@@ -1,0 +1,7 @@
+# Mac finder artifacts
+.DS_Store
+
+# client
+node_modules
+npm-debug.log
+npm-debug.log.*

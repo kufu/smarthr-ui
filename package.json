@@ -1,0 +1,24 @@
+{
+  "name": "smarthr-ui-workspace",
+  "private": true,
+  "author": "SmartHR-UI Team",
+  "version": "0.0.1",
+  "description": "SmartHR-UI's workspace package",
+  "keywords": [
+    "react",
+    "react-component",
+    "smarthr"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kufu/smarthr-ui.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kufu/smarthr-ui/issues"
+  },
+  "homepage": "https://github.com/kufu/smarthr-ui#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
