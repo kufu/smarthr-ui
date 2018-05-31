@@ -47,7 +47,12 @@
     "import/imports-first": 2,
     "import/prefer-default-export": 2,
     "import/no-dynamic-require": 2,
-    "import/no-extraneous-dependencies": 2,
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "packageDir": ["./"]
+      }
+    ],
     "import/no-mutable-exports": 2,
     "import/no-commonjs": 2,
     "import/order": 2
