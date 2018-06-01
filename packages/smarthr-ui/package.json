@@ -1,8 +1,7 @@
 {
-  "name": "@smarthr-ui/core",
-  "private": true,
+  "name": "smarthr-ui",
   "author": "SmartHR-UI Team",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SmartHR ui components built with React.",
   "keywords": [
     "react",
