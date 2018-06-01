@@ -1,0 +1,37 @@
+{
+  "name": "smarthr-ui",
+  "author": "SmartHR-UI Team",
+  "version": "0.2.0",
+  "description": "SmartHR ui components built with React.",
+  "keywords": [
+    "react",
+    "react-component",
+    "smarthr"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kufu/smarthr-ui.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kufu/smarthr-ui/issues"
+  },
+  "homepage": "https://github.com/kufu/smarthr-ui#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "peerDependencies": {
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  },
+  "dependencies": {
+    "styled-components": "^3.3.0"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  }
+}

@@ -1,7 +1,10 @@
 # Mac finder artifacts
 .DS_Store
 
-# client
+# npm
 node_modules
 npm-debug.log
 npm-debug.log.*
+
+# lerna
+lerna-debug.log
