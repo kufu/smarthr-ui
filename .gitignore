@@ -8,3 +8,6 @@ npm-debug.log.*
 
 # lerna
 lerna-debug.log
+
+# packages
+packages/smarthr-ui/dist
