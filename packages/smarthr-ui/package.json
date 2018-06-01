@@ -2,7 +2,7 @@
   "name": "@smarthr-ui/core",
   "private": true,
   "author": "SmartHR-UI Team",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "SmartHR ui components built with React.",
   "keywords": [
     "react",
@@ -25,8 +25,9 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.2"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "styled-components": "^3.3.0"
+  },
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
