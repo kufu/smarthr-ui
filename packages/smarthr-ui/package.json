@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "author": "SmartHR-UI Team",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "SmartHR ui components built with React.",
   "keywords": [
     "react",
@@ -32,7 +32,7 @@
     "@babel/preset-react": "^7.0.0-beta.49"
   },
   "dependencies": {
-    "styled-components": "^3.3.0"
+    "lodash.assign": "^4.2.0"
   },
   "sideEffects": false,
   "publishConfig": {

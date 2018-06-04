@@ -6,7 +6,7 @@ export const color = {
     secondary: '#3c763d',
   },
   info: {
-    primary: '#b3e5e',
+    primary: '#b3e5ef',
     secondary: '#31708f',
   },
   warning: {
