@@ -1,14 +1,16 @@
 {
   "name": "smarthr-ui",
   "author": "SmartHR-UI Team",
-  "version": "0.2.2",
+  "version": "1.0.0",
   "description": "SmartHR ui components built with React.",
   "keywords": [
     "react",
     "react-component",
+    "typescript",
     "smarthr"
   ],
-  "main": "dist/index.js",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kufu/smarthr-ui.git"
@@ -19,20 +21,14 @@
   },
   "homepage": "https://github.com/kufu/smarthr-ui#readme",
   "scripts": {
-    "prepare": "babel src -d dist"
+    "prepare": "tsc -p tsconfig.build.json"
   },
   "peerDependencies": {
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2"
+    "react": "^16.4.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.49",
-    "@babel/core": "^7.0.0-beta.49",
-    "@babel/preset-env": "^7.0.0-beta.49",
-    "@babel/preset-react": "^7.0.0-beta.49"
-  },
-  "dependencies": {
-    "lodash.assign": "^4.2.0"
+    "@types/react": "^16.4.6",
+    "typescript": "^2.9.2"
   },
   "sideEffects": false,
   "publishConfig": {
