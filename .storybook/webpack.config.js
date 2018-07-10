@@ -10,16 +10,6 @@ module.exports = (baseConfig, env, defaultConfig) => {
           loader: 'babel-loader',
           query: {
             presets: [
-              [
-                '@babel/preset-env',
-                {
-                  modules: false,
-                  targets: {
-                    Chrome: 66,
-                  },
-                  exclude: ['transform-regenerator'],
-                },
-              ],
               '@babel/preset-react',
             ],
           },

@@ -28,7 +28,6 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.49",
-    "@babel/preset-env": "^7.0.0-beta.49",
     "@babel/preset-react": "^7.0.0-beta.49",
     "@storybook/react": "^3.4.6",
     "babel-core": "^7.0.0-bridge.0",
