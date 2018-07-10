@@ -1,4 +1,4 @@
-const getTypeOf = (input: any):string => {
+const getTypeOf = (input: any): string => {
   if (input === null) {
     return 'null'
   } else if (typeof input === 'undefined') {
@@ -10,7 +10,7 @@ const getTypeOf = (input: any):string => {
   return typeof input
 }
 
-const cloneValue = (value: any): Array<any> | {} => {
+const cloneValue = (value: any): any[] | {} => {
   if (getTypeOf(value) === 'object') {
     return quickCloneObject(value)
   } else if (getTypeOf(value) === 'array') {
@@ -20,7 +20,7 @@ const cloneValue = (value: any): Array<any> | {} => {
   return value
 }
 
-const quickCloneArray = (input: Array<any>) => input.map(cloneValue)
+const quickCloneArray = (input: any[]) => input.map(cloneValue)
 
 const quickCloneObject = (input: any) => {
   const output = {}
@@ -30,26 +30,28 @@ const quickCloneObject = (input: any) => {
       continue
     }
 
-    (output as any)[key] = cloneValue(input[key])
+    ;(output as any)[key] = cloneValue(input[key])
   }
 
   return output
 }
 
-const executeDeepMerge = (target: {}, _objects: any[] = [], _options: any = {}) => {
+const executeDeepMerge = (
+  target: {},
+  tmpObjects: any[] = [],
+  tmpOtions: any = {},
+) => {
   const options = {
-    arrayBehaviour: _options.arrayBehaviour || 'replace',
+    arrayBehaviour: tmpOtions.arrayBehaviour || 'replace',
   }
 
-  const objects = _objects.map(object => object || {})
+  const objects = tmpObjects.map(object => object || {})
   const output: any = target || {}
 
-  for (let oindex = 0; oindex < objects.length; oindex++) {
-    const object = objects[oindex]
+  for (const object of objects) {
     const keys = Object.keys(object)
 
-    for (let kindex = 0; kindex < keys.length; kindex++) {
-      const key = keys[kindex]
+    for (const key of keys) {
       const value = (object as any)[key]
       const type = getTypeOf(value)
       const existingValueType = getTypeOf(output[key])
@@ -85,6 +87,7 @@ const executeDeepMerge = (target: {}, _objects: any[] = [], _options: any = {}) 
   return output
 }
 
-const objectAssign = (target: {}, ...objects: any[]) => executeDeepMerge(target, objects)
+const objectAssign = (target: {}, ...objects: any[]) =>
+  executeDeepMerge(target, objects)
 
 export default objectAssign
