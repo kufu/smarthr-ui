@@ -18,5 +18,3 @@ export const color = {
     secondary: '#a94442',
   },
 }
-
-export default { color }

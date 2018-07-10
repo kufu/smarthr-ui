@@ -1,15 +1,19 @@
-import React from 'react'
-import assign from 'lodash.assign'
+import * as React from 'react'
 
+import objectAssign from '../../helper/objectAssign'
 import { color } from '../../constants/style'
 
-const Alert = ({ type, children }) => (
+interface Props {
+  type: string
+  children: string | JSX.Element
+}
+const Alert: React.SFC<Props> = ({ type, children }) => (
   <div style={getStyle(type)}>{children}</div>
 )
 
 export default Alert
 
-const getStyle = type => {
+const getStyle = (type: string) => {
   let typeStyle = {}
 
   switch (type) {
@@ -41,7 +45,7 @@ const getStyle = type => {
       break
   }
 
-  return assign(
+  return objectAssign(
     {
       display: 'inline-block',
       padding: '15px',

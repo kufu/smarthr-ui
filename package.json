@@ -2,13 +2,7 @@
   "name": "smarthr-ui-workspace",
   "private": true,
   "author": "SmartHR-UI Team",
-  "version": "0.0.0",
   "description": "SmartHR-UI's workspace package",
-  "keywords": [
-    "react",
-    "react-component",
-    "smarthr"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kufu/smarthr-ui.git"
@@ -20,33 +14,23 @@
   "homepage": "https://github.com/kufu/smarthr-ui#readme",
   "scripts": {
     "publish": "lerna publish",
-    "add": "lerna add",
-    "lint": "eslint ./",
-    "format": "prettier-eslint --write \"./**/*.js\"",
-    "storybook": "start-storybook -p 6006"
+    "bootstrap": "lerna bootstrap",
+    "test": "lerna run test",
+    "prepare": "lerna run prepare",
+    "clean": "rimraf packages/**/lib"
   },
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.49",
-    "@babel/preset-react": "^7.0.0-beta.49",
-    "@storybook/react": "^3.4.6",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^8.2.3",
-    "babel-loader": "^8.0.0-beta.3",
-    "eslint": "^4.19.1",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-import": "^2.12.0",
-    "eslint-plugin-prettier": "^2.6.0",
-    "eslint-plugin-react": "^7.8.2",
+    "@types/react": "^16.4.6",
     "lerna": "^2.11.0",
-    "prettier-eslint-cli": "^4.7.1",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0",
-    "webpack": "^4.10.2",
-    "webpack-cli": "^2.1.4"
+    "react": "^16.4.1",
+    "rimraf": "^2.6.2"
   },
   "sideEffects": false,
   "engines": {
     "node": ">=8.0.0"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
