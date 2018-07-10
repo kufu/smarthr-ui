@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/kufu/smarthr-ui#readme",
   "scripts": {
+    "publish": "lerna publish",
+    "add": "lerna add",
     "lint": "eslint ./",
     "format": "prettier-eslint --write \"./**/*.js\"",
     "storybook": "start-storybook -p 6006"
