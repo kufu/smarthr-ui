@@ -1,7 +1,13 @@
 import * as React from 'react'
-import { storiesOf } from '@storybook/react'
+import { storiesOf, addDecorator } from '@storybook/react'
 
+import { createTheme } from '../../styles/createTheme'
+import { ThemeProvider } from '../../styles/ThemeProvider'
 import Alert from './Alert'
+
+const theme = createTheme()
+const ThemeDecorator = (storyFn: any) => <ThemeProvider theme={theme}>{storyFn()}</ThemeProvider>
+addDecorator(ThemeDecorator)
 
 const dummyText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
 
