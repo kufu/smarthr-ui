@@ -592,6 +592,19 @@
     global "^4.3.2"
     prop-types "^15.6.1"
 
+"@storybook/addon-viewport@4.0.0-alpha.13":
+  version "4.0.0-alpha.13"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-viewport/-/addon-viewport-4.0.0-alpha.13.tgz#1b2c97c100071fed4b9458c8b589b094f02755b2"
+  dependencies:
+    "@storybook/addons" "4.0.0-alpha.13"
+    "@storybook/components" "4.0.0-alpha.13"
+    "@storybook/core-events" "4.0.0-alpha.13"
+    babel-runtime "^6.26.0"
+    global "^4.3.2"
+    prop-types "^15.6.1"
+    react-emotion "^9.1.3"
+    util-deprecate "^1.0.2"
+
 "@storybook/addons@4.0.0-alpha.13":
   version "4.0.0-alpha.13"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-4.0.0-alpha.13.tgz#889757e88f036fb0c7606176a9236edffef4189d"
@@ -810,6 +823,10 @@
 "@types/node@^10.5.2":
   version "10.5.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.2.tgz#f19f05314d5421fe37e74153254201a7bf00a707"
+
+"@types/prop-types@^15.5.3":
+  version "15.5.3"
+  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.3.tgz#bef071852dca2a2dbb65fecdb7bfb30cedae2de2"
 
 "@types/react@*", "@types/react@^16.4.6":
   version "16.4.6"
