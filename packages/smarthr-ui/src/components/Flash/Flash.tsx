@@ -14,7 +14,7 @@ const REMOVE_DELAY = 10000
 
 export default class Flash extends React.Component<Props, State> {
   public static propTypes = {
-    children: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
   }
   public fadeoutTimer: any = null
   public removeTimer: any = null

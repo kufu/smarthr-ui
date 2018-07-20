@@ -820,7 +820,17 @@
     react-lifecycles-compat "^3.0.4"
     react-modal "^3.4.5"
 
-"@types/node@^10.5.2":
+"@types/lodash@^4.14.112":
+  version "4.14.112"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.112.tgz#4a8d8e5716b97a1ac01fe1931ad1e4cba719de5a"
+
+"@types/node-uuid@^0.0.28":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@types/node-uuid/-/node-uuid-0.0.28.tgz#41655b5ce63b2f3374c4e826b4dd21e729058e3d"
+  dependencies:
+    "@types/node" "*"
+
+"@types/node@*", "@types/node@^10.5.2":
   version "10.5.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.5.2.tgz#f19f05314d5421fe37e74153254201a7bf00a707"
 
@@ -833,6 +843,10 @@
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.6.tgz#5024957c6bcef4f02823accf5974faba2e54fada"
   dependencies:
     csstype "^2.2.0"
+
+"@types/storybook__addon-actions@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@types/storybook__addon-actions/-/storybook__addon-actions-3.0.3.tgz#99287c0b9ee6b84ea571ee4cb42d0779c56af208"
 
 "@types/storybook__react@^3.0.8":
   version "3.0.8"
@@ -5406,6 +5420,10 @@ node-pre-gyp@^0.10.0:
     rimraf "^2.6.1"
     semver "^5.3.0"
     tar "^4"
+
+node-uuid@^1.4.8:
+  version "1.4.8"
+  resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.8.tgz#b040eb0923968afabf8d32fb1f17f1167fdab907"
 
 nopt@^4.0.1:
   version "4.0.1"
