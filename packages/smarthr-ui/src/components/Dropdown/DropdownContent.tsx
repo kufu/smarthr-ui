@@ -46,6 +46,7 @@ const Wrapper = styled.div`
   visibility: hidden;
   opacity: 0;
   transform: scale(0);
+
   z-index: 1000;
   position: absolute;
   top: calc(100% + 10px);

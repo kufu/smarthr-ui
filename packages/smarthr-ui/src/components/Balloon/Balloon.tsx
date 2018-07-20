@@ -42,6 +42,7 @@ const Wrapper = styled.div`
   display: inline-block;
   border-radius: 3px;
   box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
+  white-space: nowrap;
 
   &::before,
   &::after {
