@@ -2,11 +2,11 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-export const THEME = {
+const THEME = {
   LIGHT: 'light',
   DARK: 'dark',
 }
-export const POSITION = {
+const POSITION = {
   TOP: 'top',
   BOTTOM: 'bottom',
   RIGHT: 'right',
