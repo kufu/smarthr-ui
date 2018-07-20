@@ -80,7 +80,7 @@ Alert.propTypes = {
   wide: PropTypes.bool,
   themeStyle: PropTypes.object.isRequired,
   style: PropTypes.object,
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
 }
 
 export default withStyles(styles)(Alert)

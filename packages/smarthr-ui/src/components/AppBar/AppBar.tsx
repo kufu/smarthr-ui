@@ -48,7 +48,7 @@ AppBar.propTypes = {
   size: PropTypes.oneOf(['s', 'm', 'l']),
   themeStyle: PropTypes.object.isRequired,
   style: PropTypes.object,
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
 }
 
 export default withStyles(styles)(AppBar)
