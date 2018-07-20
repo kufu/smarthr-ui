@@ -56,6 +56,14 @@ const Wrapper = styled.div`
     opacity 0.1s cubic-bezier(0.215, 0.61, 0.355, 1),
     transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
+  &.right {
+    right: 0;
+  }
+
+  &.left {
+    left: 0;
+  }
+
   &.active {
     visibility: visible;
     opacity: 1;
