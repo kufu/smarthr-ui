@@ -1,56 +1,43 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
+import styled from 'styled-components'
 
-import { CreatedTheme } from '../../styles/createTheme'
-import { withStyles, InjectedProps } from '../../styles/withStyles'
+import { withTheme, InjectedProps } from '../../hocs/withTheme'
 
-const styles = (theme: CreatedTheme) => ({
-  base: {
-    background: `linear-gradient(to right top, ${theme.palette.primaryDark}, ${
-      theme.palette.primaryLight
-    })`,
-  },
-  size: {
-    s: {
-      paddingRight: '10px',
-      paddingLeft: '10px',
-    },
-    m: {
-      paddingRight: '15px',
-      paddingLeft: '15px',
-    },
-    l: {
-      paddingRight: '20px',
-      paddingLeft: '20px',
-    },
-  },
-})
-
+type AppBarSize = 's' | 'm' | 'l'
 interface Props extends React.Props<{}> {
-  size?: 's' | 'm' | 'l'
+  size?: AppBarSize
   style?: {}
 }
 
-const AppBar: React.SFC<Props & InjectedProps> = ({
-  size = 'm',
-  themeStyle,
-  style = {},
-  children,
-}) => {
-  const createdStyle = {
-    ...themeStyle.base,
-    ...themeStyle.size[size],
-    ...style,
-  }
-
-  return <div style={createdStyle}>{children && children}</div>
-}
+const AppBar: React.SFC<Props & InjectedProps> = ({ size = 'm', theme, style = {}, children }) => (
+  <Wrapper theme={theme} size={size} style={style}>
+    {children && children}
+  </Wrapper>
+)
 
 AppBar.propTypes = {
   size: PropTypes.oneOf(['s', 'm', 'l']),
-  themeStyle: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
   style: PropTypes.object,
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
 }
 
-export default withStyles(styles)(AppBar)
+export default withTheme(AppBar)
+
+interface Styles extends InjectedProps {
+  size: AppBarSize
+}
+const sizeMap = {
+  s: '0 10px',
+  m: '0 15px',
+  l: '0 20px',
+}
+const Wrapper = styled.div`
+  padding: ${({ size }: Styles) => sizeMap[size]};
+  background: linear-gradient(
+    to right top,
+    ${({ theme }: Styles) => theme.palette.primaryDark},
+    ${({ theme }: Styles) => theme.palette.primaryLight}
+  );
+`

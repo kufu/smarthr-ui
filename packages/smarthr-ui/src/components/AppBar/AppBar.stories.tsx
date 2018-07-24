@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { storiesOf, addDecorator } from '@storybook/react'
 
-import { createTheme } from '../../styles/createTheme'
-import { ThemeProvider } from '../../styles/ThemeProvider'
+import { createTheme } from '../../themes/createTheme'
+import { ThemeProvider } from '../../themes/ThemeProvider'
 import AppBar from './AppBar'
 
 const theme = createTheme()

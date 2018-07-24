@@ -52,18 +52,18 @@ const Wrapper = styled.div`
     content: '';
   }
 
-  &.${THEME.LIGHT} {
+  &.light {
     border: 1px solid #dfdfdf;
     background-color: #fff;
     color: #222;
   }
 
-  &.${THEME.DARK} {
+  &.dark {
     background-color: #222;
     color: #fff;
   }
 
-  &.${THEME.LIGHT}.${POSITION.TOP} {
+  &.light.top {
     &::before {
       border-color: transparent transparent #dfdfdf;
     }
@@ -71,7 +71,7 @@ const Wrapper = styled.div`
       border-color: transparent transparent #fff;
     }
   }
-  &.${THEME.LIGHT}.${POSITION.BOTTOM} {
+  &.light.bottom {
     &::before {
       border-color: #dfdfdf transparent transparent;
     }
@@ -79,20 +79,20 @@ const Wrapper = styled.div`
       border-color: #fff transparent transparent;
     }
   }
-  &.${THEME.DARK}.${POSITION.TOP} {
+  &.dark.top {
     &::before,
     &::after {
       border-color: transparent transparent #222;
     }
   }
-  &.${THEME.DARK}.${POSITION.BOTTOM} {
+  &.dark.bottom {
     &::before,
     &::after {
       border-color: #222 transparent transparent;
     }
   }
 
-  &.${POSITION.TOP} {
+  &.top {
     &::before,
     &::after {
       border-width: 0 8px 8px;
@@ -105,7 +105,7 @@ const Wrapper = styled.div`
     }
   }
 
-  &.${POSITION.BOTTOM} {
+  &.bottom {
     &::before,
     &::after {
       border-width: 8px 8px 0;
@@ -118,14 +118,14 @@ const Wrapper = styled.div`
     }
   }
 
-  &.${POSITION.RIGHT} {
+  &.right {
     &::before,
     &::after {
       right: 24px;
     }
   }
 
-  &.${POSITION.CENTER} {
+  &.center {
     &::before,
     &::after {
       left: 50%;
@@ -133,7 +133,7 @@ const Wrapper = styled.div`
     }
   }
 
-  &.${POSITION.LEFT} {
+  &.left {
     &::before,
     &::after {
       left: 24px;

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { CreatedTheme } from './createTheme'
+import { CreatedTheme } from '../themes/createTheme'
 
 export const ThemeContext = React.createContext({})
 const { Provider } = ThemeContext

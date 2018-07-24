@@ -7,5 +7,5 @@ export { default as Flash } from './components/Flash/'
 export { default as Tooltip } from './components/Tooltip/'
 
 // styles
-export { createTheme } from './styles/createTheme'
-export { ThemeProvider } from './styles/ThemeProvider'
+export { createTheme } from './themes/createTheme'
+export { ThemeProvider } from './themes/ThemeProvider'
