@@ -1,5 +1,6 @@
 export interface CreatedPaletteTheme {
-  primary: string
+  primaryLight: string
+  primaryDark: string
   white: string
   black: string
   success: {
@@ -22,7 +23,8 @@ export interface CreatedPaletteTheme {
 
 export const createPalette = (palette: any = {}) => {
   const created: CreatedPaletteTheme = {
-    primary: '#4ed0d6',
+    primaryLight: '#32ece0',
+    primaryDark: '#27b8dd',
     white: '#fff',
     black: '#222',
     success: {

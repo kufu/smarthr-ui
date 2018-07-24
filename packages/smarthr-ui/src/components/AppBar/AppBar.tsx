@@ -6,7 +6,9 @@ import { withStyles, InjectedProps } from '../../styles/withStyles'
 
 const styles = (theme: CreatedTheme) => ({
   base: {
-    backgroundColor: theme.palette.primary,
+    background: `linear-gradient(to right top, ${theme.palette.primaryDark}, ${
+      theme.palette.primaryLight
+    })`,
   },
   size: {
     s: {
