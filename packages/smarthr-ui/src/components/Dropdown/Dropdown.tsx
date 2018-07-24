@@ -11,7 +11,7 @@ import DropdownContent, { Rect } from './DropdownContent'
 interface CustomTarget extends EventTarget {
   getBoundingClientRect(): Rect
 }
-interface ToggleEvenet extends Event {
+interface ToggleEvent extends Event {
   currentTarget: CustomTarget
 }
 interface Props extends React.Props<{}> {}
@@ -77,7 +77,7 @@ export default class Dropdown extends React.Component<Props, State> {
     })
   }
 
-  public handleToggle = (e: ToggleEvenet) => {
+  public handleToggle = (e: ToggleEvent) => {
     e.preventDefault()
 
     this.setState({
