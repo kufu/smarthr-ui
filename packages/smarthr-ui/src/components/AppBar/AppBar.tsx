@@ -37,7 +37,7 @@ const Wrapper = styled.div`
   padding: ${({ size }: Styles) => sizeMap[size]};
   background: linear-gradient(
     to right top,
-    ${({ theme }: Styles) => theme.palette.primaryDark},
-    ${({ theme }: Styles) => theme.palette.primaryLight}
+    ${({ theme }: Styles) => theme.palette.primary},
+    ${({ theme }: Styles) => theme.palette.primary}
   );
 `

@@ -16,25 +16,14 @@ export default class Flash extends React.Component<Props, State> {
   public static propTypes = {
     children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
   }
+
   public fadeoutTimer: any = null
   public removeTimer: any = null
 
-  constructor(props: Props) {
-    super(props)
-
-    this.state = {
-      bounce: false,
-      fadeout: false,
-      remove: false,
-    }
-  }
-
-  public fadeout = () => {
-    this.setState({ fadeout: true })
-  }
-
-  public remove = () => {
-    this.setState({ remove: true })
+  public state = {
+    bounce: false,
+    fadeout: false,
+    remove: false,
   }
 
   public componentDidMount() {
@@ -59,6 +48,14 @@ export default class Flash extends React.Component<Props, State> {
         <Box className={bounce ? 'bounce' : ''}>{children}</Box>
       </Wrapper>
     )
+  }
+
+  private fadeout = () => {
+    this.setState({ fadeout: true })
+  }
+
+  private remove = () => {
+    this.setState({ remove: true })
   }
 }
 
