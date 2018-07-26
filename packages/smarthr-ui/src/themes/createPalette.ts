@@ -2,6 +2,7 @@ import { merge } from '../libs/lodash'
 
 export interface PaletteProperty {
   primary?: string
+  primaryLight?: string
   white?: string
   black?: string
   success?: {
@@ -24,6 +25,7 @@ export interface PaletteProperty {
 
 export interface CreatedPaletteTheme {
   primary: string
+  primaryLight: string
   white: string
   black: string
   success: {
@@ -48,6 +50,7 @@ export const createPalette = (palette: PaletteProperty = {}) => {
   const created: CreatedPaletteTheme = merge(
     {
       primary: '#4ed0d6',
+      primaryLight: '#73dfe4',
       white: '#fff',
       black: '#222',
       success: {
