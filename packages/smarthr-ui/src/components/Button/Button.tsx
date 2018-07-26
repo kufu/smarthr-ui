@@ -13,6 +13,7 @@ interface Props extends React.Props<{}> {
   disabled?: boolean
   to?: string
   size?: ButtonSize
+  wide?: boolean
   style?: {}
 }
 
@@ -22,13 +23,21 @@ const Button: React.SFC<Props & InjectedProps> = ({
   disabled = false,
   to = '',
   size = 'm',
+  wide = false,
   theme,
   style = {},
   children,
 }) => {
   if (element === 'button') {
     return (
-      <Trigger onClick={onClick} disabled={disabled} theme={theme} size={size} style={style}>
+      <Trigger
+        onClick={onClick}
+        disabled={disabled}
+        theme={theme}
+        size={size}
+        wide={wide}
+        style={style}
+      >
         {children}
       </Trigger>
     )
@@ -43,6 +52,7 @@ const Button: React.SFC<Props & InjectedProps> = ({
           disabled={disabled}
           theme={theme}
           size={size}
+          wide={wide}
           style={style}
         />
       )
@@ -53,7 +63,7 @@ const Button: React.SFC<Props & InjectedProps> = ({
 
   if (element === 'a') {
     return (
-      <Link href={to} onClick={onClick} theme={theme} size={size} style={style}>
+      <Link href={to} onClick={onClick} theme={theme} size={size} wide={wide} style={style}>
         {children}
       </Link>
     )
@@ -68,6 +78,7 @@ Button.propTypes = {
   disabled: PropTypes.bool,
   to: PropTypes.string,
   size: PropTypes.oneOf(['s', 'm', 'l']),
+  wide: PropTypes.bool,
   theme: PropTypes.object.isRequired,
   style: PropTypes.object,
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
@@ -77,6 +88,7 @@ export default withTheme(Button)
 
 interface Styles extends InjectedProps {
   size: ButtonSize
+  wide: boolean
 }
 const sizeMap = {
   s: {
@@ -94,6 +106,8 @@ const sizeMap = {
 }
 const Base = styled.button`
   display: inline-block;
+  box-sizing: border-box;
+  width: ${({ wide }: Styles) => (wide ? '100%;' : 'auto')};
   margin: 0;
   padding: ${({ size }: Styles) => sizeMap[size].padding};
   box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),

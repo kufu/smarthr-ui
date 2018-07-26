@@ -12,6 +12,12 @@ addDecorator(ThemeDecorator)
 
 const onClick = action('click!')
 
+storiesOf('Button', module).add('wide', () => (
+  <Button element="a" to="#" size="m" wide={true}>
+    Wide
+  </Button>
+))
+
 storiesOf('Button/size', module)
   .add('s', () => (
     <Button element="a" to="#" size="s">
