@@ -1,9 +1,9 @@
-import { CreatedPaletteTheme, createPalette } from './createPalette'
-import { CreatedTypographyTheme, createTypography } from './createTypography'
+import { PaletteProperty, CreatedPaletteTheme, createPalette } from './createPalette'
+import { TypographyProperty, CreatedTypographyTheme, createTypography } from './createTypography'
 
 interface Theme {
-  palette?: any
-  typography?: any
+  palette?: PaletteProperty
+  typography?: TypographyProperty
 }
 
 export interface CreatedTheme {

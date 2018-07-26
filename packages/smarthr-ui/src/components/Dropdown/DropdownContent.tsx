@@ -46,7 +46,6 @@ const Wrapper = styled.div`
   visibility: hidden;
   opacity: 0;
   transform: scale(0);
-
   z-index: 1000;
   position: absolute;
   top: calc(100% + 10px);
@@ -55,6 +54,14 @@ const Wrapper = styled.div`
   transition: visibility 0.1s cubic-bezier(0.215, 0.61, 0.355, 1),
     opacity 0.1s cubic-bezier(0.215, 0.61, 0.355, 1),
     transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  &.right {
+    right: 0;
+  }
+
+  &.left {
+    left: 0;
+  }
 
   &.active {
     visibility: visible;

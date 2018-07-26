@@ -11,7 +11,7 @@ import DropdownContent, { Rect } from './DropdownContent'
 interface CustomTarget extends EventTarget {
   getBoundingClientRect(): Rect
 }
-interface ToggleEvenet extends Event {
+interface ToggleEvent extends Event {
   currentTarget: CustomTarget
 }
 interface Props extends React.Props<{}> {}
@@ -52,12 +52,20 @@ export default class Dropdown extends React.Component<Props, State> {
     }
   }
 
-  public hide = (e: { target: HTMLElement }) => {
+  public render() {
+    return (
+      <Wrapper className={`Dropdown ${this.state.active ? 'active' : ''}`}>
+        {this.state.children}
+      </Wrapper>
+    )
+  }
+
+  private hide = (e: { target: HTMLElement }) => {
     if (getParentElementByClassName(e.target, this.dropdownKey, true)) return
     this.setState({ active: false })
   }
 
-  public getChildren = () => {
+  private getChildren = () => {
     const { active, clientRect } = this.state
 
     return React.Children.map(this.props.children, (child: any) => {
@@ -77,21 +85,13 @@ export default class Dropdown extends React.Component<Props, State> {
     })
   }
 
-  public handleToggle = (e: ToggleEvenet) => {
+  private handleToggle = (e: ToggleEvent) => {
     e.preventDefault()
 
     this.setState({
       active: !this.state.active,
       clientRect: e.currentTarget.getBoundingClientRect(),
     })
-  }
-
-  public render() {
-    return (
-      <Wrapper className={`Dropdown ${this.state.active ? 'active' : ''}`}>
-        {this.state.children}
-      </Wrapper>
-    )
   }
 }
 
