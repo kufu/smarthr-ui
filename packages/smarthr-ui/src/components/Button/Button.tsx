@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
 
+import { extendDefaultPropTypes } from '../../libs/propTypes'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
 import hoverable from '../../hocs/hoverable'
 import { isTouchDevice } from '../../libs/ua'
@@ -16,8 +17,9 @@ interface Props extends React.Props<{}> {
   wide?: boolean
   style?: {}
 }
+type MergedProps = Props & InjectedProps
 
-const Button: React.SFC<Props & InjectedProps> = ({
+const Button: React.SFC<MergedProps> = ({
   element,
   onClick,
   disabled = false,
@@ -72,17 +74,14 @@ const Button: React.SFC<Props & InjectedProps> = ({
   return null
 }
 
-Button.propTypes = {
+Button.propTypes = extendDefaultPropTypes<MergedProps>({
   element: PropTypes.oneOf(['button', 'input', 'a']).isRequired,
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
   to: PropTypes.string,
   size: PropTypes.oneOf(['s', 'm', 'l']),
   wide: PropTypes.bool,
-  theme: PropTypes.object.isRequired,
-  style: PropTypes.object,
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
-}
+})
 
 export default withTheme(Button)
 

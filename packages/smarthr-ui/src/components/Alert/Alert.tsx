@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
 
+import { extendDefaultPropTypes } from '../../libs/propTypes'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
 
 type AlertType = 'success' | 'info' | 'warning' | 'danger'
@@ -12,8 +13,9 @@ interface Props extends React.Props<{}> {
   wide?: boolean
   style?: {}
 }
+type MergedProps = Props & InjectedProps
 
-const Alert: React.SFC<Props & InjectedProps> = ({
+const Alert: React.SFC<MergedProps> = ({
   theme,
   type,
   size = 'm',
@@ -26,14 +28,11 @@ const Alert: React.SFC<Props & InjectedProps> = ({
   </Wrapper>
 )
 
-Alert.propTypes = {
+Alert.propTypes = extendDefaultPropTypes<MergedProps>({
   type: PropTypes.oneOf(['success', 'info', 'warning', 'danger']).isRequired,
   size: PropTypes.oneOf(['s', 'm', 'l']),
   wide: PropTypes.bool,
-  theme: PropTypes.object.isRequired,
-  style: PropTypes.object,
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
-}
+})
 
 export default withTheme(Alert)
 
