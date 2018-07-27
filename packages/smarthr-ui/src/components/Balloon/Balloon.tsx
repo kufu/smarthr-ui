@@ -2,6 +2,8 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
 
+import { extendDefaultPropTypes } from '../../libs/propTypes'
+
 const THEME = {
   LIGHT: 'light',
   DARK: 'dark',
@@ -27,13 +29,11 @@ const Balloon: React.SFC<Props> = ({ theme, horizontal, vertical, style = {}, ch
   </Wrapper>
 )
 
-Balloon.propTypes = {
+Balloon.propTypes = extendDefaultPropTypes<Props>({
   theme: PropTypes.oneOf([THEME.LIGHT, THEME.DARK]).isRequired,
   horizontal: PropTypes.oneOf([POSITION.RIGHT, POSITION.CENTER, POSITION.LEFT]).isRequired,
   vertical: PropTypes.oneOf([POSITION.TOP, POSITION.BOTTOM]).isRequired,
-  style: PropTypes.object,
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
-}
+})
 
 export default Balloon
 

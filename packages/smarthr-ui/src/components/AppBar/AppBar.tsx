@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
 
+import { extendDefaultPropTypes } from '../../libs/propTypes'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
 
 type AppBarSize = 's' | 'm' | 'l'
@@ -9,19 +10,17 @@ interface Props extends React.Props<{}> {
   size?: AppBarSize
   style?: {}
 }
+type MergedProps = Props & InjectedProps
 
-const AppBar: React.SFC<Props & InjectedProps> = ({ size = 'm', theme, style = {}, children }) => (
+const AppBar: React.SFC<MergedProps> = ({ size = 'm', theme, style = {}, children }) => (
   <Wrapper theme={theme} size={size} style={style}>
     {children && children}
   </Wrapper>
 )
 
-AppBar.propTypes = {
+AppBar.propTypes = extendDefaultPropTypes<MergedProps>({
   size: PropTypes.oneOf(['s', 'm', 'l']),
-  theme: PropTypes.object.isRequired,
-  style: PropTypes.object,
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
-}
+})
 
 export default withTheme(AppBar)
 

@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
 
+import { extendDefaultPropTypes } from '../../libs/propTypes'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
 import { isTouchDevice } from '../../libs/ua'
 import Balloon from '../Balloon/'
@@ -14,14 +15,14 @@ interface Props extends React.Props<{}> {
 interface State {
   active: boolean
 }
+type MergedProps = Props & InjectedProps
 
-class Tooltip extends React.Component<Props & InjectedProps, State> {
-  public static propTypes = {
+class Tooltip extends React.Component<MergedProps, State> {
+  public static propTypes = extendDefaultPropTypes<MergedProps>({
     text: PropTypes.string.isRequired,
     size: PropTypes.oneOf(['s', 'm', 'l']),
-    themeStyle: PropTypes.object.isRequired,
-    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
-  }
+  })
+
   public state = {
     active: false,
   }
