@@ -60,6 +60,6 @@ storiesOf('Button/disabled', module)
   ))
   .add('false', () => (
     <Button element="button" size="m" disabled={false} onClick={onClick}>
-      input
+      Button
     </Button>
   ))
