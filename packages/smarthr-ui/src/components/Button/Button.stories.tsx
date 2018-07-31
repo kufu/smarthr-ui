@@ -10,7 +10,7 @@ const theme = createTheme()
 const ThemeDecorator = (storyFn: any) => <ThemeProvider theme={theme}>{storyFn()}</ThemeProvider>
 addDecorator(ThemeDecorator)
 
-const onClick = action('click!!')
+const onClick = action('click!')
 
 storiesOf('Button', module).add('wide', () => (
   <Button element="a" to="#" size="m" wide={true}>
