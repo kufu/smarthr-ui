@@ -10,7 +10,7 @@ export const extendDefaultPropTypes = <P>(
     {
       theme: PropTypes.object,
       style: PropTypes.object,
-      children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+      children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
     },
     propTypes,
   )
