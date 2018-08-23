@@ -84,6 +84,6 @@ const Body = styled.td`
   padding: ${({ size }: Styles) => sizeMap[size].padding};
   font-size: ${({ theme, size }: Styles) => theme.typography.pxToRem(sizeMap[size].fontSize)};
 `
-const Head = Body.withComponent('th').extend`
-  font-weight: bold
+const Head = styled(Body.withComponent('th'))`
+  font-weight: bold;
 `

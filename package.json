@@ -22,7 +22,8 @@
     "lint:css": "stylelint 'packages/**/src/**/*.ts{,x}'",
     "lint": "run-p lint:*",
     "format": "tslint --fix 'packages/**/src/**/*.ts{,x}'",
-    "storybook": "start-storybook -p 6006"
+    "storybook": "start-storybook -p 6006",
+    "build": "build-storybook -c .storybook -o docs"
   },
   "dependencies": {},
   "devDependencies": {
