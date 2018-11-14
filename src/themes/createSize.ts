@@ -1,4 +1,4 @@
-import { merge } from '../libs/lodash'
+import merge from 'lodash-es/merge'
 
 const defaultHtmlFontSize = 16
 const defaultSpace = 5
