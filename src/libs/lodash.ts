@@ -1,1 +1,1 @@
-export { isEqual, merge } from 'lodash'
+export { merge } from 'lodash'
