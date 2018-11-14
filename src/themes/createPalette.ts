@@ -1,4 +1,4 @@
-import { merge } from '../libs/lodash'
+import merge from 'lodash-es/merge'
 
 const color = {
   turquoise: '#00C4CC',

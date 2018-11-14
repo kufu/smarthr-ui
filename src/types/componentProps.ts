@@ -11,7 +11,7 @@ export interface ComponentProps<T> extends Props<T> {
 }
 
 export interface StyledProperties {
-  pcSize: SizePattern
-  tabletSize: SizePattern
-  spSize: SizePattern
+  pcSize?: SizePattern
+  tabletSize?: SizePattern
+  spSize?: SizePattern
 }

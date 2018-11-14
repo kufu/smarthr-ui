@@ -22,18 +22,18 @@ const getSpace = (size: SizePattern): 'xs' | 's' | 'm' => {
   return spaceMap[size]
 }
 const Wrapper: any = styled.div`
-  padding: ${({ pcSize, theme }: MergedStyledProps) =>
+  padding: ${({ pcSize = 'm', theme }: MergedStyledProps) =>
     `0 ${theme.size.pxToRem(theme.size.space[getSpace(pcSize)])}`};
   background: ${({ theme }: MergedStyledProps) => theme.palette.primary};
 
   @media screen and (max-width: ${({ theme }: MergedStyledProps) =>
       theme.size.mediaQuery.tablet}px) {
-    padding: ${({ tabletSize, theme }: MergedStyledProps) =>
+    padding: ${({ tabletSize = 'm', theme }: MergedStyledProps) =>
       `0 ${theme.size.pxToRem(theme.size.space[getSpace(tabletSize)])}`};
   }
 
   @media screen and (max-width: ${({ theme }: MergedStyledProps) => theme.size.mediaQuery.sp}px) {
-    padding: ${({ spSize, theme }: MergedStyledProps) =>
+    padding: ${({ spSize = 'm', theme }: MergedStyledProps) =>
       `0 ${theme.size.pxToRem(theme.size.space[getSpace(spSize)])}`};
   }
 `
