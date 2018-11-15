@@ -1,4 +1,5 @@
-import merge from 'lodash-es/merge'
+// tslint:disable-next-line:no-var-requires
+const merge = require('lodash.merge') // import 文だと runtime エラーが出てしまう・・・
 
 const color = {
   turquoise: '#00C4CC',

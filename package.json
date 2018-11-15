@@ -47,10 +47,11 @@
     ]
   },
   "dependencies": {
-    "lodash-es": "^4.17.11"
+    "lodash.merge": "^4.6.1"
   },
   "peerDependencies": {
     "react": "^16.6.1",
+    "react-dom": "^16.6.3",
     "styled-components": "^4.0.3"
   },
   "devDependencies": {
@@ -61,7 +62,7 @@
     "@storybook/addons": "^4.0.4",
     "@storybook/cli": "^4.0.4",
     "@storybook/react": "^4.0.4",
-    "@types/lodash-es": "^4.17.1",
+    "@types/lodash.merge": "^4.6.4",
     "@types/react": "^16.7.1",
     "@types/storybook__react": "^4.0.0",
     "@types/styled-components": "^4.0.3",
