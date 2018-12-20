@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { SizePattern, ComponentProps, StyledProperties } from '../../types/componentProps'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
@@ -11,7 +11,7 @@ const AppBar: React.SFC<MergedComponentProps> = ({ ...props }) => <Wrapper {...p
 
 export default withTheme(AppBar)
 
-const getSpace = (size: SizePattern): 'xs' | 's' | 'm' => {
+const getSpaceSize = (size: SizePattern): 'xs' | 's' | 'm' => {
   const spaceMap: any = {
     xs: 'xs',
     s: 'xs',
@@ -22,18 +22,22 @@ const getSpace = (size: SizePattern): 'xs' | 's' | 'm' => {
   return spaceMap[size]
 }
 const Wrapper: any = styled.div`
-  padding: ${({ pcSize = 'm', theme }: MergedStyledProps) =>
-    `0 ${theme.size.pxToRem(theme.size.space[getSpace(pcSize)])}`};
-  background: ${({ theme }: MergedStyledProps) => theme.palette.primary};
+  ${({ spSize = 'm', pcSize = 'm', tabletSize = 'm', theme }: MergedStyledProps) => {
+    const [pcPadding, tabletPadding, spPadding] = [pcSize, tabletSize, spSize]
+      .map(getSpaceSize)
+      .map(size => `0 ${theme.size.pxToRem(theme.size.space[size])}`)
 
-  @media screen and (max-width: ${({ theme }: MergedStyledProps) =>
-      theme.size.mediaQuery.tablet}px) {
-    padding: ${({ tabletSize = 'm', theme }: MergedStyledProps) =>
-      `0 ${theme.size.pxToRem(theme.size.space[getSpace(tabletSize)])}`};
-  }
+    return css`
+      padding: ${pcPadding};
+      background: ${theme.palette.primary};
 
-  @media screen and (max-width: ${({ theme }: MergedStyledProps) => theme.size.mediaQuery.sp}px) {
-    padding: ${({ spSize = 'm', theme }: MergedStyledProps) =>
-      `0 ${theme.size.pxToRem(theme.size.space[getSpace(spSize)])}`};
-  }
+      @media screen and (max-width: ${theme.size.mediaQuery.tablet}px) {
+        padding: ${tabletPadding};
+      }
+
+      @media screen and (max-width: ${theme.size.mediaQuery.sp}px) {
+        padding: ${spPadding};
+      }
+    `
+  }}
 `
