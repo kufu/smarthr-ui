@@ -9,6 +9,6 @@ interface Props extends React.Props<{}> {
   theme: CreatedTheme
 }
 
-export const ThemeProvider: React.SFC<Props> = ({ theme, children }) => {
+export const ThemeProvider: React.FC<Props> = ({ theme, children }) => {
   return <Provider value={theme}>{children}</Provider>
 }

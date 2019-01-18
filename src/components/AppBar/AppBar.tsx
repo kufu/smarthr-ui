@@ -7,7 +7,7 @@ import { withTheme, InjectedProps } from '../../hocs/withTheme'
 type MergedComponentProps = ComponentProps<{}> & InjectedProps
 type MergedStyledProps = StyledProperties & InjectedProps
 
-const AppBarComponent: React.SFC<MergedComponentProps> = ({ ...props }) => <Wrapper {...props} />
+const AppBarComponent: React.FC<MergedComponentProps> = ({ ...props }) => <Wrapper {...props} />
 
 export const AppBar = withTheme(AppBarComponent)
 
