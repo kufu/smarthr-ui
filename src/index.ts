@@ -1,5 +1,5 @@
 // components
-export { default as AppBar } from './components/AppBar/'
+export { AppBar } from './components/AppBar/'
 
 // themes
 export { createTheme } from './themes/createTheme'
