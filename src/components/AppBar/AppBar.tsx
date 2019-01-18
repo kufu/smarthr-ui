@@ -7,9 +7,9 @@ import { withTheme, InjectedProps } from '../../hocs/withTheme'
 type MergedComponentProps = ComponentProps<{}> & InjectedProps
 type MergedStyledProps = StyledProperties & InjectedProps
 
-const AppBar: React.SFC<MergedComponentProps> = ({ ...props }) => <Wrapper {...props} />
+const AppBarComponent: React.FC<MergedComponentProps> = ({ ...props }) => <Wrapper {...props} />
 
-export default withTheme(AppBar)
+export const AppBar = withTheme(AppBarComponent)
 
 const getSpaceSize = (size: SizePattern): 'xs' | 's' | 'm' => {
   const spaceMap: any = {

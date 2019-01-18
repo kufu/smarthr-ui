@@ -1,8 +1,7 @@
-// tslint:disable-next-line:no-var-requires
-const merge = require('lodash.merge') // import 文だと runtime エラーが出てしまう・・・
+import { merge } from '../libs/lodash'
 
 const defaultHtmlFontSize = 16
-const defaultSpace = 5
+const defaultSpace = 8
 
 export interface SizeProperty {
   htmlFontSize?: number
@@ -39,12 +38,12 @@ export interface CreatedSizeTheme {
   }
 }
 
-export const createSize = (size: SizeProperty = {}) => {
-  const space = size.space || {}
+export const createSize = (userSize: SizeProperty = {}) => {
+  const space = userSize.space || {}
   const created: CreatedSizeTheme = merge(
     {
       pxToRem: (value: number): string =>
-        `${value / (size.htmlFontSize || defaultHtmlFontSize)}rem`,
+        `${value / (userSize.htmlFontSize || defaultHtmlFontSize)}rem`,
       space: {
         xxs: space.default || defaultSpace,
         xs: (space.default || defaultSpace) * 2,
@@ -59,7 +58,7 @@ export const createSize = (size: SizeProperty = {}) => {
         tablet: 959,
       },
     },
-    size,
+    userSize,
   )
 
   return created

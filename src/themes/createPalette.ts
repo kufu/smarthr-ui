@@ -1,25 +1,37 @@
-// tslint:disable-next-line:no-var-requires
-const merge = require('lodash.merge') // import 文だと runtime エラーが出てしまう・・・
+import { merge } from '../libs/lodash'
 
 const color = {
+  white: '#fff',
+  gray: '#dfdfdf',
+  black: '#222',
+
   turquoise: '#00C4CC',
 }
 
 export interface PaletteProperty {
+  base?: string
+  default?: string
+  line?: string
   primary?: string
 }
 
 export interface CreatedPaletteTheme {
+  base: string
+  default: string
+  line: string
   primary: string
 }
 
-export const createPalette = (palette: PaletteProperty = {}) => {
-  const created: CreatedPaletteTheme = merge(
-    {
-      primary: color.turquoise,
-    },
-    palette,
-  )
+export const defaultPalette: CreatedPaletteTheme = {
+  base: color.white,
+  default: color.black,
 
+  line: color.gray,
+
+  primary: color.turquoise,
+}
+
+export const createPalette = (userPalette: PaletteProperty = {}) => {
+  const created = merge(defaultPalette, userPalette)
   return created
 }
