@@ -18,7 +18,7 @@ export const DropdownTrigger: React.FC<Props> = ({ children, dropdownKey, active
 
         case 'object':
           return React.cloneElement(child, {
-            className: `${dropdownKey} ${active ? 'active' : ''} ${className}}`,
+            className: `${dropdownKey} ${active ? 'active' : ''} ${className}`,
           })
 
         default:
