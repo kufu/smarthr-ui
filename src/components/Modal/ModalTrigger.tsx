@@ -5,9 +5,9 @@ interface Props {
 }
 
 export const ModalTrigger: React.FC<Props> = ({ children, onClick }) => (
-  <button className="ModalTrigger" onClick={onClick}>
+  <div className="ModalTrigger" onClick={onClick}>
     {children}
-  </button>
+  </div>
 )
 
 ModalTrigger.displayName = 'ModalTrigger'
