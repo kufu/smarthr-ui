@@ -2,10 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { storiesOf } from '@storybook/react'
 
-import { Modal } from './Modal'
-import { ModalTrigger } from './ModalTrigger'
-import { ModalEraser } from './ModalEraser'
-import { ModalContent } from './ModalContent'
+import { Modal, ModalTrigger, ModalEraser, ModalContent } from './'
 
 storiesOf('Modal', module).add('all', () => (
   <div>
