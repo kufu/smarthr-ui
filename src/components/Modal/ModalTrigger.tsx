@@ -1,13 +1,6 @@
 import * as React from 'react'
+import { ModalConsumer } from './Modal'
 
-interface Props {
-  onClick?: () => void
-}
-
-export const ModalTrigger: React.FC<Props> = ({ children, onClick }) => (
-  <div className="ModalTrigger" onClick={onClick}>
-    {children}
-  </div>
+export const ModalTrigger: React.FC<{}> = ({ children }) => (
+  <ModalConsumer>{({ showModal }) => <div onClick={showModal}>{children}</div>}</ModalConsumer>
 )
-
-ModalTrigger.displayName = 'ModalTrigger'

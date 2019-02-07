@@ -6,7 +6,7 @@ import { Modal, ModalTrigger, ModalEraser, ModalContent } from './'
 
 storiesOf('Modal', module).add('all', () => (
   <div>
-    <Modal modalKey="test-modal-1">
+    <Modal>
       <ModalTrigger>
         <Txt>Click me (Modal1)</Txt>
       </ModalTrigger>
@@ -19,7 +19,7 @@ storiesOf('Modal', module).add('all', () => (
       </ModalContent>
     </Modal>
 
-    <Modal modalKey="test-modal-2">
+    <Modal>
       <ModalTrigger>
         <Txt>Click me (Modal2)</Txt>
       </ModalTrigger>

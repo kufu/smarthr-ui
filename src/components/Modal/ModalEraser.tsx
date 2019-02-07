@@ -1,7 +1,6 @@
 import * as React from 'react'
+import { ModalConsumer } from './Modal'
 
 export const ModalEraser: React.FC<{}> = ({ children }) => (
-  <div className="ModalEraser">{children}</div>
+  <ModalConsumer>{({ hideModal }) => <div onClick={hideModal}>{children}</div>}</ModalConsumer>
 )
-
-ModalEraser.displayName = 'ModalEraser'
