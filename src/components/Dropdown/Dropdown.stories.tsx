@@ -8,7 +8,7 @@ import { DropdownContent } from './DropdownContent'
 
 storiesOf('Dropdown', module).add('all', () => (
   <Wrapper>
-    <Dropdown dropdownKey="test-1">
+    <Dropdown>
       <DropdownTrigger>
         <Txt>Click me (left position)</Txt>
       </DropdownTrigger>
@@ -17,7 +17,7 @@ storiesOf('Dropdown', module).add('all', () => (
       </DropdownContent>
     </Dropdown>
 
-    <Dropdown dropdownKey="test-2">
+    <Dropdown>
       <DropdownTrigger>
         <Txt>Click me (right position)</Txt>
       </DropdownTrigger>
