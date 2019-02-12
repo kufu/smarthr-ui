@@ -1,40 +1,17 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { ModalEraser } from './ModalEraser'
+import { ModalConsumer } from './Modal'
 
-interface Props {
-  active?: boolean
-  onClick?: () => void
-}
-
-export class ModalContent extends React.PureComponent<Props> {
-  public static displayName = 'ModalContent'
-  private erasers: Element[] = []
-
-  public componentDidMount() {
-    this.erasers = Array.from(document.getElementsByClassName(ModalEraser.displayName || ''))
-    this.erasers.forEach(eraser => {
-      eraser.addEventListener('click', this.props.onClick as any)
-    })
-  }
-
-  public componentWillUnmount() {
-    this.erasers.forEach(eraser => {
-      eraser.removeEventListener('click', this.props.onClick as any)
-    })
-  }
-
-  public render() {
-    const { active, children } = this.props
-
-    return (
-      <Wrapper className={`ModalContent ${active ? 'active' : ''}`}>
-        <div>{children}</div>
+export const ModalContent: React.FC<{}> = props => (
+  <ModalConsumer>
+    {({ active }) => (
+      <Wrapper className={active ? 'active' : ''}>
+        <div>{props.children}</div>
       </Wrapper>
-    )
-  }
-}
+    )}
+  </ModalConsumer>
+)
 
 const Wrapper = styled.div`
   visibility: hidden;

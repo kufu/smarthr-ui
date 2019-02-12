@@ -2,14 +2,11 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { LightBalloon } from '../Balloon'
+import { DropdownConsumer } from './Dropdown'
 
 export interface Rect {
   right: number
   left: number
-}
-interface Props extends React.Props<{}> {
-  clientRect?: Rect
-  active?: boolean
 }
 
 const getPositionClassName = (clientRect?: Rect): 'center' | 'left' | 'right' => {
@@ -19,17 +16,19 @@ const getPositionClassName = (clientRect?: Rect): 'center' | 'left' | 'right' =>
   return 'center'
 }
 
-export const DropdownContent: React.FC<Props> = ({ active, clientRect, children }) => (
-  <Wrapper
-    className={`DropdownContent ${active ? 'active' : ''} ${getPositionClassName(clientRect)}`}
-  >
-    <LightBalloon vertical="top" horizontal={getPositionClassName(clientRect)}>
-      {children}
-    </LightBalloon>
-  </Wrapper>
+export const DropdownContent: React.FC<{}> = ({ children }) => (
+  <DropdownConsumer>
+    {({ active, clientRect }) => (
+      <Wrapper
+        className={`DropdownContent ${active ? 'active' : ''} ${getPositionClassName(clientRect)}`}
+      >
+        <LightBalloon vertical="top" horizontal={getPositionClassName(clientRect)}>
+          {children}
+        </LightBalloon>
+      </Wrapper>
+    )}
+  </DropdownConsumer>
 )
-
-DropdownContent.displayName = 'DropdownContent'
 
 const Wrapper = styled.div`
   visibility: hidden;

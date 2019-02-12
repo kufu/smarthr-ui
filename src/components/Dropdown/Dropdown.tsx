@@ -1,90 +1,51 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { isEqual } from '../../libs/lodash'
-import { getParentElementByClassName } from '../../libs/dom'
-import { DropdownTrigger } from './DropdownTrigger'
-import { DropdownContent, Rect } from './DropdownContent'
-
-interface ToggleEvent {
-  currentTarget: {
-    getBoundingClientRect(): Rect
-  }
-  preventDefault(): void
-}
+import { Rect } from './DropdownContent'
 
 interface Props {
-  dropdownKey: string
   children?: React.ReactNode
 }
 
 interface State {
   active: boolean
   clientRect?: Rect
-  children?: Array<React.ComponentType<{}>>
 }
+
+interface DropdownContext {
+  active: boolean
+  clientRect?: Rect
+  toggleDropdown: (clientRect: Rect) => void
+}
+
+const { Consumer, Provider } = React.createContext<DropdownContext>({
+  active: false,
+  toggleDropdown: (_: Rect) => null,
+})
+
+export const DropdownConsumer = Consumer
 
 export class Dropdown extends React.Component<Props, State> {
   public state: State = { active: false }
 
-  public componentDidMount() {
-    this.setState({ children: this.getChildren() })
-    document.body.addEventListener('click', this.hide as any)
-  }
-
-  public componentWillUnmount() {
-    document.body.removeEventListener('click', this.hide as any)
-  }
-
-  public componentDidUpdate(prevProps: Props, prevState: State) {
-    if (prevState.active !== this.state.active) {
-      this.setState({ children: this.getChildren() })
-    }
-
-    if (!isEqual(prevProps.children, this.props.children)) {
-      this.setState({ children: this.getChildren() })
-    }
-  }
-
   public render() {
     return (
-      <Wrapper className={`Dropdown ${this.state.active ? 'active' : ''}`}>
-        {this.state.children}
-      </Wrapper>
+      <Provider
+        value={{
+          active: this.state.active,
+          toggleDropdown: this.handleToggle,
+          clientRect: this.state.clientRect,
+        }}
+      >
+        <Wrapper className={this.state.active ? 'active' : ''}>{this.props.children}</Wrapper>
+      </Provider>
     )
   }
 
-  private hide = (e: { target: HTMLElement }) => {
-    if (getParentElementByClassName(e.target, this.props.dropdownKey, true)) return
-    this.setState({ active: false })
-  }
-
-  private getChildren = () => {
-    const { active, clientRect } = this.state
-
-    return React.Children.map(this.props.children, (child: any) => {
-      if (child.type.displayName === DropdownTrigger.displayName) {
-        return React.cloneElement(child, {
-          dropdownKey: this.props.dropdownKey,
-          active,
-          onClick: this.handleToggle,
-        })
-      }
-
-      if (child.type.displayName === DropdownContent.displayName) {
-        return React.cloneElement(child, { active, clientRect })
-      }
-
-      return child
-    })
-  }
-
-  private handleToggle = (e: ToggleEvent) => {
-    e.preventDefault()
-
+  private handleToggle = (clientRect: Rect) => {
     this.setState({
       active: !this.state.active,
-      clientRect: e.currentTarget.getBoundingClientRect(),
+      clientRect,
     })
   }
 }
