@@ -66,6 +66,7 @@ const Balloon = styled.div`
       display: inline-block;
       border-radius: ${theme.frame.border.radius};
       box-shadow: 0 2px 8px 0 rgba(51, 51, 51, 0.35);
+      background-color: ${theme.palette.White};
       white-space: nowrap;
     `
   }}
