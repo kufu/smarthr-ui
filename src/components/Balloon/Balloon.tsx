@@ -6,9 +6,10 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 type BalloonTheme = 'light' | 'dark'
 
 interface Props {
-  className?: string
   horizontal: 'right' | 'center' | 'left'
   vertical: 'top' | 'middle' | 'bottom'
+  className?: string
+  children?: React.ReactNode
 }
 
 const balloonFactory: (theme: BalloonTheme) => React.FC<Props & InjectedProps> = theme => ({
@@ -36,8 +37,8 @@ const Base = styled.div`
     return css`
       position: relative;
       display: inline-block;
-      border-radius: ${frame.border.radius};
-      box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px 0 rgba(51, 51, 51, 0.35);
       white-space: nowrap;
 
       &::before,
@@ -49,7 +50,6 @@ const Base = styled.div`
       }
 
       &.light {
-        border: ${frame.border.default};
         background-color: ${palette.White};
         color: ${palette.Black};
       }
