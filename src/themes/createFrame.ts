@@ -23,14 +23,14 @@ export interface CreatedFrameTheme {
 }
 
 export const createFrame = (userFrame: FrameProperty = {}, userPalette: PaletteProperty = {}) => {
-  const line = userPalette.line || defaultPalette.line
+  const color = userPalette.Mono_P20 || defaultPalette.Mono_P20
   const created: CreatedFrameTheme = merge(
     {
       border: {
         lineWidth,
         lineStyle,
-        default: `${lineWidth} ${lineStyle} ${line}`,
-        radius: '3px',
+        default: `${lineWidth} ${lineStyle} ${color}`,
+        radius: '8px',
       },
     },
     userFrame,

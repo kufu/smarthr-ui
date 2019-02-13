@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import { ThemeContext } from '../themes/ThemeProvider'
 import { CreatedTheme } from '../themes/createTheme'
+import { ThemeContext } from '../themes/ThemeProvider'
 
 const Consumer = ThemeContext.Consumer
 

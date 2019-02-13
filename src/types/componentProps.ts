@@ -1,4 +1,4 @@
-import { Props, CSSProperties } from 'react'
+import { CSSProperties, Props } from 'react'
 
 export type SizePattern = 'xs' | 's' | 'm' | 'l' | 'xl'
 

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { SizePattern, ComponentProps, StyledProperties } from '../../types/componentProps'
-import { withTheme, InjectedProps } from '../../hocs/withTheme'
+import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { ComponentProps, SizePattern, StyledProperties } from '../../types/componentProps'
 
 type MergedComponentProps = ComponentProps<{}> & InjectedProps
 type MergedStyledProps = StyledProperties & InjectedProps
@@ -29,7 +29,7 @@ const Wrapper: any = styled.div`
 
     return css`
       padding: ${pcPadding};
-      background: ${theme.palette.primary};
+      background: ${theme.palette.SmartHRGreen};
 
       @media screen and (max-width: ${theme.size.mediaQuery.tablet}px) {
         padding: ${tabletPadding};

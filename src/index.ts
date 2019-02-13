@@ -2,7 +2,7 @@
 export { AppBar } from './components/AppBar/'
 export { LightBalloon, DarkBalloon } from './components/Balloon/'
 export { Dropdown, DropdownTrigger, DropdownContent } from './components/Dropdown/'
-export { Modal, ModalTrigger, ModalEraser, ModalContent } from './components/Modal/'
+export { Modal, ModalWrapper, ModalTrigger, ModalEraser, ModalContent } from './components/Modal/'
 
 // themes
 export { createTheme } from './themes/createTheme'

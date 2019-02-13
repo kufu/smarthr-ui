@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { withTheme, InjectedProps } from '../../hocs/withTheme'
+import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 type BalloonTheme = 'light' | 'dark'
 
@@ -50,41 +50,41 @@ const Base = styled.div`
 
       &.light {
         border: ${frame.border.default};
-        background-color: ${palette.base};
-        color: ${palette.default};
+        background-color: ${palette.White};
+        color: ${palette.Black};
       }
       &.dark {
-        background-color: ${palette.default};
-        color: ${palette.base};
+        background-color: ${palette.Black};
+        color: ${palette.White};
       }
 
       &.light.top {
         &::before {
-          border-color: transparent transparent ${palette.line};
+          border-color: transparent transparent ${palette.Mono_P20};
         }
         &::after {
-          border-color: transparent transparent ${palette.base};
+          border-color: transparent transparent ${palette.White};
         }
       }
       &.light.bottom {
         &::before {
-          border-color: ${palette.line} transparent transparent;
+          border-color: ${palette.Mono_P20} transparent transparent;
         }
         &::after {
-          border-color: ${palette.base} transparent transparent;
+          border-color: ${palette.White} transparent transparent;
         }
       }
 
       &.dark.top {
         &::before,
         &::after {
-          border-color: transparent transparent ${palette.default};
+          border-color: transparent transparent ${palette.Black};
         }
       }
       &.dark.bottom {
         &::before,
         &::after {
-          border-color: ${palette.default} transparent transparent;
+          border-color: ${palette.Black} transparent transparent;
         }
       }
 
@@ -152,16 +152,16 @@ const Base = styled.div`
           }
           &.light {
             &::before {
-              border-color: transparent ${palette.line} transparent transparent;
+              border-color: transparent ${palette.Mono_P20} transparent transparent;
             }
             &::after {
-              border-color: transparent ${palette.base} transparent transparent;
+              border-color: transparent ${palette.White} transparent transparent;
             }
           }
           &.dark {
             &::before,
             &::after {
-              border-color: transparent ${palette.default} transparent transparent;
+              border-color: transparent ${palette.Black} transparent transparent;
             }
           }
         }
@@ -178,16 +178,16 @@ const Base = styled.div`
           }
           &.light {
             &::before {
-              border-color: transparent transparent transparent ${palette.line};
+              border-color: transparent transparent transparent ${palette.Mono_P20};
             }
             &::after {
-              border-color: transparent transparent transparent ${palette.base};
+              border-color: transparent transparent transparent ${palette.White};
             }
           }
           &.dark {
             &::before,
             &::after {
-              border-color: transparent transparent transparent ${palette.default};
+              border-color: transparent transparent transparent ${palette.Black};
             }
           }
         }
