@@ -4,13 +4,9 @@ import { DropdownConsumer } from './Dropdown'
 export const DropdownTrigger: React.FC<{}> = ({ children }) => (
   <DropdownConsumer>
     {({ toggleDropdown, active }) => (
-      <button
-        className="DropdownTrigger"
+      <div
         /* tslint:disable:jsx-no-lambda */
-        onClick={e => {
-          e.preventDefault()
-          toggleDropdown(e.currentTarget.getBoundingClientRect())
-        }}
+        onClick={e => toggleDropdown(e.currentTarget.getBoundingClientRect())}
       >
         {React.Children.map(children, (child: any) => {
           const props = child.props ? child.props : {}
@@ -29,7 +25,7 @@ export const DropdownTrigger: React.FC<{}> = ({ children }) => (
               return null
           }
         })}
-      </button>
+      </div>
     )}
   </DropdownConsumer>
 )

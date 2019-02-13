@@ -1,10 +1,10 @@
+import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { storiesOf } from '@storybook/react'
 
 import { Dropdown } from './Dropdown'
-import { DropdownTrigger } from './DropdownTrigger'
 import { DropdownContent } from './DropdownContent'
+import { DropdownTrigger } from './DropdownTrigger'
 
 storiesOf('Dropdown', module).add('all', () => (
   <Wrapper>

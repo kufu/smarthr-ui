@@ -1,8 +1,8 @@
+import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { storiesOf } from '@storybook/react'
 
-import { LightBalloon, DarkBalloon } from './Balloon'
+import { DarkBalloon, LightBalloon } from './Balloon'
 
 storiesOf('Balloon', module).add('all', () => (
   <List>

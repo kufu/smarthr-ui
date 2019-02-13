@@ -25,7 +25,7 @@ const { Consumer, Provider } = React.createContext<DropdownContext>({
 
 export const DropdownConsumer = Consumer
 
-export class Dropdown extends React.Component<Props, State> {
+export class Dropdown extends React.PureComponent<Props, State> {
   public state: State = { active: false }
 
   public render() {

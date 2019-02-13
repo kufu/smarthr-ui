@@ -1,48 +1,92 @@
+import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { storiesOf } from '@storybook/react'
 
-import { Modal, ModalTrigger, ModalEraser, ModalContent } from './'
+import { Modal, ModalContent, ModalEraser, ModalTrigger, ModalWrapper } from './'
+
+// prepare wrapper class
+class ModalController extends React.PureComponent {
+  public state = {
+    isOpen: false,
+  }
+
+  public render() {
+    return (
+      <div>
+        <button onClick={this.onClickOpen}>Controllable Modal</button>
+        <Modal isOpen={this.state.isOpen}>
+          <Inner>
+            <button onClick={this.onClickClose}>Close Modal</button>
+          </Inner>
+        </Modal>
+      </div>
+    )
+  }
+
+  private onClickOpen = () => {
+    this.setState({ isOpen: true })
+  }
+
+  private onClickClose = () => {
+    this.setState({ isOpen: false })
+  }
+}
 
 storiesOf('Modal', module).add('all', () => (
   <div>
-    <Modal>
-      <ModalTrigger>
-        <Txt>Click me (Modal1)</Txt>
-      </ModalTrigger>
-      <ModalContent>
-        <Inner>
-          Modal1 Rendered!
-          <br />
-          <ModalEraser>閉じる</ModalEraser>
-        </Inner>
-      </ModalContent>
-    </Modal>
+    <ModalController />
 
-    <Modal>
+    <ModalWrapper>
       <ModalTrigger>
-        <Txt>Click me (Modal2)</Txt>
+        <button>Uncontrollable Modal</button>
       </ModalTrigger>
       <ModalContent>
         <Inner>
-          Modal2 Rendered!
-          <br />
-          <ModalEraser>閉じる</ModalEraser>
+          <Txt>Rendered</Txt>
+          <ModalEraser>
+            <button>閉じる</button>
+          </ModalEraser>
         </Inner>
       </ModalContent>
-    </Modal>
+    </ModalWrapper>
+
+    <ModalWrapper>
+      <ModalTrigger>
+        <button>
+          モーダルの位置を変更することができます。
+          <br />
+          top: 50px, left: 200px
+        </button>
+      </ModalTrigger>
+      <ModalContent top={50} left={200}>
+        <Inner>
+          <Txt>Rendered</Txt>
+          <ModalEraser>
+            <button>閉じる</button>
+          </ModalEraser>
+        </Inner>
+      </ModalContent>
+    </ModalWrapper>
+
+    <ModalWrapper>
+      <ModalTrigger>
+        <button>right: 50px, bottom: 100px</button>
+      </ModalTrigger>
+      <ModalContent right={50} bottom={100}>
+        <Inner>
+          <Txt>Rendered</Txt>
+          <ModalEraser>
+            <button>閉じる</button>
+          </ModalEraser>
+        </Inner>
+      </ModalContent>
+    </ModalWrapper>
   </div>
 ))
 
+const Inner = styled.div`
+  padding: 2.4rem;
+`
 const Txt = styled.p`
   margin: 0;
-  padding: 5px 10px;
-  font-size: 16px;
-`
-const Inner = styled.p`
-  margin: 0;
-  padding: 20px;
-  border-radius: 4px;
-  background-color: #fff;
-  font-size: 14px;
 `

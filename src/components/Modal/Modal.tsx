@@ -1,44 +1,14 @@
+// controllable modal
 import * as React from 'react'
 
+import { Box } from './Box'
+
 interface Props {
-  children?: React.ReactNode
+  isOpen: boolean
+  top?: number
+  right?: number
+  bottom?: number
+  left?: number
 }
 
-interface State {
-  active: boolean
-  children?: Array<React.ComponentType<{}>>
-}
-
-interface ModalContext {
-  showModal: () => void
-  hideModal: () => void
-  active: boolean
-}
-
-const { Provider, Consumer } = React.createContext<ModalContext>({
-  showModal: () => null,
-  hideModal: () => null,
-  active: false,
-})
-
-export const ModalConsumer = Consumer
-
-export class Modal extends React.Component<Props, State> {
-  public state: State = { active: false }
-
-  public render() {
-    return (
-      <Provider value={{ showModal: this.show, hideModal: this.hide, active: this.state.active }}>
-        {this.props.children}
-      </Provider>
-    )
-  }
-
-  private hide = () => {
-    this.setState({ active: false })
-  }
-
-  private show = () => {
-    this.setState({ active: true })
-  }
-}
+export const Modal: React.FC<Props> = ({ isOpen, ...props }) => <Box active={isOpen} {...props} />

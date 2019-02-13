@@ -8,7 +8,6 @@
   ],
   "rules": {
     "prettier": true,
-    "ordered-imports": false,
     "object-literal-sort-keys": false,
     "interface-name": false,
     "curly": [true, "ignore-same-line"],

@@ -1,14 +1,15 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { withTheme, InjectedProps } from '../../hocs/withTheme'
+import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 type BalloonTheme = 'light' | 'dark'
 
 interface Props {
-  className?: string
   horizontal: 'right' | 'center' | 'left'
   vertical: 'top' | 'middle' | 'bottom'
+  className?: string
+  children?: React.ReactNode
 }
 
 const balloonFactory: (theme: BalloonTheme) => React.FC<Props & InjectedProps> = theme => ({
@@ -36,8 +37,8 @@ const Base = styled.div`
     return css`
       position: relative;
       display: inline-block;
-      border-radius: ${frame.border.radius};
-      box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px 0 rgba(51, 51, 51, 0.35);
       white-space: nowrap;
 
       &::before,
@@ -49,42 +50,41 @@ const Base = styled.div`
       }
 
       &.light {
-        border: ${frame.border.default};
-        background-color: ${palette.base};
-        color: ${palette.default};
+        background-color: ${palette.White};
+        color: ${palette.Black};
       }
       &.dark {
-        background-color: ${palette.default};
-        color: ${palette.base};
+        background-color: ${palette.Black};
+        color: ${palette.White};
       }
 
       &.light.top {
         &::before {
-          border-color: transparent transparent ${palette.line};
+          border-color: transparent transparent ${palette.Mono_P20};
         }
         &::after {
-          border-color: transparent transparent ${palette.base};
+          border-color: transparent transparent ${palette.White};
         }
       }
       &.light.bottom {
         &::before {
-          border-color: ${palette.line} transparent transparent;
+          border-color: ${palette.Mono_P20} transparent transparent;
         }
         &::after {
-          border-color: ${palette.base} transparent transparent;
+          border-color: ${palette.White} transparent transparent;
         }
       }
 
       &.dark.top {
         &::before,
         &::after {
-          border-color: transparent transparent ${palette.default};
+          border-color: transparent transparent ${palette.Black};
         }
       }
       &.dark.bottom {
         &::before,
         &::after {
-          border-color: ${palette.default} transparent transparent;
+          border-color: ${palette.Black} transparent transparent;
         }
       }
 
@@ -152,16 +152,16 @@ const Base = styled.div`
           }
           &.light {
             &::before {
-              border-color: transparent ${palette.line} transparent transparent;
+              border-color: transparent ${palette.Mono_P20} transparent transparent;
             }
             &::after {
-              border-color: transparent ${palette.base} transparent transparent;
+              border-color: transparent ${palette.White} transparent transparent;
             }
           }
           &.dark {
             &::before,
             &::after {
-              border-color: transparent ${palette.default} transparent transparent;
+              border-color: transparent ${palette.Black} transparent transparent;
             }
           }
         }
@@ -178,16 +178,16 @@ const Base = styled.div`
           }
           &.light {
             &::before {
-              border-color: transparent transparent transparent ${palette.line};
+              border-color: transparent transparent transparent ${palette.Mono_P20};
             }
             &::after {
-              border-color: transparent transparent transparent ${palette.base};
+              border-color: transparent transparent transparent ${palette.White};
             }
           }
           &.dark {
             &::before,
             &::after {
-              border-color: transparent transparent transparent ${palette.default};
+              border-color: transparent transparent transparent ${palette.Black};
             }
           }
         }

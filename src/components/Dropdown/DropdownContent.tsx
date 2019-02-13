@@ -1,12 +1,16 @@
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-import { LightBalloon } from '../Balloon'
+import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { DropdownConsumer } from './Dropdown'
 
 export interface Rect {
   right: number
   left: number
+}
+
+interface Props {
+  children?: React.ReactNode
 }
 
 const getPositionClassName = (clientRect?: Rect): 'center' | 'left' | 'right' => {
@@ -16,19 +20,17 @@ const getPositionClassName = (clientRect?: Rect): 'center' | 'left' | 'right' =>
   return 'center'
 }
 
-export const DropdownContent: React.FC<{}> = ({ children }) => (
+const DropdownContentComponent: React.FC<Props & InjectedProps> = ({ children, theme }) => (
   <DropdownConsumer>
     {({ active, clientRect }) => (
-      <Wrapper
-        className={`DropdownContent ${active ? 'active' : ''} ${getPositionClassName(clientRect)}`}
-      >
-        <LightBalloon vertical="top" horizontal={getPositionClassName(clientRect)}>
-          {children}
-        </LightBalloon>
+      <Wrapper className={`${active ? 'active' : ''} ${getPositionClassName(clientRect)}`}>
+        <Balloon theme={theme}>{children}</Balloon>
       </Wrapper>
     )}
   </DropdownConsumer>
 )
+
+export const DropdownContent = withTheme(DropdownContentComponent)
 
 const Wrapper = styled.div`
   visibility: hidden;
@@ -56,4 +58,15 @@ const Wrapper = styled.div`
     opacity: 1;
     transform: scale(1);
   }
+`
+const Balloon = styled.div`
+  ${({ theme }: InjectedProps) => {
+    return css`
+      position: relative;
+      display: inline-block;
+      border-radius: ${theme.frame.border.radius};
+      box-shadow: 0 2px 8px 0 rgba(51, 51, 51, 0.35);
+      white-space: nowrap;
+    `
+  }}
 `
