@@ -75,6 +75,7 @@ const Inner = styled.div`
       left: ${positionLeft};
       border-radius: ${theme.frame.border.radius};
       background-color: ${theme.palette.White};
+      box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       transform: translate(${translateX}, ${translateY});
     `
   }}

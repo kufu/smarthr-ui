@@ -9,7 +9,11 @@ export interface FrameProperty {
     lineWidth?: string
     lineStyle?: string
     default?: string
-    radius?: string
+    radius?: {
+      s?: string
+      m?: string
+      l?: string
+    }
   }
 }
 
@@ -18,7 +22,11 @@ export interface CreatedFrameTheme {
     lineWidth: string
     lineStyle: string
     default: string
-    radius: string
+    radius: {
+      s: string
+      m: string
+      l: string
+    }
   }
 }
 
@@ -30,7 +38,11 @@ export const createFrame = (userFrame: FrameProperty = {}, userPalette: PaletteP
         lineWidth,
         lineStyle,
         default: `${lineWidth} ${lineStyle} ${color}`,
-        radius: '8px',
+        radius: {
+          s: '3px',
+          m: '6px',
+          l: '8px',
+        },
       },
     },
     userFrame,
