@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "author": "SmartHR-UI Team",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "SmartHR ui components built with React.",
   "keywords": [
     "react",
