@@ -53,6 +53,7 @@ const Item = styled.span`
       line-height: 32px;
       text-align: center;
       cursor: pointer;
+      outline: 0;
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
 
       &.active,
