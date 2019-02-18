@@ -8,7 +8,7 @@ import { Pagination } from './Pagination'
 storiesOf('Pagination', module).add('all', () => (
   <List>
     <li>
-      <Txt>通常</Txt>
+      <Txt>default</Txt>
       <Pagination current={7} total={13} onClick={action('click!!')} />
     </li>
     <li>

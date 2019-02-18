@@ -53,7 +53,7 @@ storiesOf('Modal', module).add('all', () => (
     <ModalWrapper>
       <ModalTrigger>
         <button>
-          モーダルの位置を変更することができます。
+          Change the position of the modal.
           <br />
           top: 50px, left: 200px
         </button>
