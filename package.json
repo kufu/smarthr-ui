@@ -31,9 +31,10 @@
     "lint": "run-p lint:*",
     "format": "tslint --fix 'src/**/*.ts{,x}'",
     "clean": "rimraf ./lib",
-    "prepublish": "yarn release",
+    "prepack": "yarn release",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "test": "echo 'TODO'"
   },
   "husky": {
     "hooks": {
