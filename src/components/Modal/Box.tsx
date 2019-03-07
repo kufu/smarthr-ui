@@ -21,7 +21,7 @@ interface MergedStyledProps extends InjectedProps {
 
 const BoxComponent: React.FC<Props & InjectedProps> = ({ active, children, ...props }) => (
   <Wrapper className={active ? 'active' : ''} {...props}>
-    <Inner {...props}>{children}</Inner>
+    {active ? <Inner {...props}>{children}</Inner> : null}
   </Wrapper>
 )
 
