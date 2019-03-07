@@ -39,7 +39,7 @@ const Wrapper = styled.div`
       width: 100%;
       height: 100%;
       background-color: ${theme.palette.Overlay};
-      transition: all 0.3s ease-in-out;
+      transition: opacity 0.3s ease-in-out;
 
       &.active {
         visibility: visible;
