@@ -15,7 +15,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", "src/**/*.test.tsx", "src/**/*.stories.tsx"],
   "include": ["src/**/*"]
