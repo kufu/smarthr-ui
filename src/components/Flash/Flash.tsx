@@ -17,7 +17,7 @@ interface State {
 
 type MergedProps = Props & InjectedProps
 
-const REMOVE_DELAY = 10000
+const REMOVE_DELAY = 8000
 
 class FlashComponent extends React.PureComponent<MergedProps, State> {
   public static getDerivedStateFromProps(props: Props) {
