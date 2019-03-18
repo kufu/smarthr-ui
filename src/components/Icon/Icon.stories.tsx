@@ -7,9 +7,9 @@ import { Icon, Props } from './Icon'
 const Wrapper = ({ children }: any) => <Container>{children}</Container>
 const black = '#222'
 const white = '#eee'
-const icons: Array<Props['name']> = ['check']
+const icons: Array<Props['name']> = ['check', 'check-circle', 'cross', 'exclamation-triangle']
 
-const getIconList = (fill: string, bg: string) =>
+const getIconList = (bg: string, fill?: string) =>
   icons.map(name => (
     <IconWrap key={`${fill}-${name}`} bg={bg}>
       <Icon name={name} fill={fill} />
@@ -18,8 +18,9 @@ const getIconList = (fill: string, bg: string) =>
   ))
 
 storiesOf('Icon', module)
-  .add('white', () => <Wrapper>{getIconList(white, black)}</Wrapper>)
-  .add('black', () => <Wrapper>{getIconList(black, white)}</Wrapper>)
+  .add('white', () => <Wrapper>{getIconList(black, white)}</Wrapper>)
+  .add('black', () => <Wrapper>{getIconList(white, black)}</Wrapper>)
+  .add('default', () => <Wrapper>{getIconList(white)}</Wrapper>)
 
 const Container = styled.div`
   display: flex;
