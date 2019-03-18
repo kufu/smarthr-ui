@@ -65,9 +65,7 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
 
     return (
       <Wrapper className={type} theme={theme}>
-        <IconWrap theme={theme}>
-          <Icon name={iconName} width={14} height={14} fill={theme.palette.White} />
-        </IconWrap>
+        <Icon name={iconName} width={24} height={24} fill={theme.palette.White} />
         <Txt theme={theme}>{text}</Txt>
         <CloseButton onClick={onClose}>
           <Icon name="cross" width={12} height={12} fill={theme.palette.Mono_P20} />
@@ -131,15 +129,6 @@ const Wrapper = styled.div`
       }
     `
   }}
-`
-const IconWrap = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-color: ${({ theme }: InjectedProps) => theme.palette.White};
 `
 const Txt = styled.p`
   ${({ theme }: InjectedProps) => {
