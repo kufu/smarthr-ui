@@ -27,6 +27,10 @@ const BoxComponent: React.FC<Props & InjectedProps> = ({ active, children, ...pr
 
 export const Box = withTheme(BoxComponent)
 
+function exist(value: any) {
+  return value !== undefined && value !== null
+}
+
 const Wrapper = styled.div`
   ${({ theme }: InjectedProps) => {
     return css`
@@ -50,10 +54,10 @@ const Wrapper = styled.div`
 `
 const Inner = styled.div`
   ${({ theme, top, right, bottom, left }: MergedStyledProps) => {
-    const positionRight: number | string = right ? `${right}px` : 'auto'
-    const positionBottom: number | string = bottom ? `${bottom}px` : 'auto'
-    let positionTop: number | string = top ? `${top}px` : 'auto'
-    let positionLeft: number | string = left ? `${left}px` : 'auto'
+    const positionRight: number | string = exist(right) ? `${right}px` : 'auto'
+    const positionBottom: number | string = exist(bottom) ? `${bottom}px` : 'auto'
+    let positionTop: number | string = exist(top) ? `${top}px` : 'auto'
+    let positionLeft: number | string = exist(left) ? `${left}px` : 'auto'
     let translateX: string = '0'
     let translateY: string = '0'
 
