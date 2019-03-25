@@ -81,6 +81,20 @@ storiesOf('Modal', module).add('all', () => (
         </Inner>
       </ModalContent>
     </ModalWrapper>
+
+    <ModalWrapper>
+      <ModalTrigger>
+        <button>right: 0px, bottom: 0px</button>
+      </ModalTrigger>
+      <ModalContent right={0} bottom={0}>
+        <Inner>
+          <Txt>Rendered</Txt>
+          <ModalEraser>
+            <button>閉じる</button>
+          </ModalEraser>
+        </Inner>
+      </ModalContent>
+    </ModalWrapper>
   </div>
 ))
 
