@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "./lib",
     "lib": ["es2018", "dom"],
-    "target": "es2018",
+    "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
     "declaration": true,
