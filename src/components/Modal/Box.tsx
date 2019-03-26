@@ -9,6 +9,7 @@ interface Props {
   right?: number
   bottom?: number
   left?: number
+  hideModal?: () => void
   children?: React.ReactNode
 }
 
@@ -19,8 +20,14 @@ interface MergedStyledProps extends InjectedProps {
   left?: number
 }
 
-const BoxComponent: React.FC<Props & InjectedProps> = ({ active, children, ...props }) => (
-  <Wrapper className={active ? 'active' : ''} {...props}>
+const BoxComponent: React.FC<Props & InjectedProps> = ({
+  active,
+  children,
+  hideModal,
+  ...props
+}) => (
+  <Wrapper className={active ? 'active' : ''}>
+    <Background {...props} onClick={hideModal} />
     <Inner {...props}>{children}</Inner>
   </Wrapper>
 )
@@ -28,25 +35,19 @@ const BoxComponent: React.FC<Props & InjectedProps> = ({ active, children, ...pr
 export const Box = withTheme(BoxComponent)
 
 const Wrapper = styled.div`
-  ${({ theme }: InjectedProps) => {
-    return css`
-      visibility: hidden;
-      opacity: 0;
-      z-index: 10000;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: ${theme.palette.Overlay};
-      transition: all 0.3s ease-in-out;
-
-      &.active {
-        visibility: visible;
-        opacity: 1;
-      }
-    `
-  }}
+  visibility: hidden;
+  opacity: 0;
+  z-index: 10000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s ease-in-out;
+  &.active {
+    visibility: visible;
+    opacity: 1;
+  }
 `
 const Inner = styled.div`
   ${({ theme, top, right, bottom, left }: MergedStyledProps) => {
@@ -69,6 +70,7 @@ const Inner = styled.div`
 
     return css`
       position: absolute;
+      z-index: 10100;
       top: ${positionTop};
       right: ${positionRight};
       bottom: ${positionBottom};
@@ -77,6 +79,18 @@ const Inner = styled.div`
       background-color: ${theme.palette.White};
       box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       transform: translate(${translateX}, ${translateY});
+    `
+  }}
+`
+const Background = styled.div`
+  ${({ theme }: InjectedProps) => {
+    return css`
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: ${theme.palette.Overlay};
     `
   }}
 `
