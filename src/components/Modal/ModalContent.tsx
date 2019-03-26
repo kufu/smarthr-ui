@@ -12,8 +12,8 @@ interface Props {
 
 export const ModalContent: React.FC<Props> = ({ children, ...props }) => (
   <ModalConsumer>
-    {({ active }) => (
-      <Box active={active} {...props}>
+    {({ active, hideModal }) => (
+      <Box active={active} hideModal={hideModal} {...props}>
         {children}
       </Box>
     )}
