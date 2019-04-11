@@ -25,9 +25,10 @@
   "homepage": "https://github.com/kufu/smarthr-ui#readme",
   "scripts": {
     "release": "np",
-    "prepublishOnly": "run-s clean build",
+    "prepublishOnly": "run-s clean lint build",
     "build": "tsc",
-    "lint:ts": "tslint 'src/**/*.ts{,x}'",
+    "lint:tsc": "tsc --noEmit",
+    "lint:tslint": "tslint 'src/**/*.ts{,x}'",
     "lint:style": "stylelint 'src/**/*.ts{,x}'",
     "lint": "run-p lint:*",
     "format": "tslint --fix 'src/**/*.ts{,x}'",
