@@ -33,7 +33,6 @@
     "lint": "run-p lint:*",
     "format": "tslint --fix 'src/**/*.ts{,x}'",
     "clean": "rimraf ./lib",
-    "prepack": "yarn release",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "test": "jest"
