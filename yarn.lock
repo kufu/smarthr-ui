@@ -1800,7 +1800,7 @@
     "@types/react" "*"
     "@types/webpack-env" "*"
 
-"@types/styled-components@^4.1.8":
+"@types/styled-components@4.1.8":
   version "4.1.8"
   resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-4.1.8.tgz#15c8a53bb4b9066e528fafb7558963dee5690ae0"
   integrity sha512-NrG0wmB9Rafy5i00GFxUM/uEge148bX2QPr+Q/MI2fXrew6WOp1hN2A3YEG0AeT45z47CMdJ3BEffPsdQCWayA==
@@ -8518,7 +8518,7 @@ normalize-url@^3.1.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
-np@^4.0.2:
+np@4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/np/-/np-4.0.2.tgz#be164eab2159d6a45ce5fdaee276af71aaa27873"
   integrity sha512-TN9rLMeGeGKcpFKOMGVd/CvMSEFmifRSBi8iaM8iZwBS5IcdyBQLTNq2KclwN68k9VE5zgp5auK7NbFzXyYElw==

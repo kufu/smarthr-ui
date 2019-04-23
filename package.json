@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "author": "SmartHR-UI Team",
-  "version": "3.5.1",
+  "version": "3.5.6",
   "description": "SmartHR ui components built with React.",
   "keywords": [
     "react",
@@ -33,7 +33,6 @@
     "lint": "run-p lint:*",
     "format": "tslint --fix 'src/**/*.ts{,x}'",
     "clean": "rimraf ./lib",
-    "prepack": "yarn release",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "test": "jest"
@@ -78,7 +77,7 @@
     "husky": "^1.3.1",
     "jest": "^24.1.0",
     "lint-staged": "^8.1.0",
-    "np": "^4.0.2",
+    "np": "4.0.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.15.3",
     "react": "^16.7.0",
@@ -100,7 +99,8 @@
   },
   "sideEffects": false,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "engines": {
     "node": ">=8.0.0"
