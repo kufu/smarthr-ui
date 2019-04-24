@@ -11127,10 +11127,10 @@ styled-components@^4.1.3:
     stylis-rule-sheet "^0.0.10"
     supports-color "^5.5.0"
 
-stylelint-config-prettier@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/stylelint-config-prettier/-/stylelint-config-prettier-4.0.0.tgz#8c712977be13bd25191ab8b986b5c07a3342a5dc"
-  integrity sha512-cwh3QbBC2+3zBeMvuxFjT8XsbSdyoyELOY9BZqMuvphUKEQ+srkPWoN60FlvRwLB014TOke4Y12KvTtfKnaHhg==
+stylelint-config-prettier@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/stylelint-config-prettier/-/stylelint-config-prettier-5.1.0.tgz#bbc21d4b0dc01c8d19c181c2cca68fb8dadb515b"
+  integrity sha512-xRWnMTVxVcBJ2lHi0Y1B0Gr8RoXC6SsnXNYb5sjmDYupf2fxx67uxrms8jni1pviR/4QkwlqKuuH6Z4nXWnPWw==
 
 stylelint-config-recommended@^2.1.0:
   version "2.1.0"
