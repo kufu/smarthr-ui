@@ -62,7 +62,7 @@
     "@storybook/addon-actions": "^4.1.7",
     "@storybook/addon-links": "^4.1.7",
     "@storybook/addon-viewport": "^4.1.7",
-    "@storybook/addons": "^4.1.7",
+    "@storybook/addons": "^5.0.11",
     "@storybook/cli": "^4.1.7",
     "@storybook/react": "^4.1.7",
     "@types/jest": "^24.0.6",
