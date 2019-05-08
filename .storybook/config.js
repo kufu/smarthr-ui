@@ -1,17 +1,26 @@
 import React from 'react'
-import { configure, addDecorator } from '@storybook/react'
+import { configure, addDecorator, addParameters } from '@storybook/react'
+import { create } from '@storybook/theming'
 
 import { createTheme } from '../src/themes/createTheme'
 import { ThemeProvider } from '../src/themes/ThemeProvider'
 
-const req = require.context('../src/components', true, /.stories.tsx$/)
+addParameters({
+  options: {
+    theme: create({
+      base: 'light',
+      brandTitle: 'smarthr-ui storybook',
+      brandUrl: 'https://github.com/kufu/smarthr-ui',
+    }),
+    isFullscreen: false,
+    isToolshown: true,
+  },
+})
 
+const req = require.context('../src/components', true, /.stories.tsx$/)
 function loadStories() {
   req.keys().forEach(filename => req(filename))
 }
 
-const theme = createTheme()
-const ThemeDecorator = storyFn => <ThemeProvider theme={theme}>{storyFn()}</ThemeProvider>
-addDecorator(ThemeDecorator)
-
+addDecorator(storyFn => <ThemeProvider theme={createTheme()}>{storyFn()}</ThemeProvider>)
 configure(loadStories, module)
