@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Checkbox should be able to match snapshot 1`] = `
+exports[`Checkbox should be match snapshot 1`] = `
 <Component
   checked={true}
   name="sample"
