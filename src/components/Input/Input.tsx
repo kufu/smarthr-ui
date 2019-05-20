@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 export interface Props {
+  className?: string
   value: string
   name: string
   required?: boolean
@@ -31,6 +32,7 @@ const inputFactory: (
   return class InputComponent extends React.PureComponent<Props & InjectedProps> {
     public render() {
       const {
+        className = '',
         value,
         name,
         required = false,
@@ -41,10 +43,11 @@ const inputFactory: (
         theme,
       } = this.props
       const widthStyle = typeof width === 'number' ? `${width}px` : width
+      const classNames = error ? `error ${className}` : className
 
       return (
         <Base
-          className={error ? 'error' : ''}
+          className={classNames}
           type={inputType}
           value={value}
           name={name}
