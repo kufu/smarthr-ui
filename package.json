@@ -28,10 +28,10 @@
     "prepublishOnly": "run-s clean lint build",
     "build": "tsc",
     "lint:tsc": "tsc --noEmit",
-    "lint:tslint": "tslint 'src/**/*.ts{,x}'",
+    "lint:eslint": "eslint 'src/**/*.ts{,x}'",
     "lint:style": "stylelint 'src/**/*.ts{,x}'",
     "lint": "run-p lint:*",
-    "format": "tslint --fix 'src/**/*.ts{,x}'",
+    "format": "eslint --fix 'src/**/*.ts{,x}'",
     "clean": "rimraf ./lib",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
@@ -44,7 +44,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "tslint --fix",
+      "eslint --fix",
       "git add"
     ]
   },
@@ -99,10 +99,6 @@
     "stylelint-processor-styled-components": "^1.5.2",
     "ts-jest": "^24.0.0",
     "ts-loader": "^6.0.0",
-    "tslint": "^5.12.1",
-    "tslint-config-prettier": "^1.17.0",
-    "tslint-plugin-prettier": "^2.0.1",
-    "tslint-react": "^3.6.0",
     "typescript": "^3.2.4"
   },
   "sideEffects": false,
