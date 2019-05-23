@@ -52,41 +52,22 @@ class WrappedComponent extends React.PureComponent<{}, State> {
   }
 
   private onClose = () => {
-    this.setState({
-      flash: {
-        ...this.state.flash,
-        visible: false,
-      },
-    })
+    this.setState(state => ({ flash: { ...state.flash, visible: false } }))
   }
 
   private onChangeText = (e: { currentTarget: { value: string } }) => {
-    this.setState({
-      form: {
-        ...this.state.form,
-        text: e.currentTarget.value,
-      },
-    })
+    const text = e.currentTarget.value
+    this.setState(state => ({ form: { ...state.form, text } }))
   }
 
   private onChangeType = (e: { currentTarget: { value: string } }) => {
-    this.setState({
-      form: {
-        ...this.state.form,
-        type: e.currentTarget.value as FlashType,
-      },
-    })
+    const type = e.currentTarget.value as FlashType
+    this.setState(state => ({ form: { ...state.form, type } }))
   }
 
   private onSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
-
-    this.setState({
-      flash: {
-        ...this.state.form,
-        visible: true,
-      },
-    })
+    this.setState(state => ({ flash: { ...state.form, visible: true } }))
   }
 }
 

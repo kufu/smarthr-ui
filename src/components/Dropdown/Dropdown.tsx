@@ -56,10 +56,7 @@ export class Dropdown extends React.PureComponent<Props, State> {
   }
 
   private handleToggle = (clientRect: Rect) => {
-    this.setState({
-      active: !this.state.active,
-      clientRect,
-    })
+    this.setState(state => ({ active: !state.active, clientRect }))
   }
 
   private handleClickBody = (e: { target: HTMLElement }) => {
