@@ -66,7 +66,7 @@ const List = styled.ul`
     return css`
       display: flex;
       border-radius: ${frame.border.radius.s};
-      border: 1px solid ${palette.Mono_P10};
+      border: 1px solid ${palette.Mono_P20};
       padding: 0;
 
       & > li {
