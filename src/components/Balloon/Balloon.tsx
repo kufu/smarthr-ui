@@ -32,11 +32,12 @@ export const DarkBalloon = withTheme(balloonFactory('dark'))
 
 const Base = styled.div`
   ${({ theme }: InjectedProps) => {
-    const { palette, frame } = theme
+    const { palette, frame, size } = theme
 
     return css`
       position: relative;
       display: inline-block;
+      font-size: ${size.pxToRem(size.font.tasting)};
       border-radius: 4px;
       box-shadow: 0 2px 8px 0 rgba(51, 51, 51, 0.35);
       white-space: nowrap;

@@ -64,5 +64,4 @@ const List = styled.ul`
 const Txt = styled.p`
   margin: 0;
   padding: 5px 10px;
-  font-size: 16px;
 `
