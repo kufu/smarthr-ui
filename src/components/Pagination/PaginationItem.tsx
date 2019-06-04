@@ -56,10 +56,14 @@ const Item = styled.span`
       outline: 0;
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
 
-      &.active,
-      &.hover {
-        background-color: ${palette.Main};
+      &.active {
         color: ${palette.White};
+        background-color: ${palette.Main};
+      }
+
+      &.hover {
+        color: ${palette.Main};
+        background-color: ${palette.Mono_P05};
       }
     `
   }}
