@@ -13,6 +13,6 @@ describe('Base', () => {
     )
 
     expect(wrapper.find('p')).toHaveLength(1)
-    expect(wrapper.find('p')).toHaveText(hello)
+    expect(wrapper.find('p').text()).toBe(hello)
   })
 })
