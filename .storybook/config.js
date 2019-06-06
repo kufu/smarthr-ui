@@ -24,3 +24,6 @@ function loadStories() {
 
 addDecorator(storyFn => <ThemeProvider theme={createTheme()}>{storyFn()}</ThemeProvider>)
 configure(loadStories, module)
+
+import { withA11y } from '@storybook/addon-a11y'
+addDecorator(withA11y)
