@@ -32,6 +32,7 @@ class ModalController extends React.PureComponent {
   }
 }
 
+/* eslint-disable jsx-a11y/no-autofocus */
 storiesOf('Modal', module).add('all', () => (
   <div>
     <ModalController />
@@ -111,6 +112,7 @@ storiesOf('Modal', module).add('all', () => (
     </ModalWrapper>
   </div>
 ))
+/* eslint-enable jsx-a11y/no-autofocus */
 
 const Inner = styled.div`
   padding: 2.4rem;
