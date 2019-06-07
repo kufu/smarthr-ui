@@ -3,9 +3,6 @@
   "description": "SmartHR ui components built with React.",
   "version": "3.7.0",
   "author": "SmartHR-UI Team",
-  "bugs": {
-    "url": "https://github.com/kufu/smarthr-ui/issues"
-  },
   "dependencies": {
     "fixpack": "^2.3.1",
     "lodash.merge": "^4.6.1",
@@ -55,6 +52,14 @@
     "ts-loader": "^6.0.0",
     "typescript": "^3.2.4"
   },
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "styled-components": "^4.2.0"
+  },
+  "bugs": {
+    "url": "https://github.com/kufu/smarthr-ui/issues"
+  },
   "engines": {
     "node": ">=8.0.0"
   },
@@ -81,11 +86,6 @@
     ]
   },
   "main": "lib/index.js",
-  "peerDependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "styled-components": "^4.2.0"
-  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
