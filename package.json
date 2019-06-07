@@ -1,61 +1,12 @@
 {
   "name": "smarthr-ui",
-  "author": "SmartHR-UI Team",
-  "version": "3.5.6",
   "description": "SmartHR ui components built with React.",
-  "keywords": [
-    "react",
-    "react-component",
-    "typescript",
-    "smarthr"
-  ],
-  "files": [
-    "lib"
-  ],
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kufu/smarthr-ui.git"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/kufu/smarthr-ui/issues"
-  },
-  "homepage": "https://github.com/kufu/smarthr-ui#readme",
-  "scripts": {
-    "release": "np",
-    "prepublishOnly": "run-s clean lint build",
-    "build": "tsc",
-    "lint:tsc": "tsc --noEmit",
-    "lint:eslint": "eslint 'src/**/*.ts{,x}'",
-    "lint:style": "stylelint 'src/**/*.ts{,x}'",
-    "lint": "run-p lint:*",
-    "format": "eslint --fix 'src/**/*.ts{,x}'",
-    "clean": "rimraf ./lib",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "test": "jest"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "git add"
-    ]
-  },
+  "version": "3.7.0",
+  "author": "SmartHR-UI Team",
   "dependencies": {
+    "fixpack": "^2.3.1",
     "lodash.merge": "^4.6.1",
     "lodash.range": "^3.2.0"
-  },
-  "peerDependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "styled-components": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -101,12 +52,63 @@
     "ts-loader": "^6.0.0",
     "typescript": "^3.2.4"
   },
-  "sideEffects": false,
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "styled-components": "^4.2.0"
+  },
+  "bugs": {
+    "url": "https://github.com/kufu/smarthr-ui/issues"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "lib"
+  ],
+  "homepage": "https://github.com/kufu/smarthr-ui#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "smarthr",
+    "typescript"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "main": "lib/index.js",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
-  "engines": {
-    "node": ">=8.0.0"
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kufu/smarthr-ui.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build-storybook": "build-storybook",
+    "clean": "rimraf ./lib",
+    "fix": "fixpack",
+    "format": "eslint --fix 'src/**/*.ts{,x}'",
+    "lint": "run-p lint:*",
+    "lint:eslint": "eslint 'src/**/*.ts{,x}'",
+    "lint:style": "stylelint 'src/**/*.ts{,x}'",
+    "lint:tsc": "tsc --noEmit",
+    "prepublishOnly": "run-s clean lint build",
+    "release": "np",
+    "storybook": "start-storybook -p 6006",
+    "test": "jest"
+  },
+  "sideEffects": false,
+  "typings": "lib/index.d.ts"
 }
