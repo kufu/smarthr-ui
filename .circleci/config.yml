@@ -18,6 +18,19 @@ commands:
       # run tests!
       - run: yarn lint
       - run: yarn test
+  # visual regression testing
+  run-reg-suit:
+    - checkout
+    - restore_cache:
+        keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
+    - run: npm install
+    - save_cache:
+        paths:
+          - node_modules
+        key: v1-dependencies-{{ checksum "package.json" }}
+    - run: npm run test-visual
 jobs:
   node-v8:
     docker:
@@ -29,9 +42,16 @@ jobs:
       - image: circleci/node:10
     steps:
       - run-npm-test
+  reg-suit:
+    docker:
+      - image: regviz/node-xcb
+    working_directory: ~/repo
+    steps:
+      - run-reg-suit
 
 workflows:
   multiple_builds:
     jobs:
       - node-v8
       - node-v10
+      - reg-suit
