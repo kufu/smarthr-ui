@@ -51,7 +51,7 @@ const Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  transition: all 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
   &.active {
     visibility: visible;
     opacity: 1;
