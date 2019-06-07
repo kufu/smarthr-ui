@@ -68,3 +68,5 @@ lib/
 .cache
 
 storybook-static/
+.reg
+actual_images
