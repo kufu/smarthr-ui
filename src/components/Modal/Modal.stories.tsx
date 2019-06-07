@@ -95,6 +95,20 @@ storiesOf('Modal', module).add('all', () => (
         </Inner>
       </ModalContent>
     </ModalWrapper>
+
+    <ModalWrapper>
+      <ModalTrigger>
+        <button>autoFocus</button>
+      </ModalTrigger>
+      <ModalContent>
+        <Inner>
+          <input type="text" autoFocus />
+          <ModalEraser>
+            <button>閉じる</button>
+          </ModalEraser>
+        </Inner>
+      </ModalContent>
+    </ModalWrapper>
   </div>
 ))
 
