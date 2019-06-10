@@ -31,7 +31,6 @@ commands:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm run pretest-visual
       - run: npm run test-visual
 jobs:
   node-v8:
