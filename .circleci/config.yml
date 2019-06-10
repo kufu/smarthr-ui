@@ -31,8 +31,7 @@ commands:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run: node -p "require('ip').address()"
-      - run: echo 'export LOCALIP=`node -p "require(\"ip\").address()"`' >> $BASH_ENV
+      - run: npm run storybook &
       - run: npm run test-visual
 jobs:
   node-v8:
