@@ -33,7 +33,7 @@ commands:
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm run storybook &
       - run: sleep 50
-      - run: wget http://localhost:6006/
+      - run: wget http://127.0.0.1:6006/
       - run: npm run test-visual
 jobs:
   node-v8:
