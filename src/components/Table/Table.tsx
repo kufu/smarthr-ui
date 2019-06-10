@@ -11,6 +11,11 @@ import styled from 'styled-components'
 // } as const
 
 export type TableSize = 's' | 'm' | 'l'
+export const tableSizes = {
+  s: 's',
+  m: 'm',
+  l: 'l',
+}
 
 export type TableContextValue = {
   size: TableSize
