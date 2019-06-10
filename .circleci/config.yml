@@ -31,7 +31,8 @@ commands:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm run storybook
+      - run: npm run storybook &
+      - run: sleep 50
       - run: npm run test-visual
 jobs:
   node-v8:
