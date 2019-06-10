@@ -38,26 +38,66 @@ const tableSampleDataSet = [
 ]
 
 storiesOf('Table', module).add('all', () => (
-  <Table size="l" disabled>
-    <Head>
-      <Row>
-        <Cell>社員番号</Cell>
-        <Cell>権限</Cell>
-        <Cell>雇用形態</Cell>
-        <Cell>役職</Cell>
-        <Cell>部署</Cell>
-      </Row>
-    </Head>
-    <Body>
-      {tableSampleDataSet.map(member => (
-        <Row key={member.employeeNumber}>
-          <Cell>{member.employeeNumber}</Cell>
-          <Cell>{member.role}</Cell>
-          <Cell>{member.employmentType}</Cell>
-          <Cell>{member.role}</Cell>
-          <Cell>{member.team}</Cell>
+  <>
+    <Table>
+      <Head>
+        <Row>
+          <Cell>社員番号</Cell>
+          <Cell>権限</Cell>
+          <Cell>雇用形態</Cell>
+          <Cell>役職</Cell>
+          <Cell>部署</Cell>
         </Row>
-      ))}
-    </Body>
-  </Table>
+      </Head>
+      <Body>
+        {tableSampleDataSet.map(member => (
+          <Row key={member.employeeNumber}>
+            <Cell>{member.employeeNumber}</Cell>
+            <Cell>{member.role}</Cell>
+            <Cell>{member.employmentType}</Cell>
+            <Cell>{member.role}</Cell>
+            <Cell>{member.team}</Cell>
+          </Row>
+        ))}
+      </Body>
+    </Table>
+    <div>disabled</div>
+    <Table size="s" disabled>
+      <Head>
+        <Row>
+          <Cell>社員番号</Cell>
+          <Cell>権限</Cell>
+          <Cell>雇用形態</Cell>
+          <Cell>役職</Cell>
+          <Cell>部署</Cell>
+        </Row>
+      </Head>
+      <Body>
+        {tableSampleDataSet.map(member => (
+          <Row key={member.employeeNumber}>
+            <Cell>{member.employeeNumber}</Cell>
+            <Cell>{member.role}</Cell>
+            <Cell>{member.employmentType}</Cell>
+            <Cell>{member.role}</Cell>
+            <Cell>{member.team}</Cell>
+          </Row>
+        ))}
+      </Body>
+    </Table>
+    <div>Long Text</div>
+    <Table size="m">
+      <Head>
+        <Row>
+          <Cell>タイトル</Cell>
+          <Cell>概要</Cell>
+        </Row>
+      </Head>
+      <Body>
+        <Row>
+          <Cell>長い本</Cell>
+          <Cell>概要もとてもながいです。hogehoghoehgoehgoejogejaogjaoe, ogehoghoehg</Cell>
+        </Row>
+      </Body>
+    </Table>
+  </>
 ))

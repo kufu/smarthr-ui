@@ -1,10 +1,19 @@
 import * as React from 'react'
-import styled from 'styled-components'
-
-import { TableGroupContext } from './Table'
-
-const Cell: React.FC<{}> = props => {
+import styled, { css } from 'styled-components'
+import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { TableContext, tableSizes, TableGroupContext } from './Table'
+const tableSizeToPaddingMap = {
+  [tableSizes.s]: 8,
+  [tableSizes.m]: 12,
+  [tableSizes.l]: 16,
+}
+export type Props = {
+  children?: React.ReactNode
+}
+const Cell: React.FC<Props & InjectedProps> = props => {
   const { group } = React.useContext(TableGroupContext)
+  const { size, disabled } = React.useContext(TableContext)
+
   const WrapComponent = (tableGroup => {
     switch (tableGroup) {
       case 'body':
@@ -13,11 +22,35 @@ const Cell: React.FC<{}> = props => {
         return Th
     }
   })(group)
-  return <WrapComponent>{props.children}</WrapComponent>
+  return (
+    <WrapComponent theme={props.theme} disabled={disabled} margin={tableSizeToPaddingMap[size]}>
+      {props.children}
+    </WrapComponent>
+  )
 }
 
-const Td = styled.td``
+type WrapperProps = InjectedProps & {
+  margin: number
+  disabled: boolean
+}
 
-const Th = styled.th``
+const cellStyle = css`
+  ${(props: WrapperProps) => `
+    padding-top: ${props.theme.size.pxToRem(props.margin)};
+    padding-bottom: ${props.theme.size.pxToRem(props.margin)};
+    padding-left: 0;
+    padding-right: 0;
+    border-style: none;
+  `}
+`
 
-export default Cell
+const Td = styled.td`
+  ${cellStyle}
+  ${(props: WrapperProps) => props.disabled && `opacity: 0.5;`}
+`
+
+const Th = styled.th`
+  ${cellStyle}
+`
+
+export default withTheme(Cell)

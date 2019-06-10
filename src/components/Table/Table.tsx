@@ -1,21 +1,13 @@
 import * as React from 'react'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-// import { ComponentProps } from '../../types/componentProps'
 import styled from 'styled-components'
-
-// TODO
-// export const tableSizes = {
-//     s: 's',
-//     m: 'm',
-//     l: 'l'
-// } as const
 
 export type TableSize = 's' | 'm' | 'l'
 export const tableSizes = {
   s: 's',
   m: 'm',
   l: 'l',
-}
+} as const
 
 export type TableContextValue = {
   size: TableSize
@@ -33,7 +25,7 @@ export const TableGroupContext = React.createContext<TableGroupContextValue>({
 })
 
 export const TableContext = React.createContext<TableContextValue>({
-  size: 'm',
+  size: tableSizes.m,
   disabled: false,
 })
 
@@ -45,14 +37,25 @@ export type Props = {
 
 type MergedComponentProps = Props & InjectedProps
 
-const Table: React.FC<MergedComponentProps> = ({ disabled = false, size = 'm', ...props }) => {
+const Table: React.FC<MergedComponentProps> = ({
+  disabled = false,
+  size = tableSizes.m,
+  ...props
+}) => {
   return (
     <TableContext.Provider value={{ disabled: disabled, size: size }}>
-      <Wrapper {...(props as any)}>{props.children}</Wrapper>
+      <Wrapper {...props}>{props.children}</Wrapper>
     </TableContext.Provider>
   )
 }
 
-const Wrapper = styled.table``
+const Wrapper = styled.table`
+  ${({ theme }: InjectedProps) => `
+    border-radius: ${theme.frame.border.radius.m};
+    border: ${theme.frame.border.default};
+    border-collapse: collapse;
+    border-spacing: 0;
+`}
+`
 
 export default withTheme(Table)
