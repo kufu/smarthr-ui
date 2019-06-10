@@ -22,6 +22,8 @@ commands:
   run-reg-suit:
     steps:
       - checkout
+      - run: echo 'export AWS_ACCESS_KEY_ID="AKIAI4NOABK6V764JINA"' >> $BASH_ENV
+      - run: echo 'export AWS_SECRET_ACCESS_KEY="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"' >> $BASH_ENV
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
@@ -31,6 +33,7 @@ commands:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+      - run: echo $AWS_ACCESS_KEY_ID
       - run: npm run test-visual
 jobs:
   node-v8:

@@ -14,7 +14,7 @@
       "clientId": "MzQ2sjAzsbSw1C/OTSwqySjSLc3UNzQ0MjIwttTPLk0rBQA="
     },
     "reg-publish-s3-plugin": {
-      "bucketName": "smarthr-ui-snapshots"
+      "bucketName": "test-reg-suit"
     }
   }
 }
