@@ -1,6 +1,13 @@
-// import Table from './Table'
-// import Header from './Header'
-// import Body from './Body'
-// import Row from './Row'
+import TableComponent from './Table'
+import Head from './Head'
+import Body from './Body'
+import Row from './Row'
+import Cell from './Cell'
 
-// export
+export const Table = {
+  Table: TableComponent,
+  Head,
+  Body,
+  Row,
+  Cell,
+}
