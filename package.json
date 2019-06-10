@@ -110,9 +110,9 @@
     "lint:style": "stylelint 'src/**/*.ts{,x}'",
     "lint:tsc": "tsc --noEmit",
     "prepublishOnly": "run-s clean lint build",
-    "pretest-visual": "zisui --serverCmd \"npm run storybook\" http://127.0.0.1:6006 -o actual_images",
+    "pretest-visual": "zisui --serverCmd \"npm run storybook\" http://localhost:9001 -o actual_images",
     "release": "np",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 9001",
     "test": "jest",
     "test-visual": "reg-suit run"
   },
