@@ -22,8 +22,6 @@ commands:
   run-reg-suit:
     steps:
       - checkout
-      - run: echo 'export AWS_ACCESS_KEY_ID="AKIAI4NOABK6V764JINA"' >> $BASH_ENV
-      - run: echo 'export AWS_SECRET_ACCESS_KEY="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"' >> $BASH_ENV
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
@@ -33,7 +31,8 @@ commands:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run: echo $AWS_ACCESS_KEY_ID
+      - run: node -p "require('ip').address()"
+      - run: echo 'export LOCALIP=`node -p "require(\'ip\').address()"`' >> $BASH_ENV
       - run: npm run test-visual
 jobs:
   node-v8:
@@ -56,6 +55,6 @@ jobs:
 workflows:
   multiple_builds:
     jobs:
-      - node-v8
-      - node-v10
+#      - node-v8
+#      - node-v10
       - reg-suit
