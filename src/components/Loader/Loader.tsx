@@ -35,6 +35,15 @@ const lineScale = keyframes`
 `
 const Wrapper = styled.div`
   ${({ color }: { color: string }) => css`
+    display: inline-block;
+
+    &.s {
+      transform: scale(0.8);
+    }
+    &.l {
+      transform: scale(1.2);
+    }
+
     & > div {
       display: inline-block;
       width: 4px;
@@ -60,11 +69,4 @@ const Wrapper = styled.div`
       }
     }
   `}
-
-  &.s {
-    transform: scale(0.8);
-  }
-  &.l {
-    transform: scale(1.2);
-  }
 `
