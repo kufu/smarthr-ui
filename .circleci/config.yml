@@ -1,4 +1,4 @@
-version: 2.1
+version: 2
 
 commands:
   run-npm-test:
@@ -53,6 +53,6 @@ jobs:
 workflows:
   multiple_builds:
     jobs:
-      - node-v8
-      - node-v10
+#      - node-v8
+#      - node-v10
       - reg-suit
