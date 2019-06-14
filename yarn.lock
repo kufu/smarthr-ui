@@ -11205,7 +11205,7 @@ stylelint-processor-styled-components@^1.5.2:
     micromatch "^4.0.2"
     postcss "^7.0.0"
 
-stylelint@^10.0.1:
+stylelint@^10.1.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/stylelint/-/stylelint-10.1.0.tgz#1bc4c4ce878107e7c396b19226d91ba28268911a"
   integrity sha512-OmlUXrgzEMLQYj1JPTpyZPR9G4bl0StidfHnGJEMpdiQ0JyTq0MPg1xkHk1/xVJ2rTPESyJCDWjG8Kbpoo7Kuw==
