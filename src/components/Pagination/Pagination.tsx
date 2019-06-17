@@ -67,9 +67,12 @@ const List = styled.ul`
       display: flex;
       border-radius: ${frame.border.radius.s};
       border: 1px solid ${palette.Mono_P20};
+      margin: 0;
       padding: 0;
 
       & > li {
+        margin: 0;
+        padding: 0;
         list-style: none;
 
         &:not(:first-child) {
