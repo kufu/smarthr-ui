@@ -13,6 +13,7 @@ interface Props {
   current: number
   onClick: (pageNumber: number) => void
   padding?: number
+  className?: string
 }
 
 const PaginationComponent: React.FC<Props & InjectedProps> = ({
@@ -20,6 +21,7 @@ const PaginationComponent: React.FC<Props & InjectedProps> = ({
   current,
   onClick,
   padding = 4,
+  className = '',
   theme,
 }) => {
   if (total <= 1) return null
@@ -44,7 +46,7 @@ const PaginationComponent: React.FC<Props & InjectedProps> = ({
   )
 
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       <List theme={theme}>
         {prevPage}
         {pages}
