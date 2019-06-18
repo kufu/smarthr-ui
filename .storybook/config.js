@@ -1,6 +1,7 @@
 import React from 'react'
 import { configure, addDecorator, addParameters } from '@storybook/react'
 import { create } from '@storybook/theming'
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 
 import { createTheme } from '../src/themes/createTheme'
 import { ThemeProvider } from '../src/themes/ThemeProvider'
@@ -16,6 +17,7 @@ addParameters({
     isToolshown: true,
   },
 })
+addParameters({ viewport: { viewports: INITIAL_VIEWPORTS } })
 
 const req = require.context('../src/components', true, /.stories.tsx$/)
 function loadStories() {
