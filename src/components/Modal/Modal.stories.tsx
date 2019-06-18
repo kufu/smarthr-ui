@@ -32,6 +32,7 @@ class ModalController extends React.PureComponent {
   }
 }
 
+/* eslint-disable jsx-a11y/no-autofocus */
 storiesOf('Modal', module).add('all', () => (
   <div>
     <ModalController />
@@ -95,8 +96,23 @@ storiesOf('Modal', module).add('all', () => (
         </Inner>
       </ModalContent>
     </ModalWrapper>
+
+    <ModalWrapper>
+      <ModalTrigger>
+        <button>autoFocus</button>
+      </ModalTrigger>
+      <ModalContent>
+        <Inner>
+          <input type="text" autoFocus />
+          <ModalEraser>
+            <button>閉じる</button>
+          </ModalEraser>
+        </Inner>
+      </ModalContent>
+    </ModalWrapper>
   </div>
 ))
+/* eslint-enable jsx-a11y/no-autofocus */
 
 const Inner = styled.div`
   padding: 2.4rem;
