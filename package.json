@@ -41,6 +41,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-test-renderer": "16.8.6",
+    "storybook-readme": "^5.0.3",
     "styled-components": "^4.3.1",
     "stylelint": "^10.1.0",
     "stylelint-config-prettier": "^5.1.0",
