@@ -2,40 +2,39 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { ComponentProps, SizePattern, StyledProperties } from '../../types/componentProps'
+import { ComponentProps, Size, StyledProperties } from '../../types/props'
 
-type MergedComponentProps = ComponentProps<{}> & InjectedProps
+type MergedComponentProps = ComponentProps & InjectedProps
 type MergedStyledProps = StyledProperties & InjectedProps
 
 const AppBarComponent: React.FC<MergedComponentProps> = ({ ...props }) => <Wrapper {...props} />
 
 export const AppBar = withTheme(AppBarComponent)
 
-const getSpaceSize = (size: SizePattern): 'xs' | 's' | 'm' => {
+const getSpaceSize = (size: Size): 'xs' | 's' | 'm' => {
   const spaceMap: any = {
-    xs: 'xs',
     s: 'xs',
     m: 's',
     l: 'm',
-    xl: 'm',
   }
   return spaceMap[size]
 }
-const Wrapper: any = styled.div`
+const Wrapper = styled.div`
   ${({ spSize = 'm', pcSize = 'm', tabletSize = 'm', theme }: MergedStyledProps) => {
+    const { size, palette } = theme
     const [pcPadding, tabletPadding, spPadding] = [pcSize, tabletSize, spSize]
       .map(getSpaceSize)
-      .map(size => `0 ${theme.size.pxToRem(theme.size.space[size])}`)
+      .map(spaceSize => `0 ${size.pxToRem(size.space[spaceSize])}`)
 
     return css`
       padding: ${pcPadding};
-      background: ${theme.palette.SmartHRGreen};
+      background: ${palette.SmartHRGreen};
 
-      @media screen and (max-width: ${theme.size.mediaQuery.tablet}px) {
+      @media screen and (max-width: ${size.mediaQuery.tablet}px) {
         padding: ${tabletPadding};
       }
 
-      @media screen and (max-width: ${theme.size.mediaQuery.sp}px) {
+      @media screen and (max-width: ${size.mediaQuery.sp}px) {
         padding: ${spPadding};
       }
     `
