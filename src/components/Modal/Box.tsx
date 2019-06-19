@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css, createGlobalStyle } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
@@ -20,21 +20,45 @@ interface MergedStyledProps extends InjectedProps {
   left?: number
 }
 
-const BoxComponent: React.FC<Props & InjectedProps> = ({
-  active,
-  children,
-  hideModal,
-  ...props
-}) => (
-  <Wrapper className={active ? 'active' : ''} {...props}>
-    {active ? (
-      <React.Fragment>
-        <Background {...props} onClick={hideModal} />
-        <Inner {...props}>{children}</Inner>
-      </React.Fragment>
-    ) : null}
-  </Wrapper>
-)
+interface State {
+  scrollTop: number
+}
+
+export class BoxComponent extends React.Component<Props & InjectedProps, State> {
+  public state = { scrollTop: 0 }
+
+  public static getDerivedStateFromProps(props: Props) {
+    if (props.active) {
+      return {
+        scrollTop: window.pageYOffset,
+      }
+    }
+
+    return null
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    if (prevProps.active === true && this.props.active === false) {
+      window.scrollTo(0, this.state.scrollTop)
+    }
+  }
+
+  public render() {
+    const { active, children, hideModal, ...props } = this.props
+    return (
+      <Wrapper className={active ? 'active' : ''} {...props}>
+        {active ? (
+          <React.Fragment>
+            <Background {...props} onClick={hideModal} />
+            <Inner {...props}>{children}</Inner>
+            {/* Suppresses scrolling of body while modal is displayed */}
+            <ScrollSuppressing top={this.state.scrollTop} />
+          </React.Fragment>
+        ) : null}
+      </Wrapper>
+    )
+  }
+}
 
 export const Box = withTheme(BoxComponent)
 
@@ -59,12 +83,12 @@ const Wrapper = styled.div`
 `
 const Inner = styled.div`
   ${({ theme, top, right, bottom, left }: MergedStyledProps) => {
-    const positionRight: number | string = exist(right) ? `${right}px` : 'auto'
-    const positionBottom: number | string = exist(bottom) ? `${bottom}px` : 'auto'
-    let positionTop: number | string = exist(top) ? `${top}px` : 'auto'
-    let positionLeft: number | string = exist(left) ? `${left}px` : 'auto'
-    let translateX: string = '0'
-    let translateY: string = '0'
+    const positionRight = exist(right) ? `${right}px` : 'auto'
+    const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
+    let positionTop = exist(top) ? `${top}px` : 'auto'
+    let positionLeft = exist(left) ? `${left}px` : 'auto'
+    let translateX = '0'
+    let translateY = '0'
 
     if (top === undefined && bottom === undefined) {
       positionTop = '50%'
@@ -101,4 +125,13 @@ const Background = styled.div`
       background-color: ${theme.palette.Overlay};
     `
   }}
+`
+const ScrollSuppressing = createGlobalStyle`
+  body {
+    overflow: hidden;
+    position: fixed;
+    top: -${({ top }: { top: number }) => top}px;
+    width: 100%;
+    height: 100%;
+  }
 `
