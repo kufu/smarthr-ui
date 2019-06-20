@@ -4,6 +4,7 @@ import { create } from '@storybook/theming'
 
 import { createTheme } from '../src/themes/createTheme'
 import { ThemeProvider } from '../src/themes/ThemeProvider'
+import { withA11y } from '@storybook/addon-a11y'
 
 addParameters({
   options: {
@@ -25,5 +26,4 @@ function loadStories() {
 addDecorator(storyFn => <ThemeProvider theme={createTheme()}>{storyFn()}</ThemeProvider>)
 configure(loadStories, module)
 
-import { withA11y } from '@storybook/addon-a11y'
 addDecorator(withA11y)
