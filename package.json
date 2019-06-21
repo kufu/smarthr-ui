@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "3.8.2",
+  "version": "3.8.3",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "lodash.merge": "^4.6.1",
@@ -9,9 +9,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
+    "@storybook/addon-a11y": "^5.1.1",
     "@storybook/addon-actions": "^5.0.11",
-    "@storybook/addon-links": "^5.1.7",
-    "@storybook/addon-viewport": "^5.0.11",
+    "@storybook/addon-viewport": "^5.1.8",
     "@storybook/addons": "^5.0.11",
     "@storybook/cli": "^5.1.7",
     "@storybook/react": "^5.0.11",
@@ -42,6 +42,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-test-renderer": "16.8.6",
+    "storybook-readme": "^5.0.3",
     "styled-components": "^4.3.1",
     "stylelint": "^10.1.0",
     "stylelint-config-prettier": "^5.1.0",
@@ -95,7 +96,7 @@
     "url": "git+https://github.com/kufu/smarthr-ui.git"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "build-storybook": "build-storybook",
     "clean": "rimraf ./lib",
     "fix": "fixpack",

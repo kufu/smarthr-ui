@@ -32,9 +32,8 @@ class ModalController extends React.PureComponent {
   }
 }
 
-/* eslint-disable jsx-a11y/no-autofocus */
-storiesOf('Modal', module).add('all', () => (
-  <div>
+const StoryComponents = () => (
+  <React.Fragment>
     <ModalController />
 
     <ModalWrapper>
@@ -103,6 +102,7 @@ storiesOf('Modal', module).add('all', () => (
       </ModalTrigger>
       <ModalContent>
         <Inner>
+          {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
           <input type="text" autoFocus />
           <ModalEraser>
             <button>閉じる</button>
@@ -110,13 +110,50 @@ storiesOf('Modal', module).add('all', () => (
         </Inner>
       </ModalContent>
     </ModalWrapper>
-  </div>
-))
-/* eslint-enable jsx-a11y/no-autofocus */
+  </React.Fragment>
+)
+
+storiesOf('Modal', module)
+  .add('all', () => <StoryComponents />)
+  .add('Suppresses scrolling', () => (
+    <Wrapper>
+      <ScrollBox>
+        <ScrollChunk>0px</ScrollChunk>
+        <ScrollChunk>200px</ScrollChunk>
+        <ScrollChunk>400px</ScrollChunk>
+        <ScrollChunk>600px</ScrollChunk>
+        <ScrollChunk>800px</ScrollChunk>
+        <ScrollChunk>1000px</ScrollChunk>
+        <ScrollChunk>1200px</ScrollChunk>
+        <ScrollChunk>1400px</ScrollChunk>
+        <ScrollChunk>1600px</ScrollChunk>
+        <ScrollChunk>1800px</ScrollChunk>
+        <ScrollChunk>2000px</ScrollChunk>
+      </ScrollBox>
+      <div>
+        <ButtonWrap>
+          <StoryComponents />
+        </ButtonWrap>
+      </div>
+    </Wrapper>
+  ))
 
 const Inner = styled.div`
   padding: 2.4rem;
 `
 const Txt = styled.p`
   margin: 0;
+`
+const Wrapper = styled.div`
+  display: flex;
+`
+const ScrollBox = styled.div`
+  width: 300px;
+`
+const ScrollChunk = styled.div`
+  height: 200px;
+`
+const ButtonWrap = styled.div`
+  position: fixed;
+  top: 0;
 `
