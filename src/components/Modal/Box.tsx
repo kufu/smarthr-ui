@@ -22,7 +22,6 @@ interface MergedStyledProps extends InjectedProps {
 
 const BoxComponent: React.FC<Props> = ({ active, children, hideModal, ...props }) => (
   <Wrapper className={active ? 'active' : ''} {...props}>
-    {console.log(active)}
     {active ? (
       <React.Fragment>
         <Background {...props} onClick={hideModal} />
