@@ -1,4 +1,4 @@
-# AppBar
+# Tag
 
 ```tsx
 import { Tag } from 'smarthr-ui'
