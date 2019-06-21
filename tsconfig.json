@@ -19,6 +19,6 @@
     "noEmitOnError": true,
     "esModuleInterop": true
   },
-  "exclude": ["node_modules", "src/**/*.test.tsx", "src/**/*.stories.tsx"],
+  "exclude": ["node_modules"],
   "include": ["src/**/*"]
 }

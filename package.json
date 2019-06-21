@@ -96,7 +96,7 @@
     "url": "git+https://github.com/kufu/smarthr-ui.git"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "build-storybook": "build-storybook",
     "clean": "rimraf ./lib",
     "fix": "fixpack",
