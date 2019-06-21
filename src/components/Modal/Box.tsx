@@ -20,45 +20,19 @@ interface MergedStyledProps extends InjectedProps {
   left?: number
 }
 
-interface State {
-  scrollTop: number
-}
-
-export class BoxComponent extends React.Component<Props & InjectedProps, State> {
-  public state = { scrollTop: 0 }
-
-  public static getDerivedStateFromProps(props: Props) {
-    if (props.active) {
-      return {
-        scrollTop: window.pageYOffset,
-      }
-    }
-
-    return null
-  }
-
-  public componentDidUpdate(prevProps: Props) {
-    if (prevProps.active === true && this.props.active === false) {
-      window.scrollTo(0, this.state.scrollTop)
-    }
-  }
-
-  public render() {
-    const { active, children, hideModal, ...props } = this.props
-    return (
-      <Wrapper className={active ? 'active' : ''} {...props}>
-        {active ? (
-          <React.Fragment>
-            <Background {...props} onClick={hideModal} />
-            <Inner {...props}>{children}</Inner>
-            {/* Suppresses scrolling of body while modal is displayed */}
-            <ScrollSuppressing top={this.state.scrollTop} />
-          </React.Fragment>
-        ) : null}
-      </Wrapper>
-    )
-  }
-}
+const BoxComponent: React.FC<Props> = ({ active, children, hideModal, ...props }) => (
+  <Wrapper className={active ? 'active' : ''} {...props}>
+    {console.log(active)}
+    {active ? (
+      <React.Fragment>
+        <Background {...props} onClick={hideModal} />
+        <Inner {...props}>{children}</Inner>
+        {/* Suppresses scrolling of body while modal is displayed */}
+        <ScrollSuppressing />
+      </React.Fragment>
+    ) : null}
+  </Wrapper>
+)
 
 export const Box = withTheme(BoxComponent)
 
@@ -129,9 +103,5 @@ const Background = styled.div`
 const ScrollSuppressing = createGlobalStyle`
   body {
     overflow: hidden;
-    position: fixed;
-    top: -${({ top }: { top: number }) => top}px;
-    width: 100%;
-    height: 100%;
   }
 `
