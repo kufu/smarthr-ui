@@ -58,6 +58,7 @@ export interface CreatedPaletteTheme {
   Orange_P10: string
   Orange: string
   Orange_M30: string
+  Yellow: string
   Red: string
 }
 
@@ -93,6 +94,8 @@ export const defaultPalette: CreatedPaletteTheme = {
   Orange_P10: '#e67a00',
   Orange: '#f80',
   Orange_M30: '#ffac4d',
+
+  Yellow: '#ffcc00',
 
   Red: '#ef475b',
 }
