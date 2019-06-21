@@ -2,11 +2,11 @@ import React from 'react'
 import { configure, addDecorator, addParameters } from '@storybook/react'
 import { create } from '@storybook/theming'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
+import { withA11y } from '@storybook/addon-a11y'
 import { addReadme } from 'storybook-readme'
 
 import { createTheme } from '../src/themes/createTheme'
 import { ThemeProvider } from '../src/themes/ThemeProvider'
-import { withA11y } from '@storybook/addon-a11y'
 
 const req = require.context('../src/components', true, /.stories.tsx$/)
 
@@ -27,9 +27,9 @@ addParameters({
 })
 addParameters({ viewport: { viewports: INITIAL_VIEWPORTS } })
 
+addDecorator(withA11y)
 addDecorator(addReadme)
 addDecorator(storyFn => <ThemeProvider theme={createTheme()}>{storyFn()}</ThemeProvider>)
 
 configure(loadStories, module)
 
-addDecorator(withA11y)
