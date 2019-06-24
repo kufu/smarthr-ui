@@ -58,6 +58,7 @@ exports[`Checkbox should be match snapshot 1`] = `
           "Red": "#ef475b",
           "SmartHRGreen": "#00c4cc",
           "White": "#fff",
+          "Yellow": "#fc0",
         },
         "size": Object {
           "font": Object {
@@ -138,6 +139,7 @@ exports[`Checkbox should be match snapshot 1`] = `
             "Red": "#ef475b",
             "SmartHRGreen": "#00c4cc",
             "White": "#fff",
+            "Yellow": "#fc0",
           },
           "size": Object {
             "font": Object {
@@ -245,6 +247,7 @@ exports[`Checkbox should be match snapshot 1`] = `
               "Red": "#ef475b",
               "SmartHRGreen": "#00c4cc",
               "White": "#fff",
+              "Yellow": "#fc0",
             },
             "size": Object {
               "font": Object {
@@ -381,6 +384,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                             "Red": "#ef475b",
                             "SmartHRGreen": "#00c4cc",
                             "White": "#fff",
+                            "Yellow": "#fc0",
                           },
                           "size": Object {
                             "font": Object {

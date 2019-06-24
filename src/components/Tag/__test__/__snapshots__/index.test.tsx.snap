@@ -1,8 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AppBar should be match snapshot 1`] = `
-<Component>
-  <AppBarComponent
+exports[`Tag should be match snapshot 1`] = `
+<Component
+  type="success"
+>
+  <TagComponent
     theme={
       Object {
         "frame": Object {
@@ -81,8 +83,11 @@ exports[`AppBar should be match snapshot 1`] = `
         },
       }
     }
+    type="success"
   >
-    <styled.div
+    <styled.span
+      className="success"
+      skeleton={false}
       theme={
         Object {
           "frame": Object {
@@ -163,6 +168,7 @@ exports[`AppBar should be match snapshot 1`] = `
       }
     >
       <StyledComponent
+        className="success"
         forwardedComponent={
           Object {
             "$$typeof": Symbol(react.forward_ref),
@@ -170,7 +176,7 @@ exports[`AppBar should be match snapshot 1`] = `
             "componentStyle": ComponentStyle {
               "componentId": "sc-bdVaJa",
               "isStatic": false,
-              "lastClassName": "jkxwsS",
+              "lastClassName": "ddLWBq",
               "rules": Array [
                 "
   ",
@@ -179,17 +185,18 @@ exports[`AppBar should be match snapshot 1`] = `
 ",
               ],
             },
-            "displayName": "styled.div",
+            "displayName": "styled.span",
             "foldedComponentIds": Array [],
             "render": [Function],
             "styledComponentId": "sc-bdVaJa",
-            "target": "div",
+            "target": "span",
             "toString": [Function],
             "warnTooManyClasses": [Function],
             "withComponent": [Function],
           }
         }
         forwardedRef={null}
+        skeleton={false}
         theme={
           Object {
             "frame": Object {
@@ -269,11 +276,13 @@ exports[`AppBar should be match snapshot 1`] = `
           }
         }
       >
-        <div
-          className="sc-bdVaJa jkxwsS"
-        />
+        <span
+          className="success sc-bdVaJa ddLWBq"
+        >
+          hello
+        </span>
       </StyledComponent>
-    </styled.div>
-  </AppBarComponent>
+    </styled.span>
+  </TagComponent>
 </Component>
 `;
