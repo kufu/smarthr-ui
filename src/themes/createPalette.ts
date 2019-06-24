@@ -95,7 +95,7 @@ export const defaultPalette: CreatedPaletteTheme = {
   Orange: '#f80',
   Orange_M30: '#ffac4d',
 
-  Yellow: '#ffcc00',
+  Yellow: '#fc0',
 
   Red: '#ef475b',
 }
