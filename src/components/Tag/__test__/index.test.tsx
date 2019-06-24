@@ -10,4 +10,15 @@ describe('Tag', () => {
 
     expect(wrapper.text()).toBe(hello)
   })
+  it('should have given type', () => {
+    const hello = 'hello'
+    const wrapper = mount(
+      <Tag type="success" skeleton={true}>
+        {hello}
+      </Tag>,
+    )
+
+    expect(wrapper.prop('type')).toBe('success')
+    expect(wrapper.prop('skeleton')).toBeTruthy()
+  })
 })
