@@ -53,7 +53,7 @@ exports[`AppBar should be match snapshot 1`] = `
           "Red": "#ef475b",
           "SmartHRGreen": "#00c4cc",
           "White": "#fff",
-          "Yellow": "#ffcc00",
+          "Yellow": "#fc0",
         },
         "size": Object {
           "font": Object {
@@ -133,7 +133,7 @@ exports[`AppBar should be match snapshot 1`] = `
             "Red": "#ef475b",
             "SmartHRGreen": "#00c4cc",
             "White": "#fff",
-            "Yellow": "#ffcc00",
+            "Yellow": "#fc0",
           },
           "size": Object {
             "font": Object {
@@ -240,7 +240,7 @@ exports[`AppBar should be match snapshot 1`] = `
               "Red": "#ef475b",
               "SmartHRGreen": "#00c4cc",
               "White": "#fff",
-              "Yellow": "#ffcc00",
+              "Yellow": "#fc0",
             },
             "size": Object {
               "font": Object {
