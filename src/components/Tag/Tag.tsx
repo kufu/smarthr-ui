@@ -32,7 +32,7 @@ const Wrapper = styled.span`
 
     return css`
       margin: 0;
-      padding: 0 ${size.pxToRem(8)};
+      padding: 0 ${size.pxToRem(theme.size.space.xxs)};
       display: inline-block;
       white-space: nowrap;
       font-size: ${size.font.tasting}px;

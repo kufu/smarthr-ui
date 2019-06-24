@@ -118,5 +118,7 @@ const Error = styled.p`
 `
 
 const TagWrapper = styled.span`
-  margin-left: 8px;
+  ${({ theme }: InjectedProps) => css`
+    margin-left: ${theme.size.pxToRem(theme.size.space.xxs)};
+  `}
 `
