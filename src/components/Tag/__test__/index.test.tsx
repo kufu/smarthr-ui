@@ -4,14 +4,16 @@ import React from 'react'
 import { Tag } from '../Tag'
 
 describe('Tag', () => {
+  const hello = 'hello'
+  it('should be match snapshot', () => {
+    const component = mount(<Tag type="success">{hello}</Tag>)
+    expect(component).toMatchSnapshot()
+  })
   it('should render given children', () => {
-    const hello = 'hello'
     const wrapper = mount(<Tag type="success">{hello}</Tag>)
-
     expect(wrapper.text()).toBe(hello)
   })
   it('should have given type', () => {
-    const hello = 'hello'
     const wrapper = mount(
       <Tag type="success" skeleton={true}>
         {hello}
