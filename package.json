@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "3.8.3",
+  "version": "3.8.4",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "lodash.merge": "^4.6.1",
