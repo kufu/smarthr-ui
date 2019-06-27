@@ -42,34 +42,32 @@ const fieldFactory: (
 
   return (
     <Wrapper width={widthStyle}>
-      <label>
-        <LabelHead theme={theme}>
-          <Title theme={theme}>
-            {label}
-            {required && (
-              <TagWrapper theme={theme}>
-                <Tag type="require">必須</Tag>
-              </TagWrapper>
-            )}
-          </Title>
-          {help && <Help theme={theme}>{help}</Help>}
-        </LabelHead>
-        {InputComponent ? (
-          <InputComponent
-            value={value}
-            name={name}
-            required={required}
-            placeholder={placeholder}
-            disabled={disabled}
-            error={!!error}
-            width={width}
-            onChange={onChange}
-            onBlur={onBlur}
-          />
-        ) : (
-          children
-        )}
-      </label>
+      <LabelHead theme={theme}>
+        <Title theme={theme}>
+          {label}
+          {required && (
+            <TagWrapper theme={theme}>
+              <Tag type="require">必須</Tag>
+            </TagWrapper>
+          )}
+        </Title>
+        {help && <Help theme={theme}>{help}</Help>}
+      </LabelHead>
+      {InputComponent ? (
+        <InputComponent
+          value={value}
+          name={name}
+          required={required}
+          placeholder={placeholder}
+          disabled={disabled}
+          error={!!error}
+          width={width}
+          onChange={onChange}
+          onBlur={onBlur}
+        />
+      ) : (
+        children
+      )}
       {error && <Error theme={theme}>{error}</Error>}
     </Wrapper>
   )
