@@ -47,7 +47,7 @@ const fieldFactory: (
           <Title theme={theme}>
             {label}
             {required && (
-              <TagWrapper>
+              <TagWrapper theme={theme}>
                 <Tag type="require">必須</Tag>
               </TagWrapper>
             )}
