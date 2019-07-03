@@ -107,6 +107,7 @@
     "lint:tsc": "tsc --noEmit",
     "prepublishOnly": "run-s clean lint build",
     "release": "standard-version",
+    "release:dryrun": "standard-version --dry-run",
     "storybook": "start-storybook -p 6006",
     "test": "jest",
     "test:update-snapshot": "jest --updateSnapshot"
