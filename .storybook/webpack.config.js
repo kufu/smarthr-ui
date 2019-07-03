@@ -1,13 +1,11 @@
-module.exports = {
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
-  },
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        loader: 'ts-loader',
-      },
-    ],
-  },
+module.exports = ({ config }) => {
+  config.module.rules.push({
+    test: /\.(ts|tsx)$/,
+    loader: require.resolve('babel-loader'),
+    options: {
+      presets: [['react-app', { flow: false, typescript: true }]],
+    },
+  })
+  config.resolve.extensions.push('.ts', '.tsx', '.js')
+  return config
 }
