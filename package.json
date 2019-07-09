@@ -113,6 +113,7 @@
     "prepublishOnly": "run-s clean lint build",
     "pretest-visual": "zisui --serverCmd \"start-storybook -p 6006\" http://localhost:6006 -o actual_images  --serverTimeout 3600000",
     "release": "standard-version",
+    "release:dryrun": "standard-version --dry-run",
     "storybook": "start-storybook -p 6006",
     "test": "jest",
     "test:update-snapshot": "jest --updateSnapshot",
