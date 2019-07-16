@@ -11012,13 +11012,13 @@ reg-notify-github-plugin@^0.7.21:
     tiny-commit-walker "^1.1.2"
 
 reg-publish-s3-plugin@^0.7.22:
-  version "0.7.22"
-  resolved "https://registry.yarnpkg.com/reg-publish-s3-plugin/-/reg-publish-s3-plugin-0.7.22.tgz#029ba0115c024362f99ccfe0c7b212c501eb7d0e"
-  integrity sha512-U7vPSJG5oDtOt8/ljNoeE0JeuHSbdjl1Kcu0YfVWL7HEbiMmxIZNCsDMLdXuweTXidI0erwxiyHGI99UkQxd8w==
+  version "0.7.23"
+  resolved "https://registry.yarnpkg.com/reg-publish-s3-plugin/-/reg-publish-s3-plugin-0.7.23.tgz#6a9a6725b552c9976878a42a6d4f46db27356060"
+  integrity sha512-cE5u7GrxshNNmHvwaAUnaQZN/t/XlwsZXRpViGiAxb96w8LNr8O3CevxcvRe3aNEmQSrD3WgFTbW8ZP0BqtOpw==
   dependencies:
     aws-sdk "^2.432.0"
     mkdirp "^0.5.1"
-    reg-suit-util "^0.7.16"
+    reg-suit-util "^0.7.23"
     uuid "^3.1.0"
 
 reg-suit-core@^0.7.17:
@@ -11031,10 +11031,10 @@ reg-suit-core@^0.7.17:
     reg-suit-util "^0.7.16"
     rimraf "^2.6.1"
 
-reg-suit-util@^0.7.16:
-  version "0.7.16"
-  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.7.16.tgz#b16b03970dde074b093c385aaa0d1a2c4ec3157f"
-  integrity sha512-d/w3h5lp6JguGjwCTQCOzHOGSYdJVtv9zOqlfiOTpbj+nR2hPoV9DyFR6VuDfxdpm3oGw2+M27s+Pv12UXfQcA==
+reg-suit-util@^0.7.16, reg-suit-util@^0.7.23:
+  version "0.7.23"
+  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.7.23.tgz#60e967dcc3e624f2a8120c1bded80c79d11a769c"
+  integrity sha512-Mommv8XYEV/uf4+eUhNOySDu89yJ8DW0Cv0TVTSznOjoJadvY5dgP3XtnBRpm4zjyIgW6auUgmIB71STt7VT+A==
   dependencies:
     chalk "^2.0.1"
     cli-progress "^1.4.1"
