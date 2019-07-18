@@ -6,16 +6,17 @@ type Radius = 's' | 'm'
 interface Props {
   radius?: Radius
   children?: React.ReactNode
+  className?: string
 }
 
-const BaseComponent: React.FC<Props> = ({ radius = 'm', children, ...props }) => {
+const BaseComponent: React.FC<Props> = ({ radius = 'm', children, className = '' }) => {
   const radiusMap = {
     s: '6px',
     m: '8px',
   }
 
   return (
-    <Wrapper radius={radiusMap[radius]} {...props}>
+    <Wrapper radius={radiusMap[radius]} className={className}>
       {children}
     </Wrapper>
   )
