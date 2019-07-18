@@ -16,6 +16,11 @@ storiesOf('Base', module).add('all', () => (
         <Txt>radius m</Txt>
       </Base>
     </li>
+    <li>
+      <CustomBase radius="m">
+        <Txt>custom base</Txt>
+      </CustomBase>
+    </li>
   </List>
 ))
 
@@ -26,4 +31,8 @@ const List = styled.ul`
 
 const Txt = styled.p`
   padding: 8px;
+`
+
+const CustomBase = styled(Base)`
+  border: solid 1px;
 `

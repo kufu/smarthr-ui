@@ -8,13 +8,17 @@ interface Props {
   children?: React.ReactNode
 }
 
-const BaseComponent: React.FC<Props> = ({ radius = 'm', children }) => {
+const BaseComponent: React.FC<Props> = ({ radius = 'm', children, ...props }) => {
   const radiusMap = {
     s: '6px',
     m: '8px',
   }
 
-  return <Wrapper radius={radiusMap[radius]}>{children}</Wrapper>
+  return (
+    <Wrapper radius={radiusMap[radius]} {...props}>
+      {children}
+    </Wrapper>
+  )
 }
 
 interface WrapperProps {
@@ -26,6 +30,7 @@ const Wrapper = styled.div`
     return css`
       border-radius: ${radius};
       box-shadow: rgba(51, 51, 51, 0.3) 1px 1px 4px 0;
+      overflow: hidden;
     `
   }}
 `
