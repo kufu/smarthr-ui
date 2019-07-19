@@ -5,7 +5,8 @@
   "author": "SmartHR-UI Team",
   "dependencies": {
     "lodash.merge": "^4.6.1",
-    "lodash.range": "^3.2.0"
+    "lodash.range": "^3.2.0",
+    "react-icons": "^3.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
