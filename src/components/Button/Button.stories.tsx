@@ -2,6 +2,7 @@ import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
+import { FaPlusCircle } from 'react-icons/fa'
 
 import { Button, ButtonAnchor, ButtonDiv } from './Button'
 
@@ -53,6 +54,16 @@ storiesOf('Button', module).add('all', () => (
       <Button onClick={action('click button!')} full>
         フルサイズ
       </Button>
+    </li>
+
+    <li>
+      <Button onClick={action('click button!')} icon={FaPlusCircle}>
+        アイコンつき
+      </Button>
+    </li>
+
+    <li>
+      <FaPlusCircle />
     </li>
   </List>
 ))
