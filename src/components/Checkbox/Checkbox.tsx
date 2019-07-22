@@ -58,6 +58,7 @@ const Wrapper = styled.div`
       display: inline-block;
       width: 20px;
       height: 20px;
+      flex-shrink: 0;
       border-radius: ${frame.border.radius.s};
       border: ${frame.border.default};
       background-color: ${palette.White};

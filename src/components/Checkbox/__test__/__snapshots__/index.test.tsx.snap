@@ -177,7 +177,7 @@ exports[`Checkbox should be match snapshot 1`] = `
             "componentStyle": ComponentStyle {
               "componentId": "sc-bdVaJa",
               "isStatic": false,
-              "lastClassName": "gtcKYe",
+              "lastClassName": "NbjhZ",
               "rules": Array [
                 "
   ",
@@ -277,7 +277,7 @@ exports[`Checkbox should be match snapshot 1`] = `
         }
       >
         <div
-          className="active  light sc-bdVaJa gtcKYe"
+          className="active  light sc-bdVaJa NbjhZ"
         >
           <styled.span>
             <StyledComponent
