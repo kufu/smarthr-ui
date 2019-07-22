@@ -19,6 +19,8 @@ interface BaseProps {
   size?: Size
   full?: boolean
   children?: React.ReactNode
+  iconLeft?: React.ReactNode
+  iconRight?: React.ReactNode
 }
 
 interface ButtonProps extends BaseProps {
@@ -48,7 +50,14 @@ const buttonFactory: <Props extends BaseProps>(
 }) => {
   const Tag = hoverable()(Base.withComponent(tag))
   const classNames = `${type} ${size} ${full ? 'full' : ''}`
-  return <Tag className={classNames} {...props} />
+  //return <Tag className={classNames} {...props} />
+  return (
+    <Tag className={classNames} {...props}>
+      {props.iconLeft && <figure className="icon-left">{props.iconLeft}</figure>}
+      {props.children}
+      {props.iconRight && <figure className="icon-right">{props.iconRight}</figure>}
+    </Tag>
+  )
 }
 
 const ButtonComponent: React.FC<ButtonProps & InjectedProps> = buttonFactory<ButtonProps>('button')
@@ -143,6 +152,26 @@ const Base: any = styled.div`
         background-color: ${palette.Mono_P10};
         color: ${palette.Mono_P30};
         pointer-events: none;
+        cursor: not-allowed;
+      }
+
+      & figure.icon-left,
+      & figure.icon-right {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        vertical-align: middle;
+        line-height: 1;
+      }
+
+      & figure.icon-left {
+        margin-right: ${size.font.grande}px;
+        margin-left: -8px;
+      }
+
+      & figure.icon-right {
+        margin-left: ${size.font.grande}px;
+        margin-right: -8px;
       }
     `
   }}

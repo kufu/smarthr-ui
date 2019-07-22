@@ -57,13 +57,54 @@ storiesOf('Button', module).add('all', () => (
     </li>
 
     <li>
-      <Button onClick={action('click button!')} icon={FaPlusCircle}>
-        アイコンつき
+      <Button onClick={action('click button!')} type="primary" iconLeft={<FaPlusCircle />}>
+        左アイコン
+      </Button>
+      <Button onClick={action('click button!')} type="primary" iconRight={<FaPlusCircle />}>
+        右アイコン
+      </Button>
+      <Button
+        onClick={action('click button!')}
+        type="primary"
+        iconLeft={<FaPlusCircle />}
+        iconRight={<FaPlusCircle />}
+      >
+        両アイコン（非推奨）
       </Button>
     </li>
 
     <li>
-      <FaPlusCircle />
+      <Button onClick={action('click button!')} type="sub-b" iconLeft={<FaPlusCircle />}>
+        左アイコン
+      </Button>
+      <Button onClick={action('click button!')} type="sub-b" iconRight={<FaPlusCircle />}>
+        右アイコン
+      </Button>
+      <Button
+        onClick={action('click button!')}
+        type="sub-b"
+        iconLeft={<FaPlusCircle />}
+        iconRight={<FaPlusCircle />}
+      >
+        両アイコン（非推奨）
+      </Button>
+    </li>
+
+    <li>
+      <Button onClick={action('click button!')} disabled iconLeft={<FaPlusCircle />}>
+        左アイコン
+      </Button>
+      <Button onClick={action('click button!')} disabled iconRight={<FaPlusCircle />}>
+        右アイコン
+      </Button>
+      <Button
+        onClick={action('click button!')}
+        disabled
+        iconLeft={<FaPlusCircle />}
+        iconRight={<FaPlusCircle />}
+      >
+        両アイコン（非推奨）
+      </Button>
     </li>
   </List>
 ))
