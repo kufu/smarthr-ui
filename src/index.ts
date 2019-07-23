@@ -18,5 +18,3 @@ export { Tag } from './components/Tag'
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
-
-// test comment
