@@ -11010,11 +11010,11 @@ reg-cli@^0.13.0:
     x-img-diff-js "0.3.5"
 
 reg-keygen-git-hash-plugin@^0.7.16:
-  version "0.7.16"
-  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.7.16.tgz#46f82a079c06aca286f29931038a0355df6a3694"
-  integrity sha512-3620yIaogoCHngriSJJSMrjoTimECd9Fvt/XEnC/Ui2yYsl7X3JGLHjkKlYtf7NeRvhXh5gaJ5AVtvmA6VX0Eg==
+  version "0.7.23"
+  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.7.23.tgz#7c66d75fe5e512824fbf80e9d27318f9d525baba"
+  integrity sha512-eJV1NagFgoUuZWuBjMIJmiV0fOnxSp2tLxlyfgIjLLhiU7evqxKi7NDLbxVXgVsftwhBz5WIOnd66u6+D6u9jA==
   dependencies:
-    reg-suit-util "^0.7.16"
+    reg-suit-util "^0.7.23"
 
 reg-notify-github-plugin@^0.7.21:
   version "0.7.23"
