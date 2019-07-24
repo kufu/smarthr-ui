@@ -68,9 +68,11 @@ const Base: any = styled.div`
     return css`
       display: inline-block;
       width: ${({ wide }: any) => (wide ? '100%;' : 'auto')};
+      border: none;
       border-radius: ${frame.border.radius.m};
       color: ${palette.White};
-      font-size: ${size.font.grande}px;
+      font-size: ${size.font.tall}px;
+      font-weight: bold;
       text-align: center;
       text-decoration: none;
       box-sizing: border-box;
@@ -110,7 +112,7 @@ const Base: any = styled.div`
         background-color: #5e718d;
       }
       &.sub-b {
-        border: 1px solid #d2d2d2;
+        border: 1px solid ${palette.Mono_P20};
         background-color: ${palette.White};
         color: ${palette.Mono_P60};
       }
