@@ -3,6 +3,8 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
+import { HeaderButton } from '../HeaderButton/HeaderButton'
+import { FaQuestionCircle, FaThList, FaUser } from 'react-icons/fa'
 
 interface Props {
   tenant_name?: string
@@ -22,7 +24,17 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
       <span className="header-logoarea__tenant-name">{props.tenant_name}</span>
     </div>
 
-    <div className="header-naviarea">hoge</div>
+    <div className="header-naviarea">
+      <HeaderButton url="#" icon={<FaQuestionCircle />}>
+        ヘルプ
+      </HeaderButton>
+      <HeaderButton url="#" icon={<FaThList />}>
+        従業員リスト
+      </HeaderButton>
+      <HeaderButton url="#" icon={<FaUser />}>
+        従業員管理
+      </HeaderButton>
+    </div>
   </Wrapper>
 )
 
@@ -63,6 +75,12 @@ const Wrapper: any = styled.header`
           margin-left: ${size.space.xs}px;
           color: ${palette.White};
         }
+      }
+
+      .header-naviarea {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       }
     `
   }}
