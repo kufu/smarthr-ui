@@ -10,7 +10,7 @@ storiesOf('SmartHRLogo', module).add('all', () => (
       <SmartHRLogo />
     </li>
     <li>
-      <SmartHRLogo size="large" />
+      <SmartHRLogo title="タイトルを設定できます" fill="#008d91" />
     </li>
   </List>
 ))
