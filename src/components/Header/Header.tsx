@@ -12,7 +12,11 @@ interface Props {
 const HeaderComponent: React.FC<Props> = ({ ...props }) => (
   <Wrapper {...props}>
     <div className="header-logoarea">
-      <a className="header-logoarea__logo" href={props.logo_url ? props.logo_url : '/'}>
+      <a
+        className="header-logoarea__logo"
+        href={props.logo_url ? props.logo_url : '/'}
+        aria-label="SmartHR"
+      >
         <SmartHRLogo />
       </a>
       <span className="header-logoarea__tenant-name">{props.tenant_name}</span>
