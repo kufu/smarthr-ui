@@ -2,102 +2,42 @@ import { merge } from '../libs/lodash'
 
 // Allow deviations from the JavaScript naming convention to match SmartHR design guidelines
 export interface PaletteProperty {
+  TextBlack?: string
+  TextGrey?: string
+  Border?: string
   Background?: string
-  Background_Omen?: string
-  Background_Omen_M07?: string
-  Black?: string
-  Mono_P80?: string
-  Mono_P60?: string
-  Mono_P40?: string
-  Mono_P30?: string
-  Mono_P20?: string
-  Mono_P10?: string
-  Mono_P05?: string
-  Mono_P03?: string
-  White?: string
-  Overlay?: string
-  SmartHRGreen?: string
-  Main_P20?: string
-  Main_P10?: string
+  Column?: string
   Main?: string
-  GreenGray?: string
-  GreenGray_M20?: string
-  Blue_P30?: string
-  Blue?: string
-  Blue_M20?: string
-  Orange_P10?: string
-  Orange?: string
-  Orange_M30?: string
-  Red?: string
+  Danger?: string
+  Warning?: string
+  Scrim?: string
+  Overlay?: string
 }
 
 export interface CreatedPaletteTheme {
+  TextBlack: string
+  TextGrey: string
+  Border: string
   Background: string
-  Background_Omen: string
-  Background_Omen_M07: string
-  Black: string
-  Mono_P80: string
-  Mono_P60: string
-  Mono_P40: string
-  Mono_P30: string
-  Mono_P20: string
-  Mono_P10: string
-  Mono_P05: string
-  Mono_P03: string
-  White: string
-  Overlay: string
-  SmartHRGreen: string
-  Main_P20: string
-  Main_P10: string
+  Column: string
   Main: string
-  GreenGray: string
-  GreenGray_M20: string
-  Blue_P30: string
-  Blue: string
-  Blue_M20: string
-  Orange_P10: string
-  Orange: string
-  Orange_M30: string
-  Yellow: string
-  Red: string
+  Danger: string
+  Warning: string
+  Scrim: string
+  Overlay: string
 }
 
 export const defaultPalette: CreatedPaletteTheme = {
-  Background: '#f5f6fa',
-  Background_Omen: '#009ea6',
-  Background_Omen_M07: '#0dbac1',
-
-  Black: '#333',
-  Mono_P80: '#5c5c5c',
-  Mono_P60: '#858585',
-  Mono_P40: '#adadad',
-  Mono_P30: '#c1c1c1',
-  Mono_P20: '#d6d6d6',
-  Mono_P10: '#eaeaea',
-  Mono_P05: '#f5f5f5',
-  Mono_P03: '#f9f9f9',
-  White: '#fff',
-  Overlay: 'rgba(51, 51, 51, 0.4)',
-
-  SmartHRGreen: '#00c4cc',
-  Main_P20: '#007378',
-  Main_P10: '#008d91',
-  Main: '#00a5ab',
-
-  GreenGray: '#6bb0b3',
-  GreenGray_M20: '#f0f9fa',
-
-  Blue_P30: '#005180',
-  Blue: '#0081cc',
-  Blue_M20: '#4dbdff',
-
-  Orange_P10: '#e67a00',
-  Orange: '#f80',
-  Orange_M30: '#ffac4d',
-
-  Yellow: '#fc0',
-
-  Red: '#ef475b',
+  TextBlack: '#333',
+  TextGrey: '#767676',
+  Border: '#D6D6D6',
+  Background: '#F5F6FA',
+  Column: '#F9F9F9',
+  Main: '#00A5AB',
+  Danger: '#EF475B',
+  Warning: '#FF8800',
+  Scrim: 'rgba(0,0,0,0.5)',
+  Overlay: 'rgba(0,0,0,0.15)',
 }
 
 export const createPalette = (userPalette: PaletteProperty = {}) => {
