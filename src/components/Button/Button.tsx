@@ -142,7 +142,7 @@ const Base: any = styled.div`
       }
 
       &[disabled] {
-        background-color: ${palette.Mono_P10};
+        background-color: ${palette.Border};
         color: ${palette.Mono_P30};
         pointer-events: none;
       }

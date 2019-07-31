@@ -110,7 +110,7 @@ const Base = styled.input`
       }
 
       &[disabled] {
-        border-color: ${palette.Mono_P10};
+        border-color: ${palette.Border};
         pointer-events: none;
       }
     `

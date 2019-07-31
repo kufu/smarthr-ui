@@ -71,11 +71,11 @@ const Wrapper = styled.div`
       }
 
       &.disabled {
-        background-color: ${palette.Mono_P10};
-        border-color: ${palette.Mono_P10};
+        background-color: ${palette.Border};
+        border-color: ${palette.Border};
 
         &.active {
-          border-color: ${palette.Mono_P10};
+          border-color: ${palette.Border};
         }
       }
 
