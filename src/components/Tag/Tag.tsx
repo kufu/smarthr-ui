@@ -28,7 +28,7 @@ const TagComponent: React.FC<MergedProps> = ({ skeleton = false, type, children,
 const Wrapper = styled.span`
   ${({ theme, skeleton }: InjectedProps & WrapperProps) => {
     const { frame, size, palette } = theme
-    const { Black, White, Blue, Red, Yellow, Warning, Border } = palette
+    const { Black, White, Blue, Red, Warning, Border } = palette
 
     return css`
       margin: 0;
@@ -53,9 +53,9 @@ const Wrapper = styled.span`
       }
 
       &.warning {
-        border: 1px solid ${Yellow};
-        background-color: ${skeleton ? 'transparent' : Yellow};
-        color: ${skeleton ? Yellow : Black};
+        border: 1px solid ${Warning};
+        background-color: ${skeleton ? 'transparent' : Warning};
+        color: ${skeleton ? Warning : Black};
       }
 
       &.require {
