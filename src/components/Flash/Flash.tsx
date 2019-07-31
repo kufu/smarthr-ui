@@ -65,7 +65,7 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
 
     return (
       <Wrapper className={type} theme={theme}>
-        <Icon name={iconName} width={24} height={24} fill={theme.palette.White} />
+        <Icon name={iconName} width={24} height={24} fill="#fff" />
         <Txt theme={theme}>{text}</Txt>
         <CloseButton onClick={onClose} className="close">
           <Icon name="cross" width={12} height={12} fill={theme.palette.Border} />

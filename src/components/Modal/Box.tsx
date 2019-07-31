@@ -81,7 +81,7 @@ const Inner = styled.div`
       bottom: ${positionBottom};
       left: ${positionLeft};
       border-radius: ${theme.frame.border.radius.l};
-      background-color: ${theme.palette.White};
+      background-color: #fff;
       box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       transform: translate(${translateX}, ${translateY});
     `
