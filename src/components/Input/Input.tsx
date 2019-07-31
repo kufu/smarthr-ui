@@ -98,7 +98,7 @@ const Base = styled.input`
       box-sizing: border-box;
 
       &::placeholder {
-        color: ${palette.Mono_P30};
+        color: ${palette.TextGrey};
       }
 
       &:focus {
