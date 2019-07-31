@@ -137,7 +137,7 @@ const Txt = styled.p`
     return css`
       flex: 1;
       padding: 0 ${size.pxToRem(size.space.xs)};
-      color: ${palette.White};
+      color: #fff;
       font-size: ${size.pxToRem(size.font.tall)};
     `
   }}

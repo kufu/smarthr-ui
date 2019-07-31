@@ -51,12 +51,12 @@ const Base = styled.div`
       }
 
       &.light {
-        background-color: ${palette.White};
+        background-color: #fff;
         color: ${palette.Black};
       }
       &.dark {
         background-color: ${palette.Black};
-        color: ${palette.White};
+        color: #fff;
       }
 
       &.light.top {
@@ -64,7 +64,7 @@ const Base = styled.div`
           border-color: transparent transparent ${palette.Mono_P20};
         }
         &::after {
-          border-color: transparent transparent ${palette.White};
+          border-color: transparent transparent #fff;
         }
       }
       &.light.bottom {
@@ -72,7 +72,7 @@ const Base = styled.div`
           border-color: ${palette.Mono_P20} transparent transparent;
         }
         &::after {
-          border-color: ${palette.White} transparent transparent;
+          border-color: #fff transparent transparent;
         }
       }
 
@@ -156,7 +156,7 @@ const Base = styled.div`
               border-color: transparent ${palette.Mono_P20} transparent transparent;
             }
             &::after {
-              border-color: transparent ${palette.White} transparent transparent;
+              border-color: transparent #fff transparent transparent;
             }
           }
           &.dark {
@@ -182,7 +182,7 @@ const Base = styled.div`
               border-color: transparent transparent transparent ${palette.Mono_P20};
             }
             &::after {
-              border-color: transparent transparent transparent ${palette.White};
+              border-color: transparent transparent transparent #fff;
             }
           }
           &.dark {

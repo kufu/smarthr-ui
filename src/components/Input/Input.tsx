@@ -90,7 +90,7 @@ const Base = styled.input`
       padding: ${size.pxToRem(size.space.xxs)};
       border-radius: ${frame.border.radius.m};
       border: ${frame.border.default};
-      background-color: ${palette.White};
+      background-color: #fff;
       color: ${palette.Black};
       font-size: ${size.pxToRem(size.font.tall)};
       line-height: 1.6;

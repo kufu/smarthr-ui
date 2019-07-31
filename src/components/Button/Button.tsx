@@ -70,7 +70,7 @@ const Base: any = styled.div`
       width: ${({ wide }: any) => (wide ? '100%;' : 'auto')};
       border: none;
       border-radius: ${frame.border.radius.m};
-      color: ${palette.White};
+      color: #fff;
       font-size: ${size.font.tall}px;
       font-weight: bold;
       text-align: center;
@@ -113,13 +113,13 @@ const Base: any = styled.div`
       }
       &.sub-b {
         border: 1px solid ${palette.Mono_P20};
-        background-color: ${palette.White};
+        background-color: #fff;
         color: ${palette.Mono_P60};
       }
       &.sub-c {
-        border: 1px solid ${palette.White};
+        border: 1px solid #fff;
         background-color: transparent;
-        color: ${palette.White};
+        color: #fff;
       }
 
       &.hover {
@@ -136,7 +136,7 @@ const Base: any = styled.div`
           background-color: ${palette.Mono_P05};
         }
         &.sub-c {
-          background-color: ${palette.White};
+          background-color: #fff;
           color: ${palette.Main};
         }
       }

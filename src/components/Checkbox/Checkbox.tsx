@@ -61,7 +61,7 @@ const Wrapper = styled.div`
       flex-shrink: 0;
       border-radius: ${frame.border.radius.s};
       border: ${frame.border.default};
-      background-color: ${palette.White};
+      background-color: #fff;
       line-height: 1;
       box-sizing: border-box;
 
@@ -83,7 +83,7 @@ const Wrapper = styled.div`
         border-color: ${palette.Main};
 
         &.active {
-          background-color: ${palette.White};
+          background-color: #fff;
         }
       }
     `
