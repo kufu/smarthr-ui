@@ -106,7 +106,7 @@ const Base = styled.input`
       }
 
       &.error {
-        border-color: ${palette.Red};
+        border-color: ${palette.Danger};
       }
 
       &[disabled] {

@@ -125,14 +125,14 @@ const Wrapper = styled.div`
       }
 
       &.danger {
-        background-color: ${palette.Red};
+        background-color: ${palette.Danger};
       }
     `
   }}
 `
 const Txt = styled.p`
   ${({ theme }: InjectedProps) => {
-    const { size, palette } = theme
+    const { size } = theme
 
     return css`
       flex: 1;

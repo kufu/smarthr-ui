@@ -106,7 +106,7 @@ const Base: any = styled.div`
         background-color: ${palette.Main};
       }
       &.danger {
-        background-color: ${palette.Red};
+        background-color: ${palette.Danger};
       }
       &.sub-a {
         background-color: #5e718d;
