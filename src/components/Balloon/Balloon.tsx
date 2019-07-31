@@ -61,7 +61,7 @@ const Base = styled.div`
 
       &.light.top {
         &::before {
-          border-color: transparent transparent ${palette.Mono_P20};
+          border-color: transparent transparent ${palette.Border};
         }
         &::after {
           border-color: transparent transparent #fff;
@@ -69,7 +69,7 @@ const Base = styled.div`
       }
       &.light.bottom {
         &::before {
-          border-color: ${palette.Mono_P20} transparent transparent;
+          border-color: ${palette.Border} transparent transparent;
         }
         &::after {
           border-color: #fff transparent transparent;
@@ -153,7 +153,7 @@ const Base = styled.div`
           }
           &.light {
             &::before {
-              border-color: transparent ${palette.Mono_P20} transparent transparent;
+              border-color: transparent ${palette.Border} transparent transparent;
             }
             &::after {
               border-color: transparent #fff transparent transparent;
@@ -179,7 +179,7 @@ const Base = styled.div`
           }
           &.light {
             &::before {
-              border-color: transparent transparent transparent ${palette.Mono_P20};
+              border-color: transparent transparent transparent ${palette.Border};
             }
             &::after {
               border-color: transparent transparent transparent #fff;

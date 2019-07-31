@@ -112,7 +112,7 @@ const Base: any = styled.div`
         background-color: #5e718d;
       }
       &.sub-b {
-        border: 1px solid ${palette.Mono_P20};
+        border: 1px solid ${palette.Border};
         background-color: #fff;
         color: ${palette.Mono_P60};
       }
