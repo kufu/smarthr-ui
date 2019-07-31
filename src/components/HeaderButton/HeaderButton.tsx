@@ -10,7 +10,7 @@ export interface HeaderButtonProps {
   icon?: React.ReactNode
 }
 
-const HeaderButtonComponent: React.StatelessComponent<HeaderButtonProps & InjectedProps> = ({
+const HeaderButtonComponent: React.FC<HeaderButtonProps & InjectedProps> = ({
   theme,
   ...props
 }) => (
