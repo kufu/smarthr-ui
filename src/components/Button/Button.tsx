@@ -114,7 +114,7 @@ const Base: any = styled.div`
       &.sub-b {
         border: 1px solid ${palette.Border};
         background-color: #fff;
-        color: ${palette.Mono_P60};
+        color: ${palette.TextGrey};
       }
       &.sub-c {
         border: 1px solid #fff;
