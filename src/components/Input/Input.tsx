@@ -91,7 +91,7 @@ const Base = styled.input`
       border-radius: ${frame.border.radius.m};
       border: ${frame.border.default};
       background-color: #fff;
-      color: ${palette.Black};
+      color: ${palette.TextBlack};
       font-size: ${size.pxToRem(size.font.tall)};
       line-height: 1.6;
       outline: none;

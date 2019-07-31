@@ -52,10 +52,10 @@ const Base = styled.div`
 
       &.light {
         background-color: #fff;
-        color: ${palette.Black};
+        color: ${palette.TextBlack};
       }
       &.dark {
-        background-color: ${palette.Black};
+        background-color: ${palette.TextBlack};
         color: #fff;
       }
 
@@ -79,13 +79,13 @@ const Base = styled.div`
       &.dark.top {
         &::before,
         &::after {
-          border-color: transparent transparent ${palette.Black};
+          border-color: transparent transparent ${palette.TextBlack};
         }
       }
       &.dark.bottom {
         &::before,
         &::after {
-          border-color: ${palette.Black} transparent transparent;
+          border-color: ${palette.TextBlack} transparent transparent;
         }
       }
 
@@ -162,7 +162,7 @@ const Base = styled.div`
           &.dark {
             &::before,
             &::after {
-              border-color: transparent ${palette.Black} transparent transparent;
+              border-color: transparent ${palette.TextBlack} transparent transparent;
             }
           }
         }
@@ -188,7 +188,7 @@ const Base = styled.div`
           &.dark {
             &::before,
             &::after {
-              border-color: transparent transparent transparent ${palette.Black};
+              border-color: transparent transparent transparent ${palette.TextBlack};
             }
           }
         }
