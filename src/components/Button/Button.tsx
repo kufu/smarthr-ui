@@ -124,16 +124,16 @@ const Base: any = styled.div`
 
       &.hover {
         &.primary {
-          background-color: ${palette.Main_P10};
+          background-color: ${palette.hoverColor(palette.Main)};
         }
         &.danger {
-          background-color: #de283d;
+          background-color: ${palette.hoverColor(palette.Danger)};
         }
         &.sub-a {
           background-color: #414e62;
         }
         &.sub-b {
-          background-color: ${palette.Mono_P05};
+          background-color: ${palette.hoverColor('#fff')};
         }
         &.sub-c {
           background-color: #fff;
