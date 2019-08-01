@@ -1,4 +1,5 @@
 import { merge } from '../libs/lodash'
+import { darken } from 'polished'
 
 // Allow deviations from the JavaScript naming convention to match SmartHR design guidelines
 export interface PaletteProperty {
@@ -15,6 +16,7 @@ export interface PaletteProperty {
 }
 
 export interface CreatedPaletteTheme {
+  hoverColor: (value: string) => string
   TextBlack: string
   TextGrey: string
   Border: string
@@ -27,7 +29,7 @@ export interface CreatedPaletteTheme {
   Overlay: string
 }
 
-export const defaultPalette: CreatedPaletteTheme = {
+export const defaultPalette = {
   TextBlack: '#333',
   TextGrey: '#767676',
   Border: '#D6D6D6',
@@ -41,6 +43,12 @@ export const defaultPalette: CreatedPaletteTheme = {
 }
 
 export const createPalette = (userPalette: PaletteProperty = {}) => {
-  const created = merge(defaultPalette, userPalette)
+  const created: CreatedPaletteTheme = merge(
+    {
+      hoverColor: (value: string): string => darken(0.05, value),
+      ...defaultPalette,
+    },
+    userPalette,
+  )
   return created
 }
