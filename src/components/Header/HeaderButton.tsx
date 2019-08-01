@@ -21,25 +21,8 @@ const HeaderButtonComponent: React.FC<HeaderButtonProps & InjectedProps> = ({
       </HeaderButtonIcon>
     )}
     {props.children}
-    {/* {props.menus && CreateDropDownMenu(props.menus, theme)} */}
   </Wrapper>
 )
-
-// function CreateDropDownMenu(menus: Array<MenuProps>, theme: InjectedProps) {
-//   return (
-//     <DropDownMenu theme={theme}>
-//       {menus &&
-//         menus.map(menu => (
-//           <li key={`pagination-${menu}`}>
-//             <a href={menu.menu_url}>
-//               {menu.menu_icon && <figure>{menu.menu_icon}</figure>}
-//               {menu.menu_title}
-//             </a>
-//           </li>
-//         ))}
-//     </DropDownMenu>
-//   )
-// }
 
 export const HeaderButton = withTheme(HeaderButtonComponent)
 
@@ -72,20 +55,3 @@ const HeaderButtonIcon: any = styled.figure`
     `
   }}
 `
-
-// const DropDownMenu: any = styled.a`
-//   ${({ theme }: InjectedProps) => {
-//     const { palette, size } = theme
-
-//     return css`
-//       display: block;
-//       margin: 0;
-//       padding: 0 10px;
-//       color: ${palette.White};
-//       font-size: ${size.font.tall};
-//       text-decoration: none;
-//       line-height: 50px;
-//       transition: background-color 0.3s;
-//     `
-//   }}
-// `

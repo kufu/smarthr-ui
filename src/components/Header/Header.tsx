@@ -4,12 +4,38 @@ import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
-import { FaQuestionCircle, FaThList, FaUser } from 'react-icons/fa'
+import { HeaderDropDown } from './HeaderDropDown'
+import {
+  FaQuestionCircle,
+  FaThList,
+  FaUser,
+  FaEdit,
+  FaRegPlusSquare,
+  FaSyncAlt,
+} from 'react-icons/fa'
 
 interface Props {
   tenantName?: string
   logoUrl?: string
 }
+
+const DropDownSample = [
+  {
+    title: '新規登録する（手入力）',
+    url: '#menu1',
+    icon: <FaEdit />,
+  },
+  {
+    title: '新規登録する（ファイル）',
+    url: '#menu2',
+    icon: <FaRegPlusSquare />,
+  },
+  {
+    title: '更新する（ファイル）',
+    url: '#menu3',
+    icon: <FaSyncAlt />,
+  },
+]
 
 const HeaderComponent: React.FC<Props> = ({ ...props }) => (
   <Wrapper {...props}>
@@ -27,9 +53,10 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
       <HeaderButton url="#" icon={<FaThList />}>
         従業員リスト
       </HeaderButton>
-      <HeaderButton url="#" icon={<FaUser />}>
+      <HeaderDropDown icon={<FaUser />} menus={DropDownSample}>
         従業員管理
-      </HeaderButton>
+      </HeaderDropDown>
+      <HeaderDropDown menus={DropDownSample}>test@smarthr.co.jp</HeaderDropDown>
     </HeaderAreaNavi>
   </Wrapper>
 )
