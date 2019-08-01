@@ -3,8 +3,8 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
-import { HeaderButton } from './HeaderButton'
-import { HeaderDropDown } from './HeaderDropDown'
+import { HeaderButton, HeaderButtonProps } from './HeaderButton'
+import { HeaderDropDown, HeaderDropDownProps } from './HeaderDropDown'
 import {
   FaQuestionCircle,
   FaThList,
@@ -17,6 +17,11 @@ import {
 interface Props {
   tenantName?: string
   logoUrl?: string
+  buttons?: ButtonProps[]
+}
+
+interface ButtonProps extends HeaderButtonProps, HeaderDropDownProps {
+  buttonType: 'anchor' | 'dropdown'
 }
 
 const DropDownSample = [
