@@ -38,13 +38,11 @@ export const Header = withTheme(HeaderComponent)
 
 const Wrapper: any = styled.header`
   ${({ theme }: InjectedProps) => {
-    const { palette, size } = theme
-
     return css`
       display: flex;
-      height: 50px;
-      padding: 0 ${size.space.xs}px;
-      background-color: ${palette.SmartHRGreen};
+      height: ${theme.size.pxToRem(50)};
+      padding: 0 ${theme.size.pxToRem(theme.size.space.xs)};
+      background-color: ${theme.palette.Hanica_Green};
       box-sizing: border-box;
       position: relative;
       align-items: center;
@@ -72,12 +70,10 @@ const HeaderLogo: any = styled.a`
 
 const TenantName: any = styled.span`
   ${({ theme }: InjectedProps) => {
-    const { palette, size } = theme
-
     return css`
       display: block;
-      margin-left: ${size.space.xs}px;
-      color: ${palette.White};
+      margin-left: ${theme.size.space.xs}px;
+      color: ${theme.palette.White};
     `
   }}
 `

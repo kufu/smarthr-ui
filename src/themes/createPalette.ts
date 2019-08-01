@@ -29,6 +29,7 @@ export interface PaletteProperty {
   Orange?: string
   Orange_M30?: string
   Red?: string
+  Hanica_Green?: string
 }
 
 export interface CreatedPaletteTheme {
@@ -60,6 +61,7 @@ export interface CreatedPaletteTheme {
   Orange_M30: string
   Yellow: string
   Red: string
+  Hanica_Green?: string
 }
 
 export const defaultPalette: CreatedPaletteTheme = {
@@ -98,6 +100,8 @@ export const defaultPalette: CreatedPaletteTheme = {
   Yellow: '#fc0',
 
   Red: '#ef475b',
+
+  Hanica_Green: '#57d0d5',
 }
 
 export const createPalette = (userPalette: PaletteProperty = {}) => {
