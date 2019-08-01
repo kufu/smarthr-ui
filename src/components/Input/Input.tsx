@@ -102,7 +102,7 @@ const Base = styled.input`
       }
 
       &:focus {
-        border-color: ${palette.Main_P10};
+        border-color: ${palette.hoverColor(palette.Main)};
       }
 
       &.error {
