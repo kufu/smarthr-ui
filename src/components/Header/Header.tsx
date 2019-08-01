@@ -3,28 +3,24 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
-import { HeaderButton } from '../HeaderButton/HeaderButton'
+import { HeaderButton } from './HeaderButton'
 import { FaQuestionCircle, FaThList, FaUser } from 'react-icons/fa'
 
 interface Props {
-  tenant_name?: string
-  logo_url?: string
+  tenantName?: string
+  logoUrl?: string
 }
 
 const HeaderComponent: React.FC<Props> = ({ ...props }) => (
   <Wrapper {...props}>
-    <div className="header-logoarea">
-      <a
-        className="header-logoarea__logo"
-        href={props.logo_url ? props.logo_url : '/'}
-        aria-label="SmartHR"
-      >
+    <HeaderLogoArea>
+      <HeaderLogo href={props.logoUrl ? props.logoUrl : '/'} aria-label="SmartHR">
         <SmartHRLogo />
-      </a>
-      <span className="header-logoarea__tenant-name">{props.tenant_name}</span>
-    </div>
+      </HeaderLogo>
+      <TenantName {...props}>{props.tenantName}</TenantName>
+    </HeaderLogoArea>
 
-    <div className="header-naviarea">
+    <HeaderAreaNavi>
       <HeaderButton url="#" icon={<FaQuestionCircle />}>
         ヘルプ
       </HeaderButton>
@@ -34,7 +30,7 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
       <HeaderButton url="#" icon={<FaUser />}>
         従業員管理
       </HeaderButton>
-    </div>
+    </HeaderAreaNavi>
   </Wrapper>
 )
 
@@ -53,35 +49,41 @@ const Wrapper: any = styled.header`
       position: relative;
       align-items: center;
       justify-content: space-between;
-
-      .header-logoarea {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        &__logo {
-          display: block;
-          padding: 0;
-          box-sizing: border-box;
-          transition: opacity 0.3s;
-
-          &:hover {
-            opacity: 0.7;
-          }
-        }
-
-        &__tenant-name {
-          display: block;
-          margin-left: ${size.space.xs}px;
-          color: ${palette.White};
-        }
-      }
-
-      .header-naviarea {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
     `
   }}
+`
+
+const HeaderLogoArea: any = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const HeaderLogo: any = styled.a`
+  display: block;
+  padding: 0;
+  box-sizing: border-box;
+  transition: opacity 0.3s;
+
+  &:hover {
+    opacity: 0.7;
+  }
+`
+
+const TenantName: any = styled.span`
+  ${({ theme }: InjectedProps) => {
+    const { palette, size } = theme
+
+    return css`
+      display: block;
+      margin-left: ${size.space.xs}px;
+      color: ${palette.White};
+    `
+  }}
+`
+
+const HeaderAreaNavi: any = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `

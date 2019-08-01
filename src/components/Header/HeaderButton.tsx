@@ -15,7 +15,11 @@ const HeaderButtonComponent: React.FC<HeaderButtonProps & InjectedProps> = ({
   ...props
 }) => (
   <Wrapper theme={theme} href={props.url} target={props.target}>
-    {props.icon && <figure className="header-button__icon">{props.icon}</figure>}
+    {props.icon && (
+      <HeaderButtonIcon theme={theme} role="presentation">
+        {props.icon}
+      </HeaderButtonIcon>
+    )}
     {props.children}
     {/* {props.menus && CreateDropDownMenu(props.menus, theme)} */}
   </Wrapper>
@@ -41,27 +45,30 @@ export const HeaderButton = withTheme(HeaderButtonComponent)
 
 const Wrapper: any = styled.a`
   ${({ theme }: InjectedProps) => {
-    const { palette, size } = theme
-
     return css`
       display: block;
       margin: 0;
-      padding: 0 10px;
-      color: ${palette.White};
-      font-size: ${size.font.tall}px;
+      padding: 0 ${theme.size.pxToRem(10)};
+      color: ${theme.palette.White};
+      font-size: ${theme.size.pxToRem(theme.size.font.tall)};
       text-decoration: none;
-      line-height: 50px;
+      line-height: ${theme.size.pxToRem(50)};
       transition: background-color 0.3s;
 
       &:hover {
         background-color: rgba(255, 255, 255, 0.3);
       }
+    `
+  }}
+`
 
-      & .header-button__icon {
-        display: inline-block;
-        padding: 0;
-        margin: 0 ${size.space.xxs}px 0 0;
-      }
+const HeaderButtonIcon: any = styled.figure`
+  ${({ theme }: InjectedProps) => {
+    return css`
+      display: inline-block;
+      padding: 0;
+      margin: 0 ${theme.size.pxToRem(theme.size.space.xxs)} 0 0;
+      vertical-align: middle;
     `
   }}
 `
