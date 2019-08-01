@@ -32,12 +32,12 @@ export interface CreatedPaletteTheme {
 export const defaultPalette = {
   TextBlack: '#333',
   TextGrey: '#767676',
-  Border: '#D6D6D6',
-  Background: '#F5F6FA',
-  Column: '#F9F9F9',
-  Main: '#00A5AB',
-  Danger: '#EF475B',
-  Warning: '#FF8800',
+  Border: '#d6d6d6',
+  Background: '#f5f6fa',
+  Column: '#f9f9f9',
+  Main: '#00a5ab',
+  Danger: '#ef475b',
+  Warning: '#ff8800',
   Scrim: 'rgba(0,0,0,0.5)',
   Overlay: 'rgba(0,0,0,0.15)',
 }
