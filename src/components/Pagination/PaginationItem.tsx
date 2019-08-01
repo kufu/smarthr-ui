@@ -63,7 +63,7 @@ const Item = styled.span`
 
       &.hover {
         color: ${palette.Main};
-        background-color: ${palette.Mono_P05};
+        background-color: ${palette.hoverColor('#fff')};
       }
     `
   }}
