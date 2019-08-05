@@ -90,27 +90,27 @@ const Base = styled.input`
       padding: ${size.pxToRem(size.space.xxs)};
       border-radius: ${frame.border.radius.m};
       border: ${frame.border.default};
-      background-color: ${palette.White};
-      color: ${palette.Black};
+      background-color: #fff;
+      color: ${palette.TextBlack};
       font-size: ${size.pxToRem(size.font.tall)};
       line-height: 1.6;
       outline: none;
       box-sizing: border-box;
 
       &::placeholder {
-        color: ${palette.Mono_P30};
+        color: ${palette.TextGrey};
       }
 
       &:focus {
-        border-color: ${palette.Main_P10};
+        border-color: ${palette.hoverColor(palette.Main)};
       }
 
       &.error {
-        border-color: ${palette.Red};
+        border-color: ${palette.Danger};
       }
 
       &[disabled] {
-        border-color: ${palette.Mono_P10};
+        border-color: ${palette.Border};
         pointer-events: none;
       }
     `

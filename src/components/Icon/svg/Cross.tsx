@@ -14,7 +14,7 @@ const CrossIcon: React.FC<IconProps & InjectedProps> = ({
     <g id="Cross">
       <path
         d="M60.61,50,97.8,12.8A7.5,7.5,0,1,0,87.2,2.2L50,39.39,12.8,2.2A7.5,7.5,0,0,0,2.2,12.8L39.39,50,2.2,87.2A7.5,7.5,0,1,0,12.8,97.8L50,60.61,87.2,97.8A7.5,7.5,0,0,0,97.8,87.2Z"
-        fill={fill ? fill : theme.palette.Mono_P40}
+        fill={fill ? fill : theme.palette.TextGrey}
       />
     </g>
   </svg>

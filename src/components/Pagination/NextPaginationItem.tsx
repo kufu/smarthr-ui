@@ -29,6 +29,6 @@ export const NextPaginationItem = withTheme(NextPaginationItemComponent)
 
 const Button = styled(ItemButton)`
   ${({ theme }: InjectedProps) => css`
-    color: ${theme.palette.Mono_P40};
+    color: ${theme.palette.TextGrey};
   `}
 `

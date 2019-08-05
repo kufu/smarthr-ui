@@ -47,7 +47,7 @@ const Item = styled.span`
       width: 34px;
       padding: 0;
       border: none;
-      background-color: ${palette.White};
+      background-color: #fff;
       color: ${palette.Main};
       font-size: ${size.pxToRem(size.font.tall)};
       line-height: 32px;
@@ -57,13 +57,13 @@ const Item = styled.span`
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
 
       &.active {
-        color: ${palette.White};
+        color: #fff;
         background-color: ${palette.Main};
       }
 
       &.hover {
         color: ${palette.Main};
-        background-color: ${palette.Mono_P05};
+        background-color: ${palette.hoverColor('#fff')};
       }
     `
   }}

@@ -8,8 +8,8 @@ interface Props {
   size?: 's' | 'm' | 'l'
 }
 
-const LoaderComponent: React.FC<Props & InjectedProps> = ({ color, size, theme }) => {
-  const loaderColor = color || theme.palette.White
+const LoaderComponent: React.FC<Props & InjectedProps> = ({ color, size }) => {
+  const loaderColor = color || '#fff'
   const loaderSize = size || 'm'
 
   return (
