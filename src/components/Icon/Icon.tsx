@@ -53,9 +53,8 @@ import { Cross } from './svg/Cross'
 import { ExclamationTriangle } from './svg/ExclamationTriangle'
 
 export interface IconProps {
-  fill?: string
-  width?: number
-  height?: number
+  color?: string
+  size?: number
 }
 
 export interface Props extends IconProps {

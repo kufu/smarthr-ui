@@ -61,11 +61,11 @@ const icons: Array<Props['name']> = [
   'fa-users',
 ]
 
-const getIconList = (bg: string, fill?: string) =>
+const getIconList = (bg: string, color?: string) =>
   icons.map(name => (
-    <IconWrap key={`${fill}-${name}`} bg={bg}>
-      <Icon name={name} fill={fill} />
-      <IconName color={fill}>{name}</IconName>
+    <IconWrap key={`${color}-${name}`} bg={bg}>
+      <Icon name={name} color={color} />
+      <IconName color={color}>{name}</IconName>
     </IconWrap>
   ))
 
