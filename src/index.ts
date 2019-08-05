@@ -15,6 +15,7 @@ export { RadioLabel } from './components/RadioLabel'
 export { Button, ButtonAnchor, ButtonDiv } from './components/Button'
 export { Tag } from './components/Tag'
 export { Base } from './components/Base'
+export { Icon } from './components/Icon'
 
 // themes
 export { createTheme } from './themes/createTheme'
