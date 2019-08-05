@@ -1,12 +1,12 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "3.9.1",
+  "version": "3.9.2",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "lodash.merge": "^4.6.1",
     "lodash.range": "^3.2.0",
-    "react-icons": "^3.7.0"
+    "polished": "^3.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

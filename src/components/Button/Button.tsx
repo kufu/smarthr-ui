@@ -70,7 +70,7 @@ const Base: any = styled.div`
       width: ${({ wide }: any) => (wide ? '100%;' : 'auto')};
       border: none;
       border-radius: ${frame.border.radius.m};
-      color: ${palette.White};
+      color: #fff;
       font-size: ${size.font.tall}px;
       font-weight: bold;
       text-align: center;
@@ -106,44 +106,44 @@ const Base: any = styled.div`
         background-color: ${palette.Main};
       }
       &.danger {
-        background-color: ${palette.Red};
+        background-color: ${palette.Danger};
       }
       &.sub-a {
         background-color: #5e718d;
       }
       &.sub-b {
-        border: 1px solid ${palette.Mono_P20};
-        background-color: ${palette.White};
-        color: ${palette.Mono_P60};
+        border: 1px solid ${palette.Border};
+        background-color: #fff;
+        color: ${palette.TextGrey};
       }
       &.sub-c {
-        border: 1px solid ${palette.White};
+        border: 1px solid #fff;
         background-color: transparent;
-        color: ${palette.White};
+        color: #fff;
       }
 
       &.hover {
         &.primary {
-          background-color: ${palette.Main_P10};
+          background-color: ${palette.hoverColor(palette.Main)};
         }
         &.danger {
-          background-color: #de283d;
+          background-color: ${palette.hoverColor(palette.Danger)};
         }
         &.sub-a {
           background-color: #414e62;
         }
         &.sub-b {
-          background-color: ${palette.Mono_P05};
+          background-color: ${palette.hoverColor('#fff')};
         }
         &.sub-c {
-          background-color: ${palette.White};
+          background-color: #fff;
           color: ${palette.Main};
         }
       }
 
       &[disabled] {
-        background-color: ${palette.Mono_P10};
-        color: ${palette.Mono_P30};
+        background-color: ${palette.Border};
+        color: ${palette.TextGrey};
         pointer-events: none;
       }
     `

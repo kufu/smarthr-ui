@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 
     return css`
       padding: ${pcPadding};
-      background: ${palette.SmartHRGreen};
+      background: ${palette.Main};
 
       @media screen and (max-width: ${size.mediaQuery.tablet}px) {
         padding: ${tabletPadding};

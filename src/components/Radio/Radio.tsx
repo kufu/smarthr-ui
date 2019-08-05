@@ -48,7 +48,7 @@ const Wrapper = styled.div`
       height: 20px;
       border-radius: 50%;
       border: ${frame.border.default};
-      background-color: ${palette.White};
+      background-color: #fff;
       line-height: 1;
       box-sizing: border-box;
 
@@ -63,21 +63,21 @@ const Wrapper = styled.div`
           width: 8px;
           height: 8px;
           border-radius: 50%;
-          background-color: ${palette.White};
+          background-color: #fff;
           transform: translate(-50%, -50%);
           content: '';
         }
       }
 
       &.disabled {
-        background-color: ${palette.Mono_P10};
-        border-color: ${palette.Mono_P10};
+        background-color: ${palette.Border};
+        border-color: ${palette.Border};
 
         &.active {
-          border-color: ${palette.Mono_P10};
+          border-color: ${palette.Border};
 
           &::before {
-            background-color: ${palette.White};
+            background-color: #fff;
           }
         }
       }
@@ -86,7 +86,7 @@ const Wrapper = styled.div`
         border-color: ${palette.Main};
 
         &.active {
-          background-color: ${palette.White};
+          background-color: #fff;
 
           &::before {
             background-color: ${palette.Main};

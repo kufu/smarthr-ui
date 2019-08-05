@@ -105,7 +105,7 @@ const TenantName: any = styled.span`
     return css`
       display: block;
       margin-left: ${theme.size.space.xs}px;
-      color: ${theme.palette.White};
+      color: #ffffff;
     `
   }}
 `

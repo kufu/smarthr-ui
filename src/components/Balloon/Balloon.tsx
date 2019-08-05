@@ -51,41 +51,41 @@ const Base = styled.div`
       }
 
       &.light {
-        background-color: ${palette.White};
-        color: ${palette.Black};
+        background-color: #fff;
+        color: ${palette.TextBlack};
       }
       &.dark {
-        background-color: ${palette.Black};
-        color: ${palette.White};
+        background-color: ${palette.TextBlack};
+        color: #fff;
       }
 
       &.light.top {
         &::before {
-          border-color: transparent transparent ${palette.Mono_P20};
+          border-color: transparent transparent ${palette.Border};
         }
         &::after {
-          border-color: transparent transparent ${palette.White};
+          border-color: transparent transparent #fff;
         }
       }
       &.light.bottom {
         &::before {
-          border-color: ${palette.Mono_P20} transparent transparent;
+          border-color: ${palette.Border} transparent transparent;
         }
         &::after {
-          border-color: ${palette.White} transparent transparent;
+          border-color: #fff transparent transparent;
         }
       }
 
       &.dark.top {
         &::before,
         &::after {
-          border-color: transparent transparent ${palette.Black};
+          border-color: transparent transparent ${palette.TextBlack};
         }
       }
       &.dark.bottom {
         &::before,
         &::after {
-          border-color: ${palette.Black} transparent transparent;
+          border-color: ${palette.TextBlack} transparent transparent;
         }
       }
 
@@ -153,16 +153,16 @@ const Base = styled.div`
           }
           &.light {
             &::before {
-              border-color: transparent ${palette.Mono_P20} transparent transparent;
+              border-color: transparent ${palette.Border} transparent transparent;
             }
             &::after {
-              border-color: transparent ${palette.White} transparent transparent;
+              border-color: transparent #fff transparent transparent;
             }
           }
           &.dark {
             &::before,
             &::after {
-              border-color: transparent ${palette.Black} transparent transparent;
+              border-color: transparent ${palette.TextBlack} transparent transparent;
             }
           }
         }
@@ -179,16 +179,16 @@ const Base = styled.div`
           }
           &.light {
             &::before {
-              border-color: transparent transparent transparent ${palette.Mono_P20};
+              border-color: transparent transparent transparent ${palette.Border};
             }
             &::after {
-              border-color: transparent transparent transparent ${palette.White};
+              border-color: transparent transparent transparent #fff;
             }
           }
           &.dark {
             &::before,
             &::after {
-              border-color: transparent transparent transparent ${palette.Black};
+              border-color: transparent transparent transparent ${palette.TextBlack};
             }
           }
         }

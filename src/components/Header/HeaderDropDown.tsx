@@ -65,7 +65,7 @@ const ButtonWrapper: any = styled.button`
       padding: 0 ${theme.size.pxToRem(10)};
       border: none;
       background: none;
-      color: ${theme.palette.White};
+      color: #ffffff;
       font-size: ${theme.size.pxToRem(theme.size.font.tall)};
       text-decoration: none;
       line-height: ${theme.size.pxToRem(50)};
@@ -105,9 +105,9 @@ const MenuWrapper: any = styled.div`
   ${({ theme }: InjectedProps) => {
     return css`
       display: block;
-      border: 1px solid ${theme.palette.Mono_P30};
+      border: 1px solid ${theme.palette.Border};
       border-radius: ${theme.size.pxToRem(3)};
-      background-color: ${theme.palette.White};
+      background-color: #ffffff;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
       position: absolute;
       top: 100%;
@@ -148,14 +148,14 @@ const MenuListItemAnchor: any = styled.a`
     return css`
       display: block;
       padding: ${theme.size.pxToRem(3)} ${theme.size.pxToRem(20)};
-      color: ${theme.palette.Black};
+      color: ${theme.palette.TextBlack};
       font-size: ${theme.size.pxToRem(theme.size.font.tall)}
       text-decoration: none;
       white-space: nowrap;
       transition: background-color 0.3s;
 
       &:hover{
-        background-color: ${theme.palette.Mono_P05};
+        background-color: ${theme.palette.Overlay};
       }
     `
   }}

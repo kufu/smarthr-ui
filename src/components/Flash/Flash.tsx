@@ -65,10 +65,10 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
 
     return (
       <Wrapper className={type} theme={theme}>
-        <Icon name={iconName} width={24} height={24} fill={theme.palette.White} />
+        <Icon name={iconName} width={24} height={24} fill="#fff" />
         <Txt theme={theme}>{text}</Txt>
         <CloseButton onClick={onClose} className="close">
-          <Icon name="cross" width={12} height={12} fill={theme.palette.Mono_P20} />
+          <Icon name="cross" width={12} height={12} fill={theme.palette.Border} />
         </CloseButton>
       </Wrapper>
     )
@@ -125,19 +125,19 @@ const Wrapper = styled.div`
       }
 
       &.danger {
-        background-color: ${palette.Red};
+        background-color: ${palette.Danger};
       }
     `
   }}
 `
 const Txt = styled.p`
   ${({ theme }: InjectedProps) => {
-    const { size, palette } = theme
+    const { size } = theme
 
     return css`
       flex: 1;
       padding: 0 ${size.pxToRem(size.space.xs)};
-      color: ${palette.White};
+      color: #fff;
       font-size: ${size.pxToRem(size.font.tall)};
     `
   }}
