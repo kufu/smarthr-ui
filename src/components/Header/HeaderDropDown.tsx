@@ -7,6 +7,7 @@ import { FaCaretDown } from 'react-icons/fa'
 export interface HeaderDropDownProps {
   children?: React.ReactNode
   icon?: React.ReactNode
+  open?: boolean
   menus?: HeaderDropDownMenuProps[]
 }
 
@@ -21,7 +22,7 @@ const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = (
   ...props
 }) => (
   <Wrapper>
-    <ButtonWrapper theme={theme}>
+    <ButtonWrapper theme={theme} open={props.open} aria-expanded={props.open} alia-line="polite">
       {props.icon && (
         <HeaderDropDownIcon theme={theme} role="presentation">
           {props.icon}
@@ -33,7 +34,7 @@ const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = (
       </HeaderDropDownCaret>
     </ButtonWrapper>
 
-    <MenuWrapper theme={theme}>
+    <MenuWrapper theme={theme} open={props.open} role="menu" aria-label={props.children}>
       {props.menus && (
         <MenuList theme={theme}>
           {props.menus.map(menu => (
@@ -58,13 +59,13 @@ const Wrapper: any = styled.div`
 `
 
 const ButtonWrapper: any = styled.button`
-  ${({ theme }: InjectedProps) => {
+  ${({ theme, open }: InjectedProps & HeaderDropDownProps) => {
     return css`
       display: block;
       margin: 0;
       padding: 0 ${theme.size.pxToRem(10)};
       border: none;
-      background: none;
+      background: ${open ? 'rgba(255, 255, 255, 0.3)' : 'none'};
       color: #ffffff;
       font-size: ${theme.size.pxToRem(theme.size.font.tall)};
       text-decoration: none;
@@ -102,9 +103,9 @@ const HeaderDropDownCaret: any = styled.figure`
 `
 
 const MenuWrapper: any = styled.div`
-  ${({ theme }: InjectedProps) => {
+  ${({ theme, open }: InjectedProps & HeaderDropDownProps) => {
     return css`
-      display: block;
+      display: ${open ? 'block' : 'none'};
       border: 1px solid ${theme.palette.Border};
       border-radius: ${theme.size.pxToRem(3)};
       background-color: #ffffff;

@@ -24,9 +24,7 @@ const SmartHRLogoComponent: React.FC<Props & InjectedProps> = ({ theme, fill, ti
 export const SmartHRLogo = withTheme(SmartHRLogoComponent)
 
 const Wrapper: any = styled.figure`
-  ${({ theme, fill }: StyledProps) => {
-    const { palette } = theme
-
+  ${({ fill }: StyledProps) => {
     return css`
       display: block;
       margin: 0;
@@ -36,7 +34,7 @@ const Wrapper: any = styled.figure`
         display: block;
         width: 150px;
         height: 27px;
-        fill: ${fill ? fill : palette.White};
+        fill: ${fill ? fill : '#fff'};
       }
     `
   }}

@@ -22,9 +22,7 @@ const IconLogoComponent: React.FC<Props & InjectedProps> = ({ theme, fill }) => 
 export const IconLogo = withTheme(IconLogoComponent)
 
 const Wrapper: any = styled.figure`
-  ${({ theme, fill }: StyledProps) => {
-    const { palette } = theme
-
+  ${({ fill }: StyledProps) => {
     return css`
       display: block;
       margin: 0;
@@ -34,7 +32,7 @@ const Wrapper: any = styled.figure`
         display: block;
         width: 27px;
         height: 27px;
-        fill: ${fill ? fill : palette.White};
+        fill: ${fill ? fill : '#fff'};
       }
     `
   }}

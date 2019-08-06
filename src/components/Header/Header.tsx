@@ -58,7 +58,7 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
       <HeaderButton url="#" icon={<FaThList />}>
         従業員リスト
       </HeaderButton>
-      <HeaderDropDown icon={<FaUser />} menus={DropDownSample}>
+      <HeaderDropDown icon={<FaUser />} menus={DropDownSample} open>
         従業員管理
       </HeaderDropDown>
       <HeaderDropDown menus={DropDownSample}>test@smarthr.co.jp</HeaderDropDown>
