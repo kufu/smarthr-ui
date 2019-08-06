@@ -13,7 +13,12 @@ const HeaderNotificationComponent: React.FC<HeaderNotificationProps & InjectedPr
   ...props
 }) => (
   <Wrapper theme={theme}>
-    <Anchor theme={theme} number={props.number} href={props.url ? props.url : '/notifications'}>
+    <Anchor
+      theme={theme}
+      number={props.number}
+      href={props.url ? props.url : '/notifications'}
+      aria-label="通知履歴"
+    >
       {props.number && props.number > 10 ? '9+' : props.number}
     </Anchor>
   </Wrapper>
