@@ -12,9 +12,10 @@ export interface HeaderDropDownProps {
 }
 
 export interface HeaderDropDownMenuProps {
+  type: 'link' | 'header' | 'divider'
   icon?: React.ReactNode
-  title: string
-  url: string
+  title?: string
+  url?: string
 }
 
 const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = ({
@@ -34,15 +35,21 @@ const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = (
       </HeaderDropDownCaret>
     </ButtonWrapper>
 
-    <MenuWrapper theme={theme} open={props.open} role="menu" aria-label={props.children}>
+    <MenuWrapper theme={theme} open={props.open} role="menu">
       {props.menus && (
         <MenuList theme={theme}>
           {props.menus.map(menu => (
             <MenuListItem key={menu.title}>
-              <MenuListItemAnchor theme={theme} href={menu.url}>
-                {menu.icon && <MenuListItemIcon theme={theme}>{menu.icon}</MenuListItemIcon>}
-                {menu.title}
-              </MenuListItemAnchor>
+              {menu.type === 'link' ? (
+                <MenuListItemAnchor theme={theme} href={menu.url}>
+                  {menu.icon && <MenuListItemIcon theme={theme}>{menu.icon}</MenuListItemIcon>}
+                  {menu.title}
+                </MenuListItemAnchor>
+              ) : menu.type === 'header' ? (
+                <MenuListItemHeader theme={theme}>{menu.title}</MenuListItemHeader>
+              ) : (
+                <MenuListItemDivider theme={theme} role="separator" />
+              )}
             </MenuListItem>
           ))}
         </MenuList>
@@ -158,6 +165,30 @@ const MenuListItemAnchor: any = styled.a`
       &:hover{
         background-color: ${theme.palette.Overlay};
       }
+    `
+  }}
+`
+
+const MenuListItemHeader: any = styled.span`
+  ${({ theme }: InjectedProps) => {
+    return css`
+      display: block;
+      padding: ${theme.size.pxToRem(3)} ${theme.size.pxToRem(20)};
+      color: ${theme.palette.TextGrey};
+      font-size: ${theme.size.pxToRem(theme.size.font.tasting)}
+      line-height: 1.6;
+      white-space: nowrap;
+    `
+  }}
+`
+
+const MenuListItemDivider: any = styled.div`
+  ${({ theme }: InjectedProps) => {
+    return css`
+      display: block;
+      padding: 0;
+      margin: ${theme.size.pxToRem(10)} 0;
+      border-top: 1px solid ${theme.palette.Border};
     `
   }}
 `

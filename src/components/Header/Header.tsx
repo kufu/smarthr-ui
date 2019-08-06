@@ -3,44 +3,21 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
-import { HeaderButton, HeaderButtonProps } from './HeaderButton'
-import { HeaderDropDown, HeaderDropDownProps } from './HeaderDropDown'
-import {
-  FaQuestionCircle,
-  FaThList,
-  FaUser,
-  FaEdit,
-  FaRegPlusSquare,
-  FaSyncAlt,
-} from 'react-icons/fa'
+import { HeaderButton } from './HeaderButton'
+import { HeaderDropDown, HeaderDropDownMenuProps } from './HeaderDropDown'
+import { HeaderNotification } from './HeaderNotification'
+import { FaQuestionCircle, FaThList, FaUser } from 'react-icons/fa'
 
 interface Props {
   tenantName?: string
   logoUrl?: string
-  buttons?: ButtonProps[]
+  helpButtonLink?: string
+  employeeListButtonLink?: string
+  userMailAddress?: string
+  employeeButtonMenu?: HeaderDropDownMenuProps[]
+  userButtonMenu?: HeaderDropDownMenuProps[]
+  notificationNumber?: number
 }
-
-interface ButtonProps extends HeaderButtonProps, HeaderDropDownProps {
-  buttonType: 'anchor' | 'dropdown'
-}
-
-const DropDownSample = [
-  {
-    title: '新規登録する（手入力）',
-    url: '#menu1',
-    icon: <FaEdit />,
-  },
-  {
-    title: '新規登録する（ファイル）',
-    url: '#menu2',
-    icon: <FaRegPlusSquare />,
-  },
-  {
-    title: '更新する（ファイル）',
-    url: '#menu3',
-    icon: <FaSyncAlt />,
-  },
-]
 
 const HeaderComponent: React.FC<Props> = ({ ...props }) => (
   <Wrapper {...props}>
@@ -52,16 +29,19 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
     </HeaderLogoArea>
 
     <HeaderAreaNavi>
-      <HeaderButton url="#" icon={<FaQuestionCircle />}>
+      <HeaderButton url={props.helpButtonLink} icon={<FaQuestionCircle />}>
         ヘルプ
       </HeaderButton>
-      <HeaderButton url="#" icon={<FaThList />}>
+      <HeaderButton url={props.employeeListButtonLink} icon={<FaThList />}>
         従業員リスト
       </HeaderButton>
-      <HeaderDropDown icon={<FaUser />} menus={DropDownSample} open>
+      <HeaderDropDown icon={<FaUser />} menus={props.employeeButtonMenu} open>
         従業員管理
       </HeaderDropDown>
-      <HeaderDropDown menus={DropDownSample}>test@smarthr.co.jp</HeaderDropDown>
+      <HeaderNotification number={props.notificationNumber} />
+      <HeaderDropDown menus={props.userButtonMenu} open>
+        {props.userMailAddress}
+      </HeaderDropDown>
     </HeaderAreaNavi>
   </Wrapper>
 )
