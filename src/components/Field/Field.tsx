@@ -103,7 +103,7 @@ const Help = styled.p`
   ${({ theme }: InjectedProps) => css`
     margin: 0;
     color: ${theme.palette.TextGrey};
-    font-size: ${theme.size.pxToRem(theme.size.font.tasting)};
+    font-size: ${theme.size.pxToRem(theme.size.font.short)};
   `}
 `
 const Error = styled.p`

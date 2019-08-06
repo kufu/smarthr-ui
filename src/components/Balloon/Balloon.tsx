@@ -37,7 +37,7 @@ const Base = styled.div`
     return css`
       position: relative;
       display: inline-block;
-      font-size: ${size.pxToRem(size.font.tasting)};
+      font-size: ${size.pxToRem(size.font.short)};
       border-radius: 4px;
       box-shadow: 0 2px 8px 0 rgba(51, 51, 51, 0.35);
       white-space: nowrap;

@@ -35,7 +35,7 @@ const Wrapper = styled.span`
       padding: 0 ${size.pxToRem(theme.size.space.xxs)};
       display: inline-block;
       white-space: nowrap;
-      font-size: ${size.font.tasting}px;
+      font-size: ${size.font.short}px;
       border: ${frame.border.default};
       background-color: transparent;
       color: ${Border};

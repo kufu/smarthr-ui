@@ -17,12 +17,10 @@ export interface SizeProperty {
   }
   // respect for Starbucks...
   font?: {
-    tasting?: number
     short?: number
     tall?: number
     grande?: number
     venti?: number
-    trenta?: number
   }
   mediaQuery?: {
     sp?: number
@@ -42,12 +40,10 @@ export interface CreatedSizeTheme {
     xxl: number
   }
   font: {
-    tasting: number
     short: number
     tall: number
     grande: number
     venti: number
-    trenta: number
   }
   mediaQuery: {
     sp: number
@@ -57,12 +53,10 @@ export interface CreatedSizeTheme {
 
 const defaultSize = {
   font: {
-    tasting: 12,
-    short: 13,
+    short: 11,
     tall: 14,
-    grande: 16,
-    venti: 20,
-    trenta: 22,
+    grande: 18,
+    venti: 24,
   },
   mediaQuery: {
     sp: 599,
