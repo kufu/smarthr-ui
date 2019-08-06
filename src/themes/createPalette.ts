@@ -13,6 +13,7 @@ export interface PaletteProperty {
   Warning?: string
   Scrim?: string
   Overlay?: string
+  Hanica_Green?: string
 }
 
 export interface CreatedPaletteTheme {
@@ -27,6 +28,7 @@ export interface CreatedPaletteTheme {
   Warning: string
   Scrim: string
   Overlay: string
+  Hanica_Green: string
 }
 
 export const defaultPalette = {
@@ -40,6 +42,7 @@ export const defaultPalette = {
   Warning: '#ff8800',
   Scrim: 'rgba(0,0,0,0.5)',
   Overlay: 'rgba(0,0,0,0.15)',
+  Hanica_Green: '#57d0d5',
 }
 
 export const createPalette = (userPalette: PaletteProperty = {}) => {
