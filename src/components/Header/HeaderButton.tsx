@@ -6,7 +6,7 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 export interface HeaderButtonProps {
   children?: React.ReactNode
   url?: string
-  target?: '_self' | '_blank'
+  target?: string
   icon?: React.ReactNode
 }
 
@@ -14,13 +14,13 @@ const HeaderButtonComponent: React.FC<HeaderButtonProps & InjectedProps> = ({
   theme,
   ...props
 }) => (
-  <Wrapper theme={theme} href={props.url} target={props.target}>
+  <Wrapper theme={theme} href={props.url} target={props.target && props.target}>
     {props.icon && (
       <HeaderButtonIcon theme={theme} role="presentation">
         {props.icon}
       </HeaderButtonIcon>
     )}
-    {props.children}
+    {props.children && props.children}
   </Wrapper>
 )
 

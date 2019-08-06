@@ -17,19 +17,19 @@ const employeeButtonMenu = [
   {
     type: 'link' as 'link',
     title: '新規登録する（手入力）',
-    url: '#menu1',
+    url: '/crews/new',
     icon: <FaEdit />,
   },
   {
     type: 'link' as 'link',
     title: '新規登録する（ファイル）',
-    url: '#menu2',
+    url: '/crews/bulk_inserter',
     icon: <FaRegPlusSquare />,
   },
   {
     type: 'link' as 'link',
     title: '更新する（ファイル）',
-    url: '#menu3',
+    url: '/crews/bulk_updater',
     icon: <FaSyncAlt />,
   },
   {
@@ -38,7 +38,7 @@ const employeeButtonMenu = [
   {
     type: 'link' as 'link',
     title: 'SmartHR に招待',
-    url: '#menu4',
+    url: '/crews/inviter',
     icon: <FaPaperPlane />,
   },
 ]
@@ -51,7 +51,7 @@ const userButtonMenu = [
   {
     type: 'link' as 'link',
     title: '個人設定',
-    url: '#menu1',
+    url: '/my/account',
     icon: <FaCog />,
   },
   {
@@ -64,7 +64,7 @@ const userButtonMenu = [
   {
     type: 'link' as 'link',
     title: '共通設定',
-    url: '#menu2',
+    url: '/admin/company',
     icon: <FaBuilding />,
   },
   {
@@ -73,19 +73,21 @@ const userButtonMenu = [
   {
     type: 'link' as 'link',
     title: 'ヘルプ',
-    url: '#menu3',
+    url: 'https://smarthr.jp/hel',
     icon: <FaQuestionCircle />,
+    target: '_blank',
   },
   {
     type: 'link' as 'link',
     title: 'SmartHR スクール',
-    url: '#menu4',
+    url: 'https://smarthr.thinkific.com/',
     icon: <FaGraduationCap />,
+    target: '_blank',
   },
   {
     type: 'link' as 'link',
     title: 'ログアウト',
-    url: '#menu5',
+    url: 'https://test-inc.smarthr.jp/logout',
     icon: <FaPowerOff />,
   },
 ]
@@ -93,8 +95,8 @@ const userButtonMenu = [
 storiesOf('Header', module).add('all', () => (
   <Header
     tenantName="TESTINC 株式会社"
-    helpButtonLink="#help"
-    employeeListButtonLink="#employees"
+    helpButtonLink="https://smarthr.jp/help/"
+    employeeListButtonLink="/crews"
     userMailAddress="test@smarthr.co.jp"
     employeeButtonMenu={employeeButtonMenu}
     userButtonMenu={userButtonMenu}

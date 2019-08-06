@@ -29,7 +29,7 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
     </HeaderLogoArea>
 
     <HeaderAreaNavi>
-      <HeaderButton url={props.helpButtonLink} icon={<FaQuestionCircle />}>
+      <HeaderButton url={props.helpButtonLink} icon={<FaQuestionCircle />} target="_blank">
         ヘルプ
       </HeaderButton>
       <HeaderButton url={props.employeeListButtonLink} icon={<FaThList />}>

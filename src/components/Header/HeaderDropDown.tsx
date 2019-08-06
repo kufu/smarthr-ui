@@ -16,6 +16,7 @@ export interface HeaderDropDownMenuProps {
   icon?: React.ReactNode
   title?: string
   url?: string
+  target?: string
 }
 
 const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = ({
@@ -39,9 +40,13 @@ const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = (
       {props.menus && (
         <MenuList theme={theme}>
           {props.menus.map(menu => (
-            <MenuListItem key={menu.title}>
+            <MenuListItem key={menu.title} role="menuitem">
               {menu.type === 'link' ? (
-                <MenuListItemAnchor theme={theme} href={menu.url}>
+                <MenuListItemAnchor
+                  theme={theme}
+                  href={menu.url}
+                  target={menu.target && menu.target}
+                >
                   {menu.icon && <MenuListItemIcon theme={theme}>{menu.icon}</MenuListItemIcon>}
                   {menu.title}
                 </MenuListItemAnchor>
@@ -124,7 +129,7 @@ const MenuWrapper: any = styled.div`
   }}
 `
 
-const MenuList: any = styled.ul`
+const MenuList: any = styled.div`
   ${({ theme }: InjectedProps) => {
     return css`
       display: block;
@@ -134,7 +139,7 @@ const MenuList: any = styled.ul`
   }}
 `
 
-const MenuListItem: any = styled.li`
+const MenuListItem: any = styled.div`
   display: block;
   margin: 0;
   padding: 0;
