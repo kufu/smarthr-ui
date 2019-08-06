@@ -15,6 +15,9 @@ export { RadioLabel } from './components/RadioLabel'
 export { Button, ButtonAnchor, ButtonDiv } from './components/Button'
 export { Tag } from './components/Tag'
 export { Base } from './components/Base'
+export { Header, HeaderButton, HeaderDropDown, HeaderNotification } from './components/Header'
+export { SmartHRLogo } from './components/SmartHRLogo'
+export { IconLogo } from './components/IconLogo'
 
 // themes
 export { createTheme } from './themes/createTheme'
