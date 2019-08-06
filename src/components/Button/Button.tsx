@@ -19,6 +19,7 @@ interface BaseProps {
   size?: Size
   full?: boolean
   children?: React.ReactNode
+  className?: string
 }
 
 interface ButtonProps extends BaseProps {
@@ -44,10 +45,11 @@ const buttonFactory: <Props extends BaseProps>(
   type = 'primary',
   size = 'm',
   full = false,
+  className = '',
   ...props
 }) => {
   const Tag = hoverable()(Base.withComponent(tag))
-  const classNames = `${type} ${size} ${full ? 'full' : ''}`
+  const classNames = `${type} ${size} ${full ? 'full' : ''} ${className}`
   return <Tag className={classNames} {...props} />
 }
 
