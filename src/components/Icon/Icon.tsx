@@ -46,6 +46,11 @@ import {
   FaUserAlt,
   FaUserCircle,
   FaUsers,
+  FaEdit,
+  FaRegPlusSquare,
+  FaGraduationCap,
+  FaPaperPlane,
+  FaPowerOff,
 } from 'react-icons/fa'
 import { Check } from './svg/Check'
 import { CheckCircle } from './svg/CheckCircle'
@@ -112,6 +117,11 @@ const iconMap = {
   'fa-user-alt': FaUserAlt,
   'fa-user-circle': FaUserCircle,
   'fa-users': FaUsers,
+  'fa-edit': FaEdit,
+  'fa-reg-plus-square': FaRegPlusSquare,
+  'fa-graduation-cap': FaGraduationCap,
+  'fa-paper-plane': FaPaperPlane,
+  'fa-power-off': FaPowerOff,
 }
 export const Icon: React.FC<Props> = ({ name, ...props }) => {
   const SvgIcon = iconMap[name]

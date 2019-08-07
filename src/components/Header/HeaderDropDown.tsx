@@ -2,19 +2,19 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { FaCaretDown } from 'react-icons/fa'
+import { Icon, Props as IconProps } from '../Icon'
 import { getParentElementRecursively } from '../Dropdown/helper'
 
 export interface HeaderDropDownProps {
   children?: React.ReactNode
-  icon?: React.ReactNode
+  icon?: IconProps['name']
   menus?: HeaderDropDownMenuProps[]
   dropDownKey: string
 }
 
 export interface HeaderDropDownMenuProps {
   type: 'link' | 'header' | 'divider'
-  icon?: React.ReactNode
+  icon?: IconProps['name']
   title?: string
   url?: string
   target?: string
@@ -35,14 +35,16 @@ const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = (
   }, [])
 
   const handleClickBody = (e: { target: HTMLElement }) => {
-    if (getParentElementRecursively(e.target, props.dropDownKey)) return
+    if (getParentElementRecursively(e.target, `headerDropDownComponent-${props.dropDownKey}`)) {
+      return
+    }
     setOpened(false)
   }
 
   const handleToggleOpen = () => setOpened(!opened)
 
   return (
-    <Wrapper className={props.dropDownKey}>
+    <Wrapper className={`headerDropDownComponent-${props.dropDownKey}`}>
       <ButtonWrapper
         onClick={handleToggleOpen}
         theme={theme}
@@ -52,12 +54,12 @@ const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = (
       >
         {props.icon && (
           <HeaderDropDownIcon theme={theme} role="presentation">
-            {props.icon}
+            <Icon name={props.icon} />
           </HeaderDropDownIcon>
         )}
         {props.children}
         <HeaderDropDownCaret theme={theme} role="presentation">
-          <FaCaretDown />
+          <Icon name="fa-caret-down" />
         </HeaderDropDownCaret>
       </ButtonWrapper>
 
@@ -72,7 +74,11 @@ const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = (
                     href={menu.url}
                     target={menu.target && menu.target}
                   >
-                    {menu.icon && <MenuListItemIcon theme={theme}>{menu.icon}</MenuListItemIcon>}
+                    {menu.icon && (
+                      <MenuListItemIcon theme={theme}>
+                        <Icon name={menu.icon} />
+                      </MenuListItemIcon>
+                    )}
                     {menu.title}
                   </MenuListItemAnchor>
                 ) : menu.type === 'header' ? (

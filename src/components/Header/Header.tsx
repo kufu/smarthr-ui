@@ -6,7 +6,7 @@ import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
 import { HeaderDropDown, HeaderDropDownMenuProps } from './HeaderDropDown'
 import { HeaderNotification } from './HeaderNotification'
-import { FaQuestionCircle, FaThList, FaUser } from 'react-icons/fa'
+import { FaQuestionCircle, FaThList } from 'react-icons/fa'
 
 interface Props {
   tenantName?: string
@@ -38,7 +38,7 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
       <HeaderDropDown
         key="headerDropDown-0"
         dropDownKey="manage"
-        icon={<FaUser />}
+        icon="fa-users"
         menus={props.employeeButtonMenu}
       >
         従業員管理

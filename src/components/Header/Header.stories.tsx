@@ -1,36 +1,25 @@
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import { Header } from './Header'
-import {
-  FaQuestionCircle,
-  FaEdit,
-  FaRegPlusSquare,
-  FaSyncAlt,
-  FaPaperPlane,
-  FaCog,
-  FaBuilding,
-  FaGraduationCap,
-  FaPowerOff,
-} from 'react-icons/fa'
 
 const employeeButtonMenu = [
   {
     type: 'link' as 'link',
     title: '新規登録する（手入力）',
     url: '/crews/new',
-    icon: <FaEdit />,
+    icon: 'fa-edit' as 'fa-edit',
   },
   {
     type: 'link' as 'link',
     title: '新規登録する（ファイル）',
     url: '/crews/bulk_inserter',
-    icon: <FaRegPlusSquare />,
+    icon: 'fa-reg-plus-square' as 'fa-reg-plus-square',
   },
   {
     type: 'link' as 'link',
     title: '更新する（ファイル）',
     url: '/crews/bulk_updater',
-    icon: <FaSyncAlt />,
+    icon: 'fa-sync-alt' as 'fa-sync-alt',
   },
   {
     type: 'divider' as 'divider',
@@ -39,7 +28,7 @@ const employeeButtonMenu = [
     type: 'link' as 'link',
     title: 'SmartHR に招待',
     url: '/crews/inviter',
-    icon: <FaPaperPlane />,
+    icon: 'fa-paper-plane' as 'fa-paper-plane',
   },
 ]
 
@@ -52,7 +41,7 @@ const userButtonMenu = [
     type: 'link' as 'link',
     title: '個人設定',
     url: '/my/account',
-    icon: <FaCog />,
+    icon: 'fa-cog' as 'fa-cog',
   },
   {
     type: 'divider' as 'divider',
@@ -65,7 +54,7 @@ const userButtonMenu = [
     type: 'link' as 'link',
     title: '共通設定',
     url: '/admin/company',
-    icon: <FaBuilding />,
+    icon: 'fa-building' as 'fa-building',
   },
   {
     type: 'divider' as 'divider',
@@ -74,21 +63,21 @@ const userButtonMenu = [
     type: 'link' as 'link',
     title: 'ヘルプ',
     url: 'https://smarthr.jp/hel',
-    icon: <FaQuestionCircle />,
+    icon: 'fa-question-circle' as 'fa-question-circle',
     target: '_blank',
   },
   {
     type: 'link' as 'link',
     title: 'SmartHR スクール',
     url: 'https://smarthr.thinkific.com/',
-    icon: <FaGraduationCap />,
+    icon: 'fa-graduation-cap' as 'fa-graduation-cap',
     target: '_blank',
   },
   {
     type: 'link' as 'link',
     title: 'ログアウト',
     url: 'https://test-inc.smarthr.jp/logout',
-    icon: <FaPowerOff />,
+    icon: 'fa-power-off' as 'fa-power-off',
   },
 ]
 
