@@ -53,12 +53,12 @@ const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = (
         alia-line="polite"
       >
         {props.icon && (
-          <HeaderDropDownIcon theme={theme} role="presentation">
+          <HeaderDropDownIcon key="headerDropDownIcon" theme={theme} role="presentation">
             <Icon name={props.icon} />
           </HeaderDropDownIcon>
         )}
         {props.children}
-        <HeaderDropDownCaret theme={theme} role="presentation">
+        <HeaderDropDownCaret key="headerDropDownCaret" theme={theme} role="presentation">
           <Icon name="fa-caret-down" />
         </HeaderDropDownCaret>
       </ButtonWrapper>
@@ -66,8 +66,8 @@ const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = (
       <MenuWrapper theme={theme} open={opened} role="menu">
         {props.menus && (
           <MenuList theme={theme}>
-            {props.menus.map(menu => (
-              <MenuListItem key={menu.title} role="menuitem">
+            {props.menus.map((menu, i) => (
+              <MenuListItem key={i} role="menuitem">
                 {menu.type === 'link' ? (
                   <MenuListItemAnchor
                     theme={theme}
@@ -82,11 +82,9 @@ const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = (
                     {menu.title}
                   </MenuListItemAnchor>
                 ) : menu.type === 'header' ? (
-                  <MenuListItemHeader key={menu.title} theme={theme}>
-                    {menu.title}
-                  </MenuListItemHeader>
+                  <MenuListItemHeader theme={theme}>{menu.title}</MenuListItemHeader>
                 ) : (
-                  <MenuListItemDivider key={menu.title} theme={theme} role="separator" />
+                  <MenuListItemDivider theme={theme} role="separator" />
                 )}
               </MenuListItem>
             ))}
