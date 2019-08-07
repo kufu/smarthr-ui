@@ -142,7 +142,7 @@ exports[`Tag should be match snapshot 1`] = `
             "componentStyle": ComponentStyle {
               "componentId": "sc-bdVaJa",
               "isStatic": false,
-              "lastClassName": "iISWOs",
+              "lastClassName": "jsUfTI",
               "rules": Array [
                 "
   ",
@@ -226,7 +226,7 @@ exports[`Tag should be match snapshot 1`] = `
         }
       >
         <span
-          className="success sc-bdVaJa iISWOs"
+          className="success sc-bdVaJa jsUfTI"
         >
           hello
         </span>
