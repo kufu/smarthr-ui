@@ -42,12 +42,10 @@ exports[`Tag should be match snapshot 1`] = `
         },
         "size": Object {
           "font": Object {
-            "grande": 16,
-            "short": 13,
+            "grande": 18,
+            "short": 11,
             "tall": 14,
-            "tasting": 12,
-            "trenta": 22,
-            "venti": 20,
+            "venti": 24,
           },
           "mediaQuery": Object {
             "sp": 599,
@@ -108,12 +106,10 @@ exports[`Tag should be match snapshot 1`] = `
           },
           "size": Object {
             "font": Object {
-              "grande": 16,
-              "short": 13,
+              "grande": 18,
+              "short": 11,
               "tall": 14,
-              "tasting": 12,
-              "trenta": 22,
-              "venti": 20,
+              "venti": 24,
             },
             "mediaQuery": Object {
               "sp": 599,
@@ -142,7 +138,7 @@ exports[`Tag should be match snapshot 1`] = `
             "componentStyle": ComponentStyle {
               "componentId": "sc-bdVaJa",
               "isStatic": false,
-              "lastClassName": "iISWOs",
+              "lastClassName": "pUjya",
               "rules": Array [
                 "
   ",
@@ -200,12 +196,10 @@ exports[`Tag should be match snapshot 1`] = `
             },
             "size": Object {
               "font": Object {
-                "grande": 16,
-                "short": 13,
+                "grande": 18,
+                "short": 11,
                 "tall": 14,
-                "tasting": 12,
-                "trenta": 22,
-                "venti": 20,
+                "venti": 24,
               },
               "mediaQuery": Object {
                 "sp": 599,
@@ -226,7 +220,7 @@ exports[`Tag should be match snapshot 1`] = `
         }
       >
         <span
-          className="success sc-bdVaJa iISWOs"
+          className="success sc-bdVaJa pUjya"
         >
           hello
         </span>
