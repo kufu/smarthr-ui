@@ -1,1 +1,1 @@
-export * from './SmartHRLogo'
+export { SmartHRLogo } from './SmartHRLogo'
