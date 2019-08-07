@@ -3,11 +3,13 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
+import { Icon, Props as IconProps } from '../Icon'
+
 export interface HeaderButtonProps {
   children?: React.ReactNode
   url?: string
   target?: string
-  icon?: React.ReactNode
+  icon?: IconProps['name']
 }
 
 const HeaderButtonComponent: React.FC<HeaderButtonProps & InjectedProps> = ({
@@ -17,7 +19,7 @@ const HeaderButtonComponent: React.FC<HeaderButtonProps & InjectedProps> = ({
   <Wrapper theme={theme} href={props.url} target={props.target && props.target}>
     {props.icon && (
       <HeaderButtonIcon theme={theme} role="presentation">
-        {props.icon}
+        <Icon name={props.icon}></Icon>
       </HeaderButtonIcon>
     )}
     {props.children && props.children}

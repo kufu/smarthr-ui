@@ -6,7 +6,6 @@ import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
 import { HeaderDropDown, HeaderDropDownMenuProps } from './HeaderDropDown'
 import { HeaderNotification } from './HeaderNotification'
-import { FaQuestionCircle, FaThList } from 'react-icons/fa'
 
 interface Props {
   tenantName?: string
@@ -29,12 +28,14 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
     </HeaderLogoArea>
 
     <HeaderAreaNavi>
-      <HeaderButton url={props.helpButtonLink} icon={<FaQuestionCircle />} target="_blank">
+      <HeaderButton url={props.helpButtonLink} icon="fa-question-circle" target="_blank">
         ヘルプ
       </HeaderButton>
-      <HeaderButton url={props.employeeListButtonLink} icon={<FaThList />}>
+
+      <HeaderButton url={props.employeeListButtonLink} icon="fa-th-list">
         従業員リスト
       </HeaderButton>
+
       <HeaderDropDown
         key="headerDropDown-0"
         dropDownKey="manage"
@@ -43,7 +44,9 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
       >
         従業員管理
       </HeaderDropDown>
+
       <HeaderNotification number={props.notificationNumber} />
+
       <HeaderDropDown key="headerDropDown-1" dropDownKey="other" menus={props.userButtonMenu}>
         {props.userMailAddress}
       </HeaderDropDown>
