@@ -35,11 +35,11 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
       <HeaderButton url={props.employeeListButtonLink} icon={<FaThList />}>
         従業員リスト
       </HeaderButton>
-      <HeaderDropDown icon={<FaUser />} menus={props.employeeButtonMenu} open>
+      <HeaderDropDown dropDownKey="manage" icon={<FaUser />} menus={props.employeeButtonMenu}>
         従業員管理
       </HeaderDropDown>
       <HeaderNotification number={props.notificationNumber} />
-      <HeaderDropDown menus={props.userButtonMenu} open>
+      <HeaderDropDown dropDownKey="hoge" menus={props.userButtonMenu}>
         {props.userMailAddress}
       </HeaderDropDown>
     </HeaderAreaNavi>

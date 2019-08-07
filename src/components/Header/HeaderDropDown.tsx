@@ -3,12 +3,13 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { FaCaretDown } from 'react-icons/fa'
+import { getParentElementRecursively } from '../Dropdown/helper'
 
 export interface HeaderDropDownProps {
   children?: React.ReactNode
   icon?: React.ReactNode
-  open?: boolean
   menus?: HeaderDropDownMenuProps[]
+  dropDownKey: string
 }
 
 export interface HeaderDropDownMenuProps {
@@ -22,46 +23,73 @@ export interface HeaderDropDownMenuProps {
 const HeaderDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = ({
   theme,
   ...props
-}) => (
-  <Wrapper>
-    <ButtonWrapper theme={theme} open={props.open} aria-expanded={props.open} alia-line="polite">
-      {props.icon && (
-        <HeaderDropDownIcon theme={theme} role="presentation">
-          {props.icon}
-        </HeaderDropDownIcon>
-      )}
-      {props.children}
-      <HeaderDropDownCaret theme={theme} role="presentation">
-        <FaCaretDown />
-      </HeaderDropDownCaret>
-    </ButtonWrapper>
+}) => {
+  const [opened, setOpened] = React.useState(false)
 
-    <MenuWrapper theme={theme} open={props.open} role="menu">
-      {props.menus && (
-        <MenuList theme={theme}>
-          {props.menus.map(menu => (
-            <MenuListItem key={menu.title} role="menuitem">
-              {menu.type === 'link' ? (
-                <MenuListItemAnchor
-                  theme={theme}
-                  href={menu.url}
-                  target={menu.target && menu.target}
-                >
-                  {menu.icon && <MenuListItemIcon theme={theme}>{menu.icon}</MenuListItemIcon>}
-                  {menu.title}
-                </MenuListItemAnchor>
-              ) : menu.type === 'header' ? (
-                <MenuListItemHeader theme={theme}>{menu.title}</MenuListItemHeader>
-              ) : (
-                <MenuListItemDivider theme={theme} role="separator" />
-              )}
-            </MenuListItem>
-          ))}
-        </MenuList>
-      )}
-    </MenuWrapper>
-  </Wrapper>
-)
+  React.useEffect(() => {
+    document.body.addEventListener('click', handleClickBody as any)
+    return () => {
+      document.body.removeEventListener('click', handleClickBody as any)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleClickBody = (e: { target: HTMLElement }) => {
+    if (getParentElementRecursively(e.target, props.dropDownKey)) return
+    setOpened(false)
+  }
+
+  const handleToggleOpen = () => setOpened(!opened)
+
+  return (
+    <Wrapper className={props.dropDownKey}>
+      <ButtonWrapper
+        onClick={handleToggleOpen}
+        theme={theme}
+        open={opened}
+        aria-expanded={opened}
+        alia-line="polite"
+      >
+        {props.icon && (
+          <HeaderDropDownIcon theme={theme} role="presentation">
+            {props.icon}
+          </HeaderDropDownIcon>
+        )}
+        {props.children}
+        <HeaderDropDownCaret theme={theme} role="presentation">
+          <FaCaretDown />
+        </HeaderDropDownCaret>
+      </ButtonWrapper>
+
+      <MenuWrapper theme={theme} open={opened} role="menu">
+        {props.menus && (
+          <MenuList theme={theme}>
+            {props.menus.map(menu => (
+              <MenuListItem key={menu.title} role="menuitem">
+                {menu.type === 'link' ? (
+                  <MenuListItemAnchor
+                    theme={theme}
+                    href={menu.url}
+                    target={menu.target && menu.target}
+                  >
+                    {menu.icon && <MenuListItemIcon theme={theme}>{menu.icon}</MenuListItemIcon>}
+                    {menu.title}
+                  </MenuListItemAnchor>
+                ) : menu.type === 'header' ? (
+                  <MenuListItemHeader key={menu.title} theme={theme}>
+                    {menu.title}
+                  </MenuListItemHeader>
+                ) : (
+                  <MenuListItemDivider key={menu.title} theme={theme} role="separator" />
+                )}
+              </MenuListItem>
+            ))}
+          </MenuList>
+        )}
+      </MenuWrapper>
+    </Wrapper>
+  )
+}
 
 export const HeaderDropDown = withTheme(HeaderDropDownComponent)
 
@@ -71,7 +99,7 @@ const Wrapper: any = styled.div`
 `
 
 const ButtonWrapper: any = styled.button`
-  ${({ theme, open }: InjectedProps & HeaderDropDownProps) => {
+  ${({ theme, open }: InjectedProps & { open: boolean }) => {
     return css`
       display: block;
       margin: 0;
@@ -115,7 +143,7 @@ const HeaderDropDownCaret: any = styled.figure`
 `
 
 const MenuWrapper: any = styled.div`
-  ${({ theme, open }: InjectedProps & HeaderDropDownProps) => {
+  ${({ theme, open }: InjectedProps & { open: boolean }) => {
     return css`
       display: ${open ? 'block' : 'none'};
       border: 1px solid ${theme.palette.Border};
