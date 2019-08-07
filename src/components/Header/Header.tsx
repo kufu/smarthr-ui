@@ -43,8 +43,8 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
       >
         従業員管理
       </HeaderDropDown>
-      <HeaderNotification key="headerDropDown-1" number={props.notificationNumber} />
-      <HeaderDropDown dropDownKey="hoge" menus={props.userButtonMenu}>
+      <HeaderNotification number={props.notificationNumber} />
+      <HeaderDropDown key="headerDropDown-1" dropDownKey="other" menus={props.userButtonMenu}>
         {props.userMailAddress}
       </HeaderDropDown>
     </HeaderAreaNavi>
