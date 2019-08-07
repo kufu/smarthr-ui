@@ -182,10 +182,10 @@ const MenuListItem: any = styled.div`
 const MenuListItemIcon: any = styled.figure`
   ${({ theme }: InjectedProps) => {
     return css`
-      display: inline-block;
+      display: flex;
+      align-items: middle;
       padding: 0;
       margin: 0 ${theme.size.pxToRem(theme.size.space.xxs)} 0 0;
-      vertical-align: middle;
     `
   }}
 `
@@ -193,7 +193,8 @@ const MenuListItemIcon: any = styled.figure`
 const MenuListItemAnchor: any = styled.a`
   ${({ theme }: InjectedProps) => {
     return css`
-      display: block;
+      display: flex;
+      align-items: center;
       padding: ${theme.size.pxToRem(3)} ${theme.size.pxToRem(20)};
       color: ${theme.palette.TextBlack};
       font-size: ${theme.size.pxToRem(theme.size.font.tall)}
