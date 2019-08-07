@@ -5,7 +5,7 @@ import fs from 'fs'
 const readFile = util.promisify(fs.readFile)
 const readdir = util.promisify(fs.readdir)
 
-const IGNORE_DIRS = ['__tests__', 'Base', 'Icon']
+const IGNORE_DIRS = ['__tests__']
 
 describe('index', () => {
   it('should export all components in the components directory from index.ts', async () => {
