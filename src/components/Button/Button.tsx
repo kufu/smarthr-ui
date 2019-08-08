@@ -105,18 +105,18 @@ const Base: any = styled.div`
       }
 
       &.primary {
-        background-color: ${palette.Main};
+        background-color: ${palette.MAIN};
       }
       &.danger {
-        background-color: ${palette.Danger};
+        background-color: ${palette.DANGER};
       }
       &.sub-a {
         background-color: #5e718d;
       }
       &.sub-b {
-        border: 1px solid ${palette.Border};
+        border: 1px solid ${palette.BORDER};
         background-color: #fff;
-        color: ${palette.TextGrey};
+        color: ${palette.TEXT_GREY};
       }
       &.sub-c {
         border: 1px solid #fff;
@@ -126,10 +126,10 @@ const Base: any = styled.div`
 
       &.hover {
         &.primary {
-          background-color: ${palette.hoverColor(palette.Main)};
+          background-color: ${palette.hoverColor(palette.MAIN)};
         }
         &.danger {
-          background-color: ${palette.hoverColor(palette.Danger)};
+          background-color: ${palette.hoverColor(palette.DANGER)};
         }
         &.sub-a {
           background-color: #414e62;
@@ -139,13 +139,13 @@ const Base: any = styled.div`
         }
         &.sub-c {
           background-color: #fff;
-          color: ${palette.Main};
+          color: ${palette.MAIN};
         }
       }
 
       &[disabled] {
-        background-color: ${palette.Border};
-        color: ${palette.TextGrey};
+        background-color: ${palette.BORDER};
+        color: ${palette.TEXT_GREY};
         pointer-events: none;
       }
     `

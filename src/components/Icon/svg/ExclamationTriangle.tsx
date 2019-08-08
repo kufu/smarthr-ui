@@ -13,7 +13,7 @@ const ExclamationTriangleIcon: React.FC<IconProps & InjectedProps> = ({
     <g id="Exclamation_Triangle">
       <path
         d="M98.72,80.6l-40-70.79a9.74,9.74,0,0,0-16.93,0L1.3,80.57A9.73,9.73,0,0,0,9.75,95.13h80.5A9.73,9.73,0,0,0,98.72,80.6ZM45,36.33a5,5,0,0,1,10,0V58.67a5,5,0,0,1-10,0Zm5.11,43.82a5.62,5.62,0,1,1,5.61-5.62A5.62,5.62,0,0,1,50.11,80.15Z"
-        fill={color ? color : theme.palette.TextGrey}
+        fill={color ? color : theme.palette.TEXT_GREY}
         style={{ fillRule: 'evenodd' }}
       />
     </g>
