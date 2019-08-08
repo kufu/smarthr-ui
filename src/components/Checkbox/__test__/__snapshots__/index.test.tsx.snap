@@ -264,19 +264,17 @@ exports[`Checkbox should be match snapshot 1`] = `
                 className="sc-htpNat oRUBv"
               >
                 <Component
-                  fill="#fff"
-                  height={12}
+                  color="#fff"
                   name="check"
-                  width={12}
+                  size={12}
                 >
                   <Component
-                    fill="#fff"
-                    height={12}
-                    width={12}
+                    color="#fff"
+                    size={12}
                   >
                     <CheckIcon
-                      fill="#fff"
-                      height={12}
+                      color="#fff"
+                      size={12}
                       theme={
                         Object {
                           "frame": Object {
@@ -336,7 +334,6 @@ exports[`Checkbox should be match snapshot 1`] = `
                           },
                         }
                       }
-                      width={12}
                     >
                       <svg
                         height="12px"
