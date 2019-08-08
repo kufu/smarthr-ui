@@ -73,7 +73,7 @@ const Base: any = styled.div`
       border: none;
       border-radius: ${frame.border.radius.m};
       color: #fff;
-      font-size: ${size.font.tall}px;
+      font-size: ${size.font.TALL}px;
       font-weight: bold;
       text-align: center;
       text-decoration: none;
@@ -84,19 +84,19 @@ const Base: any = styled.div`
       &.s {
         min-width: 80px;
         height: 32px;
-        padding: 0 ${size.space.xxs}px;
+        padding: 0 ${size.space.XXS}px;
         line-height: 32px;
       }
       &.m {
         min-width: 180px;
         height: 40px;
-        padding: 0 ${size.space.xs}px;
+        padding: 0 ${size.space.XS}px;
         line-height: 40px;
       }
       &.l {
         min-width: 220px;
         height: 48px;
-        padding: 0 ${size.space.s}px;
+        padding: 0 ${size.space.S}px;
         line-height: 48px;
       }
 

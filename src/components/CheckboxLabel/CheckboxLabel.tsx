@@ -39,8 +39,8 @@ const Label = styled.label`
 `
 const Txt = styled.p`
   ${({ theme }: InjectedProps) => css`
-    margin: 0 0 0 ${theme.size.pxToRem(theme.size.space.xxs)};
+    margin: 0 0 0 ${theme.size.pxToRem(theme.size.space.XXS)};
     color: ${theme.palette.TextBlack};
-    font-size: ${theme.size.pxToRem(theme.size.font.tall)};
+    font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
   `}
 `

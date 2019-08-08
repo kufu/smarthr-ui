@@ -49,7 +49,7 @@ const Item = styled.span`
       border: none;
       background-color: #fff;
       color: ${palette.Main};
-      font-size: ${size.pxToRem(size.font.tall)};
+      font-size: ${size.pxToRem(size.font.TALL)};
       line-height: 32px;
       text-align: center;
       cursor: pointer;

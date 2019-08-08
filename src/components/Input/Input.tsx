@@ -87,12 +87,12 @@ const Base = styled.input`
     return css`
       display: inline-block;
       width: ${width};
-      padding: ${size.pxToRem(size.space.xxs)};
+      padding: ${size.pxToRem(size.space.XXS)};
       border-radius: ${frame.border.radius.m};
       border: ${frame.border.default};
       background-color: #fff;
       color: ${palette.TextBlack};
-      font-size: ${size.pxToRem(size.font.tall)};
+      font-size: ${size.pxToRem(size.font.TALL)};
       line-height: 1.6;
       outline: none;
       box-sizing: border-box;

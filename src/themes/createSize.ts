@@ -7,78 +7,78 @@ export interface SizeProperty {
   htmlFontSize?: number
   space?: {
     defaultRem?: number
-    xxs?: number
-    xs?: number
-    s?: number
-    m?: number
-    l?: number
-    xl?: number
-    xxl?: number
+    XXS?: number
+    XS?: number
+    S?: number
+    M?: number
+    L?: number
+    XL?: number
+    XXL?: number
   }
   // respect for Starbucks...
   font?: {
-    short?: number
-    tall?: number
-    grande?: number
-    venti?: number
+    SHORT?: number
+    TALL?: number
+    GRANDE?: number
+    VENTI?: number
   }
   mediaQuery?: {
-    sp?: number
-    tablet?: number
+    SP?: number
+    TABLET?: number
   }
 }
 
 export interface CreatedSizeTheme {
   pxToRem: (value: number) => string
   space: {
-    xxs: number
-    xs: number
-    s: number
-    m: number
-    l: number
-    xl: number
-    xxl: number
+    XXS: number
+    XS: number
+    S: number
+    M: number
+    L: number
+    XL: number
+    XXL: number
   }
   font: {
-    short: number
-    tall: number
-    grande: number
-    venti: number
+    SHORT: number
+    TALL: number
+    GRANDE: number
+    VENTI: number
   }
   mediaQuery: {
-    sp: number
-    tablet: number
+    SP: number
+    TABLET: number
   }
 }
 
 const defaultSize = {
   font: {
-    short: 11,
-    tall: 14,
-    grande: 18,
-    venti: 24,
+    SHORT: 11,
+    TALL: 14,
+    GRANDE: 18,
+    VENTI: 24,
   },
   mediaQuery: {
-    sp: 599,
-    tablet: 959,
+    SP: 599,
+    TABLET: 959,
   },
 }
 
 export const createSize = (userSize: SizeProperty = {}) => {
   const space = userSize.space || {}
-  const xxs = space.defaultRem || defaultSpace
+  const XXS = space.defaultRem || defaultSpace
   const created: CreatedSizeTheme = merge(
     {
       pxToRem: (value: number): string =>
         `${value / (userSize.htmlFontSize || defaultHtmlFontSize)}rem`,
       space: {
-        xxs,
-        xs: xxs * 2,
-        s: xxs * 3,
-        m: xxs * 4,
-        l: xxs * 5,
-        xl: xxs * 6,
-        xxl: xxs * 7,
+        XXS,
+        XS: XXS * 2,
+        S: XXS * 3,
+        M: XXS * 4,
+        L: XXS * 5,
+        XL: XXS * 6,
+        XXL: XXS * 7,
       },
       ...defaultSize,
     },

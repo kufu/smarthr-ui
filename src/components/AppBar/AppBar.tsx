@@ -11,11 +11,11 @@ const AppBarComponent: React.FC<MergedComponentProps> = ({ ...props }) => <Wrapp
 
 export const AppBar = withTheme(AppBarComponent)
 
-const getSpaceSize = (size: Size): 'xs' | 's' | 'm' => {
+const getSpaceSize = (size: Size): 'XS' | 'S' | 'M' => {
   const spaceMap: any = {
-    s: 'xs',
-    m: 's',
-    l: 'm',
+    s: 'XS',
+    m: 'S',
+    l: 'M',
   }
   return spaceMap[size]
 }
@@ -30,11 +30,11 @@ const Wrapper = styled.div`
       padding: ${pcPadding};
       background: ${palette.Main};
 
-      @media screen and (max-width: ${size.mediaQuery.tablet}px) {
+      @media screen and (max-width: ${size.mediaQuery.TABLET}px) {
         padding: ${tabletPadding};
       }
 
-      @media screen and (max-width: ${size.mediaQuery.sp}px) {
+      @media screen and (max-width: ${size.mediaQuery.SP}px) {
         padding: ${spPadding};
       }
     `
