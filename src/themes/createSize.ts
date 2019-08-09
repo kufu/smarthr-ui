@@ -1,7 +1,7 @@
 import { merge } from '../libs/lodash'
 
 const defaultHtmlFontSize = 16
-const defaultSpace = 8
+const defaultSpaceSize = 8
 
 export interface SizeProperty {
   htmlFontSize?: number
@@ -51,26 +51,37 @@ export interface CreatedSizeTheme {
   }
 }
 
-const defaultSize = {
-  font: {
-    SHORT: 11,
-    TALL: 14,
-    GRANDE: 18,
-    VENTI: 24,
-  },
-  mediaQuery: {
-    SP: 599,
-    TABLET: 959,
-  },
+const pxToRem = (value: number) => (font: number) => {
+  return `${value / font}rem`
+}
+
+export const defaultFontSize = { SHORT: 11, TALL: 14, GRANDE: 18, VENTI: 24 }
+
+export const defaultMediaQuery = { SP: 599, TABLET: 959 }
+
+export const defaultspace = {
+  XXS: defaultSpaceSize,
+  XS: defaultSpaceSize * 2,
+  S: defaultSpaceSize * 3,
+  M: defaultSpaceSize * 4,
+  L: defaultSpaceSize * 5,
+  XL: defaultSpaceSize * 6,
+  XXL: defaultSpaceSize * 7,
+}
+
+export const defaultSize: CreatedSizeTheme = {
+  pxToRem: (value: number) => pxToRem(value)(defaultHtmlFontSize),
+  font: defaultFontSize,
+  space: defaultspace,
+  mediaQuery: defaultMediaQuery,
 }
 
 export const createSize = (userSize: SizeProperty = {}) => {
   const space = userSize.space || {}
-  const XXS = space.defaultRem || defaultSpace
+  const XXS = space.defaultRem || defaultSpaceSize
   const created: CreatedSizeTheme = merge(
     {
-      pxToRem: (value: number): string =>
-        `${value / (userSize.htmlFontSize || defaultHtmlFontSize)}rem`,
+      pxToRem: (value: number) => pxToRem(value)(userSize.htmlFontSize || defaultHtmlFontSize),
       space: {
         XXS,
         XS: XXS * 2,
@@ -80,7 +91,8 @@ export const createSize = (userSize: SizeProperty = {}) => {
         XL: XXS * 6,
         XXL: XXS * 7,
       },
-      ...defaultSize,
+      font: defaultFontSize,
+      mediaQuery: defaultMediaQuery,
     },
     userSize,
   )
