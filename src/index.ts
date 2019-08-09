@@ -20,3 +20,4 @@ export { Icon } from './components/Icon'
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
+export { defaultPalette } from './themes/createPalette'

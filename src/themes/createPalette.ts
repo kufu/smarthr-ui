@@ -29,7 +29,10 @@ export interface CreatedPaletteTheme {
   OVERLAY: string
 }
 
+const hoverColor = (value: string): string => darken(0.05, value)
+
 export const defaultPalette = {
+  hoverColor,
   TEXT_BLACK: '#333',
   TEXT_GREY: '#767676',
   BORDER: '#d6d6d6',
@@ -45,7 +48,7 @@ export const defaultPalette = {
 export const createPalette = (userPalette: PaletteProperty = {}) => {
   const created: CreatedPaletteTheme = merge(
     {
-      hoverColor: (value: string): string => darken(0.05, value),
+      hoverColor,
       ...defaultPalette,
     },
     userPalette,
