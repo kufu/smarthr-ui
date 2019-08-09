@@ -62,7 +62,7 @@ const Wrapper: any = styled.header`
       display: flex;
       height: ${theme.size.pxToRem(50)};
       padding: 0 ${theme.size.pxToRem(theme.size.space.xs)};
-      background-color: ${theme.palette.Hanica_Green};
+      background-color: ${theme.palette.Header_Green};
       box-sizing: border-box;
       position: relative;
       align-items: center;
