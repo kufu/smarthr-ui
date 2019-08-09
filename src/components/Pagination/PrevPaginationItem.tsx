@@ -29,6 +29,6 @@ export const PrevPaginationItem = withTheme(PrevPaginationItemComponent)
 
 const Button = styled(ItemButton)`
   ${({ theme }: InjectedProps) => css`
-    color: ${theme.palette.TextGrey};
+    color: ${theme.palette.TEXT_GREY};
   `}
 `

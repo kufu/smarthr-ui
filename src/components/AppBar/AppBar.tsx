@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 
     return css`
       padding: ${pcPadding};
-      background: ${palette.Main};
+      background: ${palette.MAIN};
 
       @media screen and (max-width: ${size.mediaQuery.TABLET}px) {
         padding: ${tabletPadding};

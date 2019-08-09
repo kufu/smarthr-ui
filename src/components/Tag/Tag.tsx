@@ -28,7 +28,7 @@ const TagComponent: React.FC<MergedProps> = ({ skeleton = false, type, children,
 const Wrapper = styled.span`
   ${({ theme, skeleton }: InjectedProps & WrapperProps) => {
     const { frame, size, palette } = theme
-    const { Main, Danger, Warning, Border } = palette
+    const { MAIN, DANGER, WARNING, BORDER } = palette
 
     return css`
       margin: 0;
@@ -38,30 +38,30 @@ const Wrapper = styled.span`
       font-size: ${size.font.SHORT}px;
       border: ${frame.border.default};
       background-color: transparent;
-      color: ${Border};
+      color: ${BORDER};
 
       &.success {
-        border: 1px solid ${Main};
-        background-color: ${skeleton ? 'transparent' : Main};
-        color: ${skeleton ? Main : '#fff'};
+        border: 1px solid ${MAIN};
+        background-color: ${skeleton ? 'transparent' : MAIN};
+        color: ${skeleton ? MAIN : '#fff'};
       }
 
       &.error {
-        border: 1px solid ${Danger};
-        background-color: ${skeleton ? 'transparent' : Danger};
-        color: ${skeleton ? Danger : '#fff'};
+        border: 1px solid ${DANGER};
+        background-color: ${skeleton ? 'transparent' : DANGER};
+        color: ${skeleton ? DANGER : '#fff'};
       }
 
       &.warning {
-        border: 1px solid ${Warning};
-        background-color: ${skeleton ? 'transparent' : Warning};
-        color: ${skeleton ? Warning : '#fff'};
+        border: 1px solid ${WARNING};
+        background-color: ${skeleton ? 'transparent' : WARNING};
+        color: ${skeleton ? WARNING : '#fff'};
       }
 
       &.require {
-        border: 1px solid ${Warning};
-        background-color: ${skeleton ? 'transparent' : Warning};
-        color: ${skeleton ? Warning : '#fff'};
+        border: 1px solid ${WARNING};
+        background-color: ${skeleton ? 'transparent' : WARNING};
+        color: ${skeleton ? WARNING : '#fff'};
       }
     `
   }}

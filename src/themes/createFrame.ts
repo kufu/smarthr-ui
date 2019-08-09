@@ -31,7 +31,7 @@ export interface CreatedFrameTheme {
 }
 
 export const createFrame = (userFrame: FrameProperty = {}, userPalette: PaletteProperty = {}) => {
-  const color = userPalette.Border || defaultPalette.Border
+  const color = userPalette.BORDER || defaultPalette.BORDER
   const created: CreatedFrameTheme = merge(
     {
       border: {
