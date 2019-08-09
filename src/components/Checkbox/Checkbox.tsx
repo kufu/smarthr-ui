@@ -25,7 +25,7 @@ class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
             <Icon
               name="check"
               size={12}
-              color={themeColor === 'light' ? '#fff' : theme.palette.Main}
+              color={themeColor === 'light' ? '#fff' : theme.palette.MAIN}
             />
           </IconWrap>
         )}
@@ -65,21 +65,21 @@ const Wrapper = styled.div`
       box-sizing: border-box;
 
       &.active {
-        border-color: ${palette.Main};
-        background-color: ${palette.Main};
+        border-color: ${palette.MAIN};
+        background-color: ${palette.MAIN};
       }
 
       &.disabled {
-        background-color: ${palette.Border};
-        border-color: ${palette.Border};
+        background-color: ${palette.BORDER};
+        border-color: ${palette.BORDER};
 
         &.active {
-          border-color: ${palette.Border};
+          border-color: ${palette.BORDER};
         }
       }
 
       &.dark {
-        border-color: ${palette.Main};
+        border-color: ${palette.MAIN};
 
         &.active {
           background-color: #fff;

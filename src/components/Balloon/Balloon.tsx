@@ -52,16 +52,16 @@ const Base = styled.div`
 
       &.light {
         background-color: #fff;
-        color: ${palette.TextBlack};
+        color: ${palette.TEXT_BLACK};
       }
       &.dark {
-        background-color: ${palette.TextBlack};
+        background-color: ${palette.TEXT_BLACK};
         color: #fff;
       }
 
       &.light.top {
         &::before {
-          border-color: transparent transparent ${palette.Border};
+          border-color: transparent transparent ${palette.BORDER};
         }
         &::after {
           border-color: transparent transparent #fff;
@@ -69,7 +69,7 @@ const Base = styled.div`
       }
       &.light.bottom {
         &::before {
-          border-color: ${palette.Border} transparent transparent;
+          border-color: ${palette.BORDER} transparent transparent;
         }
         &::after {
           border-color: #fff transparent transparent;
@@ -79,13 +79,13 @@ const Base = styled.div`
       &.dark.top {
         &::before,
         &::after {
-          border-color: transparent transparent ${palette.TextBlack};
+          border-color: transparent transparent ${palette.TEXT_BLACK};
         }
       }
       &.dark.bottom {
         &::before,
         &::after {
-          border-color: ${palette.TextBlack} transparent transparent;
+          border-color: ${palette.TEXT_BLACK} transparent transparent;
         }
       }
 
@@ -153,7 +153,7 @@ const Base = styled.div`
           }
           &.light {
             &::before {
-              border-color: transparent ${palette.Border} transparent transparent;
+              border-color: transparent ${palette.BORDER} transparent transparent;
             }
             &::after {
               border-color: transparent #fff transparent transparent;
@@ -162,7 +162,7 @@ const Base = styled.div`
           &.dark {
             &::before,
             &::after {
-              border-color: transparent ${palette.TextBlack} transparent transparent;
+              border-color: transparent ${palette.TEXT_BLACK} transparent transparent;
             }
           }
         }
@@ -179,7 +179,7 @@ const Base = styled.div`
           }
           &.light {
             &::before {
-              border-color: transparent transparent transparent ${palette.Border};
+              border-color: transparent transparent transparent ${palette.BORDER};
             }
             &::after {
               border-color: transparent transparent transparent #fff;
@@ -188,7 +188,7 @@ const Base = styled.div`
           &.dark {
             &::before,
             &::after {
-              border-color: transparent transparent transparent ${palette.TextBlack};
+              border-color: transparent transparent transparent ${palette.TEXT_BLACK};
             }
           }
         }

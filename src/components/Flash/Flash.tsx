@@ -68,7 +68,7 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
         <Icon name={iconName} size={24} color="#fff" />
         <Txt theme={theme}>{text}</Txt>
         <CloseButton onClick={onClose} className="close">
-          <Icon name="cross" size={12} color={theme.palette.Border} />
+          <Icon name="cross" size={12} color={theme.palette.BORDER} />
         </CloseButton>
       </Wrapper>
     )
@@ -121,11 +121,11 @@ const Wrapper = styled.div`
       animation: ${bounceAnimation} 1s 0s both;
 
       &.success {
-        background-color: ${palette.Main};
+        background-color: ${palette.MAIN};
       }
 
       &.danger {
-        background-color: ${palette.Danger};
+        background-color: ${palette.DANGER};
       }
     `
   }}

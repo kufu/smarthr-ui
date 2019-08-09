@@ -94,7 +94,7 @@ const LabelHead = styled.div`
 const Title = styled.p`
   ${({ theme }: InjectedProps) => css`
     margin: 0;
-    color: ${theme.palette.TextGrey};
+    color: ${theme.palette.TEXT_GREY};
     font-weight: bold;
     font-size: ${theme.size.pxToRem(theme.size.font.tall)};
   `}
@@ -102,14 +102,14 @@ const Title = styled.p`
 const Help = styled.p`
   ${({ theme }: InjectedProps) => css`
     margin: 0;
-    color: ${theme.palette.TextGrey};
+    color: ${theme.palette.TEXT_GREY};
     font-size: ${theme.size.pxToRem(theme.size.font.tasting)};
   `}
 `
 const Error = styled.p`
   ${({ theme }: InjectedProps) => css`
     margin: ${theme.size.pxToRem(theme.size.space.xxs)} 0 0 0;
-    color: ${theme.palette.Danger};
+    color: ${theme.palette.DANGER};
     font-size: ${theme.size.pxToRem(theme.size.font.tall)};
     line-height: 1.4;
   `}
