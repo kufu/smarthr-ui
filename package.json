@@ -71,6 +71,7 @@
     "node": ">=8.0.0"
   },
   "files": [
+    "esm",
     "lib"
   ],
   "homepage": "https://github.com/kufu/smarthr-ui#readme",
@@ -93,6 +94,7 @@
     ]
   },
   "main": "lib/index.js",
+  "module": "esm/index.js",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
@@ -102,7 +104,9 @@
     "url": "git+https://github.com/kufu/smarthr-ui.git"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "run-p build:*",
+    "build:lib": "tsc -p tsconfig.build.json",
+    "build:esm": "tsc -p tsconfig.esm.build.json",
     "build-storybook": "build-storybook",
     "clean": "rimraf ./lib",
     "fix": "fixpack",
