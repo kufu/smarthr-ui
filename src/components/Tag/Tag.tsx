@@ -28,7 +28,7 @@ const TagComponent: React.FC<MergedProps> = ({ skeleton = false, type, children,
 const Wrapper = styled.span`
   ${({ theme, skeleton }: InjectedProps & WrapperProps) => {
     const { frame, size, palette } = theme
-    const { MAIN, DANGER, WARNING, BORDER } = palette
+    const { MAIN, DANGER, WARNING, TEXT_GREY } = palette
 
     return css`
       margin: 0;
@@ -39,7 +39,7 @@ const Wrapper = styled.span`
       font-weight: bold;
       border: ${frame.border.default};
       background-color: transparent;
-      color: ${BORDER};
+      color: ${TEXT_GREY};
 
       &.success {
         border: 1px solid ${MAIN};

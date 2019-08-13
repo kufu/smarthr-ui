@@ -74,7 +74,7 @@ const CurrentWrapper = styled.span`
   ${({ theme }: InjectedProps) => {
     return css`
       ${BaseStyle}
-      border-bottom: ${theme.size.pxToRem(2)} solid ${theme.palette.MAIN};
+      border-bottom: ${theme.size.pxToRem(3)} solid ${theme.palette.MAIN};
       color: ${theme.palette.TEXT_BLACK};
     `
   }}

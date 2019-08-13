@@ -7,17 +7,17 @@ import { AppNavi } from './AppNavi'
 const buttons = [
   {
     children: 'ボタン1',
-    icon: 'fa-file' as 'fa-file',
+    icon: 'fa-file' as const,
     current: true,
   },
   {
     children: 'ボタン2',
-    icon: 'fa-user-alt' as 'fa-user-alt',
+    icon: 'fa-user-alt' as const,
     onClick: action('click!!'),
   },
   {
     children: 'ボタン3',
-    icon: 'fa-cog' as 'fa-cog',
+    icon: 'fa-cog' as const,
     onClick: action('click!!'),
   },
 ]
