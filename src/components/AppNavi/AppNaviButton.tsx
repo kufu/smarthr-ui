@@ -4,11 +4,14 @@ import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { Icon, Props as IconProps } from '../Icon/Icon'
 
+interface ClickEvent {
+  preventDefault: () => void
+}
+
 export interface AppNaviButtonProps {
-  label: string
+  children: React.ReactNode
   icon?: IconProps['name']
-  url?: string
-  target?: string
+  onClick?: (e: ClickEvent) => void
   current?: boolean
 }
 
@@ -24,24 +27,24 @@ const AppNaviButtonComponent: React.FC<AppNaviButtonProps & InjectedProps> = ({
             <Icon name={props.icon} size={14} color={theme.palette.TextBlack} />
           </IconWrapper>
         )}
-        {props.label}
+        {props.children}
       </CurrentWrapper>
     ) : (
-      <AnchorWrapper theme={theme} href={props.url} target={props.target ? props.target : '_self'}>
+      <ButtonWrapper theme={theme} onClick={props.onClick}>
         {props.icon && (
           <IconWrapper theme={theme}>
             <Icon name={props.icon} size={14} color={theme.palette.TextGrey} />
           </IconWrapper>
         )}
-        {props.label}
-      </AnchorWrapper>
+        {props.children}
+      </ButtonWrapper>
     )}
   </Wrapper>
 )
 
 export const AppNaviButton = withTheme(AppNaviButtonComponent)
 
-const Wrapper: any = styled.div`
+const Wrapper = styled.div`
   ${({ theme }: InjectedProps) => {
     return css`
       display: inline-block;
@@ -58,14 +61,16 @@ const BaseStyle = css`
       box-sizing: border-box;
       height: ${theme.size.pxToRem(40)};
       padding: 0 ${theme.size.pxToRem(theme.size.space.xxs)};
-      font-size: ${theme.size.font.tall};
+      background: none;
+      border: none;
+      font-size: ${theme.size.pxToRem(theme.size.font.tall)};
       font-weight: bold;
       text-decoration: none;
     `
   }}
 `
 
-const CurrentWrapper: any = styled.span`
+const CurrentWrapper = styled.span`
   ${({ theme }: InjectedProps) => {
     return css`
       ${BaseStyle}
@@ -75,11 +80,12 @@ const CurrentWrapper: any = styled.span`
   }}
 `
 
-const AnchorWrapper: any = styled.a`
+const ButtonWrapper = styled.button`
   ${({ theme }: InjectedProps) => {
     return css`
       ${BaseStyle}
       color: ${theme.palette.TextGrey};
+      cursor: pointer;
       transition: background-color 0.3s;
 
       &:hover{
@@ -89,7 +95,7 @@ const AnchorWrapper: any = styled.a`
   }}
 `
 
-const IconWrapper: any = styled.figure`
+const IconWrapper = styled.figure`
   ${({ theme }: InjectedProps) => {
     return css`
       display: inline-block;
