@@ -91,26 +91,26 @@ const Base = styled.input`
       border-radius: ${frame.border.radius.m};
       border: ${frame.border.default};
       background-color: #fff;
-      color: ${palette.TextBlack};
+      color: ${palette.TEXT_BLACK};
       font-size: ${size.pxToRem(size.font.tall)};
       line-height: 1.6;
       outline: none;
       box-sizing: border-box;
 
       &::placeholder {
-        color: ${palette.TextGrey};
+        color: ${palette.TEXT_GREY};
       }
 
       &:focus {
-        border-color: ${palette.hoverColor(palette.Main)};
+        border-color: ${palette.hoverColor(palette.MAIN)};
       }
 
       &.error {
-        border-color: ${palette.Danger};
+        border-color: ${palette.DANGER};
       }
 
       &[disabled] {
-        border-color: ${palette.Border};
+        border-color: ${palette.BORDER};
         pointer-events: none;
       }
     `

@@ -24,7 +24,7 @@ const AppNaviButtonComponent: React.FC<AppNaviButtonProps & InjectedProps> = ({
       <CurrentWrapper theme={theme} aria-selected="true">
         {props.icon && (
           <IconWrapper theme={theme}>
-            <Icon name={props.icon} size={14} color={theme.palette.TextBlack} />
+            <Icon name={props.icon} size={14} color={theme.palette.TEXT_BLACK} />
           </IconWrapper>
         )}
         {props.children}
@@ -33,7 +33,7 @@ const AppNaviButtonComponent: React.FC<AppNaviButtonProps & InjectedProps> = ({
       <ButtonWrapper theme={theme} onClick={props.onClick}>
         {props.icon && (
           <IconWrapper theme={theme}>
-            <Icon name={props.icon} size={14} color={theme.palette.TextGrey} />
+            <Icon name={props.icon} size={14} color={theme.palette.TEXT_GREY} />
           </IconWrapper>
         )}
         {props.children}
@@ -74,8 +74,8 @@ const CurrentWrapper = styled.span`
   ${({ theme }: InjectedProps) => {
     return css`
       ${BaseStyle}
-      border-bottom: ${theme.size.pxToRem(2)} solid ${theme.palette.Main};
-      color: ${theme.palette.TextBlack};
+      border-bottom: ${theme.size.pxToRem(2)} solid ${theme.palette.MAIN};
+      color: ${theme.palette.TEXT_BLACK};
     `
   }}
 `
@@ -84,7 +84,7 @@ const ButtonWrapper = styled.button`
   ${({ theme }: InjectedProps) => {
     return css`
       ${BaseStyle}
-      color: ${theme.palette.TextGrey};
+      color: ${theme.palette.TEXT_GREY};
       cursor: pointer;
       transition: background-color 0.3s;
 
