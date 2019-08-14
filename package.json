@@ -46,7 +46,7 @@
     "reg-notify-github-plugin": "^0.7.21",
     "reg-publish-s3-plugin": "^0.7.22",
     "reg-suit": "^0.7.17",
-    "standard-version": "^6.0.1",
+    "standard-version": "^7.0.0",
     "storybook-readme": "^5.0.3",
     "styled-components": "^4.3.1",
     "stylelint": "^10.1.0",
