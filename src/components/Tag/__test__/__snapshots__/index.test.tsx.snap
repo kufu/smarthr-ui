@@ -70,7 +70,6 @@ exports[`Tag should be match snapshot 1`] = `
   >
     <styled.span
       className="success"
-      skeleton={false}
       theme={
         Object {
           "frame": Object {
@@ -142,7 +141,7 @@ exports[`Tag should be match snapshot 1`] = `
             "componentStyle": ComponentStyle {
               "componentId": "sc-bdVaJa",
               "isStatic": false,
-              "lastClassName": "iISWOs",
+              "lastClassName": "fOvYYt",
               "rules": Array [
                 "
   ",
@@ -162,7 +161,6 @@ exports[`Tag should be match snapshot 1`] = `
           }
         }
         forwardedRef={null}
-        skeleton={false}
         theme={
           Object {
             "frame": Object {
@@ -226,7 +224,7 @@ exports[`Tag should be match snapshot 1`] = `
         }
       >
         <span
-          className="success sc-bdVaJa iISWOs"
+          className="success sc-bdVaJa fOvYYt"
         >
           hello
         </span>
