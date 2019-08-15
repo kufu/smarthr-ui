@@ -31,14 +31,16 @@ export interface CreatedFrameTheme {
   }
 }
 
-export const defaultBorder = {
-  lineWidth,
-  lineStyle,
-  default: `${lineWidth} ${lineStyle} ${lineColor}`,
-  radius: {
-    s: '3px',
-    m: '6px',
-    l: '8px',
+export const defaultFrame = {
+  border: {
+    lineWidth,
+    lineStyle,
+    default: `${lineWidth} ${lineStyle} ${lineColor}`,
+    radius: {
+      s: '3px',
+      m: '6px',
+      l: '8px',
+    },
   },
 }
 
