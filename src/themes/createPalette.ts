@@ -31,7 +31,7 @@ export interface CreatedPaletteTheme {
 
 const hoverColor = (value: string): string => darken(0.05, value)
 
-export const defaultPalette = {
+export const defaultPalette: CreatedPaletteTheme = {
   hoverColor,
   TEXT_BLACK: '#333',
   TEXT_GREY: '#767676',

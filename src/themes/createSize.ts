@@ -55,24 +55,28 @@ const pxToRem = (value: number) => (font: number) => {
   return `${value / font}rem`
 }
 
-export const defaultFontSize = { SHORT: 11, TALL: 14, GRANDE: 18, VENTI: 24 }
-
-export const defaultMediaQuery = { SP: 599, TABLET: 959 }
-
-export const defaultspace = {
-  XXS: defaultSpaceSize,
-  XS: defaultSpaceSize * 2,
-  S: defaultSpaceSize * 3,
-  M: defaultSpaceSize * 4,
-  L: defaultSpaceSize * 5,
-  XL: defaultSpaceSize * 6,
-  XXL: defaultSpaceSize * 7,
+const getSpace = (size: number) => {
+  return {
+    XXS: size,
+    XS: size * 2,
+    S: size * 3,
+    M: size * 4,
+    L: size * 5,
+    XL: size * 6,
+    XXL: size * 7,
+  }
 }
+
+const defaultFontSize = { SHORT: 11, TALL: 14, GRANDE: 18, VENTI: 24 }
+
+const defaultMediaQuery = { SP: 599, TABLET: 959 }
+
+const defaultSpace = getSpace(defaultSpaceSize)
 
 export const defaultSize: CreatedSizeTheme = {
   pxToRem: (value: number) => pxToRem(value)(defaultHtmlFontSize),
   font: defaultFontSize,
-  space: defaultspace,
+  space: defaultSpace,
   mediaQuery: defaultMediaQuery,
 }
 
@@ -82,15 +86,7 @@ export const createSize = (userSize: SizeProperty = {}) => {
   const created: CreatedSizeTheme = merge(
     {
       pxToRem: (value: number) => pxToRem(value)(userSize.htmlFontSize || defaultHtmlFontSize),
-      space: {
-        XXS,
-        XS: XXS * 2,
-        S: XXS * 3,
-        M: XXS * 4,
-        L: XXS * 5,
-        XL: XXS * 6,
-        XXL: XXS * 7,
-      },
+      space: getSpace(XXS),
       font: defaultFontSize,
       mediaQuery: defaultMediaQuery,
     },

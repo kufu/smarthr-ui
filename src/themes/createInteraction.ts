@@ -21,17 +21,19 @@ export interface CreatedInteractionTheme {
   }
 }
 
-export const defaultHover = {
-  feedbackOpacity: '.7',
-  animationDuration: hoverAnimationDuration,
-  animationTiming: hoverAnimationTiming,
-  animation: `${hoverAnimationDuration} ${hoverAnimationTiming}`,
+export const defaultInteraction = {
+  hover: {
+    feedbackOpacity: '.7',
+    animationDuration: hoverAnimationDuration,
+    animationTiming: hoverAnimationTiming,
+    animation: `${hoverAnimationDuration} ${hoverAnimationTiming}`,
+  },
 }
 
 export const createInteraction = (userInteraction: InteractionProperty = {}) => {
   const created: CreatedInteractionTheme = merge(
     {
-      hover: defaultHover,
+      ...defaultInteraction,
     },
     userInteraction,
   )

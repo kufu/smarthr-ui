@@ -31,7 +31,7 @@ export interface CreatedFrameTheme {
   }
 }
 
-export const defaultFrame = {
+export const defaultFrame: CreatedFrameTheme = {
   border: {
     lineWidth,
     lineStyle,
@@ -49,14 +49,8 @@ export const createFrame = (userFrame: FrameProperty = {}, userPalette: PaletteP
   const created: CreatedFrameTheme = merge(
     {
       border: {
-        lineWidth,
-        lineStyle,
+        ...defaultFrame.border,
         default: `${lineWidth} ${lineStyle} ${color}`,
-        radius: {
-          s: '3px',
-          m: '6px',
-          l: '8px',
-        },
       },
     },
     userFrame,
