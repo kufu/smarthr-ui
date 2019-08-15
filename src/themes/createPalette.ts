@@ -48,7 +48,6 @@ export const defaultPalette = {
 export const createPalette = (userPalette: PaletteProperty = {}) => {
   const created: CreatedPaletteTheme = merge(
     {
-      hoverColor,
       ...defaultPalette,
     },
     userPalette,
