@@ -25,7 +25,7 @@ npm install smarthr-ui
 yarn add smarthr-ui
 ```
 
-Install peerDepedencies.
+Install peerDependencies.
 
 ```sh
 // with npm
