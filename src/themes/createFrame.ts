@@ -3,6 +3,7 @@ import { defaultPalette, PaletteProperty } from './createPalette'
 
 const lineWidth = '1px'
 const lineStyle = 'solid'
+const lineColor = defaultPalette.BORDER
 
 export interface FrameProperty {
   border?: {
@@ -30,19 +31,26 @@ export interface CreatedFrameTheme {
   }
 }
 
+export const defaultFrame: CreatedFrameTheme = {
+  border: {
+    lineWidth,
+    lineStyle,
+    default: `${lineWidth} ${lineStyle} ${lineColor}`,
+    radius: {
+      s: '3px',
+      m: '6px',
+      l: '8px',
+    },
+  },
+}
+
 export const createFrame = (userFrame: FrameProperty = {}, userPalette: PaletteProperty = {}) => {
-  const color = userPalette.Border || defaultPalette.Border
+  const color = userPalette.BORDER || defaultPalette.BORDER
   const created: CreatedFrameTheme = merge(
     {
       border: {
-        lineWidth,
-        lineStyle,
+        ...defaultFrame.border,
         default: `${lineWidth} ${lineStyle} ${color}`,
-        radius: {
-          s: '3px',
-          m: '6px',
-          l: '8px',
-        },
       },
     },
     userFrame,

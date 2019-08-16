@@ -87,36 +87,36 @@ const LabelHead = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: ${theme.size.pxToRem(theme.size.space.xxs)};
+    margin-bottom: ${theme.size.pxToRem(theme.size.space.XXS)};
     line-height: 1.4;
   `}
 `
 const Title = styled.p`
   ${({ theme }: InjectedProps) => css`
     margin: 0;
-    color: ${theme.palette.TextGrey};
+    color: ${theme.palette.TEXT_GREY};
     font-weight: bold;
-    font-size: ${theme.size.pxToRem(theme.size.font.tall)};
+    font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
   `}
 `
 const Help = styled.p`
   ${({ theme }: InjectedProps) => css`
     margin: 0;
-    color: ${theme.palette.TextGrey};
-    font-size: ${theme.size.pxToRem(theme.size.font.tasting)};
+    font-size: ${theme.size.pxToRem(theme.size.font.SHORT)};
+    color: ${theme.palette.TEXT_GREY};
   `}
 `
 const Error = styled.p`
   ${({ theme }: InjectedProps) => css`
-    margin: ${theme.size.pxToRem(theme.size.space.xxs)} 0 0 0;
-    color: ${theme.palette.Danger};
-    font-size: ${theme.size.pxToRem(theme.size.font.tall)};
+    margin: ${theme.size.pxToRem(theme.size.space.XXS)} 0 0 0;
+    font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
+    color: ${theme.palette.DANGER};
     line-height: 1.4;
   `}
 `
 
 const TagWrapper = styled.span`
   ${({ theme }: InjectedProps) => css`
-    margin-left: ${theme.size.pxToRem(theme.size.space.xxs)};
+    margin-left: ${theme.size.pxToRem(theme.size.space.XXS)};
   `}
 `
