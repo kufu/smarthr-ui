@@ -1,11 +1,14 @@
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 
+import styled from 'styled-components'
+
 import Table from './Table'
 import Body from './Body'
 import Head from './Head'
 import Row from './Row'
 import Cell from './Cell'
+import { action } from '@storybook/addon-actions'
 
 class TableSampleData {
   readonly employeeNumber: string
@@ -38,66 +41,62 @@ const tableSampleDataSet = [
 ]
 
 storiesOf('Table', module).add('all', () => (
-  <>
-    <Table>
-      <Head>
-        <Row>
-          <Cell>社員番号</Cell>
-          <Cell>権限</Cell>
-          <Cell>雇用形態</Cell>
-          <Cell>役職</Cell>
-          <Cell>部署</Cell>
-        </Row>
-      </Head>
-      <Body>
-        {tableSampleDataSet.map(member => (
-          <Row key={member.employeeNumber}>
-            <Cell>{member.employeeNumber}</Cell>
-            <Cell>{member.role}</Cell>
-            <Cell>{member.employmentType}</Cell>
-            <Cell>{member.role}</Cell>
-            <Cell>{member.team}</Cell>
+  <Ul>
+    <li>
+      <Table>
+        <Head>
+          <Row>
+            <Cell onClick={action('clicked')}>社員番号</Cell>
+            <Cell>権限</Cell>
+            <Cell>雇用形態</Cell>
+            <Cell>役職</Cell>
+            <Cell>部署</Cell>
           </Row>
-        ))}
-      </Body>
-    </Table>
-    <div>disabled</div>
-    <Table size="s" disabled>
-      <Head>
-        <Row>
-          <Cell>社員番号</Cell>
-          <Cell>権限</Cell>
-          <Cell>雇用形態</Cell>
-          <Cell>役職</Cell>
-          <Cell>部署</Cell>
-        </Row>
-      </Head>
-      <Body>
-        {tableSampleDataSet.map(member => (
-          <Row key={member.employeeNumber}>
-            <Cell>{member.employeeNumber}</Cell>
-            <Cell>{member.role}</Cell>
-            <Cell>{member.employmentType}</Cell>
-            <Cell>{member.role}</Cell>
-            <Cell>{member.team}</Cell>
+        </Head>
+        <Body>
+          {tableSampleDataSet.map(member => (
+            <Row key={member.employeeNumber}>
+              <Cell>{member.employeeNumber}</Cell>
+              <Cell>{member.role}</Cell>
+              <Cell>{member.employmentType}</Cell>
+              <Cell>{member.role}</Cell>
+              <Cell>{member.team}</Cell>
+            </Row>
+          ))}
+        </Body>
+      </Table>
+    </li>
+    <li>
+      <Table>
+        <Head>
+          <Row>
+            <Cell>社員番号</Cell>
+            <Cell>権限</Cell>
+            <Cell>雇用形態</Cell>
+            <Cell>役職</Cell>
+            <Cell>部署</Cell>
           </Row>
-        ))}
-      </Body>
-    </Table>
-    <div>Long Text</div>
-    <Table size="m">
-      <Head>
-        <Row>
-          <Cell>タイトル</Cell>
-          <Cell>概要</Cell>
-        </Row>
-      </Head>
-      <Body>
-        <Row>
-          <Cell>長い本</Cell>
-          <Cell>概要もとてもながいです。hogehoghoehgoehgoejogejaogjaoe, ogehoghoehg</Cell>
-        </Row>
-      </Body>
-    </Table>
-  </>
+        </Head>
+        <Body>
+          {tableSampleDataSet.map(member => (
+            <Row key={member.employeeNumber}>
+              <Cell>{member.employeeNumber}</Cell>
+              <Cell>{member.role}</Cell>
+              <Cell>{member.employmentType}</Cell>
+              <Cell>{member.role}</Cell>
+              <Cell>{member.team}</Cell>
+            </Row>
+          ))}
+        </Body>
+      </Table>
+    </li>
+  </Ul>
 ))
+
+const Ul = styled.ul`
+  list-style: none;
+
+  > li {
+    margin-top: 2rem;
+  }
+`

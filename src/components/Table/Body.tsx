@@ -4,7 +4,7 @@ import { TableGroupContext } from './Table'
 
 const Body: React.FC<{}> = props => {
   return (
-    <Wrapper>
+    <Wrapper {...props}>
       <TableGroupContext.Provider value={{ group: 'body' }}>
         {props.children}
       </TableGroupContext.Provider>
@@ -12,6 +12,8 @@ const Body: React.FC<{}> = props => {
   )
 }
 
-const Wrapper = styled.tbody``
+const Wrapper = styled.tbody`
+  background-color: #fff;
+`
 
 export default Body

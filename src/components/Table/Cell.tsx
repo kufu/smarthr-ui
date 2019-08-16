@@ -1,18 +1,16 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { TableContext, tableSizes, TableGroupContext } from './Table'
-const tableSizeToPaddingMap = {
-  [tableSizes.s]: 8,
-  [tableSizes.m]: 12,
-  [tableSizes.l]: 16,
-}
+import { TableGroupContext } from './Table'
+
 export type Props = {
   children?: React.ReactNode
+  className?: string
+  onClick?: () => void
 }
-const Cell: React.FC<Props & InjectedProps> = props => {
+
+const Cell: React.FC<Props & InjectedProps> = ({ theme, className = '', children, onClick }) => {
   const { group } = React.useContext(TableGroupContext)
-  const { size, disabled } = React.useContext(TableContext)
 
   const WrapComponent = (tableGroup => {
     switch (tableGroup) {
@@ -22,35 +20,36 @@ const Cell: React.FC<Props & InjectedProps> = props => {
         return Th
     }
   })(group)
+
   return (
-    <WrapComponent theme={props.theme} disabled={disabled} margin={tableSizeToPaddingMap[size]}>
-      {props.children}
+    <WrapComponent onClick={onClick} className={className} theme={theme}>
+      {children}
     </WrapComponent>
   )
 }
 
-type WrapperProps = InjectedProps & {
-  margin: number
-  disabled: boolean
-}
-
 const cellStyle = css`
-  ${(props: WrapperProps) => `
-    padding-top: ${props.theme.size.pxToRem(props.margin)};
-    padding-bottom: ${props.theme.size.pxToRem(props.margin)};
-    padding-left: 0;
-    padding-right: 0;
-    border-style: none;
-  `}
-`
-
-const Td = styled.td`
-  ${cellStyle}
-  ${(props: WrapperProps) => props.disabled && `opacity: 0.5;`}
+  border-style: none;
+  text-align: left;
+  padding: ${({ theme }: InjectedProps) => `${theme.size.space.XXS}px`};
+  ${(props: InjectedProps & Props) =>
+    props.onClick &&
+    css`
+      :hover {
+        background-color: ${props.theme.palette.hoverColor(props.theme.palette.BACKGROUND)};
+        cursor: pointer;
+      }
+    `}
 `
 
 const Th = styled.th`
   ${cellStyle}
+  font-size: 11px;
+`
+
+const Td = styled.td`
+  ${cellStyle}
+  font-size: 14px;
 `
 
 export default withTheme(Cell)
