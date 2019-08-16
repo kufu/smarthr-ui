@@ -31,7 +31,7 @@ const Cell: React.FC<Props & InjectedProps> = ({ theme, className = '', children
 const cellStyle = css`
   border-style: none;
   text-align: left;
-  padding: ${({ theme }: InjectedProps) => `${theme.size.space.XXS}px`};
+  padding: ${({ theme }: InjectedProps) => `${theme.size.space.XS}px`};
   ${(props: InjectedProps & Props) =>
     props.onClick &&
     css`
