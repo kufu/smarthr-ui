@@ -35,6 +35,7 @@ const Wrapper = styled.table`
     border-radius: ${theme.frame.border.radius.m};
     border-spacing: 0;
     overflow: hidden;
+    box-shadow: 1px 1px 4px 0px rgba(51, 51, 51, 0.15);
   `}
 `
 
