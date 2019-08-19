@@ -87,7 +87,7 @@ const LabelHead = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: ${theme.size.pxToRem(theme.size.space.xxs)};
+    margin-bottom: ${theme.size.pxToRem(theme.size.space.XXS)};
     line-height: 1.4;
   `}
 `
@@ -96,27 +96,27 @@ const Title = styled.p`
     margin: 0;
     color: ${theme.palette.TEXT_GREY};
     font-weight: bold;
-    font-size: ${theme.size.pxToRem(theme.size.font.tall)};
+    font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
   `}
 `
 const Help = styled.p`
   ${({ theme }: InjectedProps) => css`
     margin: 0;
+    font-size: ${theme.size.pxToRem(theme.size.font.SHORT)};
     color: ${theme.palette.TEXT_GREY};
-    font-size: ${theme.size.pxToRem(theme.size.font.tasting)};
   `}
 `
 const Error = styled.p`
   ${({ theme }: InjectedProps) => css`
-    margin: ${theme.size.pxToRem(theme.size.space.xxs)} 0 0 0;
+    margin: ${theme.size.pxToRem(theme.size.space.XXS)} 0 0 0;
+    font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
     color: ${theme.palette.DANGER};
-    font-size: ${theme.size.pxToRem(theme.size.font.tall)};
     line-height: 1.4;
   `}
 `
 
 const TagWrapper = styled.span`
   ${({ theme }: InjectedProps) => css`
-    margin-left: ${theme.size.pxToRem(theme.size.space.xxs)};
+    margin-left: ${theme.size.pxToRem(theme.size.space.XXS)};
   `}
 `
