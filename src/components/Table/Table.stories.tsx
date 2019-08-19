@@ -34,6 +34,27 @@ storiesOf('Table', module).add('all', () => (
             <Cell>cell</Cell>
             <Cell>cell</Cell>
           </Row>
+          <Row>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+          </Row>
+          <Row>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+          </Row>
+          <Row>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+          </Row>
         </Body>
       </Table>
     </li>

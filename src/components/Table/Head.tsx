@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { TableGroupContext } from './Table'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
@@ -16,8 +16,8 @@ const Head: React.FC<Props & InjectedProps> = ({ theme, className = '', children
 }
 
 const Wrapper = styled.thead`
-  ${({ theme }: InjectedProps) => css`
-    background-color: ${theme.palette.BACKGROUND};
+  ${({ theme }: InjectedProps) => `
+    background-color: ${theme.palette.COLUMN};
   `}
 `
 

@@ -29,11 +29,13 @@ const Table: React.FC<MergedComponentProps> = ({ children, className = '', theme
 
 const Wrapper = styled.table`
   ${({ theme }: InjectedProps) => `
-    border-radius: ${theme.frame.border.radius.m};
+    width: 100%;
+    border-collapse: separate;
     border: ${theme.frame.border.default};
-    border-collapse: collapse;
+    border-radius: ${theme.frame.border.radius.m};
     border-spacing: 0;
-`}
+    overflow: hidden;
+  `}
 `
 
 export default withTheme(Table)

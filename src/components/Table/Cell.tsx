@@ -28,28 +28,25 @@ const Cell: React.FC<Props & InjectedProps> = ({ theme, className = '', children
   )
 }
 
-const cellStyle = css`
-  border-style: none;
-  text-align: left;
+const Th = styled.th`
+  font-size: 11px;
   padding: ${({ theme }: InjectedProps) => `${theme.size.space.XS}px`};
   ${(props: InjectedProps & Props) =>
     props.onClick &&
     css`
       :hover {
-        background-color: ${props.theme.palette.hoverColor(props.theme.palette.BACKGROUND)};
+        background-color: ${props.theme.palette.hoverColor(props.theme.palette.COLUMN)};
         cursor: pointer;
       }
     `}
 `
 
-const Th = styled.th`
-  ${cellStyle}
-  font-size: 11px;
-`
-
 const Td = styled.td`
-  ${cellStyle}
-  font-size: 14px;
+  ${({ theme }: InjectedProps) => `
+    padding: ${theme.size.space.XXS}px ${theme.size.space.XS}px;
+    border-top: ${theme.frame.border.default};
+    font-size: 14px;
+  `};
 `
 
 export default withTheme(Cell)
