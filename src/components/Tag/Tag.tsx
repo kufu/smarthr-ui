@@ -42,10 +42,10 @@ const Wrapper = styled.span`
       height: ${theme.size.pxToRem(20)};
       box-sizing: border-box;
       margin: 0;
-      padding: 0 ${theme.size.pxToRem(theme.size.space.xxs)};
+      padding: 0 ${theme.size.pxToRem(theme.size.space.XXS)};
       display: inline-block;
       white-space: nowrap;
-      font-size: ${theme.size.pxToRem(theme.size.font.tasting)};
+      font-size: ${theme.size.pxToRem(theme.size.font.SHORT)};
       font-weight: bold;
       line-height: ${theme.size.pxToRem(20)};
 

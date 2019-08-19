@@ -1,92 +1,94 @@
 import { merge } from '../libs/lodash'
 
 const defaultHtmlFontSize = 16
-const defaultSpace = 8
+const defaultSpaceSize = 8
 
 export interface SizeProperty {
   htmlFontSize?: number
   space?: {
     defaultRem?: number
-    xxs?: number
-    xs?: number
-    s?: number
-    m?: number
-    l?: number
-    xl?: number
-    xxl?: number
+    XXS?: number
+    XS?: number
+    S?: number
+    M?: number
+    L?: number
+    XL?: number
+    XXL?: number
   }
   // respect for Starbucks...
   font?: {
-    tasting?: number
-    short?: number
-    tall?: number
-    grande?: number
-    venti?: number
-    trenta?: number
+    SHORT?: number
+    TALL?: number
+    GRANDE?: number
+    VENTI?: number
   }
   mediaQuery?: {
-    sp?: number
-    tablet?: number
+    SP?: number
+    TABLET?: number
   }
 }
 
 export interface CreatedSizeTheme {
   pxToRem: (value: number) => string
   space: {
-    xxs: number
-    xs: number
-    s: number
-    m: number
-    l: number
-    xl: number
-    xxl: number
+    XXS: number
+    XS: number
+    S: number
+    M: number
+    L: number
+    XL: number
+    XXL: number
   }
   font: {
-    tasting: number
-    short: number
-    tall: number
-    grande: number
-    venti: number
-    trenta: number
+    SHORT: number
+    TALL: number
+    GRANDE: number
+    VENTI: number
   }
   mediaQuery: {
-    sp: number
-    tablet: number
+    SP: number
+    TABLET: number
   }
 }
 
-const defaultSize = {
-  font: {
-    tasting: 12,
-    short: 13,
-    tall: 14,
-    grande: 16,
-    venti: 20,
-    trenta: 22,
-  },
-  mediaQuery: {
-    sp: 599,
-    tablet: 959,
-  },
+const pxToRem = (value: number) => (font: number) => {
+  return `${value / font}rem`
+}
+
+const getSpace = (size: number) => {
+  return {
+    XXS: size,
+    XS: size * 2,
+    S: size * 3,
+    M: size * 4,
+    L: size * 5,
+    XL: size * 6,
+    XXL: size * 7,
+  }
+}
+
+const defaultFontSize = { SHORT: 11, TALL: 14, GRANDE: 18, VENTI: 24 }
+
+const defaultMediaQuery = { SP: 599, TABLET: 959 }
+
+const defaultSpace = getSpace(defaultSpaceSize)
+
+export const defaultSize: CreatedSizeTheme = {
+  pxToRem: (value: number) => pxToRem(value)(defaultHtmlFontSize),
+  font: defaultFontSize,
+  space: defaultSpace,
+  mediaQuery: defaultMediaQuery,
 }
 
 export const createSize = (userSize: SizeProperty = {}) => {
   const space = userSize.space || {}
-  const xxs = space.defaultRem || defaultSpace
+  const XXS = space.defaultRem || defaultSpaceSize
   const created: CreatedSizeTheme = merge(
     {
-      pxToRem: (value: number): string =>
-        `${value / (userSize.htmlFontSize || defaultHtmlFontSize)}rem`,
-      space: {
-        xxs,
-        xs: xxs * 2,
-        s: xxs * 3,
-        m: xxs * 4,
-        l: xxs * 5,
-        xl: xxs * 6,
-        xxl: xxs * 7,
-      },
-      ...defaultSize,
+      pxToRem: (value: number) => pxToRem(value)(userSize.htmlFontSize || defaultHtmlFontSize),
+      space: getSpace(XXS),
+      font: defaultFontSize,
+      mediaQuery: defaultMediaQuery,
     },
     userSize,
   )

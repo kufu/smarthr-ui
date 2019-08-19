@@ -48,8 +48,8 @@ const Item = styled.span`
       padding: 0;
       border: none;
       background-color: #fff;
+      font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.MAIN};
-      font-size: ${size.pxToRem(size.font.tall)};
       line-height: 32px;
       text-align: center;
       cursor: pointer;
