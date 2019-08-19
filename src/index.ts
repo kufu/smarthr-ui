@@ -16,7 +16,7 @@ export { Button, ButtonAnchor, ButtonDiv } from './components/Button'
 export { Tag } from './components/Tag'
 export { Base } from './components/Base'
 export { Icon } from './components/Icon'
-export { AppNavi, AppNaviButton } from './components/AppNavi'
+export { AppNavi } from './components/AppNavi'
 
 // themes
 export { createTheme } from './themes/createTheme'

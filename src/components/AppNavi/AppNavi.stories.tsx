@@ -1,24 +1,24 @@
+import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 
 import { AppNavi } from './AppNavi'
-import { Props as IconProps } from '../Icon/Icon'
 
 const buttons = [
   {
-    label: 'ボタン1',
-    icon: 'fa-file' as IconProps['name'],
+    children: 'ボタン1',
+    icon: 'fa-file' as const,
     current: true,
   },
   {
-    label: 'ボタン2',
-    icon: 'fa-user-alt' as IconProps['name'],
-    url: '/',
+    children: 'ボタン2',
+    icon: 'fa-user-alt' as const,
+    onClick: action('click!!'),
   },
   {
-    label: 'ボタン3',
-    icon: 'fa-cog' as IconProps['name'],
-    url: '/',
+    children: 'ボタン3',
+    icon: 'fa-cog' as const,
+    onClick: action('click!!'),
   },
 ]
 

@@ -19,22 +19,22 @@ const AppNaviComponent: React.FC<Props & InjectedProps> = ({ theme, ...props }) 
     )}
 
     {props.buttons &&
-      props.buttons.map(button => (
+      props.buttons.map((button, index) => (
         <AppNaviButton
-          label={button.label}
           icon={button.icon}
-          url={button.url}
-          target={button.target}
           current={button.current}
-          key={button.label}
-        ></AppNaviButton>
+          key={index}
+          onClick={button.onClick}
+        >
+          {button.children}
+        </AppNaviButton>
       ))}
   </Wrapper>
 )
 
 export const AppNavi = withTheme(AppNaviComponent)
 
-const Wrapper: any = styled.nav`
+const Wrapper = styled.nav`
   ${({ theme }: InjectedProps) => {
     return css`
       display: flex;
@@ -48,7 +48,7 @@ const Wrapper: any = styled.nav`
   }}
 `
 
-const TagWrapper: any = styled.span`
+const TagWrapper = styled.span`
   ${({ theme }: InjectedProps) => {
     return css`
       display: inline-block;
