@@ -31,19 +31,6 @@ exports[`Checkbox should be match snapshot 1`] = `
           },
         },
         "palette": Object {
-<<<<<<< HEAD
-          "Background": "#f5f6fa",
-          "Border": "#d6d6d6",
-          "Column": "#f9f9f9",
-          "Danger": "#ef475b",
-          "Hanica_Green": "#57d0d5",
-          "Main": "#00a5ab",
-          "Overlay": "rgba(0,0,0,0.15)",
-          "Scrim": "rgba(0,0,0,0.5)",
-          "TextBlack": "#333",
-          "TextGrey": "#767676",
-          "Warning": "#ff8800",
-=======
           "BACKGROUND": "#f5f6fa",
           "BORDER": "#d6d6d6",
           "COLUMN": "#f9f9f9",
@@ -54,7 +41,6 @@ exports[`Checkbox should be match snapshot 1`] = `
           "TEXT_BLACK": "#333",
           "TEXT_GREY": "#767676",
           "WARNING": "#ff8800",
->>>>>>> upstream/features/ttmz
           "hoverColor": [Function],
         },
         "size": Object {
@@ -107,19 +93,6 @@ exports[`Checkbox should be match snapshot 1`] = `
             },
           },
           "palette": Object {
-<<<<<<< HEAD
-            "Background": "#f5f6fa",
-            "Border": "#d6d6d6",
-            "Column": "#f9f9f9",
-            "Danger": "#ef475b",
-            "Hanica_Green": "#57d0d5",
-            "Main": "#00a5ab",
-            "Overlay": "rgba(0,0,0,0.15)",
-            "Scrim": "rgba(0,0,0,0.5)",
-            "TextBlack": "#333",
-            "TextGrey": "#767676",
-            "Warning": "#ff8800",
-=======
             "BACKGROUND": "#f5f6fa",
             "BORDER": "#d6d6d6",
             "COLUMN": "#f9f9f9",
@@ -130,7 +103,6 @@ exports[`Checkbox should be match snapshot 1`] = `
             "TEXT_BLACK": "#333",
             "TEXT_GREY": "#767676",
             "WARNING": "#ff8800",
->>>>>>> upstream/features/ttmz
             "hoverColor": [Function],
           },
           "size": Object {
@@ -210,19 +182,6 @@ exports[`Checkbox should be match snapshot 1`] = `
               },
             },
             "palette": Object {
-<<<<<<< HEAD
-              "Background": "#f5f6fa",
-              "Border": "#d6d6d6",
-              "Column": "#f9f9f9",
-              "Danger": "#ef475b",
-              "Hanica_Green": "#57d0d5",
-              "Main": "#00a5ab",
-              "Overlay": "rgba(0,0,0,0.15)",
-              "Scrim": "rgba(0,0,0,0.5)",
-              "TextBlack": "#333",
-              "TextGrey": "#767676",
-              "Warning": "#ff8800",
-=======
               "BACKGROUND": "#f5f6fa",
               "BORDER": "#d6d6d6",
               "COLUMN": "#f9f9f9",
@@ -233,7 +192,6 @@ exports[`Checkbox should be match snapshot 1`] = `
               "TEXT_BLACK": "#333",
               "TEXT_GREY": "#767676",
               "WARNING": "#ff8800",
->>>>>>> upstream/features/ttmz
               "hoverColor": [Function],
             },
             "size": Object {
@@ -340,19 +298,6 @@ exports[`Checkbox should be match snapshot 1`] = `
                             },
                           },
                           "palette": Object {
-<<<<<<< HEAD
-                            "Background": "#f5f6fa",
-                            "Border": "#d6d6d6",
-                            "Column": "#f9f9f9",
-                            "Danger": "#ef475b",
-                            "Hanica_Green": "#57d0d5",
-                            "Main": "#00a5ab",
-                            "Overlay": "rgba(0,0,0,0.15)",
-                            "Scrim": "rgba(0,0,0,0.5)",
-                            "TextBlack": "#333",
-                            "TextGrey": "#767676",
-                            "Warning": "#ff8800",
-=======
                             "BACKGROUND": "#f5f6fa",
                             "BORDER": "#d6d6d6",
                             "COLUMN": "#f9f9f9",
@@ -363,7 +308,6 @@ exports[`Checkbox should be match snapshot 1`] = `
                             "TEXT_BLACK": "#333",
                             "TEXT_GREY": "#767676",
                             "WARNING": "#ff8800",
->>>>>>> upstream/features/ttmz
                             "hoverColor": [Function],
                           },
                           "size": Object {
