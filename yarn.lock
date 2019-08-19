@@ -1335,15 +1335,15 @@
     uuid "^3.3.2"
 
 "@storybook/addon-viewport@^5.1.8":
-  version "5.1.10"
-  resolved "https://registry.yarnpkg.com/@storybook/addon-viewport/-/addon-viewport-5.1.10.tgz#b29b942d330e77d412f24f0f1d6a140bfa5a7946"
-  integrity sha512-KgX0UMUAZ9w+pMOtwtHeDHU8xCP3jKYNjyswd6JX3spPZYzjI3E/qUWmvgzXyXWaNJQ8Ayxm6gVS2+uZ2875Yw==
+  version "5.1.11"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-viewport/-/addon-viewport-5.1.11.tgz#3061d618e53f1e8e453e0d5d3380828e40207a9a"
+  integrity sha512-9abbCEivU4Gqueg2rY0TJUnUb2w7xq0T+9G6RO7QYayXC9zPfK0hpdGOPZ3d5cJTox87K8j2536pyTVOd7Cc+Q==
   dependencies:
-    "@storybook/addons" "5.1.10"
-    "@storybook/client-logger" "5.1.10"
-    "@storybook/components" "5.1.10"
-    "@storybook/core-events" "5.1.10"
-    "@storybook/theming" "5.1.10"
+    "@storybook/addons" "5.1.11"
+    "@storybook/client-logger" "5.1.11"
+    "@storybook/components" "5.1.11"
+    "@storybook/core-events" "5.1.11"
+    "@storybook/theming" "5.1.11"
     core-js "^3.0.1"
     global "^4.3.2"
     memoizerific "^1.11.3"
