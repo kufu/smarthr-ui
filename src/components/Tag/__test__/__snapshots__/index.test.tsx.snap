@@ -28,6 +28,7 @@ exports[`Tag should be match snapshot 1`] = `
           },
         },
         "palette": Object {
+<<<<<<< HEAD
           "Background": "#f5f6fa",
           "Border": "#d6d6d6",
           "Column": "#f9f9f9",
@@ -39,30 +40,40 @@ exports[`Tag should be match snapshot 1`] = `
           "TextBlack": "#333",
           "TextGrey": "#767676",
           "Warning": "#ff8800",
+=======
+          "BACKGROUND": "#f5f6fa",
+          "BORDER": "#d6d6d6",
+          "COLUMN": "#f9f9f9",
+          "DANGER": "#ef475b",
+          "MAIN": "#00a5ab",
+          "OVERLAY": "rgba(0,0,0,0.15)",
+          "SCRIM": "rgba(0,0,0,0.5)",
+          "TEXT_BLACK": "#333",
+          "TEXT_GREY": "#767676",
+          "WARNING": "#ff8800",
+>>>>>>> upstream/features/ttmz
           "hoverColor": [Function],
         },
         "size": Object {
           "font": Object {
-            "grande": 16,
-            "short": 13,
-            "tall": 14,
-            "tasting": 12,
-            "trenta": 22,
-            "venti": 20,
+            "GRANDE": 18,
+            "SHORT": 11,
+            "TALL": 14,
+            "VENTI": 24,
           },
           "mediaQuery": Object {
-            "sp": 599,
-            "tablet": 959,
+            "SP": 599,
+            "TABLET": 959,
           },
           "pxToRem": [Function],
           "space": Object {
-            "l": 40,
-            "m": 32,
-            "s": 24,
-            "xl": 48,
-            "xs": 16,
-            "xxl": 56,
-            "xxs": 8,
+            "L": 40,
+            "M": 32,
+            "S": 24,
+            "XL": 48,
+            "XS": 16,
+            "XXL": 56,
+            "XXS": 8,
           },
         },
       }
@@ -95,6 +106,7 @@ exports[`Tag should be match snapshot 1`] = `
             },
           },
           "palette": Object {
+<<<<<<< HEAD
             "Background": "#f5f6fa",
             "Border": "#d6d6d6",
             "Column": "#f9f9f9",
@@ -106,30 +118,40 @@ exports[`Tag should be match snapshot 1`] = `
             "TextBlack": "#333",
             "TextGrey": "#767676",
             "Warning": "#ff8800",
+=======
+            "BACKGROUND": "#f5f6fa",
+            "BORDER": "#d6d6d6",
+            "COLUMN": "#f9f9f9",
+            "DANGER": "#ef475b",
+            "MAIN": "#00a5ab",
+            "OVERLAY": "rgba(0,0,0,0.15)",
+            "SCRIM": "rgba(0,0,0,0.5)",
+            "TEXT_BLACK": "#333",
+            "TEXT_GREY": "#767676",
+            "WARNING": "#ff8800",
+>>>>>>> upstream/features/ttmz
             "hoverColor": [Function],
           },
           "size": Object {
             "font": Object {
-              "grande": 16,
-              "short": 13,
-              "tall": 14,
-              "tasting": 12,
-              "trenta": 22,
-              "venti": 20,
+              "GRANDE": 18,
+              "SHORT": 11,
+              "TALL": 14,
+              "VENTI": 24,
             },
             "mediaQuery": Object {
-              "sp": 599,
-              "tablet": 959,
+              "SP": 599,
+              "TABLET": 959,
             },
             "pxToRem": [Function],
             "space": Object {
-              "l": 40,
-              "m": 32,
-              "s": 24,
-              "xl": 48,
-              "xs": 16,
-              "xxl": 56,
-              "xxs": 8,
+              "L": 40,
+              "M": 32,
+              "S": 24,
+              "XL": 48,
+              "XS": 16,
+              "XXL": 56,
+              "XXS": 8,
             },
           },
         }
@@ -144,7 +166,7 @@ exports[`Tag should be match snapshot 1`] = `
             "componentStyle": ComponentStyle {
               "componentId": "sc-bdVaJa",
               "isStatic": false,
-              "lastClassName": "iISWOs",
+              "lastClassName": "pUjya",
               "rules": Array [
                 "
   ",
@@ -188,6 +210,7 @@ exports[`Tag should be match snapshot 1`] = `
               },
             },
             "palette": Object {
+<<<<<<< HEAD
               "Background": "#f5f6fa",
               "Border": "#d6d6d6",
               "Column": "#f9f9f9",
@@ -199,37 +222,47 @@ exports[`Tag should be match snapshot 1`] = `
               "TextBlack": "#333",
               "TextGrey": "#767676",
               "Warning": "#ff8800",
+=======
+              "BACKGROUND": "#f5f6fa",
+              "BORDER": "#d6d6d6",
+              "COLUMN": "#f9f9f9",
+              "DANGER": "#ef475b",
+              "MAIN": "#00a5ab",
+              "OVERLAY": "rgba(0,0,0,0.15)",
+              "SCRIM": "rgba(0,0,0,0.5)",
+              "TEXT_BLACK": "#333",
+              "TEXT_GREY": "#767676",
+              "WARNING": "#ff8800",
+>>>>>>> upstream/features/ttmz
               "hoverColor": [Function],
             },
             "size": Object {
               "font": Object {
-                "grande": 16,
-                "short": 13,
-                "tall": 14,
-                "tasting": 12,
-                "trenta": 22,
-                "venti": 20,
+                "GRANDE": 18,
+                "SHORT": 11,
+                "TALL": 14,
+                "VENTI": 24,
               },
               "mediaQuery": Object {
-                "sp": 599,
-                "tablet": 959,
+                "SP": 599,
+                "TABLET": 959,
               },
               "pxToRem": [Function],
               "space": Object {
-                "l": 40,
-                "m": 32,
-                "s": 24,
-                "xl": 48,
-                "xs": 16,
-                "xxl": 56,
-                "xxs": 8,
+                "L": 40,
+                "M": 32,
+                "S": 24,
+                "XL": 48,
+                "XS": 16,
+                "XXL": 56,
+                "XXS": 8,
               },
             },
           }
         }
       >
         <span
-          className="success sc-bdVaJa iISWOs"
+          className="success sc-bdVaJa pUjya"
         >
           hello
         </span>

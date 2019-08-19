@@ -48,8 +48,8 @@ const Item = styled.span`
       padding: 0;
       border: none;
       background-color: #fff;
-      color: ${palette.Main};
-      font-size: ${size.pxToRem(size.font.tall)};
+      font-size: ${size.pxToRem(size.font.TALL)};
+      color: ${palette.MAIN};
       line-height: 32px;
       text-align: center;
       cursor: pointer;
@@ -58,11 +58,11 @@ const Item = styled.span`
 
       &.active {
         color: #fff;
-        background-color: ${palette.Main};
+        background-color: ${palette.MAIN};
       }
 
       &.hover {
-        color: ${palette.Main};
+        color: ${palette.MAIN};
         background-color: ${palette.hoverColor('#fff')};
       }
     `

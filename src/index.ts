@@ -22,3 +22,7 @@ export { Header } from './components/Header'
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
+export { defaultPalette } from './themes/createPalette'
+export { defaultInteraction } from './themes/createInteraction'
+export { defaultFrame } from './themes/createFrame'
+export { defaultSize } from './themes/createSize'

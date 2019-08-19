@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/kufu/smarthr-ui/compare/v4.0.0...v4.0.1) (2019-08-06)
+
+
+### Bug Fixes
+
+* Fix export test ([5e67069](https://github.com/kufu/smarthr-ui/commit/5e67069))
+
+
+
 ## [4.0.0](https://github.com/kufu/smarthr-ui/compare/v3.9.2...v4.0.0) (2019-08-05)
 
 
