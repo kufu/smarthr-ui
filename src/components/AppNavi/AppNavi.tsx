@@ -52,7 +52,7 @@ const TagWrapper: any = styled.span`
   ${({ theme }: InjectedProps) => {
     return css`
       display: inline-block;
-      margin-right: ${theme.size.pxToRem(theme.size.space.xs)};
+      margin-right: ${theme.size.pxToRem(theme.size.space.XS)};
     `
   }}
 `

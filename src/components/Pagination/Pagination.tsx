@@ -68,7 +68,7 @@ const List = styled.ul`
     return css`
       display: flex;
       border-radius: ${frame.border.radius.s};
-      border: 1px solid ${palette.Border};
+      border: 1px solid ${palette.BORDER};
       margin: 0;
       padding: 0;
 

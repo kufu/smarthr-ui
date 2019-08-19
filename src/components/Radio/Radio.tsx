@@ -53,8 +53,8 @@ const Wrapper = styled.div`
       box-sizing: border-box;
 
       &.active {
-        border-color: ${palette.Main};
-        background-color: ${palette.Main};
+        border-color: ${palette.MAIN};
+        background-color: ${palette.MAIN};
 
         &::before {
           position: absolute;
@@ -70,11 +70,11 @@ const Wrapper = styled.div`
       }
 
       &.disabled {
-        background-color: ${palette.Border};
-        border-color: ${palette.Border};
+        background-color: ${palette.BORDER};
+        border-color: ${palette.BORDER};
 
         &.active {
-          border-color: ${palette.Border};
+          border-color: ${palette.BORDER};
 
           &::before {
             background-color: #fff;
@@ -83,13 +83,13 @@ const Wrapper = styled.div`
       }
 
       &.dark {
-        border-color: ${palette.Main};
+        border-color: ${palette.MAIN};
 
         &.active {
           background-color: #fff;
 
           &::before {
-            background-color: ${palette.Main};
+            background-color: ${palette.MAIN};
           }
         }
       }

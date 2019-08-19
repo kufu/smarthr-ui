@@ -21,7 +21,7 @@ const AppNaviButtonComponent: React.FC<AppNaviButtonProps & InjectedProps> = ({
       <CurrentWrapper theme={theme} aria-selected="true">
         {props.icon && (
           <IconWrapper theme={theme}>
-            <Icon name={props.icon} size={14} color={theme.palette.TextBlack} />
+            <Icon name={props.icon} size={14} color={theme.palette.TEXT_BLACK} />
           </IconWrapper>
         )}
         {props.label}
@@ -30,7 +30,7 @@ const AppNaviButtonComponent: React.FC<AppNaviButtonProps & InjectedProps> = ({
       <AnchorWrapper theme={theme} href={props.url} target={props.target ? props.target : '_self'}>
         {props.icon && (
           <IconWrapper theme={theme}>
-            <Icon name={props.icon} size={14} color={theme.palette.TextGrey} />
+            <Icon name={props.icon} size={14} color={theme.palette.TEXT_GREY} />
           </IconWrapper>
         )}
         {props.label}
@@ -57,8 +57,8 @@ const BaseStyle = css`
       align-items: center;
       box-sizing: border-box;
       height: ${theme.size.pxToRem(40)};
-      padding: 0 ${theme.size.pxToRem(theme.size.space.xxs)};
-      font-size: ${theme.size.font.tall};
+      padding: 0 ${theme.size.pxToRem(theme.size.space.XXS)};
+      font-size: ${theme.size.font.TALL};
       font-weight: bold;
       text-decoration: none;
     `
@@ -69,8 +69,8 @@ const CurrentWrapper: any = styled.span`
   ${({ theme }: InjectedProps) => {
     return css`
       ${BaseStyle}
-      border-bottom: ${theme.size.pxToRem(2)} solid ${theme.palette.Main};
-      color: ${theme.palette.TextBlack};
+      border-bottom: ${theme.size.pxToRem(2)} solid ${theme.palette.MAIN};
+      color: ${theme.palette.TEXT_BLACK};
     `
   }}
 `
@@ -79,7 +79,7 @@ const AnchorWrapper: any = styled.a`
   ${({ theme }: InjectedProps) => {
     return css`
       ${BaseStyle}
-      color: ${theme.palette.TextGrey};
+      color: ${theme.palette.TEXT_GREY};
       transition: background-color 0.3s;
 
       &:hover{
@@ -94,7 +94,7 @@ const IconWrapper: any = styled.figure`
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 ${theme.size.pxToRem(theme.size.space.xxs)} 0 0;
+      margin: 0 ${theme.size.pxToRem(theme.size.space.XXS)} 0 0;
     `
   }}
 `

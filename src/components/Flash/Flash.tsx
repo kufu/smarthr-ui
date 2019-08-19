@@ -68,7 +68,7 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
         <Icon name={iconName} size={24} color="#fff" />
         <Txt theme={theme}>{text}</Txt>
         <CloseButton onClick={onClose} className="close">
-          <Icon name="cross" size={12} color={theme.palette.Border} />
+          <Icon name="cross" size={12} color={theme.palette.BORDER} />
         </CloseButton>
       </Wrapper>
     )
@@ -107,13 +107,13 @@ const Wrapper = styled.div`
     return css`
       z-index: 1000;
       position: fixed;
-      bottom: ${size.pxToRem(size.space.xxs)};
-      left: ${size.pxToRem(size.space.xxs)};
+      bottom: ${size.pxToRem(size.space.XXS)};
+      left: ${size.pxToRem(size.space.XXS)};
       display: flex;
       align-items: center;
       width: 404px;
       height: 50px;
-      padding: 0 ${size.pxToRem(size.space.xs)};
+      padding: 0 ${size.pxToRem(size.space.XS)};
       border-radius: ${frame.border.radius.m};
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
         0 2px 1px -1px rgba(0, 0, 0, 0.12);
@@ -121,11 +121,11 @@ const Wrapper = styled.div`
       animation: ${bounceAnimation} 1s 0s both;
 
       &.success {
-        background-color: ${palette.Main};
+        background-color: ${palette.MAIN};
       }
 
       &.danger {
-        background-color: ${palette.Danger};
+        background-color: ${palette.DANGER};
       }
     `
   }}
@@ -136,9 +136,9 @@ const Txt = styled.p`
 
     return css`
       flex: 1;
-      padding: 0 ${size.pxToRem(size.space.xs)};
+      padding: 0 ${size.pxToRem(size.space.XS)};
       color: #fff;
-      font-size: ${size.pxToRem(size.font.tall)};
+      font-size: ${size.pxToRem(size.font.TALL)};
     `
   }}
 `
