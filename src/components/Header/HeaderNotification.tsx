@@ -44,7 +44,7 @@ const Anchor: any = styled.a`
       border-radius: ${theme.size.pxToRem(4)};
       background-color: ${number && number > 0 ? '#fcb156' : '#aaa'};
       color: #fff;
-      font-size: ${theme.size.pxToRem(theme.size.font.tall)};
+      font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
       line-height: ${theme.size.pxToRem(29)};
       text-align: center;
       text-decoration: none;

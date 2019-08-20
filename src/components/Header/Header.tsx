@@ -61,8 +61,8 @@ const Wrapper: any = styled.header`
     return css`
       display: flex;
       height: ${theme.size.pxToRem(50)};
-      padding: 0 ${theme.size.pxToRem(theme.size.space.xs)};
-      background-color: ${theme.palette.Header_Green};
+      padding: 0 ${theme.size.pxToRem(theme.size.space.XS)};
+      background-color: ${theme.palette.MAIN};
       box-sizing: border-box;
       position: relative;
       align-items: center;
@@ -92,7 +92,7 @@ const TenantName: any = styled.span`
   ${({ theme }: InjectedProps) => {
     return css`
       display: block;
-      margin-left: ${theme.size.space.xs}px;
+      margin-left: ${theme.size.space.XS}px;
       color: #ffffff;
     `
   }}

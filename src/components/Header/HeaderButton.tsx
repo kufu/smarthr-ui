@@ -35,7 +35,7 @@ const Wrapper: any = styled.a`
       margin: 0;
       padding: 0 ${theme.size.pxToRem(10)};
       color: #ffffff;
-      font-size: ${theme.size.pxToRem(theme.size.font.tall)};
+      font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
       text-decoration: none;
       line-height: ${theme.size.pxToRem(50)};
       transition: background-color 0.3s;
@@ -52,7 +52,7 @@ const HeaderButtonIcon: any = styled.figure`
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 ${theme.size.pxToRem(theme.size.space.xxs)} 0 0;
+      margin: 0 ${theme.size.pxToRem(theme.size.space.XXS)} 0 0;
       vertical-align: middle;
     `
   }}

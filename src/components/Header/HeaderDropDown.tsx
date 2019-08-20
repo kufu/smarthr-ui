@@ -111,7 +111,7 @@ const ButtonWrapper: any = styled.button`
       border: none;
       background: ${open ? 'rgba(255, 255, 255, 0.3)' : 'none'};
       color: #ffffff;
-      font-size: ${theme.size.pxToRem(theme.size.font.tall)};
+      font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
       text-decoration: none;
       line-height: ${theme.size.pxToRem(50)};
       transition: background-color 0.3s;
@@ -129,7 +129,7 @@ const HeaderDropDownIcon: any = styled.figure`
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 ${theme.size.pxToRem(theme.size.space.xxs)} 0 0;
+      margin: 0 ${theme.size.pxToRem(theme.size.space.XXS)} 0 0;
       vertical-align: middle;
     `
   }}
@@ -140,7 +140,7 @@ const HeaderDropDownCaret: any = styled.figure`
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 0 0 ${theme.size.pxToRem(theme.size.space.xxs)};
+      margin: 0 0 0 ${theme.size.pxToRem(theme.size.space.XXS)};
       vertical-align: middle;
     `
   }}
@@ -150,7 +150,7 @@ const MenuWrapper: any = styled.div`
   ${({ theme, open }: InjectedProps & { open: boolean }) => {
     return css`
       display: ${open ? 'block' : 'none'};
-      border: 1px solid ${theme.palette.Border};
+      border: 1px solid ${theme.palette.BORDER};
       border-radius: ${theme.size.pxToRem(3)};
       background-color: #ffffff;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
@@ -183,7 +183,7 @@ const MenuListItemIcon: any = styled.figure`
       display: flex;
       align-items: middle;
       padding: 0;
-      margin: 0 ${theme.size.pxToRem(theme.size.space.xxs)} 0 0;
+      margin: 0 ${theme.size.pxToRem(theme.size.space.XXS)} 0 0;
     `
   }}
 `
@@ -194,14 +194,14 @@ const MenuListItemAnchor: any = styled.a`
       display: flex;
       align-items: center;
       padding: ${theme.size.pxToRem(3)} ${theme.size.pxToRem(20)};
-      color: ${theme.palette.TextBlack};
-      font-size: ${theme.size.pxToRem(theme.size.font.tall)}
+      color: ${theme.palette.TEXT_BLACK};
+      font-size: ${theme.size.pxToRem(theme.size.font.TALL)}
       text-decoration: none;
       white-space: nowrap;
       transition: background-color 0.3s;
 
       &:hover{
-        background-color: ${theme.palette.Overlay};
+        background-color: ${theme.palette.OVERLAY};
       }
     `
   }}
@@ -212,8 +212,8 @@ const MenuListItemHeader: any = styled.span`
     return css`
       display: block;
       padding: ${theme.size.pxToRem(3)} ${theme.size.pxToRem(20)};
-      color: ${theme.palette.TextGrey};
-      font-size: ${theme.size.pxToRem(theme.size.font.tasting)}
+      color: ${theme.palette.TEXT_GREY};
+      font-size: ${theme.size.pxToRem(theme.size.font.SHORT)}
       line-height: 1.6;
       white-space: nowrap;
     `
@@ -226,7 +226,7 @@ const MenuListItemDivider: any = styled.div`
       display: block;
       padding: 0;
       margin: ${theme.size.pxToRem(10)} 0;
-      border-top: 1px solid ${theme.palette.Border};
+      border-top: 1px solid ${theme.palette.BORDER};
     `
   }}
 `
