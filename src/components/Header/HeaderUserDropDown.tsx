@@ -7,20 +7,24 @@ import { Dropdown, DropdownContent as DropdownContentComponent, DropdownTrigger 
 import { Icon } from '../Icon'
 
 export interface HeaderDropDownProps {
-  children?: React.ReactNode
   displayName: string
   currentTenant: string
+  avatar?: string
+  isAdmin?: boolean
 }
 
 const HeaderUserDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = ({
   displayName,
   currentTenant,
+  avatar,
+  isAdmin = false,
   theme,
 }) => {
   return (
     <Dropdown>
       <DropdownTrigger>
         <ButtonWrapper theme={theme}>
+          {avatar && <Avatar src={avatar} theme={theme} />}
           {displayName}
           <HeaderDropDownCaret key="headerDropDownCaret" theme={theme} role="presentation">
             <Icon name="fa-caret-down" color="#fff" />
@@ -30,8 +34,18 @@ const HeaderUserDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps>
 
       <DropdownContent>
         <MenuList theme={theme} role="menu">
+          {!isAdmin && (
+            <MenuListItem role="menuitem">
+              <MenuListItemHeader theme={theme}>{displayName}</MenuListItemHeader>
+            </MenuListItem>
+          )}
           <MenuListItem role="menuitem">
-            <MenuListItemHeader theme={theme}>{displayName}</MenuListItemHeader>
+            <MenuListItemAnchor theme={theme}>
+              <MenuListItemIcon theme={theme}>
+                <Icon name="fa-user-alt" />
+              </MenuListItemIcon>
+              プロフィールの確認
+            </MenuListItemAnchor>
           </MenuListItem>
 
           <MenuListItem role="menuitem">
@@ -43,23 +57,26 @@ const HeaderUserDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps>
             </MenuListItemAnchor>
           </MenuListItem>
 
-          <MenuListItem role="menuitem">
-            <MenuListItemDivider theme={theme} role="separator" />
-          </MenuListItem>
+          {isAdmin && (
+            <>
+              <MenuListItem role="menuitem">
+                <MenuListItemDivider theme={theme} role="separator" />
+              </MenuListItem>
 
-          <MenuListItem role="menuitem">
-            <MenuListItemHeader theme={theme}>{currentTenant}</MenuListItemHeader>
-          </MenuListItem>
+              <MenuListItem role="menuitem">
+                <MenuListItemHeader theme={theme}>{currentTenant}</MenuListItemHeader>
+              </MenuListItem>
 
-          <MenuListItem role="menuitem">
-            <MenuListItemAnchor theme={theme}>
-              <MenuListItemIcon theme={theme}>
-                <Icon name="fa-building" />
-              </MenuListItemIcon>
-              共通設定
-            </MenuListItemAnchor>
-          </MenuListItem>
-
+              <MenuListItem role="menuitem">
+                <MenuListItemAnchor theme={theme}>
+                  <MenuListItemIcon theme={theme}>
+                    <Icon name="fa-building" />
+                  </MenuListItemIcon>
+                  共通設定
+                </MenuListItemAnchor>
+              </MenuListItem>
+            </>
+          )}
           <MenuListItem role="menuitem">
             <MenuListItemDivider theme={theme} role="separator" />
           </MenuListItem>
@@ -73,14 +90,16 @@ const HeaderUserDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps>
             </MenuListItemAnchor>
           </MenuListItem>
 
-          <MenuListItem role="menuitem">
-            <MenuListItemAnchor theme={theme} target="_blank">
-              <MenuListItemIcon theme={theme}>
-                <Icon name="fa-graduation-cap" />
-              </MenuListItemIcon>
-              SmartHR スクール
-            </MenuListItemAnchor>
-          </MenuListItem>
+          {isAdmin && (
+            <MenuListItem role="menuitem">
+              <MenuListItemAnchor theme={theme} target="_blank">
+                <MenuListItemIcon theme={theme}>
+                  <Icon name="fa-graduation-cap" />
+                </MenuListItemIcon>
+                SmartHR スクール
+              </MenuListItemAnchor>
+            </MenuListItem>
+          )}
 
           <MenuListItem role="menuitem">
             <MenuListItemAnchor theme={theme}>
@@ -98,10 +117,11 @@ const HeaderUserDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps>
 
 export const HeaderUserDropDown = withTheme(HeaderUserDropDownComponent)
 
-const ButtonWrapper: any = styled.button`
+const ButtonWrapper = styled.button`
   ${({ theme }: InjectedProps) => {
     return css`
-      display: block;
+      display: flex;
+      align-items: center;
       margin: 0;
       padding: 0 ${theme.size.pxToRem(10)};
       border: none;
@@ -119,7 +139,15 @@ const ButtonWrapper: any = styled.button`
     `
   }}
 `
-const HeaderDropDownCaret: any = styled.figure`
+const Avatar = styled.img`
+  ${({ theme }: InjectedProps) => {
+    return css`
+      border-radius: ${theme.frame.border.radius.m};
+      margin-right: ${theme.size.space.XXS}px;
+    `
+  }};
+`
+const HeaderDropDownCaret = styled.figure`
   ${({ theme }: InjectedProps) => {
     return css`
       display: inline-block;
@@ -132,7 +160,7 @@ const HeaderDropDownCaret: any = styled.figure`
 const DropdownContent = styled(DropdownContentComponent)`
   transition: none;
 `
-const MenuList: any = styled.div`
+const MenuList = styled.div`
   ${({ theme }: InjectedProps) => {
     return css`
       border: 1px solid ${theme.palette.BORDER};
@@ -143,11 +171,11 @@ const MenuList: any = styled.div`
     `
   }}
 `
-const MenuListItem: any = styled.div`
+const MenuListItem = styled.div`
   margin: 0;
   padding: 0;
 `
-const MenuListItemIcon: any = styled.figure`
+const MenuListItemIcon = styled.figure`
   ${({ theme }: InjectedProps) => {
     return css`
       display: flex;
@@ -157,7 +185,7 @@ const MenuListItemIcon: any = styled.figure`
     `
   }}
 `
-const MenuListItemAnchor: any = styled.a`
+const MenuListItemAnchor = styled.a`
   ${({ theme }: InjectedProps) => {
     return css`
       display: flex;
@@ -175,7 +203,7 @@ const MenuListItemAnchor: any = styled.a`
     `
   }}
 `
-const MenuListItemHeader: any = styled.div`
+const MenuListItemHeader = styled.div`
   ${({ theme }: InjectedProps) => {
     return css`
       padding: ${theme.size.pxToRem(3)} ${theme.size.pxToRem(20)};
@@ -186,7 +214,7 @@ const MenuListItemHeader: any = styled.div`
     `
   }}
 `
-const MenuListItemDivider: any = styled.div`
+const MenuListItemDivider = styled.div`
   ${({ theme }: InjectedProps) => {
     return css`
       padding: 0;
