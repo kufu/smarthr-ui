@@ -27,6 +27,7 @@ export interface CreatedPaletteTheme {
   WARNING: string
   SCRIM: string
   OVERLAY: string
+  HEADER_GREEN: string
 }
 
 const hoverColor = (value: string): string => darken(0.05, value)
@@ -43,6 +44,7 @@ export const defaultPalette: CreatedPaletteTheme = {
   WARNING: '#ff8800',
   SCRIM: 'rgba(0,0,0,0.5)',
   OVERLAY: 'rgba(0,0,0,0.15)',
+  HEADER_GREEN: '#57d0d5',
 }
 
 export const createPalette = (userPalette: PaletteProperty = {}) => {
