@@ -6,6 +6,7 @@ import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
 import { HeaderDropDown, HeaderDropDownMenuProps } from './HeaderDropDown'
 import { HeaderNotification } from './HeaderNotification'
+import { HeaderUserDropDown } from './HeaderUserDropDown'
 
 interface Props {
   tenantName?: string
@@ -50,6 +51,10 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
       <HeaderDropDown key="headerDropDown-1" dropDownKey="other" menus={props.userButtonMenu}>
         {props.userMailAddress}
       </HeaderDropDown>
+      <HeaderUserDropDown
+        displayName="abc@example.com"
+        currentTenant="Test inc."
+      ></HeaderUserDropDown>
     </HeaderAreaNavi>
   </Wrapper>
 )
