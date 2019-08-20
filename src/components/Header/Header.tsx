@@ -4,32 +4,30 @@ import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
-import { HeaderDropDown, HeaderDropDownMenuProps } from './HeaderDropDown'
 import { HeaderNotification } from './HeaderNotification'
-import { HeaderUserDropDown } from './HeaderUserDropDown'
+import { HeaderUserDropDown, HeaderUserDropDownProps } from './HeaderUserDropDown'
+import { HeaderEmployeeDropDown, HeaderEmployeeDropDownProps } from './HeaderEmployeeDropDown'
 
 interface Props {
-  tenantName?: string
   logoUrl?: string
-  helpButtonLink?: string
   employeeListButtonLink?: string
-  userMailAddress?: string
-  employeeButtonMenu?: HeaderDropDownMenuProps[]
-  userButtonMenu?: HeaderDropDownMenuProps[]
   notificationNumber?: number
+  isAdmin?: boolean
 }
 
-const HeaderComponent: React.FC<Props> = ({ ...props }) => (
+const HeaderComponent: React.FC<Props & HeaderEmployeeDropDownProps & HeaderUserDropDownProps> = ({
+  ...props
+}) => (
   <Wrapper {...props}>
     <HeaderLogoArea>
       <HeaderLogo href={props.logoUrl ? props.logoUrl : '/'} aria-label="SmartHR">
         <SmartHRLogo />
       </HeaderLogo>
-      <TenantName {...props}>{props.tenantName}</TenantName>
+      <TenantName {...props}>{props.currentTenant}</TenantName>
     </HeaderLogoArea>
 
     <HeaderAreaNavi>
-      <HeaderButton url={props.helpButtonLink} icon="fa-question-circle" target="_blank">
+      <HeaderButton url={props.helpUrl} icon="fa-question-circle" target="_blank">
         ヘルプ
       </HeaderButton>
 
@@ -37,24 +35,26 @@ const HeaderComponent: React.FC<Props> = ({ ...props }) => (
         従業員リスト
       </HeaderButton>
 
-      <HeaderDropDown
-        key="headerDropDown-0"
-        dropDownKey="manage"
-        icon="fa-users"
-        menus={props.employeeButtonMenu}
-      >
-        従業員管理
-      </HeaderDropDown>
-
+      {props.isAdmin && (
+        <HeaderEmployeeDropDown
+          crewsNewUrl="abc"
+          crewsBulkInserterUrl="abc"
+          crewsBulkUpdaterUrl="abc"
+          crewsInviterUrl="abc"
+        />
+      )}
       <HeaderNotification number={props.notificationNumber} />
 
-      <HeaderDropDown key="headerDropDown-1" dropDownKey="other" menus={props.userButtonMenu}>
-        {props.userMailAddress}
-      </HeaderDropDown>
       <HeaderUserDropDown
         displayName="abc@example.com"
         currentTenant="Test inc."
-      ></HeaderUserDropDown>
+        isAdmin={true}
+        profileUrl="abc"
+        myAccountUrl="abc"
+        adminCompanyUrl="abc"
+        helpUrl="abc"
+        schoolUrl="abc"
+      />
     </HeaderAreaNavi>
   </Wrapper>
 )
@@ -98,7 +98,7 @@ const TenantName: any = styled.span`
     return css`
       display: block;
       margin-left: ${theme.size.space.XS}px;
-      color: #ffffff;
+      color: #fff;
     `
   }}
 `
