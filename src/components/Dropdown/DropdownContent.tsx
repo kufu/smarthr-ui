@@ -16,6 +16,7 @@ interface Props {
     x?: number
     y?: number
   }
+  className?: string
   children?: React.ReactNode
 }
 
@@ -33,13 +34,18 @@ const getVerticalPositionClassName = (clientRect?: Rect): 'middle' | 'top' | 'bo
   return 'middle'
 }
 
-const DropdownContentComponent: React.FC<Props & InjectedProps> = ({ offset, children, theme }) => (
+const DropdownContentComponent: React.FC<Props & InjectedProps> = ({
+  offset,
+  children,
+  theme,
+  className = '',
+}) => (
   <DropdownConsumer>
     {({ active, clientRect }) => (
       <Wrapper
         className={`${active ? 'active' : ''} ${getHorizontalPositionClassName(
           clientRect,
-        )} ${getVerticalPositionClassName(clientRect)}`}
+        )} ${getVerticalPositionClassName(clientRect)} ${className}`}
         offset={offset}
       >
         <Balloon theme={theme}>{children}</Balloon>
