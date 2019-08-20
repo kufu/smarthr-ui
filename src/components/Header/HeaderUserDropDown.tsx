@@ -6,14 +6,19 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { Dropdown, DropdownContent as DropdownContentComponent, DropdownTrigger } from '../Dropdown'
 import { Icon } from '../Icon'
 
-export interface HeaderDropDownProps {
+export interface HeaderUserDropDownProps {
   displayName: string
   currentTenant: string
   avatar?: string
   isAdmin?: boolean
+  profileUrl: string
+  myAccountUrl: string
+  adminCompanyUrl: string
+  helpUrl: string
+  schoolUrl: string
 }
 
-const HeaderUserDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps> = ({
+const HeaderUserDropDownComponent: React.FC<HeaderUserDropDownProps & InjectedProps> = ({
   displayName,
   currentTenant,
   avatar,
@@ -34,19 +39,20 @@ const HeaderUserDropDownComponent: React.FC<HeaderDropDownProps & InjectedProps>
 
       <DropdownContent>
         <MenuList theme={theme} role="menu">
+          <MenuListItem role="menuitem">
+            <MenuListItemHeader theme={theme}>{displayName}</MenuListItemHeader>
+          </MenuListItem>
+
           {!isAdmin && (
             <MenuListItem role="menuitem">
-              <MenuListItemHeader theme={theme}>{displayName}</MenuListItemHeader>
+              <MenuListItemAnchor theme={theme}>
+                <MenuListItemIcon theme={theme}>
+                  <Icon name="fa-user-alt" />
+                </MenuListItemIcon>
+                プロフィールの確認
+              </MenuListItemAnchor>
             </MenuListItem>
           )}
-          <MenuListItem role="menuitem">
-            <MenuListItemAnchor theme={theme}>
-              <MenuListItemIcon theme={theme}>
-                <Icon name="fa-user-alt" />
-              </MenuListItemIcon>
-              プロフィールの確認
-            </MenuListItemAnchor>
-          </MenuListItem>
 
           <MenuListItem role="menuitem">
             <MenuListItemAnchor theme={theme}>
