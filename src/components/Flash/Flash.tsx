@@ -5,7 +5,7 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { Icon } from '../Icon'
 
 interface Props {
-  type: 'success' | 'info' | 'alert' | 'danger' | ''
+  type: 'success' | 'info' | 'warning' | 'error' | ''
   text: string
   visible: boolean
   onClose: () => void
@@ -17,7 +17,7 @@ interface State {
 
 type MergedProps = Props & InjectedProps
 
-const REMOVE_DELAY = 8000
+const REMOVE_DELAY = 80000
 
 class FlashComponent extends React.PureComponent<MergedProps, State> {
   public static getDerivedStateFromProps(props: Props) {
@@ -59,13 +59,34 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
   public render() {
     const { visible } = this.state
     const { type, text, onClose, theme } = this.props
-    const iconName = type === 'success' ? 'check-circle' : 'exclamation-triangle'
+
+    const iconName =
+      type === 'success'
+        ? 'check-circle'
+        : type === 'info'
+        ? 'fa-info-circle'
+        : type === 'warning'
+        ? 'fa-exclamation-triangle'
+        : type === 'error'
+        ? 'fa-exclamation-circle'
+        : 'check-circle'
+
+    const iconColor =
+      type === 'success'
+        ? theme.palette.MAIN
+        : type === 'info'
+        ? theme.palette.TEXT_GREY
+        : type === 'warning'
+        ? theme.palette.WARNING
+        : type === 'error'
+        ? theme.palette.DANGER
+        : theme.palette.TEXT_GREY
 
     if (!visible) return null
 
     return (
       <Wrapper className={type} theme={theme}>
-        <Icon name={iconName} size={24} color="#fff" />
+        <Icon name={iconName} size={14} color={iconColor} />
         <Txt theme={theme}>{text}</Txt>
         <CloseButton onClick={onClose} className="close">
           <Icon name="cross" size={12} color={theme.palette.BORDER} />
@@ -110,23 +131,16 @@ const Wrapper = styled.div`
       bottom: ${size.pxToRem(size.space.XXS)};
       left: ${size.pxToRem(size.space.XXS)};
       display: flex;
+      box-sizing: border-box;
       align-items: center;
-      width: 404px;
-      height: 50px;
-      padding: 0 ${size.pxToRem(size.space.XS)};
+      min-width: ${size.pxToRem(200)};
+      padding: ${size.pxToRem(size.space.XS)};
+      border: 1px solid ${palette.BORDER}
       border-radius: ${frame.border.radius.m};
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
         0 2px 1px -1px rgba(0, 0, 0, 0.12);
       box-sizing: border-box;
       animation: ${bounceAnimation} 1s 0s both;
-
-      &.success {
-        background-color: ${palette.MAIN};
-      }
-
-      &.danger {
-        background-color: ${palette.DANGER};
-      }
     `
   }}
 `
@@ -136,9 +150,10 @@ const Txt = styled.p`
 
     return css`
       flex: 1;
-      padding: 0 ${size.pxToRem(size.space.XS)};
-      color: #fff;
+      padding: 0;
+      margin: 0 ${size.pxToRem(8)};
       font-size: ${size.pxToRem(size.font.TALL)};
+      line-height: 1;
     `
   }}
 `
