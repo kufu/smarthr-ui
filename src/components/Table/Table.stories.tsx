@@ -103,7 +103,6 @@ storiesOf('Table', module).add('all', () => (
           </Row>
           <Row>
             <Cell rowspan={0}>rowspan="0"</Cell>
-
             <Cell>cell</Cell>
             <Cell>cell</Cell>
             <Cell>cell</Cell>
