@@ -82,6 +82,58 @@ storiesOf('Table', module).add('all', () => (
         </Body>
       </Table>
     </li>
+    <li>
+      <Table>
+        <Head>
+          <Row>
+            <Cell colspan={3}>colspan="3"</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+          </Row>
+        </Head>
+        <Body>
+          <Row>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+          </Row>
+          <Row>
+            <Cell rowspan={0}>rowspan="0"</Cell>
+
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+          </Row>
+          <Row>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+          </Row>
+          <Row>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+          </Row>
+          <Row>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+            <Cell>cell</Cell>
+          </Row>
+        </Body>
+      </Table>
+    </li>
   </Ul>
 ))
 

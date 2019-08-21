@@ -7,9 +7,18 @@ export type Props = {
   children?: React.ReactNode
   className?: string
   onClick?: () => void
+  colspan?: number
+  rowspan?: number
 }
 
-const Cell: React.FC<Props & InjectedProps> = ({ theme, className = '', children, onClick }) => {
+const Cell: React.FC<Props & InjectedProps> = ({
+  theme,
+  className = '',
+  children,
+  onClick,
+  colspan,
+  rowspan,
+}) => {
   const { group } = React.useContext(TableGroupContext)
 
   const WrapComponent = (tableGroup => {
@@ -22,7 +31,13 @@ const Cell: React.FC<Props & InjectedProps> = ({ theme, className = '', children
   })(group)
 
   return (
-    <WrapComponent onClick={onClick} className={className} theme={theme}>
+    <WrapComponent
+      onClick={onClick}
+      className={className}
+      theme={theme}
+      colSpan={colspan}
+      rowSpan={rowspan}
+    >
       {children}
     </WrapComponent>
   )
