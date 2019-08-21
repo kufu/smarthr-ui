@@ -4,60 +4,91 @@ import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
-import { HeaderNotification } from './HeaderNotification'
+import { HeaderNotification, HeaderNotificationProps } from './HeaderNotification'
 import { HeaderUserDropDown, HeaderUserDropDownProps } from './HeaderUserDropDown'
 import { HeaderEmployeeDropDown, HeaderEmployeeDropDownProps } from './HeaderEmployeeDropDown'
 
 interface Props {
   logoUrl?: string
   employeeListButtonLink?: string
-  notificationNumber?: number
   isAdmin?: boolean
+  headerNotification: HeaderNotificationProps
+  headerEmployeeDropDown: HeaderEmployeeDropDownProps
+  headerUserDropDown: HeaderUserDropDownProps
 }
 
-const HeaderComponent: React.FC<Props & HeaderEmployeeDropDownProps & HeaderUserDropDownProps> = ({
-  ...props
-}) => (
-  <Wrapper {...props}>
-    <HeaderLogoArea>
-      <HeaderLogo href={props.logoUrl ? props.logoUrl : '/'} aria-label="SmartHR">
-        <SmartHRLogo />
-      </HeaderLogo>
-      <TenantName {...props}>{props.currentTenant}</TenantName>
-    </HeaderLogoArea>
+const HeaderComponent: React.FC<Props & InjectedProps> = ({
+  logoUrl = '/',
+  employeeListButtonLink,
+  isAdmin,
+  headerNotification,
+  headerEmployeeDropDown,
+  headerUserDropDown,
+  theme,
+}) => {
+  const { number, url } = headerNotification
+  const {
+    crewsNewUrl,
+    crewsBulkInserterUrl,
+    crewsBulkUpdaterUrl,
+    crewsInviterUrl,
+  } = headerEmployeeDropDown
+  const {
+    displayName,
+    currentTenant,
+    avatar,
+    profileUrl,
+    myAccountUrl,
+    adminCompanyUrl,
+    helpUrl,
+    schoolUrl,
+  } = headerUserDropDown
 
-    <HeaderAreaNavi>
-      <HeaderButton url={props.helpUrl} icon="fa-question-circle" target="_blank">
-        ヘルプ
-      </HeaderButton>
+  return (
+    <Wrapper theme={theme}>
+      <HeaderLogoArea>
+        <HeaderLogo href={logoUrl} aria-label="SmartHR">
+          <SmartHRLogo />
+        </HeaderLogo>
+        <TenantName theme={theme}>{currentTenant}</TenantName>
+      </HeaderLogoArea>
 
-      <HeaderButton url={props.employeeListButtonLink} icon="fa-th-list">
-        従業員リスト
-      </HeaderButton>
+      <HeaderAreaNavi>
+        {isAdmin && (
+          <>
+            <HeaderButton url={helpUrl} icon="fa-question-circle" target="_blank">
+              ヘルプ
+            </HeaderButton>
 
-      {props.isAdmin && (
-        <HeaderEmployeeDropDown
-          crewsNewUrl="abc"
-          crewsBulkInserterUrl="abc"
-          crewsBulkUpdaterUrl="abc"
-          crewsInviterUrl="abc"
+            <HeaderButton url={employeeListButtonLink} icon="fa-th-list">
+              従業員リスト
+            </HeaderButton>
+
+            <HeaderEmployeeDropDown
+              crewsNewUrl={crewsNewUrl}
+              crewsBulkInserterUrl={crewsBulkInserterUrl}
+              crewsBulkUpdaterUrl={crewsBulkUpdaterUrl}
+              crewsInviterUrl={crewsInviterUrl}
+            />
+          </>
+        )}
+        <HeaderNotification url={url} number={number} />
+
+        <HeaderUserDropDown
+          displayName={displayName}
+          currentTenant={currentTenant}
+          avatar={avatar}
+          isAdmin={isAdmin}
+          profileUrl={profileUrl}
+          myAccountUrl={myAccountUrl}
+          adminCompanyUrl={adminCompanyUrl}
+          helpUrl={helpUrl}
+          schoolUrl={schoolUrl}
         />
-      )}
-      <HeaderNotification number={props.notificationNumber} />
-
-      <HeaderUserDropDown
-        displayName="abc@example.com"
-        currentTenant="Test inc."
-        isAdmin={true}
-        profileUrl="abc"
-        myAccountUrl="abc"
-        adminCompanyUrl="abc"
-        helpUrl="abc"
-        schoolUrl="abc"
-      />
-    </HeaderAreaNavi>
-  </Wrapper>
-)
+      </HeaderAreaNavi>
+    </Wrapper>
+  )
+}
 
 export const Header = withTheme(HeaderComponent)
 
