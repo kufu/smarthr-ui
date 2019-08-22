@@ -45,7 +45,11 @@ const Cell: React.FC<Props & InjectedProps> = ({
 
 const Th = styled.th`
   font-size: 11px;
-  padding: ${({ theme }: InjectedProps) => `${theme.size.space.XS}px`};
+  font-weight: bold;
+  ${({ theme }: InjectedProps) => css`
+    padding: ${theme.size.space.XS}px};
+    color: ${theme.palette.TEXT_GREY};
+  `};
   ${(props: InjectedProps & Props) =>
     props.onClick &&
     css`
