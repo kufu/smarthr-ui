@@ -14,7 +14,7 @@ const AppNaviComponent: React.FC<Props & InjectedProps> = ({ theme, ...props }) 
   <Wrapper theme={theme}>
     {props.label && (
       <TagWrapper theme={theme}>
-        <Tag skeleton>{props.label}</Tag>
+        <Tag type="done">{props.label}</Tag>
       </TagWrapper>
     )}
 

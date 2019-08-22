@@ -12,46 +12,49 @@ storiesOf('Tag', module)
     },
   })
   .add('all', () => (
-    <List>
-      <li>
-        <Tag>デフォルト</Tag>
-      </li>
-      <li>
-        <Tag type="success">サクセス</Tag>
-      </li>
-      <li>
-        <Tag type="warning">警告</Tag>
-      </li>
-      <li>
-        <Tag type="error">エラー</Tag>
-      </li>
-      <li>
-        <Tag type="require">必須</Tag>
-      </li>
-      <li>
-        <Tag type="success" skeleton={true}>
-          サクセス
-        </Tag>
-      </li>
-      <li>
-        <Tag type="warning" skeleton={true}>
-          警告
-        </Tag>
-      </li>
-      <li>
-        <Tag type="error" skeleton={true}>
-          エラー
-        </Tag>
-      </li>
-      <li>
-        <Tag type="require" skeleton={true}>
-          必須
-        </Tag>
-      </li>
-    </List>
+    <ListWrapper>
+      <List>
+        <li>
+          <Tag type="done">done</Tag>
+        </li>
+        <li>
+          <Tag type="success">success</Tag>
+        </li>
+        <li>
+          <Tag type="process">process</Tag>
+        </li>
+        <li>
+          <Tag type="required">required</Tag>
+        </li>
+      </List>
+      <List>
+        <li>
+          <Tag type="disabled">disabled</Tag>
+        </li>
+        <li>
+          <Tag type="must">must</Tag>
+        </li>
+        <li>
+          <Tag type="warning">warning</Tag>
+        </li>
+        <li>
+          <Tag type="error">error</Tag>
+        </li>
+      </List>
+    </ListWrapper>
   ))
 
+const ListWrapper = styled.div`
+  padding: 0 24px;
+`
+
 const List = styled.ul`
-  padding: 8px 24px;
-  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0 0 24px;
+
+  > li {
+    display: block;
+    margin-right: 16px;
+  }
 `
