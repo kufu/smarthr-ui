@@ -17,6 +17,8 @@ export { Tag } from './components/Tag'
 export { Base } from './components/Base'
 export { Icon } from './components/Icon'
 export { AppNavi } from './components/AppNavi'
+export { Heading } from './components/Heading'
+export { HeadlineArea } from './components/HeadlineArea'
 
 // themes
 export { createTheme } from './themes/createTheme'
