@@ -44,28 +44,37 @@ const Cell: React.FC<Props & InjectedProps> = ({
 }
 
 const Th = styled.th`
-  font-size: 11px;
-  font-weight: bold;
-  ${({ theme }: InjectedProps) => css`
-    padding: ${theme.size.space.XS}px};
-    color: ${theme.palette.TEXT_GREY};
-  `};
-  ${(props: InjectedProps & Props) =>
-    props.onClick &&
-    css`
-      :hover {
-        background-color: ${props.theme.palette.hoverColor(props.theme.palette.COLUMN)};
-        cursor: pointer;
-      }
-    `}
+  ${(props: InjectedProps & Props) => {
+    const { theme } = props
+    const { size, palette } = theme
+
+    return css`
+      font-size: ${size.pxToRem(size.font.SHORT)}
+      font-weight: bold;
+      padding: ${size.pxToRem(size.space.XS)};
+      color: ${palette.TEXT_GREY};
+
+      ${props.onClick &&
+        css`
+          :hover {
+            background-color: ${palette.hoverColor(palette.COLUMN)};
+            cursor: pointer;
+          }
+        `}
+    `
+  }}
 `
 
 const Td = styled.td`
-  ${({ theme }: InjectedProps) => `
-    padding: ${theme.size.space.XXS}px ${theme.size.space.XS}px;
-    border-top: ${theme.frame.border.default};
-    font-size: 14px;
-  `};
+  ${({ theme }: InjectedProps) => {
+    const { size, frame } = theme
+
+    return css`
+      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+      border-top: ${frame.border.default};
+      font-size: ${size.pxToRem(size.font.TALL)};
+    `
+  }};
 `
 
 export default withTheme(Cell)
