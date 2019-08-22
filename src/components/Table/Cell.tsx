@@ -3,6 +3,8 @@ import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { TableGroupContext } from './Table'
 
+import { isTouchDevice } from '../../libs/ua'
+
 export type Props = {
   children?: React.ReactNode
   className?: string
@@ -46,13 +48,14 @@ const Cell: React.FC<Props & InjectedProps> = ({
 const Th = styled.th`
   ${(props: InjectedProps & Props) => {
     const { theme } = props
-    const { size, palette } = theme
+    const { size, palette, interaction } = theme
 
     return css`
       font-size: ${size.pxToRem(size.font.SHORT)}
       font-weight: bold;
       padding: ${size.pxToRem(size.space.XS)};
       color: ${palette.TEXT_GREY};
+      transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`}
 
       ${props.onClick &&
         css`
