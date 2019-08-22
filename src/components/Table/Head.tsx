@@ -7,7 +7,7 @@ export type Props = {
   children?: React.ReactNode
   className?: string
 }
-const Head: React.FC<Props & InjectedProps> = ({ theme, className = '', children }) => {
+const HeadComponent: React.FC<Props & InjectedProps> = ({ theme, className = '', children }) => {
   return (
     <Wrapper theme={theme} className={className}>
       <TableGroupContext.Provider value={{ group: 'head' }}>{children}</TableGroupContext.Provider>
@@ -21,4 +21,4 @@ const Wrapper = styled.thead`
   `}
 `
 
-export default withTheme(Head)
+export const Head = withTheme(HeadComponent)

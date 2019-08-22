@@ -13,7 +13,7 @@ export type Props = {
   rowspan?: number
 }
 
-const Cell: React.FC<Props & InjectedProps> = ({
+const CellComponent: React.FC<Props & InjectedProps> = ({
   theme,
   className = '',
   children,
@@ -80,4 +80,4 @@ const Td = styled.td`
   }};
 `
 
-export default withTheme(Cell)
+export const Cell = withTheme(CellComponent)

@@ -19,7 +19,7 @@ export type Props = {
 
 type MergedComponentProps = Props & InjectedProps
 
-const Table: React.FC<MergedComponentProps> = ({ children, className = '', theme }) => (
+const TableComponent: React.FC<MergedComponentProps> = ({ children, className = '', theme }) => (
   <Wrapper theme={theme} className={className}>
     {children}
   </Wrapper>
@@ -31,4 +31,4 @@ const Wrapper = styled.table`
   border-spacing: 0;
 `
 
-export default withTheme(Table)
+export const Table = withTheme(TableComponent)
