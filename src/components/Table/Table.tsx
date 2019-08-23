@@ -12,13 +12,10 @@ export const TableGroupContext = React.createContext<TableGroupContextValue>({
 })
 
 export type Props = {
-  children?: React.ReactNode
   className?: string
 }
 
-type MergedComponentProps = Props
-
-export const Table: React.FC<MergedComponentProps> = ({ children, className = '' }) => (
+export const Table: React.FC<Props> = ({ children, className = '' }) => (
   <Wrapper className={className}>{children}</Wrapper>
 )
 
