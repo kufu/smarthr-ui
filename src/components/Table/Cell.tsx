@@ -70,9 +70,10 @@ const Th = styled.th`
 
 const Td = styled.td`
   ${({ theme }: InjectedProps) => {
-    const { size, frame } = theme
+    const { size, palette, frame } = theme
 
     return css`
+      color: ${palette.TEXT_BLACK};
       padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
       border-top: ${frame.border.default};
       font-size: ${size.pxToRem(size.font.TALL)};
