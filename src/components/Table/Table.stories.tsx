@@ -14,6 +14,8 @@ import { Checkbox as CheckboxComponent } from '../Checkbox'
 import { Button } from '../Button'
 import { Base } from '../Base'
 
+import readme from './README.md'
+
 const data = [
   {
     name: 'Tea',
@@ -38,96 +40,64 @@ const data = [
   },
 ]
 
-storiesOf('Table', module).add('all', () => (
-  <Ul>
-    <li>
-      table
-      <Table>
-        <Head>
-          <Row>
-            <Cell>
-              <Checkbox name="tableCheckbox" checked={false}></Checkbox>
-            </Cell>
-            <Cell onClick={action('clicked')}>
-              <ClickableCell>
-                Name
-                <Arrow name="fa-arrow-down" />
-              </ClickableCell>
-            </Cell>
-            <Cell>Calories</Cell>
-            <Cell>Fat (g)</Cell>
-            <Cell>Carbs (g)</Cell>
-            <Cell>Protein (g)</Cell>
-            <Cell>Button</Cell>
-          </Row>
-        </Head>
-        <Body>
-          {data.map(({ name, calories, fat, carbs, protein }) => {
-            return (
-              <Row key={name}>
-                <Cell>
-                  <Checkbox name="tableCheckbox" checked={false}></Checkbox>
-                </Cell>
-                <Cell>{name}</Cell>
-                <Cell>{calories}</Cell>
-                <Cell>{fat}</Cell>
-                <Cell>{carbs}</Cell>
-                <Cell>{protein}</Cell>
-                <Cell>
-                  <Button type="sub-a" size="s">
-                    Button
-                  </Button>
-                </Cell>
-              </Row>
-            )
-          })}
-        </Body>
-      </Table>
-    </li>
-    <li>
-      colspan / rowspan
-      <Table>
-        <Head>
-          <Row>
-            <Cell colspan={3}>colspan="3"</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-          </Row>
-        </Head>
-        <Body>
-          <Row>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-          </Row>
-          <Row>
-            <Cell rowspan={0}>rowspan="0"</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-          </Row>
-          <Row>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-          </Row>
-        </Body>
-      </Table>
-    </li>
-    <li>
-      Table on Base
-      <Base>
+storiesOf('Table', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
+  .add('all', () => (
+    <Ul>
+      <li>
+        table
         <Table>
           <Head>
             <Row>
+              <Cell>
+                <Checkbox name="tableCheckbox" checked={false}></Checkbox>
+              </Cell>
+              <Cell onClick={action('clicked')}>
+                <ClickableCell>
+                  Name
+                  <Arrow name="fa-arrow-down" />
+                </ClickableCell>
+              </Cell>
+              <Cell>Calories</Cell>
+              <Cell>Fat (g)</Cell>
+              <Cell>Carbs (g)</Cell>
+              <Cell>Protein (g)</Cell>
+              <Cell>Button</Cell>
+            </Row>
+          </Head>
+          <Body>
+            {data.map(({ name, calories, fat, carbs, protein }) => {
+              return (
+                <Row key={name}>
+                  <Cell>
+                    <Checkbox name="tableCheckbox" checked={false}></Checkbox>
+                  </Cell>
+                  <Cell>{name}</Cell>
+                  <Cell>{calories}</Cell>
+                  <Cell>{fat}</Cell>
+                  <Cell>{carbs}</Cell>
+                  <Cell>{protein}</Cell>
+                  <Cell>
+                    <Button type="sub-a" size="s">
+                      Button
+                    </Button>
+                  </Cell>
+                </Row>
+              )
+            })}
+          </Body>
+        </Table>
+      </li>
+      <li>
+        colspan / rowspan
+        <Table>
+          <Head>
+            <Row>
+              <Cell colspan={3}>colspan="3"</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
@@ -138,23 +108,61 @@ storiesOf('Table', module).add('all', () => (
               <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
-            </Row>
-            <Row>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
             </Row>
             <Row>
+              <Cell rowspan={0}>rowspan="0"</Cell>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+            </Row>
+            <Row>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
             </Row>
           </Body>
         </Table>
-      </Base>
-    </li>
-  </Ul>
-))
+      </li>
+      <li>
+        Table on Base
+        <Base>
+          <Table>
+            <Head>
+              <Row>
+                <Cell>cell</Cell>
+                <Cell>cell</Cell>
+                <Cell>cell</Cell>
+              </Row>
+            </Head>
+            <Body>
+              <Row>
+                <Cell>cell</Cell>
+                <Cell>cell</Cell>
+                <Cell>cell</Cell>
+              </Row>
+              <Row>
+                <Cell>cell</Cell>
+                <Cell>cell</Cell>
+                <Cell>cell</Cell>
+              </Row>
+              <Row>
+                <Cell>cell</Cell>
+                <Cell>cell</Cell>
+                <Cell>cell</Cell>
+              </Row>
+            </Body>
+          </Table>
+        </Base>
+      </li>
+    </Ul>
+  ))
 
 const Ul = styled.ul`
   list-style: none;
