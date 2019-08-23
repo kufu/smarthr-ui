@@ -82,7 +82,7 @@ storiesOf('Table', module)
                   <Cell>{carbs}</Cell>
                   <Cell>{protein}</Cell>
                   <Cell>
-                    <Button type="sub-a" size="s">
+                    <Button type="sub-b" size="s">
                       Button
                     </Button>
                   </Cell>
