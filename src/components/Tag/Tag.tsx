@@ -3,65 +3,94 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-type Type = 'success' | 'warning' | 'error' | 'require'
+type Type = 'done' | 'success' | 'process' | 'required' | 'disabled' | 'must' | 'warning' | 'error'
 
 interface Props {
-  skeleton?: boolean
   type?: Type
   children: string
 }
-
-interface WrapperProps {
-  skeleton: boolean
-}
-
 type MergedProps = Props & InjectedProps
 
-const TagComponent: React.FC<MergedProps> = ({ skeleton = false, type, children, theme }) => {
+const TagComponent: React.FC<MergedProps> = ({ type = 'done', children, theme }) => {
   return (
-    <Wrapper theme={theme} className={type} skeleton={skeleton}>
+    <Wrapper theme={theme} className={type}>
       {children}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.span`
-  ${({ theme, skeleton }: InjectedProps & WrapperProps) => {
-    const { frame, size, palette } = theme
-    const { MAIN, DANGER, WARNING, BORDER } = palette
-
+const BorderStyle = css`
+  ${({ theme }: InjectedProps) => {
     return css`
+      border: ${theme.frame.border.default};
+    `
+  }}
+`
+
+const FillStyle = css`
+  ${({ theme }: InjectedProps) => {
+    return css`
+      background-color: ${theme.palette.BORDER};
+      color: #fff;
+    `
+  }}
+`
+
+const Wrapper = styled.span`
+  ${({ theme }: InjectedProps) => {
+    return css`
+      height: ${theme.size.pxToRem(20)};
+      box-sizing: border-box;
       margin: 0;
-      padding: 0 ${size.pxToRem(theme.size.space.XXS)};
+      padding: 0 ${theme.size.pxToRem(theme.size.space.XXS)};
       display: inline-block;
       white-space: nowrap;
-      font-size: ${size.font.SHORT}px;
-      border: ${frame.border.default};
-      background-color: transparent;
-      color: ${BORDER};
+      font-size: ${theme.size.pxToRem(theme.size.font.SHORT)};
+      font-weight: bold;
+      line-height: ${theme.size.pxToRem(20)};
 
-      &.success {
-        border: 1px solid ${MAIN};
-        background-color: ${skeleton ? 'transparent' : MAIN};
-        color: ${skeleton ? MAIN : '#fff'};
+      &.done {
+        ${BorderStyle}
+        border-color: ${theme.palette.BORDER};
+        color: ${theme.palette.TEXT_GREY};
       }
 
-      &.error {
-        border: 1px solid ${DANGER};
-        background-color: ${skeleton ? 'transparent' : DANGER};
-        color: ${skeleton ? DANGER : '#fff'};
+      &.success {
+        ${BorderStyle}
+        border-color: ${theme.palette.MAIN};
+        color: ${theme.palette.MAIN};
+      }
+
+      &.process {
+        ${BorderStyle}
+        border-color: ${theme.palette.WARNING};
+        color: ${theme.palette.WARNING};
+      }
+
+      &.required {
+        ${BorderStyle}
+        border-color: ${theme.palette.DANGER};
+        color: ${theme.palette.DANGER};
+      }
+
+      &.disabled {
+        ${FillStyle}
+        background-color: ${theme.palette.TEXT_GREY};
+      }
+
+      &.must {
+        ${FillStyle}
+        background-color: ${theme.palette.MAIN};
       }
 
       &.warning {
-        border: 1px solid ${WARNING};
-        background-color: ${skeleton ? 'transparent' : WARNING};
-        color: ${skeleton ? WARNING : '#fff'};
+        ${FillStyle}
+        background-color: ${theme.palette.WARNING};
       }
 
-      &.require {
-        border: 1px solid ${WARNING};
-        background-color: ${skeleton ? 'transparent' : WARNING};
-        color: ${skeleton ? WARNING : '#fff'};
+      &.error {
+        ${FillStyle}
+        background-color: ${theme.palette.DANGER};
       }
     `
   }}
