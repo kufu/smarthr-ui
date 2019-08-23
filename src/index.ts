@@ -16,7 +16,7 @@ export { Button, ButtonAnchor, ButtonDiv } from './components/Button'
 export { Tag } from './components/Tag'
 export { Base } from './components/Base'
 export { Icon } from './components/Icon'
-export { Table } from './components/Table'
+export { Table, Head, Row, Cell, Body } from './components/Table'
 
 // themes
 export { createTheme } from './themes/createTheme'
