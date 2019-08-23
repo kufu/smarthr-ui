@@ -12,6 +12,7 @@ import { action } from '@storybook/addon-actions'
 import { Icon } from '../Icon'
 import { Checkbox as CheckboxComponent } from '../Checkbox'
 import { Button } from '../Button'
+import { Base } from '../Base'
 
 const data = [
   {
@@ -40,6 +41,7 @@ const data = [
 storiesOf('Table', module).add('all', () => (
   <Ul>
     <li>
+      table
       <Table>
         <Head>
           <Row>
@@ -83,6 +85,7 @@ storiesOf('Table', module).add('all', () => (
       </Table>
     </li>
     <li>
+      colspan / rowspan
       <Table>
         <Head>
           <Row>
@@ -102,21 +105,7 @@ storiesOf('Table', module).add('all', () => (
             <Cell>cell</Cell>
           </Row>
           <Row>
-            <Cell rowspan={0}>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-          </Row>
-          <Row>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-            <Cell>cell</Cell>
-          </Row>
-          <Row>
+            <Cell rowspan={0}>rowspan="0"</Cell>
             <Cell>cell</Cell>
             <Cell>cell</Cell>
             <Cell>cell</Cell>
@@ -132,6 +121,37 @@ storiesOf('Table', module).add('all', () => (
           </Row>
         </Body>
       </Table>
+    </li>
+    <li>
+      Table on Base
+      <Base>
+        <Table>
+          <Head>
+            <Row>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+            </Row>
+          </Head>
+          <Body>
+            <Row>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+            </Row>
+            <Row>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+            </Row>
+            <Row>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+              <Cell>cell</Cell>
+            </Row>
+          </Body>
+        </Table>
+      </Base>
     </li>
   </Ul>
 ))
