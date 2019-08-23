@@ -49,7 +49,7 @@ storiesOf('Table', module).add('all', () => (
             <Cell onClick={action('clicked')}>
               <ClickableCell>
                 Name
-                <Icon name="fa-angle-down" />
+                <Icon name="fa-arrow-down" />
               </ClickableCell>
             </Cell>
             <Cell>Calories</Cell>
@@ -102,7 +102,7 @@ storiesOf('Table', module).add('all', () => (
             <Cell>cell</Cell>
           </Row>
           <Row>
-            <Cell rowspan={0}>rowspan="0"</Cell>
+            <Cell rowspan={0}>cell</Cell>
             <Cell>cell</Cell>
             <Cell>cell</Cell>
             <Cell>cell</Cell>
@@ -153,4 +153,5 @@ const Checkbox = styled(CheckboxComponent)`
 const ClickableCell = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `
