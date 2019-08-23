@@ -28,8 +28,35 @@ import { Table, Body, Head, Row, Cell } from 'smarthr-ui'
 
 ## props
 
-| Name    | Required | Type       | DefaultValue | Description                                      |
-| ------- | -------- | ---------- | ------------ | ------------------------------------------------ |
-| colspan | -        | **number** | -            | Indicates for how many columns the cell extends. |
-| rowspan | -        | **number** | -            | Indicates for how many rows the cell extends.    |
-| onClick | -        | () => void | -            | Fires when clicked.                              |
+### Table
+
+| Name      | Required | Type       | DefaultValue | Description             |
+| --------- | -------- | ---------- | ------------ | ----------------------- |
+| className | -        | **string** | -            | className for component |
+
+### Head
+
+| Name      | Required | Type       | DefaultValue | Description             |
+| --------- | -------- | ---------- | ------------ | ----------------------- |
+| className | -        | **string** | -            | className for component |
+
+### Body
+
+| Name      | Required | Type       | DefaultValue | Description             |
+| --------- | -------- | ---------- | ------------ | ----------------------- |
+| className | -        | **string** | -            | className for component |
+
+### Row
+
+| Name      | Required | Type       | DefaultValue | Description             |
+| --------- | -------- | ---------- | ------------ | ----------------------- |
+| className | -        | **string** | -            | className for component |
+
+### Cell
+
+| Name      | Required | Type           | DefaultValue | Description                                      |
+| --------- | -------- | -------------- | ------------ | ------------------------------------------------ |
+| className | -        | **string**     | -            | className for component                          |
+| colspan   | -        | **number**     | -            | Indicates for how many columns the cell extends. |
+| rowspan   | -        | **number**     | -            | Indicates for how many rows the cell extends.    |
+| onClick   | -        | **() => void** | -            | Fires when clicked.                              |
