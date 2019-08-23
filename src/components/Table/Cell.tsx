@@ -11,6 +11,7 @@ export type Props = {
   onClick?: () => void
   colspan?: number
   rowspan?: number
+  highlighted?: boolean
 }
 
 const CellComponent: React.FC<Props & InjectedProps> = ({
@@ -20,6 +21,7 @@ const CellComponent: React.FC<Props & InjectedProps> = ({
   onClick,
   colspan,
   rowspan,
+  highlighted = false,
 }) => {
   const { group } = React.useContext(TableGroupContext)
 
@@ -32,13 +34,16 @@ const CellComponent: React.FC<Props & InjectedProps> = ({
     }
   })(group)
 
+  const classNames = `${className} ${highlighted ? 'highlighted' : ''}`
+
   return (
     <WrapComponent
       onClick={onClick}
-      className={className}
+      className={classNames}
       theme={theme}
       colSpan={colspan}
       rowSpan={rowspan}
+      highlighted={highlighted}
     >
       {children}
     </WrapComponent>
@@ -58,10 +63,16 @@ const Th = styled.th`
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`}
       text-align: left;
 
+      &.highlighted {
+        background-color: ${palette.hoverColor(palette.COLUMN)};
+      }
+
       ${props.onClick &&
         css`
-          background-color: ${palette.hoverColor(palette.COLUMN)};
-          cursor: pointer;
+          :hover {
+            background-color: ${palette.hoverColor(palette.COLUMN)};
+            cursor: pointer;
+          }
         `}
     `
   }}

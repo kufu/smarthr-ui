@@ -56,7 +56,7 @@ storiesOf('Table', module)
               <Cell>
                 <Checkbox name="tableCheckbox" checked={false}></Checkbox>
               </Cell>
-              <Cell onClick={action('clicked')}>
+              <Cell onClick={action('clicked')} highlighted={true}>
                 <ClickableCell>
                   Name
                   <Arrow name="fa-arrow-down" />
