@@ -60,10 +60,8 @@ const Th = styled.th`
 
       ${props.onClick &&
         css`
-          :hover {
-            background-color: ${palette.hoverColor(palette.COLUMN)};
-            cursor: pointer;
-          }
+          background-color: ${palette.hoverColor(palette.COLUMN)};
+          cursor: pointer;
         `}
     `
   }}
