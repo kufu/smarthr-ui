@@ -51,7 +51,7 @@ storiesOf('Table', module).add('all', () => (
             <Cell onClick={action('clicked')}>
               <ClickableCell>
                 Name
-                <Icon name="fa-arrow-down" />
+                <Arrow name="fa-arrow-down" />
               </ClickableCell>
             </Cell>
             <Cell>Calories</Cell>
@@ -174,4 +174,8 @@ const ClickableCell = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`
+
+const Arrow = styled(Icon)`
+  transform: rotate(180deg);
 `
