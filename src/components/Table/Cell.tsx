@@ -56,6 +56,7 @@ const Th = styled.th`
       padding: ${size.pxToRem(size.space.XS)};
       color: ${palette.TEXT_GREY};
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`}
+      text-align: left;
 
       ${props.onClick &&
         css`
