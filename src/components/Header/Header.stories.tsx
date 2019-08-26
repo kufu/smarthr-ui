@@ -20,7 +20,6 @@ const headerUserDropDown = {
   profileUrl: 'path/to/profileUrl/',
   myAccountUrl: 'path/to/myAccountUrl/',
   adminCompanyUrl: 'path/to/adminCompanyUrl/',
-  helpUrl: 'path/to/helpUrl/',
   schoolUrl: 'path/to/schoolUrl/',
 }
 
@@ -34,6 +33,7 @@ storiesOf('Header', module).add('all', () => (
         headerEmployeeDropDown={headerEmployeeDropDown}
         headerUserDropDown={headerUserDropDown}
         isAdmin={true}
+        helpUrl="path/to/helpUrl/"
       />
     </li>
     <li>
@@ -44,6 +44,7 @@ storiesOf('Header', module).add('all', () => (
         headerEmployeeDropDown={headerEmployeeDropDown}
         headerUserDropDown={headerUserDropDown}
         isAdmin={false}
+        helpUrl="path/to/helpUrl/"
       />
     </li>
   </Ul>

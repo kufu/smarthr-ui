@@ -14,7 +14,6 @@ export interface HeaderUserDropDownProps {
   profileUrl: string
   myAccountUrl: string
   adminCompanyUrl: string
-  helpUrl: string
   schoolUrl: string
 }
 
@@ -85,15 +84,6 @@ const HeaderUserDropDownComponent: React.FC<HeaderUserDropDownProps & InjectedPr
           )}
           <MenuListItem role="menuitem">
             <MenuListItemDivider theme={theme} role="separator" />
-          </MenuListItem>
-
-          <MenuListItem role="menuitem">
-            <MenuListItemAnchor theme={theme} target="_blank">
-              <MenuListItemIcon theme={theme}>
-                <Icon name="fa-question-circle" />
-              </MenuListItemIcon>
-              ヘルプ
-            </MenuListItemAnchor>
           </MenuListItem>
 
           {isAdmin && (

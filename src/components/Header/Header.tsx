@@ -12,6 +12,7 @@ interface Props {
   logoUrl?: string
   employeeListButtonLink?: string
   isAdmin?: boolean
+  helpUrl?: string
   headerNotification: HeaderNotificationProps
   headerEmployeeDropDown: HeaderEmployeeDropDownProps
   headerUserDropDown: HeaderUserDropDownProps
@@ -21,6 +22,7 @@ const HeaderComponent: React.FC<Props & InjectedProps> = ({
   logoUrl = '/',
   employeeListButtonLink,
   isAdmin,
+  helpUrl,
   headerNotification,
   headerEmployeeDropDown,
   headerUserDropDown,
@@ -40,7 +42,6 @@ const HeaderComponent: React.FC<Props & InjectedProps> = ({
     profileUrl,
     myAccountUrl,
     adminCompanyUrl,
-    helpUrl,
     schoolUrl,
   } = headerUserDropDown
 
@@ -54,12 +55,11 @@ const HeaderComponent: React.FC<Props & InjectedProps> = ({
       </HeaderLogoArea>
 
       <HeaderAreaNavi>
+        <HeaderButton url={helpUrl} icon="fa-question-circle" target="_blank">
+          ヘルプ
+        </HeaderButton>
         {isAdmin && (
           <>
-            <HeaderButton url={helpUrl} icon="fa-question-circle" target="_blank">
-              ヘルプ
-            </HeaderButton>
-
             <HeaderButton url={employeeListButtonLink} icon="fa-th-list">
               従業員リスト
             </HeaderButton>
@@ -82,7 +82,6 @@ const HeaderComponent: React.FC<Props & InjectedProps> = ({
           profileUrl={profileUrl}
           myAccountUrl={myAccountUrl}
           adminCompanyUrl={adminCompanyUrl}
-          helpUrl={helpUrl}
           schoolUrl={schoolUrl}
         />
       </HeaderAreaNavi>
