@@ -14,7 +14,7 @@ class ModalController extends React.PureComponent {
     return (
       <div>
         <button onClick={this.onClickOpen}>Controllable Modal</button>
-        <Modal isOpen={this.state.isOpen}>
+        <Modal isOpen={this.state.isOpen} onClickBackground={this.onClickClose}>
           <Inner>
             <button onClick={this.onClickClose}>Close Modal</button>
           </Inner>
