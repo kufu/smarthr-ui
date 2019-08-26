@@ -11123,6 +11123,11 @@ reg-cli@^0.13.0:
     mustache "^2.3.0"
     x-img-diff-js "0.3.5"
 
+reg-gh-app-interface@^1.0.1:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/reg-gh-app-interface/-/reg-gh-app-interface-1.0.6.tgz#6e4f78f2e5c60585dac87b21d1cbc586dbb7f71c"
+  integrity sha512-aLI9CpVlSyw3pdJkPS4E7P8pMjJG3DQrEN5bO5ANySxhHndXA7/uTGEe6kcK6V+/+xcYOsvoE6UrRphhkCZy3w==
+
 reg-keygen-git-hash-plugin@^0.7.16:
   version "0.7.23"
   resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.7.23.tgz#7c66d75fe5e512824fbf80e9d27318f9d525baba"
@@ -11131,11 +11136,12 @@ reg-keygen-git-hash-plugin@^0.7.16:
     reg-suit-util "^0.7.23"
 
 reg-notify-github-plugin@^0.7.21:
-  version "0.7.23"
-  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.7.23.tgz#bd5a73ef06f2e9813bdf425d0b14d7ed5760c36a"
-  integrity sha512-mKwD5V50CG/ckl39alLP1Z6Y6vRqbjcZQSXxlmQeXfjmw0c1PpcS/GlSbXOqdUxk1O/jcjbUkRPCWiu7ZNUqKg==
+  version "0.7.24"
+  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.7.24.tgz#743435d360df1c14514a899dac2f2beafa8e386d"
+  integrity sha512-scuaeKPoxgWFTsxxQU+tOYAaIAZAhSDr0hlxPEIhQBLFMFKvBGr0nUjzZMHOUexLJYpEA/zFELd7Cv3/9ugGVA==
   dependencies:
     opn "^5.4.0"
+    reg-gh-app-interface "^1.0.1"
     reg-suit-util "^0.7.23"
     request "^2.81.0"
     request-promise "^4.2.1"
