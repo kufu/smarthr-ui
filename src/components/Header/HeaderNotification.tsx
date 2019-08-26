@@ -19,7 +19,7 @@ const HeaderNotificationComponent: React.FC<HeaderNotificationProps & InjectedPr
       href={props.url ? props.url : '/notifications'}
       aria-label="通知履歴"
     >
-      {props.number && props.number > 10 ? '9+' : props.number}
+      {props.number && props.number >= 10 ? '9+' : props.number}
     </Anchor>
   </Wrapper>
 )
