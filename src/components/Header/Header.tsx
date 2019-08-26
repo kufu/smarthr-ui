@@ -13,9 +13,9 @@ interface Props {
   employeeListButtonLink?: string
   isAdmin?: boolean
   helpUrl?: string
-  headerNotification: HeaderNotificationProps
-  headerEmployeeDropDown: HeaderEmployeeDropDownProps
-  headerUserDropDown: HeaderUserDropDownProps
+  notification: HeaderNotificationProps
+  employeeDropDown: HeaderEmployeeDropDownProps
+  userDropDown: HeaderUserDropDownProps
 }
 
 const HeaderComponent: React.FC<Props & InjectedProps> = ({
@@ -23,18 +23,18 @@ const HeaderComponent: React.FC<Props & InjectedProps> = ({
   employeeListButtonLink,
   isAdmin,
   helpUrl,
-  headerNotification,
-  headerEmployeeDropDown,
-  headerUserDropDown,
+  notification,
+  employeeDropDown,
+  userDropDown,
   theme,
 }) => {
-  const { number, url } = headerNotification
+  const { number, url } = notification
   const {
     crewsNewUrl,
     crewsBulkInserterUrl,
     crewsBulkUpdaterUrl,
     crewsInviterUrl,
-  } = headerEmployeeDropDown
+  } = employeeDropDown
   const {
     displayName,
     currentTenant,
@@ -43,7 +43,7 @@ const HeaderComponent: React.FC<Props & InjectedProps> = ({
     myAccountUrl,
     adminCompanyUrl,
     schoolUrl,
-  } = headerUserDropDown
+  } = userDropDown
 
   return (
     <Wrapper theme={theme}>

@@ -7,13 +7,13 @@ const notification = {
   url: 'abc',
   number: 999,
 }
-const headerEmployeeDropDown = {
+const employeeDropDown = {
   crewsNewUrl: 'path/to/crewsNewUrl/',
   crewsBulkInserterUrl: 'path/to/crewsBulkInserterUrl/',
   crewsBulkUpdaterUrl: 'path/to/crewsBulkUpdaterUrl/',
   crewsInviterUrl: 'path/to/crewsInviterUrl/',
 }
-const headerUserDropDown = {
+const userDropDown = {
   displayName: 'example@example.com',
   currentTenant: 'example, Inc.',
   avatar: 'path/to/avatarImage',
@@ -29,9 +29,9 @@ storiesOf('Header', module).add('all', () => (
       For admin user
       <Header
         employeeListButtonLink="/crews"
-        headerNotification={notification}
-        headerEmployeeDropDown={headerEmployeeDropDown}
-        headerUserDropDown={headerUserDropDown}
+        notification={notification}
+        employeeDropDown={employeeDropDown}
+        userDropDown={userDropDown}
         isAdmin={true}
         helpUrl="path/to/helpUrl/"
       />
@@ -40,9 +40,9 @@ storiesOf('Header', module).add('all', () => (
       For normal user
       <Header
         employeeListButtonLink="/crews"
-        headerNotification={notification}
-        headerEmployeeDropDown={headerEmployeeDropDown}
-        headerUserDropDown={headerUserDropDown}
+        notification={notification}
+        employeeDropDown={employeeDropDown}
+        userDropDown={userDropDown}
         isAdmin={false}
         helpUrl="path/to/helpUrl/"
       />
