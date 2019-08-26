@@ -133,7 +133,7 @@ const MenuList = styled.div`
     return css`
       border: 1px solid ${theme.palette.BORDER};
       border-radius: ${theme.size.pxToRem(3)};
-      background-color: #ffffff;
+      background-color: #fff;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
       padding: ${theme.size.pxToRem(5)} 0;
     `

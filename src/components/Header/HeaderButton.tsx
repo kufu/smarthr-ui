@@ -34,7 +34,7 @@ const Wrapper: any = styled.a`
       display: block;
       margin: 0;
       padding: 0 ${theme.size.pxToRem(10)};
-      color: #ffffff;
+      color: #fff;
       font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
       text-decoration: none;
       line-height: ${theme.size.pxToRem(50)};
