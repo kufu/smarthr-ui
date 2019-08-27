@@ -5224,10 +5224,10 @@ eslint-config-prettier@^6.0.0:
   dependencies:
     get-stdin "^6.0.0"
 
-eslint-config-smarthr@^1.0.4:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/eslint-config-smarthr/-/eslint-config-smarthr-1.0.5.tgz#c297cca502e4a8bc773633962d8155c6e1c2f318"
-  integrity sha512-x37TKyMASWikJTrUcs5mZyIT+Q2ww5f3J+Iuj70hb5CUwxlvUxftMD+pUa3RDm+J02b69EU0WVF1HBdixuC9Mg==
+eslint-config-smarthr@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-smarthr/-/eslint-config-smarthr-2.0.0.tgz#00d34507d3a945da6b8662ec03660f9a65df89d8"
+  integrity sha512-CeC0V4KyW3327nEo/0eLZ52flJFCliE3WfxrgVZ3MNtLdZKL8PcniLbZ6U7Eh5kpBzI7PSo4U9dS7IsUk+tuUw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^1.11.0"
     "@typescript-eslint/parser" "^1.11.0"
