@@ -7,7 +7,6 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { isTouchDevice } from '../../libs/ua'
 
 type Tag = 'button' | 'a'
-type Type = 'primary' | 'danger' | 'sub-a' | 'sub-b' | 'sub-c'
 type Size = 's' | 'm' | 'l'
 
 interface ClickEvent {
@@ -15,7 +14,6 @@ interface ClickEvent {
 }
 
 interface BaseProps {
-  type?: Type
   size?: Size
   full?: boolean
   children?: React.ReactNode
@@ -37,14 +35,13 @@ interface ButtonProps extends BaseProps {
 // }
 
 const PrimaryButtonComponent: React.FC<ButtonProps & InjectedProps> = ({
-  type = 'primary',
   size = 'm',
   full = false,
   className = '',
   tag = 'button',
   ...props
 }) => {
-  const classNames = `${type} ${size} ${full ? 'full' : ''} ${className}`
+  const classNames = `${size} ${full ? 'full' : ''} ${className}`
 
   return <Base className={classNames} as={tag} {...props}></Base>
 }
@@ -68,6 +65,7 @@ const Base: any = styled.div`
       box-sizing: border-box;
       cursor: pointer;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+      background-color: ${palette.MAIN};
 
       &.s {
         min-width: 80px;
@@ -92,43 +90,8 @@ const Base: any = styled.div`
         width: 100%;
       }
 
-      &.primary {
-        background-color: ${palette.MAIN};
-      }
-      &.danger {
-        background-color: ${palette.DANGER};
-      }
-      &.sub-a {
-        background-color: #5e718d;
-      }
-      &.sub-b {
-        border: 1px solid ${palette.BORDER};
-        background-color: #fff;
-        color: ${palette.TEXT_GREY};
-      }
-      &.sub-c {
-        border: 1px solid #fff;
-        background-color: transparent;
-        color: #fff;
-      }
-
       &.hover {
-        &.primary {
-          background-color: ${palette.hoverColor(palette.MAIN)};
-        }
-        &.danger {
-          background-color: ${palette.hoverColor(palette.DANGER)};
-        }
-        &.sub-a {
-          background-color: #414e62;
-        }
-        &.sub-b {
-          background-color: ${palette.hoverColor('#fff')};
-        }
-        &.sub-c {
-          background-color: #fff;
-          color: ${palette.MAIN};
-        }
+        background-color: ${palette.hoverColor(palette.MAIN)};
       }
 
       &[disabled] {
