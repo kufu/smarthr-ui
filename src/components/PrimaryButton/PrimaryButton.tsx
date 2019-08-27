@@ -3,10 +3,10 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-import { hoverable } from '../../hocs/hoverable'
+// import { hoverable } from '../../hocs/hoverable'
 import { isTouchDevice } from '../../libs/ua'
 
-type Tag = 'button' | 'a' | 'div'
+type Tag = 'button' | 'a'
 type Type = 'primary' | 'danger' | 'sub-a' | 'sub-b' | 'sub-c'
 type Size = 's' | 'm' | 'l'
 
@@ -20,6 +20,8 @@ interface BaseProps {
   full?: boolean
   children?: React.ReactNode
   className?: string
+  tag?: Tag
+  tabIndex?: number
 }
 
 interface ButtonProps extends BaseProps {
@@ -27,41 +29,25 @@ interface ButtonProps extends BaseProps {
   disabled?: boolean
 }
 
-interface AnchorProps extends BaseProps {
-  href: string
-  target?: string
-}
+// interface AnchorProps extends BaseProps {
+//   href: string
+//   target?: string
+// }
 
-interface ButtonDivProps extends BaseProps {
-  onClick?: (e: ClickEvent) => void
-  disabled?: boolean
-  tabIndex?: number
-  role?: string
-}
-
-const buttonFactory: <Props extends BaseProps>(
-  tag: Tag,
-) => React.FC<Props & InjectedProps> = tag => ({
+const PrimaryButtonComponent: React.FC<ButtonProps & InjectedProps> = ({
   type = 'primary',
   size = 'm',
   full = false,
   className = '',
+  tag = 'button',
   ...props
 }) => {
-  const Tag = hoverable()(Base.withComponent(tag))
   const classNames = `${type} ${size} ${full ? 'full' : ''} ${className}`
-  return <Tag className={classNames} {...props} />
+
+  return <Base className={classNames} as={tag} {...props}></Base>
 }
 
-const ButtonComponent: React.FC<ButtonProps & InjectedProps> = buttonFactory<ButtonProps>('button')
-const ButtonAnchorComponent: React.FC<AnchorProps & InjectedProps> = buttonFactory<AnchorProps>('a')
-const ButtonDivComponent: React.FC<ButtonDivProps & InjectedProps> = buttonFactory<ButtonDivProps>(
-  'div',
-)
-
-export const Button = withTheme(ButtonComponent)
-export const ButtonAnchor = withTheme(ButtonAnchorComponent)
-export const ButtonDiv = withTheme(ButtonDivComponent)
+export const PrimaryButton = withTheme(PrimaryButtonComponent)
 
 const Base: any = styled.div`
   ${({ theme }: InjectedProps) => {
