@@ -24,11 +24,13 @@ interface BaseProps {
   tabIndex?: number
 }
 
+// tag = 'button' ならこの型を使いたい
 interface ButtonProps extends BaseProps {
   onClick?: (e: ClickEvent) => void
   disabled?: boolean
 }
 
+// tag = 'a' ならこの型を使いたい
 // interface AnchorProps extends BaseProps {
 //   href: string
 //   target?: string
