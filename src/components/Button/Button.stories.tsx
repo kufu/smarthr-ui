@@ -2,77 +2,150 @@ import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
-
-import { Button, ButtonAnchor, ButtonDiv } from './Button'
+import { PrimaryButton, PrimaryButtonAnchor } from './PrimaryButton'
+import { Icon } from '../Icon'
 
 storiesOf('Button', module).add('all', () => (
-  <List>
-    <li>
-      <Button onClick={action('click button!')}>button element</Button>
-      <ButtonAnchor href="https://google.com" target="_blank">
-        anchor element
-      </ButtonAnchor>
-      <ButtonDiv onClick={action('click button!')}>div element</ButtonDiv>
-    </li>
-    <li>
-      <Button onClick={action('click button!')} size="s">
-        Size S
-      </Button>
-      <Button onClick={action('click button!')} size="m">
-        Size M
-      </Button>
-      <Button onClick={action('click button!')} size="l">
-        Size L
-      </Button>
-    </li>
-    <li>
-      <Button onClick={action('click button!')} type="primary">
-        Primary
-      </Button>
-      <Button onClick={action('click button!')} type="danger">
-        Danger
-      </Button>
-      <Button onClick={action('click button!')} type="sub-a">
-        sub-a
-      </Button>
-    </li>
-    <li>
-      <Button onClick={action('click button!')} type="sub-b">
-        sub-b
-      </Button>
-      <Background>
-        <Button onClick={action('click button!')} type="sub-c">
-          sub-c
-        </Button>
-      </Background>
-      <Button onClick={action('click button!')} disabled>
-        Disabled
-      </Button>
-    </li>
-    <li>
-      <Button onClick={action('click button!')} full>
-        Full Size
-      </Button>
-    </li>
-  </List>
+  <>
+    <Wrapper>
+      Default
+      <List>
+        <li>
+          <PrimaryButton onClick={action('clicked')}>Button</PrimaryButton>
+          <PrimaryButtonAnchor href="#">Anchor</PrimaryButtonAnchor>
+          <PrimaryButton disabled={true}>Disabled</PrimaryButton>
+        </li>
+      </List>
+      With icon (Left)
+      <List>
+        <li>
+          <PrimaryButton
+            prefix={<Icon size={14} name="fa-plus-circle" />}
+            onClick={action('clicked')}
+          >
+            Button
+          </PrimaryButton>
+          <PrimaryButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
+            Anchor
+          </PrimaryButtonAnchor>
+          <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+            Disabled
+          </PrimaryButton>
+        </li>
+      </List>
+      With icon (Right)
+      <List>
+        <li>
+          <PrimaryButton
+            suffix={<Icon size={14} name="fa-plus-circle" />}
+            onClick={action('clicked')}
+          >
+            Button
+          </PrimaryButton>
+          <PrimaryButtonAnchor suffix={<Icon size={14} name="fa-plus-circle" />} href="#">
+            Anchor
+          </PrimaryButtonAnchor>
+          <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+            Disabled
+          </PrimaryButton>
+        </li>
+      </List>
+      Only icon
+      <List>
+        <li>
+          <PrimaryButton onClick={action('clicked')} square>
+            <Icon size={16} name="fa-plus-circle" />
+          </PrimaryButton>
+          <PrimaryButtonAnchor href="#" square>
+            <Icon size={16} name="fa-plus-circle" />
+          </PrimaryButtonAnchor>
+          <PrimaryButton disabled={true} square>
+            <Icon size={16} name="fa-plus-circle" />
+          </PrimaryButton>
+        </li>
+      </List>
+    </Wrapper>
+    <Wrapper>
+      Default
+      <List>
+        <li>
+          <PrimaryButton size="s" onClick={action('clicked')}>
+            Button
+          </PrimaryButton>
+          <PrimaryButtonAnchor size="s" href="#">
+            Anchor
+          </PrimaryButtonAnchor>
+          <PrimaryButton size="s" disabled={true}>
+            Disabled
+          </PrimaryButton>
+        </li>
+      </List>
+      With icon (Left)
+      <List>
+        <li>
+          <PrimaryButton
+            size="s"
+            prefix={<Icon size={11} name="fa-plus-circle" />}
+            onClick={action('clicked')}
+          >
+            Button
+          </PrimaryButton>
+          <PrimaryButtonAnchor size="s" prefix={<Icon size={11} name="fa-plus-circle" />} href="#">
+            Anchor
+          </PrimaryButtonAnchor>
+          <PrimaryButton size="s" prefix={<Icon size={11} name="fa-plus-circle" />} disabled={true}>
+            Disabled
+          </PrimaryButton>
+        </li>
+      </List>
+      With icon (Right)
+      <List>
+        <li>
+          <PrimaryButton
+            size="s"
+            suffix={<Icon size={11} name="fa-plus-circle" />}
+            onClick={action('clicked')}
+          >
+            Button
+          </PrimaryButton>
+          <PrimaryButtonAnchor size="s" suffix={<Icon size={11} name="fa-plus-circle" />} href="#">
+            Anchor
+          </PrimaryButtonAnchor>
+          <PrimaryButton size="s" suffix={<Icon size={11} name="fa-plus-circle" />} disabled={true}>
+            Disabled
+          </PrimaryButton>
+        </li>
+      </List>
+      Only icon
+      <List>
+        <li>
+          <PrimaryButton size="s" onClick={action('clicked')} square>
+            <Icon size={14} name="fa-plus-circle" />
+          </PrimaryButton>
+          <PrimaryButtonAnchor size="s" href="#" square>
+            <Icon size={14} name="fa-plus-circle" />
+          </PrimaryButtonAnchor>
+          <PrimaryButton size="s" disabled={true} square>
+            <Icon size={14} name="fa-plus-circle" />
+          </PrimaryButton>
+        </li>
+      </List>
+    </Wrapper>
+  </>
 ))
 
+const Wrapper = styled.div`
+  padding: 1rem;
+`
+
 const List = styled.ul`
-  padding: 0 2.4rem;
+  padding: 0;
   list-style: none;
+  vertical-align: middle;
 
   & > li {
-    &:not(:first-child) {
-      margin-top: 2.4rem;
-    }
-
     & > *:not(:first-child) {
       margin-left: 1.6rem;
     }
   }
-`
-const Background = styled.div`
-  display: inline-block;
-  padding: 0.8rem;
-  background-color: #0dbac1;
 `
