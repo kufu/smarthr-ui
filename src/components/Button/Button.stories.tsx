@@ -8,144 +8,161 @@ import { Icon } from '../Icon'
 storiesOf('Button', module).add('all', () => (
   <>
     <Wrapper>
-      Default
-      <List>
-        <li>
-          <PrimaryButton onClick={action('clicked')}>Button</PrimaryButton>
-          <PrimaryButtonAnchor href="#">Anchor</PrimaryButtonAnchor>
-          <PrimaryButton disabled={true}>Disabled</PrimaryButton>
-        </li>
-      </List>
-      With icon (Left)
-      <List>
-        <li>
-          <PrimaryButton
-            prefix={<Icon size={14} name="fa-plus-circle" />}
-            onClick={action('clicked')}
-          >
-            Button
-          </PrimaryButton>
-          <PrimaryButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
-            Anchor
-          </PrimaryButtonAnchor>
-          <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
-            Disabled
-          </PrimaryButton>
-        </li>
-      </List>
-      With icon (Right)
-      <List>
-        <li>
-          <PrimaryButton
-            suffix={<Icon size={14} name="fa-plus-circle" />}
-            onClick={action('clicked')}
-          >
-            Button
-          </PrimaryButton>
-          <PrimaryButtonAnchor suffix={<Icon size={14} name="fa-plus-circle" />} href="#">
-            Anchor
-          </PrimaryButtonAnchor>
-          <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
-            Disabled
-          </PrimaryButton>
-        </li>
-      </List>
-      Only icon
-      <List>
-        <li>
-          <PrimaryButton onClick={action('clicked')} square>
-            <Icon size={16} name="fa-plus-circle" />
-          </PrimaryButton>
-          <PrimaryButtonAnchor href="#" square>
-            <Icon size={16} name="fa-plus-circle" />
-          </PrimaryButtonAnchor>
-          <PrimaryButton disabled={true} square>
-            <Icon size={16} name="fa-plus-circle" />
-          </PrimaryButton>
-        </li>
-      </List>
+      <p>Default Size</p>
     </Wrapper>
+
     <Wrapper>
-      Default
-      <List>
-        <li>
-          <PrimaryButton size="s" onClick={action('clicked')}>
-            Button
-          </PrimaryButton>
-          <PrimaryButtonAnchor size="s" href="#">
-            Anchor
-          </PrimaryButtonAnchor>
-          <PrimaryButton size="s" disabled={true}>
-            Disabled
-          </PrimaryButton>
-        </li>
-      </List>
-      With icon (Left)
-      <List>
-        <li>
-          <PrimaryButton
-            size="s"
-            prefix={<Icon size={11} name="fa-plus-circle" />}
-            onClick={action('clicked')}
-          >
-            Button
-          </PrimaryButton>
-          <PrimaryButtonAnchor size="s" prefix={<Icon size={11} name="fa-plus-circle" />} href="#">
-            Anchor
-          </PrimaryButtonAnchor>
-          <PrimaryButton size="s" prefix={<Icon size={11} name="fa-plus-circle" />} disabled={true}>
-            Disabled
-          </PrimaryButton>
-        </li>
-      </List>
-      With icon (Right)
-      <List>
-        <li>
-          <PrimaryButton
-            size="s"
-            suffix={<Icon size={11} name="fa-plus-circle" />}
-            onClick={action('clicked')}
-          >
-            Button
-          </PrimaryButton>
-          <PrimaryButtonAnchor size="s" suffix={<Icon size={11} name="fa-plus-circle" />} href="#">
-            Anchor
-          </PrimaryButtonAnchor>
-          <PrimaryButton size="s" suffix={<Icon size={11} name="fa-plus-circle" />} disabled={true}>
-            Disabled
-          </PrimaryButton>
-        </li>
-      </List>
-      Only icon
-      <List>
-        <li>
-          <PrimaryButton size="s" onClick={action('clicked')} square>
-            <Icon size={14} name="fa-plus-circle" />
-          </PrimaryButton>
-          <PrimaryButtonAnchor size="s" href="#" square>
-            <Icon size={14} name="fa-plus-circle" />
-          </PrimaryButtonAnchor>
-          <PrimaryButton size="s" disabled={true} square>
-            <Icon size={14} name="fa-plus-circle" />
-          </PrimaryButton>
-        </li>
-      </List>
+      <p>Default</p>
+      <PrimaryButton onClick={action('clicked')}>Button</PrimaryButton>
+      <PrimaryButtonAnchor href="#">Anchor</PrimaryButtonAnchor>
+      <PrimaryButton disabled={true}>Disabled</PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>With icon (Left)</p>
+      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>With icon (Right)</p>
+      <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor suffix={<Icon size={14} name="fa-plus-circle" />} href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>Only icon</p>
+      <PrimaryButton onClick={action('clicked')} square>
+        <Icon size={16} name="fa-plus-circle" />
+      </PrimaryButton>
+      <PrimaryButtonAnchor href="#" square>
+        <Icon size={16} name="fa-plus-circle" />
+      </PrimaryButtonAnchor>
+      <PrimaryButton disabled={true} square>
+        <Icon size={16} name="fa-plus-circle" />
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper className="wide">
+      <p>Wide</p>
+      <PrimaryButton onClick={action('clicked')} wide={true}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor href="#" wide={true}>
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton disabled={true} wide={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>Small Size</p>
+    </Wrapper>
+
+    <Wrapper>
+      <p>Default</p>
+      <PrimaryButton size="s" onClick={action('clicked')}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor size="s" href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton size="s" disabled={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>With icon (Left)</p>
+      <PrimaryButton
+        size="s"
+        prefix={<Icon size={11} name="fa-plus-circle" />}
+        onClick={action('clicked')}
+      >
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor size="s" prefix={<Icon size={11} name="fa-plus-circle" />} href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton size="s" prefix={<Icon size={11} name="fa-plus-circle" />} disabled={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>With icon (Right)</p>
+      <PrimaryButton
+        size="s"
+        suffix={<Icon size={11} name="fa-plus-circle" />}
+        onClick={action('clicked')}
+      >
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor size="s" suffix={<Icon size={11} name="fa-plus-circle" />} href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton size="s" suffix={<Icon size={11} name="fa-plus-circle" />} disabled={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>Only icon</p>
+      <PrimaryButton size="s" onClick={action('clicked')} square>
+        <Icon size={13} name="fa-plus-circle" />
+      </PrimaryButton>
+      <PrimaryButtonAnchor size="s" href="#" square>
+        <Icon size={13} name="fa-plus-circle" />
+      </PrimaryButtonAnchor>
+      <PrimaryButton size="s" disabled={true} square>
+        <Icon size={13} name="fa-plus-circle" />
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper className="wide">
+      <p>Wide</p>
+      <PrimaryButton size="s" onClick={action('clicked')} wide={true}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor size="s" href="#" wide={true}>
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton size="s" disabled={true} wide={true}>
+        Disabled
+      </PrimaryButton>
     </Wrapper>
   </>
 ))
 
 const Wrapper = styled.div`
-  padding: 1rem;
-`
+  margin: 1rem;
 
-const List = styled.ul`
-  padding: 0;
-  list-style: none;
-  vertical-align: middle;
+  > * {
+    margin-right: 1rem;
+  }
 
-  & > li {
-    & > *:not(:first-child) {
-      margin-left: 1.6rem;
+  p {
+    margin-bottom: 0.5rem;
+  }
+
+  &.wide {
+    > * {
+      margin-bottom: 0.5rem;
     }
   }
 `

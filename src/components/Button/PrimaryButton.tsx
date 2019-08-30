@@ -84,6 +84,7 @@ const Base: any = styled.div`
       border-radius: ${frame.border.radius.m};
       background-color: ${palette.MAIN};
       color: #fff;
+      font-family: inherit;
       font-size: ${size.pxToRem(size.font.TALL)};
       font-weight: bold;
       text-align: center;
@@ -93,10 +94,10 @@ const Base: any = styled.div`
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
       &.s {
-        min-width: 80px;
-        height: 32px;
+        font-size: ${size.pxToRem(size.font.SHORT)};
+        height: 27px;
+        line-height: 27px;
         padding: 0 ${size.pxToRem(size.space.XXS)};
-        line-height: 32px;
       }
 
       &.hover {
@@ -109,15 +110,15 @@ const Base: any = styled.div`
         padding: 0;
 
         &.s {
-          font-size: ${size.pxToRem(size.font.SHORT)}
-          width: 32px;
-          min-width: 32px;
+          width: 27px;
+          min-width: 27px;
         }
       }
 
       &[disabled] {
         background-color: ${palette.disableColor(palette.MAIN)};
         color: ${palette.disableColor('#fff')};
+        cursor: not-allowed;
       }
 
       &.suffix {
