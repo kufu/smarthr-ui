@@ -46,7 +46,7 @@ const TabComponent: React.FC<MergedProps> = ({
 
 export const Tab = withTheme(TabComponent)
 
-const buttonReseter = css`
+const resetButtonStyle = css`
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -56,18 +56,19 @@ const buttonReseter = css`
 `
 
 const Wrapper = styled.button`
-  ${buttonReseter}
+  ${resetButtonStyle}
   ${({ theme }: InjectedProps) => {
     const { size, palette, interaction } = theme
     return css`
       font-weight: bold;
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_GREY};
+      height: 40px;
+      margin-bottom: -1px;
       border-bottom: solid 3px transparent;
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.S)};
+      padding: 0 ${size.pxToRem(size.space.S)};
       box-sizing: border-box;
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
-      margin-bottom: -1px;
 
       &.active {
         color: ${palette.TEXT_BLACK};
