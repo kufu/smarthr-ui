@@ -81,7 +81,7 @@ const Wrapper = styled.button`
 
       :disabled {
         color: #c1c1c1;
-        pointer-events: none;
+        cursor: not-allowed;
       }
     `
   }}
