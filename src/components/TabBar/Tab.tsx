@@ -29,8 +29,16 @@ const TabComponent: React.FC<MergedProps> = ({
   const handleClick = () => {
     onClick(id)
   }
+
   return (
-    <Wrapper className={classNames} onClick={handleClick} theme={theme} {...props}>
+    <Wrapper
+      role="tab"
+      aria-selected={active}
+      className={classNames}
+      onClick={handleClick}
+      theme={theme}
+      {...props}
+    >
       {label}
     </Wrapper>
   )
@@ -55,19 +63,21 @@ const Wrapper = styled.button`
       font-weight: bold;
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_GREY};
-      background-color: #fff;
       border-bottom: solid 3px transparent;
       padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.S)};
       box-sizing: border-box;
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
+      margin-bottom: -1px;
 
       &.active {
         color: ${palette.TEXT_BLACK};
         border-color: ${palette.MAIN};
       }
+
       :hover {
         background-color: ${palette.COLUMN};
       }
+
       :disabled {
         color: #c1c1c1;
         pointer-events: none;
