@@ -12,17 +12,17 @@ storiesOf('TabBar', module).add('all', () => (
     <li>
       <p>Border</p>
       <TabBar>
-        <Tab label="tab" id="1" onClick={action('clicked')} />
-        <Tab label="Actived tab" id="2" onClick={action('clicked')} active />
-        <Tab label="Disabled tab" id="3" onClick={action('clicked')} disabled />
+        <Tab label="Tab" id="1" onClick={action('clicked')} />
+        <Tab label="Selected" id="2" onClick={action('clicked')} selected />
+        <Tab label="Disabled" id="3" onClick={action('clicked')} disabled />
       </TabBar>
     </li>
     <li>
       <p>No border</p>
       <TabBar bordered={false}>
-        <Tab label="tab" id="1" onClick={action('clicked')} />
-        <Tab label="Actived tab" id="2" onClick={action('clicked')} active />
-        <Tab label="Disabled tab" id="3" onClick={action('clicked')} disabled />
+        <Tab label="Tab" id="1" onClick={action('clicked')} />
+        <Tab label="Selected" id="2" onClick={action('clicked')} selected />
+        <Tab label="Disabled" id="3" onClick={action('clicked')} disabled />
       </TabBar>
     </li>
   </Ul>

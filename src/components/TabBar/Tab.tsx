@@ -7,7 +7,7 @@ import { isTouchDevice } from '../../libs/ua'
 export interface Props {
   id: string
   label: string
-  active?: boolean
+  selected?: boolean
   disabled?: boolean
   className?: string
   onClick: (tabId: string) => void
@@ -20,11 +20,11 @@ const TabComponent: React.FC<MergedProps> = ({
   label,
   onClick,
   theme,
-  active = false,
+  selected = false,
   className = '',
   ...props
 }) => {
-  const classNames = `${className} ${active ? 'active' : ''}`
+  const classNames = `${className} ${selected ? 'selected' : ''}`
 
   const handleClick = () => {
     onClick(id)
@@ -33,7 +33,7 @@ const TabComponent: React.FC<MergedProps> = ({
   return (
     <Wrapper
       role="tab"
-      aria-selected={active}
+      aria-selected={selected}
       className={classNames}
       onClick={handleClick}
       theme={theme}
@@ -70,7 +70,7 @@ const Wrapper = styled.button`
       box-sizing: border-box;
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
 
-      &.active {
+      &.selected {
         color: ${palette.TEXT_BLACK};
         border-color: ${palette.MAIN};
       }
