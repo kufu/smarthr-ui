@@ -7,7 +7,7 @@ import { hoverable } from '../../hocs/hoverable'
 import { isTouchDevice } from '../../libs/ua'
 
 type Tag = 'button' | 'a'
-type Size = 's'
+type Size = 'default' | 's'
 
 interface ClickEvent {
   preventDefault: () => void
@@ -37,7 +37,7 @@ interface AnchorProps extends BaseProps {
 const buttonFactory: <Props extends BaseProps>(
   tag: Tag,
 ) => React.FC<Props & InjectedProps> = tag => ({
-  size = '',
+  size = 'default',
   className = '',
   square = false,
   children = '',
@@ -74,24 +74,27 @@ const Base: any = styled.div`
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      padding: 0 ${size.pxToRem(size.space.XS)};
       width: ${({ wide }: any) => (wide ? '100%;' : 'auto')};
       min-width: 2rem;
-      height: 40px;
-      line-height: 40px;
       vertical-align: middle;
       border: none;
       border-radius: ${frame.border.radius.m};
       background-color: ${palette.MAIN};
       color: #fff;
       font-family: inherit;
-      font-size: ${size.pxToRem(size.font.TALL)};
       font-weight: bold;
       text-align: center;
       text-decoration: none;
       box-sizing: border-box;
       cursor: pointer;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+
+      &.default {
+        font-size: ${size.pxToRem(size.font.TALL)};
+        height: 40px;
+        line-height: 40px;
+        padding: 0 ${size.pxToRem(size.space.XS)};
+      }
 
       &.s {
         font-size: ${size.pxToRem(size.font.SHORT)};
