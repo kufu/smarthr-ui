@@ -6,27 +6,27 @@ import { Heading } from './Heading'
 storiesOf('Heading', module).add('all', () => (
   <List>
     <li>
-      <Heading type="ScreenTitle" tag="h1">
+      <Heading type="screenTitle" tag="h1">
         ScreenTitle
       </Heading>
     </li>
     <li>
-      <Heading type="SectionTitle" tag="h2">
+      <Heading type="sectionTitle" tag="h2">
         SectionTitle
       </Heading>
     </li>
     <li>
-      <Heading type="BlockTitle" tag="h3">
+      <Heading type="blockTitle" tag="h3">
         BlockTitle
       </Heading>
     </li>
     <li>
-      <Heading type="SubBlockTitle" tag="h4">
+      <Heading type="subBlockTitle" tag="h4">
         SubBlockTitle
       </Heading>
     </li>
     <li>
-      <Heading type="SubSubBlockTitle" tag="h5">
+      <Heading type="subSubBlockTitle" tag="h5">
         SubSubBlockTitle
       </Heading>
     </li>

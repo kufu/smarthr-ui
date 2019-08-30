@@ -4,91 +4,60 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 export interface HeadingProps {
   children: string
-  type?: 'ScreenTitle' | 'SectionTitle' | 'BlockTitle' | 'SubBlockTitle' | 'SubSubBlockTitle'
+  type?: 'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
   tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 }
 
-const HeadingComponent: React.FC<HeadingProps & InjectedProps> = ({ theme, ...props }) => (
-  <Wrapper
-    as={props.tag ? props.tag : 'h1'}
-    theme={theme}
-    type={props.type ? props.type : 'ScreenTitle'}
-  >
-    {props.children}
+const HeadingComponent: React.FC<HeadingProps & InjectedProps> = ({
+  tag = 'h1',
+  type = 'ScreenTitle',
+  children,
+  theme,
+}) => (
+  <Wrapper as={tag} className={type} theme={theme}>
+    {children}
   </Wrapper>
 )
 
 export const Heading = withTheme(HeadingComponent)
 
-const ScreenTitleStyle = css`
-  ${({ theme }: InjectedProps) => {
-    return css`
-      color: ${theme.palette.TEXT_BLACK};
-      font-size: ${theme.size.pxToRem(theme.size.font.VENTI)};
-      font-weight: normal;
-    `
-  }}
-`
-
-const SectionTitleStyle = css`
-  ${({ theme }: InjectedProps) => {
-    return css`
-      color: ${theme.palette.TEXT_BLACK};
-      font-size: ${theme.size.pxToRem(theme.size.font.GRANDE)};
-      font-weight: normal;
-    `
-  }}
-`
-
-const BlockTitleStyle = css`
-  ${({ theme }: InjectedProps) => {
-    return css`
-      color: ${theme.palette.TEXT_BLACK};
-      font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
-      font-weight: bold;
-    `
-  }}
-`
-
-const SubBlockTitleStyle = css`
-  ${({ theme }: InjectedProps) => {
-    return css`
-      color: ${theme.palette.TEXT_GREY};
-      font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
-      font-weight: bold;
-    `
-  }}
-`
-
-const SubSubBlockTitleStyle = css`
-  ${({ theme }: InjectedProps) => {
-    return css`
-      color: ${theme.palette.TEXT_GREY};
-      font-size: ${theme.size.pxToRem(theme.size.font.SHORT)};
-      font-weight: bold;
-    `
-  }}
-`
-
 const Wrapper = styled.h1`
-  ${({ type }: HeadingProps) => {
+  ${({ theme }: InjectedProps) => {
     return css`
       display: block;
       margin: 0;
       padding: 0;
       line-height: 1;
 
-      ${type === 'ScreenTitle'
-        ? ScreenTitleStyle
-        : type === 'SectionTitle'
-        ? SectionTitleStyle
-        : type === 'BlockTitle'
-        ? BlockTitleStyle
-        : type === 'SubBlockTitle'
-        ? SubBlockTitleStyle
-        : type === 'SubSubBlockTitle'
-        ? SubSubBlockTitleStyle
-        : ScreenTitleStyle}
+      &.screenTitle {
+        color: ${theme.palette.TEXT_BLACK};
+        font-size: ${theme.size.pxToRem(theme.size.font.VENTI)};
+        font-weight: normal;
+      }
+
+      &.sectionTitle {
+        color: ${theme.palette.TEXT_BLACK};
+        font-size: ${theme.size.pxToRem(theme.size.font.GRANDE)};
+        font-weight: normal;
+      }
+
+      &.blockTitle {
+        color: ${theme.palette.TEXT_BLACK};
+        font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
+        font-weight: bold;
+      }
+
+      &.subBlockTitle {
+        color: ${theme.palette.TEXT_GREY};
+        font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
+        font-weight: bold;
+      }
+
+      &.subSubBlockTitle {
+        color: ${theme.palette.TEXT_GREY};
+        font-size: ${theme.size.pxToRem(theme.size.font.SHORT)};
+        font-weight: bold;
+      }
     `
   }}
 `

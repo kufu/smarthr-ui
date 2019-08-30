@@ -4,13 +4,16 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { HeadingProps, Heading } from '../Heading/Heading'
 
 interface Props {
-  heading: HeadingProps
+  heading: {
+    children: HeadingProps['children']
+    tag?: HeadingProps['tag']
+  }
   description?: React.ReactNode
 }
 
 const HeadlineAreaComponent: React.FC<Props & InjectedProps> = ({ theme, ...props }) => (
   <Wrapper theme={theme}>
-    <Heading type="ScreenTitle" tag={props.heading.tag ? props.heading.tag : 'h1'}>
+    <Heading type="screenTitle" tag={props.heading.tag ? props.heading.tag : 'h1'}>
       {props.heading.children}
     </Heading>
     {props.description && <Description theme={theme}>{props.description}</Description>}
@@ -25,10 +28,9 @@ const Wrapper = styled.div`
   padding: 0;
 `
 
-const Description = styled.span`
+const Description = styled.div`
   ${({ theme }: InjectedProps) => {
     return css`
-      display: block;
       margin-top: ${theme.size.pxToRem(theme.size.space.XS)};
       color: ${theme.palette.TEXT_BLACK};
       font-size: ${theme.size.font.TALL};
