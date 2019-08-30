@@ -80,6 +80,7 @@ const Wrapper = styled.button`
       }
 
       :disabled {
+        background-color: inherit;
         color: #c1c1c1;
         cursor: not-allowed;
       }
