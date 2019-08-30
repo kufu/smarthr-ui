@@ -1,1 +1,2 @@
-export * from './TabBar'
+export { TabBar } from './TabBar'
+export { Tab } from './Tab'
