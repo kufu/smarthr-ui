@@ -271,100 +271,45 @@ exports[`Checkbox should be match snapshot 1`] = `
               >
                 <Component
                   color="#fff"
-                  name="check"
+                  name="fa-check"
                   size={12}
                 >
-                  <Component
+                  <FaCheck
                     color="#fff"
                     size={12}
                   >
-                    <CheckIcon
-                      color="#fff"
-                      size={12}
-                      theme={
+                    <IconBase
+                      attr={
                         Object {
-                          "frame": Object {
-                            "border": Object {
-                              "default": "1px solid #d6d6d6",
-                              "lineStyle": "solid",
-                              "lineWidth": "1px",
-                              "radius": Object {
-                                "l": "8px",
-                                "m": "6px",
-                                "s": "3px",
-                              },
-                            },
-                          },
-                          "interaction": Object {
-                            "hover": Object {
-                              "animation": ".3s ease-out",
-                              "animationDuration": ".3s",
-                              "animationTiming": "ease-out",
-                              "feedbackOpacity": ".7",
-                            },
-                          },
-                          "palette": Object {
-                            "BACKGROUND": "#f5f6fa",
-                            "BORDER": "#d6d6d6",
-                            "COLUMN": "#f9f9f9",
-                            "DANGER": "#ef475b",
-                            "MAIN": "#00a5ab",
-                            "OVERLAY": "rgba(0,0,0,0.15)",
-                            "SCRIM": "rgba(0,0,0,0.5)",
-                            "TEXT_BLACK": "#333",
-                            "TEXT_GREY": "#767676",
-                            "WARNING": "#ff8800",
-                            "hoverColor": [Function],
-                          },
-                          "size": Object {
-                            "font": Object {
-                              "GRANDE": 18,
-                              "SHORT": 11,
-                              "TALL": 14,
-                              "VENTI": 24,
-                            },
-                            "mediaQuery": Object {
-                              "SP": 599,
-                              "TABLET": 959,
-                            },
-                            "pxToRem": [Function],
-                            "space": Object {
-                              "L": 40,
-                              "M": 32,
-                              "S": 24,
-                              "XL": 48,
-                              "XS": 16,
-                              "XXL": 56,
-                              "XXS": 8,
-                            },
-                          },
+                          "viewBox": "0 0 512 512",
                         }
                       }
+                      color="#fff"
+                      size={12}
                     >
                       <svg
-                        height="12px"
-                        viewBox="0 0 100 100"
-                        width="12px"
+                        color="#fff"
+                        fill="currentColor"
+                        height={12}
+                        size={12}
+                        stroke="currentColor"
+                        strokeWidth="0"
+                        style={
+                          Object {
+                            "color": "#fff",
+                          }
+                        }
+                        viewBox="0 0 512 512"
+                        width={12}
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <title>
-                          check
-                        </title>
-                        <g
-                          id="Check"
-                        >
-                          <path
-                            d="M100,26.06a6.2,6.2,0,0,1-1.81,4.5L51.48,78.44l-8.77,9a6.1,6.1,0,0,1-8.77,0l-8.78-9L1.81,54.5a6.5,6.5,0,0,1,0-9l8.77-9A5.88,5.88,0,0,1,15,34.66a5.86,5.86,0,0,1,4.38,1.85L38.32,56,80.65,12.57a6.1,6.1,0,0,1,8.77,0l8.77,9A6.19,6.19,0,0,1,100,26.06Z"
-                            fill="#fff"
-                            style={
-                              Object {
-                                "fillRule": "evenodd",
-                              }
-                            }
-                          />
-                        </g>
+                        <path
+                          d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"
+                          key="0"
+                        />
                       </svg>
-                    </CheckIcon>
-                  </Component>
+                    </IconBase>
+                  </FaCheck>
                 </Component>
               </span>
             </StyledComponent>
