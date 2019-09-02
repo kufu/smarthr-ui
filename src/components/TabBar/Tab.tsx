@@ -68,7 +68,9 @@ const Wrapper = styled.button`
       border-bottom: solid 3px transparent;
       padding: 0 ${size.pxToRem(size.space.S)};
       box-sizing: border-box;
-      transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
+      transition: ${isTouchDevice
+        ? 'none'
+        : `background-color ${interaction.hover.animation}, color ${interaction.hover.animation}`};
 
       &.selected {
         color: ${palette.TEXT_BLACK};
@@ -77,11 +79,12 @@ const Wrapper = styled.button`
 
       :hover {
         background-color: ${palette.COLUMN};
+        color: ${palette.TEXT_BLACK};
       }
 
       :disabled {
         background-color: inherit;
-        color: #c1c1c1;
+        color: ${palette.disableColor(palette.TEXT_GREY)};
         cursor: not-allowed;
       }
     `
