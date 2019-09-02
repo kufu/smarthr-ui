@@ -18,6 +18,7 @@ export { Base } from './components/Base'
 export { Icon } from './components/Icon'
 export { Table, Head, Row, Cell, Body } from './components/Table'
 export { AppNavi } from './components/AppNavi'
+export { TabBar, Tab } from './components/TabBar'
 
 // themes
 export { createTheme } from './themes/createTheme'
