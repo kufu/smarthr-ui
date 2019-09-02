@@ -20,6 +20,7 @@ import {
   FaDatabase,
   FaEllipsisH,
   FaEnvelope,
+  FaExclamationTriangle,
   FaFile,
   FaFileAlt,
   FaFileArchive,
@@ -50,7 +51,6 @@ import {
   FaUserCircle,
   FaUsers,
 } from 'react-icons/fa'
-import { ExclamationTriangle } from './svg/ExclamationTriangle'
 
 export interface IconProps {
   color?: string
@@ -62,7 +62,6 @@ export interface Props extends IconProps {
 }
 
 const iconMap = {
-  'exclamation-triangle': ExclamationTriangle,
   'fa-address-book': FaAddressBook,
   'fa-address-card': FaAddressCard,
   'fa-angle-double-down': FaAngleDoubleDown,
@@ -83,6 +82,7 @@ const iconMap = {
   'fa-databas': FaDatabase,
   'fa-ellipsis-h': FaEllipsisH,
   'fa-envelope': FaEnvelope,
+  'fa-exclamation-triangle': FaExclamationTriangle,
   'fa-file': FaFile,
   'fa-file-alt': FaFileAlt,
   'fa-file-archive': FaFileArchive,
