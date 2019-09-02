@@ -44,12 +44,12 @@ import {
   FaSyncAlt,
   FaTable,
   FaThList,
+  FaTimes,
   FaUserAlt,
   FaUserCircle,
   FaUsers,
 } from 'react-icons/fa'
 import { CheckCircle } from './svg/CheckCircle'
-import { Cross } from './svg/Cross'
 import { ExclamationTriangle } from './svg/ExclamationTriangle'
 
 export interface IconProps {
@@ -63,7 +63,6 @@ export interface Props extends IconProps {
 
 const iconMap = {
   'check-circle': CheckCircle,
-  cross: Cross,
   'exclamation-triangle': ExclamationTriangle,
   'fa-address-book': FaAddressBook,
   'fa-address-card': FaAddressCard,
@@ -109,6 +108,7 @@ const iconMap = {
   'fa-sync-alt': FaSyncAlt,
   'fa-table': FaTable,
   'fa-th-list': FaThList,
+  'fa-times': FaTimes,
   'fa-user-alt': FaUserAlt,
   'fa-user-circle': FaUserCircle,
   'fa-users': FaUsers,

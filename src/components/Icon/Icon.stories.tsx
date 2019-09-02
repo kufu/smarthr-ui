@@ -9,7 +9,6 @@ const black = '#222'
 const white = '#eee'
 const icons: Array<Props['name']> = [
   'check-circle',
-  'cross',
   'exclamation-triangle',
   'fa-address-book',
   'fa-address-card',
@@ -55,6 +54,7 @@ const icons: Array<Props['name']> = [
   'fa-sync-alt',
   'fa-table',
   'fa-th-list',
+  'fa-times',
   'fa-user-alt',
   'fa-user-circle',
   'fa-users',
