@@ -38,6 +38,7 @@ exports[`Tag should be match snapshot 1`] = `
           "TEXT_BLACK": "#333",
           "TEXT_GREY": "#767676",
           "WARNING": "#ff8800",
+          "disableColor": [Function],
           "hoverColor": [Function],
         },
         "size": Object {
@@ -101,6 +102,7 @@ exports[`Tag should be match snapshot 1`] = `
             "TEXT_BLACK": "#333",
             "TEXT_GREY": "#767676",
             "WARNING": "#ff8800",
+            "disableColor": [Function],
             "hoverColor": [Function],
           },
           "size": Object {
@@ -190,6 +192,7 @@ exports[`Tag should be match snapshot 1`] = `
               "TEXT_BLACK": "#333",
               "TEXT_GREY": "#767676",
               "WARNING": "#ff8800",
+              "disableColor": [Function],
               "hoverColor": [Function],
             },
             "size": Object {
