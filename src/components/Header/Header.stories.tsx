@@ -3,6 +3,8 @@ import * as React from 'react'
 import { Header } from './Header'
 import styled from 'styled-components'
 
+import readme from './README.md'
+
 const notification = {
   url: 'abc',
   number: 999,
@@ -23,32 +25,38 @@ const userDropDown = {
   schoolUrl: 'path/to/schoolUrl/',
 }
 
-storiesOf('Header', module).add('all', () => (
-  <Ul>
-    <li>
-      For admin user
-      <Header
-        employeeListLink="/crews"
-        notification={notification}
-        employeeDropDown={employeeDropDown}
-        userDropDown={userDropDown}
-        isAdmin={true}
-        helpUrl="path/to/helpUrl/"
-      />
-    </li>
-    <li>
-      For normal user
-      <Header
-        employeeListLink="/crews"
-        notification={notification}
-        employeeDropDown={employeeDropDown}
-        userDropDown={userDropDown}
-        isAdmin={false}
-        helpUrl="path/to/helpUrl/"
-      />
-    </li>
-  </Ul>
-))
+storiesOf('Header', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
+  .add('all', () => (
+    <Ul>
+      <li>
+        For admin user
+        <Header
+          employeeListLink="/crews"
+          notification={notification}
+          employeeDropDown={employeeDropDown}
+          userDropDown={userDropDown}
+          isAdmin={true}
+          helpUrl="path/to/helpUrl/"
+        />
+      </li>
+      <li>
+        For normal user
+        <Header
+          employeeListLink="/crews"
+          notification={notification}
+          employeeDropDown={employeeDropDown}
+          userDropDown={userDropDown}
+          isAdmin={false}
+          helpUrl="path/to/helpUrl/"
+        />
+      </li>
+    </Ul>
+  ))
 
 const Ul = styled.ul`
   padding: 0;
