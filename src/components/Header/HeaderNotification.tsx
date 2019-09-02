@@ -10,16 +10,12 @@ export interface HeaderNotificationProps {
 
 const HeaderNotificationComponent: React.FC<HeaderNotificationProps & InjectedProps> = ({
   theme,
-  ...props
+  number = 0,
+  url = '/notifications',
 }) => (
   <Wrapper theme={theme}>
-    <Anchor
-      theme={theme}
-      number={props.number}
-      href={props.url ? props.url : '/notifications'}
-      aria-label="通知履歴"
-    >
-      {props.number && props.number >= 10 ? '9+' : props.number}
+    <Anchor theme={theme} number={number} href={url} aria-label="通知履歴">
+      {number && number >= 10 ? '9+' : number}
     </Anchor>
   </Wrapper>
 )
