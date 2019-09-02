@@ -69,7 +69,9 @@ exports[`Checkbox should be match snapshot 1`] = `
     }
   >
     <styled.div
-      className="active  light"
+      className="
+       active  light
+    "
       theme={
         Object {
           "frame": Object {
@@ -131,7 +133,9 @@ exports[`Checkbox should be match snapshot 1`] = `
       }
     >
       <StyledComponent
-        className="active  light"
+        className="
+       active  light
+    "
         forwardedComponent={
           Object {
             "$$typeof": Symbol(react.forward_ref),
@@ -220,7 +224,9 @@ exports[`Checkbox should be match snapshot 1`] = `
         }
       >
         <div
-          className="active  light sc-bdVaJa kPctVz"
+          className="
+       active  light
+     sc-bdVaJa kPctVz"
         >
           <styled.span>
             <StyledComponent

@@ -8,50 +8,50 @@ import { Button, ButtonAnchor, ButtonDiv } from './Button'
 storiesOf('Button', module).add('all', () => (
   <List>
     <li>
-      <Button onClick={action('click button!')}>button タグ</Button>
+      <Button onClick={action('click button!')}>button element</Button>
       <ButtonAnchor href="https://google.com" target="_blank">
-        a タグ
+        anchor element
       </ButtonAnchor>
-      <ButtonDiv onClick={action('click button!')}>div タグ</ButtonDiv>
+      <ButtonDiv onClick={action('click button!')}>div element</ButtonDiv>
     </li>
     <li>
       <Button onClick={action('click button!')} size="s">
-        Sサイズ
+        Size S
       </Button>
       <Button onClick={action('click button!')} size="m">
-        Mサイズ
+        Size M
       </Button>
       <Button onClick={action('click button!')} size="l">
-        Lサイズ
+        Size L
       </Button>
     </li>
     <li>
       <Button onClick={action('click button!')} type="primary">
-        primaryカラー
+        Primary
       </Button>
       <Button onClick={action('click button!')} type="danger">
-        dangerカラー
+        Danger
       </Button>
       <Button onClick={action('click button!')} type="sub-a">
-        sub-aカラー
+        sub-a
       </Button>
     </li>
     <li>
       <Button onClick={action('click button!')} type="sub-b">
-        sub-bカラー
+        sub-b
       </Button>
       <Background>
         <Button onClick={action('click button!')} type="sub-c">
-          sub-cカラー
+          sub-c
         </Button>
       </Background>
       <Button onClick={action('click button!')} disabled>
-        disabled
+        Disabled
       </Button>
     </li>
     <li>
       <Button onClick={action('click button!')} full>
-        フルサイズ
+        Full Size
       </Button>
     </li>
   </List>
@@ -59,6 +59,7 @@ storiesOf('Button', module).add('all', () => (
 
 const List = styled.ul`
   padding: 0 2.4rem;
+  list-style: none;
 
   & > li {
     &:not(:first-child) {

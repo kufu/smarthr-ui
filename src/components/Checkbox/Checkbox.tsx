@@ -10,13 +10,24 @@ interface Props {
   name: string
   themeColor?: 'light' | 'dark'
   disabled?: boolean
+  className?: string
   onChange?: (name: string, checked: boolean) => void
 }
 
 class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
   public render() {
-    const { checked, name, disabled = false, themeColor = 'light', theme } = this.props
-    const classNames = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
+    const {
+      checked,
+      name,
+      disabled = false,
+      themeColor = 'light',
+      theme,
+      className = '',
+    } = this.props
+
+    const classNames = `
+      ${className} ${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}
+    `
 
     return (
       <Wrapper className={classNames} theme={theme}>

@@ -18,6 +18,8 @@ export { Base } from './components/Base'
 export { Icon } from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
 export { Header } from './components/Header'
+export { Table, Head, Row, Cell, Body } from './components/Table'
+export { AppNavi } from './components/AppNavi'
 
 // themes
 export { createTheme } from './themes/createTheme'

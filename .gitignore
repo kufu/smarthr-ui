@@ -65,6 +65,7 @@ typings/
 # End of https://www.gitignore.io/api/node
 
 lib/
+esm/
 .cache
 
 storybook-static/
