@@ -21,12 +21,11 @@ import { TabBar, Tab } from 'smarthr-ui'
 
 ### Tab
 
-| Name                                                                                         | Required | Type        | DefaultValue | Description                                                |
-| -------------------------------------------------------------------------------------------- | -------- | ----------- | ------------ | ---------------------------------------------------------- |
-| label                                                                                        | ✓        | **string**  | -            | Display label on Tab                                       |
-| id                                                                                           | ✓        | **string**  | -            | Id for Tab                                                 |
-| selected                                                                                     | -        | **boolean** | false        | If true, Tab changes to selected style.                    |
-| disabled                                                                                     | -        | **boolean** | false        | If true, Tab changes to selected style, and not clickable. |
-| onClick                                                                                      | ✓        | **func**    | -            | Fired when the Tab is clicked.                             |
-| <br/><br/>**Signature:**<br/> `function(id: string) => void` <br> _id_ : id given to the tab |
-| className                                                                                    | -        | **string**  | -            | `className` for component.                                 |
+| Name      | Required | Type        | DefaultValue | Description                                                                                                                 |
+| --------- | -------- | ----------- | ------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| label     | ✓        | **string**  | -            | Display label on Tab                                                                                                        |
+| id        | ✓        | **string**  | -            | Id for Tab                                                                                                                  |
+| selected  | -        | **boolean** | false        | If true, Tab changes to selected style.                                                                                     |
+| disabled  | -        | **boolean** | false        | If true, Tab changes to selected style, and not clickable.                                                                  |
+| onClick   | ✓        | **func**    | -            | Fired when the Tab is clicked. <br/><br/>**Signature:**<br/> `function(id: string) => void` <br> _id_ : id given to the tab |
+| className | -        | **string**  | -            | `className` for component.                                                                                                  |
