@@ -30,15 +30,16 @@ export const HeaderButton = withTheme(HeaderButtonComponent)
 
 const Wrapper: any = styled.a`
   ${({ theme }: InjectedProps) => {
+    const { size, interaction } = theme
     return css`
       display: block;
       margin: 0;
-      padding: 0 ${theme.size.pxToRem(10)};
+      padding: 0 ${size.pxToRem(10)};
       color: #fff;
-      font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
+      font-size: ${size.pxToRem(size.font.TALL)};
       text-decoration: none;
-      line-height: ${theme.size.pxToRem(50)};
-      transition: background-color 0.3s;
+      line-height: ${size.pxToRem(50)};
+      transition: background-color ${interaction.hover.animation};
 
       &:hover {
         background-color: rgba(255, 255, 255, 0.3);
