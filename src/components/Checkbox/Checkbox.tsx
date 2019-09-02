@@ -34,7 +34,7 @@ class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
         {checked && (
           <IconWrap>
             <Icon
-              name="check"
+              name="fa-check"
               size={12}
               color={themeColor === 'light' ? '#fff' : theme.palette.MAIN}
             />

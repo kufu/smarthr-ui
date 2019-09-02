@@ -8,7 +8,6 @@ const Wrapper = ({ children }: any) => <Container>{children}</Container>
 const black = '#222'
 const white = '#eee'
 const icons: Array<Props['name']> = [
-  'check',
   'check-circle',
   'cross',
   'exclamation-triangle',
@@ -26,6 +25,7 @@ const icons: Array<Props['name']> = [
   'fa-chart-bar',
   'fa-chart-line',
   'fa-chart-pie',
+  'fa-check',
   'fa-cog',
   'fa-databas',
   'fa-ellipsis-h',
