@@ -28,7 +28,7 @@ storiesOf('Header', module).add('all', () => (
     <li>
       For admin user
       <Header
-        employeeListButtonLink="/crews"
+        employeeListLink="/crews"
         notification={notification}
         employeeDropDown={employeeDropDown}
         userDropDown={userDropDown}
@@ -39,7 +39,7 @@ storiesOf('Header', module).add('all', () => (
     <li>
       For normal user
       <Header
-        employeeListButtonLink="/crews"
+        employeeListLink="/crews"
         notification={notification}
         employeeDropDown={employeeDropDown}
         userDropDown={userDropDown}

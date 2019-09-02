@@ -10,7 +10,7 @@ import { HeaderEmployeeDropDown, HeaderEmployeeDropDownProps } from './HeaderEmp
 
 interface Props {
   logoUrl?: string
-  employeeListButtonLink?: string
+  employeeListLink?: string
   isAdmin?: boolean
   helpUrl?: string
   notification: HeaderNotificationProps
@@ -20,7 +20,7 @@ interface Props {
 
 const HeaderComponent: React.FC<Props & InjectedProps> = ({
   logoUrl = '/',
-  employeeListButtonLink,
+  employeeListLink,
   isAdmin,
   helpUrl,
   notification,
@@ -60,7 +60,7 @@ const HeaderComponent: React.FC<Props & InjectedProps> = ({
         </HeaderButton>
         {isAdmin && (
           <>
-            <HeaderButton url={employeeListButtonLink} icon="fa-th-list">
+            <HeaderButton url={employeeListLink} icon="fa-th-list">
               従業員リスト
             </HeaderButton>
 
