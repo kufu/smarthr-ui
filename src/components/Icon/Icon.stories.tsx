@@ -12,7 +12,6 @@ const icons: Array<Props['name']> = [
   'check-circle',
   'cross',
   'exclamation-triangle',
-  'exclamation-triangle',
   'fa-address-book',
   'fa-address-card',
   'fa-angle-double-down',
