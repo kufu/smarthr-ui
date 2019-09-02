@@ -59,7 +59,7 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
   public render() {
     const { visible } = this.state
     const { type, text, onClose, theme } = this.props
-    const iconName = type === 'success' ? 'check-circle' : 'exclamation-triangle'
+    const iconName = type === 'success' ? 'fa-check-circle' : 'exclamation-triangle'
 
     if (!visible) return null
 

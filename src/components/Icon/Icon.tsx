@@ -15,6 +15,7 @@ import {
   FaChartLine,
   FaChartPie,
   FaCheck,
+  FaCheckCircle,
   FaCog,
   FaDatabase,
   FaEllipsisH,
@@ -49,7 +50,6 @@ import {
   FaUserCircle,
   FaUsers,
 } from 'react-icons/fa'
-import { CheckCircle } from './svg/CheckCircle'
 import { ExclamationTriangle } from './svg/ExclamationTriangle'
 
 export interface IconProps {
@@ -62,7 +62,6 @@ export interface Props extends IconProps {
 }
 
 const iconMap = {
-  'check-circle': CheckCircle,
   'exclamation-triangle': ExclamationTriangle,
   'fa-address-book': FaAddressBook,
   'fa-address-card': FaAddressCard,
@@ -79,6 +78,7 @@ const iconMap = {
   'fa-chart-line': FaChartLine,
   'fa-chart-pie': FaChartPie,
   'fa-check': FaCheck,
+  'fa-check-circle': FaCheckCircle,
   'fa-cog': FaCog,
   'fa-databas': FaDatabase,
   'fa-ellipsis-h': FaEllipsisH,
