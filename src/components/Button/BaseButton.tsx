@@ -9,6 +9,21 @@ import { isTouchDevice } from '../../libs/ua'
 type Tag = 'button' | 'a'
 type Size = 'default' | 's'
 
+interface ClickEvent {
+  preventDefault: () => void
+}
+
+export interface ButtonProps extends BaseProps {
+  onClick?: (e: ClickEvent) => void
+  disabled?: boolean
+}
+
+export interface AnchorProps extends BaseProps {
+  href: string
+  target?: string
+  rel?: string
+}
+
 export interface BaseProps {
   size?: Size
   children?: React.ReactNode
@@ -18,6 +33,9 @@ export interface BaseProps {
   square?: boolean
   wide?: boolean
 }
+
+export type MargedButtonProps = ButtonProps & InjectedProps
+export type MargedAnchorProps = AnchorProps & InjectedProps
 
 export const buttonFactory: <Props extends BaseProps>(
   tag: Tag,
@@ -123,3 +141,6 @@ const Suffix = styled.span`
     `
   }}
 `
+
+export const BaseButton: React.FC<MargedButtonProps> = buttonFactory<ButtonProps>('button')
+export const BaseButtonAnchor: React.FC<MargedAnchorProps> = buttonFactory<AnchorProps>('a')
