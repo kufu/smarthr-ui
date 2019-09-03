@@ -31,28 +31,27 @@ const injectStyle = (
   component: React.FC<MargedButtonProps> | React.FC<MargedAnchorProps>,
 ) => styled(component)`
   ${({ theme }: InjectedProps) => {
-    const { palette, interaction } = theme
+    const { palette, interaction, frame } = theme
 
     return css`
-      color: #fff;
-      border: none;
-      background-color: ${palette.DANGER};
-      color: #fff;
+      background-color: #fff;
+      color: ${palette.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+      border: ${frame.border.default};
 
       &.hover {
-        background-color: ${palette.hoverColor(palette.DANGER)};
+        background-color: ${palette.hoverColor('#fff')};
       }
 
       &[disabled] {
-        background-color: ${palette.disableColor(palette.DANGER)};
-        color: ${palette.disableColor('#fff')};
+        background-color: ${palette.disableColor('#fff')};
+        color: ${palette.disableColor(palette.TEXT_BLACK)};
       }
     `
   }}
 `
 
-export const DangerButton: React.FC<ButtonProps> = withTheme(injectStyle(ButtonComponent))
-export const DangerButtonAnchor: React.FC<AnchorProps> = withTheme(
+export const SecondaryButton: React.FC<ButtonProps> = withTheme(injectStyle(ButtonComponent))
+export const SecondaryButtonAnchor: React.FC<AnchorProps> = withTheme(
   injectStyle(ButtonAnchorComponent),
 )

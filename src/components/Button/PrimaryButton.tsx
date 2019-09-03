@@ -34,6 +34,8 @@ const injectStyle = (
     const { palette, interaction } = theme
 
     return css`
+      color: #fff;
+      border: none;
       background-color: ${palette.MAIN};
       color: #fff;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};

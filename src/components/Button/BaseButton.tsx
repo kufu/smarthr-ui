@@ -56,9 +56,7 @@ const Base: any = styled.div`
       width: ${({ wide }: any) => (wide ? '100%;' : 'auto')};
       min-width: 2rem;
       vertical-align: middle;
-      border: none;
       border-radius: ${frame.border.radius.m};
-      color: #fff;
       font-family: inherit;
       font-weight: bold;
       text-align: center;
