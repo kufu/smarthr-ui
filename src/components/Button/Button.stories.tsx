@@ -5,8 +5,10 @@ import styled from 'styled-components'
 import { PrimaryButton, PrimaryButtonAnchor } from './PrimaryButton'
 import { DangerButton, DangerButtonAnchor } from './DangerButton'
 import { SecondaryButton, SecondaryButtonAnchor } from './SecondaryButton'
+import { SkeletonButton, SkeletonButtonAnchor } from './SkeletonButton'
 import { Icon } from '../Icon'
 import readme from './README.md'
+import { Base } from '../Base'
 
 storiesOf('Button', module)
   .addParameters({
@@ -455,6 +457,155 @@ storiesOf('Button', module)
       </Wrapper>
     </>
   ))
+  .add('Skeleton', () => (
+    <Background>
+      <Wrapper>
+        <p>Default Size</p>
+      </Wrapper>
+
+      <Wrapper>
+        <p>Default</p>
+        <SkeletonButton onClick={action('clicked')}>Button</SkeletonButton>
+        <SkeletonButtonAnchor href="#">Anchor</SkeletonButtonAnchor>
+        <SkeletonButton disabled={true}>Disabled</SkeletonButton>
+      </Wrapper>
+
+      <Wrapper>
+        <p>With icon (Left)</p>
+        <SkeletonButton
+          prefix={<Icon size={14} name="fa-plus-circle" />}
+          onClick={action('clicked')}
+        >
+          Button
+        </SkeletonButton>
+        <SkeletonButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
+          Anchor
+        </SkeletonButtonAnchor>
+        <SkeletonButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+          Disabled
+        </SkeletonButton>
+      </Wrapper>
+
+      <Wrapper>
+        <p>With icon (Right)</p>
+        <SkeletonButton
+          suffix={<Icon size={14} name="fa-plus-circle" />}
+          onClick={action('clicked')}
+        >
+          Button
+        </SkeletonButton>
+        <SkeletonButtonAnchor suffix={<Icon size={14} name="fa-plus-circle" />} href="#">
+          Anchor
+        </SkeletonButtonAnchor>
+        <SkeletonButton suffix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+          Disabled
+        </SkeletonButton>
+      </Wrapper>
+
+      <Wrapper>
+        <p>Only icon</p>
+        <SkeletonButton onClick={action('clicked')} square>
+          <Icon size={16} name="fa-plus-circle" />
+        </SkeletonButton>
+        <SkeletonButtonAnchor href="#" square>
+          <Icon size={16} name="fa-plus-circle" />
+        </SkeletonButtonAnchor>
+        <SkeletonButton disabled={true} square>
+          <Icon size={16} name="fa-plus-circle" />
+        </SkeletonButton>
+      </Wrapper>
+
+      <Wrapper className="wide">
+        <p>Wide</p>
+        <SkeletonButton onClick={action('clicked')} wide={true}>
+          Button
+        </SkeletonButton>
+        <SkeletonButtonAnchor href="#" wide={true}>
+          Anchor
+        </SkeletonButtonAnchor>
+        <SkeletonButton disabled={true} wide={true}>
+          Disabled
+        </SkeletonButton>
+      </Wrapper>
+
+      <Wrapper>
+        <p>Small Size</p>
+      </Wrapper>
+
+      <Wrapper>
+        <p>Default</p>
+        <SkeletonButton size="s" onClick={action('clicked')}>
+          Button
+        </SkeletonButton>
+        <SkeletonButtonAnchor size="s" href="#">
+          Anchor
+        </SkeletonButtonAnchor>
+        <SkeletonButton size="s" disabled={true}>
+          Disabled
+        </SkeletonButton>
+      </Wrapper>
+
+      <Wrapper>
+        <p>With icon (Left)</p>
+        <SkeletonButton
+          size="s"
+          prefix={<Icon size={11} name="fa-plus-circle" />}
+          onClick={action('clicked')}
+        >
+          Button
+        </SkeletonButton>
+        <SkeletonButtonAnchor size="s" prefix={<Icon size={11} name="fa-plus-circle" />} href="#">
+          Anchor
+        </SkeletonButtonAnchor>
+        <SkeletonButton size="s" prefix={<Icon size={11} name="fa-plus-circle" />} disabled={true}>
+          Disabled
+        </SkeletonButton>
+      </Wrapper>
+
+      <Wrapper>
+        <p>With icon (Right)</p>
+        <SkeletonButton
+          size="s"
+          suffix={<Icon size={11} name="fa-plus-circle" />}
+          onClick={action('clicked')}
+        >
+          Button
+        </SkeletonButton>
+        <SkeletonButtonAnchor size="s" suffix={<Icon size={11} name="fa-plus-circle" />} href="#">
+          Anchor
+        </SkeletonButtonAnchor>
+        <SkeletonButton size="s" suffix={<Icon size={11} name="fa-plus-circle" />} disabled={true}>
+          Disabled
+        </SkeletonButton>
+      </Wrapper>
+
+      <Wrapper>
+        <p>Only icon</p>
+        <SkeletonButton size="s" onClick={action('clicked')} square>
+          <Icon size={13} name="fa-plus-circle" />
+        </SkeletonButton>
+        <SkeletonButtonAnchor size="s" href="#" square>
+          <Icon size={13} name="fa-plus-circle" />
+        </SkeletonButtonAnchor>
+        <SkeletonButton size="s" disabled={true} square>
+          <Icon size={13} name="fa-plus-circle" />
+        </SkeletonButton>
+      </Wrapper>
+
+      <Wrapper className="wide">
+        <p>Wide</p>
+        <SkeletonButton size="s" onClick={action('clicked')} wide={true}>
+          Button
+        </SkeletonButton>
+        <SkeletonButtonAnchor size="s" href="#" wide={true}>
+          Anchor
+        </SkeletonButtonAnchor>
+        <SkeletonButton size="s" disabled={true} wide={true}>
+          Disabled
+        </SkeletonButton>
+      </Wrapper>
+    </Background>
+  ))
 
 const Wrapper = styled.div`
   margin: 1rem;
@@ -471,5 +622,13 @@ const Wrapper = styled.div`
     > * {
       margin-bottom: 0.5rem;
     }
+  }
+`
+
+const Background = styled(Base)`
+  background-color: #5c5c5c;
+
+  p {
+    color: #fff;
   }
 `
