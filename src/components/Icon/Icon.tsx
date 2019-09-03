@@ -14,10 +14,13 @@ import {
   FaChartBar,
   FaChartLine,
   FaChartPie,
+  FaCheck,
+  FaCheckCircle,
   FaCog,
   FaDatabase,
   FaEllipsisH,
   FaEnvelope,
+  FaExclamationTriangle,
   FaFile,
   FaFileAlt,
   FaFileArchive,
@@ -43,14 +46,11 @@ import {
   FaSyncAlt,
   FaTable,
   FaThList,
+  FaTimes,
   FaUserAlt,
   FaUserCircle,
   FaUsers,
 } from 'react-icons/fa'
-import { Check } from './svg/Check'
-import { CheckCircle } from './svg/CheckCircle'
-import { Cross } from './svg/Cross'
-import { ExclamationTriangle } from './svg/ExclamationTriangle'
 
 export interface IconProps {
   color?: string
@@ -62,10 +62,6 @@ export interface Props extends IconProps {
 }
 
 const iconMap = {
-  check: Check,
-  'check-circle': CheckCircle,
-  cross: Cross,
-  'exclamation-triangle': ExclamationTriangle,
   'fa-address-book': FaAddressBook,
   'fa-address-card': FaAddressCard,
   'fa-angle-double-down': FaAngleDoubleDown,
@@ -80,10 +76,13 @@ const iconMap = {
   'fa-chart-bar': FaChartBar,
   'fa-chart-line': FaChartLine,
   'fa-chart-pie': FaChartPie,
+  'fa-check': FaCheck,
+  'fa-check-circle': FaCheckCircle,
   'fa-cog': FaCog,
   'fa-databas': FaDatabase,
   'fa-ellipsis-h': FaEllipsisH,
   'fa-envelope': FaEnvelope,
+  'fa-exclamation-triangle': FaExclamationTriangle,
   'fa-file': FaFile,
   'fa-file-alt': FaFileAlt,
   'fa-file-archive': FaFileArchive,
@@ -109,6 +108,7 @@ const iconMap = {
   'fa-sync-alt': FaSyncAlt,
   'fa-table': FaTable,
   'fa-th-list': FaThList,
+  'fa-times': FaTimes,
   'fa-user-alt': FaUserAlt,
   'fa-user-circle': FaUserCircle,
   'fa-users': FaUsers,
