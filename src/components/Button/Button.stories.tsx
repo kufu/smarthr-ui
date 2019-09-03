@@ -6,8 +6,14 @@ import { PrimaryButton, PrimaryButtonAnchor } from './PrimaryButton'
 import { DangerButton, DangerButtonAnchor } from './DangerButton'
 import { SecondaryButton, SecondaryButtonAnchor } from './SecondaryButton'
 import { Icon } from '../Icon'
+import readme from './README.md'
 
 storiesOf('Button', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
   .add('Primary', () => (
     <>
       <Wrapper>

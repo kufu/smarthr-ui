@@ -1,15 +1,23 @@
-# PrimaryButton
+# Buttons
 
 ```tsx
 import { PrimaryButton, PrimaryButtonAnchor } from 'smarthr-ui'
+import { SecondaryButton, SecondaryButtonAnchor } from 'smarthr-ui'
+import { DangerButton, DangerButtonAnchor } from 'smarthr-ui'
 
 <PrimaryButton>Button</PrimaryButton>
 <PrimaryButtonAnchor href="#">Anchor</PrimaryButtonAnchor>
+
+<SecondaryButton>Button</SecondaryButton>
+<SecondaryButtonAnchor href="#">Anchor</SecondaryButtonAnchor>
+
+<DangerButton>Button</DangerButton>
+<DangerButtonAnchor href="#">Anchor</DangerButtonAnchor>
 ```
 
 ## props
 
-### Common to PrimaryButton and PrimaryButtonAnchor
+### Common to Button and Anchor
 
 | Name      | Required | Type                           | DefaultValue | Description                                                                           |
 | --------- | -------- | ------------------------------ | ------------ | ------------------------------------------------------------------------------------- |
@@ -21,14 +29,14 @@ import { PrimaryButton, PrimaryButtonAnchor } from 'smarthr-ui'
 | wide      | -        | **boolean**                    | false        | If `true`, the component shape changes width is 100%.                                 |
 | className | -        | **string**                     | ''           | `className` of component.                                                             |
 
-### PrimaryButton
+### Button
 
 | Name     | Required | Type         | DefaultValue | Description                                                         |
 | -------- | -------- | ------------ | ------------ | ------------------------------------------------------------------- |
 | onClick  | -        | **function** | -            | Fired when the component is focused. <br><br>`function: () => void` |
 | disabled | -        | **boolean**  | false        | If `true`, the component is disabled.                               |
 
-### PrimaryButtonAnchor
+### Anchor
 
 | Name   | Required | Type       | DefaultValue | Description             |
 | ------ | -------- | ---------- | ------------ | ----------------------- |
