@@ -9,7 +9,7 @@ import { isTouchDevice } from '../../libs/ua'
 type Tag = 'button' | 'a'
 type Size = 'default' | 's'
 
-interface BaseProps {
+export interface BaseProps {
   size?: Size
   children?: React.ReactNode
   className?: string

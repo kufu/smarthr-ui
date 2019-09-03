@@ -1,25 +1,13 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { buttonFactory } from './BaseButton'
+import { buttonFactory, BaseProps } from './BaseButton'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { isTouchDevice } from '../../libs/ua'
 
-type Size = 'default' | 's'
-
 interface ClickEvent {
   preventDefault: () => void
-}
-
-interface BaseProps {
-  size?: Size
-  children?: React.ReactNode
-  className?: string
-  prefix?: React.ReactNode
-  suffix?: React.ReactNode
-  square?: boolean
-  wide?: boolean
 }
 
 interface ButtonProps extends BaseProps {
@@ -33,11 +21,14 @@ interface AnchorProps extends BaseProps {
   rel?: string
 }
 
-const ButtonComponent: React.FC<ButtonProps & InjectedProps> = buttonFactory<ButtonProps>('button')
-const ButtonAnchorComponent: React.FC<AnchorProps & InjectedProps> = buttonFactory<AnchorProps>('a')
+type MargedButtonProps = ButtonProps & InjectedProps
+type MargedAnchorProps = AnchorProps & InjectedProps
+
+const ButtonComponent: React.FC<MargedButtonProps> = buttonFactory<ButtonProps>('button')
+const ButtonAnchorComponent: React.FC<MargedAnchorProps> = buttonFactory<AnchorProps>('a')
 
 const injectStyle = (
-  component: React.FC<ButtonProps & InjectedProps> | React.FC<AnchorProps & InjectedProps>,
+  component: React.FC<MargedButtonProps> | React.FC<MargedAnchorProps>,
 ) => styled(component)`
   ${({ theme }: InjectedProps) => {
     const { palette, interaction } = theme
