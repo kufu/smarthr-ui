@@ -5,14 +5,16 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 interface Props {
   title?: string
   size?: 's' | 'm' | 'l'
+  className?: string
 }
 
 const BlankImageComponent: React.FC<Props & InjectedProps> = ({
   title = 'BlankImage',
   size = 'm',
+  className = '',
   theme,
 }) => (
-  <Wrapper>
+  <Wrapper className={className}>
     <Svg theme={theme} className={size} viewBox="0 0 250 250" role="img" aria-label={title}>
       <title>{title}</title>
       <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -153,22 +155,23 @@ const Wrapper = styled.figure`
 
 const Svg = styled.svg`
   ${({ theme }: InjectedProps) => {
+    const { pxToRem } = theme.size
     return css`
       display: block;
 
       &.s {
-        width: ${theme.size.pxToRem(166)};
-        height: ${theme.size.pxToRem(166)};
+        width: ${pxToRem(166)};
+        height: ${pxToRem(166)};
       }
 
       &.m {
-        width: ${theme.size.pxToRem(250)};
-        height: ${theme.size.pxToRem(250)};
+        width: ${pxToRem(250)};
+        height: ${pxToRem(250)};
       }
 
       &.l {
-        width: ${theme.size.pxToRem(375)};
-        height: ${theme.size.pxToRem(375)};
+        width: ${pxToRem(375)};
+        height: ${pxToRem(375)};
       }
     `
   }}
