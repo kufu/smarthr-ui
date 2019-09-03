@@ -19,6 +19,8 @@ export {
   SecondaryButtonAnchor,
   DangerButton,
   DangerButtonAnchor,
+  SkeletonButton,
+  SkeletonButtonAnchor,
 } from './components/Button'
 export { Tag } from './components/Tag'
 export { Base } from './components/Base'
