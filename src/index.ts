@@ -18,7 +18,7 @@ export { Base } from './components/Base'
 export { Icon } from './components/Icon'
 export { Table, Head, Row, Cell, Body } from './components/Table'
 export { AppNavi } from './components/AppNavi'
-export { BlankImage } from './components/Images'
+export { BlankImage } from './components/Image'
 
 // themes
 export { createTheme } from './themes/createTheme'

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { BlankImage } from './BlankImage'
 
-storiesOf('Images', module).add('all', () => (
+storiesOf('Image', module).add('BlankImage', () => (
   <List>
     <dt>BlankImage size="s"</dt>
     <dd>
