@@ -1,21 +1,12 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import {
-  BaseButton,
-  BaseButtonAnchor,
-  MargedButtonProps,
-  MargedAnchorProps,
-  ButtonProps,
-  AnchorProps,
-} from './BaseButton'
+import { BaseButton, BaseButtonAnchor, ButtonProps, AnchorProps } from './BaseButton'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { isTouchDevice } from '../../libs/ua'
 
-const injectStyle = (
-  component: React.FC<MargedButtonProps> | React.FC<MargedAnchorProps>,
-) => styled(component)`
+const injectStyle = <T extends {}>(component: React.FC<T & InjectedProps>) => styled(component)`
   ${({ theme }: InjectedProps) => {
     const { palette, interaction, frame } = theme
 
@@ -37,5 +28,5 @@ const injectStyle = (
   }}
 `
 
-export const SkeletonButton: React.FC<ButtonProps> = withTheme(injectStyle(BaseButton))
-export const SkeletonButtonAnchor: React.FC<AnchorProps> = withTheme(injectStyle(BaseButtonAnchor))
+export const SkeletonButton = withTheme(injectStyle<ButtonProps>(BaseButton))
+export const SkeletonButtonAnchor = withTheme(injectStyle<AnchorProps>(BaseButtonAnchor))
