@@ -59,7 +59,7 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
   public render() {
     const { visible } = this.state
     const { type, text, onClose, theme } = this.props
-    const iconName = type === 'success' ? 'check-circle' : 'exclamation-triangle'
+    const iconName = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'
 
     if (!visible) return null
 
@@ -68,7 +68,7 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
         <Icon name={iconName} size={24} color="#fff" />
         <Txt theme={theme}>{text}</Txt>
         <CloseButton onClick={onClose} className="close">
-          <Icon name="cross" size={12} color={theme.palette.BORDER} />
+          <Icon name="fa-times" size={12} color={theme.palette.BORDER} />
         </CloseButton>
       </Wrapper>
     )
