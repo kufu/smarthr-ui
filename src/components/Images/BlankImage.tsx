@@ -13,7 +13,7 @@ const BlankImageComponent: React.FC<Props & InjectedProps> = ({
   theme,
 }) => (
   <Wrapper>
-    <Svg theme={theme} className={size} viewBox="0 0 250 250">
+    <Svg theme={theme} className={size} viewBox="0 0 250 250" role="img" aria-label={title}>
       <title>{title}</title>
       <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g transform="translate(20.283019, 12.735849)">
