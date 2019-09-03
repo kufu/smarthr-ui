@@ -2,77 +2,167 @@ import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
-
-import { Button, ButtonAnchor, ButtonDiv } from './Button'
+import { PrimaryButton, PrimaryButtonAnchor } from './PrimaryButton'
+import { Icon } from '../Icon'
 
 storiesOf('Button', module).add('all', () => (
-  <List>
-    <li>
-      <Button onClick={action('click button!')}>button element</Button>
-      <ButtonAnchor href="https://google.com" target="_blank">
-        anchor element
-      </ButtonAnchor>
-      <ButtonDiv onClick={action('click button!')}>div element</ButtonDiv>
-    </li>
-    <li>
-      <Button onClick={action('click button!')} size="s">
-        Size S
-      </Button>
-      <Button onClick={action('click button!')} size="m">
-        Size M
-      </Button>
-      <Button onClick={action('click button!')} size="l">
-        Size L
-      </Button>
-    </li>
-    <li>
-      <Button onClick={action('click button!')} type="primary">
-        Primary
-      </Button>
-      <Button onClick={action('click button!')} type="danger">
-        Danger
-      </Button>
-      <Button onClick={action('click button!')} type="sub-a">
-        sub-a
-      </Button>
-    </li>
-    <li>
-      <Button onClick={action('click button!')} type="sub-b">
-        sub-b
-      </Button>
-      <Background>
-        <Button onClick={action('click button!')} type="sub-c">
-          sub-c
-        </Button>
-      </Background>
-      <Button onClick={action('click button!')} disabled>
+  <>
+    <Wrapper>
+      <p>Default Size</p>
+    </Wrapper>
+
+    <Wrapper>
+      <p>Default</p>
+      <PrimaryButton onClick={action('clicked')}>Button</PrimaryButton>
+      <PrimaryButtonAnchor href="#">Anchor</PrimaryButtonAnchor>
+      <PrimaryButton disabled={true}>Disabled</PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>With icon (Left)</p>
+      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
         Disabled
-      </Button>
-    </li>
-    <li>
-      <Button onClick={action('click button!')} full>
-        Full Size
-      </Button>
-    </li>
-  </List>
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>With icon (Right)</p>
+      <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor suffix={<Icon size={14} name="fa-plus-circle" />} href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>Only icon</p>
+      <PrimaryButton onClick={action('clicked')} square>
+        <Icon size={16} name="fa-plus-circle" />
+      </PrimaryButton>
+      <PrimaryButtonAnchor href="#" square>
+        <Icon size={16} name="fa-plus-circle" />
+      </PrimaryButtonAnchor>
+      <PrimaryButton disabled={true} square>
+        <Icon size={16} name="fa-plus-circle" />
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper className="wide">
+      <p>Wide</p>
+      <PrimaryButton onClick={action('clicked')} wide={true}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor href="#" wide={true}>
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton disabled={true} wide={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>Small Size</p>
+    </Wrapper>
+
+    <Wrapper>
+      <p>Default</p>
+      <PrimaryButton size="s" onClick={action('clicked')}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor size="s" href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton size="s" disabled={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>With icon (Left)</p>
+      <PrimaryButton
+        size="s"
+        prefix={<Icon size={11} name="fa-plus-circle" />}
+        onClick={action('clicked')}
+      >
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor size="s" prefix={<Icon size={11} name="fa-plus-circle" />} href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton size="s" prefix={<Icon size={11} name="fa-plus-circle" />} disabled={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>With icon (Right)</p>
+      <PrimaryButton
+        size="s"
+        suffix={<Icon size={11} name="fa-plus-circle" />}
+        onClick={action('clicked')}
+      >
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor size="s" suffix={<Icon size={11} name="fa-plus-circle" />} href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton size="s" suffix={<Icon size={11} name="fa-plus-circle" />} disabled={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper>
+      <p>Only icon</p>
+      <PrimaryButton size="s" onClick={action('clicked')} square>
+        <Icon size={13} name="fa-plus-circle" />
+      </PrimaryButton>
+      <PrimaryButtonAnchor size="s" href="#" square>
+        <Icon size={13} name="fa-plus-circle" />
+      </PrimaryButtonAnchor>
+      <PrimaryButton size="s" disabled={true} square>
+        <Icon size={13} name="fa-plus-circle" />
+      </PrimaryButton>
+    </Wrapper>
+
+    <Wrapper className="wide">
+      <p>Wide</p>
+      <PrimaryButton size="s" onClick={action('clicked')} wide={true}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor size="s" href="#" wide={true}>
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton size="s" disabled={true} wide={true}>
+        Disabled
+      </PrimaryButton>
+    </Wrapper>
+  </>
 ))
 
-const List = styled.ul`
-  padding: 0 2.4rem;
-  list-style: none;
+const Wrapper = styled.div`
+  margin: 1rem;
 
-  & > li {
-    &:not(:first-child) {
-      margin-top: 2.4rem;
-    }
+  > * {
+    margin-right: 1rem;
+  }
 
-    & > *:not(:first-child) {
-      margin-left: 1.6rem;
+  p {
+    margin-bottom: 0.5rem;
+  }
+
+  &.wide {
+    > * {
+      margin-bottom: 0.5rem;
     }
   }
-`
-const Background = styled.div`
-  display: inline-block;
-  padding: 0.8rem;
-  background-color: #0dbac1;
 `
