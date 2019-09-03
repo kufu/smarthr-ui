@@ -19,7 +19,15 @@ class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
     const classNames = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
 
     return (
-      <Wrapper className={classNames} theme={theme}>
+      <Wrapper theme={theme}>
+        <Input
+          type="checkbox"
+          checked={checked}
+          name={name}
+          disabled={disabled}
+          onChange={this.handleChange}
+        />
+        <Box className={classNames} theme={theme} />
         {checked && (
           <IconWrap>
             <Icon
@@ -30,13 +38,6 @@ class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
             />
           </IconWrap>
         )}
-        <Input
-          type="checkbox"
-          checked={checked}
-          name={name}
-          disabled={disabled}
-          onChange={this.handleChange}
-        />
       </Wrapper>
     )
   }
@@ -50,20 +51,27 @@ class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
 export const Checkbox = withTheme(CheckboxComponent)
 
 const Wrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  line-height: 1;
+  box-sizing: border-box;
+`
+
+const Box = styled.span`
   ${({ theme }: InjectedProps) => {
     const { frame, palette } = theme
-
     return css`
-      position: relative;
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
+      position: absolute;
+      width: 100%;
+      height: 100%;
       border-radius: ${frame.border.radius.s};
       border: ${frame.border.default};
       background-color: #fff;
-      line-height: 1;
       box-sizing: border-box;
+      pointer-events: none;
 
       &.active {
         border-color: ${palette.Main};
@@ -102,7 +110,12 @@ const Input = styled.input`
   &[disabled] {
     pointer-events: none;
   }
+
+  &:focus + span {
+    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.85); /* FIXME focus style */
+  }
 `
+
 const IconWrap = styled.span`
   position: absolute;
   top: 50%;
@@ -111,6 +124,7 @@ const IconWrap = styled.span`
   width: 12px;
   height: 12px;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 
   & > svg {
     vertical-align: top;
