@@ -17,7 +17,7 @@ class RadioComponent extends React.PureComponent<Props & InjectedProps> {
     const classNames = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
 
     return (
-      <Wrapper className={classNames} theme={theme}>
+      <Wrapper>
         <Input
           type="radio"
           checked={checked}
@@ -25,6 +25,7 @@ class RadioComponent extends React.PureComponent<Props & InjectedProps> {
           disabled={disabled}
           onChange={this.handleChange}
         />
+        <Box className={classNames} theme={theme} />
       </Wrapper>
     )
   }
@@ -38,18 +39,22 @@ class RadioComponent extends React.PureComponent<Props & InjectedProps> {
 export const Radio = withTheme(RadioComponent)
 
 const Wrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 1;
+`
+const Box = styled.span`
   ${({ theme }: InjectedProps) => {
     const { frame, palette } = theme
-
     return css`
-      position: relative;
       display: inline-block;
-      width: 20px;
-      height: 20px;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
       border: ${frame.border.default};
       background-color: #fff;
-      line-height: 1;
       box-sizing: border-box;
 
       &.active {
@@ -66,6 +71,7 @@ const Wrapper = styled.div`
           background-color: #fff;
           transform: translate(-50%, -50%);
           content: '';
+          pointer-events: none;
         }
       }
 
@@ -108,5 +114,9 @@ const Input = styled.input`
 
   &[disabled] {
     pointer-events: none;
+  }
+
+  &:focus + span {
+    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.85); /* FIXME focus style */
   }
 `
