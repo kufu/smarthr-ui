@@ -15,7 +15,7 @@ export interface Props {
 
 type MergedProps = Props & InjectedProps
 
-const TabComponent: React.FC<MergedProps> = ({
+const TabItemComponent: React.FC<MergedProps> = ({
   id,
   label,
   onClick,
@@ -42,7 +42,7 @@ const TabComponent: React.FC<MergedProps> = ({
   )
 }
 
-export const Tab = withTheme(TabComponent)
+export const TabItem = withTheme(TabItemComponent)
 
 const resetButtonStyle = css`
   background-color: transparent;

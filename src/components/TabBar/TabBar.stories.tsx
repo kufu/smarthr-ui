@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react'
 
 import styled from 'styled-components'
 
-import { Tab } from './Tab'
+import { TabItem } from './TabItem'
 import { TabBar } from './TabBar'
 
 import readme from './README.md'
@@ -20,17 +20,17 @@ storiesOf('TabBar', module)
       <li>
         <p>Border</p>
         <TabBar>
-          <Tab label="Tab" id="1" onClick={action('clicked')} />
-          <Tab label="Selected" id="2" onClick={action('clicked')} selected />
-          <Tab label="Disabled" id="3" onClick={action('clicked')} disabled />
+          <TabItem label="Tab" id="1" onClick={action('clicked')} />
+          <TabItem label="Selected" id="2" onClick={action('clicked')} selected />
+          <TabItem label="Disabled" id="3" onClick={action('clicked')} disabled />
         </TabBar>
       </li>
       <li>
         <p>No border</p>
         <TabBar bordered={false}>
-          <Tab label="Tab" id="1" onClick={action('clicked')} />
-          <Tab label="Selected" id="2" onClick={action('clicked')} selected />
-          <Tab label="Disabled" id="3" onClick={action('clicked')} disabled />
+          <TabItem label="Tab" id="1" onClick={action('clicked')} />
+          <TabItem label="Selected" id="2" onClick={action('clicked')} selected />
+          <TabItem label="Disabled" id="3" onClick={action('clicked')} disabled />
         </TabBar>
       </li>
     </Ul>
