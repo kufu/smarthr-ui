@@ -1,6 +1,5 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
-
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 interface Props {
@@ -32,11 +31,24 @@ const Wrapper = styled.div`
     const { frame } = theme
     return css`
       display: flex;
-      padding-bottom: 1px;
 
       &.bordered {
-        border-bottom: ${frame.border.default};
-        padding-bottom: 0;
+        position: relative;
+
+        :after {
+          position: absolute;
+          bottom: 0px;
+          width: 100%;
+          border-bottom: ${frame.border.default};
+          content: '';
+        }
+
+        > button {
+          &.selected {
+            position: relative;
+            z-index: 1;
+          }
+        }
       }
     `
   }}

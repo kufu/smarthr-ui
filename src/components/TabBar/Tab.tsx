@@ -64,7 +64,6 @@ const Wrapper = styled.button`
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_GREY};
       height: 40px;
-      margin-bottom: -1px;
       border-bottom: solid 3px transparent;
       padding: 0 ${size.pxToRem(size.space.S)};
       box-sizing: border-box;
