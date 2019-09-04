@@ -10,15 +10,10 @@ interface Props {
 
 type MergedProps = Props & InjectedProps
 
-const TabBarComponent: React.FC<MergedProps> = ({
-  className = '',
-  bordered = true,
-  children,
-  ...props
-}) => {
+const TabBarComponent: React.FC<MergedProps> = ({ className = '', bordered = true, children }) => {
   const classNames = `${className} ${bordered ? 'bordered' : ''}`
   return (
-    <Wrapper role="tablist" className={classNames} {...props}>
+    <Wrapper role="tablist" className={classNames}>
       {children}
     </Wrapper>
   )

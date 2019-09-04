@@ -22,7 +22,6 @@ const TabComponent: React.FC<MergedProps> = ({
   theme,
   selected = false,
   className = '',
-  ...props
 }) => {
   const classNames = `${className} ${selected ? 'selected' : ''}`
 
@@ -37,7 +36,6 @@ const TabComponent: React.FC<MergedProps> = ({
       className={classNames}
       onClick={handleClick}
       theme={theme}
-      {...props}
     >
       {label}
     </Wrapper>
