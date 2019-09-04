@@ -13,21 +13,21 @@ const injectStyle = <T extends {}>(component: React.FC<T & InjectedProps>) => st
     return css`
       color: #fff;
       border: none;
-      background-color: ${palette.MAIN};
+      background-color: ${palette.DANGER};
       color: #fff;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
       &.hover {
-        background-color: ${palette.hoverColor(palette.MAIN)};
+        background-color: ${palette.hoverColor(palette.DANGER)};
       }
 
       &[disabled] {
-        background-color: ${palette.disableColor(palette.MAIN)};
+        background-color: ${palette.disableColor(palette.DANGER)};
         color: ${palette.disableColor('#fff')};
       }
     `
   }}
 `
 
-export const PrimaryButton = withTheme(injectStyle<ButtonProps>(BaseButton))
-export const PrimaryButtonAnchor = withTheme(injectStyle<AnchorProps>(BaseButtonAnchor))
+export const DangerButton = withTheme(injectStyle<ButtonProps>(BaseButton))
+export const DangerButtonAnchor = withTheme(injectStyle<AnchorProps>(BaseButtonAnchor))

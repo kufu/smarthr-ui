@@ -11,7 +11,7 @@ import { Cell } from './Cell'
 import { action } from '@storybook/addon-actions'
 import { Icon } from '../Icon'
 import { Checkbox as CheckboxComponent } from '../Checkbox'
-import { Button } from '../Button'
+import { SecondaryButton as Button } from '../Button'
 import { Base } from '../Base'
 
 import readme from './README.md'
@@ -82,9 +82,7 @@ storiesOf('Table', module)
                   <Cell>{carbs}</Cell>
                   <Cell>{protein}</Cell>
                   <Cell>
-                    <Button type="sub-b" size="s">
-                      Button
-                    </Button>
+                    <Button size="s">Button</Button>
                   </Cell>
                 </Row>
               )

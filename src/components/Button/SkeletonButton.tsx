@@ -8,26 +8,25 @@ import { isTouchDevice } from '../../libs/ua'
 
 const injectStyle = <T extends {}>(component: React.FC<T & InjectedProps>) => styled(component)`
   ${({ theme }: InjectedProps) => {
-    const { palette, interaction } = theme
+    const { palette, interaction, frame } = theme
 
     return css`
-      color: #fff;
-      border: none;
-      background-color: ${palette.MAIN};
+      background-color: transparent;
       color: #fff;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+      border: ${frame.border.lineWidth} ${frame.border.lineStyle} #fff;
 
       &.hover {
-        background-color: ${palette.hoverColor(palette.MAIN)};
+        background-color: ${palette.OVERLAY};
       }
 
       &[disabled] {
-        background-color: ${palette.disableColor(palette.MAIN)};
+        background-color: transparent;
         color: ${palette.disableColor('#fff')};
       }
     `
   }}
 `
 
-export const PrimaryButton = withTheme(injectStyle<ButtonProps>(BaseButton))
-export const PrimaryButtonAnchor = withTheme(injectStyle<AnchorProps>(BaseButtonAnchor))
+export const SkeletonButton = withTheme(injectStyle<ButtonProps>(BaseButton))
+export const SkeletonButtonAnchor = withTheme(injectStyle<AnchorProps>(BaseButtonAnchor))
