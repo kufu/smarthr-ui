@@ -1,12 +1,12 @@
 # TabBar
 
 ```tsx
-import { TabBar, Tab } from 'smarthr-ui'
+import { TabBar, TabItem } from 'smarthr-ui'
 
 <TabBar>
-  <Tab label="Tab" id="1" onClick={action('clicked')} />
-  <Tab label="Selected" id="2" onClick={action('clicked')} selected />
-  <Tab label="Disabled" id="3" onClick={action('clicked')} disabled />
+  <TabItem label="Tab" id="1" onClick={action('clicked')} />
+  <TabItem label="Selected" id="2" onClick={action('clicked')} selected />
+  <TabItem label="Disabled" id="3" onClick={action('clicked')} disabled />
 </TabBar>
 ```
 
@@ -19,7 +19,7 @@ import { TabBar, Tab } from 'smarthr-ui'
 | bordered  | -        | **boolean** | true         | If true, display border on bottom of TabBar. |
 | className | -        | **string**  | -            | `className` for component.                   |
 
-### Tab
+### TabItem
 
 | Name      | Required | Type        | DefaultValue | Description                                                                                                                 |
 | --------- | -------- | ----------- | ------------ | --------------------------------------------------------------------------------------------------------------------------- |
