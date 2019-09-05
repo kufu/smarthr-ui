@@ -31,6 +31,7 @@ const Wrapper = styled.div`
     const { frame } = theme
     return css`
       display: flex;
+      background-color: #fff;
 
       &.bordered {
         position: relative;
