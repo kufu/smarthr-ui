@@ -19,9 +19,10 @@ const TabItemComponent: React.FC<MergedProps> = ({
   id,
   label,
   onClick,
+  theme,
   selected = false,
   className = '',
-  ...props
+  disabled = false,
 }) => {
   const classNames = `${className} ${selected ? 'selected' : ''}`
 
@@ -35,7 +36,8 @@ const TabItemComponent: React.FC<MergedProps> = ({
       aria-selected={selected}
       className={classNames}
       onClick={handleClick}
-      {...props}
+      theme={theme}
+      disabled={disabled}
     >
       {label}
     </Wrapper>
