@@ -33,7 +33,7 @@ const Description = styled.div`
     return css`
       margin-top: ${theme.size.pxToRem(theme.size.space.XS)};
       color: ${theme.palette.TEXT_BLACK};
-      font-size: ${theme.size.font.TALL};
+      font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
       line-height: 1.5;
     `
   }}
