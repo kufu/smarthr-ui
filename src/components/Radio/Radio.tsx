@@ -23,6 +23,7 @@ class RadioComponent extends React.PureComponent<Props & InjectedProps> {
           checked={checked}
           name={name}
           disabled={disabled}
+          theme={theme}
           onChange={this.handleChange}
         />
         <Box className={classNames} theme={theme} />
@@ -103,20 +104,25 @@ const Box = styled.span`
   }}
 `
 const Input = styled.input`
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  cursor: pointer;
+  ${({ theme }: InjectedProps) => {
+    const { palette } = theme
+    return css`
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      cursor: pointer;
 
-  &[disabled] {
-    pointer-events: none;
-  }
+      &[disabled] {
+        pointer-events: none;
+      }
 
-  &:focus + span {
-    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.85); /* FIXME focus style */
-  }
+      &:focus + span {
+        box-shadow: 0 0 0 2px ${palette.Outline};
+      }
+    `
+  }}
 `
