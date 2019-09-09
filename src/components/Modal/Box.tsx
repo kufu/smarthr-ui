@@ -5,11 +5,11 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 interface Props {
   active: boolean
+  onClickBackground?: () => void
   top?: number
   right?: number
   bottom?: number
   left?: number
-  hideModal?: () => void
   children?: React.ReactNode
 }
 
@@ -20,11 +20,11 @@ interface MergedStyledProps extends InjectedProps {
   left?: number
 }
 
-const BoxComponent: React.FC<Props> = ({ active, children, hideModal, ...props }) => (
+const BoxComponent: React.FC<Props> = ({ active, children, onClickBackground, ...props }) => (
   <Wrapper className={active ? 'active' : ''} {...props}>
     {active ? (
       <React.Fragment>
-        <Background {...props} onClick={hideModal} />
+        <Background {...props} onClick={onClickBackground} />
         <Inner {...props}>{children}</Inner>
         {/* Suppresses scrolling of body while modal is displayed */}
         <ScrollSuppressing />
