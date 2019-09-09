@@ -28,6 +28,7 @@ export { Icon } from './components/Icon'
 export { Table, Head, Row, Cell, Body } from './components/Table'
 export { AppNavi } from './components/AppNavi'
 export { TabBar, TabItem } from './components/TabBar'
+export { BlankImage } from './components/Image'
 export { Heading } from './components/Heading'
 export { HeadlineArea } from './components/HeadlineArea'
 
