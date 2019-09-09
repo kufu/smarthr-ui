@@ -11049,20 +11049,20 @@ reg-publish-s3-plugin@^0.7.22:
     reg-suit-util "^0.7.23"
     uuid "^3.1.0"
 
-reg-suit-core@^0.7.23:
-  version "0.7.23"
-  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.7.23.tgz#43657b1b4c4b3c9e9c0c047de2eabe0cd4779dbc"
-  integrity sha512-kaT4WO0WcKJFFJUECjXXbk41kFbn0gQH+O0cWN1VgZ4zQ7MceOzf3+PWe9U/tDhT1LfhmZqbnLvVYzIt0q94YQ==
+reg-suit-core@^0.7.25:
+  version "0.7.25"
+  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.7.25.tgz#0f34454a67b2a1ac9be5c922267b2c791e5110a3"
+  integrity sha512-ZvScOny/H7bfajuFHvYrJwZBAufBN0ss/5jbUETHWaUN/ETPmPGTlS/GQ8bg78fWg/vN7wn2dNY/jN6TVeNMgw==
   dependencies:
     cpx "^1.5.0"
     reg-cli "^0.13.0"
-    reg-suit-util "^0.7.23"
+    reg-suit-util "^0.7.25"
     rimraf "^2.6.1"
 
-reg-suit-util@^0.7.23:
-  version "0.7.23"
-  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.7.23.tgz#60e967dcc3e624f2a8120c1bded80c79d11a769c"
-  integrity sha512-Mommv8XYEV/uf4+eUhNOySDu89yJ8DW0Cv0TVTSznOjoJadvY5dgP3XtnBRpm4zjyIgW6auUgmIB71STt7VT+A==
+reg-suit-util@^0.7.23, reg-suit-util@^0.7.25:
+  version "0.7.25"
+  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.7.25.tgz#92c753160cfdcd22f86e31fa1e69cae9637f5a63"
+  integrity sha512-ALkvQ78EzIzCujPQpn8cCVBRLpe73EQAyPp5RDclk0PBBFO4M72qIUP2/WCBnJozLYD5PPhWLYHdE9/wssIqqg==
   dependencies:
     chalk "^2.0.1"
     cli-progress "^1.4.1"
@@ -11073,15 +11073,15 @@ reg-suit-util@^0.7.23:
     mkdirp "^0.5.1"
 
 reg-suit@^0.7.17:
-  version "0.7.23"
-  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.7.23.tgz#049d140b2fda393f302c861714cba08696caf9b7"
-  integrity sha512-XxhZhVfDRuOu1zePR5OKUsYsZyBEWk7P9YDuYkRs9cuWAEyPpCkGB79L5HXziRbgGXszvcnafFm3CDL0C5QxdA==
+  version "0.7.25"
+  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.7.25.tgz#26ba546393d5dad8adccab9c152ba497cee990ac"
+  integrity sha512-yd4A0iQmnqUHK3fEpwmJgVigov5GESgCYRYs2hgxmUzsmel5rHX+d1raG8LZo2O4D+J0fyD/Gub7tsMElXyVfQ==
   dependencies:
     cp-file "^4.2.0"
     ignore "^3.3.7"
     inquirer "^3.1.1"
-    reg-suit-core "^0.7.23"
-    reg-suit-util "^0.7.23"
+    reg-suit-core "^0.7.25"
+    reg-suit-util "^0.7.25"
     yargs "^8.0.2"
 
 regenerate-unicode-properties@^8.0.2:
@@ -11559,14 +11559,6 @@ sax@>=0.6.0, sax@^1.2.4, sax@~1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
-
-scheduler@^0.13.6:
-  version "0.13.6"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.13.6.tgz#466a4ec332467b31a91b9bf74e5347072e4cd889"
-  integrity sha512-IWnObHt413ucAYKsD9J1QShUKkbKLQQHdxRyw73sw4FN26iWr3DY/H34xGPe4nmL1DwXyWmSWmMrA9TfQbE/XQ==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 scheduler@^0.15.0:
   version "0.15.0"
