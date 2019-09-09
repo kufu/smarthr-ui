@@ -36,6 +36,7 @@ exports[`Checkbox should be match snapshot 1`] = `
           "Column": "#f9f9f9",
           "Danger": "#ef475b",
           "Main": "#00a5ab",
+          "Outline": "rgba(0,165,171,0.5)",
           "Overlay": "rgba(0,0,0,0.15)",
           "Scrim": "rgba(0,0,0,0.5)",
           "TextBlack": "#333",
@@ -99,6 +100,7 @@ exports[`Checkbox should be match snapshot 1`] = `
             "Column": "#f9f9f9",
             "Danger": "#ef475b",
             "Main": "#00a5ab",
+            "Outline": "rgba(0,165,171,0.5)",
             "Overlay": "rgba(0,0,0,0.15)",
             "Scrim": "rgba(0,0,0,0.5)",
             "TextBlack": "#333",
@@ -193,6 +195,7 @@ exports[`Checkbox should be match snapshot 1`] = `
               "Column": "#f9f9f9",
               "Danger": "#ef475b",
               "Main": "#00a5ab",
+              "Outline": "rgba(0,165,171,0.5)",
               "Overlay": "rgba(0,0,0,0.15)",
               "Scrim": "rgba(0,0,0,0.5)",
               "TextBlack": "#333",
@@ -235,6 +238,68 @@ exports[`Checkbox should be match snapshot 1`] = `
             disabled={false}
             name="sample"
             onChange={[Function]}
+            theme={
+              Object {
+                "frame": Object {
+                  "border": Object {
+                    "default": "1px solid #d6d6d6",
+                    "lineStyle": "solid",
+                    "lineWidth": "1px",
+                    "radius": Object {
+                      "l": "8px",
+                      "m": "6px",
+                      "s": "3px",
+                    },
+                  },
+                },
+                "interaction": Object {
+                  "hover": Object {
+                    "animation": ".3s ease-out",
+                    "animationDuration": ".3s",
+                    "animationTiming": "ease-out",
+                    "feedbackOpacity": ".7",
+                  },
+                },
+                "palette": Object {
+                  "Background": "#f5f6fa",
+                  "Border": "#d6d6d6",
+                  "Column": "#f9f9f9",
+                  "Danger": "#ef475b",
+                  "Main": "#00a5ab",
+                  "Outline": "rgba(0,165,171,0.5)",
+                  "Overlay": "rgba(0,0,0,0.15)",
+                  "Scrim": "rgba(0,0,0,0.5)",
+                  "TextBlack": "#333",
+                  "TextGrey": "#767676",
+                  "Warning": "#ff8800",
+                  "hoverColor": [Function],
+                },
+                "size": Object {
+                  "font": Object {
+                    "grande": 16,
+                    "short": 13,
+                    "tall": 14,
+                    "tasting": 12,
+                    "trenta": 22,
+                    "venti": 20,
+                  },
+                  "mediaQuery": Object {
+                    "sp": 599,
+                    "tablet": 959,
+                  },
+                  "pxToRem": [Function],
+                  "space": Object {
+                    "l": 40,
+                    "m": 32,
+                    "s": 24,
+                    "xl": 48,
+                    "xs": 16,
+                    "xxl": 56,
+                    "xxs": 8,
+                  },
+                },
+              }
+            }
             type="checkbox"
           >
             <StyledComponent
@@ -246,26 +311,13 @@ exports[`Checkbox should be match snapshot 1`] = `
                   "attrs": Array [],
                   "componentStyle": ComponentStyle {
                     "componentId": "sc-htpNat",
-                    "isStatic": true,
-                    "lastClassName": "lcvBdy",
+                    "isStatic": false,
+                    "lastClassName": "jPKSoQ",
                     "rules": Array [
                       "
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  cursor: pointer;
-
-  &[disabled] {
-    pointer-events: none;
-  }
-
-  &:focus + span {
-    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.85); /* FIXME focus style */
-  }
+  ",
+                      [Function],
+                      "
 ",
                     ],
                   },
@@ -282,11 +334,73 @@ exports[`Checkbox should be match snapshot 1`] = `
               forwardedRef={null}
               name="sample"
               onChange={[Function]}
+              theme={
+                Object {
+                  "frame": Object {
+                    "border": Object {
+                      "default": "1px solid #d6d6d6",
+                      "lineStyle": "solid",
+                      "lineWidth": "1px",
+                      "radius": Object {
+                        "l": "8px",
+                        "m": "6px",
+                        "s": "3px",
+                      },
+                    },
+                  },
+                  "interaction": Object {
+                    "hover": Object {
+                      "animation": ".3s ease-out",
+                      "animationDuration": ".3s",
+                      "animationTiming": "ease-out",
+                      "feedbackOpacity": ".7",
+                    },
+                  },
+                  "palette": Object {
+                    "Background": "#f5f6fa",
+                    "Border": "#d6d6d6",
+                    "Column": "#f9f9f9",
+                    "Danger": "#ef475b",
+                    "Main": "#00a5ab",
+                    "Outline": "rgba(0,165,171,0.5)",
+                    "Overlay": "rgba(0,0,0,0.15)",
+                    "Scrim": "rgba(0,0,0,0.5)",
+                    "TextBlack": "#333",
+                    "TextGrey": "#767676",
+                    "Warning": "#ff8800",
+                    "hoverColor": [Function],
+                  },
+                  "size": Object {
+                    "font": Object {
+                      "grande": 16,
+                      "short": 13,
+                      "tall": 14,
+                      "tasting": 12,
+                      "trenta": 22,
+                      "venti": 20,
+                    },
+                    "mediaQuery": Object {
+                      "sp": 599,
+                      "tablet": 959,
+                    },
+                    "pxToRem": [Function],
+                    "space": Object {
+                      "l": 40,
+                      "m": 32,
+                      "s": 24,
+                      "xl": 48,
+                      "xs": 16,
+                      "xxl": 56,
+                      "xxs": 8,
+                    },
+                  },
+                }
+              }
               type="checkbox"
             >
               <input
                 checked={true}
-                className="sc-htpNat lcvBdy"
+                className="sc-htpNat jPKSoQ"
                 disabled={false}
                 name="sample"
                 onChange={[Function]}
@@ -324,6 +438,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                   "Column": "#f9f9f9",
                   "Danger": "#ef475b",
                   "Main": "#00a5ab",
+                  "Outline": "rgba(0,165,171,0.5)",
                   "Overlay": "rgba(0,0,0,0.15)",
                   "Scrim": "rgba(0,0,0,0.5)",
                   "TextBlack": "#333",
@@ -415,6 +530,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                     "Column": "#f9f9f9",
                     "Danger": "#ef475b",
                     "Main": "#00a5ab",
+                    "Outline": "rgba(0,165,171,0.5)",
                     "Overlay": "rgba(0,0,0,0.15)",
                     "Scrim": "rgba(0,0,0,0.5)",
                     "TextBlack": "#333",
@@ -538,6 +654,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                             "Column": "#f9f9f9",
                             "Danger": "#ef475b",
                             "Main": "#00a5ab",
+                            "Outline": "rgba(0,165,171,0.5)",
                             "Overlay": "rgba(0,0,0,0.15)",
                             "Scrim": "rgba(0,0,0,0.5)",
                             "TextBlack": "#333",
