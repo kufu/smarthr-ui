@@ -11028,13 +11028,13 @@ reg-keygen-git-hash-plugin@^0.7.16:
     reg-suit-util "^0.7.23"
 
 reg-notify-github-plugin@^0.7.21:
-  version "0.7.24"
-  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.7.24.tgz#743435d360df1c14514a899dac2f2beafa8e386d"
-  integrity sha512-scuaeKPoxgWFTsxxQU+tOYAaIAZAhSDr0hlxPEIhQBLFMFKvBGr0nUjzZMHOUexLJYpEA/zFELd7Cv3/9ugGVA==
+  version "0.7.25"
+  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.7.25.tgz#263922918feeed27de570dd08f61fa339c50f787"
+  integrity sha512-9F8Vhcglnf6UNS1a/IuZ5+zDH9EsXobTVNEhpfmU9ySRO9Tg/OfbNC1QVwzXhxWsy7/b7ERokJUpaWYui0H2Bw==
   dependencies:
     opn "^5.4.0"
     reg-gh-app-interface "^1.0.1"
-    reg-suit-util "^0.7.23"
+    reg-suit-util "^0.7.25"
     request "^2.81.0"
     request-promise "^4.2.1"
     tiny-commit-walker "^1.1.2"
@@ -11059,10 +11059,10 @@ reg-suit-core@^0.7.23:
     reg-suit-util "^0.7.23"
     rimraf "^2.6.1"
 
-reg-suit-util@^0.7.23:
-  version "0.7.23"
-  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.7.23.tgz#60e967dcc3e624f2a8120c1bded80c79d11a769c"
-  integrity sha512-Mommv8XYEV/uf4+eUhNOySDu89yJ8DW0Cv0TVTSznOjoJadvY5dgP3XtnBRpm4zjyIgW6auUgmIB71STt7VT+A==
+reg-suit-util@^0.7.23, reg-suit-util@^0.7.25:
+  version "0.7.25"
+  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.7.25.tgz#92c753160cfdcd22f86e31fa1e69cae9637f5a63"
+  integrity sha512-ALkvQ78EzIzCujPQpn8cCVBRLpe73EQAyPp5RDclk0PBBFO4M72qIUP2/WCBnJozLYD5PPhWLYHdE9/wssIqqg==
   dependencies:
     chalk "^2.0.1"
     cli-progress "^1.4.1"
@@ -11559,14 +11559,6 @@ sax@>=0.6.0, sax@^1.2.4, sax@~1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
-
-scheduler@^0.13.6:
-  version "0.13.6"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.13.6.tgz#466a4ec332467b31a91b9bf74e5347072e4cd889"
-  integrity sha512-IWnObHt413ucAYKsD9J1QShUKkbKLQQHdxRyw73sw4FN26iWr3DY/H34xGPe4nmL1DwXyWmSWmMrA9TfQbE/XQ==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 scheduler@^0.15.0:
   version "0.15.0"
