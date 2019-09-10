@@ -17,14 +17,16 @@ class RadioComponent extends React.PureComponent<Props & InjectedProps> {
     const classNames = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
 
     return (
-      <Wrapper className={classNames} theme={theme}>
+      <Wrapper>
         <Input
           type="radio"
           checked={checked}
           name={name}
           disabled={disabled}
+          theme={theme}
           onChange={this.handleChange}
         />
+        <Box className={classNames} theme={theme} />
       </Wrapper>
     )
   }
@@ -38,18 +40,22 @@ class RadioComponent extends React.PureComponent<Props & InjectedProps> {
 export const Radio = withTheme(RadioComponent)
 
 const Wrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 1;
+`
+const Box = styled.span`
   ${({ theme }: InjectedProps) => {
     const { frame, palette } = theme
-
     return css`
-      position: relative;
       display: inline-block;
-      width: 20px;
-      height: 20px;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
       border: ${frame.border.default};
       background-color: #fff;
-      line-height: 1;
       box-sizing: border-box;
 
       &.active {
@@ -66,6 +72,7 @@ const Wrapper = styled.div`
           background-color: #fff;
           transform: translate(-50%, -50%);
           content: '';
+          pointer-events: none;
         }
       }
 
@@ -97,16 +104,25 @@ const Wrapper = styled.div`
   }}
 `
 const Input = styled.input`
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  cursor: pointer;
+  ${({ theme }: InjectedProps) => {
+    const { palette } = theme
+    return css`
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      cursor: pointer;
 
-  &[disabled] {
-    pointer-events: none;
-  }
+      &[disabled] {
+        pointer-events: none;
+      }
+
+      &:focus + span {
+        box-shadow: 0 0 0 2px ${palette.OUTLINE};
+      }
+    `
+  }}
 `

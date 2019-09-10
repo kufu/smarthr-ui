@@ -30,7 +30,16 @@ class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
     `
 
     return (
-      <Wrapper className={classNames} theme={theme}>
+      <Wrapper theme={theme}>
+        <Input
+          type="checkbox"
+          checked={checked}
+          name={name}
+          disabled={disabled}
+          theme={theme}
+          onChange={this.handleChange}
+        />
+        <Box className={classNames} theme={theme} />
         {checked && (
           <IconWrap>
             <Icon
@@ -40,13 +49,6 @@ class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
             />
           </IconWrap>
         )}
-        <Input
-          type="checkbox"
-          checked={checked}
-          name={name}
-          disabled={disabled}
-          onChange={this.handleChange}
-        />
       </Wrapper>
     )
   }
@@ -60,20 +62,27 @@ class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
 export const Checkbox = withTheme(CheckboxComponent)
 
 const Wrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  line-height: 1;
+  box-sizing: border-box;
+`
+
+const Box = styled.span`
   ${({ theme }: InjectedProps) => {
     const { frame, palette } = theme
-
     return css`
-      position: relative;
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
+      position: absolute;
+      width: 100%;
+      height: 100%;
       border-radius: ${frame.border.radius.s};
       border: ${frame.border.default};
       background-color: #fff;
-      line-height: 1;
       box-sizing: border-box;
+      pointer-events: none;
 
       &.active {
         border-color: ${palette.MAIN};
@@ -100,19 +109,29 @@ const Wrapper = styled.div`
   }}
 `
 const Input = styled.input`
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  cursor: pointer;
+  ${({ theme }: InjectedProps) => {
+    const { palette } = theme
+    return css`
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      cursor: pointer;
 
-  &[disabled] {
-    pointer-events: none;
-  }
+      &[disabled] {
+        pointer-events: none;
+      }
+
+      &:focus + span {
+        box-shadow: 0 0 0 2px ${palette.OUTLINE};
+      }
+    `
+  }}
 `
+
 const IconWrap = styled.span`
   position: absolute;
   top: 50%;
@@ -121,6 +140,7 @@ const IconWrap = styled.span`
   width: 12px;
   height: 12px;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 
   & > svg {
     vertical-align: top;
