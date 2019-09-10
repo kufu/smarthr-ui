@@ -36,6 +36,7 @@ exports[`Checkbox should be match snapshot 1`] = `
           "Column": "#f9f9f9",
           "Danger": "#ef475b",
           "Main": "#00a5ab",
+          "Outline": "rgba(0,165,171,0.5)",
           "Overlay": "rgba(0,0,0,0.15)",
           "Scrim": "rgba(0,0,0,0.5)",
           "TextBlack": "#333",
@@ -71,7 +72,6 @@ exports[`Checkbox should be match snapshot 1`] = `
     }
   >
     <styled.div
-      className="active  light"
       theme={
         Object {
           "frame": Object {
@@ -100,6 +100,7 @@ exports[`Checkbox should be match snapshot 1`] = `
             "Column": "#f9f9f9",
             "Danger": "#ef475b",
             "Main": "#00a5ab",
+            "Outline": "rgba(0,165,171,0.5)",
             "Overlay": "rgba(0,0,0,0.15)",
             "Scrim": "rgba(0,0,0,0.5)",
             "TextBlack": "#333",
@@ -135,20 +136,23 @@ exports[`Checkbox should be match snapshot 1`] = `
       }
     >
       <StyledComponent
-        className="active  light"
         forwardedComponent={
           Object {
             "$$typeof": Symbol(react.forward_ref),
             "attrs": Array [],
             "componentStyle": ComponentStyle {
               "componentId": "sc-bdVaJa",
-              "isStatic": false,
-              "lastClassName": "kPctVz",
+              "isStatic": true,
+              "lastClassName": "hObIwy",
               "rules": Array [
                 "
-  ",
-                [Function],
-                "
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  line-height: 1;
+  box-sizing: border-box;
 ",
               ],
             },
@@ -191,6 +195,7 @@ exports[`Checkbox should be match snapshot 1`] = `
               "Column": "#f9f9f9",
               "Danger": "#ef475b",
               "Main": "#00a5ab",
+              "Outline": "rgba(0,165,171,0.5)",
               "Overlay": "rgba(0,0,0,0.15)",
               "Scrim": "rgba(0,0,0,0.5)",
               "TextBlack": "#333",
@@ -226,8 +231,345 @@ exports[`Checkbox should be match snapshot 1`] = `
         }
       >
         <div
-          className="active  light sc-bdVaJa kPctVz"
+          className="sc-bdVaJa hObIwy"
         >
+          <styled.input
+            checked={true}
+            disabled={false}
+            name="sample"
+            onChange={[Function]}
+            theme={
+              Object {
+                "frame": Object {
+                  "border": Object {
+                    "default": "1px solid #d6d6d6",
+                    "lineStyle": "solid",
+                    "lineWidth": "1px",
+                    "radius": Object {
+                      "l": "8px",
+                      "m": "6px",
+                      "s": "3px",
+                    },
+                  },
+                },
+                "interaction": Object {
+                  "hover": Object {
+                    "animation": ".3s ease-out",
+                    "animationDuration": ".3s",
+                    "animationTiming": "ease-out",
+                    "feedbackOpacity": ".7",
+                  },
+                },
+                "palette": Object {
+                  "Background": "#f5f6fa",
+                  "Border": "#d6d6d6",
+                  "Column": "#f9f9f9",
+                  "Danger": "#ef475b",
+                  "Main": "#00a5ab",
+                  "Outline": "rgba(0,165,171,0.5)",
+                  "Overlay": "rgba(0,0,0,0.15)",
+                  "Scrim": "rgba(0,0,0,0.5)",
+                  "TextBlack": "#333",
+                  "TextGrey": "#767676",
+                  "Warning": "#ff8800",
+                  "hoverColor": [Function],
+                },
+                "size": Object {
+                  "font": Object {
+                    "grande": 16,
+                    "short": 13,
+                    "tall": 14,
+                    "tasting": 12,
+                    "trenta": 22,
+                    "venti": 20,
+                  },
+                  "mediaQuery": Object {
+                    "sp": 599,
+                    "tablet": 959,
+                  },
+                  "pxToRem": [Function],
+                  "space": Object {
+                    "l": 40,
+                    "m": 32,
+                    "s": 24,
+                    "xl": 48,
+                    "xs": 16,
+                    "xxl": 56,
+                    "xxs": 8,
+                  },
+                },
+              }
+            }
+            type="checkbox"
+          >
+            <StyledComponent
+              checked={true}
+              disabled={false}
+              forwardedComponent={
+                Object {
+                  "$$typeof": Symbol(react.forward_ref),
+                  "attrs": Array [],
+                  "componentStyle": ComponentStyle {
+                    "componentId": "sc-htpNat",
+                    "isStatic": false,
+                    "lastClassName": "jPKSoQ",
+                    "rules": Array [
+                      "
+  ",
+                      [Function],
+                      "
+",
+                    ],
+                  },
+                  "displayName": "styled.input",
+                  "foldedComponentIds": Array [],
+                  "render": [Function],
+                  "styledComponentId": "sc-htpNat",
+                  "target": "input",
+                  "toString": [Function],
+                  "warnTooManyClasses": [Function],
+                  "withComponent": [Function],
+                }
+              }
+              forwardedRef={null}
+              name="sample"
+              onChange={[Function]}
+              theme={
+                Object {
+                  "frame": Object {
+                    "border": Object {
+                      "default": "1px solid #d6d6d6",
+                      "lineStyle": "solid",
+                      "lineWidth": "1px",
+                      "radius": Object {
+                        "l": "8px",
+                        "m": "6px",
+                        "s": "3px",
+                      },
+                    },
+                  },
+                  "interaction": Object {
+                    "hover": Object {
+                      "animation": ".3s ease-out",
+                      "animationDuration": ".3s",
+                      "animationTiming": "ease-out",
+                      "feedbackOpacity": ".7",
+                    },
+                  },
+                  "palette": Object {
+                    "Background": "#f5f6fa",
+                    "Border": "#d6d6d6",
+                    "Column": "#f9f9f9",
+                    "Danger": "#ef475b",
+                    "Main": "#00a5ab",
+                    "Outline": "rgba(0,165,171,0.5)",
+                    "Overlay": "rgba(0,0,0,0.15)",
+                    "Scrim": "rgba(0,0,0,0.5)",
+                    "TextBlack": "#333",
+                    "TextGrey": "#767676",
+                    "Warning": "#ff8800",
+                    "hoverColor": [Function],
+                  },
+                  "size": Object {
+                    "font": Object {
+                      "grande": 16,
+                      "short": 13,
+                      "tall": 14,
+                      "tasting": 12,
+                      "trenta": 22,
+                      "venti": 20,
+                    },
+                    "mediaQuery": Object {
+                      "sp": 599,
+                      "tablet": 959,
+                    },
+                    "pxToRem": [Function],
+                    "space": Object {
+                      "l": 40,
+                      "m": 32,
+                      "s": 24,
+                      "xl": 48,
+                      "xs": 16,
+                      "xxl": 56,
+                      "xxs": 8,
+                    },
+                  },
+                }
+              }
+              type="checkbox"
+            >
+              <input
+                checked={true}
+                className="sc-htpNat jPKSoQ"
+                disabled={false}
+                name="sample"
+                onChange={[Function]}
+                type="checkbox"
+              />
+            </StyledComponent>
+          </styled.input>
+          <styled.span
+            className="active  light"
+            theme={
+              Object {
+                "frame": Object {
+                  "border": Object {
+                    "default": "1px solid #d6d6d6",
+                    "lineStyle": "solid",
+                    "lineWidth": "1px",
+                    "radius": Object {
+                      "l": "8px",
+                      "m": "6px",
+                      "s": "3px",
+                    },
+                  },
+                },
+                "interaction": Object {
+                  "hover": Object {
+                    "animation": ".3s ease-out",
+                    "animationDuration": ".3s",
+                    "animationTiming": "ease-out",
+                    "feedbackOpacity": ".7",
+                  },
+                },
+                "palette": Object {
+                  "Background": "#f5f6fa",
+                  "Border": "#d6d6d6",
+                  "Column": "#f9f9f9",
+                  "Danger": "#ef475b",
+                  "Main": "#00a5ab",
+                  "Outline": "rgba(0,165,171,0.5)",
+                  "Overlay": "rgba(0,0,0,0.15)",
+                  "Scrim": "rgba(0,0,0,0.5)",
+                  "TextBlack": "#333",
+                  "TextGrey": "#767676",
+                  "Warning": "#ff8800",
+                  "hoverColor": [Function],
+                },
+                "size": Object {
+                  "font": Object {
+                    "grande": 16,
+                    "short": 13,
+                    "tall": 14,
+                    "tasting": 12,
+                    "trenta": 22,
+                    "venti": 20,
+                  },
+                  "mediaQuery": Object {
+                    "sp": 599,
+                    "tablet": 959,
+                  },
+                  "pxToRem": [Function],
+                  "space": Object {
+                    "l": 40,
+                    "m": 32,
+                    "s": 24,
+                    "xl": 48,
+                    "xs": 16,
+                    "xxl": 56,
+                    "xxs": 8,
+                  },
+                },
+              }
+            }
+          >
+            <StyledComponent
+              className="active  light"
+              forwardedComponent={
+                Object {
+                  "$$typeof": Symbol(react.forward_ref),
+                  "attrs": Array [],
+                  "componentStyle": ComponentStyle {
+                    "componentId": "sc-bwzfXH",
+                    "isStatic": false,
+                    "lastClassName": "iJVVrz",
+                    "rules": Array [
+                      "
+  ",
+                      [Function],
+                      "
+",
+                    ],
+                  },
+                  "displayName": "styled.span",
+                  "foldedComponentIds": Array [],
+                  "render": [Function],
+                  "styledComponentId": "sc-bwzfXH",
+                  "target": "span",
+                  "toString": [Function],
+                  "warnTooManyClasses": [Function],
+                  "withComponent": [Function],
+                }
+              }
+              forwardedRef={null}
+              theme={
+                Object {
+                  "frame": Object {
+                    "border": Object {
+                      "default": "1px solid #d6d6d6",
+                      "lineStyle": "solid",
+                      "lineWidth": "1px",
+                      "radius": Object {
+                        "l": "8px",
+                        "m": "6px",
+                        "s": "3px",
+                      },
+                    },
+                  },
+                  "interaction": Object {
+                    "hover": Object {
+                      "animation": ".3s ease-out",
+                      "animationDuration": ".3s",
+                      "animationTiming": "ease-out",
+                      "feedbackOpacity": ".7",
+                    },
+                  },
+                  "palette": Object {
+                    "Background": "#f5f6fa",
+                    "Border": "#d6d6d6",
+                    "Column": "#f9f9f9",
+                    "Danger": "#ef475b",
+                    "Main": "#00a5ab",
+                    "Outline": "rgba(0,165,171,0.5)",
+                    "Overlay": "rgba(0,0,0,0.15)",
+                    "Scrim": "rgba(0,0,0,0.5)",
+                    "TextBlack": "#333",
+                    "TextGrey": "#767676",
+                    "Warning": "#ff8800",
+                    "hoverColor": [Function],
+                  },
+                  "size": Object {
+                    "font": Object {
+                      "grande": 16,
+                      "short": 13,
+                      "tall": 14,
+                      "tasting": 12,
+                      "trenta": 22,
+                      "venti": 20,
+                    },
+                    "mediaQuery": Object {
+                      "sp": 599,
+                      "tablet": 959,
+                    },
+                    "pxToRem": [Function],
+                    "space": Object {
+                      "l": 40,
+                      "m": 32,
+                      "s": 24,
+                      "xl": 48,
+                      "xs": 16,
+                      "xxl": 56,
+                      "xxs": 8,
+                    },
+                  },
+                }
+              }
+            >
+              <span
+                className="active  light sc-bwzfXH iJVVrz"
+              />
+            </StyledComponent>
+          </styled.span>
           <styled.span>
             <StyledComponent
               forwardedComponent={
@@ -235,9 +577,9 @@ exports[`Checkbox should be match snapshot 1`] = `
                   "$$typeof": Symbol(react.forward_ref),
                   "attrs": Array [],
                   "componentStyle": ComponentStyle {
-                    "componentId": "sc-htpNat",
+                    "componentId": "sc-bxivhb",
                     "isStatic": true,
-                    "lastClassName": "oRUBv",
+                    "lastClassName": "gDnquz",
                     "rules": Array [
                       "
   position: absolute;
@@ -247,6 +589,7 @@ exports[`Checkbox should be match snapshot 1`] = `
   width: 12px;
   height: 12px;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 
   & > svg {
     vertical-align: top;
@@ -257,7 +600,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                   "displayName": "styled.span",
                   "foldedComponentIds": Array [],
                   "render": [Function],
-                  "styledComponentId": "sc-htpNat",
+                  "styledComponentId": "sc-bxivhb",
                   "target": "span",
                   "toString": [Function],
                   "warnTooManyClasses": [Function],
@@ -267,7 +610,7 @@ exports[`Checkbox should be match snapshot 1`] = `
               forwardedRef={null}
             >
               <span
-                className="sc-htpNat oRUBv"
+                className="sc-bxivhb gDnquz"
               >
                 <Component
                   fill="#fff"
@@ -311,6 +654,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                             "Column": "#f9f9f9",
                             "Danger": "#ef475b",
                             "Main": "#00a5ab",
+                            "Outline": "rgba(0,165,171,0.5)",
                             "Overlay": "rgba(0,0,0,0.15)",
                             "Scrim": "rgba(0,0,0,0.5)",
                             "TextBlack": "#333",
@@ -374,66 +718,6 @@ exports[`Checkbox should be match snapshot 1`] = `
               </span>
             </StyledComponent>
           </styled.span>
-          <styled.input
-            checked={true}
-            disabled={false}
-            name="sample"
-            onChange={[Function]}
-            type="checkbox"
-          >
-            <StyledComponent
-              checked={true}
-              disabled={false}
-              forwardedComponent={
-                Object {
-                  "$$typeof": Symbol(react.forward_ref),
-                  "attrs": Array [],
-                  "componentStyle": ComponentStyle {
-                    "componentId": "sc-bwzfXH",
-                    "isStatic": true,
-                    "lastClassName": "dHqMOG",
-                    "rules": Array [
-                      "
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  cursor: pointer;
-
-  &[disabled] {
-    pointer-events: none;
-  }
-",
-                    ],
-                  },
-                  "displayName": "styled.input",
-                  "foldedComponentIds": Array [],
-                  "render": [Function],
-                  "styledComponentId": "sc-bwzfXH",
-                  "target": "input",
-                  "toString": [Function],
-                  "warnTooManyClasses": [Function],
-                  "withComponent": [Function],
-                }
-              }
-              forwardedRef={null}
-              name="sample"
-              onChange={[Function]}
-              type="checkbox"
-            >
-              <input
-                checked={true}
-                className="sc-bwzfXH dHqMOG"
-                disabled={false}
-                name="sample"
-                onChange={[Function]}
-                type="checkbox"
-              />
-            </StyledComponent>
-          </styled.input>
         </div>
       </StyledComponent>
     </styled.div>
