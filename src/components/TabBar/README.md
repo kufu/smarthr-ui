@@ -4,9 +4,9 @@
 import { TabBar, TabItem } from 'smarthr-ui'
 
 <TabBar>
-  <TabItem label="Tab" id="1" onClick={action('clicked')} />
-  <TabItem label="Selected" id="2" onClick={action('clicked')} selected />
-  <TabItem label="Disabled" id="3" onClick={action('clicked')} disabled />
+  <TabItem id="1" onClick={action('clicked')}>Tab</TabItem>
+  <TabItem id="2" onClick={action('clicked')} selected>Selected</TabItem>
+  <TabItem id="3" onClick={action('clicked')} disabled>Disabled</TabItem>
 </TabBar>
 ```
 
@@ -23,7 +23,7 @@ import { TabBar, TabItem } from 'smarthr-ui'
 
 | Name      | Required | Type        | DefaultValue | Description                                                                                                                 |
 | --------- | -------- | ----------- | ------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| label     | ✓        | **string**  | -            | Display label on Tab                                                                                                        |
+| children  | ✓        | **string**  | -            | Display children on Tab                                                                                                        |
 | id        | ✓        | **string**  | -            | Id for Tab                                                                                                                  |
 | selected  | -        | **boolean** | false        | If true, Tab changes to selected style.                                                                                     |
 | disabled  | -        | **boolean** | false        | If true, Tab changes to selected style, and not clickable.                                                                  |
