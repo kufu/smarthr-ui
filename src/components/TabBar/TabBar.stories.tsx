@@ -20,17 +20,29 @@ storiesOf('TabBar', module)
       <li>
         <p>Border</p>
         <TabBar>
-          <TabItem label="Tab" id="1" onClick={action('clicked')} />
-          <TabItem label="Selected" id="2" onClick={action('clicked')} selected />
-          <TabItem label="Disabled" id="3" onClick={action('clicked')} disabled />
+          <TabItem id="1" onClick={action('clicked')}>
+            Tab
+          </TabItem>
+          <TabItem id="2" onClick={action('clicked')} selected>
+            Selected
+          </TabItem>
+          <TabItem id="3" onClick={action('clicked')} disabled>
+            Disabled
+          </TabItem>
         </TabBar>
       </li>
       <li>
         <p>No border</p>
         <TabBar bordered={false}>
-          <TabItem label="Tab" id="1" onClick={action('clicked')} />
-          <TabItem label="Selected" id="2" onClick={action('clicked')} selected />
-          <TabItem label="Disabled" id="3" onClick={action('clicked')} disabled />
+          <TabItem id="1" onClick={action('clicked')}>
+            Tab
+          </TabItem>
+          <TabItem id="2" onClick={action('clicked')} selected>
+            Selected
+          </TabItem>
+          <TabItem id="3" onClick={action('clicked')} disabled>
+            Disabled
+          </TabItem>
         </TabBar>
       </li>
     </Ul>

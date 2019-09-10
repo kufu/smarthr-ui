@@ -6,7 +6,7 @@ import { isTouchDevice } from '../../libs/ua'
 
 export interface Props {
   id: string
-  label: string
+  children: string
   selected?: boolean
   disabled?: boolean
   className?: string
@@ -17,7 +17,7 @@ type MergedProps = Props & InjectedProps
 
 const TabItemComponent: React.FC<MergedProps> = ({
   id,
-  label,
+  children,
   onClick,
   theme,
   selected = false,
@@ -39,7 +39,7 @@ const TabItemComponent: React.FC<MergedProps> = ({
       theme={theme}
       disabled={disabled}
     >
-      {label}
+      {children}
     </Wrapper>
   )
 }
