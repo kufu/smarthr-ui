@@ -6,7 +6,7 @@ import { isTouchDevice } from '../../libs/ua'
 
 export interface Props {
   id: string
-  children: string
+  children: React.ReactNode
   selected?: boolean
   disabled?: boolean
   className?: string

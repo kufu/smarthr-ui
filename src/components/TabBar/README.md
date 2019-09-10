@@ -23,7 +23,7 @@ import { TabBar, TabItem } from 'smarthr-ui'
 
 | Name      | Required | Type        | DefaultValue | Description                                                                                                                 |
 | --------- | -------- | ----------- | ------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| children  | ✓        | **string**  | -            | Display children on Tab                                                                                                        |
+| children  | ✓        |  **node**   | -            | Display children on Tab                                                                                                        |
 | id        | ✓        | **string**  | -            | Id for Tab                                                                                                                  |
 | selected  | -        | **boolean** | false        | If true, Tab changes to selected style.                                                                                     |
 | disabled  | -        | **boolean** | false        | If true, Tab changes to selected style, and not clickable.                                                                  |
