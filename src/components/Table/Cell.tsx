@@ -62,6 +62,8 @@ const Th = styled.th`
       color: ${palette.TEXT_GREY};
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`}
       text-align: left;
+      line-height: 1.5;
+      vertical-align: middle;
 
       &.highlighted {
         background-color: ${palette.hoverColor(palette.COLUMN)};
@@ -87,6 +89,8 @@ const Td = styled.td`
       padding: ${size.pxToRem(size.space.XS)};
       border-top: ${frame.border.default};
       font-size: ${size.pxToRem(size.font.TALL)};
+      line-height: 1.5;
+      vertical-align: middle;
     `
   }};
 `
