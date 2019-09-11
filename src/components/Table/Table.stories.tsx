@@ -153,7 +153,11 @@ storiesOf('Table', module)
               <Row>
                 <Cell>cell</Cell>
                 <Cell>cell</Cell>
-                <Cell>cell</Cell>
+                <Cell>
+                  multi
+                  <br />
+                  line
+                </Cell>
               </Row>
             </Body>
           </Table>
