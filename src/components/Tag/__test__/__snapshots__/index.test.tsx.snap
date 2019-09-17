@@ -69,7 +69,7 @@ exports[`Tag should be match snapshot 1`] = `
     type="success"
   >
     <styled.span
-      className="success"
+      className="success "
       theme={
         Object {
           "frame": Object {
@@ -133,7 +133,7 @@ exports[`Tag should be match snapshot 1`] = `
       }
     >
       <StyledComponent
-        className="success"
+        className="success "
         forwardedComponent={
           Object {
             "$$typeof": Symbol(react.forward_ref),
@@ -224,7 +224,7 @@ exports[`Tag should be match snapshot 1`] = `
         }
       >
         <span
-          className="success sc-bdVaJa dNYNqM"
+          className="success  sc-bdVaJa dNYNqM"
         >
           hello
         </span>

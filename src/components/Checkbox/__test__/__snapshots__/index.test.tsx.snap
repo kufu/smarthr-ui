@@ -71,6 +71,7 @@ exports[`Checkbox should be match snapshot 1`] = `
     }
   >
     <styled.div
+      className=""
       theme={
         Object {
           "frame": Object {
@@ -134,6 +135,7 @@ exports[`Checkbox should be match snapshot 1`] = `
       }
     >
       <StyledComponent
+        className=""
         forwardedComponent={
           Object {
             "$$typeof": Symbol(react.forward_ref),
@@ -404,9 +406,7 @@ exports[`Checkbox should be match snapshot 1`] = `
             </StyledComponent>
           </styled.input>
           <styled.span
-            className="
-       active  light
-    "
+            className="active  light"
             theme={
               Object {
                 "frame": Object {
@@ -470,9 +470,7 @@ exports[`Checkbox should be match snapshot 1`] = `
             }
           >
             <StyledComponent
-              className="
-       active  light
-    "
+              className="active  light"
               forwardedComponent={
                 Object {
                   "$$typeof": Symbol(react.forward_ref),
@@ -563,9 +561,7 @@ exports[`Checkbox should be match snapshot 1`] = `
               }
             >
               <span
-                className="
-       active  light
-     sc-bwzfXH iJVVrz"
+                className="active  light sc-bwzfXH iJVVrz"
               />
             </StyledComponent>
           </styled.span>
@@ -617,6 +613,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                   size={12}
                 >
                   <FaCheck
+                    className=""
                     color="#fff"
                     size={12}
                   >
@@ -626,6 +623,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                           "viewBox": "0 0 512 512",
                         }
                       }
+                      className=""
                       color="#fff"
                       size={12}
                     >
