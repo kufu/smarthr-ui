@@ -8,16 +8,24 @@ interface Props {
   name: string
   themeColor?: 'light' | 'dark'
   disabled?: boolean
+  className?: string
   onChange?: (name: string, checked: boolean) => void
 }
 
 class RadioComponent extends React.PureComponent<Props & InjectedProps> {
   public render() {
-    const { checked, name, disabled = false, themeColor = 'light', theme } = this.props
-    const classNames = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
+    const {
+      checked,
+      name,
+      disabled = false,
+      themeColor = 'light',
+      className = '',
+      theme,
+    } = this.props
+    const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
 
     return (
-      <Wrapper>
+      <Wrapper className={className}>
         <Input
           type="radio"
           checked={checked}
@@ -26,7 +34,7 @@ class RadioComponent extends React.PureComponent<Props & InjectedProps> {
           theme={theme}
           onChange={this.handleChange}
         />
-        <Box className={classNames} theme={theme} />
+        <Box className={boxClassName} theme={theme} />
       </Wrapper>
     )
   }

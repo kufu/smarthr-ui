@@ -61,6 +61,7 @@ export interface IconProps {
 
 export interface Props extends IconProps {
   name: keyof typeof iconMap
+  className?: string
 }
 
 const iconMap = {
@@ -117,7 +118,7 @@ const iconMap = {
   'fa-user-circle': FaUserCircle,
   'fa-users': FaUsers,
 }
-export const Icon: React.FC<Props> = ({ name, ...props }) => {
+export const Icon: React.FC<Props> = ({ name, className = '', ...props }) => {
   const SvgIcon = iconMap[name]
-  return <SvgIcon {...props} />
+  return <SvgIcon className={className} {...props} />
 }

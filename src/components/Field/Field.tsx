@@ -16,6 +16,7 @@ interface Props {
   error?: string
   help?: string
   width?: number | string
+  className?: string
   onChange?: (name: string, value: string) => void
   onBlur?: (name: string, value: string) => void
   children?: React.ReactNode
@@ -33,6 +34,7 @@ const fieldFactory: (
   error,
   help,
   width,
+  className = '',
   onChange,
   onBlur,
   theme,
@@ -41,7 +43,7 @@ const fieldFactory: (
   const widthStyle = typeof width === 'number' ? `${width}px` : width
 
   return (
-    <Wrapper width={widthStyle}>
+    <Wrapper width={widthStyle} className={className}>
       <LabelHead theme={theme}>
         <Title theme={theme}>
           {label}

@@ -9,14 +9,20 @@ interface Props {
     tag?: HeadingProps['tag']
   }
   description?: React.ReactNode
+  className?: string
 }
 
-const HeadlineAreaComponent: React.FC<Props & InjectedProps> = ({ theme, ...props }) => (
-  <Wrapper theme={theme}>
-    <Heading type="screenTitle" tag={props.heading.tag ? props.heading.tag : 'h1'}>
-      {props.heading.children}
+const HeadlineAreaComponent: React.FC<Props & InjectedProps> = ({
+  heading,
+  description,
+  className = '',
+  theme,
+}) => (
+  <Wrapper theme={theme} className={className}>
+    <Heading type="screenTitle" tag={heading.tag ? heading.tag : 'h1'}>
+      {heading.children}
     </Heading>
-    {props.description && <Description theme={theme}>{props.description}</Description>}
+    {description && <Description theme={theme}>{description}</Description>}
   </Wrapper>
 )
 

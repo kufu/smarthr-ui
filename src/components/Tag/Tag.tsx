@@ -7,13 +7,20 @@ type Type = 'done' | 'success' | 'process' | 'required' | 'disabled' | 'must' | 
 
 interface Props {
   type?: Type
+  className?: string
   children: string
 }
+
 type MergedProps = Props & InjectedProps
 
-const TagComponent: React.FC<MergedProps> = ({ type = 'done', children, theme }) => {
+const TagComponent: React.FC<MergedProps> = ({
+  type = 'done',
+  className = '',
+  children,
+  theme,
+}) => {
   return (
-    <Wrapper theme={theme} className={type}>
+    <Wrapper theme={theme} className={`${type} ${className}`}>
       {children}
     </Wrapper>
   )

@@ -11,11 +11,17 @@ interface Props {
   name: string
   themeColor?: 'light' | 'dark'
   disabled?: boolean
+  className?: string
   onChange?: (name: string, checked: boolean) => void
 }
 
-const CheckboxLabelComponent: React.FC<Props & InjectedProps> = ({ label, theme, ...props }) => (
-  <Wrapper>
+const CheckboxLabelComponent: React.FC<Props & InjectedProps> = ({
+  label,
+  theme,
+  className = '',
+  ...props
+}) => (
+  <Wrapper className={className}>
     <Label className={`${props.disabled ? 'disabled' : ''}`}>
       <Checkbox {...props} />
       <Txt theme={theme}>{label}</Txt>
