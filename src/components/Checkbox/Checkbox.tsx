@@ -24,13 +24,10 @@ class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
       theme,
       className = '',
     } = this.props
-
-    const classNames = `
-      ${className} ${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}
-    `
+    const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
 
     return (
-      <Wrapper theme={theme}>
+      <Wrapper theme={theme} className={className}>
         <Input
           type="checkbox"
           checked={checked}
@@ -39,7 +36,7 @@ class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
           theme={theme}
           onChange={this.handleChange}
         />
-        <Box className={classNames} theme={theme} />
+        <Box className={boxClassName} theme={theme} />
         {checked && (
           <IconWrap>
             <Icon
