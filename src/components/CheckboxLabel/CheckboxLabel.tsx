@@ -18,7 +18,7 @@ interface Props {
 const CheckboxLabelComponent: React.FC<Props & InjectedProps> = ({
   label,
   theme,
-  className,
+  className = '',
   ...props
 }) => (
   <Wrapper className={className}>

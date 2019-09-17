@@ -11,11 +11,17 @@ interface Props {
   name: string
   themeColor?: 'light' | 'dark'
   disabled?: boolean
+  className?: string
   onChange?: (name: string, checked: boolean) => void
 }
 
-const RadioLabelComponent: React.FC<Props & InjectedProps> = ({ label, theme, ...props }) => (
-  <Wrapper>
+const RadioLabelComponent: React.FC<Props & InjectedProps> = ({
+  label,
+  className = '',
+  theme,
+  ...props
+}) => (
+  <Wrapper className={className}>
     <Label className={`${props.disabled ? 'disabled' : ''}`}>
       <Radio {...props} />
       <Txt theme={theme}>{label}</Txt>

@@ -8,6 +8,7 @@ interface Props {
   type: 'success' | 'info' | 'alert' | 'danger' | ''
   text: string
   visible: boolean
+  className?: string
   onClose: () => void
 }
 
@@ -58,13 +59,13 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
 
   public render() {
     const { visible } = this.state
-    const { type, text, onClose, theme } = this.props
+    const { type, text, className = '', onClose, theme } = this.props
     const iconName = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'
 
     if (!visible) return null
 
     return (
-      <Wrapper className={type} theme={theme}>
+      <Wrapper className={`${type} ${className}`} theme={theme}>
         <Icon name={iconName} size={24} color="#fff" />
         <Txt theme={theme}>{text}</Txt>
         <CloseButton onClick={onClose} className="close">

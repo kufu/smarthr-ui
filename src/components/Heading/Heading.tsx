@@ -6,15 +6,17 @@ export interface HeadingProps {
   children: string
   type?: 'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
   tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+  className?: string
 }
 
 const HeadingComponent: React.FC<HeadingProps & InjectedProps> = ({
   tag = 'h1',
   type = 'ScreenTitle',
+  className = '',
   children,
   theme,
 }) => (
-  <Wrapper as={tag} className={type} theme={theme}>
+  <Wrapper as={tag} className={`${type} ${className}`} theme={theme}>
     {children}
   </Wrapper>
 )
