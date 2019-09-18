@@ -31,6 +31,7 @@ const icons: Array<Props['name']> = [
   'fa-ellipsis-h',
   'fa-envelope',
   'fa-exclamation-triangle',
+  'fa-external-link-alt',
   'fa-file',
   'fa-file-alt',
   'fa-file-archive',
