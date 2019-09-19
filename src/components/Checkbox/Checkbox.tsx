@@ -1,5 +1,6 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
+import { transparentize } from 'polished'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
@@ -67,7 +68,6 @@ const Wrapper = styled.div`
   line-height: 1;
   box-sizing: border-box;
 `
-
 const Box = styled.span`
   ${({ theme }: InjectedProps) => {
     const { frame, palette } = theme
@@ -122,13 +122,16 @@ const Input = styled.input`
         pointer-events: none;
       }
 
+      &:hover + span {
+        box-shadow: 0 0 0 2px ${transparentize(0.78, palette.MAIN)};
+      }
+
       &:focus + span {
         box-shadow: 0 0 0 2px ${palette.OUTLINE};
       }
     `
   }}
 `
-
 const IconWrap = styled.span`
   position: absolute;
   top: 50%;
