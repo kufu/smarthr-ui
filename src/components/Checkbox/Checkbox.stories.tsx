@@ -86,6 +86,6 @@ const Group = styled.ul`
   }
 `
 const Text = styled.p`
-  margin-bottom: 16px;
+  margin: 0 0 16px 0;
   font-size: 16px;
 `

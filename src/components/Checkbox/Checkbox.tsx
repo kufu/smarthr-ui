@@ -5,8 +5,9 @@ import { transparentize } from 'polished'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 import { Icon } from '../Icon'
+import { hoverable } from '../../hocs/hoverable'
 
-type Props = {
+export type Props = {
   checked: boolean
   name: string
   themeColor?: 'light' | 'dark'
@@ -103,7 +104,7 @@ const Box = styled.span`
     `
   }}
 `
-const Input = styled.input`
+const Input = hoverable()(styled.input`
   ${({ theme }: InjectedProps) => {
     const { palette } = theme
     return css`
@@ -120,16 +121,17 @@ const Input = styled.input`
         pointer-events: none;
       }
 
-      &:hover + span {
+      &.hover + span {
         box-shadow: 0 0 0 2px ${transparentize(0.78, palette.MAIN)};
       }
 
-      &:focus + span {
+      &.focus + span {
         box-shadow: 0 0 0 2px ${palette.OUTLINE};
       }
     `
   }}
-`
+`)
+
 const IconWrap = styled.span`
   position: absolute;
   top: 50%;
