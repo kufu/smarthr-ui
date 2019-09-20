@@ -1,5 +1,6 @@
 import { mount } from 'enzyme'
 import React from 'react'
+
 import { Checkbox } from './Checkbox'
 
 describe('Checkbox', () => {
