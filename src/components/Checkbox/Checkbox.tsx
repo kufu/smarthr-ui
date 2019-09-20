@@ -11,6 +11,7 @@ type Props = {
   name: string
   themeColor?: 'light' | 'dark'
   disabled?: boolean
+  mixed?: boolean
   className?: string
   onChange?: (name: string, checked: boolean) => void
 }
@@ -20,6 +21,7 @@ const CheckboxComponent: FC<Props & InjectedProps> = ({
   name,
   disabled = false,
   themeColor = 'light',
+  mixed = false,
   className = '',
   onChange,
   theme,
@@ -43,7 +45,7 @@ const CheckboxComponent: FC<Props & InjectedProps> = ({
       {checked && (
         <IconWrap>
           <Icon
-            name="fa-check"
+            name={mixed ? 'fa-minus' : 'fa-check'}
             size={12}
             color={themeColor === 'light' ? '#fff' : theme.palette.MAIN}
           />
