@@ -40,7 +40,7 @@ storiesOf('Checkbox', module).add('all', () => (
     </li>
 
     <li>
-      <Text>unchecked</Text>
+      <Text>mixed</Text>
       <List>
         <li>
           <Checkbox name="sample" checked={true} mixed={true} onChange={onChange} />
