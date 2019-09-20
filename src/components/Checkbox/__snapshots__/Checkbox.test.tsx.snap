@@ -310,7 +310,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                   "componentStyle": ComponentStyle {
                     "componentId": "sc-htpNat",
                     "isStatic": false,
-                    "lastClassName": "jPKSoQ",
+                    "lastClassName": "PkcKW",
                     "rules": Array [
                       "
   ",
@@ -397,7 +397,7 @@ exports[`Checkbox should be match snapshot 1`] = `
             >
               <input
                 checked={true}
-                className="sc-htpNat jPKSoQ"
+                className="sc-htpNat PkcKW"
                 disabled={false}
                 name="sample"
                 onChange={[Function]}
