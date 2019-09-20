@@ -4,101 +4,118 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { CheckboxLabel } from './CheckboxLabel'
+import readme from './README.md'
 
 const onChange = action('onChange')
 
-storiesOf('CheckboxLabel', module).add('all', () => (
-  <Group>
-    <li>
-      <Text>checked</Text>
-      <List>
-        <li>
-          <CheckboxLabel label="enabled / light" name="name1" checked={true} onChange={onChange} />
-        </li>
-        <li>
-          <CheckboxLabel
-            label="disabled / light"
-            name="name2"
-            checked={true}
-            disabled={true}
-            onChange={onChange}
-          />
-        </li>
-        <li className="dark">
-          <CheckboxLabel
-            label="enabled / dark"
-            name="name3"
-            checked={true}
-            onChange={onChange}
-            themeColor="dark"
-          />
-        </li>
-      </List>
-    </li>
+storiesOf('CheckboxLabel', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
+  .add('all', () => (
+    <Group>
+      <li>
+        <Text>checked</Text>
+        <List>
+          <li>
+            <CheckboxLabel
+              label="enabled / light"
+              name="name1"
+              checked={true}
+              onChange={onChange}
+            />
+          </li>
+          <li>
+            <CheckboxLabel
+              label="disabled / light"
+              name="name2"
+              checked={true}
+              disabled={true}
+              onChange={onChange}
+            />
+          </li>
+          <li className="dark">
+            <CheckboxLabel
+              label="enabled / dark"
+              name="name3"
+              checked={true}
+              onChange={onChange}
+              themeColor="dark"
+            />
+          </li>
+        </List>
+      </li>
 
-    <li>
-      <Text>unchecked</Text>
-      <List>
-        <li>
-          <CheckboxLabel label="enabled / light" name="name4" checked={false} onChange={onChange} />
-        </li>
-        <li>
-          <CheckboxLabel
-            label="disabled / light"
-            name="name5"
-            checked={false}
-            disabled={true}
-            onChange={onChange}
-          />
-        </li>
-        <li className="dark">
-          <CheckboxLabel
-            label="enabled / dark"
-            name="name6"
-            checked={false}
-            onChange={onChange}
-            themeColor="dark"
-          />
-        </li>
-      </List>
-    </li>
+      <li>
+        <Text>unchecked</Text>
+        <List>
+          <li>
+            <CheckboxLabel
+              label="enabled / light"
+              name="name4"
+              checked={false}
+              onChange={onChange}
+            />
+          </li>
+          <li>
+            <CheckboxLabel
+              label="disabled / light"
+              name="name5"
+              checked={false}
+              disabled={true}
+              onChange={onChange}
+            />
+          </li>
+          <li className="dark">
+            <CheckboxLabel
+              label="enabled / dark"
+              name="name6"
+              checked={false}
+              onChange={onChange}
+              themeColor="dark"
+            />
+          </li>
+        </List>
+      </li>
 
-    <li>
-      <Text>mixed</Text>
-      <List>
-        <li>
-          <CheckboxLabel
-            label="enabled / light"
-            name="name7"
-            checked={true}
-            mixed={true}
-            onChange={onChange}
-          />
-        </li>
-        <li>
-          <CheckboxLabel
-            label="disabled / light"
-            name="name8"
-            checked={true}
-            mixed={true}
-            disabled={true}
-            onChange={onChange}
-          />
-        </li>
-        <li className="dark">
-          <CheckboxLabel
-            label="enabled / dark"
-            name="name9"
-            checked={true}
-            mixed={true}
-            onChange={onChange}
-            themeColor="dark"
-          />
-        </li>
-      </List>
-    </li>
-  </Group>
-))
+      <li>
+        <Text>mixed</Text>
+        <List>
+          <li>
+            <CheckboxLabel
+              label="enabled / light"
+              name="name7"
+              checked={true}
+              mixed={true}
+              onChange={onChange}
+            />
+          </li>
+          <li>
+            <CheckboxLabel
+              label="disabled / light"
+              name="name8"
+              checked={true}
+              mixed={true}
+              disabled={true}
+              onChange={onChange}
+            />
+          </li>
+          <li className="dark">
+            <CheckboxLabel
+              label="enabled / dark"
+              name="name9"
+              checked={true}
+              mixed={true}
+              onChange={onChange}
+              themeColor="dark"
+            />
+          </li>
+        </List>
+      </li>
+    </Group>
+  ))
 
 const List = styled.ul`
   padding: 0;
