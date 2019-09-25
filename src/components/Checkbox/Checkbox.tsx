@@ -1,59 +1,59 @@
-import * as React from 'react'
+import React, { FC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
+import { transparentize } from 'polished'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 import { Icon } from '../Icon'
+import { hoverable } from '../../hocs/hoverable'
 
-interface Props {
+export type Props = {
   checked: boolean
   name: string
   themeColor?: 'light' | 'dark'
   disabled?: boolean
+  mixed?: boolean
   className?: string
   onChange?: (name: string, checked: boolean) => void
 }
 
-class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
-  public render() {
-    const {
-      checked,
-      name,
-      disabled = false,
-      themeColor = 'light',
-      theme,
-      className = '',
-    } = this.props
-    const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
-
-    return (
-      <Wrapper theme={theme} className={className}>
-        <Input
-          type="checkbox"
-          checked={checked}
-          name={name}
-          disabled={disabled}
-          theme={theme}
-          onChange={this.handleChange}
-        />
-        <Box className={boxClassName} theme={theme} />
-        {checked && (
-          <IconWrap>
-            <Icon
-              name="fa-check"
-              size={12}
-              color={themeColor === 'light' ? '#fff' : theme.palette.MAIN}
-            />
-          </IconWrap>
-        )}
-      </Wrapper>
-    )
-  }
-
-  private handleChange = () => {
-    const { checked, name, onChange } = this.props
+const CheckboxComponent: FC<Props & InjectedProps> = ({
+  checked,
+  name,
+  disabled = false,
+  themeColor = 'light',
+  mixed = false,
+  className = '',
+  onChange,
+  theme,
+}) => {
+  const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
+  const handleChange = useCallback(() => {
     if (onChange) onChange(name, !checked)
-  }
+  }, [checked, name, onChange])
+
+  return (
+    <Wrapper theme={theme} className={className}>
+      <Input
+        type="checkbox"
+        checked={checked}
+        name={name}
+        disabled={disabled}
+        theme={theme}
+        onChange={handleChange}
+      />
+      <Box className={boxClassName} theme={theme} />
+      {checked && (
+        <IconWrap>
+          <Icon
+            name={mixed ? 'fa-minus' : 'fa-check'}
+            size={12}
+            color={themeColor === 'light' ? '#fff' : theme.palette.MAIN}
+          />
+        </IconWrap>
+      )}
+    </Wrapper>
+  )
 }
 
 export const Checkbox = withTheme(CheckboxComponent)
@@ -67,7 +67,6 @@ const Wrapper = styled.div`
   line-height: 1;
   box-sizing: border-box;
 `
-
 const Box = styled.span`
   ${({ theme }: InjectedProps) => {
     const { frame, palette } = theme
@@ -105,7 +104,7 @@ const Box = styled.span`
     `
   }}
 `
-const Input = styled.input`
+const Input = hoverable()(styled.input`
   ${({ theme }: InjectedProps) => {
     const { palette } = theme
     return css`
@@ -122,12 +121,16 @@ const Input = styled.input`
         pointer-events: none;
       }
 
-      &:focus + span {
+      &.hover + span {
+        box-shadow: 0 0 0 2px ${transparentize(0.78, palette.MAIN)};
+      }
+
+      &.focus + span {
         box-shadow: 0 0 0 2px ${palette.OUTLINE};
       }
     `
   }}
-`
+`)
 
 const IconWrap = styled.span`
   position: absolute;

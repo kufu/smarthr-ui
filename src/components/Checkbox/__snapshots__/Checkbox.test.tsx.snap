@@ -232,7 +232,7 @@ exports[`Checkbox should be match snapshot 1`] = `
         <div
           className="sc-bdVaJa hObIwy"
         >
-          <styled.input
+          <HoverableComponent(styled.input)
             checked={true}
             disabled={false}
             name="sample"
@@ -300,38 +300,16 @@ exports[`Checkbox should be match snapshot 1`] = `
             }
             type="checkbox"
           >
-            <StyledComponent
+            <styled.input
               checked={true}
+              className=" "
               disabled={false}
-              forwardedComponent={
-                Object {
-                  "$$typeof": Symbol(react.forward_ref),
-                  "attrs": Array [],
-                  "componentStyle": ComponentStyle {
-                    "componentId": "sc-htpNat",
-                    "isStatic": false,
-                    "lastClassName": "jPKSoQ",
-                    "rules": Array [
-                      "
-  ",
-                      [Function],
-                      "
-",
-                    ],
-                  },
-                  "displayName": "styled.input",
-                  "foldedComponentIds": Array [],
-                  "render": [Function],
-                  "styledComponentId": "sc-htpNat",
-                  "target": "input",
-                  "toString": [Function],
-                  "warnTooManyClasses": [Function],
-                  "withComponent": [Function],
-                }
-              }
-              forwardedRef={null}
               name="sample"
               onChange={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onTouchEnd={[Function]}
+              onTouchStart={[Function]}
               theme={
                 Object {
                   "frame": Object {
@@ -395,16 +373,121 @@ exports[`Checkbox should be match snapshot 1`] = `
               }
               type="checkbox"
             >
-              <input
+              <StyledComponent
                 checked={true}
-                className="sc-htpNat jPKSoQ"
+                className=" "
                 disabled={false}
+                forwardedComponent={
+                  Object {
+                    "$$typeof": Symbol(react.forward_ref),
+                    "attrs": Array [],
+                    "componentStyle": ComponentStyle {
+                      "componentId": "sc-htpNat",
+                      "isStatic": false,
+                      "lastClassName": "ZkUIj",
+                      "rules": Array [
+                        "
+  ",
+                        [Function],
+                        "
+",
+                      ],
+                    },
+                    "displayName": "styled.input",
+                    "foldedComponentIds": Array [],
+                    "render": [Function],
+                    "styledComponentId": "sc-htpNat",
+                    "target": "input",
+                    "toString": [Function],
+                    "warnTooManyClasses": [Function],
+                    "withComponent": [Function],
+                  }
+                }
+                forwardedRef={null}
                 name="sample"
                 onChange={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+                onTouchEnd={[Function]}
+                onTouchStart={[Function]}
+                theme={
+                  Object {
+                    "frame": Object {
+                      "border": Object {
+                        "default": "1px solid #d6d6d6",
+                        "lineStyle": "solid",
+                        "lineWidth": "1px",
+                        "radius": Object {
+                          "l": "8px",
+                          "m": "6px",
+                          "s": "3px",
+                        },
+                      },
+                    },
+                    "interaction": Object {
+                      "hover": Object {
+                        "animation": ".3s ease-out",
+                        "animationDuration": ".3s",
+                        "animationTiming": "ease-out",
+                        "feedbackOpacity": ".7",
+                      },
+                    },
+                    "palette": Object {
+                      "BACKGROUND": "#f5f6fa",
+                      "BORDER": "#d6d6d6",
+                      "COLUMN": "#f9f9f9",
+                      "DANGER": "#ef475b",
+                      "MAIN": "#00a5ab",
+                      "OUTLINE": "rgba(0,165,171,0.5)",
+                      "OVERLAY": "rgba(0,0,0,0.15)",
+                      "SCRIM": "rgba(0,0,0,0.5)",
+                      "TEXT_BLACK": "#333",
+                      "TEXT_GREY": "#767676",
+                      "WARNING": "#ff8800",
+                      "disableColor": [Function],
+                      "hoverColor": [Function],
+                    },
+                    "size": Object {
+                      "font": Object {
+                        "GRANDE": 18,
+                        "SHORT": 11,
+                        "TALL": 14,
+                        "VENTI": 24,
+                      },
+                      "mediaQuery": Object {
+                        "SP": 599,
+                        "TABLET": 959,
+                      },
+                      "pxToRem": [Function],
+                      "space": Object {
+                        "L": 40,
+                        "M": 32,
+                        "S": 24,
+                        "XL": 48,
+                        "XS": 16,
+                        "XXL": 56,
+                        "XXS": 8,
+                      },
+                    },
+                  }
+                }
                 type="checkbox"
-              />
-            </StyledComponent>
-          </styled.input>
+              >
+                <input
+                  checked={true}
+                  className="  sc-htpNat ZkUIj"
+                  disabled={false}
+                  name="sample"
+                  onChange={[Function]}
+                  onMouseEnter={[Function]}
+                  onMouseLeave={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchStart={[Function]}
+                  type="checkbox"
+                />
+              </StyledComponent>
+            </styled.input>
+          </HoverableComponent(styled.input)>
           <styled.span
             className="active  light"
             theme={

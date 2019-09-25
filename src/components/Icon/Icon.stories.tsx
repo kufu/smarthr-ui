@@ -44,6 +44,7 @@ const icons: Array<Props['name']> = [
   'fa-grip-vertical',
   'fa-lock',
   'fa-lock-open',
+  'fa-minus',
   'fa-pencil-alt',
   'fa-plus',
   'fa-plus-circle',
