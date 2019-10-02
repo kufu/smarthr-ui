@@ -5,6 +5,7 @@ import { Box } from './Box'
 
 interface Props {
   isOpen: boolean
+  onClickBackground?: () => void
   top?: number
   right?: number
   bottom?: number

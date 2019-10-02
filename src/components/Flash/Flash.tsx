@@ -2,12 +2,13 @@ import * as React from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { Icon } from '../Icon'
+import { Icon, iconMap } from '../Icon'
 
 interface Props {
   type: 'success' | 'info' | 'warning' | 'error' | ''
   text: string
   visible: boolean
+  className?: string
   onClose: () => void
 }
 
@@ -60,16 +61,16 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
     const { visible } = this.state
     const { type, text, onClose, theme } = this.props
 
-    const iconName =
+    const iconName: keyof typeof iconMap =
       type === 'success'
-        ? 'check-circle'
+        ? 'fa-check-circle'
         : type === 'info'
         ? 'fa-info-circle'
         : type === 'warning'
         ? 'fa-exclamation-triangle'
         : type === 'error'
         ? 'fa-exclamation-circle'
-        : 'check-circle'
+        : 'fa-check-circle'
 
     const iconColor =
       type === 'success'
@@ -89,7 +90,7 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
         <Icon name={iconName} size={14} color={iconColor} />
         <Txt theme={theme}>{text}</Txt>
         <CloseButton onClick={onClose} className="close">
-          <Icon name="cross" size={12} color={theme.palette.BORDER} />
+          <Icon name="fa-times" size={12} color={theme.palette.BORDER} />
         </CloseButton>
       </Wrapper>
     )

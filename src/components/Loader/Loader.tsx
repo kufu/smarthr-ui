@@ -6,22 +6,22 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 interface Props {
   color?: string
   size?: 's' | 'm' | 'l'
+  className?: string
 }
 
-const LoaderComponent: React.FC<Props & InjectedProps> = ({ color, size }) => {
-  const loaderColor = color || '#fff'
-  const loaderSize = size || 'm'
-
-  return (
-    <Wrapper className={loaderSize} color={loaderColor}>
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-    </Wrapper>
-  )
-}
+const LoaderComponent: React.FC<Props & InjectedProps> = ({
+  color = '#fff',
+  size = 'm',
+  className = '',
+}) => (
+  <Wrapper className={`${size} ${className}`} color={color}>
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
+  </Wrapper>
+)
 
 export const Loader = withTheme(LoaderComponent)
 

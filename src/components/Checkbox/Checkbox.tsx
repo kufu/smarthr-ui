@@ -1,68 +1,84 @@
-import * as React from 'react'
+import React, { FC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
+import { transparentize } from 'polished'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 import { Icon } from '../Icon'
+import { hoverable } from '../../hocs/hoverable'
 
-interface Props {
+export type Props = {
   checked: boolean
   name: string
   themeColor?: 'light' | 'dark'
   disabled?: boolean
+  mixed?: boolean
+  className?: string
   onChange?: (name: string, checked: boolean) => void
 }
 
-class CheckboxComponent extends React.PureComponent<Props & InjectedProps> {
-  public render() {
-    const { checked, name, disabled = false, themeColor = 'light', theme } = this.props
-    const classNames = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
-
-    return (
-      <Wrapper className={classNames} theme={theme}>
-        {checked && (
-          <IconWrap>
-            <Icon
-              name="check"
-              size={12}
-              color={themeColor === 'light' ? '#fff' : theme.palette.MAIN}
-            />
-          </IconWrap>
-        )}
-        <Input
-          type="checkbox"
-          checked={checked}
-          name={name}
-          disabled={disabled}
-          onChange={this.handleChange}
-        />
-      </Wrapper>
-    )
-  }
-
-  private handleChange = () => {
-    const { checked, name, onChange } = this.props
+const CheckboxComponent: FC<Props & InjectedProps> = ({
+  checked,
+  name,
+  disabled = false,
+  themeColor = 'light',
+  mixed = false,
+  className = '',
+  onChange,
+  theme,
+}) => {
+  const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
+  const handleChange = useCallback(() => {
     if (onChange) onChange(name, !checked)
-  }
+  }, [checked, name, onChange])
+
+  return (
+    <Wrapper theme={theme} className={className}>
+      <Input
+        type="checkbox"
+        checked={checked}
+        name={name}
+        disabled={disabled}
+        theme={theme}
+        onChange={handleChange}
+      />
+      <Box className={boxClassName} theme={theme} />
+      {checked && (
+        <IconWrap>
+          <Icon
+            name={mixed ? 'fa-minus' : 'fa-check'}
+            size={12}
+            color={themeColor === 'light' ? '#fff' : theme.palette.MAIN}
+          />
+        </IconWrap>
+      )}
+    </Wrapper>
+  )
 }
 
 export const Checkbox = withTheme(CheckboxComponent)
 
 const Wrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  line-height: 1;
+  box-sizing: border-box;
+`
+const Box = styled.span`
   ${({ theme }: InjectedProps) => {
     const { frame, palette } = theme
-
     return css`
-      position: relative;
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
+      position: absolute;
+      width: 100%;
+      height: 100%;
       border-radius: ${frame.border.radius.s};
       border: ${frame.border.default};
       background-color: #fff;
-      line-height: 1;
       box-sizing: border-box;
+      pointer-events: none;
 
       &.active {
         border-color: ${palette.MAIN};
@@ -88,20 +104,34 @@ const Wrapper = styled.div`
     `
   }}
 `
-const Input = styled.input`
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  cursor: pointer;
+const Input = hoverable()(styled.input`
+  ${({ theme }: InjectedProps) => {
+    const { palette } = theme
+    return css`
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      cursor: pointer;
 
-  &[disabled] {
-    pointer-events: none;
-  }
-`
+      &[disabled] {
+        pointer-events: none;
+      }
+
+      &.hover + span {
+        box-shadow: 0 0 0 2px ${transparentize(0.78, palette.MAIN)};
+      }
+
+      &.focus + span {
+        box-shadow: 0 0 0 2px ${palette.OUTLINE};
+      }
+    `
+  }}
+`)
+
 const IconWrap = styled.span`
   position: absolute;
   top: 50%;
@@ -110,6 +140,7 @@ const IconWrap = styled.span`
   width: 12px;
   height: 12px;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 
   & > svg {
     vertical-align: top;

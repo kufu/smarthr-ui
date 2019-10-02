@@ -43,7 +43,7 @@ const inputFactory: (
         theme,
       } = this.props
       const widthStyle = typeof width === 'number' ? `${width}px` : width
-      const classNames = error ? `error ${className}` : className
+      const classNames = `${className} ${error ? 'error' : ''}`
 
       return (
         <Base

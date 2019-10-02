@@ -3,19 +3,19 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-import { Checkbox } from '../Checkbox'
+import { Checkbox, Props as CheckboxProps } from '../Checkbox'
 
-interface Props {
+type Props = CheckboxProps & {
   label: string
-  checked: boolean
-  name: string
-  themeColor?: 'light' | 'dark'
-  disabled?: boolean
-  onChange?: (name: string, checked: boolean) => void
 }
 
-const CheckboxLabelComponent: React.FC<Props & InjectedProps> = ({ label, theme, ...props }) => (
-  <Wrapper>
+const CheckboxLabelComponent: React.FC<Props & InjectedProps> = ({
+  label,
+  theme,
+  className = '',
+  ...props
+}) => (
+  <Wrapper className={className}>
     <Label className={`${props.disabled ? 'disabled' : ''}`}>
       <Checkbox {...props} />
       <Txt theme={theme}>{label}</Txt>

@@ -4,6 +4,8 @@ import {
   FaAddressCard,
   FaAngleDoubleDown,
   FaAngleDown,
+  FaAngleLeft,
+  FaAngleRight,
   FaArrowCircleDown,
   FaArrowDown,
   FaBirthdayCake,
@@ -14,12 +16,15 @@ import {
   FaChartBar,
   FaChartLine,
   FaChartPie,
+  FaCheck,
+  FaCheckCircle,
   FaCog,
   FaDatabase,
   FaEllipsisH,
   FaEnvelope,
   FaExclamationCircle,
   FaExclamationTriangle,
+  FaExternalLinkAlt,
   FaFile,
   FaFileAlt,
   FaFileArchive,
@@ -33,6 +38,7 @@ import {
   FaInfoCircle,
   FaLock,
   FaLockOpen,
+  FaMinus,
   FaPencilAlt,
   FaPlus,
   FaPlusCircle,
@@ -46,14 +52,11 @@ import {
   FaSyncAlt,
   FaTable,
   FaThList,
+  FaTimes,
   FaUserAlt,
   FaUserCircle,
   FaUsers,
 } from 'react-icons/fa'
-import { Check } from './svg/Check'
-import { CheckCircle } from './svg/CheckCircle'
-import { Cross } from './svg/Cross'
-import { ExclamationTriangle } from './svg/ExclamationTriangle'
 
 export interface IconProps {
   color?: string
@@ -62,17 +65,16 @@ export interface IconProps {
 
 export interface Props extends IconProps {
   name: keyof typeof iconMap
+  className?: string
 }
 
-const iconMap = {
-  check: Check,
-  'check-circle': CheckCircle,
-  cross: Cross,
-  'exclamation-triangle': ExclamationTriangle,
+export const iconMap = {
   'fa-address-book': FaAddressBook,
   'fa-address-card': FaAddressCard,
   'fa-angle-double-down': FaAngleDoubleDown,
   'fa-angle-down': FaAngleDown,
+  'fa-angle-left': FaAngleLeft,
+  'fa-angle-right': FaAngleRight,
   'fa-arrow-circle-down': FaArrowCircleDown,
   'fa-arrow-down': FaArrowDown,
   'fa-birthday-cake': FaBirthdayCake,
@@ -83,12 +85,15 @@ const iconMap = {
   'fa-chart-bar': FaChartBar,
   'fa-chart-line': FaChartLine,
   'fa-chart-pie': FaChartPie,
+  'fa-check': FaCheck,
+  'fa-check-circle': FaCheckCircle,
   'fa-cog': FaCog,
   'fa-databas': FaDatabase,
   'fa-ellipsis-h': FaEllipsisH,
   'fa-envelope': FaEnvelope,
   'fa-exclamation-circle': FaExclamationCircle,
   'fa-exclamation-triangle': FaExclamationTriangle,
+  'fa-external-link-alt': FaExternalLinkAlt,
   'fa-file': FaFile,
   'fa-file-alt': FaFileAlt,
   'fa-file-archive': FaFileArchive,
@@ -102,6 +107,7 @@ const iconMap = {
   'fa-info-circle': FaInfoCircle,
   'fa-lock': FaLock,
   'fa-lock-open': FaLockOpen,
+  'fa-minus': FaMinus,
   'fa-pencil-alt': FaPencilAlt,
   'fa-plus': FaPlus,
   'fa-plus-circle': FaPlusCircle,
@@ -115,11 +121,12 @@ const iconMap = {
   'fa-sync-alt': FaSyncAlt,
   'fa-table': FaTable,
   'fa-th-list': FaThList,
+  'fa-times': FaTimes,
   'fa-user-alt': FaUserAlt,
   'fa-user-circle': FaUserCircle,
   'fa-users': FaUsers,
 }
-export const Icon: React.FC<Props> = ({ name, ...props }) => {
+export const Icon: React.FC<Props> = ({ name, className = '', ...props }) => {
   const SvgIcon = iconMap[name]
-  return <SvgIcon {...props} />
+  return <SvgIcon className={className} {...props} />
 }

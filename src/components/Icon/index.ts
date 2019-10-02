@@ -1,1 +1,1 @@
-export { Icon } from './Icon'
+export { Icon, iconMap } from './Icon'

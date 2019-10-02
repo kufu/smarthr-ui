@@ -33,11 +33,13 @@ exports[`Tag should be match snapshot 1`] = `
           "COLUMN": "#f9f9f9",
           "DANGER": "#ef475b",
           "MAIN": "#00a5ab",
+          "OUTLINE": "rgba(0,165,171,0.5)",
           "OVERLAY": "rgba(0,0,0,0.15)",
           "SCRIM": "rgba(0,0,0,0.5)",
           "TEXT_BLACK": "#333",
           "TEXT_GREY": "#767676",
           "WARNING": "#ff8800",
+          "disableColor": [Function],
           "hoverColor": [Function],
         },
         "size": Object {
@@ -67,8 +69,7 @@ exports[`Tag should be match snapshot 1`] = `
     type="success"
   >
     <styled.span
-      className="success"
-      skeleton={false}
+      className="success "
       theme={
         Object {
           "frame": Object {
@@ -97,11 +98,13 @@ exports[`Tag should be match snapshot 1`] = `
             "COLUMN": "#f9f9f9",
             "DANGER": "#ef475b",
             "MAIN": "#00a5ab",
+            "OUTLINE": "rgba(0,165,171,0.5)",
             "OVERLAY": "rgba(0,0,0,0.15)",
             "SCRIM": "rgba(0,0,0,0.5)",
             "TEXT_BLACK": "#333",
             "TEXT_GREY": "#767676",
             "WARNING": "#ff8800",
+            "disableColor": [Function],
             "hoverColor": [Function],
           },
           "size": Object {
@@ -130,7 +133,7 @@ exports[`Tag should be match snapshot 1`] = `
       }
     >
       <StyledComponent
-        className="success"
+        className="success "
         forwardedComponent={
           Object {
             "$$typeof": Symbol(react.forward_ref),
@@ -138,7 +141,7 @@ exports[`Tag should be match snapshot 1`] = `
             "componentStyle": ComponentStyle {
               "componentId": "sc-bdVaJa",
               "isStatic": false,
-              "lastClassName": "pUjya",
+              "lastClassName": "dNYNqM",
               "rules": Array [
                 "
   ",
@@ -158,7 +161,6 @@ exports[`Tag should be match snapshot 1`] = `
           }
         }
         forwardedRef={null}
-        skeleton={false}
         theme={
           Object {
             "frame": Object {
@@ -187,11 +189,13 @@ exports[`Tag should be match snapshot 1`] = `
               "COLUMN": "#f9f9f9",
               "DANGER": "#ef475b",
               "MAIN": "#00a5ab",
+              "OUTLINE": "rgba(0,165,171,0.5)",
               "OVERLAY": "rgba(0,0,0,0.15)",
               "SCRIM": "rgba(0,0,0,0.5)",
               "TEXT_BLACK": "#333",
               "TEXT_GREY": "#767676",
               "WARNING": "#ff8800",
+              "disableColor": [Function],
               "hoverColor": [Function],
             },
             "size": Object {
@@ -220,7 +224,7 @@ exports[`Tag should be match snapshot 1`] = `
         }
       >
         <span
-          className="success sc-bdVaJa pUjya"
+          className="success  sc-bdVaJa dNYNqM"
         >
           hello
         </span>
