@@ -62,27 +62,26 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
     const { visible } = this.state
     const { type, text, onClose, theme } = this.props
 
-    const iconName: keyof typeof iconMap =
-      type === 'success'
-        ? 'fa-check-circle'
-        : type === 'info'
-        ? 'fa-info-circle'
-        : type === 'warning'
-        ? 'fa-exclamation-triangle'
-        : type === 'error'
-        ? 'fa-exclamation-circle'
-        : 'fa-check-circle'
+    let iconName: keyof typeof iconMap = 'fa-check-circle'
+    let iconColor = theme.palette.TEXT_GREY
 
-    const iconColor =
-      type === 'success'
-        ? theme.palette.MAIN
-        : type === 'info'
-        ? theme.palette.TEXT_GREY
-        : type === 'warning'
-        ? theme.palette.WARNING
-        : type === 'error'
-        ? theme.palette.DANGER
-        : theme.palette.TEXT_GREY
+    switch (type) {
+      case 'success':
+        iconName = 'fa-check-circle'
+        iconColor = theme.palette.MAIN
+        break
+      case 'info':
+        iconName = 'fa-info-circle'
+        iconColor = theme.palette.TEXT_GREY
+        break
+      case 'warning':
+        iconName = 'fa-exclamation-triangle'
+        iconColor = theme.palette.WARNING
+        break
+      case 'error':
+        iconName = 'fa-exclamation-circle'
+        iconColor = theme.palette.DANGER
+    }
 
     if (!visible) return null
 
