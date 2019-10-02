@@ -3,6 +3,7 @@ import styled, { css, keyframes } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { Icon, iconMap } from '../Icon'
+import { SecondaryButton } from '../Button/SecondaryButton'
 
 interface Props {
   type: 'success' | 'info' | 'warning' | 'error' | ''
@@ -89,9 +90,9 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
       <Wrapper className={type} theme={theme}>
         <Icon name={iconName} size={14} color={iconColor} />
         <Txt theme={theme}>{text}</Txt>
-        <CloseButton onClick={onClose} className="close">
-          <Icon name="fa-times" size={12} color={theme.palette.BORDER} />
-        </CloseButton>
+        <SecondaryButton className="flash_onclose" onClick={onClose} size="s" square>
+          <Icon size={16} name="fa-times" />
+        </SecondaryButton>
       </Wrapper>
     )
   }
@@ -128,20 +129,28 @@ const Wrapper = styled.div`
 
     return css`
       z-index: 1000;
+      display: flex;
       position: fixed;
       bottom: ${size.pxToRem(size.space.XXS)};
       left: ${size.pxToRem(size.space.XXS)};
-      display: flex;
       box-sizing: border-box;
       align-items: center;
       min-width: ${size.pxToRem(200)};
       padding: ${size.pxToRem(size.space.XS)};
+      padding-right: ${size.pxToRem(54)};
       border: 1px solid ${palette.BORDER}
       border-radius: ${frame.border.radius.m};
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
         0 2px 1px -1px rgba(0, 0, 0, 0.12);
       box-sizing: border-box;
       animation: ${bounceAnimation} 1s 0s both;
+
+      > .flash_onclose {
+        position: absolute;
+        top: 50%;
+        right: ${size.pxToRem(size.space.XXS)};
+        transform: translateY(-50%);
+      }
     `
   }}
 `
@@ -152,17 +161,9 @@ const Txt = styled.p`
     return css`
       flex: 1;
       padding: 0;
-      margin: 0 ${size.pxToRem(8)};
+      margin: 0 0 0 ${size.pxToRem(8)};
       font-size: ${size.pxToRem(size.font.TALL)};
       line-height: 1;
     `
   }}
-`
-const CloseButton = styled.button`
-  width: 12px;
-  height: 12px;
-  padding: 0;
-  border: 0;
-  background-color: transparent;
-  cursor: pointer;
 `
