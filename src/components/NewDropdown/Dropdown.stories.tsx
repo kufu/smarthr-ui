@@ -16,7 +16,7 @@ storiesOf('NewDropdown', module).add('controll', () => (
         </DropdownTrigger>
         <DropdownControllableContent>
           <div>
-            <p>hogefuga</p>
+            <p>hogefugahogefugahogefuga</p>
             <DropdownCloser>
               <button>close</button>
             </DropdownCloser>
@@ -29,7 +29,7 @@ storiesOf('NewDropdown', module).add('controll', () => (
 
 const Wrapper = styled.div`
   position: relative;
-  height: 100vh;
+  height: 2000px;
   padding: 24px;
   box-sizing: border-box;
 `

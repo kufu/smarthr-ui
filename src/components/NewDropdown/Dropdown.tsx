@@ -1,29 +1,21 @@
 import React, { useState, useEffect } from 'react'
 
-import { getRandomStr, getParentElementByClassNameRecursively } from './helper'
-
-// export type Rect = {
-//   top: number
-//   right: number
-//   bottom: number
-//   left: number
-// }
-
-export type CustomEvent = {
-  target: any
-  stopPropagation: () => void
-}
+import { Rect, getRandomStr, getParentElementByClassNameRecursively } from './dropdownHelper'
 
 type DropdownContextType = {
   key: string
   active: boolean
-  onClickTrigger: () => void
+  triggerRect: Rect
+  onClickTrigger: (rect: Rect) => void
   onClickCloser: () => void
 }
+
+const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
 
 export const DropdownContext = React.createContext<DropdownContextType>({
   key: '',
   active: false,
+  triggerRect: initialRect,
   onClickTrigger: () => {},
   onClickCloser: () => {},
 })
@@ -31,10 +23,11 @@ export const DropdownContext = React.createContext<DropdownContextType>({
 export const Dropdown: React.FC<{}> = ({ children }) => {
   const [key, setKey] = useState('')
   const [active, setActive] = useState(false)
+  const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
   useEffect(() => {
     const newKey = getRandomStr()
-    const onClickBody = (e: CustomEvent) => {
+    const onClickBody = (e: any) => {
       if (getParentElementByClassNameRecursively(e.target, `dropdown-trigger-${newKey}`)) return
       setActive(false)
     }
@@ -54,11 +47,13 @@ export const Dropdown: React.FC<{}> = ({ children }) => {
       value={{
         key,
         active,
-        onClickTrigger: () => setActive(!active),
-        onClickCloser: () => {
-          console.log('------------onClickCloser-------------')
-          setActive(false)
+        triggerRect,
+        onClickTrigger: rect => {
+          const newActive = !active
+          setActive(newActive)
+          if (newActive) setTriggerRect(rect)
         },
+        onClickCloser: () => setActive(false),
       }}
     >
       {children}
