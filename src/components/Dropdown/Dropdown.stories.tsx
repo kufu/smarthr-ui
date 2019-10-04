@@ -10,6 +10,8 @@ import { DropdownControllableContent } from './DropdownControllableContent'
 import { DropdownCloser } from './DropdownCloser'
 import { SecondaryButton, PrimaryButton } from '../Button'
 
+import readme from './README.md'
+
 const ListMenu = () => (
   <List>
     <li>
@@ -27,80 +29,16 @@ const ListMenu = () => (
   </List>
 )
 
-storiesOf('Dropdown', module).add('all', () => (
-  <Wrapper>
-    <Legends>
-      <li>
-        <Box>
-          <Dropdown>
-            <DropdownTrigger>
-              <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
-            </DropdownTrigger>
-            <DropdownContent>
-              <ListMenu />
-            </DropdownContent>
-          </Dropdown>
-        </Box>
-      </li>
-      <li>
-        <Box>
-          <Dropdown>
-            <DropdownTrigger>
-              <SecondaryButton>Controllable Dropdown</SecondaryButton>
-            </DropdownTrigger>
-            <DropdownControllableContent>
-              <>
-                <ControllableBoxMain>
-                  <Text>
-                    Use `DropdownControllableContent` to get a controllable dropdown.
-                    <br />
-                    Clicking inside content of controllable dropdown does not close dropdown.
-                    <br />
-                    In that case, you can use `DropdownCloser` to close the dropdown.
-                  </Text>
-                </ControllableBoxMain>
-                <ControllableBoxBottom>
-                  <DropdownCloser>
-                    <SecondaryButton>Close only</SecondaryButton>
-                  </DropdownCloser>
-                  <DropdownCloser>
-                    <PrimaryButton onClick={action('clicked button 1')}>
-                      Action and close
-                    </PrimaryButton>
-                  </DropdownCloser>
-                  <PrimaryButton onClick={action('clicked button 2')}>Action only</PrimaryButton>
-                </ControllableBoxBottom>
-              </>
-            </DropdownControllableContent>
-          </Dropdown>
-        </Box>
-      </li>
-      <li>
-        <Description>
-          Depending on where `DropdownTrigger` is on window, the position to display
-          `DropdownContent` is automatically determined.
-        </Description>
-        <Description>
-          ↓<br />↓
-        </Description>
-        <Description>
-          ↓<br />↓
-        </Description>
-      </li>
-      <li>
-        <Box>
-          <Dropdown>
-            <DropdownTrigger>
-              <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
-            </DropdownTrigger>
-            <DropdownContent>
-              <ListMenu />
-            </DropdownContent>
-          </Dropdown>
-        </Box>
-      </li>
-      <li>
-        <RightAlign>
+storiesOf('Dropdown', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
+  .add('all', () => (
+    <Wrapper>
+      <Legends>
+        <li>
           <Box>
             <Dropdown>
               <DropdownTrigger>
@@ -111,14 +49,84 @@ storiesOf('Dropdown', module).add('all', () => (
               </DropdownContent>
             </Dropdown>
           </Box>
-        </RightAlign>
-      </li>
-      <li>
-        <Bottom />
-      </li>
-    </Legends>
-  </Wrapper>
-))
+        </li>
+        <li>
+          <Box>
+            <Dropdown>
+              <DropdownTrigger>
+                <SecondaryButton>Controllable Dropdown</SecondaryButton>
+              </DropdownTrigger>
+              <DropdownControllableContent>
+                <>
+                  <ControllableBoxMain>
+                    <Text>
+                      Use `DropdownControllableContent` to get a controllable dropdown.
+                      <br />
+                      Clicking inside content of controllable dropdown does not close dropdown.
+                      <br />
+                      In that case, you can use `DropdownCloser` to close the dropdown.
+                    </Text>
+                  </ControllableBoxMain>
+                  <ControllableBoxBottom>
+                    <DropdownCloser>
+                      <SecondaryButton>Close only</SecondaryButton>
+                    </DropdownCloser>
+                    <DropdownCloser>
+                      <PrimaryButton onClick={action('clicked button 1')}>
+                        Action and close
+                      </PrimaryButton>
+                    </DropdownCloser>
+                    <PrimaryButton onClick={action('clicked button 2')}>Action only</PrimaryButton>
+                  </ControllableBoxBottom>
+                </>
+              </DropdownControllableContent>
+            </Dropdown>
+          </Box>
+        </li>
+        <li>
+          <Description>
+            Depending on where `DropdownTrigger` is on window, the position to display
+            `DropdownContent` is automatically determined.
+          </Description>
+          <Description>
+            ↓<br />↓
+          </Description>
+          <Description>
+            ↓<br />↓
+          </Description>
+        </li>
+        <li>
+          <Box>
+            <Dropdown>
+              <DropdownTrigger>
+                <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
+              </DropdownTrigger>
+              <DropdownContent>
+                <ListMenu />
+              </DropdownContent>
+            </Dropdown>
+          </Box>
+        </li>
+        <li>
+          <RightAlign>
+            <Box>
+              <Dropdown>
+                <DropdownTrigger>
+                  <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
+                </DropdownTrigger>
+                <DropdownContent>
+                  <ListMenu />
+                </DropdownContent>
+              </Dropdown>
+            </Box>
+          </RightAlign>
+        </li>
+        <li>
+          <Bottom />
+        </li>
+      </Legends>
+    </Wrapper>
+  ))
 
 const List = styled.ul`
   margin: 0;
