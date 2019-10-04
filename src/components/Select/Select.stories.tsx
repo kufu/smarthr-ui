@@ -8,7 +8,7 @@ import { Select } from './Select'
 storiesOf('Select', module).add('all', () => (
   <List>
     <li>
-      <Text>text</Text>
+      <Text>default</Text>
       <Select
         name="sample1"
         value=""
