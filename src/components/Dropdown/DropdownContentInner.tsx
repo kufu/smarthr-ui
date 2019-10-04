@@ -63,6 +63,7 @@ export const DropdownContentInner = withTheme(DropdownContentInnerComponent)
 const Wrapper = styled.div`
   ${({ position, theme }: { position: Position } & InjectedProps) => {
     return css`
+      visibility: hidden;
       z-index: 1000;
       position: absolute;
       top: ${position.top};
@@ -72,6 +73,10 @@ const Wrapper = styled.div`
         0 2px 1px -1px rgba(0, 0, 0, 0.12);
       background-color: #fff;
       white-space: nowrap;
+
+      &.active {
+        visibility: visible;
+      }
     `
   }}
 `
