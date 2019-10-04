@@ -29,7 +29,7 @@ addParameters({ viewport: { viewports: INITIAL_VIEWPORTS } })
 
 addDecorator(withA11y)
 addDecorator(addReadme)
-addDecorator(storyFn => <ThemeProvider theme={createTheme()}>{storyFn()}</ThemeProvider>)
+addDecorator(Story => <ThemeProvider theme={createTheme()}><Story /></ThemeProvider>)
 
 configure(loadStories, module)
 
