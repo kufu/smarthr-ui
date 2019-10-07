@@ -19,7 +19,7 @@ describe('Flash', () => {
     const spy = jest.fn()
     const wrapper = mount(<Flash type="success" text="flash!!" onClose={spy} visible={true} />)
 
-    wrapper.find('button.flash_onclose').simulate('click')
+    wrapper.find('button.close').simulate('click')
 
     expect(spy).toHaveBeenCalled()
   })

@@ -89,9 +89,9 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
       <Wrapper className={`${type} ${className}`} theme={theme}>
         <Icon name={iconName} size={14} color={iconColor} />
         <Txt theme={theme}>{text}</Txt>
-        <SecondaryButton className="flash_onclose" onClick={onClose} size="s" square>
+        <CloseButton className="close" onClick={onClose} size="s" square theme={theme}>
           <Icon size={16} name="fa-times" />
-        </SecondaryButton>
+        </CloseButton>
       </Wrapper>
     )
   }
@@ -144,15 +144,23 @@ const Wrapper = styled.div`
       box-sizing: border-box;
       animation: ${bounceAnimation} 1s 0s both;
 
-      > .flash_onclose {
-        position: absolute;
-        top: 50%;
-        right: ${size.pxToRem(size.space.XXS)};
-        transform: translateY(-50%);
-      }
     `
   }}
 `
+
+const CloseButton = styled(SecondaryButton)`
+  ${({ theme }: InjectedProps) => {
+    const { size } = theme
+
+    return css`
+      position: absolute;
+      top: 50%;
+      right: ${size.pxToRem(size.space.XXS)};
+      transform: translateY(-50%);
+    `
+  }}
+`
+
 const Txt = styled.p`
   ${({ theme }: InjectedProps) => {
     const { size } = theme
