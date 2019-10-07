@@ -41,7 +41,7 @@
     "prettier": "^1.17.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-test-renderer": "16.9.0",
+    "react-test-renderer": "16.10.2",
     "reg-keygen-git-hash-plugin": "^0.7.16",
     "reg-notify-github-plugin": "^0.7.21",
     "reg-publish-s3-plugin": "^0.7.22",
