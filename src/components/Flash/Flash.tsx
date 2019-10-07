@@ -19,7 +19,7 @@ interface State {
 
 type MergedProps = Props & InjectedProps
 
-const REMOVE_DELAY = 80000
+const REMOVE_DELAY = 8000
 
 class FlashComponent extends React.PureComponent<MergedProps, State> {
   public static getDerivedStateFromProps(props: Props) {
@@ -60,7 +60,7 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
 
   public render() {
     const { visible } = this.state
-    const { type, text, onClose, theme } = this.props
+    const { type, text, onClose, theme, className } = this.props
 
     let iconName: keyof typeof iconMap = 'fa-check-circle'
     let iconColor = theme.palette.TEXT_GREY
@@ -86,7 +86,7 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
     if (!visible) return null
 
     return (
-      <Wrapper className={type} theme={theme}>
+      <Wrapper className={`${type} ${className}`} theme={theme}>
         <Icon name={iconName} size={14} color={iconColor} />
         <Txt theme={theme}>{text}</Txt>
         <SecondaryButton className="flash_onclose" onClick={onClose} size="s" square>
@@ -160,7 +160,7 @@ const Txt = styled.p`
     return css`
       flex: 1;
       padding: 0;
-      margin: 0 0 0 ${size.pxToRem(8)};
+      margin: 0 0 0 ${size.pxToRem(size.space.XXS)};
       font-size: ${size.pxToRem(size.font.TALL)};
       line-height: 1;
     `
