@@ -20,6 +20,7 @@ const icons: Array<Props['name']> = [
   'fa-building',
   'fa-calendar-alt',
   'fa-caret-down',
+  'fa-caret-up',
   'fa-chart-area',
   'fa-chart-bar',
   'fa-chart-line',
