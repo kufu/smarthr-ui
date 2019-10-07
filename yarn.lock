@@ -2039,6 +2039,13 @@
     "@types/history" "*"
     "@types/react" "*"
 
+"@types/react-dom@^16.9.1":
+  version "16.9.1"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.1.tgz#79206237cba9532a9f870b1cd5428bef6b66378c"
+  integrity sha512-1S/akvkKr63qIUWVu5IKYou2P9fHLb/P2VAwyxVV85JGaGZTcUniMiTuIqM3lXFB25ej6h+CYEQ27ERVwi6eGA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-native@*":
   version "0.60.15"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.60.15.tgz#fe502d9fca6e292e54ea3d527004f21d9b806370"

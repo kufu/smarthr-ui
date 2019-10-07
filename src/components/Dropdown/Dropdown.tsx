@@ -1,70 +1,62 @@
-import * as React from 'react'
-import styled from 'styled-components'
+import React, { useState, useEffect } from 'react'
 
-import { Rect } from './DropdownContent'
-import { getParentElementRecursively, getRandomStr } from './helper'
+import { Rect, getRandomStr, getParentElementByClassNameRecursively } from './dropdownHelper'
 
-interface Props {
-  children?: React.ReactNode
-}
-
-interface State {
+type DropdownContextType = {
+  key: string
   active: boolean
-  clientRect?: Rect
+  triggerRect: Rect
+  onClickTrigger: (rect: Rect) => void
+  onClickCloser: () => void
 }
 
-interface DropdownContext {
-  keyName: string
-  active: boolean
-  clientRect?: Rect
-  toggleDropdown: (clientRect: Rect) => void
-}
+const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
 
-const { Consumer, Provider } = React.createContext<DropdownContext>({
-  keyName: '',
+export const DropdownContext = React.createContext<DropdownContextType>({
+  key: '',
   active: false,
-  toggleDropdown: (_: Rect) => null,
+  triggerRect: initialRect,
+  onClickTrigger: () => {},
+  onClickCloser: () => {},
 })
 
-export const DropdownConsumer = Consumer
+export const Dropdown: React.FC<{}> = ({ children }) => {
+  const [key, setKey] = useState('')
+  const [active, setActive] = useState(false)
+  const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
-export class Dropdown extends React.PureComponent<Props, State> {
-  public state: State = { active: false }
-  public keyName = getRandomStr()
+  useEffect(() => {
+    const newKey = getRandomStr()
+    const onClickBody = (e: any) => {
+      if (getParentElementByClassNameRecursively(e.target, `dropdown-trigger-${newKey}`)) return
+      setActive(false)
+    }
 
-  public componentDidMount = () => {
-    document.body.addEventListener('click', this.handleClickBody as any)
-  }
+    setKey(newKey)
+    document.body.addEventListener('click', onClickBody, false)
 
-  public componentWillUnmount() {
-    document.body.removeEventListener('click', this.handleClickBody as any)
-  }
+    return () => {
+      const element = document.querySelector(`.dropdown-content-${newKey}`)
+      if (element) document.body.removeChild(element)
+      document.body.removeEventListener('click', onClickBody, false)
+    }
+  }, [])
 
-  public render() {
-    return (
-      <Provider
-        value={{
-          keyName: this.keyName,
-          active: this.state.active,
-          toggleDropdown: this.handleToggle,
-          clientRect: this.state.clientRect,
-        }}
-      >
-        <Wrapper className={this.state.active ? 'active' : ''}>{this.props.children}</Wrapper>
-      </Provider>
-    )
-  }
-
-  private handleToggle = (clientRect: Rect) => {
-    this.setState(state => ({ active: !state.active, clientRect }))
-  }
-
-  private handleClickBody = (e: { target: HTMLElement }) => {
-    if (getParentElementRecursively(e.target, this.keyName)) return
-    this.setState({ active: false })
-  }
+  return (
+    <DropdownContext.Provider
+      value={{
+        key,
+        active,
+        triggerRect,
+        onClickTrigger: rect => {
+          const newActive = !active
+          setActive(newActive)
+          if (newActive) setTriggerRect(rect)
+        },
+        onClickCloser: () => setActive(false),
+      }}
+    >
+      {children}
+    </DropdownContext.Provider>
+  )
 }
-
-const Wrapper = styled.div`
-  position: relative;
-`

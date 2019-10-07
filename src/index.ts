@@ -3,7 +3,13 @@ export { AppBar } from './components/AppBar'
 export { LightBalloon, DarkBalloon } from './components/Balloon'
 export { Checkbox } from './components/Checkbox'
 export { CheckboxLabel } from './components/CheckboxLabel'
-export { Dropdown, DropdownTrigger, DropdownContent } from './components/Dropdown'
+export {
+  Dropdown,
+  DropdownTrigger,
+  DropdownContent,
+  DropdownControllableContent,
+  DropdownCloser,
+} from './components/Dropdown'
 export { Field, TextField, NumberField, PasswordField } from './components/Field'
 export { Flash } from './components/Flash'
 export { TextInput, NumberInput, PasswordInput } from './components/Input'

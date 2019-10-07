@@ -24,6 +24,7 @@
     "@types/lodash.merge": "^4.6.4",
     "@types/lodash.range": "^3.2.5",
     "@types/react": "^16.8.16",
+    "@types/react-dom": "^16.9.1",
     "@types/react-test-renderer": "^16.8.1",
     "@types/storybook__addon-actions": "^3.4.3",
     "@types/storybook__react": "^4.0.2",
@@ -63,7 +64,7 @@
   "peerDependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.3.1"
   },
   "bugs": {
     "url": "https://github.com/kufu/smarthr-ui/issues"
