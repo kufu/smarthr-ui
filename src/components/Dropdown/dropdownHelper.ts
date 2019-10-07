@@ -53,7 +53,7 @@ export function getContentPositionStyle(
     position.top = `${scroll.top + triggerRect.top - contentSize.height}px`
   }
 
-  if (triggerRect.left + contentSize.width <= windowSize.width) {
+  if (triggerRect.left + (triggerRect.right - triggerRect.left) / 2 <= windowSize.width / 2) {
     position.left = `${scroll.left + triggerRect.left}px`
   } else {
     position.left = `${scroll.left + triggerRect.right - contentSize.width}px`
