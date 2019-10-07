@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { Flash } from './Flash'
 
-type FlashType = 'success' | 'danger' | ''
+type FlashType = 'success' | 'info' | 'warning' | 'error' | ''
 
 interface State {
   form: {
@@ -41,7 +41,9 @@ class WrappedComponent extends React.PureComponent<{}, State> {
           <select value={form.type} onChange={this.onChangeType}>
             <option value="">選択してください</option>
             <option value="success">success</option>
-            <option value="danger">danger</option>
+            <option value="info">info</option>
+            <option value="warning">warning</option>
+            <option value="error">error</option>
           </select>
           <input type="submit" value="フラッシュメッセージを表示する" />
         </Form>

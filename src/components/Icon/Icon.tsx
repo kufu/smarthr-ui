@@ -36,6 +36,7 @@ import {
   FaFilter,
   FaFont,
   FaGripVertical,
+  FaInfoCircle,
   FaLock,
   FaLockOpen,
   FaMinus,
@@ -68,7 +69,7 @@ export interface Props extends IconProps {
   className?: string
 }
 
-const iconMap = {
+export const iconMap = {
   'fa-address-book': FaAddressBook,
   'fa-address-card': FaAddressCard,
   'fa-angle-double-down': FaAngleDoubleDown,
@@ -105,6 +106,7 @@ const iconMap = {
   'fa-filter': FaFilter,
   'fa-font': FaFont,
   'fa-grip-vertical': FaGripVertical,
+  'fa-info-circle': FaInfoCircle,
   'fa-lock': FaLock,
   'fa-lock-open': FaLockOpen,
   'fa-minus': FaMinus,

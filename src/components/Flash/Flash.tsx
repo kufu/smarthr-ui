@@ -2,10 +2,11 @@ import * as React from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { Icon } from '../Icon'
+import { Icon, iconMap } from '../Icon'
+import { SecondaryButton } from '../Button/SecondaryButton'
 
 interface Props {
-  type: 'success' | 'info' | 'alert' | 'danger' | ''
+  type: 'success' | 'info' | 'warning' | 'error' | ''
   text: string
   visible: boolean
   className?: string
@@ -59,17 +60,37 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
 
   public render() {
     const { visible } = this.state
-    const { type, text, className = '', onClose, theme } = this.props
-    const iconName = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'
+    const { type, text, onClose, theme, className } = this.props
+
+    let iconName: keyof typeof iconMap = 'fa-check-circle'
+    let iconColor = theme.palette.TEXT_GREY
+
+    switch (type) {
+      case 'success':
+        iconName = 'fa-check-circle'
+        iconColor = theme.palette.MAIN
+        break
+      case 'info':
+        iconName = 'fa-info-circle'
+        iconColor = theme.palette.TEXT_GREY
+        break
+      case 'warning':
+        iconName = 'fa-exclamation-triangle'
+        iconColor = theme.palette.WARNING
+        break
+      case 'error':
+        iconName = 'fa-exclamation-circle'
+        iconColor = theme.palette.DANGER
+    }
 
     if (!visible) return null
 
     return (
       <Wrapper className={`${type} ${className}`} theme={theme}>
-        <Icon name={iconName} size={24} color="#fff" />
+        <Icon name={iconName} size={14} color={iconColor} />
         <Txt theme={theme}>{text}</Txt>
-        <CloseButton onClick={onClose} className="close">
-          <Icon name="fa-times" size={12} color={theme.palette.BORDER} />
+        <CloseButton className="close" onClick={onClose} size="s" square theme={theme}>
+          <Icon size={16} name="fa-times" />
         </CloseButton>
       </Wrapper>
     )
@@ -107,47 +128,49 @@ const Wrapper = styled.div`
 
     return css`
       z-index: 1000;
+      display: flex;
       position: fixed;
       bottom: ${size.pxToRem(size.space.XXS)};
       left: ${size.pxToRem(size.space.XXS)};
-      display: flex;
+      box-sizing: border-box;
       align-items: center;
-      width: 404px;
-      height: 50px;
-      padding: 0 ${size.pxToRem(size.space.XS)};
+      min-width: ${size.pxToRem(200)};
+      padding: ${size.pxToRem(size.space.XS)};
+      padding-right: ${size.pxToRem(54)};
+      border: 1px solid ${palette.BORDER}
       border-radius: ${frame.border.radius.m};
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
         0 2px 1px -1px rgba(0, 0, 0, 0.12);
       box-sizing: border-box;
       animation: ${bounceAnimation} 1s 0s both;
 
-      &.success {
-        background-color: ${palette.MAIN};
-      }
-
-      &.danger {
-        background-color: ${palette.DANGER};
-      }
     `
   }}
 `
+
+const CloseButton = styled(SecondaryButton)`
+  ${({ theme }: InjectedProps) => {
+    const { size } = theme
+
+    return css`
+      position: absolute;
+      top: 50%;
+      right: ${size.pxToRem(size.space.XXS)};
+      transform: translateY(-50%);
+    `
+  }}
+`
+
 const Txt = styled.p`
   ${({ theme }: InjectedProps) => {
     const { size } = theme
 
     return css`
       flex: 1;
-      padding: 0 ${size.pxToRem(size.space.XS)};
-      color: #fff;
+      padding: 0;
+      margin: 0 0 0 ${size.pxToRem(size.space.XXS)};
       font-size: ${size.pxToRem(size.font.TALL)};
+      line-height: 1;
     `
   }}
-`
-const CloseButton = styled.button`
-  width: 12px;
-  height: 12px;
-  padding: 0;
-  border: 0;
-  background-color: transparent;
-  cursor: pointer;
 `
