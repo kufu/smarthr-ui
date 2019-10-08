@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { range } from '../../libs/lodash'
@@ -14,6 +14,7 @@ interface Props {
   onClick: (pageNumber: number) => void
   padding?: number
   className?: string
+  withoutNumbers?: boolean
 }
 
 const PaginationComponent: React.FC<Props & InjectedProps> = ({
@@ -22,32 +23,52 @@ const PaginationComponent: React.FC<Props & InjectedProps> = ({
   onClick,
   padding = 4,
   className = '',
+  withoutNumbers = false,
   theme,
 }) => {
   if (total <= 1) return null
 
-  const prevPage = current >= 2 && (
-    <li>
-      <PrevPaginationItem onClick={onClick} prevPage={current - 1} />
-    </li>
+  const prevPage = (
+    <React.Fragment>
+      <li className="prev-double">
+        <PrevPaginationItem onClick={onClick} prevPage={1} disabled={current === 1} double />
+      </li>
+      <li className="prev">
+        <PrevPaginationItem onClick={onClick} prevPage={current - 1} disabled={current === 1} />
+      </li>
+    </React.Fragment>
   )
-  const pages = [
-    ...range(current - padding, current).filter(page => page >= 1),
-    ...range(current, current + padding + 1).filter(page => page <= total),
-  ].map(page => (
-    <li key={`pagination-${page}`}>
-      <PaginationItem page={page} currentPage={current} onClick={onClick} />
-    </li>
-  ))
-  const nextPage = current + 1 <= total && (
-    <li>
-      <NextPaginationItem onClick={onClick} nextPage={current + 1} />
-    </li>
+
+  const pages = !withoutNumbers
+    ? [
+        ...range(current - padding, current).filter(page => page >= 1),
+        ...range(current, current + padding + 1).filter(page => page <= total),
+      ].map(page => (
+        <li key={`pagination-${page}`}>
+          <PaginationItem page={page} currentPage={current} onClick={onClick} />
+        </li>
+      ))
+    : null
+
+  const nextPage = (
+    <React.Fragment>
+      <li className="next">
+        <NextPaginationItem onClick={onClick} nextPage={current + 1} disabled={current === total} />
+      </li>
+      <li className="next-double">
+        <NextPaginationItem
+          onClick={onClick}
+          nextPage={total}
+          disabled={current === total}
+          double
+        />
+      </li>
+    </React.Fragment>
   )
 
   return (
     <Wrapper className={className}>
-      <List theme={theme}>
+      <List theme={theme} className={withoutNumbers ? 'without-numbers' : ''}>
         {prevPage}
         {pages}
         {nextPage}
@@ -62,35 +83,37 @@ const Wrapper = styled.div`
   display: inline-block;
 `
 const List = styled.ul`
-  ${({ theme }: InjectedProps) => {
-    const { frame, palette } = theme
-
-    return css`
-      display: flex;
-      border-radius: ${frame.border.radius.s};
-      border: 1px solid ${palette.BORDER};
-      margin: 0;
-      padding: 0;
-
-      & > li {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-
-        &:not(:first-child) {
-          border-left: ${frame.border.default};
-        }
-
-        &:first-child > .PaginationItem {
-          border-top-left-radius: ${frame.border.radius.s};
-          border-bottom-left-radius: ${frame.border.radius.s};
-        }
-
-        &:last-child > .PaginationItem {
-          border-top-right-radius: ${frame.border.radius.s};
-          border-bottom-right-radius: ${frame.border.radius.s};
-        }
+  display: flex;
+  margin: 0;
+  padding: 0;
+  > li {
+    list-style: none;
+    margin: 0 4px;
+    &.prev-double {
+      margin-left: 0;
+    }
+    &.next-double {
+      margin-right: 0;
+    }
+  }
+  &.without-numbers {
+    > li {
+      &.prev-double {
+        margin-right: 12px;
       }
-    `
-  }}
+      &.next-double {
+        margin-left: 12px;
+      }
+    }
+  }
+  &:not(&.without-numbers) {
+    > li {
+      &.prev {
+        margin-right: 12px;
+      }
+      &.next {
+        margin-left: 12px;
+      }
+    }
+  }
 `

@@ -35,6 +35,14 @@ storiesOf('Pagination', module).add('all', () => (
       <Txt>current = 1, total = 1</Txt>
       <Pagination current={1} total={1} onClick={action('click!!')} />
     </li>
+    <li>
+      <Txt>current = 1, total = 5, withoutNumbers = true</Txt>
+      <Pagination current={1} total={5} onClick={action('click!!')} withoutNumbers />
+    </li>
+    <li>
+      <Txt>current = 2, total = 5, withoutNumbers = true</Txt>
+      <Pagination current={2} total={5} onClick={action('click!!')} withoutNumbers />
+    </li>
   </List>
 ))
 
