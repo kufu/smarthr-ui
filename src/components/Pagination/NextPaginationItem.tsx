@@ -44,7 +44,6 @@ const Button = styled(ItemButton)`
       font-size: 13px;
       border-radius: 4px;
       &:disabled {
-        border-bottom-color: #c1c1c1;
         color: #c1c1c1;
       }
     }
