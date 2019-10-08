@@ -30,7 +30,7 @@ const PaginationComponent: React.FC<Props & InjectedProps> = ({
 
   const prevPage = (
     <React.Fragment>
-      <li className="prev-double">
+      <li className="prevDouble">
         <PrevPaginationItem onClick={onClick} prevPage={1} disabled={current === 1} double />
       </li>
       <li className="prev">
@@ -55,7 +55,7 @@ const PaginationComponent: React.FC<Props & InjectedProps> = ({
       <li className="next">
         <NextPaginationItem onClick={onClick} nextPage={current + 1} disabled={current === total} />
       </li>
-      <li className="next-double">
+      <li className="nextDouble">
         <NextPaginationItem
           onClick={onClick}
           nextPage={total}
@@ -68,7 +68,7 @@ const PaginationComponent: React.FC<Props & InjectedProps> = ({
 
   return (
     <Wrapper className={className}>
-      <List theme={theme} className={withoutNumbers ? 'without-numbers' : ''}>
+      <List theme={theme} className={withoutNumbers ? 'withoutNumbers' : ''}>
         {prevPage}
         {pages}
         {nextPage}
@@ -89,29 +89,31 @@ const List = styled.ul`
   > li {
     list-style: none;
     margin: 0 4px;
-    &.prev-double {
+    &.prev {
+      margin-right: 12px;
+    }
+    &.next {
+      margin-left: 12px;
+    }
+    &.prevDouble {
       margin-left: 0;
     }
-    &.next-double {
+    &.nextDouble {
       margin-right: 0;
     }
   }
-  &.without-numbers {
-    > li {
-      &.prev-double {
-        margin-right: 12px;
-      }
-      &.next-double {
-        margin-left: 12px;
-      }
-    }
-  }
-  &:not(&.without-numbers) {
+  &.withoutNumbers {
     > li {
       &.prev {
-        margin-right: 12px;
+        margin-right: 4px;
       }
       &.next {
+        margin-left: 4px;
+      }
+      &.prevDouble {
+        margin-right: 12px;
+      }
+      &.nextDouble {
         margin-left: 12px;
       }
     }

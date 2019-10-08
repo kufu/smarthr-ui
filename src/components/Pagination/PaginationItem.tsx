@@ -16,14 +16,14 @@ class PaginationItemComponent extends React.PureComponent<Props & InjectedProps>
 
     if (page === currentPage) {
       return (
-        <ItemButton square size="s" className="PaginationItem active" theme={theme} disabled>
+        <ItemButton square size="s" className="paginationItem active" theme={theme} disabled>
           {page}
         </ItemButton>
       )
     }
 
     return (
-      <ItemButton square size="s" className="PaginationItem" onClick={this.onClick} theme={theme}>
+      <ItemButton square size="s" className="paginationItem" onClick={this.onClick} theme={theme}>
         {page}
       </ItemButton>
     )
@@ -41,7 +41,7 @@ export const ItemButton = styled(SecondaryButton)`
   ${({ theme }: InjectedProps) => {
     const { palette } = theme
     return css`
-      &.PaginationItem.s.square {
+      &.paginationItem.s.square {
         line-height: 25px;
         border-radius: 4px;
         &.active {

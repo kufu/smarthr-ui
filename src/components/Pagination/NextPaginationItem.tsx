@@ -16,18 +16,16 @@ interface Props {
 class NextPaginationItemComponent extends React.PureComponent<Props & InjectedProps> {
   public render() {
     return (
-      <React.Fragment>
-        <Button
-          square
-          size="s"
-          className="PaginationItem"
-          onClick={this.onClick}
-          theme={this.props.theme}
-          disabled={this.props.disabled}
-        >
-          <Icon name={this.props.double ? 'fa-angle-double-right' : 'fa-chevron-right'} />
-        </Button>
-      </React.Fragment>
+      <Button
+        square
+        size="s"
+        className="paginationItem"
+        onClick={this.onClick}
+        theme={this.props.theme}
+        disabled={this.props.disabled}
+      >
+        <Icon name={this.props.double ? 'fa-angle-double-right' : 'fa-chevron-right'} />
+      </Button>
     )
   }
 
@@ -42,8 +40,9 @@ export const NextPaginationItem = withTheme(NextPaginationItemComponent)
 const Button = styled(ItemButton)`
   ${({ theme }: InjectedProps) => css`
     color: ${theme.palette.TEXT_GREY};
-    &.PaginationItem.s.square {
+    &.paginationItem.s.square {
       font-size: 13px;
+      border-radius: 4px;
       &:disabled {
         border-bottom-color: #c1c1c1;
         color: #c1c1c1;
