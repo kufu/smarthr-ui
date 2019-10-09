@@ -1,5 +1,4 @@
 import * as React from 'react'
-import styled from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
@@ -17,7 +16,7 @@ class NextPaginationItemComponent extends React.PureComponent<Props & InjectedPr
   public render() {
     const { theme, double, disabled } = this.props
     return (
-      <Button
+      <ItemButton
         square
         size="s"
         className="paginationItem"
@@ -30,7 +29,7 @@ class NextPaginationItemComponent extends React.PureComponent<Props & InjectedPr
           color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.TEXT_BLACK}
           size={13}
         />
-      </Button>
+      </ItemButton>
     )
   }
 
@@ -41,9 +40,3 @@ class NextPaginationItemComponent extends React.PureComponent<Props & InjectedPr
 }
 
 export const NextPaginationItem = withTheme(NextPaginationItemComponent)
-
-const Button = styled(ItemButton)`
-  &.paginationItem.s.square {
-    border-radius: 4px;
-  }
-`
