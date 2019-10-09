@@ -4,9 +4,8 @@ import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { range } from '../../libs/lodash'
 
-import { NextPaginationItem } from './NextPaginationItem'
 import { PaginationItem } from './PaginationItem'
-import { PrevPaginationItem } from './PrevPaginationItem'
+import { PaginationControllerItem } from './PaginationControllerItem'
 
 interface Props {
   total: number
@@ -14,6 +13,7 @@ interface Props {
   onClick: (pageNumber: number) => void
   padding?: number
   className?: string
+  withoutNumbers?: boolean
 }
 
 const PaginationComponent: React.FC<Props & InjectedProps> = ({
@@ -22,32 +22,69 @@ const PaginationComponent: React.FC<Props & InjectedProps> = ({
   onClick,
   padding = 4,
   className = '',
+  withoutNumbers = false,
   theme,
 }) => {
   if (total <= 1) return null
 
-  const prevPage = current >= 2 && (
-    <li>
-      <PrevPaginationItem onClick={onClick} prevPage={current - 1} />
-    </li>
+  const prevPage = (
+    <React.Fragment>
+      <li className="prevDouble">
+        <PaginationControllerItem
+          onClick={onClick}
+          direction="prev"
+          targetPage={1}
+          disabled={current === 1}
+          double
+        />
+      </li>
+      <li className="prev">
+        <PaginationControllerItem
+          onClick={onClick}
+          direction="prev"
+          targetPage={current - 1}
+          disabled={current === 1}
+        />
+      </li>
+    </React.Fragment>
   )
-  const pages = [
-    ...range(current - padding, current).filter(page => page >= 1),
-    ...range(current, current + padding + 1).filter(page => page <= total),
-  ].map(page => (
-    <li key={`pagination-${page}`}>
-      <PaginationItem page={page} currentPage={current} onClick={onClick} />
-    </li>
-  ))
-  const nextPage = current + 1 <= total && (
-    <li>
-      <NextPaginationItem onClick={onClick} nextPage={current + 1} />
-    </li>
+
+  const pages = !withoutNumbers
+    ? [
+        ...range(current - padding, current).filter(page => page >= 1),
+        ...range(current, current + padding + 1).filter(page => page <= total),
+      ].map(page => (
+        <li key={`pagination-${page}`}>
+          <PaginationItem page={page} currentPage={current} onClick={onClick} />
+        </li>
+      ))
+    : null
+
+  const nextPage = (
+    <React.Fragment>
+      <li className="next">
+        <PaginationControllerItem
+          onClick={onClick}
+          direction="next"
+          targetPage={current + 1}
+          disabled={current === total}
+        />
+      </li>
+      <li className="nextDouble">
+        <PaginationControllerItem
+          onClick={onClick}
+          direction="next"
+          targetPage={total}
+          disabled={current === total}
+          double
+        />
+      </li>
+    </React.Fragment>
   )
 
   return (
     <Wrapper className={className}>
-      <List theme={theme}>
+      <List theme={theme} className={withoutNumbers ? 'withoutNumbers' : ''}>
         {prevPage}
         {pages}
         {nextPage}
@@ -63,32 +100,39 @@ const Wrapper = styled.div`
 `
 const List = styled.ul`
   ${({ theme }: InjectedProps) => {
-    const { frame, palette } = theme
-
+    const { size } = theme
     return css`
       display: flex;
-      border-radius: ${frame.border.radius.s};
-      border: 1px solid ${palette.BORDER};
       margin: 0;
       padding: 0;
-
-      & > li {
-        margin: 0;
-        padding: 0;
+      > li {
         list-style: none;
-
-        &:not(:first-child) {
-          border-left: ${frame.border.default};
+        margin-left: ${size.pxToRem(size.space.XXS)};
+        &.prev {
+          margin-right: ${size.pxToRem(size.space.XS)};
+          + li {
+            margin-left: 0;
+          }
         }
-
-        &:first-child > .PaginationItem {
-          border-top-left-radius: ${frame.border.radius.s};
-          border-bottom-left-radius: ${frame.border.radius.s};
+        &.next {
+          margin-left: ${size.pxToRem(size.space.XS)};
         }
-
-        &:last-child > .PaginationItem {
-          border-top-right-radius: ${frame.border.radius.s};
-          border-bottom-right-radius: ${frame.border.radius.s};
+        &.prevDouble {
+          margin-left: 0;
+        }
+      }
+      &.withoutNumbers {
+        > li {
+          &.prev {
+            margin-left: ${size.pxToRem(size.space.XS)};
+            margin-right: 0;
+          }
+          &.next {
+            margin-left: ${size.pxToRem(size.space.XXS)};
+          }
+          &.nextDouble {
+            margin-left: ${size.pxToRem(size.space.XS)};
+          }
         }
       }
     `

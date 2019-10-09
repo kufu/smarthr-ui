@@ -5,6 +5,7 @@ import { darken, rgba, transparentize } from 'polished'
 export interface PaletteProperty {
   TEXT_BLACK?: string
   TEXT_GREY?: string
+  TEXT_DISABLED?: string
   BORDER?: string
   BACKGROUND?: string
   COLUMN?: string
@@ -21,6 +22,7 @@ export interface CreatedPaletteTheme {
   disableColor: (value: string) => string
   TEXT_BLACK: string
   TEXT_GREY: string
+  TEXT_DISABLED: string
   BORDER: string
   BACKGROUND: string
   COLUMN: string
@@ -35,6 +37,7 @@ export interface CreatedPaletteTheme {
 export const defaultPalette = {
   TEXT_BLACK: '#333',
   TEXT_GREY: '#767676',
+  TEXT_DISABLED: '#c1c1c1',
   BORDER: '#d6d6d6',
   BACKGROUND: '#f5f6fa',
   COLUMN: '#f9f9f9',
