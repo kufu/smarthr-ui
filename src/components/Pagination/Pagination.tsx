@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { range } from '../../libs/lodash'
@@ -83,39 +83,42 @@ const Wrapper = styled.div`
   display: inline-block;
 `
 const List = styled.ul`
-  display: flex;
-  margin: 0;
-  padding: 0;
-  > li {
-    list-style: none;
-    margin: 0 4px;
-    &.prev {
-      margin-right: 12px;
-    }
-    &.next {
-      margin-left: 12px;
-    }
-    &.prevDouble {
-      margin-left: 0;
-    }
-    &.nextDouble {
-      margin-right: 0;
-    }
-  }
-  &.withoutNumbers {
-    > li {
-      &.prev {
-        margin-right: 4px;
+  ${({ theme }: InjectedProps) => {
+    const { size } = theme
+    return css`
+      display: flex;
+      margin: 0;
+      padding: 0;
+      > li {
+        list-style: none;
+        margin-left: ${size.pxToRem(size.space.XXS)};
+        &.prev {
+          margin-right: ${size.pxToRem(size.space.XS)};
+          + li {
+            margin-left: 0;
+          }
+        }
+        &.next {
+          margin-left: ${size.pxToRem(size.space.XS)};
+        }
+        &.prevDouble {
+          margin-left: 0;
+        }
       }
-      &.next {
-        margin-left: 4px;
+      &.withoutNumbers {
+        > li {
+          &.prev {
+            margin-left: ${size.pxToRem(size.space.XS)};
+            margin-right: 0;
+          }
+          &.next {
+            margin-left: ${size.pxToRem(size.space.XXS)};
+          }
+          &.nextDouble {
+            margin-left: ${size.pxToRem(size.space.XS)};
+          }
+        }
       }
-      &.prevDouble {
-        margin-right: 12px;
-      }
-      &.nextDouble {
-        margin-left: 12px;
-      }
-    }
-  }
+    `
+  }}
 `

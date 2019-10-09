@@ -39,12 +39,12 @@ export const NextPaginationItem = withTheme(NextPaginationItemComponent)
 
 const Button = styled(ItemButton)`
   ${({ theme }: InjectedProps) => css`
-    color: ${theme.palette.TEXT_GREY};
+    color: ${theme.palette.TEXT_BLACK};
     &.paginationItem.s.square {
-      font-size: 13px;
+      font-size: ${theme.size.pxToRem(13)};
       border-radius: 4px;
       &:disabled {
-        color: #c1c1c1;
+        color: ${theme.palette.TEXT_DISABLED};
       }
     }
   `}
