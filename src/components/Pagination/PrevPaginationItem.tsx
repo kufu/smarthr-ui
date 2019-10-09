@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
@@ -15,16 +15,21 @@ interface Props {
 
 class PrevPaginationItemComponent extends React.PureComponent<Props & InjectedProps> {
   public render() {
+    const { theme, double, disabled } = this.props
     return (
       <Button
         square
         size="s"
         className="paginationItem"
         onClick={this.onClick}
-        theme={this.props.theme}
-        disabled={this.props.disabled}
+        theme={theme}
+        disabled={disabled}
       >
-        <Icon name={this.props.double ? 'fa-angle-double-left' : 'fa-chevron-left'} />
+        <Icon
+          name={double ? 'fa-angle-double-left' : 'fa-chevron-left'}
+          color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.TEXT_BLACK}
+          size={13}
+        />
       </Button>
     )
   }
@@ -38,14 +43,7 @@ class PrevPaginationItemComponent extends React.PureComponent<Props & InjectedPr
 export const PrevPaginationItem = withTheme(PrevPaginationItemComponent)
 
 const Button = styled(ItemButton)`
-  ${({ theme }: InjectedProps) => css`
-    color: ${theme.palette.TEXT_BLACK};
-    &.paginationItem.s.square {
-      font-size: ${theme.size.pxToRem(13)};
-      border-radius: 4px;
-      &:disabled {
-        color: ${theme.palette.TEXT_DISABLED};
-      }
-    }
-  `}
+  &.paginationItem.s.square {
+    border-radius: 4px;
+  }
 `
