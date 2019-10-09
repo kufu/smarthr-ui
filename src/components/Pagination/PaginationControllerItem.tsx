@@ -6,15 +6,16 @@ import { ItemButton } from './PaginationItem'
 import { Icon } from '../Icon'
 
 interface Props {
-  prevPage: number
+  targetPage: number
   onClick: (pageNumber: number) => void
+  direction: 'prev' | 'next'
   disabled: boolean
   double?: boolean
 }
 
-class PrevPaginationItemComponent extends React.PureComponent<Props & InjectedProps> {
+class PaginationControllerItemComponent extends React.PureComponent<Props & InjectedProps> {
   public render() {
-    const { theme, double, disabled } = this.props
+    const { theme, direction, disabled, double } = this.props
     return (
       <ItemButton
         square
@@ -25,7 +26,15 @@ class PrevPaginationItemComponent extends React.PureComponent<Props & InjectedPr
         disabled={disabled}
       >
         <Icon
-          name={double ? 'fa-angle-double-left' : 'fa-chevron-left'}
+          name={
+            direction === 'prev'
+              ? double
+                ? 'fa-angle-double-left'
+                : 'fa-chevron-left'
+              : double
+              ? 'fa-angle-double-right'
+              : 'fa-chevron-right'
+          }
           color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.TEXT_BLACK}
           size={13}
         />
@@ -34,9 +43,9 @@ class PrevPaginationItemComponent extends React.PureComponent<Props & InjectedPr
   }
 
   private onClick = () => {
-    const { onClick, prevPage } = this.props
-    onClick(prevPage)
+    const { onClick, targetPage } = this.props
+    onClick(targetPage)
   }
 }
 
-export const PrevPaginationItem = withTheme(PrevPaginationItemComponent)
+export const PaginationControllerItem = withTheme(PaginationControllerItemComponent)

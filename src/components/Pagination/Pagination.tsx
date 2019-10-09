@@ -4,9 +4,8 @@ import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { range } from '../../libs/lodash'
 
-import { NextPaginationItem } from './NextPaginationItem'
 import { PaginationItem } from './PaginationItem'
-import { PrevPaginationItem } from './PrevPaginationItem'
+import { PaginationControllerItem } from './PaginationControllerItem'
 
 interface Props {
   total: number
@@ -31,10 +30,21 @@ const PaginationComponent: React.FC<Props & InjectedProps> = ({
   const prevPage = (
     <React.Fragment>
       <li className="prevDouble">
-        <PrevPaginationItem onClick={onClick} prevPage={1} disabled={current === 1} double />
+        <PaginationControllerItem
+          onClick={onClick}
+          direction="prev"
+          targetPage={1}
+          disabled={current === 1}
+          double
+        />
       </li>
       <li className="prev">
-        <PrevPaginationItem onClick={onClick} prevPage={current - 1} disabled={current === 1} />
+        <PaginationControllerItem
+          onClick={onClick}
+          direction="prev"
+          targetPage={current - 1}
+          disabled={current === 1}
+        />
       </li>
     </React.Fragment>
   )
@@ -53,12 +63,18 @@ const PaginationComponent: React.FC<Props & InjectedProps> = ({
   const nextPage = (
     <React.Fragment>
       <li className="next">
-        <NextPaginationItem onClick={onClick} nextPage={current + 1} disabled={current === total} />
+        <PaginationControllerItem
+          onClick={onClick}
+          direction="next"
+          targetPage={current + 1}
+          disabled={current === total}
+        />
       </li>
       <li className="nextDouble">
-        <NextPaginationItem
+        <PaginationControllerItem
           onClick={onClick}
-          nextPage={total}
+          direction="next"
+          targetPage={total}
           disabled={current === total}
           double
         />
