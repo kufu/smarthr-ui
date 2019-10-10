@@ -46,26 +46,12 @@ storiesOf('Select', module).add('all', () => (
       />
     </li>
     <li>
-      <Text>blankOption</Text>
+      <Text>placeholder</Text>
       <Select
         name="sample4"
         value=""
-        blankOption={true}
         options={[
-          { label: 'apple', value: 'apple' },
-          { label: 'orange', value: 'orange' },
-          { label: 'banana', value: 'banana' },
-        ]}
-      />
-    </li>
-    <li>
-      <Text>placeholder</Text>
-      <Select
-        name="sample5"
-        value=""
-        placeholder="Fruit"
-        blankOption={true}
-        options={[
+          { label: 'Fruit', value: '' },
           { label: 'apple', value: 'apple' },
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
@@ -75,7 +61,7 @@ storiesOf('Select', module).add('all', () => (
     <li>
       <Text>width</Text>
       <Select
-        name="sample6"
+        name="sample5"
         value="width: 100%"
         width="100%"
         options={[
@@ -88,7 +74,7 @@ storiesOf('Select', module).add('all', () => (
     <li>
       <Text>onChange</Text>
       <Select
-        name="sample7"
+        name="sample6"
         value=""
         onChange={action('onChange!!')}
         options={[

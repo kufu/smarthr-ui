@@ -19,8 +19,6 @@ interface Props {
   error?: boolean
   width?: number | string
   options: Option[]
-  blankOption?: boolean
-  placeholder?: string
   onChange?: (name: string, value: string) => void
 }
 
@@ -46,8 +44,6 @@ class SelectComponent extends React.PureComponent<Props & InjectedProps> {
       width = 260,
       theme,
       options,
-      blankOption = false,
-      placeholder = '',
     } = this.props
     const widthStyle = typeof width === 'number' ? `${width}px` : width
     const classNames = `${className} ${error ? 'error' : ''}`
@@ -63,7 +59,6 @@ class SelectComponent extends React.PureComponent<Props & InjectedProps> {
           onChange={this.handleChange}
           theme={theme}
         >
-          {blankOption && <option value=""> {placeholder}</option>}
           {options.map(option => (
             <option key={option.value} value={option.value}>
               {option.label}
