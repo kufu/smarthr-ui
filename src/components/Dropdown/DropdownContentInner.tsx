@@ -64,7 +64,7 @@ const Wrapper = styled.div`
   ${({ position, theme }: { position: Position } & InjectedProps) => {
     return css`
       visibility: hidden;
-      z-index: 1000;
+      z-index: 99999;
       position: absolute;
       top: ${position.top};
       left: ${position.left};
