@@ -2,13 +2,14 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { isTouchDevice } from '../../libs/ua'
 
-export interface Options {
+interface Option {
   label: string
   value: string
 }
 
-export interface Props {
+interface Props {
   className?: string
   value: string
   name: string
@@ -16,7 +17,7 @@ export interface Props {
   disabled?: boolean
   error?: boolean
   width?: number | string
-  options: Options[]
+  options: Option[]
   blankOption?: boolean
   placeholder?: string
   onChange?: (name: string, value: string) => void
@@ -36,7 +37,7 @@ class SelectComponent extends React.PureComponent<Props & InjectedProps> {
   public render() {
     const {
       className = '',
-      value = '',
+      value,
       name,
       required = false,
       disabled = false,
@@ -116,7 +117,7 @@ const Wrapper = styled.div`
 
 const Base = styled.select`
   ${({ theme }: InjectedProps) => {
-    const { size, frame, palette } = theme
+    const { size, frame, palette, interaction } = theme
 
     return css`
       display: inline-block;
@@ -134,13 +135,20 @@ const Base = styled.select`
       -webkit-appearance: none;
       -moz-appearance: none;
       padding-right: 20px;
+      cursor: pointer;
+      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+      text-align: right;
+
+      &:hover {
+        background-color: ${palette.hoverColor('#fff')};
+      }
 
       &::placeholder {
         color: ${palette.TEXT_GREY};
       }
 
       &:focus {
-        border-color: ${palette.hoverColor(palette.MAIN)};
+        border-color: ${palette.MAIN};
       }
 
       &.error {
@@ -148,8 +156,11 @@ const Base = styled.select`
       }
 
       &[disabled] {
-        border-color: ${palette.BORDER};
+        border-color: #f5f5f5;
         pointer-events: none;
+        cursor: not-allowed;
+        background-color: #f5f5f5;
+        color: #c1c1c1;
       }
 
       &:-ms-expand {
