@@ -17,6 +17,7 @@ storiesOf('Select', module).add('all', () => (
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
+        labelText="default"
       />
     </li>
     <li>
@@ -30,6 +31,7 @@ storiesOf('Select', module).add('all', () => (
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
+        labelText="error"
       />
     </li>
     <li>
@@ -43,6 +45,7 @@ storiesOf('Select', module).add('all', () => (
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
+        labelText="disabled"
       />
     </li>
     <li>
@@ -56,6 +59,7 @@ storiesOf('Select', module).add('all', () => (
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
+        labelText="sample4"
       />
     </li>
     <li>
@@ -69,6 +73,7 @@ storiesOf('Select', module).add('all', () => (
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
+        labelText="width"
       />
     </li>
     <li>
@@ -82,6 +87,7 @@ storiesOf('Select', module).add('all', () => (
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
+        labelText="onChange"
       />
     </li>
   </List>
