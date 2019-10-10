@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
+import { Icon } from '../Icon'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { isTouchDevice } from '../../libs/ua'
 
@@ -69,6 +70,9 @@ class SelectComponent extends React.PureComponent<Props & InjectedProps> {
             </option>
           ))}
         </Base>
+        <IconWrap>
+          <Icon size={13} name="fa-sort" />
+        </IconWrap>
       </Wrapper>
     )
   }
@@ -83,34 +87,10 @@ class SelectComponent extends React.PureComponent<Props & InjectedProps> {
 export const Select = withTheme(SelectComponent)
 
 const Wrapper = styled.div`
-  ${({ width, theme }: StyledProps) => {
-    const { palette } = theme
+  ${({ width }: StyledProps) => {
     return css`
       position: relative;
       width: ${width};
-
-      &::before,
-      &::after {
-        position: absolute;
-        right: 12px;
-        width: 0;
-        height: 0;
-        padding: 0;
-        content: '';
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        pointer-events: none;
-      }
-
-      &::before {
-        border-top: 5px solid ${palette.TEXT_BLACK};
-        top: 52%;
-      }
-
-      &::after {
-        bottom: 52%;
-        border-bottom: 5px solid ${palette.TEXT_BLACK};
-      }
     `
   }}
 `
@@ -134,7 +114,6 @@ const Base = styled.select`
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      padding-right: 20px;
       cursor: pointer;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       text-align: right;
@@ -168,4 +147,19 @@ const Base = styled.select`
       }
     `
   }}
+`
+
+const IconWrap = styled.span`
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+
+  & > svg {
+    vertical-align: top;
+  }
 `
