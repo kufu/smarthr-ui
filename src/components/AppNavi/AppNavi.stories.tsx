@@ -27,7 +27,7 @@ storiesOf('AppNavi', module).add('all', () => (
   <React.Fragment>
     <Wrapper>
       <Description>No child component</Description>
-      <AppNavi label="プラスメニュー" buttons={buttons}></AppNavi>
+      <AppNavi label="プラスメニュー" buttons={buttons} />
     </Wrapper>
     <Wrapper>
       <Description>With a child component</Description>
