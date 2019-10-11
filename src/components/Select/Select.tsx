@@ -110,8 +110,6 @@ const Base = styled.select`
       outline: none;
       box-sizing: border-box;
       appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
       cursor: pointer;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       text-align: right;
