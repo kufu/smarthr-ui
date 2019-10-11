@@ -7,7 +7,7 @@ import {
 import { CreatedPaletteTheme, createPalette, PaletteProperty } from './createPalette'
 import { CreatedSizeTheme, createSize, SizeProperty } from './createSize'
 
-interface ThemeProperty {
+export interface ThemeProperty {
   palette?: PaletteProperty
   size?: SizeProperty
   frame?: FrameProperty
