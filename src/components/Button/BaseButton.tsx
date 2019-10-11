@@ -86,20 +86,17 @@ const Base: any = styled.div`
       &.default {
         font-size: ${size.pxToRem(size.font.TALL)};
         height: 40px;
-        line-height: 40px;
         padding: 0 ${size.pxToRem(size.space.XS)};
       }
 
       &.s {
         font-size: ${size.pxToRem(size.font.SHORT)};
         height: 27px;
-        line-height: 27px;
         padding: 0 ${size.pxToRem(size.space.XXS)};
       }
 
       &.square {
         width: 40px;
-        line-height: 40px;
         padding: 0;
 
         &.s {
