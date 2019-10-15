@@ -32,6 +32,7 @@ const icons: Array<Props['name']> = [
   'fa-chevron-left',
   'fa-chevron-right',
   'fa-clone',
+  'fa-cloud-download-alt',
   'fa-cog',
   'fa-databas',
   'fa-ellipsis-h',
