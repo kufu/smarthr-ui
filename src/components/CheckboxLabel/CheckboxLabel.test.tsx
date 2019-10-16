@@ -1,12 +1,12 @@
 import { mount } from 'enzyme'
 import React from 'react'
 
-import { CheckboxLabel } from './CheckboxLabel'
+import { CheckBoxLabel } from './CheckBoxLabel'
 
-describe('CheckboxLabel', () => {
+describe('CheckBoxLabel', () => {
   it('should be match snapshot', () => {
     const component = mount(
-      <CheckboxLabel label="label" name="name" checked={true} disabled={false} />,
+      <CheckBoxLabel label="label" name="name" checked={true} disabled={false} />,
     )
     expect(component).toMatchSnapshot()
   })

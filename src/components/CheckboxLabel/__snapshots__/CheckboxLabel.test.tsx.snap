@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CheckboxLabel should be match snapshot 1`] = `
+exports[`CheckBoxLabel should be match snapshot 1`] = `
 <Component
   checked={true}
   disabled={false}
   label="label"
   name="name"
 >
-  <CheckboxLabelComponent
+  <CheckBoxLabelComponent
     checked={true}
     disabled={false}
     label="label"
@@ -154,7 +154,7 @@ exports[`CheckboxLabel should be match snapshot 1`] = `
                   disabled={false}
                   name="name"
                 >
-                  <CheckboxComponent
+                  <CheckBoxComponent
                     checked={true}
                     disabled={false}
                     name="name"
@@ -452,7 +452,7 @@ exports[`CheckboxLabel should be match snapshot 1`] = `
                                 },
                               }
                             }
-                            type="checkbox"
+                            type="CheckBox"
                           >
                             <styled.input
                               checked={true}
@@ -526,7 +526,7 @@ exports[`CheckboxLabel should be match snapshot 1`] = `
                                   },
                                 }
                               }
-                              type="checkbox"
+                              type="CheckBox"
                             >
                               <StyledComponent
                                 checked={true}
@@ -627,7 +627,7 @@ exports[`CheckboxLabel should be match snapshot 1`] = `
                                     },
                                   }
                                 }
-                                type="checkbox"
+                                type="CheckBox"
                               >
                                 <input
                                   checked={true}
@@ -639,7 +639,7 @@ exports[`CheckboxLabel should be match snapshot 1`] = `
                                   onMouseLeave={[Function]}
                                   onTouchEnd={[Function]}
                                   onTouchStart={[Function]}
-                                  type="checkbox"
+                                  type="CheckBox"
                                 />
                               </StyledComponent>
                             </styled.input>
@@ -898,7 +898,7 @@ exports[`CheckboxLabel should be match snapshot 1`] = `
                         </div>
                       </StyledComponent>
                     </styled.div>
-                  </CheckboxComponent>
+                  </CheckBoxComponent>
                 </Component>
                 <styled.p
                   theme={
@@ -1068,6 +1068,6 @@ exports[`CheckboxLabel should be match snapshot 1`] = `
         </div>
       </StyledComponent>
     </styled.div>
-  </CheckboxLabelComponent>
+  </CheckBoxLabelComponent>
 </Component>
 `;

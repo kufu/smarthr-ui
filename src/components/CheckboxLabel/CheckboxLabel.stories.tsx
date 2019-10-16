@@ -3,12 +3,12 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { CheckboxLabel } from './CheckboxLabel'
+import { CheckBoxLabel } from './CheckBoxLabel'
 import readme from './README.md'
 
 const onChange = action('onChange')
 
-storiesOf('CheckboxLabel', module)
+storiesOf('CheckBoxLabel', module)
   .addParameters({
     readme: {
       sidebar: readme,
@@ -20,7 +20,7 @@ storiesOf('CheckboxLabel', module)
         <Text>checked</Text>
         <List>
           <li>
-            <CheckboxLabel
+            <CheckBoxLabel
               label="enabled / light"
               name="name1"
               checked={true}
@@ -28,7 +28,7 @@ storiesOf('CheckboxLabel', module)
             />
           </li>
           <li>
-            <CheckboxLabel
+            <CheckBoxLabel
               label="disabled / light"
               name="name2"
               checked={true}
@@ -37,7 +37,7 @@ storiesOf('CheckboxLabel', module)
             />
           </li>
           <li className="dark">
-            <CheckboxLabel
+            <CheckBoxLabel
               label="enabled / dark"
               name="name3"
               checked={true}
@@ -52,7 +52,7 @@ storiesOf('CheckboxLabel', module)
         <Text>unchecked</Text>
         <List>
           <li>
-            <CheckboxLabel
+            <CheckBoxLabel
               label="enabled / light"
               name="name4"
               checked={false}
@@ -60,7 +60,7 @@ storiesOf('CheckboxLabel', module)
             />
           </li>
           <li>
-            <CheckboxLabel
+            <CheckBoxLabel
               label="disabled / light"
               name="name5"
               checked={false}
@@ -69,7 +69,7 @@ storiesOf('CheckboxLabel', module)
             />
           </li>
           <li className="dark">
-            <CheckboxLabel
+            <CheckBoxLabel
               label="enabled / dark"
               name="name6"
               checked={false}
@@ -84,7 +84,7 @@ storiesOf('CheckboxLabel', module)
         <Text>mixed</Text>
         <List>
           <li>
-            <CheckboxLabel
+            <CheckBoxLabel
               label="enabled / light"
               name="name7"
               checked={true}
@@ -93,7 +93,7 @@ storiesOf('CheckboxLabel', module)
             />
           </li>
           <li>
-            <CheckboxLabel
+            <CheckBoxLabel
               label="disabled / light"
               name="name8"
               checked={true}
@@ -103,7 +103,7 @@ storiesOf('CheckboxLabel', module)
             />
           </li>
           <li className="dark">
-            <CheckboxLabel
+            <CheckBoxLabel
               label="enabled / dark"
               name="name9"
               checked={true}

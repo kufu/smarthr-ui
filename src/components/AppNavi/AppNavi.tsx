@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { Tag } from '../Tag/Tag'
+import { StatusLabel } from '../StatusLabel/StatusLabel'
 import { AppNaviButton, AppNaviButtonProps } from './AppNaviButton'
 
 interface Props {
@@ -20,7 +20,7 @@ const AppNaviComponent: React.FC<Props & InjectedProps> = ({
   <Wrapper theme={theme}>
     {label && (
       <TagWrapper theme={theme}>
-        <Tag type="done">{label}</Tag>
+        <StatusLabel type="done">{label}</StatusLabel>
       </TagWrapper>
     )}
 

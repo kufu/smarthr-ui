@@ -17,7 +17,7 @@ export type Props = {
   onChange?: (name: string, checked: boolean) => void
 }
 
-const CheckboxComponent: FC<Props & InjectedProps> = ({
+const CheckBoxComponent: FC<Props & InjectedProps> = ({
   checked,
   name,
   disabled = false,
@@ -35,7 +35,7 @@ const CheckboxComponent: FC<Props & InjectedProps> = ({
   return (
     <Wrapper theme={theme} className={className}>
       <Input
-        type="checkbox"
+        type="CheckBox"
         checked={checked}
         name={name}
         disabled={disabled}
@@ -56,7 +56,7 @@ const CheckboxComponent: FC<Props & InjectedProps> = ({
   )
 }
 
-export const Checkbox = withTheme(CheckboxComponent)
+export const CheckBox = withTheme(CheckBoxComponent)
 
 const Wrapper = styled.div`
   position: relative;

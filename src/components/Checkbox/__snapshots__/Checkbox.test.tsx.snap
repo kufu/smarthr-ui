@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Checkbox should be match snapshot 1`] = `
+exports[`CheckBox should be match snapshot 1`] = `
 <Component
   checked={true}
   name="sample"
 >
-  <CheckboxComponent
+  <CheckBoxComponent
     checked={true}
     name="sample"
     theme={
@@ -302,7 +302,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                 },
               }
             }
-            type="checkbox"
+            type="CheckBox"
           >
             <styled.input
               checked={true}
@@ -376,7 +376,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                   },
                 }
               }
-              type="checkbox"
+              type="CheckBox"
             >
               <StyledComponent
                 checked={true}
@@ -477,7 +477,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                     },
                   }
                 }
-                type="checkbox"
+                type="CheckBox"
               >
                 <input
                   checked={true}
@@ -489,7 +489,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                   onMouseLeave={[Function]}
                   onTouchEnd={[Function]}
                   onTouchStart={[Function]}
-                  type="checkbox"
+                  type="CheckBox"
                 />
               </StyledComponent>
             </styled.input>
@@ -748,6 +748,6 @@ exports[`Checkbox should be match snapshot 1`] = `
         </div>
       </StyledComponent>
     </styled.div>
-  </CheckboxComponent>
+  </CheckBoxComponent>
 </Component>
 `;

@@ -1,8 +1,8 @@
 // components
 export { AppBar } from './components/AppBar'
-export { LightBalloon, DarkBalloon } from './components/Balloon'
-export { Checkbox } from './components/Checkbox'
-export { CheckboxLabel } from './components/CheckboxLabel'
+export { LightTooltip, DarkTooltip } from './components/Tooltip'
+export { CheckBox } from './components/CheckBox'
+export { CheckBoxLabel } from './components/CheckBoxLabel'
 export {
   Dropdown,
   DropdownTrigger,
@@ -11,13 +11,19 @@ export {
   DropdownCloser,
 } from './components/Dropdown'
 export { Field, TextField, NumberField, PasswordField } from './components/Field'
-export { Flash } from './components/Flash'
+export { FlashMessage } from './components/FlashMessage'
 export { TextInput, NumberInput, PasswordInput } from './components/Input'
 export { Loader } from './components/Loader'
-export { Modal, ModalWrapper, ModalTrigger, ModalEraser, ModalContent } from './components/Modal'
+export {
+  Dialog,
+  DialogWrapper,
+  DialogTrigger,
+  DialogEraser,
+  DialogContent,
+} from './components/Dialog'
 export { Pagination } from './components/Pagination'
-export { Radio } from './components/Radio'
-export { RadioLabel } from './components/RadioLabel'
+export { RadioButton } from './components/RadioButton'
+export { RadioButtonLabel } from './components/RadioButtonLabel'
 export {
   PrimaryButton,
   PrimaryButtonAnchor,
@@ -28,7 +34,7 @@ export {
   SkeletonButton,
   SkeletonButtonAnchor,
 } from './components/Button'
-export { Tag } from './components/Tag'
+export { StatusLabel } from './components/StatusLabel'
 export { Base } from './components/Base'
 export { Icon } from './components/Icon'
 export { Table, Head, Row, Cell, Body } from './components/Table'

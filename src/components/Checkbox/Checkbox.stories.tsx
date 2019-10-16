@@ -3,12 +3,12 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Checkbox } from './Checkbox'
+import { CheckBox } from './CheckBox'
 import readme from './README.md'
 
 const onChange = action('onChange')
 
-storiesOf('Checkbox', module)
+storiesOf('CheckBox', module)
   .addParameters({
     readme: {
       sidebar: readme,
@@ -20,13 +20,13 @@ storiesOf('Checkbox', module)
         <Text>checked</Text>
         <List>
           <li>
-            <Checkbox name="sample" checked={true} onChange={onChange} />
+            <CheckBox name="sample" checked={true} onChange={onChange} />
           </li>
           <li>
-            <Checkbox name="sample" checked={true} disabled={true} onChange={onChange} />
+            <CheckBox name="sample" checked={true} disabled={true} onChange={onChange} />
           </li>
           <li className="dark">
-            <Checkbox name="sample" checked={true} onChange={onChange} themeColor="dark" />
+            <CheckBox name="sample" checked={true} onChange={onChange} themeColor="dark" />
           </li>
         </List>
       </li>
@@ -35,13 +35,13 @@ storiesOf('Checkbox', module)
         <Text>unchecked</Text>
         <List>
           <li>
-            <Checkbox name="sample" checked={false} onChange={onChange} />
+            <CheckBox name="sample" checked={false} onChange={onChange} />
           </li>
           <li>
-            <Checkbox name="sample" checked={false} disabled={true} onChange={onChange} />
+            <CheckBox name="sample" checked={false} disabled={true} onChange={onChange} />
           </li>
           <li className="dark">
-            <Checkbox name="sample" checked={false} onChange={onChange} themeColor="dark" />
+            <CheckBox name="sample" checked={false} onChange={onChange} themeColor="dark" />
           </li>
         </List>
       </li>
@@ -50,10 +50,10 @@ storiesOf('Checkbox', module)
         <Text>mixed</Text>
         <List>
           <li>
-            <Checkbox name="sample" checked={true} mixed={true} onChange={onChange} />
+            <CheckBox name="sample" checked={true} mixed={true} onChange={onChange} />
           </li>
           <li>
-            <Checkbox
+            <CheckBox
               name="sample"
               checked={true}
               mixed={true}
@@ -62,7 +62,7 @@ storiesOf('Checkbox', module)
             />
           </li>
           <li className="dark">
-            <Checkbox
+            <CheckBox
               name="sample"
               checked={true}
               mixed={true}

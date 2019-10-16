@@ -3,27 +3,33 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
+import { RadioButton } from '../RadioButton'
 
-type Props = CheckBoxProps & {
+interface Props {
   label: string
+  checked: boolean
+  name: string
+  themeColor?: 'light' | 'dark'
+  disabled?: boolean
+  className?: string
+  onChange?: (name: string, checked: boolean) => void
 }
 
-const CheckBoxLabelComponent: React.FC<Props & InjectedProps> = ({
+const RadioButtonLabelComponent: React.FC<Props & InjectedProps> = ({
   label,
-  theme,
   className = '',
+  theme,
   ...props
 }) => (
   <Wrapper className={className}>
     <Label className={`${props.disabled ? 'disabled' : ''}`}>
-      <CheckBox {...props} />
+      <RadioButton {...props} />
       <Txt theme={theme}>{label}</Txt>
     </Label>
   </Wrapper>
 )
 
-export const CheckBoxLabel = withTheme(CheckBoxLabelComponent)
+export const RadioButtonLabel = withTheme(RadioButtonLabelComponent)
 
 const Wrapper = styled.div`
   display: inline-block;
