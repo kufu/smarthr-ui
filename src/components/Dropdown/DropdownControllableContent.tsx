@@ -1,9 +1,12 @@
 import React, { useContext, useEffect } from 'react'
 
+import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { DropdownContext } from './Dropdown'
 import { toggleContentView } from './DropdownContent'
 
-export const DropdownControllableContent: React.FC<{}> = ({ children }) => {
+const DropdownControllableContentComponent: React.FC<
+  { children: React.ReactNode } & InjectedProps
+> = ({ theme, children }) => {
   const { key, active, triggerRect, onClickCloser } = useContext(DropdownContext)
 
   useEffect(
@@ -11,6 +14,7 @@ export const DropdownControllableContent: React.FC<{}> = ({ children }) => {
       active,
       triggerRect,
       children,
+      theme,
       onClickCloser,
     ),
     [active, children, key, onClickCloser],
@@ -18,3 +22,5 @@ export const DropdownControllableContent: React.FC<{}> = ({ children }) => {
 
   return null
 }
+
+export const DropdownControllableContent = withTheme(DropdownControllableContentComponent)
