@@ -1,26 +1,26 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
+import { createPortal } from 'react-dom'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { DropdownContext } from './Dropdown'
-import { toggleContentView } from './DropdownContent'
+import { DropdownContentContext, createElement } from './DropdownContent'
+import { DropdownContentInner } from './DropdownContentInner'
 
-const DropdownControllableContentComponent: React.FC<
-  { children: React.ReactNode } & InjectedProps
-> = ({ theme, children }) => {
+export const DropdownControllableContent: React.FC<{}> = ({ children }) => {
   const { key, active, triggerRect, onClickCloser } = useContext(DropdownContext)
 
-  useEffect(
-    toggleContentView(`dropdown-content-${key}`, `dropdown-trigger-${key}`)(
-      active,
-      triggerRect,
-      children,
-      theme,
-      onClickCloser,
-    ),
-    [active, children, key, onClickCloser],
+  if (!active) return null
+
+  let element = document.querySelector(`.dropdown-content-${key}`)
+
+  if (!element) {
+    element = createElement('div', `dropdown-content-${key} dropdown-trigger-${key}`)
+    document.body.appendChild(element)
+  }
+
+  return createPortal(
+    <DropdownContentContext.Provider value={{ onClickCloser }}>
+      <DropdownContentInner triggerRect={triggerRect}>{children}</DropdownContentInner>
+    </DropdownContentContext.Provider>,
+    element,
   )
-
-  return null
 }
-
-export const DropdownControllableContent = withTheme(DropdownControllableContentComponent)

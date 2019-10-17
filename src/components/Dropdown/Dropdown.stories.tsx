@@ -12,6 +12,36 @@ import { SecondaryButton, PrimaryButton } from '../Button'
 
 import readme from './README.md'
 
+import { RadioLabel } from '../RadioLabel'
+
+const TestComponent = () => {
+  const [value, setValue] = React.useState('hoge')
+  const onChange = React.useCallback(name => {
+    setValue(name)
+  }, [])
+
+  return (
+    <Dropdown>
+      <DropdownTrigger>
+        <SecondaryButton>trigger button</SecondaryButton>
+      </DropdownTrigger>
+      <DropdownControllableContent>
+        <ul>
+          <li>
+            <RadioLabel name="hoge" label="hoge" checked={value === 'hoge'} onChange={onChange} />
+          </li>
+          <li>
+            <RadioLabel name="fuga" label="fuga" checked={value === 'fuga'} onChange={onChange} />
+          </li>
+          <li>
+            <RadioLabel name="piyo" label="piyo" checked={value === 'piyo'} onChange={onChange} />
+          </li>
+        </ul>
+      </DropdownControllableContent>
+    </Dropdown>
+  )
+}
+
 const ListMenu = () => (
   <List>
     <li>
@@ -35,6 +65,7 @@ storiesOf('Dropdown', module)
       sidebar: readme,
     },
   })
+  .add('test', () => <TestComponent />)
   .add('all', () => (
     <Wrapper>
       <Legends>
