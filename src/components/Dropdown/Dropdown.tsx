@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
-import { Rect, getRandomStr, getParentElementByClassNameRecursively } from './dropdownHelper'
+import { Rect, hasParentElement } from './dropdownHelper'
 
 type DropdownContextType = {
-  key: string
+  element: HTMLElement | null
   active: boolean
   triggerRect: Rect
   onClickTrigger: (rect: Rect) => void
@@ -13,7 +13,7 @@ type DropdownContextType = {
 const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
 
 export const DropdownContext = React.createContext<DropdownContextType>({
-  key: '',
+  element: null,
   active: false,
   triggerRect: initialRect,
   onClickTrigger: () => {},
@@ -21,23 +21,22 @@ export const DropdownContext = React.createContext<DropdownContextType>({
 })
 
 export const Dropdown: React.FC<{}> = ({ children }) => {
-  const [key, setKey] = useState('')
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
+  const element = useRef(document.createElement('div'))
+
   useEffect(() => {
-    const newKey = getRandomStr()
     const onClickBody = (e: any) => {
-      if (getParentElementByClassNameRecursively(e.target, `dropdown-trigger-${newKey}`)) return
+      if (hasParentElement(e.target, element.current)) return
       setActive(false)
     }
 
-    setKey(newKey)
+    document.body.appendChild(element.current)
     document.body.addEventListener('click', onClickBody, false)
 
     return () => {
-      const element = document.querySelector(`.dropdown-content-${newKey}`)
-      if (element) document.body.removeChild(element)
+      document.body.removeChild(element.current)
       document.body.removeEventListener('click', onClickBody, false)
     }
   }, [])
@@ -45,7 +44,7 @@ export const Dropdown: React.FC<{}> = ({ children }) => {
   return (
     <DropdownContext.Provider
       value={{
-        key,
+        element: element.current,
         active,
         triggerRect,
         onClickTrigger: rect => {

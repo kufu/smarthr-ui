@@ -4,11 +4,10 @@ import styled from 'styled-components'
 import { DropdownContext } from './Dropdown'
 
 export const DropdownTrigger: React.FC<{}> = ({ children }) => {
-  const { key, active, onClickTrigger } = useContext(DropdownContext)
+  const { active, onClickTrigger } = useContext(DropdownContext)
 
   return (
     <Wrapper
-      className={`dropdown-trigger-${key}`}
       onClick={e => {
         const rect = e.currentTarget.getBoundingClientRect()
         onClickTrigger({
