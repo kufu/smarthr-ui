@@ -10,7 +10,7 @@ export const DropdownContentContext = React.createContext<{
   onClickCloser: () => {},
 })
 
-export function createElement(tagName: string, className: string) {
+function createElement(tagName: string, className: string) {
   const element = document.createElement(tagName)
   element.className = className
   return element
