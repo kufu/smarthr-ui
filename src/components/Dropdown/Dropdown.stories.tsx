@@ -6,9 +6,9 @@ import styled from 'styled-components'
 import { Dropdown } from './Dropdown'
 import { DropdownTrigger } from './DropdownTrigger'
 import { DropdownContent } from './DropdownContent'
-import { DropdownControllableContent } from './DropdownControllableContent'
 import { DropdownCloser } from './DropdownCloser'
 import { SecondaryButton, PrimaryButton } from '../Button'
+import { RadioLabel } from '../RadioLabel'
 
 import readme from './README.md'
 
@@ -28,6 +28,69 @@ const ListMenu = () => (
     </li>
   </List>
 )
+
+const ControlableDropdown = () => {
+  const [value, setValue] = React.useState('hoge')
+  const onChange = React.useCallback(name => {
+    setValue(name)
+  }, [])
+
+  return (
+    <Dropdown>
+      <DropdownTrigger>
+        <SecondaryButton>trigger button</SecondaryButton>
+      </DropdownTrigger>
+      <DropdownContent controllable>
+        <>
+          <ControllableBoxMain>
+            <Text>
+              Use `DropdownControllableContent` to get a controllable dropdown.
+              <br />
+              Clicking inside content of controllable dropdown does not close dropdown.
+              <br />
+              In that case, you can use `DropdownCloser` to close the dropdown.
+            </Text>
+            <RadioButtonList>
+              <li>
+                <RadioLabel
+                  name="hoge"
+                  label="hoge"
+                  checked={value === 'hoge'}
+                  onChange={onChange}
+                />
+              </li>
+              <li>
+                <RadioLabel
+                  name="fuga"
+                  label="fuga"
+                  checked={value === 'fuga'}
+                  onChange={onChange}
+                />
+              </li>
+              <li>
+                <RadioLabel
+                  name="piyo"
+                  label="piyo"
+                  checked={value === 'piyo'}
+                  onChange={onChange}
+                />
+              </li>
+            </RadioButtonList>
+          </ControllableBoxMain>
+          <ControllableBoxBottom>
+            <DropdownCloser>
+              <SecondaryButton>Close only</SecondaryButton>
+            </DropdownCloser>
+            <DropdownCloser>
+              <PrimaryButton onClick={action('clicked button 1')}>Action and close</PrimaryButton>
+            </DropdownCloser>
+            <PrimaryButton onClick={action('clicked button 2')}>Action only</PrimaryButton>
+          </ControllableBoxBottom>
+        </>
+      </DropdownContent>
+    </Dropdown>
+  )
+}
 
 storiesOf('Dropdown', module)
   .addParameters({
@@ -52,35 +115,7 @@ storiesOf('Dropdown', module)
         </li>
         <li>
           <Box>
-            <Dropdown>
-              <DropdownTrigger>
-                <SecondaryButton>Controllable Dropdown</SecondaryButton>
-              </DropdownTrigger>
-              <DropdownControllableContent>
-                <>
-                  <ControllableBoxMain>
-                    <Text>
-                      Use `DropdownControllableContent` to get a controllable dropdown.
-                      <br />
-                      Clicking inside content of controllable dropdown does not close dropdown.
-                      <br />
-                      In that case, you can use `DropdownCloser` to close the dropdown.
-                    </Text>
-                  </ControllableBoxMain>
-                  <ControllableBoxBottom>
-                    <DropdownCloser>
-                      <SecondaryButton>Close only</SecondaryButton>
-                    </DropdownCloser>
-                    <DropdownCloser>
-                      <PrimaryButton onClick={action('clicked button 1')}>
-                        Action and close
-                      </PrimaryButton>
-                    </DropdownCloser>
-                    <PrimaryButton onClick={action('clicked button 2')}>Action only</PrimaryButton>
-                  </ControllableBoxBottom>
-                </>
-              </DropdownControllableContent>
-            </Dropdown>
+            <ControlableDropdown />
           </Box>
         </li>
         <li>
@@ -191,4 +226,7 @@ const RightAlign = styled.div`
 `
 const Bottom = styled.div`
   height: 500px;
+`
+const RadioButtonList = styled.ul`
+  list-style: none;
 `

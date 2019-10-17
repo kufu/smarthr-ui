@@ -1,64 +1,45 @@
-import React, { useContext, useEffect } from 'react'
-import { render } from 'react-dom'
+import React, { useContext } from 'react'
+import { createPortal } from 'react-dom'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { ThemeProvider } from '../../themes/ThemeProvider'
-import { Rect } from './dropdownHelper'
 import { DropdownContext } from './Dropdown'
 import { DropdownContentInner } from './DropdownContentInner'
 
-type DropdownContentContextType = {
+export const DropdownContentContext = React.createContext<{
   onClickCloser: () => void
-}
-
-export const DropdownContentContext = React.createContext<DropdownContentContextType>({
+}>({
   onClickCloser: () => {},
 })
 
-export const toggleContentView = (className: string, additionalClassName?: string) => (
-  active: boolean,
-  triggerRect: Rect,
-  children: React.ReactNode,
-  theme: InjectedProps['theme'],
-  onClickCloser: () => void,
-) => () => {
-  if (active) {
-    const element = document.createElement('div')
-    let classNames = className
-    if (additionalClassName) classNames += ` ${additionalClassName}`
-    element.className = classNames
-    render(
-      <ThemeProvider theme={theme}>
-        <DropdownContentContext.Provider value={{ onClickCloser }}>
-          <DropdownContentInner triggerRect={triggerRect}>{children}</DropdownContentInner>
-        </DropdownContentContext.Provider>
-      </ThemeProvider>,
-      document.body.appendChild(element),
-    )
-  } else {
-    const element = document.querySelector(`.${className}`)
-    if (element) document.body.removeChild(element)
-  }
+function createElement(tagName: string, className: string) {
+  const element = document.createElement(tagName)
+  element.className = className
+  return element
 }
 
-const DropdownContentComponent: React.FC<{ children: React.ReactNode } & InjectedProps> = ({
-  theme,
-  children,
-}) => {
+type Props = {
+  controllable?: boolean
+}
+
+export const DropdownContent: React.FC<Props> = ({ controllable = false, children }) => {
   const { key, active, triggerRect, onClickCloser } = useContext(DropdownContext)
 
-  useEffect(
-    toggleContentView(`dropdown-content-${key}`)(
-      active,
-      triggerRect,
-      children,
-      theme,
-      onClickCloser,
-    ),
-    [active, children, key, onClickCloser],
+  if (!active) return null
+
+  const contentClassName = `dropdown-content-${key}`
+  let element = document.querySelector(`.${contentClassName}`)
+
+  if (!element) {
+    element = createElement(
+      'div',
+      `${contentClassName} ${controllable ? `dropdown-trigger-${key}` : ''}`,
+    )
+    document.body.appendChild(element)
+  }
+
+  return createPortal(
+    <DropdownContentContext.Provider value={{ onClickCloser }}>
+      <DropdownContentInner triggerRect={triggerRect}>{children}</DropdownContentInner>
+    </DropdownContentContext.Provider>,
+    element,
   )
-
-  return null
 }
-
-export const DropdownContent = withTheme(DropdownContentComponent)
