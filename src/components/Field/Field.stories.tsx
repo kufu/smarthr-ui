@@ -3,55 +3,49 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Field, NumberField, PasswordField, TextField } from './Field'
+import { Field } from './Field'
 
 storiesOf('Field', module).add('all', () => (
   <List>
     <li>
-      <TextField name="sample" value="string" label="string" />
+      <Field defaultValue="string" label="string" />
     </li>
     <li>
-      <NumberField name="sample" value="1" label="number" />
+      <Field type="number" defaultValue="1" label="number" />
     </li>
     <li>
-      <PasswordField name="sample" value="password" label="password" />
+      <Field type="password" defaultValue="password" label="password" />
     </li>
     <li>
-      <TextField
+      <Field
         name="sample"
-        value="string"
+        defaultValue="string"
         label="long title.........................................."
       />
     </li>
     <li>
-      <TextField name="sample" value="string" label="required" required={true} />
+      <Field defaultValue="string" label="required" required={true} />
     </li>
     <li>
-      <TextField name="sample" value="" label="disabled" disabled={true} />
+      <Field label="disabled" disabled={true} />
     </li>
     <li>
-      <TextField name="sample" value="width: 100%" label="width" width="100%" />
+      <Field defaultValue="width: 100%" label="width" width="100%" />
     </li>
     <li>
-      <TextField name="sample" value="" label="placeholder" placeholder="placeholder" />
+      <Field label="placeholder" placeholder="placeholder" />
     </li>
     <li>
-      <TextField name="sample" value="" label="onChange" onChange={action('onChange!!')} />
+      <Field label="onChange" onChange={action('onChange!!')} />
     </li>
     <li>
-      <TextField name="sample" value="" label="onBlur" onBlur={action('onBlur!!')} />
+      <Field label="onBlur" onBlur={action('onBlur!!')} />
     </li>
     <li>
-      <TextField
-        name="sample"
-        value=""
-        label="help message"
-        help="This is help message."
-        width={400}
-      />
+      <Field label="help message" help="This is help message." width={400} />
     </li>
     <li>
-      <TextField name="sample" value="" label="error message" error="An error occurred" />
+      <Field label="error message" error="An error occurred" />
     </li>
     <li>
       <Field label="custom field">

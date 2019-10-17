@@ -3,47 +3,23 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-import { NumberInput, PasswordInput, Props as InputProps, TextInput } from '../Input'
+import { Input, Props as InputProps } from '../Input'
 import { StatusLabel } from '../StatusLabel'
 
-interface Props {
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
+
+type Props = Omit<InputProps, 'error'> & {
   label: string
-  name?: string
-  value?: string
-  required?: boolean
-  placeholder?: string
-  disabled?: boolean
   error?: string
   help?: string
-  width?: number | string
   className?: string
-  onChange?: (name: string, value: string) => void
-  onBlur?: (name: string, value: string) => void
-  children?: React.ReactNode
 }
 
-const fieldFactory: (
-  InputComponent?: React.ComponentType<InputProps>,
-) => React.SFC<Props & InjectedProps> = InputComponent => ({
-  label,
-  name = '',
-  value = '',
-  required,
-  placeholder,
-  disabled,
-  error,
-  help,
-  width,
-  className = '',
-  onChange,
-  onBlur,
-  theme,
-  children,
-}) => {
-  const widthStyle = typeof width === 'number' ? `${width}px` : width
+const FieldComponent: React.FC<Props & InjectedProps> = props => {
+  const { label, required, error, help, width, className = '', theme, children } = props
 
   return (
-    <Wrapper width={widthStyle} className={className}>
+    <Wrapper width={width} className={className}>
       <LabelHead theme={theme}>
         <Title theme={theme}>
           {label}
@@ -55,34 +31,19 @@ const fieldFactory: (
         </Title>
         {help && <Help theme={theme}>{help}</Help>}
       </LabelHead>
-      {InputComponent ? (
-        <InputComponent
-          value={value}
-          name={name}
-          required={required}
-          placeholder={placeholder}
-          disabled={disabled}
-          error={!!error}
-          width={width}
-          onChange={onChange}
-          onBlur={onBlur}
-        />
-      ) : (
-        children
-      )}
+      {children ? children : <Input {...props} width={width} error={!!error} />}
       {error && <Error theme={theme}>{error}</Error>}
     </Wrapper>
   )
 }
 
-export const Field = withTheme(fieldFactory())
-export const TextField = withTheme(fieldFactory(TextInput))
-export const NumberField = withTheme(fieldFactory(NumberInput))
-export const PasswordField = withTheme(fieldFactory(PasswordInput))
+export const Field = withTheme(FieldComponent)
 
-const Wrapper: any = styled.div`
-  display: inline-block;
-  width: ${({ width }: { width: string }) => width};
+const Wrapper: any = styled.div<{ width: string | number }>`
+  ${({ width }) => css`
+    display: inline-block;
+    width: ${typeof width === 'number' ? `${width}px` : width};
+  `}
 `
 const LabelHead = styled.div`
   ${({ theme }: InjectedProps) => css`
