@@ -7,7 +7,8 @@
     "lodash.merge": "^4.6.1",
     "lodash.range": "^3.2.0",
     "polished": "^3.4.1",
-    "react-icons": "^3.7.0"
+    "react-icons": "^3.7.0",
+    "react-transition-group": "^4.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -26,6 +27,7 @@
     "@types/react": "^16.8.16",
     "@types/react-dom": "^16.9.1",
     "@types/react-test-renderer": "^16.8.1",
+    "@types/react-transition-group": "^4.2.3",
     "@types/storybook__addon-actions": "^3.4.3",
     "@types/storybook__react": "^4.0.2",
     "@types/styled-components": "^4.1.16",
