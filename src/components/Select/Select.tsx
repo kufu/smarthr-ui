@@ -10,27 +10,15 @@ interface Option {
   value: string
 }
 
-interface Props {
-  className?: string
-  value: string
-  name: string
-  required?: boolean
-  disabled?: boolean
+type Props = React.SelectHTMLAttributes<HTMLSelectElement> & {
   error?: boolean
   width?: number | string
   options: Option[]
   labelText?: string
-  onChange?: (name: string, value: string) => void
 }
 
 interface StyledProps extends InjectedProps {
   width: string
-}
-
-interface SelectEvent {
-  currentTarget: {
-    value: string
-  }
 }
 
 class SelectComponent extends React.PureComponent<Props & InjectedProps> {
@@ -75,10 +63,9 @@ class SelectComponent extends React.PureComponent<Props & InjectedProps> {
     )
   }
 
-  private handleChange = (e: SelectEvent) => {
-    const { name, onChange } = this.props
-    const value = e.currentTarget.value
-    if (onChange) onChange(name, value)
+  private handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { onChange } = this.props
+    if (onChange) onChange(e)
   }
 }
 
