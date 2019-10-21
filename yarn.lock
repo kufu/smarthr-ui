@@ -12005,10 +12005,10 @@ refractor@^2.4.1:
     parse-entities "^1.1.2"
     prismjs "~1.16.0"
 
-reg-cli@^0.15.7:
-  version "0.15.7"
-  resolved "https://registry.yarnpkg.com/reg-cli/-/reg-cli-0.15.7.tgz#d577b3346683a1df3f55dc2469c8efd339dfe0c0"
-  integrity sha512-4IDZsvY6kgUWwRYv7I1BKSGkn2MhS8EIHRdqGp16Yu9CQcqcGoKbrRkx4LrAuIAID3ftyAZI9r696Vg8e6cprQ==
+reg-cli@^0.15.10:
+  version "0.15.10"
+  resolved "https://registry.yarnpkg.com/reg-cli/-/reg-cli-0.15.10.tgz#4389ea488bac3b67b6d91a44f52d7e3668794d40"
+  integrity sha512-ecgGMJZJYdyK6I0UPx1c90r5/70znZbPesUFauroO1QN5YEbEFL4qmehVlp4trAe8fcxvcDxo2paIRr0S5+6LQ==
   dependencies:
     bluebird "3.5.5"
     chalk "2.4.2"
@@ -12058,13 +12058,13 @@ reg-publish-s3-plugin@^0.7.22:
     reg-suit-util "^0.7.25"
     uuid "^3.1.0"
 
-reg-suit-core@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.8.1.tgz#ecf66ebcd6a3cf1ea9e66ef67cb60c3401aeb97d"
-  integrity sha512-IiPbU5PuW1bJ7Q/WLf+dEVQfuSdL0BLFqVwqj5nTpbrhrhtc09MQPOJrovXBxmbOWJdx2v7fjR3LhiYwt4k+xQ==
+reg-suit-core@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.8.2.tgz#08739bd39991f949b4a4416f46eee759a45b09b4"
+  integrity sha512-LPUUWl1Y86SPN9A83svw6a1KkplbcThCseJ3ii2v9tJQ59X6HeoIud7chuKjV8T2WkvBTq9GwCB3y4g2d8bDBQ==
   dependencies:
     cpx "^1.5.0"
-    reg-cli "^0.15.7"
+    reg-cli "^0.15.10"
     reg-suit-util "^0.7.25"
     rimraf "^2.6.1"
 
@@ -12082,14 +12082,14 @@ reg-suit-util@^0.7.25:
     mkdirp "^0.5.1"
 
 reg-suit@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.8.1.tgz#e86c4dec079546ca7132002d3cf245899b8f260e"
-  integrity sha512-7VzJf3Bdt2DlLpX4VfD8SvlXHiKeupD51laYCL/Zy2UZp+ix0HkXOFNdwLFfgyo52uMrtWUZSHDIp1qAn/IaVw==
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.8.2.tgz#8b6c87206f173311c55271e008af2ecbe2047bc5"
+  integrity sha512-h+2KY0HLxYCS0OHeCgZEtKoG4W8eDERoZ4qGIKQTJbM7IOR2mr74TC+yuMfbagreab1f2iHDOMPjHm2Ta/9Q7Q==
   dependencies:
     cp-file "^4.2.0"
     ignore "^3.3.7"
     inquirer "^3.1.1"
-    reg-suit-core "^0.8.1"
+    reg-suit-core "^0.8.2"
     reg-suit-util "^0.7.25"
     yargs "^8.0.2"
 
