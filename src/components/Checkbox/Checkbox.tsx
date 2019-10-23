@@ -7,9 +7,14 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { Icon } from '../Icon'
 import { hoverable } from '../../hocs/hoverable'
 
-export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
+export type Props = {
+  checked: boolean
+  name: string
   themeColor?: 'light' | 'dark'
+  disabled?: boolean
   mixed?: boolean
+  className?: string
+  onChange?: (name: string, checked: boolean) => void
 }
 
 const CheckboxComponent: FC<Props & InjectedProps> = ({
@@ -23,12 +28,9 @@ const CheckboxComponent: FC<Props & InjectedProps> = ({
   theme,
 }) => {
   const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (onChange) onChange(e)
-    },
-    [onChange],
-  )
+  const handleChange = useCallback(() => {
+    if (onChange) onChange(name, !checked)
+  }, [checked, name, onChange])
 
   return (
     <Wrapper theme={theme} className={className}>
