@@ -9,20 +9,11 @@ import { isTouchDevice } from '../../libs/ua'
 type Tag = 'button' | 'a'
 type Size = 'default' | 's'
 
-interface ClickEvent {
-  preventDefault: () => void
-}
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
 
-export interface ButtonProps extends BaseProps {
-  onClick?: (e: ClickEvent) => void
-  disabled?: boolean
-}
-
-export interface AnchorProps extends BaseProps {
-  href: string
-  target?: string
-  rel?: string
-}
+export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'size' | 'prefix'> &
+  BaseProps
+export type AnchorProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'prefix'> & BaseProps
 
 export interface BaseProps {
   size?: Size
