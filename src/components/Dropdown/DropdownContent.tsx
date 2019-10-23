@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import { createPortal } from 'react-dom'
 
 import { DropdownContext } from './Dropdown'
 import { DropdownContentInner } from './DropdownContentInner'
@@ -16,16 +15,14 @@ type Props = {
 }
 
 export const DropdownContent: React.FC<Props> = ({ controllable = false, children }) => {
-  const { element, active, triggerRect, onClickCloser } = useContext(DropdownContext)
-
-  if (!active || !element) return null
-
-  return createPortal(
-    <DropdownContentContext.Provider value={{ onClickCloser }}>
-      <DropdownContentInner triggerRect={triggerRect}>
-        {controllable ? children : <DropdownCloser>{children}</DropdownCloser>}
-      </DropdownContentInner>
-    </DropdownContentContext.Provider>,
-    element,
+  const { DropdownContentRoot, triggerRect, onClickCloser } = useContext(DropdownContext)
+  return (
+    <DropdownContentRoot>
+      <DropdownContentContext.Provider value={{ onClickCloser }}>
+        <DropdownContentInner triggerRect={triggerRect}>
+          {controllable ? children : <DropdownCloser>{children}</DropdownCloser>}
+        </DropdownContentInner>
+      </DropdownContentContext.Provider>
+    </DropdownContentRoot>
   )
 }
