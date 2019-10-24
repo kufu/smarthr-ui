@@ -19,3 +19,5 @@ export { Base } from './components/Base'
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
+
+console.log('test')
