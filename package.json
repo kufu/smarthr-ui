@@ -61,7 +61,7 @@
   "peerDependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.4.0"
   },
   "bugs": {
     "url": "https://github.com/kufu/smarthr-ui/issues"
