@@ -153,6 +153,7 @@ exports[`AppBar should be match snapshot 1`] = `
             "styledComponentId": "sc-bdVaJa",
             "target": "div",
             "toString": [Function],
+            "usesTheme": false,
             "warnTooManyClasses": [Function],
             "withComponent": [Function],
           }

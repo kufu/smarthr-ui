@@ -159,6 +159,7 @@ exports[`Tag should be match snapshot 1`] = `
             "styledComponentId": "sc-bdVaJa",
             "target": "span",
             "toString": [Function],
+            "usesTheme": false,
             "warnTooManyClasses": [Function],
             "withComponent": [Function],
           }
@@ -229,7 +230,7 @@ exports[`Tag should be match snapshot 1`] = `
         }
       >
         <span
-          className="success sc-bdVaJa iISWOs"
+          className="sc-bdVaJa iISWOs success"
         >
           hello
         </span>
