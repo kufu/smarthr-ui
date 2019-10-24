@@ -142,7 +142,7 @@ exports[`Checkbox should be match snapshot 1`] = `
             "attrs": Array [],
             "componentStyle": ComponentStyle {
               "componentId": "sc-bdVaJa",
-              "isStatic": true,
+              "isStatic": false,
               "lastClassName": "hObIwy",
               "rules": Array [
                 "
@@ -162,6 +162,7 @@ exports[`Checkbox should be match snapshot 1`] = `
             "styledComponentId": "sc-bdVaJa",
             "target": "div",
             "toString": [Function],
+            "usesTheme": false,
             "warnTooManyClasses": [Function],
             "withComponent": [Function],
           }
@@ -327,6 +328,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                   "styledComponentId": "sc-htpNat",
                   "target": "input",
                   "toString": [Function],
+                  "usesTheme": false,
                   "warnTooManyClasses": [Function],
                   "withComponent": [Function],
                 }
@@ -497,6 +499,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                   "styledComponentId": "sc-bwzfXH",
                   "target": "span",
                   "toString": [Function],
+                  "usesTheme": false,
                   "warnTooManyClasses": [Function],
                   "withComponent": [Function],
                 }
@@ -566,7 +569,7 @@ exports[`Checkbox should be match snapshot 1`] = `
               }
             >
               <span
-                className="active  light sc-bwzfXH iJVVrz"
+                className="sc-bwzfXH iJVVrz active  light"
               />
             </StyledComponent>
           </styled.span>
@@ -578,7 +581,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                   "attrs": Array [],
                   "componentStyle": ComponentStyle {
                     "componentId": "sc-bxivhb",
-                    "isStatic": true,
+                    "isStatic": false,
                     "lastClassName": "gDnquz",
                     "rules": Array [
                       "
@@ -603,6 +606,7 @@ exports[`Checkbox should be match snapshot 1`] = `
                   "styledComponentId": "sc-bxivhb",
                   "target": "span",
                   "toString": [Function],
+                  "usesTheme": false,
                   "warnTooManyClasses": [Function],
                   "withComponent": [Function],
                 }
