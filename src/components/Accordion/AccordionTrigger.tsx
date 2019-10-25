@@ -14,10 +14,11 @@ const AccordionTriggerComponent: React.SFC<Props> = ({
   className = '',
 }) => {
   const { expanded, name, onClick } = useContext(AccordionContext)
-  console.log('TCL: { expanded, name, onClick }', { expanded, name, onClick })
+
   const handleClick = () => {
     return onClick(name, !expanded)
   }
+
   return (
     <button
       onClick={handleClick}

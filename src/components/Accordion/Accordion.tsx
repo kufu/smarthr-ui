@@ -18,17 +18,15 @@ export const AccordionContext = React.createContext<ContextType>({
 
 const AccordionComponent: React.FC<Props> = ({ children, name, expanded = false, onClick }) => {
   return (
-    <>
-      <AccordionContext.Provider
-        value={{
-          expanded,
-          name,
-          onClick,
-        }}
-      >
-        {children}
-      </AccordionContext.Provider>
-    </>
+    <AccordionContext.Provider
+      value={{
+        expanded,
+        name,
+        onClick,
+      }}
+    >
+      {children}
+    </AccordionContext.Provider>
   )
 }
 
