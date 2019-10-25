@@ -3,23 +3,21 @@ import { withTheme } from '../../hocs/withTheme'
 
 interface Props {
   children: React.ReactElement | string
-  accordionKey: string
   expanded?: boolean
   disabled?: boolean
   className?: string
-  onClick?: (accordionKey: string) => void
+  onClick?: (expanded: boolean) => void
 }
 
 const AccordionTriggerComponent: React.SFC<Props> = ({
   children,
-  accordionKey,
   expanded = false,
   disabled = false,
   className = '',
   onClick,
 }) => {
   const handleClick = () => {
-    onClick && onClick(accordionKey)
+    onClick && onClick(!expanded)
   }
   return (
     <button

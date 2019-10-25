@@ -12,7 +12,6 @@ const AccordionContentComponent: React.FC<Props & InjectedProps> = ({ expanded, 
   const wrapperRef = React.useRef<HTMLDivElement>(null)
 
   const handleEntering = (node: HTMLElement) => {
-    console.log(node)
     const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
     node.style.height = `${wrapperHeight}px`
   }

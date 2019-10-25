@@ -3,7 +3,6 @@ import { withTheme } from '../../hocs/withTheme'
 
 interface Props {
   children: React.ReactNode
-  accordionKey: string
   expanded?: boolean
   disabled?: boolean
   onClick: () => void
