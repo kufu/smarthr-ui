@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { withTheme } from '../../hocs/withTheme'
 
-interface Props {
+type Props = {
   children: React.ReactNode
   expanded?: boolean
   name: string

@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { withTheme } from '../../hocs/withTheme'
 import { AccordionContext } from './Accordion'
 
-interface Props {
+type Props = {
   children: React.ReactElement | string
   disabled?: boolean
   className?: string
