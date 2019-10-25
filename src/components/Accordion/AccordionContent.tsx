@@ -1,10 +1,10 @@
-import React, { useContext } from 'react'
+import React, { useContext, useCallback } from 'react'
 import styled from 'styled-components'
 import { Transition } from 'react-transition-group'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { AccordionContext } from './Accordion'
 
-interface Props {
+type Props = {
   children: React.ReactNode
 }
 
@@ -13,26 +13,38 @@ const AccordionContentComponent: React.FC<Props & InjectedProps> = ({ children }
 
   const wrapperRef = React.useRef<HTMLDivElement>(null)
 
-  const handleEntering = (node: HTMLElement) => {
-    const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
-    node.style.height = `${wrapperHeight}px`
-  }
+  const handleEntering = useCallback(
+    (node: HTMLElement) => {
+      const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
+      node.style.height = `${wrapperHeight}px`
+    },
+    [wrapperRef],
+  )
 
   const handleEnterd = (node: HTMLElement) => {
     node.style.height = 'auto'
   }
 
-  const handleExit = (node: HTMLElement) => {
-    const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
-    node.style.height = `${wrapperHeight}px`
-  }
-  const handleExiting = (node: HTMLElement) => {
-    const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
-    node.style.height = `${wrapperHeight}px`
-  }
+  const handleExit = useCallback(
+    (node: HTMLElement) => {
+      const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
+      node.style.height = `${wrapperHeight}px`
+    },
+    [wrapperRef],
+  )
+
+  const handleExiting = useCallback(
+    (node: HTMLElement) => {
+      const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
+      node.style.height = `${wrapperHeight}px`
+    },
+    [wrapperRef],
+  )
+
   const handleExited = (node: HTMLElement) => {
-    node.style.height = `0px`
+    node.style.height = '0px'
   }
+
   return (
     <Transition
       in={expanded}
