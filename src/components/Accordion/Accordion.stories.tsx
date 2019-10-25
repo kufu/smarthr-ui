@@ -7,34 +7,33 @@ import { AccordionContent } from './AccordionContent'
 
 storiesOf('Accordion', module).add('Accordion', () => {
   const [state, setstate] = useState('')
-  const handleClick = (value: string, expanded: boolean) => {
-    console.log({ value, expanded })
+  const handleClick = (value: string, _expanded: boolean) => {
     setstate(value)
   }
   return (
     <>
-      <Accordion name="a" expanded={state === 'a'} onClick={handleClick}>
-        <AccordionTrigger>hoge</AccordionTrigger>
+      <Accordion name="accordion-0" expanded={state === 'accordion-0'} onClick={handleClick}>
+        <AccordionTrigger>Accordion 0</AccordionTrigger>
         <AccordionContent>
-          <div>AccordionContent Component</div>
+          <div>Content of Accordion 0</div>
         </AccordionContent>
       </Accordion>
-      <Accordion name="b" expanded={state === 'b'} onClick={handleClick}>
-        <AccordionTrigger>hoge</AccordionTrigger>
+      <Accordion name="accordion-1" expanded={state === 'accordion-1'} onClick={handleClick}>
+        <AccordionTrigger>Accordion 1</AccordionTrigger>
         <AccordionContent>
-          <div>AccordionContent Component</div>
+          <div>Content of Accordion 1</div>
         </AccordionContent>
       </Accordion>
-      <Accordion name="c" expanded={state === 'c'} onClick={handleClick}>
-        <AccordionTrigger>hoge</AccordionTrigger>
+      <Accordion name="accordion-2" expanded={state === 'accordion-2'} onClick={handleClick}>
+        <AccordionTrigger>Accordion 2</AccordionTrigger>
         <AccordionContent>
-          <div>AccordionContent Component</div>
+          <div>Content of Accordion 2</div>
         </AccordionContent>
       </Accordion>
-      <Accordion name="d" expanded={state === 'd'} onClick={handleClick}>
-        <AccordionTrigger>hoge</AccordionTrigger>
+      <Accordion name="accordion-3" expanded={state === 'accordion-3'} onClick={handleClick}>
+        <AccordionTrigger>Accordion 3</AccordionTrigger>
         <AccordionContent>
-          <div>AccordionContent Component</div>
+          <div>Content of Accordion 3</div>
         </AccordionContent>
       </Accordion>
     </>
