@@ -1,12 +1,13 @@
 import React, { useContext } from 'react'
+import styled from 'styled-components'
 
 import { DropdownContext } from './Dropdown'
 
 export const DropdownTrigger: React.FC<{}> = ({ children }) => {
-  const { key, active, onClickTrigger } = useContext(DropdownContext)
+  const { active, onClickTrigger } = useContext(DropdownContext)
 
   return (
-    <div
+    <Wrapper
       onClick={e => {
         const rect = e.currentTarget.getBoundingClientRect()
         onClickTrigger({
@@ -16,7 +17,6 @@ export const DropdownTrigger: React.FC<{}> = ({ children }) => {
           left: rect.left,
         })
       }}
-      className={`dropdown-trigger-${key}`}
     >
       {React.Children.map(children, (child: any) => {
         const props = child.props ? child.props : {}
@@ -35,6 +35,10 @@ export const DropdownTrigger: React.FC<{}> = ({ children }) => {
             return null
         }
       })}
-    </div>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  display: inline-block;
+`

@@ -3,13 +3,7 @@ export { AppBar } from './components/AppBar'
 export { LightBalloon, DarkBalloon } from './components/Balloon'
 export { Checkbox } from './components/Checkbox'
 export { CheckboxLabel } from './components/CheckboxLabel'
-export {
-  Dropdown,
-  DropdownTrigger,
-  DropdownContent,
-  DropdownControllableContent,
-  DropdownCloser,
-} from './components/Dropdown'
+export { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser } from './components/Dropdown'
 export { Field, TextField, NumberField, PasswordField } from './components/Field'
 export { Flash } from './components/Flash'
 export { TextInput, NumberInput, PasswordInput } from './components/Input'
@@ -37,6 +31,7 @@ export { TabBar, TabItem } from './components/TabBar'
 export { BlankImage } from './components/Image'
 export { Heading } from './components/Heading'
 export { HeadlineArea } from './components/HeadlineArea'
+export { Select } from './components/Select'
 
 // themes
 export { createTheme } from './themes/createTheme'

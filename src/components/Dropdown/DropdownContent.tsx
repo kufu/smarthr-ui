@@ -1,48 +1,28 @@
-import React, { useContext, useEffect } from 'react'
-import { render } from 'react-dom'
+import React, { useContext } from 'react'
 
-import { Rect } from './dropdownHelper'
 import { DropdownContext } from './Dropdown'
 import { DropdownContentInner } from './DropdownContentInner'
+import { DropdownCloser } from './DropdownCloser'
 
-type DropdownContentContextType = {
+export const DropdownContentContext = React.createContext<{
   onClickCloser: () => void
-}
-
-export const DropdownContentContext = React.createContext<DropdownContentContextType>({
+}>({
   onClickCloser: () => {},
 })
 
-export const toggleContentView = (className: string, additionalClassName?: string) => (
-  active: boolean,
-  triggerRect: Rect,
-  children: React.ReactNode,
-  onClickCloser: () => void,
-) => () => {
-  if (active) {
-    const element = document.createElement('div')
-    let classNames = className
-    if (additionalClassName) classNames += ` ${additionalClassName}`
-    element.className = classNames
-    render(
-      <DropdownContentContext.Provider value={{ onClickCloser }}>
-        <DropdownContentInner triggerRect={triggerRect}>{children}</DropdownContentInner>
-      </DropdownContentContext.Provider>,
-      document.body.appendChild(element),
-    )
-  } else {
-    const element = document.querySelector(`.${className}`)
-    if (element) document.body.removeChild(element)
-  }
+type Props = {
+  controllable?: boolean
 }
 
-export const DropdownContent: React.FC<{}> = ({ children }) => {
-  const { key, active, triggerRect, onClickCloser } = useContext(DropdownContext)
-
-  useEffect(
-    toggleContentView(`dropdown-content-${key}`)(active, triggerRect, children, onClickCloser),
-    [active, children, key, onClickCloser],
+export const DropdownContent: React.FC<Props> = ({ controllable = false, children }) => {
+  const { DropdownContentRoot, triggerRect, onClickCloser } = useContext(DropdownContext)
+  return (
+    <DropdownContentRoot>
+      <DropdownContentContext.Provider value={{ onClickCloser }}>
+        <DropdownContentInner triggerRect={triggerRect}>
+          {controllable ? children : <DropdownCloser>{children}</DropdownCloser>}
+        </DropdownContentInner>
+      </DropdownContentContext.Provider>
+    </DropdownContentRoot>
   )
-
-  return null
 }

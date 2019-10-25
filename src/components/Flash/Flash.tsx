@@ -137,6 +137,7 @@ const Wrapper = styled.div`
       min-width: ${size.pxToRem(200)};
       padding: ${size.pxToRem(size.space.XS)};
       padding-right: ${size.pxToRem(54)};
+      background-color: #fff;
       border: 1px solid ${palette.BORDER}
       border-radius: ${frame.border.radius.m};
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
