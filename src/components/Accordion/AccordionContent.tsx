@@ -1,14 +1,16 @@
-import * as React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { Transition } from 'react-transition-group'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { AccordionContext } from './Accordion'
 
 interface Props {
-  expanded?: boolean
   children: React.ReactNode
 }
 
-const AccordionContentComponent: React.FC<Props & InjectedProps> = ({ expanded, children }) => {
+const AccordionContentComponent: React.FC<Props & InjectedProps> = ({ children }) => {
+  const { expanded } = useContext(AccordionContext)
+
   const wrapperRef = React.useRef<HTMLDivElement>(null)
 
   const handleEntering = (node: HTMLElement) => {

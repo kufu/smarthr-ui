@@ -1,23 +1,22 @@
-import * as React from 'react'
+import React, { useContext } from 'react'
 import { withTheme } from '../../hocs/withTheme'
+import { AccordionContext } from './Accordion'
 
 interface Props {
   children: React.ReactElement | string
-  expanded?: boolean
   disabled?: boolean
   className?: string
-  onClick?: (expanded: boolean) => void
 }
 
 const AccordionTriggerComponent: React.SFC<Props> = ({
   children,
-  expanded = false,
   disabled = false,
   className = '',
-  onClick,
 }) => {
+  const { expanded, name, onClick } = useContext(AccordionContext)
+  console.log('TCL: { expanded, name, onClick }', { expanded, name, onClick })
   const handleClick = () => {
-    onClick && onClick(!expanded)
+    return onClick(name, !expanded)
   }
   return (
     <button

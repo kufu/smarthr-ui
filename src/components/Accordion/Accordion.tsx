@@ -4,21 +4,30 @@ import { withTheme } from '../../hocs/withTheme'
 interface Props {
   children: React.ReactNode
   expanded?: boolean
-  disabled?: boolean
-  onClick: () => void
+  name: string
+  onClick: (name: string, expanded: boolean) => void
 }
 
-const AccordionComponent: React.FC<Props> = ({ children, expanded = false, onClick }) => {
-  const [trigger, content] = React.Children.toArray(children)
+type ContextType = Omit<Props, 'children'>
+
+export const AccordionContext = React.createContext<ContextType>({
+  expanded: false,
+  name: '',
+  onClick: () => {},
+})
+
+const AccordionComponent: React.FC<Props> = ({ children, name, expanded = false, onClick }) => {
   return (
     <>
-      {React.cloneElement(trigger as React.ReactElement<any>, {
-        expanded,
-        onClick,
-      })}
-      {React.cloneElement(content as React.ReactElement<any>, {
-        expanded,
-      })}
+      <AccordionContext.Provider
+        value={{
+          expanded,
+          name,
+          onClick,
+        }}
+      >
+        {children}
+      </AccordionContext.Provider>
     </>
   )
 }
