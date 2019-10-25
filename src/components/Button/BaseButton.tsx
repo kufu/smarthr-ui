@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps } from '../../hocs/withTheme'
 
-import { hoverable } from '../../hocs/hoverable'
 import { isTouchDevice } from '../../libs/ua'
 
 type Tag = 'button' | 'a'
@@ -49,21 +48,20 @@ export const buttonFactory: <Props extends BaseProps>(
   theme,
   ...props
 }) => {
-  const Tag = hoverable()(Base.withComponent(tag))
-
-  // prettier-ignore
-  const classNames = `${size} ${className} ${square ? 'square' : ''} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
+  const classNames = `${size} ${className} ${square ? 'square' : ''} ${prefix ? 'prefix' : ''} ${
+    suffix ? 'suffix' : ''
+  }`
 
   return (
-    <Tag className={classNames} theme={theme} {...props}>
+    <Base as={tag} className={classNames} theme={theme} {...props}>
       {prefix && <Prefix theme={theme}>{prefix}</Prefix>}
       {children}
       {suffix && <Suffix theme={theme}>{suffix}</Suffix>}
-    </Tag>
+    </Base>
   )
 }
 
-const Base: any = styled.div`
+const Base = styled.div`
   ${({ theme }: InjectedProps) => {
     const { frame, size, interaction } = theme
 

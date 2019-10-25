@@ -16,7 +16,8 @@ const injectStyle = <T extends {}>(component: React.FC<T & InjectedProps>) => st
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       border: ${frame.border.lineWidth} ${frame.border.lineStyle} #fff;
 
-      &.hover {
+      &:hover,
+      &:active {
         background-color: ${palette.OVERLAY};
       }
 
