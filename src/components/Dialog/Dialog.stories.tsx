@@ -8,6 +8,7 @@ import { RadioLabel } from '../RadioLabel'
 import {
   Dialog,
   MessageDialog,
+  ActionDialog,
   DialogWrapper,
   DialogTrigger,
   DialogContent,
@@ -76,6 +77,44 @@ const MessageDialogController: React.FC = () => {
         closeText="close"
         onClickClose={onClickClose}
       />
+    </div>
+  )
+}
+
+const ActionDialogController: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [value, setValue] = React.useState('hoge')
+  const onClickOpen = () => setIsOpen(true)
+  const onClickClose = () => setIsOpen(false)
+  const onChange = (name: string) => setValue(name)
+
+  return (
+    <div>
+      <SecondaryButton onClick={onClickOpen}>ActionDialog</SecondaryButton>
+      <ActionDialog
+        isOpen={isOpen}
+        title="ActionDialog"
+        closeText="close"
+        actionText="execute"
+        actionTheme="primary"
+        onClickAction={closeDialog => {
+          action('executed')()
+          setTimeout(closeDialog, 1000)
+        }}
+        onClickClose={onClickClose}
+      >
+        <DialogControllerBox>
+          <li>
+            <RadioLabel name="hoge" label="hoge" checked={value === 'hoge'} onChange={onChange} />
+          </li>
+          <li>
+            <RadioLabel name="fuga" label="fuga" checked={value === 'fuga'} onChange={onChange} />
+          </li>
+          <li>
+            <RadioLabel name="piyo" label="piyo" checked={value === 'piyo'} onChange={onChange} />
+          </li>
+        </DialogControllerBox>
+      </ActionDialog>
     </div>
   )
 }
@@ -190,6 +229,9 @@ storiesOf('Dialog', module)
       <li>
         <MessageDialogController />
       </li>
+      <li>
+        <ActionDialogController />
+      </li>
     </List>
   ))
 
@@ -225,7 +267,7 @@ const DialogControllerTitle = styled.p`
 const DialogControllerBox = styled.ul`
   margin: 0;
   padding: 16px 24px;
-  width: 200px;
+  width: 300px;
   list-style: none;
 
   & > li {
