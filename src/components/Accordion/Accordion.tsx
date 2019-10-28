@@ -5,10 +5,11 @@ type Props = {
   children: React.ReactNode
   expanded?: boolean
   name: string
+  bordered?: boolean
   onClick: (name: string, expanded: boolean) => void
 }
 
-type ContextType = Omit<Props, 'children'>
+type ContextType = Omit<Props, 'children' | 'bordered'>
 
 export const AccordionContext = React.createContext<ContextType>({
   expanded: false,

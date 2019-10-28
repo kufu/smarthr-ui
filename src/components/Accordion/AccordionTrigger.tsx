@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
 import { AccordionContext } from './Accordion'
 import styled, { css } from 'styled-components'
+import { isTouchDevice } from '../../libs/ua'
 
 type Props = {
   children: React.ReactNode
@@ -20,20 +21,28 @@ const AccordionTriggerComponent: React.SFC<MergedProps> = ({
   theme,
 }) => {
   const { expanded, name, onClick } = useContext(AccordionContext)
+  const expandedClassName = expanded ? 'expanded' : ''
+
+  // prettier-ignore
+  const classNames = `${className} ${expandedClassName} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
 
   const handleClick = () => {
     return onClick(name, !expanded)
   }
 
   return (
-    <Button
-      onClick={handleClick}
-      className={`${className} ${expanded ? 'expanded' : ''}`}
-      theme={theme}
-    >
-      {prefix && <Prefix theme={theme}>{prefix}</Prefix>}
+    <Button onClick={handleClick} className={classNames} theme={theme}>
+      {prefix && (
+        <Prefix className={expandedClassName} theme={theme}>
+          {prefix}
+        </Prefix>
+      )}
       {children}
-      {suffix && <Suffix theme={theme}>{suffix}</Suffix>}
+      {suffix && (
+        <Suffix className={expandedClassName} theme={theme}>
+          {suffix}
+        </Suffix>
+      )}
     </Button>
   )
 }
@@ -51,7 +60,7 @@ const resetButtonStyle = css`
 const Button = styled.button`
   ${resetButtonStyle}
   ${({ theme }: InjectedProps) => {
-    const { size, palette } = theme
+    const { size, palette, interaction } = theme
 
     return css`
       display:flex;
@@ -63,6 +72,19 @@ const Button = styled.button`
       font-size: ${size.pxToRem(size.font.TALL)};
       text-align: left;
       cursor: pointer;
+      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+
+      &:hover {
+        background-color: ${palette.hoverColor('#fff')};
+      }
+
+      &.suffix {
+        justify-content: space-between;
+      }
+
+      &.prefix {
+        justify-content: left;
+      }
     `
   }}
 `
@@ -74,6 +96,11 @@ const Prefix = styled.span`
     return css`
       display: inline-flex;
       margin-right: ${size.pxToRem(size.space.XXS)};
+      transition: all 0.3s;
+
+      &.expanded {
+        transform: rotate(180deg);
+      }
     `
   }}
 `
@@ -84,6 +111,11 @@ const Suffix = styled.span`
     return css`
       display: inline-flex;
       margin-left: ${size.pxToRem(size.space.XXS)};
+      transition: all 0.3s;
+
+      &.expanded {
+        transform: rotate(180deg);
+      }
     `
   }}
 `

@@ -69,6 +69,7 @@ const AccordionContentComponent: React.FC<Props & InjectedProps> = ({ children }
 
 export const AccordionContent = withTheme(AccordionContentComponent)
 
+// TODO: transition 調整する
 const CollapseContainer = styled.div`
   height: 0;
   overflow: hidden;
