@@ -13,8 +13,8 @@ type Props = {
   closeText: string
   actionText: string
   actionTheme: 'primary' | 'secondary' | 'danger'
-  onClickAction: () => void
-  disabledAction?: boolean
+  onClickAction: (closeDialog: () => void) => void
+  actionDisabled?: boolean
   top?: number
   right?: number
   bottom?: number
@@ -28,14 +28,13 @@ const ActionDialogContentComponent: React.FC<Props & InjectedProps> = ({
   actionText,
   actionTheme,
   onClickAction,
-  disabledAction = false,
+  actionDisabled = false,
   theme,
   ...props
 }) => {
   const { DialogContentRoot, onClickClose } = useContext(DialogContext)
   const handleClickAction = useCallback(() => {
-    onClickAction()
-    onClickClose()
+    onClickAction(onClickClose)
   }, [onClickAction, onClickClose])
 
   let ActionButton = PrimaryButton

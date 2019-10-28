@@ -98,8 +98,11 @@ storiesOf('Dialog', module).add('uncontrollable', () => (
           closeText="close"
           actionText="execute"
           actionTheme="primary"
-          disabledAction={false}
-          onClickAction={action('executed')}
+          actionDisabled={false}
+          onClickAction={closeDialog => {
+            action('executed')()
+            setTimeout(closeDialog, 1000)
+          }}
         >
           <ActionDialogInner>
             The content of ActionDialogContent is freely implemented by the user as children.
