@@ -3,12 +3,12 @@ import { withTheme, InjectedProps } from '../../hocs/withTheme'
 import { AccordionContext } from './Accordion'
 import styled, { css } from 'styled-components'
 import { isTouchDevice } from '../../libs/ua'
+import { Icon as IconComponent } from '../Icon'
 
 type Props = {
-  children: React.ReactNode
+  children: string
   className?: string
-  prefix?: React.ReactNode
-  suffix?: React.ReactNode
+  icon?: 'left' | 'right' | 'none'
 }
 
 type MergedProps = Props & InjectedProps
@@ -16,15 +16,15 @@ type MergedProps = Props & InjectedProps
 const AccordionTriggerComponent: React.SFC<MergedProps> = ({
   children,
   className = '',
-  prefix = '',
-  suffix = '',
+  icon = 'left',
   theme,
 }) => {
   const { expanded, name, onClick } = useContext(AccordionContext)
-  const expandedClassName = expanded ? 'expanded' : ''
 
-  // prettier-ignore
-  const classNames = `${className} ${expandedClassName} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
+  const expandedClassName = expanded ? 'expanded' : ''
+  const classNames = `${className} ${expandedClassName} ${icon}`
+
+  const caretIcon = <Icon className={expandedClassName} name="fa-caret-up" theme={theme} />
 
   const handleClick = () => {
     return onClick(name, !expanded)
@@ -32,17 +32,9 @@ const AccordionTriggerComponent: React.SFC<MergedProps> = ({
 
   return (
     <Button onClick={handleClick} className={classNames} theme={theme}>
-      {prefix && (
-        <Prefix className={expandedClassName} theme={theme}>
-          {prefix}
-        </Prefix>
-      )}
+      {icon === 'left' && caretIcon}
       {children}
-      {suffix && (
-        <Suffix className={expandedClassName} theme={theme}>
-          {suffix}
-        </Suffix>
-      )}
+      {icon === 'right' && caretIcon}
     </Button>
   )
 }
@@ -77,40 +69,23 @@ const Button = styled.button`
       &:hover {
         background-color: ${palette.hoverColor('#fff')};
       }
-
-      &.suffix {
+      &.right {
         justify-content: space-between;
       }
-
-      &.prefix {
+      &.left {
         justify-content: left;
       }
     `
   }}
 `
 
-const Prefix = styled.span`
+const Icon = styled(IconComponent)`
   ${({ theme }: InjectedProps) => {
     const { size } = theme
 
     return css`
       display: inline-flex;
       margin-right: ${size.pxToRem(size.space.XXS)};
-      transition: all 0.3s;
-
-      &.expanded {
-        transform: rotate(180deg);
-      }
-    `
-  }}
-`
-const Suffix = styled.span`
-  ${({ theme }: InjectedProps) => {
-    const { size } = theme
-
-    return css`
-      display: inline-flex;
-      margin-left: ${size.pxToRem(size.space.XXS)};
       transition: all 0.3s;
 
       &.expanded {
