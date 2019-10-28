@@ -1,4 +1,5 @@
 export { Dialog } from './Dialog'
+export { MessageDialog } from './MessageDialog'
 export { DialogWrapper } from './DialogWrapper'
 export { DialogTrigger } from './DialogTrigger'
 export { DialogContent } from './DialogContent'

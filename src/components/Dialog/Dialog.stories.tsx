@@ -7,6 +7,7 @@ import { SecondaryButton } from '../Button'
 import { RadioLabel } from '../RadioLabel'
 import {
   Dialog,
+  MessageDialog,
   DialogWrapper,
   DialogTrigger,
   DialogContent,
@@ -42,6 +43,39 @@ const DialogController: React.FC = () => {
           <SecondaryButton onClick={onClickClose}>close</SecondaryButton>
         </DialogControllerBottom>
       </Dialog>
+    </div>
+  )
+}
+
+const MessageDialogController: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false)
+  const onClickOpen = () => setIsOpen(true)
+  const onClickClose = () => setIsOpen(false)
+
+  return (
+    <div>
+      <SecondaryButton onClick={onClickOpen}>MessageDialog</SecondaryButton>
+      <MessageDialog
+        isOpen={isOpen}
+        title="MessageDialog"
+        description={
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua.
+            <br />
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+            commodo consequat.
+            <br />
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+            nulla pariatur.
+            <br />
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+            mollit anim id est laborum.
+          </p>
+        }
+        closeText="close"
+        onClickClose={onClickClose}
+      />
     </div>
   )
 }
@@ -152,6 +186,9 @@ storiesOf('Dialog', module)
     <List>
       <li>
         <DialogController />
+      </li>
+      <li>
+        <MessageDialogController />
       </li>
     </List>
   ))

@@ -1,11 +1,8 @@
 import React, { useContext } from 'react'
-import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
-
-import { SecondaryButton } from '../Button'
 import { DialogContext } from './DialogWrapper'
 import { DialogContentInner } from './DialogContentInner'
+import { MessageDialogContentInner } from './MessageDialogContentInner'
 
 type Props = {
   title: string
@@ -17,11 +14,10 @@ type Props = {
   left?: number
 }
 
-const MessageDialogContentComponent: React.FC<Props & InjectedProps> = ({
+export const MessageDialogContent: React.FC<Props> = ({
   title,
   description,
   closeText,
-  theme,
   ...props
 }) => {
   const { DialogContentRoot, onClickClose } = useContext(DialogContext)
@@ -29,49 +25,13 @@ const MessageDialogContentComponent: React.FC<Props & InjectedProps> = ({
   return (
     <DialogContentRoot>
       <DialogContentInner onClickOverlay={onClickClose} {...props}>
-        <Wrapper theme={theme}>
-          <Title theme={theme}>{title}</Title>
-          <Description theme={theme}>{description}</Description>
-          <Bottom>
-            <SecondaryButton onClick={onClickClose}>{closeText}</SecondaryButton>
-          </Bottom>
-        </Wrapper>
+        <MessageDialogContentInner
+          title={title}
+          description={description}
+          closeText={closeText}
+          onClickClose={onClickClose}
+        />
       </DialogContentInner>
     </DialogContentRoot>
   )
 }
-
-export const MessageDialogContent = withTheme(MessageDialogContentComponent)
-
-const Wrapper = styled.div`
-  ${({ theme }: InjectedProps) => {
-    const { pxToRem, space } = theme.size
-    return css`
-      padding: ${pxToRem(space.XS)} ${pxToRem(space.S)};
-    `
-  }}
-`
-const Title = styled.p`
-  ${({ theme }: InjectedProps) => {
-    const { pxToRem, space, font } = theme.size
-    return css`
-      margin: 0 0 ${pxToRem(space.S)} 0;
-      font-size: ${pxToRem(font.GRANDE)};
-      line-height: 1;
-    `
-  }}
-`
-const Description = styled.div`
-  ${({ theme }: InjectedProps) => {
-    const { pxToRem, space, font } = theme.size
-    return css`
-      margin: 0 0 ${pxToRem(space.S)} 0;
-      font-size: ${pxToRem(font.TALL)};
-      line-height: 1.5;
-    `
-  }}
-`
-const Bottom = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`
