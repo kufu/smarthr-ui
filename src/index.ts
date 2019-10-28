@@ -8,7 +8,17 @@ export { Field, TextField, NumberField, PasswordField } from './components/Field
 export { Flash } from './components/Flash'
 export { TextInput, NumberInput, PasswordInput } from './components/Input'
 export { Loader } from './components/Loader'
-export { Modal, ModalWrapper, ModalTrigger, ModalEraser, ModalContent } from './components/Modal'
+export {
+  Dialog,
+  MessageDialog,
+  ActionDialog,
+  DialogWrapper,
+  DialogTrigger,
+  DialogCloser,
+  DialogContent,
+  MessageDialogContent,
+  ActionDialogContent,
+} from './components/Dialog'
 export { Pagination } from './components/Pagination'
 export { Radio } from './components/Radio'
 export { RadioLabel } from './components/RadioLabel'
