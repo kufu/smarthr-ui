@@ -2,23 +2,16 @@ import React, { useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
 import { DialogContentInner } from './DialogContentInner'
-import { ActionDialogContentInner } from './ActionDialogContentInner'
+import { BaseProps, ActionDialogContentInner } from './ActionDialogContentInner'
 
-type Props = {
-  children: React.ReactNode
-  title: string
-  closeText: string
-  actionText: string
-  actionTheme: 'primary' | 'secondary' | 'danger'
-  onClickAction: (closeDialog: () => void) => void
-  actionDisabled?: boolean
+export type ActionDialogContentProps = BaseProps & {
   top?: number
   right?: number
   bottom?: number
   left?: number
 }
 
-export const ActionDialogContent: React.FC<Props> = ({
+export const ActionDialogContent: React.FC<ActionDialogContentProps> = ({
   children,
   title,
   closeText,

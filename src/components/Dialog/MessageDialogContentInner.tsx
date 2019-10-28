@@ -5,10 +5,13 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 import { SecondaryButton } from '../Button'
 
-type Props = {
+export type BaseProps = {
   title: string
   description: React.ReactNode
   closeText: string
+}
+
+type Props = BaseProps & {
   onClickClose: () => void
 }
 

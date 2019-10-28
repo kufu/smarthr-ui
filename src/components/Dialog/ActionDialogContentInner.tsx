@@ -5,15 +5,18 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 import { PrimaryButton, SecondaryButton, DangerButton } from '../Button'
 
-type Props = {
+export type BaseProps = {
   children: React.ReactNode
   title: string
   closeText: string
   actionText: string
   actionTheme: 'primary' | 'secondary' | 'danger'
   onClickAction: (closeDialog: () => void) => void
-  onClickClose: () => void
   actionDisabled?: boolean
+}
+
+type Props = BaseProps & {
+  onClickClose: () => void
 }
 
 const ActionDialogContentInnerComponent: React.FC<Props & InjectedProps> = ({

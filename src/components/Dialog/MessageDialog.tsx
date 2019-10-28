@@ -2,18 +2,12 @@ import React, { useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 
 import { DialogContentInner } from './DialogContentInner'
+import { MessageDialogContentProps } from './MessageDialogContent'
 import { MessageDialogContentInner } from './MessageDialogContentInner'
 
-type Props = {
+type Props = MessageDialogContentProps & {
   isOpen: boolean
-  title: string
-  description: React.ReactNode
-  closeText: string
   onClickClose: () => void
-  top?: number
-  right?: number
-  bottom?: number
-  left?: number
 }
 
 export const MessageDialog: React.FC<Props> = ({

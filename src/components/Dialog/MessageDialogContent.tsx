@@ -2,19 +2,16 @@ import React, { useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
 import { DialogContentInner } from './DialogContentInner'
-import { MessageDialogContentInner } from './MessageDialogContentInner'
+import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
 
-type Props = {
-  title: string
-  description: React.ReactNode
-  closeText: string
+export type MessageDialogContentProps = BaseProps & {
   top?: number
   right?: number
   bottom?: number
   left?: number
 }
 
-export const MessageDialogContent: React.FC<Props> = ({
+export const MessageDialogContent: React.FC<MessageDialogContentProps> = ({
   title,
   description,
   closeText,

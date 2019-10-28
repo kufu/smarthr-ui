@@ -2,22 +2,12 @@ import React, { useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 
 import { DialogContentInner } from './DialogContentInner'
+import { ActionDialogContentProps } from './ActionDialogContent'
 import { ActionDialogContentInner } from './ActionDialogContentInner'
 
-type Props = {
+type Props = ActionDialogContentProps & {
   isOpen: boolean
-  children: React.ReactNode
-  title: string
-  closeText: string
-  actionText: string
-  actionTheme: 'primary' | 'secondary' | 'danger'
-  onClickAction: (closeDialog: () => void) => void
   onClickClose: () => void
-  actionDisabled?: boolean
-  top?: number
-  right?: number
-  bottom?: number
-  left?: number
 }
 
 export const ActionDialog: React.FC<Props> = ({
