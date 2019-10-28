@@ -3,14 +3,14 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { SecondaryButton } from '../Button'
-import { Dialog, DialogTrigger, DialogContent, DialogCloser } from './'
+import { Dialog, DialogTrigger, DialogContent, DialogCloser, MessageDialogContent } from './'
 
-storiesOf('Dialog', module).add('all', () => (
+storiesOf('Dialog', module).add('uncontrollable', () => (
   <List>
     <li>
       <Dialog>
         <DialogTrigger>
-          <SecondaryButton>Controllable Dialog</SecondaryButton>
+          <SecondaryButton>Dialog</SecondaryButton>
         </DialogTrigger>
         <DialogContent>
           <Inner>
@@ -37,6 +37,47 @@ storiesOf('Dialog', module).add('all', () => (
             </DialogCloser>
           </Inner>
         </DialogContent>
+      </Dialog>
+    </li>
+    <li>
+      <Dialog>
+        <DialogTrigger>
+          <SecondaryButton>right: 50px, bottom: 100px.</SecondaryButton>
+        </DialogTrigger>
+        <DialogContent right={50} bottom={100}>
+          <Inner>
+            <Text>Rendered!!</Text>
+            <DialogCloser>
+              <SecondaryButton>close</SecondaryButton>
+            </DialogCloser>
+          </Inner>
+        </DialogContent>
+      </Dialog>
+    </li>
+    <li>
+      <Dialog>
+        <DialogTrigger>
+          <SecondaryButton>MessageDialog</SecondaryButton>
+        </DialogTrigger>
+        <MessageDialogContent
+          title="Title Message"
+          description={
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+              incididunt ut labore et dolore magna aliqua.
+              <br />
+              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+              ea commodo consequat.
+              <br />
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur.
+              <br />
+              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+              mollit anim id est laborum.
+            </p>
+          }
+          closeText="close"
+        />
       </Dialog>
     </li>
   </List>
