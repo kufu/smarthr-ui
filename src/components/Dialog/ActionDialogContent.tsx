@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 import { SecondaryButton, PrimaryButton, DangerButton } from '../Button'
-import { DialogContext } from './Dialog'
+import { DialogContext } from './DialogWrapper'
 import { DialogContentInner } from './DialogContentInner'
 
 type Props = {
@@ -43,7 +43,7 @@ const ActionDialogContentComponent: React.FC<Props & InjectedProps> = ({
 
   return (
     <DialogContentRoot>
-      <DialogContentInner onClickBackground={onClickClose} {...props}>
+      <DialogContentInner onClickOverlay={onClickClose} {...props}>
         <Title theme={theme}>{title}</Title>
         {children}
         <Bottom theme={theme}>

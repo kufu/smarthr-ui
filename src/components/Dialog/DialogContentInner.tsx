@@ -4,7 +4,7 @@ import styled, { css, createGlobalStyle } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 type Props = {
-  onClickBackground?: () => void
+  onClickOverlay?: () => void
   top?: number
   right?: number
   bottom?: number
@@ -24,7 +24,7 @@ function exist(value: any) {
 }
 
 const DialogContentInnerComponent: React.FC<Props & InjectedProps> = ({
-  onClickBackground,
+  onClickOverlay,
   children,
   ...props
 }) => {
@@ -36,7 +36,7 @@ const DialogContentInnerComponent: React.FC<Props & InjectedProps> = ({
 
   return (
     <Wrapper className={isMounted ? 'active' : ''}>
-      <Background onClick={onClickBackground} {...props} />
+      <Background onClick={onClickOverlay} {...props} />
       <Inner {...props}>{children}</Inner>
       {/* Suppresses scrolling of body while modal is displayed */}
       <ScrollSuppressing />

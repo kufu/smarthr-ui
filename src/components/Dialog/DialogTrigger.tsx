@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 
-import { DialogContext } from './Dialog'
+import { DialogContext } from './DialogWrapper'
 
 export const DialogTrigger: React.FC = ({ children }) => {
   const { onClickTrigger } = useContext(DialogContext)

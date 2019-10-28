@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react'
 
-import { DialogContext } from './Dialog'
+import { DialogContext } from './DialogWrapper'
 import { DialogContentInner } from './DialogContentInner'
 
 type DialogContentContextType = {
@@ -24,7 +24,7 @@ export const DialogContent: React.FC<Props> = ({ children, ...props }) => {
   return (
     <DialogContentRoot>
       <DialogContentContext.Provider value={{ onClickClose }}>
-        <DialogContentInner onClickBackground={onClickClose} {...props}>
+        <DialogContentInner onClickOverlay={onClickClose} {...props}>
           {children}
         </DialogContentInner>
       </DialogContentContext.Provider>
