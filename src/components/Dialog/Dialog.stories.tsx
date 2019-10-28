@@ -1,9 +1,17 @@
 import { storiesOf } from '@storybook/react'
+import { action } from '@storybook/addon-actions'
 import * as React from 'react'
 import styled from 'styled-components'
 
 import { SecondaryButton } from '../Button'
-import { Dialog, DialogTrigger, DialogContent, DialogCloser, MessageDialogContent } from './'
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogCloser,
+  MessageDialogContent,
+  ActionDialogContent,
+} from './'
 
 storiesOf('Dialog', module).add('uncontrollable', () => (
   <List>
@@ -80,6 +88,27 @@ storiesOf('Dialog', module).add('uncontrollable', () => (
         />
       </Dialog>
     </li>
+    <li>
+      <Dialog>
+        <DialogTrigger>
+          <SecondaryButton>ActionDialog</SecondaryButton>
+        </DialogTrigger>
+        <ActionDialogContent
+          title="Title Message"
+          closeText="close"
+          actionText="execute"
+          actionTheme="primary"
+          disabledAction={false}
+          onClickAction={action('executed')}
+        >
+          <ActionDialogInner>
+            The content of ActionDialogContent is freely implemented by the user as children.
+            <br />
+            So you need to prepare your own style.
+          </ActionDialogInner>
+        </ActionDialogContent>
+      </Dialog>
+    </li>
   </List>
 ))
 
@@ -99,4 +128,9 @@ const Text = styled.p`
   margin-bottom: 1.6rem;
   font-size: 16px;
   text-align: center;
+`
+const ActionDialogInner = styled.p`
+  padding: 16px 24px;
+  font-size: 14px;
+  line-height: 1.5;
 `
