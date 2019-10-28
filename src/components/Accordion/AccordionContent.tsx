@@ -67,8 +67,6 @@ const AccordionContentComponent: React.FC<Props & InjectedProps> = ({ children }
   )
 }
 
-AccordionContentComponent.displayName = 'AccordionContentComponent'
-
 export const AccordionContent = withTheme(AccordionContentComponent)
 
 const CollapseContainer = styled.div`
