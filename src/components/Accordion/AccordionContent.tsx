@@ -13,7 +13,7 @@ const AccordionContentComponent: React.FC<Props & InjectedProps> = ({
   children,
   className = '',
 }) => {
-  const { expanded } = useContext(AccordionContext)
+  const { expanded, name } = useContext(AccordionContext)
   const wrapperRef = React.useRef<HTMLDivElement>(null)
 
   const handleEntering = useCallback(
@@ -62,7 +62,12 @@ const AccordionContentComponent: React.FC<Props & InjectedProps> = ({
       }}
     >
       {status => (
-        <CollapseContainer className={`${status} ${className}`}>
+        <CollapseContainer
+          id={`${name}-content`}
+          className={`${status} ${className}`}
+          aria-labelledby={`${name}-trigger`}
+          aria-hidden={!expanded}
+        >
           <div ref={wrapperRef}>{children}</div>
         </CollapseContainer>
       )}

@@ -31,7 +31,14 @@ const AccordionTriggerComponent: React.SFC<MergedProps> = ({
   }
 
   return (
-    <Button onClick={handleClick} className={classNames} theme={theme}>
+    <Button
+      id={`${name}-trigger`}
+      className={classNames}
+      aria-expanded={!!expanded}
+      aria-controls={`${name}-content`}
+      onClick={handleClick}
+      theme={theme}
+    >
       {icon === 'left' && caretIcon}
       {children}
       {icon === 'right' && caretIcon}
@@ -48,7 +55,6 @@ const resetButtonStyle = css`
   padding: 0;
   appearance: none;
 `
-
 const Button = styled.button`
   ${resetButtonStyle}
   ${({ theme }: InjectedProps) => {
