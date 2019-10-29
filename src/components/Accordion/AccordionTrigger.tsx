@@ -22,9 +22,10 @@ const AccordionTriggerComponent: React.SFC<MergedProps> = ({
   const { expanded, name, onClick } = useContext(AccordionContext)
 
   const expandedClassName = expanded ? 'expanded' : ''
-  const classNames = `${className} ${expandedClassName} ${icon}`
+  const buttonClassNames = `${className} ${expandedClassName} ${icon}`
+  const iconClassNames = `${expandedClassName} ${icon}`
 
-  const caretIcon = <Icon className={expandedClassName} name="fa-caret-up" theme={theme} />
+  const caretIcon = <Icon className={iconClassNames} name="fa-caret-up" theme={theme} />
 
   const handleClick = () => {
     return onClick(name, !expanded)
@@ -33,7 +34,7 @@ const AccordionTriggerComponent: React.SFC<MergedProps> = ({
   return (
     <Button
       id={`${name}-trigger`}
-      className={classNames}
+      className={buttonClassNames}
       aria-expanded={!!expanded}
       aria-controls={`${name}-content`}
       onClick={handleClick}
@@ -65,6 +66,7 @@ const Button = styled.button`
       align-items: center;
       width: 100%;
       height: 40px;
+      padding: 0 ${size.pxToRem(size.space.XS)};
       color: ${palette.TEXT_BLACK};
       font-size: ${size.pxToRem(size.font.TALL)};
       text-align: left;
@@ -90,10 +92,15 @@ const Icon = styled(IconComponent)`
     return css`
       display: inline-flex;
       margin-right: ${size.pxToRem(size.space.XXS)};
-      transition: all 0.3s;
+      transition: transform 0.3s;
 
       &.expanded {
         transform: rotate(180deg);
+      }
+
+      &.right {
+        margin-right: 0;
+        margin-left: ${size.pxToRem(size.space.XXS)};
       }
     `
   }}
