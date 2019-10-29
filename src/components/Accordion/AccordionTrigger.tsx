@@ -55,11 +55,10 @@ const Button = styled.button`
     const { size, palette, interaction } = theme
 
     return css`
-      display:flex;
+      display: flex;
       align-items: center;
       width: 100%;
       height: 40px;
-      padding: 0 ${size.pxToRem(size.space.XS)}
       color: ${palette.TEXT_BLACK};
       font-size: ${size.pxToRem(size.font.TALL)};
       text-align: left;
@@ -78,7 +77,6 @@ const Button = styled.button`
     `
   }}
 `
-
 const Icon = styled(IconComponent)`
   ${({ theme }: InjectedProps) => {
     const { size } = theme
