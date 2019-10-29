@@ -6,11 +6,14 @@ import { AccordionContext } from './Accordion'
 
 type Props = {
   children: React.ReactNode
+  className?: string
 }
 
-const AccordionContentComponent: React.FC<Props & InjectedProps> = ({ children }) => {
+const AccordionContentComponent: React.FC<Props & InjectedProps> = ({
+  children,
+  className = '',
+}) => {
   const { expanded } = useContext(AccordionContext)
-
   const wrapperRef = React.useRef<HTMLDivElement>(null)
 
   const handleEntering = useCallback(
@@ -59,7 +62,7 @@ const AccordionContentComponent: React.FC<Props & InjectedProps> = ({ children }
       }}
     >
       {status => (
-        <CollapseContainer className={status}>
+        <CollapseContainer className={`${status} ${className}`}>
           <div ref={wrapperRef}>{children}</div>
         </CollapseContainer>
       )}
