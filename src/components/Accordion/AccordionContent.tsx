@@ -77,11 +77,10 @@ const AccordionContentComponent: React.FC<Props & InjectedProps> = ({
 
 export const AccordionContent = withTheme(AccordionContentComponent)
 
-// TODO: transition 調整する
 const CollapseContainer = styled.div`
   height: 0;
   overflow: hidden;
-  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: height 0.3s;
 
   &.entered {
     height: auto;

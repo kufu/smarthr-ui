@@ -39,7 +39,6 @@ storiesOf('Accordion', module).add('Accordion', () => {
           ))}
         </ul>
       </Base>
-
       <Base>
         <ul>
           {arr.map((_, index) => (
@@ -58,7 +57,6 @@ storiesOf('Accordion', module).add('Accordion', () => {
           ))}
         </ul>
       </Base>
-
       <Base>
         <ul>
           {arr.map((_, index) => (
@@ -77,7 +75,6 @@ storiesOf('Accordion', module).add('Accordion', () => {
           ))}
         </ul>
       </Base>
-
       <Base>
         <ul>
           {arr.map((_, index) => (
