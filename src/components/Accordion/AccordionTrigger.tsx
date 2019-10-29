@@ -6,7 +6,7 @@ import { isTouchDevice } from '../../libs/ua'
 import { Icon as IconComponent } from '../Icon'
 
 type Props = {
-  children: string
+  children: React.ReactNode
   className?: string
   icon?: 'left' | 'right' | 'none'
 }
