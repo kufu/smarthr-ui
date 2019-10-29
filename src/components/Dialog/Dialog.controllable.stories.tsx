@@ -11,9 +11,11 @@ import readme from './README.md'
 const DialogController: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = React.useState('hoge')
+  const [text, setText] = React.useState('')
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => setIsOpen(false)
-  const onChange = (name: string) => setValue(name)
+  const onChangeValue = (name: string) => setValue(name)
+  const onChangeText = (txt: string) => setText(txt)
 
   return (
     <div>
@@ -25,13 +27,31 @@ const DialogController: React.FC = () => {
         </DialogControllerText>
         <DialogControllerBox>
           <li>
-            <RadioLabel name="hoge" label="hoge" checked={value === 'hoge'} onChange={onChange} />
+            <RadioLabel
+              name="hoge"
+              label="hoge"
+              checked={value === 'hoge'}
+              onChange={onChangeValue}
+            />
           </li>
           <li>
-            <RadioLabel name="fuga" label="fuga" checked={value === 'fuga'} onChange={onChange} />
+            <RadioLabel
+              name="fuga"
+              label="fuga"
+              checked={value === 'fuga'}
+              onChange={onChangeValue}
+            />
           </li>
           <li>
-            <RadioLabel name="piyo" label="piyo" checked={value === 'piyo'} onChange={onChange} />
+            <RadioLabel
+              name="piyo"
+              label="piyo"
+              checked={value === 'piyo'}
+              onChange={onChangeValue}
+            />
+          </li>
+          <li>
+            <input name="test" value={text} onChange={e => onChangeText(e.currentTarget.value)} />
           </li>
         </DialogControllerBox>
         <DialogControllerBottom>
