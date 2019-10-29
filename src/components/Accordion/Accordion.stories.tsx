@@ -19,7 +19,7 @@ storiesOf('Accordion', module).add('Accordion', () => {
         </AccordionContent>
       </Accordion>
       <Accordion name="accordion-1" expanded={state === 'accordion-1'} onClick={handleClick}>
-        <AccordionTrigger>Accordion 1</AccordionTrigger>
+        <AccordionTrigger icon="right">Accordion 1</AccordionTrigger>
         <AccordionContent>
           <div>Content of Accordion 1</div>
         </AccordionContent>
