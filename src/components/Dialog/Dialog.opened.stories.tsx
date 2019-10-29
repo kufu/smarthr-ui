@@ -4,8 +4,14 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { MessageDialog, ActionDialog } from '.'
+import readme from './README.md'
 
 storiesOf('Dialog/opened', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
   .add('MessageDialog', () => (
     <MessageDialog
       isOpen={true}
