@@ -5,7 +5,6 @@ type Props = {
   children: React.ReactNode
   expanded?: boolean
   name: string
-  bordered?: boolean
   onClick: (name: string, expanded: boolean) => void
 }
 
