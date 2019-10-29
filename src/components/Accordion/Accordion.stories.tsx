@@ -118,4 +118,5 @@ const Content = styled.div`
   color: #333;
   background-color: #f9f9f9;
   padding: 1rem;
+  text-align: justify;
 `
