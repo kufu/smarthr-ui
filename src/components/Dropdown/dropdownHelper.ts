@@ -11,13 +11,13 @@ export function hasParentElement(element: HTMLElement | null, parent: HTMLElemen
 }
 
 type Size = { width: number; height: number }
-export type Position = {
+export type ContentBoxStyle = {
   top: string
   left: string
   maxHeight: string
 }
 
-export function getContentPositionStyle(
+export function getContentBoxStyle(
   triggerRect: Rect,
   contentSize: Size,
   windowSize: Size,
@@ -26,7 +26,7 @@ export function getContentPositionStyle(
     left: number
   },
 ) {
-  const position: Position = {
+  const contentBox: ContentBoxStyle = {
     top: 'auto',
     left: 'auto',
     maxHeight: '',
@@ -34,22 +34,22 @@ export function getContentPositionStyle(
   const triggerAlignCenter = triggerRect.left + (triggerRect.right - triggerRect.left) / 2
 
   if (triggerRect.bottom + contentSize.height <= windowSize.height) {
-    position.top = `${scroll.top + triggerRect.bottom}px`
+    contentBox.top = `${scroll.top + triggerRect.bottom}px`
   } else if (triggerRect.top - contentSize.height >= 0) {
-    position.top = `${scroll.top + triggerRect.top - contentSize.height}px`
+    contentBox.top = `${scroll.top + triggerRect.top - contentSize.height}px`
   } else {
     const paddingBottom = 10
-    position.top = `${scroll.top + triggerRect.bottom}px`
-    position.maxHeight = `${windowSize.height - triggerRect.bottom - paddingBottom}px`
+    contentBox.top = `${scroll.top + triggerRect.bottom}px`
+    contentBox.maxHeight = `${windowSize.height - triggerRect.bottom - paddingBottom}px`
   }
 
   if (triggerAlignCenter <= windowSize.width / 2) {
-    position.left = `${scroll.left + triggerRect.left}px`
+    contentBox.left = `${scroll.left + triggerRect.left}px`
   } else if (triggerAlignCenter >= windowSize.width / 2) {
-    position.left = `${scroll.left + triggerRect.right - contentSize.width}px`
+    contentBox.left = `${scroll.left + triggerRect.right - contentSize.width}px`
   } else {
-    position.left = `${scroll.left + triggerRect.left}px`
+    contentBox.left = `${scroll.left + triggerRect.left}px`
   }
 
-  return position
+  return contentBox
 }
