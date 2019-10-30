@@ -9,6 +9,7 @@ import { DropdownContent } from './DropdownContent'
 import { DropdownCloser } from './DropdownCloser'
 import { SecondaryButton, PrimaryButton } from '../Button'
 import { RadioLabel } from '../RadioLabel'
+import { TextInput } from '../Input'
 
 import readme from './README.md'
 
@@ -33,7 +34,7 @@ const ControlableDropdown = () => {
   const [value, setValue] = React.useState('hoge')
   const [text, setText] = React.useState('')
   const onChangeValue = (name: string) => setValue(name)
-  const onChangeText = (txt: string) => setText(txt)
+  const onChangeText = (_: string, txt: string) => setText(txt)
 
   return (
     <Dropdown>
@@ -76,11 +77,7 @@ const ControlableDropdown = () => {
                 />
               </li>
               <li>
-                <input
-                  name="test"
-                  value={text}
-                  onChange={e => onChangeText(e.currentTarget.value)}
-                />
+                <TextInput name="test" value={text} onChange={onChangeText} />
               </li>
             </RadioButtonList>
           </ControllableBoxMain>

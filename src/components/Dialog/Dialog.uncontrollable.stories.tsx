@@ -1,9 +1,10 @@
 import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import * as React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { SecondaryButton } from '../Button'
+import { RadioLabel } from '../RadioLabel'
 import {
   DialogWrapper,
   DialogTrigger,
@@ -14,6 +15,57 @@ import {
 } from '.'
 import readme from './README.md'
 
+const FormDialog: React.FC = () => {
+  const [value, setValue] = useState('hoge')
+  const [text, setText] = useState('')
+  const onChangeValue = (name: string) => setValue(name)
+  const onChangeText = (txt: string) => setText(txt)
+
+  return (
+    <DialogWrapper>
+      <DialogTrigger>
+        <SecondaryButton>Dialog</SecondaryButton>
+      </DialogTrigger>
+      <DialogContent>
+        <Inner>
+          <ul>
+            <li>
+              <RadioLabel
+                name="hoge"
+                label="hoge"
+                checked={value === 'hoge'}
+                onChange={onChangeValue}
+              />
+            </li>
+            <li>
+              <RadioLabel
+                name="fuga"
+                label="fuga"
+                checked={value === 'fuga'}
+                onChange={onChangeValue}
+              />
+            </li>
+            <li>
+              <RadioLabel
+                name="piyo"
+                label="piyo"
+                checked={value === 'piyo'}
+                onChange={onChangeValue}
+              />
+            </li>
+            <li>
+              <input name="test" value={text} onChange={e => onChangeText(e.currentTarget.value)} />
+            </li>
+          </ul>
+          <DialogCloser>
+            <SecondaryButton>close</SecondaryButton>
+          </DialogCloser>
+        </Inner>
+      </DialogContent>
+    </DialogWrapper>
+  )
+}
+
 storiesOf('Dialog', module)
   .addParameters({
     readme: {
@@ -23,19 +75,7 @@ storiesOf('Dialog', module)
   .add('uncontrollable', () => (
     <List>
       <li>
-        <DialogWrapper>
-          <DialogTrigger>
-            <SecondaryButton>Dialog</SecondaryButton>
-          </DialogTrigger>
-          <DialogContent>
-            <Inner>
-              <Text>Uncontrollable simple Dialog</Text>
-              <DialogCloser>
-                <SecondaryButton>close</SecondaryButton>
-              </DialogCloser>
-            </Inner>
-          </DialogContent>
-        </DialogWrapper>
+        <FormDialog />
       </li>
       <li>
         <DialogWrapper>

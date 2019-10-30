@@ -10,8 +10,8 @@ import readme from './README.md'
 
 const DialogController: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [value, setValue] = React.useState('hoge')
-  const [text, setText] = React.useState('')
+  const [value, setValue] = useState('hoge')
+  const [text, setText] = useState('')
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => setIsOpen(false)
   const onChangeValue = (name: string) => setValue(name)
