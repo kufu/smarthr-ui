@@ -9,11 +9,12 @@ type Props = {
   onClick: (name: string, expanded: boolean) => void
 }
 
-type ContextType = Omit<Props, 'children' | 'bordered'>
+type ContextType = Omit<Props, 'children'>
 
 export const AccordionPanelContext = React.createContext<ContextType>({
   expanded: false,
   name: '',
+  icon: 'left',
   onClick: () => {},
 })
 
