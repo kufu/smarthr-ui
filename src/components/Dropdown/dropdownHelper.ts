@@ -29,17 +29,22 @@ export function getContentPositionStyle(
     top: 'auto',
     left: 'auto',
   }
+  const triggerAlignCenter = triggerRect.left + (triggerRect.right - triggerRect.left) / 2
 
   if (triggerRect.bottom + contentSize.height <= windowSize.height) {
     position.top = `${scroll.top + triggerRect.bottom}px`
-  } else {
+  } else if (triggerRect.top - contentSize.height >= 0) {
     position.top = `${scroll.top + triggerRect.top - contentSize.height}px`
+  } else {
+    position.top = `${scroll.top + triggerRect.bottom}px`
   }
 
-  if (triggerRect.left + (triggerRect.right - triggerRect.left) / 2 <= windowSize.width / 2) {
+  if (triggerAlignCenter <= windowSize.width / 2) {
     position.left = `${scroll.left + triggerRect.left}px`
-  } else {
+  } else if (triggerAlignCenter >= windowSize.width / 2) {
     position.left = `${scroll.left + triggerRect.right - contentSize.width}px`
+  } else {
+    position.left = `${scroll.left + triggerRect.left}px`
   }
 
   return position
