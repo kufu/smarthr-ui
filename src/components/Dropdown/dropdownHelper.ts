@@ -14,6 +14,7 @@ type Size = { width: number; height: number }
 export type Position = {
   top: string
   left: string
+  maxHeight: string
 }
 
 export function getContentPositionStyle(
@@ -28,6 +29,7 @@ export function getContentPositionStyle(
   const position: Position = {
     top: 'auto',
     left: 'auto',
+    maxHeight: '',
   }
   const triggerAlignCenter = triggerRect.left + (triggerRect.right - triggerRect.left) / 2
 
@@ -36,7 +38,9 @@ export function getContentPositionStyle(
   } else if (triggerRect.top - contentSize.height >= 0) {
     position.top = `${scroll.top + triggerRect.top - contentSize.height}px`
   } else {
+    const paddingBottom = 10
     position.top = `${scroll.top + triggerRect.bottom}px`
+    position.maxHeight = `${windowSize.height - triggerRect.bottom - paddingBottom}px`
   }
 
   if (triggerAlignCenter <= windowSize.width / 2) {

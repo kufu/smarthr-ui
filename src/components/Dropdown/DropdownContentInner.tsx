@@ -18,8 +18,9 @@ const DropdownContentInnerComponent: React.FC<Props & InjectedProps> = ({
   const [position, setPosition] = useState<Position>({
     top: 'auto',
     left: 'auto',
+    maxHeight: '',
   })
-  const wrapperRef = useRef(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setIsMounted(true)
@@ -30,8 +31,8 @@ const DropdownContentInnerComponent: React.FC<Props & InjectedProps> = ({
       const contentPosition = getContentPositionStyle(
         triggerRect,
         {
-          width: (wrapperRef.current as any).offsetWidth,
-          height: (wrapperRef.current as any).offsetHeight,
+          width: wrapperRef.current.offsetWidth,
+          height: wrapperRef.current.offsetHeight,
         },
         {
           width: innerWidth,
@@ -77,6 +78,13 @@ const Wrapper = styled.div`
       &.active {
         visibility: visible;
       }
+
+      ${position.maxHeight
+        ? `
+          overflow-y: scroll;
+          max-height: ${position.maxHeight};
+      `
+        : ''}
     `
   }}
 `
