@@ -8,18 +8,12 @@ import { Icon as IconComponent } from '../Icon'
 type Props = {
   children: React.ReactNode
   className?: string
-  icon?: 'left' | 'right' | 'none'
 }
 
 type MergedProps = Props & InjectedProps
 
-const AccordionTriggerComponent: React.SFC<MergedProps> = ({
-  children,
-  className = '',
-  icon = 'left',
-  theme,
-}) => {
-  const { expanded, name, onClick } = useContext(AccordionContext)
+const AccordionTriggerComponent: React.SFC<MergedProps> = ({ children, className = '', theme }) => {
+  const { expanded, name, onClick, icon } = useContext(AccordionContext)
 
   const expandedClassName = expanded ? 'expanded' : ''
   const buttonClassNames = `${className} ${expandedClassName} ${icon}`

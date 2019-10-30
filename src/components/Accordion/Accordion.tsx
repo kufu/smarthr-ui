@@ -5,6 +5,7 @@ type Props = {
   children: React.ReactNode
   expanded?: boolean
   name: string
+  icon?: 'left' | 'right' | 'none'
   onClick: (name: string, expanded: boolean) => void
 }
 
@@ -16,12 +17,19 @@ export const AccordionContext = React.createContext<ContextType>({
   onClick: () => {},
 })
 
-const AccordionComponent: React.FC<Props> = ({ children, name, expanded = false, onClick }) => {
+const AccordionComponent: React.FC<Props> = ({
+  children,
+  name,
+  expanded = false,
+  icon = 'left',
+  onClick,
+}) => {
   return (
     <AccordionContext.Provider
       value={{
         expanded,
         name,
+        icon,
         onClick,
       }}
     >

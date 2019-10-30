@@ -54,9 +54,10 @@ storiesOf('Accordion', module)
                 <Accordion
                   name={`right-icon-${index}`}
                   expanded={state === `right-icon-${index}`}
+                  icon="right"
                   onClick={handleClick}
                 >
-                  <AccordionTrigger icon="right">Right Icon {index}</AccordionTrigger>
+                  <AccordionTrigger>Right Icon {index}</AccordionTrigger>
                   <AccordionContent>
                     <Content>{lorem}</Content>
                   </AccordionContent>
@@ -72,9 +73,10 @@ storiesOf('Accordion', module)
                 <Accordion
                   name={`no-icon-${index}`}
                   expanded={state === `no-icon-${index}`}
+                  icon="none"
                   onClick={handleClick}
                 >
-                  <AccordionTrigger icon="none">No Icon {index}</AccordionTrigger>
+                  <AccordionTrigger>No Icon {index}</AccordionTrigger>
                   <AccordionContent>
                     <Content>{lorem}</Content>
                   </AccordionContent>
@@ -90,9 +92,10 @@ storiesOf('Accordion', module)
                 <Accordion
                   name={`no-border-${index}`}
                   expanded={state === `no-border-${index}`}
+                  icon="none"
                   onClick={handleClick}
                 >
-                  <AccordionTrigger icon="none">No Border {index}</AccordionTrigger>
+                  <AccordionTrigger>No Border {index}</AccordionTrigger>
                   <AccordionContent>
                     <Content>{lorem}</Content>
                   </AccordionContent>
