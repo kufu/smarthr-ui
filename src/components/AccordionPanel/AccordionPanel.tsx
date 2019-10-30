@@ -11,13 +11,13 @@ type Props = {
 
 type ContextType = Omit<Props, 'children' | 'bordered'>
 
-export const AccordionContext = React.createContext<ContextType>({
+export const AccordionPanelContext = React.createContext<ContextType>({
   expanded: false,
   name: '',
   onClick: () => {},
 })
 
-const AccordionComponent: React.FC<Props> = ({
+const AccordionPanelComponent: React.FC<Props> = ({
   children,
   name,
   expanded = false,
@@ -25,7 +25,7 @@ const AccordionComponent: React.FC<Props> = ({
   onClick,
 }) => {
   return (
-    <AccordionContext.Provider
+    <AccordionPanelContext.Provider
       value={{
         expanded,
         name,
@@ -34,8 +34,8 @@ const AccordionComponent: React.FC<Props> = ({
       }}
     >
       {children}
-    </AccordionContext.Provider>
+    </AccordionPanelContext.Provider>
   )
 }
 
-export const Accordion = withTheme(AccordionComponent)
+export const AccordionPanel = withTheme(AccordionPanelComponent)

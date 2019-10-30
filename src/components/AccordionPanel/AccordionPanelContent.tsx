@@ -2,18 +2,18 @@ import React, { useContext, useCallback } from 'react'
 import styled from 'styled-components'
 import { Transition } from 'react-transition-group'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { AccordionContext } from './Accordion'
+import { AccordionPanelContext } from './AccordionPanel'
 
 type Props = {
   children: React.ReactNode
   className?: string
 }
 
-const AccordionContentComponent: React.FC<Props & InjectedProps> = ({
+const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
   children,
   className = '',
 }) => {
-  const { expanded, name } = useContext(AccordionContext)
+  const { expanded, name } = useContext(AccordionPanelContext)
   const wrapperRef = React.useRef<HTMLDivElement>(null)
 
   const handleEntering = useCallback(
@@ -75,7 +75,7 @@ const AccordionContentComponent: React.FC<Props & InjectedProps> = ({
   )
 }
 
-export const AccordionContent = withTheme(AccordionContentComponent)
+export const AccordionPanelContent = withTheme(AccordionPanelContentComponent)
 
 const CollapseContainer = styled.div`
   height: 0;
