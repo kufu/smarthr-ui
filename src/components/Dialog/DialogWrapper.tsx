@@ -1,4 +1,4 @@
-import React, { createContext, useState, useRef, useEffect } from 'react'
+import React, { createContext, useState, useRef, useEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 
 type DialogContextType = {
@@ -26,10 +26,15 @@ export const DialogWrapper: React.FC = ({ children }) => {
   }, [element])
 
   // This is the root container of a dialog content located in outside the DOM tree
-  const DialogContentRoot = (props: { children: React.ReactNode }) => {
-    if (!active) return null
-    return createPortal(props.children, element)
-  }
+  const DialogContentRoot = useMemo<React.FC<{ children: React.ReactNode }>>(
+    () => props => {
+      if (!active) return null
+      return createPortal(props.children, element)
+    },
+    [active, element],
+  )
+  // set the displayName explicit for DevTools
+  DialogContentRoot.displayName = 'DialogContentRoot'
 
   return (
     <DialogContext.Provider
