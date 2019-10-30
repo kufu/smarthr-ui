@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 
 import { Rect, hasParentElement } from './dropdownHelper'
 import { createPortal } from 'react-dom'
@@ -43,10 +43,15 @@ export const Dropdown: React.FC<{}> = ({ children }) => {
   }, [element])
 
   // This is the root container of a dropdown content located in outside the DOM tree
-  const DropdownContentRoot = (props: { children: React.ReactNode }) => {
-    if (!active) return null
-    return createPortal(props.children, element)
-  }
+  const DropdownContentRoot = useMemo<React.FC<{ children: React.ReactNode }>>(
+    () => props => {
+      if (!active) return null
+      return createPortal(props.children, element)
+    },
+    [active, element],
+  )
+  // set the displayName explicit for DevTools
+  DropdownContentRoot.displayName = 'DropdownContentRoot'
 
   return (
     <DropdownContext.Provider
