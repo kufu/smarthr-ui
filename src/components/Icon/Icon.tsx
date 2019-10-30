@@ -105,7 +105,7 @@ export const iconMap = {
   'fa-clone': FaClone,
   'fa-cloud-download-alt': FaCloudDownloadAlt,
   'fa-cog': FaCog,
-  'fa-databas': FaDatabase,
+  'fa-database': FaDatabase,
   'fa-ellipsis-h': FaEllipsisH,
   'fa-envelope': FaEnvelope,
   'fa-exclamation-circle': FaExclamationCircle,

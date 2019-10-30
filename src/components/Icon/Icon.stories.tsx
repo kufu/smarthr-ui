@@ -34,7 +34,7 @@ const icons: Array<Props['name']> = [
   'fa-clone',
   'fa-cloud-download-alt',
   'fa-cog',
-  'fa-databas',
+  'fa-database',
   'fa-ellipsis-h',
   'fa-envelope',
   'fa-exclamation-circle',
