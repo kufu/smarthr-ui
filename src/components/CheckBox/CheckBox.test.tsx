@@ -42,6 +42,8 @@ describe('CheckBox', () => {
     const spy = jest.fn()
     const component = mount(<CheckBox name={name} checked={checked} onChange={spy} />)
     component.find('input').simulate('change')
-    expect(spy).toHaveBeenCalledWith(name, !checked)
+    const event = spy.mock.calls[0][0] as React.ChangeEvent<HTMLInputElement>
+    expect(event.target.name).toBe('sample')
+    expect(event.target.checked).toBeTruthy()
   })
 })

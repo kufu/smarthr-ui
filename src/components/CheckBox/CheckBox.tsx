@@ -6,14 +6,9 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 import { Icon } from '../Icon'
 
-export type Props = {
-  checked: boolean
-  name: string
+export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   themeColor?: 'light' | 'dark'
-  disabled?: boolean
   mixed?: boolean
-  className?: string
-  onChange?: (name: string, checked: boolean) => void
 }
 
 const CheckBoxComponent: FC<Props & InjectedProps> = ({
@@ -27,9 +22,12 @@ const CheckBoxComponent: FC<Props & InjectedProps> = ({
   theme,
 }) => {
   const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
-  const handleChange = useCallback(() => {
-    if (onChange) onChange(name, !checked)
-  }, [checked, name, onChange])
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (onChange) onChange(e)
+    },
+    [onChange],
+  )
 
   return (
     <Wrapper theme={theme} className={className}>
