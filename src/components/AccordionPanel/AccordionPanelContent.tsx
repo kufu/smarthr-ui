@@ -2,7 +2,7 @@ import React, { useContext, useCallback } from 'react'
 import styled from 'styled-components'
 import { Transition } from 'react-transition-group'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { AccordionPanelContext } from './AccordionPanel'
+import { AccordionPanelItemContext } from './AccordionPanelItem'
 
 type Props = {
   children: React.ReactNode
@@ -13,7 +13,7 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
   children,
   className = '',
 }) => {
-  const { expanded, name } = useContext(AccordionPanelContext)
+  const { expanded, name } = useContext(AccordionPanelItemContext)
   const wrapperRef = React.useRef<HTMLDivElement>(null)
 
   const handleEntering = useCallback(

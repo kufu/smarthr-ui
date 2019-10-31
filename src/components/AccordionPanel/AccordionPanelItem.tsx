@@ -11,14 +11,14 @@ type Props = {
 
 type ContextType = Omit<Props, 'children'>
 
-export const AccordionPanelContext = React.createContext<ContextType>({
+export const AccordionPanelItemContext = React.createContext<ContextType>({
   expanded: false,
   name: '',
   icon: 'left',
   onClick: () => {},
 })
 
-const AccordionPanelComponent: React.FC<Props> = ({
+const AccordionPanelItemComponent: React.FC<Props> = ({
   children,
   name,
   expanded = false,
@@ -26,7 +26,7 @@ const AccordionPanelComponent: React.FC<Props> = ({
   onClick,
 }) => {
   return (
-    <AccordionPanelContext.Provider
+    <AccordionPanelItemContext.Provider
       value={{
         expanded,
         name,
@@ -35,8 +35,8 @@ const AccordionPanelComponent: React.FC<Props> = ({
       }}
     >
       {children}
-    </AccordionPanelContext.Provider>
+    </AccordionPanelItemContext.Provider>
   )
 }
 
-export const AccordionPanel = withTheme(AccordionPanelComponent)
+export const AccordionPanelItem = withTheme(AccordionPanelItemComponent)

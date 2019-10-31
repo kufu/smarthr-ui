@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
-import { AccordionPanelContext } from './AccordionPanel'
+import { AccordionPanelItemContext } from './AccordionPanelItem'
 import styled, { css } from 'styled-components'
 import { isTouchDevice } from '../../libs/ua'
 import { Icon as IconComponent } from '../Icon'
@@ -17,7 +17,7 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
   className = '',
   theme,
 }) => {
-  const { expanded, name, onClick, icon } = useContext(AccordionPanelContext)
+  const { expanded, name, onClick, icon } = useContext(AccordionPanelItemContext)
 
   const expandedClassName = expanded ? 'expanded' : ''
   const buttonClassNames = `${className} ${expandedClassName} ${icon}`

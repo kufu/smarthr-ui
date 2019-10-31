@@ -2,7 +2,7 @@ import { storiesOf } from '@storybook/react'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { AccordionPanel } from './AccordionPanel'
+import { AccordionPanelItem } from './AccordionPanelItem'
 import { AccordionPanelTrigger } from './AccordionPanelTrigger'
 import { AccordionPanelContent } from './AccordionPanelContent'
 import { Base as BaseComponent } from '../Base'
@@ -31,7 +31,7 @@ storiesOf('AccordionPanel', module)
           <ul>
             {arr.map((_, index) => (
               <li className="border" key={index}>
-                <AccordionPanel
+                <AccordionPanelItem
                   name={`left-icon-${index}`}
                   expanded={state === `left-icon-${index}`}
                   onClick={handleClick}
@@ -42,7 +42,7 @@ storiesOf('AccordionPanel', module)
                       <div>{lorem}</div>
                     </Content>
                   </AccordionPanelContent>
-                </AccordionPanel>
+                </AccordionPanelItem>
               </li>
             ))}
           </ul>
@@ -51,7 +51,7 @@ storiesOf('AccordionPanel', module)
           <ul>
             {arr.map((_, index) => (
               <li className="border" key={index}>
-                <AccordionPanel
+                <AccordionPanelItem
                   name={`right-icon-${index}`}
                   expanded={state === `right-icon-${index}`}
                   icon="right"
@@ -61,7 +61,7 @@ storiesOf('AccordionPanel', module)
                   <AccordionPanelContent>
                     <Content>{lorem}</Content>
                   </AccordionPanelContent>
-                </AccordionPanel>
+                </AccordionPanelItem>
               </li>
             ))}
           </ul>
@@ -70,7 +70,7 @@ storiesOf('AccordionPanel', module)
           <ul>
             {arr.map((_, index) => (
               <li className="border" key={index}>
-                <AccordionPanel
+                <AccordionPanelItem
                   name={`no-icon-${index}`}
                   expanded={state === `no-icon-${index}`}
                   icon="none"
@@ -80,7 +80,7 @@ storiesOf('AccordionPanel', module)
                   <AccordionPanelContent>
                     <Content>{lorem}</Content>
                   </AccordionPanelContent>
-                </AccordionPanel>
+                </AccordionPanelItem>
               </li>
             ))}
           </ul>
@@ -89,7 +89,7 @@ storiesOf('AccordionPanel', module)
           <ul>
             {arr.map((_, index) => (
               <li key={index}>
-                <AccordionPanel
+                <AccordionPanelItem
                   name={`no-border-${index}`}
                   expanded={state === `no-border-${index}`}
                   icon="none"
@@ -99,7 +99,7 @@ storiesOf('AccordionPanel', module)
                   <AccordionPanelContent>
                     <Content>{lorem}</Content>
                   </AccordionPanelContent>
-                </AccordionPanel>
+                </AccordionPanelItem>
               </li>
             ))}
           </ul>
