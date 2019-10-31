@@ -5,7 +5,7 @@ export { Checkbox } from './components/Checkbox'
 export { CheckboxLabel } from './components/CheckboxLabel'
 export { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser } from './components/Dropdown'
 export { Field, TextField, NumberField, PasswordField } from './components/Field'
-export { Flash } from './components/Flash'
+export { FlashMessage } from './components/FlashMessage'
 export { TextInput, NumberInput, PasswordInput } from './components/Input'
 export { Loader } from './components/Loader'
 export {

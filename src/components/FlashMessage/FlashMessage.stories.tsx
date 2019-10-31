@@ -2,17 +2,17 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Flash } from './Flash'
+import { FlashMessage } from './FlashMessage'
 
-type FlashType = 'success' | 'info' | 'warning' | 'error' | ''
+type FlashMessageType = 'success' | 'info' | 'warning' | 'error' | ''
 
 interface State {
   form: {
-    type: FlashType
+    type: FlashMessageType
     text: string
   }
   flash: {
-    type: FlashType
+    type: FlashMessageType
     text: string
     visible: boolean
   }
@@ -21,11 +21,11 @@ interface State {
 class WrappedComponent extends React.PureComponent<{}, State> {
   public state = {
     form: {
-      type: '' as FlashType,
+      type: '' as FlashMessageType,
       text: '',
     },
     flash: {
-      type: '' as FlashType,
+      type: '' as FlashMessageType,
       text: '',
       visible: false,
     },
@@ -48,7 +48,7 @@ class WrappedComponent extends React.PureComponent<{}, State> {
           <input type="submit" value="フラッシュメッセージを表示する" />
         </Form>
 
-        <Flash {...flash} onClose={this.onClose} />
+        <FlashMessage {...flash} onClose={this.onClose} />
       </div>
     )
   }
@@ -63,7 +63,7 @@ class WrappedComponent extends React.PureComponent<{}, State> {
   }
 
   private onChangeType = (e: { currentTarget: { value: string } }) => {
-    const type = e.currentTarget.value as FlashType
+    const type = e.currentTarget.value as FlashMessageType
     this.setState(state => ({ form: { ...state.form, type } }))
   }
 
@@ -73,7 +73,7 @@ class WrappedComponent extends React.PureComponent<{}, State> {
   }
 }
 
-storiesOf('Flash', module).add('all', () => <WrappedComponent />)
+storiesOf('FlashMessage', module).add('all', () => <WrappedComponent />)
 
 const Form = styled.form`
   margin-bottom: 24px;

@@ -21,7 +21,7 @@ type MergedProps = Props & InjectedProps
 
 const REMOVE_DELAY = 8000
 
-class FlashComponent extends React.PureComponent<MergedProps, State> {
+class FlashMessageComponent extends React.PureComponent<MergedProps, State> {
   public static getDerivedStateFromProps(props: Props) {
     return {
       visible: props.visible,
@@ -97,7 +97,7 @@ class FlashComponent extends React.PureComponent<MergedProps, State> {
   }
 }
 
-export const Flash = withTheme(FlashComponent)
+export const FlashMessage = withTheme(FlashMessageComponent)
 
 const bounceAnimation = keyframes`
   from,
