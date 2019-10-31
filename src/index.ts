@@ -1,8 +1,8 @@
 // components
 export { AppBar } from './components/AppBar'
 export { LightBalloon, DarkBalloon } from './components/Balloon'
-export { Checkbox } from './components/Checkbox'
-export { CheckboxLabel } from './components/CheckboxLabel'
+export { CheckBox } from './components/CheckBox'
+export { CheckBoxLabel } from './components/CheckBoxLabel'
 export { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser } from './components/Dropdown'
 export { Field, TextField, NumberField, PasswordField } from './components/Field'
 export { FlashMessage } from './components/FlashMessage'
