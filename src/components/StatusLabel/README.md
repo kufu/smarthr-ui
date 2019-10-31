@@ -1,9 +1,9 @@
-# Tag
+# StatusLabel
 
 ```tsx
-import { Tag } from 'smarthr-ui'
+import { StatusLabel } from 'smarthr-ui'
 
-<Tag type="require">必須</Tag>
+<StatusLabel type="require">必須</StatusLabel>
 ```
 
 ## props

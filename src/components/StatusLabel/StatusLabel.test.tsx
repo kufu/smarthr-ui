@@ -1,20 +1,20 @@
 import { mount } from 'enzyme'
 import React from 'react'
 
-import { Tag } from '../Tag'
+import { StatusLabel } from './StatusLabel'
 
-describe('Tag', () => {
+describe('StatusLabel', () => {
   const hello = 'hello'
   it('should be match snapshot', () => {
-    const component = mount(<Tag type="success">{hello}</Tag>)
+    const component = mount(<StatusLabel type="success">{hello}</StatusLabel>)
     expect(component).toMatchSnapshot()
   })
   it('should render given children', () => {
-    const wrapper = mount(<Tag type="success">{hello}</Tag>)
+    const wrapper = mount(<StatusLabel type="success">{hello}</StatusLabel>)
     expect(wrapper.text()).toBe(hello)
   })
   it('should have given type', () => {
-    const wrapper = mount(<Tag type="success">{hello}</Tag>)
+    const wrapper = mount(<StatusLabel type="success">{hello}</StatusLabel>)
     expect(wrapper.prop('type')).toBe('success')
   })
 })

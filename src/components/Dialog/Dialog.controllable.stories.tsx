@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { SecondaryButton } from '../Button'
-import { RadioLabel } from '../RadioLabel'
+import { RadioButtonLabel } from '../RadioButtonLabel'
 import { Dialog, MessageDialog, ActionDialog } from '.'
 import readme from './README.md'
 
@@ -27,7 +27,7 @@ const DialogController: React.FC = () => {
         </DialogControllerText>
         <DialogControllerBox>
           <li>
-            <RadioLabel
+            <RadioButtonLabel
               name="hoge"
               label="hoge"
               checked={value === 'hoge'}
@@ -35,7 +35,7 @@ const DialogController: React.FC = () => {
             />
           </li>
           <li>
-            <RadioLabel
+            <RadioButtonLabel
               name="fuga"
               label="fuga"
               checked={value === 'fuga'}
@@ -43,7 +43,7 @@ const DialogController: React.FC = () => {
             />
           </li>
           <li>
-            <RadioLabel
+            <RadioButtonLabel
               name="piyo"
               label="piyo"
               checked={value === 'piyo'}
@@ -119,13 +119,28 @@ const ActionDialogController: React.FC = () => {
       >
         <DialogControllerBox>
           <li>
-            <RadioLabel name="hoge" label="hoge" checked={value === 'hoge'} onChange={onChange} />
+            <RadioButtonLabel
+              name="hoge"
+              label="hoge"
+              checked={value === 'hoge'}
+              onChange={onChange}
+            />
           </li>
           <li>
-            <RadioLabel name="fuga" label="fuga" checked={value === 'fuga'} onChange={onChange} />
+            <RadioButtonLabel
+              name="fuga"
+              label="fuga"
+              checked={value === 'fuga'}
+              onChange={onChange}
+            />
           </li>
           <li>
-            <RadioLabel name="piyo" label="piyo" checked={value === 'piyo'} onChange={onChange} />
+            <RadioButtonLabel
+              name="piyo"
+              label="piyo"
+              checked={value === 'piyo'}
+              onChange={onChange}
+            />
           </li>
         </DialogControllerBox>
       </ActionDialog>

@@ -8,7 +8,7 @@ import { DropdownTrigger } from './DropdownTrigger'
 import { DropdownContent } from './DropdownContent'
 import { DropdownCloser } from './DropdownCloser'
 import { SecondaryButton, PrimaryButton } from '../Button'
-import { RadioLabel } from '../RadioLabel'
+import { RadioButtonLabel } from '../RadioButtonLabel'
 import { TextInput } from '../Input'
 
 import readme from './README.md'
@@ -53,7 +53,7 @@ const ControlableDropdown = () => {
             </Text>
             <RadioButtonList>
               <li>
-                <RadioLabel
+                <RadioButtonLabel
                   name="hoge"
                   label="hoge"
                   checked={value === 'hoge'}
@@ -61,7 +61,7 @@ const ControlableDropdown = () => {
                 />
               </li>
               <li>
-                <RadioLabel
+                <RadioButtonLabel
                   name="fuga"
                   label="fuga"
                   checked={value === 'fuga'}
@@ -69,7 +69,7 @@ const ControlableDropdown = () => {
                 />
               </li>
               <li>
-                <RadioLabel
+                <RadioButtonLabel
                   name="piyo"
                   label="piyo"
                   checked={value === 'piyo'}

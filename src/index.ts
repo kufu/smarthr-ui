@@ -20,8 +20,8 @@ export {
   ActionDialogContent,
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
-export { Radio } from './components/Radio'
-export { RadioLabel } from './components/RadioLabel'
+export { RadioButton } from './components/RadioButton'
+export { RadioButtonLabel } from './components/RadioButtonLabel'
 export {
   PrimaryButton,
   PrimaryButtonAnchor,
@@ -32,7 +32,7 @@ export {
   SkeletonButton,
   SkeletonButtonAnchor,
 } from './components/Button'
-export { Tag } from './components/Tag'
+export { StatusLabel } from './components/StatusLabel'
 export { Base } from './components/Base'
 export { Icon } from './components/Icon'
 export { Table, Head, Row, Cell, Body } from './components/Table'

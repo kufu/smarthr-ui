@@ -13,7 +13,7 @@ interface Props {
 
 type MergedProps = Props & InjectedProps
 
-const TagComponent: React.FC<MergedProps> = ({
+const StatusLabelComponent: React.FC<MergedProps> = ({
   type = 'done',
   className = '',
   children,
@@ -26,6 +26,8 @@ const TagComponent: React.FC<MergedProps> = ({
   )
 }
 
+export const StatusLabel = withTheme(StatusLabelComponent)
+
 const BorderStyle = css`
   ${({ theme }: InjectedProps) => {
     return css`
@@ -33,7 +35,6 @@ const BorderStyle = css`
     `
   }}
 `
-
 const FillStyle = css`
   ${({ theme }: InjectedProps) => {
     return css`
@@ -42,7 +43,6 @@ const FillStyle = css`
     `
   }}
 `
-
 const Wrapper = styled.span`
   ${({ theme }: InjectedProps) => {
     return css`
@@ -102,5 +102,3 @@ const Wrapper = styled.span`
     `
   }}
 `
-
-export const Tag = withTheme(TagComponent)

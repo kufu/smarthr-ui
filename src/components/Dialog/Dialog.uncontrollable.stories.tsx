@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { SecondaryButton } from '../Button'
-import { RadioLabel } from '../RadioLabel'
+import { RadioButtonLabel } from '../RadioButtonLabel'
 import {
   DialogWrapper,
   DialogTrigger,
@@ -30,7 +30,7 @@ const FormDialog: React.FC = () => {
         <Inner>
           <ul>
             <li>
-              <RadioLabel
+              <RadioButtonLabel
                 name="hoge"
                 label="hoge"
                 checked={value === 'hoge'}
@@ -38,7 +38,7 @@ const FormDialog: React.FC = () => {
               />
             </li>
             <li>
-              <RadioLabel
+              <RadioButtonLabel
                 name="fuga"
                 label="fuga"
                 checked={value === 'fuga'}
@@ -46,7 +46,7 @@ const FormDialog: React.FC = () => {
               />
             </li>
             <li>
-              <RadioLabel
+              <RadioButtonLabel
                 name="piyo"
                 label="piyo"
                 checked={value === 'piyo'}

@@ -3,12 +3,12 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { RadioLabel } from './RadioLabel'
+import { RadioButtonLabel } from './RadioButtonLabel'
 
-storiesOf('RadioLabel', module).add('all', () => (
+storiesOf('RadioButtonLabel', module).add('all', () => (
   <List>
     <li>
-      <RadioLabel
+      <RadioButtonLabel
         label="light / unchecked"
         name="sample"
         checked={false}
@@ -16,7 +16,7 @@ storiesOf('RadioLabel', module).add('all', () => (
       />
     </li>
     <li>
-      <RadioLabel
+      <RadioButtonLabel
         label="light / checked"
         name="sample"
         checked={true}
@@ -24,7 +24,7 @@ storiesOf('RadioLabel', module).add('all', () => (
       />
     </li>
     <li>
-      <RadioLabel
+      <RadioButtonLabel
         label="light / unchecked / disabled"
         name="sample"
         checked={false}
@@ -33,7 +33,7 @@ storiesOf('RadioLabel', module).add('all', () => (
       />
     </li>
     <li>
-      <RadioLabel
+      <RadioButtonLabel
         label="light / checked / disabled"
         name="sample"
         checked={true}
@@ -42,7 +42,7 @@ storiesOf('RadioLabel', module).add('all', () => (
       />
     </li>
     <li className="dark">
-      <RadioLabel
+      <RadioButtonLabel
         label="dark / unchecked"
         name="sample"
         checked={false}
@@ -51,7 +51,7 @@ storiesOf('RadioLabel', module).add('all', () => (
       />
     </li>
     <li className="dark">
-      <RadioLabel
+      <RadioButtonLabel
         label="dark / checked"
         name="sample"
         checked={true}

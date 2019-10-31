@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 import { NumberInput, PasswordInput, Props as InputProps, TextInput } from '../Input'
-import { Tag } from '../Tag'
+import { StatusLabel } from '../StatusLabel'
 
 interface Props {
   label: string
@@ -48,9 +48,9 @@ const fieldFactory: (
         <Title theme={theme}>
           {label}
           {required && (
-            <TagWrapper theme={theme}>
-              <Tag type="required">必須</Tag>
-            </TagWrapper>
+            <StatusLabelWrapper theme={theme}>
+              <StatusLabel type="required">必須</StatusLabel>
+            </StatusLabelWrapper>
           )}
         </Title>
         {help && <Help theme={theme}>{help}</Help>}
@@ -117,7 +117,7 @@ const Error = styled.p`
   `}
 `
 
-const TagWrapper = styled.span`
+const StatusLabelWrapper = styled.span`
   ${({ theme }: InjectedProps) => css`
     margin-left: ${theme.size.pxToRem(theme.size.space.XXS)};
   `}

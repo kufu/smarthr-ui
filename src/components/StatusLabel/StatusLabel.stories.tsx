@@ -2,10 +2,10 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Tag } from './Tag'
+import { StatusLabel } from './StatusLabel'
 import readme from './README.md'
 
-storiesOf('Tag', module)
+storiesOf('StatusLabel', module)
   .addParameters({
     readme: {
       sidebar: readme,
@@ -15,30 +15,30 @@ storiesOf('Tag', module)
     <ListWrapper>
       <List>
         <li>
-          <Tag type="done">done</Tag>
+          <StatusLabel type="done">done</StatusLabel>
         </li>
         <li>
-          <Tag type="success">success</Tag>
+          <StatusLabel type="success">success</StatusLabel>
         </li>
         <li>
-          <Tag type="process">process</Tag>
+          <StatusLabel type="process">process</StatusLabel>
         </li>
         <li>
-          <Tag type="required">required</Tag>
+          <StatusLabel type="required">required</StatusLabel>
         </li>
       </List>
       <List>
         <li>
-          <Tag type="disabled">disabled</Tag>
+          <StatusLabel type="disabled">disabled</StatusLabel>
         </li>
         <li>
-          <Tag type="must">must</Tag>
+          <StatusLabel type="must">must</StatusLabel>
         </li>
         <li>
-          <Tag type="warning">warning</Tag>
+          <StatusLabel type="warning">warning</StatusLabel>
         </li>
         <li>
-          <Tag type="error">error</Tag>
+          <StatusLabel type="error">error</StatusLabel>
         </li>
       </List>
     </ListWrapper>

@@ -12,7 +12,7 @@ interface Props {
   onChange?: (name: string, checked: boolean) => void
 }
 
-class RadioComponent extends React.PureComponent<Props & InjectedProps> {
+class RadioButtonComponent extends React.PureComponent<Props & InjectedProps> {
   public render() {
     const {
       checked,
@@ -45,7 +45,7 @@ class RadioComponent extends React.PureComponent<Props & InjectedProps> {
   }
 }
 
-export const Radio = withTheme(RadioComponent)
+export const RadioButton = withTheme(RadioButtonComponent)
 
 const Wrapper = styled.div`
   position: relative;

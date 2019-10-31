@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-import { Radio } from '../Radio'
+import { RadioButton } from '../RadioButton'
 
 interface Props {
   label: string
@@ -15,7 +15,7 @@ interface Props {
   onChange?: (name: string, checked: boolean) => void
 }
 
-const RadioLabelComponent: React.FC<Props & InjectedProps> = ({
+const RadioButtonLabelComponent: React.FC<Props & InjectedProps> = ({
   label,
   className = '',
   theme,
@@ -23,13 +23,13 @@ const RadioLabelComponent: React.FC<Props & InjectedProps> = ({
 }) => (
   <Wrapper className={className}>
     <Label className={`${props.disabled ? 'disabled' : ''}`}>
-      <Radio {...props} />
+      <RadioButton {...props} />
       <Txt theme={theme}>{label}</Txt>
     </Label>
   </Wrapper>
 )
 
-export const RadioLabel = withTheme(RadioLabelComponent)
+export const RadioButtonLabel = withTheme(RadioButtonLabelComponent)
 
 const Wrapper = styled.div`
   display: inline-block;
