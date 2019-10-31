@@ -1,43 +1,50 @@
-import * as React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled, { css, createGlobalStyle } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-interface Props {
-  active: boolean
-  onClickBackground?: () => void
+type Props = {
+  onClickOverlay?: () => void
   top?: number
   right?: number
   bottom?: number
   left?: number
-  children?: React.ReactNode
+  children: React.ReactNode
 }
 
-interface MergedStyledProps extends InjectedProps {
+type MergedStyledProps = InjectedProps & {
   top?: number
   right?: number
   bottom?: number
   left?: number
 }
-
-const BoxComponent: React.FC<Props> = ({ active, children, onClickBackground, ...props }) => (
-  <Wrapper className={active ? 'active' : ''} {...props}>
-    {active ? (
-      <React.Fragment>
-        <Background {...props} onClick={onClickBackground} />
-        <Inner {...props}>{children}</Inner>
-        {/* Suppresses scrolling of body while modal is displayed */}
-        <ScrollSuppressing />
-      </React.Fragment>
-    ) : null}
-  </Wrapper>
-)
-
-export const Box = withTheme(BoxComponent)
 
 function exist(value: any) {
   return value !== undefined && value !== null
 }
+
+const DialogContentInnerComponent: React.FC<Props & InjectedProps> = ({
+  onClickOverlay,
+  children,
+  ...props
+}) => {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  return (
+    <Wrapper className={isMounted ? 'active' : ''}>
+      <Background onClick={onClickOverlay} {...props} />
+      <Inner {...props}>{children}</Inner>
+      {/* Suppresses scrolling of body while modal is displayed */}
+      <ScrollSuppressing />
+    </Wrapper>
+  )
+}
+
+export const DialogContentInner = withTheme(DialogContentInnerComponent)
 
 const Wrapper = styled.div`
   visibility: hidden;
@@ -49,6 +56,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   transition: opacity 0.3s ease-in-out;
+
   &.active {
     visibility: visible;
     opacity: 1;

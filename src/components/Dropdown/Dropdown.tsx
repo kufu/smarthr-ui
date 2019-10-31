@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 
 import { Rect, hasParentElement } from './dropdownHelper'
-import { createPortal } from 'react-dom'
 
 type DropdownContextType = {
   active: boolean
