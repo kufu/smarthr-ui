@@ -11,12 +11,13 @@ export function hasParentElement(element: HTMLElement | null, parent: HTMLElemen
 }
 
 type Size = { width: number; height: number }
-export type Position = {
+export type ContentBoxStyle = {
   top: string
   left: string
+  maxHeight: string
 }
 
-export function getContentPositionStyle(
+export function getContentBoxStyle(
   triggerRect: Rect,
   contentSize: Size,
   windowSize: Size,
@@ -25,22 +26,37 @@ export function getContentPositionStyle(
     left: number
   },
 ) {
-  const position: Position = {
+  const contentBox: ContentBoxStyle = {
     top: 'auto',
     left: 'auto',
+    maxHeight: '',
   }
 
   if (triggerRect.bottom + contentSize.height <= windowSize.height) {
-    position.top = `${scroll.top + triggerRect.bottom}px`
+    contentBox.top = `${scroll.top + triggerRect.bottom}px`
+  } else if (triggerRect.top - contentSize.height >= 0) {
+    contentBox.top = `${scroll.top + triggerRect.top - contentSize.height}px`
   } else {
-    position.top = `${scroll.top + triggerRect.top - contentSize.height}px`
+    const padding = 10
+
+    if (triggerRect.top + (triggerRect.bottom - triggerRect.top) / 2 < windowSize.height / 2) {
+      contentBox.top = `${scroll.top + triggerRect.bottom}px`
+      contentBox.maxHeight = `${windowSize.height - triggerRect.bottom - padding}px`
+    } else {
+      contentBox.top = `${scroll.top + padding}px`
+      contentBox.maxHeight = `${triggerRect.top - padding}px`
+    }
   }
 
-  if (triggerRect.left + (triggerRect.right - triggerRect.left) / 2 <= windowSize.width / 2) {
-    position.left = `${scroll.left + triggerRect.left}px`
+  const triggerAlignCenter = triggerRect.left + (triggerRect.right - triggerRect.left) / 2
+
+  if (triggerAlignCenter <= windowSize.width / 2) {
+    contentBox.left = `${scroll.left + triggerRect.left}px`
+  } else if (triggerAlignCenter >= windowSize.width / 2) {
+    contentBox.left = `${scroll.left + triggerRect.right - contentSize.width}px`
   } else {
-    position.left = `${scroll.left + triggerRect.right - contentSize.width}px`
+    contentBox.left = `${scroll.left + triggerRect.left}px`
   }
 
-  return position
+  return contentBox
 }
