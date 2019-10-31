@@ -8,7 +8,7 @@ import { CheckBoxLabel } from 'smarthr-ui'
 
 ## props
 
-CheckBoxLabel props extends Checkbox props.
+CheckBoxLabel props extends CheckBox props.
 
 In addition to it...
 
