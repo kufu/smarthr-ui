@@ -467,7 +467,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                                   "componentStyle": ComponentStyle {
                                     "componentId": "sc-htpNat",
                                     "isStatic": false,
-                                    "lastClassName": "PkcKW",
+                                    "lastClassName": "bVYgpj",
                                     "rules": Array [
                                       "
   ",
@@ -556,7 +556,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                             >
                               <input
                                 checked={true}
-                                className="sc-htpNat PkcKW"
+                                className="sc-htpNat bVYgpj"
                                 disabled={false}
                                 name="name"
                                 onChange={[Function]}
@@ -638,7 +638,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                                   "componentStyle": ComponentStyle {
                                     "componentId": "sc-bwzfXH",
                                     "isStatic": false,
-                                    "lastClassName": "iJVVrz",
+                                    "lastClassName": "giiqhe",
                                     "rules": Array [
                                       "
   ",
@@ -723,7 +723,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                               }
                             >
                               <span
-                                className="sc-bwzfXH iJVVrz active  light"
+                                className="sc-bwzfXH giiqhe active  light"
                               />
                             </StyledComponent>
                           </styled.span>
@@ -736,7 +736,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                                   "componentStyle": ComponentStyle {
                                     "componentId": "sc-bxivhb",
                                     "isStatic": false,
-                                    "lastClassName": "gDnquz",
+                                    "lastClassName": "fAOeDW",
                                     "rules": Array [
                                       "
   position: absolute;
@@ -747,7 +747,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
   height: 12px;
   transform: translate(-50%, -50%);
   pointer-events: none;
-
   & > svg {
     vertical-align: top;
   }
@@ -768,7 +767,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                               forwardedRef={null}
                             >
                               <span
-                                className="sc-bxivhb gDnquz"
+                                className="sc-bxivhb fAOeDW"
                               >
                                 <Component
                                   color="#fff"
