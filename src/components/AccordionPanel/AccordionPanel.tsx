@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+
 import { mapToArray, arrayToMap } from './AccordionPanelHelper'
 
-// type ExpandedItems = Map<string, string>
+import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 type Props = InjectedProps & {
   children: React.ReactNode
@@ -27,11 +27,7 @@ const AccordionPanelComponent: React.FC<Props> = ({
   defaultExpanded = [],
   ...props
 }) => {
-  const [expanded, setExpanded] = useState(new Map())
-
-  useEffect(() => {
-    setExpanded(arrayToMap(defaultExpanded))
-  }, [defaultExpanded])
+  const [expanded, setExpanded] = useState(new Map(arrayToMap(defaultExpanded)))
 
   const handleClick = useCallback(
     (itemName: string, isExpanded: boolean) => {
