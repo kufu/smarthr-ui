@@ -38,7 +38,7 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
     <Button
       id={`${name}-trigger`}
       className={buttonClassNames}
-      aria-expanded={!!expanded}
+      aria-expanded={!!isExpanded}
       aria-controls={`${name}-content`}
       onClick={handleClick}
       theme={theme}
