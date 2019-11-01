@@ -4,11 +4,13 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 console.log({ useContext, useCallback })
 
+type ExpandedItems = Map<string, string>
+
 type Props = InjectedProps & {
   children: React.ReactNode
   className?: string
   icon?: 'left' | 'right' | 'none'
-  onClick?: (expandedItem: string) => void
+  onClick?: (expandedItems: ExpandedItems) => void
 }
 
 export const AccordionPanelContext = React.createContext<any>({
@@ -18,10 +20,11 @@ export const AccordionPanelContext = React.createContext<any>({
 })
 
 const AccordionPanelComponent: React.FC<Props> = ({ onClick, icon = 'left', ...props }) => {
-  const [expanded, setExpanded] = useState('')
+  const [expanded, setExpanded] = useState(new Map())
 
-  const handleClick = (itemName: string) => {
-    setExpanded(itemName)
+  const handleClick = (itemName: string, isExpanded: boolean) => {
+    isExpanded ? expanded.set(itemName, itemName) : expanded.delete(itemName)
+    setExpanded(new Map(expanded))
     if (onClick) onClick(expanded)
   }
 

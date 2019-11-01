@@ -1,10 +1,13 @@
 import React, { useContext } from 'react'
-import { withTheme, InjectedProps } from '../../hocs/withTheme'
-import { AccordionPanelItemContext } from './AccordionPanelItem'
 import styled, { css } from 'styled-components'
-import { isTouchDevice } from '../../libs/ua'
-import { Icon as IconComponent } from '../Icon'
+
 import { AccordionPanelContext } from './AccordionPanel'
+import { AccordionPanelItemContext } from './AccordionPanelItem'
+import { Icon as IconComponent } from '../Icon'
+
+import { getShouldExpanded } from './AccordionPanelHelper'
+import { isTouchDevice } from '../../libs/ua'
+import { withTheme, InjectedProps } from '../../hocs/withTheme'
 
 type Props = {
   children: React.ReactNode
@@ -20,15 +23,15 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
 }) => {
   const { name } = useContext(AccordionPanelItemContext)
   const { icon, expanded, onClick } = useContext(AccordionPanelContext)
-
-  const expandedClassName = expanded === name ? 'expanded' : ''
+  const isExpanded = getShouldExpanded(expanded, name)
+  const expandedClassName = isExpanded ? 'expanded' : ''
   const buttonClassNames = `${className} ${expandedClassName} ${icon}`
   const iconClassNames = `${expandedClassName} ${icon}`
 
   const caretIcon = <Icon className={iconClassNames} name="fa-caret-up" theme={theme} />
 
   const handleClick = () => {
-    return onClick(name)
+    return onClick(name, !isExpanded)
   }
 
   return (

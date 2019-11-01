@@ -4,6 +4,7 @@ import { Transition } from 'react-transition-group'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { AccordionPanelContext } from './AccordionPanel'
+import { getShouldExpanded } from './AccordionPanelHelper'
 
 type Props = {
   children: React.ReactNode
@@ -52,7 +53,8 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
 
   return (
     <Transition
-      in={expanded === name}
+      // TODO: export expanded === name to helper file
+      in={getShouldExpanded(expanded, name)}
       onEntering={handleEntering}
       onEntered={handleEnterd}
       onExit={handleExit}
@@ -68,7 +70,7 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
           id={`${name}-content`}
           className={`${status} ${className}`}
           aria-labelledby={`${name}-trigger`}
-          aria-hidden={!(expanded === name)}
+          aria-hidden={!getShouldExpanded(expanded, name)}
         >
           <div ref={wrapperRef}>{children}</div>
         </CollapseContainer>
