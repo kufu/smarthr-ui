@@ -1,13 +1,10 @@
 import React, { useCallback, useState } from 'react'
-import styled from 'styled-components'
 
 import { mapToArray, arrayToMap } from './AccordionPanelHelper'
-
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 type Props = InjectedProps & {
   children: React.ReactNode
-  className?: string
   icon?: 'left' | 'right' | 'none'
   expandableMultiply?: boolean
   defaultExpanded?: string[]
@@ -15,7 +12,7 @@ type Props = InjectedProps & {
 }
 
 export const AccordionPanelContext = React.createContext<any>({
-  expanded: '',
+  expandedItems: '',
   icon: 'left',
   onClick: () => {},
 })
@@ -27,32 +24,30 @@ const AccordionPanelComponent: React.FC<Props> = ({
   defaultExpanded = [],
   ...props
 }) => {
-  const [expanded, setExpanded] = useState(new Map(arrayToMap(defaultExpanded)))
+  const [expandedItems, setExpanded] = useState(new Map(arrayToMap(defaultExpanded)))
 
   const handleClick = useCallback(
     (itemName: string, isExpanded: boolean) => {
       if (expandableMultiply) {
-        isExpanded ? expanded.set(itemName, itemName) : expanded.delete(itemName)
-        setExpanded(new Map(expanded))
+        isExpanded ? expandedItems.set(itemName, itemName) : expandedItems.delete(itemName)
+        setExpanded(new Map(expandedItems))
       } else {
         isExpanded ? setExpanded(new Map([[itemName, itemName]])) : setExpanded(new Map())
       }
     },
-    [expandableMultiply, expanded],
+    [expandableMultiply, expandedItems],
   )
 
   // fires onClick after state of expanded changed
   React.useEffect(() => {
-    if (onClick) onClick(mapToArray(expanded))
-  }, [expanded, onClick])
+    if (onClick) onClick(mapToArray(expandedItems))
+  }, [expandedItems, onClick])
 
   return (
-    <AccordionPanelContext.Provider value={{ onClick: handleClick, expanded, icon }}>
-      <Wrapper {...props} />
+    <AccordionPanelContext.Provider value={{ onClick: handleClick, expandedItems, icon }}>
+      <div {...props} />
     </AccordionPanelContext.Provider>
   )
 }
 
 export const AccordionPanel = withTheme(AccordionPanelComponent)
-
-const Wrapper = styled.div``

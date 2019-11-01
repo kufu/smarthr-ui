@@ -16,7 +16,8 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
   className = '',
 }) => {
   const { name } = useContext(AccordionPanelItemContext)
-  const { expanded } = useContext(AccordionPanelContext)
+  const { expandedItems } = useContext(AccordionPanelContext)
+
   const wrapperRef = React.useRef<HTMLDivElement>(null)
 
   const handleEntering = useCallback(
@@ -45,7 +46,7 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
 
   return (
     <Transition
-      in={getShouldExpanded(expanded, name)}
+      in={getShouldExpanded(expandedItems, name)}
       onEntering={handleEntering}
       onEntered={handleEnterd}
       onExit={handleExit}
@@ -60,7 +61,7 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
           id={`${name}-content`}
           className={`${status} ${className}`}
           aria-labelledby={`${name}-trigger`}
-          aria-hidden={!getShouldExpanded(expanded, name)}
+          aria-hidden={!getShouldExpanded(expandedItems, name)}
         >
           <div ref={wrapperRef}>{children}</div>
         </CollapseContainer>
