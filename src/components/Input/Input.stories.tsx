@@ -29,7 +29,7 @@ storiesOf('Input', module).add('all', () => (
     </li>
     <li>
       <Txt>onChange</Txt>
-      <Input value="onChange" onChange={action('onChange!!')} />
+      <Input onChange={action('onChange!!')} />
     </li>
     <li>
       <Txt>onBlur</Txt>
