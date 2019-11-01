@@ -13,6 +13,7 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
 const InputComponent: React.FC<Props & InjectedProps> = props => {
   const ref = React.useRef<HTMLInputElement>(null)
   const { autoFocus } = props
+
   React.useEffect(() => {
     if (autoFocus && ref && ref.current) {
       ref.current.focus()

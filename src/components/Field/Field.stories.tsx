@@ -8,44 +8,43 @@ import { Field } from './Field'
 storiesOf('Field', module).add('all', () => (
   <List>
     <li>
-      <Field defaultValue="string" label="string" />
+      <Field label="string" input={{ defaultValue: 'string' }} />
     </li>
     <li>
-      <Field type="number" defaultValue="1" label="number" />
+      <Field label="number" input={{ type: 'number', defaultValue: '1' }} />
     </li>
     <li>
-      <Field type="password" defaultValue="password" label="password" />
+      <Field label="password" input={{ type: 'password', defaultValue: 'password' }} />
     </li>
     <li>
       <Field
-        name="sample"
-        defaultValue="string"
         label="long title.........................................."
+        input={{ name: 'sample', defaultValue: 'string' }}
       />
     </li>
     <li>
-      <Field defaultValue="string" label="required" required={true} />
+      <Field label="required" input={{ required: true, defaultValue: 'string' }} />
     </li>
     <li>
-      <Field label="disabled" disabled={true} />
+      <Field label="disabled" input={{ disabled: true }} />
     </li>
     <li>
-      <Field defaultValue="width: 100%" label="width" width="100%" />
+      <Field label="width" input={{ width: '100%', defaultValue: 'width: 100%' }} />
     </li>
     <li>
-      <Field label="placeholder" placeholder="placeholder" />
+      <Field label="placeholder" input={{ placeholder: 'placeholder' }} />
     </li>
     <li>
-      <Field label="onChange" onChange={action('onChange!!')} />
+      <Field label="onChange" input={{ onChange: action('onChange!!') }} />
     </li>
     <li>
-      <Field label="onBlur" onBlur={action('onBlur!!')} />
+      <Field label="onBlur" input={{ onBlur: action('onBlur!!') }} />
     </li>
     <li>
-      <Field label="help message" help="This is help message." width={400} />
+      <Field label="help message" helpMessage="This is help message." input={{ width: 400 }} />
     </li>
     <li>
-      <Field label="error message" error="An error occurred" />
+      <Field label="error message" errorMessage="An error occurred" input={{ error: true }} />
     </li>
     <li>
       <Field label="custom field">
@@ -53,7 +52,7 @@ storiesOf('Field', module).add('all', () => (
       </Field>
     </li>
     <li>
-      <Field label="custom field" error="custom error" required={true}>
+      <Field label="custom field" errorMessage="custom error" input={{ required: true }}>
         <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
       </Field>
     </li>

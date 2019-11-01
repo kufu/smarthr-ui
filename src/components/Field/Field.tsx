@@ -6,36 +6,40 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { Input, Props as InputProps } from '../Input'
 import { StatusLabel } from '../StatusLabel'
 
-type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
-
-type Props = Omit<InputProps, 'error'> & {
+type Props = {
   label: string
-  error?: string
-  help?: string
+  input?: InputProps
+  errorMessage?: string
+  helpMessage?: string
   className?: string
+  children?: React.ReactNode
 }
 
-const FieldComponent: React.FC<Props & InjectedProps> = props => {
-  const { label, required, error, help, width, className = '', theme, children } = props
-
-  return (
-    <Wrapper width={width} className={className}>
-      <LabelHead theme={theme}>
-        <Title theme={theme}>
-          {label}
-          {required && (
-            <StatusLabelWrapper theme={theme}>
-              <StatusLabel type="required">必須</StatusLabel>
-            </StatusLabelWrapper>
-          )}
-        </Title>
-        {help && <Help theme={theme}>{help}</Help>}
-      </LabelHead>
-      {children ? children : <Input {...props} width={width} error={!!error} />}
-      {error && <Error theme={theme}>{error}</Error>}
-    </Wrapper>
-  )
-}
+const FieldComponent: React.FC<Props & InjectedProps> = ({
+  label,
+  input = {},
+  errorMessage,
+  helpMessage,
+  className = '',
+  theme,
+  children,
+}) => (
+  <Wrapper width={input.width || 'auto'} className={className}>
+    <LabelHead theme={theme}>
+      <Title theme={theme}>
+        {label}
+        {input.required && (
+          <StatusLabelWrapper theme={theme}>
+            <StatusLabel type="required">必須</StatusLabel>
+          </StatusLabelWrapper>
+        )}
+      </Title>
+      {helpMessage && <Help theme={theme}>{helpMessage}</Help>}
+    </LabelHead>
+    {children ? children : <Input {...input} />}
+    {errorMessage && <Error theme={theme}>{errorMessage}</Error>}
+  </Wrapper>
+)
 
 export const Field = withTheme(FieldComponent)
 
@@ -77,7 +81,6 @@ const Error = styled.p`
     line-height: 1.4;
   `}
 `
-
 const StatusLabelWrapper = styled.span`
   ${({ theme }: InjectedProps) => css`
     margin-left: ${theme.size.pxToRem(theme.size.space.XXS)};
