@@ -37,11 +37,14 @@ const AccordionPanelComponent: React.FC<Props> = ({
       } else {
         isExpanded ? setExpanded(new Map([[itemName, itemName]])) : setExpanded(new Map())
       }
-
-      if (onClick) onClick(mapToArray(expanded))
     },
-    [expandableMultiply, expanded, onClick],
+    [expandableMultiply, expanded],
   )
+
+  // fires onClick after state of expanded changed
+  React.useEffect(() => {
+    if (onClick) onClick(mapToArray(expanded))
+  }, [expanded, onClick])
 
   return (
     <AccordionPanelContext.Provider value={{ onClick: handleClick, expanded, icon }}>

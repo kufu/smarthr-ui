@@ -39,14 +39,6 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
     [wrapperRef],
   )
 
-  const handleExiting = useCallback(
-    (node: HTMLElement) => {
-      const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
-      node.style.height = `${wrapperHeight}px`
-    },
-    [wrapperRef],
-  )
-
   const handleExited = (node: HTMLElement) => {
     node.style.height = '0px'
   }
@@ -57,7 +49,6 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
       onEntering={handleEntering}
       onEntered={handleEnterd}
       onExit={handleExit}
-      onExiting={handleExiting}
       onExited={handleExited}
       timeout={{
         enter: 300,
@@ -83,7 +74,7 @@ export const AccordionPanelContent = withTheme(AccordionPanelContentComponent)
 const CollapseContainer = styled.div`
   height: 0;
   overflow: hidden;
-  transition: height 0.3s;
+  transition: height 0.3s ease;
 
   &.entered {
     height: auto;
