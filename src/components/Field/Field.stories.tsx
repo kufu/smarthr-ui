@@ -3,55 +3,48 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Field, NumberField, PasswordField, TextField } from './Field'
+import { Field } from './Field'
 
 storiesOf('Field', module).add('all', () => (
   <List>
     <li>
-      <TextField name="sample" value="string" label="string" />
+      <Field label="string" input={{ defaultValue: 'string' }} />
     </li>
     <li>
-      <NumberField name="sample" value="1" label="number" />
+      <Field label="number" input={{ type: 'number', defaultValue: '1' }} />
     </li>
     <li>
-      <PasswordField name="sample" value="password" label="password" />
+      <Field label="password" input={{ type: 'password', defaultValue: 'password' }} />
     </li>
     <li>
-      <TextField
-        name="sample"
-        value="string"
+      <Field
         label="long title.........................................."
+        input={{ name: 'sample', defaultValue: 'string' }}
       />
     </li>
     <li>
-      <TextField name="sample" value="string" label="required" required={true} />
+      <Field label="required" input={{ required: true, defaultValue: 'string' }} />
     </li>
     <li>
-      <TextField name="sample" value="" label="disabled" disabled={true} />
+      <Field label="disabled" input={{ disabled: true }} />
     </li>
     <li>
-      <TextField name="sample" value="width: 100%" label="width" width="100%" />
+      <Field label="width" input={{ width: '100%', defaultValue: 'width: 100%' }} />
     </li>
     <li>
-      <TextField name="sample" value="" label="placeholder" placeholder="placeholder" />
+      <Field label="placeholder" input={{ placeholder: 'placeholder' }} />
     </li>
     <li>
-      <TextField name="sample" value="" label="onChange" onChange={action('onChange!!')} />
+      <Field label="onChange" input={{ onChange: action('onChange!!') }} />
     </li>
     <li>
-      <TextField name="sample" value="" label="onBlur" onBlur={action('onBlur!!')} />
+      <Field label="onBlur" input={{ onBlur: action('onBlur!!') }} />
     </li>
     <li>
-      <TextField
-        name="sample"
-        value=""
-        label="help message"
-        help="This is help message."
-        width={400}
-      />
+      <Field label="help message" helpMessage="This is help message." input={{ width: 400 }} />
     </li>
     <li>
-      <TextField name="sample" value="" label="error message" error="An error occurred" />
+      <Field label="error message" errorMessage="An error occurred" input={{ error: true }} />
     </li>
     <li>
       <Field label="custom field">
@@ -59,7 +52,7 @@ storiesOf('Field', module).add('all', () => (
       </Field>
     </li>
     <li>
-      <Field label="custom field" error="custom error" required={true}>
+      <Field label="custom field" errorMessage="custom error" input={{ required: true }}>
         <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
       </Field>
     </li>

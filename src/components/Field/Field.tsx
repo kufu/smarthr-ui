@@ -3,86 +3,51 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-import { NumberInput, PasswordInput, Props as InputProps, TextInput } from '../Input'
+import { Input, Props as InputProps } from '../Input'
 import { StatusLabel } from '../StatusLabel'
 
-interface Props {
+type Props = {
   label: string
-  name?: string
-  value?: string
-  required?: boolean
-  placeholder?: string
-  disabled?: boolean
-  error?: string
-  help?: string
-  width?: number | string
+  input?: InputProps
+  errorMessage?: string
+  helpMessage?: string
   className?: string
-  onChange?: (name: string, value: string) => void
-  onBlur?: (name: string, value: string) => void
   children?: React.ReactNode
 }
 
-const fieldFactory: (
-  InputComponent?: React.ComponentType<InputProps>,
-) => React.SFC<Props & InjectedProps> = InputComponent => ({
+const FieldComponent: React.FC<Props & InjectedProps> = ({
   label,
-  name = '',
-  value = '',
-  required,
-  placeholder,
-  disabled,
-  error,
-  help,
-  width,
+  input = {},
+  errorMessage,
+  helpMessage,
   className = '',
-  onChange,
-  onBlur,
   theme,
   children,
-}) => {
-  const widthStyle = typeof width === 'number' ? `${width}px` : width
+}) => (
+  <Wrapper width={input.width || 'auto'} className={className}>
+    <LabelHead theme={theme}>
+      <Title theme={theme}>
+        {label}
+        {input.required && (
+          <StatusLabelWrapper theme={theme}>
+            <StatusLabel type="required">必須</StatusLabel>
+          </StatusLabelWrapper>
+        )}
+      </Title>
+      {helpMessage && <Help theme={theme}>{helpMessage}</Help>}
+    </LabelHead>
+    {children ? children : <Input {...input} />}
+    {errorMessage && <Error theme={theme}>{errorMessage}</Error>}
+  </Wrapper>
+)
 
-  return (
-    <Wrapper width={widthStyle} className={className}>
-      <LabelHead theme={theme}>
-        <Title theme={theme}>
-          {label}
-          {required && (
-            <StatusLabelWrapper theme={theme}>
-              <StatusLabel type="required">必須</StatusLabel>
-            </StatusLabelWrapper>
-          )}
-        </Title>
-        {help && <Help theme={theme}>{help}</Help>}
-      </LabelHead>
-      {InputComponent ? (
-        <InputComponent
-          value={value}
-          name={name}
-          required={required}
-          placeholder={placeholder}
-          disabled={disabled}
-          error={!!error}
-          width={width}
-          onChange={onChange}
-          onBlur={onBlur}
-        />
-      ) : (
-        children
-      )}
-      {error && <Error theme={theme}>{error}</Error>}
-    </Wrapper>
-  )
-}
+export const Field = withTheme(FieldComponent)
 
-export const Field = withTheme(fieldFactory())
-export const TextField = withTheme(fieldFactory(TextInput))
-export const NumberField = withTheme(fieldFactory(NumberInput))
-export const PasswordField = withTheme(fieldFactory(PasswordInput))
-
-const Wrapper: any = styled.div`
-  display: inline-block;
-  width: ${({ width }: { width: string }) => width};
+const Wrapper: any = styled.div<{ width: string | number }>`
+  ${({ width }) => css`
+    display: inline-block;
+    width: ${typeof width === 'number' ? `${width}px` : width};
+  `}
 `
 const LabelHead = styled.div`
   ${({ theme }: InjectedProps) => css`
@@ -116,7 +81,6 @@ const Error = styled.p`
     line-height: 1.4;
   `}
 `
-
 const StatusLabelWrapper = styled.span`
   ${({ theme }: InjectedProps) => css`
     margin-left: ${theme.size.pxToRem(theme.size.space.XXS)};

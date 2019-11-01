@@ -4,9 +4,9 @@ export { LightBalloon, DarkBalloon } from './components/Balloon'
 export { CheckBox } from './components/CheckBox'
 export { CheckBoxLabel } from './components/CheckBoxLabel'
 export { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser } from './components/Dropdown'
-export { Field, TextField, NumberField, PasswordField } from './components/Field'
+export { Field } from './components/Field'
 export { FlashMessage } from './components/FlashMessage'
-export { TextInput, NumberInput, PasswordInput } from './components/Input'
+export { Input } from './components/Input'
 export { Loader } from './components/Loader'
 export {
   Dialog,
