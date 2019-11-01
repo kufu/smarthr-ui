@@ -10,9 +10,8 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   autoFocus?: boolean
 }
 
-const InputComponent: React.FC<Props & InjectedProps> = props => {
+const InputComponent: React.FC<Props & InjectedProps> = ({ autoFocus, ...props }) => {
   const ref = React.useRef<HTMLInputElement>(null)
-  const { autoFocus } = props
 
   React.useEffect(() => {
     if (autoFocus && ref && ref.current) {
