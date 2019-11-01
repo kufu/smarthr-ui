@@ -53,7 +53,6 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
 
   return (
     <Transition
-      // TODO: export expanded === name to helper file
       in={getShouldExpanded(expanded, name)}
       onEntering={handleEntering}
       onEntered={handleEnterd}
