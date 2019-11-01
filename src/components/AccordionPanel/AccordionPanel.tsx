@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react'
 
 import { mapToArray, arrayToMap } from './AccordionPanelHelper'
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-type Props = InjectedProps & {
+type Props = {
   children: React.ReactNode
   icon?: 'left' | 'right' | 'none'
   expandableMultiply?: boolean
   defaultExpanded?: string[]
+  className?: string
   onClick?: (expandedItems: string[]) => void
 }
 
@@ -17,12 +17,13 @@ export const AccordionPanelContext = React.createContext<any>({
   onClick: () => {},
 })
 
-const AccordionPanelComponent: React.FC<Props> = ({
-  onClick,
+export const AccordionPanel: React.FC<Props> = ({
+  children,
   icon = 'left',
   expandableMultiply = false,
   defaultExpanded = [],
-  ...props
+  className = '',
+  onClick,
 }) => {
   const [expandedItems, setExpanded] = useState(new Map(arrayToMap(defaultExpanded)))
 
@@ -45,9 +46,7 @@ const AccordionPanelComponent: React.FC<Props> = ({
 
   return (
     <AccordionPanelContext.Provider value={{ onClick: handleClick, expandedItems, icon }}>
-      <div {...props} />
+      <div className={className} children={children} />
     </AccordionPanelContext.Provider>
   )
 }
-
-export const AccordionPanel = withTheme(AccordionPanelComponent)

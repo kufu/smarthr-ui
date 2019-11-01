@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { withTheme } from '../../hocs/withTheme'
 
 type Props = {
   children: React.ReactNode
   name: string
+  className?: string
 }
 
 type ContextType = Omit<Props, 'children'>
@@ -12,16 +12,14 @@ export const AccordionPanelItemContext = React.createContext<ContextType>({
   name: '',
 })
 
-const AccordionPanelItemComponent: React.FC<Props> = ({ children, name }) => {
+export const AccordionPanelItem: React.FC<Props> = ({ children, name, className = '' }) => {
   return (
     <AccordionPanelItemContext.Provider
       value={{
         name,
       }}
     >
-      {children}
+      <div className={className}> {children}</div>
     </AccordionPanelItemContext.Provider>
   )
 }
-
-export const AccordionPanelItem = withTheme(AccordionPanelItemComponent)
