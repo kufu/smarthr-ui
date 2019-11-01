@@ -1,48 +1,34 @@
-import * as React from 'react'
+import React, { FC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-interface Props {
-  checked: boolean
-  name: string
+export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   themeColor?: 'light' | 'dark'
-  disabled?: boolean
-  className?: string
-  onChange?: (name: string, checked: boolean) => void
 }
 
-class RadioButtonComponent extends React.PureComponent<Props & InjectedProps> {
-  public render() {
-    const {
-      checked,
-      name,
-      disabled = false,
-      themeColor = 'light',
-      className = '',
-      theme,
-    } = this.props
-    const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
+const RadioButtonComponent: FC<Props & InjectedProps> = ({
+  themeColor = 'light',
+  className = '',
+  onChange,
+  theme,
+  ...props
+}) => {
+  const { checked, disabled } = props
+  const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (onChange) onChange(e)
+    },
+    [onChange],
+  )
 
-    return (
-      <Wrapper className={className}>
-        <Input
-          type="radio"
-          checked={checked}
-          name={name}
-          disabled={disabled}
-          theme={theme}
-          onChange={this.handleChange}
-        />
-        <Box className={boxClassName} theme={theme} />
-      </Wrapper>
-    )
-  }
-
-  private handleChange = () => {
-    const { checked, name, onChange } = this.props
-    if (onChange) onChange(name, !checked)
-  }
+  return (
+    <Wrapper className={className}>
+      <Input type="radio" theme={theme} onChange={handleChange} {...props} />
+      <Box className={boxClassName} theme={theme} />
+    </Wrapper>
+  )
 }
 
 export const RadioButton = withTheme(RadioButtonComponent)

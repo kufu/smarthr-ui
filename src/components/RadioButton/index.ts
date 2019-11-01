@@ -1,1 +1,1 @@
-export { RadioButton } from './RadioButton'
+export { RadioButton, Props } from './RadioButton'

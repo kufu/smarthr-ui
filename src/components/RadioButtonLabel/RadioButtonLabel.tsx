@@ -1,21 +1,15 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-import { RadioButton } from '../RadioButton'
+import { RadioButton, Props as RadioButtonProps } from '../RadioButton'
 
-interface Props {
+type Props = RadioButtonProps & {
   label: string
-  checked: boolean
-  name: string
-  themeColor?: 'light' | 'dark'
-  disabled?: boolean
-  className?: string
-  onChange?: (name: string, checked: boolean) => void
 }
 
-const RadioButtonLabelComponent: React.FC<Props & InjectedProps> = ({
+const RadioButtonLabelComponent: FC<Props & InjectedProps> = ({
   label,
   className = '',
   theme,
