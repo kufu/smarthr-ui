@@ -4,6 +4,7 @@ import { AccordionPanelItemContext } from './AccordionPanelItem'
 import styled, { css } from 'styled-components'
 import { isTouchDevice } from '../../libs/ua'
 import { Icon as IconComponent } from '../Icon'
+import { AccordionPanelContext } from './AccordionPanel'
 
 type Props = {
   children: React.ReactNode
@@ -17,16 +18,17 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
   className = '',
   theme,
 }) => {
-  const { expanded, name, onClick, icon } = useContext(AccordionPanelItemContext)
+  const { name, icon } = useContext(AccordionPanelItemContext)
+  const { onClick, expanded } = useContext(AccordionPanelContext)
 
-  const expandedClassName = expanded ? 'expanded' : ''
+  const expandedClassName = expanded === name ? 'expanded' : ''
   const buttonClassNames = `${className} ${expandedClassName} ${icon}`
   const iconClassNames = `${expandedClassName} ${icon}`
 
   const caretIcon = <Icon className={iconClassNames} name="fa-caret-up" theme={theme} />
 
   const handleClick = () => {
-    return onClick(name, !expanded)
+    return onClick(name)
   }
 
   return (

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Transition } from 'react-transition-group'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
+import { AccordionPanelContext } from './AccordionPanel'
 
 type Props = {
   children: React.ReactNode
@@ -13,7 +14,8 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
   children,
   className = '',
 }) => {
-  const { expanded, name } = useContext(AccordionPanelItemContext)
+  const { name } = useContext(AccordionPanelItemContext)
+  const { expanded } = useContext(AccordionPanelContext)
   const wrapperRef = React.useRef<HTMLDivElement>(null)
 
   const handleEntering = useCallback(
@@ -50,7 +52,7 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
 
   return (
     <Transition
-      in={expanded}
+      in={expanded === name}
       onEntering={handleEntering}
       onEntered={handleEnterd}
       onExit={handleExit}
@@ -66,7 +68,7 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
           id={`${name}-content`}
           className={`${status} ${className}`}
           aria-labelledby={`${name}-trigger`}
-          aria-hidden={!expanded}
+          aria-hidden={!(expanded === name)}
         >
           <div ref={wrapperRef}>{children}</div>
         </CollapseContainer>

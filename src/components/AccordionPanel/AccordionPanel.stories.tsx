@@ -1,7 +1,8 @@
 import { storiesOf } from '@storybook/react'
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
+import { AccordionPanel } from './AccordionPanel'
 import { AccordionPanelItem } from './AccordionPanelItem'
 import { AccordionPanelTrigger } from './AccordionPanelTrigger'
 import { AccordionPanelContent } from './AccordionPanelContent'
@@ -19,35 +20,33 @@ storiesOf('AccordionPanel', module)
     },
   })
   .add('AccordionPanel', () => {
-    const [state, setstate] = useState('')
+    // const [state, setstate] = useState('')
 
-    const handleClick = (name: string, _expanded: boolean) => {
-      setstate(name)
-    }
+    // const handleClick = (name: string, _expanded: boolean) => {
+    //   setstate(name)
+    // }
 
     return (
       <>
         <Base>
-          <ul>
-            {arr.map((_, index) => (
-              <li className="border" key={index}>
-                <AccordionPanelItem
-                  name={`left-icon-${index}`}
-                  expanded={state === `left-icon-${index}`}
-                  onClick={handleClick}
-                >
-                  <AccordionPanelTrigger>Left Icon (default) {index}</AccordionPanelTrigger>
-                  <AccordionPanelContent>
-                    <Content>
-                      <div>{lorem}</div>
-                    </Content>
-                  </AccordionPanelContent>
-                </AccordionPanelItem>
-              </li>
-            ))}
-          </ul>
+          <AccordionPanel>
+            <ul>
+              {arr.map((_, index) => (
+                <li className="border" key={index}>
+                  <AccordionPanelItem name={`left-icon-${index}`}>
+                    <AccordionPanelTrigger>Left Icon (default) {index}</AccordionPanelTrigger>
+                    <AccordionPanelContent>
+                      <Content>
+                        <div>{lorem}</div>
+                      </Content>
+                    </AccordionPanelContent>
+                  </AccordionPanelItem>
+                </li>
+              ))}
+            </ul>
+          </AccordionPanel>
         </Base>
-        <Base>
+        {/* <Base>
           <ul>
             {arr.map((_, index) => (
               <li className="border" key={index}>
@@ -103,7 +102,7 @@ storiesOf('AccordionPanel', module)
               </li>
             ))}
           </ul>
-        </Base>
+        </Base> */}
       </>
     )
   })
@@ -111,7 +110,7 @@ storiesOf('AccordionPanel', module)
 const Base = styled(BaseComponent)`
   margin: 1rem;
 
-  > ul {
+  ul {
     margin: 0;
     padding: 0;
     list-style: none;
