@@ -7,15 +7,17 @@ console.log({ useContext, useCallback })
 type Props = InjectedProps & {
   children: React.ReactNode
   className?: string
+  icon?: 'left' | 'right' | 'none'
   onClick?: (expandedItem: string) => void
 }
 
 export const AccordionPanelContext = React.createContext<any>({
   expanded: '',
+  icon: 'left',
   onClick: () => {},
 })
 
-const AccordionPanelComponent: React.FC<Props> = ({ onClick, ...props }) => {
+const AccordionPanelComponent: React.FC<Props> = ({ onClick, icon = 'left', ...props }) => {
   const [expanded, setExpanded] = useState('')
 
   const handleClick = (itemName: string) => {
@@ -24,7 +26,7 @@ const AccordionPanelComponent: React.FC<Props> = ({ onClick, ...props }) => {
   }
 
   return (
-    <AccordionPanelContext.Provider value={{ onClick: handleClick, expanded }}>
+    <AccordionPanelContext.Provider value={{ onClick: handleClick, expanded, icon }}>
       <Wrapper {...props} />
     </AccordionPanelContext.Provider>
   )

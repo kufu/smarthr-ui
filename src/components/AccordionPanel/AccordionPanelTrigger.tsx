@@ -18,8 +18,8 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
   className = '',
   theme,
 }) => {
-  const { name, icon } = useContext(AccordionPanelItemContext)
-  const { onClick, expanded } = useContext(AccordionPanelContext)
+  const { name } = useContext(AccordionPanelItemContext)
+  const { icon, expanded, onClick } = useContext(AccordionPanelContext)
 
   const expandedClassName = expanded === name ? 'expanded' : ''
   const buttonClassNames = `${className} ${expandedClassName} ${icon}`
