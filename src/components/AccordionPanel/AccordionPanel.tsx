@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { mapToArray, arrayToMap } from './AccordionPanelHelper'
 
-type ExpandedItems = Map<string, string>
+// type ExpandedItems = Map<string, string>
 
 type Props = InjectedProps & {
   children: React.ReactNode
   className?: string
   icon?: 'left' | 'right' | 'none'
   expandableMultiply?: boolean
-  onClick?: (expandedItems: ExpandedItems) => void
+  defaultExpanded?: string[]
+  onClick?: (expandedItems: string[]) => void
 }
 
 export const AccordionPanelContext = React.createContext<any>({
@@ -22,20 +24,28 @@ const AccordionPanelComponent: React.FC<Props> = ({
   onClick,
   icon = 'left',
   expandableMultiply = false,
+  defaultExpanded = [],
   ...props
 }) => {
   const [expanded, setExpanded] = useState(new Map())
 
-  const handleClick = (itemName: string, isExpanded: boolean) => {
-    if (expandableMultiply) {
-      isExpanded ? expanded.set(itemName, itemName) : expanded.delete(itemName)
-      setExpanded(new Map(expanded))
-    } else {
-      isExpanded ? setExpanded(new Map([[itemName, itemName]])) : setExpanded(new Map())
-    }
+  useEffect(() => {
+    setExpanded(arrayToMap(defaultExpanded))
+  }, [defaultExpanded])
 
-    if (onClick) onClick(expanded)
-  }
+  const handleClick = useCallback(
+    (itemName: string, isExpanded: boolean) => {
+      if (expandableMultiply) {
+        isExpanded ? expanded.set(itemName, itemName) : expanded.delete(itemName)
+        setExpanded(new Map(expanded))
+      } else {
+        isExpanded ? setExpanded(new Map([[itemName, itemName]])) : setExpanded(new Map())
+      }
+
+      if (onClick) onClick(mapToArray(expanded))
+    },
+    [expandableMultiply, expanded, onClick],
+  )
 
   return (
     <AccordionPanelContext.Provider value={{ onClick: handleClick, expanded, icon }}>
