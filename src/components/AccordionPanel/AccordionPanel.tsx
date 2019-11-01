@@ -1,8 +1,6 @@
-import React, { useContext, useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-
-console.log({ useContext, useCallback })
 
 type ExpandedItems = Map<string, string>
 
@@ -10,6 +8,7 @@ type Props = InjectedProps & {
   children: React.ReactNode
   className?: string
   icon?: 'left' | 'right' | 'none'
+  expandableMultiply?: boolean
   onClick?: (expandedItems: ExpandedItems) => void
 }
 
@@ -19,12 +18,22 @@ export const AccordionPanelContext = React.createContext<any>({
   onClick: () => {},
 })
 
-const AccordionPanelComponent: React.FC<Props> = ({ onClick, icon = 'left', ...props }) => {
+const AccordionPanelComponent: React.FC<Props> = ({
+  onClick,
+  icon = 'left',
+  expandableMultiply = false,
+  ...props
+}) => {
   const [expanded, setExpanded] = useState(new Map())
 
   const handleClick = (itemName: string, isExpanded: boolean) => {
-    isExpanded ? expanded.set(itemName, itemName) : expanded.delete(itemName)
-    setExpanded(new Map(expanded))
+    if (expandableMultiply) {
+      isExpanded ? expanded.set(itemName, itemName) : expanded.delete(itemName)
+      setExpanded(new Map(expanded))
+    } else {
+      isExpanded ? setExpanded(new Map([[itemName, itemName]])) : setExpanded(new Map())
+    }
+
     if (onClick) onClick(expanded)
   }
 
