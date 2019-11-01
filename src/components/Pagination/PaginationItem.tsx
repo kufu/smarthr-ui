@@ -1,9 +1,8 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { hoverable } from '../../hocs/hoverable'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { isTouchDevice } from '../../libs/ua'
+import { SecondaryButton } from '../Button'
 
 interface Props {
   page: number
@@ -17,14 +16,14 @@ class PaginationItemComponent extends React.PureComponent<Props & InjectedProps>
 
     if (page === currentPage) {
       return (
-        <Item className="PaginationItem active" theme={theme}>
+        <ItemButton square size="s" className="paginationItem active" theme={theme} disabled>
           {page}
-        </Item>
+        </ItemButton>
       )
     }
 
     return (
-      <ItemButton className="PaginationItem" onClick={this.onClick} theme={theme}>
+      <ItemButton square size="s" className="paginationItem" onClick={this.onClick} theme={theme}>
         {page}
       </ItemButton>
     )
@@ -38,35 +37,21 @@ class PaginationItemComponent extends React.PureComponent<Props & InjectedProps>
 
 export const PaginationItem = withTheme(PaginationItemComponent)
 
-const Item = styled.span`
+export const ItemButton = styled(SecondaryButton)`
   ${({ theme }: InjectedProps) => {
-    const { size, palette, interaction } = theme
-
+    const { palette } = theme
     return css`
-      display: inline-block;
-      width: 34px;
-      padding: 0;
-      border: none;
-      background-color: #fff;
-      color: ${palette.Main};
-      font-size: ${size.pxToRem(size.font.tall)};
-      line-height: 32px;
-      text-align: center;
-      cursor: pointer;
-      outline: 0;
-      transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
-
-      &.active {
-        color: #fff;
-        background-color: ${palette.Main};
-      }
-
-      &.hover {
-        color: ${palette.Main};
-        background-color: ${palette.hoverColor('#fff')};
+      &.paginationItem.s.square {
+        line-height: 25px;
+        border-radius: 4px;
+        &.active {
+          color: #fff;
+          background-color: ${palette.MAIN};
+          border: solid 1px ${palette.MAIN};
+          cursor: default;
+          outline: none;
+        }
       }
     `
   }}
 `
-
-export const ItemButton = hoverable()(Item.withComponent('button'))

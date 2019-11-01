@@ -1,59 +1,64 @@
 import { merge } from '../libs/lodash'
-import { darken, transparentize } from 'polished'
+import { darken, rgba, transparentize } from 'polished'
 
 // Allow deviations from the JavaScript naming convention to match SmartHR design guidelines
 export interface PaletteProperty {
-  TextBlack?: string
-  TextGrey?: string
-  Border?: string
-  Background?: string
-  Column?: string
-  Main?: string
-  Danger?: string
-  Warning?: string
-  Scrim?: string
-  Overlay?: string
-  Outline?: string
+  TEXT_BLACK?: string
+  TEXT_GREY?: string
+  TEXT_DISABLED?: string
+  BORDER?: string
+  BACKGROUND?: string
+  COLUMN?: string
+  MAIN?: string
+  DANGER?: string
+  WARNING?: string
+  SCRIM?: string
+  OVERLAY?: string
+  OUTLINE?: string
 }
 
 export interface CreatedPaletteTheme {
   hoverColor: (value: string) => string
-  TextBlack: string
-  TextGrey: string
-  Border: string
-  Background: string
-  Column: string
-  Main: string
-  Danger: string
-  Warning: string
-  Scrim: string
-  Overlay: string
-  Outline: string
+  disableColor: (value: string) => string
+  TEXT_BLACK: string
+  TEXT_GREY: string
+  TEXT_DISABLED: string
+  BORDER: string
+  BACKGROUND: string
+  COLUMN: string
+  MAIN: string
+  DANGER: string
+  WARNING: string
+  SCRIM: string
+  OVERLAY: string
+  OUTLINE: string
 }
 
 export const defaultPalette = {
-  TextBlack: '#333',
-  TextGrey: '#767676',
-  Border: '#d6d6d6',
-  Background: '#f5f6fa',
-  Column: '#f9f9f9',
-  Main: '#00a5ab',
-  Danger: '#ef475b',
-  Warning: '#ff8800',
-  Scrim: 'rgba(0,0,0,0.5)',
-  Overlay: 'rgba(0,0,0,0.15)',
+  TEXT_BLACK: '#333',
+  TEXT_GREY: '#767676',
+  TEXT_DISABLED: '#c1c1c1',
+  BORDER: '#d6d6d6',
+  BACKGROUND: '#f5f6fa',
+  COLUMN: '#f9f9f9',
+  MAIN: '#00a5ab',
+  DANGER: '#ef475b',
+  WARNING: '#ff8800',
+  SCRIM: 'rgba(0,0,0,0.5)',
+  OVERLAY: 'rgba(0,0,0,0.15)',
 }
 
 export const createPalette = (userPalette: PaletteProperty = {}) => {
   const created: CreatedPaletteTheme = merge(
     {
       hoverColor: (value: string): string => darken(0.05, value),
-      Outline: transparentize(0.5, defaultPalette.Main),
+      disableColor: (value: string): string => rgba(value, 0.5),
+      OUTLINE: transparentize(0.5, defaultPalette.MAIN),
       ...defaultPalette,
     },
     userPalette,
-    userPalette.Outline == null && userPalette.Main != null
-      ? { Outline: transparentize(0.5, userPalette.Main) }
+    userPalette.OUTLINE == null && userPalette.MAIN != null
+      ? { OUTLINE: transparentize(0.5, userPalette.MAIN) }
       : null,
   )
   return created

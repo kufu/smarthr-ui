@@ -7,13 +7,79 @@ import { Icon, Props } from './Icon'
 const Wrapper = ({ children }: any) => <Container>{children}</Container>
 const black = '#222'
 const white = '#eee'
-const icons: Array<Props['name']> = ['check', 'check-circle', 'cross', 'exclamation-triangle']
+const icons: Array<Props['name']> = [
+  'fa-address-book',
+  'fa-address-card',
+  'fa-angle-double-down',
+  'fa-angle-double-left',
+  'fa-angle-double-right',
+  'fa-angle-down',
+  'fa-angle-left',
+  'fa-angle-right',
+  'fa-arrow-circle-down',
+  'fa-arrow-down',
+  'fa-birthday-cake',
+  'fa-building',
+  'fa-calendar-alt',
+  'fa-caret-down',
+  'fa-caret-up',
+  'fa-chart-area',
+  'fa-chart-bar',
+  'fa-chart-line',
+  'fa-chart-pie',
+  'fa-check',
+  'fa-check-circle',
+  'fa-chevron-left',
+  'fa-chevron-right',
+  'fa-clone',
+  'fa-cloud-download-alt',
+  'fa-cog',
+  'fa-database',
+  'fa-ellipsis-h',
+  'fa-envelope',
+  'fa-exclamation-circle',
+  'fa-exclamation-triangle',
+  'fa-external-link-alt',
+  'fa-eye',
+  'fa-file',
+  'fa-file-alt',
+  'fa-file-archive',
+  'fa-file-download',
+  'fa-file-export',
+  'fa-file-import',
+  'fa-file-upload',
+  'fa-filter',
+  'fa-font',
+  'fa-grip-vertical',
+  'fa-lock',
+  'fa-lock-open',
+  'fa-minus',
+  'fa-paper-plane',
+  'fa-pencil-alt',
+  'fa-plus',
+  'fa-plus-circle',
+  'fa-question-circle',
+  'fa-reg-calendar-check',
+  'fa-reg-chart-bar',
+  'fa-reg-image',
+  'fa-reply',
+  'fa-search',
+  'fa-sliders-h',
+  'fa-sort',
+  'fa-sync-alt',
+  'fa-table',
+  'fa-th-list',
+  'fa-times',
+  'fa-user-alt',
+  'fa-user-circle',
+  'fa-users',
+]
 
-const getIconList = (bg: string, fill?: string) =>
+const getIconList = (bg: string, color?: string) =>
   icons.map(name => (
-    <IconWrap key={`${fill}-${name}`} bg={bg}>
-      <Icon name={name} fill={fill} />
-      <IconName color={fill}>{name}</IconName>
+    <IconWrap key={`${color}-${name}`} bg={bg}>
+      <Icon name={name} color={color} />
+      <IconName color={color}>{name}</IconName>
     </IconWrap>
   ))
 

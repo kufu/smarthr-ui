@@ -3,120 +3,86 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-import { NumberInput, PasswordInput, Props as InputProps, TextInput } from '../Input'
-import { Tag } from '../Tag'
+import { Input, Props as InputProps } from '../Input'
+import { StatusLabel } from '../StatusLabel'
 
-interface Props {
+type Props = {
   label: string
-  name?: string
-  value?: string
-  required?: boolean
-  placeholder?: string
-  disabled?: boolean
-  error?: string
-  help?: string
-  width?: number | string
-  onChange?: (name: string, value: string) => void
-  onBlur?: (name: string, value: string) => void
+  input?: InputProps
+  errorMessage?: string
+  helpMessage?: string
+  className?: string
   children?: React.ReactNode
 }
 
-const fieldFactory: (
-  InputComponent?: React.ComponentType<InputProps>,
-) => React.SFC<Props & InjectedProps> = InputComponent => ({
+const FieldComponent: React.FC<Props & InjectedProps> = ({
   label,
-  name = '',
-  value = '',
-  required,
-  placeholder,
-  disabled,
-  error,
-  help,
-  width,
-  onChange,
-  onBlur,
+  input = {},
+  errorMessage,
+  helpMessage,
+  className = '',
   theme,
   children,
-}) => {
-  const widthStyle = typeof width === 'number' ? `${width}px` : width
+}) => (
+  <Wrapper width={input.width || 'auto'} className={className}>
+    <LabelHead theme={theme}>
+      <Title theme={theme}>
+        {label}
+        {input.required && (
+          <StatusLabelWrapper theme={theme}>
+            <StatusLabel type="required">必須</StatusLabel>
+          </StatusLabelWrapper>
+        )}
+      </Title>
+      {helpMessage && <Help theme={theme}>{helpMessage}</Help>}
+    </LabelHead>
+    {children ? children : <Input {...input} />}
+    {errorMessage && <Error theme={theme}>{errorMessage}</Error>}
+  </Wrapper>
+)
 
-  return (
-    <Wrapper width={widthStyle}>
-      <LabelHead theme={theme}>
-        <Title theme={theme}>
-          {label}
-          {required && (
-            <TagWrapper theme={theme}>
-              <Tag type="require">必須</Tag>
-            </TagWrapper>
-          )}
-        </Title>
-        {help && <Help theme={theme}>{help}</Help>}
-      </LabelHead>
-      {InputComponent ? (
-        <InputComponent
-          value={value}
-          name={name}
-          required={required}
-          placeholder={placeholder}
-          disabled={disabled}
-          error={!!error}
-          width={width}
-          onChange={onChange}
-          onBlur={onBlur}
-        />
-      ) : (
-        children
-      )}
-      {error && <Error theme={theme}>{error}</Error>}
-    </Wrapper>
-  )
-}
+export const Field = withTheme(FieldComponent)
 
-export const Field = withTheme(fieldFactory())
-export const TextField = withTheme(fieldFactory(TextInput))
-export const NumberField = withTheme(fieldFactory(NumberInput))
-export const PasswordField = withTheme(fieldFactory(PasswordInput))
-
-const Wrapper: any = styled.div`
-  display: inline-block;
-  width: ${({ width }: { width: string }) => width};
+const Wrapper: any = styled.div<{ width: string | number }>`
+  ${({ width }) => css`
+    display: inline-block;
+    width: ${typeof width === 'number' ? `${width}px` : width};
+  `}
 `
 const LabelHead = styled.div`
   ${({ theme }: InjectedProps) => css`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: ${theme.size.pxToRem(theme.size.space.xxs)};
+    margin-bottom: ${theme.size.pxToRem(theme.size.space.XXS)};
     line-height: 1.4;
   `}
 `
 const Title = styled.p`
   ${({ theme }: InjectedProps) => css`
     margin: 0;
-    color: ${theme.palette.TextGrey};
+    color: ${theme.palette.TEXT_GREY};
     font-weight: bold;
-    font-size: ${theme.size.pxToRem(theme.size.font.tall)};
+    font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
   `}
 `
 const Help = styled.p`
   ${({ theme }: InjectedProps) => css`
     margin: 0;
-    color: ${theme.palette.TextGrey};
-    font-size: ${theme.size.pxToRem(theme.size.font.tasting)};
+    font-size: ${theme.size.pxToRem(theme.size.font.SHORT)};
+    color: ${theme.palette.TEXT_GREY};
   `}
 `
 const Error = styled.p`
   ${({ theme }: InjectedProps) => css`
-    margin: ${theme.size.pxToRem(theme.size.space.xxs)} 0 0 0;
-    color: ${theme.palette.Danger};
-    font-size: ${theme.size.pxToRem(theme.size.font.tall)};
+    margin: ${theme.size.pxToRem(theme.size.space.XXS)} 0 0 0;
+    font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
+    color: ${theme.palette.DANGER};
     line-height: 1.4;
   `}
 `
-
-const TagWrapper = styled.span`
+const StatusLabelWrapper = styled.span`
   ${({ theme }: InjectedProps) => css`
-    margin-left: ${theme.size.pxToRem(theme.size.space.xxs)};
+    margin-left: ${theme.size.pxToRem(theme.size.space.XXS)};
   `}
 `
