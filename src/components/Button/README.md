@@ -25,7 +25,7 @@ import { DangerButton, DangerButtonAnchor } from 'smarthr-ui'
 | children  | -        | **node**                       | ''           | The content of the component.                                                         |
 | prefix    | -        | **node**                       | ''           | The content of the prefix of button content.<br>Normally, this is for icon insertion. |
 | suffix    | -        | **node**                       | ''           | The content of the suffix of button content.<br>Normally, this is for icon insertion. |
-| square    | -        | **boolean**                    | false        | If `true`, the component shape changes to square.                                     |
+| square    | -        | **boolean**                    | false        | If `true`, the component shape changes to square. Cannot be used with TextButton.     |
 | wide      | -        | **boolean**                    | false        | If `true`, the component shape changes width is 100%.                                 |
 | className | -        | **string**                     | ''           | `className` of component.                                                             |
 
