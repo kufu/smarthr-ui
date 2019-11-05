@@ -73,7 +73,6 @@ const icons: Array<Props['name']> = [
   'fa-user-alt',
   'fa-user-circle',
   'fa-users',
-  'fa-undo',
 ]
 
 const getIconList = (bg: string, color?: string) =>

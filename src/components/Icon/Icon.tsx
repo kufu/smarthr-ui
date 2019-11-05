@@ -66,7 +66,6 @@ import {
   FaUserAlt,
   FaUserCircle,
   FaUsers,
-  FaUndo,
 } from 'react-icons/fa'
 
 export interface IconProps {
@@ -146,7 +145,6 @@ export const iconMap = {
   'fa-user-alt': FaUserAlt,
   'fa-user-circle': FaUserCircle,
   'fa-users': FaUsers,
-  'fa-undo': FaUndo,
 }
 export const Icon: React.FC<Props> = ({ name, className = '', ...props }) => {
   const SvgIcon = iconMap[name]
