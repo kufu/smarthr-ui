@@ -158,7 +158,6 @@ exports[`StatusLabel should be match snapshot 1`] = `
             "styledComponentId": "sc-bdVaJa",
             "target": "span",
             "toString": [Function],
-            "usesTheme": false,
             "warnTooManyClasses": [Function],
             "withComponent": [Function],
           }

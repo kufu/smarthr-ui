@@ -100,7 +100,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
             "styledComponentId": "sc-ifAKCX",
             "target": "div",
             "toString": [Function],
-            "usesTheme": false,
             "warnTooManyClasses": [Function],
             "withComponent": [Function],
           }
@@ -141,7 +140,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                   "styledComponentId": "sc-EHOje",
                   "target": "label",
                   "toString": [Function],
-                  "usesTheme": false,
                   "warnTooManyClasses": [Function],
                   "withComponent": [Function],
                 }
@@ -316,7 +314,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                             "styledComponentId": "sc-bdVaJa",
                             "target": "div",
                             "toString": [Function],
-                            "usesTheme": false,
                             "warnTooManyClasses": [Function],
                             "withComponent": [Function],
                           }
@@ -482,7 +479,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                                   "styledComponentId": "sc-htpNat",
                                   "target": "input",
                                   "toString": [Function],
-                                  "usesTheme": false,
                                   "warnTooManyClasses": [Function],
                                   "withComponent": [Function],
                                 }
@@ -653,7 +649,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                                   "styledComponentId": "sc-bwzfXH",
                                   "target": "span",
                                   "toString": [Function],
-                                  "usesTheme": false,
                                   "warnTooManyClasses": [Function],
                                   "withComponent": [Function],
                                 }
@@ -759,7 +754,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                                   "styledComponentId": "sc-bxivhb",
                                   "target": "span",
                                   "toString": [Function],
-                                  "usesTheme": false,
                                   "warnTooManyClasses": [Function],
                                   "withComponent": [Function],
                                 }
@@ -908,7 +902,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                         "styledComponentId": "sc-bZQynM",
                         "target": "p",
                         "toString": [Function],
-                        "usesTheme": false,
                         "warnTooManyClasses": [Function],
                         "withComponent": [Function],
                       }
