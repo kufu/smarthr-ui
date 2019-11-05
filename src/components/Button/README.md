@@ -4,6 +4,8 @@
 import { PrimaryButton, PrimaryButtonAnchor } from 'smarthr-ui'
 import { SecondaryButton, SecondaryButtonAnchor } from 'smarthr-ui'
 import { DangerButton, DangerButtonAnchor } from 'smarthr-ui'
+import { SkeletonButton, SkeletonButtonAnchor } from 'smarthr-ui'
+import { TextButton, TextButtonAnchor } from 'smarthr-ui'
 
 <PrimaryButton>Button</PrimaryButton>
 <PrimaryButtonAnchor href="#">Anchor</PrimaryButtonAnchor>
@@ -13,6 +15,12 @@ import { DangerButton, DangerButtonAnchor } from 'smarthr-ui'
 
 <DangerButton>Button</DangerButton>
 <DangerButtonAnchor href="#">Anchor</DangerButtonAnchor>
+
+<SkeletonButton>Button</SkeletonButton>
+<SkeletonButtonAnchor href="#">Anchor</SkeletonButtonAnchor>
+
+<TextButton>Button</TextButton>
+<TextButtonAnchor href="#">Anchor</TextButtonAnchor>
 ```
 
 ## props
