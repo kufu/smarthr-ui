@@ -2037,9 +2037,9 @@
     "@types/react" "*"
 
 "@types/react-dom@^16.9.1":
-  version "16.9.1"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.1.tgz#79206237cba9532a9f870b1cd5428bef6b66378c"
-  integrity sha512-1S/akvkKr63qIUWVu5IKYou2P9fHLb/P2VAwyxVV85JGaGZTcUniMiTuIqM3lXFB25ej6h+CYEQ27ERVwi6eGA==
+  version "16.9.3"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.3.tgz#4006ff0e13958af91313869077c04cb20d9b9d04"
+  integrity sha512-FUuZKXPr9qlzUT9lhuzrZgLjH63TvNn28Ch3MvKG4B+F52zQtO8DtE0Opbncy3xaucNZM2WIPfuNTgkbKx5Brg==
   dependencies:
     "@types/react" "*"
 
