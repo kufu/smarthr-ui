@@ -12883,9 +12883,9 @@ storybook-readme@^5.0.8:
     vuex "^3.1.0"
 
 storycap@^2.0.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/storycap/-/storycap-2.1.0.tgz#14cb6a792d504d84bd2b109d3cdd93b1f80a0267"
-  integrity sha512-A55pSpYqjFVRhJvS3xyJ0EkcyH4+umUToBojkmGnMLJ/kA/F7ddXuN2GJyxmx5kg+1PH2Y+4109/jFM0/qtPyw==
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/storycap/-/storycap-2.2.0.tgz#d1d85f098d8522f54948e9601e6d9a5b1e5baa31"
+  integrity sha512-rRDeKNHexB3L7n1jMYzO69BHhm5hchKGD5fc1jLMlrQ9Xj9PBimX6JoPibxb+nJgHc9itPwaunS8lZPOfk2GIA==
   dependencies:
     "@types/minimatch" "^3.0.3"
     "@types/mkdirp" "^0.5.2"
