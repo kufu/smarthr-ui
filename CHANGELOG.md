@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.1.0](https://github.com/kufu/smarthr-ui/compare/v5.0.0...v5.1.0) (2019-11-05)
+
+
+### Features
+
+* add TextButton component ([9001063](https://github.com/kufu/smarthr-ui/commit/9001063))
+* export undo icon ([797adaa](https://github.com/kufu/smarthr-ui/commit/797adaa))
+* export undo icon ([2cbd5c5](https://github.com/kufu/smarthr-ui/commit/2cbd5c5))
+
 ## [5.0.0](https://github.com/kufu/smarthr-ui/compare/v4.0.1...v5.0.0) (2019-11-01)
 
 
