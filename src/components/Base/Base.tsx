@@ -1,15 +1,12 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-type Radius = 's' | 'm'
-
-interface Props {
-  radius?: Radius
-  children?: React.ReactNode
+type Props = {
+  radius?: 's' | 'm'
   className?: string
 }
 
-const BaseComponent: React.FC<Props> = ({ radius = 'm', children, className = '' }) => {
+export const Base: FC<Props> = ({ radius = 'm', className = '', children }) => {
   const radiusMap = {
     s: '6px',
     m: '8px',
@@ -22,18 +19,12 @@ const BaseComponent: React.FC<Props> = ({ radius = 'm', children, className = ''
   )
 }
 
-interface WrapperProps {
-  radius: string
-}
-
-const Wrapper = styled.div`
-  ${({ radius }: WrapperProps) => {
+const Wrapper = styled.div<{ radius: string }>`
+  ${({ radius }) => {
     return css`
+      overflow: hidden;
       border-radius: ${radius};
       box-shadow: rgba(51, 51, 51, 0.3) 1px 1px 4px 0;
-      overflow: hidden;
     `
   }}
 `
-
-export const Base = BaseComponent
