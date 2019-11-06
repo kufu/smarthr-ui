@@ -1,5 +1,4 @@
-export const getShouldExpanded = (expanded: Map<string, string>, name: string) =>
-  !!expanded.get(name)
+export const getShouldExpanded = (map: Map<string, string>, key: string) => !!map.get(key)
 
 export const mapToArray = (map: Map<string, string>) => Array.from(map.keys())
 

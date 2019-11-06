@@ -5,7 +5,7 @@ import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { Icon as IconComponent } from '../Icon'
 
-import { getShouldExpanded } from './AccordionPanelHelper'
+import { getShouldExpanded } from '../../libs/map'
 import { isTouchDevice } from '../../libs/ua'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
 

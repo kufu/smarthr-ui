@@ -4,7 +4,7 @@ import { Transition } from 'react-transition-group'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { AccordionPanelContext } from './AccordionPanel'
-import { getShouldExpanded } from './AccordionPanelHelper'
+import { getShouldExpanded } from '../../libs/map'
 
 type Props = {
   children: React.ReactNode

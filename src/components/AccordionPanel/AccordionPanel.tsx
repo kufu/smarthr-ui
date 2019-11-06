@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
-import { mapToArray, arrayToMap } from './AccordionPanelHelper'
+import { mapToArray, arrayToMap } from '../../libs/map'
 
 type Props = {
   children: React.ReactNode
