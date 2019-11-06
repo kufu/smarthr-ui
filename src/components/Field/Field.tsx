@@ -6,9 +6,10 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { Input, Props as InputProps } from '../Input'
 import { StatusLabel } from '../StatusLabel'
 
-type Props = {
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
+
+type Props = Omit<InputProps, 'error'> & {
   label: string
-  input?: InputProps
   errorMessage?: string
   helpMessage?: string
   className?: string
@@ -17,18 +18,18 @@ type Props = {
 
 const FieldComponent: React.FC<Props & InjectedProps> = ({
   label,
-  input = {},
   errorMessage,
   helpMessage,
   className = '',
   theme,
   children,
+  ...props
 }) => (
-  <Wrapper width={input.width || 'auto'} className={className}>
+  <Wrapper width={props.width || 'auto'} className={className}>
     <LabelHead theme={theme}>
       <Title theme={theme}>
         {label}
-        {input.required && (
+        {props.required && (
           <StatusLabelWrapper theme={theme}>
             <StatusLabel type="required">必須</StatusLabel>
           </StatusLabelWrapper>
@@ -36,7 +37,7 @@ const FieldComponent: React.FC<Props & InjectedProps> = ({
       </Title>
       {helpMessage && <Help theme={theme}>{helpMessage}</Help>}
     </LabelHead>
-    {children ? children : <Input {...input} />}
+    {children ? children : <Input {...props} error={!!errorMessage} />}
     {errorMessage && <Error theme={theme}>{errorMessage}</Error>}
   </Wrapper>
 )

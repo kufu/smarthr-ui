@@ -12,15 +12,14 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
 }
 
 const CheckBoxComponent: FC<Props & InjectedProps> = ({
-  checked,
-  name,
-  disabled = false,
   themeColor = 'light',
   mixed = false,
   className = '',
   onChange,
   theme,
+  ...props
 }) => {
+  const { checked, disabled } = props
   const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,14 +30,7 @@ const CheckBoxComponent: FC<Props & InjectedProps> = ({
 
   return (
     <Wrapper theme={theme} className={className}>
-      <Input
-        type="checkbox"
-        checked={checked}
-        name={name}
-        disabled={disabled}
-        theme={theme}
-        onChange={handleChange}
-      />
+      <Input {...props} type="checkbox" theme={theme} onChange={handleChange} />
       <Box className={boxClassName} theme={theme} />
       {checked && (
         <IconWrap>
@@ -120,7 +112,6 @@ const Input = styled.input`
     `
   }}
 `
-
 const IconWrap = styled.span`
   position: absolute;
   top: 50%;

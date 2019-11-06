@@ -14,7 +14,7 @@ const DialogController: React.FC = () => {
   const [text, setText] = useState('')
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => setIsOpen(false)
-  const onChangeValue = (name: string) => setValue(name)
+  const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
   const onChangeText = (txt: string) => setText(txt)
 
   return (
@@ -100,7 +100,7 @@ const ActionDialogController: React.FC = () => {
   const [value, setValue] = React.useState('hoge')
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => setIsOpen(false)
-  const onChange = (name: string) => setValue(name)
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
 
   return (
     <div>

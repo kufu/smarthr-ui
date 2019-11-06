@@ -10,84 +10,78 @@ storiesOf('Select', module).add('all', () => (
     <li>
       <Text>default</Text>
       <Select
-        name="sample1"
-        value=""
         options={[
           { label: 'apple', value: 'apple' },
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
-        labelText="default"
+      />
+    </li>
+    <li>
+      <Text>value</Text>
+      <Select
+        value="orange"
+        options={[
+          { label: 'apple', value: 'apple' },
+          { label: 'orange', value: 'orange' },
+          { label: 'banana', value: 'banana' },
+        ]}
       />
     </li>
     <li>
       <Text>error</Text>
       <Select
-        name="sample2"
-        value=""
-        error={true}
+        error
         options={[
           { label: 'apple', value: 'apple' },
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
-        labelText="error"
       />
     </li>
     <li>
       <Text>disabled</Text>
       <Select
-        name="sample3"
-        value=""
-        disabled={true}
+        disabled
         options={[
           { label: 'apple', value: 'apple' },
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
-        labelText="disabled"
       />
     </li>
     <li>
       <Text>placeholder</Text>
       <Select
-        name="sample4"
         value=""
         options={[
-          { label: 'Fruit', value: '' },
+          { label: 'Select fruit', value: '' },
           { label: 'apple', value: 'apple' },
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
-        labelText="sample4"
       />
     </li>
     <li>
       <Text>width</Text>
       <Select
-        name="sample5"
-        value="width: 100%"
         width="100%"
         options={[
           { label: 'apple', value: 'apple' },
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
-        labelText="width"
       />
     </li>
     <li>
       <Text>onChange</Text>
       <Select
-        name="sample6"
-        value=""
         onChange={action('onChange!!')}
         options={[
           { label: 'apple', value: 'apple' },
           { label: 'orange', value: 'orange' },
           { label: 'banana', value: 'banana' },
         ]}
-        labelText="onChange"
       />
     </li>
   </List>

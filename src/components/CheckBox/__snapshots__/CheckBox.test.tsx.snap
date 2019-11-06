@@ -237,7 +237,6 @@ exports[`CheckBox should be match snapshot 1`] = `
         >
           <styled.input
             checked={true}
-            disabled={false}
             name="sample"
             onChange={[Function]}
             theme={
@@ -306,7 +305,6 @@ exports[`CheckBox should be match snapshot 1`] = `
           >
             <StyledComponent
               checked={true}
-              disabled={false}
               forwardedComponent={
                 Object {
                   "$$typeof": Symbol(react.forward_ref),
@@ -403,7 +401,6 @@ exports[`CheckBox should be match snapshot 1`] = `
               <input
                 checked={true}
                 className="sc-htpNat bVYgpj"
-                disabled={false}
                 name="sample"
                 onChange={[Function]}
                 type="checkbox"

@@ -33,8 +33,8 @@ const ListMenu = () => (
 const ControlableDropdown = () => {
   const [value, setValue] = React.useState('hoge')
   const [text, setText] = React.useState('')
-  const onChangeValue = (name: string) => setValue(name)
-  const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.target.value)
+  const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+  const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.currentTarget.value)
 
   return (
     <Dropdown>
