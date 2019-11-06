@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.2.0](https://github.com/kufu/smarthr-ui/compare/v5.0.0...v5.2.0) (2019-11-06)
+
+
+### Bug Fixes
+
+* add resolutions field ([6e0dc4b](https://github.com/kufu/smarthr-ui/commit/6e0dc4b))
+* Change Field props ([6ebf620](https://github.com/kufu/smarthr-ui/commit/6ebf620))
+* Change RadioButton props ([fe8f014](https://github.com/kufu/smarthr-ui/commit/fe8f014))
+* Change Select props ([1c667ea](https://github.com/kufu/smarthr-ui/commit/1c667ea))
+* Except autoFocus from input ([b3b7065](https://github.com/kufu/smarthr-ui/commit/b3b7065))
+* export text button ([55b2922](https://github.com/kufu/smarthr-ui/commit/55b2922))
+* Pass input default props to checkbox ([e576001](https://github.com/kufu/smarthr-ui/commit/e576001))
+
+
+### Features
+
+* add TextButton component ([9001063](https://github.com/kufu/smarthr-ui/commit/9001063))
+* export undo icon ([797adaa](https://github.com/kufu/smarthr-ui/commit/797adaa))
+* export undo icon ([2cbd5c5](https://github.com/kufu/smarthr-ui/commit/2cbd5c5))
+
 ## [5.1.0](https://github.com/kufu/smarthr-ui/compare/v5.0.0...v5.1.0) (2019-11-05)
 
 
