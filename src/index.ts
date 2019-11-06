@@ -31,6 +31,8 @@ export {
   DangerButtonAnchor,
   SkeletonButton,
   SkeletonButtonAnchor,
+  TextButton,
+  TextButtonAnchor,
 } from './components/Button'
 export { StatusLabel } from './components/StatusLabel'
 export { Base } from './components/Base'
