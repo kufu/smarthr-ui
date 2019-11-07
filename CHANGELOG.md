@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.2.1](https://github.com/kufu/smarthr-ui/compare/v5.2.0...v5.2.1) (2019-11-07)
+
+
+### Bug Fixes
+
+* Add ref props ([47fe111](https://github.com/kufu/smarthr-ui/commit/47fe111))
+* use forwardRef ([f2ab9a9](https://github.com/kufu/smarthr-ui/commit/f2ab9a9))
+
 ## [5.2.0](https://github.com/kufu/smarthr-ui/compare/v5.0.0...v5.2.0) (2019-11-06)
 
 
