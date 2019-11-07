@@ -4,7 +4,8 @@ import { mapToArray, arrayToMap } from '../../libs/map'
 
 type Props = {
   children: React.ReactNode
-  icon?: 'left' | 'right' | 'none'
+  iconPosition?: 'left' | 'right'
+  displayIcon?: boolean
   expandableMultiply?: boolean
   defaultExpanded?: string[]
   className?: string
@@ -19,7 +20,8 @@ export const AccordionPanelContext = React.createContext<any>({
 
 export const AccordionPanel: React.FC<Props> = ({
   children,
-  icon = 'left',
+  iconPosition = 'left',
+  displayIcon = true,
   expandableMultiply = false,
   defaultExpanded = [],
   className = '',
@@ -45,7 +47,9 @@ export const AccordionPanel: React.FC<Props> = ({
   }, [expandedItems, onClick])
 
   return (
-    <AccordionPanelContext.Provider value={{ onClick: handleClick, expandedItems, icon }}>
+    <AccordionPanelContext.Provider
+      value={{ onClick: handleClick, expandedItems, iconPosition, displayIcon }}
+    >
       <div className={className}>{children}</div>
     </AccordionPanelContext.Provider>
   )

@@ -22,12 +22,12 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
   theme,
 }) => {
   const { name } = useContext(AccordionPanelItemContext)
-  const { icon, expandedItems, onClick } = useContext(AccordionPanelContext)
+  const { iconPosition, displayIcon, expandedItems, onClick } = useContext(AccordionPanelContext)
 
   const isExpanded = getShouldExpanded(expandedItems, name)
   const expandedClassName = isExpanded ? 'expanded' : ''
-  const buttonClassNames = `${className} ${expandedClassName} ${icon}`
-  const iconClassNames = `${expandedClassName} ${icon}`
+  const buttonClassNames = `${className} ${expandedClassName} ${iconPosition}`
+  const iconClassNames = `${expandedClassName} ${iconPosition}`
 
   const caretIcon = <Icon className={iconClassNames} name="fa-caret-up" theme={theme} />
 
@@ -42,9 +42,9 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
       }}
       theme={theme}
     >
-      {icon === 'left' && caretIcon}
+      {displayIcon && iconPosition === 'left' && caretIcon}
       {children}
-      {icon === 'right' && caretIcon}
+      {displayIcon && iconPosition === 'right' && caretIcon}
     </Button>
   )
 }

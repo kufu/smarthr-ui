@@ -41,7 +41,7 @@ storiesOf('AccordionPanel', module)
         </AccordionPanel>
       </Base>
       <Base>
-        <AccordionPanel icon="right">
+        <AccordionPanel iconPosition="right">
           <ul>
             {arr.map((_, index) => (
               <li className="border" key={index}>
@@ -59,7 +59,7 @@ storiesOf('AccordionPanel', module)
         </AccordionPanel>
       </Base>
       <Base>
-        <AccordionPanel icon="none">
+        <AccordionPanel displayIcon={false}>
           <ul>
             {arr.map((_, index) => (
               <li className="border" key={index}>
@@ -77,7 +77,7 @@ storiesOf('AccordionPanel', module)
         </AccordionPanel>
       </Base>
       <Base>
-        <AccordionPanel icon="none">
+        <AccordionPanel displayIcon={false}>
           <ul>
             {arr.map((_, index) => (
               <li key={index}>
@@ -99,7 +99,7 @@ storiesOf('AccordionPanel', module)
   .add('Expanded options', () => (
     <>
       <Base>
-        <AccordionPanel icon="none" expandableMultiply={true}>
+        <AccordionPanel displayIcon={true} expandableMultiply={true}>
           <ul>
             {arr.map((_, index) => (
               <li key={index}>
@@ -117,7 +117,7 @@ storiesOf('AccordionPanel', module)
         </AccordionPanel>
       </Base>
       <Base>
-        <AccordionPanel icon="none" defaultExpanded={['default-expanded-0']}>
+        <AccordionPanel displayIcon={true} defaultExpanded={['default-expanded-0']}>
           <ul>
             {arr.map((_, index) => (
               <li className="" key={index}>
@@ -138,7 +138,7 @@ storiesOf('AccordionPanel', module)
   ))
   .add('Callback', () => (
     <Base>
-      <AccordionPanel icon="none" expandableMultiply={true} onClick={action('Clicked')}>
+      <AccordionPanel displayIcon={false} expandableMultiply={true} onClick={action('Clicked')}>
         <ul>
           {arr.map((_, index) => (
             <li key={index}>
