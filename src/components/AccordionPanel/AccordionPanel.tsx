@@ -12,11 +12,12 @@ type Props = {
   onClick?: (expandedItems: string[]) => void
 }
 
-// TODO: any
 export const AccordionPanelContext = React.createContext<any>({
-  expandedItems: '',
-  icon: 'left',
-  onClick: () => {},
+  iconPosition: 'left',
+  displayIcon: true,
+  onClickTrigger: () => {},
+  onClickProps: () => {},
+  expandedItems: new Map(),
 })
 
 export const AccordionPanel: React.FC<Props> = ({
