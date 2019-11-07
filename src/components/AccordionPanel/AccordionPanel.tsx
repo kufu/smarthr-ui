@@ -46,7 +46,7 @@ export const AccordionPanel: React.FC<Props> = ({
 
   return (
     <AccordionPanelContext.Provider value={{ onClick: handleClick, expandedItems, icon }}>
-      <div className={className} children={children} />
+      <div className={className}>{children}</div>
     </AccordionPanelContext.Provider>
   )
 }
