@@ -31,17 +31,15 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
 
   const caretIcon = <Icon className={iconClassNames} name="fa-caret-up" theme={theme} />
 
-  const handleClick = () => {
-    return onClick(name, !isExpanded)
-  }
-
   return (
     <Button
       id={`${name}-trigger`}
       className={buttonClassNames}
       aria-expanded={!!isExpanded}
       aria-controls={`${name}-content`}
-      onClick={handleClick}
+      onClick={() => {
+        onClick(name, !isExpanded)
+      }}
       theme={theme}
     >
       {icon === 'left' && caretIcon}
