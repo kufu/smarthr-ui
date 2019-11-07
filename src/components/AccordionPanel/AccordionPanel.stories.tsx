@@ -23,7 +23,7 @@ storiesOf('AccordionPanel', module)
   .add('Accordion style', () => (
     <>
       <Base>
-        <AccordionPanel onClick={action('click')}>
+        <AccordionPanel>
           <ul>
             {arr.map((_, index) => (
               <li className="border" key={index}>
