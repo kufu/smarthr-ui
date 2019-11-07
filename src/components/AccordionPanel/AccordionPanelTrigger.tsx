@@ -29,7 +29,7 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
   const buttonClassNames = `${className} ${expandedClassName} ${iconPosition}`
   const iconClassNames = `${expandedClassName} ${iconPosition}`
 
-  const caretIcon = <Icon className={iconClassNames} name="fa-caret-up" theme={theme} />
+  const caretIcon = <Icon className={iconClassNames} name="fa-caret-down" theme={theme} />
 
   return (
     <Button
