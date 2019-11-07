@@ -5,7 +5,7 @@ import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { Icon as IconComponent } from '../Icon'
 
-import { getShouldExpanded } from '../../libs/map'
+import { getIsInclude } from '../../libs/map'
 import { isTouchDevice } from '../../libs/ua'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
 
@@ -24,7 +24,7 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
   const { name } = useContext(AccordionPanelItemContext)
   const { iconPosition, displayIcon, expandedItems, onClick } = useContext(AccordionPanelContext)
 
-  const isExpanded = getShouldExpanded(expandedItems, name)
+  const isExpanded = getIsInclude(expandedItems, name)
   const expandedClassName = isExpanded ? 'expanded' : ''
   const buttonClassNames = `${className} ${expandedClassName} ${iconPosition}`
   const iconClassNames = `${expandedClassName} ${iconPosition}`
