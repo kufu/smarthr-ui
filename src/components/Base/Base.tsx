@@ -1,19 +1,19 @@
-import React, { FC, Ref } from 'react'
+import React, { ReactNode, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
-type BaseProps = {
+type Props = {
+  children: ReactNode
   radius?: 's' | 'm'
   className?: string
-  ref?: Ref<HTMLDivElement>
 }
 
-export const Base: FC<BaseProps> = ({ radius = 'm', ...props }) => {
+export const Base = forwardRef<HTMLDivElement, Props>(({ radius = 'm', ...props }, ref) => {
   const radiusMap = {
     s: '6px',
     m: '8px',
   }
-  return <Wrapper radius={radiusMap[radius]} {...props} />
-}
+  return <Wrapper radius={radiusMap[radius]} ref={ref} {...props} />
+})
 
 const Wrapper = styled.div<{ radius: string }>`
   ${({ radius }) => {
