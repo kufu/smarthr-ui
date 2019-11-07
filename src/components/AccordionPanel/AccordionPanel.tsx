@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
-import { mapToArray, arrayToMap } from '../../libs/map'
+import { arrayToMap } from '../../libs/map'
 
 type Props = {
   children: React.ReactNode
@@ -26,11 +26,11 @@ export const AccordionPanel: React.FC<Props> = ({
   expandableMultiply = false,
   defaultExpanded = [],
   className = '',
-  onClick,
+  onClick: onClickProps,
 }) => {
   const [expandedItems, setExpanded] = useState(new Map(arrayToMap(defaultExpanded)))
 
-  const handleClick = useCallback(
+  const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
       if (expandableMultiply) {
         isExpanded ? expandedItems.set(itemName, itemName) : expandedItems.delete(itemName)
@@ -42,14 +42,9 @@ export const AccordionPanel: React.FC<Props> = ({
     [expandableMultiply, expandedItems],
   )
 
-  // fires onClick after state of expanded changed
-  React.useEffect(() => {
-    if (onClick) onClick(mapToArray(expandedItems))
-  }, [expandedItems, onClick])
-
   return (
     <AccordionPanelContext.Provider
-      value={{ onClick: handleClick, expandedItems, iconPosition, displayIcon }}
+      value={{ onClickTrigger, onClickProps, expandedItems, iconPosition, displayIcon }}
     >
       <div className={className}>{children}</div>
     </AccordionPanelContext.Provider>

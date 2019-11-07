@@ -1,11 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { Icon as IconComponent } from '../Icon'
 
-import { getIsInclude } from '../../libs/map'
+import { getIsInclude, mapToArray } from '../../libs/map'
 import { isTouchDevice } from '../../libs/ua'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
 
@@ -22,7 +22,9 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
   theme,
 }) => {
   const { name } = useContext(AccordionPanelItemContext)
-  const { iconPosition, displayIcon, expandedItems, onClick } = useContext(AccordionPanelContext)
+  const { iconPosition, displayIcon, expandedItems, onClickTrigger, onClickProps } = useContext(
+    AccordionPanelContext,
+  )
 
   const isExpanded = getIsInclude(expandedItems, name)
   const expandedClassName = isExpanded ? 'expanded' : ''
@@ -31,15 +33,18 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
 
   const caretIcon = <Icon className={iconClassNames} name="fa-caret-down" theme={theme} />
 
+  const handleClick = useCallback(() => {
+    onClickTrigger(name, !isExpanded)
+    if (onClickProps) onClickProps(mapToArray(expandedItems))
+  }, [onClickProps, expandedItems, isExpanded, name, onClickTrigger])
+
   return (
     <Button
       id={`${name}-trigger`}
       className={buttonClassNames}
       aria-expanded={!!isExpanded}
       aria-controls={`${name}-content`}
-      onClick={() => {
-        onClick(name, !isExpanded)
-      }}
+      onClick={handleClick}
       theme={theme}
     >
       {displayIcon && iconPosition === 'left' && caretIcon}
