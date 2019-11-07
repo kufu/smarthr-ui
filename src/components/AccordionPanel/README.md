@@ -1,7 +1,12 @@
 # AccordionPanel
 
 ```tsx
-import { AccordionPanel, AccorionPanelItem, AccordionPanelTrigger, AccordionPanelContent } from 'smarthr-ui'
+import {
+  AccordionPanel,
+  AccorionPanelItem,
+  AccordionPanelTrigger,
+  AccordionPanelContent,
+} from 'smarthr-ui'
 
 <AccordionPanel
   icon="none"
@@ -27,7 +32,7 @@ import { AccordionPanel, AccorionPanelItem, AccordionPanelTrigger, AccordionPane
 | icon               | -        | **string** <br> left &#124; right &#124; none | left         | Position of icon. If sets 'none', icon is not display.                                           |
 | expandableMultiply | -        | **boolean**                                   | false        | If true, allow to expand accordion panel multiply.                                               |
 | defaultExpanded    | -        | **string[]**                                  | []           | Expands accordion with name matching value in array.                                             |
-| onClick            | ✓        | **function**                                  | -            | Fires when the AccordionPanelTrigger clicked. <br><br>function: (expandedList: string[]) => void |
+| onClick            | -        | **function**                                  | -            | Fires when the AccordionPanelTrigger clicked. <br><br>function: (expandedList: string[]) => void |
 
 ### AccorionPanelItem component
 
