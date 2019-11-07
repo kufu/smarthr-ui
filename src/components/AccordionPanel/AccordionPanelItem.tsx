@@ -19,7 +19,7 @@ export const AccordionPanelItem: React.FC<Props> = ({ children, name, className 
         name,
       }}
     >
-      <div className={className}> {children}</div>
+      <div className={className}>{children}</div>
     </AccordionPanelItemContext.Provider>
   )
 }
