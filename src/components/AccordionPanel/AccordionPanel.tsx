@@ -34,8 +34,9 @@ export const AccordionPanel: React.FC<Props> = ({
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
       if (expandableMultiply) {
-        isExpanded ? expandedItems.set(itemName, itemName) : expandedItems.delete(itemName)
-        setExpanded(new Map(expandedItems))
+        const newState = new Map(expandedItems)
+        isExpanded ? newState.set(itemName, itemName) : newState.delete(itemName)
+        setExpanded(newState)
       } else {
         isExpanded ? setExpanded(new Map([[itemName, itemName]])) : setExpanded(new Map())
       }
