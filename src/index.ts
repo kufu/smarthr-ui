@@ -33,6 +33,7 @@ export { Heading } from './components/Heading'
 export { HeadlineArea } from './components/HeadlineArea'
 export { Select } from './components/Select'
 export {
+  AccordionPanel,
   AccordionPanelItem,
   AccordionPanelContent,
   AccordionPanelTrigger,

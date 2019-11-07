@@ -1,7 +1,7 @@
-# AppBar
+# AccordionPanel
 
 ```tsx
-import { AccordionPanel, AccordionPanelTrigger, AccordionPanelContent } from 'smarthr-ui'
+import { AccordionPanel, AccorionPanelItem, AccordionPanelTrigger, AccordionPanelContent } from 'smarthr-ui'
 
 <AccordionPanel
   icon="none"
