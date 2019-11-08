@@ -8,6 +8,7 @@ import { Icon as IconComponent } from '../Icon'
 import { getIsInclude, mapToKeyArray } from '../../libs/map'
 import { isTouchDevice } from '../../libs/ua'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
+import { getNewExpandedItems } from './accordionPanelHelper'
 
 type Props = {
   children: React.ReactNode
@@ -22,9 +23,14 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
   theme,
 }) => {
   const { name } = useContext(AccordionPanelItemContext)
-  const { iconPosition, displayIcon, expandedItems, onClickTrigger, onClickProps } = useContext(
-    AccordionPanelContext,
-  )
+  const {
+    iconPosition,
+    displayIcon,
+    expandedItems,
+    onClickTrigger,
+    onClickProps,
+    expandableMultiply,
+  } = useContext(AccordionPanelContext)
 
   const isExpanded = getIsInclude(expandedItems, name)
   const expandedClassName = isExpanded ? 'expanded' : ''
@@ -35,8 +41,16 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
 
   const handleClick = useCallback(() => {
     onClickTrigger(name, !isExpanded)
-    if (onClickProps) onClickProps(mapToKeyArray(expandedItems))
-  }, [onClickProps, expandedItems, isExpanded, name, onClickTrigger])
+    if (onClickProps) {
+      const newExpandedItems = getNewExpandedItems(
+        expandedItems,
+        name,
+        !isExpanded,
+        expandableMultiply,
+      )
+      onClickProps(mapToKeyArray(newExpandedItems))
+    }
+  }, [onClickTrigger, name, isExpanded, onClickProps, expandedItems, expandableMultiply])
 
   return (
     <Button

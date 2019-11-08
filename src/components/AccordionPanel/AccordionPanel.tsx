@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-
+import { getNewExpandedItems } from './accordionPanelHelper'
 import { flatArrayToMap } from '../../libs/map'
 
 type Props = {
@@ -15,9 +15,10 @@ type Props = {
 export const AccordionPanelContext = React.createContext<any>({
   iconPosition: 'left',
   displayIcon: true,
+  expandedItems: new Map(),
+  expandableMultiply: false,
   onClickTrigger: () => {},
   onClickProps: () => {},
-  expandedItems: new Map(),
 })
 
 export const AccordionPanel: React.FC<Props> = ({
@@ -33,20 +34,21 @@ export const AccordionPanel: React.FC<Props> = ({
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
-      if (expandableMultiply) {
-        const newState = new Map(expandedItems)
-        isExpanded ? newState.set(itemName, itemName) : newState.delete(itemName)
-        setExpanded(newState)
-      } else {
-        isExpanded ? setExpanded(new Map([[itemName, itemName]])) : setExpanded(new Map())
-      }
+      setExpanded(getNewExpandedItems(expandedItems, itemName, isExpanded, expandableMultiply))
     },
     [expandableMultiply, expandedItems],
   )
 
   return (
     <AccordionPanelContext.Provider
-      value={{ onClickTrigger, onClickProps, expandedItems, iconPosition, displayIcon }}
+      value={{
+        onClickTrigger,
+        onClickProps,
+        expandedItems,
+        iconPosition,
+        displayIcon,
+        expandableMultiply,
+      }}
     >
       <div className={className}>{children}</div>
     </AccordionPanelContext.Provider>
