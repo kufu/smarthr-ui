@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
-import { arrayToMap } from '../../libs/map'
+import { flatArrayToMap } from '../../libs/map'
 
 type Props = {
   children: React.ReactNode
@@ -29,7 +29,7 @@ export const AccordionPanel: React.FC<Props> = ({
   className = '',
   onClick: onClickProps,
 }) => {
-  const [expandedItems, setExpanded] = useState(new Map(arrayToMap(defaultExpanded)))
+  const [expandedItems, setExpanded] = useState(new Map(flatArrayToMap(defaultExpanded)))
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {

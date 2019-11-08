@@ -5,7 +5,7 @@ import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { Icon as IconComponent } from '../Icon'
 
-import { getIsInclude, mapToArray } from '../../libs/map'
+import { getIsInclude, mapToKeyArray } from '../../libs/map'
 import { isTouchDevice } from '../../libs/ua'
 import { withTheme, InjectedProps } from '../../hocs/withTheme'
 
@@ -35,7 +35,7 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
 
   const handleClick = useCallback(() => {
     onClickTrigger(name, !isExpanded)
-    if (onClickProps) onClickProps(mapToArray(expandedItems))
+    if (onClickProps) onClickProps(mapToKeyArray(expandedItems))
   }, [onClickProps, expandedItems, isExpanded, name, onClickTrigger])
 
   return (
