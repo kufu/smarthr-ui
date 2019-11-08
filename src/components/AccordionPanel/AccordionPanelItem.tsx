@@ -6,9 +6,7 @@ type Props = {
   className?: string
 }
 
-type ContextType = Omit<Props, 'children'>
-
-export const AccordionPanelItemContext = React.createContext<ContextType>({
+export const AccordionPanelItemContext = React.createContext<{ name: string }>({
   name: '',
 })
 
