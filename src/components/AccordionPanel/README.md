@@ -9,7 +9,8 @@ import {
 } from 'smarthr-ui'
 
 <AccordionPanel
-  icon="none"
+  iconPosition="right"
+  displayIcon={true}
   expandableMultiply={true}
   defaultExpanded={['accordion-name']}
   onClick={handleClick}
