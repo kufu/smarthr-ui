@@ -44,6 +44,7 @@ export { BlankImage } from './components/Image'
 export { Heading } from './components/Heading'
 export { HeadlineArea } from './components/HeadlineArea'
 export { Select } from './components/Select'
+export { DescriptionListItem } from './components/DescriptionList'
 
 // themes
 export { createTheme } from './themes/createTheme'
