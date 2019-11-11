@@ -86,8 +86,7 @@ const Button = styled.button`
       display: flex;
       align-items: center;
       width: 100%;
-      height: 40px;
-      padding: 0 ${size.pxToRem(size.space.XS)};
+      padding: ${size.pxToRem(12)} ${size.pxToRem(size.space.XS)};
       color: ${palette.TEXT_BLACK};
       font-size: ${size.pxToRem(size.font.TALL)};
       text-align: left;
