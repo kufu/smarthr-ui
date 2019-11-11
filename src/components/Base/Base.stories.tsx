@@ -8,31 +8,35 @@ storiesOf('Base', module).add('all', () => (
   <List>
     <li>
       <Base radius="s">
-        <Txt>radius s</Txt>
+        <Txt>
+          If radius props is specified as <Bold>s</Bold>, border-radius becomes <Bold>6px</Bold>.
+        </Txt>
       </Base>
     </li>
     <li>
       <Base radius="m">
-        <Txt>radius m</Txt>
+        <Txt>
+          If radius props is specified as <Bold>m</Bold>, border-radius becomes <Bold>8px</Bold>.
+        </Txt>
       </Base>
-    </li>
-    <li>
-      <CustomBase radius="m">
-        <Txt>custom base</Txt>
-      </CustomBase>
     </li>
   </List>
 ))
 
 const List = styled.ul`
-  padding: 8px 24px;
+  margin: 0;
+  padding: 24px;
+  background-color: #eee;
   list-style: none;
-`
 
+  & > li:not(:first-child) {
+    margin-top: 24px;
+  }
+`
 const Txt = styled.p`
-  padding: 8px;
+  margin: 0;
+  padding: 24px;
 `
-
-const CustomBase = styled(Base)`
-  border: solid 1px;
+const Bold = styled.span`
+  font-weight: bold;
 `

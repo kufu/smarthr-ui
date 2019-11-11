@@ -10,7 +10,7 @@ import { Row } from './Row'
 import { Cell } from './Cell'
 import { action } from '@storybook/addon-actions'
 import { Icon } from '../Icon'
-import { Checkbox as CheckboxComponent } from '../Checkbox'
+import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { SecondaryButton as Button } from '../Button'
 import { Base } from '../Base'
 
@@ -54,7 +54,7 @@ storiesOf('Table', module)
           <Head>
             <Row>
               <Cell>
-                <Checkbox name="tableCheckbox" checked={false}></Checkbox>
+                <CheckBox name="tableCheckBox" checked={false} />
               </Cell>
               <Cell onClick={action('clicked')} highlighted={true}>
                 <ClickableCell>
@@ -74,7 +74,7 @@ storiesOf('Table', module)
               return (
                 <Row key={name}>
                   <Cell>
-                    <Checkbox name="tableCheckbox" checked={false}></Checkbox>
+                    <CheckBox name="tableCheckBox" checked={false} />
                   </Cell>
                   <Cell>{name}</Cell>
                   <Cell>{calories}</Cell>
@@ -176,7 +176,7 @@ const Ul = styled.ul`
   }
 `
 
-const Checkbox = styled(CheckboxComponent)`
+const CheckBox = styled(CheckBoxComponent)`
   vertical-align: middle;
 `
 

@@ -34,12 +34,13 @@ const icons: Array<Props['name']> = [
   'fa-clone',
   'fa-cloud-download-alt',
   'fa-cog',
-  'fa-databas',
+  'fa-database',
   'fa-ellipsis-h',
   'fa-envelope',
   'fa-exclamation-circle',
   'fa-exclamation-triangle',
   'fa-external-link-alt',
+  'fa-eye',
   'fa-file',
   'fa-file-alt',
   'fa-file-archive',
@@ -72,6 +73,7 @@ const icons: Array<Props['name']> = [
   'fa-user-alt',
   'fa-user-circle',
   'fa-users',
+  'fa-undo',
 ]
 
 const getIconList = (bg: string, color?: string) =>

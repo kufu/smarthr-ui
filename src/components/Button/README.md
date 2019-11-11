@@ -4,6 +4,8 @@
 import { PrimaryButton, PrimaryButtonAnchor } from 'smarthr-ui'
 import { SecondaryButton, SecondaryButtonAnchor } from 'smarthr-ui'
 import { DangerButton, DangerButtonAnchor } from 'smarthr-ui'
+import { SkeletonButton, SkeletonButtonAnchor } from 'smarthr-ui'
+import { TextButton, TextButtonAnchor } from 'smarthr-ui'
 
 <PrimaryButton>Button</PrimaryButton>
 <PrimaryButtonAnchor href="#">Anchor</PrimaryButtonAnchor>
@@ -13,6 +15,12 @@ import { DangerButton, DangerButtonAnchor } from 'smarthr-ui'
 
 <DangerButton>Button</DangerButton>
 <DangerButtonAnchor href="#">Anchor</DangerButtonAnchor>
+
+<SkeletonButton>Button</SkeletonButton>
+<SkeletonButtonAnchor href="#">Anchor</SkeletonButtonAnchor>
+
+<TextButton>Button</TextButton>
+<TextButtonAnchor href="#">Anchor</TextButtonAnchor>
 ```
 
 ## props
@@ -25,7 +33,7 @@ import { DangerButton, DangerButtonAnchor } from 'smarthr-ui'
 | children  | -        | **node**                       | ''           | The content of the component.                                                         |
 | prefix    | -        | **node**                       | ''           | The content of the prefix of button content.<br>Normally, this is for icon insertion. |
 | suffix    | -        | **node**                       | ''           | The content of the suffix of button content.<br>Normally, this is for icon insertion. |
-| square    | -        | **boolean**                    | false        | If `true`, the component shape changes to square.                                     |
+| square    | -        | **boolean**                    | false        | If `true`, the component shape changes to square. Cannot be used with TextButton.     |
 | wide      | -        | **boolean**                    | false        | If `true`, the component shape changes width is 100%.                                 |
 | className | -        | **string**                     | ''           | `className` of component.                                                             |
 

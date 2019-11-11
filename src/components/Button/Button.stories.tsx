@@ -7,9 +7,13 @@ import { PrimaryButton, PrimaryButtonAnchor } from './PrimaryButton'
 import { SecondaryButton, SecondaryButtonAnchor } from './SecondaryButton'
 import { DangerButton, DangerButtonAnchor } from './DangerButton'
 import { SkeletonButton, SkeletonButtonAnchor } from './SkeletonButton'
+import { TextButton } from './TextButton'
+import { TextButtonAnchor } from './TextButton'
+
 import { Icon } from '../Icon'
-import readme from './README.md'
 import { Base } from '../Base'
+
+import readme from './README.md'
 
 storiesOf('Button', module)
   .addParameters({
@@ -606,6 +610,93 @@ storiesOf('Button', module)
         </SkeletonButton>
       </Wrapper>
     </Background>
+  ))
+  .add('Text', () => (
+    <Base>
+      <Wrapper>
+        <p>Default Size</p>
+      </Wrapper>
+
+      <Wrapper>
+        <p>Default</p>
+        <TextButton onClick={action('clicked')}>Button</TextButton>
+        <TextButtonAnchor href="#">Anchor</TextButtonAnchor>
+        <TextButton disabled={true}>Disabled</TextButton>
+      </Wrapper>
+
+      <Wrapper>
+        <p>With icon (Left)</p>
+        <TextButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+          Button
+        </TextButton>
+        <TextButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
+          Anchor
+        </TextButtonAnchor>
+        <TextButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+          Disabled
+        </TextButton>
+      </Wrapper>
+
+      <Wrapper>
+        <p>With icon (Right)</p>
+        <TextButton suffix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+          Button
+        </TextButton>
+        <TextButtonAnchor suffix={<Icon size={14} name="fa-plus-circle" />} href="#">
+          Anchor
+        </TextButtonAnchor>
+        <TextButton suffix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+          Disabled
+        </TextButton>
+      </Wrapper>
+
+      <Wrapper>
+        <p>Small Size</p>
+      </Wrapper>
+
+      <Wrapper>
+        <p>Default</p>
+        <TextButton size="s" onClick={action('clicked')}>
+          Button
+        </TextButton>
+        <TextButtonAnchor size="s" href="#">
+          Anchor
+        </TextButtonAnchor>
+        <TextButton size="s" disabled={true}>
+          Disabled
+        </TextButton>
+      </Wrapper>
+
+      <Wrapper>
+        <p>With icon (Left)</p>
+        <TextButton
+          size="s"
+          prefix={<Icon size={11} name="fa-plus-circle" />}
+          onClick={action('clicked')}
+        >
+          Button
+        </TextButton>
+        <TextButtonAnchor size="s" prefix={<Icon size={11} name="fa-plus-circle" />} href="#">
+          Anchor
+        </TextButtonAnchor>
+        <TextButton size="s" prefix={<Icon size={11} name="fa-plus-circle" />} disabled={true}>
+          Disabled
+        </TextButton>
+      </Wrapper>
+
+      <Wrapper className="wide">
+        <p>Wide</p>
+        <TextButton size="s" onClick={action('clicked')} wide={true}>
+          Button
+        </TextButton>
+        <TextButtonAnchor size="s" href="#" wide={true}>
+          Anchor
+        </TextButtonAnchor>
+        <TextButton size="s" disabled={true} wide={true}>
+          Disabled
+        </TextButton>
+      </Wrapper>
+    </Base>
   ))
 
 const Wrapper = styled.div`

@@ -8,7 +8,8 @@ import { DropdownTrigger } from './DropdownTrigger'
 import { DropdownContent } from './DropdownContent'
 import { DropdownCloser } from './DropdownCloser'
 import { SecondaryButton, PrimaryButton } from '../Button'
-import { RadioLabel } from '../RadioLabel'
+import { RadioButtonLabel } from '../RadioButtonLabel'
+import { Input } from '../Input'
 
 import readme from './README.md'
 
@@ -31,9 +32,9 @@ const ListMenu = () => (
 
 const ControlableDropdown = () => {
   const [value, setValue] = React.useState('hoge')
-  const onChange = React.useCallback(name => {
-    setValue(name)
-  }, [])
+  const [text, setText] = React.useState('')
+  const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+  const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.currentTarget.value)
 
   return (
     <Dropdown>
@@ -52,28 +53,31 @@ const ControlableDropdown = () => {
             </Text>
             <RadioButtonList>
               <li>
-                <RadioLabel
+                <RadioButtonLabel
                   name="hoge"
                   label="hoge"
                   checked={value === 'hoge'}
-                  onChange={onChange}
+                  onChange={onChangeValue}
                 />
               </li>
               <li>
-                <RadioLabel
+                <RadioButtonLabel
                   name="fuga"
                   label="fuga"
                   checked={value === 'fuga'}
-                  onChange={onChange}
+                  onChange={onChangeValue}
                 />
               </li>
               <li>
-                <RadioLabel
+                <RadioButtonLabel
                   name="piyo"
                   label="piyo"
                   checked={value === 'piyo'}
-                  onChange={onChange}
+                  onChange={onChangeValue}
                 />
+              </li>
+              <li>
+                <Input name="test" value={text} onChange={onChangeText} />
               </li>
             </RadioButtonList>
           </ControllableBoxMain>

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { FC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Icon } from '../Icon'
@@ -10,76 +10,47 @@ interface Option {
   value: string
 }
 
-interface Props {
-  className?: string
-  value: string
-  name: string
-  required?: boolean
-  disabled?: boolean
+type Props = React.SelectHTMLAttributes<HTMLSelectElement> & {
+  options: Option[]
   error?: boolean
   width?: number | string
-  options: Option[]
-  labelText?: string
-  onChange?: (name: string, value: string) => void
 }
 
 interface StyledProps extends InjectedProps {
   width: string
 }
 
-interface SelectEvent {
-  currentTarget: {
-    value: string
-  }
-}
+const SelectComponent: FC<Props & InjectedProps> = ({
+  options,
+  onChange,
+  error = false,
+  width = 260,
+  className = '',
+  theme,
+  ...props
+}) => {
+  const widthStyle = typeof width === 'number' ? `${width}px` : width
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      if (onChange) onChange(e)
+    },
+    [onChange],
+  )
 
-class SelectComponent extends React.PureComponent<Props & InjectedProps> {
-  public render() {
-    const {
-      className = '',
-      value,
-      name,
-      required = false,
-      disabled = false,
-      error = false,
-      width = 260,
-      theme,
-      options,
-      labelText = '',
-    } = this.props
-    const widthStyle = typeof width === 'number' ? `${width}px` : width
-    const classNames = `${className} ${error ? 'error' : ''}`
-
-    return (
-      <Wrapper width={widthStyle} theme={theme}>
-        <Base
-          className={classNames}
-          value={value}
-          name={name}
-          required={required}
-          disabled={disabled}
-          onChange={this.handleChange}
-          theme={theme}
-          aria-label={labelText}
-        >
-          {options.map(option => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </Base>
-        <IconWrap>
-          <Icon size={13} name="fa-sort" />
-        </IconWrap>
-      </Wrapper>
-    )
-  }
-
-  private handleChange = (e: SelectEvent) => {
-    const { name, onChange } = this.props
-    const value = e.currentTarget.value
-    if (onChange) onChange(name, value)
-  }
+  return (
+    <Wrapper className={className} width={widthStyle} theme={theme}>
+      <SelectBox className={error ? 'error' : ''} onChange={handleChange} theme={theme} {...props}>
+        {options.map(option => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </SelectBox>
+      <IconWrap>
+        <Icon size={13} name="fa-sort" />
+      </IconWrap>
+    </Wrapper>
+  )
 }
 
 export const Select = withTheme(SelectComponent)
@@ -92,8 +63,7 @@ const Wrapper = styled.div`
     `
   }}
 `
-
-const Base = styled.select`
+const SelectBox = styled.select`
   ${({ theme }: InjectedProps) => {
     const { size, frame, palette, interaction } = theme
 

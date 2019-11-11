@@ -32,6 +32,7 @@ import {
   FaExclamationCircle,
   FaExclamationTriangle,
   FaExternalLinkAlt,
+  FaEye,
   FaFile,
   FaFileAlt,
   FaFileArchive,
@@ -65,6 +66,7 @@ import {
   FaUserAlt,
   FaUserCircle,
   FaUsers,
+  FaUndo,
 } from 'react-icons/fa'
 
 export interface IconProps {
@@ -104,12 +106,13 @@ export const iconMap = {
   'fa-clone': FaClone,
   'fa-cloud-download-alt': FaCloudDownloadAlt,
   'fa-cog': FaCog,
-  'fa-databas': FaDatabase,
+  'fa-database': FaDatabase,
   'fa-ellipsis-h': FaEllipsisH,
   'fa-envelope': FaEnvelope,
   'fa-exclamation-circle': FaExclamationCircle,
   'fa-exclamation-triangle': FaExclamationTriangle,
   'fa-external-link-alt': FaExternalLinkAlt,
+  'fa-eye': FaEye,
   'fa-file': FaFile,
   'fa-file-alt': FaFileAlt,
   'fa-file-archive': FaFileArchive,
@@ -143,6 +146,7 @@ export const iconMap = {
   'fa-user-alt': FaUserAlt,
   'fa-user-circle': FaUserCircle,
   'fa-users': FaUsers,
+  'fa-undo': FaUndo,
 }
 export const Icon: React.FC<Props> = ({ name, className = '', ...props }) => {
   const SvgIcon = iconMap[name]

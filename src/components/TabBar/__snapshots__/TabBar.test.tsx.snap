@@ -157,7 +157,6 @@ exports[`TabBar should be match snapshot 1`] = `
               "styledComponentId": "sc-bdVaJa",
               "target": "div",
               "toString": [Function],
-              "usesTheme": false,
               "warnTooManyClasses": [Function],
               "withComponent": [Function],
             }
@@ -406,7 +405,6 @@ exports[`TabBar should be match snapshot 1`] = `
                         "styledComponentId": "sc-bwzfXH",
                         "target": "button",
                         "toString": [Function],
-                        "usesTheme": false,
                         "warnTooManyClasses": [Function],
                         "withComponent": [Function],
                       }
@@ -667,7 +665,6 @@ exports[`TabBar should be match snapshot 1`] = `
                         "styledComponentId": "sc-bwzfXH",
                         "target": "button",
                         "toString": [Function],
-                        "usesTheme": false,
                         "warnTooManyClasses": [Function],
                         "withComponent": [Function],
                       }
@@ -928,7 +925,6 @@ exports[`TabBar should be match snapshot 1`] = `
                         "styledComponentId": "sc-bwzfXH",
                         "target": "button",
                         "toString": [Function],
-                        "usesTheme": false,
                         "warnTooManyClasses": [Function],
                         "withComponent": [Function],
                       }

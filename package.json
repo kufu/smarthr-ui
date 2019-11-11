@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "4.0.1",
+  "version": "5.2.1",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "lodash.merge": "^4.6.1",
@@ -44,7 +44,7 @@
     "prettier": "^1.17.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-test-renderer": "16.10.2",
+    "react-test-renderer": "16.11.0",
     "reg-keygen-git-hash-plugin": "^0.7.16",
     "reg-notify-github-plugin": "^0.7.21",
     "reg-publish-s3-plugin": "^0.7.22",
@@ -128,5 +128,11 @@
     "test-visual": "reg-suit run"
   },
   "sideEffects": false,
-  "typings": "lib/index.d.ts"
+  "typings": "lib/index.d.ts",
+  "resolutions": {
+    "reg-suit/**/braces": "2.3.1",
+    "deep-extend": "0.5.1",
+    "https-proxy-agent": "2.2.3",
+    "handlebars": "4.4.5"
+  }
 }
