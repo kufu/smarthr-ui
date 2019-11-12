@@ -7,7 +7,8 @@
     "lodash.merge": "^4.6.1",
     "lodash.range": "^3.2.0",
     "polished": "^3.4.1",
-    "react-icons": "^3.7.0"
+    "react-icons": "^3.7.0",
+    "react-transition-group": "^4.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -26,6 +27,7 @@
     "@types/react": "^16.8.16",
     "@types/react-dom": "^16.9.1",
     "@types/react-test-renderer": "^16.8.1",
+    "@types/react-transition-group": "^4.2.3",
     "@types/storybook__react": "^4.0.2",
     "@types/styled-components": "^4.1.19",
     "babel-loader": "^8.0.5",
@@ -55,8 +57,8 @@
     "stylelint-config-prettier": "^6.0.0",
     "stylelint-config-standard": "^19.0.0",
     "stylelint-config-styled-components": "^0.1.1",
-    "ts-jest": "^24.0.2",
     "stylelint-processor-styled-components": "^1.8.0",
+    "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.0",
     "typescript": "^3.2.4"
   },
