@@ -114,13 +114,19 @@ const Icon = styled(IconComponent)`
       margin-right: ${size.pxToRem(size.space.XXS)};
       transition: transform 0.3s;
 
-      &.expanded {
-        transform: rotate(180deg);
+      &.left {
+        &.expanded {
+          transform: rotate(-180deg);
+        }
       }
 
       &.right {
         margin-right: 0;
         margin-left: ${size.pxToRem(size.space.XXS)};
+
+        &.expanded {
+          transform: rotate(180deg);
+        }
       }
     `
   }}
