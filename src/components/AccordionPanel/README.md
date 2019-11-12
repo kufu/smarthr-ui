@@ -7,8 +7,7 @@ import {
   AccordionPanelTrigger,
   AccordionPanelContent,
 } from 'smarthr-ui'
-
-<AccordionPanel
+;<AccordionPanel
   iconPosition="right"
   displayIcon={true}
   expandableMultiply={true}
@@ -28,12 +27,13 @@ import {
 
 ### AccordionPanel component
 
-| Name               | Required | Type                                          | DefaultValue | Description                                                                                      |
-| ------------------ | -------- | --------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------ |
-| icon               | -        | **string** <br> left &#124; right &#124; none | left         | Position of icon. If sets 'none', icon is not display.                                           |
-| expandableMultiply | -        | **boolean**                                   | false        | If true, allow to expand accordion panel multiply.                                               |
-| defaultExpanded    | -        | **string[]**                                  | []           | Expands accordion with name matching value in array.                                             |
-| onClick            | -        | **function**                                  | -            | Fires when the AccordionPanelTrigger clicked. <br><br>function: (expandedList: string[]) => void |
+| Name               | Required | Type                              | DefaultValue | Description                                                                                      |
+| ------------------ | -------- | --------------------------------- | ------------ | ------------------------------------------------------------------------------------------------ |
+| iconPosition       | -        | **string** <br> left &#124; right | left         | Position of icon.                                                                                |
+| displayIcon        | -        | **boolean**                       | true         | If false, icon is not display.                                                                   |
+| expandableMultiply | -        | **boolean**                       | false        | If true, allow to expand accordion panel multiply.                                               |
+| defaultExpanded    | -        | **string[]**                      | []           | Expands accordion with name matching value in array.                                             |
+| onClick            | -        | **function**                      | -            | Fires when the AccordionPanelTrigger clicked. <br><br>function: (expandedList: string[]) => void |
 
 ### AccorionPanelItem component
 
