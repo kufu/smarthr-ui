@@ -7,7 +7,8 @@ import {
   AccordionPanelTrigger,
   AccordionPanelContent,
 } from 'smarthr-ui'
-;<AccordionPanel
+
+<AccordionPanel
   iconPosition="right"
   displayIcon={true}
   expandableMultiply={true}
