@@ -14,9 +14,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
     name="name"
     theme={
       Object {
-        "font": Object {
-          "BASIC": "system-ui, -apple-system, BlinkMacSystemFont, \\"Helvetica Neue\\", \\"Hiragino Sans\\", \\"Hiragino Kaku Gothic ProN\\", \\"ヒラギノ角ゴ ProN W3\\", Meiryo, \\"メイリオ\\", sans-serif",
-        },
         "frame": Object {
           "border": Object {
             "default": "1px solid #d6d6d6",
@@ -163,9 +160,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                     name="name"
                     theme={
                       Object {
-                        "font": Object {
-                          "BASIC": "system-ui, -apple-system, BlinkMacSystemFont, \\"Helvetica Neue\\", \\"Hiragino Sans\\", \\"Hiragino Kaku Gothic ProN\\", \\"ヒラギノ角ゴ ProN W3\\", Meiryo, \\"メイリオ\\", sans-serif",
-                        },
                         "frame": Object {
                           "border": Object {
                             "default": "1px solid #d6d6d6",
@@ -231,9 +225,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                       className=""
                       theme={
                         Object {
-                          "font": Object {
-                            "BASIC": "system-ui, -apple-system, BlinkMacSystemFont, \\"Helvetica Neue\\", \\"Hiragino Sans\\", \\"Hiragino Kaku Gothic ProN\\", \\"ヒラギノ角ゴ ProN W3\\", Meiryo, \\"メイリオ\\", sans-serif",
-                          },
                           "frame": Object {
                             "border": Object {
                               "default": "1px solid #d6d6d6",
@@ -330,9 +321,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                         forwardedRef={null}
                         theme={
                           Object {
-                            "font": Object {
-                              "BASIC": "system-ui, -apple-system, BlinkMacSystemFont, \\"Helvetica Neue\\", \\"Hiragino Sans\\", \\"Hiragino Kaku Gothic ProN\\", \\"ヒラギノ角ゴ ProN W3\\", Meiryo, \\"メイリオ\\", sans-serif",
-                            },
                             "frame": Object {
                               "border": Object {
                                 "default": "1px solid #d6d6d6",
@@ -404,9 +392,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                             onChange={[Function]}
                             theme={
                               Object {
-                                "font": Object {
-                                  "BASIC": "system-ui, -apple-system, BlinkMacSystemFont, \\"Helvetica Neue\\", \\"Hiragino Sans\\", \\"Hiragino Kaku Gothic ProN\\", \\"ヒラギノ角ゴ ProN W3\\", Meiryo, \\"メイリオ\\", sans-serif",
-                                },
                                 "frame": Object {
                                   "border": Object {
                                     "default": "1px solid #d6d6d6",
@@ -503,9 +488,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                               onChange={[Function]}
                               theme={
                                 Object {
-                                  "font": Object {
-                                    "BASIC": "system-ui, -apple-system, BlinkMacSystemFont, \\"Helvetica Neue\\", \\"Hiragino Sans\\", \\"Hiragino Kaku Gothic ProN\\", \\"ヒラギノ角ゴ ProN W3\\", Meiryo, \\"メイリオ\\", sans-serif",
-                                  },
                                   "frame": Object {
                                     "border": Object {
                                       "default": "1px solid #d6d6d6",
@@ -582,9 +564,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                             className="active  light"
                             theme={
                               Object {
-                                "font": Object {
-                                  "BASIC": "system-ui, -apple-system, BlinkMacSystemFont, \\"Helvetica Neue\\", \\"Hiragino Sans\\", \\"Hiragino Kaku Gothic ProN\\", \\"ヒラギノ角ゴ ProN W3\\", Meiryo, \\"メイリオ\\", sans-serif",
-                                },
                                 "frame": Object {
                                   "border": Object {
                                     "default": "1px solid #d6d6d6",
@@ -677,9 +656,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                               forwardedRef={null}
                               theme={
                                 Object {
-                                  "font": Object {
-                                    "BASIC": "system-ui, -apple-system, BlinkMacSystemFont, \\"Helvetica Neue\\", \\"Hiragino Sans\\", \\"Hiragino Kaku Gothic ProN\\", \\"ヒラギノ角ゴ ProN W3\\", Meiryo, \\"メイリオ\\", sans-serif",
-                                  },
                                   "frame": Object {
                                     "border": Object {
                                       "default": "1px solid #d6d6d6",
@@ -842,9 +818,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                 <styled.p
                   theme={
                     Object {
-                      "font": Object {
-                        "BASIC": "system-ui, -apple-system, BlinkMacSystemFont, \\"Helvetica Neue\\", \\"Hiragino Sans\\", \\"Hiragino Kaku Gothic ProN\\", \\"ヒラギノ角ゴ ProN W3\\", Meiryo, \\"メイリオ\\", sans-serif",
-                      },
                       "frame": Object {
                         "border": Object {
                           "default": "1px solid #d6d6d6",
@@ -936,9 +909,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                     forwardedRef={null}
                     theme={
                       Object {
-                        "font": Object {
-                          "BASIC": "system-ui, -apple-system, BlinkMacSystemFont, \\"Helvetica Neue\\", \\"Hiragino Sans\\", \\"Hiragino Kaku Gothic ProN\\", \\"ヒラギノ角ゴ ProN W3\\", Meiryo, \\"メイリオ\\", sans-serif",
-                        },
                         "frame": Object {
                           "border": Object {
                             "default": "1px solid #d6d6d6",

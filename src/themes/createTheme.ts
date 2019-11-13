@@ -6,14 +6,12 @@ import {
 } from './createInteraction'
 import { CreatedPaletteTheme, createPalette, PaletteProperty } from './createPalette'
 import { CreatedSizeTheme, createSize, SizeProperty } from './createSize'
-import { CreatedFontTheme, createFont, FontProperty } from './createFont'
 
 interface ThemeProperty {
   palette?: PaletteProperty
   size?: SizeProperty
   frame?: FrameProperty
   interaction?: InteractionProperty
-  font?: FontProperty
 }
 
 export interface CreatedTheme {
@@ -21,7 +19,6 @@ export interface CreatedTheme {
   size: CreatedSizeTheme
   frame: CreatedFrameTheme
   interaction: CreatedInteractionTheme
-  font: CreatedFontTheme
 }
 
 export const createTheme = (theme: ThemeProperty = {}) => {
@@ -30,7 +27,6 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     size: createSize(theme.size || {}),
     frame: createFrame(theme.frame || {}, theme.palette || {}),
     interaction: createInteraction(theme.interaction || {}),
-    font: createFont(theme.font || {}),
   }
   return created
 }
