@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.4.0](https://github.com/kufu/smarthr-ui/compare/v5.3.0...v5.4.0) (2019-11-13)
+
+
+### Features
+
+* **icon:** Add a FaClock icon ([73e8156](https://github.com/kufu/smarthr-ui/commit/73e8156))
+
 ## [5.3.0](https://github.com/kufu/smarthr-ui/compare/v5.2.1...v5.3.0) (2019-11-12)
 
 
