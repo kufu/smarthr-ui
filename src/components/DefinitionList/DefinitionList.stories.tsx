@@ -7,24 +7,24 @@ import { DefinitionList } from './DefinitionList'
 
 const DefinitionListItems = [
   {
-    label: 'label 1',
-    children: 'content 1',
+    term: 'term 1',
+    description: 'description 1',
   },
   {
-    label: 'label 2',
-    children: 'content 2',
+    term: 'term 2',
+    description: 'description 2',
   },
   {
-    label: 'label 3',
-    children: 'content 3',
+    term: 'term 3',
+    description: 'description 3',
   },
   {
-    label: 'label 4',
-    children: 'content 4',
+    term: 'term 4',
+    description: 'description 4',
   },
   {
-    label: 'label 5',
-    children: 'content 5',
+    term: 'term 5',
+    description: 'description 5',
   },
 ]
 

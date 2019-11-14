@@ -4,24 +4,26 @@ import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { Heading, HeadingProps } from '../Heading'
 
 export interface DefinitionListItemProps {
-  label: string
-  labelTag?: HeadingProps['tag']
-  children: React.ReactNode
+  term: string
+  termTag?: HeadingProps['tag']
+  description: React.ReactNode
   className?: string
 }
 
 const DefinitionListItemComponent: React.FC<DefinitionListItemProps & InjectedProps> = ({
-  label,
-  labelTag = 'span',
-  children,
+  term,
+  termTag = 'span',
+  description,
   className = '',
   theme,
 }) => (
   <Wrapper theme={theme} className={className}>
-    <Heading tag={labelTag} type="subSubBlockTitle">
-      {label}
-    </Heading>
-    <Content theme={theme}>{children}</Content>
+    <dt>
+      <Heading tag={termTag} type="subSubBlockTitle">
+        {term}
+      </Heading>
+    </dt>
+    <Content theme={theme}>{description}</Content>
   </Wrapper>
 )
 
@@ -32,18 +34,21 @@ const Wrapper = styled.div`
     const { palette, size } = theme
 
     return css`
+      position: relative;
       border-bottom: 1px dotted ${palette.BORDER};
       padding-bottom: ${size.pxToRem(size.space.XXS)};
     `
   }}
 `
 
-const Content = styled.div`
+const Content = styled.dd`
   ${({ theme }: InjectedProps) => {
     const { size } = theme
 
     return css`
-      margin-top: ${size.pxToRem(size.space.XXS)};
+      position: relative;
+      padding: 0;
+      margin: ${size.pxToRem(size.space.XXS)} 0 0;
     `
   }}
 `

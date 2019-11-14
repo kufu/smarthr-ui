@@ -20,22 +20,27 @@ const DefinitionListComponent: React.FC<Props & InjectedProps> = ({
   <Wrapper className={className} layout={layout}>
     {items.map((item, index) => (
       <Item
-        label={item.label}
+        term={item.term}
+        description={item.description}
         key={index}
         theme={theme}
         layout={layout}
         className={item.className && item.className}
-      >
-        {item.children}
-      </Item>
+      />
     ))}
   </Wrapper>
 )
 
 export const DefinitionList = withTheme(DefinitionListComponent)
 
-const Wrapper = styled.div<{ layout: LayoutType }>`
+const Wrapper = styled.dl<{ layout: LayoutType }>`
   ${({ layout }) => {
+    const baseStyle = css`
+      padding: 0;
+      margin: 0;
+      position: relative;
+    `
+
     const flexStyle = css`
       display: flex;
       justify-content: space-between;
@@ -47,10 +52,12 @@ const Wrapper = styled.div<{ layout: LayoutType }>`
     switch (layout) {
       case 'double':
         return css`
+          ${baseStyle}
           ${flexStyle}
         `
       case 'triple':
         return css`
+          ${baseStyle}
           ${flexStyle}
           &:after {
             content: '';
@@ -60,6 +67,7 @@ const Wrapper = styled.div<{ layout: LayoutType }>`
         `
       default:
         return css`
+          ${baseStyle}
           display: block;
         `
     }
