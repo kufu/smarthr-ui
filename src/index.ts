@@ -44,6 +44,7 @@ export { BlankImage } from './components/Image'
 export { Heading } from './components/Heading'
 export { HeadlineArea } from './components/HeadlineArea'
 export { Select } from './components/Select'
+export { DefinitionList } from './components/DefinitionList'
 export {
   AccordionPanel,
   AccordionPanelItem,
