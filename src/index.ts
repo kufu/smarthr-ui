@@ -58,3 +58,6 @@ export { defaultPalette } from './themes/createPalette'
 export { defaultInteraction } from './themes/createInteraction'
 export { defaultFrame } from './themes/createFrame'
 export { defaultSize } from './themes/createSize'
+
+// constants
+export { FONT_FAMILY } from './constants'
