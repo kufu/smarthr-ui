@@ -143,7 +143,7 @@ exports[`StatusLabel should be match snapshot 1`] = `
             "componentStyle": ComponentStyle {
               "componentId": "sc-bdVaJa",
               "isStatic": false,
-              "lastClassName": "dNYNqM",
+              "lastClassName": "iaQeAq",
               "rules": Array [
                 "
   ",
@@ -227,7 +227,7 @@ exports[`StatusLabel should be match snapshot 1`] = `
         }
       >
         <span
-          className="sc-bdVaJa dNYNqM success "
+          className="sc-bdVaJa iaQeAq success "
         >
           hello
         </span>
