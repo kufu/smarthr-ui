@@ -3,9 +3,9 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { Heading } from '../Heading'
 import { Base } from '../Base'
-import { DescriptionList } from './DescriptionList'
+import { DefinitionList } from './DefinitionList'
 
-const DescriptionListItems = [
+const DefinitionListItems = [
   {
     label: 'label 1',
     children: 'content 1',
@@ -28,21 +28,21 @@ const DescriptionListItems = [
   },
 ]
 
-storiesOf('DescriptionList', module).add('all', () => (
+storiesOf('DefinitionList', module).add('all', () => (
   <Wrapper>
     <Title type="sectionTitle">single column</Title>
     <Content>
-      <DescriptionList items={DescriptionListItems} layout="single"></DescriptionList>
+      <DefinitionList items={DefinitionListItems} layout="single"></DefinitionList>
     </Content>
 
     <Title type="sectionTitle">two column</Title>
     <Content>
-      <DescriptionList items={DescriptionListItems} layout="double"></DescriptionList>
+      <DefinitionList items={DefinitionListItems} layout="double"></DefinitionList>
     </Content>
 
     <Title type="sectionTitle">three column</Title>
     <Content>
-      <DescriptionList items={DescriptionListItems} layout="triple"></DescriptionList>
+      <DefinitionList items={DefinitionListItems} layout="triple"></DefinitionList>
     </Content>
   </Wrapper>
 ))

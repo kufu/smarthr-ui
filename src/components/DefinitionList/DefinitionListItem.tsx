@@ -3,14 +3,14 @@ import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { Heading, HeadingProps } from '../Heading'
 
-export interface DescriptionListItemProps {
+export interface DefinitionListItemProps {
   label: string
   labelTag?: HeadingProps['tag']
   children: React.ReactNode
   className?: string
 }
 
-const DescriptionListItemComponent: React.FC<DescriptionListItemProps & InjectedProps> = ({
+const DefinitionListItemComponent: React.FC<DefinitionListItemProps & InjectedProps> = ({
   label,
   labelTag = 'span',
   children,
@@ -25,7 +25,7 @@ const DescriptionListItemComponent: React.FC<DescriptionListItemProps & Injected
   </Wrapper>
 )
 
-export const DescriptionListItem = withTheme(DescriptionListItemComponent)
+export const DefinitionListItem = withTheme(DefinitionListItemComponent)
 
 const Wrapper = styled.div`
   ${({ theme }: InjectedProps) => {

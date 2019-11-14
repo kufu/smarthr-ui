@@ -1,17 +1,17 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { DescriptionListItem, DescriptionListItemProps } from './DescriptionListItem'
+import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListItem'
 
 interface Props {
   layout?: LayoutType
-  items: DescriptionListItemProps[]
+  items: DefinitionListItemProps[]
   className?: string
 }
 
 type LayoutType = 'single' | 'double' | 'triple'
 
-const DescriptionListComponent: React.FC<Props & InjectedProps> = ({
+const DefinitionListComponent: React.FC<Props & InjectedProps> = ({
   items,
   layout = 'single',
   className = '',
@@ -32,7 +32,7 @@ const DescriptionListComponent: React.FC<Props & InjectedProps> = ({
   </Wrapper>
 )
 
-export const DescriptionList = withTheme(DescriptionListComponent)
+export const DefinitionList = withTheme(DefinitionListComponent)
 
 const Wrapper = styled.div<{ layout: LayoutType }>`
   ${({ layout }) => {
@@ -66,7 +66,7 @@ const Wrapper = styled.div<{ layout: LayoutType }>`
   }}
 `
 
-const Item = styled(DescriptionListItem)<InjectedProps & { layout: LayoutType }>`
+const Item = styled(DefinitionListItem)<InjectedProps & { layout: LayoutType }>`
   ${({ theme, layout }) => {
     const { size } = theme
     const basicStyle = css`
