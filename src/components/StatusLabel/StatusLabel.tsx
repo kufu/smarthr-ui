@@ -32,6 +32,7 @@ const BorderStyle = css`
   ${({ theme }: InjectedProps) => {
     return css`
       border: ${theme.frame.border.default};
+      background-color: #fff;
     `
   }}
 `
