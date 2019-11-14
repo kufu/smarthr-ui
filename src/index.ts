@@ -45,6 +45,12 @@ export { Heading } from './components/Heading'
 export { HeadlineArea } from './components/HeadlineArea'
 export { Select } from './components/Select'
 export { DescriptionListItem } from './components/DescriptionList'
+export {
+  AccordionPanel,
+  AccordionPanelItem,
+  AccordionPanelContent,
+  AccordionPanelTrigger,
+} from './components/AccordionPanel'
 
 // themes
 export { createTheme } from './themes/createTheme'

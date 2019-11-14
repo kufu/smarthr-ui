@@ -63,6 +63,10 @@ We'd greatly appreciate any [contribution](https://github.com/kufu/smarthr-ui/bl
 
 Please read the [changelog](https://github.com/kufu/smarthr-ui/releases).
 
+## Design
+We released design in [InVision](https://smarthr.invisionapp.com/share/ADUDJ8BW74C).  
+If you use our corporate logo, please read the [SmartHR Brand Asset Guide](https://developer.smarthr.jp/design/logo-policy.pdf)
+
 ## License
 
 This project is licensed under the terms of the [MIT license](https://github.com/kufu/smarthr-ui/blob/master/LICENSE).
