@@ -34,7 +34,6 @@ const Wrapper = styled.div`
     const { palette, size } = theme
 
     return css`
-      position: relative;
       border-bottom: 1px dotted ${palette.BORDER};
       padding-bottom: ${size.pxToRem(size.space.XXS)};
     `
@@ -46,7 +45,6 @@ const Content = styled.dd`
     const { size } = theme
 
     return css`
-      position: relative;
       padding: 0;
       margin: ${size.pxToRem(size.space.XXS)} 0 0;
     `

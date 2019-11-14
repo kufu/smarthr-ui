@@ -38,7 +38,6 @@ const Wrapper = styled.dl<{ layout: LayoutType }>`
     const baseStyle = css`
       padding: 0;
       margin: 0;
-      position: relative;
     `
 
     const flexStyle = css`
