@@ -1,10 +1,9 @@
-import * as React from 'react'
+import React, { ReactNode, FC } from 'react'
 import styled, { css } from 'styled-components'
-
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
 import { Input, Props as InputProps } from '../Input'
 import { StatusLabel } from '../StatusLabel'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
 
@@ -13,36 +12,37 @@ type Props = Omit<InputProps, 'error'> & {
   errorMessage?: string
   helpMessage?: string
   className?: string
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
-const FieldComponent: React.FC<Props & InjectedProps> = ({
+export const Field: FC<Props> = ({
   label,
   errorMessage,
   helpMessage,
   className = '',
-  theme,
   children,
   ...props
-}) => (
-  <Wrapper width={props.width || 'auto'} className={className}>
-    <LabelHead theme={theme}>
-      <Title theme={theme}>
-        {label}
-        {props.required && (
-          <StatusLabelWrapper theme={theme}>
-            <StatusLabel type="required">必須</StatusLabel>
-          </StatusLabelWrapper>
-        )}
-      </Title>
-      {helpMessage && <Help theme={theme}>{helpMessage}</Help>}
-    </LabelHead>
-    {children ? children : <Input {...props} error={!!errorMessage} />}
-    {errorMessage && <Error theme={theme}>{errorMessage}</Error>}
-  </Wrapper>
-)
+}) => {
+  const theme = useTheme()
 
-export const Field = withTheme(FieldComponent)
+  return (
+    <Wrapper width={props.width || 'auto'} className={className}>
+      <LabelHead themes={theme}>
+        <Title themes={theme}>
+          {label}
+          {props.required && (
+            <StatusLabelWrapper themes={theme}>
+              <StatusLabel type="required">必須</StatusLabel>
+            </StatusLabelWrapper>
+          )}
+        </Title>
+        {helpMessage && <Help themes={theme}>{helpMessage}</Help>}
+      </LabelHead>
+      {children ? children : <Input {...props} error={!!errorMessage} />}
+      {errorMessage && <Error themes={theme}>{errorMessage}</Error>}
+    </Wrapper>
+  )
+}
 
 const Wrapper: any = styled.div<{ width: string | number }>`
   ${({ width }) => css`
@@ -50,40 +50,40 @@ const Wrapper: any = styled.div<{ width: string | number }>`
     width: ${typeof width === 'number' ? `${width}px` : width};
   `}
 `
-const LabelHead = styled.div`
-  ${({ theme }: InjectedProps) => css`
+const LabelHead = styled.div<{ themes: Theme }>`
+  ${({ themes }) => css`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: ${theme.size.pxToRem(theme.size.space.XXS)};
+    margin-bottom: ${themes.size.pxToRem(themes.size.space.XXS)};
     line-height: 1.4;
   `}
 `
-const Title = styled.p`
-  ${({ theme }: InjectedProps) => css`
+const Title = styled.p<{ themes: Theme }>`
+  ${({ themes }) => css`
     margin: 0;
-    color: ${theme.palette.TEXT_GREY};
+    color: ${themes.palette.TEXT_GREY};
     font-weight: bold;
-    font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
+    font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
   `}
 `
-const Help = styled.p`
-  ${({ theme }: InjectedProps) => css`
+const Help = styled.p<{ themes: Theme }>`
+  ${({ themes }) => css`
     margin: 0;
-    font-size: ${theme.size.pxToRem(theme.size.font.SHORT)};
-    color: ${theme.palette.TEXT_GREY};
+    font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
+    color: ${themes.palette.TEXT_GREY};
   `}
 `
-const Error = styled.p`
-  ${({ theme }: InjectedProps) => css`
-    margin: ${theme.size.pxToRem(theme.size.space.XXS)} 0 0 0;
-    font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
-    color: ${theme.palette.DANGER};
+const Error = styled.p<{ themes: Theme }>`
+  ${({ themes }) => css`
+    margin: ${themes.size.pxToRem(themes.size.space.XXS)} 0 0 0;
+    font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
+    color: ${themes.palette.DANGER};
     line-height: 1.4;
   `}
 `
-const StatusLabelWrapper = styled.span`
-  ${({ theme }: InjectedProps) => css`
-    margin-left: ${theme.size.pxToRem(theme.size.space.XXS)};
+const StatusLabelWrapper = styled.span<{ themes: Theme }>`
+  ${({ themes }) => css`
+    margin-left: ${themes.size.pxToRem(themes.size.space.XXS)};
   `}
 `
