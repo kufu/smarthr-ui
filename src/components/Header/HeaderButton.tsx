@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-import { Icon, Props as IconProps } from '../Icon'
+import { Icon, Props as IconProps } from '../Icon/Icon'
 
 export interface HeaderButtonProps {
   children?: React.ReactNode
