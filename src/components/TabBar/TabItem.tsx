@@ -1,50 +1,42 @@
-import * as React from 'react'
+import React, { ReactNode, FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 import { isTouchDevice } from '../../libs/ua'
 
-export interface Props {
+type Props = {
   id: string
-  children: React.ReactNode
+  children: ReactNode
   selected?: boolean
   disabled?: boolean
   className?: string
   onClick: (tabId: string) => void
 }
 
-type MergedProps = Props & InjectedProps
-
-const TabItemComponent: React.FC<MergedProps> = ({
+export const TabItem: FC<Props> = ({
   id,
   children,
   onClick,
-  theme,
   selected = false,
   className = '',
   disabled = false,
 }) => {
+  const theme = useTheme()
   const classNames = `${className} ${selected ? 'selected' : ''}`
-
-  const handleClick = () => {
-    onClick(id)
-  }
 
   return (
     <Wrapper
       role="tab"
       aria-selected={selected}
       className={classNames}
-      onClick={handleClick}
-      theme={theme}
+      onClick={() => onClick(id)}
       disabled={disabled}
+      themes={theme}
     >
       {children}
     </Wrapper>
   )
 }
-
-export const TabItem = withTheme(TabItemComponent)
 
 const resetButtonStyle = css`
   background-color: transparent;
@@ -54,11 +46,10 @@ const resetButtonStyle = css`
   padding: 0;
   appearance: none;
 `
-
-const Wrapper = styled.button`
+const Wrapper = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
-  ${({ theme }: InjectedProps) => {
-    const { size, palette, interaction } = theme
+  ${({ themes }) => {
+    const { size, palette, interaction } = themes
     return css`
       font-weight: bold;
       font-size: ${size.pxToRem(size.font.TALL)};

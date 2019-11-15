@@ -1,34 +1,29 @@
-import * as React from 'react'
+import React, { ReactNode, FC } from 'react'
 import styled, { css } from 'styled-components'
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
 
-interface Props {
-  children: React.ReactNode
+import { useTheme, Theme } from '../../hooks/useTheme'
+
+type Props = {
+  children: ReactNode
   bordered?: boolean
   className?: string
 }
 
-type MergedProps = Props & InjectedProps
-
-const TabBarComponent: React.FC<MergedProps> = ({
-  className = '',
-  bordered = true,
-  theme,
-  children,
-}) => {
+export const TabBar: FC<Props> = ({ className = '', bordered = true, children }) => {
+  const theme = useTheme()
   const classNames = `${className} ${bordered ? 'bordered' : ''}`
+
   return (
-    <Wrapper role="tablist" className={classNames} theme={theme}>
+    <Wrapper role="tablist" className={classNames} themes={theme}>
       {children}
     </Wrapper>
   )
 }
 
-export const TabBar = withTheme(TabBarComponent)
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { border } = themes.frame
 
-const Wrapper = styled.div`
-  ${({ theme }: InjectedProps) => {
-    const { frame } = theme
     return css`
       display: flex;
       background-color: #fff;
@@ -40,7 +35,7 @@ const Wrapper = styled.div`
           position: absolute;
           bottom: 0px;
           width: 100%;
-          border-bottom: ${frame.border.default};
+          border-bottom: ${border.default};
           content: '';
         }
 
