@@ -1,37 +1,39 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { Heading, HeadingProps } from '../Heading'
 
-export interface DefinitionListItemProps {
+import { Heading, HeadingProps } from '../Heading'
+import { useTheme, Theme } from '../../hooks/useTheme'
+
+export type DefinitionListItemProps = {
   term: string
   termTag?: HeadingProps['tag']
   description: React.ReactNode
   className?: string
 }
 
-const DefinitionListItemComponent: React.FC<DefinitionListItemProps & InjectedProps> = ({
+export const DefinitionListItem: FC<DefinitionListItemProps> = ({
   term,
   termTag = 'span',
   description,
   className = '',
-  theme,
-}) => (
-  <Wrapper theme={theme} className={className}>
-    <dt>
-      <Heading tag={termTag} type="subSubBlockTitle">
-        {term}
-      </Heading>
-    </dt>
-    <Content theme={theme}>{description}</Content>
-  </Wrapper>
-)
+}) => {
+  const theme = useTheme()
 
-export const DefinitionListItem = withTheme(DefinitionListItemComponent)
+  return (
+    <Wrapper className={className} themes={theme}>
+      <dt>
+        <Heading tag={termTag} type="subSubBlockTitle">
+          {term}
+        </Heading>
+      </dt>
+      <Content themes={theme}>{description}</Content>
+    </Wrapper>
+  )
+}
 
-const Wrapper = styled.div`
-  ${({ theme }: InjectedProps) => {
-    const { palette, size } = theme
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette, size } = themes
 
     return css`
       border-bottom: 1px dotted ${palette.BORDER};
@@ -39,14 +41,13 @@ const Wrapper = styled.div`
     `
   }}
 `
-
-const Content = styled.dd`
-  ${({ theme }: InjectedProps) => {
-    const { size } = theme
+const Content = styled.dd<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space } = themes.size
 
     return css`
       padding: 0;
-      margin: ${size.pxToRem(size.space.XXS)} 0 0;
+      margin: ${pxToRem(space.XXS)} 0 0;
     `
   }}
 `
