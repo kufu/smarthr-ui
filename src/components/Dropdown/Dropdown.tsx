@@ -1,70 +1,73 @@
-import * as React from 'react'
-import styled from 'styled-components'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 
-import { Rect } from './DropdownContent'
-import { getParentElementRecursively, getRandomStr } from './helper'
+import { Rect, hasParentElement } from './dropdownHelper'
 
-interface Props {
-  children?: React.ReactNode
-}
-
-interface State {
+type DropdownContextType = {
   active: boolean
-  clientRect?: Rect
+  triggerRect: Rect
+  onClickTrigger: (rect: Rect) => void
+  onClickCloser: () => void
+  DropdownContentRoot: React.FC<{ children: React.ReactNode }>
 }
 
-interface DropdownContext {
-  keyName: string
-  active: boolean
-  clientRect?: Rect
-  toggleDropdown: (clientRect: Rect) => void
-}
+const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
 
-const { Consumer, Provider } = React.createContext<DropdownContext>({
-  keyName: '',
+export const DropdownContext = React.createContext<DropdownContextType>({
   active: false,
-  toggleDropdown: (_: Rect) => null,
+  triggerRect: initialRect,
+  onClickTrigger: () => {},
+  onClickCloser: () => {},
+  DropdownContentRoot: () => null,
 })
 
-export const DropdownConsumer = Consumer
+export const Dropdown: React.FC<{}> = ({ children }) => {
+  const [active, setActive] = useState(false)
+  const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
-export class Dropdown extends React.PureComponent<Props, State> {
-  public state: State = { active: false }
-  public keyName = getRandomStr()
+  const element = useRef(document.createElement('div')).current
 
-  public componentDidMount = () => {
-    document.body.addEventListener('click', this.handleClickBody as any)
-  }
+  useEffect(() => {
+    const onClickBody = (e: any) => {
+      if (hasParentElement(e.target, element)) return
+      setActive(false)
+    }
 
-  public componentWillUnmount() {
-    document.body.removeEventListener('click', this.handleClickBody as any)
-  }
+    document.body.appendChild(element)
+    document.body.addEventListener('click', onClickBody, false)
 
-  public render() {
-    return (
-      <Provider
-        value={{
-          keyName: this.keyName,
-          active: this.state.active,
-          toggleDropdown: this.handleToggle,
-          clientRect: this.state.clientRect,
-        }}
-      >
-        <Wrapper className={this.state.active ? 'active' : ''}>{this.props.children}</Wrapper>
-      </Provider>
-    )
-  }
+    return () => {
+      document.body.removeChild(element)
+      document.body.removeEventListener('click', onClickBody, false)
+    }
+  }, [element])
 
-  private handleToggle = (clientRect: Rect) => {
-    this.setState(state => ({ active: !state.active, clientRect }))
-  }
+  // This is the root container of a dropdown content located in outside the DOM tree
+  const DropdownContentRoot = useMemo<React.FC<{ children: React.ReactNode }>>(
+    () => props => {
+      if (!active) return null
+      return createPortal(props.children, element)
+    },
+    [active, element],
+  )
+  // set the displayName explicit for DevTools
+  DropdownContentRoot.displayName = 'DropdownContentRoot'
 
-  private handleClickBody = (e: { target: HTMLElement }) => {
-    if (getParentElementRecursively(e.target, this.keyName)) return
-    this.setState({ active: false })
-  }
+  return (
+    <DropdownContext.Provider
+      value={{
+        active,
+        triggerRect,
+        onClickTrigger: rect => {
+          const newActive = !active
+          setActive(newActive)
+          if (newActive) setTriggerRect(rect)
+        },
+        onClickCloser: () => setActive(false),
+        DropdownContentRoot,
+      }}
+    >
+      {children}
+    </DropdownContext.Provider>
+  )
 }
-
-const Wrapper = styled.div`
-  position: relative;
-`

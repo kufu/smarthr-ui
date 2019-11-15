@@ -10,8 +10,8 @@ import { Row } from './Row'
 import { Cell } from './Cell'
 import { action } from '@storybook/addon-actions'
 import { Icon } from '../Icon'
-import { Checkbox as CheckboxComponent } from '../Checkbox'
-import { Button } from '../Button'
+import { CheckBox as CheckBoxComponent } from '../CheckBox'
+import { SecondaryButton as Button } from '../Button'
 import { Base } from '../Base'
 
 import readme from './README.md'
@@ -54,7 +54,7 @@ storiesOf('Table', module)
           <Head>
             <Row>
               <Cell>
-                <Checkbox name="tableCheckbox" checked={false}></Checkbox>
+                <CheckBox name="tableCheckBox" checked={false} />
               </Cell>
               <Cell onClick={action('clicked')} highlighted={true}>
                 <ClickableCell>
@@ -74,7 +74,7 @@ storiesOf('Table', module)
               return (
                 <Row key={name}>
                   <Cell>
-                    <Checkbox name="tableCheckbox" checked={false}></Checkbox>
+                    <CheckBox name="tableCheckBox" checked={false} />
                   </Cell>
                   <Cell>{name}</Cell>
                   <Cell>{calories}</Cell>
@@ -82,9 +82,7 @@ storiesOf('Table', module)
                   <Cell>{carbs}</Cell>
                   <Cell>{protein}</Cell>
                   <Cell>
-                    <Button type="sub-b" size="s">
-                      Button
-                    </Button>
+                    <Button size="s">Button</Button>
                   </Cell>
                 </Row>
               )
@@ -97,7 +95,7 @@ storiesOf('Table', module)
         <Table>
           <Head>
             <Row>
-              <Cell colspan={3}>colspan="3"</Cell>
+              <Cell colspan={3}>colspan=3</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
@@ -113,7 +111,7 @@ storiesOf('Table', module)
               <Cell>cell</Cell>
             </Row>
             <Row>
-              <Cell rowspan={0}>rowspan="0"</Cell>
+              <Cell rowspan={0}>rowspan=0</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
@@ -155,7 +153,11 @@ storiesOf('Table', module)
               <Row>
                 <Cell>cell</Cell>
                 <Cell>cell</Cell>
-                <Cell>cell</Cell>
+                <Cell>
+                  multi
+                  <br />
+                  line
+                </Cell>
               </Row>
             </Body>
           </Table>
@@ -174,7 +176,7 @@ const Ul = styled.ul`
   }
 `
 
-const Checkbox = styled(CheckboxComponent)`
+const CheckBox = styled(CheckBoxComponent)`
   vertical-align: middle;
 `
 

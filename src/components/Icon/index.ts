@@ -1,1 +1,1 @@
-export { Icon, Props } from './Icon'
+export { Icon, iconMap } from './Icon'

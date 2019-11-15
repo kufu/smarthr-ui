@@ -2,24 +2,30 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { Tag } from '../Tag/Tag'
+import { StatusLabel } from '../StatusLabel/StatusLabel'
 import { AppNaviButton, AppNaviButtonProps } from './AppNaviButton'
 
 interface Props {
   label?: string
   buttons?: AppNaviButtonProps[]
+  children?: React.ReactNode
 }
 
-const AppNaviComponent: React.FC<Props & InjectedProps> = ({ theme, ...props }) => (
+const AppNaviComponent: React.FC<Props & InjectedProps> = ({
+  theme,
+  label,
+  buttons,
+  children = null,
+}) => (
   <Wrapper theme={theme}>
-    {props.label && (
-      <TagWrapper theme={theme}>
-        <Tag type="done">{props.label}</Tag>
-      </TagWrapper>
+    {label && (
+      <StatusLabelWrapper theme={theme}>
+        <StatusLabel>{label}</StatusLabel>
+      </StatusLabelWrapper>
     )}
 
-    {props.buttons &&
-      props.buttons.map((button, index) => (
+    {buttons &&
+      buttons.map((button, index) => (
         <AppNaviButton
           icon={button.icon}
           current={button.current}
@@ -29,6 +35,7 @@ const AppNaviComponent: React.FC<Props & InjectedProps> = ({ theme, ...props }) 
           {button.children}
         </AppNaviButton>
       ))}
+    {children}
   </Wrapper>
 )
 
@@ -43,12 +50,13 @@ const Wrapper = styled.nav`
       height: ${theme.size.pxToRem(40)};
       padding: 0 ${theme.size.pxToRem(20)};
       background-color: #fff;
+      box-sizing: border-box;
       box-shadow: 0 ${theme.size.pxToRem(1)} ${theme.size.pxToRem(4)} rgba(0, 0, 0, 0.15);
     `
   }}
 `
 
-const TagWrapper = styled.span`
+const StatusLabelWrapper = styled.span`
   ${({ theme }: InjectedProps) => {
     return css`
       display: inline-block;

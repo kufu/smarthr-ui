@@ -31,14 +31,14 @@ commands:
           fi
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "yarn.lock" }}
             - v1-dependencies-
-      - run: npm install
+      - run: yarn install
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm run test-visual
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+      - run: yarn test-visual
 jobs:
   node-v8:
     docker:

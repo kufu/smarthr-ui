@@ -1,32 +1,44 @@
-import * as React from 'react'
-import { DropdownConsumer } from './Dropdown'
+import React, { useContext } from 'react'
+import styled from 'styled-components'
 
-export const DropdownTrigger: React.FC<{}> = ({ children }) => (
-  <DropdownConsumer>
-    {({ keyName, toggleDropdown, active }) => (
-      <div
-        /* tslint:disable:jsx-no-lambda */
-        onClick={e => toggleDropdown(e.currentTarget.getBoundingClientRect())}
-        className={keyName}
-      >
-        {React.Children.map(children, (child: any) => {
-          const props = child.props ? child.props : {}
-          const { className = '' } = props
+import { DropdownContext } from './Dropdown'
 
-          switch (typeof child) {
-            case 'string':
-              return child
+export const DropdownTrigger: React.FC<{}> = ({ children }) => {
+  const { active, onClickTrigger } = useContext(DropdownContext)
 
-            case 'object':
-              return React.cloneElement(child, {
-                className: `${active ? 'active' : ''} ${className}`,
-              })
+  return (
+    <Wrapper
+      onClick={e => {
+        const rect = e.currentTarget.getBoundingClientRect()
+        onClickTrigger({
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+          left: rect.left,
+        })
+      }}
+    >
+      {React.Children.map(children, (child: any) => {
+        const props = child.props ? child.props : {}
+        const { className = '' } = props
 
-            default:
-              return null
-          }
-        })}
-      </div>
-    )}
-  </DropdownConsumer>
-)
+        switch (typeof child) {
+          case 'string':
+            return child
+
+          case 'object':
+            return React.cloneElement(child, {
+              className: `${active ? 'active' : ''} ${className}`,
+            })
+
+          default:
+            return null
+        }
+      })}
+    </Wrapper>
+  )
+}
+
+const Wrapper = styled.div`
+  display: inline-block;
+`
