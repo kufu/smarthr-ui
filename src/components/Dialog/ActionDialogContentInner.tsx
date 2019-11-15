@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react'
+import React, { FC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { PrimaryButton, SecondaryButton, DangerButton } from '../Button'
 
@@ -19,7 +19,7 @@ type Props = BaseProps & {
   onClickClose: () => void
 }
 
-const ActionDialogContentInnerComponent: React.FC<Props & InjectedProps> = ({
+export const ActionDialogContentInner: FC<Props> = ({
   children,
   title,
   closeText,
@@ -28,8 +28,8 @@ const ActionDialogContentInnerComponent: React.FC<Props & InjectedProps> = ({
   onClickAction,
   onClickClose,
   actionDisabled = false,
-  theme,
 }) => {
+  const theme = useTheme()
   const handleClickAction = useCallback(() => {
     onClickAction(onClickClose)
   }, [onClickAction, onClickClose])
@@ -40,9 +40,9 @@ const ActionDialogContentInnerComponent: React.FC<Props & InjectedProps> = ({
 
   return (
     <>
-      <Title theme={theme}>{title}</Title>
+      <Title themes={theme}>{title}</Title>
       {children}
-      <Bottom theme={theme}>
+      <Bottom themes={theme}>
         <SecondaryButton onClick={onClickClose}>{closeText}</SecondaryButton>
         <ActionButton onClick={handleClickAction} disabled={actionDisabled}>
           {actionText}
@@ -52,12 +52,10 @@ const ActionDialogContentInnerComponent: React.FC<Props & InjectedProps> = ({
   )
 }
 
-export const ActionDialogContentInner = withTheme(ActionDialogContentInnerComponent)
-
-const Title = styled.p`
-  ${({ theme }: InjectedProps) => {
-    const { pxToRem, space, font } = theme.size
-    const { border } = theme.frame
+const Title = styled.p<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space, font } = themes.size
+    const { border } = themes.frame
     return css`
       margin: 0;
       padding: ${pxToRem(space.XS)} ${pxToRem(space.S)};
@@ -67,10 +65,10 @@ const Title = styled.p`
     `
   }}
 `
-const Bottom = styled.div`
-  ${({ theme }: InjectedProps) => {
-    const { pxToRem, space } = theme.size
-    const { border } = theme.frame
+const Bottom = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space } = themes.size
+    const { border } = themes.frame
     return css`
       display: flex;
       justify-content: flex-end;

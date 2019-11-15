@@ -1,8 +1,9 @@
 import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Heading, HeadingProps } from '../Heading'
 import { useTheme, Theme } from '../../hooks/useTheme'
+
+import { Heading, HeadingProps } from '../Heading'
 
 export type DefinitionListItemProps = {
   term: string
