@@ -2,7 +2,7 @@ import React, { FC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { transparentize } from 'polished'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { Icon } from '../Icon'
 
@@ -11,14 +11,14 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   mixed?: boolean
 }
 
-const CheckBoxComponent: FC<Props & InjectedProps> = ({
+export const CheckBox: FC<Props> = ({
   themeColor = 'light',
   mixed = false,
   className = '',
   onChange,
-  theme,
   ...props
 }) => {
+  const theme = useTheme()
   const { checked, disabled } = props
   const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
   const handleChange = useCallback(
@@ -29,9 +29,9 @@ const CheckBoxComponent: FC<Props & InjectedProps> = ({
   )
 
   return (
-    <Wrapper theme={theme} className={className}>
-      <Input {...props} type="checkbox" theme={theme} onChange={handleChange} />
-      <Box className={boxClassName} theme={theme} />
+    <Wrapper className={className}>
+      <Input {...props} type="checkbox" onChange={handleChange} themes={theme} />
+      <Box className={boxClassName} themes={theme} />
       {checked && (
         <IconWrap>
           <Icon
@@ -45,8 +45,6 @@ const CheckBoxComponent: FC<Props & InjectedProps> = ({
   )
 }
 
-export const CheckBox = withTheme(CheckBoxComponent)
-
 const Wrapper = styled.div`
   position: relative;
   display: inline-block;
@@ -56,9 +54,9 @@ const Wrapper = styled.div`
   line-height: 1;
   box-sizing: border-box;
 `
-const Box = styled.span`
-  ${({ theme }: InjectedProps) => {
-    const { frame, palette } = theme
+const Box = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { frame, palette } = themes
     return css`
       position: absolute;
       width: 100%;
@@ -88,9 +86,9 @@ const Box = styled.span`
     `
   }}
 `
-const Input = styled.input`
-  ${({ theme }: InjectedProps) => {
-    const { palette } = theme
+const Input = styled.input<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { MAIN, OUTLINE } = themes.palette
     return css`
       opacity: 0;
       position: absolute;
@@ -104,10 +102,10 @@ const Input = styled.input`
         pointer-events: none;
       }
       &:hover + span {
-        box-shadow: 0 0 0 2px ${transparentize(0.78, palette.MAIN)};
+        box-shadow: 0 0 0 2px ${transparentize(0.78, MAIN)};
       }
       &:focus + span {
-        box-shadow: 0 0 0 2px ${palette.OUTLINE};
+        box-shadow: 0 0 0 2px ${OUTLINE};
       }
     `
   }}
