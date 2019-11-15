@@ -1,7 +1,6 @@
-import React, { useContext, useCallback } from 'react'
+import React, { FC, useContext, useCallback } from 'react'
 import styled from 'styled-components'
 import { Transition } from 'react-transition-group'
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { AccordionPanelContext } from './AccordionPanel'
 import { getIsInclude } from '../../libs/map'
@@ -11,10 +10,7 @@ type Props = {
   className?: string
 }
 
-const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
-  children,
-  className = '',
-}) => {
+export const AccordionPanelContent: FC<Props> = ({ children, className = '' }) => {
   const { name } = useContext(AccordionPanelItemContext)
   const { expandedItems } = useContext(AccordionPanelContext)
 
@@ -78,8 +74,6 @@ const AccordionPanelContentComponent: React.FC<Props & InjectedProps> = ({
     </Transition>
   )
 }
-
-export const AccordionPanelContent = withTheme(AccordionPanelContentComponent)
 
 const CollapseContainer = styled.div`
   height: 0;

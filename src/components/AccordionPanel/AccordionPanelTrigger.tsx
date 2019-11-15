@@ -1,13 +1,13 @@
-import React, { useContext, useCallback } from 'react'
+import React, { FC, useContext, useCallback } from 'react'
 import styled, { css } from 'styled-components'
+
+import { useTheme, Theme } from '../../hooks/useTheme'
+import { getIsInclude, mapToKeyArray } from '../../libs/map'
+import { isTouchDevice } from '../../libs/ua'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { Icon as IconComponent } from '../Icon'
-
-import { getIsInclude, mapToKeyArray } from '../../libs/map'
-import { isTouchDevice } from '../../libs/ua'
-import { withTheme, InjectedProps } from '../../hocs/withTheme'
 import { getNewExpandedItems } from './accordionPanelHelper'
 
 type Props = {
@@ -15,13 +15,8 @@ type Props = {
   className?: string
 }
 
-type MergedProps = Props & InjectedProps
-
-const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
-  children,
-  className = '',
-  theme,
-}) => {
+export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) => {
+  const theme = useTheme()
   const { name } = useContext(AccordionPanelItemContext)
   const {
     iconPosition,
@@ -37,7 +32,7 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
   const buttonClassNames = `${className} ${expandedClassName} ${iconPosition}`
   const iconClassNames = `${expandedClassName} ${iconPosition}`
 
-  const caretIcon = <Icon className={iconClassNames} name="fa-caret-down" theme={theme} />
+  const caretIcon = <Icon className={iconClassNames} name="fa-caret-down" themes={theme} />
 
   const handleClick = useCallback(() => {
     onClickTrigger(name, !isExpanded)
@@ -59,7 +54,7 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
       aria-expanded={!!isExpanded}
       aria-controls={`${name}-content`}
       onClick={handleClick}
-      theme={theme}
+      themes={theme}
     >
       {displayIcon && iconPosition === 'left' && caretIcon}
       {children}
@@ -68,8 +63,6 @@ const AccordionPanelTriggerComponent: React.SFC<MergedProps> = ({
   )
 }
 
-export const AccordionPanelTrigger = withTheme(AccordionPanelTriggerComponent)
-
 const resetButtonStyle = css`
   background-color: transparent;
   border: none;
@@ -77,10 +70,10 @@ const resetButtonStyle = css`
   padding: 0;
   appearance: none;
 `
-const Button = styled.button`
+const Button = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
-  ${({ theme }: InjectedProps) => {
-    const { size, palette, interaction } = theme
+  ${({ themes }) => {
+    const { size, palette, interaction } = themes
 
     return css`
       display: flex;
@@ -105,9 +98,9 @@ const Button = styled.button`
     `
   }}
 `
-const Icon = styled(IconComponent)`
-  ${({ theme }: InjectedProps) => {
-    const { size } = theme
+const Icon = styled(IconComponent)<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
 
     return css`
       display: inline-flex;
