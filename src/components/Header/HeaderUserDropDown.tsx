@@ -28,7 +28,7 @@ const HeaderUserDropDownComponent: React.FC<HeaderUserDropDownProps & InjectedPr
     <Dropdown>
       <DropdownTrigger>
         <ButtonWrapper theme={theme}>
-          {avatar && <Avatar src={avatar} theme={theme} />}
+          {avatar && <Avatar src={avatar} theme={theme} alt={displayName + 'の写真'} />}
           {displayName}
           <HeaderDropDownCaret key="headerDropDownCaret" theme={theme} role="presentation">
             <Icon name="fa-caret-down" color="#fff" />
