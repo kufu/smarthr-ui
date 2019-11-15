@@ -1,6 +1,6 @@
-import React, { FC, useCallback } from './node_modules/react'
-import styled, { css } from './node_modules/styled-components'
-import { transparentize } from './node_modules/polished'
+import React, { FC, useCallback } from 'react'
+import styled, { css } from 'styled-components'
+import { transparentize } from 'polished'
 
 import { InjectedProps, withTheme } from '../../hocs/withTheme'
 

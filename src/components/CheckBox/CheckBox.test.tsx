@@ -1,5 +1,5 @@
-import { mount } from './node_modules/enzyme'
-import React from './node_modules/react'
+import { mount } from 'enzyme'
+import React from 'react'
 
 import { CheckBox } from './CheckBox'
 

@@ -1,7 +1,7 @@
-import { action } from './node_modules/@storybook/addon-actions'
-import { storiesOf } from './node_modules/@storybook/react'
-import * as React from './node_modules/react'
-import styled from './node_modules/styled-components'
+import { action } from '@storybook/addon-actions'
+import { storiesOf } from '@storybook/react'
+import * as React from 'react'
+import styled from 'styled-components'
 
 import { CheckBox } from './CheckBox'
 import readme from './README.md'
