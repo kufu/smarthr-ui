@@ -5796,11 +5796,6 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-ev-emitter@^1.0.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ev-emitter/-/ev-emitter-1.1.1.tgz#8f18b0ce5c76a5d18017f71c0a795c65b9138f2a"
-  integrity sha512-ipiDYhdQSCZ4hSbX4rMW+XzNKMD1prg/sTvoVmSLkuQ1MVlwjJQQA+sW8tMYR3BLUr9KjodFV4pvzunvRhd33Q==
-
 eventemitter3@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.0.tgz#d65176163887ee59f386d64c82610b696a4a74eb"
@@ -7296,13 +7291,6 @@ ignore@^5.0.6, ignore@^5.1.1:
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.4.tgz#84b7b3dbe64552b6ef0eca99f6743dbec6d97adf"
   integrity sha512-MzbUSahkTW1u7JpKKjY7LCARd1fU5W2rLdxlM4kdkayuCwZImjkpluF9CM1aLewYJguPDqewLam18Y6AU69A8A==
-
-imagesloaded@^4.1.4:
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/imagesloaded/-/imagesloaded-4.1.4.tgz#1376efcd162bb768c34c3727ac89cc04051f3cc7"
-  integrity sha512-ltiBVcYpc/TYTF5nolkMNsnREHW+ICvfQ3Yla2Sgr71YFwQ86bDwV9hgpFhFtrGPuwEx5+LqOHIrdXBdoWwwsA==
-  dependencies:
-    ev-emitter "^1.0.0"
 
 img-diff-js@0.4.1:
   version "0.4.1"
@@ -12997,9 +12985,9 @@ storybook-readme@^5.0.8:
     vuex "^3.1.0"
 
 storycap@^2.0.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/storycap/-/storycap-2.2.0.tgz#d1d85f098d8522f54948e9601e6d9a5b1e5baa31"
-  integrity sha512-rRDeKNHexB3L7n1jMYzO69BHhm5hchKGD5fc1jLMlrQ9Xj9PBimX6JoPibxb+nJgHc9itPwaunS8lZPOfk2GIA==
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/storycap/-/storycap-2.3.1.tgz#47f4f394541fb39e70fe9bc57a0ef2731bbe85c3"
+  integrity sha512-SKojwBsSJGr9TiW17ocTZFYCRm6WoR1mjt1MxDNYYCzSEjhL6hqSEwgXXK/iCOfHuDlydENKH+MdwVopN98yvA==
   dependencies:
     "@types/minimatch" "^3.0.3"
     "@types/mkdirp" "^0.5.2"
@@ -13009,18 +12997,17 @@ storycap@^2.0.0:
     "@types/wait-on" "^3.2.0"
     "@types/yargs" "^13.0.1"
     core-js "^3.2.1"
-    imagesloaded "^4.1.4"
     minimatch "^3.0.4"
     mkdirp "^0.5.1"
     puppeteer "^1.19.0"
     rimraf "^3.0.0"
-    storycrawler "^2.0.0"
+    storycrawler "^2.3.1"
     yargs "^14.0.0"
 
-storycrawler@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/storycrawler/-/storycrawler-2.0.0.tgz#4b0964e050f9ab195a72ed98b97fc962099ec36d"
-  integrity sha512-C+aL6akpwkO7zQQJ2Wwa8kPiLTGN4e98i5JbwRHk7Cz0N0hJdP7gGRkRdFJHIUHBGz5W/KnQRS79QLQJP8tJqA==
+storycrawler@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/storycrawler/-/storycrawler-2.3.1.tgz#3733d5d77df1bfa6b9f1b9a966bf033a854a3ef2"
+  integrity sha512-iOiyyRcC01K6Uw+Sv6RY6OIwObaVfvm3qP7vWc/2MXI5/V8vuK6n2chUw3nMY75N+HaQik14Ug+KzfwVAk1Tzw==
   dependencies:
     "@types/chalk" "^2.2.0"
     "@types/node" "^12.6.8"
