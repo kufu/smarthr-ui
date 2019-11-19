@@ -3,8 +3,10 @@
 exports[`TabBar should be match snapshot 1`] = `
 <Tab>
   <Component>
-    <TabBarComponent
-      theme={
+    <styled.div
+      className=" bordered"
+      role="tablist"
+      themes={
         Object {
           "frame": Object {
             "border": Object {
@@ -67,10 +69,37 @@ exports[`TabBar should be match snapshot 1`] = `
         }
       }
     >
-      <styled.div
+      <StyledComponent
         className=" bordered"
+        forwardedComponent={
+          Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "attrs": Array [],
+            "componentStyle": ComponentStyle {
+              "componentId": "sc-bdVaJa",
+              "isStatic": false,
+              "lastClassName": "eorowA",
+              "rules": Array [
+                "
+  ",
+                [Function],
+                "
+",
+              ],
+            },
+            "displayName": "styled.div",
+            "foldedComponentIds": Array [],
+            "render": [Function],
+            "styledComponentId": "sc-bdVaJa",
+            "target": "div",
+            "toString": [Function],
+            "warnTooManyClasses": [Function],
+            "withComponent": [Function],
+          }
+        }
+        forwardedRef={null}
         role="tablist"
-        theme={
+        themes={
           Object {
             "frame": Object {
               "border": Object {
@@ -133,258 +162,99 @@ exports[`TabBar should be match snapshot 1`] = `
           }
         }
       >
-        <StyledComponent
-          className=" bordered"
-          forwardedComponent={
-            Object {
-              "$$typeof": Symbol(react.forward_ref),
-              "attrs": Array [],
-              "componentStyle": ComponentStyle {
-                "componentId": "sc-bdVaJa",
-                "isStatic": false,
-                "lastClassName": "eorowA",
-                "rules": Array [
-                  "
-  ",
-                  [Function],
-                  "
-",
-                ],
-              },
-              "displayName": "styled.div",
-              "foldedComponentIds": Array [],
-              "render": [Function],
-              "styledComponentId": "sc-bdVaJa",
-              "target": "div",
-              "toString": [Function],
-              "warnTooManyClasses": [Function],
-              "withComponent": [Function],
-            }
-          }
-          forwardedRef={null}
+        <div
+          className="sc-bdVaJa eorowA  bordered"
           role="tablist"
-          theme={
-            Object {
-              "frame": Object {
-                "border": Object {
-                  "default": "1px solid #d6d6d6",
-                  "lineStyle": "solid",
-                  "lineWidth": "1px",
-                  "radius": Object {
-                    "l": "8px",
-                    "m": "6px",
-                    "s": "3px",
-                  },
-                },
-              },
-              "interaction": Object {
-                "hover": Object {
-                  "animation": ".3s ease-out",
-                  "animationDuration": ".3s",
-                  "animationTiming": "ease-out",
-                  "feedbackOpacity": ".7",
-                },
-              },
-              "palette": Object {
-                "BACKGROUND": "#f5f6fa",
-                "BORDER": "#d6d6d6",
-                "COLUMN": "#f9f9f9",
-                "DANGER": "#ef475b",
-                "MAIN": "#00a5ab",
-                "OUTLINE": "rgba(0,165,171,0.5)",
-                "OVERLAY": "rgba(0,0,0,0.15)",
-                "SCRIM": "rgba(0,0,0,0.5)",
-                "TEXT_BLACK": "#333",
-                "TEXT_DISABLED": "#c1c1c1",
-                "TEXT_GREY": "#767676",
-                "WARNING": "#ff8800",
-                "disableColor": [Function],
-                "hoverColor": [Function],
-              },
-              "size": Object {
-                "font": Object {
-                  "GRANDE": 18,
-                  "SHORT": 11,
-                  "TALL": 14,
-                  "VENTI": 24,
-                },
-                "mediaQuery": Object {
-                  "SP": 599,
-                  "TABLET": 959,
-                },
-                "pxToRem": [Function],
-                "space": Object {
-                  "L": 40,
-                  "M": 32,
-                  "S": 24,
-                  "XL": 48,
-                  "XS": 16,
-                  "XXL": 56,
-                  "XXS": 8,
-                },
-              },
-            }
-          }
         >
-          <div
-            className="sc-bdVaJa eorowA  bordered"
-            role="tablist"
+          <Component
+            id="1"
+            onClick={[Function]}
           >
-            <Component
-              id="1"
+            <styled.button
+              aria-selected={false}
+              className=" "
+              disabled={false}
               onClick={[Function]}
-            >
-              <TabItemComponent
-                id="1"
-                onClick={[Function]}
-                theme={
-                  Object {
-                    "frame": Object {
-                      "border": Object {
-                        "default": "1px solid #d6d6d6",
-                        "lineStyle": "solid",
-                        "lineWidth": "1px",
-                        "radius": Object {
-                          "l": "8px",
-                          "m": "6px",
-                          "s": "3px",
-                        },
+              role="tab"
+              themes={
+                Object {
+                  "frame": Object {
+                    "border": Object {
+                      "default": "1px solid #d6d6d6",
+                      "lineStyle": "solid",
+                      "lineWidth": "1px",
+                      "radius": Object {
+                        "l": "8px",
+                        "m": "6px",
+                        "s": "3px",
                       },
                     },
-                    "interaction": Object {
-                      "hover": Object {
-                        "animation": ".3s ease-out",
-                        "animationDuration": ".3s",
-                        "animationTiming": "ease-out",
-                        "feedbackOpacity": ".7",
-                      },
+                  },
+                  "interaction": Object {
+                    "hover": Object {
+                      "animation": ".3s ease-out",
+                      "animationDuration": ".3s",
+                      "animationTiming": "ease-out",
+                      "feedbackOpacity": ".7",
                     },
-                    "palette": Object {
-                      "BACKGROUND": "#f5f6fa",
-                      "BORDER": "#d6d6d6",
-                      "COLUMN": "#f9f9f9",
-                      "DANGER": "#ef475b",
-                      "MAIN": "#00a5ab",
-                      "OUTLINE": "rgba(0,165,171,0.5)",
-                      "OVERLAY": "rgba(0,0,0,0.15)",
-                      "SCRIM": "rgba(0,0,0,0.5)",
-                      "TEXT_BLACK": "#333",
-                      "TEXT_DISABLED": "#c1c1c1",
-                      "TEXT_GREY": "#767676",
-                      "WARNING": "#ff8800",
-                      "disableColor": [Function],
-                      "hoverColor": [Function],
+                  },
+                  "palette": Object {
+                    "BACKGROUND": "#f5f6fa",
+                    "BORDER": "#d6d6d6",
+                    "COLUMN": "#f9f9f9",
+                    "DANGER": "#ef475b",
+                    "MAIN": "#00a5ab",
+                    "OUTLINE": "rgba(0,165,171,0.5)",
+                    "OVERLAY": "rgba(0,0,0,0.15)",
+                    "SCRIM": "rgba(0,0,0,0.5)",
+                    "TEXT_BLACK": "#333",
+                    "TEXT_DISABLED": "#c1c1c1",
+                    "TEXT_GREY": "#767676",
+                    "WARNING": "#ff8800",
+                    "disableColor": [Function],
+                    "hoverColor": [Function],
+                  },
+                  "size": Object {
+                    "font": Object {
+                      "GRANDE": 18,
+                      "SHORT": 11,
+                      "TALL": 14,
+                      "VENTI": 24,
                     },
-                    "size": Object {
-                      "font": Object {
-                        "GRANDE": 18,
-                        "SHORT": 11,
-                        "TALL": 14,
-                        "VENTI": 24,
-                      },
-                      "mediaQuery": Object {
-                        "SP": 599,
-                        "TABLET": 959,
-                      },
-                      "pxToRem": [Function],
-                      "space": Object {
-                        "L": 40,
-                        "M": 32,
-                        "S": 24,
-                        "XL": 48,
-                        "XS": 16,
-                        "XXL": 56,
-                        "XXS": 8,
-                      },
+                    "mediaQuery": Object {
+                      "SP": 599,
+                      "TABLET": 959,
                     },
-                  }
+                    "pxToRem": [Function],
+                    "space": Object {
+                      "L": 40,
+                      "M": 32,
+                      "S": 24,
+                      "XL": 48,
+                      "XS": 16,
+                      "XXL": 56,
+                      "XXS": 8,
+                    },
+                  },
                 }
-              >
-                <styled.button
-                  aria-selected={false}
-                  className=" "
-                  disabled={false}
-                  onClick={[Function]}
-                  role="tab"
-                  theme={
-                    Object {
-                      "frame": Object {
-                        "border": Object {
-                          "default": "1px solid #d6d6d6",
-                          "lineStyle": "solid",
-                          "lineWidth": "1px",
-                          "radius": Object {
-                            "l": "8px",
-                            "m": "6px",
-                            "s": "3px",
-                          },
-                        },
-                      },
-                      "interaction": Object {
-                        "hover": Object {
-                          "animation": ".3s ease-out",
-                          "animationDuration": ".3s",
-                          "animationTiming": "ease-out",
-                          "feedbackOpacity": ".7",
-                        },
-                      },
-                      "palette": Object {
-                        "BACKGROUND": "#f5f6fa",
-                        "BORDER": "#d6d6d6",
-                        "COLUMN": "#f9f9f9",
-                        "DANGER": "#ef475b",
-                        "MAIN": "#00a5ab",
-                        "OUTLINE": "rgba(0,165,171,0.5)",
-                        "OVERLAY": "rgba(0,0,0,0.15)",
-                        "SCRIM": "rgba(0,0,0,0.5)",
-                        "TEXT_BLACK": "#333",
-                        "TEXT_DISABLED": "#c1c1c1",
-                        "TEXT_GREY": "#767676",
-                        "WARNING": "#ff8800",
-                        "disableColor": [Function],
-                        "hoverColor": [Function],
-                      },
-                      "size": Object {
-                        "font": Object {
-                          "GRANDE": 18,
-                          "SHORT": 11,
-                          "TALL": 14,
-                          "VENTI": 24,
-                        },
-                        "mediaQuery": Object {
-                          "SP": 599,
-                          "TABLET": 959,
-                        },
-                        "pxToRem": [Function],
-                        "space": Object {
-                          "L": 40,
-                          "M": 32,
-                          "S": 24,
-                          "XL": 48,
-                          "XS": 16,
-                          "XXL": 56,
-                          "XXS": 8,
-                        },
-                      },
-                    }
-                  }
-                >
-                  <StyledComponent
-                    aria-selected={false}
-                    className=" "
-                    disabled={false}
-                    forwardedComponent={
-                      Object {
-                        "$$typeof": Symbol(react.forward_ref),
-                        "attrs": Array [],
-                        "componentStyle": ComponentStyle {
-                          "componentId": "sc-bwzfXH",
-                          "isStatic": false,
-                          "lastClassName": "gFsAMQ",
-                          "rules": Array [
-                            "
+              }
+            >
+              <StyledComponent
+                aria-selected={false}
+                className=" "
+                disabled={false}
+                forwardedComponent={
+                  Object {
+                    "$$typeof": Symbol(react.forward_ref),
+                    "attrs": Array [],
+                    "componentStyle": ComponentStyle {
+                      "componentId": "sc-bwzfXH",
+                      "isStatic": false,
+                      "lastClassName": "gFsAMQ",
+                      "rules": Array [
+                        "
   ",
-                            "
+                        "
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -392,112 +262,27 @@ exports[`TabBar should be match snapshot 1`] = `
   padding: 0;
   appearance: none;
 ",
-                            "
+                        "
   ",
-                            [Function],
-                            "
+                        [Function],
+                        "
 ",
-                          ],
-                        },
-                        "displayName": "styled.button",
-                        "foldedComponentIds": Array [],
-                        "render": [Function],
-                        "styledComponentId": "sc-bwzfXH",
-                        "target": "button",
-                        "toString": [Function],
-                        "warnTooManyClasses": [Function],
-                        "withComponent": [Function],
-                      }
-                    }
-                    forwardedRef={null}
-                    onClick={[Function]}
-                    role="tab"
-                    theme={
-                      Object {
-                        "frame": Object {
-                          "border": Object {
-                            "default": "1px solid #d6d6d6",
-                            "lineStyle": "solid",
-                            "lineWidth": "1px",
-                            "radius": Object {
-                              "l": "8px",
-                              "m": "6px",
-                              "s": "3px",
-                            },
-                          },
-                        },
-                        "interaction": Object {
-                          "hover": Object {
-                            "animation": ".3s ease-out",
-                            "animationDuration": ".3s",
-                            "animationTiming": "ease-out",
-                            "feedbackOpacity": ".7",
-                          },
-                        },
-                        "palette": Object {
-                          "BACKGROUND": "#f5f6fa",
-                          "BORDER": "#d6d6d6",
-                          "COLUMN": "#f9f9f9",
-                          "DANGER": "#ef475b",
-                          "MAIN": "#00a5ab",
-                          "OUTLINE": "rgba(0,165,171,0.5)",
-                          "OVERLAY": "rgba(0,0,0,0.15)",
-                          "SCRIM": "rgba(0,0,0,0.5)",
-                          "TEXT_BLACK": "#333",
-                          "TEXT_DISABLED": "#c1c1c1",
-                          "TEXT_GREY": "#767676",
-                          "WARNING": "#ff8800",
-                          "disableColor": [Function],
-                          "hoverColor": [Function],
-                        },
-                        "size": Object {
-                          "font": Object {
-                            "GRANDE": 18,
-                            "SHORT": 11,
-                            "TALL": 14,
-                            "VENTI": 24,
-                          },
-                          "mediaQuery": Object {
-                            "SP": 599,
-                            "TABLET": 959,
-                          },
-                          "pxToRem": [Function],
-                          "space": Object {
-                            "L": 40,
-                            "M": 32,
-                            "S": 24,
-                            "XL": 48,
-                            "XS": 16,
-                            "XXL": 56,
-                            "XXS": 8,
-                          },
-                        },
-                      }
-                    }
-                  >
-                    <button
-                      aria-selected={false}
-                      className="sc-bwzfXH gFsAMQ  "
-                      disabled={false}
-                      onClick={[Function]}
-                      role="tab"
-                    >
-                      Tab
-                    </button>
-                  </StyledComponent>
-                </styled.button>
-              </TabItemComponent>
-            </Component>
-            <Component
-              id="2"
-              onClick={[Function]}
-              selected={true}
-            >
-              <TabItemComponent
-                id="2"
+                      ],
+                    },
+                    "displayName": "styled.button",
+                    "foldedComponentIds": Array [],
+                    "render": [Function],
+                    "styledComponentId": "sc-bwzfXH",
+                    "target": "button",
+                    "toString": [Function],
+                    "warnTooManyClasses": [Function],
+                    "withComponent": [Function],
+                  }
+                }
+                forwardedRef={null}
                 onClick={[Function]}
-                selected={true}
-                theme={
+                role="tab"
+                themes={
                   Object {
                     "frame": Object {
                       "border": Object {
@@ -560,91 +345,300 @@ exports[`TabBar should be match snapshot 1`] = `
                   }
                 }
               >
-                <styled.button
+                <button
+                  aria-selected={false}
+                  className="sc-bwzfXH gFsAMQ  "
+                  disabled={false}
+                  onClick={[Function]}
+                  role="tab"
+                >
+                  Tab
+                </button>
+              </StyledComponent>
+            </styled.button>
+          </Component>
+          <Component
+            id="2"
+            onClick={[Function]}
+            selected={true}
+          >
+            <styled.button
+              aria-selected={true}
+              className=" selected"
+              disabled={false}
+              onClick={[Function]}
+              role="tab"
+              themes={
+                Object {
+                  "frame": Object {
+                    "border": Object {
+                      "default": "1px solid #d6d6d6",
+                      "lineStyle": "solid",
+                      "lineWidth": "1px",
+                      "radius": Object {
+                        "l": "8px",
+                        "m": "6px",
+                        "s": "3px",
+                      },
+                    },
+                  },
+                  "interaction": Object {
+                    "hover": Object {
+                      "animation": ".3s ease-out",
+                      "animationDuration": ".3s",
+                      "animationTiming": "ease-out",
+                      "feedbackOpacity": ".7",
+                    },
+                  },
+                  "palette": Object {
+                    "BACKGROUND": "#f5f6fa",
+                    "BORDER": "#d6d6d6",
+                    "COLUMN": "#f9f9f9",
+                    "DANGER": "#ef475b",
+                    "MAIN": "#00a5ab",
+                    "OUTLINE": "rgba(0,165,171,0.5)",
+                    "OVERLAY": "rgba(0,0,0,0.15)",
+                    "SCRIM": "rgba(0,0,0,0.5)",
+                    "TEXT_BLACK": "#333",
+                    "TEXT_DISABLED": "#c1c1c1",
+                    "TEXT_GREY": "#767676",
+                    "WARNING": "#ff8800",
+                    "disableColor": [Function],
+                    "hoverColor": [Function],
+                  },
+                  "size": Object {
+                    "font": Object {
+                      "GRANDE": 18,
+                      "SHORT": 11,
+                      "TALL": 14,
+                      "VENTI": 24,
+                    },
+                    "mediaQuery": Object {
+                      "SP": 599,
+                      "TABLET": 959,
+                    },
+                    "pxToRem": [Function],
+                    "space": Object {
+                      "L": 40,
+                      "M": 32,
+                      "S": 24,
+                      "XL": 48,
+                      "XS": 16,
+                      "XXL": 56,
+                      "XXS": 8,
+                    },
+                  },
+                }
+              }
+            >
+              <StyledComponent
+                aria-selected={true}
+                className=" selected"
+                disabled={false}
+                forwardedComponent={
+                  Object {
+                    "$$typeof": Symbol(react.forward_ref),
+                    "attrs": Array [],
+                    "componentStyle": ComponentStyle {
+                      "componentId": "sc-bwzfXH",
+                      "isStatic": false,
+                      "lastClassName": "gFsAMQ",
+                      "rules": Array [
+                        "
+  ",
+                        "
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  appearance: none;
+",
+                        "
+  ",
+                        [Function],
+                        "
+",
+                      ],
+                    },
+                    "displayName": "styled.button",
+                    "foldedComponentIds": Array [],
+                    "render": [Function],
+                    "styledComponentId": "sc-bwzfXH",
+                    "target": "button",
+                    "toString": [Function],
+                    "warnTooManyClasses": [Function],
+                    "withComponent": [Function],
+                  }
+                }
+                forwardedRef={null}
+                onClick={[Function]}
+                role="tab"
+                themes={
+                  Object {
+                    "frame": Object {
+                      "border": Object {
+                        "default": "1px solid #d6d6d6",
+                        "lineStyle": "solid",
+                        "lineWidth": "1px",
+                        "radius": Object {
+                          "l": "8px",
+                          "m": "6px",
+                          "s": "3px",
+                        },
+                      },
+                    },
+                    "interaction": Object {
+                      "hover": Object {
+                        "animation": ".3s ease-out",
+                        "animationDuration": ".3s",
+                        "animationTiming": "ease-out",
+                        "feedbackOpacity": ".7",
+                      },
+                    },
+                    "palette": Object {
+                      "BACKGROUND": "#f5f6fa",
+                      "BORDER": "#d6d6d6",
+                      "COLUMN": "#f9f9f9",
+                      "DANGER": "#ef475b",
+                      "MAIN": "#00a5ab",
+                      "OUTLINE": "rgba(0,165,171,0.5)",
+                      "OVERLAY": "rgba(0,0,0,0.15)",
+                      "SCRIM": "rgba(0,0,0,0.5)",
+                      "TEXT_BLACK": "#333",
+                      "TEXT_DISABLED": "#c1c1c1",
+                      "TEXT_GREY": "#767676",
+                      "WARNING": "#ff8800",
+                      "disableColor": [Function],
+                      "hoverColor": [Function],
+                    },
+                    "size": Object {
+                      "font": Object {
+                        "GRANDE": 18,
+                        "SHORT": 11,
+                        "TALL": 14,
+                        "VENTI": 24,
+                      },
+                      "mediaQuery": Object {
+                        "SP": 599,
+                        "TABLET": 959,
+                      },
+                      "pxToRem": [Function],
+                      "space": Object {
+                        "L": 40,
+                        "M": 32,
+                        "S": 24,
+                        "XL": 48,
+                        "XS": 16,
+                        "XXL": 56,
+                        "XXS": 8,
+                      },
+                    },
+                  }
+                }
+              >
+                <button
                   aria-selected={true}
-                  className=" selected"
+                  className="sc-bwzfXH gFsAMQ  selected"
                   disabled={false}
                   onClick={[Function]}
                   role="tab"
-                  theme={
-                    Object {
-                      "frame": Object {
-                        "border": Object {
-                          "default": "1px solid #d6d6d6",
-                          "lineStyle": "solid",
-                          "lineWidth": "1px",
-                          "radius": Object {
-                            "l": "8px",
-                            "m": "6px",
-                            "s": "3px",
-                          },
-                        },
-                      },
-                      "interaction": Object {
-                        "hover": Object {
-                          "animation": ".3s ease-out",
-                          "animationDuration": ".3s",
-                          "animationTiming": "ease-out",
-                          "feedbackOpacity": ".7",
-                        },
-                      },
-                      "palette": Object {
-                        "BACKGROUND": "#f5f6fa",
-                        "BORDER": "#d6d6d6",
-                        "COLUMN": "#f9f9f9",
-                        "DANGER": "#ef475b",
-                        "MAIN": "#00a5ab",
-                        "OUTLINE": "rgba(0,165,171,0.5)",
-                        "OVERLAY": "rgba(0,0,0,0.15)",
-                        "SCRIM": "rgba(0,0,0,0.5)",
-                        "TEXT_BLACK": "#333",
-                        "TEXT_DISABLED": "#c1c1c1",
-                        "TEXT_GREY": "#767676",
-                        "WARNING": "#ff8800",
-                        "disableColor": [Function],
-                        "hoverColor": [Function],
-                      },
-                      "size": Object {
-                        "font": Object {
-                          "GRANDE": 18,
-                          "SHORT": 11,
-                          "TALL": 14,
-                          "VENTI": 24,
-                        },
-                        "mediaQuery": Object {
-                          "SP": 599,
-                          "TABLET": 959,
-                        },
-                        "pxToRem": [Function],
-                        "space": Object {
-                          "L": 40,
-                          "M": 32,
-                          "S": 24,
-                          "XL": 48,
-                          "XS": 16,
-                          "XXL": 56,
-                          "XXS": 8,
-                        },
-                      },
-                    }
-                  }
                 >
-                  <StyledComponent
-                    aria-selected={true}
-                    className=" selected"
-                    disabled={false}
-                    forwardedComponent={
-                      Object {
-                        "$$typeof": Symbol(react.forward_ref),
-                        "attrs": Array [],
-                        "componentStyle": ComponentStyle {
-                          "componentId": "sc-bwzfXH",
-                          "isStatic": false,
-                          "lastClassName": "gFsAMQ",
-                          "rules": Array [
-                            "
+                  Selected
+                </button>
+              </StyledComponent>
+            </styled.button>
+          </Component>
+          <Component
+            disabled={true}
+            id="3"
+            onClick={[Function]}
+          >
+            <styled.button
+              aria-selected={false}
+              className=" "
+              disabled={true}
+              onClick={[Function]}
+              role="tab"
+              themes={
+                Object {
+                  "frame": Object {
+                    "border": Object {
+                      "default": "1px solid #d6d6d6",
+                      "lineStyle": "solid",
+                      "lineWidth": "1px",
+                      "radius": Object {
+                        "l": "8px",
+                        "m": "6px",
+                        "s": "3px",
+                      },
+                    },
+                  },
+                  "interaction": Object {
+                    "hover": Object {
+                      "animation": ".3s ease-out",
+                      "animationDuration": ".3s",
+                      "animationTiming": "ease-out",
+                      "feedbackOpacity": ".7",
+                    },
+                  },
+                  "palette": Object {
+                    "BACKGROUND": "#f5f6fa",
+                    "BORDER": "#d6d6d6",
+                    "COLUMN": "#f9f9f9",
+                    "DANGER": "#ef475b",
+                    "MAIN": "#00a5ab",
+                    "OUTLINE": "rgba(0,165,171,0.5)",
+                    "OVERLAY": "rgba(0,0,0,0.15)",
+                    "SCRIM": "rgba(0,0,0,0.5)",
+                    "TEXT_BLACK": "#333",
+                    "TEXT_DISABLED": "#c1c1c1",
+                    "TEXT_GREY": "#767676",
+                    "WARNING": "#ff8800",
+                    "disableColor": [Function],
+                    "hoverColor": [Function],
+                  },
+                  "size": Object {
+                    "font": Object {
+                      "GRANDE": 18,
+                      "SHORT": 11,
+                      "TALL": 14,
+                      "VENTI": 24,
+                    },
+                    "mediaQuery": Object {
+                      "SP": 599,
+                      "TABLET": 959,
+                    },
+                    "pxToRem": [Function],
+                    "space": Object {
+                      "L": 40,
+                      "M": 32,
+                      "S": 24,
+                      "XL": 48,
+                      "XS": 16,
+                      "XXL": 56,
+                      "XXS": 8,
+                    },
+                  },
+                }
+              }
+            >
+              <StyledComponent
+                aria-selected={false}
+                className=" "
+                disabled={true}
+                forwardedComponent={
+                  Object {
+                    "$$typeof": Symbol(react.forward_ref),
+                    "attrs": Array [],
+                    "componentStyle": ComponentStyle {
+                      "componentId": "sc-bwzfXH",
+                      "isStatic": false,
+                      "lastClassName": "gFsAMQ",
+                      "rules": Array [
+                        "
   ",
-                            "
+                        "
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -652,112 +646,27 @@ exports[`TabBar should be match snapshot 1`] = `
   padding: 0;
   appearance: none;
 ",
-                            "
+                        "
   ",
-                            [Function],
-                            "
+                        [Function],
+                        "
 ",
-                          ],
-                        },
-                        "displayName": "styled.button",
-                        "foldedComponentIds": Array [],
-                        "render": [Function],
-                        "styledComponentId": "sc-bwzfXH",
-                        "target": "button",
-                        "toString": [Function],
-                        "warnTooManyClasses": [Function],
-                        "withComponent": [Function],
-                      }
-                    }
-                    forwardedRef={null}
-                    onClick={[Function]}
-                    role="tab"
-                    theme={
-                      Object {
-                        "frame": Object {
-                          "border": Object {
-                            "default": "1px solid #d6d6d6",
-                            "lineStyle": "solid",
-                            "lineWidth": "1px",
-                            "radius": Object {
-                              "l": "8px",
-                              "m": "6px",
-                              "s": "3px",
-                            },
-                          },
-                        },
-                        "interaction": Object {
-                          "hover": Object {
-                            "animation": ".3s ease-out",
-                            "animationDuration": ".3s",
-                            "animationTiming": "ease-out",
-                            "feedbackOpacity": ".7",
-                          },
-                        },
-                        "palette": Object {
-                          "BACKGROUND": "#f5f6fa",
-                          "BORDER": "#d6d6d6",
-                          "COLUMN": "#f9f9f9",
-                          "DANGER": "#ef475b",
-                          "MAIN": "#00a5ab",
-                          "OUTLINE": "rgba(0,165,171,0.5)",
-                          "OVERLAY": "rgba(0,0,0,0.15)",
-                          "SCRIM": "rgba(0,0,0,0.5)",
-                          "TEXT_BLACK": "#333",
-                          "TEXT_DISABLED": "#c1c1c1",
-                          "TEXT_GREY": "#767676",
-                          "WARNING": "#ff8800",
-                          "disableColor": [Function],
-                          "hoverColor": [Function],
-                        },
-                        "size": Object {
-                          "font": Object {
-                            "GRANDE": 18,
-                            "SHORT": 11,
-                            "TALL": 14,
-                            "VENTI": 24,
-                          },
-                          "mediaQuery": Object {
-                            "SP": 599,
-                            "TABLET": 959,
-                          },
-                          "pxToRem": [Function],
-                          "space": Object {
-                            "L": 40,
-                            "M": 32,
-                            "S": 24,
-                            "XL": 48,
-                            "XS": 16,
-                            "XXL": 56,
-                            "XXS": 8,
-                          },
-                        },
-                      }
-                    }
-                  >
-                    <button
-                      aria-selected={true}
-                      className="sc-bwzfXH gFsAMQ  selected"
-                      disabled={false}
-                      onClick={[Function]}
-                      role="tab"
-                    >
-                      Selected
-                    </button>
-                  </StyledComponent>
-                </styled.button>
-              </TabItemComponent>
-            </Component>
-            <Component
-              disabled={true}
-              id="3"
-              onClick={[Function]}
-            >
-              <TabItemComponent
-                disabled={true}
-                id="3"
+                      ],
+                    },
+                    "displayName": "styled.button",
+                    "foldedComponentIds": Array [],
+                    "render": [Function],
+                    "styledComponentId": "sc-bwzfXH",
+                    "target": "button",
+                    "toString": [Function],
+                    "warnTooManyClasses": [Function],
+                    "withComponent": [Function],
+                  }
+                }
+                forwardedRef={null}
                 onClick={[Function]}
-                theme={
+                role="tab"
+                themes={
                   Object {
                     "frame": Object {
                       "border": Object {
@@ -820,198 +729,21 @@ exports[`TabBar should be match snapshot 1`] = `
                   }
                 }
               >
-                <styled.button
+                <button
                   aria-selected={false}
-                  className=" "
+                  className="sc-bwzfXH gFsAMQ  "
                   disabled={true}
                   onClick={[Function]}
                   role="tab"
-                  theme={
-                    Object {
-                      "frame": Object {
-                        "border": Object {
-                          "default": "1px solid #d6d6d6",
-                          "lineStyle": "solid",
-                          "lineWidth": "1px",
-                          "radius": Object {
-                            "l": "8px",
-                            "m": "6px",
-                            "s": "3px",
-                          },
-                        },
-                      },
-                      "interaction": Object {
-                        "hover": Object {
-                          "animation": ".3s ease-out",
-                          "animationDuration": ".3s",
-                          "animationTiming": "ease-out",
-                          "feedbackOpacity": ".7",
-                        },
-                      },
-                      "palette": Object {
-                        "BACKGROUND": "#f5f6fa",
-                        "BORDER": "#d6d6d6",
-                        "COLUMN": "#f9f9f9",
-                        "DANGER": "#ef475b",
-                        "MAIN": "#00a5ab",
-                        "OUTLINE": "rgba(0,165,171,0.5)",
-                        "OVERLAY": "rgba(0,0,0,0.15)",
-                        "SCRIM": "rgba(0,0,0,0.5)",
-                        "TEXT_BLACK": "#333",
-                        "TEXT_DISABLED": "#c1c1c1",
-                        "TEXT_GREY": "#767676",
-                        "WARNING": "#ff8800",
-                        "disableColor": [Function],
-                        "hoverColor": [Function],
-                      },
-                      "size": Object {
-                        "font": Object {
-                          "GRANDE": 18,
-                          "SHORT": 11,
-                          "TALL": 14,
-                          "VENTI": 24,
-                        },
-                        "mediaQuery": Object {
-                          "SP": 599,
-                          "TABLET": 959,
-                        },
-                        "pxToRem": [Function],
-                        "space": Object {
-                          "L": 40,
-                          "M": 32,
-                          "S": 24,
-                          "XL": 48,
-                          "XS": 16,
-                          "XXL": 56,
-                          "XXS": 8,
-                        },
-                      },
-                    }
-                  }
                 >
-                  <StyledComponent
-                    aria-selected={false}
-                    className=" "
-                    disabled={true}
-                    forwardedComponent={
-                      Object {
-                        "$$typeof": Symbol(react.forward_ref),
-                        "attrs": Array [],
-                        "componentStyle": ComponentStyle {
-                          "componentId": "sc-bwzfXH",
-                          "isStatic": false,
-                          "lastClassName": "gFsAMQ",
-                          "rules": Array [
-                            "
-  ",
-                            "
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  padding: 0;
-  appearance: none;
-",
-                            "
-  ",
-                            [Function],
-                            "
-",
-                          ],
-                        },
-                        "displayName": "styled.button",
-                        "foldedComponentIds": Array [],
-                        "render": [Function],
-                        "styledComponentId": "sc-bwzfXH",
-                        "target": "button",
-                        "toString": [Function],
-                        "warnTooManyClasses": [Function],
-                        "withComponent": [Function],
-                      }
-                    }
-                    forwardedRef={null}
-                    onClick={[Function]}
-                    role="tab"
-                    theme={
-                      Object {
-                        "frame": Object {
-                          "border": Object {
-                            "default": "1px solid #d6d6d6",
-                            "lineStyle": "solid",
-                            "lineWidth": "1px",
-                            "radius": Object {
-                              "l": "8px",
-                              "m": "6px",
-                              "s": "3px",
-                            },
-                          },
-                        },
-                        "interaction": Object {
-                          "hover": Object {
-                            "animation": ".3s ease-out",
-                            "animationDuration": ".3s",
-                            "animationTiming": "ease-out",
-                            "feedbackOpacity": ".7",
-                          },
-                        },
-                        "palette": Object {
-                          "BACKGROUND": "#f5f6fa",
-                          "BORDER": "#d6d6d6",
-                          "COLUMN": "#f9f9f9",
-                          "DANGER": "#ef475b",
-                          "MAIN": "#00a5ab",
-                          "OUTLINE": "rgba(0,165,171,0.5)",
-                          "OVERLAY": "rgba(0,0,0,0.15)",
-                          "SCRIM": "rgba(0,0,0,0.5)",
-                          "TEXT_BLACK": "#333",
-                          "TEXT_DISABLED": "#c1c1c1",
-                          "TEXT_GREY": "#767676",
-                          "WARNING": "#ff8800",
-                          "disableColor": [Function],
-                          "hoverColor": [Function],
-                        },
-                        "size": Object {
-                          "font": Object {
-                            "GRANDE": 18,
-                            "SHORT": 11,
-                            "TALL": 14,
-                            "VENTI": 24,
-                          },
-                          "mediaQuery": Object {
-                            "SP": 599,
-                            "TABLET": 959,
-                          },
-                          "pxToRem": [Function],
-                          "space": Object {
-                            "L": 40,
-                            "M": 32,
-                            "S": 24,
-                            "XL": 48,
-                            "XS": 16,
-                            "XXL": 56,
-                            "XXS": 8,
-                          },
-                        },
-                      }
-                    }
-                  >
-                    <button
-                      aria-selected={false}
-                      className="sc-bwzfXH gFsAMQ  "
-                      disabled={true}
-                      onClick={[Function]}
-                      role="tab"
-                    >
-                      Disabled
-                    </button>
-                  </StyledComponent>
-                </styled.button>
-              </TabItemComponent>
-            </Component>
-          </div>
-        </StyledComponent>
-      </styled.div>
-    </TabBarComponent>
+                  Disabled
+                </button>
+              </StyledComponent>
+            </styled.button>
+          </Component>
+        </div>
+      </StyledComponent>
+    </styled.div>
   </Component>
 </Tab>
 `;
