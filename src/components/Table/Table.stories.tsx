@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react'
+import { action } from '@storybook/addon-actions'
 import * as React from 'react'
-
 import styled from 'styled-components'
 
 import { Table } from './Table'
@@ -8,7 +8,6 @@ import { Body } from './Body'
 import { Head } from './Head'
 import { Row } from './Row'
 import { Cell } from './Cell'
-import { action } from '@storybook/addon-actions'
 import { Icon } from '../Icon'
 import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { SecondaryButton as Button } from '../Button'
