@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-import { Heading, HeadingProps } from '../Heading'
+import { Heading, Props as HeadingProps } from '../Heading'
 
 export type DefinitionListItemProps = {
   term: string

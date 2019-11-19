@@ -1,6 +1,7 @@
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
+
 import { Heading } from './Heading'
 
 storiesOf('Heading', module).add('all', () => (
