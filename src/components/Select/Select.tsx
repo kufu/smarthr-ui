@@ -1,37 +1,33 @@
-import React, { FC, useCallback } from 'react'
+import React, { SelectHTMLAttributes, FC, ChangeEvent, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Icon } from '../Icon'
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { isTouchDevice } from '../../libs/ua'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
-interface Option {
+import { Icon } from '../Icon'
+
+type Option = {
   label: string
   value: string
 }
-
-type Props = React.SelectHTMLAttributes<HTMLSelectElement> & {
+type Props = SelectHTMLAttributes<HTMLSelectElement> & {
   options: Option[]
   error?: boolean
   width?: number | string
 }
 
-interface StyledProps extends InjectedProps {
-  width: string
-}
-
-const SelectComponent: FC<Props & InjectedProps> = ({
+export const Select: FC<Props> = ({
   options,
   onChange,
   error = false,
   width = 260,
   className = '',
-  theme,
   ...props
 }) => {
+  const theme = useTheme()
   const widthStyle = typeof width === 'number' ? `${width}px` : width
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
+    (e: ChangeEvent<HTMLSelectElement>) => {
       if (onChange) onChange(e)
     },
     [onChange],
@@ -39,7 +35,7 @@ const SelectComponent: FC<Props & InjectedProps> = ({
 
   return (
     <Wrapper className={className} width={widthStyle} theme={theme}>
-      <SelectBox className={error ? 'error' : ''} onChange={handleChange} theme={theme} {...props}>
+      <SelectBox className={error ? 'error' : ''} onChange={handleChange} themes={theme} {...props}>
         {options.map(option => (
           <option key={option.value} value={option.value}>
             {option.label}
@@ -53,19 +49,17 @@ const SelectComponent: FC<Props & InjectedProps> = ({
   )
 }
 
-export const Select = withTheme(SelectComponent)
-
-const Wrapper = styled.div`
-  ${({ width }: StyledProps) => {
+const Wrapper = styled.div<{ width: string }>`
+  ${({ width }) => {
     return css`
       position: relative;
       width: ${width};
     `
   }}
 `
-const SelectBox = styled.select`
-  ${({ theme }: InjectedProps) => {
-    const { size, frame, palette, interaction } = theme
+const SelectBox = styled.select<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, frame, palette, interaction } = themes
 
     return css`
       display: inline-block;
@@ -114,7 +108,6 @@ const SelectBox = styled.select`
     `
   }}
 `
-
 const IconWrap = styled.span`
   position: absolute;
   top: 50%;
