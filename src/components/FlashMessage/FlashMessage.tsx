@@ -1,103 +1,70 @@
-import * as React from 'react'
+import React, { FC, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
+
 import { Icon, iconMap } from '../Icon'
 import { SecondaryButton } from '../Button/SecondaryButton'
 
-interface Props {
+type Props = {
+  visible: boolean
   type: 'success' | 'info' | 'warning' | 'error' | ''
   text: string
-  visible: boolean
   className?: string
   onClose: () => void
 }
 
-interface State {
-  visible: boolean
-}
-
-type MergedProps = Props & InjectedProps
-
 const REMOVE_DELAY = 8000
+let timerId: any = 0
 
-class FlashMessageComponent extends React.PureComponent<MergedProps, State> {
-  public static getDerivedStateFromProps(props: Props) {
-    return {
-      visible: props.visible,
-    }
-  }
+export const FlashMessage: FC<Props> = ({ visible, type, text, onClose, className = '' }) => {
+  const theme = useTheme()
 
-  public timerId: any = 0
-
-  constructor(props: MergedProps) {
-    super(props)
-
-    this.state = {
-      visible: props.visible,
-    }
-  }
-
-  public componentDidMount() {
-    if (this.state.visible) {
-      this.timerId = setTimeout(this.props.onClose, REMOVE_DELAY) as any
-    }
-  }
-
-  public componentDidUpdate(prevProps: MergedProps) {
-    if (!prevProps.visible && this.props.visible) {
-      this.timerId = setTimeout(this.props.onClose, REMOVE_DELAY) as any
+  useEffect(() => {
+    if (visible) {
+      timerId = setTimeout(onClose, REMOVE_DELAY)
+    } else {
+      clearTimeout(timerId)
     }
 
-    if (prevProps.visible && !this.props.visible) {
-      clearTimeout(this.timerId)
+    return () => {
+      clearTimeout(timerId)
     }
+  }, [onClose, visible])
+
+  if (!visible) return null
+
+  let iconName: keyof typeof iconMap = 'fa-check-circle'
+  let iconColor = theme.palette.TEXT_GREY
+
+  switch (type) {
+    case 'success':
+      iconName = 'fa-check-circle'
+      iconColor = theme.palette.MAIN
+      break
+    case 'info':
+      iconName = 'fa-info-circle'
+      iconColor = theme.palette.TEXT_GREY
+      break
+    case 'warning':
+      iconName = 'fa-exclamation-triangle'
+      iconColor = theme.palette.WARNING
+      break
+    case 'error':
+      iconName = 'fa-exclamation-circle'
+      iconColor = theme.palette.DANGER
   }
 
-  public componentWillUnmount() {
-    clearTimeout(this.timerId)
-  }
-
-  public render() {
-    const { visible } = this.state
-    const { type, text, onClose, theme, className } = this.props
-
-    let iconName: keyof typeof iconMap = 'fa-check-circle'
-    let iconColor = theme.palette.TEXT_GREY
-
-    switch (type) {
-      case 'success':
-        iconName = 'fa-check-circle'
-        iconColor = theme.palette.MAIN
-        break
-      case 'info':
-        iconName = 'fa-info-circle'
-        iconColor = theme.palette.TEXT_GREY
-        break
-      case 'warning':
-        iconName = 'fa-exclamation-triangle'
-        iconColor = theme.palette.WARNING
-        break
-      case 'error':
-        iconName = 'fa-exclamation-circle'
-        iconColor = theme.palette.DANGER
-    }
-
-    if (!visible) return null
-
-    return (
-      <Wrapper className={`${type} ${className}`} theme={theme}>
-        <Icon name={iconName} size={14} color={iconColor} />
-        <Txt theme={theme}>{text}</Txt>
-        <CloseButton className="close" onClick={onClose} size="s" square theme={theme}>
-          <Icon size={16} name="fa-times" />
-        </CloseButton>
-      </Wrapper>
-    )
-  }
+  return (
+    <Wrapper className={`${type} ${className}`} themes={theme}>
+      <Icon name={iconName} size={14} color={iconColor} />
+      <Txt themes={theme}>{text}</Txt>
+      <CloseButton className="close" onClick={onClose} size="s" square themes={theme}>
+        <Icon size={16} name="fa-times" />
+      </CloseButton>
+    </Wrapper>
+  )
 }
-
-export const FlashMessage = withTheme(FlashMessageComponent)
 
 const bounceAnimation = keyframes`
   from,
@@ -121,10 +88,9 @@ const bounceAnimation = keyframes`
     transform: translate3d(0, -4px, 0);
   }
 `
-
-const Wrapper = styled.div`
-  ${({ theme }: InjectedProps) => {
-    const { size, frame, palette } = theme
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, frame, palette } = themes
 
     return css`
       z-index: 1000;
@@ -144,33 +110,30 @@ const Wrapper = styled.div`
         0 2px 1px -1px rgba(0, 0, 0, 0.12);
       box-sizing: border-box;
       animation: ${bounceAnimation} 1s 0s both;
-
     `
   }}
 `
-
-const CloseButton = styled(SecondaryButton)`
-  ${({ theme }: InjectedProps) => {
-    const { size } = theme
+const CloseButton = styled(SecondaryButton)<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space } = themes.size
 
     return css`
       position: absolute;
       top: 50%;
-      right: ${size.pxToRem(size.space.XXS)};
+      right: ${pxToRem(space.XXS)};
       transform: translateY(-50%);
     `
   }}
 `
-
-const Txt = styled.p`
-  ${({ theme }: InjectedProps) => {
-    const { size } = theme
+const Txt = styled.p<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space, font } = themes.size
 
     return css`
       flex: 1;
       padding: 0;
-      margin: 0 0 0 ${size.pxToRem(size.space.XXS)};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      margin: 0 0 0 ${pxToRem(space.XXS)};
+      font-size: ${pxToRem(font.TALL)};
       line-height: 1;
     `
   }}

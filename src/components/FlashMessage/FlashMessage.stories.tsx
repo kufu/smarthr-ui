@@ -21,11 +21,11 @@ interface State {
 class WrappedComponent extends React.PureComponent<{}, State> {
   public state = {
     form: {
-      type: '' as FlashMessageType,
+      type: '' as const,
       text: '',
     },
     flash: {
-      type: '' as FlashMessageType,
+      type: '' as const,
       text: '',
       visible: false,
     },
