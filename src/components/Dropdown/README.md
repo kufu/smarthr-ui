@@ -1,7 +1,7 @@
 # Dropdown
 
 ```tsx
-import { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser } from 'smarthr-ui
+import { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser } from 'smarthr-ui'
 
 // Uncontrollable Dropdown
 // After Dropdown is opened, clicking anywhere will close Dropdown.
