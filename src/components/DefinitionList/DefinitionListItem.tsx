@@ -34,19 +34,19 @@ const Wrapper = styled.div`
     const { palette, size } = theme
 
     return css`
-      border-bottom: 1px dotted ${palette.BORDER};
       padding-bottom: ${size.pxToRem(size.space.XXS)};
+      border-bottom: 1px dotted ${palette.BORDER};
     `
   }}
 `
-
 const Content = styled.dd`
   ${({ theme }: InjectedProps) => {
-    const { size } = theme
+    const { size, palette } = theme
 
     return css`
-      padding: 0;
       margin: ${size.pxToRem(size.space.XXS)} 0 0;
+      padding: 0;
+      color: ${palette.TEXT_BLACK};
       font-size: ${size.pxToRem(size.font.TALL)};
     `
   }}
