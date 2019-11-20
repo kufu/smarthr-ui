@@ -18,6 +18,7 @@ const icons: Array<Props['name']> = [
   'fa-angle-right',
   'fa-arrow-circle-down',
   'fa-arrow-down',
+  'fa-arrow-right',
   'fa-birthday-cake',
   'fa-building',
   'fa-calendar-alt',
