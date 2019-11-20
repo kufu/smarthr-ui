@@ -50,11 +50,9 @@ storiesOf('DefinitionList', module).add('all', () => (
 const Wrapper = styled.div`
   padding: 24px;
 `
-
 const Title = styled(Heading)`
   margin: 0 0 16px;
 `
-
 const Content = styled(Base)`
   margin: 0 0 32px;
   padding: 24px;
