@@ -47,6 +47,7 @@ const Content = styled.dd`
     return css`
       padding: 0;
       margin: ${size.pxToRem(size.space.XXS)} 0 0;
+      font-size: ${size.pxToRem(size.font.TALL)};
     `
   }}
 `
