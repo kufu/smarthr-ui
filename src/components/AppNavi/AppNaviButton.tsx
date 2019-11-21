@@ -1,106 +1,108 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
+
 import { Icon, Props as IconProps } from '../Icon/Icon'
 
-interface ClickEvent {
+type ClickEvent = {
   preventDefault: () => void
 }
-
-export interface AppNaviButtonProps {
+export type AppNaviButtonProps = {
   children: React.ReactNode
   icon?: IconProps['name']
   onClick?: (e: ClickEvent) => void
   current?: boolean
 }
 
-const AppNaviButtonComponent: React.FC<AppNaviButtonProps & InjectedProps> = ({
-  theme,
-  ...props
-}) => (
-  <Wrapper theme={theme}>
-    {props.current ? (
-      <CurrentWrapper theme={theme} aria-selected="true">
-        {props.icon && (
-          <IconWrapper theme={theme}>
-            <Icon name={props.icon} size={14} color={theme.palette.TEXT_BLACK} />
-          </IconWrapper>
-        )}
-        {props.children}
-      </CurrentWrapper>
-    ) : (
-      <ButtonWrapper theme={theme} onClick={props.onClick}>
-        {props.icon && (
-          <IconWrapper theme={theme}>
-            <Icon name={props.icon} size={14} color={theme.palette.TEXT_GREY} />
-          </IconWrapper>
-        )}
-        {props.children}
-      </ButtonWrapper>
-    )}
-  </Wrapper>
-)
+export const AppNaviButton: FC<AppNaviButtonProps> = ({ current, icon, onClick, children }) => {
+  const theme = useTheme()
+  return (
+    <Wrapper themes={theme}>
+      {current ? (
+        <CurrentWrapper themes={theme} aria-selected="true">
+          {icon && (
+            <IconWrapper themes={theme}>
+              <Icon name={icon} size={14} color={theme.palette.TEXT_BLACK} />
+            </IconWrapper>
+          )}
+          {children}
+        </CurrentWrapper>
+      ) : (
+        <ButtonWrapper themes={theme} onClick={onClick}>
+          {icon && (
+            <IconWrapper themes={theme}>
+              <Icon name={icon} size={14} color={theme.palette.TEXT_GREY} />
+            </IconWrapper>
+          )}
+          {children}
+        </ButtonWrapper>
+      )}
+    </Wrapper>
+  )
+}
 
-export const AppNaviButton = withTheme(AppNaviButtonComponent)
-
-const Wrapper = styled.div`
-  ${({ theme }: InjectedProps) => {
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
     return css`
       display: inline-block;
-      margin-right: ${theme.size.pxToRem(4)};
+      margin-right: ${themes.size.pxToRem(4)};
     `
   }}
 `
+const BaseStyle = css<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space, font } = themes.size
 
-const BaseStyle = css`
-  ${({ theme }: InjectedProps) => {
     return css`
       display: flex;
       align-items: center;
       box-sizing: border-box;
-      height: ${theme.size.pxToRem(40)};
-      padding: 0 ${theme.size.pxToRem(theme.size.space.XXS)};
+      height: ${pxToRem(40)};
+      padding: 0 ${pxToRem(space.XXS)};
       background: none;
       border: none;
-      font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
+      font-size: ${pxToRem(font.TALL)};
       font-weight: bold;
       text-decoration: none;
     `
   }}
 `
+const CurrentWrapper = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, palette } = themes
 
-const CurrentWrapper = styled.span`
-  ${({ theme }: InjectedProps) => {
     return css`
       ${BaseStyle}
-      border-bottom: ${theme.size.pxToRem(3)} solid ${theme.palette.MAIN};
-      color: ${theme.palette.TEXT_BLACK};
+      border-bottom: ${size.pxToRem(3)} solid ${palette.MAIN};
+      color: ${palette.TEXT_BLACK};
     `
   }}
 `
+const ButtonWrapper = styled.button<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { TEXT_GREY, hoverColor } = themes.palette
 
-const ButtonWrapper = styled.button`
-  ${({ theme }: InjectedProps) => {
     return css`
       ${BaseStyle}
-      color: ${theme.palette.TEXT_GREY};
+      color: ${TEXT_GREY};
       cursor: pointer;
       transition: background-color 0.3s;
 
       &:hover{
-        background-color: ${theme.palette.hoverColor('#fff')};
+        background-color: ${hoverColor('#fff')};
       }
     `
   }}
 `
+const IconWrapper = styled.figure<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space } = themes.size
 
-const IconWrapper = styled.figure`
-  ${({ theme }: InjectedProps) => {
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 ${theme.size.pxToRem(theme.size.space.XXS)} 0 0;
+      margin: 0 ${pxToRem(space.XXS)} 0 0;
     `
   }}
 `

@@ -1,21 +1,21 @@
-import * as React from 'react'
+import React, { ReactNode, FC, useContext } from 'react'
 import styled, { css } from 'styled-components'
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { TableGroupContext } from './Table'
 
 import { isTouchDevice } from '../../libs/ua'
+import { useTheme, Theme } from '../../hooks/useTheme'
+
+import { TableGroupContext } from './Table'
 
 export type Props = {
-  children?: React.ReactNode
-  className?: string
-  onClick?: () => void
   colspan?: number
   rowspan?: number
   highlighted?: boolean
+  children?: ReactNode
+  className?: string
+  onClick?: () => void
 }
 
-const CellComponent: React.FC<Props & InjectedProps> = ({
-  theme,
+export const Cell: FC<Props> = ({
   className = '',
   children,
   onClick,
@@ -23,7 +23,8 @@ const CellComponent: React.FC<Props & InjectedProps> = ({
   rowspan,
   highlighted = false,
 }) => {
-  const { group } = React.useContext(TableGroupContext)
+  const { group } = useContext(TableGroupContext)
+  const theme = useTheme()
 
   const WrapComponent = (tableGroup => {
     switch (tableGroup) {
@@ -38,22 +39,20 @@ const CellComponent: React.FC<Props & InjectedProps> = ({
 
   return (
     <WrapComponent
-      onClick={onClick}
-      className={classNames}
-      theme={theme}
       colSpan={colspan}
       rowSpan={rowspan}
-      highlighted={highlighted}
+      className={classNames}
+      onClick={onClick}
+      themes={theme}
     >
       {children}
     </WrapComponent>
   )
 }
 
-const Th = styled.th`
-  ${(props: InjectedProps & Props) => {
-    const { theme } = props
-    const { size, palette, interaction } = theme
+const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
+  ${({ themes, onClick }) => {
+    const { size, palette, interaction } = themes
 
     return css`
       font-size: ${size.pxToRem(size.font.SHORT)}
@@ -69,7 +68,7 @@ const Th = styled.th`
         background-color: ${palette.hoverColor(palette.COLUMN)};
       }
 
-      ${props.onClick &&
+      ${onClick &&
         css`
           :hover {
             background-color: ${palette.hoverColor(palette.COLUMN)};
@@ -79,10 +78,9 @@ const Th = styled.th`
     `
   }}
 `
-
-const Td = styled.td`
-  ${({ theme }: InjectedProps) => {
-    const { size, palette, frame } = theme
+const Td = styled.td<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, palette, frame } = themes
 
     return css`
       color: ${palette.TEXT_BLACK};
@@ -94,5 +92,3 @@ const Td = styled.td`
     `
   }};
 `
-
-export const Cell = withTheme(CellComponent)

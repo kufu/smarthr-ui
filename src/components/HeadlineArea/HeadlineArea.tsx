@@ -1,45 +1,45 @@
-import * as React from 'react'
+import React, { ReactNode, FC } from 'react'
 import styled, { css } from 'styled-components'
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { HeadingProps, Heading } from '../Heading/Heading'
 
-interface Props {
+import { useTheme, Theme } from '../../hooks/useTheme'
+
+import { Heading, Props as HeadingProps } from '../Heading'
+
+type Props = {
   heading: {
     children: HeadingProps['children']
     tag?: HeadingProps['tag']
   }
-  description?: React.ReactNode
+  description?: ReactNode
   className?: string
 }
 
-const HeadlineAreaComponent: React.FC<Props & InjectedProps> = ({
-  heading,
-  description,
-  className = '',
-  theme,
-}) => (
-  <Wrapper theme={theme} className={className}>
-    <Heading type="screenTitle" tag={heading.tag ? heading.tag : 'h1'}>
-      {heading.children}
-    </Heading>
-    {description && <Description theme={theme}>{description}</Description>}
-  </Wrapper>
-)
+export const HeadlineArea: FC<Props> = ({ heading, description, className = '' }) => {
+  const theme = useTheme()
 
-export const HeadlineArea = withTheme(HeadlineAreaComponent)
+  return (
+    <Wrapper theme={theme} className={className}>
+      <Heading type="screenTitle" tag={heading.tag ? heading.tag : 'h1'}>
+        {heading.children}
+      </Heading>
+      {description && <Description themes={theme}>{description}</Description>}
+    </Wrapper>
+  )
+}
 
 const Wrapper = styled.div`
   display: block;
   margin: 0;
   padding: 0;
 `
+const Description = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, palette } = themes
 
-const Description = styled.div`
-  ${({ theme }: InjectedProps) => {
     return css`
-      margin-top: ${theme.size.pxToRem(theme.size.space.XS)};
-      color: ${theme.palette.TEXT_BLACK};
-      font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
+      margin-top: ${size.pxToRem(size.space.XS)};
+      color: ${palette.TEXT_BLACK};
+      font-size: ${size.pxToRem(size.font.TALL)};
       line-height: 1.5;
     `
   }}

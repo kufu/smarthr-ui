@@ -7,123 +7,55 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
   label="label"
   name="name"
 >
-  <CheckBoxLabelComponent
-    checked={true}
-    disabled={false}
-    label="label"
-    name="name"
-    theme={
-      Object {
-        "frame": Object {
-          "border": Object {
-            "default": "1px solid #d6d6d6",
-            "lineStyle": "solid",
-            "lineWidth": "1px",
-            "radius": Object {
-              "l": "8px",
-              "m": "6px",
-              "s": "3px",
-            },
-          },
-        },
-        "interaction": Object {
-          "hover": Object {
-            "animation": ".3s ease-out",
-            "animationDuration": ".3s",
-            "animationTiming": "ease-out",
-            "feedbackOpacity": ".7",
-          },
-        },
-        "palette": Object {
-          "BACKGROUND": "#f5f6fa",
-          "BORDER": "#d6d6d6",
-          "COLUMN": "#f9f9f9",
-          "DANGER": "#ef475b",
-          "MAIN": "#00a5ab",
-          "OUTLINE": "rgba(0,165,171,0.5)",
-          "OVERLAY": "rgba(0,0,0,0.15)",
-          "SCRIM": "rgba(0,0,0,0.5)",
-          "TEXT_BLACK": "#333",
-          "TEXT_DISABLED": "#c1c1c1",
-          "TEXT_GREY": "#767676",
-          "WARNING": "#ff8800",
-          "disableColor": [Function],
-          "hoverColor": [Function],
-        },
-        "size": Object {
-          "font": Object {
-            "GRANDE": 18,
-            "SHORT": 11,
-            "TALL": 14,
-            "VENTI": 24,
-          },
-          "mediaQuery": Object {
-            "SP": 599,
-            "TABLET": 959,
-          },
-          "pxToRem": [Function],
-          "space": Object {
-            "L": 40,
-            "M": 32,
-            "S": 24,
-            "XL": 48,
-            "XS": 16,
-            "XXL": 56,
-            "XXS": 8,
-          },
-        },
-      }
-    }
+  <styled.div
+    className=""
   >
-    <styled.div
+    <StyledComponent
       className=""
-    >
-      <StyledComponent
-        className=""
-        forwardedComponent={
-          Object {
-            "$$typeof": Symbol(react.forward_ref),
-            "attrs": Array [],
-            "componentStyle": ComponentStyle {
-              "componentId": "sc-ifAKCX",
-              "isStatic": false,
-              "lastClassName": "kmbVwf",
-              "rules": Array [
-                "
+      forwardedComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-ifAKCX",
+            "isStatic": false,
+            "lastClassName": "kmbVwf",
+            "rules": Array [
+              "
   display: inline-block;
 ",
-              ],
-            },
-            "displayName": "styled.div",
-            "foldedComponentIds": Array [],
-            "render": [Function],
-            "styledComponentId": "sc-ifAKCX",
-            "target": "div",
-            "toString": [Function],
-            "warnTooManyClasses": [Function],
-            "withComponent": [Function],
-          }
+            ],
+          },
+          "displayName": "styled.div",
+          "foldedComponentIds": Array [],
+          "render": [Function],
+          "styledComponentId": "sc-ifAKCX",
+          "target": "div",
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
         }
-        forwardedRef={null}
+      }
+      forwardedRef={null}
+    >
+      <div
+        className="sc-ifAKCX kmbVwf"
       >
-        <div
-          className="sc-ifAKCX kmbVwf"
+        <styled.label
+          className=""
         >
-          <styled.label
+          <StyledComponent
             className=""
-          >
-            <StyledComponent
-              className=""
-              forwardedComponent={
-                Object {
-                  "$$typeof": Symbol(react.forward_ref),
-                  "attrs": Array [],
-                  "componentStyle": ComponentStyle {
-                    "componentId": "sc-EHOje",
-                    "isStatic": false,
-                    "lastClassName": "dZGsxD",
-                    "rules": Array [
-                      "
+            forwardedComponent={
+              Object {
+                "$$typeof": Symbol(react.forward_ref),
+                "attrs": Array [],
+                "componentStyle": ComponentStyle {
+                  "componentId": "sc-EHOje",
+                  "isStatic": false,
+                  "lastClassName": "dZGsxD",
+                  "rules": Array [
+                    "
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -132,172 +64,43 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
     cursor: default;
   }
 ",
-                    ],
-                  },
-                  "displayName": "styled.label",
-                  "foldedComponentIds": Array [],
-                  "render": [Function],
-                  "styledComponentId": "sc-EHOje",
-                  "target": "label",
-                  "toString": [Function],
-                  "warnTooManyClasses": [Function],
-                  "withComponent": [Function],
-                }
+                  ],
+                },
+                "displayName": "styled.label",
+                "foldedComponentIds": Array [],
+                "render": [Function],
+                "styledComponentId": "sc-EHOje",
+                "target": "label",
+                "toString": [Function],
+                "warnTooManyClasses": [Function],
+                "withComponent": [Function],
               }
-              forwardedRef={null}
+            }
+            forwardedRef={null}
+          >
+            <label
+              className="sc-EHOje dZGsxD"
             >
-              <label
-                className="sc-EHOje dZGsxD"
+              <Component
+                checked={true}
+                disabled={false}
+                name="name"
               >
-                <Component
-                  checked={true}
-                  disabled={false}
-                  name="name"
+                <styled.div
+                  className=""
                 >
-                  <CheckBoxComponent
-                    checked={true}
-                    disabled={false}
-                    name="name"
-                    theme={
+                  <StyledComponent
+                    className=""
+                    forwardedComponent={
                       Object {
-                        "frame": Object {
-                          "border": Object {
-                            "default": "1px solid #d6d6d6",
-                            "lineStyle": "solid",
-                            "lineWidth": "1px",
-                            "radius": Object {
-                              "l": "8px",
-                              "m": "6px",
-                              "s": "3px",
-                            },
-                          },
-                        },
-                        "interaction": Object {
-                          "hover": Object {
-                            "animation": ".3s ease-out",
-                            "animationDuration": ".3s",
-                            "animationTiming": "ease-out",
-                            "feedbackOpacity": ".7",
-                          },
-                        },
-                        "palette": Object {
-                          "BACKGROUND": "#f5f6fa",
-                          "BORDER": "#d6d6d6",
-                          "COLUMN": "#f9f9f9",
-                          "DANGER": "#ef475b",
-                          "MAIN": "#00a5ab",
-                          "OUTLINE": "rgba(0,165,171,0.5)",
-                          "OVERLAY": "rgba(0,0,0,0.15)",
-                          "SCRIM": "rgba(0,0,0,0.5)",
-                          "TEXT_BLACK": "#333",
-                          "TEXT_DISABLED": "#c1c1c1",
-                          "TEXT_GREY": "#767676",
-                          "WARNING": "#ff8800",
-                          "disableColor": [Function],
-                          "hoverColor": [Function],
-                        },
-                        "size": Object {
-                          "font": Object {
-                            "GRANDE": 18,
-                            "SHORT": 11,
-                            "TALL": 14,
-                            "VENTI": 24,
-                          },
-                          "mediaQuery": Object {
-                            "SP": 599,
-                            "TABLET": 959,
-                          },
-                          "pxToRem": [Function],
-                          "space": Object {
-                            "L": 40,
-                            "M": 32,
-                            "S": 24,
-                            "XL": 48,
-                            "XS": 16,
-                            "XXL": 56,
-                            "XXS": 8,
-                          },
-                        },
-                      }
-                    }
-                  >
-                    <styled.div
-                      className=""
-                      theme={
-                        Object {
-                          "frame": Object {
-                            "border": Object {
-                              "default": "1px solid #d6d6d6",
-                              "lineStyle": "solid",
-                              "lineWidth": "1px",
-                              "radius": Object {
-                                "l": "8px",
-                                "m": "6px",
-                                "s": "3px",
-                              },
-                            },
-                          },
-                          "interaction": Object {
-                            "hover": Object {
-                              "animation": ".3s ease-out",
-                              "animationDuration": ".3s",
-                              "animationTiming": "ease-out",
-                              "feedbackOpacity": ".7",
-                            },
-                          },
-                          "palette": Object {
-                            "BACKGROUND": "#f5f6fa",
-                            "BORDER": "#d6d6d6",
-                            "COLUMN": "#f9f9f9",
-                            "DANGER": "#ef475b",
-                            "MAIN": "#00a5ab",
-                            "OUTLINE": "rgba(0,165,171,0.5)",
-                            "OVERLAY": "rgba(0,0,0,0.15)",
-                            "SCRIM": "rgba(0,0,0,0.5)",
-                            "TEXT_BLACK": "#333",
-                            "TEXT_DISABLED": "#c1c1c1",
-                            "TEXT_GREY": "#767676",
-                            "WARNING": "#ff8800",
-                            "disableColor": [Function],
-                            "hoverColor": [Function],
-                          },
-                          "size": Object {
-                            "font": Object {
-                              "GRANDE": 18,
-                              "SHORT": 11,
-                              "TALL": 14,
-                              "VENTI": 24,
-                            },
-                            "mediaQuery": Object {
-                              "SP": 599,
-                              "TABLET": 959,
-                            },
-                            "pxToRem": [Function],
-                            "space": Object {
-                              "L": 40,
-                              "M": 32,
-                              "S": 24,
-                              "XL": 48,
-                              "XS": 16,
-                              "XXL": 56,
-                              "XXS": 8,
-                            },
-                          },
-                        }
-                      }
-                    >
-                      <StyledComponent
-                        className=""
-                        forwardedComponent={
-                          Object {
-                            "$$typeof": Symbol(react.forward_ref),
-                            "attrs": Array [],
-                            "componentStyle": ComponentStyle {
-                              "componentId": "sc-bdVaJa",
-                              "isStatic": false,
-                              "lastClassName": "hObIwy",
-                              "rules": Array [
-                                "
+                        "$$typeof": Symbol(react.forward_ref),
+                        "attrs": Array [],
+                        "componentStyle": ComponentStyle {
+                          "componentId": "sc-bdVaJa",
+                          "isStatic": false,
+                          "lastClassName": "hObIwy",
+                          "rules": Array [
+                            "
   position: relative;
   display: inline-block;
   width: 20px;
@@ -306,20 +109,201 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
   line-height: 1;
   box-sizing: border-box;
 ",
-                              ],
+                          ],
+                        },
+                        "displayName": "styled.div",
+                        "foldedComponentIds": Array [],
+                        "render": [Function],
+                        "styledComponentId": "sc-bdVaJa",
+                        "target": "div",
+                        "toString": [Function],
+                        "warnTooManyClasses": [Function],
+                        "withComponent": [Function],
+                      }
+                    }
+                    forwardedRef={null}
+                  >
+                    <div
+                      className="sc-bdVaJa hObIwy"
+                    >
+                      <styled.input
+                        checked={true}
+                        disabled={false}
+                        name="name"
+                        onChange={[Function]}
+                        themes={
+                          Object {
+                            "frame": Object {
+                              "border": Object {
+                                "default": "1px solid #d6d6d6",
+                                "lineStyle": "solid",
+                                "lineWidth": "1px",
+                                "radius": Object {
+                                  "l": "8px",
+                                  "m": "6px",
+                                  "s": "3px",
+                                },
+                              },
                             },
-                            "displayName": "styled.div",
-                            "foldedComponentIds": Array [],
-                            "render": [Function],
-                            "styledComponentId": "sc-bdVaJa",
-                            "target": "div",
-                            "toString": [Function],
-                            "warnTooManyClasses": [Function],
-                            "withComponent": [Function],
+                            "interaction": Object {
+                              "hover": Object {
+                                "animation": ".3s ease-out",
+                                "animationDuration": ".3s",
+                                "animationTiming": "ease-out",
+                                "feedbackOpacity": ".7",
+                              },
+                            },
+                            "palette": Object {
+                              "BACKGROUND": "#f5f6fa",
+                              "BORDER": "#d6d6d6",
+                              "COLUMN": "#f9f9f9",
+                              "DANGER": "#ef475b",
+                              "MAIN": "#00a5ab",
+                              "OUTLINE": "rgba(0,165,171,0.5)",
+                              "OVERLAY": "rgba(0,0,0,0.15)",
+                              "SCRIM": "rgba(0,0,0,0.5)",
+                              "TEXT_BLACK": "#333",
+                              "TEXT_DISABLED": "#c1c1c1",
+                              "TEXT_GREY": "#767676",
+                              "WARNING": "#ff8800",
+                              "disableColor": [Function],
+                              "hoverColor": [Function],
+                            },
+                            "size": Object {
+                              "font": Object {
+                                "GRANDE": 18,
+                                "SHORT": 11,
+                                "TALL": 14,
+                                "VENTI": 24,
+                              },
+                              "mediaQuery": Object {
+                                "SP": 599,
+                                "TABLET": 959,
+                              },
+                              "pxToRem": [Function],
+                              "space": Object {
+                                "L": 40,
+                                "M": 32,
+                                "S": 24,
+                                "XL": 48,
+                                "XS": 16,
+                                "XXL": 56,
+                                "XXS": 8,
+                              },
+                            },
                           }
                         }
-                        forwardedRef={null}
-                        theme={
+                        type="checkbox"
+                      >
+                        <StyledComponent
+                          checked={true}
+                          disabled={false}
+                          forwardedComponent={
+                            Object {
+                              "$$typeof": Symbol(react.forward_ref),
+                              "attrs": Array [],
+                              "componentStyle": ComponentStyle {
+                                "componentId": "sc-htpNat",
+                                "isStatic": false,
+                                "lastClassName": "bVYgpj",
+                                "rules": Array [
+                                  "
+  ",
+                                  [Function],
+                                  "
+",
+                                ],
+                              },
+                              "displayName": "styled.input",
+                              "foldedComponentIds": Array [],
+                              "render": [Function],
+                              "styledComponentId": "sc-htpNat",
+                              "target": "input",
+                              "toString": [Function],
+                              "warnTooManyClasses": [Function],
+                              "withComponent": [Function],
+                            }
+                          }
+                          forwardedRef={null}
+                          name="name"
+                          onChange={[Function]}
+                          themes={
+                            Object {
+                              "frame": Object {
+                                "border": Object {
+                                  "default": "1px solid #d6d6d6",
+                                  "lineStyle": "solid",
+                                  "lineWidth": "1px",
+                                  "radius": Object {
+                                    "l": "8px",
+                                    "m": "6px",
+                                    "s": "3px",
+                                  },
+                                },
+                              },
+                              "interaction": Object {
+                                "hover": Object {
+                                  "animation": ".3s ease-out",
+                                  "animationDuration": ".3s",
+                                  "animationTiming": "ease-out",
+                                  "feedbackOpacity": ".7",
+                                },
+                              },
+                              "palette": Object {
+                                "BACKGROUND": "#f5f6fa",
+                                "BORDER": "#d6d6d6",
+                                "COLUMN": "#f9f9f9",
+                                "DANGER": "#ef475b",
+                                "MAIN": "#00a5ab",
+                                "OUTLINE": "rgba(0,165,171,0.5)",
+                                "OVERLAY": "rgba(0,0,0,0.15)",
+                                "SCRIM": "rgba(0,0,0,0.5)",
+                                "TEXT_BLACK": "#333",
+                                "TEXT_DISABLED": "#c1c1c1",
+                                "TEXT_GREY": "#767676",
+                                "WARNING": "#ff8800",
+                                "disableColor": [Function],
+                                "hoverColor": [Function],
+                              },
+                              "size": Object {
+                                "font": Object {
+                                  "GRANDE": 18,
+                                  "SHORT": 11,
+                                  "TALL": 14,
+                                  "VENTI": 24,
+                                },
+                                "mediaQuery": Object {
+                                  "SP": 599,
+                                  "TABLET": 959,
+                                },
+                                "pxToRem": [Function],
+                                "space": Object {
+                                  "L": 40,
+                                  "M": 32,
+                                  "S": 24,
+                                  "XL": 48,
+                                  "XS": 16,
+                                  "XXL": 56,
+                                  "XXS": 8,
+                                },
+                              },
+                            }
+                          }
+                          type="checkbox"
+                        >
+                          <input
+                            checked={true}
+                            className="sc-htpNat bVYgpj"
+                            disabled={false}
+                            name="name"
+                            onChange={[Function]}
+                            type="checkbox"
+                          />
+                        </StyledComponent>
+                      </styled.input>
+                      <styled.span
+                        className="active  light"
+                        themes={
                           Object {
                             "frame": Object {
                               "border": Object {
@@ -382,358 +366,115 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                           }
                         }
                       >
-                        <div
-                          className="sc-bdVaJa hObIwy"
+                        <StyledComponent
+                          className="active  light"
+                          forwardedComponent={
+                            Object {
+                              "$$typeof": Symbol(react.forward_ref),
+                              "attrs": Array [],
+                              "componentStyle": ComponentStyle {
+                                "componentId": "sc-bwzfXH",
+                                "isStatic": false,
+                                "lastClassName": "giiqhe",
+                                "rules": Array [
+                                  "
+  ",
+                                  [Function],
+                                  "
+",
+                                ],
+                              },
+                              "displayName": "styled.span",
+                              "foldedComponentIds": Array [],
+                              "render": [Function],
+                              "styledComponentId": "sc-bwzfXH",
+                              "target": "span",
+                              "toString": [Function],
+                              "warnTooManyClasses": [Function],
+                              "withComponent": [Function],
+                            }
+                          }
+                          forwardedRef={null}
+                          themes={
+                            Object {
+                              "frame": Object {
+                                "border": Object {
+                                  "default": "1px solid #d6d6d6",
+                                  "lineStyle": "solid",
+                                  "lineWidth": "1px",
+                                  "radius": Object {
+                                    "l": "8px",
+                                    "m": "6px",
+                                    "s": "3px",
+                                  },
+                                },
+                              },
+                              "interaction": Object {
+                                "hover": Object {
+                                  "animation": ".3s ease-out",
+                                  "animationDuration": ".3s",
+                                  "animationTiming": "ease-out",
+                                  "feedbackOpacity": ".7",
+                                },
+                              },
+                              "palette": Object {
+                                "BACKGROUND": "#f5f6fa",
+                                "BORDER": "#d6d6d6",
+                                "COLUMN": "#f9f9f9",
+                                "DANGER": "#ef475b",
+                                "MAIN": "#00a5ab",
+                                "OUTLINE": "rgba(0,165,171,0.5)",
+                                "OVERLAY": "rgba(0,0,0,0.15)",
+                                "SCRIM": "rgba(0,0,0,0.5)",
+                                "TEXT_BLACK": "#333",
+                                "TEXT_DISABLED": "#c1c1c1",
+                                "TEXT_GREY": "#767676",
+                                "WARNING": "#ff8800",
+                                "disableColor": [Function],
+                                "hoverColor": [Function],
+                              },
+                              "size": Object {
+                                "font": Object {
+                                  "GRANDE": 18,
+                                  "SHORT": 11,
+                                  "TALL": 14,
+                                  "VENTI": 24,
+                                },
+                                "mediaQuery": Object {
+                                  "SP": 599,
+                                  "TABLET": 959,
+                                },
+                                "pxToRem": [Function],
+                                "space": Object {
+                                  "L": 40,
+                                  "M": 32,
+                                  "S": 24,
+                                  "XL": 48,
+                                  "XS": 16,
+                                  "XXL": 56,
+                                  "XXS": 8,
+                                },
+                              },
+                            }
+                          }
                         >
-                          <styled.input
-                            checked={true}
-                            disabled={false}
-                            name="name"
-                            onChange={[Function]}
-                            theme={
-                              Object {
-                                "frame": Object {
-                                  "border": Object {
-                                    "default": "1px solid #d6d6d6",
-                                    "lineStyle": "solid",
-                                    "lineWidth": "1px",
-                                    "radius": Object {
-                                      "l": "8px",
-                                      "m": "6px",
-                                      "s": "3px",
-                                    },
-                                  },
-                                },
-                                "interaction": Object {
-                                  "hover": Object {
-                                    "animation": ".3s ease-out",
-                                    "animationDuration": ".3s",
-                                    "animationTiming": "ease-out",
-                                    "feedbackOpacity": ".7",
-                                  },
-                                },
-                                "palette": Object {
-                                  "BACKGROUND": "#f5f6fa",
-                                  "BORDER": "#d6d6d6",
-                                  "COLUMN": "#f9f9f9",
-                                  "DANGER": "#ef475b",
-                                  "MAIN": "#00a5ab",
-                                  "OUTLINE": "rgba(0,165,171,0.5)",
-                                  "OVERLAY": "rgba(0,0,0,0.15)",
-                                  "SCRIM": "rgba(0,0,0,0.5)",
-                                  "TEXT_BLACK": "#333",
-                                  "TEXT_DISABLED": "#c1c1c1",
-                                  "TEXT_GREY": "#767676",
-                                  "WARNING": "#ff8800",
-                                  "disableColor": [Function],
-                                  "hoverColor": [Function],
-                                },
-                                "size": Object {
-                                  "font": Object {
-                                    "GRANDE": 18,
-                                    "SHORT": 11,
-                                    "TALL": 14,
-                                    "VENTI": 24,
-                                  },
-                                  "mediaQuery": Object {
-                                    "SP": 599,
-                                    "TABLET": 959,
-                                  },
-                                  "pxToRem": [Function],
-                                  "space": Object {
-                                    "L": 40,
-                                    "M": 32,
-                                    "S": 24,
-                                    "XL": 48,
-                                    "XS": 16,
-                                    "XXL": 56,
-                                    "XXS": 8,
-                                  },
-                                },
-                              }
-                            }
-                            type="checkbox"
-                          >
-                            <StyledComponent
-                              checked={true}
-                              disabled={false}
-                              forwardedComponent={
-                                Object {
-                                  "$$typeof": Symbol(react.forward_ref),
-                                  "attrs": Array [],
-                                  "componentStyle": ComponentStyle {
-                                    "componentId": "sc-htpNat",
-                                    "isStatic": false,
-                                    "lastClassName": "bVYgpj",
-                                    "rules": Array [
-                                      "
-  ",
-                                      [Function],
-                                      "
-",
-                                    ],
-                                  },
-                                  "displayName": "styled.input",
-                                  "foldedComponentIds": Array [],
-                                  "render": [Function],
-                                  "styledComponentId": "sc-htpNat",
-                                  "target": "input",
-                                  "toString": [Function],
-                                  "warnTooManyClasses": [Function],
-                                  "withComponent": [Function],
-                                }
-                              }
-                              forwardedRef={null}
-                              name="name"
-                              onChange={[Function]}
-                              theme={
-                                Object {
-                                  "frame": Object {
-                                    "border": Object {
-                                      "default": "1px solid #d6d6d6",
-                                      "lineStyle": "solid",
-                                      "lineWidth": "1px",
-                                      "radius": Object {
-                                        "l": "8px",
-                                        "m": "6px",
-                                        "s": "3px",
-                                      },
-                                    },
-                                  },
-                                  "interaction": Object {
-                                    "hover": Object {
-                                      "animation": ".3s ease-out",
-                                      "animationDuration": ".3s",
-                                      "animationTiming": "ease-out",
-                                      "feedbackOpacity": ".7",
-                                    },
-                                  },
-                                  "palette": Object {
-                                    "BACKGROUND": "#f5f6fa",
-                                    "BORDER": "#d6d6d6",
-                                    "COLUMN": "#f9f9f9",
-                                    "DANGER": "#ef475b",
-                                    "MAIN": "#00a5ab",
-                                    "OUTLINE": "rgba(0,165,171,0.5)",
-                                    "OVERLAY": "rgba(0,0,0,0.15)",
-                                    "SCRIM": "rgba(0,0,0,0.5)",
-                                    "TEXT_BLACK": "#333",
-                                    "TEXT_DISABLED": "#c1c1c1",
-                                    "TEXT_GREY": "#767676",
-                                    "WARNING": "#ff8800",
-                                    "disableColor": [Function],
-                                    "hoverColor": [Function],
-                                  },
-                                  "size": Object {
-                                    "font": Object {
-                                      "GRANDE": 18,
-                                      "SHORT": 11,
-                                      "TALL": 14,
-                                      "VENTI": 24,
-                                    },
-                                    "mediaQuery": Object {
-                                      "SP": 599,
-                                      "TABLET": 959,
-                                    },
-                                    "pxToRem": [Function],
-                                    "space": Object {
-                                      "L": 40,
-                                      "M": 32,
-                                      "S": 24,
-                                      "XL": 48,
-                                      "XS": 16,
-                                      "XXL": 56,
-                                      "XXS": 8,
-                                    },
-                                  },
-                                }
-                              }
-                              type="checkbox"
-                            >
-                              <input
-                                checked={true}
-                                className="sc-htpNat bVYgpj"
-                                disabled={false}
-                                name="name"
-                                onChange={[Function]}
-                                type="checkbox"
-                              />
-                            </StyledComponent>
-                          </styled.input>
-                          <styled.span
-                            className="active  light"
-                            theme={
-                              Object {
-                                "frame": Object {
-                                  "border": Object {
-                                    "default": "1px solid #d6d6d6",
-                                    "lineStyle": "solid",
-                                    "lineWidth": "1px",
-                                    "radius": Object {
-                                      "l": "8px",
-                                      "m": "6px",
-                                      "s": "3px",
-                                    },
-                                  },
-                                },
-                                "interaction": Object {
-                                  "hover": Object {
-                                    "animation": ".3s ease-out",
-                                    "animationDuration": ".3s",
-                                    "animationTiming": "ease-out",
-                                    "feedbackOpacity": ".7",
-                                  },
-                                },
-                                "palette": Object {
-                                  "BACKGROUND": "#f5f6fa",
-                                  "BORDER": "#d6d6d6",
-                                  "COLUMN": "#f9f9f9",
-                                  "DANGER": "#ef475b",
-                                  "MAIN": "#00a5ab",
-                                  "OUTLINE": "rgba(0,165,171,0.5)",
-                                  "OVERLAY": "rgba(0,0,0,0.15)",
-                                  "SCRIM": "rgba(0,0,0,0.5)",
-                                  "TEXT_BLACK": "#333",
-                                  "TEXT_DISABLED": "#c1c1c1",
-                                  "TEXT_GREY": "#767676",
-                                  "WARNING": "#ff8800",
-                                  "disableColor": [Function],
-                                  "hoverColor": [Function],
-                                },
-                                "size": Object {
-                                  "font": Object {
-                                    "GRANDE": 18,
-                                    "SHORT": 11,
-                                    "TALL": 14,
-                                    "VENTI": 24,
-                                  },
-                                  "mediaQuery": Object {
-                                    "SP": 599,
-                                    "TABLET": 959,
-                                  },
-                                  "pxToRem": [Function],
-                                  "space": Object {
-                                    "L": 40,
-                                    "M": 32,
-                                    "S": 24,
-                                    "XL": 48,
-                                    "XS": 16,
-                                    "XXL": 56,
-                                    "XXS": 8,
-                                  },
-                                },
-                              }
-                            }
-                          >
-                            <StyledComponent
-                              className="active  light"
-                              forwardedComponent={
-                                Object {
-                                  "$$typeof": Symbol(react.forward_ref),
-                                  "attrs": Array [],
-                                  "componentStyle": ComponentStyle {
-                                    "componentId": "sc-bwzfXH",
-                                    "isStatic": false,
-                                    "lastClassName": "giiqhe",
-                                    "rules": Array [
-                                      "
-  ",
-                                      [Function],
-                                      "
-",
-                                    ],
-                                  },
-                                  "displayName": "styled.span",
-                                  "foldedComponentIds": Array [],
-                                  "render": [Function],
-                                  "styledComponentId": "sc-bwzfXH",
-                                  "target": "span",
-                                  "toString": [Function],
-                                  "warnTooManyClasses": [Function],
-                                  "withComponent": [Function],
-                                }
-                              }
-                              forwardedRef={null}
-                              theme={
-                                Object {
-                                  "frame": Object {
-                                    "border": Object {
-                                      "default": "1px solid #d6d6d6",
-                                      "lineStyle": "solid",
-                                      "lineWidth": "1px",
-                                      "radius": Object {
-                                        "l": "8px",
-                                        "m": "6px",
-                                        "s": "3px",
-                                      },
-                                    },
-                                  },
-                                  "interaction": Object {
-                                    "hover": Object {
-                                      "animation": ".3s ease-out",
-                                      "animationDuration": ".3s",
-                                      "animationTiming": "ease-out",
-                                      "feedbackOpacity": ".7",
-                                    },
-                                  },
-                                  "palette": Object {
-                                    "BACKGROUND": "#f5f6fa",
-                                    "BORDER": "#d6d6d6",
-                                    "COLUMN": "#f9f9f9",
-                                    "DANGER": "#ef475b",
-                                    "MAIN": "#00a5ab",
-                                    "OUTLINE": "rgba(0,165,171,0.5)",
-                                    "OVERLAY": "rgba(0,0,0,0.15)",
-                                    "SCRIM": "rgba(0,0,0,0.5)",
-                                    "TEXT_BLACK": "#333",
-                                    "TEXT_DISABLED": "#c1c1c1",
-                                    "TEXT_GREY": "#767676",
-                                    "WARNING": "#ff8800",
-                                    "disableColor": [Function],
-                                    "hoverColor": [Function],
-                                  },
-                                  "size": Object {
-                                    "font": Object {
-                                      "GRANDE": 18,
-                                      "SHORT": 11,
-                                      "TALL": 14,
-                                      "VENTI": 24,
-                                    },
-                                    "mediaQuery": Object {
-                                      "SP": 599,
-                                      "TABLET": 959,
-                                    },
-                                    "pxToRem": [Function],
-                                    "space": Object {
-                                      "L": 40,
-                                      "M": 32,
-                                      "S": 24,
-                                      "XL": 48,
-                                      "XS": 16,
-                                      "XXL": 56,
-                                      "XXS": 8,
-                                    },
-                                  },
-                                }
-                              }
-                            >
-                              <span
-                                className="sc-bwzfXH giiqhe active  light"
-                              />
-                            </StyledComponent>
-                          </styled.span>
-                          <styled.span>
-                            <StyledComponent
-                              forwardedComponent={
-                                Object {
-                                  "$$typeof": Symbol(react.forward_ref),
-                                  "attrs": Array [],
-                                  "componentStyle": ComponentStyle {
-                                    "componentId": "sc-bxivhb",
-                                    "isStatic": false,
-                                    "lastClassName": "fAOeDW",
-                                    "rules": Array [
-                                      "
+                          <span
+                            className="sc-bwzfXH giiqhe active  light"
+                          />
+                        </StyledComponent>
+                      </styled.span>
+                      <styled.span>
+                        <StyledComponent
+                          forwardedComponent={
+                            Object {
+                              "$$typeof": Symbol(react.forward_ref),
+                              "attrs": Array [],
+                              "componentStyle": ComponentStyle {
+                                "componentId": "sc-bxivhb",
+                                "isStatic": false,
+                                "lastClassName": "fAOeDW",
+                                "rules": Array [
+                                  "
   position: absolute;
   top: 50%;
   left: 50%;
@@ -746,77 +487,167 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
     vertical-align: top;
   }
 ",
-                                    ],
-                                  },
-                                  "displayName": "styled.span",
-                                  "foldedComponentIds": Array [],
-                                  "render": [Function],
-                                  "styledComponentId": "sc-bxivhb",
-                                  "target": "span",
-                                  "toString": [Function],
-                                  "warnTooManyClasses": [Function],
-                                  "withComponent": [Function],
-                                }
-                              }
-                              forwardedRef={null}
+                                ],
+                              },
+                              "displayName": "styled.span",
+                              "foldedComponentIds": Array [],
+                              "render": [Function],
+                              "styledComponentId": "sc-bxivhb",
+                              "target": "span",
+                              "toString": [Function],
+                              "warnTooManyClasses": [Function],
+                              "withComponent": [Function],
+                            }
+                          }
+                          forwardedRef={null}
+                        >
+                          <span
+                            className="sc-bxivhb fAOeDW"
+                          >
+                            <Component
+                              color="#fff"
+                              name="fa-check"
+                              size={12}
                             >
-                              <span
-                                className="sc-bxivhb fAOeDW"
+                              <FaCheck
+                                className=""
+                                color="#fff"
+                                size={12}
                               >
-                                <Component
+                                <IconBase
+                                  attr={
+                                    Object {
+                                      "viewBox": "0 0 512 512",
+                                    }
+                                  }
+                                  className=""
                                   color="#fff"
-                                  name="fa-check"
                                   size={12}
                                 >
-                                  <FaCheck
-                                    className=""
+                                  <svg
                                     color="#fff"
+                                    fill="currentColor"
+                                    height={12}
                                     size={12}
-                                  >
-                                    <IconBase
-                                      attr={
-                                        Object {
-                                          "viewBox": "0 0 512 512",
-                                        }
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      Object {
+                                        "color": "#fff",
                                       }
-                                      className=""
-                                      color="#fff"
-                                      size={12}
-                                    >
-                                      <svg
-                                        color="#fff"
-                                        fill="currentColor"
-                                        height={12}
-                                        size={12}
-                                        stroke="currentColor"
-                                        strokeWidth="0"
-                                        style={
-                                          Object {
-                                            "color": "#fff",
-                                          }
-                                        }
-                                        viewBox="0 0 512 512"
-                                        width={12}
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"
-                                          key="0"
-                                        />
-                                      </svg>
-                                    </IconBase>
-                                  </FaCheck>
-                                </Component>
-                              </span>
-                            </StyledComponent>
-                          </styled.span>
-                        </div>
-                      </StyledComponent>
-                    </styled.div>
-                  </CheckBoxComponent>
-                </Component>
-                <styled.p
-                  theme={
+                                    }
+                                    viewBox="0 0 512 512"
+                                    width={12}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"
+                                      key="0"
+                                    />
+                                  </svg>
+                                </IconBase>
+                              </FaCheck>
+                            </Component>
+                          </span>
+                        </StyledComponent>
+                      </styled.span>
+                    </div>
+                  </StyledComponent>
+                </styled.div>
+              </Component>
+              <styled.p
+                themes={
+                  Object {
+                    "frame": Object {
+                      "border": Object {
+                        "default": "1px solid #d6d6d6",
+                        "lineStyle": "solid",
+                        "lineWidth": "1px",
+                        "radius": Object {
+                          "l": "8px",
+                          "m": "6px",
+                          "s": "3px",
+                        },
+                      },
+                    },
+                    "interaction": Object {
+                      "hover": Object {
+                        "animation": ".3s ease-out",
+                        "animationDuration": ".3s",
+                        "animationTiming": "ease-out",
+                        "feedbackOpacity": ".7",
+                      },
+                    },
+                    "palette": Object {
+                      "BACKGROUND": "#f5f6fa",
+                      "BORDER": "#d6d6d6",
+                      "COLUMN": "#f9f9f9",
+                      "DANGER": "#ef475b",
+                      "MAIN": "#00a5ab",
+                      "OUTLINE": "rgba(0,165,171,0.5)",
+                      "OVERLAY": "rgba(0,0,0,0.15)",
+                      "SCRIM": "rgba(0,0,0,0.5)",
+                      "TEXT_BLACK": "#333",
+                      "TEXT_DISABLED": "#c1c1c1",
+                      "TEXT_GREY": "#767676",
+                      "WARNING": "#ff8800",
+                      "disableColor": [Function],
+                      "hoverColor": [Function],
+                    },
+                    "size": Object {
+                      "font": Object {
+                        "GRANDE": 18,
+                        "SHORT": 11,
+                        "TALL": 14,
+                        "VENTI": 24,
+                      },
+                      "mediaQuery": Object {
+                        "SP": 599,
+                        "TABLET": 959,
+                      },
+                      "pxToRem": [Function],
+                      "space": Object {
+                        "L": 40,
+                        "M": 32,
+                        "S": 24,
+                        "XL": 48,
+                        "XS": 16,
+                        "XXL": 56,
+                        "XXS": 8,
+                      },
+                    },
+                  }
+                }
+              >
+                <StyledComponent
+                  forwardedComponent={
+                    Object {
+                      "$$typeof": Symbol(react.forward_ref),
+                      "attrs": Array [],
+                      "componentStyle": ComponentStyle {
+                        "componentId": "sc-bZQynM",
+                        "isStatic": false,
+                        "lastClassName": "jwslZ",
+                        "rules": Array [
+                          "
+  ",
+                          [Function],
+                          "
+",
+                        ],
+                      },
+                      "displayName": "styled.p",
+                      "foldedComponentIds": Array [],
+                      "render": [Function],
+                      "styledComponentId": "sc-bZQynM",
+                      "target": "p",
+                      "toString": [Function],
+                      "warnTooManyClasses": [Function],
+                      "withComponent": [Function],
+                    }
+                  }
+                  forwardedRef={null}
+                  themes={
                     Object {
                       "frame": Object {
                         "border": Object {
@@ -879,110 +710,18 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                     }
                   }
                 >
-                  <StyledComponent
-                    forwardedComponent={
-                      Object {
-                        "$$typeof": Symbol(react.forward_ref),
-                        "attrs": Array [],
-                        "componentStyle": ComponentStyle {
-                          "componentId": "sc-bZQynM",
-                          "isStatic": false,
-                          "lastClassName": "gtSevl",
-                          "rules": Array [
-                            "
-  ",
-                            [Function],
-                            "
-",
-                          ],
-                        },
-                        "displayName": "styled.p",
-                        "foldedComponentIds": Array [],
-                        "render": [Function],
-                        "styledComponentId": "sc-bZQynM",
-                        "target": "p",
-                        "toString": [Function],
-                        "warnTooManyClasses": [Function],
-                        "withComponent": [Function],
-                      }
-                    }
-                    forwardedRef={null}
-                    theme={
-                      Object {
-                        "frame": Object {
-                          "border": Object {
-                            "default": "1px solid #d6d6d6",
-                            "lineStyle": "solid",
-                            "lineWidth": "1px",
-                            "radius": Object {
-                              "l": "8px",
-                              "m": "6px",
-                              "s": "3px",
-                            },
-                          },
-                        },
-                        "interaction": Object {
-                          "hover": Object {
-                            "animation": ".3s ease-out",
-                            "animationDuration": ".3s",
-                            "animationTiming": "ease-out",
-                            "feedbackOpacity": ".7",
-                          },
-                        },
-                        "palette": Object {
-                          "BACKGROUND": "#f5f6fa",
-                          "BORDER": "#d6d6d6",
-                          "COLUMN": "#f9f9f9",
-                          "DANGER": "#ef475b",
-                          "MAIN": "#00a5ab",
-                          "OUTLINE": "rgba(0,165,171,0.5)",
-                          "OVERLAY": "rgba(0,0,0,0.15)",
-                          "SCRIM": "rgba(0,0,0,0.5)",
-                          "TEXT_BLACK": "#333",
-                          "TEXT_DISABLED": "#c1c1c1",
-                          "TEXT_GREY": "#767676",
-                          "WARNING": "#ff8800",
-                          "disableColor": [Function],
-                          "hoverColor": [Function],
-                        },
-                        "size": Object {
-                          "font": Object {
-                            "GRANDE": 18,
-                            "SHORT": 11,
-                            "TALL": 14,
-                            "VENTI": 24,
-                          },
-                          "mediaQuery": Object {
-                            "SP": 599,
-                            "TABLET": 959,
-                          },
-                          "pxToRem": [Function],
-                          "space": Object {
-                            "L": 40,
-                            "M": 32,
-                            "S": 24,
-                            "XL": 48,
-                            "XS": 16,
-                            "XXL": 56,
-                            "XXS": 8,
-                          },
-                        },
-                      }
-                    }
+                  <p
+                    className="sc-bZQynM jwslZ"
                   >
-                    <p
-                      className="sc-bZQynM gtSevl"
-                    >
-                      label
-                    </p>
-                  </StyledComponent>
-                </styled.p>
-              </label>
-            </StyledComponent>
-          </styled.label>
-        </div>
-      </StyledComponent>
-    </styled.div>
-  </CheckBoxLabelComponent>
+                    label
+                  </p>
+                </StyledComponent>
+              </styled.p>
+            </label>
+          </StyledComponent>
+        </styled.label>
+      </div>
+    </StyledComponent>
+  </styled.div>
 </Component>
 `;

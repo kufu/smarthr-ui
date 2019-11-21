@@ -1,6 +1,5 @@
-import * as React from 'react'
-import styled, { css } from 'styled-components'
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import React, { FC } from 'react'
+import styled from 'styled-components'
 
 interface Props {
   title?: string
@@ -8,14 +7,9 @@ interface Props {
   className?: string
 }
 
-const BlankImageComponent: React.FC<Props & InjectedProps> = ({
-  title = 'BlankImage',
-  size = 'm',
-  className = '',
-  theme,
-}) => (
+export const BlankImage: FC<Props> = ({ title = 'BlankImage', size = 'm', className = '' }) => (
   <Wrapper className={className}>
-    <Svg theme={theme} className={size} viewBox="0 0 250 250" role="img" aria-label={title}>
+    <Svg className={size} viewBox="0 0 250 250" role="img" aria-label={title}>
       <title>{title}</title>
       <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g transform="translate(20.283019, 12.735849)">
@@ -145,34 +139,26 @@ const BlankImageComponent: React.FC<Props & InjectedProps> = ({
   </Wrapper>
 )
 
-export const BlankImage = withTheme(BlankImageComponent)
-
 const Wrapper = styled.figure`
   display: inline-block;
   margin: 0;
   padding: 0;
 `
-
 const Svg = styled.svg`
-  ${({ theme }: InjectedProps) => {
-    const { pxToRem } = theme.size
-    return css`
-      display: block;
+  display: block;
 
-      &.s {
-        width: ${pxToRem(166)};
-        height: ${pxToRem(166)};
-      }
+  &.s {
+    width: 166px;
+    height: 166px;
+  }
 
-      &.m {
-        width: ${pxToRem(250)};
-        height: ${pxToRem(250)};
-      }
+  &.m {
+    width: 250px;
+    height: 250px;
+  }
 
-      &.l {
-        width: ${pxToRem(375)};
-        height: ${pxToRem(375)};
-      }
-    `
-  }}
+  &.l {
+    width: 375px;
+    height: 375px;
+  }
 `

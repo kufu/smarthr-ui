@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled, { css, createGlobalStyle } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 type Props = {
   onClickOverlay?: () => void
@@ -12,7 +12,7 @@ type Props = {
   children: React.ReactNode
 }
 
-type MergedStyledProps = InjectedProps & {
+type StyleProps = {
   top?: number
   right?: number
   bottom?: number
@@ -23,11 +23,8 @@ function exist(value: any) {
   return value !== undefined && value !== null
 }
 
-const DialogContentInnerComponent: React.FC<Props & InjectedProps> = ({
-  onClickOverlay,
-  children,
-  ...props
-}) => {
+export const DialogContentInner: React.FC<Props> = ({ onClickOverlay, children, ...props }) => {
+  const theme = useTheme()
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
@@ -36,15 +33,15 @@ const DialogContentInnerComponent: React.FC<Props & InjectedProps> = ({
 
   return (
     <Wrapper className={isMounted ? 'active' : ''}>
-      <Background onClick={onClickOverlay} {...props} />
-      <Inner {...props}>{children}</Inner>
+      <Background onClick={onClickOverlay} themes={theme} {...props} />
+      <Inner themes={theme} {...props}>
+        {children}
+      </Inner>
       {/* Suppresses scrolling of body while modal is displayed */}
       <ScrollSuppressing />
     </Wrapper>
   )
 }
-
-export const DialogContentInner = withTheme(DialogContentInnerComponent)
 
 const Wrapper = styled.div`
   visibility: hidden;
@@ -62,8 +59,8 @@ const Wrapper = styled.div`
     opacity: 1;
   }
 `
-const Inner = styled.div`
-  ${({ theme, top, right, bottom, left }: MergedStyledProps) => {
+const Inner = styled.div<StyleProps & { themes: Theme }>`
+  ${({ themes, top, right, bottom, left }) => {
     const positionRight = exist(right) ? `${right}px` : 'auto'
     const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
     let positionTop = exist(top) ? `${top}px` : 'auto'
@@ -88,22 +85,22 @@ const Inner = styled.div`
       right: ${positionRight};
       bottom: ${positionBottom};
       left: ${positionLeft};
-      border-radius: ${theme.frame.border.radius.l};
+      border-radius: ${themes.frame.border.radius.l};
       background-color: #fff;
       box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       transform: translate(${translateX}, ${translateY});
     `
   }}
 `
-const Background = styled.div`
-  ${({ theme }: InjectedProps) => {
+const Background = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
     return css`
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: ${theme.palette.SCRIM};
+      background-color: ${themes.palette.SCRIM};
     `
   }}
 `

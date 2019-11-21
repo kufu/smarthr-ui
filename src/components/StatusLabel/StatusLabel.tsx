@@ -1,104 +1,89 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
-type Type = 'done' | 'success' | 'process' | 'required' | 'disabled' | 'must' | 'warning' | 'error'
-
-interface Props {
-  type?: Type
+type Props = {
+  type?: 'done' | 'success' | 'process' | 'required' | 'disabled' | 'must' | 'warning' | 'error'
   className?: string
   children: string
 }
 
-type MergedProps = Props & InjectedProps
+export const StatusLabel: FC<Props> = ({ type = 'done', className = '', children }) => {
+  const theme = useTheme()
 
-const StatusLabelComponent: React.FC<MergedProps> = ({
-  type = 'done',
-  className = '',
-  children,
-  theme,
-}) => {
   return (
-    <Wrapper theme={theme} className={`${type} ${className}`}>
+    <Wrapper className={`${type} ${className}`} themes={theme}>
       {children}
     </Wrapper>
   )
 }
 
-export const StatusLabel = withTheme(StatusLabelComponent)
+const borderStyle = (border: string) => css`
+  border: ${border};
+  background-color: #fff;
+`
+const fillStyle = (backgroundColor: string) => css`
+  background-color: ${backgroundColor};
+  color: #fff;
+`
+const Wrapper = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, frame, palette } = themes
 
-const BorderStyle = css`
-  ${({ theme }: InjectedProps) => {
     return css`
-      border: ${theme.frame.border.default};
-      background-color: #fff;
-    `
-  }}
-`
-const FillStyle = css`
-  ${({ theme }: InjectedProps) => {
-    return css`
-      background-color: ${theme.palette.BORDER};
-      color: #fff;
-    `
-  }}
-`
-const Wrapper = styled.span`
-  ${({ theme }: InjectedProps) => {
-    return css`
-      height: ${theme.size.pxToRem(20)};
+      height: ${size.pxToRem(20)};
       box-sizing: border-box;
       margin: 0;
-      padding: 0 ${theme.size.pxToRem(theme.size.space.XXS)};
+      padding: 0 ${size.pxToRem(size.space.XXS)};
       display: inline-block;
       white-space: nowrap;
-      font-size: ${theme.size.pxToRem(theme.size.font.SHORT)};
+      font-size: ${size.pxToRem(size.font.SHORT)};
       font-weight: bold;
-      line-height: ${theme.size.pxToRem(20)};
+      line-height: ${size.pxToRem(20)};
 
       &.done {
-        ${BorderStyle}
-        border-color: ${theme.palette.BORDER};
-        color: ${theme.palette.TEXT_GREY};
+        ${borderStyle(frame.border.default)}
+        border-color: ${palette.BORDER};
+        color: ${palette.TEXT_GREY};
       }
 
       &.success {
-        ${BorderStyle}
-        border-color: ${theme.palette.MAIN};
-        color: ${theme.palette.MAIN};
+        ${borderStyle(frame.border.default)}
+        border-color: ${palette.MAIN};
+        color: ${palette.MAIN};
       }
 
       &.process {
-        ${BorderStyle}
-        border-color: ${theme.palette.WARNING};
-        color: ${theme.palette.WARNING};
+        ${borderStyle(frame.border.default)}
+        border-color: ${palette.WARNING};
+        color: ${palette.WARNING};
       }
 
       &.required {
-        ${BorderStyle}
-        border-color: ${theme.palette.DANGER};
-        color: ${theme.palette.DANGER};
+        ${borderStyle(frame.border.default)}
+        border-color: ${palette.DANGER};
+        color: ${palette.DANGER};
       }
 
       &.disabled {
-        ${FillStyle}
-        background-color: ${theme.palette.TEXT_GREY};
+        ${fillStyle(palette.BORDER)}
+        background-color: ${palette.TEXT_GREY};
       }
 
       &.must {
-        ${FillStyle}
-        background-color: ${theme.palette.MAIN};
+        ${fillStyle(palette.BORDER)}
+        background-color: ${palette.MAIN};
       }
 
       &.warning {
-        ${FillStyle}
-        background-color: ${theme.palette.WARNING};
+        ${fillStyle(palette.BORDER)}
+        background-color: ${palette.WARNING};
       }
 
       &.error {
-        ${FillStyle}
-        background-color: ${theme.palette.DANGER};
+        ${fillStyle(palette.BORDER)}
+        background-color: ${palette.DANGER};
       }
     `
   }}

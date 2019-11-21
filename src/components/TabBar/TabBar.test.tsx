@@ -28,9 +28,4 @@ describe('TabBar', () => {
   it('should be able to render without crashing', () => {
     ReactTestRenderer.create(<Tab />)
   })
-
-  it('should render a `<TabBarComponent />`', () => {
-    const component = mount(<Tab />)
-    expect(component.find('TabBarComponent')).toHaveLength(1)
-  })
 })

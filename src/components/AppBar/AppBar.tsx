@@ -1,15 +1,13 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
 import { ComponentProps, Size, StyledProperties } from '../../types/props'
+import { useTheme } from '../../hooks/useTheme'
 
-type MergedComponentProps = ComponentProps & InjectedProps
-type MergedStyledProps = StyledProperties & InjectedProps
-
-const AppBarComponent: React.FC<MergedComponentProps> = ({ ...props }) => <Wrapper {...props} />
-
-export const AppBar = withTheme(AppBarComponent)
+export const AppBar: React.FC<ComponentProps> = ({ ...props }) => {
+  const theme = useTheme()
+  return <Wrapper theme={theme} {...props} />
+}
 
 const getSpaceSize = (size: Size): 'XS' | 'S' | 'M' => {
   const spaceMap: any = {
@@ -19,8 +17,8 @@ const getSpaceSize = (size: Size): 'XS' | 'S' | 'M' => {
   }
   return spaceMap[size]
 }
-const Wrapper = styled.div`
-  ${({ spSize = 'm', pcSize = 'm', tabletSize = 'm', theme }: MergedStyledProps) => {
+const Wrapper = styled.div<StyledProperties>`
+  ${({ spSize = 'm', pcSize = 'm', tabletSize = 'm', theme }) => {
     const { size, palette } = theme
     const [pcPadding, tabletPadding, spPadding] = [pcSize, tabletSize, spSize]
       .map(getSpaceSize)

@@ -1,5 +1,8 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
+
+import { isTouchDevice } from '../../libs/ua'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 import {
   BaseButton,
@@ -11,12 +14,19 @@ import {
 type ButtonProps = Omit<BaseButtonProps, 'square'>
 type AnchorProps = Omit<BaseAnchorProps, 'square'>
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { isTouchDevice } from '../../libs/ua'
+export const TextButton: FC<ButtonProps> = props => {
+  const theme = useTheme()
+  return <TextStyleButton themes={theme} {...props} />
+}
 
-const injectStyle = <T extends {}>(component: React.FC<T & InjectedProps>) => styled(component)`
-  ${({ theme }: InjectedProps) => {
-    const { palette, interaction, frame } = theme
+export const TextButtonAnchor: FC<AnchorProps> = props => {
+  const theme = useTheme()
+  return <TextStyleButtonAnchor themes={theme} {...props} />
+}
+
+const textStyle = css`
+  ${({ themes }: { themes: Theme }) => {
+    const { palette, interaction, frame } = themes
 
     return css`
       background-color: transparent;
@@ -35,6 +45,9 @@ const injectStyle = <T extends {}>(component: React.FC<T & InjectedProps>) => st
     `
   }}
 `
-
-export const TextButton = withTheme(injectStyle<ButtonProps>(BaseButton))
-export const TextButtonAnchor = withTheme(injectStyle<AnchorProps>(BaseButtonAnchor))
+const TextStyleButton = styled(BaseButton)`
+  ${textStyle}
+`
+const TextStyleButtonAnchor = styled(BaseButtonAnchor)`
+  ${textStyle}
+`

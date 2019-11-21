@@ -1,11 +1,11 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme } from '../../hooks/useTheme'
 
 import { ItemButton } from './PaginationItem'
 import { Icon } from '../Icon'
 
-interface Props {
+type Props = {
   targetPage: number
   onClick: (pageNumber: number) => void
   direction: 'prev' | 'next'
@@ -13,39 +13,37 @@ interface Props {
   double?: boolean
 }
 
-class PaginationControllerItemComponent extends React.PureComponent<Props & InjectedProps> {
-  public render() {
-    const { theme, direction, disabled, double } = this.props
-    return (
-      <ItemButton
-        square
-        size="s"
-        className="paginationItem"
-        onClick={this.onClick}
-        theme={theme}
-        disabled={disabled}
-      >
-        <Icon
-          name={
-            direction === 'prev'
-              ? double
-                ? 'fa-angle-double-left'
-                : 'fa-chevron-left'
-              : double
-              ? 'fa-angle-double-right'
-              : 'fa-chevron-right'
-          }
-          color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.TEXT_BLACK}
-          size={13}
-        />
-      </ItemButton>
-    )
-  }
+export const PaginationControllerItem: FC<Props> = ({
+  direction,
+  disabled,
+  double,
+  targetPage,
+  onClick,
+}) => {
+  const theme = useTheme()
 
-  private onClick = () => {
-    const { onClick, targetPage } = this.props
-    onClick(targetPage)
-  }
+  return (
+    <ItemButton
+      square
+      size="s"
+      className="paginationItem"
+      onClick={() => onClick(targetPage)}
+      disabled={disabled}
+      themes={theme}
+    >
+      <Icon
+        name={
+          direction === 'prev'
+            ? double
+              ? 'fa-angle-double-left'
+              : 'fa-chevron-left'
+            : double
+            ? 'fa-angle-double-right'
+            : 'fa-chevron-right'
+        }
+        color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.TEXT_BLACK}
+        size={13}
+      />
+    </ItemButton>
+  )
 }
-
-export const PaginationControllerItem = withTheme(PaginationControllerItemComponent)

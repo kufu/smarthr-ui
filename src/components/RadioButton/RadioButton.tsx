@@ -1,23 +1,23 @@
-import React, { FC, useCallback } from 'react'
+import React, { InputHTMLAttributes, FC, ChangeEvent, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
-export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
+export type Props = InputHTMLAttributes<HTMLInputElement> & {
   themeColor?: 'light' | 'dark'
 }
 
-const RadioButtonComponent: FC<Props & InjectedProps> = ({
+export const RadioButton: FC<Props> = ({
   themeColor = 'light',
   className = '',
   onChange,
-  theme,
   ...props
 }) => {
+  const theme = useTheme()
   const { checked, disabled } = props
   const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       if (onChange) onChange(e)
     },
     [onChange],
@@ -25,13 +25,11 @@ const RadioButtonComponent: FC<Props & InjectedProps> = ({
 
   return (
     <Wrapper className={className}>
-      <Input type="radio" theme={theme} onChange={handleChange} {...props} />
-      <Box className={boxClassName} theme={theme} />
+      <Input type="radio" onChange={handleChange} themes={theme} {...props} />
+      <Box className={boxClassName} themes={theme} />
     </Wrapper>
   )
 }
-
-export const RadioButton = withTheme(RadioButtonComponent)
 
 const Wrapper = styled.div`
   position: relative;
@@ -40,9 +38,10 @@ const Wrapper = styled.div`
   height: 20px;
   line-height: 1;
 `
-const Box = styled.span`
-  ${({ theme }: InjectedProps) => {
-    const { frame, palette } = theme
+const Box = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { frame, palette } = themes
+
     return css`
       display: inline-block;
       width: 100%;
@@ -97,9 +96,10 @@ const Box = styled.span`
     `
   }}
 `
-const Input = styled.input`
-  ${({ theme }: InjectedProps) => {
-    const { palette } = theme
+const Input = styled.input<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { OUTLINE } = themes.palette
+
     return css`
       opacity: 0;
       position: absolute;
@@ -115,7 +115,7 @@ const Input = styled.input`
       }
 
       &:focus + span {
-        box-shadow: 0 0 0 2px ${palette.OUTLINE};
+        box-shadow: 0 0 0 2px ${OUTLINE};
       }
     `
   }}

@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { RadioButton, Props as RadioButtonProps } from '../RadioButton'
 
@@ -9,21 +9,18 @@ type Props = RadioButtonProps & {
   label: string
 }
 
-const RadioButtonLabelComponent: FC<Props & InjectedProps> = ({
-  label,
-  className = '',
-  theme,
-  ...props
-}) => (
-  <Wrapper className={className}>
-    <Label className={`${props.disabled ? 'disabled' : ''}`}>
-      <RadioButton {...props} />
-      <Txt theme={theme}>{label}</Txt>
-    </Label>
-  </Wrapper>
-)
+export const RadioButtonLabel: FC<Props> = ({ label, className = '', ...props }) => {
+  const theme = useTheme()
 
-export const RadioButtonLabel = withTheme(RadioButtonLabelComponent)
+  return (
+    <Wrapper className={className}>
+      <Label className={`${props.disabled ? 'disabled' : ''}`}>
+        <RadioButton {...props} />
+        <Txt themes={theme}>{label}</Txt>
+      </Label>
+    </Wrapper>
+  )
+}
 
 const Wrapper = styled.div`
   display: inline-block;
@@ -37,10 +34,13 @@ const Label = styled.label`
     cursor: default;
   }
 `
-const Txt = styled.p`
-  ${({ theme }: InjectedProps) => css`
-    margin: 0 0 0 ${theme.size.pxToRem(theme.size.space.XXS)};
-    font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
-    color: ${theme.palette.TEXT_BLACK};
-  `}
+const Txt = styled.p<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, palette } = themes
+    return css`
+      margin: 0 0 0 ${size.pxToRem(size.space.XXS)};
+      font-size: ${size.pxToRem(size.font.TALL)};
+      color: ${palette.TEXT_BLACK};
+    `
+  }}
 `
