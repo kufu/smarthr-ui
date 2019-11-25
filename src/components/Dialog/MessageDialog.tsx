@@ -8,6 +8,7 @@ import { MessageDialogContentInner } from './MessageDialogContentInner'
 type Props = MessageDialogContentProps & {
   isOpen: boolean
   onClickClose: () => void
+  onClickOverlay?: () => void
 }
 
 export const MessageDialog: React.FC<Props> = ({
@@ -16,6 +17,7 @@ export const MessageDialog: React.FC<Props> = ({
   description,
   closeText,
   onClickClose,
+  onClickOverlay = () => {},
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current
@@ -31,7 +33,7 @@ export const MessageDialog: React.FC<Props> = ({
   if (!isOpen) return null
 
   return createPortal(
-    <DialogContentInner onClickOverlay={onClickClose} {...props}>
+    <DialogContentInner onClickOverlay={onClickOverlay} {...props}>
       <MessageDialogContentInner
         title={title}
         description={description}
