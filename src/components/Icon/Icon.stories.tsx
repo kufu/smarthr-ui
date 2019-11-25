@@ -72,6 +72,7 @@ const icons: Array<Props['name']> = [
   'fa-table',
   'fa-th-list',
   'fa-times',
+  'fa-times-circle',
   'fa-user-alt',
   'fa-user-circle',
   'fa-users',
