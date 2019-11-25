@@ -51,6 +51,7 @@ const Content = styled.dd<{ themes: Theme }>`
       padding: 0;
       color: ${palette.TEXT_BLACK};
       font-size: ${size.pxToRem(size.font.TALL)};
+      line-height: 1.5;
     `
   }}
 `
