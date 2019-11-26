@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
+import { Input } from '../Input'
 import { Dialog, MessageDialog, ActionDialog } from '.'
 import readme from './README.md'
 
@@ -51,7 +52,7 @@ const DialogController: React.FC = () => {
             />
           </li>
           <li>
-            <input name="test" value={text} onChange={e => onChangeText(e.currentTarget.value)} />
+            <Input name="test" value={text} onChange={e => onChangeText(e.currentTarget.value)} />
           </li>
         </DialogControllerBox>
         <DialogControllerBottom>
@@ -99,9 +100,11 @@ const MessageDialogController: React.FC = () => {
 const ActionDialogController: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = React.useState('hoge')
+  const [text, setText] = useState('')
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => setIsOpen(false)
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+  const onChangeText = (txt: string) => setText(txt)
 
   return (
     <div>
@@ -142,6 +145,14 @@ const ActionDialogController: React.FC = () => {
               label="piyo"
               checked={value === 'piyo'}
               onChange={onChange}
+            />
+          </li>
+          <li>
+            <Input
+              name="test"
+              value={text}
+              onChange={e => onChangeText(e.currentTarget.value)}
+              autoFocus
             />
           </li>
         </DialogControllerBox>
