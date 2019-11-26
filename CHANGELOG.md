@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.7.0](https://github.com/kufu/smarthr-ui/compare/v5.6.0...v5.7.0) (2019-11-26)
+
+
+### Features
+
+* **icon:** Add fa-times-circle ([961a5c9](https://github.com/kufu/smarthr-ui/commit/961a5c99e4e183c2b9ca8a761fccdc4e111e4daa))
+* Add onClickOverlay props to to ActionDialog and MessageDialog ([c002fd1](https://github.com/kufu/smarthr-ui/commit/c002fd1049f76106dc137ee08fdc137f6a29c20b))
+
+
+### Bug Fixes
+
+* Add line-height to DefinitionListItem ([e328728](https://github.com/kufu/smarthr-ui/commit/e3287281754de860ae31aeb51827c1e5f043604c))
+* Adjust style ([88b9767](https://github.com/kufu/smarthr-ui/commit/88b9767786e1905156dfe7c0584a8d52b89dd98b))
+* Fix build error ([1679909](https://github.com/kufu/smarthr-ui/commit/1679909d61121dc200a857d9f9587a141d3aa434))
+
 ## [5.6.0](https://github.com/kufu/smarthr-ui/compare/v5.5.0...v5.6.0) (2019-11-20)
 
 
