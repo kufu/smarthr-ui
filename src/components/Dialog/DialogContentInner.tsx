@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import styled, { css, createGlobalStyle } from 'styled-components'
+import React, { ReactNode, FC } from 'react'
+import styled, { css, createGlobalStyle, keyframes } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
@@ -9,7 +9,7 @@ type Props = {
   right?: number
   bottom?: number
   left?: number
-  children: React.ReactNode
+  children: ReactNode
 }
 
 type StyleProps = {
@@ -23,16 +23,10 @@ function exist(value: any) {
   return value !== undefined && value !== null
 }
 
-export const DialogContentInner: React.FC<Props> = ({ onClickOverlay, children, ...props }) => {
+export const DialogContentInner: FC<Props> = ({ onClickOverlay, children, ...props }) => {
   const theme = useTheme()
-  const [isMounted, setIsMounted] = useState(false)
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
   return (
-    <Wrapper className={isMounted ? 'active' : ''}>
+    <Wrapper>
       <Background onClick={onClickOverlay} themes={theme} {...props} />
       <Inner themes={theme} {...props}>
         {children}
@@ -43,8 +37,13 @@ export const DialogContentInner: React.FC<Props> = ({ onClickOverlay, children, 
   )
 }
 
+const fadeIn = keyframes`
+  0% { opacity: 0 }
+  30% { opacity: 0.1 }
+  70% { opacity: 0.9 }
+  100% { opacity: 1 }
+`
 const Wrapper = styled.div`
-  visibility: hidden;
   opacity: 0;
   z-index: 10000;
   position: fixed;
@@ -52,12 +51,7 @@ const Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  transition: opacity 0.3s ease-in-out;
-
-  &.active {
-    visibility: visible;
-    opacity: 1;
-  }
+  animation: 0.3s 0s both ${fadeIn};
 `
 const Inner = styled.div<StyleProps & { themes: Theme }>`
   ${({ themes, top, right, bottom, left }) => {
