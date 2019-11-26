@@ -23,31 +23,25 @@ export const Cell: FC<Props> = ({
   rowspan,
   highlighted = false,
 }) => {
-  const { group } = useContext(TableGroupContext)
   const theme = useTheme()
-
-  const WrapComponent = (tableGroup => {
-    switch (tableGroup) {
-      case 'body':
-        return Td
-      case 'head':
-        return Th
-    }
-  })(group)
-
+  const { group } = useContext(TableGroupContext)
   const classNames = `${className} ${highlighted ? 'highlighted' : ''}`
+  const props = {
+    children,
+    onClick,
+    colSpan: colspan,
+    rowSpan: rowspan,
+    className: classNames,
+    themes: theme,
+  }
 
-  return (
-    <WrapComponent
-      colSpan={colspan}
-      rowSpan={rowspan}
-      className={classNames}
-      onClick={onClick}
-      themes={theme}
-    >
-      {children}
-    </WrapComponent>
-  )
+  if (group === 'head') {
+    return <Th {...props} />
+  } else if (group === 'body') {
+    return <Td {...props} />
+  } else {
+    return null
+  }
 }
 
 const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
