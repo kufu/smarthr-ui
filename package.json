@@ -29,7 +29,7 @@
     "@types/react-test-renderer": "^16.8.1",
     "@types/react-transition-group": "^4.2.3",
     "@types/storybook__react": "^4.0.2",
-    "@types/styled-components": "^4.1.19",
+    "@types/styled-components": "^4.4.0",
     "babel-loader": "^8.0.5",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
