@@ -4,7 +4,20 @@ import styled, { css } from 'styled-components'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
 export type Props = InputHTMLAttributes<HTMLInputElement> & {
-  type?: 'text' | 'number' | 'password'
+  type?:
+    | 'text'
+    | 'search'
+    | 'tel'
+    | 'url'
+    | 'email'
+    | 'password'
+    | 'datetime'
+    | 'date'
+    | 'month'
+    | 'week'
+    | 'time'
+    | 'datetime-local'
+    | 'number'
   error?: boolean
   width?: number | string
   autoFocus?: boolean
