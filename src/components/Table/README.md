@@ -58,6 +58,6 @@ import { Table, Body, Head, Row, Cell } from 'smarthr-ui'
 | ----------- | -------- | -------------- | ------------ | ------------------------------------------------ |
 | className   | -        | **string**     | -            | className for component                          |
 | highlighted | -        | **boolean**    | false        | If true, the cell has a className of highlighted |
-| colspan     | -        | **number**     | -            | Indicates for how many columns the cell extends. |
-| rowspan     | -        | **number**     | -            | Indicates for how many rows the cell extends.    |
+| colSpan     | -        | **number**     | -            | Indicates for how many columns the cell extends. |
+| rowSpan     | -        | **number**     | -            | Indicates for how many rows the cell extends.    |
 | onClick     | -        | **() => void** | -            | Fires when clicked.                              |

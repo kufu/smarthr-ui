@@ -90,11 +90,11 @@ storiesOf('Table', module)
         </Table>
       </li>
       <li>
-        colspan / rowspan
+        colSpan / rowSpan
         <Table>
           <Head>
             <Row>
-              <Cell colspan={3}>colspan=3</Cell>
+              <Cell colSpan={3}>colSpan=3</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
@@ -110,7 +110,7 @@ storiesOf('Table', module)
               <Cell>cell</Cell>
             </Row>
             <Row>
-              <Cell rowspan={0}>rowspan=0</Cell>
+              <Cell rowSpan={0}>rowSpan=0</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
