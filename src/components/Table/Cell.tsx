@@ -6,7 +6,11 @@ import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { TableGroupContext } from './Table'
 
+// TODO: colspan and rowspan are incorrect naming conventions and are now deprecated and removed later.
+// Delete in January 2020.
 export type Props = {
+  colSpan?: number
+  rowSpan?: number
   colspan?: number
   rowspan?: number
   highlighted?: boolean
@@ -19,6 +23,8 @@ export const Cell: FC<Props> = ({
   className = '',
   children,
   onClick,
+  colSpan,
+  rowSpan,
   colspan,
   rowspan,
   highlighted = false,
@@ -29,8 +35,8 @@ export const Cell: FC<Props> = ({
   const props = {
     children,
     onClick,
-    colSpan: colspan,
-    rowSpan: rowspan,
+    colSpan: colSpan || colspan,
+    rowSpan: rowSpan || rowspan,
     className: classNames,
     themes: theme,
   }
