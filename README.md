@@ -42,9 +42,29 @@ The simplest and easiest example to get you started.
 ```tsx
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { ThemeProvider, Button } from 'smarthr-ui'
+
+const App: React.FC<{}> = () => (
+  <ThemeProvider>
+    <Button>Hello World</Button>
+  </ThemeProvider>
+)
+
+ReactDOM.render(<App />, document.getElementById('app'))
+```
+
+When you want the theme customized, use `createTheme`.
+
+```tsx
+import React from 'react'
+import ReactDOM from 'react-dom'
 import { createTheme, ThemeProvider, Button } from 'smarthr-ui'
 
-const theme = createTheme({})
+const theme = createTheme({
+  // palette: {
+  //   MAIN: '#000080',
+  // }
+})
 
 const App: React.FC<{}> = () => (
   <ThemeProvider theme={theme}>
