@@ -1,4 +1,4 @@
-<h1 align="center">SmartHR-UI</h1>
+<h1 align="center"><img src ="https://user-images.githubusercontent.com/44044475/70199902-44602780-1756-11ea-8108-1261cbbb4207.png" alt="SmartHR UI" title="SmartHR UI"></h1>
 
 <div align="center">
 
