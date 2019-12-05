@@ -1,14 +1,15 @@
 import { storiesOf } from '@storybook/react'
+import { action } from '@storybook/addon-actions'
 import React from 'react'
 import styled from 'styled-components'
 
+import { Base } from '../Base'
 import { AccordionPanel } from './AccordionPanel'
 import { AccordionPanelItem } from './AccordionPanelItem'
 import { AccordionPanelTrigger } from './AccordionPanelTrigger'
 import { AccordionPanelContent } from './AccordionPanelContent'
-import { Base as BaseComponent } from '../Base'
+
 import readme from './README.md'
-import { action } from '@storybook/addon-actions'
 
 const arr = Array.from({ length: 3 })
 // prettier-ignore
@@ -21,12 +22,12 @@ storiesOf('AccordionPanel', module)
     },
   })
   .add('Accordion style', () => (
-    <>
+    <Wrapper>
       <Base>
         <AccordionPanel>
-          <ul>
+          <BorderList>
             {arr.map((_, index) => (
-              <li className="border" key={index}>
+              <li key={index}>
                 <AccordionPanelItem name={`left-icon-${index}`}>
                   <AccordionPanelTrigger>Left Icon (default) {index}</AccordionPanelTrigger>
                   <AccordionPanelContent>
@@ -37,14 +38,14 @@ storiesOf('AccordionPanel', module)
                 </AccordionPanelItem>
               </li>
             ))}
-          </ul>
+          </BorderList>
         </AccordionPanel>
       </Base>
       <Base>
         <AccordionPanel iconPosition="right">
-          <ul>
+          <BorderList>
             {arr.map((_, index) => (
-              <li className="border" key={index}>
+              <li key={index}>
                 <AccordionPanelItem name={`right-icon-${index}`}>
                   <AccordionPanelTrigger>Right Icon {index}</AccordionPanelTrigger>
                   <AccordionPanelContent>
@@ -55,14 +56,14 @@ storiesOf('AccordionPanel', module)
                 </AccordionPanelItem>
               </li>
             ))}
-          </ul>
+          </BorderList>
         </AccordionPanel>
       </Base>
       <Base>
         <AccordionPanel displayIcon={false}>
-          <ul>
+          <BorderList>
             {arr.map((_, index) => (
-              <li className="border" key={index}>
+              <li key={index}>
                 <AccordionPanelItem name={`no-icon-${index}`}>
                   <AccordionPanelTrigger>No Icon {index}</AccordionPanelTrigger>
                   <AccordionPanelContent>
@@ -73,107 +74,81 @@ storiesOf('AccordionPanel', module)
                 </AccordionPanelItem>
               </li>
             ))}
-          </ul>
+          </BorderList>
         </AccordionPanel>
       </Base>
-      <Base>
-        <AccordionPanel displayIcon={false}>
-          <ul>
-            {arr.map((_, index) => (
-              <li key={index}>
-                <AccordionPanelItem name={`no-border-${index}`}>
-                  <AccordionPanelTrigger>No Border {index}</AccordionPanelTrigger>
-                  <AccordionPanelContent>
-                    <Content>
-                      <div>{lorem}</div>
-                    </Content>
-                  </AccordionPanelContent>
-                </AccordionPanelItem>
-              </li>
-            ))}
-          </ul>
-        </AccordionPanel>
-      </Base>
-    </>
+    </Wrapper>
   ))
   .add('Expanded options', () => (
-    <>
+    <Wrapper>
       <Base>
         <AccordionPanel displayIcon={true} expandableMultiply={true}>
-          <ul>
-            {arr.map((_, index) => (
-              <li key={index}>
-                <AccordionPanelItem name={`expandable-multiply-${index}`}>
-                  <AccordionPanelTrigger>Expandable Multiply {index}</AccordionPanelTrigger>
-                  <AccordionPanelContent>
-                    <Content>
-                      <div>{lorem}</div>
-                    </Content>
-                  </AccordionPanelContent>
-                </AccordionPanelItem>
-              </li>
-            ))}
-          </ul>
+          {arr.map((_, index) => (
+            <AccordionPanelItem key={index} name={`expandable-multiply-${index}`}>
+              <AccordionPanelTrigger>Expandable Multiply {index}</AccordionPanelTrigger>
+              <AccordionPanelContent>
+                <Content>
+                  <div>{lorem}</div>
+                </Content>
+              </AccordionPanelContent>
+            </AccordionPanelItem>
+          ))}
         </AccordionPanel>
       </Base>
       <Base>
         <AccordionPanel displayIcon={true} defaultExpanded={['default-expanded-0']}>
-          <ul>
-            {arr.map((_, index) => (
-              <li className="" key={index}>
-                <AccordionPanelItem name={`default-expanded-${index}`}>
-                  <AccordionPanelTrigger>Default Expanded {index}</AccordionPanelTrigger>
-                  <AccordionPanelContent>
-                    <Content>
-                      <div>{lorem}</div>
-                    </Content>
-                  </AccordionPanelContent>
-                </AccordionPanelItem>
-              </li>
-            ))}
-          </ul>
+          {arr.map((_, index) => (
+            <AccordionPanelItem key={index} name={`default-expanded-${index}`}>
+              <AccordionPanelTrigger>Default Expanded {index}</AccordionPanelTrigger>
+              <AccordionPanelContent>
+                <Content>
+                  <div>{lorem}</div>
+                </Content>
+              </AccordionPanelContent>
+            </AccordionPanelItem>
+          ))}
         </AccordionPanel>
       </Base>
-    </>
+    </Wrapper>
   ))
   .add('Callback', () => (
-    <Base>
-      <AccordionPanel displayIcon={false} expandableMultiply={true} onClick={action('Clicked')}>
-        <ul>
+    <Wrapper>
+      <Base>
+        <AccordionPanel displayIcon={false} expandableMultiply={true} onClick={action('Clicked')}>
           {arr.map((_, index) => (
-            <li key={index}>
-              <AccordionPanelItem name={`expandable-multiply-${index}`}>
-                <AccordionPanelTrigger>Expandable Multiply {index}</AccordionPanelTrigger>
-                <AccordionPanelContent>
-                  <Content>
-                    <div>{lorem}</div>
-                  </Content>
-                </AccordionPanelContent>
-              </AccordionPanelItem>
-            </li>
+            <AccordionPanelItem key={index} name={`expandable-multiply-${index}`}>
+              <AccordionPanelTrigger>Expandable Multiply {index}</AccordionPanelTrigger>
+              <AccordionPanelContent>
+                <Content>
+                  <div>{lorem}</div>
+                </Content>
+              </AccordionPanelContent>
+            </AccordionPanelItem>
           ))}
-        </ul>
-      </AccordionPanel>
-    </Base>
+        </AccordionPanel>
+      </Base>
+    </Wrapper>
   ))
 
-const Base = styled(BaseComponent)`
-  margin: 1rem;
+const Wrapper = styled.div`
+  padding: 24px;
 
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  > *:not(:first-child) {
+    margin-top: 24px;
+  }
+`
+const BorderList = styled.ul`
+  margin: 0;
+  padding: 0;
+  list-style: none;
 
-    > .border:not(:last-of-type) {
-      border-bottom: 1px solid #d6d6d6;
-    }
+  > li:not(:first-child) {
+    border-top: 1px solid #d6d6d6;
   }
 `
 const Content = styled.div`
-  font-size: 14px;
-  color: #333;
+  padding: 16px;
   background-color: #f9f9f9;
-  padding: 1rem;
-  text-align: justify;
+  color: #333;
+  font-size: 14px;
 `
