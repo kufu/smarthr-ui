@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { getNewExpandedItems } from './accordionPanelHelper'
 import { flatArrayToMap } from '../../libs/map'
 
@@ -38,6 +38,12 @@ export const AccordionPanel: React.FC<Props> = ({
     },
     [expandableMultiply, expandedItems],
   )
+
+  console.log('hogeeeeeee')
+
+  useEffect(() => {
+    if (defaultExpanded.length > 0) setExpanded(new Map(flatArrayToMap(defaultExpanded)))
+  }, [defaultExpanded])
 
   return (
     <AccordionPanelContext.Provider
