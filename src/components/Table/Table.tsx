@@ -1,40 +1,42 @@
-import * as React from 'react'
-import styled from 'styled-components'
+import React, { ReactNode, FC, createContext } from 'react'
+import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
-export type TableGroup = 'head' | 'body'
-
-export type TableGroupContextValue = {
-  group: TableGroup
-}
-
-export const TableGroupContext = React.createContext<TableGroupContextValue>({
+export const TableGroupContext = createContext<{
+  group: 'head' | 'body'
+}>({
   group: 'body',
 })
 
-export type Props = {
-  children?: React.ReactNode
+type Props = {
+  children?: ReactNode
   className?: string
 }
 
-const TableComponent: React.FC<Props & InjectedProps> = ({ theme, children, className = '' }) => (
-  <Wrapper theme={theme} className={className}>
-    {children}
-  </Wrapper>
-)
+export const Table: FC<Props> = ({ children, className = '' }) => {
+  const theme = useTheme()
 
-export const Table = withTheme(TableComponent)
+  return (
+    <Wrapper themes={theme} className={className}>
+      {children}
+    </Wrapper>
+  )
+}
 
-const Wrapper = styled.table`
-  ${({ theme }: InjectedProps) => `
-    background-color: ${theme.palette.COLUMN};
-  `}
-  width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
+const Wrapper = styled.table<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { COLUMN } = themes.palette
 
-  & > thead > tr > th {
-    background-color: ${({ theme }: InjectedProps) => theme.palette.COLUMN};
-  }
+    return css`
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+      background-color: ${COLUMN};
+
+      & > thead > tr > th {
+        background-color: ${COLUMN};
+      }
+    `
+  }}
 `

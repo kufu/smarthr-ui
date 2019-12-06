@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react'
+import { action } from '@storybook/addon-actions'
 import * as React from 'react'
-
 import styled from 'styled-components'
 
 import { Table } from './Table'
@@ -8,7 +8,6 @@ import { Body } from './Body'
 import { Head } from './Head'
 import { Row } from './Row'
 import { Cell } from './Cell'
-import { action } from '@storybook/addon-actions'
 import { Icon } from '../Icon'
 import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { SecondaryButton as Button } from '../Button'
@@ -91,11 +90,11 @@ storiesOf('Table', module)
         </Table>
       </li>
       <li>
-        colspan / rowspan
+        colSpan / rowSpan
         <Table>
           <Head>
             <Row>
-              <Cell colspan={3}>colspan=3</Cell>
+              <Cell colSpan={3}>colSpan=3</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
@@ -111,7 +110,7 @@ storiesOf('Table', module)
               <Cell>cell</Cell>
             </Row>
             <Row>
-              <Cell rowspan={0}>rowspan=0</Cell>
+              <Cell rowSpan={0}>rowSpan=0</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>

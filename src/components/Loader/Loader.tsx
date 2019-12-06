@@ -1,19 +1,13 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { keyframes, css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
-
-interface Props {
+type Props = {
   color?: string
   size?: 's' | 'm' | 'l'
   className?: string
 }
 
-const LoaderComponent: React.FC<Props & InjectedProps> = ({
-  color = '#fff',
-  size = 'm',
-  className = '',
-}) => (
+export const Loader: FC<Props> = ({ color = '#fff', size = 'm', className = '' }) => (
   <Wrapper className={`${size} ${className}`} color={color}>
     <div />
     <div />
@@ -22,8 +16,6 @@ const LoaderComponent: React.FC<Props & InjectedProps> = ({
     <div />
   </Wrapper>
 )
-
-export const Loader = withTheme(LoaderComponent)
 
 const lineScale = keyframes`
   0%, 100% {

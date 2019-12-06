@@ -1,7 +1,7 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { SecondaryButton } from '../Button'
 
@@ -15,35 +15,36 @@ type Props = BaseProps & {
   onClickClose: () => void
 }
 
-const MessageDialogContentInnerComponent: React.FC<Props & InjectedProps> = ({
+export const MessageDialogContentInner: FC<Props> = ({
   title,
   description,
   closeText,
   onClickClose,
-  theme,
-}) => (
-  <Wrapper theme={theme}>
-    <Title theme={theme}>{title}</Title>
-    <Description theme={theme}>{description}</Description>
-    <Bottom>
-      <SecondaryButton onClick={onClickClose}>{closeText}</SecondaryButton>
-    </Bottom>
-  </Wrapper>
-)
+}) => {
+  const theme = useTheme()
 
-export const MessageDialogContentInner = withTheme(MessageDialogContentInnerComponent)
+  return (
+    <Wrapper themes={theme}>
+      <Title themes={theme}>{title}</Title>
+      <Description themes={theme}>{description}</Description>
+      <Bottom>
+        <SecondaryButton onClick={onClickClose}>{closeText}</SecondaryButton>
+      </Bottom>
+    </Wrapper>
+  )
+}
 
-const Wrapper = styled.div`
-  ${({ theme }: InjectedProps) => {
-    const { pxToRem, space } = theme.size
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space } = themes.size
     return css`
       padding: ${pxToRem(space.XS)} ${pxToRem(space.S)};
     `
   }}
 `
-const Title = styled.p`
-  ${({ theme }: InjectedProps) => {
-    const { pxToRem, space, font } = theme.size
+const Title = styled.p<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space, font } = themes.size
     return css`
       margin: 0 0 ${pxToRem(space.S)} 0;
       font-size: ${pxToRem(font.GRANDE)};
@@ -51,9 +52,9 @@ const Title = styled.p`
     `
   }}
 `
-const Description = styled.div`
-  ${({ theme }: InjectedProps) => {
-    const { pxToRem, space, font } = theme.size
+const Description = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space, font } = themes.size
     return css`
       margin: 0 0 ${pxToRem(space.S)} 0;
       font-size: ${pxToRem(font.TALL)};

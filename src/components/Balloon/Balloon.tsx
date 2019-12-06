@@ -1,18 +1,17 @@
-import * as React from 'react'
+import React, { ReactNode, FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 type BalloonTheme = 'light' | 'dark'
-
-interface Props {
+type Props = {
   horizontal: 'right' | 'center' | 'left'
   vertical: 'top' | 'middle' | 'bottom'
   className?: string
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
-const balloonFactory: (theme: BalloonTheme) => React.FC<Props & InjectedProps> = theme => ({
+const balloonFactory: (theme: BalloonTheme) => FC<Props> = theme => ({
   horizontal,
   vertical,
   className = '',
@@ -22,17 +21,18 @@ const balloonFactory: (theme: BalloonTheme) => React.FC<Props & InjectedProps> =
     throw new Error('"vertical" can not be specified as "middle" when "horizontal" is "center".')
   }
 
+  const themes = useTheme()
   const classNames = `${theme} ${horizontal} ${vertical} ${className}`
 
-  return <Base className={classNames} {...props} />
+  return <Base className={classNames} themes={themes} {...props} />
 }
 
-export const LightBalloon = withTheme(balloonFactory('light'))
-export const DarkBalloon = withTheme(balloonFactory('dark'))
+export const LightBalloon = balloonFactory('light')
+export const DarkBalloon = balloonFactory('dark')
 
-const Base = styled.div`
-  ${({ theme }: InjectedProps) => {
-    const { palette, frame, size } = theme
+const Base = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette, frame, size } = themes
 
     return css`
       position: relative;

@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { FC, useEffect, useState, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
+
 import { Rect, getContentBoxStyle, ContentBoxStyle } from './dropdownHelper'
 
 type Props = {
@@ -9,11 +10,8 @@ type Props = {
   children: React.ReactNode
 }
 
-const DropdownContentInnerComponent: React.FC<Props & InjectedProps> = ({
-  triggerRect,
-  theme,
-  children,
-}) => {
+export const DropdownContentInner: FC<Props> = ({ triggerRect, children }) => {
+  const theme = useTheme()
   const [isMounted, setIsMounted] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
     top: 'auto',
@@ -53,24 +51,22 @@ const DropdownContentInnerComponent: React.FC<Props & InjectedProps> = ({
       ref={wrapperRef}
       contentBox={contentBox}
       className={isMounted ? 'active' : ''}
-      theme={theme}
+      themes={theme}
     >
       {children}
     </Wrapper>
   )
 }
 
-export const DropdownContentInner = withTheme(DropdownContentInnerComponent)
-
-const Wrapper = styled.div`
-  ${({ contentBox, theme }: { contentBox: ContentBoxStyle } & InjectedProps) => {
+const Wrapper = styled.div<{ themes: Theme; contentBox: ContentBoxStyle }>`
+  ${({ contentBox, themes }) => {
     return css`
       visibility: hidden;
       z-index: 99999;
       position: absolute;
       top: ${contentBox.top};
       left: ${contentBox.left};
-      border-radius: ${theme.frame.border.radius.m};
+      border-radius: ${themes.frame.border.radius.m};
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
         0 2px 1px -1px rgba(0, 0, 0, 0.12);
       background-color: #fff;

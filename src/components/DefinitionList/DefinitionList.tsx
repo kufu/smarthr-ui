@@ -1,37 +1,35 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+
+import { useTheme, Theme } from '../../hooks/useTheme'
+
 import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListItem'
 
-interface Props {
+type LayoutType = 'single' | 'double' | 'triple'
+type Props = {
   layout?: LayoutType
   items: DefinitionListItemProps[]
   className?: string
 }
 
-type LayoutType = 'single' | 'double' | 'triple'
+export const DefinitionList: FC<Props> = ({ items, layout = 'single', className = '' }) => {
+  const theme = useTheme()
 
-const DefinitionListComponent: React.FC<Props & InjectedProps> = ({
-  items,
-  layout = 'single',
-  className = '',
-  theme,
-}) => (
-  <Wrapper className={className} layout={layout}>
-    {items.map((item, index) => (
-      <Item
-        term={item.term}
-        description={item.description}
-        key={index}
-        theme={theme}
-        layout={layout}
-        className={item.className && item.className}
-      />
-    ))}
-  </Wrapper>
-)
-
-export const DefinitionList = withTheme(DefinitionListComponent)
+  return (
+    <Wrapper className={className} layout={layout}>
+      {items.map((item, index) => (
+        <Item
+          term={item.term}
+          description={item.description}
+          key={index}
+          layout={layout}
+          className={item.className && item.className}
+          themes={theme}
+        />
+      ))}
+    </Wrapper>
+  )
+}
 
 const Wrapper = styled.dl<{ layout: LayoutType }>`
   ${({ layout }) => {
@@ -72,12 +70,11 @@ const Wrapper = styled.dl<{ layout: LayoutType }>`
     }
   }}
 `
-
-const Item = styled(DefinitionListItem)<InjectedProps & { layout: LayoutType }>`
-  ${({ theme, layout }) => {
-    const { size } = theme
+const Item = styled(DefinitionListItem)<{ themes: Theme; layout: LayoutType }>`
+  ${({ themes, layout }) => {
+    const { pxToRem, space } = themes.size
     const basicStyle = css`
-      margin-bottom: ${size.pxToRem(size.space.S)};
+      margin-bottom: ${pxToRem(space.S)};
     `
 
     switch (layout) {

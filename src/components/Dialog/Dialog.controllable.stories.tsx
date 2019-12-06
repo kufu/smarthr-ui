@@ -90,6 +90,7 @@ const MessageDialogController: React.FC = () => {
         }
         closeText="close"
         onClickClose={onClickClose}
+        onClickOverlay={onClickClose}
       />
     </div>
   )
@@ -116,6 +117,7 @@ const ActionDialogController: React.FC = () => {
           setTimeout(closeDialog, 1000)
         }}
         onClickClose={onClickClose}
+        onClickOverlay={onClickClose}
       >
         <DialogControllerBox>
           <li>

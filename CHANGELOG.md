@@ -2,6 +2,87 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.7.1](https://github.com/kufu/smarthr-ui/compare/v5.7.0...v5.7.1) (2019-12-04)
+
+
+### Bug Fixes
+
+* Add colSpan, rowSpan props to Cell ([9f95526](https://github.com/kufu/smarthr-ui/commit/9f9552622b8f79251b8ddc71f12945a50ec9c72c))
+* Change the animation ([2fbaf84](https://github.com/kufu/smarthr-ui/commit/2fbaf84f3e69d427977ddcb5bfa564f247abcecb))
+* Increase type of Input type props, fix [#483](https://github.com/kufu/smarthr-ui/issues/483) ([e2db0fe](https://github.com/kufu/smarthr-ui/commit/e2db0fe475f81c8e16cfd748b4af79b8803343c9))
+
+## [5.7.0](https://github.com/kufu/smarthr-ui/compare/v5.6.0...v5.7.0) (2019-11-26)
+
+
+### Features
+
+* **icon:** Add fa-times-circle ([961a5c9](https://github.com/kufu/smarthr-ui/commit/961a5c99e4e183c2b9ca8a761fccdc4e111e4daa))
+* Add onClickOverlay props to to ActionDialog and MessageDialog ([c002fd1](https://github.com/kufu/smarthr-ui/commit/c002fd1049f76106dc137ee08fdc137f6a29c20b))
+
+
+### Bug Fixes
+
+* Add line-height to DefinitionListItem ([e328728](https://github.com/kufu/smarthr-ui/commit/e3287281754de860ae31aeb51827c1e5f043604c))
+* Adjust style ([88b9767](https://github.com/kufu/smarthr-ui/commit/88b9767786e1905156dfe7c0584a8d52b89dd98b))
+* Fix build error ([1679909](https://github.com/kufu/smarthr-ui/commit/1679909d61121dc200a857d9f9587a141d3aa434))
+
+## [5.6.0](https://github.com/kufu/smarthr-ui/compare/v5.5.0...v5.6.0) (2019-11-20)
+
+
+### Features
+
+* **icon:** Add arrow right icon ([0d76099](https://github.com/kufu/smarthr-ui/commit/0d76099))
+
+## [5.5.0](https://github.com/kufu/smarthr-ui/compare/v5.2.1...v5.5.0) (2019-11-15)
+
+
+### Bug Fixes
+
+* AccordionPanel -> AccordionPanelItem ([c221c65](https://github.com/kufu/smarthr-ui/commit/c221c65))
+* add className props ([75d3f20](https://github.com/kufu/smarthr-ui/commit/75d3f20))
+* callback onClick ([c792871](https://github.com/kufu/smarthr-ui/commit/c792871))
+* change area-expanded value ([02a0ae8](https://github.com/kufu/smarthr-ui/commit/02a0ae8))
+* change context types ([74edb9a](https://github.com/kufu/smarthr-ui/commit/74edb9a))
+* change icon ([f704049](https://github.com/kufu/smarthr-ui/commit/f704049))
+* change padding ([bcda0c6](https://github.com/kufu/smarthr-ui/commit/bcda0c6))
+* change rotate direction ([84963e5](https://github.com/kufu/smarthr-ui/commit/84963e5))
+* change to correct name ([1d0dd75](https://github.com/kufu/smarthr-ui/commit/1d0dd75))
+* children format ([a44720b](https://github.com/kufu/smarthr-ui/commit/a44720b))
+* context initial data ([2a6e39b](https://github.com/kufu/smarthr-ui/commit/2a6e39b))
+* export components ([d9609db](https://github.com/kufu/smarthr-ui/commit/d9609db))
+* export import ([369b780](https://github.com/kufu/smarthr-ui/commit/369b780))
+* fix for reviews ([20fdf3f](https://github.com/kufu/smarthr-ui/commit/20fdf3f))
+* Fixed a bug that did not animate when using firefox ([c65fa1f](https://github.com/kufu/smarthr-ui/commit/c65fa1f))
+* manage state inside component ([855c1ed](https://github.com/kufu/smarthr-ui/commit/855c1ed))
+* move helper file to inside libs ([36e30c6](https://github.com/kufu/smarthr-ui/commit/36e30c6))
+* move icon props to Accordion component ([e6717aa](https://github.com/kufu/smarthr-ui/commit/e6717aa))
+* move onClick to trigger component ([8dae970](https://github.com/kufu/smarthr-ui/commit/8dae970))
+* not to animate at first rendering ([530542b](https://github.com/kufu/smarthr-ui/commit/530542b))
+* pass icon props from AccordionPanel ([392668a](https://github.com/kufu/smarthr-ui/commit/392668a))
+* remove unnecessary onClick ([ebff6fb](https://github.com/kufu/smarthr-ui/commit/ebff6fb))
+* rename Accordion to AccordionPanel ([e3925fd](https://github.com/kufu/smarthr-ui/commit/e3925fd))
+* rename function ([f75505e](https://github.com/kufu/smarthr-ui/commit/f75505e))
+* state management ([932eb5c](https://github.com/kufu/smarthr-ui/commit/932eb5c))
+* style ([3f9bb39](https://github.com/kufu/smarthr-ui/commit/3f9bb39))
+* style ([5358cf9](https://github.com/kufu/smarthr-ui/commit/5358cf9))
+* use typescript generics ([1de2b8e](https://github.com/kufu/smarthr-ui/commit/1de2b8e))
+
+
+### Features
+
+* add aria attributes ([d5b6cfd](https://github.com/kufu/smarthr-ui/commit/d5b6cfd))
+* add className props ([e8aacf4](https://github.com/kufu/smarthr-ui/commit/e8aacf4))
+* add defaultExpanded props ([b53f599](https://github.com/kufu/smarthr-ui/commit/b53f599))
+* add DescriptionList ([88bab82](https://github.com/kufu/smarthr-ui/commit/88bab82))
+* add font themes ([56a3fc6](https://github.com/kufu/smarthr-ui/commit/56a3fc6))
+* add some examples ([b152b6f](https://github.com/kufu/smarthr-ui/commit/b152b6f))
+* add style ([7540a13](https://github.com/kufu/smarthr-ui/commit/7540a13))
+* add style ([2c99af2](https://github.com/kufu/smarthr-ui/commit/2c99af2))
+* **icon:** Add a FaClock icon ([73e8156](https://github.com/kufu/smarthr-ui/commit/73e8156))
+* change props ([8e51061](https://github.com/kufu/smarthr-ui/commit/8e51061))
+* divide icon props to iconPosition and DisplayIcon ([1f37eff](https://github.com/kufu/smarthr-ui/commit/1f37eff))
+* manage state useing Map object ([e512a42](https://github.com/kufu/smarthr-ui/commit/e512a42))
+
 ## [5.4.0](https://github.com/kufu/smarthr-ui/compare/v5.3.0...v5.4.0) (2019-11-13)
 
 

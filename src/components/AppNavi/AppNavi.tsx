@@ -1,7 +1,8 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
+
 import { StatusLabel } from '../StatusLabel/StatusLabel'
 import { AppNaviButton, AppNaviButtonProps } from './AppNaviButton'
 
@@ -11,56 +12,56 @@ interface Props {
   children?: React.ReactNode
 }
 
-const AppNaviComponent: React.FC<Props & InjectedProps> = ({
-  theme,
-  label,
-  buttons,
-  children = null,
-}) => (
-  <Wrapper theme={theme}>
-    {label && (
-      <StatusLabelWrapper theme={theme}>
-        <StatusLabel>{label}</StatusLabel>
-      </StatusLabelWrapper>
-    )}
+export const AppNavi: FC<Props> = ({ label, buttons, children = null }) => {
+  const theme = useTheme()
 
-    {buttons &&
-      buttons.map((button, index) => (
-        <AppNaviButton
-          icon={button.icon}
-          current={button.current}
-          key={index}
-          onClick={button.onClick}
-        >
-          {button.children}
-        </AppNaviButton>
-      ))}
-    {children}
-  </Wrapper>
-)
+  return (
+    <Wrapper themes={theme}>
+      {label && (
+        <StatusLabelWrapper themes={theme}>
+          <StatusLabel>{label}</StatusLabel>
+        </StatusLabelWrapper>
+      )}
 
-export const AppNavi = withTheme(AppNaviComponent)
+      {buttons &&
+        buttons.map((button, index) => (
+          <AppNaviButton
+            icon={button.icon}
+            current={button.current}
+            key={index}
+            onClick={button.onClick}
+          >
+            {button.children}
+          </AppNaviButton>
+        ))}
+      {children}
+    </Wrapper>
+  )
+}
 
-const Wrapper = styled.nav`
-  ${({ theme }: InjectedProps) => {
+const Wrapper = styled.nav<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem } = themes.size
+
     return css`
       display: flex;
       align-items: center;
       width: 100%;
-      height: ${theme.size.pxToRem(40)};
-      padding: 0 ${theme.size.pxToRem(20)};
+      height: ${pxToRem(40)};
+      padding: 0 ${pxToRem(20)};
       background-color: #fff;
       box-sizing: border-box;
-      box-shadow: 0 ${theme.size.pxToRem(1)} ${theme.size.pxToRem(4)} rgba(0, 0, 0, 0.15);
+      box-shadow: 0 ${pxToRem(1)} ${pxToRem(4)} rgba(0, 0, 0, 0.15);
     `
   }}
 `
+const StatusLabelWrapper = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space } = themes.size
 
-const StatusLabelWrapper = styled.span`
-  ${({ theme }: InjectedProps) => {
     return css`
       display: inline-block;
-      margin-right: ${theme.size.pxToRem(theme.size.space.XS)};
+      margin-right: ${pxToRem(space.XS)};
     `
   }}
 `

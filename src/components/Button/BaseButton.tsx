@@ -1,8 +1,7 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps } from '../../hocs/withTheme'
-
+import { useTheme, Theme } from '../../hooks/useTheme'
 import { hoverable } from '../../hocs/hoverable'
 import { isTouchDevice } from '../../libs/ua'
 
@@ -15,7 +14,7 @@ export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 's
   BaseProps
 export type AnchorProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'prefix'> & BaseProps
 
-export interface BaseProps {
+export type BaseProps = {
   size?: Size
   children?: React.ReactNode
   className?: string
@@ -25,44 +24,39 @@ export interface BaseProps {
   wide?: boolean
 }
 
-export type MargedButtonProps = ButtonProps & InjectedProps
-export type MargedAnchorProps = AnchorProps & InjectedProps
-
-export const buttonFactory: <Props extends BaseProps>(
-  tag: Tag,
-) => React.FC<Props & InjectedProps> = tag => ({
+export const buttonFactory: <Props extends BaseProps>(tag: Tag) => FC<Props> = tag => ({
   size = 'default',
   className = '',
   square = false,
   children = '',
   prefix = '',
   suffix = '',
-  theme,
   ...props
 }) => {
+  const theme = useTheme()
   const Tag = hoverable()(Base.withComponent(tag))
 
   // prettier-ignore
   const classNames = `${size} ${className} ${square ? 'square' : ''} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
 
   return (
-    <Tag className={classNames} theme={theme} {...props}>
-      {prefix && <Prefix theme={theme}>{prefix}</Prefix>}
+    <Tag className={classNames} themes={theme} {...props}>
+      {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
       {children}
-      {suffix && <Suffix theme={theme}>{suffix}</Suffix>}
+      {suffix && <Suffix themes={theme}>{suffix}</Suffix>}
     </Tag>
   )
 }
 
-const Base: any = styled.div`
-  ${({ theme }: InjectedProps) => {
-    const { frame, size, interaction } = theme
+const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
+  ${({ themes, wide }) => {
+    const { frame, size, interaction } = themes
 
     return css`
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      width: ${({ wide }: any) => (wide ? '100%;' : 'auto')};
+      width: ${wide ? '100%;' : 'auto'};
       min-width: 2rem;
       vertical-align: middle;
       border-radius: ${frame.border.radius.m};
@@ -110,25 +104,24 @@ const Base: any = styled.div`
     `
   }}
 `
-
-const Prefix = styled.span`
-  ${({ theme }: InjectedProps) => {
-    const { size } = theme
+const Prefix = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space } = themes.size
     return css`
       display: inline-flex;
-      margin-right: ${size.pxToRem(size.space.XXS)};
+      margin-right: ${pxToRem(space.XXS)};
     `
   }}
 `
-const Suffix = styled.span`
-  ${({ theme }: InjectedProps) => {
-    const { size } = theme
+const Suffix = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space } = themes.size
     return css`
       display: inline-flex;
-      margin-left: ${size.pxToRem(size.space.XXS)};
+      margin-left: ${pxToRem(space.XXS)};
     `
   }}
 `
 
-export const BaseButton: React.FC<MargedButtonProps> = buttonFactory<ButtonProps>('button')
-export const BaseButtonAnchor: React.FC<MargedAnchorProps> = buttonFactory<AnchorProps>('a')
+export const BaseButton: FC<ButtonProps> = buttonFactory<ButtonProps>('button')
+export const BaseButtonAnchor: FC<AnchorProps> = buttonFactory<AnchorProps>('a')

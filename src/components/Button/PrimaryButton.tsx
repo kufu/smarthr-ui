@@ -1,14 +1,24 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
+
+import { isTouchDevice } from '../../libs/ua'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { BaseButton, BaseButtonAnchor, ButtonProps, AnchorProps } from './BaseButton'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
-import { isTouchDevice } from '../../libs/ua'
+export const PrimaryButton: FC<ButtonProps> = props => {
+  const theme = useTheme()
+  return <PrimaryStyleButton themes={theme} {...props} />
+}
 
-const injectStyle = <T extends {}>(component: React.FC<T & InjectedProps>) => styled(component)`
-  ${({ theme }: InjectedProps) => {
-    const { palette, interaction } = theme
+export const PrimaryButtonAnchor: FC<AnchorProps> = props => {
+  const theme = useTheme()
+  return <PrimaryStyleButtonAnchor themes={theme} {...props} />
+}
+
+const primaryStyle = css`
+  ${({ themes }: { themes: Theme }) => {
+    const { palette, interaction } = themes
 
     return css`
       color: #fff;
@@ -28,6 +38,9 @@ const injectStyle = <T extends {}>(component: React.FC<T & InjectedProps>) => st
     `
   }}
 `
-
-export const PrimaryButton = withTheme(injectStyle<ButtonProps>(BaseButton))
-export const PrimaryButtonAnchor = withTheme(injectStyle<AnchorProps>(BaseButtonAnchor))
+const PrimaryStyleButton = styled(BaseButton)`
+  ${primaryStyle}
+`
+const PrimaryStyleButtonAnchor = styled(BaseButtonAnchor)`
+  ${primaryStyle}
+`

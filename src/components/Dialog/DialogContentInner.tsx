@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import styled, { css, createGlobalStyle } from 'styled-components'
+import React, { ReactNode, FC } from 'react'
+import styled, { css, createGlobalStyle, keyframes } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 type Props = {
   onClickOverlay?: () => void
@@ -9,10 +9,10 @@ type Props = {
   right?: number
   bottom?: number
   left?: number
-  children: React.ReactNode
+  children: ReactNode
 }
 
-type MergedStyledProps = InjectedProps & {
+type StyleProps = {
   top?: number
   right?: number
   bottom?: number
@@ -23,31 +23,27 @@ function exist(value: any) {
   return value !== undefined && value !== null
 }
 
-const DialogContentInnerComponent: React.FC<Props & InjectedProps> = ({
-  onClickOverlay,
-  children,
-  ...props
-}) => {
-  const [isMounted, setIsMounted] = useState(false)
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
+export const DialogContentInner: FC<Props> = ({ onClickOverlay, children, ...props }) => {
+  const theme = useTheme()
   return (
-    <Wrapper className={isMounted ? 'active' : ''}>
-      <Background onClick={onClickOverlay} {...props} />
-      <Inner {...props}>{children}</Inner>
+    <Wrapper>
+      <Background onClick={onClickOverlay} themes={theme} {...props} />
+      <Inner themes={theme} {...props}>
+        {children}
+      </Inner>
       {/* Suppresses scrolling of body while modal is displayed */}
       <ScrollSuppressing />
     </Wrapper>
   )
 }
 
-export const DialogContentInner = withTheme(DialogContentInnerComponent)
-
+const fadeIn = keyframes`
+  0% { opacity: 0 }
+  30% { opacity: 0.1 }
+  70% { opacity: 0.9 }
+  100% { opacity: 1 }
+`
 const Wrapper = styled.div`
-  visibility: hidden;
   opacity: 0;
   z-index: 10000;
   position: fixed;
@@ -55,15 +51,10 @@ const Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  transition: opacity 0.3s ease-in-out;
-
-  &.active {
-    visibility: visible;
-    opacity: 1;
-  }
+  animation: 0.3s 0s both ${fadeIn};
 `
-const Inner = styled.div`
-  ${({ theme, top, right, bottom, left }: MergedStyledProps) => {
+const Inner = styled.div<StyleProps & { themes: Theme }>`
+  ${({ themes, top, right, bottom, left }) => {
     const positionRight = exist(right) ? `${right}px` : 'auto'
     const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
     let positionTop = exist(top) ? `${top}px` : 'auto'
@@ -88,22 +79,22 @@ const Inner = styled.div`
       right: ${positionRight};
       bottom: ${positionBottom};
       left: ${positionLeft};
-      border-radius: ${theme.frame.border.radius.l};
+      border-radius: ${themes.frame.border.radius.l};
       background-color: #fff;
       box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       transform: translate(${translateX}, ${translateY});
     `
   }}
 `
-const Background = styled.div`
-  ${({ theme }: InjectedProps) => {
+const Background = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
     return css`
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: ${theme.palette.SCRIM};
+      background-color: ${themes.palette.SCRIM};
     `
   }}
 `
