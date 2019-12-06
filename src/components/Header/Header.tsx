@@ -8,7 +8,7 @@ import { HeaderNotification, HeaderNotificationProps } from './HeaderNotificatio
 import { HeaderUserDropDown, HeaderUserDropDownProps } from './HeaderUserDropDown'
 import { HeaderEmployeeDropDown, HeaderEmployeeDropDownProps } from './HeaderEmployeeDropDown'
 
-interface Props {
+type Props = {
   logoUrl?: string
   employeeListLink?: string
   isAdmin?: boolean

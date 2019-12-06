@@ -5,7 +5,7 @@ import { Dropdown, DropdownContent as DropdownContentComponent, DropdownTrigger 
 import { Icon } from '../Icon'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-export interface HeaderUserDropDownProps {
+export type HeaderUserDropDownProps = {
   displayName: string
   currentTenant: string
   avatar?: string

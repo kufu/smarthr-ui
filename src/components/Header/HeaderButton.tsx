@@ -5,7 +5,7 @@ import { Icon, Props as IconProps } from '../Icon/Icon'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-export interface HeaderButtonProps {
+export type HeaderButtonProps = {
   children?: React.ReactNode
   url?: string
   target?: string

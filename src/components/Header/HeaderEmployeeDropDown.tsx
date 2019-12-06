@@ -5,7 +5,7 @@ import { Dropdown, DropdownContent as DropdownContentComponent, DropdownTrigger 
 import { Icon } from '../Icon'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-export interface HeaderEmployeeDropDownProps {
+export type HeaderEmployeeDropDownProps = {
   crewsNewUrl: string
   crewsBulkInserterUrl: string
   crewsBulkUpdaterUrl: string

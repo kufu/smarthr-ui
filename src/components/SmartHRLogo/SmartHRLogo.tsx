@@ -1,15 +1,15 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-interface Props {
+type Props = {
   title?: string
   fill?: string
   className?: string
 }
-
-interface StyledProps {
+type StyledProps = {
   fill?: string
 }
+
 export const SmartHRLogo: React.FC<Props> = ({ fill, title, className }) => {
   return (
     <Wrapper fill={fill} className={className}>

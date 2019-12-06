@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-export interface HeaderNotificationProps {
+export type HeaderNotificationProps = {
   number?: number
   url?: string
 }
