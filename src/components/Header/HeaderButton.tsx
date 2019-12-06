@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Icon, Props as IconProps } from '../Icon/Icon'
@@ -12,7 +12,7 @@ export type HeaderButtonProps = {
   icon?: IconProps['name']
 }
 
-export const HeaderButton: React.FC<HeaderButtonProps> = ({ ...props }) => {
+export const HeaderButton: FC<HeaderButtonProps> = ({ ...props }) => {
   const theme = useTheme()
   return (
     <Wrapper themes={theme} href={props.url} target={props.target && props.target}>

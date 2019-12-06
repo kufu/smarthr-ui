@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
@@ -8,7 +8,7 @@ export type HeaderNotificationProps = {
   url?: string
 }
 
-export const HeaderNotification: React.FC<HeaderNotificationProps> = ({
+export const HeaderNotification: FC<HeaderNotificationProps> = ({
   number = 0,
   url = '/notifications',
 }) => {

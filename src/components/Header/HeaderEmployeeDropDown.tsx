@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Dropdown, DropdownContent as DropdownContentComponent, DropdownTrigger } from '../Dropdown'
@@ -12,7 +12,7 @@ export type HeaderEmployeeDropDownProps = {
   crewsInviterUrl: string
 }
 
-export const HeaderEmployeeDropDown: React.FC<HeaderEmployeeDropDownProps> = ({
+export const HeaderEmployeeDropDown: FC<HeaderEmployeeDropDownProps> = ({
   crewsNewUrl,
   crewsBulkInserterUrl,
   crewsBulkUpdaterUrl,

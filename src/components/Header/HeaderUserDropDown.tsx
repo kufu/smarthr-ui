@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Dropdown, DropdownContent as DropdownContentComponent, DropdownTrigger } from '../Dropdown'
@@ -16,7 +16,7 @@ export type HeaderUserDropDownProps = {
   schoolUrl: string
 }
 
-export const HeaderUserDropDown: React.FC<HeaderUserDropDownProps> = ({
+export const HeaderUserDropDown: FC<HeaderUserDropDownProps> = ({
   displayName,
   currentTenant,
   avatar,

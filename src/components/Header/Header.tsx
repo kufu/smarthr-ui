@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
@@ -18,7 +18,7 @@ type Props = {
   userDropDown: HeaderUserDropDownProps
 }
 
-export const Header: React.FC<Props> = ({
+export const Header: FC<Props> = ({
   logoUrl = '/',
   employeeListLink,
   isAdmin,

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 type Props = {
@@ -10,7 +10,7 @@ type StyledProps = {
   fill?: string
 }
 
-export const SmartHRLogo: React.FC<Props> = ({ fill, title, className }) => {
+export const SmartHRLogo: FC<Props> = ({ fill, title, className }) => {
   return (
     <Wrapper fill={fill} className={className}>
       <svg role="img">
