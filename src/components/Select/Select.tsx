@@ -76,7 +76,6 @@ const SelectBox = styled.select<{ themes: Theme }>`
       appearance: none;
       cursor: pointer;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
-      text-align: right;
 
       &:hover {
         background-color: ${palette.hoverColor('#fff')};
