@@ -80,6 +80,10 @@ import {
   FaUserAlt,
   FaUserCircle,
   FaUsers,
+  FaEdit,
+  FaRegPlusSquare,
+  FaGraduationCap,
+  FaPowerOff,
   FaUndo,
 } from 'react-icons/fa'
 
@@ -174,6 +178,10 @@ export const iconMap = {
   'fa-user-alt': FaUserAlt,
   'fa-user-circle': FaUserCircle,
   'fa-users': FaUsers,
+  'fa-edit': FaEdit,
+  'fa-reg-plus-square': FaRegPlusSquare,
+  'fa-graduation-cap': FaGraduationCap,
+  'fa-power-off': FaPowerOff,
   'fa-undo': FaUndo,
 }
 export const Icon: React.FC<Props> = ({ name, className = '', ...props }) => {

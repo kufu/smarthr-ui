@@ -1,0 +1,1 @@
+export { SmartHRLogo } from './SmartHRLogo'
