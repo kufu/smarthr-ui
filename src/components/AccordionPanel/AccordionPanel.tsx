@@ -39,8 +39,6 @@ export const AccordionPanel: React.FC<Props> = ({
     [expandableMultiply, expandedItems],
   )
 
-  console.log('hogeeeeeee')
-
   useEffect(() => {
     if (defaultExpanded.length > 0) setExpanded(new Map(flatArrayToMap(defaultExpanded)))
   }, [defaultExpanded])
