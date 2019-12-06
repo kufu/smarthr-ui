@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.8.0](https://github.com/kufu/smarthr-ui/compare/v5.7.1...v5.8.0) (2019-12-06)
+
+
+### Features
+
+* **icon:** Add fa-chevron-*, fa-copy, and fa-trash-* ([dcfac49](https://github.com/kufu/smarthr-ui/commit/dcfac49c867b92ac53021c0d6db11db51c425713))
+* Added Header component ([236f58f](https://github.com/kufu/smarthr-ui/commit/236f58fb1e5b64ada6d3ad12210a581ab4b76453))
+* Update behavior  of defaultExpanded ([8190c7c](https://github.com/kufu/smarthr-ui/commit/8190c7ccef1366959c331e93f9805e548fb95a70))
+
+
+### Bug Fixes
+
+* Remove console.log ([098a44d](https://github.com/kufu/smarthr-ui/commit/098a44d7c28a5e8ff91a08ca06b293fdd8c66f89))
+* **select:** fix selectbox css ([#503](https://github.com/kufu/smarthr-ui/issues/503)) ([934687b](https://github.com/kufu/smarthr-ui/commit/934687b2414ddbbf219e1eb77823d22f6f6f362c))
+
 ### [5.7.1](https://github.com/kufu/smarthr-ui/compare/v5.7.0...v5.7.1) (2019-12-04)
 
 
