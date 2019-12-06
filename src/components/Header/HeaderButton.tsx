@@ -1,9 +1,9 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
-
 import { Icon, Props as IconProps } from '../Icon/Icon'
+
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 export interface HeaderButtonProps {
   children?: React.ReactNode
@@ -12,25 +12,23 @@ export interface HeaderButtonProps {
   icon?: IconProps['name']
 }
 
-const HeaderButtonComponent: React.FC<HeaderButtonProps & InjectedProps> = ({
-  theme,
-  ...props
-}) => (
-  <Wrapper theme={theme} href={props.url} target={props.target && props.target}>
-    {props.icon && (
-      <HeaderButtonIcon theme={theme} role="presentation">
-        <Icon name={props.icon}></Icon>
-      </HeaderButtonIcon>
-    )}
-    {props.children && props.children}
-  </Wrapper>
-)
+export const HeaderButton: React.FC<HeaderButtonProps> = ({ ...props }) => {
+  const theme = useTheme()
+  return (
+    <Wrapper themes={theme} href={props.url} target={props.target && props.target}>
+      {props.icon && (
+        <HeaderButtonIcon themes={theme} role="presentation">
+          <Icon name={props.icon}></Icon>
+        </HeaderButtonIcon>
+      )}
+      {props.children && props.children}
+    </Wrapper>
+  )
+}
 
-export const HeaderButton = withTheme(HeaderButtonComponent)
-
-const Wrapper: any = styled.a`
-  ${({ theme }: InjectedProps) => {
-    const { size, interaction } = theme
+const Wrapper: any = styled.a<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, interaction } = themes
     return css`
       display: block;
       margin: 0;
@@ -48,12 +46,13 @@ const Wrapper: any = styled.a`
   }}
 `
 
-const HeaderButtonIcon: any = styled.figure`
-  ${({ theme }: InjectedProps) => {
+const HeaderButtonIcon: any = styled.figure<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 ${theme.size.pxToRem(theme.size.space.XXS)} 0 0;
+      margin: 0 ${size.pxToRem(size.space.XXS)} 0 0;
       vertical-align: middle;
     `
   }}

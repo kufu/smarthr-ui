@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
+import { useTheme, Theme } from '../../hooks/useTheme'
 import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
 import { HeaderNotification, HeaderNotificationProps } from './HeaderNotification'
@@ -18,7 +18,7 @@ interface Props {
   userDropDown: HeaderUserDropDownProps
 }
 
-const HeaderComponent: React.FC<Props & InjectedProps> = ({
+export const Header: React.FC<Props> = ({
   logoUrl = '/',
   employeeListLink,
   isAdmin,
@@ -26,8 +26,8 @@ const HeaderComponent: React.FC<Props & InjectedProps> = ({
   notification,
   employeeDropDown,
   userDropDown,
-  theme,
 }) => {
+  const theme = useTheme()
   const { number, url } = notification
   const {
     crewsNewUrl,
@@ -46,12 +46,12 @@ const HeaderComponent: React.FC<Props & InjectedProps> = ({
   } = userDropDown
 
   return (
-    <Wrapper theme={theme}>
+    <Wrapper themes={theme}>
       <HeaderLogoArea>
         <HeaderLogo href={logoUrl} aria-label="SmartHR">
           <SmartHRLogo />
         </HeaderLogo>
-        <TenantName theme={theme}>{currentTenant}</TenantName>
+        <TenantName themes={theme}>{currentTenant}</TenantName>
       </HeaderLogoArea>
 
       <HeaderAreaNavi>
@@ -89,15 +89,14 @@ const HeaderComponent: React.FC<Props & InjectedProps> = ({
   )
 }
 
-export const Header = withTheme(HeaderComponent)
-
-const Wrapper: any = styled.header`
-  ${({ theme }: InjectedProps) => {
+const Wrapper: any = styled.header<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, palette } = themes
     return css`
       display: flex;
-      height: ${theme.size.pxToRem(50)};
-      padding: 0 ${theme.size.pxToRem(theme.size.space.XS)};
-      background-color: ${theme.palette.HEADER_GREEN};
+      height: ${size.pxToRem(50)};
+      padding: 0 ${size.pxToRem(size.space.XS)};
+      background-color: ${palette.HEADER_GREEN};
       box-sizing: border-box;
       position: relative;
       align-items: center;
@@ -123,11 +122,12 @@ const HeaderLogo: any = styled.a`
   }
 `
 
-const TenantName: any = styled.span`
-  ${({ theme }: InjectedProps) => {
+const TenantName: any = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
     return css`
       display: block;
-      margin-left: ${theme.size.space.XS}px;
+      margin-left: ${size.space.XS}px;
       color: #fff;
     `
   }}

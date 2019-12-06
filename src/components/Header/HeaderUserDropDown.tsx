@@ -1,10 +1,9 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { InjectedProps, withTheme } from '../../hocs/withTheme'
-
 import { Dropdown, DropdownContent as DropdownContentComponent, DropdownTrigger } from '../Dropdown'
 import { Icon } from '../Icon'
+import { useTheme, Theme } from '../../hooks/useTheme'
 
 export interface HeaderUserDropDownProps {
   displayName: string
@@ -17,35 +16,35 @@ export interface HeaderUserDropDownProps {
   schoolUrl: string
 }
 
-const HeaderUserDropDownComponent: React.FC<HeaderUserDropDownProps & InjectedProps> = ({
+export const HeaderUserDropDown: React.FC<HeaderUserDropDownProps> = ({
   displayName,
   currentTenant,
   avatar,
   isAdmin = false,
-  theme,
 }) => {
+  const theme = useTheme()
   return (
     <Dropdown>
       <DropdownTrigger>
-        <ButtonWrapper theme={theme}>
-          {avatar && <Avatar src={avatar} theme={theme} alt={displayName + 'の写真'} />}
+        <ButtonWrapper themes={theme}>
+          {avatar && <Avatar src={avatar} themes={theme} alt={displayName + 'の写真'} />}
           {displayName}
-          <HeaderDropDownCaret key="headerDropDownCaret" theme={theme} role="presentation">
+          <HeaderDropDownCaret key="headerDropDownCaret" themes={theme} role="presentation">
             <Icon name="fa-caret-down" color="#fff" />
           </HeaderDropDownCaret>
         </ButtonWrapper>
       </DropdownTrigger>
 
       <DropdownContent>
-        <MenuList theme={theme} role="menu">
+        <MenuList themes={theme} role="menu">
           <MenuListItem role="menuitem">
-            <MenuListItemHeader theme={theme}>{displayName}</MenuListItemHeader>
+            <MenuListItemHeader themes={theme}>{displayName}</MenuListItemHeader>
           </MenuListItem>
 
           {!isAdmin && (
             <MenuListItem role="menuitem">
-              <MenuListItemAnchor theme={theme}>
-                <MenuListItemIcon theme={theme}>
+              <MenuListItemAnchor themes={theme}>
+                <MenuListItemIcon themes={theme}>
                   <Icon name="fa-user-alt" />
                 </MenuListItemIcon>
                 プロフィールの確認
@@ -54,8 +53,8 @@ const HeaderUserDropDownComponent: React.FC<HeaderUserDropDownProps & InjectedPr
           )}
 
           <MenuListItem role="menuitem">
-            <MenuListItemAnchor theme={theme}>
-              <MenuListItemIcon theme={theme}>
+            <MenuListItemAnchor themes={theme}>
+              <MenuListItemIcon themes={theme}>
                 <Icon name="fa-cog" />
               </MenuListItemIcon>
               個人設定
@@ -65,16 +64,16 @@ const HeaderUserDropDownComponent: React.FC<HeaderUserDropDownProps & InjectedPr
           {isAdmin && (
             <>
               <MenuListItem role="menuitem">
-                <MenuListItemDivider theme={theme} role="separator" />
+                <MenuListItemDivider themes={theme} role="separator" />
               </MenuListItem>
 
               <MenuListItem role="menuitem">
-                <MenuListItemHeader theme={theme}>{currentTenant}</MenuListItemHeader>
+                <MenuListItemHeader themes={theme}>{currentTenant}</MenuListItemHeader>
               </MenuListItem>
 
               <MenuListItem role="menuitem">
-                <MenuListItemAnchor theme={theme}>
-                  <MenuListItemIcon theme={theme}>
+                <MenuListItemAnchor themes={theme}>
+                  <MenuListItemIcon themes={theme}>
                     <Icon name="fa-building" />
                   </MenuListItemIcon>
                   共通設定
@@ -83,13 +82,13 @@ const HeaderUserDropDownComponent: React.FC<HeaderUserDropDownProps & InjectedPr
             </>
           )}
           <MenuListItem role="menuitem">
-            <MenuListItemDivider theme={theme} role="separator" />
+            <MenuListItemDivider themes={theme} role="separator" />
           </MenuListItem>
 
           {isAdmin && (
             <MenuListItem role="menuitem">
-              <MenuListItemAnchor theme={theme} target="_blank">
-                <MenuListItemIcon theme={theme}>
+              <MenuListItemAnchor themes={theme} target="_blank">
+                <MenuListItemIcon themes={theme}>
                   <Icon name="fa-graduation-cap" />
                 </MenuListItemIcon>
                 SmartHR スクール
@@ -98,8 +97,8 @@ const HeaderUserDropDownComponent: React.FC<HeaderUserDropDownProps & InjectedPr
           )}
 
           <MenuListItem role="menuitem">
-            <MenuListItemAnchor theme={theme}>
-              <MenuListItemIcon theme={theme}>
+            <MenuListItemAnchor themes={theme}>
+              <MenuListItemIcon themes={theme}>
                 <Icon name="fa-power-off" />
               </MenuListItemIcon>
               ログアウト
@@ -111,21 +110,21 @@ const HeaderUserDropDownComponent: React.FC<HeaderUserDropDownProps & InjectedPr
   )
 }
 
-export const HeaderUserDropDown = withTheme(HeaderUserDropDownComponent)
+const ButtonWrapper = styled.button<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
 
-const ButtonWrapper = styled.button`
-  ${({ theme }: InjectedProps) => {
     return css`
       display: flex;
       align-items: center;
       margin: 0;
-      padding: 0 ${theme.size.pxToRem(10)};
+      padding: 0 ${size.pxToRem(10)};
       border: none;
       background: initial;
       color: #fff;
-      font-size: ${theme.size.pxToRem(theme.size.font.TALL)};
+      font-size: ${size.pxToRem(size.font.TALL)};
       text-decoration: none;
-      line-height: ${theme.size.pxToRem(50)};
+      line-height: ${size.pxToRem(50)};
       transition: background-color 0.3s;
       cursor: pointer;
 
@@ -135,20 +134,24 @@ const ButtonWrapper = styled.button`
     `
   }}
 `
-const Avatar = styled.img`
-  ${({ theme }: InjectedProps) => {
+const Avatar = styled.img<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, frame } = themes
+
     return css`
-      border-radius: ${theme.frame.border.radius.m};
-      margin-right: ${theme.size.space.XXS}px;
+      border-radius: ${frame.border.radius.m};
+      margin-right: ${size.space.XXS}px;
     `
   }};
 `
-const HeaderDropDownCaret = styled.figure`
-  ${({ theme }: InjectedProps) => {
+const HeaderDropDownCaret = styled.figure<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
+
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 0 0 ${theme.size.pxToRem(theme.size.space.XXS)};
+      margin: 0 0 0 ${size.pxToRem(size.space.XXS)};
       vertical-align: middle;
     `
   }}
@@ -156,14 +159,16 @@ const HeaderDropDownCaret = styled.figure`
 const DropdownContent = styled(DropdownContentComponent)`
   transition: none;
 `
-const MenuList = styled.div`
-  ${({ theme }: InjectedProps) => {
+const MenuList = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, palette } = themes
+
     return css`
-      border: 1px solid ${theme.palette.BORDER};
-      border-radius: ${theme.size.pxToRem(3)};
+      border: 1px solid ${palette.BORDER};
+      border-radius: ${size.pxToRem(3)};
       background-color: #fff;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-      padding: ${theme.size.pxToRem(5)} 0;
+      padding: ${size.pxToRem(5)} 0;
     `
   }}
 `
@@ -171,51 +176,59 @@ const MenuListItem = styled.div`
   margin: 0;
   padding: 0;
 `
-const MenuListItemIcon = styled.figure`
-  ${({ theme }: InjectedProps) => {
+const MenuListItemIcon = styled.figure<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
+
     return css`
       display: flex;
       align-items: center;
       padding: 0;
-      margin: 0 ${theme.size.pxToRem(theme.size.space.XXS)} 0 0;
+      margin: 0 ${size.pxToRem(size.space.XXS)} 0 0;
     `
   }}
 `
-const MenuListItemAnchor = styled.a`
-  ${({ theme }: InjectedProps) => {
+const MenuListItemAnchor = styled.a<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, palette } = themes
+
     return css`
       display: flex;
       align-items: center;
-      padding: ${theme.size.pxToRem(3)} ${theme.size.pxToRem(20)};
-      color: ${theme.palette.TEXT_BLACK};
-      font-size: ${theme.size.pxToRem(theme.size.font.TALL)}
+      padding: ${size.pxToRem(3)} ${size.pxToRem(20)};
+      color: ${palette.TEXT_BLACK};
+      font-size: ${size.pxToRem(size.font.TALL)}
       text-decoration: none;
       white-space: nowrap;
       transition: background-color 0.3s;
 
       &:hover{
-        background-color: ${theme.palette.OVERLAY};
+        background-color: ${palette.OVERLAY};
       }
     `
   }}
 `
-const MenuListItemHeader = styled.div`
-  ${({ theme }: InjectedProps) => {
+const MenuListItemHeader = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, palette } = themes
+
     return css`
-      padding: ${theme.size.pxToRem(3)} ${theme.size.pxToRem(20)};
-      color: ${theme.palette.TEXT_GREY};
-      font-size: ${theme.size.pxToRem(theme.size.font.SHORT)}
+      padding: ${size.pxToRem(3)} ${size.pxToRem(20)};
+      color: ${palette.TEXT_GREY};
+      font-size: ${size.pxToRem(size.font.SHORT)}
       line-height: 1.6;
       white-space: nowrap;
     `
   }}
 `
-const MenuListItemDivider = styled.div`
-  ${({ theme }: InjectedProps) => {
+const MenuListItemDivider = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size, palette } = themes
+
     return css`
       padding: 0;
-      margin: ${theme.size.pxToRem(10)} 0;
-      border-top: 1px solid ${theme.palette.BORDER};
+      margin: ${size.pxToRem(10)} 0;
+      border-top: 1px solid ${palette.BORDER};
     `
   }}
 `
