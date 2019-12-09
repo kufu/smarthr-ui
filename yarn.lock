@@ -12487,14 +12487,14 @@ reg-keygen-git-hash-plugin@^0.8.5:
   dependencies:
     reg-suit-util "^0.8.5"
 
-reg-notify-github-plugin@^0.7.21:
-  version "0.7.26"
-  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.7.26.tgz#410fcf48d8c75e6a76bad38676dd569a0e16022f"
-  integrity sha512-l3IUjsEoZpVE5Fl6LmHGh4mmNO0Px1Q5+jCn8QgTWt0NTqAasDZnBpL1vdAspvo06M1YmsTkkNQTXRu52lUWMQ==
+reg-notify-github-plugin@^0.8.5:
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.8.5.tgz#18f6beb8280468ee65d4f95f3249b7bcb5d206e1"
+  integrity sha512-4JSJDXuJGHC8NO+uhpibMDptw3Lz0nHduOj/GuxLEUBbio3w9102VvR5fHcgW9hPPKjjwM0B/6WamLNbWWN50A==
   dependencies:
     opn "^5.4.0"
     reg-gh-app-interface "^1.0.1"
-    reg-suit-util "^0.7.25"
+    reg-suit-util "^0.8.5"
     request "^2.81.0"
     request-promise "^4.2.1"
     tiny-commit-walker "^1.1.2"
