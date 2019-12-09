@@ -12456,10 +12456,10 @@ refractor@^2.4.1:
     parse-entities "^1.1.2"
     prismjs "~1.17.0"
 
-reg-cli@^0.15.12:
-  version "0.15.12"
-  resolved "https://registry.yarnpkg.com/reg-cli/-/reg-cli-0.15.12.tgz#96e18b86ab081adde721442bd172071ff9fca620"
-  integrity sha512-H1JCUdIZ2RT69cdig5WRyz7RpIOkNh1J1QgCYxEDfsOsb3Es6MDMSxvoG/DG7fKEdNW8ZRmrZPvRDnHXSlIFoA==
+reg-cli@^0.15.13:
+  version "0.15.13"
+  resolved "https://registry.yarnpkg.com/reg-cli/-/reg-cli-0.15.13.tgz#6397bec7ad626792bd1b1f839ef8048ae77998cf"
+  integrity sha512-2qfJEG15DybbT/AAHf2AttoVAnfCrfybN0JQa1057CmQ72aN9oOjmbhtTxFQeGjxLEx1epkmrZcu1EhOm/HLhw==
   dependencies:
     bluebird "3.5.5"
     chalk "2.4.2"
@@ -12509,14 +12509,14 @@ reg-publish-s3-plugin@^0.7.22:
     reg-suit-util "^0.7.25"
     uuid "^3.1.0"
 
-reg-suit-core@^0.8.4:
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.8.4.tgz#6ca27f83a948279082c3239c089ce4834955b8d1"
-  integrity sha512-ArndCXERn1ijtshmUzMXQxXQWryEzr2V7MGp3FXGH3zRdQSNm6BGVIcCYc9oO4L77ki3VR23HSi5M/5JmKIkLg==
+reg-suit-core@^0.8.6:
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.8.6.tgz#8f44d504da2483d8b9fc623f9d86963b631758a5"
+  integrity sha512-0weAI3I/510+kJvv8LtvK8nS6feWYv/5zFtlx2zeiuQdVyCGZnXbe0Wh1oonTQx4om7LtfU2xc9YpDs3DJ5hsg==
   dependencies:
     cpx "^1.5.0"
-    reg-cli "^0.15.12"
-    reg-suit-util "^0.7.25"
+    reg-cli "^0.15.13"
+    reg-suit-util "^0.8.5"
     rimraf "^2.6.1"
 
 reg-suit-util@^0.7.25:
@@ -12546,15 +12546,15 @@ reg-suit-util@^0.8.5:
     mkdirp "^0.5.1"
 
 reg-suit@^0.8.1:
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.8.4.tgz#8cd94a81087632078123e3d3d39d9a127bd43baa"
-  integrity sha512-y0KGhr5cAb6H7Aobt4c4nAnDPt/M3H9lqj0TKncf4vgY0Arkp6biyTLait9Uo+DrYkjxVOeIrL08t0K3v4ZBnQ==
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.8.6.tgz#c90025b1143757da3dfbd42f7ab97188cd76a801"
+  integrity sha512-+/gGENj2FTLlIUghpYg41OAYqp1XZcuC7ZUSBxU9d8jAcoSHexaqFvNmjUJpIfLCmFedpNe+lqiRhaIcfw9MAA==
   dependencies:
     cp-file "^4.2.0"
     ignore "^3.3.7"
     inquirer "^3.1.1"
-    reg-suit-core "^0.8.4"
-    reg-suit-util "^0.7.25"
+    reg-suit-core "^0.8.6"
+    reg-suit-util "^0.8.5"
     yargs "^8.0.2"
 
 regenerate-unicode-properties@^8.1.0:
