@@ -45,7 +45,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-test-renderer": "16.12.0",
-    "reg-keygen-git-hash-plugin": "^0.7.16",
+    "reg-keygen-git-hash-plugin": "^0.8.5",
     "reg-notify-github-plugin": "^0.7.21",
     "reg-publish-s3-plugin": "^0.7.22",
     "reg-suit": "^0.8.1",
