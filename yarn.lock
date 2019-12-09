@@ -2000,13 +2000,13 @@
     core-js "^3.0.1"
 
 "@storybook/cli@^5.2.5":
-  version "5.2.7"
-  resolved "https://registry.yarnpkg.com/@storybook/cli/-/cli-5.2.7.tgz#17017c183a1bdb720dba05ca50d9e518616c2612"
-  integrity sha512-adEo8pbA3nU47AMi5o3c5tu/qM3q135c3plpymWtqcS3t4XY04wB28kKSJPyqjrqRi85axL+c1ApDiIFDPeXiw==
+  version "5.2.8"
+  resolved "https://registry.yarnpkg.com/@storybook/cli/-/cli-5.2.8.tgz#304ce8680ed5ab9b63501feb0e55186d06dcc60a"
+  integrity sha512-oV7UrUYwfAtFiigXEI3lyDKLH0Xc8HJ3wAGuhsZQ9Bp7NFAh7ARVoTXProFk0SVRfuFy7f2PaCwoHT6/kqf6mg==
   dependencies:
     "@babel/core" "^7.7.2"
     "@babel/preset-env" "^7.7.1"
-    "@storybook/codemod" "5.2.7"
+    "@storybook/codemod" "5.2.8"
     chalk "^2.4.1"
     commander "^2.19.0"
     core-js "^3.0.1"
@@ -2051,14 +2051,14 @@
   dependencies:
     core-js "^3.0.1"
 
-"@storybook/codemod@5.2.7":
-  version "5.2.7"
-  resolved "https://registry.yarnpkg.com/@storybook/codemod/-/codemod-5.2.7.tgz#599d2c6e59d168d690e5406851b7a3e7f342ce46"
-  integrity sha512-WC7T+t/agOfrSWeS6p9nIqD7CqKPE6aUJRFAfgS6myGuPoVhoEkTNNAPYG/d2gpLtRxqZI8lpSpDj9zI+99H9g==
+"@storybook/codemod@5.2.8":
+  version "5.2.8"
+  resolved "https://registry.yarnpkg.com/@storybook/codemod/-/codemod-5.2.8.tgz#eeb3bce176229af4f865c0ab72c9f189f0eab023"
+  integrity sha512-PsW21eMHaccT3y8qRKL7QTkaTYbnBTljiYle0Xy5CStTzsVG5haoayVD2kQPH69nftTURdIdkHr1rXPiyl+yvA==
   dependencies:
     "@mdx-js/mdx" "^1.0.0"
-    "@storybook/node-logger" "5.2.7"
-    "@storybook/router" "5.2.7"
+    "@storybook/node-logger" "5.2.8"
+    "@storybook/router" "5.2.8"
     core-js "^3.0.1"
     cross-spawn "^6.0.5"
     globby "^10.0.1"
@@ -2185,6 +2185,17 @@
     pretty-hrtime "^1.0.3"
     regenerator-runtime "^0.12.1"
 
+"@storybook/node-logger@5.2.8":
+  version "5.2.8"
+  resolved "https://registry.yarnpkg.com/@storybook/node-logger/-/node-logger-5.2.8.tgz#4a3df21d731014d54b9ca53d5b9a72dd350bb075"
+  integrity sha512-3TK5mx6VWbfJO+WUrqwPhTbTQ4qESTnwJY/02xPzOhvuC6tIG1QOxzi+Rq6rFlwxTpUuWh6iyDYnGIqFFQywkA==
+  dependencies:
+    chalk "^2.4.2"
+    core-js "^3.0.1"
+    npmlog "^4.1.2"
+    pretty-hrtime "^1.0.3"
+    regenerator-runtime "^0.12.1"
+
 "@storybook/react@^5.2.5":
   version "5.2.7"
   resolved "https://registry.yarnpkg.com/@storybook/react/-/react-5.2.7.tgz#52b0bb7bfdc07991624122e9a14142733624156c"
@@ -2217,6 +2228,19 @@
   version "5.2.7"
   resolved "https://registry.yarnpkg.com/@storybook/router/-/router-5.2.7.tgz#4c9e48667a1e23a86a9fdd5810722e73b12f35f5"
   integrity sha512-6xXAjc+4OtLXEGFacFKHpUDooZlRODwLSGYL0UDuPMpFwBDPZvuIaNtG18m3yhAgjWqoH7kS/bwKwtosno9/xg==
+  dependencies:
+    "@reach/router" "^1.2.1"
+    "@types/reach__router" "^1.2.3"
+    core-js "^3.0.1"
+    global "^4.3.2"
+    lodash "^4.17.15"
+    memoizerific "^1.11.3"
+    qs "^6.6.0"
+
+"@storybook/router@5.2.8":
+  version "5.2.8"
+  resolved "https://registry.yarnpkg.com/@storybook/router/-/router-5.2.8.tgz#d7de2d401701857c033e28560c30e16512f7f72f"
+  integrity sha512-wnbyKESUMyv9fwo9W+n4Fev/jXylB8whpjtHrOttjguUOYX1zGSHdwNI66voPetbtVLxUeHyJteJwdyRDSirJg==
   dependencies:
     "@reach/router" "^1.2.1"
     "@types/reach__router" "^1.2.3"
