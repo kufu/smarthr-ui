@@ -323,7 +323,7 @@ storiesOf('Icon', module)
 
 const Container = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   flex-wrap: wrap;
 `
