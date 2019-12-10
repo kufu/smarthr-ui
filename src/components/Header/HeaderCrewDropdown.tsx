@@ -49,7 +49,7 @@ export const HeaderCrewDropdown: FC<Props> = ({
           <MenuListItem role="menuitem">
             <MenuListItemButon themes={theme} onClick={onClickBulkInsert}>
               <MenuListItemIcon themes={theme}>
-                <Icon name="fa-reg-plus-square" />
+                <Icon name="fa-plus-square" />
               </MenuListItemIcon>
               新規登録する（ファイル）
             </MenuListItemButon>

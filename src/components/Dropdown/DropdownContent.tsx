@@ -12,14 +12,19 @@ export const DropdownContentContext = React.createContext<{
 
 type Props = {
   controllable?: boolean
+  className?: string
 }
 
-export const DropdownContent: React.FC<Props> = ({ controllable = false, children }) => {
+export const DropdownContent: React.FC<Props> = ({
+  controllable = false,
+  className = '',
+  children,
+}) => {
   const { DropdownContentRoot, triggerRect, onClickCloser } = useContext(DropdownContext)
   return (
     <DropdownContentRoot>
       <DropdownContentContext.Provider value={{ onClickCloser }}>
-        <DropdownContentInner triggerRect={triggerRect}>
+        <DropdownContentInner triggerRect={triggerRect} className={className}>
           {controllable ? children : <DropdownCloser>{children}</DropdownCloser>}
         </DropdownContentInner>
       </DropdownContentContext.Provider>

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.8.1](https://github.com/kufu/smarthr-ui/compare/v5.8.0...v5.8.1) (2019-12-10)
+
+
+### Bug Fixes
+
+* **dropdown:** change initial position for dropdown component ([6d73c0a](https://github.com/kufu/smarthr-ui/commit/6d73c0ad882aff6aef5fa6db3c85d152a41d58c8))
+* add className props for Dropdown component ([#522](https://github.com/kufu/smarthr-ui/issues/522)) ([88c7066](https://github.com/kufu/smarthr-ui/commit/88c70667b4339466b95e28a4ee6b661759e1e3db))
+
 ## [5.8.0](https://github.com/kufu/smarthr-ui/compare/v5.7.1...v5.8.0) (2019-12-06)
 
 
