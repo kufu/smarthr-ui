@@ -5,37 +5,38 @@ import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { SmartHRLogo } from '../SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
-import { HeaderNotification, HeaderNotificationProps } from './HeaderNotification'
+import { HeaderNotification } from './HeaderNotification'
 import { HeaderUserDropDown, HeaderUserDropDownProps } from './HeaderUserDropDown'
 import { HeaderEmployeeDropDown, HeaderEmployeeDropDownProps } from './HeaderEmployeeDropDown'
 
 type Props = {
   currentTenantName: string
+  notificationLength: number
   onClickLogo: () => void
   onClickHelp: () => void
+  onClickNotification: () => void
 
   isAdmin?: boolean
   onClickCrewList?: () => void
 
-  notification: HeaderNotificationProps
   employeeDropDown: HeaderEmployeeDropDownProps
   userDropDown: HeaderUserDropDownProps
 }
 
 export const Header: FC<Props> = ({
   currentTenantName,
+  notificationLength,
   onClickLogo,
   onClickHelp,
+  onClickNotification,
 
   isAdmin = false,
   onClickCrewList,
 
-  notification,
   employeeDropDown,
   userDropDown,
 }) => {
   const theme = useTheme()
-  const { number, url } = notification
   const {
     crewsNewUrl,
     crewsBulkInserterUrl,
@@ -73,7 +74,7 @@ export const Header: FC<Props> = ({
           </>
         )}
 
-        <HeaderNotification url={url} number={number} />
+        <HeaderNotification length={notificationLength} onClick={onClickNotification} />
 
         <HeaderUserDropDown
           displayName={displayName}

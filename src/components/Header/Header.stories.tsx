@@ -6,10 +6,6 @@ import { Header } from './Header'
 
 import readme from './README.md'
 
-const notification = {
-  url: 'abc',
-  number: 999,
-}
 const employeeDropDown = {
   crewsNewUrl: 'path/to/crewsNewUrl/',
   crewsBulkInserterUrl: 'path/to/crewsBulkInserterUrl/',
@@ -36,10 +32,12 @@ storiesOf('Header', module)
     <Header
       isAdmin
       currentTenantName="example, Inc."
+      notificationLength={999}
       onClickLogo={action('clicked logo')}
       onClickHelp={action('clicked help')}
+      onClickNotification={action('clicked notification')}
+      // hoge
       onClickCrewList={action('clicked crew list')}
-      notification={notification}
       employeeDropDown={employeeDropDown}
       userDropDown={userDropDown}
     />
