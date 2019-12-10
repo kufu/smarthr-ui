@@ -153,10 +153,10 @@ const TriggerButton = styled.button<{ themes: Theme }>`
 `
 const Avatar = styled.img<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame } = themes
+    const { size } = themes
 
     return css`
-      border-radius: ${frame.border.radius.m};
+      border-radius: 4px;
       margin-right: ${size.pxToRem(size.space.XXS)};
     `
   }};
