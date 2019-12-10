@@ -8,9 +8,10 @@ import { Rect, getContentBoxStyle, ContentBoxStyle } from './dropdownHelper'
 type Props = {
   triggerRect: Rect
   children: React.ReactNode
+  className: string
 }
 
-export const DropdownContentInner: FC<Props> = ({ triggerRect, children }) => {
+export const DropdownContentInner: FC<Props> = ({ triggerRect, children, className }) => {
   const theme = useTheme()
   const [isMounted, setIsMounted] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
@@ -50,7 +51,7 @@ export const DropdownContentInner: FC<Props> = ({ triggerRect, children }) => {
     <Wrapper
       ref={wrapperRef}
       contentBox={contentBox}
-      className={isMounted ? 'active' : ''}
+      className={`${className} ${isMounted ? 'active' : ''}`}
       themes={theme}
     >
       {children}
