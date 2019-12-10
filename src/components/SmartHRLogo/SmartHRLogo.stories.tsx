@@ -7,23 +7,27 @@ import styled from 'styled-components'
 storiesOf('SmartHRLogo', module).add('all', () => (
   <List>
     <li>
+      <Text>default</Text>
       <SmartHRLogo />
     </li>
     <li>
-      <SmartHRLogo title="タイトルを設定できます" fill="#008d91" />
+      <Text>You can set custom title and custom fill color</Text>
+      <SmartHRLogo title="custom title" fill="#008d91" />
     </li>
   </List>
 ))
 
 const List = styled.ul`
-  display: block;
-  padding: 0;
   margin: 0;
+  padding: 8px;
+  background-color: #00c4cc;
 
   & > li {
     display: inline-block;
-    padding: 1rem;
-    margin: 0 1rem 1rem 0;
-    background-color: #00c4cc;
+    padding: 16px;
   }
+`
+const Text = styled.p`
+  margin: 0 0 8px 0;
+  font-size: 16px;
 `
