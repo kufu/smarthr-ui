@@ -171,14 +171,14 @@ const MenuListItemButon = styled.button<{ themes: Theme }>`
       border: none;
       background: none;
       color: ${palette.TEXT_BLACK};
-      font-size: ${size.pxToRem(size.font.TALL)}
+      font-size: ${size.pxToRem(size.font.TALL)};
       line-height: 1.5;
       white-space: nowrap;
       box-sizing: border-box;
       transition: background-color ${interaction.hover.animation};
       cursor: pointer;
 
-      &:hover{
+      &:hover {
         background-color: ${palette.OVERLAY};
       }
     `

@@ -6,16 +6,6 @@ import { Header } from './Header'
 
 import readme from './README.md'
 
-const userDropDown = {
-  displayName: 'example@example.com',
-  currentTenant: 'example, Inc.',
-  avatar: 'path/to/avatarImage',
-  profileUrl: 'path/to/profileUrl/',
-  myAccountUrl: 'path/to/myAccountUrl/',
-  adminCompanyUrl: 'path/to/adminCompanyUrl/',
-  schoolUrl: 'path/to/schoolUrl/',
-}
-
 storiesOf('Header', module)
   .addParameters({
     readme: {
@@ -25,19 +15,25 @@ storiesOf('Header', module)
   .add('admin', () => (
     <Header
       isAdmin
+      user={{
+        displayName: 'example@example.com',
+        avatar: '',
+      }}
       currentTenantName="example, Inc."
       notificationLength={999}
       onClickLogo={action('clicked logo')}
       onClickHelp={action('clicked help')}
       onClickNotification={action('clicked notification')}
-      // hoge
+      onClickAccount={action('clicked account')}
+      onClickLogout={action('clicked logout')}
       onClickCrewList={action('clicked crew list')}
       onClickNewCrew={action('clicked new crew')}
       onClickBulkInsertCrews={action('clicked bulk insert crews')}
       onClickBulkUpdateCrews={action('clicked bulk update crews')}
       onClickInviteCrew={action('clicked invite crew')}
-      //hoge
-      userDropDown={userDropDown}
+      onClickProfile={action('clicked profile')}
+      onClickCompany={action('clicked company')}
+      onClickSchool={action('clicked school')}
     />
   ))
 // .add('all', () => (

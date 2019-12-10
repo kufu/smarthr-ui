@@ -7,43 +7,52 @@ import { SmartHRLogo } from '../SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
 import { HeaderNotification } from './HeaderNotification'
 import { HeaderCrewDropdown } from './HeaderCrewDropdown'
-import { HeaderUserDropDown, HeaderUserDropDownProps } from './HeaderUserDropDown'
+import { HeaderUserDropdown } from './HeaderUserDropdown'
 
 type Props = {
+  isAdmin?: boolean
+  user: {
+    displayName: string
+    avatar: string
+  }
   currentTenantName: string
   notificationLength: number
   onClickLogo: () => void
   onClickHelp: () => void
   onClickNotification: () => void
-
-  isAdmin?: boolean
+  onClickAccount: () => void
+  onClickLogout: () => void
   onClickCrewList?: () => void
   onClickNewCrew?: () => void
   onClickBulkInsertCrews?: () => void
   onClickBulkUpdateCrews?: () => void
   onClickInviteCrew?: () => void
-
-  userDropDown: HeaderUserDropDownProps
+  onClickProfile?: () => void
+  onClickCompany?: () => void
+  onClickSchool?: () => void
 }
 
 export const Header: FC<Props> = ({
+  isAdmin = false,
+  user,
   currentTenantName,
   notificationLength,
   onClickLogo,
   onClickHelp,
   onClickNotification,
-
-  isAdmin = false,
+  onClickAccount,
+  onClickLogout,
   onClickCrewList,
   onClickNewCrew,
   onClickBulkInsertCrews,
   onClickBulkUpdateCrews,
   onClickInviteCrew,
-
-  userDropDown,
+  onClickProfile,
+  onClickCompany,
+  onClickSchool,
 }) => {
   const theme = useTheme()
-  const { displayName, avatar, profileUrl, myAccountUrl, adminCompanyUrl, schoolUrl } = userDropDown
+  const { displayName, avatar } = user
 
   return (
     <Wrapper themes={theme}>
@@ -76,15 +85,17 @@ export const Header: FC<Props> = ({
 
         <HeaderNotification length={notificationLength} onClick={onClickNotification} />
 
-        <HeaderUserDropDown
-          displayName={displayName}
-          currentTenant={currentTenantName}
-          avatar={avatar}
+        <HeaderUserDropdown
           isAdmin={isAdmin}
-          profileUrl={profileUrl}
-          myAccountUrl={myAccountUrl}
-          adminCompanyUrl={adminCompanyUrl}
-          schoolUrl={schoolUrl}
+          isCrew={true} // TODO: 調査
+          displayName={displayName}
+          currentTenantName={currentTenantName}
+          avatar={avatar}
+          onClickAccount={onClickAccount}
+          onClickLogout={onClickLogout}
+          onClickProfile={onClickProfile}
+          onClickCompany={onClickCompany}
+          onClickSchool={onClickSchool}
         />
       </HeaderColumn>
     </Wrapper>
