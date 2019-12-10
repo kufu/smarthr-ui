@@ -3,6 +3,11 @@ import { createPortal } from 'react-dom'
 
 import { Rect, hasParentElement } from './dropdownHelper'
 
+type Props = {
+  children: React.ReactNode
+  className?: string
+}
+
 type DropdownContextType = {
   active: boolean
   triggerRect: Rect
@@ -21,7 +26,7 @@ export const DropdownContext = React.createContext<DropdownContextType>({
   DropdownContentRoot: () => null,
 })
 
-export const Dropdown: React.FC<{}> = ({ children }) => {
+export const Dropdown: React.FC<Props> = ({ children, className = '' }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
@@ -67,7 +72,7 @@ export const Dropdown: React.FC<{}> = ({ children }) => {
         DropdownContentRoot,
       }}
     >
-      {children}
+      <div className={className}>{children}</div>
     </DropdownContext.Provider>
   )
 }
