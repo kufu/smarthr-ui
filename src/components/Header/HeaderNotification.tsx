@@ -39,6 +39,7 @@ const Button = styled.button<{ themes: Theme; isZero: boolean }>`
       color: #fff;
       font-size: ${size.pxToRem(size.font.TALL)};
       transition: background-color ${interaction.hover.animation};
+      cursor: pointer;
 
       &:hover {
         background-color: ${isZero ? '#aaa' : '#ffc77b'};

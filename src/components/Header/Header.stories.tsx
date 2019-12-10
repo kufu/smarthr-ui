@@ -6,12 +6,6 @@ import { Header } from './Header'
 
 import readme from './README.md'
 
-const employeeDropDown = {
-  crewsNewUrl: 'path/to/crewsNewUrl/',
-  crewsBulkInserterUrl: 'path/to/crewsBulkInserterUrl/',
-  crewsBulkUpdaterUrl: 'path/to/crewsBulkUpdaterUrl/',
-  crewsInviterUrl: 'path/to/crewsInviterUrl/',
-}
 const userDropDown = {
   displayName: 'example@example.com',
   currentTenant: 'example, Inc.',
@@ -38,7 +32,11 @@ storiesOf('Header', module)
       onClickNotification={action('clicked notification')}
       // hoge
       onClickCrewList={action('clicked crew list')}
-      employeeDropDown={employeeDropDown}
+      onClickNewCrew={action('clicked new crew')}
+      onClickBulkInsertCrews={action('clicked bulk insert crews')}
+      onClickBulkUpdateCrews={action('clicked bulk update crews')}
+      onClickInviteCrew={action('clicked invite crew')}
+      //hoge
       userDropDown={userDropDown}
     />
   ))

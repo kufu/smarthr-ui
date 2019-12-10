@@ -6,8 +6,8 @@ import { useTheme, Theme } from '../../hooks/useTheme'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
 import { HeaderNotification } from './HeaderNotification'
+import { HeaderCrewDropdown } from './HeaderCrewDropdown'
 import { HeaderUserDropDown, HeaderUserDropDownProps } from './HeaderUserDropDown'
-import { HeaderEmployeeDropDown, HeaderEmployeeDropDownProps } from './HeaderEmployeeDropDown'
 
 type Props = {
   currentTenantName: string
@@ -18,8 +18,11 @@ type Props = {
 
   isAdmin?: boolean
   onClickCrewList?: () => void
+  onClickNewCrew?: () => void
+  onClickBulkInsertCrews?: () => void
+  onClickBulkUpdateCrews?: () => void
+  onClickInviteCrew?: () => void
 
-  employeeDropDown: HeaderEmployeeDropDownProps
   userDropDown: HeaderUserDropDownProps
 }
 
@@ -32,17 +35,14 @@ export const Header: FC<Props> = ({
 
   isAdmin = false,
   onClickCrewList,
+  onClickNewCrew,
+  onClickBulkInsertCrews,
+  onClickBulkUpdateCrews,
+  onClickInviteCrew,
 
-  employeeDropDown,
   userDropDown,
 }) => {
   const theme = useTheme()
-  const {
-    crewsNewUrl,
-    crewsBulkInserterUrl,
-    crewsBulkUpdaterUrl,
-    crewsInviterUrl,
-  } = employeeDropDown
   const { displayName, avatar, profileUrl, myAccountUrl, adminCompanyUrl, schoolUrl } = userDropDown
 
   return (
@@ -65,11 +65,11 @@ export const Header: FC<Props> = ({
               従業員リスト
             </HeaderButton>
 
-            <HeaderEmployeeDropDown
-              crewsNewUrl={crewsNewUrl}
-              crewsBulkInserterUrl={crewsBulkInserterUrl}
-              crewsBulkUpdaterUrl={crewsBulkUpdaterUrl}
-              crewsInviterUrl={crewsInviterUrl}
+            <HeaderCrewDropdown
+              onClickNew={onClickNewCrew}
+              onClickBulkInsert={onClickBulkInsertCrews}
+              onClickBulkUpdate={onClickBulkUpdateCrews}
+              onClickInvite={onClickInviteCrew}
             />
           </>
         )}

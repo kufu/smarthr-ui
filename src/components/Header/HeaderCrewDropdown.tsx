@@ -1,65 +1,67 @@
 import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Dropdown, DropdownContent as DropdownContentComponent, DropdownTrigger } from '../Dropdown'
-import { Icon } from '../Icon'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-export type HeaderEmployeeDropDownProps = {
-  crewsNewUrl: string
-  crewsBulkInserterUrl: string
-  crewsBulkUpdaterUrl: string
-  crewsInviterUrl: string
+import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
+import { Icon } from '../Icon'
+
+type Props = {
+  onClickNew?: () => void
+  onClickBulkInsert?: () => void
+  onClickBulkUpdate?: () => void
+  onClickInvite?: () => void
 }
 
-export const HeaderEmployeeDropDown: FC<HeaderEmployeeDropDownProps> = ({
-  crewsNewUrl,
-  crewsBulkInserterUrl,
-  crewsBulkUpdaterUrl,
-  crewsInviterUrl,
+export const HeaderCrewDropdown: FC<Props> = ({
+  onClickNew,
+  onClickBulkInsert,
+  onClickBulkUpdate,
+  onClickInvite,
 }) => {
   const theme = useTheme()
+
   return (
     <Dropdown>
       <DropdownTrigger>
-        <ButtonWrapper themes={theme}>
-          <HeaderDropDownIcon key="headerDropDownIcon" themes={theme} role="presentation">
+        <TriggerButton themes={theme}>
+          <TriggerIcon themes={theme} role="presentation">
             <Icon name="fa-users" />
-          </HeaderDropDownIcon>
+          </TriggerIcon>
           従業員管理
-          <HeaderDropDownCaret key="headerDropDownCaret" themes={theme} role="presentation">
+          <CaretIcon themes={theme} role="presentation">
             <Icon name="fa-caret-down" color="#fff" />
-          </HeaderDropDownCaret>
-        </ButtonWrapper>
+          </CaretIcon>
+        </TriggerButton>
       </DropdownTrigger>
 
       <DropdownContent>
         <MenuList themes={theme} role="menu">
           <MenuListItem role="menuitem">
-            <MenuListItemAnchor themes={theme} href={crewsNewUrl}>
+            <MenuListItemButon themes={theme} onClick={onClickNew}>
               <MenuListItemIcon themes={theme}>
                 <Icon name="fa-edit" />
               </MenuListItemIcon>
               新規登録する（手入力）
-            </MenuListItemAnchor>
+            </MenuListItemButon>
           </MenuListItem>
 
           <MenuListItem role="menuitem">
-            <MenuListItemAnchor themes={theme} href={crewsBulkInserterUrl}>
+            <MenuListItemButon themes={theme} onClick={onClickBulkInsert}>
               <MenuListItemIcon themes={theme}>
                 <Icon name="fa-reg-plus-square" />
               </MenuListItemIcon>
               新規登録する（ファイル）
-            </MenuListItemAnchor>
+            </MenuListItemButon>
           </MenuListItem>
 
           <MenuListItem role="menuitem">
-            <MenuListItemAnchor themes={theme} href={crewsBulkUpdaterUrl}>
+            <MenuListItemButon themes={theme} onClick={onClickBulkUpdate}>
               <MenuListItemIcon themes={theme}>
                 <Icon name="fa-sync-alt" />
               </MenuListItemIcon>
               更新する（ファイル）
-            </MenuListItemAnchor>
+            </MenuListItemButon>
           </MenuListItem>
 
           <MenuListItem role="menuitem">
@@ -67,12 +69,12 @@ export const HeaderEmployeeDropDown: FC<HeaderEmployeeDropDownProps> = ({
           </MenuListItem>
 
           <MenuListItem role="menuitem">
-            <MenuListItemAnchor themes={theme} href={crewsInviterUrl}>
+            <MenuListItemButon themes={theme} onClick={onClickInvite}>
               <MenuListItemIcon themes={theme}>
                 <Icon name="fa-paper-plane" />
               </MenuListItemIcon>
               SmartHR に招待
-            </MenuListItemAnchor>
+            </MenuListItemButon>
           </MenuListItem>
         </MenuList>
       </DropdownContent>
@@ -80,22 +82,21 @@ export const HeaderEmployeeDropDown: FC<HeaderEmployeeDropDownProps> = ({
   )
 }
 
-const ButtonWrapper = styled.button<{ themes: Theme }>`
+const TriggerButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { size, interaction } = themes
 
     return css`
       display: flex;
       align-items: center;
+      height: 50px;
       margin: 0;
-      padding: 0 ${size.pxToRem(10)};
+      padding: 0 1rem;
       border: none;
-      background: initial;
+      background: none;
       color: #fff;
       font-size: ${size.pxToRem(size.font.TALL)};
-      text-decoration: none;
-      line-height: ${size.pxToRem(50)};
-      transition: background-color 0.3s;
+      transition: background-color ${interaction.hover.animation};
       cursor: pointer;
 
       &:hover {
@@ -104,19 +105,20 @@ const ButtonWrapper = styled.button<{ themes: Theme }>`
     `
   }}
 `
-const HeaderDropDownIcon: any = styled.figure<{ themes: Theme }>`
+const TriggerIcon = styled.figure<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 
     return css`
       display: inline-block;
+      height: 14px;
       padding: 0;
       margin: 0 ${size.pxToRem(size.space.XXS)} 0 0;
       vertical-align: middle;
     `
   }}
 `
-const HeaderDropDownCaret = styled.figure<{ themes: Theme }>`
+const CaretIcon = styled.figure<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 
@@ -128,19 +130,16 @@ const HeaderDropDownCaret = styled.figure<{ themes: Theme }>`
     `
   }}
 `
-const DropdownContent = styled(DropdownContentComponent)`
-  transition: none;
-`
 const MenuList = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { frame } = themes
 
     return css`
-      border: 1px solid ${palette.BORDER};
-      border-radius: ${size.pxToRem(3)};
+      border: ${frame.border.default};
+      border-radius: ${frame.border.radius.s};
       background-color: #fff;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-      padding: ${size.pxToRem(5)} 0;
+      padding: 0.5rem 0;
     `
   }}
 `
@@ -160,19 +159,20 @@ const MenuListItemIcon = styled.figure<{ themes: Theme }>`
     `
   }}
 `
-const MenuListItemAnchor = styled.a<{ themes: Theme }>`
+const MenuListItemButon = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { size, palette, interaction } = themes
 
     return css`
       display: flex;
       align-items: center;
-      padding: ${size.pxToRem(3)} ${size.pxToRem(20)};
+      padding: 0.3rem 2rem;
+      border: none;
+      background: none;
       color: ${palette.TEXT_BLACK};
       font-size: ${size.pxToRem(size.font.TALL)}
-      text-decoration: none;
       white-space: nowrap;
-      transition: background-color 0.3s;
+      transition: background-color ${interaction.hover.animation};
 
       &:hover{
         background-color: ${palette.OVERLAY};
@@ -182,12 +182,12 @@ const MenuListItemAnchor = styled.a<{ themes: Theme }>`
 `
 const MenuListItemDivider = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { frame } = themes
 
     return css`
       padding: 0;
-      margin: ${size.pxToRem(10)} 0;
-      border-top: 1px solid ${palette.BORDER};
+      margin: 1rem 0;
+      border-top: ${frame.border.default};
     `
   }}
 `
