@@ -3,7 +3,12 @@ import styled from 'styled-components'
 
 import { DropdownContext } from './Dropdown'
 
-export const DropdownTrigger: React.FC<{}> = ({ children }) => {
+type Props = {
+  children: React.ReactNode
+  className?: string
+}
+
+export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) => {
   const { active, onClickTrigger } = useContext(DropdownContext)
 
   return (
@@ -17,10 +22,11 @@ export const DropdownTrigger: React.FC<{}> = ({ children }) => {
           left: rect.left,
         })
       }}
+      className={className}
     >
       {React.Children.map(children, (child: any) => {
         const props = child.props ? child.props : {}
-        const { className = '' } = props
+        const { className: classNameProps = '' } = props
 
         switch (typeof child) {
           case 'string':
@@ -28,7 +34,7 @@ export const DropdownTrigger: React.FC<{}> = ({ children }) => {
 
           case 'object':
             return React.cloneElement(child, {
-              className: `${active ? 'active' : ''} ${className}`,
+              className: `${active ? 'active' : ''} ${classNameProps}`,
             })
 
           default:

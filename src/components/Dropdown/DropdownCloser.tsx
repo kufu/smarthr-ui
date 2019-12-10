@@ -2,7 +2,16 @@ import React, { useContext } from 'react'
 
 import { DropdownContentContext } from './DropdownContent'
 
-export const DropdownCloser: React.FC<{}> = ({ children }) => {
+type Props = {
+  children: React.ReactNode
+  className?: string
+}
+
+export const DropdownCloser: React.FC<Props> = ({ children, className = '' }) => {
   const { onClickCloser } = useContext(DropdownContentContext)
-  return <div onClick={onClickCloser}>{children}</div>
+  return (
+    <div className={className} onClick={onClickCloser}>
+      {children}
+    </div>
+  )
 }
