@@ -11,6 +11,7 @@ import { HeaderUserDropdown } from './HeaderUserDropdown'
 
 type Props = {
   isAdmin?: boolean
+  isCrew?: boolean
   user: {
     displayName: string
     avatar: string
@@ -34,6 +35,7 @@ type Props = {
 
 export const Header: FC<Props> = ({
   isAdmin = false,
+  isCrew = false,
   user,
   currentTenantName,
   notificationLength,
@@ -87,7 +89,7 @@ export const Header: FC<Props> = ({
 
         <HeaderUserDropdown
           isAdmin={isAdmin}
-          isCrew={true} // TODO: 調査
+          isCrew={isCrew}
           displayName={displayName}
           currentTenantName={currentTenantName}
           avatar={avatar}
