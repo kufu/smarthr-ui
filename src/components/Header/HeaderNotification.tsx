@@ -3,55 +3,52 @@ import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-export type HeaderNotificationProps = {
-  number?: number
-  url?: string
+type Props = {
+  length: number
+  onClick: () => void
 }
 
-export const HeaderNotification: FC<HeaderNotificationProps> = ({
-  number = 0,
-  url = '/notifications',
-}) => {
+export const HeaderNotification: FC<Props> = ({ length, onClick }) => {
   const theme = useTheme()
 
   return (
     <Wrapper themes={theme}>
-      <Anchor themes={theme} number={number} href={url} aria-label="通知履歴">
-        {number && number >= 10 ? '9+' : number}
-      </Anchor>
+      <Button isZero={length === 0} onClick={onClick} aria-label="通知履歴" themes={theme}>
+        {length >= 10 ? '9+' : length}
+      </Button>
     </Wrapper>
   )
 }
 
-const Wrapper: any = styled.div<{ themes: Theme }>`
+const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { pxToRem } = themes.size
+
     return css`
       display: flex;
       align-items: center;
-      padding: 0 ${size.pxToRem(10)};
+      padding: 0 ${pxToRem(10)};
     `
   }}
 `
-
-const Anchor: any = styled.a<{ themes: Theme; number: HeaderNotificationProps }>`
-  ${({ themes, number }) => {
-    const { size } = themes
+const Button = styled.button<{ themes: Theme; isZero: boolean }>`
+  ${({ themes, isZero }) => {
+    const { size, interaction } = themes
 
     return css`
-      display: block;
-      width: ${size.pxToRem(29)};
-      border-radius: ${size.pxToRem(4)};
-      background-color: ${number && number > 0 ? '#fcb156' : '#aaa'};
+      display: inline-block;
+      width: 29px;
+      height: 29px;
+      padding: 0;
+      border-radius: 4px;
+      background-color: ${isZero ? '#aaa' : '#fcb156'};
       color: #fff;
       font-size: ${size.pxToRem(size.font.TALL)};
-      line-height: ${size.pxToRem(29)};
-      text-align: center;
-      text-decoration: none;
-      transition: background-color 0.3s;
+      transition: background-color ${interaction.hover.animation};
+      cursor: pointer;
 
       &:hover {
-        background-color: ${number && number > 0 ? '#ffc77b' : '#aaa'};
+        background-color: ${isZero ? '#aaa' : '#ffc77b'};
       }
     `
   }}

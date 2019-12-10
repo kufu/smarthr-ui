@@ -1,38 +1,55 @@
 import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Dropdown, DropdownContent as DropdownContentComponent, DropdownTrigger } from '../Dropdown'
-import { Icon } from '../Icon'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-export type HeaderUserDropDownProps = {
+import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
+import { Icon } from '../Icon'
+
+type Props = {
+  isAdmin: boolean
+  isCrew: boolean
   displayName: string
-  currentTenant: string
-  avatar?: string
-  isAdmin?: boolean
-  profileUrl: string
-  myAccountUrl: string
-  adminCompanyUrl: string
-  schoolUrl: string
+  currentTenantName: string
+  avatar: string
+  onClickAccount: () => void
+  onClickLogout: () => void
+  onClickProfile?: () => void
+  onClickCompany?: () => void
+  onClickSchool?: () => void
 }
 
-export const HeaderUserDropDown: FC<HeaderUserDropDownProps> = ({
+export const HeaderUserDropdown: FC<Props> = ({
+  isAdmin,
+  isCrew,
   displayName,
-  currentTenant,
+  currentTenantName,
   avatar,
-  isAdmin = false,
+  onClickAccount,
+  onClickLogout,
+  onClickProfile,
+  onClickCompany,
+  onClickSchool,
 }) => {
   const theme = useTheme()
   return (
     <Dropdown>
       <DropdownTrigger>
-        <ButtonWrapper themes={theme}>
-          {avatar && <Avatar src={avatar} themes={theme} alt={displayName + 'の写真'} />}
+        <TriggerButton themes={theme}>
+          {avatar && (
+            <Avatar
+              src={avatar}
+              width={20}
+              height={20}
+              alt={displayName + 'の写真'}
+              themes={theme}
+            />
+          )}
           {displayName}
-          <HeaderDropDownCaret key="headerDropDownCaret" themes={theme} role="presentation">
+          <CaretIcon themes={theme} role="presentation">
             <Icon name="fa-caret-down" color="#fff" />
-          </HeaderDropDownCaret>
-        </ButtonWrapper>
+          </CaretIcon>
+        </TriggerButton>
       </DropdownTrigger>
 
       <DropdownContent>
@@ -41,24 +58,24 @@ export const HeaderUserDropDown: FC<HeaderUserDropDownProps> = ({
             <MenuListItemHeader themes={theme}>{displayName}</MenuListItemHeader>
           </MenuListItem>
 
-          {!isAdmin && (
+          {isCrew && (
             <MenuListItem role="menuitem">
-              <MenuListItemAnchor themes={theme}>
+              <MenuListItemButton onClick={onClickProfile} themes={theme}>
                 <MenuListItemIcon themes={theme}>
                   <Icon name="fa-user-alt" />
                 </MenuListItemIcon>
                 プロフィールの確認
-              </MenuListItemAnchor>
+              </MenuListItemButton>
             </MenuListItem>
           )}
 
           <MenuListItem role="menuitem">
-            <MenuListItemAnchor themes={theme}>
+            <MenuListItemButton onClick={onClickAccount} themes={theme}>
               <MenuListItemIcon themes={theme}>
                 <Icon name="fa-cog" />
               </MenuListItemIcon>
               個人設定
-            </MenuListItemAnchor>
+            </MenuListItemButton>
           </MenuListItem>
 
           {isAdmin && (
@@ -68,41 +85,42 @@ export const HeaderUserDropDown: FC<HeaderUserDropDownProps> = ({
               </MenuListItem>
 
               <MenuListItem role="menuitem">
-                <MenuListItemHeader themes={theme}>{currentTenant}</MenuListItemHeader>
+                <MenuListItemHeader themes={theme}>{currentTenantName}</MenuListItemHeader>
               </MenuListItem>
 
               <MenuListItem role="menuitem">
-                <MenuListItemAnchor themes={theme}>
+                <MenuListItemButton onClick={onClickCompany} themes={theme}>
                   <MenuListItemIcon themes={theme}>
                     <Icon name="fa-building" />
                   </MenuListItemIcon>
                   共通設定
-                </MenuListItemAnchor>
+                </MenuListItemButton>
               </MenuListItem>
             </>
           )}
+
           <MenuListItem role="menuitem">
             <MenuListItemDivider themes={theme} role="separator" />
           </MenuListItem>
 
           {isAdmin && (
             <MenuListItem role="menuitem">
-              <MenuListItemAnchor themes={theme} target="_blank">
+              <MenuListItemButton onClick={onClickSchool} themes={theme}>
                 <MenuListItemIcon themes={theme}>
                   <Icon name="fa-graduation-cap" />
                 </MenuListItemIcon>
                 SmartHR スクール
-              </MenuListItemAnchor>
+              </MenuListItemButton>
             </MenuListItem>
           )}
 
           <MenuListItem role="menuitem">
-            <MenuListItemAnchor themes={theme}>
+            <MenuListItemButton onClick={onClickLogout} themes={theme}>
               <MenuListItemIcon themes={theme}>
                 <Icon name="fa-power-off" />
               </MenuListItemIcon>
               ログアウト
-            </MenuListItemAnchor>
+            </MenuListItemButton>
           </MenuListItem>
         </MenuList>
       </DropdownContent>
@@ -110,22 +128,21 @@ export const HeaderUserDropDown: FC<HeaderUserDropDownProps> = ({
   )
 }
 
-const ButtonWrapper = styled.button<{ themes: Theme }>`
+const TriggerButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { size, interaction } = themes
 
     return css`
       display: flex;
       align-items: center;
+      height: 50px;
       margin: 0;
       padding: 0 ${size.pxToRem(10)};
       border: none;
-      background: initial;
+      background: none;
       color: #fff;
       font-size: ${size.pxToRem(size.font.TALL)};
-      text-decoration: none;
-      line-height: ${size.pxToRem(50)};
-      transition: background-color 0.3s;
+      transition: background-color ${interaction.hover.animation};
       cursor: pointer;
 
       &:hover {
@@ -140,11 +157,11 @@ const Avatar = styled.img<{ themes: Theme }>`
 
     return css`
       border-radius: ${frame.border.radius.m};
-      margin-right: ${size.space.XXS}px;
+      margin-right: ${size.pxToRem(size.space.XXS)};
     `
   }};
 `
-const HeaderDropDownCaret = styled.figure<{ themes: Theme }>`
+const CaretIcon = styled.figure<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 
@@ -156,16 +173,13 @@ const HeaderDropDownCaret = styled.figure<{ themes: Theme }>`
     `
   }}
 `
-const DropdownContent = styled(DropdownContentComponent)`
-  transition: none;
-`
 const MenuList = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { size, frame } = themes
 
     return css`
-      border: 1px solid ${palette.BORDER};
-      border-radius: ${size.pxToRem(3)};
+      border: ${frame.border.default};
+      border-radius: ${frame.border.radius.s};
       background-color: #fff;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
       padding: ${size.pxToRem(5)} 0;
@@ -188,21 +202,26 @@ const MenuListItemIcon = styled.figure<{ themes: Theme }>`
     `
   }}
 `
-const MenuListItemAnchor = styled.a<{ themes: Theme }>`
+const MenuListItemButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { size, palette, interaction } = themes
 
     return css`
       display: flex;
       align-items: center;
+      width: 100%;
       padding: ${size.pxToRem(3)} ${size.pxToRem(20)};
+      border: none;
+      background: none;
       color: ${palette.TEXT_BLACK};
-      font-size: ${size.pxToRem(size.font.TALL)}
-      text-decoration: none;
+      font-size: ${size.pxToRem(size.font.TALL)};
+      line-height: 1.5;
       white-space: nowrap;
-      transition: background-color 0.3s;
+      box-sizing: border-box;
+      transition: background-color ${interaction.hover.animation};
+      cursor: pointer;
 
-      &:hover{
+      &:hover {
         background-color: ${palette.OVERLAY};
       }
     `
@@ -223,12 +242,12 @@ const MenuListItemHeader = styled.div<{ themes: Theme }>`
 `
 const MenuListItemDivider = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { size, frame } = themes
 
     return css`
       padding: 0;
       margin: ${size.pxToRem(10)} 0;
-      border-top: 1px solid ${palette.BORDER};
+      border-top: ${frame.border.default};
     `
   }}
 `

@@ -1,29 +1,10 @@
 import { storiesOf } from '@storybook/react'
+import { action } from '@storybook/addon-actions'
 import * as React from 'react'
+
 import { Header } from './Header'
-import styled from 'styled-components'
 
 import readme from './README.md'
-
-const notification = {
-  url: 'abc',
-  number: 999,
-}
-const employeeDropDown = {
-  crewsNewUrl: 'path/to/crewsNewUrl/',
-  crewsBulkInserterUrl: 'path/to/crewsBulkInserterUrl/',
-  crewsBulkUpdaterUrl: 'path/to/crewsBulkUpdaterUrl/',
-  crewsInviterUrl: 'path/to/crewsInviterUrl/',
-}
-const userDropDown = {
-  displayName: 'example@example.com',
-  currentTenant: 'example, Inc.',
-  avatar: 'path/to/avatarImage',
-  profileUrl: 'path/to/profileUrl/',
-  myAccountUrl: 'path/to/myAccountUrl/',
-  adminCompanyUrl: 'path/to/adminCompanyUrl/',
-  schoolUrl: 'path/to/schoolUrl/',
-}
 
 storiesOf('Header', module)
   .addParameters({
@@ -31,38 +12,53 @@ storiesOf('Header', module)
       sidebar: readme,
     },
   })
-  .add('all', () => (
-    <Ul>
-      <li>
-        For admin user
-        <Header
-          employeeListLink="/crews"
-          notification={notification}
-          employeeDropDown={employeeDropDown}
-          userDropDown={userDropDown}
-          isAdmin={true}
-          helpUrl="path/to/helpUrl/"
-        />
-      </li>
-      <li>
-        For normal user
-        <Header
-          employeeListLink="/crews"
-          notification={notification}
-          employeeDropDown={employeeDropDown}
-          userDropDown={userDropDown}
-          isAdmin={false}
-          helpUrl="path/to/helpUrl/"
-        />
-      </li>
-    </Ul>
+  .add('admin', () => (
+    <Header
+      isAdmin
+      user={{
+        displayName: 'example@example.com',
+        avatar: '',
+      }}
+      currentTenantName="example, Inc."
+      notificationLength={999}
+      onClickLogo={action('clicked logo')}
+      onClickHelp={action('clicked help')}
+      onClickNotification={action('clicked notification')}
+      onClickAccount={action('clicked account')}
+      onClickLogout={action('clicked logout')}
+      onClickCrewList={action('clicked crew list')}
+      onClickNewCrew={action('clicked new crew')}
+      onClickBulkInsertCrews={action('clicked bulk insert crews')}
+      onClickBulkUpdateCrews={action('clicked bulk update crews')}
+      onClickInviteCrew={action('clicked invite crew')}
+      onClickProfile={action('clicked profile')}
+      onClickCompany={action('clicked company')}
+      onClickSchool={action('clicked school')}
+    />
   ))
-
-const Ul = styled.ul`
-  padding: 0;
-  list-style: none;
-
-  > li ~ li {
-    margin-top: 2rem;
-  }
-`
+// .add('all', () => (
+//   <Ul>
+//     <li>
+//       For admin user
+//       <Header
+//         employeeListLink="/crews"
+//         notification={notification}
+//         employeeDropDown={employeeDropDown}
+//         userDropDown={userDropDown}
+//         isAdmin={true}
+//         helpUrl="path/to/helpUrl/"
+//       />
+//     </li>
+//     <li>
+//       For normal user
+//       <Header
+//         employeeListLink="/crews"
+//         notification={notification}
+//         employeeDropDown={employeeDropDown}
+//         userDropDown={userDropDown}
+//         isAdmin={false}
+//         helpUrl="path/to/helpUrl/"
+//       />
+//     </li>
+//   </Ul>
+// ))

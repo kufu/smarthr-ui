@@ -2,139 +2,151 @@ import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
-import { SmartHRLogo } from '../SmartHRLogo/SmartHRLogo'
+
+import { SmartHRLogo } from '../SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
-import { HeaderNotification, HeaderNotificationProps } from './HeaderNotification'
-import { HeaderUserDropDown, HeaderUserDropDownProps } from './HeaderUserDropDown'
-import { HeaderEmployeeDropDown, HeaderEmployeeDropDownProps } from './HeaderEmployeeDropDown'
+import { HeaderNotification } from './HeaderNotification'
+import { HeaderCrewDropdown } from './HeaderCrewDropdown'
+import { HeaderUserDropdown } from './HeaderUserDropdown'
 
 type Props = {
-  logoUrl?: string
-  employeeListLink?: string
   isAdmin?: boolean
-  helpUrl?: string
-  notification: HeaderNotificationProps
-  employeeDropDown: HeaderEmployeeDropDownProps
-  userDropDown: HeaderUserDropDownProps
+  user: {
+    displayName: string
+    avatar: string
+  }
+  currentTenantName: string
+  notificationLength: number
+  onClickLogo: () => void
+  onClickHelp: () => void
+  onClickNotification: () => void
+  onClickAccount: () => void
+  onClickLogout: () => void
+  onClickCrewList?: () => void
+  onClickNewCrew?: () => void
+  onClickBulkInsertCrews?: () => void
+  onClickBulkUpdateCrews?: () => void
+  onClickInviteCrew?: () => void
+  onClickProfile?: () => void
+  onClickCompany?: () => void
+  onClickSchool?: () => void
 }
 
 export const Header: FC<Props> = ({
-  logoUrl = '/',
-  employeeListLink,
-  isAdmin,
-  helpUrl,
-  notification,
-  employeeDropDown,
-  userDropDown,
+  isAdmin = false,
+  user,
+  currentTenantName,
+  notificationLength,
+  onClickLogo,
+  onClickHelp,
+  onClickNotification,
+  onClickAccount,
+  onClickLogout,
+  onClickCrewList,
+  onClickNewCrew,
+  onClickBulkInsertCrews,
+  onClickBulkUpdateCrews,
+  onClickInviteCrew,
+  onClickProfile,
+  onClickCompany,
+  onClickSchool,
 }) => {
   const theme = useTheme()
-  const { number, url } = notification
-  const {
-    crewsNewUrl,
-    crewsBulkInserterUrl,
-    crewsBulkUpdaterUrl,
-    crewsInviterUrl,
-  } = employeeDropDown
-  const {
-    displayName,
-    currentTenant,
-    avatar,
-    profileUrl,
-    myAccountUrl,
-    adminCompanyUrl,
-    schoolUrl,
-  } = userDropDown
+  const { displayName, avatar } = user
 
   return (
     <Wrapper themes={theme}>
-      <HeaderLogoArea>
-        <HeaderLogo href={logoUrl} aria-label="SmartHR">
+      <HeaderColumn>
+        <HeaderLogo onClick={onClickLogo} aria-label="SmartHR" themes={theme}>
           <SmartHRLogo />
         </HeaderLogo>
-        <TenantName themes={theme}>{currentTenant}</TenantName>
-      </HeaderLogoArea>
+        <TenantName themes={theme}>{currentTenantName}</TenantName>
+      </HeaderColumn>
 
-      <HeaderAreaNavi>
-        <HeaderButton url={helpUrl} icon="fa-question-circle" target="_blank">
+      <HeaderColumn>
+        <HeaderButton icon="fa-question-circle" onClick={onClickHelp}>
           ヘルプ
         </HeaderButton>
+
         {isAdmin && (
           <>
-            <HeaderButton url={employeeListLink} icon="fa-th-list">
+            <HeaderButton icon="fa-th-list" onClick={onClickCrewList}>
               従業員リスト
             </HeaderButton>
 
-            <HeaderEmployeeDropDown
-              crewsNewUrl={crewsNewUrl}
-              crewsBulkInserterUrl={crewsBulkInserterUrl}
-              crewsBulkUpdaterUrl={crewsBulkUpdaterUrl}
-              crewsInviterUrl={crewsInviterUrl}
+            <HeaderCrewDropdown
+              onClickNew={onClickNewCrew}
+              onClickBulkInsert={onClickBulkInsertCrews}
+              onClickBulkUpdate={onClickBulkUpdateCrews}
+              onClickInvite={onClickInviteCrew}
             />
           </>
         )}
-        <HeaderNotification url={url} number={number} />
 
-        <HeaderUserDropDown
-          displayName={displayName}
-          currentTenant={currentTenant}
-          avatar={avatar}
+        <HeaderNotification length={notificationLength} onClick={onClickNotification} />
+
+        <HeaderUserDropdown
           isAdmin={isAdmin}
-          profileUrl={profileUrl}
-          myAccountUrl={myAccountUrl}
-          adminCompanyUrl={adminCompanyUrl}
-          schoolUrl={schoolUrl}
+          isCrew={true} // TODO: 調査
+          displayName={displayName}
+          currentTenantName={currentTenantName}
+          avatar={avatar}
+          onClickAccount={onClickAccount}
+          onClickLogout={onClickLogout}
+          onClickProfile={onClickProfile}
+          onClickCompany={onClickCompany}
+          onClickSchool={onClickSchool}
         />
-      </HeaderAreaNavi>
+      </HeaderColumn>
     </Wrapper>
   )
 }
 
-const Wrapper: any = styled.header<{ themes: Theme }>`
+const Wrapper = styled.header<{ themes: Theme }>`
   ${({ themes }) => {
     const { size, palette } = themes
+
     return css`
       display: flex;
-      height: ${size.pxToRem(50)};
-      padding: 0 ${size.pxToRem(size.space.XS)};
-      background-color: ${palette.HEADER_GREEN};
-      box-sizing: border-box;
-      position: relative;
       align-items: center;
       justify-content: space-between;
+      height: 50px;
+      padding: 0 ${size.pxToRem(size.space.XS)};
+      background-color: ${palette.HEADER_GREEN};
     `
   }}
 `
-
-const HeaderLogoArea: any = styled.div`
+const HeaderColumn = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
 `
+const HeaderLogo = styled.button<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { animation } = themes.interaction.hover
 
-const HeaderLogo: any = styled.a`
-  display: block;
-  padding: 0;
-  box-sizing: border-box;
-  transition: opacity 0.3s;
+    return css`
+      padding: 0;
+      border: none;
+      background: none;
+      box-sizing: border-box;
+      transition: opacity ${animation};
+      cursor: pointer;
 
-  &:hover {
-    opacity: 0.7;
-  }
+      &:hover {
+        opacity: 0.7;
+      }
+    `
+  }}
 `
-
-const TenantName: any = styled.span<{ themes: Theme }>`
+const TenantName = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
+
     return css`
-      display: block;
-      margin-left: ${size.space.XS}px;
+      margin: 0 0 0 ${size.pxToRem(size.space.XS)};
+      font-size: ${size.pxToRem(size.font.TALL)};
       color: #fff;
     `
   }}
-`
-
-const HeaderAreaNavi: any = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 `
