@@ -40,6 +40,7 @@ const Button = styled.button<{ themes: Theme; isZero: boolean }>`
       width: 29px;
       height: 29px;
       padding: 0;
+      border: none;
       border-radius: 4px;
       background-color: ${isZero ? '#aaa' : '#fcb156'};
       color: #fff;
