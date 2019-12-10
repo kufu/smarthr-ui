@@ -14,8 +14,8 @@ export const DropdownContentInner: FC<Props> = ({ triggerRect, children }) => {
   const theme = useTheme()
   const [isMounted, setIsMounted] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
-    top: 'auto',
-    left: 'auto',
+    top: '0',
+    left: '0',
     maxHeight: '',
   })
   const wrapperRef = useRef<HTMLDivElement>(null)
