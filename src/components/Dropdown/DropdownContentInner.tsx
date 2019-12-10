@@ -11,7 +11,7 @@ type Props = {
   className: string
 }
 
-export const DropdownContentInner: FC<Props> = ({ triggerRect, children, className = '' }) => {
+export const DropdownContentInner: FC<Props> = ({ triggerRect, children, className }) => {
   const theme = useTheme()
   const [isMounted, setIsMounted] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
