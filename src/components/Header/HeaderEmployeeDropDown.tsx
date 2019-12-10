@@ -47,7 +47,7 @@ export const HeaderEmployeeDropDown: FC<HeaderEmployeeDropDownProps> = ({
           <MenuListItem role="menuitem">
             <MenuListItemAnchor themes={theme} href={crewsBulkInserterUrl}>
               <MenuListItemIcon themes={theme}>
-                <Icon name="fa-reg-plus-square" />
+                <Icon name="fa-plus-square" />
               </MenuListItemIcon>
               新規登録する（ファイル）
             </MenuListItemAnchor>
