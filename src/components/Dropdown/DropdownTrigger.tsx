@@ -9,7 +9,7 @@ type Props = {
 }
 
 export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) => {
-  const { active, onClickTrigger } = useContext(DropdownContext)
+  const { dropdownKey, active, onClickTrigger } = useContext(DropdownContext)
 
   return (
     <Wrapper
@@ -22,7 +22,7 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) =
           left: rect.left,
         })
       }}
-      className={className}
+      className={`${dropdownKey} ${className}`}
     >
       {React.Children.map(children, (child: any) => {
         const props = child.props ? child.props : {}
