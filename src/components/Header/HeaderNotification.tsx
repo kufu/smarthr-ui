@@ -12,7 +12,7 @@ export const HeaderNotification: FC<Props> = ({ length, onClick }) => {
   const theme = useTheme()
 
   return (
-    <Wrapper>
+    <Wrapper themes={theme}>
       <Button isZero={length === 0} onClick={onClick} aria-label="通知履歴" themes={theme}>
         {length >= 10 ? '9+' : length}
       </Button>
@@ -20,10 +20,16 @@ export const HeaderNotification: FC<Props> = ({ length, onClick }) => {
   )
 }
 
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0 1rem;
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem } = themes.size
+
+    return css`
+      display: flex;
+      align-items: center;
+      padding: 0 ${pxToRem(10)};
+    `
+  }}
 `
 const Button = styled.button<{ themes: Theme; isZero: boolean }>`
   ${({ themes, isZero }) => {

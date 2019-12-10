@@ -91,7 +91,7 @@ const TriggerButton = styled.button<{ themes: Theme }>`
       align-items: center;
       height: 50px;
       margin: 0;
-      padding: 0 1rem;
+      padding: 0 ${size.pxToRem(10)};
       border: none;
       background: none;
       color: #fff;
@@ -132,14 +132,14 @@ const CaretIcon = styled.figure<{ themes: Theme }>`
 `
 const MenuList = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { frame } = themes
+    const { size, frame } = themes
 
     return css`
       border: ${frame.border.default};
       border-radius: ${frame.border.radius.s};
       background-color: #fff;
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-      padding: 0.5rem 0;
+      padding: ${size.pxToRem(5)} 0;
     `
   }}
 `
@@ -166,13 +166,17 @@ const MenuListItemButon = styled.button<{ themes: Theme }>`
     return css`
       display: flex;
       align-items: center;
-      padding: 0.3rem 2rem;
+      width: 100%;
+      padding: ${size.pxToRem(3)} ${size.pxToRem(20)};
       border: none;
       background: none;
       color: ${palette.TEXT_BLACK};
       font-size: ${size.pxToRem(size.font.TALL)}
+      line-height: 1.5;
       white-space: nowrap;
+      box-sizing: border-box;
       transition: background-color ${interaction.hover.animation};
+      cursor: pointer;
 
       &:hover{
         background-color: ${palette.OVERLAY};
@@ -182,11 +186,11 @@ const MenuListItemButon = styled.button<{ themes: Theme }>`
 `
 const MenuListItemDivider = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { frame } = themes
+    const { size, frame } = themes
 
     return css`
       padding: 0;
-      margin: 1rem 0;
+      margin: ${size.pxToRem(10)} 0;
       border-top: ${frame.border.default};
     `
   }}

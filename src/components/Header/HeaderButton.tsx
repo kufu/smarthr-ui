@@ -33,7 +33,7 @@ const Wrapper = styled.button<{ themes: Theme }>`
     return css`
       display: inline-block;
       margin: 0;
-      padding: 0 1rem;
+      padding: 0 ${size.pxToRem(10)};
       border: none;
       background: none;
       color: #fff;
