@@ -1,7 +1,8 @@
 import { storiesOf } from '@storybook/react'
+import { action } from '@storybook/addon-actions'
 import * as React from 'react'
+
 import { Header } from './Header'
-import styled from 'styled-components'
 
 import readme from './README.md'
 
@@ -31,38 +32,41 @@ storiesOf('Header', module)
       sidebar: readme,
     },
   })
-  .add('all', () => (
-    <Ul>
-      <li>
-        For admin user
-        <Header
-          employeeListLink="/crews"
-          notification={notification}
-          employeeDropDown={employeeDropDown}
-          userDropDown={userDropDown}
-          isAdmin={true}
-          helpUrl="path/to/helpUrl/"
-        />
-      </li>
-      <li>
-        For normal user
-        <Header
-          employeeListLink="/crews"
-          notification={notification}
-          employeeDropDown={employeeDropDown}
-          userDropDown={userDropDown}
-          isAdmin={false}
-          helpUrl="path/to/helpUrl/"
-        />
-      </li>
-    </Ul>
+  .add('admin', () => (
+    <Header
+      isAdmin
+      currentTenantName="example, Inc."
+      onClickLogo={action('clicked logo')}
+      onClickHelp={action('clicked help')}
+      onClickCrewList={action('clicked crew list')}
+      notification={notification}
+      employeeDropDown={employeeDropDown}
+      userDropDown={userDropDown}
+    />
   ))
-
-const Ul = styled.ul`
-  padding: 0;
-  list-style: none;
-
-  > li ~ li {
-    margin-top: 2rem;
-  }
-`
+// .add('all', () => (
+//   <Ul>
+//     <li>
+//       For admin user
+//       <Header
+//         employeeListLink="/crews"
+//         notification={notification}
+//         employeeDropDown={employeeDropDown}
+//         userDropDown={userDropDown}
+//         isAdmin={true}
+//         helpUrl="path/to/helpUrl/"
+//       />
+//     </li>
+//     <li>
+//       For normal user
+//       <Header
+//         employeeListLink="/crews"
+//         notification={notification}
+//         employeeDropDown={employeeDropDown}
+//         userDropDown={userDropDown}
+//         isAdmin={false}
+//         helpUrl="path/to/helpUrl/"
+//       />
+//     </li>
+//   </Ul>
+// ))

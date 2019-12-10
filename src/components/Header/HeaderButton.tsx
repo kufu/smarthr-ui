@@ -1,43 +1,46 @@
-import React, { FC } from 'react'
+import React, { ReactNode, FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Icon, Props as IconProps } from '../Icon/Icon'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-export type HeaderButtonProps = {
-  children?: React.ReactNode
-  url?: string
-  target?: string
-  icon?: IconProps['name']
+type Props = {
+  icon: IconProps['name']
+  children: ReactNode
+  onClick?: () => void
 }
 
-export const HeaderButton: FC<HeaderButtonProps> = ({ ...props }) => {
+export const HeaderButton: FC<Props> = ({ icon, children, onClick }) => {
   const theme = useTheme()
+
   return (
-    <Wrapper themes={theme} href={props.url} target={props.target && props.target}>
-      {props.icon && (
-        <HeaderButtonIcon themes={theme} role="presentation">
-          <Icon name={props.icon}></Icon>
-        </HeaderButtonIcon>
+    <Wrapper themes={theme} onClick={onClick}>
+      {icon && (
+        <IconWrapper themes={theme} role="presentation">
+          <Icon name={icon}></Icon>
+        </IconWrapper>
       )}
-      {props.children && props.children}
+      {children}
     </Wrapper>
   )
 }
 
-const Wrapper: any = styled.a<{ themes: Theme }>`
+const Wrapper = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
     const { size, interaction } = themes
+
     return css`
-      display: block;
+      display: inline-block;
       margin: 0;
-      padding: 0 ${size.pxToRem(10)};
+      padding: 0 1rem;
+      border: none;
+      background: none;
       color: #fff;
       font-size: ${size.pxToRem(size.font.TALL)};
-      text-decoration: none;
-      line-height: ${size.pxToRem(50)};
+      line-height: 50px;
       transition: background-color ${interaction.hover.animation};
+      cursor: pointer;
 
       &:hover {
         background-color: rgba(255, 255, 255, 0.3);
@@ -45,10 +48,10 @@ const Wrapper: any = styled.a<{ themes: Theme }>`
     `
   }}
 `
-
-const HeaderButtonIcon: any = styled.figure<{ themes: Theme }>`
+const IconWrapper = styled.figure<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
+
     return css`
       display: inline-block;
       padding: 0;
