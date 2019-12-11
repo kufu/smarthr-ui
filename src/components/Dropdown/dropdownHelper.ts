@@ -5,9 +5,21 @@ export type Rect = {
   left: number
 }
 
-export function hasParentElement(element: HTMLElement | null, parent: HTMLElement | null): boolean {
+export function getRandomStr() {
+  return Math.random()
+    .toString(32)
+    .substring(2)
+}
+
+export function includeDropdownElement(
+  element: HTMLElement | null,
+  dropdownClassName: string,
+): boolean {
   if (!element) return false
-  return element === parent || hasParentElement(element.parentElement, parent)
+  return (
+    element.classList.contains(dropdownClassName) ||
+    includeDropdownElement(element.parentElement, dropdownClassName)
+  )
 }
 
 type Size = { width: number; height: number }
