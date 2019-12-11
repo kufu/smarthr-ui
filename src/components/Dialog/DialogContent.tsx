@@ -24,7 +24,7 @@ export const DialogContent: React.FC<Props> = ({ children, ...props }) => {
   return (
     <DialogContentRoot>
       <DialogContentContext.Provider value={{ onClickClose }}>
-        <DialogContentInner onClickOverlay={onClickClose} {...props}>
+        <DialogContentInner onClickOverlay={onClickClose} onPressEscape={onClickClose} {...props}>
           {children}
         </DialogContentInner>
       </DialogContentContext.Provider>

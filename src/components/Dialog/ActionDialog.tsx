@@ -9,6 +9,7 @@ type Props = ActionDialogContentProps & {
   isOpen: boolean
   onClickClose: () => void
   onClickOverlay?: () => void
+  onPressEscape?: () => void
 }
 
 export const ActionDialog: React.FC<Props> = ({
@@ -22,6 +23,7 @@ export const ActionDialog: React.FC<Props> = ({
   onClickClose,
   actionDisabled = false,
   onClickOverlay = () => {},
+  onPressEscape = () => {},
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current
@@ -37,7 +39,7 @@ export const ActionDialog: React.FC<Props> = ({
   if (!isOpen) return null
 
   return createPortal(
-    <DialogContentInner onClickOverlay={onClickOverlay} {...props}>
+    <DialogContentInner onClickOverlay={onClickOverlay} onPressEscape={onPressEscape} {...props}>
       <ActionDialogContentInner
         title={title}
         closeText={closeText}
