@@ -6,6 +6,7 @@ import { DialogContentInner } from './DialogContentInner'
 type Props = {
   isOpen: boolean
   onClickOverlay?: () => void
+  onPressEscape?: () => void
   top?: number
   right?: number
   bottom?: number
@@ -16,6 +17,7 @@ export const Dialog: React.FC<Props> = ({
   isOpen,
   children,
   onClickOverlay = () => {},
+  onPressEscape = () => {},
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current
@@ -31,7 +33,7 @@ export const Dialog: React.FC<Props> = ({
   if (!isOpen) return null
 
   return createPortal(
-    <DialogContentInner onClickOverlay={onClickOverlay} {...props}>
+    <DialogContentInner onClickOverlay={onClickOverlay} onPressEscape={onPressEscape} {...props}>
       {children}
     </DialogContentInner>,
     element,

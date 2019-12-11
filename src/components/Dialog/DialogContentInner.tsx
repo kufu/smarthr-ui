@@ -2,9 +2,11 @@ import React, { ReactNode, FC } from 'react'
 import styled, { css, createGlobalStyle, keyframes } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
+import { useHandleEscape } from '../../hooks/useHandleEscape'
 
 type Props = {
   onClickOverlay?: () => void
+  onPressEscape?: () => void
   top?: number
   right?: number
   bottom?: number
@@ -23,8 +25,14 @@ function exist(value: any) {
   return value !== undefined && value !== null
 }
 
-export const DialogContentInner: FC<Props> = ({ onClickOverlay, children, ...props }) => {
+export const DialogContentInner: FC<Props> = ({
+  onClickOverlay,
+  onPressEscape = () => {},
+  children,
+  ...props
+}) => {
   const theme = useTheme()
+  useHandleEscape(onPressEscape)
   return (
     <Wrapper>
       <Background onClick={onClickOverlay} themes={theme} {...props} />
