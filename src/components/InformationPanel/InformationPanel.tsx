@@ -5,24 +5,24 @@ import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { DialogBase } from '../Base'
 import { Icon } from '../Icon'
-import { Heading } from '../Heading'
+import { Heading, HeadingTagTypes } from '../Heading'
 import { SecondaryButton } from '../Button'
 
 type Props = {
   children?: React.ReactNode
   title: string
-  titleTag?: string
+  titleTag?: HeadingTagTypes
   className?: string
 }
 
-export const InformationPanel: FC<Props> = ({ children, title, className }) => {
+export const InformationPanel: FC<Props> = ({ children, title, titleTag = 'span', className }) => {
   const theme = useTheme()
 
   return (
     <Wrapper className={className} themes={theme}>
       <Title themes={theme}>
         <TitleIcon name="fa-info-circle" color={theme.palette.TEXT_GREY} themes={theme}></TitleIcon>
-        <Heading type="blockTitle" tag="span">
+        <Heading type="blockTitle" tag={titleTag}>
           {title}
         </Heading>
         <PanelButton suffix={<Icon size={14} name="fa-caret-down" />} size="s">
@@ -45,15 +45,10 @@ const Wrapper = styled(DialogBase)<{ themes: Theme }>`
 `
 
 const Title = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { font } = themes.size
-
-    return css`
-      display: flex;
-      font-size: ${font.TALL};
-      position: relative;
-    `
-  }}
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  position: relative;
 `
 
 const TitleIcon = styled(Icon)<{ themes: Theme }>`
@@ -72,7 +67,7 @@ const Content = styled.div<{ themes: Theme }>`
 
     return css`
       margin-top: ${pxToRem(space.S)};
-      font-size: ${font.TALL};
+      font-size: ${pxToRem(font.TALL)};
     `
   }}
 `

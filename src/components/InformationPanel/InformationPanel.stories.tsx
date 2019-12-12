@@ -6,7 +6,9 @@ import { InformationPanel } from './InformationPanel'
 
 storiesOf('InformationPanel', module).add('all', () => (
   <Wrapper>
-    <InformationPanel title="title">aaaaaaaaaaaa</InformationPanel>
+    <InformationPanel title="うあああああああああああああああああうあああああああああああああああああ">
+      うあああああああああああああああああうあああああああああああああああああうあああああああああああああああああうあああああああああああああああああうあああああああああああああああああうあああああああああああああああああうあああああああああああああああああうあああああああああああああああああうあああああああああああああああああうあああああああああああああああああうあああああああああああああああああうあああああああああああああああああ
+    </InformationPanel>
   </Wrapper>
 ))
 
