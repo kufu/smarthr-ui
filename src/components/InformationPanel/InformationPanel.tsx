@@ -53,7 +53,7 @@ export const InformationPanel: FC<Props> = ({
         <Heading type="blockTitle" tag={titleTag}>
           {title}
         </Heading>
-        <PanelButton suffix={<Icon size={14} name="fa-caret-down" />} size="s">
+        <PanelButton suffix={<Icon size={14} name="fa-caret-up" />} size="s">
           閉じる
         </PanelButton>
       </Title>
@@ -67,7 +67,7 @@ const Wrapper = styled(DialogBase)<{ themes: Theme }>`
     const { pxToRem, space } = themes.size
 
     return css`
-      padding: ${pxToRem(space.M)};
+      padding: ${pxToRem(space.S)};
     `
   }}
 `
