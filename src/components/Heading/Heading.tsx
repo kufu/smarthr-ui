@@ -5,10 +5,17 @@ import { useTheme, Theme } from '../../hooks/useTheme'
 
 export type Props = {
   children: string
-  type?: 'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
+  type?: HeadingTagTypes
   tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'
   className?: string
 }
+
+export type HeadingTagTypes =
+  | 'screenTitle'
+  | 'sectionTitle'
+  | 'blockTitle'
+  | 'subBlockTitle'
+  | 'subSubBlockTitle'
 
 export const Heading: FC<Props> = ({
   tag = 'h1',

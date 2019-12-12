@@ -11,6 +11,7 @@ import { SecondaryButton } from '../Button'
 type Props = {
   children?: React.ReactNode
   title: string
+  titleTag?: string
   className?: string
 }
 
