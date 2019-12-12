@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.9.0](https://github.com/kufu/smarthr-ui/compare/v5.8.0...v5.9.0) (2019-12-12)
+
+
+### Features
+
+* **Dialog:** close a dialog when Escape key is pressed ([7e86234](https://github.com/kufu/smarthr-ui/commit/7e862345a9977be44f9d67d5dd6e44bd8b43ab1b))
+
+
+### Bug Fixes
+
+* Fix dropdown trigger bug ([34aee6b](https://github.com/kufu/smarthr-ui/commit/34aee6b00d458f72040c5a7b15c09d466898dbba))
+* **dropdown:** change initial position for dropdown component ([6d73c0a](https://github.com/kufu/smarthr-ui/commit/6d73c0ad882aff6aef5fa6db3c85d152a41d58c8))
+* add className props for Dropdown component ([#522](https://github.com/kufu/smarthr-ui/issues/522)) ([88c7066](https://github.com/kufu/smarthr-ui/commit/88c70667b4339466b95e28a4ee6b661759e1e3db))
+* Add isCrew as props ([8c21b76](https://github.com/kufu/smarthr-ui/commit/8c21b76d65c2cc93d8d9282bc426176ec96687e1))
+* change fa-reg-plus-square icon to fa-plus-square icon ([d87a545](https://github.com/kufu/smarthr-ui/commit/d87a545785d75149a1f0f9a6d6294f0798f95186))
+* Fix Header and HeaderButton construction ([364756a](https://github.com/kufu/smarthr-ui/commit/364756aac00ea229ebbaa9a95d860a5b26ef03e3))
+* Fix HeaderUserNotification construction ([554b3dd](https://github.com/kufu/smarthr-ui/commit/554b3dd5769dd7bd8ed05ea52b55f6806dbc3f26))
+* Fix HeaderUsreDropdown ([2f59124](https://github.com/kufu/smarthr-ui/commit/2f591243ec9e63f9a69f71cd8a674e92eea85046))
+* Fix style ([b2bc511](https://github.com/kufu/smarthr-ui/commit/b2bc5118474df4b4d40b6baed6174a1c9b81c490))
+* HeaderCrewDropDown -> HeaderCrewDropdown ([59f2ac5](https://github.com/kufu/smarthr-ui/commit/59f2ac54a9ef1c4a15ce6d93ce064d09c79d2d9d))
+* Remove unnecessary file ([8e17b82](https://github.com/kufu/smarthr-ui/commit/8e17b8215ebbdc5634d6a1258830fd0f07d1424e))
+* Update avatar style ([93c651e](https://github.com/kufu/smarthr-ui/commit/93c651e147454241222080719465bee44fba6859))
+
 ### [5.8.1](https://github.com/kufu/smarthr-ui/compare/v5.8.0...v5.8.1) (2019-12-10)
 
 
