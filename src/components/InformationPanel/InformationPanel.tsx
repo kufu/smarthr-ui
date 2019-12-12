@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { DialogBase } from '../Base'
-import { Icon } from '../Icon'
+import { Icon, iconMap } from '../Icon'
 import { Heading, HeadingTagTypes } from '../Heading'
 import { SecondaryButton } from '../Button'
 
@@ -12,16 +12,44 @@ type Props = {
   children?: React.ReactNode
   title: string
   titleTag?: HeadingTagTypes
+  type?: 'success' | 'info' | 'warning' | 'error' | ''
   className?: string
 }
 
-export const InformationPanel: FC<Props> = ({ children, title, titleTag = 'span', className }) => {
+export const InformationPanel: FC<Props> = ({
+  children,
+  title,
+  titleTag = 'span',
+  type = 'info',
+  className,
+}) => {
   const theme = useTheme()
+
+  let iconName: keyof typeof iconMap = 'fa-info-circle'
+  let iconColor = theme.palette.TEXT_GREY
+
+  switch (type) {
+    case 'success':
+      iconName = 'fa-check-circle'
+      iconColor = theme.palette.MAIN
+      break
+    case 'info':
+      iconName = 'fa-info-circle'
+      iconColor = theme.palette.TEXT_GREY
+      break
+    case 'warning':
+      iconName = 'fa-exclamation-triangle'
+      iconColor = theme.palette.WARNING
+      break
+    case 'error':
+      iconName = 'fa-exclamation-circle'
+      iconColor = theme.palette.DANGER
+  }
 
   return (
     <Wrapper className={className} themes={theme}>
       <Title themes={theme}>
-        <TitleIcon name="fa-info-circle" color={theme.palette.TEXT_GREY} themes={theme}></TitleIcon>
+        <TitleIcon name={iconName} color={iconColor} themes={theme}></TitleIcon>
         <Heading type="blockTitle" tag={titleTag}>
           {title}
         </Heading>
