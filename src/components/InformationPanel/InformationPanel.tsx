@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
@@ -14,6 +14,10 @@ type Props = {
   titleTag?: HeadingTagTypes
   type?: 'success' | 'info' | 'warning' | 'error' | ''
   className?: string
+  active?: boolean
+  controllable?: boolean
+  onClickOpener?: () => void
+  onClickCloser?: () => void
 }
 
 export const InformationPanel: FC<Props> = ({
@@ -22,6 +26,10 @@ export const InformationPanel: FC<Props> = ({
   titleTag = 'span',
   type = 'info',
   className,
+  active = true,
+  controllable = false,
+  onClickOpener,
+  onClickCloser,
 }) => {
   const theme = useTheme()
 
@@ -46,6 +54,19 @@ export const InformationPanel: FC<Props> = ({
       iconColor = theme.palette.DANGER
   }
 
+  const [activeState, setActiveState] = useState(active)
+  const actualActive = controllable ? active : activeState
+  const actualClickOpener = controllable
+    ? onClickOpener
+    : () => {
+        setActiveState(true)
+      }
+  const actualClickCloser = controllable
+    ? onClickCloser
+    : () => {
+        setActiveState(false)
+      }
+
   return (
     <Wrapper className={className} themes={theme}>
       <Title themes={theme}>
@@ -53,11 +74,15 @@ export const InformationPanel: FC<Props> = ({
         <Heading type="blockTitle" tag={titleTag}>
           {title}
         </Heading>
-        <PanelButton suffix={<Icon size={14} name="fa-caret-up" />} size="s">
-          閉じる
+        <PanelButton
+          suffix={<Icon size={14} name={actualActive ? 'fa-caret-up' : 'fa-caret-down'} />}
+          size="s"
+          onClick={actualActive ? actualClickCloser : actualClickOpener}
+        >
+          {actualActive ? '閉じる' : '開く'}
         </PanelButton>
       </Title>
-      <Content themes={theme}>{children}</Content>
+      {actualActive && <Content themes={theme}>{children}</Content>}
     </Wrapper>
   )
 }
