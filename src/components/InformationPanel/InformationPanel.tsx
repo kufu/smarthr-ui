@@ -55,6 +55,7 @@ export const InformationPanel: FC<Props> = ({
   }
 
   const [activeState, setActiveState] = useState(active)
+  const actualActive = controllable ? active : activeState
   const actualClickOpener = controllable
     ? onClickOpener
     : () => {
@@ -74,14 +75,14 @@ export const InformationPanel: FC<Props> = ({
           {title}
         </Heading>
         <PanelButton
-          suffix={<Icon size={14} name={activeState ? 'fa-caret-up' : 'fa-caret-down'} />}
+          suffix={<Icon size={14} name={actualActive ? 'fa-caret-up' : 'fa-caret-down'} />}
           size="s"
-          onClick={activeState ? actualClickCloser : actualClickOpener}
+          onClick={actualActive ? actualClickCloser : actualClickOpener}
         >
-          {activeState ? '閉じる' : '開く'}
+          {actualActive ? '閉じる' : '開く'}
         </PanelButton>
       </Title>
-      {activeState && <Content themes={theme}>{children}</Content>}
+      {actualActive && <Content themes={theme}>{children}</Content>}
     </Wrapper>
   )
 }
