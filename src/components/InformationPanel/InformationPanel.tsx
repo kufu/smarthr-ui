@@ -13,6 +13,8 @@ type Props = {
   title: string
   titleTag?: HeadingTagTypes
   type?: 'success' | 'info' | 'warning' | 'error' | ''
+  openButtonLabel?: string
+  closeButtonLabel?: string
   className?: string
   active?: boolean
   controllable?: boolean
@@ -25,6 +27,8 @@ export const InformationPanel: FC<Props> = ({
   title,
   titleTag = 'span',
   type = 'info',
+  openButtonLabel = '開く',
+  closeButtonLabel = '閉じる',
   className = '',
   active = true,
   controllable = false,
@@ -70,7 +74,7 @@ export const InformationPanel: FC<Props> = ({
   return (
     <Wrapper className={className} themes={theme}>
       <Title themes={theme}>
-        <TitleIcon name={iconName} color={iconColor} themes={theme}></TitleIcon>
+        <TitleIcon name={iconName} color={iconColor} themes={theme} />
         <Heading type="blockTitle" tag={titleTag}>
           {title}
         </Heading>
@@ -79,7 +83,7 @@ export const InformationPanel: FC<Props> = ({
           size="s"
           onClick={actualActive ? actualClickCloser : actualClickOpener}
         >
-          {actualActive ? '閉じる' : '開く'}
+          {actualActive ? closeButtonLabel : openButtonLabel}
         </PanelButton>
       </Title>
       {actualActive && <Content themes={theme}>{children}</Content>}
