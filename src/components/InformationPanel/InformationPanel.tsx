@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-import { DialogBase } from '../Base'
+import { Base } from '../Base'
 import { Icon, iconMap } from '../Icon'
 import { Heading, HeadingTagTypes } from '../Heading'
 import { SecondaryButton } from '../Button'
@@ -25,7 +25,7 @@ export const InformationPanel: FC<Props> = ({
   title,
   titleTag = 'span',
   type = 'info',
-  className,
+  className = '',
   active = true,
   controllable = false,
   onClickOpener,
@@ -87,7 +87,7 @@ export const InformationPanel: FC<Props> = ({
   )
 }
 
-const Wrapper = styled(DialogBase)<{ themes: Theme }>`
+const Wrapper = styled(Base)<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 
