@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
@@ -9,31 +9,27 @@ import { Heading, HeadingTagTypes } from '../Heading'
 import { SecondaryButton } from '../Button'
 
 type Props = {
-  children?: React.ReactNode
   title: string
   titleTag?: HeadingTagTypes
   type?: 'success' | 'info' | 'warning' | 'error' | ''
   openButtonLabel?: string
   closeButtonLabel?: string
-  className?: string
   active?: boolean
-  controllable?: boolean
-  onClickOpener?: () => void
-  onClickCloser?: () => void
+  className?: string
+  children: React.ReactNode
+  onClickTrigger?: (active: boolean) => void
 }
 
 export const InformationPanel: FC<Props> = ({
-  children,
   title,
   titleTag = 'span',
   type = 'info',
   openButtonLabel = '開く',
   closeButtonLabel = '閉じる',
+  active: activeProps = true,
   className = '',
-  active = true,
-  controllable = false,
-  onClickOpener,
-  onClickCloser,
+  children,
+  onClickTrigger,
 }) => {
   const theme = useTheme()
 
@@ -58,35 +54,36 @@ export const InformationPanel: FC<Props> = ({
       iconColor = theme.palette.DANGER
   }
 
-  const [activeState, setActiveState] = useState(active)
-  const actualActive = controllable ? active : activeState
-  const actualClickOpener = controllable
-    ? onClickOpener
-    : () => {
-        setActiveState(true)
-      }
-  const actualClickCloser = controllable
-    ? onClickCloser
-    : () => {
-        setActiveState(false)
-      }
+  const [active, setActive] = useState(activeProps)
+
+  const handleClickTrigger = () => {
+    if (onClickTrigger) {
+      onClickTrigger(active)
+    } else {
+      setActive(!active)
+    }
+  }
+
+  useEffect(() => {
+    setActive(activeProps)
+  }, [activeProps])
 
   return (
     <Wrapper className={className} themes={theme}>
       <Title themes={theme}>
-        <TitleIcon name={iconName} color={iconColor} themes={theme} />
+        <TitleIcon name={iconName} color={iconColor} themes={theme}></TitleIcon>
         <Heading type="blockTitle" tag={titleTag}>
           {title}
         </Heading>
         <PanelButton
-          suffix={<Icon size={14} name={actualActive ? 'fa-caret-up' : 'fa-caret-down'} />}
+          suffix={<Icon size={14} name={active ? 'fa-caret-up' : 'fa-caret-down'} />}
           size="s"
-          onClick={actualActive ? actualClickCloser : actualClickOpener}
+          onClick={handleClickTrigger}
         >
-          {actualActive ? closeButtonLabel : openButtonLabel}
+          {active ? closeButtonLabel : openButtonLabel}
         </PanelButton>
       </Title>
-      {actualActive && <Content themes={theme}>{children}</Content>}
+      {active && <Content themes={theme}>{children}</Content>}
     </Wrapper>
   )
 }
