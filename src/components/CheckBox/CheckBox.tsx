@@ -29,14 +29,14 @@ export const CheckBox: FC<Props> = ({
   )
 
   return (
-    <Wrapper className={className}>
+    <Wrapper className={className} themes={theme}>
       <Input {...props} type="checkbox" onChange={handleChange} themes={theme} />
       <Box className={boxClassName} themes={theme} />
       {checked && (
         <IconWrap>
           <Icon
             name={mixed ? 'fa-minus' : 'fa-check'}
-            size={12}
+            size={10}
             color={themeColor === 'light' ? '#fff' : theme.palette.MAIN}
           />
         </IconWrap>
@@ -45,14 +45,19 @@ export const CheckBox: FC<Props> = ({
   )
 }
 
-const Wrapper = styled.div`
-  position: relative;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  line-height: 1;
-  box-sizing: border-box;
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
+    return css`
+      position: relative;
+      display: inline-block;
+      width: ${size.pxToRem(16)};
+      height: ${size.pxToRem(16)};
+      flex-shrink: 0;
+      line-height: 1;
+      box-sizing: border-box;
+    `
+  }}
 `
 const Box = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
@@ -115,8 +120,8 @@ const IconWrap = styled.span`
   top: 50%;
   left: 50%;
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   transform: translate(-50%, -50%);
   pointer-events: none;
   & > svg {
