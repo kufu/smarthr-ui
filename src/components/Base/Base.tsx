@@ -4,29 +4,22 @@ import styled, { css } from 'styled-components'
 type Props = {
   children: ReactNode
   radius?: 's' | 'm'
-  dialog?: boolean
   className?: string
 }
 
-export const Base = forwardRef<HTMLDivElement, Props>(
-  ({ radius = 'm', dialog = false, ...props }, ref) => {
-    const radiusMap = {
-      s: '6px',
-      m: '8px',
-    }
-    return <Wrapper radius={radiusMap[radius]} dialog={dialog} ref={ref} {...props} />
-  },
-)
+export const Base = forwardRef<HTMLDivElement, Props>(({ radius = 'm', ...props }, ref) => {
+  const radiusMap = {
+    s: '6px',
+    m: '8px',
+  }
+  return <Wrapper radius={radiusMap[radius]} ref={ref} {...props} />
+})
 
-const Wrapper = styled.div<{ radius: string; dialog: boolean }>`
-  ${({ radius, dialog }) => {
-    const boxShadow = dialog
-      ? 'rgba(51, 51, 51, 0.3) 0px 4px 10px 0'
-      : 'rgba(51, 51, 51, 0.3) 1px 1px 4px 0'
-
+const Wrapper = styled.div<{ radius: string }>`
+  ${({ radius }) => {
     return css`
       border-radius: ${radius};
-      box-shadow: ${boxShadow};
+      box-shadow: 'rgba(51, 51, 51, 0.3) 1px 1px 4px 0';
       background-color: #fff;
     `
   }}

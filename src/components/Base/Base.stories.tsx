@@ -20,12 +20,6 @@ storiesOf('Base', module).add('all', () => (
         </Txt>
       </Base>
     </li>
-
-    <li>
-      <Base dialog>
-        <Txt>If dialog props is specified, box-shadow becomes more deep.</Txt>
-      </Base>
-    </li>
   </List>
 ))
 
