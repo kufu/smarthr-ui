@@ -33,7 +33,7 @@ export const CheckBox: FC<Props> = ({
       <Input {...props} type="checkbox" onChange={handleChange} themes={theme} />
       <Box className={boxClassName} themes={theme} />
       {checked && (
-        <IconWrap>
+        <IconWrap themes={theme}>
           <Icon
             name={mixed ? 'fa-minus' : 'fa-check'}
             size={10}
@@ -115,16 +115,22 @@ const Input = styled.input<{ themes: Theme }>`
     `
   }}
 `
-const IconWrap = styled.span`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  & > svg {
-    vertical-align: top;
-  }
+const IconWrap = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
+
+    return css`
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: inline-block;
+      width: ${size.pxToRem(10)};
+      height: ${size.pxToRem(10)};
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      & > svg {
+        vertical-align: top;
+      }
+    `
+  }}
 `
