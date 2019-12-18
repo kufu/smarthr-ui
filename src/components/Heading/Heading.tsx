@@ -6,12 +6,14 @@ import { useTheme, Theme } from '../../hooks/useTheme'
 export type Props = {
   children: string
   type?: 'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle'
-  tag?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'
+  tag?: HeadingTagTypes
   className?: string
 }
 
+export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'
+
 export const Heading: FC<Props> = ({
-  tag = 'h1',
+  tag = 'h1' as HeadingTagTypes,
   type = 'ScreenTitle',
   className = '',
   children,
