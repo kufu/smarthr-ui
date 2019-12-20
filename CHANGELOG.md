@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.10.0](https://github.com/kufu/smarthr-ui/compare/v5.9.0...v5.10.0) (2019-12-20)
+
+
+### Features
+
+* Create InformationPanel component ([1b08bf7](https://github.com/kufu/smarthr-ui/commit/1b08bf7419426a81c1a97ba559cb3c76c9dc82af))
+
 ## [5.9.0](https://github.com/kufu/smarthr-ui/compare/v5.8.0...v5.9.0) (2019-12-12)
 
 

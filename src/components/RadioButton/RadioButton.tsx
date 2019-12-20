@@ -24,23 +24,29 @@ export const RadioButton: FC<Props> = ({
   )
 
   return (
-    <Wrapper className={className}>
+    <Wrapper className={className} themes={theme}>
       <Input type="radio" onChange={handleChange} themes={theme} {...props} />
       <Box className={boxClassName} themes={theme} />
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
-  position: relative;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  line-height: 1;
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
+
+    return css`
+      position: relative;
+      display: inline-block;
+      width: ${size.pxToRem(16)};
+      height: ${size.pxToRem(16)};
+      line-height: 1;
+    `
+  }}
 `
 const Box = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { frame, palette } = themes
+    const { size, frame, palette } = themes
 
     return css`
       display: inline-block;
@@ -59,8 +65,8 @@ const Box = styled.span<{ themes: Theme }>`
           position: absolute;
           top: 50%;
           left: 50%;
-          width: 8px;
-          height: 8px;
+          width: ${size.pxToRem(6)};
+          height: ${size.pxToRem(6)};
           border-radius: 50%;
           background-color: #fff;
           transform: translate(-50%, -50%);

@@ -88,6 +88,69 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
               >
                 <styled.div
                   className=""
+                  themes={
+                    Object {
+                      "frame": Object {
+                        "border": Object {
+                          "default": "1px solid #d6d6d6",
+                          "lineStyle": "solid",
+                          "lineWidth": "1px",
+                          "radius": Object {
+                            "l": "8px",
+                            "m": "6px",
+                            "s": "3px",
+                          },
+                        },
+                      },
+                      "interaction": Object {
+                        "hover": Object {
+                          "animation": ".3s ease-out",
+                          "animationDuration": ".3s",
+                          "animationTiming": "ease-out",
+                          "feedbackOpacity": ".7",
+                        },
+                      },
+                      "palette": Object {
+                        "BACKGROUND": "#f5f6fa",
+                        "BORDER": "#d6d6d6",
+                        "COLUMN": "#f9f9f9",
+                        "DANGER": "#ef475b",
+                        "HEADER_GREEN": "#57d0d5",
+                        "MAIN": "#00a5ab",
+                        "OUTLINE": "rgba(0,165,171,0.5)",
+                        "OVERLAY": "rgba(0,0,0,0.15)",
+                        "SCRIM": "rgba(0,0,0,0.5)",
+                        "TEXT_BLACK": "#333",
+                        "TEXT_DISABLED": "#c1c1c1",
+                        "TEXT_GREY": "#767676",
+                        "WARNING": "#ff8800",
+                        "disableColor": [Function],
+                        "hoverColor": [Function],
+                      },
+                      "size": Object {
+                        "font": Object {
+                          "GRANDE": 18,
+                          "SHORT": 11,
+                          "TALL": 14,
+                          "VENTI": 24,
+                        },
+                        "mediaQuery": Object {
+                          "SP": 599,
+                          "TABLET": 959,
+                        },
+                        "pxToRem": [Function],
+                        "space": Object {
+                          "L": 40,
+                          "M": 32,
+                          "S": 24,
+                          "XL": 48,
+                          "XS": 16,
+                          "XXL": 56,
+                          "XXS": 8,
+                        },
+                      },
+                    }
+                  }
                 >
                   <StyledComponent
                     className=""
@@ -98,16 +161,12 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                         "componentStyle": ComponentStyle {
                           "componentId": "sc-bdVaJa",
                           "isStatic": false,
-                          "lastClassName": "hObIwy",
+                          "lastClassName": "gNGtPj",
                           "rules": Array [
                             "
-  position: relative;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  line-height: 1;
-  box-sizing: border-box;
+  ",
+                            [Function],
+                            "
 ",
                           ],
                         },
@@ -122,9 +181,72 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                       }
                     }
                     forwardedRef={null}
+                    themes={
+                      Object {
+                        "frame": Object {
+                          "border": Object {
+                            "default": "1px solid #d6d6d6",
+                            "lineStyle": "solid",
+                            "lineWidth": "1px",
+                            "radius": Object {
+                              "l": "8px",
+                              "m": "6px",
+                              "s": "3px",
+                            },
+                          },
+                        },
+                        "interaction": Object {
+                          "hover": Object {
+                            "animation": ".3s ease-out",
+                            "animationDuration": ".3s",
+                            "animationTiming": "ease-out",
+                            "feedbackOpacity": ".7",
+                          },
+                        },
+                        "palette": Object {
+                          "BACKGROUND": "#f5f6fa",
+                          "BORDER": "#d6d6d6",
+                          "COLUMN": "#f9f9f9",
+                          "DANGER": "#ef475b",
+                          "HEADER_GREEN": "#57d0d5",
+                          "MAIN": "#00a5ab",
+                          "OUTLINE": "rgba(0,165,171,0.5)",
+                          "OVERLAY": "rgba(0,0,0,0.15)",
+                          "SCRIM": "rgba(0,0,0,0.5)",
+                          "TEXT_BLACK": "#333",
+                          "TEXT_DISABLED": "#c1c1c1",
+                          "TEXT_GREY": "#767676",
+                          "WARNING": "#ff8800",
+                          "disableColor": [Function],
+                          "hoverColor": [Function],
+                        },
+                        "size": Object {
+                          "font": Object {
+                            "GRANDE": 18,
+                            "SHORT": 11,
+                            "TALL": 14,
+                            "VENTI": 24,
+                          },
+                          "mediaQuery": Object {
+                            "SP": 599,
+                            "TABLET": 959,
+                          },
+                          "pxToRem": [Function],
+                          "space": Object {
+                            "L": 40,
+                            "M": 32,
+                            "S": 24,
+                            "XL": 48,
+                            "XS": 16,
+                            "XXL": 56,
+                            "XXS": 8,
+                          },
+                        },
+                      }
+                    }
                   >
                     <div
-                      className="sc-bdVaJa hObIwy"
+                      className="sc-bdVaJa gNGtPj"
                     >
                       <styled.input
                         checked={true}
@@ -467,7 +589,71 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                           />
                         </StyledComponent>
                       </styled.span>
-                      <styled.span>
+                      <styled.span
+                        themes={
+                          Object {
+                            "frame": Object {
+                              "border": Object {
+                                "default": "1px solid #d6d6d6",
+                                "lineStyle": "solid",
+                                "lineWidth": "1px",
+                                "radius": Object {
+                                  "l": "8px",
+                                  "m": "6px",
+                                  "s": "3px",
+                                },
+                              },
+                            },
+                            "interaction": Object {
+                              "hover": Object {
+                                "animation": ".3s ease-out",
+                                "animationDuration": ".3s",
+                                "animationTiming": "ease-out",
+                                "feedbackOpacity": ".7",
+                              },
+                            },
+                            "palette": Object {
+                              "BACKGROUND": "#f5f6fa",
+                              "BORDER": "#d6d6d6",
+                              "COLUMN": "#f9f9f9",
+                              "DANGER": "#ef475b",
+                              "HEADER_GREEN": "#57d0d5",
+                              "MAIN": "#00a5ab",
+                              "OUTLINE": "rgba(0,165,171,0.5)",
+                              "OVERLAY": "rgba(0,0,0,0.15)",
+                              "SCRIM": "rgba(0,0,0,0.5)",
+                              "TEXT_BLACK": "#333",
+                              "TEXT_DISABLED": "#c1c1c1",
+                              "TEXT_GREY": "#767676",
+                              "WARNING": "#ff8800",
+                              "disableColor": [Function],
+                              "hoverColor": [Function],
+                            },
+                            "size": Object {
+                              "font": Object {
+                                "GRANDE": 18,
+                                "SHORT": 11,
+                                "TALL": 14,
+                                "VENTI": 24,
+                              },
+                              "mediaQuery": Object {
+                                "SP": 599,
+                                "TABLET": 959,
+                              },
+                              "pxToRem": [Function],
+                              "space": Object {
+                                "L": 40,
+                                "M": 32,
+                                "S": 24,
+                                "XL": 48,
+                                "XS": 16,
+                                "XXL": 56,
+                                "XXS": 8,
+                              },
+                            },
+                          }
+                        }
+                      >
                         <StyledComponent
                           forwardedComponent={
                             Object {
@@ -476,20 +662,12 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                               "componentStyle": ComponentStyle {
                                 "componentId": "sc-bxivhb",
                                 "isStatic": false,
-                                "lastClassName": "fAOeDW",
+                                "lastClassName": "huIqIw",
                                 "rules": Array [
                                   "
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  & > svg {
-    vertical-align: top;
-  }
+  ",
+                                  [Function],
+                                  "
 ",
                                 ],
                               },
@@ -504,19 +682,82 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                             }
                           }
                           forwardedRef={null}
+                          themes={
+                            Object {
+                              "frame": Object {
+                                "border": Object {
+                                  "default": "1px solid #d6d6d6",
+                                  "lineStyle": "solid",
+                                  "lineWidth": "1px",
+                                  "radius": Object {
+                                    "l": "8px",
+                                    "m": "6px",
+                                    "s": "3px",
+                                  },
+                                },
+                              },
+                              "interaction": Object {
+                                "hover": Object {
+                                  "animation": ".3s ease-out",
+                                  "animationDuration": ".3s",
+                                  "animationTiming": "ease-out",
+                                  "feedbackOpacity": ".7",
+                                },
+                              },
+                              "palette": Object {
+                                "BACKGROUND": "#f5f6fa",
+                                "BORDER": "#d6d6d6",
+                                "COLUMN": "#f9f9f9",
+                                "DANGER": "#ef475b",
+                                "HEADER_GREEN": "#57d0d5",
+                                "MAIN": "#00a5ab",
+                                "OUTLINE": "rgba(0,165,171,0.5)",
+                                "OVERLAY": "rgba(0,0,0,0.15)",
+                                "SCRIM": "rgba(0,0,0,0.5)",
+                                "TEXT_BLACK": "#333",
+                                "TEXT_DISABLED": "#c1c1c1",
+                                "TEXT_GREY": "#767676",
+                                "WARNING": "#ff8800",
+                                "disableColor": [Function],
+                                "hoverColor": [Function],
+                              },
+                              "size": Object {
+                                "font": Object {
+                                  "GRANDE": 18,
+                                  "SHORT": 11,
+                                  "TALL": 14,
+                                  "VENTI": 24,
+                                },
+                                "mediaQuery": Object {
+                                  "SP": 599,
+                                  "TABLET": 959,
+                                },
+                                "pxToRem": [Function],
+                                "space": Object {
+                                  "L": 40,
+                                  "M": 32,
+                                  "S": 24,
+                                  "XL": 48,
+                                  "XS": 16,
+                                  "XXL": 56,
+                                  "XXS": 8,
+                                },
+                              },
+                            }
+                          }
                         >
                           <span
-                            className="sc-bxivhb fAOeDW"
+                            className="sc-bxivhb huIqIw"
                           >
                             <Component
                               color="#fff"
                               name="fa-check"
-                              size={12}
+                              size={10}
                             >
                               <FaCheck
                                 className=""
                                 color="#fff"
-                                size={12}
+                                size={10}
                               >
                                 <IconBase
                                   attr={
@@ -526,13 +767,13 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                                   }
                                   className=""
                                   color="#fff"
-                                  size={12}
+                                  size={10}
                                 >
                                   <svg
                                     color="#fff"
                                     fill="currentColor"
-                                    height={12}
-                                    size={12}
+                                    height={10}
+                                    size={10}
                                     stroke="currentColor"
                                     strokeWidth="0"
                                     style={
@@ -541,7 +782,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                                       }
                                     }
                                     viewBox="0 0 512 512"
-                                    width={12}
+                                    width={10}
                                     xmlns="http://www.w3.org/2000/svg"
                                   >
                                     <path
