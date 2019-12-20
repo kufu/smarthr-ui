@@ -120,6 +120,7 @@
     "lint:eslint": "eslint 'src/**/*.ts{,x}'",
     "lint:style": "stylelint 'src/**/*.ts{,x}'",
     "lint:tsc": "tsc --noEmit",
+    "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepublishOnly": "run-s clean lint build",
     "pretest-visual": "storycap --serverCmd \"start-storybook -p 6006 --ci\" http://localhost:6006 -o actual_images  --serverTimeout 3600000",
     "release": "standard-version",
