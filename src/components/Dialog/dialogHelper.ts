@@ -19,10 +19,12 @@ export const useOffsetHeight = (): offsetHeightValues => {
   useEffect(() => {
     const topSpace = top ? top : baseSpace
     const bottomSpace = bottom ? bottom : baseSpace
-    const titleHeight = titleRef.current ? titleRef.current.offsetHeight : 0
-    const bottomHeight = bottomRef.current ? bottomRef.current.offsetHeight : 0
-
-    setOffsetHeight(topSpace + bottomSpace + titleHeight + bottomHeight)
+    // delay scheduling to get the element's height
+    setTimeout(() => {
+      const titleHeight = titleRef.current ? titleRef.current.offsetHeight : 0
+      const bottomHeight = bottomRef.current ? bottomRef.current.offsetHeight : 0
+      setOffsetHeight(topSpace + bottomSpace + titleHeight + bottomHeight)
+    }, 0)
   }, [top, bottom, baseSpace])
 
   return {
