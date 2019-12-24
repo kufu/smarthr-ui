@@ -53,7 +53,12 @@ storiesOf('Field', module).add('all', () => (
       </Field>
     </li>
     <li>
-      <Field label="custom field" errorMessage="custom error" required>
+      <Field
+        label="custom field"
+        errorMessage="custom error"
+        helpMessage="This is help message."
+        required
+      >
         <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
       </Field>
     </li>

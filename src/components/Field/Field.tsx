@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import { Input, Props as InputProps } from '../Input'
 import { Heading, HeadingTypes, HeadingTagTypes } from '../Heading'
 import { StatusLabel } from '../StatusLabel'
+import { Icon } from '../Icon'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
@@ -32,22 +33,25 @@ export const Field: FC<Props> = ({
 
   return (
     <Wrapper width={props.width || 'auto'} className={className}>
-      <LabelHead themes={theme}>
-        <Title themes={theme}>
-          <Heading type={labelType} tag={labelTagType}>
-            {label}
-          </Heading>
+      <Title themes={theme}>
+        <TitleText type={labelType} tag={labelTagType}>
+          {label}
+        </TitleText>
 
-          {props.required && (
-            <StatusLabelWrapper themes={theme}>
-              <StatusLabel type="required">必須</StatusLabel>
-            </StatusLabelWrapper>
-          )}
-        </Title>
-        {helpMessage && <Help themes={theme}>{helpMessage}</Help>}
-      </LabelHead>
+        {props.required && (
+          <StatusLabelWrapper themes={theme}>
+            <StatusLabel type="required">必須</StatusLabel>
+          </StatusLabelWrapper>
+        )}
+      </Title>
       {children ? children : <Input {...props} error={!!errorMessage} />}
-      {errorMessage && <Error themes={theme}>{errorMessage}</Error>}
+      {errorMessage && (
+        <Error themes={theme}>
+          <ErrorIcon name="fa-exclamation-circle" themes={theme} color={theme.palette.DANGER} />
+          {errorMessage}
+        </Error>
+      )}
+      {helpMessage && <Help themes={theme}>{helpMessage}</Help>}
     </Wrapper>
   )
 }
@@ -58,38 +62,40 @@ const Wrapper: any = styled.div<{ width: string | number }>`
     width: ${typeof width === 'number' ? `${width}px` : width};
   `}
 `
-const LabelHead = styled.div<{ themes: Theme }>`
+
+const Title = styled.div<{ themes: Theme }>`
   ${({ themes }) => css`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: ${themes.size.pxToRem(themes.size.space.XXS)};
-    line-height: 1.4;
+    margin: 0 0 ${themes.size.pxToRem(themes.size.space.XXS)};
   `}
 `
-const Title = styled.p<{ themes: Theme }>`
-  ${({ themes }) => css`
-    margin: 0;
-    color: ${themes.palette.TEXT_GREY};
-    font-weight: bold;
-    font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
-  `}
+
+const TitleText = styled(Heading)`
+  display: inline-block;
 `
-const Help = styled.p<{ themes: Theme }>`
-  ${({ themes }) => css`
-    margin: 0;
-    font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
-    color: ${themes.palette.TEXT_GREY};
-  `}
-`
-const Error = styled.p<{ themes: Theme }>`
+
+const Help = styled.div<{ themes: Theme }>`
   ${({ themes }) => css`
     margin: ${themes.size.pxToRem(themes.size.space.XXS)} 0 0 0;
-    font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
-    color: ${themes.palette.DANGER};
-    line-height: 1.4;
+    font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
+    line-height: 1;
+    color: ${themes.palette.TEXT_GREY};
   `}
 `
+const Error = styled.div<{ themes: Theme }>`
+  ${({ themes }) => css`
+    margin: ${themes.size.pxToRem(themes.size.space.XXS)} 0 0 0;
+    font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
+    line-height: 1;
+  `}
+`
+
+const ErrorIcon = styled(Icon)<{ themes: Theme }>`
+  ${({ themes }) => css`
+    margin-right: ${themes.size.pxToRem(4)};
+    vertical-align: middle;
+  `}
+`
+
 const StatusLabelWrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => css`
     margin-left: ${themes.size.pxToRem(themes.size.space.XXS)};
