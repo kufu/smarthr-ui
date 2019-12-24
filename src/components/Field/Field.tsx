@@ -2,6 +2,7 @@ import React, { ReactNode, FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Input, Props as InputProps } from '../Input'
+import { Heading, HeadingTypes, HeadingTagTypes } from '../Heading'
 import { StatusLabel } from '../StatusLabel'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
@@ -9,6 +10,8 @@ type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
 
 type Props = Omit<InputProps, 'error'> & {
   label: string
+  labelType?: HeadingTypes
+  labelTagType?: HeadingTagTypes
   errorMessage?: string
   helpMessage?: string
   className?: string
@@ -17,6 +20,8 @@ type Props = Omit<InputProps, 'error'> & {
 
 export const Field: FC<Props> = ({
   label,
+  labelType = 'subBlockTitle',
+  labelTagType = 'span',
   errorMessage,
   helpMessage,
   className = '',
@@ -29,7 +34,10 @@ export const Field: FC<Props> = ({
     <Wrapper width={props.width || 'auto'} className={className}>
       <LabelHead themes={theme}>
         <Title themes={theme}>
-          {label}
+          <Heading type={labelType} tag={labelTagType}>
+            {label}
+          </Heading>
+
           {props.required && (
             <StatusLabelWrapper themes={theme}>
               <StatusLabel type="required">必須</StatusLabel>
