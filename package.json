@@ -49,7 +49,7 @@
     "react-test-renderer": "16.12.0",
     "reg-keygen-git-hash-plugin": "^0.8.5",
     "reg-notify-github-plugin": "^0.8.5",
-    "reg-publish-s3-plugin": "^0.8.5",
+    "reg-publish-s3-plugin": "^0.9.0",
     "reg-suit": "^0.8.1",
     "standard-version": "^7.0.0",
     "storybook-readme": "^5.0.8",
