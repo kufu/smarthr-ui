@@ -48,7 +48,7 @@ export const Field: FC<Props> = ({
       {errorMessage && (
         <Error themes={theme}>
           <ErrorIcon name="fa-exclamation-circle" themes={theme} color={theme.palette.DANGER} />
-          {errorMessage}
+          <ErrorText>{errorMessage}</ErrorText>
         </Error>
       )}
       {helpMessage && <Help themes={theme}>{helpMessage}</Help>}
@@ -94,6 +94,10 @@ const ErrorIcon = styled(Icon)<{ themes: Theme }>`
     margin-right: ${themes.size.pxToRem(4)};
     vertical-align: middle;
   `}
+`
+
+const ErrorText = styled.span`
+  vertical-align: middle;
 `
 
 const StatusLabelWrapper = styled.span<{ themes: Theme }>`
