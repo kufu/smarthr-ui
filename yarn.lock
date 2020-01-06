@@ -12596,10 +12596,10 @@ reg-notify-github-plugin@^0.8.5:
     request-promise "^4.2.1"
     tiny-commit-walker "^1.1.2"
 
-reg-publish-s3-plugin@^0.8.5:
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/reg-publish-s3-plugin/-/reg-publish-s3-plugin-0.8.5.tgz#2d17a9a7aa9be46825349e8bdc1d8f7d5f2b74da"
-  integrity sha512-9dwt4E2E0PGcQSNXRG8tisgmf5dE9q6wLTAX6WHFM/1SYd5JhkJV0+I5hLtjfzsbAFVqEifPzMNoZKXjhGfhTA==
+reg-publish-s3-plugin@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/reg-publish-s3-plugin/-/reg-publish-s3-plugin-0.9.0.tgz#6973ebfb2354140f6f97b7ee63eba6a7ac63f05e"
+  integrity sha512-fOrcVI4xIK7EKHkLvVkF8GXGPYr2I+KZYgV5EDgZfGB3ffuNZ6fyQUBMv4wr8/jkfl6tFbw4GzSammdbp5gPeA==
   dependencies:
     aws-sdk "^2.432.0"
     mkdirp "^0.5.1"
