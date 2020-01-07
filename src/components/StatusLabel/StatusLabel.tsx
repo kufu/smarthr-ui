@@ -40,7 +40,7 @@ const Wrapper = styled.span<{ themes: Theme }>`
       white-space: nowrap;
       font-size: ${size.pxToRem(size.font.SHORT)};
       font-weight: bold;
-      line-height: ${size.pxToRem(20)};
+      line-height: calc(${size.pxToRem(20)} - ${frame.border.lineWidth} * 2);
 
       &.done {
         ${borderStyle(frame.border.default)}
