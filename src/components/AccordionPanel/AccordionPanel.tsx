@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react'
 
-import { getNewExpandedItems } from './accordionPanelHelper'
 import { flatArrayToMap } from '../../libs/map'
+import { getNewExpandedItems } from './accordionPanelHelper'
 
 type Props = {
   children: React.ReactNode
