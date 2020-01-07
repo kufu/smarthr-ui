@@ -3,6 +3,7 @@ import styled, { css, createGlobalStyle, keyframes } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
+import { DialogPositionProvider } from './DialogPositionProvider'
 
 type Props = {
   onClickOverlay?: () => void
@@ -34,14 +35,16 @@ export const DialogContentInner: FC<Props> = ({
   const theme = useTheme()
   useHandleEscape(onPressEscape)
   return (
-    <Wrapper>
-      <Background onClick={onClickOverlay} themes={theme} {...props} />
-      <Inner themes={theme} {...props}>
-        {children}
-      </Inner>
-      {/* Suppresses scrolling of body while modal is displayed */}
-      <ScrollSuppressing />
-    </Wrapper>
+    <DialogPositionProvider top={props.top} bottom={props.bottom}>
+      <Wrapper>
+        <Background onClick={onClickOverlay} themes={theme} {...props} />
+        <Inner themes={theme} {...props}>
+          {children}
+        </Inner>
+        {/* Suppresses scrolling of body while modal is displayed */}
+        <ScrollSuppressing />
+      </Wrapper>
+    </DialogPositionProvider>
   )
 }
 

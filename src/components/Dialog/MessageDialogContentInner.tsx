@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
+import { useOffsetHeight } from './dialogHelper'
 import { SecondaryButton } from '../Button'
 
 export type BaseProps = {
@@ -22,47 +23,53 @@ export const MessageDialogContentInner: FC<Props> = ({
   onClickClose,
 }) => {
   const theme = useTheme()
+  const { offsetHeight, titleRef, bottomRef } = useOffsetHeight()
 
   return (
-    <Wrapper themes={theme}>
-      <Title themes={theme}>{title}</Title>
-      <Description themes={theme}>{description}</Description>
-      <Bottom>
+    <>
+      <Title themes={theme} ref={titleRef}>
+        {title}
+      </Title>
+      <Description themes={theme} offsetHeight={offsetHeight}>
+        {description}
+      </Description>
+      <Bottom themes={theme} ref={bottomRef}>
         <SecondaryButton onClick={onClickClose}>{closeText}</SecondaryButton>
       </Bottom>
-    </Wrapper>
+    </>
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-    return css`
-      padding: ${pxToRem(space.XS)} ${pxToRem(space.S)};
-    `
-  }}
-`
 const Title = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, space, font } = themes.size
     return css`
-      margin: 0 0 ${pxToRem(space.S)} 0;
+      margin: 0;
+      padding: ${pxToRem(space.XS)} ${pxToRem(space.S)} ${pxToRem(space.S)};
       font-size: ${pxToRem(font.GRANDE)};
       line-height: 1;
     `
   }}
 `
-const Description = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
+const Description = styled.div<{ themes: Theme; offsetHeight: number }>`
+  ${({ themes, offsetHeight }) => {
     const { pxToRem, space, font } = themes.size
     return css`
-      margin: 0 0 ${pxToRem(space.S)} 0;
+      max-height: calc(100vh - ${offsetHeight}px);
+      overflow: auto;
+      padding: 0 ${pxToRem(space.S)};
       font-size: ${pxToRem(font.TALL)};
       line-height: 1.5;
     `
   }}
 `
-const Bottom = styled.div`
-  display: flex;
-  justify-content: flex-end;
+const Bottom = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space } = themes.size
+    return css`
+      display: flex;
+      justify-content: flex-end;
+      padding: ${pxToRem(space.S)} ${pxToRem(space.S)} ${pxToRem(space.XS)};
+    `
+  }}
 `

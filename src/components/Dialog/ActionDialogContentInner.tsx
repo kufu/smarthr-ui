@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
+import { useOffsetHeight } from './dialogHelper'
 import { PrimaryButton, SecondaryButton, DangerButton } from '../Button'
 
 export type BaseProps = {
@@ -33,6 +34,7 @@ export const ActionDialogContentInner: FC<Props> = ({
   const handleClickAction = useCallback(() => {
     onClickAction(onClickClose)
   }, [onClickAction, onClickClose])
+  const { offsetHeight, titleRef, bottomRef } = useOffsetHeight()
 
   let ActionButton = PrimaryButton
   if (actionTheme === 'secondary') ActionButton = SecondaryButton
@@ -40,9 +42,11 @@ export const ActionDialogContentInner: FC<Props> = ({
 
   return (
     <>
-      <Title themes={theme}>{title}</Title>
-      {children}
-      <Bottom themes={theme}>
+      <Title themes={theme} ref={titleRef}>
+        {title}
+      </Title>
+      <Body offsetHeight={offsetHeight}>{children}</Body>
+      <Bottom themes={theme} ref={bottomRef}>
         <SecondaryButton onClick={onClickClose}>{closeText}</SecondaryButton>
         <ActionButton onClick={handleClickAction} disabled={actionDisabled}>
           {actionText}
@@ -62,6 +66,14 @@ const Title = styled.p<{ themes: Theme }>`
       border-bottom: ${border.default};
       font-size: ${pxToRem(font.GRANDE)};
       line-height: 1;
+    `
+  }}
+`
+const Body = styled.div<{ offsetHeight: number }>`
+  ${({ offsetHeight }) => {
+    return css`
+      max-height: calc(100vh - ${offsetHeight}px);
+      overflow: auto;
     `
   }}
 `
