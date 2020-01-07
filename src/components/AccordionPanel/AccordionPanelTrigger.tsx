@@ -35,7 +35,8 @@ export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) =
   const caretIcon = <Icon className={iconClassNames} name="fa-caret-down" themes={theme} />
 
   const handleClick = useCallback(() => {
-    onClickTrigger(name, !isExpanded)
+    if (onClickTrigger) onClickTrigger(name, !isExpanded)
+
     if (onClickProps) {
       const newExpandedItems = getNewExpandedItems(
         expandedItems,
