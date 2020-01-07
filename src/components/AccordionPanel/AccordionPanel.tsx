@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react'
+
 import { getNewExpandedItems } from './accordionPanelHelper'
 import { flatArrayToMap } from '../../libs/map'
 
@@ -30,7 +31,7 @@ export const AccordionPanel: React.FC<Props> = ({
   className = '',
   onClick: onClickProps,
 }) => {
-  const [expandedItems, setExpanded] = useState(new Map(flatArrayToMap(defaultExpanded)))
+  const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
@@ -40,7 +41,7 @@ export const AccordionPanel: React.FC<Props> = ({
   )
 
   useEffect(() => {
-    if (defaultExpanded.length > 0) setExpanded(new Map(flatArrayToMap(defaultExpanded)))
+    if (defaultExpanded.length > 0) setExpanded(flatArrayToMap(defaultExpanded))
   }, [defaultExpanded])
 
   return (
