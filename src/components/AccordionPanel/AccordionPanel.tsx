@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import { getNewExpandedItems } from './accordionPanelHelper'
+
 import { flatArrayToMap } from '../../libs/map'
+import { getNewExpandedItems } from './accordionPanelHelper'
 
 type Props = {
   children: React.ReactNode
@@ -12,13 +13,18 @@ type Props = {
   onClick?: (expandedItems: string[]) => void
 }
 
-export const AccordionPanelContext = React.createContext<any>({
+export const AccordionPanelContext = React.createContext<{
+  iconPosition: 'left' | 'right'
+  displayIcon: boolean
+  expandedItems: Map<string, string>
+  expandableMultiply: boolean
+  onClickTrigger?: (itemName: string, isExpanded: boolean) => void
+  onClickProps?: (expandedItems: string[]) => void
+}>({
   iconPosition: 'left',
   displayIcon: true,
   expandedItems: new Map(),
   expandableMultiply: false,
-  onClickTrigger: () => {},
-  onClickProps: () => {},
 })
 
 export const AccordionPanel: React.FC<Props> = ({
@@ -30,7 +36,7 @@ export const AccordionPanel: React.FC<Props> = ({
   className = '',
   onClick: onClickProps,
 }) => {
-  const [expandedItems, setExpanded] = useState(new Map(flatArrayToMap(defaultExpanded)))
+  const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
@@ -40,7 +46,7 @@ export const AccordionPanel: React.FC<Props> = ({
   )
 
   useEffect(() => {
-    if (defaultExpanded.length > 0) setExpanded(new Map(flatArrayToMap(defaultExpanded)))
+    if (defaultExpanded.length > 0) setExpanded(flatArrayToMap(defaultExpanded))
   }, [defaultExpanded])
 
   return (
