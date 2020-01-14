@@ -54,6 +54,7 @@ export {
   AccordionPanelTrigger,
 } from './components/AccordionPanel'
 export { InformationPanel } from './components/InformationPanel'
+export { DialogBase } from './components/DialogBase'
 
 // themes
 export { createTheme } from './themes/createTheme'
