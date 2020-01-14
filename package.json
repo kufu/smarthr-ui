@@ -38,7 +38,7 @@
     "eslint": "^6.0.1",
     "eslint-config-smarthr": "^2.0.0",
     "fixpack": "^2.3.1",
-    "husky": "^3.0.0",
+    "husky": "^4.0.7",
     "jest": "^24.9.0",
     "lint-staged": "^9.0.1",
     "npm-run-all": "^4.1.5",
