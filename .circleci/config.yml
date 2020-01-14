@@ -40,14 +40,14 @@ commands:
           key: v1-dependencies-{{ checksum "yarn.lock" }}
       - run: yarn test-visual
 jobs:
-  node-v8:
-    docker:
-      - image: circleci/node:8
-    steps:
-      - run-npm-test
   node-v10:
     docker:
       - image: circleci/node:10
+    steps:
+      - run-npm-test
+  node-v12:
+    docker:
+      - image: circleci/node:12
     steps:
       - run-npm-test
   reg-suit:
@@ -60,6 +60,6 @@ jobs:
 workflows:
   multiple_builds:
     jobs:
-      - node-v8
       - node-v10
+      - node-v12
       - reg-suit
