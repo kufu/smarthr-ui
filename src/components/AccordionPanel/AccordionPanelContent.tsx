@@ -1,25 +1,30 @@
-import React, { FC, useContext, useCallback } from 'react'
+import React, { RefObject, FC, useContext, useRef, useCallback } from 'react'
 import styled from 'styled-components'
 import { Transition } from 'react-transition-group'
+
+import { getIsInclude } from '../../libs/map'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { AccordionPanelContext } from './AccordionPanel'
-import { getIsInclude } from '../../libs/map'
 
 type Props = {
   children: React.ReactNode
   className?: string
 }
 
+const updateNodeHeight = (node: HTMLElement, wrapperRef: RefObject<HTMLDivElement>) => {
+  const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
+  node.style.height = `${wrapperHeight}px`
+}
+
 export const AccordionPanelContent: FC<Props> = ({ children, className = '' }) => {
   const { name } = useContext(AccordionPanelItemContext)
   const { expandedItems } = useContext(AccordionPanelContext)
-
-  const wrapperRef = React.useRef<HTMLDivElement>(null)
+  const isInclude = getIsInclude(expandedItems, name)
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const handleEntering = useCallback(
     (node: HTMLElement) => {
-      const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
-      node.style.height = `${wrapperHeight}px`
+      updateNodeHeight(node, wrapperRef)
     },
     [wrapperRef],
   )
@@ -30,16 +35,14 @@ export const AccordionPanelContent: FC<Props> = ({ children, className = '' }) =
 
   const handleExit = useCallback(
     (node: HTMLElement) => {
-      const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
-      node.style.height = `${wrapperHeight}px`
+      updateNodeHeight(node, wrapperRef)
     },
     [wrapperRef],
   )
 
   const handleExiting = useCallback(
     (node: HTMLElement) => {
-      const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
-      node.style.height = `${wrapperHeight}px`
+      updateNodeHeight(node, wrapperRef)
     },
     [wrapperRef],
   )
@@ -50,7 +53,7 @@ export const AccordionPanelContent: FC<Props> = ({ children, className = '' }) =
 
   return (
     <Transition
-      in={getIsInclude(expandedItems, name)}
+      in={isInclude}
       onEntering={handleEntering}
       onEntered={handleEnterd}
       onExit={handleExit}
@@ -66,7 +69,7 @@ export const AccordionPanelContent: FC<Props> = ({ children, className = '' }) =
           id={`${name}-content`}
           className={`${status} ${className}`}
           aria-labelledby={`${name}-trigger`}
-          aria-hidden={!getIsInclude(expandedItems, name)}
+          aria-hidden={!isInclude}
         >
           <div ref={wrapperRef}>{children}</div>
         </CollapseContainer>

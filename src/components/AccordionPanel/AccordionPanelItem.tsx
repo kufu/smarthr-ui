@@ -1,23 +1,21 @@
-import * as React from 'react'
+import React, { createContext, FC } from 'react'
 
 type Props = {
-  children: React.ReactNode
   name: string
+  children: React.ReactNode
   className?: string
 }
 
-export const AccordionPanelItemContext = React.createContext<{ name: string }>({
+export const AccordionPanelItemContext = createContext<{ name: string }>({
   name: '',
 })
 
-export const AccordionPanelItem: React.FC<Props> = ({ children, name, className = '' }) => {
-  return (
-    <AccordionPanelItemContext.Provider
-      value={{
-        name,
-      }}
-    >
-      <div className={className}>{children}</div>
-    </AccordionPanelItemContext.Provider>
-  )
-}
+export const AccordionPanelItem: FC<Props> = ({ name, children, className = '' }) => (
+  <AccordionPanelItemContext.Provider
+    value={{
+      name,
+    }}
+  >
+    <div className={className}>{children}</div>
+  </AccordionPanelItemContext.Provider>
+)

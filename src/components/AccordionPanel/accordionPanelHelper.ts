@@ -4,12 +4,14 @@ export const getNewExpandedItems = (
   isExpanded: boolean,
   expandableMultiply: boolean,
 ) => {
-  let newState
+  let newState: Map<string, string>
+
   if (expandableMultiply) {
     newState = new Map(prevExpandedItems)
     isExpanded ? newState.set(itemName, itemName) : newState.delete(itemName)
   } else {
     newState = isExpanded ? new Map([[itemName, itemName]]) : new Map()
   }
+
   return newState
 }

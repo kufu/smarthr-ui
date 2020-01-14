@@ -4,11 +4,11 @@ import styled, { css } from 'styled-components'
 import { useTheme, Theme } from '../../hooks/useTheme'
 import { getIsInclude, mapToKeyArray } from '../../libs/map'
 import { isTouchDevice } from '../../libs/ua'
-
+import { getNewExpandedItems } from './accordionPanelHelper'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
+
 import { Icon as IconComponent } from '../Icon'
-import { getNewExpandedItems } from './accordionPanelHelper'
 
 type Props = {
   children: React.ReactNode
@@ -32,10 +32,9 @@ export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) =
   const buttonClassNames = `${className} ${expandedClassName} ${iconPosition}`
   const iconClassNames = `${expandedClassName} ${iconPosition}`
 
-  const caretIcon = <Icon className={iconClassNames} name="fa-caret-down" themes={theme} />
-
   const handleClick = useCallback(() => {
-    onClickTrigger(name, !isExpanded)
+    if (onClickTrigger) onClickTrigger(name, !isExpanded)
+
     if (onClickProps) {
       const newExpandedItems = getNewExpandedItems(
         expandedItems,
@@ -47,14 +46,16 @@ export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) =
     }
   }, [onClickTrigger, name, isExpanded, onClickProps, expandedItems, expandableMultiply])
 
+  const caretIcon = <Icon className={iconClassNames} name="fa-caret-down" themes={theme} />
+
   return (
     <Button
       id={`${name}-trigger`}
       className={buttonClassNames}
-      aria-expanded={!!isExpanded}
+      aria-expanded={isExpanded}
       aria-controls={`${name}-content`}
-      onClick={handleClick}
       themes={theme}
+      onClick={handleClick}
     >
       {displayIcon && iconPosition === 'left' && caretIcon}
       {children}
