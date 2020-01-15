@@ -69,8 +69,9 @@ const StyledInput = styled.input<Props & { themes: Theme }>`
           `}
 
       &[disabled] {
-        border-color: ${palette.BORDER};
+        background-color: ${palette.COLUMN};
         pointer-events: none;
+        color: ${palette.TEXT_DISABLED};
       }
     `
   }}
