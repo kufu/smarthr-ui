@@ -3,8 +3,9 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { Base } from './Base'
+import { DialogBase } from './DialogBase'
 
-storiesOf('Base', module).add('all', () => (
+storiesOf('Base', module).add('Base', () => (
   <List>
     <li>
       <Base radius="s">
@@ -19,6 +20,25 @@ storiesOf('Base', module).add('all', () => (
           If radius props is specified as <Bold>m</Bold>, border-radius becomes <Bold>8px</Bold>.
         </Txt>
       </Base>
+    </li>
+  </List>
+))
+
+storiesOf('Base', module).add('DialogBase', () => (
+  <List>
+    <li>
+      <DialogBase radius="s">
+        <Txt>
+          If radius props is specified as <Bold>s</Bold>, border-radius becomes <Bold>6px</Bold>.
+        </Txt>
+      </DialogBase>
+    </li>
+    <li>
+      <DialogBase radius="m">
+        <Txt>
+          If radius props is specified as <Bold>m</Bold>, border-radius becomes <Bold>8px</Bold>.
+        </Txt>
+      </DialogBase>
     </li>
   </List>
 ))
