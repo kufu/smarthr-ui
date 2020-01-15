@@ -1,1 +1,0 @@
-export { DialogBase } from './DialogBase'
