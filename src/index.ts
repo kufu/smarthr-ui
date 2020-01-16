@@ -1,5 +1,4 @@
 // components
-export { AppBar } from './components/AppBar'
 export { LightBalloon, DarkBalloon } from './components/Balloon'
 export { CheckBox } from './components/CheckBox'
 export { CheckBoxLabel } from './components/CheckBoxLabel'
