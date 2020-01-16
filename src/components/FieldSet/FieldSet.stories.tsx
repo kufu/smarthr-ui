@@ -3,64 +3,64 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Field } from './Field'
+import { FieldSet } from './FieldSet'
 
-storiesOf('Field', module).add('all', () => (
+storiesOf('FieldSet', module).add('all', () => (
   <List>
     <li>
-      <Field label="string" defaultValue="string" />
+      <FieldSet label="string" defaultValue="string" />
     </li>
     <li>
-      <Field type="number" label="number" defaultValue={1} />
+      <FieldSet type="number" label="number" defaultValue={1} />
     </li>
     <li>
-      <Field type="password" label="password" defaultValue="password" />
+      <FieldSet type="password" label="password" defaultValue="password" />
     </li>
     <li>
-      <Field
+      <FieldSet
         name="sample"
         label="long title.........................................."
         defaultValue="string"
       />
     </li>
     <li>
-      <Field label="required" defaultValue="string" required />
+      <FieldSet label="required" defaultValue="string" required />
     </li>
     <li>
-      <Field label="disabled" disabled />
+      <FieldSet label="disabled" disabled />
     </li>
     <li>
-      <Field label="width" defaultValue="width: 100%" width="100%" />
+      <FieldSet label="width" defaultValue="width: 100%" width="100%" />
     </li>
     <li>
-      <Field label="placeholder" placeholder="placeholder" />
+      <FieldSet label="placeholder" placeholder="placeholder" />
     </li>
     <li>
-      <Field label="onChange" onChange={action('onChange!!')} />
+      <FieldSet label="onChange" onChange={action('onChange!!')} />
     </li>
     <li>
-      <Field label="onBlur" onBlur={action('onBlur!!')} />
+      <FieldSet label="onBlur" onBlur={action('onBlur!!')} />
     </li>
     <li>
-      <Field label="help message" helpMessage="This is help message." width={400} />
+      <FieldSet label="help message" helpMessage="This is help message." width={400} />
     </li>
     <li>
-      <Field label="error message" errorMessage="An error occurred" />
+      <FieldSet label="error message" errorMessage="An error occurred" />
     </li>
     <li>
-      <Field label="custom field">
+      <FieldSet label="custom field">
         <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
-      </Field>
+      </FieldSet>
     </li>
     <li>
-      <Field
+      <FieldSet
         label="custom field"
         errorMessage="custom error"
         helpMessage="This is help message."
         required
       >
         <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
-      </Field>
+      </FieldSet>
     </li>
   </List>
 ))
