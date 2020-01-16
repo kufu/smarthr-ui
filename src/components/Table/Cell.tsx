@@ -6,13 +6,9 @@ import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { TableGroupContext } from './Table'
 
-// TODO: colspan and rowspan are incorrect naming conventions and are now deprecated and removed later.
-// Delete in January 2020.
 export type Props = {
   colSpan?: number
   rowSpan?: number
-  colspan?: number
-  rowspan?: number
   highlighted?: boolean
   children?: ReactNode
   className?: string
@@ -25,8 +21,6 @@ export const Cell: FC<Props> = ({
   onClick,
   colSpan,
   rowSpan,
-  colspan,
-  rowspan,
   highlighted = false,
 }) => {
   const theme = useTheme()
@@ -35,8 +29,8 @@ export const Cell: FC<Props> = ({
   const props = {
     children,
     onClick,
-    colSpan: colSpan || colspan,
-    rowSpan: rowSpan || rowspan,
+    colSpan,
+    rowSpan,
     className: classNames,
     themes: theme,
   }

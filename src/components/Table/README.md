@@ -1,4 +1,4 @@
-# AppBar
+# Table
 
 ```tsx
 import { Table, Body, Head, Row, Cell } from 'smarthr-ui'
