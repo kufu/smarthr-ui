@@ -19,7 +19,7 @@ type Props = Omit<InputProps, 'error'> & {
   children?: ReactNode
 }
 
-export const Field: FC<Props> = ({
+export const FieldSet: FC<Props> = ({
   label,
   labelType = 'subBlockTitle',
   labelTagType = 'span',
