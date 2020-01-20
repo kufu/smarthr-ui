@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0](https://github.com/kufu/smarthr-ui/compare/v6.0.0...v6.1.0) (2020-01-20)
+
+
+### Features
+
+* change children prop type of Heading ([d27424f](https://github.com/kufu/smarthr-ui/commit/d27424f78cb66fa2e4de6566b8fcbf8022a1900f))
+* change term prop type of DefinitionListItem ([b654ca0](https://github.com/kufu/smarthr-ui/commit/b654ca007a997d721e649a8f4c12bd798eb5e595))
+
 ## [6.0.0](https://github.com/kufu/smarthr-ui/compare/v5.0.0...v6.0.0) (2020-01-17)
 
 ### ⚠ BREAKING CHANGES
