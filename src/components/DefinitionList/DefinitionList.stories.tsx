@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Heading } from '../Heading'
 import { Base } from '../Base'
 import { DefinitionList } from './DefinitionList'
+import { Icon } from '../Icon'
 
 const DefinitionListItems = [
   {
@@ -44,6 +45,30 @@ storiesOf('DefinitionList', module).add('all', () => (
     <Content>
       <DefinitionList items={DefinitionListItems} layout="triple"></DefinitionList>
     </Content>
+
+    <Title type="sectionTitle">customized</Title>
+    <Content>
+      <DefinitionList
+        items={[
+          {
+            term: 'term 1',
+            description: 'description 1',
+          },
+          {
+            term: (
+              <Term>
+                <span>term 2</span>
+                <Alert>
+                  <Icon name="fa-exclamation-circle" size={11} color="#ef475b" />
+                  <AlertText>error occurred</AlertText>
+                </Alert>
+              </Term>
+            ),
+            description: 'description 2',
+          },
+        ]}
+      ></DefinitionList>
+    </Content>
   </Wrapper>
 ))
 
@@ -56,4 +81,18 @@ const Title = styled(Heading)`
 const Content = styled(Base)`
   margin: 0 0 32px;
   padding: 24px;
+`
+const Term = styled.span`
+  display: flex;
+  align-items: center;
+`
+const Alert = styled.span`
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+`
+const AlertText = styled.span`
+  margin-left: 4px;
+  color: #333;
+  font-size: 11px;
 `

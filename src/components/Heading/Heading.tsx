@@ -1,10 +1,10 @@
-import React, { FC } from 'react'
+import React, { ReactNode, FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
 export type Props = {
-  children: string
+  children: ReactNode
   type?: HeadingTypes
   tag?: HeadingTagTypes
   className?: string
