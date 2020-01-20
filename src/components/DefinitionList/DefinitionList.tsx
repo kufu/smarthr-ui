@@ -7,8 +7,8 @@ import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListIte
 
 type LayoutType = 'single' | 'double' | 'triple'
 type Props = {
-  layout?: LayoutType
   items: DefinitionListItemProps[]
+  layout?: LayoutType
   className?: string
 }
 

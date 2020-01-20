@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { ReactNode, FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
@@ -6,16 +6,16 @@ import { useTheme, Theme } from '../../hooks/useTheme'
 import { Heading, Props as HeadingProps } from '../Heading'
 
 export type DefinitionListItemProps = {
-  term: string
+  term: ReactNode
+  description: ReactNode
   termTag?: HeadingProps['tag']
-  description: React.ReactNode
   className?: string
 }
 
 export const DefinitionListItem: FC<DefinitionListItemProps> = ({
   term,
-  termTag = 'span',
   description,
+  termTag = 'span',
   className = '',
 }) => {
   const theme = useTheme()
