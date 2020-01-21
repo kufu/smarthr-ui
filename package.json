@@ -79,11 +79,6 @@
     "lib"
   ],
   "homepage": "https://github.com/kufu/smarthr-ui#readme",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "keywords": [
     "react",
     "react-component",
@@ -93,8 +88,7 @@
   "license": "MIT",
   "lint-staged": {
     "*.{ts,tsx}": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "main": "lib/index.js",
