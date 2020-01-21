@@ -6,6 +6,7 @@ export interface PaletteProperty {
   TEXT_BLACK?: string
   TEXT_GREY?: string
   TEXT_DISABLED?: string
+  TEXT_LINK?: string
   BORDER?: string
   BACKGROUND?: string
   COLUMN?: string
@@ -23,6 +24,7 @@ export interface CreatedPaletteTheme {
   TEXT_BLACK: string
   TEXT_GREY: string
   TEXT_DISABLED: string
+  TEXT_LINK: string
   BORDER: string
   BACKGROUND: string
   COLUMN: string
@@ -39,6 +41,7 @@ export const defaultPalette = {
   TEXT_BLACK: '#333',
   TEXT_GREY: '#767676',
   TEXT_DISABLED: '#c1c1c1',
+  TEXT_LINK: '#007bc2',
   BORDER: '#d6d6d6',
   BACKGROUND: '#f5f6fa',
   COLUMN: '#f9f9f9',
