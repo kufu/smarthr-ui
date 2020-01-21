@@ -3,7 +3,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { Icon } from '../Icon'
 
-storiesOf('Downloader', module).add('all', () => (
+storiesOf('[TBD] Downloader', module).add('all', () => (
   <Wrapper>
     <Title>To Be Developed</Title>
     <Description>This component will develop in the near future.</Description>
