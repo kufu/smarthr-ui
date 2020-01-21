@@ -3,15 +3,15 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { Icon } from '../Icon'
 
-storiesOf('DatePicker', module).add('all', () => (
+storiesOf('SegmentedControl', module).add('all', () => (
   <Wrapper>
     <Title>To Be Developed</Title>
     <Description>This component will develop in the near future.</Description>
     <Link
-      href="https://smarthr.invisionapp.com/share/ADUDJ8BW74C#/378269214_datepicker"
+      href="https://smarthr.invisionapp.com/share/ADUDJ8BW74C#/386514186_segmentedcontrol"
       target="_blank"
     >
-      <LinkText>Design of DatePicker (InVision)</LinkText>
+      <LinkText>Design of SegmentedControl (InVision)</LinkText>
       <LinkIcon name="fa-external-link-alt" size={14} />
     </Link>
   </Wrapper>
