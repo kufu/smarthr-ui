@@ -36,7 +36,7 @@
     "enzyme-adapter-react-16": "^1.14.0",
     "enzyme-to-json": "^3.3.5",
     "eslint": "^6.0.1",
-    "eslint-config-smarthr": "^2.0.0",
+    "eslint-config-smarthr": "^4.0.0",
     "fixpack": "^2.3.1",
     "husky": "^4.0.7",
     "jest": "^25.1.0",
