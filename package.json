@@ -39,7 +39,7 @@
     "eslint-config-smarthr": "^2.0.0",
     "fixpack": "^2.3.1",
     "husky": "^4.0.7",
-    "jest": "^24.9.0",
+    "jest": "^25.1.0",
     "lint-staged": "^10.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.17.0",
@@ -59,7 +59,7 @@
     "stylelint-config-standard": "^19.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-processor-styled-components": "^1.8.0",
-    "ts-jest": "^24.0.2",
+    "ts-jest": "^25.0.0",
     "ts-loader": "^6.0.0",
     "typescript": "^3.2.4"
   },
