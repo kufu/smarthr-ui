@@ -1,0 +1,5 @@
+{
+  "extends": [
+    "github>kufu/renovate-config"
+  ]
+}
