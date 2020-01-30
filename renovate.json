@@ -1,5 +1,5 @@
 {
   "extends": [
-    "config:base"
+    "github>kufu/renovate-config"
   ]
 }
