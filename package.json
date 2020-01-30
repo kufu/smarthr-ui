@@ -11,7 +11,7 @@
     "react-transition-group": "^4.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
+    "@babel/core": "^7.8.3",
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
     "@storybook/addon-a11y": "^5.3.2",
@@ -31,7 +31,7 @@
     "@types/react-test-renderer": "^16.8.1",
     "@types/react-transition-group": "^4.2.3",
     "@types/styled-components": "^4.4.0",
-    "babel-loader": "^8.0.5",
+    "babel-loader": "^8.0.6",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "enzyme-to-json": "^3.3.5",
