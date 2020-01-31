@@ -2231,7 +2231,7 @@
   dependencies:
     "@types/lodash" "*"
 
-"@types/lodash.range@^3.2.5":
+"@types/lodash.range@^3.2.6":
   version "3.2.6"
   resolved "https://registry.yarnpkg.com/@types/lodash.range/-/lodash.range-3.2.6.tgz#82e0afe2cbc77698a57a21b9f14cfd22cf547e9f"
   integrity sha512-bofMTb/7zteggVbeQfMp5iMd1Dar0txmq/i2HEWgrRabF4HxZsyHeny9YktvUGpgkk2m1A4qEkUovVWpbFDYRg==
