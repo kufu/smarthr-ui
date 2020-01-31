@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { MessageDialog, ActionDialog } from '.'
+import { ActionDialog, MessageDialog } from '.'
 import readme from './README.md'
 
 storiesOf('Dialog/opened', module)

@@ -2,7 +2,7 @@ import React, { FC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { transparentize } from 'polished'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Icon } from '../Icon'
 

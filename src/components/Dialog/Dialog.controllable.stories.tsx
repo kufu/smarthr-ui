@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
-import { Dialog, MessageDialog, ActionDialog } from '.'
+import { ActionDialog, Dialog, MessageDialog } from '.'
 import readme from './README.md'
 
 const DialogController: React.FC = () => {

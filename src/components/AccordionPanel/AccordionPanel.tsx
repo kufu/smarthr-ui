@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { flatArrayToMap } from '../../libs/map'
 import { getNewExpandedItems } from './accordionPanelHelper'

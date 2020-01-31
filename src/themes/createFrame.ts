@@ -1,5 +1,5 @@
 import { merge } from '../libs/lodash'
-import { defaultPalette, PaletteProperty } from './createPalette'
+import { PaletteProperty, defaultPalette } from './createPalette'
 
 const lineWidth = '1px'
 const lineStyle = 'solid'

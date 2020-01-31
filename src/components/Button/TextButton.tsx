@@ -2,13 +2,13 @@ import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import {
+  AnchorProps as BaseAnchorProps,
   BaseButton,
   BaseButtonAnchor,
   ButtonProps as BaseButtonProps,
-  AnchorProps as BaseAnchorProps,
 } from './BaseButton'
 
 type ButtonProps = Omit<BaseButtonProps, 'square'>

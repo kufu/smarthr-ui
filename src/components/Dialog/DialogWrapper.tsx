@@ -1,4 +1,4 @@
-import React, { createContext, useState, useRef, useEffect, useMemo } from 'react'
+import React, { createContext, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 type DialogContextType = {

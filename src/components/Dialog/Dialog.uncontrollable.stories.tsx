@@ -6,12 +6,12 @@ import styled from 'styled-components'
 import { SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
 import {
-  DialogWrapper,
-  DialogTrigger,
-  DialogContent,
-  DialogCloser,
-  MessageDialogContent,
   ActionDialogContent,
+  DialogCloser,
+  DialogContent,
+  DialogTrigger,
+  DialogWrapper,
+  MessageDialogContent,
 } from '.'
 import readme from './README.md'
 

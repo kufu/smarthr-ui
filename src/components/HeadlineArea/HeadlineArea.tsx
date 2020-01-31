@@ -1,7 +1,7 @@
-import React, { ReactNode, FC } from 'react'
+import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Heading, Props as HeadingProps } from '../Heading'
 

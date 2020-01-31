@@ -1,4 +1,4 @@
-import React, { RefObject, FC, useContext, useRef, useCallback } from 'react'
+import React, { FC, RefObject, useCallback, useContext, useRef } from 'react'
 import styled from 'styled-components'
 import { Transition } from 'react-transition-group'
 

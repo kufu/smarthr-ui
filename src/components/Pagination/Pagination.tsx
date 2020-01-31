@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { range } from '../../libs/lodash'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { PaginationItem } from './PaginationItem'
 import { PaginationControllerItem } from './PaginationControllerItem'

@@ -2,9 +2,9 @@ import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { BaseButton, BaseButtonAnchor, ButtonProps, AnchorProps } from './BaseButton'
+import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
 export const SecondaryButton: FC<ButtonProps> = props => {
   const theme = useTheme()

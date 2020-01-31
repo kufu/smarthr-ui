@@ -1,7 +1,7 @@
-import React, { ReactNode, FC } from 'react'
-import styled, { css, createGlobalStyle, keyframes } from 'styled-components'
+import React, { FC, ReactNode } from 'react'
+import styled, { createGlobalStyle, css, keyframes } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { DialogPositionProvider } from './DialogPositionProvider'
 

@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
 import { DialogContentInner } from './DialogContentInner'
-import { BaseProps, ActionDialogContentInner } from './ActionDialogContentInner'
+import { ActionDialogContentInner, BaseProps } from './ActionDialogContentInner'
 
 export type ActionDialogContentProps = BaseProps & {
   top?: number
