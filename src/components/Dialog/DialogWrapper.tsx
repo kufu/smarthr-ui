@@ -8,8 +8,8 @@ type DialogContextType = {
 }
 
 export const DialogContext = createContext<DialogContextType>({
-  onClickTrigger: () => {},
-  onClickClose: () => {},
+  onClickTrigger: () => undefined,
+  onClickClose: () => undefined,
   DialogContentRoot: () => null,
 })
 

@@ -22,8 +22,8 @@ export const ActionDialog: React.FC<Props> = ({
   onClickAction,
   onClickClose,
   actionDisabled = false,
-  onClickOverlay = () => {},
-  onPressEscape = () => {},
+  onClickOverlay = () => undefined,
+  onPressEscape = () => undefined,
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current

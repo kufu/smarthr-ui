@@ -18,8 +18,8 @@ export const MessageDialog: React.FC<Props> = ({
   description,
   closeText,
   onClickClose,
-  onClickOverlay = () => {},
-  onPressEscape = () => {},
+  onClickOverlay = () => undefined,
+  onPressEscape = () => undefined,
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current

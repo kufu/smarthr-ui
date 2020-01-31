@@ -22,8 +22,8 @@ export const DropdownContext = createContext<DropdownContextType>({
   dropdownKey: '',
   active: false,
   triggerRect: initialRect,
-  onClickTrigger: () => {},
-  onClickCloser: () => {},
+  onClickTrigger: () => undefined,
+  onClickCloser: () => undefined,
   DropdownContentRoot: () => null,
 })
 

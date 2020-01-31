@@ -5,10 +5,10 @@ import { FlashMessage } from './FlashMessage'
 describe('FlashMessage', () => {
   it('should not render if prop visible is false', () => {
     const visibleFlashMessage = mount(
-      <FlashMessage type="success" text="flash!!" onClose={() => {}} visible={true} />,
+      <FlashMessage type="success" text="flash!!" onClose={() => undefined} visible={true} />,
     )
     const invisibleFlashMessage = mount(
-      <FlashMessage type="success" text="flash!!" onClose={() => {}} visible={false} />,
+      <FlashMessage type="success" text="flash!!" onClose={() => undefined} visible={false} />,
     )
 
     expect(visibleFlashMessage.text()).toEqual(expect.stringContaining('flash!!'))

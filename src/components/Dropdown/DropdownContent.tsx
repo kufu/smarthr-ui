@@ -7,7 +7,7 @@ import { DropdownCloser } from './DropdownCloser'
 export const DropdownContentContext = React.createContext<{
   onClickCloser: () => void
 }>({
-  onClickCloser: () => {},
+  onClickCloser: () => undefined,
 })
 
 type Props = {

@@ -16,8 +16,8 @@ type Props = {
 export const Dialog: React.FC<Props> = ({
   isOpen,
   children,
-  onClickOverlay = () => {},
-  onPressEscape = () => {},
+  onClickOverlay = () => undefined,
+  onPressEscape = () => undefined,
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current

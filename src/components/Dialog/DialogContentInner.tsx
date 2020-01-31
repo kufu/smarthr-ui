@@ -28,7 +28,7 @@ function exist(value: any) {
 
 export const DialogContentInner: FC<Props> = ({
   onClickOverlay,
-  onPressEscape = () => {},
+  onPressEscape = () => undefined,
   children,
   ...props
 }) => {
