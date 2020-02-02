@@ -26,7 +26,7 @@
     "@types/jest": "^24.9.1",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
-    "@types/react": "^16.8.16",
+    "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.1",
     "@types/react-test-renderer": "^16.8.1",
     "@types/react-transition-group": "^4.2.3",
