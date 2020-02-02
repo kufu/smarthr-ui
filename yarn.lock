@@ -12763,7 +12763,7 @@ reg-suit-util@^0.8.5:
     mime-types "^2.1.15"
     mkdirp "^0.5.1"
 
-reg-suit@^0.8.1:
+reg-suit@^0.8.6:
   version "0.8.6"
   resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.8.6.tgz#c90025b1143757da3dfbd42f7ab97188cd76a801"
   integrity sha512-+/gGENj2FTLlIUghpYg41OAYqp1XZcuC7ZUSBxU9d8jAcoSHexaqFvNmjUJpIfLCmFedpNe+lqiRhaIcfw9MAA==
@@ -13957,7 +13957,7 @@ storybook-readme@^5.0.8:
     string-raw "^1.0.1"
     vuex "^3.1.0"
 
-storycap@^2.0.0:
+storycap@^2.3.4:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/storycap/-/storycap-2.3.4.tgz#f7916942291ccae3d0d57e0c306d954719f852dc"
   integrity sha512-aCv9+d5nL7U46l/QxbBY/aG97tPeoUJFBDH85l1mLn/vMfTipM3Smu3ftPmu2VzbtBg7pBJJdCmIJmGxcswksQ==
