@@ -14,6 +14,7 @@ type Props = {
 export const DropdownContentInner: FC<Props> = ({ triggerRect, children, className }) => {
   const theme = useTheme()
   const [isMounted, setIsMounted] = useState(false)
+  const [isActive, setIsActive] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
     top: '0',
     left: '0',
@@ -23,6 +24,7 @@ export const DropdownContentInner: FC<Props> = ({ triggerRect, children, classNa
 
   useEffect(() => {
     setIsMounted(true)
+    setIsActive(false)
   }, [])
 
   useEffect(() => {
@@ -44,6 +46,7 @@ export const DropdownContentInner: FC<Props> = ({ triggerRect, children, classNa
           },
         ),
       )
+      setIsActive(true)
     }
   }, [isMounted, triggerRect])
 
@@ -51,7 +54,7 @@ export const DropdownContentInner: FC<Props> = ({ triggerRect, children, classNa
     <Wrapper
       ref={wrapperRef}
       contentBox={contentBox}
-      className={`${className} ${isMounted ? 'active' : ''}`}
+      className={`${className} ${isActive ? 'active' : ''}`}
       themes={theme}
     >
       {children}
