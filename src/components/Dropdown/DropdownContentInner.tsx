@@ -24,7 +24,6 @@ export const DropdownContentInner: FC<Props> = ({ triggerRect, children, classNa
 
   useEffect(() => {
     setIsMounted(true)
-    setIsActive(false)
   }, [])
 
   useEffect(() => {
