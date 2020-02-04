@@ -4,7 +4,7 @@
   "version": "6.1.1",
   "author": "SmartHR-UI Team",
   "dependencies": {
-    "lodash.merge": "^4.6.1",
+    "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^3.4.1",
     "react-icons": "^3.9.0",
