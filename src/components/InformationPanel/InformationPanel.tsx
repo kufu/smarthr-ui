@@ -110,7 +110,6 @@ const Header = styled.div<{ themes: Theme }>`
 
 const Title = styled.div<{ themes: Theme }>`
   vertical-align: middle;
-
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 
@@ -122,7 +121,6 @@ const Title = styled.div<{ themes: Theme }>`
 
 const TitleIcon = styled(Icon)<{ themes: Theme }>`
   vertical-align: text-top;
-
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 

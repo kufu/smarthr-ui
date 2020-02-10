@@ -13,11 +13,7 @@ storiesOf('InformationPanel', module)
   })
   .add('all', () => (
     <Wrapper>
-      <InformationPanel
-        title="Panel Title Panel Title Panel Title Panel Title Panel Title Panel Title Panel Title Panel Title Panel Title Panel Title Panel Title Panel Title Panel Title Panel Title Panel Title Panel Title"
-        openButtonLabel="OPEN"
-        closeButtonLabel="CLOSE"
-      >
+      <InformationPanel title="Panel Title" openButtonLabel="OPEN" closeButtonLabel="CLOSE">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
         labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
         laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
