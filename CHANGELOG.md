@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.2.0](https://github.com/kufu/smarthr-ui/compare/v6.1.1...v6.2.0) (2020-02-13)
+
+
+### Features
+
+* add icon ([090d48c](https://github.com/kufu/smarthr-ui/commit/090d48ced891c50938a1f727fde682f472efae3c))
+* add TBD stories ([#598](https://github.com/kufu/smarthr-ui/issues/598)) ([4c16fdc](https://github.com/kufu/smarthr-ui/commit/4c16fdc97e35c63c83220427c27cd968f965a01c))
+* add TEXT_LINK to palette ([#597](https://github.com/kufu/smarthr-ui/issues/597)) ([abb8029](https://github.com/kufu/smarthr-ui/commit/abb8029d6fb21ee4bfa35ab27cfc3345aa77268b))
+
+
+### Bug Fixes
+
+* dropdown flickers ([#650](https://github.com/kufu/smarthr-ui/issues/650)) ([32ccc98](https://github.com/kufu/smarthr-ui/commit/32ccc985b45876a94a9f1a9e38e97b047175d89b))
+* lint for InformationPanel ([f85e8af](https://github.com/kufu/smarthr-ui/commit/f85e8af5870087dc52c5116ff1303b9edf9c53cb))
+* long title InformationPanel ([b9d47b5](https://github.com/kufu/smarthr-ui/commit/b9d47b5ee37438f546cd8665464fc6ff8f050e8e))
+
 ### [6.1.1](https://github.com/kufu/smarthr-ui/compare/v6.1.0...v6.1.1) (2020-01-21)
 
 
