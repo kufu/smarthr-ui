@@ -68,8 +68,7 @@ const Wrapper = styled.div<{ themes: Theme; contentBox: ContentBoxStyle }>`
       top: ${contentBox.top};
       left: ${contentBox.left};
       border-radius: ${themes.frame.border.radius.m};
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
-        0 2px 1px -1px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       background-color: #fff;
       white-space: nowrap;
 
