@@ -12831,10 +12831,10 @@ reg-suit-util@^0.8.5:
     mime-types "^2.1.15"
     mkdirp "^0.5.1"
 
-reg-suit@^0.9.1:
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.9.1.tgz#efed509935a28eb7ec4160b6e2e95ccf50c7edec"
-  integrity sha512-YIIcPjeCvUDaJMj7nb2coJpJ5Fj8GfvxGX1XLiptY7BBMzCZ0jBhl7Y6Cl3IDDZ+dK9LxOvQVSPlU0mcbDGjEw==
+reg-suit@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.10.0.tgz#9ff86f96ed0a1b661ae931adb6e537150c3e9701"
+  integrity sha512-Fum+moxCbv1+z8puUxhInLrEdRaFFl1JFmMOHU/6+MZqzJsWAcrRsrUIVipR/SDouRNJ6JVFWlJ/sUAoNr5Dfg==
   dependencies:
     cp-file "^7.0.0"
     ignore "^3.3.7"
