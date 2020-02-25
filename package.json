@@ -49,7 +49,7 @@
     "reg-keygen-git-hash-plugin": "^0.8.5",
     "reg-notify-github-plugin": "^0.8.5",
     "reg-publish-s3-plugin": "^0.9.0",
-    "reg-suit": "^0.9.1",
+    "reg-suit": "^0.10.0",
     "standard-version": "^7.1.0",
     "storybook-readme": "^5.0.8",
     "storycap": "^2.3.4",
@@ -61,7 +61,7 @@
     "stylelint-processor-styled-components": "^1.10.0",
     "ts-jest": "^25.0.0",
     "ts-loader": "^6.2.1",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.2"
   },
   "peerDependencies": {
     "react": "^16.8.6",

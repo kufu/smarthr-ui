@@ -12816,10 +12816,10 @@ reg-suit-util@^0.8.5:
     mime-types "^2.1.15"
     mkdirp "^0.5.1"
 
-reg-suit@^0.9.1:
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.9.1.tgz#efed509935a28eb7ec4160b6e2e95ccf50c7edec"
-  integrity sha512-YIIcPjeCvUDaJMj7nb2coJpJ5Fj8GfvxGX1XLiptY7BBMzCZ0jBhl7Y6Cl3IDDZ+dK9LxOvQVSPlU0mcbDGjEw==
+reg-suit@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.10.0.tgz#9ff86f96ed0a1b661ae931adb6e537150c3e9701"
+  integrity sha512-Fum+moxCbv1+z8puUxhInLrEdRaFFl1JFmMOHU/6+MZqzJsWAcrRsrUIVipR/SDouRNJ6JVFWlJ/sUAoNr5Dfg==
   dependencies:
     cp-file "^7.0.0"
     ignore "^3.3.7"
@@ -15003,10 +15003,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^3.7.5:
-  version "3.7.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
-  integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
+typescript@^3.8.2:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.2.tgz#91d6868aaead7da74f493c553aeff76c0c0b1d5a"
+  integrity sha512-EgOVgL/4xfVrCMbhYKUQTdF37SQn4Iw73H5BgCrF1Abdun7Kwy/QZsE/ssAy0y4LxBbvua3PIbFsbRczWWnDdQ==
 
 ua-parser-js@^0.7.18:
   version "0.7.21"
