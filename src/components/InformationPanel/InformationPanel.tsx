@@ -106,6 +106,7 @@ const Wrapper = styled(Base)<{ themes: Theme }>`
 const Header = styled.div<{ themes: Theme }>`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `
 
 const Title = styled.div<{ themes: Theme }>`
