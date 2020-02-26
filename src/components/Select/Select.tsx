@@ -10,8 +10,13 @@ type Option = {
   label: string
   value: string
 }
-type Props = SelectHTMLAttributes<HTMLSelectElement> & {
+type Optgroup = {
+  label: string
   options: Option[]
+}
+
+type Props = SelectHTMLAttributes<HTMLSelectElement> & {
+  options: Array<Option | Optgroup>
   error?: boolean
   width?: number | string
 }
@@ -36,11 +41,27 @@ export const Select: FC<Props> = ({
   return (
     <Wrapper className={className} width={widthStyle} theme={theme}>
       <SelectBox className={error ? 'error' : ''} onChange={handleChange} themes={theme} {...props}>
-        {options.map(option => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
+        {options.map(option => {
+          if ('value' in option) {
+            return (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            )
+          }
+
+          const optgroup: Optgroup = option!
+
+          return (
+            <optgroup key={optgroup.label} label={optgroup.label}>
+              {optgroup.options.map(o => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </optgroup>
+          )
+        })}
       </SelectBox>
       <IconWrap>
         <Icon size={13} name="fa-sort" />
