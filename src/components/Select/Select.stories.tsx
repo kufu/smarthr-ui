@@ -68,10 +68,10 @@ storiesOf('Select', module).add('all', () => (
         value="orange"
         options={[
           { label: 'Select fruit', value: '' },
+          { label: 'apple', value: 'apple' },
           {
             label: 'citrus',
             options: [
-              { label: 'apple', value: 'apple' },
               { label: 'orange', value: 'orange' },
             ],
           },
