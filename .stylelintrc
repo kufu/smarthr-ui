@@ -5,6 +5,10 @@
     "stylelint-config-styled-components",
     "stylelint-config-prettier"
   ],
-  "rules": {},
+  "rules": {
+    "value-keyword-case": ["lower", {
+      ignoreKeywords: "dummyValue"
+    }]
+  },
   "syntax": "scss"
 }
