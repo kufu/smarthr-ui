@@ -11,7 +11,7 @@
     "react-transition-group": "^4.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
+    "@babel/core": "^7.8.6",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "@storybook/addon-a11y": "^5.3.14",
@@ -29,7 +29,7 @@
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
     "@types/react-test-renderer": "^16.9.2",
-    "@types/react-transition-group": "^4.2.3",
+    "@types/react-transition-group": "^4.2.4",
     "@types/styled-components": "^5.0.1",
     "babel-loader": "^8.0.6",
     "enzyme": "^3.11.0",
@@ -37,15 +37,15 @@
     "enzyme-to-json": "^3.4.4",
     "eslint": "^6.8.0",
     "eslint-config-smarthr": "^2.0.0",
-    "fixpack": "^3.0.5",
+    "fixpack": "^3.0.6",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
-    "lint-staged": "^10.0.7",
+    "lint-staged": "^10.0.8",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.19.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-test-renderer": "16.12.0",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-test-renderer": "16.13.0",
     "reg-keygen-git-hash-plugin": "^0.8.5",
     "reg-notify-github-plugin": "^0.8.5",
     "reg-publish-s3-plugin": "^0.9.0",
@@ -61,7 +61,7 @@
     "stylelint-processor-styled-components": "^1.10.0",
     "ts-jest": "^25.2.1",
     "ts-loader": "^6.2.1",
-    "typescript": "^3.8.2"
+    "typescript": "^3.8.3"
   },
   "peerDependencies": {
     "react": "^16.8.6",
