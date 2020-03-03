@@ -67,18 +67,18 @@
     semver "^5.4.1"
     source-map "^0.5.0"
 
-"@babel/core@^7.8.4":
-  version "7.8.4"
-  resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.8.4.tgz#d496799e5c12195b3602d0fddd77294e3e38e80e"
-  integrity sha512-0LiLrB2PwrVI+a2/IEskBopDYSd8BCb3rOvH7D5tzoWd696TBEduBvuLVm4Nx6rltrLZqvI3MCalB2K2aVzQjA==
+"@babel/core@^7.8.6":
+  version "7.8.6"
+  resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.8.6.tgz#27d7df9258a45c2e686b6f18b6c659e563aa4636"
+  integrity sha512-Sheg7yEJD51YHAvLEV/7Uvw95AeWqYPL3Vk3zGujJKIhJ+8oLw2ALaf3hbucILhKsgSoADOvtKRJuNVdcJkOrg==
   dependencies:
     "@babel/code-frame" "^7.8.3"
-    "@babel/generator" "^7.8.4"
+    "@babel/generator" "^7.8.6"
     "@babel/helpers" "^7.8.4"
-    "@babel/parser" "^7.8.4"
-    "@babel/template" "^7.8.3"
-    "@babel/traverse" "^7.8.4"
-    "@babel/types" "^7.8.3"
+    "@babel/parser" "^7.8.6"
+    "@babel/template" "^7.8.6"
+    "@babel/traverse" "^7.8.6"
+    "@babel/types" "^7.8.6"
     convert-source-map "^1.7.0"
     debug "^4.1.0"
     gensync "^1.0.0-beta.1"
@@ -971,6 +971,15 @@
     "@babel/parser" "^7.8.3"
     "@babel/types" "^7.8.3"
 
+"@babel/template@^7.8.6":
+  version "7.8.6"
+  resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.8.6.tgz#86b22af15f828dfb086474f964dcc3e39c43ce2b"
+  integrity sha512-zbMsPMy/v0PWFZEhQJ66bqjhH+z0JgMoBWuikXybgG3Gkd/3t5oQ1Rw2WQhnSrsOmsKXnZOx15tkC4qON/+JPg==
+  dependencies:
+    "@babel/code-frame" "^7.8.3"
+    "@babel/parser" "^7.8.6"
+    "@babel/types" "^7.8.6"
+
 "@babel/traverse@^7.1.0", "@babel/traverse@^7.7.4", "@babel/traverse@^7.8.0", "@babel/traverse@^7.8.3":
   version "7.8.3"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.8.3.tgz#a826215b011c9b4f73f3a893afbc05151358bf9a"
@@ -986,7 +995,7 @@
     globals "^11.1.0"
     lodash "^4.17.13"
 
-"@babel/traverse@^7.4.5":
+"@babel/traverse@^7.4.5", "@babel/traverse@^7.8.6":
   version "7.8.6"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.8.6.tgz#acfe0c64e1cd991b3e32eae813a6eb564954b5ff"
   integrity sha512-2B8l0db/DPi8iinITKuo7cbPznLCEk0kCxDoB9/N6gGNg/gxOXiR/IcymAFPiBwk5w6TtQ27w4wpElgp9btR9A==
@@ -6838,10 +6847,10 @@ find-versions@^3.2.0:
   dependencies:
     semver-regex "^2.0.0"
 
-fixpack@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/fixpack/-/fixpack-3.0.5.tgz#a6ec47a4d9eef4286a045ee1779864d945c7b0b6"
-  integrity sha512-pwhJTYl7FGPm3aCEmGpzH4oZLmdeC9L07O+qGIcPluZ0MgFtzG/N57u1yRLvsyfQQhyl2UD9Xkqr3LIWDG6hOQ==
+fixpack@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/fixpack/-/fixpack-3.0.6.tgz#80128402ece98095803362d41d8c7c1d57f77f5e"
+  integrity sha512-RfEXT2IMmoeAyr7PCwUHSRvC2K2VrrXQkmXwqjdTxoJ9TDDIWxgevr93ZIaEFFB+aQR17SN8zB6G0YCNQ6v83w==
   dependencies:
     alce "1.0.0"
     chalk "^2.4.1"
