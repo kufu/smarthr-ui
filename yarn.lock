@@ -6833,10 +6833,10 @@ find-versions@^3.2.0:
   dependencies:
     semver-regex "^2.0.0"
 
-fixpack@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/fixpack/-/fixpack-3.0.5.tgz#a6ec47a4d9eef4286a045ee1779864d945c7b0b6"
-  integrity sha512-pwhJTYl7FGPm3aCEmGpzH4oZLmdeC9L07O+qGIcPluZ0MgFtzG/N57u1yRLvsyfQQhyl2UD9Xkqr3LIWDG6hOQ==
+fixpack@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/fixpack/-/fixpack-3.0.6.tgz#80128402ece98095803362d41d8c7c1d57f77f5e"
+  integrity sha512-RfEXT2IMmoeAyr7PCwUHSRvC2K2VrrXQkmXwqjdTxoJ9TDDIWxgevr93ZIaEFFB+aQR17SN8zB6G0YCNQ6v83w==
   dependencies:
     alce "1.0.0"
     chalk "^2.4.1"
