@@ -65,6 +65,7 @@ const SelectBox = styled.select<{ themes: Theme }>`
       display: inline-block;
       width: 100%;
       padding: ${size.pxToRem(size.space.XXS)};
+      padding-right: ${size.pxToRem(size.space.M)};
       border-radius: ${frame.border.radius.m};
       border: ${frame.border.default};
       background-color: #fff;
