@@ -67,6 +67,7 @@ typings/
 lib/
 esm/
 .cache
+.DS_Store
 
 storybook-static/
 .reg
