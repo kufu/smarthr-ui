@@ -14,6 +14,7 @@ type Props = {
 export const DropdownContentInner: FC<Props> = ({ triggerRect, children, className }) => {
   const theme = useTheme()
   const [isMounted, setIsMounted] = useState(false)
+  const [isActive, setIsActive] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
     top: '0',
     left: '0',
@@ -44,6 +45,7 @@ export const DropdownContentInner: FC<Props> = ({ triggerRect, children, classNa
           },
         ),
       )
+      setIsActive(true)
     }
   }, [isMounted, triggerRect])
 
@@ -51,7 +53,7 @@ export const DropdownContentInner: FC<Props> = ({ triggerRect, children, classNa
     <Wrapper
       ref={wrapperRef}
       contentBox={contentBox}
-      className={`${className} ${isMounted ? 'active' : ''}`}
+      className={`${className} ${isActive ? 'active' : ''}`}
       themes={theme}
     >
       {children}
@@ -68,8 +70,7 @@ const Wrapper = styled.div<{ themes: Theme; contentBox: ContentBoxStyle }>`
       top: ${contentBox.top};
       left: ${contentBox.left};
       border-radius: ${themes.frame.border.radius.m};
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
-        0 2px 1px -1px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       background-color: #fff;
       white-space: nowrap;
 

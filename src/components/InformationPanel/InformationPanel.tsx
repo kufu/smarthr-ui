@@ -70,19 +70,23 @@ export const InformationPanel: FC<Props> = ({
 
   return (
     <Wrapper className={className} themes={theme}>
-      <Title themes={theme}>
-        <TitleIcon name={iconName} color={iconColor} themes={theme} />
-        <Heading type="blockTitle" tag={titleTag}>
-          {title}
-        </Heading>
-        <PanelButton
-          suffix={<Icon size={14} name={active ? 'fa-caret-up' : 'fa-caret-down'} />}
-          size="s"
-          onClick={handleClickTrigger}
-        >
-          {active ? closeButtonLabel : openButtonLabel}
-        </PanelButton>
-      </Title>
+      <Header themes={theme}>
+        <Title themes={theme}>
+          <TitleIcon name={iconName} color={iconColor} themes={theme} />
+          <StyledHeading type="blockTitle" tag={titleTag}>
+            {title}
+          </StyledHeading>
+        </Title>
+        <div>
+          <SecondaryButton
+            suffix={<Icon size={14} name={active ? 'fa-caret-up' : 'fa-caret-down'} />}
+            size="s"
+            onClick={handleClickTrigger}
+          >
+            {active ? closeButtonLabel : openButtonLabel}
+          </SecondaryButton>
+        </div>
+      </Header>
       {active && <Content themes={theme}>{children}</Content>}
     </Wrapper>
   )
@@ -99,14 +103,25 @@ const Wrapper = styled(Base)<{ themes: Theme }>`
   }}
 `
 
-const Title = styled.div<{ themes: Theme }>`
+const Header = styled.div<{ themes: Theme }>`
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
-  position: relative;
+`
+
+const Title = styled.div<{ themes: Theme }>`
+  vertical-align: middle;
+  ${({ themes }) => {
+    const { pxToRem, space } = themes.size
+
+    return css`
+      margin-right: ${pxToRem(space.XXS)};
+    `
+  }}
 `
 
 const TitleIcon = styled(Icon)<{ themes: Theme }>`
+  vertical-align: text-top;
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 
@@ -127,9 +142,6 @@ const Content = styled.div<{ themes: Theme }>`
   }}
 `
 
-const PanelButton = styled(SecondaryButton)`
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
+const StyledHeading = styled(Heading)`
+  display: inline;
 `
