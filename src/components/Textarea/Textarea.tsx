@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-export type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   error?: boolean
   width?: number | string
   autoFocus?: boolean
