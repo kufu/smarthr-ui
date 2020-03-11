@@ -53,6 +53,7 @@ export {
   AccordionPanelTrigger,
 } from './components/AccordionPanel'
 export { InformationPanel } from './components/InformationPanel'
+export { Footer } from './components/Footer'
 
 // themes
 export { createTheme } from './themes/createTheme'

@@ -29,7 +29,7 @@ export const AccordionPanelContent: FC<Props> = ({ children, className = '' }) =
     [wrapperRef],
   )
 
-  const handleEnterd = (node: HTMLElement) => {
+  const handleEntered = (node: HTMLElement) => {
     node.style.height = 'auto'
   }
 
@@ -55,7 +55,7 @@ export const AccordionPanelContent: FC<Props> = ({ children, className = '' }) =
     <Transition
       in={isInclude}
       onEntering={handleEntering}
-      onEntered={handleEnterd}
+      onEntered={handleEntered}
       onExit={handleExit}
       onExiting={handleExiting}
       onExited={handleExited}

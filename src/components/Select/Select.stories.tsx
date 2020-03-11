@@ -63,6 +63,25 @@ storiesOf('Select', module).add('all', () => (
       />
     </li>
     <li>
+      <Text>optgroup</Text>
+      <Select
+        value="orange"
+        options={[
+          { label: 'Select fruit', value: '' },
+          { label: 'apple', value: 'apple' },
+          {
+            label: 'citrus',
+            options: [
+              { label: 'orange', value: 'orange' },
+              { label: 'lemon', value: 'lemon' },
+              { label: 'grapefruit', value: 'grapefruit' },
+            ],
+          },
+          { label: 'banana', value: 'banana' },
+        ]}
+      />
+    </li>
+    <li>
       <Text>width</Text>
       <Select
         width="100%"
