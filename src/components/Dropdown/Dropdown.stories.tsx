@@ -30,7 +30,7 @@ const ListMenu = () => (
   </List>
 )
 
-const ControlableDropdown = () => {
+const ControllableDropdown = () => {
   const [value, setValue] = React.useState('hoge')
   const [text, setText] = React.useState('')
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
@@ -119,7 +119,7 @@ storiesOf('Dropdown', module)
         </li>
         <li>
           <Box>
-            <ControlableDropdown />
+            <ControllableDropdown />
           </Box>
         </li>
         <li>
