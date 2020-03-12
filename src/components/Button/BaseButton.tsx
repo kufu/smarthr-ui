@@ -34,7 +34,7 @@ export const buttonFactory: <Props extends BaseProps>(tag: Tag) => FC<Props> = t
   ...props
 }) => {
   const theme = useTheme()
-  const Tag = hoverable()(Base.withComponent(tag))
+  const Tag = hoverable()(tagStore[tag])
 
   // prettier-ignore
   const classNames = `${size} ${className} ${square ? 'square' : ''} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
@@ -122,6 +122,10 @@ const Suffix = styled.span<{ themes: Theme }>`
     `
   }}
 `
+const tagStore = {
+  button: Base.withComponent('button'),
+  a: Base.withComponent('a'),
+}
 
 export const BaseButton: FC<ButtonProps> = buttonFactory<ButtonProps>('button')
 export const BaseButtonAnchor: FC<AnchorProps> = buttonFactory<AnchorProps>('a')
