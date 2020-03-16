@@ -128,7 +128,7 @@
   "resolutions": {
     "reg-suit/**/braces": "2.3.1",
     "deep-extend": "0.6.0",
-    "https-proxy-agent": "2.2.3",
+    "https-proxy-agent": "5.0.0",
     "handlebars": "4.7.3"
   }
 }
