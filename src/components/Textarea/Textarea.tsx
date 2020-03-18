@@ -37,7 +37,6 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme }>`
           width: ${typeof width === 'number' ? `${width}px` : width};
         `}
       background-color: #fff;
-      resize: vertical;
       outline: none;
       border: ${frame.border.default};
       ${error
