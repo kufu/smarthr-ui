@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0](https://github.com/kufu/smarthr-ui/compare/v6.2.0...v7.0.0) (2020-03-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* change several icon names
+
+### Features
+
+* introduce Footer component ([#686](https://github.com/kufu/smarthr-ui/issues/686)) ([09da7a4](https://github.com/kufu/smarthr-ui/commit/09da7a4b52bf13efcf773b8d0c9457a54188d2cd))
+
+
+### Bug Fixes
+
+* add align-items property to InformationPanel ([#672](https://github.com/kufu/smarthr-ui/issues/672)) ([1de95b7](https://github.com/kufu/smarthr-ui/commit/1de95b7a28329c70b7de95081858d5ebcb9ea224))
+* add optgroup option for select ([#671](https://github.com/kufu/smarthr-ui/issues/671)) ([ebbff1d](https://github.com/kufu/smarthr-ui/commit/ebbff1d1afdb0e985a09a15823ac6a80f7baa5fd))
+* avoid creating styled-components' instance dynamically ([#685](https://github.com/kufu/smarthr-ui/issues/685)) ([4adfa2a](https://github.com/kufu/smarthr-ui/commit/4adfa2a55f57a7aed6fb534aef204f0e189efd5f))
+* dropdown content position ([#664](https://github.com/kufu/smarthr-ui/issues/664)) ([6bcf49b](https://github.com/kufu/smarthr-ui/commit/6bcf49b971fd11f41987ac208aae6a2372fc8faf))
+* fix padding-right in Input ([#665](https://github.com/kufu/smarthr-ui/issues/665)) ([df24caf](https://github.com/kufu/smarthr-ui/commit/df24caf43c39cca3b7d791769b0617d68f7e5d96))
+* fix padding-right in Input ([#665](https://github.com/kufu/smarthr-ui/issues/665)) ([c16d5ec](https://github.com/kufu/smarthr-ui/commit/c16d5ec728806c28805908acdb7ea7306d3b4d4c))
+* fix typos ([#684](https://github.com/kufu/smarthr-ui/issues/684)) ([1bcd45b](https://github.com/kufu/smarthr-ui/commit/1bcd45ba7212823c20be42d750f726ea93555b9b))
+
 ## [6.2.0](https://github.com/kufu/smarthr-ui/compare/v6.1.1...v6.2.0) (2020-02-13)
 
 

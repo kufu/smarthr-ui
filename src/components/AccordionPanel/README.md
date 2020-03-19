@@ -3,7 +3,7 @@
 ```tsx
 import {
   AccordionPanel,
-  AccorionPanelItem,
+  AccordionPanelItem,
   AccordionPanelTrigger,
   AccordionPanelContent,
 } from 'smarthr-ui'
@@ -15,12 +15,12 @@ import {
   defaultExpanded={['accordion-name']}
   onClick={handleClick}
 >
-  <AccorionPanelItem name="accordionPanel">
+  <AccordionPanelItem name="accordionPanel">
     <AccordionPanelTrigger>Accordion panel trigger</AccordionPanelTrigger>
     <AccordionPanelContent>
       <Content>Accordion panel content</Content>
     </AccordionPanelContent>
-  </AccorionPanelItem>
+  </AccordionPanelItem>
 </AccordionPanel>
 ```
 
@@ -36,7 +36,7 @@ import {
 | defaultExpanded    | -        | **string[]**                      | []           | Expands accordion with name matching value in array.                                             |
 | onClick            | -        | **function**                      | -            | Fires when the AccordionPanelTrigger clicked. <br><br>function: (expandedList: string[]) => void |
 
-### AccorionPanelItem component
+### AccordionPanelItem component
 
 | Name | Required | Type       | DefaultValue | Description              |
 | ---- | -------- | ---------- | ------------ | ------------------------ |

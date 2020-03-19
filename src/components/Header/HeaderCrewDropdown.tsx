@@ -38,30 +38,30 @@ export const HeaderCrewDropdown: FC<Props> = ({
       <DropdownContent>
         <MenuList themes={theme} role="menu">
           <MenuListItem role="menuitem">
-            <MenuListItemButon themes={theme} onClick={onClickNew}>
+            <MenuListItemButton themes={theme} onClick={onClickNew}>
               <MenuListItemIcon themes={theme}>
                 <Icon name="fa-edit" />
               </MenuListItemIcon>
               新規登録する（手入力）
-            </MenuListItemButon>
+            </MenuListItemButton>
           </MenuListItem>
 
           <MenuListItem role="menuitem">
-            <MenuListItemButon themes={theme} onClick={onClickBulkInsert}>
+            <MenuListItemButton themes={theme} onClick={onClickBulkInsert}>
               <MenuListItemIcon themes={theme}>
                 <Icon name="fa-plus-square" />
               </MenuListItemIcon>
               新規登録する（ファイル）
-            </MenuListItemButon>
+            </MenuListItemButton>
           </MenuListItem>
 
           <MenuListItem role="menuitem">
-            <MenuListItemButon themes={theme} onClick={onClickBulkUpdate}>
+            <MenuListItemButton themes={theme} onClick={onClickBulkUpdate}>
               <MenuListItemIcon themes={theme}>
                 <Icon name="fa-sync-alt" />
               </MenuListItemIcon>
               更新する（ファイル）
-            </MenuListItemButon>
+            </MenuListItemButton>
           </MenuListItem>
 
           <MenuListItem role="menuitem">
@@ -69,12 +69,12 @@ export const HeaderCrewDropdown: FC<Props> = ({
           </MenuListItem>
 
           <MenuListItem role="menuitem">
-            <MenuListItemButon themes={theme} onClick={onClickInvite}>
+            <MenuListItemButton themes={theme} onClick={onClickInvite}>
               <MenuListItemIcon themes={theme}>
                 <Icon name="fa-paper-plane" />
               </MenuListItemIcon>
               SmartHR に招待
-            </MenuListItemButon>
+            </MenuListItemButton>
           </MenuListItem>
         </MenuList>
       </DropdownContent>
@@ -159,7 +159,7 @@ const MenuListItemIcon = styled.figure<{ themes: Theme }>`
     `
   }}
 `
-const MenuListItemButon = styled.button<{ themes: Theme }>`
+const MenuListItemButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
     const { size, palette, interaction } = themes
 
