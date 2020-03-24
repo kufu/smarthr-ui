@@ -49,11 +49,11 @@ const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
     const { size, palette, interaction } = themes
 
     return css`
-      font-size: ${size.pxToRem(size.font.SHORT)}
+      font-size: ${size.pxToRem(size.font.SHORT)};
       font-weight: bold;
       padding: ${size.pxToRem(size.space.XS)};
       color: ${palette.TEXT_GREY};
-      transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`}
+      transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
       text-align: left;
       line-height: 1.5;
       vertical-align: middle;
