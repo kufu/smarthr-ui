@@ -77,7 +77,7 @@ const CurrentWrapper = styled.span<{ themes: Theme }>`
       color: ${palette.TEXT_BLACK};
       position: relative;
 
-      &:after{
+      &::after{
         content: '';
         display: block;
         height: ${size.pxToRem(3)};
