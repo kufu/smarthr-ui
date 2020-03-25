@@ -13,7 +13,7 @@ export const CheckBoxLabel: FC<Props> = ({ label, className = '', ...props }) =>
 
   return (
     <Wrapper className={className}>
-      <Label className={`${props.disabled ? 'disabled' : ''}`}>
+      <Label className={`${props.disabled ? 'disabled' : ''}`} themes={theme}>
         <CheckBox {...props} />
         <Txt themes={theme}>{label}</Txt>
       </Label>
@@ -24,22 +24,28 @@ export const CheckBoxLabel: FC<Props> = ({ label, className = '', ...props }) =>
 const Wrapper = styled.div`
   display: inline-block;
 `
-const Label = styled.label`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+const Label = styled.label<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette } = themes
+    return css`
+      display: flex;
+      align-items: center;
+      color: ${palette.TEXT_BLACK};
+      cursor: pointer;
 
-  &.disabled {
-    cursor: default;
-  }
+      &.disabled {
+        color: ${palette.TEXT_DISABLED};
+        cursor: default;
+      }
+    `
+  }}
 `
 const Txt = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { size } = themes
     return css`
       margin: 0 0 0 ${size.pxToRem(size.space.XXS)};
       font-size: ${size.pxToRem(size.font.TALL)};
-      color: ${palette.TEXT_BLACK};
     `
   }}
 `
