@@ -26,7 +26,7 @@
     "@types/jest": "^25.1.4",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
-    "@types/react": "^16.9.23",
+    "@types/react": "^16.9.25",
     "@types/react-dom": "^16.9.5",
     "@types/react-test-renderer": "^16.9.2",
     "@types/react-transition-group": "^4.2.4",
@@ -129,6 +129,7 @@
     "reg-suit/**/braces": "3.0.2",
     "deep-extend": "0.6.0",
     "https-proxy-agent": "5.0.0",
-    "handlebars": "4.7.3"
+    "handlebars": "4.7.3",
+    "@types/react": "^16.9.25"
   }
 }
