@@ -74,8 +74,19 @@ const CurrentWrapper = styled.span<{ themes: Theme }>`
 
     return css`
       ${BaseStyle}
-      border-bottom: ${size.pxToRem(3)} solid ${palette.MAIN};
       color: ${palette.TEXT_BLACK};
+      position: relative;
+
+      &::after{
+        content: '';
+        display: block;
+        height: ${size.pxToRem(3)};
+        background-color: ${palette.MAIN};
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
     `
   }}
 `
