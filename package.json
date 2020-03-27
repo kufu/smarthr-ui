@@ -129,6 +129,7 @@
     "reg-suit/**/braces": "3.0.2",
     "deep-extend": "0.6.0",
     "https-proxy-agent": "5.0.0",
-    "handlebars": "4.7.3"
+    "handlebars": "4.7.3",
+    "@types/react": "^16.9.25"
   }
 }
