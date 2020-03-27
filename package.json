@@ -130,6 +130,10 @@
     "deep-extend": "0.6.0",
     "https-proxy-agent": "5.0.0",
     "handlebars": "4.7.3",
-    "@types/react": "^16.9.25"
+    "@types/react": "^16.9.25",
+    "acorn": "7.1.1",
+    "minimist": "1.2.5",
+    "@hapi/hoek": "9.0.4",
+    "mem": "6.0.1"
   }
 }
