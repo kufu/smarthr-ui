@@ -119,6 +119,19 @@ storiesOf('Dropdown', module)
         </li>
         <li>
           <Box>
+            <Dropdown>
+              <DropdownTrigger>
+                <SecondaryButton>Non-scroll dropdown</SecondaryButton>
+              </DropdownTrigger>
+              <DropdownContent scrollable={false}>
+                <ListMenu />
+                <ListMenu />
+              </DropdownContent>
+            </Dropdown>
+          </Box>
+        </li>
+        <li>
+          <Box>
             <ControllableDropdown />
           </Box>
         </li>

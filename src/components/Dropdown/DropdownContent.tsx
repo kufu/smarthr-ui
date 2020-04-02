@@ -12,11 +12,13 @@ export const DropdownContentContext = React.createContext<{
 
 type Props = {
   controllable?: boolean
+  scrollable?: boolean
   className?: string
 }
 
 export const DropdownContent: React.FC<Props> = ({
   controllable = false,
+  scrollable = true,
   className = '',
   children,
 }) => {
@@ -27,7 +29,11 @@ export const DropdownContent: React.FC<Props> = ({
   return (
     <DropdownContentRoot>
       <DropdownContentContext.Provider value={{ onClickCloser }}>
-        <DropdownContentInner triggerRect={triggerRect} className={`${dropdownKey} ${className}`}>
+        <DropdownContentInner
+          triggerRect={triggerRect}
+          scrollable={scrollable}
+          className={`${dropdownKey} ${className}`}
+        >
           {controllable ? children : <DropdownCloser>{children}</DropdownCloser>}
         </DropdownContentInner>
       </DropdownContentContext.Provider>
