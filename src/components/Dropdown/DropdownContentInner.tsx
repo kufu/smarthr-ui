@@ -7,11 +7,17 @@ import { Rect, getContentBoxStyle, ContentBoxStyle } from './dropdownHelper'
 
 type Props = {
   triggerRect: Rect
+  scrollable: boolean
   children: React.ReactNode
   className: string
 }
 
-export const DropdownContentInner: FC<Props> = ({ triggerRect, children, className }) => {
+export const DropdownContentInner: FC<Props> = ({
+  triggerRect,
+  scrollable,
+  children,
+  className,
+}) => {
   const theme = useTheme()
   const [isMounted, setIsMounted] = useState(false)
   const [isActive, setIsActive] = useState(false)
@@ -53,6 +59,7 @@ export const DropdownContentInner: FC<Props> = ({ triggerRect, children, classNa
     <Wrapper
       ref={wrapperRef}
       contentBox={contentBox}
+      scrollable={scrollable}
       className={`${className} ${isActive ? 'active' : ''}`}
       themes={theme}
     >
@@ -61,8 +68,8 @@ export const DropdownContentInner: FC<Props> = ({ triggerRect, children, classNa
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme; contentBox: ContentBoxStyle }>`
-  ${({ contentBox, themes }) => {
+const Wrapper = styled.div<{ themes: Theme; contentBox: ContentBoxStyle; scrollable: boolean }>`
+  ${({ contentBox, themes, scrollable }) => {
     return css`
       visibility: hidden;
       z-index: 99999;
@@ -78,7 +85,7 @@ const Wrapper = styled.div<{ themes: Theme; contentBox: ContentBoxStyle }>`
         visibility: visible;
       }
 
-      ${contentBox.maxHeight
+      ${contentBox.maxHeight && scrollable
         ? `
           overflow-y: scroll;
           max-height: ${contentBox.maxHeight};
