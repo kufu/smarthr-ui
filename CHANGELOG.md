@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.1.0](https://github.com/kufu/smarthr-ui/compare/v7.0.0...v7.1.0) (2020-04-03)
+
+
+### Features
+
+* add scrollable props for DropdownContent ([#710](https://github.com/kufu/smarthr-ui/issues/710)) ([9559404](https://github.com/kufu/smarthr-ui/commit/9559404c6a6308bee9982d077a93b6d236250a95))
+* add textarea component ([#683](https://github.com/kufu/smarthr-ui/issues/683)) ([2852d43](https://github.com/kufu/smarthr-ui/commit/2852d43cfe398565919d86c36c46c3328b50329c))
+
+
+### Bug Fixes
+
+* change AppNaviButton style ([#697](https://github.com/kufu/smarthr-ui/issues/697)) ([25a9729](https://github.com/kufu/smarthr-ui/commit/25a97290a90bec2a191620d42acb80f2e9cd7067))
+* change label text color in RadioButtonLabel and CheckBoxLabel ([#698](https://github.com/kufu/smarthr-ui/issues/698)) ([969861f](https://github.com/kufu/smarthr-ui/commit/969861f4ebb9a0c99ce4c6bcbaa6a6f9ad67db2d))
+* fix that some styles doesn’t work ([#705](https://github.com/kufu/smarthr-ui/issues/705)) ([f6f75a6](https://github.com/kufu/smarthr-ui/commit/f6f75a6eb78ceee5d9c00ac82264073655ea7ac6))
+
 ## [7.0.0](https://github.com/kufu/smarthr-ui/compare/v6.2.0...v7.0.0) (2020-03-18)
 
 
