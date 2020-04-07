@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
-export const DropdownScrollArea: React.FC<{}> = ({ children }) => (
-  <Wrapper className="scroll">{children}</Wrapper>
+type Props = {
+  className?: string
+  children: ReactNode
+}
+
+export const DropdownScrollArea: React.FC<Props> = ({ children, className = '' }) => (
+  <Wrapper className={className}>{children}</Wrapper>
 )
 
 const Wrapper = styled.div`
