@@ -17,7 +17,7 @@ export const DropdownCloser: React.FC<Props> = ({ children, className = '' }) =>
 
   return (
     <Wrapper
-      className={`${dropdownKey} ${className} close`}
+      className={`${dropdownKey} ${className}`}
       onClick={onClickCloser}
       maxHeight={maxHeight}
       controllable={controllable}
