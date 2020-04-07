@@ -1,7 +1,7 @@
 # Dropdown
 
 ```tsx
-import { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser } from 'smarthr-ui'
+import { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser, DropdownScrollArea } from 'smarthr-ui'
 
 // Uncontrollable Dropdown
 // After Dropdown is opened, clicking anywhere will close Dropdown.
@@ -11,7 +11,9 @@ import { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser } from 'smar
     <button>dropdown trigger button</button>
   </DropdownTrigger>
   <DropdownContent>
-    <div>dropdown content</div>
+    <DropdownScrollArea>
+      <div>dropdown content</div>
+    </DropdownScrollArea>
   </DropdownContent>
 </Dropdown>
 
@@ -23,12 +25,32 @@ import { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser } from 'smar
     <button>dropdown trigger button</button>
   </DropdownTrigger>
   <DropdownContent controllable>
-    <div>
-      <p>dropdown content</p>
-      <DropdownCloser>
-        <button>dropdown close button</button>
-      </DropdownCloser>
-    </div>
+    <DropdownScrollArea>
+      <div>
+        <p>dropdown content</p>
+        <DropdownCloser>
+          <button>dropdown close button</button>
+        </DropdownCloser>
+      </div>
+    </DropdownScrollArea>
+  </DropdownContent>
+</Dropdown>
+
+// Dropdown with fixed content
+<Dropdown>
+  <DropdownTrigger>
+    <button>dropdown trigger button</button>
+  </DropdownTrigger>
+  <DropdownContent controllable>
+    <div>fixed area</div>
+    <DropdownScrollArea>
+      <div>
+        <p>dropdown content</p>
+        <DropdownCloser>
+          <button>dropdown close button</button>
+        </DropdownCloser>
+      </div>
+    </DropdownScrollArea>
   </DropdownContent>
 </Dropdown>
 ```

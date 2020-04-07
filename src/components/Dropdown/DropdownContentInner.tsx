@@ -1,22 +1,33 @@
-import React, { FC, useEffect, useState, useRef } from 'react'
+import React, { FC, useEffect, useState, useRef, createContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { Rect, getContentBoxStyle, ContentBoxStyle } from './dropdownHelper'
+import { DropdownCloser } from './DropdownCloser'
 
 type Props = {
   triggerRect: Rect
   scrollable: boolean
   children: React.ReactNode
   className: string
+  controllable: boolean
 }
+
+type DropdownContentInnerContextType = {
+  maxHeight: string
+}
+
+export const DropdownContentInnerContext = createContext<DropdownContentInnerContextType>({
+  maxHeight: '',
+})
 
 export const DropdownContentInner: FC<Props> = ({
   triggerRect,
   scrollable,
   children,
   className,
+  controllable,
 }) => {
   const theme = useTheme()
   const [isMounted, setIsMounted] = useState(false)
@@ -27,7 +38,6 @@ export const DropdownContentInner: FC<Props> = ({
     maxHeight: '',
   })
   const wrapperRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
     setIsMounted(true)
   }, [])
@@ -61,15 +71,27 @@ export const DropdownContentInner: FC<Props> = ({
       contentBox={contentBox}
       scrollable={scrollable}
       className={`${className} ${isActive ? 'active' : ''}`}
+      controllable={controllable}
       themes={theme}
     >
-      {children}
+      {controllable ? (
+        children
+      ) : (
+        <DropdownContentInnerContext.Provider value={{ maxHeight: contentBox.maxHeight }}>
+          <DropdownCloser>{children}</DropdownCloser>
+        </DropdownContentInnerContext.Provider>
+      )}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme; contentBox: ContentBoxStyle; scrollable: boolean }>`
-  ${({ contentBox, themes, scrollable }) => {
+const Wrapper = styled.div<{
+  themes: Theme
+  contentBox: ContentBoxStyle
+  scrollable: boolean
+  controllable: boolean
+}>`
+  ${({ contentBox, themes, scrollable, controllable }) => {
     return css`
       visibility: hidden;
       z-index: 99999;
@@ -81,16 +103,22 @@ const Wrapper = styled.div<{ themes: Theme; contentBox: ContentBoxStyle; scrolla
       background-color: #fff;
       white-space: nowrap;
 
+      ${controllable
+        ? `
+          display: flex;
+          flex-direction: column;
+          `
+        : ''}
+
+      ${contentBox.maxHeight && scrollable && controllable
+        ? `
+          max-height: ${contentBox.maxHeight};
+          `
+        : ''}
+
       &.active {
         visibility: visible;
       }
-
-      ${contentBox.maxHeight && scrollable
-        ? `
-          overflow-y: scroll;
-          max-height: ${contentBox.maxHeight};
-      `
-        : ''}
     `
   }}
 `
