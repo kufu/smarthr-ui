@@ -2,7 +2,13 @@
 export { LightBalloon, DarkBalloon } from './components/Balloon'
 export { CheckBox } from './components/CheckBox'
 export { CheckBoxLabel } from './components/CheckBoxLabel'
-export { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser } from './components/Dropdown'
+export {
+  Dropdown,
+  DropdownTrigger,
+  DropdownContent,
+  DropdownCloser,
+  DropdownScrollArea,
+} from './components/Dropdown'
 export { FieldSet } from './components/FieldSet'
 export { FlashMessage } from './components/FlashMessage'
 export { Input } from './components/Input'
