@@ -4,7 +4,7 @@ import styled, { css, keyframes } from 'styled-components'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { Icon, iconMap } from '../Icon'
-import { SecondaryButton } from '../Button/SecondaryButton'
+import { SecondaryButton } from '../Button'
 
 type Props = {
   visible: boolean
