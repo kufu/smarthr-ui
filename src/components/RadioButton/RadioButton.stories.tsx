@@ -19,12 +19,6 @@ storiesOf('RadioButton', module).add('all', () => (
     <li>
       <RadioButton name="sample" checked={true} disabled={true} onChange={action('onChange')} />
     </li>
-    <li className="dark">
-      <RadioButton name="sample" checked={false} onChange={action('onChange')} themeColor="dark" />
-    </li>
-    <li className="dark">
-      <RadioButton name="sample" checked={true} onChange={action('onChange')} themeColor="dark" />
-    </li>
   </List>
 ))
 
@@ -37,10 +31,6 @@ const List = styled.ul`
 
     &:not(:first-child) {
       margin-left: 16px;
-    }
-
-    &.dark {
-      background-color: gray;
     }
   }
 `
