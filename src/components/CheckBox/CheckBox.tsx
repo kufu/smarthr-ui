@@ -66,7 +66,7 @@ const Box = styled.span<{ themes: Theme }>`
       position: absolute;
       width: 100%;
       height: 100%;
-      border-radius: ${frame.border.radius.s};
+      border-radius: 4px;
       border: ${frame.border.default};
       background-color: #fff;
       box-sizing: border-box;
