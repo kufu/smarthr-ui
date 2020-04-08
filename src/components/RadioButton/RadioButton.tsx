@@ -38,6 +38,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
     return css`
       position: relative;
       display: inline-block;
+      flex-shrink: 0;
       width: ${size.pxToRem(16)};
       height: ${size.pxToRem(16)};
       line-height: 1;
