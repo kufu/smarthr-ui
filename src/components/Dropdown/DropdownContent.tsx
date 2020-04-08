@@ -2,12 +2,15 @@ import React, { useContext } from 'react'
 
 import { DropdownContext } from './Dropdown'
 import { DropdownContentInner } from './DropdownContentInner'
-import { DropdownCloser } from './DropdownCloser'
 
 export const DropdownContentContext = React.createContext<{
   onClickCloser: () => void
+  controllable: boolean
+  scrollable: boolean
 }>({
   onClickCloser: () => {},
+  controllable: false,
+  scrollable: true,
 })
 
 type Props = {
@@ -28,13 +31,14 @@ export const DropdownContent: React.FC<Props> = ({
 
   return (
     <DropdownContentRoot>
-      <DropdownContentContext.Provider value={{ onClickCloser }}>
+      <DropdownContentContext.Provider value={{ onClickCloser, controllable, scrollable }}>
         <DropdownContentInner
           triggerRect={triggerRect}
           scrollable={scrollable}
           className={`${dropdownKey} ${className}`}
+          controllable={controllable}
         >
-          {controllable ? children : <DropdownCloser>{children}</DropdownCloser>}
+          {children}
         </DropdownContentInner>
       </DropdownContentContext.Provider>
     </DropdownContentRoot>
