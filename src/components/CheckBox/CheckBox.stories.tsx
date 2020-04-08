@@ -25,9 +25,6 @@ storiesOf('CheckBox', module)
           <li>
             <CheckBox name="sample" checked={true} disabled={true} onChange={onChange} />
           </li>
-          <li className="dark">
-            <CheckBox name="sample" checked={true} onChange={onChange} themeColor="dark" />
-          </li>
         </List>
       </li>
 
@@ -39,9 +36,6 @@ storiesOf('CheckBox', module)
           </li>
           <li>
             <CheckBox name="sample" checked={false} disabled={true} onChange={onChange} />
-          </li>
-          <li className="dark">
-            <CheckBox name="sample" checked={false} onChange={onChange} themeColor="dark" />
           </li>
         </List>
       </li>
@@ -59,15 +53,6 @@ storiesOf('CheckBox', module)
               mixed={true}
               disabled={true}
               onChange={onChange}
-            />
-          </li>
-          <li className="dark">
-            <CheckBox
-              name="sample"
-              checked={true}
-              mixed={true}
-              onChange={onChange}
-              themeColor="dark"
             />
           </li>
         </List>

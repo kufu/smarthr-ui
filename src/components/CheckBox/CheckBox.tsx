@@ -7,20 +7,13 @@ import { useTheme, Theme } from '../../hooks/useTheme'
 import { Icon } from '../Icon'
 
 export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
-  themeColor?: 'light' | 'dark'
   mixed?: boolean
 }
 
-export const CheckBox: FC<Props> = ({
-  themeColor = 'light',
-  mixed = false,
-  className = '',
-  onChange,
-  ...props
-}) => {
+export const CheckBox: FC<Props> = ({ mixed = false, className = '', onChange, ...props }) => {
   const theme = useTheme()
   const { checked, disabled } = props
-  const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
+  const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (onChange) onChange(e)
@@ -34,11 +27,7 @@ export const CheckBox: FC<Props> = ({
       <Box className={boxClassName} themes={theme} />
       {checked && (
         <IconWrap themes={theme}>
-          <Icon
-            name={mixed ? 'fa-minus' : 'fa-check'}
-            size={10}
-            color={themeColor === 'light' ? '#fff' : theme.palette.MAIN}
-          />
+          <Icon name={mixed ? 'fa-minus' : 'fa-check'} size={10} color="#fff" />
         </IconWrap>
       )}
     </Wrapper>
@@ -80,12 +69,6 @@ const Box = styled.span<{ themes: Theme }>`
         border-color: ${palette.BORDER};
         &.active {
           border-color: ${palette.BORDER};
-        }
-      }
-      &.dark {
-        border-color: ${palette.MAIN};
-        &.active {
-          background-color: #fff;
         }
       }
     `
