@@ -92,25 +92,25 @@ const Base = styled.div<{ themes: Theme }>`
       &.top {
         &::before,
         &::after {
-          border-width: 0 8px 8px;
+          border-width: 0 5px 5px;
         }
         &::before {
-          top: -8px;
+          top: -5px;
         }
         &::after {
-          top: -7px;
+          top: -4px;
         }
       }
       &.bottom {
         &::before,
         &::after {
-          border-width: 8px 8px 0;
+          border-width: 5px 5px 0;
         }
         &::before {
-          bottom: -8px;
+          bottom: -5px;
         }
         &::after {
-          bottom: -7px;
+          bottom: -4px;
         }
       }
 
@@ -124,7 +124,7 @@ const Base = styled.div<{ themes: Theme }>`
         &::before,
         &::after {
           left: 50%;
-          transform: translateX(-8px);
+          transform: translateX(-5px);
         }
       }
       &.left {
@@ -138,18 +138,18 @@ const Base = styled.div<{ themes: Theme }>`
         &::before,
         &::after {
           top: 50%;
-          transform: translateY(-8px);
+          transform: translateY(-5px);
         }
         &.left {
           &::before,
           &::after {
-            border-width: 8px 8px 8px 0;
+            border-width: 5px 5px 5px 0;
           }
           &::before {
-            left: -8px;
+            left: -5px;
           }
           &::after {
-            left: -7px;
+            left: -4px;
           }
           &.light {
             &::before {
@@ -169,13 +169,13 @@ const Base = styled.div<{ themes: Theme }>`
         &.right {
           &::before,
           &::after {
-            border-width: 8px 0 8px 8px;
+            border-width: 5px 0 5px 5px;
           }
           &::before {
-            right: -8px;
+            right: -5px;
           }
           &::after {
-            right: -7px;
+            right: -4px;
           }
           &.light {
             &::before {
