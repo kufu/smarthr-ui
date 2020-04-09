@@ -3,19 +3,12 @@ import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-export type Props = InputHTMLAttributes<HTMLInputElement> & {
-  themeColor?: 'light' | 'dark'
-}
+export type Props = InputHTMLAttributes<HTMLInputElement>
 
-export const RadioButton: FC<Props> = ({
-  themeColor = 'light',
-  className = '',
-  onChange,
-  ...props
-}) => {
+export const RadioButton: FC<Props> = ({ className = '', onChange, ...props }) => {
   const theme = useTheme()
   const { checked, disabled } = props
-  const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''} ${themeColor}`
+  const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (onChange) onChange(e)
@@ -38,6 +31,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
     return css`
       position: relative;
       display: inline-block;
+      flex-shrink: 0;
       width: ${size.pxToRem(16)};
       height: ${size.pxToRem(16)};
       line-height: 1;
@@ -84,18 +78,6 @@ const Box = styled.span<{ themes: Theme }>`
 
           &::before {
             background-color: #fff;
-          }
-        }
-      }
-
-      &.dark {
-        border-color: ${palette.MAIN};
-
-        &.active {
-          background-color: #fff;
-
-          &::before {
-            background-color: ${palette.MAIN};
           }
         }
       }
