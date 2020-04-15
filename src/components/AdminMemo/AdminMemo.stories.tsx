@@ -1,10 +1,29 @@
 import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
-
-import { AdminMemoItem } from './AdminMemoItem'
-
+import { AdminMemo } from './AdminMemo'
 import readme from './README.md'
+
+const sampleItems = [
+  {
+    comment: 'コメントテキストテキストテキストテキストテキストテキスト',
+    date: '2020-04-15 16:20:00',
+    author: 'test@smarthr.co.jp',
+    editOnClick: action('click!!'),
+  },
+  {
+    comment: 'コメントテキストテキストテキストテキストテキストテキスト',
+    date: '2020-04-15 16:20:00',
+    author: 'test@smarthr.co.jp',
+    editOnClick: action('click!'),
+  },
+  {
+    comment: 'コメントテキストテキストテキストテキストテキストテキスト',
+    date: '2020-04-15 16:20:00',
+    author: 'test@smarthr.co.jp',
+    editOnClick: action('click!'),
+  },
+]
 
 storiesOf('AdminMemo', module)
   .addParameters({
@@ -12,11 +31,4 @@ storiesOf('AdminMemo', module)
       sidebar: readme,
     },
   })
-  .add('all', () => (
-    <AdminMemoItem
-      comment="コメントほげほげほげほげ"
-      date="2020-04-15 16:20:00"
-      author="koji.miyahara+test190508@smarthr.co.jp"
-      editOnClick={action('click!!')}
-    />
-  ))
+  .add('all', () => <AdminMemo title="管理者メモ" items={sampleItems} />)
