@@ -22,15 +22,15 @@ export const AdminMemoItem: FC<Props> = ({ comment, date, author, editOnClick })
   return (
     <AdminMemoItemWrapper themes={theme}>
       <AdminMemoItemCommentBase themes={theme}>
-        <AdminMemoItemCommentText themes={theme}>{comment && comment}</AdminMemoItemCommentText>
         <AdminMemoItemEditButton
           size="s"
-          themes={theme}
           onClick={editOnClick && editOnClick}
           disabled={editOnClick ? false : true}
+          square
         >
           <Icon name="fa-pen" />
         </AdminMemoItemEditButton>
+        <AdminMemoItemCommentText themes={theme}>{comment && comment}</AdminMemoItemCommentText>
       </AdminMemoItemCommentBase>
       {date && <AdminMemoItemInfo themes={theme}>{date}</AdminMemoItemInfo>}
       {author && <AdminMemoItemInfo themes={theme}>{author}</AdminMemoItemInfo>}
@@ -44,6 +44,7 @@ const AdminMemoItemWrapper = styled.div<{ themes: Theme }>`
 
     return css`
       margin-bottom: ${pxToRem(space.S)};
+      overflow: hidden;
     `
   }}
 `
@@ -53,37 +54,39 @@ const AdminMemoItemCommentBase = styled(Base)<{ themes: Theme }>`
     const { pxToRem, space } = themes.size
 
     return css`
-      margin-bottom: ${pxToRem(space.S)};
+      padding: ${pxToRem(space.XXS)};
+      margin-bottom: ${pxToRem(space.XXS)};
+      overflow: hidden;
     `
   }}
 `
 
 const AdminMemoItemCommentText = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { pxToRem, space } = themes.size
+    const { font, pxToRem } = themes.size
 
     return css`
-      margin-bottom: ${pxToRem(space.S)};
+      display: block;
+      padding: 0;
+      margin: 0;
+      font-size: ${pxToRem(font.TALL)};
+      line-height: 1.5;
     `
   }}
 `
 
-const AdminMemoItemEditButton = styled(SecondaryButton)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
-    return css`
-      margin-bottom: ${pxToRem(space.S)};
-    `
-  }}
+const AdminMemoItemEditButton = styled(SecondaryButton)`
+  float: right;
 `
 
 const AdminMemoItemInfo = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { pxToRem, space } = themes.size
+    const { size, palette } = themes
 
     return css`
-      margin-bottom: ${pxToRem(space.S)};
+      color: ${palette.TEXT_GREY};
+      font-size: ${size.pxToRem(size.font.SHORT)};
+      text-align: right;
     `
   }}
 `
