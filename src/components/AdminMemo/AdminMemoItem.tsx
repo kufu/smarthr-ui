@@ -9,14 +9,14 @@ type ClickEvent = {
   preventDefault: () => void
 }
 
-interface Props {
+export interface AdminMemoItemProps {
   comment?: string
   date?: string
   author?: string
   editOnClick?: (e: ClickEvent) => void
 }
 
-export const AdminMemoItem: FC<Props> = ({ comment, date, author, editOnClick }) => {
+export const AdminMemoItem: FC<AdminMemoItemProps> = ({ comment, date, author, editOnClick }) => {
   const theme = useTheme()
 
   return (
@@ -44,7 +44,6 @@ const AdminMemoItemWrapper = styled.div<{ themes: Theme }>`
 
     return css`
       margin-bottom: ${pxToRem(space.S)};
-      overflow: hidden;
     `
   }}
 `
