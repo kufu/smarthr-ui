@@ -41,24 +41,6 @@ storiesOf('RadioButtonLabel', module).add('all', () => (
         onChange={action('onChange')}
       />
     </li>
-    <li className="dark">
-      <RadioButtonLabel
-        label="dark / unchecked"
-        name="sample"
-        checked={false}
-        onChange={action('onChange')}
-        themeColor="dark"
-      />
-    </li>
-    <li className="dark">
-      <RadioButtonLabel
-        label="dark / checked"
-        name="sample"
-        checked={true}
-        onChange={action('onChange')}
-        themeColor="dark"
-      />
-    </li>
   </List>
 ))
 

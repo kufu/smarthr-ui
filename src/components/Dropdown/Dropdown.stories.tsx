@@ -7,6 +7,7 @@ import { Dropdown } from './Dropdown'
 import { DropdownTrigger } from './DropdownTrigger'
 import { DropdownContent } from './DropdownContent'
 import { DropdownCloser } from './DropdownCloser'
+import { DropdownScrollArea } from './DropdownScrollArea'
 import { SecondaryButton, PrimaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
 import { Input } from '../Input'
@@ -42,7 +43,7 @@ const ControllableDropdown = () => {
         <SecondaryButton>trigger button</SecondaryButton>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <>
+        <DropdownScrollArea>
           <ControllableBoxMain>
             <Text>
               Use `DropdownControllableContent` to get a controllable dropdown.
@@ -90,7 +91,7 @@ const ControllableDropdown = () => {
             </DropdownCloser>
             <PrimaryButton onClick={action('clicked button 2')}>Action only</PrimaryButton>
           </ControllableBoxBottom>
-        </>
+        </DropdownScrollArea>
       </DropdownContent>
     </Dropdown>
   )
@@ -112,7 +113,9 @@ storiesOf('Dropdown', module)
                 <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
               </DropdownTrigger>
               <DropdownContent>
-                <ListMenu />
+                <DropdownScrollArea>
+                  <ListMenu />
+                </DropdownScrollArea>
               </DropdownContent>
             </Dropdown>
           </Box>
@@ -121,11 +124,14 @@ storiesOf('Dropdown', module)
           <Box>
             <Dropdown>
               <DropdownTrigger>
-                <SecondaryButton>Non-scroll dropdown</SecondaryButton>
+                <SecondaryButton>static area</SecondaryButton>
               </DropdownTrigger>
-              <DropdownContent scrollable={false}>
-                <ListMenu />
-                <ListMenu />
+              <DropdownContent>
+                <Fixed>fixed header</Fixed>
+                <DropdownScrollArea>
+                  <ListMenu />
+                </DropdownScrollArea>
+                <Fixed>fixed footer</Fixed>
               </DropdownContent>
             </Dropdown>
           </Box>
@@ -154,7 +160,9 @@ storiesOf('Dropdown', module)
                 <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
               </DropdownTrigger>
               <DropdownContent>
-                <ListMenu />
+                <DropdownScrollArea>
+                  <ListMenu />
+                </DropdownScrollArea>
               </DropdownContent>
             </Dropdown>
           </Box>
@@ -167,7 +175,9 @@ storiesOf('Dropdown', module)
                   <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
                 </DropdownTrigger>
                 <DropdownContent>
-                  <ListMenu />
+                  <DropdownScrollArea>
+                    <ListMenu />
+                  </DropdownScrollArea>
                 </DropdownContent>
               </Dropdown>
             </Box>
@@ -246,4 +256,12 @@ const Bottom = styled.div`
 `
 const RadioButtonList = styled.ul`
   list-style: none;
+`
+const Fixed = styled.div`
+  width: 100%;
+  padding: 0 20px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 40px;
 `

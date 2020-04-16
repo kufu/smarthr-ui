@@ -154,7 +154,7 @@ exports[`CheckBox should be match snapshot 1`] = `
         />
       </styled.input>
       <styled.span
-        className="active  light"
+        className="active "
         themes={
           Object {
             "frame": Object {
@@ -221,7 +221,7 @@ exports[`CheckBox should be match snapshot 1`] = `
         }
       >
         <span
-          className="sc-AxirZ ffBCIs active  light"
+          className="sc-AxirZ hRgeHQ active "
         />
       </styled.span>
       <styled.span
