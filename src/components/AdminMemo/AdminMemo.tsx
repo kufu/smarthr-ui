@@ -6,13 +6,23 @@ import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
 import { SecondaryButton } from '../Button'
 
-interface Props {
-  title?: string
-
-  items?: AdminMemoItemProps[]
+type ClickEvent = {
+  preventDefault: () => void
 }
 
-export const AdminMemo: FC<Props> = ({ title, items }) => {
+interface Props {
+  title?: string
+  items?: AdminMemoItemProps[]
+  submitButtonOnClick?: (e: ClickEvent) => void
+  submitButtonLabel?: string
+}
+
+export const AdminMemo: FC<Props> = ({
+  title,
+  items,
+  submitButtonOnClick,
+  submitButtonLabel = '送信',
+}) => {
   const theme = useTheme()
 
   return (
@@ -33,7 +43,12 @@ export const AdminMemo: FC<Props> = ({ title, items }) => {
           />
         ))}
       <AdminMemoTextArea themes={theme} />
-      <AdminMemoSubmitButton>送信</AdminMemoSubmitButton>
+      <AdminMemoSubmitButton
+        onClick={submitButtonOnClick}
+        disabled={submitButtonOnClick ? false : true}
+      >
+        {submitButtonLabel}
+      </AdminMemoSubmitButton>
     </AdminMemoWrapper>
   )
 }

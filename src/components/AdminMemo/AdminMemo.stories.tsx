@@ -7,19 +7,19 @@ import readme from './README.md'
 const sampleItems = [
   {
     comment: 'コメントテキストテキストテキストテキストテキストテキスト',
-    date: '2020-04-15 16:20:00',
+    date: '2020/4/15 16:20:00',
     author: 'test@smarthr.co.jp',
     editOnClick: action('click!!'),
   },
   {
     comment: 'コメントテキストテキストテキストテキストテキストテキスト',
-    date: '2020-04-15 16:20:00',
+    date: '2020/4/15 16:20:00',
     author: 'test@smarthr.co.jp',
     editOnClick: action('click!'),
   },
   {
     comment: 'コメントテキストテキストテキストテキストテキストテキスト',
-    date: '2020-04-15 16:20:00',
+    date: '2020/4/15 16:20:00',
     author: 'test@smarthr.co.jp',
     editOnClick: action('click!'),
   },
@@ -31,4 +31,6 @@ storiesOf('AdminMemo', module)
       sidebar: readme,
     },
   })
-  .add('all', () => <AdminMemo title="管理者メモ" items={sampleItems} />)
+  .add('all', () => (
+    <AdminMemo title="管理者メモ" items={sampleItems} submitButtonOnClick={action('submit!')} />
+  ))
