@@ -61,6 +61,7 @@ export {
 } from './components/AccordionPanel'
 export { InformationPanel } from './components/InformationPanel'
 export { Footer } from './components/Footer'
+export { AdminMemo, AdminMemoItem } from './components/AdminMemo'
 
 // themes
 export { createTheme } from './themes/createTheme'
