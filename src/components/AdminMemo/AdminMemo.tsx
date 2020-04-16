@@ -16,6 +16,7 @@ interface Props {
   submitButtonOnClick?: (e: ClickEvent) => void
   submitButtonLabel?: string
   width?: number
+  textareaLabel?: string
 }
 
 export const AdminMemo: FC<Props> = ({
@@ -24,6 +25,7 @@ export const AdminMemo: FC<Props> = ({
   submitButtonOnClick,
   submitButtonLabel = '送信',
   width = 270,
+  textareaLabel,
 }) => {
   const theme = useTheme()
 
@@ -44,7 +46,10 @@ export const AdminMemo: FC<Props> = ({
             key={index}
           />
         ))}
-      <AdminMemoTextArea themes={theme} />
+      <AdminMemoTextArea
+        themes={theme}
+        aria-label={textareaLabel ? textareaLabel : title && title}
+      />
       <AdminMemoSubmitButton
         onClick={submitButtonOnClick}
         disabled={submitButtonOnClick ? false : true}

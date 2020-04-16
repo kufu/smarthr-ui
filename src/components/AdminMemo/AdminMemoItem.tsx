@@ -14,9 +14,16 @@ export interface AdminMemoItemProps {
   date?: string
   author?: string
   editOnClick?: (e: ClickEvent) => void
+  editLabel?: string
 }
 
-export const AdminMemoItem: FC<AdminMemoItemProps> = ({ comment, date, author, editOnClick }) => {
+export const AdminMemoItem: FC<AdminMemoItemProps> = ({
+  comment,
+  date,
+  author,
+  editOnClick,
+  editLabel = '編集',
+}) => {
   const theme = useTheme()
 
   return (
@@ -27,6 +34,7 @@ export const AdminMemoItem: FC<AdminMemoItemProps> = ({ comment, date, author, e
           onClick={editOnClick && editOnClick}
           disabled={editOnClick ? false : true}
           square
+          aria-label={editLabel}
         >
           <Icon name="fa-pen" />
         </AdminMemoItemEditButton>
