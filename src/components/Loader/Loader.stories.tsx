@@ -12,9 +12,9 @@ storiesOf('Loader', module).add('all', () => (
       <Loader size="l" />
     </GrayWrapper>
     <WhiteWrapper>
-      <Loader color="#00c4cc" />
-      <Loader color="#0081cc" />
-      <Loader color="#f80" />
+      <Loader color="#00a5ab" />
+      <Loader color="#007bc2" />
+      <Loader color="#ff8800" />
       <Loader color="#ef475b" />
     </WhiteWrapper>
   </>

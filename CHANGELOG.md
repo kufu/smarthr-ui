@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.0.0](https://github.com/kufu/smarthr-ui/compare/v7.1.0...v8.0.0) (2020-04-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* dark property for CheckBox and CheckBoxLable will no longer work
+* dark property for RadioButton will no longer work
+* The scroll area is no longer automatically allocated.
+
+### Features
+
+* add scroller component for Dropdown ([#720](https://github.com/kufu/smarthr-ui/issues/720)) ([3c9d5b5](https://github.com/kufu/smarthr-ui/commit/3c9d5b5a6409999fec0c6bf966566981bf570dd1))
+* update .node-version ([#728](https://github.com/kufu/smarthr-ui/issues/728)) ([e9102d5](https://github.com/kufu/smarthr-ui/commit/e9102d564f11b25f4c64015f1936553932b3fe00))
+
+
+### Bug Fixes
+
+* fix checkbox style ([#724](https://github.com/kufu/smarthr-ui/issues/724)) ([478d488](https://github.com/kufu/smarthr-ui/commit/478d488cceab265055e591659733474e619130c4))
+* radio button style ([#722](https://github.com/kufu/smarthr-ui/issues/722)) ([4a81272](https://github.com/kufu/smarthr-ui/commit/4a812723f095fc0e59abb756c7f42f3708684f5b))
+* remove dark property from RadioButton component ([#725](https://github.com/kufu/smarthr-ui/issues/725)) ([f3f70ee](https://github.com/kufu/smarthr-ui/commit/f3f70ee466a504727b5f851a3ed09f156f1208ad))
+* tweak arrow size for Ballloon component([#723](https://github.com/kufu/smarthr-ui/issues/723)) ([ae5287f](https://github.com/kufu/smarthr-ui/commit/ae5287f93214908530465dce4c10134e36e9e058))
+
 ## [7.1.0](https://github.com/kufu/smarthr-ui/compare/v7.0.0...v7.1.0) (2020-04-03)
 
 

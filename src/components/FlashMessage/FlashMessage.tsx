@@ -4,7 +4,7 @@ import styled, { css, keyframes } from 'styled-components'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
 import { Icon, iconMap } from '../Icon'
-import { SecondaryButton } from '../Button/SecondaryButton'
+import { SecondaryButton } from '../Button'
 
 type Props = {
   visible: boolean
@@ -106,9 +106,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
       background-color: #fff;
       border: 1px solid ${palette.BORDER};
       border-radius: ${frame.border.radius.m};
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
-        0 2px 1px -1px rgba(0, 0, 0, 0.12);
-      box-sizing: border-box;
+      box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       animation: ${bounceAnimation} 1s 0s both;
     `
   }}

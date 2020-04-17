@@ -20,29 +20,15 @@ storiesOf('CheckBoxLabel', module)
         <Text>checked</Text>
         <List>
           <li>
-            <CheckBoxLabel
-              label="enabled / light"
-              name="name1"
-              checked={true}
-              onChange={onChange}
-            />
+            <CheckBoxLabel label="enabled" name="name1" checked={true} onChange={onChange} />
           </li>
           <li>
             <CheckBoxLabel
-              label="disabled / light"
+              label="disabled"
               name="name2"
               checked={true}
               disabled={true}
               onChange={onChange}
-            />
-          </li>
-          <li className="dark">
-            <CheckBoxLabel
-              label="enabled / dark"
-              name="name3"
-              checked={true}
-              onChange={onChange}
-              themeColor="dark"
             />
           </li>
         </List>
@@ -52,29 +38,15 @@ storiesOf('CheckBoxLabel', module)
         <Text>unchecked</Text>
         <List>
           <li>
-            <CheckBoxLabel
-              label="enabled / light"
-              name="name4"
-              checked={false}
-              onChange={onChange}
-            />
+            <CheckBoxLabel label="enabled" name="name4" checked={false} onChange={onChange} />
           </li>
           <li>
             <CheckBoxLabel
-              label="disabled / light"
+              label="disabled"
               name="name5"
               checked={false}
               disabled={true}
               onChange={onChange}
-            />
-          </li>
-          <li className="dark">
-            <CheckBoxLabel
-              label="enabled / dark"
-              name="name6"
-              checked={false}
-              onChange={onChange}
-              themeColor="dark"
             />
           </li>
         </List>
@@ -85,7 +57,7 @@ storiesOf('CheckBoxLabel', module)
         <List>
           <li>
             <CheckBoxLabel
-              label="enabled / light"
+              label="enabled"
               name="name7"
               checked={true}
               mixed={true}
@@ -94,22 +66,12 @@ storiesOf('CheckBoxLabel', module)
           </li>
           <li>
             <CheckBoxLabel
-              label="disabled / light"
+              label="disabled"
               name="name8"
               checked={true}
               mixed={true}
               disabled={true}
               onChange={onChange}
-            />
-          </li>
-          <li className="dark">
-            <CheckBoxLabel
-              label="enabled / dark"
-              name="name9"
-              checked={true}
-              mixed={true}
-              onChange={onChange}
-              themeColor="dark"
             />
           </li>
         </List>
@@ -126,10 +88,6 @@ const List = styled.ul`
 
     &:not(:first-child) {
       margin-left: 16px;
-    }
-
-    &.dark {
-      background-color: gray;
     }
   }
 `
