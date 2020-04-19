@@ -30,7 +30,7 @@
     "@types/react-dom": "^16.9.6",
     "@types/react-test-renderer": "^16.9.2",
     "@types/react-transition-group": "^4.2.4",
-    "@types/styled-components": "^5.0.1",
+    "@types/styled-components": "^5.1.0",
     "babel-loader": "^8.1.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
