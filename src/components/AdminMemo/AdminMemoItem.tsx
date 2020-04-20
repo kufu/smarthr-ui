@@ -27,9 +27,9 @@ export const AdminMemoItem: FC<AdminMemoItemProps> = ({
   const theme = useTheme()
 
   return (
-    <AdminMemoItemWrapper themes={theme}>
-      <AdminMemoItemCommentBase themes={theme}>
-        <AdminMemoItemEditButton
+    <Wrapper themes={theme}>
+      <TextBase themes={theme}>
+        <EditButton
           size="s"
           onClick={editOnClick && editOnClick}
           disabled={editOnClick ? false : true}
@@ -37,16 +37,16 @@ export const AdminMemoItem: FC<AdminMemoItemProps> = ({
           aria-label={editLabel}
         >
           <Icon name="fa-pen" />
-        </AdminMemoItemEditButton>
-        <AdminMemoItemCommentText themes={theme}>{comment && comment}</AdminMemoItemCommentText>
-      </AdminMemoItemCommentBase>
-      {date && <AdminMemoItemInfo themes={theme}>{date}</AdminMemoItemInfo>}
-      {author && <AdminMemoItemInfo themes={theme}>{author}</AdminMemoItemInfo>}
-    </AdminMemoItemWrapper>
+        </EditButton>
+        <Text themes={theme}>{comment && comment}</Text>
+      </TextBase>
+      {date && <Info themes={theme}>{date}</Info>}
+      {author && <Info themes={theme}>{author}</Info>}
+    </Wrapper>
   )
 }
 
-const AdminMemoItemWrapper = styled.div<{ themes: Theme }>`
+const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 
@@ -56,7 +56,7 @@ const AdminMemoItemWrapper = styled.div<{ themes: Theme }>`
   }}
 `
 
-const AdminMemoItemCommentBase = styled(Base)<{ themes: Theme }>`
+const TextBase = styled(Base)<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 
@@ -68,7 +68,7 @@ const AdminMemoItemCommentBase = styled(Base)<{ themes: Theme }>`
   }}
 `
 
-const AdminMemoItemCommentText = styled.p<{ themes: Theme }>`
+const Text = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
     const { font, pxToRem } = themes.size
 
@@ -82,11 +82,11 @@ const AdminMemoItemCommentText = styled.p<{ themes: Theme }>`
   }}
 `
 
-const AdminMemoItemEditButton = styled(SecondaryButton)`
+const EditButton = styled(SecondaryButton)`
   float: right;
 `
 
-const AdminMemoItemInfo = styled.div<{ themes: Theme }>`
+const Info = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { size, palette } = themes
 
