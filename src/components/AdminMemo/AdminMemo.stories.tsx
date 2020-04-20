@@ -6,19 +6,19 @@ import readme from './README.md'
 
 const sampleItems = [
   {
-    comment: 'コメントテキストテキストテキストテキストテキストテキスト',
+    text: 'コメントテキストテキストテキストテキストテキストテキスト',
     date: '2020/4/15 16:20:00',
     author: 'test@smarthr.co.jp',
     editOnClick: action('click!!'),
   },
   {
-    comment: 'コメントテキストテキストテキストテキストテキストテキスト',
+    text: 'コメントテキストテキストテキストテキストテキストテキスト',
     date: '2020/4/15 16:20:00',
     author: 'test@smarthr.co.jp',
     editOnClick: action('click!'),
   },
   {
-    comment: 'コメントテキストテキストテキストテキストテキストテキスト',
+    text: 'コメントテキストテキストテキストテキストテキストテキスト',
     date: '2020/4/15 16:20:00',
     author: 'test@smarthr.co.jp',
     editOnClick: action('click!'),

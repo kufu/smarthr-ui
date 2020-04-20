@@ -39,7 +39,7 @@ export const AdminMemo: FC<Props> = ({
       {items &&
         items.map((item, index) => (
           <AdminMemoItem
-            comment={item.comment}
+            text={item.text}
             date={item.date}
             author={item.author}
             editOnClick={item.editOnClick}

@@ -10,7 +10,7 @@ type ClickEvent = {
 }
 
 export interface AdminMemoItemProps {
-  comment?: string
+  text?: string
   date?: string
   author?: string
   editOnClick?: (e: ClickEvent) => void
@@ -18,7 +18,7 @@ export interface AdminMemoItemProps {
 }
 
 export const AdminMemoItem: FC<AdminMemoItemProps> = ({
-  comment,
+  text,
   date,
   author,
   editOnClick,
@@ -38,7 +38,7 @@ export const AdminMemoItem: FC<AdminMemoItemProps> = ({
         >
           <Icon name="fa-pen" />
         </EditButton>
-        <Text themes={theme}>{comment && comment}</Text>
+        <Text themes={theme}>{text && text}</Text>
       </TextBase>
       {date && <Info themes={theme}>{date}</Info>}
       {author && <Info themes={theme}>{author}</Info>}
