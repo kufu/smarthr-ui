@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 import { useTheme, Theme } from '../../hooks/useTheme'
-import { AdminMemoItem, AdminMemoItemProps } from './AdminMemoItem'
+import { AdminMemoItem, ItemProps, OnClickEdit } from './AdminMemoItem'
 import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
 import { SecondaryButton } from '../Button'
@@ -12,11 +12,12 @@ type ClickEvent = {
 
 interface Props {
   title?: string
-  items?: AdminMemoItemProps[]
+  items?: ItemProps[]
   onClickSubmit?: (e: ClickEvent) => void
   submitLabel?: string
   width?: number
   textareaLabel?: string
+  onClickEdit: OnClickEdit
 }
 
 export const AdminMemo: FC<Props> = ({
@@ -26,6 +27,7 @@ export const AdminMemo: FC<Props> = ({
   submitLabel = '送信',
   width = 270,
   textareaLabel,
+  onClickEdit,
 }) => {
   const theme = useTheme()
 
@@ -37,15 +39,7 @@ export const AdminMemo: FC<Props> = ({
         </Title>
       )}
       {items &&
-        items.map((item, index) => (
-          <AdminMemoItem
-            text={item.text}
-            date={item.date}
-            author={item.author}
-            editOnClick={item.editOnClick}
-            key={index}
-          />
-        ))}
+        items.map(item => <AdminMemoItem key={item.id} {...item} onClickEdit={onClickEdit} />)}
       <TextArea themes={theme} aria-label={textareaLabel ? textareaLabel : title && title} />
       <SubmitButton onClick={onClickSubmit} disabled={!onClickSubmit}>
         {submitLabel}

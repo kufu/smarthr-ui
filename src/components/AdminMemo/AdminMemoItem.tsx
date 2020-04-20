@@ -5,23 +5,26 @@ import { Base } from '../Base'
 import { SecondaryButton } from '../Button'
 import { Icon } from '../Icon'
 
-type ClickEvent = {
-  preventDefault: () => void
-}
-
-export interface AdminMemoItemProps {
-  text?: string
+export type ItemProps = {
+  id: string
+  text: string
   date?: string
   author?: string
-  editOnClick?: (e: ClickEvent) => void
   editLabel?: string
 }
 
-export const AdminMemoItem: FC<AdminMemoItemProps> = ({
+export type OnClickEdit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
+
+type Props = ItemProps & {
+  onClickEdit: OnClickEdit
+}
+
+export const AdminMemoItem: FC<Props> = ({
+  id,
   text,
   date,
   author,
-  editOnClick,
+  onClickEdit,
   editLabel = '編集',
 }) => {
   const theme = useTheme()
@@ -29,16 +32,10 @@ export const AdminMemoItem: FC<AdminMemoItemProps> = ({
   return (
     <Wrapper themes={theme}>
       <TextBase themes={theme}>
-        <EditButton
-          size="s"
-          onClick={editOnClick && editOnClick}
-          disabled={editOnClick ? false : true}
-          square
-          aria-label={editLabel}
-        >
+        <EditButton size="s" onClick={e => onClickEdit(e, id)} square aria-label={editLabel}>
           <Icon name="fa-pen" />
         </EditButton>
-        <Text themes={theme}>{text && text}</Text>
+        <Text themes={theme}>{text}</Text>
       </TextBase>
       {date && <Info themes={theme}>{date}</Info>}
       {author && <Info themes={theme}>{author}</Info>}
