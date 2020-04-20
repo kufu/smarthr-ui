@@ -35,7 +35,7 @@ storiesOf('AdminMemo', module)
     <AdminMemo
       title="管理者メモ"
       items={sampleItems}
-      onClickSubmit={action('submit!')}
+      onSubmit={action('submit!')}
       onClickEdit={action('click edit!!')}
     />
   ))

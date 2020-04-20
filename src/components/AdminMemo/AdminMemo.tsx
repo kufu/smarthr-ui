@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { useTheme, Theme } from '../../hooks/useTheme'
 import { AdminMemoItem, ItemProps, OnClickEdit } from './AdminMemoItem'
@@ -6,49 +6,64 @@ import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
 import { SecondaryButton } from '../Button'
 
-type ClickEvent = {
-  preventDefault: () => void
-}
-
 interface Props {
   title?: string
   items?: ItemProps[]
-  onClickSubmit?: (e: ClickEvent) => void
   submitLabel?: string
   width?: number
   textareaLabel?: string
   onClickEdit: OnClickEdit
+  onSubmit: (e: React.FormEvent<HTMLFormElement>, text: string) => void
 }
+
+const TEXT_AREA_NAME = 'admin_memo_new_text'
 
 export const AdminMemo: FC<Props> = ({
   title,
   items,
-  onClickSubmit,
   submitLabel = '送信',
   width = 270,
   textareaLabel,
   onClickEdit,
+  onSubmit,
 }) => {
   const theme = useTheme()
 
+  const handleSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+
+      const formData = new FormData(e.currentTarget)
+      const newText = (formData.get(TEXT_AREA_NAME) || '') as string
+
+      onSubmit(e, newText)
+    },
+    [onSubmit],
+  )
+
   return (
-    <Wrapper themes={theme} width={width}>
+    <Wrapper themes={theme} width={width} onSubmit={handleSubmit}>
       {title && (
         <Title type="sectionTitle" themes={theme}>
           {title}
         </Title>
       )}
+
       {items &&
         items.map(item => <AdminMemoItem key={item.id} {...item} onClickEdit={onClickEdit} />)}
-      <TextArea themes={theme} aria-label={textareaLabel ? textareaLabel : title && title} />
-      <SubmitButton onClick={onClickSubmit} disabled={!onClickSubmit}>
-        {submitLabel}
-      </SubmitButton>
+
+      <TextArea
+        name={TEXT_AREA_NAME}
+        themes={theme}
+        aria-label={textareaLabel ? textareaLabel : title}
+      />
+
+      <SubmitButton type="submit">{submitLabel}</SubmitButton>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme; width: number }>`
+const Wrapper = styled.form<{ themes: Theme; width: number }>`
   ${({ themes, width }) => {
     const { size, palette } = themes
 
