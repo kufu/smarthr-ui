@@ -30,11 +30,11 @@ export const AdminMemo: FC<Props> = ({
   const theme = useTheme()
 
   return (
-    <AdminMemoWrapper themes={theme} width={width}>
+    <Wrapper themes={theme} width={width}>
       {title && (
-        <AdminMemoTitle type="sectionTitle" themes={theme}>
+        <Title type="sectionTitle" themes={theme}>
           {title}
-        </AdminMemoTitle>
+        </Title>
       )}
       {items &&
         items.map((item, index) => (
@@ -46,18 +46,15 @@ export const AdminMemo: FC<Props> = ({
             key={index}
           />
         ))}
-      <AdminMemoTextArea
-        themes={theme}
-        aria-label={textareaLabel ? textareaLabel : title && title}
-      />
-      <AdminMemoSubmitButton onClick={onClickSubmit} disabled={onClickSubmit ? false : true}>
+      <TextArea themes={theme} aria-label={textareaLabel ? textareaLabel : title && title} />
+      <SubmitButton onClick={onClickSubmit} disabled={!onClickSubmit}>
         {submitLabel}
-      </AdminMemoSubmitButton>
-    </AdminMemoWrapper>
+      </SubmitButton>
+    </Wrapper>
   )
 }
 
-const AdminMemoWrapper = styled.div<{ themes: Theme; width: number }>`
+const Wrapper = styled.div<{ themes: Theme; width: number }>`
   ${({ themes, width }) => {
     const { size, palette } = themes
 
@@ -75,7 +72,7 @@ const AdminMemoWrapper = styled.div<{ themes: Theme; width: number }>`
   }}
 `
 
-const AdminMemoTitle = styled(Heading)<{ themes: Theme }>`
+const Title = styled(Heading)<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 
@@ -86,7 +83,7 @@ const AdminMemoTitle = styled(Heading)<{ themes: Theme }>`
   }}
 `
 
-const AdminMemoTextArea = styled(Textarea)<{ themes: Theme }>`
+const TextArea = styled(Textarea)<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 
@@ -101,7 +98,7 @@ const AdminMemoTextArea = styled(Textarea)<{ themes: Theme }>`
   }}
 `
 
-const AdminMemoSubmitButton = styled(SecondaryButton)`
+const SubmitButton = styled(SecondaryButton)`
   display: block;
   float: right;
 `
