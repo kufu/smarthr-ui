@@ -13,8 +13,8 @@ type ClickEvent = {
 interface Props {
   title?: string
   items?: AdminMemoItemProps[]
-  submitButtonOnClick?: (e: ClickEvent) => void
-  submitButtonLabel?: string
+  onClickSubmit?: (e: ClickEvent) => void
+  submitLabel?: string
   width?: number
   textareaLabel?: string
 }
@@ -22,8 +22,8 @@ interface Props {
 export const AdminMemo: FC<Props> = ({
   title,
   items,
-  submitButtonOnClick,
-  submitButtonLabel = '送信',
+  onClickSubmit,
+  submitLabel = '送信',
   width = 270,
   textareaLabel,
 }) => {
@@ -50,11 +50,8 @@ export const AdminMemo: FC<Props> = ({
         themes={theme}
         aria-label={textareaLabel ? textareaLabel : title && title}
       />
-      <AdminMemoSubmitButton
-        onClick={submitButtonOnClick}
-        disabled={submitButtonOnClick ? false : true}
-      >
-        {submitButtonLabel}
+      <AdminMemoSubmitButton onClick={onClickSubmit} disabled={onClickSubmit ? false : true}>
+        {submitLabel}
       </AdminMemoSubmitButton>
     </AdminMemoWrapper>
   )

@@ -32,5 +32,5 @@ storiesOf('AdminMemo', module)
     },
   })
   .add('all', () => (
-    <AdminMemo title="管理者メモ" items={sampleItems} submitButtonOnClick={action('submit!')} />
+    <AdminMemo title="管理者メモ" items={sampleItems} onClickSubmit={action('submit!')} />
   ))
