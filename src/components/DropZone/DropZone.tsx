@@ -52,7 +52,7 @@ export const DropZone: React.FC<DropZoneProps> = ({ children, onSelectFiles, acc
   )
 
   const onClickButton = () => {
-    if (fileRef.current) fileRef.current.click()
+    fileRef.current!.click()
   }
 
   return (
