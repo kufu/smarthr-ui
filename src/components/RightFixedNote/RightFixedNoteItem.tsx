@@ -19,7 +19,7 @@ type Props = ItemProps & {
   onClickEdit: OnClickEdit
 }
 
-export const AdminMemoItem: FC<Props> = ({
+export const RightFixedNoteItem: FC<Props> = ({
   id,
   text,
   date,

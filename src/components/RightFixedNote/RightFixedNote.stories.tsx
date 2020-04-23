@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
-import { AdminMemo } from './AdminMemo'
+import { RightFixedNote } from './RightFixedNote'
 import readme from './README.md'
 
 const sampleItems = [
@@ -25,14 +25,14 @@ const sampleItems = [
   },
 ]
 
-storiesOf('AdminMemo', module)
+storiesOf('RightFixedNote', module)
   .addParameters({
     readme: {
       sidebar: readme,
     },
   })
   .add('all', () => (
-    <AdminMemo
+    <RightFixedNote
       title="管理者メモ"
       items={sampleItems}
       onSubmit={action('submit!')}

@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { useTheme, Theme } from '../../hooks/useTheme'
-import { AdminMemoItem, ItemProps, OnClickEdit } from './AdminMemoItem'
+import { RightFixedNoteItem, ItemProps, OnClickEdit } from './RightFixedNoteItem'
 import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
 import { SecondaryButton } from '../Button'
@@ -18,7 +18,7 @@ interface Props {
 
 const TEXT_AREA_NAME = 'admin_memo_new_text'
 
-export const AdminMemo: FC<Props> = ({
+export const RightFixedNote: FC<Props> = ({
   title,
   items,
   submitLabel = '送信',
@@ -50,7 +50,7 @@ export const AdminMemo: FC<Props> = ({
       )}
 
       {items &&
-        items.map(item => <AdminMemoItem key={item.id} {...item} onClickEdit={onClickEdit} />)}
+        items.map(item => <RightFixedNoteItem key={item.id} {...item} onClickEdit={onClickEdit} />)}
 
       <TextArea
         name={TEXT_AREA_NAME}

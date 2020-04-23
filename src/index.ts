@@ -61,7 +61,7 @@ export {
 } from './components/AccordionPanel'
 export { InformationPanel } from './components/InformationPanel'
 export { Footer } from './components/Footer'
-export { AdminMemo } from './components/AdminMemo'
+export { RightFixedNote } from './components/RightFixedNote'
 
 // themes
 export { createTheme } from './themes/createTheme'
