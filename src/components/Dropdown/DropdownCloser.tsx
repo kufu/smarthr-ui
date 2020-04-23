@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import styled, { css } from 'styled-components'
 
-import { DropdownContext } from './Dropdown'
 import { DropdownContentContext } from './DropdownContent'
 import { DropdownContentInnerContext } from './DropdownContentInner'
 
@@ -11,13 +10,12 @@ type Props = {
 }
 
 export const DropdownCloser: React.FC<Props> = ({ children, className = '' }) => {
-  const { dropdownKey } = useContext(DropdownContext)
   const { onClickCloser, controllable, scrollable } = useContext(DropdownContentContext)
   const { maxHeight } = useContext(DropdownContentInnerContext)
 
   return (
     <Wrapper
-      className={`${dropdownKey} ${className}`}
+      className={className}
       onClick={onClickCloser}
       maxHeight={maxHeight}
       controllable={controllable}
