@@ -40,34 +40,37 @@ export const Dropdown: FC<Props> = ({ children }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
-  const element = useRef(document.createElement('div')).current
+  const portalElementRef = useRef(document.createElement('div'))
   const triggerElementRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const onClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
-      if (e.target === triggerElementRef.current || hasParentElement(e.target, element)) {
+      if (
+        e.target === triggerElementRef.current ||
+        hasParentElement(e.target, portalElementRef.current)
+      ) {
         return
       }
       setActive(false)
     }
-
-    document.body.appendChild(element)
+    const portalElement = portalElementRef.current
+    document.body.appendChild(portalElement)
     document.body.addEventListener('click', onClickBody, false)
 
     return () => {
-      document.body.removeChild(element)
+      document.body.removeChild(portalElement)
       document.body.removeEventListener('click', onClickBody, false)
     }
-  }, [element])
+  }, [])
 
   // This is the root container of a dropdown content located in outside the DOM tree
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(
     () => props => {
       if (!active) return null
-      return createPortal(props.children, element)
+      return createPortal(props.children, portalElementRef.current)
     },
-    [active, element],
+    [active],
   )
   // set the displayName explicit for DevTools
   DropdownContentRoot.displayName = 'DropdownContentRoot'
