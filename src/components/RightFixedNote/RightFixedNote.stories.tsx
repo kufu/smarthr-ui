@@ -33,9 +33,26 @@ storiesOf('RightFixedNote', module)
   })
   .add('all', () => (
     <RightFixedNote
-      title="管理者メモ"
+      title="RightFixedNote"
       items={sampleItems}
       onSubmit={action('submit!')}
       onClickEdit={action('click edit!!')}
     />
+  ))
+  .add('without title', () => (
+    <RightFixedNote
+      items={sampleItems}
+      onSubmit={action('submit!')}
+      onClickEdit={action('click edit!!')}
+    />
+  ))
+  .add('without items', () => (
+    <RightFixedNote
+      title="RightFixedNote"
+      onSubmit={action('submit!')}
+      onClickEdit={action('click edit!!')}
+    />
+  ))
+  .add('without title and items', () => (
+    <RightFixedNote onSubmit={action('submit!')} onClickEdit={action('click edit!!')} />
   ))
