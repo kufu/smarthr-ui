@@ -61,6 +61,7 @@ export {
 } from './components/AccordionPanel'
 export { InformationPanel } from './components/InformationPanel'
 export { Footer } from './components/Footer'
+export { RightFixedNote } from './components/RightFixedNote'
 
 // themes
 export { createTheme } from './themes/createTheme'
