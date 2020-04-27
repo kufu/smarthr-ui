@@ -27,8 +27,8 @@ const sampleItems = [
 <RightFixedNote
   title="Component Title"
   items={sampleItems}
-  onSubmit={action('submit!')}
-  onClickEdit={action('click edit!!')}
+  onSubmit={(e, text) => console.log(e, text)}
+  onClickEdit={(e, id) => console.log(e, id)}
 />
 ```
 
@@ -49,7 +49,7 @@ const sampleItems = [
 | Name      | Required | Type       | DefaultValue | Description                     |
 | --------- | -------- | ---------- | ------------ | ------------------------------- |
 | id        | ✓        | **string** | -            | The ID for onClick event        |
-| text      | -        | **string** | -            | Content of component            |
+| text      | ✓        | **string** | -            | Content of component            |
 | date      | -        | **string** | -            | Date of added this component    |
 | author    | -        | **string** | -            | Author who is saying about text |
 | editLabel | -        | **string** | '編集'       | `aria-label` of EditButton      |
