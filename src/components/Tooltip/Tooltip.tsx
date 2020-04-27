@@ -21,7 +21,7 @@ export const Tooltip: React.FC<Prop> = ({
   const theme = useTheme()
   const [isShow, setIsShow] = useState(false)
 
-  const className = [triggerType == 'icon' ? 'icon-tooltip' : '', multiLine ? 'multi-line' : '']
+  const className = [triggerType === 'icon' ? 'icon-tooltip' : '', multiLine ? 'multi-line' : '']
     .filter(c => !!c)
     .join(' ')
   const ref: React.RefObject<HTMLSpanElement> = React.createRef()
