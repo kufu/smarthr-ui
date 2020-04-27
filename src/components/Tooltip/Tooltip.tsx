@@ -19,7 +19,7 @@ export const Tooltip: React.FC<Prop> = ({
   ellipsisOnly = false,
 }) => {
   const theme = useTheme()
-  const [isShow, setIsShow] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
 
   const className = [triggerType === 'icon' ? 'icon-tooltip' : '', multiLine ? 'multi-line' : '']
     .filter(c => !!c)
@@ -28,7 +28,7 @@ export const Tooltip: React.FC<Prop> = ({
 
   const overAction = () => {
     if (!ellipsisOnly) {
-      setIsShow(true)
+      setIsVisible(true)
 
       return
     }
@@ -40,11 +40,11 @@ export const Tooltip: React.FC<Prop> = ({
     )
 
     if (parentWidth <= wrapper.clientWidth) {
-      setIsShow(true)
+      setIsVisible(true)
     }
   }
   const outAction = () => {
-    setIsShow(false)
+    setIsVisible(false)
   }
 
   return (
@@ -55,7 +55,7 @@ export const Tooltip: React.FC<Prop> = ({
       onMouseOut={outAction}
       onTouchEnd={outAction}
     >
-      {isShow && (
+      {isVisible && (
         <StyledBalloon horizontal="left" vertical="bottom" className={className}>
           <StyledBalloonText themes={theme}>{message}</StyledBalloonText>
         </StyledBalloon>
