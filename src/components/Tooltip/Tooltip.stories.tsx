@@ -7,30 +7,32 @@ import { Tooltip } from './Tooltip'
 
 storiesOf('Tooltip', module).add('all', () => (
   <List>
-    <li>
-      <Tooltip
-        message="Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima Trinidad Ruiz Picasso"
-        balloonType="dark"
-      >
+    <dt>Default</dt>
+    <dd>
+      <Tooltip message="Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima Trinidad Ruiz Picasso">
         Default: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima
         Trinidad Ruiz Picasso
       </Tooltip>
-    </li>
-    <li>
+    </dd>
+    <dt>ellipsisOnly</dt>
+    <dd>
       <Tooltip message="invisible message" ellipsisOnly={true}>
-        Ellipsis Only
+        invisible
       </Tooltip>
+    </dd>
+    <dd>
       <Tooltip
         message="Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima Trinidad Ruiz Picasso"
         ellipsisOnly={true}
       >
         <Text>
-          Ellipsis Only: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la
+          visible: Ellipsis Only: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la
           Santísima Trinidad Ruiz Picasso
         </Text>
       </Tooltip>
-    </li>
-    <li>
+    </dd>
+    <dt>multiLine</dt>
+    <dd>
       <Tooltip
         message="Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima Trinidad Ruiz Picasso"
         multiLine={true}
@@ -38,8 +40,9 @@ storiesOf('Tooltip', module).add('all', () => (
         MultiLineMessage: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la
         Santísima Trinidad Ruiz Picasso
       </Tooltip>
-    </li>
-    <li>
+    </dd>
+    <dt>ReactNode message attribute</dt>
+    <dd>
       <Tooltip
         message={
           <>
@@ -58,24 +61,31 @@ storiesOf('Tooltip', module).add('all', () => (
           Santísima Trinidad Ruiz Picasso
         </Text>
       </Tooltip>
-    </li>
-    <li>
+    </dd>
+    <dt>triggerType</dt>
+    <dd>
       <Tooltip message="Icon Message" triggerType="icon">
         <Icon name="fa-question-circle" />
       </Tooltip>
-    </li>
+    </dd>
   </List>
 ))
 
-const List = styled.ul`
-  width: 200px;
+const List = styled.dl`
   margin-top: 100px;
   padding: 0 24px;
   list-style: none;
 
-  & > li {
-    &:not(:first-child) {
-      margin-top: 16px;
+  & > {
+    dt {
+      font-weight: bold;
+      &:not(:first-child) {
+        margin-top: 16px;
+      }
+    }
+    dd {
+      margin-top: 5px;
+      width: 200px;
     }
   }
 `
