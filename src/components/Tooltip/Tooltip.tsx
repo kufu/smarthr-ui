@@ -24,7 +24,7 @@ export const Tooltip: React.FC<Prop> = ({
   const className = [triggerType === 'icon' ? 'icon-tooltip' : '', multiLine ? 'multi-line' : '']
     .filter(c => !!c)
     .join(' ')
-  const ref: React.RefObject<HTMLSpanElement> = React.createRef()
+  const ref = React.createRef<HTMLSpanElement>()
 
   const overAction = () => {
     if (!ellipsisOnly) {
@@ -33,7 +33,7 @@ export const Tooltip: React.FC<Prop> = ({
       return
     }
 
-    const wrapper: HTMLSpanElement = ref.current!
+    const wrapper = ref.current!
     const parentWidth = parseInt(
       window.getComputedStyle(wrapper.parentNode! as HTMLElement, null).width.match(/\d+/)![0],
       10,
@@ -82,7 +82,7 @@ const StyledBalloon = styled(LightBalloon)`
   }
 
   &.icon-tooltip {
-    left: calc(-100% - 11px);
+    left: calc(-100% - 5px);
   }
 `
 
