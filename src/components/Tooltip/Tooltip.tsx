@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
-import { LightBalloon } from '../Balloon'
+import { LightBalloon, DarkBalloon } from '../Balloon'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
 interface Prop {
@@ -9,6 +9,7 @@ interface Prop {
   triggerType?: 'icon' | 'text'
   multiLine?: boolean
   ellipsisOnly?: boolean
+  balloonType?: 'light' | 'dark'
 }
 
 export const Tooltip: React.FC<Prop> = ({
@@ -17,6 +18,7 @@ export const Tooltip: React.FC<Prop> = ({
   triggerType,
   multiLine,
   ellipsisOnly = false,
+  balloonType = 'light',
 }) => {
   const theme = useTheme()
   const [isVisible, setIsVisible] = useState(false)
@@ -46,6 +48,7 @@ export const Tooltip: React.FC<Prop> = ({
   const outAction = () => {
     setIsVisible(false)
   }
+  const StyledBalloon = balloonType === 'light' ? StyledLightBalloon : StyledDarkBallon
 
   return (
     <Wrapper
@@ -71,7 +74,7 @@ const Wrapper = styled.span`
   max-width: 100%;
 `
 
-const StyledBalloon = styled(LightBalloon)`
+const StyledLightBalloon = styled(LightBalloon)`
   position: absolute;
   left: 0;
   bottom: calc(100% + 10px);
@@ -85,6 +88,7 @@ const StyledBalloon = styled(LightBalloon)`
     left: calc(-100% - 5px);
   }
 `
+const StyledDarkBallon = StyledLightBalloon.withComponent(DarkBalloon)
 
 const StyledBalloonText = styled.p<{ themes: Theme }>`
   margin: 0;

@@ -8,7 +8,10 @@ import { Tooltip } from './Tooltip'
 storiesOf('Tooltip', module).add('all', () => (
   <List>
     <li>
-      <Tooltip message="Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima Trinidad Ruiz Picasso">
+      <Tooltip
+        message="Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima Trinidad Ruiz Picasso"
+        balloonType="dark"
+      >
         Default: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima
         Trinidad Ruiz Picasso
       </Tooltip>
