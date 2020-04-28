@@ -10,6 +10,8 @@ storiesOf('Tooltip', module).add('all', () => (
     <dt>Default</dt>
     <dd>
       <LightTooltip message="LightBalloon">LightTooltip</LightTooltip>
+    </dd>
+    <dd>
       <DarkTooltip message="DarkBalloon">DarkTooltip</DarkTooltip>
     </dd>
     <dt>horizontal & vertical</dt>
