@@ -65,7 +65,7 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = balloonTheme =
   const outAction = () => {
     setIsVisible(false)
   }
-  const StyledBalloon = balloonTheme === 'light' ? StyledLightBalloon : StyledDarkBallon
+  const StyledBalloon = balloonTheme === 'light' ? StyledLightBalloon : StyledDarkBalloon
 
   return (
     <Wrapper
@@ -238,7 +238,7 @@ const StyledLightBalloon = styled(LightBalloon)<{
     }}
   }
 `
-const StyledDarkBallon = StyledLightBalloon.withComponent(DarkBalloon)
+const StyledDarkBalloon = StyledLightBalloon.withComponent(DarkBalloon)
 
 const StyledBalloonText = styled.p<{ themes: Theme }>`
   margin: 0;
