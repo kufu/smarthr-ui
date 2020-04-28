@@ -114,7 +114,7 @@ const Wrapper = styled.header<{ themes: Theme }>`
       justify-content: space-between;
       height: 50px;
       padding: 0 ${size.pxToRem(size.space.XS)};
-      background-color: ${palette.HEADER_GREEN};
+      background-color: ${palette.BRAND};
     `
   }}
 `
