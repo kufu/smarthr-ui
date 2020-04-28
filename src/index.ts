@@ -61,6 +61,7 @@ export {
 } from './components/AccordionPanel'
 export { InformationPanel } from './components/InformationPanel'
 export { Footer } from './components/Footer'
+export { Tooltip } from './components/Tooltip'
 
 // themes
 export { createTheme } from './themes/createTheme'

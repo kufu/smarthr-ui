@@ -14,8 +14,53 @@ storiesOf('Tooltip', module).add('all', () => (
         Trinidad Ruiz Picasso
       </Tooltip>
     </dd>
-    <dt>ellipsisOnly</dt>
+    <dt>horizontal & vertical</dt>
     <dd>
+      <Tooltip
+        message="horizontal=left & vertical=bottom (default)"
+        horizontal="left"
+        vertical="bottom"
+      >
+        horizontal=left & vertical=bottom (default)
+      </Tooltip>
+    </dd>
+    <dd className="center">
+      <Tooltip message="horizontal=center & vertical=bottom" horizontal="center" vertical="bottom">
+        horizontal=center & vertical=bottom
+      </Tooltip>
+    </dd>
+    <dd className="right">
+      <Tooltip message="horizontal=right & vertical=bottom" horizontal="right" vertical="bottom">
+        horizontal=right & vertical=bottom
+      </Tooltip>
+    </dd>
+    <dd>
+      <Tooltip message="horizontal=left & vertical=middle" horizontal="left" vertical="middle">
+        horizontal=left & vertical=middle
+      </Tooltip>
+    </dd>
+    <dd className="right">
+      <Tooltip message="horizontal=right & vertical=middle" horizontal="right" vertical="middle">
+        horizontal=right & vertical=middle
+      </Tooltip>
+    </dd>
+    <dd>
+      <Tooltip message="horizontal=left & vertical=top" horizontal="left" vertical="top">
+        horizontal=left & vertical=top
+      </Tooltip>
+    </dd>
+    <dd className="center">
+      <Tooltip message="horizontal=center & vertical=top" horizontal="center" vertical="top">
+        horizontal=center & vertical=top
+      </Tooltip>
+    </dd>
+    <dd className="right">
+      <Tooltip message="horizontal=right & vertical=top" horizontal="right" vertical="top">
+        horizontal=right & vertical=top
+      </Tooltip>
+    </dd>
+    <dt>ellipsisOnly</dt>
+    <dd className="limit">
       <Tooltip message="invisible message" ellipsisOnly={true}>
         invisible
       </Tooltip>
@@ -85,7 +130,16 @@ const List = styled.dl`
     }
     dd {
       margin-top: 5px;
-      width: 200px;
+
+      &.limit {
+        width: 200px;
+      }
+      &.center {
+        text-align: center;
+      }
+      &.right {
+        text-align: right;
+      }
     }
   }
 `
