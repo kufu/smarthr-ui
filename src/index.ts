@@ -63,7 +63,7 @@ export {
 export { InformationPanel } from './components/InformationPanel'
 export { Footer } from './components/Footer'
 export { RightFixedNote } from './components/RightFixedNote'
-export { Tooltip } from './components/Tooltip'
+export { LightTooltip, DarkTooltip } from './components/Tooltip'
 
 // themes
 export { createTheme } from './themes/createTheme'

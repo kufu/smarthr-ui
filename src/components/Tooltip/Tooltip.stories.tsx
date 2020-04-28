@@ -3,92 +3,99 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { Icon } from '../Icon'
-import { Tooltip } from './Tooltip'
+import { LightTooltip, DarkTooltip } from './Tooltip'
 
 storiesOf('Tooltip', module).add('all', () => (
   <List>
     <dt>Default</dt>
     <dd>
-      <Tooltip message="Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima Trinidad Ruiz Picasso">
-        Default: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima
-        Trinidad Ruiz Picasso
-      </Tooltip>
+      <LightTooltip message="LightBalloon">LightTooltip</LightTooltip>
+      <DarkTooltip message="DarkBalloon">DarkTooltip</DarkTooltip>
     </dd>
     <dt>horizontal & vertical</dt>
     <dd>
-      <Tooltip
+      <LightTooltip
         message="horizontal=left & vertical=bottom (default)"
         horizontal="left"
         vertical="bottom"
       >
         horizontal=left & vertical=bottom (default)
-      </Tooltip>
+      </LightTooltip>
     </dd>
     <dd className="center">
-      <Tooltip message="horizontal=center & vertical=bottom" horizontal="center" vertical="bottom">
+      <LightTooltip
+        message="horizontal=center & vertical=bottom"
+        horizontal="center"
+        vertical="bottom"
+      >
         horizontal=center & vertical=bottom
-      </Tooltip>
+      </LightTooltip>
     </dd>
     <dd className="right">
-      <Tooltip message="horizontal=right & vertical=bottom" horizontal="right" vertical="bottom">
+      <LightTooltip
+        message="horizontal=right & vertical=bottom"
+        horizontal="right"
+        vertical="bottom"
+      >
         horizontal=right & vertical=bottom
-      </Tooltip>
+      </LightTooltip>
     </dd>
     <dd>
-      <Tooltip message="horizontal=left & vertical=middle" horizontal="left" vertical="middle">
+      <DarkTooltip message="horizontal=left & vertical=middle" horizontal="left" vertical="middle">
         horizontal=left & vertical=middle
-      </Tooltip>
+      </DarkTooltip>
     </dd>
     <dd className="right">
-      <Tooltip message="horizontal=right & vertical=middle" horizontal="right" vertical="middle">
+      <DarkTooltip
+        message="horizontal=right & vertical=middle"
+        horizontal="right"
+        vertical="middle"
+      >
         horizontal=right & vertical=middle
-      </Tooltip>
+      </DarkTooltip>
     </dd>
     <dd>
-      <Tooltip message="horizontal=left & vertical=top" horizontal="left" vertical="top">
+      <LightTooltip message="horizontal=left & vertical=top" horizontal="left" vertical="top">
         horizontal=left & vertical=top
-      </Tooltip>
+      </LightTooltip>
     </dd>
     <dd className="center">
-      <Tooltip message="horizontal=center & vertical=top" horizontal="center" vertical="top">
+      <LightTooltip message="horizontal=center & vertical=top" horizontal="center" vertical="top">
         horizontal=center & vertical=top
-      </Tooltip>
+      </LightTooltip>
     </dd>
     <dd className="right">
-      <Tooltip message="horizontal=right & vertical=top" horizontal="right" vertical="top">
+      <LightTooltip message="horizontal=right & vertical=top" horizontal="right" vertical="top">
         horizontal=right & vertical=top
-      </Tooltip>
+      </LightTooltip>
     </dd>
     <dt>ellipsisOnly</dt>
     <dd className="limit">
-      <Tooltip message="invisible message" ellipsisOnly={true}>
-        invisible
-      </Tooltip>
+      <DarkTooltip message="invisible message" ellipsisOnly={true}>
+        ellipsisOnly: invisible
+      </DarkTooltip>
     </dd>
-    <dd>
-      <Tooltip
-        message="Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima Trinidad Ruiz Picasso"
-        ellipsisOnly={true}
-      >
+    <dd className="limit">
+      <DarkTooltip message="visible message" ellipsisOnly={true}>
         <Text>
-          visible: Ellipsis Only: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la
+          ellipsisOnly: visible: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la
           Santísima Trinidad Ruiz Picasso
         </Text>
-      </Tooltip>
+      </DarkTooltip>
     </dd>
     <dt>multiLine</dt>
-    <dd>
-      <Tooltip
+    <dd className="limit">
+      <LightTooltip
         message="Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima Trinidad Ruiz Picasso"
         multiLine={true}
       >
         MultiLineMessage: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la
         Santísima Trinidad Ruiz Picasso
-      </Tooltip>
+      </LightTooltip>
     </dd>
     <dt>ReactNode message attribute</dt>
     <dd>
-      <Tooltip
+      <LightTooltip
         message={
           <>
             MultiLineMessage
@@ -99,25 +106,85 @@ storiesOf('Tooltip', module).add('all', () => (
             ...
           </>
         }
-        multiLine={true}
       >
         <Text>
           MultiLineMessage: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la
           Santísima Trinidad Ruiz Picasso
         </Text>
-      </Tooltip>
+      </LightTooltip>
     </dd>
     <dt>triggerType</dt>
-    <dd>
-      <Tooltip message="Icon Message" triggerType="icon">
-        <Icon name="fa-question-circle" />
-      </Tooltip>
+    <dd className="center">
+      <LightTooltip
+        message="horizontal=left & vertical=bottom (default)"
+        horizontal="left"
+        vertical="bottom"
+        triggerType="icon"
+      >
+        <Icon name="fa-arrow-alt-circle-up" />
+      </LightTooltip>
+      <LightTooltip
+        message="horizontal=center & vertical=bottom"
+        horizontal="center"
+        vertical="bottom"
+        triggerType="icon"
+      >
+        <Icon name="fa-arrow-alt-circle-up" />
+      </LightTooltip>
+      <LightTooltip
+        message="horizontal=right & vertical=bottom"
+        horizontal="right"
+        vertical="bottom"
+        triggerType="icon"
+      >
+        <Icon name="fa-arrow-alt-circle-up" />
+      </LightTooltip>
+      <DarkTooltip
+        message="horizontal=left & vertical=middle"
+        horizontal="left"
+        vertical="middle"
+        triggerType="icon"
+      >
+        <Icon name="fa-arrow-alt-circle-right" />
+      </DarkTooltip>
+      <DarkTooltip
+        message="horizontal=right & vertical=middle"
+        horizontal="right"
+        vertical="middle"
+        triggerType="icon"
+      >
+        <Icon name="fa-arrow-alt-circle-left" />
+      </DarkTooltip>
+      <LightTooltip
+        message="horizontal=left & vertical=top"
+        horizontal="left"
+        vertical="top"
+        triggerType="icon"
+      >
+        <Icon name="fa-arrow-alt-circle-down" />
+      </LightTooltip>
+      <LightTooltip
+        message="horizontal=center & vertical=top"
+        horizontal="center"
+        vertical="top"
+        triggerType="icon"
+      >
+        <Icon name="fa-arrow-alt-circle-down" />
+      </LightTooltip>
+      <LightTooltip
+        message="horizontal=right & vertical=top"
+        horizontal="right"
+        vertical="top"
+        triggerType="icon"
+      >
+        <Icon name="fa-arrow-alt-circle-down" />
+      </LightTooltip>
     </dd>
   </List>
 ))
 
 const List = styled.dl`
-  margin-top: 100px;
+  margin: 50px 0;
   padding: 0 24px;
   list-style: none;
 

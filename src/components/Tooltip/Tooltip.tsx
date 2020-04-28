@@ -1,30 +1,28 @@
-import React, { useState } from 'react'
+import React, { ReactNode, FC, useState } from 'react'
 import styled, { css } from 'styled-components'
-import { LightBalloon, DarkBalloon, Props as BalloonProps } from '../Balloon'
+import { LightBalloon, DarkBalloon, Props as BalloonProps, BalloonTheme } from '../Balloon'
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-interface Prop {
-  message: React.ReactNode
-  children: React.ReactNode
+type Props = {
+  message: ReactNode
+  children: ReactNode
   triggerType?: 'icon' | 'text'
   multiLine?: boolean
   ellipsisOnly?: boolean
-  balloonType?: 'light' | 'dark'
   horizontal?: BalloonProps['horizontal']
   vertical?: BalloonProps['vertical']
 }
 
-export const Tooltip: React.FC<Prop> = ({
+const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = balloonTheme => ({
   message,
   children,
   triggerType,
   multiLine,
   ellipsisOnly = false,
-  balloonType = 'light',
   horizontal = 'left',
   vertical = 'bottom',
 }) => {
-  const theme = useTheme()
+  const themes = useTheme()
   const [isVisible, setIsVisible] = useState(false)
 
   const className = [triggerType === 'icon' ? 'icon-tooltip' : '', multiLine ? 'multi-line' : '']
@@ -58,7 +56,7 @@ export const Tooltip: React.FC<Prop> = ({
 
     const parentWidth = getParentWidth()
 
-    if (parentWidth < 0 && parentWidth > getBalloonWrapperWidth()) {
+    if (parentWidth < 0 || parentWidth > getBalloonWrapperWidth()) {
       return
     }
 
@@ -67,7 +65,7 @@ export const Tooltip: React.FC<Prop> = ({
   const outAction = () => {
     setIsVisible(false)
   }
-  const StyledBalloon = balloonType === 'light' ? StyledLightBalloon : StyledDarkBallon
+  const StyledBalloon = balloonTheme === 'light' ? StyledLightBalloon : StyledDarkBallon
 
   return (
     <Wrapper
@@ -79,13 +77,16 @@ export const Tooltip: React.FC<Prop> = ({
     >
       {isVisible && (
         <StyledBalloon horizontal={horizontal} vertical={vertical} className={className}>
-          <StyledBalloonText themes={theme}>{message}</StyledBalloonText>
+          <StyledBalloonText themes={themes}>{message}</StyledBalloonText>
         </StyledBalloon>
       )}
       {children}
     </Wrapper>
   )
 }
+
+export const LightTooltip = tooltipFactory('light')
+export const DarkTooltip = tooltipFactory('dark')
 
 const Wrapper = styled.span`
   position: relative;
@@ -101,12 +102,8 @@ const StyledLightBalloon = styled(LightBalloon)<{
   z-index: 9000;
 
   &.multi-line {
-    width: 100%;
+    max-width: 100%;
     white-space: normal;
-  }
-
-  &.icon-tooltip {
-    left: calc(-100% - 5px);
   }
 
   ${({ horizontal, vertical }) => {
@@ -171,6 +168,75 @@ const StyledLightBalloon = styled(LightBalloon)<{
 
     return ''
   }}
+
+  &.icon-tooltip {
+    ${({ horizontal, vertical }) => {
+      switch (horizontal) {
+        case 'left':
+          switch (vertical) {
+            case 'bottom':
+              return css`
+                left: 50%;
+                bottom: calc(100% + 10px);
+                transform: translate(-29px, 0);
+              `
+            case 'middle':
+              return css`
+                left: calc(100% + 10px);
+                top: calc(50% - 2px);
+                transform: translate(0, -50%);
+              `
+            case 'top':
+              return css`
+                left: 50%;
+                top: calc(100% + 10px);
+                transform: translate(-29px, 0);
+              `
+          }
+          break
+        case 'center':
+          switch (vertical) {
+            case 'bottom':
+              return css`
+                left: 50%;
+                bottom: calc(100% + 10px);
+                transform: translate(-50%, 0);
+              `
+            case 'top':
+              return css`
+                left: 50%;
+                top: calc(100% + 10px);
+                transform: translate(-50%, 0);
+              `
+          }
+          break
+        case 'right':
+          switch (vertical) {
+            case 'bottom':
+              return css`
+                right: 50%;
+                bottom: calc(100% + 10px);
+                transform: translate(29px, 0);
+              `
+            case 'middle':
+              return css`
+                right: calc(100% + 10px);
+                top: calc(50% - 2px);
+                transform: translate(0, -50%);
+              `
+            case 'top':
+              return css`
+                right: 0;
+                top: calc(100% + 10px);
+                transform: translate(19px, 0);
+              `
+          }
+          break
+      }
+
+      return ''
+    }}
+  }
 `
 const StyledDarkBallon = StyledLightBalloon.withComponent(DarkBalloon)
 

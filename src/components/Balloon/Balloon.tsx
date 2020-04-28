@@ -3,7 +3,8 @@ import styled, { css } from 'styled-components'
 
 import { useTheme, Theme } from '../../hooks/useTheme'
 
-type BalloonTheme = 'light' | 'dark'
+export type BalloonTheme = 'light' | 'dark'
+
 export type Props = {
   horizontal: 'right' | 'center' | 'left'
   vertical: 'top' | 'middle' | 'bottom'
