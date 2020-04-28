@@ -10,6 +10,7 @@ export type Props = {
   colSpan?: number
   rowSpan?: number
   highlighted?: boolean
+  nullable?: boolean
   children?: ReactNode
   className?: string
   onClick?: () => void
@@ -22,10 +23,13 @@ export const Cell: FC<Props> = ({
   colSpan,
   rowSpan,
   highlighted = false,
+  nullable = false,
 }) => {
   const theme = useTheme()
   const { group } = useContext(TableGroupContext)
-  const classNames = `${className} ${highlighted ? 'highlighted' : ''}`
+  const classNames = [className, highlighted && 'highlighted', nullable && 'nullable']
+    .filter(c => !!c)
+    .join(' ')
   const props = {
     children,
     onClick,
@@ -73,6 +77,14 @@ const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
   }}
 `
 const Td = styled.td<{ themes: Theme }>`
+  &.nullable {
+    &:empty {
+      &::after {
+        content: '-----';
+      }
+    }
+  }
+
   ${({ themes }) => {
     const { size, palette, frame } = themes
 
