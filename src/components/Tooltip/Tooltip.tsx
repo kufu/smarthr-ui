@@ -11,7 +11,6 @@ type Props = {
   ellipsisOnly?: boolean
   horizontal?: BalloonProps['horizontal']
   vertical?: BalloonProps['vertical']
-  tabIndex?: number
 }
 
 const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = balloonTheme => ({
@@ -22,7 +21,6 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = balloonTheme =
   ellipsisOnly = false,
   horizontal = 'left',
   vertical = 'bottom',
-  tabIndex = 0,
 }) => {
   const themes = useTheme()
   const [isVisible, setIsVisible] = useState(false)
@@ -78,7 +76,7 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = balloonTheme =
       onMouseOut={outAction}
       onTouchEnd={outAction}
       onBlur={outAction}
-      tabIndex={tabIndex}
+      tabIndex={0}
     >
       {isVisible && (
         <StyledBalloon horizontal={horizontal} vertical={vertical} className={className}>
