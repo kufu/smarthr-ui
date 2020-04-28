@@ -52,6 +52,7 @@ export { BlankImage } from './components/Image'
 export { Heading } from './components/Heading'
 export { HeadlineArea } from './components/HeadlineArea'
 export { Select } from './components/Select'
+export { DropZone } from './components/DropZone'
 export { DefinitionList } from './components/DefinitionList'
 export {
   AccordionPanel,
@@ -61,6 +62,7 @@ export {
 } from './components/AccordionPanel'
 export { InformationPanel } from './components/InformationPanel'
 export { Footer } from './components/Footer'
+export { RightFixedNote } from './components/RightFixedNote'
 export { Tooltip } from './components/Tooltip'
 
 // themes

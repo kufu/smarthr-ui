@@ -1,16 +1,25 @@
-import React, { FC, ReactNode, createContext, useState, useEffect, useRef, useMemo } from 'react'
+import React, {
+  FC,
+  ReactNode,
+  createContext,
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  MutableRefObject,
+} from 'react'
 import { createPortal } from 'react-dom'
 
-import { Rect, getRandomStr, includeDropdownElement } from './dropdownHelper'
+import { Rect, hasParentElement } from './dropdownHelper'
 
 type Props = {
   children: ReactNode
 }
 
 type DropdownContextType = {
-  dropdownKey: string
   active: boolean
   triggerRect: Rect
+  triggerElementRef: MutableRefObject<HTMLDivElement | null>
   onClickTrigger: (rect: Rect) => void
   onClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
@@ -19,9 +28,9 @@ type DropdownContextType = {
 const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
 
 export const DropdownContext = createContext<DropdownContextType>({
-  dropdownKey: '',
   active: false,
   triggerRect: initialRect,
+  triggerElementRef: React.createRef(),
   onClickTrigger: () => {},
   onClickCloser: () => {},
   DropdownContentRoot: () => null,
@@ -30,32 +39,38 @@ export const DropdownContext = createContext<DropdownContextType>({
 export const Dropdown: FC<Props> = ({ children }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
-  const [dropdownKey] = useState(getRandomStr())
 
-  const element = useRef(document.createElement('div')).current
+  const portalElementRef = useRef(document.createElement('div'))
+  const triggerElementRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const onClickBody = (e: any) => {
-      if (includeDropdownElement(e.target, `dropdown-${dropdownKey}`)) return
+      // ignore events from events within DropdownTrigger and DropdownContent
+      if (
+        e.target === triggerElementRef.current ||
+        hasParentElement(e.target, portalElementRef.current)
+      ) {
+        return
+      }
       setActive(false)
     }
-
-    document.body.appendChild(element)
+    const portalElement = portalElementRef.current
+    document.body.appendChild(portalElement)
     document.body.addEventListener('click', onClickBody, false)
 
     return () => {
-      document.body.removeChild(element)
+      document.body.removeChild(portalElement)
       document.body.removeEventListener('click', onClickBody, false)
     }
-  }, [dropdownKey, element])
+  }, [])
 
   // This is the root container of a dropdown content located in outside the DOM tree
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(
     () => props => {
       if (!active) return null
-      return createPortal(props.children, element)
+      return createPortal(props.children, portalElementRef.current)
     },
-    [active, element],
+    [active],
   )
   // set the displayName explicit for DevTools
   DropdownContentRoot.displayName = 'DropdownContentRoot'
@@ -63,9 +78,9 @@ export const Dropdown: FC<Props> = ({ children }) => {
   return (
     <DropdownContext.Provider
       value={{
-        dropdownKey: `dropdown-${dropdownKey}`,
         active,
         triggerRect,
+        triggerElementRef,
         onClickTrigger: rect => {
           const newActive = !active
           setActive(newActive)
