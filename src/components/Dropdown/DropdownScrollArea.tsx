@@ -15,6 +15,7 @@ const Wrapper = styled.div`
   flex: 1 1 auto;
 
   /* IE11 */
+  /* stylelint-disable-next-line selector-type-no-unknown */
   _:-ms-lang(x)::-ms-backdrop,
   & {
     max-height: 300px;
