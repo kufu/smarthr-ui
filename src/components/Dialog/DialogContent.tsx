@@ -8,7 +8,9 @@ type DialogContentContextType = {
 }
 
 export const DialogContentContext = createContext<DialogContentContextType>({
-  onClickClose: () => {},
+  onClickClose: () => {
+    /* noop */
+  },
 })
 
 type Props = {

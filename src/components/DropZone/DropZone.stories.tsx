@@ -4,7 +4,7 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { DropZone } from './DropZone'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import readme from './README.md'
 
 const onSelectFiles = action('onSelectFiles')

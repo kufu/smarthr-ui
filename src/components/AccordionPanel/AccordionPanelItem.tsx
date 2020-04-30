@@ -1,4 +1,4 @@
-import React, { createContext, FC } from 'react'
+import React, { FC, createContext } from 'react'
 
 type Props = {
   name: string

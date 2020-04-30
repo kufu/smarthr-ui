@@ -1,7 +1,7 @@
-import React, { InputHTMLAttributes, FC, useRef, useEffect } from 'react'
+import React, { FC, InputHTMLAttributes, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 export type Props = InputHTMLAttributes<HTMLInputElement> & {
   type?:
@@ -37,7 +37,7 @@ export const Input: FC<Props> = ({ autoFocus, ...props }) => {
 }
 
 const StyledInput = styled.input<Props & { themes: Theme }>`
-  ${props => {
+  ${(props) => {
     const { themes, width = 'auto', error } = props
     const { size, frame, palette } = themes
 

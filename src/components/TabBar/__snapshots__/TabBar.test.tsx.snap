@@ -78,7 +78,7 @@ exports[`TabBar should be match snapshot 1`] = `
       >
         <Component
           id="1"
-          onClick={[Function]}
+          onClick={[MockFunction]}
         >
           <styled.button
             aria-selected={false}
@@ -165,7 +165,7 @@ exports[`TabBar should be match snapshot 1`] = `
         </Component>
         <Component
           id="2"
-          onClick={[Function]}
+          onClick={[MockFunction]}
           selected={true}
         >
           <styled.button
@@ -254,7 +254,7 @@ exports[`TabBar should be match snapshot 1`] = `
         <Component
           disabled={true}
           id="3"
-          onClick={[Function]}
+          onClick={[MockFunction]}
         >
           <styled.button
             aria-selected={false}

@@ -8,7 +8,9 @@ export const DropdownContentContext = React.createContext<{
   controllable: boolean
   scrollable: boolean
 }>({
-  onClickCloser: () => {},
+  onClickCloser: () => {
+    /* noop */
+  },
   controllable: false,
   scrollable: true,
 })

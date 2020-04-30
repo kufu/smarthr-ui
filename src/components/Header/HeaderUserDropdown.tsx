@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import { Icon } from '../Icon'

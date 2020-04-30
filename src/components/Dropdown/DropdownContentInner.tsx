@@ -1,9 +1,9 @@
-import React, { FC, useEffect, useState, useRef, createContext } from 'react'
+import React, { FC, createContext, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { Rect, getContentBoxStyle, ContentBoxStyle } from './dropdownHelper'
+import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
 import { DropdownCloser } from './DropdownCloser'
 
 type Props = {

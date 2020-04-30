@@ -2,16 +2,16 @@ import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { BaseButton, BaseButtonAnchor, ButtonProps, AnchorProps } from './BaseButton'
+import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
-export const SkeletonButton: FC<ButtonProps> = props => {
+export const SkeletonButton: FC<ButtonProps> = (props) => {
   const theme = useTheme()
   return <SkeletonStyleButton themes={theme} {...props} />
 }
 
-export const SkeletonButtonAnchor: FC<AnchorProps> = props => {
+export const SkeletonButtonAnchor: FC<AnchorProps> = (props) => {
   const theme = useTheme()
   return <SkeletonStyleButtonAnchor themes={theme} {...props} />
 }

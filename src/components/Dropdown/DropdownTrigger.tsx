@@ -14,7 +14,7 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) =
   return (
     <Wrapper
       ref={triggerElementRef}
-      onClick={e => {
+      onClick={(e) => {
         const rect = e.currentTarget.getBoundingClientRect()
         onClickTrigger({
           top: rect.top,

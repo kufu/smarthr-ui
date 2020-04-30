@@ -1,11 +1,11 @@
-import { CreatedFrameTheme, createFrame, FrameProperty } from './createFrame'
+import { CreatedFrameTheme, FrameProperty, createFrame } from './createFrame'
 import {
   CreatedInteractionTheme,
-  createInteraction,
   InteractionProperty,
+  createInteraction,
 } from './createInteraction'
-import { CreatedPaletteTheme, createPalette, PaletteProperty } from './createPalette'
-import { CreatedSizeTheme, createSize, SizeProperty } from './createSize'
+import { CreatedPaletteTheme, PaletteProperty, createPalette } from './createPalette'
+import { CreatedSizeTheme, SizeProperty, createSize } from './createSize'
 
 interface ThemeProperty {
   palette?: PaletteProperty

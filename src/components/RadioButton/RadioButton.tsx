@@ -1,7 +1,7 @@
-import React, { InputHTMLAttributes, FC, ChangeEvent, useCallback } from 'react'
+import React, { ChangeEvent, FC, InputHTMLAttributes, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 export type Props = InputHTMLAttributes<HTMLInputElement>
 

@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { hoverable } from '../../hocs/hoverable'
 import { isTouchDevice } from '../../libs/ua'
 
@@ -24,7 +24,7 @@ export type BaseProps = {
   wide?: boolean
 }
 
-export const buttonFactory: <Props extends BaseProps>(tag: Tag) => FC<Props> = tag => ({
+export const buttonFactory: <Props extends BaseProps>(tag: Tag) => FC<Props> = (tag) => ({
   size = 'default',
   className = '',
   square = false,

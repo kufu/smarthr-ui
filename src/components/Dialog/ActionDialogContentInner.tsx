@@ -1,10 +1,10 @@
 import React, { FC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { useOffsetHeight } from './dialogHelper'
-import { PrimaryButton, SecondaryButton, DangerButton } from '../Button'
+import { DangerButton, PrimaryButton, SecondaryButton } from '../Button'
 
 export type BaseProps = {
   children: React.ReactNode

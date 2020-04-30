@@ -1,7 +1,7 @@
-import React, { ReactNode, FC, createContext } from 'react'
+import React, { FC, ReactNode, createContext } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 export const TableGroupContext = createContext<{
   group: 'head' | 'body'
