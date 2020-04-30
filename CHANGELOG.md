@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.1.0](https://github.com/kufu/smarthr-ui/compare/v8.0.0...v8.1.0) (2020-04-30)
+
+
+### Features
+
+* add DropZone component ([#719](https://github.com/kufu/smarthr-ui/issues/719)) ([67942a0](https://github.com/kufu/smarthr-ui/commit/67942a08c697c604e4e3e411a1d0e9008cf12c33))
+
+
+### Bug Fixes
+
+* change Footer base color ([#748](https://github.com/kufu/smarthr-ui/issues/748)) ([ab6ecf6](https://github.com/kufu/smarthr-ui/commit/ab6ecf69ac3f27a61c3d9b15a86a7b2fb6dbfcb7))
+* Change header color ([#753](https://github.com/kufu/smarthr-ui/issues/753)) ([43e4e8a](https://github.com/kufu/smarthr-ui/commit/43e4e8a97af7f75206d2a2effbe89168d92a94bf))
+* change storybook loader color ([#730](https://github.com/kufu/smarthr-ui/issues/730)) ([f2aed10](https://github.com/kufu/smarthr-ui/commit/f2aed10614e393fa22d9fd4ea76016696c839a4a))
+* dropdown scroll area height for ie ([#756](https://github.com/kufu/smarthr-ui/issues/756)) ([4d52204](https://github.com/kufu/smarthr-ui/commit/4d52204af0c1c5893e944ded9966587cc57b71a7))
+* fix styles for FlashMessage component ([#726](https://github.com/kufu/smarthr-ui/issues/726)) ([d6b8eae](https://github.com/kufu/smarthr-ui/commit/d6b8eaef9ec2322a266da1593629b329e19a00fb))
+
 ## [8.0.0](https://github.com/kufu/smarthr-ui/compare/v7.1.0...v8.0.0) (2020-04-09)
 
 
