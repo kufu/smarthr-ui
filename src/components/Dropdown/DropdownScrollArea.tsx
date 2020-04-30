@@ -19,10 +19,4 @@ const Wrapper = styled.div`
   & {
     max-height: 300px;
   }
-
-  /* Edge */
-  _:-ms-lang(x)::backdrop,
-  & {
-    max-height: 300px;
-  }
 `
