@@ -31,8 +31,8 @@ const secondaryStyle = css`
       }
 
       &[disabled] {
-        background-color: ${palette.disableColor('#fff')};
-        color: ${palette.disableColor(palette.TEXT_BLACK)};
+        background-color: ${palette.COLUMN};
+        color: ${palette.TEXT_DISABLED};
       }
     `
   }}
