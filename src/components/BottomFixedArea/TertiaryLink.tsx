@@ -14,8 +14,8 @@ export const TertiaryLink: FC<Props> = ({ text, iconName, onClick }) => {
   const theme = useTheme()
   return (
     <Button onClick={onClick} themes={theme}>
-      {iconName && <Icon name={iconName} />}
-      <p>{text}</p>
+      {iconName && <Icon size={14} name={iconName} />}
+      <Text themes={theme}>{text}</Text>
     </Button>
   )
 }
@@ -31,11 +31,10 @@ const resetButtonStyle = css`
 const Button = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
-    const { pxToRem, font } = themes.size
+    const { pxToRem } = themes.size
 
     return css`
       color: #007bc2;
-      font-size: ${pxToRem(font.GRANDE)};
       display: flex;
       align-items: center;
 
@@ -47,6 +46,15 @@ const Button = styled.button<{ themes: Theme }>`
       > svg {
         margin-right: ${pxToRem(4)};
       }
+    `
+  }}
+`
+const Text = styled.p<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, font } = themes.size
+    return css`
+      margin: 0px;
+      font-size: ${pxToRem(font.GRANDE)};
     `
   }}
 `

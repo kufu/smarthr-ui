@@ -10,6 +10,6 @@ storiesOf('BottomFixedArea', module).add('BottomFixedArea', () => (
     description={'This is description.'}
     primaryButton={<PrimaryButton>Primary Button</PrimaryButton>}
     secondaryButton={<SecondaryButton>Secondary Button</SecondaryButton>}
-    tertiaryLinks={[{ text: 'tertiary', iconName: 'fa-trash', onClick: action('click') }]}
+    tertiaryLinks={[{ text: 'tertiary_1', iconName: 'fa-trash', onClick: action('click_1') }]}
   ></BottomFixedArea>
 ))
