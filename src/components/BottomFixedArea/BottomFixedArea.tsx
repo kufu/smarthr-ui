@@ -1,4 +1,9 @@
 import React, { FC, ReactNode, useEffect, FunctionComponentElement, ComponentProps } from 'react'
+import styled, { css } from 'styled-components'
+
+import { TertiaryLink } from './TertiaryLink'
+import { validateElement } from './bottomFixedAreaHelper'
+
 import { Base as BaseComponent } from '../Base'
 import {
   PrimaryButton,
@@ -6,10 +11,7 @@ import {
   SecondaryButton,
   SecondaryButtonAnchor,
 } from '../Button'
-import { TertiaryLink } from './TertiaryLink'
-import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { validateElement } from './bottomFixedAreaHelper'
 
 type Primary =
   | FunctionComponentElement<ComponentProps<typeof PrimaryButton>>
@@ -38,10 +40,12 @@ export const BottomFixedArea: FC<Props> = props => {
   return (
     <Base themes={theme}>
       {description && <Text>{description}</Text>}
-      <ButtonList themes={theme}>
-        {secondaryButton && <li>{secondaryButton}</li>}
-        {primaryButton && <li>{primaryButton}</li>}
-      </ButtonList>
+      {(secondaryButton || primaryButton) && (
+        <ButtonList themes={theme}>
+          {secondaryButton && <li>{secondaryButton}</li>}
+          {primaryButton && <li>{primaryButton}</li>}
+        </ButtonList>
+      )}
       {tertiaryLinks && tertiaryLinks.length > 0 && (
         <TertiaryList themes={theme}>
           {tertiaryLinks.map((tertiaryLink, index) => (
