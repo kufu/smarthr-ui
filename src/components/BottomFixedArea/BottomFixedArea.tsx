@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect } from 'react'
+import React, { FC, ReactNode, useEffect, FunctionComponentElement, ComponentProps } from 'react'
 import { Base as BaseComponent } from '../Base'
 import {
   PrimaryButton,
@@ -9,15 +9,20 @@ import {
 import { TertiaryLink } from './TertiaryLink'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { validateElement } from './bottomFixedAreaHelper'
+
+type Primary =
+  | FunctionComponentElement<ComponentProps<typeof PrimaryButton>>
+  | FunctionComponentElement<ComponentProps<typeof PrimaryButtonAnchor>>
+
+type Secondary =
+  | FunctionComponentElement<ComponentProps<typeof SecondaryButton>>
+  | FunctionComponentElement<ComponentProps<typeof SecondaryButtonAnchor>>
 
 type Props = {
   description?: ReactNode
-  primaryButton?:
-    | React.FunctionComponentElement<React.ComponentProps<typeof PrimaryButton>>
-    | React.FunctionComponentElement<React.ComponentProps<typeof PrimaryButtonAnchor>>
-  secondaryButton?:
-    | React.FunctionComponentElement<React.ComponentProps<typeof SecondaryButton>>
-    | React.FunctionComponentElement<React.ComponentProps<typeof SecondaryButtonAnchor>>
+  primaryButton?: Primary
+  secondaryButton?: Secondary
   tertiaryLinks?: Array<React.ComponentProps<typeof TertiaryLink>>
   className?: string
 }
@@ -27,22 +32,7 @@ export const BottomFixedArea: FC<Props> = props => {
   const { description, primaryButton, secondaryButton, tertiaryLinks } = props
 
   useEffect(() => {
-    if (primaryButton) {
-      const { displayName } = primaryButton.type
-      if (displayName !== 'PrimaryButton' && displayName !== 'PrimaryButtonAnchor') {
-        console.error(
-          'Invalid element Error. Set PrimaryButton or PrimaryButtonAnchor component instead of invalid element.',
-        )
-      }
-    }
-    if (secondaryButton) {
-      const { displayName } = secondaryButton.type
-      if (displayName !== 'SecondaryButton' && displayName !== 'SecondaryButtonAnchor') {
-        console.error(
-          'Invalid element Error. Set SecondaryButton or SecondaryButtonAnchor component instead of invalid element.',
-        )
-      }
-    }
+    validateElement(primaryButton, secondaryButton)
   }, [primaryButton, secondaryButton])
 
   return (
