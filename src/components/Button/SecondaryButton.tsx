@@ -10,11 +10,17 @@ export const SecondaryButton: FC<ButtonProps> = props => {
   const theme = useTheme()
   return <SecondaryStyleButton themes={theme} {...props} />
 }
+// set the displayName explicit.
+// This is for error message of BottomFixedArea component.
+SecondaryButton.displayName = 'SecondaryButton'
 
 export const SecondaryButtonAnchor: FC<AnchorProps> = props => {
   const theme = useTheme()
   return <SecondaryStyleButtonAnchor themes={theme} {...props} />
 }
+// set the displayName explicit.
+// This is for error message of BottomFixedArea component.
+SecondaryButtonAnchor.displayName = 'SecondaryButtonAnchor'
 
 const secondaryStyle = css`
   ${({ themes }: { themes: Theme }) => {
