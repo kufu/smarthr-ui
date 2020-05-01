@@ -1,7 +1,7 @@
-import React, { ReactNode, FC, useState } from 'react'
+import React, { FC, ReactNode, useState } from 'react'
 import styled, { css } from 'styled-components'
-import { LightBalloon, DarkBalloon, Props as BalloonProps, BalloonTheme } from '../Balloon'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Props as BalloonProps, BalloonTheme, DarkBalloon, LightBalloon } from '../Balloon'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {
   message: ReactNode
@@ -13,7 +13,7 @@ type Props = {
   vertical?: BalloonProps['vertical']
 }
 
-const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = balloonTheme => ({
+const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme) => ({
   message,
   children,
   triggerType,
@@ -26,7 +26,7 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = balloonTheme =
   const [isVisible, setIsVisible] = useState(false)
 
   const className = [triggerType === 'icon' ? 'icon-tooltip' : '', multiLine ? 'multi-line' : '']
-    .filter(c => !!c)
+    .filter((c) => !!c)
     .join(' ')
   const ref = React.createRef<HTMLSpanElement>()
 
@@ -245,7 +245,7 @@ const StyledDarkBalloon = StyledLightBalloon.withComponent(DarkBalloon)
 
 const StyledBalloonText = styled.p<{ themes: Theme }>`
   margin: 0;
-  ${props => {
+  ${(props) => {
     const { themes } = props
     const { size } = themes
 

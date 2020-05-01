@@ -1,7 +1,7 @@
-import React, { TextareaHTMLAttributes, FC, useRef, useEffect } from 'react'
+import React, { FC, TextareaHTMLAttributes, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   error?: boolean
@@ -23,7 +23,7 @@ export const Textarea: FC<Props> = ({ autoFocus, ...props }) => {
 }
 
 const StyledTextarea = styled.textarea<Props & { themes: Theme }>`
-  ${props => {
+  ${(props) => {
     const { themes, width = 'auto', error } = props
     const { size, frame, palette } = themes
 
@@ -33,9 +33,9 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme }>`
       color: ${palette.TEXT_BLACK};
       border-radius: ${frame.border.radius.m};
       ${width &&
-        css`
-          width: ${typeof width === 'number' ? `${width}px` : width};
-        `}
+      css`
+        width: ${typeof width === 'number' ? `${width}px` : width};
+      `}
       background-color: #fff;
       outline: none;
       border: ${frame.border.default};

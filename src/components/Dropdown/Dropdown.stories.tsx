@@ -8,7 +8,7 @@ import { DropdownTrigger } from './DropdownTrigger'
 import { DropdownContent } from './DropdownContent'
 import { DropdownCloser } from './DropdownCloser'
 import { DropdownScrollArea } from './DropdownScrollArea'
-import { SecondaryButton, PrimaryButton } from '../Button'
+import { PrimaryButton, SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
 import { Input } from '../Input'
 

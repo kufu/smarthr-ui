@@ -312,7 +312,7 @@ const icons: Array<Props['name']> = [
 ]
 
 const getIconList = (bg: string, color?: string) =>
-  icons.map(name => (
+  icons.map((name) => (
     <IconWrap key={`${color}-${name}`} bg={bg}>
       <Icon name={name} color={color} />
       <IconName color={color}>{name}</IconName>

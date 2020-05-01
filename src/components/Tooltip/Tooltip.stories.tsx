@@ -3,7 +3,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { Icon } from '../Icon'
-import { LightTooltip, DarkTooltip } from './Tooltip'
+import { DarkTooltip, LightTooltip } from './Tooltip'
 
 storiesOf('Tooltip', module).add('all', () => (
   <List>
