@@ -11,7 +11,7 @@ import { Cell } from './Cell'
 import { Icon } from '../Icon'
 import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { SecondaryButton as Button } from '../Button'
-import { Base } from '../Base'
+import { Base as BaseComponent } from '../Base'
 
 import readme from './README.md'
 
@@ -187,4 +187,8 @@ const ClickableCell = styled.div`
 
 const Arrow = styled(Icon)`
   transform: rotate(180deg);
+`
+
+const Base = styled(BaseComponent)`
+  overflow-x: auto;
 `
