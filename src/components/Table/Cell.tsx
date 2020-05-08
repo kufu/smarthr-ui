@@ -28,7 +28,7 @@ export const Cell: FC<Props> = ({
   const theme = useTheme()
   const { group } = useContext(TableGroupContext)
   const classNames = [className, highlighted && 'highlighted', nullable && 'nullable']
-    .filter(c => !!c)
+    .filter((c) => !!c)
     .join(' ')
   const props = {
     children,
