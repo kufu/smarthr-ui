@@ -11,7 +11,7 @@ import { Cell } from './Cell'
 import { Icon } from '../Icon'
 import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { SecondaryButton as Button } from '../Button'
-import { Base } from '../Base'
+import { Base as BaseComponent } from '../Base'
 
 import readme from './README.md'
 
@@ -158,6 +158,11 @@ storiesOf('Table', module)
                   line
                 </Cell>
               </Row>
+              <Row>
+                <Cell nullable={true}></Cell>
+                <Cell nullable={true}>not null</Cell>
+                <Cell nullable={false}></Cell>
+              </Row>
             </Body>
           </Table>
         </Base>
@@ -187,4 +192,8 @@ const ClickableCell = styled.div`
 
 const Arrow = styled(Icon)`
   transform: rotate(180deg);
+`
+
+const Base = styled(BaseComponent)`
+  overflow-x: auto;
 `
