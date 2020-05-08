@@ -17,7 +17,7 @@ describe('index', () => {
 
 const getAllExportPaths = (sourceFile: ts.SourceFile): string[] => {
   const exportPaths: string[] = []
-  ts.forEachChild(sourceFile, node => {
+  ts.forEachChild(sourceFile, (node) => {
     if (ts.isExportDeclaration(node)) {
       node.forEachChild((child: ts.Node) => {
         if (ts.isStringLiteral(child)) {
@@ -45,5 +45,5 @@ const getExportedComponents = async (file: string): Promise<string[]> => {
 
 const getExistingComponents = async (file: string, filterDirs: string[]): Promise<string[]> => {
   const dirs = await readdir(file)
-  return dirs.filter(dir => !filterDirs.includes(dir))
+  return dirs.filter((dir) => !filterDirs.includes(dir))
 }

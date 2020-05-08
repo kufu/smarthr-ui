@@ -1,12 +1,12 @@
 import React, {
   FC,
+  MutableRefObject,
   ReactNode,
   createContext,
-  useState,
   useEffect,
-  useRef,
   useMemo,
-  MutableRefObject,
+  useRef,
+  useState,
 } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -31,8 +31,12 @@ export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
   triggerElementRef: React.createRef(),
-  onClickTrigger: () => {},
-  onClickCloser: () => {},
+  onClickTrigger: () => {
+    /* noop */
+  },
+  onClickCloser: () => {
+    /* noop */
+  },
   DropdownContentRoot: () => null,
 })
 
@@ -66,7 +70,7 @@ export const Dropdown: FC<Props> = ({ children }) => {
 
   // This is the root container of a dropdown content located in outside the DOM tree
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(
-    () => props => {
+    () => (props) => {
       if (!active) return null
       return createPortal(props.children, portalElementRef.current)
     },
@@ -81,7 +85,7 @@ export const Dropdown: FC<Props> = ({ children }) => {
         active,
         triggerRect,
         triggerElementRef,
-        onClickTrigger: rect => {
+        onClickTrigger: (rect) => {
           const newActive = !active
           setActive(newActive)
           if (newActive) setTriggerRect(rect)

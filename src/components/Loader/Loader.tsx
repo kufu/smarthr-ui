@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import styled, { keyframes, css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 
 type Props = {
   color?: string

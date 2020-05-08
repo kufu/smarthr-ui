@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
 import { SecondaryButton } from '../Button'
 import { Icon } from '../Icon'
@@ -32,7 +32,7 @@ export const RightFixedNoteItem: FC<Props> = ({
   return (
     <Wrapper themes={theme}>
       <TextBase themes={theme}>
-        <EditButton size="s" onClick={e => onClickEdit(e, id)} square aria-label={editLabel}>
+        <EditButton size="s" onClick={(e) => onClickEdit(e, id)} square aria-label={editLabel}>
           <Icon name="fa-pen" />
         </EditButton>
         <Text themes={theme}>{text}</Text>

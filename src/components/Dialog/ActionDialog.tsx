@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 import { DialogContentInner } from './DialogContentInner'
@@ -22,8 +22,12 @@ export const ActionDialog: React.FC<Props> = ({
   onClickAction,
   onClickClose,
   actionDisabled = false,
-  onClickOverlay = () => {},
-  onPressEscape = () => {},
+  onClickOverlay = () => {
+    /* noop */
+  },
+  onPressEscape = () => {
+    /* noop */
+  },
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current

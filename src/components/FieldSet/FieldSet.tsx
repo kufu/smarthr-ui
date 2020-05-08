@@ -1,11 +1,11 @@
-import React, { ReactNode, FC } from 'react'
+import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Input, Props as InputProps } from '../Input'
-import { Heading, HeadingTypes, HeadingTagTypes } from '../Heading'
+import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
 import { StatusLabel } from '../StatusLabel'
 import { Icon } from '../Icon'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
 

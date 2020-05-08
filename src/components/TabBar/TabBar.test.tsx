@@ -7,13 +7,13 @@ import { TabItem } from './TabItem'
 
 const Tab = () => (
   <TabBar>
-    <TabItem id="1" onClick={() => {}}>
+    <TabItem id="1" onClick={jest.fn()}>
       Tab
     </TabItem>
-    <TabItem id="2" onClick={() => {}} selected>
+    <TabItem id="2" onClick={jest.fn()} selected>
       Selected
     </TabItem>
-    <TabItem id="3" onClick={() => {}} disabled>
+    <TabItem id="3" onClick={jest.fn()} disabled>
       Disabled
     </TabItem>
   </TabBar>

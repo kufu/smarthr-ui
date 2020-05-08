@@ -6,12 +6,12 @@ import styled from 'styled-components'
 import { SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
 import {
-  DialogWrapper,
-  DialogTrigger,
-  DialogContent,
-  DialogCloser,
-  MessageDialogContent,
   ActionDialogContent,
+  DialogCloser,
+  DialogContent,
+  DialogTrigger,
+  DialogWrapper,
+  MessageDialogContent,
 } from '.'
 import readme from './README.md'
 
@@ -54,7 +54,11 @@ const FormDialog: React.FC = () => {
               />
             </li>
             <li>
-              <input name="test" value={text} onChange={e => onChangeText(e.currentTarget.value)} />
+              <input
+                name="test"
+                value={text}
+                onChange={(e) => onChangeText(e.currentTarget.value)}
+              />
             </li>
           </ul>
           <DialogCloser>
@@ -146,7 +150,7 @@ storiesOf('Dialog', module)
             actionText="execute"
             actionTheme="primary"
             actionDisabled={false}
-            onClickAction={closeDialog => {
+            onClickAction={(closeDialog) => {
               action('executed')()
               setTimeout(closeDialog, 1000)
             }}

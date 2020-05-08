@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Icon, iconMap } from '../Icon'
 import { SecondaryButton } from '../Button'

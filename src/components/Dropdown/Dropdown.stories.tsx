@@ -8,7 +8,7 @@ import { DropdownTrigger } from './DropdownTrigger'
 import { DropdownContent } from './DropdownContent'
 import { DropdownCloser } from './DropdownCloser'
 import { DropdownScrollArea } from './DropdownScrollArea'
-import { SecondaryButton, PrimaryButton } from '../Button'
+import { PrimaryButton, SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
 import { Input } from '../Input'
 
@@ -192,7 +192,7 @@ storiesOf('Dropdown', module)
 
 const List = styled.ul`
   margin: 0;
-  padding: 10px 0;
+  padding: 8px 0;
   list-style: none;
 
   & > li > button {
@@ -201,7 +201,8 @@ const List = styled.ul`
     padding: 0 20px;
     border: none;
     background-color: #fff;
-    font-size: 16px;
+    font-size: 14px;
+    color: #333;
 
     &:hover {
       background-color: #f5f5f5;
@@ -210,6 +211,7 @@ const List = styled.ul`
 `
 const Wrapper = styled.div`
   padding: 24px;
+  color: #333;
 `
 const Legends = styled.ul`
   margin: 0;
@@ -228,7 +230,8 @@ const ControllableBoxMain = styled.div`
 `
 const Text = styled.p`
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
+  color: #333;
 `
 const ControllableBoxBottom = styled.div`
   display: flex;
@@ -261,7 +264,8 @@ const Fixed = styled.div`
   width: 100%;
   padding: 0 20px;
   border: none;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   line-height: 40px;
+  color: #333;
 `

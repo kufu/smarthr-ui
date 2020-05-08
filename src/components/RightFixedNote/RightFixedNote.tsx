@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
-import { useTheme, Theme } from '../../hooks/useTheme'
-import { RightFixedNoteItem, ItemProps, OnClickEdit } from './RightFixedNoteItem'
+import { Theme, useTheme } from '../../hooks/useTheme'
+import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
 import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
 import { SecondaryButton } from '../Button'
@@ -50,7 +50,9 @@ export const RightFixedNote: FC<Props> = ({
       )}
 
       {items &&
-        items.map(item => <RightFixedNoteItem key={item.id} {...item} onClickEdit={onClickEdit} />)}
+        items.map((item) => (
+          <RightFixedNoteItem key={item.id} {...item} onClickEdit={onClickEdit} />
+        ))}
 
       <TextArea
         name={TEXT_AREA_NAME}
