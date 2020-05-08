@@ -158,6 +158,11 @@ storiesOf('Table', module)
                   line
                 </Cell>
               </Row>
+              <Row>
+                <Cell nullable={true}></Cell>
+                <Cell nullable={true}>not null</Cell>
+                <Cell nullable={false}></Cell>
+              </Row>
             </Body>
           </Table>
         </Base>
