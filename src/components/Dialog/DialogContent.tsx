@@ -21,12 +21,17 @@ type Props = {
 }
 
 export const DialogContent: React.FC<Props> = ({ children, ...props }) => {
-  const { DialogContentRoot, onClickClose } = useContext(DialogContext)
+  const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
 
   return (
     <DialogContentRoot>
       <DialogContentContext.Provider value={{ onClickClose }}>
-        <DialogContentInner onClickOverlay={onClickClose} onPressEscape={onClickClose} {...props}>
+        <DialogContentInner
+          isOpen={active}
+          onClickOverlay={onClickClose}
+          onPressEscape={onClickClose}
+          {...props}
+        >
           {children}
         </DialogContentInner>
       </DialogContentContext.Provider>

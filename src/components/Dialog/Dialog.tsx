@@ -34,10 +34,13 @@ export const Dialog: React.FC<Props> = ({
     }
   }, [element])
 
-  if (!isOpen) return null
-
   return createPortal(
-    <DialogContentInner onClickOverlay={onClickOverlay} onPressEscape={onPressEscape} {...props}>
+    <DialogContentInner
+      onClickOverlay={onClickOverlay}
+      onPressEscape={onPressEscape}
+      isOpen={isOpen}
+      {...props}
+    >
       {children}
     </DialogContentInner>,
     element,
