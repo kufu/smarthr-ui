@@ -3,6 +3,7 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { Icon } from '../Icon'
 import { FieldSet } from './FieldSet'
 
 storiesOf('FieldSet', module).add('all', () => (
@@ -48,15 +49,32 @@ storiesOf('FieldSet', module).add('all', () => (
       <FieldSet label="error message" errorMessage="An error occurred" />
     </li>
     <li>
+      <FieldSet
+        label="labelSuffix"
+        labelSuffix={
+          <Suffix>
+            <Icon name="fa-exclamation-circle" size={12} color="#767676" />
+            <SuffixText>suffix text</SuffixText>
+          </Suffix>
+        }
+      />
+    </li>
+    <li>
       <FieldSet label="custom field">
         <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
       </FieldSet>
     </li>
     <li>
       <FieldSet
-        label="custom field"
+        label="many parts"
         errorMessage="custom error"
         helpMessage="This is help message."
+        labelSuffix={
+          <Suffix>
+            <Icon name="fa-exclamation-circle" size={12} color="#767676" />
+            <SuffixText>suffix text</SuffixText>
+          </Suffix>
+        }
         required
       >
         <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
@@ -72,6 +90,18 @@ const List = styled.ul`
   & > li:not(:first-child) {
     margin-top: 16px;
   }
+`
+const Suffix = styled.div`
+  display: flex;
+  align-items: center;
+
+  > *:first-child {
+    margin-right: 4px;
+  }
+`
+const SuffixText = styled.p`
+  margin: 0;
+  font-size: 11px;
 `
 const CustomTag = styled.div`
   padding: 10px;
