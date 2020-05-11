@@ -59,7 +59,7 @@
     "stylelint-config-standard": "^20.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-processor-styled-components": "^1.10.0",
-    "ts-jest": "^25.4.0",
+    "ts-jest": "^25.5.1",
     "ts-loader": "^7.0.0",
     "typescript": "^3.8.3"
   },
