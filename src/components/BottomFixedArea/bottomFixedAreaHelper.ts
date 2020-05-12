@@ -1,14 +1,4 @@
-import { FunctionComponentElement, ComponentProps } from 'react'
-import { PrimaryButton, PrimaryButtonAnchor } from '../Button/PrimaryButton'
-import { SecondaryButton, SecondaryButtonAnchor } from '../Button/SecondaryButton'
-
-type Primary =
-  | FunctionComponentElement<ComponentProps<typeof PrimaryButton>>
-  | FunctionComponentElement<ComponentProps<typeof PrimaryButtonAnchor>>
-
-type Secondary =
-  | FunctionComponentElement<ComponentProps<typeof SecondaryButton>>
-  | FunctionComponentElement<ComponentProps<typeof SecondaryButtonAnchor>>
+import { Primary, Secondary } from './BottomFixedArea'
 
 export const validateElement = (primary?: Primary, secondary?: Secondary) => {
   if (primary) {

@@ -13,11 +13,11 @@ import {
 } from '../Button'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-type Primary =
+export type Primary =
   | FunctionComponentElement<ComponentProps<typeof PrimaryButton>>
   | FunctionComponentElement<ComponentProps<typeof PrimaryButtonAnchor>>
 
-type Secondary =
+export type Secondary =
   | FunctionComponentElement<ComponentProps<typeof SecondaryButton>>
   | FunctionComponentElement<ComponentProps<typeof SecondaryButtonAnchor>>
 
