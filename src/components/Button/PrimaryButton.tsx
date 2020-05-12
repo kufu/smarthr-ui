@@ -2,11 +2,11 @@ import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { BaseButton, BaseButtonAnchor, ButtonProps, AnchorProps } from './BaseButton'
+import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
-export const PrimaryButton: FC<ButtonProps> = props => {
+export const PrimaryButton: FC<ButtonProps> = (props) => {
   const theme = useTheme()
   const { className, ...rest } = props
   return (
@@ -21,7 +21,7 @@ export const PrimaryButton: FC<ButtonProps> = props => {
 // This is for error message of BottomFixedArea component.
 PrimaryButton.displayName = 'PrimaryButton'
 
-export const PrimaryButtonAnchor: FC<AnchorProps> = props => {
+export const PrimaryButtonAnchor: FC<AnchorProps> = (props) => {
   const theme = useTheme()
   const { className, ...rest } = props
 

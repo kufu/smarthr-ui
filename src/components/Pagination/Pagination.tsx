@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { range } from '../../libs/lodash'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { PaginationItem } from './PaginationItem'
 import { PaginationControllerItem } from './PaginationControllerItem'
@@ -52,9 +52,9 @@ export const Pagination: FC<Props> = ({
 
   const pages = !withoutNumbers
     ? [
-        ...range(current - padding, current).filter(page => page >= 1),
-        ...range(current, current + padding + 1).filter(page => page <= total),
-      ].map(page => (
+        ...range(current - padding, current).filter((page) => page >= 1),
+        ...range(current, current + padding + 1).filter((page) => page <= total),
+      ].map((page) => (
         <li key={`pagination-${page}`}>
           <PaginationItem page={page} currentPage={current} onClick={onClick} />
         </li>

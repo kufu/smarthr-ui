@@ -1,7 +1,7 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Base } from '../Base'
 import { Icon, iconMap } from '../Icon'

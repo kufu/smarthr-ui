@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { SmartHRLogo } from '../SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
@@ -114,7 +114,7 @@ const Wrapper = styled.header<{ themes: Theme }>`
       justify-content: space-between;
       height: 50px;
       padding: 0 ${size.pxToRem(size.space.XS)};
-      background-color: ${palette.HEADER_GREEN};
+      background-color: ${palette.BRAND};
     `
   }}
 `

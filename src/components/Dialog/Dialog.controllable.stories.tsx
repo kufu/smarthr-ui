@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
-import { Dialog, MessageDialog, ActionDialog } from '.'
+import { ActionDialog, Dialog, MessageDialog } from '.'
 import readme from './README.md'
 
 const DialogController: React.FC = () => {
@@ -51,7 +51,7 @@ const DialogController: React.FC = () => {
             />
           </li>
           <li>
-            <input name="test" value={text} onChange={e => onChangeText(e.currentTarget.value)} />
+            <input name="test" value={text} onChange={(e) => onChangeText(e.currentTarget.value)} />
           </li>
         </DialogControllerBox>
         <DialogControllerBottom>
@@ -113,7 +113,7 @@ const ActionDialogController: React.FC = () => {
         closeText="close"
         actionText="execute"
         actionTheme="primary"
-        onClickAction={closeDialog => {
+        onClickAction={(closeDialog) => {
           action('executed')()
           setTimeout(closeDialog, 1000)
         }}

@@ -2,11 +2,11 @@ import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { BaseButton, BaseButtonAnchor, ButtonProps, AnchorProps } from './BaseButton'
+import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
-export const SecondaryButton: FC<ButtonProps> = props => {
+export const SecondaryButton: FC<ButtonProps> = (props) => {
   const theme = useTheme()
   return <SecondaryStyleButton themes={theme} {...props} />
 }
@@ -14,7 +14,7 @@ export const SecondaryButton: FC<ButtonProps> = props => {
 // This is for error message of BottomFixedArea component.
 SecondaryButton.displayName = 'SecondaryButton'
 
-export const SecondaryButtonAnchor: FC<AnchorProps> = props => {
+export const SecondaryButtonAnchor: FC<AnchorProps> = (props) => {
   const theme = useTheme()
   return <SecondaryStyleButtonAnchor themes={theme} {...props} />
 }
@@ -37,8 +37,8 @@ const secondaryStyle = css`
       }
 
       &[disabled] {
-        background-color: ${palette.disableColor('#fff')};
-        color: ${palette.disableColor(palette.TEXT_BLACK)};
+        background-color: ${palette.COLUMN};
+        color: ${palette.TEXT_DISABLED};
       }
     `
   }}

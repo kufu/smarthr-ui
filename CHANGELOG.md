@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.2.0](https://github.com/kufu/smarthr-ui/compare/v8.1.0...v8.2.0) (2020-05-07)
+
+
+### Features
+
+* add tooltip component ([#738](https://github.com/kufu/smarthr-ui/issues/738)) ([dc1e2ee](https://github.com/kufu/smarthr-ui/commit/dc1e2eec09ae5d6801ed65f5df862d463a0af0f7))
+
+
+### Bug Fixes
+
+* Fix the polished version ([#765](https://github.com/kufu/smarthr-ui/issues/765)) ([bddfaab](https://github.com/kufu/smarthr-ui/commit/bddfaab037fac19bfed915356ab01a97c4005b93))
+* change SecondaryButton disabled style ([#757](https://github.com/kufu/smarthr-ui/issues/757)) ([d3c2ba1](https://github.com/kufu/smarthr-ui/commit/d3c2ba1540ed4a67922a695d25f552027257c263))
+* change storybook dropdown style ([#740](https://github.com/kufu/smarthr-ui/issues/740)) ([20ee9e8](https://github.com/kufu/smarthr-ui/commit/20ee9e83f17baafcf78eb04e6bf4b79f2dc284a3))
+
+## [8.1.0](https://github.com/kufu/smarthr-ui/compare/v8.0.0...v8.1.0) (2020-04-30)
+
+
+### Features
+
+* add DropZone component ([#719](https://github.com/kufu/smarthr-ui/issues/719)) ([67942a0](https://github.com/kufu/smarthr-ui/commit/67942a08c697c604e4e3e411a1d0e9008cf12c33))
+
+
+### Bug Fixes
+
+* change Footer base color ([#748](https://github.com/kufu/smarthr-ui/issues/748)) ([ab6ecf6](https://github.com/kufu/smarthr-ui/commit/ab6ecf69ac3f27a61c3d9b15a86a7b2fb6dbfcb7))
+* Change header color ([#753](https://github.com/kufu/smarthr-ui/issues/753)) ([43e4e8a](https://github.com/kufu/smarthr-ui/commit/43e4e8a97af7f75206d2a2effbe89168d92a94bf))
+* change storybook loader color ([#730](https://github.com/kufu/smarthr-ui/issues/730)) ([f2aed10](https://github.com/kufu/smarthr-ui/commit/f2aed10614e393fa22d9fd4ea76016696c839a4a))
+* dropdown scroll area height for ie ([#756](https://github.com/kufu/smarthr-ui/issues/756)) ([4d52204](https://github.com/kufu/smarthr-ui/commit/4d52204af0c1c5893e944ded9966587cc57b71a7))
+* fix styles for FlashMessage component ([#726](https://github.com/kufu/smarthr-ui/issues/726)) ([d6b8eae](https://github.com/kufu/smarthr-ui/commit/d6b8eaef9ec2322a266da1593629b329e19a00fb))
+
 ## [8.0.0](https://github.com/kufu/smarthr-ui/compare/v7.1.0...v8.0.0) (2020-04-09)
 
 

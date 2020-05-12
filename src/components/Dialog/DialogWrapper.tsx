@@ -1,4 +1,4 @@
-import React, { createContext, useState, useRef, useEffect, useMemo } from 'react'
+import React, { createContext, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 type DialogContextType = {
@@ -8,8 +8,12 @@ type DialogContextType = {
 }
 
 export const DialogContext = createContext<DialogContextType>({
-  onClickTrigger: () => {},
-  onClickClose: () => {},
+  onClickTrigger: () => {
+    /* noop */
+  },
+  onClickClose: () => {
+    /* noop */
+  },
   DialogContentRoot: () => null,
 })
 
@@ -27,7 +31,7 @@ export const DialogWrapper: React.FC = ({ children }) => {
 
   // This is the root container of a dialog content located in outside the DOM tree
   const DialogContentRoot = useMemo<React.FC<{ children: React.ReactNode }>>(
-    () => props => {
+    () => (props) => {
       if (!active) return null
       return createPortal(props.children, element)
     },

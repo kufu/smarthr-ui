@@ -1,8 +1,8 @@
-import React, { ReactNode, FC, useContext } from 'react'
+import React, { FC, ReactNode, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { TableGroupContext } from './Table'
 
@@ -10,6 +10,7 @@ export type Props = {
   colSpan?: number
   rowSpan?: number
   highlighted?: boolean
+  nullable?: boolean
   children?: ReactNode
   className?: string
   onClick?: () => void
@@ -22,10 +23,13 @@ export const Cell: FC<Props> = ({
   colSpan,
   rowSpan,
   highlighted = false,
+  nullable = false,
 }) => {
   const theme = useTheme()
   const { group } = useContext(TableGroupContext)
-  const classNames = `${className} ${highlighted ? 'highlighted' : ''}`
+  const classNames = [className, highlighted && 'highlighted', nullable && 'nullable']
+    .filter((c) => !!c)
+    .join(' ')
   const props = {
     children,
     onClick,
@@ -63,16 +67,24 @@ const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
       }
 
       ${onClick &&
-        css`
-          :hover {
-            background-color: ${palette.hoverColor(palette.COLUMN)};
-            cursor: pointer;
-          }
-        `}
+      css`
+        :hover {
+          background-color: ${palette.hoverColor(palette.COLUMN)};
+          cursor: pointer;
+        }
+      `}
     `
   }}
 `
 const Td = styled.td<{ themes: Theme }>`
+  &.nullable {
+    &:empty {
+      &::after {
+        content: '-----';
+      }
+    }
+  }
+
   ${({ themes }) => {
     const { size, palette, frame } = themes
 

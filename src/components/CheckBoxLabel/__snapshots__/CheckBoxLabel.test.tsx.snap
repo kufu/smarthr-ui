@@ -40,6 +40,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
             "palette": Object {
               "BACKGROUND": "#f5f6fa",
               "BORDER": "#d6d6d6",
+              "BRAND": "#00c4cc",
               "COLUMN": "#f9f9f9",
               "DANGER": "#ef475b",
               "HEADER_GREEN": "#57d0d5",
@@ -115,6 +116,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                   "palette": Object {
                     "BACKGROUND": "#f5f6fa",
                     "BORDER": "#d6d6d6",
+                    "BRAND": "#00c4cc",
                     "COLUMN": "#f9f9f9",
                     "DANGER": "#ef475b",
                     "HEADER_GREEN": "#57d0d5",
@@ -188,6 +190,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                       "palette": Object {
                         "BACKGROUND": "#f5f6fa",
                         "BORDER": "#d6d6d6",
+                        "BRAND": "#00c4cc",
                         "COLUMN": "#f9f9f9",
                         "DANGER": "#ef475b",
                         "HEADER_GREEN": "#57d0d5",
@@ -265,6 +268,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                       "palette": Object {
                         "BACKGROUND": "#f5f6fa",
                         "BORDER": "#d6d6d6",
+                        "BRAND": "#00c4cc",
                         "COLUMN": "#f9f9f9",
                         "DANGER": "#ef475b",
                         "HEADER_GREEN": "#57d0d5",
@@ -335,6 +339,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                       "palette": Object {
                         "BACKGROUND": "#f5f6fa",
                         "BORDER": "#d6d6d6",
+                        "BRAND": "#00c4cc",
                         "COLUMN": "#f9f9f9",
                         "DANGER": "#ef475b",
                         "HEADER_GREEN": "#57d0d5",
@@ -453,6 +458,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                 "palette": Object {
                   "BACKGROUND": "#f5f6fa",
                   "BORDER": "#d6d6d6",
+                  "BRAND": "#00c4cc",
                   "COLUMN": "#f9f9f9",
                   "DANGER": "#ef475b",
                   "HEADER_GREEN": "#57d0d5",

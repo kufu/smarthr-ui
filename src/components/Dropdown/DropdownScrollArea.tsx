@@ -12,5 +12,12 @@ export const DropdownScrollArea: React.FC<Props> = ({ children, className = '' }
 
 const Wrapper = styled.div`
   overflow-y: scroll;
-  flex: 1;
+  flex: 1 1 auto;
+
+  /* IE11 */
+  /* stylelint-disable-next-line selector-type-no-unknown */
+  _:-ms-lang(x)::-ms-backdrop,
+  & {
+    max-height: 300px;
+  }
 `

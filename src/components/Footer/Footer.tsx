@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 export const Footer = () => {
   const theme = useTheme()
@@ -58,7 +58,7 @@ const Wrapper = styled.footer<{ themes: Theme }>`
     justify-content: space-between;
     height: 60px;
     padding: 0 ${themes.size.pxToRem(themes.size.space.S)};
-    background-color: ${themes.palette.MAIN};
+    background-color: ${themes.palette.HEADER_GREEN};
     color: #fff;
     font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
   `}

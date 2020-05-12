@@ -1,9 +1,9 @@
-import React, { ReactNode, FC } from 'react'
+import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Icon, Props as IconProps } from '../Icon/Icon'
 
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {
   icon: IconProps['name']
