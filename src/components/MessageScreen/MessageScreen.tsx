@@ -127,6 +127,7 @@ const Link = styled.a<{ themes: Theme }>`
     return css`
       color: ${palette.TEXT_LINK};
       font-size: ${size.font.TALL}px;
+      line-height: 1.4;
       text-decoration: none;
 
       &:hover {
