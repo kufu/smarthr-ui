@@ -63,10 +63,13 @@ const Base = styled(BaseComponent)<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
     return css`
-      text-align: center;
       display: flex;
       flex-direction: column;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
       padding: ${pxToRem(space.S)};
+      text-align: center;
     `
   }}
 `
