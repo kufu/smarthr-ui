@@ -1,5 +1,6 @@
 import React, { FC, ReactNode } from 'react'
-import styled, { createGlobalStyle, css, keyframes } from 'styled-components'
+import styled, { createGlobalStyle, css } from 'styled-components'
+import { CSSTransition } from 'react-transition-group'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
@@ -8,6 +9,7 @@ import { DialogPositionProvider } from './DialogPositionProvider'
 type Props = {
   onClickOverlay?: () => void
   onPressEscape?: () => void
+  isOpen: boolean
   top?: number
   right?: number
   bottom?: number
@@ -31,40 +33,56 @@ export const DialogContentInner: FC<Props> = ({
   onPressEscape = () => {
     /* noop */
   },
+  isOpen,
   children,
   ...props
 }) => {
   const theme = useTheme()
   useHandleEscape(onPressEscape)
+
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
-      <Wrapper>
-        <Background onClick={onClickOverlay} themes={theme} {...props} />
-        <Inner themes={theme} {...props}>
-          {children}
-        </Inner>
-        {/* Suppresses scrolling of body while modal is displayed */}
-        <ScrollSuppressing />
-      </Wrapper>
+      <CSSTransition
+        className="wrapper"
+        classNames="wrapper"
+        in={isOpen}
+        timeout={300}
+        unmountOnExit
+      >
+        <Wrapper>
+          <Background onClick={onClickOverlay} themes={theme} {...props} />
+          <Inner themes={theme} {...props}>
+            {children}
+          </Inner>
+          {/* Suppresses scrolling of body while modal is displayed */}
+          <ScrollSuppressing />
+        </Wrapper>
+      </CSSTransition>
     </DialogPositionProvider>
   )
 }
 
-const fadeIn = keyframes`
-  0% { opacity: 0 }
-  30% { opacity: 0.1 }
-  70% { opacity: 0.9 }
-  100% { opacity: 1 }
-`
 const Wrapper = styled.div`
-  opacity: 0;
   z-index: 10000;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  animation: 0.3s 0s both ${fadeIn};
+  &.wrapper-enter {
+    opacity: 0;
+  }
+  &.wrapper-enter-active {
+    transition: opacity 300ms;
+    opacity: 1;
+  }
+  &.wrapper-exit {
+    opacity: 1;
+  }
+  &.wrapper-exit-active {
+    transition: opacity 300ms;
+    opacity: 0;
+  }
 `
 const Inner = styled.div<StyleProps & { themes: Theme }>`
   ${({ themes, top, right, bottom, left }) => {
