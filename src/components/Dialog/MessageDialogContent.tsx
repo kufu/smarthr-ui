@@ -17,11 +17,16 @@ export const MessageDialogContent: React.FC<MessageDialogContentProps> = ({
   closeText,
   ...props
 }) => {
-  const { DialogContentRoot, onClickClose } = useContext(DialogContext)
+  const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
 
   return (
     <DialogContentRoot>
-      <DialogContentInner onClickOverlay={onClickClose} onPressEscape={onClickClose} {...props}>
+      <DialogContentInner
+        onClickOverlay={onClickClose}
+        onPressEscape={onClickClose}
+        isOpen={active}
+        {...props}
+      >
         <MessageDialogContentInner
           title={title}
           description={description}
