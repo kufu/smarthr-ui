@@ -79,7 +79,7 @@ const Box = styled.div`
 const Logo = styled.div`
   height: ${LOGO_HEIGHT}px;
 `
-const Title = styled.div<{ themes: Theme }>`
+const Title = styled.h1<{ themes: Theme }>`
   ${({ themes }) => {
     const { size, palette } = themes
     const { pxToRem, space, font } = size
