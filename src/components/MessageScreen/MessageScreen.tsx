@@ -107,7 +107,7 @@ const Links = styled.ul<{ themes: Theme }>`
     const { pxToRem, space } = themes.size
 
     return css`
-      margin: ${pxToRem(space.XS)} 0 0 0;
+      margin: ${pxToRem(space.XS)} 0 0;
       padding: 0;
       list-style: none;
       text-align: center;
