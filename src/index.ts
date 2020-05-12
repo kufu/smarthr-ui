@@ -64,6 +64,7 @@ export { InformationPanel } from './components/InformationPanel'
 export { Footer } from './components/Footer'
 export { RightFixedNote } from './components/RightFixedNote'
 export { LightTooltip, DarkTooltip } from './components/Tooltip'
+export { BottomFixedArea } from './components/BottomFixedArea'
 
 // themes
 export { createTheme } from './themes/createTheme'
