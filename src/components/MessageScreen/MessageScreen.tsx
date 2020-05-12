@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -8,7 +8,7 @@ import { Footer } from '../Footer'
 import { Icon } from '../Icon'
 
 type Props = {
-  title?: string
+  title?: ReactNode
   links?: Array<{
     label: string
     url: string
@@ -85,9 +85,10 @@ const Title = styled.h1<{ themes: Theme }>`
     const { pxToRem, space, font } = size
 
     return css`
-      margin-top: ${pxToRem(space.S)};
+      margin: ${pxToRem(space.S)} 0 0;
       background-color: ${palette.BACKGROUND};
       color: ${palette.TEXT_BLACK};
+      font-weight: normal;
       font-size: ${font.VENTI}px;
       line-height: 1;
     `

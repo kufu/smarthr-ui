@@ -24,7 +24,7 @@ import { MessageScreen } from 'smarthr-ui'
 
 | Name      | Required | Type                | DefaultValue | Description                                                     |
 | --------- | -------- | ------------------- | ------------ | --------------------------------------------------------------- |
-| title     | -        | **string**          | -            | title string to display at the top of the content               |
+| title     | -        | **React.ReactNode** | -            | title string to display at the top of the content               |
 | links     | -        | **Link[]**          | -            | List of anchor elements to display at the bottom of the content |
 | children  | -        | **React.ReactNode** | -            | children content                                                |
 | className | -        | **string**          | ''           | className of wrapper div element                                |

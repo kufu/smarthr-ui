@@ -67,8 +67,15 @@ storiesOf('MessageScreen', module)
     </MessageScreen>
   ))
   .add('without links', () => (
-    <MessageScreen title="株式会社 TEST INC">
-      <Headline>専用ログイン画面</Headline>
+    <MessageScreen
+      title={
+        <>
+          株式会社 TEST INC
+          <br />
+          <Headline>専用ログイン画面</Headline>
+        </>
+      }
+    >
       <Box>
         <List>
           <li>
@@ -139,8 +146,10 @@ const Link = styled.a`
     text-decoration: underline;
   }
 `
-const Headline = styled.p`
-  margin: 0 0 32px 0;
+const Headline = styled.span`
+  display: inline-block;
+  width: 100%;
+  margin-top: 16px;
   color: #333;
   font-size: 18px;
   text-align: center;
