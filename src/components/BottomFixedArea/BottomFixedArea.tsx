@@ -26,19 +26,27 @@ type Props = {
   primaryButton?: Primary
   secondaryButton?: Secondary
   tertiaryLinks?: Array<React.ComponentProps<typeof TertiaryLink>>
+  zIndex?: number
   className?: string
 }
 
 export const BottomFixedArea: FC<Props> = props => {
   const theme = useTheme()
-  const { description, primaryButton, secondaryButton, tertiaryLinks } = props
+  const {
+    description,
+    primaryButton,
+    secondaryButton,
+    tertiaryLinks,
+    zIndex = 500,
+    className = '',
+  } = props
 
   useEffect(() => {
     validateElement(primaryButton, secondaryButton)
   }, [primaryButton, secondaryButton])
 
   return (
-    <Base themes={theme}>
+    <Base themes={theme} zIndex={zIndex} className={className}>
       {description && <Text>{description}</Text>}
       {(secondaryButton || primaryButton) && (
         <ButtonList themes={theme}>
@@ -59,9 +67,10 @@ export const BottomFixedArea: FC<Props> = props => {
   )
 }
 
-const Base = styled(BaseComponent)<{ themes: Theme }>`
-  ${({ themes }) => {
+const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
+  ${({ themes, zIndex }) => {
     const { pxToRem, space } = themes.size
+
     return css`
       display: flex;
       flex-direction: column;
@@ -70,16 +79,17 @@ const Base = styled(BaseComponent)<{ themes: Theme }>`
       width: 100%;
       padding: ${pxToRem(space.S)};
       text-align: center;
+      z-index: ${zIndex};
     `
   }}
 `
-
 const Text = styled.p`
   margin: 0;
 `
 const ButtonList = styled.ul<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
+
     return css`
       margin: ${pxToRem(space.XS)} 0 0 0;
       padding: 0;
