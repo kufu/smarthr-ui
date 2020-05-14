@@ -32,6 +32,7 @@
     "@types/react-transition-group": "^4.2.4",
     "@types/styled-components": "^5.1.0",
     "babel-loader": "^8.1.0",
+    "ecma-version-validator-webpack-plugin": "^1.0.4",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.4.4",
@@ -41,6 +42,7 @@
     "husky": "^4.2.5",
     "jest": "^25.5.4",
     "lint-staged": "^10.2.2",
+    "memory-fs": "^0.5.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
@@ -61,7 +63,8 @@
     "stylelint-processor-styled-components": "^1.10.0",
     "ts-jest": "^25.5.1",
     "ts-loader": "^7.0.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "webpack": "^4.43.0"
   },
   "peerDependencies": {
     "react": "^16.13.0",
@@ -121,6 +124,7 @@
     "storybook": "start-storybook -p 6006",
     "test": "jest",
     "test:update-snapshot": "jest --updateSnapshot",
+    "test:build-assets": "node scripts/build-test.ts",
     "test-visual": "reg-suit run"
   },
   "sideEffects": false,
