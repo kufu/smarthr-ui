@@ -19,6 +19,7 @@ commands:
       - run: yarn audit
       - run: yarn lint
       - run: yarn test
+      - run: yarn test:build-assets
   # visual regression testing
   run-reg-suit:
     steps:
