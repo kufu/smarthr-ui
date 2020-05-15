@@ -35,7 +35,7 @@ export const MessageScreen: FC<Props> = ({ title, links, children, className = '
 
         {links && links.length && (
           <Links themes={theme}>
-            {links.map(link => (
+            {links.map((link) => (
               <li key={link.label}>
                 <Link
                   href={link.url}

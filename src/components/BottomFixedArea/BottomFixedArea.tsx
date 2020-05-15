@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, FunctionComponentElement, ComponentProps } from 'react'
+import React, { ComponentProps, FC, FunctionComponentElement, ReactNode, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 
 import { TertiaryLink } from './TertiaryLink'
@@ -30,7 +30,7 @@ type Props = {
   className?: string
 }
 
-export const BottomFixedArea: FC<Props> = props => {
+export const BottomFixedArea: FC<Props> = (props) => {
   const theme = useTheme()
   const {
     description,

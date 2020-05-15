@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { iconMap, Icon } from '../Icon'
+import { Icon, iconMap } from '../Icon'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {

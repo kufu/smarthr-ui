@@ -33,7 +33,7 @@ export const DialogWrapper: React.FC = ({ children }) => {
 
   // This is the root container of a dialog content located in outside the DOM tree
   const DialogContentRoot = useMemo<React.FC<{ children: React.ReactNode }>>(
-    () => props => {
+    () => (props) => {
       return createPortal(props.children, element)
     },
     [element],
