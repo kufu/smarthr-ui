@@ -21,11 +21,16 @@ export const ActionDialogContent: React.FC<ActionDialogContentProps> = ({
   actionDisabled = false,
   ...props
 }) => {
-  const { DialogContentRoot, onClickClose } = useContext(DialogContext)
+  const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
 
   return (
     <DialogContentRoot>
-      <DialogContentInner onClickOverlay={onClickClose} onPressEscape={onClickClose} {...props}>
+      <DialogContentInner
+        onClickOverlay={onClickClose}
+        onPressEscape={onClickClose}
+        isOpen={active}
+        {...props}
+      >
         <ActionDialogContentInner
           title={title}
           closeText={closeText}

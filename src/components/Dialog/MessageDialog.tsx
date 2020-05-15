@@ -36,10 +36,13 @@ export const MessageDialog: React.FC<Props> = ({
     }
   }, [element])
 
-  if (!isOpen) return null
-
   return createPortal(
-    <DialogContentInner onClickOverlay={onClickOverlay} onPressEscape={onPressEscape} {...props}>
+    <DialogContentInner
+      onClickOverlay={onClickOverlay}
+      onPressEscape={onPressEscape}
+      isOpen={isOpen}
+      {...props}
+    >
       <MessageDialogContentInner
         title={title}
         description={description}

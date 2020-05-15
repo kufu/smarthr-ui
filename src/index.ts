@@ -65,6 +65,7 @@ export { Footer } from './components/Footer'
 export { RightFixedNote } from './components/RightFixedNote'
 export { LightTooltip, DarkTooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
+export { MessageScreen } from './components/MessageScreen'
 
 // themes
 export { createTheme } from './themes/createTheme'

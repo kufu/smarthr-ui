@@ -5,6 +5,7 @@ type DialogContextType = {
   onClickTrigger: () => void
   onClickClose: () => void
   DialogContentRoot: React.FC<{ children: React.ReactNode }>
+  active: boolean
 }
 
 export const DialogContext = createContext<DialogContextType>({
@@ -15,6 +16,7 @@ export const DialogContext = createContext<DialogContextType>({
     /* noop */
   },
   DialogContentRoot: () => null,
+  active: false,
 })
 
 export const DialogWrapper: React.FC = ({ children }) => {
@@ -31,11 +33,10 @@ export const DialogWrapper: React.FC = ({ children }) => {
 
   // This is the root container of a dialog content located in outside the DOM tree
   const DialogContentRoot = useMemo<React.FC<{ children: React.ReactNode }>>(
-    () => (props) => {
-      if (!active) return null
+    () => props => {
       return createPortal(props.children, element)
     },
-    [active, element],
+    [element],
   )
   // set the displayName explicit for DevTools
   DialogContentRoot.displayName = 'DialogContentRoot'
@@ -46,6 +47,7 @@ export const DialogWrapper: React.FC = ({ children }) => {
         onClickTrigger: () => setActive(true),
         onClickClose: () => setActive(false),
         DialogContentRoot,
+        active,
       }}
     >
       {children}
