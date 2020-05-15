@@ -83,7 +83,7 @@ const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
     `
   }}
 `
-const Text = styled.p`
+const Text = styled.div`
   margin: 0;
 `
 const ButtonList = styled.ul<{ themes: Theme }>`
