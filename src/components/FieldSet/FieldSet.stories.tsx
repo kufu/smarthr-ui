@@ -67,7 +67,7 @@ storiesOf('FieldSet', module).add('all', () => (
     <li>
       <FieldSet
         label="many parts"
-        errorMessage="custom error"
+        errorMessage={['First error message.', 'Second error message.']}
         helpMessage="This is help message."
         labelSuffix={
           <Suffix>
