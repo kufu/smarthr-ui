@@ -69,7 +69,7 @@ export const InformationPanel: FC<Props> = ({
   }, [activeProps])
 
   return (
-    <Wrapper className={className} themes={theme}>
+    <Wrapper className={className} themes={theme} aria-expanded={active}>
       <Header themes={theme}>
         <Title themes={theme}>
           <TitleIcon name={iconName} color={iconColor} themes={theme} />
@@ -87,7 +87,11 @@ export const InformationPanel: FC<Props> = ({
           </SecondaryButton>
         </div>
       </Header>
-      {active && <Content themes={theme}>{children}</Content>}
+      {active && (
+        <Content themes={theme} aria-hidden={!active}>
+          {children}
+        </Content>
+      )}
     </Wrapper>
   )
 }
