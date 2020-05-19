@@ -87,11 +87,7 @@ export const InformationPanel: FC<Props> = ({
           </SecondaryButton>
         </div>
       </Header>
-      {active && (
-        <Content themes={theme} aria-hidden={!active}>
-          {children}
-        </Content>
-      )}
+      {active && <Content themes={theme}>{children}</Content>}
     </Wrapper>
   )
 }
