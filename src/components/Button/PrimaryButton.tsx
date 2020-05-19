@@ -8,31 +8,18 @@ import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseBu
 
 export const PrimaryButton: FC<ButtonProps> = (props) => {
   const theme = useTheme()
-  const { className, ...rest } = props
-  return (
-    <PrimaryStyleButton
-      themes={theme}
-      className={`${className} smarthr-ui-primary-button`}
-      {...rest}
-    />
-  )
+  return <PrimaryStyleButton themes={theme} {...props} />
 }
+
 // set the displayName explicit.
 // This is for error message of BottomFixedArea component.
 PrimaryButton.displayName = 'PrimaryButton'
 
 export const PrimaryButtonAnchor: FC<AnchorProps> = (props) => {
   const theme = useTheme()
-  const { className, ...rest } = props
-
-  return (
-    <PrimaryStyleButtonAnchor
-      themes={theme}
-      className={`${className} smarthr-ui-primary-button-anchor`}
-      {...rest}
-    />
-  )
+  return <PrimaryStyleButtonAnchor themes={theme} {...props} />
 }
+
 // set the displayName explicit.
 // This is for error message of BottomFixedArea component.
 PrimaryButtonAnchor.displayName = 'PrimaryButtonAnchor'
