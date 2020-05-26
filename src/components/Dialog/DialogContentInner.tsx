@@ -46,7 +46,12 @@ export const DialogContentInner: FC<Props> = ({
         className="wrapper"
         classNames="wrapper"
         in={isOpen}
-        timeout={300}
+        timeout={{
+          appear: 500,
+          enter: 300,
+          exit: 300,
+        }}
+        appear
         unmountOnExit
       >
         <Wrapper>
@@ -69,6 +74,13 @@ const Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
+  &.wrapper-appear {
+    opacity: 0;
+  }
+  &.wrapper-appear-active {
+    transition: opacity 500ms;
+    opacity: 1;
+  }
   &.wrapper-enter {
     opacity: 0;
   }

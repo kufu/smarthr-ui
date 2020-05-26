@@ -16,7 +16,7 @@ commands:
             - node_modules
           key: v4-dependencies-{{ checksum "yarn.lock" }}
       # run tests!
-      - run: yarn audit
+      - run: yarn audit --groups dependencies
       - run: yarn lint
       - run: yarn test
   # visual regression testing
