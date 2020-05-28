@@ -12,7 +12,7 @@ type Props = Omit<InputProps, 'error'> & {
   label: string
   labelType?: HeadingTypes
   labelTagType?: HeadingTagTypes
-  errorMessage?: string
+  errorMessage?: string | string[]
   helpMessage?: string
   labelSuffix?: ReactNode
   className?: string
@@ -45,12 +45,13 @@ export const FieldSet: FC<Props> = ({
 
       {children ? children : <Input {...props} error={!!errorMessage} />}
 
-      {errorMessage && (
-        <Error themes={theme}>
-          <ErrorIcon name="fa-exclamation-circle" color={theme.palette.DANGER} />
-          <ErrorText>{errorMessage}</ErrorText>
-        </Error>
-      )}
+      {errorMessage &&
+        (typeof errorMessage === 'string' ? [errorMessage] : errorMessage).map((message) => (
+          <Error themes={theme} key={message}>
+            <ErrorIcon name="fa-exclamation-circle" color={theme.palette.DANGER} />
+            <ErrorText>{message}</ErrorText>
+          </Error>
+        ))}
 
       {helpMessage && <Help themes={theme}>{helpMessage}</Help>}
     </Wrapper>
