@@ -22,7 +22,7 @@ const lineScale = keyframes`
     transform: scaleY(1);
   }
   50% {
-    transform: scaleY(.4);
+    transform: scaleY(0.4);
   }
 `
 const Wrapper = styled.div`
