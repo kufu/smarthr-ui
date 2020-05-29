@@ -23,7 +23,6 @@ export const TertiaryLink: FC<Props> = ({ text, iconName, onClick }) => {
 const resetButtonStyle = css`
   background-color: transparent;
   border: none;
-  outline: none;
   padding: 0;
   appearance: none;
 `
