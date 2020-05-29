@@ -4,7 +4,7 @@ export const validateElement = (primary?: Primary, secondary?: Secondary) => {
   if (primary) {
     const { displayName } = primary.type
     if (displayName !== 'PrimaryButton' && displayName !== 'PrimaryButtonAnchor') {
-      console.error(
+      throw new Error(
         'SmartHR UI: the primaryButton props accepts PrimaryButton or PrimaryButtonAnchor component',
       )
     }
@@ -12,7 +12,7 @@ export const validateElement = (primary?: Primary, secondary?: Secondary) => {
   if (secondary) {
     const { displayName } = secondary.type
     if (displayName !== 'SecondaryButton' && displayName !== 'SecondaryButtonAnchor') {
-      console.error(
+      throw new Error(
         'SmartHR UI: the secondaryButton props accepts SecondaryButton or SecondaryButtonAnchor component',
       )
     }
