@@ -1,4 +1,4 @@
-# AccordionPanel
+# BottomFixedArea
 
 ```tsx
 import { BottomFixedArea } from 'smarthr-ui'
@@ -13,7 +13,7 @@ import { BottomFixedArea } from 'smarthr-ui'
 
 ## props
 
-### AccordionPanel component
+### BottomFixedArea component
 
 | Name            | Required | Type                                             | DefaultValue | Description                                                     |
 | --------------- | -------- | ------------------------------------------------ | ------------ | --------------------------------------------------------------- |
@@ -24,10 +24,10 @@ import { BottomFixedArea } from 'smarthr-ui'
 | zIndex          | -        | **number**                                       | 500          | The z-index of this component                                   |
 | className       | -        | **string**                                       | ''           | The className of this component                                 |
 
-### tertiaryLink
+### TertiaryLink
 
 | Name     | Required | Type                                                             | DefaultValue | Description                                                       |
 | -------- | -------- | ---------------------------------------------------------------- | ------------ | ----------------------------------------------------------------- |
-| test     | ✓        | **string**                                                       |              | The Text of tertiaryLink                                          |
+| text     | ✓        | **string**                                                       |              | The text of tertiaryLink                                          |
 | iconName | -        | **name Props of Icon component** <br> 'fa-trash', 'fa-sync', ... |              | Set the name of the icon to be displayed next to the button text. |
 | onClick  | ✓        | **(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void** |              | Fired when the tertiaryLink is clicked                            |
