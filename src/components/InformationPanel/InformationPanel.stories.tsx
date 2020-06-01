@@ -42,6 +42,7 @@ storiesOf('InformationPanel', module)
 
 const List = styled.ul`
   list-style: none;
+  padding: 0;
 `
 const Wrapper = styled.div`
   width: 1140px;
