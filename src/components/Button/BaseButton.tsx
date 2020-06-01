@@ -67,6 +67,7 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       box-sizing: border-box;
       cursor: pointer;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+      white-space: nowrap;
 
       &.default {
         font-size: ${size.pxToRem(size.font.TALL)};
