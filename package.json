@@ -6,7 +6,7 @@
   "dependencies": {
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
-    "polished": "^3.6.3",
+    "polished": "^3.6.4",
     "react-icons": "^3.10.0",
     "react-transition-group": "^4.4.1"
   },
@@ -34,7 +34,7 @@
     "babel-loader": "^8.1.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
-    "enzyme-to-json": "^3.4.4",
+    "enzyme-to-json": "^3.5.0",
     "eslint": "^7.0.0",
     "eslint-config-smarthr": "^4.0.0",
     "fixpack": "^3.0.6",
