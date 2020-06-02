@@ -53,7 +53,7 @@
     "standard-version": "^8.0.0",
     "storybook-readme": "^5.0.8",
     "storycap": "^2.3.5",
-    "styled-components": "^5.1.0",
+    "styled-components": "^5.1.1",
     "stylelint": "^13.3.3",
     "stylelint-config-prettier": "^8.0.1",
     "stylelint-config-standard": "^20.0.0",
