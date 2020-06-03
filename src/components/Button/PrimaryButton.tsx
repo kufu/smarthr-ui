@@ -11,10 +11,18 @@ export const PrimaryButton: FC<ButtonProps> = (props) => {
   return <PrimaryStyleButton themes={theme} {...props} />
 }
 
+// set the displayName explicit.
+// This is for error message of BottomFixedArea component.
+PrimaryButton.displayName = 'PrimaryButton'
+
 export const PrimaryButtonAnchor: FC<AnchorProps> = (props) => {
   const theme = useTheme()
   return <PrimaryStyleButtonAnchor themes={theme} {...props} />
 }
+
+// set the displayName explicit.
+// This is for error message of BottomFixedArea component.
+PrimaryButtonAnchor.displayName = 'PrimaryButtonAnchor'
 
 const primaryStyle = css`
   ${({ themes }: { themes: Theme }) => {
