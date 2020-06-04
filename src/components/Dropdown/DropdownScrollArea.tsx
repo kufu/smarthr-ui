@@ -11,7 +11,7 @@ export const DropdownScrollArea: React.FC<Props> = ({ children, className = '' }
 )
 
 const Wrapper = styled.div`
-  overflow-y: scroll;
+  overflow-y: auto;
   flex: 1 1 auto;
 
   /* IE11 */
