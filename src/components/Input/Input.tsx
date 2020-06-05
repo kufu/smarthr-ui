@@ -21,11 +21,15 @@ export type Props = InputHTMLAttributes<HTMLInputElement> & {
   error?: boolean
   width?: number | string
   autoFocus?: boolean
+  thousandsSeparated?: boolean
 }
 
-export const Input: FC<Props> = ({ autoFocus, ...props }) => {
+export const Input: FC<Props> = ({ type, autoFocus, thousandsSeparated, ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLInputElement>(null)
+
+  const isCurrency = type === 'number' && thousandsSeparated
+  const actualType = isCurrency ? 'text' : type
 
   useEffect(() => {
     if (autoFocus && ref && ref.current) {
@@ -33,7 +37,7 @@ export const Input: FC<Props> = ({ autoFocus, ...props }) => {
     }
   }, [autoFocus])
 
-  return <StyledInput {...props} ref={ref} themes={theme} />
+  return <StyledInput type={actualType} {...props} ref={ref} themes={theme} />
 }
 
 const StyledInput = styled.input<Props & { themes: Theme }>`
