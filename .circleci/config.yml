@@ -7,14 +7,14 @@ commands:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v4-dependencies-{{ checksum "yarn.lock" }}
+          - dependencies-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
           # fallback to using the latest cache if no exact match is found
-          - v4-dependencies-
+          - modules-cache-
       - run: yarn install
       - save_cache:
           paths:
             - node_modules
-          key: v4-dependencies-{{ checksum "yarn.lock" }}
+          key: dependencies-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
       # run tests!
       - run: yarn audit --groups dependencies
       - run: yarn lint
@@ -33,13 +33,13 @@ commands:
           fi
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "yarn.lock" }}
-            - v1-dependencies-
+            - dependencies-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+            - modules-cache-
       - run: yarn install
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "yarn.lock" }}
+          key: dependencies-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
       - run: yarn test-visual
 jobs:
   node-v10:

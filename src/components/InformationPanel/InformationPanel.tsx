@@ -12,6 +12,7 @@ type Props = {
   title: string
   titleTag?: HeadingTagTypes
   type?: 'success' | 'info' | 'warning' | 'error' | ''
+  togglable?: boolean
   openButtonLabel?: string
   closeButtonLabel?: string
   active?: boolean
@@ -24,6 +25,7 @@ export const InformationPanel: FC<Props> = ({
   title,
   titleTag = 'span',
   type = 'info',
+  togglable = true,
   openButtonLabel = '開く',
   closeButtonLabel = '閉じる',
   active: activeProps = true,
@@ -77,15 +79,17 @@ export const InformationPanel: FC<Props> = ({
             {title}
           </StyledHeading>
         </Title>
-        <div>
-          <SecondaryButton
-            suffix={<Icon size={14} name={active ? 'fa-caret-up' : 'fa-caret-down'} />}
-            size="s"
-            onClick={handleClickTrigger}
-          >
-            {active ? closeButtonLabel : openButtonLabel}
-          </SecondaryButton>
-        </div>
+        {togglable && (
+          <div>
+            <SecondaryButton
+              suffix={<Icon size={14} name={active ? 'fa-caret-up' : 'fa-caret-down'} />}
+              size="s"
+              onClick={handleClickTrigger}
+            >
+              {active ? closeButtonLabel : openButtonLabel}
+            </SecondaryButton>
+          </div>
+        )}
       </Header>
       {active && <Content themes={theme}>{children}</Content>}
     </Wrapper>
