@@ -12,8 +12,8 @@ import { Icon } from '../Icon'
 
 type Props = {
   onApply: () => void
-  onCancel: () => void
-  onReset: () => void
+  onCancel?: () => void
+  onReset?: () => void
   children: ReactNode
 }
 
@@ -30,12 +30,14 @@ export const FilterDropdown: FC<Props> = ({ onApply, onCancel, onReset, children
           <ContentLayout>{children}</ContentLayout>
         </DropdownScrollArea>
         <BottomLayout themes={themes}>
-          <TextButton prefix={<Icon name="fa-undo-alt" />} onClick={() => onReset()}>
-            絞り込み条件を解除
-          </TextButton>
+          {onReset && (
+            <TextButton prefix={<Icon name="fa-undo-alt" />} onClick={() => onReset()}>
+              絞り込み条件を解除
+            </TextButton>
+          )}
           <RightButtonLayout>
             <DropdownCloser>
-              <SecondaryButton onClick={() => onCancel()}>キャンセル</SecondaryButton>
+              <SecondaryButton onClick={() => onCancel?.()}>キャンセル</SecondaryButton>
             </DropdownCloser>
             <DropdownCloser>
               <PrimaryButton onClick={() => onApply()}>適用</PrimaryButton>
