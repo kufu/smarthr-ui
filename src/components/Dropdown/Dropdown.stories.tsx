@@ -11,7 +11,6 @@ import { DropdownScrollArea } from './DropdownScrollArea'
 import { PrimaryButton, SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
 import { Input } from '../Input'
-import { FilterDropdown } from './FilterDropdown'
 
 import readme from './README.md'
 
@@ -190,64 +189,6 @@ storiesOf('Dropdown', module)
       </Legends>
     </Wrapper>
   ))
-  .add('filter', () => {
-    const [value, setValue] = React.useState('hoge')
-    const [text, setText] = React.useState('')
-    const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
-    const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.currentTarget.value)
-
-    return (
-      <Wrapper>
-        <FilterDropdown
-          onApply={action('apply')}
-          onCancel={action('cancel')}
-          onReset={() => {
-            setValue('hoge')
-            setText('')
-          }}
-        >
-          <Text>
-            `FilterDropdown` provide specific interface to be able to filter data.
-            <br />
-            You can control inputs for filtering conditions as children components.
-          </Text>
-          <RadioButtonList>
-            <li>
-              <RadioButtonLabel
-                name="hoge"
-                label="hoge"
-                checked={value === 'hoge'}
-                onChange={onChangeValue}
-              />
-            </li>
-            <li>
-              <RadioButtonLabel
-                name="fuga"
-                label="fuga"
-                checked={value === 'fuga'}
-                onChange={onChangeValue}
-              />
-            </li>
-            <li>
-              <RadioButtonLabel
-                name="piyo"
-                label="piyo"
-                checked={value === 'piyo'}
-                onChange={onChangeValue}
-              />
-            </li>
-            <li>
-              <Input name="test" value={text} onChange={onChangeText} />
-            </li>
-          </RadioButtonList>
-          <Description>
-            ↓<br />↓
-          </Description>
-          <Text>Children content is scrollable.</Text>
-        </FilterDropdown>
-      </Wrapper>
-    )
-  })
 
 const List = styled.ul`
   margin: 0;

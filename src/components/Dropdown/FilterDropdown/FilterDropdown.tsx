@@ -1,14 +1,14 @@
 import React, { FC, ReactNode } from 'react'
 import styled from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { Dropdown } from './Dropdown'
-import { DropdownTrigger } from './DropdownTrigger'
-import { DropdownContent } from './DropdownContent'
-import { DropdownCloser } from './DropdownCloser'
-import { DropdownScrollArea } from './DropdownScrollArea'
-import { PrimaryButton, SecondaryButton, TextButton } from '../Button'
-import { Icon } from '../Icon'
+import { Theme, useTheme } from '../../../hooks/useTheme'
+import { Dropdown } from '../Dropdown'
+import { DropdownTrigger } from '../DropdownTrigger'
+import { DropdownContent } from '../DropdownContent'
+import { DropdownCloser } from '../DropdownCloser'
+import { DropdownScrollArea } from '../DropdownScrollArea'
+import { PrimaryButton, SecondaryButton, TextButton } from '../../Button'
+import { Icon } from '../../Icon'
 
 type Props = {
   onApply: () => void
