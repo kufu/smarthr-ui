@@ -3,17 +3,23 @@ import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
+import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import { Props as IconProps } from '../Icon'
 import { Active, InActiveStyle, getIconComponent } from './appNaviHelper'
 
-export type AppNaviButtonProps = {
+export type AppNaviDropdownProps = {
   children: ReactNode
+  dropdownContent: ReactNode
   current?: boolean
   icon?: IconProps['name']
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-export const AppNaviButton: FC<AppNaviButtonProps> = ({ children, current, icon, onClick }) => {
+export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
+  children,
+  dropdownContent,
+  current,
+  icon,
+}) => {
   const theme = useTheme()
   const iconComponent = getIconComponent(theme, icon, current)
 
@@ -27,10 +33,16 @@ export const AppNaviButton: FC<AppNaviButtonProps> = ({ children, current, icon,
   }
 
   return (
-    <InActive themes={theme} onClick={onClick}>
-      {iconComponent}
-      {children}
-    </InActive>
+    <Dropdown>
+      <DropdownTrigger>
+        <InActive themes={theme}>
+          {iconComponent}
+          {children}
+        </InActive>
+      </DropdownTrigger>
+
+      <DropdownContent>{dropdownContent}</DropdownContent>
+    </Dropdown>
   )
 }
 

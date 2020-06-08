@@ -6,14 +6,14 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { Props as IconProps } from '../Icon'
 import { Active, InActiveStyle, getIconComponent } from './appNaviHelper'
 
-export type AppNaviButtonProps = {
+export type AppNaviAnchorProps = {
   children: ReactNode
+  href: string
   current?: boolean
   icon?: IconProps['name']
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-export const AppNaviButton: FC<AppNaviButtonProps> = ({ children, current, icon, onClick }) => {
+export const AppNaviAnchor: FC<AppNaviAnchorProps> = ({ children, href, current, icon }) => {
   const theme = useTheme()
   const iconComponent = getIconComponent(theme, icon, current)
 
@@ -27,13 +27,13 @@ export const AppNaviButton: FC<AppNaviButtonProps> = ({ children, current, icon,
   }
 
   return (
-    <InActive themes={theme} onClick={onClick}>
+    <InActive themes={theme} href={href}>
       {iconComponent}
       {children}
     </InActive>
   )
 }
 
-const InActive = styled.button<{ themes: Theme }>`
+const InActive = styled.a<{ themes: Theme }>`
   ${InActiveStyle}
 `

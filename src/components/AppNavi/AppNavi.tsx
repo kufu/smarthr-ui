@@ -1,15 +1,20 @@
-import React, { FC } from 'react'
+import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { StatusLabel } from '../StatusLabel/StatusLabel'
+import { StatusLabel as StatusLabelComponent } from '../StatusLabel/StatusLabel'
 import { AppNaviButton, AppNaviButtonProps } from './AppNaviButton'
+import { AppNaviAnchor, AppNaviAnchorProps } from './AppNaviAnchor'
+import { AppNaviDropdown, AppNaviDropdownProps } from './AppNaviDropdown'
+import { AppNaviCustomTag, AppNaviCustomTagProps } from './AppNaviCustomTag'
 
 interface Props {
   label?: string
-  buttons?: AppNaviButtonProps[]
-  children?: React.ReactNode
+  buttons?: Array<
+    AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
+  >
+  children?: ReactNode
 }
 
 export const AppNavi: FC<Props> = ({ label, buttons, children = null }) => {
@@ -17,23 +22,57 @@ export const AppNavi: FC<Props> = ({ label, buttons, children = null }) => {
 
   return (
     <Wrapper themes={theme}>
-      {label && (
-        <StatusLabelWrapper themes={theme}>
-          <StatusLabel>{label}</StatusLabel>
-        </StatusLabelWrapper>
+      {label && <StatusLabel themes={theme}>{label}</StatusLabel>}
+
+      {buttons && (
+        <Buttons themes={theme}>
+          {buttons.map((button, i) => {
+            if ('href' in button) {
+              return (
+                <li key={i}>
+                  <AppNaviAnchor href={button.href} icon={button.icon} current={button.current}>
+                    {button.children}
+                  </AppNaviAnchor>
+                </li>
+              )
+            }
+
+            if ('dropdownContent' in button) {
+              return (
+                <li key={i}>
+                  <AppNaviDropdown
+                    dropdownContent={button.dropdownContent}
+                    icon={button.icon}
+                    current={button.current}
+                  >
+                    {button.children}
+                  </AppNaviDropdown>
+                </li>
+              )
+            }
+
+            if ('tag' in button) {
+              const { tag, icon, current, children: buttonChildren, ...props } = button
+              return (
+                <li key={i}>
+                  <AppNaviCustomTag tag={tag} icon={icon} current={current} {...props}>
+                    {buttonChildren}
+                  </AppNaviCustomTag>
+                </li>
+              )
+            }
+
+            return (
+              <li key={i}>
+                <AppNaviButton icon={button.icon} current={button.current} onClick={button.onClick}>
+                  {button.children}
+                </AppNaviButton>
+              </li>
+            )
+          })}
+        </Buttons>
       )}
 
-      {buttons &&
-        buttons.map((button, index) => (
-          <AppNaviButton
-            icon={button.icon}
-            current={button.current}
-            key={index}
-            onClick={button.onClick}
-          >
-            {button.children}
-          </AppNaviButton>
-        ))}
       {children}
     </Wrapper>
   )
@@ -47,21 +86,40 @@ const Wrapper = styled.nav<{ themes: Theme }>`
       display: flex;
       align-items: center;
       width: 100%;
-      height: ${pxToRem(40)};
+      height: 40px;
       padding: 0 ${pxToRem(20)};
       background-color: #fff;
       box-sizing: border-box;
-      box-shadow: 0 ${pxToRem(1)} ${pxToRem(4)} rgba(0, 0, 0, 0.15);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     `
   }}
 `
-const StatusLabelWrapper = styled.span<{ themes: Theme }>`
+const StatusLabel = styled(StatusLabelComponent)<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 
     return css`
-      display: inline-block;
       margin-right: ${pxToRem(space.XS)};
+    `
+  }}
+`
+const Buttons = styled.ul<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { pxToRem, space } = themes.size
+
+    return css`
+      display: flex;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+
+      > li {
+        list-style: none;
+
+        &:not(:first-child) {
+          margin-left: ${pxToRem(space.XS)};
+        }
+      }
     `
   }}
 `
