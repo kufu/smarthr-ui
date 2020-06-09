@@ -32,7 +32,7 @@ const textStyle = css`
       background-color: transparent;
       color: ${palette.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
-      border: ${frame.border.lineWidth} ${frame.border.lineStyle} #fff;
+      border: ${frame.border.lineWidth} ${frame.border.lineStyle} transparent;
 
       &.hover {
         background-color: ${palette.hoverColor('#fff')};

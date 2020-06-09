@@ -34,7 +34,7 @@ const Wrapper = styled.table<{ themes: Theme }>`
       border-spacing: 0;
       background-color: ${COLUMN};
 
-      & > thead > tr > th {
+      th {
         background-color: ${COLUMN};
       }
     `
