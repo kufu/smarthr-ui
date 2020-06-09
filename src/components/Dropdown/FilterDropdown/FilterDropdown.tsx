@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Dropdown } from '../Dropdown'
@@ -11,19 +11,28 @@ import { PrimaryButton, SecondaryButton, TextButton } from '../../Button'
 import { Icon } from '../../Icon'
 
 type Props = {
+  isFiltered?: boolean
   onApply: () => void
   onCancel?: () => void
   onReset?: () => void
   children: ReactNode
 }
 
-export const FilterDropdown: FC<Props> = ({ onApply, onCancel, onReset, children }: Props) => {
+export const FilterDropdown: FC<Props> = ({
+  isFiltered = false,
+  onApply,
+  onCancel,
+  onReset,
+  children,
+}: Props) => {
   const themes = useTheme()
 
   return (
     <Dropdown>
       <DropdownTrigger>
-        <SecondaryButton suffix={<Icon name="fa-caret-down" />}>絞り込み</SecondaryButton>
+        <TriggerButtonWrapper themes={themes} isFiltered={isFiltered}>
+          <SecondaryButton suffix={<Icon name="fa-caret-down" />}>絞り込み</SecondaryButton>
+        </TriggerButtonWrapper>
       </DropdownTrigger>
       <DropdownContent controllable>
         <DropdownScrollArea>
@@ -50,6 +59,17 @@ export const FilterDropdown: FC<Props> = ({ onApply, onCancel, onReset, children
     </Dropdown>
   )
 }
+
+const TriggerButtonWrapper = styled.div<{ themes: Theme; isFiltered: boolean }>`
+  pointer-events: none;
+  ${({ themes, isFiltered }) =>
+    isFiltered &&
+    css`
+      button {
+        border-color: ${themes.palette.WARNING};
+      }
+    `}
+`
 
 const ContentLayout = styled.div`
   padding: 24px;
