@@ -4,6 +4,7 @@ import React, { FC, ReactNode } from 'react'
 import styled from 'styled-components'
 
 import { AppNavi } from './AppNavi'
+import readme from './README.md'
 
 const List = styled.ul`
   margin: 0;
@@ -74,6 +75,11 @@ const buttons = [
 ]
 
 storiesOf('AppNavi', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
   .add('with children', () => (
     <Wrapper>
       <AppNavi label="プラスメニュー" buttons={buttons}>
