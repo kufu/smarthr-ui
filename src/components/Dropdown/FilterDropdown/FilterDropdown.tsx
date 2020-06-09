@@ -31,9 +31,11 @@ export const FilterDropdown: FC<Props> = ({ onApply, onCancel, onReset, children
         </DropdownScrollArea>
         <BottomLayout themes={themes}>
           {onReset && (
-            <TextButton prefix={<Icon name="fa-undo-alt" />} onClick={() => onReset()}>
-              絞り込み条件を解除
-            </TextButton>
+            <ResetButtonLayout>
+              <TextButton size="s" prefix={<Icon name="fa-undo-alt" />} onClick={() => onReset()}>
+                絞り込み条件を解除
+              </TextButton>
+            </ResetButtonLayout>
           )}
           <RightButtonLayout>
             <DropdownCloser>
@@ -54,8 +56,12 @@ const ContentLayout = styled.div`
 `
 const BottomLayout = styled.div<{ themes: Theme }>`
   display: flex;
+  align-items: center;
   border-top: 1px solid ${({ themes }) => themes.palette.BORDER};
   padding: 16px 24px;
+`
+const ResetButtonLayout = styled.div`
+  margin-left: -8px;
 `
 const RightButtonLayout = styled.div`
   display: flex;
