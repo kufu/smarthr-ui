@@ -77,7 +77,7 @@ storiesOf('AppNavi', module)
   .add('with children', () => (
     <Wrapper>
       <AppNavi label="プラスメニュー" buttons={buttons}>
-        <Child>Some child component</Child>
+        <Child>Some child components</Child>
       </AppNavi>
     </Wrapper>
   ))
