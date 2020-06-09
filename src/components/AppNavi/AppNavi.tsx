@@ -30,7 +30,12 @@ export const AppNavi: FC<Props> = ({ label, buttons, children = null }) => {
             if ('href' in button) {
               return (
                 <li key={i}>
-                  <AppNaviAnchor href={button.href} icon={button.icon} current={button.current}>
+                  <AppNaviAnchor
+                    href={button.href}
+                    icon={button.icon}
+                    current={button.current}
+                    disabled={button.disabled}
+                  >
                     {button.children}
                   </AppNaviAnchor>
                 </li>
@@ -44,6 +49,7 @@ export const AppNavi: FC<Props> = ({ label, buttons, children = null }) => {
                     dropdownContent={button.dropdownContent}
                     icon={button.icon}
                     current={button.current}
+                    disabled={button.disabled}
                   >
                     {button.children}
                   </AppNaviDropdown>
@@ -55,7 +61,13 @@ export const AppNavi: FC<Props> = ({ label, buttons, children = null }) => {
               const { tag, icon, current, children: buttonChildren, ...props } = button
               return (
                 <li key={i}>
-                  <AppNaviCustomTag tag={tag} icon={icon} current={current} {...props}>
+                  <AppNaviCustomTag
+                    tag={tag}
+                    icon={icon}
+                    current={current}
+                    disabled={button.disabled}
+                    {...props}
+                  >
                     {buttonChildren}
                   </AppNaviCustomTag>
                 </li>
@@ -64,7 +76,12 @@ export const AppNavi: FC<Props> = ({ label, buttons, children = null }) => {
 
             return (
               <li key={i}>
-                <AppNaviButton icon={button.icon} current={button.current} onClick={button.onClick}>
+                <AppNaviButton
+                  icon={button.icon}
+                  current={button.current}
+                  disabled={button.disabled}
+                  onClick={button.onClick}
+                >
                   {button.children}
                 </AppNaviButton>
               </li>

@@ -5,15 +5,26 @@ import { Theme } from '../../hooks/useTheme'
 
 import { Icon, Props as IconProps } from '../Icon'
 
-export const getIconComponent = (theme: Theme, icon?: IconProps['name'], current?: boolean) => {
-  if (!icon) return null
+export const getIconComponent = (
+  theme: Theme,
+  options?: { icon?: IconProps['name']; current?: boolean; disabled?: boolean },
+) => {
+  const opts = {
+    icon: null,
+    current: false,
+    disabled: false,
+    ...options,
+  }
+  const { TEXT_BLACK, TEXT_DISABLED, TEXT_GREY } = theme.palette
+
+  if (!opts.icon) return null
 
   return (
     <IconWrapper themes={theme}>
       <Icon
-        name={icon}
+        name={opts.icon}
         size={14}
-        color={current ? theme.palette.TEXT_BLACK : theme.palette.TEXT_GREY}
+        color={opts.current ? TEXT_BLACK : opts.disabled ? TEXT_DISABLED : TEXT_GREY}
       />
     </IconWrapper>
   )
@@ -33,6 +44,7 @@ const IconWrapper = styled.figure<{ themes: Theme }>`
 const BaseStyle = css<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, font } = themes.size
+    const { hoverColor } = themes.palette
 
     return css`
       display: flex;
@@ -45,10 +57,20 @@ const BaseStyle = css<{ themes: Theme }>`
       font-size: ${pxToRem(font.TALL)};
       font-weight: bold;
       text-decoration: none;
+      transition: background-color 0.3s;
+
+      &:not(.disabled) {
+        cursor: pointer;
+
+        &:hover {
+          background-color: ${hoverColor('#fff')};
+        }
+      }
     `
   }}
 `
-export const Active = styled.span<{ themes: Theme }>`
+
+const ActiveStyle = css<{ themes: Theme }>`
   ${({ themes }) => {
     const { size, palette } = themes
 
@@ -70,19 +92,18 @@ export const Active = styled.span<{ themes: Theme }>`
     `
   }}
 `
-export const InActiveStyle = css<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { TEXT_GREY, hoverColor } = themes.palette
+const InActiveStyle = css<{ themes: Theme }>`
+  ${({ themes }) => css`
+    ${BaseStyle}
+    color: ${themes.palette.TEXT_GREY};
 
-    return css`
-      ${BaseStyle}
-      color: ${TEXT_GREY};
-      cursor: pointer;
-      transition: background-color 0.3s;
-
-      &:hover{
-        background-color: ${hoverColor('#fff')};
-      }
-    `
-  }}
+    &.disabled {
+      color: ${themes.palette.TEXT_DISABLED};
+    }
+`}
 `
+
+export const buttonStyle = {
+  active: ActiveStyle,
+  inactive: InActiveStyle,
+}

@@ -14,6 +14,7 @@ const buttons = [
     children: 'current',
     icon: 'fa-file' as const,
     current: true,
+    disabled: true,
   },
   {
     children: 'button',
@@ -60,8 +61,9 @@ const component = () => (
 | Name     | Required | Type                                                             | DefaultValue | Description                   |
 | -------- | -------- | ---------------------------------------------------------------- | ------------ | ----------------------------- |
 | children | ✓        | **React.ReactNode**                                              | -            | Button text.                  |
-| current  | -        | **boolean**                                                      | -            | Whether to give active style. |
 | icon     | -        | **IconProps['name']**                                            | -            | Name of Icon component.       |
+| current  | -        | **boolean**                                                      | -            | Whether to give active style. |
+| disabled | -        | **boolean**                                                      | false        | Disable button.               |
 | onClick  | -        | **(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void** | -            | Button's click handler.       |
 
 IconProps is props of Icon component.
@@ -72,8 +74,9 @@ IconProps is props of Icon component.
 | -------- | -------- | --------------------- | ------------ | ----------------------------- |
 | children | ✓        | **React.ReactNode**   | -            | Anchor text.                  |
 | href     | ✓        | **string**            | -            | Href of anchor.               |
-| current  | -        | **boolean**           | -            | Whether to give active style. |
 | icon     | -        | **IconProps['name']** | -            | Name of Icon component.       |
+| current  | -        | **boolean**           | -            | Whether to give active style. |
+| disabled | -        | **boolean**           | false        | Disable anchor.               |
 
 ### AppNaviDropdownProps
 
@@ -81,16 +84,18 @@ IconProps is props of Icon component.
 | --------------- | -------- | --------------------- | ------------ | ----------------------------- |
 | children        | ✓        | **React.ReactNode**   | -            | Button text.                  |
 | dropdownContent | ✓        | **React.ReactNode**   | -            | Content of DropdownContent.   |
-| current         | -        | **boolean**           | -            | Whether to give active style. |
 | icon            | -        | **IconProps['name']** | -            | Name of Icon component.       |
+| current         | -        | **boolean**           | -            | Whether to give active style. |
+| disabled        | -        | **boolean**           | false        | Disable button.               |
 
 ### AppNaviCustomTagProps
 
-| Name     | Required | Type                   | DefaultValue | Description                   |
-| -------- | -------- | ---------------------- | ------------ | ----------------------------- |
-| children | ✓        | **React.ReactNode**    | -            | Button text.                  |
-| tag      | ✓        | **AnyStyledComponent** | -            | Custom tag component.         |
-| current  | -        | **boolean**            | -            | Whether to give active style. |
-| icon     | -        | **IconProps['name']**  | -            | Name of Icon component.       |
+| Name     | Required | Type                   | DefaultValue | Description                        |
+| -------- | -------- | ---------------------- | ------------ | ---------------------------------- |
+| children | ✓        | **React.ReactNode**    | -            | Button text.                       |
+| tag      | ✓        | **AnyStyledComponent** | -            | Custom tag component.              |
+| icon     | -        | **IconProps['name']**  | -            | Name of Icon component.            |
+| current  | -        | **boolean**            | -            | Whether to give active style.      |
+| disabled | -        | **boolean**            | false        | Pass disabled props to custom tag. |
 
 AnyStyledComponent is type of styled-components.

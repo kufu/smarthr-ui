@@ -25,8 +25,14 @@ const List = styled.ul`
     }
   }
 `
-const Link: FC<{ to: string; children: ReactNode }> = ({ to, children, ...props }) => (
-  <a href={to} {...props}>
+const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?: string }> = ({
+  to,
+  children,
+  disabled = false,
+  className = '',
+  ...props
+}) => (
+  <a className={className} {...(disabled ? {} : { href: to })} {...props}>
     {children}
   </a>
 )
@@ -35,6 +41,7 @@ const buttons = [
     children: 'カレントボタン',
     icon: 'fa-file' as const,
     current: true,
+    onClick: action('click!!'),
   },
   {
     children: 'ボタン',
@@ -90,6 +97,16 @@ storiesOf('AppNavi', module)
   .add('without children', () => (
     <Wrapper>
       <AppNavi label="プラスメニュー" buttons={buttons} />
+    </Wrapper>
+  ))
+  .add('with disalbed', () => (
+    <Wrapper>
+      <AppNavi
+        label="プラスメニュー"
+        buttons={buttons.map((item) => ({ ...item, disabled: true }))}
+      >
+        <Child>Some child components</Child>
+      </AppNavi>
     </Wrapper>
   ))
 

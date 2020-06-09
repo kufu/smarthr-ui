@@ -5,40 +5,41 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import { Props as IconProps } from '../Icon'
-import { Active, InActiveStyle, getIconComponent } from './appNaviHelper'
+import { buttonStyle, getIconComponent } from './appNaviHelper'
 
 export type AppNaviDropdownProps = {
   children: ReactNode
   dropdownContent: ReactNode
-  current?: boolean
   icon?: IconProps['name']
+  current?: boolean
+  disabled?: boolean
 }
 
 export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   children,
   dropdownContent,
-  current,
   icon,
+  current,
+  disabled,
 }) => {
   const theme = useTheme()
-  const iconComponent = getIconComponent(theme, icon, current)
-
-  if (current) {
-    return (
-      <Active themes={theme} aria-selected="true">
-        {iconComponent}
-        {children}
-      </Active>
-    )
-  }
+  const iconComponent = getIconComponent(theme, { icon, current, disabled })
+  const additionalProps = disabled ? { disabled: true, className: 'disabled' } : {}
 
   return (
     <Dropdown>
       <DropdownTrigger>
-        <InActive themes={theme}>
-          {iconComponent}
-          {children}
-        </InActive>
+        {current ? (
+          <Active themes={theme} aria-selected="true" {...additionalProps}>
+            {iconComponent}
+            {children}
+          </Active>
+        ) : (
+          <InActive themes={theme} {...additionalProps}>
+            {iconComponent}
+            {children}
+          </InActive>
+        )}
       </DropdownTrigger>
 
       <DropdownContent>{dropdownContent}</DropdownContent>
@@ -46,6 +47,9 @@ export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   )
 }
 
+const Active = styled.button<{ themes: Theme }>`
+  ${buttonStyle.active}
+`
 const InActive = styled.button<{ themes: Theme }>`
-  ${InActiveStyle}
+  ${buttonStyle.inactive}
 `
