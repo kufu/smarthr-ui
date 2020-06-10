@@ -29,11 +29,11 @@ export const FilterDropdown: FC<Props> = ({
 
   return (
     <Dropdown>
-      <DropdownTrigger>
-        <TriggerButtonWrapper themes={themes} isFiltered={isFiltered}>
+      <TriggerButtonWrapper themes={themes} isFiltered={isFiltered}>
+        <DropdownTrigger>
           <SecondaryButton suffix={<Icon name="fa-caret-down" />}>絞り込み</SecondaryButton>
-        </TriggerButtonWrapper>
-      </DropdownTrigger>
+        </DropdownTrigger>
+      </TriggerButtonWrapper>
       <DropdownContent controllable>
         <DropdownScrollArea>
           <ContentLayout>{children}</ContentLayout>
@@ -61,7 +61,6 @@ export const FilterDropdown: FC<Props> = ({
 }
 
 const TriggerButtonWrapper = styled.div<{ themes: Theme; isFiltered: boolean }>`
-  pointer-events: none;
   ${({ themes, isFiltered }) =>
     isFiltered &&
     css`
