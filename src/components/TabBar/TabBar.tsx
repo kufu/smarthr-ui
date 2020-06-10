@@ -26,7 +26,6 @@ const Wrapper = styled.div<{ themes: Theme }>`
 
     return css`
       display: flex;
-      background-color: #fff;
 
       &.bordered {
         position: relative;

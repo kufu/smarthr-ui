@@ -1,36 +1,37 @@
 import React, { FC, ReactNode } from 'react'
-import styled from 'styled-components'
+import styled, { AnyStyledComponent } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Props as IconProps } from '../Icon'
 import { buttonStyle, getIconComponent } from './appNaviHelper'
 
-export type AppNaviButtonProps = {
+export type AppNaviCustomTagProps = {
   children: ReactNode
+  tag: AnyStyledComponent
   icon?: IconProps['name']
   current?: boolean
   disabled?: boolean
-  onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-}
+} & {}
 
-export const AppNaviButton: FC<AppNaviButtonProps> = ({
+export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   children,
+  tag,
   icon,
   current,
   disabled = false,
-  onClick,
+  ...props
 }) => {
   const theme = useTheme()
   const iconComponent = getIconComponent(theme, { icon, current, disabled })
-  const additionalProps = disabled
-    ? {
-        disabled,
-        className: 'disabled',
-      }
-    : {
-        onClick,
-      }
+  const additionalProps = disabled ? { disabled: true, className: 'disabled' } : {}
+
+  const Active = styled(tag)<{ themes: Theme }>`
+    ${buttonStyle.active}
+  `
+  const InActive = styled(tag)<{ themes: Theme }>`
+    ${buttonStyle.inactive}
+  `
 
   if (current) {
     return (
@@ -42,16 +43,9 @@ export const AppNaviButton: FC<AppNaviButtonProps> = ({
   }
 
   return (
-    <InActive themes={theme} {...additionalProps}>
+    <InActive themes={theme} {...props} {...additionalProps}>
       {iconComponent}
       {children}
     </InActive>
   )
 }
-
-const Active = styled.button<{ themes: Theme }>`
-  ${buttonStyle.active}
-`
-const InActive = styled.button<{ themes: Theme }>`
-  ${buttonStyle.inactive}
-`

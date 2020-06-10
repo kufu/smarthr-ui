@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, ReactNode, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
@@ -38,11 +38,13 @@ export const DialogContentInner: FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme()
+  const domRef = useRef(null)
   useHandleEscape(onPressEscape)
 
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
       <CSSTransition
+        nodeRef={domRef}
         className="wrapper"
         classNames="wrapper"
         in={isOpen}
@@ -54,7 +56,7 @@ export const DialogContentInner: FC<Props> = ({
         appear
         unmountOnExit
       >
-        <Wrapper>
+        <Wrapper ref={domRef}>
           <Background onClick={onClickOverlay} themes={theme} {...props} />
           <Inner themes={theme} {...props}>
             {children}

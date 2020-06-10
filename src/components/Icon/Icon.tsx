@@ -616,6 +616,7 @@ export const iconMap = {
   'fa-wrench': FaWrench,
   'fa-yen-sign': FaYenSign,
 }
+
 export const Icon: React.FC<Props> = ({ name, className = '', ...props }) => {
   const SvgIcon = iconMap[name]
   return <SvgIcon className={className} {...props} />

@@ -73,7 +73,7 @@ exports[`TabBar should be match snapshot 1`] = `
       }
     >
       <div
-        className="sc-AxjAm cdVSsP  bordered"
+        className="sc-AxjAm KiHRv  bordered"
         role="tablist"
       >
         <Component
