@@ -35,7 +35,7 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
 
   if (current) {
     return (
-      <Active themes={theme} aria-selected="true" {...additionalProps}>
+      <Active themes={theme} aria-selected="true" {...props} {...additionalProps}>
         {iconComponent}
         {children}
       </Active>
