@@ -90,12 +90,12 @@ IconProps is props of Icon component.
 
 ### AppNaviCustomTagProps
 
-| Name     | Required | Type                   | DefaultValue | Description                        |
-| -------- | -------- | ---------------------- | ------------ | ---------------------------------- |
-| children | ✓        | **React.ReactNode**    | -            | Button text.                       |
-| tag      | ✓        | **AnyStyledComponent** | -            | Custom tag component.              |
-| icon     | -        | **IconProps['name']**  | -            | Name of Icon component.            |
-| current  | -        | **boolean**            | -            | Whether to give active style.      |
-| disabled | -        | **boolean**            | false        | Pass disabled props to custom tag. |
+| Name     | Required | Type                         | DefaultValue | Description                        |
+| -------- | -------- | ---------------------------- | ------------ | ---------------------------------- |
+| children | ✓        | **React.ReactNode**          | -            | Button text.                       |
+| tag      | ✓        | **React.ComponentType<any>** | -            | Custom tag component.              |
+| icon     | -        | **IconProps['name']**        | -            | Name of Icon component.            |
+| current  | -        | **boolean**                  | -            | Whether to give active style.      |
+| disabled | -        | **boolean**                  | false        | Pass disabled props to custom tag. |
 
-AnyStyledComponent is type of styled-components.
+and additional key value, `{ key: [string]: any }`.
