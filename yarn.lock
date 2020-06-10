@@ -15326,6 +15326,11 @@ stylelint-config-recommended@^3.0.0:
   resolved "https://registry.yarnpkg.com/stylelint-config-recommended/-/stylelint-config-recommended-3.0.0.tgz#e0e547434016c5539fe2650afd58049a2fd1d657"
   integrity sha512-F6yTRuc06xr1h5Qw/ykb2LuFynJ2IxkKfCMf+1xqPffkxh0S09Zc902XCffcsw/XMFq/OzQ1w54fLIDtmRNHnQ==
 
+stylelint-config-smarthr@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/stylelint-config-smarthr/-/stylelint-config-smarthr-0.1.2.tgz#c6a2eee8c3c32d6e969334fca321360493701a53"
+  integrity sha512-IRt5skc1momEeYJOCT61Ztk8PRxaH6Nk9SBvJJPkGXIh92scZE42zwyegp9IMBurbthtzoOR8qLCRkvWUI/WyA==
+
 stylelint-config-standard@^20.0.0:
   version "20.0.0"
   resolved "https://registry.yarnpkg.com/stylelint-config-standard/-/stylelint-config-standard-20.0.0.tgz#06135090c9e064befee3d594289f50e295b5e20d"
