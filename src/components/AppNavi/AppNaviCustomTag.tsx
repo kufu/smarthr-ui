@@ -1,5 +1,5 @@
-import React, { FC, ReactNode } from 'react'
-import styled, { AnyStyledComponent } from 'styled-components'
+import React, { ComponentType, FC, ReactNode } from 'react'
+import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
@@ -8,11 +8,11 @@ import { buttonStyle, getIconComponent } from './appNaviHelper'
 
 export type AppNaviCustomTagProps = {
   children: ReactNode
-  tag: AnyStyledComponent
+  tag: ComponentType<any>
   icon?: IconProps['name']
   current?: boolean
   disabled?: boolean
-} & {}
+} & { [key: string]: any }
 
 export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   children,
@@ -35,7 +35,7 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
 
   if (current) {
     return (
-      <Active themes={theme} aria-selected="true" {...additionalProps}>
+      <Active themes={theme} aria-selected="true" {...props} {...additionalProps}>
         {iconComponent}
         {children}
       </Active>
