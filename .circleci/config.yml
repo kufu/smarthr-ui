@@ -45,21 +45,13 @@ jobs:
   node-v10:
     docker:
       - image: circleci/node:10
-    working_directory: /tmp
     steps:
       - run-npm-test
   node-v12:
     docker:
       - image: circleci/node:12
-    working_directory: /tmp
     steps:
       - run-npm-test
-  reg-suit:
-    docker:
-      - image: regviz/node-xcb
-    working_directory: /tmp
-    steps:
-      - run-reg-suit
 
 workflows:
   multiple_builds:
