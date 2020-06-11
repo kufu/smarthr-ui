@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "8.4.0",
+  "version": "9.0.2",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "lodash.merge": "^4.6.2",
@@ -36,7 +36,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.5.0",
-    "eslint": "^7.0.0",
+    "eslint": "^7.2.0",
     "eslint-config-smarthr": "^4.0.0",
     "fixpack": "^3.0.6",
     "husky": "^4.2.5",
@@ -58,6 +58,7 @@
     "styled-components": "^5.1.1",
     "stylelint": "^13.3.3",
     "stylelint-config-prettier": "^8.0.1",
+    "stylelint-config-smarthr": "^0.1.2",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-processor-styled-components": "^1.10.0",

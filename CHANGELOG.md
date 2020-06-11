@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.0.2](https://github.com/kufu/smarthr-ui/compare/v9.0.1...v9.0.2) (2020-06-10)
+
+
+### Bug Fixes
+
+* pass other props to AppNaviCustomTag ([#829](https://github.com/kufu/smarthr-ui/issues/829)) ([77b260b](https://github.com/kufu/smarthr-ui/commit/77b260b8653e7321fdfad56e800002185bf8cc26))
+
+### [9.0.1](https://github.com/kufu/smarthr-ui/compare/v9.0.0...v9.0.1) (2020-06-10)
+
+
+### Bug Fixes
+
+* fix props type for AppNavi ([#828](https://github.com/kufu/smarthr-ui/issues/828)) ([57ff40b](https://github.com/kufu/smarthr-ui/commit/57ff40b1404187c8ff91fb100b05f6a4777e419c))
+* use stylelint-config-smarthr for stylelint ([#806](https://github.com/kufu/smarthr-ui/issues/806)) ([b25debd](https://github.com/kufu/smarthr-ui/commit/b25debd5a1d677953258f21e1e10a574f099c3f3))
+
+## [9.0.0](https://github.com/kufu/smarthr-ui/compare/v8.4.0...v9.0.0) (2020-06-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* it is no longer disabled by default when passing true for current props
+* feat: add buttons props types for AppNavi component
+* fix: add AppNavi test
+* fix: add README of AppNavi
+* feat: add disabled props for AppNavi items
+* remove background color from TabBar
+
+* fix: remove background color
+
+* test: update snapshot
+
+### Features
+
+* add buttons props types for AppNavi component ([#826](https://github.com/kufu/smarthr-ui/issues/826)) ([ed3a138](https://github.com/kufu/smarthr-ui/commit/ed3a1388fd20cd528301bc1857d0d58fd1b7f3e9))
+* add togglable option in InformationPanel ([#817](https://github.com/kufu/smarthr-ui/issues/817)) ([5df6953](https://github.com/kufu/smarthr-ui/commit/5df695383e927f96b7750f4ca5ad0c9df277c039))
+
+
+### Bug Fixes
+
+* fix typo Heading default type ([#815](https://github.com/kufu/smarthr-ui/issues/815)) ([2b54b88](https://github.com/kufu/smarthr-ui/commit/2b54b88774aa54708b47746ee780eee3b8131af2))
+* improve TextButton broder-color to transparent ([#813](https://github.com/kufu/smarthr-ui/issues/813)) ([299de50](https://github.com/kufu/smarthr-ui/commit/299de504d56b8da68819b1c71fcd102580b16880))
+* lower 'th' details in 'Table' ([#816](https://github.com/kufu/smarthr-ui/issues/816)) ([0dcf86a](https://github.com/kufu/smarthr-ui/commit/0dcf86ae4ab351441247a5ca8ef08096982848c0))
+* remove background color from TabBar ([#820](https://github.com/kufu/smarthr-ui/issues/820)) ([4ea3e8f](https://github.com/kufu/smarthr-ui/commit/4ea3e8fea6ff1c05ce538ab2f9d2a10697dde8e2))
+
 ## [8.4.0](https://github.com/kufu/smarthr-ui/compare/v8.3.0...v8.4.0) (2020-06-03)
 
 
