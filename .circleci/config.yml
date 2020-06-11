@@ -44,18 +44,20 @@ commands:
 jobs:
   node-v10:
     docker:
-      - image: circleci/node:10@sha256:591777a79de41bb0cea2f391d9e0c01af4dd4542f36ad9d93f0e579d87d5eab4
+      - image: circleci/node:10
+    working_directory: /tmp
     steps:
       - run-npm-test
   node-v12:
     docker:
-      - image: circleci/node:12@sha256:b242f1d317202308e6a7c15f9f5e04f712e85058e38d9e8f70d589472d4618c0
+      - image: circleci/node:12
+    working_directory: /tmp
     steps:
       - run-npm-test
   reg-suit:
     docker:
       - image: regviz/node-xcb
-    working_directory: ~/repo
+    working_directory: /tmp
     steps:
       - run-reg-suit
 
