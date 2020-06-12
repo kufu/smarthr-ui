@@ -1,0 +1,90 @@
+import React, { FC } from 'react'
+import styled, { css } from 'styled-components'
+
+import { Theme, useTheme } from '../../hooks/useTheme'
+
+type Props = {
+  selectedYear?: number
+  fromYear: number
+  toYear: number
+  onSelectYear: (year: number) => void
+}
+
+export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelectYear }) => {
+  const themes = useTheme()
+
+  const thisYear = new Date().getFullYear()
+  const numOfYear = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
+
+  const yearArray = Array(numOfYear)
+    .fill(null)
+    .map((_, i) => fromYear + i)
+
+  return (
+    <Container>
+      <Grid>
+        {yearArray.map((year) => (
+          <Cell key={year} themes={themes} onClick={() => onSelectYear(year)}>
+            <YearWrapper
+              themes={themes}
+              isThisYear={thisYear === year}
+              isSelected={selectedYear === year}
+            >
+              {year}
+            </YearWrapper>
+          </Cell>
+        ))}
+      </Grid>
+    </Container>
+  )
+}
+
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 8px 2.5px;
+  box-sizing: border-box;
+  overflow-y: auto;
+`
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+`
+const YearWrapper = styled.div<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
+  ({ themes, isThisYear, isSelected }) => {
+    const { palette, size } = themes
+    return css`
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 51px;
+      height: 27px;
+      border-radius: 13.5px;
+      font-size: ${size.pxToRem(size.font.TALL)};
+      box-sizing: border-box;
+      line-height: 0;
+      ${isThisYear &&
+      css`
+        border: solid 1px ${palette.BORDER};
+      `};
+      ${isSelected &&
+      css`
+        color: #fff !important;
+        background-color: ${palette.MAIN} !important;
+      `}
+    `
+  },
+)
+const Cell = styled.div<{ themes: Theme }>`
+  height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:hover {
+    ${YearWrapper} {
+      color: ${(props) => props.themes.palette.TEXT_BLACK};
+      background-color: #f5f5f5;
+    }
+  }
+`
