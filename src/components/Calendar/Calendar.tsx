@@ -37,11 +37,7 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
         </SecondaryButton>
         <MonthButtonLayout>
           <SecondaryButton
-            disabled={
-              isSelectingYear ||
-              prevMonth.isBefore(fromDay, 'month') ||
-              prevMonth.isAfter(toDay, 'month')
-            }
+            disabled={isSelectingYear || prevMonth.isBefore(fromDay, 'month')}
             onClick={() => setCurrentMonth(prevMonth)}
             size="s"
             square
@@ -49,11 +45,7 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
             <Icon size={13} name="fa-chevron-left" />
           </SecondaryButton>
           <SecondaryButton
-            disabled={
-              isSelectingYear ||
-              nextMonth.isBefore(fromDay, 'month') ||
-              nextMonth.isAfter(toDay, 'month')
-            }
+            disabled={isSelectingYear || nextMonth.isAfter(toDay, 'month')}
             onClick={() => setCurrentMonth(nextMonth)}
             size="s"
             square
