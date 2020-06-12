@@ -46,7 +46,7 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
             size="s"
             square
           >
-            <Icon size={13} name="fa-angle-left" />
+            <Icon size={13} name="fa-chevron-left" />
           </SecondaryButton>
           <SecondaryButton
             disabled={
@@ -58,7 +58,7 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
             size="s"
             square
           >
-            <Icon size={13} name="fa-angle-right" />
+            <Icon size={13} name="fa-chevron-right" />
           </SecondaryButton>
         </MonthButtonLayout>
       </Header>
@@ -122,7 +122,6 @@ const MonthButtonLayout = styled.div`
 const TableLayout = styled.div`
   position: relative;
 `
-
 const YearOverlay = styled.div`
   position: absolute;
   top: 0;
