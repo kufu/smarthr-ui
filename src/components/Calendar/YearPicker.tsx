@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -12,9 +12,16 @@ type Props = {
 
 export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelectYear }) => {
   const themes = useTheme()
+  const scrollingRef = useRef<HTMLDivElement>(null)
 
   const thisYear = new Date().getFullYear()
   const numOfYear = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
+
+  useEffect(() => {
+    if (scrollingRef.current) {
+      scrollingRef.current.scrollIntoView({ block: 'center' })
+    }
+  }, [])
 
   const yearArray = Array(numOfYear)
     .fill(null)
@@ -23,17 +30,21 @@ export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelect
   return (
     <Container>
       <Grid>
-        {yearArray.map((year) => (
-          <Cell key={year} themes={themes} onClick={() => onSelectYear(year)}>
-            <YearWrapper
-              themes={themes}
-              isThisYear={thisYear === year}
-              isSelected={selectedYear === year}
-            >
-              {year}
-            </YearWrapper>
-          </Cell>
-        ))}
+        {yearArray.map((year) => {
+          const isThisYear = thisYear === year
+          return (
+            <Cell key={year} themes={themes} onClick={() => onSelectYear(year)}>
+              <YearWrapper
+                themes={themes}
+                isThisYear={isThisYear}
+                isSelected={selectedYear === year}
+                ref={isThisYear ? scrollingRef : null}
+              >
+                {year}
+              </YearWrapper>
+            </Cell>
+          )
+        })}
       </Grid>
     </Container>
   )
