@@ -16,16 +16,15 @@ export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelect
 
   const thisYear = new Date().getFullYear()
   const numOfYear = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
+  const yearArray = Array(numOfYear)
+    .fill(null)
+    .map((_, i) => fromYear + i)
 
   useEffect(() => {
     if (scrollingRef.current) {
       scrollingRef.current.scrollIntoView({ block: 'center' })
     }
   }, [])
-
-  const yearArray = Array(numOfYear)
-    .fill(null)
-    .map((_, i) => fromYear + i)
 
   return (
     <Container>
