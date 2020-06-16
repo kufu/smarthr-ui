@@ -26,8 +26,8 @@
     "@types/jest": "^26.0.0",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
-    "@types/react": "^16.9.35",
-    "@types/react-dom": "^16.9.6",
+    "@types/react": "^16.9.36",
+    "@types/react-dom": "^16.9.8",
     "@types/react-test-renderer": "^16.9.2",
     "@types/react-transition-group": "^4.4.0",
     "@types/styled-components": "^5.1.0",
@@ -135,6 +135,6 @@
     "minimist": "1.2.5",
     "mem": "6.1.0",
     "yargs-parser": ">=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2",
-    "@types/react": "^16.9.35"
+    "@types/react": "^16.9.36"
   }
 }
