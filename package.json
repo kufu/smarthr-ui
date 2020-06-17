@@ -135,6 +135,7 @@
     "minimist": "1.2.5",
     "mem": "6.1.0",
     "yargs-parser": ">=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2",
-    "@types/react": "^16.9.36"
+    "@types/react": "^16.9.36",
+    "@babel/helper-compilation-targets": "^7.10.0"
   }
 }
