@@ -41,6 +41,8 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
                 const isOutRange =
                   !date ||
                   !isBetween(currentDay.date(date).toDate(), fromDay.toDate(), toDay.toDate())
+                const isSelectedDate =
+                  !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
                 return (
                   <td key={dateIndex}>
                     {date && (
@@ -50,13 +52,12 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
                         onClick={(e) =>
                           !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
                         }
+                        aria-pressed={isSelectedDate}
                       >
                         <DateCell
                           themes={themes}
                           isToday={currentDay.date(date).isSame(now, 'date')}
-                          isSelected={
-                            !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
-                          }
+                          isSelected={isSelectedDate}
                         >
                           {date}
                         </DateCell>

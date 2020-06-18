@@ -31,12 +31,18 @@ export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelect
     <Container>
       {yearArray.map((year) => {
         const isThisYear = thisYear === year
+        const isSelectedYear = selectedYear === year
         return (
-          <YearButton key={year} themes={themes} onClick={() => onSelectYear(year)}>
+          <YearButton
+            key={year}
+            themes={themes}
+            onClick={() => onSelectYear(year)}
+            aria-pressed={isSelectedYear}
+          >
             <YearWrapper
               themes={themes}
               isThisYear={isThisYear}
-              isSelected={selectedYear === year}
+              isSelected={isSelectedYear}
               ref={isThisYear ? scrollingRef : null}
             >
               {year}
