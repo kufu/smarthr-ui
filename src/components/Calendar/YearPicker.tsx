@@ -54,7 +54,7 @@ const Container = styled.div`
   height: 100%;
   padding: 8px 2.5px;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-y: scroll;
 `
 const YearWrapper = styled.div<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
   ({ themes, isThisYear, isSelected }) => {
@@ -88,7 +88,7 @@ const Cell = styled.button<{ themes: Theme }>`
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: inherit;
+  background-color: transparent;
   font-size: 100%;
   font-family: inherit;
   cursor: pointer;

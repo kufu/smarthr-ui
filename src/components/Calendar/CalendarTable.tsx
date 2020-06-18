@@ -123,7 +123,7 @@ const CellWrapper = styled.button<{ themes: Theme; isDisabled?: boolean }>(
     width: 100%;
     height: 100%;
     border: none;
-    background-color: inherit;
+    background-color: transparent;
     font-size: 100%;
     font-family: inherit;
     cursor: pointer;
