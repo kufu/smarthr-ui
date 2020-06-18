@@ -28,37 +28,33 @@ export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelect
 
   return (
     <Container>
-      <Grid>
-        {yearArray.map((year) => {
-          const isThisYear = thisYear === year
-          return (
-            <Cell key={year} themes={themes} onClick={() => onSelectYear(year)}>
-              <YearWrapper
-                themes={themes}
-                isThisYear={isThisYear}
-                isSelected={selectedYear === year}
-                ref={isThisYear ? scrollingRef : null}
-              >
-                {year}
-              </YearWrapper>
-            </Cell>
-          )
-        })}
-      </Grid>
+      {yearArray.map((year) => {
+        const isThisYear = thisYear === year
+        return (
+          <Cell key={year} themes={themes} onClick={() => onSelectYear(year)}>
+            <YearWrapper
+              themes={themes}
+              isThisYear={isThisYear}
+              isSelected={selectedYear === year}
+              ref={isThisYear ? scrollingRef : null}
+            >
+              {year}
+            </YearWrapper>
+          </Cell>
+        )
+      })}
     </Container>
   )
 }
 
 const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
   height: 100%;
   padding: 8px 2.5px;
   box-sizing: border-box;
   overflow-y: auto;
-`
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
 `
 const YearWrapper = styled.div<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
   ({ themes, isThisYear, isSelected }) => {
@@ -86,6 +82,7 @@ const YearWrapper = styled.div<{ themes: Theme; isThisYear?: boolean; isSelected
   },
 )
 const Cell = styled.button<{ themes: Theme }>`
+  width: 25%;
   height: 43px;
   display: flex;
   align-items: center;
