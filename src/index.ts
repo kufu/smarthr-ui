@@ -8,6 +8,7 @@ export {
   DropdownContent,
   DropdownCloser,
   DropdownScrollArea,
+  FilterDropdown,
 } from './components/Dropdown'
 export { FieldSet } from './components/FieldSet'
 export { FlashMessage } from './components/FlashMessage'
