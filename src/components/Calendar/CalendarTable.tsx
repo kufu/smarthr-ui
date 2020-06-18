@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { daysInWeek, getMonthArray, isBetween } from './calendarHelper'
+import { ResetButton } from './ResetButton'
 
 type Props = {
   current: Date
@@ -43,9 +44,9 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
                 return (
                   <td key={dateIndex}>
                     {date && (
-                      <CellWrapper
+                      <CellButton
                         themes={themes}
-                        isDisabled={isOutRange}
+                        disabled={isOutRange}
                         onClick={(e) =>
                           !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
                         }
@@ -59,7 +60,7 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
                         >
                           {date}
                         </DateCell>
-                      </CellWrapper>
+                      </CellButton>
                     )}
                   </td>
                 )
@@ -115,30 +116,26 @@ const DateCell = styled.div<{ themes: Theme; isToday?: boolean; isSelected?: boo
     `}
   `}
 `
-const CellWrapper = styled.button<{ themes: Theme; isDisabled?: boolean }>(
-  ({ themes, isDisabled }) => css`
+const CellButton = styled(ResetButton)<{ themes: Theme }>(
+  ({ themes }) => css`
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
-    border: none;
-    background-color: transparent;
-    font-size: 100%;
-    font-family: inherit;
     cursor: pointer;
-    ${isDisabled
-      ? css`
-          color: ${themes.palette.TEXT_DISABLED};
-          cursor: not-allowed;
-        `
-      : css`
-          &:hover {
-            ${DateCell} {
-              background-color: #f5f5f5;
-              color: ${themes.palette.TEXT_BLACK};
-            }
-          }
-        `}
+
+    :disabled {
+      color: ${themes.palette.TEXT_DISABLED};
+      cursor: not-allowed;
+    }
+    :not(:disabled) {
+      &:hover {
+        ${DateCell} {
+          background-color: #f5f5f5;
+          color: ${themes.palette.TEXT_BLACK};
+        }
+      }
+    }
   `,
 )

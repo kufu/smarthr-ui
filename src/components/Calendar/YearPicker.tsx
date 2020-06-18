@@ -2,6 +2,7 @@ import React, { FC, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { ResetButton } from './ResetButton'
 
 type Props = {
   selectedYear?: number
@@ -31,7 +32,7 @@ export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelect
       {yearArray.map((year) => {
         const isThisYear = thisYear === year
         return (
-          <Cell key={year} themes={themes} onClick={() => onSelectYear(year)}>
+          <YearButton key={year} themes={themes} onClick={() => onSelectYear(year)}>
             <YearWrapper
               themes={themes}
               isThisYear={isThisYear}
@@ -40,7 +41,7 @@ export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelect
             >
               {year}
             </YearWrapper>
-          </Cell>
+          </YearButton>
         )
       })}
     </Container>
@@ -81,16 +82,12 @@ const YearWrapper = styled.div<{ themes: Theme; isThisYear?: boolean; isSelected
     `
   },
 )
-const Cell = styled.button<{ themes: Theme }>`
+const YearButton = styled(ResetButton)<{ themes: Theme }>`
   width: 25%;
   height: 43px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  background-color: transparent;
-  font-size: 100%;
-  font-family: inherit;
   cursor: pointer;
   &:hover {
     ${YearWrapper} {
