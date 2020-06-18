@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { storiesOf } from '@storybook/react'
+import { action } from '@storybook/addon-actions'
 import styled from 'styled-components'
 
 import { Calendar } from './Calendar'
@@ -16,7 +17,13 @@ storiesOf('Calendar', module)
     const [value, setValue] = useState(new Date())
     return (
       <Wrapper>
-        <Calendar onSelectDate={(_, date) => setValue(date)} value={value} />
+        <Calendar
+          onSelectDate={(e, date) => {
+            action('selected')(e, date)
+            setValue(date)
+          }}
+          value={value}
+        />
       </Wrapper>
     )
   })
