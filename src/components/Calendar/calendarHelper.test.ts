@@ -1,6 +1,46 @@
-import { getMonthArray, isBetween } from './calendarHelper'
+import { getFromDate, getMonthArray, getToDate, isBetween } from './calendarHelper'
 
 describe('calendarHelper', () => {
+  describe('getFromDate', () => {
+    it('returns given date when date is after 1970-01-01', () => {
+      const date = new Date(2020, 0, 1)
+      expect(getFromDate(date)).toEqual(new Date(2020, 0, 1))
+    })
+    it('returns 1970-01-01 when date is before 1970-01-01', () => {
+      const date = new Date(1000, 0, 1)
+      expect(getFromDate(date)).toEqual(new Date(1970, 0, 1))
+    })
+    it('returns 1970-01-01 when date is not given', () => {
+      expect(getFromDate()).toEqual(new Date(1970, 0, 1))
+    })
+    it('returns 1970-01-01 when date is invalid', () => {
+      const date = new Date('aaa')
+      expect(getFromDate(date)).toEqual(new Date(1970, 0, 1))
+    })
+  })
+
+  describe('getToDate', () => {
+    it('returns given date when date is before 9999-12-31', () => {
+      const date = new Date(2020, 0, 1)
+      expect(getToDate(date)).toEqual(new Date(2020, 0, 1))
+    })
+    it('returns 9999-12-31 when date is after 9999-12-31', () => {
+      const date = new Date(10000, 5, 1)
+      expect(getToDate(date)).toEqual(new Date(9999, 11, 31))
+    })
+    it('returns date of today in 50 years time when date is not given', () => {
+      const expected = new Date()
+      expected.setFullYear(expected.getFullYear() + 50)
+      expect(getToDate()).toEqual(expected)
+    })
+    it('returns date of today in 50 years time when date is invalid', () => {
+      const date = new Date('aaa')
+      const expected = new Date()
+      expected.setFullYear(expected.getFullYear() + 50)
+      expect(getToDate(date)).toEqual(expected)
+    })
+  })
+
   describe('getMonthArray', () => {
     it('returns calendar array of month of the begining of year', () => {
       const date = new Date(2020, 0, 1) // 2020-01-01

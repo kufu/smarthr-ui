@@ -2,6 +2,25 @@ import dayjs from 'dayjs'
 
 export const daysInWeek = ['日', '月', '火', '水', '木', '金', '土']
 
+export function getFromDate(date?: Date): Date {
+  const min = new Date(1970, 0, 1)
+  if (!date || isNaN(date.getTime()) || date.getTime() < 0) {
+    return min
+  }
+  return date
+}
+
+export function getToDate(date?: Date): Date {
+  if (!date || isNaN(date.getTime())) {
+    return dayjs().add(50, 'year').toDate()
+  }
+  const max = new Date(9999, 11, 31)
+  if (date.getTime() > max.getTime()) {
+    return max
+  }
+  return date
+}
+
 export function getMonthArray(date: Date) {
   const startDay = dayjs(date).date(1).day()
   const lastDate = dayjs(date).add(1, 'month').date(0).date()
