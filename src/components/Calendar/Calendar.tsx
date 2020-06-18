@@ -58,13 +58,6 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
         </MonthButtonLayout>
       </Header>
       <TableLayout>
-        <CalendarTable
-          current={currentMonth.toDate()}
-          from={fromDay.toDate()}
-          to={toDay.toDate()}
-          onSelectDate={onSelectDate}
-          selected={isValidValue ? value : null}
-        />
         {isSelectingYear && (
           <YearOverlay>
             <YearPicker
@@ -78,6 +71,13 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
             />
           </YearOverlay>
         )}
+        <CalendarTable
+          current={currentMonth.toDate()}
+          from={fromDay.toDate()}
+          to={toDay.toDate()}
+          onSelectDate={onSelectDate}
+          selected={isValidValue ? value : null}
+        />
       </TableLayout>
     </Container>
   )
@@ -123,5 +123,6 @@ const YearOverlay = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 1;
   background-color: #fff;
 `
