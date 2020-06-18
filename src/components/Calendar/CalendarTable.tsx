@@ -102,7 +102,7 @@ const DateCell = styled.div<{ themes: Theme; isToday?: boolean; isSelected?: boo
   justify-content: center;
   width: 27px;
   height: 27px;
-  border-radius: 13.5px;
+  border-radius: 50%;
   line-height: 0;
   ${({ themes, isToday, isSelected }) => css`
     ${isToday &&

@@ -59,7 +59,7 @@ const Container = styled.div`
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
-  padding: 8px 2.5px;
+  padding: 8px 3px;
   box-sizing: border-box;
   overflow-y: scroll;
 `
@@ -72,7 +72,7 @@ const YearWrapper = styled.div<{ themes: Theme; isThisYear?: boolean; isSelected
       justify-content: center;
       width: 51px;
       height: 27px;
-      border-radius: 13.5px;
+      border-radius: 14px;
       font-size: ${size.pxToRem(size.font.TALL)};
       box-sizing: border-box;
       line-height: 0;
