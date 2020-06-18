@@ -15,19 +15,38 @@ storiesOf('Calendar', module)
   })
   .add('All', () => {
     const [value, setValue] = useState(new Date())
+    const [value2, setValue2] = useState(new Date(2020, 0, 20))
     return (
-      <Wrapper>
-        <Calendar
-          onSelectDate={(e, date) => {
-            action('selected')(e, date)
-            setValue(date)
-          }}
-          value={value}
-        />
-      </Wrapper>
+      <List>
+        <dt>Default</dt>
+        <dd>
+          <Calendar
+            onSelectDate={(e, date) => {
+              action('selected')(e, date)
+              setValue(date)
+            }}
+            value={value}
+          />
+        </dd>
+        <dt>You can set term of selectable date by setting [from] and [to].</dt>
+        <dd>
+          <Calendar
+            from={new Date(2020, 0, 10)}
+            to={new Date(2020, 1, 10)}
+            onSelectDate={(e, date) => {
+              action('selected')(e, date)
+              setValue2(date)
+            }}
+            value={value2}
+          />
+        </dd>
+      </List>
     )
   })
 
-const Wrapper = styled.div`
-  padding: 16px;
+const List = styled.dl`
+  margin: 1rem;
+  & > dd {
+    margin: 10px 0 40px;
+  }
 `
