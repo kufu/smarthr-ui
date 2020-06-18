@@ -115,20 +115,24 @@ const DateCell = styled.div<{ themes: Theme; isToday?: boolean; isSelected?: boo
     `}
   `}
 `
-const CellWrapper = styled.div<{ themes: Theme; isDisabled?: boolean }>(
+const CellWrapper = styled.button<{ themes: Theme; isDisabled?: boolean }>(
   ({ themes, isDisabled }) => css`
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
+    border: none;
+    background-color: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    cursor: pointer;
     ${isDisabled
       ? css`
           color: ${themes.palette.TEXT_DISABLED};
           cursor: not-allowed;
         `
       : css`
-          cursor: pointer;
           &:hover {
             ${DateCell} {
               background-color: #f5f5f5;

@@ -85,11 +85,15 @@ const YearWrapper = styled.div<{ themes: Theme; isThisYear?: boolean; isSelected
     `
   },
 )
-const Cell = styled.div<{ themes: Theme }>`
+const Cell = styled.button<{ themes: Theme }>`
   height: 43px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
+  background-color: inherit;
+  font-size: 100%;
+  font-family: inherit;
   cursor: pointer;
   &:hover {
     ${YearWrapper} {
