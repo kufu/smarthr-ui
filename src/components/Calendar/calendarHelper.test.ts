@@ -40,7 +40,7 @@ describe('calendarHelper', () => {
   })
 
   describe('isBetween', () => {
-    it('returns ture when [date] is between [from] and [to]', () => {
+    it('returns true when [date] is between [from] and [to]', () => {
       const date = new Date(2020, 5, 1)
       const from = new Date(2019, 0, 1)
       const to = new Date(2021, 0, 1)
@@ -54,14 +54,14 @@ describe('calendarHelper', () => {
       expect(isBetween(date, from, to)).toBeFalsy()
     })
 
-    it('returns ture when [date] is equal to [from]', () => {
+    it('returns true when [date] is equal to [from]', () => {
       const date = new Date(2019, 0, 1)
       const from = new Date(2019, 0, 1)
       const to = new Date(2021, 0, 1)
       expect(isBetween(date, from, to)).toBeTruthy()
     })
 
-    it('returns ture when [date] is equal to [to]', () => {
+    it('returns true when [date] is equal to [to]', () => {
       const date = new Date(2021, 0, 1)
       const from = new Date(2019, 0, 1)
       const to = new Date(2021, 0, 1)
