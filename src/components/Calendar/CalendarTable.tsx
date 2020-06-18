@@ -10,7 +10,7 @@ type Props = {
   from: Date
   to: Date
   onSelectDate: (e: MouseEvent, date: Date) => void
-  selected?: Date
+  selected?: Date | null
 }
 
 export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, selected }) => {

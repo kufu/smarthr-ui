@@ -7,6 +7,7 @@ import { SecondaryButton } from '../Button'
 import { Icon } from '../Icon'
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
+import { isBetween } from './calendarHelper'
 
 type Props = {
   from?: Date
@@ -18,11 +19,13 @@ type Props = {
 export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
   const themes = useTheme()
   const now = dayjs()
-  const [currentMonth, setCurrentMonth] = useState(value ? dayjs(value) : now)
-  const [isSelectingYear, setIsSelectingYear] = useState(false)
-
   const fromDay = dayjs(from || '1970-01-01')
   const toDay = to ? dayjs(to) : now.add(50, 'year')
+  const isValidValue = value && isBetween(value, fromDay.toDate(), toDay.toDate())
+
+  const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : now)
+  const [isSelectingYear, setIsSelectingYear] = useState(false)
+
   const prevMonth = currentMonth.subtract(1, 'month')
   const nextMonth = currentMonth.add(1, 'month')
 
@@ -60,7 +63,7 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
           from={fromDay.toDate()}
           to={toDay.toDate()}
           onSelectDate={onSelectDate}
-          selected={value}
+          selected={isValidValue ? value : null}
         />
         {isSelectingYear && (
           <YearOverlay>
