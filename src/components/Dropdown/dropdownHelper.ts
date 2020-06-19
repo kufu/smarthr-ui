@@ -40,10 +40,10 @@ export function getContentBoxStyle(
     const padding = 10
 
     if (triggerRect.top + (triggerRect.bottom - triggerRect.top) / 2 < windowSize.height / 2) {
-      contentBox.top = `${scroll.top + triggerRect.bottom}px`
+      contentBox.top = `${scroll.top + triggerRect.bottom - 5}px`
       contentBox.maxHeight = `${windowSize.height - triggerRect.bottom - padding}px`
     } else {
-      contentBox.top = `${scroll.top + padding}px`
+      contentBox.top = `${scroll.top + padding + 5}px`
       contentBox.maxHeight = `${triggerRect.top - padding}px`
     }
   }

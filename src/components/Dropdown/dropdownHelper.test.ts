@@ -32,7 +32,7 @@ describe('dropdownHelper', () => {
       const windowSize = { width: 1000, height: 370 }
       const scroll = { top: 0, left: 0 }
       expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
-        top: '140px', // 140
+        top: '135px', // 140 - 5
         left: '-5px', // 0 - 5
         maxHeight: '220px', // 370 - 140 - 10
       })
@@ -44,7 +44,7 @@ describe('dropdownHelper', () => {
       const windowSize = { width: 1000, height: 370 }
       const scroll = { top: 0, left: 0 }
       expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
-        top: '10px', // 0 + 10
+        top: '15px', // 0 + 10 + 5
         left: '-5px', // 0 - 5
         maxHeight: '190px', // 200 - 10
       })
