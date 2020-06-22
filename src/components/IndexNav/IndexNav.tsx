@@ -51,11 +51,11 @@ const Item = styled.li<{ themes: Theme }>(({ themes }) => {
   return css`
     line-height: 1em;
     &:not(:first-child) {
-      margin-top: 16px;
+      margin-top: ${size.pxToRem(size.space.XS)};
     }
     & > ${List} {
-      margin-top: 16px;
-      margin-left: 24px;
+      margin-top: ${size.pxToRem(size.space.XS)};
+      margin-left: ${size.pxToRem(size.space.S)};
       font-size: ${size.pxToRem(size.font.SHORT)};
     }
   `
