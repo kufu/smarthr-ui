@@ -124,7 +124,7 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
       right: ${positionRight};
       bottom: ${positionBottom};
       left: ${positionLeft};
-      border-radius: ${themes.frame.border.radius.l};
+      border-radius: ${themes.frame.border.radius.m};
       background-color: #fff;
       box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       transform: translate(${translateX}, ${translateY});
