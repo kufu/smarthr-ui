@@ -1,4 +1,4 @@
-import React, { FC, FocusEvent, InputHTMLAttributes, useEffect, useRef } from 'react'
+import React, { FC, FocusEvent, InputHTMLAttributes, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -34,11 +34,13 @@ export const Input: FC<Props> = ({
 }) => {
   const theme = useTheme()
   const ref = useRef<HTMLInputElement>(null)
+  const [isFocused, setIsFocused] = useState(false)
 
   const isCurrency = type === 'number' && thousandsSeparated
   const actualType = isCurrency ? 'text' : type
 
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
+    setIsFocused(true)
     if (isCurrency && ref.current) {
       const commaExcluded = ref.current.value.replace(/,/g, '')
       ref.current.value = commaExcluded
@@ -47,6 +49,7 @@ export const Input: FC<Props> = ({
   }
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+    setIsFocused(false)
     if (isCurrency && ref.current) {
       const value = ref.current.value
       const shaped = value
@@ -68,29 +71,74 @@ export const Input: FC<Props> = ({
   }, [autoFocus])
 
   return (
-    <StyledInput
-      type={actualType}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      {...props}
-      ref={ref}
+    <Wrapper
       themes={theme}
-    />
+      width={props.width}
+      isFocused={isFocused}
+      disabled={props.disabled}
+      error={props.error}
+      onClick={() => ref.current?.focus()}
+    >
+      <StyledInput
+        type={actualType}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        {...props}
+        ref={ref}
+        themes={theme}
+      />
+    </Wrapper>
   )
 }
 
+const Wrapper = styled.span<{
+  themes: Theme
+  width?: string | number
+  isFocused: boolean
+  disabled?: boolean
+  error?: boolean
+}>(({ themes, width = 'auto', isFocused, disabled, error }) => {
+  const { frame, palette } = themes
+  return css`
+    display: inline-flex;
+    width: ${typeof width === 'number' ? `${width}px` : width};
+    background-color: #fff;
+    border-radius: ${frame.border.radius.m};
+    border: ${frame.border.default};
+    overflow: hidden;
+    cursor: text;
+    ${
+      isFocused &&
+      css`
+        border-color: ${palette.hoverColor(palette.MAIN)};
+      `
+    }
+    ${
+      error &&
+      css`
+        border-color: ${palette.DANGER};
+      `
+    }
+    ${
+      disabled &&
+      css`
+        background-color: ${palette.COLUMN};
+        pointer-events: none;
+      `
+    }
+  `
+})
 const StyledInput = styled.input<Props & { themes: Theme }>`
   ${(props) => {
-    const { themes, width = 'auto', error } = props
-    const { size, frame, palette } = themes
+    const { themes } = props
+    const { size, palette } = themes
 
     return css`
+      flex-grow: 1;
       display: inline-block;
-      width: ${typeof width === 'number' ? `${width}px` : width};
       padding: ${size.pxToRem(size.space.XXS)};
-      border-radius: ${frame.border.radius.m};
-      border: ${frame.border.default};
-      background-color: #fff;
+      border: none;
+      background-color: inherit;
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
@@ -101,19 +149,7 @@ const StyledInput = styled.input<Props & { themes: Theme }>`
         color: ${palette.TEXT_GREY};
       }
 
-      ${error
-        ? css`
-            border-color: ${palette.DANGER};
-          `
-        : css`
-            &:focus {
-              border-color: ${palette.hoverColor(palette.MAIN)};
-            }
-          `}
-
       &[disabled] {
-        background-color: ${palette.COLUMN};
-        pointer-events: none;
         color: ${palette.TEXT_DISABLED};
       }
     `
