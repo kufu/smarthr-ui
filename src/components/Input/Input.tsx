@@ -153,7 +153,7 @@ const StyledInput = styled.input<Props & { themes: Theme }>`
       display: inline-block;
       padding: ${size.pxToRem(size.space.XXS)} 0;
       border: none;
-      background-color: inherit;
+      background-color: transparent;
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
