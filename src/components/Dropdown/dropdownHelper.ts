@@ -40,10 +40,10 @@ export function getContentBoxStyle(
     const padding = 10
 
     if (triggerRect.top + (triggerRect.bottom - triggerRect.top) / 2 < windowSize.height / 2) {
-      contentBox.top = `${scroll.top + triggerRect.bottom}px`
+      contentBox.top = `${scroll.top + triggerRect.bottom - 5}px`
       contentBox.maxHeight = `${windowSize.height - triggerRect.bottom - padding}px`
     } else {
-      contentBox.top = `${scroll.top + padding}px`
+      contentBox.top = `${scroll.top + padding + 5}px`
       contentBox.maxHeight = `${triggerRect.top - padding}px`
     }
   }
@@ -52,10 +52,8 @@ export function getContentBoxStyle(
 
   if (triggerAlignCenter <= windowSize.width / 2) {
     contentBox.left = `${scroll.left + triggerRect.left - 5}px`
-  } else if (triggerAlignCenter >= windowSize.width / 2) {
-    contentBox.left = `${scroll.left + triggerRect.right - contentSize.width + 5}px`
   } else {
-    contentBox.left = `${scroll.left + triggerRect.left}px`
+    contentBox.left = `${scroll.left + triggerRect.right - contentSize.width + 5}px`
   }
 
   return contentBox

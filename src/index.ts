@@ -68,6 +68,7 @@ export { LightTooltip, DarkTooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
 export { MessageScreen } from './components/MessageScreen'
 export { Calendar } from './components/Calendar'
+export { IndexNav, IndexNavItemProps } from './components/IndexNav'
 
 // themes
 export { createTheme } from './themes/createTheme'
