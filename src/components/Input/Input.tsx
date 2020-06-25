@@ -1,9 +1,17 @@
-import React, { FC, FocusEvent, InputHTMLAttributes, useEffect, useRef, useState } from 'react'
+import React, {
+  FC,
+  FocusEvent,
+  InputHTMLAttributes,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-export type Props = InputHTMLAttributes<HTMLInputElement> & {
+export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> & {
   type?:
     | 'text'
     | 'search'
@@ -22,6 +30,8 @@ export type Props = InputHTMLAttributes<HTMLInputElement> & {
   width?: number | string
   autoFocus?: boolean
   thousandsSeparated?: boolean
+  prefix?: ReactNode
+  suffix?: ReactNode
 }
 
 export const Input: FC<Props> = ({
@@ -30,6 +40,8 @@ export const Input: FC<Props> = ({
   onBlur,
   autoFocus,
   thousandsSeparated,
+  prefix,
+  suffix,
   ...props
 }) => {
   const theme = useTheme()
@@ -79,6 +91,7 @@ export const Input: FC<Props> = ({
       error={props.error}
       onClick={() => ref.current?.focus()}
     >
+      {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
       <StyledInput
         type={actualType}
         onFocus={handleFocus}
@@ -87,6 +100,7 @@ export const Input: FC<Props> = ({
         ref={ref}
         themes={theme}
       />
+      {suffix && <Suffix themes={theme}>{suffix}</Suffix>}
     </Wrapper>
   )
 }
@@ -98,14 +112,15 @@ const Wrapper = styled.span<{
   disabled?: boolean
   error?: boolean
 }>(({ themes, width = 'auto', isFocused, disabled, error }) => {
-  const { frame, palette } = themes
+  const { frame, palette, size } = themes
   return css`
     display: inline-flex;
+    align-items: stretch;
     width: ${typeof width === 'number' ? `${width}px` : width};
+    padding: 0 ${size.pxToRem(size.space.XXS)};
     background-color: #fff;
     border-radius: ${frame.border.radius.m};
     border: ${frame.border.default};
-    overflow: hidden;
     cursor: text;
     ${
       isFocused &&
@@ -136,7 +151,7 @@ const StyledInput = styled.input<Props & { themes: Theme }>`
     return css`
       flex-grow: 1;
       display: inline-block;
-      padding: ${size.pxToRem(size.space.XXS)};
+      padding: ${size.pxToRem(size.space.XXS)} 0;
       border: none;
       background-color: inherit;
       font-size: ${size.pxToRem(size.font.TALL)};
@@ -155,3 +170,19 @@ const StyledInput = styled.input<Props & { themes: Theme }>`
     `
   }}
 `
+const Prefix = styled.span<{ themes: Theme }>(({ themes }) => {
+  const { size } = themes
+  return css`
+    display: inline-flex;
+    align-items: center;
+    margin-right: ${size.pxToRem(size.space.XXS)};
+  `
+})
+const Suffix = styled.span<{ themes: Theme }>(({ themes }) => {
+  const { size } = themes
+  return css`
+    display: inline-flex;
+    align-items: center;
+    margin-left: ${size.pxToRem(size.space.XXS)};
+  `
+})
