@@ -121,6 +121,7 @@ const Wrapper = styled.span<{
     background-color: #fff;
     border-radius: ${frame.border.radius.m};
     border: ${frame.border.default};
+    box-sizing: border-box;
     cursor: text;
     ${
       isFocused &&
@@ -158,7 +159,6 @@ const StyledInput = styled.input<Props & { themes: Theme }>`
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
       outline: none;
-      box-sizing: border-box;
 
       &::placeholder {
         color: ${palette.TEXT_GREY};
