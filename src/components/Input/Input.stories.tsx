@@ -5,6 +5,8 @@ import styled from 'styled-components'
 
 import { Input } from './Input'
 
+import { Icon } from '../Icon'
+
 storiesOf('Input', module).add('all', () => (
   <List>
     <li>
@@ -14,6 +16,10 @@ storiesOf('Input', module).add('all', () => (
     <li>
       <Txt>number</Txt>
       <Input type="number" defaultValue="1" />
+    </li>
+    <li>
+      <Txt>number (thousands separated)</Txt>
+      <Input type="number" thousandsSeparated defaultValue="1,000.1234" />
     </li>
     <li>
       <Txt>password</Txt>
@@ -42,6 +48,14 @@ storiesOf('Input', module).add('all', () => (
     <li>
       <Txt>error</Txt>
       <Input error={true} />
+    </li>
+    <li>
+      <Txt>prefix</Txt>
+      <Input prefix={<Icon name="fa-search" color="#d6d6d6" />} />
+    </li>
+    <li>
+      <Txt>suffix</Txt>
+      <Input suffix={<Icon name="fa-search" color="#d6d6d6" />} />
     </li>
   </List>
 ))
