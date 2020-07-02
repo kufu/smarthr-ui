@@ -123,7 +123,7 @@ const SelectBox = styled.select<{ themes: Theme }>`
         color: #c1c1c1;
       }
 
-      &:-ms-expand {
+      &::-ms-expand {
         display: none;
       }
     `

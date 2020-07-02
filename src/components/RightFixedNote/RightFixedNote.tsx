@@ -14,6 +14,7 @@ interface Props {
   textareaLabel?: string
   onClickEdit: OnClickEdit
   onSubmit: (e: React.FormEvent<HTMLFormElement>, text: string) => void
+  className?: string
 }
 
 const TEXT_AREA_NAME = 'admin_memo_new_text'
@@ -26,6 +27,7 @@ export const RightFixedNote: FC<Props> = ({
   textareaLabel,
   onClickEdit,
   onSubmit,
+  className,
 }) => {
   const theme = useTheme()
 
@@ -42,7 +44,7 @@ export const RightFixedNote: FC<Props> = ({
   )
 
   return (
-    <Wrapper themes={theme} width={width} onSubmit={handleSubmit}>
+    <Wrapper themes={theme} width={width} onSubmit={handleSubmit} className={className}>
       {title && (
         <Title type="sectionTitle" themes={theme}>
           {title}
