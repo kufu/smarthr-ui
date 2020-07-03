@@ -128,7 +128,8 @@ const Txt = styled.p<{ themes: Theme }>`
     const { pxToRem, space, font } = themes.size
 
     return css`
-      flex: 1;
+      flex-grow: 1;
+      flex-shrink: 1;
       padding: 0;
       margin: 0 0 0 ${pxToRem(space.XXS)};
       font-size: ${pxToRem(font.TALL)};
