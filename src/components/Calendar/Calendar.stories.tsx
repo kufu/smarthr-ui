@@ -14,8 +14,9 @@ storiesOf('Calendar', module)
     },
   })
   .add('All', () => {
-    const [value, setValue] = useState(new Date())
+    const [value, setValue] = useState(new Date(2020, 6, 5))
     const [value2, setValue2] = useState(new Date(2020, 0, 20))
+
     return (
       <List>
         <dt>Default</dt>
