@@ -28,6 +28,7 @@ export const AppNavi: FC<Props> = ({ label, buttons, isCurrentUnclickable, child
       {buttons && (
         <Buttons themes={theme}>
           {buttons.map((button, i) => {
+            const isUnclickable = button.current && isCurrentUnclickable
             if ('href' in button) {
               return (
                 <li key={i}>
@@ -35,7 +36,7 @@ export const AppNavi: FC<Props> = ({ label, buttons, isCurrentUnclickable, child
                     href={button.href}
                     icon={button.icon}
                     current={button.current}
-                    isUnclickable={button.current && isCurrentUnclickable}
+                    isUnclickable={isUnclickable}
                   >
                     {button.children}
                   </AppNaviAnchor>
@@ -80,8 +81,8 @@ export const AppNavi: FC<Props> = ({ label, buttons, isCurrentUnclickable, child
                 <AppNaviButton
                   icon={button.icon}
                   current={button.current}
-                  disabled={button.disabled}
                   onClick={button.onClick}
+                  isUnclickable={isUnclickable}
                 >
                   {button.children}
                 </AppNaviButton>
