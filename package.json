@@ -12,7 +12,7 @@
     "react-transition-group": "^4.4.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.3",
+    "@babel/core": "^7.10.4",
     "@commitlint/cli": "^9.0.1",
     "@commitlint/config-conventional": "^9.0.1",
     "@storybook/addon-a11y": "^5.3.19",
@@ -137,6 +137,6 @@
     "mem": "6.1.0",
     "yargs-parser": ">=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2",
     "@types/react": "^16.9.41",
-    "@babel/helper-compilation-targets": "^7.10.2"
+    "@babel/helper-compilation-targets": "^7.10.4"
   }
 }
