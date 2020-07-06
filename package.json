@@ -12,7 +12,7 @@
     "react-transition-group": "^4.4.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.3",
+    "@babel/core": "^7.10.4",
     "@commitlint/cli": "^9.0.1",
     "@commitlint/config-conventional": "^9.0.1",
     "@storybook/addon-a11y": "^5.3.19",
@@ -37,7 +37,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.5.0",
-    "eslint": "^7.3.1",
+    "eslint": "^7.4.0",
     "eslint-config-smarthr": "^4.0.0",
     "fixpack": "^3.0.6",
     "husky": "^4.2.5",
@@ -65,7 +65,7 @@
     "stylelint-processor-styled-components": "^1.10.0",
     "ts-jest": "^26.1.1",
     "ts-loader": "^7.0.5",
-    "typescript": "^3.9.5",
+    "typescript": "^3.9.6",
     "webpack": "^4.43.0"
   },
   "peerDependencies": {
@@ -137,6 +137,6 @@
     "mem": "6.1.0",
     "yargs-parser": ">=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2",
     "@types/react": "^16.9.41",
-    "@babel/helper-compilation-targets": "^7.10.2"
+    "@babel/helper-compilation-targets": "^7.10.4"
   }
 }
