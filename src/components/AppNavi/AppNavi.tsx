@@ -14,10 +14,11 @@ interface Props {
   buttons?: Array<
     AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
   >
+  isCurrentUnclickable?: boolean
   children?: ReactNode
 }
 
-export const AppNavi: FC<Props> = ({ label, buttons, children = null }) => {
+export const AppNavi: FC<Props> = ({ label, buttons, isCurrentUnclickable, children = null }) => {
   const theme = useTheme()
 
   return (
@@ -34,7 +35,7 @@ export const AppNavi: FC<Props> = ({ label, buttons, children = null }) => {
                     href={button.href}
                     icon={button.icon}
                     current={button.current}
-                    disabled={button.disabled}
+                    isUnclickable={button.current && isCurrentUnclickable}
                   >
                     {button.children}
                   </AppNaviAnchor>
