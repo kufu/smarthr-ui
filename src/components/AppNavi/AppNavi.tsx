@@ -51,7 +51,7 @@ export const AppNavi: FC<Props> = ({ label, buttons, isCurrentUnclickable, child
                     dropdownContent={button.dropdownContent}
                     icon={button.icon}
                     current={button.current}
-                    disabled={button.disabled}
+                    isUnclickable={isUnclickable}
                   >
                     {button.children}
                   </AppNaviDropdown>
