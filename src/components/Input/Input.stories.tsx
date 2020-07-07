@@ -55,6 +55,14 @@ storiesOf('Input', module)
         <Txt>error</Txt>
         <Input error={true} />
       </li>
+      <li>
+        <Txt>prefix</Txt>
+        <Input prefix={<Icon name="fa-search" color="#d6d6d6" />} />
+      </li>
+      <li>
+        <Txt>suffix</Txt>
+        <Input suffix={<Icon name="fa-search" color="#d6d6d6" />} />
+      </li>
     </List>
   ))
 
