@@ -99,16 +99,6 @@ storiesOf('AppNavi', module)
       <AppNavi label="プラスメニュー" buttons={buttons} />
     </Wrapper>
   ))
-  .add('with disalbed', () => (
-    <Wrapper>
-      <AppNavi
-        label="プラスメニュー"
-        buttons={buttons.map((item) => ({ ...item, disabled: true }))}
-      >
-        <Child>Some child components</Child>
-      </AppNavi>
-    </Wrapper>
-  ))
 
 const Wrapper = styled.div`
   padding: 32px 0;
