@@ -99,6 +99,55 @@ storiesOf('AppNavi', module)
       <AppNavi label="プラスメニュー" buttons={buttons} />
     </Wrapper>
   ))
+  .add('unclickable current', () => {
+    const items = [
+      {
+        children: 'ボタン',
+        icon: 'fa-user-alt' as const,
+        onClick: action('click!!'),
+      },
+      {
+        children: 'アンカー',
+        icon: 'fa-cog' as const,
+        href: 'http://www.google.com',
+      },
+      {
+        children: 'ドロップダウン',
+        icon: 'fa-chart-pie' as const,
+        dropdownContent: (
+          <List>
+            <li>
+              <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
+            </li>
+          </List>
+        ),
+      },
+      {
+        children: 'カスタムタグ',
+        icon: 'fa-birthday-cake' as const,
+        tag: Link,
+        to: 'http://www.google.com',
+      },
+    ]
+    return (
+      <Wrapper>
+        {items.map((_, currentIndex) => (
+          <InnerWrapper key={currentIndex}>
+            <AppNavi
+              label="プラスメニュー"
+              buttons={items.map((item, index) => {
+                if (index === currentIndex) {
+                  return { ...item, current: true }
+                }
+                return item
+              })}
+              isCurrentUnclickable
+            />
+          </InnerWrapper>
+        ))}
+      </Wrapper>
+    )
+  })
 
 const Wrapper = styled.div`
   padding: 32px 0;
@@ -106,4 +155,7 @@ const Wrapper = styled.div`
 `
 const Child = styled.p`
   margin: 0 0 0 auto;
+`
+const InnerWrapper = styled.div`
+  margin-bottom: 40px;
 `
