@@ -67,7 +67,7 @@ export const AppNavi: FC<Props> = ({ label, buttons, isCurrentUnclickable, child
                     tag={tag}
                     icon={icon}
                     current={current}
-                    disabled={button.disabled}
+                    isUnclickable={isUnclickable}
                     {...props}
                   >
                     {buttonChildren}
