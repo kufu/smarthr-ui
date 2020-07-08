@@ -9,10 +9,16 @@ type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   autoFocus?: boolean
 }
 
+const stringLength = (value: string) => {
+  return value.length - (value.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g) || []).length
+}
+
 export const Textarea: FC<Props> = ({ autoFocus, maxLength, ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
-  const [count, setCount] = useState(props.defaultValue ? (props.defaultValue as string).length : 0)
+  const [count, setCount] = useState(
+    props.defaultValue ? stringLength(props.defaultValue as string) : 0,
+  )
 
   useEffect(() => {
     if (autoFocus && ref && ref.current) {
@@ -21,8 +27,7 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, ...props }) => {
   }, [autoFocus])
 
   const handleKeyup = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    const value = event.currentTarget.value
-    setCount(value.length - (value.split(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g).length - 1))
+    setCount(stringLength(event.currentTarget.value))
   }
 
   return (
