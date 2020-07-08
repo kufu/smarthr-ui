@@ -22,6 +22,10 @@ storiesOf('Textarea', module).add('all', () => (
       <Txt>error</Txt>
       <Textarea error={true} />
     </li>
+    <li>
+      <Txt>maxLength</Txt>
+      <Textarea maxLength={140} />
+    </li>
   </List>
 ))
 
