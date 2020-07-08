@@ -12,7 +12,7 @@ type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
 export const Textarea: FC<Props> = ({ autoFocus, maxLength, ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(props.defaultValue ? (props.defaultValue as string).length : 0)
 
   useEffect(() => {
     if (autoFocus && ref && ref.current) {
