@@ -9,8 +9,11 @@ type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   autoFocus?: boolean
 }
 
+// https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
+const surrogatePairs = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
+
 const stringLength = (value: string) => {
-  return value.length - (value.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g) || []).length
+  return value.length - (value.match(surrogatePairs) || []).length
 }
 
 export const Textarea: FC<Props> = ({ autoFocus, maxLength, ...props }) => {
