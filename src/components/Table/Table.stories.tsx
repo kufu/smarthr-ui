@@ -110,7 +110,7 @@ storiesOf('Table', module)
               <Cell>cell</Cell>
             </Row>
             <Row>
-              <Cell rowSpan={0}>rowSpan=0</Cell>
+              <Cell rowSpan={2}>rowSpan=2</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>
               <Cell>cell</Cell>

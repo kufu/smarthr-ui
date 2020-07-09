@@ -57,7 +57,7 @@ export const DialogContentInner: FC<Props> = ({
         unmountOnExit
       >
         <Wrapper ref={domRef}>
-          <Background onClick={onClickOverlay} themes={theme} {...props} />
+          <Background onClick={onClickOverlay} themes={theme} />
           <Inner themes={theme} {...props}>
             {children}
           </Inner>
