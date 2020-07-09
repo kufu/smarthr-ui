@@ -19,7 +19,7 @@ e.g.
 - How this solves
 -->
 
-## What i did
+## What I did
 
 <!--
 What kind of changes were made specifically.
