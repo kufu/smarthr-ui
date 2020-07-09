@@ -23,4 +23,4 @@ import { HeadlineArea } from 'smarthr-ui'
 | Name        | Required | Type          | DefaultValue | Description                                                       |
 | ----------- | -------- | ------------- | ------------ | ----------------------------------------------------------------- |
 | heading     | true     | **ReactNode** | -            | The Content of the HeadlineArea                                   |
-| tag         | false    | **string**    | 'h1'         | The tag of the Heading. ([reference](/?path=/story/heading--all)) |
+| tag         | false    | **'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'**    | 'h1'         | The tag of the Heading. ([reference](/?path=/story/heading--all)) |
