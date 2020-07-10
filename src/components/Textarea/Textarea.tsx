@@ -19,9 +19,8 @@ const stringLength = (value: string) => {
 export const Textarea: FC<Props> = ({ autoFocus, maxLength, ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
-  const [count, setCount] = useState(
-    props.defaultValue ? stringLength(props.defaultValue as string) : 0,
-  )
+  const currentValue = (props.defaultValue || props.value) as string
+  const [count, setCount] = useState(currentValue ? stringLength(currentValue) : 0)
 
   useEffect(() => {
     if (autoFocus && ref && ref.current) {
