@@ -29,50 +29,22 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> & {
   error?: boolean
   width?: number | string
   autoFocus?: boolean
-  thousandsSeparated?: boolean
   prefix?: ReactNode
   suffix?: ReactNode
 }
 
-export const Input: FC<Props> = ({
-  type,
-  onFocus,
-  onBlur,
-  autoFocus,
-  thousandsSeparated,
-  prefix,
-  suffix,
-  ...props
-}) => {
+export const Input: FC<Props> = ({ onFocus, onBlur, autoFocus, prefix, suffix, ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
 
-  const isCurrency = type === 'number' && thousandsSeparated
-  const actualType = isCurrency ? 'text' : type
-
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     setIsFocused(true)
-    if (isCurrency && ref.current) {
-      const commaExcluded = ref.current.value.replace(/,/g, '')
-      ref.current.value = commaExcluded
-    }
     onFocus && onFocus(e)
   }
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     setIsFocused(false)
-    if (isCurrency && ref.current) {
-      const value = ref.current.value
-      const shaped = value
-        .replace(/[０-９．]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0)) // convert number and dot to half-width
-        .replace(/[−ー]/, '-') // replace full-width minus
-        .replace(/[^0-9.-]|(?!^)-|^\.+|\.+$/g, '') // exclude non-numeric characters
-      const splited = shaped.split('.')
-      const integerPart = splited[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') // add comma to integer every 3 digits
-      const formattedArray = Object.assign(splited, [integerPart])
-      ref.current.value = formattedArray.join('.')
-    }
     onBlur && onBlur(e)
   }
 
@@ -92,14 +64,7 @@ export const Input: FC<Props> = ({
       onClick={() => ref.current?.focus()}
     >
       {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
-      <StyledInput
-        type={actualType}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        {...props}
-        ref={ref}
-        themes={theme}
-      />
+      <StyledInput onFocus={handleFocus} onBlur={handleBlur} {...props} ref={ref} themes={theme} />
       {suffix && <Suffix themes={theme}>{suffix}</Suffix>}
     </Wrapper>
   )

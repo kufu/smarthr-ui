@@ -4,6 +4,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { Input } from './Input'
+import { CurrencyInput } from './CurrencyInput'
 
 import { Icon } from '../Icon'
 
@@ -19,7 +20,7 @@ storiesOf('Input', module).add('all', () => (
     </li>
     <li>
       <Txt>number (thousands separated)</Txt>
-      <Input type="number" thousandsSeparated defaultValue="1,000.1234" />
+      <CurrencyInput />
     </li>
     <li>
       <Txt>password</Txt>
