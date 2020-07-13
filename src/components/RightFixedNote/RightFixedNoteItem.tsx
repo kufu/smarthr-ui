@@ -11,6 +11,7 @@ export type ItemProps = {
   date?: string
   author?: string
   editLabel?: string
+  className?: string
 }
 
 export type OnClickEdit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
@@ -26,11 +27,12 @@ export const RightFixedNoteItem: FC<Props> = ({
   author,
   onClickEdit,
   editLabel = '編集',
+  className,
 }) => {
   const theme = useTheme()
 
   return (
-    <Wrapper themes={theme}>
+    <Wrapper themes={theme} className={className}>
       <TextBase themes={theme}>
         <EditButton size="s" onClick={(e) => onClickEdit(e, id)} square aria-label={editLabel}>
           <Icon name="fa-pen" />
