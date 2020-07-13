@@ -9,16 +9,23 @@ type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   autoFocus?: boolean
 }
 
-const getStringLength = (value: string) => {
+const getStringLength = (value: string | number | readonly string[]) => {
+  const formattedValue =
+    typeof value === 'number' || typeof value === 'string'
+      ? `${value}`
+      : Array.isArray(value)
+      ? value.join(',')
+      : ''
+
   // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
   const surrogatePairs = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
-  return value.length - (value.match(surrogatePairs) || []).length
+  return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
 
 export const Textarea: FC<Props> = ({ autoFocus, maxLength, ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
-  const currentValue = (props.defaultValue || props.value) as string
+  const currentValue = props.defaultValue || props.value
   const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
 
   useEffect(() => {
