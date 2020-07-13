@@ -9,10 +9,9 @@ type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   autoFocus?: boolean
 }
 
-// https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
-const surrogatePairs = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
-
-const stringLength = (value: string) => {
+const getStringLength = (value: string) => {
+  // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
+  const surrogatePairs = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
   return value.length - (value.match(surrogatePairs) || []).length
 }
 
@@ -20,7 +19,7 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
   const currentValue = (props.defaultValue || props.value) as string
-  const [count, setCount] = useState(currentValue ? stringLength(currentValue) : 0)
+  const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
 
   useEffect(() => {
     if (autoFocus && ref && ref.current) {
@@ -29,7 +28,7 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, ...props }) => {
   }, [autoFocus])
 
   const handleKeyup = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    setCount(stringLength(event.currentTarget.value))
+    setCount(getStringLength(event.currentTarget.value))
   }
 
   return (
