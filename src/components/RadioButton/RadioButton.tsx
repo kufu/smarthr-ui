@@ -24,7 +24,7 @@ export const RadioButton: FC<Props> = ({ className = '', onChange, ...props }) =
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme }>`
+const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 
