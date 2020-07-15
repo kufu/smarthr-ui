@@ -74,7 +74,6 @@ function convertToCurrency(value?: string) {
   const shaped = value
     .replace(/[０-９．]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0)) // convert number and dot to half-width
     .replace(/[−ー]/, '-') // replace full-width minus
-    // .replace(/[^0-9.-]|(?!^)-|^\.+|\.+$/g, '') // exclude non-numeric characters
     .replace(/[^0-9.-]/g, '') // exclude non-numeric characters
   const splited = shaped.split('.')
   const integerPart = splited[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') // add comma to integer every 3 digits
