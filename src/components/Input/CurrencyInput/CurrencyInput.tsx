@@ -33,7 +33,7 @@ export const CurrencyInput: FC<Props> = ({
     if (isFocused) {
       setControlledValue(value || '')
     } else {
-      changeValue(convertToCurrency(value))
+      changeValue(formatCurrency(value))
     }
   }, [isFocused, value, controlledValue, changeValue])
 
@@ -51,7 +51,7 @@ export const CurrencyInput: FC<Props> = ({
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     setIsFocused(false)
-    changeValue(convertToCurrency(controlledValue))
+    changeValue(formatCurrency(controlledValue))
     onBlur && onBlur(e)
   }
 
@@ -67,7 +67,7 @@ export const CurrencyInput: FC<Props> = ({
   )
 }
 
-function convertToCurrency(value?: string) {
+function formatCurrency(value?: string) {
   if (!value) {
     return ''
   }
