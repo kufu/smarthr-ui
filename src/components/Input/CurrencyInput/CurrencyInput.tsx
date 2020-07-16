@@ -41,10 +41,16 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     }, [])
 
     useEffect(() => {
-      if (!isFocused && props.value !== undefined) {
-        formatValue(formatCurrency(props.value))
+      if (!isFocused) {
+        if (props.value !== undefined) {
+          // for controlled component
+          formatValue(formatCurrency(props.value))
+        } else if (innerRef.current) {
+          // for uncontrolled component
+          formatValue(formatCurrency(innerRef.current.value))
+        }
       }
-    }, [isFocused, formatValue])
+    }, [isFocused])
 
     const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
       setIsFocused(true)
@@ -57,9 +63,6 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
 
     const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
       setIsFocused(false)
-      if (innerRef.current) {
-        formatValue(formatCurrency(innerRef.current.value))
-      }
       onBlur && onBlur(e)
     }
 
