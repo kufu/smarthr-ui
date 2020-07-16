@@ -1,70 +1,52 @@
-import React, { ChangeEvent, FC, FocusEvent, useCallback, useEffect, useState } from 'react'
+import React, { FC, FocusEvent, useCallback, useEffect, useRef, useState } from 'react'
 
 import { Input, Props as InputProps } from '../Input'
 
 type Props = Omit<InputProps, 'type' | 'value' | 'defaultValue'> & {
   value?: string
-  onChangeValue?: (value: string) => void
+  defaultValue?: string
+  onFormatValue?: (value: string) => void
 }
 
-export const CurrencyInput: FC<Props> = ({
-  value,
-  onChangeValue,
-  onChange,
-  onFocus,
-  onBlur,
-  ...props
-}) => {
-  const [controlledValue, setControlledValue] = useState(value || '')
+export const CurrencyInput: FC<Props> = ({ onFormatValue, onFocus, onBlur, ...props }) => {
+  const ref = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
 
-  const changeValue = useCallback(
-    (changed = '') => {
-      if (changed === controlledValue) {
+  const formatValue = useCallback(
+    (formatted = '') => {
+      if (!ref.current || formatted === ref.current.value) {
         return
       }
-      setControlledValue(changed)
-      onChangeValue && onChangeValue(changed)
+      ref.current.value = formatted
+      onFormatValue && onFormatValue(formatted)
     },
-    [controlledValue, onChangeValue],
+    [onFormatValue],
   )
 
   useEffect(() => {
-    if (isFocused) {
-      setControlledValue(value || '')
-    } else {
-      changeValue(formatCurrency(value))
+    if (!isFocused && props.value !== undefined) {
+      formatValue(formatCurrency(props.value))
     }
-  }, [isFocused, value, controlledValue, changeValue])
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    changeValue(e.target.value)
-    onChange && onChange(e)
-  }
+  }, [isFocused, props.value, formatValue])
 
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     setIsFocused(true)
-    const commaExcluded = controlledValue.replace(/,/g, '')
-    changeValue(commaExcluded)
+    if (ref.current) {
+      const commaExcluded = ref.current.value.replace(/,/g, '')
+      formatValue(commaExcluded)
+    }
     onFocus && onFocus(e)
   }
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     setIsFocused(false)
-    changeValue(formatCurrency(controlledValue))
+    if (ref.current) {
+      formatValue(formatCurrency(ref.current.value))
+    }
     onBlur && onBlur(e)
   }
 
-  return (
-    <Input
-      type="text"
-      value={controlledValue}
-      onChange={handleChange}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      {...props}
-    />
-  )
+  return <Input type="text" onFocus={handleFocus} onBlur={handleBlur} ref={ref} {...props} />
 }
 
 function formatCurrency(value?: string) {

@@ -19,9 +19,13 @@ storiesOf('Input/currency', module)
         <Txt>currency (add comma to integer every 3 digits)</Txt>
         <CurrencyInput
           value={value}
-          onChangeValue={(changed) => {
-            action('changed value')(changed)
-            setValue(changed)
+          onChange={(e) => {
+            action('changed')(e)
+            setValue(e.target.value)
+          }}
+          onFormatValue={(formatted) => {
+            action('formatted')(formatted)
+            setValue(formatted)
           }}
         />
       </Wrapper>
