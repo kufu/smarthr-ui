@@ -41,7 +41,7 @@ const Label = styled.label<{ themes: Theme }>`
     `
   }}
 `
-const Txt = styled.p<{ themes: Theme }>`
+const Txt = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
     return css`
