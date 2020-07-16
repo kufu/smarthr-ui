@@ -44,7 +44,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       if (!isFocused && props.value !== undefined) {
         formatValue(formatCurrency(props.value))
       }
-    }, [isFocused, props.value, formatValue])
+    }, [isFocused, formatValue])
 
     const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
       setIsFocused(true)
