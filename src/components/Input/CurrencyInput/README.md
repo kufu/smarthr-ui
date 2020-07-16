@@ -9,8 +9,11 @@ function MyApp() {
   return (
     <CurrencyInput
       value={value}
-      onChangeValue={(changed) => {
-        setValue(changed)
+      onChange={(e) => {
+        setValue(e.target.value)
+      }}
+      onFormatValue={(formatted) => {
+        setValue(formatted)
       }}
     />
   )
@@ -21,9 +24,10 @@ function MyApp() {
 
 **CurrencyInput**
 
-This component has props of `Input` component excluding `type` and `defaultValue`.
+This component has props of `Input` component excluding `type` prop.
 
-| Name          | Required | Type                        | DefaultValue | Description                                                    |
-| ------------- | -------- | --------------------------- | ------------ | -------------------------------------------------------------- |
-| value         | -        | **string**                  | -            | Value of input, but it allows only string type.                |
-| onChangeValue | -        | **(value: string) => void** | -            | Handler Function when value changed, or formatted to currency. |
+| Name          | Required | Type                        | DefaultValue | Description                                              |
+| ------------- | -------- | --------------------------- | ------------ | -------------------------------------------------------- |
+| value         | -        | **string**                  | -            | Value of input that is allowed only string type.         |
+| defaultValue  | -        | **string**                  | -            | Default value of input that is allowed only string type. |
+| onFormatValue | -        | **(value: string) => void** | -            | Handler Function when value formatted.                   |
