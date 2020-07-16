@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, FocusEvent, useCallback, useEffect, useState } from 'react'
 
-import { Input, Props as InputProps } from './Input'
+import { Input, Props as InputProps } from '../Input'
 
 type Props = Omit<InputProps, 'type' | 'value' | 'defaultValue'> & {
   value?: string
