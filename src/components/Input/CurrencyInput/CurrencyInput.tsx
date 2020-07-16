@@ -35,6 +35,12 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     )
 
     useEffect(() => {
+      if (props.value === undefined && props.defaultValue !== undefined) {
+        formatValue(formatCurrency(props.defaultValue))
+      }
+    }, [])
+
+    useEffect(() => {
       if (!isFocused && props.value !== undefined) {
         formatValue(formatCurrency(props.value))
       }
