@@ -1,8 +1,8 @@
 import React, {
-  FC,
   FocusEvent,
   InputHTMLAttributes,
   ReactNode,
+  forwardRef,
   useEffect,
   useRef,
   useState,
@@ -33,42 +33,61 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> & {
   suffix?: ReactNode
 }
 
-export const Input: FC<Props> = ({ onFocus, onBlur, autoFocus, prefix, suffix, ...props }) => {
-  const theme = useTheme()
-  const ref = useRef<HTMLInputElement>(null)
-  const [isFocused, setIsFocused] = useState(false)
+export const Input = forwardRef<HTMLInputElement, Props>(
+  ({ onFocus, onBlur, autoFocus, prefix, suffix, ...props }, ref) => {
+    const theme = useTheme()
+    const innerRef = useRef<HTMLInputElement>(null)
+    useEffect(() => {
+      // combine ref
+      if (!ref) return
 
-  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
-    setIsFocused(true)
-    onFocus && onFocus(e)
-  }
+      if (typeof ref === 'function') {
+        ref(innerRef.current)
+      } else {
+        ref.current = innerRef.current
+      }
+    }, [ref])
 
-  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-    setIsFocused(false)
-    onBlur && onBlur(e)
-  }
+    const [isFocused, setIsFocused] = useState(false)
 
-  useEffect(() => {
-    if (autoFocus && ref && ref.current) {
-      ref.current.focus()
+    const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
+      setIsFocused(true)
+      onFocus && onFocus(e)
     }
-  }, [autoFocus])
 
-  return (
-    <Wrapper
-      themes={theme}
-      width={props.width}
-      isFocused={isFocused}
-      disabled={props.disabled}
-      error={props.error}
-      onClick={() => ref.current?.focus()}
-    >
-      {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
-      <StyledInput onFocus={handleFocus} onBlur={handleBlur} {...props} ref={ref} themes={theme} />
-      {suffix && <Suffix themes={theme}>{suffix}</Suffix>}
-    </Wrapper>
-  )
-}
+    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+      setIsFocused(false)
+      onBlur && onBlur(e)
+    }
+
+    useEffect(() => {
+      if (autoFocus && innerRef.current) {
+        innerRef.current.focus()
+      }
+    }, [autoFocus])
+
+    return (
+      <Wrapper
+        themes={theme}
+        width={props.width}
+        isFocused={isFocused}
+        disabled={props.disabled}
+        error={props.error}
+        onClick={() => innerRef.current?.focus()}
+      >
+        {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
+        <StyledInput
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          {...props}
+          ref={innerRef}
+          themes={theme}
+        />
+        {suffix && <Suffix themes={theme}>{suffix}</Suffix>}
+      </Wrapper>
+    )
+  },
+)
 
 const Wrapper = styled.span<{
   themes: Theme
