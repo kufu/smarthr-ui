@@ -1,4 +1,12 @@
-import React, { FocusEvent, forwardRef, useCallback, useEffect, useRef, useState } from 'react'
+import React, {
+  FocusEvent,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 
 import { Input, Props as InputProps } from '../Input'
 
@@ -11,17 +19,12 @@ type Props = Omit<InputProps, 'type' | 'value' | 'defaultValue'> & {
 export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
   ({ onFormatValue, onFocus, onBlur, ...props }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
-    useEffect(() => {
-      // combine ref
-      if (!ref) return
-
-      if (typeof ref === 'function') {
-        ref(innerRef.current)
-      } else {
-        ref.current = innerRef.current
-      }
-    }, [ref])
     const [isFocused, setIsFocused] = useState(false)
+
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => innerRef.current,
+    )
 
     const formatValue = useCallback(
       (formatted = '') => {

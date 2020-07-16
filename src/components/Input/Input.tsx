@@ -4,6 +4,7 @@ import React, {
   ReactNode,
   forwardRef,
   useEffect,
+  useImperativeHandle,
   useRef,
   useState,
 } from 'react'
@@ -37,18 +38,12 @@ export const Input = forwardRef<HTMLInputElement, Props>(
   ({ onFocus, onBlur, autoFocus, prefix, suffix, ...props }, ref) => {
     const theme = useTheme()
     const innerRef = useRef<HTMLInputElement>(null)
-    useEffect(() => {
-      // combine ref
-      if (!ref) return
-
-      if (typeof ref === 'function') {
-        ref(innerRef.current)
-      } else {
-        ref.current = innerRef.current
-      }
-    }, [ref])
-
     const [isFocused, setIsFocused] = useState(false)
+
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => innerRef.current,
+    )
 
     const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
       setIsFocused(true)
