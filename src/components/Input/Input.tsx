@@ -42,6 +42,7 @@ export const Input: FC<Props> = ({
   thousandsSeparated,
   prefix,
   suffix,
+  className,
   ...props
 }) => {
   const theme = useTheme()
@@ -90,6 +91,7 @@ export const Input: FC<Props> = ({
       disabled={props.disabled}
       error={props.error}
       onClick={() => ref.current?.focus()}
+      className={className}
     >
       {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
       <StyledInput

@@ -57,6 +57,10 @@ storiesOf('Input', module).add('all', () => (
       <Txt>suffix</Txt>
       <Input suffix={<Icon name="fa-search" color="#d6d6d6" />} />
     </li>
+    <li>
+      <Txt>extending style (width 50%)</Txt>
+      <StyledInput />
+    </li>
   </List>
 ))
 
@@ -70,4 +74,7 @@ const List = styled.ul`
 `
 const Txt = styled.p`
   margin: 0 0 8px 0;
+`
+const StyledInput = styled(Input)`
+  width: 50%;
 `
