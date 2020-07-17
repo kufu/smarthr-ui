@@ -53,7 +53,7 @@
     "reg-notify-github-plugin": "^0.8.5",
     "reg-publish-s3-plugin": "^0.9.0",
     "reg-suit": "^0.10.2",
-    "standard-version": "^8.0.0",
+    "standard-version": "^8.0.2",
     "storybook-readme": "^5.0.8",
     "storycap": "^2.3.5",
     "styled-components": "^5.1.1",
