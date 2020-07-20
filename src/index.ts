@@ -12,7 +12,7 @@ export {
 } from './components/Dropdown'
 export { FieldSet } from './components/FieldSet'
 export { FlashMessage } from './components/FlashMessage'
-export { Input } from './components/Input'
+export { Input, CurrencyInput } from './components/Input'
 export { Textarea } from './components/Textarea'
 export { Loader } from './components/Loader'
 export {
