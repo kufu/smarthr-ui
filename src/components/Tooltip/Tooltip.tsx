@@ -108,7 +108,6 @@ export const LightTooltip = tooltipFactory('light')
 export const DarkTooltip = tooltipFactory('dark')
 
 const Wrapper = styled.div<{ isIcon?: boolean }>`
-  position: relative;
   display: inline-block;
   max-width: 100%;
   ${({ isIcon }) =>
