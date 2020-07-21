@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components'
 import { getTooltipRect } from './tooltipHelper'
 
 type Props = {
+  id: string
   parentRect: DOMRect
   children: ReactNode
   isIcon?: boolean
@@ -14,6 +15,7 @@ type Props = {
 }
 
 export const TooltipPortal: FC<Props> = ({
+  id,
   parentRect,
   children,
   isIcon = false,
@@ -59,7 +61,7 @@ export const TooltipPortal: FC<Props> = ({
   }, [element])
 
   return createPortal(
-    <Container ref={portalRef} {...rect}>
+    <Container id={id} ref={portalRef} {...rect}>
       {children}
     </Container>,
     element,

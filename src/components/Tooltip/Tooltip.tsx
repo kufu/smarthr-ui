@@ -5,6 +5,7 @@ import { TooltipPortal } from './TooltipPortal'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {
+  id: string
   message: ReactNode
   children: ReactNode
   triggerType?: 'icon' | 'text'
@@ -15,6 +16,7 @@ type Props = {
 }
 
 const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme) => ({
+  id,
   message,
   children,
   triggerType,
@@ -72,6 +74,7 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
 
   return (
     <Wrapper
+      aria-describedby={isVisible ? id : undefined}
       ref={ref}
       onMouseEnter={overAction}
       onTouchStart={overAction}
@@ -84,6 +87,7 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
     >
       {isVisible && rect && (
         <TooltipPortal
+          id={id}
           parentRect={rect}
           isIcon={isIcon}
           isMultiLine={multiLine}
