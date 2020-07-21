@@ -18,14 +18,11 @@ storiesOf('Input', module).add('all', () => (
       <Input type="number" defaultValue="1" />
     </li>
     <li>
-      <Txt>number (thousands separated)</Txt>
-      <Input type="number" thousandsSeparated defaultValue="1,000.1234" />
-    </li>
-    <li>
       <Txt>password</Txt>
-      <Input type="password" defaultValue="password" />
-    </li>
+      <Input type="password" defaultValue="password" />{' '}
+    </li>{' '}
     <li>
+      {' '}
       <Txt>placeholder</Txt>
       <Input placeholder="string" />
     </li>

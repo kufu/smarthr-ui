@@ -1,50 +1,43 @@
 import React, { FC, ReactNode } from 'react'
 import styled from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme'
 
 import { Props as IconProps } from '../Icon'
-import { buttonStyle, getIconComponent } from './appNaviHelper'
+import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
 
 export type AppNaviAnchorProps = {
   children: ReactNode
   href: string
   icon?: IconProps['name']
   current?: boolean
-  disabled?: boolean
+}
+type InnerProps = AppNaviAnchorProps & {
+  isUnclickable?: boolean
 }
 
-export const AppNaviAnchor: FC<AppNaviAnchorProps> = ({
+export const AppNaviAnchor: FC<InnerProps> = ({
   children,
   href,
   icon,
-  current,
-  disabled = false,
+  current = false,
+  isUnclickable = false,
 }) => {
   const theme = useTheme()
-  const iconComponent = getIconComponent(theme, { icon, current, disabled })
-  const additional = disabled ? { className: 'disabled' } : { href }
-
-  if (current) {
-    return (
-      <Active themes={theme} aria-selected="true" {...additional}>
-        {iconComponent}
-        {children}
-      </Active>
-    )
-  }
+  const iconComponent = getIconComponent(theme, { icon, current })
 
   return (
-    <InActive themes={theme} {...additional}>
+    <Anchor
+      themes={theme}
+      aria-current={current ? 'page' : undefined}
+      href={isUnclickable ? undefined : href}
+      isActive={current}
+      isUnclickable={isUnclickable}
+    >
       {iconComponent}
       {children}
-    </InActive>
+    </Anchor>
   )
 }
 
-const Active = styled.a<{ themes: Theme }>`
-  ${buttonStyle.active}
-`
-const InActive = styled.a<{ themes: Theme }>`
-  ${buttonStyle.inactive}
-`
+const Anchor = styled.a<ItemStyleProps>((props) => getItemStyle(props))
