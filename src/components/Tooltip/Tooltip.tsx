@@ -1,6 +1,7 @@
 import React, { FC, ReactNode, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { Props as BalloonProps, BalloonTheme, DarkBalloon, LightBalloon } from '../Balloon'
+import { TooltipPortal } from './TooltipPortal'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {
@@ -24,10 +25,7 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
 }) => {
   const themes = useTheme()
   const [isVisible, setIsVisible] = useState(false)
-
-  const className = [triggerType === 'icon' ? 'icon-tooltip' : '', multiLine ? 'multi-line' : '']
-    .filter((c) => !!c)
-    .join(' ')
+  const [rect, setRect] = useState<DOMRect | null>(null)
   const ref = React.createRef<HTMLSpanElement>()
 
   const getBalloonWrapperWidth = (): number => {
@@ -48,6 +46,10 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
     )
   }
   const overAction = () => {
+    if (ref.current) {
+      setRect(ref.current.getBoundingClientRect())
+    }
+
     if (!ellipsisOnly) {
       setIsVisible(true)
 
@@ -66,6 +68,7 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
     setIsVisible(false)
   }
   const StyledBalloon = balloonTheme === 'light' ? StyledLightBalloon : StyledDarkBalloon
+  const isIcon = triggerType === 'icon'
 
   return (
     <Wrapper
@@ -77,11 +80,20 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
       onTouchEnd={outAction}
       onBlur={outAction}
       tabIndex={0}
+      isIcon={isIcon}
     >
-      {isVisible && (
-        <StyledBalloon horizontal={horizontal} vertical={vertical} className={className}>
-          <StyledBalloonText themes={themes}>{message}</StyledBalloonText>
-        </StyledBalloon>
+      {isVisible && rect && (
+        <TooltipPortal
+          parentRect={rect}
+          isIcon={isIcon}
+          isMultiLine={multiLine}
+          horizontal={horizontal}
+          vertical={vertical}
+        >
+          <StyledBalloon horizontal={horizontal} vertical={vertical} isMultiLine={multiLine}>
+            <StyledBalloonText themes={themes}>{message}</StyledBalloonText>
+          </StyledBalloon>
+        </TooltipPortal>
       )}
       {children}
     </Wrapper>
@@ -91,156 +103,25 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
 export const LightTooltip = tooltipFactory('light')
 export const DarkTooltip = tooltipFactory('dark')
 
-const Wrapper = styled.span`
+const Wrapper = styled.span<{ isIcon?: boolean }>`
   position: relative;
   display: inline-block;
   max-width: 100%;
+  ${({ isIcon }) =>
+    isIcon &&
+    css`
+      line-height: 0;
+    `}
 `
 
-const StyledLightBalloon = styled(LightBalloon)<{
-  horizontal: BalloonProps['horizontal']
-  vertical: BalloonProps['vertical']
-}>`
-  position: absolute;
-  z-index: 9000;
-
-  &.multi-line {
-    max-width: 100%;
-    white-space: normal;
-  }
-
-  ${({ horizontal, vertical }) => {
-    switch (horizontal) {
-      case 'left':
-        switch (vertical) {
-          case 'bottom':
-            return css`
-              left: 0;
-              bottom: calc(100% + 10px);
-            `
-          case 'middle':
-            return css`
-              left: calc(100% + 10px);
-              top: 50%;
-              transform: translate(0, -50%);
-            `
-          case 'top':
-            return css`
-              left: 0;
-              top: calc(100% + 10px);
-            `
-        }
-        break
-      case 'center':
-        switch (vertical) {
-          case 'bottom':
-            return css`
-              left: 50%;
-              bottom: calc(100% + 10px);
-              transform: translate(-50%, 0);
-            `
-          case 'top':
-            return css`
-              left: 50%;
-              top: calc(100% + 10px);
-              transform: translate(-50%, 0);
-            `
-        }
-        break
-      case 'right':
-        switch (vertical) {
-          case 'bottom':
-            return css`
-              right: 0;
-              bottom: calc(100% + 10px);
-            `
-          case 'middle':
-            return css`
-              right: calc(100% + 10px);
-              top: 50%;
-              transform: translate(0, -50%);
-            `
-          case 'top':
-            return css`
-              right: 0;
-              top: calc(100% + 10px);
-            `
-        }
-        break
-    }
-
-    return ''
-  }}
-
-  &.icon-tooltip {
-    ${({ horizontal, vertical }) => {
-      switch (horizontal) {
-        case 'left':
-          switch (vertical) {
-            case 'bottom':
-              return css`
-                left: 50%;
-                bottom: calc(100% + 10px);
-                transform: translate(-29px, 0);
-              `
-            case 'middle':
-              return css`
-                left: calc(100% + 10px);
-                top: calc(50% - 2px);
-                transform: translate(0, -50%);
-              `
-            case 'top':
-              return css`
-                left: 50%;
-                top: calc(100% + 10px);
-                transform: translate(-29px, 0);
-              `
-          }
-          break
-        case 'center':
-          switch (vertical) {
-            case 'bottom':
-              return css`
-                left: 50%;
-                bottom: calc(100% + 10px);
-                transform: translate(-50%, 0);
-              `
-            case 'top':
-              return css`
-                left: 50%;
-                top: calc(100% + 10px);
-                transform: translate(-50%, 0);
-              `
-          }
-          break
-        case 'right':
-          switch (vertical) {
-            case 'bottom':
-              return css`
-                right: 50%;
-                bottom: calc(100% + 10px);
-                transform: translate(29px, 0);
-              `
-            case 'middle':
-              return css`
-                right: calc(100% + 10px);
-                top: calc(50% - 2px);
-                transform: translate(0, -50%);
-              `
-            case 'top':
-              return css`
-                right: 0;
-                top: calc(100% + 10px);
-                transform: translate(19px, 0);
-              `
-          }
-          break
-      }
-
-      return ''
-    }}
-  }
-`
+const StyledLightBalloon = styled(LightBalloon)<{ isMultiLine?: boolean }>(
+  ({ isMultiLine }) =>
+    isMultiLine &&
+    css`
+      max-width: 100%;
+      white-space: normal;
+    `,
+)
 const StyledDarkBalloon = StyledLightBalloon.withComponent(DarkBalloon)
 
 const StyledBalloonText = styled.p<{ themes: Theme }>`
