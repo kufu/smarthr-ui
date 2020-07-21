@@ -28,7 +28,7 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
   const themes = useTheme()
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
-  const ref = React.createRef<HTMLSpanElement>()
+  const ref = React.createRef<HTMLDivElement>()
 
   const getBalloonWrapperWidth = (): number => {
     if (!ref.current) {
@@ -107,7 +107,7 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
 export const LightTooltip = tooltipFactory('light')
 export const DarkTooltip = tooltipFactory('dark')
 
-const Wrapper = styled.span<{ isIcon?: boolean }>`
+const Wrapper = styled.div<{ isIcon?: boolean }>`
   position: relative;
   display: inline-block;
   max-width: 100%;
