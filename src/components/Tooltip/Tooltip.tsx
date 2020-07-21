@@ -73,10 +73,10 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
   return (
     <Wrapper
       ref={ref}
-      onMouseOver={overAction}
+      onMouseEnter={overAction}
       onTouchStart={overAction}
       onFocus={overAction}
-      onMouseOut={outAction}
+      onMouseLeave={outAction}
       onTouchEnd={outAction}
       onBlur={outAction}
       tabIndex={0}
