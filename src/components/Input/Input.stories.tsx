@@ -18,14 +18,11 @@ storiesOf('Input', module).add('all', () => (
       <Input type="number" defaultValue="1" />
     </li>
     <li>
-      <Txt>number (thousands separated)</Txt>
-      <Input type="number" thousandsSeparated defaultValue="1,000.1234" />
-    </li>
-    <li>
       <Txt>password</Txt>
-      <Input type="password" defaultValue="password" />
-    </li>
+      <Input type="password" defaultValue="password" />{' '}
+    </li>{' '}
     <li>
+      {' '}
       <Txt>placeholder</Txt>
       <Input placeholder="string" />
     </li>
@@ -57,6 +54,10 @@ storiesOf('Input', module).add('all', () => (
       <Txt>suffix</Txt>
       <Input suffix={<Icon name="fa-search" color="#d6d6d6" />} />
     </li>
+    <li>
+      <Txt>extending style (width 50%)</Txt>
+      <StyledInput />
+    </li>
   </List>
 ))
 
@@ -70,4 +71,7 @@ const List = styled.ul`
 `
 const Txt = styled.p`
   margin: 0 0 8px 0;
+`
+const StyledInput = styled(Input)`
+  width: 50%;
 `
