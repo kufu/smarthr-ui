@@ -18,7 +18,7 @@ interface State {
   }
 }
 
-class WrappedComponent extends React.PureComponent<{}, State> {
+class WrappedComponent extends React.PureComponent<Record<string, unknown>, State> {
   public state = {
     form: {
       type: '' as const,
