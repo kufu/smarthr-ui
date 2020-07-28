@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import React, { FC, ReactNode, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { getTooltipRect } from './tooltipHelper'
@@ -29,7 +29,7 @@ export const TooltipPortal: FC<Props> = ({
     width: 0,
     height: 0,
   })
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!portalRef.current) {
       return
     }
