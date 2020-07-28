@@ -132,6 +132,7 @@ const StyledInput = styled.input<Props & { themes: Theme }>`
     return css`
       flex-grow: 1;
       display: inline-block;
+      width: 100%;
       padding: ${size.pxToRem(size.space.XXS)} 0;
       border: none;
       background-color: transparent;
