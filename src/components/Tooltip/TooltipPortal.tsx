@@ -49,7 +49,7 @@ export const TooltipPortal: FC<Props> = ({
         outerMargin: 10,
       }),
     )
-  }, [portalRef.current])
+  }, [horizontal, isIcon, isMultiLine, parentRect, vertical])
 
   const element = useRef(document.createElement('div')).current
   useEffect(() => {
