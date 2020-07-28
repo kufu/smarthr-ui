@@ -1,4 +1,5 @@
-import React, { FC, ReactNode, useState } from 'react'
+import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 import { Props as BalloonProps, BalloonTheme, DarkBalloon, LightBalloon } from '../Balloon'
 import { TooltipPortal } from './TooltipPortal'
@@ -72,6 +73,15 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
   const StyledBalloon = balloonTheme === 'light' ? StyledLightBalloon : StyledDarkBalloon
   const isIcon = triggerType === 'icon'
 
+  const portalRoot = useRef(document.createElement('div')).current
+  useEffect(() => {
+    document.body.appendChild(portalRoot)
+
+    return () => {
+      document.body.removeChild(portalRoot)
+    }
+  }, [portalRoot])
+
   return (
     <Wrapper
       aria-describedby={isVisible ? id : undefined}
@@ -85,20 +95,23 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
       tabIndex={0}
       isIcon={isIcon}
     >
-      {isVisible && rect && (
-        <TooltipPortal
-          id={id}
-          parentRect={rect}
-          isIcon={isIcon}
-          isMultiLine={multiLine}
-          horizontal={horizontal}
-          vertical={vertical}
-        >
-          <StyledBalloon horizontal={horizontal} vertical={vertical} isMultiLine={multiLine}>
-            <StyledBalloonText themes={themes}>{message}</StyledBalloonText>
-          </StyledBalloon>
-        </TooltipPortal>
-      )}
+      {isVisible &&
+        rect &&
+        createPortal(
+          <TooltipPortal
+            id={id}
+            parentRect={rect}
+            isIcon={isIcon}
+            isMultiLine={multiLine}
+            horizontal={horizontal}
+            vertical={vertical}
+          >
+            <StyledBalloon horizontal={horizontal} vertical={vertical} isMultiLine={multiLine}>
+              <StyledBalloonText themes={themes}>{message}</StyledBalloonText>
+            </StyledBalloon>
+          </TooltipPortal>,
+          portalRoot,
+        )}
       {children}
     </Wrapper>
   )

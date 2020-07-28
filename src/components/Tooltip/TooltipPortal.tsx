@@ -1,5 +1,4 @@
 import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
 import { getTooltipRect } from './tooltipHelper'
@@ -51,20 +50,10 @@ export const TooltipPortal: FC<Props> = ({
     )
   }, [horizontal, isIcon, isMultiLine, parentRect, vertical])
 
-  const element = useRef(document.createElement('div')).current
-  useEffect(() => {
-    document.body.appendChild(element)
-
-    return () => {
-      document.body.removeChild(element)
-    }
-  }, [element])
-
-  return createPortal(
+  return (
     <Container id={id} ref={portalRef} {...rect}>
       {children}
-    </Container>,
-    element,
+    </Container>
   )
 }
 
