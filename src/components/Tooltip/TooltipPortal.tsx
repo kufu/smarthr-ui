@@ -30,7 +30,7 @@ export const TooltipPortal: FC<Props> = ({
     height: 0,
   })
   useEffect(() => {
-    if (!parentRect || !portalRef.current) {
+    if (!portalRef.current) {
       return
     }
     const { offsetWidth, offsetHeight } = portalRef.current
