@@ -26,7 +26,7 @@ export const TooltipPortal: FC<Props> = ({
   const [rect, setRect] = useState({
     top: 0,
     left: 0,
-    width: 0,
+    width: isMultiLine ? parentRect.width : 0,
     height: 0,
   })
   useLayoutEffect(() => {

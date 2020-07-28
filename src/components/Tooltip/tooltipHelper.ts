@@ -33,7 +33,8 @@ export function getTooltipRect({
   return {
     top: top + window.pageYOffset,
     left: left + window.pageXOffset,
-    width: isMultiLine ? parentRect.width : tooltipSize.width,
+    // If isMultiLine, width of the tooltip does not exceed width of the parent.
+    width: isMultiLine ? Math.min(parentRect.width, tooltipSize.width) : tooltipSize.width,
     height: tooltipSize.height,
   }
 }
