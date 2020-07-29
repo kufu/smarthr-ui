@@ -147,7 +147,7 @@ const HeaderLogo = styled.button<{ themes: Theme }>`
     `
   }}
 `
-const TenantName = styled.p<{ themes: Theme }>`
+const TenantName = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 
