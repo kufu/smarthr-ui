@@ -17,6 +17,7 @@ type Props = {
     avatar: string
   }
   currentTenantName: string
+  displayTenantName?: React.ReactNode
   notificationLength: number
   onClickLogo: () => void
   onClickHelp: () => void
@@ -39,6 +40,7 @@ export const Header: FC<Props> = ({
   isCrew = false,
   user,
   currentTenantName,
+  displayTenantName,
   notificationLength,
   onClickLogo,
   onClickHelp,
@@ -64,7 +66,9 @@ export const Header: FC<Props> = ({
         <HeaderLogo onClick={onClickLogo} aria-label="SmartHR" themes={theme}>
           <SmartHRLogo />
         </HeaderLogo>
-        <TenantName themes={theme}>{currentTenantName}</TenantName>
+        <TenantName themes={theme}>
+          {displayTenantName ? displayTenantName : currentTenantName}
+        </TenantName>
       </HeaderColumn>
 
       <HeaderColumn>
