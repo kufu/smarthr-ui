@@ -31,6 +31,7 @@ type Props = {
   onClickProfile?: () => void
   onClickCompany?: () => void
   onClickSchool?: () => void
+  className?: string
 }
 
 export const Header: FC<Props> = ({
@@ -52,12 +53,13 @@ export const Header: FC<Props> = ({
   onClickProfile,
   onClickCompany,
   onClickSchool,
+  className,
 }) => {
   const theme = useTheme()
   const { displayName, avatar } = user
 
   return (
-    <Wrapper themes={theme}>
+    <Wrapper themes={theme} className={className}>
       <HeaderColumn>
         <HeaderLogo onClick={onClickLogo} aria-label="SmartHR" themes={theme}>
           <SmartHRLogo />
