@@ -72,7 +72,11 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
               selectedYear={value?.getFullYear()}
               onSelectYear={(year) => {
                 setCurrentMonth(currentMonth.year(year))
-                setIsSelectingYear(false)
+                requestAnimationFrame(() => {
+                  // fallback for IE
+                  // delay hiding elements to be able to follow parent elements of click event by ParentNode API
+                  setIsSelectingYear(false)
+                })
               }}
             />
           </YearOverlay>
