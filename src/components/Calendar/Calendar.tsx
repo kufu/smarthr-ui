@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useState } from 'react'
+import React, { FC, MouseEvent, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -25,6 +25,12 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
 
   const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : now)
   const [isSelectingYear, setIsSelectingYear] = useState(false)
+
+  useEffect(() => {
+    if (value && isValidValue) {
+      setCurrentMonth(dayjs(value))
+    }
+  }, [value, isValidValue])
 
   const prevMonth = currentMonth.subtract(1, 'month')
   const nextMonth = currentMonth.add(1, 'month')
