@@ -73,7 +73,7 @@ const Wrapper = styled.button<{ themes: Theme }>`
       }
 
       :disabled {
-        background-color: inherit;
+        background-color: transparent;
         color: ${palette.disableColor(palette.TEXT_GREY)};
         cursor: not-allowed;
       }
