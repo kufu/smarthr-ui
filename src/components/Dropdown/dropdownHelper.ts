@@ -5,9 +5,17 @@ export type Rect = {
   left: number
 }
 
-export function hasParentElement(element: HTMLElement | null, parent: HTMLElement | null): boolean {
+export const PORTAL_CLASSNAME = '__dropdown--portal--root__'
+
+export function createPortalElement() {
+  const element = document.createElement('div')
+  element.className = PORTAL_CLASSNAME
+  return element
+}
+
+export function isElementInPortal(element: HTMLElement | null): boolean {
   if (!element) return false
-  return element === parent || hasParentElement(element.parentElement, parent)
+  return element.className === PORTAL_CLASSNAME || isElementInPortal(element.parentElement)
 }
 
 type Size = { width: number; height: number }
