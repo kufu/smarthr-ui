@@ -189,6 +189,31 @@ storiesOf('Dropdown', module)
       </Legends>
     </Wrapper>
   ))
+  .add('rta', () => (
+    <Wrapper>
+      <Dropdown>
+        <DropdownTrigger>
+          <SecondaryButton>RTA</SecondaryButton>
+        </DropdownTrigger>
+        <DropdownContent controllable>
+          <DropdownScrollArea>
+            <RTAContainer>
+              <Dropdown>
+                <DropdownTrigger>
+                  <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
+                </DropdownTrigger>
+                <DropdownContent>
+                  <DropdownScrollArea>
+                    <ListMenu />
+                  </DropdownScrollArea>
+                </DropdownContent>
+              </Dropdown>
+            </RTAContainer>
+          </DropdownScrollArea>
+        </DropdownContent>
+      </Dropdown>
+    </Wrapper>
+  ))
 
 const List = styled.ul`
   margin: 0;
@@ -268,4 +293,8 @@ const Fixed = styled.div`
   font-weight: bold;
   line-height: 40px;
   color: #333;
+`
+
+const RTAContainer = styled.div`
+  padding: 2rem;
 `
