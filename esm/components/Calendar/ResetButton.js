@@ -1,0 +1,8 @@
+var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
+import styled from 'styled-components';
+export var ResetButton = styled.button(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  appearance: none;\n  display: inline;\n  align-items: stretch;\n  overflow: visible;\n  cursor: auto;\n  padding: 0;\n  border-style: none;\n  border-width: medium;\n  border-color: currentColor;\n  border-image-source: none;\n  border-image-slice: 100%;\n  border-image-width: 1;\n  border-image-outset: 0;\n  border-image-repeat: stretch;\n  box-sizing: content-box;\n  background-color: transparent;\n  background-image: none;\n  background-origin: padding-box;\n  color: inherit;\n  font-family: inherit;\n  font-size: inherit;\n  text-align: left;\n  user-select: auto;\n  zoom: auto;\n"], ["\n  appearance: none;\n  display: inline;\n  align-items: stretch;\n  overflow: visible;\n  cursor: auto;\n  padding: 0;\n  border-style: none;\n  border-width: medium;\n  border-color: currentColor;\n  border-image-source: none;\n  border-image-slice: 100%;\n  border-image-width: 1;\n  border-image-outset: 0;\n  border-image-repeat: stretch;\n  box-sizing: content-box;\n  background-color: transparent;\n  background-image: none;\n  background-origin: padding-box;\n  color: inherit;\n  font-family: inherit;\n  font-size: inherit;\n  text-align: left;\n  user-select: auto;\n  zoom: auto;\n"])));
+var templateObject_1;
+//# sourceMappingURL=ResetButton.js.map
