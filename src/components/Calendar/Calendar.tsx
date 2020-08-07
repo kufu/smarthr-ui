@@ -18,7 +18,7 @@ type Props = {
 
 export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate, value }, ref) => {
   const themes = useTheme()
-  const now = dayjs()
+  const now = dayjs().startOf('date')
   const fromDay = dayjs(getFromDate(from))
   const toDay = dayjs(getToDate(to))
   const isValidValue = value && isBetween(value, fromDay.toDate(), toDay.toDate())
