@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useEffect, useState } from 'react'
+import React, { MouseEvent, forwardRef, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -16,7 +16,7 @@ type Props = {
   value?: Date
 }
 
-export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
+export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate, value }, ref) => {
   const themes = useTheme()
   const now = dayjs()
   const fromDay = dayjs(getFromDate(from))
@@ -36,7 +36,7 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
   const nextMonth = currentMonth.add(1, 'month')
 
   return (
-    <Container themes={themes}>
+    <Container themes={themes} ref={ref}>
       <Header themes={themes}>
         <YearMonth>
           {currentMonth.year()}年{currentMonth.month() + 1}月
@@ -87,7 +87,7 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
       </TableLayout>
     </Container>
   )
-}
+})
 
 const Container = styled.section<{ themes: Theme }>`
   display: inline-block;
