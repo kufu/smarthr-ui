@@ -24,7 +24,10 @@ storiesOf('DatePicker', module)
         <dd>
           <DatePicker
             date={date}
-            onChangeDate={(_date) => setDate(_date)}
+            onChangeDate={(_date) => {
+              action('change date')(_date)
+              setDate(_date)
+            }}
             formatDate={(_date) => {
               if (!_date) return ''
               return _date.toDateString()
@@ -33,7 +36,7 @@ storiesOf('DatePicker', module)
         </dd>
         <dt>Extending style (width: 50%)</dt>
         <dd>
-          <ExtendingDatePicker />
+          <ExtendingDatePicker onChangeDate={action('change date')} />
         </dd>
       </List>
     )
