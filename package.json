@@ -35,7 +35,7 @@
     "babel-loader": "^8.1.0",
     "ecma-version-validator-webpack-plugin": "^1.0.4",
     "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.2",
+    "enzyme-adapter-react-16": "^1.15.3",
     "enzyme-to-json": "^3.5.0",
     "eslint": "^7.6.0",
     "eslint-config-smarthr": "^5.0.0",
