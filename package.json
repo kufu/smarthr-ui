@@ -24,7 +24,7 @@
     "@storybook/theming": "^5.3.19",
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
-    "@types/jest": "^26.0.8",
+    "@types/jest": "^26.0.9",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
     "@types/react": "^16.9.44",
