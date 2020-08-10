@@ -115,6 +115,8 @@ const Title = styled.dt`
   display: block;
   padding: 0;
   margin: 0 0 16px;
+  color: #707070;
+  font-style: italic;
 `
 
 const Body = styled.dd`

@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { StatusLabel, Props as StatusLabelProps } from '../StatusLabel'
 import { Heading, HeadingTypes } from '../Heading'
+import { Icon } from '../Icon'
 
 interface Props {
   label: string
@@ -59,7 +60,13 @@ export const FormGroup: FC<Props> = ({
         {errorMessages &&
           errorMessages.map((errorMessageItem, index) => (
             <ErrorMessage themes={theme} key={index} className={disabledClass}>
-              {errorMessageItem}
+              <ErrorIcon
+                name="fa-exclamation-circle"
+                color={theme.palette.DANGER}
+                themes={theme}
+                size={14}
+              />
+              <ErrorText>{errorMessageItem}</ErrorText>
             </ErrorMessage>
           ))}
       </Label>
@@ -116,24 +123,39 @@ const LabelItem = styled(StatusLabel)<{ themes: Theme }>`
   }}
 `
 
-const HelpMessage = styled.span<{ themes: Theme }>`
+const HelpMessage = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 
     return css`
-      margin-bottom: ${size.pxToRem(size.space.XS)};
-      display: block;
+      margin-top: ${size.pxToRem(size.space.XXS)};
+      font-size: ${size.pxToRem(size.font.TALL)};
     `
   }}
 `
 
-const ErrorMessage = styled.label<{ themes: Theme }>`
+const ErrorMessage = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 
     return css`
-      margin-bottom: ${size.pxToRem(size.space.XS)};
-      display: block;
+      margin-top: ${size.pxToRem(size.space.XXS)};
+      font-size: ${size.pxToRem(size.font.TALL)};
+    `
+  }}
+`
+
+const ErrorText = styled.span`
+  vertical-align: middle;
+`
+
+const ErrorIcon = styled(Icon)<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
+
+    return css`
+      margin-right: ${size.pxToRem(4)};
+      vertical-align: middle;
     `
   }}
 `
