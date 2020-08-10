@@ -8,6 +8,7 @@ export type Props = {
   type?: HeadingTypes
   tag?: HeadingTagTypes
   className?: string
+  disabled?: boolean
 }
 
 export type HeadingTypes =
@@ -24,11 +25,12 @@ export const Heading: FC<Props> = ({
   type = 'screenTitle',
   className = '',
   children,
+  disabled,
 }) => {
   const theme = useTheme()
 
   return (
-    <Wrapper as={tag} className={`${type} ${className}`} themes={theme}>
+    <Wrapper as={tag} className={`${type} ${disabled && 'disabled'} ${className}`} themes={theme}>
       {children}
     </Wrapper>
   )
@@ -72,6 +74,10 @@ const Wrapper = styled.h1<{ themes: Theme }>`
         color: ${palette.TEXT_GREY};
         font-size: ${size.pxToRem(size.font.SHORT)};
         font-weight: bold;
+      }
+
+      &.disabled {
+        color: ${palette.TEXT_DISABLED};
       }
     `
   }}
