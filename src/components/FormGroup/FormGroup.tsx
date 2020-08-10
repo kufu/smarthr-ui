@@ -33,14 +33,24 @@ export const FormGroup: FC<Props> = ({
   return (
     <Wrapper className={className}>
       <Label themes={theme} id={labelId}>
-        <Heading type={labelType}>{label}</Heading>
-        {statusLabels && (
-          <StatusLabels themes={theme}>
-            {statusLabels.map((StatusLabelItem, index) => (
-              <StatusLabel key={index}>{StatusLabelItem.children}</StatusLabel>
-            ))}
-          </StatusLabels>
-        )}
+        <TitleWrapper>
+          <Title type={labelType}>{label}</Title>
+          {statusLabels && (
+            <StatusLabels themes={theme}>
+              {statusLabels.map((StatusLabelItem, index) => (
+                <LabelItem
+                  key={index}
+                  type={StatusLabelItem.type}
+                  className={StatusLabelItem.className}
+                  themes={theme}
+                >
+                  {StatusLabelItem.children}
+                </LabelItem>
+              ))}
+            </StatusLabels>
+          )}
+        </TitleWrapper>
+
         {helpMessage && (
           <HelpMessage themes={theme} className={disabledClass}>
             {helpMessage}
@@ -73,13 +83,35 @@ const Label = styled.label<{ themes: Theme }>`
   }}
 `
 
-const StatusLabels = styled.label<{ themes: Theme }>`
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+`
+
+const Title = styled(Heading)`
+  display: inline-block;
+`
+
+const StatusLabels = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 
     return css`
-      margin-bottom: ${size.pxToRem(size.space.XS)};
-      display: block;
+      margin-left: ${size.pxToRem(size.space.XXS)};
+      display: inline-block;
+      line-height: 1;
+    `
+  }}
+`
+
+const LabelItem = styled(StatusLabel)<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
+
+    return css`
+      margin-right: ${size.pxToRem(4)};
+      display: inline-block;
     `
   }}
 `
