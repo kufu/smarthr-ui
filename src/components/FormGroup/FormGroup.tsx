@@ -35,7 +35,9 @@ export const FormGroup: FC<Props> = ({
     <Wrapper className={className}>
       <Label themes={theme} id={labelId}>
         <TitleWrapper>
-          <Title type={labelType}>{label}</Title>
+          <Title type={labelType} disabled={disabled}>
+            {label}
+          </Title>
           {statusLabels && (
             <StatusLabels themes={theme}>
               {statusLabels.map((StatusLabelItem, index) => (
@@ -62,7 +64,7 @@ export const FormGroup: FC<Props> = ({
             <ErrorMessage themes={theme} key={index} className={disabledClass}>
               <ErrorIcon
                 name="fa-exclamation-circle"
-                color={theme.palette.DANGER}
+                color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.DANGER}
                 themes={theme}
                 size={14}
               />
@@ -125,22 +127,30 @@ const LabelItem = styled(StatusLabel)<{ themes: Theme }>`
 
 const HelpMessage = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { size, palette } = themes
 
     return css`
       margin-top: ${size.pxToRem(size.space.XXS)};
       font-size: ${size.pxToRem(size.font.TALL)};
+
+      &.disabled {
+        color: ${palette.TEXT_DISABLED};
+      }
     `
   }}
 `
 
 const ErrorMessage = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { size, palette } = themes
 
     return css`
       margin-top: ${size.pxToRem(size.space.XXS)};
       font-size: ${size.pxToRem(size.font.TALL)};
+
+      &.disabled {
+        color: ${palette.TEXT_DISABLED};
+      }
     `
   }}
 `

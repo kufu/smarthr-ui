@@ -99,7 +99,7 @@ storiesOf('FormGroup', module)
           errorMessages={['error message 1', 'error message 2']}
           disabled
         >
-          <SampleChildren id1="id_6-1" id2="id_6-2" />
+          <SampleChildren id1="id_6-1" id2="id_6-2" disabled />
         </FormGroup>
       </Body>
     </Wrapper>
