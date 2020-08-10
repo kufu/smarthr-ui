@@ -5,10 +5,12 @@ import { StatusLabel, Props as StatusLabelProps } from '../StatusLabel'
 import { Heading, HeadingTypes } from '../Heading'
 import { Icon } from '../Icon'
 
-interface Props {
+type LabelMarginType = 'XXS' | 'XS' | 'S'
+type Props = {
   label: string
   labelType?: HeadingTypes
   labelId?: string
+  labelMargin?: LabelMarginType
   statusLabels?: StatusLabelProps[]
   helpMessage?: ReactNode
   errorMessages?: string[]
@@ -21,6 +23,7 @@ export const FormGroup: FC<Props> = ({
   label,
   labelType = 'blockTitle',
   labelId,
+  labelMargin = 'XS',
   statusLabels,
   helpMessage,
   errorMessages,
@@ -33,7 +36,7 @@ export const FormGroup: FC<Props> = ({
 
   return (
     <Wrapper className={className}>
-      <Label themes={theme} id={labelId}>
+      <Label themes={theme} id={labelId} margin={labelMargin}>
         <TitleWrapper>
           <Title type={labelType} disabled={disabled}>
             {label}
@@ -81,14 +84,32 @@ const Wrapper = styled.div`
   display: block;
 `
 
-const Label = styled.label<{ themes: Theme }>`
-  ${({ themes }) => {
+const Label = styled.label<{ themes: Theme; margin: LabelMarginType }>`
+  ${({ themes, margin }) => {
     const { size } = themes
 
-    return css`
-      margin-bottom: ${size.pxToRem(size.space.XS)};
-      display: block;
-    `
+    switch (margin) {
+      case 'XXS':
+        return css`
+          display: block;
+          margin-bottom: ${size.pxToRem(size.space.XXS)};
+        `
+      case 'XS':
+        return css`
+          display: block;
+          margin-bottom: ${size.pxToRem(size.space.XS)};
+        `
+      case 'S':
+        return css`
+          display: block;
+          margin-bottom: ${size.pxToRem(size.space.S)};
+        `
+      default:
+        return css`
+          display: block;
+          margin-bottom: ${size.pxToRem(size.space.XS)};
+        `
+    }
   }}
 `
 
@@ -147,6 +168,7 @@ const ErrorMessage = styled.div<{ themes: Theme }>`
     return css`
       margin-top: ${size.pxToRem(size.space.XXS)};
       font-size: ${size.pxToRem(size.font.TALL)};
+      line-height: 1;
 
       &.disabled {
         color: ${palette.TEXT_DISABLED};
