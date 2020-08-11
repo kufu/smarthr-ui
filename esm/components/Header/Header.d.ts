@@ -2,6 +2,10 @@ import React, { FC } from 'react';
 declare type Props = {
     isAdmin?: boolean;
     isCrew?: boolean;
+    showHelp?: boolean;
+    showCrewList?: boolean;
+    showCrewManagement?: boolean;
+    showNotification?: boolean;
     user: {
         displayName: string;
         avatar: string;

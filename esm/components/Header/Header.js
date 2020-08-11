@@ -11,7 +11,7 @@ import { HeaderNotification } from './HeaderNotification';
 import { HeaderCrewDropdown } from './HeaderCrewDropdown';
 import { HeaderUserDropdown } from './HeaderUserDropdown';
 export var Header = function (_a) {
-    var _b = _a.isAdmin, isAdmin = _b === void 0 ? false : _b, _c = _a.isCrew, isCrew = _c === void 0 ? false : _c, user = _a.user, currentTenantName = _a.currentTenantName, tenantContent = _a.tenantContent, notificationLength = _a.notificationLength, onClickLogo = _a.onClickLogo, onClickHelp = _a.onClickHelp, onClickNotification = _a.onClickNotification, onClickAccount = _a.onClickAccount, onClickLogout = _a.onClickLogout, onClickCrewList = _a.onClickCrewList, onClickNewCrew = _a.onClickNewCrew, onClickBulkInsertCrews = _a.onClickBulkInsertCrews, onClickBulkUpdateCrews = _a.onClickBulkUpdateCrews, onClickInviteCrew = _a.onClickInviteCrew, onClickProfile = _a.onClickProfile, onClickCompany = _a.onClickCompany, onClickSchool = _a.onClickSchool, className = _a.className;
+    var _b = _a.isAdmin, isAdmin = _b === void 0 ? false : _b, _c = _a.isCrew, isCrew = _c === void 0 ? false : _c, _d = _a.showHelp, showHelp = _d === void 0 ? true : _d, _e = _a.showCrewList, showCrewList = _e === void 0 ? true : _e, _f = _a.showCrewManagement, showCrewManagement = _f === void 0 ? true : _f, _g = _a.showNotification, showNotification = _g === void 0 ? true : _g, user = _a.user, currentTenantName = _a.currentTenantName, tenantContent = _a.tenantContent, notificationLength = _a.notificationLength, onClickLogo = _a.onClickLogo, onClickHelp = _a.onClickHelp, onClickNotification = _a.onClickNotification, onClickAccount = _a.onClickAccount, onClickLogout = _a.onClickLogout, onClickCrewList = _a.onClickCrewList, onClickNewCrew = _a.onClickNewCrew, onClickBulkInsertCrews = _a.onClickBulkInsertCrews, onClickBulkUpdateCrews = _a.onClickBulkUpdateCrews, onClickInviteCrew = _a.onClickInviteCrew, onClickProfile = _a.onClickProfile, onClickCompany = _a.onClickCompany, onClickSchool = _a.onClickSchool, className = _a.className;
     var theme = useTheme();
     var displayName = user.displayName, avatar = user.avatar;
     return (React.createElement(Wrapper, { themes: theme, className: className },
@@ -20,11 +20,11 @@ export var Header = function (_a) {
                 React.createElement(SmartHRLogo, null)),
             React.createElement(TenantName, { themes: theme }, tenantContent ? tenantContent : currentTenantName)),
         React.createElement(HeaderColumn, null,
-            React.createElement(HeaderButton, { icon: "fa-question-circle", onClick: onClickHelp }, "\u30D8\u30EB\u30D7"),
+            showHelp && (React.createElement(HeaderButton, { icon: "fa-question-circle", onClick: onClickHelp }, "\u30D8\u30EB\u30D7")),
             isAdmin && (React.createElement(React.Fragment, null,
-                React.createElement(HeaderButton, { icon: "fa-th-list", onClick: onClickCrewList }, "\u5F93\u696D\u54E1\u30EA\u30B9\u30C8"),
-                React.createElement(HeaderCrewDropdown, { onClickNew: onClickNewCrew, onClickBulkInsert: onClickBulkInsertCrews, onClickBulkUpdate: onClickBulkUpdateCrews, onClickInvite: onClickInviteCrew }))),
-            React.createElement(HeaderNotification, { length: notificationLength, onClick: onClickNotification }),
+                showCrewList && (React.createElement(HeaderButton, { icon: "fa-th-list", onClick: onClickCrewList }, "\u5F93\u696D\u54E1\u30EA\u30B9\u30C8")),
+                showCrewManagement && (React.createElement(HeaderCrewDropdown, { onClickNew: onClickNewCrew, onClickBulkInsert: onClickBulkInsertCrews, onClickBulkUpdate: onClickBulkUpdateCrews, onClickInvite: onClickInviteCrew })))),
+            showNotification && (React.createElement(HeaderNotification, { length: notificationLength, onClick: onClickNotification })),
             React.createElement(HeaderUserDropdown, { isAdmin: isAdmin, isCrew: isCrew, displayName: displayName, currentTenantName: currentTenantName, avatar: avatar, onClickAccount: onClickAccount, onClickLogout: onClickLogout, onClickProfile: onClickProfile, onClickCompany: onClickCompany, onClickSchool: onClickSchool }))));
 };
 var Wrapper = styled.header(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  ", "\n"], ["\n  ",
