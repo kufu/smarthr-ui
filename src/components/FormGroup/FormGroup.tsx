@@ -88,28 +88,10 @@ const Label = styled.label<{ themes: Theme; margin: innerMarginType }>`
   ${({ themes, margin }) => {
     const { size } = themes
 
-    switch (margin) {
-      case 'XXS':
-        return css`
-          display: block;
-          margin-bottom: ${size.pxToRem(size.space.XXS)};
-        `
-      case 'XS':
-        return css`
-          display: block;
-          margin-bottom: ${size.pxToRem(size.space.XS)};
-        `
-      case 'S':
-        return css`
-          display: block;
-          margin-bottom: ${size.pxToRem(size.space.S)};
-        `
-      default:
-        return css`
-          display: block;
-          margin-bottom: ${size.pxToRem(size.space.XS)};
-        `
-    }
+    return css`
+      display: block;
+      margin-bottom: ${size.pxToRem(size.space[margin])};
+    `
   }}
 `
 
