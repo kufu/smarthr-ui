@@ -19,7 +19,7 @@ const SampleChildren: React.FC<SampleChildrenProps> = ({ id1, id2, disabled }) =
       <SampleFormGroup
         label="first name"
         labelType="subSubBlockTitle"
-        labelMargin="XXS"
+        innerMargin="XXS"
         labelId={id1}
         disabled={disabled}
       >
@@ -28,7 +28,7 @@ const SampleChildren: React.FC<SampleChildrenProps> = ({ id1, id2, disabled }) =
       <SampleFormGroup
         label="last name"
         labelType="subSubBlockTitle"
-        labelMargin="XXS"
+        innerMargin="XXS"
         labelId={id2}
         disabled={disabled}
       >

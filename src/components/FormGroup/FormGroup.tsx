@@ -5,12 +5,12 @@ import { StatusLabel, Props as StatusLabelProps } from '../StatusLabel'
 import { Heading, HeadingTypes } from '../Heading'
 import { Icon } from '../Icon'
 
-type LabelMarginType = 'XXS' | 'XS' | 'S'
+type innerMarginType = 'XXS' | 'XS' | 'S'
 type Props = {
   label: string
   labelType?: HeadingTypes
   labelId?: string
-  labelMargin?: LabelMarginType
+  innerMargin?: innerMarginType
   statusLabels?: StatusLabelProps[]
   helpMessage?: ReactNode
   errorMessages?: string[]
@@ -23,7 +23,7 @@ export const FormGroup: FC<Props> = ({
   label,
   labelType = 'blockTitle',
   labelId,
-  labelMargin = 'XS',
+  innerMargin = 'XS',
   statusLabels,
   helpMessage,
   errorMessages,
@@ -36,7 +36,7 @@ export const FormGroup: FC<Props> = ({
 
   return (
     <Wrapper className={className}>
-      <Label themes={theme} id={labelId} margin={labelMargin}>
+      <Label themes={theme} id={labelId} margin={innerMargin}>
         <TitleWrapper>
           <Title type={labelType} disabled={disabled}>
             {label}
@@ -84,7 +84,7 @@ const Wrapper = styled.div`
   display: block;
 `
 
-const Label = styled.label<{ themes: Theme; margin: LabelMarginType }>`
+const Label = styled.label<{ themes: Theme; margin: innerMarginType }>`
   ${({ themes, margin }) => {
     const { size } = themes
 
