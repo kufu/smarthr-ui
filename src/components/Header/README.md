@@ -46,6 +46,7 @@ import { Header } from 'smarthr-ui'
 | user                   | ✓        | **{ displayName: string,<br> avatar: string }** | -            | Viewer's user information.                  |
 | currentTenantName      | ✓        | **string**                                      | -            | Current tenant name.                        |
 | tenantContent          | -        | **node**                                        | -            | The content of tenant name area.            |
+| customContents         | -        | **Array\<node\>**                               | -            | Additional custom contents.                 |        |
 | notificationLength     | ✓        | **number**                                      | -            | Number of notifications.                    |
 | onClickLogo            | ✓        | **() => void**                                  | -            | Fires when the logo clicked.                |
 | onClickHelp            | ✓        | **() => void**                                  | -            | Fires when the help clicked.                |
