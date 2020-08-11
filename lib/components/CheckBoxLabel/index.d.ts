@@ -1,0 +1,1 @@
+export { CheckBoxLabel } from './CheckBoxLabel';
