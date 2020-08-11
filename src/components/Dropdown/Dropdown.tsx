@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 import { createPortal } from 'react-dom'
 
-import { Rect, createPortalElement, isElementInPortal } from './dropdownHelper'
+import { Rect } from './dropdownHelper'
 
 type Props = {
   children: ReactNode
@@ -44,15 +44,11 @@ export const Dropdown: FC<Props> = ({ children }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
-  const portalElementRef = useRef(createPortalElement())
+  const portalElementRef = useRef(document.createElement('div'))
   const triggerElementRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const onClickBody = (e: any) => {
-      // ignore events from events within DropdownTrigger and DropdownContent
-      if (e.target === triggerElementRef.current || isElementInPortal(e.target)) {
-        return
-      }
+    const onClickBody = () => {
       setActive(false)
     }
     const portalElement = portalElementRef.current

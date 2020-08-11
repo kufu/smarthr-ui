@@ -22,6 +22,7 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) =
           bottom: rect.bottom,
           left: rect.left,
         })
+        e.stopPropagation()
       }}
       className={className}
     >
