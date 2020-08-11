@@ -10,10 +10,17 @@ import React, {
 } from 'react'
 import { createPortal } from 'react-dom'
 
-import { Rect, hasParentElement } from './dropdownHelper'
+import {
+  Rect,
+  createPortalElement,
+  getParentPortalElement,
+  isElementInPortal,
+} from './dropdownHelper'
 
 type Props = {
   children: ReactNode
+  groupName?: string
+  layer?: number
 }
 
 type DropdownContextType = {
@@ -40,31 +47,30 @@ export const DropdownContext = createContext<DropdownContextType>({
   DropdownContentRoot: () => null,
 })
 
-export const Dropdown: FC<Props> = ({ children }) => {
+export const Dropdown: FC<Props> = ({ children, groupName, layer }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
-  const portalElementRef = useRef(document.createElement('div'))
+  const portalElementRef = useRef(createPortalElement(groupName, layer))
   const triggerElementRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const onClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
-      if (
-        e.target === triggerElementRef.current ||
-        hasParentElement(e.target, portalElementRef.current)
-      ) {
+      if (e.target === triggerElementRef.current || isElementInPortal(e.target, groupName, layer)) {
         return
       }
+
       setActive(false)
     }
     const portalElement = portalElementRef.current
-    document.body.appendChild(portalElement)
-    document.body.addEventListener('click', onClickBody, false)
+    const parent = getParentPortalElement(groupName, layer)
+    parent.appendChild(portalElement)
+    parent.addEventListener('click', onClickBody, false)
 
     return () => {
-      document.body.removeChild(portalElement)
-      document.body.removeEventListener('click', onClickBody, false)
+      parent.removeChild(portalElement)
+      parent.removeEventListener('click', onClickBody, false)
     }
   }, [])
 

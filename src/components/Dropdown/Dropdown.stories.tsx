@@ -30,6 +30,22 @@ const ListMenu = () => (
     </li>
   </List>
 )
+const ListMenu2 = () => (
+  <List>
+    <li>
+      <button onClick={action('clicked item 1')}>Dropdown list item 5, click me.</button>
+    </li>
+    <li>
+      <button onClick={action('clicked item 2')}>Dropdown list item 6, click me.</button>
+    </li>
+    <li>
+      <button onClick={action('clicked item 3')}>Dropdown list item 7, click me.</button>
+    </li>
+    <li>
+      <button onClick={action('clicked item 4')}>Dropdown list item 8, click me.</button>
+    </li>
+  </List>
+)
 
 const ControllableDropdown = () => {
   const [value, setValue] = React.useState('hoge')
@@ -191,20 +207,61 @@ storiesOf('Dropdown', module)
   ))
   .add('rta', () => (
     <Wrapper>
-      <Dropdown>
+      <Dropdown groupName="RTA">
         <DropdownTrigger>
           <SecondaryButton>RTA</SecondaryButton>
         </DropdownTrigger>
         <DropdownContent controllable>
           <DropdownScrollArea>
             <RTAContainer>
-              <Dropdown>
+              <Dropdown groupName="RTA" layer={1}>
                 <DropdownTrigger>
-                  <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
+                  <SecondaryButton>Uncontrollable Dropdown1</SecondaryButton>
                 </DropdownTrigger>
                 <DropdownContent>
                   <DropdownScrollArea>
                     <ListMenu />
+                  </DropdownScrollArea>
+                </DropdownContent>
+              </Dropdown>
+              <Dropdown groupName="RTA" layer={1}>
+                <DropdownTrigger>
+                  <SecondaryButton>Uncontrollable Dropdown2</SecondaryButton>
+                </DropdownTrigger>
+                <DropdownContent>
+                  <DropdownScrollArea>
+                    <ListMenu2 />
+                  </DropdownScrollArea>
+                </DropdownContent>
+              </Dropdown>
+            </RTAContainer>
+          </DropdownScrollArea>
+        </DropdownContent>
+      </Dropdown>
+      <Dropdown groupName="RTA2">
+        <DropdownTrigger>
+          <SecondaryButton>RTA2</SecondaryButton>
+        </DropdownTrigger>
+        <DropdownContent controllable>
+          <DropdownScrollArea>
+            <RTAContainer>
+              <Dropdown groupName="RTA2" layer={1}>
+                <DropdownTrigger>
+                  <SecondaryButton>Uncontrollable Dropdown1</SecondaryButton>
+                </DropdownTrigger>
+                <DropdownContent>
+                  <DropdownScrollArea>
+                    <ListMenu />
+                  </DropdownScrollArea>
+                </DropdownContent>
+              </Dropdown>
+              <Dropdown groupName="RTA2" layer={1}>
+                <DropdownTrigger>
+                  <SecondaryButton>Uncontrollable Dropdown2</SecondaryButton>
+                </DropdownTrigger>
+                <DropdownContent>
+                  <DropdownScrollArea>
+                    <ListMenu2 />
                   </DropdownScrollArea>
                 </DropdownContent>
               </Dropdown>

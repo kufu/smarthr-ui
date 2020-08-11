@@ -5,9 +5,49 @@ export type Rect = {
   left: number
 }
 
-export function hasParentElement(element: HTMLElement | null, parent: HTMLElement | null): boolean {
-  if (!element) return false
-  return element === parent || hasParentElement(element.parentElement, parent)
+export const PORTAL_CLASSNAME = '__dropdown--portal--root__'
+
+export function createPortalElement(groupName: string = '', layer: number = 0) {
+  const element = document.createElement('div')
+
+  element.className = PORTAL_CLASSNAME
+  element.dataset.dropdownLayer = `${layer}`
+  element.dataset.dropdownGroupName = `${groupName}`
+  return element
+}
+
+export function isElementInPortal(
+  element: HTMLElement | null,
+  groupName: string = '',
+  layer: number = 0,
+): boolean {
+  if (!element) {
+    return false
+  }
+  if (element.className !== PORTAL_CLASSNAME) {
+    return isElementInPortal(element.parentElement, groupName, layer)
+  }
+
+  return (
+    element.dataset?.dropdownGroupName === groupName &&
+    parseInt(element.dataset?.dropdownLayer || '0', 10) >= layer
+  )
+}
+
+export function getParentPortalElement(groupName: string = '', layer: number = 0) {
+  if (layer > 0) {
+    const e = document.querySelector(
+      `.${PORTAL_CLASSNAME}[data-dropdown-group-name="${groupName}"][data-dropdown-layer="${
+        layer - 1
+      }"]`,
+    )
+
+    if (e) {
+      return e
+    }
+  }
+
+  return document.body
 }
 
 type Size = { width: number; height: number }
