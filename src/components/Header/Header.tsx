@@ -12,12 +12,17 @@ import { HeaderUserDropdown } from './HeaderUserDropdown'
 type Props = {
   isAdmin?: boolean
   isCrew?: boolean
+  showHelp?: boolean
+  showCrewList?: boolean
+  showCrewManagement?: boolean
+  showNotification?: boolean
   user: {
     displayName: string
     avatar: string
   }
   currentTenantName: string
   tenantContent?: React.ReactNode
+  customContents?: Array<React.ReactNode>
   notificationLength: number
   onClickLogo: () => void
   onClickHelp: () => void
@@ -38,6 +43,10 @@ type Props = {
 export const Header: FC<Props> = ({
   isAdmin = false,
   isCrew = false,
+  showHelp = true,
+  showCrewList = true,
+  showCrewManagement = true,
+  showNotification = true,
   user,
   currentTenantName,
   tenantContent,
@@ -70,26 +79,34 @@ export const Header: FC<Props> = ({
       </HeaderColumn>
 
       <HeaderColumn>
-        <HeaderButton icon="fa-question-circle" onClick={onClickHelp}>
-          ヘルプ
-        </HeaderButton>
+        {showHelp && (
+          <HeaderButton icon="fa-question-circle" onClick={onClickHelp}>
+            ヘルプ
+          </HeaderButton>
+        )}
 
         {isAdmin && (
           <>
-            <HeaderButton icon="fa-th-list" onClick={onClickCrewList}>
-              従業員リスト
-            </HeaderButton>
+            {showCrewList && (
+              <HeaderButton icon="fa-th-list" onClick={onClickCrewList}>
+                従業員リスト
+              </HeaderButton>
+            )}
 
-            <HeaderCrewDropdown
-              onClickNew={onClickNewCrew}
-              onClickBulkInsert={onClickBulkInsertCrews}
-              onClickBulkUpdate={onClickBulkUpdateCrews}
-              onClickInvite={onClickInviteCrew}
-            />
+            {showCrewManagement && (
+              <HeaderCrewDropdown
+                onClickNew={onClickNewCrew}
+                onClickBulkInsert={onClickBulkInsertCrews}
+                onClickBulkUpdate={onClickBulkUpdateCrews}
+                onClickInvite={onClickInviteCrew}
+              />
+            )}
           </>
         )}
 
-        <HeaderNotification length={notificationLength} onClick={onClickNotification} />
+        {showNotification && (
+          <HeaderNotification length={notificationLength} onClick={onClickNotification} />
+        )}
 
         <HeaderUserDropdown
           isAdmin={isAdmin}
