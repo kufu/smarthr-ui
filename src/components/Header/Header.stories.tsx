@@ -79,21 +79,3 @@ storiesOf('Header', module)
       {...handlers}
     />
   ))
-  .add('custom content', () => (
-    <Header
-      isAdmin
-      isCrew={false}
-      showHelp={false}
-      showCrewList={false}
-      showCrewManagement={false}
-      showNotification={false}
-      user={{
-        displayName: 'example@example.com',
-        avatar: '',
-      }}
-      currentTenantName="example, Inc."
-      notificationLength={999}
-      customContents={['CustomContent']}
-      {...handlers}
-    />
-  ))
