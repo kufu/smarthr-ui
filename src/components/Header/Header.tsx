@@ -50,6 +50,7 @@ export const Header: FC<Props> = ({
   user,
   currentTenantName,
   tenantContent,
+  customContents = [],
   notificationLength,
   onClickLogo,
   onClickHelp,
@@ -103,6 +104,10 @@ export const Header: FC<Props> = ({
             )}
           </>
         )}
+
+        {customContents.map(content => (
+          <CustomContent themes={theme}>{content}</CustomContent>
+        ))}
 
         {showNotification && (
           <HeaderNotification length={notificationLength} onClick={onClickNotification} />
@@ -168,6 +173,17 @@ const TenantName = styled.div<{ themes: Theme }>`
 
     return css`
       margin: 0 0 0 ${size.pxToRem(size.space.XS)};
+      font-size: ${size.pxToRem(size.font.TALL)};
+      color: #fff;
+    `
+  }}
+`
+const CustomContent = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
+
+    return css`
+      margin: 0 ${size.pxToRem(size.space.XS)} 0 0;
       font-size: ${size.pxToRem(size.font.TALL)};
       color: #fff;
     `
