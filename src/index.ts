@@ -75,6 +75,7 @@ export { BottomFixedArea } from './components/BottomFixedArea'
 export { MessageScreen } from './components/MessageScreen'
 export { Calendar } from './components/Calendar'
 export { IndexNav, IndexNavItemProps } from './components/IndexNav'
+export { FormGroup } from './components/FormGroup'
 
 // themes
 export { createTheme } from './themes/createTheme'
