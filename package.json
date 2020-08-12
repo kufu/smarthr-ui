@@ -91,6 +91,11 @@
     "typescript"
   ],
   "license": "MIT",
+  "lint-staged": {
+    "*.{ts,tsx},!^esm,!^lib": [
+      "eslint --fix"
+    ]
+  },
   "main": "lib/index.js",
   "module": "esm/index.js",
   "publishConfig": {
