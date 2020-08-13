@@ -73,9 +73,6 @@ export const DropdownContentInner: FC<Props> = ({
       className={`${className} ${isActive ? 'active' : ''}`}
       controllable={controllable}
       themes={theme}
-      onClick={(e) => {
-        e.stopPropagation()
-      }}
     >
       {controllable ? (
         children
