@@ -13,7 +13,7 @@ type Props = {
   innerMargin?: innerMarginType
   statusLabels?: StatusLabelProps[]
   helpMessage?: ReactNode
-  errorMessages?: string[]
+  errorMessages?: string | string[]
   children: ReactNode
   disabled?: boolean
   className?: string
@@ -62,16 +62,17 @@ export const FormGroup: FC<Props> = ({
             {helpMessage}
           </HelpMessage>
         )}
+
         {errorMessages &&
-          errorMessages.map((errorMessageItem, index) => (
-            <ErrorMessage themes={theme} key={index} className={disabledClass}>
+          (typeof errorMessages === 'string' ? [errorMessages] : errorMessages).map((message) => (
+            <ErrorMessage themes={theme} key={message}>
               <ErrorIcon
                 name="fa-exclamation-circle"
                 color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.DANGER}
                 themes={theme}
                 size={14}
               />
-              <ErrorText>{errorMessageItem}</ErrorText>
+              <ErrorText>{message}</ErrorText>
             </ErrorMessage>
           ))}
       </Label>
