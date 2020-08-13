@@ -57,11 +57,7 @@ export const FormGroup: FC<Props> = ({
           )}
         </TitleWrapper>
 
-        {helpMessage && (
-          <HelpMessage themes={theme} className={disabledClass}>
-            {helpMessage}
-          </HelpMessage>
-        )}
+        {helpMessage && <HelpMessage themes={theme}>{helpMessage}</HelpMessage>}
 
         {errorMessages &&
           (typeof errorMessages === 'string' ? [errorMessages] : errorMessages).map((message) => (
