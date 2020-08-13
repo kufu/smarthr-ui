@@ -9,9 +9,10 @@ export type Props = InputHTMLAttributes<HTMLInputElement> & {
   id?: string
   className?: string
   file?: File[]
+  multiple?: boolean
 }
 
-export const InputFile: FC<Props> = ({ label, id, className, file }) => {
+export const InputFile: FC<Props> = ({ label, id, className, file, multiple = true }) => {
   const [files, setFiles] = useState<File[]>(file ? file : [])
   const theme = useTheme()
 
@@ -24,7 +25,6 @@ export const InputFile: FC<Props> = ({ label, id, className, file }) => {
 
   const handleRemove = (index: number) => {
     const newFiles = [...files]
-
     newFiles.splice(index, 1)
     setFiles(newFiles)
   }
@@ -59,7 +59,7 @@ export const InputFile: FC<Props> = ({ label, id, className, file }) => {
             {label}
           </label>
         </UploadButton>
-        <input type="file" id={id} multiple onChange={(e) => handleUpload(e)} />
+        <input type="file" id={id} onChange={(e) => handleUpload(e)} multiple={multiple} />
       </UploadButtonWrapper>
     </Wrapper>
   )
