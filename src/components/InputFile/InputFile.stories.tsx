@@ -4,27 +4,37 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { InputFile } from './InputFile'
-import readme from './README.md'
 
-storiesOf('InputFile', module)
-  .addParameters({
-    readme: {
-      sidebar: readme,
-    },
-  })
-  .add('all', () => (
-    <List>
-      <li>
-        <InputFile label="選択" onChange={action('change')} />
-      </li>
-    </List>
-  ))
+storiesOf('InputFile', module).add('all', () => {
+  const files: File[] = [
+    { name: 'fileName' } as File,
+    {
+      name:
+        'はばぱひびぴふぶぷへべぺほぼぽ_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.txt',
+    } as File,
+  ]
+  return (
+    <>
+      <Wrapper>
+        <p>Default</p>
+        <InputFile label="ファイルを選択" onChange={action('change')} />
+      </Wrapper>
+      <Wrapper>
+        <p>Set 'file'</p>
+        <InputFile label="ファイルを選択" onChange={action('change')} file={files} />
+      </Wrapper>
+    </>
+  )
+})
 
-const List = styled.ul`
-  padding: 0 24px;
-  list-style: none;
+const Wrapper = styled.div`
+  margin: 1rem;
 
-  & > li:not(:first-child) {
-    margin-top: 16px;
+  > * {
+    margin-right: 1rem;
+  }
+
+  p {
+    margin-bottom: 0.5rem;
   }
 `
