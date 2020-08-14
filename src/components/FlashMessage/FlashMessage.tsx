@@ -56,7 +56,7 @@ export const FlashMessage: FC<Props> = ({ visible, type, text, onClose, classNam
   }
 
   return (
-    <Wrapper className={`${type} ${className}`} themes={theme}>
+    <Wrapper className={`${type} ${className}`} themes={theme} role="alert">
       <Icon name={iconName} size={14} color={iconColor} />
       <Txt themes={theme}>{text}</Txt>
       <CloseButton className="close" onClick={onClose} size="s" square themes={theme}>
