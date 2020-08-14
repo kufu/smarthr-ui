@@ -9,7 +9,7 @@ declare type Props = {
     innerMargin?: innerMarginType;
     statusLabels?: StatusLabelProps[];
     helpMessage?: ReactNode;
-    errorMessages?: string[];
+    errorMessages?: string | string[];
     children: ReactNode;
     disabled?: boolean;
     className?: string;

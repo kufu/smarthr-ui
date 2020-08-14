@@ -104,7 +104,7 @@ storiesOf('FormGroup', module)
           labelType="blockTitle"
           statusLabels={SampleStatusLabels}
           helpMessage="help message text"
-          errorMessages={['error message 1', 'error message 2']}
+          errorMessages="error message"
           disabled
         >
           <SampleChildren id1="id_6-1" id2="id_6-2" disabled />
