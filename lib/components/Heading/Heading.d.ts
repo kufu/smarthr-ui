@@ -4,6 +4,7 @@ export declare type Props = {
     type?: HeadingTypes;
     tag?: HeadingTagTypes;
     className?: string;
+    disabled?: boolean;
 };
 export declare type HeadingTypes = 'screenTitle' | 'sectionTitle' | 'blockTitle' | 'subBlockTitle' | 'subSubBlockTitle';
 export declare type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span';

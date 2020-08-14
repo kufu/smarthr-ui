@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "9.2.0",
+  "version": "9.3.0",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "dayjs": "^1.8.30",
@@ -12,7 +12,7 @@
     "react-transition-group": "^4.4.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.5",
+    "@babel/core": "^7.11.1",
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
     "@storybook/addon-a11y": "^5.3.19",
@@ -91,6 +91,11 @@
     "typescript"
   ],
   "license": "MIT",
+  "lint-staged": {
+    "*.{ts,tsx},!^esm,!^lib": [
+      "eslint --fix"
+    ]
+  },
   "main": "lib/index.js",
   "module": "esm/index.js",
   "publishConfig": {
