@@ -20,11 +20,11 @@ storiesOf('InputFile', module).add('all', () => {
         <InputFile label="ファイルを選択" onChange={action('change')} />
       </Wrapper>
       <Wrapper>
-        <p>Set 'file'</p>
-        <InputFile label="ファイルを選択" onChange={action('change')} file={files} />
+        <p>Set files</p>
+        <InputFile label="ファイルを選択" onChange={action('change')} files={files} />
       </Wrapper>
       <Wrapper>
-        <p>Disabled 'multiple'</p>
+        <p>Disabled multiple</p>
         <InputFile label="ファイルを選択" onChange={action('change')} multiple={false} />
       </Wrapper>
     </>

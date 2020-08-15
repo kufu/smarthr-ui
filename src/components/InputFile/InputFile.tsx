@@ -1,39 +1,39 @@
-import React, { FC, useState, InputHTMLAttributes } from 'react'
+import React, { FC, InputHTMLAttributes, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { TextButton } from '../Button'
 import { Icon } from '../Icon'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 export type Props = InputHTMLAttributes<HTMLInputElement> & {
-  label: string
   id?: string
   className?: string
-  file?: File[]
+  label: string
+  files?: File[]
   multiple?: boolean
 }
 
-export const InputFile: FC<Props> = ({ label, id, className, file, multiple = true }) => {
-  const [files, setFiles] = useState<File[]>(file ? file : [])
+export const InputFile: FC<Props> = ({ label, id, className, files, multiple = true }) => {
+  const [filesArray, setFilesArray] = useState<File[]>(files ? files : [])
   const theme = useTheme()
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const uploadFile = Array.from(e.target.files)
-      setFiles([...files, ...uploadFile])
+      setFilesArray([...filesArray, ...uploadFile])
     }
   }
 
   const handleRemove = (index: number) => {
-    const newFiles = [...files]
-    newFiles.splice(index, 1)
-    setFiles(newFiles)
+    const newFilesArray = [...filesArray]
+    newFilesArray.splice(index, 1)
+    setFilesArray(newFilesArray)
   }
 
   return (
     <Wrapper className={className}>
-      {files && files.length > 0 && (
+      {filesArray && filesArray.length > 0 && (
         <FileList themes={theme}>
-          {files?.map((file, index) => {
+          {filesArray?.map((file, index) => {
             return (
               <li key={index}>
                 <span>{file.name}</span>
