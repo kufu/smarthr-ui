@@ -13,6 +13,7 @@ import { Header } from 'smarthr-ui'
     avatar: 'https://placehold.jp/150x150.png',
   }}
   currentTenantName="example, Inc."
+  tenantContent={<div>example, Inc.</div>}
   notificationLength={999}
   onClickLogo={handleClickLogo}
   onClickHelp={handleClickHelp}
@@ -40,6 +41,7 @@ import { Header } from 'smarthr-ui'
 | isCrew                 | -        | **boolean**                                     | false        | Whether viewer is crew.                     |
 | user                   | ✓        | **{ displayName: string,<br> avatar: string }** | -            | Viewer's user informations.                 |
 | currentTenantName      | ✓        | **string**                                      | -            | Current tenant name.                        |
+| tenantContent          | -        | **node**                                        | -            | The content of tenant name area.            |
 | notificationLength     | ✓        | **number**                                      | -            | Number of notifications.                    |
 | onClickLogo            | ✓        | **() => void**                                  | -            | Fires when the logo clicked.                |
 | onClickHelp            | ✓        | **() => void**                                  | -            | Fires when the help clicked.                |

@@ -17,10 +17,14 @@ storiesOf('Tooltip', module)
     <List>
       <dt>Default</dt>
       <dd>
-        <LightTooltip message="LightBalloon">LightTooltip</LightTooltip>
+        <LightTooltip message="LightBalloon" id="tooltip-1">
+          LightTooltip
+        </LightTooltip>
       </dd>
       <dd>
-        <DarkTooltip message="DarkBalloon">DarkTooltip</DarkTooltip>
+        <DarkTooltip message="DarkBalloon" id="tooltip-2">
+          DarkTooltip
+        </DarkTooltip>
       </dd>
       <dt>horizontal & vertical</dt>
       <dd>
@@ -28,6 +32,7 @@ storiesOf('Tooltip', module)
           message="horizontal=left & vertical=bottom (default)"
           horizontal="left"
           vertical="bottom"
+          id="tooltip-3"
         >
           horizontal=left & vertical=bottom (default)
         </LightTooltip>
@@ -37,6 +42,7 @@ storiesOf('Tooltip', module)
           message="horizontal=center & vertical=bottom"
           horizontal="center"
           vertical="bottom"
+          id="tooltip-4"
         >
           horizontal=center & vertical=bottom
         </LightTooltip>
@@ -46,6 +52,7 @@ storiesOf('Tooltip', module)
           message="horizontal=right & vertical=bottom"
           horizontal="right"
           vertical="bottom"
+          id="tooltip-5"
         >
           horizontal=right & vertical=bottom
         </LightTooltip>
@@ -55,6 +62,7 @@ storiesOf('Tooltip', module)
           message="horizontal=left & vertical=middle"
           horizontal="left"
           vertical="middle"
+          id="tooltip-6"
         >
           horizontal=left & vertical=middle
         </DarkTooltip>
@@ -64,33 +72,49 @@ storiesOf('Tooltip', module)
           message="horizontal=right & vertical=middle"
           horizontal="right"
           vertical="middle"
+          id="tooltip-7"
         >
           horizontal=right & vertical=middle
         </DarkTooltip>
       </dd>
       <dd>
-        <LightTooltip message="horizontal=left & vertical=top" horizontal="left" vertical="top">
+        <LightTooltip
+          message="horizontal=left & vertical=top"
+          horizontal="left"
+          vertical="top"
+          id="tooltip-8"
+        >
           horizontal=left & vertical=top
         </LightTooltip>
       </dd>
       <dd className="center">
-        <LightTooltip message="horizontal=center & vertical=top" horizontal="center" vertical="top">
+        <LightTooltip
+          message="horizontal=center & vertical=top"
+          horizontal="center"
+          vertical="top"
+          id="tooltip-9"
+        >
           horizontal=center & vertical=top
         </LightTooltip>
       </dd>
       <dd className="right">
-        <LightTooltip message="horizontal=right & vertical=top" horizontal="right" vertical="top">
+        <LightTooltip
+          message="horizontal=right & vertical=top"
+          horizontal="right"
+          vertical="top"
+          id="tooltip-10"
+        >
           horizontal=right & vertical=top
         </LightTooltip>
       </dd>
       <dt>ellipsisOnly</dt>
       <dd className="limit">
-        <DarkTooltip message="invisible message" ellipsisOnly={true}>
+        <DarkTooltip message="invisible message" ellipsisOnly={true} id="tooltip-11">
           ellipsisOnly: invisible
         </DarkTooltip>
       </dd>
       <dd className="limit">
-        <DarkTooltip message="visible message" ellipsisOnly={true}>
+        <DarkTooltip message="visible message" ellipsisOnly={true} id="tooltip-12">
           <Text>
             ellipsisOnly: visible: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de
             la Santísima Trinidad Ruiz Picasso
@@ -102,6 +126,7 @@ storiesOf('Tooltip', module)
         <LightTooltip
           message="Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima Trinidad Ruiz Picasso"
           multiLine={true}
+          id="tooltip-13"
         >
           MultiLineMessage: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la
           Santísima Trinidad Ruiz Picasso
@@ -120,6 +145,7 @@ storiesOf('Tooltip', module)
               ...
             </>
           }
+          id="tooltip-14"
         >
           <Text>
             MultiLineMessage: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la
@@ -134,6 +160,7 @@ storiesOf('Tooltip', module)
           horizontal="left"
           vertical="bottom"
           triggerType="icon"
+          id="tooltip-15"
         >
           <Icon name="fa-arrow-alt-circle-up" />
         </LightTooltip>
@@ -142,6 +169,7 @@ storiesOf('Tooltip', module)
           horizontal="center"
           vertical="bottom"
           triggerType="icon"
+          id="tooltip-16"
         >
           <Icon name="fa-arrow-alt-circle-up" />
         </LightTooltip>
@@ -150,6 +178,7 @@ storiesOf('Tooltip', module)
           horizontal="right"
           vertical="bottom"
           triggerType="icon"
+          id="tooltip-17"
         >
           <Icon name="fa-arrow-alt-circle-up" />
         </LightTooltip>
@@ -158,6 +187,7 @@ storiesOf('Tooltip', module)
           horizontal="left"
           vertical="middle"
           triggerType="icon"
+          id="tooltip-18"
         >
           <Icon name="fa-arrow-alt-circle-right" />
         </DarkTooltip>
@@ -166,6 +196,7 @@ storiesOf('Tooltip', module)
           horizontal="right"
           vertical="middle"
           triggerType="icon"
+          id="tooltip-19"
         >
           <Icon name="fa-arrow-alt-circle-left" />
         </DarkTooltip>
@@ -174,6 +205,7 @@ storiesOf('Tooltip', module)
           horizontal="left"
           vertical="top"
           triggerType="icon"
+          id="tooltip-20"
         >
           <Icon name="fa-arrow-alt-circle-down" />
         </LightTooltip>
@@ -182,6 +214,7 @@ storiesOf('Tooltip', module)
           horizontal="center"
           vertical="top"
           triggerType="icon"
+          id="tooltip-21"
         >
           <Icon name="fa-arrow-alt-circle-down" />
         </LightTooltip>
@@ -190,6 +223,7 @@ storiesOf('Tooltip', module)
           horizontal="right"
           vertical="top"
           triggerType="icon"
+          id="tooltip-22"
         >
           <Icon name="fa-arrow-alt-circle-down" />
         </LightTooltip>

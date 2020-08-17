@@ -17,6 +17,7 @@ type Props = {
     avatar: string
   }
   currentTenantName: string
+  tenantContent?: React.ReactNode
   notificationLength: number
   onClickLogo: () => void
   onClickHelp: () => void
@@ -31,6 +32,7 @@ type Props = {
   onClickProfile?: () => void
   onClickCompany?: () => void
   onClickSchool?: () => void
+  className?: string
 }
 
 export const Header: FC<Props> = ({
@@ -38,6 +40,7 @@ export const Header: FC<Props> = ({
   isCrew = false,
   user,
   currentTenantName,
+  tenantContent,
   notificationLength,
   onClickLogo,
   onClickHelp,
@@ -52,17 +55,18 @@ export const Header: FC<Props> = ({
   onClickProfile,
   onClickCompany,
   onClickSchool,
+  className,
 }) => {
   const theme = useTheme()
   const { displayName, avatar } = user
 
   return (
-    <Wrapper themes={theme}>
+    <Wrapper themes={theme} className={className}>
       <HeaderColumn>
         <HeaderLogo onClick={onClickLogo} aria-label="SmartHR" themes={theme}>
           <SmartHRLogo />
         </HeaderLogo>
-        <TenantName themes={theme}>{currentTenantName}</TenantName>
+        <TenantName themes={theme}>{tenantContent ? tenantContent : currentTenantName}</TenantName>
       </HeaderColumn>
 
       <HeaderColumn>
@@ -141,7 +145,7 @@ const HeaderLogo = styled.button<{ themes: Theme }>`
     `
   }}
 `
-const TenantName = styled.p<{ themes: Theme }>`
+const TenantName = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 

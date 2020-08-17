@@ -41,6 +41,8 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       if (props.value === undefined && props.defaultValue !== undefined) {
         formatValue(formatCurrency(props.defaultValue))
       }
+      // when component did mount
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
@@ -53,7 +55,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           formatValue(formatCurrency(innerRef.current.value))
         }
       }
-    }, [isFocused])
+    }, [isFocused, props.value, formatValue])
 
     const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
       setIsFocused(true)
