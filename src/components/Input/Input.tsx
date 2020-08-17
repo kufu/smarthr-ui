@@ -110,6 +110,7 @@ const Wrapper = styled.span<{
       `
     }
     ${
+      !disabled &&
       error &&
       css`
         border-color: ${palette.DANGER};
