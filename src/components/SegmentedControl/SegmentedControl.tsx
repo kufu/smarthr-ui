@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { PrimaryButton, SecondaryButton } from '../Button'
 
-type Option = {
+export type Option = {
   value: string
   content: ReactNode
   ariaLabel?: string
