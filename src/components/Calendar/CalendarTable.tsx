@@ -19,7 +19,7 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
   const currentDay = dayjs(current)
   const selectedDay = selected ? dayjs(selected) : null
 
-  const now = dayjs()
+  const now = dayjs().startOf('date')
   const fromDay = dayjs(from)
   const toDay = dayjs(to)
 
