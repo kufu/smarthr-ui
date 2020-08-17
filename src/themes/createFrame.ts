@@ -26,7 +26,6 @@ export interface CreatedFrameTheme {
     radius: {
       s: string
       m: string
-      l: string
     }
   }
 }
@@ -37,9 +36,8 @@ export const defaultFrame: CreatedFrameTheme = {
     lineStyle,
     default: `${lineWidth} ${lineStyle} ${lineColor}`,
     radius: {
-      s: '3px',
+      s: '4px',
       m: '6px',
-      l: '8px',
     },
   },
 }
