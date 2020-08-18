@@ -11,7 +11,6 @@ export type Props = InputHTMLAttributes<HTMLInputElement> & {
   className?: string
   label: string
   files?: File[]
-  multiple?: boolean
   onAdd?: (addFiles: File[]) => void
   onDelete?: (index: number) => void
   hasFileList?: boolean
@@ -32,11 +31,14 @@ export const InputFile: FC<Props> = ({
   const FileButtonWrapperClassName = `${disabled ? 'disabled' : ''}`
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onAdd && e.target.files) {
+    if (onAdd && e.target.files && e.target.files?.length > 0) {
       const uploadFile = Array.from(e.target.files)
       onAdd(uploadFile)
     }
   }
+
+  const handleClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) =>
+    ((e.target as HTMLInputElement).value = '')
 
   const handleDelete = (index: number) => {
     onDelete && onDelete(index)
@@ -68,6 +70,7 @@ export const InputFile: FC<Props> = ({
           type="file"
           id={id}
           onChange={(e) => handleChange(e)}
+          onClick={(e) => handleClick(e)}
           disabled={disabled}
           {...props}
         />

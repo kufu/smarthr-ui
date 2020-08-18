@@ -1,19 +1,19 @@
 import { storiesOf } from '@storybook/react'
-import React, { useState } from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 
 import { InputFile } from './InputFile'
 
 storiesOf('InputFile', module).add('all', () => {
-  const [files1, setFiles1] = useState<File[]>([])
-  const [files2, setFiles2] = useState<File[]>([])
+  const [files1, setFiles1] = React.useState<File[]>([])
+  const [files2, setFiles2] = React.useState<File[]>([])
 
   return (
     <>
       <Wrapper>
         <p>Default</p>
         <InputFile
-          label="ファイルを選択"
+          label="Choose File"
           onAdd={(addFiles) => {
             setFiles1([...files1, ...addFiles])
           }}
@@ -29,7 +29,7 @@ storiesOf('InputFile', module).add('all', () => {
       <Wrapper>
         <p>Disabled file list</p>
         <InputFile
-          label="ファイルを選択"
+          label="Choose File"
           onAdd={(addFiles) => {
             setFiles2([...files2, ...addFiles])
           }}
@@ -44,7 +44,7 @@ storiesOf('InputFile', module).add('all', () => {
       </Wrapper>
       <Wrapper>
         <p>Disabled input</p>
-        <InputFile label="ファイルを選択" files={[]} disabled />
+        <InputFile label="Choose File" files={[]} disabled />
       </Wrapper>
     </>
   )
