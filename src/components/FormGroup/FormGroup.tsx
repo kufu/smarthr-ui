@@ -13,7 +13,7 @@ type Props = {
   innerMargin?: innerMarginType
   statusLabels?: StatusLabelProps[]
   helpMessage?: ReactNode
-  errorMessages?: string[]
+  errorMessages?: string | string[]
   children: ReactNode
   disabled?: boolean
   className?: string
@@ -35,7 +35,7 @@ export const FormGroup: FC<Props> = ({
   const disabledClass = disabled ? 'disabled' : ''
 
   return (
-    <Wrapper className={className}>
+    <Wrapper className={`${className} ${disabledClass}`} themes={theme}>
       <Label themes={theme} id={labelId} margin={innerMargin}>
         <TitleWrapper>
           <Title type={labelType} disabled={disabled}>
@@ -57,21 +57,18 @@ export const FormGroup: FC<Props> = ({
           )}
         </TitleWrapper>
 
-        {helpMessage && (
-          <HelpMessage themes={theme} className={disabledClass}>
-            {helpMessage}
-          </HelpMessage>
-        )}
+        {helpMessage && <HelpMessage themes={theme}>{helpMessage}</HelpMessage>}
+
         {errorMessages &&
-          errorMessages.map((errorMessageItem, index) => (
-            <ErrorMessage themes={theme} key={index} className={disabledClass}>
+          (typeof errorMessages === 'string' ? [errorMessages] : errorMessages).map((message) => (
+            <ErrorMessage themes={theme} key={message}>
               <ErrorIcon
                 name="fa-exclamation-circle"
                 color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.DANGER}
                 themes={theme}
                 size={14}
               />
-              <ErrorText>{errorMessageItem}</ErrorText>
+              <ErrorText>{message}</ErrorText>
             </ErrorMessage>
           ))}
       </Label>
@@ -80,8 +77,17 @@ export const FormGroup: FC<Props> = ({
   )
 }
 
-const Wrapper = styled.div`
-  display: block;
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette } = themes
+    return css`
+      display: block;
+
+      &.disabled {
+        color: ${palette.TEXT_DISABLED};
+      }
+    `
+  }}
 `
 
 const Label = styled.label<{ themes: Theme; margin: innerMarginType }>`
@@ -130,31 +136,23 @@ const LabelItem = styled(StatusLabel)<{ themes: Theme }>`
 
 const HelpMessage = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { size } = themes
 
     return css`
       margin-top: ${size.pxToRem(size.space.XXS)};
       font-size: ${size.pxToRem(size.font.TALL)};
-
-      &.disabled {
-        color: ${palette.TEXT_DISABLED};
-      }
     `
   }}
 `
 
 const ErrorMessage = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { size } = themes
 
     return css`
       margin-top: ${size.pxToRem(size.space.XXS)};
       font-size: ${size.pxToRem(size.font.TALL)};
       line-height: 1;
-
-      &.disabled {
-        color: ${palette.TEXT_DISABLED};
-      }
     `
   }}
 `
