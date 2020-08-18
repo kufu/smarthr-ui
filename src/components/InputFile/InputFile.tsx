@@ -34,11 +34,11 @@ export const InputFile: FC<Props> = ({
     if (onAdd && e.target.files && e.target.files?.length > 0) {
       const uploadFile = Array.from(e.target.files)
       onAdd(uploadFile)
+
+      const target = e.target as HTMLInputElement
+      target.value = ''
     }
   }
-
-  const handleClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) =>
-    ((e.target as HTMLInputElement).value = '')
 
   const handleDelete = (index: number) => {
     onDelete && onDelete(index)
@@ -70,7 +70,6 @@ export const InputFile: FC<Props> = ({
           type="file"
           id={id}
           onChange={(e) => handleChange(e)}
-          onClick={(e) => handleClick(e)}
           disabled={disabled}
           {...props}
         />
