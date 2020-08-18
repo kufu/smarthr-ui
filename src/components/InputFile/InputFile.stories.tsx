@@ -5,8 +5,8 @@ import styled from 'styled-components'
 import { InputFile } from './InputFile'
 
 storiesOf('InputFile', module).add('all', () => {
-  const [defaultFiles, setDefaultFiles] = useState<File[]>([])
-  const [fileListFiles, setFileListFiles] = useState<File[]>([])
+  const [files1, setFiles1] = useState<File[]>([])
+  const [files2, setFiles2] = useState<File[]>([])
 
   return (
     <>
@@ -15,14 +15,14 @@ storiesOf('InputFile', module).add('all', () => {
         <InputFile
           label="ファイルを選択"
           onAdd={(addFiles) => {
-            setDefaultFiles([...defaultFiles, ...addFiles])
+            setFiles1([...files1, ...addFiles])
           }}
           onDelete={(index) => {
-            const newFiles = [...defaultFiles]
+            const newFiles = [...files1]
             newFiles.splice(index, 1)
-            setDefaultFiles(newFiles)
+            setFiles1(newFiles)
           }}
-          files={defaultFiles}
+          files={files1}
           multiple
         />
       </Wrapper>
@@ -31,14 +31,14 @@ storiesOf('InputFile', module).add('all', () => {
         <InputFile
           label="ファイルを選択"
           onAdd={(addFiles) => {
-            setFileListFiles([...fileListFiles, ...addFiles])
+            setFiles2([...files2, ...addFiles])
           }}
           onDelete={(index) => {
-            const newFiles = [...fileListFiles]
+            const newFiles = [...files2]
             newFiles.splice(index, 1)
-            setFileListFiles(newFiles)
+            setFiles2(newFiles)
           }}
-          files={fileListFiles}
+          files={files2}
           hasFileList={false}
         />
       </Wrapper>
