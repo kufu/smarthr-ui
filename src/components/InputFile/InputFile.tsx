@@ -95,7 +95,7 @@ const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
     border-radius: ${frame.border.radius.m};
     padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
     margin-bottom: ${size.pxToRem(size.space.XS)};
-    background-color: ${palette.BACKGROUND};
+    background-color: ${palette.COLUMN};
     list-style: none;
 
     > li {
