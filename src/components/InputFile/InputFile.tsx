@@ -16,7 +16,7 @@ export const InputFile: FC<Props> = ({ label, id, className, files, multiple = t
   const [filesArray, setFilesArray] = useState<File[]>(files ? files : [])
   const theme = useTheme()
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const uploadFile = Array.from(e.target.files)
       setFilesArray([...filesArray, ...uploadFile])
@@ -31,9 +31,9 @@ export const InputFile: FC<Props> = ({ label, id, className, files, multiple = t
 
   return (
     <Wrapper className={className}>
-      {filesArray && filesArray.length > 0 && (
+      {filesArray.length > 0 && (
         <FileList themes={theme}>
-          {filesArray?.map((file, index) => {
+          {filesArray.map((file, index) => {
             return (
               <li key={index}>
                 <span>{file.name}</span>
@@ -59,7 +59,7 @@ export const InputFile: FC<Props> = ({ label, id, className, files, multiple = t
             {label}
           </label>
         </UploadButton>
-        <input type="file" id={id} onChange={(e) => handleUpload(e)} multiple={multiple} />
+        <input type="file" id={id} onChange={(e) => handleChange(e)} multiple={multiple} />
       </UploadButtonWrapper>
     </Wrapper>
   )
