@@ -1,31 +1,50 @@
-import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
-import * as React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { InputFile } from './InputFile'
 
 storiesOf('InputFile', module).add('all', () => {
-  const files: File[] = [
-    { name: 'fileName' } as File,
-    {
-      name:
-        'はばぱひびぴふぶぷへべぺほぼぽ_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.txt',
-    } as File,
-  ]
+  const [defaultFiles, setDefaultFiles] = useState<File[]>([])
+  const [fileListFiles, setFileListFiles] = useState<File[]>([])
+
   return (
     <>
       <Wrapper>
         <p>Default</p>
-        <InputFile label="ファイルを選択" onChange={action('change')} />
+        <InputFile
+          label="ファイルを選択"
+          onAdd={(addFiles) => {
+            setDefaultFiles([...defaultFiles, ...addFiles])
+          }}
+          onDelete={(index) => {
+            const newFiles = [...defaultFiles]
+            newFiles.splice(index, 1)
+            setDefaultFiles(newFiles)
+          }}
+          files={defaultFiles}
+          multiple
+        />
       </Wrapper>
       <Wrapper>
-        <p>Set files</p>
-        <InputFile label="ファイルを選択" onChange={action('change')} files={files} />
+        <p>Disabled file list</p>
+        <InputFile
+          label="ファイルを選択"
+          onAdd={(addFiles) => {
+            setFileListFiles([...fileListFiles, ...addFiles])
+          }}
+          onDelete={(index) => {
+            const newFiles = [...fileListFiles]
+            newFiles.splice(index, 1)
+            setFileListFiles(newFiles)
+          }}
+          files={fileListFiles}
+          hasFileList={false}
+        />
       </Wrapper>
       <Wrapper>
-        <p>Disabled multiple</p>
-        <InputFile label="ファイルを選択" onChange={action('change')} multiple={false} />
+        <p>Disabled input</p>
+        <InputFile label="ファイルを選択" files={[]} disabled />
       </Wrapper>
     </>
   )

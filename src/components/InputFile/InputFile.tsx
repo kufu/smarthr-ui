@@ -1,5 +1,7 @@
-import React, { FC, InputHTMLAttributes, useState } from 'react'
+import React, { FC, InputHTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
+
+import { isTouchDevice } from '../../libs/ua'
 import { TextButton } from '../Button'
 import { Icon } from '../Icon'
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -10,37 +12,48 @@ export type Props = InputHTMLAttributes<HTMLInputElement> & {
   label: string
   files?: File[]
   multiple?: boolean
+  onAdd?: (addFiles: File[]) => void
+  onDelete?: (index: number) => void
+  hasFileList?: boolean
 }
 
-export const InputFile: FC<Props> = ({ label, id, className, files, multiple = true }) => {
-  const [filesArray, setFilesArray] = useState<File[]>(files ? files : [])
+export const InputFile: FC<Props> = ({
+  label,
+  id,
+  className,
+  files = [],
+  hasFileList = true,
+  onAdd,
+  onDelete,
+  disabled = false,
+  ...props
+}) => {
   const theme = useTheme()
+  const FileButtonWrapperClassName = `${disabled ? 'disabled' : ''}`
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
+    if (onAdd && e.target.files) {
       const uploadFile = Array.from(e.target.files)
-      setFilesArray([...filesArray, ...uploadFile])
+      onAdd(uploadFile)
     }
   }
 
-  const handleRemove = (index: number) => {
-    const newFilesArray = [...filesArray]
-    newFilesArray.splice(index, 1)
-    setFilesArray(newFilesArray)
+  const handleDelete = (index: number) => {
+    onDelete && onDelete(index)
   }
 
   return (
     <Wrapper className={className}>
-      {filesArray.length > 0 && (
+      {!disabled && hasFileList && files.length > 0 && (
         <FileList themes={theme}>
-          {filesArray.map((file, index) => {
+          {files.map((file, index) => {
             return (
               <li key={index}>
                 <span>{file.name}</span>
                 <span>
                   <TextButton
                     prefix={<Icon size={14} name="fa-trash-alt" />}
-                    onClick={() => handleRemove(index)}
+                    onClick={() => handleDelete(index)}
                   >
                     削除
                   </TextButton>
@@ -50,17 +63,23 @@ export const InputFile: FC<Props> = ({ label, id, className, files, multiple = t
           })}
         </FileList>
       )}
-      <UploadButtonWrapper>
-        <UploadButton themes={theme}>
+      <FileButtonWrapper themes={theme} className={FileButtonWrapperClassName}>
+        <input
+          type="file"
+          id={id}
+          onChange={(e) => handleChange(e)}
+          disabled={disabled}
+          {...props}
+        />
+        <FileButton themes={theme} disabled={disabled}>
           <label htmlFor={id}>
             <Prefix themes={theme}>
               <Icon size={14} name="fa-folder-open" />
             </Prefix>
             {label}
           </label>
-        </UploadButton>
-        <input type="file" id={id} onChange={(e) => handleChange(e)} multiple={multiple} />
-      </UploadButtonWrapper>
+        </FileButton>
+      </FileButtonWrapper>
     </Wrapper>
   )
 }
@@ -86,28 +105,52 @@ const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
   `
 })
 
-const UploadButtonWrapper = styled.div`
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
+const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
+  const { palette, interaction } = themes
 
-  > input[type='file'] {
-    position: absolute;
-    cursor: pointer;
-    height: 100%;
-    left: 0;
-    top: 0;
-    margin: 0;
-    font-size: 128px;
-    opacity: 0;
+  return css`
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
 
-    &::-webkit-file-upload-button {
-      cursor: pointer;
+    > input[type='file'] {
+      position: absolute;
+      height: 100%;
+      left: 0;
+      top: 0;
+      margin: 0;
+      font-size: 128px;
+      opacity: 0;
+
+      &::-webkit-file-upload-button {
+        cursor: pointer;
+      }
     }
-  }
-`
 
-const UploadButton = styled.button<{ themes: Theme }>(({ themes }) => {
+    > button {
+      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+    }
+
+    &:hover {
+      > button {
+        background-color: ${palette.hoverColor('#fff')};
+      }
+      &.disabled {
+        > button {
+          background-color: ${palette.COLUMN};
+        }
+      }
+    }
+
+    &.disabled {
+      > input[type='file'] {
+        display: none;
+      }
+    }
+  `
+})
+
+const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
   const { frame, palette, size } = themes
   return css`
     font-family: inherit;
@@ -127,6 +170,15 @@ const UploadButton = styled.button<{ themes: Theme }>(({ themes }) => {
 
     &.prefix {
       justify-content: left;
+    }
+
+    &[disabled] {
+      cursor: not-allowed;
+      background-color: ${palette.COLUMN};
+      color: ${palette.TEXT_DISABLED};
+      > label {
+        cursor: not-allowed;
+      }
     }
   `
 })
