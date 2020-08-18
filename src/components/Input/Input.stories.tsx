@@ -47,6 +47,11 @@ storiesOf('Input', module).add('all', () => (
       <Input error={true} />
     </li>
     <li>
+      <Txt>disabled and error</Txt>
+      <Input error={true} disabled={true} />
+      <Note>`disabled` takes precedence over `error`</Note>
+    </li>
+    <li>
       <Txt>prefix</Txt>
       <Input prefix={<Icon name="fa-search" color="#d6d6d6" />} />
     </li>
@@ -74,4 +79,10 @@ const Txt = styled.p`
 `
 const StyledInput = styled(Input)`
   width: 50%;
+`
+
+const Note = styled.div`
+  margin-top: 8px;
+  font-size: 12px;
+  color: #767676;
 `
