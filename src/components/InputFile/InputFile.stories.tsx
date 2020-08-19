@@ -7,6 +7,7 @@ import { InputFile } from './InputFile'
 storiesOf('InputFile', module).add('all', () => {
   const [files1, setFiles1] = React.useState<File[]>([])
   const [files2, setFiles2] = React.useState<File[]>([])
+  const [files3, setFiles3] = React.useState<File[]>([])
 
   return (
     <>
@@ -27,7 +28,7 @@ storiesOf('InputFile', module).add('all', () => {
         />
       </Wrapper>
       <Wrapper>
-        <p>Disabled file list</p>
+        <p>Size S</p>
         <InputFile
           label="Choose File"
           onAdd={(addFiles) => {
@@ -39,6 +40,23 @@ storiesOf('InputFile', module).add('all', () => {
             setFiles2(newFiles)
           }}
           files={files2}
+          size="s"
+          multiple
+        />
+      </Wrapper>
+      <Wrapper>
+        <p>Disabled file list</p>
+        <InputFile
+          label="Choose File"
+          onAdd={(addFiles) => {
+            setFiles3([...files3, ...addFiles])
+          }}
+          onDelete={(index) => {
+            const newFiles = [...files3]
+            newFiles.splice(index, 1)
+            setFiles3(newFiles)
+          }}
+          files={files3}
           hasFileList={false}
         />
       </Wrapper>

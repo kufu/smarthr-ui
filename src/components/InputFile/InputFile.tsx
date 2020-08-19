@@ -6,9 +6,12 @@ import { TextButton } from '../Button'
 import { Icon } from '../Icon'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-export type Props = InputHTMLAttributes<HTMLInputElement> & {
+type Size = 'default' | 's'
+
+export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   id?: string
   className?: string
+  size?: Size
   label: string
   files?: File[]
   onAdd?: (addFiles: File[]) => void
@@ -17,9 +20,10 @@ export type Props = InputHTMLAttributes<HTMLInputElement> & {
 }
 
 export const InputFile: FC<Props> = ({
-  label,
   id,
   className,
+  size = 'default',
+  label,
   files = [],
   hasFileList = true,
   onAdd,
@@ -29,6 +33,7 @@ export const InputFile: FC<Props> = ({
 }) => {
   const theme = useTheme()
   const FileButtonWrapperClassName = `${disabled ? 'disabled' : ''}`
+  const FileButtonClassName = `${size}`
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onAdd && e.target.files && e.target.files?.length > 0) {
@@ -73,7 +78,7 @@ export const InputFile: FC<Props> = ({
           disabled={disabled}
           {...props}
         />
-        <FileButton themes={theme} disabled={disabled}>
+        <FileButton themes={theme} className={FileButtonClassName} disabled={disabled}>
           <label htmlFor={id}>
             <Prefix themes={theme}>
               <Icon size={14} name="fa-folder-open" />
@@ -91,10 +96,9 @@ const Wrapper = styled.div`
 `
 
 const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
-  const { frame, palette, size } = themes
+  const { palette, size } = themes
   return css`
     font-size: ${size.pxToRem(size.font.TALL)};
-    border-radius: ${frame.border.radius.m};
     padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
     margin-bottom: ${size.pxToRem(size.space.XS)};
     background-color: ${palette.COLUMN};
@@ -157,9 +161,6 @@ const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
   return css`
     font-family: inherit;
     font-weight: bold;
-    font-size: ${size.pxToRem(size.font.TALL)};
-    height: 40px;
-    padding: 0 ${size.pxToRem(size.space.XS)};
     border-radius: ${frame.border.radius.m};
     color: ${palette.TEXT_BLACK};
     background-color: #fff;
@@ -168,6 +169,28 @@ const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
     > label {
       display: flex;
       align-items: center;
+    }
+
+    &.default {
+      font-size: ${size.pxToRem(size.font.TALL)};
+      height: 40px;
+      padding: 0 ${size.pxToRem(size.space.XS)};
+    }
+
+    &.s {
+      font-size: ${size.pxToRem(size.font.SHORT)};
+      height: 27px;
+      padding: 0 ${size.pxToRem(size.space.XXS)};
+    }
+
+    &.square {
+      width: 40px;
+      padding: 0;
+
+      &.s {
+        width: 27px;
+        min-width: 27px;
+      }
     }
 
     &.prefix {
