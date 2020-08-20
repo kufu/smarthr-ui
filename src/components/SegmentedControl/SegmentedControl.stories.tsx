@@ -33,7 +33,7 @@ storiesOf('SegmentedControl', module)
         <dt>Default</dt>
         <dd>
           <SegmentedControl
-            options={options.map((option) => ({ ...option, content: 'ボタン' }))}
+            options={options.map((option) => ({ ...option, content: 'Button' }))}
             value={value1}
             onClickOption={(value) => {
               action('clicked')(value)
@@ -44,7 +44,7 @@ storiesOf('SegmentedControl', module)
         <dt>Small</dt>
         <dd>
           <SegmentedControl
-            options={options.map((option) => ({ ...option, content: 'ボタン' }))}
+            options={options.map((option) => ({ ...option, content: 'Button' }))}
             value={value2}
             onClickOption={(value) => {
               action('clicked')(value)
@@ -89,7 +89,7 @@ storiesOf('SegmentedControl', module)
           <SegmentedControl
             options={options.map((option, i) => ({
               ...option,
-              content: 'ボタン',
+              content: 'Button',
               disabled: i > 2,
             }))}
             value={value5}
