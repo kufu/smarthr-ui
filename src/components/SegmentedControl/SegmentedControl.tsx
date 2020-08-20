@@ -35,12 +35,13 @@ export const SegmentedControl: FC<Props> = ({
       {options.map((option) => {
         const isSelected = !!value && value === option.value
         const Button = isSelected ? SelectedButton : DefaultButton
+        const onClick = onClickOption ? () => onClickOption(option.value) : undefined
         return (
           <Button
             aria-label={option.ariaLabel}
             key={option.value}
             disabled={option.disabled}
-            onClick={() => onClickOption && onClickOption(option.value)}
+            onClick={onClick}
             size={size}
             square={isSquare}
             themes={themes}
