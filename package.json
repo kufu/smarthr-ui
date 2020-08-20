@@ -131,6 +131,8 @@
     "reg-suit/**/braces": "3.0.2",
     "minimist": "1.2.5",
     "mem": "6.1.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "yargs-parser": ">=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2",
     "@types/react": "^16.9.48",
     "@babel/helper-compilation-targets": "^7.10.4"
