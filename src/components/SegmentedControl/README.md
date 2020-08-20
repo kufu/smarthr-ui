@@ -20,14 +20,14 @@ import { SegmentedControl } from 'smarthr-ui'
 
 ### SegmentedControl
 
-| Name          | Required | Type                         | DefaultValue | Description                                                                                 |
-| ------------- | -------- | ---------------------------- | ------------ | ------------------------------------------------------------------------------------------- |
-| options       | ✓        | **SegmentedControlOption[]** | -            | Data of each options.                                                                       |
-| value         | -        | **string**                   | -            | Value of selected option.                                                                   |
-| onClickOption | -        | **(value: string) => void**  | -            | Fired when option is clicked.                                                               |
-| size          | -        | **'default' \| 's'**         | 'default'    | Size of each buttons.                                                                       |
-| isSquare      | -        | **boolean**                  | false        | Whether makes each buttons square. <br/>It is set when each option buttons are icon button. |
-| className     | -        | **string**                   | -            | ClassName for component                                                                     |
+| Name          | Required | Type                         | DefaultValue | Description                                                                               |
+| ------------- | -------- | ---------------------------- | ------------ | ----------------------------------------------------------------------------------------- |
+| options       | ✓        | **SegmentedControlOption[]** | -            | Data of each option.                                                                      |
+| value         | -        | **string**                   | -            | Value of selected option.                                                                 |
+| onClickOption | -        | **(value: string) => void**  | -            | Fired when option is clicked.                                                             |
+| size          | -        | **'default' \| 's'**         | 'default'    | Size of each button.                                                                      |
+| isSquare      | -        | **boolean**                  | false        | Whether makes each button square. <br/>It is set when each option button are icon button. |
+| className     | -        | **string**                   | -            | ClassName for component                                                                   |
 
 ### SegmentedControlOption
 
