@@ -19,7 +19,7 @@ export var FormGroup = function (_a) {
                 statusLabels && (React.createElement(StatusLabels, { themes: theme }, statusLabels.map(function (StatusLabelItem, index) { return (React.createElement(LabelItem, { key: index, type: StatusLabelItem.type, className: StatusLabelItem.className, themes: theme }, StatusLabelItem.children)); })))),
             helpMessage && React.createElement(HelpMessage, { themes: theme }, helpMessage),
             errorMessages &&
-                (typeof errorMessages === 'string' ? [errorMessages] : errorMessages).map(function (message) { return (React.createElement(ErrorMessage, { themes: theme, key: message },
+                (typeof errorMessages === 'string' ? [errorMessages] : errorMessages).map(function (message, index) { return (React.createElement(ErrorMessage, { themes: theme, key: index },
                     React.createElement(ErrorIcon, { name: "fa-exclamation-circle", color: disabled ? theme.palette.TEXT_DISABLED : theme.palette.DANGER, themes: theme, size: 14 }),
                     React.createElement(ErrorText, null, message))); })),
         React.createElement(Body, null, children)));
