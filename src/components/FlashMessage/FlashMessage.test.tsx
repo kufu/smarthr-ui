@@ -1,27 +1,40 @@
-import { mount } from 'enzyme'
+// import { create } from 'react-test-renderer'
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { FlashMessage } from './FlashMessage'
 
 describe('FlashMessage', () => {
-  it('should not render if prop visible is false', () => {
-    const visibleFlashMessage = mount(
+  let container: HTMLDivElement
+  beforeEach(() => {
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
+  afterEach(() => {
+    document.body.removeChild(container)
+  })
+  it('should render if prop visible is true', () => {
+    ReactDOM.render(
       <FlashMessage type="success" text="flash!!" onClose={jest.fn()} visible={true} />,
+      container,
     )
-    const invisibleFlashMessage = mount(
+    expect(container.textContent).toEqual(expect.stringContaining('flash!!'))
+  })
+  it('should not render if prop visible is false', () => {
+    ReactDOM.render(
       <FlashMessage type="success" text="flash!!" onClose={jest.fn()} visible={false} />,
+      container,
     )
-
-    expect(visibleFlashMessage.text()).toEqual(expect.stringContaining('flash!!'))
-    expect(invisibleFlashMessage.text()).toEqual(expect.not.stringContaining('flash!!'))
+    expect(container.textContent).toEqual(expect.not.stringContaining('flash!!'))
   })
 
   it('should call onClose on click close button', () => {
     const spy = jest.fn()
-    const wrapper = mount(
+    ReactDOM.render(
       <FlashMessage type="success" text="flash!!" onClose={spy} visible={true} />,
+      container,
     )
 
-    wrapper.find('button.close').simulate('click')
+    document.querySelector<HTMLButtonElement>('button.close')!.click()
 
     expect(spy).toHaveBeenCalled()
   })

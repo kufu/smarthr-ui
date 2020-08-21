@@ -1,49 +1,62 @@
-import { mount } from 'enzyme'
+import { create } from 'react-test-renderer'
 import React from 'react'
+import ReactDOM from 'react-dom'
 
 import { CheckBox } from './CheckBox'
 
 describe('CheckBox', () => {
+  let container: HTMLDivElement
+  beforeEach(() => {
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
+  afterEach(() => {
+    document.body.removeChild(container)
+  })
   it('should be match snapshot', () => {
-    const component = mount(<CheckBox name="sample" checked={true} />)
-    expect(component).toMatchSnapshot()
+    const testRenderer = create(<CheckBox name="sample" checked={true} />)
+    expect(testRenderer.toJSON()).toMatchSnapshot()
   })
 
   it('should be render with value of name and checked attribute', () => {
     const name = 'sample'
     const checked = false
-    const component = mount(<CheckBox name={name} checked={checked} />)
+    ReactDOM.render(<CheckBox name={name} checked={checked} />, container)
 
-    expect(component.find('input').prop('name')).toBe(name)
-    expect(component.find('input').prop('checked')).toBe(checked)
+    expect(document.querySelector('input')!.name).toBe(name)
+    expect(document.querySelector('input')!.checked).toBe(checked)
   })
 
   it('should be render check icon if checked attribute is true', () => {
     const name = 'sample'
     const checked = true
-    const component = mount(<CheckBox name={name} checked={checked} />)
+    ReactDOM.render(<CheckBox name={name} checked={checked} />, container)
 
-    expect(component.find('svg')).toHaveLength(1)
-    expect(component.find('input').prop('checked')).toBe(checked)
+    expect(document.querySelectorAll('svg')).toHaveLength(1)
+    expect(document.querySelector('input')!.checked).toBe(checked)
   })
 
   it('should be not render check icon if checked attribute is false', () => {
     const name = 'sample'
     const checked = false
-    const component = mount(<CheckBox name={name} checked={checked} />)
+    ReactDOM.render(<CheckBox name={name} checked={checked} />, container)
 
-    expect(component.find('svg')).toHaveLength(0)
-    expect(component.find('input').prop('checked')).toBe(checked)
+    expect(document.querySelectorAll('svg')).toHaveLength(0)
+    expect(document.querySelector('input')!.checked).toBe(checked)
   })
 
   it('should be call onChange with name and checked', () => {
     const name = 'sample'
     const checked = true
-    const spy = jest.fn()
-    const component = mount(<CheckBox name={name} checked={checked} onChange={spy} />)
-    component.find('input').simulate('change')
-    const event = spy.mock.calls[0][0] as React.ChangeEvent<HTMLInputElement>
-    expect(event.target.name).toBe('sample')
-    expect(event.target.checked).toBeTruthy()
+    let target: HTMLInputElement
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      target = e.target
+    }
+    ReactDOM.render(<CheckBox name={name} checked={checked} onChange={onChange} />, container)
+    container.querySelector('input')!.click()
+    // @ts-expect-error
+    expect(target.name).toBe('sample')
+    // @ts-expect-error
+    expect(target.checked).toBeTruthy()
   })
 })
