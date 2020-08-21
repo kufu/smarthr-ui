@@ -6,6 +6,7 @@ export { Dropdown, DropdownTrigger, DropdownContent, DropdownCloser, DropdownScr
 export { FieldSet } from './components/FieldSet';
 export { FlashMessage } from './components/FlashMessage';
 export { Input, CurrencyInput } from './components/Input';
+export { InputFile } from './components/InputFile';
 export { Textarea } from './components/Textarea';
 export { Loader } from './components/Loader';
 export { Dialog, MessageDialog, ActionDialog, DialogWrapper, DialogTrigger, DialogCloser, DialogContent, MessageDialogContent, ActionDialogContent, } from './components/Dialog';
