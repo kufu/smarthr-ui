@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useState } from 'react'
+import React, { MouseEvent, forwardRef, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -16,9 +16,9 @@ type Props = {
   value?: Date
 }
 
-export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
+export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate, value }, ref) => {
   const themes = useTheme()
-  const now = dayjs()
+  const now = dayjs().startOf('date')
   const fromDay = dayjs(getFromDate(from))
   const toDay = dayjs(getToDate(to))
   const isValidValue = value && isBetween(value, fromDay.toDate(), toDay.toDate())
@@ -26,11 +26,17 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
   const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : now)
   const [isSelectingYear, setIsSelectingYear] = useState(false)
 
+  useEffect(() => {
+    if (value && isValidValue) {
+      setCurrentMonth(dayjs(value))
+    }
+  }, [value, isValidValue])
+
   const prevMonth = currentMonth.subtract(1, 'month')
   const nextMonth = currentMonth.add(1, 'month')
 
   return (
-    <Container themes={themes}>
+    <Container themes={themes} ref={ref}>
       <Header themes={themes}>
         <YearMonth>
           {currentMonth.year()}年{currentMonth.month() + 1}月
@@ -66,7 +72,11 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
               selectedYear={value?.getFullYear()}
               onSelectYear={(year) => {
                 setCurrentMonth(currentMonth.year(year))
-                setIsSelectingYear(false)
+                requestAnimationFrame(() => {
+                  // fallback for IE
+                  // delay hiding elements to be able to follow parent elements of click event by ParentNode API
+                  setIsSelectingYear(false)
+                })
               }}
             />
           </YearOverlay>
@@ -81,7 +91,7 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
       </TableLayout>
     </Container>
   )
-}
+})
 
 const Container = styled.section<{ themes: Theme }>`
   display: inline-block;

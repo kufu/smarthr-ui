@@ -13,7 +13,7 @@ type Props = {
 
 export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelectYear }) => {
   const themes = useTheme()
-  const scrollingRef = useRef<HTMLDivElement>(null)
+  const focusingRef = useRef<HTMLButtonElement>(null)
 
   const thisYear = new Date().getFullYear()
   const numOfYear = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0)
@@ -22,8 +22,9 @@ export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelect
     .map((_, i) => fromYear + i)
 
   useEffect(() => {
-    if (scrollingRef.current) {
-      scrollingRef.current.scrollIntoView({ block: 'center' })
+    if (focusingRef.current) {
+      focusingRef.current.focus()
+      focusingRef.current.blur()
     }
   }, [])
 
@@ -38,13 +39,9 @@ export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelect
             themes={themes}
             onClick={() => onSelectYear(year)}
             aria-pressed={isSelectedYear}
+            ref={isThisYear ? focusingRef : null}
           >
-            <YearWrapper
-              themes={themes}
-              isThisYear={isThisYear}
-              isSelected={isSelectedYear}
-              ref={isThisYear ? scrollingRef : null}
-            >
+            <YearWrapper themes={themes} isThisYear={isThisYear} isSelected={isSelectedYear}>
               {year}
             </YearWrapper>
           </YearButton>
