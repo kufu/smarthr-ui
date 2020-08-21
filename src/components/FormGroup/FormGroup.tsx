@@ -60,17 +60,19 @@ export const FormGroup: FC<Props> = ({
         {helpMessage && <HelpMessage themes={theme}>{helpMessage}</HelpMessage>}
 
         {errorMessages &&
-          (typeof errorMessages === 'string' ? [errorMessages] : errorMessages).map((message) => (
-            <ErrorMessage themes={theme} key={message}>
-              <ErrorIcon
-                name="fa-exclamation-circle"
-                color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.DANGER}
-                themes={theme}
-                size={14}
-              />
-              <ErrorText>{message}</ErrorText>
-            </ErrorMessage>
-          ))}
+          (typeof errorMessages === 'string' ? [errorMessages] : errorMessages).map(
+            (message, index) => (
+              <ErrorMessage themes={theme} key={index}>
+                <ErrorIcon
+                  name="fa-exclamation-circle"
+                  color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.DANGER}
+                  themes={theme}
+                  size={14}
+                />
+                <ErrorText>{message}</ErrorText>
+              </ErrorMessage>
+            ),
+          )}
       </Label>
       <Body>{children}</Body>
     </Wrapper>
