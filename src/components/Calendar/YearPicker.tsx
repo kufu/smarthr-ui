@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { ThemeProvider, css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme'
 import { ResetButton } from './ResetButton'
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 }
 
 export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelectYear }) => {
-  const themes = useTheme()
+  const theme = useTheme()
   const focusingRef = useRef<HTMLButtonElement>(null)
 
   const thisYear = new Date().getFullYear()
@@ -29,25 +29,26 @@ export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelect
   }, [])
 
   return (
-    <Container>
-      {yearArray.map((year) => {
-        const isThisYear = thisYear === year
-        const isSelectedYear = selectedYear === year
-        return (
-          <YearButton
-            key={year}
-            themes={themes}
-            onClick={() => onSelectYear(year)}
-            aria-pressed={isSelectedYear}
-            ref={isThisYear ? focusingRef : null}
-          >
-            <YearWrapper themes={themes} isThisYear={isThisYear} isSelected={isSelectedYear}>
-              {year}
-            </YearWrapper>
-          </YearButton>
-        )
-      })}
-    </Container>
+    <ThemeProvider theme={theme}>
+      <Container>
+        {yearArray.map((year) => {
+          const isThisYear = thisYear === year
+          const isSelectedYear = selectedYear === year
+          return (
+            <YearButton
+              key={year}
+              onClick={() => onSelectYear(year)}
+              aria-pressed={isSelectedYear}
+              ref={isThisYear ? focusingRef : null}
+            >
+              <YearWrapper isThisYear={isThisYear} isSelected={isSelectedYear}>
+                {year}
+              </YearWrapper>
+            </YearButton>
+          )
+        })}
+      </Container>
+    </ThemeProvider>
   )
 }
 
@@ -60,9 +61,9 @@ const Container = styled.div`
   box-sizing: border-box;
   overflow-y: scroll;
 `
-const YearWrapper = styled.div<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
-  ({ themes, isThisYear, isSelected }) => {
-    const { palette, size } = themes
+const YearWrapper = styled.div<{ isThisYear?: boolean; isSelected?: boolean }>(
+  ({ theme, isThisYear, isSelected }) => {
+    const { palette, size } = theme
     return css`
       display: flex;
       align-items: center;
@@ -85,7 +86,7 @@ const YearWrapper = styled.div<{ themes: Theme; isThisYear?: boolean; isSelected
     `
   },
 )
-const YearButton = styled(ResetButton)<{ themes: Theme }>`
+const YearButton = styled(ResetButton)`
   width: 25%;
   height: 43px;
   display: flex;
@@ -94,7 +95,7 @@ const YearButton = styled(ResetButton)<{ themes: Theme }>`
   cursor: pointer;
   &:hover {
     ${YearWrapper} {
-      color: ${(props) => props.themes.palette.TEXT_BLACK};
+      color: ${(props) => props.theme.palette.TEXT_BLACK};
       background-color: #f5f5f5;
     }
   }

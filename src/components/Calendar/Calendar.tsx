@@ -1,8 +1,8 @@
 import React, { MouseEvent, forwardRef, useEffect, useState } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { ThemeProvider, css } from 'styled-components'
 import dayjs from 'dayjs'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
 import { Icon } from '../Icon'
 import { CalendarTable } from './CalendarTable'
@@ -17,7 +17,7 @@ type Props = {
 }
 
 export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate, value }, ref) => {
-  const themes = useTheme()
+  const theme = useTheme()
   const now = dayjs().startOf('date')
   const fromDay = dayjs(getFromDate(from))
   const toDay = dayjs(getToDate(to))
@@ -36,77 +36,79 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
   const nextMonth = currentMonth.add(1, 'month')
 
   return (
-    <Container themes={themes} ref={ref}>
-      <Header themes={themes}>
-        <YearMonth>
-          {currentMonth.year()}年{currentMonth.month() + 1}月
-        </YearMonth>
-        <SecondaryButton onClick={() => setIsSelectingYear(!isSelectingYear)} size="s" square>
-          <Icon size={13} name={isSelectingYear ? 'fa-caret-up' : 'fa-caret-down'} />
-        </SecondaryButton>
-        <MonthButtonLayout>
-          <SecondaryButton
-            disabled={isSelectingYear || prevMonth.isBefore(fromDay, 'month')}
-            onClick={() => setCurrentMonth(prevMonth)}
-            size="s"
-            square
-          >
-            <Icon size={13} name="fa-chevron-left" />
+    <ThemeProvider theme={theme}>
+      <Container ref={ref}>
+        <Header>
+          <YearMonth>
+            {currentMonth.year()}年{currentMonth.month() + 1}月
+          </YearMonth>
+          <SecondaryButton onClick={() => setIsSelectingYear(!isSelectingYear)} size="s" square>
+            <Icon size={13} name={isSelectingYear ? 'fa-caret-up' : 'fa-caret-down'} />
           </SecondaryButton>
-          <SecondaryButton
-            disabled={isSelectingYear || nextMonth.isAfter(toDay, 'month')}
-            onClick={() => setCurrentMonth(nextMonth)}
-            size="s"
-            square
-          >
-            <Icon size={13} name="fa-chevron-right" />
-          </SecondaryButton>
-        </MonthButtonLayout>
-      </Header>
-      <TableLayout>
-        {isSelectingYear && (
-          <YearOverlay>
-            <YearPicker
-              fromYear={fromDay.year()}
-              toYear={toDay.year()}
-              selectedYear={value?.getFullYear()}
-              onSelectYear={(year) => {
-                setCurrentMonth(currentMonth.year(year))
-                requestAnimationFrame(() => {
-                  // fallback for IE
-                  // delay hiding elements to be able to follow parent elements of click event by ParentNode API
-                  setIsSelectingYear(false)
-                })
-              }}
-            />
-          </YearOverlay>
-        )}
-        <CalendarTable
-          current={currentMonth.toDate()}
-          from={fromDay.toDate()}
-          to={toDay.toDate()}
-          onSelectDate={onSelectDate}
-          selected={isValidValue ? value : null}
-        />
-      </TableLayout>
-    </Container>
+          <MonthButtonLayout>
+            <SecondaryButton
+              disabled={isSelectingYear || prevMonth.isBefore(fromDay, 'month')}
+              onClick={() => setCurrentMonth(prevMonth)}
+              size="s"
+              square
+            >
+              <Icon size={13} name="fa-chevron-left" />
+            </SecondaryButton>
+            <SecondaryButton
+              disabled={isSelectingYear || nextMonth.isAfter(toDay, 'month')}
+              onClick={() => setCurrentMonth(nextMonth)}
+              size="s"
+              square
+            >
+              <Icon size={13} name="fa-chevron-right" />
+            </SecondaryButton>
+          </MonthButtonLayout>
+        </Header>
+        <TableLayout>
+          {isSelectingYear && (
+            <YearOverlay>
+              <YearPicker
+                fromYear={fromDay.year()}
+                toYear={toDay.year()}
+                selectedYear={value?.getFullYear()}
+                onSelectYear={(year) => {
+                  setCurrentMonth(currentMonth.year(year))
+                  requestAnimationFrame(() => {
+                    // fallback for IE
+                    // delay hiding elements to be able to follow parent elements of click event by ParentNode API
+                    setIsSelectingYear(false)
+                  })
+                }}
+              />
+            </YearOverlay>
+          )}
+          <CalendarTable
+            current={currentMonth.toDate()}
+            from={fromDay.toDate()}
+            to={toDay.toDate()}
+            onSelectDate={onSelectDate}
+            selected={isValidValue ? value : null}
+          />
+        </TableLayout>
+      </Container>
+    </ThemeProvider>
   )
 })
 
-const Container = styled.section<{ themes: Theme }>`
+const Container = styled.section`
   display: inline-block;
   border-radius: 6px;
   background-color: #fff;
   box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
-  color: ${(props) => props.themes.palette.TEXT_BLACK};
+  color: ${(props) => props.theme.palette.TEXT_BLACK};
   overflow: hidden;
 `
 const YearMonth = styled.div`
   margin-right: 8px;
   font-weight: bold;
 `
-const Header = styled.header<{ themes: Theme }>(({ themes }) => {
-  const { palette, size } = themes
+const Header = styled.header(({ theme }) => {
+  const { palette, size } = theme
   return css`
     display: flex;
     align-items: center;

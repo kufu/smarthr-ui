@@ -1,8 +1,8 @@
 import React, { FC, MouseEvent } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { ThemeProvider, css } from 'styled-components'
 import dayjs from 'dayjs'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme'
 import { daysInWeek, getMonthArray, isBetween } from './calendarHelper'
 import { ResetButton } from './ResetButton'
 
@@ -15,7 +15,7 @@ type Props = {
 }
 
 export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, selected }) => {
-  const themes = useTheme()
+  const theme = useTheme()
   const currentDay = dayjs(current)
   const selectedDay = selected ? dayjs(selected) : null
 
@@ -25,57 +25,57 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
 
   const array = getMonthArray(currentDay.toDate())
   return (
-    <Table themes={themes}>
-      <thead>
-        <tr>
-          {daysInWeek.map((day, i) => (
-            <th key={i}>{day}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {array.map((week, weekIndex) => {
-          return (
-            <tr key={weekIndex}>
-              {week.map((date, dateIndex) => {
-                const isOutRange =
-                  !date ||
-                  !isBetween(currentDay.date(date).toDate(), fromDay.toDate(), toDay.toDate())
-                const isSelectedDate =
-                  !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
-                return (
-                  <td key={dateIndex}>
-                    {date && (
-                      <CellButton
-                        themes={themes}
-                        disabled={isOutRange}
-                        onClick={(e) =>
-                          !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
-                        }
-                        aria-pressed={isSelectedDate}
-                      >
-                        <DateCell
-                          themes={themes}
-                          isToday={currentDay.date(date).isSame(now, 'date')}
-                          isSelected={isSelectedDate}
+    <ThemeProvider theme={theme}>
+      <Table>
+        <thead>
+          <tr>
+            {daysInWeek.map((day, i) => (
+              <th key={i}>{day}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {array.map((week, weekIndex) => {
+            return (
+              <tr key={weekIndex}>
+                {week.map((date, dateIndex) => {
+                  const isOutRange =
+                    !date ||
+                    !isBetween(currentDay.date(date).toDate(), fromDay.toDate(), toDay.toDate())
+                  const isSelectedDate =
+                    !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
+                  return (
+                    <td key={dateIndex}>
+                      {date && (
+                        <CellButton
+                          disabled={isOutRange}
+                          onClick={(e) =>
+                            !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
+                          }
+                          aria-pressed={isSelectedDate}
                         >
-                          {date}
-                        </DateCell>
-                      </CellButton>
-                    )}
-                  </td>
-                )
-              })}
-            </tr>
-          )
-        })}
-      </tbody>
-    </Table>
+                          <DateCell
+                            isToday={currentDay.date(date).isSame(now, 'date')}
+                            isSelected={isSelectedDate}
+                          >
+                            {date}
+                          </DateCell>
+                        </CellButton>
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
+      </Table>
+    </ThemeProvider>
   )
 }
 
-const Table = styled.table<{ themes: Theme }>(({ themes }) => {
-  const { palette, size } = themes
+const Table = styled.table(({ theme }) => {
+  const { palette, size } = theme
   return css`
     color: ${palette.TEXT_BLACK};
     font-size: ${size.pxToRem(size.font.TALL)};
@@ -96,7 +96,7 @@ const Table = styled.table<{ themes: Theme }>(({ themes }) => {
     }
   `
 })
-const DateCell = styled.div<{ themes: Theme; isToday?: boolean; isSelected?: boolean }>`
+const DateCell = styled.div<{ isToday?: boolean; isSelected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,21 +104,21 @@ const DateCell = styled.div<{ themes: Theme; isToday?: boolean; isSelected?: boo
   height: 27px;
   border-radius: 50%;
   line-height: 0;
-  ${({ themes, isToday, isSelected }) => css`
+  ${({ theme, isToday, isSelected }) => css`
     ${isToday &&
     css`
-      border: solid 1px ${themes.palette.BORDER};
+      border: solid 1px ${theme.palette.BORDER};
     `}
 
     ${isSelected &&
     css`
-      background-color: ${themes.palette.MAIN} !important;
+      background-color: ${theme.palette.MAIN} !important;
       color: #fff !important;
     `}
   `}
 `
-const CellButton = styled(ResetButton)<{ themes: Theme }>(
-  ({ themes }) => css`
+const CellButton = styled(ResetButton)(
+  ({ theme }) => css`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -127,14 +127,14 @@ const CellButton = styled(ResetButton)<{ themes: Theme }>(
     cursor: pointer;
 
     :disabled {
-      color: ${themes.palette.TEXT_DISABLED};
+      color: ${theme.palette.TEXT_DISABLED};
       cursor: not-allowed;
     }
     :not(:disabled) {
       &:hover {
         ${DateCell} {
           background-color: #f5f5f5;
-          color: ${themes.palette.TEXT_BLACK};
+          color: ${theme.palette.TEXT_BLACK};
         }
       }
     }
