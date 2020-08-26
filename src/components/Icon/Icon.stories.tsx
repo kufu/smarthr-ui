@@ -187,6 +187,7 @@ const icons: Array<Props['name']> = [
   'fa-long-arrow-alt-left',
   'fa-long-arrow-alt-right',
   'fa-long-arrow-alt-up',
+  'fa-medkit',
   'fa-minus',
   'fa-minus-circle',
   'fa-minus-square',
