@@ -8,7 +8,7 @@ import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
 import { StatusLabel } from '../StatusLabel'
 import { Icon } from '../Icon'
 
-type Props = Omit<InputProps, 'error'> & {
+export type Props = Omit<InputProps, 'error'> & {
   label: string
   labelType?: HeadingTypes
   labelTagType?: HeadingTagTypes

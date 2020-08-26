@@ -10,7 +10,7 @@ export {
   DropdownScrollArea,
   FilterDropdown,
 } from './components/Dropdown'
-export { FieldSet } from './components/FieldSet'
+export { FieldSet, Props as FieldSetProps } from './components/FieldSet'
 export { FlashMessage } from './components/FlashMessage'
 export { Input, CurrencyInput } from './components/Input'
 export { Textarea } from './components/Textarea'
