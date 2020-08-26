@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useRef } from 'react'
-import styled, { ThemeProvider, css } from 'styled-components'
+import styled, { css } from 'styled-components'
 
-import { useTheme } from '../../hooks/useTheme'
 import { ResetButton } from './ResetButton'
 
 type Props = {
@@ -12,7 +11,6 @@ type Props = {
 }
 
 export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelectYear }) => {
-  const theme = useTheme()
   const focusingRef = useRef<HTMLButtonElement>(null)
 
   const thisYear = new Date().getFullYear()
@@ -29,26 +27,24 @@ export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelect
   }, [])
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container>
-        {yearArray.map((year) => {
-          const isThisYear = thisYear === year
-          const isSelectedYear = selectedYear === year
-          return (
-            <YearButton
-              key={year}
-              onClick={() => onSelectYear(year)}
-              aria-pressed={isSelectedYear}
-              ref={isThisYear ? focusingRef : null}
-            >
-              <YearWrapper isThisYear={isThisYear} isSelected={isSelectedYear}>
-                {year}
-              </YearWrapper>
-            </YearButton>
-          )
-        })}
-      </Container>
-    </ThemeProvider>
+    <Container>
+      {yearArray.map((year) => {
+        const isThisYear = thisYear === year
+        const isSelectedYear = selectedYear === year
+        return (
+          <YearButton
+            key={year}
+            onClick={() => onSelectYear(year)}
+            aria-pressed={isSelectedYear}
+            ref={isThisYear ? focusingRef : null}
+          >
+            <YearWrapper isThisYear={isThisYear} isSelected={isSelectedYear}>
+              {year}
+            </YearWrapper>
+          </YearButton>
+        )
+      })}
+    </Container>
   )
 }
 

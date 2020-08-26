@@ -1,8 +1,7 @@
 import React, { FC, MouseEvent } from 'react'
-import styled, { ThemeProvider, css } from 'styled-components'
+import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
-import { useTheme } from '../../hooks/useTheme'
 import { daysInWeek, getMonthArray, isBetween } from './calendarHelper'
 import { ResetButton } from './ResetButton'
 
@@ -15,7 +14,6 @@ type Props = {
 }
 
 export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, selected }) => {
-  const theme = useTheme()
   const currentDay = dayjs(current)
   const selectedDay = selected ? dayjs(selected) : null
 
@@ -25,52 +23,50 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
 
   const array = getMonthArray(currentDay.toDate())
   return (
-    <ThemeProvider theme={theme}>
-      <Table>
-        <thead>
-          <tr>
-            {daysInWeek.map((day, i) => (
-              <th key={i}>{day}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {array.map((week, weekIndex) => {
-            return (
-              <tr key={weekIndex}>
-                {week.map((date, dateIndex) => {
-                  const isOutRange =
-                    !date ||
-                    !isBetween(currentDay.date(date).toDate(), fromDay.toDate(), toDay.toDate())
-                  const isSelectedDate =
-                    !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
-                  return (
-                    <td key={dateIndex}>
-                      {date && (
-                        <CellButton
-                          disabled={isOutRange}
-                          onClick={(e) =>
-                            !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
-                          }
-                          aria-pressed={isSelectedDate}
+    <Table>
+      <thead>
+        <tr>
+          {daysInWeek.map((day, i) => (
+            <th key={i}>{day}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {array.map((week, weekIndex) => {
+          return (
+            <tr key={weekIndex}>
+              {week.map((date, dateIndex) => {
+                const isOutRange =
+                  !date ||
+                  !isBetween(currentDay.date(date).toDate(), fromDay.toDate(), toDay.toDate())
+                const isSelectedDate =
+                  !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
+                return (
+                  <td key={dateIndex}>
+                    {date && (
+                      <CellButton
+                        disabled={isOutRange}
+                        onClick={(e) =>
+                          !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
+                        }
+                        aria-pressed={isSelectedDate}
+                      >
+                        <DateCell
+                          isToday={currentDay.date(date).isSame(now, 'date')}
+                          isSelected={isSelectedDate}
                         >
-                          <DateCell
-                            isToday={currentDay.date(date).isSame(now, 'date')}
-                            isSelected={isSelectedDate}
-                          >
-                            {date}
-                          </DateCell>
-                        </CellButton>
-                      )}
-                    </td>
-                  )
-                })}
-              </tr>
-            )
-          })}
-        </tbody>
-      </Table>
-    </ThemeProvider>
+                          {date}
+                        </DateCell>
+                      </CellButton>
+                    )}
+                  </td>
+                )
+              })}
+            </tr>
+          )
+        })}
+      </tbody>
+    </Table>
   )
 }
 
