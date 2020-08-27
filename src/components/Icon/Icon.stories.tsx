@@ -265,6 +265,7 @@ const icons: Array<Props['name']> = [
   'fa-table',
   'fa-tablet',
   'fa-tablet-alt',
+  'fa-tachometer-alt',
   'fa-tag',
   'fa-tags',
   'fa-task',
