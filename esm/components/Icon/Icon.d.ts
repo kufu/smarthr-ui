@@ -187,6 +187,7 @@ export declare const iconMap: {
     'fa-long-arrow-alt-left': import("react-icons/lib").IconType;
     'fa-long-arrow-alt-right': import("react-icons/lib").IconType;
     'fa-long-arrow-alt-up': import("react-icons/lib").IconType;
+    'fa-medkit': import("react-icons/lib").IconType;
     'fa-minus': import("react-icons/lib").IconType;
     'fa-minus-circle': import("react-icons/lib").IconType;
     'fa-minus-square': import("react-icons/lib").IconType;
@@ -264,6 +265,7 @@ export declare const iconMap: {
     'fa-table': import("react-icons/lib").IconType;
     'fa-tablet': import("react-icons/lib").IconType;
     'fa-tablet-alt': import("react-icons/lib").IconType;
+    'fa-tachometer-alt': import("react-icons/lib").IconType;
     'fa-tag': import("react-icons/lib").IconType;
     'fa-tags': import("react-icons/lib").IconType;
     'fa-task': import("react-icons/lib").IconType;
