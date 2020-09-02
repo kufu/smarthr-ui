@@ -88,3 +88,6 @@ export { defaultSize } from './themes/createSize'
 
 // constants
 export { FONT_FAMILY } from './constants'
+
+// utils
+export { SequencePrefixIdProvider } from './hooks/useId'
