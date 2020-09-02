@@ -3,7 +3,7 @@ import { css } from 'styled-components'
 export const FONT_FAMILY =
   'system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", Meiryo, "メイリオ", sans-serif'
 
-export const VISUALLY_HIDDEN = css`
+export const VISUALLY_HIDDEN_STYLE = css`
   position: absolute;
   width: 1px;
   height: 1px;

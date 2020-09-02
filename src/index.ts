@@ -86,4 +86,4 @@ export { defaultFrame } from './themes/createFrame'
 export { defaultSize } from './themes/createSize'
 
 // constants
-export { FONT_FAMILY, VISUALLY_HIDDEN } from './constants'
+export { FONT_FAMILY, VISUALLY_HIDDEN_STYLE } from './constants'
