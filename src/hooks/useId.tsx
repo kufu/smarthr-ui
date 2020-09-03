@@ -6,7 +6,7 @@ interface IdContextValue {
 }
 
 const defaultContext: IdContextValue = {
-  prefix: Math.round(Math.random() * 10000000000),
+  prefix: 0,
   current: 0,
 }
 
@@ -22,10 +22,9 @@ export function useId(defaultId?: string) {
 
 export const SequencePrefixIdProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const context = useContext(IdContext)
-  // If this is the first Provider, set `prefix` to 0, otherwise increment.
-  // And set `current` to 0 on every Provider.
+  // increment `prefix` and reset `current` to 0 on every Provider
   const value: IdContextValue = {
-    prefix: context === defaultContext ? 0 : context.prefix + 1,
+    prefix: context.prefix + 1,
     current: 0,
   }
   return <IdContext.Provider value={value}>{children}</IdContext.Provider>
