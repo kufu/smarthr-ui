@@ -13,7 +13,7 @@ import { OmittableJobText } from './OmittableJobText'
 type JobId = string | number
 export type Status = 'processing' | 'downloading' | 'warning' | 'error' | 'done'
 
-type Job = {
+export type JobProps = {
   id: JobId
   status: Status
   name: string
@@ -23,7 +23,7 @@ type Job = {
 
 type Props = {
   title: string
-  jobs: Job[]
+  jobs: JobProps[]
   isExpanded?: boolean
   onClickCancelJob?: (jobId: JobId) => void
   onClickExpansion?: (isExpanded: boolean) => void
