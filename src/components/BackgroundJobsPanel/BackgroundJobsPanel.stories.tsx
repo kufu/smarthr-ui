@@ -46,6 +46,7 @@ storiesOf('BackgroundJobs', module)
                 description: 'Done',
               },
             ]}
+            onClickExpansion={action('click expansion')}
             onClickCancelJob={action('click cancel')}
             onClickClose={action('click close')}
             isExpanded
@@ -64,6 +65,7 @@ storiesOf('BackgroundJobs', module)
                 isCancelable: true,
               },
             ]}
+            onClickExpansion={action('click expansion')}
             onClickClose={action('click close')}
             isExpanded={false}
           />
@@ -105,6 +107,7 @@ storiesOf('BackgroundJobs', module)
                 description: 'Done',
               },
             ]}
+            onClickExpansion={action('click expansion')}
             onClickCancelJob={action('click cancel')}
             onClickClose={action('click close')}
           />
@@ -130,7 +133,9 @@ storiesOf('BackgroundJobs', module)
                 isCancelable: true,
               },
             ]}
+            onClickExpansion={action('click expansion')}
             onClickCancelJob={action('click cancel')}
+            onClickClose={action('click close')}
           />
         </dd>
       </List>
