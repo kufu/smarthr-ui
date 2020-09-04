@@ -78,6 +78,7 @@ export const BackgroundJobsPanel: FC<Props> = ({
       </Header>
       <JobList themes={themes} isExpanded={shouldExpand} id={jobListId}>
         {jobs.map((job) => {
+          const handleClickCancelJob = onClickCancelJob ? () => onClickCancelJob(job.id) : undefined
           return (
             <Job key={job.id} themes={themes}>
               <JobIconWrapper>
@@ -85,8 +86,8 @@ export const BackgroundJobsPanel: FC<Props> = ({
               </JobIconWrapper>
               <JobName themes={themes}>{job.name}</JobName>
               <JobDesc themes={themes}>{job.description}</JobDesc>
-              {job.isCancelable && onClickCancelJob && (
-                <CancelButton onClick={() => onClickCancelJob(job.id)} themes={themes}>
+              {job.isCancelable && (
+                <CancelButton onClick={handleClickCancelJob} themes={themes}>
                   キャンセル
                 </CancelButton>
               )}
