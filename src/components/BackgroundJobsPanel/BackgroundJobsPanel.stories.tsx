@@ -5,7 +5,14 @@ import styled from 'styled-components'
 import { BackgroundJobsPanel, JobProps } from './BackgroundJobsPanel'
 import { BackgroundJobsList } from './BackgroundJobsList'
 
-storiesOf('BackgroundJobs', module)
+import readme from './README.md'
+
+storiesOf('BackgroundJobsPanel', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
   .add('panel', () => {
     return (
       <List>
