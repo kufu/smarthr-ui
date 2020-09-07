@@ -76,6 +76,7 @@ export { MessageScreen } from './components/MessageScreen'
 export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { IndexNav, IndexNavItemProps } from './components/IndexNav'
+export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'
 
 // themes
 export { createTheme } from './themes/createTheme'
@@ -87,3 +88,6 @@ export { defaultSize } from './themes/createSize'
 
 // constants
 export { FONT_FAMILY, VISUALLY_HIDDEN_STYLE } from './constants'
+
+// utils
+export { SequencePrefixIdProvider } from './hooks/useId'
