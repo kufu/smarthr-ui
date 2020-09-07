@@ -16,7 +16,7 @@ const BackgroundJobsList: FC<Props> = ({ children, className }) => {
   )
 }
 
-const BackgroundJobsListItem = styled.li``
+const Item = styled.li``
 const List = styled.ul<{ themes: Theme }>(({ themes }) => {
   const { pxToRem, space } = themes.size
   return css`
@@ -29,7 +29,7 @@ const List = styled.ul<{ themes: Theme }>(({ themes }) => {
     margin: ${pxToRem(space.XS)};
     list-style: none;
 
-    ${BackgroundJobsListItem} {
+    ${Item} {
       :not(:first-child) {
         margin-top: ${pxToRem(space.XS)};
       }
@@ -37,7 +37,10 @@ const List = styled.ul<{ themes: Theme }>(({ themes }) => {
   `
 })
 
-const ListAndItem: typeof BackgroundJobsList & { Item: FC } = Object.assign(BackgroundJobsList, {
-  Item: BackgroundJobsListItem,
-})
+const ListAndItem: typeof BackgroundJobsList & { Item: typeof Item } = Object.assign(
+  BackgroundJobsList,
+  {
+    Item,
+  },
+)
 export { ListAndItem as BackgroundJobsList }

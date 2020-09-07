@@ -34,21 +34,21 @@ type Props = {
 export const BackgroundJobsPanel: FC<Props> = ({
   title,
   jobs,
-  isExpanded,
   onClickCancelJob,
   onClickExpansion,
   onClickClose,
   className,
+  ...props
 }) => {
   const themes = useTheme()
-  const isExpansionControlled = isExpanded !== undefined
+  const isExpansionControlled = props.isExpanded !== undefined
 
-  const [shouldExpand, setShouldExpand] = useState(isExpansionControlled ? !!isExpanded : true)
+  const [isExpanded, setIsExpanded] = useState(isExpansionControlled ? !!props.isExpanded : true)
   useEffect(() => {
     if (isExpansionControlled) {
-      setShouldExpand(!!isExpanded)
+      setIsExpanded(!!props.isExpanded)
     }
-  }, [isExpansionControlled, isExpanded])
+  }, [isExpansionControlled, props.isExpanded])
 
   const jobListId = useId()
 
@@ -61,22 +61,22 @@ export const BackgroundJobsPanel: FC<Props> = ({
             size="s"
             square
             onClick={() => {
-              onClickExpansion && onClickExpansion(!shouldExpand)
+              onClickExpansion && onClickExpansion(!isExpanded)
               if (!isExpansionControlled) {
-                setShouldExpand(!shouldExpand)
+                setIsExpanded(!isExpanded)
               }
             }}
-            aria-expanded={shouldExpand}
+            aria-expanded={isExpanded}
             aria-controls={jobListId}
           >
-            <Icon name={shouldExpand ? 'fa-minus' : 'fa-window-maximize'} size={13} />
+            <Icon name={isExpanded ? 'fa-minus' : 'fa-window-maximize'} size={13} />
           </SecondaryButton>
           <SecondaryButton size="s" square onClick={onClickClose}>
             <Icon name="fa-times" size={13} aria-label="Close" />
           </SecondaryButton>
         </HeaderButtonLayout>
       </Header>
-      <JobList themes={themes} isExpanded={shouldExpand} id={jobListId}>
+      <JobList themes={themes} isExpanded={isExpanded} id={jobListId}>
         {jobs.map((job) => {
           const handleClickCancelJob = onClickCancelJob ? () => onClickCancelJob(job.id) : undefined
           return (

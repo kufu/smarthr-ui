@@ -9,24 +9,27 @@ type Props = {
 }
 
 export const OmittableJobText: FC<Props> = ({ children, className }) => {
-  const [isEllipsis, setIsEllipsis] = useState(false)
-  const ref = useRef<HTMLSpanElement>(null)
+  const [needsOmitting, setNeedsOmitting] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (!ref.current) {
+    setNeedsOmitting(false)
+  }, [children])
+  useEffect(() => {
+    if (!ref.current || needsOmitting) {
       return
     }
     const { offsetWidth, offsetHeight, scrollWidth, scrollHeight } = ref.current
-    setIsEllipsis(offsetWidth < scrollWidth || offsetHeight < scrollHeight)
-  }, [])
+    setNeedsOmitting(offsetWidth < scrollWidth || offsetHeight < scrollHeight)
+  }, [needsOmitting, children])
 
   return (
     <Wrapper ref={ref} className={className}>
-      {isEllipsis ? <Tooltip message={children}>{children}</Tooltip> : children}
+      {needsOmitting ? <Tooltip message={children}>{children}</Tooltip> : children}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.span`
+const Wrapper = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
