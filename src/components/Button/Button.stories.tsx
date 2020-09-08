@@ -21,6 +21,123 @@ storiesOf('Button', module)
       sidebar: readme,
     },
   })
+  .add('Sumally', () => (
+    <SumallyBackground>
+      <Wrapper>
+        <p>Default size</p>
+        <PrimaryButton onClick={action('clicked')}>Button</PrimaryButton>
+        <SecondaryButton onClick={action('clicked')}>Button</SecondaryButton>
+        <DangerButton onClick={action('clicked')}>Button</DangerButton>
+        <SkeletonButton onClick={action('clicked')}>Button</SkeletonButton>
+        <TextButton onClick={action('clicked')}>Button</TextButton>
+      </Wrapper>
+      <Wrapper>
+        <p>Small size</p>
+        <PrimaryButton size="s" onClick={action('clicked')}>
+          Button
+        </PrimaryButton>
+        <SecondaryButton size="s" onClick={action('clicked')}>
+          Button
+        </SecondaryButton>
+        <DangerButton size="s" onClick={action('clicked')}>
+          Button
+        </DangerButton>
+        <SkeletonButton size="s" onClick={action('clicked')}>
+          Button
+        </SkeletonButton>
+        <TextButton size="s" onClick={action('clicked')}>
+          Button
+        </TextButton>
+      </Wrapper>
+      <Wrapper>
+        <p>With icon (Left)</p>
+        <PrimaryButton
+          prefix={<Icon size={14} name="fa-plus-circle" />}
+          onClick={action('clicked')}
+        >
+          Button
+        </PrimaryButton>
+        <SecondaryButton
+          prefix={<Icon size={14} name="fa-plus-circle" />}
+          onClick={action('clicked')}
+        >
+          Button
+        </SecondaryButton>
+        <DangerButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+          Button
+        </DangerButton>
+        <SkeletonButton
+          prefix={<Icon size={14} name="fa-plus-circle" />}
+          onClick={action('clicked')}
+        >
+          Button
+        </SkeletonButton>
+        <TextButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+          Button
+        </TextButton>
+      </Wrapper>
+      <Wrapper>
+        <p>With icon (Right)</p>
+        <PrimaryButton
+          suffix={<Icon size={14} name="fa-plus-circle" />}
+          onClick={action('clicked')}
+        >
+          Button
+        </PrimaryButton>
+        <SecondaryButton
+          suffix={<Icon size={14} name="fa-plus-circle" />}
+          onClick={action('clicked')}
+        >
+          Button
+        </SecondaryButton>
+        <DangerButton suffix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+          Button
+        </DangerButton>
+        <SkeletonButton
+          suffix={<Icon size={14} name="fa-plus-circle" />}
+          onClick={action('clicked')}
+        >
+          Button
+        </SkeletonButton>
+        <TextButton suffix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+          Button
+        </TextButton>
+      </Wrapper>
+      <Wrapper>
+        <p>Only icon</p>
+        <PrimaryButton onClick={action('clicked')} square>
+          <Icon size={13} name="fa-plus-circle" />
+        </PrimaryButton>
+        <SecondaryButton onClick={action('clicked')} square>
+          <Icon size={13} name="fa-plus-circle" />
+        </SecondaryButton>
+        <DangerButton onClick={action('clicked')} square>
+          <Icon size={13} name="fa-plus-circle" />
+        </DangerButton>
+        <SkeletonButton onClick={action('clicked')} square>
+          <Icon size={13} name="fa-plus-circle" />
+        </SkeletonButton>
+      </Wrapper>
+      <Wrapper className="wide">
+        <p>Wide</p>
+        <PrimaryButton onClick={action('clicked')} wide={true}>
+          Button
+        </PrimaryButton>
+        <SecondaryButton onClick={action('clicked')} wide={true}>
+          Button
+        </SecondaryButton>
+        <DangerButton onClick={action('clicked')} wide={true}>
+          Button
+        </DangerButton>
+        <SkeletonButton onClick={action('clicked')} wide={true}>
+          Button
+        </SkeletonButton>
+        <TextButton onClick={action('clicked')} wide={true}>
+          Button
+        </TextButton>
+      </Wrapper>
+    </SumallyBackground>
+  ))
   .add('Primary', () => (
     <>
       <Wrapper>
@@ -715,6 +832,10 @@ const Wrapper = styled.div`
       margin-bottom: 0.5rem;
     }
   }
+`
+
+const SumallyBackground = styled(Base)`
+  background-color: #edebe6;
 `
 
 const Background = styled(Base)`
