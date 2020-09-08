@@ -22,7 +22,7 @@ storiesOf('Button', module)
     },
   })
   .add('Sumally', () => (
-    <SumallyBackground>
+    <>
       <Wrapper>
         <p>Default size</p>
         <PrimaryButton onClick={action('clicked')}>Button</PrimaryButton>
@@ -136,7 +136,7 @@ storiesOf('Button', module)
           Button
         </TextButton>
       </Wrapper>
-    </SumallyBackground>
+    </>
   ))
   .add('Primary', () => (
     <>
@@ -832,10 +832,6 @@ const Wrapper = styled.div`
       margin-bottom: 0.5rem;
     }
   }
-`
-
-const SumallyBackground = styled(Base)`
-  background-color: #edebe6;
 `
 
 const Background = styled(Base)`
