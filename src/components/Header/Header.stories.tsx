@@ -32,6 +32,7 @@ storiesOf('Header', module)
     <Header
       isAdmin
       isCrew={false}
+      showLogout={false}
       user={{
         displayName: 'example@example.com',
         avatar: '',
