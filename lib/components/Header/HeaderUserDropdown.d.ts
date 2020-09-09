@@ -5,6 +5,7 @@ declare type Props = {
     displayName: string;
     currentTenantName: string;
     avatar: string;
+    showLogout: boolean;
     onClickAccount: () => void;
     onClickLogout: () => void;
     onClickProfile?: () => void;
