@@ -6,6 +6,7 @@ declare type Props = {
     showCrewList?: boolean;
     showCrewManagement?: boolean;
     showNotification?: boolean;
+    showLogout?: boolean;
     user: {
         displayName: string;
         avatar: string;

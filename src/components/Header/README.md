@@ -43,6 +43,7 @@ import { Header } from 'smarthr-ui'
 | showCrewList           | -        | **boolean**                                     | true         | Show crew list button.                      |
 | showCrewManagement     | -        | **boolean**                                     | true         | Show crew management dropdown.              |
 | showNotification       | -        | **boolean**                                     | true         | Show notification counter.                  |
+| showLogout             | -        | **boolean**                                     | true         | Show logout button in user dropdown.        |
 | user                   | ✓        | **{ displayName: string,<br> avatar: string }** | -            | Viewer's user information.                  |
 | currentTenantName      | ✓        | **string**                                      | -            | Current tenant name.                        |
 | tenantContent          | -        | **node**                                        | -            | The content of tenant name area.            |

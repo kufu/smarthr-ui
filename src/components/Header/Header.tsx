@@ -16,6 +16,7 @@ type Props = {
   showCrewList?: boolean
   showCrewManagement?: boolean
   showNotification?: boolean
+  showLogout?: boolean
   user: {
     displayName: string
     avatar: string
@@ -46,6 +47,7 @@ export const Header: FC<Props> = ({
   showCrewList = true,
   showCrewManagement = true,
   showNotification = true,
+  showLogout = true,
   user,
   currentTenantName,
   tenantContent,
@@ -113,6 +115,7 @@ export const Header: FC<Props> = ({
           displayName={displayName}
           currentTenantName={currentTenantName}
           avatar={avatar}
+          showLogout={showLogout}
           onClickAccount={onClickAccount}
           onClickLogout={onClickLogout}
           onClickProfile={onClickProfile}

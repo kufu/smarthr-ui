@@ -8,7 +8,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown';
 import { Icon } from '../Icon';
 export var HeaderUserDropdown = function (_a) {
-    var isAdmin = _a.isAdmin, isCrew = _a.isCrew, displayName = _a.displayName, currentTenantName = _a.currentTenantName, avatar = _a.avatar, onClickAccount = _a.onClickAccount, onClickLogout = _a.onClickLogout, onClickProfile = _a.onClickProfile, onClickCompany = _a.onClickCompany, onClickSchool = _a.onClickSchool;
+    var isAdmin = _a.isAdmin, isCrew = _a.isCrew, displayName = _a.displayName, currentTenantName = _a.currentTenantName, avatar = _a.avatar, showLogout = _a.showLogout, onClickAccount = _a.onClickAccount, onClickLogout = _a.onClickLogout, onClickProfile = _a.onClickProfile, onClickCompany = _a.onClickCompany, onClickSchool = _a.onClickSchool;
     var theme = useTheme();
     return (React.createElement(Dropdown, null,
         React.createElement(DropdownTrigger, null,
@@ -48,11 +48,11 @@ export var HeaderUserDropdown = function (_a) {
                         React.createElement(MenuListItemIcon, { themes: theme },
                             React.createElement(Icon, { name: "fa-graduation-cap" })),
                         "SmartHR \u30B9\u30AF\u30FC\u30EB"))),
-                React.createElement(MenuListItem, { role: "menuitem" },
+                showLogout && (React.createElement(MenuListItem, { role: "menuitem" },
                     React.createElement(MenuListItemButton, { onClick: onClickLogout, themes: theme },
                         React.createElement(MenuListItemIcon, { themes: theme },
                             React.createElement(Icon, { name: "fa-power-off" })),
-                        "\u30ED\u30B0\u30A2\u30A6\u30C8"))))));
+                        "\u30ED\u30B0\u30A2\u30A6\u30C8")))))));
 };
 var TriggerButton = styled.button(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  ", "\n"], ["\n  ",
     "\n"])), function (_a) {
