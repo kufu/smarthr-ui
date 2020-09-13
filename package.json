@@ -22,7 +22,7 @@
     "@storybook/cli": "^5.3.21",
     "@storybook/react": "^5.3.21",
     "@storybook/theming": "^5.3.21",
-    "@types/enzyme": "^3.10.5",
+    "@types/enzyme": "^3.10.6",
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/jest": "^26.0.13",
     "@types/lodash.merge": "^4.6.6",
