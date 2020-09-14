@@ -8836,15 +8836,15 @@ humanize-ms@^1.2.1:
   dependencies:
     ms "^2.0.0"
 
-husky@^4.2.5:
-  version "4.2.5"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-4.2.5.tgz#2b4f7622673a71579f901d9885ed448394b5fa36"
-  integrity sha512-SYZ95AjKcX7goYVZtVZF2i6XiZcHknw50iXvY7b0MiGoj5RwdgRQNEHdb+gPDPCXKlzwrybjFjkL6FOj8uRhZQ==
+husky@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-4.3.0.tgz#0b2ec1d66424e9219d359e26a51c58ec5278f0de"
+  integrity sha512-tTMeLCLqSBqnflBZnlVDhpaIMucSGaYyX6855jM4AguGeWCeSzNdb1mfyWduTZ3pe3SJVvVWGL0jO1iKZVPfTA==
   dependencies:
     chalk "^4.0.0"
     ci-info "^2.0.0"
     compare-versions "^3.6.0"
-    cosmiconfig "^6.0.0"
+    cosmiconfig "^7.0.0"
     find-versions "^3.2.0"
     opencollective-postinstall "^2.0.2"
     pkg-dir "^4.2.0"
@@ -10728,10 +10728,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-lint-staged@^10.2.13:
-  version "10.2.13"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-10.2.13.tgz#b9c504683470edfc464b7d3fe3845a5a1efcd814"
-  integrity sha512-conwlukNV6aL9SiMWjFtDp5exeDnTMekdNPDZsKGnpfQuHcO0E3L3Bbf58lcR+M7vk6LpCilxDAVks/DDVBYlA==
+lint-staged@^10.3.0:
+  version "10.3.0"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-10.3.0.tgz#388c3d440590c45c339e7163f669ea69ae90b1e0"
+  integrity sha512-an3VgjHqmJk0TORB/sdQl0CTkRg4E5ybYCXTTCSJ5h9jFwZbcgKIx5oVma5e7wp/uKt17s1QYFmYqT9MGVosGw==
   dependencies:
     chalk "^4.1.0"
     cli-truncate "^2.1.0"
@@ -14068,38 +14068,38 @@ reg-cli@^0.16.1:
     mustache "3.1.0"
     x-img-diff-js "0.3.5"
 
-reg-gh-app-interface@^1.0.1:
+reg-gh-app-interface@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/reg-gh-app-interface/-/reg-gh-app-interface-1.0.6.tgz#6e4f78f2e5c60585dac87b21d1cbc586dbb7f71c"
   integrity sha512-aLI9CpVlSyw3pdJkPS4E7P8pMjJG3DQrEN5bO5ANySxhHndXA7/uTGEe6kcK6V+/+xcYOsvoE6UrRphhkCZy3w==
 
-reg-keygen-git-hash-plugin@^0.8.5:
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.8.5.tgz#8738a964396844de14dbf98f07ac5a5d983b3576"
-  integrity sha512-d0Bk8bWnXLaqIl37MVVdZRia87POgLuJ6yOhZBrVGz0Zn41vE+SeS8nuMEwsxvNBrqWvESvzBmetcfTFOEhkxw==
+reg-keygen-git-hash-plugin@^0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.10.3.tgz#8519a8c1384d5996877a8e45ec04aa4ccabc6361"
+  integrity sha512-Dpe4hmyV1P0nlMXZ1kDQye1XyuZaVBCIIqt83N6sQnohPy0/ez3vFSS8B0JUJjr7J2YSphbaiWXuIOvb46aSsg==
   dependencies:
-    reg-suit-util "^0.8.5"
+    reg-suit-util "^0.10.3"
 
-reg-notify-github-plugin@^0.8.5:
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.8.5.tgz#18f6beb8280468ee65d4f95f3249b7bcb5d206e1"
-  integrity sha512-4JSJDXuJGHC8NO+uhpibMDptw3Lz0nHduOj/GuxLEUBbio3w9102VvR5fHcgW9hPPKjjwM0B/6WamLNbWWN50A==
+reg-notify-github-plugin@^0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.10.3.tgz#284539c5c618f9ab7a4031436ceccb4b25acc261"
+  integrity sha512-hfYiXj0ni3adWj1Xgx7oMIwN/qqLyMDQsblm6HoNOzY9yxithMQKT7G/2ngecSUU66hi840dLc+u40uGrmfKHQ==
   dependencies:
     opn "^5.4.0"
-    reg-gh-app-interface "^1.0.1"
-    reg-suit-util "^0.8.5"
+    reg-gh-app-interface "^1.0.6"
+    reg-suit-util "^0.10.3"
     request "^2.81.0"
     request-promise "^4.2.1"
     tiny-commit-walker "^1.1.2"
 
-reg-publish-s3-plugin@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/reg-publish-s3-plugin/-/reg-publish-s3-plugin-0.9.0.tgz#6973ebfb2354140f6f97b7ee63eba6a7ac63f05e"
-  integrity sha512-fOrcVI4xIK7EKHkLvVkF8GXGPYr2I+KZYgV5EDgZfGB3ffuNZ6fyQUBMv4wr8/jkfl6tFbw4GzSammdbp5gPeA==
+reg-publish-s3-plugin@^0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/reg-publish-s3-plugin/-/reg-publish-s3-plugin-0.10.3.tgz#b6d383e7a115ffec70d7a593c71f53995296045b"
+  integrity sha512-37Y/o4pPIVCvRVvbwAtWKksVYm+MKD9zXOoeQNmjCXGq6GzjJe7fIjtTK9oAdLiq2SyVkOf2KM+WaMK5q0BdRA==
   dependencies:
     aws-sdk "^2.432.0"
     mkdirp "^0.5.1"
-    reg-suit-util "^0.8.5"
+    reg-suit-util "^0.10.3"
     uuid "^3.1.0"
 
 reg-suit-core@^0.10.3:
@@ -14116,19 +14116,6 @@ reg-suit-util@^0.10.3:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.10.3.tgz#c5c4067e77b7a1b8fde661ffd31d818d7e0d3af1"
   integrity sha512-Fx++RKCxr08mqN+Yg10ueaaq8IUnm9h3fu+45LsFkMg34e22kfZk5JtpeUANvUuYzsVYjQ0NU25S024Aho6gzg==
-  dependencies:
-    chalk "^2.0.1"
-    cli-progress "^1.4.1"
-    cli-spinner "^0.2.6"
-    glob "^7.1.2"
-    lodash "^4.17.4"
-    mime-types "^2.1.15"
-    mkdirp "^0.5.1"
-
-reg-suit-util@^0.8.5:
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/reg-suit-util/-/reg-suit-util-0.8.5.tgz#a86eeacb032b5550fb98a0c696822e8a0ef072ef"
-  integrity sha512-9SdOTaXpTMAVurch5fP6u5kd9pADktUZgKYEbCIh4ud4tAObl6sKGPtD+bnsjkN4cymj7PBZSNXijgrW7lCV2w==
   dependencies:
     chalk "^2.0.1"
     cli-progress "^1.4.1"
