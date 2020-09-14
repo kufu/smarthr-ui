@@ -18,6 +18,7 @@ type Props = {
   parseInput?: (input: string) => Date | null
   formatDate?: (date: Date | null) => string
   name?: string
+  error?: boolean
   className?: string
 }
 
@@ -28,6 +29,7 @@ export const DatePicker: FC<Props> = ({
   parseInput,
   formatDate,
   name,
+  error,
   className,
 }) => {
   const themes = useTheme()
@@ -208,7 +210,7 @@ export const DatePicker: FC<Props> = ({
               </CalendarIconWrapper>
             </CalendarIconLayout>
           }
-          error={shouldShowError}
+          error={error || shouldShowError}
           ref={inputRef}
         />
       </InputWrapper>
