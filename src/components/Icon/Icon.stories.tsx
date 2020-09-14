@@ -313,18 +313,21 @@ const icons: Array<Props['name']> = [
   'fa-yen-sign',
 ]
 
-const getIconList = (bg: string, color?: string) =>
+const getIconList = (bg: string, color?: string, role?: string) =>
   icons.map((name) => (
-    <IconWrap key={`${color}-${name}`} bg={bg}>
-      <Icon name={name} color={color} />
-      <IconName color={color}>{name}</IconName>
-    </IconWrap>
+    <>
+      <IconWrap key={`${color}-${name}`} bg={bg}>
+        <Icon name={name} color={color} role={role && role} />
+        <IconName color={color}>{name}</IconName>
+      </IconWrap>
+    </>
   ))
 
 storiesOf('Icon', module)
   .add('white', () => <Wrapper>{getIconList(black, white)}</Wrapper>)
   .add('black', () => <Wrapper>{getIconList(white, black)}</Wrapper>)
   .add('default', () => <Wrapper>{getIconList(white)}</Wrapper>)
+  .add('change role', () => <Wrapper>{getIconList(white, black, 'figure')}</Wrapper>)
 
 const Container = styled.div`
   display: flex;

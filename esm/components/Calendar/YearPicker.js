@@ -9,22 +9,23 @@ import { ResetButton } from './ResetButton';
 export var YearPicker = function (_a) {
     var selectedYear = _a.selectedYear, fromYear = _a.fromYear, toYear = _a.toYear, onSelectYear = _a.onSelectYear;
     var themes = useTheme();
-    var scrollingRef = useRef(null);
+    var focusingRef = useRef(null);
     var thisYear = new Date().getFullYear();
     var numOfYear = Math.max(Math.min(toYear, 9999) - fromYear + 1, 0);
     var yearArray = Array(numOfYear)
         .fill(null)
         .map(function (_, i) { return fromYear + i; });
     useEffect(function () {
-        if (scrollingRef.current) {
-            scrollingRef.current.scrollIntoView({ block: 'center' });
+        if (focusingRef.current) {
+            focusingRef.current.focus();
+            focusingRef.current.blur();
         }
     }, []);
     return (React.createElement(Container, null, yearArray.map(function (year) {
         var isThisYear = thisYear === year;
         var isSelectedYear = selectedYear === year;
-        return (React.createElement(YearButton, { key: year, themes: themes, onClick: function () { return onSelectYear(year); }, "aria-pressed": isSelectedYear },
-            React.createElement(YearWrapper, { themes: themes, isThisYear: isThisYear, isSelected: isSelectedYear, ref: isThisYear ? scrollingRef : null }, year)));
+        return (React.createElement(YearButton, { key: year, themes: themes, onClick: function () { return onSelectYear(year); }, "aria-pressed": isSelectedYear, ref: isThisYear ? focusingRef : null },
+            React.createElement(YearWrapper, { themes: themes, isThisYear: isThisYear, isSelected: isSelectedYear }, year)));
     })));
 };
 var Container = styled.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  width: 100%;\n  height: 100%;\n  padding: 8px 3px;\n  box-sizing: border-box;\n  overflow-y: scroll;\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  width: 100%;\n  height: 100%;\n  padding: 8px 3px;\n  box-sizing: border-box;\n  overflow-y: scroll;\n"])));

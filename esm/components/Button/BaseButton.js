@@ -29,17 +29,19 @@ import styled, { css } from 'styled-components';
 import { useTheme } from '../../hooks/useTheme';
 import { hoverable } from '../../hocs/hoverable';
 import { isTouchDevice } from '../../libs/ua';
-export var buttonFactory = function (tag) { return function (_a) {
-    var _b = _a.size, size = _b === void 0 ? 'default' : _b, _c = _a.className, className = _c === void 0 ? '' : _c, _d = _a.square, square = _d === void 0 ? false : _d, _e = _a.children, children = _e === void 0 ? '' : _e, _f = _a.prefix, prefix = _f === void 0 ? '' : _f, _g = _a.suffix, suffix = _g === void 0 ? '' : _g, props = __rest(_a, ["size", "className", "square", "children", "prefix", "suffix"]);
-    var theme = useTheme();
+export var buttonFactory = function (tag) {
     var Tag = hoverable()(tagStore[tag]);
-    // prettier-ignore
-    var classNames = size + " " + className + " " + (square ? 'square' : '') + " " + (prefix ? 'prefix' : '') + " " + (suffix ? 'suffix' : '');
-    return (React.createElement(Tag, __assign({ className: classNames, themes: theme }, props),
-        prefix && React.createElement(Prefix, { themes: theme }, prefix),
-        children,
-        suffix && React.createElement(Suffix, { themes: theme }, suffix)));
-}; };
+    return function (_a) {
+        var _b = _a.size, size = _b === void 0 ? 'default' : _b, _c = _a.className, className = _c === void 0 ? '' : _c, _d = _a.square, square = _d === void 0 ? false : _d, _e = _a.children, children = _e === void 0 ? '' : _e, _f = _a.prefix, prefix = _f === void 0 ? '' : _f, _g = _a.suffix, suffix = _g === void 0 ? '' : _g, props = __rest(_a, ["size", "className", "square", "children", "prefix", "suffix"]);
+        var theme = useTheme();
+        // prettier-ignore
+        var classNames = size + " " + className + " " + (square ? 'square' : '') + " " + (prefix ? 'prefix' : '') + " " + (suffix ? 'suffix' : '');
+        return (React.createElement(Tag, __assign({ className: classNames, themes: theme }, props),
+            prefix && React.createElement(Prefix, { themes: theme }, prefix),
+            children,
+            suffix && React.createElement(Suffix, { themes: theme }, suffix)));
+    };
+};
 var Base = styled.div(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  ", "\n"], ["\n  ",
     "\n"])), function (_a) {
     var themes = _a.themes, wide = _a.wide;

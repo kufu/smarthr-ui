@@ -1,1 +1,2 @@
-export declare const FONT_FAMILY = "system-ui, -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", \"Hiragino Sans\", \"Hiragino Kaku Gothic ProN\", \"\u30D2\u30E9\u30AE\u30CE\u89D2\u30B4 ProN W3\", Meiryo, \"\u30E1\u30A4\u30EA\u30AA\", sans-serif";
+export declare const VISUALLY_HIDDEN_STYLE: import("styled-components").FlattenSimpleInterpolation;
+export declare const FONT_FAMILY = "system-ui, sans-serif";

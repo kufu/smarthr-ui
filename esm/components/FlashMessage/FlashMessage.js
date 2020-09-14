@@ -44,7 +44,7 @@ export var FlashMessage = function (_a) {
             iconName = 'fa-exclamation-circle';
             iconColor = theme.palette.DANGER;
     }
-    return (React.createElement(Wrapper, { className: type + " " + className, themes: theme },
+    return (React.createElement(Wrapper, { className: type + " " + className, themes: theme, role: "alert" },
         React.createElement(Icon, { name: iconName, size: 14, color: iconColor }),
         React.createElement(Txt, { themes: theme }, text),
         React.createElement(CloseButton, { className: "close", onClick: onClose, size: "s", square: true, themes: theme },

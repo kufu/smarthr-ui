@@ -19,7 +19,7 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
   const currentDay = dayjs(current)
   const selectedDay = selected ? dayjs(selected) : null
 
-  const now = dayjs()
+  const now = dayjs().startOf('date')
   const fromDay = dayjs(from)
   const toDay = dayjs(to)
 
@@ -80,11 +80,12 @@ const Table = styled.table<{ themes: Theme }>(({ themes }) => {
     color: ${palette.TEXT_BLACK};
     font-size: ${size.pxToRem(size.font.TALL)};
     border-spacing: 0;
-    padding: 4px 8px 13px;
+    margin: 4px 8px 13px;
 
     th {
       height: 37px;
       padding: 0;
+      vertical-align: middle;
       text-align: center;
       font-weight: normal;
       color: ${palette.TEXT_GREY};
@@ -93,6 +94,7 @@ const Table = styled.table<{ themes: Theme }>(({ themes }) => {
       width: 43px;
       height: 35px;
       padding: 0;
+      vertical-align: middle;
     }
   `
 })
