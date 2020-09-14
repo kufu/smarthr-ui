@@ -90,8 +90,8 @@ export const DatePicker: FC<Props> = ({
     setIsCalendarShown(true)
     const rect = inputWrapperRef.current.getBoundingClientRect()
     setCalendarPosition({
-      top: rect.top + rect.height - 4,
-      left: rect.left,
+      top: rect.top + rect.height - 4 + window.pageYOffset,
+      left: rect.left + window.pageXOffset,
     })
   }, [])
 
