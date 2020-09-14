@@ -17,6 +17,7 @@ type Props = {
   parsingErrorMessage?: string
   parseInput?: (input: string) => Date | null
   formatDate?: (date: Date | null) => string
+  name?: string
   className?: string
 }
 
@@ -26,6 +27,7 @@ export const DatePicker: FC<Props> = ({
   parsingErrorMessage = '非対応な入力形式です',
   parseInput,
   formatDate,
+  name,
   className,
 }) => {
   const themes = useTheme()
@@ -167,6 +169,7 @@ export const DatePicker: FC<Props> = ({
       <InputWrapper ref={inputWrapperRef}>
         <StyledInput
           type="text"
+          name={name}
           onChange={() => {
             if (isCalendarShown) {
               switchCalendarVisibility(false)
