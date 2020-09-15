@@ -18,7 +18,7 @@ storiesOf('DatePicker', module)
       <List>
         <dt>DatePicker</dt>
         <dd>
-          <DatePicker onChangeDate={action('change date')} />
+          <DatePicker onChangeDate={action('change date')} onChangeValue={action('change value')} />
         </dd>
         <dt>Custom format (ex. Date.toDateString)</dt>
         <dd>
