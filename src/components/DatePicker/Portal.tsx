@@ -31,5 +31,6 @@ const Container = styled.div<{ top: number; left: number }>(
     position: absolute;
     top: ${top}px;
     left: ${left}px;
+    z-index: 11000;
   `,
 )
