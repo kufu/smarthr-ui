@@ -18,6 +18,7 @@ type Props = {
   parseInput?: (input: string) => Date | null
   formatDate?: (date: Date | null) => string
   name?: string
+  disabled?: boolean
   error?: boolean
   className?: string
 }
@@ -29,6 +30,7 @@ export const DatePicker: FC<Props> = ({
   parseInput,
   formatDate,
   name,
+  disabled,
   error,
   className,
 }) => {
@@ -153,7 +155,7 @@ export const DatePicker: FC<Props> = ({
     <Container
       className={className}
       onClick={() => {
-        if (!isCalendarShown) {
+        if (!disabled && !isCalendarShown) {
           switchCalendarVisibility(true)
         }
       }}
@@ -210,6 +212,7 @@ export const DatePicker: FC<Props> = ({
               </CalendarIconWrapper>
             </CalendarIconLayout>
           }
+          disabled={disabled}
           error={error || shouldShowError}
           ref={inputRef}
         />
