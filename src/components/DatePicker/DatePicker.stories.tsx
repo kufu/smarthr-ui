@@ -34,6 +34,10 @@ storiesOf('DatePicker', module)
             }}
           />
         </dd>
+        <dt>Disabled</dt>
+        <dd>
+          <DatePicker disabled />
+        </dd>
         <dt>Extending style (width: 50%)</dt>
         <dd>
           <ExtendingDatePicker onChangeDate={action('change date')} />
