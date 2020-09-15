@@ -14,6 +14,7 @@ import { parseJpnDateString } from './datePickerHelper'
 type Props = {
   date?: Date | null
   onChangeDate?: (date: Date | null) => void
+  onChangeValue?: (value: string) => void
   parsingErrorMessage?: string
   parseInput?: (input: string) => Date | null
   formatDate?: (date: Date | null) => string
@@ -26,6 +27,7 @@ type Props = {
 export const DatePicker: FC<Props> = ({
   date = null,
   onChangeDate,
+  onChangeValue,
   parsingErrorMessage = '非対応な入力形式です',
   parseInput,
   formatDate,
@@ -75,12 +77,14 @@ export const DatePicker: FC<Props> = ({
       if (!inputRef.current) {
         return
       }
-      inputRef.current.value = dateToString(newDate)
+      const newDateString = dateToString(newDate)
+      inputRef.current.value = newDateString
       setSelectedDate(newDate)
       setExistsParsingError(false)
       onChangeDate && onChangeDate(newDate)
+      onChangeValue && onChangeValue(newDateString)
     },
-    [selectedDate, dateToString, onChangeDate],
+    [selectedDate, dateToString, onChangeDate, onChangeValue],
   )
 
   const switchCalendarVisibility = useCallback((isVisible: boolean) => {
@@ -174,10 +178,11 @@ export const DatePicker: FC<Props> = ({
         <StyledInput
           type="text"
           name={name}
-          onChange={() => {
+          onChange={(e) => {
             if (isCalendarShown) {
               switchCalendarVisibility(false)
             }
+            onChangeValue && onChangeValue(e.target.value)
           }}
           onKeyPress={(e) => {
             if (e.key === 'Enter') {
