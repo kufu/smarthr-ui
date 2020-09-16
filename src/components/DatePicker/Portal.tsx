@@ -1,6 +1,8 @@
-import React, { FC, ReactNode, useEffect, useRef } from 'react'
+import React, { FC, ReactNode, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
+
+import { usePortal } from '../../hooks/usePortal'
 
 type Props = {
   top: number
@@ -9,20 +11,20 @@ type Props = {
 }
 
 export const Portal: FC<Props> = ({ top, left, children }) => {
-  const root = useRef(document.createElement('div')).current
+  const { portalRoot } = usePortal()
   useEffect(() => {
-    document.body.appendChild(root)
+    document.body.appendChild(portalRoot)
 
     return () => {
-      document.body.removeChild(root)
+      document.body.removeChild(portalRoot)
     }
-  }, [root])
+  }, [portalRoot])
 
   return createPortal(
     <Container top={top} left={left}>
       {children}
     </Container>,
-    root,
+    portalRoot,
   )
 }
 
