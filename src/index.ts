@@ -91,3 +91,4 @@ export { FONT_FAMILY, VISUALLY_HIDDEN_STYLE } from './constants'
 
 // utils
 export { SequencePrefixIdProvider } from './hooks/useId'
+export { PortalZIndexProvider } from './hooks/usePortalZIndex'
