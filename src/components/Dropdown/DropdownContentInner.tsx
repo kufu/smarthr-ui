@@ -5,6 +5,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
 import { DropdownCloser } from './DropdownCloser'
+import { usePortalZIndex } from '../../hooks/usePortalZIndex'
 
 type Props = {
   triggerRect: Rect
@@ -41,6 +42,7 @@ export const DropdownContentInner: FC<Props> = ({
   useEffect(() => {
     setIsMounted(true)
   }, [])
+  const zIndex = usePortalZIndex()
 
   useEffect(() => {
     if (isMounted && wrapperRef.current) {
@@ -72,6 +74,7 @@ export const DropdownContentInner: FC<Props> = ({
       scrollable={scrollable}
       className={`${className} ${isActive ? 'active' : ''}`}
       controllable={controllable}
+      zIndex={zIndex}
       themes={theme}
     >
       {controllable ? (
@@ -90,11 +93,12 @@ const Wrapper = styled.div<{
   contentBox: ContentBoxStyle
   scrollable: boolean
   controllable: boolean
+  zIndex: number
 }>`
-  ${({ contentBox, themes, scrollable, controllable }) => {
+  ${({ contentBox, themes, scrollable, controllable, zIndex }) => {
     return css`
       visibility: hidden;
-      z-index: 99999;
+      z-index: ${zIndex};
       position: absolute;
       top: ${contentBox.top};
       left: ${contentBox.left};

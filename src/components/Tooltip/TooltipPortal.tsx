@@ -2,6 +2,7 @@ import React, { FC, ReactNode, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { getTooltipRect } from './tooltipHelper'
+import { usePortalZIndex } from '../../hooks/usePortalZIndex'
 
 type Props = {
   id: string
@@ -50,8 +51,10 @@ export const TooltipPortal: FC<Props> = ({
     )
   }, [horizontal, isIcon, isMultiLine, parentRect, vertical])
 
+  const zIndex = usePortalZIndex()
+
   return (
-    <Container id={id} ref={portalRef} {...rect}>
+    <Container id={id} ref={portalRef} zIndex={zIndex} {...rect}>
       {children}
     </Container>
   )
@@ -62,8 +65,9 @@ const Container = styled.div<{
   left: number
   width: number
   height: number
+  zIndex: number
 }>(
-  ({ top, left, width, height }) => css`
+  ({ top, left, width, height, zIndex }) => css`
     position: absolute;
     top: ${top}px;
     left: ${left}px;
@@ -75,6 +79,6 @@ const Container = styled.div<{
     css`
       height: ${height}px;
     `}
-    z-index: 9000;
+    z-index: ${zIndex};
   `,
 )

@@ -5,6 +5,7 @@ import { CSSTransition } from 'react-transition-group'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { DialogPositionProvider } from './DialogPositionProvider'
+import { usePortalZIndex } from '../../hooks/usePortalZIndex'
 
 type Props = {
   onClickOverlay?: () => void
@@ -39,6 +40,7 @@ export const DialogContentInner: FC<Props> = ({
 }) => {
   const theme = useTheme()
   const domRef = useRef(null)
+  const zIndex = usePortalZIndex()
   useHandleEscape(onPressEscape)
 
   return (
@@ -56,7 +58,7 @@ export const DialogContentInner: FC<Props> = ({
         appear
         unmountOnExit
       >
-        <Wrapper ref={domRef}>
+        <Wrapper zIndex={zIndex} ref={domRef}>
           <Background onClick={onClickOverlay} themes={theme} />
           <Inner themes={theme} {...props}>
             {children}
@@ -69,8 +71,8 @@ export const DialogContentInner: FC<Props> = ({
   )
 }
 
-const Wrapper = styled.div`
-  z-index: 10000;
+const Wrapper = styled.div<{ zIndex: number }>`
+  z-index: ${({ zIndex }) => zIndex};
   position: fixed;
   top: 0;
   left: 0;
@@ -119,7 +121,6 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
 
     return css`
       position: absolute;
-      z-index: 10100;
       top: ${positionTop};
       right: ${positionRight};
       bottom: ${positionBottom};
