@@ -5,11 +5,6 @@ export type Rect = {
   left: number
 }
 
-export function hasParentElement(element: HTMLElement | null, parent: HTMLElement | null): boolean {
-  if (!element) return false
-  return element === parent || hasParentElement(element.parentElement, parent)
-}
-
 type Size = { width: number; height: number }
 export type ContentBoxStyle = {
   top: string
