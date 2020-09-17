@@ -11,8 +11,8 @@ export interface CreatedShadowTheme {
 }
 
 export const defaultShadow = {
-  BASE: 'base だよー',
-  DIALOG: 'dialog だよー',
+  BASE: 'rgba(51, 51, 51, 0.15) 0 0 4px 0',
+  DIALOG: 'rgba(51, 51, 51, 0.3) 0 4px 10px 0',
 }
 
 export const createShadow = (userShadow: ShadowProperty = {}) => {
