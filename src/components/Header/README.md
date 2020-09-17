@@ -39,7 +39,12 @@ import { Header } from 'smarthr-ui'
 | ---------------------- | -------- | ----------------------------------------------- | ------------ | ------------------------------------------- |
 | isAdmin                | -        | **boolean**                                     | false        | Whether viewer is admin.                    |
 | isCrew                 | -        | **boolean**                                     | false        | Whether viewer is crew.                     |
-| user                   | ✓        | **{ displayName: string,<br> avatar: string }** | -            | Viewer's user informations.                 |
+| showHelp               | -        | **boolean**                                     | true         | Show help button.                           |
+| showCrewList           | -        | **boolean**                                     | true         | Show crew list button.                      |
+| showCrewManagement     | -        | **boolean**                                     | true         | Show crew management dropdown.              |
+| showNotification       | -        | **boolean**                                     | true         | Show notification counter.                  |
+| showLogout             | -        | **boolean**                                     | true         | Show logout button in user dropdown.        |
+| user                   | ✓        | **{ displayName: string,<br> avatar: string }** | -            | Viewer's user information.                  |
 | currentTenantName      | ✓        | **string**                                      | -            | Current tenant name.                        |
 | tenantContent          | -        | **node**                                        | -            | The content of tenant name area.            |
 | notificationLength     | ✓        | **number**                                      | -            | Number of notifications.                    |

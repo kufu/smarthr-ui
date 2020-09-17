@@ -13,6 +13,7 @@ export {
 export { FieldSet } from './components/FieldSet'
 export { FlashMessage } from './components/FlashMessage'
 export { Input, CurrencyInput } from './components/Input'
+export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
 export { Loader } from './components/Loader'
 export {
@@ -77,6 +78,7 @@ export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { IndexNav, IndexNavItemProps } from './components/IndexNav'
 export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'
+export { FormGroup } from './components/FormGroup'
 
 // themes
 export { createTheme } from './themes/createTheme'

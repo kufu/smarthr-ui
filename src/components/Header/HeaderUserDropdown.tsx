@@ -12,6 +12,7 @@ type Props = {
   displayName: string
   currentTenantName: string
   avatar: string
+  showLogout: boolean
   onClickAccount: () => void
   onClickLogout: () => void
   onClickProfile?: () => void
@@ -25,6 +26,7 @@ export const HeaderUserDropdown: FC<Props> = ({
   displayName,
   currentTenantName,
   avatar,
+  showLogout,
   onClickAccount,
   onClickLogout,
   onClickProfile,
@@ -114,14 +116,16 @@ export const HeaderUserDropdown: FC<Props> = ({
             </MenuListItem>
           )}
 
-          <MenuListItem role="menuitem">
-            <MenuListItemButton onClick={onClickLogout} themes={theme}>
-              <MenuListItemIcon themes={theme}>
-                <Icon name="fa-power-off" />
-              </MenuListItemIcon>
-              ログアウト
-            </MenuListItemButton>
-          </MenuListItem>
+          {showLogout && (
+            <MenuListItem role="menuitem">
+              <MenuListItemButton onClick={onClickLogout} themes={theme}>
+                <MenuListItemIcon themes={theme}>
+                  <Icon name="fa-power-off" />
+                </MenuListItemIcon>
+                ログアウト
+              </MenuListItemButton>
+            </MenuListItem>
+          )}
         </MenuList>
       </DropdownContent>
     </Dropdown>

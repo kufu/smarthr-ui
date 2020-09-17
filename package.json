@@ -92,7 +92,7 @@
   ],
   "license": "MIT",
   "lint-staged": {
-    "*.{ts,tsx}": [
+    "*.{ts,tsx},!^esm,!^lib": [
       "eslint --fix"
     ]
   },
