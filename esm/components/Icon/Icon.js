@@ -328,8 +328,8 @@ export var iconMap = {
     'fa-yen-sign': FaYenSign,
 };
 export var Icon = function (_a) {
-    var name = _a.name, _b = _a.className, className = _b === void 0 ? '' : _b, props = __rest(_a, ["name", "className"]);
+    var name = _a.name, _b = _a.className, className = _b === void 0 ? '' : _b, _c = _a.role, role = _c === void 0 ? 'img' : _c, props = __rest(_a, ["name", "className", "role"]);
     var SvgIcon = iconMap[name];
-    return React.createElement(SvgIcon, __assign({ className: className }, props));
+    return React.createElement(SvgIcon, __assign({ className: className, role: role }, props));
 };
 //# sourceMappingURL=Icon.js.map

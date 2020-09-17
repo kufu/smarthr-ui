@@ -8,12 +8,14 @@ import styled, { css } from 'styled-components';
 import { DarkBalloon, LightBalloon } from '../Balloon';
 import { TooltipPortal } from './TooltipPortal';
 import { useTheme } from '../../hooks/useTheme';
+import { useId } from '../../hooks/useId';
 var tooltipFactory = function (balloonTheme) { return function (_a) {
-    var id = _a.id, message = _a.message, children = _a.children, triggerType = _a.triggerType, multiLine = _a.multiLine, _b = _a.ellipsisOnly, ellipsisOnly = _b === void 0 ? false : _b, _c = _a.horizontal, horizontal = _c === void 0 ? 'left' : _c, _d = _a.vertical, vertical = _d === void 0 ? 'bottom' : _d;
+    var message = _a.message, children = _a.children, triggerType = _a.triggerType, multiLine = _a.multiLine, _b = _a.ellipsisOnly, ellipsisOnly = _b === void 0 ? false : _b, _c = _a.horizontal, horizontal = _c === void 0 ? 'left' : _c, _d = _a.vertical, vertical = _d === void 0 ? 'bottom' : _d;
     var themes = useTheme();
     var _e = useState(false), isVisible = _e[0], setIsVisible = _e[1];
     var _f = useState(null), rect = _f[0], setRect = _f[1];
     var ref = React.createRef();
+    var tooltipId = useId();
     var getBalloonWrapperWidth = function () {
         if (!ref.current) {
             return 0;
@@ -52,10 +54,10 @@ var tooltipFactory = function (balloonTheme) { return function (_a) {
             document.body.removeChild(portalRoot);
         };
     }, [portalRoot]);
-    return (React.createElement(Wrapper, { "aria-describedby": isVisible ? id : undefined, ref: ref, onMouseEnter: overAction, onTouchStart: overAction, onFocus: overAction, onMouseLeave: outAction, onTouchEnd: outAction, onBlur: outAction, tabIndex: 0, isIcon: isIcon },
+    return (React.createElement(Wrapper, { "aria-describedby": isVisible ? tooltipId : undefined, ref: ref, onMouseEnter: overAction, onTouchStart: overAction, onFocus: overAction, onMouseLeave: outAction, onTouchEnd: outAction, onBlur: outAction, tabIndex: 0, isIcon: isIcon },
         isVisible &&
             rect &&
-            createPortal(React.createElement(TooltipPortal, { id: id, parentRect: rect, isIcon: isIcon, isMultiLine: multiLine, horizontal: horizontal, vertical: vertical },
+            createPortal(React.createElement(TooltipPortal, { id: tooltipId, parentRect: rect, isIcon: isIcon, isMultiLine: multiLine, horizontal: horizontal, vertical: vertical },
                 React.createElement(StyledBalloon, { horizontal: horizontal, vertical: vertical, isMultiLine: multiLine },
                     React.createElement(StyledBalloonText, { themes: themes }, message))), portalRoot),
         children));

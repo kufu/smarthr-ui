@@ -2,7 +2,7 @@ var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cook
     if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
     return cooked;
 };
-import React, { useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import dayjs from 'dayjs';
 import { useTheme } from '../../hooks/useTheme';
@@ -11,18 +11,23 @@ import { Icon } from '../Icon';
 import { CalendarTable } from './CalendarTable';
 import { YearPicker } from './YearPicker';
 import { getFromDate, getToDate, isBetween } from './calendarHelper';
-export var Calendar = function (_a) {
+export var Calendar = forwardRef(function (_a, ref) {
     var from = _a.from, to = _a.to, onSelectDate = _a.onSelectDate, value = _a.value;
     var themes = useTheme();
-    var now = dayjs();
+    var now = dayjs().startOf('date');
     var fromDay = dayjs(getFromDate(from));
     var toDay = dayjs(getToDate(to));
     var isValidValue = value && isBetween(value, fromDay.toDate(), toDay.toDate());
     var _b = useState(isValidValue ? dayjs(value) : now), currentMonth = _b[0], setCurrentMonth = _b[1];
     var _c = useState(false), isSelectingYear = _c[0], setIsSelectingYear = _c[1];
+    useEffect(function () {
+        if (value && isValidValue) {
+            setCurrentMonth(dayjs(value));
+        }
+    }, [value, isValidValue]);
     var prevMonth = currentMonth.subtract(1, 'month');
     var nextMonth = currentMonth.add(1, 'month');
-    return (React.createElement(Container, { themes: themes },
+    return (React.createElement(Container, { themes: themes, ref: ref },
         React.createElement(Header, { themes: themes },
             React.createElement(YearMonth, null,
                 currentMonth.year(),
@@ -40,10 +45,14 @@ export var Calendar = function (_a) {
             isSelectingYear && (React.createElement(YearOverlay, null,
                 React.createElement(YearPicker, { fromYear: fromDay.year(), toYear: toDay.year(), selectedYear: value === null || value === void 0 ? void 0 : value.getFullYear(), onSelectYear: function (year) {
                         setCurrentMonth(currentMonth.year(year));
-                        setIsSelectingYear(false);
+                        requestAnimationFrame(function () {
+                            // fallback for IE
+                            // delay hiding elements to be able to follow parent elements of click event by ParentNode API
+                            setIsSelectingYear(false);
+                        });
                     } }))),
             React.createElement(CalendarTable, { current: currentMonth.toDate(), from: fromDay.toDate(), to: toDay.toDate(), onSelectDate: onSelectDate, selected: isValidValue ? value : null }))));
-};
+});
 var Container = styled.section(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  display: inline-block;\n  border-radius: 6px;\n  background-color: #fff;\n  box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);\n  color: ", ";\n  overflow: hidden;\n"], ["\n  display: inline-block;\n  border-radius: 6px;\n  background-color: #fff;\n  box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);\n  color: ", ";\n  overflow: hidden;\n"])), function (props) { return props.themes.palette.TEXT_BLACK; });
 var YearMonth = styled.div(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n  margin-right: 8px;\n  font-weight: bold;\n"], ["\n  margin-right: 8px;\n  font-weight: bold;\n"])));
 var Header = styled.header(function (_a) {

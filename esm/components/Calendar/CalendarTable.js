@@ -13,7 +13,7 @@ export var CalendarTable = function (_a) {
     var themes = useTheme();
     var currentDay = dayjs(current);
     var selectedDay = selected ? dayjs(selected) : null;
-    var now = dayjs();
+    var now = dayjs().startOf('date');
     var fromDay = dayjs(from);
     var toDay = dayjs(to);
     var array = getMonthArray(currentDay.toDate());
@@ -35,7 +35,7 @@ export var CalendarTable = function (_a) {
 var Table = styled.table(function (_a) {
     var themes = _a.themes;
     var palette = themes.palette, size = themes.size;
-    return css(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    color: ", ";\n    font-size: ", ";\n    border-spacing: 0;\n    padding: 4px 8px 13px;\n\n    th {\n      height: 37px;\n      padding: 0;\n      text-align: center;\n      font-weight: normal;\n      color: ", ";\n    }\n    td {\n      width: 43px;\n      height: 35px;\n      padding: 0;\n    }\n  "], ["\n    color: ", ";\n    font-size: ", ";\n    border-spacing: 0;\n    padding: 4px 8px 13px;\n\n    th {\n      height: 37px;\n      padding: 0;\n      text-align: center;\n      font-weight: normal;\n      color: ", ";\n    }\n    td {\n      width: 43px;\n      height: 35px;\n      padding: 0;\n    }\n  "])), palette.TEXT_BLACK, size.pxToRem(size.font.TALL), palette.TEXT_GREY);
+    return css(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    color: ", ";\n    font-size: ", ";\n    border-spacing: 0;\n    margin: 4px 8px 13px;\n\n    th {\n      height: 37px;\n      padding: 0;\n      vertical-align: middle;\n      text-align: center;\n      font-weight: normal;\n      color: ", ";\n    }\n    td {\n      width: 43px;\n      height: 35px;\n      padding: 0;\n      vertical-align: middle;\n    }\n  "], ["\n    color: ", ";\n    font-size: ", ";\n    border-spacing: 0;\n    margin: 4px 8px 13px;\n\n    th {\n      height: 37px;\n      padding: 0;\n      vertical-align: middle;\n      text-align: center;\n      font-weight: normal;\n      color: ", ";\n    }\n    td {\n      width: 43px;\n      height: 35px;\n      padding: 0;\n      vertical-align: middle;\n    }\n  "])), palette.TEXT_BLACK, size.pxToRem(size.font.TALL), palette.TEXT_GREY);
 });
 var DateCell = styled.div(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 27px;\n  height: 27px;\n  border-radius: 50%;\n  line-height: 0;\n  ", "\n"], ["\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 27px;\n  height: 27px;\n  border-radius: 50%;\n  line-height: 0;\n  ",
     "\n"])), function (_a) {

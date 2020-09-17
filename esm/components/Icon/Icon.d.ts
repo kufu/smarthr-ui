@@ -3,7 +3,7 @@ export interface IconProps {
     color?: string;
     size?: number;
 }
-export interface Props extends IconProps {
+export interface Props extends IconProps, React.SVGAttributes<SVGAElement> {
     name: keyof typeof iconMap;
     className?: string;
 }

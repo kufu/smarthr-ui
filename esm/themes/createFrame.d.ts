@@ -19,7 +19,6 @@ export interface CreatedFrameTheme {
         radius: {
             s: string;
             m: string;
-            l: string;
         };
     };
 }

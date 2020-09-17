@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Props as BalloonProps } from '../Balloon';
 declare type Props = {
-    id: string;
     message: ReactNode;
     children: ReactNode;
     triggerType?: 'icon' | 'text';

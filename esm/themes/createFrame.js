@@ -20,9 +20,8 @@ export var defaultFrame = {
         lineStyle: lineStyle,
         default: lineWidth + " " + lineStyle + " " + lineColor,
         radius: {
-            s: '3px',
+            s: '4px',
             m: '6px',
-            l: '8px',
         },
     },
 };
