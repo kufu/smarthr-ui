@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import styled, { css, keyframes } from 'styled-components'
+import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 
 type Props = {
   color?: string
@@ -8,7 +9,8 @@ type Props = {
 }
 
 export const Loader: FC<Props> = ({ color = '#fff', size = 'm', className = '' }) => (
-  <Wrapper className={`${size} ${className}`} color={color}>
+  <Wrapper className={`${size} ${className}`} color={color} role="status">
+    <VisuallyHidden>Loading</VisuallyHidden>
     <div />
     <div />
     <div />
@@ -61,4 +63,8 @@ const Wrapper = styled.div`
       }
     }
   `}
+`
+
+const VisuallyHidden = styled.span`
+  ${VISUALLY_HIDDEN_STYLE}
 `
