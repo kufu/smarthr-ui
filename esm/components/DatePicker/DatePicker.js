@@ -89,7 +89,7 @@ export var DatePicker = function (_a) {
         }
         /**
          * Do not format the given value in the following cases
-         * - while input element is forcused.
+         * - while input element is focused.
          * - if the given value is not date formattable.
          */
         if (!isInputFocused) {
