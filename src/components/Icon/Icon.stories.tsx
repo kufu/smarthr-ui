@@ -291,6 +291,7 @@ const icons: Array<Props['name']> = [
   'fa-user-alt-slash',
   'fa-user-check',
   'fa-user-circle',
+  'fa-user-clock',
   'fa-user-cog',
   'fa-user-edit',
   'fa-user-minus',
