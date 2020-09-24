@@ -18,7 +18,7 @@ export var Portal = function (_a) {
 };
 var Container = styled.div(function (_a) {
     var top = _a.top, left = _a.left;
-    return css(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    position: absolute;\n    top: ", "px;\n    left: ", "px;\n  "], ["\n    position: absolute;\n    top: ", "px;\n    left: ", "px;\n  "])), top, left);
+    return css(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    position: absolute;\n    top: ", "px;\n    left: ", "px;\n    z-index: 11000;\n  "], ["\n    position: absolute;\n    top: ", "px;\n    left: ", "px;\n    z-index: 11000;\n  "])), top, left);
 });
 var templateObject_1;
 //# sourceMappingURL=Portal.js.map
