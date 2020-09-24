@@ -291,6 +291,7 @@ export declare const iconMap: {
     'fa-user-alt-slash': import("react-icons/lib").IconType;
     'fa-user-check': import("react-icons/lib").IconType;
     'fa-user-circle': import("react-icons/lib").IconType;
+    'fa-user-clock': import("react-icons/lib").IconType;
     'fa-user-cog': import("react-icons/lib").IconType;
     'fa-user-edit': import("react-icons/lib").IconType;
     'fa-user-minus': import("react-icons/lib").IconType;
