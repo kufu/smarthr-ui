@@ -58,6 +58,7 @@ export const BackgroundJobsPanel: FC<Props> = ({
         <Title themes={themes}>{title}</Title>
         <HeaderButtonLayout themes={themes}>
           <SecondaryButton
+            type="button"
             size="s"
             square
             onClick={() => {
@@ -71,7 +72,7 @@ export const BackgroundJobsPanel: FC<Props> = ({
           >
             <Icon name={isExpanded ? 'fa-minus' : 'fa-window-maximize'} size={13} />
           </SecondaryButton>
-          <SecondaryButton size="s" square onClick={onClickClose}>
+          <SecondaryButton type="button" size="s" square onClick={onClickClose}>
             <Icon name="fa-times" size={13} aria-label="Close" />
           </SecondaryButton>
         </HeaderButtonLayout>
@@ -87,7 +88,7 @@ export const BackgroundJobsPanel: FC<Props> = ({
               <JobName themes={themes}>{job.name}</JobName>
               <JobDesc themes={themes}>{job.description}</JobDesc>
               {job.isCancelable && (
-                <CancelButton onClick={handleClickCancelJob} themes={themes}>
+                <CancelButton type="button" onClick={handleClickCancelJob} themes={themes}>
                   キャンセル
                 </CancelButton>
               )}
