@@ -6,12 +6,14 @@ import {
 } from './createInteraction'
 import { CreatedPaletteTheme, PaletteProperty, createPalette } from './createPalette'
 import { CreatedSizeTheme, SizeProperty, createSize } from './createSize'
+import { CreatedZindexTheme, ZIndexProperty, createZIndex } from './createZIndex'
 
 interface ThemeProperty {
   palette?: PaletteProperty
   size?: SizeProperty
   frame?: FrameProperty
   interaction?: InteractionProperty
+  zIndex?: ZIndexProperty
 }
 
 export interface CreatedTheme {
@@ -19,6 +21,7 @@ export interface CreatedTheme {
   size: CreatedSizeTheme
   frame: CreatedFrameTheme
   interaction: CreatedInteractionTheme
+  zIndex: CreatedZindexTheme
 }
 
 export const createTheme = (theme: ThemeProperty = {}) => {
@@ -27,6 +30,7 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     size: createSize(theme.size || {}),
     frame: createFrame(theme.frame || {}, theme.palette || {}),
     interaction: createInteraction(theme.interaction || {}),
+    zIndex: createZIndex(theme.zIndex || {}),
   }
   return created
 }
