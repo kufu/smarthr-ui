@@ -13,7 +13,7 @@ export const SkeletonButton: FC<ButtonProps> = (props) => {
 
 export const SkeletonButtonAnchor: FC<AnchorProps> = (props) => {
   const theme = useTheme()
-  return <SkeletonStyleButtonAnchor themes={theme} {...props} />
+  return <SkeletonStyleButtonAnchor role="button" themes={theme} {...props} />
 }
 
 const skeletonStyle = css`

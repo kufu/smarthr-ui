@@ -13,7 +13,7 @@ export const DangerButton: FC<ButtonProps> = (props) => {
 
 export const DangerButtonAnchor: FC<AnchorProps> = (props) => {
   const theme = useTheme()
-  return <DangerStyleButtonAnchor themes={theme} {...props} />
+  return <DangerStyleButtonAnchor role="button" themes={theme} {...props} />
 }
 
 const dangerStyle = css`

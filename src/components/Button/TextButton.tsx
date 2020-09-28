@@ -21,7 +21,7 @@ export const TextButton: FC<ButtonProps> = (props) => {
 
 export const TextButtonAnchor: FC<AnchorProps> = (props) => {
   const theme = useTheme()
-  return <TextStyleButtonAnchor themes={theme} {...props} />
+  return <TextStyleButtonAnchor role="button" themes={theme} {...props} />
 }
 
 const textStyle = css`

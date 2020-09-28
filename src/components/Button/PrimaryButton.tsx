@@ -17,7 +17,7 @@ PrimaryButton.displayName = 'PrimaryButton'
 
 export const PrimaryButtonAnchor: FC<AnchorProps> = (props) => {
   const theme = useTheme()
-  return <PrimaryStyleButtonAnchor themes={theme} {...props} />
+  return <PrimaryStyleButtonAnchor role="button" themes={theme} {...props} />
 }
 
 // set the displayName explicit.
