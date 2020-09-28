@@ -1,12 +1,12 @@
-import { useCallback, useEffect } from 'react'
+import { RefObject, useCallback, useEffect } from 'react'
 
 export function useOuterClick(
-  targets: Array<HTMLElement | null>,
+  targets: Array<RefObject<HTMLElement>>,
   callback: (e: MouseEvent) => void,
 ) {
   const handleOuterClick = useCallback(
     (e: MouseEvent) => {
-      if (targets.some((target) => isEventIncludedParent(e, target))) {
+      if (targets.some((target) => isEventIncludedParent(e, target.current))) {
         return
       }
       callback(e)

@@ -126,7 +126,7 @@ export const DatePicker: FC<Props> = ({
   }, [value, isInputFocused, dateToString, stringToDate])
 
   useOuterClick(
-    [inputWrapperRef.current, calendarRef.current],
+    [inputWrapperRef, calendarRef],
     useCallback(() => {
       switchCalendarVisibility(false)
     }, [switchCalendarVisibility]),
