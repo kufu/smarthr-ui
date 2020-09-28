@@ -65,7 +65,7 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
       </Header>
       <TableLayout>
         {isSelectingYear && (
-          <YearOverlay>
+          <YearOverlay themes={themes}>
             <YearPicker
               fromYear={fromDay.year()}
               toYear={toDay.year()}
@@ -127,12 +127,16 @@ const MonthButtonLayout = styled.div`
 const TableLayout = styled.div`
   position: relative;
 `
-const YearOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  background-color: #fff;
-`
+const YearOverlay = styled.div<{ themes: Theme }>(({ themes }) => {
+  const { zIndex } = themes
+
+  return css`
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: ${zIndex.OVERLAP};
+    background-color: #fff;
+  `
+})
