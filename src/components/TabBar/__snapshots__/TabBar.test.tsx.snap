@@ -68,11 +68,18 @@ exports[`TabBar should be match snapshot 1`] = `
               "XXS": 8,
             },
           },
+          "zIndex": Object {
+            "AUTO": "auto",
+            "DEFAULT": 0,
+            "FIXED_MENU": 100,
+            "FLASH_MESSAGE": 11000,
+            "OVERLAP": 10000,
+          },
         }
       }
     >
       <div
-        className="sc-AxjAm gCFdwB  bordered"
+        className="sc-AxjAm bDreEW  bordered"
         role="tablist"
       >
         <Component
@@ -146,6 +153,13 @@ exports[`TabBar should be match snapshot 1`] = `
                     "XXL": 56,
                     "XXS": 8,
                   },
+                },
+                "zIndex": Object {
+                  "AUTO": "auto",
+                  "DEFAULT": 0,
+                  "FIXED_MENU": 100,
+                  "FLASH_MESSAGE": 11000,
+                  "OVERLAP": 10000,
                 },
               }
             }
@@ -234,6 +248,13 @@ exports[`TabBar should be match snapshot 1`] = `
                     "XXS": 8,
                   },
                 },
+                "zIndex": Object {
+                  "AUTO": "auto",
+                  "DEFAULT": 0,
+                  "FIXED_MENU": 100,
+                  "FLASH_MESSAGE": 11000,
+                  "OVERLAP": 10000,
+                },
               }
             }
           >
@@ -320,6 +341,13 @@ exports[`TabBar should be match snapshot 1`] = `
                     "XXL": 56,
                     "XXS": 8,
                   },
+                },
+                "zIndex": Object {
+                  "AUTO": "auto",
+                  "DEFAULT": 0,
+                  "FIXED_MENU": 100,
+                  "FLASH_MESSAGE": 11000,
+                  "OVERLAP": 10000,
                 },
               }
             }
