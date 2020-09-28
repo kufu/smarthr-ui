@@ -10,12 +10,12 @@ type Props = {
 
 export const Loader: FC<Props> = ({ color = '#fff', size = 'm', className = '' }) => (
   <Wrapper className={`${size} ${className}`} color={color} role="status">
+    <div />
+    <div />
+    <div />
+    <div />
+    <div />
     <VisuallyHidden>Loading</VisuallyHidden>
-    <div />
-    <div />
-    <div />
-    <div />
-    <div />
   </Wrapper>
 )
 
