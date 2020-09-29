@@ -68,21 +68,17 @@ const Container = styled.div<{
 }>`
   ${({ top, left, width, height, themes }) => {
     return css`
-        position: absolute;
-        top: ${top}px;
-        left: ${left}px;
-        ${
-          width > 0 &&
-          css`
-            width: ${width}px;
-          `
-        }
-        ${
-          height > 0 &&
-          css`
-            height: ${height}px;
-          `
-        }
+      position: absolute;
+      top: ${top}px;
+      left: ${left}px;
+      ${width > 0 &&
+      css`
+        width: ${width}px;
+      `}
+      ${height > 0 &&
+      css`
+        height: ${height}px;
+      `}
         z-index: ${themes.zIndex.OVERLAP};
     `
   }}
