@@ -73,9 +73,9 @@ const Container = styled.div<{
         left: ${left}px;
         ${
           width > 0 &&
+          css`
+            width: ${width}px;
           `
-          width: ${width}px;
-        `
         }
         ${
           height > 0 &&
