@@ -76,6 +76,7 @@ exports[`CheckBox should be match snapshot 1`] = `
       className="sc-AxjAm impYQq"
     >
       <styled.input
+        aria-checked="true"
         checked={true}
         name="sample"
         onChange={[Function]}
@@ -146,6 +147,7 @@ exports[`CheckBox should be match snapshot 1`] = `
         type="checkbox"
       >
         <input
+          aria-checked="true"
           checked={true}
           className="sc-AxiKw igyvWT"
           name="sample"
