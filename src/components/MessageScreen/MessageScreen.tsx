@@ -39,7 +39,8 @@ export const MessageScreen: FC<Props> = ({ title, links, children, className = '
               <li key={link.label}>
                 <Link
                   href={link.url}
-                  {...(link.target ? { target: link.target, 'aria-label': '別タブで開く' } : {})}
+                  {...(link.target ? { target: link.target } : {})}
+                  {...(link.target === '_blank' ? { 'aria-label': '別タブで開く' } : {})}
                   themes={theme}
                 >
                   {link.label}
