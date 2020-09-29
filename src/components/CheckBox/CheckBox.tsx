@@ -23,7 +23,17 @@ export const CheckBox: FC<Props> = ({ mixed = false, className = '', onChange, .
 
   return (
     <Wrapper className={className} themes={theme}>
-      <Input {...props} type="checkbox" onChange={handleChange} themes={theme} />
+      <Input
+        {...props}
+        type="checkbox"
+        onChange={handleChange}
+        themes={theme}
+        {...(checked
+          ? mixed
+            ? { 'aria-checked': 'mixed' }
+            : { 'aria-checked': 'true' }
+          : { 'aria-checked': 'false' })}
+      />
       <Box className={boxClassName} themes={theme} />
       {checked && (
         <IconWrap themes={theme}>
