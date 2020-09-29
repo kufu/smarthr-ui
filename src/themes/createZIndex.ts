@@ -9,11 +9,11 @@ export interface ZIndexProperty {
 }
 
 export interface CreatedZindexTheme {
-  AUTO?: 'auto'
-  DEFAULT?: number
-  FIXED_MENU?: number
-  OVERLAP?: number
-  FLASH_MESSAGE?: number
+  AUTO: 'auto'
+  DEFAULT: number
+  FIXED_MENU: number
+  OVERLAP: number
+  FLASH_MESSAGE: number
 }
 
 export const defaultZIndex = {
