@@ -166,7 +166,7 @@ exports[`TabBar should be match snapshot 1`] = `
           >
             <button
               aria-selected={false}
-              className="sc-AxirZ iiyULo  "
+              className="sc-AxirZ fpnMNO  "
               disabled={false}
               onClick={[Function]}
               role="tab"
@@ -260,7 +260,7 @@ exports[`TabBar should be match snapshot 1`] = `
           >
             <button
               aria-selected={true}
-              className="sc-AxirZ iiyULo  selected"
+              className="sc-AxirZ fpnMNO  selected"
               disabled={false}
               onClick={[Function]}
               role="tab"
@@ -354,7 +354,7 @@ exports[`TabBar should be match snapshot 1`] = `
           >
             <button
               aria-selected={false}
-              className="sc-AxirZ iiyULo  "
+              className="sc-AxirZ fpnMNO  "
               disabled={true}
               onClick={[Function]}
               role="tab"
