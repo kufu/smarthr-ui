@@ -36,6 +36,8 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) =
           case 'object':
             return React.cloneElement(child, {
               className: `${active ? 'active' : ''} ${classNameProps}`,
+              'aria-haspopup': 'true',
+              'aria-expanded': `${active ? true : false}`,
             })
 
           default:
