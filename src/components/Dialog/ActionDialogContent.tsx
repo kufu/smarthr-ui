@@ -29,6 +29,8 @@ export const ActionDialogContent: React.FC<ActionDialogContentProps> = ({
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
         isOpen={active}
+        ariaLabelledBy={title ? 'dialogTitle' : ''}
+        ariaDescribedBy={children ? 'dialogDesc' : ''}
         {...props}
       >
         <ActionDialogContentInner

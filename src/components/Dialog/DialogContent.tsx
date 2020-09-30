@@ -18,9 +18,16 @@ type Props = {
   right?: number
   bottom?: number
   left?: number
+  ariaLabelledBy?: string
+  ariaDescribedBy?: string
 }
 
-export const DialogContent: React.FC<Props> = ({ children, ...props }) => {
+export const DialogContent: React.FC<Props> = ({
+  children,
+  ariaLabelledBy = '',
+  ariaDescribedBy = '',
+  ...props
+}) => {
   const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
 
   return (
@@ -30,6 +37,8 @@ export const DialogContent: React.FC<Props> = ({ children, ...props }) => {
           isOpen={active}
           onClickOverlay={onClickClose}
           onPressEscape={onClickClose}
+          ariaLabelledBy={ariaLabelledBy}
+          ariaDescribedBy={ariaDescribedBy}
           {...props}
         >
           {children}

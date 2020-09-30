@@ -11,6 +11,8 @@ type Props = {
   right?: number
   bottom?: number
   left?: number
+  ariaLabelledBy?: string
+  ariaDescribedBy?: string
 }
 
 export const Dialog: React.FC<Props> = ({
@@ -22,6 +24,8 @@ export const Dialog: React.FC<Props> = ({
   onPressEscape = () => {
     /* noop */
   },
+  ariaLabelledBy = '',
+  ariaDescribedBy = '',
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current
@@ -39,6 +43,8 @@ export const Dialog: React.FC<Props> = ({
       onClickOverlay={onClickOverlay}
       onPressEscape={onPressEscape}
       isOpen={isOpen}
+      ariaLabelledBy={ariaLabelledBy}
+      ariaDescribedBy={ariaDescribedBy}
       {...props}
     >
       {children}

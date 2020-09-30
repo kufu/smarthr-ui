@@ -14,6 +14,8 @@ type Props = {
   right?: number
   bottom?: number
   left?: number
+  ariaLabelledBy?: string
+  ariaDescribedBy?: string
   children: ReactNode
 }
 
@@ -34,6 +36,8 @@ export const DialogContentInner: FC<Props> = ({
     /* noop */
   },
   isOpen,
+  ariaLabelledBy,
+  ariaDescribedBy,
   children,
   ...props
 }) => {
@@ -55,6 +59,9 @@ export const DialogContentInner: FC<Props> = ({
         }}
         appear
         unmountOnExit
+        role="dialog"
+        {...(ariaLabelledBy ? { 'aria-labelledby': ariaLabelledBy } : {})}
+        {...(ariaDescribedBy ? { 'aria-describedby': ariaDescribedBy } : {})}
       >
         <Wrapper ref={domRef}>
           <Background onClick={onClickOverlay} themes={theme} />

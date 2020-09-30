@@ -41,6 +41,8 @@ export const MessageDialog: React.FC<Props> = ({
       onClickOverlay={onClickOverlay}
       onPressEscape={onPressEscape}
       isOpen={isOpen}
+      ariaLabelledBy={title ? 'dialogTitle' : ''}
+      ariaDescribedBy={description ? 'dialogDesc' : ''}
       {...props}
     >
       <MessageDialogContentInner

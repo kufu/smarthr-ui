@@ -27,10 +27,10 @@ export const MessageDialogContentInner: FC<Props> = ({
 
   return (
     <>
-      <Title themes={theme} ref={titleRef}>
+      <Title themes={theme} ref={titleRef} id="dialogTitle">
         {title}
       </Title>
-      <Description themes={theme} offsetHeight={offsetHeight}>
+      <Description themes={theme} offsetHeight={offsetHeight} id="dialogDesc">
         {description}
       </Description>
       <Bottom themes={theme} ref={bottomRef}>

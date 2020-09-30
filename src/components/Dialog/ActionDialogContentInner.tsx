@@ -42,10 +42,12 @@ export const ActionDialogContentInner: FC<Props> = ({
 
   return (
     <>
-      <Title themes={theme} ref={titleRef}>
+      <Title themes={theme} ref={titleRef} id="dialogTitle">
         {title}
       </Title>
-      <Body offsetHeight={offsetHeight}>{children}</Body>
+      <Body offsetHeight={offsetHeight} id="dialogDesc">
+        {children}
+      </Body>
       <Bottom themes={theme} ref={bottomRef}>
         <SecondaryButton onClick={onClickClose}>{closeText}</SecondaryButton>
         <ActionButton onClick={handleClickAction} disabled={actionDisabled}>
