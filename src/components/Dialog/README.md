@@ -238,3 +238,12 @@ ActionDialogContent
 | right          | false    | number                                       | -            | Specifies the right position of the Dialog content.                                                         |
 | bottom         | false    | number                                       | -            | Specifies the bottom position of the Dialog content.                                                        |
 | left           | false    | number                                       | -            | Specifies the left position of the Dialog content.                                                          |
+
+## Accessibility
+
+### ARIA
+
+- Dialog component has `role` set to `"dialog"`.
+- Dialog component has `aria-modal` set to `true`.
+- Uncontrollable Dialog has `aria-haspopup` set to `"dialog"` in the trigger. When using controllable Dialog, set `aria-haspopup` to `"dialog"` in the trigger.
+- MessageDialog and ActionDialog set the title value to the `aria-label` value. When using Dialog and DialogContent, you can specify a value for `aria-label` in `ariaLabel` props.
