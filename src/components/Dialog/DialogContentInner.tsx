@@ -55,6 +55,8 @@ export const DialogContentInner: FC<Props> = ({
         }}
         appear
         unmountOnExit
+        role="dialog"
+        aria-modal="true"
       >
         <Wrapper ref={domRef}>
           <Background onClick={onClickOverlay} themes={theme} />
