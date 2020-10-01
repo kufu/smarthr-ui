@@ -102,7 +102,7 @@ const Wrapper = styled(Base)<{ themes: Theme }>`
 
     return css`
       padding: ${pxToRem(space.S)};
-      box-shadow: rgba(51, 51, 51, 0.3) 0px 4px 10px 0;
+      box-shadow: rgba(51, 51, 51, 0.3) 0 4px 10px 0;
     `
   }}
 `
