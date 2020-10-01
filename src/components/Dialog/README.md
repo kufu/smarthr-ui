@@ -16,7 +16,7 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <button onClick={onClickOpen}>open dialog</button>
+      <button onClick={onClickOpen} aria-haspopup="dialog">open dialog</button>
       <Dialog isOpen={isOpen} onClickOverlay={onClickClose}>
         <p>text</p>
         <button onClick={onClickClose}>close dialog</button>
@@ -58,15 +58,17 @@ Dialog
 | right          | false    | number     | -            | Specifies the right position of the Dialog content.  |
 | bottom         | false    | number     | -            | Specifies the bottom position of the Dialog content. |
 | left           | false    | number     | -            | Specifies the left position of the Dialog content.   |
+| ariaLabel      | false    | string     | -            | Define a string to label the Dialog.                 |
 
 DialogContent
 
-| Name   | Required | Type   | DefaultValue | Description                                          |
-| ------ | -------- | ------ | ------------ | ---------------------------------------------------- |
-| top    | false    | number | -            | Specifies the top position of the Dialog content.    |
-| right  | false    | number | -            | Specifies the right position of the Dialog content.  |
-| bottom | false    | number | -            | Specifies the bottom position of the Dialog content. |
-| left   | false    | number | -            | Specifies the left position of the Dialog content.   |
+| Name      | Required | Type   | DefaultValue | Description                                          |
+| --------- | -------- | ------ | ------------ | ---------------------------------------------------- |
+| top       | false    | number | -            | Specifies the top position of the Dialog content.    |
+| right     | false    | number | -            | Specifies the right position of the Dialog content.  |
+| bottom    | false    | number | -            | Specifies the bottom position of the Dialog content. |
+| left      | false    | number | -            | Specifies the left position of the Dialog content.   |
+| ariaLabel | false    | string | -            | Define a string to label the Dialog.                 |
 
 ## MessageDialog
 
@@ -84,7 +86,7 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <button onClick={onClickOpen}>open dialog</button>
+      <button onClick={onClickOpen} aria-haspopup="dialog">open dialog</button>
       <MessageDialog
         isOpen={isOpen}
         title="title message"
@@ -160,7 +162,7 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <button onClick={onClickOpen}>open dialog</button>
+      <button onClick={onClickOpen} aria-haspopup="dialog">open dialog</button>
       <ActionDialog
         isOpen={isOpen}
         title="title message"
