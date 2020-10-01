@@ -19,8 +19,15 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen}>Dialog</SecondaryButton>
-      <Dialog isOpen={isOpen} onClickOverlay={onClickClose} onPressEscape={onClickClose}>
+      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog">
+        Dialog
+      </SecondaryButton>
+      <Dialog
+        isOpen={isOpen}
+        onClickOverlay={onClickClose}
+        onPressEscape={onClickClose}
+        ariaLabel="Dialog"
+      >
         <DialogControllerTitle>Dialog</DialogControllerTitle>
         <DialogControllerText>
           The value of isOpen must be managed by you, but you can customize content freely.
@@ -69,7 +76,9 @@ const MessageDialogController: React.FC = () => {
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen}>MessageDialog</SecondaryButton>
+      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog">
+        MessageDialog
+      </SecondaryButton>
       <MessageDialog
         isOpen={isOpen}
         title="MessageDialog"
@@ -106,7 +115,9 @@ const ActionDialogController: React.FC = () => {
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen}>ActionDialog</SecondaryButton>
+      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog">
+        ActionDialog
+      </SecondaryButton>
       <ActionDialog
         isOpen={isOpen}
         title="ActionDialog"
