@@ -14,6 +14,7 @@ type Props = {
   right?: number
   bottom?: number
   left?: number
+  ariaLabel?: string
   children: ReactNode
 }
 
@@ -34,6 +35,7 @@ export const DialogContentInner: FC<Props> = ({
     /* noop */
   },
   isOpen,
+  ariaLabel,
   children,
   ...props
 }) => {
@@ -57,6 +59,7 @@ export const DialogContentInner: FC<Props> = ({
         unmountOnExit
         role="dialog"
         aria-modal="true"
+        {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
       >
         <Wrapper ref={domRef}>
           <Background onClick={onClickOverlay} themes={theme} />

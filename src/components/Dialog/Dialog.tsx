@@ -11,6 +11,7 @@ type Props = {
   right?: number
   bottom?: number
   left?: number
+  ariaLabel?: string
 }
 
 export const Dialog: React.FC<Props> = ({
@@ -22,6 +23,7 @@ export const Dialog: React.FC<Props> = ({
   onPressEscape = () => {
     /* noop */
   },
+  ariaLabel,
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current
@@ -39,6 +41,7 @@ export const Dialog: React.FC<Props> = ({
       onClickOverlay={onClickOverlay}
       onPressEscape={onPressEscape}
       isOpen={isOpen}
+      ariaLabel={ariaLabel}
       {...props}
     >
       {children}
