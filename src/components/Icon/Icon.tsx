@@ -630,11 +630,11 @@ export const Icon: React.FC<Props> = ({
   ...props
 }) => {
   const SvgIcon = iconMap[name]
-  const hasLabel =
+  const hasAltText =
     visuallyHiddenText !== undefined ||
     props['aria-label'] !== undefined ||
     props['aria-labelledby'] !== undefined
-  const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasLabel
+  const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasAltText
   return (
     <>
       {visuallyHiddenText && <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>}
