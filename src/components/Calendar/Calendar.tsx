@@ -68,23 +68,16 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
         </MonthButtonLayout>
       </Header>
       <TableLayout>
-        {isSelectingYear && (
-          <YearOverlay>
-            <YearPicker
-              fromYear={fromDay.year()}
-              toYear={toDay.year()}
-              selectedYear={value?.getFullYear()}
-              onSelectYear={(year) => {
-                setCurrentMonth(currentMonth.year(year))
-                requestAnimationFrame(() => {
-                  // fallback for IE
-                  // delay hiding elements to be able to follow parent elements of click event by ParentNode API
-                  setIsSelectingYear(false)
-                })
-              }}
-            />
-          </YearOverlay>
-        )}
+        <YearPicker
+          fromYear={fromDay.year()}
+          toYear={toDay.year()}
+          selectedYear={value?.getFullYear()}
+          onSelectYear={(year) => {
+            setCurrentMonth(currentMonth.year(year))
+            setIsSelectingYear(false)
+          }}
+          isDisplayed={isSelectingYear}
+        />
         <CalendarTable
           current={currentMonth.toDate()}
           from={fromDay.toDate()}
@@ -130,12 +123,4 @@ const MonthButtonLayout = styled.div`
 `
 const TableLayout = styled.div`
   position: relative;
-`
-const YearOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: #fff;
 `
