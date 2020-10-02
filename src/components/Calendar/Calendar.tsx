@@ -8,6 +8,7 @@ import { Icon } from '../Icon'
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
 import { getFromDate, getToDate, isBetween } from './calendarHelper'
+import { useId } from '../../hooks/useId'
 
 type Props = {
   from?: Date
@@ -26,6 +27,8 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
   const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : now)
   const [isSelectingYear, setIsSelectingYear] = useState(false)
 
+  const yearPickerId = useId()
+
   useEffect(() => {
     if (value && isValidValue) {
       setCurrentMonth(dayjs(value))
@@ -41,7 +44,13 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
         <YearMonth>
           {currentMonth.year()}年{currentMonth.month() + 1}月
         </YearMonth>
-        <SecondaryButton onClick={() => setIsSelectingYear(!isSelectingYear)} size="s" square>
+        <SecondaryButton
+          onClick={() => setIsSelectingYear(!isSelectingYear)}
+          size="s"
+          square
+          aria-expanded={isSelectingYear}
+          aria-controls={yearPickerId}
+        >
           <Icon
             size={13}
             visuallyHiddenText="年を選択する"
@@ -77,6 +86,7 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
             setIsSelectingYear(false)
           }}
           isDisplayed={isSelectingYear}
+          id={yearPickerId}
         />
         <CalendarTable
           current={currentMonth.toDate()}

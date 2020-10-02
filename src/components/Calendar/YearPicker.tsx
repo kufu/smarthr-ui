@@ -10,6 +10,7 @@ type Props = {
   toYear: number
   onSelectYear: (year: number) => void
   isDisplayed: boolean
+  id: string
 }
 
 export const YearPicker: FC<Props> = ({
@@ -18,6 +19,7 @@ export const YearPicker: FC<Props> = ({
   toYear,
   onSelectYear,
   isDisplayed,
+  id,
 }) => {
   const themes = useTheme()
   const focusingRef = useRef<HTMLButtonElement>(null)
@@ -36,7 +38,7 @@ export const YearPicker: FC<Props> = ({
   }, [isDisplayed])
 
   return (
-    <Overlay isDisplayed={isDisplayed}>
+    <Overlay isDisplayed={isDisplayed} id={id}>
       <Container>
         {yearArray.map((year) => {
           const isThisYear = thisYear === year
