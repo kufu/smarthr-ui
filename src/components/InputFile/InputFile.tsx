@@ -122,7 +122,9 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
     > input[type='file'] {
       position: absolute;
       height: 100%;
-      left: 0;
+
+      /* Prevent to show caret on the upload button on IE11 */
+      left: -10px;
       top: 0;
       margin: 0;
       font-size: 128px;
