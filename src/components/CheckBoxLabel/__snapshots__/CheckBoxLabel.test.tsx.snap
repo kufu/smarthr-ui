@@ -11,7 +11,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
     className=""
   >
     <div
-      className="sc-AxhUy hejoPV"
+      className="sc-AxgMl khpreb"
     >
       <styled.label
         className=""
@@ -81,7 +81,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
         }
       >
         <label
-          className="sc-AxgMl hMZYSl"
+          className="sc-AxheI ldTmjf"
         >
           <Component
             checked={true}
@@ -156,7 +156,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
               }
             >
               <div
-                className="sc-AxjAm impYQq"
+                className="sc-AxirZ clMtsN"
               >
                 <styled.input
                   checked={true}
@@ -231,7 +231,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                 >
                   <input
                     checked={true}
-                    className="sc-AxiKw igyvWT"
+                    className="sc-AxhCb bzdyKr"
                     disabled={false}
                     name="name"
                     onChange={[Function]}
@@ -306,7 +306,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                   }
                 >
                   <span
-                    className="sc-AxirZ hRgeHQ active "
+                    className="sc-AxiKw kXHM active "
                   />
                 </styled.span>
                 <styled.span
@@ -376,7 +376,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                   }
                 >
                   <span
-                    className="sc-AxhCb DoGBp"
+                    className="sc-AxhUy cfHhAU"
                   >
                     <Component
                       color="#fff"
@@ -497,7 +497,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
             }
           >
             <p
-              className="sc-AxheI fDRfns"
+              className="sc-Axmtr ibdPSj"
             >
               label
             </p>
