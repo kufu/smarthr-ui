@@ -98,7 +98,7 @@ const List = styled.ul`
     margin-top: 16px;
   }
 `
-const Suffix = styled.span`
+const Suffix = styled.div`
   display: flex;
   align-items: center;
 
@@ -106,11 +106,11 @@ const Suffix = styled.span`
     margin-right: 4px;
   }
 `
-const SuffixText = styled.span`
+const SuffixText = styled.p`
   margin: 0;
   font-size: 11px;
 `
-const CustomTag = styled.span`
+const CustomTag = styled.div`
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;

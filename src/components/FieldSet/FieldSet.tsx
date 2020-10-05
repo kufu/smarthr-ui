@@ -58,13 +58,13 @@ export const FieldSet: FC<Props> = ({
   )
 }
 
-const Wrapper = styled.label<{ width: string | number }>`
+const Wrapper = styled.div<{ width: string | number }>`
   ${({ width }) => css`
     display: inline-block;
     width: ${typeof width === 'number' ? `${width}px` : width};
   `}
 `
-const Title = styled.span<{ themes: Theme }>`
+const Title = styled.div<{ themes: Theme }>`
   ${({ themes }) => css`
     display: flex;
     align-items: center;
@@ -78,7 +78,7 @@ const Title = styled.span<{ themes: Theme }>`
 const TitleText = styled(Heading)`
   display: inline-block;
 `
-const Help = styled.span<{ themes: Theme }>`
+const Help = styled.div<{ themes: Theme }>`
   ${({ themes }) => css`
     margin: ${themes.size.pxToRem(themes.size.space.XXS)} 0 0 0;
     font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
@@ -87,7 +87,7 @@ const Help = styled.span<{ themes: Theme }>`
     display: block;
   `}
 `
-const Error = styled.span<{ themes: Theme }>`
+const Error = styled.div<{ themes: Theme }>`
   ${({ themes }) => css`
     margin: ${themes.size.pxToRem(themes.size.space.XXS)} 0 0 0;
     font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
