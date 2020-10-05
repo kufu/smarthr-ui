@@ -137,6 +137,5 @@ const YearOverlay = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1;
   background-color: #fff;
 `

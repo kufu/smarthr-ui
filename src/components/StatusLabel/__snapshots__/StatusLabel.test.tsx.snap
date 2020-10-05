@@ -68,6 +68,13 @@ exports[`StatusLabel should be match snapshot 1`] = `
             "XXS": 8,
           },
         },
+        "zIndex": Object {
+          "AUTO": "auto",
+          "DEFAULT": 0,
+          "FIXED_MENU": 100,
+          "FLASH_MESSAGE": 11000,
+          "OVERLAP": 10000,
+        },
       }
     }
   >
