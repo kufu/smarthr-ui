@@ -84,7 +84,6 @@ const Help = styled.div<{ themes: Theme }>`
     font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
     line-height: 1;
     color: ${themes.palette.TEXT_GREY};
-    display: block;
   `}
 `
 const Error = styled.div<{ themes: Theme }>`
@@ -92,7 +91,6 @@ const Error = styled.div<{ themes: Theme }>`
     margin: ${themes.size.pxToRem(themes.size.space.XXS)} 0 0 0;
     font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
     line-height: 1;
-    display: block;
   `}
 `
 const ErrorIcon = styled(Icon)`
