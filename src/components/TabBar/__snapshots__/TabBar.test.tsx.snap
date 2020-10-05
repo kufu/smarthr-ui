@@ -72,11 +72,18 @@ exports[`TabBar should be match snapshot 1`] = `
               "XXS": 8,
             },
           },
+          "zIndex": Object {
+            "AUTO": "auto",
+            "DEFAULT": 0,
+            "FIXED_MENU": 100,
+            "FLASH_MESSAGE": 11000,
+            "OVERLAP": 10000,
+          },
         }
       }
     >
       <div
-        className="sc-AxjAm gCFdwB  bordered"
+        className="sc-AxjAm bDreEW  bordered"
         role="tablist"
       >
         <Component
@@ -155,12 +162,19 @@ exports[`TabBar should be match snapshot 1`] = `
                     "XXS": 8,
                   },
                 },
+                "zIndex": Object {
+                  "AUTO": "auto",
+                  "DEFAULT": 0,
+                  "FIXED_MENU": 100,
+                  "FLASH_MESSAGE": 11000,
+                  "OVERLAP": 10000,
+                },
               }
             }
           >
             <button
               aria-selected={false}
-              className="sc-AxirZ iiyULo  "
+              className="sc-AxirZ fpnMNO  "
               disabled={false}
               onClick={[Function]}
               role="tab"
@@ -246,12 +260,19 @@ exports[`TabBar should be match snapshot 1`] = `
                     "XXS": 8,
                   },
                 },
+                "zIndex": Object {
+                  "AUTO": "auto",
+                  "DEFAULT": 0,
+                  "FIXED_MENU": 100,
+                  "FLASH_MESSAGE": 11000,
+                  "OVERLAP": 10000,
+                },
               }
             }
           >
             <button
               aria-selected={true}
-              className="sc-AxirZ iiyULo  selected"
+              className="sc-AxirZ fpnMNO  selected"
               disabled={false}
               onClick={[Function]}
               role="tab"
@@ -337,12 +358,19 @@ exports[`TabBar should be match snapshot 1`] = `
                     "XXS": 8,
                   },
                 },
+                "zIndex": Object {
+                  "AUTO": "auto",
+                  "DEFAULT": 0,
+                  "FIXED_MENU": 100,
+                  "FLASH_MESSAGE": 11000,
+                  "OVERLAP": 10000,
+                },
               }
             }
           >
             <button
               aria-selected={false}
-              className="sc-AxirZ iiyULo  "
+              className="sc-AxirZ fpnMNO  "
               disabled={true}
               onClick={[Function]}
               role="tab"

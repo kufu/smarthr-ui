@@ -16,7 +16,14 @@ export const PaginationItem: FC<Props> = ({ page, currentPage, onClick }) => {
 
   if (page === currentPage) {
     return (
-      <ItemButton square size="s" className="paginationItem active" themes={theme} disabled>
+      <ItemButton
+        square
+        size="s"
+        className="paginationItem active"
+        themes={theme}
+        disabled
+        aria-current="page"
+      >
         {page}
       </ItemButton>
     )
