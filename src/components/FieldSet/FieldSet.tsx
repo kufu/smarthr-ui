@@ -52,6 +52,7 @@ export const FieldSet: FC<Props> = ({
             <ErrorText>{message}</ErrorText>
           </Error>
         ))}
+
       {helpMessage && <Help themes={theme}>{helpMessage}</Help>}
     </Wrapper>
   )
@@ -74,7 +75,6 @@ const Title = styled.div<{ themes: Theme }>`
     }
   `}
 `
-
 const TitleText = styled(Heading)`
   display: inline-block;
 `
