@@ -4,14 +4,14 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Input, Props as InputProps } from '../Input'
-import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
+import { Heading, HeadingTypes } from '../Heading'
 import { StatusLabel } from '../StatusLabel'
 import { Icon } from '../Icon'
+import { useId } from '../../hooks/useId'
 
 type Props = Omit<InputProps, 'error'> & {
   label: string
   labelType?: HeadingTypes
-  labelTagType?: HeadingTagTypes
   errorMessage?: string | string[]
   helpMessage?: string
   labelSuffix?: ReactNode
@@ -21,7 +21,6 @@ type Props = Omit<InputProps, 'error'> & {
 export const FieldSet: FC<Props> = ({
   label,
   labelType = 'subBlockTitle',
-  labelTagType = 'span',
   errorMessage,
   helpMessage,
   className = '',
@@ -30,21 +29,22 @@ export const FieldSet: FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme()
+  const fieldSetId = useId()
 
   return (
     <Wrapper width={props.width || 'auto'} className={className}>
       <Title themes={theme}>
-        <TitleText type={labelType} tag={labelTagType}>
-          {label}
-        </TitleText>
-
+        <label {...(children ? {} : { htmlFor: fieldSetId })}>
+          <TitleText type={labelType} tag="span">
+            {label}
+          </TitleText>
+        </label>
         {props.required && <StatusLabel type="required">必須</StatusLabel>}
 
         {labelSuffix && labelSuffix}
       </Title>
 
-      {children ? children : <Input {...props} error={!!errorMessage} />}
-
+      {children ? children : <Input {...props} error={!!errorMessage} id={fieldSetId} />}
       {errorMessage &&
         (typeof errorMessage === 'string' ? [errorMessage] : errorMessage).map((message) => (
           <Error themes={theme} key={message}>
@@ -52,7 +52,6 @@ export const FieldSet: FC<Props> = ({
             <ErrorText>{message}</ErrorText>
           </Error>
         ))}
-
       {helpMessage && <Help themes={theme}>{helpMessage}</Help>}
     </Wrapper>
   )
@@ -75,6 +74,7 @@ const Title = styled.div<{ themes: Theme }>`
     }
   `}
 `
+
 const TitleText = styled(Heading)`
   display: inline-block;
 `
