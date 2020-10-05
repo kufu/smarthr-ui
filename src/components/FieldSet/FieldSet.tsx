@@ -34,11 +34,11 @@ export const FieldSet: FC<Props> = ({
   return (
     <Wrapper width={props.width || 'auto'} className={className}>
       <Title themes={theme}>
-        <label {...(children ? {} : { htmlFor: fieldSetId })}>
+        <Label {...(children ? {} : { htmlFor: fieldSetId })}>
           <TitleText type={labelType} tag="span">
             {label}
           </TitleText>
-        </label>
+        </Label>
         {props.required && <StatusLabel type="required">必須</StatusLabel>}
 
         {labelSuffix && labelSuffix}
@@ -74,6 +74,9 @@ const Title = styled.div<{ themes: Theme }>`
       margin-left: ${themes.size.pxToRem(themes.size.space.XXS)};
     }
   `}
+`
+const Label = styled.label`
+  line-height: 0;
 `
 const TitleText = styled(Heading)`
   display: inline-block;
