@@ -69,13 +69,13 @@ storiesOf('Button', module)
       <Wrapper>
         <p>Only icon</p>
         <PrimaryButton onClick={action('clicked')} square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </PrimaryButton>
         <PrimaryButtonAnchor href="#" square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </PrimaryButtonAnchor>
         <PrimaryButton disabled={true} square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </PrimaryButton>
       </Wrapper>
 
@@ -146,13 +146,13 @@ storiesOf('Button', module)
       <Wrapper>
         <p>Only icon</p>
         <PrimaryButton size="s" onClick={action('clicked')} square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </PrimaryButton>
         <PrimaryButtonAnchor size="s" href="#" square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </PrimaryButtonAnchor>
         <PrimaryButton size="s" disabled={true} square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </PrimaryButton>
       </Wrapper>
 
@@ -218,13 +218,13 @@ storiesOf('Button', module)
       <Wrapper>
         <p>Only icon</p>
         <SecondaryButton onClick={action('clicked')} square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SecondaryButton>
         <SecondaryButtonAnchor href="#" square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SecondaryButtonAnchor>
         <SecondaryButton disabled={true} square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SecondaryButton>
       </Wrapper>
 
@@ -295,13 +295,13 @@ storiesOf('Button', module)
       <Wrapper>
         <p>Only icon</p>
         <SecondaryButton size="s" onClick={action('clicked')} square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SecondaryButton>
         <SecondaryButtonAnchor size="s" href="#" square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SecondaryButtonAnchor>
         <SecondaryButton size="s" disabled={true} square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SecondaryButton>
       </Wrapper>
 
@@ -361,13 +361,13 @@ storiesOf('Button', module)
       <Wrapper>
         <p>Only icon</p>
         <DangerButton onClick={action('clicked')} square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </DangerButton>
         <DangerButtonAnchor href="#" square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </DangerButtonAnchor>
         <DangerButton disabled={true} square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </DangerButton>
       </Wrapper>
 
@@ -438,13 +438,13 @@ storiesOf('Button', module)
       <Wrapper>
         <p>Only icon</p>
         <DangerButton size="s" onClick={action('clicked')} square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </DangerButton>
         <DangerButtonAnchor size="s" href="#" square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </DangerButtonAnchor>
         <DangerButton size="s" disabled={true} square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </DangerButton>
       </Wrapper>
 
@@ -510,13 +510,13 @@ storiesOf('Button', module)
       <Wrapper>
         <p>Only icon</p>
         <SkeletonButton onClick={action('clicked')} square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SkeletonButton>
         <SkeletonButtonAnchor href="#" square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SkeletonButtonAnchor>
         <SkeletonButton disabled={true} square>
-          <Icon size={16} name="fa-plus-circle" />
+          <Icon size={16} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SkeletonButton>
       </Wrapper>
 
@@ -587,13 +587,13 @@ storiesOf('Button', module)
       <Wrapper>
         <p>Only icon</p>
         <SkeletonButton size="s" onClick={action('clicked')} square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SkeletonButton>
         <SkeletonButtonAnchor size="s" href="#" square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SkeletonButtonAnchor>
         <SkeletonButton size="s" disabled={true} square>
-          <Icon size={13} name="fa-plus-circle" />
+          <Icon size={13} name="fa-plus-circle" visuallyHiddenText="プラスボタン" />
         </SkeletonButton>
       </Wrapper>
 
