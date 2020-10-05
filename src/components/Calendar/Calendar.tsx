@@ -42,7 +42,11 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
           {currentMonth.year()}年{currentMonth.month() + 1}月
         </YearMonth>
         <SecondaryButton onClick={() => setIsSelectingYear(!isSelectingYear)} size="s" square>
-          <Icon size={13} name={isSelectingYear ? 'fa-caret-up' : 'fa-caret-down'} />
+          <Icon
+            size={13}
+            visuallyHiddenText="年を選択する"
+            name={isSelectingYear ? 'fa-caret-up' : 'fa-caret-down'}
+          />
         </SecondaryButton>
         <MonthButtonLayout>
           <SecondaryButton
@@ -51,7 +55,7 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
             size="s"
             square
           >
-            <Icon size={13} name="fa-chevron-left" />
+            <Icon visuallyHiddenText="前の月へ" size={13} name="fa-chevron-left" />
           </SecondaryButton>
           <SecondaryButton
             disabled={isSelectingYear || nextMonth.isAfter(toDay, 'month')}
@@ -59,7 +63,7 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
             size="s"
             square
           >
-            <Icon size={13} name="fa-chevron-right" />
+            <Icon visuallyHiddenText="次の月へ" size={13} name="fa-chevron-right" />
           </SecondaryButton>
         </MonthButtonLayout>
       </Header>
