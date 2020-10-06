@@ -135,7 +135,10 @@ storiesOf('Tooltip', module)
           vertical="bottom"
           triggerType="icon"
         >
-          <Icon name="fa-arrow-alt-circle-up" />
+          <Icon
+            visuallyHiddenText="フォーカスすると情報が表示されます"
+            name="fa-arrow-alt-circle-up"
+          />
         </LightTooltip>
         <LightTooltip
           message="horizontal=center & vertical=bottom"
@@ -143,7 +146,10 @@ storiesOf('Tooltip', module)
           vertical="bottom"
           triggerType="icon"
         >
-          <Icon name="fa-arrow-alt-circle-up" />
+          <Icon
+            visuallyHiddenText="フォーカスすると情報が表示されます"
+            name="fa-arrow-alt-circle-up"
+          />
         </LightTooltip>
         <LightTooltip
           message="horizontal=right & vertical=bottom"
@@ -151,7 +157,10 @@ storiesOf('Tooltip', module)
           vertical="bottom"
           triggerType="icon"
         >
-          <Icon name="fa-arrow-alt-circle-up" />
+          <Icon
+            visuallyHiddenText="フォーカスすると情報が表示されます"
+            name="fa-arrow-alt-circle-up"
+          />
         </LightTooltip>
         <DarkTooltip
           message="horizontal=left & vertical=middle"
@@ -159,7 +168,10 @@ storiesOf('Tooltip', module)
           vertical="middle"
           triggerType="icon"
         >
-          <Icon name="fa-arrow-alt-circle-right" />
+          <Icon
+            visuallyHiddenText="フォーカスすると情報が表示されます"
+            name="fa-arrow-alt-circle-right"
+          />
         </DarkTooltip>
         <DarkTooltip
           message="horizontal=right & vertical=middle"
@@ -167,7 +179,10 @@ storiesOf('Tooltip', module)
           vertical="middle"
           triggerType="icon"
         >
-          <Icon name="fa-arrow-alt-circle-left" />
+          <Icon
+            visuallyHiddenText="フォーカスすると情報が表示されます"
+            name="fa-arrow-alt-circle-left"
+          />
         </DarkTooltip>
         <LightTooltip
           message="horizontal=left & vertical=top"
@@ -175,7 +190,10 @@ storiesOf('Tooltip', module)
           vertical="top"
           triggerType="icon"
         >
-          <Icon name="fa-arrow-alt-circle-down" />
+          <Icon
+            visuallyHiddenText="フォーカスすると情報が表示されます"
+            name="fa-arrow-alt-circle-down"
+          />
         </LightTooltip>
         <LightTooltip
           message="horizontal=center & vertical=top"
@@ -183,7 +201,10 @@ storiesOf('Tooltip', module)
           vertical="top"
           triggerType="icon"
         >
-          <Icon name="fa-arrow-alt-circle-down" />
+          <Icon
+            visuallyHiddenText="フォーカスすると情報が表示されます"
+            name="fa-arrow-alt-circle-down"
+          />
         </LightTooltip>
         <LightTooltip
           message="horizontal=right & vertical=top"
@@ -191,7 +212,10 @@ storiesOf('Tooltip', module)
           vertical="top"
           triggerType="icon"
         >
-          <Icon name="fa-arrow-alt-circle-down" />
+          <Icon
+            visuallyHiddenText="フォーカスすると情報が表示されます"
+            name="fa-arrow-alt-circle-down"
+          />
         </LightTooltip>
       </dd>
     </List>

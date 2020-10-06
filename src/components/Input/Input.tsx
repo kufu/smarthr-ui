@@ -103,25 +103,19 @@ const Wrapper = styled.span<{
     border: ${frame.border.default};
     box-sizing: border-box;
     cursor: text;
-    ${
-      isFocused &&
-      css`
-        border-color: ${palette.hoverColor(palette.MAIN)};
-      `
-    }
-    ${
-      error &&
-      css`
-        border-color: ${palette.DANGER};
-      `
-    }
-    ${
-      disabled &&
-      css`
-        background-color: ${palette.COLUMN};
-        pointer-events: none;
-      `
-    }
+    ${isFocused &&
+    css`
+      border-color: ${palette.hoverColor(palette.MAIN)};
+    `}
+    ${error &&
+    css`
+      border-color: ${palette.DANGER};
+    `}
+    ${disabled &&
+    css`
+      background-color: ${palette.COLUMN};
+      pointer-events: none;
+    `}
   `
 })
 const StyledInput = styled.input<Props & { themes: Theme }>`
@@ -147,6 +141,8 @@ const StyledInput = styled.input<Props & { themes: Theme }>`
 
       &[disabled] {
         color: ${palette.TEXT_DISABLED};
+        -webkit-text-fill-color: ${palette.TEXT_DISABLED};
+        opacity: 1;
       }
     `
   }}

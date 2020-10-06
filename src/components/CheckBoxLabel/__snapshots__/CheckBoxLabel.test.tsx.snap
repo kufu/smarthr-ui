@@ -11,7 +11,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
     className=""
   >
     <div
-      className="sc-AxhUy hejoPV"
+      className="sc-AxgMl khpreb"
     >
       <styled.label
         className=""
@@ -77,11 +77,18 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                 "XXS": 8,
               },
             },
+            "zIndex": Object {
+              "AUTO": "auto",
+              "DEFAULT": 0,
+              "FIXED_MENU": 100,
+              "FLASH_MESSAGE": 11000,
+              "OVERLAP": 10000,
+            },
           }
         }
       >
         <label
-          className="sc-AxgMl hMZYSl"
+          className="sc-AxheI ldTmjf"
         >
           <Component
             checked={true}
@@ -152,11 +159,18 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                       "XXS": 8,
                     },
                   },
+                  "zIndex": Object {
+                    "AUTO": "auto",
+                    "DEFAULT": 0,
+                    "FIXED_MENU": 100,
+                    "FLASH_MESSAGE": 11000,
+                    "OVERLAP": 10000,
+                  },
                 }
               }
             >
               <div
-                className="sc-AxjAm impYQq"
+                className="sc-AxirZ clMtsN"
               >
                 <styled.input
                   checked={true}
@@ -225,13 +239,20 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                           "XXS": 8,
                         },
                       },
+                      "zIndex": Object {
+                        "AUTO": "auto",
+                        "DEFAULT": 0,
+                        "FIXED_MENU": 100,
+                        "FLASH_MESSAGE": 11000,
+                        "OVERLAP": 10000,
+                      },
                     }
                   }
                   type="checkbox"
                 >
                   <input
                     checked={true}
-                    className="sc-AxiKw igyvWT"
+                    className="sc-AxhCb bzdyKr"
                     disabled={false}
                     name="name"
                     onChange={[Function]}
@@ -302,11 +323,18 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                           "XXS": 8,
                         },
                       },
+                      "zIndex": Object {
+                        "AUTO": "auto",
+                        "DEFAULT": 0,
+                        "FIXED_MENU": 100,
+                        "FLASH_MESSAGE": 11000,
+                        "OVERLAP": 10000,
+                      },
                     }
                   }
                 >
                   <span
-                    className="sc-AxirZ hRgeHQ active "
+                    className="sc-AxiKw kXHM active "
                   />
                 </styled.span>
                 <styled.span
@@ -372,11 +400,18 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                           "XXS": 8,
                         },
                       },
+                      "zIndex": Object {
+                        "AUTO": "auto",
+                        "DEFAULT": 0,
+                        "FIXED_MENU": 100,
+                        "FLASH_MESSAGE": 11000,
+                        "OVERLAP": 10000,
+                      },
                     }
                   }
                 >
                   <span
-                    className="sc-AxhCb DoGBp"
+                    className="sc-AxhUy cfHhAU"
                   >
                     <Component
                       color="#fff"
@@ -384,12 +419,15 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                       size={10}
                     >
                       <FaCheck
+                        aria-hidden={true}
                         className=""
                         color="#fff"
+                        focusable={false}
                         role="img"
                         size={10}
                       >
                         <IconBase
+                          aria-hidden={true}
                           attr={
                             Object {
                               "viewBox": "0 0 512 512",
@@ -397,12 +435,15 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                           }
                           className=""
                           color="#fff"
+                          focusable={false}
                           role="img"
                           size={10}
                         >
                           <svg
+                            aria-hidden={true}
                             color="#fff"
                             fill="currentColor"
+                            focusable={false}
                             height={10}
                             role="img"
                             size={10}
@@ -493,11 +534,18 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
                     "XXS": 8,
                   },
                 },
+                "zIndex": Object {
+                  "AUTO": "auto",
+                  "DEFAULT": 0,
+                  "FIXED_MENU": 100,
+                  "FLASH_MESSAGE": 11000,
+                  "OVERLAP": 10000,
+                },
               }
             }
           >
             <p
-              className="sc-AxheI fDRfns"
+              className="sc-Axmtr ibdPSj"
             >
               label
             </p>

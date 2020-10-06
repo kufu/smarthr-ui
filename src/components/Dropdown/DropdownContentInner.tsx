@@ -92,13 +92,15 @@ const Wrapper = styled.div<{
   controllable: boolean
 }>`
   ${({ contentBox, themes, scrollable, controllable }) => {
+    const { frame, zIndex } = themes
+
     return css`
       visibility: hidden;
-      z-index: 99999;
+      z-index: ${zIndex.OVERLAP};
       position: absolute;
       top: ${contentBox.top};
       left: ${contentBox.left};
-      border-radius: ${themes.frame.border.radius.m};
+      border-radius: ${frame.border.radius.m};
       box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       background-color: #fff;
       white-space: nowrap;
