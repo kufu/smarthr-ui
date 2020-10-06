@@ -54,7 +54,7 @@ jobs:
       - run-npm-test
   reg-suit:
     docker:
-      - image: regviz/node-xcb
+      - image: circleci/node:12-browsers
     working_directory: ~/repo
     steps:
       - run-reg-suit
