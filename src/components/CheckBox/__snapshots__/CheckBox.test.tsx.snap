@@ -69,6 +69,13 @@ exports[`CheckBox should be match snapshot 1`] = `
             "XXS": 8,
           },
         },
+        "zIndex": Object {
+          "AUTO": "auto",
+          "DEFAULT": 0,
+          "FIXED_MENU": 100,
+          "FLASH_MESSAGE": 11000,
+          "OVERLAP": 10000,
+        },
       }
     }
   >
@@ -140,6 +147,13 @@ exports[`CheckBox should be match snapshot 1`] = `
                 "XXL": 56,
                 "XXS": 8,
               },
+            },
+            "zIndex": Object {
+              "AUTO": "auto",
+              "DEFAULT": 0,
+              "FIXED_MENU": 100,
+              "FLASH_MESSAGE": 11000,
+              "OVERLAP": 10000,
             },
           }
         }
@@ -217,6 +231,13 @@ exports[`CheckBox should be match snapshot 1`] = `
                 "XXS": 8,
               },
             },
+            "zIndex": Object {
+              "AUTO": "auto",
+              "DEFAULT": 0,
+              "FIXED_MENU": 100,
+              "FLASH_MESSAGE": 11000,
+              "OVERLAP": 10000,
+            },
           }
         }
       >
@@ -287,6 +308,13 @@ exports[`CheckBox should be match snapshot 1`] = `
                 "XXS": 8,
               },
             },
+            "zIndex": Object {
+              "AUTO": "auto",
+              "DEFAULT": 0,
+              "FIXED_MENU": 100,
+              "FLASH_MESSAGE": 11000,
+              "OVERLAP": 10000,
+            },
           }
         }
       >
@@ -299,12 +327,15 @@ exports[`CheckBox should be match snapshot 1`] = `
             size={10}
           >
             <FaCheck
+              aria-hidden={true}
               className=""
               color="#fff"
+              focusable={false}
               role="img"
               size={10}
             >
               <IconBase
+                aria-hidden={true}
                 attr={
                   Object {
                     "viewBox": "0 0 512 512",
@@ -312,12 +343,15 @@ exports[`CheckBox should be match snapshot 1`] = `
                 }
                 className=""
                 color="#fff"
+                focusable={false}
                 role="img"
                 size={10}
               >
                 <svg
+                  aria-hidden={true}
                   color="#fff"
                   fill="currentColor"
+                  focusable={false}
                   height={10}
                   role="img"
                   size={10}
