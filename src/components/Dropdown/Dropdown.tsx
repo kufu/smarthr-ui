@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 import { createPortal } from 'react-dom'
 
-import { Rect } from './dropdownHelper'
+import { Rect, isEventFromChild } from './dropdownHelper'
 import { usePortal } from '../../hooks/usePortal'
 
 type Props = {
@@ -52,7 +52,7 @@ export const Dropdown: FC<Props> = ({ children }) => {
   useEffect(() => {
     const onClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
-      if (e.target === triggerElementRef.current || isChildPortal(e.target)) {
+      if (isEventFromChild(e, triggerElementRef.current) || isChildPortal(e.target)) {
         return
       }
       setActive(false)
