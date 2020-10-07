@@ -2,6 +2,7 @@ import React, { FC, ReactNode, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { getTooltipRect } from './tooltipHelper'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {
   id: string
@@ -22,6 +23,7 @@ export const TooltipPortal: FC<Props> = ({
   horizontal,
   vertical,
 }) => {
+  const theme = useTheme()
   const portalRef = useRef<HTMLDivElement>(null)
   const [rect, setRect] = useState({
     top: 0,
@@ -51,7 +53,7 @@ export const TooltipPortal: FC<Props> = ({
   }, [horizontal, isIcon, isMultiLine, parentRect, vertical])
 
   return (
-    <Container id={id} ref={portalRef} {...rect}>
+    <Container id={id} ref={portalRef} themes={theme} role="tooltip" {...rect}>
       {children}
     </Container>
   )
@@ -62,19 +64,22 @@ const Container = styled.div<{
   left: number
   width: number
   height: number
-}>(
-  ({ top, left, width, height }) => css`
-    position: absolute;
-    top: ${top}px;
-    left: ${left}px;
-    ${width > 0 &&
-    css`
-      width: ${width}px;
-    `}
-    ${height > 0 &&
-    css`
-      height: ${height}px;
-    `}
-    z-index: 9000;
-  `,
-)
+  themes: Theme
+}>`
+  ${({ top, left, width, height, themes }) => {
+    return css`
+      position: absolute;
+      top: ${top}px;
+      left: ${left}px;
+      ${width > 0 &&
+      css`
+        width: ${width}px;
+      `}
+      ${height > 0 &&
+      css`
+        height: ${height}px;
+      `}
+        z-index: ${themes.zIndex.OVERLAP};
+    `
+  }}
+`
