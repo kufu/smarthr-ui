@@ -46,6 +46,10 @@ exports[`TabBar should be match snapshot 1`] = `
             "disableColor": [Function],
             "hoverColor": [Function],
           },
+          "shadow": Object {
+            "BASE": "rgba(51, 51, 51, 0.15) 0 0 4px 0",
+            "DIALOG": "rgba(51, 51, 51, 0.3) 0 4px 10px 0",
+          },
           "size": Object {
             "font": Object {
               "GRANDE": 18,
@@ -131,6 +135,10 @@ exports[`TabBar should be match snapshot 1`] = `
                   "WARNING": "#ff8800",
                   "disableColor": [Function],
                   "hoverColor": [Function],
+                },
+                "shadow": Object {
+                  "BASE": "rgba(51, 51, 51, 0.15) 0 0 4px 0",
+                  "DIALOG": "rgba(51, 51, 51, 0.3) 0 4px 10px 0",
                 },
                 "size": Object {
                   "font": Object {
@@ -226,6 +234,10 @@ exports[`TabBar should be match snapshot 1`] = `
                   "disableColor": [Function],
                   "hoverColor": [Function],
                 },
+                "shadow": Object {
+                  "BASE": "rgba(51, 51, 51, 0.15) 0 0 4px 0",
+                  "DIALOG": "rgba(51, 51, 51, 0.3) 0 4px 10px 0",
+                },
                 "size": Object {
                   "font": Object {
                     "GRANDE": 18,
@@ -319,6 +331,10 @@ exports[`TabBar should be match snapshot 1`] = `
                   "WARNING": "#ff8800",
                   "disableColor": [Function],
                   "hoverColor": [Function],
+                },
+                "shadow": Object {
+                  "BASE": "rgba(51, 51, 51, 0.15) 0 0 4px 0",
+                  "DIALOG": "rgba(51, 51, 51, 0.3) 0 4px 10px 0",
                 },
                 "size": Object {
                   "font": Object {
