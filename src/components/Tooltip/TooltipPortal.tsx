@@ -53,7 +53,7 @@ export const TooltipPortal: FC<Props> = ({
   }, [horizontal, isIcon, isMultiLine, parentRect, vertical])
 
   return (
-    <Container id={id} ref={portalRef} themes={theme} {...rect}>
+    <Container id={id} ref={portalRef} themes={theme} role="tooltip" {...rect}>
       {children}
     </Container>
   )
