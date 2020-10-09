@@ -56,8 +56,8 @@ export const DialogContentInner: FC<Props> = ({
         appear
         unmountOnExit
       >
-        <Wrapper ref={domRef}>
-          <Background onClick={onClickOverlay} themes={theme} {...props} />
+        <Wrapper ref={domRef} themes={theme}>
+          <Background onClick={onClickOverlay} themes={theme} />
           <Inner themes={theme} {...props}>
             {children}
           </Inner>
@@ -69,37 +69,43 @@ export const DialogContentInner: FC<Props> = ({
   )
 }
 
-const Wrapper = styled.div`
-  z-index: 10000;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  &.wrapper-appear {
-    opacity: 0;
-  }
-  &.wrapper-appear-active {
-    transition: opacity 500ms;
-    opacity: 1;
-  }
-  &.wrapper-enter {
-    opacity: 0;
-  }
-  &.wrapper-enter-active {
-    transition: opacity 300ms;
-    opacity: 1;
-  }
-  &.wrapper-exit {
-    opacity: 1;
-  }
-  &.wrapper-exit-active {
-    transition: opacity 300ms;
-    opacity: 0;
-  }
-`
+const Wrapper = styled.div<{ themes: Theme }>(({ themes }) => {
+  const { zIndex } = themes
+
+  return css`
+    z-index: ${zIndex.OVERLAP};
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    &.wrapper-appear {
+      opacity: 0;
+    }
+    &.wrapper-appear-active {
+      transition: opacity 500ms;
+      opacity: 1;
+    }
+    &.wrapper-enter {
+      opacity: 0;
+    }
+    &.wrapper-enter-active {
+      transition: opacity 300ms;
+      opacity: 1;
+    }
+    &.wrapper-exit {
+      opacity: 1;
+    }
+    &.wrapper-exit-active {
+      transition: opacity 300ms;
+      opacity: 0;
+    }
+  `
+})
+
 const Inner = styled.div<StyleProps & { themes: Theme }>`
   ${({ themes, top, right, bottom, left }) => {
+    const { zIndex, frame } = themes
     const positionRight = exist(right) ? `${right}px` : 'auto'
     const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
     let positionTop = exist(top) ? `${top}px` : 'auto'
@@ -119,12 +125,12 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
 
     return css`
       position: absolute;
-      z-index: 10100;
+      z-index: ${zIndex.OVERLAP};
       top: ${positionTop};
       right: ${positionRight};
       bottom: ${positionBottom};
       left: ${positionLeft};
-      border-radius: ${themes.frame.border.radius.l};
+      border-radius: ${frame.border.radius.m};
       background-color: #fff;
       box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       transform: translate(${translateX}, ${translateY});

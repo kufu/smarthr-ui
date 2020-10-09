@@ -24,28 +24,31 @@ export type BaseProps = {
   wide?: boolean
 }
 
-export const buttonFactory: <Props extends BaseProps>(tag: Tag) => FC<Props> = (tag) => ({
-  size = 'default',
-  className = '',
-  square = false,
-  children = '',
-  prefix = '',
-  suffix = '',
-  ...props
-}) => {
-  const theme = useTheme()
+export const buttonFactory: <Props extends BaseProps>(tag: Tag) => FC<Props> = (tag) => {
   const Tag = hoverable()(tagStore[tag])
 
-  // prettier-ignore
-  const classNames = `${size} ${className} ${square ? 'square' : ''} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
+  return ({
+    size = 'default',
+    className = '',
+    square = false,
+    children = '',
+    prefix = '',
+    suffix = '',
+    ...props
+  }) => {
+    const theme = useTheme()
 
-  return (
-    <Tag className={classNames} themes={theme} {...props}>
-      {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
-      {children}
-      {suffix && <Suffix themes={theme}>{suffix}</Suffix>}
-    </Tag>
-  )
+    // prettier-ignore
+    const classNames = `${size} ${className} ${square ? 'square' : ''} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
+
+    return (
+      <Tag className={classNames} themes={theme} {...props}>
+        {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
+        {children}
+        {suffix && <Suffix themes={theme}>{suffix}</Suffix>}
+      </Tag>
+    )
+  }
 }
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`

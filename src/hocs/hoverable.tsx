@@ -22,7 +22,9 @@ interface Options {
   hoverClassName?: string
 }
 
-export const hoverable = ({ hoverClassName = 'hover' }: Options = {}) => <OriginalProps extends {}>(
+export const hoverable = ({ hoverClassName = 'hover' }: Options = {}) => <
+  OriginalProps extends Record<string, unknown>
+>(
   WrappedComponent: React.ComponentType<OriginalProps & InjectedProps>,
 ) => {
   return class HoverableComponent extends React.PureComponent<
