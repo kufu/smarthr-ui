@@ -8,6 +8,7 @@ import { Icon } from '../Icon'
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
 import { getFromDate, getToDate, isBetween } from './calendarHelper'
+import { useId } from '../../hooks/useId'
 
 type Props = {
   from?: Date
@@ -26,6 +27,8 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
   const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : now)
   const [isSelectingYear, setIsSelectingYear] = useState(false)
 
+  const yearPickerId = useId()
+
   useEffect(() => {
     if (value && isValidValue) {
       setCurrentMonth(dayjs(value))
@@ -41,7 +44,13 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
         <YearMonth>
           {currentMonth.year()}年{currentMonth.month() + 1}月
         </YearMonth>
-        <SecondaryButton onClick={() => setIsSelectingYear(!isSelectingYear)} size="s" square>
+        <SecondaryButton
+          onClick={() => setIsSelectingYear(!isSelectingYear)}
+          size="s"
+          square
+          aria-expanded={isSelectingYear}
+          aria-controls={yearPickerId}
+        >
           <Icon
             size={13}
             visuallyHiddenText="年を選択する"
@@ -68,23 +77,17 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
         </MonthButtonLayout>
       </Header>
       <TableLayout>
-        {isSelectingYear && (
-          <YearOverlay>
-            <YearPicker
-              fromYear={fromDay.year()}
-              toYear={toDay.year()}
-              selectedYear={value?.getFullYear()}
-              onSelectYear={(year) => {
-                setCurrentMonth(currentMonth.year(year))
-                requestAnimationFrame(() => {
-                  // fallback for IE
-                  // delay hiding elements to be able to follow parent elements of click event by ParentNode API
-                  setIsSelectingYear(false)
-                })
-              }}
-            />
-          </YearOverlay>
-        )}
+        <YearPicker
+          fromYear={fromDay.year()}
+          toYear={toDay.year()}
+          selectedYear={value?.getFullYear()}
+          onSelectYear={(year) => {
+            setCurrentMonth(currentMonth.year(year))
+            setIsSelectingYear(false)
+          }}
+          isDisplayed={isSelectingYear}
+          id={yearPickerId}
+        />
         <CalendarTable
           current={currentMonth.toDate()}
           from={fromDay.toDate()}
@@ -130,12 +133,4 @@ const MonthButtonLayout = styled.div`
 `
 const TableLayout = styled.div`
   position: relative;
-`
-const YearOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: #fff;
 `
