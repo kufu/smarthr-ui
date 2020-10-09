@@ -1,4 +1,4 @@
-import { mount } from 'enzyme'
+import { create } from 'react-test-renderer'
 
 import { getIconComponent } from './appNaviHelper'
 import { createTheme } from '../../themes/createTheme'
@@ -27,23 +27,25 @@ describe('AppNavi', () => {
 
       describe('if icon exist', () => {
         it('svg should be rendered', () => {
-          const component = mount(getIconComponent(theme, { icon: 'fa-archive' })!)
-          expect(component.exists('svg')).toBeTruthy()
+          const testInstance = create(getIconComponent(theme, { icon: 'fa-archive' })!).root
+          expect(testInstance.findByType('svg')).toBeTruthy()
         })
 
         describe('if current is true', () => {
-          const component = mount(getIconComponent(theme, { icon: 'fa-archive', current: true })!)
-
           it('svg color should be TEXT_BLACK color', () => {
-            expect(component.find('svg').props().color).toBe('black')
+            const testInstance = create(
+              getIconComponent(theme, { icon: 'fa-archive', current: true })!,
+            ).root
+            expect(testInstance.findByType('svg').props.color).toBe('black')
           })
         })
 
         describe('if current is false', () => {
-          const component = mount(getIconComponent(theme, { icon: 'fa-archive', current: false })!)
-
           it('svg color should be TEXT_GREY color', () => {
-            expect(component.find('svg').props().color).toBe('grey')
+            const testInstance = create(
+              getIconComponent(theme, { icon: 'fa-archive', current: false })!,
+            ).root
+            expect(testInstance.findByType('svg').props.color).toBe('grey')
           })
         })
       })
