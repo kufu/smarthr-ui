@@ -141,6 +141,8 @@ const StyledInput = styled.input<Props & { themes: Theme }>`
 
       &[disabled] {
         color: ${palette.TEXT_DISABLED};
+        -webkit-text-fill-color: ${palette.TEXT_DISABLED};
+        opacity: 1;
       }
     `
   }}

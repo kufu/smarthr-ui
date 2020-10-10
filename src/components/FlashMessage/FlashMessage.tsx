@@ -90,10 +90,10 @@ const bounceAnimation = keyframes`
 `
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame, palette } = themes
+    const { size, frame, palette, zIndex } = themes
 
     return css`
-      z-index: 1000;
+      z-index: ${zIndex.FLASH_MESSAGE};
       display: flex;
       position: fixed;
       bottom: ${size.pxToRem(size.space.XXS)};

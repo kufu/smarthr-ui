@@ -84,7 +84,7 @@ export const Pagination: FC<Props> = ({
   )
 
   return (
-    <Wrapper className={className}>
+    <Wrapper className={className} aria-label="ページの操作">
       <List className={withoutNumbers ? 'withoutNumbers' : ''} themes={theme}>
         {prevPage}
         {pages}
@@ -94,7 +94,7 @@ export const Pagination: FC<Props> = ({
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.nav`
   display: inline-block;
 `
 const List = styled.ul<{ themes: Theme }>`
