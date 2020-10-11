@@ -312,6 +312,7 @@ const Input = styled.input<{ themes: Theme }>`
       border: none;
       font-size: ${size.font.TALL}px;
       box-sizing: border-box;
+      outline: none;
     `
   }}
 `
