@@ -7,7 +7,7 @@
     "dayjs": "^1.9.1",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
-    "polished": "^4.0.1",
+    "polished": "^4.0.2",
     "react-icons": "^3.11.0",
     "react-transition-group": "^4.4.1"
   },
