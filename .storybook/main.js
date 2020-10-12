@@ -9,6 +9,12 @@ module.exports = {
         docs: false
       }
     },
+    {
+      name: '@storybook/addon-storysource',
+      options: {
+        parser: 'typescript'
+      }
+    },
     '@storybook/addon-a11y',
     'storybook-readme'
   ]
