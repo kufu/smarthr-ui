@@ -71,7 +71,7 @@ export const InformationPanel: FC<Props> = ({
   }, [activeProps])
 
   return (
-    <Wrapper className={className} themes={theme} aria-expanded={active}>
+    <Wrapper className={className} themes={theme} aria-expanded={togglable ? active : undefined}>
       <Header themes={theme}>
         <Title themes={theme}>
           <TitleIcon name={iconName} color={iconColor} themes={theme} />
