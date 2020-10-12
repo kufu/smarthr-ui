@@ -30,11 +30,11 @@ const Wrapper = styled.div<{ themes: Theme }>`
       &.bordered {
         position: relative;
 
-        :before {
+        ::before {
           position: absolute;
           left: 0;
           right: 0;
-          bottom: 0px;
+          bottom: 0;
           border-bottom: ${frame.border.default};
           content: '';
         }
