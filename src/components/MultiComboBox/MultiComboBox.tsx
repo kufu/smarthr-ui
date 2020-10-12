@@ -1,10 +1,6 @@
 import React, { ChangeEvent, FC, useCallback, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-// README.md 作成
-// キーボード操作
-// アクセシビリティ
-
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
