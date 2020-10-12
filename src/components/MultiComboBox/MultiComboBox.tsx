@@ -106,6 +106,12 @@ export const MultiComboBox: FC<Props> = ({
           setIsFocused(true)
         }
       }}
+      onKeyDown={(e) => {
+        if ((e.key === 'Escape' || e.key === 'Esc') && isFocused) {
+          e.stopPropagation()
+          setIsFocused(false)
+        }
+      }}
     >
       <Inner ref={innerRef}>
         <InputArea themes={theme}>
