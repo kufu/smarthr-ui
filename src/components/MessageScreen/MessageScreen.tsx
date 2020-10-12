@@ -76,6 +76,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: auto 0;
 `
 const Logo = styled.div`
   height: ${LOGO_HEIGHT}px;
