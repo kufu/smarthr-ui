@@ -52,7 +52,7 @@ const Text = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, font } = themes.size
     return css`
-      margin: 0px;
+      margin: 0;
       font-size: ${pxToRem(font.GRANDE)};
     `
   }}

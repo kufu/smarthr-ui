@@ -15551,10 +15551,10 @@ stylelint-config-recommended@^3.0.0:
   resolved "https://registry.yarnpkg.com/stylelint-config-recommended/-/stylelint-config-recommended-3.0.0.tgz#e0e547434016c5539fe2650afd58049a2fd1d657"
   integrity sha512-F6yTRuc06xr1h5Qw/ykb2LuFynJ2IxkKfCMf+1xqPffkxh0S09Zc902XCffcsw/XMFq/OzQ1w54fLIDtmRNHnQ==
 
-stylelint-config-smarthr@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/stylelint-config-smarthr/-/stylelint-config-smarthr-0.1.2.tgz#c6a2eee8c3c32d6e969334fca321360493701a53"
-  integrity sha512-IRt5skc1momEeYJOCT61Ztk8PRxaH6Nk9SBvJJPkGXIh92scZE42zwyegp9IMBurbthtzoOR8qLCRkvWUI/WyA==
+stylelint-config-smarthr@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/stylelint-config-smarthr/-/stylelint-config-smarthr-1.0.0.tgz#f3eff48af33ba5fe09e8afdecb303cdb06f11c81"
+  integrity sha512-imWJBxYmBgOa3Lxox3oG+DhSgUros4ignlQ1/gP+m4Cjix44FloKABIKPDMx2xjREdjhPJswcIpufGU4StMNtg==
 
 stylelint-config-standard@^20.0.0:
   version "20.0.0"
@@ -15567,16 +15567,6 @@ stylelint-config-styled-components@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/stylelint-config-styled-components/-/stylelint-config-styled-components-0.1.1.tgz#b408388d7c687833ab4be4c4e6522d97d2827ede"
   integrity sha512-z5Xz/9GmvxO6e/DLzBMwkB85zHxEEjN6K7Cj80Bi+o/9vR9eS3GX3E9VuMnX9WLFYulqbqLtTapGGY28JBiy9Q==
-
-stylelint-processor-styled-components@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/stylelint-processor-styled-components/-/stylelint-processor-styled-components-1.10.0.tgz#8082fc68779476aac411d3afffac0bc833d77a29"
-  integrity sha512-g4HpN9rm0JD0LoHuIOcd/FIjTZCJ0ErQ+dC3VTxp+dSvnkV+MklKCCmCQEdz5K5WxF4vPuzfVgdbSDuPYGZhoA==
-  dependencies:
-    "@babel/parser" "^7.8.3"
-    "@babel/traverse" "^7.8.3"
-    micromatch "^4.0.2"
-    postcss "^7.0.26"
 
 stylelint@^13.7.2:
   version "13.7.2"

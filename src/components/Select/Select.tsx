@@ -62,6 +62,10 @@ export const Select: FC<Props> = ({
             </optgroup>
           )
         })}
+        {
+          // Support for not omitting labels in Mobile Safari
+          <BlankOptgroup />
+        }
       </SelectBox>
       <IconWrap>
         <Icon size={13} name="fa-sort" />
@@ -142,4 +146,7 @@ const IconWrap = styled.span`
   & > svg {
     vertical-align: top;
   }
+`
+const BlankOptgroup = styled.optgroup`
+  display: none;
 `
