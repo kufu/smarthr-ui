@@ -75,7 +75,7 @@ const Wrapper = styled.form<{ themes: Theme; width: number }>`
       width: ${size.pxToRem(width)};
       padding: ${size.pxToRem(size.space.XS)};
       background-color: ${palette.COLUMN};
-      box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0 0 8px;
       overflow: hidden scroll;
       position: fixed;
       top: 0;
