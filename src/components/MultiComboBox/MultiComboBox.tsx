@@ -177,7 +177,13 @@ export const MultiComboBox: FC<Props> = ({
           <Dropdown themes={theme} ref={dropdownRef} width={dropdownStyle.width}>
             {creatable && inputValue && (
               <AddButton themes={theme} onClick={() => onAdd && onAdd(inputValue)}>
-                「{inputValue}」を追加
+                <AddIcon
+                  name="fa-plus-circle"
+                  size={14}
+                  color={theme.palette.TEXT_LINK}
+                  themes={theme}
+                />
+                <AddText themes={theme}>「{inputValue}」を追加</AddText>
               </AddButton>
             )}
 
@@ -402,6 +408,21 @@ const SelectButton = styled.button<{ themes: Theme }>`
   }}
 `
 const AddButton = styled(SelectButton)`
+  display: flex;
+  align-items: center;
+`
+const AddIcon = styled(Icon)<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
+
+    return css`
+      position: relative;
+      top: -1px;
+      margin-right: ${size.pxToRem(4)};
+    `
+  }}
+`
+const AddText = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { palette } = themes
 
