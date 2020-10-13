@@ -1,6 +1,7 @@
 module.exports = {
   stories: ['../**/*.stories.js'],
   addons: [
+    'storybook-readme',
     {
       name: '@storybook/addon-essentials',
       options: {
@@ -15,7 +16,6 @@ module.exports = {
         parser: 'typescript'
       }
     },
-    '@storybook/addon-a11y',
-    'storybook-readme'
+    '@storybook/addon-a11y'
   ]
 }
