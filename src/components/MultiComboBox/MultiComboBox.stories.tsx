@@ -23,7 +23,7 @@ const initialItems = [
     value: 'value-4',
   },
   {
-    label: '選択肢5 (deletable が true になる)',
+    label: '選択肢5 (deletable が false になる)',
     value: 'value-5',
   },
 ]
