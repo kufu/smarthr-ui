@@ -13,6 +13,7 @@ import { createPortal } from 'react-dom'
 
 import { Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 import { usePortal } from '../../hooks/usePortal'
+import { useId } from '../../hooks/useId'
 
 type Props = {
   children: ReactNode
@@ -26,6 +27,7 @@ type DropdownContextType = {
   onClickTrigger: (rect: Rect) => void
   onClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
+  contentWrapperId: string
 }
 
 const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
@@ -42,6 +44,7 @@ export const DropdownContext = createContext<DropdownContextType>({
     /* noop */
   },
   DropdownContentRoot: () => null,
+  contentWrapperId: '',
 })
 
 export const Dropdown: FC<Props> = ({ children }) => {
@@ -52,6 +55,7 @@ export const Dropdown: FC<Props> = ({ children }) => {
   const { portalRoot, isChildPortal, PortalParentProvider } = usePortal()
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
+  const contentWrapperId = useId()
 
   useEffect(() => {
     const onClickBody = (e: any) => {
@@ -106,6 +110,7 @@ export const Dropdown: FC<Props> = ({ children }) => {
             })
           },
           DropdownContentRoot,
+          contentWrapperId,
         }}
       >
         {children}
