@@ -48,11 +48,11 @@ const Button = styled.button<{ themes: Theme }>`
     `
   }}
 `
-const Text = styled.p<{ themes: Theme }>`
+const Text = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, font } = themes.size
     return css`
-      margin: 0px;
+      margin: 0;
       font-size: ${pxToRem(font.GRANDE)};
     `
   }}

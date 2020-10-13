@@ -71,7 +71,7 @@ export const InformationPanel: FC<Props> = ({
   }, [activeProps])
 
   return (
-    <Wrapper className={className} themes={theme} aria-expanded={active}>
+    <Wrapper className={className} themes={theme} aria-expanded={togglable ? active : undefined}>
       <Header themes={theme}>
         <Title themes={theme}>
           <TitleIcon name={iconName} color={iconColor} themes={theme} />
@@ -102,7 +102,7 @@ const Wrapper = styled(Base)<{ themes: Theme }>`
 
     return css`
       padding: ${pxToRem(space.S)};
-      box-shadow: rgba(51, 51, 51, 0.3) 0px 4px 10px 0;
+      box-shadow: rgba(51, 51, 51, 0.3) 0 4px 10px 0;
     `
   }}
 `

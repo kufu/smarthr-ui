@@ -56,7 +56,7 @@ const Wrapper = styled.dl<{ layout: LayoutType }>`
         return css`
           ${baseStyle}
           ${flexStyle}
-          &:after {
+          &::after {
             content: '';
             display: block;
             flex-basis: calc(33.333333% - 12px);

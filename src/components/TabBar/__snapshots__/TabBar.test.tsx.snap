@@ -1,342 +1,93 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TabBar should be match snapshot 1`] = `
-<Tab>
-  <Component>
-    <styled.div
-      className=" bordered"
-      role="tablist"
-      themes={
-        Object {
-          "frame": Object {
-            "border": Object {
-              "default": "1px solid #d6d6d6",
-              "lineStyle": "solid",
-              "lineWidth": "1px",
-              "radius": Object {
-                "m": "6px",
-                "s": "4px",
-              },
-            },
-          },
-          "interaction": Object {
-            "hover": Object {
-              "animation": ".3s ease-out",
-              "animationDuration": ".3s",
-              "animationTiming": "ease-out",
-              "feedbackOpacity": ".7",
-            },
-          },
-          "palette": Object {
-            "BACKGROUND": "#f5f6fa",
-            "BORDER": "#d6d6d6",
-            "BRAND": "#00c4cc",
-            "COLUMN": "#f9f9f9",
-            "DANGER": "#ef475b",
-            "HEADER_GREEN": "#57d0d5",
-            "MAIN": "#00a5ab",
-            "OUTLINE": "rgba(0,165,171,0.5)",
-            "OVERLAY": "rgba(0,0,0,0.15)",
-            "SCRIM": "rgba(0,0,0,0.5)",
-            "TEXT_BLACK": "#333",
-            "TEXT_DISABLED": "#c1c1c1",
-            "TEXT_GREY": "#767676",
-            "TEXT_LINK": "#007bc2",
-            "WARNING": "#ff8800",
-            "disableColor": [Function],
-            "hoverColor": [Function],
-          },
-          "size": Object {
-            "font": Object {
-              "GRANDE": 18,
-              "SHORT": 11,
-              "TALL": 14,
-              "VENTI": 24,
-            },
-            "mediaQuery": Object {
-              "SP": 599,
-              "TABLET": 959,
-            },
-            "pxToRem": [Function],
-            "space": Object {
-              "L": 40,
-              "M": 32,
-              "S": 24,
-              "XL": 48,
-              "XS": 16,
-              "XXL": 56,
-              "XXS": 8,
-            },
-          },
-        }
-      }
-    >
-      <div
-        className="sc-AxjAm gCFdwB  bordered"
-        role="tablist"
-      >
-        <Component
-          id="1"
-          onClick={[MockFunction]}
-        >
-          <styled.button
-            aria-selected={false}
-            className=" "
-            disabled={false}
-            onClick={[Function]}
-            role="tab"
-            themes={
-              Object {
-                "frame": Object {
-                  "border": Object {
-                    "default": "1px solid #d6d6d6",
-                    "lineStyle": "solid",
-                    "lineWidth": "1px",
-                    "radius": Object {
-                      "m": "6px",
-                      "s": "4px",
-                    },
-                  },
-                },
-                "interaction": Object {
-                  "hover": Object {
-                    "animation": ".3s ease-out",
-                    "animationDuration": ".3s",
-                    "animationTiming": "ease-out",
-                    "feedbackOpacity": ".7",
-                  },
-                },
-                "palette": Object {
-                  "BACKGROUND": "#f5f6fa",
-                  "BORDER": "#d6d6d6",
-                  "BRAND": "#00c4cc",
-                  "COLUMN": "#f9f9f9",
-                  "DANGER": "#ef475b",
-                  "HEADER_GREEN": "#57d0d5",
-                  "MAIN": "#00a5ab",
-                  "OUTLINE": "rgba(0,165,171,0.5)",
-                  "OVERLAY": "rgba(0,0,0,0.15)",
-                  "SCRIM": "rgba(0,0,0,0.5)",
-                  "TEXT_BLACK": "#333",
-                  "TEXT_DISABLED": "#c1c1c1",
-                  "TEXT_GREY": "#767676",
-                  "TEXT_LINK": "#007bc2",
-                  "WARNING": "#ff8800",
-                  "disableColor": [Function],
-                  "hoverColor": [Function],
-                },
-                "size": Object {
-                  "font": Object {
-                    "GRANDE": 18,
-                    "SHORT": 11,
-                    "TALL": 14,
-                    "VENTI": 24,
-                  },
-                  "mediaQuery": Object {
-                    "SP": 599,
-                    "TABLET": 959,
-                  },
-                  "pxToRem": [Function],
-                  "space": Object {
-                    "L": 40,
-                    "M": 32,
-                    "S": 24,
-                    "XL": 48,
-                    "XS": 16,
-                    "XXL": 56,
-                    "XXS": 8,
-                  },
-                },
-              }
-            }
-          >
-            <button
-              aria-selected={false}
-              className="sc-AxirZ iiyULo  "
-              disabled={false}
-              onClick={[Function]}
-              role="tab"
-            >
-              Tab
-            </button>
-          </styled.button>
-        </Component>
-        <Component
-          id="2"
-          onClick={[MockFunction]}
-          selected={true}
-        >
-          <styled.button
-            aria-selected={true}
-            className=" selected"
-            disabled={false}
-            onClick={[Function]}
-            role="tab"
-            themes={
-              Object {
-                "frame": Object {
-                  "border": Object {
-                    "default": "1px solid #d6d6d6",
-                    "lineStyle": "solid",
-                    "lineWidth": "1px",
-                    "radius": Object {
-                      "m": "6px",
-                      "s": "4px",
-                    },
-                  },
-                },
-                "interaction": Object {
-                  "hover": Object {
-                    "animation": ".3s ease-out",
-                    "animationDuration": ".3s",
-                    "animationTiming": "ease-out",
-                    "feedbackOpacity": ".7",
-                  },
-                },
-                "palette": Object {
-                  "BACKGROUND": "#f5f6fa",
-                  "BORDER": "#d6d6d6",
-                  "BRAND": "#00c4cc",
-                  "COLUMN": "#f9f9f9",
-                  "DANGER": "#ef475b",
-                  "HEADER_GREEN": "#57d0d5",
-                  "MAIN": "#00a5ab",
-                  "OUTLINE": "rgba(0,165,171,0.5)",
-                  "OVERLAY": "rgba(0,0,0,0.15)",
-                  "SCRIM": "rgba(0,0,0,0.5)",
-                  "TEXT_BLACK": "#333",
-                  "TEXT_DISABLED": "#c1c1c1",
-                  "TEXT_GREY": "#767676",
-                  "TEXT_LINK": "#007bc2",
-                  "WARNING": "#ff8800",
-                  "disableColor": [Function],
-                  "hoverColor": [Function],
-                },
-                "size": Object {
-                  "font": Object {
-                    "GRANDE": 18,
-                    "SHORT": 11,
-                    "TALL": 14,
-                    "VENTI": 24,
-                  },
-                  "mediaQuery": Object {
-                    "SP": 599,
-                    "TABLET": 959,
-                  },
-                  "pxToRem": [Function],
-                  "space": Object {
-                    "L": 40,
-                    "M": 32,
-                    "S": 24,
-                    "XL": 48,
-                    "XS": 16,
-                    "XXL": 56,
-                    "XXS": 8,
-                  },
-                },
-              }
-            }
-          >
-            <button
-              aria-selected={true}
-              className="sc-AxirZ iiyULo  selected"
-              disabled={false}
-              onClick={[Function]}
-              role="tab"
-            >
-              Selected
-            </button>
-          </styled.button>
-        </Component>
-        <Component
-          disabled={true}
-          id="3"
-          onClick={[MockFunction]}
-        >
-          <styled.button
-            aria-selected={false}
-            className=" "
-            disabled={true}
-            onClick={[Function]}
-            role="tab"
-            themes={
-              Object {
-                "frame": Object {
-                  "border": Object {
-                    "default": "1px solid #d6d6d6",
-                    "lineStyle": "solid",
-                    "lineWidth": "1px",
-                    "radius": Object {
-                      "m": "6px",
-                      "s": "4px",
-                    },
-                  },
-                },
-                "interaction": Object {
-                  "hover": Object {
-                    "animation": ".3s ease-out",
-                    "animationDuration": ".3s",
-                    "animationTiming": "ease-out",
-                    "feedbackOpacity": ".7",
-                  },
-                },
-                "palette": Object {
-                  "BACKGROUND": "#f5f6fa",
-                  "BORDER": "#d6d6d6",
-                  "BRAND": "#00c4cc",
-                  "COLUMN": "#f9f9f9",
-                  "DANGER": "#ef475b",
-                  "HEADER_GREEN": "#57d0d5",
-                  "MAIN": "#00a5ab",
-                  "OUTLINE": "rgba(0,165,171,0.5)",
-                  "OVERLAY": "rgba(0,0,0,0.15)",
-                  "SCRIM": "rgba(0,0,0,0.5)",
-                  "TEXT_BLACK": "#333",
-                  "TEXT_DISABLED": "#c1c1c1",
-                  "TEXT_GREY": "#767676",
-                  "TEXT_LINK": "#007bc2",
-                  "WARNING": "#ff8800",
-                  "disableColor": [Function],
-                  "hoverColor": [Function],
-                },
-                "size": Object {
-                  "font": Object {
-                    "GRANDE": 18,
-                    "SHORT": 11,
-                    "TALL": 14,
-                    "VENTI": 24,
-                  },
-                  "mediaQuery": Object {
-                    "SP": 599,
-                    "TABLET": 959,
-                  },
-                  "pxToRem": [Function],
-                  "space": Object {
-                    "L": 40,
-                    "M": 32,
-                    "S": 24,
-                    "XL": 48,
-                    "XS": 16,
-                    "XXL": 56,
-                    "XXS": 8,
-                  },
-                },
-              }
-            }
-          >
-            <button
-              aria-selected={false}
-              className="sc-AxirZ iiyULo  "
-              disabled={true}
-              onClick={[Function]}
-              role="tab"
-            >
-              Disabled
-            </button>
-          </styled.button>
-        </Component>
-      </div>
-    </styled.div>
-  </Component>
-</Tab>
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c0.bordered {
+  position: relative;
+}
+
+.c0.bordered::before {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom: 1px solid #d6d6d6;
+  content: '';
+}
+
+.c1 {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-weight: bold;
+  font-size: 0.875rem;
+  color: #767676;
+  height: 40px;
+  border-bottom: solid 3px transparent;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+  -webkit-transition: background-color .3s ease-out,color .3s ease-out;
+  transition: background-color .3s ease-out,color .3s ease-out;
+}
+
+.c1.selected {
+  position: relative;
+  color: #333;
+  border-color: #00a5ab;
+}
+
+.c1:hover {
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.c1:disabled {
+  background-color: transparent;
+  color: rgba(118,118,118,0.5);
+  cursor: not-allowed;
+}
+
+<div
+  className="c0  bordered"
+  role="tablist"
+>
+  <button
+    aria-selected={false}
+    className="c1  "
+    disabled={false}
+    onClick={[Function]}
+    role="tab"
+  >
+    Tab
+  </button>
+  <button
+    aria-selected={true}
+    className="c1  selected"
+    disabled={false}
+    onClick={[Function]}
+    role="tab"
+  >
+    Selected
+  </button>
+  <button
+    aria-selected={false}
+    className="c1  "
+    disabled={true}
+    onClick={[Function]}
+    role="tab"
+  >
+    Disabled
+  </button>
+</div>
 `;
