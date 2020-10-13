@@ -241,7 +241,7 @@ const InputArea = styled.div<{ themes: Theme }>`
 
     return css`
       overflow-y: auto;
-      flex: 1 1 0;
+      flex: 1 1 0px;
       max-height: 300px;
       padding: 0 ${size.pxToRem(4)};
     `
@@ -305,7 +305,7 @@ const DeleteIcon = styled(Icon)`
   vertical-align: 1px;
 `
 const InputWrapper = styled.li`
-  flex: 1 1 0;
+  flex: 1 1 0px;
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
