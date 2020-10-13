@@ -3,6 +3,7 @@ import React, {
   MutableRefObject,
   ReactNode,
   createContext,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -10,7 +11,7 @@ import React, {
 } from 'react'
 import { createPortal } from 'react-dom'
 
-import { Rect, isEventFromChild } from './dropdownHelper'
+import { Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 import { usePortal } from '../../hooks/usePortal'
 
 type Props = {
@@ -21,6 +22,7 @@ type DropdownContextType = {
   active: boolean
   triggerRect: Rect
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
+  rootTriggerRef: MutableRefObject<HTMLDivElement | null> | null
   onClickTrigger: (rect: Rect) => void
   onClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
@@ -32,6 +34,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
   triggerElementRef: React.createRef(),
+  rootTriggerRef: null,
   onClickTrigger: () => {
     /* noop */
   },
@@ -45,6 +48,7 @@ export const Dropdown: FC<Props> = ({ children }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
+  const { rootTriggerRef } = useContext(DropdownContext)
   const { portalRoot, isChildPortal, PortalParentProvider } = usePortal()
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
@@ -84,6 +88,7 @@ export const Dropdown: FC<Props> = ({ children }) => {
           active,
           triggerRect,
           triggerElementRef,
+          rootTriggerRef: rootTriggerRef || triggerElementRef || null,
           onClickTrigger: (rect) => {
             const newActive = !active
             setActive(newActive)
@@ -91,6 +96,14 @@ export const Dropdown: FC<Props> = ({ children }) => {
           },
           onClickCloser: () => {
             setActive(false)
+            // wait to re-render
+            requestAnimationFrame(() => {
+              // return focus to the Trigger
+              const trigger = getFirstTabbable(triggerElementRef)
+              if (trigger) {
+                trigger.focus()
+              }
+            })
           },
           DropdownContentRoot,
         }}
