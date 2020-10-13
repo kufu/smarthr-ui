@@ -234,7 +234,7 @@ const MenuListItemHeader = styled.div<{ themes: Theme }>`
     return css`
       padding: ${size.pxToRem(3)} ${size.pxToRem(20)};
       color: ${palette.TEXT_GREY};
-      font-size: ${size.pxToRem(size.font.SHORT)}
+      font-size: ${size.pxToRem(size.font.SHORT)};
       line-height: 1.6;
       white-space: nowrap;
     `

@@ -6,11 +6,13 @@ import { DatePicker } from 'smarthr-ui'
 
 ```tsx
 <DatePicker
-  date={date}
+  value={value}
   onChangeDate={handleChangeDate}
-  parsingErrorMessage="custom parsing error message"
   parseInput={customParser}
   formatDate={customFormatter}
+  name={name}
+  disabled={disabled}
+  error={error}
 />
 ```
 
@@ -18,11 +20,13 @@ import { DatePicker } from 'smarthr-ui'
 
 ### DatePicker
 
-| Name                | Required | Type                                | DefaultValue           | Description                                |
-| ------------------- | -------- | ----------------------------------- | ---------------------- | ------------------------------------------ |
-| date                | -        | **Date**                            | null                   | Date value.                                |
-| onChangeDate        | -        | **(date: Date \| null) => void**    | -                      | Fired when date is changed.                |
-| parsingErrorMessage | -        | **string**                          | '非対応な入力形式です' | Error message of parsing date string.      |
-| parseInput          | -        | **(input: string) => Date \| null** | -                      | Custom parsing function for input.         |
-| formatDate          | -        | **(date: Date \| null) => string**  | -                      | Custom formatting function to displa date. |
-| className           | -        | **string**                          | -                      | `className` of component.                  |
+| Name         | Required | Type                                            | DefaultValue | Description                                |
+| ------------ | -------- | ----------------------------------------------- | ------------ | ------------------------------------------ |
+| value        | -        | **string \| null**                              | null         | `value` of input.                          |
+| onChangeDate | -        | **(date: Date \| null, value: string) => void** | -            | Fired when date is changed.                |
+| parseInput   | -        | **(input: string) => Date \| null**             | -            | Custom parsing function for input.         |
+| formatDate   | -        | **(date: Date \| null) => string**              | -            | Custom formatting function to displa date. |
+| name         | -        | **string**                                      | -            | `name` of input.                           |
+| disabled     | -        | **boolean**                                     | -            | `disabled` of input.                       |
+| error        | -        | **boolean**                                     | -            | `error` of input.                          |
+| className    | -        | **string**                                      | -            | `className` of component.                  |

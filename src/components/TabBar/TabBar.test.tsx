@@ -1,6 +1,5 @@
-import { mount } from 'enzyme'
+import { create } from 'react-test-renderer'
 import React from 'react'
-import ReactTestRenderer from 'react-test-renderer'
 
 import { TabBar } from './TabBar'
 import { TabItem } from './TabItem'
@@ -21,11 +20,7 @@ const Tab = () => (
 
 describe('TabBar', () => {
   it('should be match snapshot', () => {
-    const component = mount(<Tab />)
-    expect(component).toMatchSnapshot()
-  })
-
-  it('should be able to render without crashing', () => {
-    ReactTestRenderer.create(<Tab />)
+    const testRenderer = create(<Tab />)
+    expect(testRenderer.toJSON()).toMatchSnapshot()
   })
 })
