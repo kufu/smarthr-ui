@@ -124,6 +124,7 @@ export const MultiComboBox: FC<Props> = ({
 
                   {deletable && (
                     <DeleteButton
+                      type="button"
                       themes={theme}
                       className={DELETE_BUTTON_CLASS_NAME}
                       onClick={() => onDelete({ value, label })}
@@ -186,6 +187,7 @@ export const MultiComboBox: FC<Props> = ({
               filteredItems.map(({ label, value, disabled: itemDisabled = false }, i) => (
                 <SelectButton
                   key={i}
+                  type="button"
                   themes={theme}
                   disabled={itemDisabled}
                   onClick={() => onSelect({ value, label })}
