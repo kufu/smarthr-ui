@@ -42,7 +42,7 @@ export const MultiComboBox: FC<Props> = ({
   onSelect,
 }) => {
   const theme = useTheme()
-  const innerRef = useRef<HTMLDivElement>(null)
+  const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
@@ -68,7 +68,7 @@ export const MultiComboBox: FC<Props> = ({
     .join(' ')
 
   useOuterClick(
-    [innerRef, dropdownRef],
+    [outerRef, dropdownRef],
     useCallback(() => {
       setIsFocused(false)
     }, []),
@@ -81,13 +81,13 @@ export const MultiComboBox: FC<Props> = ({
       inputRef.current.focus()
     }
 
-    if (innerRef.current) {
-      const rect = innerRef.current.getBoundingClientRect()
+    if (outerRef.current) {
+      const rect = outerRef.current.getBoundingClientRect()
 
       setDropdownStyle({
         top: rect.top + rect.height - 2 + window.pageYOffset,
         left: rect.left + window.pageXOffset,
-        width: innerRef.current.clientWidth,
+        width: outerRef.current.clientWidth,
       })
     }
   }, [isFocused, selectedItems])
@@ -96,6 +96,7 @@ export const MultiComboBox: FC<Props> = ({
     <Container
       themes={theme}
       width={width}
+      ref={outerRef}
       className={classNames}
       onClick={(e) => {
         if (
@@ -113,7 +114,7 @@ export const MultiComboBox: FC<Props> = ({
         }
       }}
     >
-      <Inner ref={innerRef}>
+      <Inner>
         <InputArea themes={theme}>
           <List themes={theme}>
             {selectedItems.map(({ value, label, deletable = true }, i) => (
