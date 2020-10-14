@@ -12,11 +12,11 @@ exports[`TabBar should be match snapshot 1`] = `
   position: relative;
 }
 
-.c0.bordered:before {
+.c0.bordered::before {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0px;
+  bottom: 0;
   border-bottom: 1px solid #d6d6d6;
   content: '';
 }
