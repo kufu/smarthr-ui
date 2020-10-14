@@ -7,7 +7,6 @@ import { Input, Props as InputProps } from '../Input'
 import { Heading, HeadingTypes } from '../Heading'
 import { StatusLabel } from '../StatusLabel'
 import { Icon } from '../Icon'
-import { useId } from '../../hooks/useId'
 
 type Props = Omit<InputProps, 'error'> & {
   label: string
@@ -16,6 +15,7 @@ type Props = Omit<InputProps, 'error'> & {
   helpMessage?: string
   labelSuffix?: ReactNode
   className?: string
+  htmlFor?: string
 }
 
 export const FieldSet: FC<Props> = ({
@@ -26,15 +26,15 @@ export const FieldSet: FC<Props> = ({
   className = '',
   labelSuffix,
   children,
+  htmlFor,
   ...props
 }) => {
   const theme = useTheme()
-  const fieldSetId = useId()
 
   return (
     <Wrapper width={props.width || 'auto'} className={className}>
       <Title themes={theme}>
-        <Label {...(children ? {} : { htmlFor: fieldSetId })}>
+        <Label htmlFor={htmlFor ?? undefined}>
           <TitleText type={labelType} tag="span">
             {label}
           </TitleText>
@@ -44,7 +44,7 @@ export const FieldSet: FC<Props> = ({
         {labelSuffix && labelSuffix}
       </Title>
 
-      {children ? children : <Input {...props} error={!!errorMessage} id={fieldSetId} />}
+      {children ? children : <Input {...props} error={!!errorMessage} id={htmlFor ?? undefined} />}
       {errorMessage &&
         (typeof errorMessage === 'string' ? [errorMessage] : errorMessage).map((message) => (
           <Error themes={theme} key={message}>

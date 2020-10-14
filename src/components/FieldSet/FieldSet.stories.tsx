@@ -38,6 +38,9 @@ storiesOf('FieldSet', module)
         <FieldSet label="disabled" disabled />
       </li>
       <li>
+        <FieldSet label="htmlFor" defaultValue="htmlFor" htmlFor="htmlFor" />
+      </li>
+      <li>
         <FieldSet label="width" defaultValue="width: 100%" width="100%" />
       </li>
       <li>
@@ -69,6 +72,11 @@ storiesOf('FieldSet', module)
       <li>
         <FieldSet label="custom field">
           <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
+        </FieldSet>
+      </li>
+      <li>
+        <FieldSet label="custom field htmlFor" htmlFor="customFieldHtmlFor">
+          <CustomTag id="customFieldHtmlFor">Use htmlFor with custom fields</CustomTag>
         </FieldSet>
       </li>
       <li>
