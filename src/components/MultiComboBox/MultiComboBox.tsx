@@ -260,10 +260,10 @@ const InputArea = styled.div<{ themes: Theme }>`
     const { size } = themes
 
     return css`
-      overflow-y: auto;
       /* for IE */
       /* stylelint-disable-next-line length-zero-no-unit */
       flex: 1 1 0px;
+      overflow-y: auto;
       max-height: 300px;
       padding: 0 ${size.pxToRem(4)};
     `
