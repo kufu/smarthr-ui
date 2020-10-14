@@ -365,6 +365,8 @@ const Dropdown = styled.div<{ themes: Theme; width: number }>`
     const { size, frame } = themes
 
     return css`
+      overflow-y: auto;
+      max-height: 300px;
       width: ${width}px;
       padding: ${size.pxToRem(size.space.XXS)} 0;
       border-radius: ${frame.border.radius.m};
