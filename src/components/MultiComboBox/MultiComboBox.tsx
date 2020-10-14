@@ -58,6 +58,7 @@ export const MultiComboBox: FC<Props> = ({
     if (!inputValue) return true
     return label.includes(inputValue)
   })
+  const itemLabels = items.map(({ label }) => label)
   const classNames = [
     isFocused ? 'active' : '',
     disabled ? 'disabled' : '',
@@ -175,17 +176,21 @@ export const MultiComboBox: FC<Props> = ({
       {isFocused && (
         <Portal top={dropdownStyle.top} left={dropdownStyle.left}>
           <Dropdown themes={theme} ref={dropdownRef} width={dropdownStyle.width}>
-            {creatable && inputValue && (
-              <AddButton themes={theme} onClick={() => onAdd && onAdd(inputValue)}>
-                <AddIcon
-                  name="fa-plus-circle"
-                  size={14}
-                  color={theme.palette.TEXT_LINK}
-                  themes={theme}
-                />
-                <AddText themes={theme}>「{inputValue}」を追加</AddText>
-              </AddButton>
-            )}
+            {creatable &&
+              inputValue &&
+              (itemLabels.includes(inputValue) ? (
+                <NoItems themes={theme}>重複する選択肢は追加できません</NoItems>
+              ) : (
+                <AddButton themes={theme} onClick={() => onAdd && onAdd(inputValue)}>
+                  <AddIcon
+                    name="fa-plus-circle"
+                    size={14}
+                    color={theme.palette.TEXT_LINK}
+                    themes={theme}
+                  />
+                  <AddText themes={theme}>「{inputValue}」を追加</AddText>
+                </AddButton>
+              ))}
 
             {filteredItems.length === 0 && !creatable ? (
               <NoItems themes={theme}>一致する選択肢がありません</NoItems>
