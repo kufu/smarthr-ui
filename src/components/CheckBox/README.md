@@ -10,8 +10,8 @@ import { CheckBox } from 'smarthr-ui'
 
 | Name       | Required | Type                                   | DefaultValue | Description                                                                                 |
 | ---------- | -------- | -------------------------------------- | ------------ | ------------------------------------------------------------------------------------------- |
-| checked    | true     | **boolean** <br> true &#124; false     | -            | Whether the check box is checked.                                                           |
-| name       | true     | **string**                             | -            | the name attribute of input tag.                                                            |
+| checked    | ✓     | **boolean** <br> true &#124; false     | -            | Whether the check box is checked.                                                           |
+| name       | ✓     | **string**                             | -            | the name attribute of input tag.                                                            |
 | themeColor | -        | **string** <br>  'light' &#124; 'dark' | 'light'      | style theme.                                                                                |
 | disabled   | -        | **boolean** <br> true &#124; false     | false        | The disabled attribute of input tag.                                                        |
 | mixed      | -        | **boolean** <br> true &#124; false     | false        | If `true`, the check Icon change to minus.                                                  |
