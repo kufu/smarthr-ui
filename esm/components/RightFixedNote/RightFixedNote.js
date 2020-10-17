@@ -22,7 +22,7 @@ import { Textarea } from '../Textarea';
 import { SecondaryButton } from '../Button';
 var TEXT_AREA_NAME = 'admin_memo_new_text';
 export var RightFixedNote = function (_a) {
-    var title = _a.title, items = _a.items, _b = _a.submitLabel, submitLabel = _b === void 0 ? '送信' : _b, _c = _a.width, width = _c === void 0 ? 270 : _c, textareaLabel = _a.textareaLabel, onClickEdit = _a.onClickEdit, onSubmit = _a.onSubmit, className = _a.className;
+    var title = _a.title, items = _a.items, _b = _a.submitLabel, submitLabel = _b === void 0 ? '送信' : _b, _c = _a.width, width = _c === void 0 ? 270 : _c, _d = _a.enableEdit, enableEdit = _d === void 0 ? true : _d, textareaLabel = _a.textareaLabel, onClickEdit = _a.onClickEdit, onSubmit = _a.onSubmit, className = _a.className;
     var theme = useTheme();
     var handleSubmit = useCallback(function (e) {
         e.preventDefault();
@@ -33,7 +33,7 @@ export var RightFixedNote = function (_a) {
     return (React.createElement(Wrapper, { themes: theme, width: width, onSubmit: handleSubmit, className: className },
         title && (React.createElement(Title, { type: "sectionTitle", themes: theme }, title)),
         items &&
-            items.map(function (item) { return (React.createElement(RightFixedNoteItem, __assign({ key: item.id }, item, { onClickEdit: onClickEdit }))); }),
+            items.map(function (item) { return (React.createElement(RightFixedNoteItem, __assign({ key: item.id }, item, { showEditButton: enableEdit, onClickEdit: onClickEdit }))); }),
         React.createElement(TextArea, { name: TEXT_AREA_NAME, themes: theme, "aria-label": textareaLabel ? textareaLabel : title }),
         React.createElement(SubmitButton, { type: "submit" }, submitLabel)));
 };

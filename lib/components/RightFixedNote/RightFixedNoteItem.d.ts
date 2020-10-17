@@ -5,6 +5,7 @@ export declare type ItemProps = {
     date?: string;
     author?: string;
     editLabel?: string;
+    showEditButton?: boolean;
     className?: string;
 };
 export declare type OnClickEdit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void;
