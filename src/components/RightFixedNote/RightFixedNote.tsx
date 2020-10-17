@@ -55,7 +55,12 @@ export const RightFixedNote: FC<Props> = ({
 
       {items &&
         items.map((item) => (
-          <RightFixedNoteItem key={item.id} {...item} showEditButton={enableEdit} onClickEdit={onClickEdit} />
+          <RightFixedNoteItem
+            key={item.id}
+            {...item}
+            showEditButton={enableEdit}
+            onClickEdit={onClickEdit}
+          />
         ))}
 
       <TextArea
