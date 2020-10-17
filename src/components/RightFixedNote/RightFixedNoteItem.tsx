@@ -11,6 +11,7 @@ export type ItemProps = {
   date?: string
   author?: string
   editLabel?: string
+  showEditButton?: boolean
   className?: string
 }
 
@@ -27,6 +28,7 @@ export const RightFixedNoteItem: FC<Props> = ({
   author,
   onClickEdit,
   editLabel = '編集',
+  showEditButton = true,
   className,
 }) => {
   const theme = useTheme()
@@ -34,9 +36,11 @@ export const RightFixedNoteItem: FC<Props> = ({
   return (
     <Wrapper themes={theme} className={className}>
       <TextBase themes={theme}>
-        <EditButton size="s" onClick={(e) => onClickEdit(e, id)} square aria-label={editLabel}>
-          <Icon name="fa-pen" />
-        </EditButton>
+        {showEditButton && (
+          <EditButton size="s" onClick={(e) => onClickEdit(e, id)} square aria-label={editLabel}>
+            <Icon name="fa-pen" />
+          </EditButton>
+        )}
         <Text themes={theme}>{text}</Text>
       </TextBase>
       {date && <Info themes={theme}>{date}</Info>}
