@@ -67,7 +67,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       background-color: ${palette.BACKGROUND};
     `
   }}
