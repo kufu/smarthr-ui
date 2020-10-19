@@ -6,12 +6,11 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 
 type Props = {
-  top: number
-  left: number
+  inputRect: DOMRect
   children: ReactNode
 }
 
-export const Portal: FC<Props> = ({ top, left, children }) => {
+export const Portal: FC<Props> = ({ inputRect, children }) => {
   const themes = useTheme()
   const { portalRoot } = usePortal()
   useEffect(() => {
@@ -21,6 +20,9 @@ export const Portal: FC<Props> = ({ top, left, children }) => {
       document.body.removeChild(portalRoot)
     }
   }, [portalRoot])
+
+  const top = inputRect.top + inputRect.height - 4 + window.pageYOffset
+  const left = inputRect.left + window.pageXOffset
 
   return createPortal(
     <Container top={top} left={left} themes={themes}>
