@@ -36,7 +36,7 @@
     "eslint-config-smarthr": "^5.0.0",
     "fixpack": "^3.0.6",
     "husky": "^4.3.0",
-    "jest": "^26.4.2",
+    "jest": "^26.5.3",
     "jest-styled-components": "^7.0.3",
     "lint-staged": "^10.4.2",
     "memory-fs": "^0.5.0",
