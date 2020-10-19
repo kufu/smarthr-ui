@@ -10,7 +10,8 @@ import React, {
 } from 'react'
 import { createPortal } from 'react-dom'
 
-import { Rect, hasParentElement } from './dropdownHelper'
+import { Rect } from './dropdownHelper'
+import { usePortal } from '../../hooks/usePortal'
 
 type Props = {
   children: ReactNode
@@ -44,59 +45,58 @@ export const Dropdown: FC<Props> = ({ children }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
-  const portalElementRef = useRef(document.createElement('div'))
+  const { portalRoot, isChildPortal, PortalParentProvider } = usePortal()
+
   const triggerElementRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const onClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
-      if (
-        e.target === triggerElementRef.current ||
-        hasParentElement(e.target, portalElementRef.current)
-      ) {
+      if (e.target === triggerElementRef.current || isChildPortal(e.target)) {
         return
       }
       setActive(false)
     }
-    const portalElement = portalElementRef.current
-    document.body.appendChild(portalElement)
+    document.body.appendChild(portalRoot)
     document.body.addEventListener('click', onClickBody, false)
 
     return () => {
-      document.body.removeChild(portalElement)
+      document.body.removeChild(portalRoot)
       document.body.removeEventListener('click', onClickBody, false)
     }
-  }, [])
+  }, [isChildPortal, portalRoot])
 
   // This is the root container of a dropdown content located in outside the DOM tree
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(
     () => (props) => {
       if (!active) return null
-      return createPortal(props.children, portalElementRef.current)
+      return createPortal(props.children, portalRoot)
     },
-    [active],
+    [active, portalRoot],
   )
   // set the displayName explicit for DevTools
   DropdownContentRoot.displayName = 'DropdownContentRoot'
 
   return (
-    <DropdownContext.Provider
-      value={{
-        active,
-        triggerRect,
-        triggerElementRef,
-        onClickTrigger: (rect) => {
-          const newActive = !active
-          setActive(newActive)
-          if (newActive) setTriggerRect(rect)
-        },
-        onClickCloser: () => {
-          setActive(false)
-        },
-        DropdownContentRoot,
-      }}
-    >
-      {children}
-    </DropdownContext.Provider>
+    <PortalParentProvider>
+      <DropdownContext.Provider
+        value={{
+          active,
+          triggerRect,
+          triggerElementRef,
+          onClickTrigger: (rect) => {
+            const newActive = !active
+            setActive(newActive)
+            if (newActive) setTriggerRect(rect)
+          },
+          onClickCloser: () => {
+            setActive(false)
+          },
+          DropdownContentRoot,
+        }}
+      >
+        {children}
+      </DropdownContext.Provider>
+    </PortalParentProvider>
   )
 }
