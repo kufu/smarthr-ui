@@ -4,7 +4,7 @@
   "version": "11.0.0-0",
   "author": "SmartHR-UI Team",
   "dependencies": {
-    "dayjs": "^1.9.1",
+    "dayjs": "^1.9.3",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.0.1",
