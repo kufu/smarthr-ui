@@ -48,7 +48,7 @@ const Wrapper = styled.button<{ themes: Theme }>`
     `
   }}
 `
-const IconWrapper = styled.figure<{ themes: Theme }>`
+const IconWrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 
