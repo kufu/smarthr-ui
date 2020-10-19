@@ -7,6 +7,7 @@ import { Input, Props as InputProps } from '../Input'
 import { Heading, HeadingTypes } from '../Heading'
 import { StatusLabel } from '../StatusLabel'
 import { Icon } from '../Icon'
+import { useId } from '../../hooks/useId'
 
 type Props = Omit<InputProps, 'error'> & {
   label: string
@@ -30,11 +31,12 @@ export const FieldSet: FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme()
+  const fieldSetId = useId(htmlFor)
 
   return (
     <Wrapper width={props.width || 'auto'} className={className}>
       <Title themes={theme}>
-        <Label htmlFor={htmlFor ?? undefined}>
+        <Label htmlFor={children && !htmlFor ? undefined : fieldSetId}>
           <TitleText type={labelType} tag="span">
             {label}
           </TitleText>
@@ -44,7 +46,7 @@ export const FieldSet: FC<Props> = ({
         {labelSuffix && labelSuffix}
       </Title>
 
-      {children ? children : <Input {...props} error={!!errorMessage} id={htmlFor ?? undefined} />}
+      {children ? children : <Input {...props} error={!!errorMessage} id={fieldSetId} />}
       {errorMessage &&
         (typeof errorMessage === 'string' ? [errorMessage] : errorMessage).map((message) => (
           <Error themes={theme} key={message}>
