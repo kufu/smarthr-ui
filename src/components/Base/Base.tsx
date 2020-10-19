@@ -8,23 +8,26 @@ type Props = {
   className?: string
 }
 
-export const Base = forwardRef<HTMLDivElement, Props>(({ radius = 'm', ...props }, ref) => {
-  const themes = useTheme()
-  const radiusMap = {
-    s: '6px',
-    m: '8px',
-  }
-  return <Wrapper themes={themes} radius={radiusMap[radius]} ref={ref} {...props} />
-})
+export const Base = forwardRef<HTMLDivElement, Props>(
+  ({ radius = 'm', className = '', ...props }, ref) => {
+    const themes = useTheme()
+    const classNames = `${className} ${radius ? `radius-${radius}` : ''}`
+    return <Wrapper className={classNames} themes={themes} ref={ref} {...props} />
+  },
+)
 
-const Wrapper = styled.div<{ themes: Theme; radius: string }>`
-  ${({ themes, radius }) => {
-    const { shadow } = themes
-
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
     return css`
-      border-radius: ${radius};
-      box-shadow: ${shadow.BASE};
+      box-shadow: ${themes.shadow.BASE};
       background-color: #fff;
+
+      &.radius-s {
+        border-radius: 6px;
+      }
+      &.radius-m {
+        border-radius: 8px;
+      }
     `
   }}
 `
