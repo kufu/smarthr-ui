@@ -1,9 +1,8 @@
-import React, { FC, ReactNode, useEffect } from 'react'
+import React, { FC, ReactNode, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
-import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { usePortal } from '../../hooks/usePortal'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {
   top: number
@@ -13,20 +12,21 @@ type Props = {
 
 export const Portal: FC<Props> = ({ top, left, children }) => {
   const themes = useTheme()
-  const { portalRoot } = usePortal()
+  const root = useRef(document.createElement('div')).current
+
   useEffect(() => {
-    document.body.appendChild(portalRoot)
+    document.body.appendChild(root)
 
     return () => {
-      document.body.removeChild(portalRoot)
+      document.body.removeChild(root)
     }
-  }, [portalRoot])
+  }, [root])
 
   return createPortal(
     <Container top={top} left={left} themes={themes}>
       {children}
     </Container>,
-    portalRoot,
+    root,
   )
 }
 

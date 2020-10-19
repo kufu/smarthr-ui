@@ -77,6 +77,12 @@ export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { IndexNav, IndexNavItemProps } from './components/IndexNav'
 export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'
+export {
+  BackgroundJobsPanel,
+  BackgroundJobsList,
+  BackgroundJobProps,
+} from './components/BackgroundJobsPanel'
+export { MultiComboBox } from './components/MultiComboBox'
 
 // themes
 export { createTheme } from './themes/createTheme'
