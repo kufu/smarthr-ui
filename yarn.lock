@@ -4441,6 +4441,11 @@ acorn@^7.1.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.2.0.tgz#17ea7e40d7c8640ff54a694c889c26f31704effe"
   integrity sha512-apwXVmYVpQ34m/i71vrApRrRKCWQnZZF1+npOD0WV5xZFfwWOmKGQ2RWlfdy9vWITsenisM8M0Qeq8agcFHNiQ==
 
+acorn@^8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.0.4.tgz#7a3ae4191466a6984eee0fe3407a4f3aa9db8354"
+  integrity sha512-XNP0PqF1XD19ZlLKvB7cMmnZswW4C/03pRHgirB30uSJTaS3A3V1/P4sS3HPvFmjoriPCJQs+JDSbm4bL1TxGQ==
+
 add-stream@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/add-stream/-/add-stream-1.0.0.tgz#6a7990437ca736d5e1288db92bd3266d5f5cb2aa"
@@ -7426,13 +7431,12 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
-ecma-version-validator-webpack-plugin@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/ecma-version-validator-webpack-plugin/-/ecma-version-validator-webpack-plugin-1.0.4.tgz#417a3c8e386ae74ec94f87d3f38278c25a85cac6"
-  integrity sha512-f41wa1Sq/fLZRS3TKA6XDN9oCZqz4TMQ40/S3BXKx4/uEsxidlusoIo5ofJjbRtLCgKAfQ2CZP3c2/3F3OTTxQ==
+ecma-version-validator-webpack-plugin@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ecma-version-validator-webpack-plugin/-/ecma-version-validator-webpack-plugin-1.1.0.tgz#ee711d74267d0534e550cb90526c6928aceef7db"
+  integrity sha512-gaADOe6CZ6WkAxE/UpIcU2bXuJB7QwP+Atv6JtZG4wCp9HBy+VS11H+1OTXtPyo0vTLSO5a8LjvTo7OG3ke3kw==
   dependencies:
-    acorn "^7.1.1"
-    webpack-sources "^1.4.3"
+    acorn "^8.0.4"
 
 ee-first@1.1.1:
   version "1.1.1"
