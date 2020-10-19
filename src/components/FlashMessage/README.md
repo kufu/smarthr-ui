@@ -1,30 +1,17 @@
 # FlashMessage
 
 ```tsx
+import { useState } from 'react'
 import {
   FlashMessage,
 } from 'smarthr-ui'
 
-interface State {
-  visible: boolean
-}
+const FlashMessageExample: React.FC = () => {
+  const [visible, setVisible] = useState(true)
 
-class FlashMessageExample {
-  public state = {
-    visible: true,
-  }
-
-  public render() {
-    const { visible } = this.state
-
-    return (
-      <FlashMessage type="success" text="Hello, FlashMessage." visible={visible} onClose={this.onClose} />
-    )
-  }
-
-  private onClose = () => {
-    this.setState((state) => ({ visible: false }))
-  }
+  return (
+    <FlashMessage type="success" text="Hello, FlashMessage." visible={visible} onClose={() => { setVisible(false) }} />
+  )
 }
 ```
 
@@ -35,7 +22,7 @@ class FlashMessageExample {
 | Name      | Required | Type                                                  | DefaultValue | Description                                               |
 | --------- | -------- | ----------------------------------------------------- | ------------ | --------------------------------------------------------- |
 | visible   | ✓        | **boolean**                                           | -            | If true, FlashMessage is display.                         |
-| type      | ✓        | **'success' \| 'info' \| 'warning' \| 'error' \| ''** | -            | Icon type prop.                                           |
-| text      | ✓        | **string**                                            | -            |                                                           |
+| type      | ✓        | **'success' \| 'info' \| 'warning' \| 'error' \| ''** | -            | change Icon type and color.                               |
+| text      | ✓        | **string**                                            | -            | -                                                         |
 | className |          | **string**                                            | ''           | className of FlashMessage.                                |
-| onClose   | ✓        | **function**                                          | -            | Fired when the Close button is clicked or wait 8000 msec. |
+| onClose   | ✓        | **() => void**                                        | -            | Fired when the Close button is clicked or wait 8000 msec. |
