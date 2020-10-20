@@ -15,7 +15,7 @@ import { HeadlineArea } from 'smarthr-ui'
 | Name        | Required | Type          | DefaultValue                  | Description                                                    |
 | ----------- | -------- | ------------- | ----------------------------- | ---------------------------------------------------------------|
 | heading     | ✓        | **object**    | [reference Heading](#Heading) | The Content of the Headline Area [reference Heading](#Heading) |
-| description | -        | **ReactNode** | undefined                     | description message.                                           |
+| description | -        | **ReactNode** | -                             | description message.                                           |
 | className   | -        | **string**    | ''                            | `className` of component.                                      |
 
 ### Heading
