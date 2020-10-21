@@ -35,6 +35,7 @@ const Wrapper = styled.div`
   overflow: hidden;
 `
 const Tooltip = styled(LightTooltip)`
+  display: block;
   text-overflow: ellipsis;
   overflow: hidden;
 `
