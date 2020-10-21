@@ -57,9 +57,5 @@ storiesOf('RightFixedNote', module)
     <RightFixedNote onSubmit={action('submit!')} onClickEdit={action('click edit!!')} />
   ))
   .add('without edit button', () => (
-    <RightFixedNote
-      title="RightFixedNote"
-      items={sampleItems}
-      onSubmit={action('submit!')}
-    />
+    <RightFixedNote title="RightFixedNote" items={sampleItems} onSubmit={action('submit!')} />
   ))
