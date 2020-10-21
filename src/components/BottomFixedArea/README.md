@@ -17,10 +17,10 @@ import { BottomFixedArea } from 'smarthr-ui'
 
 | Name            | Required | Type                                             | DefaultValue | Description                                                     |
 | --------------- | -------- | ------------------------------------------------ | ------------ | --------------------------------------------------------------- |
-| description     | -        | **ReactNode**                                    |              | The Description of this area.                                   |
-| primaryButton   | -        | **PrimaryButton &#124; PrimaryButtonAnchor**     |              | This is for PrimaryButton or PrimaryButtonAnchor component.     |
-| secondaryButton | -        | **SecondaryButton &#124; SecondaryButtonAnchor** |              | This is for SecondaryButton or SecondaryButtonAnchor component. |
-| tertiaryLinks   | -        | **TertiaryLinks[]**                              |              | Array of tertiaryLink props.                                    |
+| description     | -        | **ReactNode**                                    | -            | The Description of this area.                                   |
+| primaryButton   | -        | **PrimaryButton &#124; PrimaryButtonAnchor**     | -            | This is for PrimaryButton or PrimaryButtonAnchor component.     |
+| secondaryButton | -        | **SecondaryButton &#124; SecondaryButtonAnchor** | -            | This is for SecondaryButton or SecondaryButtonAnchor component. |
+| tertiaryLinks   | -        | **TertiaryLinks[]**                              | -            | Array of tertiaryLink props.                                    |
 | zIndex          | -        | **number**                                       | 500          | The z-index of this component                                   |
 | className       | -        | **string**                                       | ''           | The className of this component                                 |
 
@@ -28,7 +28,7 @@ import { BottomFixedArea } from 'smarthr-ui'
 
 | Name     | Required | Type                                                             | DefaultValue | Description                                                       |
 | -------- | -------- | ---------------------------------------------------------------- | ------------ | ----------------------------------------------------------------- |
-| text     | ✓        | **string**                                                       |              | The text of tertiaryLink                                          |
-| iconName | -        | **name Props of Icon component** <br> 'fa-trash', 'fa-sync', ... |              | Set the name of the icon to be displayed next to the button text. |
+| text     | ✓        | **string**                                                       | -            | The text of tertiaryLink                                          |
+| iconName | -        | **name Props of Icon component** <br> 'fa-trash', 'fa-sync', ... | -            | Set the name of the icon to be displayed next to the button text. |
 | type     | -        | **"button" &#124; "submit" &#124; "reset"**                      | "button"     | type for component.                                               |
-| onClick  | ✓        | **(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void** |              | Fired when the tertiaryLink is clicked                            |
+| onClick  | ✓        | **(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void** | -            | Fired when the tertiaryLink is clicked                            |
