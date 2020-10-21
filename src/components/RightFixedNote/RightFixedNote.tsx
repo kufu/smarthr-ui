@@ -12,8 +12,7 @@ interface Props {
   submitLabel?: string
   width?: number
   textareaLabel?: string
-  enableEdit?: boolean
-  onClickEdit: OnClickEdit
+  onClickEdit?: OnClickEdit
   onSubmit: (e: React.FormEvent<HTMLFormElement>, text: string) => void
   className?: string
 }
@@ -25,7 +24,6 @@ export const RightFixedNote: FC<Props> = ({
   items,
   submitLabel = '送信',
   width = 270,
-  enableEdit = true,
   textareaLabel,
   onClickEdit,
   onSubmit,
@@ -58,7 +56,6 @@ export const RightFixedNote: FC<Props> = ({
           <RightFixedNoteItem
             key={item.id}
             {...item}
-            showEditButton={enableEdit}
             onClickEdit={onClickEdit}
           />
         ))}

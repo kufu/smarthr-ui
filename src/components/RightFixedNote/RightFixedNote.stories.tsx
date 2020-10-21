@@ -60,8 +60,6 @@ storiesOf('RightFixedNote', module)
     <RightFixedNote
       title="RightFixedNote"
       items={sampleItems}
-      enableEdit={false}
       onSubmit={action('submit!')}
-      onClickEdit={action('click edit!')}
     />
   ))
