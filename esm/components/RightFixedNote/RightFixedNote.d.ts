@@ -6,8 +6,7 @@ interface Props {
     submitLabel?: string;
     width?: number;
     textareaLabel?: string;
-    enableEdit?: boolean;
-    onClickEdit: OnClickEdit;
+    onClickEdit?: OnClickEdit;
     onSubmit: (e: React.FormEvent<HTMLFormElement>, text: string) => void;
     className?: string;
 }

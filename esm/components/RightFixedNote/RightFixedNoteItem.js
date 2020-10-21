@@ -9,11 +9,11 @@ import { Base } from '../Base';
 import { SecondaryButton } from '../Button';
 import { Icon } from '../Icon';
 export var RightFixedNoteItem = function (_a) {
-    var id = _a.id, text = _a.text, date = _a.date, author = _a.author, onClickEdit = _a.onClickEdit, _b = _a.editLabel, editLabel = _b === void 0 ? '編集' : _b, _c = _a.showEditButton, showEditButton = _c === void 0 ? true : _c, className = _a.className;
+    var id = _a.id, text = _a.text, date = _a.date, author = _a.author, onClickEdit = _a.onClickEdit, _b = _a.editLabel, editLabel = _b === void 0 ? '編集' : _b, className = _a.className;
     var theme = useTheme();
     return (React.createElement(Wrapper, { themes: theme, className: className },
         React.createElement(TextBase, { themes: theme },
-            showEditButton && (React.createElement(EditButton, { size: "s", onClick: function (e) { return onClickEdit(e, id); }, square: true, "aria-label": editLabel },
+            onClickEdit && (React.createElement(EditButton, { size: "s", onClick: function (e) { return onClickEdit(e, id); }, square: true, "aria-label": editLabel },
                 React.createElement(Icon, { name: "fa-pen" }))),
             React.createElement(Text, { themes: theme }, text)),
         date && React.createElement(Info, { themes: theme }, date),
