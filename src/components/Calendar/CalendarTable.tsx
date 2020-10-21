@@ -53,6 +53,7 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
                           !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
                         }
                         aria-pressed={isSelectedDate}
+                        type="button"
                       >
                         <DateCell
                           themes={themes}
