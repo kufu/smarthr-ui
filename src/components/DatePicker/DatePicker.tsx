@@ -64,7 +64,7 @@ export const DatePicker: FC<Props> = ({
   const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
   const inputRef = useRef<HTMLInputElement>(null)
   const inputWrapperRef = useRef<HTMLDivElement>(null)
-  const calendarRef = useRef<HTMLDivElement>(null)
+  const calendarPortalRef = useRef<HTMLDivElement>(null)
   const [inputRect, setInputRect] = useState<DOMRect>(new DOMRect())
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [isCalendarShown, setIsCalendarShown] = useState(false)
@@ -124,7 +124,7 @@ export const DatePicker: FC<Props> = ({
   }, [value, isInputFocused, dateToString, stringToDate])
 
   useOuterClick(
-    [inputWrapperRef, calendarRef],
+    [inputWrapperRef, calendarPortalRef],
     useCallback(() => {
       switchCalendarVisibility(false)
     }, [switchCalendarVisibility]),
@@ -132,10 +132,10 @@ export const DatePicker: FC<Props> = ({
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key !== 'Tab' || !inputRef.current || !calendarRef.current) {
+      if (e.key !== 'Tab' || !inputRef.current || !calendarPortalRef.current) {
         return
       }
-      const calendarButtons = calendarRef.current.querySelectorAll('button')
+      const calendarButtons = calendarPortalRef.current.querySelectorAll('button')
       if (calendarButtons.length === 0) {
         return
       }
@@ -234,7 +234,7 @@ export const DatePicker: FC<Props> = ({
         />
       </InputWrapper>
       {isCalendarShown && (
-        <Portal inputRect={inputRect}>
+        <Portal inputRect={inputRect} ref={calendarPortalRef}>
           <Calendar
             value={selectedDate || undefined}
             from={from}
@@ -247,7 +247,6 @@ export const DatePicker: FC<Props> = ({
               })
               inputRef.current && inputRef.current.focus()
             }}
-            ref={calendarRef}
           />
         </Portal>
       )}
