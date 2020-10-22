@@ -1,7 +1,8 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { DropdownContext } from './Dropdown'
+import { tabbable } from './tabbable'
 
 type Props = {
   children: React.ReactNode
@@ -9,7 +10,26 @@ type Props = {
 }
 
 export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) => {
-  const { active, onClickTrigger, triggerElementRef } = useContext(DropdownContext)
+  const { active, onClickTrigger, contentWrapperId, triggerElementRef } = useContext(
+    DropdownContext,
+  )
+
+  useEffect(() => {
+    if (!triggerElementRef.current) {
+      return
+    }
+    // find trigger element and add ARIA
+    const trigger = tabbable(triggerElementRef.current)[0]
+    if (trigger) {
+      trigger.setAttribute('aria-expanded', String(active))
+      trigger.setAttribute('aria-haspopup', 'dialog')
+      if (active) {
+        trigger.setAttribute('aria-controls', contentWrapperId)
+      } else {
+        trigger.removeAttribute('aria-controls')
+      }
+    }
+  }, [triggerElementRef, active, contentWrapperId])
 
   return (
     <Wrapper

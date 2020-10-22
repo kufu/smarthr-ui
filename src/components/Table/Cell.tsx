@@ -53,14 +53,16 @@ const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
     const { size, palette, interaction } = themes
 
     return css`
+      height: ${size.pxToRem(40)};
       font-size: ${size.pxToRem(size.font.SHORT)};
       font-weight: bold;
-      padding: ${size.pxToRem(size.space.XS)};
+      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
       color: ${palette.TEXT_GREY};
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
       text-align: left;
       line-height: 1.5;
       vertical-align: middle;
+      box-sizing: border-box;
 
       &.highlighted {
         background-color: ${palette.hoverColor(palette.COLUMN)};
@@ -90,11 +92,13 @@ const Td = styled.td<{ themes: Theme }>`
 
     return css`
       color: ${palette.TEXT_BLACK};
-      padding: ${size.pxToRem(size.space.XS)};
+      height: ${size.pxToRem(44)};
+      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
       border-top: ${frame.border.default};
       font-size: ${size.pxToRem(size.font.TALL)};
       line-height: 1.5;
       vertical-align: middle;
+      box-sizing: border-box;
     `
   }};
 `

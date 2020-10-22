@@ -14,13 +14,6 @@ type Props = {
 export const Portal: FC<Props> = ({ inputRect, children }) => {
   const themes = useTheme()
   const { portalRoot } = usePortal()
-  useEffect(() => {
-    document.body.appendChild(portalRoot)
-
-    return () => {
-      document.body.removeChild(portalRoot)
-    }
-  }, [portalRoot])
 
   const [position, setPosition] = useState({
     top: 0,
