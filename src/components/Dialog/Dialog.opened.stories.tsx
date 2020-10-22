@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { ActionDialog, MessageDialog } from '.'
 import readme from './README.md'
 
-storiesOf('Dialog/opened', module)
+storiesOf('Dialog', module)
   .addParameters({
     readme: {
       sidebar: readme,

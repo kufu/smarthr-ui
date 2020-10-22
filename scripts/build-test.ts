@@ -6,6 +6,7 @@ const MemoryFS = require('memory-fs')
 const compiler = webpack({
   mode: 'development',
   entry: path.resolve('src', 'index.ts'),
+  target: ['web', 'es5'],
   devtool: 'nosources-source-map',
   plugins: [new ECMAVersionValidatorPlugin()],
   resolve: {
