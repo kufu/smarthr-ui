@@ -7,7 +7,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 type Props = {
   text: string
   iconName?: keyof typeof iconMap
-  type?: 'button' | 'submit' | 'reset'
+  type?: 'button' | 'reset'
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
