@@ -65,11 +65,9 @@ export const Dropdown: FC<Props> = ({ children }) => {
       }
       setActive(false)
     }
-    document.body.appendChild(portalRoot)
     document.body.addEventListener('click', onClickBody, false)
 
     return () => {
-      document.body.removeChild(portalRoot)
       document.body.removeEventListener('click', onClickBody, false)
     }
   }, [isChildPortal, portalRoot])
