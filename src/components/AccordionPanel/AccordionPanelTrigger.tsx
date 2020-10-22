@@ -46,7 +46,7 @@ export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) =
     }
   }, [onClickTrigger, name, isExpanded, onClickProps, expandedItems, expandableMultiply])
 
-  const caretIcon = <Icon className={iconClassNames} name="fa-caret-down" themes={theme} />
+  const caretIcon = <Icon className={iconClassNames} name="fa-caret-down" $theme={theme} />
 
   return (
     <Button
@@ -99,9 +99,9 @@ const Button = styled.button<{ themes: Theme }>`
     `
   }}
 `
-const Icon = styled(IconComponent)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
+const Icon = styled(IconComponent)<{ $theme: Theme }>`
+  ${({ $theme }) => {
+    const { size } = $theme
 
     return css`
       display: inline-flex;

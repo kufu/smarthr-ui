@@ -190,7 +190,7 @@ export const MultiComboBox: FC<Props> = ({
                   name="fa-plus-circle"
                   size={14}
                   color={theme.palette.TEXT_LINK}
-                  themes={theme}
+                  $theme={theme}
                 />
                 <AddText themes={theme}>「{inputValue}」を追加</AddText>
               </AddButton>
@@ -431,9 +431,9 @@ const AddButton = styled(SelectButton)`
   display: flex;
   align-items: center;
 `
-const AddIcon = styled(Icon)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
+const AddIcon = styled(Icon)<{ $theme: Theme }>`
+  ${({ $theme }) => {
+    const { size } = $theme
 
     return css`
       position: relative;
