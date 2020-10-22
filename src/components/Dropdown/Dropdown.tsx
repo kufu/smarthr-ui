@@ -3,6 +3,7 @@ import React, {
   MutableRefObject,
   ReactNode,
   createContext,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -10,8 +11,9 @@ import React, {
 } from 'react'
 import { createPortal } from 'react-dom'
 
-import { Rect } from './dropdownHelper'
+import { Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 import { usePortal } from '../../hooks/usePortal'
+import { useId } from '../../hooks/useId'
 
 type Props = {
   children: ReactNode
@@ -21,9 +23,11 @@ type DropdownContextType = {
   active: boolean
   triggerRect: Rect
   triggerElementRef: MutableRefObject<HTMLDivElement | null>
+  rootTriggerRef: MutableRefObject<HTMLDivElement | null> | null
   onClickTrigger: (rect: Rect) => void
   onClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
+  contentWrapperId: string
 }
 
 const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
@@ -32,6 +36,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   active: false,
   triggerRect: initialRect,
   triggerElementRef: React.createRef(),
+  rootTriggerRef: null,
   onClickTrigger: () => {
     /* noop */
   },
@@ -39,20 +44,23 @@ export const DropdownContext = createContext<DropdownContextType>({
     /* noop */
   },
   DropdownContentRoot: () => null,
+  contentWrapperId: '',
 })
 
 export const Dropdown: FC<Props> = ({ children }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
+  const { rootTriggerRef } = useContext(DropdownContext)
   const { portalRoot, isChildPortal, PortalParentProvider } = usePortal()
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
+  const contentWrapperId = useId()
 
   useEffect(() => {
     const onClickBody = (e: any) => {
       // ignore events from events within DropdownTrigger and DropdownContent
-      if (e.target === triggerElementRef.current || isChildPortal(e.target)) {
+      if (isEventFromChild(e, triggerElementRef.current) || isChildPortal(e.target)) {
         return
       }
       setActive(false)
@@ -84,6 +92,7 @@ export const Dropdown: FC<Props> = ({ children }) => {
           active,
           triggerRect,
           triggerElementRef,
+          rootTriggerRef: rootTriggerRef || triggerElementRef || null,
           onClickTrigger: (rect) => {
             const newActive = !active
             setActive(newActive)
@@ -91,8 +100,17 @@ export const Dropdown: FC<Props> = ({ children }) => {
           },
           onClickCloser: () => {
             setActive(false)
+            // wait to re-render
+            requestAnimationFrame(() => {
+              // return focus to the Trigger
+              const trigger = getFirstTabbable(triggerElementRef)
+              if (trigger) {
+                trigger.focus()
+              }
+            })
           },
           DropdownContentRoot,
+          contentWrapperId,
         }}
       >
         {children}
