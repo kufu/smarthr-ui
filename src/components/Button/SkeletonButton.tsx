@@ -8,7 +8,7 @@ import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseBu
 
 export const SkeletonButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
-  return <SkeletonStyleButton type={type} themes={theme} {...props} />
+  return <SkeletonStyleButton {...props} themes={theme} type={type} />
 }
 
 export const SkeletonButtonAnchor: FC<AnchorProps> = (props) => {

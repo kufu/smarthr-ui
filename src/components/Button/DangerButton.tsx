@@ -8,7 +8,7 @@ import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseBu
 
 export const DangerButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
-  return <DangerStyleButton type={type} themes={theme} {...props} />
+  return <DangerStyleButton {...props} themes={theme} type={type} />
 }
 
 export const DangerButtonAnchor: FC<AnchorProps> = (props) => {

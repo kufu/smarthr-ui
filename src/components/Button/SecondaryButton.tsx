@@ -8,7 +8,7 @@ import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseBu
 
 export const SecondaryButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
-  return <SecondaryStyleButton type={type} themes={theme} {...props} />
+  return <SecondaryStyleButton {...props} themes={theme} type={type} />
 }
 // set the displayName explicit.
 // This is for error message of BottomFixedArea component.

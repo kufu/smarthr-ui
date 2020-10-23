@@ -8,7 +8,7 @@ import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseBu
 
 export const PrimaryButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
-  return <PrimaryStyleButton type={type} themes={theme} {...props} />
+  return <PrimaryStyleButton {...props} themes={theme} type={type} />
 }
 
 // set the displayName explicit.
