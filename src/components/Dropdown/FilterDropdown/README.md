@@ -16,7 +16,7 @@ import { FilterDropdown } from 'smarthr-ui'
 | Name       | Required | Type                | DefaultValue | Description                                           |
 | ---------- | -------- | ------------------- | ------------ | ----------------------------------------------------- |
 | isFiltered | -        | **boolean**         | false        | Flag to switch border color of the trigger button     |
-| onApply    | true     | **function**        | -            | Fired when the Apply button is clicked                |
+| onApply    | ✓       | **function**        | -            | Fired when the Apply button is clicked                |
 | onCancel   | -        | **function**        | -            | Fired when the Cancel button is clicked               |
 | onReset    | -        | **function**        | -            | Fired when the Reset button is clicked                |
-| children   | true     | **React.ReactNode** | -            | Components to control Inputs for filtering conditions |
+| children   | ✓       | **React.ReactNode** | -            | Components to control Inputs for filtering conditions |

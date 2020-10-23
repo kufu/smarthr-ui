@@ -61,10 +61,7 @@ export const DatePicker: FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const calendarRef = useRef<HTMLDivElement>(null)
-  const [calendarPosition, setCalendarPosition] = useState({
-    top: 0,
-    left: 0,
-  })
+  const [inputRect, setInputRect] = useState<DOMRect>(new DOMRect())
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [isCalendarShown, setIsCalendarShown] = useState(false)
 
@@ -100,11 +97,7 @@ export const DatePicker: FC<Props> = ({
       return
     }
     setIsCalendarShown(true)
-    const rect = inputWrapperRef.current.getBoundingClientRect()
-    setCalendarPosition({
-      top: rect.top + rect.height - 4 + window.pageYOffset,
-      left: rect.left + window.pageXOffset,
-    })
+    setInputRect(inputWrapperRef.current.getBoundingClientRect())
   }, [])
 
   useEffect(() => {
@@ -237,7 +230,7 @@ export const DatePicker: FC<Props> = ({
         />
       </InputWrapper>
       {isCalendarShown && (
-        <Portal {...calendarPosition}>
+        <Portal inputRect={inputRect}>
           <Calendar
             value={selectedDate || undefined}
             onSelectDate={(_, selected) => {

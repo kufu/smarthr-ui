@@ -153,9 +153,9 @@ const Job = styled.li<{ themes: Theme }>(({ themes }) => {
   const { pxToRem, space } = themes.size
   return css`
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     flex-wrap: nowrap;
-    line-height: 1rem;
+    line-height: normal;
     :not(:first-child) {
       margin-top: ${pxToRem(space.XS)};
     }
@@ -163,6 +163,7 @@ const Job = styled.li<{ themes: Theme }>(({ themes }) => {
 })
 const JobIconWrapper = styled.div`
   flex-shrink: 0;
+  line-height: 0;
 `
 const JobName = styled(OmittableJobText)<{ themes: Theme }>(({ themes }) => {
   const { font, pxToRem, space } = themes.size

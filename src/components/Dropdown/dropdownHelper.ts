@@ -1,3 +1,6 @@
+import { RefObject } from 'react'
+import { tabbable } from './tabbable'
+
 export type Rect = {
   top: number
   right: number
@@ -10,6 +13,24 @@ export type ContentBoxStyle = {
   top: string
   left: string
   maxHeight: string
+}
+
+export function isEventFromChild(e: Event, parent: Element | null): boolean {
+  const path = e.composedPath && e.composedPath()
+  if (!path) {
+    // fallback for IE
+    if (e.target instanceof Element) {
+      return isChildElement(e.target, parent)
+    }
+    return false
+  }
+  if (path.length === 0 || !parent) return false
+  return path.includes(parent)
+}
+
+function isChildElement(target: Element | null, parent: Element | null): boolean {
+  if (!target || !parent) return false
+  return target === parent || isChildElement(target.parentElement, parent)
 }
 
 export function getContentBoxStyle(
@@ -52,4 +73,13 @@ export function getContentBoxStyle(
   }
 
   return contentBox
+}
+
+export function getFirstTabbable(ref: RefObject<HTMLElement>) {
+  if (ref.current) {
+    const tabbables = tabbable(ref.current)
+    const firstTabbable = tabbables[0]
+    return firstTabbable
+  }
+  return null
 }
