@@ -3,6 +3,8 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { Heading } from './Heading'
+import { H } from './H'
+import { Section } from './Section'
 
 import readme from './README.md'
 
@@ -41,6 +43,29 @@ storiesOf('Heading', module)
       </li>
     </List>
   ))
+  .add('contextual heading', () => (
+    <Wrapper>
+      <H>This is h1</H>
+      <Section>
+        <H>This is h2</H>
+        <Section>
+          <H>This is h3</H>
+          <Section>
+            <H>This is h4</H>
+            <Section>
+              <H>This is h5</H>
+              <Section>
+                <H>This is h6</H>
+                <Section>
+                  <H>It does not get smaller than h6</H>
+                </Section>
+              </Section>
+            </Section>
+          </Section>
+        </Section>
+      </Section>
+    </Wrapper>
+  ))
 
 const List = styled.ul`
   padding: 0 2.4rem;
@@ -54,5 +79,12 @@ const List = styled.ul`
     & > *:not(:first-child) {
       margin-left: 1.6rem;
     }
+  }
+`
+const Wrapper = styled.div`
+  padding: 1rem;
+  section {
+    padding: 1rem;
+    background-color: rgba(150, 150, 150, 0.1);
   }
 `
