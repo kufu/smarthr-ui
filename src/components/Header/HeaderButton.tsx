@@ -15,7 +15,7 @@ export const HeaderButton: FC<Props> = ({ icon, children, onClick }) => {
   const theme = useTheme()
 
   return (
-    <Wrapper themes={theme} onClick={onClick}>
+    <Wrapper themes={theme} onClick={onClick} type="button">
       {icon && (
         <IconWrapper themes={theme} role="presentation">
           <Icon name={icon}></Icon>

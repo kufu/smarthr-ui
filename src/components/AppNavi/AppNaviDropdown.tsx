@@ -37,6 +37,7 @@ export const AppNaviDropdown: FC<InnerProps> = ({
           isActive={current}
           disabled={isUnclickable}
           isUnclickable={isUnclickable}
+          type="button"
         >
           {iconComponent}
           {children}
