@@ -66,7 +66,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         themes={theme}
         width={props.width}
         isFocused={isFocused}
-        disabled={props.disabled}
+        $disabled={props.disabled}
         error={props.error}
         onClick={() => innerRef.current?.focus()}
         className={className}
@@ -89,9 +89,9 @@ const Wrapper = styled.span<{
   themes: Theme
   width?: string | number
   isFocused: boolean
-  disabled?: boolean
+  $disabled?: boolean
   error?: boolean
-}>(({ themes, width = 'auto', isFocused, disabled, error }) => {
+}>(({ themes, width = 'auto', isFocused, $disabled, error }) => {
   const { frame, palette, size } = themes
   return css`
     display: inline-flex;
@@ -111,7 +111,7 @@ const Wrapper = styled.span<{
     css`
       border-color: ${palette.DANGER};
     `}
-    ${disabled &&
+    ${$disabled &&
     css`
       background-color: ${palette.COLUMN};
       pointer-events: none;
