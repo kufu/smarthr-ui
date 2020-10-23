@@ -1,4 +1,12 @@
-import React, { FC, ReactNode, createContext, useCallback, useContext, useMemo } from 'react'
+import React, {
+  FC,
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+} from 'react'
 
 interface PortalContextValue {
   currentSeq: number
@@ -23,6 +31,13 @@ export function usePortal() {
     element.dataset.portalChildOf = seqs.join(',')
     return element
   }, [parentSeqs, currentSeq])
+
+  useEffect(() => {
+    document.body.appendChild(portalRoot)
+    return () => {
+      document.body.removeChild(portalRoot)
+    }
+  }, [portalRoot])
 
   const isChildPortal = useCallback(
     (element: HTMLElement | null) => {

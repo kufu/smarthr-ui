@@ -99,7 +99,7 @@ const Table = styled.table<{ themes: Theme }>(({ themes }) => {
     }
   `
 })
-const DateCell = styled.div<{ themes: Theme; isToday?: boolean; isSelected?: boolean }>`
+const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
