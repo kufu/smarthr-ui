@@ -35,6 +35,7 @@ export const AppNaviButton: FC<InnerProps> = ({
       isActive={current}
       disabled={isUnclickable}
       isUnclickable={isUnclickable}
+      type="button"
     >
       {iconComponent}
       {children}

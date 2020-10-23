@@ -32,6 +32,7 @@ export const TabItem: FC<Props> = ({
       onClick={() => onClick(id)}
       disabled={disabled}
       themes={theme}
+      type="button"
     >
       {children}
     </Wrapper>
