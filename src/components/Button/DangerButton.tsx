@@ -6,9 +6,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
-export const DangerButton: FC<ButtonProps> = (props) => {
+export const DangerButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
-  return <DangerStyleButton themes={theme} {...props} />
+  return <DangerStyleButton {...props} themes={theme} type={type} />
 }
 
 export const DangerButtonAnchor: FC<AnchorProps> = (props) => {

@@ -14,9 +14,9 @@ import {
 type ButtonProps = Omit<BaseButtonProps, 'square'>
 type AnchorProps = Omit<BaseAnchorProps, 'square'>
 
-export const TextButton: FC<ButtonProps> = (props) => {
+export const TextButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
-  return <TextStyleButton themes={theme} {...props} />
+  return <TextStyleButton {...props} themes={theme} type={type} />
 }
 
 export const TextButtonAnchor: FC<AnchorProps> = (props) => {

@@ -56,6 +56,7 @@ export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) =
       aria-controls={`${name}-content`}
       themes={theme}
       onClick={handleClick}
+      type="button"
     >
       {displayIcon && iconPosition === 'left' && caretIcon}
       {children}

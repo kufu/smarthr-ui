@@ -68,6 +68,7 @@ exports[`TabBar should be match snapshot 1`] = `
     disabled={false}
     onClick={[Function]}
     role="tab"
+    type="button"
   >
     Tab
   </button>
@@ -77,6 +78,7 @@ exports[`TabBar should be match snapshot 1`] = `
     disabled={false}
     onClick={[Function]}
     role="tab"
+    type="button"
   >
     Selected
   </button>
@@ -86,6 +88,7 @@ exports[`TabBar should be match snapshot 1`] = `
     disabled={true}
     onClick={[Function]}
     role="tab"
+    type="button"
   >
     Disabled
   </button>
