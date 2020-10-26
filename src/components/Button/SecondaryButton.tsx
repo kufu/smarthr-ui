@@ -6,9 +6,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
-export const SecondaryButton: FC<ButtonProps> = (props) => {
+export const SecondaryButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
-  return <SecondaryStyleButton themes={theme} {...props} />
+  return <SecondaryStyleButton {...props} themes={theme} type={type} />
 }
 // set the displayName explicit.
 // This is for error message of BottomFixedArea component.
