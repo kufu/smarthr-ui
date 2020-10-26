@@ -4,7 +4,7 @@
   "version": "11.0.0",
   "author": "SmartHR-UI Team",
   "dependencies": {
-    "dayjs": "^1.9.3",
+    "dayjs": "^1.9.4",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.0.3",
@@ -36,7 +36,7 @@
     "eslint-config-smarthr": "^5.0.0",
     "fixpack": "^3.0.6",
     "husky": "^4.3.0",
-    "jest": "^26.5.3",
+    "jest": "^26.6.1",
     "jest-styled-components": "^7.0.3",
     "lint-staged": "^10.4.2",
     "memory-fs": "^0.5.0",
