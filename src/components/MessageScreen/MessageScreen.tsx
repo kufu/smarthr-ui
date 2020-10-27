@@ -67,7 +67,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       background-color: ${palette.BACKGROUND};
     `
   }}
@@ -76,6 +76,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: auto 0;
 `
 const Logo = styled.div`
   height: ${LOGO_HEIGHT}px;

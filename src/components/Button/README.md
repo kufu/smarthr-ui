@@ -39,10 +39,11 @@ import { TextButton, TextButtonAnchor } from 'smarthr-ui'
 
 ### Button
 
-| Name     | Required | Type         | DefaultValue | Description                                                         |
-| -------- | -------- | ------------ | ------------ | ------------------------------------------------------------------- |
-| onClick  | -        | **function** | -            | Fired when the component is focused. <br><br>`function: () => void` |
-| disabled | -        | **boolean**  | false        | If `true`, the component is disabled.                               |
+| Name     | Required | Type                                         | DefaultValue | Description                                                         |
+| -------- | -------- | -------------------------------------------- | ------------ | ------------------------------------------------------------------- |
+| onClick  | -        | **function**                                 | -            | Fired when the component is focused. <br><br>`function: () => void` |
+| disabled | -        | **boolean**                                  | false        | If `true`, the component is disabled.                               |
+| type     | -        | **"button" &#124; "submit" &#124; "reset"**  | "button"     | `type` for component.                                               |
 
 ### Anchor
 

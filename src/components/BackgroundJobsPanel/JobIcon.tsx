@@ -12,7 +12,7 @@ export const JobIcon: FC<Props> = ({ status }) => {
   const name = getIconName(status)
   const color = useIconColor(status)
 
-  return <Icon name={name} color={color} />
+  return <Icon name={name} color={color} size={16} />
 }
 
 function getIconName(status: Status): ComponentProps<typeof Icon>['name'] {
