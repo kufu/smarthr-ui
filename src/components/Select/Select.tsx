@@ -41,7 +41,7 @@ export const Select: FC<Props> = ({
   return (
     <Wrapper
       className={className}
-      width={widthStyle}
+      $width={widthStyle}
       error={error}
       disabled={props.disabled}
       themes={theme}
@@ -81,15 +81,15 @@ export const Select: FC<Props> = ({
 }
 
 const Wrapper = styled.div<{
-  width: string
+  $width: string
   error?: boolean
   disabled?: boolean
   themes: Theme
-}>(({ width, error, disabled, themes }) => {
+}>(({ $width, error, disabled, themes }) => {
   const { frame, palette, interaction } = themes
   return css`
     position: relative;
-    width: ${width};
+    width: ${$width};
     border-radius: ${frame.border.radius.m};
     border: ${frame.border.default};
     background-color: #fff;

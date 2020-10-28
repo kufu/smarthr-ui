@@ -64,7 +64,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <Wrapper
         themes={theme}
-        width={props.width}
+        $width={props.width}
         isFocused={isFocused}
         disabled={props.disabled}
         error={props.error}
@@ -87,16 +87,16 @@ export const Input = forwardRef<HTMLInputElement, Props>(
 
 const Wrapper = styled.span<{
   themes: Theme
-  width?: string | number
+  $width?: string | number
   isFocused: boolean
   disabled?: boolean
   error?: boolean
-}>(({ themes, width = 'auto', isFocused, disabled, error }) => {
+}>(({ themes, $width = 'auto', isFocused, disabled, error }) => {
   const { frame, palette, size } = themes
   return css`
     display: inline-flex;
     align-items: stretch;
-    width: ${typeof width === 'number' ? `${width}px` : width};
+    width: ${typeof $width === 'number' ? `${$width}px` : $width};
     padding: 0 ${size.pxToRem(size.space.XXS)};
     background-color: #fff;
     border-radius: ${frame.border.radius.m};
