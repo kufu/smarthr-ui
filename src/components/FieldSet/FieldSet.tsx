@@ -32,7 +32,7 @@ export const FieldSet: FC<Props> = ({
   const theme = useTheme()
 
   return (
-    <Wrapper width={props.width || 'auto'} className={className}>
+    <Wrapper $width={props.width || 'auto'} className={className}>
       <Title themes={theme}>
         <TitleText type={labelType} tag={labelTagType}>
           {label}
@@ -58,10 +58,10 @@ export const FieldSet: FC<Props> = ({
   )
 }
 
-const Wrapper = styled.div<{ width: string | number }>`
-  ${({ width }) => css`
+const Wrapper = styled.div<{ $width: string | number }>`
+  ${({ $width }) => css`
     display: inline-block;
-    width: ${typeof width === 'number' ? `${width}px` : width};
+    width: ${typeof $width === 'number' ? `${$width}px` : $width};
   `}
 `
 const Title = styled.div<{ themes: Theme }>`

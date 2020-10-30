@@ -78,7 +78,7 @@ exports[`CheckBox should be match snapshot 1`] = `
   vertical-align: top;
 }
 
-<div
+<span
   className="c0"
 >
   <input
@@ -118,5 +118,5 @@ exports[`CheckBox should be match snapshot 1`] = `
       />
     </svg>
   </span>
-</div>
+</span>
 `;
