@@ -9,13 +9,13 @@ import { Input } from '../../Input'
 
 import readme from './README.md'
 
-storiesOf('Dropdown/filter', module)
+storiesOf('Dropdown', module)
   .addParameters({
     readme: {
       sidebar: readme,
     },
   })
-  .add('all', () => {
+  .add('filter', () => {
     const [value, setValue] = React.useState('hoge')
     const [text, setText] = React.useState('')
     const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)

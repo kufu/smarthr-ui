@@ -44,7 +44,7 @@ export const RightFixedNote: FC<Props> = ({
   )
 
   return (
-    <Wrapper themes={theme} width={width} onSubmit={handleSubmit} className={className}>
+    <Wrapper themes={theme} $width={width} onSubmit={handleSubmit} className={className}>
       {title && (
         <Title type="sectionTitle" themes={theme}>
           {title}
@@ -67,15 +67,15 @@ export const RightFixedNote: FC<Props> = ({
   )
 }
 
-const Wrapper = styled.form<{ themes: Theme; width: number }>`
-  ${({ themes, width }) => {
+const Wrapper = styled.form<{ themes: Theme; $width: number }>`
+  ${({ themes, $width }) => {
     const { size, palette } = themes
 
     return css`
-      width: ${size.pxToRem(width)};
+      width: ${size.pxToRem($width)};
       padding: ${size.pxToRem(size.space.XS)};
       background-color: ${palette.COLUMN};
-      box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0 0 8px;
       overflow: hidden scroll;
       position: fixed;
       top: 0;

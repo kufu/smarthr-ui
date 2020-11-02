@@ -56,7 +56,7 @@ export const FlashMessage: FC<Props> = ({ visible, type, text, onClose, classNam
   }
 
   return (
-    <Wrapper className={`${type} ${className}`} themes={theme}>
+    <Wrapper className={`${type} ${className}`} themes={theme} role="alert">
       <Icon name={iconName} size={14} color={iconColor} />
       <Txt themes={theme}>{text}</Txt>
       <CloseButton className="close" onClick={onClose} size="s" square themes={theme}>
@@ -90,10 +90,10 @@ const bounceAnimation = keyframes`
 `
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame, palette } = themes
+    const { size, frame, palette, zIndex } = themes
 
     return css`
-      z-index: 1000;
+      z-index: ${zIndex.FLASH_MESSAGE};
       display: flex;
       position: fixed;
       bottom: ${size.pxToRem(size.space.XXS)};

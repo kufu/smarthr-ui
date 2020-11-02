@@ -1,12 +1,14 @@
-import React, { FC, createContext, useEffect, useRef, useState } from 'react'
+import React, { FC, createContext, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
+import { ContentBoxStyle, Rect, getContentBoxStyle, getFirstTabbable } from './dropdownHelper'
 import { DropdownCloser } from './DropdownCloser'
+import { useKeyboardNavigation } from './useKeyboardNavigation'
 
 type Props = {
+  id: string
   triggerRect: Rect
   scrollable: boolean
   children: React.ReactNode
@@ -23,6 +25,7 @@ export const DropdownContentInnerContext = createContext<DropdownContentInnerCon
 })
 
 export const DropdownContentInner: FC<Props> = ({
+  id,
   triggerRect,
   scrollable,
   children,
@@ -30,7 +33,6 @@ export const DropdownContentInner: FC<Props> = ({
   controllable,
 }) => {
   const theme = useTheme()
-  const [isMounted, setIsMounted] = useState(false)
   const [isActive, setIsActive] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
     top: '0',
@@ -38,12 +40,9 @@ export const DropdownContentInner: FC<Props> = ({
     maxHeight: '',
   })
   const wrapperRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
 
-  useEffect(() => {
-    if (isMounted && wrapperRef.current) {
+  useLayoutEffect(() => {
+    if (wrapperRef.current) {
       setContentBox(
         getContentBoxStyle(
           triggerRect,
@@ -63,10 +62,37 @@ export const DropdownContentInner: FC<Props> = ({
       )
       setIsActive(true)
     }
-  }, [isMounted, triggerRect])
+  }, [triggerRect])
+
+  const focusContent = useCallback(() => {
+    // delay for waiting to change the inner contents to visible
+    const firstTabbale = getFirstTabbable(wrapperRef)
+    if (firstTabbale) {
+      firstTabbale.focus()
+      return true
+    }
+    return false
+  }, [])
+
+  useLayoutEffect(() => {
+    if (isActive) {
+      // when the dropdwon content becomes active, focus a first tabbable element in it
+      setTimeout(() => {
+        // delay for waiting to change the inner contents to visible
+        if (!focusContent()) {
+          setTimeout(() => {
+            focusContent()
+          }, 100)
+        }
+      }, 30)
+    }
+  }, [isActive, focusContent])
+
+  useKeyboardNavigation(wrapperRef)
 
   return (
     <Wrapper
+      id={id}
       ref={wrapperRef}
       contentBox={contentBox}
       scrollable={scrollable}
@@ -92,13 +118,15 @@ const Wrapper = styled.div<{
   controllable: boolean
 }>`
   ${({ contentBox, themes, scrollable, controllable }) => {
+    const { frame, zIndex } = themes
+
     return css`
       visibility: hidden;
-      z-index: 99999;
+      z-index: ${zIndex.OVERLAP};
       position: absolute;
       top: ${contentBox.top};
       left: ${contentBox.left};
-      border-radius: ${themes.frame.border.radius.m};
+      border-radius: ${frame.border.radius.m};
       box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       background-color: #fff;
       white-space: nowrap;

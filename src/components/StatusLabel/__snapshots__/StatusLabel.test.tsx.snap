@@ -1,81 +1,73 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`StatusLabel should be match snapshot 1`] = `
-<Component
-  type="success"
+.c0 {
+  height: 1.25rem;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 0.5rem;
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  font-weight: bold;
+  line-height: calc(1.25rem - 1px * 2);
+}
+
+.c0.done {
+  border: 1px solid #d6d6d6;
+  background-color: #fff;
+  border-color: #d6d6d6;
+  color: #767676;
+}
+
+.c0.success {
+  border: 1px solid #d6d6d6;
+  background-color: #fff;
+  border-color: #00a5ab;
+  color: #00a5ab;
+}
+
+.c0.process {
+  border: 1px solid #d6d6d6;
+  background-color: #fff;
+  border-color: #ff8800;
+  color: #ff8800;
+}
+
+.c0.required {
+  border: 1px solid #d6d6d6;
+  background-color: #fff;
+  border-color: #ef475b;
+  color: #ef475b;
+}
+
+.c0.disabled {
+  background-color: #d6d6d6;
+  color: #fff;
+  background-color: #767676;
+}
+
+.c0.must {
+  background-color: #d6d6d6;
+  color: #fff;
+  background-color: #00a5ab;
+}
+
+.c0.warning {
+  background-color: #d6d6d6;
+  color: #fff;
+  background-color: #ff8800;
+}
+
+.c0.error {
+  background-color: #d6d6d6;
+  color: #fff;
+  background-color: #ef475b;
+}
+
+<span
+  className="c0 success "
 >
-  <styled.span
-    className="success "
-    themes={
-      Object {
-        "frame": Object {
-          "border": Object {
-            "default": "1px solid #d6d6d6",
-            "lineStyle": "solid",
-            "lineWidth": "1px",
-            "radius": Object {
-              "m": "6px",
-              "s": "4px",
-            },
-          },
-        },
-        "interaction": Object {
-          "hover": Object {
-            "animation": ".3s ease-out",
-            "animationDuration": ".3s",
-            "animationTiming": "ease-out",
-            "feedbackOpacity": ".7",
-          },
-        },
-        "palette": Object {
-          "BACKGROUND": "#f5f6fa",
-          "BORDER": "#d6d6d6",
-          "BRAND": "#00c4cc",
-          "COLUMN": "#f9f9f9",
-          "DANGER": "#ef475b",
-          "HEADER_GREEN": "#57d0d5",
-          "MAIN": "#00a5ab",
-          "OUTLINE": "rgba(0,165,171,0.5)",
-          "OVERLAY": "rgba(0,0,0,0.15)",
-          "SCRIM": "rgba(0,0,0,0.5)",
-          "TEXT_BLACK": "#333",
-          "TEXT_DISABLED": "#c1c1c1",
-          "TEXT_GREY": "#767676",
-          "TEXT_LINK": "#007bc2",
-          "WARNING": "#ff8800",
-          "disableColor": [Function],
-          "hoverColor": [Function],
-        },
-        "size": Object {
-          "font": Object {
-            "GRANDE": 18,
-            "SHORT": 11,
-            "TALL": 14,
-            "VENTI": 24,
-          },
-          "mediaQuery": Object {
-            "SP": 599,
-            "TABLET": 959,
-          },
-          "pxToRem": [Function],
-          "space": Object {
-            "L": 40,
-            "M": 32,
-            "S": 24,
-            "XL": 48,
-            "XS": 16,
-            "XXL": 56,
-            "XXS": 8,
-          },
-        },
-      }
-    }
-  >
-    <span
-      className="sc-AxjAm djdleU success "
-    >
-      hello
-    </span>
-  </styled.span>
-</Component>
+  hello
+</span>
 `;

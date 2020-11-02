@@ -39,8 +39,14 @@ export const Select: FC<Props> = ({
   )
 
   return (
-    <Wrapper className={className} width={widthStyle} theme={theme}>
-      <SelectBox className={error ? 'error' : ''} onChange={handleChange} themes={theme} {...props}>
+    <Wrapper
+      className={className}
+      $width={widthStyle}
+      error={error}
+      disabled={props.disabled}
+      themes={theme}
+    >
+      <SelectBox onChange={handleChange} themes={theme} {...props}>
         {options.map((option) => {
           if ('value' in option) {
             return (
@@ -62,6 +68,10 @@ export const Select: FC<Props> = ({
             </optgroup>
           )
         })}
+        {
+          // Support for not omitting labels in Mobile Safari
+          <BlankOptgroup />
+        }
       </SelectBox>
       <IconWrap>
         <Icon size={13} name="fa-sort" />
@@ -70,17 +80,46 @@ export const Select: FC<Props> = ({
   )
 }
 
-const Wrapper = styled.div<{ width: string }>`
-  ${({ width }) => {
-    return css`
-      position: relative;
-      width: ${width};
-    `
-  }}
-`
+const Wrapper = styled.div<{
+  $width: string
+  error?: boolean
+  disabled?: boolean
+  themes: Theme
+}>(({ $width, error, disabled, themes }) => {
+  const { frame, palette, interaction } = themes
+  return css`
+    position: relative;
+    width: ${$width};
+    border-radius: ${frame.border.radius.m};
+    border: ${frame.border.default};
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+
+    &:hover {
+      ${!disabled &&
+      css`
+        background-color: ${palette.hoverColor('#fff')};
+      `}
+    }
+    :focus-within {
+      border-color: ${palette.MAIN};
+    }
+
+    ${error &&
+    css`
+      border-color: ${palette.DANGER} !important;
+    `}
+    ${disabled &&
+    css`
+      border-color: #f5f5f5;
+      background-color: #f5f5f5;
+    `}
+  `
+})
 const SelectBox = styled.select<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame, palette, interaction } = themes
+    const { size, frame, palette } = themes
 
     return css`
       display: inline-block;
@@ -88,39 +127,24 @@ const SelectBox = styled.select<{ themes: Theme }>`
       padding: ${size.pxToRem(size.space.XXS)};
       padding-right: ${size.pxToRem(size.space.M)};
       border-radius: ${frame.border.radius.m};
-      border: ${frame.border.default};
-      background-color: #fff;
+      border: none;
+      background-color: transparent;
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
       outline: none;
-      box-sizing: border-box;
       appearance: none;
       cursor: pointer;
-      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
-
-      &:hover {
-        background-color: ${palette.hoverColor('#fff')};
-      }
 
       &::placeholder {
         color: ${palette.TEXT_GREY};
       }
 
-      &:focus {
-        border-color: ${palette.MAIN};
-      }
-
-      &.error {
-        border-color: ${palette.DANGER};
-      }
-
       &[disabled] {
-        border-color: #f5f5f5;
         pointer-events: none;
         cursor: not-allowed;
-        background-color: #f5f5f5;
-        color: #c1c1c1;
+        color: ${palette.TEXT_DISABLED};
+        opacity: 1;
       }
 
       &::-ms-expand {
@@ -142,4 +166,7 @@ const IconWrap = styled.span`
   & > svg {
     vertical-align: top;
   }
+`
+const BlankOptgroup = styled.optgroup`
+  display: none;
 `

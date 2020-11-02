@@ -302,14 +302,17 @@ import {
   FaWrench,
   FaYenSign,
 } from 'react-icons/fa'
+import styled from 'styled-components'
+import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 
 export interface IconProps {
   color?: string
   size?: number
 }
 
-export interface Props extends IconProps {
+export interface Props extends IconProps, React.SVGAttributes<SVGAElement> {
   name: keyof typeof iconMap
+  visuallyHiddenText?: string
   className?: string
 }
 
@@ -617,7 +620,35 @@ export const iconMap = {
   'fa-yen-sign': FaYenSign,
 }
 
-export const Icon: React.FC<Props> = ({ name, className = '', ...props }) => {
+export const Icon: React.FC<Props> = ({
+  name,
+  className = '',
+  role = 'img',
+  visuallyHiddenText,
+  'aria-hidden': ariaHidden,
+  focusable = false,
+  ...props
+}) => {
   const SvgIcon = iconMap[name]
-  return <SvgIcon className={className} {...props} />
+  const hasAltText =
+    visuallyHiddenText !== undefined ||
+    props['aria-label'] !== undefined ||
+    props['aria-labelledby'] !== undefined
+  const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasAltText
+  return (
+    <>
+      {visuallyHiddenText && <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>}
+      <SvgIcon
+        className={className}
+        role={role}
+        aria-hidden={isAriaHidden || undefined}
+        focusable={focusable}
+        {...props}
+      />
+    </>
+  )
 }
+
+const VisuallyHiddenText = styled.span`
+  ${VISUALLY_HIDDEN_STYLE}
+`
