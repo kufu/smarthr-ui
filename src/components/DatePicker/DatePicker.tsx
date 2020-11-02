@@ -14,24 +14,28 @@ import { Portal } from './Portal'
 
 type Props = {
   value?: string | null
-  onChangeDate?: (date: Date | null, value: string) => void
-  parseInput?: (input: string) => Date | null
-  formatDate?: (date: Date | null) => string
   name?: string
+  from?: Date
+  to?: Date
   disabled?: boolean
   error?: boolean
   className?: string
+  parseInput?: (input: string) => Date | null
+  formatDate?: (date: Date | null) => string
+  onChangeDate?: (date: Date | null, value: string) => void
 }
 
 export const DatePicker: FC<Props> = ({
   value = null,
-  onChangeDate,
-  parseInput,
-  formatDate,
   name,
+  from,
+  to,
   disabled,
   error,
   className,
+  parseInput,
+  formatDate,
+  onChangeDate,
 }) => {
   const stringToDate = useCallback(
     (str?: string | null) => {
@@ -233,6 +237,8 @@ export const DatePicker: FC<Props> = ({
         <Portal inputRect={inputRect}>
           <Calendar
             value={selectedDate || undefined}
+            from={from}
+            to={to}
             onSelectDate={(_, selected) => {
               updateDate(selected)
               requestAnimationFrame(() => {
