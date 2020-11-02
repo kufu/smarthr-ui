@@ -11,23 +11,28 @@ type Props = {
 export const DialogBase = forwardRef<HTMLDivElement, Props>(
   ({ radius = 'm', className = '', ...props }, ref) => {
     const themes = useTheme()
-    const classNames = `${className} ${radius ? `radius-${radius}` : ''}`
-    return <Wrapper className={classNames} themes={themes} ref={ref} {...props} />
+    const radiusMap = {
+      s: '6px',
+      m: '8px',
+    }
+    return (
+      <Wrapper
+        className={className}
+        themes={themes}
+        $radius={radiusMap[radius]}
+        ref={ref}
+        {...props}
+      />
+    )
   },
 )
 
-const Wrapper = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
+const Wrapper = styled.div<{ themes: Theme; $radius: string }>`
+  ${({ themes, $radius }) => {
     return css`
       box-shadow: ${themes.shadow.DIALOG};
+      border-radius: ${$radius};
       background-color: #fff;
-
-      &.radius-s {
-        border-radius: 6px;
-      }
-      &.radius-m {
-        border-radius: 8px;
-      }
     `
   }}
 `
