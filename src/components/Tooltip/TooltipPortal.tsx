@@ -28,8 +28,8 @@ export const TooltipPortal: FC<Props> = ({
   const [rect, setRect] = useState({
     top: 0,
     left: 0,
-    width: isMultiLine ? parentRect.width : 0,
-    height: 0,
+    $width: isMultiLine ? parentRect.width : 0,
+    $height: 0,
   })
   useLayoutEffect(() => {
     if (!portalRef.current) {
@@ -62,22 +62,22 @@ export const TooltipPortal: FC<Props> = ({
 const Container = styled.div<{
   top: number
   left: number
-  width: number
-  height: number
+  $width: number
+  $height: number
   themes: Theme
 }>`
-  ${({ top, left, width, height, themes }) => {
+  ${({ top, left, $width, $height, themes }) => {
     return css`
       position: absolute;
       top: ${top}px;
       left: ${left}px;
-      ${width > 0 &&
+      ${$width > 0 &&
       css`
-        width: ${width}px;
+        width: ${$width}px;
       `}
-      ${height > 0 &&
+      ${$height > 0 &&
       css`
-        height: ${height}px;
+        height: ${$height}px;
       `}
         z-index: ${themes.zIndex.OVERLAP};
     `
