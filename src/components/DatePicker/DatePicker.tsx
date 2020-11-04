@@ -3,34 +3,39 @@ import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useOuterClick } from '../../hooks/useOuterClick'
+import { useGlobalKeyDown } from './useGlobalKeyDown'
+import { parseJpnDateString } from './datePickerHelper'
+
 import { Input } from '../Input'
 import { Icon } from '../Icon'
 import { Calendar } from '../Calendar'
 import { Portal } from './Portal'
-import { useOuterClick } from './useOuterClick'
-import { useGlobalKeyDown } from './useGlobalKeyDown'
-import { parseJpnDateString } from './datePickerHelper'
 
 type Props = {
   value?: string | null
-  onChangeDate?: (date: Date | null, value: string) => void
-  parseInput?: (input: string) => Date | null
-  formatDate?: (date: Date | null) => string
   name?: string
+  from?: Date
+  to?: Date
   disabled?: boolean
   error?: boolean
   className?: string
+  parseInput?: (input: string) => Date | null
+  formatDate?: (date: Date | null) => string
+  onChangeDate?: (date: Date | null, value: string) => void
 }
 
 export const DatePicker: FC<Props> = ({
   value = null,
-  onChangeDate,
-  parseInput,
-  formatDate,
   name,
+  from,
+  to,
   disabled,
   error,
   className,
+  parseInput,
+  formatDate,
+  onChangeDate,
 }) => {
   const stringToDate = useCallback(
     (str?: string | null) => {
@@ -60,10 +65,7 @@ export const DatePicker: FC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const calendarRef = useRef<HTMLDivElement>(null)
-  const [calendarPosition, setCalendarPosition] = useState({
-    top: 0,
-    left: 0,
-  })
+  const [inputRect, setInputRect] = useState<DOMRect>(new DOMRect())
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [isCalendarShown, setIsCalendarShown] = useState(false)
 
@@ -99,11 +101,7 @@ export const DatePicker: FC<Props> = ({
       return
     }
     setIsCalendarShown(true)
-    const rect = inputWrapperRef.current.getBoundingClientRect()
-    setCalendarPosition({
-      top: rect.top + rect.height - 4 + window.pageYOffset,
-      left: rect.left + window.pageXOffset,
-    })
+    setInputRect(inputWrapperRef.current.getBoundingClientRect())
   }, [])
 
   useEffect(() => {
@@ -236,9 +234,11 @@ export const DatePicker: FC<Props> = ({
         />
       </InputWrapper>
       {isCalendarShown && (
-        <Portal {...calendarPosition}>
+        <Portal inputRect={inputRect}>
           <Calendar
             value={selectedDate || undefined}
+            from={from}
+            to={to}
             onSelectDate={(_, selected) => {
               updateDate(selected)
               requestAnimationFrame(() => {

@@ -53,6 +53,7 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
                           !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
                         }
                         aria-pressed={isSelectedDate}
+                        type="button"
                       >
                         <DateCell
                           themes={themes}
@@ -98,7 +99,7 @@ const Table = styled.table<{ themes: Theme }>(({ themes }) => {
     }
   `
 })
-const DateCell = styled.div<{ themes: Theme; isToday?: boolean; isSelected?: boolean }>`
+const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;

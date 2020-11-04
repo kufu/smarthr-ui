@@ -21,5 +21,5 @@ function MyApp() {
 | ------------ | -------- | --------------------------------------------- | ---------------------- | ------------------------------ |
 | from         | -        | **Date**                                      | 1970-01-01             | Start date that is selectable. |
 | to           | -        | **Date**                                      | today in 50 years time | End date that is selectable.   |
-| onSelectDate | true     | **(e: React.MouseEvent, date: Date) => void** | -                      | Fired when date is selected.   |
+| onSelectDate | ✓        | **(e: React.MouseEvent, date: Date) => void** | -                      | Fired when date is selected.   |
 | value        | -        | **Date**                                      | -                      | Selected date.                 |

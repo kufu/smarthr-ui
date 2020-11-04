@@ -35,7 +35,7 @@ export const HeaderUserDropdown: FC<Props> = ({
   return (
     <Dropdown>
       <DropdownTrigger>
-        <TriggerButton themes={theme}>
+        <TriggerButton themes={theme} type="button">
           {avatar && (
             <Avatar
               src={avatar}

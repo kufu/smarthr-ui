@@ -20,6 +20,14 @@ storiesOf('DatePicker', module)
         <dd>
           <DatePicker onChangeDate={action('change')} />
         </dd>
+        <dt>Pass `from`, `to`</dt>
+        <dd>
+          <DatePicker
+            from={new Date(1901, 0, 1)}
+            to={new Date(2100, 11, 30)}
+            onChangeDate={action('change')}
+          />
+        </dd>
         <dt>Custom format (ex. Date.toDateString)</dt>
         <dd>
           <DatePicker
@@ -42,6 +50,10 @@ storiesOf('DatePicker', module)
         <dd>
           <ExtendingDatePicker onChangeDate={action('change')} />
         </dd>
+        <dt className="bottom">Place on the page bottom</dt>
+        <dd>
+          <DatePicker onChangeDate={action('change')} />
+        </dd>
       </List>
     )
   })
@@ -52,6 +64,9 @@ const List = styled.dl`
 
   dd {
     margin: 10px 0 20px;
+  }
+  dt.bottom {
+    margin-top: 1000px;
   }
 `
 
