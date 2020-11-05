@@ -3,10 +3,17 @@ import dayjs from 'dayjs'
 export const daysInWeek = ['日', '月', '火', '水', '木', '金', '土']
 
 export function getFromDate(date?: Date): Date {
-  const min = new Date(1970, 0, 1)
-  if (!date || isNaN(date.getTime()) || date.getTime() < 0) {
+  const defaultDate = new Date(1970, 0, 1)
+  const min = new Date(1900, 0, 1)
+
+  if (!date || isNaN(date.getTime())) {
+    return defaultDate
+  }
+
+  if (date.getTime() < min.getTime()) {
     return min
   }
+
   return date
 }
 
