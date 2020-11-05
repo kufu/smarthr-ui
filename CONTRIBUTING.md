@@ -66,7 +66,7 @@ For the above reasons, it doesn't matter if the reg-suit fails for a repository 
 
 If you add or update a component, update the component README.
 
-### template
+### Template
 
 ````markdown
 # Component name
