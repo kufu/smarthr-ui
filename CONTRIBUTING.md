@@ -54,9 +54,13 @@ The component displayed at this URL is up to date with the SmartHR UI.
 
 ### [reg-suit](https://github.com/reg-viz/reg-suit)
 
-If reg-suit is run and the results are diff, the status is red. In that case, make sure that you have made sure that no unintended changes have occurred.
+#### Fail reg-suit
 
-PR from the forked repository will always drop the reg-suit. Reviewer uses [git-push-fork-to-upstream-branch] (https://github.com/jklukas/git-push-fork-to-upstream-branch) to run reg-suit and the result Please check.
+reg-suit hosts the results of the image regression test in S3. To do this, we are passing `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` as environment variables to CircleCI.
+
+For PR from fork repositories, security concerns have specified that CircleCI environment variables should not be passed. Therefore, in the case of PR from the fork repository, the CircleCI environment variable does not exist when the reg-suit is executed, AWS cannot be accessed, and CI fail.
+
+For the above reasons, it doesn't matter if the reg-suit fails for a repository from a fork.
 
 ## How to update component README
 
