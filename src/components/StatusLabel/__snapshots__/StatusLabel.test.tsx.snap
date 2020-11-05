@@ -2,67 +2,57 @@
 
 exports[`StatusLabel should be match snapshot 1`] = `
 .c0 {
-  height: 1.25rem;
   box-sizing: border-box;
-  margin: 0;
-  padding: 0 0.5rem;
   display: inline-block;
+  margin: 0;
+  border: 1px solid transparent;
+  padding: 0.25rem 0.5rem;
+  text-align: center;
   white-space: nowrap;
+  min-width: 3.75rem;
   font-size: 0.6875rem;
   font-weight: bold;
-  line-height: calc(1.25rem - 1px * 2);
+  line-height: 1;
 }
 
 .c0.done {
-  border: 1px solid #d6d6d6;
-  background-color: #fff;
   border-color: #d6d6d6;
   color: #767676;
 }
 
 .c0.success {
-  border: 1px solid #d6d6d6;
-  background-color: #fff;
   border-color: #00a5ab;
   color: #00a5ab;
 }
 
 .c0.process {
-  border: 1px solid #d6d6d6;
-  background-color: #fff;
   border-color: #ff8800;
   color: #ff8800;
 }
 
 .c0.required {
-  border: 1px solid #d6d6d6;
-  background-color: #fff;
   border-color: #ef475b;
   color: #ef475b;
 }
 
 .c0.disabled {
-  background-color: #d6d6d6;
-  color: #fff;
   background-color: #767676;
+  color: #fff;
 }
 
 .c0.must {
-  background-color: #d6d6d6;
-  color: #fff;
   background-color: #00a5ab;
+  color: #fff;
 }
 
 .c0.warning {
-  background-color: #d6d6d6;
-  color: #fff;
   background-color: #ff8800;
+  color: #fff;
 }
 
 .c0.error {
-  background-color: #d6d6d6;
-  color: #fff;
   background-color: #ef475b;
+  color: #fff;
 }
 
 <span
