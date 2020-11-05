@@ -2,11 +2,12 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Icon, Props } from './Icon'
+import { ComponentProps, FaAddressBookIcon, FaCaretDownIcon, Icon, Props } from './Icon'
 
 const Wrapper = ({ children }: any) => <Container>{children}</Container>
 const black = '#222'
 const white = '#eee'
+
 const icons: Array<Props['name']> = [
   'fa-address-book',
   'fa-address-card',
@@ -311,15 +312,27 @@ const icons: Array<Props['name']> = [
   'fa-yen-sign',
 ]
 
+const componentMap: { [key in Props['name']]?: React.ComponentType<ComponentProps> } = {
+  'fa-address-book': FaAddressBookIcon,
+  'fa-caret-down': FaCaretDownIcon,
+}
+
 const getIconList = (bg: string, color?: string, role?: string) =>
-  icons.map((name) => (
-    <>
-      <IconWrap key={`${color}-${name}`} bg={bg}>
-        <Icon name={name} color={color} role={role && role} />
-        <IconName color={color}>{name}</IconName>
-      </IconWrap>
-    </>
-  ))
+  icons.map((name) => {
+    const Component = componentMap[name]
+    return (
+      <>
+        <IconWrap key={`${color}-${name}`} bg={bg}>
+          {Component ? (
+            <Component color={color} role={role && role} />
+          ) : (
+            <Icon name={name} color={color} role={role && role} />
+          )}
+          <IconName color={color}>{name}</IconName>
+        </IconWrap>
+      </>
+    )
+  })
 
 storiesOf('Icon', module)
   .add('white', () => <Wrapper>{getIconList(black, white)}</Wrapper>)

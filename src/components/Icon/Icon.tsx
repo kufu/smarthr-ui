@@ -620,6 +620,41 @@ export const iconMap = {
   'fa-yen-sign': FaYenSign,
 }
 
+export type ComponentProps = Omit<Props, 'name'>
+
+const createIcon = (Component: React.ComponentType<ComponentProps>) => {
+  const Icon: React.FC<ComponentProps> = ({
+    className = '',
+    role = 'img',
+    visuallyHiddenText,
+    'aria-hidden': ariaHidden,
+    focusable = false,
+    ...props
+  }) => {
+    const hasAltText =
+      visuallyHiddenText !== undefined ||
+      props['aria-label'] !== undefined ||
+      props['aria-labelledby'] !== undefined
+    const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasAltText
+    return (
+      <>
+        {visuallyHiddenText && <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>}
+        <Component
+          className={className}
+          role={role}
+          aria-hidden={isAriaHidden || undefined}
+          focusable={focusable}
+          {...props}
+        />
+      </>
+    )
+  }
+  return Icon
+}
+
+export const FaAddressBookIcon = createIcon(FaAddressBook)
+export const FaCaretDownIcon = createIcon(FaCaretDown)
+
 export const Icon: React.FC<Props> = ({
   name,
   className = '',
