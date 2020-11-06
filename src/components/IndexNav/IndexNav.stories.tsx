@@ -3,6 +3,8 @@ import { storiesOf } from '@storybook/react'
 import styled from 'styled-components'
 
 import { IndexNav } from './IndexNav'
+import { IndexNavItem } from './IndexNavItem'
+import { IndexNavList } from './IndexNavList'
 
 import readme from './README.md'
 
@@ -51,6 +53,36 @@ storiesOf('IndexNav', module)
             { label: 'first layer index 4', href: 'https://example.com/4' },
           ]}
         />
+      </dd>
+    </List>
+  ))
+  .add('alternative', () => (
+    <List>
+      <dt>First layer current</dt>
+      <dd>
+        <IndexNavList>
+          <IndexNavItem label="first layer index 1" href="https://expamle.com/1" />
+          <IndexNavItem label="first layer index 2" href="https://expamle.com/2" current />
+          <IndexNavItem label="first layer index 3" href="https://expamle.com/3">
+            <IndexNavItem label="second layer index 1" href="https://expamle.com/5" />
+            <IndexNavItem label="second layer index 2" href="https://expamle.com/6" />
+            <IndexNavItem label="second layer index 3" href="https://expamle.com/7" />
+          </IndexNavItem>
+          <IndexNavItem label="first layer index 4" href="https://expamle.com/4" />
+        </IndexNavList>
+      </dd>
+      <dt>Second layer current</dt>
+      <dd>
+        <IndexNavList>
+          <IndexNavItem label="first layer index 1" href="https://expamle.com/1" />
+          <IndexNavItem label="first layer index 2" href="https://expamle.com/2" />
+          <IndexNavItem label="first layer index 3" href="https://expamle.com/3">
+            <IndexNavItem label="second layer index 1" href="https://expamle.com/5" />
+            <IndexNavItem label="second layer index 2" href="https://expamle.com/6" />
+            <IndexNavItem label="second layer index 3" href="https://expamle.com/7" current />
+          </IndexNavItem>
+          <IndexNavItem label="first layer index 4" href="https://expamle.com/4" />
+        </IndexNavList>
       </dd>
     </List>
   ))
