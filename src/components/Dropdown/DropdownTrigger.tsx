@@ -10,9 +10,7 @@ type Props = {
 }
 
 export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) => {
-  const { active, onClickTrigger, contentWrapperId, triggerElementRef } = useContext(
-    DropdownContext,
-  )
+  const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
 
   useEffect(() => {
     if (!triggerElementRef.current) {
@@ -23,13 +21,9 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) =
     if (trigger) {
       trigger.setAttribute('aria-expanded', String(active))
       trigger.setAttribute('aria-haspopup', 'dialog')
-      if (active) {
-        trigger.setAttribute('aria-controls', contentWrapperId)
-      } else {
-        trigger.removeAttribute('aria-controls')
-      }
+      trigger.setAttribute('aria-controls', contentId)
     }
-  }, [triggerElementRef, active, contentWrapperId])
+  }, [triggerElementRef, active, contentId])
 
   return (
     <Wrapper
