@@ -20,7 +20,6 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) =
     const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
     triggers.forEach((trigger) => {
       trigger.setAttribute('aria-expanded', String(active))
-      trigger.setAttribute('aria-haspopup', 'dialog')
       trigger.setAttribute('aria-controls', contentId)
     })
   }, [triggerElementRef, active, contentId])
