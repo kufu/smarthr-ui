@@ -85,7 +85,7 @@ const Container = styled.div`
   box-sizing: border-box;
   overflow-y: scroll;
 `
-const YearWrapper = styled.div<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
+const YearWrapper = styled.span<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
   ({ themes, isThisYear, isSelected }) => {
     const { palette, size } = themes
     return css`

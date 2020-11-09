@@ -12,7 +12,7 @@ import { Heading } from 'smarthr-ui'
 
 | Name      | Required | Type                                                                                                         | DefaultValue  | Description              |
 | --------- | -------- | ------------------------------------------------------------------------------------------------------------ | ------------- | ------------------------ |
-| children  | true     | **React.ReactNode**                                                                                          | -             | displayed text           |
-| type      | false    | **'screenTitle' &#124; 'sectionTitle' &#124; 'blockTitle' &#124; 'subBlockTitle' &#124; 'subSubBlockTitle'** | 'screenTitle' | style for the text       |
-| tag       | false    | **'h1' &#124; 'h2' &#124; 'h3' &#124; 'h4' &#124; 'h5' &#124; 'h6' &#124; 'span'**                           | 'h1'          | HTML tag                 |
-| className | false    | **string**                                                                                                   | ''            | `className` of component |
+| children  | ✓        | **React.ReactNode**                                                                                          | -             | displayed text           |
+| type      | -        | **'screenTitle' &#124; 'sectionTitle' &#124; 'blockTitle' &#124; 'subBlockTitle' &#124; 'subSubBlockTitle'** | 'screenTitle' | style for the text       |
+| tag       | -        | **'h1' &#124; 'h2' &#124; 'h3' &#124; 'h4' &#124; 'h5' &#124; 'h6' &#124; 'span'**                           | 'h1'          | HTML tag                 |
+| className | -        | **string**                                                                                                   | ''            | `className` of component |
