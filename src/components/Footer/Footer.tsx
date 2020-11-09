@@ -58,7 +58,7 @@ const Wrapper = styled.footer<{ themes: Theme }>`
     justify-content: space-between;
     height: 60px;
     padding: 0 ${themes.size.pxToRem(themes.size.space.S)};
-    background-color: ${themes.palette.HEADER_GREEN};
+    background-color: ${themes.palette.BRAND};
     color: #fff;
     font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
   `}
