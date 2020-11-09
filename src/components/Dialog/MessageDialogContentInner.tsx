@@ -42,11 +42,12 @@ export const MessageDialogContentInner: FC<Props> = ({
 
 const Title = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { pxToRem, space, font } = themes.size
+    const { size, frame } = themes
     return css`
       margin: 0;
-      padding: ${pxToRem(space.XS)} ${pxToRem(space.S)} ${pxToRem(space.S)};
-      font-size: ${pxToRem(font.GRANDE)};
+      padding: ${size.pxToRem(size.space.XS)} ${size.pxToRem(size.space.S)};
+      border-bottom: ${frame.border.default};
+      font-size: ${size.pxToRem(size.font.GRANDE)};
       line-height: 1;
     `
   }}
@@ -65,11 +66,12 @@ const Description = styled.div<{ themes: Theme; offsetHeight: number }>`
 `
 const Bottom = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { pxToRem, space } = themes.size
+    const { size, frame } = themes
     return css`
       display: flex;
       justify-content: flex-end;
-      padding: ${pxToRem(space.S)} ${pxToRem(space.S)} ${pxToRem(space.XS)};
+      padding: ${size.pxToRem(size.space.XS)} ${size.pxToRem(size.space.S)};
+      border-top: ${frame.border.default};
     `
   }}
 `
