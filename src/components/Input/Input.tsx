@@ -35,7 +35,7 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> & {
 }
 
 export const Input = forwardRef<HTMLInputElement, Props>(
-  ({ onFocus, onBlur, autoFocus, prefix, suffix, className, ...props }, ref) => {
+  ({ onFocus, onBlur, autoFocus, prefix, suffix, className, width, ...props }, ref) => {
     const theme = useTheme()
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
@@ -64,7 +64,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <Wrapper
         themes={theme}
-        $width={props.width}
+        $width={width}
         isFocused={isFocused}
         disabled={props.disabled}
         error={props.error}

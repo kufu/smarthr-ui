@@ -36,13 +36,14 @@
     "eslint-config-smarthr": "^5.0.0",
     "fixpack": "^3.0.6",
     "husky": "^4.3.0",
-    "jest": "^26.6.1",
+    "jest": "^26.6.3",
     "jest-styled-components": "^7.0.3",
     "lint-staged": "^10.5.1",
     "memory-fs": "^0.5.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.1.2",
     "prettier-config-smarthr": "^0.1.0",
+    "puppeteer": "^5.4.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-test-renderer": "16.14.0",
@@ -52,15 +53,16 @@
     "reg-suit": "^0.10.7",
     "standard-version": "^9.0.0",
     "storybook-readme": "^5.0.8",
-    "storycap": "^2.3.7",
+    "storycap": "^3.0.1",
     "styled-components": "^5.1.1",
+    "styled-reset": "^4.3.0",
     "stylelint": "^13.7.2",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-smarthr": "^1.0.0",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "ts-jest": "^26.4.3",
-    "ts-loader": "^8.0.7",
+    "ts-loader": "^8.0.10",
     "typescript": "^4.0.5",
     "webpack": "^5.0.0"
   },
@@ -130,11 +132,11 @@
   "resolutions": {
     "reg-suit/**/braces": "3.0.2",
     "minimist": "1.2.5",
-    "mem": "6.1.1",
+    "mem": "8.0.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "yargs-parser": ">=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2",
     "@types/react": "^16.9.53",
-    "@babel/helper-compilation-targets": "^7.12.1"
+    "@babel/helper-compilation-targets": "^7.12.5"
   }
 }
