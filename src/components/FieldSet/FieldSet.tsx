@@ -2,6 +2,7 @@ import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useId } from '../../hooks/useId'
 
 import { Input, Props as InputProps } from '../Input'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
@@ -30,9 +31,14 @@ export const FieldSet: FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme()
+  const helpId = useId()
 
   return (
-    <Wrapper $width={props.width || 'auto'} className={className}>
+    <Wrapper
+      $width={props.width || 'auto'}
+      className={className}
+      aria-describedby={helpMessage ? helpId : undefined}
+    >
       <Title themes={theme}>
         <TitleText type={labelType} tag={labelTagType}>
           {label}
@@ -53,7 +59,11 @@ export const FieldSet: FC<Props> = ({
           </Error>
         ))}
 
-      {helpMessage && <Help themes={theme}>{helpMessage}</Help>}
+      {helpMessage && (
+        <Help id={helpId} themes={theme}>
+          {helpMessage}
+        </Help>
+      )}
     </Wrapper>
   )
 }
