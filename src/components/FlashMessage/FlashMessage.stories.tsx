@@ -1,6 +1,7 @@
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
+import readme from './README.md'
 
 import { FlashMessage } from './FlashMessage'
 
@@ -73,7 +74,13 @@ class WrappedComponent extends React.PureComponent<Record<string, unknown>, Stat
   }
 }
 
-storiesOf('FlashMessage', module).add('all', () => <WrappedComponent />)
+storiesOf('FlashMessage', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
+  .add('all', () => <WrappedComponent />)
 
 const Form = styled.form`
   margin-bottom: 24px;
