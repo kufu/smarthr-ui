@@ -10,6 +10,7 @@ export interface PaletteProperty {
   BORDER?: string
   BACKGROUND?: string
   COLUMN?: string
+  BASE_GREY?: string
   MAIN?: string
   DANGER?: string
   WARNING?: string
@@ -28,6 +29,7 @@ export interface CreatedPaletteTheme {
   BORDER: string
   BACKGROUND: string
   COLUMN: string
+  BASE_GREY: string
   MAIN: string
   DANGER: string
   WARNING: string
@@ -45,6 +47,7 @@ export const defaultPalette = {
   BORDER: '#d6d6d6',
   BACKGROUND: '#f5f6fa',
   COLUMN: '#f9f9f9',
+  BASE_GREY: '#f5f5f5',
   MAIN: '#00a5ab',
   DANGER: '#ef475b',
   WARNING: '#ff8800',
