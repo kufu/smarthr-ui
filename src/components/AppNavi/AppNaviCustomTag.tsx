@@ -33,7 +33,7 @@ export const AppNaviCustomTag: FC<InnerProps> = ({
       return (
         <UnclickableActive
           as={tag}
-          themes={theme}
+          $themes={theme}
           aria-current="page"
           {...props}
           {...unclickableProps}
@@ -44,7 +44,7 @@ export const AppNaviCustomTag: FC<InnerProps> = ({
       )
     }
     return (
-      <Active as={tag} themes={theme} aria-current="page" {...props}>
+      <Active as={tag} $themes={theme} aria-current="page" {...props}>
         {iconComponent}
         {children}
       </Active>
@@ -52,17 +52,17 @@ export const AppNaviCustomTag: FC<InnerProps> = ({
   }
 
   return (
-    <InActive as={tag} themes={theme} {...props}>
+    <InActive as={tag} $themes={theme} {...props}>
       {iconComponent}
       {children}
     </InActive>
   )
 }
 
-const Active = styled.div<{ themes: Theme }>(({ themes }) =>
-  getItemStyle({ themes, isActive: true }),
+const Active = styled.div<{ $themes: Theme }>(({ $themes }) =>
+  getItemStyle({ themes: $themes, isActive: true }),
 )
-const InActive = styled.div<{ themes: Theme }>(({ themes }) => getItemStyle({ themes }))
-const UnclickableActive = styled.div<{ themes: Theme }>(({ themes }) =>
-  getItemStyle({ themes, isActive: true, isUnclickable: true }),
+const InActive = styled.div<{ $themes: Theme }>(({ $themes }) => getItemStyle({ themes: $themes }))
+const UnclickableActive = styled.div<{ $themes: Theme }>(({ $themes }) =>
+  getItemStyle({ themes: $themes, isActive: true, isUnclickable: true }),
 )
