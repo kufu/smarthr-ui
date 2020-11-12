@@ -87,9 +87,16 @@ function formatCurrency(value?: string) {
     // if value includes non-numeric characters, return value as it is
     return value
   }
-  const excluded = converted.replace(nonNumericRegExp, '') // exclude non-numeric characters
-  const splited = excluded.split('.')
-  const integerPart = splited[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') // add comma to integer every 3 digits
-  const formattedArray = Object.assign(splited, [integerPart])
-  return formattedArray.join('.')
+  const numeric = converted.replace(nonNumericRegExp, '') // exclude non-numeric characters
+  const splited = numeric.split('.')
+  const [integerPart, decimalPart] = splited
+  const commaed = integerPart.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') // add comma to integer every 3 digits
+  if (!decimalPart) {
+    return commaed
+  }
+  const excludedEndZero = decimalPart.replace(/0+$/, '')
+  if (excludedEndZero.length === 0) {
+    return commaed
+  }
+  return [commaed, excludedEndZero].join('.')
 }
