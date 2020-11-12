@@ -310,12 +310,18 @@ export interface IconProps {
   size?: number
 }
 
+/**
+ * @deprecated The Icon component will be deprecated, so the Props also will be deprecated
+ */
 export interface Props extends IconProps, React.SVGAttributes<SVGAElement> {
   name: keyof typeof iconMap
   visuallyHiddenText?: string
   className?: string
 }
 
+/**
+ * @deprecated The Icon component will be deprecated, so the iconMap also will be deprecated
+ */
 export const iconMap = {
   'fa-address-book': FaAddressBook,
   'fa-address-card': FaAddressCard,
@@ -621,10 +627,10 @@ export const iconMap = {
 }
 
 export type ComponentProps = Omit<Props, 'name'>
-type IconComponent = ComponentProps & { Component: React.ComponentType<ComponentProps> }
+type IconComponentProps = ComponentProps & { Component: React.ComponentType<ComponentProps> }
 
 // This should be inlined in the createIcon function after the Icon component had been removed
-const IconComponent: React.FC<IconComponent> = ({
+const IconComponent: React.FC<IconComponentProps> = ({
   Component,
   className = '',
   role = 'img',
@@ -659,6 +665,13 @@ const createIcon = (SvgIcon: React.ComponentType<ComponentProps>) => {
   return Icon
 }
 
+const VisuallyHiddenText = styled.span`
+  ${VISUALLY_HIDDEN_STYLE}
+`
+
+/**
+ * @deprecated The Icon component will be deprecated, please use indivisual components (e.g. FaAddressBookIcon) instead
+ */
 export const Icon: React.FC<Props> = ({ name, ...props }) => (
   <IconComponent {...props} Component={iconMap[name]} />
 )
@@ -964,7 +977,3 @@ export const FaWindowMinimizeIcon = /*#__PURE__*/ createIcon(FaWindowMinimize)
 export const FaWindowRestoreIcon = /*#__PURE__*/ createIcon(FaWindowRestore)
 export const FaWrenchIcon = /*#__PURE__*/ createIcon(FaWrench)
 export const FaYenSignIcon = /*#__PURE__*/ createIcon(FaYenSign)
-
-const VisuallyHiddenText = styled.span`
-  ${VISUALLY_HIDDEN_STYLE}
-`
