@@ -83,7 +83,7 @@ function formatCurrency(value?: string) {
     .replace(/[０-９．]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0)) // convert number and dot to half-width
     .replace(/[−ー]/, '-') // replace full-width minus
   const nonNumericRegExp = /[^0-9.-]/g
-  if (converted.match(nonNumericRegExp)) {
+  if (converted.match(nonNumericRegExp) || isNaN(Number(converted))) {
     // if value includes non-numeric characters, return value as it is
     return value
   }
