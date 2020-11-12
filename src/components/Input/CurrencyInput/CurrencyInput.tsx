@@ -79,11 +79,16 @@ function formatCurrency(value?: string) {
   if (!value) {
     return ''
   }
-  const shaped = value
+  const converted = value
     .replace(/[０-９．]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0)) // convert number and dot to half-width
     .replace(/[−ー]/, '-') // replace full-width minus
-    .replace(/[^0-9.-]/g, '') // exclude non-numeric characters
-  const splited = shaped.split('.')
+  const nonNumericRegExp = /[^0-9.-]/g
+  if (converted.match(nonNumericRegExp)) {
+    // if value includes non-numeric characters, return value as it is
+    return value
+  }
+  const excluded = converted.replace(nonNumericRegExp, '') // exclude non-numeric characters
+  const splited = excluded.split('.')
   const integerPart = splited[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') // add comma to integer every 3 digits
   const formattedArray = Object.assign(splited, [integerPart])
   return formattedArray.join('.')
