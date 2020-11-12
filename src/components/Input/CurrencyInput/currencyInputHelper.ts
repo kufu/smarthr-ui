@@ -11,7 +11,7 @@ export function formatCurrency(value?: string) {
     // if value includes non-numeric characters, return value as it is
     return value
   }
-  const numeric = converted.replace(nonNumericRegExp, '') // exclude non-numeric characters
+  const numeric = converted.replace(nonNumericRegExp, '') // remove non-numeric characters
   const splited = numeric.split('.')
   const [integerPart, decimalPart] = splited
   const commaed = integerPart.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') // add comma to integer every 3 digits
