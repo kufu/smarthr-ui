@@ -5,6 +5,7 @@ export function formatCurrency(value?: string) {
   const converted = value
     .replace(/[０-９．]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0)) // convert number and dot to half-width
     .replace(/[−ー]/, '-') // replace full-width minus
+    .replace(/^0+(?!\.|$)/, '') // remove 0 at the front of integer part
   const nonNumericRegExp = /[^0-9.-]/g
   if (converted.match(nonNumericRegExp) || isNaN(Number(converted))) {
     // if value includes non-numeric characters, return value as it is
