@@ -18,7 +18,7 @@ export type OnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: s
 
 type Props = SideNavItemProps & {
   size?: SideNavSizeType
-  onClick: OnClick
+  onClick?: OnClick
 }
 
 export const SideNavItem: FC<Props> = ({
@@ -30,10 +30,13 @@ export const SideNavItem: FC<Props> = ({
   onClick,
 }) => {
   const theme = useTheme()
+  const handleClick = onClick
+    ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, id)
+    : undefined
 
   return (
     <Wrapper className={isSelected ? 'selected' : ''} themes={theme}>
-      <Button className={size} themes={theme} onClick={(e) => onClick(e, id)}>
+      <Button className={size} themes={theme} onClick={handleClick}>
         {prefix && <span>{prefix}</span>}
         {title}
       </Button>

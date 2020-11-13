@@ -7,7 +7,7 @@ import { OnClick, SideNavItem, SideNavItemProps, SideNavSizeType } from './SideN
 type Props = {
   items: SideNavItemProps[]
   size?: SideNavSizeType
-  onClick: OnClick
+  onClick?: OnClick
 }
 
 export const SideNav: FC<Props> = ({ items, size = 'default', onClick }) => {
