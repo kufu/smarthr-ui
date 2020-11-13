@@ -7,6 +7,8 @@ import { SideNav } from './SideNav'
 import { StatusLabel } from '../StatusLabel'
 import { Heading } from '../Heading'
 
+import readme from './README.md'
+
 const Label = styled(StatusLabel)`
   margin-right: 8px;
 
@@ -76,18 +78,24 @@ const SideNavPrefixItems = [
   },
 ]
 
-storiesOf('SideNav', module).add('all', () => (
-  <Wrapper>
-    <Title type="sectionTitle">default</Title>
-    <SideNav items={SideNavItems} onClick={action('clicked')} />
+storiesOf('SideNav', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
+  .add('all', () => (
+    <Wrapper>
+      <Title type="sectionTitle">default</Title>
+      <SideNav items={SideNavItems} onClick={action('clicked')} />
 
-    <Title type="sectionTitle">Small Size</Title>
-    <SideNav size="s" items={SideNavItems} onClick={action('clicked')} />
+      <Title type="sectionTitle">Small Size</Title>
+      <SideNav size="s" items={SideNavItems} onClick={action('clicked')} />
 
-    <Title type="sectionTitle">With Prefix</Title>
-    <SideNav items={SideNavPrefixItems} onClick={action('clicked')} />
-  </Wrapper>
-))
+      <Title type="sectionTitle">With Prefix</Title>
+      <SideNav items={SideNavPrefixItems} onClick={action('clicked')} />
+    </Wrapper>
+  ))
 
 const Wrapper = styled.div`
   padding: 24px;
