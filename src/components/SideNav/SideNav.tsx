@@ -2,17 +2,16 @@ import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { SideNavItem, SideNavItemProps } from './SideNavItem'
+import { OnClick, SideNavItem, SideNavItemProps, SideNavSizeType } from './SideNavItem'
 
 type Props = {
   items: SideNavItemProps[]
-  size?: 'default' | 's'
-  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
+  size?: SideNavSizeType
+  onClick: OnClick
 }
 
 export const SideNav: FC<Props> = ({ items, size = 'default', onClick }) => {
   const theme = useTheme()
-  const SideNavButtonClassName = `${size}`
 
   return (
     <Wrapper themes={theme}>
@@ -22,7 +21,7 @@ export const SideNav: FC<Props> = ({ items, size = 'default', onClick }) => {
           title={item.title}
           prefix={item.prefix}
           isSelected={item.isSelected}
-          className={SideNavButtonClassName}
+          size={size}
           key={item.id}
           onClick={onClick}
         />
