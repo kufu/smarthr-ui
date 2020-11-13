@@ -84,7 +84,7 @@ export const Pagination: FC<Props> = ({
   )
 
   return (
-    <Wrapper className={className} role="navigation" aria-label="ページネーション">
+    <Wrapper className={className} aria-label="ページネーション">
       <List className={withoutNumbers ? 'withoutNumbers' : ''} themes={theme}>
         {prevPage}
         {pages}
