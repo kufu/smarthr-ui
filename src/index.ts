@@ -84,6 +84,7 @@ export {
   BackgroundJobProps,
 } from './components/BackgroundJobsPanel'
 export { MultiComboBox } from './components/MultiComboBox'
+export { SideNav } from './components/SideNav'
 
 // themes
 export { createTheme } from './themes/createTheme'
