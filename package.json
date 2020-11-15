@@ -32,7 +32,7 @@
     "@types/styled-components": "^5.1.4",
     "babel-loader": "^8.1.0",
     "ecma-version-validator-webpack-plugin": "^1.1.0",
-    "eslint": "^7.12.1",
+    "eslint": "^7.13.0",
     "eslint-config-smarthr": "^5.0.0",
     "fixpack": "^3.0.6",
     "husky": "^4.3.0",
