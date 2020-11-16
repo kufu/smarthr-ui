@@ -36,6 +36,7 @@ const Label = styled.label<{ themes: Theme }>`
       &.disabled {
         color: ${palette.TEXT_DISABLED};
         cursor: default;
+        pointer-events: none;
       }
     `
   }}
