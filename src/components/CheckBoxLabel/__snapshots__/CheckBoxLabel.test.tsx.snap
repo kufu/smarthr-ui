@@ -98,6 +98,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
 .c1.disabled {
   color: #c1c1c1;
   cursor: default;
+  pointer-events: none;
 }
 
 .c6 {
