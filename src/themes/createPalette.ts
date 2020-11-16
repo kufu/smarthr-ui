@@ -40,23 +40,6 @@ export interface CreatedPaletteTheme {
 }
 
 export const defaultPalette = {
-  TEXT_BLACK: '#333',
-  TEXT_GREY: '#767676',
-  TEXT_DISABLED: '#c1c1c1',
-  TEXT_LINK: '#007bc2',
-  BORDER: '#d6d6d6',
-  BACKGROUND: '#f5f6fa',
-  COLUMN: '#f9f9f9',
-  BASE_GREY: '#f5f5f5',
-  MAIN: '#00a5ab',
-  DANGER: '#ef475b',
-  WARNING: '#ff8800',
-  SCRIM: 'rgba(0,0,0,0.5)',
-  OVERLAY: 'rgba(0,0,0,0.15)',
-  BRAND: '#00c4cc',
-}
-
-export const shinColorPalette = {
   TEXT_BLACK: '#23221f',
   TEXT_GREY: '#76736a',
   TEXT_DISABLED: '#c1bdb7',
