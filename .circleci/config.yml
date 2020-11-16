@@ -45,16 +45,25 @@ jobs:
   node-v10:
     docker:
       - image: circleci/node:10
+        auth:
+          username: smarthrinc
+          password: $DOCKER_HUB_ACCESS_TOKEN
     steps:
       - run-npm-test
   node-v12:
     docker:
       - image: circleci/node:12
+        auth:
+          username: smarthrinc
+          password: $DOCKER_HUB_ACCESS_TOKEN
     steps:
       - run-npm-test
   reg-suit:
     docker:
       - image: regviz/node-xcb
+        auth:
+          username: smarthrinc
+          password: $DOCKER_HUB_ACCESS_TOKEN
     working_directory: ~/repo
     steps:
       - run-reg-suit
