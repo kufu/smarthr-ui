@@ -19,7 +19,7 @@ export interface PaletteProperty {
 }
 
 export interface CreatedPaletteTheme {
-  hoverColor: (value: string) => string
+  hoverColor: (value: string, darkenAmount?: 0.05 | 0.15) => string
   disableColor: (value: string) => string
   TEXT_BLACK: string
   TEXT_GREY: string
@@ -33,7 +33,6 @@ export interface CreatedPaletteTheme {
   WARNING: string
   SCRIM: string
   OVERLAY: string
-  HEADER_GREEN: string
   BRAND: string
   OUTLINE: string
 }
@@ -51,14 +50,14 @@ export const defaultPalette = {
   WARNING: '#ff8800',
   SCRIM: 'rgba(0,0,0,0.5)',
   OVERLAY: 'rgba(0,0,0,0.15)',
-  HEADER_GREEN: '#57d0d5',
   BRAND: '#00c4cc',
 }
 
 export const createPalette = (userPalette: PaletteProperty = {}) => {
   const created: CreatedPaletteTheme = merge(
     {
-      hoverColor: (value: string): string => darken(0.05, value),
+      hoverColor: (value: string, darkenAmount: 0.05 | 0.15 = 0.05): string =>
+        darken(darkenAmount, value),
       disableColor: (value: string): string => rgba(value, 0.5),
       OUTLINE: transparentize(0.5, defaultPalette.MAIN),
       ...defaultPalette,

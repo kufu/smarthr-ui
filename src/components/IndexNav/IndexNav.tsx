@@ -63,6 +63,7 @@ const Item = styled.li<{ themes: Theme }>(({ themes }) => {
 const Anchor = styled.a<{ themes: Theme; current?: boolean }>(({ themes, current }) => {
   const { palette, size } = themes
   return css`
+    display: inline-block;
     padding-left: ${size.pxToRem(size.space.XXS)};
     border-left: 2px solid;
     border-color: ${current ? palette.MAIN : 'transparent'};
