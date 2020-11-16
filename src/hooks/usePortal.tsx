@@ -8,36 +8,37 @@ import React, {
   useMemo,
 } from 'react'
 
-interface PortalContextValue {
-  currentSeq: number
-  parentSeqs: number[]
+interface ParentContextValue {
+  seqs: number[]
 }
 
-const defaultContext: PortalContextValue = {
-  currentSeq: 0,
-  parentSeqs: [],
-}
+const ParentContext = createContext<ParentContextValue>({
+  seqs: [],
+})
 
-const PortalContext = createContext<PortalContextValue>(defaultContext)
+let portalSeq = 0
 
 export function usePortal() {
-  const context = useContext(PortalContext)
-  const { parentSeqs } = context
-  const currentSeq = useMemo(() => ++context.currentSeq, [context])
+  const currentSeq = useMemo(() => ++portalSeq, [])
+  const parent = useContext(ParentContext)
+  const parentSeqs = parent.seqs.concat(currentSeq)
 
   const portalRoot = useMemo(() => {
     const element = document.createElement('div')
-    const seqs = parentSeqs.concat(currentSeq)
-    element.dataset.portalChildOf = seqs.join(',')
+    element.dataset.portalChildOf = parentSeqs.join(',')
     return element
-  }, [parentSeqs, currentSeq])
+    // spread parentSeqs array for deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...parentSeqs])
 
   useEffect(() => {
     document.body.appendChild(portalRoot)
     return () => {
       document.body.removeChild(portalRoot)
     }
-  }, [portalRoot])
+    // spread parentSeqs array for deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...parentSeqs, portalRoot])
 
   const isChildPortal = useCallback(
     (element: HTMLElement | null) => {
@@ -48,13 +49,14 @@ export function usePortal() {
 
   const PortalParentProvider: FC<{ children: ReactNode }> = useCallback(
     ({ children }) => {
-      const value: PortalContextValue = {
-        ...context,
-        parentSeqs: context.parentSeqs.concat(currentSeq),
+      const value: ParentContextValue = {
+        seqs: parentSeqs,
       }
-      return <PortalContext.Provider value={value}>{children}</PortalContext.Provider>
+      return <ParentContext.Provider value={value}>{children}</ParentContext.Provider>
     },
-    [context, currentSeq],
+    // spread parentSeqs array for deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [...parentSeqs],
   )
 
   return {
