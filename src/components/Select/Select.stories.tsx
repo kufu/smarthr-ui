@@ -93,6 +93,17 @@ storiesOf('Select', module).add('all', () => (
       />
     </li>
     <li>
+      <Text>hasBlank</Text>
+      <Select
+        hasBlank
+        options={[
+          { label: 'apple', value: 'apple' },
+          { label: 'orange', value: 'orange' },
+          { label: 'banana', value: 'banana' },
+        ]}
+      />
+    </li>
+    <li>
       <Text>onChange</Text>
       <Select
         onChange={action('onChange!!')}
