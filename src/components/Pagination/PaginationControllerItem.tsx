@@ -47,6 +47,7 @@ export const PaginationControllerItem: FC<Props> = ({
       onClick={() => onClick(targetPage)}
       disabled={disabled}
       themes={theme}
+      aria-label={iconProps.visuallyHiddenText}
     >
       <Icon
         name={iconProps.name}

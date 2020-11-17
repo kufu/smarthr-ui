@@ -19,6 +19,8 @@ type Props = SelectHTMLAttributes<HTMLSelectElement> & {
   options: Array<Option | Optgroup>
   error?: boolean
   width?: number | string
+  hasBlank?: boolean
+  blankLabel?: string
 }
 
 export const Select: FC<Props> = ({
@@ -26,10 +28,13 @@ export const Select: FC<Props> = ({
   onChange,
   error = false,
   width = 260,
+  hasBlank = false,
+  blankLabel = '選択してください',
   className = '',
   ...props
 }) => {
   const theme = useTheme()
+  const newOptions = hasBlank ? [{ label: blankLabel, value: '' }, ...options] : options
   const widthStyle = typeof width === 'number' ? `${width}px` : width
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -47,7 +52,7 @@ export const Select: FC<Props> = ({
       themes={theme}
     >
       <SelectBox onChange={handleChange} themes={theme} {...props}>
-        {options.map((option) => {
+        {newOptions.map((option) => {
           if ('value' in option) {
             return (
               <option key={option.value} value={option.value}>
