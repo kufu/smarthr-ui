@@ -85,5 +85,6 @@ const CollapseContainer = styled.div`
 
   &.entered {
     height: auto;
+    overflow: visible;
   }
 `
