@@ -33,7 +33,6 @@ export interface CreatedPaletteTheme {
   WARNING: string
   SCRIM: string
   OVERLAY: string
-  HEADER_GREEN: string
   BRAND: string
   OUTLINE: string
 }
@@ -51,7 +50,6 @@ export const defaultPalette = {
   WARNING: '#ff8800',
   SCRIM: 'rgba(0,0,0,0.5)',
   OVERLAY: 'rgba(0,0,0,0.15)',
-  HEADER_GREEN: '#57d0d5',
   BRAND: '#00c4cc',
 }
 

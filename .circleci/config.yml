@@ -41,6 +41,20 @@ commands:
             - node_modules
           key: dependencies-reg-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
       - run: yarn test-visual
+  install-noto-sans-cjk-jp:
+    steps:
+      - run:
+          name: Install NotoSansCJK JP
+          command: |
+            mkdir /tmp/fonts
+            cd /tmp/fonts
+            wget https://noto-website-2.storage.googleapis.com/pkgs/NotoSansCJKjp-hinted.zip
+            unzip NotoSansCJKjp-hinted.zip
+            mkdir -p ~/.fonts
+            cp *otf ~/.fonts
+            fc-cache -f -v
+            fc-match --all
+            rm -rf /tmp/fonts
 jobs:
   node-v10:
     docker:
@@ -57,6 +71,7 @@ jobs:
       - image: regviz/node-xcb
     working_directory: ~/repo
     steps:
+      - install-noto-sans-cjk-jp
       - run-reg-suit
 
 workflows:
