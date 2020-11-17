@@ -27,15 +27,12 @@ export const DropdownContent: React.FC<Props> = ({
   className = '',
   children,
 }) => {
-  const { DropdownContentRoot, contentWrapperId, triggerRect, onClickCloser } = useContext(
-    DropdownContext,
-  )
+  const { DropdownContentRoot, triggerRect, onClickCloser } = useContext(DropdownContext)
 
   return (
     <DropdownContentRoot>
       <DropdownContentContext.Provider value={{ onClickCloser, controllable, scrollable }}>
         <DropdownContentInner
-          id={contentWrapperId}
           triggerRect={triggerRect}
           scrollable={scrollable}
           className={className}
