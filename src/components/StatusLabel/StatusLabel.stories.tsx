@@ -15,30 +15,30 @@ storiesOf('StatusLabel', module)
     <ListWrapper>
       <List>
         <li>
-          <StatusLabel type="done">done</StatusLabel>
+          <StatusLabel type="done">完了</StatusLabel>
         </li>
         <li>
-          <StatusLabel type="success">success</StatusLabel>
+          <StatusLabel type="success">入力完了</StatusLabel>
         </li>
         <li>
-          <StatusLabel type="process">process</StatusLabel>
+          <StatusLabel type="process">入力中</StatusLabel>
         </li>
         <li>
-          <StatusLabel type="required">required</StatusLabel>
+          <StatusLabel type="required">入力必要</StatusLabel>
         </li>
       </List>
       <List>
         <li>
-          <StatusLabel type="disabled">disabled</StatusLabel>
+          <StatusLabel type="disabled">不可</StatusLabel>
         </li>
         <li>
-          <StatusLabel type="must">must</StatusLabel>
+          <StatusLabel type="must">必読</StatusLabel>
         </li>
         <li>
-          <StatusLabel type="warning">warning</StatusLabel>
+          <StatusLabel type="warning">警告</StatusLabel>
         </li>
         <li>
-          <StatusLabel type="error">error</StatusLabel>
+          <StatusLabel type="error">エラー</StatusLabel>
         </li>
       </List>
     </ListWrapper>

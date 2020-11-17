@@ -1,12 +1,13 @@
 import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
+
 import { Props as BalloonProps, BalloonTheme, DarkBalloon, LightBalloon } from '../Balloon'
 import { TooltipPortal } from './TooltipPortal'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useId } from '../../hooks/useId'
 
 type Props = {
-  id: string
   message: ReactNode
   children: ReactNode
   triggerType?: 'icon' | 'text'
@@ -14,10 +15,10 @@ type Props = {
   ellipsisOnly?: boolean
   horizontal?: BalloonProps['horizontal']
   vertical?: BalloonProps['vertical']
+  className?: string
 }
 
 const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme) => ({
-  id,
   message,
   children,
   triggerType,
@@ -25,11 +26,13 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
   ellipsisOnly = false,
   horizontal = 'left',
   vertical = 'bottom',
+  className,
 }) => {
   const themes = useTheme()
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const ref = React.createRef<HTMLDivElement>()
+  const tooltipId = useId()
 
   const getBalloonWrapperWidth = (): number => {
     if (!ref.current) {
@@ -84,7 +87,7 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
 
   return (
     <Wrapper
-      aria-describedby={isVisible ? id : undefined}
+      aria-describedby={isVisible ? tooltipId : undefined}
       ref={ref}
       onMouseEnter={overAction}
       onTouchStart={overAction}
@@ -94,12 +97,13 @@ const tooltipFactory: (balloonTheme: BalloonTheme) => FC<Props> = (balloonTheme)
       onBlur={outAction}
       tabIndex={0}
       isIcon={isIcon}
+      className={className}
     >
       {isVisible &&
         rect &&
         createPortal(
           <TooltipPortal
-            id={id}
+            id={tooltipId}
             parentRect={rect}
             isIcon={isIcon}
             isMultiLine={multiLine}

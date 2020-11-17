@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useState } from 'react'
+import React, { MouseEvent, forwardRef, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -8,6 +8,7 @@ import { Icon } from '../Icon'
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
 import { getFromDate, getToDate, isBetween } from './calendarHelper'
+import { useId } from '../../hooks/useId'
 
 type Props = {
   from?: Date
@@ -16,9 +17,9 @@ type Props = {
   value?: Date
 }
 
-export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
+export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate, value }, ref) => {
   const themes = useTheme()
-  const now = dayjs()
+  const now = dayjs().startOf('date')
   const fromDay = dayjs(getFromDate(from))
   const toDay = dayjs(getToDate(to))
   const isValidValue = value && isBetween(value, fromDay.toDate(), toDay.toDate())
@@ -26,17 +27,35 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
   const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : now)
   const [isSelectingYear, setIsSelectingYear] = useState(false)
 
+  const yearPickerId = useId()
+
+  useEffect(() => {
+    if (value && isValidValue) {
+      setCurrentMonth(dayjs(value))
+    }
+  }, [value, isValidValue])
+
   const prevMonth = currentMonth.subtract(1, 'month')
   const nextMonth = currentMonth.add(1, 'month')
 
   return (
-    <Container themes={themes}>
+    <Container themes={themes} ref={ref}>
       <Header themes={themes}>
         <YearMonth>
           {currentMonth.year()}年{currentMonth.month() + 1}月
         </YearMonth>
-        <SecondaryButton onClick={() => setIsSelectingYear(!isSelectingYear)} size="s" square>
-          <Icon size={13} name={isSelectingYear ? 'fa-caret-up' : 'fa-caret-down'} />
+        <SecondaryButton
+          onClick={() => setIsSelectingYear(!isSelectingYear)}
+          size="s"
+          square
+          aria-expanded={isSelectingYear}
+          aria-controls={yearPickerId}
+        >
+          <Icon
+            size={13}
+            visuallyHiddenText="年を選択する"
+            name={isSelectingYear ? 'fa-caret-up' : 'fa-caret-down'}
+          />
         </SecondaryButton>
         <MonthButtonLayout>
           <SecondaryButton
@@ -45,7 +64,7 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
             size="s"
             square
           >
-            <Icon size={13} name="fa-chevron-left" />
+            <Icon visuallyHiddenText="前の月へ" size={13} name="fa-chevron-left" />
           </SecondaryButton>
           <SecondaryButton
             disabled={isSelectingYear || nextMonth.isAfter(toDay, 'month')}
@@ -53,24 +72,22 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
             size="s"
             square
           >
-            <Icon size={13} name="fa-chevron-right" />
+            <Icon visuallyHiddenText="次の月へ" size={13} name="fa-chevron-right" />
           </SecondaryButton>
         </MonthButtonLayout>
       </Header>
       <TableLayout>
-        {isSelectingYear && (
-          <YearOverlay>
-            <YearPicker
-              fromYear={fromDay.year()}
-              toYear={toDay.year()}
-              selectedYear={value?.getFullYear()}
-              onSelectYear={(year) => {
-                setCurrentMonth(currentMonth.year(year))
-                setIsSelectingYear(false)
-              }}
-            />
-          </YearOverlay>
-        )}
+        <YearPicker
+          fromYear={fromDay.year()}
+          toYear={toDay.year()}
+          selectedYear={value?.getFullYear()}
+          onSelectYear={(year) => {
+            setCurrentMonth(currentMonth.year(year))
+            setIsSelectingYear(false)
+          }}
+          isDisplayed={isSelectingYear}
+          id={yearPickerId}
+        />
         <CalendarTable
           current={currentMonth.toDate()}
           from={fromDay.toDate()}
@@ -81,7 +98,7 @@ export const Calendar: FC<Props> = ({ from, to, onSelectDate, value }) => {
       </TableLayout>
     </Container>
   )
-}
+})
 
 const Container = styled.section<{ themes: Theme }>`
   display: inline-block;
@@ -116,13 +133,4 @@ const MonthButtonLayout = styled.div`
 `
 const TableLayout = styled.div`
   position: relative;
-`
-const YearOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  background-color: #fff;
 `

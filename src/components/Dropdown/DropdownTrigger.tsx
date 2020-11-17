@@ -1,7 +1,8 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { DropdownContext } from './Dropdown'
+import { tabbable } from './tabbable'
 
 type Props = {
   children: React.ReactNode
@@ -9,7 +10,19 @@ type Props = {
 }
 
 export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) => {
-  const { active, onClickTrigger, triggerElementRef } = useContext(DropdownContext)
+  const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
+
+  useEffect(() => {
+    if (!triggerElementRef.current) {
+      return
+    }
+    // apply ARIA to all focusable elements in trigger
+    const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
+    triggers.forEach((trigger) => {
+      trigger.setAttribute('aria-expanded', String(active))
+      trigger.setAttribute('aria-controls', contentId)
+    })
+  }, [triggerElementRef, active, contentId])
 
   return (
     <Wrapper

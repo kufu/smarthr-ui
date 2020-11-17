@@ -1,56 +1,75 @@
 import { storiesOf } from '@storybook/react'
+import { action } from '@storybook/addon-actions'
 import * as React from 'react'
 import styled from 'styled-components'
-import { Icon } from '../Icon'
 
-storiesOf('[TBD] DatePicker', module).add('all', () => (
-  <Wrapper>
-    <Title>To Be Developed</Title>
-    <Description>This component will develop in the near future.</Description>
-    <Link
-      href="https://smarthr.invisionapp.com/share/ADUDJ8BW74C#/378269214_datepicker"
-      target="_blank"
-    >
-      <LinkText>Design of DatePicker (InVision)</LinkText>
-      <LinkIcon name="fa-external-link-alt" size={14} />
-    </Link>
-  </Wrapper>
-))
+import { DatePicker } from './DatePicker'
+import readme from './README.md'
 
-const Wrapper = styled.div`
-  box-sizing: border-box;
+storiesOf('DatePicker', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
+  .add('all', () => {
+    const [value, setValue] = React.useState<string>(new Date(2020, 0, 1).toDateString())
+    return (
+      <List>
+        <dt>DatePicker</dt>
+        <dd>
+          <DatePicker onChangeDate={action('change')} />
+        </dd>
+        <dt>Pass `from`, `to`</dt>
+        <dd>
+          <DatePicker
+            from={new Date(1901, 0, 1)}
+            to={new Date(2100, 11, 30)}
+            onChangeDate={action('change')}
+          />
+        </dd>
+        <dt>Custom format (ex. Date.toDateString)</dt>
+        <dd>
+          <DatePicker
+            value={value}
+            formatDate={(_date) => {
+              if (!_date) return ''
+              return _date.toDateString()
+            }}
+            onChangeDate={(_date, _value) => {
+              action('change')(_date, _value)
+              setValue(_value)
+            }}
+          />
+        </dd>
+        <dt>Disabled</dt>
+        <dd>
+          <DatePicker disabled />
+        </dd>
+        <dt>Extending style (width: 50%)</dt>
+        <dd>
+          <ExtendingDatePicker onChangeDate={action('change')} />
+        </dd>
+        <dt className="bottom">Place on the page bottom</dt>
+        <dd>
+          <DatePicker onChangeDate={action('change')} />
+        </dd>
+      </List>
+    )
+  })
+
+const List = styled.dl`
   padding: 24px;
-  border-radius: 6px;
-  box-shadow: rgba(51, 51, 51, 0.3) 1px 1px 4px 0;
-  color: #333;
-  font-size: 14px;
-  text-align: center;
-  line-height: 1;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: 0;
+
+  dd {
+    margin: 10px 0 20px;
+  }
+  dt.bottom {
+    margin-top: 1000px;
+  }
 `
 
-const Title = styled.h1`
-  display: block;
-  margin-bottom: 16px;
-  font-size: 18px;
-  font-weight: bold;
-`
-
-const Description = styled.div`
-  margin-bottom: 16px;
-`
-
-const Link = styled.a`
-  color: #007bc2;
-`
-const LinkText = styled.span`
-  vertical-align: middle;
-`
-
-const LinkIcon = styled(Icon)`
-  margin-left: 4px;
-  vertical-align: middle;
+const ExtendingDatePicker = styled(DatePicker)`
+  width: 50%;
 `
