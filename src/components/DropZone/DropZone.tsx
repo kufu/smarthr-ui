@@ -18,7 +18,7 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.stopPropagation()
 }
 
-export const DropZone: React.FC<DropZoneProps> = ({ children, onSelectFiles, accept = '' }) => {
+export const DropZone: React.FC<DropZoneProps> = ({ children, onSelectFiles, accept }) => {
   const theme = useTheme()
   const fileRef = useRef<HTMLInputElement>(null)
   const [filesDraggedOver, setFilesDraggedOver] = useState(false)
