@@ -19,6 +19,8 @@ type Props = SelectHTMLAttributes<HTMLSelectElement> & {
   options: Array<Option | Optgroup>
   error?: boolean
   width?: number | string
+  hasBlank?: boolean
+  blankLabel?: string
 }
 
 export const Select: FC<Props> = ({
@@ -26,10 +28,13 @@ export const Select: FC<Props> = ({
   onChange,
   error = false,
   width = 260,
+  hasBlank = false,
+  blankLabel = '選択してください',
   className = '',
   ...props
 }) => {
   const theme = useTheme()
+  const newOptions = hasBlank ? [{ label: blankLabel, value: '' }, ...options] : options
   const widthStyle = typeof width === 'number' ? `${width}px` : width
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -41,13 +46,13 @@ export const Select: FC<Props> = ({
   return (
     <Wrapper
       className={className}
-      width={widthStyle}
+      $width={widthStyle}
       error={error}
       disabled={props.disabled}
       themes={theme}
     >
       <SelectBox onChange={handleChange} themes={theme} {...props}>
-        {options.map((option) => {
+        {newOptions.map((option) => {
           if ('value' in option) {
             return (
               <option key={option.value} value={option.value}>
@@ -81,15 +86,15 @@ export const Select: FC<Props> = ({
 }
 
 const Wrapper = styled.div<{
-  width: string
+  $width: string
   error?: boolean
   disabled?: boolean
   themes: Theme
-}>(({ width, error, disabled, themes }) => {
+}>(({ $width, error, disabled, themes }) => {
   const { frame, palette, interaction } = themes
   return css`
     position: relative;
-    width: ${width};
+    width: ${$width};
     border-radius: ${frame.border.radius.m};
     border: ${frame.border.default};
     background-color: #fff;

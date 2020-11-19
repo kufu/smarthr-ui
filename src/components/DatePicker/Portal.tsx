@@ -1,4 +1,11 @@
-import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import React, {
+  ReactNode,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -11,7 +18,7 @@ type Props = {
   children: ReactNode
 }
 
-export const Portal: FC<Props> = ({ inputRect, children }) => {
+export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, children }, ref) => {
   const themes = useTheme()
   const { portalRoot } = usePortal()
 
@@ -21,6 +28,7 @@ export const Portal: FC<Props> = ({ inputRect, children }) => {
   })
   const [isReady, setIsReady] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => containerRef.current)
 
   useEffect(() => {
     // wait for createPortal
@@ -39,7 +47,7 @@ export const Portal: FC<Props> = ({ inputRect, children }) => {
     </Container>,
     portalRoot,
   )
-}
+})
 
 const Container = styled.div<{ top: number; left: number; themes: Theme }>(
   ({ top, left, themes }) => css`
@@ -47,6 +55,7 @@ const Container = styled.div<{ top: number; left: number; themes: Theme }>(
     top: ${top}px;
     left: ${left}px;
     z-index: ${themes.zIndex.OVERLAP};
+    line-height: 1;
 
     visibility: hidden;
     &.ready {

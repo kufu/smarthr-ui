@@ -78,7 +78,12 @@ export const InputFile: FC<Props> = ({
           disabled={disabled}
           {...props}
         />
-        <FileButton themes={theme} className={FileButtonClassName} disabled={disabled}>
+        <FileButton
+          themes={theme}
+          className={FileButtonClassName}
+          disabled={disabled}
+          type="button"
+        >
           <label htmlFor={id}>
             <Prefix themes={theme}>
               <Icon size={14} name="fa-folder-open" />

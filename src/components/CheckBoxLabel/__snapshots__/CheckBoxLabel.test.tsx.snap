@@ -98,6 +98,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
 .c1.disabled {
   color: #c1c1c1;
   cursor: default;
+  pointer-events: none;
 }
 
 .c6 {
@@ -111,7 +112,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
   <label
     className="c1"
   >
-    <div
+    <span
       className="c2"
     >
       <input
@@ -152,12 +153,12 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
           />
         </svg>
       </span>
-    </div>
-    <p
+    </span>
+    <span
       className="c6"
     >
       label
-    </p>
+    </span>
   </label>
 </div>
 `;
