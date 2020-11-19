@@ -302,6 +302,7 @@ import {
   FaWrench,
   FaYenSign,
 } from 'react-icons/fa'
+import type { IconType } from 'react-icons'
 import styled from 'styled-components'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 
@@ -626,8 +627,8 @@ export const iconMap = {
   'fa-yen-sign': FaYenSign,
 }
 
-export type ComponentProps = Omit<Props, 'name'>
-type IconComponentProps = ComponentProps & { Component: React.ComponentType<ComponentProps> }
+type ComponentProps = Omit<Props, 'name'>
+type IconComponentProps = ComponentProps & { Component: IconType }
 
 // This should be inlined in the createIcon function after the Icon component had been removed
 const IconComponent: React.FC<IconComponentProps> = ({
@@ -658,7 +659,7 @@ const IconComponent: React.FC<IconComponentProps> = ({
   )
 }
 
-const createIcon = (SvgIcon: React.ComponentType<ComponentProps>) => {
+const createIcon = (SvgIcon: IconType) => {
   const Icon: React.FC<ComponentProps> = (props: ComponentProps) => {
     return <IconComponent {...props} Component={SvgIcon} />
   }
