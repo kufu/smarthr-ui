@@ -627,7 +627,7 @@ export const iconMap = {
   'fa-yen-sign': FaYenSign,
 }
 
-type ComponentProps = Omit<Props, 'name'>
+export type ComponentProps = Omit<Props, 'name'>
 type IconComponentProps = ComponentProps & { Component: IconType }
 
 // This should be inlined in the createIcon function after the Icon component had been removed
