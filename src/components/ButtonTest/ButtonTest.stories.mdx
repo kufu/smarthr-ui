@@ -1,0 +1,80 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import { PrimaryButton, PrimaryButtonAnchor } from './PrimaryButton'
+import { ArgsTable } from '@storybook/addon-docs/blocks';
+import { Icon } from '../Icon'
+import { action } from '@storybook/addon-actions'
+
+<Meta title="ButtonTest/MDX" component={PrimaryButton} args={{primary: true }} />
+
+# Hello
+
+Hello, this is an awesome button.
+- foo
+- bar
+- baz
+
+<ArgsTable of={PrimaryButton} />
+
+<Canvas>
+  <Story name="Default">
+      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={() => {}}/>
+   </Story>
+</Canvas>
+
+you can use this button with an icon
+
+<Canvas>
+  <Story name="WithIcon">
+    <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+        Disabled
+      </PrimaryButton>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="WithIconLeft">
+      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+        Disabled
+      </PrimaryButton>
+    </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="WithIconRight">
+      <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
+        Button
+      </PrimaryButton>
+      <PrimaryButtonAnchor suffix={<Icon size={14} name="fa-plus-circle" />} href="#">
+        Anchor
+      </PrimaryButtonAnchor>
+      <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
+        Disabled
+      </PrimaryButton>
+    </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="OnlyIcon">
+      <PrimaryButton onClick={action('clicked')} square>
+        <Icon size={16} name="fa-plus-circle" />
+      </PrimaryButton>
+      <PrimaryButtonAnchor href="#" square>
+        <Icon size={16} name="fa-plus-circle" />
+      </PrimaryButtonAnchor>
+      <PrimaryButton disabled={true} square>
+        <Icon size={16} name="fa-plus-circle" />
+      </PrimaryButton>
+    </Story>
+</Canvas>
