@@ -1,5 +1,5 @@
 module.exports = {
-  stories: ['../**/*.stories.js'],
+  stories: ['../**/*.stories.tsx', '../**/*.stories.mdx'],
   addons: [
     'storybook-readme',
     {
@@ -7,7 +7,6 @@ module.exports = {
       options: {
         // we are not ready to use them yet.
         controls: false,
-        docs: false
       }
     },
     {
