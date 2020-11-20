@@ -25,14 +25,14 @@
     "@types/jest": "^26.0.15",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
-    "@types/react": "^16.9.53",
+    "@types/react": "^16.9.56",
     "@types/react-dom": "^16.9.9",
     "@types/react-test-renderer": "^16.9.3",
     "@types/react-transition-group": "^4.4.0",
     "@types/styled-components": "^5.1.4",
     "babel-loader": "^8.1.0",
     "ecma-version-validator-webpack-plugin": "^1.1.0",
-    "eslint": "^7.12.1",
+    "eslint": "^7.13.0",
     "eslint-config-smarthr": "^5.0.0",
     "fixpack": "^3.0.6",
     "husky": "^4.3.0",
@@ -136,7 +136,7 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "yargs-parser": ">=13.1.2 <14.0.0 || >=15.0.1 <16.0.0 || >=18.1.2",
-    "@types/react": "^16.9.53",
+    "@types/react": "^16.9.56",
     "@babel/helper-compilation-targets": "^7.12.5"
   }
 }
