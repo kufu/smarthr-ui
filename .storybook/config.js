@@ -6,12 +6,13 @@ import { withA11y } from '@storybook/addon-a11y'
 import { addReadme } from 'storybook-readme'
 
 import { createTheme } from '../src/themes/createTheme'
+import { shinColorPalette } from '../src/themes/createPalette'
 import { ThemeProvider } from '../src/themes/ThemeProvider'
 
 const req = require.context('../src/components', true, /.stories.tsx$/)
 
 function loadStories() {
-  req.keys().forEach(filename => req(filename))
+  req.keys().forEach((filename) => req(filename))
 }
 
 addParameters({
@@ -29,7 +30,10 @@ addParameters({ viewport: { viewports: INITIAL_VIEWPORTS } })
 
 addDecorator(withA11y)
 addDecorator(addReadme)
-addDecorator(Story => <ThemeProvider theme={createTheme()}><Story /></ThemeProvider>)
+addDecorator((Story) => (
+  <ThemeProvider theme={createTheme({ palette: shinColorPalette })}>
+    <Story />
+  </ThemeProvider>
+))
 
 configure(loadStories, module)
-

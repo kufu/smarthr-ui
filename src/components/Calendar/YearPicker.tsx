@@ -97,8 +97,10 @@ const YearButton = styled(ResetButton)<{ themes: Theme }>`
   cursor: pointer;
   &:hover {
     ${YearWrapper} {
-      color: ${(props) => props.themes.palette.TEXT_BLACK};
-      background-color: #f5f5f5;
+      ${({ themes }) => css`
+        color: ${themes.palette.TEXT_BLACK};
+        background-color: ${themes.palette.BASE_GREY};
+      `}
     }
   }
 `
