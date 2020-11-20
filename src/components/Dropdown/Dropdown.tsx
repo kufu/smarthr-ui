@@ -27,7 +27,7 @@ type DropdownContextType = {
   onClickTrigger: (rect: Rect) => void
   onClickCloser: () => void
   DropdownContentRoot: FC<{ children: ReactNode }>
-  contentWrapperId: string
+  contentId: string
 }
 
 const initialRect = { top: 0, right: 0, bottom: 0, left: 0 }
@@ -44,7 +44,7 @@ export const DropdownContext = createContext<DropdownContextType>({
     /* noop */
   },
   DropdownContentRoot: () => null,
-  contentWrapperId: '',
+  contentId: '',
 })
 
 export const Dropdown: FC<Props> = ({ children }) => {
@@ -55,7 +55,9 @@ export const Dropdown: FC<Props> = ({ children }) => {
   const { portalRoot, isChildPortal, PortalParentProvider } = usePortal()
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
-  const contentWrapperId = useId()
+  const contentId = useId()
+
+  portalRoot.setAttribute('id', contentId)
 
   useEffect(() => {
     const onClickBody = (e: any) => {
@@ -108,7 +110,7 @@ export const Dropdown: FC<Props> = ({ children }) => {
             })
           },
           DropdownContentRoot,
-          contentWrapperId,
+          contentId,
         }}
       >
         {children}

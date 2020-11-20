@@ -34,6 +34,7 @@ const AccordionPanelController = () => {
           <SecondaryButton
             key={`button-${i}`}
             onClick={() => setExpandedId(`accordion-panel-${i}`)}
+            aria-controls={`accordion-panel-${i}-content`}
           >
             open {i}
           </SecondaryButton>
