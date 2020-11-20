@@ -1,8 +1,8 @@
-import React, { SelectHTMLAttributes, FC, ChangeEvent, useCallback } from 'react'
+import React, { ChangeEvent, FC, SelectHTMLAttributes, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
-import { useTheme, Theme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Icon } from '../Icon'
 
@@ -36,7 +36,7 @@ export const Select: FC<Props> = ({
   return (
     <Wrapper className={className} width={widthStyle} theme={theme}>
       <SelectBox className={error ? 'error' : ''} onChange={handleChange} themes={theme} {...props}>
-        {options.map(option => (
+        {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
