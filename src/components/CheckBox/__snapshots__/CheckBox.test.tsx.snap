@@ -30,6 +30,7 @@ exports[`CheckBox should be match snapshot 1`] = `
         },
         "palette": Object {
           "BACKGROUND": "#f5f6fa",
+          "BASE_GREY": "#f5f5f5",
           "BORDER": "#d6d6d6",
           "BRAND": "#00c4cc",
           "COLUMN": "#f9f9f9",
@@ -102,6 +103,7 @@ exports[`CheckBox should be match snapshot 1`] = `
             },
             "palette": Object {
               "BACKGROUND": "#f5f6fa",
+              "BASE_GREY": "#f5f5f5",
               "BORDER": "#d6d6d6",
               "BRAND": "#00c4cc",
               "COLUMN": "#f9f9f9",
@@ -178,6 +180,7 @@ exports[`CheckBox should be match snapshot 1`] = `
             },
             "palette": Object {
               "BACKGROUND": "#f5f6fa",
+              "BASE_GREY": "#f5f5f5",
               "BORDER": "#d6d6d6",
               "BRAND": "#00c4cc",
               "COLUMN": "#f9f9f9",
@@ -248,6 +251,7 @@ exports[`CheckBox should be match snapshot 1`] = `
             },
             "palette": Object {
               "BACKGROUND": "#f5f6fa",
+              "BASE_GREY": "#f5f5f5",
               "BORDER": "#d6d6d6",
               "BRAND": "#00c4cc",
               "COLUMN": "#f9f9f9",
