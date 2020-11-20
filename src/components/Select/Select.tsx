@@ -36,7 +36,7 @@ export const Select: FC<Props> = ({
   return (
     <Wrapper className={className} width={widthStyle} theme={theme}>
       <SelectBox className={error ? 'error' : ''} onChange={handleChange} themes={theme} {...props}>
-        {options.map((option) => (
+        {options.map(option => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
