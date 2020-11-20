@@ -17,7 +17,7 @@ exports[`TabBar should be match snapshot 1`] = `
   left: 0;
   right: 0;
   bottom: 0;
-  border-bottom: 1px solid #d6d6d6;
+  border-bottom: 1px solid #d6d3d0;
   content: '';
 }
 
@@ -32,7 +32,7 @@ exports[`TabBar should be match snapshot 1`] = `
   appearance: none;
   font-weight: bold;
   font-size: 0.875rem;
-  color: #767676;
+  color: #76736a;
   height: 40px;
   border-bottom: solid 3px transparent;
   padding: 0 1.5rem;
@@ -43,18 +43,18 @@ exports[`TabBar should be match snapshot 1`] = `
 
 .c1.selected {
   position: relative;
-  color: #333;
-  border-color: #00a5ab;
+  color: #23221f;
+  border-color: #0077c7;
 }
 
 .c1:hover {
-  background-color: #f9f9f9;
-  color: #333;
+  background-color: #f9f8f7;
+  color: #23221f;
 }
 
 .c1:disabled {
   background-color: transparent;
-  color: rgba(118,118,118,0.5);
+  color: rgba(118,115,106,0.5);
   cursor: not-allowed;
 }
 
