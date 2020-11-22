@@ -26,7 +26,7 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
     "@types/react": "^16.9.56",
-    "@types/react-dom": "^16.9.9",
+    "@types/react-dom": "^16.9.10",
     "@types/react-test-renderer": "^16.9.3",
     "@types/react-transition-group": "^4.4.0",
     "@types/styled-components": "^5.1.4",
