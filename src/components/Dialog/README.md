@@ -59,6 +59,7 @@ Dialog
 | bottom         | false    | number     | -            | Specifies the bottom position of the Dialog content. |
 | left           | false    | number     | -            | Specifies the left position of the Dialog content.   |
 | ariaLabel      | false    | string     | -            | Define a string to label the Dialog.                 |
+| ariaLabelledby | false    | string     | -            | Define the ID of another element in the DOM as the element's label. |
 
 DialogContent
 
@@ -246,4 +247,4 @@ ActionDialogContent
 - Dialog component has `role` set to `"dialog"`.
 - Dialog component has `aria-modal` set to `true`.
 - Uncontrollable Dialog has `aria-haspopup` set to `"dialog"` in the trigger. When using controllable Dialog, set `aria-haspopup` to `"dialog"` in the trigger.
-- MessageDialog and ActionDialog set the title value to the `aria-label` value. When using Dialog and DialogContent, you can specify a value for `aria-label` in `ariaLabel` props.
+- MessageDialog and ActionDialog set the title value to the `aria-label` value. When using Dialog and DialogContent, you can specify a value for `aria-label` in `ariaLabel` props. Alternatively, you can use the aria-labelledby attribute by passing the id value in `ariaLabelledby` props.
