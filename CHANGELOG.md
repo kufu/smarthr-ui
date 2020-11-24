@@ -319,6 +319,13 @@ parsing error.
 * fix padding-right in Input ([#665](https://github.com/kufu/smarthr-ui/issues/665)) ([c16d5ec](https://github.com/kufu/smarthr-ui/commit/c16d5ec728806c28805908acdb7ea7306d3b4d4c))
 * fix typos ([#684](https://github.com/kufu/smarthr-ui/issues/684)) ([1bcd45b](https://github.com/kufu/smarthr-ui/commit/1bcd45ba7212823c20be42d750f726ea93555b9b))
 
+## [6.3.0](https://github.com/kufu/smarthr-ui/compare/v6.2.0...v6.3.0) (2020-11-24)
+
+
+### Features
+
+* backport Shin Color to v6 (SHRUI-232) ([#1157](https://github.com/kufu/smarthr-ui/issues/1157)) ([f462116](https://github.com/kufu/smarthr-ui/commit/f462116007b047a7ce6c96679cbc8410a55523ea)), closes [#1141](https://github.com/kufu/smarthr-ui/issues/1141)
+
 ## [6.2.0](https://github.com/kufu/smarthr-ui/compare/v6.1.1...v6.2.0) (2020-02-13)
 
 
