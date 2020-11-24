@@ -2,6 +2,7 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { useTheme } from '../../hooks/useTheme'
 import { Loader } from './Loader'
 import readme from './README.md'
 
@@ -11,28 +12,31 @@ storiesOf('Loader', module)
       sidebar: readme,
     },
   })
-  .add('all', () => (
-    <>
-      <GrayWrapper>
-        <Text>You can choose the size.</Text>
-        <Inner>
-          <Loader size="s" />
-          <Loader size="m" />
-          <Loader size="l" />
-        </Inner>
-      </GrayWrapper>
+  .add('all', () => {
+    const theme = useTheme()
+    return (
+      <>
+        <GrayWrapper>
+          <Text>You can choose the size.</Text>
+          <Inner>
+            <Loader size="s" />
+            <Loader size="m" />
+            <Loader size="l" />
+          </Inner>
+        </GrayWrapper>
 
-      <Wrapper>
-        <Text>You can choose the color.</Text>
-        <Inner>
-          <Loader color="#00a5ab" />
-          <Loader color="#007bc2" />
-          <Loader color="#ff8800" />
-          <Loader color="#ef475b" />
-        </Inner>
-      </Wrapper>
-    </>
-  ))
+        <Wrapper>
+          <Text>You can choose the color.</Text>
+          <Inner>
+            <Loader color={theme.palette.BRAND} />
+            <Loader color={theme.palette.TEXT_LINK} />
+            <Loader color={theme.palette.WARNING} />
+            <Loader color={theme.palette.DANGER} />
+          </Inner>
+        </Wrapper>
+      </>
+    )
+  })
 
 const Wrapper = styled.div`
   padding: 24px;

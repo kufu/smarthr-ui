@@ -33,7 +33,7 @@ const Button = styled.button<{ themes: Theme }>`
     const { pxToRem } = themes.size
 
     return css`
-      color: #007bc2;
+      color: ${themes.palette.TEXT_LINK};
       display: flex;
       align-items: center;
 
