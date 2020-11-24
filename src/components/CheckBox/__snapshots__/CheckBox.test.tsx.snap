@@ -31,6 +31,7 @@ exports[`CheckBox should be match snapshot 1`] = `
         },
         "palette": Object {
           "BACKGROUND": "#f5f6fa",
+          "BASE_GREY": "#f5f5f5",
           "BORDER": "#d6d6d6",
           "COLUMN": "#f9f9f9",
           "DANGER": "#ef475b",
@@ -125,6 +126,7 @@ exports[`CheckBox should be match snapshot 1`] = `
           },
           "palette": Object {
             "BACKGROUND": "#f5f6fa",
+            "BASE_GREY": "#f5f5f5",
             "BORDER": "#d6d6d6",
             "COLUMN": "#f9f9f9",
             "DANGER": "#ef475b",
@@ -197,6 +199,7 @@ exports[`CheckBox should be match snapshot 1`] = `
               },
               "palette": Object {
                 "BACKGROUND": "#f5f6fa",
+                "BASE_GREY": "#f5f5f5",
                 "BORDER": "#d6d6d6",
                 "COLUMN": "#f9f9f9",
                 "DANGER": "#ef475b",
@@ -294,6 +297,7 @@ exports[`CheckBox should be match snapshot 1`] = `
                 },
                 "palette": Object {
                   "BACKGROUND": "#f5f6fa",
+                  "BASE_GREY": "#f5f5f5",
                   "BORDER": "#d6d6d6",
                   "COLUMN": "#f9f9f9",
                   "DANGER": "#ef475b",
@@ -371,6 +375,7 @@ exports[`CheckBox should be match snapshot 1`] = `
               },
               "palette": Object {
                 "BACKGROUND": "#f5f6fa",
+                "BASE_GREY": "#f5f5f5",
                 "BORDER": "#d6d6d6",
                 "COLUMN": "#f9f9f9",
                 "DANGER": "#ef475b",
@@ -465,6 +470,7 @@ exports[`CheckBox should be match snapshot 1`] = `
                 },
                 "palette": Object {
                   "BACKGROUND": "#f5f6fa",
+                  "BASE_GREY": "#f5f5f5",
                   "BORDER": "#d6d6d6",
                   "COLUMN": "#f9f9f9",
                   "DANGER": "#ef475b",
@@ -536,6 +542,7 @@ exports[`CheckBox should be match snapshot 1`] = `
               },
               "palette": Object {
                 "BACKGROUND": "#f5f6fa",
+                "BASE_GREY": "#f5f5f5",
                 "BORDER": "#d6d6d6",
                 "COLUMN": "#f9f9f9",
                 "DANGER": "#ef475b",
@@ -629,6 +636,7 @@ exports[`CheckBox should be match snapshot 1`] = `
                 },
                 "palette": Object {
                   "BACKGROUND": "#f5f6fa",
+                  "BASE_GREY": "#f5f5f5",
                   "BORDER": "#d6d6d6",
                   "COLUMN": "#f9f9f9",
                   "DANGER": "#ef475b",
