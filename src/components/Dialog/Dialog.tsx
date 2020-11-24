@@ -12,6 +12,7 @@ type Props = {
   bottom?: number
   left?: number
   ariaLabel?: string
+  ariaLabelledby?: string
 }
 
 export const Dialog: React.FC<Props> = ({
@@ -24,6 +25,7 @@ export const Dialog: React.FC<Props> = ({
     /* noop */
   },
   ariaLabel,
+  ariaLabelledby,
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current
@@ -42,6 +44,7 @@ export const Dialog: React.FC<Props> = ({
       onPressEscape={onPressEscape}
       isOpen={isOpen}
       ariaLabel={ariaLabel}
+      ariaLabelledby={ariaLabelledby}
       {...props}
     >
       {children}
