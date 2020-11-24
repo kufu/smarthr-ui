@@ -52,24 +52,24 @@ Dialog
 
 | Name           | Required | Type       | DefaultValue | Description                                          |
 | -------------- | -------- | ---------- | ------------ | ---------------------------------------------------- |
-| isOpen         | true     | boolean    | -            | Whether to display a Dialog.                         |
-| onClickOverlay | false    | () => void | () => {}     | Handler function when clicking on overlay.           |
-| top            | false    | number     | -            | Specifies the top position of the Dialog content.    |
-| right          | false    | number     | -            | Specifies the right position of the Dialog content.  |
-| bottom         | false    | number     | -            | Specifies the bottom position of the Dialog content. |
-| left           | false    | number     | -            | Specifies the left position of the Dialog content.   |
-| ariaLabel      | false    | string     | -            | Define a string to label the Dialog.                 |
-| ariaLabelledby | false    | string     | -            | Define the ID of another element in the DOM as the element's label. |
+| isOpen         | ✓        | boolean    | -            | Whether to display a Dialog.                         |
+| onClickOverlay | -        | () => void | () => {}     | Handler function when clicking on overlay.           |
+| top            | -        | number     | -            | Specifies the top position of the Dialog content.    |
+| right          | -        | number     | -            | Specifies the right position of the Dialog content.  |
+| bottom         | -        | number     | -            | Specifies the bottom position of the Dialog content. |
+| left           | -        | number     | -            | Specifies the left position of the Dialog content.   |
+| ariaLabel      | -        | string     | -            | Define a string to label the Dialog.                 |
+| ariaLabelledby | -        | string     | -            | Define the ID of another element in the DOM as the element's label. |
 
 DialogContent
 
 | Name      | Required | Type   | DefaultValue | Description                                          |
 | --------- | -------- | ------ | ------------ | ---------------------------------------------------- |
-| top       | false    | number | -            | Specifies the top position of the Dialog content.    |
-| right     | false    | number | -            | Specifies the right position of the Dialog content.  |
-| bottom    | false    | number | -            | Specifies the bottom position of the Dialog content. |
-| left      | false    | number | -            | Specifies the left position of the Dialog content.   |
-| ariaLabel | false    | string | -            | Define a string to label the Dialog.                 |
+| top       | -        | number | -            | Specifies the top position of the Dialog content.    |
+| right     | -        | number | -            | Specifies the right position of the Dialog content.  |
+| bottom    | -        | number | -            | Specifies the bottom position of the Dialog content. |
+| left      | -        | number | -            | Specifies the left position of the Dialog content.   |
+| ariaLabel | -        | string | -            | Define a string to label the Dialog.                 |
 
 ## MessageDialog
 
@@ -125,27 +125,27 @@ MessageDialog
 
 | Name         | Required | Type       | DefaultValue | Description                                                 |
 | ------------ | -------- | ---------- | ------------ | ----------------------------------------------------------- |
-| isOpen       | true     | boolean    | -            | Whether to display a Dialog.                                |
-| onClickClose | true     | () => void | -            | Handler function when clicking on close button and overlay. |
-| title        | true     | string     | -            | dialog title message.                                       |
-| description  | true     | ReactNode  | -            | body of dialog.                                             |
-| closeText    | true     | string     | -            | close button text.                                          |
-| top          | false    | number     | -            | Specifies the top position of the Dialog content.           |
-| right        | false    | number     | -            | Specifies the right position of the Dialog content.         |
-| bottom       | false    | number     | -            | Specifies the bottom position of the Dialog content.        |
-| left         | false    | number     | -            | Specifies the left position of the Dialog content.          |
+| isOpen       | ✓        | boolean    | -            | Whether to display a Dialog.                                |
+| onClickClose | ✓        | () => void | -            | Handler function when clicking on close button and overlay. |
+| title        | ✓        | string     | -            | dialog title message.                                       |
+| description  | ✓        | ReactNode  | -            | body of dialog.                                             |
+| closeText    | ✓        | string     | -            | close button text.                                          |
+| top          | -        | number     | -            | Specifies the top position of the Dialog content.           |
+| right        | -        | number     | -            | Specifies the right position of the Dialog content.         |
+| bottom       | -        | number     | -            | Specifies the bottom position of the Dialog content.        |
+| left         | -        | number     | -            | Specifies the left position of the Dialog content.          |
 
 MessageDialogContent
 
 | Name        | Required | Type      | DefaultValue | Description                                          |
 | ----------- | -------- | --------- | ------------ | ---------------------------------------------------- |
-| title       | true     | string    | -            | dialog title message.                                |
-| description | true     | ReactNode | -            | body of dialog.                                      |
-| closeText   | true     | string    | -            | close button text.                                   |
-| top         | false    | number    | -            | Specifies the top position of the Dialog content.    |
-| right       | false    | number    | -            | Specifies the right position of the Dialog content.  |
-| bottom      | false    | number    | -            | Specifies the bottom position of the Dialog content. |
-| left        | false    | number    | -            | Specifies the left position of the Dialog content.   |
+| title       | ✓        | string    | -            | dialog title message.                                |
+| description | ✓        | ReactNode | -            | body of dialog.                                      |
+| closeText   | ✓        | string    | -            | close button text.                                   |
+| top         | -        | number    | -            | Specifies the top position of the Dialog content.    |
+| right       | -        | number    | -            | Specifies the right position of the Dialog content.  |
+| bottom      | -        | number    | -            | Specifies the bottom position of the Dialog content. |
+| left        | -        | number    | -            | Specifies the left position of the Dialog content.   |
 
 ## Action Dialog
 
@@ -210,14 +210,14 @@ ActionDialog
 
 | Name           | Required | Type                                         | DefaultValue | Description                                                                                                 |
 | -------------- | -------- | -------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------- |
-| isOpen         | true     | boolean                                      | -            | Whether to display a Dialog.                                                                                |
-| onClickClose   | true     | () => void                                   | -            | Handler function when clicking on close button and overlay.                                                 |
-| title          | true     | string                                       | -            | dialog title message.                                                                                       |
-| closeText      | true     | string                                       | -            | close button text.                                                                                          |
-| actionText     | true     | string                                       | -            | action button text.                                                                                         |
-| actionTheme    | true     | 'primary' &#124; 'secondary' &#124; 'danger' | -            | action button style theme.                                                                                  |
-| onClickAction  | true     | (closeDialog: () => void) => void            | -            | Handler function when clicking on action button.<br />accepts a function that closes dialog as an argument. |
-| children       | true     | ReactNode                                    | -            | body of dialog.                                                                                             |
+| isOpen         | ✓        | boolean                                      | -            | Whether to display a Dialog.                                                                                |
+| onClickClose   | ✓        | () => void                                   | -            | Handler function when clicking on close button and overlay.                                                 |
+| title          | ✓        | string                                       | -            | dialog title message.                                                                                       |
+| closeText      | ✓         | string                                       | -            | close button text.                                                                                          |
+| actionText     | ✓         | string                                       | -            | action button text.                                                                                         |
+| actionTheme    | ✓         | 'primary' &#124; 'secondary' &#124; 'danger' | -            | action button style theme.                                                                                  |
+| onClickAction  | ✓         | (closeDialog: () => void) => void            | -            | Handler function when clicking on action button.<br />accepts a function that closes dialog as an argument. |
+| children       | ✓         | ReactNode                                    | -            | body of dialog.                                                                                             |
 | actionDisabled | false    | boolean                                      | false        | whether action button should be disabled.                                                                   |
 | top            | false    | number                                       | -            | Specifies the top position of the Dialog content.                                                           |
 | right          | false    | number                                       | -            | Specifies the right position of the Dialog content.                                                         |
@@ -228,17 +228,17 @@ ActionDialogContent
 
 | Name           | Required | Type                                         | DefaultValue | Description                                                                                                 |
 | -------------- | -------- | -------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------- |
-| title          | true     | string                                       | -            | dialog title message.                                                                                       |
-| closeText      | true     | string                                       | -            | close button text.                                                                                          |
-| actionText     | true     | string                                       | -            | action button text.                                                                                         |
-| actionTheme    | true     | 'primary' &#124; 'secondary' &#124; 'danger' | -            | action button style theme.                                                                                  |
-| onClickAction  | true     | (closeDialog: () => void) => void            | -            | Handler function when clicking on action button.<br />accepts a function that closes dialog as an argument. |
-| children       | true     | ReactNode                                    | -            | body of dialog.                                                                                             |
-| actionDisabled | false    | boolean                                      | false        | whether action button should be disabled.                                                                   |
-| top            | false    | number                                       | -            | Specifies the top position of the Dialog content.                                                           |
-| right          | false    | number                                       | -            | Specifies the right position of the Dialog content.                                                         |
-| bottom         | false    | number                                       | -            | Specifies the bottom position of the Dialog content.                                                        |
-| left           | false    | number                                       | -            | Specifies the left position of the Dialog content.                                                          |
+| title          | ✓        | string                                       | -            | dialog title message.                                                                                       |
+| closeText      | ✓        | string                                       | -            | close button text.                                                                                          |
+| actionText     | ✓        | string                                       | -            | action button text.                                                                                         |
+| actionTheme    | ✓        | 'primary' &#124; 'secondary' &#124; 'danger' | -            | action button style theme.                                                                                  |
+| onClickAction  | ✓        | (closeDialog: () => void) => void            | -            | Handler function when clicking on action button.<br />accepts a function that closes dialog as an argument. |
+| children       | ✓        | ReactNode                                    | -            | body of dialog.                                                                                             |
+| actionDisabled | -        | boolean                                      | false        | whether action button should be disabled.                                                                   |
+| top            | -        | number                                       | -            | Specifies the top position of the Dialog content.                                                           |
+| right          | -        | number                                       | -            | Specifies the right position of the Dialog content.                                                         |
+| bottom         | -        | number                                       | -            | Specifies the bottom position of the Dialog content.                                                        |
+| left           | -        | number                                       | -            | Specifies the left position of the Dialog content.                                                          |
 
 ## Accessibility
 

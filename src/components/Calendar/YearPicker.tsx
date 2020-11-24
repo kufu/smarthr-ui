@@ -9,9 +9,18 @@ type Props = {
   fromYear: number
   toYear: number
   onSelectYear: (year: number) => void
+  isDisplayed: boolean
+  id: string
 }
 
-export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelectYear }) => {
+export const YearPicker: FC<Props> = ({
+  selectedYear,
+  fromYear,
+  toYear,
+  onSelectYear,
+  isDisplayed,
+  id,
+}) => {
   const themes = useTheme()
   const focusingRef = useRef<HTMLButtonElement>(null)
 
@@ -22,34 +31,50 @@ export const YearPicker: FC<Props> = ({ selectedYear, fromYear, toYear, onSelect
     .map((_, i) => fromYear + i)
 
   useEffect(() => {
-    if (focusingRef.current) {
+    if (focusingRef.current && isDisplayed) {
       focusingRef.current.focus()
       focusingRef.current.blur()
     }
-  }, [])
+  }, [isDisplayed])
 
   return (
-    <Container>
-      {yearArray.map((year) => {
-        const isThisYear = thisYear === year
-        const isSelectedYear = selectedYear === year
-        return (
-          <YearButton
-            key={year}
-            themes={themes}
-            onClick={() => onSelectYear(year)}
-            aria-pressed={isSelectedYear}
-            ref={isThisYear ? focusingRef : null}
-          >
-            <YearWrapper themes={themes} isThisYear={isThisYear} isSelected={isSelectedYear}>
-              {year}
-            </YearWrapper>
-          </YearButton>
-        )
-      })}
-    </Container>
+    <Overlay isDisplayed={isDisplayed} id={id}>
+      <Container>
+        {yearArray.map((year) => {
+          const isThisYear = thisYear === year
+          const isSelectedYear = selectedYear === year
+          return (
+            <YearButton
+              key={year}
+              themes={themes}
+              onClick={() => onSelectYear(year)}
+              aria-pressed={isSelectedYear}
+              ref={isThisYear ? focusingRef : null}
+            >
+              <YearWrapper themes={themes} isThisYear={isThisYear} isSelected={isSelectedYear}>
+                {year}
+              </YearWrapper>
+            </YearButton>
+          )
+        })}
+      </Container>
+    </Overlay>
   )
 }
+
+const Overlay = styled.div<{ isDisplayed: boolean }>`
+  ${({ isDisplayed }) =>
+    !isDisplayed &&
+    css`
+      display: none;
+    `}
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+`
 
 const Container = styled.div`
   display: flex;
@@ -60,7 +85,7 @@ const Container = styled.div`
   box-sizing: border-box;
   overflow-y: scroll;
 `
-const YearWrapper = styled.div<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
+const YearWrapper = styled.span<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
   ({ themes, isThisYear, isSelected }) => {
     const { palette, size } = themes
     return css`
@@ -94,8 +119,10 @@ const YearButton = styled(ResetButton)<{ themes: Theme }>`
   cursor: pointer;
   &:hover {
     ${YearWrapper} {
-      color: ${(props) => props.themes.palette.TEXT_BLACK};
-      background-color: #f5f5f5;
+      ${({ themes }) => css`
+        color: ${themes.palette.TEXT_BLACK};
+        background-color: ${themes.palette.BASE_GREY};
+      `}
     }
   }
 `

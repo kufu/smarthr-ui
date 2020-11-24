@@ -24,7 +24,7 @@ export const HeaderCrewDropdown: FC<Props> = ({
   return (
     <Dropdown>
       <DropdownTrigger>
-        <TriggerButton themes={theme}>
+        <TriggerButton themes={theme} type="button">
           <TriggerIcon themes={theme} role="presentation">
             <Icon name="fa-users" />
           </TriggerIcon>

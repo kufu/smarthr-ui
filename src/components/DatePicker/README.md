@@ -6,11 +6,15 @@ import { DatePicker } from 'smarthr-ui'
 
 ```tsx
 <DatePicker
-  date={date}
-  onChangeDate={handleChangeDate}
-  parsingErrorMessage="custom parsing error message"
+  value={value}
+  name={name}
+  from={from}
+  to={to}
+  disabled={disabled}
+  error={error}
   parseInput={customParser}
   formatDate={customFormatter}
+  onChangeDate={handleChangeDate}
 />
 ```
 
@@ -18,11 +22,15 @@ import { DatePicker } from 'smarthr-ui'
 
 ### DatePicker
 
-| Name                | Required | Type                                | DefaultValue           | Description                                |
-| ------------------- | -------- | ----------------------------------- | ---------------------- | ------------------------------------------ |
-| date                | -        | **Date**                            | null                   | Date value.                                |
-| onChangeDate        | -        | **(date: Date \| null) => void**    | -                      | Fired when date is changed.                |
-| parsingErrorMessage | -        | **string**                          | '非対応な入力形式です' | Error message of parsing date string.      |
-| parseInput          | -        | **(input: string) => Date \| null** | -                      | Custom parsing function for input.         |
-| formatDate          | -        | **(date: Date \| null) => string**  | -                      | Custom formatting function to displa date. |
-| className           | -        | **string**                          | -                      | `className` of component.                  |
+| Name         | Required | Type                                            | DefaultValue           | Description                                |
+| ------------ | -------- | ----------------------------------------------- | ---------------------- | ------------------------------------------ |
+| value        | -        | **string \| null**                              | null                   | `value` of input.                          |
+| name         | -        | **string**                                      | -                      | `name` of input.                           |
+| from         | -        | **Date**                                        | 1970-01-01             | Start date that is selectable.             |
+| to           | -        | **Date**                                        | today in 50 years time | End date that is selectable.               |
+| disabled     | -        | **boolean**                                     | -                      | `disabled` of input.                       |
+| error        | -        | **boolean**                                     | -                      | `error` of input.                          |
+| className    | -        | **string**                                      | -                      | `className` of component.                  |
+| parseInput   | -        | **(input: string) => Date \| null**             | -                      | Custom parsing function for input.         |
+| formatDate   | -        | **(date: Date \| null) => string**              | -                      | Custom formatting function to displa date. |
+| onChangeDate | -        | **(date: Date \| null, value: string) => void** | -                      | Fired when date is changed.                |

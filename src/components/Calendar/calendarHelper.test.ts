@@ -2,15 +2,15 @@ import { getFromDate, getMonthArray, getToDate, isBetween } from './calendarHelp
 
 describe('calendarHelper', () => {
   describe('getFromDate', () => {
-    it('returns given date when date is after 1970-01-01', () => {
+    it('returns given date when date is after 1900-01-01', () => {
       const actual = getFromDate(new Date(2020, 5, 15))
       expect(actual.getFullYear()).toBe(2020)
       expect(actual.getMonth()).toBe(5)
       expect(actual.getDate()).toBe(15)
     })
-    it('returns 1970-01-01 when date is before 1970-01-01', () => {
+    it('returns 1900-01-01 when date is before 1900-01-01', () => {
       const actual = getFromDate(new Date(1000, 5, 15))
-      expect(actual.getFullYear()).toBe(1970)
+      expect(actual.getFullYear()).toBe(1900)
       expect(actual.getMonth()).toBe(0)
       expect(actual.getDate()).toBe(1)
     })

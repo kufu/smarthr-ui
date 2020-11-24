@@ -142,6 +142,40 @@ storiesOf('Dropdown', module)
           </Box>
         </li>
         <li>
+          <Dropdown>
+            <DropdownTrigger>
+              <SecondaryButton>Nested Dropdown</SecondaryButton>
+            </DropdownTrigger>
+            <DropdownContent controllable>
+              <DropdownScrollArea>
+                <ControllableBoxMain>
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <SecondaryButton>Nested Dropdown</SecondaryButton>
+                    </DropdownTrigger>
+                    <DropdownContent controllable>
+                      <DropdownScrollArea>
+                        <ControllableBoxMain>
+                          <Dropdown>
+                            <DropdownTrigger>
+                              <SecondaryButton>Nested Dropdown</SecondaryButton>
+                            </DropdownTrigger>
+                            <DropdownContent>
+                              <DropdownScrollArea>
+                                <ListMenu />
+                              </DropdownScrollArea>
+                            </DropdownContent>
+                          </Dropdown>
+                        </ControllableBoxMain>
+                      </DropdownScrollArea>
+                    </DropdownContent>
+                  </Dropdown>
+                </ControllableBoxMain>
+              </DropdownScrollArea>
+            </DropdownContent>
+          </Dropdown>
+        </li>
+        <li>
           <Description>
             Depending on where `DropdownTrigger` is on window, the position to display
             `DropdownContent` is automatically determined.

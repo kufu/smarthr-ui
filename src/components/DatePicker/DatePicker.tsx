@@ -3,43 +3,49 @@ import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useOuterClick } from '../../hooks/useOuterClick'
+import { useGlobalKeyDown } from './useGlobalKeyDown'
+import { parseJpnDateString } from './datePickerHelper'
+
 import { Input } from '../Input'
 import { Icon } from '../Icon'
 import { Calendar } from '../Calendar'
 import { Portal } from './Portal'
-import { useOuterClick } from './useOuterClick'
-import { useGlobalKeyDown } from './useGlobalKeyDown'
-import { parseJpnDateString } from './datePickerHelper'
 
 type Props = {
-  date?: Date | null
-  onChangeDate?: (date: Date | null) => void
-  parsingErrorMessage?: string
+  value?: string | null
+  name?: string
+  from?: Date
+  to?: Date
+  disabled?: boolean
+  error?: boolean
+  className?: string
   parseInput?: (input: string) => Date | null
   formatDate?: (date: Date | null) => string
-  className?: string
+  onChangeDate?: (date: Date | null, value: string) => void
 }
 
 export const DatePicker: FC<Props> = ({
-  date = null,
-  onChangeDate,
-  parsingErrorMessage = '非対応な入力形式です',
+  value,
+  name,
+  from,
+  to,
+  disabled,
+  error,
+  className,
   parseInput,
   formatDate,
-  className,
+  onChangeDate,
 }) => {
-  const themes = useTheme()
-  const [selectedDate, setSelectedDate] = useState<Date | null>(date)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const inputWrapperRef = useRef<HTMLDivElement>(null)
-  const calendarRef = useRef<HTMLDivElement>(null)
-  const [calendarPosition, setCalendarPosition] = useState({
-    top: 0,
-    left: 0,
-  })
-  const [isInputFocused, setIsInputFocused] = useState(false)
-  const [isCalendarShown, setIsCalendarShown] = useState(false)
-  const [existsParsingError, setExistsParsingError] = useState(false)
+  const stringToDate = useCallback(
+    (str?: string | null) => {
+      if (!str) {
+        return null
+      }
+      return parseInput ? parseInput(str) : parseJpnDateString(str)
+    },
+    [parseInput],
+  )
 
   const dateToString = useCallback(
     (_date: Date | null) => {
@@ -54,25 +60,34 @@ export const DatePicker: FC<Props> = ({
     [formatDate],
   )
 
+  const themes = useTheme()
+  const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
+  const inputRef = useRef<HTMLInputElement>(null)
+  const inputWrapperRef = useRef<HTMLDivElement>(null)
+  const calendarPortalRef = useRef<HTMLDivElement>(null)
+  const [inputRect, setInputRect] = useState<DOMRect>(new DOMRect())
+  const [isInputFocused, setIsInputFocused] = useState(false)
+  const [isCalendarShown, setIsCalendarShown] = useState(false)
+
   const updateDate = useCallback(
     (newDate: Date | null) => {
-      if (newDate && isNaN(newDate.getTime())) {
-        setExistsParsingError(true)
-        return
-      }
       if (
         newDate === selectedDate ||
         (newDate && selectedDate && newDate.getTime() === selectedDate.getTime())
       ) {
+        // Do not update date if the new date is same with the old one.
         return
       }
       if (!inputRef.current) {
         return
       }
-      inputRef.current.value = dateToString(newDate)
+
+      // Do not change input value if new date is invalid date
+      if (!newDate || dayjs(newDate).isValid()) {
+        inputRef.current.value = dateToString(newDate)
+      }
       setSelectedDate(newDate)
-      setExistsParsingError(false)
-      onChangeDate && onChangeDate(newDate)
+      onChangeDate && onChangeDate(newDate, inputRef.current.value)
     },
     [selectedDate, dateToString, onChangeDate],
   )
@@ -86,21 +101,32 @@ export const DatePicker: FC<Props> = ({
       return
     }
     setIsCalendarShown(true)
-    const rect = inputWrapperRef.current.getBoundingClientRect()
-    setCalendarPosition({
-      top: rect.top + rect.height - 4,
-      left: rect.left,
-    })
+    setInputRect(inputWrapperRef.current.getBoundingClientRect())
   }, [])
 
   useEffect(() => {
-    if (date && inputRef.current) {
-      inputRef.current.value = dateToString(date)
+    if (value === undefined || !inputRef.current) {
+      return
     }
-  }, [date, dateToString])
+    /**
+     * Do not format the given value in the following cases
+     * - while input element is focused.
+     * - if the given value is not date formattable.
+     */
+    if (!isInputFocused) {
+      const newDate = stringToDate(value)
+      if (newDate && dayjs(newDate).isValid()) {
+        inputRef.current.value = dateToString(newDate)
+        setSelectedDate(newDate)
+        return
+      }
+      setSelectedDate(null)
+    }
+    inputRef.current.value = value || ''
+  }, [value, isInputFocused, dateToString, stringToDate])
 
   useOuterClick(
-    [inputWrapperRef.current, calendarRef.current],
+    [inputWrapperRef, calendarPortalRef],
     useCallback(() => {
       switchCalendarVisibility(false)
     }, [switchCalendarVisibility]),
@@ -108,10 +134,10 @@ export const DatePicker: FC<Props> = ({
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key !== 'Tab' || !inputRef.current || !calendarRef.current) {
+      if (e.key !== 'Tab' || !inputRef.current || !calendarPortalRef.current) {
         return
       }
-      const calendarButtons = calendarRef.current.querySelectorAll('button')
+      const calendarButtons = calendarPortalRef.current.querySelectorAll('button')
       if (calendarButtons.length === 0) {
         return
       }
@@ -143,13 +169,11 @@ export const DatePicker: FC<Props> = ({
   )
   useGlobalKeyDown(handleKeyDown)
 
-  const shouldShowError = !isInputFocused && !isCalendarShown && existsParsingError
-
   return (
     <Container
       className={className}
       onClick={() => {
-        if (!isCalendarShown) {
+        if (!disabled && !isCalendarShown) {
           switchCalendarVisibility(true)
         }
       }}
@@ -167,6 +191,7 @@ export const DatePicker: FC<Props> = ({
       <InputWrapper ref={inputWrapperRef}>
         <StyledInput
           type="text"
+          name={name}
           onChange={() => {
             if (isCalendarShown) {
               switchCalendarVisibility(false)
@@ -205,14 +230,17 @@ export const DatePicker: FC<Props> = ({
               </CalendarIconWrapper>
             </CalendarIconLayout>
           }
-          error={shouldShowError}
+          disabled={disabled}
+          error={error}
           ref={inputRef}
         />
       </InputWrapper>
       {isCalendarShown && (
-        <Portal {...calendarPosition}>
+        <Portal inputRect={inputRect} ref={calendarPortalRef}>
           <Calendar
             value={selectedDate || undefined}
+            from={from}
+            to={to}
             onSelectDate={(_, selected) => {
               updateDate(selected)
               requestAnimationFrame(() => {
@@ -221,15 +249,8 @@ export const DatePicker: FC<Props> = ({
               })
               inputRef.current && inputRef.current.focus()
             }}
-            ref={calendarRef}
           />
         </Portal>
-      )}
-      {shouldShowError && (
-        <Error themes={themes}>
-          <ErrorIcon name="fa-exclamation-circle" color={themes.palette.DANGER} />
-          <ErrorText>{parsingErrorMessage}</ErrorText>
-        </Error>
       )}
     </Container>
   )
@@ -263,18 +284,3 @@ const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     font-size: ${size.pxToRem(size.font.TALL)};
   `
 })
-const Error = styled.div<{ themes: Theme }>(({ themes }) => {
-  const { font, pxToRem, space } = themes.size
-  return css`
-    margin: ${pxToRem(space.XXS)} 0 0 0;
-    font-size: ${pxToRem(font.SHORT)};
-    line-height: 1;
-  `
-})
-const ErrorIcon = styled(Icon)`
-  margin-right: 0.4rem;
-  vertical-align: middle;
-`
-const ErrorText = styled.span`
-  vertical-align: middle;
-`

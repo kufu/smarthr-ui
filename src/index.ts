@@ -13,6 +13,7 @@ export {
 export { FieldSet } from './components/FieldSet'
 export { FlashMessage } from './components/FlashMessage'
 export { Input, CurrencyInput } from './components/Input'
+export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
 export { Loader } from './components/Loader'
 export {
@@ -77,11 +78,17 @@ export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { IndexNav, IndexNavItemProps } from './components/IndexNav'
 export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'
+export {
+  BackgroundJobsPanel,
+  BackgroundJobsList,
+  BackgroundJobProps,
+} from './components/BackgroundJobsPanel'
+export { MultiComboBox } from './components/MultiComboBox'
 
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
-export { defaultPalette } from './themes/createPalette'
+export { defaultPalette, shinColorPalette } from './themes/createPalette'
 export { defaultInteraction } from './themes/createInteraction'
 export { defaultFrame } from './themes/createFrame'
 export { defaultSize } from './themes/createSize'
