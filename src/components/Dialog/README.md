@@ -63,13 +63,14 @@ Dialog
 
 DialogContent
 
-| Name      | Required | Type   | DefaultValue | Description                                          |
-| --------- | -------- | ------ | ------------ | ---------------------------------------------------- |
-| top       | -        | number | -            | Specifies the top position of the Dialog content.    |
-| right     | -        | number | -            | Specifies the right position of the Dialog content.  |
-| bottom    | -        | number | -            | Specifies the bottom position of the Dialog content. |
-| left      | -        | number | -            | Specifies the left position of the Dialog content.   |
-| ariaLabel | -        | string | -            | Define a string to label the Dialog.                 |
+| Name           | Required | Type   | DefaultValue | Description                                          |
+| -------------- | -------- | ------ | ------------ | ---------------------------------------------------- |
+| top            | -        | number | -            | Specifies the top position of the Dialog content.    |
+| right          | -        | number | -            | Specifies the right position of the Dialog content.  |
+| bottom         | -        | number | -            | Specifies the bottom position of the Dialog content. |
+| left           | -        | number | -            | Specifies the left position of the Dialog content.   |
+| ariaLabel      | -        | string | -            | Define a string to label the Dialog.                 |
+| ariaLabelledby | -        | string | -            | Define the ID of another element in the DOM as the element's label. |
 
 ## MessageDialog
 
