@@ -40,7 +40,7 @@ export const CheckBox: FC<Props> = ({ mixed = false, className = '', onChange, .
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme }>`
+const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
     return css`

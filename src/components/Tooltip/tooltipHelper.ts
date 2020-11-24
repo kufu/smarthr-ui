@@ -14,7 +14,7 @@ export function getTooltipRect({
   isMultiLine: boolean
   isIcon: boolean
   outerMargin: number
-}): { top: number; left: number; width: number; height: number } {
+}): { top: number; left: number; $width: number; $height: number } {
   const top = getTop({
     parentRect,
     tooltipHeight: tooltipSize.height,
@@ -34,8 +34,8 @@ export function getTooltipRect({
     top: top + window.pageYOffset,
     left: left + window.pageXOffset,
     // If isMultiLine, width of the tooltip does not exceed width of the parent.
-    width: isMultiLine ? Math.min(parentRect.width, tooltipSize.width) : tooltipSize.width,
-    height: tooltipSize.height,
+    $width: isMultiLine ? Math.min(parentRect.width, tooltipSize.width) : tooltipSize.width,
+    $height: tooltipSize.height,
   }
 }
 

@@ -29,13 +29,13 @@ function MyApp() {
 
 | Name  | Required | Type                    | DefaultValue | Description               |
 | ----- | -------- | ----------------------- | ------------ | ------------------------- |
-| items | true     | **IndexNavItemProps[]** | -            | Array of index item props |
+| items | ✓        | **IndexNavItemProps[]** | -            | Array of index item props |
 
 ### IndexNavItemProps
 
 | Name     | Required | Type                    | DefaultValue | Description                |
 | -------- | -------- | ----------------------- | ------------ | -------------------------- |
-| label    | true     | **string**              | -            | Label of the index.        |
-| href     | true     | **string**              | -            | Href of the index anchor.  |
+| label    | ✓        | **string**              | -            | Label of the index.        |
+| href     | ✓        | **string**              | -            | Href of the index anchor.  |
 | children | -        | **IndexNavItemProps[]** | -            | Child indexes.             |
 | current  | -        | **boolean**             | -            | Flag of the current index. |

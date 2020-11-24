@@ -13,7 +13,13 @@ export const HeaderNotification: FC<Props> = ({ length, onClick }) => {
 
   return (
     <Wrapper themes={theme}>
-      <Button isZero={length === 0} onClick={onClick} aria-label="通知履歴" themes={theme}>
+      <Button
+        isZero={length === 0}
+        onClick={onClick}
+        aria-label="通知履歴"
+        themes={theme}
+        type="button"
+      >
         {length >= 10 ? '9+' : length}
       </Button>
     </Wrapper>

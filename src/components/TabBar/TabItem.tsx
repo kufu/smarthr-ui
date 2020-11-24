@@ -32,6 +32,7 @@ export const TabItem: FC<Props> = ({
       onClick={() => onClick(id)}
       disabled={disabled}
       themes={theme}
+      type="button"
     >
       {children}
     </Wrapper>
@@ -63,6 +64,7 @@ const Wrapper = styled.button<{ themes: Theme }>`
         : `background-color ${interaction.hover.animation}, color ${interaction.hover.animation}`};
 
       &.selected {
+        position: relative;
         color: ${palette.TEXT_BLACK};
         border-color: ${palette.MAIN};
       }

@@ -13,30 +13,46 @@ storiesOf('DatePicker', module)
     },
   })
   .add('all', () => {
-    const [date, setDate] = React.useState<Date | null>(new Date(2020, 0, 1))
+    const [value, setValue] = React.useState<string>(new Date(2020, 0, 1).toDateString())
     return (
       <List>
         <dt>DatePicker</dt>
         <dd>
-          <DatePicker onChangeDate={action('change date')} />
+          <DatePicker onChangeDate={action('change')} />
+        </dd>
+        <dt>Pass `from`, `to`</dt>
+        <dd>
+          <DatePicker
+            from={new Date(1901, 0, 1)}
+            to={new Date(2100, 11, 30)}
+            onChangeDate={action('change')}
+          />
         </dd>
         <dt>Custom format (ex. Date.toDateString)</dt>
         <dd>
           <DatePicker
-            date={date}
-            onChangeDate={(_date) => {
-              action('change date')(_date)
-              setDate(_date)
-            }}
+            value={value}
             formatDate={(_date) => {
               if (!_date) return ''
               return _date.toDateString()
             }}
+            onChangeDate={(_date, _value) => {
+              action('change')(_date, _value)
+              setValue(_value)
+            }}
           />
+        </dd>
+        <dt>Disabled</dt>
+        <dd>
+          <DatePicker disabled />
         </dd>
         <dt>Extending style (width: 50%)</dt>
         <dd>
-          <ExtendingDatePicker onChangeDate={action('change date')} />
+          <ExtendingDatePicker onChangeDate={action('change')} />
+        </dd>
+        <dt className="bottom">Place on the page bottom</dt>
+        <dd>
+          <DatePicker onChangeDate={action('change')} />
         </dd>
       </List>
     )
@@ -48,6 +64,9 @@ const List = styled.dl`
 
   dd {
     margin: 10px 0 20px;
+  }
+  dt.bottom {
+    margin-top: 1000px;
   }
 `
 

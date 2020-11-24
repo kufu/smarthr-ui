@@ -6,9 +6,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
-export const PrimaryButton: FC<ButtonProps> = (props) => {
+export const PrimaryButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
-  return <PrimaryStyleButton themes={theme} {...props} />
+  return <PrimaryStyleButton {...props} themes={theme} type={type} />
 }
 
 // set the displayName explicit.

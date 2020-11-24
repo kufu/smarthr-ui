@@ -25,7 +25,7 @@ export const getIconComponent = (
   )
 }
 
-const IconWrapper = styled.figure<{ themes: Theme }>`
+const IconWrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 
