@@ -28,11 +28,7 @@ export const CheckBox: FC<Props> = ({ mixed = false, className = '', onChange, .
         type="checkbox"
         onChange={handleChange}
         themes={theme}
-        {...(checked
-          ? mixed
-            ? { 'aria-checked': 'mixed' }
-            : { 'aria-checked': 'true' }
-          : { 'aria-checked': 'false' })}
+        {...(mixed && { 'aria-checked': 'mixed' })}
       />
       <Box className={boxClassName} themes={theme} />
       {checked && (
