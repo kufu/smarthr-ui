@@ -58,8 +58,8 @@ Dialog
 | right          | -        | number     | -            | Specifies the right position of the Dialog content.  |
 | bottom         | -        | number     | -            | Specifies the bottom position of the Dialog content. |
 | left           | -        | number     | -            | Specifies the left position of the Dialog content.   |
-| ariaLabel      | -        | string     | -            | Define a string to label the Dialog.                 |
-| ariaLabelledby | -        | string     | -            | Define the ID of another element in the DOM as the element's label. |
+| ariaLabel      | -        | string     | -            | Value to set for [aria-label](https://developer.mozilla.org/ja/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-label_attribute). |
+| ariaLabelledby | -        | string     | -            | Value to set for [aria-labelledby](https://developer.mozilla.org/ja/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-labelledby_attribute). |
 
 DialogContent
 
@@ -69,8 +69,8 @@ DialogContent
 | right          | -        | number | -            | Specifies the right position of the Dialog content.  |
 | bottom         | -        | number | -            | Specifies the bottom position of the Dialog content. |
 | left           | -        | number | -            | Specifies the left position of the Dialog content.   |
-| ariaLabel      | -        | string | -            | Define a string to label the Dialog.                 |
-| ariaLabelledby | -        | string | -            | Define the ID of another element in the DOM as the element's label. |
+| ariaLabel      | -        | string | -            | Value to set for [aria-label](https://developer.mozilla.org/ja/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-label_attribute). |
+| ariaLabelledby | -        | string | -            | Value to set for [aria-labelledby](https://developer.mozilla.org/ja/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-labelledby_attribute). |
 
 ## MessageDialog
 
