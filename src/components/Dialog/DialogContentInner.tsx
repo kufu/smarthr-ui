@@ -61,8 +61,8 @@ export const DialogContentInner: FC<Props> = ({
         unmountOnExit
         role="dialog"
         aria-modal="true"
-        {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
-        {...(ariaLabelledby ? { 'aria-labelledby': ariaLabelledby } : {})}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledby}
       >
         <Wrapper ref={domRef} themes={theme}>
           <Background onClick={onClickOverlay} themes={theme} />
