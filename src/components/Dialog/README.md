@@ -16,7 +16,7 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <button onClick={onClickOpen}>open dialog</button>
+      <button onClick={onClickOpen} aria-haspopup="dialog">open dialog</button>
       <Dialog isOpen={isOpen} onClickOverlay={onClickClose}>
         <p>text</p>
         <button onClick={onClickClose}>close dialog</button>
@@ -55,18 +55,22 @@ Dialog
 | isOpen         | ✓        | boolean    | -            | Whether to display a Dialog.                         |
 | onClickOverlay | -        | () => void | () => {}     | Handler function when clicking on overlay.           |
 | top            | -        | number     | -            | Specifies the top position of the Dialog content.    |
-| right          |          | number     | -            | Specifies the right position of the Dialog content.  |
+| right          | -        | number     | -            | Specifies the right position of the Dialog content.  |
 | bottom         | -        | number     | -            | Specifies the bottom position of the Dialog content. |
 | left           | -        | number     | -            | Specifies the left position of the Dialog content.   |
+| ariaLabel      | -        | string     | -            | Value to set for [aria-label](https://developer.mozilla.org/ja/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-label_attribute). |
+| ariaLabelledby | -        | string     | -            | Value to set for [aria-labelledby](https://developer.mozilla.org/ja/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-labelledby_attribute). |
 
 DialogContent
 
-| Name   | Required | Type   | DefaultValue | Description                                          |
-| ------ | -------- | ------ | ------------ | ---------------------------------------------------- |
-| top    | -        | number | -            | Specifies the top position of the Dialog content.    |
-| right  | -        | number | -            | Specifies the right position of the Dialog content.  |
-| bottom | -        | number | -            | Specifies the bottom position of the Dialog content. |
-| left   | -        | number | -            | Specifies the left position of the Dialog content.   |
+| Name           | Required | Type   | DefaultValue | Description                                          |
+| -------------- | -------- | ------ | ------------ | ---------------------------------------------------- |
+| top            | -        | number | -            | Specifies the top position of the Dialog content.    |
+| right          | -        | number | -            | Specifies the right position of the Dialog content.  |
+| bottom         | -        | number | -            | Specifies the bottom position of the Dialog content. |
+| left           | -        | number | -            | Specifies the left position of the Dialog content.   |
+| ariaLabel      | -        | string | -            | Value to set for [aria-label](https://developer.mozilla.org/ja/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-label_attribute). |
+| ariaLabelledby | -        | string | -            | Value to set for [aria-labelledby](https://developer.mozilla.org/ja/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-labelledby_attribute). |
 
 ## MessageDialog
 
@@ -84,7 +88,7 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <button onClick={onClickOpen}>open dialog</button>
+      <button onClick={onClickOpen} aria-haspopup="dialog">open dialog</button>
       <MessageDialog
         isOpen={isOpen}
         title="title message"
@@ -160,7 +164,7 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <button onClick={onClickOpen}>open dialog</button>
+      <button onClick={onClickOpen} aria-haspopup="dialog">open dialog</button>
       <ActionDialog
         isOpen={isOpen}
         title="title message"
@@ -236,3 +240,12 @@ ActionDialogContent
 | right          | -        | number                                       | -            | Specifies the right position of the Dialog content.                                                         |
 | bottom         | -        | number                                       | -            | Specifies the bottom position of the Dialog content.                                                        |
 | left           | -        | number                                       | -            | Specifies the left position of the Dialog content.                                                          |
+
+## Accessibility
+
+### ARIA
+
+- Dialog component has `role` set to `"dialog"`.
+- Dialog component has `aria-modal` set to `true`.
+- Uncontrollable Dialog has `aria-haspopup` set to `"dialog"` in the trigger. When using controllable Dialog, set `aria-haspopup` to `"dialog"` in the trigger.
+- MessageDialog and ActionDialog set the title value to the `aria-label` value. When using Dialog and DialogContent, you can specify a value for `aria-label` in `ariaLabel` props. Alternatively, you can use the aria-labelledby attribute by passing the id value in `ariaLabelledby` props.
