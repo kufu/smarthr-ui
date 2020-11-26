@@ -1,0 +1,44 @@
+name: e2e
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  setup:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
+      - name: cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: e2e-yarn-${{ hashFiles('**\yarn.lock') }}
+          restore-keys: |
+            e2e-yarn-
+      - run: yarn install
+  e2e-win-matrix:
+    needs: [setup]
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        browser: [ie]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
+      - name: use node_modules cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: e2e-yarn-${{ hashFiles('**\yarn.lock') }}
+          restore-keys: |
+            e2e-yarn-
+      - name: run
+        env:
+          CAFE_BROWSER: ${{ matrix.browser }}
+        run: yarn ts-node ./scripts/e2e.ts
