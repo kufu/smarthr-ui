@@ -21,7 +21,6 @@ storiesOf('Loader', module)
           <Inner>
             <Loader size="s" />
             <Loader size="m" />
-            <Loader size="l" />
           </Inner>
         </GrayWrapper>
 
