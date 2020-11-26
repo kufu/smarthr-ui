@@ -1,80 +1,83 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import { Meta, Story, Canvas, Description } from '@storybook/addon-docs/blocks';
 import { PrimaryButton, PrimaryButtonAnchor } from './PrimaryButton'
+import { SecondaryButton } from './SecondaryButton'
+import { DangerButton } from './DangerButton'
 import { ArgsTable } from '@storybook/addon-docs/blocks';
 import { Icon } from '../Icon'
 import { action } from '@storybook/addon-actions'
 
-<Meta title="ButtonTest/MDX" component={PrimaryButton} args={{primary: true }} />
+export const Template = (args) => (
+  <>
+    <PrimaryButton onClick={action('clicked')} {...args}>
+      {args.children ?? 'Button'}
+    </PrimaryButton>
+    <SecondaryButton onClick={action('clicked')} {...args}>
+      {args.children ?? 'SecondaryButton'}
+    </SecondaryButton>
+    <DangerButton onClick={action('clicked')} {...args}>
+      {args.children ?? 'DangerButton'}
+    </DangerButton>
+    <PrimaryButtonAnchor href="#" {...args}>
+      {args.children ?? 'Anchor'}
+    </PrimaryButtonAnchor>
+    <PrimaryButton disabled={true} {...args}>
+      {args.children ?? 'Disabled'}
+    </PrimaryButton>
+  </>
+)
 
-# Hello
+<Meta
+  title="ButtonTest/Button(MDX)"
+  component={PrimaryButton}
+  subcomponents={[PrimaryButtonAnchor, SecondaryButton, DangerButton]}
+  argTypes={{
+    prefix: { control: false },
+    suffix: { control: false },
+  }}
+/>
 
-Hello, this is an awesome button.
-- foo
-- bar
-- baz
+# Button(MDX)
 
-<ArgsTable of={PrimaryButton} />
+<Description of={PrimaryButton} />
 
 <Canvas>
   <Story name="Default">
-      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={() => {}}/>
+      {Template.bind({})}
    </Story>
 </Canvas>
 
-you can use this button with an icon
+<ArgsTable of={PrimaryButton} />
+
+You can put an icon before the label text.
+
+## Stories
+
+### With Icon
+
+You can put an icon before the label text
 
 <Canvas>
-  <Story name="WithIcon">
-    <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
-        Button
-      </PrimaryButton>
-      <PrimaryButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
-        Anchor
-      </PrimaryButtonAnchor>
-      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
-        Disabled
-      </PrimaryButton>
+  <Story name="WithIcon" args={{ prefix: <Icon size={14} name="fa-plus-circle" /> }}>
+  {Template.bind({})}
   </Story>
 </Canvas>
 
-<Canvas>
-  <Story name="WithIconLeft">
-      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
-        Button
-      </PrimaryButton>
-      <PrimaryButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
-        Anchor
-      </PrimaryButtonAnchor>
-      <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
-        Disabled
-      </PrimaryButton>
-    </Story>
-</Canvas>
+### With Icon Right
+
+You can put an icon after the label text
 
 <Canvas>
-  <Story name="WithIconRight">
-      <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
-        Button
-      </PrimaryButton>
-      <PrimaryButtonAnchor suffix={<Icon size={14} name="fa-plus-circle" />} href="#">
-        Anchor
-      </PrimaryButtonAnchor>
-      <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
-        Disabled
-      </PrimaryButton>
-    </Story>
+  <Story name="WithIconRight" args={{ suffix: <Icon size={14} name="fa-plus-circle" /> }}>
+  {Template.bind({})}
+  </Story>
 </Canvas>
 
+### Only Icon
+
+This is an icon button
+
 <Canvas>
-  <Story name="OnlyIcon">
-      <PrimaryButton onClick={action('clicked')} square>
-        <Icon size={16} name="fa-plus-circle" />
-      </PrimaryButton>
-      <PrimaryButtonAnchor href="#" square>
-        <Icon size={16} name="fa-plus-circle" />
-      </PrimaryButtonAnchor>
-      <PrimaryButton disabled={true} square>
-        <Icon size={16} name="fa-plus-circle" />
-      </PrimaryButton>
-    </Story>
+  <Story name="OnlyIcon" args={{ square: true, children: <Icon size={16} name="fa-plus-circle" /> }}>
+  {Template.bind({})}
+  </Story>
 </Canvas>

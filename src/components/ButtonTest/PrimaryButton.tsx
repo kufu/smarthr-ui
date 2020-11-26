@@ -6,6 +6,12 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
+/**
+ *
+ * A Button component.
+ *
+ * **This component is not intended for a navigation link.**
+ */
 export const PrimaryButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
   return <PrimaryStyleButton {...props} themes={theme} type={type} />

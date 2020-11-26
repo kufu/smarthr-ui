@@ -6,21 +6,10 @@ import { DangerButton } from './DangerButton'
 import { Icon } from '../Icon'
 import { Story } from '@storybook/react'
 
-const description = `A Button component.
-
-**This component is not intended for a navigation link.**
-`
 export default {
   title: 'ButtonTest/Button(CSF)',
   component: PrimaryButton,
   subcomponents: { PrimaryButtonAnchor, SecondaryButton, DangerButton },
-  parameters: {
-    docs: {
-      description: {
-        component: description,
-      },
-    },
-  },
   argTypes: {
     prefix: { control: false },
     suffix: { control: false },
