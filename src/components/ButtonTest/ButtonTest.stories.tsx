@@ -5,6 +5,11 @@ import { SecondaryButton } from './SecondaryButton'
 import { DangerButton } from './DangerButton'
 import { Icon } from '../Icon'
 import { Story } from '@storybook/react'
+
+const description = `A Button component.
+
+**This component is not intended for a navigation link.**
+`
 export default {
   title: 'ButtonTest/Button(CSF)',
   component: PrimaryButton,
@@ -12,7 +17,7 @@ export default {
   parameters: {
     docs: {
       description: {
-        component: 'A Button component',
+        component: description,
       },
     },
   },
