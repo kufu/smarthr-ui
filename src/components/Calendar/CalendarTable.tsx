@@ -135,7 +135,7 @@ const CellButton = styled(ResetButton)<{ themes: Theme }>(
     :not(:disabled) {
       &:hover {
         ${DateCell} {
-          background-color: #f5f5f5;
+          background-color: ${themes.palette.BASE_GREY};
           color: ${themes.palette.TEXT_BLACK};
         }
       }
