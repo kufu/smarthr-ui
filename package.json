@@ -64,6 +64,7 @@
     "testcafe": "^1.9.4",
     "ts-jest": "^26.4.4",
     "ts-loader": "^8.0.11",
+    "ts-node": "^9.0.0",
     "typescript": "^4.1.2",
     "webpack": "^5.0.0"
   },
@@ -127,6 +128,7 @@
     "test:update-snapshot": "jest --updateSnapshot",
     "test:build-assets": "node scripts/build-test.ts",
     "test-visual": "reg-suit run",
+    "ts-node": "ts-node --project ./tsconfig.json",
     "e2e": "testcafe"
   },
   "sideEffects": false,

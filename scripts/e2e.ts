@@ -1,4 +1,4 @@
-const { execSync, spawn } = require('child_process')
+import { spawn } from 'child_process'
 
 function envSpawn(command: string) {
   const [c, ...args] = command.split(' ')
