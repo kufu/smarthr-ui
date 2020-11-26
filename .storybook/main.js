@@ -2,13 +2,7 @@ module.exports = {
   stories: ['../**/*.stories.tsx', '../**/*.stories.mdx'],
   addons: [
     'storybook-readme',
-    {
-      name: '@storybook/addon-essentials',
-      options: {
-        // we are not ready to use them yet.
-        controls: false,
-      }
-    },
+    '@storybook/addon-essentials',
     {
       name: '@storybook/addon-storysource',
       options: {

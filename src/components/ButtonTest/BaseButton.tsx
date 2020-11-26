@@ -15,12 +15,27 @@ export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 's
 export type AnchorProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'prefix'> & BaseProps
 
 export type BaseProps = {
+  /**
+   * ## The size of button
+   * You can write this comment as Markdown
+   */
   size?: Size
-  children?: React.ReactNode
   className?: string
+  /**
+   * An element placed before the label
+   */
   prefix?: React.ReactNode
+  /**
+   * An element placed after the label
+   */
   suffix?: React.ReactNode
+  /**
+   * A boolean if the button is a square shape
+   */
   square?: boolean
+  /**
+   * A boolean if the button is a wide shape
+   */
   wide?: boolean
 }
 

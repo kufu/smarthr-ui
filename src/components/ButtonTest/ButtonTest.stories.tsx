@@ -4,82 +4,80 @@ import { PrimaryButton, PrimaryButtonAnchor } from './PrimaryButton'
 import { SecondaryButton } from './SecondaryButton'
 import { DangerButton } from './DangerButton'
 import { Icon } from '../Icon'
+import { Story } from '@storybook/react'
 export default {
-  title: 'ButtonTest/CSF',
+  title: 'ButtonTest/Button(CSF)',
   component: PrimaryButton,
-  subcomponents: { SecondaryButton, DangerButton },
+  subcomponents: { PrimaryButtonAnchor, SecondaryButton, DangerButton },
   parameters: {
     docs: {
       description: {
-        component: 'this is an awesome button!!',
+        component: 'A Button component',
       },
     },
   },
+  argTypes: {
+    prefix: { control: false },
+    suffix: { control: false },
+  },
 }
-export const Default = () => (
+const Template: Story<React.ComponentProps<typeof PrimaryButton>> = (args) => (
   <>
-    <PrimaryButton onClick={action('clicked')}>Button</PrimaryButton>
-    <PrimaryButtonAnchor href="#">Anchor</PrimaryButtonAnchor>
-    <PrimaryButton disabled={true}>Disabled</PrimaryButton>
-  </>
-)
-export const WithIcon = () => (
-  <>
-    <p>With icon (Left)</p>
-    <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
-      Button
+    <PrimaryButton onClick={action('clicked')} {...args}>
+      {args.children ?? 'Button'}
     </PrimaryButton>
-    <PrimaryButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
-      Anchor
+    <SecondaryButton onClick={action('clicked')} {...args}>
+      {args.children ?? 'SecondaryButton'}
+    </SecondaryButton>
+    <DangerButton onClick={action('clicked')} {...args}>
+      {args.children ?? 'DangerButton'}
+    </DangerButton>
+    {/* @ts-expect-error */}
+    <PrimaryButtonAnchor href="#" {...args}>
+      {args.children ?? 'Anchor'}
     </PrimaryButtonAnchor>
-    <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
-      Disabled
+    <PrimaryButton disabled={true} {...args}>
+      {args.children ?? 'Disabled'}
     </PrimaryButton>
   </>
 )
+
+export const Default = Template.bind({})
+Default.args = {}
+
+export const WithIcon = Template.bind({})
+WithIcon.args = {
+  prefix: <Icon size={14} name="fa-plus-circle" />,
+}
 WithIcon.parameters = {
   docs: {
     description: {
-      story: 'you can use this button with an icon',
+      story: 'You can put an icon before the label text',
     },
   },
 }
-export const WithIconLeft = () => (
-  <>
-    <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
-      Button
-    </PrimaryButton>
-    <PrimaryButtonAnchor prefix={<Icon size={14} name="fa-plus-circle" />} href="#">
-      Anchor
-    </PrimaryButtonAnchor>
-    <PrimaryButton prefix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
-      Disabled
-    </PrimaryButton>
-  </>
-)
-export const WithIconRight = () => (
-  <>
-    <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} onClick={action('clicked')}>
-      Button
-    </PrimaryButton>
-    <PrimaryButtonAnchor suffix={<Icon size={14} name="fa-plus-circle" />} href="#">
-      Anchor
-    </PrimaryButtonAnchor>
-    <PrimaryButton suffix={<Icon size={14} name="fa-plus-circle" />} disabled={true}>
-      Disabled
-    </PrimaryButton>
-  </>
-)
-export const OnlyIcon = () => (
-  <>
-    <PrimaryButton onClick={action('clicked')} square>
-      <Icon size={16} name="fa-plus-circle" />
-    </PrimaryButton>
-    <PrimaryButtonAnchor href="#" square>
-      <Icon size={16} name="fa-plus-circle" />
-    </PrimaryButtonAnchor>
-    <PrimaryButton disabled={true} square>
-      <Icon size={16} name="fa-plus-circle" />
-    </PrimaryButton>
-  </>
-)
+
+export const WithIconRight = Template.bind({})
+WithIconRight.args = {
+  suffix: <Icon size={14} name="fa-plus-circle" />,
+}
+WithIconRight.parameters = {
+  docs: {
+    description: {
+      story: 'You can put an icon after the label text',
+    },
+  },
+}
+
+export const OnlyIcon = Template.bind({})
+OnlyIcon.args = {
+  square: true,
+  children: <Icon size={16} name="fa-plus-circle" />,
+}
+OnlyIcon.parameters = {
+  docs: {
+    description: {
+      story: 'This is an icon button',
+    },
+  },
+}
