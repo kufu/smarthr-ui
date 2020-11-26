@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [11.2.0](https://github.com/kufu/smarthr-ui/compare/v11.1.0...v11.2.0) (2020-11-26)
+
+
+### Features
+
+* add Shin color (SHRUI-227) ([#1141](https://github.com/kufu/smarthr-ui/issues/1141)) ([#1154](https://github.com/kufu/smarthr-ui/issues/1154)) ([db08ce4](https://github.com/kufu/smarthr-ui/commit/db08ce47b2fb2eb8985b295e9470974842ee948a))
+
 ## [11.1.0](https://github.com/kufu/smarthr-ui/compare/v11.0.0-0...v11.1.0) (2020-10-28)
 
 
