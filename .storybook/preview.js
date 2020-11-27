@@ -7,6 +7,7 @@ import { addReadme } from 'storybook-readme'
 import { Reset } from 'styled-reset'
 
 import { createTheme } from '../src/themes/createTheme'
+import { shinColorPalette } from '../src/themes/createPalette'
 import { ThemeProvider } from '../src/themes/ThemeProvider'
 
 const req = require.context('../src/components', true, /.stories.tsx$/)
@@ -45,7 +46,7 @@ addDecorator(addReadme)
 addDecorator((Story, context) => {
   const shouldReset = context.globals.reset === 'styled-reset'
   return (
-    <ThemeProvider theme={createTheme()}>
+    <ThemeProvider theme={createTheme({ palette: shinColorPalette })}>
       {shouldReset && <Reset />}
       <Story />
     </ThemeProvider>
