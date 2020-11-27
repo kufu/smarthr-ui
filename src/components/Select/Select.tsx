@@ -117,8 +117,8 @@ const Wrapper = styled.div<{
     `}
     ${disabled &&
     css`
-      border-color: #f5f5f5;
-      background-color: #f5f5f5;
+      border-color: ${palette.BASE_GREY};
+      background-color: ${palette.BASE_GREY};
     `}
   `
 })

@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { Icon, Props } from './Icon'
 
@@ -316,7 +316,7 @@ const getIconList = (bg: string, color?: string, role?: string) =>
     <>
       <IconWrap key={`${color}-${name}`} bg={bg}>
         <Icon name={name} color={color} role={role && role} />
-        <IconName color={color}>{name}</IconName>
+        <IconName $color={color}>{name}</IconName>
       </IconWrap>
     </>
   ))
@@ -339,8 +339,12 @@ const IconWrap: any = styled.div`
   background-color: ${({ bg }: any) => bg};
   text-align: center;
 `
-const IconName = styled.p`
+const IconName = styled.p<{ $color?: string }>`
   margin-top: 10px;
-  color: ${({ color }: any) => color};
   font-size: 14px;
+  ${({ $color }) => {
+    return css`
+      ${$color && `color: ${$color};`}
+    `
+  }}
 `
