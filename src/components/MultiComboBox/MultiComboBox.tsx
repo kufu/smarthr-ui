@@ -52,6 +52,7 @@ export const MultiComboBox: FC<Props> = ({
     width: 0,
   })
   const [inputValue, setInputValue] = useState('')
+  const [isComposing, setIsComposing] = useState(false)
   const selectedLabels = selectedItems.map(({ label }) => label)
   const filteredItems = items.filter(({ label }) => {
     if (selectedLabels.includes(label)) return false
@@ -163,10 +164,12 @@ export const MultiComboBox: FC<Props> = ({
                 }}
                 onFocus={() => setIsFocused(true)}
                 onKeyDown={(e) => {
-                  if (isFocused && e.key === 'Tab') {
+                  if (!isComposing && isFocused && e.key === 'Tab') {
                     setIsFocused(false)
                   }
                 }}
+                onCompositionStart={() => setIsComposing(true)}
+                onCompositionEnd={() => setIsComposing(false)}
               />
             </InputWrapper>
 
