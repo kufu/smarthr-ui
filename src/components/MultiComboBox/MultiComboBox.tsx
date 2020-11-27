@@ -149,21 +149,26 @@ export const MultiComboBox: FC<Props> = ({
               </li>
             ))}
 
-            {isFocused && !disabled && (
-              <InputWrapper>
-                <Input
-                  type="text"
-                  name={name}
-                  value={inputValue}
-                  ref={inputRef}
-                  themes={theme}
-                  onChange={(e) => {
-                    if (onChange) onChange(e)
-                    setInputValue(e.currentTarget.value)
-                  }}
-                />
-              </InputWrapper>
-            )}
+            <InputWrapper className={isFocused ? undefined : 'hidden'}>
+              <Input
+                type="text"
+                name={name}
+                value={inputValue}
+                disabled={disabled}
+                ref={inputRef}
+                themes={theme}
+                onChange={(e) => {
+                  if (onChange) onChange(e)
+                  setInputValue(e.currentTarget.value)
+                }}
+                onFocus={() => setIsFocused(true)}
+                onKeyDown={(e) => {
+                  if (isFocused && e.key === 'Tab') {
+                    setIsFocused(false)
+                  }
+                }}
+              />
+            </InputWrapper>
 
             {selectedItems.length === 0 && placeholder && !isFocused && (
               <li>
@@ -327,6 +332,11 @@ const DeleteIcon = styled(Icon)`
   vertical-align: 1px;
 `
 const InputWrapper = styled.li`
+  &.hidden {
+    position: absolute;
+    opacity: 0;
+  }
+
   /* for IE */
   /* stylelint-disable-next-line length-zero-no-unit */
   flex: 1 1 0px;
@@ -342,6 +352,9 @@ const Input = styled.input<{ themes: Theme }>`
       font-size: ${size.font.TALL}px;
       box-sizing: border-box;
       outline: none;
+      &[disabled] {
+        display: none;
+      }
     `
   }}
 `
