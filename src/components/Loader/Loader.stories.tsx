@@ -33,6 +33,13 @@ storiesOf('Loader', module)
             <Loader color={theme.palette.DANGER} />
           </Inner>
         </Wrapper>
+
+        <Wrapper>
+          <Text>You can add a loading message.</Text>
+          <Inner>
+            <Loader color={theme.palette.BRAND} text="loading message" />
+          </Inner>
+        </Wrapper>
       </>
     )
   })

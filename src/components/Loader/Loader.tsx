@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 import {
   cogDuration,
@@ -19,28 +20,34 @@ type Props = {
   color?: string
   size?: 's' | 'm'
   className?: string
+  text?: string
 }
 
-export const Loader: FC<Props> = ({ color = '#fff', size = 'm', className = '' }) => (
-  <Wrapper className={className} role="status">
-    <Spinner className={size}>
-      {[...Array(4)].map((_, index) => (
-        <Line className={`line${index + 1}`} color={color} key={index}>
-          <Cog>
-            <CogInner className="cogInner left"></CogInner>
-          </Cog>
-          <Ticker>
-            <CogInner className="cogInner center"></CogInner>
-          </Ticker>
-          <Cog>
-            <CogInner className="cogInner right"></CogInner>
-          </Cog>
-        </Line>
-      ))}
-    </Spinner>
-    <VisuallyHidden>Loading</VisuallyHidden>
-  </Wrapper>
-)
+export const Loader: FC<Props> = ({ color = '#fff', size = 'm', className = '', text = '' }) => {
+  const theme = useTheme()
+
+  return (
+    <Wrapper className={className} role="status">
+      <Spinner className={size}>
+        {[...Array(4)].map((_, index) => (
+          <Line className={`line${index + 1}`} color={color} key={index}>
+            <Cog>
+              <CogInner className="cogInner left"></CogInner>
+            </Cog>
+            <Ticker>
+              <CogInner className="cogInner center"></CogInner>
+            </Ticker>
+            <Cog>
+              <CogInner className="cogInner right"></CogInner>
+            </Cog>
+          </Line>
+        ))}
+      </Spinner>
+      <Text themes={theme}>{text}</Text>
+      <VisuallyHidden>Loading</VisuallyHidden>
+    </Wrapper>
+  )
+}
 
 const Wrapper = styled.div``
 
@@ -51,6 +58,7 @@ const VisuallyHidden = styled.span`
 const Spinner = styled.div`
   position: relative;
   animation: ${containerRotate} 1600ms linear infinite;
+  margin: 0 auto;
 
   &.m {
     width: 48px;
@@ -147,4 +155,16 @@ const Ticker = styled.div`
   height: 100%;
   overflow: hidden;
   border-color: inherit;
+`
+
+const Text = styled.p<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette, size } = themes
+
+    return css`
+      color: ${palette.TEXT_BLACK};
+      margin-top: ${size.pxToRem(size.space.XS)};
+      font-size: ${size.pxToRem(size.font.TALL)};
+    `
+  }}
 `
