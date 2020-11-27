@@ -1,13 +1,16 @@
 name: e2e
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - master
 
 jobs:
   setup:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2-beta
         with:
           node-version: 12
       - name: cache node_modules
@@ -26,7 +29,7 @@ jobs:
         browser: [ie]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2-beta
         with:
           node-version: 12
       - name: use node_modules cache
