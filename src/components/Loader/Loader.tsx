@@ -9,7 +9,7 @@ type Props = {
 }
 
 export const Loader: FC<Props> = ({ color = '#fff', size = 'm', className = '' }) => (
-  <Wrapper className={`${size} ${className}`} color={color} role="status">
+  <Wrapper className={`${size} ${className}`} $color={color} role="status">
     <div />
     <div />
     <div />
@@ -28,7 +28,7 @@ const lineScale = keyframes`
   }
 `
 const Wrapper = styled.div`
-  ${({ color }: { color: string }) => css`
+  ${({ $color }: { $color: string }) => css`
     display: inline-block;
 
     &.s {
@@ -44,7 +44,7 @@ const Wrapper = styled.div`
       height: 35px;
       border-radius: 2px;
       margin: 2px;
-      background-color: ${color};
+      background-color: ${$color};
 
       &:nth-child(1) {
         animation: ${lineScale} 1s -0.4s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);

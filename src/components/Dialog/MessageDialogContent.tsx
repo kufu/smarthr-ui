@@ -25,6 +25,7 @@ export const MessageDialogContent: React.FC<MessageDialogContentProps> = ({
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
         isOpen={active}
+        ariaLabel={title}
         {...props}
       >
         <MessageDialogContentInner
