@@ -30,7 +30,7 @@ export const Loader: FC<Props> = ({ color = '#fff', size = 'm', className = '', 
     <Wrapper className={className} role="status">
       <Spinner className={size}>
         {[...Array(4)].map((_, index) => (
-          <Line className={`line${index + 1}`} color={color} key={index}>
+          <Line className={`line${index + 1}`} $color={color} key={index}>
             <Cog>
               <CogInner className="cogInner left"></CogInner>
             </Cog>
@@ -79,12 +79,12 @@ const Spinner = styled.div`
 `
 
 const Line = styled.div`
-  ${({ color }: { color: string }) => css`
+  ${({ $color }: { $color: string }) => css`
     position: absolute;
     width: 100%;
     height: 100%;
     opacity: 0;
-    border-color: ${color};
+    border-color: ${$color};
 
     &.line1 {
       /* stylelint-disable */
