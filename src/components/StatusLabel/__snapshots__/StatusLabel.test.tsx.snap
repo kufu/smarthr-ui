@@ -16,13 +16,13 @@ exports[`StatusLabel should be match snapshot 1`] = `
 }
 
 .c0.done {
-  border-color: #d6d6d6;
-  color: #767676;
+  border-color: #d6d3d0;
+  color: #76736a;
 }
 
 .c0.success {
-  border-color: #00a5ab;
-  color: #00a5ab;
+  border-color: #0077c7;
+  color: #0077c7;
 }
 
 .c0.process {
@@ -31,17 +31,17 @@ exports[`StatusLabel should be match snapshot 1`] = `
 }
 
 .c0.required {
-  border-color: #ef475b;
-  color: #ef475b;
+  border-color: #e01e5a;
+  color: #e01e5a;
 }
 
 .c0.disabled {
-  background-color: #767676;
+  background-color: #76736a;
   color: #fff;
 }
 
 .c0.must {
-  background-color: #00a5ab;
+  background-color: #0077c7;
   color: #fff;
 }
 
@@ -51,7 +51,7 @@ exports[`StatusLabel should be match snapshot 1`] = `
 }
 
 .c0.error {
-  background-color: #ef475b;
+  background-color: #e01e5a;
   color: #fff;
 }
 
