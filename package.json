@@ -8,7 +8,7 @@
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.0.4",
-    "react-icons": "^3.11.0",
+    "react-icons": "^4.1.0",
     "react-transition-group": "^4.4.1"
   },
   "devDependencies": {
