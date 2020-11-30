@@ -53,6 +53,7 @@ export const MultiComboBox: FC<Props> = ({
   })
   const [inputValue, setInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
+  const [activeOptionIndex, setActiveOptionIndex] = useState(0)
   const selectedLabels = selectedItems.map(({ label }) => label)
   const filteredItems = items.filter(({ label }) => {
     if (selectedLabels.includes(label)) return false
@@ -77,11 +78,19 @@ export const MultiComboBox: FC<Props> = ({
     .filter((item) => item)
     .join(' ')
 
+  const focus = useCallback(() => {
+    setIsFocused(true)
+    setActiveOptionIndex(0)
+  }, [])
+  const blur = useCallback(() => {
+    setIsFocused(false)
+  }, [])
+
   useOuterClick(
     [outerRef, dropdownRef],
     useCallback(() => {
-      setIsFocused(false)
-    }, []),
+      blur()
+    }, [blur]),
   )
 
   useEffect(() => {
@@ -102,6 +111,20 @@ export const MultiComboBox: FC<Props> = ({
     }
   }, [isFocused, selectedItems])
 
+  const optionCount = (dropdownContentFlags.addable ? 1 : 0) + filteredItems.length
+
+  useEffect(() => {
+    // correct the focus index in dropdown to fit actual row count
+    setActiveOptionIndex(Math.max(Math.min(activeOptionIndex, optionCount - 1), 0))
+  }, [activeOptionIndex, optionCount])
+
+  const activateOption = useCallback(
+    (index: number) => {
+      setActiveOptionIndex((index + optionCount) % optionCount)
+    },
+    [optionCount],
+  )
+
   return (
     <Container
       themes={theme}
@@ -114,13 +137,13 @@ export const MultiComboBox: FC<Props> = ({
           !disabled &&
           !isFocused
         ) {
-          setIsFocused(true)
+          focus()
         }
       }}
       onKeyDown={(e) => {
         if ((e.key === 'Escape' || e.key === 'Esc') && isFocused) {
           e.stopPropagation()
-          setIsFocused(false)
+          blur()
         }
       }}
     >
@@ -162,14 +185,44 @@ export const MultiComboBox: FC<Props> = ({
                   if (onChange) onChange(e)
                   setInputValue(e.currentTarget.value)
                 }}
-                onFocus={() => setIsFocused(true)}
-                onKeyDown={(e) => {
-                  if (!isComposing && isFocused && e.key === 'Tab') {
-                    setIsFocused(false)
-                  }
-                }}
+                onFocus={focus}
                 onCompositionStart={() => setIsComposing(true)}
                 onCompositionEnd={() => setIsComposing(false)}
+                onKeyDown={(e) => {
+                  if (isComposing) {
+                    return
+                  }
+                  switch (e.key) {
+                    case 'Tab':
+                      blur()
+                      break
+                    case 'ArrowDown':
+                    case 'Down':
+                      e.preventDefault()
+                      activateOption(activeOptionIndex + 1)
+                      break
+                    case 'ArrowUp':
+                    case 'Up':
+                      e.preventDefault()
+                      activateOption(activeOptionIndex - 1)
+                      break
+                    case 'Enter': {
+                      e.preventDefault()
+                      const { addable } = dropdownContentFlags
+                      if (addable && activeOptionIndex === 0) {
+                        onAdd && onAdd(inputValue)
+                        return
+                      }
+                      const itemIndex = activeOptionIndex - (addable ? 1 : 0)
+                      const activeItem = filteredItems[itemIndex]
+                      if (activeItem) {
+                        const { value, label } = activeItem
+                        onSelect({ value, label })
+                      }
+                      break
+                    }
+                  }
+                }}
               />
             </InputWrapper>
 
@@ -193,7 +246,12 @@ export const MultiComboBox: FC<Props> = ({
         <Portal top={dropdownStyle.top} left={dropdownStyle.left}>
           <Dropdown themes={theme} ref={dropdownRef} width={dropdownStyle.width}>
             {dropdownContentFlags.addable && (
-              <AddButton themes={theme} onClick={() => onAdd && onAdd(inputValue)}>
+              <AddButton
+                themes={theme}
+                onClick={() => onAdd && onAdd(inputValue)}
+                onMouseOver={() => setActiveOptionIndex(0)}
+                className={activeOptionIndex === 0 ? 'active' : undefined}
+              >
                 <AddIcon
                   name="fa-plus-circle"
                   size={14}
@@ -212,6 +270,14 @@ export const MultiComboBox: FC<Props> = ({
                   themes={theme}
                   disabled={itemDisabled}
                   onClick={() => onSelect({ value, label })}
+                  onMouseOver={() =>
+                    setActiveOptionIndex(i + (dropdownContentFlags.addable ? 1 : 0))
+                  }
+                  className={
+                    activeOptionIndex === i + (dropdownContentFlags.addable ? 1 : 0)
+                      ? 'active'
+                      : undefined
+                  }
                 >
                   {label}
                 </SelectButton>
@@ -432,7 +498,8 @@ const SelectButton = styled.button<{ themes: Theme }>`
       text-align: left;
       cursor: pointer;
 
-      &:hover:not([disabled]) {
+      &:hover:not([disabled]),
+      &.active {
         background-color: ${palette.COLUMN};
       }
 
