@@ -25,7 +25,7 @@ import { useOuterClick } from './useOuterClick';
 import { useGlobalKeyDown } from './useGlobalKeyDown';
 import { parseJpnDateString } from './datePickerHelper';
 export var DatePicker = function (_a) {
-    var _b = _a.value, value = _b === void 0 ? null : _b, onChangeDate = _a.onChangeDate, parseInput = _a.parseInput, formatDate = _a.formatDate, name = _a.name, disabled = _a.disabled, error = _a.error, className = _a.className;
+    var value = _a.value, onChangeDate = _a.onChangeDate, parseInput = _a.parseInput, formatDate = _a.formatDate, name = _a.name, disabled = _a.disabled, error = _a.error, className = _a.className;
     var stringToDate = useCallback(function (str) {
         if (!str) {
             return null;
@@ -42,16 +42,16 @@ export var DatePicker = function (_a) {
         return dayjs(_date).format('YYYY/MM/DD');
     }, [formatDate]);
     var themes = useTheme();
-    var _c = useState(stringToDate(value)), selectedDate = _c[0], setSelectedDate = _c[1];
+    var _b = useState(stringToDate(value)), selectedDate = _b[0], setSelectedDate = _b[1];
     var inputRef = useRef(null);
     var inputWrapperRef = useRef(null);
     var calendarRef = useRef(null);
-    var _d = useState({
+    var _c = useState({
         top: 0,
         left: 0,
-    }), calendarPosition = _d[0], setCalendarPosition = _d[1];
-    var _e = useState(false), isInputFocused = _e[0], setIsInputFocused = _e[1];
-    var _f = useState(false), isCalendarShown = _f[0], setIsCalendarShown = _f[1];
+    }), calendarPosition = _c[0], setCalendarPosition = _c[1];
+    var _d = useState(false), isInputFocused = _d[0], setIsInputFocused = _d[1];
+    var _e = useState(false), isCalendarShown = _e[0], setIsCalendarShown = _e[1];
     var updateDate = useCallback(function (newDate) {
         if (newDate === selectedDate ||
             (newDate && selectedDate && newDate.getTime() === selectedDate.getTime())) {
@@ -84,7 +84,7 @@ export var DatePicker = function (_a) {
         });
     }, []);
     useEffect(function () {
-        if (!value || !inputRef.current) {
+        if (value === undefined || !inputRef.current) {
             return;
         }
         /**
@@ -96,10 +96,12 @@ export var DatePicker = function (_a) {
             var newDate = stringToDate(value);
             if (newDate && dayjs(newDate).isValid()) {
                 inputRef.current.value = dateToString(newDate);
+                setSelectedDate(newDate);
                 return;
             }
+            setSelectedDate(null);
         }
-        inputRef.current.value = value;
+        inputRef.current.value = value || '';
     }, [value, isInputFocused, dateToString, stringToDate]);
     useOuterClick([inputWrapperRef.current, calendarRef.current], useCallback(function () {
         switchCalendarVisibility(false);
