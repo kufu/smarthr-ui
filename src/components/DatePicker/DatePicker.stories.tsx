@@ -20,6 +20,14 @@ storiesOf('DatePicker', module)
         <dd>
           <DatePicker onChangeDate={action('change')} />
         </dd>
+        <dt>Pass `from`, `to`</dt>
+        <dd>
+          <DatePicker
+            from={new Date(1901, 0, 1)}
+            to={new Date(2100, 11, 30)}
+            onChangeDate={action('change')}
+          />
+        </dd>
         <dt>Custom format (ex. Date.toDateString)</dt>
         <dd>
           <DatePicker

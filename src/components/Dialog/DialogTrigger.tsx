@@ -5,7 +5,11 @@ import { DialogContext } from './DialogWrapper'
 
 export const DialogTrigger: React.FC = ({ children }) => {
   const { onClickTrigger } = useContext(DialogContext)
-  return <Wrapper onClick={onClickTrigger}>{children}</Wrapper>
+  return (
+    <Wrapper onClick={onClickTrigger} aria-haspopup="dialog">
+      {children}
+    </Wrapper>
+  )
 }
 
 const Wrapper = styled.div`
