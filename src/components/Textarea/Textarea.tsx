@@ -27,7 +27,7 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) =
   const ref = useRef<HTMLTextAreaElement>(null)
   const currentValue = props.defaultValue || props.value
   const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
-  const widthProps = typeof width === 'number' ? `${width}px` : width
+  const textAreaWidth = typeof width === 'number' ? `${width}px` : width
 
   useEffect(() => {
     if (autoFocus && ref && ref.current) {
@@ -44,7 +44,7 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) =
       <StyledTextarea
         {...(maxLength ? { onKeyUp: handleKeyup } : {})}
         {...props}
-        $width={widthProps}
+        textAreaWidth={textAreaWidth}
         ref={ref}
         themes={theme}
       />
@@ -61,9 +61,9 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) =
   )
 }
 
-const StyledTextarea = styled.textarea<Props & { themes: Theme; $width?: string | number }>`
+const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: string | number }>`
   ${(props) => {
-    const { themes, $width = 'auto', error } = props
+    const { themes, textAreaWidth = 'auto', error } = props
     const { size, frame, palette } = themes
 
     return css`
@@ -71,7 +71,7 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; $width?: string 
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_BLACK};
       border-radius: ${frame.border.radius.m};
-      width: ${$width};
+      width: ${textAreaWidth};
       background-color: #fff;
       outline: none;
       border: ${frame.border.default};
