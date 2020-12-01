@@ -8,13 +8,14 @@ type Props = {
   items: SideNavItemProps[]
   size?: SideNavSizeType
   onClick?: OnClick
+  className?: string
 }
 
-export const SideNav: FC<Props> = ({ items, size = 'default', onClick }) => {
+export const SideNav: FC<Props> = ({ items, size = 'default', onClick, className }) => {
   const theme = useTheme()
 
   return (
-    <Wrapper themes={theme}>
+    <Wrapper themes={theme} className={className}>
       {items.map((item) => (
         <SideNavItem
           id={item.id}
