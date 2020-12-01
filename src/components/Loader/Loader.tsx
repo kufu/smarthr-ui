@@ -17,20 +17,20 @@ import {
 } from './loaderAnimation'
 
 type Props = {
-  color?: string
   size?: 's' | 'm'
   className?: string
   text?: string
+  type?: 'primary' | 'light'
 }
 
-export const Loader: FC<Props> = ({ color = '#fff', size = 'm', className = '', text = '' }) => {
+export const Loader: FC<Props> = ({ size = 'm', className = '', text = '', type = 'primary' }) => {
   const theme = useTheme()
 
   return (
     <Wrapper className={className} role="status">
       <Spinner className={size}>
         {[...Array(4)].map((_, index) => (
-          <Line className={`line${index + 1}`} $color={color} key={index}>
+          <Line className={`line${index + 1} ${type}`} key={index} themes={theme}>
             <Cog>
               <CogInner className="cogInner left"></CogInner>
             </Cog>
@@ -43,7 +43,11 @@ export const Loader: FC<Props> = ({ color = '#fff', size = 'm', className = '', 
           </Line>
         ))}
       </Spinner>
-      {text && <Text themes={theme}>{text}</Text>}
+      {text && (
+        <Text className={type} themes={theme}>
+          {text}
+        </Text>
+      )}
       <VisuallyHidden>Loading</VisuallyHidden>
     </Wrapper>
   )
@@ -78,33 +82,43 @@ const Spinner = styled.div`
   }
 `
 
-const Line = styled.div`
-  ${({ $color }: { $color: string }) => css`
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    border-color: ${$color};
+const Line = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette } = themes
 
-    &.line1 {
-      /* stylelint-disable */
-      animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
-        ${line1FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
-    }
-    &.line2 {
-      animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
-        ${line2FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
-    }
-    &.line3 {
-      animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
-        ${line3FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
-    }
-    &.line4 {
-      animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
-        ${line4FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
-    }
-    /* stylelint-enable */
-  `}
+    return css`
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+
+      &.line1 {
+        /* stylelint-disable */
+        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+          ${line1FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
+      }
+      &.line2 {
+        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+          ${line2FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
+      }
+      &.line3 {
+        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+          ${line3FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
+      }
+      &.line4 {
+        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+          ${line4FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
+      }
+      /* stylelint-enable */
+
+      &.primary {
+        border-color: ${palette.BRAND};
+      }
+      &.light {
+        border-color: #fff;
+      }
+    `
+  }}
 `
 
 const Cog = styled.div`
@@ -162,9 +176,16 @@ const Text = styled.p<{ themes: Theme }>`
     const { palette, size } = themes
 
     return css`
-      color: ${palette.TEXT_BLACK};
       margin-top: ${size.pxToRem(size.space.XS)};
       font-size: ${size.pxToRem(size.font.TALL)};
+      text-align: center;
+
+      &.primary {
+        color: ${palette.TEXT_BLACK};
+      }
+      &.light {
+        color: #fff;
+      }
     `
   }}
 `
