@@ -36,9 +36,10 @@ import { Table, Body, Head, Row, Cell } from 'smarthr-ui'
 
 ### Head
 
-| Name      | Required | Type       | DefaultValue | Description             |
-| --------- | -------- | ---------- | ------------ | ----------------------- |
-| className | -        | **string** | -            | className for component |
+| Name           | Required | Type                | DefaultValue | Description                     |
+| -------------- | -------- | ------------------- | ------------ | ------------------------------- |
+| bulkActionArea | -        | **React.ReactNode** | -            | Components on bulk action area. |
+| className      | -        | **string**          | -            | className for component         |
 
 ### Body
 
