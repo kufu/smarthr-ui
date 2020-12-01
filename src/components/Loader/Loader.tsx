@@ -53,7 +53,9 @@ export const Loader: FC<Props> = ({ size = 'm', className = '', text = '', type 
   )
 }
 
-const Wrapper = styled.div``
+const Wrapper = styled.div`
+  display: inline-block;
+`
 
 const VisuallyHidden = styled.span`
   ${VISUALLY_HIDDEN_STYLE}
