@@ -43,7 +43,7 @@ export const Loader: FC<Props> = ({ color = '#fff', size = 'm', className = '', 
           </Line>
         ))}
       </Spinner>
-      <Text themes={theme}>{text}</Text>
+      {text && <Text themes={theme}>{text}</Text>}
       <VisuallyHidden>Loading</VisuallyHidden>
     </Wrapper>
   )
