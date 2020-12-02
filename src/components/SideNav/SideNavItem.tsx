@@ -5,18 +5,14 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { isTouchDevice } from '../../libs/ua'
 import { ResetButton } from '../Button/ResetButton'
 
-export type SideNavItemProps = {
+export type SideNavSizeType = 'default' | 's'
+export type OnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
+
+type Props = {
   id: string
   title: string
   prefix?: ReactNode
   isSelected?: boolean
-}
-
-export type SideNavSizeType = 'default' | 's'
-
-export type OnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
-
-type Props = SideNavItemProps & {
   size?: SideNavSizeType
   onClick?: OnClick
 }

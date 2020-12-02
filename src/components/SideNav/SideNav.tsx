@@ -1,8 +1,10 @@
-import React, { FC } from 'react'
+import React, { ComponentProps, FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { OnClick, SideNavItem, SideNavItemProps, SideNavSizeType } from './SideNavItem'
+import { OnClick, SideNavItem, SideNavSizeType } from './SideNavItem'
+
+type SideNavItemProps = Omit<ComponentProps<typeof SideNavItem>, 'size' | 'onClick'>
 
 type Props = {
   items: SideNavItemProps[]
