@@ -10,26 +10,19 @@ type Props = {
 }
 
 export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) => {
-  const { active, onClickTrigger, contentWrapperId, triggerElementRef } = useContext(
-    DropdownContext,
-  )
+  const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
 
   useEffect(() => {
     if (!triggerElementRef.current) {
       return
     }
-    // find trigger element and add ARIA
-    const trigger = tabbable(triggerElementRef.current)[0]
-    if (trigger) {
+    // apply ARIA to all focusable elements in trigger
+    const triggers = tabbable(triggerElementRef.current, { shouldIgnoreVisibility: true })
+    triggers.forEach((trigger) => {
       trigger.setAttribute('aria-expanded', String(active))
-      trigger.setAttribute('aria-haspopup', 'dialog')
-      if (active) {
-        trigger.setAttribute('aria-controls', contentWrapperId)
-      } else {
-        trigger.removeAttribute('aria-controls')
-      }
-    }
-  }, [triggerElementRef, active, contentWrapperId])
+      trigger.setAttribute('aria-controls', contentId)
+    })
+  }, [triggerElementRef, active, contentId])
 
   return (
     <Wrapper

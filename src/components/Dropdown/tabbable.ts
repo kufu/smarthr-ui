@@ -12,8 +12,22 @@ const candidateSelectors = [
 ]
 const candidateSelector = candidateSelectors.join(',')
 
-export function tabbable(el: HTMLElement) {
+type Option = {
+  shouldIgnoreVisibility: boolean
+}
+const defaultOption: Option = {
+  shouldIgnoreVisibility: false,
+}
+
+export function tabbable(el: HTMLElement, option?: Partial<Option>) {
+  const mergedOption = {
+    ...defaultOption,
+    ...option,
+  }
   const candidates = Array.from(el.querySelectorAll<HTMLElement>(candidateSelector))
+  if (mergedOption.shouldIgnoreVisibility) {
+    return candidates
+  }
   return candidates.filter((candidate) => !isHidden(candidate))
 }
 

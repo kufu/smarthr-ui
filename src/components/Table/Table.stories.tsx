@@ -50,7 +50,7 @@ storiesOf('Table', module)
       <li>
         table
         <Table>
-          <Head>
+          <Head bulkActionArea={'Bulk action area'}>
             <Row>
               <Cell>
                 <CheckBox name="tableCheckBox" checked={false} />

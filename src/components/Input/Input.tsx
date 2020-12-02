@@ -5,6 +5,7 @@ import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react'
@@ -39,6 +40,10 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     const theme = useTheme()
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
+    const prefixRef = useRef<HTMLSpanElement>(null)
+    const suffixRef = useRef<HTMLScriptElement>(null)
+    const [prefixWidth, setPrefixWidth] = useState(0)
+    const [suffixWidth, setSuffixWidth] = useState(0)
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
@@ -61,25 +66,44 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       }
     }, [autoFocus])
 
+    useLayoutEffect(() => {
+      if (prefixRef.current) {
+        setPrefixWidth(prefixRef.current.clientWidth)
+      }
+      if (suffixRef.current) {
+        setSuffixWidth(suffixRef.current.clientWidth)
+      }
+    }, [])
+
     return (
       <Wrapper
         themes={theme}
         $width={width}
         isFocused={isFocused}
-        disabled={props.disabled}
+        $disabled={props.disabled}
         error={props.error}
         onClick={() => innerRef.current?.focus()}
         className={className}
       >
-        {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
+        {prefix && (
+          <Prefix themes={theme} ref={prefixRef}>
+            {prefix}
+          </Prefix>
+        )}
         <StyledInput
           onFocus={handleFocus}
           onBlur={handleBlur}
           {...props}
+          prefixWidth={prefixWidth}
+          suffixWidth={suffixWidth}
           ref={innerRef}
           themes={theme}
         />
-        {suffix && <Suffix themes={theme}>{suffix}</Suffix>}
+        {suffix && (
+          <Suffix themes={theme} ref={suffixRef}>
+            {suffix}
+          </Suffix>
+        )}
       </Wrapper>
     )
   },
@@ -89,15 +113,15 @@ const Wrapper = styled.span<{
   themes: Theme
   $width?: string | number
   isFocused: boolean
-  disabled?: boolean
+  $disabled?: boolean
   error?: boolean
-}>(({ themes, $width = 'auto', isFocused, disabled, error }) => {
-  const { frame, palette, size } = themes
+}>(({ themes, $width = 'auto', isFocused, $disabled, error }) => {
+  const { frame, palette } = themes
   return css`
+    position: relative;
     display: inline-flex;
     align-items: stretch;
     width: ${typeof $width === 'number' ? `${$width}px` : $width};
-    padding: 0 ${size.pxToRem(size.space.XXS)};
     background-color: #fff;
     border-radius: ${frame.border.radius.m};
     border: ${frame.border.default};
@@ -111,25 +135,30 @@ const Wrapper = styled.span<{
     css`
       border-color: ${palette.DANGER};
     `}
-    ${disabled &&
+    ${$disabled &&
     css`
       background-color: ${palette.COLUMN};
       pointer-events: none;
     `}
   `
 })
-const StyledInput = styled.input<Props & { themes: Theme }>`
+const StyledInput = styled.input<
+  Props & { prefixWidth: number; suffixWidth: number; themes: Theme }
+>`
   ${(props) => {
-    const { themes } = props
-    const { size, palette } = themes
+    const { prefixWidth, suffixWidth, themes } = props
+    const { size, palette, frame } = themes
 
     return css`
       flex-grow: 1;
       display: inline-block;
       width: 100%;
-      padding: ${size.pxToRem(size.space.XXS)} 0;
+      padding-top: ${size.pxToRem(size.space.XXS)};
+      padding-bottom: ${size.pxToRem(size.space.XXS)};
+      padding-left: ${size.pxToRem(size.space.XXS + prefixWidth)};
+      padding-right: ${size.pxToRem(size.space.XXS + suffixWidth)};
       border: none;
-      background-color: transparent;
+      border-radius: ${frame.border.radius.m};
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
@@ -150,16 +179,24 @@ const StyledInput = styled.input<Props & { themes: Theme }>`
 const Prefix = styled.span<{ themes: Theme }>(({ themes }) => {
   const { size } = themes
   return css`
-    display: inline-flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
     align-items: center;
-    margin-right: ${size.pxToRem(size.space.XXS)};
+    padding-left: ${size.pxToRem(size.space.XXS)};
   `
 })
 const Suffix = styled.span<{ themes: Theme }>(({ themes }) => {
   const { size } = themes
   return css`
-    display: inline-flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
     align-items: center;
-    margin-left: ${size.pxToRem(size.space.XXS)};
+    padding-right: ${size.pxToRem(size.space.XXS)};
   `
 })
