@@ -12,7 +12,7 @@ function envSpawn(command: string) {
 
 function startTestcafe() {
   const testcafe = envSpawn(
-    `yarn e2e ${process.env.CAFE_BROWSER} e2e/**/*.test.ts --host localhost`,
+    `yarn e2e ${process.env.CAFE_BROWSER} e2e/**/*.test.ts --host localhost --skip-js-errors`,
   )
 
   testcafe.stdout.on('data', (data) => {
