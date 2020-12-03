@@ -1,7 +1,7 @@
 import { spawn } from 'child_process'
 import waitForLocalhost from 'wait-for-localhost'
 ;(async () => {
-  const storybook = spawn('yarn', ['run', 'storybook'], { stdio: 'inherit' })
+  const storybook = spawn('yarn', ['run', 'storybook'], { stdio: 'inherit', shell: true })
   await waitForLocalhost({ port: 6006, path: '/iframe.html' })
   // waiting for webpack compile
   await new Promise((r) => setTimeout(r, 60 * 1000))
@@ -9,6 +9,7 @@ import waitForLocalhost from 'wait-for-localhost'
   const testcafeArgs = 'e2e/**/*.test.ts --host localhost --skip-js-errors'
   const testcafe = spawn('yarn', ['run', 'testcafe', browser, ...testcafeArgs.split(' ')], {
     stdio: 'inherit',
+    shell: true,
   })
   testcafe.on('close', (code) => {
     storybook.kill()
