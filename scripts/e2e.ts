@@ -1,7 +1,10 @@
 import { spawn } from 'child_process'
 import waitForLocalhost from 'wait-for-localhost'
 ;(async () => {
-  const storybook = spawn('yarn', ['run', 'storybook'], { stdio: 'inherit', shell: true })
+  const storybook = spawn('yarn', ['run', 'storybook', '--quiet'], {
+    stdio: 'inherit',
+    shell: true,
+  })
 
   await waitForLocalhost({ port: 6006, path: '/iframe.html' })
   // storybook seems to have an additional build after serving iframe.html,
