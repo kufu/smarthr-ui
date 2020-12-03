@@ -44,3 +44,5 @@ jobs:
             e2e-yarn-
       - name: run
         run: yarn e2e
+        env:
+            TESTCAFE_BROWSER: ie
