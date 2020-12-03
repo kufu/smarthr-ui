@@ -43,6 +43,4 @@ jobs:
           restore-keys: |
             e2e-yarn-
       - name: run
-        env:
-          CAFE_BROWSER: ${{ matrix.browser }}
-        run: yarn ts-node ./scripts/e2e.ts
+        run: yarn e2e

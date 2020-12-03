@@ -132,6 +132,7 @@
     "test:build-assets": "node scripts/build-test.ts",
     "test-visual": "reg-suit run",
     "testcafe": "testcafe ie e2e/**/*.test.ts --host localhost --skip-js-errors",
+    "testcafe:local": "testcafe chrome e2e/**/*.test.ts --host localhost --skip-js-errors",
     "wait-storybook": "ts-node --project ./tsconfig.json ./scripts/waitStorybook.ts",
     "e2e:storybook": "yarn storybook",
     "e2e:testcafe": "run-s wait-storybook testcafe",
