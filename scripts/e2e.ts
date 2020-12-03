@@ -5,15 +5,13 @@ import waitForLocalhost from 'wait-for-localhost'
     stdio: 'inherit',
     shell: true,
   })
-
   await waitForLocalhost({ port: 6006, path: '/iframe.html' })
-  // storybook seems to have an additional build after serving iframe.html,
-  // so we have to wait the build to avoid a timeout of testcafe.
-  // 60s is a heuristic duration, so we have to add the duration in the future.
-  await new Promise((r) => setTimeout(r, 60 * 1000))
 
   const browser = process.env.TESTCAFE_BROWSER || 'chrome'
-  const testcafeArgs = 'e2e/**/*.test.ts --host localhost --skip-js-errors'
+  // This timeout is to wait for the build of webpack because
+  // storybook seems to have an additional build after serving iframe.html
+  const timeoutMs = 5 * 60 * 1000
+  const testcafeArgs = `e2e/**/*.test.ts --host localhost --skip-js-errors --page-load-timeout ${timeoutMs}`
   const testcafe = spawn('yarn', ['run', 'testcafe', browser, ...testcafeArgs.split(' ')], {
     stdio: 'inherit',
     shell: true,
