@@ -22,6 +22,7 @@
     "@storybook/cli": "^6.1.9",
     "@storybook/react": "^6.1.9",
     "@storybook/theming": "^6.1.9",
+    "@types/detect-port": "^1.3.0",
     "@types/jest": "^26.0.15",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
@@ -67,6 +68,7 @@
     "ts-loader": "^8.0.11",
     "ts-node": "^9.0.0",
     "typescript": "^4.1.2",
+    "wait-for-localhost": "^3.3.0",
     "webpack": "^5.9.0"
   },
   "peerDependencies": {
@@ -129,8 +131,11 @@
     "test:update-snapshot": "jest --updateSnapshot",
     "test:build-assets": "node scripts/build-test.ts",
     "test-visual": "reg-suit run",
-    "ts-node": "ts-node --project ./tsconfig.json",
-    "e2e": "testcafe"
+    "testcafe": "testcafe ie e2e/**/*.test.ts --host localhost --skip-js-errors",
+    "wait-storybook": "ts-node --project ./tsconfig.json ./scripts/waitStorybook.ts",
+    "e2e:storybook": "yarn storybook",
+    "e2e:testcafe": "run-s wait-storybook testcafe",
+    "e2e": "run-p e2e:**"
   },
   "sideEffects": false,
   "typings": "lib/index.d.ts",
