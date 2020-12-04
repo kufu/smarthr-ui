@@ -27,20 +27,49 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
     left: 0,
     width: 0,
   })
-  const [activeOptionIndex, setActiveOptionIndex] = useState(0)
+  const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
 
   const addingOptionCount = flags.addable ? 1 : 0
   const optionCount = addingOptionCount + items.length
 
-  const activateOption = useCallback(
-    (index: number) => {
-      if (flags.noItems) {
+  const moveActiveOptionIndex = useCallback(
+    (currentIndex: number | null, delta: -1 | 1) => {
+      if (items.filter((item) => !item.disabled).length === 0) {
         return
       }
-      setActiveOptionIndex((index + optionCount) % optionCount)
+      const nextIndex = (() => {
+        if (currentIndex === null) {
+          if (delta === 1) {
+            return 0
+          } else {
+            return optionCount - 1
+          }
+        }
+        return (currentIndex + delta + optionCount) % optionCount
+      })()
+      const nextActive = items[nextIndex]
+      if (nextActive && nextActive.disabled) {
+        moveActiveOptionIndex(nextIndex, delta)
+        return
+      }
+      setActiveOptionIndex(nextIndex)
     },
-    [flags, optionCount],
+    [items, optionCount],
   )
+
+  useEffect(() => {
+    // correct the focus index in dropdown to fit actual row count
+    if (activeOptionIndex === null) {
+      return
+    }
+    const corrected = Math.max(Math.min(activeOptionIndex, optionCount - 1), 0)
+    const active = items[corrected - addingOptionCount]
+    if (!active || active.disabled) {
+      setActiveOptionIndex(null)
+      return
+    }
+    setActiveOptionIndex(corrected)
+  }, [activeOptionIndex, addingOptionCount, items, optionCount])
 
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -51,22 +80,25 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
         case 'ArrowDown':
         case 'Down':
           e.preventDefault()
-          activateOption(activeOptionIndex + 1)
+          moveActiveOptionIndex(activeOptionIndex, 1)
           break
         case 'ArrowUp':
         case 'Up':
           e.preventDefault()
-          activateOption(activeOptionIndex - 1)
+          moveActiveOptionIndex(activeOptionIndex, -1)
           break
         case 'Enter': {
           e.preventDefault()
+          if (activeOptionIndex === null) {
+            return
+          }
           if (flags.addable && activeOptionIndex === 0) {
             onAdd && onAdd(inputValue)
             return
           }
           const itemIndex = activeOptionIndex - addingOptionCount
           const activeItem = items[itemIndex]
-          if (activeItem) {
+          if (activeItem && !activeItem.disabled) {
             const { value, label } = activeItem
             onSelect({ value, label })
           }
@@ -75,12 +107,12 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
       }
     },
     [
-      activateOption,
       activeOptionIndex,
       addingOptionCount,
       flags.addable,
       inputValue,
       items,
+      moveActiveOptionIndex,
       onAdd,
       onSelect,
     ],
@@ -96,6 +128,9 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
     [optionIdPrefix],
   )
   const activeDescendant = (() => {
+    if (activeOptionIndex === null) {
+      return undefined
+    }
     if (flags.addable && activeOptionIndex === 0) {
       return addingButtonId
     }
@@ -105,11 +140,6 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
     }
     return undefined
   })()
-
-  useEffect(() => {
-    // correct the focus index in dropdown to fit actual row count
-    setActiveOptionIndex(Math.max(Math.min(activeOptionIndex, optionCount - 1), 0))
-  }, [activeOptionIndex, optionCount])
 
   const theme = useTheme()
   const { portalRoot } = usePortal()
@@ -178,7 +208,7 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
   return {
     renderListbox,
     setDropdownStyle,
-    resetActiveOptionIndex: () => setActiveOptionIndex(0),
+    resetActiveOptionIndex: () => setActiveOptionIndex(null),
     handleInputKeyDown,
     listboxRef,
     aria: {
@@ -237,7 +267,6 @@ const SelectButton = styled.button<{ themes: Theme }>`
       text-align: left;
       cursor: pointer;
 
-      &:hover:not([disabled]),
       &.active {
         background-color: ${palette.COLUMN};
       }
