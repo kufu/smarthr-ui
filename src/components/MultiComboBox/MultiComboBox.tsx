@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
+import { useId } from '../../hooks/useId'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 
 import { Icon } from '../Icon'
@@ -111,7 +112,8 @@ export const MultiComboBox: FC<Props> = ({
     }
   }, [isFocused, selectedItems])
 
-  const optionCount = (dropdownContentFlags.addable ? 1 : 0) + filteredItems.length
+  const addingOptionCount = dropdownContentFlags.addable ? 1 : 0
+  const optionCount = addingOptionCount + filteredItems.length
 
   useEffect(() => {
     // correct the focus index in dropdown to fit actual row count
@@ -120,10 +122,30 @@ export const MultiComboBox: FC<Props> = ({
 
   const activateOption = useCallback(
     (index: number) => {
+      if (dropdownContentFlags.noItems) {
+        return
+      }
       setActiveOptionIndex((index + optionCount) % optionCount)
     },
-    [optionCount],
+    [dropdownContentFlags, optionCount],
   )
+
+  const listboxId = useId()
+  const addingButtonId = useId()
+  const optionIdPrefix = useId()
+  function getOptionId(item: { value: string; label: string }) {
+    return `${optionIdPrefix}-${item.label}`
+  }
+  const activeDescendant = (() => {
+    if (dropdownContentFlags.addable && activeOptionIndex === 0) {
+      return addingButtonId
+    }
+    const item = filteredItems[activeOptionIndex - addingOptionCount]
+    if (item) {
+      return getOptionId(item)
+    }
+    return undefined
+  })()
 
   return (
     <Container
@@ -146,6 +168,10 @@ export const MultiComboBox: FC<Props> = ({
           blur()
         }
       }}
+      role="combobox"
+      aria-owns={listboxId}
+      aria-haspopup="listbox"
+      aria-expanded={isFocused}
     >
       <Inner>
         <InputArea themes={theme}>
@@ -166,6 +192,7 @@ export const MultiComboBox: FC<Props> = ({
                         name="fa-times-circle"
                         size={11}
                         color={theme.palette.TEXT_BLACK}
+                        visuallyHiddenText="delete"
                       />
                     </DeleteButton>
                   )}
@@ -213,7 +240,7 @@ export const MultiComboBox: FC<Props> = ({
                         onAdd && onAdd(inputValue)
                         return
                       }
-                      const itemIndex = activeOptionIndex - (addable ? 1 : 0)
+                      const itemIndex = activeOptionIndex - addingOptionCount
                       const activeItem = filteredItems[itemIndex]
                       if (activeItem) {
                         const { value, label } = activeItem
@@ -223,6 +250,9 @@ export const MultiComboBox: FC<Props> = ({
                     }
                   }
                 }}
+                aria-activedescendant={activeDescendant}
+                aria-autocomplete="list"
+                aria-controls={listboxId}
               />
             </InputWrapper>
 
@@ -244,13 +274,21 @@ export const MultiComboBox: FC<Props> = ({
 
       {isFocused && (
         <Portal top={dropdownStyle.top} left={dropdownStyle.left}>
-          <Dropdown themes={theme} ref={dropdownRef} width={dropdownStyle.width}>
+          <Dropdown
+            themes={theme}
+            ref={dropdownRef}
+            width={dropdownStyle.width}
+            id={listboxId}
+            role="listbox"
+          >
             {dropdownContentFlags.addable && (
               <AddButton
                 themes={theme}
                 onClick={() => onAdd && onAdd(inputValue)}
                 onMouseOver={() => setActiveOptionIndex(0)}
                 className={activeOptionIndex === 0 ? 'active' : undefined}
+                id={addingButtonId}
+                role="option"
               >
                 <AddIcon
                   name="fa-plus-circle"
@@ -265,30 +303,30 @@ export const MultiComboBox: FC<Props> = ({
             {dropdownContentFlags.viewList &&
               filteredItems.map(({ label, value, disabled: itemDisabled = false }, i) => (
                 <SelectButton
-                  key={i}
+                  key={label}
                   type="button"
                   themes={theme}
                   disabled={itemDisabled}
                   onClick={() => onSelect({ value, label })}
-                  onMouseOver={() =>
-                    setActiveOptionIndex(i + (dropdownContentFlags.addable ? 1 : 0))
-                  }
-                  className={
-                    activeOptionIndex === i + (dropdownContentFlags.addable ? 1 : 0)
-                      ? 'active'
-                      : undefined
-                  }
+                  onMouseOver={() => setActiveOptionIndex(i + addingOptionCount)}
+                  className={activeOptionIndex === i + addingOptionCount ? 'active' : undefined}
+                  id={getOptionId({ label, value })}
+                  role="option"
                 >
                   {label}
                 </SelectButton>
               ))}
 
             {dropdownContentFlags.duplicate && (
-              <NoItems themes={theme}>重複する選択肢は追加できません</NoItems>
+              <NoItems themes={theme} aria-live="polite">
+                重複する選択肢は追加できません
+              </NoItems>
             )}
 
             {dropdownContentFlags.noItems && (
-              <NoItems themes={theme}>一致する選択肢がありません</NoItems>
+              <NoItems themes={theme} aria-live="polite">
+                一致する選択肢がありません
+              </NoItems>
             )}
           </Dropdown>
         </Portal>
