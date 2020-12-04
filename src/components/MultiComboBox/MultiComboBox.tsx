@@ -3,11 +3,10 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { useId } from '../../hooks/useId'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 
 import { Icon } from '../Icon'
-import { Portal } from './Portal'
+import { useListbox } from './useListbox'
 
 const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
 
@@ -45,16 +44,9 @@ export const MultiComboBox: FC<Props> = ({
   const theme = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
-  const [dropdownStyle, setDropdownStyle] = useState({
-    top: 0,
-    left: 0,
-    width: 0,
-  })
   const [inputValue, setInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
-  const [activeOptionIndex, setActiveOptionIndex] = useState(0)
   const selectedLabels = selectedItems.map(({ label }) => label)
   const filteredItems = items.filter(({ label }) => {
     if (selectedLabels.includes(label)) return false
@@ -62,14 +54,29 @@ export const MultiComboBox: FC<Props> = ({
     return label.includes(inputValue)
   })
   const isDuplicate = items.map(({ label }) => label).includes(inputValue)
-  const dropdownContentFlags = {
-    addable: creatable && inputValue && !isDuplicate,
-    duplicate: creatable && inputValue && isDuplicate,
-    noItems:
-      (!creatable && filteredItems.length === 0) ||
-      (creatable && filteredItems.length === 0 && !inputValue),
-    viewList: filteredItems.length > 0,
-  }
+  const isAddable = creatable && !!inputValue && !isDuplicate
+  const {
+    renderListbox,
+    setDropdownStyle,
+    resetActiveOptionIndex,
+    handleInputKeyDown,
+    listboxRef,
+    aria,
+  } = useListbox({
+    items: filteredItems,
+    inputValue,
+    onAdd,
+    onSelect,
+    isExpanded: isFocused,
+    flags: {
+      addable: isAddable,
+      duplicate: creatable && !!inputValue && isDuplicate,
+      noItems:
+        (!creatable && filteredItems.length === 0) ||
+        (creatable && filteredItems.length === 0 && !inputValue),
+    },
+  })
+
   const classNames = [
     isFocused ? 'active' : '',
     disabled ? 'disabled' : '',
@@ -81,14 +88,14 @@ export const MultiComboBox: FC<Props> = ({
 
   const focus = useCallback(() => {
     setIsFocused(true)
-    setActiveOptionIndex(0)
-  }, [])
+    resetActiveOptionIndex()
+  }, [resetActiveOptionIndex])
   const blur = useCallback(() => {
     setIsFocused(false)
   }, [])
 
   useOuterClick(
-    [outerRef, dropdownRef],
+    [outerRef, listboxRef],
     useCallback(() => {
       blur()
     }, [blur]),
@@ -110,42 +117,7 @@ export const MultiComboBox: FC<Props> = ({
         width: outerRef.current.clientWidth,
       })
     }
-  }, [isFocused, selectedItems])
-
-  const addingOptionCount = dropdownContentFlags.addable ? 1 : 0
-  const optionCount = addingOptionCount + filteredItems.length
-
-  useEffect(() => {
-    // correct the focus index in dropdown to fit actual row count
-    setActiveOptionIndex(Math.max(Math.min(activeOptionIndex, optionCount - 1), 0))
-  }, [activeOptionIndex, optionCount])
-
-  const activateOption = useCallback(
-    (index: number) => {
-      if (dropdownContentFlags.noItems) {
-        return
-      }
-      setActiveOptionIndex((index + optionCount) % optionCount)
-    },
-    [dropdownContentFlags, optionCount],
-  )
-
-  const listboxId = useId()
-  const addingButtonId = useId()
-  const optionIdPrefix = useId()
-  function getOptionId(item: { value: string; label: string }) {
-    return `${optionIdPrefix}-${item.label}`
-  }
-  const activeDescendant = (() => {
-    if (dropdownContentFlags.addable && activeOptionIndex === 0) {
-      return addingButtonId
-    }
-    const item = filteredItems[activeOptionIndex - addingOptionCount]
-    if (item) {
-      return getOptionId(item)
-    }
-    return undefined
-  })()
+  }, [isFocused, selectedItems, setDropdownStyle])
 
   return (
     <Container
@@ -172,7 +144,7 @@ export const MultiComboBox: FC<Props> = ({
         }
       }}
       role="combobox"
-      aria-owns={listboxId}
+      aria-owns={aria.listboxId}
       aria-haspopup="listbox"
       aria-expanded={isFocused}
     >
@@ -226,40 +198,15 @@ export const MultiComboBox: FC<Props> = ({
                   if (isComposing) {
                     return
                   }
-                  switch (e.key) {
-                    case 'Tab':
-                      blur()
-                      break
-                    case 'ArrowDown':
-                    case 'Down':
-                      e.preventDefault()
-                      activateOption(activeOptionIndex + 1)
-                      break
-                    case 'ArrowUp':
-                    case 'Up':
-                      e.preventDefault()
-                      activateOption(activeOptionIndex - 1)
-                      break
-                    case 'Enter': {
-                      e.preventDefault()
-                      const { addable } = dropdownContentFlags
-                      if (addable && activeOptionIndex === 0) {
-                        onAdd && onAdd(inputValue)
-                        return
-                      }
-                      const itemIndex = activeOptionIndex - addingOptionCount
-                      const activeItem = filteredItems[itemIndex]
-                      if (activeItem) {
-                        const { value, label } = activeItem
-                        onSelect({ value, label })
-                      }
-                      break
-                    }
+                  if (e.key === 'Tab') {
+                    blur()
+                    return
                   }
+                  handleInputKeyDown(e)
                 }}
-                aria-activedescendant={activeDescendant}
+                aria-activedescendant={aria.activeDescendant}
                 aria-autocomplete="list"
-                aria-controls={listboxId}
+                aria-controls={aria.listboxId}
               />
             </InputWrapper>
 
@@ -279,64 +226,7 @@ export const MultiComboBox: FC<Props> = ({
         </Suffix>
       </Inner>
 
-      <Portal top={dropdownStyle.top} left={dropdownStyle.left}>
-        <Dropdown
-          themes={theme}
-          ref={dropdownRef}
-          width={dropdownStyle.width}
-          id={listboxId}
-          className={isFocused ? undefined : 'hidden'}
-          role="listbox"
-        >
-          {dropdownContentFlags.addable && (
-            <AddButton
-              themes={theme}
-              onClick={() => onAdd && onAdd(inputValue)}
-              onMouseOver={() => setActiveOptionIndex(0)}
-              className={activeOptionIndex === 0 ? 'active' : undefined}
-              id={addingButtonId}
-              role="option"
-            >
-              <AddIcon
-                name="fa-plus-circle"
-                size={14}
-                color={theme.palette.TEXT_LINK}
-                $theme={theme}
-              />
-              <AddText themes={theme}>「{inputValue}」を追加</AddText>
-            </AddButton>
-          )}
-
-          {dropdownContentFlags.viewList &&
-            filteredItems.map(({ label, value, disabled: itemDisabled = false }, i) => (
-              <SelectButton
-                key={label}
-                type="button"
-                themes={theme}
-                disabled={itemDisabled}
-                onClick={() => onSelect({ value, label })}
-                onMouseOver={() => setActiveOptionIndex(i + addingOptionCount)}
-                className={activeOptionIndex === i + addingOptionCount ? 'active' : undefined}
-                id={getOptionId({ label, value })}
-                role="option"
-              >
-                {label}
-              </SelectButton>
-            ))}
-
-          {dropdownContentFlags.duplicate && (
-            <NoItems themes={theme} aria-live="polite">
-              重複する選択肢は追加できません
-            </NoItems>
-          )}
-
-          {dropdownContentFlags.noItems && (
-            <NoItems themes={theme} aria-live="polite">
-              一致する選択肢がありません
-            </NoItems>
-          )}
-        </Dropdown>
-      </Portal>
+      {renderListbox()}
     </Container>
   )
 }
@@ -496,88 +386,6 @@ const Suffix = styled.div<{ themes: Theme }>`
       margin: ${size.pxToRem(size.space.XXS)} 0;
       border-left: ${frame.border.default};
       box-sizing: border-box;
-    `
-  }}
-`
-const Dropdown = styled.div<{ themes: Theme; width: number }>`
-  ${({ themes, width }) => {
-    const { size, frame } = themes
-
-    return css`
-      overflow-y: auto;
-      max-height: 300px;
-      width: ${width}px;
-      padding: ${size.pxToRem(size.space.XXS)} 0;
-      border-radius: ${frame.border.radius.m};
-      box-shadow: rgba(51, 51, 51, 0.3) 0 4px 10px 0;
-      background-color: #fff;
-      white-space: nowrap;
-      box-sizing: border-box;
-      &.hidden {
-        display: none;
-      }
-    `
-  }}
-`
-const NoItems = styled.p<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
-    return css`
-      margin: 0;
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
-      background-color: #fff;
-      font-size: ${size.font.TALL}px;
-    `
-  }}
-`
-const SelectButton = styled.button<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size, palette } = themes
-
-    return css`
-      display: block;
-      width: 100%;
-      border: none;
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
-      background-color: #fff;
-      font-size: ${size.font.TALL}px;
-      text-align: left;
-      cursor: pointer;
-
-      &:hover:not([disabled]),
-      &.active {
-        background-color: ${palette.COLUMN};
-      }
-
-      &[disabled] {
-        color: ${palette.TEXT_DISABLED};
-        cursor: not-allowed;
-      }
-    `
-  }}
-`
-const AddButton = styled(SelectButton)`
-  display: flex;
-  align-items: center;
-`
-const AddIcon = styled(Icon)<{ $theme: Theme }>`
-  ${({ $theme }) => {
-    const { size } = $theme
-
-    return css`
-      position: relative;
-      top: -1px;
-      margin-right: ${size.pxToRem(4)};
-    `
-  }}
-`
-const AddText = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { palette } = themes
-
-    return css`
-      color: ${palette.TEXT_LINK};
     `
   }}
 `
