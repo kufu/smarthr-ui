@@ -17,7 +17,9 @@ import readme from './README.md'
 const ListMenu = () => (
   <List>
     <li>
-      <button onClick={action('clicked item 1')}>Dropdown list item 1, click me.</button>
+      <button id="dropdown-list-item-1" onClick={action('clicked item 1')}>
+        Dropdown list item 1, click me.
+      </button>
     </li>
     <li>
       <button onClick={action('clicked item 2')}>Dropdown list item 2, click me.</button>
@@ -110,7 +112,7 @@ storiesOf('Dropdown', module)
           <Box>
             <Dropdown>
               <DropdownTrigger>
-                <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
+                <SecondaryButton id="dropdown-button-1">Uncontrollable Dropdown</SecondaryButton>
               </DropdownTrigger>
               <DropdownContent>
                 <DropdownScrollArea>
