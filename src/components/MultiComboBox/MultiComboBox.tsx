@@ -161,6 +161,9 @@ export const MultiComboBox: FC<Props> = ({
         ) {
           focus()
         }
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
       }}
       onKeyDown={(e) => {
         if ((e.key === 'Escape' || e.key === 'Esc') && isFocused) {
