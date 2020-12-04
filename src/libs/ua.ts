@@ -23,3 +23,7 @@ export const isPc = !isSp && !isTablet
 
 export const isTouchDevice = isSp || isTablet
 export const isMouseDevice = isPc
+export const isMobileSafari =
+  (ua.indexOf('iphone') !== -1 || ua.indexOf('ipod') !== -1) &&
+  ua.indexOf('safari') !== -1 &&
+  ua.indexOf('apple') !== -1

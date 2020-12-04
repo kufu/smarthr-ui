@@ -14646,10 +14646,10 @@ polished@^3.4.4:
   dependencies:
     "@babel/runtime" "^7.9.2"
 
-polished@^4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/polished/-/polished-4.0.4.tgz#daa04f23bd0b671438265db72f99960551c566b5"
-  integrity sha512-P2PAwmvzsGDwf1La7za64s7IPFIT4Ee287sEKV86D5i0JLLSjq9TnapyNyIMXtx2Maoq11cWLdrD8raGfCr7lw==
+polished@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/polished/-/polished-4.0.5.tgz#3f91873c8f72dec1723b3f892f57fbb22645b23d"
+  integrity sha512-BY2+LVtOHQWBQpGN4GPAKpCdsBePOdSdHTpZegRDRCrvGPkRPTx1DEC+vGjIDPhXS7W2qiBxschnwRWTFdMZag==
   dependencies:
     "@babel/runtime" "^7.12.5"
 
@@ -15395,12 +15395,10 @@ react-hotkeys@2.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-react-icons@^3.11.0:
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-3.11.0.tgz#2ca2903dfab8268ca18ebd8cc2e879921ec3b254"
-  integrity sha512-JRgiI/vdF6uyBgyZhVyYJUZAop95Sy4XDe/jmT3R/bKliFWpO/uZBwvSjWEdxwzec7SYbEPNPck0Kff2tUGM2Q==
-  dependencies:
-    camelcase "^5.0.0"
+react-icons@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.1.0.tgz#9ca9bcbf2e3aee8e86e378bb9d465842947bbfc3"
+  integrity sha512-FCXBg1JbbR0vWALXIxmFAfozHdVIJmmwCD81Jk0EKOt7Ax4AdBNcaRkWhR0NaKy9ugJgoY3fFvo0PHpte55pXg==
 
 react-inspector@^5.0.1:
   version "5.0.1"
