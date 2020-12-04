@@ -54,7 +54,6 @@ export const MultiComboBox: FC<Props> = ({
     return label.includes(inputValue)
   })
   const isDuplicate = items.map(({ label }) => label).includes(inputValue)
-  const isAddable = creatable && !!inputValue && !isDuplicate
   const {
     renderListbox,
     setDropdownStyle,
@@ -68,13 +67,11 @@ export const MultiComboBox: FC<Props> = ({
     onAdd,
     onSelect,
     isExpanded: isFocused,
-    flags: {
-      addable: isAddable,
-      duplicate: creatable && !!inputValue && isDuplicate,
-      noItems:
-        (!creatable && filteredItems.length === 0) ||
-        (creatable && filteredItems.length === 0 && !inputValue),
-    },
+    isAddable: creatable && !!inputValue && !isDuplicate,
+    isDuplicated: creatable && !!inputValue && isDuplicate,
+    hasNoMatch:
+      (!creatable && filteredItems.length === 0) ||
+      (creatable && filteredItems.length === 0 && !inputValue),
   })
 
   const classNames = [

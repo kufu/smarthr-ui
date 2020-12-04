@@ -14,14 +14,21 @@ type Option = {
   onAdd?: (label: string) => void
   onSelect: (option: { value: string; label: string }) => void
   isExpanded: boolean
-  flags: {
-    addable: boolean
-    duplicate: boolean
-    noItems: boolean
-  }
+  isAddable: boolean
+  isDuplicated: boolean
+  hasNoMatch: boolean
 }
 
-export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, flags }: Option) {
+export function useListbox({
+  items,
+  inputValue,
+  onAdd,
+  onSelect,
+  isExpanded,
+  isAddable,
+  isDuplicated,
+  hasNoMatch,
+}: Option) {
   const [dropdownStyle, setDropdownStyle] = useState({
     top: 0,
     left: 0,
@@ -29,7 +36,7 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
   })
   const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
 
-  const addingOptionCount = flags.addable ? 1 : 0
+  const addingOptionCount = isAddable ? 1 : 0
   const optionCount = addingOptionCount + items.length
 
   const moveActiveOptionIndex = useCallback(
@@ -92,7 +99,7 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
           if (activeOptionIndex === null) {
             return
           }
-          if (flags.addable && activeOptionIndex === 0) {
+          if (isAddable && activeOptionIndex === 0) {
             onAdd && onAdd(inputValue)
             return
           }
@@ -109,8 +116,8 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
     [
       activeOptionIndex,
       addingOptionCount,
-      flags.addable,
       inputValue,
+      isAddable,
       items,
       moveActiveOptionIndex,
       onAdd,
@@ -131,7 +138,7 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
     if (activeOptionIndex === null) {
       return undefined
     }
-    if (flags.addable && activeOptionIndex === 0) {
+    if (isAddable && activeOptionIndex === 0) {
       return addingButtonId
     }
     const item = items[activeOptionIndex - addingOptionCount]
@@ -155,7 +162,7 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
         ref={listboxRef}
         role="listbox"
       >
-        {flags.addable && (
+        {isAddable && (
           <AddButton
             themes={theme}
             onClick={() => onAdd && onAdd(inputValue)}
@@ -190,13 +197,13 @@ export function useListbox({ items, inputValue, onAdd, onSelect, isExpanded, fla
           </SelectButton>
         ))}
 
-        {flags.duplicate && (
+        {isDuplicated && (
           <NoItems themes={theme} aria-live="polite">
             重複する選択肢は追加できません
           </NoItems>
         )}
 
-        {flags.noItems && (
+        {hasNoMatch && (
           <NoItems themes={theme} aria-live="polite">
             一致する選択肢がありません
           </NoItems>
