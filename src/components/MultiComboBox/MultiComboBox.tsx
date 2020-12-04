@@ -215,7 +215,11 @@ export const MultiComboBox: FC<Props> = ({
                   if (onChange) onChange(e)
                   setInputValue(e.currentTarget.value)
                 }}
-                onFocus={focus}
+                onFocus={() => {
+                  if (!isFocused) {
+                    focus()
+                  }
+                }}
                 onCompositionStart={() => setIsComposing(true)}
                 onCompositionEnd={() => setIsComposing(false)}
                 onKeyDown={(e) => {
