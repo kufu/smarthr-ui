@@ -4,28 +4,13 @@ on:
   push:
     branches:
       - master
+      - refactor-add-ie-e2e-test
   pull_request:
     branches:
       - ie
 
 jobs:
-  setup:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
-        with:
-          node-version: 12
-      - name: cache node_modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: e2e-yarn-${{ hashFiles('**\yarn.lock') }}
-          restore-keys: |
-            e2e-yarn-
-      - run: yarn install
   e2e-win-matrix:
-    needs: [setup]
     runs-on: windows-latest
     strategy:
       matrix:
@@ -43,4 +28,8 @@ jobs:
           restore-keys: |
             e2e-yarn-
       - name: run
-        run: yarn e2e
+        run: |
+            yarn install
+            yarn e2e
+        env:
+            TESTCAFE_BROWSER: ${{ matrix.browser }}
