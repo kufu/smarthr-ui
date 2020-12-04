@@ -272,65 +272,64 @@ export const MultiComboBox: FC<Props> = ({
         </Suffix>
       </Inner>
 
-      {isFocused && (
-        <Portal top={dropdownStyle.top} left={dropdownStyle.left}>
-          <Dropdown
-            themes={theme}
-            ref={dropdownRef}
-            width={dropdownStyle.width}
-            id={listboxId}
-            role="listbox"
-          >
-            {dropdownContentFlags.addable && (
-              <AddButton
+      <Portal top={dropdownStyle.top} left={dropdownStyle.left}>
+        <Dropdown
+          themes={theme}
+          ref={dropdownRef}
+          width={dropdownStyle.width}
+          id={listboxId}
+          className={isFocused ? undefined : 'hidden'}
+          role="listbox"
+        >
+          {dropdownContentFlags.addable && (
+            <AddButton
+              themes={theme}
+              onClick={() => onAdd && onAdd(inputValue)}
+              onMouseOver={() => setActiveOptionIndex(0)}
+              className={activeOptionIndex === 0 ? 'active' : undefined}
+              id={addingButtonId}
+              role="option"
+            >
+              <AddIcon
+                name="fa-plus-circle"
+                size={14}
+                color={theme.palette.TEXT_LINK}
+                $theme={theme}
+              />
+              <AddText themes={theme}>「{inputValue}」を追加</AddText>
+            </AddButton>
+          )}
+
+          {dropdownContentFlags.viewList &&
+            filteredItems.map(({ label, value, disabled: itemDisabled = false }, i) => (
+              <SelectButton
+                key={label}
+                type="button"
                 themes={theme}
-                onClick={() => onAdd && onAdd(inputValue)}
-                onMouseOver={() => setActiveOptionIndex(0)}
-                className={activeOptionIndex === 0 ? 'active' : undefined}
-                id={addingButtonId}
+                disabled={itemDisabled}
+                onClick={() => onSelect({ value, label })}
+                onMouseOver={() => setActiveOptionIndex(i + addingOptionCount)}
+                className={activeOptionIndex === i + addingOptionCount ? 'active' : undefined}
+                id={getOptionId({ label, value })}
                 role="option"
               >
-                <AddIcon
-                  name="fa-plus-circle"
-                  size={14}
-                  color={theme.palette.TEXT_LINK}
-                  $theme={theme}
-                />
-                <AddText themes={theme}>「{inputValue}」を追加</AddText>
-              </AddButton>
-            )}
+                {label}
+              </SelectButton>
+            ))}
 
-            {dropdownContentFlags.viewList &&
-              filteredItems.map(({ label, value, disabled: itemDisabled = false }, i) => (
-                <SelectButton
-                  key={label}
-                  type="button"
-                  themes={theme}
-                  disabled={itemDisabled}
-                  onClick={() => onSelect({ value, label })}
-                  onMouseOver={() => setActiveOptionIndex(i + addingOptionCount)}
-                  className={activeOptionIndex === i + addingOptionCount ? 'active' : undefined}
-                  id={getOptionId({ label, value })}
-                  role="option"
-                >
-                  {label}
-                </SelectButton>
-              ))}
+          {dropdownContentFlags.duplicate && (
+            <NoItems themes={theme} aria-live="polite">
+              重複する選択肢は追加できません
+            </NoItems>
+          )}
 
-            {dropdownContentFlags.duplicate && (
-              <NoItems themes={theme} aria-live="polite">
-                重複する選択肢は追加できません
-              </NoItems>
-            )}
-
-            {dropdownContentFlags.noItems && (
-              <NoItems themes={theme} aria-live="polite">
-                一致する選択肢がありません
-              </NoItems>
-            )}
-          </Dropdown>
-        </Portal>
-      )}
+          {dropdownContentFlags.noItems && (
+            <NoItems themes={theme} aria-live="polite">
+              一致する選択肢がありません
+            </NoItems>
+          )}
+        </Dropdown>
+      </Portal>
     </Container>
   )
 }
@@ -507,6 +506,9 @@ const Dropdown = styled.div<{ themes: Theme; width: number }>`
       background-color: #fff;
       white-space: nowrap;
       box-sizing: border-box;
+      &.hidden {
+        display: none;
+      }
     `
   }}
 `
