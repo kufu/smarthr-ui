@@ -1,11 +1,9 @@
 import { Selector } from 'testcafe'
 
-import { resizeWindow } from '../helper'
-
 fixture('Dropdown')
   .page('http://localhost:6006/iframe.html?id=dropdown--all&viewMode=story')
   .beforeEach(async (t) => {
-    await resizeWindow(t)
+    await t.maximizeWindow()
   })
 
 test('sample test', async (t) => {
