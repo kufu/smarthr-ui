@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - refactor-add-ie-e2e-test
   pull_request:
     branches:
       - ie
