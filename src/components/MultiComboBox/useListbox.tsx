@@ -56,6 +56,7 @@ export function useListbox({
       })()
       const nextActive = items[nextIndex]
       if (nextActive && nextActive.disabled) {
+        // skip disabled item
         moveActiveOptionIndex(nextIndex, delta)
         return
       }
