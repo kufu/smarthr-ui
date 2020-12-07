@@ -92,13 +92,13 @@ export const DropdownContentInner: FC<Props> = ({
     <Wrapper
       ref={wrapperRef}
       contentBox={contentBox}
-      scrollable={scrollable}
       className={`${className} ${isActive ? 'active' : ''}`}
-      controllable={controllable}
       themes={theme}
     >
       {controllable ? (
-        children
+        <ControllableWrapper scrollable={scrollable} contentBox={contentBox}>
+          {children}
+        </ControllableWrapper>
       ) : (
         <DropdownContentInnerContext.Provider value={{ maxHeight: contentBox.maxHeight }}>
           <DropdownCloser>{children}</DropdownCloser>
@@ -111,13 +111,12 @@ export const DropdownContentInner: FC<Props> = ({
 const Wrapper = styled.div<{
   themes: Theme
   contentBox: ContentBoxStyle
-  scrollable: boolean
-  controllable: boolean
 }>`
-  ${({ contentBox, themes, scrollable, controllable }) => {
+  ${({ contentBox, themes }) => {
     const { frame, zIndex } = themes
 
     return css`
+      display: flex;
       visibility: hidden;
       z-index: ${zIndex.OVERLAP};
       position: absolute;
@@ -128,22 +127,25 @@ const Wrapper = styled.div<{
       background-color: #fff;
       white-space: nowrap;
 
-      ${controllable
-        ? `
-          display: flex;
-          flex-direction: column;
-          `
-        : ''}
-
-      ${contentBox.maxHeight && scrollable && controllable
+      &.active {
+        visibility: visible;
+      }
+    `
+  }}
+`
+const ControllableWrapper = styled.div<{
+  contentBox: ContentBoxStyle
+  scrollable: boolean
+}>`
+  ${({ contentBox, scrollable }) => {
+    return css`
+      display: flex;
+      flex-direction: column;
+      ${contentBox.maxHeight && scrollable
         ? `
           max-height: ${contentBox.maxHeight};
           `
         : ''}
-
-      &.active {
-        visibility: visible;
-      }
     `
   }}
 `
