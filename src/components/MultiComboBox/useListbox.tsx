@@ -81,9 +81,6 @@ export function useListbox({
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       switch (e.key) {
-        case 'Tab':
-          blur()
-          break
         case 'ArrowDown':
         case 'Down':
           e.preventDefault()
