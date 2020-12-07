@@ -136,7 +136,6 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
           focusable={false}
           height={10}
           role="img"
-          size={10}
           stroke="currentColor"
           strokeWidth="0"
           style={
