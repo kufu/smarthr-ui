@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FC, SelectHTMLAttributes, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isTouchDevice } from '../../libs/ua'
+import { isMobileSafari, isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Icon } from '../Icon'
@@ -75,7 +75,7 @@ export const Select: FC<Props> = ({
         })}
         {
           // Support for not omitting labels in Mobile Safari
-          <BlankOptgroup />
+          isMobileSafari && <BlankOptgroup />
         }
       </SelectBox>
       <IconWrap>
@@ -117,8 +117,8 @@ const Wrapper = styled.div<{
     `}
     ${disabled &&
     css`
-      border-color: ${palette.BASE_GREY};
       background-color: ${palette.BASE_GREY};
+      color: ${palette.TEXT_DISABLED};
     `}
   `
 })
