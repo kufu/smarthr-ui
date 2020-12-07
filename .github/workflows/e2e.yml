@@ -3,7 +3,7 @@ name: e2e
 on:
   pull_request:
     branches:
-      - master
+      - ie
 
 jobs:
   e2e-win-matrix:
