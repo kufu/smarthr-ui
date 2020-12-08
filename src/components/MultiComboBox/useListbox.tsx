@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
@@ -8,7 +8,7 @@ import { useId } from '../../hooks/useId'
 
 import { Icon } from '../Icon'
 
-type Option = {
+type Args = {
   items: Array<{ value: string; label: string; disabled?: boolean }>
   inputValue: string
   onAdd?: (label: string) => void
@@ -17,6 +17,13 @@ type Option = {
   isAddable: boolean
   isDuplicated: boolean
   hasNoMatch: boolean
+}
+
+type Option = {
+  label: string
+  value: string
+  disabled?: boolean
+  isAdding?: boolean
 }
 
 export function useListbox({
@@ -28,7 +35,7 @@ export function useListbox({
   isAddable,
   isDuplicated,
   hasNoMatch,
-}: Option) {
+}: Args) {
   const [dropdownStyle, setDropdownStyle] = useState({
     top: 0,
     left: 0,
@@ -36,12 +43,16 @@ export function useListbox({
   })
   const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
 
-  const addingOptionCount = isAddable ? 1 : 0
-  const optionCount = addingOptionCount + items.length
+  const options: Option[] = useMemo(() => {
+    if (isAddable) {
+      return [{ label: inputValue, value: inputValue, isAdding: true }, ...items]
+    }
+    return items
+  }, [inputValue, isAddable, items])
 
   const moveActiveOptionIndex = useCallback(
     (currentIndex: number | null, delta: -1 | 1) => {
-      if (items.filter((item) => !item.disabled).length === 0) {
+      if (options.filter((option) => !option.disabled).length === 0) {
         return
       }
       const nextIndex = (() => {
@@ -49,12 +60,12 @@ export function useListbox({
           if (delta === 1) {
             return 0
           } else {
-            return optionCount - 1
+            return options.length - 1
           }
         }
-        return (currentIndex + delta + optionCount) % optionCount
+        return (currentIndex + delta + options.length) % options.length
       })()
-      const nextActive = items[nextIndex]
+      const nextActive = options[nextIndex]
       if (nextActive && nextActive.disabled) {
         // skip disabled item
         moveActiveOptionIndex(nextIndex, delta)
@@ -62,7 +73,7 @@ export function useListbox({
       }
       setActiveOptionIndex(nextIndex)
     },
-    [items, optionCount],
+    [options],
   )
 
   useEffect(() => {
@@ -70,14 +81,14 @@ export function useListbox({
     if (activeOptionIndex === null) {
       return
     }
-    const corrected = Math.max(Math.min(activeOptionIndex, optionCount - 1), 0)
-    const active = items[corrected - addingOptionCount]
+    const corrected = Math.max(Math.min(activeOptionIndex, options.length - 1), 0)
+    const active = options[corrected]
     if (!active || active.disabled) {
       setActiveOptionIndex(null)
       return
     }
     setActiveOptionIndex(corrected)
-  }, [activeOptionIndex, addingOptionCount, items, optionCount])
+  }, [activeOptionIndex, options])
 
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -97,51 +108,41 @@ export function useListbox({
           if (activeOptionIndex === null) {
             return
           }
-          if (isAddable && activeOptionIndex === 0) {
-            onAdd && onAdd(inputValue)
+          const activeOption = options[activeOptionIndex]
+          if (activeOption.isAdding) {
+            onAdd && onAdd(activeOption.label)
             return
           }
-          const itemIndex = activeOptionIndex - addingOptionCount
-          const activeItem = items[itemIndex]
-          if (activeItem && !activeItem.disabled) {
-            const { value, label } = activeItem
+          if (activeOption && !activeOption.disabled) {
+            const { value, label } = activeOption
             onSelect({ value, label })
           }
           break
         }
       }
     },
-    [
-      activeOptionIndex,
-      addingOptionCount,
-      inputValue,
-      isAddable,
-      items,
-      moveActiveOptionIndex,
-      onAdd,
-      onSelect,
-    ],
+    [activeOptionIndex, moveActiveOptionIndex, onAdd, onSelect, options],
   )
 
   const listboxId = useId()
   const addingButtonId = useId()
   const optionIdPrefix = useId()
   const getOptionId = useCallback(
-    (item: { value: string; label: string }) => {
-      return `${optionIdPrefix}-${item.label}`
+    (option: Option) => {
+      if (option.isAdding) {
+        return addingButtonId
+      }
+      return `${optionIdPrefix}-${option.label}`
     },
-    [optionIdPrefix],
+    [addingButtonId, optionIdPrefix],
   )
   const activeDescendant = (() => {
     if (activeOptionIndex === null) {
       return undefined
     }
-    if (isAddable && activeOptionIndex === 0) {
-      return addingButtonId
-    }
-    const item = items[activeOptionIndex - addingOptionCount]
-    if (item) {
-      return getOptionId(item)
+    const activeOption = options[activeOptionIndex]
+    if (activeOption) {
+      return getOptionId(activeOption)
     }
     return undefined
   })()
@@ -160,40 +161,46 @@ export function useListbox({
         ref={listboxRef}
         role="listbox"
       >
-        {isAddable && (
-          <AddButton
-            themes={theme}
-            onClick={() => onAdd && onAdd(inputValue)}
-            onMouseOver={() => setActiveOptionIndex(0)}
-            className={activeOptionIndex === 0 ? 'active' : undefined}
-            id={addingButtonId}
-            role="option"
-          >
-            <AddIcon
-              name="fa-plus-circle"
-              size={14}
-              color={theme.palette.TEXT_LINK}
-              $theme={theme}
-            />
-            <AddText themes={theme}>「{inputValue}」を追加</AddText>
-          </AddButton>
-        )}
-
-        {items.map(({ label, value, disabled: itemDisabled = false }, i) => (
-          <SelectButton
-            key={label}
-            type="button"
-            themes={theme}
-            disabled={itemDisabled}
-            onClick={() => onSelect({ value, label })}
-            onMouseOver={() => setActiveOptionIndex(i + addingOptionCount)}
-            className={activeOptionIndex === i + addingOptionCount ? 'active' : undefined}
-            id={getOptionId({ label, value })}
-            role="option"
-          >
-            {label}
-          </SelectButton>
-        ))}
+        {options.map((option, i) => {
+          const activeClass = activeOptionIndex === i ? 'active' : undefined
+          const { label, disabled, isAdding } = option
+          if (isAdding) {
+            return (
+              <AddButton
+                key={`add-${label}`}
+                themes={theme}
+                onClick={() => onAdd && onAdd(label)}
+                onMouseOver={() => setActiveOptionIndex(0)}
+                className={activeClass}
+                id={addingButtonId}
+                role="option"
+              >
+                <AddIcon
+                  name="fa-plus-circle"
+                  size={14}
+                  color={theme.palette.TEXT_LINK}
+                  $theme={theme}
+                />
+                <AddText themes={theme}>「{label}」を追加</AddText>
+              </AddButton>
+            )
+          }
+          return (
+            <SelectButton
+              key={`item-${label}`}
+              type="button"
+              themes={theme}
+              disabled={disabled}
+              onClick={() => onSelect(option)}
+              onMouseOver={() => setActiveOptionIndex(i)}
+              className={activeClass}
+              id={getOptionId(option)}
+              role="option"
+            >
+              {label}
+            </SelectButton>
+          )
+        })}
 
         {isDuplicated && (
           <NoItems themes={theme} aria-live="polite">
