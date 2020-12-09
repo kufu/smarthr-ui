@@ -4,7 +4,7 @@
   "version": "11.2.0",
   "author": "SmartHR-UI Team",
   "dependencies": {
-    "dayjs": "^1.9.6",
+    "dayjs": "^1.9.7",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.0.5",
@@ -33,7 +33,7 @@
     "@types/styled-components": "^5.1.4",
     "babel-loader": "^8.2.2",
     "ecma-version-validator-webpack-plugin": "^1.1.0",
-    "eslint": "^7.14.0",
+    "eslint": "^7.15.0",
     "eslint-config-smarthr": "^5.0.0",
     "fixpack": "^3.0.6",
     "husky": "^4.3.0",
@@ -56,7 +56,7 @@
     "storybook-readme": "^5.0.9",
     "storycap": "^3.0.1",
     "styled-components": "^5.2.1",
-    "styled-reset": "^4.3.1",
+    "styled-reset": "^4.3.2",
     "stylelint": "^13.7.2",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-smarthr": "^1.0.0",
@@ -68,7 +68,7 @@
     "ts-node": "^9.1.0",
     "typescript": "^4.1.2",
     "wait-for-localhost": "^3.3.0",
-    "webpack": "^5.9.0"
+    "webpack": "^5.10.0"
   },
   "peerDependencies": {
     "react": "16.13.0 || ^17.0.1",
