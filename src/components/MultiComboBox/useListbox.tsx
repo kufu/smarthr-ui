@@ -157,9 +157,9 @@ export function useListbox({
         {...dropdownStyle}
         themes={theme}
         id={listboxId}
-        className={isExpanded ? undefined : 'hidden'}
         ref={listboxRef}
         role="listbox"
+        aria-hidden={!isExpanded}
       >
         {options.map((option, i) => {
           const activeClass = activeOptionIndex === i ? 'active' : undefined
@@ -246,7 +246,7 @@ const Container = styled.div<{ top: number; left: number; width: number; themes:
       background-color: #fff;
       white-space: nowrap;
       box-sizing: border-box;
-      &.hidden {
+      &[aria-hidden='true'] {
         display: none;
       }
       z-index: ${themes.zIndex.OVERLAP};
