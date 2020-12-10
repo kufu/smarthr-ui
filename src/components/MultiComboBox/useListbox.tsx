@@ -162,7 +162,7 @@ export function useListbox({
         aria-hidden={!isExpanded}
       >
         {options.map((option, i) => {
-          const activeClass = activeOptionIndex === i ? 'active' : undefined
+          const isSelected = activeOptionIndex === i
           const { label, disabled, isAdding } = option
           if (isAdding) {
             return (
@@ -171,9 +171,9 @@ export function useListbox({
                 themes={theme}
                 onClick={() => onAdd && onAdd(label)}
                 onMouseOver={() => setActiveOptionIndex(0)}
-                className={activeClass}
                 id={addingButtonId}
                 role="option"
+                aria-selected={isSelected}
               >
                 <AddIcon
                   name="fa-plus-circle"
@@ -193,9 +193,9 @@ export function useListbox({
               disabled={disabled}
               onClick={() => onSelect(option)}
               onMouseOver={() => setActiveOptionIndex(i)}
-              className={activeClass}
               id={getOptionId(option)}
               role="option"
+              aria-selected={isSelected}
             >
               {label}
             </SelectButton>
@@ -279,7 +279,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
       text-align: left;
       cursor: pointer;
 
-      &.active {
+      &[aria-selected='true'] {
         background-color: ${palette.COLUMN};
       }
 
