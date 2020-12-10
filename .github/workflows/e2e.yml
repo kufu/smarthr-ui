@@ -1,0 +1,31 @@
+name: e2e
+
+on:
+  pull_request:
+    branches:
+      - ie
+
+jobs:
+  e2e-win-matrix:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        browser: [ie]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: 12
+      - name: use node_modules cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: e2e-yarn-${{ hashFiles('**\yarn.lock') }}
+          restore-keys: |
+            e2e-yarn-
+      - name: run
+        run: |
+            yarn install
+            yarn e2e
+        env:
+            TESTCAFE_BROWSER: ${{ matrix.browser }}

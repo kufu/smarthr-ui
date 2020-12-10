@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FC, SelectHTMLAttributes, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isTouchDevice } from '../../libs/ua'
+import { isMobileSafari, isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Icon } from '../Icon'
@@ -19,6 +19,8 @@ type Props = SelectHTMLAttributes<HTMLSelectElement> & {
   options: Array<Option | Optgroup>
   error?: boolean
   width?: number | string
+  hasBlank?: boolean
+  blankLabel?: string
 }
 
 export const Select: FC<Props> = ({
@@ -26,10 +28,13 @@ export const Select: FC<Props> = ({
   onChange,
   error = false,
   width = 260,
+  hasBlank = false,
+  blankLabel = '選択してください',
   className = '',
   ...props
 }) => {
   const theme = useTheme()
+  const newOptions = hasBlank ? [{ label: blankLabel, value: '' }, ...options] : options
   const widthStyle = typeof width === 'number' ? `${width}px` : width
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -47,7 +52,7 @@ export const Select: FC<Props> = ({
       themes={theme}
     >
       <SelectBox onChange={handleChange} themes={theme} {...props}>
-        {options.map((option) => {
+        {newOptions.map((option) => {
           if ('value' in option) {
             return (
               <option key={option.value} value={option.value}>
@@ -70,7 +75,7 @@ export const Select: FC<Props> = ({
         })}
         {
           // Support for not omitting labels in Mobile Safari
-          <BlankOptgroup />
+          isMobileSafari && <BlankOptgroup />
         }
       </SelectBox>
       <IconWrap>
@@ -112,8 +117,8 @@ const Wrapper = styled.div<{
     `}
     ${disabled &&
     css`
-      border-color: #f5f5f5;
-      background-color: #f5f5f5;
+      background-color: ${palette.BASE_GREY};
+      color: ${palette.TEXT_DISABLED};
     `}
   `
 })

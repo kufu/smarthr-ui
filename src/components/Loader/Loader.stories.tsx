@@ -11,44 +11,66 @@ storiesOf('Loader', module)
       sidebar: readme,
     },
   })
-  .add('all', () => (
-    <>
-      <GrayWrapper>
-        <Text>You can choose the size.</Text>
-        <Inner>
-          <Loader size="s" />
-          <Loader size="m" />
-          <Loader size="l" />
-        </Inner>
-      </GrayWrapper>
+  .add('all', () => {
+    return (
+      <>
+        <Wrapper>
+          <Text>Primary</Text>
+          <List>
+            <dt>Default</dt>
+            <dd>
+              <Loader />
+            </dd>
+            <dt>Small</dt>
+            <dd>
+              <Loader size="s" />
+            </dd>
+            <dt>With text</dt>
+            <dd>
+              <Loader text="loading message" />
+            </dd>
+          </List>
+        </Wrapper>
 
-      <Wrapper>
-        <Text>You can choose the color.</Text>
-        <Inner>
-          <Loader color="#00a5ab" />
-          <Loader color="#007bc2" />
-          <Loader color="#ff8800" />
-          <Loader color="#ef475b" />
-        </Inner>
-      </Wrapper>
-    </>
-  ))
+        <GrayWrapper>
+          <Text>Light</Text>
+          <List>
+            <dt>Default</dt>
+            <dd>
+              <Loader type="light" />
+            </dd>
+            <dt>Small</dt>
+            <dd>
+              <Loader type="light" size="s" />
+            </dd>
+            <dt>With text</dt>
+            <dd>
+              <Loader type="light" text="loading message" />
+            </dd>
+          </List>
+        </GrayWrapper>
+      </>
+    )
+  })
 
 const Wrapper = styled.div`
   padding: 24px;
 `
 const GrayWrapper = styled(Wrapper)`
-  background-color: #c1c1c1;
-`
-const Inner = styled.div`
-  display: flex;
-  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
 
-  & > *:not(:first-child) {
-    margin-left: 24px;
+  p,
+  dt {
+    color: #fff;
   }
 `
 const Text = styled.p`
   margin: 0 0 16px 0;
   font-size: 18px;
+`
+const List = styled.dl`
+  margin: 1rem;
+  & > dd {
+    margin: 16px 0 40px;
+  }
 `

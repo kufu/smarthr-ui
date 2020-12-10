@@ -22,11 +22,12 @@ const getStringLength = (value: string | number | readonly string[]) => {
   return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
 
-export const Textarea: FC<Props> = ({ autoFocus, maxLength, ...props }) => {
+export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
   const currentValue = props.defaultValue || props.value
   const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
+  const textAreaWidth = typeof width === 'number' ? `${width}px` : width
 
   useEffect(() => {
     if (autoFocus && ref && ref.current) {
@@ -43,6 +44,7 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, ...props }) => {
       <StyledTextarea
         {...(maxLength ? { onKeyUp: handleKeyup } : {})}
         {...props}
+        textAreaWidth={textAreaWidth}
         ref={ref}
         themes={theme}
       />
@@ -59,9 +61,9 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, ...props }) => {
   )
 }
 
-const StyledTextarea = styled.textarea<Props & { themes: Theme }>`
+const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: string | number }>`
   ${(props) => {
-    const { themes, width = 'auto', error } = props
+    const { themes, textAreaWidth = 'auto', error } = props
     const { size, frame, palette } = themes
 
     return css`
@@ -69,10 +71,7 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme }>`
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_BLACK};
       border-radius: ${frame.border.radius.m};
-      ${width &&
-      css`
-        width: ${typeof width === 'number' ? `${width}px` : width};
-      `}
+      width: ${textAreaWidth};
       background-color: #fff;
       outline: none;
       border: ${frame.border.default};
