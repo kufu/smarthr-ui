@@ -3,14 +3,18 @@ import waitForLocalhost from 'wait-for-localhost'
 ;(async () => {
   const PORT = 6006
 
-  spawnSync('yarn', ['run', 'build-storybook'], {
+  spawnSync('yarn', ['run', 'build-storybook', '--quiet'], {
     stdio: 'inherit',
     shell: true,
   })
-  const httpServer = spawn('yarn', ['http-server', 'storybook-static', '--port', `${PORT}`], {
-    stdio: 'inherit',
-    shell: true,
-  })
+  const httpServer = spawn(
+    'yarn',
+    ['http-server', 'storybook-static', '--port', `${PORT}`, '--silent'],
+    {
+      stdio: 'inherit',
+      shell: true,
+    },
+  )
 
   await waitForLocalhost({ port: PORT, path: '/iframe.html' })
 
