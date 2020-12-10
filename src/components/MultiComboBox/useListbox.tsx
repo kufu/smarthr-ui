@@ -203,13 +203,13 @@ export function useListbox({
         })}
 
         {isDuplicated && (
-          <NoItems themes={theme} aria-live="polite">
+          <NoItems themes={theme} role="alert" aria-live="polite">
             重複する選択肢は追加できません
           </NoItems>
         )}
 
         {hasNoMatch && (
-          <NoItems themes={theme} aria-live="polite">
+          <NoItems themes={theme} role="alert" aria-live="polite">
             一致する選択肢がありません
           </NoItems>
         )}
