@@ -281,6 +281,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
 
       &[aria-selected='true'] {
         background-color: ${palette.COLUMN};
+        color: inherit;
       }
 
       &[disabled] {
