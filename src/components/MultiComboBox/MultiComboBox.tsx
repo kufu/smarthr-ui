@@ -6,7 +6,7 @@ import { useOuterClick } from '../../hooks/useOuterClick'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 
 import { Icon } from '../Icon'
-import { useListbox } from './useListbox'
+import { useListBox } from './useListBox'
 
 const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
 
@@ -55,13 +55,13 @@ export const MultiComboBox: FC<Props> = ({
   })
   const isDuplicate = items.map(({ label }) => label).includes(inputValue)
   const {
-    renderListbox,
+    renderListBox,
     setDropdownStyle,
     resetActiveOptionIndex,
     handleInputKeyDown,
-    listboxRef,
+    listBoxRef,
     aria,
-  } = useListbox({
+  } = useListBox({
     items: filteredItems,
     inputValue,
     onAdd,
@@ -92,7 +92,7 @@ export const MultiComboBox: FC<Props> = ({
   }, [])
 
   useOuterClick(
-    [outerRef, listboxRef],
+    [outerRef, listBoxRef],
     useCallback(() => {
       blur()
     }, [blur]),
@@ -141,7 +141,7 @@ export const MultiComboBox: FC<Props> = ({
         }
       }}
       role="combobox"
-      aria-owns={aria.listboxId}
+      aria-owns={aria.listBoxId}
       aria-haspopup="listbox"
       aria-expanded={isFocused}
     >
@@ -203,7 +203,7 @@ export const MultiComboBox: FC<Props> = ({
                 }}
                 aria-activedescendant={aria.activeDescendant}
                 aria-autocomplete="list"
-                aria-controls={aria.listboxId}
+                aria-controls={aria.listBoxId}
               />
             </InputWrapper>
 
@@ -223,7 +223,7 @@ export const MultiComboBox: FC<Props> = ({
         </Suffix>
       </Inner>
 
-      {renderListbox()}
+      {renderListBox()}
     </Container>
   )
 }

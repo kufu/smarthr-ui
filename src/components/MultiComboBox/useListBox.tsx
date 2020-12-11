@@ -26,7 +26,7 @@ type Option = {
   isAdding?: boolean
 }
 
-export function useListbox({
+export function useListBox({
   items,
   inputValue,
   onAdd,
@@ -124,7 +124,7 @@ export function useListbox({
     [activeOptionIndex, moveActiveOptionIndex, onAdd, onSelect, options],
   )
 
-  const listboxId = useId()
+  const listBoxId = useId()
   const addingButtonId = useId()
   const optionIdPrefix = useId()
   const getOptionId = useCallback(
@@ -149,15 +149,15 @@ export function useListbox({
 
   const theme = useTheme()
   const { portalRoot } = usePortal()
-  const listboxRef = useRef<HTMLDivElement>(null)
+  const listBoxRef = useRef<HTMLDivElement>(null)
 
-  const renderListbox = () => {
+  const renderListBox = () => {
     return createPortal(
       <Container
         {...dropdownStyle}
         themes={theme}
-        id={listboxId}
-        ref={listboxRef}
+        id={listBoxId}
+        ref={listBoxRef}
         role="listbox"
         aria-hidden={!isExpanded}
       >
@@ -218,13 +218,13 @@ export function useListbox({
     )
   }
   return {
-    renderListbox,
+    renderListBox,
     setDropdownStyle,
     resetActiveOptionIndex: () => setActiveOptionIndex(null),
     handleInputKeyDown,
-    listboxRef,
+    listBoxRef,
     aria: {
-      listboxId,
+      listBoxId,
       activeDescendant,
     },
   }
