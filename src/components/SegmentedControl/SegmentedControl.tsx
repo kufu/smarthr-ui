@@ -2,7 +2,7 @@ import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from '
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { PrimaryButton, SecondaryButton } from '../Button'
+import { SecondaryButton } from '../Button'
 
 export type Option = {
   value: string
@@ -106,7 +106,6 @@ export const SegmentedControl: FC<Props> = ({
       <div role="radiogroup">
         {options.map((option, i) => {
           const isSelected = !!value && value === option.value
-          const Button = isSelected ? SelectedButton : DefaultButton
           const onClick = onClickOption ? () => onClickOption(option.value) : undefined
           return (
             <Button
@@ -133,12 +132,20 @@ export const SegmentedControl: FC<Props> = ({
 const Container = styled.div`
   display: inline-flex;
 `
-const buttonStyle = css<{ themes: Theme }>(({ themes }) => {
-  const { border } = themes.frame
+const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
+  const { palette, frame } = themes
+  const { border } = frame
   return css`
     border: ${border.default};
     border-radius: 0;
 
+    &[aria-checked='true'] {
+      color: #fff;
+      background-color: ${palette.MAIN};
+      &.hover {
+        background-color: ${palette.hoverColor(palette.MAIN)};
+      }
+    }
     &:first-child {
       border-top-left-radius: ${border.radius.m};
       border-bottom-left-radius: ${border.radius.m};
@@ -152,9 +159,3 @@ const buttonStyle = css<{ themes: Theme }>(({ themes }) => {
     }
   `
 })
-const DefaultButton = styled(SecondaryButton)<{ themes: Theme }>`
-  ${buttonStyle}
-`
-const SelectedButton = styled(PrimaryButton)<{ themes: Theme }>`
-  ${buttonStyle}
-`
