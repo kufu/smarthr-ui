@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -30,11 +30,81 @@ export const SegmentedControl: FC<Props> = ({
   ...props
 }) => {
   const themes = useTheme()
+  const [isFocused, setIsFocused] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (!isFocused || !containerRef.current) {
+        return
+      }
+      const radios = Array.from(
+        containerRef.current.querySelectorAll('[role="radio"]:not(:disabled)'),
+      )
+      if (radios.length < 2 || !document.activeElement) {
+        return
+      }
+      const focusedIndex = radios.indexOf(document.activeElement)
+      if (focusedIndex === -1) {
+        return
+      }
+      switch (e.key) {
+        case 'Down':
+        case 'ArrowDown':
+        case 'Right':
+        case 'ArrowRight': {
+          const nextIndex = focusedIndex + 1
+          const nextRadio = radios[nextIndex % radios.length]
+          if (nextRadio instanceof HTMLButtonElement) {
+            nextRadio.focus()
+          }
+          break
+        }
+        case 'Up':
+        case 'ArrowUp':
+        case 'Left':
+        case 'ArrowLeft': {
+          const nextIndex = focusedIndex - 1
+          const nextRadio = radios[(nextIndex + radios.length) % radios.length]
+          if (nextRadio instanceof HTMLButtonElement) {
+            nextRadio.focus()
+          }
+          break
+        }
+      }
+    },
+    [isFocused],
+  )
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [handleKeyDown])
+
+  const includesSelected = value && options.some((option) => option.value === value)
+  const getRovingTabIndex = useCallback(
+    (option: Option, index: number) => {
+      if (!includesSelected) {
+        return index === 0 ? 0 : -1
+      }
+      return option.value === value ? 0 : -1
+    },
+    [includesSelected, value],
+  )
 
   return (
-    <Container {...props} className={className} role="toolbar">
+    <Container
+      {...props}
+      className={className}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
+      ref={containerRef}
+      role="toolbar"
+    >
       <div role="radiogroup">
-        {options.map((option) => {
+        {options.map((option, i) => {
           const isSelected = !!value && value === option.value
           const Button = isSelected ? SelectedButton : DefaultButton
           const onClick = onClickOption ? () => onClickOption(option.value) : undefined
@@ -47,6 +117,7 @@ export const SegmentedControl: FC<Props> = ({
               size={size}
               square={isSquare}
               themes={themes}
+              tabIndex={getRovingTabIndex(option, i)}
               role="radio"
               aria-checked={isSelected}
             >
