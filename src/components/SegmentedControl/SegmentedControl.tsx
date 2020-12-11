@@ -27,11 +27,12 @@ export const SegmentedControl: FC<Props> = ({
   size = 'default',
   isSquare = false,
   className,
+  ...props
 }) => {
   const themes = useTheme()
 
   return (
-    <Container className={className}>
+    <Container {...props} className={className} role="radiogroup">
       {options.map((option) => {
         const isSelected = !!value && value === option.value
         const Button = isSelected ? SelectedButton : DefaultButton
@@ -45,6 +46,8 @@ export const SegmentedControl: FC<Props> = ({
             size={size}
             square={isSquare}
             themes={themes}
+            role="radio"
+            aria-checked={isSelected}
           >
             {option.content}
           </Button>
