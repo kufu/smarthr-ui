@@ -86,12 +86,15 @@ export const SegmentedControl: FC<Props> = ({
   const includesSelected = value && options.some((option) => option.value === value)
   const getRovingTabIndex = useCallback(
     (option: Option, index: number) => {
+      if (isFocused) {
+        return -1
+      }
       if (!includesSelected) {
         return index === 0 ? 0 : -1
       }
       return option.value === value ? 0 : -1
     },
-    [includesSelected, value],
+    [includesSelected, isFocused, value],
   )
 
   return (
