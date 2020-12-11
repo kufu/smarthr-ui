@@ -32,27 +32,29 @@ export const SegmentedControl: FC<Props> = ({
   const themes = useTheme()
 
   return (
-    <Container {...props} className={className} role="radiogroup">
-      {options.map((option) => {
-        const isSelected = !!value && value === option.value
-        const Button = isSelected ? SelectedButton : DefaultButton
-        const onClick = onClickOption ? () => onClickOption(option.value) : undefined
-        return (
-          <Button
-            aria-label={option.ariaLabel}
-            key={option.value}
-            disabled={option.disabled}
-            onClick={onClick}
-            size={size}
-            square={isSquare}
-            themes={themes}
-            role="radio"
-            aria-checked={isSelected}
-          >
-            {option.content}
-          </Button>
-        )
-      })}
+    <Container {...props} className={className} role="toolbar">
+      <div role="radiogroup">
+        {options.map((option) => {
+          const isSelected = !!value && value === option.value
+          const Button = isSelected ? SelectedButton : DefaultButton
+          const onClick = onClickOption ? () => onClickOption(option.value) : undefined
+          return (
+            <Button
+              aria-label={option.ariaLabel}
+              key={option.value}
+              disabled={option.disabled}
+              onClick={onClick}
+              size={size}
+              square={isSquare}
+              themes={themes}
+              role="radio"
+              aria-checked={isSelected}
+            >
+              {option.content}
+            </Button>
+          )
+        })}
+      </div>
     </Container>
   )
 }
