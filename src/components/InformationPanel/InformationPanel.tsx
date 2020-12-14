@@ -71,7 +71,7 @@ export const InformationPanel: FC<Props> = ({
   }, [activeProps])
 
   return (
-    <Wrapper className={className} themes={theme} aria-expanded={togglable ? active : undefined}>
+    <Wrapper className={className} themes={theme} role="presentation">
       <Header themes={theme}>
         <Title themes={theme}>
           <TitleIcon name={iconName} color={iconColor} $theme={theme} />
@@ -85,18 +85,23 @@ export const InformationPanel: FC<Props> = ({
               suffix={<Icon size={14} name={active ? 'fa-caret-up' : 'fa-caret-down'} />}
               size="s"
               onClick={handleClickTrigger}
+              aria-expanded={togglable ? active : undefined}
             >
               {active ? closeButtonLabel : openButtonLabel}
             </SecondaryButton>
           </div>
         )}
       </Header>
-      {active && <Content themes={theme}>{children}</Content>}
+      {active && (
+        <Content themes={theme} aria-hidden={active}>
+          {children}
+        </Content>
+      )}
     </Wrapper>
   )
 }
 
-const Wrapper = styled(Base)<{ themes: Theme }>`
+const Wrapper = styled(Base)<{ themes: Theme; role: string }>`
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 

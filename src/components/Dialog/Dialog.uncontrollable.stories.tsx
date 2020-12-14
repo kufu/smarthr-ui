@@ -24,7 +24,7 @@ const FormDialog: React.FC = () => {
   return (
     <DialogWrapper>
       <DialogTrigger>
-        <SecondaryButton>Dialog</SecondaryButton>
+        <SecondaryButton aria-haspopup="dialog">Dialog</SecondaryButton>
       </DialogTrigger>
       <DialogContent>
         <Inner>
@@ -84,7 +84,7 @@ storiesOf('Dialog', module)
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton>
+            <SecondaryButton aria-haspopup="dialog">
               Modal position can be changed. top: 50px, left: 200px.
             </SecondaryButton>
           </DialogTrigger>
@@ -101,7 +101,7 @@ storiesOf('Dialog', module)
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton>right: 50px, bottom: 100px.</SecondaryButton>
+            <SecondaryButton aria-haspopup="dialog">right: 50px, bottom: 100px.</SecondaryButton>
           </DialogTrigger>
           <DialogContent right={50} bottom={100}>
             <Inner>
@@ -142,7 +142,7 @@ storiesOf('Dialog', module)
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton>ActionDialog</SecondaryButton>
+            <SecondaryButton aria-haspopup="dialog">ActionDialog</SecondaryButton>
           </DialogTrigger>
           <ActionDialogContent
             title="Title Message"
