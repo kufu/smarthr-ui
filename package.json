@@ -58,7 +58,7 @@
     "storycap": "^3.0.1",
     "styled-components": "^5.2.1",
     "styled-reset": "^4.3.3",
-    "stylelint": "^13.7.2",
+    "stylelint": "^13.8.0",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-smarthr": "^1.0.0",
     "stylelint-config-standard": "^20.0.0",
