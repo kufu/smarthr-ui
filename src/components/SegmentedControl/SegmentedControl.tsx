@@ -35,13 +35,13 @@ export const SegmentedControl: FC<Props> = ({
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (!isFocused || !containerRef.current) {
+      if (!isFocused || !containerRef.current || !document.activeElement) {
         return
       }
       const radios = Array.from(
         containerRef.current.querySelectorAll('[role="radio"]:not(:disabled)'),
       )
-      if (radios.length < 2 || !document.activeElement) {
+      if (radios.length < 2) {
         return
       }
       const focusedIndex = radios.indexOf(document.activeElement)
