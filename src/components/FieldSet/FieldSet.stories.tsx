@@ -15,7 +15,7 @@ storiesOf('FieldSet', module)
     },
   })
   .add('all', () => {
-    const theme = useTheme()
+    const themes = useTheme()
 
     return (
       <List>
@@ -72,7 +72,7 @@ storiesOf('FieldSet', module)
         </li>
         <li>
           <FieldSet label="custom field">
-            <CustomTag theme={theme}>It is a field where tags can be freely inserted.</CustomTag>
+            <CustomTag themes={themes}>It is a field where tags can be freely inserted.</CustomTag>
           </FieldSet>
         </li>
         <li>
@@ -88,7 +88,7 @@ storiesOf('FieldSet', module)
             }
             required
           >
-            <CustomTag theme={theme}>It is a field where tags can be freely inserted.</CustomTag>
+            <CustomTag themes={themes}>It is a field where tags can be freely inserted.</CustomTag>
           </FieldSet>
         </li>
       </List>
@@ -115,11 +115,11 @@ const SuffixText = styled.p`
   margin: 0;
   font-size: 11px;
 `
-const CustomTag = styled.div<{ theme: Theme }>`
-  ${({ theme }) => {
+const CustomTag = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
     return css`
       padding: 10px;
-      border: 1px solid ${theme.palette.BORDER};
+      border: 1px solid ${themes.palette.BORDER};
       border-radius: 5px;
     `
   }}
