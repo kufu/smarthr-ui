@@ -7,7 +7,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { DialogPositionProvider } from './DialogPositionProvider'
 
-type Props = {
+export type DialogContentInnerProps = {
   onClickOverlay?: () => void
   onPressEscape?: () => void
   isOpen: boolean
@@ -31,7 +31,7 @@ function exist(value: any) {
   return value !== undefined && value !== null
 }
 
-export const DialogContentInner: FC<Props> = ({
+export const DialogContentInner: FC<DialogContentInnerProps> = ({
   onClickOverlay,
   onPressEscape = () => {
     /* noop */

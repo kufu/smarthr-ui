@@ -1,15 +1,11 @@
 import React, { useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
-import { DialogContentInner } from './DialogContentInner'
+import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 import { ActionDialogContentInner, BaseProps } from './ActionDialogContentInner'
 
-export type ActionDialogContentProps = BaseProps & {
-  top?: number
-  right?: number
-  bottom?: number
-  left?: number
-}
+export type ActionDialogContentProps = BaseProps &
+  Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left'>
 
 export const ActionDialogContent: React.FC<ActionDialogContentProps> = ({
   children,
