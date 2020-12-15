@@ -6,7 +6,7 @@ import { useOuterClick } from '../../hooks/useOuterClick'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 
 import { Icon } from '../Icon'
-import { Portal } from './Portal'
+import { useListBox } from './useListBox'
 
 const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
 
@@ -44,14 +44,9 @@ export const MultiComboBox: FC<Props> = ({
   const theme = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
-  const [dropdownStyle, setDropdownStyle] = useState({
-    top: 0,
-    left: 0,
-    width: 0,
-  })
   const [inputValue, setInputValue] = useState('')
+  const [isComposing, setIsComposing] = useState(false)
   const selectedLabels = selectedItems.map(({ label }) => label)
   const filteredItems = items.filter(({ label }) => {
     if (selectedLabels.includes(label)) return false
@@ -59,14 +54,26 @@ export const MultiComboBox: FC<Props> = ({
     return label.includes(inputValue)
   })
   const isDuplicate = items.map(({ label }) => label).includes(inputValue)
-  const dropdownContentFlags = {
-    addable: creatable && inputValue && !isDuplicate,
-    duplicate: creatable && inputValue && isDuplicate,
-    noItems:
+  const {
+    renderListBox,
+    setDropdownStyle,
+    resetActiveOptionIndex,
+    handleInputKeyDown,
+    listBoxRef,
+    aria,
+  } = useListBox({
+    items: filteredItems,
+    inputValue,
+    onAdd,
+    onSelect,
+    isExpanded: isFocused,
+    isAddable: creatable && !!inputValue && !isDuplicate,
+    isDuplicated: creatable && !!inputValue && isDuplicate,
+    hasNoMatch:
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
-    viewList: filteredItems.length > 0,
-  }
+  })
+
   const classNames = [
     isFocused ? 'active' : '',
     disabled ? 'disabled' : '',
@@ -76,11 +83,19 @@ export const MultiComboBox: FC<Props> = ({
     .filter((item) => item)
     .join(' ')
 
+  const focus = useCallback(() => {
+    setIsFocused(true)
+    resetActiveOptionIndex()
+  }, [resetActiveOptionIndex])
+  const blur = useCallback(() => {
+    setIsFocused(false)
+  }, [])
+
   useOuterClick(
-    [outerRef, dropdownRef],
+    [outerRef, listBoxRef],
     useCallback(() => {
-      setIsFocused(false)
-    }, []),
+      blur()
+    }, [blur]),
   )
 
   useEffect(() => {
@@ -99,7 +114,7 @@ export const MultiComboBox: FC<Props> = ({
         width: outerRef.current.clientWidth,
       })
     }
-  }, [isFocused, selectedItems])
+  }, [isFocused, selectedItems, setDropdownStyle])
 
   return (
     <Container
@@ -113,15 +128,22 @@ export const MultiComboBox: FC<Props> = ({
           !disabled &&
           !isFocused
         ) {
-          setIsFocused(true)
+          focus()
+        }
+        if (inputRef.current) {
+          inputRef.current.focus()
         }
       }}
       onKeyDown={(e) => {
         if ((e.key === 'Escape' || e.key === 'Esc') && isFocused) {
           e.stopPropagation()
-          setIsFocused(false)
+          blur()
         }
       }}
+      role="combobox"
+      aria-owns={aria.listBoxId}
+      aria-haspopup="listbox"
+      aria-expanded={isFocused}
     >
       <Inner>
         <InputArea themes={theme}>
@@ -142,6 +164,7 @@ export const MultiComboBox: FC<Props> = ({
                         name="fa-times-circle"
                         size={11}
                         color={theme.palette.TEXT_BLACK}
+                        visuallyHiddenText="delete"
                       />
                     </DeleteButton>
                   )}
@@ -149,21 +172,40 @@ export const MultiComboBox: FC<Props> = ({
               </li>
             ))}
 
-            {isFocused && !disabled && (
-              <InputWrapper>
-                <Input
-                  type="text"
-                  name={name}
-                  value={inputValue}
-                  ref={inputRef}
-                  themes={theme}
-                  onChange={(e) => {
-                    if (onChange) onChange(e)
-                    setInputValue(e.currentTarget.value)
-                  }}
-                />
-              </InputWrapper>
-            )}
+            <InputWrapper className={isFocused ? undefined : 'hidden'}>
+              <Input
+                type="text"
+                name={name}
+                value={inputValue}
+                disabled={disabled}
+                ref={inputRef}
+                themes={theme}
+                onChange={(e) => {
+                  if (onChange) onChange(e)
+                  setInputValue(e.currentTarget.value)
+                }}
+                onFocus={() => {
+                  if (!isFocused) {
+                    focus()
+                  }
+                }}
+                onCompositionStart={() => setIsComposing(true)}
+                onCompositionEnd={() => setIsComposing(false)}
+                onKeyDown={(e) => {
+                  if (isComposing) {
+                    return
+                  }
+                  if (e.key === 'Tab') {
+                    blur()
+                    return
+                  }
+                  handleInputKeyDown(e)
+                }}
+                aria-activedescendant={aria.activeDescendant}
+                aria-autocomplete="list"
+                aria-controls={aria.listBoxId}
+              />
+            </InputWrapper>
 
             {selectedItems.length === 0 && placeholder && !isFocused && (
               <li>
@@ -181,44 +223,7 @@ export const MultiComboBox: FC<Props> = ({
         </Suffix>
       </Inner>
 
-      {isFocused && (
-        <Portal top={dropdownStyle.top} left={dropdownStyle.left}>
-          <Dropdown themes={theme} ref={dropdownRef} width={dropdownStyle.width}>
-            {dropdownContentFlags.addable && (
-              <AddButton themes={theme} onClick={() => onAdd && onAdd(inputValue)}>
-                <AddIcon
-                  name="fa-plus-circle"
-                  size={14}
-                  color={theme.palette.TEXT_LINK}
-                  $theme={theme}
-                />
-                <AddText themes={theme}>「{inputValue}」を追加</AddText>
-              </AddButton>
-            )}
-
-            {dropdownContentFlags.viewList &&
-              filteredItems.map(({ label, value, disabled: itemDisabled = false }, i) => (
-                <SelectButton
-                  key={i}
-                  type="button"
-                  themes={theme}
-                  disabled={itemDisabled}
-                  onClick={() => onSelect({ value, label })}
-                >
-                  {label}
-                </SelectButton>
-              ))}
-
-            {dropdownContentFlags.duplicate && (
-              <NoItems themes={theme}>重複する選択肢は追加できません</NoItems>
-            )}
-
-            {dropdownContentFlags.noItems && (
-              <NoItems themes={theme}>一致する選択肢がありません</NoItems>
-            )}
-          </Dropdown>
-        </Portal>
-      )}
+      {renderListBox()}
     </Container>
   )
 }
@@ -327,6 +332,11 @@ const DeleteIcon = styled(Icon)`
   vertical-align: 1px;
 `
 const InputWrapper = styled.li`
+  &.hidden {
+    position: absolute;
+    opacity: 0;
+  }
+
   /* for IE */
   /* stylelint-disable-next-line length-zero-no-unit */
   flex: 1 1 0px;
@@ -342,6 +352,9 @@ const Input = styled.input<{ themes: Theme }>`
       font-size: ${size.font.TALL}px;
       box-sizing: border-box;
       outline: none;
+      &[disabled] {
+        display: none;
+      }
     `
   }}
 `
@@ -370,84 +383,6 @@ const Suffix = styled.div<{ themes: Theme }>`
       margin: ${size.pxToRem(size.space.XXS)} 0;
       border-left: ${frame.border.default};
       box-sizing: border-box;
-    `
-  }}
-`
-const Dropdown = styled.div<{ themes: Theme; width: number }>`
-  ${({ themes, width }) => {
-    const { size, frame } = themes
-
-    return css`
-      overflow-y: auto;
-      max-height: 300px;
-      width: ${width}px;
-      padding: ${size.pxToRem(size.space.XXS)} 0;
-      border-radius: ${frame.border.radius.m};
-      box-shadow: rgba(51, 51, 51, 0.3) 0 4px 10px 0;
-      background-color: #fff;
-      white-space: nowrap;
-      box-sizing: border-box;
-    `
-  }}
-`
-const NoItems = styled.p<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
-    return css`
-      margin: 0;
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
-      background-color: #fff;
-      font-size: ${size.font.TALL}px;
-    `
-  }}
-`
-const SelectButton = styled.button<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size, palette } = themes
-
-    return css`
-      display: block;
-      width: 100%;
-      border: none;
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
-      background-color: #fff;
-      font-size: ${size.font.TALL}px;
-      text-align: left;
-      cursor: pointer;
-
-      &:hover:not([disabled]) {
-        background-color: ${palette.COLUMN};
-      }
-
-      &[disabled] {
-        color: ${palette.TEXT_DISABLED};
-        cursor: not-allowed;
-      }
-    `
-  }}
-`
-const AddButton = styled(SelectButton)`
-  display: flex;
-  align-items: center;
-`
-const AddIcon = styled(Icon)<{ $theme: Theme }>`
-  ${({ $theme }) => {
-    const { size } = $theme
-
-    return css`
-      position: relative;
-      top: -1px;
-      margin-right: ${size.pxToRem(4)};
-    `
-  }}
-`
-const AddText = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { palette } = themes
-
-    return css`
-      color: ${palette.TEXT_LINK};
     `
   }}
 `
