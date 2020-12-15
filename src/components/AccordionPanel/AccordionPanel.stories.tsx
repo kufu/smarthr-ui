@@ -213,7 +213,7 @@ const BorderList = styled.ul<{ themes: Theme }>`
 const Content = styled.div<{ themes: Theme }>`
   ${({ themes }) => css`
     padding: 16px;
-    background-color: ${themes.palette.COLUMN};
+    background-color: ${themes.palette.BACKGROUND};
     font-size: 14px;
   `}
 `
