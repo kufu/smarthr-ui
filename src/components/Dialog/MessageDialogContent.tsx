@@ -4,10 +4,9 @@ import { DialogContext } from './DialogWrapper'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
 
-export type MessageDialogContentProps = BaseProps &
-  Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left'>
+type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left'>
 
-export const MessageDialogContent: React.FC<MessageDialogContentProps> = ({
+export const MessageDialogContent: React.FC<Props> = ({
   title,
   description,
   closeText,
