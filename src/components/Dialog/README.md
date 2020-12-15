@@ -261,6 +261,7 @@ ActionDialogContent
 
 - Add Name by `title` or `ariaLabel` or `ariaLabelledby` props.
 - Add `aria-haspopup="dialog"` to trigger
+- Add `id` attribute to dialog / dialog content and set the `id` to `aria-controls` in trigger
 - Add Close Action in Dialog Contents.
 
 ### ARIA
