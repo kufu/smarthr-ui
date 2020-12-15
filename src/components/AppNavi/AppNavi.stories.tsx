@@ -23,7 +23,7 @@ const List: FC = () => {
   const theme = useTheme()
 
   return (
-    <ListWrapper theme={theme}>
+    <ListWrapper themes={theme}>
       <li>
         <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
       </li>
@@ -80,7 +80,7 @@ storiesOf('AppNavi', module)
     const theme = useTheme()
 
     return (
-      <Wrapper theme={theme}>
+      <Wrapper themes={theme}>
         <AppNavi label="プラスメニュー" buttons={buttons}>
           <Child>Some child components</Child>
         </AppNavi>
@@ -91,7 +91,7 @@ storiesOf('AppNavi', module)
     const theme = useTheme()
 
     return (
-      <Wrapper theme={theme}>
+      <Wrapper themes={theme}>
         <AppNavi label="プラスメニュー" buttons={buttons} />
       </Wrapper>
     )
@@ -129,7 +129,7 @@ storiesOf('AppNavi', module)
       },
     ]
     return (
-      <Wrapper theme={theme}>
+      <Wrapper themes={theme}>
         {items.map((_, currentIndex) => (
           <InnerWrapper key={currentIndex}>
             <AppNavi
@@ -148,9 +148,9 @@ storiesOf('AppNavi', module)
     )
   })
 
-const Wrapper = styled.div<{ theme: Theme }>`
-  ${({ theme }) => {
-    const { palette } = theme
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette } = themes
 
     return css`
       padding: 32px 0;
@@ -165,9 +165,9 @@ const InnerWrapper = styled.div`
   margin-bottom: 40px;
 `
 
-const ListWrapper = styled.ul<{ theme: Theme }>`
-  ${({ theme }) => {
-    const { palette } = theme
+const ListWrapper = styled.ul<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette } = themes
 
     return css`
       margin: 0;
