@@ -15,6 +15,7 @@ export type DialogContentInnerProps = {
   right?: number
   bottom?: number
   left?: number
+  id?: string
   ariaLabel?: string
   ariaLabelledby?: string
   children: ReactNode
@@ -37,6 +38,7 @@ export const DialogContentInner: FC<DialogContentInnerProps> = ({
     /* noop */
   },
   isOpen,
+  id,
   ariaLabel,
   ariaLabelledby,
   children,
@@ -79,6 +81,7 @@ export const DialogContentInner: FC<DialogContentInnerProps> = ({
         }}
         appear
         unmountOnExit
+        id={id}
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}

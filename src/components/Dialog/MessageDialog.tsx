@@ -10,7 +10,7 @@ import {
 type Props = MessageDialogContentInnerProps &
   Pick<
     DialogContentInnerProps,
-    'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left'
+    'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
   >
 
 export const MessageDialog: React.FC<Props> = ({

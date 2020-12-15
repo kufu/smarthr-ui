@@ -15,7 +15,7 @@ export const DialogContentContext = createContext<DialogContentContextType>({
 
 type Props = Pick<
   DialogContentInnerProps,
-  'top' | 'right' | 'bottom' | 'left' | 'ariaLabel' | 'ariaLabelledby'
+  'top' | 'right' | 'bottom' | 'left' | 'id' | 'ariaLabel' | 'ariaLabelledby'
 >
 
 export const DialogContent: React.FC<Props> = ({ children, ...props }) => {

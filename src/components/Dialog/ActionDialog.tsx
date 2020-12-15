@@ -8,7 +8,7 @@ type Props = ActionDialogContentInnerProps & {
   onClickClose: () => void
 } & Pick<
     DialogContentInnerProps,
-    'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left'
+    'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
   >
 
 export const ActionDialog: React.FC<Props> = ({

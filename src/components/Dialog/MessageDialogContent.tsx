@@ -4,7 +4,7 @@ import { DialogContext } from './DialogWrapper'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
 
-type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left'>
+type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
 
 export const MessageDialogContent: React.FC<Props> = ({
   title,
