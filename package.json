@@ -5,6 +5,7 @@
   "author": "SmartHR-UI Team",
   "dependencies": {
     "dayjs": "^1.9.7",
+    "focus-trap": "^6.2.3",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.0.5",
@@ -80,7 +81,7 @@
     "url": "https://github.com/kufu/smarthr-ui/issues"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.0.0"
   },
   "files": [
     "esm",
