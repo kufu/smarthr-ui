@@ -5,19 +5,7 @@ import { DialogContentInner, DialogContentInnerProps } from './DialogContentInne
 
 type Props = DialogContentInnerProps
 
-export const Dialog: React.FC<Props> = ({
-  isOpen,
-  children,
-  onClickOverlay = () => {
-    /* noop */
-  },
-  onPressEscape = () => {
-    /* noop */
-  },
-  ariaLabel,
-  ariaLabelledby,
-  ...props
-}) => {
+export const Dialog: React.FC<Props> = ({ children, ...props }) => {
   const element = useRef(document.createElement('div')).current
 
   useEffect(() => {
@@ -28,17 +16,5 @@ export const Dialog: React.FC<Props> = ({
     }
   }, [element])
 
-  return createPortal(
-    <DialogContentInner
-      onClickOverlay={onClickOverlay}
-      onPressEscape={onPressEscape}
-      isOpen={isOpen}
-      ariaLabel={ariaLabel}
-      ariaLabelledby={ariaLabelledby}
-      {...props}
-    >
-      {children}
-    </DialogContentInner>,
-    element,
-  )
+  return createPortal(<DialogContentInner {...props}>{children}</DialogContentInner>, element)
 }

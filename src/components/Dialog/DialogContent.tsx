@@ -18,12 +18,7 @@ type Props = Pick<
   'top' | 'right' | 'bottom' | 'left' | 'ariaLabel' | 'ariaLabelledby'
 >
 
-export const DialogContent: React.FC<Props> = ({
-  ariaLabel,
-  ariaLabelledby,
-  children,
-  ...props
-}) => {
+export const DialogContent: React.FC<Props> = ({ children, ...props }) => {
   const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
 
   return (
@@ -33,8 +28,6 @@ export const DialogContent: React.FC<Props> = ({
           isOpen={active}
           onClickOverlay={onClickClose}
           onPressEscape={onClickClose}
-          ariaLabel={ariaLabel}
-          ariaLabelledby={ariaLabelledby}
           {...props}
         >
           {children}

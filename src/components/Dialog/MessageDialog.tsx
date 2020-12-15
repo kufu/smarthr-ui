@@ -10,17 +10,10 @@ type Props = MessageDialogContentProps & {
 } & Pick<DialogContentInnerProps, 'isOpen' | 'onClickOverlay' | 'onPressEscape'>
 
 export const MessageDialog: React.FC<Props> = ({
-  isOpen,
   title,
   description,
   closeText,
   onClickClose,
-  onClickOverlay = () => {
-    /* noop */
-  },
-  onPressEscape = () => {
-    /* noop */
-  },
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current
@@ -34,13 +27,7 @@ export const MessageDialog: React.FC<Props> = ({
   }, [element])
 
   return createPortal(
-    <DialogContentInner
-      onClickOverlay={onClickOverlay}
-      onPressEscape={onPressEscape}
-      isOpen={isOpen}
-      ariaLabel={title}
-      {...props}
-    >
+    <DialogContentInner ariaLabel={title} {...props}>
       <MessageDialogContentInner
         title={title}
         description={description}
