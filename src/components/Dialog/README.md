@@ -16,7 +16,9 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <button onClick={onClickOpen} aria-haspopup="dialog">open dialog</button>
+      <button onClick={onClickOpen} type="button" aria-haspopup="dialog">
+        open dialog
+      </button>
       <Dialog isOpen={isOpen} onClickOverlay={onClickClose}>
         <p>text</p>
         <button onClick={onClickClose}>close dialog</button>
@@ -34,7 +36,7 @@ import { DialogWrapper, DialogTrigger, DialogContent, DialogCloser } from 'smart
 const Component: React.FC = () => (
   <DialogWrapper>
     <DialogTrigger>
-      <button>open dialog</button>
+      <button type="button" aria-haspopup="dialog">open dialog</button>
     </DialogTrigger>
     <DialogContent>
       <p>text</p>
@@ -88,7 +90,9 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <button onClick={onClickOpen} aria-haspopup="dialog">open dialog</button>
+      <button onClick={onClickOpen} type="button" aria-haspopup="dialog">
+        open dialog
+      </button>
       <MessageDialog
         isOpen={isOpen}
         title="title message"
@@ -109,7 +113,7 @@ import { DialogWrapper, DialogTrigger, MessageDialogContent } from 'smarthr-ui'
 const Component: React.FC = () => (
   <DialogWrapper>
     <DialogTrigger>
-      <button>open dialog</button>
+      <button type="button" aria-haspopup="dialog">open dialog</button>
     </DialogTrigger>
     <MessageDialogContent
       title="title message"
@@ -164,7 +168,9 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <button onClick={onClickOpen} aria-haspopup="dialog">open dialog</button>
+      <button onClick={onClickOpen} type="button" aria-haspopup="dialog">
+        open dialog
+      </button>
       <ActionDialog
         isOpen={isOpen}
         title="title message"
@@ -189,7 +195,9 @@ import { DialogWrapper, DialogTrigger, ActionDialogContent } from 'smarthr-ui'
 const Component: React.FC = () => (
   <DialogWrapper>
     <DialogTrigger>
-      <button>open dialog</button>
+      <button type="button" aria-haspopup="dialog">
+        open dialog
+      </button>
     </DialogTrigger>
     <ActionDialogContent
       title="title message"
@@ -243,9 +251,31 @@ ActionDialogContent
 
 ## Accessibility
 
+### usage
+
+#### Recommend
+
+- Add Name by `title` or `ariaLabel` or `ariaLabelledby` props.
+- Add `aria-haspopup="dialog"` to trigger
+- Add Close Action in Dialog Contents.
+
 ### ARIA
 
 - Dialog component has `role` set to `"dialog"`.
 - Dialog component has `aria-modal` set to `true`.
 - Uncontrollable Dialog has `aria-haspopup` set to `"dialog"` in the trigger. When using controllable Dialog, set `aria-haspopup` to `"dialog"` in the trigger.
 - MessageDialog and ActionDialog set the title value to the `aria-label` value. When using Dialog and DialogContent, you can specify a value for `aria-label` in `ariaLabel` props. Alternatively, you can use the aria-labelledby attribute by passing the id value in `ariaLabelledby` props.
+
+### Keyboard Interaction
+
+> When a dialog opens, focus moves to an element inside the dialog. See notes below regarding initial focus placement.
+
+> `Tab`: Moves focus to the next tabbable element inside the dialog.
+If focus is on the last tabbable element inside the dialog, moves focus to the first tabbable element inside the dialog.
+
+> `Shift + Tab`: Moves focus to the previous tabbable element inside the dialog.
+If focus is on the first tabbable element inside the dialog, moves focus to the last tabbable element inside the dialog.
+
+> `Escape`: Closes the dialog.
+
+[WAI-ARIA Authoring Practices 1.1 - 3.9 Dialog(Modal) - Keyboard Interaction](https://www.w3.org/TR/wai-aria-practices-1.1/#keyboard-interaction-7)
