@@ -64,7 +64,7 @@ storiesOf('FieldSet', module)
             label="labelSuffix"
             labelSuffix={
               <Suffix>
-                <Icon name="fa-exclamation-circle" size={12} color="#767676" />
+                <Icon name="fa-exclamation-circle" size={12} color={themes.palette.TEXT_GREY} />
                 <SuffixText>suffix text</SuffixText>
               </Suffix>
             }
@@ -82,7 +82,7 @@ storiesOf('FieldSet', module)
             helpMessage="This is help message."
             labelSuffix={
               <Suffix>
-                <Icon name="fa-exclamation-circle" size={12} color="#767676" />
+                <Icon name="fa-exclamation-circle" size={12} color={themes.palette.TEXT_GREY} />
                 <SuffixText>suffix text</SuffixText>
               </Suffix>
             }
