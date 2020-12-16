@@ -25,7 +25,7 @@ import { Select } from 'smarthr-ui'
 
 | Name           | Required | Type                               | DefaultValue             | Description                                                     |
 | -------------- | -------- | ---------------------------------- | ------------------------ | --------------------------------------------------------------- |
-| options        | ✓        | **Array<Option | Optgroup>**       | -                        | Option list in select.                                          |
+| options        | ✓        | **Array<Option \| Optgroup>**      | -                        | Option list in select.                                          |
 | error          | -        | **boolean**                        | false                    | Whether the input value has any errors.                         |
 | width          | -        | **number | string**                | 260                      | Width of style.                                                 |
 | hasBlank       | -        | **boolean**                        | false                    | Show blank item in select.                                      |
