@@ -22,6 +22,7 @@ const initialItems = [
   {
     label: '選択肢4',
     value: 'value-4',
+    disabled: true,
   },
   {
     label: '選択肢5 (deletable が false になる)',

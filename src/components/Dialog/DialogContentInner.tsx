@@ -1,6 +1,7 @@
-import React, { FC, ReactNode, useRef } from 'react'
+import React, { FC, ReactNode, useEffect, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
+import { Options as CreateFocusTrapOptions, createFocusTrap } from 'focus-trap'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
@@ -43,7 +44,26 @@ export const DialogContentInner: FC<Props> = ({
 }) => {
   const theme = useTheme()
   const domRef = useRef(null)
+  const innerRef = useRef<HTMLDivElement>(null)
+  const focusTarget = useRef<HTMLDivElement>(null)
   useHandleEscape(onPressEscape)
+
+  useEffect(() => {
+    const focusTrapOption: CreateFocusTrapOptions = {
+      allowOutsideClick: true,
+      initialFocus: focusTarget.current ? focusTarget.current : undefined,
+    }
+    const focusTrap =
+      innerRef.current !== null ? createFocusTrap(innerRef.current, focusTrapOption) : undefined
+
+    if (isOpen) {
+      focusTrap?.activate()
+    }
+
+    return () => {
+      focusTrap?.deactivate()
+    }
+  }, [isOpen])
 
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
@@ -66,7 +86,9 @@ export const DialogContentInner: FC<Props> = ({
       >
         <Wrapper ref={domRef} themes={theme}>
           <Background onClick={onClickOverlay} themes={theme} />
-          <Inner themes={theme} {...props}>
+          <Inner ref={innerRef} themes={theme} role="dialog" aria-modal="true" {...props}>
+            {/* dummy element for focus management. */}
+            <div ref={focusTarget} tabIndex={-1} aria-label={ariaLabel}></div>
             {children}
           </Inner>
           {/* Suppresses scrolling of body while modal is displayed */}
