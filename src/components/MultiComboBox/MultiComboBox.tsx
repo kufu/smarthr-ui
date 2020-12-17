@@ -69,7 +69,7 @@ export const MultiComboBox: FC<Props> = ({
     onSelect,
     isExpanded: isFocused,
     isAddable: creatable && !!inputValue && !isDuplicate,
-    isDuplicated: creatable && !!inputValue && isDuplicate && !hasSelectableExactMatch,
+    isDuplicate: creatable && !!inputValue && isDuplicate && !hasSelectableExactMatch,
     hasNoMatch:
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
