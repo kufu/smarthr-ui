@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useRef } from 'react'
+import React, { FC, ReactNode, useCallback, useEffect, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 import { Options as CreateFocusTrapOptions, createFocusTrap } from 'focus-trap'
@@ -46,7 +46,14 @@ export const DialogContentInner: FC<Props> = ({
   const domRef = useRef(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const focusTarget = useRef<HTMLDivElement>(null)
-  useHandleEscape(onPressEscape)
+  useHandleEscape(
+    useCallback(() => {
+      if (!isOpen) {
+        return
+      }
+      onPressEscape()
+    }, [isOpen, onPressEscape]),
+  )
 
   useEffect(() => {
     const focusTrapOption: CreateFocusTrapOptions = {
