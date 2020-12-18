@@ -105,6 +105,11 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       &.prefix {
         justify-content: left;
       }
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
     `
   }}
 `
