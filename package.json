@@ -31,7 +31,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-test-renderer": "^17.0.0",
     "@types/react-transition-group": "^4.4.0",
-    "@types/styled-components": "^5.1.5",
+    "@types/styled-components": "^5.1.7",
     "babel-loader": "^8.2.2",
     "ecma-version-validator-webpack-plugin": "^1.1.0",
     "eslint": "^7.15.0",
