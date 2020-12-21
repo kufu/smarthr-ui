@@ -68,7 +68,7 @@ export function usePortal() {
 
 function _isChildPortal(element: HTMLElement | null, parentPortalSeq: number): boolean {
   if (!element) return false
-  const childOf = element.dataset.portalChildOf || ''
+  const childOf = element.dataset?.portalChildOf || ''
   const includesSeq = childOf.split(',').includes(String(parentPortalSeq))
   return includesSeq || _isChildPortal(element.parentElement, parentPortalSeq)
 }
