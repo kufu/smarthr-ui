@@ -16,11 +16,11 @@ export type BaseProps = {
   actionDisabled?: boolean
 }
 
-type Props = BaseProps & {
+export type ActionDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
 }
 
-export const ActionDialogContentInner: FC<Props> = ({
+export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   children,
   title,
   closeText,
