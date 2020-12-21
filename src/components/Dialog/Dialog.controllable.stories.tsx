@@ -19,13 +19,18 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog">
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-controllable-1"
+      >
         Dialog
       </SecondaryButton>
       <Dialog
         isOpen={isOpen}
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
+        id="dialog-controllable-1"
         ariaLabel="Dialog"
       >
         <DialogControllerTitle>Dialog</DialogControllerTitle>
@@ -76,7 +81,11 @@ const MessageDialogController: React.FC = () => {
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog">
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-controllable-2"
+      >
         MessageDialog
       </SecondaryButton>
       <MessageDialog
@@ -101,6 +110,7 @@ const MessageDialogController: React.FC = () => {
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
+        id="dialog-controllable-2"
       />
     </div>
   )
@@ -115,7 +125,11 @@ const ActionDialogController: React.FC = () => {
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog">
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-controllable-3"
+      >
         ActionDialog
       </SecondaryButton>
       <ActionDialog
@@ -131,6 +145,7 @@ const ActionDialogController: React.FC = () => {
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
+        id="dialog-controllable-3"
       >
         <DialogControllerBox>
           <li>
