@@ -33,7 +33,7 @@ export const SideNavItem: FC<Props> = ({
   return (
     <Wrapper className={isSelected ? 'selected' : ''} themes={theme}>
       <Button className={size} themes={theme} onClick={handleClick}>
-        {prefix && <span>{prefix}</span>}
+        {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
         {title}
       </Button>
     </Wrapper>
@@ -92,6 +92,15 @@ const Button = styled(ResetButton)<{ themes: Theme }>`
         padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
         font-size: ${size.pxToRem(size.font.SHORT)};
       }
+    `
+  }}
+`
+const PrefixWrapper = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
+
+    return css`
+      margin-right: ${size.pxToRem(size.space.XXS)};
     `
   }}
 `
