@@ -85,6 +85,7 @@ const Button = styled(ResetButton)<{ themes: Theme }>`
       width: 100%;
       line-height: 1;
       box-sizing: border-box;
+      cursor: pointer;
 
       &.default {
         padding: ${size.pxToRem(size.space.XS)};
