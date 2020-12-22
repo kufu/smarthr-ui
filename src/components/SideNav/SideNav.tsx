@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { OnClick, SideNavItem, SideNavSizeType } from './SideNavItem'
+import { useClassNames } from './useClassNames'
 
 type SideNavItemProps = Omit<ComponentProps<typeof SideNavItem>, 'size' | 'onClick'>
 
@@ -15,9 +16,10 @@ type Props = {
 
 export const SideNav: FC<Props> = ({ items, size = 'default', onClick, className }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={className}>
+    <Wrapper themes={theme} className={`${className} ${classNames.wrapper}`}>
       {items.map((item) => (
         <SideNavItem
           id={item.id}

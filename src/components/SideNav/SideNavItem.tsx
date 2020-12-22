@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { isTouchDevice } from '../../libs/ua'
 import { ResetButton } from '../Button/ResetButton'
+import { useClassNames } from './useClassNames'
 
 export type SideNavSizeType = 'default' | 's'
 export type OnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
@@ -26,15 +27,17 @@ export const SideNavItem: FC<Props> = ({
   onClick,
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
   const handleClick = onClick
     ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, id)
     : undefined
 
+  const itemClassName = `${isSelected ? 'selected' : ''} ${classNames.item}`
   return (
-    <Wrapper className={isSelected ? 'selected' : ''} themes={theme}>
+    <Wrapper className={itemClassName} themes={theme}>
       <Button className={size} themes={theme} onClick={handleClick}>
         {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
-        {title}
+        <span className={classNames.itemTitle}>{title}</span>
       </Button>
     </Wrapper>
   )
