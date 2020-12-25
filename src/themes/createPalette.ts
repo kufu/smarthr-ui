@@ -39,6 +39,9 @@ export interface CreatedPaletteTheme {
   OUTLINE: string
 }
 
+/**
+ * @deprecated The defaultPelette will be deprecated, please use defaultColor instead
+ */
 export const defaultPalette = {
   TEXT_BLACK: '#23221f',
   TEXT_GREY: '#76736a',
