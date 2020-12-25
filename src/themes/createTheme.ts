@@ -65,18 +65,18 @@ export interface CreatedTheme {
 
 export const createTheme = (theme: ThemeProperty = {}) => {
   const created: CreatedTheme = {
-    palette: createPalette(theme.palette || {}),
-    color: createColor(theme.color || {}),
-    size: createSize(theme.size || {}),
-    fontSize: createFontSize(theme.fontSize || {}),
-    spacing: createSpacing(theme.spacing || {}),
-    breakPoint: createBreakPoint(theme.breakPoint || {}),
-    frame: createFrame(theme.frame || {}, theme.palette || {}),
+    palette: createPalette(theme.palette),
+    color: createColor(theme.color),
+    size: createSize(theme.size),
+    fontSize: createFontSize(theme.fontSize),
+    spacing: createSpacing(theme.spacing),
+    breakPoint: createBreakPoint(theme.breakPoint),
+    frame: createFrame(theme.frame, theme.palette),
     border: createBorder(theme.border, theme.color),
     radius: createRadius(theme.radius),
-    interaction: createInteraction(theme.interaction || {}),
-    shadow: createShadow(theme.shadow || {}),
-    zIndex: createZIndex(theme.zIndex || {}),
+    interaction: createInteraction(theme.interaction),
+    shadow: createShadow(theme.shadow),
+    zIndex: createZIndex(theme.zIndex),
   }
   return created
 }
