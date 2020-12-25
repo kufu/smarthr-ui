@@ -1,9 +1,9 @@
 import { merge } from '../libs/lodash'
 
-const defaultSize = 8
+const defaultBaseSize = 8
 
 export interface SpacingProperty {
-  defaultRem?: number
+  baseSize?: number
   XXS?: number
   XS?: number
   S?: number
@@ -23,24 +23,23 @@ export interface CreatedSpacingTheme {
   XXL: number
 }
 
-const getSpacing = (size: number) => {
+const getSpacing = (baseSize: number) => {
   return {
-    XXS: size,
-    XS: size * 2,
-    S: size * 3,
-    M: size * 4,
-    L: size * 5,
-    XL: size * 6,
-    XXL: size * 7,
+    XXS: baseSize,
+    XS: baseSize * 2,
+    S: baseSize * 3,
+    M: baseSize * 4,
+    L: baseSize * 5,
+    XL: baseSize * 6,
+    XXL: baseSize * 7,
   }
 }
 
-export const defaultSpacing = getSpacing(defaultSize)
+export const defaultSpacing = getSpacing(defaultBaseSize)
 
 export const createSpacing = (userSpacing: SpacingProperty = {}) => {
-  const { defaultRem, ...userTokens } = userSpacing
-  const XXS = defaultRem || defaultSize
-  const created: CreatedSpacingTheme = merge(getSpacing(XXS), userTokens)
+  const { baseSize, ...userTokens } = userSpacing
+  const created: CreatedSpacingTheme = merge(getSpacing(baseSize || defaultBaseSize), userTokens)
 
   return created
 }
