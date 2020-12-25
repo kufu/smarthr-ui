@@ -94,6 +94,9 @@ export { defaultColor } from './themes/createColor'
 export { defaultInteraction } from './themes/createInteraction'
 export { defaultFrame } from './themes/createFrame'
 export { defaultSize } from './themes/createSize'
+export { defaultFontSize } from './themes/createFontSize'
+export { defaultSpacing } from './themes/createSpacing'
+export { defaultBreakPoint } from './themes/createBreakPoint'
 
 // constants
 export { FONT_FAMILY, VISUALLY_HIDDEN_STYLE } from './constants'

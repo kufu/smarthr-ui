@@ -7,6 +7,9 @@ import {
 import { CreatedPaletteTheme, PaletteProperty, createPalette } from './createPalette'
 import { ColorProperty, CreatedColorTheme, createColor } from './createColor'
 import { CreatedSizeTheme, SizeProperty, createSize } from './createSize'
+import { CreatedFontSizeTheme, FontSizeProperty, createFontSize } from './createFontSize'
+import { CreatedSpacingTheme, SpacingProperty, createSpacing } from './createSpacing'
+import { BreakPointProperty, CreatedBreakPointTheme, createBreakPoint } from './createBreakPoint'
 import { CreatedShadowTheme, ShadowProperty, createShadow } from './createShadow'
 import { CreatedZindexTheme, ZIndexProperty, createZIndex } from './createZIndex'
 
@@ -16,7 +19,13 @@ interface ThemeProperty {
    */
   palette?: PaletteProperty
   color?: ColorProperty
+  /**
+   * @deprecated The size property will be deprecated, please use fontSize, spacing or breakPoint property instead
+   */
   size?: SizeProperty
+  fontSize?: FontSizeProperty
+  spacing?: SpacingProperty
+  breakPoint?: BreakPointProperty
   frame?: FrameProperty
   interaction?: InteractionProperty
   shadow?: ShadowProperty
@@ -29,7 +38,13 @@ export interface CreatedTheme {
    */
   palette: CreatedPaletteTheme
   color: CreatedColorTheme
+  /**
+   * @deprecated The size property will be deprecated, please use fontSize, spacing or breakPoint property instead
+   */
   size: CreatedSizeTheme
+  fontSize: CreatedFontSizeTheme
+  spacing: CreatedSpacingTheme
+  breakPoint: CreatedBreakPointTheme
   frame: CreatedFrameTheme
   interaction: CreatedInteractionTheme
   shadow: CreatedShadowTheme
@@ -41,6 +56,9 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     palette: createPalette(theme.palette || {}),
     color: createColor(theme.color || {}),
     size: createSize(theme.size || {}),
+    fontSize: createFontSize(theme.fontSize || {}),
+    spacing: createSpacing(theme.spacing || {}),
+    breakPoint: createBreakPoint(theme.breakPoint || {}),
     frame: createFrame(theme.frame || {}, theme.palette || {}),
     interaction: createInteraction(theme.interaction || {}),
     shadow: createShadow(theme.shadow || {}),
