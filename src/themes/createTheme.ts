@@ -1,4 +1,6 @@
 import { CreatedFrameTheme, FrameProperty, createFrame } from './createFrame'
+import { BorderProperty, CreatedBorderTheme, createBorder } from './createBorder'
+import { CreatedRadiusTheme, RadiusProperty, createRadius } from './createRadius'
 import {
   CreatedInteractionTheme,
   InteractionProperty,
@@ -26,7 +28,12 @@ interface ThemeProperty {
   fontSize?: FontSizeProperty
   spacing?: SpacingProperty
   breakPoint?: BreakPointProperty
+  /**
+   * @deprecated The frame property will be deprecated, please use border or radius property instead
+   */
   frame?: FrameProperty
+  border?: BorderProperty
+  radius?: RadiusProperty
   interaction?: InteractionProperty
   shadow?: ShadowProperty
   zIndex?: ZIndexProperty
@@ -45,7 +52,12 @@ export interface CreatedTheme {
   fontSize: CreatedFontSizeTheme
   spacing: CreatedSpacingTheme
   breakPoint: CreatedBreakPointTheme
+  /**
+   * @deprecated The frame property will be deprecated, please use border or radius property instead
+   */
   frame: CreatedFrameTheme
+  border: CreatedBorderTheme
+  radius: CreatedRadiusTheme
   interaction: CreatedInteractionTheme
   shadow: CreatedShadowTheme
   zIndex: CreatedZindexTheme
@@ -60,6 +72,8 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     spacing: createSpacing(theme.spacing || {}),
     breakPoint: createBreakPoint(theme.breakPoint || {}),
     frame: createFrame(theme.frame || {}, theme.palette || {}),
+    border: createBorder(theme.border, theme.color),
+    radius: createRadius(theme.radius),
     interaction: createInteraction(theme.interaction || {}),
     shadow: createShadow(theme.shadow || {}),
     zIndex: createZIndex(theme.zIndex || {}),
