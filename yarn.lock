@@ -17790,10 +17790,10 @@ styled-components@^5.2.1:
     shallowequal "^1.1.0"
     supports-color "^5.5.0"
 
-styled-reset@^4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/styled-reset/-/styled-reset-4.3.3.tgz#51b55fceceaa3569068a48cfce44f717910fea7a"
-  integrity sha512-vjkkcWi1I7Nl7xS80+JO96egcUe1v/8r6nv76GnHNs43IjeoBH30W8jsqwFPZ54Ifv3Ncy9ux1cuwBax0yCfVA==
+styled-reset@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/styled-reset/-/styled-reset-4.3.4.tgz#87b6f43caa3f83a5f9dc63773c13b8bb71efbe69"
+  integrity sha512-1UmkWmRwSPfzolKleyPjbZdBqkxSXv5ImqTP5WeSjWk0Z7IvEzsrYhrqinZfCg10eM1P6BEtFly8+puQJnN/0A==
 
 stylelint-config-prettier@^8.0.2:
   version "8.0.2"
