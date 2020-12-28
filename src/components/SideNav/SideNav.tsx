@@ -14,7 +14,7 @@ type Props = {
   className?: string
 }
 
-export const SideNav: FC<Props> = ({ items, size = 'default', onClick, className }) => {
+export const SideNav: FC<Props> = ({ items, size = 'default', onClick, className = '' }) => {
   const theme = useTheme()
   const classNames = useClassNames()
 
