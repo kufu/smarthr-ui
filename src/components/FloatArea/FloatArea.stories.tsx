@@ -18,7 +18,7 @@ storiesOf('FloatArea', module)
       primaryButton={<PrimaryButton>Submit</PrimaryButton>}
       secondaryButton={<SecondaryButton>Cancel</SecondaryButton>}
       tertiaryButton={<SecondaryButton>preview</SecondaryButton>}
-      errorIcon={<FaExclamationTriangleIcon />}
+      errorIcon={<FaExclamationTriangleIcon color="#e01e5a" />}
       errorText="This is the error text."
       width="80%"
       top={40}

@@ -72,8 +72,8 @@ export const FloatArea: FC<Props> = ({
     <Base themes={theme} className={className} $width={width} {...props}>
       {tertiaryButton && <TertiaryArea>{tertiaryButton}</TertiaryArea>}
       {errorText && (
-        <ErrorTextArea themes={theme}>
-          {errorIcon && errorIcon}
+        <ErrorTextArea>
+          {errorIcon && <ErrorIcon>{errorIcon}</ErrorIcon>}
           <ErrorText themes={theme}>{errorText}</ErrorText>
         </ErrorTextArea>
       )}
@@ -113,7 +113,7 @@ const ActionArea = styled.div<{ themes: Theme }>`
     return css`
       margin: 0 0 auto 0;
       > button,
-      a {
+      > a {
         margin-left: ${pxToRem(space.XXS)};
         &:first-child {
           margin-left: ${pxToRem(space.XS)};
@@ -125,18 +125,16 @@ const ActionArea = styled.div<{ themes: Theme }>`
 const TertiaryArea = styled.div`
   margin: 0 auto 0 0;
 `
-
-const ErrorTextArea = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { DANGER } = themes.palette
-    return css`
-      display: flex;
-      text-align: left;
-      align-items: center;
-      max-width: 256px;
-      color: ${DANGER};
-    `
-  }}
+const ErrorTextArea = styled.div`
+  display: flex;
+  text-align: left;
+  align-items: center;
+  line-height: 1;
+  max-width: 256px;
+`
+const ErrorIcon = styled.div`
+  width: 16px;
+  flex-shrink: 0;
 `
 const ErrorText = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
