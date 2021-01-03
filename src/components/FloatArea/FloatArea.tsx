@@ -1,7 +1,7 @@
 import React, { ComponentProps, FC, FunctionComponentElement, ReactNode, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 
-import { validateElement } from './FloatAreaAreaHelper'
+import { validateElement } from './FloatAreaHelper'
 import { DialogBase as BaseComponent } from '../Base'
 import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
 import {
@@ -70,10 +70,10 @@ export const FloatArea: FC<Props> = ({
 
   return (
     <Base themes={theme} className={className} $width={width} {...props}>
-      <TertiaryArea>{tertiaryButton && tertiaryButton}</TertiaryArea>
+      {tertiaryButton && <TertiaryArea>{tertiaryButton}</TertiaryArea>}
       {errorText && (
         <ErrorTextArea themes={theme}>
-          {errorIcon}
+          {errorIcon && errorIcon}
           <ErrorText themes={theme}>{errorText}</ErrorText>
         </ErrorTextArea>
       )}
@@ -103,7 +103,6 @@ const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string 
       z-index: ${zIndex};
       width: ${$width};
       padding: ${pxToRem(space.XS)};
-      text-align: center;
     `
   }}
 `
