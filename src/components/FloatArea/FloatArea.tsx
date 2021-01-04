@@ -88,10 +88,10 @@ export const FloatArea: FC<Props> = ({
 const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string }>`
   ${({ themes, top, right, bottom, left, $width, zIndex = 500 }) => {
     const { pxToRem, space } = themes.size
-    const positionRight = exist(right) ? `${right}px` : 'auto'
-    const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
-    const positionTop = exist(top) ? `${top}px` : 'auto'
-    const positionLeft = exist(left) ? `${left}px` : 'auto'
+    const positionRight = exist(right) ? `${right}px` : 'initial'
+    const positionBottom = exist(bottom) ? `${bottom}px` : 'initial'
+    const positionTop = exist(top) ? `${top}px` : 'initial'
+    const positionLeft = exist(left) ? `${left}px` : 'initial'
 
     return css`
       display: flex;
@@ -114,10 +114,7 @@ const ActionArea = styled.div<{ themes: Theme }>`
       margin: 0 0 auto 0;
       > button,
       > a {
-        margin-left: ${pxToRem(space.XXS)};
-        &:first-child {
-          margin-left: ${pxToRem(space.XS)};
-        }
+        margin-left: ${pxToRem(space.XS)};
       }
     `
   }}
