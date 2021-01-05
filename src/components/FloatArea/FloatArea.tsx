@@ -95,6 +95,7 @@ const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string 
 
     return css`
       display: flex;
+      align-items: center;
       position: fixed;
       top: ${positionTop};
       bottom: ${positionBottom};
@@ -111,7 +112,6 @@ const ActionArea = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
     return css`
-      margin: 0 0 auto 0;
       > button,
       > a {
         margin-left: ${pxToRem(space.XS)};
@@ -127,7 +127,7 @@ const ErrorTextArea = styled.div`
   text-align: left;
   align-items: center;
   line-height: 1;
-  max-width: 256px;
+  max-width: 40%;
 `
 const ErrorIcon = styled.div`
   width: 16px;
