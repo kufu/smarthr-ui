@@ -15,7 +15,7 @@ type Args = {
   onSelect: (option: { value: string; label: string }) => void
   isExpanded: boolean
   isAddable: boolean
-  isDuplicated: boolean
+  isDuplicate: boolean
   hasNoMatch: boolean
 }
 
@@ -33,7 +33,7 @@ export function useListBox({
   onSelect,
   isExpanded,
   isAddable,
-  isDuplicated,
+  isDuplicate,
   hasNoMatch,
 }: Args) {
   const [dropdownStyle, setDropdownStyle] = useState({
@@ -202,7 +202,7 @@ export function useListBox({
           )
         })}
 
-        {isDuplicated && (
+        {isDuplicate && (
           <NoItems themes={theme} role="alert" aria-live="polite">
             重複する選択肢は追加できません
           </NoItems>

@@ -1,10 +1,11 @@
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { Heading } from '../Heading'
 import { Base } from '../Base'
 import { DefinitionList } from './DefinitionList'
-import { Icon } from '../Icon'
+import { FaExclamationCircleIcon } from '../Icon'
 
 const DefinitionListItems = [
   {
@@ -29,48 +30,51 @@ const DefinitionListItems = [
   },
 ]
 
-storiesOf('DefinitionList', module).add('all', () => (
-  <Wrapper>
-    <Title type="sectionTitle">single column</Title>
-    <Content>
-      <DefinitionList items={DefinitionListItems} layout="single"></DefinitionList>
-    </Content>
+storiesOf('DefinitionList', module).add('all', () => {
+  const themes = useTheme()
+  return (
+    <Wrapper>
+      <Title type="sectionTitle">single column</Title>
+      <Content>
+        <DefinitionList items={DefinitionListItems} layout="single"></DefinitionList>
+      </Content>
 
-    <Title type="sectionTitle">two column</Title>
-    <Content>
-      <DefinitionList items={DefinitionListItems} layout="double"></DefinitionList>
-    </Content>
+      <Title type="sectionTitle">two column</Title>
+      <Content>
+        <DefinitionList items={DefinitionListItems} layout="double"></DefinitionList>
+      </Content>
 
-    <Title type="sectionTitle">three column</Title>
-    <Content>
-      <DefinitionList items={DefinitionListItems} layout="triple"></DefinitionList>
-    </Content>
+      <Title type="sectionTitle">three column</Title>
+      <Content>
+        <DefinitionList items={DefinitionListItems} layout="triple"></DefinitionList>
+      </Content>
 
-    <Title type="sectionTitle">customized</Title>
-    <Content>
-      <DefinitionList
-        items={[
-          {
-            term: 'term 1',
-            description: 'description 1',
-          },
-          {
-            term: (
-              <Term>
-                <span>term 2</span>
-                <Alert>
-                  <Icon name="fa-exclamation-circle" size={11} color="#ef475b" />
-                  <AlertText>error occurred</AlertText>
-                </Alert>
-              </Term>
-            ),
-            description: 'description 2',
-          },
-        ]}
-      ></DefinitionList>
-    </Content>
-  </Wrapper>
-))
+      <Title type="sectionTitle">customized</Title>
+      <Content>
+        <DefinitionList
+          items={[
+            {
+              term: 'term 1',
+              description: 'description 1',
+            },
+            {
+              term: (
+                <Term>
+                  <span>term 2</span>
+                  <Alert>
+                    <FaExclamationCircleIcon size={11} color={themes.palette.DANGER} />
+                    <AlertText themes={themes}>error occurred</AlertText>
+                  </Alert>
+                </Term>
+              ),
+              description: 'description 2',
+            },
+          ]}
+        ></DefinitionList>
+      </Content>
+    </Wrapper>
+  )
+})
 
 const Wrapper = styled.div`
   padding: 24px;
@@ -91,8 +95,8 @@ const Alert = styled.span`
   align-items: center;
   margin-left: 8px;
 `
-const AlertText = styled.span`
+const AlertText = styled.span<{ themes: Theme }>`
   margin-left: 4px;
-  color: #333;
+  color: ${({ themes }) => themes.palette.TEXT_BLACK};
   font-size: 11px;
 `
