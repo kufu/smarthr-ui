@@ -4,7 +4,7 @@
   "version": "12.0.0-0",
   "author": "SmartHR-UI Team",
   "dependencies": {
-    "dayjs": "^1.9.7",
+    "dayjs": "^1.10.3",
     "focus-trap": "^6.2.3",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
@@ -34,7 +34,7 @@
     "@types/styled-components": "^5.1.7",
     "babel-loader": "^8.2.2",
     "ecma-version-validator-webpack-plugin": "^1.1.0",
-    "eslint": "^7.16.0",
+    "eslint": "^7.17.0",
     "eslint-config-smarthr": "^5.0.0",
     "fixpack": "^3.0.6",
     "http-server": "^0.12.3",
