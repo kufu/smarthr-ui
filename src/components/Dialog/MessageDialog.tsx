@@ -1,29 +1,23 @@
 import React, { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
-import { DialogContentInner } from './DialogContentInner'
-import { MessageDialogContentProps } from './MessageDialogContent'
-import { MessageDialogContentInner } from './MessageDialogContentInner'
+import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
+import {
+  MessageDialogContentInner,
+  MessageDialogContentInnerProps,
+} from './MessageDialogContentInner'
 
-type Props = MessageDialogContentProps & {
-  isOpen: boolean
-  onClickClose: () => void
-  onClickOverlay?: () => void
-  onPressEscape?: () => void
-}
+type Props = MessageDialogContentInnerProps &
+  Pick<
+    DialogContentInnerProps,
+    'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
+  >
 
 export const MessageDialog: React.FC<Props> = ({
-  isOpen,
   title,
   description,
   closeText,
   onClickClose,
-  onClickOverlay = () => {
-    /* noop */
-  },
-  onPressEscape = () => {
-    /* noop */
-  },
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current
@@ -37,13 +31,7 @@ export const MessageDialog: React.FC<Props> = ({
   }, [element])
 
   return createPortal(
-    <DialogContentInner
-      onClickOverlay={onClickOverlay}
-      onPressEscape={onPressEscape}
-      isOpen={isOpen}
-      ariaLabel={title}
-      {...props}
-    >
+    <DialogContentInner ariaLabel={title} {...props}>
       <MessageDialogContentInner
         title={title}
         description={description}
