@@ -11,7 +11,7 @@ import { ColorProperty, CreatedColorTheme, createColor } from './createColor'
 import { CreatedSizeTheme, SizeProperty, createSize } from './createSize'
 import { CreatedFontSizeTheme, FontSizeProperty, createFontSize } from './createFontSize'
 import { CreatedSpacingTheme, SpacingProperty, createSpacing } from './createSpacing'
-import { BreakPointProperty, CreatedBreakPointTheme, createBreakPoint } from './createBreakPoint'
+import { BreakpointProperty, CreatedBreakpointTheme, createBreakpoint } from './createBreakpoint'
 import { CreatedShadowTheme, ShadowProperty, createShadow } from './createShadow'
 import { CreatedZindexTheme, ZIndexProperty, createZIndex } from './createZIndex'
 
@@ -22,12 +22,12 @@ interface ThemeProperty {
   palette?: PaletteProperty
   color?: ColorProperty
   /**
-   * @deprecated The size property will be deprecated, please use fontSize, spacing or breakPoint property instead
+   * @deprecated The size property will be deprecated, please use fontSize, spacing or breakpoint property instead
    */
   size?: SizeProperty
   fontSize?: FontSizeProperty
   spacing?: SpacingProperty
-  breakPoint?: BreakPointProperty
+  breakpoint?: BreakpointProperty
   /**
    * @deprecated The frame property will be deprecated, please use border or radius property instead
    */
@@ -46,12 +46,12 @@ export interface CreatedTheme {
   palette: CreatedPaletteTheme
   color: CreatedColorTheme
   /**
-   * @deprecated The size property will be deprecated, please use fontSize, spacing or breakPoint property instead
+   * @deprecated The size property will be deprecated, please use fontSize, spacing or breakpoint property instead
    */
   size: CreatedSizeTheme
   fontSize: CreatedFontSizeTheme
   spacing: CreatedSpacingTheme
-  breakPoint: CreatedBreakPointTheme
+  breakpoint: CreatedBreakpointTheme
   /**
    * @deprecated The frame property will be deprecated, please use border or radius property instead
    */
@@ -70,7 +70,7 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     size: createSize(theme.size),
     fontSize: createFontSize(theme.fontSize),
     spacing: createSpacing(theme.spacing),
-    breakPoint: createBreakPoint(theme.breakPoint),
+    breakpoint: createBreakpoint(theme.breakpoint),
     frame: createFrame(theme.frame, theme.palette),
     border: createBorder(theme.border, theme.color),
     radius: createRadius(theme.radius),

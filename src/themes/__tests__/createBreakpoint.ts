@@ -1,9 +1,9 @@
-import { createBreakPoint } from '../createBreakPoint'
+import { createBreakpoint } from '../createBreakpoint'
 import { createSize } from '../createSize'
 
-describe('createBreakPoint', () => {
+describe('createBreakpoint', () => {
   it('returns same break point theme with createSize', () => {
-    const actual = createBreakPoint()
+    const actual = createBreakpoint()
     const expected = createSize()
 
     expect(actual.SP).toBe(expected.mediaQuery.SP)
@@ -11,7 +11,7 @@ describe('createBreakPoint', () => {
   })
 
   it('returns customized break point theme when give user break point', () => {
-    const actual = createBreakPoint({
+    const actual = createBreakpoint({
       SP: 100,
       TABLET: 200,
     })
