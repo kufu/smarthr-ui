@@ -1,9 +1,9 @@
 import { merge } from '../libs/lodash'
 import { ColorProperty, defaultColor } from './createColor'
 
-const lineWidth = '1px'
-const lineStyle = 'solid'
-const lineColor = defaultColor.BORDER
+const defaultLineWidth = '1px'
+const defaultLineStyle = 'solid'
+const defaultLineColor = defaultColor.BORDER
 
 export interface BorderProperty {
   lineWidth?: string
@@ -18,9 +18,9 @@ export interface CreatedBorderTheme {
 }
 
 export const defaultBorder: CreatedBorderTheme = {
-  lineWidth,
-  lineStyle,
-  shorthand: `${lineWidth} ${lineStyle} ${lineColor}`,
+  lineWidth: defaultLineWidth,
+  lineStyle: defaultLineStyle,
+  shorthand: `${defaultLineWidth} ${defaultLineStyle} ${defaultLineColor}`,
 }
 
 export const createBorder = (userBorder: BorderProperty = {}, userColor: ColorProperty = {}) => {
@@ -28,7 +28,7 @@ export const createBorder = (userBorder: BorderProperty = {}, userColor: ColorPr
   const created: CreatedBorderTheme = merge(
     {
       ...defaultBorder,
-      shorthand: `${lineWidth} ${lineStyle} ${color}`,
+      shorthand: `${defaultLineWidth} ${defaultLineStyle} ${color}`,
     },
     userBorder,
   )
