@@ -58,9 +58,9 @@ export const parameters = {
         <Subtitle />
         <Description />
         <Primary />
+        <Stories title="Usage" />
         <Heading>Props</Heading>
         <ArgsTable />
-        <Stories title="Usage" />
       </>
     ),
   },
