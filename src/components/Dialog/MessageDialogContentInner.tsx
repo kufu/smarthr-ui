@@ -12,11 +12,11 @@ export type BaseProps = {
   closeText: string
 }
 
-type Props = BaseProps & {
+export type MessageDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
 }
 
-export const MessageDialogContentInner: FC<Props> = ({
+export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   title,
   description,
   closeText,

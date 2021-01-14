@@ -1,30 +1,12 @@
 import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import React, { FC, ReactNode } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { AppNavi } from './AppNavi'
 import readme from './README.md'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
-const List = styled.ul`
-  margin: 0;
-  padding: 8px 0;
-  list-style: none;
-
-  & > li > button {
-    line-height: 40px;
-    width: 100%;
-    padding: 0 20px;
-    border: none;
-    background-color: #fff;
-    font-size: 14px;
-    color: #333;
-
-    &:hover {
-      background-color: #f5f5f5;
-    }
-  }
-`
 const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?: string }> = ({
   to,
   children,
@@ -36,6 +18,28 @@ const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?
     {children}
   </a>
 )
+
+const List: FC = () => {
+  const theme = useTheme()
+
+  return (
+    <ListWrapper themes={theme}>
+      <li>
+        <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
+      </li>
+      <li>
+        <button onClick={action('clicked item 2')}>ドロップダウンアイテム2</button>
+      </li>
+      <li>
+        <button onClick={action('clicked item 3')}>ドロップダウンアイテム3</button>
+      </li>
+      <li>
+        <button onClick={action('clicked item 4')}>ドロップダウンアイテム4</button>
+      </li>
+    </ListWrapper>
+  )
+}
+
 const buttons = [
   {
     children: 'カレントボタン',
@@ -56,22 +60,7 @@ const buttons = [
   {
     children: 'ドロップダウン',
     icon: 'fa-chart-pie' as const,
-    dropdownContent: (
-      <List>
-        <li>
-          <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
-        </li>
-        <li>
-          <button onClick={action('clicked item 2')}>ドロップダウンアイテム2</button>
-        </li>
-        <li>
-          <button onClick={action('clicked item 3')}>ドロップダウンアイテム3</button>
-        </li>
-        <li>
-          <button onClick={action('clicked item 4')}>ドロップダウンアイテム4</button>
-        </li>
-      </List>
-    ),
+    dropdownContent: <List />,
   },
   {
     children: 'カスタムタグ',
@@ -87,19 +76,29 @@ storiesOf('AppNavi', module)
       sidebar: readme,
     },
   })
-  .add('with children', () => (
-    <Wrapper>
-      <AppNavi label="プラスメニュー" buttons={buttons}>
-        <Child>Some child components</Child>
-      </AppNavi>
-    </Wrapper>
-  ))
-  .add('without children', () => (
-    <Wrapper>
-      <AppNavi label="プラスメニュー" buttons={buttons} />
-    </Wrapper>
-  ))
+  .add('with children', () => {
+    const theme = useTheme()
+
+    return (
+      <Wrapper themes={theme}>
+        <AppNavi label="プラスメニュー" buttons={buttons}>
+          <Child>Some child components</Child>
+        </AppNavi>
+      </Wrapper>
+    )
+  })
+  .add('without children', () => {
+    const theme = useTheme()
+
+    return (
+      <Wrapper themes={theme}>
+        <AppNavi label="プラスメニュー" buttons={buttons} />
+      </Wrapper>
+    )
+  })
   .add('unclickable current', () => {
+    const theme = useTheme()
+
     const items = [
       {
         children: 'ボタン',
@@ -130,7 +129,7 @@ storiesOf('AppNavi', module)
       },
     ]
     return (
-      <Wrapper>
+      <Wrapper themes={theme}>
         {items.map((_, currentIndex) => (
           <InnerWrapper key={currentIndex}>
             <AppNavi
@@ -149,13 +148,45 @@ storiesOf('AppNavi', module)
     )
   })
 
-const Wrapper = styled.div`
-  padding: 32px 0;
-  background-color: #f5f6fa;
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette } = themes
+
+    return css`
+      padding: 32px 0;
+      background-color: ${palette.BACKGROUND};
+    `
+  }}
 `
 const Child = styled.p`
   margin: 0 0 0 auto;
 `
 const InnerWrapper = styled.div`
   margin-bottom: 40px;
+`
+
+const ListWrapper = styled.ul<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette } = themes
+
+    return css`
+      margin: 0;
+      padding: 8px 0;
+      list-style: none;
+
+      & > li > button {
+        line-height: 40px;
+        width: 100%;
+        padding: 0 20px;
+        border: none;
+        background-color: #fff;
+        font-size: 14px;
+        color: ${palette.TEXT_BLACK};
+
+        &:hover {
+          background-color: ${palette.hoverColor('#fff')};
+        }
+      }
+    `
+  }}
 `

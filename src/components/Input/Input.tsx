@@ -163,6 +163,7 @@ const StyledInput = styled.input<
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
       outline: none;
+      box-sizing: border-box;
 
       &::placeholder {
         color: ${palette.TEXT_GREY};

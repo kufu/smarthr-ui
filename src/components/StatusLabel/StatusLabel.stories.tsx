@@ -45,9 +45,8 @@ storiesOf('StatusLabel', module)
   ))
 
 const ListWrapper = styled.div`
-  padding: 0 24px;
+  padding: 24px;
 `
-
 const List = styled.ul`
   display: flex;
   padding: 0;
