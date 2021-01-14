@@ -15,12 +15,35 @@ export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 's
 export type AnchorProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'prefix'> & BaseProps
 
 export type BaseProps = {
+  /**
+   * Size of button.
+   */
   size?: Size
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode
+  /**
+   * `className` of component.
+   */
   className?: string
+  /**
+   * The content of the prefix of button content.
+   * Normally, this is for icon insertion.
+   */
   prefix?: React.ReactNode
+  /**
+   * The content of the suffix of button content.
+   * Normally, this is for icon insertion.
+   */
   suffix?: React.ReactNode
+  /**
+   * If `true`, the component shape changes to square.
+   */
   square?: boolean
+  /**
+   * If `true`, the component shape changes width is 100%
+   */
   wide?: boolean
 }
 
