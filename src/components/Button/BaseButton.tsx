@@ -16,6 +16,7 @@ export type AnchorProps = BaseProps &
 export type BaseProps = {
   /**
    * Size of button.
+   * @default 'default'
    */
   size?: Size
   /**
@@ -38,6 +39,7 @@ export type BaseProps = {
   suffix?: React.ReactNode
   /**
    * If `true`, the component shape changes to square.
+   * @default false
    */
   square?: boolean
   /**
