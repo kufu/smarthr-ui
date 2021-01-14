@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Icon } from '../Icon'
+import { FaExclamationCircleIcon } from '../Icon'
 import { FieldSet } from './FieldSet'
 import readme from './README.md'
 
@@ -60,7 +60,7 @@ storiesOf('FieldSet', module)
           label="labelSuffix"
           labelSuffix={
             <Suffix>
-              <Icon name="fa-exclamation-circle" size={12} color="#767676" />
+              <FaExclamationCircleIcon size={12} color="#767676" />
               <SuffixText>suffix text</SuffixText>
             </Suffix>
           }
@@ -78,7 +78,7 @@ storiesOf('FieldSet', module)
           helpMessage="This is help message."
           labelSuffix={
             <Suffix>
-              <Icon name="fa-exclamation-circle" size={12} color="#767676" />
+              <FaExclamationCircleIcon size={12} color="#767676" />
               <SuffixText>suffix text</SuffixText>
             </Suffix>
           }

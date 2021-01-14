@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { Icon } from '../Icon'
+import { FaExternalLinkAltIcon } from '../Icon'
 
 storiesOf('[TBD] ProgressBar', module).add('all', () => (
   <Wrapper>
@@ -12,7 +12,7 @@ storiesOf('[TBD] ProgressBar', module).add('all', () => (
       target="_blank"
     >
       <LinkText>Design of ProgressBar (InVision)</LinkText>
-      <LinkIcon name="fa-external-link-alt" size={14} />
+      <LinkIcon size={14} />
     </Link>
   </Wrapper>
 ))
@@ -50,7 +50,7 @@ const LinkText = styled.span`
   vertical-align: middle;
 `
 
-const LinkIcon = styled(Icon)`
+const LinkIcon = styled(FaExternalLinkAltIcon)`
   margin-left: 4px;
   vertical-align: middle;
 `

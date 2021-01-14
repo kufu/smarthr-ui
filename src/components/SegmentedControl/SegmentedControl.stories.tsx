@@ -4,7 +4,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { SegmentedControl } from './SegmentedControl'
-import { Icon } from '../Icon'
+import { FaPlusCircleIcon } from '../Icon'
 
 import readme from './README.md'
 
@@ -58,7 +58,7 @@ storiesOf('SegmentedControl', module)
           <SegmentedControl
             options={options.map((option) => ({
               ...option,
-              content: <Icon size={16} name="fa-plus-circle" />,
+              content: <FaPlusCircleIcon size={16} />,
             }))}
             value={value3}
             onClickOption={(value) => {
@@ -73,7 +73,7 @@ storiesOf('SegmentedControl', module)
           <SegmentedControl
             options={options.map((option) => ({
               ...option,
-              content: <Icon size={13} name="fa-plus-circle" />,
+              content: <FaPlusCircleIcon size={13} />,
             }))}
             value={value4}
             onClickOption={(value) => {
