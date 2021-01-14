@@ -8,19 +8,19 @@ const lineColor = defaultColor.BORDER
 export interface BorderProperty {
   lineWidth?: string
   lineStyle?: string
-  default?: string
+  shorthand?: string
 }
 
 export interface CreatedBorderTheme {
   lineWidth: string
   lineStyle: string
-  default: string
+  shorthand: string
 }
 
 export const defaultBorder: CreatedBorderTheme = {
   lineWidth,
   lineStyle,
-  default: `${lineWidth} ${lineStyle} ${lineColor}`,
+  shorthand: `${lineWidth} ${lineStyle} ${lineColor}`,
 }
 
 export const createBorder = (userBorder: BorderProperty = {}, userColor: ColorProperty = {}) => {
@@ -28,7 +28,7 @@ export const createBorder = (userBorder: BorderProperty = {}, userColor: ColorPr
   const created: CreatedBorderTheme = merge(
     {
       ...defaultBorder,
-      default: `${lineWidth} ${lineStyle} ${color}`,
+      shorthand: `${lineWidth} ${lineStyle} ${color}`,
     },
     userBorder,
   )
