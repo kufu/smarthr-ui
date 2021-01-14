@@ -7,7 +7,7 @@ import { useId } from '../../hooks/useId'
 import { Input, Props as InputProps } from '../Input'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
 import { StatusLabel } from '../StatusLabel'
-import { Icon } from '../Icon'
+import { FaExclamationCircleIcon } from '../Icon'
 
 type Props = Omit<InputProps, 'error'> & {
   label: string
@@ -54,7 +54,7 @@ export const FieldSet: FC<Props> = ({
       {errorMessage &&
         (typeof errorMessage === 'string' ? [errorMessage] : errorMessage).map((message) => (
           <Error themes={theme} key={message}>
-            <ErrorIcon name="fa-exclamation-circle" color={theme.palette.DANGER} />
+            <ErrorIcon color={theme.palette.DANGER} />
             <ErrorText>{message}</ErrorText>
           </Error>
         ))}
@@ -103,7 +103,7 @@ const Error = styled.div<{ themes: Theme }>`
     line-height: 1;
   `}
 `
-const ErrorIcon = styled(Icon)`
+const ErrorIcon = styled(FaExclamationCircleIcon)`
   margin-right: 0.4rem;
   vertical-align: middle;
 `
