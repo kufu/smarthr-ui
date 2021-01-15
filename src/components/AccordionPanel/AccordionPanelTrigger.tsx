@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext } from 'react'
+import React, { ButtonHTMLAttributes, FC, useCallback, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -15,8 +15,13 @@ type Props = {
   children: React.ReactNode
   className?: string
 }
+type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
-export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) => {
+export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
+  children,
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
   const { name } = useContext(AccordionPanelItemContext)
   const {
@@ -59,6 +64,7 @@ export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) =
       themes={theme}
       onClick={handleClick}
       type="button"
+      {...props}
     >
       {displayIcon && iconPosition === 'left' && caretIcon}
       {children}

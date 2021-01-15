@@ -1,4 +1,4 @@
-import React, { FC, RefObject, useCallback, useContext, useRef } from 'react'
+import React, { FC, HTMLAttributes, RefObject, useCallback, useContext, useRef } from 'react'
 import styled from 'styled-components'
 import { Transition } from 'react-transition-group'
 
@@ -11,13 +11,18 @@ type Props = {
   children: React.ReactNode
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 const updateNodeHeight = (node: HTMLElement, wrapperRef: RefObject<HTMLDivElement>) => {
   const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
   node.style.height = `${wrapperHeight}px`
 }
 
-export const AccordionPanelContent: FC<Props> = ({ children, className = '' }) => {
+export const AccordionPanelContent: FC<Props & ElementProps> = ({
+  children,
+  className = '',
+  ...props
+}) => {
   const { name } = useContext(AccordionPanelItemContext)
   const { expandedItems } = useContext(AccordionPanelContext)
   const isInclude = getIsInclude(expandedItems, name)
@@ -72,6 +77,7 @@ export const AccordionPanelContent: FC<Props> = ({ children, className = '' }) =
           className={`${status} ${className} ${classNames.content}`}
           aria-labelledby={`${name}-trigger`}
           aria-hidden={!isInclude}
+          {...props}
         >
           <div ref={wrapperRef}>{children}</div>
         </CollapseContainer>
