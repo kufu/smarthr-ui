@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 
 import { flatArrayToMap } from '../../libs/map'
 import { getNewExpandedItems } from './accordionPanelHelper'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   children: React.ReactNode
@@ -37,6 +38,7 @@ export const AccordionPanel: React.FC<Props> = ({
   onClick: onClickProps,
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
+  const classNames = useClassNames()
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
@@ -60,7 +62,7 @@ export const AccordionPanel: React.FC<Props> = ({
         expandableMultiply,
       }}
     >
-      <div className={className}>{children}</div>
+      <div className={`${className} ${classNames.wrapper}`}>{children}</div>
     </AccordionPanelContext.Provider>
   )
 }

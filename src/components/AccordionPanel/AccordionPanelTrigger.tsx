@@ -7,6 +7,7 @@ import { isTouchDevice } from '../../libs/ua'
 import { getNewExpandedItems } from './accordionPanelHelper'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
+import { useClassNames } from './useClassNames'
 
 import { FaCaretDownIcon } from '../Icon'
 
@@ -26,10 +27,11 @@ export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) =
     onClickProps,
     expandableMultiply,
   } = useContext(AccordionPanelContext)
+  const classNames = useClassNames()
 
   const isExpanded = getIsInclude(expandedItems, name)
   const expandedClassName = isExpanded ? 'expanded' : ''
-  const buttonClassNames = `${className} ${expandedClassName} ${iconPosition}`
+  const buttonClassNames = `${className} ${expandedClassName} ${iconPosition} ${classNames.trigger}`
   const iconClassNames = `${expandedClassName} ${iconPosition}`
 
   const handleClick = useCallback(() => {

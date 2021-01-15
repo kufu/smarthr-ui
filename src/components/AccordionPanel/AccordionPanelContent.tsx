@@ -5,6 +5,7 @@ import { Transition } from 'react-transition-group'
 import { getIsInclude } from '../../libs/map'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { AccordionPanelContext } from './AccordionPanel'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   children: React.ReactNode
@@ -21,6 +22,7 @@ export const AccordionPanelContent: FC<Props> = ({ children, className = '' }) =
   const { expandedItems } = useContext(AccordionPanelContext)
   const isInclude = getIsInclude(expandedItems, name)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const classNames = useClassNames()
 
   const handleEntering = useCallback(
     (node: HTMLElement) => {
@@ -67,7 +69,7 @@ export const AccordionPanelContent: FC<Props> = ({ children, className = '' }) =
       {(status) => (
         <CollapseContainer
           id={`${name}-content`}
-          className={`${status} ${className}`}
+          className={`${status} ${className} ${classNames.content}`}
           aria-labelledby={`${name}-trigger`}
           aria-hidden={!isInclude}
         >
