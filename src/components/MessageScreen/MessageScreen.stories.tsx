@@ -1,6 +1,7 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import { storiesOf } from '@storybook/react'
+import styled, { css } from 'styled-components'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Base } from '../Base'
 import { FieldSet } from '../FieldSet'
@@ -15,44 +16,81 @@ storiesOf('MessageScreen', module)
       sidebar: readme,
     },
   })
-  .add('full', () => (
-    <MessageScreen
-      title="SmartHR は現在メンテナンス中です"
-      links={[
-        {
-          label: 'SmartHR お知らせ',
-          url: 'http://example.com',
-          target: '_blank',
-        },
-      ]}
-    >
-      <Description>
-        いつも SmartHR をご利用いただきありがとうございます。
-        <br />
-        ただいまメンテナンスのため、一時サービスを停止しております。
-        <br />
-        ご迷惑をおかけいたしますが、ご理解のほどよろしくお願いいたします。
-      </Description>
-    </MessageScreen>
-  ))
-  .add('without title', () => (
-    <MessageScreen
-      links={[
-        {
-          label: '新しく企業アカウントを作成する',
-          url: 'http://example.com',
-        },
-        {
-          label: '登録確認メールを再送する',
-          url: 'http://example.com',
-        },
-      ]}
-    >
-      <BoxWrapper>
+  .add('full', () => {
+    const themes = useTheme()
+    return (
+      <MessageScreen
+        title="SmartHR は現在メンテナンス中です"
+        links={[
+          {
+            label: 'SmartHR お知らせ',
+            url: 'http://example.com',
+            target: '_blank',
+          },
+        ]}
+      >
+        <Description themes={themes}>
+          いつも SmartHR をご利用いただきありがとうございます。
+          <br />
+          ただいまメンテナンスのため、一時サービスを停止しております。
+          <br />
+          ご迷惑をおかけいたしますが、ご理解のほどよろしくお願いいたします。
+        </Description>
+      </MessageScreen>
+    )
+  })
+  .add('without title', () => {
+    const themes = useTheme()
+    return (
+      <MessageScreen
+        links={[
+          {
+            label: '新しく企業アカウントを作成する',
+            url: 'http://example.com',
+          },
+          {
+            label: '登録確認メールを再送する',
+            url: 'http://example.com',
+          },
+        ]}
+      >
+        <BoxWrapper>
+          <Box>
+            <List>
+              <li>
+                <FieldSet label="メールアドレス" width="100%" />
+              </li>
+              <li>
+                <FieldSet label="パスワード" width="100%" />
+              </li>
+            </List>
+            <Bottom>
+              <PrimaryButton wide>ログイン</PrimaryButton>
+              <Link href="http://example.com" themes={themes}>
+                パスワードをお忘れの方
+              </Link>
+            </Bottom>
+          </Box>
+        </BoxWrapper>
+      </MessageScreen>
+    )
+  })
+  .add('without links', () => {
+    const themes = useTheme()
+    return (
+      <MessageScreen
+        title={
+          <>
+            株式会社 TEST INC
+            <br />
+            <Headline themes={themes}>専用ログイン画面</Headline>
+          </>
+        }
+      >
         <Box>
           <List>
             <li>
-              <FieldSet label="メールアドレス" width="100%" />
+              <FieldSet label="社員番号またはメールアドレス" width="100%" />
             </li>
             <li>
               <FieldSet label="パスワード" width="100%" />
@@ -60,38 +98,14 @@ storiesOf('MessageScreen', module)
           </List>
           <Bottom>
             <PrimaryButton wide>ログイン</PrimaryButton>
-            <Link href="http://example.com">パスワードをお忘れの方</Link>
+            <Link href="http://example.com" themes={themes}>
+              パスワードをお忘れの方
+            </Link>
           </Bottom>
         </Box>
-      </BoxWrapper>
-    </MessageScreen>
-  ))
-  .add('without links', () => (
-    <MessageScreen
-      title={
-        <>
-          株式会社 TEST INC
-          <br />
-          <Headline>専用ログイン画面</Headline>
-        </>
-      }
-    >
-      <Box>
-        <List>
-          <li>
-            <FieldSet label="社員番号またはメールアドレス" width="100%" />
-          </li>
-          <li>
-            <FieldSet label="パスワード" width="100%" />
-          </li>
-        </List>
-        <Bottom>
-          <PrimaryButton wide>ログイン</PrimaryButton>
-          <Link href="http://example.com">パスワードをお忘れの方</Link>
-        </Bottom>
-      </Box>
-    </MessageScreen>
-  ))
+      </MessageScreen>
+    )
+  })
   .add('without children', () => (
     <MessageScreen
       title="サンプルタイトル"
@@ -105,11 +119,13 @@ storiesOf('MessageScreen', module)
   ))
   .add('without all optional props', () => <MessageScreen />)
 
-const Description = styled.div`
-  color: #333;
-  font-size: 14px;
-  line-height: 21px;
-  text-align: center;
+const Description = styled.div<{ themes: Theme }>`
+  ${({ themes }) => css`
+    color: ${themes.palette.TEXT_BLACK};
+    font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
+    line-height: 21px;
+    text-align: center;
+  `}
 `
 const BoxWrapper = styled.div`
   margin-bottom: 16px;
@@ -137,20 +153,24 @@ const Bottom = styled.div`
     margin-bottom: 24px;
   }
 `
-const Link = styled.a`
-  color: #007bc2;
-  font-size: 14px;
-  text-decoration: none;
+const Link = styled.a<{ themes: Theme }>`
+  ${({ themes }) => css`
+    color: ${themes.palette.TEXT_LINK};
+    font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
+    text-decoration: none;
 
-  &:hover {
-    text-decoration: underline;
-  }
+    &:hover {
+      text-decoration: underline;
+    }
+  `}
 `
-const Headline = styled.span`
-  display: inline-block;
-  width: 100%;
-  margin-top: 16px;
-  color: #333;
-  font-size: 18px;
-  text-align: center;
+const Headline = styled.span<{ themes: Theme }>`
+  ${({ themes }) => css`
+    display: inline-block;
+    width: 100%;
+    margin-top: 16px;
+    color: ${themes.palette.TEXT_BLACK};
+    font-size: ${themes.size.pxToRem(themes.size.font.GRANDE)};
+    text-align: center;
+  `}
 `
