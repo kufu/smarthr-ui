@@ -8,7 +8,7 @@ import { useGlobalKeyDown } from './useGlobalKeyDown'
 import { parseJpnDateString } from './datePickerHelper'
 
 import { Input } from '../Input'
-import { Icon } from '../Icon'
+import { FaCalendarAltIcon } from '../Icon'
 import { Calendar } from '../Calendar'
 import { Portal } from './Portal'
 
@@ -219,8 +219,7 @@ export const DatePicker: FC<Props> = ({
           suffix={
             <CalendarIconLayout themes={themes}>
               <CalendarIconWrapper themes={themes}>
-                <Icon
-                  name="fa-calendar-alt"
+                <FaCalendarAltIcon
                   color={
                     isInputFocused || isCalendarShown
                       ? themes.palette.TEXT_BLACK
