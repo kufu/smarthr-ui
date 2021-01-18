@@ -3,7 +3,13 @@ import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { Icon, iconMap } from '../Icon'
+import {
+  FaCheckCircleIcon,
+  FaExclamationCircleIcon,
+  FaExclamationTriangleIcon,
+  FaInfoCircleIcon,
+  FaTimesIcon,
+} from '../Icon'
 import { SecondaryButton } from '../Button'
 
 type Props = {
@@ -34,33 +40,33 @@ export const FlashMessage: FC<Props> = ({ visible, type, text, onClose, classNam
 
   if (!visible) return null
 
-  let iconName: keyof typeof iconMap = 'fa-check-circle'
+  let Icon = FaCheckCircleIcon
   let iconColor = theme.palette.TEXT_GREY
 
   switch (type) {
     case 'success':
-      iconName = 'fa-check-circle'
+      Icon = FaCheckCircleIcon
       iconColor = theme.palette.MAIN
       break
     case 'info':
-      iconName = 'fa-info-circle'
+      Icon = FaInfoCircleIcon
       iconColor = theme.palette.TEXT_GREY
       break
     case 'warning':
-      iconName = 'fa-exclamation-triangle'
+      Icon = FaExclamationTriangleIcon
       iconColor = theme.palette.WARNING
       break
     case 'error':
-      iconName = 'fa-exclamation-circle'
+      Icon = FaExclamationCircleIcon
       iconColor = theme.palette.DANGER
   }
 
   return (
     <Wrapper className={`${type} ${className}`} themes={theme} role="alert">
-      <Icon name={iconName} size={14} color={iconColor} />
+      <Icon size={14} color={iconColor} />
       <Txt themes={theme}>{text}</Txt>
       <CloseButton className="close" onClick={onClose} size="s" square themes={theme}>
-        <Icon size={16} name="fa-times" />
+        <FaTimesIcon size={16} />
       </CloseButton>
     </Wrapper>
   )
