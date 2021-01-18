@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
 import { TextButton } from '../Button'
-import { Icon } from '../Icon'
+import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Size = 'default' | 's'
@@ -59,7 +59,7 @@ export const InputFile: FC<Props> = ({
                 <span>{file.name}</span>
                 <span>
                   <TextButton
-                    prefix={<Icon size={14} name="fa-trash-alt" />}
+                    prefix={<FaTrashAltIcon size={14} />}
                     onClick={() => handleDelete(index)}
                   >
                     削除
@@ -86,7 +86,7 @@ export const InputFile: FC<Props> = ({
         >
           <label htmlFor={id}>
             <Prefix themes={theme}>
-              <Icon size={14} name="fa-folder-open" />
+              <FaFolderOpenIcon size={14} />
             </Prefix>
             {label}
           </label>

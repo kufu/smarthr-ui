@@ -8,7 +8,7 @@ import { DropdownContent } from '../DropdownContent'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownScrollArea } from '../DropdownScrollArea'
 import { PrimaryButton, SecondaryButton, TextButton } from '../../Button'
-import { Icon } from '../../Icon'
+import { FaCaretDownIcon, FaUndoAltIcon } from '../../Icon'
 
 type Props = {
   isFiltered?: boolean
@@ -31,7 +31,7 @@ export const FilterDropdown: FC<Props> = ({
     <Dropdown>
       <TriggerButtonWrapper themes={themes} isFiltered={isFiltered}>
         <DropdownTrigger>
-          <SecondaryButton suffix={<Icon name="fa-caret-down" />}>絞り込み</SecondaryButton>
+          <SecondaryButton suffix={<FaCaretDownIcon />}>絞り込み</SecondaryButton>
         </DropdownTrigger>
       </TriggerButtonWrapper>
       <DropdownContent controllable>
@@ -41,7 +41,7 @@ export const FilterDropdown: FC<Props> = ({
         <BottomLayout themes={themes}>
           {onReset && (
             <ResetButtonLayout>
-              <TextButton size="s" prefix={<Icon name="fa-undo-alt" />} onClick={() => onReset()}>
+              <TextButton size="s" prefix={<FaUndoAltIcon />} onClick={() => onReset()}>
                 絞り込み条件を解除
               </TextButton>
             </ResetButtonLayout>

@@ -5,7 +5,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 
-import { Icon } from '../Icon'
+import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { useListBox } from './useListBox'
 
 const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
@@ -162,7 +162,6 @@ export const MultiComboBox: FC<Props> = ({
                       onClick={() => onDelete({ value, label })}
                     >
                       <DeleteIcon
-                        name="fa-times-circle"
                         size={11}
                         color={theme.palette.TEXT_BLACK}
                         visuallyHiddenText="delete"
@@ -217,10 +216,7 @@ export const MultiComboBox: FC<Props> = ({
         </InputArea>
 
         <Suffix themes={theme}>
-          <Icon
-            name="fa-caret-down"
-            color={isFocused ? theme.palette.TEXT_BLACK : theme.palette.BORDER}
-          />
+          <FaCaretDownIcon color={isFocused ? theme.palette.TEXT_BLACK : theme.palette.BORDER} />
         </Suffix>
       </Inner>
 
@@ -329,7 +325,7 @@ const DeleteButton = styled.button<{ themes: Theme }>`
     `
   }}
 `
-const DeleteIcon = styled(Icon)`
+const DeleteIcon = styled(FaTimesCircleIcon)`
   vertical-align: 1px;
 `
 const InputWrapper = styled.li`
