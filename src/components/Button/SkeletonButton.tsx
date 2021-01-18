@@ -26,8 +26,10 @@ const skeletonStyle = css`
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       border: ${frame.border.lineWidth} ${frame.border.lineStyle} #fff;
 
-      &.hover {
+      &.hover,
+      &:focus {
         background-color: ${palette.OVERLAY};
+        color: #fff;
       }
 
       &[disabled] {
