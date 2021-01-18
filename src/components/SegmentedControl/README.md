@@ -37,3 +37,11 @@ import { SegmentedControl } from 'smarthr-ui'
 | content   | ✓        | **React.ReactNode** | -            | Content of option button.                             |
 | ariaLabel | -        | **string**          | -            | Value of aria-label.                                  |
 | disabled  | -        | **boolean**         | -            | Whether makes button disabled.                        |
+
+## Accessibility
+
+### ARIA
+
+- `SegmentedControl` is `role=toolbar` with `role=radiogroup` inside.
+- The buttons in `SegmentedControl` are `role=radio`.
+- `SegmentedControl` should be labelled by `aria-label` or `aria-labelledby`.

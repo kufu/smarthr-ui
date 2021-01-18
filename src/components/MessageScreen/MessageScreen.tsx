@@ -5,7 +5,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { SmartHRLogo } from '../SmartHRLogo'
 import { Footer } from '../Footer'
-import { Icon } from '../Icon'
+import { FaExternalLinkAltIcon } from '../Icon'
 
 type Props = {
   title?: ReactNode
@@ -139,8 +139,7 @@ const Link = styled.a<{ themes: Theme }>`
     `
   }}
 `
-const ExternalIcon = styled(Icon).attrs(() => ({
-  name: 'fa-external-link-alt',
+const ExternalIcon = styled(FaExternalLinkAltIcon).attrs(() => ({
   size: 14,
 }))`
   margin-left: 0.4rem;

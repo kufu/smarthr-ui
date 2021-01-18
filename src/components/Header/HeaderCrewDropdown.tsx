@@ -4,7 +4,14 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
-import { Icon } from '../Icon'
+import {
+  FaCaretDownIcon,
+  FaEditIcon,
+  FaPaperPlaneIcon,
+  FaPlusSquareIcon,
+  FaSyncAltIcon,
+  FaUsersIcon,
+} from '../Icon'
 
 type Props = {
   onClickNew?: () => void
@@ -26,11 +33,11 @@ export const HeaderCrewDropdown: FC<Props> = ({
       <DropdownTrigger>
         <TriggerButton themes={theme} type="button">
           <TriggerIcon themes={theme} role="presentation">
-            <Icon name="fa-users" />
+            <FaUsersIcon />
           </TriggerIcon>
           従業員管理
           <CaretIcon themes={theme} role="presentation">
-            <Icon name="fa-caret-down" color="#fff" />
+            <FaCaretDownIcon color="#fff" />
           </CaretIcon>
         </TriggerButton>
       </DropdownTrigger>
@@ -40,7 +47,7 @@ export const HeaderCrewDropdown: FC<Props> = ({
           <MenuListItem role="menuitem">
             <MenuListItemButton themes={theme} onClick={onClickNew}>
               <MenuListItemIcon themes={theme}>
-                <Icon name="fa-edit" />
+                <FaEditIcon />
               </MenuListItemIcon>
               新規登録する（手入力）
             </MenuListItemButton>
@@ -49,7 +56,7 @@ export const HeaderCrewDropdown: FC<Props> = ({
           <MenuListItem role="menuitem">
             <MenuListItemButton themes={theme} onClick={onClickBulkInsert}>
               <MenuListItemIcon themes={theme}>
-                <Icon name="fa-plus-square" />
+                <FaPlusSquareIcon />
               </MenuListItemIcon>
               新規登録する（ファイル）
             </MenuListItemButton>
@@ -58,7 +65,7 @@ export const HeaderCrewDropdown: FC<Props> = ({
           <MenuListItem role="menuitem">
             <MenuListItemButton themes={theme} onClick={onClickBulkUpdate}>
               <MenuListItemIcon themes={theme}>
-                <Icon name="fa-sync-alt" />
+                <FaSyncAltIcon />
               </MenuListItemIcon>
               更新する（ファイル）
             </MenuListItemButton>
@@ -71,7 +78,7 @@ export const HeaderCrewDropdown: FC<Props> = ({
           <MenuListItem role="menuitem">
             <MenuListItemButton themes={theme} onClick={onClickInvite}>
               <MenuListItemIcon themes={theme}>
-                <Icon name="fa-paper-plane" />
+                <FaPaperPlaneIcon />
               </MenuListItemIcon>
               SmartHR に招待
             </MenuListItemButton>
