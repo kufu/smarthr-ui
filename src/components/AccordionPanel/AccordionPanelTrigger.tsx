@@ -8,7 +8,7 @@ import { getNewExpandedItems } from './accordionPanelHelper'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 
-import { Icon as IconComponent } from '../Icon'
+import { FaCaretDownIcon } from '../Icon'
 
 type Props = {
   children: React.ReactNode
@@ -46,7 +46,7 @@ export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) =
     }
   }, [onClickTrigger, name, isExpanded, onClickProps, expandedItems, expandableMultiply])
 
-  const caretIcon = <Icon className={iconClassNames} name="fa-caret-down" $theme={theme} />
+  const caretIcon = <Icon className={iconClassNames} $theme={theme} />
 
   return (
     <Button
@@ -100,7 +100,7 @@ const Button = styled.button<{ themes: Theme }>`
     `
   }}
 `
-const Icon = styled(IconComponent)<{ $theme: Theme }>`
+const Icon = styled(FaCaretDownIcon)<{ $theme: Theme }>`
   ${({ $theme }) => {
     const { size } = $theme
 

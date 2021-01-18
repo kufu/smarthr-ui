@@ -1,32 +1,39 @@
-import React, { ComponentProps, FC } from 'react'
+import React, { FC } from 'react'
 
 import { useTheme } from '../../hooks/useTheme'
 import { Status } from './BackgroundJobsPanel'
-import { Icon } from '../Icon'
+import {
+  FaCheckCircleIcon,
+  FaCloudDownloadAltIcon,
+  FaExclamationTriangleIcon,
+  FaSyncAltIcon,
+  FaTimesCircleIcon,
+  IconProps,
+} from '../Icon'
 
 type Props = {
   status: Status
 }
 
 export const JobIcon: FC<Props> = ({ status }) => {
-  const name = getIconName(status)
+  const Icon = getIcon(status)
   const color = useIconColor(status)
 
-  return <Icon name={name} color={color} size={16} />
+  return <Icon color={color} size={16} />
 }
 
-function getIconName(status: Status): ComponentProps<typeof Icon>['name'] {
+function getIcon(status: Status): React.ComponentType<IconProps> {
   switch (status) {
     case 'processing':
-      return 'fa-sync-alt'
+      return FaSyncAltIcon
     case 'downloading':
-      return 'fa-cloud-download-alt'
+      return FaCloudDownloadAltIcon
     case 'warning':
-      return 'fa-exclamation-triangle'
+      return FaExclamationTriangleIcon
     case 'error':
-      return 'fa-times-circle'
+      return FaTimesCircleIcon
     case 'done':
-      return 'fa-check-circle'
+      return FaCheckCircleIcon
   }
 }
 
