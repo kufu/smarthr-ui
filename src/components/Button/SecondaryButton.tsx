@@ -32,8 +32,10 @@ const secondaryStyle = css`
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       border: ${frame.border.default};
 
-      &.hover {
+      &.hover,
+      &:focus {
         background-color: ${palette.hoverColor('#fff')};
+        color: ${palette.TEXT_BLACK};
       }
 
       &[disabled] {

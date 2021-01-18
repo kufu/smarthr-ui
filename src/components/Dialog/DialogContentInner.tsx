@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useRef } from 'react'
+import React, { FC, ReactNode, useCallback, useEffect, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 import { Options as CreateFocusTrapOptions, createFocusTrap } from 'focus-trap'
@@ -7,7 +7,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { DialogPositionProvider } from './DialogPositionProvider'
 
-type Props = {
+export type DialogContentInnerProps = {
   onClickOverlay?: () => void
   onPressEscape?: () => void
   isOpen: boolean
@@ -15,6 +15,7 @@ type Props = {
   right?: number
   bottom?: number
   left?: number
+  id?: string
   ariaLabel?: string
   ariaLabelledby?: string
   children: ReactNode
@@ -31,12 +32,13 @@ function exist(value: any) {
   return value !== undefined && value !== null
 }
 
-export const DialogContentInner: FC<Props> = ({
+export const DialogContentInner: FC<DialogContentInnerProps> = ({
   onClickOverlay,
   onPressEscape = () => {
     /* noop */
   },
   isOpen,
+  id,
   ariaLabel,
   ariaLabelledby,
   children,
@@ -46,7 +48,14 @@ export const DialogContentInner: FC<Props> = ({
   const domRef = useRef(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const focusTarget = useRef<HTMLDivElement>(null)
-  useHandleEscape(onPressEscape)
+  useHandleEscape(
+    useCallback(() => {
+      if (!isOpen) {
+        return
+      }
+      onPressEscape()
+    }, [isOpen, onPressEscape]),
+  )
 
   useEffect(() => {
     const focusTrapOption: CreateFocusTrapOptions = {
@@ -79,6 +88,7 @@ export const DialogContentInner: FC<Props> = ({
         }}
         appear
         unmountOnExit
+        id={id}
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}

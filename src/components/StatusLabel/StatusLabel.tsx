@@ -30,6 +30,7 @@ const Wrapper = styled.span<{ themes: Theme }>`
       margin: 0;
       border: 1px solid transparent;
       padding: ${size.pxToRem(XXXS)} ${size.pxToRem(size.space.XXS)};
+      background-color: #fff;
       text-align: center;
       white-space: nowrap;
       min-width: ${size.pxToRem(60)};

@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
-import { Icon } from '../Icon'
+import { FaCaretDownIcon, FaCaretUpIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
 import { getFromDate, getToDate, isBetween } from './calendarHelper'
@@ -51,11 +51,11 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
           aria-expanded={isSelectingYear}
           aria-controls={yearPickerId}
         >
-          <Icon
-            size={13}
-            visuallyHiddenText="年を選択する"
-            name={isSelectingYear ? 'fa-caret-up' : 'fa-caret-down'}
-          />
+          {isSelectingYear ? (
+            <FaCaretUpIcon size={13} visuallyHiddenText="年を選択する" />
+          ) : (
+            <FaCaretDownIcon size={13} visuallyHiddenText="年を選択する" />
+          )}
         </SecondaryButton>
         <MonthButtonLayout>
           <SecondaryButton
@@ -64,7 +64,7 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
             size="s"
             square
           >
-            <Icon visuallyHiddenText="前の月へ" size={13} name="fa-chevron-left" />
+            <FaChevronLeftIcon visuallyHiddenText="前の月へ" size={13} />
           </SecondaryButton>
           <SecondaryButton
             disabled={isSelectingYear || nextMonth.isAfter(toDay, 'month')}
@@ -72,7 +72,7 @@ export const Calendar = forwardRef<HTMLElement, Props>(({ from, to, onSelectDate
             size="s"
             square
           >
-            <Icon visuallyHiddenText="次の月へ" size={13} name="fa-chevron-right" />
+            <FaChevronRightIcon visuallyHiddenText="次の月へ" size={13} />
           </SecondaryButton>
         </MonthButtonLayout>
       </Header>
