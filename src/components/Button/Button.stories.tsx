@@ -18,6 +18,7 @@ import {
 import { FaPlusCircleIcon } from '../Icon'
 
 import readme from './README.md'
+import { RegStory } from './RegStory'
 
 export default {
   title: 'Button',
@@ -145,9 +146,6 @@ export const WithIcon: Story = (_) => (
     <PrimaryButton square onClick={action('clicked')}>
       <FaPlusCircleIcon size={16} />
     </PrimaryButton>
-    <PrimaryButton square disabled onClick={action('clicked')}>
-      <FaPlusCircleIcon size={16} />
-    </PrimaryButton>
   </Wrapper>
 )
 WithIcon.parameters = {
@@ -182,6 +180,8 @@ ExtendingStyle.parameters = {
     },
   },
 }
+
+export const Reg = RegStory
 
 const Wrapper = styled.div`
   > * {
