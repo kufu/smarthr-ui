@@ -39,10 +39,6 @@ export default {
       description: { component: readme },
     },
   },
-  argTypes: {
-    prefix: { control: false },
-    suffix: { control: false },
-  },
 }
 
 export const Default: Story = (args) => (

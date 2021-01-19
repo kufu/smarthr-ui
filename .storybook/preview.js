@@ -51,6 +51,7 @@ export const parameters = {
     // This setting is needed not to apply css of storybook-readme to DocsPage
     highlightContent: false,
   },
+  controls: { disabled: true },
   docs: {
     page: () => (
       <>
