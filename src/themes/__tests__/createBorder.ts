@@ -8,19 +8,19 @@ describe('createBorder', () => {
 
     expect(actual.lineStyle).toBe(expected.border.lineStyle)
     expect(actual.lineWidth).toBe(expected.border.lineWidth)
-    expect(actual.default).toBe(expected.border.default)
+    expect(actual.shorthand).toBe(expected.border.default)
   })
 
   it('returns customized default border theme when give user border and user color', () => {
     const actual = createBorder({
       lineStyle: 'dotted',
       lineWidth: '13px',
-      default: 'double 24px black',
+      shorthand: 'double 24px black',
     })
 
     expect(actual.lineStyle).toBe(`dotted`)
     expect(actual.lineWidth).toBe(`13px`)
-    expect(actual.default).toBe('double 24px black')
+    expect(actual.shorthand).toBe('double 24px black')
   })
 
   it('returns customized default border theme when give user color', () => {
@@ -28,6 +28,6 @@ describe('createBorder', () => {
       BORDER: '#345',
     })
 
-    expect(actual.default).toBe(`1px solid #345`)
+    expect(actual.shorthand).toBe(`1px solid #345`)
   })
 })
