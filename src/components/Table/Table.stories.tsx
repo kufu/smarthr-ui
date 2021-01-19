@@ -8,7 +8,7 @@ import { Body } from './Body'
 import { Head } from './Head'
 import { Row } from './Row'
 import { Cell } from './Cell'
-import { Icon } from '../Icon'
+import { FaArrowDownIcon } from '../Icon'
 import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { SecondaryButton as Button } from '../Button'
 import { Base as BaseComponent } from '../Base'
@@ -58,7 +58,7 @@ storiesOf('Table', module)
               <Cell onClick={action('clicked')} highlighted={true}>
                 <ClickableCell>
                   Name
-                  <Arrow name="fa-arrow-down" />
+                  <Arrow />
                 </ClickableCell>
               </Cell>
               <Cell>Calories</Cell>
@@ -190,7 +190,7 @@ const ClickableCell = styled.div`
   justify-content: space-between;
 `
 
-const Arrow = styled(Icon)`
+const Arrow = styled(FaArrowDownIcon)`
   transform: rotate(180deg);
 `
 
