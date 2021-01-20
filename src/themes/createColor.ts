@@ -2,26 +2,7 @@ import { merge } from '../libs/lodash'
 import { darken, rgba, transparentize } from 'polished'
 
 // Allow deviations from the JavaScript naming convention to match SmartHR design guidelines
-export interface ColorProperty {
-  TEXT_BLACK?: string
-  TEXT_GREY?: string
-  TEXT_DISABLED?: string
-  TEXT_LINK?: string
-  BORDER?: string
-  BACKGROUND?: string
-  COLUMN?: string
-  BASE_GREY?: string
-  MAIN?: string
-  DANGER?: string
-  WARNING?: string
-  SCRIM?: string
-  OVERLAY?: string
-  OUTLINE?: string
-}
-
-export interface CreatedColorTheme {
-  hoverColor: (value: string, darkenAmount?: 0.05 | 0.15) => string
-  disableColor: (value: string) => string
+type Palette = {
   TEXT_BLACK: string
   TEXT_GREY: string
   TEXT_DISABLED: string
@@ -37,6 +18,13 @@ export interface CreatedColorTheme {
   OVERLAY: string
   BRAND: string
   OUTLINE: string
+}
+
+export type ColorProperty = Partial<Palette>
+
+export type CreatedColorTheme = Palette & {
+  hoverColor: (value: string, darkenAmount?: 0.05 | 0.15) => string
+  disableColor: (value: string) => string
 }
 
 export const defaultColor = {
