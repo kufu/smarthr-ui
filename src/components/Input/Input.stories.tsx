@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { useTheme } from '../../hooks/useTheme'
 
 import { Input } from './Input'
-import { Icon } from '../Icon'
+import { FaSearchIcon } from '../Icon'
 
 storiesOf('Input', module).add('all', () => {
   const theme = useTheme()
@@ -52,11 +52,11 @@ storiesOf('Input', module).add('all', () => {
       </li>
       <li>
         <Txt>prefix</Txt>
-        <Input prefix={<Icon name="fa-search" color={theme.palette.BORDER} />} />
+        <Input prefix={<FaSearchIcon color={theme.palette.BORDER} />} />
       </li>
       <li>
         <Txt>suffix</Txt>
-        <Input suffix={<Icon name="fa-search" color={theme.palette.BORDER} />} />
+        <Input suffix={<FaSearchIcon color={theme.palette.BORDER} />} />
       </li>
       <li>
         <Txt>extending style (width 50%)</Txt>
