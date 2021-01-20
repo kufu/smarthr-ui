@@ -5,7 +5,7 @@
   "author": "SmartHR-UI Team",
   "dependencies": {
     "dayjs": "^1.10.3",
-    "focus-trap": "^6.2.3",
+    "focus-trap": "^6.3.0",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.0.5",
