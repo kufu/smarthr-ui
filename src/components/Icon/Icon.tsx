@@ -314,10 +314,15 @@ export interface IconProps {
 }
 
 /**
+ * @deprecated The Icon component will be deprecated, so the IconNames also will be deprecated
+ */
+export type IconNames = keyof typeof iconMap
+
+/**
  * @deprecated The Icon component will be deprecated, so the Props also will be deprecated
  */
 export interface Props extends IconProps, React.SVGAttributes<SVGAElement> {
-  name: keyof typeof iconMap
+  name: IconNames
   visuallyHiddenText?: string
   className?: string
 }
@@ -674,12 +679,20 @@ const VisuallyHiddenText = styled.span`
   ${VISUALLY_HIDDEN_STYLE}
 `
 
+// Suppress duplicated warning messages
+const didWarnDeprecatedIcon = new Set()
 /**
  * @deprecated The Icon component will be deprecated, please use indivisual components (e.g. FaAddressBookIcon) instead
  */
-export const Icon: React.FC<Props> = ({ name, ...props }) => (
-  <IconComponent {...props} Component={iconMap[name]} />
-)
+export const Icon: React.FC<Props> = ({ name, ...props }) => {
+  if (process.env.NODE_ENV !== 'production' && !didWarnDeprecatedIcon.has(name)) {
+    console.warn(
+      `<Icon name="${name}" /> is now deprecated and will be removed in the future major release. Please use <${iconMap[name].name}Icon /> instead.`,
+    )
+    didWarnDeprecatedIcon.add(name)
+  }
+  return <IconComponent {...props} Component={iconMap[name]} />
+}
 
 export const FaAddressBookIcon = /*#__PURE__*/ createIcon(FaAddressBook)
 export const FaAddressCardIcon = /*#__PURE__*/ createIcon(FaAddressCard)
