@@ -38,14 +38,19 @@ storiesOf('RadioButton', module)
         </li>
         <li>
           <RadioButton
-            name="sample"
+            name="sample-disabled"
             checked={false}
             disabled={true}
             onChange={action('onChange')}
           />
         </li>
         <li>
-          <RadioButton name="sample" checked={true} disabled={true} onChange={action('onChange')} />
+          <RadioButton
+            name="sample-disabled"
+            checked={true}
+            disabled={true}
+            onChange={action('onChange')}
+          />
         </li>
       </List>
     )
