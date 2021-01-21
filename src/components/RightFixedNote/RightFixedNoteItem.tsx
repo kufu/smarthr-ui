@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
 import { SecondaryButton } from '../Button'
-import { Icon } from '../Icon'
+import { FaPenIcon } from '../Icon'
 
 export type ItemProps = {
   id: string
@@ -35,7 +35,7 @@ export const RightFixedNoteItem: FC<Props> = ({
     <Wrapper themes={theme} className={className}>
       <TextBase themes={theme}>
         <EditButton size="s" onClick={(e) => onClickEdit(e, id)} square aria-label={editLabel}>
-          <Icon name="fa-pen" />
+          <FaPenIcon />
         </EditButton>
         <Text themes={theme}>{text}</Text>
       </TextBase>
