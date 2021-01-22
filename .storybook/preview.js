@@ -53,6 +53,7 @@ export const parameters = {
   },
   controls: { disabled: true },
   docs: {
+    source: { type: 'dynamic' },
     page: () => (
       <>
         <Title />

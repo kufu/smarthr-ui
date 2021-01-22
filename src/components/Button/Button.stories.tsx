@@ -41,13 +41,11 @@ export default {
   },
 }
 
-export const Default: Story = (args) => (
-  <PrimaryButton onClick={action('clicked')} {...args}>
-    Button
-  </PrimaryButton>
+export const Default: Story = () => (
+  <PrimaryButton onClick={action('clicked')}>Button</PrimaryButton>
 )
 
-export const ButtonType: Story = (_) => (
+export const ButtonType: Story = () => (
   <Wrapper>
     <PrimaryButton onClick={action('clicked')}>Primary</PrimaryButton>
     <SecondaryButton onClick={action('clicked')}>Secondary</SecondaryButton>
@@ -69,7 +67,7 @@ ButtonType.parameters = {
   },
 }
 
-export const AnchorButton: Story = (_) => (
+export const AnchorButton: Story = () => (
   <PrimaryButtonAnchor href="#" onClick={action('clicked')}>
     Anchor
   </PrimaryButtonAnchor>
@@ -82,7 +80,7 @@ AnchorButton.parameters = {
   },
 }
 
-export const Disabled: Story = (_) => (
+export const Disabled: Story = () => (
   <PrimaryButton disabled onClick={action('clicked')}>
     Disabled
   </PrimaryButton>
@@ -95,7 +93,7 @@ Disabled.parameters = {
   },
 }
 
-export const Size: Story = (_) => (
+export const Size: Story = () => (
   <Wrapper>
     <PrimaryButton size="default" onClick={action('clicked')}>
       Default Size
@@ -113,7 +111,7 @@ Size.parameters = {
   },
 }
 
-export const Square: Story = (_) => (
+export const Square: Story = () => (
   <Wrapper>
     <PrimaryButton square onClick={action('clicked')}>
       M
@@ -131,7 +129,7 @@ Square.parameters = {
   },
 }
 
-export const WithIcon: Story = (_) => (
+export const WithIcon: Story = () => (
   <Wrapper>
     <PrimaryButton prefix={<FaPlusCircleIcon size={16} />} onClick={action('clicked')}>
       Prefix
@@ -152,7 +150,7 @@ WithIcon.parameters = {
   },
 }
 
-export const Wide: Story = (_) => (
+export const Wide: Story = () => (
   <PrimaryButton wide onClick={action('clicked')}>
     Wide
   </PrimaryButton>
@@ -165,7 +163,7 @@ Wide.parameters = {
   },
 }
 
-export const ExtendingStyle: Story = (_) => (
+export const ExtendingStyle: Story = () => (
   <Extended onClick={action('clicked')}>width: 300px</Extended>
 )
 ExtendingStyle.parameters = {
