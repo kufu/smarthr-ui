@@ -1,4 +1,4 @@
-const ua = window.navigator.userAgent.toLowerCase()
+const ua = window ? window.navigator.userAgent.toLowerCase() : ''
 
 export const isIe = ua.indexOf('msie') !== -1 || ua.indexOf('trident') !== -1
 
