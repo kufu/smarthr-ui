@@ -72,11 +72,12 @@ export const InputFile: FC<Props> = ({
       )}
       <FileButtonWrapper themes={theme} className={FileButtonWrapperClassName}>
         <input
+          {...props}
           type="file"
           id={id}
           onChange={(e) => handleChange(e)}
           disabled={disabled}
-          {...props}
+          tab-index="-1"
         />
         <FileButton
           themes={theme}
