@@ -132,8 +132,15 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
       left: -10px;
       top: 0;
       margin: 0;
-      font-size: 128px;
+      /*
+      HINT:
+        input[type=file] が button ボタンを覆うようにサイズを調整
+        Hanica のようにデフォルト font-size に !important がついているプロダクトの場合、上書きされてしまうため念のため !important を入れる
+      */
+      font-size: 128px !important;
       opacity: 0;
+      appearance: none;
+      cursor: pointer;
 
       &::-webkit-file-upload-button {
         cursor: pointer;
