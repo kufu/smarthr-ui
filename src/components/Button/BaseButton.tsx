@@ -8,19 +8,43 @@ import { isTouchDevice } from '../../libs/ua'
 type Tag = 'button' | 'a'
 type Size = 'default' | 's'
 
-type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
-
-export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'size' | 'prefix'> &
-  BaseProps
-export type AnchorProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'prefix'> & BaseProps
+export type ButtonProps = BaseProps &
+  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
+export type AnchorProps = BaseProps &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseProps>
 
 export type BaseProps = {
+  /**
+   * Size of button.
+   * @default 'default'
+   */
   size?: Size
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode
+  /**
+   * `className` of component.
+   */
   className?: string
+  /**
+   * The content of the prefix of button content.
+   * Normally, this is for icon insertion.
+   */
   prefix?: React.ReactNode
+  /**
+   * The content of the suffix of button content.
+   * Normally, this is for icon insertion.
+   */
   suffix?: React.ReactNode
+  /**
+   * If `true`, the component shape changes to square.
+   * @default false
+   */
   square?: boolean
+  /**
+   * If `true`, the component shape changes width is 100%
+   */
   wide?: boolean
 }
 
