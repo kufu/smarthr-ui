@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 import { isMobileSafari, isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { Icon } from '../Icon'
+import { FaSortIcon } from '../Icon'
 
 type Option = {
   label: string
@@ -79,7 +79,7 @@ export const Select: FC<Props> = ({
         }
       </SelectBox>
       <IconWrap>
-        <Icon size={13} name="fa-sort" />
+        <FaSortIcon size={13} />
       </IconWrap>
     </Wrapper>
   )
