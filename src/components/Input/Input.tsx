@@ -131,7 +131,8 @@ const Wrapper = styled.span<{
     css`
       border-color: ${palette.hoverColor(palette.MAIN)};
     `}
-    ${error &&
+    ${!$disabled &&
+    error &&
     css`
       border-color: ${palette.DANGER};
     `}
