@@ -49,7 +49,7 @@ export type BaseProps = {
 }
 
 export const buttonFactory: <Props extends BaseProps>(tag: Tag) => FC<Props> = (tag) => {
-  const Tag = hoverable()(tagStore[tag])
+  const BaseTag = hoverable()(tagStore[tag])
 
   return ({
     size = 'default',
@@ -66,11 +66,11 @@ export const buttonFactory: <Props extends BaseProps>(tag: Tag) => FC<Props> = (
     const classNames = `${size} ${className} ${square ? 'square' : ''} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
 
     return (
-      <Tag className={classNames} themes={theme} {...props}>
+      <BaseTag className={classNames} themes={theme} {...props}>
         {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
         {children}
         {suffix && <Suffix themes={theme}>{suffix}</Suffix>}
-      </Tag>
+      </BaseTag>
     )
   }
 }
