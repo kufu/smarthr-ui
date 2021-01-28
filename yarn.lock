@@ -4140,10 +4140,10 @@
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.3.tgz#9c088679876f374eb5983f150d4787aa6fb32d7e"
   integrity sha512-FvUupuM3rlRsRtCN+fDudtmytGO6iHJuuRKS1Ss0pG5z8oX0diNEw94UEL7hgDbpN94rgaK5R7sWm6RrSkZuAQ==
 
-"@types/wait-on@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/wait-on/-/wait-on-4.0.0.tgz#fb6fa2854b592f7344f1dd9836b5655795510dce"
-  integrity sha512-Cj2jcMOzrdvWMP+Vl+qlz942eQfJk96S9kRnB1ejVMl+w9/9mUn0+pF4J+v0Iv+6zCrmBBODZAXKsRo6Y91Cfw==
+"@types/wait-on@^5.0.0":
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@types/wait-on/-/wait-on-5.2.0.tgz#f9096b7bd0c9c03052d6d402ae5cd51714480b2d"
+  integrity sha512-3+jsMyPm8aot1mqDUDLOl+dejPvpysUUoUXD6CCRY20MNNhcjEfvdcBnGdnk7DEYs9Hr16ubGJA/9/QW0Df/9g==
 
 "@types/webpack-env@^1.15.3":
   version "1.15.3"
@@ -7715,11 +7715,6 @@ device-specs@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/device-specs/-/device-specs-1.0.0.tgz#47b54577b9b159118bbb0a175177d0aa9c50a9c9"
   integrity sha512-fYXbFSeilT7bnKWFi4OERSPHdtaEoDGn4aUhV5Nly6/I+Tp6JZ/6Icmd7LVIF5euyodGpxz2e/bfUmDnIdSIDw==
-
-devtools-protocol@0.0.799653:
-  version "0.0.799653"
-  resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.799653.tgz#86fc95ce5bf4fdf4b77a58047ba9d2301078f119"
-  integrity sha512-t1CcaZbvm8pOlikqrsIM9GOa7Ipp07+4h/q9u0JXBWjPCjHdBl9KkddX87Vv9vBHoBGtwV79sYQNGnQM6iS5gg==
 
 devtools-protocol@0.0.818844:
   version "0.0.818844"
@@ -14700,16 +14695,16 @@ pupa@^2.0.1:
   dependencies:
     escape-goat "^2.0.0"
 
-puppeteer-core@5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-5.3.0.tgz#36d2e10132632c9cb73007f3f2880f4e6b655977"
-  integrity sha512-+4wk+0dcDNg7AQqN41Q9r41U6iltAtknuVBI0aj0O/Vp8/4orgbFV0wn55wV5xRae//CucLPUnaczxZx7dz0UA==
+puppeteer-core@5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-5.5.0.tgz#dfb6266efe5a933cbf1a368d27025a6fd4f5a884"
+  integrity sha512-tlA+1n+ziW/Db03hVV+bAecDKse8ihFRXYiEypBe9IlLRvOCzYFG6qrCMBYK34HO/Q/Ecjc+tvkHRAfLVH+NgQ==
   dependencies:
     debug "^4.1.0"
-    devtools-protocol "0.0.799653"
+    devtools-protocol "0.0.818844"
     extract-zip "^2.0.0"
     https-proxy-agent "^4.0.0"
-    mime "^2.0.3"
+    node-fetch "^2.6.1"
     pkg-dir "^4.2.0"
     progress "^2.0.1"
     proxy-from-env "^1.0.0"
@@ -16752,38 +16747,38 @@ storybook-readme@^5.0.9:
     string-raw "^1.0.1"
     vuex "^3.1.0"
 
-storycap@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/storycap/-/storycap-3.0.1.tgz#2858647c09ac8574af2e0c1fbc86463bb6bbd89c"
-  integrity sha512-eL7vQjo+Cd3JZhdlbHnNE4rDQYbxE1d2sm98rozpH2vDxQnrL7JAzsCA0ErsAbNSIRF1SR0dJSTmzoMt/qCJLw==
+storycap@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/storycap/-/storycap-3.0.3.tgz#887ac118d92961419b05bf2a34e3fb040d34b958"
+  integrity sha512-bu/MLVe+601UaHVPunvBC0XWfYKtICyGa8pS8f61sFLtRsMpXNA2WPvBNqLJ8CJh754CON2JRJELtJVVF6qWdg==
   dependencies:
     "@types/minimatch" "^3.0.3"
     "@types/mkdirp" "^1.0.0"
     "@types/node" "^12.6.8"
     "@types/puppeteer-core" "^2.0.0"
     "@types/rimraf" "^3.0.0"
-    "@types/wait-on" "^4.0.0"
+    "@types/wait-on" "^5.0.0"
     "@types/yargs" "^15.0.0"
     core-js "^3.2.1"
     minimatch "^3.0.4"
     mkdirp "^1.0.0"
-    puppeteer-core "5.3.0"
+    puppeteer-core "5.5.0"
     rimraf "^3.0.0"
     sanitize-filename "^1.6.3"
-    storycrawler "^3.0.1"
+    storycrawler "^3.0.3"
     yargs "^16.0.0"
 
-storycrawler@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/storycrawler/-/storycrawler-3.0.1.tgz#abb107a005d784fef0a6e5b2851fc8b532bb1532"
-  integrity sha512-5/Icmpz/IUciKrcVl9F6nqK1IRFBwkGalgIZWXaip23EHACPFaIatwtlYRHds9aHsHG0UHNBU8pzrw6Xh1pmCw==
+storycrawler@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/storycrawler/-/storycrawler-3.0.3.tgz#cd108c81f012585692c4ea9da7e44bb5219035bd"
+  integrity sha512-aKm5l10HWmCFURrzX+pE0di7IsGuAN7X93TCslvYGcEWxvvngqX4t8bTrzlEwvRrBT70AajQdbe5qvYZFb4KCg==
   dependencies:
     "@types/chalk" "^2.2.0"
     "@types/node" "^12.6.8"
     "@types/puppeteer-core" "^2.0.0"
-    "@types/wait-on" "^4.0.0"
+    "@types/wait-on" "^5.0.0"
     chalk "^2.4.1"
-    puppeteer-core "5.3.0"
+    puppeteer-core "5.5.0"
     wait-on "^5.0.0"
 
 stream-browserify@^2.0.1:
