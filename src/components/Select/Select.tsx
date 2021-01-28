@@ -61,7 +61,7 @@ export const Select: FC<Props> = ({
             )
           }
 
-          const optgroup: Optgroup = option!
+          const optgroup = option
 
           return (
             <optgroup key={optgroup.label} label={optgroup.label}>
