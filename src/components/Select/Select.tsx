@@ -34,7 +34,6 @@ export const Select: FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme()
-  const newOptions = hasBlank ? [{ label: blankLabel, value: '' }, ...options] : options
   const widthStyle = typeof width === 'number' ? `${width}px` : width
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -52,7 +51,8 @@ export const Select: FC<Props> = ({
       themes={theme}
     >
       <SelectBox onChange={handleChange} themes={theme} {...props}>
-        {newOptions.map((option) => {
+        {hasBlank && <option value="">{blankLabel}</option>}
+        {options.map((option) => {
           if ('value' in option) {
             return (
               <option key={option.value} value={option.value}>
