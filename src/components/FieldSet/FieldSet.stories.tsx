@@ -4,7 +4,7 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { Icon } from '../Icon'
+import { FaExclamationCircleIcon } from '../Icon'
 import { FieldSet } from './FieldSet'
 import readme from './README.md'
 
@@ -64,7 +64,7 @@ storiesOf('FieldSet', module)
             label="labelSuffix"
             labelSuffix={
               <Suffix>
-                <Icon name="fa-exclamation-circle" size={12} color={themes.palette.TEXT_GREY} />
+                <FaExclamationCircleIcon size={12} color={themes.palette.TEXT_GREY} />
                 <SuffixText>suffix text</SuffixText>
               </Suffix>
             }
@@ -82,7 +82,7 @@ storiesOf('FieldSet', module)
             helpMessage="This is help message."
             labelSuffix={
               <Suffix>
-                <Icon name="fa-exclamation-circle" size={12} color={themes.palette.TEXT_GREY} />
+                <FaExclamationCircleIcon size={12} color={themes.palette.TEXT_GREY} />
                 <SuffixText>suffix text</SuffixText>
               </Suffix>
             }
