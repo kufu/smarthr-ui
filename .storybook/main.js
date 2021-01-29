@@ -1,21 +1,4 @@
 module.exports = {
-  stories: ['../**/*.stories.js'],
-  addons: [
-    'storybook-readme',
-    {
-      name: '@storybook/addon-essentials',
-      options: {
-        // we are not ready to use them yet.
-        controls: false,
-        docs: false
-      }
-    },
-    {
-      name: '@storybook/addon-storysource',
-      options: {
-        parser: 'typescript'
-      }
-    },
-    '@storybook/addon-a11y'
-  ]
+  stories: ['../**/*.stories.tsx'],
+  addons: ['storybook-readme', '@storybook/addon-essentials', '@storybook/addon-a11y'],
 }
