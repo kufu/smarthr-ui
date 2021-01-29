@@ -127,10 +127,12 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
     > input[type='file'] {
       position: absolute;
       height: 100%;
+
       /* Prevent to show caret on the upload button on IE11 */
       left: -10px;
       top: 0;
       margin: 0;
+
       /* HINT: input[type=file] が button ボタンを覆うようにサイズを調整
       Hanica のようにデフォルト font-size に !important がついているプロダクトの場合、上書きされてしまうため念のため !important を入れる */
       font-size: 128px !important;
