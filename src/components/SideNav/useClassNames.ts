@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+import { SideNav } from './SideNav'
 
 export function useClassNames() {
-  const generate = useClassNameGenerator('SideNav')
+  const generate = useClassNameGenerator(SideNav.displayName || 'SideNav')
   return useMemo(
     () => ({
       wrapper: generate(),
