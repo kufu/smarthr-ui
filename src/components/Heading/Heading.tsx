@@ -7,6 +7,7 @@ export type Props = {
   children: ReactNode
   type?: HeadingTypes
   tag?: HeadingTagTypes
+  disabled?: boolean
   className?: string
 }
 
@@ -22,13 +23,14 @@ export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'
 export const Heading: VFC<Props> = ({
   tag = 'h1' as HeadingTagTypes,
   type = 'screenTitle',
+  disabled = false,
   className = '',
   children,
 }) => {
   const theme = useTheme()
 
   return (
-    <Wrapper as={tag} className={`${type} ${className}`} themes={theme}>
+    <Wrapper as={tag} className={`${type} ${disabled && 'disabled'} ${className}`} themes={theme}>
       {children}
     </Wrapper>
   )
@@ -72,6 +74,10 @@ const Wrapper = styled.h1<{ themes: Theme }>`
         color: ${palette.TEXT_GREY};
         font-size: ${size.pxToRem(size.font.SHORT)};
         font-weight: bold;
+      }
+
+      &.disabled {
+        color: ${palette.TEXT_DISABLED};
       }
     `
   }}

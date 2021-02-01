@@ -39,6 +39,31 @@ storiesOf('Heading', module)
           SubSubBlockTitle
         </Heading>
       </li>
+      <li>
+        <Heading type="screenTitle" tag="h1" disabled>
+          Disabled ScreenTitle
+        </Heading>
+      </li>
+      <li>
+        <Heading type="sectionTitle" tag="h2" disabled>
+          Disabled SectionTitle
+        </Heading>
+      </li>
+      <li>
+        <Heading type="blockTitle" tag="h3" disabled>
+          Disabled BlockTitle
+        </Heading>
+      </li>
+      <li>
+        <Heading type="subBlockTitle" tag="h4" disabled>
+          Disabled SubBlockTitle
+        </Heading>
+      </li>
+      <li>
+        <Heading type="subSubBlockTitle" tag="h5" disabled>
+          Disabled SubSubBlockTitle
+        </Heading>
+      </li>
     </List>
   ))
 
