@@ -10,6 +10,7 @@ type Palette = {
   BORDER: string
   BACKGROUND: string
   COLUMN: string
+  HEAD: string
   BASE_GREY: string
   MAIN: string
   DANGER: string
@@ -35,6 +36,7 @@ export const defaultColor = {
   BORDER: '#d6d3d0',
   BACKGROUND: '#f8f7f6',
   COLUMN: '#f9f8f7',
+  HEAD: '#edebe8',
   BASE_GREY: '#f5f4f3',
   MAIN: '#0077c7',
   DANGER: '#e01e5a',
