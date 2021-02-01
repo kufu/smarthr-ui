@@ -77,7 +77,7 @@ export const InputFile: FC<Props> = ({
           id={id}
           onChange={(e) => handleChange(e)}
           disabled={disabled}
-          tab-index="-1"
+          tabIndex={-1}
         />
         <FileButton
           themes={theme}
