@@ -22,6 +22,7 @@ storiesOf('Select', module)
             { label: 'apple', value: 'apple' },
             { label: 'orange', value: 'orange' },
             { label: 'banana', value: 'banana' },
+            { label: 'melon', value: 'melon', disabled: true },
           ]}
         />
       </li>
@@ -86,6 +87,15 @@ storiesOf('Select', module)
               ],
             },
             { label: 'banana', value: 'banana' },
+            {
+              label: 'fruit vegetables',
+              disabled: true,
+              options: [
+                { label: 'strawberry', value: 'strawberry' },
+                { label: 'melon', value: 'melon' },
+                { label: 'water melon', value: 'water melon' },
+              ],
+            },
           ]}
         />
       </li>
