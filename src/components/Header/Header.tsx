@@ -8,6 +8,7 @@ import { HeaderButton } from './HeaderButton'
 import { HeaderNotification } from './HeaderNotification'
 import { HeaderCrewDropdown } from './HeaderCrewDropdown'
 import { HeaderUserDropdown } from './HeaderUserDropdown'
+import { FaQuestionCircleIcon, FaThListIcon } from '../Icon/'
 
 type Props = {
   isAdmin?: boolean
@@ -70,13 +71,13 @@ export const Header: FC<Props> = ({
       </HeaderColumn>
 
       <HeaderColumn>
-        <HeaderButton icon="fa-question-circle" onClick={onClickHelp}>
+        <HeaderButton icon={FaQuestionCircleIcon} onClick={onClickHelp}>
           ヘルプ
         </HeaderButton>
 
         {isAdmin && (
           <>
-            <HeaderButton icon="fa-th-list" onClick={onClickCrewList}>
+            <HeaderButton icon={FaThListIcon} onClick={onClickCrewList}>
               従業員リスト
             </HeaderButton>
 
