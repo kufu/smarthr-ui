@@ -1,7 +1,7 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ComponentProps, FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { StatusLabel, Props as StatusLabelProps } from '../StatusLabel'
+import { StatusLabel } from '../StatusLabel'
 import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 
@@ -11,7 +11,7 @@ type Props = {
   labelType?: HeadingTypes
   labelId?: string
   innerMargin?: innerMarginType
-  statusLabels?: StatusLabelProps[]
+  statusLabels?: Array<ComponentProps<typeof StatusLabel>>
   helpMessage?: ReactNode
   errorMessages?: string | string[]
   children: ReactNode
