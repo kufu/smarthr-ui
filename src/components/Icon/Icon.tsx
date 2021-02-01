@@ -309,7 +309,13 @@ import styled from 'styled-components'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 
 export interface IconProps {
+  /**
+   * Color of Icon.
+   */
   color?: string
+  /**
+   * Size of icon.
+   */
   size?: number
 }
 
@@ -323,7 +329,13 @@ export type IconNames = keyof typeof iconMap
  */
 export interface Props extends IconProps, React.SVGAttributes<SVGAElement> {
   name: IconNames
+  /**
+   * The text that is not displayed but exists in DOM for accessibility purposes.
+   */
   visuallyHiddenText?: string
+  /**
+   * `className` of component.
+   */
   className?: string
 }
 

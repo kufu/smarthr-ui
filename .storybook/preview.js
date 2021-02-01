@@ -1,10 +1,19 @@
 import React from 'react'
-import { configure, addDecorator, addParameters } from '@storybook/react'
+import { configure, addDecorator } from '@storybook/react'
 import { create } from '@storybook/theming'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { withA11y } from '@storybook/addon-a11y'
 import { addReadme } from 'storybook-readme'
 import { Reset } from 'styled-reset'
+import {
+  ArgsTable,
+  Description,
+  Heading,
+  Primary,
+  Stories,
+  Subtitle,
+  Title,
+} from '@storybook/addon-docs/blocks'
 
 import { createTheme } from '../src/themes/createTheme'
 import { ThemeProvider } from '../src/themes/ThemeProvider'
@@ -27,7 +36,7 @@ export const globalTypes = {
   },
 }
 
-addParameters({
+export const parameters = {
   options: {
     theme: create({
       base: 'light',
@@ -37,8 +46,27 @@ addParameters({
     isFullscreen: false,
     isToolshown: true,
   },
-})
-addParameters({ viewport: { viewports: INITIAL_VIEWPORTS } })
+  viewport: { viewports: INITIAL_VIEWPORTS },
+  readme: {
+    // This setting is needed not to apply css of storybook-readme to DocsPage
+    highlightContent: false,
+  },
+  controls: { disabled: true },
+  docs: {
+    source: { type: 'dynamic' },
+    page: () => (
+      <>
+        <Title />
+        <Subtitle />
+        <Description />
+        <Primary />
+        <Stories title="Usage" />
+        <Heading>Props</Heading>
+        <ArgsTable />
+      </>
+    ),
+  },
+}
 
 addDecorator(withA11y)
 addDecorator(addReadme)

@@ -24,8 +24,9 @@ type Props = {
   formatDate?: (date: Date | null) => string
   onChangeDate?: (date: Date | null, value: string) => void
 }
+type InputAttributes = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
-export const DatePicker: FC<Props> = ({
+export const DatePicker: FC<Props & InputAttributes> = ({
   value,
   name,
   from,
@@ -36,6 +37,7 @@ export const DatePicker: FC<Props> = ({
   parseInput,
   formatDate,
   onChangeDate,
+  ...inputAttrs
 }) => {
   const stringToDate = useCallback(
     (str?: string | null) => {
@@ -190,6 +192,7 @@ export const DatePicker: FC<Props> = ({
     >
       <InputWrapper ref={inputWrapperRef}>
         <StyledInput
+          {...inputAttrs}
           type="text"
           name={name}
           onChange={() => {
