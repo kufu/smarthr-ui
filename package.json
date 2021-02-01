@@ -122,7 +122,7 @@
     "lint:tsc": "tsc --noEmit",
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepublishOnly": "run-s clean lint build",
-    "pretest-visual": "storycap --serverCmd \"start-storybook -p 6006 --ci\" http://localhost:6006 -o actual_images  --serverTimeout 3600000",
+    "pretest-visual": "build-storybook -o reg_storybook --quiet; storycap --serverCmd \"npx http-server reg_storybook -p 6006\" http://localhost:6006 -o actual_images  --serverTimeout 3600000",
     "release": "standard-version",
     "release:dryrun": "standard-version --dry-run",
     "storybook": "start-storybook -p 6006",
