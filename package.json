@@ -4,11 +4,11 @@
   "version": "12.0.0",
   "author": "SmartHR-UI Team",
   "dependencies": {
-    "dayjs": "^1.10.3",
+    "dayjs": "^1.10.4",
     "focus-trap": "^6.3.0",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
-    "polished": "^4.0.5",
+    "polished": "^4.1.0",
     "react-icons": "^4.1.0",
     "react-transition-group": "^4.4.1"
   },
@@ -33,7 +33,7 @@
     "@types/styled-components": "^5.1.7",
     "babel-loader": "^8.2.2",
     "ecma-version-validator-webpack-plugin": "^1.1.0",
-    "eslint": "^7.18.0",
+    "eslint": "^7.19.0",
     "eslint-config-smarthr": "^5.0.0",
     "http-server": "^0.12.3",
     "husky": "^4.3.8",
@@ -68,7 +68,7 @@
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",
     "wait-for-localhost": "^3.3.0",
-    "webpack": "^5.16.0"
+    "webpack": "^5.17.0"
   },
   "peerDependencies": {
     "react": "16.13.0 || ^17.0.1",
@@ -122,7 +122,7 @@
     "lint:tsc": "tsc --noEmit",
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepublishOnly": "run-s clean lint build",
-    "pretest-visual": "storycap --serverCmd \"start-storybook -p 6006 --ci\" http://localhost:6006 -o actual_images  --serverTimeout 3600000",
+    "pretest-visual": "build-storybook -o reg_storybook --quiet; storycap --serverCmd \"npx http-server reg_storybook -p 6006\" http://localhost:6006 -o actual_images  --serverTimeout 3600000",
     "release": "standard-version",
     "release:dryrun": "standard-version --dry-run",
     "storybook": "start-storybook -p 6006",
