@@ -57,7 +57,7 @@ const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
       font-size: ${size.pxToRem(size.font.SHORT)};
       font-weight: bold;
       padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
-      color: ${palette.TEXT_GREY};
+      color: ${palette.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
       text-align: left;
       line-height: 1.5;
@@ -65,13 +65,13 @@ const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
       box-sizing: border-box;
 
       &.highlighted {
-        background-color: ${palette.hoverColor(palette.COLUMN)};
+        background-color: ${palette.hoverColor(palette.HEAD)};
       }
 
       ${onClick &&
       css`
         :hover {
-          background-color: ${palette.hoverColor(palette.COLUMN)};
+          background-color: ${palette.hoverColor(palette.HEAD)};
           cursor: pointer;
         }
       `}
