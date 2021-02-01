@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { StatusLabel, Props as StatusLabelProps } from '../StatusLabel'
 import { Heading, HeadingTypes } from '../Heading'
-import { Icon } from '../Icon'
+import { FaExclamationCircleIcon } from '../Icon'
 
 type innerMarginType = 'XXS' | 'XS' | 'S'
 type Props = {
@@ -64,7 +64,6 @@ export const FormGroup: FC<Props> = ({
             (message, index) => (
               <ErrorMessage themes={theme} key={index}>
                 <ErrorIcon
-                  name="fa-exclamation-circle"
                   color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.DANGER}
                   themes={theme}
                   size={14}
@@ -163,7 +162,7 @@ const ErrorText = styled.span`
   vertical-align: middle;
 `
 
-const ErrorIcon = styled(Icon)<{ themes: Theme }>`
+const ErrorIcon = styled(FaExclamationCircleIcon)<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 
