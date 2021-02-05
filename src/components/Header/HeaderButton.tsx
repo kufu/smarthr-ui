@@ -1,26 +1,24 @@
 import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Icon, Props as IconProps } from '../Icon/Icon'
+import { Icon as DuplicatedIcon, IconNames, ComponentProps as IconProps } from '../Icon/Icon'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {
-  icon: IconProps['name']
+  icon: IconNames | React.ComponentType<IconProps>
   children: ReactNode
   onClick?: () => void
 }
 
-export const HeaderButton: FC<Props> = ({ icon, children, onClick }) => {
+export const HeaderButton: FC<Props> = ({ icon: Icon, children, onClick }) => {
   const theme = useTheme()
 
   return (
     <Wrapper themes={theme} onClick={onClick} type="button">
-      {icon && (
-        <IconWrapper themes={theme} role="presentation">
-          <Icon name={icon}></Icon>
-        </IconWrapper>
-      )}
+      <IconWrapper themes={theme} role="presentation">
+        {typeof Icon === 'string' ? <DuplicatedIcon name={Icon}></DuplicatedIcon> : <Icon />}
+      </IconWrapper>
       {children}
     </Wrapper>
   )

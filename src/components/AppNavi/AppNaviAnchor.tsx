@@ -3,13 +3,13 @@ import styled from 'styled-components'
 
 import { useTheme } from '../../hooks/useTheme'
 
-import { Props as IconProps } from '../Icon'
+import { IconNames, ComponentProps as IconProps } from '../Icon'
 import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
 
 export type AppNaviAnchorProps = {
   children: ReactNode
   href: string
-  icon?: IconProps['name']
+  icon?: IconNames | React.ComponentType<IconProps>
   current?: boolean
 }
 type InnerProps = AppNaviAnchorProps & {
