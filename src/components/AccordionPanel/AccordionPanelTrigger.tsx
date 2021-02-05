@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext } from 'react'
+import React, { ButtonHTMLAttributes, FC, useCallback, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -7,6 +7,7 @@ import { isTouchDevice } from '../../libs/ua'
 import { getNewExpandedItems } from './accordionPanelHelper'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
+import { useClassNames } from './useClassNames'
 
 import { FaCaretDownIcon } from '../Icon'
 
@@ -14,8 +15,13 @@ type Props = {
   children: React.ReactNode
   className?: string
 }
+type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
-export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) => {
+export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
+  children,
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
   const { name } = useContext(AccordionPanelItemContext)
   const {
@@ -26,10 +32,11 @@ export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) =
     onClickProps,
     expandableMultiply,
   } = useContext(AccordionPanelContext)
+  const classNames = useClassNames()
 
   const isExpanded = getIsInclude(expandedItems, name)
   const expandedClassName = isExpanded ? 'expanded' : ''
-  const buttonClassNames = `${className} ${expandedClassName} ${iconPosition}`
+  const buttonClassNames = `${className} ${expandedClassName} ${iconPosition} ${classNames.trigger}`
   const iconClassNames = `${expandedClassName} ${iconPosition}`
 
   const handleClick = useCallback(() => {
@@ -57,6 +64,7 @@ export const AccordionPanelTrigger: FC<Props> = ({ children, className = '' }) =
       themes={theme}
       onClick={handleClick}
       type="button"
+      {...props}
     >
       {displayIcon && iconPosition === 'left' && caretIcon}
       {children}

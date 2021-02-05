@@ -1,15 +1,16 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
-import { SideNav } from './SideNav'
+import { AccordionPanel } from './AccordionPanel'
 
 export function useClassNames() {
-  const generate = useClassNameGenerator(SideNav.displayName || 'SideNav')
+  const generate = useClassNameGenerator(AccordionPanel.displayName || 'AccordionPanel')
   return useMemo(
     () => ({
       wrapper: generate(),
       item: generate('item'),
-      itemTitle: generate('itemTitle'),
+      trigger: generate('trigger'),
+      content: generate('content'),
     }),
     [generate],
   )
