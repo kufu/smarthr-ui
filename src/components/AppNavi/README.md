@@ -2,7 +2,7 @@
 
 ```tsx
 import React, { FC, ReactNode } from 'react'
-import { AppNavi } from 'smarthr-ui'
+import { AppNavi, FaBirthdayCakeIcon, FaChartPieIcon, FaCogIcon, FaFileIcon, FaUserAltIcon } from 'smarthr-ui'
 
 const CustomLink: FC<{ to: string; children: ReactNode }> = ({ to, children, ...props }) => (
   <a href={to} {...props}>
@@ -12,27 +12,27 @@ const CustomLink: FC<{ to: string; children: ReactNode }> = ({ to, children, ...
 const buttons = [
   {
     children: 'current',
-    icon: 'fa-file' as const,
+    icon: FaFileIcon,
     current: true,
   },
   {
     children: 'button',
-    icon: 'fa-user-alt' as const,
+    icon: FaUserAltIcon,
     onClick: () => console.log('click'),
   },
   {
     children: 'anchor',
-    icon: 'fa-cog' as const,
+    icon: FaCogIcon,
     href: 'http://www.google.com',
   },
   {
     children: 'dropdown',
-    icon: 'fa-chart-pie' as const,
+    icon: FaChartPieIcon,
     dropdownContent: <div>dropdown content</div>,
   },
   {
     children: 'custom tag',
-    icon: 'fa-birthday-cake' as const,
+    icon: FaBirthdayCakeIcon,
     tag: CustomLink,
     to: 'http://www.google.com',
   },

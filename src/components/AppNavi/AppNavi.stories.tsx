@@ -103,17 +103,17 @@ storiesOf('AppNavi', module)
     const items = [
       {
         children: 'ボタン',
-        icon: 'fa-user-alt' as const,
+        icon: FaUserAltIcon,
         onClick: action('click!!'),
       },
       {
         children: 'アンカー',
-        icon: 'fa-cog' as const,
+        icon: FaCogIcon,
         href: 'http://www.google.com',
       },
       {
         children: 'ドロップダウン',
-        icon: 'fa-chart-pie' as const,
+        icon: FaChartPieIcon,
         dropdownContent: (
           <List>
             <li>
@@ -124,7 +124,7 @@ storiesOf('AppNavi', module)
       },
       {
         children: 'カスタムタグ',
-        icon: 'fa-birthday-cake' as const,
+        icon: FaBirthdayCakeIcon,
         tag: Link,
         to: 'http://www.google.com',
       },
