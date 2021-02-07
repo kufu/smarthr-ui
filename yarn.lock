@@ -16110,10 +16110,10 @@ webpack@^4.44.2:
     watchpack "^1.7.4"
     webpack-sources "^1.4.1"
 
-webpack@^5.17.0:
-  version "5.17.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.17.0.tgz#e92aebad45be25f86f788dc72fc11daacdcfd55d"
-  integrity sha512-R+IdNEaYcYaACpXZOt7reyc8txBK7J06lOPkX1SbgmeoAnUbyBZivJIksrDBnmMA3wlTWvPcX7DubxELyPB8rA==
+webpack@^5.21.2:
+  version "5.21.2"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.21.2.tgz#647507e50d3637695be28af58a6a8246050394e7"
+  integrity sha512-xHflCenx+AM4uWKX71SWHhxml5aMXdy2tu/vdi4lClm7PADKxlyDAFFN1rEFzNV0MAoPpHtBeJnl/+K6F4QBPg==
   dependencies:
     "@types/eslint-scope" "^3.7.0"
     "@types/estree" "^0.0.46"
@@ -16133,7 +16133,6 @@ webpack@^5.17.0:
     loader-runner "^4.2.0"
     mime-types "^2.1.27"
     neo-async "^2.6.2"
-    pkg-dir "^5.0.0"
     schema-utils "^3.0.0"
     tapable "^2.1.1"
     terser-webpack-plugin "^5.1.1"
