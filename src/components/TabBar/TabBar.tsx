@@ -22,7 +22,7 @@ export const TabBar: FC<Props> = ({ className = '', bordered = true, children })
 
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { border } = themes.frame
+    const { frame } = themes
 
     return css`
       display: flex;
@@ -30,19 +30,13 @@ const Wrapper = styled.div<{ themes: Theme }>`
       &.bordered {
         position: relative;
 
-        :after {
+        ::before {
           position: absolute;
-          bottom: 0px;
-          width: 100%;
-          border-bottom: ${border.default};
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-bottom: ${frame.border.default};
           content: '';
-        }
-
-        > button {
-          &.selected {
-            position: relative;
-            z-index: 1;
-          }
         }
       }
     `

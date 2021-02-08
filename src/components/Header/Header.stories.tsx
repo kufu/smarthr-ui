@@ -4,6 +4,8 @@ import * as React from 'react'
 
 import { Header } from './Header'
 
+import readme from './README.md'
+
 const handlers = {
   onClickLogo: action('clicked logo'),
   onClickHelp: action('clicked help'),
@@ -21,6 +23,11 @@ const handlers = {
 }
 
 storiesOf('Header', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
   .add('admin', () => (
     <Header
       isAdmin

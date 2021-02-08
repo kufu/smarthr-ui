@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
-import { DialogContentInner } from './DialogContentInner'
+import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 
 type DialogContentContextType = {
   onClickClose: () => void
@@ -13,12 +13,10 @@ export const DialogContentContext = createContext<DialogContentContextType>({
   },
 })
 
-type Props = {
-  top?: number
-  right?: number
-  bottom?: number
-  left?: number
-}
+type Props = Pick<
+  DialogContentInnerProps,
+  'top' | 'right' | 'bottom' | 'left' | 'id' | 'ariaLabel' | 'ariaLabelledby'
+>
 
 export const DialogContent: React.FC<Props> = ({ children, ...props }) => {
   const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)

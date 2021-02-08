@@ -2,11 +2,12 @@ import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useId } from '../../hooks/useId'
 
 import { Input, Props as InputProps } from '../Input'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
 import { StatusLabel } from '../StatusLabel'
-import { Icon } from '../Icon'
+import { FaExclamationCircleIcon } from '../Icon'
 
 type Props = Omit<InputProps, 'error'> & {
   label: string
@@ -30,9 +31,14 @@ export const FieldSet: FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme()
+  const helpId = useId()
 
   return (
-    <Wrapper width={props.width || 'auto'} className={className}>
+    <Wrapper
+      $width={props.width || 'auto'}
+      className={className}
+      aria-describedby={helpMessage ? helpId : undefined}
+    >
       <Title themes={theme}>
         <TitleText type={labelType} tag={labelTagType}>
           {label}
@@ -48,20 +54,24 @@ export const FieldSet: FC<Props> = ({
       {errorMessage &&
         (typeof errorMessage === 'string' ? [errorMessage] : errorMessage).map((message) => (
           <Error themes={theme} key={message}>
-            <ErrorIcon name="fa-exclamation-circle" color={theme.palette.DANGER} />
+            <ErrorIcon color={theme.palette.DANGER} />
             <ErrorText>{message}</ErrorText>
           </Error>
         ))}
 
-      {helpMessage && <Help themes={theme}>{helpMessage}</Help>}
+      {helpMessage && (
+        <Help id={helpId} themes={theme}>
+          {helpMessage}
+        </Help>
+      )}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div<{ width: string | number }>`
-  ${({ width }) => css`
+const Wrapper = styled.div<{ $width: string | number }>`
+  ${({ $width }) => css`
     display: inline-block;
-    width: ${typeof width === 'number' ? `${width}px` : width};
+    width: ${typeof $width === 'number' ? `${$width}px` : $width};
   `}
 `
 const Title = styled.div<{ themes: Theme }>`
@@ -93,7 +103,7 @@ const Error = styled.div<{ themes: Theme }>`
     line-height: 1;
   `}
 `
-const ErrorIcon = styled(Icon)`
+const ErrorIcon = styled(FaExclamationCircleIcon)`
   margin-right: 0.4rem;
   vertical-align: middle;
 `

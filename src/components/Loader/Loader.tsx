@@ -1,64 +1,193 @@
 import React, { FC } from 'react'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { css } from 'styled-components'
+import { Theme, useTheme } from '../../hooks/useTheme'
+import { VISUALLY_HIDDEN_STYLE } from '../../constants'
+import {
+  cogDuration,
+  containerRotate,
+  fillUnfillRotate,
+  leftSpin,
+  line1FadeInOut,
+  line2FadeInOut,
+  line3FadeInOut,
+  line4FadeInOut,
+  lineDuration,
+  rightSpin,
+  spinnerEasing,
+} from './loaderAnimation'
 
 type Props = {
-  color?: string
-  size?: 's' | 'm' | 'l'
+  size?: 's' | 'm'
   className?: string
+  text?: string
+  type?: 'primary' | 'light'
 }
 
-export const Loader: FC<Props> = ({ color = '#fff', size = 'm', className = '' }) => (
-  <Wrapper className={`${size} ${className}`} color={color}>
-    <div />
-    <div />
-    <div />
-    <div />
-    <div />
-  </Wrapper>
-)
+export const Loader: FC<Props> = ({ size = 'm', className = '', text = '', type = 'primary' }) => {
+  const theme = useTheme()
 
-const lineScale = keyframes`
-  0%, 100% {
-    transform: scaleY(1);
+  return (
+    <Wrapper className={className} role="status">
+      <Spinner className={size}>
+        {[...Array(4)].map((_, index) => (
+          <Line className={`line${index + 1} ${type}`} key={index} themes={theme}>
+            <Cog>
+              <CogInner className="cogInner left"></CogInner>
+            </Cog>
+            <Ticker>
+              <CogInner className="cogInner center"></CogInner>
+            </Ticker>
+            <Cog>
+              <CogInner className="cogInner right"></CogInner>
+            </Cog>
+          </Line>
+        ))}
+      </Spinner>
+      {text && (
+        <Text className={type} themes={theme}>
+          {text}
+        </Text>
+      )}
+      <VisuallyHidden>Loading</VisuallyHidden>
+    </Wrapper>
+  )
+}
+
+const Wrapper = styled.div`
+  display: inline-block;
+`
+
+const VisuallyHidden = styled.span`
+  ${VISUALLY_HIDDEN_STYLE}
+`
+
+const Spinner = styled.div`
+  position: relative;
+  animation: ${containerRotate} 1600ms linear infinite;
+  margin: 0 auto;
+
+  &.m {
+    width: 48px;
+    height: 48px;
+
+    .cogInner {
+      border-width: 4px;
+    }
   }
-  50% {
-    transform: scaleY(0.4);
+  &.s {
+    width: 24px;
+    height: 24px;
+
+    .cogInner {
+      border-width: 2px;
+    }
   }
 `
-const Wrapper = styled.div`
-  ${({ color }: { color: string }) => css`
-    display: inline-block;
 
-    &.s {
-      transform: scale(0.8);
-    }
-    &.l {
-      transform: scale(1.2);
-    }
+const Line = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette } = themes
 
-    & > div {
-      display: inline-block;
-      width: 4px;
-      height: 35px;
-      border-radius: 2px;
-      margin: 2px;
-      background-color: ${color};
+    return css`
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
 
-      &:nth-child(1) {
-        animation: ${lineScale} 1s -0.4s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
+      &.line1 {
+        /* stylelint-disable */
+        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+          ${line1FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
       }
-      &:nth-child(2) {
-        animation: ${lineScale} 1s -0.3s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
+      &.line2 {
+        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+          ${line2FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
       }
-      &:nth-child(3) {
-        animation: ${lineScale} 1s -0.2s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
+      &.line3 {
+        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+          ${line3FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
       }
-      &:nth-child(4) {
-        animation: ${lineScale} 1s -0.1s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
+      &.line4 {
+        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+          ${line4FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
       }
-      &:nth-child(5) {
-        animation: ${lineScale} 1s 0s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
+      /* stylelint-enable */
+
+      &.primary {
+        border-color: ${palette.BRAND};
       }
-    }
-  `}
+      &.light {
+        border-color: #fff;
+      }
+    `
+  }}
+`
+
+const Cog = styled.div`
+  display: inline-block;
+  position: relative;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  border-color: inherit;
+`
+
+const CogInner = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  box-sizing: border-box;
+  height: 100%;
+  border-style: solid;
+  border-color: inherit;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  animation: none;
+
+  &.left {
+    border-right-color: transparent;
+    transform: rotate(129deg);
+    animation: ${leftSpin} ${cogDuration} ${spinnerEasing} infinite both;
+  }
+  &.center {
+    width: 1000%;
+    left: -450%;
+  }
+  &.right {
+    left: -100%;
+    border-left-color: transparent;
+    transform: rotate(-129deg);
+    animation: ${rightSpin} ${cogDuration} ${spinnerEasing} infinite both;
+  }
+`
+
+const Ticker = styled.div`
+  position: absolute;
+  box-sizing: border-box;
+  top: 0;
+  left: 45%;
+  width: 10%;
+  height: 100%;
+  overflow: hidden;
+  border-color: inherit;
+`
+
+const Text = styled.p<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette, size } = themes
+
+    return css`
+      margin-top: ${size.pxToRem(size.space.XS)};
+      font-size: ${size.pxToRem(size.font.TALL)};
+      text-align: center;
+
+      &.primary {
+        color: ${palette.TEXT_BLACK};
+      }
+      &.light {
+        color: #fff;
+      }
+    `
+  }}
 `

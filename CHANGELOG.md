@@ -2,6 +2,294 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [12.0.0](https://github.com/kufu/smarthr-ui/compare/v11.1.0...v12.0.0) (2021-01-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* change loader animation (#1173)
+* remove shinColorPalette
+* add type props to button (#1086)
+
+### Features
+
+* add "from" and "to" props to DatePicker component ([#1123](https://github.com/kufu/smarthr-ui/issues/1123)) ([7f841e0](https://github.com/kufu/smarthr-ui/commit/7f841e08964fc1c912d2e3d042015f04e254deb6))
+* add blukActionArea in Head of Table (SHRUI-8) ([#937](https://github.com/kufu/smarthr-ui/issues/937)) ([bf0158a](https://github.com/kufu/smarthr-ui/commit/bf0158acb176fc42be5e9365b996b1998db12f70))
+* add border style to MessageDialog ([#1059](https://github.com/kufu/smarthr-ui/issues/1059)) ([add5da7](https://github.com/kufu/smarthr-ui/commit/add5da754c47190bacf6d69c9ae6b88dd34ec0cf))
+* add darkenAmount argument to hoverColor method ([#950](https://github.com/kufu/smarthr-ui/issues/950)) ([7d78586](https://github.com/kufu/smarthr-ui/commit/7d78586cc9073c3ac4fd998169e285f3ac72f6e4))
+* add hasBlank and blankLabel props to Select ([#1061](https://github.com/kufu/smarthr-ui/issues/1061)) ([165e104](https://github.com/kufu/smarthr-ui/commit/165e1049083ae19dab9d2ee5030375130aa3700b))
+* add Shin color (SHRUI-227) ([#1141](https://github.com/kufu/smarthr-ui/issues/1141)) ([1c8063a](https://github.com/kufu/smarthr-ui/commit/1c8063ac92543f54b4046efc7d9f12a177cb891b))
+* add SideNav component ([#1142](https://github.com/kufu/smarthr-ui/issues/1142)) ([6bae12c](https://github.com/kufu/smarthr-ui/commit/6bae12c4e24360e839f55a1f9f2789de75681d47)), closes [/github.com/kufu/smarthr-ui/pull/1142#discussion_r533174306](https://github.com/kufu//github.com/kufu/smarthr-ui/pull/1142/issues/discussion_r533174306)
+* change the attribute of radius ([#1080](https://github.com/kufu/smarthr-ui/issues/1080)) ([0e5bb8f](https://github.com/kufu/smarthr-ui/commit/0e5bb8fc47268ac96f86a5d7d876f9fee9e34786))
+* expose Icon components individually ([#1127](https://github.com/kufu/smarthr-ui/issues/1127)) ([f7e716b](https://github.com/kufu/smarthr-ui/commit/f7e716b019488f267caae733dbfc80f9d14a9cab))
+* fix style of disabling selectbox ([#1184](https://github.com/kufu/smarthr-ui/issues/1184)) ([04f0240](https://github.com/kufu/smarthr-ui/commit/04f0240946bac8764d397d215f79fd7156e8febb))
+* support React v17 ([#1151](https://github.com/kufu/smarthr-ui/issues/1151)) ([dc23011](https://github.com/kufu/smarthr-ui/commit/dc23011ad7db3eca02c1c5ea6e0dbe0af4da8367))
+
+
+### Bug Fixes
+
+*  invalid html width attribute ([#1105](https://github.com/kufu/smarthr-ui/issues/1105)) ([1061356](https://github.com/kufu/smarthr-ui/commit/1061356fdd9b4849740f0b7515cb34193d13676a))
+* add aria and role attributes to dialog ([#1033](https://github.com/kufu/smarthr-ui/issues/1033)) ([92561f3](https://github.com/kufu/smarthr-ui/commit/92561f388350f5398afd7efea317527134a3e983)), closes [/github.com/kufu/smarthr-ui/pull/1033#discussion_r529388476](https://github.com/kufu//github.com/kufu/smarthr-ui/pull/1033/issues/discussion_r529388476)
+* add aria and role attributes to Pagenation ([#1124](https://github.com/kufu/smarthr-ui/issues/1124)) ([8a5ac30](https://github.com/kufu/smarthr-ui/commit/8a5ac30ade05b68e08ad414573bab0aaffdc184c))
+* add aria-checked to checkbox ([#1029](https://github.com/kufu/smarthr-ui/issues/1029)) ([69dfed1](https://github.com/kufu/smarthr-ui/commit/69dfed1262dc1197984caf202b48b9a013b30f23))
+* add aria-controls to accordion button triggers for Change default Expanded ([#1140](https://github.com/kufu/smarthr-ui/issues/1140)) ([8d366c2](https://github.com/kufu/smarthr-ui/commit/8d366c258d09ef4476e17f5c34c832497cf97978))
+* add aria-describedby ([#1137](https://github.com/kufu/smarthr-ui/issues/1137)) ([d98f729](https://github.com/kufu/smarthr-ui/commit/d98f7293b535b215237365fb87ce67004348175f))
+* add background-color white ([#1260](https://github.com/kufu/smarthr-ui/issues/1260)) ([3caa554](https://github.com/kufu/smarthr-ui/commit/3caa554106fb76cd39f9ac412624334df68c27b0))
+* add box-sizing: border-box to textarea ([#1060](https://github.com/kufu/smarthr-ui/issues/1060)) ([14e8f06](https://github.com/kufu/smarthr-ui/commit/14e8f06d2fc796b268fdac2fdc79681b797b067d))
+* add optional chaining to _isChildPortal ([#1236](https://github.com/kufu/smarthr-ui/issues/1236)) ([6258036](https://github.com/kufu/smarthr-ui/commit/6258036bda429340b23abbbd0e67aa59e3560cc9))
+* add type props to button ([#1086](https://github.com/kufu/smarthr-ui/issues/1086)) ([f603a16](https://github.com/kufu/smarthr-ui/commit/f603a16e680e6e025ddf2c95095eb2799dd82ed6))
+* change disabled props to transient props ([#1092](https://github.com/kufu/smarthr-ui/issues/1092)) ([1af1390](https://github.com/kufu/smarthr-ui/commit/1af13904e73a827f74065975b2c803ed7278a638))
+* change full-width space to half-width ([#1201](https://github.com/kufu/smarthr-ui/issues/1201)) ([889aa2b](https://github.com/kufu/smarthr-ui/commit/889aa2beac63b458504ff4c9613d203f4f1f3a7e))
+* change loader animation ([#1173](https://github.com/kufu/smarthr-ui/issues/1173)) ([abddc8f](https://github.com/kufu/smarthr-ui/commit/abddc8f99190e585647a330f5d9ae877ac4ad8ae)), closes [/github.com/kufu/smarthr-ui/pull/1173#discussion_r532369303](https://github.com/kufu//github.com/kufu/smarthr-ui/pull/1173/issues/discussion_r532369303)
+* change the minimum value of from props in the calendar component ([#1122](https://github.com/kufu/smarthr-ui/issues/1122)) ([5718806](https://github.com/kufu/smarthr-ui/commit/57188066ad7edda3632bd4591d94e7e6c6a0c362))
+* change theme props to transient props ([#1081](https://github.com/kufu/smarthr-ui/issues/1081)) ([960bc98](https://github.com/kufu/smarthr-ui/commit/960bc980ac7d89ad7e3c953cb8ab90b109d88636))
+* change to add aria-label to icon ([#1110](https://github.com/kufu/smarthr-ui/issues/1110)) ([3254aef](https://github.com/kufu/smarthr-ui/commit/3254aef5bd62aa88b7fd687798807f040ecd6dbc))
+* change width props to temporary props ([#1089](https://github.com/kufu/smarthr-ui/issues/1089)) ([44bbe36](https://github.com/kufu/smarthr-ui/commit/44bbe364c8d7b5634dec738a2627b24d78caac5d))
+* checkboxLabel where the label contains a "div" and "p" ([#1083](https://github.com/kufu/smarthr-ui/issues/1083)) ([96e6b69](https://github.com/kufu/smarthr-ui/commit/96e6b69e7d71d96f7d223f6dbe03569f10f45c0f))
+* DatePicker bugs ([#1091](https://github.com/kufu/smarthr-ui/issues/1091)) ([11edaab](https://github.com/kufu/smarthr-ui/commit/11edaabc7b99e1b7e97eb0b636e1786e3a31ef12))
+* dialog focus management ([#889](https://github.com/kufu/smarthr-ui/issues/889)) ([b9fde13](https://github.com/kufu/smarthr-ui/commit/b9fde131af353180fe7742fb34d9a65648bd8b22))
+* fallback parentElement of svg element for IE ([#1241](https://github.com/kufu/smarthr-ui/issues/1241)) ([d4ae54e](https://github.com/kufu/smarthr-ui/commit/d4ae54e448fd1baa985b8c3f11556dfa468007ef))
+* fix input width for firefox ([#1253](https://github.com/kufu/smarthr-ui/issues/1253)) ([d9fc669](https://github.com/kufu/smarthr-ui/commit/d9fc6695384c4263a6d00fc598f736054cc7eb3b))
+* improve accessibility of MultiComboBox (SHRUI-207) ([#1187](https://github.com/kufu/smarthr-ui/issues/1187)) ([db30633](https://github.com/kufu/smarthr-ui/commit/db30633601ba48d69c8ad26bd87a914c7f6c4172))
+* improve role of infomationpanel ([#1205](https://github.com/kufu/smarthr-ui/issues/1205)) ([116a3c4](https://github.com/kufu/smarthr-ui/commit/116a3c4b5e05bfae21ac992d049ff0235ec843e5))
+* invalid html attribute ([#1095](https://github.com/kufu/smarthr-ui/issues/1095)) ([bb85bac](https://github.com/kufu/smarthr-ui/commit/bb85bac2df1a26e717010385a2a7e096ac3d444e))
+* invalid html attribute ([#1106](https://github.com/kufu/smarthr-ui/issues/1106)) ([8732440](https://github.com/kufu/smarthr-ui/commit/87324403a7501c86e84386db60e7cf983a441532))
+* make StatusLabel vertical center alignment  ([#879](https://github.com/kufu/smarthr-ui/issues/879)) ([34cc429](https://github.com/kufu/smarthr-ui/commit/34cc429d255a95c67ee7cc53875a25c1ef5899f5))
+* modify auto format of CurrencyInput (SHRUI-145) ([#1143](https://github.com/kufu/smarthr-ui/issues/1143)) ([266a0bc](https://github.com/kufu/smarthr-ui/commit/266a0bc2cc11922addafffeec560bf234603236f))
+* modify not to apply hover-style to Checkbox when hover over a disabled CheckboxLabel ([#1136](https://github.com/kufu/smarthr-ui/issues/1136)) ([0c662a3](https://github.com/kufu/smarthr-ui/commit/0c662a3f803513941df4e375dc4700888a38b520))
+* pass undefined to accept instead of blank string ([#1121](https://github.com/kufu/smarthr-ui/issues/1121)) ([514d569](https://github.com/kufu/smarthr-ui/commit/514d569b38d27eaf8bdc590f7e961f6c52ace6ca))
+* refactor Dropdown (SHRUI-221) ([#1126](https://github.com/kufu/smarthr-ui/issues/1126)) ([0b77df6](https://github.com/kufu/smarthr-ui/commit/0b77df6909d4f6dcb624463c9343c746a5587883))
+* reflect feedback of SideNav (SHRUI-320) ([#1251](https://github.com/kufu/smarthr-ui/issues/1251)) ([b66441c](https://github.com/kufu/smarthr-ui/commit/b66441c486c8f2c8baffcc78c477655ac70956da))
+* remove that blank optgroup is displayed for IE ([#1186](https://github.com/kufu/smarthr-ui/issues/1186)) ([06dc2db](https://github.com/kufu/smarthr-ui/commit/06dc2db71ef578e32ac783fb062dfc62baf02c2a))
+* replace defaultPalette (SHRUI-233) ([#1153](https://github.com/kufu/smarthr-ui/issues/1153)) ([b323bd5](https://github.com/kufu/smarthr-ui/commit/b323bd584ea5c679e0e3d21cccc48072aa402cfc))
+* replace div in button with span ([#1084](https://github.com/kufu/smarthr-ui/issues/1084)) ([8f1ed53](https://github.com/kufu/smarthr-ui/commit/8f1ed5304528bd1161d5429188bb903df096cddb))
+* replace figurein button with span ([#1082](https://github.com/kufu/smarthr-ui/issues/1082)) ([4c0188f](https://github.com/kufu/smarthr-ui/commit/4c0188f32396f19cccbba9a20d5e9dbeda84f802))
+* shifting of index when IndexNav's ListItem is inserted into a new line ([#1138](https://github.com/kufu/smarthr-ui/issues/1138)) ([6222f57](https://github.com/kufu/smarthr-ui/commit/6222f576824f5c108699b9a7613fd1f27f46d469))
+* update package.json ([#1224](https://github.com/kufu/smarthr-ui/issues/1224)) ([976fb89](https://github.com/kufu/smarthr-ui/commit/976fb89f506bf83da309fcf606fe2fb08d321438))
+* アコーディオンパネルの展開時に overflow を既定値に戻す ([#1125](https://github.com/kufu/smarthr-ui/issues/1125)) ([8d8069b](https://github.com/kufu/smarthr-ui/commit/8d8069b05672165943ef17080c17696108a17872))
+
+## [12.0.0-0](https://github.com/kufu/smarthr-ui/compare/v11.1.0...v12.0.0-0) (2020-12-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* change loader animation (#1173)
+* remove shinColorPalette
+* add type props to button (#1086)
+
+### Features
+
+* add "from" and "to" props to DatePicker component ([#1123](https://github.com/kufu/smarthr-ui/issues/1123)) ([7f841e0](https://github.com/kufu/smarthr-ui/commit/7f841e08964fc1c912d2e3d042015f04e254deb6))
+* add blukActionArea in Head of Table (SHRUI-8) ([#937](https://github.com/kufu/smarthr-ui/issues/937)) ([bf0158a](https://github.com/kufu/smarthr-ui/commit/bf0158acb176fc42be5e9365b996b1998db12f70))
+* add border style to MessageDialog ([#1059](https://github.com/kufu/smarthr-ui/issues/1059)) ([add5da7](https://github.com/kufu/smarthr-ui/commit/add5da754c47190bacf6d69c9ae6b88dd34ec0cf))
+* add darkenAmount argument to hoverColor method ([#950](https://github.com/kufu/smarthr-ui/issues/950)) ([7d78586](https://github.com/kufu/smarthr-ui/commit/7d78586cc9073c3ac4fd998169e285f3ac72f6e4))
+* add hasBlank and blankLabel props to Select ([#1061](https://github.com/kufu/smarthr-ui/issues/1061)) ([165e104](https://github.com/kufu/smarthr-ui/commit/165e1049083ae19dab9d2ee5030375130aa3700b))
+* add Shin color (SHRUI-227) ([#1141](https://github.com/kufu/smarthr-ui/issues/1141)) ([1c8063a](https://github.com/kufu/smarthr-ui/commit/1c8063ac92543f54b4046efc7d9f12a177cb891b))
+* add SideNav component ([#1142](https://github.com/kufu/smarthr-ui/issues/1142)) ([6bae12c](https://github.com/kufu/smarthr-ui/commit/6bae12c4e24360e839f55a1f9f2789de75681d47)), closes [/github.com/kufu/smarthr-ui/pull/1142#discussion_r533174306](https://github.com/kufu//github.com/kufu/smarthr-ui/pull/1142/issues/discussion_r533174306)
+* change the attribute of radius ([#1080](https://github.com/kufu/smarthr-ui/issues/1080)) ([0e5bb8f](https://github.com/kufu/smarthr-ui/commit/0e5bb8fc47268ac96f86a5d7d876f9fee9e34786))
+* expose Icon components individually ([#1127](https://github.com/kufu/smarthr-ui/issues/1127)) ([f7e716b](https://github.com/kufu/smarthr-ui/commit/f7e716b019488f267caae733dbfc80f9d14a9cab))
+* fix style of disabling selectbox ([#1184](https://github.com/kufu/smarthr-ui/issues/1184)) ([04f0240](https://github.com/kufu/smarthr-ui/commit/04f0240946bac8764d397d215f79fd7156e8febb))
+* support React v17 ([#1151](https://github.com/kufu/smarthr-ui/issues/1151)) ([dc23011](https://github.com/kufu/smarthr-ui/commit/dc23011ad7db3eca02c1c5ea6e0dbe0af4da8367))
+
+
+### Bug Fixes
+
+*  invalid html width attribute ([#1105](https://github.com/kufu/smarthr-ui/issues/1105)) ([1061356](https://github.com/kufu/smarthr-ui/commit/1061356fdd9b4849740f0b7515cb34193d13676a))
+* add aria and role attributes to dialog ([#1033](https://github.com/kufu/smarthr-ui/issues/1033)) ([92561f3](https://github.com/kufu/smarthr-ui/commit/92561f388350f5398afd7efea317527134a3e983)), closes [/github.com/kufu/smarthr-ui/pull/1033#discussion_r529388476](https://github.com/kufu//github.com/kufu/smarthr-ui/pull/1033/issues/discussion_r529388476)
+* add aria and role attributes to Pagenation ([#1124](https://github.com/kufu/smarthr-ui/issues/1124)) ([8a5ac30](https://github.com/kufu/smarthr-ui/commit/8a5ac30ade05b68e08ad414573bab0aaffdc184c))
+* add aria-checked to checkbox ([#1029](https://github.com/kufu/smarthr-ui/issues/1029)) ([69dfed1](https://github.com/kufu/smarthr-ui/commit/69dfed1262dc1197984caf202b48b9a013b30f23))
+* add aria-controls to accordion button triggers for Change default Expanded ([#1140](https://github.com/kufu/smarthr-ui/issues/1140)) ([8d366c2](https://github.com/kufu/smarthr-ui/commit/8d366c258d09ef4476e17f5c34c832497cf97978))
+* add aria-describedby ([#1137](https://github.com/kufu/smarthr-ui/issues/1137)) ([d98f729](https://github.com/kufu/smarthr-ui/commit/d98f7293b535b215237365fb87ce67004348175f))
+* add box-sizing: border-box to textarea ([#1060](https://github.com/kufu/smarthr-ui/issues/1060)) ([14e8f06](https://github.com/kufu/smarthr-ui/commit/14e8f06d2fc796b268fdac2fdc79681b797b067d))
+* add optional chaining to _isChildPortal ([#1236](https://github.com/kufu/smarthr-ui/issues/1236)) ([6258036](https://github.com/kufu/smarthr-ui/commit/6258036bda429340b23abbbd0e67aa59e3560cc9))
+* add type props to button ([#1086](https://github.com/kufu/smarthr-ui/issues/1086)) ([f603a16](https://github.com/kufu/smarthr-ui/commit/f603a16e680e6e025ddf2c95095eb2799dd82ed6))
+* change disabled props to transient props ([#1092](https://github.com/kufu/smarthr-ui/issues/1092)) ([1af1390](https://github.com/kufu/smarthr-ui/commit/1af13904e73a827f74065975b2c803ed7278a638))
+* change full-width space to half-width ([#1201](https://github.com/kufu/smarthr-ui/issues/1201)) ([889aa2b](https://github.com/kufu/smarthr-ui/commit/889aa2beac63b458504ff4c9613d203f4f1f3a7e))
+* change loader animation ([#1173](https://github.com/kufu/smarthr-ui/issues/1173)) ([abddc8f](https://github.com/kufu/smarthr-ui/commit/abddc8f99190e585647a330f5d9ae877ac4ad8ae)), closes [/github.com/kufu/smarthr-ui/pull/1173#discussion_r532369303](https://github.com/kufu//github.com/kufu/smarthr-ui/pull/1173/issues/discussion_r532369303)
+* change the minimum value of from props in the calendar component ([#1122](https://github.com/kufu/smarthr-ui/issues/1122)) ([5718806](https://github.com/kufu/smarthr-ui/commit/57188066ad7edda3632bd4591d94e7e6c6a0c362))
+* change theme props to transient props ([#1081](https://github.com/kufu/smarthr-ui/issues/1081)) ([960bc98](https://github.com/kufu/smarthr-ui/commit/960bc980ac7d89ad7e3c953cb8ab90b109d88636))
+* change to add aria-label to icon ([#1110](https://github.com/kufu/smarthr-ui/issues/1110)) ([3254aef](https://github.com/kufu/smarthr-ui/commit/3254aef5bd62aa88b7fd687798807f040ecd6dbc))
+* change width props to temporary props ([#1089](https://github.com/kufu/smarthr-ui/issues/1089)) ([44bbe36](https://github.com/kufu/smarthr-ui/commit/44bbe364c8d7b5634dec738a2627b24d78caac5d))
+* checkboxLabel where the label contains a "div" and "p" ([#1083](https://github.com/kufu/smarthr-ui/issues/1083)) ([96e6b69](https://github.com/kufu/smarthr-ui/commit/96e6b69e7d71d96f7d223f6dbe03569f10f45c0f))
+* DatePicker bugs ([#1091](https://github.com/kufu/smarthr-ui/issues/1091)) ([11edaab](https://github.com/kufu/smarthr-ui/commit/11edaabc7b99e1b7e97eb0b636e1786e3a31ef12))
+* dialog focus management ([#889](https://github.com/kufu/smarthr-ui/issues/889)) ([b9fde13](https://github.com/kufu/smarthr-ui/commit/b9fde131af353180fe7742fb34d9a65648bd8b22))
+* improve accessibility of MultiComboBox (SHRUI-207) ([#1187](https://github.com/kufu/smarthr-ui/issues/1187)) ([db30633](https://github.com/kufu/smarthr-ui/commit/db30633601ba48d69c8ad26bd87a914c7f6c4172))
+* improve role of infomationpanel ([#1205](https://github.com/kufu/smarthr-ui/issues/1205)) ([116a3c4](https://github.com/kufu/smarthr-ui/commit/116a3c4b5e05bfae21ac992d049ff0235ec843e5))
+* invalid html attribute ([#1095](https://github.com/kufu/smarthr-ui/issues/1095)) ([bb85bac](https://github.com/kufu/smarthr-ui/commit/bb85bac2df1a26e717010385a2a7e096ac3d444e))
+* invalid html attribute ([#1106](https://github.com/kufu/smarthr-ui/issues/1106)) ([8732440](https://github.com/kufu/smarthr-ui/commit/87324403a7501c86e84386db60e7cf983a441532))
+* make StatusLabel vertical center alignment  ([#879](https://github.com/kufu/smarthr-ui/issues/879)) ([34cc429](https://github.com/kufu/smarthr-ui/commit/34cc429d255a95c67ee7cc53875a25c1ef5899f5))
+* modify auto format of CurrencyInput (SHRUI-145) ([#1143](https://github.com/kufu/smarthr-ui/issues/1143)) ([266a0bc](https://github.com/kufu/smarthr-ui/commit/266a0bc2cc11922addafffeec560bf234603236f))
+* modify not to apply hover-style to Checkbox when hover over a disabled CheckboxLabel ([#1136](https://github.com/kufu/smarthr-ui/issues/1136)) ([0c662a3](https://github.com/kufu/smarthr-ui/commit/0c662a3f803513941df4e375dc4700888a38b520))
+* pass undefined to accept instead of blank string ([#1121](https://github.com/kufu/smarthr-ui/issues/1121)) ([514d569](https://github.com/kufu/smarthr-ui/commit/514d569b38d27eaf8bdc590f7e961f6c52ace6ca))
+* refactor Dropdown (SHRUI-221) ([#1126](https://github.com/kufu/smarthr-ui/issues/1126)) ([0b77df6](https://github.com/kufu/smarthr-ui/commit/0b77df6909d4f6dcb624463c9343c746a5587883))
+* remove that blank optgroup is displayed for IE ([#1186](https://github.com/kufu/smarthr-ui/issues/1186)) ([06dc2db](https://github.com/kufu/smarthr-ui/commit/06dc2db71ef578e32ac783fb062dfc62baf02c2a))
+* replace defaultPalette (SHRUI-233) ([#1153](https://github.com/kufu/smarthr-ui/issues/1153)) ([b323bd5](https://github.com/kufu/smarthr-ui/commit/b323bd584ea5c679e0e3d21cccc48072aa402cfc))
+* replace div in button with span ([#1084](https://github.com/kufu/smarthr-ui/issues/1084)) ([8f1ed53](https://github.com/kufu/smarthr-ui/commit/8f1ed5304528bd1161d5429188bb903df096cddb))
+* replace figurein button with span ([#1082](https://github.com/kufu/smarthr-ui/issues/1082)) ([4c0188f](https://github.com/kufu/smarthr-ui/commit/4c0188f32396f19cccbba9a20d5e9dbeda84f802))
+* shifting of index when IndexNav's ListItem is inserted into a new line ([#1138](https://github.com/kufu/smarthr-ui/issues/1138)) ([6222f57](https://github.com/kufu/smarthr-ui/commit/6222f576824f5c108699b9a7613fd1f27f46d469))
+* update package.json ([#1224](https://github.com/kufu/smarthr-ui/issues/1224)) ([976fb89](https://github.com/kufu/smarthr-ui/commit/976fb89f506bf83da309fcf606fe2fb08d321438))
+* アコーディオンパネルの展開時に overflow を既定値に戻す ([#1125](https://github.com/kufu/smarthr-ui/issues/1125)) ([8d8069b](https://github.com/kufu/smarthr-ui/commit/8d8069b05672165943ef17080c17696108a17872))
+
+## [11.2.0](https://github.com/kufu/smarthr-ui/compare/v11.1.0...v11.2.0) (2020-11-26)
+
+
+### Features
+
+* add Shin color (SHRUI-227) ([#1141](https://github.com/kufu/smarthr-ui/issues/1141)) ([#1154](https://github.com/kufu/smarthr-ui/issues/1154)) ([db08ce4](https://github.com/kufu/smarthr-ui/commit/db08ce47b2fb2eb8985b295e9470974842ee948a))
+
+## [11.1.0](https://github.com/kufu/smarthr-ui/compare/v11.0.0-0...v11.1.0) (2020-10-28)
+
+
+### Features
+
+* add InputFIle (SHRUI-156) ([#1066](https://github.com/kufu/smarthr-ui/issues/1066)) ([0c92755](https://github.com/kufu/smarthr-ui/commit/0c92755393dade4810b6f8e73061e88f8bffdafb))
+
+
+### Bug Fixes
+
+* a11y of Dropdown (SHRUI-180) ([#1050](https://github.com/kufu/smarthr-ui/issues/1050)) ([a413acf](https://github.com/kufu/smarthr-ui/commit/a413acf50fb8ae3abea69bcd775ea60c396ecc0b))
+* apply changes of release v11.0.0 ([#1090](https://github.com/kufu/smarthr-ui/issues/1090)) ([9cf6ded](https://github.com/kufu/smarthr-ui/commit/9cf6ded78a5cb2437eccb354122f3ca7b4d4a584)), closes [#1085](https://github.com/kufu/smarthr-ui/issues/1085) [#1087](https://github.com/kufu/smarthr-ui/issues/1087)
+* change Cell height ([#976](https://github.com/kufu/smarthr-ui/issues/976)) ([0ad828c](https://github.com/kufu/smarthr-ui/commit/0ad828c725ce91d9d42939c6a608ac236c85c630))
+* change SmartHR Logo props to temporary props ([#1094](https://github.com/kufu/smarthr-ui/issues/1094)) ([91b509a](https://github.com/kufu/smarthr-ui/commit/91b509a1e2a1b13ea53afbabc84f480d116fb4c9))
+* change tag of calendar component ([#1088](https://github.com/kufu/smarthr-ui/issues/1088)) ([ba87935](https://github.com/kufu/smarthr-ui/commit/ba87935cf3ffad2f987a4e62df9fe60b70761561))
+* change tertiary link in Bottom Fixed Area to correct HTML ([#1065](https://github.com/kufu/smarthr-ui/issues/1065)) ([b023dfd](https://github.com/kufu/smarthr-ui/commit/b023dfd860fa258854f416279514e82d1cb3f6fc))
+* change theme props to transient props ([#1069](https://github.com/kufu/smarthr-ui/issues/1069)) ([beaff5c](https://github.com/kufu/smarthr-ui/commit/beaff5cad6ca3a908dbdbd6cb4c8af31799b8d1a))
+* change to see the content overflowing in the vertical direction of MessageScreen ([#1058](https://github.com/kufu/smarthr-ui/issues/1058)) ([773fd15](https://github.com/kufu/smarthr-ui/commit/773fd15631be8a9f279a98742c492b0bfc052614))
+* change to unify the notation in the README ([#1068](https://github.com/kufu/smarthr-ui/issues/1068)) ([c8e515c](https://github.com/kufu/smarthr-ui/commit/c8e515c9a17f551f42b30499924acad8a986aec0))
+* enable to use MultiComboBox on Dropdown ([#1067](https://github.com/kufu/smarthr-ui/issues/1067)) ([0d9fe7f](https://github.com/kufu/smarthr-ui/commit/0d9fe7fb2c63fd5dcdf947f2f43b46f856254537))
+* support webpack v5 ([#1057](https://github.com/kufu/smarthr-ui/issues/1057)) ([3d8d14e](https://github.com/kufu/smarthr-ui/commit/3d8d14ee9d1ae19f051cad95a57156370a5168c1))
+
+## [11.0.0](https://github.com/kufu/smarthr-ui/compare/v11.0.0-1...v11.0.0) (2020-10-22)
+
+## [11.0.0-1](https://github.com/kufu/smarthr-ui/compare/v11.0.0-0...v11.0.0-1) (2020-10-21)
+
+
+### Bug Fixes
+
+* calculate Calendar position in DatePicker (SHRUI-212) ([#1085](https://github.com/kufu/smarthr-ui/issues/1085)) ([eeb9bda](https://github.com/kufu/smarthr-ui/commit/eeb9bda4b144705d6681658f1b1a7e5c46ea4fdf))
+* consider reset css in BackgroundJobsPanel (SHRUI-213) ([#1087](https://github.com/kufu/smarthr-ui/issues/1087)) ([9bbc279](https://github.com/kufu/smarthr-ui/commit/9bbc27998d9bec16a4fc0acaaa6cd639a595e8c3))
+
+## [11.0.0-0](https://github.com/kufu/smarthr-ui/compare/v10.0.0...v11.0.0-0) (2020-10-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* change props of DatePicker drastically, and remove
+parsing error.
+
+* fix: typo
+
+* fix: ref in custom hook
+
+* docs: update README
+* Remove id property from Tooltip component
+
+* fix: change prefix to sequence number
+
+### Features
+
+* add BackgroundJobsPanel (SHRUI-116) ([#975](https://github.com/kufu/smarthr-ui/issues/975)) ([9a1ae65](https://github.com/kufu/smarthr-ui/commit/9a1ae659086ed31abbb9387178031a9cd39dd7f9))
+* add SegmentedControl (SHRUI-115) ([#949](https://github.com/kufu/smarthr-ui/issues/949)) ([36ea094](https://github.com/kufu/smarthr-ui/commit/36ea094cf1f2dd5b426d53153b04c9bcbc3af9d5))
+* add style for visually hidden ([#963](https://github.com/kufu/smarthr-ui/issues/963)) ([fda4ccf](https://github.com/kufu/smarthr-ui/commit/fda4ccf5e72957c8070f1009aefb4bb14f140515))
+* add useId hook and remove id property from Tooltip ([#974](https://github.com/kufu/smarthr-ui/issues/974)) ([f638d6b](https://github.com/kufu/smarthr-ui/commit/f638d6b4bb14450640f90b580218793e27843df7))
+* add visually hidden text for some components ([#1016](https://github.com/kufu/smarthr-ui/issues/1016)) ([39c85c7](https://github.com/kufu/smarthr-ui/commit/39c85c7e83bb3af461c082ac4245b1299aa955ce))
+* change addon order ([#1041](https://github.com/kufu/smarthr-ui/issues/1041)) ([29bde4c](https://github.com/kufu/smarthr-ui/commit/29bde4c33390ecb520c912ec4643dd801213403a))
+* create shadow theme ([#1004](https://github.com/kufu/smarthr-ui/issues/1004)) ([e194e01](https://github.com/kufu/smarthr-ui/commit/e194e017626337638a9af7645f7034f47193e737))
+* create zIndex theme ([#1026](https://github.com/kufu/smarthr-ui/issues/1026)) ([0f190ab](https://github.com/kufu/smarthr-ui/commit/0f190ab99476b3620298436b6a3571bed988144a))
+
+
+### Bug Fixes
+
+* a11y of Calendar ([#1035](https://github.com/kufu/smarthr-ui/issues/1035)) ([45ed373](https://github.com/kufu/smarthr-ui/commit/45ed37332868a8f5df68449a96c8e8de68d42c10))
+* add ARIA attributes into Pagination ([#1032](https://github.com/kufu/smarthr-ui/issues/1032)) ([32f1e3f](https://github.com/kufu/smarthr-ui/commit/32f1e3f25fca91ffd0525e4e80dffa6e223dc974))
+* add aria-label to MessageScreen ([#1018](https://github.com/kufu/smarthr-ui/issues/1018)) ([ef56e37](https://github.com/kufu/smarthr-ui/commit/ef56e377984e8c199ca7eaa5156f1b4f5df26406))
+* add aria-label to SmartHR Logo ([#1019](https://github.com/kufu/smarthr-ui/issues/1019)) ([5507618](https://github.com/kufu/smarthr-ui/commit/55076180a67f542b05e48ad13db73badd95dda56))
+* add blank optgroup for not omitting labels for Mobile Safari ([#979](https://github.com/kufu/smarthr-ui/issues/979)) ([87eaa1b](https://github.com/kufu/smarthr-ui/commit/87eaa1b59ceddefccab713da68c931e683962d11))
+* add css to show disabled input value ([#1028](https://github.com/kufu/smarthr-ui/issues/1028)) ([1547580](https://github.com/kufu/smarthr-ui/commit/154758027b2bf29d9524ef7f00f1d6adadaa850c))
+* add role attribute and visually hidden text ([#1015](https://github.com/kufu/smarthr-ui/issues/1015)) ([536e304](https://github.com/kufu/smarthr-ui/commit/536e30470e5b413ca14bedc4cf644ad9a7c6112f))
+* add role attribute to tooltip ([#1045](https://github.com/kufu/smarthr-ui/issues/1045)) ([d67fb3d](https://github.com/kufu/smarthr-ui/commit/d67fb3d1523e1e8a42ba42428591cb7d20e3a4ab))
+* change not to add aria-expanded when InformationPanel has no toggle button ([#1046](https://github.com/kufu/smarthr-ui/issues/1046)) ([ffe8652](https://github.com/kufu/smarthr-ui/commit/ffe8652782bd36015787f8e8700a8a5f3353ac04))
+* DatePicker (SHRUI-178) ([#1027](https://github.com/kufu/smarthr-ui/issues/1027)) ([3c94f19](https://github.com/kufu/smarthr-ui/commit/3c94f19211b4db465267411e1f6ff2a3d10125e8))
+* enable to ignore Icon what has no labels (SHRUI-148) ([#1031](https://github.com/kufu/smarthr-ui/issues/1031)) ([bf12672](https://github.com/kufu/smarthr-ui/commit/bf126727d59754be102932a1b4ac0f2d78cd2358))
+* fix styles of Calendar when using reset style ([#973](https://github.com/kufu/smarthr-ui/issues/973)) ([3e790b2](https://github.com/kufu/smarthr-ui/commit/3e790b255b38414e3681ed6c4d84253f8b33a9e7))
+* move frame styles to Wrapper ([#985](https://github.com/kufu/smarthr-ui/issues/985)) ([b9de4e4](https://github.com/kufu/smarthr-ui/commit/b9de4e4f607e4a352e43ce17512be9c48d35afe2))
+* nested Dropdown ([#1003](https://github.com/kufu/smarthr-ui/issues/1003)) ([6f648df](https://github.com/kufu/smarthr-ui/commit/6f648df61d3e2140a156f0692f866d9be3901fb9))
+* stylelint ([#1034](https://github.com/kufu/smarthr-ui/issues/1034)) ([a6a23e4](https://github.com/kufu/smarthr-ui/commit/a6a23e46161023d59d7841bbbc76df480f4cd61f))
+* update font-family ([#930](https://github.com/kufu/smarthr-ui/issues/930)) ([ff7c7f3](https://github.com/kufu/smarthr-ui/commit/ff7c7f3a64f170ea76fdc94ab57dea4dc4c90ad8))
+
+## [10.1.0](https://github.com/kufu/smarthr-ui/compare/v10.0.0...v10.1.0) (2020-11-24)
+
+
+### Features
+
+* backport Shin Color to v10 (SHRUI-232) ([#1155](https://github.com/kufu/smarthr-ui/issues/1155)) ([1b551e1](https://github.com/kufu/smarthr-ui/commit/1b551e107674209966083cbacf89ccc6a11b4a3b)), closes [#1141](https://github.com/kufu/smarthr-ui/issues/1141)
+
+## [10.0.0](https://github.com/kufu/smarthr-ui/compare/v9.3.0...v10.0.0) (2020-08-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* reconsider border radius of theme (#849)
+* Tooltip become portal, and become to require id property
+
+### Features
+
+* add DatePicker ([#910](https://github.com/kufu/smarthr-ui/issues/910)) ([8e400fc](https://github.com/kufu/smarthr-ui/commit/8e400fca421517b139ba12f8fb21e98f56f688a9))
+* added SVGAttributes and role attributes to props ([#909](https://github.com/kufu/smarthr-ui/issues/909)) ([d975191](https://github.com/kufu/smarthr-ui/commit/d975191b9432663828ec8216932f00a5f253fe43))
+
+
+### Bug Fixes
+
+* add role in FlashMessage ([#940](https://github.com/kufu/smarthr-ui/issues/940)) ([56e1e2e](https://github.com/kufu/smarthr-ui/commit/56e1e2e8e22a6b01689f6c8d819f301bf09a25cf))
+* reconsider border radius of theme ([#849](https://github.com/kufu/smarthr-ui/issues/849)) ([02e21ca](https://github.com/kufu/smarthr-ui/commit/02e21caae2a77adc61b17200c895a48c4a73c7af))
+
+
+* BREAKING CHANGE: change Tooltip to portal (#900) ([b4a3a9d](https://github.com/kufu/smarthr-ui/commit/b4a3a9d20a71793b479b6f988ac4833871753660)), closes [#900](https://github.com/kufu/smarthr-ui/issues/900)
+
+## [9.4.0](https://github.com/kufu/smarthr-ui/compare/v9.3.0...v9.4.0) (2020-11-26)
+
+
+### Features
+
+* backport Shin Color to v9 (SHRUI-232) ([#1156](https://github.com/kufu/smarthr-ui/issues/1156)) ([88ff431](https://github.com/kufu/smarthr-ui/commit/88ff431c056aec6f6a8fd0872226d3b55c77b1e5)), closes [#1141](https://github.com/kufu/smarthr-ui/issues/1141)
+
+## [9.3.0](https://github.com/kufu/smarthr-ui/compare/v9.2.0...v9.3.0) (2020-08-11)
+
+
+### Features
+
+* add maxlength attribute and text counter to textarea ([#877](https://github.com/kufu/smarthr-ui/issues/877)) ([9ae5142](https://github.com/kufu/smarthr-ui/commit/9ae5142bb4f766a6f0a2c1e0488f710e10fd0366))
+
+
+### Bug Fixes
+
+* add necessary dependencies of hooks ([#906](https://github.com/kufu/smarthr-ui/issues/906)) ([a14e2c0](https://github.com/kufu/smarthr-ui/commit/a14e2c0adae7853d1ba153ef9215519e67eecd8f))
+* fix applying className ([#890](https://github.com/kufu/smarthr-ui/issues/890)) ([a950f0c](https://github.com/kufu/smarthr-ui/commit/a950f0c2e9cd1b3a9cd82cf7dc0c71ce97d5afec))
+* TabBar for IE support ([#854](https://github.com/kufu/smarthr-ui/issues/854)) ([adb0fc3](https://github.com/kufu/smarthr-ui/commit/adb0fc3cf0715e36b19e0ce05f5824d1b556281e))
+* typographical error ([#920](https://github.com/kufu/smarthr-ui/issues/920)) ([0e30876](https://github.com/kufu/smarthr-ui/commit/0e30876b50f5c34a67e661b0b35d85013394c9f6))
+* width for input element in Input ([#905](https://github.com/kufu/smarthr-ui/issues/905)) ([b77046f](https://github.com/kufu/smarthr-ui/commit/b77046fdc221ba07c814714104735e2f4ae996a1))
+
+## [9.2.0](https://github.com/kufu/smarthr-ui/compare/v9.1.0...v9.2.0) (2020-07-15)
+
+
+### Features
+
+* add affixes into Input ([#851](https://github.com/kufu/smarthr-ui/issues/851)) ([f95c8ec](https://github.com/kufu/smarthr-ui/commit/f95c8ecbad568fe4739b4a3dd927722109375be8))
+* add Calendar component ([#832](https://github.com/kufu/smarthr-ui/issues/832)) ([0990e38](https://github.com/kufu/smarthr-ui/commit/0990e38d8f8716795e0c82599245625412574c61))
+* add IndexNav component ([#838](https://github.com/kufu/smarthr-ui/issues/838)) ([6ce3c6a](https://github.com/kufu/smarthr-ui/commit/6ce3c6a43ecc1a5a429566402e8d60aaba19f9fd))
+
+
+### Bug Fixes
+
+* add className props to RightFixedNote and RightFixedNoteItem ([#865](https://github.com/kufu/smarthr-ui/issues/865)) ([a861eed](https://github.com/kufu/smarthr-ui/commit/a861eed4f20205a882d7cd7580fd2099d33d91da))
+* change flex to long-hand in FlashMessage ([#852](https://github.com/kufu/smarthr-ui/issues/852)) ([e2817e1](https://github.com/kufu/smarthr-ui/commit/e2817e16b0a10da954b3cce614fc77fb0579eeb8))
+* change not to pass unnecessary props to Background ([#862](https://github.com/kufu/smarthr-ui/issues/862)) ([9dd9c2f](https://github.com/kufu/smarthr-ui/commit/9dd9c2f905a5738dfeef987f9044db2b0052a8af))
+* change not to use rowSpan=0 ([#861](https://github.com/kufu/smarthr-ui/issues/861)) ([6f829c0](https://github.com/kufu/smarthr-ui/commit/6f829c02fccaf06f6acd92953a84654320be863c))
+* correct ms-expand of Select ([#853](https://github.com/kufu/smarthr-ui/issues/853)) ([9b2811b](https://github.com/kufu/smarthr-ui/commit/9b2811bf72d123a052310e83b8eb4a0e89b7b94c))
+* fix calendar date in storybook ([#863](https://github.com/kufu/smarthr-ui/issues/863)) ([f4bac46](https://github.com/kufu/smarthr-ui/commit/f4bac461689f135d6a50c5a183171e924f1c4a08))
+* position shift of scrollable DropdownContent ([#841](https://github.com/kufu/smarthr-ui/issues/841)) ([07786eb](https://github.com/kufu/smarthr-ui/commit/07786eb8a2ca7da579d001def098f47bec8b1bab))
+* validate tags in RadioButton/RadioButtonLabel ([#837](https://github.com/kufu/smarthr-ui/issues/837)) ([21c10d8](https://github.com/kufu/smarthr-ui/commit/21c10d8eef56f95a283ce2ab6854d0198868501b))
+
 ## [9.1.0](https://github.com/kufu/smarthr-ui/compare/v9.0.2...v9.1.0) (2020-06-17)
 
 
@@ -179,6 +467,13 @@ All notable changes to this project will be documented in this file. See [standa
 * fix padding-right in Input ([#665](https://github.com/kufu/smarthr-ui/issues/665)) ([df24caf](https://github.com/kufu/smarthr-ui/commit/df24caf43c39cca3b7d791769b0617d68f7e5d96))
 * fix padding-right in Input ([#665](https://github.com/kufu/smarthr-ui/issues/665)) ([c16d5ec](https://github.com/kufu/smarthr-ui/commit/c16d5ec728806c28805908acdb7ea7306d3b4d4c))
 * fix typos ([#684](https://github.com/kufu/smarthr-ui/issues/684)) ([1bcd45b](https://github.com/kufu/smarthr-ui/commit/1bcd45ba7212823c20be42d750f726ea93555b9b))
+
+## [6.3.0](https://github.com/kufu/smarthr-ui/compare/v6.2.0...v6.3.0) (2020-11-24)
+
+
+### Features
+
+* backport Shin Color to v6 (SHRUI-232) ([#1157](https://github.com/kufu/smarthr-ui/issues/1157)) ([f462116](https://github.com/kufu/smarthr-ui/commit/f462116007b047a7ce6c96679cbc8410a55523ea)), closes [#1141](https://github.com/kufu/smarthr-ui/issues/1141)
 
 ## [6.2.0](https://github.com/kufu/smarthr-ui/compare/v6.1.1...v6.2.0) (2020-02-13)
 

@@ -1,19 +1,17 @@
 import React, { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
-import { DialogContentInner } from './DialogContentInner'
-import { ActionDialogContentProps } from './ActionDialogContent'
-import { ActionDialogContentInner } from './ActionDialogContentInner'
+import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
+import { ActionDialogContentInner, ActionDialogContentInnerProps } from './ActionDialogContentInner'
 
-type Props = ActionDialogContentProps & {
-  isOpen: boolean
+type Props = ActionDialogContentInnerProps & {
   onClickClose: () => void
-  onClickOverlay?: () => void
-  onPressEscape?: () => void
-}
+} & Pick<
+    DialogContentInnerProps,
+    'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
+  >
 
 export const ActionDialog: React.FC<Props> = ({
-  isOpen,
   children,
   title,
   closeText,
@@ -22,12 +20,6 @@ export const ActionDialog: React.FC<Props> = ({
   onClickAction,
   onClickClose,
   actionDisabled = false,
-  onClickOverlay = () => {
-    /* noop */
-  },
-  onPressEscape = () => {
-    /* noop */
-  },
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current
@@ -41,12 +33,7 @@ export const ActionDialog: React.FC<Props> = ({
   }, [element])
 
   return createPortal(
-    <DialogContentInner
-      onClickOverlay={onClickOverlay}
-      onPressEscape={onPressEscape}
-      isOpen={isOpen}
-      {...props}
-    >
+    <DialogContentInner ariaLabel={title} {...props}>
       <ActionDialogContentInner
         title={title}
         closeText={closeText}

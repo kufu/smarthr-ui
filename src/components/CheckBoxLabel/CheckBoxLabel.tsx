@@ -36,11 +36,12 @@ const Label = styled.label<{ themes: Theme }>`
       &.disabled {
         color: ${palette.TEXT_DISABLED};
         cursor: default;
+        pointer-events: none;
       }
     `
   }}
 `
-const Txt = styled.p<{ themes: Theme }>`
+const Txt = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
     return css`

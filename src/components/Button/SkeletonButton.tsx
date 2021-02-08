@@ -6,9 +6,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
-export const SkeletonButton: FC<ButtonProps> = (props) => {
+export const SkeletonButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
-  return <SkeletonStyleButton themes={theme} {...props} />
+  return <SkeletonStyleButton {...props} themes={theme} type={type} />
 }
 
 export const SkeletonButtonAnchor: FC<AnchorProps> = (props) => {
@@ -26,8 +26,10 @@ const skeletonStyle = css`
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       border: ${frame.border.lineWidth} ${frame.border.lineStyle} #fff;
 
-      &.hover {
+      &.hover,
+      &:focus {
         background-color: ${palette.OVERLAY};
+        color: #fff;
       }
 
       &[disabled] {

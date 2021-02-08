@@ -6,7 +6,23 @@ import styled from 'styled-components'
 import { ActionDialog, MessageDialog } from '.'
 import readme from './README.md'
 
-storiesOf('Dialog/opened', module)
+const dummyText = (
+  <>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+    labore et dolore magna aliqua.
+    <br />
+    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat.
+    <br />
+    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+    pariatur.
+    <br />
+    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
+    id est laborum.
+  </>
+)
+
+storiesOf('Dialog', module)
   .addParameters({
     readme: {
       sidebar: readme,
@@ -16,21 +32,7 @@ storiesOf('Dialog/opened', module)
     <MessageDialog
       isOpen={true}
       title="MessageDialog"
-      description={
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua.
-          <br />
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-          commodo consequat.
-          <br />
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-          nulla pariatur.
-          <br />
-          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-          anim id est laborum.
-        </p>
-      }
+      description={<p>{dummyText}</p>}
       closeText="close"
       onClickClose={action('clicked close')}
     />
@@ -45,18 +47,28 @@ storiesOf('Dialog/opened', module)
       onClickAction={action('clicked action')}
       onClickClose={action('clicked close')}
     >
+      <Text>{dummyText}</Text>
+    </ActionDialog>
+  ))
+  .add('ActionDialog with Long Contents', () => (
+    <ActionDialog
+      isOpen={true}
+      title="ActionDialog"
+      closeText="close"
+      actionText="execute"
+      actionTheme="primary"
+      onClickAction={action('clicked action')}
+      onClickClose={action('clicked close')}
+    >
+      <Text>{dummyText}</Text>
+      <Text>{dummyText}</Text>
+      <Text>{dummyText}</Text>
+      <Text>{dummyText}</Text>
       <Text>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua.
-        <br />
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
-        <br />
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-        pariatur.
-        <br />
-        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-        anim id est laborum.
+        <label>
+          <input type="checkbox" />
+          Agree
+        </label>
       </Text>
     </ActionDialog>
   ))

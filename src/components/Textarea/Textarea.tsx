@@ -1,4 +1,4 @@
-import React, { FC, TextareaHTMLAttributes, useEffect, useRef } from 'react'
+import React, { FC, TextareaHTMLAttributes, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -9,9 +9,25 @@ type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   autoFocus?: boolean
 }
 
-export const Textarea: FC<Props> = ({ autoFocus, ...props }) => {
+const getStringLength = (value: string | number | readonly string[]) => {
+  const formattedValue =
+    typeof value === 'number' || typeof value === 'string'
+      ? `${value}`
+      : Array.isArray(value)
+      ? value.join(',')
+      : ''
+
+  // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
+  const surrogatePairs = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
+  return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
+}
+
+export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
+  const currentValue = props.defaultValue || props.value
+  const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
+  const textAreaWidth = typeof width === 'number' ? `${width}px` : width
 
   useEffect(() => {
     if (autoFocus && ref && ref.current) {
@@ -19,12 +35,35 @@ export const Textarea: FC<Props> = ({ autoFocus, ...props }) => {
     }
   }, [autoFocus])
 
-  return <StyledTextarea {...props} ref={ref} themes={theme} />
+  const handleKeyup = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    setCount(getStringLength(event.currentTarget.value))
+  }
+
+  return (
+    <>
+      <StyledTextarea
+        {...(maxLength ? { onKeyUp: handleKeyup } : {})}
+        {...props}
+        textAreaWidth={textAreaWidth}
+        ref={ref}
+        themes={theme}
+      />
+      {maxLength && (
+        <Counter themes={theme}>
+          あと
+          <span className={maxLength && maxLength - count <= 0 ? 'error' : ''}>
+            {maxLength - count}
+          </span>
+          文字
+        </Counter>
+      )}
+    </>
+  )
 }
 
-const StyledTextarea = styled.textarea<Props & { themes: Theme }>`
+const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: string | number }>`
   ${(props) => {
-    const { themes, width = 'auto', error } = props
+    const { themes, textAreaWidth = 'auto', error } = props
     const { size, frame, palette } = themes
 
     return css`
@@ -32,13 +71,11 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme }>`
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_BLACK};
       border-radius: ${frame.border.radius.m};
-      ${width &&
-      css`
-        width: ${typeof width === 'number' ? `${width}px` : width};
-      `}
+      width: ${textAreaWidth};
       background-color: #fff;
       outline: none;
       border: ${frame.border.default};
+      box-sizing: border-box;
       ${error
         ? css`
             border-color: ${palette.DANGER};
@@ -48,11 +85,26 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme }>`
               border-color: ${palette.hoverColor(palette.MAIN)};
             }
           `}
-
       &[disabled] {
         background-color: ${palette.COLUMN};
         pointer-events: none;
         color: ${palette.TEXT_DISABLED};
+      }
+    `
+  }}
+`
+
+const Counter = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette, size } = themes
+    return css`
+      font-size: ${size.pxToRem(size.font.SHORT)};
+      > span {
+        font-weight: bold;
+        color: ${palette.TEXT_GREY};
+        &.error {
+          color: ${palette.DANGER};
+        }
       }
     `
   }}

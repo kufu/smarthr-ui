@@ -5,7 +5,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { SmartHRLogo } from '../SmartHRLogo'
 import { Footer } from '../Footer'
-import { Icon } from '../Icon'
+import { FaExternalLinkAltIcon } from '../Icon'
 
 type Props = {
   title?: ReactNode
@@ -43,7 +43,9 @@ export const MessageScreen: FC<Props> = ({ title, links, children, className = '
                   themes={theme}
                 >
                   {link.label}
-                  {link.target === '_blank' && <ExternalIcon color={theme.palette.TEXT_LINK} />}
+                  {link.target === '_blank' && (
+                    <ExternalIcon color={theme.palette.TEXT_LINK} aria-label="別タブで開く" />
+                  )}
                 </Link>
               </li>
             ))}
@@ -66,7 +68,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       background-color: ${palette.BACKGROUND};
     `
   }}
@@ -75,6 +77,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: auto 0;
 `
 const Logo = styled.div`
   height: ${LOGO_HEIGHT}px;
@@ -136,8 +139,7 @@ const Link = styled.a<{ themes: Theme }>`
     `
   }}
 `
-const ExternalIcon = styled(Icon).attrs(() => ({
-  name: 'fa-external-link-alt',
+const ExternalIcon = styled(FaExternalLinkAltIcon).attrs(() => ({
   size: 14,
 }))`
   margin-left: 0.4rem;

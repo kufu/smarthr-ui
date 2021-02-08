@@ -1,19 +1,17 @@
 import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-import readme from './README.md'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Input } from './Input'
+import { FaSearchIcon } from '../Icon'
 
-storiesOf('Input', module)
-  .addParameters({
-    readme: {
-      sidebar: readme,
-    },
-  })
-  .add('all', () => (
+storiesOf('Input', module).add('all', () => {
+  const theme = useTheme()
+
+  return (
     <List>
       <li>
         <Txt>text</Txt>
@@ -24,14 +22,11 @@ storiesOf('Input', module)
         <Input type="number" defaultValue="1" />
       </li>
       <li>
-        <Txt>number (thousands separated)</Txt>
-        <Input type="number" thousandsSeparated defaultValue="1,000.1234" />
-      </li>
-      <li>
         <Txt>password</Txt>
-        <Input type="password" defaultValue="password" />
-      </li>
+        <Input type="password" defaultValue="password" />{' '}
+      </li>{' '}
       <li>
+        {' '}
         <Txt>placeholder</Txt>
         <Input placeholder="string" />
       </li>
@@ -56,15 +51,25 @@ storiesOf('Input', module)
         <Input error={true} />
       </li>
       <li>
+        <Txt>disabled and error</Txt>
+        <Input disabled={true} error={true} />
+        <Note themes={theme}>`disabled` takes precedence over `error`</Note>
+      </li>
+      <li>
         <Txt>prefix</Txt>
-        <Input prefix={<Icon name="fa-search" color="#d6d6d6" />} />
+        <Input prefix={<FaSearchIcon color={theme.palette.BORDER} />} />
       </li>
       <li>
         <Txt>suffix</Txt>
-        <Input suffix={<Icon name="fa-search" color="#d6d6d6" />} />
+        <Input suffix={<FaSearchIcon color={theme.palette.BORDER} />} />
+      </li>
+      <li>
+        <Txt>extending style (width 50%)</Txt>
+        <StyledInput />
       </li>
     </List>
-  ))
+  )
+})
 
 const List = styled.ul`
   padding: 0 24px;
@@ -76,4 +81,15 @@ const List = styled.ul`
 `
 const Txt = styled.p`
   margin: 0 0 8px 0;
+`
+const StyledInput = styled(Input)`
+  width: 50%;
+`
+const Note = styled.div<{ themes: Theme }>`
+  ${({ themes }) => css`
+    margin-top: 8px;
+    font-size: 12px;
+    font-size: 14px;
+    color: ${themes.palette.TEXT_GREY};
+  `}
 `

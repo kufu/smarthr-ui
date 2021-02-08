@@ -1,513 +1,163 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CheckBoxLabel should be match snapshot 1`] = `
-<Component
-  checked={true}
-  disabled={false}
-  label="label"
-  name="name"
+.c2 {
+  position: relative;
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  line-height: 1;
+  box-sizing: border-box;
+}
+
+.c4 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  border: 1px solid #d6d3d0;
+  background-color: #fff;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.c4.active {
+  border-color: #0077c7;
+  background-color: #0077c7;
+}
+
+.c4.disabled {
+  background-color: #d6d3d0;
+  border-color: #d6d3d0;
+}
+
+.c4.disabled.active {
+  border-color: #d6d3d0;
+}
+
+.c3 {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.c3[disabled] {
+  pointer-events: none;
+}
+
+.c3:hover + span {
+  box-shadow: 0 0 0 2px rgba(0,119,199,0.22);
+}
+
+.c3:focus + span {
+  box-shadow: 0 0 0 2px rgba(0,119,199,0.5);
+}
+
+.c5 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.625rem;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+}
+
+.c5 > svg {
+  vertical-align: top;
+}
+
+.c0 {
+  display: inline-block;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #23221f;
+  cursor: pointer;
+}
+
+.c1.disabled {
+  color: #c1bdb7;
+  cursor: default;
+  pointer-events: none;
+}
+
+.c6 {
+  margin: 0 0 0 0.5rem;
+  font-size: 0.875rem;
+}
+
+<div
+  className="c0"
 >
-  <styled.div
-    className=""
+  <label
+    className="c1"
   >
-    <div
-      className="sc-AxhUy hejoPV"
+    <span
+      className="c2"
     >
-      <styled.label
-        className=""
-        themes={
-          Object {
-            "frame": Object {
-              "border": Object {
-                "default": "1px solid #d6d6d6",
-                "lineStyle": "solid",
-                "lineWidth": "1px",
-                "radius": Object {
-                  "l": "8px",
-                  "m": "6px",
-                  "s": "3px",
-                },
-              },
-            },
-            "interaction": Object {
-              "hover": Object {
-                "animation": ".3s ease-out",
-                "animationDuration": ".3s",
-                "animationTiming": "ease-out",
-                "feedbackOpacity": ".7",
-              },
-            },
-            "palette": Object {
-              "BACKGROUND": "#f5f6fa",
-              "BORDER": "#d6d6d6",
-              "BRAND": "#00c4cc",
-              "COLUMN": "#f9f9f9",
-              "DANGER": "#ef475b",
-              "HEADER_GREEN": "#57d0d5",
-              "MAIN": "#00a5ab",
-              "OUTLINE": "rgba(0,165,171,0.5)",
-              "OVERLAY": "rgba(0,0,0,0.15)",
-              "SCRIM": "rgba(0,0,0,0.5)",
-              "TEXT_BLACK": "#333",
-              "TEXT_DISABLED": "#c1c1c1",
-              "TEXT_GREY": "#767676",
-              "TEXT_LINK": "#007bc2",
-              "WARNING": "#ff8800",
-              "disableColor": [Function],
-              "hoverColor": [Function],
-            },
-            "size": Object {
-              "font": Object {
-                "GRANDE": 18,
-                "SHORT": 11,
-                "TALL": 14,
-                "VENTI": 24,
-              },
-              "mediaQuery": Object {
-                "SP": 599,
-                "TABLET": 959,
-              },
-              "pxToRem": [Function],
-              "space": Object {
-                "L": 40,
-                "M": 32,
-                "S": 24,
-                "XL": 48,
-                "XS": 16,
-                "XXL": 56,
-                "XXS": 8,
-              },
-            },
-          }
-        }
+      <input
+        checked={true}
+        className="c3"
+        disabled={false}
+        name="name"
+        onChange={[Function]}
+        type="checkbox"
+      />
+      <span
+        className="c4 active "
+      />
+      <span
+        className="c5"
       >
-        <label
-          className="sc-AxgMl hMZYSl"
-        >
-          <Component
-            checked={true}
-            disabled={false}
-            name="name"
-          >
-            <styled.div
-              className=""
-              themes={
-                Object {
-                  "frame": Object {
-                    "border": Object {
-                      "default": "1px solid #d6d6d6",
-                      "lineStyle": "solid",
-                      "lineWidth": "1px",
-                      "radius": Object {
-                        "l": "8px",
-                        "m": "6px",
-                        "s": "3px",
-                      },
-                    },
-                  },
-                  "interaction": Object {
-                    "hover": Object {
-                      "animation": ".3s ease-out",
-                      "animationDuration": ".3s",
-                      "animationTiming": "ease-out",
-                      "feedbackOpacity": ".7",
-                    },
-                  },
-                  "palette": Object {
-                    "BACKGROUND": "#f5f6fa",
-                    "BORDER": "#d6d6d6",
-                    "BRAND": "#00c4cc",
-                    "COLUMN": "#f9f9f9",
-                    "DANGER": "#ef475b",
-                    "HEADER_GREEN": "#57d0d5",
-                    "MAIN": "#00a5ab",
-                    "OUTLINE": "rgba(0,165,171,0.5)",
-                    "OVERLAY": "rgba(0,0,0,0.15)",
-                    "SCRIM": "rgba(0,0,0,0.5)",
-                    "TEXT_BLACK": "#333",
-                    "TEXT_DISABLED": "#c1c1c1",
-                    "TEXT_GREY": "#767676",
-                    "TEXT_LINK": "#007bc2",
-                    "WARNING": "#ff8800",
-                    "disableColor": [Function],
-                    "hoverColor": [Function],
-                  },
-                  "size": Object {
-                    "font": Object {
-                      "GRANDE": 18,
-                      "SHORT": 11,
-                      "TALL": 14,
-                      "VENTI": 24,
-                    },
-                    "mediaQuery": Object {
-                      "SP": 599,
-                      "TABLET": 959,
-                    },
-                    "pxToRem": [Function],
-                    "space": Object {
-                      "L": 40,
-                      "M": 32,
-                      "S": 24,
-                      "XL": 48,
-                      "XS": 16,
-                      "XXL": 56,
-                      "XXS": 8,
-                    },
-                  },
-                }
-              }
-            >
-              <div
-                className="sc-AxjAm impYQq"
-              >
-                <styled.input
-                  checked={true}
-                  disabled={false}
-                  name="name"
-                  onChange={[Function]}
-                  themes={
-                    Object {
-                      "frame": Object {
-                        "border": Object {
-                          "default": "1px solid #d6d6d6",
-                          "lineStyle": "solid",
-                          "lineWidth": "1px",
-                          "radius": Object {
-                            "l": "8px",
-                            "m": "6px",
-                            "s": "3px",
-                          },
-                        },
-                      },
-                      "interaction": Object {
-                        "hover": Object {
-                          "animation": ".3s ease-out",
-                          "animationDuration": ".3s",
-                          "animationTiming": "ease-out",
-                          "feedbackOpacity": ".7",
-                        },
-                      },
-                      "palette": Object {
-                        "BACKGROUND": "#f5f6fa",
-                        "BORDER": "#d6d6d6",
-                        "BRAND": "#00c4cc",
-                        "COLUMN": "#f9f9f9",
-                        "DANGER": "#ef475b",
-                        "HEADER_GREEN": "#57d0d5",
-                        "MAIN": "#00a5ab",
-                        "OUTLINE": "rgba(0,165,171,0.5)",
-                        "OVERLAY": "rgba(0,0,0,0.15)",
-                        "SCRIM": "rgba(0,0,0,0.5)",
-                        "TEXT_BLACK": "#333",
-                        "TEXT_DISABLED": "#c1c1c1",
-                        "TEXT_GREY": "#767676",
-                        "TEXT_LINK": "#007bc2",
-                        "WARNING": "#ff8800",
-                        "disableColor": [Function],
-                        "hoverColor": [Function],
-                      },
-                      "size": Object {
-                        "font": Object {
-                          "GRANDE": 18,
-                          "SHORT": 11,
-                          "TALL": 14,
-                          "VENTI": 24,
-                        },
-                        "mediaQuery": Object {
-                          "SP": 599,
-                          "TABLET": 959,
-                        },
-                        "pxToRem": [Function],
-                        "space": Object {
-                          "L": 40,
-                          "M": 32,
-                          "S": 24,
-                          "XL": 48,
-                          "XS": 16,
-                          "XXL": 56,
-                          "XXS": 8,
-                        },
-                      },
-                    }
-                  }
-                  type="checkbox"
-                >
-                  <input
-                    checked={true}
-                    className="sc-AxiKw igyvWT"
-                    disabled={false}
-                    name="name"
-                    onChange={[Function]}
-                    type="checkbox"
-                  />
-                </styled.input>
-                <styled.span
-                  className="active "
-                  themes={
-                    Object {
-                      "frame": Object {
-                        "border": Object {
-                          "default": "1px solid #d6d6d6",
-                          "lineStyle": "solid",
-                          "lineWidth": "1px",
-                          "radius": Object {
-                            "l": "8px",
-                            "m": "6px",
-                            "s": "3px",
-                          },
-                        },
-                      },
-                      "interaction": Object {
-                        "hover": Object {
-                          "animation": ".3s ease-out",
-                          "animationDuration": ".3s",
-                          "animationTiming": "ease-out",
-                          "feedbackOpacity": ".7",
-                        },
-                      },
-                      "palette": Object {
-                        "BACKGROUND": "#f5f6fa",
-                        "BORDER": "#d6d6d6",
-                        "BRAND": "#00c4cc",
-                        "COLUMN": "#f9f9f9",
-                        "DANGER": "#ef475b",
-                        "HEADER_GREEN": "#57d0d5",
-                        "MAIN": "#00a5ab",
-                        "OUTLINE": "rgba(0,165,171,0.5)",
-                        "OVERLAY": "rgba(0,0,0,0.15)",
-                        "SCRIM": "rgba(0,0,0,0.5)",
-                        "TEXT_BLACK": "#333",
-                        "TEXT_DISABLED": "#c1c1c1",
-                        "TEXT_GREY": "#767676",
-                        "TEXT_LINK": "#007bc2",
-                        "WARNING": "#ff8800",
-                        "disableColor": [Function],
-                        "hoverColor": [Function],
-                      },
-                      "size": Object {
-                        "font": Object {
-                          "GRANDE": 18,
-                          "SHORT": 11,
-                          "TALL": 14,
-                          "VENTI": 24,
-                        },
-                        "mediaQuery": Object {
-                          "SP": 599,
-                          "TABLET": 959,
-                        },
-                        "pxToRem": [Function],
-                        "space": Object {
-                          "L": 40,
-                          "M": 32,
-                          "S": 24,
-                          "XL": 48,
-                          "XS": 16,
-                          "XXL": 56,
-                          "XXS": 8,
-                        },
-                      },
-                    }
-                  }
-                >
-                  <span
-                    className="sc-AxirZ hRgeHQ active "
-                  />
-                </styled.span>
-                <styled.span
-                  themes={
-                    Object {
-                      "frame": Object {
-                        "border": Object {
-                          "default": "1px solid #d6d6d6",
-                          "lineStyle": "solid",
-                          "lineWidth": "1px",
-                          "radius": Object {
-                            "l": "8px",
-                            "m": "6px",
-                            "s": "3px",
-                          },
-                        },
-                      },
-                      "interaction": Object {
-                        "hover": Object {
-                          "animation": ".3s ease-out",
-                          "animationDuration": ".3s",
-                          "animationTiming": "ease-out",
-                          "feedbackOpacity": ".7",
-                        },
-                      },
-                      "palette": Object {
-                        "BACKGROUND": "#f5f6fa",
-                        "BORDER": "#d6d6d6",
-                        "BRAND": "#00c4cc",
-                        "COLUMN": "#f9f9f9",
-                        "DANGER": "#ef475b",
-                        "HEADER_GREEN": "#57d0d5",
-                        "MAIN": "#00a5ab",
-                        "OUTLINE": "rgba(0,165,171,0.5)",
-                        "OVERLAY": "rgba(0,0,0,0.15)",
-                        "SCRIM": "rgba(0,0,0,0.5)",
-                        "TEXT_BLACK": "#333",
-                        "TEXT_DISABLED": "#c1c1c1",
-                        "TEXT_GREY": "#767676",
-                        "TEXT_LINK": "#007bc2",
-                        "WARNING": "#ff8800",
-                        "disableColor": [Function],
-                        "hoverColor": [Function],
-                      },
-                      "size": Object {
-                        "font": Object {
-                          "GRANDE": 18,
-                          "SHORT": 11,
-                          "TALL": 14,
-                          "VENTI": 24,
-                        },
-                        "mediaQuery": Object {
-                          "SP": 599,
-                          "TABLET": 959,
-                        },
-                        "pxToRem": [Function],
-                        "space": Object {
-                          "L": 40,
-                          "M": 32,
-                          "S": 24,
-                          "XL": 48,
-                          "XS": 16,
-                          "XXL": 56,
-                          "XXS": 8,
-                        },
-                      },
-                    }
-                  }
-                >
-                  <span
-                    className="sc-AxhCb DoGBp"
-                  >
-                    <Component
-                      color="#fff"
-                      name="fa-check"
-                      size={10}
-                    >
-                      <FaCheck
-                        className=""
-                        color="#fff"
-                        size={10}
-                      >
-                        <IconBase
-                          attr={
-                            Object {
-                              "viewBox": "0 0 512 512",
-                            }
-                          }
-                          className=""
-                          color="#fff"
-                          size={10}
-                        >
-                          <svg
-                            color="#fff"
-                            fill="currentColor"
-                            height={10}
-                            size={10}
-                            stroke="currentColor"
-                            strokeWidth="0"
-                            style={
-                              Object {
-                                "color": "#fff",
-                              }
-                            }
-                            viewBox="0 0 512 512"
-                            width={10}
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"
-                              key="0"
-                            />
-                          </svg>
-                        </IconBase>
-                      </FaCheck>
-                    </Component>
-                  </span>
-                </styled.span>
-              </div>
-            </styled.div>
-          </Component>
-          <styled.p
-            themes={
-              Object {
-                "frame": Object {
-                  "border": Object {
-                    "default": "1px solid #d6d6d6",
-                    "lineStyle": "solid",
-                    "lineWidth": "1px",
-                    "radius": Object {
-                      "l": "8px",
-                      "m": "6px",
-                      "s": "3px",
-                    },
-                  },
-                },
-                "interaction": Object {
-                  "hover": Object {
-                    "animation": ".3s ease-out",
-                    "animationDuration": ".3s",
-                    "animationTiming": "ease-out",
-                    "feedbackOpacity": ".7",
-                  },
-                },
-                "palette": Object {
-                  "BACKGROUND": "#f5f6fa",
-                  "BORDER": "#d6d6d6",
-                  "BRAND": "#00c4cc",
-                  "COLUMN": "#f9f9f9",
-                  "DANGER": "#ef475b",
-                  "HEADER_GREEN": "#57d0d5",
-                  "MAIN": "#00a5ab",
-                  "OUTLINE": "rgba(0,165,171,0.5)",
-                  "OVERLAY": "rgba(0,0,0,0.15)",
-                  "SCRIM": "rgba(0,0,0,0.5)",
-                  "TEXT_BLACK": "#333",
-                  "TEXT_DISABLED": "#c1c1c1",
-                  "TEXT_GREY": "#767676",
-                  "TEXT_LINK": "#007bc2",
-                  "WARNING": "#ff8800",
-                  "disableColor": [Function],
-                  "hoverColor": [Function],
-                },
-                "size": Object {
-                  "font": Object {
-                    "GRANDE": 18,
-                    "SHORT": 11,
-                    "TALL": 14,
-                    "VENTI": 24,
-                  },
-                  "mediaQuery": Object {
-                    "SP": 599,
-                    "TABLET": 959,
-                  },
-                  "pxToRem": [Function],
-                  "space": Object {
-                    "L": 40,
-                    "M": 32,
-                    "S": 24,
-                    "XL": 48,
-                    "XS": 16,
-                    "XXL": 56,
-                    "XXS": 8,
-                  },
-                },
-              }
+        <svg
+          aria-hidden={true}
+          color="#fff"
+          fill="currentColor"
+          focusable={false}
+          height={10}
+          role="img"
+          stroke="currentColor"
+          strokeWidth="0"
+          style={
+            Object {
+              "color": "#fff",
             }
-          >
-            <p
-              className="sc-AxheI fDRfns"
-            >
-              label
-            </p>
-          </styled.p>
-        </label>
-      </styled.label>
-    </div>
-  </styled.div>
-</Component>
+          }
+          viewBox="0 0 512 512"
+          width={10}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"
+          />
+        </svg>
+      </span>
+    </span>
+    <span
+      className="c6"
+    >
+      label
+    </span>
+  </label>
+</div>
 `;

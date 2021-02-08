@@ -1,20 +1,29 @@
-import { mount } from 'enzyme'
+import { create } from 'react-test-renderer'
 import React from 'react'
+import ReactDOM from 'react-dom'
 
 import { StatusLabel } from './StatusLabel'
 
 describe('StatusLabel', () => {
+  let container: HTMLDivElement
+  beforeEach(() => {
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
+  afterEach(() => {
+    document.body.removeChild(container)
+  })
   const hello = 'hello'
   it('should be match snapshot', () => {
-    const component = mount(<StatusLabel type="success">{hello}</StatusLabel>)
-    expect(component).toMatchSnapshot()
+    const testRenderer = create(<StatusLabel type="success">{hello}</StatusLabel>)
+    expect(testRenderer.toJSON()).toMatchSnapshot()
   })
   it('should render given children', () => {
-    const wrapper = mount(<StatusLabel type="success">{hello}</StatusLabel>)
-    expect(wrapper.text()).toBe(hello)
+    ReactDOM.render(<StatusLabel type="success">{hello}</StatusLabel>, container)
+    expect(container.textContent).toBe(hello)
   })
   it('should have given type', () => {
-    const wrapper = mount(<StatusLabel type="success">{hello}</StatusLabel>)
-    expect(wrapper.prop('type')).toBe('success')
+    const testInstance = create(<StatusLabel type="success">{hello}</StatusLabel>).root
+    expect(testInstance.props.type).toBe('success')
   })
 })

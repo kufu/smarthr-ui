@@ -3,39 +3,48 @@ import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { Props as IconProps } from '../Icon'
-import { buttonStyle, getIconComponent } from './appNaviHelper'
+import { IconNames, ComponentProps as IconProps } from '../Icon'
+import { getIconComponent, getItemStyle } from './appNaviHelper'
 
 export type AppNaviCustomTagProps = {
   children: ReactNode
   tag: ComponentType<any>
-  icon?: IconProps['name']
+  icon?: IconNames | React.ComponentType<IconProps>
   current?: boolean
-  disabled?: boolean
 } & { [key: string]: any }
+type InnerProps = AppNaviCustomTagProps & {
+  isUnclickable?: boolean
+}
 
-export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
+export const AppNaviCustomTag: FC<InnerProps> = ({
   children,
   tag,
   icon,
-  current,
-  disabled = false,
+  current = false,
+  isUnclickable = false,
   ...props
 }) => {
   const theme = useTheme()
-  const iconComponent = getIconComponent(theme, { icon, current, disabled })
-  const additionalProps = disabled ? { disabled: true, className: 'disabled' } : {}
-
-  const Active = styled(tag)<{ themes: Theme }>`
-    ${buttonStyle.active}
-  `
-  const InActive = styled(tag)<{ themes: Theme }>`
-    ${buttonStyle.inactive}
-  `
+  const iconComponent = getIconComponent(theme, { icon, current })
 
   if (current) {
+    if (isUnclickable) {
+      const unclickableProps = { href: undefined, disabled: true }
+      return (
+        <UnclickableActive
+          as={tag}
+          $themes={theme}
+          aria-current="page"
+          {...props}
+          {...unclickableProps}
+        >
+          {iconComponent}
+          {children}
+        </UnclickableActive>
+      )
+    }
     return (
-      <Active themes={theme} aria-selected="true" {...props} {...additionalProps}>
+      <Active as={tag} $themes={theme} aria-current="page" {...props}>
         {iconComponent}
         {children}
       </Active>
@@ -43,9 +52,17 @@ export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   }
 
   return (
-    <InActive themes={theme} {...props} {...additionalProps}>
+    <InActive as={tag} $themes={theme} {...props}>
       {iconComponent}
       {children}
     </InActive>
   )
 }
+
+const Active = styled.div<{ $themes: Theme }>(({ $themes }) =>
+  getItemStyle({ themes: $themes, isActive: true }),
+)
+const InActive = styled.div<{ $themes: Theme }>(({ $themes }) => getItemStyle({ themes: $themes }))
+const UnclickableActive = styled.div<{ $themes: Theme }>(({ $themes }) =>
+  getItemStyle({ themes: $themes, isActive: true, isUnclickable: true }),
+)

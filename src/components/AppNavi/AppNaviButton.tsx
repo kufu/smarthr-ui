@@ -1,57 +1,46 @@
 import React, { FC, ReactNode } from 'react'
 import styled from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme'
 
-import { Props as IconProps } from '../Icon'
-import { buttonStyle, getIconComponent } from './appNaviHelper'
+import { IconNames, ComponentProps as IconProps } from '../Icon'
+import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
 
 export type AppNaviButtonProps = {
   children: ReactNode
-  icon?: IconProps['name']
+  icon?: IconNames | React.ComponentType<IconProps>
   current?: boolean
-  disabled?: boolean
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-export const AppNaviButton: FC<AppNaviButtonProps> = ({
+type InnerProps = AppNaviButtonProps & {
+  isUnclickable?: boolean
+}
+
+export const AppNaviButton: FC<InnerProps> = ({
   children,
   icon,
-  current,
-  disabled = false,
+  current = false,
+  isUnclickable = false,
   onClick,
 }) => {
   const theme = useTheme()
-  const iconComponent = getIconComponent(theme, { icon, current, disabled })
-  const additionalProps = disabled
-    ? {
-        disabled,
-        className: 'disabled',
-      }
-    : {
-        onClick,
-      }
-
-  if (current) {
-    return (
-      <Active themes={theme} aria-selected="true" {...additionalProps}>
-        {iconComponent}
-        {children}
-      </Active>
-    )
-  }
+  const iconComponent = getIconComponent(theme, { icon, current })
 
   return (
-    <InActive themes={theme} {...additionalProps}>
+    <Button
+      themes={theme}
+      aria-current={current ? 'page' : undefined}
+      onClick={onClick}
+      isActive={current}
+      disabled={isUnclickable}
+      isUnclickable={isUnclickable}
+      type="button"
+    >
       {iconComponent}
       {children}
-    </InActive>
+    </Button>
   )
 }
 
-const Active = styled.button<{ themes: Theme }>`
-  ${buttonStyle.active}
-`
-const InActive = styled.button<{ themes: Theme }>`
-  ${buttonStyle.inactive}
-`
+const Button = styled.button<ItemStyleProps>((props) => getItemStyle(props))

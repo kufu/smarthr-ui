@@ -14,4 +14,4 @@ In addition to it...
 
 | Name  | Required | Type       | DefaultValue | Description                        |
 | ----- | -------- | ---------- | ------------ | ---------------------------------- |
-| label | true     | **string** | -            | Text to the right of the checkbox. |
+| label | ✓        | **string** | -            | Text to the right of the checkbox. |

@@ -19,71 +19,63 @@ export const StatusLabel: FC<Props> = ({ type = 'done', className = '', children
   )
 }
 
-const borderStyle = (border: string) => css`
-  border: ${border};
-  background-color: #fff;
-`
-const fillStyle = (backgroundColor: string) => css`
-  background-color: ${backgroundColor};
-  color: #fff;
-`
 const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame, palette } = themes
+    const { size, palette } = themes
+    const XXXS = size.space.XXS / 2
 
     return css`
-      height: ${size.pxToRem(20)};
       box-sizing: border-box;
-      margin: 0;
-      padding: 0 ${size.pxToRem(size.space.XXS)};
       display: inline-block;
+      margin: 0;
+      border: 1px solid transparent;
+      padding: ${size.pxToRem(XXXS)} ${size.pxToRem(size.space.XXS)};
+      background-color: #fff;
+      text-align: center;
       white-space: nowrap;
+      min-width: ${size.pxToRem(60)};
       font-size: ${size.pxToRem(size.font.SHORT)};
       font-weight: bold;
-      line-height: calc(${size.pxToRem(20)} - ${frame.border.lineWidth} * 2);
+      line-height: 1;
 
       &.done {
-        ${borderStyle(frame.border.default)}
         border-color: ${palette.BORDER};
         color: ${palette.TEXT_GREY};
       }
 
       &.success {
-        ${borderStyle(frame.border.default)}
         border-color: ${palette.MAIN};
         color: ${palette.MAIN};
       }
 
       &.process {
-        ${borderStyle(frame.border.default)}
         border-color: ${palette.WARNING};
         color: ${palette.WARNING};
       }
 
       &.required {
-        ${borderStyle(frame.border.default)}
         border-color: ${palette.DANGER};
         color: ${palette.DANGER};
       }
 
       &.disabled {
-        ${fillStyle(palette.BORDER)}
         background-color: ${palette.TEXT_GREY};
+        color: #fff;
       }
 
       &.must {
-        ${fillStyle(palette.BORDER)}
         background-color: ${palette.MAIN};
+        color: #fff;
       }
 
       &.warning {
-        ${fillStyle(palette.BORDER)}
         background-color: ${palette.WARNING};
+        color: #fff;
       }
 
       &.error {
-        ${fillStyle(palette.BORDER)}
         background-color: ${palette.DANGER};
+        color: #fff;
       }
     `
   }}

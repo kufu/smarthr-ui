@@ -3,32 +3,74 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { Loader } from './Loader'
+import readme from './README.md'
 
-storiesOf('Loader', module).add('all', () => (
-  <>
-    <GrayWrapper>
-      <Loader size="s" />
-      <Loader size="m" />
-      <Loader size="l" />
-    </GrayWrapper>
-    <WhiteWrapper>
-      <Loader color="#00a5ab" />
-      <Loader color="#007bc2" />
-      <Loader color="#ff8800" />
-      <Loader color="#ef475b" />
-    </WhiteWrapper>
-  </>
-))
+storiesOf('Loader', module)
+  .addParameters({
+    readme: {
+      sidebar: readme,
+    },
+  })
+  .add('all', () => {
+    return (
+      <>
+        <Wrapper>
+          <Text>Primary</Text>
+          <List>
+            <dt>Default</dt>
+            <dd>
+              <Loader />
+            </dd>
+            <dt>Small</dt>
+            <dd>
+              <Loader size="s" />
+            </dd>
+            <dt>With text</dt>
+            <dd>
+              <Loader text="loading message" />
+            </dd>
+          </List>
+        </Wrapper>
 
-const WhiteWrapper = styled.div`
-  display: flex;
-  align-items: center;
+        <GrayWrapper>
+          <Text>Light</Text>
+          <List>
+            <dt>Default</dt>
+            <dd>
+              <Loader type="light" />
+            </dd>
+            <dt>Small</dt>
+            <dd>
+              <Loader type="light" size="s" />
+            </dd>
+            <dt>With text</dt>
+            <dd>
+              <Loader type="light" text="loading message" />
+            </dd>
+          </List>
+        </GrayWrapper>
+      </>
+    )
+  })
+
+const Wrapper = styled.div`
   padding: 24px;
+`
+const GrayWrapper = styled(Wrapper)`
+  background-color: rgba(0, 0, 0, 0.5);
 
-  & > *:not(:first-child) {
-    margin-left: 24px;
+  p,
+  dt {
+    color: #fff;
   }
 `
-const GrayWrapper = styled(WhiteWrapper)`
-  background-color: #c1c1c1;
+const Text = styled.p`
+  margin: 0 0 16px 0;
+  font-size: 18px;
+`
+const List = styled.dl`
+  margin: 1rem;
+  & > dd {
+    margin: 16px 0 40px;
+  }
 `

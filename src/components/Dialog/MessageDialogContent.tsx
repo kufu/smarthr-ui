@@ -1,17 +1,12 @@
 import React, { useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
-import { DialogContentInner } from './DialogContentInner'
+import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
 
-export type MessageDialogContentProps = BaseProps & {
-  top?: number
-  right?: number
-  bottom?: number
-  left?: number
-}
+type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
 
-export const MessageDialogContent: React.FC<MessageDialogContentProps> = ({
+export const MessageDialogContent: React.FC<Props> = ({
   title,
   description,
   closeText,
@@ -25,6 +20,7 @@ export const MessageDialogContent: React.FC<MessageDialogContentProps> = ({
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
         isOpen={active}
+        ariaLabel={title}
         {...props}
       >
         <MessageDialogContentInner

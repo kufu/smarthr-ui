@@ -3,12 +3,13 @@ import { action } from '@storybook/addon-actions'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
 import { ActionDialog, Dialog, MessageDialog } from '.'
 import readme from './README.md'
 
-const DialogController: React.FC = () => {
+const DialogController: React.FC<{ themes: Theme }> = ({ themes }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState('hoge')
   const [text, setText] = useState('')
@@ -19,9 +20,21 @@ const DialogController: React.FC = () => {
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen}>Dialog</SecondaryButton>
-      <Dialog isOpen={isOpen} onClickOverlay={onClickClose} onPressEscape={onClickClose}>
-        <DialogControllerTitle>Dialog</DialogControllerTitle>
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-controllable-1"
+      >
+        Dialog
+      </SecondaryButton>
+      <Dialog
+        isOpen={isOpen}
+        onClickOverlay={onClickClose}
+        onPressEscape={onClickClose}
+        id="dialog-controllable-1"
+        ariaLabel="Dialog"
+      >
+        <DialogControllerTitle themes={themes}>Dialog</DialogControllerTitle>
         <DialogControllerText>
           The value of isOpen must be managed by you, but you can customize content freely.
         </DialogControllerText>
@@ -54,7 +67,7 @@ const DialogController: React.FC = () => {
             <input name="test" value={text} onChange={(e) => onChangeText(e.currentTarget.value)} />
           </li>
         </DialogControllerBox>
-        <DialogControllerBottom>
+        <DialogControllerBottom themes={themes}>
           <SecondaryButton onClick={onClickClose}>close</SecondaryButton>
         </DialogControllerBottom>
       </Dialog>
@@ -69,7 +82,13 @@ const MessageDialogController: React.FC = () => {
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen}>MessageDialog</SecondaryButton>
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-controllable-2"
+      >
+        MessageDialog
+      </SecondaryButton>
       <MessageDialog
         isOpen={isOpen}
         title="MessageDialog"
@@ -92,6 +111,7 @@ const MessageDialogController: React.FC = () => {
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
+        id="dialog-controllable-2"
       />
     </div>
   )
@@ -106,7 +126,13 @@ const ActionDialogController: React.FC = () => {
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen}>ActionDialog</SecondaryButton>
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-controllable-3"
+      >
+        ActionDialog
+      </SecondaryButton>
       <ActionDialog
         isOpen={isOpen}
         title="ActionDialog"
@@ -120,6 +146,7 @@ const ActionDialogController: React.FC = () => {
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
+        id="dialog-controllable-3"
       >
         <DialogControllerBox>
           <li>
@@ -158,19 +185,23 @@ storiesOf('Dialog', module)
       sidebar: readme,
     },
   })
-  .add('controllable', () => (
-    <List>
-      <li>
-        <DialogController />
-      </li>
-      <li>
-        <MessageDialogController />
-      </li>
-      <li>
-        <ActionDialogController />
-      </li>
-    </List>
-  ))
+  .add('controllable', () => {
+    const themes = useTheme()
+
+    return (
+      <List>
+        <li>
+          <DialogController themes={themes} />
+        </li>
+        <li>
+          <MessageDialogController />
+        </li>
+        <li>
+          <ActionDialogController />
+        </li>
+      </List>
+    )
+  })
 
 const List = styled.ul`
   margin: 0;
@@ -181,12 +212,12 @@ const List = styled.ul`
     margin: 8px;
   }
 `
-const DialogControllerTitle = styled.p`
+const DialogControllerTitle = styled.p<{ themes: Theme }>`
   padding: 16px 24px;
   margin: 0;
   font-size: 18px;
   line-height: 1;
-  border-bottom: 1px solid #d6d6d6;
+  border-bottom: ${({ themes }) => themes.frame.border.default};
 `
 const DialogControllerText = styled.p`
   padding: 16px 24px 0 24px;
@@ -202,11 +233,11 @@ const DialogControllerBox = styled.ul`
     padding: 0;
   }
 `
-const DialogControllerBottom = styled.div`
+const DialogControllerBottom = styled.div<{ themes: Theme }>`
   display: flex;
   justify-content: flex-end;
   padding: 16px 24px;
-  border-top: 1px solid #d6d6d6;
+  border-top: ${({ themes }) => themes.frame.border.default};
 
   & > *:not(:first-child) {
     margin-left: 16px;

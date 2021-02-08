@@ -19,7 +19,7 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
   const currentDay = dayjs(current)
   const selectedDay = selected ? dayjs(selected) : null
 
-  const now = dayjs()
+  const now = dayjs().startOf('date')
   const fromDay = dayjs(from)
   const toDay = dayjs(to)
 
@@ -53,6 +53,7 @@ export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, sele
                           !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
                         }
                         aria-pressed={isSelectedDate}
+                        type="button"
                       >
                         <DateCell
                           themes={themes}
@@ -80,11 +81,12 @@ const Table = styled.table<{ themes: Theme }>(({ themes }) => {
     color: ${palette.TEXT_BLACK};
     font-size: ${size.pxToRem(size.font.TALL)};
     border-spacing: 0;
-    padding: 4px 8px 13px;
+    margin: 4px 8px 13px;
 
     th {
       height: 37px;
       padding: 0;
+      vertical-align: middle;
       text-align: center;
       font-weight: normal;
       color: ${palette.TEXT_GREY};
@@ -93,10 +95,11 @@ const Table = styled.table<{ themes: Theme }>(({ themes }) => {
       width: 43px;
       height: 35px;
       padding: 0;
+      vertical-align: middle;
     }
   `
 })
-const DateCell = styled.div<{ themes: Theme; isToday?: boolean; isSelected?: boolean }>`
+const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -133,7 +136,7 @@ const CellButton = styled(ResetButton)<{ themes: Theme }>(
     :not(:disabled) {
       &:hover {
         ${DateCell} {
-          background-color: #f5f5f5;
+          background-color: ${themes.palette.BASE_GREY};
           color: ${themes.palette.TEXT_BLACK};
         }
       }

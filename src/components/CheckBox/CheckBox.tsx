@@ -4,7 +4,7 @@ import { transparentize } from 'polished'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { Icon } from '../Icon'
+import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   mixed?: boolean
@@ -23,18 +23,24 @@ export const CheckBox: FC<Props> = ({ mixed = false, className = '', onChange, .
 
   return (
     <Wrapper className={className} themes={theme}>
-      <Input {...props} type="checkbox" onChange={handleChange} themes={theme} />
+      <Input
+        {...props}
+        type="checkbox"
+        onChange={handleChange}
+        themes={theme}
+        {...(mixed && { 'aria-checked': 'mixed' })}
+      />
       <Box className={boxClassName} themes={theme} />
       {checked && (
         <IconWrap themes={theme}>
-          <Icon name={mixed ? 'fa-minus' : 'fa-check'} size={10} color="#fff" />
+          {mixed ? <FaMinusIcon size={10} color="#fff" /> : <FaCheckIcon size={10} color="#fff" />}
         </IconWrap>
       )}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme }>`
+const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
     return css`

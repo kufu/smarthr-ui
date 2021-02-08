@@ -1,17 +1,12 @@
 import React, { useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
-import { DialogContentInner } from './DialogContentInner'
+import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 import { ActionDialogContentInner, BaseProps } from './ActionDialogContentInner'
 
-export type ActionDialogContentProps = BaseProps & {
-  top?: number
-  right?: number
-  bottom?: number
-  left?: number
-}
+type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
 
-export const ActionDialogContent: React.FC<ActionDialogContentProps> = ({
+export const ActionDialogContent: React.FC<Props> = ({
   children,
   title,
   closeText,
@@ -29,6 +24,7 @@ export const ActionDialogContent: React.FC<ActionDialogContentProps> = ({
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
         isOpen={active}
+        ariaLabel={title}
         {...props}
       >
         <ActionDialogContentInner
