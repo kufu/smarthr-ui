@@ -44,7 +44,7 @@ storiesOf('Input', module).add('all', () => {
       </li>
       <li>
         <Txt>disabled</Txt>
-        <Input disabled />
+        <Input disabled={true} />
       </li>
       <li>
         <Txt>error</Txt>
@@ -52,7 +52,7 @@ storiesOf('Input', module).add('all', () => {
       </li>
       <li>
         <Txt>disabled and error</Txt>
-        <Input error={true} disabled />
+        <Input disabled={true} error={true} />
         <Note themes={theme}>`disabled` takes precedence over `error`</Note>
       </li>
       <li>
