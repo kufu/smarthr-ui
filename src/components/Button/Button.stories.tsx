@@ -18,7 +18,7 @@ import {
 import { FaPlusCircleIcon } from '../Icon'
 
 import readme from './README.md'
-import { RegStory } from './RegStory'
+import { RegStory } from './Reg.stories'
 
 export default {
   title: 'Button',
