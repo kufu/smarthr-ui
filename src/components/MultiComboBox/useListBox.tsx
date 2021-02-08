@@ -6,7 +6,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
 
-import { Icon } from '../Icon'
+import { FaPlusCircleIcon } from '../Icon'
 
 type Args = {
   items: Array<{ value: string; label: string; disabled?: boolean }>
@@ -15,7 +15,7 @@ type Args = {
   onSelect: (option: { value: string; label: string }) => void
   isExpanded: boolean
   isAddable: boolean
-  isDuplicated: boolean
+  isDuplicate: boolean
   hasNoMatch: boolean
 }
 
@@ -33,7 +33,7 @@ export function useListBox({
   onSelect,
   isExpanded,
   isAddable,
-  isDuplicated,
+  isDuplicate,
   hasNoMatch,
 }: Args) {
   const [dropdownStyle, setDropdownStyle] = useState({
@@ -175,12 +175,7 @@ export function useListBox({
                 role="option"
                 aria-selected={isSelected}
               >
-                <AddIcon
-                  name="fa-plus-circle"
-                  size={14}
-                  color={theme.palette.TEXT_LINK}
-                  $theme={theme}
-                />
+                <AddIcon size={14} color={theme.palette.TEXT_LINK} $theme={theme} />
                 <AddText themes={theme}>「{label}」を追加</AddText>
               </AddButton>
             )
@@ -202,7 +197,7 @@ export function useListBox({
           )
         })}
 
-        {isDuplicated && (
+        {isDuplicate && (
           <NoItems themes={theme} role="alert" aria-live="polite">
             重複する選択肢は追加できません
           </NoItems>
@@ -295,7 +290,7 @@ const AddButton = styled(SelectButton)`
   display: flex;
   align-items: center;
 `
-const AddIcon = styled(Icon)<{ $theme: Theme }>`
+const AddIcon = styled(FaPlusCircleIcon)<{ $theme: Theme }>`
   ${({ $theme }) => {
     const { size } = $theme
 

@@ -34,8 +34,10 @@ const textStyle = css`
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       border: ${frame.border.lineWidth} ${frame.border.lineStyle} transparent;
 
-      &.hover {
+      &.hover,
+      &:focus {
         background-color: ${palette.hoverColor('#fff')};
+        color: ${palette.TEXT_BLACK};
       }
 
       &[disabled] {

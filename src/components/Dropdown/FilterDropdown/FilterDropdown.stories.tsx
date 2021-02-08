@@ -3,6 +3,8 @@ import { action } from '@storybook/addon-actions'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { Theme, useTheme } from '../../../hooks/useTheme'
+
 import { FilterDropdown } from './FilterDropdown'
 import { RadioButtonLabel } from '../../RadioButtonLabel'
 import { Input } from '../../Input'
@@ -20,9 +22,10 @@ storiesOf('Dropdown', module)
     const [text, setText] = React.useState('')
     const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
     const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.currentTarget.value)
+    const themes = useTheme()
 
     return (
-      <Wrapper>
+      <Wrapper themes={themes}>
         <List>
           <dt>Controlled</dt>
           <dd>
@@ -34,7 +37,7 @@ storiesOf('Dropdown', module)
                 setText('')
               }}
             >
-              <Text>
+              <Text themes={themes}>
                 `FilterDropdown` provide specific interface to be able to filter data.
                 <br />
                 You can control inputs for filtering conditions as children components.
@@ -71,13 +74,13 @@ storiesOf('Dropdown', module)
               <Description>
                 ↓<br />↓
               </Description>
-              <Text>Children content is scrollable.</Text>
+              <Text themes={themes}>Children content is scrollable.</Text>
             </FilterDropdown>
           </dd>
           <dt>Filtered</dt>
           <dd>
             <FilterDropdown isFiltered onApply={action('apply')} onReset={action('reset')}>
-              <Text>
+              <Text themes={themes}>
                 You can change border color of the trigger button by setting `isFiltered`.
               </Text>
             </FilterDropdown>
@@ -87,9 +90,9 @@ storiesOf('Dropdown', module)
     )
   })
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ themes: Theme }>`
   padding: 24px;
-  color: #333;
+  color: ${({ themes }) => themes.palette.TEXT_BLACK};
 `
 const List = styled.dl`
   margin: 0;
@@ -103,10 +106,10 @@ const List = styled.dl`
     margin: 0;
   }
 `
-const Text = styled.p`
+const Text = styled.p<{ themes: Theme }>`
   margin: 0;
   font-size: 14px;
-  color: #333;
+  color: ${({ themes }) => themes.palette.TEXT_BLACK};
 `
 const Description = styled.p`
   margin: 0;

@@ -3,13 +3,13 @@ import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { Props as IconProps } from '../Icon'
+import { IconNames, ComponentProps as IconProps } from '../Icon'
 import { getIconComponent, getItemStyle } from './appNaviHelper'
 
 export type AppNaviCustomTagProps = {
   children: ReactNode
   tag: ComponentType<any>
-  icon?: IconProps['name']
+  icon?: IconNames | React.ComponentType<IconProps>
   current?: boolean
 } & { [key: string]: any }
 type InnerProps = AppNaviCustomTagProps & {

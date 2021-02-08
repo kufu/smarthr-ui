@@ -26,6 +26,6 @@ import waitForLocalhost from 'wait-for-localhost'
   })
   testcafe.on('close', (code) => {
     httpServer.kill()
-    process.exit(code)
+    process.exit(code || undefined)
   })
 })()

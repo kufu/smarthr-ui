@@ -4,7 +4,14 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Base } from '../Base'
-import { Icon, iconMap } from '../Icon'
+import {
+  FaCaretDownIcon,
+  FaCaretUpIcon,
+  FaCheckCircleIcon,
+  FaExclamationCircleIcon,
+  FaExclamationTriangleIcon,
+  FaInfoCircleIcon,
+} from '../Icon'
 import { Heading, HeadingTagTypes } from '../Heading'
 import { SecondaryButton } from '../Button'
 
@@ -35,24 +42,24 @@ export const InformationPanel: FC<Props> = ({
 }) => {
   const theme = useTheme()
 
-  let iconName: keyof typeof iconMap = 'fa-info-circle'
+  let Icon = InfoTitleIcon
   let iconColor = theme.palette.TEXT_GREY
 
   switch (type) {
     case 'success':
-      iconName = 'fa-check-circle'
+      Icon = SuccessTitleIcon
       iconColor = theme.palette.MAIN
       break
     case 'info':
-      iconName = 'fa-info-circle'
+      Icon = InfoTitleIcon
       iconColor = theme.palette.TEXT_GREY
       break
     case 'warning':
-      iconName = 'fa-exclamation-triangle'
+      Icon = WarningTitleIcon
       iconColor = theme.palette.WARNING
       break
     case 'error':
-      iconName = 'fa-exclamation-circle'
+      Icon = ErrorTitleIcon
       iconColor = theme.palette.DANGER
   }
 
@@ -74,7 +81,7 @@ export const InformationPanel: FC<Props> = ({
     <Wrapper className={className} themes={theme} role="presentation">
       <Header themes={theme}>
         <Title themes={theme}>
-          <TitleIcon name={iconName} color={iconColor} $theme={theme} />
+          <Icon color={iconColor} $theme={theme} />
           <StyledHeading type="blockTitle" tag={titleTag}>
             {title}
           </StyledHeading>
@@ -82,7 +89,7 @@ export const InformationPanel: FC<Props> = ({
         {togglable && (
           <div>
             <SecondaryButton
-              suffix={<Icon size={14} name={active ? 'fa-caret-up' : 'fa-caret-down'} />}
+              suffix={active ? <FaCaretUpIcon size={14} /> : <FaCaretDownIcon size={14} />}
               size="s"
               onClick={handleClickTrigger}
               aria-expanded={togglable ? active : undefined}
@@ -129,16 +136,22 @@ const Title = styled.div<{ themes: Theme }>`
   }}
 `
 
-const TitleIcon = styled(Icon)<{ $theme: Theme }>`
-  vertical-align: text-top;
-  ${({ $theme }) => {
-    const { pxToRem, space } = $theme.size
+const createTitleIcon = (Icon: typeof FaCheckCircleIcon) => {
+  return styled(Icon)<{ $theme: Theme }>`
+    vertical-align: text-top;
+    ${({ $theme }) => {
+      const { pxToRem, space } = $theme.size
 
-    return css`
-      margin-right: ${pxToRem(space.XXS)};
-    `
-  }}
-`
+      return css`
+        margin-right: ${pxToRem(space.XXS)};
+      `
+    }}
+  `
+}
+const SuccessTitleIcon = createTitleIcon(FaCheckCircleIcon)
+const InfoTitleIcon = createTitleIcon(FaInfoCircleIcon)
+const WarningTitleIcon = createTitleIcon(FaExclamationTriangleIcon)
+const ErrorTitleIcon = createTitleIcon(FaExclamationCircleIcon)
 
 const Content = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
