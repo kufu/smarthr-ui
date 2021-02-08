@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [12.1.1](https://github.com/kufu/smarthr-ui/compare/v12.1.0...v12.1.1) (2021-02-08)
+
+
+### Bug Fixes
+
+* rename story file to include .stories ([#1340](https://github.com/kufu/smarthr-ui/issues/1340)) ([269aea3](https://github.com/kufu/smarthr-ui/commit/269aea369af0c9018c2f233ef8c959d42fd5413c))
+
 ## [12.1.0](https://github.com/kufu/smarthr-ui/compare/v12.0.0...v12.1.0) (2021-02-08)
 
 
