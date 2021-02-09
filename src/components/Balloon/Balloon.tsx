@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -12,7 +12,7 @@ export type Props = {
   children?: ReactNode
 }
 
-const balloonFactory: (theme: BalloonTheme) => FC<Props> = (theme) => ({
+const balloonFactory: (theme: BalloonTheme) => VFC<Props> = (theme) => ({
   horizontal,
   vertical,
   className = '',
