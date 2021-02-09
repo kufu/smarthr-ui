@@ -72,3 +72,4 @@ esm/
 storybook-static/
 .reg
 actual_images
+reg_storybook

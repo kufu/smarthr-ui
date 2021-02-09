@@ -32,11 +32,12 @@ const primaryStyle = css`
       color: #fff;
       border: none;
       background-color: ${palette.MAIN};
-      color: #fff;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
-      &.hover {
+      &.hover,
+      &:focus {
         background-color: ${palette.hoverColor(palette.MAIN)};
+        color: #fff;
       }
 
       &[disabled] {

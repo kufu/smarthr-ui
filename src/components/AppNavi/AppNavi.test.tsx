@@ -2,6 +2,7 @@ import { create } from 'react-test-renderer'
 
 import { getIconComponent } from './appNaviHelper'
 import { createTheme } from '../../themes/createTheme'
+import { FaArchiveIcon } from '../Icon/'
 
 describe('AppNavi', () => {
   describe('getIconComponent', () => {
@@ -27,14 +28,14 @@ describe('AppNavi', () => {
 
       describe('if icon exist', () => {
         it('svg should be rendered', () => {
-          const testInstance = create(getIconComponent(theme, { icon: 'fa-archive' })!).root
+          const testInstance = create(getIconComponent(theme, { icon: FaArchiveIcon })!).root
           expect(testInstance.findByType('svg')).toBeTruthy()
         })
 
         describe('if current is true', () => {
           it('svg color should be TEXT_BLACK color', () => {
             const testInstance = create(
-              getIconComponent(theme, { icon: 'fa-archive', current: true })!,
+              getIconComponent(theme, { icon: FaArchiveIcon, current: true })!,
             ).root
             expect(testInstance.findByType('svg').props.color).toBe('black')
           })
@@ -43,7 +44,7 @@ describe('AppNavi', () => {
         describe('if current is false', () => {
           it('svg color should be TEXT_GREY color', () => {
             const testInstance = create(
-              getIconComponent(theme, { icon: 'fa-archive', current: false })!,
+              getIconComponent(theme, { icon: FaArchiveIcon, current: false })!,
             ).root
             expect(testInstance.findByType('svg').props.color).toBe('grey')
           })

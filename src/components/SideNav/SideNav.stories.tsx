@@ -10,8 +10,6 @@ import { Heading } from '../Heading'
 import readme from './README.md'
 
 const Label = styled(StatusLabel)`
-  margin-right: 8px;
-
   &.done {
     background-color: #fff;
   }

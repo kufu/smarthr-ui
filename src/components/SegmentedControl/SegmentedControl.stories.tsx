@@ -4,7 +4,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { SegmentedControl } from './SegmentedControl'
-import { Icon } from '../Icon'
+import { FaPlusCircleIcon } from '../Icon'
 
 import readme from './README.md'
 
@@ -23,14 +23,14 @@ storiesOf('SegmentedControl', module)
 
     const options = [
       { value: 'segment1', ariaLabel: 'segment1' },
-      { value: 'segment2', ariaLabel: 'segment1' },
-      { value: 'segment3', ariaLabel: 'segment1' },
-      { value: 'segment4', ariaLabel: 'segment1' },
-      { value: 'segment5', ariaLabel: 'segment1' },
+      { value: 'segment2', ariaLabel: 'segment2' },
+      { value: 'segment3', ariaLabel: 'segment3' },
+      { value: 'segment4', ariaLabel: 'segment4' },
+      { value: 'segment5', ariaLabel: 'segment5' },
     ]
     return (
       <List>
-        <dt>Default</dt>
+        <dt id="dt-default">Default</dt>
         <dd>
           <SegmentedControl
             options={options.map((option) => ({ ...option, content: 'Button' }))}
@@ -39,9 +39,10 @@ storiesOf('SegmentedControl', module)
               action('clicked')(value)
               setValue1(value)
             }}
+            aria-labelledby="dt-default"
           />
         </dd>
-        <dt>Small</dt>
+        <dt id="dt-small">Small</dt>
         <dd>
           <SegmentedControl
             options={options.map((option) => ({ ...option, content: 'Button' }))}
@@ -51,14 +52,15 @@ storiesOf('SegmentedControl', module)
               setValue2(value)
             }}
             size="s"
+            aria-labelledby="dt-small"
           />
         </dd>
-        <dt>Icon</dt>
+        <dt id="dt-icon">Icon</dt>
         <dd>
           <SegmentedControl
             options={options.map((option) => ({
               ...option,
-              content: <Icon size={16} name="fa-plus-circle" />,
+              content: <FaPlusCircleIcon size={16} />,
             }))}
             value={value3}
             onClickOption={(value) => {
@@ -66,14 +68,15 @@ storiesOf('SegmentedControl', module)
               setValue3(value)
             }}
             isSquare
+            aria-labelledby="dt-icon"
           />
         </dd>
-        <dt>Small icon</dt>
+        <dt id="dt-small-icon">Small icon</dt>
         <dd>
           <SegmentedControl
             options={options.map((option) => ({
               ...option,
-              content: <Icon size={13} name="fa-plus-circle" />,
+              content: <FaPlusCircleIcon size={13} />,
             }))}
             value={value4}
             onClickOption={(value) => {
@@ -82,9 +85,10 @@ storiesOf('SegmentedControl', module)
             }}
             size="s"
             isSquare
+            aria-labelledby="dt-small-icon"
           />
         </dd>
-        <dt>Disabled</dt>
+        <dt id="dt-disabled">Disabled</dt>
         <dd>
           <SegmentedControl
             options={options.map((option, i) => ({
@@ -97,6 +101,7 @@ storiesOf('SegmentedControl', module)
               action('clicked')(value)
               setValue5(value)
             }}
+            aria-labelledby="dt-disabled"
           />
         </dd>
       </List>

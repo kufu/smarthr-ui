@@ -4,16 +4,15 @@ import styled, { css } from 'styled-components'
 import { isMobileSafari, isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { Icon } from '../Icon'
+import { FaSortIcon } from '../Icon'
 
 type Option = {
-  label: string
   value: string
-}
+} & Omit<React.OptionHTMLAttributes<HTMLOptionElement>, 'value'>
 type Optgroup = {
   label: string
   options: Option[]
-}
+} & React.OptgroupHTMLAttributes<HTMLOptGroupElement>
 
 type Props = SelectHTMLAttributes<HTMLSelectElement> & {
   options: Array<Option | Optgroup>
@@ -34,7 +33,6 @@ export const Select: FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme()
-  const newOptions = hasBlank ? [{ label: blankLabel, value: '' }, ...options] : options
   const widthStyle = typeof width === 'number' ? `${width}px` : width
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -52,23 +50,18 @@ export const Select: FC<Props> = ({
       themes={theme}
     >
       <SelectBox onChange={handleChange} themes={theme} {...props}>
-        {newOptions.map((option) => {
+        {hasBlank && <option value="">{blankLabel}</option>}
+        {options.map((option) => {
           if ('value' in option) {
-            return (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            )
+            return <option key={option.value} {...option} />
           }
 
-          const optgroup: Optgroup = option!
+          const { options: groupedOptions, ...optgroup } = option
 
           return (
-            <optgroup key={optgroup.label} label={optgroup.label}>
-              {optgroup.options.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
+            <optgroup key={optgroup.label} {...optgroup}>
+              {groupedOptions.map((groupedOption) => (
+                <option key={groupedOption.value} {...groupedOption} />
               ))}
             </optgroup>
           )
@@ -79,7 +72,7 @@ export const Select: FC<Props> = ({
         }
       </SelectBox>
       <IconWrap>
-        <Icon size={13} name="fa-sort" />
+        <FaSortIcon size={13} />
       </IconWrap>
     </Wrapper>
   )

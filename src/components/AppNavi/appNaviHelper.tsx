@@ -3,11 +3,11 @@ import styled, { css } from 'styled-components'
 
 import { Theme } from '../../hooks/useTheme'
 
-import { Icon, Props as IconProps } from '../Icon'
+import { Icon as DeprecatedIcon, IconNames, ComponentProps as IconProps } from '../Icon'
 
 export const getIconComponent = (
   theme: Theme,
-  options?: { icon?: IconProps['name']; current?: boolean },
+  options?: { icon?: IconNames | React.ComponentType<IconProps>; current?: boolean },
 ) => {
   const opts = {
     icon: null,
@@ -18,9 +18,20 @@ export const getIconComponent = (
 
   if (!opts.icon) return null
 
+  const Icon = opts.icon
+
+  const iconProps = {
+    size: 14,
+    color: opts.current ? TEXT_BLACK : TEXT_GREY,
+  }
+
   return (
     <IconWrapper themes={theme}>
-      <Icon name={opts.icon} size={14} color={opts.current ? TEXT_BLACK : TEXT_GREY} />
+      {typeof Icon === 'string' ? (
+        <DeprecatedIcon {...iconProps} name={Icon} />
+      ) : (
+        <Icon {...iconProps} />
+      )}
     </IconWrapper>
   )
 }

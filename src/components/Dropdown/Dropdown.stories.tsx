@@ -1,7 +1,9 @@
 import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Dropdown } from './Dropdown'
 import { DropdownTrigger } from './DropdownTrigger'
@@ -14,30 +16,34 @@ import { Input } from '../Input'
 
 import readme from './README.md'
 
-const ListMenu = () => (
-  <List>
-    <li>
-      <button id="dropdown-list-item-1" onClick={action('clicked item 1')}>
-        Dropdown list item 1, click me.
-      </button>
-    </li>
-    <li>
-      <button onClick={action('clicked item 2')}>Dropdown list item 2, click me.</button>
-    </li>
-    <li>
-      <button onClick={action('clicked item 3')}>Dropdown list item 3, click me.</button>
-    </li>
-    <li>
-      <button onClick={action('clicked item 4')}>Dropdown list item 4, click me.</button>
-    </li>
-  </List>
-)
+const ListMenu = () => {
+  const themes = useTheme()
+  return (
+    <List themes={themes}>
+      <li>
+        <button id="dropdown-list-item-1" onClick={action('clicked item 1')}>
+          Dropdown list item 1, click me.
+        </button>
+      </li>
+      <li>
+        <button onClick={action('clicked item 2')}>Dropdown list item 2, click me.</button>
+      </li>
+      <li>
+        <button onClick={action('clicked item 3')}>Dropdown list item 3, click me.</button>
+      </li>
+      <li>
+        <button onClick={action('clicked item 4')}>Dropdown list item 4, click me.</button>
+      </li>
+    </List>
+  )
+}
 
 const ControllableDropdown = () => {
   const [value, setValue] = React.useState('hoge')
   const [text, setText] = React.useState('')
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.currentTarget.value)
+  const themes = useTheme()
 
   return (
     <Dropdown>
@@ -47,7 +53,7 @@ const ControllableDropdown = () => {
       <DropdownContent controllable>
         <DropdownScrollArea>
           <ControllableBoxMain>
-            <Text>
+            <Text themes={themes}>
               Use `DropdownControllableContent` to get a controllable dropdown.
               <br />
               Clicking inside content of controllable dropdown does not close dropdown.
@@ -84,7 +90,7 @@ const ControllableDropdown = () => {
               </li>
             </RadioButtonList>
           </ControllableBoxMain>
-          <ControllableBoxBottom>
+          <ControllableBoxBottom themes={themes}>
             <DropdownCloser>
               <SecondaryButton>Close only</SecondaryButton>
             </DropdownCloser>
@@ -105,106 +111,93 @@ storiesOf('Dropdown', module)
       sidebar: readme,
     },
   })
-  .add('all', () => (
-    <Wrapper>
-      <Legends>
-        <li>
-          <Box>
+  .add('all', () => {
+    const themes = useTheme()
+    return (
+      <Wrapper themes={themes}>
+        <Legends>
+          <li>
+            <Box>
+              <Dropdown>
+                <DropdownTrigger>
+                  <SecondaryButton id="dropdown-button-1">Uncontrollable Dropdown</SecondaryButton>
+                </DropdownTrigger>
+                <DropdownContent>
+                  <DropdownScrollArea>
+                    <ListMenu />
+                  </DropdownScrollArea>
+                </DropdownContent>
+              </Dropdown>
+            </Box>
+          </li>
+          <li>
+            <Box>
+              <Dropdown>
+                <DropdownTrigger>
+                  <SecondaryButton>static area</SecondaryButton>
+                </DropdownTrigger>
+                <DropdownContent>
+                  <Fixed themes={themes}>fixed header</Fixed>
+                  <DropdownScrollArea>
+                    <ListMenu />
+                  </DropdownScrollArea>
+                  <Fixed themes={themes}>fixed footer</Fixed>
+                </DropdownContent>
+              </Dropdown>
+            </Box>
+          </li>
+          <li>
+            <Box>
+              <ControllableDropdown />
+            </Box>
+          </li>
+          <li>
             <Dropdown>
               <DropdownTrigger>
-                <SecondaryButton id="dropdown-button-1">Uncontrollable Dropdown</SecondaryButton>
+                <SecondaryButton>Nested Dropdown</SecondaryButton>
               </DropdownTrigger>
-              <DropdownContent>
+              <DropdownContent controllable>
                 <DropdownScrollArea>
-                  <ListMenu />
+                  <ControllableBoxMain>
+                    <Dropdown>
+                      <DropdownTrigger>
+                        <SecondaryButton>Nested Dropdown</SecondaryButton>
+                      </DropdownTrigger>
+                      <DropdownContent controllable>
+                        <DropdownScrollArea>
+                          <ControllableBoxMain>
+                            <Dropdown>
+                              <DropdownTrigger>
+                                <SecondaryButton>Nested Dropdown</SecondaryButton>
+                              </DropdownTrigger>
+                              <DropdownContent>
+                                <DropdownScrollArea>
+                                  <ListMenu />
+                                </DropdownScrollArea>
+                              </DropdownContent>
+                            </Dropdown>
+                          </ControllableBoxMain>
+                        </DropdownScrollArea>
+                      </DropdownContent>
+                    </Dropdown>
+                  </ControllableBoxMain>
                 </DropdownScrollArea>
               </DropdownContent>
             </Dropdown>
-          </Box>
-        </li>
-        <li>
-          <Box>
-            <Dropdown>
-              <DropdownTrigger>
-                <SecondaryButton>static area</SecondaryButton>
-              </DropdownTrigger>
-              <DropdownContent>
-                <Fixed>fixed header</Fixed>
-                <DropdownScrollArea>
-                  <ListMenu />
-                </DropdownScrollArea>
-                <Fixed>fixed footer</Fixed>
-              </DropdownContent>
-            </Dropdown>
-          </Box>
-        </li>
-        <li>
-          <Box>
-            <ControllableDropdown />
-          </Box>
-        </li>
-        <li>
-          <Dropdown>
-            <DropdownTrigger>
-              <SecondaryButton>Nested Dropdown</SecondaryButton>
-            </DropdownTrigger>
-            <DropdownContent controllable>
-              <DropdownScrollArea>
-                <ControllableBoxMain>
-                  <Dropdown>
-                    <DropdownTrigger>
-                      <SecondaryButton>Nested Dropdown</SecondaryButton>
-                    </DropdownTrigger>
-                    <DropdownContent controllable>
-                      <DropdownScrollArea>
-                        <ControllableBoxMain>
-                          <Dropdown>
-                            <DropdownTrigger>
-                              <SecondaryButton>Nested Dropdown</SecondaryButton>
-                            </DropdownTrigger>
-                            <DropdownContent>
-                              <DropdownScrollArea>
-                                <ListMenu />
-                              </DropdownScrollArea>
-                            </DropdownContent>
-                          </Dropdown>
-                        </ControllableBoxMain>
-                      </DropdownScrollArea>
-                    </DropdownContent>
-                  </Dropdown>
-                </ControllableBoxMain>
-              </DropdownScrollArea>
-            </DropdownContent>
-          </Dropdown>
-        </li>
-        <li>
-          <Description>
-            Depending on where `DropdownTrigger` is on window, the position to display
-            `DropdownContent` is automatically determined.
-          </Description>
-          <Description>
-            ↓<br />↓
-          </Description>
-          <Description>
-            ↓<br />↓
-          </Description>
-        </li>
-        <li>
-          <Box>
-            <Dropdown>
-              <DropdownTrigger>
-                <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
-              </DropdownTrigger>
-              <DropdownContent>
-                <DropdownScrollArea>
-                  <ListMenu />
-                </DropdownScrollArea>
-              </DropdownContent>
-            </Dropdown>
-          </Box>
-        </li>
-        <li>
-          <RightAlign>
+          </li>
+          <li>
+            <Description>
+              Depending on where `DropdownTrigger` is on window, the position to display
+              `DropdownContent` is automatically determined.
+            </Description>
+            <Description>
+              ↓<br />↓
+            </Description>
+            <Description>
+              ↓<br />↓
+            </Description>
+          </li>
+          <li>
             <Box>
               <Dropdown>
                 <DropdownTrigger>
@@ -217,37 +210,58 @@ storiesOf('Dropdown', module)
                 </DropdownContent>
               </Dropdown>
             </Box>
-          </RightAlign>
-        </li>
-        <li>
-          <Bottom />
-        </li>
-      </Legends>
-    </Wrapper>
-  ))
+          </li>
+          <li>
+            <RightAlign>
+              <Box>
+                <Dropdown>
+                  <DropdownTrigger>
+                    <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
+                  </DropdownTrigger>
+                  <DropdownContent>
+                    <DropdownScrollArea>
+                      <ListMenu />
+                    </DropdownScrollArea>
+                  </DropdownContent>
+                </Dropdown>
+              </Box>
+            </RightAlign>
+          </li>
+          <li>
+            <Bottom />
+          </li>
+        </Legends>
+      </Wrapper>
+    )
+  })
 
-const List = styled.ul`
-  margin: 0;
-  padding: 8px 0;
-  list-style: none;
+const List = styled.ul<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { palette } = themes
+    return css`
+      margin: 0;
+      padding: 8px 0;
+      list-style: none;
 
-  & > li > button {
-    line-height: 40px;
-    width: 100%;
-    padding: 0 20px;
-    border: none;
-    background-color: #fff;
-    font-size: 14px;
-    color: #333;
+      & > li > button {
+        line-height: 40px;
+        width: 100%;
+        padding: 0 20px;
+        border: none;
+        background-color: #fff;
+        font-size: 14px;
+        color: ${palette.TEXT_BLACK};
 
-    &:hover {
-      background-color: #f5f5f5;
-    }
-  }
+        &:hover {
+          background-color: ${palette.hoverColor('#fff')};
+        }
+      }
+    `
+  }}
 `
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ themes: Theme }>`
   padding: 24px;
-  color: #333;
+  color: ${({ themes }) => themes.palette.TEXT_BLACK};
 `
 const Legends = styled.ul`
   margin: 0;
@@ -264,16 +278,16 @@ const Box = styled.div`
 const ControllableBoxMain = styled.div`
   padding: 24px;
 `
-const Text = styled.p`
+const Text = styled.p<{ themes: Theme }>`
   margin: 0;
   font-size: 14px;
-  color: #333;
+  color: ${({ themes }) => themes.palette.TEXT_BLACK};
 `
-const ControllableBoxBottom = styled.div`
+const ControllableBoxBottom = styled.div<{ themes: Theme }>`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  border-top: 1px solid #d6d6d6;
+  border-top: ${({ themes }) => themes.frame.border.default};
   padding: 16px 24px;
 
   & > *:not(:first-child) {
@@ -296,12 +310,12 @@ const Bottom = styled.div`
 const RadioButtonList = styled.ul`
   list-style: none;
 `
-const Fixed = styled.div`
+const Fixed = styled.div<{ themes: Theme }>`
   width: 100%;
   padding: 0 20px;
   border: none;
   font-size: 14px;
   font-weight: bold;
   line-height: 40px;
-  color: #333;
+  color: ${({ themes }) => themes.palette.TEXT_BLACK};
 `

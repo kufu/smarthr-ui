@@ -18,7 +18,7 @@ import {
 
 ### RadioButtonLabel component
 
-This component has the same props of the original [<input type="radio" />](https://developer.mozilla.org/ja/docs/Web/HTML/Element/input/radio).
+This component has the same props of the original [\<input type="radio" /\>](https://developer.mozilla.org/ja/docs/Web/HTML/Element/input/radio).
 
 | Name    | Required | Type       | DefaultValue | Description  |
 | ------- | -------- | ---------- | ------------ | ------------ |
