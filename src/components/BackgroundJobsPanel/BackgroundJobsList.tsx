@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {
+  children?: React.ReactNode
   className?: string
 }
 
