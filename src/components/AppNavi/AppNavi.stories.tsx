@@ -114,13 +114,7 @@ storiesOf('AppNavi', module)
       {
         children: 'ドロップダウン',
         icon: FaChartPieIcon,
-        dropdownContent: (
-          <List>
-            <li>
-              <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
-            </li>
-          </List>
-        ),
+        dropdownContent: <List />,
       },
       {
         children: 'カスタムタグ',
