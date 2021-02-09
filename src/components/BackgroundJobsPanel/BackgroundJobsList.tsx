@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -7,7 +7,7 @@ type Props = {
   className?: string
 }
 
-const BackgroundJobsList: FC<Props> = ({ children, className }) => {
+const BackgroundJobsList: VFC<Props> = ({ children, className }) => {
   const themes = useTheme()
   return (
     <List themes={themes} className={className}>
