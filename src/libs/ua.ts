@@ -1,4 +1,4 @@
-const ua = window.navigator.userAgent.toLowerCase()
+const ua = typeof window !== 'undefined' ? window.navigator.userAgent.toLowerCase() : 'SSR'
 
 export const isIe = ua.indexOf('msie') !== -1 || ua.indexOf('trident') !== -1
 
