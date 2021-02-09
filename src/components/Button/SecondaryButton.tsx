@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -6,7 +6,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
-export const SecondaryButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
+export const SecondaryButton: VFC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
   return <SecondaryStyleButton {...props} themes={theme} type={type} />
 }
@@ -14,7 +14,7 @@ export const SecondaryButton: FC<ButtonProps> = ({ type = 'button', ...props }) 
 // This is for error message of BottomFixedArea component.
 SecondaryButton.displayName = 'SecondaryButton'
 
-export const SecondaryButtonAnchor: FC<AnchorProps> = (props) => {
+export const SecondaryButtonAnchor: VFC<AnchorProps> = (props) => {
   const theme = useTheme()
   return <SecondaryStyleButtonAnchor themes={theme} {...props} />
 }
