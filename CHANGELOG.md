@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [12.1.0](https://github.com/kufu/smarthr-ui/compare/v12.0.0...v12.1.0) (2021-02-08)
+
+
+### Features
+
+* add new icons; fa-medkit and fa-tachometer-alt ([#1299](https://github.com/kufu/smarthr-ui/issues/1299)) ([e9557d6](https://github.com/kufu/smarthr-ui/commit/e9557d6ba1539dd24841664f5c2b95f8b49d4cbb))
+* support <Fa***Icon /> components in addition to <Icon name="fa-***" /> ([#1304](https://github.com/kufu/smarthr-ui/issues/1304)) ([cf5fbe1](https://github.com/kufu/smarthr-ui/commit/cf5fbe1ef36f393ac6a1314fa46c212c944be239))
+
+
+### Bug Fixes
+
+* add "!important" to font-size of InputFile ([#1313](https://github.com/kufu/smarthr-ui/issues/1313)) ([757ebc6](https://github.com/kufu/smarthr-ui/commit/757ebc64b07ecc00818f26d8df4c82362b302fb5))
+* add Segmented control ARIA (SHRUI-242) ([#1223](https://github.com/kufu/smarthr-ui/issues/1223)) ([f3c62cd](https://github.com/kufu/smarthr-ui/commit/f3c62cde713e08d9501cfc19f3cab82f0e2679ac))
+* change input error style (SHRUI-327) ([#1298](https://github.com/kufu/smarthr-ui/issues/1298)) ([8db8c06](https://github.com/kufu/smarthr-ui/commit/8db8c069557f01fc0debc205df0d05380976fcf7))
+* enable to set attributes of input element ([#1321](https://github.com/kufu/smarthr-ui/issues/1321)) ([b67b899](https://github.com/kufu/smarthr-ui/commit/b67b899f2e53ea6a81c8008ad2b774531be78213))
+* enable to set disabled in Option of Select (SHRUI-303) ([#1318](https://github.com/kufu/smarthr-ui/issues/1318)) ([9388106](https://github.com/kufu/smarthr-ui/commit/9388106f098eed9c073bb72c42c79f6041d247d2))
+* fix position of visually hidden text ([#1317](https://github.com/kufu/smarthr-ui/issues/1317)) ([3b02210](https://github.com/kufu/smarthr-ui/commit/3b0221066b4091c1c4e775d98212064e13c0bdc3))
+* fix the condition of displaying message of duplicating in MultiComboBox (SHRUI-302) ([#1237](https://github.com/kufu/smarthr-ui/issues/1237)) ([e35848f](https://github.com/kufu/smarthr-ui/commit/e35848f024ce9fceb0b2f83f82e7124a702089b8))
+* improve attributes of AccordionPanel (SHRUI-246) ([#1290](https://github.com/kufu/smarthr-ui/issues/1290)) ([2a58b0a](https://github.com/kufu/smarthr-ui/commit/2a58b0a6730a8b8e6321bfb84cb3aab5e747b6a0))
+* input[file] の不要なfocusを削除する ([#1314](https://github.com/kufu/smarthr-ui/issues/1314)) ([209b8fb](https://github.com/kufu/smarthr-ui/commit/209b8fb54aa9c818843ecb5ec7a25190f63c4c3d))
+* modify Dialog to be able to set aria-controls (SHRUI-220) ([#1231](https://github.com/kufu/smarthr-ui/issues/1231)) ([ae1cc05](https://github.com/kufu/smarthr-ui/commit/ae1cc05a8534d75feac98082feeeaa6072cfa36c))
+* modify not to apply hover or focus style from other css to Button ([#1242](https://github.com/kufu/smarthr-ui/issues/1242)) ([8315e21](https://github.com/kufu/smarthr-ui/commit/8315e21c7d7818037c888f40ec8c94da4d5bace5))
+* modify not to fire escape key handler when dialog is not open ([#1235](https://github.com/kufu/smarthr-ui/issues/1235)) ([b868654](https://github.com/kufu/smarthr-ui/commit/b868654a4d71d369e7480ff46d88091aa7863283))
+* modify to be able to scroll dropdown in IE ([#1206](https://github.com/kufu/smarthr-ui/issues/1206)) ([12a24f7](https://github.com/kufu/smarthr-ui/commit/12a24f704d29a734aca45a142485f1e7c54f500a))
+* replace old color code of storybook to theme in DefinitionList ([#1249](https://github.com/kufu/smarthr-ui/issues/1249)) ([d81dc3e](https://github.com/kufu/smarthr-ui/commit/d81dc3ef56cc686d49a53617957f866bc49d661c))
+
 ## [12.0.0](https://github.com/kufu/smarthr-ui/compare/v11.1.0...v12.0.0) (2021-01-12)
 
 
