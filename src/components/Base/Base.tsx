@@ -1,6 +1,7 @@
 import React, { ReactNode, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   children: ReactNode
@@ -8,20 +9,23 @@ type Props = {
   className?: string
 }
 
+const radiusMap = {
+  s: '6px',
+  m: '8px',
+}
+
 export const Base = forwardRef<HTMLDivElement, Props>(
   ({ radius = 'm', className = '', ...props }, ref) => {
     const themes = useTheme()
-    const radiusMap = {
-      s: '6px',
-      m: '8px',
-    }
+    const classNames = useClassNames()
+
     return (
       <Wrapper
-        className={className}
+        {...props}
+        className={`${className} ${classNames.wrapper}`}
         themes={themes}
         $radius={radiusMap[radius]}
         ref={ref}
-        {...props}
       />
     )
   },
