@@ -20,6 +20,7 @@ type Props = {
   disabled?: boolean
   error?: boolean
   className?: string
+  focusGroupId?: string
   parseInput?: (input: string) => Date | null
   formatDate?: (date: Date | null) => string
   onChangeDate?: (date: Date | null, value: string) => void
@@ -33,6 +34,7 @@ export const DatePicker: FC<Props & InputAttributes> = ({
   to,
   disabled,
   error,
+  focusGroupId,
   className,
   parseInput,
   formatDate,
@@ -238,7 +240,7 @@ export const DatePicker: FC<Props & InputAttributes> = ({
         />
       </InputWrapper>
       {isCalendarShown && (
-        <Portal inputRect={inputRect} ref={calendarPortalRef}>
+        <Portal focusGroupId={focusGroupId} inputRect={inputRect} ref={calendarPortalRef}>
           <Calendar
             value={selectedDate || undefined}
             from={from}

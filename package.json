@@ -5,10 +5,10 @@
   "author": "SmartHR-UI Team",
   "dependencies": {
     "dayjs": "^1.10.4",
-    "focus-trap": "^6.3.0",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.1.0",
+    "react-focus-lock": "^2.5.0",
     "react-icons": "^4.1.0",
     "react-transition-group": "^4.4.1"
   },

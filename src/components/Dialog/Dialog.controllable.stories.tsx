@@ -6,6 +6,8 @@ import styled from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
+import { DatePicker } from '../DatePicker'
+
 import { ActionDialog, Dialog, MessageDialog } from '.'
 import readme from './README.md'
 
@@ -17,6 +19,8 @@ const DialogController: React.FC<{ themes: Theme }> = ({ themes }) => {
   const onClickClose = () => setIsOpen(false)
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
   const onChangeText = (txt: string) => setText(txt)
+
+  const FOCUS_GROUP_ID = 'dialog-controller-date-picker'
 
   return (
     <div>
@@ -33,11 +37,15 @@ const DialogController: React.FC<{ themes: Theme }> = ({ themes }) => {
         onPressEscape={onClickClose}
         id="dialog-controllable-1"
         ariaLabel="Dialog"
+        focusGroupId={FOCUS_GROUP_ID}
       >
         <DialogControllerTitle themes={themes}>Dialog</DialogControllerTitle>
         <DialogControllerText>
           The value of isOpen must be managed by you, but you can customize content freely.
         </DialogControllerText>
+        <DialogItemWrapper>
+          <DatePicker focusGroupId={FOCUS_GROUP_ID} />
+        </DialogItemWrapper>
         <DialogControllerBox>
           <li>
             <RadioButtonLabel
@@ -64,7 +72,14 @@ const DialogController: React.FC<{ themes: Theme }> = ({ themes }) => {
             />
           </li>
           <li>
-            <input name="test" value={text} onChange={(e) => onChangeText(e.currentTarget.value)} />
+            <label>
+              label:
+              <input
+                name="test"
+                value={text}
+                onChange={(e) => onChangeText(e.currentTarget.value)}
+              />
+            </label>
           </li>
         </DialogControllerBox>
         <DialogControllerBottom themes={themes}>
@@ -218,6 +233,9 @@ const DialogControllerTitle = styled.p<{ themes: Theme }>`
   font-size: 18px;
   line-height: 1;
   border-bottom: ${({ themes }) => themes.frame.border.default};
+`
+const DialogItemWrapper = styled.div`
+  padding: 16px 24px;
 `
 const DialogControllerText = styled.p`
   padding: 16px 24px 0 24px;

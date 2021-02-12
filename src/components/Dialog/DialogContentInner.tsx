@@ -1,7 +1,7 @@
-import React, { FC, ReactNode, useCallback, useEffect, useRef } from 'react'
+import React, { FC, ReactNode, useCallback, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
-import { Options as CreateFocusTrapOptions, createFocusTrap } from 'focus-trap'
+import FocusLock from 'react-focus-lock'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
@@ -18,6 +18,7 @@ export type DialogContentInnerProps = {
   id?: string
   ariaLabel?: string
   ariaLabelledby?: string
+  focusGroupId?: string
   children: ReactNode
 }
 
@@ -41,6 +42,7 @@ export const DialogContentInner: FC<DialogContentInnerProps> = ({
   id,
   ariaLabel,
   ariaLabelledby,
+  focusGroupId,
   children,
   ...props
 }) => {
@@ -57,22 +59,7 @@ export const DialogContentInner: FC<DialogContentInnerProps> = ({
     }, [isOpen, onPressEscape]),
   )
 
-  useEffect(() => {
-    const focusTrapOption: CreateFocusTrapOptions = {
-      allowOutsideClick: true,
-      initialFocus: focusTarget.current ? focusTarget.current : undefined,
-    }
-    const focusTrap =
-      innerRef.current !== null ? createFocusTrap(innerRef.current, focusTrapOption) : undefined
-
-    if (isOpen) {
-      focusTrap?.activate()
-    }
-
-    return () => {
-      focusTrap?.deactivate()
-    }
-  }, [isOpen])
+  // Todo @masuP9 back focus to trigger element
 
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
@@ -98,8 +85,10 @@ export const DialogContentInner: FC<DialogContentInnerProps> = ({
           <Background onClick={onClickOverlay} themes={theme} />
           <Inner ref={innerRef} themes={theme} role="dialog" aria-modal="true" {...props}>
             {/* dummy element for focus management. */}
-            <div ref={focusTarget} tabIndex={-1} aria-label={ariaLabel}></div>
-            {children}
+            <FocusLock group={focusGroupId}>
+              <div ref={focusTarget} tabIndex={-1} aria-label={ariaLabel}></div>
+              {children}
+            </FocusLock>
           </Inner>
           {/* Suppresses scrolling of body while modal is displayed */}
           <ScrollSuppressing />

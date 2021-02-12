@@ -7545,13 +7545,6 @@ focus-lock@^0.8.1:
   dependencies:
     tslib "^1.9.3"
 
-focus-trap@^6.3.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/focus-trap/-/focus-trap-6.3.0.tgz#31c08f0b6099705f71f6e0a16d88fbcc4c012586"
-  integrity sha512-BBzvFfkPg5PqrVVCdQ1YOIVNKGvqG9YNVkiAUQFuDM66N8J9uADhs6mlYKrd30ofDJIzEniBnBKM7GO45iCzKQ==
-  dependencies:
-    tabbable "^5.1.5"
-
 follow-redirects@^1.0.0, follow-redirects@^1.10.0:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.13.1.tgz#5f69b813376cee4fd0474a3aba835df04ab763b7"
@@ -12838,7 +12831,7 @@ react-fast-compare@^3.0.1, react-fast-compare@^3.2.0:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
   integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
 
-react-focus-lock@^2.1.0:
+react-focus-lock@^2.1.0, react-focus-lock@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/react-focus-lock/-/react-focus-lock-2.5.0.tgz#12e3a3940e897c26e2c2a0408cd25ea3c99b3709"
   integrity sha512-XLxj6uTXgz0US8TmqNU2jMfnXwZG0mH2r/afQqvPEaX6nyEll5LHVcEXk2XDUQ34RVeLPkO/xK5x6c/qiuSq/A==
@@ -14877,11 +14870,6 @@ symbol.prototype.description@^1.0.0:
     es-abstract "^1.18.0-next.1"
     has-symbols "^1.0.1"
     object.getownpropertydescriptors "^2.1.0"
-
-tabbable@^5.1.5:
-  version "5.1.5"
-  resolved "https://registry.yarnpkg.com/tabbable/-/tabbable-5.1.5.tgz#efec48ede268d511c261e3b81facbb4782a35147"
-  integrity sha512-oVAPrWgLLqrbvQE8XqcU7CVBq6SQbaIbHkhOca3u7/jzuQvyZycrUKPCGr04qpEIUslmUlULbSeN+m3QrKEykA==
 
 table@^6.0.4:
   version "6.0.4"
