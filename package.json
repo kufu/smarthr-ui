@@ -27,7 +27,7 @@
     "@types/lodash.range": "^3.2.6",
     "@types/node": "^14.14.27",
     "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
+    "@types/react-dom": "^17.0.1",
     "@types/react-test-renderer": "^17.0.0",
     "@types/react-transition-group": "^4.4.0",
     "@types/styled-components": "^5.1.7",
