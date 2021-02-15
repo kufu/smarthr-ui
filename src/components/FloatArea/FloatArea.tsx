@@ -1,43 +1,14 @@
 import React, { ComponentProps, FC, FunctionComponentElement, ReactNode, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 
-import { validateElement } from './FloatAreaHelper'
+import { exist, validateElement } from './FloatAreaHelper'
 import { DialogBase as BaseComponent } from '../Base'
 import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
-import {
-  PrimaryButton,
-  PrimaryButtonAnchor,
-  SecondaryButton,
-  SecondaryButtonAnchor,
-} from '../Button'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-export type Primary =
-  | FunctionComponentElement<ComponentProps<typeof PrimaryButton>>
-  | FunctionComponentElement<ComponentProps<typeof PrimaryButtonAnchor>>
-
-export type Secondary =
-  | FunctionComponentElement<ComponentProps<typeof SecondaryButton>>
-  | FunctionComponentElement<ComponentProps<typeof SecondaryButtonAnchor>>
-
-export type errorIcons =
+type ErrorIcons =
   | FunctionComponentElement<ComponentProps<typeof FaExclamationTriangleIcon>>
   | FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
-
-interface Props {
-  primaryButton: Primary
-  secondaryButton?: Secondary
-  tertiaryButton?: ReactNode
-  errorText?: string
-  errorIcon?: errorIcons
-  top?: number
-  left?: number
-  right?: number
-  bottom?: number
-  width?: string
-  zIndex?: number
-  className?: string
-}
 
 type StyleProps = {
   top?: number
@@ -47,8 +18,14 @@ type StyleProps = {
   zIndex?: number
 }
 
-function exist(value: any) {
-  return value !== undefined && value !== null
+type Props = StyleProps & {
+  primaryButton: ReactNode
+  secondaryButton?: ReactNode
+  tertiaryButton?: ReactNode
+  errorText?: string
+  errorIcon?: ErrorIcons
+  width?: string
+  className?: string
 }
 
 export const FloatArea: FC<Props> = ({

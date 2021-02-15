@@ -18,3 +18,7 @@ export const validateElement = (primary?: Primary, secondary?: Secondary) => {
     }
   }
 }
+
+export const exist = (value: any) => {
+  return value !== undefined && value !== null
+}
