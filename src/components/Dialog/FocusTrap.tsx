@@ -41,7 +41,8 @@ export const FocusTrap: VFC<Props> = ({ children }) => {
     if (typeof document !== 'undefined') {
       setTriggerElement(document.activeElement)
     }
-    requestAnimationFrame(() => {
+    setTimeout(() => {
+      // delay focus on the first element so that is occurs last
       if (ref.current === null) {
         return
       }
@@ -50,7 +51,7 @@ export const FocusTrap: VFC<Props> = ({ children }) => {
       if (firstTabbale) {
         firstTabbale.focus()
       }
-    })
+    }, 1)
   }, [])
 
   useEffect(() => {
