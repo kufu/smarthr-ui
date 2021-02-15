@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [12.2.0](https://github.com/kufu/smarthr-ui/compare/v12.1.1...v12.2.0) (2021-02-15)
+
+
+### Features
+
+* add handling when Window object is not supported ([#1312](https://github.com/kufu/smarthr-ui/issues/1312)) ([9391da3](https://github.com/kufu/smarthr-ui/commit/9391da31bae15a58fe3b9f8cd6d04c5ca7f550e0))
+
+
+### Bug Fixes
+
+* add light focus trap in Dialog (SHRUI-348) ([#1351](https://github.com/kufu/smarthr-ui/issues/1351)) ([b625739](https://github.com/kufu/smarthr-ui/commit/b62573939eff33bd60ba979f1791fd931b0cd8fd))
+* improve attributes Base ([#1337](https://github.com/kufu/smarthr-ui/issues/1337)) ([801d02a](https://github.com/kufu/smarthr-ui/commit/801d02a508f6916ac855d0c570baaba8793a7909))
+* improve attributes of Balloon (SHRUI-250) ([#1339](https://github.com/kufu/smarthr-ui/issues/1339)) ([8ca9dae](https://github.com/kufu/smarthr-ui/commit/8ca9dae06a1bfbd4410971c2d11ee3a754813e9f))
+
 ### [12.1.1](https://github.com/kufu/smarthr-ui/compare/v12.1.0...v12.1.1) (2021-02-08)
 
 
