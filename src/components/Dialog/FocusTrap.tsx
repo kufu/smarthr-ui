@@ -38,9 +38,7 @@ export const FocusTrap: VFC<Props> = ({ children }) => {
   }, [handleKeyDown])
 
   useEffect(() => {
-    if (typeof document !== 'undefined') {
-      setTriggerElement(document.activeElement)
-    }
+    setTriggerElement(document.activeElement)
     setTimeout(() => {
       // delay focus on the first element so that is occurs last
       if (ref.current === null) {
