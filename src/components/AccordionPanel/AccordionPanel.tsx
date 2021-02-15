@@ -29,7 +29,7 @@ export const AccordionPanelContext = React.createContext<{
   expandableMultiply: false,
 })
 
-export const AccordionPanel: React.FC<Props & ElementProps> = ({
+export const AccordionPanel: React.VFC<Props & ElementProps> = ({
   children,
   iconPosition = 'left',
   displayIcon = true,

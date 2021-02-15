@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, FC, useCallback, useContext } from 'react'
+import React, { ButtonHTMLAttributes, VFC, useCallback, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -17,7 +17,7 @@ type Props = {
 }
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
-export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
+export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
   children,
   className = '',
   ...props
