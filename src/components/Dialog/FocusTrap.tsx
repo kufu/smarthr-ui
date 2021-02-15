@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, VFC, useCallback, useEffect, useRef, useState } from 'react'
 
 import { tabbable } from '../../libs/tabbable'
 
@@ -6,7 +6,7 @@ type Props = {
   children: ReactNode
 }
 
-export const FocusTrap: FC<Props> = ({ children }) => {
+export const FocusTrap: VFC<Props> = ({ children }) => {
   const [triggerElement, setTriggerElement] = useState<Element | null>(null)
   const ref = useRef<HTMLDivElement | null>(null)
 
