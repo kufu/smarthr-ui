@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 
-import { tabbable } from '../Dropdown/tabbable'
+import { tabbable } from '../../libs/tabbable'
 
 type Props = {
   children: ReactNode
