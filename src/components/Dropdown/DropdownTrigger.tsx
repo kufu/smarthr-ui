@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { DropdownContext } from './Dropdown'
-import { tabbable } from './tabbable'
+import { tabbable } from '../../libs/tabbable'
 
 type Props = {
   children: React.ReactNode
