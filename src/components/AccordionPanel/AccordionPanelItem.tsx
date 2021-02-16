@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, createContext } from 'react'
+import React, { HTMLAttributes, VFC, createContext } from 'react'
 import { useClassNames } from './useClassNames'
 
 type Props = {
@@ -12,7 +12,7 @@ export const AccordionPanelItemContext = createContext<{ name: string }>({
   name: '',
 })
 
-export const AccordionPanelItem: FC<Props & ElementProps> = ({
+export const AccordionPanelItem: VFC<Props & ElementProps> = ({
   name,
   children,
   className = '',

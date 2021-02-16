@@ -6,17 +6,17 @@ import styled from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
+import { DatePicker } from '../DatePicker'
 import { ActionDialog, Dialog, MessageDialog } from '.'
 import readme from './README.md'
 
 const DialogController: React.FC<{ themes: Theme }> = ({ themes }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState('hoge')
-  const [text, setText] = useState('')
+  const [date, setDate] = useState<Date | null>(null)
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => setIsOpen(false)
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
-  const onChangeText = (txt: string) => setText(txt)
 
   return (
     <div>
@@ -64,7 +64,11 @@ const DialogController: React.FC<{ themes: Theme }> = ({ themes }) => {
             />
           </li>
           <li>
-            <input name="test" value={text} onChange={(e) => onChangeText(e.currentTarget.value)} />
+            <DatePicker
+              value={date?.toDateString()}
+              formatDate={(_date) => (_date ? _date.toDateString() : '')}
+              onChangeDate={(_date) => setDate(_date)}
+            />
           </li>
         </DialogControllerBox>
         <DialogControllerBottom themes={themes}>
