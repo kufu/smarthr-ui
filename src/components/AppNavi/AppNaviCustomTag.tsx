@@ -1,4 +1,4 @@
-import React, { ComponentType, FC, ReactNode } from 'react'
+import React, { ComponentType, ReactNode, VFC } from 'react'
 import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -16,7 +16,7 @@ type InnerProps = AppNaviCustomTagProps & {
   isUnclickable?: boolean
 }
 
-export const AppNaviCustomTag: FC<InnerProps> = ({
+export const AppNaviCustomTag: VFC<InnerProps> = ({
   children,
   tag,
   icon,

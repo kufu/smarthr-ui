@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled from 'styled-components'
 
 import { useTheme } from '../../hooks/useTheme'
@@ -16,7 +16,7 @@ type InnerProps = AppNaviAnchorProps & {
   isUnclickable?: boolean
 }
 
-export const AppNaviAnchor: FC<InnerProps> = ({
+export const AppNaviAnchor: VFC<InnerProps> = ({
   children,
   href,
   icon,
