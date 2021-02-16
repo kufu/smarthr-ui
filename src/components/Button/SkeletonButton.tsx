@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -6,12 +6,12 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
-export const SkeletonButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
+export const SkeletonButton: VFC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
   return <SkeletonStyleButton {...props} themes={theme} type={type} />
 }
 
-export const SkeletonButtonAnchor: FC<AnchorProps> = (props) => {
+export const SkeletonButtonAnchor: VFC<AnchorProps> = (props) => {
   const theme = useTheme()
   return <SkeletonStyleButtonAnchor themes={theme} {...props} />
 }
