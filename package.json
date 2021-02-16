@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "12.1.0",
+  "version": "12.2.0",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "dayjs": "^1.10.4",
