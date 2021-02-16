@@ -1,11 +1,11 @@
-import React, { FC, ReactNode, useCallback, useEffect, useRef } from 'react'
+import React, { FC, ReactNode, useCallback, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
-import { Options as CreateFocusTrapOptions, createFocusTrap } from 'focus-trap'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { DialogPositionProvider } from './DialogPositionProvider'
+import { FocusTrap } from './FocusTrap'
 
 export type DialogContentInnerProps = {
   onClickOverlay?: () => void
@@ -57,23 +57,6 @@ export const DialogContentInner: FC<DialogContentInnerProps> = ({
     }, [isOpen, onPressEscape]),
   )
 
-  useEffect(() => {
-    const focusTrapOption: CreateFocusTrapOptions = {
-      allowOutsideClick: true,
-      initialFocus: focusTarget.current ? focusTarget.current : undefined,
-    }
-    const focusTrap =
-      innerRef.current !== null ? createFocusTrap(innerRef.current, focusTrapOption) : undefined
-
-    if (isOpen) {
-      focusTrap?.activate()
-    }
-
-    return () => {
-      focusTrap?.deactivate()
-    }
-  }, [isOpen])
-
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
       <CSSTransition
@@ -96,11 +79,13 @@ export const DialogContentInner: FC<DialogContentInnerProps> = ({
       >
         <Wrapper ref={domRef} themes={theme}>
           <Background onClick={onClickOverlay} themes={theme} />
-          <Inner ref={innerRef} themes={theme} role="dialog" aria-modal="true" {...props}>
-            {/* dummy element for focus management. */}
-            <div ref={focusTarget} tabIndex={-1} aria-label={ariaLabel}></div>
-            {children}
-          </Inner>
+          <FocusTrap>
+            <Inner ref={innerRef} themes={theme} role="dialog" aria-modal="true" {...props}>
+              {/* dummy element for focus management. */}
+              <div ref={focusTarget} tabIndex={-1} aria-label={ariaLabel}></div>
+              {children}
+            </Inner>
+          </FocusTrap>
           {/* Suppresses scrolling of body while modal is displayed */}
           <ScrollSuppressing />
         </Wrapper>
