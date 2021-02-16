@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [12.2.1](https://github.com/kufu/smarthr-ui/compare/v12.2.0...v12.2.1) (2021-02-16)
+
+
+### Bug Fixes
+
+* enable to set disabled to close button ([#1326](https://github.com/kufu/smarthr-ui/issues/1326)) ([1f6fd86](https://github.com/kufu/smarthr-ui/commit/1f6fd8674f55fd8786db258b5535aba16fa69a0e))
+* modify not to call other hooks in useMemo ([#1368](https://github.com/kufu/smarthr-ui/issues/1368)) ([c0070bc](https://github.com/kufu/smarthr-ui/commit/c0070bcefce89dc68250bbb7c194d05c764cd101))
+
 ## [12.2.0](https://github.com/kufu/smarthr-ui/compare/v12.1.1...v12.2.0) (2021-02-15)
 
 
