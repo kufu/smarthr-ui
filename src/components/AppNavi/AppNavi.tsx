@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -18,7 +18,7 @@ interface Props {
   children?: ReactNode
 }
 
-export const AppNavi: FC<Props> = ({ label, buttons, isCurrentUnclickable, children = null }) => {
+export const AppNavi: VFC<Props> = ({ label, buttons, isCurrentUnclickable, children = null }) => {
   const theme = useTheme()
 
   return (

@@ -14,6 +14,7 @@ export type BaseProps = {
   actionTheme: 'primary' | 'secondary' | 'danger'
   onClickAction: (closeDialog: () => void) => void
   actionDisabled?: boolean
+  closeDisabled?: boolean
 }
 
 export type ActionDialogContentInnerProps = BaseProps & {
@@ -29,6 +30,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   onClickAction,
   onClickClose,
   actionDisabled = false,
+  closeDisabled,
 }) => {
   const theme = useTheme()
   const handleClickAction = useCallback(() => {
@@ -47,7 +49,9 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
       </Title>
       <Body offsetHeight={offsetHeight}>{children}</Body>
       <Bottom themes={theme} ref={bottomRef}>
-        <SecondaryButton onClick={onClickClose}>{closeText}</SecondaryButton>
+        <SecondaryButton onClick={onClickClose} disabled={closeDisabled}>
+          {closeText}
+        </SecondaryButton>
         <ActionButton onClick={handleClickAction} disabled={actionDisabled}>
           {actionText}
         </ActionButton>

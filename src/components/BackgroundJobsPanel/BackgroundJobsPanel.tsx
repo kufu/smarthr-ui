@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { VFC, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { useId } from '../../hooks/useId'
 
@@ -31,7 +31,7 @@ type Props = {
   className?: string
 }
 
-export const BackgroundJobsPanel: FC<Props> = ({
+export const BackgroundJobsPanel: VFC<Props> = ({
   title,
   jobs,
   onClickCancelJob,

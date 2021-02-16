@@ -1,5 +1,5 @@
 import { RefObject } from 'react'
-import { tabbable } from './tabbable'
+import { tabbable } from '../../libs/tabbable'
 
 export type Rect = {
   top: number

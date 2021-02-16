@@ -1,5 +1,5 @@
 import { RefObject, useCallback, useContext, useEffect } from 'react'
-import { tabbable } from './tabbable'
+import { tabbable } from '../../libs/tabbable'
 
 import { DropdownContext } from './Dropdown'
 import { getFirstTabbable } from './dropdownHelper'
