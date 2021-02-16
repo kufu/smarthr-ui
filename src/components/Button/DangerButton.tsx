@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -6,12 +6,12 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 
-export const DangerButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
+export const DangerButton: VFC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
   return <DangerStyleButton {...props} themes={theme} type={type} />
 }
 
-export const DangerButtonAnchor: FC<AnchorProps> = (props) => {
+export const DangerButtonAnchor: VFC<AnchorProps> = (props) => {
   const theme = useTheme()
   return <DangerStyleButtonAnchor themes={theme} {...props} />
 }

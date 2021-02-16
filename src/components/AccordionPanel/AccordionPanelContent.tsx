@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, RefObject, useCallback, useContext, useRef } from 'react'
+import React, { HTMLAttributes, RefObject, VFC, useCallback, useContext, useRef } from 'react'
 import styled from 'styled-components'
 import { Transition } from 'react-transition-group'
 
@@ -18,7 +18,7 @@ const updateNodeHeight = (node: HTMLElement, wrapperRef: RefObject<HTMLDivElemen
   node.style.height = `${wrapperHeight}px`
 }
 
-export const AccordionPanelContent: FC<Props & ElementProps> = ({
+export const AccordionPanelContent: VFC<Props & ElementProps> = ({
   children,
   className = '',
   ...props

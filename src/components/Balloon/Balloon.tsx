@@ -1,5 +1,6 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, HTMLAttributes, ReactNode, useMemo } from 'react'
 import styled, { css } from 'styled-components'
+import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
@@ -12,7 +13,9 @@ export type Props = {
   children?: ReactNode
 }
 
-const balloonFactory: (theme: BalloonTheme) => FC<Props> = (theme) => ({
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+
+const balloonFactory: (theme: BalloonTheme) => FC<Props & ElementProps> = (theme) => ({
   horizontal,
   vertical,
   className = '',
@@ -23,7 +26,8 @@ const balloonFactory: (theme: BalloonTheme) => FC<Props> = (theme) => ({
   }
 
   const themes = useTheme()
-  const classNames = `${theme} ${horizontal} ${vertical} ${className}`
+  const componentClassName = useMemo(() => useClassNameGenerator('balloon')(), [])
+  const classNames = `${theme} ${horizontal} ${vertical} ${className} ${componentClassName}`
 
   return <Base className={classNames} themes={themes} {...props} />
 }

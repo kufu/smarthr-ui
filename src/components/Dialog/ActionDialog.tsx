@@ -20,6 +20,7 @@ export const ActionDialog: React.FC<Props> = ({
   onClickAction,
   onClickClose,
   actionDisabled = false,
+  closeDisabled,
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current
@@ -40,6 +41,7 @@ export const ActionDialog: React.FC<Props> = ({
         actionText={actionText}
         actionTheme={actionTheme}
         actionDisabled={actionDisabled}
+        closeDisabled={closeDisabled}
         onClickClose={onClickClose}
         onClickAction={onClickAction}
       >

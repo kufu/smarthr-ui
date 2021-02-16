@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Icon as DuplicatedIcon, ComponentProps as IconProps, iconMap } from '../Icon'
@@ -12,7 +12,7 @@ type Props = {
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-export const TertiaryLink: FC<Props> = ({
+export const TertiaryLink: VFC<Props> = ({
   text,
   iconName,
   icon: Icon,
