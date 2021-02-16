@@ -4,6 +4,7 @@
     "actualDir": "actual_images",
     "thresholdRate": 0,
     "addIgnore": true,
+    "enableAntialias": true,
     "ximgdiff": {
       "invocationType": "client"
     }
