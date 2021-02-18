@@ -44,7 +44,7 @@ export const FormGroup: FC<Props> = ({
           {statusLabelProps.length > 0 && (
             <StatusLabels themes={theme}>
               {statusLabelProps.map((statusLabelProp, index) => (
-                <LabelItem {...statusLabelProp} key={index} themes={theme} />
+                <StyledStatusLabel {...statusLabelProp} key={index} themes={theme} />
               ))}
             </StatusLabels>
           )}
@@ -117,7 +117,7 @@ const StatusLabels = styled.span<{ themes: Theme }>`
   }}
 `
 
-const LabelItem = styled(StatusLabel)<{ themes: Theme }>`
+const StyledStatusLabel = styled(StatusLabel)<{ themes: Theme }>`
   ${({ themes }) => {
     const { size } = themes
 
