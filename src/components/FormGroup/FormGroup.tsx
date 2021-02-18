@@ -29,7 +29,7 @@ export const FormGroup: FC<Props> = ({
   errorMessages,
   children,
   disabled,
-  className,
+  className = '',
 }) => {
   const theme = useTheme()
   const disabledClass = disabled ? 'disabled' : ''
