@@ -11,7 +11,7 @@ type Props = {
   labelType?: HeadingTypes
   labelId?: string
   innerMargin?: innerMarginType
-  statusLabels?: Array<ComponentProps<typeof StatusLabel>>
+  statusLabelProps?: Array<ComponentProps<typeof StatusLabel>>
   helpMessage?: ReactNode
   errorMessages?: string | string[]
   children: ReactNode
@@ -24,7 +24,7 @@ export const FormGroup: FC<Props> = ({
   labelType = 'blockTitle',
   labelId,
   innerMargin = 'XS',
-  statusLabels,
+  statusLabelProps = [],
   helpMessage,
   errorMessages,
   children,
@@ -41,17 +41,10 @@ export const FormGroup: FC<Props> = ({
           <Title type={labelType} disabled={disabled}>
             {label}
           </Title>
-          {statusLabels && (
+          {statusLabelProps.length > 0 && (
             <StatusLabels themes={theme}>
-              {statusLabels.map((StatusLabelItem, index) => (
-                <LabelItem
-                  key={index}
-                  type={StatusLabelItem.type}
-                  className={StatusLabelItem.className}
-                  themes={theme}
-                >
-                  {StatusLabelItem.children}
-                </LabelItem>
+              {statusLabelProps.map((statusLabelProp, index) => (
+                <LabelItem {...statusLabelProp} key={index} themes={theme} />
               ))}
             </StatusLabels>
           )}

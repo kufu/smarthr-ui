@@ -40,7 +40,7 @@ const SampleChildren: React.FC<SampleChildrenProps> = ({ id1, id2, disabled }) =
   )
 }
 
-const SampleStatusLabels = [
+const SampleStatusLabelProps = [
   {
     type: 'required' as const,
     children: 'label 1' as const,
@@ -70,7 +70,7 @@ storiesOf('FormGroup', module)
         </Body>
         <Title themes={theme}>with status label</Title>
         <Body>
-          <FormGroup label="Title" labelType="blockTitle" statusLabels={SampleStatusLabels}>
+          <FormGroup label="Title" labelType="blockTitle" statusLabelProps={SampleStatusLabelProps}>
             <SampleChildren id1="id_2-1" id2="id_2-2" />
           </FormGroup>
         </Body>
@@ -85,6 +85,7 @@ storiesOf('FormGroup', module)
           <FormGroup
             label="Title"
             labelType="blockTitle"
+            statusLabelProps={SampleStatusLabelProps}
             errorMessages={['error message 1', 'error message 2']}
           >
             <SampleChildren id1="id_4-1" id2="id_4-2" />
@@ -95,7 +96,7 @@ storiesOf('FormGroup', module)
           <FormGroup
             label="Title"
             labelType="blockTitle"
-            statusLabels={SampleStatusLabels}
+            statusLabelProps={SampleStatusLabelProps}
             helpMessage="help message text"
             errorMessages={['error message 1', 'error message 2']}
           >
@@ -107,7 +108,7 @@ storiesOf('FormGroup', module)
           <FormGroup
             label="Title"
             labelType="blockTitle"
-            statusLabels={SampleStatusLabels}
+            statusLabelProps={SampleStatusLabelProps}
             helpMessage="help message text"
             errorMessages="error message"
             disabled
