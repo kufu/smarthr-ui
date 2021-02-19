@@ -38,7 +38,7 @@ export const FormGroup: FC<Props> = ({
     <Wrapper className={`${className} ${disabledClass}`} themes={theme}>
       <Label themes={theme} id={labelId} margin={innerMargin}>
         <TitleWrapper>
-          <Title type={labelType} disabled={disabled}>
+          <Title type={labelType} themes={theme} className={disabledClass}>
             {label}
           </Title>
           {statusLabelProps.length > 0 && (
@@ -101,8 +101,12 @@ const TitleWrapper = styled.div`
   flex-wrap: wrap;
 `
 
-const Title = styled(Heading)`
+const Title = styled(Heading)<{ themes: Theme }>`
   display: inline-block;
+
+  &.disabled {
+    color: ${({ themes }) => themes.palette.TEXT_DISABLED};
+  }
 `
 
 const StatusLabels = styled.span<{ themes: Theme }>`
