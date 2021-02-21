@@ -11143,10 +11143,10 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-mustache@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/mustache/-/mustache-4.0.1.tgz#d99beb031701ad433338e7ea65e0489416c854a2"
-  integrity sha512-yL5VE97+OXn4+Er3THSmTdCFCtx5hHWzrolvH+JObZnUYwuaG7XV+Ch4fR2cIrcYI0tFHxS7iyFYl14bW8y2sA==
+mustache@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/mustache/-/mustache-4.1.0.tgz#8c1b042238a982d2eb2d30efc6c14296ae3f699d"
+  integrity sha512-0FsgP/WVq4mKyjolIyX+Z9Bd+3WS8GOwoUTyKXT5cTYMGeauNTi2HPCwERqseC1IHAy0Z7MDZnJBfjabd4O8GQ==
 
 mustache@^2.1.1, mustache@^2.1.2, mustache@^2.2.1:
   version "2.3.2"
@@ -13219,10 +13219,10 @@ refractor@^3.1.0:
     parse-entities "^2.0.0"
     prismjs "~1.23.0"
 
-reg-cli@^0.16.2:
-  version "0.16.4"
-  resolved "https://registry.yarnpkg.com/reg-cli/-/reg-cli-0.16.4.tgz#bd0f65039c6e7123d24635e0da90a5b18857b1c8"
-  integrity sha512-9kvbvQKudQ1Lq29H33jnC2fOOFN+7BW7ewoH2yUFen58daWtpWPAWLMc9t2LE8rQ3yjg4HUz8cgMYX0D+H+zKw==
+reg-cli@^0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/reg-cli/-/reg-cli-0.17.0.tgz#1ab0d20e147b83e42f25ea3867820b2f45b9ca57"
+  integrity sha512-d5Mo7nrnoFdOIV0S7cKJxT+OYAwUzAMGJsz3lzNvQLlV7C9tt61DfNCbcKKrOksUH6SsasIosyLLQijiWi5iDg==
   dependencies:
     bluebird "3.7.2"
     chalk "4.1.0"
@@ -13235,34 +13235,34 @@ reg-cli@^0.16.2:
     make-dir "3.1.0"
     md5-file "4.0.0"
     meow "3.7.0"
-    mustache "4.0.1"
+    mustache "4.1.0"
     x-img-diff-js "0.3.5"
 
-reg-gh-app-interface@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/reg-gh-app-interface/-/reg-gh-app-interface-1.1.0.tgz#a71c80acad06944d21fa5d4fb3d1bf7545a8eb42"
-  integrity sha512-hTUJVbmV/67xdqXE+Z/vFpoo+1QdNlQDcrynlKc3d+7mY2trff3n70ETOwhtrxMwSzLxtCTcnHRSIqMeW4AnaQ==
+reg-gh-app-interface@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/reg-gh-app-interface/-/reg-gh-app-interface-1.2.0.tgz#0961143d75a0f7453b5d07a4fd34591da96e6add"
+  integrity sha512-jgEH91LWOYf7HfoO9HfX2aM71CHZs/V6Yb3yEbECK9CB69an4yNdx24l8dBUdKywesnhE/IzJ3AfOd4a84L0Og==
 
-reg-keygen-git-hash-plugin@^0.10.9:
-  version "0.10.11"
-  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.10.11.tgz#93bb0f2ac7f101e1d5fe8af2da2257f61125f4f2"
-  integrity sha512-G73GYAsHwJ2S57d4TT5FxI3VLd/egGURYvzBcqRtrpUOKvSUkIecSH6nG/dbkbl3IMYvWDojGmjkGyaCxL2DoA==
+reg-keygen-git-hash-plugin@^0.10.14:
+  version "0.10.14"
+  resolved "https://registry.yarnpkg.com/reg-keygen-git-hash-plugin/-/reg-keygen-git-hash-plugin-0.10.14.tgz#154940c4eaa6b57b27267b997ad93e26c6ba4fbe"
+  integrity sha512-AK3WbrJqr2hKIwXLefxPmJiSJptt4sk4yMo4cGpeH8DLKuzUXpjocikemgi3Xl27853/ci0fIaPZPMgBM8SoLw==
   dependencies:
     reg-suit-util "^0.10.10"
 
-reg-notify-github-plugin@^0.10.9:
-  version "0.10.10"
-  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.10.10.tgz#6323790013ee89e8d80e0fd19c596cc7eb5b0e02"
-  integrity sha512-HdiHc9Ogr7Gl3sLgC9HaMHKb46klUEx2VOKdCOWhg3x/b0Tjold03yNcFeWo61f8UuqyTURnFNj3IiW6eMgb2Q==
+reg-notify-github-plugin@^0.10.14:
+  version "0.10.14"
+  resolved "https://registry.yarnpkg.com/reg-notify-github-plugin/-/reg-notify-github-plugin-0.10.14.tgz#507fe53a7b8a95277b3f7a10e6897175dddb6cfa"
+  integrity sha512-G8NOzG3vnI8dqhrJCHn2oHgKlHnbeqcHF0FmujVuDl25OUIrkfLHhT34AopWcSgk6gn/IXgF+S6n/OUJ+iB2Cw==
   dependencies:
     open "^7.2.1"
-    reg-gh-app-interface "^1.1.0"
+    reg-gh-app-interface "^1.2.0"
     reg-suit-util "^0.10.10"
     request "^2.88.2"
     request-promise "^4.2.6"
     tiny-commit-walker "^1.1.2"
 
-reg-publish-s3-plugin@^0.10.9:
+reg-publish-s3-plugin@^0.10.10:
   version "0.10.10"
   resolved "https://registry.yarnpkg.com/reg-publish-s3-plugin/-/reg-publish-s3-plugin-0.10.10.tgz#dea357db96804fb05cac9985b26c9c6929131053"
   integrity sha512-WJrFD4REI0HR1gLB6eVPpfYAAKQn/rekP1n70ndcxm9pVqX+FXETKhBNEiFXdf36EKLuJW7Sw1p3NN91eSIAuA==
@@ -13272,13 +13272,13 @@ reg-publish-s3-plugin@^0.10.9:
     reg-suit-util "^0.10.10"
     uuid "^8.3.0"
 
-reg-suit-core@^0.10.10:
-  version "0.10.10"
-  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.10.10.tgz#fd7a632bd46db868a0d27256769c0165c87ff25f"
-  integrity sha512-Rxi6fZgX1pXJyPAxugnvD0Z29iuKTv5s9v8slfbb/2JgBEIQB42mQeeWMUebkbB5HB1xVhJdAaUfnZJnYtQgUg==
+reg-suit-core@^0.10.14:
+  version "0.10.14"
+  resolved "https://registry.yarnpkg.com/reg-suit-core/-/reg-suit-core-0.10.14.tgz#f98774395469ec74fa0477787df886766c97ba1a"
+  integrity sha512-S0Mri6HOWR4O7xcWHGveHkJ8CRkEaaEMvUDGUVHUclPlQcy3B0cL7yiCdMeH8VEgRRVM/7a3BqfPMC+dQj9kIA==
   dependencies:
     cpx "^1.5.0"
-    reg-cli "^0.16.2"
+    reg-cli "^0.17.0"
     reg-suit-util "^0.10.10"
     rimraf "^3.0.2"
 
@@ -13301,15 +13301,15 @@ reg-suit-util@^0.10.10:
     mime-types "^2.1.27"
     mkdirp "^1.0.4"
 
-reg-suit@^0.10.9:
-  version "0.10.10"
-  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.10.10.tgz#1c1822daa05d236b60c461e6d552d5957f77c361"
-  integrity sha512-KzibO5DCEM1CJ9oeUbxpqMLZNdbvlYBNNh1gumVMdPyDjMwNC72hpBI1fa8CtjjY67+ZbAOvAj1lr0/jZcdhvw==
+reg-suit@^0.10.14:
+  version "0.10.14"
+  resolved "https://registry.yarnpkg.com/reg-suit/-/reg-suit-0.10.14.tgz#c38a37f071b73f2e2e4f61c9cebb5f5d4d47b6a3"
+  integrity sha512-95pEIzpWGf1j45LASB1cSSnman82XIjz2DJ1wqLzh3ScroSnRvdDFU/I26BhBqqsm8ydHWdEOQfVS3w/Bj96ew==
   dependencies:
     cp-file "9.0.0"
     ignore "5.1.8"
     inquirer "7.3.3"
-    reg-suit-core "^0.10.10"
+    reg-suit-core "^0.10.14"
     reg-suit-util "^0.10.10"
     yargs "16.2.0"
 
