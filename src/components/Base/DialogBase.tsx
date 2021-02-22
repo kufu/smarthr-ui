@@ -8,13 +8,15 @@ type Props = {
   className?: string
 }
 
+const radiusMap = {
+  s: '6px',
+  m: '8px',
+}
+
 export const DialogBase = forwardRef<HTMLDivElement, Props>(
   ({ radius = 'm', className = '', ...props }, ref) => {
     const themes = useTheme()
-    const radiusMap = {
-      s: '6px',
-      m: '8px',
-    }
+
     return (
       <Wrapper
         className={className}
