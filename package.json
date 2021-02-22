@@ -25,7 +25,7 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
     "@types/node": "^14.14.31",
-    "@types/react": "^17.0.0",
+    "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.4.1",
@@ -140,7 +140,7 @@
     "mem": "8.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "@types/react": "^17.0.0",
+    "@types/react": "^17.0.2",
     "@babel/helper-compilation-targets": "^7.12.17"
   }
 }
