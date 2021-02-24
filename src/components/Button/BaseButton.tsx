@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -48,7 +48,7 @@ export type BaseProps = {
   wide?: boolean
 }
 
-export const buttonFactory: <Props extends BaseProps>(tag: Tag) => FC<Props> = (tag) => {
+export const buttonFactory: <Props extends BaseProps>(tag: Tag) => VFC<Props> = (tag) => {
   const BaseTag = hoverable()(tagStore[tag])
 
   return ({
@@ -160,5 +160,5 @@ const tagStore = {
   a: Base.withComponent('a'),
 }
 
-export const BaseButton: FC<ButtonProps> = buttonFactory<ButtonProps>('button')
-export const BaseButtonAnchor: FC<AnchorProps> = buttonFactory<AnchorProps>('a')
+export const BaseButton: VFC<ButtonProps> = buttonFactory<ButtonProps>('button')
+export const BaseButtonAnchor: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')

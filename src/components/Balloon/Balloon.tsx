@@ -1,7 +1,8 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, HTMLAttributes, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 export type BalloonTheme = 'light' | 'dark'
 
@@ -12,7 +13,9 @@ export type Props = {
   children?: ReactNode
 }
 
-const balloonFactory: (theme: BalloonTheme) => FC<Props> = (theme) => ({
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+
+const balloonFactory: (theme: BalloonTheme) => FC<Props & ElementProps> = (theme) => ({
   horizontal,
   vertical,
   className = '',
@@ -23,7 +26,8 @@ const balloonFactory: (theme: BalloonTheme) => FC<Props> = (theme) => ({
   }
 
   const themes = useTheme()
-  const classNames = `${theme} ${horizontal} ${vertical} ${className}`
+  const { wrapper } = useClassNames()
+  const classNames = `${theme} ${horizontal} ${vertical} ${className} ${wrapper}`
 
   return <Base className={classNames} themes={themes} {...props} />
 }

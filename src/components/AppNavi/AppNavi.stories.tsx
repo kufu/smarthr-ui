@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { storiesOf } from '@storybook/react'
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { FaBirthdayCakeIcon, FaChartPieIcon, FaCogIcon, FaFileIcon, FaUserAltIcon } from '../Icon/'
@@ -8,7 +8,7 @@ import { AppNavi } from './AppNavi'
 import readme from './README.md'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?: string }> = ({
+const Link: VFC<{ to: string; children: ReactNode; disabled?: boolean; className?: string }> = ({
   to,
   children,
   disabled = false,
@@ -20,7 +20,7 @@ const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?
   </a>
 )
 
-const List: FC = () => {
+const List: VFC = () => {
   const theme = useTheme()
 
   return (
@@ -114,13 +114,7 @@ storiesOf('AppNavi', module)
       {
         children: 'ドロップダウン',
         icon: FaChartPieIcon,
-        dropdownContent: (
-          <List>
-            <li>
-              <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
-            </li>
-          </List>
-        ),
+        dropdownContent: <List />,
       },
       {
         children: 'カスタムタグ',

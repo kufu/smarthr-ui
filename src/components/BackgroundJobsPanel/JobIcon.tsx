@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 
 import { useTheme } from '../../hooks/useTheme'
 import { Status } from './BackgroundJobsPanel'
@@ -15,7 +15,7 @@ type Props = {
   status: Status
 }
 
-export const JobIcon: FC<Props> = ({ status }) => {
+export const JobIcon: VFC<Props> = ({ status }) => {
   const Icon = getIcon(status)
   const color = useIconColor(status)
 
