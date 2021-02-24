@@ -8,11 +8,11 @@
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.1.0",
-    "react-icons": "^4.1.0",
+    "react-icons": "^4.2.0",
     "react-transition-group": "^4.4.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.13",
+    "@babel/core": "^7.12.17",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@storybook/addon-a11y": "^6.1.18",
@@ -25,7 +25,7 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
     "@types/node": "^14.14.31",
-    "@types/react": "^17.0.0",
+    "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.4.1",
@@ -51,7 +51,7 @@
     "reg-notify-github-plugin": "^0.10.14",
     "reg-publish-s3-plugin": "^0.10.10",
     "reg-suit": "^0.10.14",
-    "standard-version": "^9.0.0",
+    "standard-version": "^9.1.1",
     "storybook-readme": "^5.0.9",
     "storycap": "^3.0.3",
     "styled-components": "^5.2.1",
@@ -61,13 +61,13 @@
     "stylelint-config-smarthr": "^1.0.0",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-config-styled-components": "^0.1.1",
-    "testcafe": "^1.10.1",
+    "testcafe": "^1.11.0",
     "ts-jest": "^26.5.1",
     "ts-loader": "^8.0.17",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.5",
     "wait-for-localhost": "^3.3.0",
-    "webpack": "^5.21.2"
+    "webpack": "^5.23.0"
   },
   "peerDependencies": {
     "react": "16.13.0 || ^17.0.1",
@@ -140,7 +140,7 @@
     "mem": "8.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "@types/react": "^17.0.0",
-    "@babel/helper-compilation-targets": "^7.12.13"
+    "@types/react": "^17.0.2",
+    "@babel/helper-compilation-targets": "^7.12.17"
   }
 }
