@@ -1,7 +1,6 @@
 import React, { ComponentProps, FC, FunctionComponentElement, ReactNode, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 
-import { exist, validateElement } from './FloatAreaHelper'
 import { DialogBase as BaseComponent } from '../Base'
 import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -28,6 +27,10 @@ type Props = StyleProps & {
   className?: string
 }
 
+const exist = (value: any) => {
+  return value !== undefined && value !== null
+}
+
 export const FloatArea: FC<Props> = ({
   primaryButton,
   secondaryButton,
@@ -40,10 +43,6 @@ export const FloatArea: FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme()
-
-  useEffect(() => {
-    validateElement(primaryButton, secondaryButton)
-  }, [primaryButton, secondaryButton])
 
   return (
     <Base themes={theme} className={className} $width={width} {...props}>
