@@ -24,7 +24,7 @@ export const AppNavi: VFC<Props & ElementProps> = ({
   label,
   buttons,
   isCurrentUnclickable,
-  className,
+  className = '',
   children = null,
   ...props
 }) => {
