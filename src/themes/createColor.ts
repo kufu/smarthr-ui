@@ -2,27 +2,7 @@ import { merge } from '../libs/lodash'
 import { darken, rgba, transparentize } from 'polished'
 
 // Allow deviations from the JavaScript naming convention to match SmartHR design guidelines
-export interface PaletteProperty {
-  TEXT_BLACK?: string
-  TEXT_GREY?: string
-  TEXT_DISABLED?: string
-  TEXT_LINK?: string
-  BORDER?: string
-  BACKGROUND?: string
-  COLUMN?: string
-  HEAD?: string
-  BASE_GREY?: string
-  MAIN?: string
-  DANGER?: string
-  WARNING?: string
-  SCRIM?: string
-  OVERLAY?: string
-  OUTLINE?: string
-}
-
-export interface CreatedPaletteTheme {
-  hoverColor: (value: string, darkenAmount?: 0.05 | 0.15) => string
-  disableColor: (value: string) => string
+type Palette = {
   TEXT_BLACK: string
   TEXT_GREY: string
   TEXT_DISABLED: string
@@ -41,10 +21,14 @@ export interface CreatedPaletteTheme {
   OUTLINE: string
 }
 
-/**
- * @deprecated The defaultPelette will be deprecated, please use defaultColor instead
- */
-export const defaultPalette = {
+export type ColorProperty = Partial<Palette>
+
+export type CreatedColorTheme = Palette & {
+  hoverColor: (value: string, darkenAmount?: 0.05 | 0.15) => string
+  disableColor: (value: string) => string
+}
+
+export const defaultColor = {
   TEXT_BLACK: '#23221f',
   TEXT_GREY: '#76736a',
   TEXT_DISABLED: '#c1bdb7',
@@ -62,18 +46,18 @@ export const defaultPalette = {
   BRAND: '#00c4cc',
 }
 
-export const createPalette = (userPalette: PaletteProperty = {}) => {
-  const created: CreatedPaletteTheme = merge(
+export const createColor = (userColor: ColorProperty = {}) => {
+  const created: CreatedColorTheme = merge(
     {
       hoverColor: (value: string, darkenAmount: 0.05 | 0.15 = 0.05): string =>
         darken(darkenAmount, value),
       disableColor: (value: string): string => rgba(value, 0.5),
-      OUTLINE: transparentize(0.5, defaultPalette.MAIN),
-      ...defaultPalette,
+      OUTLINE: transparentize(0.5, defaultColor.MAIN),
+      ...defaultColor,
     },
-    userPalette,
-    userPalette.OUTLINE == null && userPalette.MAIN != null
-      ? { OUTLINE: transparentize(0.5, userPalette.MAIN) }
+    userColor,
+    userColor.OUTLINE == null && userColor.MAIN != null
+      ? { OUTLINE: transparentize(0.5, userColor.MAIN) }
       : null,
   )
   return created
