@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
+import React, { VFC, useCallback, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -26,7 +26,7 @@ type Props = {
 }
 type InputAttributes = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
-export const DatePicker: FC<Props & InputAttributes> = ({
+export const DatePicker: VFC<Props & InputAttributes> = ({
   value,
   name,
   from,
