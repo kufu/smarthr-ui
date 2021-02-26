@@ -11,6 +11,7 @@ type DropZoneProps = {
     files: FileList | null,
   ) => void
   accept?: string
+  children?: React.ReactNode
 }
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
