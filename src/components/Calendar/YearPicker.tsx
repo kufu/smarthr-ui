@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { VFC, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -13,7 +13,7 @@ type Props = {
   id: string
 }
 
-export const YearPicker: FC<Props> = ({
+export const YearPicker: VFC<Props> = ({
   selectedYear,
   fromYear,
   toYear,

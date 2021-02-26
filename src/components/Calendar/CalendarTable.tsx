@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent } from 'react'
+import React, { MouseEvent, VFC } from 'react'
 import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -14,7 +14,7 @@ type Props = {
   selected?: Date | null
 }
 
-export const CalendarTable: FC<Props> = ({ current, from, to, onSelectDate, selected }) => {
+export const CalendarTable: VFC<Props> = ({ current, from, to, onSelectDate, selected }) => {
   const themes = useTheme()
   const currentDay = dayjs(current)
   const selectedDay = selected ? dayjs(selected) : null
