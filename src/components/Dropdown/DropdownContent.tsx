@@ -21,7 +21,7 @@ type Props = {
   className?: string
 }
 
-export const DropdownContent: React.FC<Props> = ({
+export const DropdownContent: React.VFC<Props> = ({
   controllable = false,
   scrollable = true,
   className = '',
