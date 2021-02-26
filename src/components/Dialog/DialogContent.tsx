@@ -15,7 +15,7 @@ export const DialogContentContext = createContext<DialogContentContextType>({
 
 type Props = Pick<
   DialogContentInnerProps,
-  'top' | 'right' | 'bottom' | 'left' | 'id' | 'ariaLabel' | 'ariaLabelledby'
+  'top' | 'right' | 'bottom' | 'left' | 'id' | 'ariaLabel' | 'ariaLabelledby' | 'children'
 >
 
 export const DialogContent: React.VFC<Props> = ({ children, ...props }) => {

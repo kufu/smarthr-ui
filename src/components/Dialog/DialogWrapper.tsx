@@ -19,7 +19,7 @@ export const DialogContext = createContext<DialogContextType>({
   active: false,
 })
 
-export const DialogWrapper: React.VFC = ({ children }) => {
+export const DialogWrapper: React.VFC<{ children?: React.ReactNode }> = ({ children }) => {
   const [active, setActive] = useState(false)
   const element = useRef(document.createElement('div')).current
 

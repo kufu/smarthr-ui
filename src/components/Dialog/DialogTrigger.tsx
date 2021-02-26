@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { DialogContext } from './DialogWrapper'
 
-export const DialogTrigger: React.VFC = ({ children }) => {
+export const DialogTrigger: React.VFC<{ children?: React.ReactNode }> = ({ children }) => {
   const { onClickTrigger } = useContext(DialogContext)
   return (
     <Wrapper onClick={onClickTrigger} aria-haspopup="dialog">
