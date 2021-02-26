@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -12,7 +12,7 @@ type Props = {
   className?: string
 }
 
-export const DefinitionList: FC<Props> = ({ items, layout = 'single', className = '' }) => {
+export const DefinitionList: VFC<Props> = ({ items, layout = 'single', className = '' }) => {
   const theme = useTheme()
 
   return (
