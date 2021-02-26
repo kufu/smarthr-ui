@@ -19,6 +19,7 @@ type Props = {
   controllable?: boolean
   scrollable?: boolean
   className?: string
+  children?: React.ReactNode
 }
 
 export const DropdownContent: React.VFC<Props> = ({
