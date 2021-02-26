@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -12,7 +12,7 @@ export type DefinitionListItemProps = {
   className?: string
 }
 
-export const DefinitionListItem: FC<DefinitionListItemProps> = ({
+export const DefinitionListItem: VFC<DefinitionListItemProps> = ({
   term,
   description,
   termTag = 'span',
