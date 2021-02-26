@@ -7,7 +7,7 @@ type PositionContextType = {
 
 export const PositionContext = createContext<PositionContextType>({})
 
-export const DialogPositionProvider: React.FC<PositionContextType> = ({
+export const DialogPositionProvider: React.VFC<PositionContextType> = ({
   top,
   bottom,
   children,

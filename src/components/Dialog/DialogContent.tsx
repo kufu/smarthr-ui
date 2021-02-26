@@ -18,7 +18,7 @@ type Props = Pick<
   'top' | 'right' | 'bottom' | 'left' | 'id' | 'ariaLabel' | 'ariaLabelledby'
 >
 
-export const DialogContent: React.FC<Props> = ({ children, ...props }) => {
+export const DialogContent: React.VFC<Props> = ({ children, ...props }) => {
   const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
 
   return (

@@ -10,7 +10,7 @@ import { DatePicker } from '../DatePicker'
 import { ActionDialog, Dialog, MessageDialog } from '.'
 import readme from './README.md'
 
-const DialogController: React.FC<{ themes: Theme }> = ({ themes }) => {
+const DialogController: React.VFC<{ themes: Theme }> = ({ themes }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState('hoge')
   const [date, setDate] = useState<Date | null>(null)
@@ -79,7 +79,7 @@ const DialogController: React.FC<{ themes: Theme }> = ({ themes }) => {
   )
 }
 
-const MessageDialogController: React.FC = () => {
+const MessageDialogController: React.VFC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => setIsOpen(false)
@@ -121,7 +121,7 @@ const MessageDialogController: React.FC = () => {
   )
 }
 
-const ActionDialogController: React.FC = () => {
+const ActionDialogController: React.VFC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = React.useState('hoge')
   const onClickOpen = () => setIsOpen(true)
