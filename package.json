@@ -78,7 +78,7 @@
     "url": "https://github.com/kufu/smarthr-ui/issues"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=v14.16.0"
   },
   "files": [
     "esm",
