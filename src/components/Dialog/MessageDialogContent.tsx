@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
@@ -14,6 +14,13 @@ export const MessageDialogContent: React.FC<Props> = ({
 }) => {
   const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
 
+  const handleClickClose = useCallback(() => {
+    if (!active) {
+      return
+    }
+    onClickClose()
+  }, [active, onClickClose])
+
   return (
     <DialogContentRoot>
       <DialogContentInner
@@ -27,7 +34,7 @@ export const MessageDialogContent: React.FC<Props> = ({
           title={title}
           description={description}
           closeText={closeText}
-          onClickClose={onClickClose}
+          onClickClose={handleClickClose}
         />
       </DialogContentInner>
     </DialogContentRoot>
