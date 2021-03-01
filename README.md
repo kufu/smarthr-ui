@@ -66,7 +66,7 @@ Please read the [changelog](https://github.com/kufu/smarthr-ui/releases).
 
 ## Design
 We released design in [InVision](https://smarthr.invisionapp.com/share/ADUDJ8BW74C).
-If you use our service logo, please read the [SmartHR Brand Asset Guide](https://developer.smarthr.jp/design/logo-policy.pdf)
+If you use our service logo, please read the [SmartHR Design System](https://www.smarthr.design/12597874e/p/55cc88-/b/692a67)
 
 ## License
 
