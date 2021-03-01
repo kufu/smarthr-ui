@@ -18,7 +18,7 @@ commands:
       # run tests!
       - run: yarn audit --groups dependencies
       - run: yarn lint
-      - run: yarn test
+      - run: yarn test -w 1
       - run: yarn test:build-assets
   # visual regression testing
   run-reg-suit:

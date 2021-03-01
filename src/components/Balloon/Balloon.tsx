@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, ReactNode } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -16,7 +16,7 @@ export type Props = {
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 const balloonFactory = (theme: BalloonTheme) => {
-  const Balloon: FC<Props & ElementProps> = ({
+  const Balloon: VFC<Props & ElementProps> = ({
     horizontal,
     vertical,
     className = '',
