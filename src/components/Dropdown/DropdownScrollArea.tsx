@@ -6,7 +6,7 @@ type Props = {
   children: ReactNode
 }
 
-export const DropdownScrollArea: React.FC<Props> = ({ children, className = '' }) => (
+export const DropdownScrollArea: React.VFC<Props> = ({ children, className = '' }) => (
   <Wrapper className={className}>{children}</Wrapper>
 )
 
