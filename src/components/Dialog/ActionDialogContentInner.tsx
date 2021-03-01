@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react'
+import React, { VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -21,7 +21,7 @@ export type ActionDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
 }
 
-export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
+export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   children,
   title,
   closeText,
