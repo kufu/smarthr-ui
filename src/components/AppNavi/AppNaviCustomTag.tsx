@@ -1,10 +1,9 @@
 import React, { ComponentType, ReactNode, VFC } from 'react'
 import styled from 'styled-components'
-
 import { Theme, useTheme } from '../../hooks/useTheme'
-
 import { IconNames, ComponentProps as IconProps } from '../Icon'
 import { getIconComponent, getItemStyle } from './appNaviHelper'
+import { useClassNames } from './useClassNames'
 
 export type AppNaviCustomTagProps = {
   children: ReactNode
@@ -25,6 +24,7 @@ export const AppNaviCustomTag: VFC<InnerProps> = ({
   ...props
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
   const iconComponent = getIconComponent(theme, { icon, current })
 
   if (current) {
@@ -35,6 +35,7 @@ export const AppNaviCustomTag: VFC<InnerProps> = ({
           as={tag}
           $themes={theme}
           aria-current="page"
+          className={classNames.customTag}
           {...props}
           {...unclickableProps}
         >
@@ -44,7 +45,13 @@ export const AppNaviCustomTag: VFC<InnerProps> = ({
       )
     }
     return (
-      <Active as={tag} $themes={theme} aria-current="page" {...props}>
+      <Active
+        as={tag}
+        $themes={theme}
+        aria-current="page"
+        className={classNames.customTag}
+        {...props}
+      >
         {iconComponent}
         {children}
       </Active>
@@ -52,7 +59,7 @@ export const AppNaviCustomTag: VFC<InnerProps> = ({
   }
 
   return (
-    <InActive as={tag} $themes={theme} {...props}>
+    <InActive as={tag} $themes={theme} className={classNames.customTag} {...props}>
       {iconComponent}
       {children}
     </InActive>
