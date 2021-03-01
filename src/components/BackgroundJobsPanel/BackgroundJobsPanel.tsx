@@ -1,4 +1,4 @@
-import React, { VFC, useEffect, useState } from 'react'
+import React, { ComponentProps, VFC, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { useId } from '../../hooks/useId'
 
@@ -28,16 +28,17 @@ type Props = {
   onClickCancelJob?: (jobId: JobId) => void
   onClickExpansion?: (isExpanded: boolean) => void
   onClickClose?: () => void
-  className?: string
 }
 
-export const BackgroundJobsPanel: VFC<Props> = ({
+type ElementProps = Omit<ComponentProps<typeof Base>, keyof Props>
+
+export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
   title,
   jobs,
   onClickCancelJob,
   onClickExpansion,
   onClickClose,
-  className,
+  className = '',
   ...props
 }) => {
   const themes = useTheme()
