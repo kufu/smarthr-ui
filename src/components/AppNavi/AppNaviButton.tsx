@@ -1,10 +1,9 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled from 'styled-components'
-
 import { useTheme } from '../../hooks/useTheme'
-
 import { IconNames, ComponentProps as IconProps } from '../Icon'
 import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
+import { useClassNames } from './useClassNames'
 
 export type AppNaviButtonProps = {
   children: ReactNode
@@ -17,7 +16,7 @@ type InnerProps = AppNaviButtonProps & {
   isUnclickable?: boolean
 }
 
-export const AppNaviButton: FC<InnerProps> = ({
+export const AppNaviButton: VFC<InnerProps> = ({
   children,
   icon,
   current = false,
@@ -25,6 +24,7 @@ export const AppNaviButton: FC<InnerProps> = ({
   onClick,
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
   const iconComponent = getIconComponent(theme, { icon, current })
 
   return (
@@ -36,6 +36,7 @@ export const AppNaviButton: FC<InnerProps> = ({
       disabled={isUnclickable}
       isUnclickable={isUnclickable}
       type="button"
+      className={classNames.button}
     >
       {iconComponent}
       {children}

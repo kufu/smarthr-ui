@@ -1,10 +1,9 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled from 'styled-components'
-
 import { useTheme } from '../../hooks/useTheme'
-
 import { IconNames, ComponentProps as IconProps } from '../Icon'
 import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
+import { useClassNames } from './useClassNames'
 
 export type AppNaviAnchorProps = {
   children: ReactNode
@@ -16,7 +15,7 @@ type InnerProps = AppNaviAnchorProps & {
   isUnclickable?: boolean
 }
 
-export const AppNaviAnchor: FC<InnerProps> = ({
+export const AppNaviAnchor: VFC<InnerProps> = ({
   children,
   href,
   icon,
@@ -24,6 +23,7 @@ export const AppNaviAnchor: FC<InnerProps> = ({
   isUnclickable = false,
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
   const iconComponent = getIconComponent(theme, { icon, current })
 
   return (
@@ -33,6 +33,7 @@ export const AppNaviAnchor: FC<InnerProps> = ({
       href={isUnclickable ? undefined : href}
       isActive={current}
       isUnclickable={isUnclickable}
+      className={classNames.anchor}
     >
       {iconComponent}
       {children}

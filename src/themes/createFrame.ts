@@ -30,6 +30,9 @@ export interface CreatedFrameTheme {
   }
 }
 
+/**
+ * @deprecated The defaultFrame will be deprecated, please use defaultBorder or defaultRadius instead
+ */
 export const defaultFrame: CreatedFrameTheme = {
   border: {
     lineWidth,

@@ -1,4 +1,11 @@
-import React, { ComponentProps, FC, FunctionComponentElement, ReactNode, useEffect } from 'react'
+import React, {
+  ComponentProps,
+  FunctionComponentElement,
+  HTMLAttributes,
+  ReactNode,
+  VFC,
+  useEffect,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { TertiaryLink } from './TertiaryLink'
@@ -12,6 +19,7 @@ import {
   SecondaryButtonAnchor,
 } from '../Button'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 export type Primary =
   | FunctionComponentElement<ComponentProps<typeof PrimaryButton>>
@@ -20,6 +28,8 @@ export type Primary =
 export type Secondary =
   | FunctionComponentElement<ComponentProps<typeof SecondaryButton>>
   | FunctionComponentElement<ComponentProps<typeof SecondaryButtonAnchor>>
+
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 type Props = {
   description?: ReactNode
@@ -30,34 +40,40 @@ type Props = {
   className?: string
 }
 
-export const BottomFixedArea: FC<Props> = (props) => {
+export const BottomFixedArea: VFC<Props & ElementProps> = ({
+  description,
+  primaryButton,
+  secondaryButton,
+  tertiaryLinks,
+  zIndex = 500,
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
-  const {
-    description,
-    primaryButton,
-    secondaryButton,
-    tertiaryLinks,
-    zIndex = 500,
-    className = '',
-  } = props
+  const classNames = useClassNames()
 
   useEffect(() => {
     validateElement(primaryButton, secondaryButton)
   }, [primaryButton, secondaryButton])
 
   return (
-    <Base themes={theme} zIndex={zIndex} className={className}>
-      {description && <Text>{description}</Text>}
+    <Base
+      themes={theme}
+      zIndex={zIndex}
+      className={`${className} ${classNames.wrapper}`}
+      {...props}
+    >
+      {description && <Text className={classNames.description}>{description}</Text>}
       {(secondaryButton || primaryButton) && (
-        <ButtonList themes={theme}>
-          {secondaryButton && <li>{secondaryButton}</li>}
-          {primaryButton && <li>{primaryButton}</li>}
+        <ButtonList themes={theme} className={classNames.buttonList}>
+          {secondaryButton && <li className={classNames.secondaryButton}>{secondaryButton}</li>}
+          {primaryButton && <li className={classNames.primaryButton}>{primaryButton}</li>}
         </ButtonList>
       )}
       {tertiaryLinks && tertiaryLinks.length > 0 && (
-        <TertiaryList themes={theme}>
+        <TertiaryList themes={theme} className={classNames.tertiaryList}>
           {tertiaryLinks.map((tertiaryLink, index) => (
-            <li key={index}>
+            <li key={index} className={classNames.tertiaryListItem}>
               <TertiaryLink {...tertiaryLink} />
             </li>
           ))}
