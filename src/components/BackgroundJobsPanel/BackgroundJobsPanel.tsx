@@ -9,6 +9,7 @@ import { ResetButton } from '../Button/ResetButton'
 import { FaMinusIcon, FaTimesIcon, FaWindowMaximizeIcon } from '../Icon'
 import { JobIcon } from './JobIcon'
 import { OmittableJobText } from './OmittableJobText'
+import { useClassNames } from './useClassNames'
 
 type JobId = string | number
 export type Status = 'processing' | 'downloading' | 'warning' | 'error' | 'done'
@@ -42,6 +43,7 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
   ...props
 }) => {
   const themes = useTheme()
+  const { backgroundJobsPanel: classNames } = useClassNames()
   const isExpansionControlled = props.isExpanded !== undefined
 
   const [isExpanded, setIsExpanded] = useState(isExpansionControlled ? !!props.isExpanded : true)
@@ -54,9 +56,11 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
   const jobListId = useId()
 
   return (
-    <Container themes={themes} className={className}>
+    <Container themes={themes} className={`${className} ${classNames.wrapper}`}>
       <Header>
-        <Title themes={themes}>{title}</Title>
+        <Title themes={themes} className={classNames.title}>
+          {title}
+        </Title>
         <HeaderButtonLayout themes={themes}>
           <SecondaryButton
             type="button"
@@ -70,19 +74,26 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
             }}
             aria-expanded={isExpanded}
             aria-controls={jobListId}
+            className={classNames.toggleButton}
           >
             {isExpanded ? <FaMinusIcon size={13} /> : <FaWindowMaximizeIcon size={13} />}
           </SecondaryButton>
-          <SecondaryButton type="button" size="s" square onClick={onClickClose}>
+          <SecondaryButton
+            type="button"
+            size="s"
+            square
+            onClick={onClickClose}
+            className={classNames.closeButton}
+          >
             <FaTimesIcon size={13} aria-label="Close" />
           </SecondaryButton>
         </HeaderButtonLayout>
       </Header>
-      <JobList themes={themes} isExpanded={isExpanded} id={jobListId}>
+      <JobList themes={themes} isExpanded={isExpanded} id={jobListId} className={classNames.list}>
         {jobs.map((job) => {
           const handleClickCancelJob = onClickCancelJob ? () => onClickCancelJob(job.id) : undefined
           return (
-            <Job key={job.id} themes={themes}>
+            <Job key={job.id} themes={themes} className={classNames.listItem}>
               <JobIconWrapper>
                 <JobIcon status={job.status} />
               </JobIconWrapper>
