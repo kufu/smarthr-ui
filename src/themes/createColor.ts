@@ -30,12 +30,12 @@ export type CreatedColorTheme = Palette & {
 
 export const defaultColor = {
   TEXT_BLACK: '#23221f',
-  TEXT_GREY: '#76736a',
+  TEXT_GREY: '#706d65',
   TEXT_DISABLED: '#c1bdb7',
-  TEXT_LINK: '#0077c7',
+  TEXT_LINK: '#0071c1',
   BORDER: '#d6d3d0',
   BACKGROUND: '#f8f7f6',
-  COLUMN: '#f9f8f7',
+  COLUMN: '#f8f7f6',
   HEAD: '#edebe8',
   BASE_GREY: '#f5f4f3',
   MAIN: '#0077c7',
