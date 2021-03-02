@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
@@ -15,19 +15,27 @@ import {
   rightSpin,
   spinnerEasing,
 } from './loaderAnimation'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   size?: 's' | 'm'
-  className?: string
   text?: string
   type?: 'primary' | 'light'
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const Loader: FC<Props> = ({ size = 'm', className = '', text = '', type = 'primary' }) => {
+export const Loader: FC<Props & ElementProps> = ({
+  size = 'm',
+  text = '',
+  type = 'primary',
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper className={className} role="status">
+    <Wrapper className={`${className} ${classNames.wrapper}`} role="status" {...props}>
       <Spinner className={size}>
         {[...Array(4)].map((_, index) => (
           <Line className={`line${index + 1} ${type}`} key={index} themes={theme}>

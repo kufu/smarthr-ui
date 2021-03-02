@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
@@ -8,7 +8,7 @@ type Props = CheckBoxProps & {
   label: string
 }
 
-export const CheckBoxLabel: FC<Props> = ({ label, className = '', ...props }) => {
+export const CheckBoxLabel: VFC<Props> = ({ label, className = '', ...props }) => {
   const theme = useTheme()
 
   return (

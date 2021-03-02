@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react'
+import React, { VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { transparentize } from 'polished'
 
@@ -11,7 +11,7 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   mixed?: boolean
 }
 
-export const CheckBox: FC<Props> = ({ mixed = false, className = '', onChange, ...props }) => {
+export const CheckBox: VFC<Props> = ({ mixed = false, className = '', onChange, ...props }) => {
   const theme = useTheme()
   const classNames = useClassNames()
   const { checked, disabled } = props

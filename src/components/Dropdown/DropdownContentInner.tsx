@@ -1,4 +1,4 @@
-import React, { FC, createContext, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import React, { VFC, createContext, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -23,7 +23,7 @@ export const DropdownContentInnerContext = createContext<DropdownContentInnerCon
   maxHeight: '',
 })
 
-export const DropdownContentInner: FC<Props> = ({
+export const DropdownContentInner: VFC<Props> = ({
   triggerRect,
   scrollable,
   children,

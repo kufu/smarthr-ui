@@ -15,7 +15,7 @@ import {
 } from '.'
 import readme from './README.md'
 
-const FormDialog: React.FC = () => {
+const FormDialog: React.VFC = () => {
   const [value, setValue] = useState('hoge')
   const [text, setText] = useState('')
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)

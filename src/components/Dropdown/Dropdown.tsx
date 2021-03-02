@@ -1,7 +1,7 @@
 import React, {
-  FC,
   MutableRefObject,
   ReactNode,
+  VFC,
   createContext,
   useContext,
   useEffect,
@@ -26,7 +26,7 @@ type DropdownContextType = {
   rootTriggerRef: MutableRefObject<HTMLDivElement | null> | null
   onClickTrigger: (rect: Rect) => void
   onClickCloser: () => void
-  DropdownContentRoot: FC<{ children: ReactNode }>
+  DropdownContentRoot: VFC<{ children: ReactNode }>
   contentId: string
 }
 
@@ -47,7 +47,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   contentId: '',
 })
 
-export const Dropdown: FC<Props> = ({ children }) => {
+export const Dropdown: VFC<Props> = ({ children }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
@@ -75,7 +75,7 @@ export const Dropdown: FC<Props> = ({ children }) => {
   }, [isChildPortal, portalRoot])
 
   // This is the root container of a dropdown content located in outside the DOM tree
-  const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(
+  const DropdownContentRoot = useMemo<VFC<{ children: ReactNode }>>(
     () => (props) => {
       if (!active) return null
       return createPortal(props.children, portalRoot)

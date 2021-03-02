@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, ReactNode } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -15,21 +15,24 @@ export type Props = {
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-const balloonFactory: (theme: BalloonTheme) => FC<Props & ElementProps> = (theme) => ({
-  horizontal,
-  vertical,
-  className = '',
-  ...props
-}) => {
-  if (horizontal === 'center' && vertical === 'middle') {
-    throw new Error('"vertical" can not be specified as "middle" when "horizontal" is "center".')
+const balloonFactory = (theme: BalloonTheme) => {
+  const Balloon: VFC<Props & ElementProps> = ({
+    horizontal,
+    vertical,
+    className = '',
+    ...props
+  }) => {
+    if (horizontal === 'center' && vertical === 'middle') {
+      throw new Error('"vertical" can not be specified as "middle" when "horizontal" is "center".')
+    }
+
+    const themes = useTheme()
+    const { wrapper } = useClassNames()
+    const classNames = `${theme} ${horizontal} ${vertical} ${className} ${wrapper}`
+
+    return <Base className={classNames} themes={themes} {...props} />
   }
-
-  const themes = useTheme()
-  const { wrapper } = useClassNames()
-  const classNames = `${theme} ${horizontal} ${vertical} ${className} ${wrapper}`
-
-  return <Base className={classNames} themes={themes} {...props} />
+  return Balloon
 }
 
 export const LightBalloon = balloonFactory('light')
