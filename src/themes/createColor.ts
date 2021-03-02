@@ -8,6 +8,7 @@ type Palette = {
   TEXT_DISABLED: string
   TEXT_LINK: string
   BORDER: string
+  ACTION_BACKGROUND: string
   BACKGROUND: string
   COLUMN: string
   OVER_BACKGROUND: string
@@ -35,6 +36,7 @@ export const defaultColor = {
   TEXT_DISABLED: '#c1bdb7',
   TEXT_LINK: '#0071c1',
   BORDER: '#d6d3d0',
+  ACTION_BACKGROUND: '#d6d3d0',
   BACKGROUND: '#f8f7f6',
   COLUMN: '#f8f7f6',
   OVER_BACKGROUND: '#f2f1f0',
