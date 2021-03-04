@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react'
+import React, { VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -14,13 +14,14 @@ export type BaseProps = {
   actionTheme: 'primary' | 'secondary' | 'danger'
   onClickAction: (closeDialog: () => void) => void
   actionDisabled?: boolean
+  closeDisabled?: boolean
 }
 
-type Props = BaseProps & {
+export type ActionDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
 }
 
-export const ActionDialogContentInner: FC<Props> = ({
+export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   children,
   title,
   closeText,
@@ -29,6 +30,7 @@ export const ActionDialogContentInner: FC<Props> = ({
   onClickAction,
   onClickClose,
   actionDisabled = false,
+  closeDisabled,
 }) => {
   const theme = useTheme()
   const handleClickAction = useCallback(() => {
@@ -47,7 +49,9 @@ export const ActionDialogContentInner: FC<Props> = ({
       </Title>
       <Body offsetHeight={offsetHeight}>{children}</Body>
       <Bottom themes={theme} ref={bottomRef}>
-        <SecondaryButton onClick={onClickClose}>{closeText}</SecondaryButton>
+        <SecondaryButton onClick={onClickClose} disabled={closeDisabled}>
+          {closeText}
+        </SecondaryButton>
         <ActionButton onClick={handleClickAction} disabled={actionDisabled}>
           {actionText}
         </ActionButton>

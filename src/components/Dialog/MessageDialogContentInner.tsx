@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -12,11 +12,11 @@ export type BaseProps = {
   closeText: string
 }
 
-type Props = BaseProps & {
+export type MessageDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
 }
 
-export const MessageDialogContentInner: FC<Props> = ({
+export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   title,
   description,
   closeText,

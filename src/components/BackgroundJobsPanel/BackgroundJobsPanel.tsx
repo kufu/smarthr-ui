@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { VFC, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { useId } from '../../hooks/useId'
 
@@ -6,7 +6,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
 import { SecondaryButton } from '../Button'
 import { ResetButton } from '../Button/ResetButton'
-import { Icon } from '../Icon'
+import { FaMinusIcon, FaTimesIcon, FaWindowMaximizeIcon } from '../Icon'
 import { JobIcon } from './JobIcon'
 import { OmittableJobText } from './OmittableJobText'
 
@@ -31,7 +31,7 @@ type Props = {
   className?: string
 }
 
-export const BackgroundJobsPanel: FC<Props> = ({
+export const BackgroundJobsPanel: VFC<Props> = ({
   title,
   jobs,
   onClickCancelJob,
@@ -70,10 +70,10 @@ export const BackgroundJobsPanel: FC<Props> = ({
             aria-expanded={isExpanded}
             aria-controls={jobListId}
           >
-            <Icon name={isExpanded ? 'fa-minus' : 'fa-window-maximize'} size={13} />
+            {isExpanded ? <FaMinusIcon size={13} /> : <FaWindowMaximizeIcon size={13} />}
           </SecondaryButton>
           <SecondaryButton type="button" size="s" square onClick={onClickClose}>
-            <Icon name="fa-times" size={13} aria-label="Close" />
+            <FaTimesIcon size={13} aria-label="Close" />
           </SecondaryButton>
         </HeaderButtonLayout>
       </Header>

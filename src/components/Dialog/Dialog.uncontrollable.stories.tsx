@@ -15,7 +15,7 @@ import {
 } from '.'
 import readme from './README.md'
 
-const FormDialog: React.FC = () => {
+const FormDialog: React.VFC = () => {
   const [value, setValue] = useState('hoge')
   const [text, setText] = useState('')
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
@@ -24,9 +24,11 @@ const FormDialog: React.FC = () => {
   return (
     <DialogWrapper>
       <DialogTrigger>
-        <SecondaryButton>Dialog</SecondaryButton>
+        <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-uncontrollable-1">
+          Dialog
+        </SecondaryButton>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent id="dialog-uncontrollable-1">
         <Inner>
           <ul>
             <li>
@@ -84,11 +86,11 @@ storiesOf('Dialog', module)
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton>
+            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-uncontrollable-2">
               Modal position can be changed. top: 50px, left: 200px.
             </SecondaryButton>
           </DialogTrigger>
-          <DialogContent top={50} left={200}>
+          <DialogContent top={50} left={200} id="dialog-uncontrollable-2">
             <Inner>
               <Text>Rendered!!</Text>
               <DialogCloser>
@@ -101,9 +103,11 @@ storiesOf('Dialog', module)
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton>right: 50px, bottom: 100px.</SecondaryButton>
+            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-uncontrollable-3">
+              right: 50px, bottom: 100px.
+            </SecondaryButton>
           </DialogTrigger>
-          <DialogContent right={50} bottom={100}>
+          <DialogContent right={50} bottom={100} id="dialog-uncontrollable-3">
             <Inner>
               <Text>Rendered!!</Text>
               <DialogCloser>
@@ -116,7 +120,7 @@ storiesOf('Dialog', module)
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton>MessageDialog</SecondaryButton>
+            <SecondaryButton aria-controls="dialog-uncontrollable-4">MessageDialog</SecondaryButton>
           </DialogTrigger>
           <MessageDialogContent
             title="Title Message"
@@ -136,13 +140,16 @@ storiesOf('Dialog', module)
               </p>
             }
             closeText="close"
+            id="dialog-uncontrollable-4"
           />
         </DialogWrapper>
       </li>
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton>ActionDialog</SecondaryButton>
+            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-uncontrollable-5">
+              ActionDialog
+            </SecondaryButton>
           </DialogTrigger>
           <ActionDialogContent
             title="Title Message"
@@ -154,6 +161,7 @@ storiesOf('Dialog', module)
               action('executed')()
               setTimeout(closeDialog, 1000)
             }}
+            id="dialog-uncontrollable-5"
           >
             <ActionDialogInner>
               The content of ActionDialogContent is freely implemented by the user as children.

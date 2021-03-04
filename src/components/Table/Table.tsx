@@ -26,7 +26,7 @@ export const Table: FC<Props> = ({ children, className = '' }) => {
 
 const Wrapper = styled.table<{ themes: Theme }>`
   ${({ themes }) => {
-    const { COLUMN } = themes.palette
+    const { COLUMN, HEAD } = themes.palette
 
     return css`
       width: 100%;
@@ -35,7 +35,7 @@ const Wrapper = styled.table<{ themes: Theme }>`
       background-color: ${COLUMN};
 
       th {
-        background-color: ${COLUMN};
+        background-color: ${HEAD};
       }
     `
   }}

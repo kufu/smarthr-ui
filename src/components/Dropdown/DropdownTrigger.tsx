@@ -2,14 +2,14 @@ import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { DropdownContext } from './Dropdown'
-import { tabbable } from './tabbable'
+import { tabbable } from '../../libs/tabbable'
 
 type Props = {
   children: React.ReactNode
   className?: string
 }
 
-export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) => {
+export const DropdownTrigger: React.VFC<Props> = ({ children, className = '' }) => {
   const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
 
   useEffect(() => {

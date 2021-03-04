@@ -1,16 +1,14 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled from 'styled-components'
-
 import { useTheme } from '../../hooks/useTheme'
-
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
-import { Props as IconProps } from '../Icon'
+import { IconNames, ComponentProps as IconProps } from '../Icon'
 import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
 
 export type AppNaviDropdownProps = {
   children: ReactNode
   dropdownContent: ReactNode
-  icon?: IconProps['name']
+  icon?: IconNames | React.ComponentType<IconProps>
   current?: boolean
 }
 
@@ -18,7 +16,7 @@ type InnerProps = AppNaviDropdownProps & {
   isUnclickable?: boolean
 }
 
-export const AppNaviDropdown: FC<InnerProps> = ({
+export const AppNaviDropdown: VFC<InnerProps> = ({
   children,
   dropdownContent,
   icon,

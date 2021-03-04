@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { HTMLAttributes, useCallback, useEffect, useState } from 'react'
 
 import { flatArrayToMap } from '../../libs/map'
 import { getNewExpandedItems } from './accordionPanelHelper'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   children: React.ReactNode
@@ -12,6 +13,7 @@ type Props = {
   className?: string
   onClick?: (expandedItems: string[]) => void
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const AccordionPanelContext = React.createContext<{
   iconPosition: 'left' | 'right'
@@ -27,7 +29,7 @@ export const AccordionPanelContext = React.createContext<{
   expandableMultiply: false,
 })
 
-export const AccordionPanel: React.FC<Props> = ({
+export const AccordionPanel: React.VFC<Props & ElementProps> = ({
   children,
   iconPosition = 'left',
   displayIcon = true,
@@ -35,8 +37,10 @@ export const AccordionPanel: React.FC<Props> = ({
   defaultExpanded = [],
   className = '',
   onClick: onClickProps,
+  ...props
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
+  const classNames = useClassNames()
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
@@ -60,7 +64,9 @@ export const AccordionPanel: React.FC<Props> = ({
         expandableMultiply,
       }}
     >
-      <div className={className}>{children}</div>
+      <div className={`${className} ${classNames.wrapper}`} {...props}>
+        {children}
+      </div>
     </AccordionPanelContext.Provider>
   )
 }

@@ -1,37 +1,51 @@
-import React, { FC, ReactNode } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
-
 import { Theme, useTheme } from '../../hooks/useTheme'
-
 import { StatusLabel as StatusLabelComponent } from '../StatusLabel/StatusLabel'
 import { AppNaviButton, AppNaviButtonProps } from './AppNaviButton'
 import { AppNaviAnchor, AppNaviAnchorProps } from './AppNaviAnchor'
 import { AppNaviDropdown, AppNaviDropdownProps } from './AppNaviDropdown'
 import { AppNaviCustomTag, AppNaviCustomTagProps } from './AppNaviCustomTag'
+import { useClassNames } from './useClassNames'
 
-interface Props {
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+
+type Props = {
   label?: string
   buttons?: Array<
     AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
   >
   isCurrentUnclickable?: boolean
   children?: ReactNode
+  className?: string
 }
 
-export const AppNavi: FC<Props> = ({ label, buttons, isCurrentUnclickable, children = null }) => {
+export const AppNavi: VFC<Props & ElementProps> = ({
+  label,
+  buttons,
+  isCurrentUnclickable,
+  className = '',
+  children = null,
+  ...props
+}) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper themes={theme}>
-      {label && <StatusLabel themes={theme}>{label}</StatusLabel>}
+    <Wrapper themes={theme} className={`${className} ${classNames.wrapper}`} {...props}>
+      {label && (
+        <StatusLabel themes={theme} className={classNames.label}>
+          {label}
+        </StatusLabel>
+      )}
 
       {buttons && (
-        <Buttons themes={theme}>
+        <Buttons themes={theme} className={classNames.buttons}>
           {buttons.map((button, i) => {
             const isUnclickable = button.current && isCurrentUnclickable
             if ('href' in button) {
               return (
-                <li key={i}>
+                <li key={i} className={classNames.listItem}>
                   <AppNaviAnchor
                     href={button.href}
                     icon={button.icon}
@@ -46,7 +60,7 @@ export const AppNavi: FC<Props> = ({ label, buttons, isCurrentUnclickable, child
 
             if ('dropdownContent' in button) {
               return (
-                <li key={i}>
+                <li key={i} className={classNames.listItem}>
                   <AppNaviDropdown
                     dropdownContent={button.dropdownContent}
                     icon={button.icon}
@@ -60,15 +74,15 @@ export const AppNavi: FC<Props> = ({ label, buttons, isCurrentUnclickable, child
             }
 
             if ('tag' in button) {
-              const { tag, icon, current, children: buttonChildren, ...props } = button
+              const { tag, icon, current, children: buttonChildren, ...buttonProps } = button
               return (
-                <li key={i}>
+                <li key={i} className={classNames.listItem}>
                   <AppNaviCustomTag
                     tag={tag}
                     icon={icon}
                     current={current}
                     isUnclickable={isUnclickable}
-                    {...props}
+                    {...buttonProps}
                   >
                     {buttonChildren}
                   </AppNaviCustomTag>
@@ -77,7 +91,7 @@ export const AppNavi: FC<Props> = ({ label, buttons, isCurrentUnclickable, child
             }
 
             return (
-              <li key={i}>
+              <li key={i} className={classNames.listItem}>
                 <AppNaviButton
                   icon={button.icon}
                   current={button.current}

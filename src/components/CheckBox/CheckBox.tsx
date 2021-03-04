@@ -1,17 +1,19 @@
-import React, { FC, useCallback } from 'react'
+import React, { VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { transparentize } from 'polished'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
-import { Icon } from '../Icon'
+import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   mixed?: boolean
 }
 
-export const CheckBox: FC<Props> = ({ mixed = false, className = '', onChange, ...props }) => {
+export const CheckBox: VFC<Props> = ({ mixed = false, className = '', onChange, ...props }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
   const { checked, disabled } = props
   const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
   const handleChange = useCallback(
@@ -22,7 +24,7 @@ export const CheckBox: FC<Props> = ({ mixed = false, className = '', onChange, .
   )
 
   return (
-    <Wrapper className={className} themes={theme}>
+    <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
       <Input
         {...props}
         type="checkbox"
@@ -33,7 +35,7 @@ export const CheckBox: FC<Props> = ({ mixed = false, className = '', onChange, .
       <Box className={boxClassName} themes={theme} />
       {checked && (
         <IconWrap themes={theme}>
-          <Icon name={mixed ? 'fa-minus' : 'fa-check'} size={10} color="#fff" />
+          {mixed ? <FaMinusIcon size={10} color="#fff" /> : <FaCheckIcon size={10} color="#fff" />}
         </IconWrap>
       )}
     </Wrapper>

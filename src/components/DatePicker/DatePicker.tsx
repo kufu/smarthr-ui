@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
+import React, { VFC, useCallback, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -8,7 +8,7 @@ import { useGlobalKeyDown } from './useGlobalKeyDown'
 import { parseJpnDateString } from './datePickerHelper'
 
 import { Input } from '../Input'
-import { Icon } from '../Icon'
+import { FaCalendarAltIcon } from '../Icon'
 import { Calendar } from '../Calendar'
 import { Portal } from './Portal'
 
@@ -24,8 +24,9 @@ type Props = {
   formatDate?: (date: Date | null) => string
   onChangeDate?: (date: Date | null, value: string) => void
 }
+type InputAttributes = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
-export const DatePicker: FC<Props> = ({
+export const DatePicker: VFC<Props & InputAttributes> = ({
   value,
   name,
   from,
@@ -36,6 +37,7 @@ export const DatePicker: FC<Props> = ({
   parseInput,
   formatDate,
   onChangeDate,
+  ...inputAttrs
 }) => {
   const stringToDate = useCallback(
     (str?: string | null) => {
@@ -190,6 +192,7 @@ export const DatePicker: FC<Props> = ({
     >
       <InputWrapper ref={inputWrapperRef}>
         <StyledInput
+          {...inputAttrs}
           type="text"
           name={name}
           onChange={() => {
@@ -219,8 +222,7 @@ export const DatePicker: FC<Props> = ({
           suffix={
             <CalendarIconLayout themes={themes}>
               <CalendarIconWrapper themes={themes}>
-                <Icon
-                  name="fa-calendar-alt"
+                <FaCalendarAltIcon
                   color={
                     isInputFocused || isCalendarShown
                       ? themes.palette.TEXT_BLACK

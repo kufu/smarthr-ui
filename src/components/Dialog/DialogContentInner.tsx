@@ -1,12 +1,13 @@
-import React, { FC, ReactNode, useRef } from 'react'
+import React, { ReactNode, VFC, useCallback, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { DialogPositionProvider } from './DialogPositionProvider'
+import { FocusTrap } from './FocusTrap'
 
-type Props = {
+export type DialogContentInnerProps = {
   onClickOverlay?: () => void
   onPressEscape?: () => void
   isOpen: boolean
@@ -14,6 +15,7 @@ type Props = {
   right?: number
   bottom?: number
   left?: number
+  id?: string
   ariaLabel?: string
   ariaLabelledby?: string
   children: ReactNode
@@ -30,12 +32,13 @@ function exist(value: any) {
   return value !== undefined && value !== null
 }
 
-export const DialogContentInner: FC<Props> = ({
+export const DialogContentInner: VFC<DialogContentInnerProps> = ({
   onClickOverlay,
   onPressEscape = () => {
     /* noop */
   },
   isOpen,
+  id,
   ariaLabel,
   ariaLabelledby,
   children,
@@ -43,7 +46,16 @@ export const DialogContentInner: FC<Props> = ({
 }) => {
   const theme = useTheme()
   const domRef = useRef(null)
-  useHandleEscape(onPressEscape)
+  const innerRef = useRef<HTMLDivElement>(null)
+  const focusTarget = useRef<HTMLDivElement>(null)
+  useHandleEscape(
+    useCallback(() => {
+      if (!isOpen) {
+        return
+      }
+      onPressEscape()
+    }, [isOpen, onPressEscape]),
+  )
 
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
@@ -59,6 +71,7 @@ export const DialogContentInner: FC<Props> = ({
         }}
         appear
         unmountOnExit
+        id={id}
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}
@@ -66,9 +79,13 @@ export const DialogContentInner: FC<Props> = ({
       >
         <Wrapper ref={domRef} themes={theme}>
           <Background onClick={onClickOverlay} themes={theme} />
-          <Inner themes={theme} {...props}>
-            {children}
-          </Inner>
+          <FocusTrap>
+            <Inner ref={innerRef} themes={theme} role="dialog" aria-modal="true" {...props}>
+              {/* dummy element for focus management. */}
+              <div ref={focusTarget} tabIndex={-1} aria-label={ariaLabel}></div>
+              {children}
+            </Inner>
+          </FocusTrap>
           {/* Suppresses scrolling of body while modal is displayed */}
           <ScrollSuppressing />
         </Wrapper>

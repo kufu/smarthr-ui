@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -8,26 +8,50 @@ import { isTouchDevice } from '../../libs/ua'
 type Tag = 'button' | 'a'
 type Size = 'default' | 's'
 
-type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
-
-export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'size' | 'prefix'> &
-  BaseProps
-export type AnchorProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'prefix'> & BaseProps
+export type ButtonProps = BaseProps &
+  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
+export type AnchorProps = BaseProps &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseProps>
 
 export type BaseProps = {
+  /**
+   * Size of button.
+   * @default 'default'
+   */
   size?: Size
+  /**
+   * The content of the component.
+   */
   children?: React.ReactNode
+  /**
+   * `className` of component.
+   */
   className?: string
+  /**
+   * The content of the prefix of button content.
+   * Normally, this is for icon insertion.
+   */
   prefix?: React.ReactNode
+  /**
+   * The content of the suffix of button content.
+   * Normally, this is for icon insertion.
+   */
   suffix?: React.ReactNode
+  /**
+   * If `true`, the component shape changes to square.
+   * @default false
+   */
   square?: boolean
+  /**
+   * If `true`, the component shape changes width is 100%
+   */
   wide?: boolean
 }
 
-export const buttonFactory: <Props extends BaseProps>(tag: Tag) => FC<Props> = (tag) => {
-  const Tag = hoverable()(tagStore[tag])
+export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
+  const BaseTag = hoverable()(tagStore[tag])
 
-  return ({
+  const Button: VFC<Props> = ({
     size = 'default',
     className = '',
     square = false,
@@ -42,13 +66,14 @@ export const buttonFactory: <Props extends BaseProps>(tag: Tag) => FC<Props> = (
     const classNames = `${size} ${className} ${square ? 'square' : ''} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
 
     return (
-      <Tag className={classNames} themes={theme} {...props}>
+      <BaseTag className={classNames} themes={theme} {...props}>
         {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
         {children}
         {suffix && <Suffix themes={theme}>{suffix}</Suffix>}
-      </Tag>
+      </BaseTag>
     )
   }
+  return Button
 }
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
@@ -105,6 +130,11 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       &.prefix {
         justify-content: left;
       }
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
     `
   }}
 `
@@ -131,5 +161,5 @@ const tagStore = {
   a: Base.withComponent('a'),
 }
 
-export const BaseButton: FC<ButtonProps> = buttonFactory<ButtonProps>('button')
-export const BaseButtonAnchor: FC<AnchorProps> = buttonFactory<AnchorProps>('a')
+export const BaseButton: VFC<ButtonProps> = buttonFactory<ButtonProps>('button')
+export const BaseButtonAnchor: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')

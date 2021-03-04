@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { VFC, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { LightTooltip } from '../Tooltip'
@@ -8,7 +8,7 @@ type Props = {
   className?: string
 }
 
-export const OmittableJobText: FC<Props> = ({ children, className }) => {
+export const OmittableJobText: VFC<Props> = ({ children, className }) => {
   const [needsOmitting, setNeedsOmitting] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {

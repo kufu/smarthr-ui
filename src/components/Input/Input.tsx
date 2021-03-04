@@ -131,7 +131,8 @@ const Wrapper = styled.span<{
     css`
       border-color: ${palette.hoverColor(palette.MAIN)};
     `}
-    ${error &&
+    ${!$disabled &&
+    error &&
     css`
       border-color: ${palette.DANGER};
     `}
@@ -163,6 +164,7 @@ const StyledInput = styled.input<
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
       outline: none;
+      box-sizing: border-box;
 
       &::placeholder {
         color: ${palette.TEXT_GREY};

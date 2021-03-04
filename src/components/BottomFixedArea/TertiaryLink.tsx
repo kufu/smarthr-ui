@@ -1,21 +1,39 @@
-import React, { FC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
-
-import { Icon, iconMap } from '../Icon'
+import { Icon as DuplicatedIcon, ComponentProps as IconProps, iconMap } from '../Icon'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
+
+type ElementProps = Omit<HTMLAttributes<HTMLButtonElement>, keyof Props>
 
 type Props = {
   text: string
   iconName?: keyof typeof iconMap
+  icon?: React.ComponentType<IconProps>
   type?: 'button' | 'reset'
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-export const TertiaryLink: FC<Props> = ({ text, iconName, type = 'button', onClick }) => {
+export const TertiaryLink: VFC<Props & ElementProps> = ({
+  text,
+  iconName,
+  icon: Icon,
+  type = 'button',
+  onClick,
+  ...props
+}) => {
   const theme = useTheme()
+  const classNames = useClassNames()
+
   return (
-    <Button onClick={onClick} themes={theme} type={type}>
-      {iconName && <Icon size={14} name={iconName} />}
+    <Button
+      onClick={onClick}
+      themes={theme}
+      type={type}
+      className={classNames.tertiaryLink}
+      {...props}
+    >
+      {Icon ? <Icon size={14} /> : iconName ? <DuplicatedIcon size={14} name={iconName} /> : null}
       <Text themes={theme}>{text}</Text>
     </Button>
   )

@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
-import { Icon } from '../Icon'
+import { FaFolderOpenIcon } from '../Icon'
 
 type DropZoneProps = {
   onSelectFiles: (
@@ -11,6 +11,7 @@ type DropZoneProps = {
     files: FileList | null,
   ) => void
   accept?: string
+  children?: React.ReactNode
 }
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
@@ -18,7 +19,7 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.stopPropagation()
 }
 
-export const DropZone: React.FC<DropZoneProps> = ({ children, onSelectFiles, accept }) => {
+export const DropZone: React.VFC<DropZoneProps> = ({ children, onSelectFiles, accept }) => {
   const theme = useTheme()
   const fileRef = useRef<HTMLInputElement>(null)
   const [filesDraggedOver, setFilesDraggedOver] = useState(false)
@@ -64,7 +65,7 @@ export const DropZone: React.FC<DropZoneProps> = ({ children, onSelectFiles, acc
       onDragLeave={onDragLeave}
     >
       {children}
-      <SecondaryButton prefix={<Icon size={14} name="fa-folder-open" />} onClick={onClickButton}>
+      <SecondaryButton prefix={<FaFolderOpenIcon size={14} />} onClick={onClickButton}>
         ファイルを選択
       </SecondaryButton>
       <input ref={fileRef} type="file" multiple accept={accept} onChange={onChange} />

@@ -179,6 +179,7 @@ import {
   FaLongArrowAltLeft,
   FaLongArrowAltRight,
   FaLongArrowAltUp,
+  FaMedkit,
   FaMinus,
   FaMinusCircle,
   FaMinusSquare,
@@ -256,6 +257,7 @@ import {
   FaTable,
   FaTablet,
   FaTabletAlt,
+  FaTachometerAlt,
   FaTag,
   FaTags,
   FaTasks,
@@ -281,6 +283,7 @@ import {
   FaUserAltSlash,
   FaUserCheck,
   FaUserCircle,
+  FaUserClock,
   FaUserCog,
   FaUserEdit,
   FaUserMinus,
@@ -307,16 +310,33 @@ import styled from 'styled-components'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 
 export interface IconProps {
+  /**
+   * Color of Icon.
+   */
   color?: string
+  /**
+   * Size of icon.
+   */
   size?: number
 }
+
+/**
+ * @deprecated The Icon component will be deprecated, so the IconNames also will be deprecated
+ */
+export type IconNames = keyof typeof iconMap
 
 /**
  * @deprecated The Icon component will be deprecated, so the Props also will be deprecated
  */
 export interface Props extends IconProps, React.SVGAttributes<SVGAElement> {
-  name: keyof typeof iconMap
+  name: IconNames
+  /**
+   * The text that is not displayed but exists in DOM for accessibility purposes.
+   */
   visuallyHiddenText?: string
+  /**
+   * `className` of component.
+   */
   className?: string
 }
 
@@ -503,6 +523,7 @@ export const iconMap = {
   'fa-long-arrow-alt-left': FaLongArrowAltLeft,
   'fa-long-arrow-alt-right': FaLongArrowAltRight,
   'fa-long-arrow-alt-up': FaLongArrowAltUp,
+  'fa-medkit': FaMedkit,
   'fa-minus': FaMinus,
   'fa-minus-circle': FaMinusCircle,
   'fa-minus-square': FaMinusSquare,
@@ -580,6 +601,7 @@ export const iconMap = {
   'fa-table': FaTable,
   'fa-tablet': FaTablet,
   'fa-tablet-alt': FaTabletAlt,
+  'fa-tachometer-alt': FaTachometerAlt,
   'fa-tag': FaTag,
   'fa-tags': FaTags,
   'fa-task': FaTasks,
@@ -605,6 +627,7 @@ export const iconMap = {
   'fa-user-alt-slash': FaUserAltSlash,
   'fa-user-check': FaUserCheck,
   'fa-user-circle': FaUserCircle,
+  'fa-user-clock': FaUserClock,
   'fa-user-cog': FaUserCog,
   'fa-user-edit': FaUserEdit,
   'fa-user-minus': FaUserMinus,
@@ -670,12 +693,20 @@ const VisuallyHiddenText = styled.span`
   ${VISUALLY_HIDDEN_STYLE}
 `
 
+// Suppress duplicated warning messages
+const didWarnDeprecatedIcon = new Set()
 /**
  * @deprecated The Icon component will be deprecated, please use indivisual components (e.g. FaAddressBookIcon) instead
  */
-export const Icon: React.FC<Props> = ({ name, ...props }) => (
-  <IconComponent {...props} Component={iconMap[name]} />
-)
+export const Icon: React.FC<Props> = ({ name, ...props }) => {
+  if (process.env.NODE_ENV !== 'production' && !didWarnDeprecatedIcon.has(name)) {
+    console.warn(
+      `<Icon name="${name}" /> is now deprecated and will be removed in the future major release. Please use <${iconMap[name].name}Icon /> instead.`,
+    )
+    didWarnDeprecatedIcon.add(name)
+  }
+  return <IconComponent {...props} Component={iconMap[name]} />
+}
 
 export const FaAddressBookIcon = /*#__PURE__*/ createIcon(FaAddressBook)
 export const FaAddressCardIcon = /*#__PURE__*/ createIcon(FaAddressCard)
@@ -856,6 +887,7 @@ export const FaLongArrowAltDownIcon = /*#__PURE__*/ createIcon(FaLongArrowAltDow
 export const FaLongArrowAltLeftIcon = /*#__PURE__*/ createIcon(FaLongArrowAltLeft)
 export const FaLongArrowAltRightIcon = /*#__PURE__*/ createIcon(FaLongArrowAltRight)
 export const FaLongArrowAltUpIcon = /*#__PURE__*/ createIcon(FaLongArrowAltUp)
+export const FaMedkitIcon = /*#__PURE__*/ createIcon(FaMedkit)
 export const FaMinusIcon = /*#__PURE__*/ createIcon(FaMinus)
 export const FaMinusCircleIcon = /*#__PURE__*/ createIcon(FaMinusCircle)
 export const FaMinusSquareIcon = /*#__PURE__*/ createIcon(FaMinusSquare)
@@ -933,6 +965,7 @@ export const FaSyncAltIcon = /*#__PURE__*/ createIcon(FaSyncAlt)
 export const FaTableIcon = /*#__PURE__*/ createIcon(FaTable)
 export const FaTabletIcon = /*#__PURE__*/ createIcon(FaTablet)
 export const FaTabletAltIcon = /*#__PURE__*/ createIcon(FaTabletAlt)
+export const FaTachometerAltIcon = /*#__PURE__*/ createIcon(FaTachometerAlt)
 export const FaTagIcon = /*#__PURE__*/ createIcon(FaTag)
 export const FaTagsIcon = /*#__PURE__*/ createIcon(FaTags)
 export const FaTasksIcon = /*#__PURE__*/ createIcon(FaTasks)
@@ -958,6 +991,7 @@ export const FaUserAltIcon = /*#__PURE__*/ createIcon(FaUserAlt)
 export const FaUserAltSlashIcon = /*#__PURE__*/ createIcon(FaUserAltSlash)
 export const FaUserCheckIcon = /*#__PURE__*/ createIcon(FaUserCheck)
 export const FaUserCircleIcon = /*#__PURE__*/ createIcon(FaUserCircle)
+export const FaUserClockIcon = /*#__PURE__*/ createIcon(FaUserClock)
 export const FaUserCogIcon = /*#__PURE__*/ createIcon(FaUserCog)
 export const FaUserEditIcon = /*#__PURE__*/ createIcon(FaUserEdit)
 export const FaUserMinusIcon = /*#__PURE__*/ createIcon(FaUserMinus)

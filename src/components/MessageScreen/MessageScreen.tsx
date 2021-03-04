@@ -5,7 +5,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { SmartHRLogo } from '../SmartHRLogo'
 import { Footer } from '../Footer'
-import { Icon } from '../Icon'
+import { FaExternalLinkAltIcon } from '../Icon'
 
 type Props = {
   title?: ReactNode
@@ -53,7 +53,7 @@ export const MessageScreen: FC<Props> = ({ title, links, children, className = '
         )}
       </Box>
 
-      <FooterArea>
+      <FooterArea themes={theme}>
         <Footer />
       </FooterArea>
     </Wrapper>
@@ -67,6 +67,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
     return css`
       display: flex;
       justify-content: center;
+      flex-direction: column;
       align-items: center;
       min-height: 100vh;
       background-color: ${palette.BACKGROUND};
@@ -139,16 +140,19 @@ const Link = styled.a<{ themes: Theme }>`
     `
   }}
 `
-const ExternalIcon = styled(Icon).attrs(() => ({
-  name: 'fa-external-link-alt',
+const ExternalIcon = styled(FaExternalLinkAltIcon).attrs(() => ({
   size: 14,
 }))`
   margin-left: 0.4rem;
   vertical-align: -1px;
 `
-const FooterArea = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+const FooterArea = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { space } = themes.size
+
+    return css`
+      width: 100%;
+      padding-top: ${space.XS}px;
+    `
+  }}
 `

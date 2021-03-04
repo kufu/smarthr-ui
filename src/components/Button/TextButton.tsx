@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -14,12 +14,12 @@ import {
 type ButtonProps = Omit<BaseButtonProps, 'square'>
 type AnchorProps = Omit<BaseAnchorProps, 'square'>
 
-export const TextButton: FC<ButtonProps> = ({ type = 'button', ...props }) => {
+export const TextButton: VFC<ButtonProps> = ({ type = 'button', ...props }) => {
   const theme = useTheme()
   return <TextStyleButton {...props} themes={theme} type={type} />
 }
 
-export const TextButtonAnchor: FC<AnchorProps> = (props) => {
+export const TextButtonAnchor: VFC<AnchorProps> = (props) => {
   const theme = useTheme()
   return <TextStyleButtonAnchor themes={theme} {...props} />
 }
@@ -34,8 +34,10 @@ const textStyle = css`
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       border: ${frame.border.lineWidth} ${frame.border.lineStyle} transparent;
 
-      &.hover {
+      &.hover,
+      &:focus {
         background-color: ${palette.hoverColor('#fff')};
+        color: ${palette.TEXT_BLACK};
       }
 
       &[disabled] {

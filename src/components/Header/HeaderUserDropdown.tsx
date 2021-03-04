@@ -4,7 +4,14 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
-import { Icon } from '../Icon'
+import {
+  FaBuildingIcon,
+  FaCaretDownIcon,
+  FaCogIcon,
+  FaGraduationCapIcon,
+  FaPowerOffIcon,
+  FaUserAltIcon,
+} from '../Icon'
 
 type Props = {
   isAdmin: boolean
@@ -47,7 +54,7 @@ export const HeaderUserDropdown: FC<Props> = ({
           )}
           {displayName}
           <CaretIcon themes={theme} role="presentation">
-            <Icon name="fa-caret-down" color="#fff" />
+            <FaCaretDownIcon color="#fff" />
           </CaretIcon>
         </TriggerButton>
       </DropdownTrigger>
@@ -62,7 +69,7 @@ export const HeaderUserDropdown: FC<Props> = ({
             <MenuListItem role="menuitem">
               <MenuListItemButton onClick={onClickProfile} themes={theme}>
                 <MenuListItemIcon themes={theme}>
-                  <Icon name="fa-user-alt" />
+                  <FaUserAltIcon />
                 </MenuListItemIcon>
                 プロフィールの確認
               </MenuListItemButton>
@@ -72,7 +79,7 @@ export const HeaderUserDropdown: FC<Props> = ({
           <MenuListItem role="menuitem">
             <MenuListItemButton onClick={onClickAccount} themes={theme}>
               <MenuListItemIcon themes={theme}>
-                <Icon name="fa-cog" />
+                <FaCogIcon />
               </MenuListItemIcon>
               個人設定
             </MenuListItemButton>
@@ -91,7 +98,7 @@ export const HeaderUserDropdown: FC<Props> = ({
               <MenuListItem role="menuitem">
                 <MenuListItemButton onClick={onClickCompany} themes={theme}>
                   <MenuListItemIcon themes={theme}>
-                    <Icon name="fa-building" />
+                    <FaBuildingIcon />
                   </MenuListItemIcon>
                   共通設定
                 </MenuListItemButton>
@@ -107,7 +114,7 @@ export const HeaderUserDropdown: FC<Props> = ({
             <MenuListItem role="menuitem">
               <MenuListItemButton onClick={onClickSchool} themes={theme}>
                 <MenuListItemIcon themes={theme}>
-                  <Icon name="fa-graduation-cap" />
+                  <FaGraduationCapIcon />
                 </MenuListItemIcon>
                 SmartHR スクール
               </MenuListItemButton>
@@ -117,7 +124,7 @@ export const HeaderUserDropdown: FC<Props> = ({
           <MenuListItem role="menuitem">
             <MenuListItemButton onClick={onClickLogout} themes={theme}>
               <MenuListItemIcon themes={theme}>
-                <Icon name="fa-power-off" />
+                <FaPowerOffIcon />
               </MenuListItemIcon>
               ログアウト
             </MenuListItemButton>

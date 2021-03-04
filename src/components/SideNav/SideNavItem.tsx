@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { isTouchDevice } from '../../libs/ua'
 import { ResetButton } from '../Button/ResetButton'
+import { useClassNames } from './useClassNames'
 
 export type SideNavSizeType = 'default' | 's'
 export type OnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
@@ -26,15 +27,17 @@ export const SideNavItem: FC<Props> = ({
   onClick,
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
   const handleClick = onClick
     ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, id)
     : undefined
 
+  const itemClassName = `${isSelected ? 'selected' : ''} ${classNames.item}`
   return (
-    <Wrapper className={isSelected ? 'selected' : ''} themes={theme}>
+    <Wrapper className={itemClassName} themes={theme}>
       <Button className={size} themes={theme} onClick={handleClick}>
-        {prefix && <span>{prefix}</span>}
-        {title}
+        {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
+        <span className={classNames.itemTitle}>{title}</span>
       </Button>
     </Wrapper>
   )
@@ -82,6 +85,7 @@ const Button = styled(ResetButton)<{ themes: Theme }>`
       width: 100%;
       line-height: 1;
       box-sizing: border-box;
+      cursor: pointer;
 
       &.default {
         padding: ${size.pxToRem(size.space.XS)};
@@ -92,6 +96,15 @@ const Button = styled(ResetButton)<{ themes: Theme }>`
         padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
         font-size: ${size.pxToRem(size.font.SHORT)};
       }
+    `
+  }}
+`
+const PrefixWrapper = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { size } = themes
+
+    return css`
+      margin-right: ${size.pxToRem(size.space.XXS)};
     `
   }}
 `

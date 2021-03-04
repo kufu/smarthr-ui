@@ -3,32 +3,38 @@ import { action } from '@storybook/addon-actions'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
 import { RadioButtonLabel } from '../RadioButtonLabel'
+import { DatePicker } from '../DatePicker'
 import { ActionDialog, Dialog, MessageDialog } from '.'
 import readme from './README.md'
 
-const DialogController: React.FC = () => {
+const DialogController: React.VFC<{ themes: Theme }> = ({ themes }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState('hoge')
-  const [text, setText] = useState('')
+  const [date, setDate] = useState<Date | null>(null)
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => setIsOpen(false)
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
-  const onChangeText = (txt: string) => setText(txt)
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog">
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-controllable-1"
+      >
         Dialog
       </SecondaryButton>
       <Dialog
         isOpen={isOpen}
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
+        id="dialog-controllable-1"
         ariaLabel="Dialog"
       >
-        <DialogControllerTitle>Dialog</DialogControllerTitle>
+        <DialogControllerTitle themes={themes}>Dialog</DialogControllerTitle>
         <DialogControllerText>
           The value of isOpen must be managed by you, but you can customize content freely.
         </DialogControllerText>
@@ -58,10 +64,14 @@ const DialogController: React.FC = () => {
             />
           </li>
           <li>
-            <input name="test" value={text} onChange={(e) => onChangeText(e.currentTarget.value)} />
+            <DatePicker
+              value={date?.toDateString()}
+              formatDate={(_date) => (_date ? _date.toDateString() : '')}
+              onChangeDate={(_date) => setDate(_date)}
+            />
           </li>
         </DialogControllerBox>
-        <DialogControllerBottom>
+        <DialogControllerBottom themes={themes}>
           <SecondaryButton onClick={onClickClose}>close</SecondaryButton>
         </DialogControllerBottom>
       </Dialog>
@@ -69,14 +79,18 @@ const DialogController: React.FC = () => {
   )
 }
 
-const MessageDialogController: React.FC = () => {
+const MessageDialogController: React.VFC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => setIsOpen(false)
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog">
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-controllable-2"
+      >
         MessageDialog
       </SecondaryButton>
       <MessageDialog
@@ -101,12 +115,13 @@ const MessageDialogController: React.FC = () => {
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
+        id="dialog-controllable-2"
       />
     </div>
   )
 }
 
-const ActionDialogController: React.FC = () => {
+const ActionDialogController: React.VFC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = React.useState('hoge')
   const onClickOpen = () => setIsOpen(true)
@@ -115,7 +130,11 @@ const ActionDialogController: React.FC = () => {
 
   return (
     <div>
-      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog">
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-controllable-3"
+      >
         ActionDialog
       </SecondaryButton>
       <ActionDialog
@@ -131,6 +150,7 @@ const ActionDialogController: React.FC = () => {
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
+        id="dialog-controllable-3"
       >
         <DialogControllerBox>
           <li>
@@ -169,19 +189,23 @@ storiesOf('Dialog', module)
       sidebar: readme,
     },
   })
-  .add('controllable', () => (
-    <List>
-      <li>
-        <DialogController />
-      </li>
-      <li>
-        <MessageDialogController />
-      </li>
-      <li>
-        <ActionDialogController />
-      </li>
-    </List>
-  ))
+  .add('controllable', () => {
+    const themes = useTheme()
+
+    return (
+      <List>
+        <li>
+          <DialogController themes={themes} />
+        </li>
+        <li>
+          <MessageDialogController />
+        </li>
+        <li>
+          <ActionDialogController />
+        </li>
+      </List>
+    )
+  })
 
 const List = styled.ul`
   margin: 0;
@@ -192,12 +216,12 @@ const List = styled.ul`
     margin: 8px;
   }
 `
-const DialogControllerTitle = styled.p`
+const DialogControllerTitle = styled.p<{ themes: Theme }>`
   padding: 16px 24px;
   margin: 0;
   font-size: 18px;
   line-height: 1;
-  border-bottom: 1px solid #d6d6d6;
+  border-bottom: ${({ themes }) => themes.frame.border.default};
 `
 const DialogControllerText = styled.p`
   padding: 16px 24px 0 24px;
@@ -213,11 +237,11 @@ const DialogControllerBox = styled.ul`
     padding: 0;
   }
 `
-const DialogControllerBottom = styled.div`
+const DialogControllerBottom = styled.div<{ themes: Theme }>`
   display: flex;
   justify-content: flex-end;
   padding: 16px 24px;
-  border-top: 1px solid #d6d6d6;
+  border-top: ${({ themes }) => themes.frame.border.default};
 
   & > *:not(:first-child) {
     margin-left: 16px;
