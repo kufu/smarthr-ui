@@ -407,7 +407,7 @@ const RadioList = styled.ul`
 const Footer = styled.div<{ themes: Theme }>`
   display: flex;
   justify-content: flex-end;
-  margin: 16px 24px;
+  padding: 16px 24px;
   border-top: ${({ themes }) => themes.frame.border.default};
 
   & > *:not(:first-child) {
