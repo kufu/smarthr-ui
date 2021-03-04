@@ -162,7 +162,8 @@ export function useListBox({
         aria-hidden={!isExpanded}
       >
         {options.map((option, i) => {
-          const isSelected = activeOptionIndex === i
+          const isActive = activeOptionIndex === i
+          const className = isActive ? 'active' : undefined
           const { label, disabled, isAdding } = option
           if (isAdding) {
             return (
@@ -173,7 +174,7 @@ export function useListBox({
                 onMouseOver={() => setActiveOptionIndex(0)}
                 id={addingButtonId}
                 role="option"
-                aria-selected={isSelected}
+                className={className}
               >
                 <AddIcon size={14} color={theme.palette.TEXT_LINK} $theme={theme} />
                 <AddText themes={theme}>「{label}」を追加</AddText>
@@ -190,7 +191,7 @@ export function useListBox({
               onMouseOver={() => setActiveOptionIndex(i)}
               id={getOptionId(option)}
               role="option"
-              aria-selected={isSelected}
+              className={className}
             >
               {label}
             </SelectButton>
@@ -274,7 +275,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
       text-align: left;
       cursor: pointer;
 
-      &[aria-selected='true'] {
+      &.active {
         background-color: ${palette.COLUMN};
         color: inherit;
       }
