@@ -283,6 +283,7 @@ import {
   FaUserAltSlash,
   FaUserCheck,
   FaUserCircle,
+  FaUserClock,
   FaUserCog,
   FaUserEdit,
   FaUserMinus,
@@ -626,6 +627,7 @@ export const iconMap = {
   'fa-user-alt-slash': FaUserAltSlash,
   'fa-user-check': FaUserCheck,
   'fa-user-circle': FaUserCircle,
+  'fa-user-clock': FaUserClock,
   'fa-user-cog': FaUserCog,
   'fa-user-edit': FaUserEdit,
   'fa-user-minus': FaUserMinus,
@@ -989,6 +991,7 @@ export const FaUserAltIcon = /*#__PURE__*/ createIcon(FaUserAlt)
 export const FaUserAltSlashIcon = /*#__PURE__*/ createIcon(FaUserAltSlash)
 export const FaUserCheckIcon = /*#__PURE__*/ createIcon(FaUserCheck)
 export const FaUserCircleIcon = /*#__PURE__*/ createIcon(FaUserCircle)
+export const FaUserClockIcon = /*#__PURE__*/ createIcon(FaUserClock)
 export const FaUserCogIcon = /*#__PURE__*/ createIcon(FaUserCog)
 export const FaUserEditIcon = /*#__PURE__*/ createIcon(FaUserEdit)
 export const FaUserMinusIcon = /*#__PURE__*/ createIcon(FaUserMinus)
