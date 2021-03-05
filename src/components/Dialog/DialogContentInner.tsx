@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback, useRef } from 'react'
+import React, { ReactNode, VFC, useCallback, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
@@ -32,7 +32,7 @@ function exist(value: any) {
   return value !== undefined && value !== null
 }
 
-export const DialogContentInner: FC<DialogContentInnerProps> = ({
+export const DialogContentInner: VFC<DialogContentInnerProps> = ({
   onClickOverlay,
   onPressEscape = () => {
     /* noop */

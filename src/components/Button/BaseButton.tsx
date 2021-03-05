@@ -48,10 +48,10 @@ export type BaseProps = {
   wide?: boolean
 }
 
-export const buttonFactory: <Props extends BaseProps>(tag: Tag) => VFC<Props> = (tag) => {
+export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
   const BaseTag = hoverable()(tagStore[tag])
 
-  return ({
+  const Button: VFC<Props> = ({
     size = 'default',
     className = '',
     square = false,
@@ -73,6 +73,7 @@ export const buttonFactory: <Props extends BaseProps>(tag: Tag) => VFC<Props> = 
       </BaseTag>
     )
   }
+  return Button
 }
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
