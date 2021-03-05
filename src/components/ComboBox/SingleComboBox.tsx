@@ -1,4 +1,12 @@
-import React, { ChangeEvent, VFC, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import React, {
+  ChangeEvent,
+  VFC,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -44,10 +52,17 @@ export const SingleComboBox: VFC<Props> = ({
   const [isExpanded, setIsExpanded] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
-  const filteredItems = items.filter(({ label }) => {
-    if (!inputValue) return true
-    return label.includes(inputValue)
-  })
+  const filteredItems = useMemo(() => {
+    return items
+      .filter(({ label }) => {
+        if (!inputValue) return true
+        return label.includes(inputValue)
+      })
+      .map((item) => ({
+        ...item,
+        isSelected: selectedItem === null ? false : item.label === selectedItem.label,
+      }))
+  }, [inputValue, items, selectedItem])
   const isDuplicate = items.some((item) => item.label === inputValue)
   const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
   const {

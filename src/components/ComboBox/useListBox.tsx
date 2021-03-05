@@ -9,7 +9,7 @@ import { useId } from '../../hooks/useId'
 import { FaPlusCircleIcon } from '../Icon'
 
 type Args = {
-  items: Array<{ value: string; label: string; disabled?: boolean }>
+  items: Array<{ value: string; label: string; disabled?: boolean; isSelected?: boolean }>
   inputValue: string
   onAdd?: (label: string) => void
   onSelect: (option: { value: string; label: string }) => void
@@ -24,6 +24,7 @@ type Option = {
   value: string
   disabled?: boolean
   isAdding?: boolean
+  isSelected?: boolean
 }
 
 export function useListBox({
@@ -164,7 +165,7 @@ export function useListBox({
         {options.map((option, i) => {
           const isActive = activeOptionIndex === i
           const className = isActive ? 'active' : undefined
-          const { label, disabled, isAdding } = option
+          const { value, label, disabled, isAdding, isSelected } = option
           if (isAdding) {
             return (
               <AddButton
@@ -187,11 +188,12 @@ export function useListBox({
               type="button"
               themes={theme}
               disabled={disabled}
-              onClick={() => onSelect(option)}
+              onClick={() => onSelect({ value, label })}
               onMouseOver={() => setActiveOptionIndex(i)}
               id={getOptionId(option)}
               role="option"
               className={className}
+              aria-selected={isSelected}
             >
               {label}
             </SelectButton>
@@ -278,6 +280,11 @@ const SelectButton = styled.button<{ themes: Theme }>`
       &.active {
         background-color: ${palette.COLUMN};
         color: inherit;
+      }
+
+      &[aria-selected='true'] {
+        background-color: ${palette.MAIN};
+        color: #fff;
       }
 
       &[disabled] {
