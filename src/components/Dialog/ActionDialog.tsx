@@ -11,7 +11,7 @@ type Props = ActionDialogContentInnerProps & {
     'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
   >
 
-export const ActionDialog: React.FC<Props> = ({
+export const ActionDialog: React.VFC<Props> = ({
   children,
   title,
   closeText,

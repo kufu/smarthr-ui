@@ -13,7 +13,7 @@ type Props = MessageDialogContentInnerProps &
     'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
   >
 
-export const MessageDialog: React.FC<Props> = ({
+export const MessageDialog: React.VFC<Props> = ({
   title,
   description,
   closeText,

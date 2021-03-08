@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react'
+import React, { VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -7,21 +7,49 @@ import { useOffsetHeight } from './dialogHelper'
 import { DangerButton, PrimaryButton, SecondaryButton } from '../Button'
 
 export type BaseProps = {
+  /**
+   * Body of the dialog.
+   */
   children: React.ReactNode
+  /**
+   * Title of the dialog.
+   */
   title: string
+  /**
+   * Label of close button.
+   */
   closeText: string
+  /**
+   * Label of action button.
+   */
   actionText: string
+  /**
+   * Action button style theme.
+   */
   actionTheme: 'primary' | 'secondary' | 'danger'
+  /**
+   * Handler function when clicking on action button.<br />
+   * Accepts a function that closes dialog as an argument.
+   */
   onClickAction: (closeDialog: () => void) => void
+  /**
+   * Whether action button should be disabled.
+   */
   actionDisabled?: boolean
+  /**
+   * Whether close button should be disabled.
+   */
   closeDisabled?: boolean
 }
 
 export type ActionDialogContentInnerProps = BaseProps & {
+  /**
+   * Handler function when clicking on close button.
+   */
   onClickClose: () => void
 }
 
-export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
+export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   children,
   title,
   closeText,

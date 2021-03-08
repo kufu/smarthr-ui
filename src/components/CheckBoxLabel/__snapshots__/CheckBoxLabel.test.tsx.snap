@@ -113,7 +113,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
     className="c1"
   >
     <span
-      className="c2"
+      className="c2  smarthr-ui-CheckBox"
     >
       <input
         checked={true}

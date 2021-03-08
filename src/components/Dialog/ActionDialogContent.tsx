@@ -6,7 +6,7 @@ import { ActionDialogContentInner, BaseProps } from './ActionDialogContentInner'
 
 type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
 
-export const ActionDialogContent: React.FC<Props> = ({
+export const ActionDialogContent: React.VFC<Props> = ({
   children,
   title,
   closeText,

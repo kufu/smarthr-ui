@@ -9,7 +9,7 @@ type Props = {
   className?: string
 }
 
-export const DropdownCloser: React.FC<Props> = ({ children, className = '' }) => {
+export const DropdownCloser: React.VFC<Props> = ({ children, className = '' }) => {
   const { onClickCloser, controllable, scrollable } = useContext(DropdownContentContext)
   const { maxHeight } = useContext(DropdownContentInnerContext)
 

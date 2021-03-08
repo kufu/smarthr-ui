@@ -6,7 +6,7 @@ import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInne
 
 type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
 
-export const MessageDialogContent: React.FC<Props> = ({
+export const MessageDialogContent: React.VFC<Props> = ({
   title,
   description,
   closeText,
