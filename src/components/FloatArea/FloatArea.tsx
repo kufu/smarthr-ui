@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, FunctionComponentElement, ReactNode } from 'react'
+import React, { ComponentProps, FunctionComponentElement, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { DialogBase as BaseComponent } from '../Base'
@@ -31,7 +31,7 @@ const exist = (value: any) => {
   return value !== undefined && value !== null
 }
 
-export const FloatArea: FC<Props> = ({
+export const FloatArea: VFC<Props> = ({
   primaryButton,
   secondaryButton,
   tertiaryButton,
