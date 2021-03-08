@@ -17,17 +17,53 @@ import { ResetButton } from '../Button/ResetButton'
 import { useListBox } from './useListBox'
 
 type Props = {
+  /**
+   * A list of items to choose from.
+   */
   items: Array<{ value: string; label: string; disabled?: boolean }>
+  /**
+   * An item that have already been selected.
+   */
   selectedItem: { value: string; label: string } | null
+  /**
+   * The value of the input `name` attribute.
+   */
   name?: string
+  /**
+   * The value of the input `disabled` attribute.
+   */
   disabled?: boolean
+  /**
+   * If true, the outline of this component will be DANGER color.
+   */
   error?: boolean
+  /**
+   *  If true, you can add new item that do not exist in `items` props.
+   */
   creatable?: boolean
+  /**
+   * The value of the input `placeholder` attribute.
+   */
   placeholder?: string
+  /**
+   * The value given to the width style of input.
+   */
   width?: number | string
+  /**
+   *  The `className` given to the outermost element of this component.
+   */
   className?: string
+  /**
+   * Fire when the value of input changes.
+   */
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  /**
+   * Fire when adding an item that does not exist in `items` props.
+   */
   onAdd?: (label: string) => void
+  /**
+   * Fire when the selected item is changed.
+   */
   onSelect: (item: { value: string; label: string } | null) => void
 }
 
