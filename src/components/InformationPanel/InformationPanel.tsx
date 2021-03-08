@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useId } from '../../hooks/useId'
 
 import { Base } from '../Base'
 import {
@@ -64,6 +65,8 @@ export const InformationPanel: FC<Props> = ({
   }
 
   const [active, setActive] = useState(activeProps)
+  const titleId = useId()
+  const contentId = useId()
 
   const handleClickTrigger = () => {
     if (onClickTrigger) {
@@ -78,9 +81,9 @@ export const InformationPanel: FC<Props> = ({
   }, [activeProps])
 
   return (
-    <Wrapper className={className} themes={theme} role="presentation">
+    <Wrapper className={className} themes={theme} role="region" aria-labelledby={titleId}>
       <Header themes={theme}>
-        <Title themes={theme}>
+        <Title themes={theme} id={titleId}>
           <Icon color={iconColor} $theme={theme} />
           <StyledHeading type="blockTitle" tag={titleTag}>
             {title}
@@ -93,17 +96,16 @@ export const InformationPanel: FC<Props> = ({
               size="s"
               onClick={handleClickTrigger}
               aria-expanded={togglable ? active : undefined}
+              aria-controls={contentId}
             >
               {active ? closeButtonLabel : openButtonLabel}
             </SecondaryButton>
           </div>
         )}
       </Header>
-      {active && (
-        <Content themes={theme} aria-hidden={active}>
-          {children}
-        </Content>
-      )}
+      <Content themes={theme} id={contentId} aria-hidden={!active}>
+        {children}
+      </Content>
     </Wrapper>
   )
 }
@@ -160,6 +162,9 @@ const Content = styled.div<{ themes: Theme }>`
     return css`
       margin-top: ${pxToRem(space.S)};
       font-size: ${pxToRem(font.TALL)};
+      &[aria-hidden='true'] {
+        display: none;
+      }
     `
   }}
 `
