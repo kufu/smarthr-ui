@@ -18,7 +18,7 @@ exports[`StatusLabel should be match snapshot 1`] = `
 
 .c0.done {
   border-color: #d6d3d0;
-  color: #76736a;
+  color: #706d65;
 }
 
 .c0.success {
@@ -37,7 +37,7 @@ exports[`StatusLabel should be match snapshot 1`] = `
 }
 
 .c0.disabled {
-  background-color: #76736a;
+  background-color: #706d65;
   color: #fff;
 }
 
