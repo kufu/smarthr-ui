@@ -7,16 +7,16 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: git config
-        run: |
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v2
         with:
           node-version: 12
+      - name: git config
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
       - name: prepare release
         run: |
           base_tag=v$(npx -c 'echo "$npm_package_version"')
@@ -40,4 +40,3 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           title: 'chore(release): ${{ env.new_tag }}'
-
