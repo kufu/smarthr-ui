@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, FunctionComponentElement, ReactNode, useEffect } from 'react'
+import React, { ComponentProps, FC, FunctionComponentElement, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { DialogBase as BaseComponent } from '../Base'
