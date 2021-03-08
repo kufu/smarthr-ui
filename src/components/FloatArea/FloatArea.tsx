@@ -38,7 +38,6 @@ export const FloatArea: VFC<Props> = ({
   errorText,
   errorIcon,
   className = '',
-  children,
   width = '80%',
   ...props
 }) => {
