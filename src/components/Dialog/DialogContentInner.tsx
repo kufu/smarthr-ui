@@ -8,16 +8,49 @@ import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
 
 export type DialogContentInnerProps = {
+  /**
+   * Handler function when clicking on onverlay.
+   */
   onClickOverlay?: () => void
+  /**
+   * Handler function when pressing escape key.
+   */
   onPressEscape?: () => void
+  /**
+   * Whether to display a Dialog.
+   */
   isOpen: boolean
+  /**
+   * Specifies the top position of the Dialog content.
+   */
   top?: number
+  /**
+   * Specifies the right position of the Dialog content.
+   */
   right?: number
+  /**
+   * Specifies the bottom position of the Dialog content.
+   */
   bottom?: number
+  /**
+   * Specifies the left position of the Dialog content.
+   */
   left?: number
+  /**
+   * `id` of the component.
+   */
   id?: string
+  /**
+   * `aria-label` of the component.
+   */
   ariaLabel?: string
+  /**
+   * `aria-labelledby` of the component.
+   */
   ariaLabelledby?: string
+  /**
+   * The content of the component.
+   */
   children: ReactNode
 }
 
