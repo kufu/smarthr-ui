@@ -72,6 +72,14 @@ jobs:
           password: $DOCKER_HUB_ACCESS_TOKEN
     steps:
       - run-npm-test
+  node-v14:
+    docker:
+      - image: circleci/node:14
+        auth:
+          username: smarthrinc
+          password: $DOCKER_HUB_ACCESS_TOKEN
+    steps:
+      - run-npm-test
   reg-suit:
     docker:
       - image: regviz/node-xcb
@@ -88,4 +96,5 @@ workflows:
     jobs:
       - node-v10
       - node-v12
+      - node-v14
       - reg-suit
