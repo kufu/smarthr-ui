@@ -1,6 +1,5 @@
 import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
-
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 export const Footer: VFC = () => {
@@ -24,27 +23,29 @@ export const Footer: VFC = () => {
 
 const Wrapper = styled.footer<{ themes: Theme }>`
   ${({ themes }) => css`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    padding: 0 ${themes.size.pxToRem(themes.size.space.S)};
+    overflow: hidden;
+    padding: ${themes.size.pxToRem(themes.size.space.XS)}
+      ${themes.size.pxToRem(themes.size.space.S)};
     background-color: ${themes.palette.BRAND};
     color: #fff;
     font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
+    white-space: nowrap;
   `}
 `
 
 const List = styled.ul<{ themes: Theme }>`
   ${({ themes }) => css`
+    float: left;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     margin: 0;
     padding: 0;
     list-style: none;
 
-    > li:not(:first-child) {
-      margin-left: ${themes.size.pxToRem(themes.size.space.XXS)};
+    > li {
+      padding: 3px 0;
+      margin-right: ${themes.size.pxToRem(themes.size.space.XXS)};
     }
   `}
 `
@@ -53,7 +54,7 @@ type ItemProp = {
   children: ReactNode
   href: string
 }
-const Item: React.VFC<ItemProp> = ({ children, href }) => (
+const Item: VFC<ItemProp> = ({ children, href }) => (
   <li>
     <ItemPart target="_blank" rel="noopener noreferrer" href={href}>
       {children}
@@ -71,6 +72,7 @@ const ItemPart = styled.a`
 
 const Copy = styled.small<{ themes: Theme }>`
   ${({ themes }) => css`
+    float: right;
     font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
   `}
 `
