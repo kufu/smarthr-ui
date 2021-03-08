@@ -278,6 +278,7 @@ const List = styled.ul<{ themes: Theme }>`
     return css`
       display: flex;
       flex-wrap: wrap;
+      margin: 0;
       padding: ${size.pxToRem(3.5)} 0;
       list-style: none;
 
