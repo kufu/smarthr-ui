@@ -90,6 +90,13 @@ export const DialogContentInner: VFC<DialogContentInnerProps> = ({
     }, [isOpen, onPressEscape]),
   )
 
+  const handleClickOverlay = useCallback(() => {
+    if (!isOpen) {
+      return
+    }
+    onClickOverlay && onClickOverlay()
+  }, [isOpen, onClickOverlay])
+
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
       <CSSTransition
@@ -111,7 +118,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps> = ({
         aria-labelledby={ariaLabelledby}
       >
         <Wrapper ref={domRef} themes={theme}>
-          <Background onClick={onClickOverlay} themes={theme} />
+          <Background onClick={handleClickOverlay} themes={theme} />
           <FocusTrap>
             <Inner ref={innerRef} themes={theme} role="dialog" aria-modal="true" {...props}>
               {/* dummy element for focus management. */}
