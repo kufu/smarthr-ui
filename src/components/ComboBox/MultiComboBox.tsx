@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, FC, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -138,7 +138,7 @@ export const MultiComboBox: FC<Props> = ({
     }, [blur]),
   )
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setInputValue('')
 
     if (isFocused && inputRef.current) {
