@@ -90,7 +90,7 @@ const TertiaryArea = styled.div`
 const ErrorTextArea = styled.p`
   display: flex;
   align-items: center;
-  margin-left: auto;
+  margin: 0 0 0 auto;
   line-height: 1;
   max-width: 40%;
 `
