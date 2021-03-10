@@ -27,6 +27,10 @@ type Props = StyleProps & {
   className?: string
 }
 
+const exist = (value: any) => {
+  return value !== undefined && value !== null
+}
+
 export const FloatArea: VFC<Props> = ({
   primaryButton,
   secondaryButton,
@@ -62,10 +66,10 @@ const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string 
       display: flex;
       align-items: center;
       position: fixed;
-      ${top && `top: ${top}px;`}
-      ${right && `right: ${right}px;`}
-      ${bottom && `bottom: ${bottom}px;`}
-      ${left && `left: ${left}px;`}
+      ${exist(top) && `top: ${top}px;`}
+      ${exist(right) && `right: ${right}px;`}
+      ${exist(bottom) && `bottom: ${bottom}px;`}
+      ${exist(left) && `left: ${left}px;`}
       z-index: ${zIndex};
       width: ${$width};
       padding: ${fontSize.pxToRem(spacing.XS)};
