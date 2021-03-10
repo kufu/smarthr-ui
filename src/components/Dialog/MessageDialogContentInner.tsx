@@ -7,12 +7,24 @@ import { useOffsetHeight } from './dialogHelper'
 import { SecondaryButton } from '../Button'
 
 export type BaseProps = {
+  /**
+   * Title of the dialog.
+   */
   title: string
+  /**
+   * Description of the dialog.
+   */
   description: React.ReactNode
+  /**
+   * Label of close button.
+   */
   closeText: string
 }
 
 export type MessageDialogContentInnerProps = BaseProps & {
+  /**
+   * Handler function when clicking on close button.
+   */
   onClickClose: () => void
 }
 
