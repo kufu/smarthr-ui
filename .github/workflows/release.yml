@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 12
+          registry-url: 'https://registry.npmjs.org'
       - name: git config
         run: |
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

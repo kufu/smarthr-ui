@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
@@ -30,13 +30,20 @@ export const MessageDialog: React.VFC<Props> = ({
     }
   }, [element])
 
+  const handleClickClose = useCallback(() => {
+    if (!props.isOpen) {
+      return
+    }
+    onClickClose()
+  }, [onClickClose, props.isOpen])
+
   return createPortal(
     <DialogContentInner ariaLabel={title} {...props}>
       <MessageDialogContentInner
         title={title}
         description={description}
         closeText={closeText}
-        onClickClose={onClickClose}
+        onClickClose={handleClickClose}
       />
     </DialogContentInner>,
     element,
