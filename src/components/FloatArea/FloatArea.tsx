@@ -27,10 +27,6 @@ type Props = StyleProps & {
   className?: string
 }
 
-const exist = (value: any) => {
-  return value !== undefined && value !== null
-}
-
 export const FloatArea: VFC<Props> = ({
   primaryButton,
   secondaryButton,
@@ -48,7 +44,7 @@ export const FloatArea: VFC<Props> = ({
       {tertiaryButton && <TertiaryArea>{tertiaryButton}</TertiaryArea>}
       {errorText && (
         <ErrorTextArea>
-          {errorIcon && <ErrorIcon>{errorIcon}</ErrorIcon>}
+          {errorIcon && <ErrorIcon themes={theme}>{errorIcon}</ErrorIcon>}
           <ErrorText themes={theme}>{errorText}</ErrorText>
         </ErrorTextArea>
       )}
@@ -61,59 +57,56 @@ export const FloatArea: VFC<Props> = ({
 }
 
 const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string }>`
-  ${({ themes, top, right, bottom, left, $width, zIndex = 500 }) => {
-    const { pxToRem, space } = themes.size
-    const positionRight = exist(right) ? `${right}px` : 'initial'
-    const positionBottom = exist(bottom) ? `${bottom}px` : 'initial'
-    const positionTop = exist(top) ? `${top}px` : 'initial'
-    const positionLeft = exist(left) ? `${left}px` : 'initial'
-
+  ${({ themes: { spacing, fontSize }, top, right, bottom, left, $width, zIndex = 500 }) => {
     return css`
       display: flex;
       align-items: center;
       position: fixed;
-      top: ${positionTop};
-      bottom: ${positionBottom};
-      right: ${positionRight};
-      left: ${positionLeft};
+      ${top && `top: ${top}px;`}
+      ${right && `right: ${right}px;`}
+      ${bottom && `bottom: ${bottom}px;`}
+      ${left && `left: ${left}px;`}
       z-index: ${zIndex};
       width: ${$width};
-      padding: ${pxToRem(space.XS)};
+      padding: ${fontSize.pxToRem(spacing.XS)};
     `
   }}
 `
 
 const ActionArea = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
+  ${({ themes: { fontSize, spacing } }) => {
     return css`
+      margin-left: 0;
       > button,
       > a {
-        margin-left: ${pxToRem(space.XS)};
+        margin-left: ${fontSize.pxToRem(spacing.XS)};
       }
     `
   }}
 `
 const TertiaryArea = styled.div`
-  margin: 0 auto 0 0;
+  margin-right: 0;
 `
-const ErrorTextArea = styled.div`
+const ErrorTextArea = styled.p`
   display: flex;
-  text-align: left;
   align-items: center;
+  margin-left: auto;
   line-height: 1;
   max-width: 40%;
 `
-const ErrorIcon = styled.div`
-  width: 16px;
-  flex-shrink: 0;
-`
-const ErrorText = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, font, space } = themes.size
+const ErrorIcon = styled.div<{ themes: Theme }>`
+  ${({ themes: { fontSize, spacing } }) => {
     return css`
-      font-size: ${pxToRem(font.SHORT)};
-      margin-left: ${pxToRem(space.XXS)};
+      margin-right: ${fontSize.pxToRem(spacing.XXS)};
+      flex-shrink: 0;
+    `
+  }}
+`
+
+const ErrorText = styled.div<{ themes: Theme }>`
+  ${({ themes: { fontSize } }) => {
+    return css`
+      font-size: ${fontSize.pxToRem(fontSize.SHORT)};
     `
   }}
 `
