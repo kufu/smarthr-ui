@@ -43,7 +43,7 @@ export const FloatArea: VFC<Props> = ({
 
   return (
     <Base themes={theme} className={className} $width={width} {...props}>
-      {tertiaryButton && <TertiaryArea>{tertiaryButton}</TertiaryArea>}
+      {tertiaryButton && tertiaryButton}
       {errorText && (
         <ErrorTextArea>
           {errorIcon && <ErrorIcon themes={theme}>{errorIcon}</ErrorIcon>}
@@ -76,16 +76,12 @@ const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string 
 const ActionArea = styled.div<{ themes: Theme }>`
   ${({ themes: { fontSize, spacing } }) => {
     return css`
-      margin-left: 0;
       > button,
       > a {
         margin-left: ${fontSize.pxToRem(spacing.XS)};
       }
     `
   }}
-`
-const TertiaryArea = styled.div`
-  margin-right: 0;
 `
 const ErrorTextArea = styled.p`
   display: flex;
