@@ -11,7 +11,6 @@ import { FloatArea, PrimaryButton, SecondaryButton, FaExclamationTriangleIcon } 
   errorText="This is the error text."
   width="80%"
   top={40}
-  left={40}
 />
 ```
 
@@ -28,7 +27,5 @@ import { FloatArea, PrimaryButton, SecondaryButton, FaExclamationTriangleIcon } 
 | errorText   |          | **string**                                        | -            | The error text. 
 | width   |          | **string**                                         | 80%            | FloatArea width.
 | top   |          | **number**                                         | -            | value of position.
-| right   |          | **number**                                         | -            | value of position.
 | bottom   |          | **number**                                         | -            | value of position.
-| left   |          | **number**                                         | -            | value of position.
 | zIndex   |          | **number**                                         | -            | value of zIndex.

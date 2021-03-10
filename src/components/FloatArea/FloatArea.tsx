@@ -11,9 +11,7 @@ type ErrorIcons =
 
 type StyleProps = {
   top?: number
-  right?: number
   bottom?: number
-  left?: number
   zIndex?: number
 }
 
@@ -61,15 +59,13 @@ export const FloatArea: VFC<Props> = ({
 }
 
 const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string }>`
-  ${({ themes: { spacing, fontSize }, top, right, bottom, left, $width, zIndex = 500 }) => {
+  ${({ themes: { spacing, fontSize }, top, bottom, $width, zIndex = 500 }) => {
     return css`
       display: flex;
       align-items: center;
       position: fixed;
       ${exist(top) && `top: ${top}px;`}
-      ${exist(right) && `right: ${right}px;`}
       ${exist(bottom) && `bottom: ${bottom}px;`}
-      ${exist(left) && `left: ${left}px;`}
       z-index: ${zIndex};
       width: ${$width};
       padding: ${fontSize.pxToRem(spacing.XS)};

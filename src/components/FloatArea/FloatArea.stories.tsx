@@ -22,6 +22,5 @@ storiesOf('FloatArea', module)
       errorText="This is the error text."
       width="80%"
       top={40}
-      left={40}
     />
   ))
