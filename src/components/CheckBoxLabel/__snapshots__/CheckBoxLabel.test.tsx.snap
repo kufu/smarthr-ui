@@ -107,10 +107,10 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
 }
 
 <div
-  className="c0"
+  className="c0  smarthr-ui-CheckBoxLabel"
 >
   <label
-    className="c1"
+    className="c1  smarthr-ui-CheckBoxLabel-label"
   >
     <span
       className="c2  smarthr-ui-CheckBox"
@@ -154,7 +154,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
       </span>
     </span>
     <span
-      className="c6"
+      className="c6 smarthr-ui-CheckBoxLabel-text"
     >
       label
     </span>

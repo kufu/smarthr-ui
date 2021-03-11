@@ -1,21 +1,27 @@
-import React, { VFC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
+
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 type Props = CheckBoxProps & {
   label: string
 }
 
-export const CheckBoxLabel: VFC<Props> = ({ label, className = '', ...props }) => {
+export const CheckBoxLabel: VFC<Props & ElementProps> = ({ label, className = '', ...props }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper className={className}>
-      <Label className={`${props.disabled ? 'disabled' : ''}`} themes={theme}>
+    <Wrapper className={`${className} ${classNames.wrapper}`}>
+      <Label className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`} themes={theme}>
         <CheckBox {...props} />
-        <Txt themes={theme}>{label}</Txt>
+        <Txt className={classNames.text} themes={theme}>
+          {label}
+        </Txt>
       </Label>
     </Wrapper>
   )
