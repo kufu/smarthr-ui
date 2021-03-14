@@ -29,7 +29,7 @@
     "@types/react-dom": "^17.0.2",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.4.1",
-    "@types/styled-components": "^5.1.7",
+    "@types/styled-components": "^5.1.8",
     "babel-loader": "^8.2.2",
     "ecma-version-validator-webpack-plugin": "^1.1.0",
     "eslint": "^7.21.0",
