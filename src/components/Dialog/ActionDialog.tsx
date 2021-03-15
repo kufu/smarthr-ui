@@ -19,6 +19,7 @@ export const ActionDialog: React.VFC<Props> = ({
   actionTheme,
   onClickAction,
   onClickClose,
+  responseMessage,
   actionDisabled = false,
   closeDisabled,
   ...props
@@ -58,6 +59,7 @@ export const ActionDialog: React.VFC<Props> = ({
         closeDisabled={closeDisabled}
         onClickClose={handleClickClose}
         onClickAction={handleClickAction}
+        responseMessage={responseMessage}
       >
         {children}
       </ActionDialogContentInner>
