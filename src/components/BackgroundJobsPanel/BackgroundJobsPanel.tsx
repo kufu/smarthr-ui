@@ -31,7 +31,7 @@ type Props = {
   onClickClose?: () => void
 }
 
-type ElementProps = Omit<ComponentProps<typeof Base>, keyof Props>
+type ElementProps = Omit<ComponentProps<typeof Base>, keyof Props | 'children'>
 
 export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
   title,
