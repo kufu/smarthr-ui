@@ -98,6 +98,7 @@ export { defaultBorder } from './themes/createBorder'
 export { defaultRadius } from './themes/createRadius'
 export { defaultSize } from './themes/createSize'
 export { defaultFontSize } from './themes/createFontSize'
+export { defaultRemSize } from './themes/createRemSize'
 export { defaultSpacing } from './themes/createSpacing'
 export { defaultBreakpoint } from './themes/createBreakpoint'
 

@@ -10,6 +10,7 @@ import { CreatedPaletteTheme, PaletteProperty, createPalette } from './createPal
 import { ColorProperty, CreatedColorTheme, createColor } from './createColor'
 import { CreatedSizeTheme, SizeProperty, createSize } from './createSize'
 import { CreatedFontSizeTheme, FontSizeProperty, createFontSize } from './createFontSize'
+import { RemSizeProperty, createRemSize, createRemSizeForPxToRem } from './createRemSize'
 import { CreatedSpacingTheme, SpacingProperty, createSpacing } from './createSpacing'
 import { BreakpointProperty, CreatedBreakpointTheme, createBreakpoint } from './createBreakpoint'
 import { CreatedShadowTheme, ShadowProperty, createShadow } from './createShadow'
@@ -26,6 +27,7 @@ interface ThemeProperty {
    */
   size?: SizeProperty
   fontSize?: FontSizeProperty
+  fontSizeFactor?: number
   spacing?: SpacingProperty
   breakpoint?: BreakpointProperty
   /**
@@ -50,6 +52,8 @@ export interface CreatedTheme {
    */
   size: CreatedSizeTheme
   fontSize: CreatedFontSizeTheme
+  remSize: RemSizeProperty
+  remSizeForPxToRem: RemSizeProperty
   spacing: CreatedSpacingTheme
   breakpoint: CreatedBreakpointTheme
   /**
@@ -69,6 +73,8 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     color: createColor(theme.color),
     size: createSize(theme.size),
     fontSize: createFontSize(theme.fontSize),
+    remSize: createRemSize(theme.fontSizeFactor),
+    remSizeForPxToRem: createRemSizeForPxToRem(theme.fontSizeFactor),
     spacing: createSpacing(theme.spacing),
     breakpoint: createBreakpoint(theme.breakpoint),
     frame: createFrame(theme.frame, theme.palette),
