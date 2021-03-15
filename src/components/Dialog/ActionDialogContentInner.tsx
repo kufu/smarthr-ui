@@ -79,7 +79,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   if (actionTheme === 'secondary') ActionButton = SecondaryButton
   if (actionTheme === 'danger') ActionButton = DangerButton
 
-  const requestProcessing = responseMessage && responseMessage.status === 'processing'
+  const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
   return (
     <>
@@ -89,14 +89,19 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
       <Body offsetHeight={offsetHeight}>{children}</Body>
       <ActionArea themes={theme} ref={bottomRef}>
         <ButtonArea themes={theme}>
-          <SecondaryButton onClick={onClickClose} disabled={closeDisabled || requestProcessing}>
+          <SecondaryButton onClick={onClickClose} disabled={closeDisabled || isRequestProcessing}>
             {closeText}
           </SecondaryButton>
-          <ActionButton onClick={handleClickAction} disabled={actionDisabled || requestProcessing}>
+          <ActionButton
+            onClick={handleClickAction}
+            disabled={actionDisabled || isRequestProcessing}
+          >
             {actionText}
           </ActionButton>
         </ButtonArea>
-        <ResponseMessage themes={theme} responseMessage={responseMessage} />
+        <div role="alert">
+          <ResponseMessage themes={theme} responseMessage={responseMessage} />
+        </div>
       </ActionArea>
     </>
   )

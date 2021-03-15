@@ -165,7 +165,10 @@ export const Action_Dialog: Story = () => {
     text: string
   }>()
   const onClickOpen = () => setIsOpen(true)
-  const onClickClose = () => setIsOpen(false)
+  const onClickClose = () => {
+    setIsOpen(false)
+    setResponseMessage(undefined)
+  }
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
 
   const Buttons = styled.div`
@@ -190,6 +193,7 @@ export const Action_Dialog: Story = () => {
         actionTheme="primary"
         onClickAction={(closeDialog) => {
           action('executed')()
+          setResponseMessage(undefined)
           closeDialog()
         }}
         onClickClose={onClickClose}
