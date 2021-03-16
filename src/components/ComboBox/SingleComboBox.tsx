@@ -278,7 +278,6 @@ const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
     padding: ${fontSize.pxToRem(spacing.XXS)} 0;
   `
 })
-
 const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
   const { border, fontSize, spacing } = themes
   return css`
