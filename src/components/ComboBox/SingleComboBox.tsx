@@ -12,6 +12,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
 
+import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { ResetButton } from '../Button/ResetButton'
 import { useListBox } from './useListBox'
@@ -84,6 +85,7 @@ export const SingleComboBox: VFC<Props> = ({
   const theme = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const clearButtonRef = useRef<HTMLButtonElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [inputValue, setInputValue] = useState('')
@@ -124,15 +126,6 @@ export const SingleComboBox: VFC<Props> = ({
       (creatable && filteredItems.length === 0 && !inputValue),
   })
 
-  const classNames = [
-    isFocused ? 'active' : '',
-    disabled ? 'disabled' : '',
-    error ? 'error' : '',
-    className,
-  ]
-    .filter((item) => item)
-    .join(' ')
-
   const focus = useCallback(() => {
     setIsFocused(true)
     resetActiveOptionIndex()
@@ -146,7 +139,7 @@ export const SingleComboBox: VFC<Props> = ({
   }, [])
 
   useOuterClick(
-    [outerRef, listBoxRef],
+    [outerRef, listBoxRef, clearButtonRef],
     useCallback(() => {
       blur()
     }, [blur]),
@@ -172,35 +165,56 @@ export const SingleComboBox: VFC<Props> = ({
 
   return (
     <Container
-      themes={theme}
-      width={width}
       ref={outerRef}
-      className={classNames}
-      onClick={(e) => {
-        if (disabled) {
-          e.stopPropagation()
-          return
-        }
-        focus()
-        if (inputRef.current) {
-          inputRef.current.focus()
-        }
-        if (!isExpanded) {
-          setIsExpanded(true)
-        }
-      }}
+      className={`${disabled ? 'disabled' : ''} ${className}`}
       role="combobox"
-      aria-owns={aria.listBoxId}
       aria-haspopup="listbox"
+      aria-controls={aria.listBoxId}
       aria-expanded={isFocused}
     >
-      <Input
+      <StyledInput
         type="text"
         name={name}
         value={inputValue}
         disabled={disabled}
-        ref={inputRef}
-        themes={theme}
+        width={width}
+        error={error}
+        placeholder={placeholder}
+        suffix={
+          <>
+            <ClearButton
+              onClick={() => {
+                onSelect(null)
+                setIsExpanded(true)
+              }}
+              ref={clearButtonRef}
+              themes={theme}
+              className={selectedItem === null || disabled ? 'hidden' : undefined}
+            >
+              <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
+            </ClearButton>
+            <CaretDownLayout themes={theme}>
+              <CaretDownWrapper themes={theme}>
+                <FaCaretDownIcon
+                  color={isFocused ? theme.palette.TEXT_BLACK : theme.palette.BORDER}
+                />
+              </CaretDownWrapper>
+            </CaretDownLayout>
+          </>
+        }
+        onClick={(e) => {
+          if (disabled) {
+            e.stopPropagation()
+            return
+          }
+          focus()
+          if (inputRef.current) {
+            inputRef.current.focus()
+          }
+          if (!isExpanded) {
+            setIsExpanded(true)
+          }
+        }}
         onChange={(e) => {
           if (onChange) onChange(e)
           const { value } = e.currentTarget
@@ -236,94 +250,47 @@ export const SingleComboBox: VFC<Props> = ({
             setIsExpanded(true)
           }
         }}
+        ref={inputRef}
         aria-activedescendant={aria.activeDescendant}
         aria-autocomplete="list"
-        aria-controls={aria.listBoxId}
-        placeholder={placeholder}
       />
-      {selectedItem !== null && !disabled && (
-        <ClearButton onClick={() => onSelect(null)} themes={theme}>
-          <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
-        </ClearButton>
-      )}
-
-      <Suffix themes={theme}>
-        <FaCaretDownIcon color={isFocused ? theme.palette.TEXT_BLACK : theme.palette.BORDER} />
-      </Suffix>
-
       {renderListBox()}
     </Container>
   )
 }
 
-const Container = styled.div<{ themes: Theme; width: number | string }>`
-  ${({ themes, width }) => {
-    const { border, color, fontSize, radius, spacing } = themes
-
-    return css`
-      display: inline-flex;
-      min-width: calc(62px + 32px + ${fontSize.pxToRem(spacing.XXS)} * 2);
-      width: ${typeof width === 'number' ? `${width}px` : width};
-      height: 40px;
-      box-sizing: border-box;
-      border-radius: ${radius.m};
-      border: ${border.shorthand};
-      background-color: #fff;
-      cursor: text;
-
-      &.active {
-        border-color: ${color.MAIN};
-      }
-
-      &.error {
-        border-color: ${color.DANGER};
-      }
-
-      &.disabled {
-        background-color: ${color.COLUMN};
-        cursor: not-allowed;
-      }
-    `
-  }}
+const Container = styled.div`
+  display: inline-block;
+  &.disabled {
+    cursor: not-allowed;
+  }
 `
-const Input = styled.input<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, radius } = themes
-
-    return css`
-      min-width: 80px;
-      width: 100%;
-      padding: ${fontSize.pxToRem(4)} ${fontSize.pxToRem(8)};
-      border: none;
-      border-radius: ${radius.m};
-      font-size: ${fontSize.TALL}px;
-      box-sizing: border-box;
-      outline: none;
-      &[disabled] {
-        background-color: inherit;
-        cursor: not-allowed;
-      }
-      &::-ms-clear {
-        display: none;
-      }
-    `
-  }}
+const StyledInput = styled(Input)`
+  input::-ms-clear {
+    display: none;
+  }
 `
-const Suffix = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { border, fontSize, spacing } = themes
+const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
+  const { fontSize, spacing } = themes
+  return css`
+    height: 100%;
+    box-sizing: border-box;
+    padding: ${fontSize.pxToRem(spacing.XXS)} 0;
+  `
+})
 
-    return css`
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 31px;
-      margin: ${fontSize.pxToRem(spacing.XXS)} 0;
-      border-left: ${border.shorthand};
-      box-sizing: border-box;
-    `
-  }}
-`
+const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
+  const { border, fontSize, spacing } = themes
+  return css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    box-sizing: border-box;
+    padding-left: ${fontSize.pxToRem(spacing.XXS)};
+    border-left: ${border.shorthand};
+  `
+})
 const ClearButton = styled(ResetButton)<{ themes: Theme }>`
   ${({ themes }) => {
     const { fontSize, spacing } = themes
@@ -331,8 +298,12 @@ const ClearButton = styled(ResetButton)<{ themes: Theme }>`
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 100%;
       padding: 0 ${fontSize.pxToRem(spacing.XXS)};
       cursor: pointer;
+      &.hidden {
+        display: none;
+      }
     `
   }}
 `
