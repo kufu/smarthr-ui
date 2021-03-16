@@ -12,6 +12,7 @@ import { CreatedSizeTheme, SizeProperty, createSize } from './createSize'
 import { CreatedFontSizeTheme, FontSizeProperty, createFontSize } from './createFontSize'
 import { RemSizeProperty, createRemSize, createRemSizeForPxToRem } from './createRemSize'
 import { CreatedSpacingTheme, SpacingProperty, createSpacing } from './createSpacing'
+import { space } from './createSpace'
 import { BreakpointProperty, CreatedBreakpointTheme, createBreakpoint } from './createBreakpoint'
 import { CreatedShadowTheme, ShadowProperty, createShadow } from './createShadow'
 import { CreatedZindexTheme, ZIndexProperty, createZIndex } from './createZIndex'
@@ -55,6 +56,7 @@ export interface CreatedTheme {
   remSize: RemSizeProperty
   remSizeForPxToRem: RemSizeProperty
   spacing: CreatedSpacingTheme
+  space: typeof space
   breakpoint: CreatedBreakpointTheme
   /**
    * @deprecated The frame property will be deprecated, please use border or radius property instead
@@ -76,6 +78,7 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     remSize: createRemSize(theme.fontSizeFactor),
     remSizeForPxToRem: createRemSizeForPxToRem(theme.fontSizeFactor),
     spacing: createSpacing(theme.spacing),
+    space,
     breakpoint: createBreakpoint(theme.breakpoint),
     frame: createFrame(theme.frame, theme.palette),
     border: createBorder(theme.border, theme.color),
