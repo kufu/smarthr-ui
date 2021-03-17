@@ -160,9 +160,25 @@ Message_Dialog.parameters = {
 export const Action_Dialog: Story = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = React.useState('Apple')
+  const [responseMessage, setResponseMessage] = useState<{
+    status: 'success' | 'error' | 'processing'
+    text: string
+  }>()
   const onClickOpen = () => setIsOpen(true)
-  const onClickClose = () => setIsOpen(false)
+  const onClickClose = () => {
+    setIsOpen(false)
+    setResponseMessage(undefined)
+  }
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+
+  const Buttons = styled.div`
+    margin-top: -2rem;
+    padding: 1rem 1.5rem;
+
+    > button + button {
+      margin-left: 0.5rem;
+    }
+  `
 
   return (
     <>
@@ -177,11 +193,13 @@ export const Action_Dialog: Story = () => {
         actionTheme="primary"
         onClickAction={(closeDialog) => {
           action('executed')()
+          setResponseMessage(undefined)
           closeDialog()
         }}
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
+        responseMessage={responseMessage}
         id="dialog-action"
       >
         <RadioList>
@@ -210,6 +228,39 @@ export const Action_Dialog: Story = () => {
             />
           </li>
         </RadioList>
+        <Buttons>
+          <p>切り替えボタン：</p>
+          <SecondaryButton
+            onClick={() =>
+              setResponseMessage({
+                status: 'success',
+                text: '保存しました。',
+              })
+            }
+          >
+            保存
+          </SecondaryButton>
+          <SecondaryButton
+            onClick={() =>
+              setResponseMessage({
+                status: 'error',
+                text: '何らかのエラーが発生しました。',
+              })
+            }
+          >
+            エラー
+          </SecondaryButton>
+          <SecondaryButton
+            onClick={() =>
+              setResponseMessage({
+                status: 'processing',
+                text: '保存中',
+              })
+            }
+          >
+            保存中
+          </SecondaryButton>
+        </Buttons>
       </ActionDialog>
     </>
   )
