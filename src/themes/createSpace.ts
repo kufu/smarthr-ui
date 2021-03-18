@@ -17,11 +17,12 @@ const primitiveToken = {
   4: 4,
   8: 8,
 }
+export type SpaceLength = keyof typeof primitiveToken
 
-export const space: (
-  length: keyof typeof primitiveToken,
-  options?: { onlyNumber: boolean },
-) => string | number = (length, { onlyNumber } = { onlyNumber: false }) => {
+export const space: (length: SpaceLength, options?: { onlyNumber: boolean }) => string | number = (
+  length,
+  { onlyNumber } = { onlyNumber: false },
+) => {
   if (length === 0) {
     return 0
   }
