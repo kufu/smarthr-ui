@@ -11,13 +11,13 @@ stream.on('data', (chunk) => {
   buffer += chunk.toString('utf8')
   // The changelog after the second release header is for old version.
   // Therefore, the part before that is considered as the changelog for latest release.
-  const matched = buffer.match(/#+\s\[?\d+\.\d+.\d+\]?/g)
+  const matched = buffer.match(/\n#+\s\[?\d+\.\d+.\d+\]?/g)
   if (matched === null || matched.length < 2) {
     return
   }
   const prevHeader = matched[1]
   const prevHeaderIndex = buffer.indexOf(prevHeader)
-  const latestChangelog = buffer.slice(0, prevHeaderIndex - 1)
+  const latestChangelog = buffer.slice(0, prevHeaderIndex)
   console.log(latestChangelog)
   stream.destroy()
 })

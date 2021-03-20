@@ -24,7 +24,7 @@ jobs:
           BASE_TAG=v$(npx -c 'echo "$npm_package_version"')
           git checkout $BASE_TAG
           git merge --no-edit ${{ github.ref }}
-          yarn install
+      - run: yarn install
       - name: release dry run
         run: |
           echo "Dry Run Log:
@@ -36,7 +36,6 @@ jobs:
           git checkout -b release-candidate
           git push origin release-candidate
       - name: create issue
-        id: create-issue
         uses: peter-evans/create-issue-from-file@v2
         with:
           title: Release candidate
