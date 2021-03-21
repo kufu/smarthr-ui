@@ -3,13 +3,14 @@ import { SpaceLength } from '../../../themes/createSpace'
 import { useTheme } from '../../../hooks/useTheme'
 
 /**
- * @param spaceLength rem の値
- * @param splitAfter nth-child に渡す値
+ * @param recursive 直下の要素だけでなく再帰的に適用するかどうかの指定
+ * @param spaceLength 間隔の指定（rem の値）
+ * @param splitAfter 分割する位置の指定（nth-child に渡す値）
  */
 export const Stack = styled.div<{
   recursive?: boolean
   spaceLength?: SpaceLength
-  splitAfter?: number
+  splitAfter?: number | string
 }>(({ recursive = false, spaceLength = 1, splitAfter }) => {
   const { space } = useTheme()
 
@@ -20,11 +21,12 @@ export const Stack = styled.div<{
 
     ${!recursive && '>'} * + * {
       margin-top: ${space(spaceLength)};
+      margin-bottom: 0;
     }
 
     ${splitAfter &&
     `
-      > :nth-child(${splitAfter}) {
+      ${!recursive && '>'} :nth-child(${splitAfter}) {
         margin-bottom: auto;
       }
     `}
