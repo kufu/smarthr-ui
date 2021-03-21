@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
-import { SpaceLength } from '../../../themes/createSpace'
-import { useTheme } from '../../../hooks/useTheme'
+import { SpaceLength } from '../../themes/createSpace'
+import { useTheme } from '../../hooks/useTheme'
 
 /**
  * @param recursive 直下の要素だけでなく再帰的に適用するかどうかの指定

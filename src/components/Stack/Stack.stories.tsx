@@ -2,10 +2,10 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { Story } from '@storybook/react'
 
-import { useTheme } from '../../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme'
 import { Stack } from '.'
-import { Base as shrBase } from '../../Base'
-import { Heading } from '../../Heading'
+import { Base as shrBase } from '../Base'
+import { Heading } from '../Heading'
 
 import readme from './README.md'
 
