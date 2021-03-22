@@ -40,6 +40,7 @@ interface ThemeProperty {
   interaction?: InteractionProperty
   shadow?: ShadowProperty
   zIndex?: ZIndexProperty
+  shinTheme?: boolean
 }
 
 export interface CreatedTheme {
@@ -67,6 +68,7 @@ export interface CreatedTheme {
   interaction: CreatedInteractionTheme
   shadow: CreatedShadowTheme
   zIndex: CreatedZindexTheme
+  shinTheme: boolean
 }
 
 export const createTheme = (theme: ThemeProperty = {}) => {
@@ -86,6 +88,7 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     interaction: createInteraction(theme.interaction),
     shadow: createShadow(theme.shadow),
     zIndex: createZIndex(theme.zIndex),
+    shinTheme: !!theme.shinTheme,
   }
   return created
 }

@@ -1,6 +1,6 @@
 import { merge } from '../libs/lodash'
 
-const defaultBaseSize = 8
+export const defaultBaseSize = 8
 
 export interface SpacingProperty {
   baseSize?: number
