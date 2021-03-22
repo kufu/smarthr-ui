@@ -25,7 +25,6 @@ exports[`TabBar should be match snapshot 1`] = `
   background-color: transparent;
   border: none;
   cursor: pointer;
-  outline: none;
   padding: 0;
   -webkit-appearance: none;
   -moz-appearance: none;
