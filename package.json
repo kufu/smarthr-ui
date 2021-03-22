@@ -137,7 +137,7 @@
   "resolutions": {
     "reg-suit/**/braces": "3.0.2",
     "minimist": "1.2.5",
-    "mem": "8.0.0",
+    "mem": "8.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "@types/react": "^17.0.3",
