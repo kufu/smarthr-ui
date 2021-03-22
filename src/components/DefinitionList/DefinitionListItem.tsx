@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, VFC } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -12,7 +12,7 @@ export type DefinitionListItemProps = {
   termTag?: HeadingProps['tag']
   className?: string
 }
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DefinitionListItemProps>
 
 export const DefinitionListItem: VFC<DefinitionListItemProps & ElementProps> = ({
   term,
