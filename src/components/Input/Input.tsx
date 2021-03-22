@@ -39,7 +39,6 @@ export const Input = forwardRef<HTMLInputElement, Props>(
   ({ onFocus, onBlur, autoFocus, prefix, suffix, className, width, ...props }, ref) => {
     const theme = useTheme()
     const innerRef = useRef<HTMLInputElement>(null)
-    const [isFocused, setIsFocused] = useState(false)
     const prefixRef = useRef<HTMLSpanElement>(null)
     const suffixRef = useRef<HTMLScriptElement>(null)
     const [prefixWidth, setPrefixWidth] = useState(0)
@@ -51,12 +50,10 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     )
 
     const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
-      setIsFocused(true)
       onFocus && onFocus(e)
     }
 
     const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-      setIsFocused(false)
       onBlur && onBlur(e)
     }
 
@@ -79,7 +76,6 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       <Wrapper
         themes={theme}
         $width={width}
-        isFocused={isFocused}
         $disabled={props.disabled}
         error={props.error}
         onClick={() => innerRef.current?.focus()}
@@ -112,10 +108,9 @@ export const Input = forwardRef<HTMLInputElement, Props>(
 const Wrapper = styled.span<{
   themes: Theme
   $width?: string | number
-  isFocused: boolean
   $disabled?: boolean
   error?: boolean
-}>(({ themes, $width = 'auto', isFocused, $disabled, error }) => {
+}>(({ themes, $width = 'auto', $disabled, error }) => {
   const { frame, palette } = themes
   return css`
     position: relative;
@@ -127,10 +122,7 @@ const Wrapper = styled.span<{
     border: ${frame.border.default};
     box-sizing: border-box;
     cursor: text;
-    ${isFocused &&
-    css`
-      border-color: ${palette.hoverColor(palette.MAIN)};
-    `}
+
     ${!$disabled &&
     error &&
     css`
@@ -163,7 +155,6 @@ const StyledInput = styled.input<
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
-      outline: none;
       box-sizing: border-box;
 
       &::placeholder {

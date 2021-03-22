@@ -87,10 +87,10 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
   color: #23221f;
   cursor: pointer;
 }
@@ -104,16 +104,25 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
 .c6 {
   margin: 0 0 0 0.5rem;
   font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.c6::before {
+  content: '';
+  display: block;
+  height: 0;
+  width: 0;
+  margin-top: calc((1 - 1.5) * 0.3em);
 }
 
 <div
-  className="c0"
+  className="c0  smarthr-ui-CheckBoxLabel"
 >
   <label
-    className="c1"
+    className="c1  smarthr-ui-CheckBoxLabel-label"
   >
     <span
-      className="c2"
+      className="c2  smarthr-ui-CheckBox"
     >
       <input
         checked={true}
@@ -154,7 +163,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
       </span>
     </span>
     <span
-      className="c6"
+      className="c6 smarthr-ui-CheckBoxLabel-text"
     >
       label
     </span>

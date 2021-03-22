@@ -15,21 +15,24 @@ export type Props = {
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-const balloonFactory: (theme: BalloonTheme) => VFC<Props & ElementProps> = (theme) => ({
-  horizontal,
-  vertical,
-  className = '',
-  ...props
-}) => {
-  if (horizontal === 'center' && vertical === 'middle') {
-    throw new Error('"vertical" can not be specified as "middle" when "horizontal" is "center".')
+const balloonFactory = (theme: BalloonTheme) => {
+  const Balloon: VFC<Props & ElementProps> = ({
+    horizontal,
+    vertical,
+    className = '',
+    ...props
+  }) => {
+    if (horizontal === 'center' && vertical === 'middle') {
+      throw new Error('"vertical" can not be specified as "middle" when "horizontal" is "center".')
+    }
+
+    const themes = useTheme()
+    const { wrapper } = useClassNames()
+    const classNames = `${theme} ${horizontal} ${vertical} ${className} ${wrapper}`
+
+    return <Base className={classNames} themes={themes} {...props} />
   }
-
-  const themes = useTheme()
-  const { wrapper } = useClassNames()
-  const classNames = `${theme} ${horizontal} ${vertical} ${className} ${wrapper}`
-
-  return <Base className={classNames} themes={themes} {...props} />
+  return Balloon
 }
 
 export const LightBalloon = balloonFactory('light')

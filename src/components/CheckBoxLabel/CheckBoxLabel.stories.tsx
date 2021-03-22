@@ -76,6 +76,21 @@ storiesOf('CheckBoxLabel', module)
           </li>
         </List>
       </li>
+
+      <li>
+        <Text>multiline text</Text>
+        <List>
+          <li>
+            <CheckBoxLabel
+              label="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+              name="name9"
+              checked={true}
+              mixed={true}
+              onChange={onChange}
+            />
+          </li>
+        </List>
+      </li>
     </Group>
   ))
 
@@ -85,10 +100,6 @@ const List = styled.ul`
   & > li {
     display: inline-block;
     padding: 16px;
-
-    &:not(:first-child) {
-      margin-left: 16px;
-    }
   }
 `
 const Group = styled.ul`
