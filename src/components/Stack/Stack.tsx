@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 import { SpaceLength } from '../../themes/createSpace'
-import { useTheme } from '../../hooks/useTheme'
+import { useSpace } from '../../hooks/useSpace'
 
 /**
  * @param recursive 直下の要素だけでなく再帰的に適用するかどうかの指定
@@ -12,15 +12,13 @@ export const Stack = styled.div<{
   spaceLength?: SpaceLength
   splitAfter?: number | string
 }>(({ recursive = false, spaceLength = 1, splitAfter }) => {
-  const { space } = useTheme()
-
   return css`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
 
     ${!recursive && '>'} * + * {
-      margin-top: ${space(spaceLength)};
+      margin-top: ${useSpace(spaceLength)};
       margin-bottom: 0;
     }
 
