@@ -1,17 +1,21 @@
-import React, { VFC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   children?: React.ReactNode
-  className?: string
 }
 
-const BackgroundJobsList: VFC<Props> = ({ children, className }) => {
+type ElementProps = Omit<HTMLAttributes<HTMLUListElement>, keyof Props>
+
+const BackgroundJobsList: VFC<Props & ElementProps> = ({ children, className = '' }) => {
   const themes = useTheme()
+  const { backgroundJobsList: classNames } = useClassNames()
+
   return (
-    <List themes={themes} className={className}>
+    <List themes={themes} className={`${className} ${classNames.wrapper}`}>
       {children}
     </List>
   )
