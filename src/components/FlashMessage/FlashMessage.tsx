@@ -41,24 +41,24 @@ export const FlashMessage: FC<Props> = ({ visible, type, text, onClose, classNam
   if (!visible) return null
 
   let Icon = FaCheckCircleIcon
-  let iconColor = theme.palette.TEXT_GREY
+  let iconColor = theme.color.TEXT_GREY
 
   switch (type) {
     case 'success':
       Icon = FaCheckCircleIcon
-      iconColor = theme.palette.MAIN
+      iconColor = theme.color.MAIN
       break
     case 'info':
       Icon = FaInfoCircleIcon
-      iconColor = theme.palette.TEXT_GREY
+      iconColor = theme.color.TEXT_GREY
       break
     case 'warning':
       Icon = FaExclamationTriangleIcon
-      iconColor = theme.palette.WARNING
+      iconColor = theme.color.WARNING
       break
     case 'error':
       Icon = FaExclamationCircleIcon
-      iconColor = theme.palette.DANGER
+      iconColor = theme.color.DANGER
   }
 
   return (
@@ -96,22 +96,22 @@ const bounceAnimation = keyframes`
 `
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame, palette, zIndex } = themes
+    const { size, spacing, color, radius, zIndex } = themes
 
     return css`
       z-index: ${zIndex.FLASH_MESSAGE};
       display: flex;
       position: fixed;
-      bottom: ${size.pxToRem(size.space.XXS)};
-      left: ${size.pxToRem(size.space.XXS)};
+      bottom: ${size.pxToRem(spacing.XXS)};
+      left: ${size.pxToRem(spacing.XXS)};
       box-sizing: border-box;
       align-items: center;
       min-width: ${size.pxToRem(200)};
-      padding: ${size.pxToRem(size.space.XS)};
+      padding: ${size.pxToRem(spacing.XS)};
       padding-right: ${size.pxToRem(54)};
       background-color: #fff;
-      border: 1px solid ${palette.BORDER};
-      border-radius: ${frame.border.radius.m};
+      border: 1px solid ${color.BORDER};
+      border-radius: ${radius.m};
       box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
       animation: ${bounceAnimation} 1s 0s both;
     `
