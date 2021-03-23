@@ -4,7 +4,7 @@ const candidateSelectors = [
   'textarea:not([disabled])',
   'a[href]',
   'button:not([disabled])',
-  '[tabindex="0"]',
+  '[tabindex]',
   'audio[controls]',
   'video[controls]',
   '[contenteditable]:not([contenteditable="false"])',
