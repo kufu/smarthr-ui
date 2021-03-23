@@ -5,7 +5,7 @@ import { DialogContentInner, DialogContentInnerProps } from './DialogContentInne
 
 type Props = DialogContentInnerProps
 
-export const Dialog: React.FC<Props> = ({ children, ...props }) => {
+export const Dialog: React.VFC<Props> = ({ children, ...props }) => {
   const element = useRef(document.createElement('div')).current
 
   useEffect(() => {

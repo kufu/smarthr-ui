@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
@@ -6,13 +6,20 @@ import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInne
 
 type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
 
-export const MessageDialogContent: React.FC<Props> = ({
+export const MessageDialogContent: React.VFC<Props> = ({
   title,
   description,
   closeText,
   ...props
 }) => {
   const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
+
+  const handleClickClose = useCallback(() => {
+    if (!active) {
+      return
+    }
+    onClickClose()
+  }, [active, onClickClose])
 
   return (
     <DialogContentRoot>
@@ -27,7 +34,7 @@ export const MessageDialogContent: React.FC<Props> = ({
           title={title}
           description={description}
           closeText={closeText}
-          onClickClose={onClickClose}
+          onClickClose={handleClickClose}
         />
       </DialogContentInner>
     </DialogContentRoot>

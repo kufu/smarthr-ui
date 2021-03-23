@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
@@ -6,7 +6,7 @@ import { ActionDialogContentInner, BaseProps } from './ActionDialogContentInner'
 
 type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
 
-export const ActionDialogContent: React.FC<Props> = ({
+export const ActionDialogContent: React.VFC<Props> = ({
   children,
   title,
   closeText,
@@ -17,6 +17,20 @@ export const ActionDialogContent: React.FC<Props> = ({
   ...props
 }) => {
   const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
+
+  const handleClickClose = useCallback(() => {
+    if (!active) {
+      return
+    }
+    onClickClose()
+  }, [active, onClickClose])
+
+  const handleClickAction = useCallback(() => {
+    if (!active) {
+      return
+    }
+    onClickAction(onClickClose)
+  }, [active, onClickAction, onClickClose])
 
   return (
     <DialogContentRoot>
@@ -32,8 +46,8 @@ export const ActionDialogContent: React.FC<Props> = ({
           closeText={closeText}
           actionText={actionText}
           actionTheme={actionTheme}
-          onClickAction={onClickAction}
-          onClickClose={onClickClose}
+          onClickAction={handleClickAction}
+          onClickClose={handleClickClose}
           actionDisabled={actionDisabled}
         >
           {children}

@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
@@ -18,7 +18,7 @@ type Props = {
   children: ReactNode
 }
 
-export const FilterDropdown: FC<Props> = ({
+export const FilterDropdown: VFC<Props> = ({
   isFiltered = false,
   onApply,
   onCancel,

@@ -1,21 +1,33 @@
-import React, { FC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
+
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 type Props = CheckBoxProps & {
   label: string
+  lineHeight?: number
 }
 
-export const CheckBoxLabel: FC<Props> = ({ label, className = '', ...props }) => {
+export const CheckBoxLabel: VFC<Props & ElementProps> = ({
+  label,
+  lineHeight = 1.5,
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper className={className}>
-      <Label className={`${props.disabled ? 'disabled' : ''}`} themes={theme}>
+    <Wrapper className={`${className} ${classNames.wrapper}`}>
+      <Label className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`} themes={theme}>
         <CheckBox {...props} />
-        <Txt themes={theme}>{label}</Txt>
+        <Txt className={classNames.text} lineHeight={lineHeight} themes={theme}>
+          {label}
+        </Txt>
       </Label>
     </Wrapper>
   )
@@ -26,27 +38,39 @@ const Wrapper = styled.div`
 `
 const Label = styled.label<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette } = themes
+    const { color } = themes
+
+    // 複数行テキストに対応させるため flex-start にする
     return css`
       display: flex;
-      align-items: center;
-      color: ${palette.TEXT_BLACK};
+      align-items: flex-start;
+      color: ${color.TEXT_BLACK};
       cursor: pointer;
 
       &.disabled {
-        color: ${palette.TEXT_DISABLED};
+        color: ${color.TEXT_DISABLED};
         cursor: default;
         pointer-events: none;
       }
     `
   }}
 `
-const Txt = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
+const Txt = styled.span<{ themes: Theme; lineHeight: number }>`
+  ${({ themes, lineHeight }) => {
+    const { fontSize, spacing } = themes
+
+    // checkbox と text の位置がずれるため、line-height 分を調整する疑似要素を作る
     return css`
-      margin: 0 0 0 ${size.pxToRem(size.space.XXS)};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      margin: 0 0 0 ${fontSize.pxToRem(spacing.XXS)};
+      font-size: ${fontSize.pxToRem(fontSize.TALL)};
+      line-height: ${lineHeight};
+      &::before {
+        content: '';
+        display: block;
+        height: 0;
+        width: 0;
+        margin-top: calc((1 - ${lineHeight}) * 0.3em);
+      }
     `
   }}
 `

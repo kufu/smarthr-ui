@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback, useRef } from 'react'
+import React, { ReactNode, VFC, useCallback, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
@@ -8,16 +8,49 @@ import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
 
 export type DialogContentInnerProps = {
+  /**
+   * Handler function when clicking on onverlay.
+   */
   onClickOverlay?: () => void
+  /**
+   * Handler function when pressing escape key.
+   */
   onPressEscape?: () => void
+  /**
+   * Whether to display a Dialog.
+   */
   isOpen: boolean
+  /**
+   * Specifies the top position of the Dialog content.
+   */
   top?: number
+  /**
+   * Specifies the right position of the Dialog content.
+   */
   right?: number
+  /**
+   * Specifies the bottom position of the Dialog content.
+   */
   bottom?: number
+  /**
+   * Specifies the left position of the Dialog content.
+   */
   left?: number
+  /**
+   * `id` of the component.
+   */
   id?: string
+  /**
+   * `aria-label` of the component.
+   */
   ariaLabel?: string
+  /**
+   * `aria-labelledby` of the component.
+   */
   ariaLabelledby?: string
+  /**
+   * The content of the component.
+   */
   children: ReactNode
 }
 
@@ -32,7 +65,7 @@ function exist(value: any) {
   return value !== undefined && value !== null
 }
 
-export const DialogContentInner: FC<DialogContentInnerProps> = ({
+export const DialogContentInner: VFC<DialogContentInnerProps> = ({
   onClickOverlay,
   onPressEscape = () => {
     /* noop */
@@ -57,6 +90,13 @@ export const DialogContentInner: FC<DialogContentInnerProps> = ({
     }, [isOpen, onPressEscape]),
   )
 
+  const handleClickOverlay = useCallback(() => {
+    if (!isOpen) {
+      return
+    }
+    onClickOverlay && onClickOverlay()
+  }, [isOpen, onClickOverlay])
+
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
       <CSSTransition
@@ -78,7 +118,7 @@ export const DialogContentInner: FC<DialogContentInnerProps> = ({
         aria-labelledby={ariaLabelledby}
       >
         <Wrapper ref={domRef} themes={theme}>
-          <Background onClick={onClickOverlay} themes={theme} />
+          <Background onClick={handleClickOverlay} themes={theme} />
           <FocusTrap>
             <Inner ref={innerRef} themes={theme} role="dialog" aria-modal="true" {...props}>
               {/* dummy element for focus management. */}

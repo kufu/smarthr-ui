@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
@@ -11,7 +11,7 @@ type Props = ActionDialogContentInnerProps & {
     'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
   >
 
-export const ActionDialog: React.FC<Props> = ({
+export const ActionDialog: React.VFC<Props> = ({
   children,
   title,
   closeText,
@@ -19,6 +19,7 @@ export const ActionDialog: React.FC<Props> = ({
   actionTheme,
   onClickAction,
   onClickClose,
+  responseMessage,
   actionDisabled = false,
   closeDisabled,
   ...props
@@ -33,6 +34,20 @@ export const ActionDialog: React.FC<Props> = ({
     }
   }, [element])
 
+  const handleClickClose = useCallback(() => {
+    if (!props.isOpen) {
+      return
+    }
+    onClickClose()
+  }, [onClickClose, props.isOpen])
+
+  const handleClickAction = useCallback(() => {
+    if (!props.isOpen) {
+      return
+    }
+    onClickAction(onClickClose)
+  }, [onClickAction, onClickClose, props.isOpen])
+
   return createPortal(
     <DialogContentInner ariaLabel={title} {...props}>
       <ActionDialogContentInner
@@ -42,8 +57,9 @@ export const ActionDialog: React.FC<Props> = ({
         actionTheme={actionTheme}
         actionDisabled={actionDisabled}
         closeDisabled={closeDisabled}
-        onClickClose={onClickClose}
-        onClickAction={onClickAction}
+        onClickClose={handleClickClose}
+        onClickAction={handleClickAction}
+        responseMessage={responseMessage}
       >
         {children}
       </ActionDialogContentInner>
