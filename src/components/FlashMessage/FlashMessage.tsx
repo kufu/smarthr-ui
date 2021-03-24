@@ -12,18 +12,29 @@ import {
 } from '../Icon'
 import { SecondaryButton } from '../Button'
 
-type Props = {
+export const messageTypes = ['success', 'info', 'warning', 'error', ''] as const
+export const animationTypes = ['bounce', 'fade', 'none'] as const
+
+export type Props = {
   visible: boolean
-  type: 'success' | 'info' | 'warning' | 'error' | ''
+  type: typeof messageTypes[number]
   text: string
   className?: string
+  animation?: typeof animationTypes[number]
   onClose: () => void
 }
 
 const REMOVE_DELAY = 8000
 let timerId: any = 0
 
-export const FlashMessage: FC<Props> = ({ visible, type, text, onClose, className = '' }) => {
+export const FlashMessage: FC<Props> = ({
+  animation = 'bounce',
+  visible,
+  type,
+  text,
+  onClose,
+  className = '',
+}) => {
   const theme = useTheme()
 
   useEffect(() => {
@@ -62,7 +73,7 @@ export const FlashMessage: FC<Props> = ({ visible, type, text, onClose, classNam
   }
 
   return (
-    <Wrapper className={`${type} ${className}`} themes={theme} role="alert">
+    <Wrapper className={`${type} ${className}`} themes={theme} animation={animation} role="alert">
       <Icon size={14} color={iconColor} />
       <Txt themes={theme}>{text}</Txt>
       <CloseButton className="close" onClick={onClose} size="s" square themes={theme}>
@@ -94,9 +105,33 @@ const bounceAnimation = keyframes`
     transform: translate3d(0, -4px, 0);
   }
 `
-const Wrapper = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size, spacing, color, radius, zIndex } = themes
+
+const fadeAnimation = keyframes`
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+`
+
+const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
+  ${({ themes, animation }) => {
+    const { size, spacing, radius, color, zIndex } = themes
+
+    let keyframe = bounceAnimation
+    switch (animation) {
+      case 'bounce':
+        keyframe = bounceAnimation
+        break
+      case 'fade':
+        keyframe = fadeAnimation
+        break
+      case 'none':
+        keyframe = fadeAnimation
+        break
+    }
 
     return css`
       z-index: ${zIndex.FLASH_MESSAGE};
@@ -113,7 +148,11 @@ const Wrapper = styled.div<{ themes: Theme }>`
       border: 1px solid ${color.BORDER};
       border-radius: ${radius.m};
       box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
-      animation: ${bounceAnimation} 1s 0s both;
+      animation: ${keyframe} ${animation === 'none' ? '0.01s' : '1s'} 0s both;
+
+      @media (prefers-reduced-motion) {
+        animation-duration: 0.01s;
+      }
     `
   }}
 `

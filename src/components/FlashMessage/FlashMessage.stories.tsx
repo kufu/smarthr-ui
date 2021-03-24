@@ -1,87 +1,152 @@
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import * as React from 'react'
-import styled from 'styled-components'
 import readme from './README.md'
+import styled from 'styled-components'
 
-import { FlashMessage } from './FlashMessage'
+import { FlashMessage, Props, animationTypes, messageTypes } from './FlashMessage'
 
-type FlashMessageType = 'success' | 'info' | 'warning' | 'error' | ''
-
-interface State {
-  form: {
-    type: FlashMessageType
-    text: string
-  }
-  flash: {
-    type: FlashMessageType
-    text: string
-    visible: boolean
-  }
+export default {
+  title: 'FlashMessage',
+  Component: FlashMessage,
+  parameters: {
+    docs: {
+      description: { component: readme },
+      source: {
+        type: 'code',
+      },
+    },
+  },
 }
 
-class WrappedComponent extends React.PureComponent<Record<string, unknown>, State> {
-  public state = {
-    form: {
-      type: '' as const,
-      text: '',
-    },
-    flash: {
-      type: '' as const,
-      text: '',
-      visible: false,
-    },
+const Template: Story = (arg) => {
+  return (
+    <List>
+      {messageTypes.map((messageType) => (
+        <li key={messageType}>
+          <FlashMessage
+            type={messageType}
+            visible={true}
+            text={messageType}
+            animation={arg.animation}
+            onClose={() => {
+              console.log('close')
+            }}
+          />
+        </li>
+      ))}
+      <li>
+        <FlashMessage
+          type="success"
+          visible={true}
+          animation={arg.animation}
+          text="長いテキスト:編集内容を自動保存したので何卒ご確認のほどよろしくお願いいたします。編集内容を自動保存したので何卒ご確認のほどよろしくお願いいたします。編集内容を自動保存したので何卒ご確認のほどよろしくお願いいたします。"
+          onClose={() => {
+            console.log('close')
+          }}
+        />
+      </li>
+    </List>
+  )
+}
+export const Bounce = Template.bind({})
+Bounce.args = { animation: 'bounce' }
+export const Fade = Template.bind({})
+Fade.args = { animation: 'fade' }
+export const None = Template.bind({})
+None.args = { animation: 'none' }
+
+export const Demo: Story = () => {
+  const [visible, setVisible] = React.useState<boolean>(true)
+  const [type, setType] = React.useState<Props['type']>('success')
+  const [animation, setAnimation] = React.useState<Props['animation']>('bounce')
+  const [text, setText] = React.useState<string>('自動保存しました')
+
+  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setType(event.currentTarget.value as Props['type'])
   }
 
-  public render() {
-    const { form, flash } = this.state
-
-    return (
-      <div>
-        <Form onSubmit={this.onSubmit}>
-          <input type="text" value={form.text} onChange={this.onChangeText} />
-          <select value={form.type} onChange={this.onChangeType}>
-            <option value="">選択してください</option>
-            <option value="success">success</option>
-            <option value="info">info</option>
-            <option value="warning">warning</option>
-            <option value="error">error</option>
-          </select>
-          <input type="submit" value="フラッシュメッセージを表示する" />
-        </Form>
-
-        <FlashMessage {...flash} onClose={this.onClose} />
-      </div>
-    )
+  const handleAnimationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAnimation(event.currentTarget.value as Props['animation'])
   }
 
-  private onClose = () => {
-    this.setState((state) => ({ flash: { ...state.flash, visible: false } }))
-  }
+  return (
+    <div style={{ padding: '20px' }}>
+      <p>
+        <label>
+          visible
+          <input
+            type="checkbox"
+            name="visible"
+            checked={visible}
+            onChange={() => setVisible(!visible)}
+          />
+        </label>
+      </p>
+      <p>
+        <label>
+          text
+          <input type="text" value={text} onChange={(e) => setText(e.currentTarget.value)} />
+        </label>
+      </p>
+      <fieldset>
+        <legend>type</legend>
+        {messageTypes.map((messageType) => (
+          <label key={messageType}>
+            <input
+              type="radio"
+              onChange={handleTypeChange}
+              value={messageType}
+              checked={type === messageType}
+            />
+            {messageType}
+          </label>
+        ))}
+      </fieldset>
+      <hr />
+      <fieldset>
+        <legend>animation</legend>
+        {animationTypes.map((animationType) => (
+          <label key={animationType}>
+            <input
+              type="radio"
+              onChange={handleAnimationChange}
+              value={animationType}
+              checked={animation === animationType}
+            />
+            {animationType}
+          </label>
+        ))}
+      </fieldset>
 
-  private onChangeText = (e: { currentTarget: { value: string } }) => {
-    const text = e.currentTarget.value
-    this.setState((state) => ({ form: { ...state.form, text } }))
-  }
-
-  private onChangeType = (e: { currentTarget: { value: string } }) => {
-    const type = e.currentTarget.value as FlashMessageType
-    this.setState((state) => ({ form: { ...state.form, type } }))
-  }
-
-  private onSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault()
-    this.setState((state) => ({ flash: { ...state.form, visible: true } }))
-  }
+      <FlashMessage
+        visible={visible}
+        type={type}
+        text={text}
+        animation={animation}
+        onClose={() => {
+          setVisible(false)
+        }}
+      />
+    </div>
+  )
 }
 
-storiesOf('FlashMessage', module)
-  .addParameters({
-    readme: {
-      sidebar: readme,
-    },
-  })
-  .add('all', () => <WrappedComponent />)
+const List = styled.ul`
+  margin: 40px;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
-const Form = styled.form`
-  margin-bottom: 24px;
+  & > li {
+    min-height: 60px;
+    position: relative;
+  }
+
+  /* overwrite FlashMessage style */
+  & > li > div {
+    bottom: auto;
+    left: auto;
+  }
 `
