@@ -14,6 +14,7 @@ import { SecondaryButton } from '../Button'
 
 export const messageTypes = ['success', 'info', 'warning', 'error', ''] as const
 export const animationTypes = ['bounce', 'fade', 'none'] as const
+export const roles = ['alert', 'status'] as const
 
 export type Props = {
   visible: boolean
@@ -21,6 +22,7 @@ export type Props = {
   text: string
   className?: string
   animation?: typeof animationTypes[number]
+  role?: typeof roles[number]
   onClose: () => void
 }
 
@@ -34,6 +36,7 @@ export const FlashMessage: FC<Props> = ({
   text,
   onClose,
   className = '',
+  role = 'alert',
 }) => {
   const theme = useTheme()
 
@@ -73,7 +76,7 @@ export const FlashMessage: FC<Props> = ({
   }
 
   return (
-    <Wrapper className={`${type} ${className}`} themes={theme} animation={animation} role="alert">
+    <Wrapper className={`${type} ${className}`} themes={theme} animation={animation} role={role}>
       <Icon size={14} color={iconColor} />
       <Txt themes={theme}>{text}</Txt>
       <CloseButton className="close" onClick={onClose} size="s" square themes={theme}>
