@@ -77,11 +77,13 @@ export const FlashMessage: FC<Props> = ({
 
   return (
     <Wrapper className={`${type} ${className}`} themes={theme} animation={animation} role={role}>
-      <Icon size={14} color={iconColor} />
+      <IconWrapper>
+        <Icon size={14} color={iconColor} />
+      </IconWrapper>
       <Txt themes={theme}>{text}</Txt>
-      <CloseButton className="close" onClick={onClose} size="s" square themes={theme}>
+      <SecondaryButton className="close" onClick={onClose} size="s" square>
         <FaTimesIcon size={16} />
-      </CloseButton>
+      </SecondaryButton>
     </Wrapper>
   )
 }
@@ -145,8 +147,8 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
       box-sizing: border-box;
       align-items: center;
       min-width: ${size.pxToRem(200)};
-      padding: ${size.pxToRem(spacing.XS)};
-      padding-right: ${size.pxToRem(54)};
+      padding: ${size.pxToRem(spacing.XXS)} ${size.pxToRem(spacing.XS)};
+      padding-right: ${size.pxToRem(spacing.XXS)};
       background-color: #fff;
       border: 1px solid ${color.BORDER};
       border-radius: ${radius.m};
@@ -156,32 +158,30 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
       @media (prefers-reduced-motion) {
         animation-duration: 0.01s;
       }
-    `
-  }}
-`
-const CloseButton = styled(SecondaryButton)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
 
-    return css`
-      position: absolute;
-      top: 50%;
-      right: ${pxToRem(space.XXS)};
-      transform: translateY(-50%);
+      & > * + * {
+        margin-left: ${size.space.XXS}px;
+      }
     `
   }}
 `
+
+const IconWrapper = styled.span`
+  flex-shrink: 0;
+`
+
 const Txt = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { pxToRem, space, font } = themes.size
+    const { pxToRem, font } = themes.size
 
     return css`
       flex-grow: 1;
       flex-shrink: 1;
+      margin-top: 0;
+      margin-bottom: 0;
       padding: 0;
-      margin: 0 0 0 ${pxToRem(space.XXS)};
       font-size: ${pxToRem(font.TALL)};
-      line-height: 1;
+      line-height: 1.5;
     `
   }}
 `
