@@ -23,6 +23,7 @@ export const PaginationItem: FC<Props> = ({ page, currentPage, onClick }) => {
         themes={theme}
         aria-current="page"
         aria-label={`${page}ページ目、現在のページ`}
+        disabled
       >
         {page}
       </ItemButton>
