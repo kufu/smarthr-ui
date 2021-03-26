@@ -1,0 +1,56 @@
+name: publish release
+
+on:
+  issues:
+    types:
+      - labeled
+
+jobs:
+  publish_release:
+    if: github.event.issue.state == 'open' && contains(github.event.issue.labels.*.name, 'release candidate') && github.event.label.name == 'approve release'
+    runs-on: ubuntu-latest
+    env:
+      CHANGELOG_PATH: /tmp/CHANGELOG.md
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: release-candidate
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: 'https://registry.npmjs.org'
+      - name: git config
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+      - run: yarn install
+      - run: yarn release
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: echo NEW_TAG=$(git describe) >> $GITHUB_ENV
+      - run: git push origin $NEW_TAG
+      - run: npx ts-node ./scripts/getLatestChangelog.ts > ${{ env.CHANGELOG_PATH }}
+      - name: cherry-pick release commit
+        run: |
+          git checkout master
+          git cherry-pick $NEW_TAG
+      - name: craete pull request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: 'chore(release): ${{ env.NEW_TAG }}'
+          branch: 'merge-release-${{ env.NEW_TAG }}'
+      - name: create release on GitHub
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.NEW_TAG }}
+          release_name: ${{ env.NEW_TAG }}
+          body_path: ${{ env.CHANGELOG_PATH }}
+          commitish: master
+      - name: close issue
+        uses: peter-evans/close-issue@v1
+      - name: delete branch
+        run: git push origin :release-candidate
