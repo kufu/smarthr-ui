@@ -1,9 +1,12 @@
-import React, { ChangeEvent, DragEvent, useCallback, useRef, useState } from 'react'
+import React, { ChangeEvent, DragEvent, HTMLAttributes, useCallback, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
+import { useClassNames } from './useClassNames'
+
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DropZoneProps>
 
 type DropZoneProps = {
   onSelectFiles: (
@@ -19,8 +22,13 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.stopPropagation()
 }
 
-export const DropZone: React.VFC<DropZoneProps> = ({ children, onSelectFiles, accept }) => {
+export const DropZone: React.VFC<DropZoneProps & ElementProps> = ({
+  children,
+  onSelectFiles,
+  accept,
+}) => {
   const theme = useTheme()
+  const classNames = useClassNames()
   const fileRef = useRef<HTMLInputElement>(null)
   const [filesDraggedOver, setFilesDraggedOver] = useState(false)
 
@@ -63,6 +71,7 @@ export const DropZone: React.VFC<DropZoneProps> = ({ children, onSelectFiles, ac
       onDrop={onDrop}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
+      className={classNames.wrapper}
     >
       {children}
       <SecondaryButton prefix={<FaFolderOpenIcon size={14} />} onClick={onClickButton}>
