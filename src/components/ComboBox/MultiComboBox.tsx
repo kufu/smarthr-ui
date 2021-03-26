@@ -403,16 +403,15 @@ const Placeholder = styled.p<{ themes: Theme }>`
 `
 const Suffix = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame } = themes
+    const { spacing, fontSize, border } = themes
 
     return css`
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 31px;
-      min-height: 24px;
-      margin: ${size.pxToRem(size.space.XXS)} 0;
-      border-left: ${frame.border.default};
+      margin: ${fontSize.pxToRem(spacing.XXS)} 0;
+      padding: 0 ${fontSize.pxToRem(spacing.XXS)};
+      border-left: ${border.shorthand};
       box-sizing: border-box;
     `
   }}
