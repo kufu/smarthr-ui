@@ -185,79 +185,77 @@ export const MultiComboBox: FC<Props> = ({
       aria-haspopup="listbox"
       aria-expanded={isFocused}
     >
-      <Inner>
-        <InputArea themes={theme}>
-          <List themes={theme}>
-            {selectedItems.map(({ value, label, deletable = true }, i) => (
-              <li key={i}>
-                <SelectedItem themes={theme} className={deletable ? 'deletable' : ''}>
-                  {label}
+      <InputArea themes={theme}>
+        <List themes={theme}>
+          {selectedItems.map(({ value, label, deletable = true }, i) => (
+            <li key={i}>
+              <SelectedItem themes={theme} className={deletable ? 'deletable' : ''}>
+                {label}
 
-                  {deletable && (
-                    <DeleteButton
-                      type="button"
-                      themes={theme}
-                      className={DELETE_BUTTON_CLASS_NAME}
-                      onClick={() => onDelete({ value, label })}
-                    >
-                      <DeleteIcon
-                        size={11}
-                        color={theme.palette.TEXT_BLACK}
-                        visuallyHiddenText="delete"
-                      />
-                    </DeleteButton>
-                  )}
-                </SelectedItem>
-              </li>
-            ))}
+                {deletable && (
+                  <DeleteButton
+                    type="button"
+                    themes={theme}
+                    className={DELETE_BUTTON_CLASS_NAME}
+                    onClick={() => onDelete({ value, label })}
+                  >
+                    <DeleteIcon
+                      size={11}
+                      color={theme.palette.TEXT_BLACK}
+                      visuallyHiddenText="delete"
+                    />
+                  </DeleteButton>
+                )}
+              </SelectedItem>
+            </li>
+          ))}
 
-            <InputWrapper className={isFocused ? undefined : 'hidden'}>
-              <Input
-                type="text"
-                name={name}
-                value={inputValue}
-                disabled={disabled}
-                ref={inputRef}
-                themes={theme}
-                onChange={(e) => {
-                  if (onChange) onChange(e)
-                  setInputValue(e.currentTarget.value)
-                }}
-                onFocus={() => {
-                  if (!isFocused) {
-                    focus()
-                  }
-                }}
-                onCompositionStart={() => setIsComposing(true)}
-                onCompositionEnd={() => setIsComposing(false)}
-                onKeyDown={(e) => {
-                  if (isComposing) {
-                    return
-                  }
-                  if (e.key === 'Tab') {
-                    blur()
-                    return
-                  }
-                  handleInputKeyDown(e)
-                }}
-                aria-activedescendant={aria.activeDescendant}
-                aria-autocomplete="list"
-                aria-controls={aria.listBoxId}
-              />
-            </InputWrapper>
+          <InputWrapper className={isFocused ? undefined : 'hidden'}>
+            <Input
+              type="text"
+              name={name}
+              value={inputValue}
+              disabled={disabled}
+              ref={inputRef}
+              themes={theme}
+              onChange={(e) => {
+                if (onChange) onChange(e)
+                setInputValue(e.currentTarget.value)
+              }}
+              onFocus={() => {
+                if (!isFocused) {
+                  focus()
+                }
+              }}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
+              onKeyDown={(e) => {
+                if (isComposing) {
+                  return
+                }
+                if (e.key === 'Tab') {
+                  blur()
+                  return
+                }
+                handleInputKeyDown(e)
+              }}
+              aria-activedescendant={aria.activeDescendant}
+              aria-autocomplete="list"
+              aria-controls={aria.listBoxId}
+            />
+          </InputWrapper>
 
-            {selectedItems.length === 0 && placeholder && !isFocused && (
-              <li>
-                <Placeholder themes={theme}>{placeholder}</Placeholder>
-              </li>
-            )}
-          </List>
-        </InputArea>
+          {selectedItems.length === 0 && placeholder && !isFocused && (
+            <li>
+              <Placeholder themes={theme}>{placeholder}</Placeholder>
+            </li>
+          )}
+        </List>
+      </InputArea>
 
-        <Suffix themes={theme}>
-          <FaCaretDownIcon color={isFocused ? theme.palette.TEXT_BLACK : theme.palette.BORDER} />
-        </Suffix>
-      </Inner>
+      <Suffix themes={theme}>
+        <FaCaretDownIcon color={isFocused ? theme.palette.TEXT_BLACK : theme.palette.BORDER} />
+      </Suffix>
 
       {renderListBox()}
     </Container>
@@ -269,7 +267,7 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
     const { frame, size, palette } = themes
 
     return css`
-      display: inline-block;
+      display: inline-flex;
       min-width: calc(62px + 32px + ${size.pxToRem(size.space.XXS)} * 2);
       width: ${typeof width === 'number' ? `${width}px` : width};
       border-radius: ${frame.border.radius.m};
@@ -291,10 +289,6 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       }
     `
   }}
-`
-const Inner = styled.div`
-  display: flex;
-  width: 100%;
 `
 const InputArea = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
