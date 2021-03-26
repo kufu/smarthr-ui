@@ -270,8 +270,10 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       display: inline-flex;
       min-width: calc(62px + 32px + ${size.pxToRem(size.space.XXS)} * 2);
       width: ${typeof width === 'number' ? `${width}px` : width};
+      min-height: 40px;
       border-radius: ${frame.border.radius.m};
       border: ${frame.border.default};
+      box-sizing: border-box;
       background-color: #fff;
       cursor: text;
 
