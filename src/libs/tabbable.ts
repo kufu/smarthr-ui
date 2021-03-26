@@ -1,9 +1,9 @@
 const candidateSelectors = [
-  'input',
-  'select',
-  'textarea',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
   'a[href]',
-  'button',
+  'button:not([disabled])',
   '[tabindex]',
   'audio[controls]',
   'video[controls]',

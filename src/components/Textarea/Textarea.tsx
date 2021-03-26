@@ -73,7 +73,6 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
       border-radius: ${frame.border.radius.m};
       width: ${textAreaWidth};
       background-color: #fff;
-      outline: none;
       border: ${frame.border.default};
       box-sizing: border-box;
       ${error
