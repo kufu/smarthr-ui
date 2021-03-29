@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, FC, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -11,18 +11,57 @@ import { useListBox } from './useListBox'
 const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
 
 type Props = {
+  /**
+   * A list of items to choose from.
+   */
   items: Array<{ value: string; label: string; disabled?: boolean }>
+  /**
+   * A list of items that have already been selected.
+   */
   selectedItems: Array<{ value: string; label: string; deletable?: boolean }>
+  /**
+   * The value of the input `name` attribute.
+   */
   name?: string
+  /**
+   * The value of the input `disabled` attribute.
+   */
   disabled?: boolean
+  /**
+   * If true, the outline of this component will be DANGER color.
+   */
   error?: boolean
+  /**
+   *  If true, you can add new item that do not exist in `items` props.
+   */
   creatable?: boolean
+  /**
+   * The value of the input `placeholder` attribute.
+   */
   placeholder?: string
+  /**
+   * The value given to the width style of input.
+   */
   width?: number | string
+  /**
+   *  The `className` given to the outermost element of this component.
+   */
   className?: string
+  /**
+   * Fire when the value of input changes.
+   */
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  /**
+   * Fire when adding an item that does not exist in `items` props.
+   */
   onAdd?: (label: string) => void
+  /**
+   *  Fire when clicking the delete element of `selectedItems` button.
+   */
   onDelete: (option: { value: string; label: string }) => void
+  /**
+   * Fire when clicking an element of `items`.
+   */
   onSelect: (option: { value: string; label: string }) => void
 }
 
@@ -99,7 +138,7 @@ export const MultiComboBox: FC<Props> = ({
     }, [blur]),
   )
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setInputValue('')
 
     if (isFocused && inputRef.current) {
@@ -278,6 +317,7 @@ const List = styled.ul<{ themes: Theme }>`
     return css`
       display: flex;
       flex-wrap: wrap;
+      margin: 0;
       padding: ${size.pxToRem(3.5)} 0;
       list-style: none;
 

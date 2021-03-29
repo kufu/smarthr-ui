@@ -9,7 +9,7 @@ import { useId } from '../../hooks/useId'
 import { FaPlusCircleIcon } from '../Icon'
 
 type Args = {
-  items: Array<{ value: string; label: string; disabled?: boolean }>
+  items: Array<{ value: string; label: string; disabled?: boolean; isSelected?: boolean }>
   inputValue: string
   onAdd?: (label: string) => void
   onSelect: (option: { value: string; label: string }) => void
@@ -24,6 +24,7 @@ type Option = {
   value: string
   disabled?: boolean
   isAdding?: boolean
+  isSelected?: boolean
 }
 
 export function useListBox({
@@ -162,8 +163,9 @@ export function useListBox({
         aria-hidden={!isExpanded}
       >
         {options.map((option, i) => {
-          const isSelected = activeOptionIndex === i
-          const { label, disabled, isAdding } = option
+          const isActive = activeOptionIndex === i
+          const className = isActive ? 'active' : undefined
+          const { value, label, disabled, isAdding, isSelected } = option
           if (isAdding) {
             return (
               <AddButton
@@ -173,7 +175,7 @@ export function useListBox({
                 onMouseOver={() => setActiveOptionIndex(0)}
                 id={addingButtonId}
                 role="option"
-                aria-selected={isSelected}
+                className={className}
               >
                 <AddIcon size={14} color={theme.palette.TEXT_LINK} $theme={theme} />
                 <AddText themes={theme}>「{label}」を追加</AddText>
@@ -186,10 +188,11 @@ export function useListBox({
               type="button"
               themes={theme}
               disabled={disabled}
-              onClick={() => onSelect(option)}
+              onClick={() => onSelect({ value, label })}
               onMouseOver={() => setActiveOptionIndex(i)}
               id={getOptionId(option)}
               role="option"
+              className={className}
               aria-selected={isSelected}
             >
               {label}
@@ -274,9 +277,14 @@ const SelectButton = styled.button<{ themes: Theme }>`
       text-align: left;
       cursor: pointer;
 
-      &[aria-selected='true'] {
+      &.active {
         background-color: ${palette.COLUMN};
         color: inherit;
+      }
+
+      &[aria-selected='true'] {
+        background-color: ${palette.MAIN};
+        color: #fff;
       }
 
       &[disabled] {
