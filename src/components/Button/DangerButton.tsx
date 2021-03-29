@@ -42,7 +42,6 @@ const dangerStyle = css`
       color: #fff;
       border: none;
       background-color: ${palette.DANGER};
-      color: #fff;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
       &.hover {
