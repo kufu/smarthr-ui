@@ -294,7 +294,7 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
 `
 const InputArea = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize, spacing } = themes
 
     return css`
       /* for IE */
@@ -302,23 +302,30 @@ const InputArea = styled.div<{ themes: Theme }>`
       flex: 1 1 0px;
       overflow-y: auto;
       max-height: 300px;
-      padding: 0 ${size.pxToRem(4)};
+      padding-left: ${fontSize.pxToRem(spacing.XXS)};
     `
   }}
 `
+const smallMargin = 6.5
+const borderWidth = 1
 const List = styled.ul<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const {
+      fontSize: { pxToRem },
+      spacing,
+    } = themes
 
     return css`
       display: flex;
       flex-wrap: wrap;
-      margin: 0;
-      padding: ${size.pxToRem(3.5)} 0;
+      margin: ${pxToRem(smallMargin - borderWidth)} 0 0;
+      padding: 0;
       list-style: none;
 
       > li {
-        margin: ${size.pxToRem(4)};
+        min-height: 27px;
+        margin-right: ${pxToRem(spacing.XXS)};
+        margin-bottom: ${pxToRem(smallMargin - borderWidth)};
       }
     `
   }}
@@ -329,8 +336,8 @@ const SelectedItem = styled.div<{ themes: Theme }>`
 
     return css`
       position: relative;
-      padding: ${size.pxToRem(size.space.XXS)};
-      border-radius: calc(${size.font.SHORT}px + ${size.pxToRem(size.space.XXS)} * 2);
+      padding: ${size.pxToRem(size.space.XXS - borderWidth)};
+      border-radius: calc(${size.font.SHORT}px + ${size.pxToRem(size.space.XXS - borderWidth)} * 2);
       border: ${frame.border.default};
       background-color: #fff;
       color: ${palette.TEXT_BLACK};
