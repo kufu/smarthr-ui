@@ -67,10 +67,12 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       if (prefixRef.current) {
         setPrefixWidth(prefixRef.current.clientWidth)
       }
+    }, [prefix])
+    useLayoutEffect(() => {
       if (suffixRef.current) {
         setSuffixWidth(suffixRef.current.clientWidth)
       }
-    }, [])
+    }, [suffix])
 
     return (
       <Wrapper
