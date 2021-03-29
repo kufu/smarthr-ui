@@ -1,7 +1,8 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, HTMLAttributes, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import {
   FaCheckCircleIcon,
@@ -20,11 +21,20 @@ type Props = {
   onClose: () => void
 }
 
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+
 const REMOVE_DELAY = 8000
 let timerId: any = 0
 
-export const FlashMessage: FC<Props> = ({ visible, type, text, onClose, className = '' }) => {
+export const FlashMessage: FC<Props & ElementProps> = ({
+  visible,
+  type,
+  text,
+  onClose,
+  className = '',
+}) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   useEffect(() => {
     if (visible) {
@@ -62,10 +72,18 @@ export const FlashMessage: FC<Props> = ({ visible, type, text, onClose, classNam
   }
 
   return (
-    <Wrapper className={`${type} ${className}`} themes={theme} role="alert">
-      <Icon size={14} color={iconColor} />
-      <Txt themes={theme}>{text}</Txt>
-      <CloseButton className="close" onClick={onClose} size="s" square themes={theme}>
+    <Wrapper className={`${type} ${classNames.wrapper} ${className}`} themes={theme} role="alert">
+      <Icon size={14} color={iconColor} className={classNames.icon} />
+      <Txt themes={theme} className={classNames.text}>
+        {text}
+      </Txt>
+      <CloseButton
+        className={`close ${classNames.button}`}
+        onClick={onClose}
+        size="s"
+        square
+        themes={theme}
+      >
         <FaTimesIcon size={16} />
       </CloseButton>
     </Wrapper>
