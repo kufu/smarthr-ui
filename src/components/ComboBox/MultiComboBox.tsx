@@ -7,6 +7,7 @@ import { hasParentElementByClassName } from './multiComboBoxHelper'
 
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { useListBox } from './useListBox'
+import { ResetButton } from '../Button/ResetButton'
 
 const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
 
@@ -189,8 +190,8 @@ export const MultiComboBox: FC<Props> = ({
         <List themes={theme}>
           {selectedItems.map(({ value, label, deletable = true }, i) => (
             <li key={i}>
-              <SelectedItem themes={theme} className={deletable ? 'deletable' : ''}>
-                {label}
+              <SelectedItem themes={theme}>
+                <SelectedItemLabel themes={theme}>{label}</SelectedItemLabel>
 
                 {deletable && (
                   <DeleteButton
@@ -335,36 +336,40 @@ const SelectedItem = styled.div<{ themes: Theme }>`
     const { frame, palette, size } = themes
 
     return css`
-      position: relative;
-      padding: ${size.pxToRem(size.space.XXS - borderWidth)};
+      display: flex;
       border-radius: calc(${size.font.SHORT}px + ${size.pxToRem(size.space.XXS - borderWidth)} * 2);
       border: ${frame.border.default};
       background-color: #fff;
       color: ${palette.TEXT_BLACK};
       font-size: ${size.font.SHORT}px;
       line-height: 1;
-
-      &.deletable {
-        padding-right: ${size.pxToRem(size.space.M)};
-      }
     `
   }}
 `
-const DeleteButton = styled.button<{ themes: Theme }>`
+const SelectedItemLabel = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const {
+      fontSize: { pxToRem },
+      spacing,
+    } = themes
 
     return css`
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: calc(11px + ${size.pxToRem(size.space.XXS)} * 2);
-      height: calc(11px + ${size.pxToRem(size.space.XXS)} * 2);
-      padding: ${size.pxToRem(size.space.XXS)};
+      padding: ${pxToRem(spacing.XXS - borderWidth)};
+    `
+  }}
+`
+const DeleteButton = styled(ResetButton)<{ themes: Theme }>`
+  ${({ themes }) => {
+    const {
+      fontSize: { pxToRem },
+      spacing,
+    } = themes
+
+    return css`
+      padding: ${pxToRem(spacing.XXS - borderWidth)};
       border-radius: 50%;
-      border: none;
-      background-color: transparent;
       cursor: pointer;
+      line-height: 0;
     `
   }}
 `
@@ -375,6 +380,7 @@ const InputWrapper = styled.li`
   &.hidden {
     position: absolute;
     opacity: 0;
+    pointer-events: none;
   }
 
   /* for IE */
