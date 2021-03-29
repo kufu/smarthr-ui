@@ -333,15 +333,16 @@ const List = styled.ul<{ themes: Theme }>`
 `
 const SelectedItem = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { frame, palette, size } = themes
+    const { border, color, fontSize, spacing } = themes
+    const { pxToRem } = fontSize
 
     return css`
       display: flex;
-      border-radius: calc(${size.font.SHORT}px + ${size.pxToRem(size.space.XXS - borderWidth)} * 2);
-      border: ${frame.border.default};
+      border-radius: calc(${fontSize.SHORT}px + ${pxToRem(spacing.XXS - borderWidth)} * 2);
+      border: ${border.shorthand};
       background-color: #fff;
-      color: ${palette.TEXT_BLACK};
-      font-size: ${size.font.SHORT}px;
+      color: ${color.TEXT_BLACK};
+      font-size: ${fontSize.SHORT}px;
       line-height: 1;
     `
   }}
@@ -389,13 +390,13 @@ const InputWrapper = styled.li`
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize } = themes
 
     return css`
       min-width: 80px;
       width: 100%;
       border: none;
-      font-size: ${size.font.TALL}px;
+      font-size: ${fontSize.TALL}px;
       box-sizing: border-box;
       outline: none;
       &[disabled] {
@@ -406,12 +407,12 @@ const Input = styled.input<{ themes: Theme }>`
 `
 const Placeholder = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, size } = themes
+    const { color, fontSize } = themes
 
     return css`
       margin: 0;
-      color: ${palette.TEXT_GREY};
-      font-size: ${size.font.TALL}px;
+      color: ${color.TEXT_GREY};
+      font-size: ${fontSize.TALL}px;
       line-height: 25px;
     `
   }}
