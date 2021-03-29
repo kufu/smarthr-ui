@@ -57,7 +57,7 @@ export const FormGroup: FC<Props> = ({
             (message, index) => (
               <ErrorMessage themes={theme} key={index}>
                 <ErrorIcon
-                  color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.DANGER}
+                  color={disabled ? theme.color.TEXT_DISABLED : theme.color.DANGER}
                   themes={theme}
                   size={14}
                 />
@@ -73,12 +73,12 @@ export const FormGroup: FC<Props> = ({
 
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette } = themes
+    const { color } = themes
     return css`
       display: block;
 
       &.disabled {
-        color: ${palette.TEXT_DISABLED};
+        color: ${color.TEXT_DISABLED};
       }
     `
   }}
@@ -86,11 +86,11 @@ const Wrapper = styled.div<{ themes: Theme }>`
 
 const Label = styled.label<{ themes: Theme; margin: innerMarginType }>`
   ${({ themes, margin }) => {
-    const { size } = themes
+    const { fontSize, spacing } = themes
 
     return css`
       display: block;
-      margin-bottom: ${size.pxToRem(size.space[margin])};
+      margin-bottom: ${fontSize.pxToRem(spacing[margin])};
     `
   }}
 `
@@ -105,16 +105,16 @@ const Title = styled(Heading)<{ themes: Theme }>`
   display: inline-block;
 
   &.disabled {
-    color: ${({ themes }) => themes.palette.TEXT_DISABLED};
+    color: ${({ themes }) => themes.color.TEXT_DISABLED};
   }
 `
 
 const StatusLabels = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize, spacing } = themes
 
     return css`
-      margin-left: ${size.pxToRem(size.space.XXS)};
+      margin-left: ${fontSize.pxToRem(spacing.XXS)};
       display: inline-block;
       line-height: 1;
     `
@@ -123,10 +123,10 @@ const StatusLabels = styled.span<{ themes: Theme }>`
 
 const StyledStatusLabel = styled(StatusLabel)<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize } = themes
 
     return css`
-      margin-right: ${size.pxToRem(4)};
+      margin-right: ${fontSize.pxToRem(4)};
       display: inline-block;
     `
   }}
@@ -134,22 +134,22 @@ const StyledStatusLabel = styled(StatusLabel)<{ themes: Theme }>`
 
 const HelpMessage = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize, spacing } = themes
 
     return css`
-      margin-top: ${size.pxToRem(size.space.XXS)};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      margin-top: ${fontSize.pxToRem(spacing.XXS)};
+      font-size: ${fontSize.pxToRem(fontSize.TALL)};
     `
   }}
 `
 
 const ErrorMessage = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize, spacing } = themes
 
     return css`
-      margin-top: ${size.pxToRem(size.space.XXS)};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      margin-top: ${fontSize.pxToRem(spacing.XXS)};
+      font-size: ${fontSize.pxToRem(fontSize.TALL)};
       line-height: 1;
     `
   }}
@@ -161,10 +161,10 @@ const ErrorText = styled.span`
 
 const ErrorIcon = styled(FaExclamationCircleIcon)<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize } = themes
 
     return css`
-      margin-right: ${size.pxToRem(4)};
+      margin-right: ${fontSize.pxToRem(4)};
       vertical-align: middle;
     `
   }}
