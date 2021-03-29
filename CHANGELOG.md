@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [12.3.0](https://github.com/kufu/smarthr-ui/compare/v12.2.1...v12.3.0) (2021-03-23)
+
+
+### Features
+
+* ActionDialog にレスポンスメッセージエリアを追加 ([#1424](https://github.com/kufu/smarthr-ui/issues/1424)) ([fa37d0e](https://github.com/kufu/smarthr-ui/commit/fa37d0e1091329363be9f739a262ab036d65726f))
+* add floatArea component ([#1270](https://github.com/kufu/smarthr-ui/issues/1270)) ([370ce97](https://github.com/kufu/smarthr-ui/commit/370ce9754bb26297eae079125939e01475174783))
+* add new icon, fa-user-clock ([#1392](https://github.com/kufu/smarthr-ui/issues/1392)) ([78fc529](https://github.com/kufu/smarthr-ui/commit/78fc529d0a545b223a2081a600370117ade7e6f9))
+* change colors (SHRUI-356, SHRUI-357, SHRUI-358) ([#1407](https://github.com/kufu/smarthr-ui/issues/1407)) ([777dbbc](https://github.com/kufu/smarthr-ui/commit/777dbbc16f27867409ef94c1c454d5ee09b89bd9))
+* improve attributes for BackgroundJobsList and BackgroundJobsPanel (SHRUI-249) ([#1404](https://github.com/kufu/smarthr-ui/issues/1404)) ([de9ece9](https://github.com/kufu/smarthr-ui/commit/de9ece95ec3dd3d880946f40de38ff64bcafaec6))
+* improve attributes for Base and DialogBase ([#1402](https://github.com/kufu/smarthr-ui/issues/1402)) ([a91f008](https://github.com/kufu/smarthr-ui/commit/a91f008e952cbffe409528fe42dfe88dedf71149))
+* support multiline text of CheckboxLabel ([#1403](https://github.com/kufu/smarthr-ui/issues/1403)) ([3441590](https://github.com/kufu/smarthr-ui/commit/3441590512686bad55e1d473bbc0cea275b77907))
+
+
+### Bug Fixes
+
+* add disabled to the current button of pagenation ([#1429](https://github.com/kufu/smarthr-ui/issues/1429)) ([c40a824](https://github.com/kufu/smarthr-ui/commit/c40a824f92c620c0c54c5b43f43ec271f8048a63))
+* add preset className to checkbox (SHRUI-255) ([#1391](https://github.com/kufu/smarthr-ui/issues/1391)) ([e455537](https://github.com/kufu/smarthr-ui/commit/e45553704d03d9f25ff2acc3591873f100e8bae2))
+* change style to show focus indicator ([#1421](https://github.com/kufu/smarthr-ui/issues/1421)) ([200fe2c](https://github.com/kufu/smarthr-ui/commit/200fe2c8f62eb7ce2102fd3bda1c9ea5da5d713a))
+* enable to set attributes of input element ([#1363](https://github.com/kufu/smarthr-ui/issues/1363)) ([9300a68](https://github.com/kufu/smarthr-ui/commit/9300a6848126c3a73e97b2fd7af29ccc85d769a8))
+* flatten theme tree (SHRUI-204) ([#1256](https://github.com/kufu/smarthr-ui/issues/1256)) ([1b13571](https://github.com/kufu/smarthr-ui/commit/1b1357190f5d685f1ad9e0b389186d097aaf0cb9))
+* improve ARIA ([#1409](https://github.com/kufu/smarthr-ui/issues/1409)) ([e2de01a](https://github.com/kufu/smarthr-ui/commit/e2de01a650c8a6c15a6d7f1a4a1e11d187204f49))
+* improve attributes of AppNavi (SHRUI-248) ([#1378](https://github.com/kufu/smarthr-ui/issues/1378)) ([2e7e020](https://github.com/kufu/smarthr-ui/commit/2e7e020552e4f229a1f7fbeeedbbee22c0f08950))
+* improve attributes of BottomFixedArea ([#1364](https://github.com/kufu/smarthr-ui/issues/1364)) ([1d0bf46](https://github.com/kufu/smarthr-ui/commit/1d0bf46a1dd4cc37c30d9cde1fa17537325143d2))
+* improve attributes of CheckBoxLabel (SHRUI-256) ([#1427](https://github.com/kufu/smarthr-ui/issues/1427)) ([7c082e4](https://github.com/kufu/smarthr-ui/commit/7c082e4ea43301765faa551a367a17be64a5aa03))
+* remove position: fixed for Footer in MessageScreen ([#1365](https://github.com/kufu/smarthr-ui/issues/1365)) ([c9505de](https://github.com/kufu/smarthr-ui/commit/c9505de9d38d365a545c7ac3c3ed3e4ae099debb))
+* suppress to fire handler during animation for closing in Dialog (SHRUI-343) ([#1406](https://github.com/kufu/smarthr-ui/issues/1406)) ([a28ad0b](https://github.com/kufu/smarthr-ui/commit/a28ad0b1be3f0da0c1a05e74a69aacfcf2d39b84))
+* tab-bar outline style ([#1439](https://github.com/kufu/smarthr-ui/issues/1439)) ([dbbca09](https://github.com/kufu/smarthr-ui/commit/dbbca0912dae5f7634a8441eb75a7850c413a784))
+* textarea outline style ([#1440](https://github.com/kufu/smarthr-ui/issues/1440)) ([1539e0e](https://github.com/kufu/smarthr-ui/commit/1539e0e104af545ac6849fee016f8d2c8c55e78e))
+
 ### [12.2.1](https://github.com/kufu/smarthr-ui/compare/v12.2.0...v12.2.1) (2021-02-16)
 
 

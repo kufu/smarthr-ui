@@ -1,0 +1,43 @@
+name: start release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  start_release:
+    runs-on: ubuntu-latest
+    env:
+      RESULT_PATH: /tmp/result.txt
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: git config
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+      - name: prepare release
+        run: |
+          BASE_TAG=v$(npx -c 'echo "$npm_package_version"')
+          git checkout $BASE_TAG
+          git merge --no-edit ${{ github.ref }}
+      - run: yarn install
+      - name: release dry run
+        run: |
+          echo "Dry Run Log:
+          \`\`\`
+          $(yarn release:dryrun)
+          \`\`\`" >> ${{ env.RESULT_PATH }}
+      - name: push branch
+        run: |
+          git checkout -b release-candidate
+          git push origin release-candidate
+      - name: create issue
+        uses: peter-evans/create-issue-from-file@v2
+        with:
+          title: Release candidate
+          content-filepath: ${{ env.RESULT_PATH }}
+          labels: release candidate
