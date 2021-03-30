@@ -65,8 +65,8 @@ export interface CreatedTheme {
 
 export const createTheme = (theme: ThemeProperty = {}) => {
   const created: CreatedTheme = {
-    palette: createPalette(theme.palette),
-    color: createColor(theme.color),
+    palette: createPalette(getPaletteProperty(theme)),
+    color: createColor(getColorProperty(theme)),
     size: createSize(theme.size),
     fontSize: createFontSize(theme.fontSize),
     spacing: createSpacing(theme.spacing),
@@ -79,4 +79,17 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     zIndex: createZIndex(theme.zIndex),
   }
   return created
+}
+
+function getPaletteProperty(theme: ThemeProperty): PaletteProperty {
+  return {
+    ...theme.palette,
+    ...theme.color,
+  }
+}
+function getColorProperty(theme: ThemeProperty): ColorProperty {
+  return {
+    ...theme.palette,
+    ...theme.color,
+  }
 }
