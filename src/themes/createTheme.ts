@@ -67,10 +67,10 @@ export const createTheme = (theme: ThemeProperty = {}) => {
   const created: CreatedTheme = {
     palette: createPalette(getPaletteProperty(theme)),
     color: createColor(getColorProperty(theme)),
-    size: createSize(theme.size),
-    fontSize: createFontSize(theme.fontSize),
-    spacing: createSpacing(theme.spacing),
-    breakpoint: createBreakpoint(theme.breakpoint),
+    size: createSize(getSizeProperty(theme)),
+    fontSize: createFontSize(getFontSizeProperty(theme)),
+    spacing: createSpacing(getSpacingProperty(theme)),
+    breakpoint: createBreakpoint(getBreakpointProperty(theme)),
     frame: createFrame(theme.frame, theme.palette),
     border: createBorder(theme.border, theme.color),
     radius: createRadius(theme.radius),
@@ -91,5 +91,56 @@ function getColorProperty(theme: ThemeProperty): ColorProperty {
   return {
     ...theme.palette,
     ...theme.color,
+  }
+}
+function getSizeProperty(theme: ThemeProperty): SizeProperty {
+  return {
+    htmlFontSize: theme.size?.htmlFontSize || theme.fontSize?.htmlFontSize,
+    space: {
+      defaultRem: theme.size?.space?.defaultRem || theme.spacing?.baseSize,
+      XXS: theme.size?.space?.XXS || theme.spacing?.XXS,
+      XS: theme.size?.space?.XS || theme.spacing?.XS,
+      S: theme.size?.space?.S || theme.spacing?.S,
+      M: theme.size?.space?.M || theme.spacing?.M,
+      L: theme.size?.space?.L || theme.spacing?.L,
+      XL: theme.size?.space?.XL || theme.spacing?.XL,
+      XXL: theme.size?.space?.XXL || theme.spacing?.XXL,
+    },
+    font: {
+      SHORT: theme.size?.font?.SHORT || theme.fontSize?.SHORT,
+      TALL: theme.size?.font?.TALL || theme.fontSize?.TALL,
+      GRANDE: theme.size?.font?.GRANDE || theme.fontSize?.GRANDE,
+      VENTI: theme.size?.font?.VENTI || theme.fontSize?.VENTI,
+    },
+    mediaQuery: {
+      ...theme.size?.mediaQuery,
+      ...theme.breakpoint,
+    },
+  }
+}
+function getFontSizeProperty(theme: ThemeProperty): FontSizeProperty {
+  return {
+    htmlFontSize: theme.size?.htmlFontSize,
+    ...theme.size?.font,
+    ...theme.fontSize,
+  }
+}
+function getSpacingProperty(theme: ThemeProperty): SpacingProperty {
+  return {
+    baseSize: theme.size?.space?.defaultRem,
+    XXS: theme.size?.space?.XXS,
+    XS: theme.size?.space?.XS,
+    S: theme.size?.space?.S,
+    M: theme.size?.space?.M,
+    L: theme.size?.space?.L,
+    XL: theme.size?.space?.XL,
+    XXL: theme.size?.space?.XXL,
+    ...theme.spacing,
+  }
+}
+function getBreakpointProperty(theme: ThemeProperty): BreakpointProperty {
+  return {
+    ...theme.size?.mediaQuery,
+    ...theme.breakpoint,
   }
 }
