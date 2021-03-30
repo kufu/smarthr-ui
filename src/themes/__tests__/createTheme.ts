@@ -1,5 +1,9 @@
 import { createTheme } from '../createTheme'
 import { defaultColor } from '../createColor'
+import { defaultFontSize } from '../createFontSize'
+import { defaultBreakpoint } from '../createBreakpoint'
+import { defaultBorder } from '../createBorder'
+import { defaultRadius } from '../createRadius'
 
 describe('createTheme', () => {
   it('returns theme reflecting settings when given palette settings', () => {
@@ -9,7 +13,9 @@ describe('createTheme', () => {
       },
     })
     expect(actual.palette.TEXT_BLACK).toBe('#001')
+    expect(actual.palette.BORDER).toBe(defaultColor.BORDER)
     expect(actual.color.TEXT_BLACK).toBe('#001')
+    expect(actual.color.BORDER).toBe(defaultColor.BORDER)
   })
 
   it('returns theme reflecting settings when given color settings', () => {
@@ -20,7 +26,9 @@ describe('createTheme', () => {
     })
 
     expect(actual.palette.TEXT_GREY).toBe('#002')
+    expect(actual.palette.BORDER).toBe(defaultColor.BORDER)
     expect(actual.color.TEXT_GREY).toBe('#002')
+    expect(actual.color.BORDER).toBe(defaultColor.BORDER)
   })
 
   it('returns theme reflecting "color" settings as the priority when given both pelette and color settings', () => {
@@ -77,10 +85,14 @@ describe('createTheme', () => {
     expect(actual.spacing.S).toBe(10 * 3)
 
     expect(actual.size.font.SHORT).toBe(100)
+    expect(actual.size.font.TALL).toBe(defaultFontSize.TALL)
     expect(actual.fontSize.SHORT).toBe(100)
+    expect(actual.fontSize.TALL).toBe(defaultFontSize.TALL)
 
     expect(actual.size.mediaQuery.SP).toBe(1000)
+    expect(actual.size.mediaQuery.TABLET).toBe(defaultBreakpoint.TABLET)
     expect(actual.breakpoint.SP).toBe(1000)
+    expect(actual.breakpoint.TABLET).toBe(defaultBreakpoint.TABLET)
   })
 
   it('returns theme reflecting settings when given spacing settings', () => {
@@ -107,7 +119,9 @@ describe('createTheme', () => {
     })
 
     expect(actual.size.font.SHORT).toBe(30)
+    expect(actual.size.font.TALL).toBe(defaultFontSize.TALL)
     expect(actual.fontSize.SHORT).toBe(30)
+    expect(actual.fontSize.TALL).toBe(defaultFontSize.TALL)
   })
 
   it('returns theme reflecting settings when given breakpoint settings', () => {
@@ -118,7 +132,9 @@ describe('createTheme', () => {
     })
 
     expect(actual.size.mediaQuery.SP).toBe(40)
+    expect(actual.size.mediaQuery.TABLET).toBe(defaultBreakpoint.TABLET)
     expect(actual.breakpoint.SP).toBe(40)
+    expect(actual.breakpoint.TABLET).toBe(defaultBreakpoint.TABLET)
   })
 
   it('returns theme reflecting settings when given frame settings', () => {
@@ -136,11 +152,15 @@ describe('createTheme', () => {
 
     expect(actual.frame.border.lineWidth).toBe('dummy_width')
     expect(actual.frame.border.default).toBe('dummy_default')
+    expect(actual.frame.border.lineStyle).toBe(defaultBorder.lineStyle)
     expect(actual.border.lineWidth).toBe('dummy_width')
     expect(actual.border.shorthand).toBe('dummy_default')
+    expect(actual.border.lineStyle).toBe(defaultBorder.lineStyle)
 
     expect(actual.frame.border.radius.s).toBe('dummy_s')
+    expect(actual.frame.border.radius.m).toBe(defaultRadius.m)
     expect(actual.radius.s).toBe('dummy_s')
+    expect(actual.radius.m).toBe(defaultRadius.m)
   })
 
   it('returns theme reflecting settings when given border settings', () => {
@@ -153,8 +173,10 @@ describe('createTheme', () => {
 
     expect(actual.frame.border.lineWidth).toBe('dummy_width')
     expect(actual.frame.border.default).toBe('dummy_shorthand')
+    expect(actual.frame.border.lineStyle).toBe(defaultBorder.lineStyle)
     expect(actual.border.lineWidth).toBe('dummy_width')
     expect(actual.border.shorthand).toBe('dummy_shorthand')
+    expect(actual.border.lineStyle).toBe(defaultBorder.lineStyle)
   })
 
   it('returns theme reflecting settings when given radius settings', () => {
@@ -165,6 +187,8 @@ describe('createTheme', () => {
     })
 
     expect(actual.frame.border.radius.s).toBe('dummy_s')
+    expect(actual.frame.border.radius.m).toBe(defaultRadius.m)
     expect(actual.radius.s).toBe('dummy_s')
+    expect(actual.radius.m).toBe(defaultRadius.m)
   })
 })
