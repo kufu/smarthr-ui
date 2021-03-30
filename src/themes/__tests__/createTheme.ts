@@ -120,4 +120,51 @@ describe('createTheme', () => {
     expect(actual.size.mediaQuery.SP).toBe(40)
     expect(actual.breakpoint.SP).toBe(40)
   })
+
+  it('returns theme reflecting settings when given frame settings', () => {
+    const actual = createTheme({
+      frame: {
+        border: {
+          lineWidth: 'dummy_width',
+          default: 'dummy_default',
+          radius: {
+            s: 'dummy_s',
+          },
+        },
+      },
+    })
+
+    expect(actual.frame.border.lineWidth).toBe('dummy_width')
+    expect(actual.frame.border.default).toBe('dummy_default')
+    expect(actual.border.lineWidth).toBe('dummy_width')
+    expect(actual.border.shorthand).toBe('dummy_default')
+
+    expect(actual.frame.border.radius.s).toBe('dummy_s')
+    expect(actual.radius.s).toBe('dummy_s')
+  })
+
+  it('returns theme reflecting settings when given border settings', () => {
+    const actual = createTheme({
+      border: {
+        lineWidth: 'dummy_width',
+        shorthand: 'dummy_shorthand',
+      },
+    })
+
+    expect(actual.frame.border.lineWidth).toBe('dummy_width')
+    expect(actual.frame.border.default).toBe('dummy_shorthand')
+    expect(actual.border.lineWidth).toBe('dummy_width')
+    expect(actual.border.shorthand).toBe('dummy_shorthand')
+  })
+
+  it('returns theme reflecting settings when given radius settings', () => {
+    const actual = createTheme({
+      radius: {
+        s: 'dummy_s',
+      },
+    })
+
+    expect(actual.frame.border.radius.s).toBe('dummy_s')
+    expect(actual.radius.s).toBe('dummy_s')
+  })
 })

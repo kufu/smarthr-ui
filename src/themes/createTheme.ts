@@ -64,16 +64,18 @@ export interface CreatedTheme {
 }
 
 export const createTheme = (theme: ThemeProperty = {}) => {
+  const paletteProperty = getPaletteProperty(theme)
+  const colorProperty = getColorProperty(theme)
   const created: CreatedTheme = {
-    palette: createPalette(getPaletteProperty(theme)),
-    color: createColor(getColorProperty(theme)),
+    palette: createPalette(paletteProperty),
+    color: createColor(colorProperty),
     size: createSize(getSizeProperty(theme)),
     fontSize: createFontSize(getFontSizeProperty(theme)),
     spacing: createSpacing(getSpacingProperty(theme)),
     breakpoint: createBreakpoint(getBreakpointProperty(theme)),
-    frame: createFrame(theme.frame, theme.palette),
-    border: createBorder(theme.border, theme.color),
-    radius: createRadius(theme.radius),
+    frame: createFrame(getFrameProperty(theme), paletteProperty),
+    border: createBorder(getBorderProperty(theme), colorProperty),
+    radius: createRadius(getRadiusProperty(theme)),
     interaction: createInteraction(theme.interaction),
     shadow: createShadow(theme.shadow),
     zIndex: createZIndex(theme.zIndex),
@@ -142,5 +144,31 @@ function getBreakpointProperty(theme: ThemeProperty): BreakpointProperty {
   return {
     ...theme.size?.mediaQuery,
     ...theme.breakpoint,
+  }
+}
+function getFrameProperty(theme: ThemeProperty): FrameProperty {
+  return {
+    border: {
+      lineWidth: theme.frame?.border?.lineWidth || theme.border?.lineWidth,
+      lineStyle: theme.frame?.border?.lineStyle || theme.border?.lineStyle,
+      default: theme.frame?.border?.default || theme.border?.shorthand,
+      radius: {
+        ...theme.frame?.border?.radius,
+        ...theme.radius,
+      },
+    },
+  }
+}
+function getBorderProperty(theme: ThemeProperty): BorderProperty {
+  return {
+    lineWidth: theme.frame?.border?.lineWidth || theme.border?.lineWidth,
+    lineStyle: theme.frame?.border?.lineStyle || theme.border?.lineStyle,
+    shorthand: theme.frame?.border?.default || theme.border?.shorthand,
+  }
+}
+function getRadiusProperty(theme: ThemeProperty): RadiusProperty {
+  return {
+    ...theme.frame?.border?.radius,
+    ...theme.radius,
   }
 }
