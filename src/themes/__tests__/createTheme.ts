@@ -6,7 +6,7 @@ import { defaultBorder } from '../createBorder'
 import { defaultRadius } from '../createRadius'
 
 describe('createTheme', () => {
-  it('returns theme reflecting settings when given palette settings', () => {
+  it('returns theme that reflects "palette" settings to "color"', () => {
     const actual = createTheme({
       palette: {
         TEXT_BLACK: '#001',
@@ -18,7 +18,7 @@ describe('createTheme', () => {
     expect(actual.color.BORDER).toBe(defaultColor.BORDER)
   })
 
-  it('returns theme reflecting settings when given color settings', () => {
+  it('returns theme that reflects "color" settings to "palette"', () => {
     const actual = createTheme({
       color: {
         TEXT_GREY: '#002',
@@ -31,7 +31,7 @@ describe('createTheme', () => {
     expect(actual.color.BORDER).toBe(defaultColor.BORDER)
   })
 
-  it('returns theme that preferentially reflects new settings when given palette and color settings', () => {
+  it('returns theme that prioritizes "color" settings over "palette" when given palette and color settings', () => {
     const actual = createTheme({
       palette: {
         TEXT_BLACK: '#001',
@@ -57,7 +57,7 @@ describe('createTheme', () => {
     expect(actual.color.BORDER).toBe(defaultColor.BORDER)
   })
 
-  it('returns theme reflecting settings when given size settings', () => {
+  it('returns theme that reflects "size" settings to "fontSize", "spacing" and "breakpoint"', () => {
     const actual = createTheme({
       size: {
         htmlFontSize: 2,
@@ -95,7 +95,7 @@ describe('createTheme', () => {
     expect(actual.breakpoint.TABLET).toBe(defaultBreakpoint.TABLET)
   })
 
-  it('returns theme reflecting settings when given spacing settings', () => {
+  it('returns theme that reflects "spacing" settings to "size.space"', () => {
     const actual = createTheme({
       spacing: {
         baseSize: 20,
@@ -111,7 +111,7 @@ describe('createTheme', () => {
     expect(actual.spacing.S).toBe(20 * 3)
   })
 
-  it('returns theme reflecting settings when given fontSize settings', () => {
+  it('returns theme that reflects "fontSize" settings to "size.fontSize"', () => {
     const actual = createTheme({
       fontSize: {
         SHORT: 30,
@@ -124,7 +124,7 @@ describe('createTheme', () => {
     expect(actual.fontSize.TALL).toBe(defaultFontSize.TALL)
   })
 
-  it('returns theme reflecting settings when given breakpoint settings', () => {
+  it('returns theme that reflects "breakpoint" settings to "size.mediaQuery"', () => {
     const actual = createTheme({
       breakpoint: {
         SP: 40,
@@ -137,7 +137,7 @@ describe('createTheme', () => {
     expect(actual.breakpoint.TABLET).toBe(defaultBreakpoint.TABLET)
   })
 
-  it('returns theme that preferentially reflects new settings when given size, spacing, fontSize and breakpoint settings', () => {
+  it('returns theme that prioritizes "spacing", "fontSize" and "breakpoint" settings over "size" when given size, spacing, fontSize and breakpoint settings', () => {
     const actual = createTheme({
       size: {
         htmlFontSize: 2,
@@ -189,7 +189,7 @@ describe('createTheme', () => {
     expect(actual.breakpoint.TABLET).toBe(2000)
   })
 
-  it('returns theme reflecting settings when given frame settings', () => {
+  it('returns theme that reflects "frame" settings to "border" and "radius"', () => {
     const actual = createTheme({
       frame: {
         border: {
@@ -215,7 +215,7 @@ describe('createTheme', () => {
     expect(actual.radius.m).toBe(defaultRadius.m)
   })
 
-  it('returns theme reflecting settings when given border settings', () => {
+  it('returns theme that reflects "border" settings to "frame.border"', () => {
     const actual = createTheme({
       border: {
         lineWidth: 'dummy_width',
@@ -231,7 +231,7 @@ describe('createTheme', () => {
     expect(actual.border.lineStyle).toBe(defaultBorder.lineStyle)
   })
 
-  it('returns theme reflecting settings when given radius settings', () => {
+  it('returns theme that reflects "radius" settings to "frame.border.radius"', () => {
     const actual = createTheme({
       radius: {
         s: 'dummy_s',
@@ -244,7 +244,7 @@ describe('createTheme', () => {
     expect(actual.radius.m).toBe(defaultRadius.m)
   })
 
-  it('returns theme that preferentially reflects new settings when given frame, border and radius settings', () => {
+  it('returns theme that prioritizes "border" and "radius" settings over "frame" when given frame, border and radius settings', () => {
     const actual = createTheme({
       frame: {
         border: {
