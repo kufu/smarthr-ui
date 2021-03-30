@@ -6,6 +6,260 @@ import { defaultBorder } from '../createBorder'
 import { defaultRadius } from '../createRadius'
 
 describe('createTheme', () => {
+  it('returns theme reflecting "palette" settings', () => {
+    const actual = createTheme({
+      palette: {
+        TEXT_BLACK: '#001',
+        TEXT_GREY: '#002',
+        TEXT_DISABLED: '#003',
+        TEXT_LINK: '#004',
+        BORDER: '#005',
+        ACTION_BACKGROUND: '#006',
+        BACKGROUND: '#007',
+        COLUMN: '#008',
+        OVER_BACKGROUND: '#009',
+        HEAD: '#010',
+        BASE_GREY: '#011',
+        MAIN: '#012',
+        DANGER: '#013',
+        WARNING: '#014',
+        SCRIM: '#015',
+        OVERLAY: '#016',
+        OUTLINE: '#017',
+      },
+    })
+    expect(actual.palette.TEXT_BLACK).toBe('#001')
+    expect(actual.palette.TEXT_GREY).toBe('#002')
+    expect(actual.palette.TEXT_DISABLED).toBe('#003')
+    expect(actual.palette.TEXT_LINK).toBe('#004')
+    expect(actual.palette.BORDER).toBe('#005')
+    expect(actual.palette.ACTION_BACKGROUND).toBe('#006')
+    expect(actual.palette.BACKGROUND).toBe('#007')
+    expect(actual.palette.COLUMN).toBe('#008')
+    expect(actual.palette.OVER_BACKGROUND).toBe('#009')
+    expect(actual.palette.HEAD).toBe('#010')
+    expect(actual.palette.BASE_GREY).toBe('#011')
+    expect(actual.palette.MAIN).toBe('#012')
+    expect(actual.palette.DANGER).toBe('#013')
+    expect(actual.palette.WARNING).toBe('#014')
+    expect(actual.palette.SCRIM).toBe('#015')
+    expect(actual.palette.OVERLAY).toBe('#016')
+    expect(actual.palette.OUTLINE).toBe('#017')
+  })
+
+  it('returns theme reflecting "color" settings', () => {
+    const actual = createTheme({
+      color: {
+        TEXT_BLACK: '#001',
+        TEXT_GREY: '#002',
+        TEXT_DISABLED: '#003',
+        TEXT_LINK: '#004',
+        BORDER: '#005',
+        ACTION_BACKGROUND: '#006',
+        BACKGROUND: '#007',
+        COLUMN: '#008',
+        OVER_BACKGROUND: '#009',
+        HEAD: '#010',
+        BASE_GREY: '#011',
+        MAIN: '#012',
+        DANGER: '#013',
+        WARNING: '#014',
+        SCRIM: '#015',
+        OVERLAY: '#016',
+        OUTLINE: '#017',
+      },
+    })
+    expect(actual.color.TEXT_BLACK).toBe('#001')
+    expect(actual.color.TEXT_GREY).toBe('#002')
+    expect(actual.color.TEXT_DISABLED).toBe('#003')
+    expect(actual.color.TEXT_LINK).toBe('#004')
+    expect(actual.color.BORDER).toBe('#005')
+    expect(actual.color.ACTION_BACKGROUND).toBe('#006')
+    expect(actual.color.BACKGROUND).toBe('#007')
+    expect(actual.color.COLUMN).toBe('#008')
+    expect(actual.color.OVER_BACKGROUND).toBe('#009')
+    expect(actual.color.HEAD).toBe('#010')
+    expect(actual.color.BASE_GREY).toBe('#011')
+    expect(actual.color.MAIN).toBe('#012')
+    expect(actual.color.DANGER).toBe('#013')
+    expect(actual.color.WARNING).toBe('#014')
+    expect(actual.color.SCRIM).toBe('#015')
+    expect(actual.color.OVERLAY).toBe('#016')
+    expect(actual.color.OUTLINE).toBe('#017')
+  })
+
+  it('returns theme reflecting "size" settings', () => {
+    const actual1 = createTheme({
+      size: {
+        htmlFontSize: 10,
+        space: {
+          XXS: 11,
+          XS: 12,
+          S: 13,
+          M: 14,
+          L: 15,
+          XL: 16,
+          XXL: 17,
+        },
+        font: {
+          SHORT: 18,
+          TALL: 19,
+          GRANDE: 20,
+          VENTI: 21,
+        },
+        mediaQuery: {
+          SP: 22,
+          TABLET: 23,
+        },
+      },
+    })
+
+    expect(actual1.size.pxToRem(400)).toBe(`${400 / 10}rem`)
+    expect(actual1.size.space.XXS).toBe(11)
+    expect(actual1.size.space.XS).toBe(12)
+    expect(actual1.size.space.S).toBe(13)
+    expect(actual1.size.space.M).toBe(14)
+    expect(actual1.size.space.L).toBe(15)
+    expect(actual1.size.space.XL).toBe(16)
+    expect(actual1.size.space.XXL).toBe(17)
+    expect(actual1.size.font.SHORT).toBe(18)
+    expect(actual1.size.font.TALL).toBe(19)
+    expect(actual1.size.font.GRANDE).toBe(20)
+    expect(actual1.size.font.VENTI).toBe(21)
+    expect(actual1.size.mediaQuery.SP).toBe(22)
+    expect(actual1.size.mediaQuery.TABLET).toBe(23)
+
+    const actual2 = createTheme({
+      size: {
+        space: {
+          defaultRem: 13,
+        },
+      },
+    })
+
+    expect(actual2.size.space.XXS).toBe(13)
+    expect(actual2.size.space.XS).toBe(13 * 2)
+    expect(actual2.size.space.S).toBe(13 * 3)
+    expect(actual2.size.space.M).toBe(13 * 4)
+    expect(actual2.size.space.L).toBe(13 * 5)
+    expect(actual2.size.space.XL).toBe(13 * 6)
+    expect(actual2.size.space.XXL).toBe(13 * 7)
+  })
+
+  it('returns theme reflecting "spacing" settings', () => {
+    const actual1 = createTheme({
+      spacing: {
+        XXS: 21,
+        XS: 22,
+        S: 23,
+        M: 24,
+        L: 25,
+        XL: 26,
+        XXL: 27,
+      },
+    })
+
+    expect(actual1.spacing.XXS).toBe(21)
+    expect(actual1.spacing.XS).toBe(22)
+    expect(actual1.spacing.S).toBe(23)
+    expect(actual1.spacing.M).toBe(24)
+    expect(actual1.spacing.L).toBe(25)
+    expect(actual1.spacing.XL).toBe(26)
+    expect(actual1.spacing.XXL).toBe(27)
+
+    const actual2 = createTheme({
+      spacing: {
+        baseSize: 17,
+      },
+    })
+
+    expect(actual2.spacing.XXS).toBe(17)
+    expect(actual2.spacing.XS).toBe(17 * 2)
+    expect(actual2.spacing.S).toBe(17 * 3)
+    expect(actual2.spacing.M).toBe(17 * 4)
+    expect(actual2.spacing.L).toBe(17 * 5)
+    expect(actual2.spacing.XL).toBe(17 * 6)
+    expect(actual2.spacing.XXL).toBe(17 * 7)
+  })
+
+  it('returns theme reflecting "fontSize" settings', () => {
+    const actual = createTheme({
+      fontSize: {
+        htmlFontSize: 11,
+        SHORT: 12,
+        TALL: 13,
+        GRANDE: 14,
+        VENTI: 15,
+      },
+    })
+
+    expect(actual.fontSize.pxToRem(55)).toBe(`${55 / 11}rem`)
+    expect(actual.fontSize.SHORT).toBe(12)
+    expect(actual.fontSize.TALL).toBe(13)
+    expect(actual.fontSize.GRANDE).toBe(14)
+    expect(actual.fontSize.VENTI).toBe(15)
+  })
+
+  it('returns theme reflecting "breakpoint" settings', () => {
+    const actual = createTheme({
+      breakpoint: {
+        SP: 21,
+        TABLET: 22,
+      },
+    })
+
+    expect(actual.breakpoint.SP).toBe(21)
+    expect(actual.breakpoint.TABLET).toBe(22)
+  })
+
+  it('returns theme reflecting "frame" settings', () => {
+    const actual = createTheme({
+      frame: {
+        border: {
+          lineWidth: 'dummy_width_2',
+          lineStyle: 'dummy_style_2',
+          default: 'dummy_default_2',
+          radius: {
+            s: 'dummy_s_2',
+            m: 'dummy_m_2',
+          },
+        },
+      },
+    })
+
+    expect(actual.frame.border.lineWidth).toBe('dummy_width_2')
+    expect(actual.frame.border.lineStyle).toBe('dummy_style_2')
+    expect(actual.frame.border.default).toBe('dummy_default_2')
+    expect(actual.frame.border.radius.s).toBe('dummy_s_2')
+    expect(actual.frame.border.radius.m).toBe('dummy_m_2')
+  })
+
+  it('returns theme reflecting "border" settings', () => {
+    const actual = createTheme({
+      border: {
+        lineWidth: 'dummy_width_3',
+        lineStyle: 'dummy_style_3',
+        shorthand: 'dummy_shorthand_3',
+      },
+    })
+
+    expect(actual.border.lineWidth).toBe('dummy_width_3')
+    expect(actual.border.lineStyle).toBe('dummy_style_3')
+    expect(actual.border.shorthand).toBe('dummy_shorthand_3')
+  })
+
+  it('returns theeme reflecting "radius" settings', () => {
+    const actual = createTheme({
+      radius: {
+        s: 'dummy_s_4',
+        m: 'dummy_m_4',
+      },
+    })
+
+    expect(actual.radius.s).toBe('dummy_s_4')
+    expect(actual.radius.m).toBe('dummy_m_4')
+  })
+
   it('returns theme that reflects "palette" settings to "color"', () => {
     const actual = createTheme({
       palette: {
