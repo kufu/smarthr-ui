@@ -90,8 +90,8 @@ export const createSize = (userSize: SizeProperty = {}) => {
     {
       pxToRem: (value: number) => pxToRem(value)(userSize.htmlFontSize || defaultHtmlFontSize),
       space: getSpace(XXS),
-      font: defaultFontSize,
-      mediaQuery: defaultMediaQuery,
+      font: { ...defaultFontSize },
+      mediaQuery: { ...defaultMediaQuery },
     },
     userSize,
   )
