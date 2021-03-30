@@ -36,7 +36,7 @@ export const FormGroup: FC<Props> = ({
 
   return (
     <Wrapper className={`${className} ${disabledClass}`} themes={theme}>
-      <Label themes={theme} id={labelId} margin={innerMargin}>
+      <Label id={labelId}>
         <TitleWrapper>
           <Title type={labelType} themes={theme} className={disabledClass}>
             {label}
@@ -65,8 +65,10 @@ export const FormGroup: FC<Props> = ({
               </ErrorMessage>
             ),
           )}
+        <Body themes={theme} margin={innerMargin}>
+          {children}
+        </Body>
       </Label>
-      <Body>{children}</Body>
     </Wrapper>
   )
 }
@@ -84,15 +86,8 @@ const Wrapper = styled.div<{ themes: Theme }>`
   }}
 `
 
-const Label = styled.label<{ themes: Theme; margin: innerMarginType }>`
-  ${({ themes, margin }) => {
-    const { fontSize, spacing } = themes
-
-    return css`
-      display: block;
-      margin-bottom: ${fontSize.pxToRem(spacing[margin])};
-    `
-  }}
+const Label = styled.label`
+  display: block;
 `
 
 const TitleWrapper = styled.div`
@@ -170,6 +165,13 @@ const ErrorIcon = styled(FaExclamationCircleIcon)<{ themes: Theme }>`
   }}
 `
 
-const Body = styled.div`
-  display: block;
+const Body = styled.div<{ themes: Theme; margin: innerMarginType }>`
+  ${({ themes, margin }) => {
+    const { fontSize, spacing } = themes
+
+    return css`
+      display: block;
+      margin-top: ${fontSize.pxToRem(spacing[margin])};
+    `
+  }}
 `
