@@ -31,7 +31,7 @@ describe('createTheme', () => {
     expect(actual.color.BORDER).toBe(defaultColor.BORDER)
   })
 
-  it('returns theme reflecting "color" settings as the priority when given both pelette and color settings', () => {
+  it('returns theme that preferentially reflects new settings when given palette and color settings', () => {
     const actual = createTheme({
       palette: {
         TEXT_BLACK: '#001',
@@ -137,6 +137,58 @@ describe('createTheme', () => {
     expect(actual.breakpoint.TABLET).toBe(defaultBreakpoint.TABLET)
   })
 
+  it('returns theme that preferentially reflects new settings when given size, spacing, fontSize and breakpoint settings', () => {
+    const actual = createTheme({
+      size: {
+        htmlFontSize: 2,
+        space: {
+          defaultRem: 10,
+          XXS: 11,
+          XS: 12,
+        },
+        font: {
+          SHORT: 100,
+          TALL: 101,
+        },
+        mediaQuery: {
+          SP: 1000,
+          TABLET: 1001,
+        },
+      },
+      spacing: {
+        baseSize: 13,
+        XS: 14,
+      },
+      fontSize: {
+        htmlFontSize: 8,
+        TALL: 200,
+      },
+      breakpoint: {
+        TABLET: 2000,
+      },
+    })
+
+    expect(actual.size.pxToRem(400)).toBe(`${400 / 8}rem`)
+    expect(actual.fontSize.pxToRem(400)).toBe(`${400 / 8}rem`)
+
+    expect(actual.size.space.XXS).toBe(11)
+    expect(actual.size.space.XS).toBe(14)
+    expect(actual.size.space.S).toBe(13 * 3)
+    expect(actual.spacing.XXS).toBe(11)
+    expect(actual.spacing.XS).toBe(14)
+    expect(actual.spacing.S).toBe(13 * 3)
+
+    expect(actual.size.font.SHORT).toBe(100)
+    expect(actual.size.font.TALL).toBe(200)
+    expect(actual.fontSize.SHORT).toBe(100)
+    expect(actual.fontSize.TALL).toBe(200)
+
+    expect(actual.size.mediaQuery.SP).toBe(1000)
+    expect(actual.size.mediaQuery.TABLET).toBe(2000)
+    expect(actual.breakpoint.SP).toBe(1000)
+    expect(actual.breakpoint.TABLET).toBe(2000)
+  })
+
   it('returns theme reflecting settings when given frame settings', () => {
     const actual = createTheme({
       frame: {
@@ -190,5 +242,36 @@ describe('createTheme', () => {
     expect(actual.frame.border.radius.m).toBe(defaultRadius.m)
     expect(actual.radius.s).toBe('dummy_s')
     expect(actual.radius.m).toBe(defaultRadius.m)
+  })
+
+  it('returns theme that preferentially reflects new settings when given frame, border and radius settings', () => {
+    const actual = createTheme({
+      frame: {
+        border: {
+          lineWidth: 'dummy_width',
+          default: 'dummy_default',
+          radius: {
+            s: 'dummy_s',
+            m: 'dummy_m',
+          },
+        },
+      },
+      border: {
+        shorthand: 'dummy_shorthand',
+      },
+      radius: {
+        m: 'dummy_radius_m',
+      },
+    })
+
+    expect(actual.frame.border.lineWidth).toBe('dummy_width')
+    expect(actual.frame.border.default).toBe('dummy_shorthand')
+    expect(actual.border.lineWidth).toBe('dummy_width')
+    expect(actual.border.shorthand).toBe('dummy_shorthand')
+
+    expect(actual.frame.border.radius.s).toBe('dummy_s')
+    expect(actual.frame.border.radius.m).toBe('dummy_radius_m')
+    expect(actual.radius.s).toBe('dummy_s')
+    expect(actual.radius.m).toBe('dummy_radius_m')
   })
 })
