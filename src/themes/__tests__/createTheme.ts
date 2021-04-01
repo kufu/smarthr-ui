@@ -45,6 +45,9 @@ describe('createTheme', () => {
     expect(actual.palette.SCRIM).toBe('#015')
     expect(actual.palette.OVERLAY).toBe('#016')
     expect(actual.palette.OUTLINE).toBe('#017')
+    expect(actual.frame.border.default).toBe(
+      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #005`,
+    )
   })
 
   it('returns theme reflecting "color" settings', () => {
@@ -86,6 +89,9 @@ describe('createTheme', () => {
     expect(actual.color.SCRIM).toBe('#015')
     expect(actual.color.OVERLAY).toBe('#016')
     expect(actual.color.OUTLINE).toBe('#017')
+    expect(actual.border.shorthand).toBe(
+      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #005`,
+    )
   })
 
   it('returns theme reflecting "size" settings', () => {
@@ -264,25 +270,39 @@ describe('createTheme', () => {
     const actual = createTheme({
       palette: {
         TEXT_BLACK: '#001',
+        BORDER: '#999',
       },
     })
     expect(actual.palette.TEXT_BLACK).toBe('#001')
-    expect(actual.palette.BORDER).toBe(defaultColor.BORDER)
+    expect(actual.palette.BACKGROUND).toBe(defaultColor.BACKGROUND)
+    expect(actual.frame.border.default).toBe(
+      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #999`,
+    )
     expect(actual.color.TEXT_BLACK).toBe('#001')
-    expect(actual.color.BORDER).toBe(defaultColor.BORDER)
+    expect(actual.color.BACKGROUND).toBe(defaultColor.BACKGROUND)
+    expect(actual.border.shorthand).toBe(
+      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #999`,
+    )
   })
 
   it('returns theme reflecting "color" settings to "palette"', () => {
     const actual = createTheme({
       color: {
         TEXT_GREY: '#002',
+        BORDER: '#998',
       },
     })
 
     expect(actual.palette.TEXT_GREY).toBe('#002')
-    expect(actual.palette.BORDER).toBe(defaultColor.BORDER)
+    expect(actual.palette.BACKGROUND).toBe(defaultColor.BACKGROUND)
+    expect(actual.frame.border.default).toBe(
+      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #998`,
+    )
     expect(actual.color.TEXT_GREY).toBe('#002')
-    expect(actual.color.BORDER).toBe(defaultColor.BORDER)
+    expect(actual.color.BACKGROUND).toBe(defaultColor.BACKGROUND)
+    expect(actual.border.shorthand).toBe(
+      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #998`,
+    )
   })
 
   it('returns theme prioritizing "color" settings over "palette" when given palette and color settings', () => {
@@ -292,10 +312,12 @@ describe('createTheme', () => {
         TEXT_GREY: '#002',
         TEXT_DISABLED: '#003',
         TEXT_LINK: '#004',
+        BORDER: '#997',
       },
       color: {
         TEXT_GREY: '#999',
         TEXT_LINK: '#888',
+        BORDER: '#996',
       },
     })
 
@@ -303,12 +325,18 @@ describe('createTheme', () => {
     expect(actual.palette.TEXT_GREY).toBe('#999')
     expect(actual.palette.TEXT_DISABLED).toBe('#003')
     expect(actual.palette.TEXT_LINK).toBe('#888')
-    expect(actual.palette.BORDER).toBe(defaultColor.BORDER)
+    expect(actual.palette.BACKGROUND).toBe(defaultColor.BACKGROUND)
+    expect(actual.frame.border.default).toBe(
+      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #996`,
+    )
     expect(actual.color.TEXT_BLACK).toBe('#001')
     expect(actual.color.TEXT_GREY).toBe('#999')
     expect(actual.color.TEXT_DISABLED).toBe('#003')
     expect(actual.color.TEXT_LINK).toBe('#888')
-    expect(actual.color.BORDER).toBe(defaultColor.BORDER)
+    expect(actual.color.BACKGROUND).toBe(defaultColor.BACKGROUND)
+    expect(actual.border.shorthand).toBe(
+      `${defaultBorder.lineWidth} ${defaultBorder.lineStyle} #996`,
+    )
   })
 
   it('returns theme reflecting "size" settings to "fontSize", "spacing" and "breakpoint"', () => {
