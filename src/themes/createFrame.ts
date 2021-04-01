@@ -52,6 +52,7 @@ export const createFrame = (userFrame: FrameProperty = {}, userPalette: PaletteP
       border: {
         ...defaultFrame.border,
         default: `${lineWidth} ${lineStyle} ${color}`,
+        radius: { ...defaultFrame.border.radius },
       },
     },
     userFrame,
