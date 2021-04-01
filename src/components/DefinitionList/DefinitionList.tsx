@@ -1,7 +1,8 @@
-import React, { VFC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListItem'
 
@@ -11,19 +12,25 @@ type Props = {
   layout?: LayoutType
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDListElement>, keyof Props>
 
-export const DefinitionList: VFC<Props> = ({ items, layout = 'single', className = '' }) => {
+export const DefinitionList: VFC<Props & ElementProps> = ({
+  items,
+  layout = 'single',
+  className = '',
+}) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper className={className} layout={layout}>
-      {items.map((item, index) => (
+    <Wrapper className={`${className} ${classNames.definitionList.wrapper}`} layout={layout}>
+      {items.map(({ term, description, className: itemClassName }, index) => (
         <Item
-          term={item.term}
-          description={item.description}
+          term={term}
+          description={description}
           key={index}
           layout={layout}
-          className={item.className && item.className}
+          className={itemClassName}
           themes={theme}
         />
       ))}
