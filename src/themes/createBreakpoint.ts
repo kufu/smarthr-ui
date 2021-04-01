@@ -13,6 +13,6 @@ export interface CreatedBreakpointTheme {
 export const defaultBreakpoint = { SP: 599, TABLET: 959 }
 
 export const createBreakpoint = (userBreakpoint: BreakpointProperty = {}) => {
-  const created: CreatedBreakpointTheme = merge(defaultBreakpoint, userBreakpoint)
+  const created: CreatedBreakpointTheme = merge({ ...defaultBreakpoint }, userBreakpoint)
   return created
 }
