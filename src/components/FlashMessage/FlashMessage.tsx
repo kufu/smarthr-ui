@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { VFC, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -29,7 +29,7 @@ export type Props = {
 const REMOVE_DELAY = 8000
 let timerId: any = 0
 
-export const FlashMessage: FC<Props> = ({
+export const FlashMessage: VFC<Props> = ({
   animation = 'bounce',
   visible,
   type,
