@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -12,7 +12,7 @@ export type IndexNavItemProps = {
   current?: boolean
 }
 
-export const IndexNav: FC<Props> = ({ items }) => {
+export const IndexNav: VFC<Props> = ({ items }) => {
   const themes = useTheme()
   if (items.length === 0) {
     return null
