@@ -88,7 +88,7 @@ const resetButtonStyle = css`
 const Button = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
-    const { color, fontSize, spacing } = themes
+    const { color, fontSize, spacing, shadow } = themes
 
     return css`
       display: flex;
@@ -97,12 +97,17 @@ const Button = styled.button<{ themes: Theme }>`
       padding: ${fontSize.pxToRem(12)} ${fontSize.pxToRem(spacing.XS)};
       cursor: pointer;
       font-size: inherit;
-      outline-color: ${color.OUTLINE};
       text-align: left;
 
-      &:hover,
       &:focus {
+        outline: none;
+        box-shadow: ${shadow.OUTLINE};
+      }
+
+      &:hover,
+      &:focus:not(:focus-visible) {
         background-color: ${color.hoverColor('#fff')};
+        box-shadow: none;
       }
 
       /* TODO replace if impremented Layout component */
