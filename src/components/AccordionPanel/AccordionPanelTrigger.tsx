@@ -8,7 +8,7 @@ import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { useClassNames } from './useClassNames'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
-import { FaCaretDownIcon } from '../Icon'
+import { FaCaretRightIcon, FaCaretUpIcon } from '../Icon'
 
 type Props = {
   children: React.ReactNode
@@ -67,9 +67,9 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
         data-component="AccordionHeaderButton"
         {...props}
       >
-        {displayIcon && iconPosition === 'left' && <Icon />}
+        {displayIcon && iconPosition === 'left' && <LeftIcon />}
         <TriggerTitle>{children}</TriggerTitle>
-        {displayIcon && iconPosition === 'right' && <Icon />}
+        {displayIcon && iconPosition === 'right' && <RightIcon />}
       </Button>
     </Heading>
   )
@@ -117,14 +117,18 @@ const Button = styled.button<{ themes: Theme }>`
     `
   }}
 `
-const Icon = styled(FaCaretDownIcon)`
+const LeftIcon = styled(FaCaretRightIcon)`
   transition: transform 0.3s;
 
   [aria-expanded='true'] > & {
-    transform: rotate(-180deg);
+    transform: rotate(90deg);
   }
+`
 
-  [aria-expanded='true'] &:last-child {
-    transform: rotate(180deg);
+const RightIcon = styled(FaCaretUpIcon)`
+  transition: transform 0.3s;
+
+  [aria-expanded='true'] & {
+    transform: rotate(-180deg);
   }
 `
