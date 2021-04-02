@@ -38,9 +38,7 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   const isExpanded = getIsInclude(expandedItems, name)
-  const expandedClassName = isExpanded ? 'expanded' : ''
-  const buttonClassNames = `${className} ${expandedClassName} ${iconPosition} ${classNames.trigger}`
-  const iconClassNames = `${expandedClassName} ${iconPosition}`
+  const buttonClassNames = `${className} ${classNames.trigger}`
 
   const handleClick = useCallback(() => {
     if (onClickTrigger) onClickTrigger(name, !isExpanded)
@@ -56,8 +54,6 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
     }
   }, [onClickTrigger, name, isExpanded, onClickProps, expandedItems, expandableMultiply])
 
-  const caretIcon = <Icon className={iconClassNames} $theme={theme} />
-
   return (
     <Heading tag={headingTag} type={headingType}>
       <Button
@@ -71,13 +67,17 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
         data-component="AccordionHeaderButton"
         {...props}
       >
-        {displayIcon && iconPosition === 'left' && caretIcon}
-        {children}
-        {displayIcon && iconPosition === 'right' && caretIcon}
+        {displayIcon && iconPosition === 'left' && <Icon />}
+        <TriggerTitle>{children}</TriggerTitle>
+        {displayIcon && iconPosition === 'right' && <Icon />}
       </Button>
     </Heading>
   )
 }
+
+const TriggerTitle = styled.span`
+  flex-grow: 1;
+`
 
 const resetButtonStyle = css`
   background-color: transparent;
@@ -98,43 +98,28 @@ const Button = styled.button<{ themes: Theme }>`
       cursor: pointer;
       font-size: inherit;
       outline-color: ${color.OUTLINE};
+      text-align: left;
 
       &:hover,
       &:focus {
         background-color: ${color.hoverColor('#fff')};
       }
-      &.right {
-        justify-content: space-between;
-      }
-      &.left {
-        justify-content: left;
+
+      /* TODO replace if impremented Layout component */
+      & > * + * {
+        margin-left: ${fontSize.pxToRem(spacing.XXS)};
       }
     `
   }}
 `
-const Icon = styled(FaCaretDownIcon)<{ $theme: Theme }>`
-  ${({ $theme }) => {
-    const { fontSize, spacing } = $theme
+const Icon = styled(FaCaretDownIcon)`
+  transition: transform 0.3s;
 
-    return css`
-      display: inline-flex;
-      margin-right: ${fontSize.pxToRem(spacing.XXS)};
-      transition: transform 0.3s;
+  [aria-expanded='true'] > & {
+    transform: rotate(-180deg);
+  }
 
-      &.left {
-        &.expanded {
-          transform: rotate(-180deg);
-        }
-      }
-
-      &.right {
-        margin-right: 0;
-        margin-left: ${fontSize.pxToRem(spacing.XXS)};
-
-        &.expanded {
-          transform: rotate(180deg);
-        }
-      }
-    `
-  }}
+  [aria-expanded='true'] &:last-child {
+    transform: rotate(180deg);
+  }
 `
