@@ -16,6 +16,6 @@ export const defaultRadius: CreatedRadiusTheme = {
 }
 
 export const createRadius = (userRadius: RadiusProperty = {}) => {
-  const created: CreatedRadiusTheme = merge(defaultRadius, userRadius)
+  const created: CreatedRadiusTheme = merge({ ...defaultRadius }, userRadius)
   return created
 }
