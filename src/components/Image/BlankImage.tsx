@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled from 'styled-components'
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
   className?: string
 }
 
-export const BlankImage: FC<Props> = ({ title = 'BlankImage', size = 'm', className = '' }) => (
+export const BlankImage: VFC<Props> = ({ title = 'BlankImage', size = 'm', className = '' }) => (
   <Wrapper className={className}>
     <Svg className={size} viewBox="0 0 250 250" role="img" aria-label={title}>
       <title>{title}</title>
