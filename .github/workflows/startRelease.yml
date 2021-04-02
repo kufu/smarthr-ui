@@ -2,12 +2,19 @@ name: start release
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Input release mode, "normal" or "prerelease".'
+        required: true
+        default: ''
 
 jobs:
   start_release:
+    if: github.event.inputs.mode == 'normal' || github.event.inputs.mode == 'prerelease'
     runs-on: ubuntu-latest
     env:
       RESULT_PATH: /tmp/result.txt
+      IS_PRERELEASE: ${{ github.event.inputs.mode == 'prerelease' }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -26,18 +33,30 @@ jobs:
           git merge --no-edit ${{ github.ref }}
       - run: yarn install
       - name: release dry run
+        if: ${{ env.IS_PRERELEASE == 'false' }}
+        run: yarn release:dryrun > ${{ env.RESULT_PATH }}
+      - name: prerelease dry run
+        if: ${{ env.IS_PRERELEASE == 'true' }}
+        run: yarn release:dryrun --prerelease > ${{ env.RESULT_PATH }}
+      - name: wrap dry run log
         run: |
           echo "Dry Run Log:
           \`\`\`
-          $(yarn release:dryrun)
-          \`\`\`" >> ${{ env.RESULT_PATH }}
+          $(cat ${{ env.RESULT_PATH }})
+          \`\`\`" > ${{ env.RESULT_PATH }}
       - name: push branch
         run: |
           git checkout -b release-candidate
           git push origin release-candidate
+      - name: release issue labels
+        if: ${{ env.IS_PRERELEASE == 'false' }}
+        run: echo ISSUE_LABELS='release candidate' >> $GITHUB_ENV
+      - name: prerelease issue labels
+        if: ${{ env.IS_PRERELEASE == 'true' }}
+        run: echo ISSUE_LABELS='release candidate, prerelease' >> $GITHUB_ENV
       - name: create issue
         uses: peter-evans/create-issue-from-file@v2
         with:
           title: Release candidate
           content-filepath: ${{ env.RESULT_PATH }}
-          labels: release candidate
+          labels: ${{ env.ISSUE_LABELS }}
