@@ -54,7 +54,7 @@
     "standard-version": "^9.1.1",
     "storybook-readme": "^5.0.9",
     "storycap": "^3.0.3",
-    "styled-components": "^5.2.1",
+    "styled-components": "^5.2.3",
     "styled-reset": "^4.3.4",
     "stylelint": "^13.12.0",
     "stylelint-config-prettier": "^8.0.2",
