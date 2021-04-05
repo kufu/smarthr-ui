@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { VFC, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -30,7 +30,7 @@ type Props = {
   onClickTrigger?: (active: boolean) => void
 }
 
-export const InformationPanel: FC<Props> = ({
+export const InformationPanel: VFC<Props> = ({
   title,
   titleTag = 'span',
   type = 'info',
