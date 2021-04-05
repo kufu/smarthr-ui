@@ -5,18 +5,40 @@ import { isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
+import { useClassNames } from './useClassNames'
 
-export const SecondaryButton: VFC<ButtonProps> = ({ type = 'button', ...props }) => {
+export const SecondaryButton: VFC<ButtonProps> = ({
+  type = 'button',
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
-  return <SecondaryStyleButton {...props} themes={theme} type={type} />
+  const { secondaryButton } = useClassNames()
+
+  return (
+    <SecondaryStyleButton
+      {...props}
+      themes={theme}
+      type={type}
+      className={`${className} ${secondaryButton.wrapper}`}
+    />
+  )
 }
 // set the displayName explicit.
 // This is for error message of BottomFixedArea component.
 SecondaryButton.displayName = 'SecondaryButton'
 
-export const SecondaryButtonAnchor: VFC<AnchorProps> = (props) => {
+export const SecondaryButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props }) => {
   const theme = useTheme()
-  return <SecondaryStyleButtonAnchor themes={theme} {...props} />
+  const { secondaryButtonAnchor } = useClassNames()
+
+  return (
+    <SecondaryStyleButtonAnchor
+      themes={theme}
+      className={`${className} ${secondaryButtonAnchor.wrapper}`}
+      {...props}
+    />
+  )
 }
 // set the displayName explicit.
 // This is for error message of BottomFixedArea component.

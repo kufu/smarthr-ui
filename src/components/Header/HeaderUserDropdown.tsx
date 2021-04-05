@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -26,7 +26,7 @@ type Props = {
   onClickSchool?: () => void
 }
 
-export const HeaderUserDropdown: FC<Props> = ({
+export const HeaderUserDropdown: VFC<Props> = ({
   isAdmin,
   isCrew,
   displayName,
