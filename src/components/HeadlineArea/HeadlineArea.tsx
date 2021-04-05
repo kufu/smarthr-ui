@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -14,7 +14,7 @@ type Props = {
   className?: string
 }
 
-export const HeadlineArea: FC<Props> = ({ heading, description, className = '' }) => {
+export const HeadlineArea: VFC<Props> = ({ heading, description, className = '' }) => {
   const theme = useTheme()
 
   return (
