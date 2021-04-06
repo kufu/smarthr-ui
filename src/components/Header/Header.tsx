@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -36,7 +36,7 @@ type Props = {
   className?: string
 }
 
-export const Header: FC<Props> = ({
+export const Header: VFC<Props> = ({
   isAdmin = false,
   isCrew = false,
   user,

@@ -10,18 +10,36 @@ import {
   BaseButtonAnchor,
   ButtonProps as BaseButtonProps,
 } from './BaseButton'
+import { useClassNames } from './useClassNames'
 
 type ButtonProps = Omit<BaseButtonProps, 'square'>
 type AnchorProps = Omit<BaseAnchorProps, 'square'>
 
-export const TextButton: VFC<ButtonProps> = ({ type = 'button', ...props }) => {
+export const TextButton: VFC<ButtonProps> = ({ type = 'button', className = '', ...props }) => {
   const theme = useTheme()
-  return <TextStyleButton {...props} themes={theme} type={type} />
+  const { textButton } = useClassNames()
+
+  return (
+    <TextStyleButton
+      {...props}
+      themes={theme}
+      type={type}
+      className={`${className} ${textButton.wrapper}`}
+    />
+  )
 }
 
-export const TextButtonAnchor: VFC<AnchorProps> = (props) => {
+export const TextButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props }) => {
   const theme = useTheme()
-  return <TextStyleButtonAnchor themes={theme} {...props} />
+  const { textButtonAnchor } = useClassNames()
+
+  return (
+    <TextStyleButtonAnchor
+      themes={theme}
+      className={`${className} ${textButtonAnchor.wrapper}`}
+      {...props}
+    />
+  )
 }
 
 const textStyle = css`
