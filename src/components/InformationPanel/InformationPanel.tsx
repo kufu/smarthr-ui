@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { VFC, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -12,6 +12,7 @@ import {
   FaExclamationCircleIcon,
   FaExclamationTriangleIcon,
   FaInfoCircleIcon,
+  FaSyncAltIcon,
 } from '../Icon'
 import { Heading, HeadingTagTypes } from '../Heading'
 import { SecondaryButton } from '../Button'
@@ -19,7 +20,7 @@ import { SecondaryButton } from '../Button'
 type Props = {
   title: string
   titleTag?: HeadingTagTypes
-  type?: 'success' | 'info' | 'warning' | 'error' | ''
+  type?: 'success' | 'info' | 'warning' | 'error' | 'sync' | ''
   togglable?: boolean
   openButtonLabel?: string
   closeButtonLabel?: string
@@ -29,7 +30,7 @@ type Props = {
   onClickTrigger?: (active: boolean) => void
 }
 
-export const InformationPanel: FC<Props> = ({
+export const InformationPanel: VFC<Props> = ({
   title,
   titleTag = 'span',
   type = 'info',
@@ -62,6 +63,10 @@ export const InformationPanel: FC<Props> = ({
     case 'error':
       Icon = ErrorTitleIcon
       iconColor = theme.palette.DANGER
+      break
+    case 'sync':
+      Icon = SyncIcon
+      iconColor = theme.palette.MAIN
   }
 
   const [active, setActive] = useState(activeProps)
@@ -154,6 +159,7 @@ const SuccessTitleIcon = createTitleIcon(FaCheckCircleIcon)
 const InfoTitleIcon = createTitleIcon(FaInfoCircleIcon)
 const WarningTitleIcon = createTitleIcon(FaExclamationTriangleIcon)
 const ErrorTitleIcon = createTitleIcon(FaExclamationCircleIcon)
+const SyncIcon = createTitleIcon(FaSyncAltIcon)
 
 const Content = styled.div<{ themes: Theme }>`
   ${({ themes }) => {

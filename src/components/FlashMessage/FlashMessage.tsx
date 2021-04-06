@@ -12,18 +12,32 @@ import {
 } from '../Icon'
 import { SecondaryButton } from '../Button'
 
-type Props = {
+export const messageTypes = ['success', 'info', 'warning', 'error', ''] as const
+export const animationTypes = ['bounce', 'fade', 'none'] as const
+export const roles = ['alert', 'status'] as const
+
+export type Props = {
   visible: boolean
-  type: 'success' | 'info' | 'warning' | 'error' | ''
+  type: typeof messageTypes[number]
   text: string
   className?: string
+  animation?: typeof animationTypes[number]
+  role?: typeof roles[number]
   onClose: () => void
 }
 
 const REMOVE_DELAY = 8000
 let timerId: any = 0
 
-export const FlashMessage: FC<Props> = ({ visible, type, text, onClose, className = '' }) => {
+export const FlashMessage: FC<Props> = ({
+  animation = 'bounce',
+  visible,
+  type,
+  text,
+  onClose,
+  className = '',
+  role = 'alert',
+}) => {
   const theme = useTheme()
 
   useEffect(() => {
@@ -41,33 +55,35 @@ export const FlashMessage: FC<Props> = ({ visible, type, text, onClose, classNam
   if (!visible) return null
 
   let Icon = FaCheckCircleIcon
-  let iconColor = theme.palette.TEXT_GREY
+  let iconColor = theme.color.TEXT_GREY
 
   switch (type) {
     case 'success':
       Icon = FaCheckCircleIcon
-      iconColor = theme.palette.MAIN
+      iconColor = theme.color.MAIN
       break
     case 'info':
       Icon = FaInfoCircleIcon
-      iconColor = theme.palette.TEXT_GREY
+      iconColor = theme.color.TEXT_GREY
       break
     case 'warning':
       Icon = FaExclamationTriangleIcon
-      iconColor = theme.palette.WARNING
+      iconColor = theme.color.WARNING
       break
     case 'error':
       Icon = FaExclamationCircleIcon
-      iconColor = theme.palette.DANGER
+      iconColor = theme.color.DANGER
   }
 
   return (
-    <Wrapper className={`${type} ${className}`} themes={theme} role="alert">
-      <Icon size={14} color={iconColor} />
+    <Wrapper className={`${type} ${className}`} themes={theme} animation={animation} role={role}>
+      <IconWrapper>
+        <Icon size={14} color={iconColor} />
+      </IconWrapper>
       <Txt themes={theme}>{text}</Txt>
-      <CloseButton className="close" onClick={onClose} size="s" square themes={theme}>
+      <SecondaryButton className="close" onClick={onClose} size="s" square>
         <FaTimesIcon size={16} />
-      </CloseButton>
+      </SecondaryButton>
     </Wrapper>
   )
 }
@@ -94,52 +110,78 @@ const bounceAnimation = keyframes`
     transform: translate3d(0, -4px, 0);
   }
 `
-const Wrapper = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size, frame, palette, zIndex } = themes
+
+const fadeAnimation = keyframes`
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+`
+
+const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
+  ${({ themes, animation }) => {
+    const { size, spacing, radius, color, zIndex } = themes
+
+    let keyframe = bounceAnimation
+    switch (animation) {
+      case 'bounce':
+        keyframe = bounceAnimation
+        break
+      case 'fade':
+        keyframe = fadeAnimation
+        break
+      case 'none':
+        keyframe = fadeAnimation
+        break
+    }
 
     return css`
       z-index: ${zIndex.FLASH_MESSAGE};
       display: flex;
       position: fixed;
-      bottom: ${size.pxToRem(size.space.XXS)};
-      left: ${size.pxToRem(size.space.XXS)};
+      bottom: ${size.pxToRem(spacing.XXS)};
+      left: ${size.pxToRem(spacing.XXS)};
       box-sizing: border-box;
       align-items: center;
       min-width: ${size.pxToRem(200)};
-      padding: ${size.pxToRem(size.space.XS)};
-      padding-right: ${size.pxToRem(54)};
+      padding: ${size.pxToRem(spacing.XXS)} ${size.pxToRem(spacing.XS)};
+      padding-right: ${size.pxToRem(spacing.XXS)};
       background-color: #fff;
-      border: 1px solid ${palette.BORDER};
-      border-radius: ${frame.border.radius.m};
+      border: 1px solid ${color.BORDER};
+      border-radius: ${radius.m};
       box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
-      animation: ${bounceAnimation} 1s 0s both;
-    `
-  }}
-`
-const CloseButton = styled(SecondaryButton)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
+      animation: ${keyframe} ${animation === 'none' ? '0.01s' : '1s'} 0s both;
 
-    return css`
-      position: absolute;
-      top: 50%;
-      right: ${pxToRem(space.XXS)};
-      transform: translateY(-50%);
+      @media (prefers-reduced-motion) {
+        animation-duration: 0.01s;
+      }
+
+      & > * + * {
+        margin-left: ${size.space.XXS}px;
+      }
     `
   }}
 `
+
+const IconWrapper = styled.span`
+  flex-shrink: 0;
+`
+
 const Txt = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { pxToRem, space, font } = themes.size
+    const { pxToRem, font } = themes.size
 
     return css`
       flex-grow: 1;
       flex-shrink: 1;
+      margin-top: 0;
+      margin-bottom: 0;
       padding: 0;
-      margin: 0 0 0 ${pxToRem(space.XXS)};
       font-size: ${pxToRem(font.TALL)};
-      line-height: 1;
+      line-height: 1.5;
     `
   }}
 `
