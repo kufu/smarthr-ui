@@ -1,14 +1,14 @@
 import React, { ComponentType, ReactNode, VFC } from 'react'
 import styled from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { IconNames, ComponentProps as IconProps } from '../Icon'
+import { ComponentProps as IconProps } from '../Icon'
 import { getIconComponent, getItemStyle } from './appNaviHelper'
 import { useClassNames } from './useClassNames'
 
 export type AppNaviCustomTagProps = {
   children: ReactNode
   tag: ComponentType<any>
-  icon?: IconNames | React.ComponentType<IconProps>
+  icon?: React.ComponentType<IconProps>
   current?: boolean
 } & { [key: string]: any }
 type InnerProps = AppNaviCustomTagProps & {
