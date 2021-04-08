@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [12.3.1](https://github.com/kufu/smarthr-ui/compare/v12.3.0...v12.3.1) (2021-04-01)
+
+
+### Bug Fixes
+
+* fix problem with createTheme ([#1475](https://github.com/kufu/smarthr-ui/issues/1475)) ([d980d4d](https://github.com/kufu/smarthr-ui/commit/d980d4dff014c459469ae73cb1c21f55f4a43253))
+
 ## [12.3.0](https://github.com/kufu/smarthr-ui/compare/v12.2.1...v12.3.0) (2021-03-23)
 
 
