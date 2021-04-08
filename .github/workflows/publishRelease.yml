@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CHANGELOG_PATH: /tmp/CHANGELOG.md
+      IS_PRERELEASE: ${{ contains(github.event.issue.labels.*.name, 'prerelease') }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -26,7 +27,15 @@ jobs:
           git config user.name "github-actions[bot]"
       - run: yarn install
       - run: yarn release
+        if: ${{ env.IS_PRERELEASE == 'false' }}
+      - run: yarn release --prerelease
+        if: ${{ env.IS_PRERELEASE == 'true' }}
       - run: npm publish
+        if: ${{ env.IS_PRERELEASE == 'false' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --tag prerelease
+        if: ${{ env.IS_PRERELEASE == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: echo NEW_TAG=$(git describe) >> $GITHUB_ENV
@@ -50,6 +59,7 @@ jobs:
           release_name: ${{ env.NEW_TAG }}
           body_path: ${{ env.CHANGELOG_PATH }}
           commitish: master
+          prerelease: ${{ env.IS_PRERELEASE }}
       - name: close issue
         uses: peter-evans/close-issue@v1
       - name: delete branch

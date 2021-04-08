@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -19,7 +19,7 @@ export type HeadingTypes =
 
 export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'
 
-export const Heading: FC<Props> = ({
+export const Heading: VFC<Props> = ({
   tag = 'h1' as HeadingTagTypes,
   type = 'screenTitle',
   className = '',

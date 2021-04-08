@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Icon as DuplicatedIcon, IconNames, ComponentProps as IconProps } from '../Icon/Icon'
@@ -11,7 +11,7 @@ type Props = {
   onClick?: () => void
 }
 
-export const HeaderButton: FC<Props> = ({ icon: Icon, children, onClick }) => {
+export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick }) => {
   const theme = useTheme()
 
   return (
