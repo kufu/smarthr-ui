@@ -58,40 +58,40 @@ const component = () => (
 
 ### AppNaviButtonProps
 
-| Name     | Required | Type                                                             | DefaultValue | Description                   |
-| -------- | -------- | ---------------------------------------------------------------- | ------------ | ----------------------------- |
-| children | ✓        | **React.ReactNode**                                              | -            | Button text.                  |
-| icon     | -        | **Fa\*\*\*Icon component in Icon**                               | -            | A Fa\*\*\*Icon component.     |
-| current  | -        | **boolean**                                                      | false        | Whether to give active style. |
-| onClick  | -        | **(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void** | -            | Button's click handler.       |
+| Name     | Required | Type                                                               | DefaultValue | Description                                                                        |
+| -------- | -------- | ------------------------------------------------------------------ | ------------ | ---------------------------------------------------------------------------------- |
+| children | ✓        | **React.ReactNode**                                                | -            | Button text.                                                                       |
+| icon     | -        | - **Fa\*\*\*Icon component in Icon**<br /> - **IconProps['name']** | -            | - A Fa\*\*\*Icon component<br />- **\[DEPRECATED\]** the name of a Icon component. |
+| current  | -        | **boolean**                                                        | false        | Whether to give active style.                                                      |
+| onClick  | -        | **(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void**   | -            | Button's click handler.                                                            |
 
 IconProps is props of Icon component.
 
 ### AppNaviAnchorProps
 
-| Name     | Required | Type                               | DefaultValue | Description                   |
-| -------- | -------- | ---------------------------------- | ------------ | ----------------------------- |
-| children | ✓        | **React.ReactNode**                | -            | Anchor text.                  |
-| href     | ✓        | **string**                         | -            | Href of anchor.               |
-| icon     | -        | **Fa\*\*\*Icon component in Icon** | -            | A Fa\*\*\*Icon component.     |
-| current  | -        | **boolean**                        | false        | Whether to give active style. |
+| Name     | Required | Type                                                               | DefaultValue | Description                                                                        |
+| -------- | -------- | ------------------------------------------------------------------ | ------------ | ---------------------------------------------------------------------------------- |
+| children | ✓        | **React.ReactNode**                                                | -            | Anchor text.                                                                       |
+| href     | ✓        | **string**                                                         | -            | Href of anchor.                                                                    |
+| icon     | -        | - **Fa\*\*\*Icon component in Icon**<br /> - **IconProps['name']** | -            | - A Fa\*\*\*Icon component<br />- **\[DEPRECATED\]** the name of a Icon component. |
+| current  | -        | **boolean**                                                        | false        | Whether to give active style.                                                      |
 
 ### AppNaviDropdownProps
 
-| Name            | Required | Type                               | DefaultValue | Description                   |
-| --------------- | -------- | ---------------------------------- | ------------ | ----------------------------- |
-| children        | ✓        | **React.ReactNode**                | -            | Button text.                  |
-| dropdownContent | ✓        | **React.ReactNode**                | -            | Content of DropdownContent.   |
-| icon            | -        | **Fa\*\*\*Icon component in Icon** | -            | A Fa\*\*\*Icon component.     |
-| current         | -        | **boolean**                        | false        | Whether to give active style. |
+| Name            | Required | Type                                                               | DefaultValue | Description                                                                        |
+| --------------- | -------- | ------------------------------------------------------------------ | ------------ | ---------------------------------------------------------------------------------- |
+| children        | ✓        | **React.ReactNode**                                                | -            | Button text.                                                                       |
+| dropdownContent | ✓        | **React.ReactNode**                                                | -            | Content of DropdownContent.                                                        |
+| icon            | -        | - **Fa\*\*\*Icon component in Icon**<br /> - **IconProps['name']** | -            | - A Fa\*\*\*Icon component<br />- **\[DEPRECATED\]** the name of a Icon component. |
+| current         | -        | **boolean**                                                        | false        | Whether to give active style.                                                      |
 
 ### AppNaviCustomTagProps
 
-| Name     | Required | Type                               | DefaultValue | Description                   |
-| -------- | -------- | ---------------------------------- | ------------ | ----------------------------- |
-| children | ✓        | **React.ReactNode**                | -            | Button text.                  |
-| tag      | ✓        | **React.ComponentType<any>**       | -            | Custom tag component.         |
-| icon     | -        | **Fa\*\*\*Icon component in Icon** | -            | A Fa\*\*\*Icon component.     |
-| current  | -        | **boolean**                        | false        | Whether to give active style. |
+| Name     | Required | Type                                                               | DefaultValue | Description                                                                        |
+| -------- | -------- | ------------------------------------------------------------------ | ------------ | ---------------------------------------------------------------------------------- |
+| children | ✓        | **React.ReactNode**                                                | -            | Button text.                                                                       |
+| tag      | ✓        | **React.ComponentType<any>**                                       | -            | Custom tag component.                                                              |
+| icon     | -        | - **Fa\*\*\*Icon component in Icon**<br /> - **IconProps['name']** | -            | - A Fa\*\*\*Icon component<br />- **\[DEPRECATED\]** the name of a Icon component. |
+| current  | -        | **boolean**                                                        | false        | Whether to give active style.                                                      |
 
 and additional key value, `{ key: [string]: any }`.
