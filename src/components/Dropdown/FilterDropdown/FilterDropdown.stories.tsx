@@ -1,5 +1,4 @@
 import { storiesOf } from '@storybook/react'
-import { action } from '@storybook/addon-actions'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -23,19 +22,23 @@ storiesOf('Dropdown', module)
     const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
     const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.currentTarget.value)
     const themes = useTheme()
+    const [isFiltered, setIsFiltered] = React.useState(false)
+    const [isFiltered2, setIsFiltered2] = React.useState(true)
+    const [isFiltered3, setIsFiltered3] = React.useState(true)
 
     return (
       <Wrapper themes={themes}>
         <List>
-          <dt>Controlled</dt>
+          <dt>nonFiltered</dt>
           <dd>
             <FilterDropdown
-              onApply={action('apply')}
-              onCancel={action('cancel')}
+              onApply={() => setIsFiltered(true)}
+              onCancel={() => setIsFiltered(false)}
               onReset={() => {
                 setValue('hoge')
                 setText('')
               }}
+              isFiltered={isFiltered}
             >
               <Text themes={themes}>
                 `FilterDropdown` provide specific interface to be able to filter data.
@@ -79,9 +82,26 @@ storiesOf('Dropdown', module)
           </dd>
           <dt>Filtered</dt>
           <dd>
-            <FilterDropdown isFiltered onApply={action('apply')} onReset={action('reset')}>
+            <FilterDropdown
+              isFiltered={isFiltered2}
+              onApply={() => setIsFiltered2(true)}
+              onReset={() => setIsFiltered2(false)}
+            >
               <Text themes={themes}>
                 You can change border color of the trigger button by setting `isFiltered`.
+              </Text>
+            </FilterDropdown>
+          </dd>
+          <dt>Filtered has status text</dt>
+          <dd>
+            <FilterDropdown
+              isFiltered={isFiltered3}
+              onApply={() => setIsFiltered3(true)}
+              onReset={() => setIsFiltered3(false)}
+              hasStatusText
+            >
+              <Text themes={themes}>
+                You can change border text and color of the trigger button by setting `isFiltered`.
               </Text>
             </FilterDropdown>
           </dd>
@@ -92,7 +112,7 @@ storiesOf('Dropdown', module)
 
 const Wrapper = styled.div<{ themes: Theme }>`
   padding: 24px;
-  color: ${({ themes }) => themes.palette.TEXT_BLACK};
+  color: ${({ themes }) => themes.color.TEXT_BLACK};
 `
 const List = styled.dl`
   margin: 0;
@@ -109,7 +129,7 @@ const List = styled.dl`
 const Text = styled.p<{ themes: Theme }>`
   margin: 0;
   font-size: 14px;
-  color: ${({ themes }) => themes.palette.TEXT_BLACK};
+  color: ${({ themes }) => themes.color.TEXT_BLACK};
 `
 const Description = styled.p`
   margin: 0;
