@@ -146,7 +146,7 @@ const List = styled.ul`
 
   /* overwrite FlashMessage style */
   & > li > div {
-    bottom: auto;
-    left: auto;
+    position: static;
+    display: inline-flex;
   }
 `
