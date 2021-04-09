@@ -5,19 +5,37 @@ import { isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
+import { useClassNames } from './useClassNames'
 
-export const PrimaryButton: VFC<ButtonProps> = ({ type = 'button', ...props }) => {
+export const PrimaryButton: VFC<ButtonProps> = ({ type = 'button', className = '', ...props }) => {
   const theme = useTheme()
-  return <PrimaryStyleButton {...props} themes={theme} type={type} />
+  const { primaryButton } = useClassNames()
+
+  return (
+    <PrimaryStyleButton
+      {...props}
+      themes={theme}
+      type={type}
+      className={`${className} ${primaryButton.wrapper}`}
+    />
+  )
 }
 
 // set the displayName explicit.
 // This is for error message of BottomFixedArea component.
 PrimaryButton.displayName = 'PrimaryButton'
 
-export const PrimaryButtonAnchor: VFC<AnchorProps> = (props) => {
+export const PrimaryButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props }) => {
   const theme = useTheme()
-  return <PrimaryStyleButtonAnchor themes={theme} {...props} />
+  const { primaryButtonAnchor } = useClassNames()
+
+  return (
+    <PrimaryStyleButtonAnchor
+      themes={theme}
+      className={`${className} ${primaryButtonAnchor.wrapper}`}
+      {...props}
+    />
+  )
 }
 
 // set the displayName explicit.
