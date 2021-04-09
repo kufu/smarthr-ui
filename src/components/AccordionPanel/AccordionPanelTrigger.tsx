@@ -76,7 +76,6 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
 const resetButtonStyle = css`
   background-color: transparent;
   border: none;
-  outline: none;
   padding: 0;
   appearance: none;
 `
