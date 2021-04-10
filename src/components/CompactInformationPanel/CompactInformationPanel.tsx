@@ -19,11 +19,49 @@ export const CompactInformationPanel: React.VFC<{
 
   return (
     <Wrapper themes={theme}>
-      <Icon type={type} themes={theme} />
+      {callIcon(type, theme)}
       <Content>{children}</Content>
     </Wrapper>
   )
 }
+
+const callIcon = (type: IconType, theme: Theme) => {
+  const { color } = theme
+  switch (type) {
+    case 'info':
+    default:
+      return <InfoIcon color={color.TEXT_GREY} $theme={theme} />
+    case 'success':
+      return <SuccessIcon color={color.MAIN} $theme={theme} />
+    case 'warning':
+      return <WarningIcon color={color.WARNING} $theme={theme} />
+    case 'error':
+      return <ErrorIcon color={color.DANGER} $theme={theme} />
+  }
+}
+
+const createIcon = (Icon: typeof FaInfoCircleIcon) =>
+  styled(Icon)<{ $theme: Theme }>(
+    ({
+      $theme: {
+        spacing,
+        fontSize: { pxToRem },
+      },
+    }) => css`
+      flex-shrink: 0;
+
+      /*
+      it set line-height to 1.5 and align-items(flexbox) to start(default),
+      translate-y 0.25em transform for leading
+      */
+      transform: translateY(0.25em);
+      margin-right: ${pxToRem(spacing.XXS)};
+    `,
+  )
+const InfoIcon = createIcon(FaInfoCircleIcon)
+const SuccessIcon = createIcon(FaCheckCircleIcon)
+const WarningIcon = createIcon(FaExclamationTriangleIcon)
+const ErrorIcon = createIcon(FaExclamationCircleIcon)
 
 const Wrapper = styled(Base)<{ themes: Theme }>`
   ${({
@@ -38,60 +76,6 @@ const Wrapper = styled(Base)<{ themes: Theme }>`
     `
   }}
 `
-const Icon: React.VFC<{
-  type: IconType
-  themes: Theme
-}> = ({
-  type,
-  themes: {
-    color,
-    spacing,
-    fontSize: { pxToRem },
-  },
-}) => {
-  let Component
-  const style = css`
-    flex-shrink: 0;
-
-    /*
-      基本 line-height を 1.5 とし
-      flexbox の align-items を start（デフォルト）にしたので
-      leading 分 0.25em をずらしている
-      */
-    transform: translateY(0.25em);
-    margin-right: ${pxToRem(spacing.XXS)};
-  `
-
-  switch (type) {
-    case 'info':
-    default:
-      Component = styled(FaInfoCircleIcon)`
-        ${style}
-        color: ${color.TEXT_GREY};
-      `
-      break
-    case 'success':
-      Component = styled(FaCheckCircleIcon)`
-        ${style}
-        color: ${color.MAIN};
-      `
-      break
-    case 'warning':
-      Component = styled(FaExclamationTriangleIcon)`
-        ${style}
-        color: ${color.WARNING};
-      `
-      break
-    case 'error':
-      Component = styled(FaExclamationCircleIcon)`
-        ${style}
-        color: ${color.DANGER};
-      `
-      break
-  }
-
-  return <Component />
-}
 const Content = styled.div`
   line-height: 1.5;
 `
