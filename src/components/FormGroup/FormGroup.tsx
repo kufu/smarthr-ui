@@ -2,12 +2,13 @@ import React, { ComponentProps, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { StatusLabel } from '../StatusLabel'
-import { Heading, HeadingTypes } from '../Heading'
+import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 
 type innerMarginType = 'XXS' | 'XS' | 'S'
 type Props = {
   label: string
+  titleTag?: HeadingTagTypes
   labelType?: HeadingTypes
   labelId?: string
   innerMargin?: innerMarginType
@@ -21,6 +22,7 @@ type Props = {
 
 export const FormGroup: VFC<Props> = ({
   label,
+  titleTag,
   labelType = 'blockTitle',
   labelId,
   innerMargin = 'XS',
@@ -37,7 +39,7 @@ export const FormGroup: VFC<Props> = ({
   return (
     <Label id={labelId} className={`${className} ${disabledClass}`} themes={theme}>
       <TitleWrapper>
-        <Title type={labelType} themes={theme} className={disabledClass}>
+        <Title tag={titleTag} type={labelType} themes={theme} className={disabledClass}>
           {label}
         </Title>
         {statusLabelProps.length > 0 && (
