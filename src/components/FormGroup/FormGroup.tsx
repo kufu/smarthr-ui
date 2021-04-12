@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, ReactNode } from 'react'
+import React, { ComponentProps, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { StatusLabel } from '../StatusLabel'
@@ -19,7 +19,7 @@ type Props = {
   className?: string
 }
 
-export const FormGroup: FC<Props> = ({
+export const FormGroup: VFC<Props> = ({
   label,
   labelType = 'blockTitle',
   labelId,
