@@ -15,9 +15,9 @@ type Props = {
   statusLabelProps?: Array<ComponentProps<typeof StatusLabel>>
   helpMessage?: ReactNode
   errorMessages?: string | string[]
-  children: ReactNode
   disabled?: boolean
   className?: string
+  children: ReactNode
 }
 
 export const FormGroup: VFC<Props> = ({
@@ -29,9 +29,9 @@ export const FormGroup: VFC<Props> = ({
   statusLabelProps = [],
   helpMessage,
   errorMessages,
-  children,
   disabled,
   className = '',
+  children,
 }) => {
   const theme = useTheme()
   const disabledClass = disabled ? 'disabled' : ''
