@@ -61,7 +61,7 @@ export const FormGroup: VFC<Props> = ({
                   themes={theme}
                   size={14}
                 />
-                <ErrorText>{message}</ErrorText>
+                <span>{message}</span>
               </ErrorMessage>
             ),
           )}
@@ -144,16 +144,13 @@ const ErrorMessage = styled.span<{ themes: Theme }>`
     const { fontSize, spacing } = themes
 
     return css`
-      display: block;
+      display: flex;
+      align-items: center;
       margin-top: ${fontSize.pxToRem(spacing.XXS)};
       font-size: ${fontSize.pxToRem(fontSize.TALL)};
       line-height: 1;
     `
   }}
-`
-
-const ErrorText = styled.span`
-  vertical-align: middle;
 `
 
 const ErrorIcon = styled(FaExclamationCircleIcon)<{ themes: Theme }>`
@@ -162,7 +159,6 @@ const ErrorIcon = styled(FaExclamationCircleIcon)<{ themes: Theme }>`
 
     return css`
       margin-right: ${fontSize.pxToRem(4)};
-      vertical-align: middle;
     `
   }}
 `
