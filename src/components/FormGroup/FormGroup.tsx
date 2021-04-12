@@ -167,7 +167,7 @@ const ErrorIcon = styled(FaExclamationCircleIcon)<{ themes: Theme }>`
   }}
 `
 
-const Body = styled.div<{ themes: Theme; margin: innerMarginType }>`
+const Body = styled.span<{ themes: Theme; margin: innerMarginType }>`
   ${({ themes, margin }) => {
     const { fontSize, spacing } = themes
 
