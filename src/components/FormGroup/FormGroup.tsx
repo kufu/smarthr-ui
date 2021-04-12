@@ -127,11 +127,12 @@ const StyledStatusLabel = styled(StatusLabel)<{ themes: Theme }>`
   }}
 `
 
-const HelpMessage = styled.div<{ themes: Theme }>`
+const HelpMessage = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { fontSize, spacing } = themes
 
     return css`
+      display: block;
       margin-top: ${fontSize.pxToRem(spacing.XXS)};
       font-size: ${fontSize.pxToRem(fontSize.TALL)};
     `
