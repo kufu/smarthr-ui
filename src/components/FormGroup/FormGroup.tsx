@@ -7,7 +7,7 @@ import { FaExclamationCircleIcon } from '../Icon'
 
 type innerMarginType = 'XXS' | 'XS' | 'S'
 type Props = {
-  label: string
+  title: string
   titleTag?: HeadingTagTypes
   titleType?: HeadingTypes
   labelId?: string
@@ -21,7 +21,7 @@ type Props = {
 }
 
 export const FormGroup: VFC<Props> = ({
-  label,
+  title,
   titleTag,
   titleType,
   labelId,
@@ -40,7 +40,7 @@ export const FormGroup: VFC<Props> = ({
     <Label id={labelId} className={`${className} ${disabledClass}`} themes={theme}>
       <TitleWrapper>
         <Title tag={titleTag} type={titleType} themes={theme} className={disabledClass}>
-          {label}
+          {title}
         </Title>
         {statusLabelProps.length > 0 && (
           <StatusLabels themes={theme}>

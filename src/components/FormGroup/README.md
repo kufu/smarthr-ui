@@ -15,7 +15,7 @@ const SampleStatusLabelProps = [
 ]
 
 <FormGroup
-  label="FormGroup sample"
+  title="FormGroup sample"
   titleType="subSubBlockTitle"
   labelId="form-group-sample"
   innerMargin="XXS"
@@ -31,7 +31,7 @@ const SampleStatusLabelProps = [
 
 | Name             | Required | Type                                                                                                                                                                                                     | DefaultValue    | Description                                                                                  |
 |------------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|----------------------------------------------------------------------------------------------|
-| label            | ✓        | **string**                                                                                                                                                                                               | -               | Label name                                                                                   |
+| title            | ✓        | **string**                                                                                                                                                                                               | -               | Title name                                                                                   |
 | titleTag         | -        | **'h1' &#124; 'h2' &#124; 'h3' &#124; 'h4' &#124; 'h5' &#124; 'h6' &#124; 'span'**                                                                                                                       | -               | Tag for title heading                                                                        |
 | titleType        | -        | **'screenTitle' &#124; 'sectionTitle' &#124; 'blockTitle' &#124; 'subBlockTitle' &#124; 'subSubBlockTitle'**                                                                                             | -               | Type for title heading                                                                       |
 | labelId          | -        | **string**                                                                                                                                                                                               | -               | ID for label                                                                                 |
