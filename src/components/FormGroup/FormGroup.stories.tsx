@@ -20,7 +20,7 @@ const SampleChildren: React.FC<SampleChildrenProps> = ({ id1, id2, disabled }) =
     <SampleWrapper>
       <SampleFormGroup
         label="first name"
-        labelType="subSubBlockTitle"
+        titleType="subSubBlockTitle"
         innerMargin="XXS"
         labelId={id1}
         disabled={disabled}
@@ -29,7 +29,7 @@ const SampleChildren: React.FC<SampleChildrenProps> = ({ id1, id2, disabled }) =
       </SampleFormGroup>
       <SampleFormGroup
         label="last name"
-        labelType="subSubBlockTitle"
+        titleType="subSubBlockTitle"
         innerMargin="XXS"
         labelId={id2}
         disabled={disabled}
@@ -64,19 +64,19 @@ storiesOf('FormGroup', module)
       <Wrapper>
         <Title themes={theme}>default</Title>
         <Body>
-          <FormGroup label="Title" labelType="blockTitle">
+          <FormGroup label="Title" titleType="blockTitle">
             <SampleChildren id1="id_1-1" id2="id_1-2" />
           </FormGroup>
         </Body>
         <Title themes={theme}>with status label</Title>
         <Body>
-          <FormGroup label="Title" labelType="blockTitle" statusLabelProps={SampleStatusLabelProps}>
+          <FormGroup label="Title" titleType="blockTitle" statusLabelProps={SampleStatusLabelProps}>
             <SampleChildren id1="id_2-1" id2="id_2-2" />
           </FormGroup>
         </Body>
         <Title themes={theme}>with help message</Title>
         <Body>
-          <FormGroup label="Title" labelType="blockTitle" helpMessage="help message text">
+          <FormGroup label="Title" titleType="blockTitle" helpMessage="help message text">
             <SampleChildren id1="id_3-1" id2="id_3-2" />
           </FormGroup>
         </Body>
@@ -84,7 +84,7 @@ storiesOf('FormGroup', module)
         <Body>
           <FormGroup
             label="Title"
-            labelType="blockTitle"
+            titleType="blockTitle"
             statusLabelProps={SampleStatusLabelProps}
             errorMessages={['error message 1', 'error message 2']}
           >
@@ -95,7 +95,7 @@ storiesOf('FormGroup', module)
         <Body>
           <FormGroup
             label="Title"
-            labelType="blockTitle"
+            titleType="blockTitle"
             statusLabelProps={SampleStatusLabelProps}
             helpMessage="help message text"
             errorMessages={['error message 1', 'error message 2']}
@@ -107,7 +107,7 @@ storiesOf('FormGroup', module)
         <Body>
           <FormGroup
             label="Title"
-            labelType="blockTitle"
+            titleType="blockTitle"
             statusLabelProps={SampleStatusLabelProps}
             helpMessage="help message text"
             errorMessages="error message"

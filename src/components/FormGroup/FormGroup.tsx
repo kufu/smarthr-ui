@@ -9,7 +9,7 @@ type innerMarginType = 'XXS' | 'XS' | 'S'
 type Props = {
   label: string
   titleTag?: HeadingTagTypes
-  labelType?: HeadingTypes
+  titleType?: HeadingTypes
   labelId?: string
   innerMargin?: innerMarginType
   statusLabelProps?: Array<ComponentProps<typeof StatusLabel>>
@@ -23,7 +23,7 @@ type Props = {
 export const FormGroup: VFC<Props> = ({
   label,
   titleTag,
-  labelType = 'blockTitle',
+  titleType,
   labelId,
   innerMargin = 'XS',
   statusLabelProps = [],
@@ -39,7 +39,7 @@ export const FormGroup: VFC<Props> = ({
   return (
     <Label id={labelId} className={`${className} ${disabledClass}`} themes={theme}>
       <TitleWrapper>
-        <Title tag={titleTag} type={labelType} themes={theme} className={disabledClass}>
+        <Title tag={titleTag} type={titleType} themes={theme} className={disabledClass}>
           {label}
         </Title>
         {statusLabelProps.length > 0 && (

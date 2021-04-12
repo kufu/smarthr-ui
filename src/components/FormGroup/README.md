@@ -16,7 +16,7 @@ const SampleStatusLabelProps = [
 
 <FormGroup
   label="FormGroup sample"
-  labelType="subSubBlockTitle"
+  titleType="subSubBlockTitle"
   labelId="form-group-sample"
   innerMargin="XXS"
   statusLabelProps={SampleStatusLabelProps}
@@ -33,7 +33,7 @@ const SampleStatusLabelProps = [
 |------------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|----------------------------------------------------------------------------------------------|
 | label            | ✓        | **string**                                                                                                                                                                                               | -               | Label name                                                                                   |
 | titleTag         | -        | **'h1' &#124; 'h2' &#124; 'h3' &#124; 'h4' &#124; 'h5' &#124; 'h6' &#124; 'span'**                                                                                                                       | -               | Tag for title heading                                                                        |
-| labelType        | -        | **'screenTitle' &#124; 'sectionTitle' &#124; 'blockTitle' &#124; 'subBlockTitle' &#124; 'subSubBlockTitle'**                                                                                             | 'blockTitle'    | Label type                                                                                   |
+| titleType        | -        | **'screenTitle' &#124; 'sectionTitle' &#124; 'blockTitle' &#124; 'subBlockTitle' &#124; 'subSubBlockTitle'**                                                                                             | -               | Type for title heading                                                                       |
 | labelId          | -        | **string**                                                                                                                                                                                               | -               | ID for label                                                                                 |
 | innerMargin      | -        | **'XXS' &#124; 'XS' &#124; 'S'**                                                                                                                                                                         | 'XS'            | margin between label and children                                                            |
 | statusLabelProps | -        | **Array<ComponentProps\<typeof StatusLabel>>**                                                                                                                                                           | -               | Each statusLabelProps is passed to StatusLabel component and display them next to the label  |
