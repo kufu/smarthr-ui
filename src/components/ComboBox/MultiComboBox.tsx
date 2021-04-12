@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, FC, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -7,22 +7,62 @@ import { hasParentElementByClassName } from './multiComboBoxHelper'
 
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { useListBox } from './useListBox'
+import { ResetButton } from '../Button/ResetButton'
 
 const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
 
 type Props = {
+  /**
+   * A list of items to choose from.
+   */
   items: Array<{ value: string; label: string; disabled?: boolean }>
+  /**
+   * A list of items that have already been selected.
+   */
   selectedItems: Array<{ value: string; label: string; deletable?: boolean }>
+  /**
+   * The value of the input `name` attribute.
+   */
   name?: string
+  /**
+   * The value of the input `disabled` attribute.
+   */
   disabled?: boolean
+  /**
+   * If true, the outline of this component will be DANGER color.
+   */
   error?: boolean
+  /**
+   *  If true, you can add new item that do not exist in `items` props.
+   */
   creatable?: boolean
+  /**
+   * The value of the input `placeholder` attribute.
+   */
   placeholder?: string
+  /**
+   * The value given to the width style of input.
+   */
   width?: number | string
+  /**
+   *  The `className` given to the outermost element of this component.
+   */
   className?: string
+  /**
+   * Fire when the value of input changes.
+   */
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  /**
+   * Fire when adding an item that does not exist in `items` props.
+   */
   onAdd?: (label: string) => void
+  /**
+   *  Fire when clicking the delete element of `selectedItems` button.
+   */
   onDelete: (option: { value: string; label: string }) => void
+  /**
+   * Fire when clicking an element of `items`.
+   */
   onSelect: (option: { value: string; label: string }) => void
 }
 
@@ -99,7 +139,7 @@ export const MultiComboBox: FC<Props> = ({
     }, [blur]),
   )
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setInputValue('')
 
     if (isFocused && inputRef.current) {
@@ -146,79 +186,77 @@ export const MultiComboBox: FC<Props> = ({
       aria-haspopup="listbox"
       aria-expanded={isFocused}
     >
-      <Inner>
-        <InputArea themes={theme}>
-          <List themes={theme}>
-            {selectedItems.map(({ value, label, deletable = true }, i) => (
-              <li key={i}>
-                <SelectedItem themes={theme} className={deletable ? 'deletable' : ''}>
-                  {label}
+      <InputArea themes={theme}>
+        <List themes={theme}>
+          {selectedItems.map(({ value, label, deletable = true }, i) => (
+            <li key={i}>
+              <SelectedItem themes={theme}>
+                <SelectedItemLabel themes={theme}>{label}</SelectedItemLabel>
 
-                  {deletable && (
-                    <DeleteButton
-                      type="button"
-                      themes={theme}
-                      className={DELETE_BUTTON_CLASS_NAME}
-                      onClick={() => onDelete({ value, label })}
-                    >
-                      <DeleteIcon
-                        size={11}
-                        color={theme.palette.TEXT_BLACK}
-                        visuallyHiddenText="delete"
-                      />
-                    </DeleteButton>
-                  )}
-                </SelectedItem>
-              </li>
-            ))}
+                {deletable && (
+                  <DeleteButton
+                    type="button"
+                    themes={theme}
+                    className={DELETE_BUTTON_CLASS_NAME}
+                    onClick={() => onDelete({ value, label })}
+                  >
+                    <DeleteIcon
+                      size={11}
+                      color={theme.palette.TEXT_BLACK}
+                      visuallyHiddenText="delete"
+                    />
+                  </DeleteButton>
+                )}
+              </SelectedItem>
+            </li>
+          ))}
 
-            <InputWrapper className={isFocused ? undefined : 'hidden'}>
-              <Input
-                type="text"
-                name={name}
-                value={inputValue}
-                disabled={disabled}
-                ref={inputRef}
-                themes={theme}
-                onChange={(e) => {
-                  if (onChange) onChange(e)
-                  setInputValue(e.currentTarget.value)
-                }}
-                onFocus={() => {
-                  if (!isFocused) {
-                    focus()
-                  }
-                }}
-                onCompositionStart={() => setIsComposing(true)}
-                onCompositionEnd={() => setIsComposing(false)}
-                onKeyDown={(e) => {
-                  if (isComposing) {
-                    return
-                  }
-                  if (e.key === 'Tab') {
-                    blur()
-                    return
-                  }
-                  handleInputKeyDown(e)
-                }}
-                aria-activedescendant={aria.activeDescendant}
-                aria-autocomplete="list"
-                aria-controls={aria.listBoxId}
-              />
-            </InputWrapper>
+          <InputWrapper className={isFocused ? undefined : 'hidden'}>
+            <Input
+              type="text"
+              name={name}
+              value={inputValue}
+              disabled={disabled}
+              ref={inputRef}
+              themes={theme}
+              onChange={(e) => {
+                if (onChange) onChange(e)
+                setInputValue(e.currentTarget.value)
+              }}
+              onFocus={() => {
+                if (!isFocused) {
+                  focus()
+                }
+              }}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
+              onKeyDown={(e) => {
+                if (isComposing) {
+                  return
+                }
+                if (e.key === 'Tab') {
+                  blur()
+                  return
+                }
+                handleInputKeyDown(e)
+              }}
+              aria-activedescendant={aria.activeDescendant}
+              aria-autocomplete="list"
+              aria-controls={aria.listBoxId}
+            />
+          </InputWrapper>
 
-            {selectedItems.length === 0 && placeholder && !isFocused && (
-              <li>
-                <Placeholder themes={theme}>{placeholder}</Placeholder>
-              </li>
-            )}
-          </List>
-        </InputArea>
+          {selectedItems.length === 0 && placeholder && !isFocused && (
+            <li>
+              <Placeholder themes={theme}>{placeholder}</Placeholder>
+            </li>
+          )}
+        </List>
+      </InputArea>
 
-        <Suffix themes={theme}>
-          <FaCaretDownIcon color={isFocused ? theme.palette.TEXT_BLACK : theme.palette.BORDER} />
-        </Suffix>
-      </Inner>
+      <Suffix themes={theme}>
+        <FaCaretDownIcon color={isFocused ? theme.palette.TEXT_BLACK : theme.palette.BORDER} />
+      </Suffix>
 
       {renderListBox()}
     </Container>
@@ -230,11 +268,13 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
     const { frame, size, palette } = themes
 
     return css`
-      display: inline-block;
+      display: inline-flex;
       min-width: calc(62px + 32px + ${size.pxToRem(size.space.XXS)} * 2);
       width: ${typeof width === 'number' ? `${width}px` : width};
+      min-height: 40px;
       border-radius: ${frame.border.radius.m};
       border: ${frame.border.default};
+      box-sizing: border-box;
       background-color: #fff;
       cursor: text;
 
@@ -253,13 +293,9 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
     `
   }}
 `
-const Inner = styled.div`
-  display: flex;
-  width: 100%;
-`
 const InputArea = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize, spacing } = themes
 
     return css`
       /* for IE */
@@ -267,61 +303,74 @@ const InputArea = styled.div<{ themes: Theme }>`
       flex: 1 1 0px;
       overflow-y: auto;
       max-height: 300px;
-      padding: 0 ${size.pxToRem(4)};
+      padding-left: ${fontSize.pxToRem(spacing.XXS)};
     `
   }}
 `
+const smallMargin = 6.5
+const borderWidth = 1
 const List = styled.ul<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const {
+      fontSize: { pxToRem },
+      spacing,
+    } = themes
 
     return css`
       display: flex;
       flex-wrap: wrap;
-      padding: ${size.pxToRem(3.5)} 0;
+      margin: ${pxToRem(smallMargin - borderWidth)} 0 0;
+      padding: 0;
       list-style: none;
 
       > li {
-        margin: ${size.pxToRem(4)};
+        min-height: 27px;
+        margin-right: ${pxToRem(spacing.XXS)};
+        margin-bottom: ${pxToRem(smallMargin - borderWidth)};
       }
     `
   }}
 `
 const SelectedItem = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { frame, palette, size } = themes
+    const { border, color, fontSize, spacing } = themes
+    const { pxToRem } = fontSize
 
     return css`
-      position: relative;
-      padding: ${size.pxToRem(size.space.XXS)};
-      border-radius: calc(${size.font.SHORT}px + ${size.pxToRem(size.space.XXS)} * 2);
-      border: ${frame.border.default};
+      display: flex;
+      border-radius: calc(${fontSize.SHORT}px + ${pxToRem(spacing.XXS - borderWidth)} * 2);
+      border: ${border.shorthand};
       background-color: #fff;
-      color: ${palette.TEXT_BLACK};
-      font-size: ${size.font.SHORT}px;
+      color: ${color.TEXT_BLACK};
+      font-size: ${fontSize.SHORT}px;
       line-height: 1;
-
-      &.deletable {
-        padding-right: ${size.pxToRem(size.space.M)};
-      }
     `
   }}
 `
-const DeleteButton = styled.button<{ themes: Theme }>`
+const SelectedItemLabel = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const {
+      fontSize: { pxToRem },
+      spacing,
+    } = themes
 
     return css`
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: calc(11px + ${size.pxToRem(size.space.XXS)} * 2);
-      height: calc(11px + ${size.pxToRem(size.space.XXS)} * 2);
-      padding: ${size.pxToRem(size.space.XXS)};
+      padding: ${pxToRem(spacing.XXS - borderWidth)};
+    `
+  }}
+`
+const DeleteButton = styled(ResetButton)<{ themes: Theme }>`
+  ${({ themes }) => {
+    const {
+      fontSize: { pxToRem },
+      spacing,
+    } = themes
+
+    return css`
+      padding: ${pxToRem(spacing.XXS - borderWidth)};
       border-radius: 50%;
-      border: none;
-      background-color: transparent;
       cursor: pointer;
+      line-height: 0;
     `
   }}
 `
@@ -332,6 +381,7 @@ const InputWrapper = styled.li`
   &.hidden {
     position: absolute;
     opacity: 0;
+    pointer-events: none;
   }
 
   /* for IE */
@@ -340,13 +390,13 @@ const InputWrapper = styled.li`
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize } = themes
 
     return css`
       min-width: 80px;
       width: 100%;
       border: none;
-      font-size: ${size.font.TALL}px;
+      font-size: ${fontSize.TALL}px;
       box-sizing: border-box;
       outline: none;
       &[disabled] {
@@ -357,28 +407,27 @@ const Input = styled.input<{ themes: Theme }>`
 `
 const Placeholder = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, size } = themes
+    const { color, fontSize } = themes
 
     return css`
       margin: 0;
-      color: ${palette.TEXT_GREY};
-      font-size: ${size.font.TALL}px;
+      color: ${color.TEXT_GREY};
+      font-size: ${fontSize.TALL}px;
       line-height: 25px;
     `
   }}
 `
 const Suffix = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame } = themes
+    const { spacing, fontSize, border } = themes
 
     return css`
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 31px;
-      min-height: 24px;
-      margin: ${size.pxToRem(size.space.XXS)} 0;
-      border-left: ${frame.border.default};
+      margin: ${fontSize.pxToRem(spacing.XXS)} 0;
+      padding: 0 ${fontSize.pxToRem(spacing.XXS)};
+      border-left: ${border.shorthand};
       box-sizing: border-box;
     `
   }}

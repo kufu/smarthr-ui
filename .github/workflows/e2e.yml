@@ -10,7 +10,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        browser: [ie]
+        browser: [ie, chrome]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2-beta
@@ -25,7 +25,7 @@ jobs:
             e2e-yarn-
       - name: run
         run: |
-            yarn install
-            yarn e2e
+          yarn install
+          yarn e2e
         env:
-            TESTCAFE_BROWSER: ${{ matrix.browser }}
+          TESTCAFE_BROWSER: ${{ matrix.browser }}

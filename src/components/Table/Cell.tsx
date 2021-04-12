@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useContext } from 'react'
+import React, { FC, HTMLAttributes, ReactNode, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -15,8 +15,9 @@ export type Props = {
   className?: string
   onClick?: () => void
 }
+type ElementProps = Omit<HTMLAttributes<HTMLTableDataCellElement>, keyof Props>
 
-export const Cell: FC<Props> = ({
+export const Cell: FC<Props & ElementProps> = ({
   className = '',
   children,
   onClick,
@@ -24,6 +25,7 @@ export const Cell: FC<Props> = ({
   rowSpan,
   highlighted = false,
   nullable = false,
+  ...elementProps
 }) => {
   const theme = useTheme()
   const { group } = useContext(TableGroupContext)
@@ -37,6 +39,7 @@ export const Cell: FC<Props> = ({
     rowSpan,
     className: classNames,
     themes: theme,
+    ...elementProps,
   }
 
   if (group === 'head') {
