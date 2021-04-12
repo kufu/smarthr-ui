@@ -90,7 +90,7 @@ const Label = styled.label`
   display: block;
 `
 
-const TitleWrapper = styled.div`
+const TitleWrapper = styled.span`
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
