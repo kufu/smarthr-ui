@@ -2,13 +2,12 @@ import React, { ComponentProps, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { StatusLabel } from '../StatusLabel'
-import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
+import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 
 type innerMarginType = 'XXS' | 'XS' | 'S'
 type Props = {
   title: string
-  titleTag?: HeadingTagTypes
   titleType?: HeadingTypes
   labelId?: string
   innerMargin?: innerMarginType
@@ -22,7 +21,6 @@ type Props = {
 
 export const FormGroup: VFC<Props> = ({
   title,
-  titleTag,
   titleType,
   labelId,
   innerMargin = 'XS',
@@ -39,7 +37,7 @@ export const FormGroup: VFC<Props> = ({
   return (
     <Label id={labelId} className={`${className} ${disabledClass}`} themes={theme}>
       <TitleWrapper>
-        <Title tag={titleTag} type={titleType} themes={theme} className={disabledClass}>
+        <Title tag="span" type={titleType} themes={theme} className={disabledClass}>
           {title}
         </Title>
         {statusLabelProps.length > 0 && (
@@ -93,8 +91,6 @@ const TitleWrapper = styled.span`
 `
 
 const Title = styled(Heading)<{ themes: Theme }>`
-  display: inline-block;
-
   &.disabled {
     color: ${({ themes }) => themes.color.TEXT_DISABLED};
   }
