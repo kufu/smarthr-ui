@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC, useCallback, useRef } from 'react'
+import React, { ReactNode, VFC, useCallback, useEffect, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
@@ -6,6 +6,11 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
+
+const suppressingScroll = (e) => e.preventDefault()
+const SUPPRESSING_SCROLL_OPTIONS = { passive: false }
+const addDocumentEventLister = document.addEventListener.bind(document)
+const removeDocumentEventLister = document.removeEventListener.bind(document)
 
 export type DialogContentInnerProps = {
   /**
@@ -97,6 +102,13 @@ export const DialogContentInner: VFC<DialogContentInnerProps> = ({
     onClickOverlay && onClickOverlay()
   }, [isOpen, onClickOverlay])
 
+  useEffect(() => {
+    const method = isOpen ? addDocumentEventLister : removeDocumentEventLister
+
+    method('mousewheel', suppressingScroll, SUPPRESSING_SCROLL_OPTIONS)
+    method('touchmove', suppressingScroll, SUPPRESSING_SCROLL_OPTIONS)
+  }, [isOpen])
+
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
       <CSSTransition
@@ -127,7 +139,6 @@ export const DialogContentInner: VFC<DialogContentInnerProps> = ({
             </Inner>
           </FocusTrap>
           {/* Suppresses scrolling of body while modal is displayed */}
-          <ScrollSuppressing />
         </Wrapper>
       </CSSTransition>
     </DialogPositionProvider>
@@ -213,9 +224,4 @@ const Background = styled.div<{ themes: Theme }>`
       background-color: ${themes.palette.SCRIM};
     `
   }}
-`
-const ScrollSuppressing = createGlobalStyle`
-  body {
-    overflow: hidden;
-  }
 `
