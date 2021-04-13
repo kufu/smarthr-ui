@@ -3,23 +3,26 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { getIsInclude, mapToKeyArray } from '../../libs/map'
-import { isTouchDevice } from '../../libs/ua'
 import { getNewExpandedItems } from './accordionPanelHelper'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { useClassNames } from './useClassNames'
-
+import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
 import { FaCaretDownIcon } from '../Icon'
 
 type Props = {
   children: React.ReactNode
   className?: string
+  headingType?: HeadingTypes
+  headingTag?: HeadingTagTypes
 }
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
 export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
   children,
   className = '',
+  headingType = 'blockTitle',
+  headingTag,
   ...props
 }) => {
   const theme = useTheme()
@@ -56,48 +59,49 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
   const caretIcon = <Icon className={iconClassNames} $theme={theme} />
 
   return (
-    <Button
-      id={`${name}-trigger`}
-      className={buttonClassNames}
-      aria-expanded={isExpanded}
-      aria-controls={`${name}-content`}
-      themes={theme}
-      onClick={handleClick}
-      type="button"
-      {...props}
-    >
-      {displayIcon && iconPosition === 'left' && caretIcon}
-      {children}
-      {displayIcon && iconPosition === 'right' && caretIcon}
-    </Button>
+    <Heading tag={headingTag} type={headingType}>
+      <Button
+        id={`${name}-trigger`}
+        className={buttonClassNames}
+        aria-expanded={isExpanded}
+        aria-controls={`${name}-content`}
+        themes={theme}
+        onClick={handleClick}
+        type="button"
+        data-component="AccordionHeaderButton"
+        {...props}
+      >
+        {displayIcon && iconPosition === 'left' && caretIcon}
+        {children}
+        {displayIcon && iconPosition === 'right' && caretIcon}
+      </Button>
+    </Heading>
   )
 }
 
 const resetButtonStyle = css`
   background-color: transparent;
   border: none;
-  outline: none;
   padding: 0;
   appearance: none;
 `
 const Button = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
-    const { size, palette, interaction } = themes
+    const { color, fontSize, spacing } = themes
 
     return css`
       display: flex;
       align-items: center;
       width: 100%;
-      padding: ${size.pxToRem(12)} ${size.pxToRem(size.space.XS)};
-      color: ${palette.TEXT_BLACK};
-      font-size: ${size.pxToRem(size.font.TALL)};
-      text-align: left;
+      padding: ${fontSize.pxToRem(12)} ${fontSize.pxToRem(spacing.XS)};
       cursor: pointer;
-      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+      font-size: inherit;
+      outline-color: ${color.OUTLINE};
 
-      &:hover {
-        background-color: ${palette.hoverColor('#fff')};
+      &:hover,
+      &:focus {
+        background-color: ${color.hoverColor('#fff')};
       }
       &.right {
         justify-content: space-between;
@@ -110,11 +114,11 @@ const Button = styled.button<{ themes: Theme }>`
 `
 const Icon = styled(FaCaretDownIcon)<{ $theme: Theme }>`
   ${({ $theme }) => {
-    const { size } = $theme
+    const { fontSize, spacing } = $theme
 
     return css`
       display: inline-flex;
-      margin-right: ${size.pxToRem(size.space.XXS)};
+      margin-right: ${fontSize.pxToRem(spacing.XXS)};
       transition: transform 0.3s;
 
       &.left {
@@ -125,7 +129,7 @@ const Icon = styled(FaCaretDownIcon)<{ $theme: Theme }>`
 
       &.right {
         margin-right: 0;
-        margin-left: ${size.pxToRem(size.space.XXS)};
+        margin-left: ${fontSize.pxToRem(spacing.XXS)};
 
         &.expanded {
           transform: rotate(180deg);
