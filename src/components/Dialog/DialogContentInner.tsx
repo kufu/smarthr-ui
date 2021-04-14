@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC, useCallback, useRef } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC, useCallback, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
@@ -6,6 +6,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
+import { useClassNames } from './useClassNames'
 
 export type DialogContentInnerProps = {
   /**
@@ -49,10 +50,15 @@ export type DialogContentInnerProps = {
    */
   ariaLabelledby?: string
   /**
+   * `className` of the component.
+   */
+  className?: string
+  /**
    * The content of the component.
    */
   children: ReactNode
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DialogContentInnerProps>
 
 type StyleProps = {
   top?: number
@@ -65,7 +71,7 @@ function exist(value: any) {
   return value !== undefined && value !== null
 }
 
-export const DialogContentInner: VFC<DialogContentInnerProps> = ({
+export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = ({
   onClickOverlay,
   onPressEscape = () => {
     /* noop */
@@ -75,8 +81,10 @@ export const DialogContentInner: VFC<DialogContentInnerProps> = ({
   ariaLabel,
   ariaLabelledby,
   children,
+  className = '',
   ...props
 }) => {
+  const classNames = useClassNames()
   const theme = useTheme()
   const domRef = useRef(null)
   const innerRef = useRef<HTMLDivElement>(null)
@@ -117,10 +125,21 @@ export const DialogContentInner: VFC<DialogContentInnerProps> = ({
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledby}
       >
-        <Wrapper ref={domRef} themes={theme}>
-          <Background onClick={handleClickOverlay} themes={theme} />
+        <Wrapper ref={domRef} themes={theme} className={`${className} ${classNames.wrapper}`}>
+          <Background
+            onClick={handleClickOverlay}
+            themes={theme}
+            className={classNames.background}
+          />
           <FocusTrap>
-            <Inner ref={innerRef} themes={theme} role="dialog" aria-modal="true" {...props}>
+            <Inner
+              ref={innerRef}
+              themes={theme}
+              role="dialog"
+              aria-modal="true"
+              className={classNames.dialog}
+              {...props}
+            >
               {/* dummy element for focus management. */}
               <div ref={focusTarget} tabIndex={-1} aria-label={ariaLabel}></div>
               {children}
