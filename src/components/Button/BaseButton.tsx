@@ -78,7 +78,7 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   ${({ themes, wide }) => {
-    const { frame, size, interaction } = themes
+    const { frame, size, interaction, shadow } = themes
 
     return css`
       display: inline-flex;
@@ -134,6 +134,11 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       &:hover,
       &:focus {
         text-decoration: none;
+      }
+
+      &:focus {
+        outline: 0;
+        box-shadow: ${shadow.OUTLINE};
       }
     `
   }}

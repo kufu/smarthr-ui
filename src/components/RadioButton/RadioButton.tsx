@@ -86,7 +86,7 @@ const Box = styled.span<{ themes: Theme }>`
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
-    const { OUTLINE } = themes.palette
+    const { OUTLINE } = themes.shadow
 
     return css`
       opacity: 0;
@@ -103,7 +103,7 @@ const Input = styled.input<{ themes: Theme }>`
       }
 
       &:focus + span {
-        box-shadow: 0 0 0 2px ${OUTLINE};
+        box-shadow: ${OUTLINE};
       }
     `
   }}

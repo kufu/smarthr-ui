@@ -30,7 +30,7 @@ export type CreatedColorTheme = Palette & {
   disableColor: (value: string) => string
 }
 
-export const defaultColor = {
+const baseColor = {
   TEXT_BLACK: '#23221f',
   TEXT_GREY: '#706d65',
   TEXT_DISABLED: '#c1bdb7',
@@ -50,13 +50,14 @@ export const defaultColor = {
   BRAND: '#00c4cc',
 }
 
+export const defaultColor = { ...baseColor, OUTLINE: baseColor.MAIN }
+
 export const createColor = (userColor: ColorProperty = {}) => {
   const created: CreatedColorTheme = merge(
     {
       hoverColor: (value: string, darkenAmount: 0.05 | 0.15 = 0.05): string =>
         darken(darkenAmount, value),
       disableColor: (value: string): string => rgba(value, 0.5),
-      OUTLINE: transparentize(0.5, defaultColor.MAIN),
       ...defaultColor,
     },
     userColor,
