@@ -41,15 +41,6 @@ jobs:
       - run: echo NEW_TAG=$(git describe) >> $GITHUB_ENV
       - run: git push origin $NEW_TAG
       - run: npx ts-node ./scripts/getLatestChangelog.ts > ${{ env.CHANGELOG_PATH }}
-      - name: cherry-pick release commit
-        run: |
-          git checkout master
-          git cherry-pick $NEW_TAG
-      - name: craete pull request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          title: 'chore(release): ${{ env.NEW_TAG }}'
-          branch: 'merge-release-${{ env.NEW_TAG }}'
       - name: create release on GitHub
         uses: actions/create-release@v1
         env:
@@ -64,3 +55,12 @@ jobs:
         uses: peter-evans/close-issue@v1
       - name: delete branch
         run: git push origin :release-candidate
+      - name: cherry-pick release commit
+        run: |
+          git checkout master
+          git cherry-pick $NEW_TAG
+      - name: craete pull request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: 'chore(release): ${{ env.NEW_TAG }}'
+          branch: 'merge-release-${{ env.NEW_TAG }}'
