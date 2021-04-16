@@ -81,9 +81,14 @@ AnchorButton.parameters = {
 }
 
 export const Disabled: Story = () => (
-  <PrimaryButton disabled onClick={action('clicked')}>
-    Disabled
-  </PrimaryButton>
+  <Wrapper onClick={() => console.log('wapper')}>
+    <PrimaryButton disabled onClick={action('clicked')}>
+      Button
+    </PrimaryButton>
+    <PrimaryButtonAnchor disabled href="#" onClick={action('clicked')}>
+      Anchor
+    </PrimaryButtonAnchor>
+  </Wrapper>
 )
 Disabled.parameters = {
   docs: {
