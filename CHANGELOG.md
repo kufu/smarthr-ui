@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. See [standa
 * apply classNames to FlashMessage ([#1473](https://github.com/kufu/smarthr-ui/issues/1473)) ([9104d81](https://github.com/kufu/smarthr-ui/commit/9104d817f784f418977fb5597525019d5e634702))
 * improve attributes for DefinitionList ([#1441](https://github.com/kufu/smarthr-ui/issues/1441)) ([27c4fc0](https://github.com/kufu/smarthr-ui/commit/27c4fc06abe17e83b664c36e219804395624e0dd))
 
+
 ### Bug Fixes
 
 * enable to set attributes of dropzone and add smarthr-ui dropzone class name ([#1445](https://github.com/kufu/smarthr-ui/issues/1445)) ([2c73296](https://github.com/kufu/smarthr-ui/commit/2c73296d46c6bbfefc2bb28854b91489948707e6))
