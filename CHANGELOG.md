@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [12.3.2](https://github.com/kufu/smarthr-ui/compare/v12.3.1...v12.3.2) (2021-04-16)
+
+
+### Bug Fixes
+
+* Fix mobile Safari not showing all options for Select component  (SHRUI-392) ([#1517](https://github.com/kufu/smarthr-ui/issues/1517)) ([e235d82](https://github.com/kufu/smarthr-ui/commit/e235d827ce313a9668ea92581a0719ad1cbe98a4))
+
 ### [12.3.1](https://github.com/kufu/smarthr-ui/compare/v12.3.0...v12.3.1) (2021-04-01)
 
 
