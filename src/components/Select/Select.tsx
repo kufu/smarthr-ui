@@ -53,7 +53,11 @@ export const Select: FC<Props> = ({
         {hasBlank && <option value="">{blankLabel}</option>}
         {options.map((option) => {
           if ('value' in option) {
-            return <option key={option.value} {...option} />
+            return (
+              <option key={option.value} {...option}>
+                {option.label}
+              </option>
+            )
           }
 
           const { options: groupedOptions, ...optgroup } = option
@@ -61,7 +65,9 @@ export const Select: FC<Props> = ({
           return (
             <optgroup key={optgroup.label} {...optgroup}>
               {groupedOptions.map((groupedOption) => (
-                <option key={groupedOption.value} {...groupedOption} />
+                <option key={groupedOption.value} {...groupedOption}>
+                  {groupedOption.label}
+                </option>
               ))}
             </optgroup>
           )
