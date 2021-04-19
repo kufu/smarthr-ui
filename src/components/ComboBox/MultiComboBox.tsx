@@ -115,15 +115,6 @@ export const MultiComboBox: FC<Props> = ({
       (creatable && filteredItems.length === 0 && !inputValue),
   })
 
-  const classNames = [
-    isFocused ? 'active' : '',
-    disabled ? 'disabled' : '',
-    error ? 'error' : '',
-    className,
-  ]
-    .filter((item) => item)
-    .join(' ')
-
   const focus = useCallback(() => {
     setIsFocused(true)
     resetActiveOptionIndex()
@@ -162,7 +153,7 @@ export const MultiComboBox: FC<Props> = ({
       themes={theme}
       width={width}
       ref={outerRef}
-      className={classNames}
+      className={className}
       onClick={(e) => {
         if (
           !hasParentElementByClassName(e.target as HTMLElement, DELETE_BUTTON_CLASS_NAME) &&
@@ -185,6 +176,8 @@ export const MultiComboBox: FC<Props> = ({
       aria-owns={aria.listBoxId}
       aria-haspopup="listbox"
       aria-expanded={isFocused}
+      aria-invalid={error}
+      aria-disabled={disabled}
     >
       <InputArea themes={theme}>
         <List themes={theme}>
@@ -278,15 +271,15 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       background-color: #fff;
       cursor: text;
 
-      &.active {
+      &[aria-expanded='true'] {
         border-color: ${palette.MAIN};
       }
 
-      &.error {
+      &[aria-invalid='true'] {
         border-color: ${palette.DANGER};
       }
 
-      &.disabled {
+      &[aria-disabled='true'] {
         background-color: ${palette.COLUMN};
         cursor: not-allowed;
       }
