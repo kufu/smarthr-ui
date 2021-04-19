@@ -8,7 +8,8 @@ import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { useClassNames } from './useClassNames'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
-import { FaCaretDownIcon } from '../Icon'
+import { FaCaretRightIcon, FaCaretUpIcon } from '../Icon'
+import { radiusMap } from '../Base'
 
 type Props = {
   children: React.ReactNode
@@ -38,9 +39,7 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   const isExpanded = getIsInclude(expandedItems, name)
-  const expandedClassName = isExpanded ? 'expanded' : ''
-  const buttonClassNames = `${className} ${expandedClassName} ${iconPosition} ${classNames.trigger}`
-  const iconClassNames = `${expandedClassName} ${iconPosition}`
+  const buttonClassNames = `${className} ${classNames.trigger}`
 
   const handleClick = useCallback(() => {
     if (onClickTrigger) onClickTrigger(name, !isExpanded)
@@ -56,8 +55,6 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
     }
   }, [onClickTrigger, name, isExpanded, onClickProps, expandedItems, expandableMultiply])
 
-  const caretIcon = <Icon className={iconClassNames} $theme={theme} />
-
   return (
     <Heading tag={headingTag} type={headingType}>
       <Button
@@ -71,13 +68,17 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
         data-component="AccordionHeaderButton"
         {...props}
       >
-        {displayIcon && iconPosition === 'left' && caretIcon}
-        {children}
-        {displayIcon && iconPosition === 'right' && caretIcon}
+        {displayIcon && iconPosition === 'left' && <LeftIcon />}
+        <TriggerTitle>{children}</TriggerTitle>
+        {displayIcon && iconPosition === 'right' && <RightIcon />}
       </Button>
     </Heading>
   )
 }
+
+const TriggerTitle = styled.span`
+  flex-grow: 1;
+`
 
 const resetButtonStyle = css`
   background-color: transparent;
@@ -88,7 +89,7 @@ const resetButtonStyle = css`
 const Button = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
-    const { color, fontSize, spacing } = themes
+    const { color, fontSize, spacing, shadow } = themes
 
     return css`
       display: flex;
@@ -97,44 +98,46 @@ const Button = styled.button<{ themes: Theme }>`
       padding: ${fontSize.pxToRem(12)} ${fontSize.pxToRem(spacing.XS)};
       cursor: pointer;
       font-size: inherit;
-      outline-color: ${color.OUTLINE};
+      text-align: left;
+
+      .smarthr-ui-AccordionPanel > * > *:first-child & {
+        border-radius: ${radiusMap.m} ${radiusMap.m} 0 0;
+      }
+
+      .smarthr-ui-AccordionPanel > * > *:last-child & {
+        border-radius: 0 0 ${radiusMap.m} ${radiusMap.m};
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: ${shadow.OUTLINE};
+      }
 
       &:hover,
-      &:focus {
+      &:focus:not(:focus-visible) {
         background-color: ${color.hoverColor('#fff')};
+        box-shadow: none;
       }
-      &.right {
-        justify-content: space-between;
-      }
-      &.left {
-        justify-content: left;
+
+      /* TODO replace if impremented Layout component */
+      & > * + * {
+        margin-left: ${fontSize.pxToRem(spacing.XXS)};
       }
     `
   }}
 `
-const Icon = styled(FaCaretDownIcon)<{ $theme: Theme }>`
-  ${({ $theme }) => {
-    const { fontSize, spacing } = $theme
+const LeftIcon = styled(FaCaretRightIcon)`
+  transition: transform 0.3s;
 
-    return css`
-      display: inline-flex;
-      margin-right: ${fontSize.pxToRem(spacing.XXS)};
-      transition: transform 0.3s;
+  [aria-expanded='true'] > & {
+    transform: rotate(90deg);
+  }
+`
 
-      &.left {
-        &.expanded {
-          transform: rotate(-180deg);
-        }
-      }
+const RightIcon = styled(FaCaretUpIcon)`
+  transition: transform 0.3s;
 
-      &.right {
-        margin-right: 0;
-        margin-left: ${fontSize.pxToRem(spacing.XXS)};
-
-        &.expanded {
-          transform: rotate(180deg);
-        }
-      }
-    `
-  }}
+  [aria-expanded='true'] & {
+    transform: rotate(-180deg);
+  }
 `
