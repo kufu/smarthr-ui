@@ -85,7 +85,7 @@ export const Disabled: Story = () => (
     <PrimaryButton disabled onClick={action('clicked')}>
       Button
     </PrimaryButton>
-    <PrimaryButtonAnchor disabled href="#" onClick={action('clicked')}>
+    <PrimaryButtonAnchor href={undefined} onClick={action('clicked')}>
       Anchor
     </PrimaryButtonAnchor>
   </Wrapper>

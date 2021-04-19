@@ -46,10 +46,6 @@ export type BaseProps = {
    * If `true`, the component shape changes width is 100%
    */
   wide?: boolean
-  /**
-   * If `true`, the button becomes disabled.
-   */
-  disabled?: boolean
 }
 
 export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
@@ -173,32 +169,8 @@ const tagStore = {
 export const BaseButton: VFC<ButtonProps> = buttonFactory<ButtonProps>('button')
 
 const AnchorButton: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')
-
-export const BaseButtonAnchor: VFC<AnchorProps> = ({ disabled, href, onClick, ...props }) => {
-  const controlledHref = React.useMemo(() => {
-    // When disabled, make href undefined
-    return disabled ? undefined : href
-  }, [disabled, href])
-
-  const controlledOnClick = React.useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (disabled) {
-        // When disabled, do not fire click event
-        e.preventDefault()
-        e.stopPropagation()
-        return
-      }
-      onClick && onClick(e)
-    },
-    [disabled, onClick],
-  )
-
-  return (
-    <AnchorButton
-      {...props}
-      href={controlledHref}
-      onClick={controlledOnClick}
-      disabled={disabled}
-    />
-  )
-}
+export const BaseButtonAnchor = styled(AnchorButton)`
+  &:not([href]) {
+    cursor: not-allowed;
+  }
+`
