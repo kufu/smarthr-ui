@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [12.4.0-1](https://github.com/kufu/smarthr-ui/compare/v12.4.0-0...v12.4.0-1) (2021-04-16)
+
+
+### Bug Fixes
+
+* Fix mobile Safari not showing all options for Select component  (SHRUI-392) ([#1517](https://github.com/kufu/smarthr-ui/issues/1517)) ([7b564b2](https://github.com/kufu/smarthr-ui/commit/7b564b2206c0734eaaa4d7fd9b2769cd74c9fe17))
+
 ## [12.4.0-0](https://github.com/kufu/smarthr-ui/compare/v12.3.1...v12.4.0-0) (2021-04-12)
 
 
@@ -20,6 +27,13 @@ All notable changes to this project will be documented in this file. See [standa
 * exclude disabled element ([#1410](https://github.com/kufu/smarthr-ui/issues/1410)) ([fd9c0f3](https://github.com/kufu/smarthr-ui/commit/fd9c0f30cd1e94aa57b9b11552e1078c693380a4))
 * Merge hotfix v12.3.0 to master ([#1477](https://github.com/kufu/smarthr-ui/issues/1477)) ([e5d8e8d](https://github.com/kufu/smarthr-ui/commit/e5d8e8d9de1e5375b3ecdb04616842f61494a488)), closes [#1475](https://github.com/kufu/smarthr-ui/issues/1475)
 * modify height of MultiComboBox (SHRUI-364) ([#1471](https://github.com/kufu/smarthr-ui/issues/1471)) ([d28daf1](https://github.com/kufu/smarthr-ui/commit/d28daf1bd9e16e3e8eaa23da19de6e0767b11579))
+
+### [12.3.2](https://github.com/kufu/smarthr-ui/compare/v12.3.1...v12.3.2) (2021-04-16)
+
+
+### Bug Fixes
+
+* Fix mobile Safari not showing all options for Select component  (SHRUI-392) ([#1517](https://github.com/kufu/smarthr-ui/issues/1517)) ([e235d82](https://github.com/kufu/smarthr-ui/commit/e235d827ce313a9668ea92581a0719ad1cbe98a4))
 
 ### [12.3.1](https://github.com/kufu/smarthr-ui/compare/v12.3.0...v12.3.1) (2021-04-01)
 
