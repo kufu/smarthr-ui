@@ -1,5 +1,5 @@
 import React, { ReactNode, VFC } from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Dropdown } from '../Dropdown'
@@ -8,7 +8,7 @@ import { DropdownContent } from '../DropdownContent'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownScrollArea } from '../DropdownScrollArea'
 import { PrimaryButton, SecondaryButton, TextButton } from '../../Button'
-import { FaCaretDownIcon, FaUndoAltIcon } from '../../Icon'
+import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
 
 type Props = {
   isFiltered?: boolean
@@ -16,6 +16,7 @@ type Props = {
   onCancel?: () => void
   onReset?: () => void
   children: ReactNode
+  hasStatusText?: boolean
 }
 
 export const FilterDropdown: VFC<Props> = ({
@@ -24,16 +25,29 @@ export const FilterDropdown: VFC<Props> = ({
   onCancel,
   onReset,
   children,
+  hasStatusText,
 }: Props) => {
   const themes = useTheme()
 
   return (
     <Dropdown>
-      <TriggerButtonWrapper themes={themes} isFiltered={isFiltered}>
-        <DropdownTrigger>
-          <SecondaryButton suffix={<FaCaretDownIcon />}>絞り込み</SecondaryButton>
-        </DropdownTrigger>
-      </TriggerButtonWrapper>
+      <DropdownTrigger>
+        <>
+          <SecondaryButton
+            suffix={
+              <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
+                <FaFilterIcon size={13} />
+                {isFiltered ? (
+                  <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : '適用中'} />
+                ) : null}
+              </IsFilteredIconWrapper>
+            }
+          >
+            絞り込み
+          </SecondaryButton>
+          {hasStatusText && isFiltered ? <StatusText themes={themes}>適用中</StatusText> : null}
+        </>
+      </DropdownTrigger>
       <DropdownContent controllable>
         <DropdownScrollArea>
           <ContentLayout>{children}</ContentLayout>
@@ -60,16 +74,23 @@ export const FilterDropdown: VFC<Props> = ({
   )
 }
 
-const TriggerButtonWrapper = styled.div<{ themes: Theme; isFiltered: boolean }>`
-  ${({ themes, isFiltered }) =>
-    isFiltered &&
-    css`
-      button {
-        border-color: ${themes.palette.WARNING};
-      }
-    `}
-`
+const IsFilteredIconWrapper = styled.span<{ isFiltered: boolean; themes: Theme }>`
+  position: relative;
+  color: ${({ isFiltered, themes }) => {
+    return isFiltered ? themes.color.MAIN : themes.color.TEXT_BLACK
+  }};
+  line-height: 1;
 
+  & > [role='img'] + [role='img'] {
+    position: absolute;
+    right: -4px;
+    bottom: 2px;
+  }
+`
+const StatusText = styled.span<{ themes: Theme }>`
+  margin-left: ${({ themes }) => themes.spacing.XXS}px;
+  font-size: ${({ themes }) => themes.size.pxToRem(themes.fontSize.SHORT)};
+`
 const ContentLayout = styled.div`
   padding: 24px;
 `
