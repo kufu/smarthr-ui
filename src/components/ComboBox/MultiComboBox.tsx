@@ -193,7 +193,7 @@ export const MultiComboBox: FC<Props> = ({
                     className={DELETE_BUTTON_CLASS_NAME}
                     onClick={() => onDelete({ value, label })}
                   >
-                    <DeleteIcon
+                    <FaTimesCircleIcon
                       size={11}
                       color={theme.palette.TEXT_BLACK}
                       visuallyHiddenText="delete"
@@ -367,9 +367,7 @@ const DeleteButton = styled(ResetButton)<{ themes: Theme }>`
     `
   }}
 `
-const DeleteIcon = styled(FaTimesCircleIcon)`
-  vertical-align: 1px;
-`
+
 const InputWrapper = styled.li`
   &.hidden {
     position: absolute;
