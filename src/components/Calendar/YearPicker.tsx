@@ -1,7 +1,8 @@
-import React, { VFC, useEffect, useRef } from 'react'
+import React, { HTMLAttributes, VFC, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 import { ResetButton } from './ResetButton'
 
 type Props = {
@@ -12,16 +13,19 @@ type Props = {
   isDisplayed: boolean
   id: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const YearPicker: VFC<Props> = ({
+export const YearPicker: VFC<Props & ElementProps> = ({
   selectedYear,
   fromYear,
   toYear,
   onSelectYear,
   isDisplayed,
   id,
+  ...props
 }) => {
   const themes = useTheme()
+  const classNames = useClassNames()
   const focusingRef = useRef<HTMLButtonElement>(null)
 
   const thisYear = new Date().getFullYear()
@@ -38,7 +42,12 @@ export const YearPicker: VFC<Props> = ({
   }, [isDisplayed])
 
   return (
-    <Overlay isDisplayed={isDisplayed} id={id}>
+    <Overlay
+      {...props}
+      isDisplayed={isDisplayed}
+      id={id}
+      className={`${props.className} ${classNames.yearPicker.wrapper}`}
+    >
       <Container>
         {yearArray.map((year) => {
           const isThisYear = thisYear === year
@@ -50,6 +59,7 @@ export const YearPicker: VFC<Props> = ({
               onClick={() => onSelectYear(year)}
               aria-pressed={isSelectedYear}
               ref={isThisYear ? focusingRef : null}
+              className={classNames.yearPicker.selectYear}
             >
               <YearWrapper themes={themes} isThisYear={isThisYear} isSelected={isSelectedYear}>
                 {year}
