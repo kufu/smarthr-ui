@@ -258,7 +258,7 @@ export const MultiComboBox: FC<Props> = ({
 
 const Container = styled.div<{ themes: Theme; width: number | string }>`
   ${({ themes, width }) => {
-    const { frame, size, palette } = themes
+    const { frame, size, palette, shadow } = themes
 
     return css`
       display: inline-flex;
@@ -272,7 +272,7 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       cursor: text;
 
       &[aria-expanded='true'] {
-        border-color: ${palette.MAIN};
+        box-shadow: ${shadow.OUTLINE};
       }
 
       &[aria-invalid='true'] {
@@ -357,6 +357,7 @@ const DeleteButton = styled(ResetButton)<{ themes: Theme }>`
     const {
       fontSize: { pxToRem },
       spacing,
+      shadow,
     } = themes
 
     return css`
@@ -364,6 +365,15 @@ const DeleteButton = styled(ResetButton)<{ themes: Theme }>`
       border-radius: 50%;
       cursor: pointer;
       line-height: 0;
+
+      &:focus {
+        outline: 0;
+      }
+
+      &:focus > svg {
+        border-radius: 50%;
+        box-shadow: ${shadow.OUTLINE};
+      }
     `
   }}
 `
