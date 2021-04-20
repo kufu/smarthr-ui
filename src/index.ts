@@ -16,6 +16,7 @@ export { FloatArea } from './components/FloatArea'
 export { Input, CurrencyInput } from './components/Input'
 export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
+export { TextLink } from './components/TextLink'
 export { Loader } from './components/Loader'
 export {
   Dialog,
