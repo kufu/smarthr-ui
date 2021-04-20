@@ -84,7 +84,7 @@ const Box = styled.span<{ themes: Theme }>`
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
-    const { MAIN, OUTLINE } = themes.palette
+    const { shadow, color } = themes
     return css`
       opacity: 0;
       position: absolute;
@@ -98,10 +98,10 @@ const Input = styled.input<{ themes: Theme }>`
         pointer-events: none;
       }
       &:hover + span {
-        box-shadow: 0 0 0 2px ${transparentize(0.78, MAIN)};
+        box-shadow: 0 0 0 2px ${transparentize(0.78, color.MAIN)};
       }
       &:focus + span {
-        box-shadow: 0 0 0 2px ${OUTLINE};
+        box-shadow: ${shadow.OUTLINE};
       }
     `
   }}
