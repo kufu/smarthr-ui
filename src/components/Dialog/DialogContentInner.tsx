@@ -1,16 +1,43 @@
 import React, { ReactNode, VFC, useCallback, useEffect, useRef } from 'react'
 import styled, { createGlobalStyle, css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
-
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
 
-const suppressingScroll = (e) => e.preventDefault()
+let isDialogContentScroll = false
+const enableDialogContentScroll = () => {
+  isDialogContentScroll = true
+}
+const disableDialogContentScroll = () => {
+  isDialogContentScroll = false
+}
+
+let bodyScrollXPosition = 0
+let bodyScrollYPosition = 0
+let clearIsDialogContentScrollID = null
+const suppressingScroll = (e) => {
+  if (!isDialogContentScroll) {
+    e.preventDefault()
+  } else {
+    window.scrollTo(bodyScrollXPosition, bodyScrollYPosition)
+    clearTimeout(clearIsDialogContentScrollID)
+    clearIsDialogContentScrollID = setTimeout(disableDialogContentScroll, 10)
+  }
+}
 const SUPPRESSING_SCROLL_OPTIONS = { passive: false }
-const addDocumentEventLister = document.addEventListener.bind(document)
-const removeDocumentEventLister = document.removeEventListener.bind(document)
+const SUPPRESSING_SCROLL_EVENTS = ['mousewheel', 'touchmove']
+const addSuppressingScrollEventLister = () => {
+  SUPPRESSING_SCROLL_EVENTS.forEach((event: string) => {
+    document.addEventListener(event, suppressingScroll, SUPPRESSING_SCROLL_OPTIONS)
+  })
+}
+const removeSuppressingScrollEventLister = () => {
+  SUPPRESSING_SCROLL_EVENTS.forEach((event: string) => {
+    document.removeEventListener(event, suppressingScroll, SUPPRESSING_SCROLL_OPTIONS)
+  })
+}
 
 export type DialogContentInnerProps = {
   /**
@@ -103,11 +130,29 @@ export const DialogContentInner: VFC<DialogContentInnerProps> = ({
   }, [isOpen, onClickOverlay])
 
   useEffect(() => {
-    const method = isOpen ? addDocumentEventLister : removeDocumentEventLister
-
-    method('mousewheel', suppressingScroll, SUPPRESSING_SCROLL_OPTIONS)
-    method('touchmove', suppressingScroll, SUPPRESSING_SCROLL_OPTIONS)
+    if (isOpen) {
+      bodyScrollXPosition = window.pageXOffset
+      bodyScrollYPosition = window.pageYOffset
+      addSuppressingScrollEventLister()
+    } else {
+      removeSuppressingScrollEventLister()
+    }
   }, [isOpen])
+  useEffect(() => {
+    const el = innerRef?.current
+
+    if (el) {
+      SUPPRESSING_SCROLL_EVENTS.forEach((event: string) => {
+        el.addEventListener(event, enableDialogContentScroll)
+      })
+
+      return () => {
+        SUPPRESSING_SCROLL_EVENTS.forEach((event: string) => {
+          el.removeEventListener(event, enableDialogContentScroll)
+        })
+      }
+    }
+  })
 
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
@@ -139,6 +184,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps> = ({
             </Inner>
           </FocusTrap>
           {/* Suppresses scrolling of body while modal is displayed */}
+          <ScrollSuppressing />
         </Wrapper>
       </CSSTransition>
     </DialogPositionProvider>
@@ -224,4 +270,12 @@ const Background = styled.div<{ themes: Theme }>`
       background-color: ${themes.palette.SCRIM};
     `
   }}
+`
+
+const ScrollSuppressing = createGlobalStyle`
+  body {
+    scroll-behavior: auto;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: auto;
+  }
 `

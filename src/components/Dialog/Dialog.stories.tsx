@@ -54,7 +54,7 @@ export const Default: Story = () => {
   const themes = useTheme()
 
   return (
-    <>
+    <Wrapper>
       <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog" aria-controls="dialog-default">
         Dialog
       </SecondaryButton>
@@ -65,50 +65,60 @@ export const Default: Story = () => {
         id="dialog-default"
         ariaLabel="Dialog"
       >
-        <Title themes={themes}>Dialog</Title>
-        <Description>
-          The value of isOpen must be managed by you, but you can customize content freely.
-        </Description>
-        <Content>
-          <DatePicker
-            value={date?.toDateString()}
-            formatDate={(_date) => (_date ? _date.toDateString() : '')}
-            onChangeDate={(_date) => setDate(_date)}
-          />
-        </Content>
-        <RadioList>
-          <li>
-            <RadioButtonLabel
-              name="Apple"
-              label="Apple"
-              checked={value === 'Apple'}
-              onChange={onChangeValue}
+        <Scroller>
+          <Title themes={themes}>Dialog</Title>
+          <Description>
+            The value of isOpen must be managed by you, but you can customize content freely.
+          </Description>
+          <Content>
+            <DatePicker
+              value={date?.toDateString()}
+              formatDate={(_date) => (_date ? _date.toDateString() : '')}
+              onChangeDate={(_date) => setDate(_date)}
             />
-          </li>
-          <li>
-            <RadioButtonLabel
-              name="Orange"
-              label="Orange"
-              checked={value === 'Orange'}
-              onChange={onChangeValue}
-            />
-          </li>
-          <li>
-            <RadioButtonLabel
-              name="Grape"
-              label="Grape"
-              checked={value === 'Grape'}
-              onChange={onChangeValue}
-            />
-          </li>
-        </RadioList>
-        <Footer themes={themes}>
-          <SecondaryButton onClick={onClickClose}>close</SecondaryButton>
-        </Footer>
+          </Content>
+          <RadioList>
+            <li>
+              <RadioButtonLabel
+                name="Apple"
+                label="Apple"
+                checked={value === 'Apple'}
+                onChange={onChangeValue}
+              />
+            </li>
+            <li>
+              <RadioButtonLabel
+                name="Orange"
+                label="Orange"
+                checked={value === 'Orange'}
+                onChange={onChangeValue}
+              />
+            </li>
+            <li>
+              <RadioButtonLabel
+                name="Grape"
+                label="Grape"
+                checked={value === 'Grape'}
+                onChange={onChangeValue}
+              />
+            </li>
+          </RadioList>
+          <Footer themes={themes}>
+            <SecondaryButton onClick={onClickClose}>close</SecondaryButton>
+          </Footer>
+        </Scroller>
       </Dialog>
-    </>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  min-height: 110vh;
+`
+const Scroller = styled.div`
+  max-height: 300px;
+  overflow-y: scroll;
+`
 
 const dummyText = (
   <>
