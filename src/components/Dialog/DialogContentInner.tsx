@@ -1,5 +1,5 @@
 import React, { HTMLAttributes, ReactNode, VFC, useCallback, useRef } from 'react'
-import styled, { createGlobalStyle, css } from 'styled-components'
+import styled, { css } from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -7,6 +7,8 @@ import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
 import { useClassNames } from './useClassNames'
+
+import { BodyScrollSuppressor } from './BodyScrollSuppressor'
 
 export type DialogContentInnerProps = {
   /**
@@ -146,7 +148,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
             </Inner>
           </FocusTrap>
           {/* Suppresses scrolling of body while modal is displayed */}
-          <ScrollSuppressing />
+          <BodyScrollSuppressor />
         </Wrapper>
       </CSSTransition>
     </DialogPositionProvider>
@@ -232,9 +234,4 @@ const Background = styled.div<{ themes: Theme }>`
       background-color: ${themes.palette.SCRIM};
     `
   }}
-`
-const ScrollSuppressing = createGlobalStyle`
-  body {
-    overflow: hidden;
-  }
 `
