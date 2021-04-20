@@ -87,6 +87,7 @@ export {
 } from './components/BackgroundJobsPanel'
 export { MultiComboBox, SingleComboBox } from './components/ComboBox'
 export { SideNav } from './components/SideNav'
+export { CompactInformationPanel } from './components/CompactInformationPanel'
 
 // themes
 export { createTheme } from './themes/createTheme'

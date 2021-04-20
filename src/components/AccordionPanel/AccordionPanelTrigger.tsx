@@ -3,23 +3,27 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { getIsInclude, mapToKeyArray } from '../../libs/map'
-import { isTouchDevice } from '../../libs/ua'
 import { getNewExpandedItems } from './accordionPanelHelper'
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { useClassNames } from './useClassNames'
-
-import { FaCaretDownIcon } from '../Icon'
+import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
+import { FaCaretRightIcon, FaCaretUpIcon } from '../Icon'
+import { radiusMap } from '../Base'
 
 type Props = {
   children: React.ReactNode
   className?: string
+  headingType?: HeadingTypes
+  headingTag?: HeadingTagTypes
 }
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
 export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
   children,
   className = '',
+  headingType = 'blockTitle',
+  headingTag,
   ...props
 }) => {
   const theme = useTheme()
@@ -35,9 +39,7 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   const isExpanded = getIsInclude(expandedItems, name)
-  const expandedClassName = isExpanded ? 'expanded' : ''
-  const buttonClassNames = `${className} ${expandedClassName} ${iconPosition} ${classNames.trigger}`
-  const iconClassNames = `${expandedClassName} ${iconPosition}`
+  const buttonClassNames = `${className} ${classNames.trigger}`
 
   const handleClick = useCallback(() => {
     if (onClickTrigger) onClickTrigger(name, !isExpanded)
@@ -53,84 +55,89 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
     }
   }, [onClickTrigger, name, isExpanded, onClickProps, expandedItems, expandableMultiply])
 
-  const caretIcon = <Icon className={iconClassNames} $theme={theme} />
-
   return (
-    <Button
-      id={`${name}-trigger`}
-      className={buttonClassNames}
-      aria-expanded={isExpanded}
-      aria-controls={`${name}-content`}
-      themes={theme}
-      onClick={handleClick}
-      type="button"
-      {...props}
-    >
-      {displayIcon && iconPosition === 'left' && caretIcon}
-      {children}
-      {displayIcon && iconPosition === 'right' && caretIcon}
-    </Button>
+    <Heading tag={headingTag} type={headingType}>
+      <Button
+        id={`${name}-trigger`}
+        className={buttonClassNames}
+        aria-expanded={isExpanded}
+        aria-controls={`${name}-content`}
+        themes={theme}
+        onClick={handleClick}
+        type="button"
+        data-component="AccordionHeaderButton"
+        {...props}
+      >
+        {displayIcon && iconPosition === 'left' && <LeftIcon />}
+        <TriggerTitle>{children}</TriggerTitle>
+        {displayIcon && iconPosition === 'right' && <RightIcon />}
+      </Button>
+    </Heading>
   )
 }
+
+const TriggerTitle = styled.span`
+  flex-grow: 1;
+`
 
 const resetButtonStyle = css`
   background-color: transparent;
   border: none;
-  outline: none;
   padding: 0;
   appearance: none;
 `
 const Button = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
-    const { size, palette, interaction } = themes
+    const { color, fontSize, spacing, shadow } = themes
 
     return css`
       display: flex;
       align-items: center;
       width: 100%;
-      padding: ${size.pxToRem(12)} ${size.pxToRem(size.space.XS)};
-      color: ${palette.TEXT_BLACK};
-      font-size: ${size.pxToRem(size.font.TALL)};
-      text-align: left;
+      padding: ${fontSize.pxToRem(12)} ${fontSize.pxToRem(spacing.XS)};
       cursor: pointer;
-      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+      font-size: inherit;
+      text-align: left;
 
-      &:hover {
-        background-color: ${palette.hoverColor('#fff')};
+      .smarthr-ui-AccordionPanel > * > *:first-child & {
+        border-radius: ${radiusMap.m} ${radiusMap.m} 0 0;
       }
-      &.right {
-        justify-content: space-between;
+
+      .smarthr-ui-AccordionPanel > * > *:last-child & {
+        border-radius: 0 0 ${radiusMap.m} ${radiusMap.m};
       }
-      &.left {
-        justify-content: left;
+
+      &:focus {
+        outline: none;
+        box-shadow: ${shadow.OUTLINE};
+      }
+
+      &:hover,
+      &:focus:not(:focus-visible) {
+        background-color: ${color.hoverColor('#fff')};
+        box-shadow: none;
+      }
+
+      /* TODO replace if impremented Layout component */
+      & > * + * {
+        margin-left: ${fontSize.pxToRem(spacing.XXS)};
       }
     `
   }}
 `
-const Icon = styled(FaCaretDownIcon)<{ $theme: Theme }>`
-  ${({ $theme }) => {
-    const { size } = $theme
+const LeftIcon = styled(FaCaretRightIcon)`
+  transition: transform 0.3s;
 
-    return css`
-      display: inline-flex;
-      margin-right: ${size.pxToRem(size.space.XXS)};
-      transition: transform 0.3s;
+  [aria-expanded='true'] > & {
+    transform: rotate(90deg);
+  }
+`
 
-      &.left {
-        &.expanded {
-          transform: rotate(-180deg);
-        }
-      }
+const RightIcon = styled(FaCaretUpIcon)`
+  transition: transform 0.3s;
 
-      &.right {
-        margin-right: 0;
-        margin-left: ${size.pxToRem(size.space.XXS)};
-
-        &.expanded {
-          transform: rotate(180deg);
-        }
-      }
-    `
-  }}
+  [aria-expanded='true'] & {
+    transform: rotate(-180deg);
+  }
 `
