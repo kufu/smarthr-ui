@@ -185,6 +185,7 @@ export const MultiComboBox: FC<Props> = ({
       aria-owns={aria.listBoxId}
       aria-haspopup="listbox"
       aria-expanded={isFocused}
+      aria-invalid={error || undefined}
     >
       <InputArea themes={theme}>
         <List themes={theme}>
