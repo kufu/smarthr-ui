@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -19,7 +19,7 @@ type Props = Omit<InputProps, 'error'> & {
   className?: string
 }
 
-export const FieldSet: FC<Props> = ({
+export const FieldSet: VFC<Props> = ({
   label,
   labelType = 'subBlockTitle',
   labelTagType = 'span',
