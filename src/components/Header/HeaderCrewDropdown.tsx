@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -20,7 +20,7 @@ type Props = {
   onClickInvite?: () => void
 }
 
-export const HeaderCrewDropdown: FC<Props> = ({
+export const HeaderCrewDropdown: VFC<Props> = ({
   onClickNew,
   onClickBulkInsert,
   onClickBulkUpdate,

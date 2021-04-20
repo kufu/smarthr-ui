@@ -5,15 +5,33 @@ import { isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
+import { useClassNames } from './useClassNames'
 
-export const SkeletonButton: VFC<ButtonProps> = ({ type = 'button', ...props }) => {
+export const SkeletonButton: VFC<ButtonProps> = ({ type = 'button', className = '', ...props }) => {
   const theme = useTheme()
-  return <SkeletonStyleButton {...props} themes={theme} type={type} />
+  const { skeletonButton } = useClassNames()
+
+  return (
+    <SkeletonStyleButton
+      {...props}
+      themes={theme}
+      type={type}
+      className={`${className} ${skeletonButton.wrapper}`}
+    />
+  )
 }
 
-export const SkeletonButtonAnchor: VFC<AnchorProps> = (props) => {
+export const SkeletonButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props }) => {
   const theme = useTheme()
-  return <SkeletonStyleButtonAnchor themes={theme} {...props} />
+  const { skeletonButtonAnchor } = useClassNames()
+
+  return (
+    <SkeletonStyleButtonAnchor
+      themes={theme}
+      className={`${className} ${skeletonButtonAnchor.wrapper}`}
+      {...props}
+    />
+  )
 }
 
 const skeletonStyle = css`

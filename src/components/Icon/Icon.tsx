@@ -654,7 +654,7 @@ export type ComponentProps = Omit<Props, 'name'>
 type IconComponentProps = ComponentProps & { Component: IconType }
 
 // This should be inlined in the createIcon function after the Icon component had been removed
-const IconComponent: React.FC<IconComponentProps> = ({
+const IconComponent: React.VFC<IconComponentProps> = ({
   Component,
   className = '',
   role = 'img',
@@ -683,7 +683,7 @@ const IconComponent: React.FC<IconComponentProps> = ({
 }
 
 const createIcon = (SvgIcon: IconType) => {
-  const Icon: React.FC<ComponentProps> = (props: ComponentProps) => {
+  const Icon: React.VFC<ComponentProps> = (props: ComponentProps) => {
     return <IconComponent {...props} Component={SvgIcon} />
   }
   return Icon
@@ -698,7 +698,7 @@ const didWarnDeprecatedIcon = new Set()
 /**
  * @deprecated The Icon component will be deprecated, please use indivisual components (e.g. FaAddressBookIcon) instead
  */
-export const Icon: React.FC<Props> = ({ name, ...props }) => {
+export const Icon: React.VFC<Props> = ({ name, ...props }) => {
   if (process.env.NODE_ENV !== 'production' && !didWarnDeprecatedIcon.has(name)) {
     console.warn(
       `<Icon name="${name}" /> is now deprecated and will be removed in the future major release. Please use <${iconMap[name].name}Icon /> instead.`,

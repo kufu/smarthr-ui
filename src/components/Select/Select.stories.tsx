@@ -19,10 +19,10 @@ storiesOf('Select', module)
         <Text>default</Text>
         <Select
           options={[
-            { label: 'apple', value: 'apple' },
-            { label: 'orange', value: 'orange' },
-            { label: 'banana', value: 'banana' },
-            { label: 'melon', value: 'melon', disabled: true },
+            { label: 'Apple', value: 'apple' },
+            { label: 'Orange', value: 'orange' },
+            { label: 'Banana', value: 'banana' },
+            { label: 'Melon', value: 'melon', disabled: true },
           ]}
         />
       </li>
@@ -31,9 +31,9 @@ storiesOf('Select', module)
         <Select
           value="orange"
           options={[
-            { label: 'apple', value: 'apple' },
-            { label: 'orange', value: 'orange' },
-            { label: 'banana', value: 'banana' },
+            { label: 'Apple', value: 'apple' },
+            { label: 'Orange', value: 'orange' },
+            { label: 'Banana', value: 'banana' },
           ]}
         />
       </li>
@@ -42,9 +42,9 @@ storiesOf('Select', module)
         <Select
           error
           options={[
-            { label: 'apple', value: 'apple' },
-            { label: 'orange', value: 'orange' },
-            { label: 'banana', value: 'banana' },
+            { label: 'Apple', value: 'apple' },
+            { label: 'Orange', value: 'orange' },
+            { label: 'Banana', value: 'banana' },
           ]}
         />
       </li>
@@ -53,9 +53,9 @@ storiesOf('Select', module)
         <Select
           disabled
           options={[
-            { label: 'apple', value: 'apple' },
-            { label: 'orange', value: 'orange' },
-            { label: 'banana', value: 'banana' },
+            { label: 'Apple', value: 'apple' },
+            { label: 'Orange', value: 'orange' },
+            { label: 'Banana', value: 'banana' },
           ]}
         />
       </li>
@@ -65,9 +65,9 @@ storiesOf('Select', module)
           value=""
           options={[
             { label: 'Select fruit', value: '' },
-            { label: 'apple', value: 'apple' },
-            { label: 'orange', value: 'orange' },
-            { label: 'banana', value: 'banana' },
+            { label: 'Apple', value: 'apple' },
+            { label: 'Orange', value: 'orange' },
+            { label: 'Banana', value: 'banana' },
           ]}
         />
       </li>
@@ -77,23 +77,23 @@ storiesOf('Select', module)
           value="orange"
           options={[
             { label: 'Select fruit', value: '' },
-            { label: 'apple', value: 'apple' },
+            { label: 'Apple', value: 'apple' },
             {
               label: 'citrus',
               options: [
-                { label: 'orange', value: 'orange' },
-                { label: 'lemon', value: 'lemon' },
-                { label: 'grapefruit', value: 'grapefruit' },
+                { label: 'Orange', value: 'orange' },
+                { label: 'Lemon', value: 'lemon' },
+                { label: 'Grapefruit', value: 'grapefruit' },
               ],
             },
-            { label: 'banana', value: 'banana' },
+            { label: 'Banana', value: 'banana' },
             {
-              label: 'fruit vegetables',
+              label: 'Fruit vegetables',
               disabled: true,
               options: [
-                { label: 'strawberry', value: 'strawberry' },
-                { label: 'melon', value: 'melon' },
-                { label: 'water melon', value: 'water melon' },
+                { label: 'Strawberry', value: 'strawberry' },
+                { label: 'Melon', value: 'melon' },
+                { label: 'Water melon', value: 'water melon' },
               ],
             },
           ]}

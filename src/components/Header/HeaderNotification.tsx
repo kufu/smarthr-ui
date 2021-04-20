@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -8,7 +8,7 @@ type Props = {
   onClick: () => void
 }
 
-export const HeaderNotification: FC<Props> = ({ length, onClick }) => {
+export const HeaderNotification: VFC<Props> = ({ length, onClick }) => {
   const theme = useTheme()
 
   return (

@@ -1,8 +1,9 @@
-import React, { MouseEvent, VFC } from 'react'
+import React, { HTMLAttributes, MouseEvent, VFC } from 'react'
 import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 import { daysInWeek, getMonthArray, isBetween } from './calendarHelper'
 import { ResetButton } from './ResetButton'
 
@@ -13,9 +14,18 @@ type Props = {
   onSelectDate: (e: MouseEvent, date: Date) => void
   selected?: Date | null
 }
+type ElementProps = Omit<HTMLAttributes<HTMLTableElement>, keyof Props>
 
-export const CalendarTable: VFC<Props> = ({ current, from, to, onSelectDate, selected }) => {
+export const CalendarTable: VFC<Props & ElementProps> = ({
+  current,
+  from,
+  to,
+  onSelectDate,
+  selected,
+  ...props
+}) => {
   const themes = useTheme()
+  const classNames = useClassNames()
   const currentDay = dayjs(current)
   const selectedDay = selected ? dayjs(selected) : null
 
@@ -25,11 +35,17 @@ export const CalendarTable: VFC<Props> = ({ current, from, to, onSelectDate, sel
 
   const array = getMonthArray(currentDay.toDate())
   return (
-    <Table themes={themes}>
+    <Table
+      {...props}
+      themes={themes}
+      className={`${props.className} ${classNames.calendarTable.wrapper}`}
+    >
       <thead>
         <tr>
           {daysInWeek.map((day, i) => (
-            <th key={i}>{day}</th>
+            <th key={i} className={classNames.calendarTable.headCell}>
+              {day}
+            </th>
           ))}
         </tr>
       </thead>
@@ -44,7 +60,7 @@ export const CalendarTable: VFC<Props> = ({ current, from, to, onSelectDate, sel
                 const isSelectedDate =
                   !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
                 return (
-                  <td key={dateIndex}>
+                  <td key={dateIndex} className={classNames.calendarTable.dataCell}>
                     {date && (
                       <CellButton
                         themes={themes}
