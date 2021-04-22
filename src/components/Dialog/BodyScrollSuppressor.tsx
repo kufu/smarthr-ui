@@ -1,16 +1,16 @@
-import React, { VFC } from 'react'
+import React, { VFC, useEffect, useState } from 'react'
 import { createGlobalStyle, css } from 'styled-components'
 
 export const BodyScrollSuppressor: VFC = () => {
-  const [originalWidth, setOriginalWidth] = React.useState<number | null>(null)
-  const [paddingRightValue, setPaddingRightValue] = React.useState('0px')
-  const [scrollbarWidth, setScrollbarWidth] = React.useState(0)
+  const [originalWidth, setOriginalWidth] = useState<number | null>(null)
+  const [paddingRightValue, setPaddingRightValue] = useState('0px')
+  const [scrollbarWidth, setScrollbarWidth] = useState(0)
 
-  React.useEffect(() => {
+  useEffect(() => {
     setOriginalWidth(document.body.clientWidth)
   }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (originalWidth === null) {
       return
     }
