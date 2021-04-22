@@ -7,7 +7,6 @@ import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
 import { useClassNames } from './useClassNames'
-
 import { BodyScrollSuppressor } from './BodyScrollSuppressor'
 
 export type DialogContentInnerProps = {
