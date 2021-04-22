@@ -2,7 +2,6 @@ import React from 'react'
 import { configure, addDecorator } from '@storybook/react'
 import { create } from '@storybook/theming'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
-import { withA11y } from '@storybook/addon-a11y'
 import { addReadme } from 'storybook-readme'
 import { Reset } from 'styled-reset'
 import {
@@ -68,7 +67,6 @@ export const parameters = {
   },
 }
 
-addDecorator(withA11y)
 addDecorator(addReadme)
 addDecorator((Story, context) => {
   const shouldReset = context.globals.reset === 'styled-reset'
