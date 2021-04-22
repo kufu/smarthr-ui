@@ -2,45 +2,47 @@ import React, { VFC } from 'react'
 import { createGlobalStyle, css } from 'styled-components'
 
 export const BodyScrollSuppressor: VFC = () => {
-  const [initialized, setInitialized] = React.useState(false)
-  const [originalWidth, setOriginalWidth] = React.useState(0)
-  const [widthDiff, setWidthDiff] = React.useState(0)
+  const [originalWidth, setOriginalWidth] = React.useState<number | null>(null)
+  const [originalPaddingRight, setOriginalPaddingRight] = React.useState('0px')
+  const [scrollbarWidth, setScrollbarWidth] = React.useState(0)
 
   React.useEffect(() => {
-    setInitialized(true)
-    return () => setInitialized(false)
+    setOriginalWidth(document.body.clientWidth)
+    setOriginalPaddingRight(getComputedStyle(document.body).getPropertyValue('padding-right'))
   }, [])
 
   React.useEffect(() => {
-    if (!initialized) {
-      setOriginalWidth(document.body.clientWidth)
-    }
-  }, [initialized])
-
-  React.useEffect(() => {
-    if (!initialized) {
+    if (originalWidth === null) {
       return
     }
     const currentWidth = document.body.clientWidth
-    const diff = currentWidth - originalWidth
-    if (diff > 0) {
-      setWidthDiff(diff)
+    const widthDiff = currentWidth - originalWidth
+    if (widthDiff > 0) {
+      setScrollbarWidth(widthDiff)
     }
-  }, [initialized, originalWidth])
+  }, [originalWidth])
 
-  if (!initialized) {
+  if (originalWidth === null) {
     return null
   }
-  return <ScrollSuppressing widthDiff={widthDiff} />
+  return (
+    <ScrollSuppressing
+      originalPaddingRight={originalPaddingRight}
+      scrollbarWidth={scrollbarWidth}
+    />
+  )
 }
 
-const ScrollSuppressing = createGlobalStyle<{ widthDiff: number }>`
+const ScrollSuppressing = createGlobalStyle<{
+  originalPaddingRight: string
+  scrollbarWidth: number
+}>`
   body {
     overflow: hidden;
-    ${({ widthDiff }) =>
-      widthDiff > 0 &&
+    ${({ originalPaddingRight, scrollbarWidth }) =>
+      scrollbarWidth > 0 &&
       css`
-        padding-right: ${widthDiff}px !important;
+        padding-right: calc(${originalPaddingRight} + ${scrollbarWidth}px) !important;
       `}
   }
 `
