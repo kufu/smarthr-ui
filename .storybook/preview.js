@@ -1,6 +1,7 @@
 import React from 'react'
 import { addDecorator } from '@storybook/react'
 import { create } from '@storybook/theming'
+import addons from '@storybook/addons'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { addReadme } from 'storybook-readme'
 import { Reset } from 'styled-reset'
@@ -29,13 +30,16 @@ export const globalTypes = {
   },
 }
 
+addons.setConfig({
+  theme: create({
+    base: 'light',
+    brandTitle: 'smarthr-ui storybook',
+    brandUrl: 'https://github.com/kufu/smarthr-ui',
+  }),
+})
+
 export const parameters = {
   options: {
-    theme: create({
-      base: 'light',
-      brandTitle: 'smarthr-ui storybook',
-      brandUrl: 'https://github.com/kufu/smarthr-ui',
-    }),
     isFullscreen: false,
     isToolshown: true,
   },
