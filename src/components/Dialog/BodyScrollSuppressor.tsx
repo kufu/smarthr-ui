@@ -2,42 +2,36 @@ import React, { VFC, useEffect, useState } from 'react'
 import { createGlobalStyle, css } from 'styled-components'
 
 export const BodyScrollSuppressor: VFC = () => {
-  const [originalWidth, setOriginalWidth] = useState<number | null>(null)
-  const [paddingRightValue, setPaddingRightValue] = useState('0px')
-  const [scrollbarWidth, setScrollbarWidth] = useState(0)
+  const [scrollBarWidth, setScrollBarWidth] = useState<number | null>(null)
+  const [paddingRight, setPaddingRight] = useState<number | null>(null)
 
   useEffect(() => {
-    setOriginalWidth(document.body.clientWidth)
+    setScrollBarWidth(window.innerWidth - document.body.clientWidth)
   }, [])
 
   useEffect(() => {
-    if (originalWidth === null) {
+    if (scrollBarWidth === null) {
       return
     }
-    setPaddingRightValue(getComputedStyle(document.body).getPropertyValue('padding-right'))
-    const currentWidth = document.body.clientWidth
-    const widthDiff = currentWidth - originalWidth
-    if (widthDiff > 0) {
-      setScrollbarWidth(widthDiff)
-    }
-  }, [originalWidth])
+    const originalPaddingRight = getComputedStyle(document.body).getPropertyValue('padding-right')
+    setPaddingRight(scrollBarWidth + parseInt(originalPaddingRight, 10))
+  }, [scrollBarWidth])
 
-  if (originalWidth === null) {
+  if (scrollBarWidth === null) {
     return null
   }
-  return <ScrollSuppressing paddingRightValue={paddingRightValue} scrollbarWidth={scrollbarWidth} />
+  return <ScrollSuppressing paddingRight={paddingRight} />
 }
 
 const ScrollSuppressing = createGlobalStyle<{
-  paddingRightValue: string
-  scrollbarWidth: number
+  paddingRight: number | null
 }>`
   body {
     overflow: hidden;
-    ${({ paddingRightValue, scrollbarWidth }) =>
-      scrollbarWidth > 0 &&
+    ${({ paddingRight }) =>
+      paddingRight &&
       css`
-        padding-right: calc(${paddingRightValue} + ${scrollbarWidth}px) !important;
+        padding-right: ${paddingRight}px !important;
       `}
   }
 `
