@@ -4,34 +4,66 @@ const defaultBaseSize = 8
 
 export interface SpacingProperty {
   baseSize?: number
-  XXS?: number
-  XS?: number
-  S?: number
-  M?: number
-  L?: number
-  XL?: number
-  XXL?: number
+  X3S?: string
+  XXS?: string
+  XS?: string
+  S?: string
+  M?: string
+  L?: string
+  XL?: string
+  XXL?: string
+  X3L?: string
 }
 
 export interface CreatedSpacingTheme {
-  XXS: number
-  XS: number
-  S: number
-  M: number
-  L: number
-  XL: number
-  XXL: number
+  X3S: string
+  XXS: string
+  XS: string
+  S: string
+  M: string
+  L: string
+  XL: string
+  XXL: string
+  X3L: string
+}
+
+export interface CreatedSpacingByChar {
+  0.5?: string
+  1?: string
+  2?: string
+  3?: string
+  4?: string
+  5?: string
+  6?: string
+  7?: string
+  8?: string
 }
 
 const getSpacing = (baseSize: number) => {
   return {
-    XXS: baseSize,
-    XS: baseSize * 2,
-    S: baseSize * 3,
-    M: baseSize * 4,
-    L: baseSize * 5,
-    XL: baseSize * 6,
-    XXL: baseSize * 7,
+    X3S: `${baseSize / 2}px`,
+    XXS: `${baseSize}px`,
+    XS: `${baseSize * 2}px`,
+    S: `${baseSize * 3}px`,
+    M: `${baseSize * 4}px`,
+    L: `${baseSize * 5}px`,
+    XL: `${baseSize * 6}px`,
+    XXL: `${baseSize * 7}px`,
+    X3L: `${baseSize * 8}px`,
+  }
+}
+
+const getSpacingByChar = (spacing: CreatedSpacingTheme) => {
+  return {
+    0.5: spacing.X3S,
+    1: spacing.XXS,
+    2: spacing.XS,
+    3: spacing.S,
+    4: spacing.M,
+    5: spacing.L,
+    6: spacing.XL,
+    7: spacing.XXL,
+    8: spacing.X3L,
   }
 }
 
@@ -43,3 +75,6 @@ export const createSpacing = (userSpacing: SpacingProperty = {}) => {
 
   return created
 }
+
+export const defaultSpacingByChar = getSpacingByChar(defaultSpacing)
+export const createSpacingByChar = (spacing: CreatedSpacingTheme) => getSpacingByChar(spacing)

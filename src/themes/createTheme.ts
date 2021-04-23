@@ -10,7 +10,13 @@ import { CreatedPaletteTheme, PaletteProperty, createPalette } from './createPal
 import { ColorProperty, CreatedColorTheme, createColor } from './createColor'
 import { CreatedSizeTheme, SizeProperty, createSize } from './createSize'
 import { CreatedFontSizeTheme, FontSizeProperty, createFontSize } from './createFontSize'
-import { CreatedSpacingTheme, SpacingProperty, createSpacing } from './createSpacing'
+import {
+  CreatedSpacingByChar,
+  CreatedSpacingTheme,
+  SpacingProperty,
+  createSpacing,
+  createSpacingByChar,
+} from './createSpacing'
 import { BreakpointProperty, CreatedBreakpointTheme, createBreakpoint } from './createBreakpoint'
 import { CreatedShadowTheme, ShadowProperty, createShadow } from './createShadow'
 import { CreatedZindexTheme, ZIndexProperty, createZIndex } from './createZIndex'
@@ -22,7 +28,7 @@ interface ThemeProperty {
   palette?: PaletteProperty
   color?: ColorProperty
   /**
-   * @deprecated The size property will be deprecated, please use fontSize, spacing or breakpoint property instead
+   * @deprecated The size property will be deprecated, please use fontSize or breakpoint property instead
    */
   size?: SizeProperty
   fontSize?: FontSizeProperty
@@ -46,11 +52,12 @@ export interface CreatedTheme {
   palette: CreatedPaletteTheme
   color: CreatedColorTheme
   /**
-   * @deprecated The size property will be deprecated, please use fontSize, spacing or breakpoint property instead
+   * @deprecated The size property will be deprecated, please use fontSize or breakpoint property instead
    */
   size: CreatedSizeTheme
   fontSize: CreatedFontSizeTheme
   spacing: CreatedSpacingTheme
+  spacingByChar: CreatedSpacingByChar
   breakpoint: CreatedBreakpointTheme
   /**
    * @deprecated The frame property will be deprecated, please use border or radius property instead
@@ -66,12 +73,14 @@ export interface CreatedTheme {
 export const createTheme = (theme: ThemeProperty = {}) => {
   const paletteProperty = getPaletteProperty(theme)
   const colorProperty = getColorProperty(theme)
+  const spacing = createSpacing(theme.spacing)
   const created: CreatedTheme = {
     palette: createPalette(paletteProperty),
     color: createColor(colorProperty),
     size: createSize(getSizeProperty(theme)),
     fontSize: createFontSize(getFontSizeProperty(theme)),
-    spacing: createSpacing(getSpacingProperty(theme)),
+    spacing,
+    spacingByChar: createSpacingByChar(spacing),
     breakpoint: createBreakpoint(getBreakpointProperty(theme)),
     frame: createFrame(getFrameProperty(theme), paletteProperty),
     border: createBorder(getBorderProperty(theme), colorProperty),
@@ -98,16 +107,6 @@ function getColorProperty(theme: ThemeProperty): ColorProperty {
 function getSizeProperty(theme: ThemeProperty): SizeProperty {
   return {
     htmlFontSize: theme.fontSize?.htmlFontSize || theme.size?.htmlFontSize,
-    space: {
-      defaultRem: theme.spacing?.baseSize || theme.size?.space?.defaultRem,
-      XXS: theme.spacing?.XXS || theme.size?.space?.XXS,
-      XS: theme.spacing?.XS || theme.size?.space?.XS,
-      S: theme.spacing?.S || theme.size?.space?.S,
-      M: theme.spacing?.M || theme.size?.space?.M,
-      L: theme.spacing?.L || theme.size?.space?.L,
-      XL: theme.spacing?.XL || theme.size?.space?.XL,
-      XXL: theme.spacing?.XXL || theme.size?.space?.XXL,
-    },
     font: {
       SHORT: theme.fontSize?.SHORT || theme.size?.font?.SHORT,
       TALL: theme.fontSize?.TALL || theme.size?.font?.TALL,
@@ -125,19 +124,6 @@ function getFontSizeProperty(theme: ThemeProperty): FontSizeProperty {
     htmlFontSize: theme.size?.htmlFontSize,
     ...theme.size?.font,
     ...theme.fontSize,
-  }
-}
-function getSpacingProperty(theme: ThemeProperty): SpacingProperty {
-  return {
-    baseSize: theme.size?.space?.defaultRem,
-    XXS: theme.size?.space?.XXS,
-    XS: theme.size?.space?.XS,
-    S: theme.size?.space?.S,
-    M: theme.size?.space?.M,
-    L: theme.size?.space?.L,
-    XL: theme.size?.space?.XL,
-    XXL: theme.size?.space?.XXL,
-    ...theme.spacing,
   }
 }
 function getBreakpointProperty(theme: ThemeProperty): BreakpointProperty {
