@@ -1,45 +1,78 @@
-import { merge } from '../libs/lodash'
-
-const defaultBaseSize = 8
+import { defaultHtmlFontSize } from './createFontSize'
+export const defaultBaseSize = defaultHtmlFontSize / 2
 
 export interface SpacingProperty {
   baseSize?: number
-  XXS?: number
-  XS?: number
-  S?: number
-  M?: number
-  L?: number
-  XL?: number
-  XXL?: number
 }
 
 export interface CreatedSpacingTheme {
-  XXS: number
-  XS: number
-  S: number
-  M: number
-  L: number
-  XL: number
-  XXL: number
+  X3S: string
+  XXS: string
+  XS: string
+  S: string
+  M: string
+  L: string
+  XL: string
+  XXL: string
+  X3L: string
 }
 
+export type CreatedSpacingByCharTheme = (size: CharRelativeSize) => string
+
+const primitiveTokens = [
+  0.25,
+  0.5,
+  0.75,
+  1,
+  1.25,
+  1.5,
+  2,
+  2.5,
+  3,
+  3.5,
+  4,
+  8,
+  -0.25,
+  -0.5,
+  -0.75,
+  -1,
+  -1.25,
+  -1.5,
+  -2,
+  -2.5,
+  -3,
+  -3.5,
+  -4,
+  -8,
+] as const
+
+export type CharRelativeSize = typeof primitiveTokens[number]
+
 const getSpacing = (baseSize: number) => {
+  const spacingByChar = createSpacingByChar(baseSize)
   return {
-    XXS: baseSize,
-    XS: baseSize * 2,
-    S: baseSize * 3,
-    M: baseSize * 4,
-    L: baseSize * 5,
-    XL: baseSize * 6,
-    XXL: baseSize * 7,
+    X3S: spacingByChar(0.25),
+    XXS: spacingByChar(0.5),
+    XS: spacingByChar(1),
+    S: spacingByChar(1.5),
+    M: spacingByChar(2),
+    L: spacingByChar(2.5),
+    XL: spacingByChar(3),
+    XXL: spacingByChar(3.5),
+    X3L: spacingByChar(4),
   }
 }
 
-export const defaultSpacing = getSpacing(defaultBaseSize)
-
-export const createSpacing = (userSpacing: SpacingProperty = {}) => {
-  const { baseSize, ...userTokens } = userSpacing
-  const created: CreatedSpacingTheme = merge(getSpacing(baseSize || defaultBaseSize), userTokens)
-
-  return created
+const getSpacingByChar = (baseSize: number) => {
+  const charSize = baseSize * 2
+  return primitiveTokens
+    .map((size) => {
+      return { [size]: `${charSize * size}px` }
+    })
+    .reduce((a, c) => Object.assign(a, c), {})
 }
+
+export const createSpacing = (userBaseSize: number = defaultBaseSize) => getSpacing(userBaseSize)
+export const createSpacingByChar = (userBaseSize: number = defaultBaseSize) => (
+  size: CharRelativeSize,
+) => getSpacingByChar(userBaseSize)[size]
