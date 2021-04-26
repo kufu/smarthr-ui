@@ -59,17 +59,24 @@ const secondaryStyle = css`
         background-color: ${palette.hoverColor('#fff')};
         color: ${palette.TEXT_BLACK};
       }
-
-      &[disabled] {
-        background-color: ${palette.COLUMN};
-        color: ${palette.TEXT_DISABLED};
-      }
     `
   }}
 `
+const disabledStyle = css`
+  ${({ themes: { color } }: { themes: Theme }) => css`
+    background-color: ${color.COLUMN};
+    color: ${color.TEXT_DISABLED};
+  `}
+`
 const SecondaryStyleButton = styled(BaseButton)`
   ${secondaryStyle}
+  &[disabled] {
+    ${disabledStyle}
+  }
 `
 const SecondaryStyleButtonAnchor = styled(BaseButtonAnchor)`
   ${secondaryStyle}
+  &:not([href]) {
+    ${disabledStyle}
+  }
 `
