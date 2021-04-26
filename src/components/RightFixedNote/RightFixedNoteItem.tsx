@@ -46,22 +46,18 @@ export const RightFixedNoteItem: FC<Props> = ({
 }
 
 const Wrapper = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      margin-bottom: ${pxToRem(space.S)};
+      margin-bottom: ${spacingByChar(1.5)};
     `
   }}
 `
 
 const TextBase = styled(Base)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      padding: ${pxToRem(space.XXS)};
-      margin-bottom: ${pxToRem(space.XXS)};
+      padding: ${spacingByChar(0.5)};
+      margin-bottom: ${spacingByChar(0.5)};
       overflow: hidden;
     `
   }}
