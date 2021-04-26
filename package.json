@@ -113,7 +113,6 @@
     "build:esm": "tsc -p tsconfig.esm.build.json",
     "build-storybook": "build-storybook",
     "clean": "rimraf ./lib",
-    "fix": "fixpack",
     "format": "eslint --fix './**/*.ts{,x}'",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint './**/*.ts{,x}'",
