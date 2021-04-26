@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, useEffect } from 'react'
+import React, { HTMLAttributes, VFC, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -32,7 +32,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 const REMOVE_DELAY = 8000
 let timerId: any = 0
 
-export const FlashMessage: FC<Props & ElementProps> = ({
+export const FlashMessage: VFC<Props & ElementProps> = ({
   visible,
   type,
   text,
