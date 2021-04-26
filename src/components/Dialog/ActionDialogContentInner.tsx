@@ -7,6 +7,7 @@ import { useOffsetHeight } from './dialogHelper'
 import { DangerButton, PrimaryButton, SecondaryButton } from '../Button'
 import { FaCheckCircleIcon, FaExclamationTriangleIcon } from '../Icon'
 import { Loader } from '../Loader'
+import { useClassNames } from './useClassNames'
 
 export type BaseProps = {
   /**
@@ -42,6 +43,10 @@ export type BaseProps = {
    * Whether close button should be disabled.
    */
   closeDisabled?: boolean
+  /**
+   * `className` of the component.
+   */
+  className?: string
 }
 
 type responseMessageType = {
@@ -69,6 +74,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   actionDisabled = false,
   closeDisabled,
 }) => {
+  const classNames = useClassNames()
   const theme = useTheme()
   const handleClickAction = useCallback(() => {
     onClickAction(onClickClose)
@@ -83,23 +89,30 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
 
   return (
     <>
-      <Title themes={theme} ref={titleRef}>
+      <Title themes={theme} ref={titleRef} className={classNames.title}>
         {title}
       </Title>
-      <Body offsetHeight={offsetHeight}>{children}</Body>
-      <ActionArea themes={theme} ref={bottomRef}>
-        <ButtonArea themes={theme}>
-          <SecondaryButton onClick={onClickClose} disabled={closeDisabled || isRequestProcessing}>
+      <Body offsetHeight={offsetHeight} className={classNames.body}>
+        {children}
+      </Body>
+      <ActionArea themes={theme} ref={bottomRef} className={classNames.actionArea}>
+        <ButtonArea themes={theme} className={classNames.buttonArea}>
+          <SecondaryButton
+            onClick={onClickClose}
+            disabled={closeDisabled || isRequestProcessing}
+            className={classNames.secondaryButton}
+          >
             {closeText}
           </SecondaryButton>
           <ActionButton
             onClick={handleClickAction}
             disabled={actionDisabled || isRequestProcessing}
+            className={classNames.actionButton}
           >
             {actionText}
           </ActionButton>
         </ButtonArea>
-        <div role="alert">
+        <div role="alert" className={classNames.alert}>
           <ResponseMessage themes={theme} responseMessage={responseMessage} />
         </div>
       </ActionArea>
