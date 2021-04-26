@@ -47,17 +47,24 @@ const dangerStyle = css`
       &.hover {
         background-color: ${palette.hoverColor(palette.DANGER)};
       }
-
-      &[disabled] {
-        background-color: ${palette.disableColor(palette.DANGER)};
-        color: ${palette.disableColor('#fff')};
-      }
     `
   }}
 `
+const disabledStyle = css`
+  ${({ themes: { color } }: { themes: Theme }) => css`
+    background-color: ${color.disableColor(color.DANGER)};
+    color: ${color.disableColor('#fff')};
+  `}
+`
 const DangerStyleButton = styled(BaseButton)`
   ${dangerStyle}
+  &[disabled] {
+    ${disabledStyle}
+  }
 `
 const DangerStyleButtonAnchor = styled(BaseButtonAnchor)`
   ${dangerStyle}
+  &:not([href]) {
+    ${disabledStyle}
+  }
 `
