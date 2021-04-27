@@ -45,8 +45,10 @@ const primitiveTokens = [
   -4,
   -8,
 ] as const
+const abstractTokens = ['X3S', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'X3L'] as const
 
 export type CharRelativeSize = typeof primitiveTokens[number]
+export type AbstractSize = typeof abstractTokens[number]
 
 const getSpacing = (baseSize: number) => {
   const spacingByChar = createSpacingByChar(baseSize)
