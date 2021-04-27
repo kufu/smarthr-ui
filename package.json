@@ -12,7 +12,7 @@
     "react-transition-group": "^4.4.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.15",
+    "@babel/core": "^7.13.16",
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
     "@storybook/addon-a11y": "^6.1.21",
@@ -47,13 +47,13 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
-    "reg-keygen-git-hash-plugin": "^0.10.14",
-    "reg-notify-github-plugin": "^0.10.14",
-    "reg-publish-s3-plugin": "^0.10.10",
-    "reg-suit": "^0.10.14",
+    "reg-keygen-git-hash-plugin": "^0.10.15",
+    "reg-notify-github-plugin": "^0.10.15",
+    "reg-publish-s3-plugin": "^0.10.15",
+    "reg-suit": "^0.10.15",
     "standard-version": "^9.2.0",
     "storybook-readme": "^5.0.9",
-    "storycap": "^3.0.3",
+    "storycap": "^3.0.4",
     "styled-components": "^5.2.3",
     "styled-reset": "^4.3.4",
     "stylelint": "^13.12.0",
@@ -63,7 +63,7 @@
     "stylelint-config-styled-components": "^0.1.1",
     "testcafe": "^1.14.0",
     "ts-jest": "^26.5.5",
-    "ts-loader": "^8.1.0",
+    "ts-loader": "^9.1.1",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4",
     "wait-for-localhost": "^3.3.0",
@@ -78,7 +78,7 @@
     "url": "https://github.com/kufu/smarthr-ui/issues"
   },
   "engines": {
-    "node": ">=v10.24.1"
+    "node": ">=v12"
   },
   "files": [
     "esm",
@@ -113,7 +113,6 @@
     "build:esm": "tsc -p tsconfig.esm.build.json",
     "build-storybook": "build-storybook",
     "clean": "rimraf ./lib",
-    "fix": "fixpack",
     "format": "eslint --fix './**/*.ts{,x}'",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint './**/*.ts{,x}'",
@@ -140,6 +139,6 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "@types/react": "^17.0.3",
-    "@babel/helper-compilation-targets": "^7.13.13"
+    "@babel/helper-compilation-targets": "^7.13.16"
   }
 }

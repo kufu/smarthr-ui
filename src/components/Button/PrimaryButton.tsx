@@ -57,17 +57,24 @@ const primaryStyle = css`
         background-color: ${palette.hoverColor(palette.MAIN)};
         color: #fff;
       }
-
-      &[disabled] {
-        background-color: ${palette.disableColor(palette.MAIN)};
-        color: ${palette.disableColor('#fff')};
-      }
     `
   }}
 `
+const disabledStyle = css`
+  ${({ themes: { color } }: { themes: Theme }) => css`
+    background-color: ${color.disableColor(color.MAIN)};
+    color: ${color.disableColor('#fff')};
+  `}
+`
 const PrimaryStyleButton = styled(BaseButton)`
   ${primaryStyle}
+  &[disabled] {
+    ${disabledStyle}
+  }
 `
 const PrimaryStyleButtonAnchor = styled(BaseButtonAnchor)`
   ${primaryStyle}
+  &:not([href]) {
+    ${disabledStyle}
+  }
 `
