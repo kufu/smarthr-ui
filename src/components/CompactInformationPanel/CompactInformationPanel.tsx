@@ -68,11 +68,13 @@ const Wrapper = styled(Base)<{ themes: Theme }>`
     themes: {
       fontSize: { pxToRem },
       spacing,
+      shadow,
     },
   }) => {
     return css`
       display: flex;
       padding: ${pxToRem(spacing.XS)};
+      box-shadow: ${shadow.DIALOG};
     `
   }}
 `
