@@ -2,6 +2,7 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { useOffsetHeight } from './dialogHelper'
 import { SecondaryButton } from '../Button'
@@ -34,19 +35,22 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   closeText,
   onClickClose,
 }) => {
+  const classNames = useClassNames()
   const theme = useTheme()
   const { offsetHeight, titleRef, bottomRef } = useOffsetHeight()
 
   return (
     <>
-      <Title themes={theme} ref={titleRef}>
+      <Title themes={theme} ref={titleRef} className={classNames.title}>
         {title}
       </Title>
-      <Description themes={theme} offsetHeight={offsetHeight}>
+      <Description themes={theme} offsetHeight={offsetHeight} className={classNames.description}>
         {description}
       </Description>
-      <Bottom themes={theme} ref={bottomRef}>
-        <SecondaryButton onClick={onClickClose}>{closeText}</SecondaryButton>
+      <Bottom themes={theme} ref={bottomRef} className={classNames.buttonArea}>
+        <SecondaryButton onClick={onClickClose} className={classNames.secondaryButton}>
+          {closeText}
+        </SecondaryButton>
       </Bottom>
     </>
   )

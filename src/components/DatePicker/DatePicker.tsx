@@ -67,7 +67,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const calendarPortalRef = useRef<HTMLDivElement>(null)
-  const [inputRect, setInputRect] = useState<DOMRect>(new DOMRect())
+  const [inputRect, setInputRect] = useState<DOMRect | null>(null)
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [isCalendarShown, setIsCalendarShown] = useState(false)
 
@@ -237,7 +237,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
           ref={inputRef}
         />
       </InputWrapper>
-      {isCalendarShown && (
+      {isCalendarShown && inputRect && (
         <Portal inputRect={inputRect} ref={calendarPortalRef}>
           <Calendar
             value={selectedDate || undefined}

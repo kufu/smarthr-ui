@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { HTMLAttributes, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
@@ -10,8 +10,9 @@ type Props = ActionDialogContentInnerProps & {
     DialogContentInnerProps,
     'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
   >
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const ActionDialog: React.VFC<Props> = ({
+export const ActionDialog: React.VFC<Props & ElementProps> = ({
   children,
   title,
   closeText,
@@ -22,6 +23,7 @@ export const ActionDialog: React.VFC<Props> = ({
   responseMessage,
   actionDisabled = false,
   closeDisabled,
+  className = '',
   ...props
 }) => {
   const element = useRef(document.createElement('div')).current
@@ -49,7 +51,7 @@ export const ActionDialog: React.VFC<Props> = ({
   }, [onClickAction, onClickClose, props.isOpen])
 
   return createPortal(
-    <DialogContentInner ariaLabel={title} {...props}>
+    <DialogContentInner ariaLabel={title} className={className} {...props}>
       <ActionDialogContentInner
         title={title}
         closeText={closeText}

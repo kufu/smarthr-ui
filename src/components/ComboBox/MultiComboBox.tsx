@@ -115,15 +115,6 @@ export const MultiComboBox: FC<Props> = ({
       (creatable && filteredItems.length === 0 && !inputValue),
   })
 
-  const classNames = [
-    isFocused ? 'active' : '',
-    disabled ? 'disabled' : '',
-    error ? 'error' : '',
-    className,
-  ]
-    .filter((item) => item)
-    .join(' ')
-
   const focus = useCallback(() => {
     setIsFocused(true)
     resetActiveOptionIndex()
@@ -162,7 +153,7 @@ export const MultiComboBox: FC<Props> = ({
       themes={theme}
       width={width}
       ref={outerRef}
-      className={classNames}
+      className={className}
       onClick={(e) => {
         if (
           !hasParentElementByClassName(e.target as HTMLElement, DELETE_BUTTON_CLASS_NAME) &&
@@ -186,6 +177,7 @@ export const MultiComboBox: FC<Props> = ({
       aria-haspopup="listbox"
       aria-expanded={isFocused}
       aria-invalid={error || undefined}
+      aria-disabled={disabled}
     >
       <InputArea themes={theme}>
         <List themes={theme}>
@@ -201,7 +193,7 @@ export const MultiComboBox: FC<Props> = ({
                     className={DELETE_BUTTON_CLASS_NAME}
                     onClick={() => onDelete({ value, label })}
                   >
-                    <DeleteIcon
+                    <FaTimesCircleIcon
                       size={11}
                       color={theme.palette.TEXT_BLACK}
                       visuallyHiddenText="delete"
@@ -266,7 +258,7 @@ export const MultiComboBox: FC<Props> = ({
 
 const Container = styled.div<{ themes: Theme; width: number | string }>`
   ${({ themes, width }) => {
-    const { frame, size, palette } = themes
+    const { frame, size, palette, shadow } = themes
 
     return css`
       display: inline-flex;
@@ -279,15 +271,15 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       background-color: #fff;
       cursor: text;
 
-      &.active {
-        border-color: ${palette.MAIN};
+      &[aria-expanded='true'] {
+        box-shadow: ${shadow.OUTLINE};
       }
 
-      &.error {
+      &[aria-invalid='true'] {
         border-color: ${palette.DANGER};
       }
 
-      &.disabled {
+      &[aria-disabled='true'] {
         background-color: ${palette.COLUMN};
         cursor: not-allowed;
       }
@@ -365,6 +357,7 @@ const DeleteButton = styled(ResetButton)<{ themes: Theme }>`
     const {
       fontSize: { pxToRem },
       spacing,
+      shadow,
     } = themes
 
     return css`
@@ -372,12 +365,19 @@ const DeleteButton = styled(ResetButton)<{ themes: Theme }>`
       border-radius: 50%;
       cursor: pointer;
       line-height: 0;
+
+      &:focus {
+        outline: 0;
+      }
+
+      &:focus > svg {
+        border-radius: 50%;
+        box-shadow: ${shadow.OUTLINE};
+      }
     `
   }}
 `
-const DeleteIcon = styled(FaTimesCircleIcon)`
-  vertical-align: 1px;
-`
+
 const InputWrapper = styled.li`
   &.hidden {
     position: absolute;
