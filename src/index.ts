@@ -91,6 +91,7 @@ export { CompactInformationPanel } from './components/CompactInformationPanel'
 
 // layout components
 export { Stack } from './components/Layout/Stack'
+export { LineUp } from './components/Layout/LineUp'
 
 // themes
 export { createTheme } from './themes/createTheme'
