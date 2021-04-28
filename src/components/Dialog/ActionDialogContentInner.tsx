@@ -112,9 +112,11 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
             {actionText}
           </ActionButton>
         </ButtonArea>
-        <div role="alert" className={classNames.alert}>
-          <ResponseMessage themes={theme} responseMessage={responseMessage} />
-        </div>
+        {responseMessage && (
+          <div role="alert" className={classNames.alert}>
+            <ResponseMessage themes={theme} responseMessage={responseMessage} />
+          </div>
+        )}
       </ActionArea>
     </>
   )
