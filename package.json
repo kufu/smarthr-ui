@@ -111,7 +111,7 @@
     "build": "run-p build:*",
     "build:lib": "tsc -p tsconfig.build.json",
     "build:esm": "tsc -p tsconfig.esm.build.json",
-    "build-storybook": "build-storybook",
+    "build-storybook": "build-storybook --quiet",
     "clean": "rimraf ./lib",
     "format": "eslint --fix './**/*.ts{,x}'",
     "lint": "run-p lint:*",
