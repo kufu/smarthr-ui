@@ -1,7 +1,8 @@
-import React, { FC, useEffect } from 'react'
+import React, { HTMLAttributes, VFC, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import {
   FaCheckCircleIcon,
@@ -20,25 +21,28 @@ export type Props = {
   visible: boolean
   type: typeof messageTypes[number]
   text: string
-  className?: string
   animation?: typeof animationTypes[number]
   role?: typeof roles[number]
+  className?: string
   onClose: () => void
 }
+
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 const REMOVE_DELAY = 8000
 let timerId: any = 0
 
-export const FlashMessage: FC<Props> = ({
-  animation = 'bounce',
+export const FlashMessage: VFC<Props & ElementProps> = ({
   visible,
   type,
   text,
-  onClose,
-  className = '',
+  animation = 'bounce',
   role = 'alert',
+  className = '',
+  onClose,
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   useEffect(() => {
     if (visible) {
@@ -76,12 +80,19 @@ export const FlashMessage: FC<Props> = ({
   }
 
   return (
-    <Wrapper className={`${type} ${className}`} themes={theme} animation={animation} role={role}>
+    <Wrapper
+      className={`${type} ${classNames.wrapper}  ${className}`}
+      themes={theme}
+      animation={animation}
+      role={role}
+    >
       <IconWrapper>
-        <Icon size={14} color={iconColor} />
+        <Icon size={14} color={iconColor} className={classNames.icon} />
       </IconWrapper>
-      <Txt themes={theme}>{text}</Txt>
-      <SecondaryButton className="close" onClick={onClose} size="s" square>
+      <Txt themes={theme} className={classNames.text}>
+        {text}
+      </Txt>
+      <SecondaryButton className={`close ${classNames.button}`} onClick={onClose} size="s" square>
         <FaTimesIcon size={16} />
       </SecondaryButton>
     </Wrapper>

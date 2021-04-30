@@ -78,7 +78,7 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   ${({ themes, wide }) => {
-    const { frame, size, interaction } = themes
+    const { frame, size, interaction, shadow } = themes
 
     return css`
       display: inline-flex;
@@ -135,6 +135,11 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       &:focus {
         text-decoration: none;
       }
+
+      &:focus {
+        outline: 0;
+        box-shadow: ${shadow.OUTLINE};
+      }
     `
   }}
 `
@@ -162,4 +167,10 @@ const tagStore = {
 }
 
 export const BaseButton: VFC<ButtonProps> = buttonFactory<ButtonProps>('button')
-export const BaseButtonAnchor: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')
+
+const AnchorButton: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')
+export const BaseButtonAnchor = styled(AnchorButton)`
+  &:not([href]) {
+    cursor: not-allowed;
+  }
+`
