@@ -252,6 +252,36 @@ Error.parameters = {
   },
 }
 
+export const Loading: Story = () => {
+  return (
+    <List>
+      <dt>Single</dt>
+      <dd>
+        <SingleComboBox
+          items={defaultItems}
+          selectedItem={null}
+          width={400}
+          placeholder="Loading"
+          onSelect={action('onSelect')}
+          isLoading
+        />
+      </dd>
+      <dt>Multi</dt>
+      <dd>
+        <MultiComboBox
+          items={defaultItems}
+          selectedItems={[]}
+          width={400}
+          placeholder="Loading"
+          onDelete={action('onDelete')}
+          onSelect={action('onSelect')}
+          isLoading
+        />
+      </dd>
+    </List>
+  )
+}
+
 export const Deletable: Story = () => {
   return (
     <MultiComboBox

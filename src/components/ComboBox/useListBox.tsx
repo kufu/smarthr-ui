@@ -7,6 +7,7 @@ import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
 
 import { FaPlusCircleIcon } from '../Icon'
+import { Loader } from '../Loader'
 
 type Args = {
   items: Array<{ value: string; label: string; disabled?: boolean; isSelected?: boolean }>
@@ -17,6 +18,7 @@ type Args = {
   isAddable: boolean
   isDuplicate: boolean
   hasNoMatch: boolean
+  isLoading?: boolean
 }
 
 type Option = {
@@ -36,6 +38,7 @@ export function useListBox({
   isAddable,
   isDuplicate,
   hasNoMatch,
+  isLoading,
 }: Args) {
   const [dropdownStyle, setDropdownStyle] = useState({
     top: 0,
@@ -93,6 +96,9 @@ export function useListBox({
 
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (isLoading) {
+        return
+      }
       switch (e.key) {
         case 'ArrowDown':
         case 'Down':
@@ -122,7 +128,7 @@ export function useListBox({
         }
       }
     },
-    [activeOptionIndex, moveActiveOptionIndex, onAdd, onSelect, options],
+    [activeOptionIndex, isLoading, moveActiveOptionIndex, onAdd, onSelect, options],
   )
 
   const listBoxId = useId()
@@ -162,54 +168,62 @@ export function useListBox({
         role="listbox"
         aria-hidden={!isExpanded}
       >
-        {options.map((option, i) => {
-          const isActive = activeOptionIndex === i
-          const className = isActive ? 'active' : undefined
-          const { value, label, disabled, isAdding, isSelected } = option
-          if (isAdding) {
-            return (
-              <AddButton
-                key={`add-${label}`}
-                themes={theme}
-                onClick={() => onAdd && onAdd(label)}
-                onMouseOver={() => setActiveOptionIndex(0)}
-                id={addingButtonId}
-                role="option"
-                className={className}
-              >
-                <AddIcon size={14} color={theme.palette.TEXT_LINK} $theme={theme} />
-                <AddText themes={theme}>「{label}」を追加</AddText>
-              </AddButton>
-            )
-          }
-          return (
-            <SelectButton
-              key={`item-${label}`}
-              type="button"
-              themes={theme}
-              disabled={disabled}
-              onClick={() => onSelect({ value, label })}
-              onMouseOver={() => setActiveOptionIndex(i)}
-              id={getOptionId(option)}
-              role="option"
-              className={className}
-              aria-selected={isSelected}
-            >
-              {label}
-            </SelectButton>
-          )
-        })}
+        {isLoading ? (
+          <LoaderWrapper themes={theme}>
+            <Loader />
+          </LoaderWrapper>
+        ) : (
+          <>
+            {options.map((option, i) => {
+              const isActive = activeOptionIndex === i
+              const className = isActive ? 'active' : undefined
+              const { value, label, disabled, isAdding, isSelected } = option
+              if (isAdding) {
+                return (
+                  <AddButton
+                    key={`add-${label}`}
+                    themes={theme}
+                    onClick={() => onAdd && onAdd(label)}
+                    onMouseOver={() => setActiveOptionIndex(0)}
+                    id={addingButtonId}
+                    role="option"
+                    className={className}
+                  >
+                    <AddIcon size={14} color={theme.palette.TEXT_LINK} $theme={theme} />
+                    <AddText themes={theme}>「{label}」を追加</AddText>
+                  </AddButton>
+                )
+              }
+              return (
+                <SelectButton
+                  key={`item-${label}`}
+                  type="button"
+                  themes={theme}
+                  disabled={disabled}
+                  onClick={() => onSelect({ value, label })}
+                  onMouseOver={() => setActiveOptionIndex(i)}
+                  id={getOptionId(option)}
+                  role="option"
+                  className={className}
+                  aria-selected={isSelected}
+                >
+                  {label}
+                </SelectButton>
+              )
+            })}
 
-        {isDuplicate && (
-          <NoItems themes={theme} role="alert" aria-live="polite">
-            重複する選択肢は追加できません
-          </NoItems>
-        )}
+            {isDuplicate && (
+              <NoItems themes={theme} role="alert" aria-live="polite">
+                重複する選択肢は追加できません
+              </NoItems>
+            )}
 
-        {hasNoMatch && (
-          <NoItems themes={theme} role="alert" aria-live="polite">
-            一致する選択肢がありません
-          </NoItems>
+            {hasNoMatch && (
+              <NoItems themes={theme} role="alert" aria-live="polite">
+                一致する選択肢がありません
+              </NoItems>
+            )}
+          </>
         )}
       </Container>,
       portalRoot,
@@ -315,6 +329,16 @@ const AddText = styled.span<{ themes: Theme }>`
 
     return css`
       color: ${palette.TEXT_LINK};
+    `
+  }}
+`
+const LoaderWrapper = styled.div<{ themes: Theme }>`
+  ${({ themes: { fontSize, spacing } }) => {
+    return css`
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: ${fontSize.pxToRem(spacing.XS)};
     `
   }}
 `
