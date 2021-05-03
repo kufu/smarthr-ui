@@ -32,6 +32,7 @@ const StyledAncher = styled.a<{ themes: Theme }>`
   ${({ themes }) => {
     const { palette } = themes
     return css`
+      text-underline-position: under;
       color: ${palette.TEXT_LINK};
 
       &:hover {
