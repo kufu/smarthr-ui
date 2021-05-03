@@ -10,7 +10,7 @@ type Props = {
 }
 
 export const TextLink: VFC<Props & ElementProps> = ({
-  href,
+  href = '',
   onClick,
   children,
   prefix,

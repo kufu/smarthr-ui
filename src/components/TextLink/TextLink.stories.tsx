@@ -32,6 +32,8 @@ storiesOf('TextLink', module)
           <br />
           use Cmd + click: Open root page with new Tabs.
         </TextLink>
+        <br />
+        <TextLink>unuse href attribute: can tab focasable.</TextLink>
       </Wrapper>
     )
   })
