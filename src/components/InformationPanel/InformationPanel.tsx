@@ -130,6 +130,7 @@ const Header = styled.div<{ themes: Theme }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: -6.5px auto;
 `
 
 const Title = styled.div<{ themes: Theme }>`
