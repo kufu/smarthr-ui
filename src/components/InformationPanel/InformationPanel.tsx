@@ -126,19 +126,22 @@ const Wrapper = styled(Base)<{ themes: Theme; role: string }>`
   }}
 `
 
-const Header = styled.div<{ themes: Theme; togglable: boolean }>`
+const Header = styled.div<{ themes: Theme; togglable: boolean }>(
+  ({ togglable }) => `
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  ${({ togglable }) => css`
-    ${togglable &&
-    css`
-      margin-top: -6.5px;
-      margin-bottom: -6.5px;
-    `}
-  `}
-`
+  ${
+    togglable &&
+    // (SecondaryButton(27px) - Heading(14px)) / 2 = 6.5px
+    `
+    margin-top: -6.5px;
+    margin-bottom: -6.5px;
+  `
+  }
+`,
+)
 
 const Title = styled.div<{ themes: Theme }>`
   vertical-align: middle;
