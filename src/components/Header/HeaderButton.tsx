@@ -1,12 +1,12 @@
 import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Icon as DuplicatedIcon, IconNames, ComponentProps as IconProps } from '../Icon/Icon'
+import { ComponentProps as IconProps } from '../Icon/Icon'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {
-  icon: IconNames | React.ComponentType<IconProps>
+  icon: React.ComponentType<IconProps>
   children: ReactNode
   onClick?: () => void
 }
@@ -17,7 +17,7 @@ export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick }) => {
   return (
     <Wrapper themes={theme} onClick={onClick} type="button">
       <IconWrapper themes={theme} role="presentation">
-        {typeof Icon === 'string' ? <DuplicatedIcon name={Icon}></DuplicatedIcon> : <Icon />}
+        <Icon />
       </IconWrapper>
       {children}
     </Wrapper>
