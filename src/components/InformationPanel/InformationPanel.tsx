@@ -32,7 +32,7 @@ type Props = {
 
 export const InformationPanel: VFC<Props> = ({
   title,
-  titleTag = 'span',
+  titleTag = 'h3',
   type = 'info',
   togglable = true,
   openButtonLabel = '開く',
