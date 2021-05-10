@@ -87,10 +87,10 @@ export const InformationPanel: VFC<Props> = ({
 
   return (
     <Wrapper className={className} themes={theme} role="region" aria-labelledby={titleId}>
-      <Header themes={theme}>
+      <Header themes={theme} togglable={togglable}>
         <Title themes={theme} id={titleId}>
-          <Icon color={iconColor} $theme={theme} />
           <StyledHeading type="blockTitle" tag={titleTag}>
+            <Icon color={iconColor} $theme={theme} />
             {title}
           </StyledHeading>
         </Title>
@@ -126,14 +126,26 @@ const Wrapper = styled(Base)<{ themes: Theme; role: string }>`
   }}
 `
 
-const Header = styled.div<{ themes: Theme }>`
+const Header = styled.div<{ themes: Theme; togglable: boolean }>(
+  ({ togglable }) => `
   display: flex;
   justify-content: space-between;
   align-items: center;
-`
+
+  ${
+    togglable &&
+    // (SecondaryButton(27px) - Heading(14px)) / 2 = 6.5px
+    `
+    margin-top: -6.5px;
+    margin-bottom: -6.5px;
+  `
+  }
+`,
+)
 
 const Title = styled.div<{ themes: Theme }>`
   vertical-align: middle;
+  line-height: 1;
   ${({ themes }) => {
     const { pxToRem, space } = themes.size
 
