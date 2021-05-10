@@ -49,7 +49,12 @@ export const Select: FC<Props> = ({
       disabled={props.disabled}
       themes={theme}
     >
-      <SelectBox onChange={handleChange} themes={theme} {...props}>
+      <SelectBox
+        onChange={handleChange}
+        aria-invalid={error || undefined}
+        themes={theme}
+        {...props}
+      >
         {hasBlank && <option value="">{blankLabel}</option>}
         {options.map((option) => {
           if ('value' in option) {

@@ -171,6 +171,7 @@ export const SingleComboBox: VFC<Props> = ({
       aria-haspopup="listbox"
       aria-controls={aria.listBoxId}
       aria-expanded={isFocused}
+      aria-invalid={error || undefined}
     >
       <StyledInput
         type="text"
