@@ -47,6 +47,7 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) =
         textAreaWidth={textAreaWidth}
         ref={ref}
         themes={theme}
+        aria-invalid={props.error || undefined}
       />
       {maxLength && (
         <Counter themes={theme}>
