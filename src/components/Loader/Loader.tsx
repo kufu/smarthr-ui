@@ -183,10 +183,10 @@ const Ticker = styled.div`
 
 const Text = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, size } = themes
+    const { palette, size, spacingByChar } = themes
 
     return css`
-      margin-top: ${size.pxToRem(size.space.XS)};
+      margin-top: ${spacingByChar(1)};
       font-size: ${size.pxToRem(size.font.TALL)};
       text-align: center;
 

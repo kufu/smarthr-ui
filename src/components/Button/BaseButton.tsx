@@ -78,7 +78,7 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   ${({ themes, wide }) => {
-    const { frame, size, interaction, shadow } = themes
+    const { frame, size, spacingByChar, interaction, shadow } = themes
 
     return css`
       display: inline-flex;
@@ -100,13 +100,13 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       &.default {
         font-size: ${size.pxToRem(size.font.TALL)};
         height: 40px;
-        padding: 0 ${size.pxToRem(size.space.XS)};
+        padding: 0 ${spacingByChar(1)};
       }
 
       &.s {
         font-size: ${size.pxToRem(size.font.SHORT)};
         height: 27px;
-        padding: 0 ${size.pxToRem(size.space.XXS)};
+        padding: 0 ${spacingByChar(0.5)};
       }
 
       &.square {
@@ -144,20 +144,18 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   }}
 `
 const Prefix = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: inline-flex;
-      margin-right: ${pxToRem(space.XXS)};
+      margin-right: ${spacingByChar(0.5)};
     `
   }}
 `
 const Suffix = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: inline-flex;
-      margin-left: ${pxToRem(space.XXS)};
+      margin-left: ${spacingByChar(0.5)};
     `
   }}
 `

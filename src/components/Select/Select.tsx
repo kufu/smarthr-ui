@@ -128,13 +128,13 @@ const Wrapper = styled.div<{
 })
 const SelectBox = styled.select<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame, palette } = themes
+    const { size, spacingByChar, frame, palette } = themes
 
     return css`
       display: inline-block;
       width: 100%;
-      padding: ${size.pxToRem(size.space.XXS)};
-      padding-right: ${size.pxToRem(size.space.M)};
+      padding: ${spacingByChar(0.5)};
+      padding-right: ${spacingByChar(2)};
       border-radius: ${frame.border.radius.m};
       border: none;
       background-color: transparent;

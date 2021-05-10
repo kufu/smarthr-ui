@@ -85,11 +85,11 @@ const Logo = styled.div`
 `
 const Title = styled.h1<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
-    const { pxToRem, space, font } = size
+    const { size, spacingByChar, palette } = themes
+    const { font } = size
 
     return css`
-      margin: ${pxToRem(space.S)} 0 0;
+      margin: ${spacingByChar(1.5)} 0 0;
       background-color: ${palette.BACKGROUND};
       color: ${palette.TEXT_BLACK};
       font-weight: normal;
@@ -99,27 +99,23 @@ const Title = styled.h1<{ themes: Theme }>`
   }}
 `
 const Content = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      margin-top: ${pxToRem(space.XS)};
+      margin-top: ${spacingByChar(1)};
     `
   }}
 `
 const Links = styled.ul<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      margin: ${pxToRem(space.XS)} 0 0;
+      margin: ${spacingByChar(1)} 0 0;
       padding: 0;
       list-style: none;
       text-align: center;
       line-height: 1;
 
       > li:not(:first-child) {
-        margin-top: ${pxToRem(space.XS)};
+        margin-top: ${spacingByChar(1)};
       }
     `
   }}
@@ -147,12 +143,10 @@ const ExternalIcon = styled(FaExternalLinkAltIcon).attrs(() => ({
   vertical-align: -1px;
 `
 const FooterArea = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       width: 100%;
-      padding-top: ${space.XS}px;
+      padding-top: ${spacingByChar(1)};
     `
   }}
 `

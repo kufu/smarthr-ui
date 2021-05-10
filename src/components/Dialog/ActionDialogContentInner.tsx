@@ -125,7 +125,7 @@ const Title = styled.p<{ themes: Theme }>`
     const { pxToRem } = fontSize
     return css`
       margin: 0;
-      padding: ${pxToRem(spacing.XS)} ${pxToRem(spacing.S)};
+      padding: ${spacing.XS} ${spacing.S};
       border-bottom: ${border.shorthand};
       font-size: ${pxToRem(fontSize.GRANDE)};
       line-height: 1;
@@ -140,14 +140,12 @@ const Body = styled.div<{ offsetHeight: number }>`
     `
   }}
 `
-const ActionArea = styled.div<{ themes: Theme }>(({ themes: { fontSize, spacing, border } }) => {
-  const { pxToRem } = fontSize
-
+const ActionArea = styled.div<{ themes: Theme }>(({ themes: { spacing, border } }) => {
   return css`
     display: flex;
     flex-direction: column;
     border-top: ${border.shorthand};
-    padding: ${pxToRem(spacing.XS)} ${pxToRem(spacing.S)};
+    padding: ${spacing.XS} ${spacing.S};
 
     &&& > * + * {
       margin-top: 0.5rem;
@@ -206,14 +204,13 @@ const ResponseMessage: React.VFC<{
     </Wrapper>
   )
 }
-const ButtonArea = styled.div<{ themes: Theme }>(({ themes: { fontSize, spacing } }) => {
-  const { pxToRem } = fontSize
+const ButtonArea = styled.div<{ themes: Theme }>(({ themes: { spacing } }) => {
   return css`
     display: flex;
     justify-content: flex-end;
 
     > * + * {
-      margin-left: ${pxToRem(spacing.XS)};
+      margin-left: ${spacing.XS};
     }
   `
 })

@@ -272,34 +272,34 @@ const StyledInput = styled(Input)`
   }
 `
 const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, spacing } = themes
+  const { spacingByChar } = themes
   return css`
     height: 100%;
     box-sizing: border-box;
-    padding: ${fontSize.pxToRem(spacing.XXS)} 0;
+    padding: ${spacingByChar(0.5)} 0;
   `
 })
 const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { border, fontSize, spacing } = themes
+  const { border, spacingByChar } = themes
   return css`
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
     box-sizing: border-box;
-    padding-left: ${fontSize.pxToRem(spacing.XXS)};
+    padding-left: ${spacingByChar(0.5)};
     border-left: ${border.shorthand};
   `
 })
 const ClearButton = styled(ResetButton)<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacing } = themes
+    const { spacingByChar } = themes
     return css`
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100%;
-      padding: 0 ${fontSize.pxToRem(spacing.XXS)};
+      padding: 0 ${spacingByChar(0.5)};
       cursor: pointer;
       &.hidden {
         display: none;

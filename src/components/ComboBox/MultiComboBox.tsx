@@ -258,11 +258,11 @@ export const MultiComboBox: FC<Props> = ({
 
 const Container = styled.div<{ themes: Theme; width: number | string }>`
   ${({ themes, width }) => {
-    const { frame, size, palette, shadow } = themes
+    const { frame, palette, shadow, spacingByChar } = themes
 
     return css`
       display: inline-flex;
-      min-width: calc(62px + 32px + ${size.pxToRem(size.space.XXS)} * 2);
+      min-width: calc(62px + 32px + ${spacingByChar(0.5)} * 2);
       width: ${typeof width === 'number' ? `${width}px` : width};
       min-height: 40px;
       border-radius: ${frame.border.radius.m};
@@ -287,18 +287,14 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
   }}
 `
 const InputArea = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, spacing } = themes
-
-    return css`
-      /* for IE */
-      /* stylelint-disable-next-line length-zero-no-unit */
-      flex: 1 1 0px;
-      overflow-y: auto;
-      max-height: 300px;
-      padding-left: ${fontSize.pxToRem(spacing.XXS)};
-    `
-  }}
+  ${({ themes: { spacingByChar } }) => css`
+    /* for IE */
+    /* stylelint-disable-next-line length-zero-no-unit */
+    flex: 1 1 0px;
+    overflow-y: auto;
+    max-height: 300px;
+    padding-left: ${spacingByChar(0.5)};
+  `}
 `
 const smallMargin = 6.5
 const borderWidth = 1
@@ -306,7 +302,7 @@ const List = styled.ul<{ themes: Theme }>`
   ${({ themes }) => {
     const {
       fontSize: { pxToRem },
-      spacing,
+      spacingByChar,
     } = themes
 
     return css`
@@ -318,7 +314,7 @@ const List = styled.ul<{ themes: Theme }>`
 
       > li {
         min-height: 27px;
-        margin-right: ${pxToRem(spacing.XXS)};
+        margin-right: ${spacingByChar(0.5)};
         margin-bottom: ${pxToRem(smallMargin - borderWidth)};
       }
     `
@@ -326,12 +322,11 @@ const List = styled.ul<{ themes: Theme }>`
 `
 const SelectedItem = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { border, color, fontSize, spacing } = themes
-    const { pxToRem } = fontSize
+    const { border, color, fontSize, spacingByChar } = themes
 
     return css`
       display: flex;
-      border-radius: calc(${fontSize.SHORT}px + ${pxToRem(spacing.XXS - borderWidth)} * 2);
+      border-radius: calc(${fontSize.SHORT}px + (${spacingByChar(0.5)} - ${borderWidth}px) * 2);
       border: ${border.shorthand};
       background-color: #fff;
       color: ${color.TEXT_BLACK};
@@ -341,27 +336,16 @@ const SelectedItem = styled.div<{ themes: Theme }>`
   }}
 `
 const SelectedItemLabel = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const {
-      fontSize: { pxToRem },
-      spacing,
-    } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      padding: ${pxToRem(spacing.XXS - borderWidth)};
+      padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);
     `
   }}
 `
 const DeleteButton = styled(ResetButton)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const {
-      fontSize: { pxToRem },
-      spacing,
-      shadow,
-    } = themes
-
+  ${({ themes: { spacingByChar, shadow } }) => {
     return css`
-      padding: ${pxToRem(spacing.XXS - borderWidth)};
+      padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);
       border-radius: 50%;
       cursor: pointer;
       line-height: 0;
@@ -377,7 +361,6 @@ const DeleteButton = styled(ResetButton)<{ themes: Theme }>`
     `
   }}
 `
-
 const InputWrapper = styled.li`
   &.hidden {
     position: absolute;
@@ -419,17 +402,14 @@ const Placeholder = styled.p<{ themes: Theme }>`
   }}
 `
 const Suffix = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { spacing, fontSize, border } = themes
-
-    return css`
+  ${({ themes: { spacingByChar, border } }) =>
+    css`
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: ${fontSize.pxToRem(spacing.XXS)} 0;
-      padding: 0 ${fontSize.pxToRem(spacing.XXS)};
+      margin: ${spacingByChar(0.5)} 0;
+      padding: 0 ${spacingByChar(0.5)};
       border-left: ${border.shorthand};
       box-sizing: border-box;
-    `
-  }}
+    `}
 `

@@ -42,12 +42,7 @@ const callIcon = (type: IconType, theme: Theme) => {
 
 const createIcon = (Icon: typeof FaInfoCircleIcon) =>
   styled(Icon)<{ $theme: Theme }>(
-    ({
-      $theme: {
-        spacing,
-        fontSize: { pxToRem },
-      },
-    }) => css`
+    ({ $theme: { spacingByChar } }) => css`
       flex-shrink: 0;
 
       /*
@@ -55,7 +50,7 @@ const createIcon = (Icon: typeof FaInfoCircleIcon) =>
       translate-y 0.25em transform for leading
       */
       transform: translateY(0.25em);
-      margin-right: ${pxToRem(spacing.XXS)};
+      margin-right: ${spacingByChar(0.5)};
     `,
   )
 const InfoIcon = createIcon(FaInfoCircleIcon)
@@ -64,17 +59,11 @@ const WarningIcon = createIcon(FaExclamationTriangleIcon)
 const ErrorIcon = createIcon(FaExclamationCircleIcon)
 
 const Wrapper = styled(Base)<{ themes: Theme }>`
-  ${({
-    themes: {
-      fontSize: { pxToRem },
-      spacing,
-      shadow,
-    },
-  }) => {
+  ${({ themes: { spacingByChar, shadow } }) => {
     return css`
       display: flex;
       box-shadow: ${shadow.DIALOG};
-      padding: ${pxToRem(spacing.XS)};
+      padding: ${spacingByChar(1)};
     `
   }}
 `

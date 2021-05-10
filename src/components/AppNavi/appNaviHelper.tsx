@@ -33,13 +33,11 @@ export const getIconComponent = (
 }
 
 const IconWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: flex;
       padding: 0;
-      margin: 0 ${pxToRem(space.XXS)} 0 0;
+      margin: 0 ${spacingByChar(0.5)} 0 0;
     `
   }}
 `

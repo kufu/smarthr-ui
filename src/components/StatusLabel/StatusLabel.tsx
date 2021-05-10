@@ -21,15 +21,14 @@ export const StatusLabel: FC<Props> = ({ type = 'done', className = '', children
 
 const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
-    const XXXS = size.space.XXS / 2
+    const { size, spacingByChar, palette } = themes
 
     return css`
       box-sizing: border-box;
       display: inline-block;
       margin: 0;
       border: 1px solid transparent;
-      padding: ${size.pxToRem(XXXS)} ${size.pxToRem(size.space.XXS)};
+      padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
       background-color: #fff;
       text-align: center;
       white-space: nowrap;

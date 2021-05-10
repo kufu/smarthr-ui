@@ -58,10 +58,10 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
 
 const Title = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame } = themes
+    const { size, spacingByChar, frame } = themes
     return css`
       margin: 0;
-      padding: ${size.pxToRem(size.space.XS)} ${size.pxToRem(size.space.S)};
+      padding: ${spacingByChar(1)} ${spacingByChar(1.5)};
       border-bottom: ${frame.border.default};
       font-size: ${size.pxToRem(size.font.GRANDE)};
       line-height: 1;
@@ -69,12 +69,12 @@ const Title = styled.p<{ themes: Theme }>`
   }}
 `
 const Description = styled.div<{ themes: Theme; offsetHeight: number }>`
-  ${({ themes, offsetHeight }) => {
-    const { pxToRem, space, font } = themes.size
+  ${({ themes: { size, spacingByChar }, offsetHeight }) => {
+    const { pxToRem, font } = size
     return css`
       max-height: calc(100vh - ${offsetHeight}px);
       overflow: auto;
-      padding: 0 ${pxToRem(space.S)};
+      padding: 0 ${spacingByChar(1.5)};
       font-size: ${pxToRem(font.TALL)};
       line-height: 1.5;
     `
@@ -82,11 +82,11 @@ const Description = styled.div<{ themes: Theme; offsetHeight: number }>`
 `
 const Bottom = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame } = themes
+    const { spacingByChar, frame } = themes
     return css`
       display: flex;
       justify-content: flex-end;
-      padding: ${size.pxToRem(size.space.XS)} ${size.pxToRem(size.space.S)};
+      padding: ${spacingByChar(1)} ${spacingByChar(1.5)};
       border-top: ${frame.border.default};
     `
   }}
