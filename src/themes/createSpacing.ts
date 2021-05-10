@@ -76,3 +76,5 @@ export const createSpacing = (userBaseSize: number = defaultBaseSize) => getSpac
 export const createSpacingByChar = (userBaseSize: number = defaultBaseSize) => (
   size: CharRelativeSize,
 ) => getSpacingByChar(userBaseSize)[size]
+
+export const defaultSpacing = createSpacing()
