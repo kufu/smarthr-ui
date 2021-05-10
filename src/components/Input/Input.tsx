@@ -96,6 +96,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           suffixWidth={suffixWidth}
           ref={innerRef}
           themes={theme}
+          aria-invalid={props.error || undefined}
         />
         {suffix && (
           <Suffix themes={theme} ref={suffixRef}>
