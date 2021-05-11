@@ -333,12 +333,12 @@ const AddText = styled.span<{ themes: Theme }>`
   }}
 `
 const LoaderWrapper = styled.div<{ themes: Theme }>`
-  ${({ themes: { fontSize, spacing } }) => {
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: ${fontSize.pxToRem(spacing.XS)};
+      padding: ${spacingByChar(1)};
     `
   }}
 `
