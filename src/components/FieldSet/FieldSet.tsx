@@ -1,8 +1,9 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
+import { useClassNames } from './useClassNames'
 
 import { Input, Props as InputProps } from '../Input'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
@@ -18,8 +19,9 @@ type Props = Omit<InputProps, 'error'> & {
   labelSuffix?: ReactNode
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const FieldSet: VFC<Props> = ({
+export const FieldSet: VFC<Props & ElementProps> = ({
   label,
   labelType = 'subBlockTitle',
   labelTagType = 'span',
@@ -32,35 +34,44 @@ export const FieldSet: VFC<Props> = ({
 }) => {
   const theme = useTheme()
   const helpId = useId()
+  const classNames = useClassNames()
 
   return (
     <Wrapper
       $width={props.width || 'auto'}
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       aria-describedby={helpMessage ? helpId : undefined}
     >
-      <Title themes={theme}>
-        <TitleText type={labelType} tag={labelTagType}>
+      <Title themes={theme} className={classNames.title}>
+        <TitleText type={labelType} tag={labelTagType} className={classNames.titleText}>
           {label}
         </TitleText>
 
-        {props.required && <StatusLabel type="required">必須</StatusLabel>}
+        {props.required && (
+          <StatusLabel type="required" className={classNames.label}>
+            必須
+          </StatusLabel>
+        )}
 
         {labelSuffix && labelSuffix}
       </Title>
 
-      {children ? children : <Input {...props} error={!!errorMessage} />}
+      {children ? (
+        children
+      ) : (
+        <Input {...props} error={!!errorMessage} className={classNames.input} />
+      )}
 
       {errorMessage &&
         (typeof errorMessage === 'string' ? [errorMessage] : errorMessage).map((message) => (
-          <Error themes={theme} key={message}>
-            <ErrorIcon color={theme.palette.DANGER} />
-            <ErrorText>{message}</ErrorText>
+          <Error themes={theme} key={message} className={classNames.error}>
+            <ErrorIcon color={theme.palette.DANGER} className={classNames.errorIcon} />
+            <ErrorText className={classNames.errorText}>{message}</ErrorText>
           </Error>
         ))}
 
       {helpMessage && (
-        <Help id={helpId} themes={theme}>
+        <Help id={helpId} themes={theme} className={classNames.help}>
           {helpMessage}
         </Help>
       )}
@@ -75,13 +86,13 @@ const Wrapper = styled.div<{ $width: string | number }>`
   `}
 `
 const Title = styled.div<{ themes: Theme }>`
-  ${({ themes }) => css`
+  ${({ themes: { spacingByChar } }) => css`
     display: flex;
     align-items: center;
-    margin: 0 0 ${themes.size.pxToRem(themes.size.space.XXS)};
+    margin: 0 0 ${spacingByChar(0.5)};
 
     > *:not(:first-child) {
-      margin-left: ${themes.size.pxToRem(themes.size.space.XXS)};
+      margin-left: ${spacingByChar(0.5)};
     }
   `}
 `
@@ -89,17 +100,17 @@ const TitleText = styled(Heading)`
   display: inline-block;
 `
 const Help = styled.div<{ themes: Theme }>`
-  ${({ themes }) => css`
-    margin: ${themes.size.pxToRem(themes.size.space.XXS)} 0 0 0;
-    font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
+  ${({ themes: { color, size, spacingByChar } }) => css`
+    margin: ${spacingByChar(0.5)} 0 0 0;
+    font-size: ${size.pxToRem(size.font.SHORT)};
     line-height: 1;
-    color: ${themes.palette.TEXT_GREY};
+    color: ${color.TEXT_GREY};
   `}
 `
 const Error = styled.div<{ themes: Theme }>`
-  ${({ themes }) => css`
-    margin: ${themes.size.pxToRem(themes.size.space.XXS)} 0 0 0;
-    font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
+  ${({ themes: { size, spacingByChar } }) => css`
+    margin: ${spacingByChar(0.5)} 0 0 0;
+    font-size: ${size.pxToRem(size.font.SHORT)};
     line-height: 1;
   `}
 `

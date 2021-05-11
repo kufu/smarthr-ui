@@ -79,7 +79,7 @@ const Wrapper = styled.li<{ themes: Theme }>`
 
 const Button = styled(ResetButton)<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { size, spacingByChar } = themes
 
     return css`
       width: 100%;
@@ -88,23 +88,21 @@ const Button = styled(ResetButton)<{ themes: Theme }>`
       cursor: pointer;
 
       &.default {
-        padding: ${size.pxToRem(size.space.XS)};
+        padding: ${spacingByChar(1)};
         font-size: ${size.pxToRem(size.font.TALL)};
       }
 
       &.s {
-        padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+        padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
         font-size: ${size.pxToRem(size.font.SHORT)};
       }
     `
   }}
 `
 const PrefixWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      margin-right: ${size.pxToRem(size.space.XXS)};
+      margin-right: ${spacingByChar(0.5)};
     `
   }}
 `

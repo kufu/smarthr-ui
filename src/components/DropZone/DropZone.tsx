@@ -84,7 +84,7 @@ export const DropZone: React.VFC<DropZoneProps & ElementProps> = ({
 
 const Wrapper = styled.div<{ theme: Theme; filesDraggedOver: boolean }>`
   ${({ theme, filesDraggedOver }) => {
-    const { palette, frame, size } = theme
+    const { palette, frame, spacingByChar } = theme
     const border = filesDraggedOver
       ? `solid ${frame.border.lineWidth} ${palette.MAIN}`
       : `dashed ${frame.border.lineWidth} ${palette.BORDER}`
@@ -93,7 +93,7 @@ const Wrapper = styled.div<{ theme: Theme; filesDraggedOver: boolean }>`
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: ${size.pxToRem(size.space.L)};
+      padding: ${spacingByChar(2.5)};
       border: ${border};
       background-color: ${palette.COLUMN};
       > input {
