@@ -13,31 +13,42 @@ storiesOf('TextLink', module)
   })
   .add('all', () => {
     const onClick = (e?: React.MouseEvent) => {
+      const href = '/'
+
       if (!e) {
-        return '/'
+        return href
       }
 
-      location.href = '/'
+      location.href = href
       return
     }
 
     return (
       <Wrapper>
-        <TextLink href="/" prefix={<FaFlagIcon />}>
-          Link to Root.
-        </TextLink>
-        <br />
-        <TextLink href={onClick()} onClick={onClick} suffix={<FaExternalLinkAltIcon />}>
-          unuse shortcut click: Open root page with change locale.href.
-          <br />
-          use Cmd + click: Open root page with new Tabs.
-        </TextLink>
-        <br />
-        <TextLink>unuse href attribute: can tab focasable.</TextLink>
+        <li>
+          <TextLink href="/" prefix={<FaFlagIcon />}>
+            Link to Root.
+          </TextLink>
+        </li>
+        <li>
+          <TextLink href={onClick()} onClick={onClick} suffix={<FaExternalLinkAltIcon />}>
+            unuse shortcut click: Open root page with change locale.href.
+            <br />
+            use Cmd + click: Open root page with new Tabs.
+          </TextLink>
+        </li>
+        <li>
+          <TextLink>unuse href attribute: can tab focasable.</TextLink>
+        </li>
       </Wrapper>
     )
   })
 
-const Wrapper = styled.div`
+const Wrapper = styled.ul`
+  list-style: none;
   margin: 24px;
+
+  li + li {
+    margin-top: 16px;
+  }
 `
