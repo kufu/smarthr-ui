@@ -1,6 +1,7 @@
 import React, { AnchorHTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { FaExternalLinkAltIcon } from '../Icon'
 
 type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Props>
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
 
 export const TextLink: VFC<Props & ElementProps> = ({
   href = '',
+  target,
   onClick,
   children,
   prefix,
@@ -18,12 +20,20 @@ export const TextLink: VFC<Props & ElementProps> = ({
   ...props
 }) => {
   const theme = useTheme()
+  const actualSuffix =
+    suffix || (target === '_blank' ? <FaExternalLinkAltIcon aria-label="別タブで開く" /> : null)
 
   return (
-    <StyledAncher {...props} href={href} onClick={generateOnClick(href, onClick)} themes={theme}>
+    <StyledAncher
+      {...props}
+      href={href}
+      target={target}
+      onClick={generateOnClick(href, onClick)}
+      themes={theme}
+    >
       {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
       {children}
-      {suffix && <SuffixWrapper themes={theme}>{suffix}</SuffixWrapper>}
+      {actualSuffix && <SuffixWrapper themes={theme}>{actualSuffix}</SuffixWrapper>}
     </StyledAncher>
   )
 }

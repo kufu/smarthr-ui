@@ -2,7 +2,7 @@ import { storiesOf } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
 import { TextLink } from './TextLink'
-import { FaExternalLinkAltIcon, FaFlagIcon } from '../Icon'
+import { FaFlagIcon } from '../Icon'
 import readme from './README.md'
 
 storiesOf('TextLink', module)
@@ -31,7 +31,12 @@ storiesOf('TextLink', module)
           </TextLink>
         </li>
         <li>
-          <TextLink href={onClick()} onClick={onClick} suffix={<FaExternalLinkAltIcon />}>
+          <TextLink href="/" target="_blank">
+            Link to Root with new Tabs.
+          </TextLink>
+        </li>
+        <li>
+          <TextLink href={onClick()} onClick={onClick}>
             unuse shortcut click: Open root page with change locale.href.
             <br />
             use Cmd + click: Open root page with new Tabs.
