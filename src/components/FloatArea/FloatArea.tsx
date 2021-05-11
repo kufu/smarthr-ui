@@ -59,8 +59,8 @@ export const FloatArea: VFC<Props> = ({
 }
 
 const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string }>`
-  ${({ themes: { spacing, fontSize }, top, bottom, $width, zIndex = 500 }) => {
-    return css`
+  ${({ themes: { spacingByChar }, top, bottom, $width, zIndex = 500 }) =>
+    css`
       display: flex;
       align-items: center;
       position: fixed;
@@ -68,20 +68,18 @@ const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string 
       ${exist(bottom) && `bottom: ${bottom}px;`}
       z-index: ${zIndex};
       width: ${$width};
-      padding: ${fontSize.pxToRem(spacing.XS)};
-    `
-  }}
+      padding: ${spacingByChar(1)};
+    `}
 `
 
 const ActionArea = styled.div<{ themes: Theme }>`
-  ${({ themes: { fontSize, spacing } }) => {
-    return css`
+  ${({ themes: { spacingByChar } }) =>
+    css`
       > button,
       > a {
-        margin-left: ${fontSize.pxToRem(spacing.XS)};
+        margin-left: ${spacingByChar(1)};
       }
-    `
-  }}
+    `}
 `
 const ErrorTextArea = styled.p`
   display: flex;
@@ -91,12 +89,11 @@ const ErrorTextArea = styled.p`
   max-width: 40%;
 `
 const ErrorIcon = styled.div<{ themes: Theme }>`
-  ${({ themes: { fontSize, spacing } }) => {
-    return css`
-      margin-right: ${fontSize.pxToRem(spacing.XXS)};
+  ${({ themes: { spacingByChar } }) =>
+    css`
+      margin-right: ${spacingByChar(0.5)};
       flex-shrink: 0;
-    `
-  }}
+    `}
 `
 
 const ErrorText = styled.div<{ themes: Theme }>`

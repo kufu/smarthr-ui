@@ -47,24 +47,24 @@ const List = styled.ul<{ themes: Theme }>(({ themes }) => {
   `
 })
 const Item = styled.li<{ themes: Theme }>(({ themes }) => {
-  const { size } = themes
+  const { size, spacingByChar } = themes
   return css`
     line-height: 1em;
     &:not(:first-child) {
-      margin-top: ${size.pxToRem(size.space.XS)};
+      margin-top: ${spacingByChar(1)};
     }
     & > ${List} {
-      margin-top: ${size.pxToRem(size.space.XS)};
-      margin-left: ${size.pxToRem(size.space.S)};
+      margin-top: ${spacingByChar(1)};
+      margin-left: ${spacingByChar(1.5)};
       font-size: ${size.pxToRem(size.font.SHORT)};
     }
   `
 })
 const Anchor = styled.a<{ themes: Theme; current?: boolean }>(({ themes, current }) => {
-  const { palette, size } = themes
+  const { palette, spacingByChar } = themes
   return css`
     display: inline-block;
-    padding-left: ${size.pxToRem(size.space.XXS)};
+    padding-left: ${spacingByChar(0.5)};
     border-left: 2px solid;
     border-color: ${current ? palette.MAIN : 'transparent'};
     line-height: 1em;

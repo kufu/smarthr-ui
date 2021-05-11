@@ -102,11 +102,11 @@ const Wrapper = styled.div`
 `
 
 const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
-  const { palette, size } = themes
+  const { palette, size, spacingByChar } = themes
   return css`
     font-size: ${size.pxToRem(size.font.TALL)};
-    padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
-    margin-bottom: ${size.pxToRem(size.space.XS)};
+    padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
+    margin-bottom: ${spacingByChar(1)};
     background-color: ${palette.COLUMN};
     list-style: none;
 
@@ -170,7 +170,7 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
 })
 
 const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
-  const { frame, palette, size } = themes
+  const { frame, palette, size, spacingByChar } = themes
   return css`
     font-family: inherit;
     font-weight: bold;
@@ -187,13 +187,13 @@ const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
     &.default {
       font-size: ${size.pxToRem(size.font.TALL)};
       height: 40px;
-      padding: 0 ${size.pxToRem(size.space.XS)};
+      padding: 0 ${spacingByChar(1)};
     }
 
     &.s {
       font-size: ${size.pxToRem(size.font.SHORT)};
       height: 27px;
-      padding: 0 ${size.pxToRem(size.space.XXS)};
+      padding: 0 ${spacingByChar(0.5)};
     }
 
     &.square {
@@ -222,11 +222,10 @@ const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
 })
 
 const Prefix = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: inline-flex;
-      margin-right: ${pxToRem(space.XXS)};
+      margin-right: ${spacingByChar(0.5)};
     `
   }}
 `

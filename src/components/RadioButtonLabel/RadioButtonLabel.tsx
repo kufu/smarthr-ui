@@ -43,9 +43,9 @@ const Label = styled.label<{ themes: Theme }>`
 `
 const Txt = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { size, spacingByChar } = themes
     return css`
-      margin: 0 0 0 ${size.pxToRem(size.space.XXS)};
+      margin: 0 0 0 ${spacingByChar(0.5)};
       font-size: ${size.pxToRem(size.font.TALL)};
     `
   }}

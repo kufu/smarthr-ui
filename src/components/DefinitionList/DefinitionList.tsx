@@ -78,10 +78,9 @@ const Wrapper = styled.dl<{ layout: LayoutType }>`
   }}
 `
 const Item = styled(DefinitionListItem)<{ themes: Theme; layout: LayoutType }>`
-  ${({ themes, layout }) => {
-    const { pxToRem, space } = themes.size
+  ${({ themes: { spacingByChar }, layout }) => {
     const basicStyle = css`
-      margin-bottom: ${pxToRem(space.S)};
+      margin-bottom: ${spacingByChar(1.5)};
     `
 
     switch (layout) {

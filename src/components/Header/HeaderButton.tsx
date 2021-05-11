@@ -47,13 +47,11 @@ const Wrapper = styled.button<{ themes: Theme }>`
   }}
 `
 const IconWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 ${size.pxToRem(size.space.XXS)} 0 0;
+      margin: 0 ${spacingByChar(0.5)} 0 0;
       vertical-align: middle;
     `
   }}
