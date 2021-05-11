@@ -53,13 +53,13 @@ export const Cell: FC<Props & ElementProps> = ({
 
 const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
   ${({ themes, onClick }) => {
-    const { size, palette, interaction } = themes
+    const { size, spacingByChar, palette, interaction } = themes
 
     return css`
       height: ${size.pxToRem(40)};
       font-size: ${size.pxToRem(size.font.SHORT)};
       font-weight: bold;
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       color: ${palette.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
       text-align: left;
@@ -91,12 +91,12 @@ const Td = styled.td<{ themes: Theme }>`
   }
 
   ${({ themes }) => {
-    const { size, palette, frame } = themes
+    const { size, spacingByChar, palette, frame } = themes
 
     return css`
       color: ${palette.TEXT_BLACK};
       height: ${size.pxToRem(44)};
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       border-top: ${frame.border.default};
       font-size: ${size.pxToRem(size.font.TALL)};
       line-height: 1.5;

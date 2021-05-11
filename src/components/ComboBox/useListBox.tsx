@@ -230,7 +230,7 @@ export function useListBox({
 
 const Container = styled.div<{ top: number; left: number; width: number; themes: Theme }>(
   ({ top, left, width, themes }) => {
-    const { size, frame } = themes
+    const { spacingByChar, frame } = themes
     return css`
       position: absolute;
       top: ${top}px;
@@ -238,7 +238,7 @@ const Container = styled.div<{ top: number; left: number; width: number; themes:
       overflow-y: auto;
       max-height: 300px;
       width: ${width}px;
-      padding: ${size.pxToRem(size.space.XXS)} 0;
+      padding: ${spacingByChar(0.5)} 0;
       border-radius: ${frame.border.radius.m};
       box-shadow: rgba(51, 51, 51, 0.3) 0 4px 10px 0;
       background-color: #fff;
@@ -253,11 +253,11 @@ const Container = styled.div<{ top: number; left: number; width: number; themes:
 )
 const NoItems = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { size, spacingByChar } = themes
 
     return css`
       margin: 0;
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: #fff;
       font-size: ${size.font.TALL}px;
     `
@@ -265,13 +265,13 @@ const NoItems = styled.p<{ themes: Theme }>`
 `
 const SelectButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { size, spacingByChar, palette } = themes
 
     return css`
       display: block;
       width: 100%;
       border: none;
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: #fff;
       font-size: ${size.font.TALL}px;
       text-align: left;

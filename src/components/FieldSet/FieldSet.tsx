@@ -86,13 +86,13 @@ const Wrapper = styled.div<{ $width: string | number }>`
   `}
 `
 const Title = styled.div<{ themes: Theme }>`
-  ${({ themes }) => css`
+  ${({ themes: { spacingByChar } }) => css`
     display: flex;
     align-items: center;
-    margin: 0 0 ${themes.size.pxToRem(themes.size.space.XXS)};
+    margin: 0 0 ${spacingByChar(0.5)};
 
     > *:not(:first-child) {
-      margin-left: ${themes.size.pxToRem(themes.size.space.XXS)};
+      margin-left: ${spacingByChar(0.5)};
     }
   `}
 `
@@ -100,17 +100,17 @@ const TitleText = styled(Heading)`
   display: inline-block;
 `
 const Help = styled.div<{ themes: Theme }>`
-  ${({ themes }) => css`
-    margin: ${themes.size.pxToRem(themes.size.space.XXS)} 0 0 0;
-    font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
+  ${({ themes: { color, size, spacingByChar } }) => css`
+    margin: ${spacingByChar(0.5)} 0 0 0;
+    font-size: ${size.pxToRem(size.font.SHORT)};
     line-height: 1;
-    color: ${themes.palette.TEXT_GREY};
+    color: ${color.TEXT_GREY};
   `}
 `
 const Error = styled.div<{ themes: Theme }>`
-  ${({ themes }) => css`
-    margin: ${themes.size.pxToRem(themes.size.space.XXS)} 0 0 0;
-    font-size: ${themes.size.pxToRem(themes.size.font.SHORT)};
+  ${({ themes: { size, spacingByChar } }) => css`
+    margin: ${spacingByChar(0.5)} 0 0 0;
+    font-size: ${size.pxToRem(size.font.SHORT)};
     line-height: 1;
   `}
 `

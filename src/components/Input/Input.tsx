@@ -143,16 +143,16 @@ const StyledInput = styled.input<
 >`
   ${(props) => {
     const { prefixWidth, suffixWidth, themes } = props
-    const { size, palette, frame } = themes
+    const { size, spacingByChar, palette, frame } = themes
 
     return css`
       flex-grow: 1;
       display: inline-block;
       width: 100%;
-      padding-top: ${size.pxToRem(size.space.XXS)};
-      padding-bottom: ${size.pxToRem(size.space.XXS)};
-      padding-left: ${size.pxToRem(size.space.XXS + prefixWidth)};
-      padding-right: ${size.pxToRem(size.space.XXS + suffixWidth)};
+      padding-top: ${spacingByChar(0.5)};
+      padding-bottom: ${spacingByChar(0.5)};
+      padding-left: calc(${spacingByChar(0.5)} + ${prefixWidth}px);
+      padding-right: calc(${spacingByChar(0.5)} + ${suffixWidth}px);
       border: none;
       border-radius: ${frame.border.radius.m};
       font-size: ${size.pxToRem(size.font.TALL)};
@@ -172,27 +172,27 @@ const StyledInput = styled.input<
     `
   }}
 `
-const Prefix = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { size } = themes
-  return css`
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    padding-left: ${size.pxToRem(size.space.XXS)};
-  `
-})
-const Suffix = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { size } = themes
-  return css`
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    padding-right: ${size.pxToRem(size.space.XXS)};
-  `
-})
+const Prefix = styled.span<{ themes: Theme }>(
+  ({ themes: { spacingByChar } }) =>
+    css`
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      padding-left: ${spacingByChar(0.5)};
+    `,
+)
+const Suffix = styled.span<{ themes: Theme }>(
+  ({ themes: { spacingByChar } }) =>
+    css`
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      padding-right: ${spacingByChar(0.5)};
+    `,
+)
