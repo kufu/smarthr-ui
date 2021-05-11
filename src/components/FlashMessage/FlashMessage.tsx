@@ -134,7 +134,7 @@ const fadeAnimation = keyframes`
 
 const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
   ${({ themes, animation }) => {
-    const { size, spacing, radius, color, zIndex } = themes
+    const { spacingByChar, radius, color, zIndex } = themes
 
     let keyframe = bounceAnimation
     switch (animation) {
@@ -153,13 +153,15 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
       z-index: ${zIndex.FLASH_MESSAGE};
       display: flex;
       position: fixed;
-      bottom: ${size.pxToRem(spacing.XXS)};
-      left: ${size.pxToRem(spacing.XXS)};
+      bottom: ${spacingByChar(0.5)};
+      left: ${spacingByChar(0.5)};
       box-sizing: border-box;
       align-items: center;
-      min-width: ${size.pxToRem(200)};
-      padding: ${size.pxToRem(spacing.XXS)} ${size.pxToRem(spacing.XS)};
-      padding-right: ${size.pxToRem(spacing.XXS)};
+
+      /* border + padding + Icon + 10em + Button + margin */
+      min-width: calc(2px + ${spacingByChar(1.5)} + 14px + 8em + 27px + ${spacingByChar(1)});
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
+      padding-right: ${spacingByChar(0.5)};
       background-color: #fff;
       border: 1px solid ${color.BORDER};
       border-radius: ${radius.m};
@@ -171,7 +173,7 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
       }
 
       & > * + * {
-        margin-left: ${size.space.XXS}px;
+        margin-left: ${spacingByChar(0.5)};
       }
     `
   }}

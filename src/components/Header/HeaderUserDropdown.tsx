@@ -159,23 +159,19 @@ const TriggerButton = styled.button<{ themes: Theme }>`
   }}
 `
 const Avatar = styled.img<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       border-radius: 4px;
-      margin-right: ${size.pxToRem(size.space.XXS)};
+      margin-right: ${spacingByChar(0.5)};
     `
   }};
 `
 const CaretIcon = styled.figure<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 0 0 ${size.pxToRem(size.space.XXS)};
+      margin: 0 0 0 ${spacingByChar(0.5)};
       vertical-align: middle;
     `
   }}
@@ -198,14 +194,12 @@ const MenuListItem = styled.div`
   padding: 0;
 `
 const MenuListItemIcon = styled.figure<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: flex;
       align-items: center;
       padding: 0;
-      margin: 0 ${size.pxToRem(size.space.XXS)} 0 0;
+      margin: 0 ${spacingByChar(0.5)} 0 0;
     `
   }}
 `

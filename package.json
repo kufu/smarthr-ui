@@ -25,7 +25,7 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
     "@types/node": "^14.14.44",
-    "@types/react": "^17.0.3",
+    "@types/react": "^17.0.5",
     "@types/react-dom": "^17.0.3",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.4.1",
@@ -54,7 +54,7 @@
     "standard-version": "^9.2.0",
     "storybook-readme": "^5.0.9",
     "storycap": "^3.0.4",
-    "styled-components": "^5.2.3",
+    "styled-components": "^5.3.0",
     "styled-reset": "^4.3.4",
     "stylelint": "^13.13.1",
     "stylelint-config-prettier": "^8.0.2",
@@ -138,7 +138,7 @@
     "minimist": "1.2.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "@types/react": "^17.0.3",
+    "@types/react": "^17.0.5",
     "@babel/helper-compilation-targets": "^7.13.16"
   }
 }

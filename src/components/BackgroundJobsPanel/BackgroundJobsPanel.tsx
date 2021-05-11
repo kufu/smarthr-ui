@@ -125,51 +125,50 @@ const Header = styled.div`
   display: flex;
   align-items: center;
 `
-const Title = styled.div<{ themes: Theme }>(({ themes }) => {
-  const { font, pxToRem, space } = themes.size
+const Title = styled.div<{ themes: Theme }>(({ themes: { size, spacingByChar } }) => {
+  const { font, pxToRem } = size
   return css`
     font-size: ${pxToRem(font.TALL)};
-    padding: ${pxToRem(space.XS)};
+    padding: ${spacingByChar(1)};
   `
 })
-const HeaderButtonLayout = styled.div<{ themes: Theme }>(({ themes }) => {
-  const { pxToRem, space } = themes.size
+const HeaderButtonLayout = styled.div<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
   return css`
     flex-shrink: 0;
     margin-left: auto;
-    padding-right: ${pxToRem(space.XS)};
+    padding-right: ${spacingByChar(1)};
     button:not(:first-child) {
-      margin-left: ${pxToRem(space.XXS)};
+      margin-left: ${spacingByChar(0.5)};
     }
   `
 })
-const JobList = styled.ul<{ isExpanded: boolean; themes: Theme }>(({ isExpanded, themes }) => {
-  const { pxToRem, space } = themes.size
-  return css`
-    margin: 0;
-    list-style: none;
-    padding: ${pxToRem(space.XS)};
-    border-top: ${themes.frame.border.default};
-    ${!isExpanded &&
-    css`
-      height: 0;
-      visibility: hidden;
-      overflow: hidden;
-      padding-top: 0;
-      padding-bottom: 0;
-      border: none;
-    `}
-  `
-})
-const Job = styled.li<{ themes: Theme }>(({ themes }) => {
-  const { pxToRem, space } = themes.size
+const JobList = styled.ul<{ isExpanded: boolean; themes: Theme }>(
+  ({ isExpanded, themes: { frame, spacingByChar } }) => {
+    return css`
+      margin: 0;
+      list-style: none;
+      padding: ${spacingByChar(1)};
+      border-top: ${frame.border.default};
+      ${!isExpanded &&
+      css`
+        height: 0;
+        visibility: hidden;
+        overflow: hidden;
+        padding-top: 0;
+        padding-bottom: 0;
+        border: none;
+      `}
+    `
+  },
+)
+const Job = styled.li<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
   return css`
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
     line-height: normal;
     :not(:first-child) {
-      margin-top: ${pxToRem(space.XS)};
+      margin-top: ${spacingByChar(1)};
     }
   `
 })
@@ -177,30 +176,36 @@ const JobIconWrapper = styled.div`
   flex-shrink: 0;
   line-height: 0;
 `
-const JobName = styled(OmittableJobText)<{ themes: Theme }>(({ themes }) => {
-  const { font, pxToRem, space } = themes.size
-  return css`
-    margin-left: ${pxToRem(space.XXS)};
-    font-size: ${pxToRem(font.TALL)};
-  `
-})
-const JobDesc = styled(OmittableJobText)<{ themes: Theme }>(({ themes }) => {
-  const { font, pxToRem, space } = themes.size
-  return css`
-    margin-left: ${pxToRem(space.XXS)};
-    font-size: ${pxToRem(font.SHORT)};
-  `
-})
-const CancelButton = styled(ResetButton)<{ themes: Theme }>(({ themes }) => {
-  const { font, pxToRem, space } = themes.size
-  return css`
-    flex-shrink: 0;
-    margin-left: ${pxToRem(space.XXS)};
-    font-size: ${pxToRem(font.SHORT)};
-    color: ${themes.palette.TEXT_LINK};
-    cursor: pointer;
-    :hover {
-      text-decoration: underline;
-    }
-  `
-})
+const JobName = styled(OmittableJobText)<{ themes: Theme }>(
+  ({ themes: { size, spacingByChar } }) => {
+    const { font, pxToRem } = size
+    return css`
+      margin-left: ${spacingByChar(0.5)};
+      font-size: ${pxToRem(font.TALL)};
+    `
+  },
+)
+const JobDesc = styled(OmittableJobText)<{ themes: Theme }>(
+  ({ themes: { size, spacingByChar } }) => {
+    const { font, pxToRem } = size
+    return css`
+      margin-left: ${spacingByChar(0.5)};
+      font-size: ${pxToRem(font.SHORT)};
+    `
+  },
+)
+const CancelButton = styled(ResetButton)<{ themes: Theme }>(
+  ({ themes: { color, size, spacingByChar } }) => {
+    const { font, pxToRem } = size
+    return css`
+      flex-shrink: 0;
+      margin-left: ${spacingByChar(0.5)};
+      font-size: ${pxToRem(font.SHORT)};
+      color: ${color.TEXT_LINK};
+      cursor: pointer;
+      :hover {
+        text-decoration: underline;
+      }
+    `
+  },
+)

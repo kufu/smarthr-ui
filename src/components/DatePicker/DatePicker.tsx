@@ -265,23 +265,22 @@ const InputWrapper = styled.div``
 const StyledInput = styled(Input)`
   width: 100%;
 `
-const CalendarIconLayout = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { size } = themes
+const CalendarIconLayout = styled.span<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
   return css`
     height: 100%;
-    padding: ${size.pxToRem(size.space.XXS)} 0;
+    padding: ${spacingByChar(0.5)} 0;
     box-sizing: border-box;
   `
 })
 const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { palette, size } = themes
+  const { palette, size, spacingByChar } = themes
   return css`
     display: flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
     height: 100%;
-    padding-left: ${size.pxToRem(size.space.XXS)};
+    padding-left: ${spacingByChar(0.5)};
     border-left: 1px solid ${palette.BORDER};
     font-size: ${size.pxToRem(size.font.TALL)};
   `

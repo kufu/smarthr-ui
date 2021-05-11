@@ -1,6 +1,6 @@
 import { merge } from '../libs/lodash'
 
-const defaultHtmlFontSize = 16
+export const defaultHtmlFontSize = 16
 
 export interface FontSizeProperty {
   htmlFontSize?: number

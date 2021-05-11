@@ -84,16 +84,14 @@ export const BottomFixedArea: VFC<Props & ElementProps> = ({
 }
 
 const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
-  ${({ themes, zIndex }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar }, zIndex }) => {
     return css`
       display: flex;
       flex-direction: column;
       position: fixed;
       bottom: 0;
       width: 100%;
-      padding: ${pxToRem(space.S)};
+      padding: ${spacingByChar(1.5)};
       text-align: center;
       z-index: ${zIndex};
     `
@@ -103,18 +101,16 @@ const Text = styled.div`
   margin: 0;
 `
 const ButtonList = styled.ul<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      margin: ${pxToRem(space.XS)} 0 0 0;
+      margin: ${spacingByChar(1)} 0 0 0;
       padding: 0;
       display: flex;
       justify-content: center;
 
       > li {
         list-style: none;
-        margin-right: ${pxToRem(space.XS)};
+        margin-right: ${spacingByChar(1)};
 
         &:last-of-type {
           margin-right: 0;
@@ -124,18 +120,16 @@ const ButtonList = styled.ul<{ themes: Theme }>`
   }}
 `
 const TertiaryList = styled.ul<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      margin: ${pxToRem(space.XS)} 0 0 0;
+      margin: ${spacingByChar(1)} 0 0 0;
       padding: 0;
       display: flex;
       justify-content: center;
 
       > li {
         list-style: none;
-        margin-right: ${pxToRem(space.XS)};
+        margin-right: ${spacingByChar(1)};
 
         &:last-of-type {
           margin-right: 0;
