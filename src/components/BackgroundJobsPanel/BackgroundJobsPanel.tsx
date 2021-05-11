@@ -89,7 +89,7 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
             onClick={onClickClose}
             className={classNames.closeButton}
           >
-            <FaTimesIcon size={13} aria-label="Close" />
+            <FaTimesIcon size={13} visuallyHiddenText="閉じる" />
           </SecondaryButton>
         </HeaderButtonLayout>
       </Header>
