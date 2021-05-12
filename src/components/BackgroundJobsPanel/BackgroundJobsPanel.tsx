@@ -76,7 +76,11 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
             aria-controls={jobListId}
             className={classNames.toggleButton}
           >
-            {isExpanded ? <FaMinusIcon size={13} /> : <FaWindowMaximizeIcon size={13} />}
+            {isExpanded ? (
+              <FaMinusIcon size={13} visuallyHiddenText="折りたたむ" />
+            ) : (
+              <FaWindowMaximizeIcon size={13} visuallyHiddenText="展開する" />
+            )}
           </SecondaryButton>
           <SecondaryButton
             type="button"
@@ -85,7 +89,7 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
             onClick={onClickClose}
             className={classNames.closeButton}
           >
-            <FaTimesIcon size={13} aria-label="Close" />
+            <FaTimesIcon size={13} visuallyHiddenText="閉じる" />
           </SecondaryButton>
         </HeaderButtonLayout>
       </Header>
