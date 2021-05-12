@@ -90,8 +90,7 @@ export { SideNav } from './components/SideNav'
 export { CompactInformationPanel } from './components/CompactInformationPanel'
 
 // layout components
-export { Stack } from './components/Layout/Stack'
-export { LineUp } from './components/Layout/LineUp'
+export { LineUp, Stack } from './components/Layout'
 
 // themes
 export { createTheme } from './themes/createTheme'
