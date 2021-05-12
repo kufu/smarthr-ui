@@ -676,6 +676,45 @@ Size.parameters = {
   },
 }
 
+export const AltText: Story = () => (
+  <div>
+    <p>
+      <span id="text">連絡帳</span>
+    </p>
+    <dl>
+      <dt>visually hidden text</dt>
+      <dd>
+        <FaAddressBookIcon visuallyHiddenText="連絡帳" />
+      </dd>
+      <dt>
+        <code>aria-labelledby</code>
+      </dt>
+      <dd>
+        <FaAddressBookIcon aria-labelledby="text" />
+      </dd>
+      <dt>
+        <code>aria-label</code>
+      </dt>
+      <dd>
+        <FaAddressBookIcon aria-label="連絡帳" />
+      </dd>
+      <dt>
+        none ( <code>aria-hidden</code> )
+      </dt>
+      <dd>
+        <FaAddressBookIcon />
+      </dd>
+    </dl>
+  </div>
+)
+Size.parameters = {
+  docs: {
+    description: {
+      story: 'An icon can be any size.',
+    },
+  },
+}
+
 export const Color: Story = () => (
   <List>
     <FaAddressBookIcon size={40} color="#D4F4F5" />

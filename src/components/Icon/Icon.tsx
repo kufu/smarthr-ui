@@ -342,18 +342,15 @@ const IconComponent: React.VFC<IconComponentProps> = ({
   focusable = false,
   ...props
 }) => {
-  const hasAltText =
-    visuallyHiddenText !== undefined ||
-    props['aria-label'] !== undefined ||
-    props['aria-labelledby'] !== undefined
-  const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasAltText
+  const hasLabelByAria = props['aria-label'] !== undefined || props['aria-labelledby'] !== undefined
+  const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasLabelByAria
   return (
     <>
       {visuallyHiddenText && <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>}
       <Component
         className={className}
         role={role}
-        aria-hidden={isAriaHidden || undefined}
+        aria-hidden={isAriaHidden || visuallyHiddenText !== undefined || undefined}
         focusable={focusable}
         {...props}
       />
