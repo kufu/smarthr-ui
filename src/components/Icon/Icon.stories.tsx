@@ -637,7 +637,9 @@ export const All: Story = () => {
         return (
           <>
             <CatalogItem key={`${Component.displayName}`}>
-              <Component />
+              <dd>
+                <Component />
+              </dd>
               <IconName>{Component.displayName?.replace(/Icon$/, '')}</IconName>
             </CatalogItem>
           </>
@@ -737,13 +739,17 @@ const Container = styled.div`
   align-items: center;
   flex-wrap: wrap;
 `
-const CatalogItem = styled.div`
+const CatalogItem = styled.dl`
   margin: 10px;
   padding: 10px;
   background-color: #eee;
   text-align: center;
+
+  & > dd {
+    margin: 0;
+  }
 `
-const IconName = styled.p`
+const IconName = styled.dt`
   margin-top: 10px;
   font-size: 14px;
   color: #222;
