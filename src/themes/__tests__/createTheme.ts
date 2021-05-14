@@ -189,6 +189,7 @@ describe('createTheme', () => {
         TALL: 13,
         GRANDE: 14,
         VENTI: 15,
+        scaleFactor: 8,
       },
     })
 
@@ -197,6 +198,13 @@ describe('createTheme', () => {
     expect(actual.fontSize.TALL).toBe(13)
     expect(actual.fontSize.GRANDE).toBe(14)
     expect(actual.fontSize.VENTI).toBe(15)
+    expect(actual.fontSize.XXS).toBe(`${8 / 11}rem`)
+    expect(actual.fontSize.XS).toBe(`${8 / 10}rem`)
+    expect(actual.fontSize.S).toBe(`${8 / 9}rem`)
+    expect(actual.fontSize.M).toBe(`${8 / 8}rem`)
+    expect(actual.fontSize.L).toBe(`${8 / 7}rem`)
+    expect(actual.fontSize.XL).toBe(`${8 / 6}rem`)
+    expect(actual.fontSize.XXL).toBe(`${8 / 5}rem`)
   })
 
   it('returns theme reflecting "breakpoint" settings', () => {
