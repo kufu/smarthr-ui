@@ -93,7 +93,7 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
         {text}
       </Txt>
       <SecondaryButton className={`close ${classNames.button}`} onClick={onClose} size="s" square>
-        <FaTimesIcon size={16} />
+        <FaTimesIcon size={16} visuallyHiddenText="閉じる" />
       </SecondaryButton>
     </Wrapper>
   )

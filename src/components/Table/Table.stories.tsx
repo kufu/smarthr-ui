@@ -14,6 +14,7 @@ import { SecondaryButton as Button } from '../Button'
 import { Base as BaseComponent } from '../Base'
 
 import readme from './README.md'
+import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 
 const data = [
   {
@@ -53,13 +54,17 @@ storiesOf('Table', module)
           <Head bulkActionArea={'Bulk action area'}>
             <Row>
               <Cell>
-                <CheckBox name="tableCheckBox" checked={false} />
+                <VisuallyHiddenText>行を選択</VisuallyHiddenText>
+                <label>
+                  <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
+                  <CheckBox name="tableCheckBox" checked={false} />
+                </label>
               </Cell>
-              <Cell onClick={action('clicked')} highlighted={true}>
-                <ClickableCell>
-                  Name
-                  <Arrow />
-                </ClickableCell>
+              <Cell aria-sort="ascending" highlighted={true}>
+                <ClickableCellInner onClick={action('clicked')}>
+                  <span style={{ lineHeight: '1.5' }}>Name</span>
+                  <Arrow visuallyHiddenText="昇順" />
+                </ClickableCellInner>
               </Cell>
               <Cell>Calories</Cell>
               <Cell>Fat (g)</Cell>
@@ -73,7 +78,10 @@ storiesOf('Table', module)
               return (
                 <Row key={name}>
                   <Cell>
-                    <CheckBox name="tableCheckBox" checked={false} />
+                    <label>
+                      <VisuallyHiddenText>{name}</VisuallyHiddenText>
+                      <CheckBox name="tableCheckBox" checked={false} />
+                    </label>
                   </Cell>
                   <Cell>{name}</Cell>
                   <Cell>{calories}</Cell>
@@ -184,10 +192,21 @@ const CheckBox = styled(CheckBoxComponent)`
   vertical-align: middle;
 `
 
-const ClickableCell = styled.div`
+const ClickableCellInner = styled.button`
+  appearance: none;
+  padding: 8px 16px;
+  border: 0;
+  box-sizing: border-box;
+  background-color: transparent;
+  width: calc(100% + 32px);
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: -8px -16px;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
 `
 
 const Arrow = styled(FaArrowDownIcon)`
@@ -196,4 +215,8 @@ const Arrow = styled(FaArrowDownIcon)`
 
 const Base = styled(BaseComponent)`
   overflow-x: auto;
+`
+
+const VisuallyHiddenText = styled.span`
+  ${VISUALLY_HIDDEN_STYLE}
 `
