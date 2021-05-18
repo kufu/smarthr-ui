@@ -194,11 +194,7 @@ export const MultiComboBox: FC<Props> = ({
                     disabled={disabled}
                     onClick={() => onDelete({ value, label })}
                   >
-                    <FaTimesCircleIcon
-                      size={11}
-                      color={disabled ? theme.color.TEXT_DISABLED : theme.color.TEXT_BLACK}
-                      visuallyHiddenText="delete"
-                    />
+                    <FaTimesCircleIcon size={11} color={'inherit'} visuallyHiddenText="delete" />
                   </DeleteButton>
                 )}
               </SelectedItem>
