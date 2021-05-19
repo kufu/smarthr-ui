@@ -7,7 +7,7 @@ type alignMethod = 'normal' | 'flex-start' | 'flex-end' | 'center' | 'baseline' 
 type justifyMethod = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around'
 
 /**
- * @param gap 間隔の指定
+ * @param gap 間隔の指定（基準フォントサイズの相対値または抽象値）
  * @param align 垂直方向の揃え方（align-items）
  * @param justify 水平方向の揃え方（justify-content）
  * @param as ネガティブマージンを隠す要素の HTML タグ名
