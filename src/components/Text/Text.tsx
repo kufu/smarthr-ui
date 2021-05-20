@@ -21,12 +21,12 @@ export interface TextProps {
  * @param [color] 色。初期値は inherit（color、）
  * @param [leading] 行送りの抽象値（line-height）
  * @param [emphasis] 強調するかどうかの真偽値。指定すると em 要素になる
- * @param [as] テキストコンポーネントの HTML タグ名。初期値は span。リンクは Link コンポーネントを使うこと
+ * @param [as] テキストコンポーネントの HTML タグ名。初期値は span
  * @param [children]
  */
 export const Text: React.VFC<
   TextProps & {
-    as?: Exclude<React.ElementType, 'a'>
+    as?: 'address' | 'b' | 'em' | 'i' | 'mark' | 'p' | 'q' | 'small' | 'span' | 'strong' | 'time'
     children: React.ReactNode
   }
 > = ({ as = 'span', ...props }) => {
