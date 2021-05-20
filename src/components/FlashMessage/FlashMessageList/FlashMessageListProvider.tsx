@@ -10,6 +10,7 @@ export const FlashMessageListContext = createContext<{
   messages: NumberedMessage[]
   enqueueMessage: (message: Message) => void
   dequeueMessage: (seq: number) => void
+  isProvided: boolean
 }>({
   messages: [],
   enqueueMessage: (_) => {
@@ -18,6 +19,7 @@ export const FlashMessageListContext = createContext<{
   dequeueMessage: (_) => {
     // no-op
   },
+  isProvided: false,
 })
 
 export const FlashMessageListProvider: VFC<{ children: ReactNode }> = ({ children }) => {
@@ -37,7 +39,9 @@ export const FlashMessageListProvider: VFC<{ children: ReactNode }> = ({ childre
   }, [])
 
   return (
-    <FlashMessageListContext.Provider value={{ messages, enqueueMessage, dequeueMessage }}>
+    <FlashMessageListContext.Provider
+      value={{ messages, enqueueMessage, dequeueMessage, isProvided: true }}
+    >
       {children}
       <FlashMessageList />
     </FlashMessageListContext.Provider>
