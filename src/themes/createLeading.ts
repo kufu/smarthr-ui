@@ -10,7 +10,7 @@ interface Leading {
 export type LeadingProperty = Partial<Omit<Leading, 'NONE'>>
 export type CreatedLeading = Leading
 
-export type Leadings = 'NORMAL' | 'TIGHT' | 'RELAXED' | 'NONE'
+export type Leadings = keyof Leading
 
 export const defaultLeading: CreatedLeading = {
   NONE: 1,
