@@ -30,6 +30,8 @@ export type CreatedColorTheme = Palette & {
   disableColor: (value: string) => string
 }
 
+export type TextColors = 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK'
+
 const baseColor = {
   TEXT_BLACK: '#23221f',
   TEXT_GREY: '#706d65',

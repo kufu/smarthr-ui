@@ -39,6 +39,8 @@ export interface CreatedFontSizeTheme {
   XXL: string
 }
 
+export type FontSizes = 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
+
 const pxToRem = (htmlFontSize: number) => (px: number) => {
   return `${px / htmlFontSize}rem`
 }
