@@ -23,6 +23,10 @@ const defaultItems = [
   {
     label: 'option 1',
     value: 'value-1',
+    data: {
+      name: 'test',
+      age: 20,
+    },
   },
   {
     label: 'option 2',

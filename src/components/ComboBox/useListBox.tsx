@@ -5,15 +5,16 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
+import { Item } from './types'
 
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
 type Args = {
-  items: Array<{ value: string; label: string; disabled?: boolean; isSelected?: boolean }>
+  items: Array<Item & { isSelected?: boolean }>
   inputValue: string
   onAdd?: (label: string) => void
-  onSelect: (option: { value: string; label: string }) => void
+  onSelect: (item: Item) => void
   isExpanded: boolean
   isAddable: boolean
   isDuplicate: boolean
@@ -21,12 +22,14 @@ type Args = {
   isLoading?: boolean
 }
 
-type Option = {
-  label: string
-  value: string
-  disabled?: boolean
+type Option = Item & {
   isAdding?: boolean
   isSelected?: boolean
+}
+
+function optionToItem(option: Option): Item {
+  const { isAdding, isSelected, ...props } = option
+  return { ...props }
 }
 
 export function useListBox({
@@ -49,7 +52,8 @@ export function useListBox({
 
   const options: Option[] = useMemo(() => {
     if (isAddable) {
-      return [{ label: inputValue, value: inputValue, isAdding: true }, ...items]
+      const addingOption = { label: inputValue, value: inputValue, isAdding: true }
+      return [addingOption, ...items]
     }
     return items
   }, [inputValue, isAddable, items])
@@ -121,8 +125,7 @@ export function useListBox({
             return
           }
           if (activeOption && !activeOption.disabled) {
-            const { value, label } = activeOption
-            onSelect({ value, label })
+            onSelect(optionToItem(activeOption))
           }
           break
         }
@@ -177,7 +180,7 @@ export function useListBox({
             {options.map((option, i) => {
               const isActive = activeOptionIndex === i
               const className = isActive ? 'active' : undefined
-              const { value, label, disabled, isAdding, isSelected } = option
+              const { label, disabled, isAdding, isSelected } = option
               if (isAdding) {
                 return (
                   <AddButton
@@ -200,7 +203,7 @@ export function useListBox({
                   type="button"
                   themes={theme}
                   disabled={disabled}
-                  onClick={() => onSelect({ value, label })}
+                  onClick={() => onSelect(optionToItem(option))}
                   onMouseOver={() => setActiveOptionIndex(i)}
                   id={getOptionId(option)}
                   role="option"

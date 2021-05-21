@@ -8,6 +8,7 @@ import { hasParentElementByClassName } from './multiComboBoxHelper'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { useListBox } from './useListBox'
 import { ResetButton } from '../Button/ResetButton'
+import { Item } from './types'
 
 const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
 
@@ -15,11 +16,11 @@ type Props = {
   /**
    * A list of items to choose from.
    */
-  items: Array<{ value: string; label: string; disabled?: boolean }>
+  items: Item[]
   /**
    * A list of items that have already been selected.
    */
-  selectedItems: Array<{ value: string; label: string; deletable?: boolean }>
+  selectedItems: Array<Item & { deletable?: boolean }>
   /**
    * The value of the input `name` attribute.
    */
@@ -63,11 +64,11 @@ type Props = {
   /**
    *  Fire when clicking the delete element of `selectedItems` button.
    */
-  onDelete: (option: { value: string; label: string }) => void
+  onDelete: (item: Item) => void
   /**
    * Fire when clicking an element of `items`.
    */
-  onSelect: (option: { value: string; label: string }) => void
+  onSelect: (item: Item) => void
 }
 
 export const MultiComboBox: VFC<Props> = ({
