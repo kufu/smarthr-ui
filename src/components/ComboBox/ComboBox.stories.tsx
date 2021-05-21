@@ -25,12 +25,16 @@ const defaultItems = [
     value: 'value-1',
     data: {
       name: 'test',
-      age: 20,
+      age: 23,
     },
   },
   {
     label: 'option 2',
     value: 'value-2',
+    data: {
+      name: 'test 2',
+      age: 34,
+    },
   },
   {
     label: 'option 3',

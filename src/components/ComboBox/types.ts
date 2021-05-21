@@ -1,8 +1,6 @@
-export type Item = {
+export type Item<T> = {
   value: string
   label: string
   disabled?: boolean
-  data?: {
-    [key: string]: any
-  }
+  data?: T
 }

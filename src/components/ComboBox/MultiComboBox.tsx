@@ -1,4 +1,4 @@
-import React, { ChangeEvent, VFC, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -12,15 +12,15 @@ import { Item } from './types'
 
 const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
 
-type Props = {
+type Props<T> = {
   /**
    * A list of items to choose from.
    */
-  items: Item[]
+  items: Array<Item<T>>
   /**
    * A list of items that have already been selected.
    */
-  selectedItems: Array<Item & { deletable?: boolean }>
+  selectedItems: Array<Item<T> & { deletable?: boolean }>
   /**
    * The value of the input `name` attribute.
    */
@@ -64,14 +64,14 @@ type Props = {
   /**
    *  Fire when clicking the delete element of `selectedItems` button.
    */
-  onDelete: (item: Item) => void
+  onDelete: (item: Item<T>) => void
   /**
    * Fire when clicking an element of `items`.
    */
-  onSelect: (item: Item) => void
+  onSelect: (item: Item<T>) => void
 }
 
-export const MultiComboBox: VFC<Props> = ({
+export function MultiComboBox<T = never>({
   items,
   selectedItems,
   name,
@@ -86,7 +86,7 @@ export const MultiComboBox: VFC<Props> = ({
   onAdd,
   onDelete,
   onSelect,
-}) => {
+}: Props<T>) {
   const theme = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)

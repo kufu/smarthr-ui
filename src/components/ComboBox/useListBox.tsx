@@ -10,11 +10,11 @@ import { Item } from './types'
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
-type Args = {
-  items: Array<Item & { isSelected?: boolean }>
+type Args<T> = {
+  items: Array<Item<T> & { isSelected?: boolean }>
   inputValue: string
   onAdd?: (label: string) => void
-  onSelect: (item: Item) => void
+  onSelect: (item: Item<T>) => void
   isExpanded: boolean
   isAddable: boolean
   isDuplicate: boolean
@@ -22,17 +22,17 @@ type Args = {
   isLoading?: boolean
 }
 
-type Option = Item & {
+type Option<T> = Item<T> & {
   isAdding?: boolean
   isSelected?: boolean
 }
 
-function optionToItem(option: Option): Item {
+function optionToItem<T>(option: Option<T>): Item<T> {
   const { isAdding, isSelected, ...props } = option
   return { ...props }
 }
 
-export function useListBox({
+export function useListBox<T>({
   items,
   inputValue,
   onAdd,
@@ -42,7 +42,7 @@ export function useListBox({
   isDuplicate,
   hasNoMatch,
   isLoading,
-}: Args) {
+}: Args<T>) {
   const [dropdownStyle, setDropdownStyle] = useState({
     top: 0,
     left: 0,
@@ -50,7 +50,7 @@ export function useListBox({
   })
   const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
 
-  const options: Option[] = useMemo(() => {
+  const options: Array<Option<T>> = useMemo(() => {
     if (isAddable) {
       const addingOption = { label: inputValue, value: inputValue, isAdding: true }
       return [addingOption, ...items]
@@ -138,7 +138,7 @@ export function useListBox({
   const addingButtonId = useId()
   const optionIdPrefix = useId()
   const getOptionId = useCallback(
-    (option: Option) => {
+    (option: Option<T>) => {
       if (option.isAdding) {
         return addingButtonId
       }

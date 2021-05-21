@@ -1,12 +1,4 @@
-import React, {
-  ChangeEvent,
-  VFC,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { ChangeEvent, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -18,15 +10,15 @@ import { ResetButton } from '../Button/ResetButton'
 import { useListBox } from './useListBox'
 import { Item } from './types'
 
-type Props = {
+type Props<T> = {
   /**
    * A list of items to choose from.
    */
-  items: Item[]
+  items: Array<Item<T>>
   /**
    * An item that have already been selected.
    */
-  selectedItem: Item | null
+  selectedItem: Item<T> | null
   /**
    * The value of the input `name` attribute.
    */
@@ -70,10 +62,10 @@ type Props = {
   /**
    * Fire when the selected item is changed.
    */
-  onSelect: (item: Item | null) => void
+  onSelect: (item: Item<T> | null) => void
 }
 
-export const SingleComboBox: VFC<Props> = ({
+export function SingleComboBox<T = never>({
   items,
   selectedItem,
   name,
@@ -87,7 +79,7 @@ export const SingleComboBox: VFC<Props> = ({
   onChange,
   onAdd,
   onSelect,
-}) => {
+}: Props<T>) {
   const theme = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
