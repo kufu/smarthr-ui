@@ -25,7 +25,7 @@ const MyComponent = () => {
   const handleClick = () => {
     enqueueMessage({
       type: 'success',
-      text: `success`,
+      text: 'message',
     })
   }
 
