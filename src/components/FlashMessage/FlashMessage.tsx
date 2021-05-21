@@ -30,7 +30,6 @@ export type Props = {
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 const REMOVE_DELAY = 8000
-let timerId: any = 0
 
 export const FlashMessage: VFC<Props & ElementProps> = ({
   visible,
@@ -45,11 +44,10 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   useEffect(() => {
-    if (visible) {
-      timerId = setTimeout(onClose, REMOVE_DELAY)
-    } else {
-      clearTimeout(timerId)
+    if (!visible) {
+      return
     }
+    const timerId = setTimeout(onClose, REMOVE_DELAY)
 
     return () => {
       clearTimeout(timerId)

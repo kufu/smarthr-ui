@@ -11,7 +11,11 @@ export {
   FilterDropdown,
 } from './components/Dropdown'
 export { FieldSet } from './components/FieldSet'
-export { FlashMessage } from './components/FlashMessage'
+export {
+  FlashMessage,
+  FlashMessageListProvider,
+  useFlashMessageList,
+} from './components/FlashMessage'
 export { FloatArea } from './components/FloatArea'
 export { Input, CurrencyInput } from './components/Input'
 export { InputFile } from './components/InputFile'

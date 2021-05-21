@@ -4,6 +4,9 @@ import readme from './README.md'
 import styled from 'styled-components'
 
 import { FlashMessage, Props, animationTypes, messageTypes } from './FlashMessage'
+import { FlashMessageListProvider, useFlashMessageList } from './'
+
+import { SecondaryButton } from '../Button'
 
 export default {
   title: 'FlashMessage',
@@ -128,6 +131,26 @@ export const Demo: Story = () => {
         }}
       />
     </div>
+  )
+}
+
+let messageCount = 1
+const ListInner = () => {
+  const { enqueueMessage } = useFlashMessageList()
+
+  const handleClick = () => {
+    enqueueMessage({
+      type: 'success',
+      text: `success ${messageCount++}`,
+    })
+  }
+  return <SecondaryButton onClick={handleClick}>Add message</SecondaryButton>
+}
+export const FlashMessageList: Story = () => {
+  return (
+    <FlashMessageListProvider>
+      <ListInner />
+    </FlashMessageListProvider>
   )
 }
 
