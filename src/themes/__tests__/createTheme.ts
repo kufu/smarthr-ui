@@ -1,6 +1,7 @@
 import { createTheme } from '../createTheme'
 import { defaultColor } from '../createColor'
 import { defaultFontSize } from '../createFontSize'
+import { defaultLeading } from '../createLeading'
 import { defaultBreakpoint } from '../createBreakpoint'
 import { defaultBorder } from '../createBorder'
 import { defaultRadius } from '../createRadius'
@@ -205,6 +206,19 @@ describe('createTheme', () => {
     expect(actual.fontSize.L).toBe(`${8 / 7}rem`)
     expect(actual.fontSize.XL).toBe(`${8 / 6}rem`)
     expect(actual.fontSize.XXL).toBe(`${8 / 5}rem`)
+  })
+
+  it('returns theme reflecting "leading" settings', () => {
+    const actual = createTheme({
+      leading: {
+        NORMAL: 1.6,
+        TIGHT: 1.125,
+      },
+    })
+
+    expect(actual.leading.NORMAL).toBe(1.6)
+    expect(actual.leading.TIGHT).toBe(1.125)
+    expect(actual.leading.RELAXED).toBe(defaultLeading.RELAXED)
   })
 
   it('returns theme reflecting "breakpoint" settings', () => {

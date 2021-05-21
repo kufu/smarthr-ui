@@ -47,6 +47,7 @@ const primitiveTokens = [
 ] as const
 
 export type CharRelativeSize = typeof primitiveTokens[number]
+export type AbstractSize = keyof CreatedSpacingTheme
 
 const getSpacing = (baseSize: number) => {
   const spacingByChar = createSpacingByChar(baseSize)

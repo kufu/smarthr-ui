@@ -10,6 +10,7 @@ import { CreatedPaletteTheme, PaletteProperty, createPalette } from './createPal
 import { ColorProperty, CreatedColorTheme, createColor } from './createColor'
 import { CreatedSizeTheme, SizeProperty, createSize } from './createSize'
 import { CreatedFontSizeTheme, FontSizeProperty, createFontSize } from './createFontSize'
+import { CreatedLeading, LeadingProperty, createLeading } from './createLeading'
 import {
   CreatedSpacingByCharTheme,
   CreatedSpacingTheme,
@@ -32,6 +33,7 @@ interface ThemeProperty {
    */
   size?: SizeProperty
   fontSize?: FontSizeProperty
+  leading?: LeadingProperty
   spacing?: SpacingProperty
   breakpoint?: BreakpointProperty
   /**
@@ -56,6 +58,7 @@ export interface CreatedTheme {
    */
   size: CreatedSizeTheme
   fontSize: CreatedFontSizeTheme
+  leading: CreatedLeading
   spacing: CreatedSpacingTheme
   spacingByChar: CreatedSpacingByCharTheme
   breakpoint: CreatedBreakpointTheme
@@ -81,6 +84,7 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     fontSize: createFontSize(getFontSizeProperty(theme)),
     spacing: createSpacing(baseSize),
     spacingByChar: createSpacingByChar(baseSize),
+    leading: createLeading(getLeadingProperty(theme)),
     breakpoint: createBreakpoint(getBreakpointProperty(theme)),
     frame: createFrame(getFrameProperty(theme), paletteProperty),
     border: createBorder(getBorderProperty(theme), colorProperty),
@@ -135,6 +139,9 @@ function getFontSizeProperty(theme: ThemeProperty): FontSizeProperty {
     ...theme.size?.font,
     ...theme.fontSize,
   }
+}
+const getLeadingProperty = (theme: ThemeProperty): LeadingProperty => {
+  return { ...theme.leading }
 }
 function getSpacingProperty(theme: ThemeProperty): SpacingProperty {
   return {
