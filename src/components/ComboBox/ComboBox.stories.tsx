@@ -79,8 +79,9 @@ export const Default: Story = () => {
           selectedItems={selectedItems}
           width={400}
           placeholder="Enter the text for filtering"
-          onDelete={({ value }) => {
-            setSelectedItems(selectedItems.filter((item) => item.value !== value))
+          onDelete={(option) => {
+            action('onDelete')(option)
+            setSelectedItems(selectedItems.filter((item) => item.value !== option.value))
           }}
           onSelect={(option) => {
             action('onSelect')(option)

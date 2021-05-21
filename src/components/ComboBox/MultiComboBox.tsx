@@ -188,25 +188,28 @@ export function MultiComboBox<T = never>({
     >
       <InputArea themes={theme}>
         <List themes={theme}>
-          {selectedItems.map(({ value, label, deletable = true }, i) => (
-            <li key={i}>
-              <SelectedItem themes={theme} disabled={disabled}>
-                <SelectedItemLabel themes={theme}>{label}</SelectedItemLabel>
+          {selectedItems.map((selectedItem, i) => {
+            const { deletable = true, ...item } = selectedItem
+            return (
+              <li key={i}>
+                <SelectedItem themes={theme} disabled={disabled}>
+                  <SelectedItemLabel themes={theme}>{selectedItem.label}</SelectedItemLabel>
 
-                {deletable && (
-                  <DeleteButton
-                    type="button"
-                    themes={theme}
-                    className={DELETE_BUTTON_CLASS_NAME}
-                    disabled={disabled}
-                    onClick={() => onDelete({ value, label })}
-                  >
-                    <FaTimesCircleIcon size={11} color={'inherit'} visuallyHiddenText="delete" />
-                  </DeleteButton>
-                )}
-              </SelectedItem>
-            </li>
-          ))}
+                  {deletable && (
+                    <DeleteButton
+                      type="button"
+                      themes={theme}
+                      className={DELETE_BUTTON_CLASS_NAME}
+                      disabled={disabled}
+                      onClick={() => onDelete(item)}
+                    >
+                      <FaTimesCircleIcon size={11} color={'inherit'} visuallyHiddenText="delete" />
+                    </DeleteButton>
+                  )}
+                </SelectedItem>
+              </li>
+            )
+          })}
 
           <InputWrapper className={isFocused ? undefined : 'hidden'}>
             <Input
