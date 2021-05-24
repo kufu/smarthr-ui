@@ -240,6 +240,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
           ref={inputRef}
           aria-expanded={isCalendarShown}
           aria-controls={calenderId}
+          aria-haspopup={true}
         />
       </InputWrapper>
       {isCalendarShown && inputRect && (
