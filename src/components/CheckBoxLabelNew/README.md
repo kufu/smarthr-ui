@@ -1,9 +1,11 @@
-# CheckBoxLabel
+# CheckBoxLabelNew
 
 ```tsx
 import { CheckBoxLabelNew } from 'smarthr-ui'
 
-<CheckBoxLabelNew label="checkbox label" name="sample" checked={true} mixed={true} onChange={() => {}} themeColor="light" />
+<CheckBoxLabelNew name="sample" checked mixed onChange={(e) => console.log(e)}>
+  checkbox label
+</CheckBoxLabelNew>
 ```
 
 ## props
@@ -12,6 +14,6 @@ CheckBoxLabelNew props extends Checkbox props.
 
 In addition to it...
 
-| Name  | Required | Type       | DefaultValue | Description                        |
-| ----- | -------- | ---------- | ------------ | ---------------------------------- |
-| label | ✓        | **string** | -            | Text to the right of the checkbox. |
+| Name     | Required | Type                | DefaultValue | Description                                                       |
+| -------- | -------- | ------------------- | ------------ | ----------------------------------------------------------------- |
+| children | -        | **React.ReactNode** | -            | If children prop is passed, the checkbox label will be displayed. |

@@ -59,6 +59,7 @@ const Label = styled.label<{ themes: Theme; $lineHeight: number }>`
       color: ${color.TEXT_BLACK};
       font-size: ${fontSize.S};
       line-height: ${$lineHeight};
+      cursor: pointer;
 
       &.disabled {
         color: ${color.TEXT_DISABLED};
