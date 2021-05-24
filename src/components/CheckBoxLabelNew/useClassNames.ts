@@ -5,6 +5,7 @@ import { CheckBoxLabelNew } from './CheckBoxLabelNew'
 
 export function useClassNames() {
   const generate = useClassNameGenerator(CheckBoxLabelNew.displayName || 'CheckBoxLabelNew')
+
   return useMemo(
     () => ({
       wrapper: generate(),

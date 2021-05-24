@@ -20,16 +20,14 @@ storiesOf('CheckBoxLabelNew', module)
         <Text>checked</Text>
         <List>
           <li>
-            <CheckBoxLabelNew label="enabled" name="name1" checked={true} onChange={onChange} />
+            <CheckBoxLabelNew name="name1" checked={true} onChange={onChange}>
+              enabled
+            </CheckBoxLabelNew>
           </li>
           <li>
-            <CheckBoxLabelNew
-              label="disabled"
-              name="name2"
-              checked={true}
-              disabled={true}
-              onChange={onChange}
-            />
+            <CheckBoxLabelNew name="name2" checked={true} disabled={true} onChange={onChange}>
+              disabled
+            </CheckBoxLabelNew>
           </li>
         </List>
       </li>
@@ -38,16 +36,14 @@ storiesOf('CheckBoxLabelNew', module)
         <Text>unchecked</Text>
         <List>
           <li>
-            <CheckBoxLabelNew label="enabled" name="name4" checked={false} onChange={onChange} />
+            <CheckBoxLabelNew name="name4" checked={false} onChange={onChange}>
+              enabled
+            </CheckBoxLabelNew>
           </li>
           <li>
-            <CheckBoxLabelNew
-              label="disabled"
-              name="name5"
-              checked={false}
-              disabled={true}
-              onChange={onChange}
-            />
+            <CheckBoxLabelNew name="name5" checked={false} disabled={true} onChange={onChange}>
+              disabled
+            </CheckBoxLabelNew>
           </li>
         </List>
       </li>
@@ -56,23 +52,20 @@ storiesOf('CheckBoxLabelNew', module)
         <Text>mixed</Text>
         <List>
           <li>
-            <CheckBoxLabelNew
-              label="enabled"
-              name="name7"
-              checked={true}
-              mixed={true}
-              onChange={onChange}
-            />
+            <CheckBoxLabelNew name="name7" checked={true} mixed={true} onChange={onChange}>
+              enabled
+            </CheckBoxLabelNew>
           </li>
           <li>
             <CheckBoxLabelNew
-              label="disabled"
               name="name8"
               checked={true}
               mixed={true}
               disabled={true}
               onChange={onChange}
-            />
+            >
+              disabled
+            </CheckBoxLabelNew>
           </li>
         </List>
       </li>
@@ -81,13 +74,15 @@ storiesOf('CheckBoxLabelNew', module)
         <Text>multiline text</Text>
         <List>
           <li>
-            <CheckBoxLabelNew
-              label="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-              name="name9"
-              checked={true}
-              mixed={true}
-              onChange={onChange}
-            />
+            <CheckBoxLabelNew name="name9" checked={true} mixed={true} onChange={onChange}>
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+              has been the industry's standard dummy text ever since the 1500s, when an unknown
+              printer took a galley of type and scrambled it to make a type specimen book. It has
+              survived not only five centuries, but also the leap into electronic typesetting,
+              remaining essentially unchanged. It was popularised in the 1960s with the release of
+              Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+              publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+            </CheckBoxLabelNew>
           </li>
         </List>
       </li>

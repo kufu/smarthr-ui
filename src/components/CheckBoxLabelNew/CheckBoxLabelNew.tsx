@@ -1,21 +1,19 @@
-import React, { HTMLAttributes, VFC } from 'react'
+import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
-import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 import { useClassNames } from './useClassNames'
 
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
-
 type Props = CheckBoxProps & {
-  label: string
   lineHeight?: number
+  children?: ReactNode
 }
 
-export const CheckBoxLabelNew: VFC<Props & ElementProps> = ({
-  label,
+export const CheckBoxLabelNew: FC<Props> = ({
   lineHeight = 1.5,
   className = '',
+  children,
   ...props
 }) => {
   const theme = useTheme()
@@ -25,8 +23,8 @@ export const CheckBoxLabelNew: VFC<Props & ElementProps> = ({
     <Wrapper className={`${className} ${classNames.wrapper}`}>
       <Label className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`} themes={theme}>
         <CheckBox {...props} />
-        <Txt className={classNames.text} lineHeight={lineHeight} themes={theme}>
-          {label}
+        <Txt className={classNames.text} $lineHeight={lineHeight} themes={theme}>
+          {children}
         </Txt>
       </Label>
     </Wrapper>
@@ -36,7 +34,7 @@ export const CheckBoxLabelNew: VFC<Props & ElementProps> = ({
 const Wrapper = styled.div`
   display: inline-block;
 `
-const Label = styled.label<{ themes: Theme }>`
+const Label = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { color } = themes
 
@@ -55,21 +53,21 @@ const Label = styled.label<{ themes: Theme }>`
     `
   }}
 `
-const Txt = styled.span<{ themes: Theme; lineHeight: number }>`
-  ${({ themes, lineHeight }) => {
+const Txt = styled.label<{ themes: Theme; $lineHeight: number }>`
+  ${({ themes, $lineHeight }) => {
     const { fontSize, spacingByChar } = themes
 
     // checkbox と text の位置がずれるため、line-height 分を調整する疑似要素を作る
     return css`
       margin: 0 0 0 ${spacingByChar(0.5)};
       font-size: ${fontSize.pxToRem(fontSize.TALL)};
-      line-height: ${lineHeight};
+      line-height: ${$lineHeight};
       &::before {
         content: '';
         display: block;
         height: 0;
         width: 0;
-        margin-top: calc((1 - ${lineHeight}) * 0.3em);
+        margin-top: calc((1 - ${$lineHeight}) * 0.3em);
       }
     `
   }}
