@@ -11,6 +11,7 @@ import { Input } from '../Input'
 import { FaCalendarAltIcon } from '../Icon'
 import { Calendar } from '../Calendar'
 import { Portal } from './Portal'
+import { useId } from '../../hooks/useId'
 
 type Props = {
   value?: string | null
@@ -39,6 +40,8 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   onChangeDate,
   ...inputAttrs
 }) => {
+  const calenderId = useId()
+
   const stringToDate = useCallback(
     (str?: string | null) => {
       if (!str) {
@@ -235,11 +238,14 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
           disabled={disabled}
           error={error}
           ref={inputRef}
+          aria-expanded={isCalendarShown}
+          aria-controls={calenderId}
         />
       </InputWrapper>
       {isCalendarShown && inputRect && (
         <Portal inputRect={inputRect} ref={calendarPortalRef}>
           <Calendar
+            id={calenderId}
             value={selectedDate || undefined}
             from={from}
             to={to}
