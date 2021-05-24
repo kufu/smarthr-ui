@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -11,7 +11,7 @@ interface Props {
   onClick: (pageNumber: number) => void
 }
 
-export const PaginationItem: FC<Props> = ({ page, currentPage, onClick }) => {
+export const PaginationItem: VFC<Props> = ({ page, currentPage, onClick }) => {
   const theme = useTheme()
 
   if (page === currentPage) {

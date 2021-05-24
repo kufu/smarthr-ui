@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 
 import { useTheme } from '../../hooks/useTheme'
 
@@ -35,7 +35,7 @@ const getIconProps = (
     : { Icon: FaChevronRightIcon, visuallyHiddenText: '次へ' }
 }
 
-export const PaginationControllerItem: FC<Props> = ({
+export const PaginationControllerItem: VFC<Props> = ({
   direction,
   disabled,
   double = false,
