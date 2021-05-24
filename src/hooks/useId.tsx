@@ -14,10 +14,10 @@ const IdContext = createContext<IdContextValue>(defaultContext)
 
 export function useId(defaultId?: string) {
   const context = useContext(IdContext)
-  return useMemo(() => defaultId || `id-${context.prefix}-${++context.current}`, [
-    defaultId,
-    context,
-  ])
+  return useMemo(
+    () => defaultId || `id-${context.prefix}-${++context.current}`,
+    [defaultId, context],
+  )
 }
 
 export const SequencePrefixIdProvider: FC<{ children: ReactNode }> = ({ children }) => {
