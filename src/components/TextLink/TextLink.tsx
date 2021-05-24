@@ -11,7 +11,7 @@ type Props = {
 }
 
 export const TextLink: VFC<Props & ElementProps> = ({
-  href = '',
+  href,
   target,
   onClick,
   children,
@@ -26,7 +26,7 @@ export const TextLink: VFC<Props & ElementProps> = ({
   return (
     <StyledAncher
       {...props}
-      href={href}
+      href={generateHref(href, onClick)}
       target={target}
       onClick={generateOnClick(href, onClick)}
       themes={theme}
@@ -69,17 +69,25 @@ const SuffixWrapper = styled.span<{ themes: Theme }>`
   }}
 `
 
+const generateHref = (href?: string, onClick?: (e: React.MouseEvent) => void) => {
+  if (href) {
+    return href
+  }
+
+  if (!onClick) {
+    return undefined
+  }
+
+  return ''
+}
+
 const generateOnClick = (href?: string, onClick?: (e: React.MouseEvent) => void) => {
   if (!onClick) {
     return undefined
   }
 
-  if (!href) {
-    return onClick
-  }
-
   return (e: React.MouseEvent) => {
-    if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
+    if (!href || (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey)) {
       e.preventDefault()
       onClick(e)
     }
