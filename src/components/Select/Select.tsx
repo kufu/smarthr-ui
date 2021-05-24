@@ -14,7 +14,7 @@ type Optgroup = {
   options: Option[]
 } & React.OptgroupHTMLAttributes<HTMLOptGroupElement>
 
-type Props = SelectHTMLAttributes<HTMLSelectElement> & {
+type Props = {
   options: Array<Option | Optgroup>
   error?: boolean
   width?: number | string
@@ -22,7 +22,9 @@ type Props = SelectHTMLAttributes<HTMLSelectElement> & {
   blankLabel?: string
 }
 
-export const Select: VFC<Props> = ({
+type ElementProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children'>
+
+export const Select: VFC<Props & ElementProps> = ({
   options,
   onChange,
   error = false,
