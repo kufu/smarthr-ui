@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, SelectHTMLAttributes, useCallback } from 'react'
+import React, { ChangeEvent, SelectHTMLAttributes, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isMobileSafari, isTouchDevice } from '../../libs/ua'
@@ -22,7 +22,7 @@ type Props = SelectHTMLAttributes<HTMLSelectElement> & {
   blankLabel?: string
 }
 
-export const Select: FC<Props> = ({
+export const Select: VFC<Props> = ({
   options,
   onChange,
   error = false,
