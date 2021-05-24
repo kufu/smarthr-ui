@@ -1,0 +1,1 @@
+export { CheckBoxLabelNew } from './CheckBoxLabelNew'
