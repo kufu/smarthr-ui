@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react'
+import React, { VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
@@ -19,7 +19,7 @@ interface Props {
 
 const TEXT_AREA_NAME = 'admin_memo_new_text'
 
-export const RightFixedNote: FC<Props> = ({
+export const RightFixedNote: VFC<Props> = ({
   title,
   items,
   submitLabel = '送信',
