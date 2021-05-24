@@ -66,7 +66,7 @@ Please read the [changelog](https://github.com/kufu/smarthr-ui/releases).
 
 ## Design
 We released design in [Figma](https://www.figma.com/community/file/978607227374353992/SmartHR-UI).
-If you use our service logo, please read the [SmartHR Design System](https://www.smarthr.design/)
+If you use our service logo, please read the [SmartHR Design System](https://smarthr.design/)
 
 ## License
 
