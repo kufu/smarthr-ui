@@ -51,7 +51,7 @@
     "reg-notify-github-plugin": "^0.10.15",
     "reg-publish-s3-plugin": "^0.10.15",
     "reg-suit": "^0.10.15",
-    "standard-version": "^9.2.0",
+    "standard-version": "^9.3.0",
     "storybook-readme": "^5.0.9",
     "storycap": "^3.0.4",
     "styled-components": "^5.3.0",
