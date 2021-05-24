@@ -9,8 +9,8 @@ export function useClassNames() {
   return useMemo(
     () => ({
       wrapper: generate(),
+      checkBox: generate('checkBox'),
       label: generate('label'),
-      text: generate('text'),
     }),
     [generate],
   )
