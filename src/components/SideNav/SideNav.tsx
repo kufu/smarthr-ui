@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC } from 'react'
+import React, { ComponentProps, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -14,7 +14,7 @@ type Props = {
   className?: string
 }
 
-export const SideNav: FC<Props> = ({ items, size = 'default', onClick, className = '' }) => {
+export const SideNav: VFC<Props> = ({ items, size = 'default', onClick, className = '' }) => {
   const theme = useTheme()
   const classNames = useClassNames()
 

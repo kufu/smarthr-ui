@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -18,7 +18,7 @@ type Props = {
   onClick?: OnClick
 }
 
-export const SideNavItem: FC<Props> = ({
+export const SideNavItem: VFC<Props> = ({
   id,
   title,
   prefix,
