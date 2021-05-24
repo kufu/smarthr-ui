@@ -47,6 +47,10 @@ type Props = {
    */
   placeholder?: string
   /**
+   * If `true`, a loader is displayed on the dropdown list.
+   */
+  isLoading?: boolean
+  /**
    * The value given to the width style of input.
    */
   width?: number | string
@@ -76,6 +80,7 @@ export const SingleComboBox: VFC<Props> = ({
   error = false,
   creatable = false,
   placeholder = '',
+  isLoading,
   width = 'auto',
   className = '',
   onChange,
@@ -124,6 +129,7 @@ export const SingleComboBox: VFC<Props> = ({
     hasNoMatch:
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
+    isLoading,
   })
 
   const focus = useCallback(() => {
