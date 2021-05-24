@@ -55,9 +55,9 @@ storiesOf('Table', module)
             <Row>
               <Cell>
                 <VisuallyHiddenText>行を選択</VisuallyHiddenText>
-                <label>
+                <label htmlFor="tableAllCheckBox">
                   <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
-                  <CheckBox name="tableCheckBox" checked={false} />
+                  <CheckBox name="tableAllCheckBox" checked={false} id="tableAllCheckBox" />
                 </label>
               </Cell>
               <Cell aria-sort="ascending" highlighted={true}>
@@ -78,9 +78,9 @@ storiesOf('Table', module)
               return (
                 <Row key={name}>
                   <Cell>
-                    <label>
+                    <label htmlFor="tableCheckBox">
                       <VisuallyHiddenText>{name}</VisuallyHiddenText>
-                      <CheckBox name="tableCheckBox" checked={false} />
+                      <CheckBox name="tableCheckBox" checked={false} id="tableCheckBox" />
                     </label>
                   </Cell>
                   <Cell>{name}</Cell>
