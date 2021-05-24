@@ -14,6 +14,7 @@ type Props = {
     url: string
     target?: string
   }>
+  children?: ReactNode
   className?: string
 }
 
