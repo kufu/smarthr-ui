@@ -47,6 +47,10 @@ type Props = {
    */
   placeholder?: string
   /**
+   * If `true`, a loader is displayed on the dropdown list.
+   */
+  isLoading?: boolean
+  /**
    * The value given to the width style of input.
    */
   width?: number | string
@@ -76,6 +80,7 @@ export const SingleComboBox: VFC<Props> = ({
   error = false,
   creatable = false,
   placeholder = '',
+  isLoading,
   width = 'auto',
   className = '',
   onChange,
@@ -124,6 +129,7 @@ export const SingleComboBox: VFC<Props> = ({
     hasNoMatch:
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
+    isLoading,
   })
 
   const focus = useCallback(() => {
@@ -167,17 +173,18 @@ export const SingleComboBox: VFC<Props> = ({
     <Container
       ref={outerRef}
       className={`${disabled ? 'disabled' : ''} ${className}`}
+      $width={width}
       role="combobox"
       aria-haspopup="listbox"
       aria-controls={aria.listBoxId}
       aria-expanded={isFocused}
+      aria-invalid={error || undefined}
     >
       <StyledInput
         type="text"
         name={name}
         value={inputValue}
         disabled={disabled}
-        width={width}
         error={error}
         placeholder={placeholder}
         suffix={
@@ -259,46 +266,48 @@ export const SingleComboBox: VFC<Props> = ({
   )
 }
 
-const Container = styled.div`
+const Container = styled.div<{ $width: number | string }>`
   display: inline-block;
+  width: ${({ $width = 'auto' }) => (typeof $width === 'number' ? `${$width}px` : $width)};
   &.disabled {
     cursor: not-allowed;
   }
 `
 const StyledInput = styled(Input)`
+  width: 100%;
   input::-ms-clear {
     display: none;
   }
 `
 const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, spacing } = themes
+  const { spacingByChar } = themes
   return css`
     height: 100%;
     box-sizing: border-box;
-    padding: ${fontSize.pxToRem(spacing.XXS)} 0;
+    padding: ${spacingByChar(0.5)} 0;
   `
 })
 const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { border, fontSize, spacing } = themes
+  const { border, spacingByChar } = themes
   return css`
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
     box-sizing: border-box;
-    padding-left: ${fontSize.pxToRem(spacing.XXS)};
+    padding-left: ${spacingByChar(0.5)};
     border-left: ${border.shorthand};
   `
 })
 const ClearButton = styled(ResetButton)<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacing } = themes
+    const { spacingByChar } = themes
     return css`
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100%;
-      padding: 0 ${fontSize.pxToRem(spacing.XXS)};
+      padding: 0 ${spacingByChar(0.5)};
       cursor: pointer;
       &.hidden {
         display: none;

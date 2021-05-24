@@ -89,13 +89,13 @@ const resetButtonStyle = css`
 const Button = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
-    const { color, fontSize, spacing, shadow } = themes
+    const { color, spacingByChar, shadow } = themes
 
     return css`
       display: flex;
       align-items: center;
       width: 100%;
-      padding: ${fontSize.pxToRem(12)} ${fontSize.pxToRem(spacing.XS)};
+      padding: ${spacingByChar(0.75)} ${spacingByChar(1)};
       cursor: pointer;
       font-size: inherit;
       text-align: left;
@@ -121,7 +121,7 @@ const Button = styled.button<{ themes: Theme }>`
 
       /* TODO replace if impremented Layout component */
       & > * + * {
-        margin-left: ${fontSize.pxToRem(spacing.XXS)};
+        margin-left: ${spacingByChar(0.5)};
       }
     `
   }}

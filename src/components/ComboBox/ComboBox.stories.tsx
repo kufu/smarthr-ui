@@ -175,6 +175,10 @@ Creatable.parameters = {
 }
 
 export const Disabled: Story = () => {
+  const [multiItems, setMultiItems] = useState(defaultItems)
+  const [multiSelected, setMultiSelected] = useState<Item[]>([])
+  const [seq, setSeq] = useState(0)
+
   return (
     <List>
       <dt>Single</dt>
@@ -192,14 +196,46 @@ export const Disabled: Story = () => {
       <dt>Multi</dt>
       <dd>
         <MultiComboBox
-          items={[]}
-          selectedItems={[]}
+          items={multiItems}
+          selectedItems={[
+            {
+              label: 'option 1',
+              value: 'value-1',
+            },
+          ]}
           disabled
           placeholder="Disabled"
           width={400}
-          onAdd={action('onAdd')}
-          onDelete={action('onDelete')}
-          onSelect={action('onSelect')}
+          onAdd={(label) => {
+            setMultiItems([
+              ...multiItems,
+              {
+                label: label,
+                value: `new-value-${seq}`,
+                disabled: label === 'disabled',
+              },
+            ])
+            setMultiSelected([
+              ...multiSelected,
+              {
+                label,
+                value: `new-value-${seq}`,
+              },
+            ])
+            setSeq(seq + 1)
+          }}
+          onDelete={({ value }) => {
+            setMultiSelected(multiSelected.filter((item) => item.value !== value))
+          }}
+          onSelect={({ value, label }) => {
+            setMultiSelected([
+              ...multiSelected,
+              {
+                value,
+                label,
+              },
+            ])
+          }}
         />
       </dd>
     </List>
@@ -250,6 +286,36 @@ Error.parameters = {
       story: 'A combobox can represent its error status.',
     },
   },
+}
+
+export const Loading: Story = () => {
+  return (
+    <List>
+      <dt>Single</dt>
+      <dd>
+        <SingleComboBox
+          items={defaultItems}
+          selectedItem={null}
+          width={400}
+          placeholder="Loading"
+          onSelect={action('onSelect')}
+          isLoading
+        />
+      </dd>
+      <dt>Multi</dt>
+      <dd>
+        <MultiComboBox
+          items={defaultItems}
+          selectedItems={[]}
+          width={400}
+          placeholder="Loading"
+          onDelete={action('onDelete')}
+          onSelect={action('onSelect')}
+          isLoading
+        />
+      </dd>
+    </List>
+  )
 }
 
 export const Deletable: Story = () => {

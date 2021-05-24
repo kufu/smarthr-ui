@@ -102,7 +102,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
 }
 
 .c6 {
-  margin: 0 0 0 0.5rem;
+  margin: 0 0 0 8px;
   font-size: 0.875rem;
   line-height: 1.5;
 }

@@ -57,17 +57,24 @@ const textStyle = css`
         background-color: ${palette.hoverColor('#fff')};
         color: ${palette.TEXT_BLACK};
       }
-
-      &[disabled] {
-        background-color: transparent;
-        color: ${palette.disableColor(palette.TEXT_DISABLED)};
-      }
     `
   }}
 `
+const disabledStyle = css`
+  ${({ themes: { color } }: { themes: Theme }) => css`
+    background-color: transparent;
+    color: ${color.disableColor(color.TEXT_DISABLED)};
+  `}
+`
 const TextStyleButton = styled(BaseButton)`
   ${textStyle}
+  &[disabled] {
+    ${disabledStyle}
+  }
 `
 const TextStyleButtonAnchor = styled(BaseButtonAnchor)`
   ${textStyle}
+  &:not([href]) {
+    ${disabledStyle}
+  }
 `

@@ -1,12 +1,12 @@
 import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Icon as DuplicatedIcon, IconNames, ComponentProps as IconProps } from '../Icon/Icon'
+import { ComponentProps as IconProps } from '../Icon/Icon'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {
-  icon: IconNames | React.ComponentType<IconProps>
+  icon: React.ComponentType<IconProps>
   children: ReactNode
   onClick?: () => void
 }
@@ -17,7 +17,7 @@ export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick }) => {
   return (
     <Wrapper themes={theme} onClick={onClick} type="button">
       <IconWrapper themes={theme} role="presentation">
-        {typeof Icon === 'string' ? <DuplicatedIcon name={Icon}></DuplicatedIcon> : <Icon />}
+        <Icon />
       </IconWrapper>
       {children}
     </Wrapper>
@@ -47,13 +47,11 @@ const Wrapper = styled.button<{ themes: Theme }>`
   }}
 `
 const IconWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 ${size.pxToRem(size.space.XXS)} 0 0;
+      margin: 0 ${spacingByChar(0.5)} 0 0;
       vertical-align: middle;
     `
   }}

@@ -151,12 +151,9 @@ const StyledDarkBalloon = StyledLightBalloon.withComponent(DarkBalloon)
 
 const StyledBalloonText = styled.p<{ themes: Theme }>`
   margin: 0;
-  ${(props) => {
-    const { themes } = props
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
     `
   }}
 `

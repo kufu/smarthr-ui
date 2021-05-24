@@ -56,14 +56,6 @@ commands:
             fc-match --all
             rm -rf /tmp/fonts
 jobs:
-  node-v10:
-    docker:
-      - image: circleci/node:10
-        auth:
-          username: smarthrinc
-          password: $DOCKER_HUB_ACCESS_TOKEN
-    steps:
-      - run-npm-test
   node-v12:
     docker:
       - image: circleci/node:12
@@ -94,7 +86,6 @@ jobs:
 workflows:
   multiple_builds:
     jobs:
-      - node-v10
       - node-v12
       - node-v14
       - reg-suit

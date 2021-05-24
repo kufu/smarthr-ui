@@ -1,15 +1,17 @@
-import React, { useCallback, useContext } from 'react'
+import React, { HTMLAttributes, useCallback, useContext } from 'react'
 
 import { DialogContext } from './DialogWrapper'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
 
 type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const MessageDialogContent: React.VFC<Props> = ({
+export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
   title,
   description,
   closeText,
+  className = '',
   ...props
 }) => {
   const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
@@ -28,6 +30,7 @@ export const MessageDialogContent: React.VFC<Props> = ({
         onPressEscape={onClickClose}
         isOpen={active}
         ariaLabel={title}
+        className={className}
         {...props}
       >
         <MessageDialogContentInner

@@ -22,8 +22,7 @@ const BackgroundJobsList: VFC<Props & ElementProps> = ({ children, className = '
 }
 
 const Item = styled.li``
-const List = styled.ul<{ themes: Theme }>(({ themes }) => {
-  const { pxToRem, space } = themes.size
+const List = styled.ul<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
   return css`
     position: fixed;
     bottom: 0;
@@ -31,12 +30,12 @@ const List = styled.ul<{ themes: Theme }>(({ themes }) => {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    margin: ${pxToRem(space.XS)};
+    margin: ${spacingByChar(1)};
     list-style: none;
 
     ${Item} {
       :not(:first-child) {
-        margin-top: ${pxToRem(space.XS)};
+        margin-top: ${spacingByChar(1)};
       }
     }
   `

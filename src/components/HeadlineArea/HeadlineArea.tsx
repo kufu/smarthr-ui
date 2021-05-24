@@ -34,10 +34,10 @@ const Wrapper = styled.div`
 `
 const Description = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { size, spacingByChar, palette } = themes
 
     return css`
-      margin-top: ${size.pxToRem(size.space.XS)};
+      margin-top: ${spacingByChar(1)};
       color: ${palette.TEXT_BLACK};
       font-size: ${size.pxToRem(size.font.TALL)};
       line-height: 1.5;

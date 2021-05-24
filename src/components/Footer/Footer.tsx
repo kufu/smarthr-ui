@@ -22,19 +22,24 @@ export const Footer: VFC = () => {
 }
 
 const Wrapper = styled.footer<{ themes: Theme }>`
-  ${({ themes }) => css`
+  ${({
+    themes: {
+      color,
+      size: { font, pxToRem },
+      spacingByChar,
+    },
+  }) => css`
     overflow: hidden;
-    padding: ${themes.size.pxToRem(themes.size.space.XS)}
-      ${themes.size.pxToRem(themes.size.space.S)};
-    background-color: ${themes.palette.BRAND};
+    padding: ${spacingByChar(1)} ${spacingByChar(1.5)};
+    background-color: ${color.BRAND};
     color: #fff;
-    font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
+    font-size: ${pxToRem(font.TALL)};
     white-space: nowrap;
   `}
 `
 
 const List = styled.ul<{ themes: Theme }>`
-  ${({ themes }) => css`
+  ${({ themes: { spacingByChar } }) => css`
     float: left;
     display: flex;
     flex-wrap: wrap;
@@ -45,7 +50,7 @@ const List = styled.ul<{ themes: Theme }>`
 
     > li {
       padding: 3px 0;
-      margin-right: ${themes.size.pxToRem(themes.size.space.XXS)};
+      margin-right: ${spacingByChar(0.5)};
     }
   `}
 `

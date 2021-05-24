@@ -110,15 +110,13 @@ export const Header: VFC<Props> = ({
 }
 
 const Wrapper = styled.header<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size, palette } = themes
-
+  ${({ themes: { spacingByChar, palette } }) => {
     return css`
       display: flex;
       align-items: center;
       justify-content: space-between;
       height: 50px;
-      padding: 0 ${size.pxToRem(size.space.XS)};
+      padding: 0 ${spacingByChar(1)};
       background-color: ${palette.BRAND};
     `
   }}
@@ -148,10 +146,10 @@ const HeaderLogo = styled.button<{ themes: Theme }>`
 `
 const TenantName = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { size, spacingByChar } = themes
 
     return css`
-      margin: 0 0 0 ${size.pxToRem(size.space.XS)};
+      margin: 0 0 0 ${spacingByChar(1)};
       font-size: ${size.pxToRem(size.font.TALL)};
       color: #fff;
     `

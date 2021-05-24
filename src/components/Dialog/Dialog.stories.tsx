@@ -171,15 +171,6 @@ export const Action_Dialog: Story = () => {
   }
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
 
-  const Buttons = styled.div`
-    margin-top: -2rem;
-    padding: 1rem 1.5rem;
-
-    > button + button {
-      margin-left: 0.5rem;
-    }
-  `
-
   return (
     <>
       <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog" aria-controls="dialog-action">
@@ -265,6 +256,14 @@ export const Action_Dialog: Story = () => {
     </>
   )
 }
+const Buttons = styled.div`
+  margin-top: -2rem;
+  padding: 1rem 1.5rem;
+
+  > button + button {
+    margin-left: 0.5rem;
+  }
+`
 Action_Dialog.parameters = {
   docs: {
     description: {
@@ -387,6 +386,54 @@ Position.parameters = {
     },
   },
 }
+
+export const WithScroll: Story = () => {
+  return (
+    <ScrollWrapper>
+      <BorderedWrapper>
+        We can confirm that there is no change in the width of the wrapper for this text before and
+        after opening a dialog.
+      </BorderedWrapper>
+      <DialogWrapper>
+        <DialogTrigger>
+          <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-with-scroll-1">
+            Opne Dialog
+          </SecondaryButton>
+        </DialogTrigger>
+        <DialogContent id="dialog-with-scroll-1">
+          <ContentWrapper>
+            <div>
+              The content behind the opened dialog is not scrollable.
+              <br />
+              Of course the content on the opened dialog is scrollable.
+            </div>
+            <br />
+          </ContentWrapper>
+        </DialogContent>
+      </DialogWrapper>
+    </ScrollWrapper>
+  )
+}
+WithScroll.parameters = { docs: { disable: true } }
+const ScrollWrapper = styled.div`
+  height: 200vh;
+  margin: 1rem;
+  padding: 1rem;
+`
+const BorderedWrapper = styled.div`
+  margin: 1rem 0;
+  padding: 1rem;
+  border: solid 1px gray;
+`
+const ContentWrapper = styled.div`
+  width: 50vh;
+  height: 50vh;
+  overflow: auto;
+  padding: 1rem;
+  & > div {
+    margin-bottom: 100vh;
+  }
+`
 
 export const RegOpendMessage: Story = () => {
   return (

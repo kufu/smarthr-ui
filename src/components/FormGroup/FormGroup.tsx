@@ -101,71 +101,53 @@ const Title = styled(Heading)<{ themes: Theme }>`
 `
 
 const StatusLabels = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, spacing } = themes
-
-    return css`
-      margin-left: ${fontSize.pxToRem(spacing.XXS)};
+  ${({ themes: { spacingByChar } }) =>
+    css`
+      margin-left: ${spacingByChar(0.5)};
       display: inline-block;
       line-height: 1;
-    `
-  }}
+    `}
 `
 
 const StyledStatusLabel = styled(StatusLabel)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize } = themes
-
-    return css`
-      margin-right: ${fontSize.pxToRem(4)};
+  ${({ themes: { spacingByChar } }) =>
+    css`
+      margin-right: ${spacingByChar(0.25)};
       display: inline-block;
-    `
-  }}
+    `}
 `
 
 const HelpMessage = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, spacing } = themes
-
-    return css`
+  ${({ themes: { fontSize, spacingByChar } }) =>
+    css`
       display: block;
-      margin-top: ${fontSize.pxToRem(spacing.XXS)};
+      margin-top: ${spacingByChar(0.5)};
       font-size: ${fontSize.pxToRem(fontSize.TALL)};
-    `
-  }}
+    `}
 `
 
 const ErrorMessage = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, spacing } = themes
-
-    return css`
+  ${({ themes: { fontSize, spacingByChar } }) =>
+    css`
       display: flex;
       align-items: center;
-      margin-top: ${fontSize.pxToRem(spacing.XXS)};
+      margin-top: ${spacingByChar(0.5)};
       font-size: ${fontSize.pxToRem(fontSize.TALL)};
       line-height: 1;
-    `
-  }}
+    `}
 `
 
 const ErrorIcon = styled(FaExclamationCircleIcon)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize } = themes
-
-    return css`
-      margin-right: ${fontSize.pxToRem(4)};
-    `
-  }}
+  ${({ themes: { spacingByChar } }) =>
+    css`
+      margin-right: ${spacingByChar(0.25)};
+    `}
 `
 
 const Body = styled.span<{ themes: Theme; margin: innerMarginType }>`
-  ${({ themes, margin }) => {
-    const { fontSize, spacing } = themes
-
-    return css`
+  ${({ themes: { spacing }, margin }) =>
+    css`
       display: block;
-      margin-top: ${fontSize.pxToRem(spacing[margin])};
-    `
-  }}
+      margin-top: ${spacing[margin]};
+    `}
 `

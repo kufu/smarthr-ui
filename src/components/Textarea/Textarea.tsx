@@ -47,6 +47,7 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) =
         textAreaWidth={textAreaWidth}
         ref={ref}
         themes={theme}
+        aria-invalid={props.error || undefined}
       />
       {maxLength && (
         <Counter themes={theme}>
@@ -64,10 +65,10 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) =
 const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: string | number }>`
   ${(props) => {
     const { themes, textAreaWidth = 'auto', error } = props
-    const { size, frame, palette } = themes
+    const { size, spacingByChar, frame, palette } = themes
 
     return css`
-      padding: ${size.pxToRem(size.space.XXS)};
+      padding: ${spacingByChar(0.5)};
       font-size: ${size.pxToRem(size.font.TALL)};
       color: ${palette.TEXT_BLACK};
       border-radius: ${frame.border.radius.m};

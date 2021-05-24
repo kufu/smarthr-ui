@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react'
+import React, { HTMLAttributes, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 
 type Props = DialogContentInnerProps
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const Dialog: React.VFC<Props> = ({ children, ...props }) => {
+export const Dialog: React.VFC<Props & ElementProps> = ({ children, className = '', ...props }) => {
   const element = useRef(document.createElement('div')).current
 
   useEffect(() => {
@@ -16,5 +16,10 @@ export const Dialog: React.VFC<Props> = ({ children, ...props }) => {
     }
   }, [element])
 
-  return createPortal(<DialogContentInner {...props}>{children}</DialogContentInner>, element)
+  return createPortal(
+    <DialogContentInner className={className} {...props}>
+      {children}
+    </DialogContentInner>,
+    element,
+  )
 }
