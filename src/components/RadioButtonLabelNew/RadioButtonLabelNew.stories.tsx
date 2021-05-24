@@ -1,7 +1,7 @@
-import { action } from '@storybook/addon-actions'
-import { storiesOf } from '@storybook/react'
-import * as React from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import styled from 'styled-components'
+import { storiesOf } from '@storybook/react'
+
 import readme from './README.md'
 
 import { RadioButtonLabelNew } from './RadioButtonLabelNew'
@@ -12,46 +12,58 @@ storiesOf('RadioButtonLabelNew', module)
       sidebar: readme,
     },
   })
-  .add('all', () => (
-    <List>
-      <li>
-        <RadioButtonLabelNew
-          label="light / unchecked"
-          name="sample"
-          checked={false}
-          onChange={action('onChange')}
-        />
-      </li>
-      <li>
-        <RadioButtonLabelNew
-          label="light / checked"
-          name="sample"
-          checked={true}
-          onChange={action('onChange')}
-        />
-      </li>
-      <li>
-        <RadioButtonLabelNew
-          label="light / unchecked / disabled"
-          name="sample"
-          checked={false}
-          disabled={true}
-          onChange={action('onChange')}
-        />
-      </li>
-      <li>
-        <RadioButtonLabelNew
-          label="light / checked / disabled"
-          name="sample"
-          checked={true}
-          disabled={true}
-          onChange={action('onChange')}
-        />
-      </li>
-    </List>
-  ))
+  .add('all', () => {
+    const [checkedName, setCheckedName] = useState<string | null>(null)
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => setCheckedName(e.currentTarget.name)
 
-const List = styled.ul`
+    return (
+      <WrapperList>
+        <li>
+          <Title>With children prop</Title>
+
+          <InnerList>
+            <li>
+              <RadioButtonLabelNew name="1" checked={checkedName === '1'} onChange={handleChange}>
+                RadioButtonLabelNew
+              </RadioButtonLabelNew>
+            </li>
+
+            <li>
+              <RadioButtonLabelNew
+                name="2"
+                checked={checkedName === '2'}
+                disabled
+                onChange={handleChange}
+              >
+                RadioButtonLabelNew / disabled
+              </RadioButtonLabelNew>
+            </li>
+          </InnerList>
+        </li>
+
+        <li>
+          <Title>Without children prop</Title>
+
+          <InnerList>
+            <li>
+              <RadioButtonLabelNew name="3" checked={checkedName === '3'} onChange={handleChange} />
+            </li>
+
+            <li>
+              <RadioButtonLabelNew
+                name="4"
+                checked={checkedName === '4'}
+                disabled
+                onChange={handleChange}
+              />
+            </li>
+          </InnerList>
+        </li>
+      </WrapperList>
+    )
+  })
+
+const WrapperList = styled.ul`
   padding: 0 24px;
   list-style: none;
 
@@ -61,9 +73,20 @@ const List = styled.ul`
     &:not(:first-child) {
       margin-top: 8px;
     }
+  }
+`
+const InnerList = styled.ul`
+  padding: 0;
+  list-style: none;
 
-    &.dark {
-      background-color: gray;
+  & > li {
+    display: inline-block;
+
+    &:not(:first-child) {
+      margin-left: 16px;
     }
   }
+`
+const Title = styled.p`
+  margin: 0 0 16px 0;
 `

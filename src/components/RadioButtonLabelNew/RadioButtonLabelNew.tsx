@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -6,17 +6,19 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { RadioButton, Props as RadioButtonProps } from '../RadioButton'
 
 type Props = RadioButtonProps & {
-  label: string
+  children?: ReactNode
 }
 
-export const RadioButtonLabelNew: FC<Props> = ({ label, className = '', ...props }) => {
+export const RadioButtonLabelNew: FC<Props> = ({ children, className = '', ...props }) => {
   const theme = useTheme()
+
+  if (!children) return <RadioButton className={className} {...props} />
 
   return (
     <Wrapper className={className}>
-      <Label className={`${props.disabled ? 'disabled' : ''}`} themes={theme}>
+      <Label className={props.disabled ? 'disabled' : ''} themes={theme}>
         <RadioButton {...props} />
-        <Txt themes={theme}>{label}</Txt>
+        <Txt themes={theme}>{children}</Txt>
       </Label>
     </Wrapper>
   )
@@ -27,15 +29,16 @@ const Wrapper = styled.div`
 `
 const Label = styled.label<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette } = themes
+    const { color } = themes
+
     return css`
       display: flex;
       align-items: center;
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       cursor: pointer;
 
       &.disabled {
-        color: ${palette.TEXT_DISABLED};
+        color: ${color.TEXT_DISABLED};
         cursor: default;
       }
     `
@@ -43,10 +46,11 @@ const Label = styled.label<{ themes: Theme }>`
 `
 const Txt = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar } = themes
+    const { fontSize, spacingByChar } = themes
+
     return css`
       margin: 0 0 0 ${spacingByChar(0.5)};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
     `
   }}
 `
