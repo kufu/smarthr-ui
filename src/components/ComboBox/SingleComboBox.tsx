@@ -167,6 +167,7 @@ export const SingleComboBox: VFC<Props> = ({
     <Container
       ref={outerRef}
       className={`${disabled ? 'disabled' : ''} ${className}`}
+      $width={width}
       role="combobox"
       aria-haspopup="listbox"
       aria-controls={aria.listBoxId}
@@ -178,7 +179,6 @@ export const SingleComboBox: VFC<Props> = ({
         name={name}
         value={inputValue}
         disabled={disabled}
-        width={width}
         error={error}
         placeholder={placeholder}
         suffix={
@@ -260,13 +260,15 @@ export const SingleComboBox: VFC<Props> = ({
   )
 }
 
-const Container = styled.div`
+const Container = styled.div<{ $width: number | string }>`
   display: inline-block;
+  width: ${({ $width = 'auto' }) => (typeof $width === 'number' ? `${$width}px` : $width)};
   &.disabled {
     cursor: not-allowed;
   }
 `
 const StyledInput = styled(Input)`
+  width: 100%;
   input::-ms-clear {
     display: none;
   }
