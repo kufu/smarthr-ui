@@ -1,4 +1,4 @@
-import React, { FC, InputHTMLAttributes } from 'react'
+import React, { InputHTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -19,7 +19,7 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   hasFileList?: boolean
 }
 
-export const InputFile: FC<Props> = ({
+export const InputFile: VFC<Props> = ({
   id,
   className,
   size = 'default',
