@@ -171,15 +171,6 @@ export const Action_Dialog: Story = () => {
   }
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
 
-  const Buttons = styled.div`
-    margin-top: -2rem;
-    padding: 1rem 1.5rem;
-
-    > button + button {
-      margin-left: 0.5rem;
-    }
-  `
-
   return (
     <>
       <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog" aria-controls="dialog-action">
@@ -265,6 +256,14 @@ export const Action_Dialog: Story = () => {
     </>
   )
 }
+const Buttons = styled.div`
+  margin-top: -2rem;
+  padding: 1rem 1.5rem;
+
+  > button + button {
+    margin-left: 0.5rem;
+  }
+`
 Action_Dialog.parameters = {
   docs: {
     description: {

@@ -11,7 +11,11 @@ export {
   FilterDropdown,
 } from './components/Dropdown'
 export { FieldSet } from './components/FieldSet'
-export { FlashMessage } from './components/FlashMessage'
+export {
+  FlashMessage,
+  FlashMessageListProvider,
+  useFlashMessageList,
+} from './components/FlashMessage'
 export { FloatArea } from './components/FloatArea'
 export { Input, CurrencyInput } from './components/Input'
 export { InputFile } from './components/InputFile'
@@ -88,6 +92,10 @@ export {
 export { MultiComboBox, SingleComboBox } from './components/ComboBox'
 export { SideNav } from './components/SideNav'
 export { CompactInformationPanel } from './components/CompactInformationPanel'
+export { Text } from './components/Text'
+
+// layout components
+export { LineUp, Stack } from './components/Layout'
 
 // themes
 export { createTheme } from './themes/createTheme'

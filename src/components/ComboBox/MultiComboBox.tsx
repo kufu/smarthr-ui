@@ -189,7 +189,7 @@ export const MultiComboBox: FC<Props> = ({
         <List themes={theme}>
           {selectedItems.map(({ value, label, deletable = true }, i) => (
             <li key={i}>
-              <SelectedItem themes={theme}>
+              <SelectedItem themes={theme} disabled={disabled}>
                 <SelectedItemLabel themes={theme}>{label}</SelectedItemLabel>
 
                 {deletable && (
@@ -197,13 +197,10 @@ export const MultiComboBox: FC<Props> = ({
                     type="button"
                     themes={theme}
                     className={DELETE_BUTTON_CLASS_NAME}
+                    disabled={disabled}
                     onClick={() => onDelete({ value, label })}
                   >
-                    <FaTimesCircleIcon
-                      size={11}
-                      color={theme.palette.TEXT_BLACK}
-                      visuallyHiddenText="delete"
-                    />
+                    <FaTimesCircleIcon size={11} color={'inherit'} visuallyHiddenText="delete" />
                   </DeleteButton>
                 )}
               </SelectedItem>
@@ -326,16 +323,16 @@ const List = styled.ul<{ themes: Theme }>`
     `
   }}
 `
-const SelectedItem = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
+const SelectedItem = styled.div<{ themes: Theme; disabled: boolean }>`
+  ${({ themes, disabled }) => {
     const { border, color, fontSize, spacingByChar } = themes
 
     return css`
       display: flex;
       border-radius: calc(${fontSize.SHORT}px + (${spacingByChar(0.5)} - ${borderWidth}px) * 2);
       border: ${border.shorthand};
-      background-color: #fff;
-      color: ${color.TEXT_BLACK};
+      background-color: ${disabled ? color.disableColor('#fff') : '#fff'};
+      color: ${disabled ? color.TEXT_DISABLED : color.TEXT_BLACK};
       font-size: ${fontSize.SHORT}px;
       line-height: 1;
     `
@@ -348,12 +345,12 @@ const SelectedItemLabel = styled.span<{ themes: Theme }>`
     `
   }}
 `
-const DeleteButton = styled(ResetButton)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar, shadow } }) => {
+const DeleteButton = styled(ResetButton)<{ themes: Theme; disabled: boolean }>`
+  ${({ themes: { spacingByChar, shadow }, disabled }) => {
     return css`
       padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);
       border-radius: 50%;
-      cursor: pointer;
+      cursor: ${disabled ? 'not-allowed' : 'pointer'};
       line-height: 0;
 
       &:focus {
