@@ -40,13 +40,13 @@ export const TextLink: VFC<Props & ElementProps> = ({
 
 const StyledAncher = styled.a<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette } = themes
+    const { color } = themes
     return css`
       text-underline-position: under;
-      color: ${palette.TEXT_LINK};
+      color: ${color.TEXT_LINK};
 
       &:hover {
-        color: ${palette.hoverColor(palette.TEXT_LINK)};
+        color: ${color.hoverColor(color.TEXT_LINK)};
       }
     `
   }}
