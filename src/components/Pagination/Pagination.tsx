@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { range } from '../../libs/lodash'
@@ -16,7 +16,7 @@ interface Props {
   withoutNumbers?: boolean
 }
 
-export const Pagination: FC<Props> = ({
+export const Pagination: VFC<Props> = ({
   total,
   current,
   onClick,
