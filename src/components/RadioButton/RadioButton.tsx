@@ -5,6 +5,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 export type Props = InputHTMLAttributes<HTMLInputElement>
 
+/**
+ * @deprecated The RadioButton component is deprecated, so use RadioButtonLabelNew component instead.
+ */
 export const RadioButton: FC<Props> = ({ className = '', onChange, ...props }) => {
   const theme = useTheme()
   const { checked, disabled } = props
