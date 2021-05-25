@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, createContext } from 'react'
+import React, { ReactNode, VFC, createContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -14,7 +14,7 @@ type Props = {
   className?: string
 }
 
-export const Table: FC<Props> = ({ children, className = '' }) => {
+export const Table: VFC<Props> = ({ children, className = '' }) => {
   const theme = useTheme()
 
   return (
