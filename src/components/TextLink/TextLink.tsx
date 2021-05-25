@@ -54,17 +54,17 @@ const StyledAncher = styled.a<{ themes: Theme }>`
 
 const PrefixWrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { spacingByChar } = themes
     return css`
-      margin-right: ${size.pxToRem(size.space.XXS)};
+      margin-right: ${spacingByChar(0.5)};
     `
   }}
 `
 const SuffixWrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { spacingByChar } = themes
     return css`
-      margin-left: ${size.pxToRem(size.space.XXS)};
+      margin-left: ${spacingByChar(0.5)};
     `
   }}
 `
