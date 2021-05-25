@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, VFC, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -70,7 +70,7 @@ type Props = {
   onSelect: (option: { value: string; label: string }) => void
 }
 
-export const MultiComboBox: FC<Props> = ({
+export const MultiComboBox: VFC<Props> = ({
   items,
   selectedItems,
   name,
