@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
+import { useClassNames } from './useClassNames'
 
 import { RadioButton, Props as RadioButtonProps } from '../RadioButton'
 
@@ -11,17 +12,24 @@ type Props = RadioButtonProps & {
 }
 
 export const RadioButtonLabelNew: FC<Props> = ({ children, className = '', ...props }) => {
-  const radioButtonId = useId()
   const theme = useTheme()
+  const classNames = useClassNames()
+  const radioButtonId = useId()
 
-  if (!children) return <RadioButton className={className} {...props} />
+  if (!children) {
+    return <RadioButton className={`${className} ${classNames.radioButton}`} {...props} />
+  }
 
   return (
-    <Wrapper className={className}>
+    <Wrapper className={`${className} ${classNames.wrapper}`}>
       <Inner>
-        <RadioButton id={radioButtonId} {...props} />
+        <RadioButton id={radioButtonId} className={classNames.radioButton} {...props} />
 
-        <Label htmlFor={radioButtonId} className={props.disabled ? 'disabled' : ''} themes={theme}>
+        <Label
+          htmlFor={radioButtonId}
+          className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
+          themes={theme}
+        >
           {children}
         </Label>
       </Inner>
