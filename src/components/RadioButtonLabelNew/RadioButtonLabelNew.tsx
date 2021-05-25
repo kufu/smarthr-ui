@@ -44,10 +44,11 @@ const Label = styled.label<{ themes: Theme }>`
       margin-left: ${spacingByChar(0.5)};
       color: ${color.TEXT_BLACK};
       font-size: ${fontSize.M};
+      cursor: pointer;
 
       &.disabled {
         color: ${color.TEXT_DISABLED};
-        cursor: default;
+        cursor: not-allowed;
       }
     `
   }}
