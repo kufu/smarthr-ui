@@ -12,7 +12,7 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
 }
 
 /**
- * @deprecated The CheckBox component will be deprecated, so use CheckBoxLabelNew component instead.
+ * @deprecated The CheckBox component is deprecated, so use CheckBoxLabelNew component instead.
  */
 export const CheckBox: VFC<Props> = ({ mixed = false, className = '', onChange, ...props }) => {
   const theme = useTheme()
