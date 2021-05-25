@@ -9,6 +9,6 @@ interface Props extends React.Props<Record<string, unknown>> {
   theme: CreatedTheme
 }
 
-export const ThemeProvider: React.FC<Props> = ({ theme, children }) => {
+export const ThemeProvider: React.VFC<Props> = ({ theme, children }) => {
   return <Provider value={theme}>{children}</Provider>
 }
