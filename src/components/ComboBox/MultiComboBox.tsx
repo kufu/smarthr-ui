@@ -71,7 +71,7 @@ type Props<T> = {
   onSelect: (item: Item<T>) => void
 }
 
-export function MultiComboBox<T = never>({
+export function MultiComboBox<T>({
   items,
   selectedItems,
   name,

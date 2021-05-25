@@ -65,7 +65,7 @@ type Props<T> = {
   onSelect: (item: Item<T> | null) => void
 }
 
-export function SingleComboBox<T = never>({
+export function SingleComboBox<T>({
   items,
   selectedItem,
   name,
