@@ -33,6 +33,8 @@ export const TextLink: VFC<Props & ElementProps> = ({
     if (onClick) {
       return ''
     }
+
+    return undefined
   }, [href, onClick])
   const actualOnClick = useMemo(() => {
     if (!onClick) {
