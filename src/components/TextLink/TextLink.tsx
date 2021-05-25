@@ -1,4 +1,4 @@
-import React, { AnchorHTMLAttributes, ReactNode, VFC } from 'react'
+import React, { AnchorHTMLAttributes, ReactNode, VFC, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaExternalLinkAltIcon } from '../Icon'
@@ -20,15 +20,39 @@ export const TextLink: VFC<Props & ElementProps> = ({
   ...props
 }) => {
   const theme = useTheme()
-  const actualSuffix =
-    suffix || (target === '_blank' ? <FaExternalLinkAltIcon aria-label="別タブで開く" /> : null)
+  const actualSuffix = useMemo(
+    () =>
+      suffix || (target === '_blank' ? <FaExternalLinkAltIcon aria-label="別タブで開く" /> : null),
+    [suffix, target],
+  )
+  const actualHref = useMemo(() => {
+    if (href) {
+      return href
+    }
+
+    if (onClick) {
+      return ''
+    }
+  }, [href, onClick])
+  const actualOnClick = useMemo(() => {
+    if (!onClick) {
+      return undefined
+    }
+
+    return (e: React.MouseEvent) => {
+      if (!href || (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey)) {
+        e.preventDefault()
+        onClick(e)
+      }
+    }
+  }, [href, onClick])
 
   return (
     <StyledAncher
       {...props}
-      href={generateHref(href, onClick)}
+      href={actualHref}
       target={target}
-      onClick={generateOnClick(href, onClick)}
+      onClick={actualOnClick}
       themes={theme}
     >
       {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
@@ -68,28 +92,3 @@ const SuffixWrapper = styled.span<{ themes: Theme }>`
     `
   }}
 `
-
-const generateHref = (href?: string, onClick?: (e: React.MouseEvent) => void) => {
-  if (href) {
-    return href
-  }
-
-  if (!onClick) {
-    return undefined
-  }
-
-  return ''
-}
-
-const generateOnClick = (href?: string, onClick?: (e: React.MouseEvent) => void) => {
-  if (!onClick) {
-    return undefined
-  }
-
-  return (e: React.MouseEvent) => {
-    if (!href || (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey)) {
-      e.preventDefault()
-      onClick(e)
-    }
-  }
-}
