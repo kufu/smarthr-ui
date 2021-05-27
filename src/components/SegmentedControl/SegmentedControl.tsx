@@ -136,26 +136,26 @@ const Container = styled.div`
   display: inline-flex;
 `
 const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
-  const { palette, frame } = themes
-  const { border } = frame
+  const { color, border, frame } = themes
   return css`
-    border: ${border.default};
+    border: ${frame.border.default};
     border-radius: 0;
 
     &[aria-checked='true'] {
       color: #fff;
-      background-color: ${palette.MAIN};
+      background-color: ${color.MAIN};
+      border: ${border.lineWidth} ${border.lineStyle} ${color.MAIN};
       &.hover {
-        background-color: ${palette.hoverColor(palette.MAIN)};
+        background-color: ${color.hoverColor(color.MAIN)};
       }
     }
     &:first-child {
-      border-top-left-radius: ${border.radius.m};
-      border-bottom-left-radius: ${border.radius.m};
+      border-top-left-radius: ${frame.border.radius.m};
+      border-bottom-left-radius: ${frame.border.radius.m};
     }
     &:last-child {
-      border-top-right-radius: ${border.radius.m};
-      border-bottom-right-radius: ${border.radius.m};
+      border-top-right-radius: ${frame.border.radius.m};
+      border-bottom-right-radius: ${frame.border.radius.m};
     }
     :not(:last-child) {
       border-right-width: 0;
