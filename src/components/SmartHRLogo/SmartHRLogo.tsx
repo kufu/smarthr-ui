@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
   className?: string
 }
 
-export const SmartHRLogo: FC<Props> = ({
+export const SmartHRLogo: VFC<Props> = ({
   title = 'SmartHR',
   width = 150,
   height = 27,
