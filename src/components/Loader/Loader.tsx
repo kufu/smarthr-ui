@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
@@ -24,7 +24,7 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const Loader: FC<Props & ElementProps> = ({
+export const Loader: VFC<Props & ElementProps> = ({
   size = 'm',
   text = '',
   type = 'primary',

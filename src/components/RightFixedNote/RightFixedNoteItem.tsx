@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
@@ -20,7 +20,7 @@ type Props = ItemProps & {
   onClickEdit: OnClickEdit
 }
 
-export const RightFixedNoteItem: FC<Props> = ({
+export const RightFixedNoteItem: VFC<Props> = ({
   id,
   text,
   date,
