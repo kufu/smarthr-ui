@@ -138,7 +138,7 @@ const Container = styled.div`
 const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
   const { color, border, frame } = themes
   return css`
-    border: ${frame.border.default};
+    border: ${border.shorthand};
     border-radius: 0;
 
     &[aria-checked='true'] {
@@ -147,11 +147,12 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
       border: ${border.lineWidth} ${border.lineStyle} ${color.MAIN};
       &.hover {
         background-color: ${color.hoverColor(color.MAIN)};
+        border-color: ${color.hoverColor(color.MAIN)};
       }
-      // active時、buttonの両端にborder.defaultが表示されることを防ぐための処置
-      + button {
-        border-left: none;
-      }
+    }
+    // active時、buttonの両端にborder.defaultが表示されることを防ぐための処置
+    &[aria-checked='true'] + & {
+      border-left: none;
     }
     &:first-child {
       border-top-left-radius: ${frame.border.radius.m};
