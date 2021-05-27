@@ -145,6 +145,7 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
       color: #fff;
       background-color: ${color.MAIN};
       border: ${border.lineWidth} ${border.lineStyle} ${color.MAIN};
+      border-left: ${border.lineWidth} ${border.lineStyle} transparent;
       &.hover {
         background-color: ${color.hoverColor(color.MAIN)};
         border-color: ${color.hoverColor(color.MAIN)};
@@ -152,7 +153,10 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
     }
     // active時、buttonの両端にborder.defaultが表示されることを防ぐための処置
     &[aria-checked='true'] + & {
-      border-left: none;
+      border-right-width: 0;
+      &:last-child {
+        border-right-width: ${border.lineWidth};
+      }
     }
     &:first-child {
       border-top-left-radius: ${frame.border.radius.m};
