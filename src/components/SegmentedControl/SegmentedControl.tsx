@@ -145,6 +145,7 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
       color: #fff;
       background-color: ${color.MAIN};
       border: ${border.lineWidth} ${border.lineStyle} ${color.MAIN};
+      position: relative;
       &.hover {
         background-color: ${color.hoverColor(color.MAIN)};
       }
