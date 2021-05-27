@@ -11,43 +11,28 @@ storiesOf('TextLink', module)
       sidebar: readme,
     },
   })
-  .add('all', () => {
-    const onClick = (e?: React.MouseEvent) => {
-      const href = '/'
-
-      if (!e) {
-        return href
-      }
-
-      location.href = href
-      return
-    }
-
-    return (
-      <Wrapper>
-        <li>
-          <TextLink href="/" prefix={<FaFlagIcon />}>
-            Link to Root.
-          </TextLink>
-        </li>
-        <li>
-          <TextLink href="/" target="_blank">
-            Link to Root with new Tabs.
-          </TextLink>
-        </li>
-        <li>
-          <TextLink href={onClick()} onClick={onClick}>
-            unuse shortcut click: Open root page with change locale.href.
-            <br />
-            use Cmd + click: Open root page with new Tabs.
-          </TextLink>
-        </li>
-        <li>
-          <TextLink>unuse href attribute: can tab focasable.</TextLink>
-        </li>
-      </Wrapper>
-    )
-  })
+  .add('all', () => (
+    <Wrapper>
+      <li>
+        <TextLink href="/" prefix={<FaFlagIcon />}>
+          Link to Root.
+        </TextLink>
+      </li>
+      <li>
+        <TextLink href="/" target="_blank">
+          Link to Root with new Tabs.
+        </TextLink>
+      </li>
+      <li>
+        <TextLink onClick={() => alert('click!')}>
+          Even if only onClick is set, it is focusable.
+        </TextLink>
+      </li>
+      <li>
+        <TextLink>unuse href attribute: can tab focasable.</TextLink>
+      </li>
+    </Wrapper>
+  ))
 
 const Wrapper = styled.ul`
   list-style: none;
