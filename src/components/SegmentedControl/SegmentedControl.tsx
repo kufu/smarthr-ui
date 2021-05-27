@@ -145,9 +145,12 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
       color: #fff;
       background-color: ${color.MAIN};
       border: ${border.lineWidth} ${border.lineStyle} ${color.MAIN};
-      position: relative;
       &.hover {
         background-color: ${color.hoverColor(color.MAIN)};
+      }
+      // active時、buttonの両端にborder.defaultが表示されることを防ぐための処置
+      + button {
+        border-left: none;
       }
     }
     &:first-child {
