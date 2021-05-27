@@ -151,7 +151,7 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
         border-color: ${color.hoverColor(color.MAIN)};
       }
     }
-    // active時、buttonの両端にborder.defaultが表示されることを防ぐための処置
+    /* active時、buttonの両端にborder.defaultが表示されることを防ぐための処置 */
     &[aria-checked='true'] + & {
       border-right-width: 0;
       &:last-child {
