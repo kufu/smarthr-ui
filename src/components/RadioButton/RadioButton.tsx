@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, InputHTMLAttributes, useCallback } from 'react'
+import React, { ChangeEvent, InputHTMLAttributes, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -8,7 +8,7 @@ export type Props = InputHTMLAttributes<HTMLInputElement>
 /**
  * @deprecated The RadioButton component is deprecated, so use RadioButtonLabelNew component instead.
  */
-export const RadioButton: FC<Props> = ({ className = '', onChange, ...props }) => {
+export const RadioButton: VFC<Props> = ({ className = '', onChange, ...props }) => {
   const theme = useTheme()
   const { checked, disabled } = props
   const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
