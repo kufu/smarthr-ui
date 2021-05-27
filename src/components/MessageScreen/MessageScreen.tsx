@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -14,12 +14,13 @@ type Props = {
     url: string
     target?: string
   }>
+  children?: ReactNode
   className?: string
 }
 
 const LOGO_HEIGHT = 20
 
-export const MessageScreen: FC<Props> = ({ title, links, children, className = '' }) => {
+export const MessageScreen: VFC<Props> = ({ title, links, children, className = '' }) => {
   const theme = useTheme()
 
   return (

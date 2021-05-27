@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, VFC, useCallback, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -20,7 +20,7 @@ type Props = {
   className?: string
 }
 
-export const SegmentedControl: FC<Props> = ({
+export const SegmentedControl: VFC<Props> = ({
   options,
   value,
   onClickOption,
