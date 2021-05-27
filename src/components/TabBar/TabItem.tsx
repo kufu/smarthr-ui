@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -13,7 +13,7 @@ type Props = {
   onClick: (tabId: string) => void
 }
 
-export const TabItem: FC<Props> = ({
+export const TabItem: VFC<Props> = ({
   id,
   children,
   onClick,

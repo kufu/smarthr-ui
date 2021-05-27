@@ -1,4 +1,4 @@
-import React, { FC, TextareaHTMLAttributes, useEffect, useRef, useState } from 'react'
+import React, { TextareaHTMLAttributes, VFC, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -22,7 +22,7 @@ const getStringLength = (value: string | number | readonly string[]) => {
   return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
 
-export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) => {
+export const Textarea: VFC<Props> = ({ autoFocus, maxLength, width, ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
   const currentValue = props.defaultValue || props.value
