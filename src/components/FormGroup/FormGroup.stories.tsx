@@ -15,7 +15,7 @@ type SampleChildrenProps = {
   disabled?: boolean
 }
 
-const SampleChildren: React.FC<SampleChildrenProps> = ({ id1, id2, disabled }) => {
+const SampleChildren: React.VFC<SampleChildrenProps> = ({ id1, id2, disabled }) => {
   return (
     <SampleWrapper>
       <SampleFormGroup
