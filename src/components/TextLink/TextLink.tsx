@@ -42,10 +42,10 @@ export const TextLink: VFC<Props & ElementProps> = ({
     }
 
     return (e: React.MouseEvent) => {
-      if (!href || (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey)) {
+      if (!href) {
         e.preventDefault()
-        onClick(e)
       }
+      onClick(e)
     }
   }, [href, onClick])
 
