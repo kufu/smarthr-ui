@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -12,7 +12,7 @@ type Props = RadioButtonProps & {
 /**
  * @deprecated The RadioButtonLabel component is deprecated, so use RadioButtonLabelNew component instead.
  */
-export const RadioButtonLabel: FC<Props> = ({ label, className = '', ...props }) => {
+export const RadioButtonLabel: VFC<Props> = ({ label, className = '', ...props }) => {
   const theme = useTheme()
 
   return (

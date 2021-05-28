@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -9,7 +9,7 @@ type Props = {
   className?: string
 }
 
-export const TabBar: FC<Props> = ({ className = '', bordered = true, children }) => {
+export const TabBar: VFC<Props> = ({ className = '', bordered = true, children }) => {
   const theme = useTheme()
   const classNames = `${className} ${bordered ? 'bordered' : ''}`
 
