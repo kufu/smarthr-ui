@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, VFC, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -41,6 +41,10 @@ type Props = {
    */
   placeholder?: string
   /**
+   * If `true`, a loader is displayed on the dropdown list.
+   */
+  isLoading?: boolean
+  /**
    * The value given to the width style of input.
    */
   width?: number | string
@@ -66,7 +70,7 @@ type Props = {
   onSelect: (option: { value: string; label: string }) => void
 }
 
-export const MultiComboBox: FC<Props> = ({
+export const MultiComboBox: VFC<Props> = ({
   items,
   selectedItems,
   name,
@@ -74,6 +78,7 @@ export const MultiComboBox: FC<Props> = ({
   error = false,
   creatable = false,
   placeholder = '',
+  isLoading,
   width = 'auto',
   className = '',
   onChange,
@@ -113,6 +118,7 @@ export const MultiComboBox: FC<Props> = ({
     hasNoMatch:
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
+    isLoading,
   })
 
   const focus = useCallback(() => {
