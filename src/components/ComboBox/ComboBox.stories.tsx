@@ -262,6 +262,22 @@ export const Disabled: Story = () => {
           selected="value"
         />
         <Textarea disabled={true} value="value" />
+        <Input placeholder="placeholder" />
+        <Select
+          placeholder="placeholder"
+          options={[
+            { label: '', value: '' },
+            { label: 'label', value: 'value' },
+          ]}
+        />
+        <Textarea placeholder="placeholder" />
+        <Input value="value" />
+        <Select
+          placeholder="placeholder"
+          options={[{ label: 'label', value: 'value' }]}
+          selected="value"
+        />
+        <Textarea value="value" />
       </dd>
     </List>
   )

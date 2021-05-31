@@ -85,6 +85,10 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
               border-color: ${palette.hoverColor(palette.MAIN)};
             }
           `}
+
+      &::placeholder {
+        color: ${palette.TEXT_GREY};
+      }
       &[disabled] {
         background-color: ${palette.COLUMN};
         pointer-events: none;
