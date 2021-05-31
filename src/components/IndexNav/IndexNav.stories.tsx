@@ -1,6 +1,6 @@
 import React from 'react'
-import { storiesOf } from '@storybook/react'
 import styled from 'styled-components'
+import { storiesOf } from '@storybook/react'
 
 import { IndexNav } from './IndexNav'
 
@@ -38,6 +38,7 @@ storiesOf('IndexNav', module)
           ]}
         />
       </dd>
+
       <dt>Second layer current</dt>
       <dd>
         <IndexNav
@@ -61,9 +62,18 @@ storiesOf('IndexNav', module)
   ))
 
 const List = styled.dl`
-  margin: 1rem;
+  margin: 0;
+  padding: 24px;
+
+  & > dt {
+    margin-bottom: 16px;
+
+    &:not(:first-child) {
+      margin-top: 24px;
+    }
+  }
 
   & > dd {
-    margin: 10px 10px 40px;
+    margin: 0;
   }
 `
