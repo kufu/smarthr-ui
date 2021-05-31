@@ -123,7 +123,7 @@ const Wrapper = styled.div<{
     `}
     ${disabled &&
     css`
-      background-color: ${palette.BASE_GREY};
+      background-color: ${palette.COLUMN};
       color: ${palette.TEXT_DISABLED};
     `}
   `
