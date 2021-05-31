@@ -12,6 +12,9 @@ type Props = CheckBoxProps & {
   lineHeight?: number
 }
 
+/**
+ * @deprecated The CheckBoxLabel component is deprecated, so use CheckBoxLabelNew component instead.
+ */
 export const CheckBoxLabel: VFC<Props & ElementProps> = ({
   label,
   lineHeight = 1.5,
