@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -9,7 +9,7 @@ type Props = {
   children: string
 }
 
-export const StatusLabel: FC<Props> = ({ type = 'done', className = '', children }) => {
+export const StatusLabel: VFC<Props> = ({ type = 'done', className = '', children }) => {
   const theme = useTheme()
 
   return (

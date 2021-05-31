@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, VFC, useCallback, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -20,7 +20,7 @@ type Props = {
   className?: string
 }
 
-export const SegmentedControl: FC<Props> = ({
+export const SegmentedControl: VFC<Props> = ({
   options,
   value,
   onClickOption,
@@ -136,26 +136,36 @@ const Container = styled.div`
   display: inline-flex;
 `
 const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
-  const { palette, frame } = themes
-  const { border } = frame
+  const { color, border, frame } = themes
   return css`
-    border: ${border.default};
+    border: ${border.shorthand};
     border-radius: 0;
 
     &[aria-checked='true'] {
       color: #fff;
-      background-color: ${palette.MAIN};
+      background-color: ${color.MAIN};
+      border: ${border.lineWidth} ${border.lineStyle} ${color.MAIN};
+      border-left: ${border.lineWidth} ${border.lineStyle} transparent;
       &.hover {
-        background-color: ${palette.hoverColor(palette.MAIN)};
+        background-color: ${color.hoverColor(color.MAIN)};
+        border-color: ${color.hoverColor(color.MAIN)};
+      }
+    }
+
+    /* active時、buttonの両端にborder.defaultが表示されることを防ぐための処置 */
+    &[aria-checked='true'] + & {
+      border-right-width: 0;
+      &:last-child {
+        border-right-width: ${border.lineWidth};
       }
     }
     &:first-child {
-      border-top-left-radius: ${border.radius.m};
-      border-bottom-left-radius: ${border.radius.m};
+      border-top-left-radius: ${frame.border.radius.m};
+      border-bottom-left-radius: ${frame.border.radius.m};
     }
     &:last-child {
-      border-top-right-radius: ${border.radius.m};
-      border-bottom-right-radius: ${border.radius.m};
+      border-top-right-radius: ${frame.border.radius.m};
+      border-bottom-right-radius: ${frame.border.radius.m};
     }
     :not(:last-child) {
       border-right-width: 0;

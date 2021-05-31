@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -10,7 +10,7 @@ export type Props = {
   className?: string
 }
 
-export const Head: FC<Props> = ({ bulkActionArea, className = '', children }) => {
+export const Head: VFC<Props> = ({ bulkActionArea, className = '', children }) => {
   const themes = useTheme()
   return (
     <thead className={className}>
