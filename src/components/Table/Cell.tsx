@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, ReactNode, useContext } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -17,7 +17,7 @@ export type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLTableDataCellElement>, keyof Props>
 
-export const Cell: FC<Props & ElementProps> = ({
+export const Cell: VFC<Props & ElementProps> = ({
   className = '',
   children,
   onClick,
