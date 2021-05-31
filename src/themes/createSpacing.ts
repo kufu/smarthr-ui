@@ -20,30 +20,8 @@ export interface CreatedSpacingTheme {
 export type CreatedSpacingByCharTheme = (size: CharRelativeSize) => string
 
 const primitiveTokens = [
-  0.25,
-  0.5,
-  0.75,
-  1,
-  1.25,
-  1.5,
-  2,
-  2.5,
-  3,
-  3.5,
-  4,
-  8,
-  -0.25,
-  -0.5,
-  -0.75,
-  -1,
-  -1.25,
-  -1.5,
-  -2,
-  -2.5,
-  -3,
-  -3.5,
-  -4,
-  -8,
+  0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4, 8, -0.25, -0.5, -0.75, -1, -1.25, -1.5, -2,
+  -2.5, -3, -3.5, -4, -8,
 ] as const
 
 export type CharRelativeSize = typeof primitiveTokens[number]
@@ -74,8 +52,9 @@ const getSpacingByChar = (baseSize: number) => {
 }
 
 export const createSpacing = (userBaseSize: number = defaultBaseSize) => getSpacing(userBaseSize)
-export const createSpacingByChar = (userBaseSize: number = defaultBaseSize) => (
-  size: CharRelativeSize,
-) => getSpacingByChar(userBaseSize)[size]
+export const createSpacingByChar =
+  (userBaseSize: number = defaultBaseSize) =>
+  (size: CharRelativeSize) =>
+    getSpacingByChar(userBaseSize)[size]
 
 export const defaultSpacing = createSpacing()
