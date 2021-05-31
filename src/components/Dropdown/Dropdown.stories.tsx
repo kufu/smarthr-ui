@@ -249,7 +249,6 @@ const List = styled.ul<{ themes: Theme }>`
         padding: 0 20px;
         border: none;
         background-color: #fff;
-        font-size: 14px;
         color: ${palette.TEXT_BLACK};
 
         &:hover {
@@ -280,7 +279,6 @@ const ControllableBoxMain = styled.div`
 `
 const Text = styled.p<{ themes: Theme }>`
   margin: 0;
-  font-size: 14px;
   color: ${({ themes }) => themes.palette.TEXT_BLACK};
 `
 const ControllableBoxBottom = styled.div<{ themes: Theme }>`
@@ -297,7 +295,6 @@ const ControllableBoxBottom = styled.div<{ themes: Theme }>`
 const Description = styled.p`
   margin: 0;
   padding: 100px 0;
-  font-size: 20px;
 `
 const RightAlign = styled.div`
   display: flex;
@@ -314,7 +311,6 @@ const Fixed = styled.div<{ themes: Theme }>`
   width: 100%;
   padding: 0 20px;
   border: none;
-  font-size: 14px;
   font-weight: bold;
   line-height: 40px;
   color: ${({ themes }) => themes.palette.TEXT_BLACK};
