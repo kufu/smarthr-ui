@@ -37,7 +37,7 @@ export const IndexNav: VFC<Props> = ({ items }) => {
   )
 }
 
-const List = styled.ul<{ themes: Theme }>(({ themes }) => {
+const List = styled.ol<{ themes: Theme }>(({ themes }) => {
   const { size } = themes
   return css`
     list-style: none;
