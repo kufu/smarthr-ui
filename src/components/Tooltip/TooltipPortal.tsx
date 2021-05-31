@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useLayoutEffect, useRef, useState } from 'react'
+import React, { ReactNode, VFC, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { getTooltipRect } from './tooltipHelper'
@@ -14,7 +14,7 @@ type Props = {
   vertical: 'top' | 'middle' | 'bottom'
 }
 
-export const TooltipPortal: FC<Props> = ({
+export const TooltipPortal: VFC<Props> = ({
   id,
   parentRect,
   children,
