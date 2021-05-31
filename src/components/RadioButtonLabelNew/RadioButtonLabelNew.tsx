@@ -51,7 +51,7 @@ const Label = styled.label<{ themes: Theme }>`
     return css`
       margin-left: ${spacingByChar(0.5)};
       color: ${color.TEXT_BLACK};
-      font-size: ${fontSize.M};
+      font-size: ${fontSize.S};
       cursor: pointer;
 
       &.disabled {
