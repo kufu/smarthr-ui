@@ -49,10 +49,10 @@ const resetButtonStyle = css`
 const Wrapper = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
-    const { size, spacingByChar, palette, interaction } = themes
+    const { fontSize, spacingByChar, palette, interaction } = themes
     return css`
       font-weight: bold;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       color: ${palette.TEXT_GREY};
       height: 40px;
       border-bottom: solid 3px transparent;

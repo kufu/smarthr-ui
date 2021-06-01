@@ -46,10 +46,10 @@ const Label = styled.label<{ themes: Theme }>`
 `
 const Txt = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar } = themes
+    const { fontSize, spacingByChar } = themes
     return css`
       margin: 0 0 0 ${spacingByChar(0.5)};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
     `
   }}
 `

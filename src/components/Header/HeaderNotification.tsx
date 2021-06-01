@@ -39,7 +39,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
 `
 const Button = styled.button<{ themes: Theme; isZero: boolean }>`
   ${({ themes, isZero }) => {
-    const { size, interaction } = themes
+    const { fontSize, interaction } = themes
 
     return css`
       display: inline-block;
@@ -50,7 +50,7 @@ const Button = styled.button<{ themes: Theme; isZero: boolean }>`
       border-radius: 4px;
       background-color: ${isZero ? '#aaa' : '#fcb156'};
       color: #fff;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       transition: background-color ${interaction.hover.animation};
       cursor: pointer;
 

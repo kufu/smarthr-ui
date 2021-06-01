@@ -65,11 +65,11 @@ export const Textarea: VFC<Props> = ({ autoFocus, maxLength, width, ...props }) 
 const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: string | number }>`
   ${(props) => {
     const { themes, textAreaWidth = 'auto', error } = props
-    const { size, spacingByChar, frame, palette } = themes
+    const { fontSize, spacingByChar, frame, palette } = themes
 
     return css`
       padding: ${spacingByChar(0.5)};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       color: ${palette.TEXT_BLACK};
       border-radius: ${frame.border.radius.m};
       width: ${textAreaWidth};
@@ -96,9 +96,9 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
 
 const Counter = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, size } = themes
+    const { fontSize, palette } = themes
     return css`
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       > span {
         font-weight: bold;
         color: ${palette.TEXT_GREY};

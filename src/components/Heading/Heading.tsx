@@ -36,7 +36,7 @@ export const Heading: VFC<Props> = ({
 
 const Wrapper = styled.h1<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, size } = themes
+    const { palette, fontSize } = themes
 
     return css`
       display: block;
@@ -46,31 +46,31 @@ const Wrapper = styled.h1<{ themes: Theme }>`
 
       &.screenTitle {
         color: ${palette.TEXT_BLACK};
-        font-size: ${size.pxToRem(size.font.VENTI)};
+        font-size: ${fontSize.XL};
         font-weight: normal;
       }
 
       &.sectionTitle {
         color: ${palette.TEXT_BLACK};
-        font-size: ${size.pxToRem(size.font.GRANDE)};
+        font-size: ${fontSize.L};
         font-weight: normal;
       }
 
       &.blockTitle {
         color: ${palette.TEXT_BLACK};
-        font-size: ${size.pxToRem(size.font.TALL)};
+        font-size: ${fontSize.M};
         font-weight: bold;
       }
 
       &.subBlockTitle {
         color: ${palette.TEXT_GREY};
-        font-size: ${size.pxToRem(size.font.TALL)};
+        font-size: ${fontSize.M};
         font-weight: bold;
       }
 
       &.subSubBlockTitle {
         color: ${palette.TEXT_GREY};
-        font-size: ${size.pxToRem(size.font.SHORT)};
+        font-size: ${fontSize.S};
         font-weight: bold;
       }
     `

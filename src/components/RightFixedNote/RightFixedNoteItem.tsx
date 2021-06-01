@@ -64,14 +64,12 @@ const TextBase = styled(Base)<{ themes: Theme }>`
 `
 
 const Text = styled.p<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { font, pxToRem } = themes.size
-
+  ${({ themes: { fontSize } }) => {
     return css`
       display: block;
       padding: 0;
       margin: 0;
-      font-size: ${pxToRem(font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1.5;
     `
   }}
@@ -82,12 +80,10 @@ const EditButton = styled(SecondaryButton)`
 `
 
 const Info = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size, palette } = themes
-
+  ${({ themes: { fontSize, palette } }) => {
     return css`
       color: ${palette.TEXT_GREY};
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       text-align: right;
     `
   }}
