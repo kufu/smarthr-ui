@@ -88,7 +88,11 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
       &[disabled] {
         background-color: ${palette.COLUMN};
         pointer-events: none;
-        color: ${palette.TEXT_DISABLED};
+
+        &,
+        &::placeholder {
+          color: ${palette.TEXT_DISABLED};
+        }
       }
     `
   }}
