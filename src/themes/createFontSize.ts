@@ -17,6 +17,13 @@ export interface FontSizeProperty {
   VENTI?: number
 
   scaleFactor?: number
+  XXS?: string
+  XS?: string
+  S?: string
+  M?: string
+  L?: string
+  XL?: string
+  XXL?: string
 }
 
 export interface CreatedFontSizeTheme {
@@ -75,8 +82,8 @@ export const createFontSize = (userFontSize: FontSizeProperty = {}) => {
       ...defaultFontSize,
       pxToRem: pxToRem(htmlFontSize || defaultHtmlFontSize),
     },
-    userTokens,
     scaleFactor ? getSizes(scaleFactor) : {},
+    userTokens,
   )
 
   return created
