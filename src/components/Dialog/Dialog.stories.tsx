@@ -160,10 +160,11 @@ Message_Dialog.parameters = {
 export const Action_Dialog: Story = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = React.useState('Apple')
-  const [responseMessage, setResponseMessage] = useState<{
-    status: 'success' | 'error' | 'processing'
-    text: string
-  }>()
+  const [responseMessage, setResponseMessage] =
+    useState<{
+      status: 'success' | 'error' | 'processing'
+      text: string
+    }>()
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => {
     setIsOpen(false)
