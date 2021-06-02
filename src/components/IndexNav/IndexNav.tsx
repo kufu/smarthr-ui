@@ -38,17 +38,17 @@ export const IndexNav: VFC<Props> = ({ items }) => {
 }
 
 const List = styled.ol<{ themes: Theme }>(({ themes }) => {
-  const { fontSize } = themes
+  const { size } = themes
 
   return css`
     list-style: none;
     margin: 0;
     padding: 0;
-    font-size: ${fontSize.S};
+    font-size: ${size.pxToRem(size.font.TALL)};
   `
 })
 const Item = styled.li<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, spacingByChar } = themes
+  const { size, spacingByChar } = themes
 
   return css`
     line-height: 1em;
@@ -60,7 +60,7 @@ const Item = styled.li<{ themes: Theme }>(({ themes }) => {
     & > ${List} {
       margin-top: ${spacingByChar(1)};
       margin-left: ${spacingByChar(1.5)};
-      font-size: ${fontSize.XS};
+      font-size: ${size.pxToRem(size.font.SHORT)};
     }
   `
 })
