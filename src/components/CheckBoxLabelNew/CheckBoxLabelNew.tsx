@@ -57,7 +57,7 @@ const Label = styled.label<{ themes: Theme; $lineHeight: number }>`
     return css`
       margin-left: ${spacingByChar(0.5)};
       color: ${color.TEXT_BLACK};
-      font-size: ${fontSize.S};
+      font-size: ${fontSize.M};
       line-height: ${$lineHeight};
       cursor: pointer;
 
