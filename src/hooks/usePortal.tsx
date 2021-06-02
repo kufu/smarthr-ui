@@ -1,6 +1,6 @@
 import React, {
-  FC,
   ReactNode,
+  VFC,
   createContext,
   useCallback,
   useContext,
@@ -47,7 +47,7 @@ export function usePortal() {
     [currentSeq],
   )
 
-  const PortalParentProvider: FC<{ children: ReactNode }> = useCallback(
+  const PortalParentProvider: VFC<{ children: ReactNode }> = useCallback(
     ({ children }) => {
       const value: ParentContextValue = {
         seqs: parentSeqs,

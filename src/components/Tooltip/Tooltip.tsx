@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, VFC, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
@@ -19,7 +19,7 @@ type Props = {
 }
 
 const tooltipFactory = (balloonTheme: BalloonTheme) => {
-  const Tooltip: FC<Props> = ({
+  const Tooltip: VFC<Props> = ({
     message,
     children,
     triggerType,
