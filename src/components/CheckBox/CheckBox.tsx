@@ -11,6 +11,9 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   mixed?: boolean
 }
 
+/**
+ * @deprecated The CheckBox component is deprecated, so use CheckBoxLabelNew component instead.
+ */
 export const CheckBox: VFC<Props> = ({ mixed = false, className = '', onChange, ...props }) => {
   const theme = useTheme()
   const classNames = useClassNames()

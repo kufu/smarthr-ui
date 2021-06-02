@@ -21,6 +21,9 @@ type Props = Omit<InputProps, 'error'> & {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
+/**
+ * @deprecated The FieldSet component is deprecated, so use FormGroup component instead.
+ */
 export const FieldSet: VFC<Props & ElementProps> = ({
   label,
   labelType = 'subBlockTitle',
