@@ -9,13 +9,14 @@ type Props = {
   icon: React.ComponentType<IconProps>
   children: ReactNode
   onClick?: () => void
+  className?: string
 }
 
-export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick }) => {
+export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick, className }) => {
   const theme = useTheme()
 
   return (
-    <Wrapper themes={theme} onClick={onClick} type="button">
+    <Wrapper themes={theme} onClick={onClick} type="button" className={className}>
       <IconWrapper themes={theme} role="presentation">
         <Icon />
       </IconWrapper>

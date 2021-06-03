@@ -2,6 +2,7 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { SmartHRLogo } from '../SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
@@ -56,28 +57,44 @@ export const Header: VFC<Props> = ({
   onClickProfile,
   onClickCompany,
   onClickSchool,
-  className,
+  className = '',
 }) => {
   const theme = useTheme()
   const { displayName, avatar } = user
+  const classNames = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={className}>
+    <Wrapper themes={theme} className={`${className} ${classNames.wrapper}`}>
       <HeaderColumn>
-        <HeaderLogo onClick={onClickLogo} aria-label="SmartHR" themes={theme}>
+        <HeaderLogo
+          onClick={onClickLogo}
+          aria-label="SmartHR"
+          themes={theme}
+          className={classNames.logoButton}
+        >
           <SmartHRLogo />
         </HeaderLogo>
-        <TenantName themes={theme}>{tenantContent ? tenantContent : currentTenantName}</TenantName>
+        <TenantName themes={theme} className={classNames.tenantName}>
+          {tenantContent ? tenantContent : currentTenantName}
+        </TenantName>
       </HeaderColumn>
 
       <HeaderColumn>
-        <HeaderButton icon={FaQuestionCircleIcon} onClick={onClickHelp}>
+        <HeaderButton
+          icon={FaQuestionCircleIcon}
+          onClick={onClickHelp}
+          className={classNames.helpButton}
+        >
           ヘルプ
         </HeaderButton>
 
         {isAdmin && (
           <>
-            <HeaderButton icon={FaThListIcon} onClick={onClickCrewList}>
+            <HeaderButton
+              icon={FaThListIcon}
+              onClick={onClickCrewList}
+              className={classNames.crewListButton}
+            >
               従業員リスト
             </HeaderButton>
 
