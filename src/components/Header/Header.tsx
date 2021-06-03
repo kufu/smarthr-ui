@@ -1,4 +1,4 @@
-import React, { VFC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -36,8 +36,9 @@ type Props = {
   onClickSchool?: () => void
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const Header: VFC<Props> = ({
+export const Header: VFC<Props & ElementProps> = ({
   isAdmin = false,
   isCrew = false,
   user,
@@ -58,13 +59,14 @@ export const Header: VFC<Props> = ({
   onClickCompany,
   onClickSchool,
   className = '',
+  ...props
 }) => {
   const theme = useTheme()
   const { displayName, avatar } = user
   const classNames = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={`${className} ${classNames.wrapper}`}>
+    <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       <HeaderColumn>
         <HeaderLogo
           onClick={onClickLogo}
