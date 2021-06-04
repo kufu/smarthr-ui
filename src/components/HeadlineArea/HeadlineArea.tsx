@@ -2,6 +2,7 @@ import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { Heading, Props as HeadingProps } from '../Heading'
 
@@ -16,13 +17,18 @@ type Props = {
 
 export const HeadlineArea: VFC<Props> = ({ heading, description, className = '' }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper theme={theme} className={className}>
+    <Wrapper theme={theme} className={`${className} ${classNames.wrapper}`}>
       <Heading type="screenTitle" tag={heading.tag ? heading.tag : 'h1'}>
         {heading.children}
       </Heading>
-      {description && <Description themes={theme}>{description}</Description>}
+      {description && (
+        <Description themes={theme} className={classNames.description}>
+          {description}
+        </Description>
+      )}
     </Wrapper>
   )
 }
