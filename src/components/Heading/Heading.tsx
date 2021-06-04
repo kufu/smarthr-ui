@@ -2,6 +2,7 @@ import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 export type Props = {
   children: ReactNode
@@ -26,9 +27,10 @@ export const Heading: VFC<Props> = ({
   children,
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper as={tag} className={`${type} ${className}`} themes={theme}>
+    <Wrapper as={tag} className={`${type} ${className} ${classNames.wrapper}`} themes={theme}>
       {children}
     </Wrapper>
   )
