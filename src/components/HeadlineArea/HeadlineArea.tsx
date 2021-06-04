@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -15,12 +15,19 @@ type Props = {
   className?: string
 }
 
-export const HeadlineArea: VFC<Props> = ({ heading, description, className = '' }) => {
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+
+export const HeadlineArea: VFC<Props & ElementProps> = ({
+  heading,
+  description,
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
   const classNames = useClassNames()
 
   return (
-    <Wrapper theme={theme} className={`${className} ${classNames.wrapper}`}>
+    <Wrapper {...props} theme={theme} className={`${className} ${classNames.wrapper}`}>
       <Heading type="screenTitle" tag={heading.tag ? heading.tag : 'h1'}>
         {heading.children}
       </Heading>
