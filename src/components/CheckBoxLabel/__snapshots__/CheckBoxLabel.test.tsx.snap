@@ -140,6 +140,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
       >
         <svg
           aria-hidden={true}
+          className=" smarthr-ui-Icon"
           color="#fff"
           fill="currentColor"
           focusable={false}
