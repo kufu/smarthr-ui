@@ -1,4 +1,4 @@
-import React, { VFC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled from 'styled-components'
 
 import { useClassNames } from './useClassNames'
@@ -9,11 +9,18 @@ interface Props {
   className?: string
 }
 
-export const BlankImage: VFC<Props> = ({ title = 'BlankImage', size = 'm', className = '' }) => {
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+
+export const BlankImage: VFC<Props & ElementProps> = ({
+  title = 'BlankImage',
+  size = 'm',
+  className = '',
+  ...props
+}) => {
   const classNames = useClassNames()
 
   return (
-    <Wrapper className={`${className} ${classNames.blankImage.wrapper}`}>
+    <Wrapper {...props} className={`${className} ${classNames.blankImage.wrapper}`}>
       <Svg className={size} viewBox="0 0 250 250" role="img" aria-label={title}>
         <title>{title}</title>
         <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
