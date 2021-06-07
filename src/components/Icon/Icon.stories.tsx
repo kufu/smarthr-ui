@@ -751,7 +751,6 @@ const CatalogItem = styled.dl`
 `
 const IconName = styled.dt`
   margin-bottom: 10px;
-  font-size: 14px;
   color: #222;
 `
 const List = styled.div`

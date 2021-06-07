@@ -21,7 +21,7 @@ export const StatusLabel: VFC<Props> = ({ type = 'done', className = '', childre
 
 const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar, palette } = themes
+    const { fontSize, size, spacingByChar, palette } = themes
 
     return css`
       box-sizing: border-box;
@@ -33,7 +33,7 @@ const Wrapper = styled.span<{ themes: Theme }>`
       text-align: center;
       white-space: nowrap;
       min-width: ${size.pxToRem(60)};
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       font-weight: bold;
       line-height: 1;
 

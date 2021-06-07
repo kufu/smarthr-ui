@@ -212,7 +212,6 @@ const Content = styled.div<{ themes: Theme }>(
   ({ themes: { color } }) => css`
     background-color: ${color.BACKGROUND};
     padding: 16px;
-    font-size: 14px;
   `,
 )
 const Stack = styled.div`
