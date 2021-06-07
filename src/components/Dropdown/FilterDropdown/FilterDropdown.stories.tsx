@@ -135,13 +135,11 @@ const List = styled.dl`
 `
 const Text = styled.p<{ themes: Theme }>`
   margin: 0;
-  font-size: 14px;
   color: ${({ themes }) => themes.color.TEXT_BLACK};
 `
 const Description = styled.p`
   margin: 0;
   padding: 100px 0;
-  font-size: 20px;
 `
 const RadioButtonList = styled.ul`
   list-style: none;

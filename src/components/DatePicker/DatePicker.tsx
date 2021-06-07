@@ -273,7 +273,7 @@ const CalendarIconLayout = styled.span<{ themes: Theme }>(({ themes: { spacingBy
   `
 })
 const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { palette, size, spacingByChar } = themes
+  const { fontSize, palette, spacingByChar } = themes
   return css`
     display: flex;
     align-items: center;
@@ -282,6 +282,6 @@ const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     height: 100%;
     padding-left: ${spacingByChar(0.5)};
     border-left: 1px solid ${palette.BORDER};
-    font-size: ${size.pxToRem(size.font.TALL)};
+    font-size: ${fontSize.M};
   `
 })

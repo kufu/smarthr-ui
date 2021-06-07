@@ -27,12 +27,11 @@ export const Head: VFC<Props> = ({ bulkActionArea, className = '', children }) =
 }
 
 const BulkActionTD = styled.td<{ themes: Theme }>(({ themes }) => {
-  const { frame, color, spacingByChar } = themes
-  const { font, pxToRem } = themes.size
+  const { fontSize, frame, color, spacingByChar } = themes
   return css`
     border-top: ${frame.border.default};
     background-color: ${color.ACTION_BACKGROUND};
     padding: ${spacingByChar(1)};
-    font-size: ${pxToRem(font.TALL)};
+    font-size: ${fontSize.M};
   `
 })

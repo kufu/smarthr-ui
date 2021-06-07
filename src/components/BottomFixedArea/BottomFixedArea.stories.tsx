@@ -18,6 +18,6 @@ storiesOf('BottomFixedArea', module)
       description="This is description."
       primaryButton={<PrimaryButton>Primary Button</PrimaryButton>}
       secondaryButton={<SecondaryButton>Secondary Button</SecondaryButton>}
-      tertiaryLinks={[{ text: 'tertiary_1', icon: FaTrashIcon, onClick: action('click_1') }]}
+      tertiaryLinks={[{ text: 'Tertiary_1', icon: FaTrashIcon, onClick: action('click_1') }]}
     />
   ))
