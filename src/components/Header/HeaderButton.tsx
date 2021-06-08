@@ -26,7 +26,7 @@ export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick }) => {
 
 const Wrapper = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, interaction } = themes
+    const { size, fontSize, interaction } = themes
 
     return css`
       display: inline-block;
@@ -35,7 +35,7 @@ const Wrapper = styled.button<{ themes: Theme }>`
       border: none;
       background: none;
       color: #fff;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 50px;
       transition: background-color ${interaction.hover.animation};
       cursor: pointer;

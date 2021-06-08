@@ -52,4 +52,22 @@ describe('createFontSize', () => {
     expect(actual.XL).toBe(`${8 / 6}rem`)
     expect(actual.XXL).toBe(`${8 / 5}rem`)
   })
+
+  it('the value from scaleFactor wil be overridden if a deprecated abstract value is specified', () => {
+    const actual = createFontSize({
+      scaleFactor: 8,
+      S: '1.1rem',
+      M: '1.4rem',
+      L: '1.8rem',
+      XL: '2.4rem',
+    })
+
+    expect(actual.XXS).toBe(`${8 / 11}rem`)
+    expect(actual.XS).toBe(`${8 / 10}rem`)
+    expect(actual.S).toBe('1.1rem')
+    expect(actual.M).toBe('1.4rem')
+    expect(actual.L).toBe('1.8rem')
+    expect(actual.XL).toBe('2.4rem')
+    expect(actual.XXL).toBe(`${8 / 5}rem`)
+  })
 })

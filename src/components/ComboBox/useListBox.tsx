@@ -267,19 +267,19 @@ const Container = styled.div<{ top: number; left: number; width: number; themes:
 )
 const NoItems = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar } = themes
+    const { fontSize, spacingByChar } = themes
 
     return css`
       margin: 0;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: #fff;
-      font-size: ${size.font.TALL}px;
+      font-size: ${fontSize.M};
     `
   }}
 `
 const SelectButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar, palette } = themes
+    const { fontSize, spacingByChar, palette } = themes
 
     return css`
       display: block;
@@ -287,7 +287,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
       border: none;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: #fff;
-      font-size: ${size.font.TALL}px;
+      font-size: ${fontSize.M};
       text-align: left;
       cursor: pointer;
 

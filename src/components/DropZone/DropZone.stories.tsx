@@ -58,7 +58,6 @@ const Group = styled.ul`
 
 const Text = styled.p`
   margin: 0 0 16px 0;
-  font-size: 16px;
 `
 
 const DropZoneText = styled.p<{ theme: Theme }>`
@@ -70,7 +69,6 @@ const DropZoneText = styled.p<{ theme: Theme }>`
         display: block;
         margin: 0 0 16px;
         text-align: center;
-        font-size: 14px;
         line-height: 1;
         color: ${palette.TEXT_GREY};
       }
