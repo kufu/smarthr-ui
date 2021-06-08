@@ -22,26 +22,21 @@ export const RadioButtonNew: FC<Props> = ({ children, className = '', ...props }
 
   return (
     <Wrapper className={`${className} ${classNames.wrapper}`}>
-      <Inner>
-        <RadioButton id={radioButtonId} className={classNames.radioButton} {...props} />
+      <RadioButton id={radioButtonId} className={classNames.radioButton} {...props} />
 
-        <Label
-          htmlFor={radioButtonId}
-          className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
-          themes={theme}
-        >
-          {children}
-        </Label>
-      </Inner>
+      <Label
+        htmlFor={radioButtonId}
+        className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
+        themes={theme}
+      >
+        {children}
+      </Label>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  display: inline-block;
-`
-const Inner = styled.div`
-  display: flex;
+  display: inline-flex;
   align-items: center;
 `
 const Label = styled.label<{ themes: Theme }>`
