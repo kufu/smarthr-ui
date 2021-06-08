@@ -1,11 +1,11 @@
-# RadioButtonLabelNew
+# RadioButtonNew
 
 ```tsx
-import { RadioButtonLabelNew } from 'smarthr-ui'
+import { RadioButtonNew } from 'smarthr-ui'
 
-<RadioButtonLabelNew name="sample" checked onChange={(e) => console.log(e)}>
+<RadioButtonNew name="sample" checked onChange={(e) => console.log(e)}>
   Radio button label sample.
-</RadioButtonLabelNew>
+</RadioButtonNew>
 ```
 
 ## props

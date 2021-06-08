@@ -4,9 +4,9 @@ import { storiesOf } from '@storybook/react'
 
 import readme from './README.md'
 
-import { RadioButtonLabelNew } from './RadioButtonLabelNew'
+import { RadioButtonNew } from './RadioButtonNew'
 
-storiesOf('RadioButtonLabelNew', module)
+storiesOf('RadioButtonNew', module)
   .addParameters({
     readme: {
       sidebar: readme,
@@ -23,20 +23,20 @@ storiesOf('RadioButtonLabelNew', module)
 
           <InnerList>
             <li>
-              <RadioButtonLabelNew name="1" checked={checkedName === '1'} onChange={handleChange}>
-                RadioButtonLabelNew
-              </RadioButtonLabelNew>
+              <RadioButtonNew name="1" checked={checkedName === '1'} onChange={handleChange}>
+                RadioButtonNew
+              </RadioButtonNew>
             </li>
 
             <li>
-              <RadioButtonLabelNew
+              <RadioButtonNew
                 name="2"
                 checked={checkedName === '2'}
                 disabled
                 onChange={handleChange}
               >
-                RadioButtonLabelNew / disabled
-              </RadioButtonLabelNew>
+                RadioButtonNew / disabled
+              </RadioButtonNew>
             </li>
           </InnerList>
         </li>
@@ -46,11 +46,11 @@ storiesOf('RadioButtonLabelNew', module)
 
           <InnerList>
             <li>
-              <RadioButtonLabelNew name="3" checked={checkedName === '3'} onChange={handleChange} />
+              <RadioButtonNew name="3" checked={checkedName === '3'} onChange={handleChange} />
             </li>
 
             <li>
-              <RadioButtonLabelNew
+              <RadioButtonNew
                 name="4"
                 checked={checkedName === '4'}
                 disabled
