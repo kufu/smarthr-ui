@@ -17,7 +17,11 @@ export const RadioButtonNew: FC<Props> = ({ children, className = '', ...props }
   const radioButtonId = useId(props.id)
 
   if (!children) {
-    return <RadioButton className={`${className} ${classNames.radioButton}`} {...props} />
+    return (
+      <Wrapper className={`${className} ${classNames.wrapper}`}>
+        <RadioButton className={classNames.radioButton} {...props} />
+      </Wrapper>
+    )
   }
 
   return (
