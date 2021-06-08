@@ -124,12 +124,11 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
 
 const Title = styled.p<{ themes: Theme }>`
   ${({ themes: { fontSize, border, spacing } }) => {
-    const { pxToRem } = fontSize
     return css`
       margin: 0;
       padding: ${spacing.XS} ${spacing.S};
       border-bottom: ${border.shorthand};
-      font-size: ${pxToRem(fontSize.GRANDE)};
+      font-size: ${fontSize.L};
       line-height: 1;
     `
   }}
@@ -162,10 +161,7 @@ const ResponseMessage: React.VFC<{
     return null
   }
 
-  const {
-    color,
-    fontSize: { pxToRem, TALL },
-  } = themes
+  const { color, fontSize } = themes
   const { status, text } = responseMessage
   const Wrapper = styled.p`
     display: flex;
@@ -173,7 +169,7 @@ const ResponseMessage: React.VFC<{
     justify-content: flex-end;
     margin-top: 0;
     margin-bottom: 0;
-    font-size: ${pxToRem(TALL)};
+    font-size: ${fontSize.M};
   `
   const Spinner = styled(Loader)`
     &&& {
