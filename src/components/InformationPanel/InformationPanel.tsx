@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
+import { useClassNames } from './useClassNames'
 
 import { Base } from '../Base'
 import {
@@ -85,10 +86,17 @@ export const InformationPanel: VFC<Props> = ({
     setActive(activeProps)
   }, [activeProps])
 
+  const classNames = useClassNames()
+
   return (
-    <Wrapper className={className} themes={theme} role="region" aria-labelledby={titleId}>
+    <Wrapper
+      className={`${className} ${classNames.wrapper}`}
+      themes={theme}
+      role="region"
+      aria-labelledby={titleId}
+    >
       <Header themes={theme} togglable={togglable}>
-        <Title themes={theme} id={titleId}>
+        <Title themes={theme} id={titleId} className={classNames.title}>
           <StyledHeading type="blockTitle" tag={titleTag}>
             <Icon color={iconColor} $theme={theme} />
             {title}
@@ -102,13 +110,14 @@ export const InformationPanel: VFC<Props> = ({
               onClick={handleClickTrigger}
               aria-expanded={togglable ? active : undefined}
               aria-controls={contentId}
+              className={classNames.closeButton}
             >
               {active ? closeButtonLabel : openButtonLabel}
             </SecondaryButton>
           </div>
         )}
       </Header>
-      <Content themes={theme} id={contentId} aria-hidden={!active}>
+      <Content themes={theme} id={contentId} aria-hidden={!active} className={classNames.content}>
         {children}
       </Content>
     </Wrapper>
