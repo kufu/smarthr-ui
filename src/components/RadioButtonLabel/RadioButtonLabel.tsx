@@ -10,7 +10,7 @@ type Props = RadioButtonProps & {
 }
 
 /**
- * @deprecated The RadioButtonLabel component is deprecated, so use RadioButtonLabelNew component instead.
+ * @deprecated The RadioButtonLabel component is deprecated, so use RadioButtonNew component instead.
  */
 export const RadioButtonLabel: VFC<Props> = ({ label, className = '', ...props }) => {
   const theme = useTheme()
