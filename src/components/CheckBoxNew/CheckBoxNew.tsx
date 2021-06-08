@@ -20,7 +20,7 @@ export const CheckBoxNew: FC<Props> = ({
 }) => {
   const theme = useTheme()
   const classNames = useClassNames()
-  const checkBoxId = useId()
+  const checkBoxId = useId(props.id)
 
   if (!children) return <CheckBox className={`${className} ${classNames.checkBox}`} {...props} />
 
