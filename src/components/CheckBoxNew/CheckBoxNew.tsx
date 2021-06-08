@@ -26,28 +26,23 @@ export const CheckBoxNew: FC<Props> = ({
 
   return (
     <Wrapper className={`${className} ${classNames.wrapper}`}>
-      <Inner>
-        <CheckBox id={checkBoxId} className={classNames.checkBox} {...props} />
+      <CheckBox id={checkBoxId} className={classNames.checkBox} {...props} />
 
-        <Label
-          className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
-          htmlFor={checkBoxId}
-          $lineHeight={lineHeight}
-          themes={theme}
-        >
-          {children}
-        </Label>
-      </Inner>
+      <Label
+        className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
+        htmlFor={checkBoxId}
+        $lineHeight={lineHeight}
+        themes={theme}
+      >
+        {children}
+      </Label>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
-  display: inline-block;
-`
 // Use flex-start to support multi-line text.
-const Inner = styled.div`
-  display: flex;
+const Wrapper = styled.div`
+  display: inline-flex;
   align-items: flex-start;
 `
 const Label = styled.label<{ themes: Theme; $lineHeight: number }>`
@@ -72,7 +67,7 @@ const Label = styled.label<{ themes: Theme; $lineHeight: number }>`
         display: block;
         width: 0;
         height: 0;
-        margin-top: calc((1 - ${$lineHeight}) * 0.3em);
+        margin-top: calc((1 - ${$lineHeight}) * 0.4em);
         content: '';
       }
     `
