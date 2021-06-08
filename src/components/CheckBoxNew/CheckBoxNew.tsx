@@ -22,7 +22,12 @@ export const CheckBoxNew: FC<Props> = ({
   const classNames = useClassNames()
   const checkBoxId = useId(props.id)
 
-  if (!children) return <CheckBox className={`${className} ${classNames.checkBox}`} {...props} />
+  if (!children)
+    return (
+      <Wrapper className={`${className} ${classNames.wrapper}`}>
+        <CheckBox className={classNames.checkBox} {...props} />
+      </Wrapper>
+    )
 
   return (
     <Wrapper className={`${className} ${classNames.wrapper}`}>
