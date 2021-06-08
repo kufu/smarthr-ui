@@ -182,16 +182,14 @@ const IconWrapper = styled.span`
 `
 
 const Txt = styled.p<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, font } = themes.size
-
+  ${({ themes: { fontSize } }) => {
     return css`
       flex-grow: 1;
       flex-shrink: 1;
       margin-top: 0;
       margin-bottom: 0;
       padding: 0;
-      font-size: ${pxToRem(font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1.5;
     `
   }}

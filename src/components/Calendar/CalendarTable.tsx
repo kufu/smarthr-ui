@@ -92,10 +92,10 @@ export const CalendarTable: VFC<Props & ElementProps> = ({
 }
 
 const Table = styled.table<{ themes: Theme }>(({ themes }) => {
-  const { palette, size } = themes
+  const { palette, fontSize } = themes
   return css`
     color: ${palette.TEXT_BLACK};
-    font-size: ${size.pxToRem(size.font.TALL)};
+    font-size: ${fontSize.M};
     border-spacing: 0;
     margin: 4px 8px 13px;
 

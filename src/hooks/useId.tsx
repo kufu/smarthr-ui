@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, createContext, useContext, useMemo } from 'react'
+import React, { ReactNode, VFC, createContext, useContext, useMemo } from 'react'
 
 interface IdContextValue {
   prefix: number
@@ -14,13 +14,13 @@ const IdContext = createContext<IdContextValue>(defaultContext)
 
 export function useId(defaultId?: string) {
   const context = useContext(IdContext)
-  return useMemo(() => defaultId || `id-${context.prefix}-${++context.current}`, [
-    defaultId,
-    context,
-  ])
+  return useMemo(
+    () => defaultId || `id-${context.prefix}-${++context.current}`,
+    [defaultId, context],
+  )
 }
 
-export const SequencePrefixIdProvider: FC<{ children: ReactNode }> = ({ children }) => {
+export const SequencePrefixIdProvider: VFC<{ children: ReactNode }> = ({ children }) => {
   const context = useContext(IdContext)
   // increment `prefix` and reset `current` to 0 on every Provider
   const value: IdContextValue = {

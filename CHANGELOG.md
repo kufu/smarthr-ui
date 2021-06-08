@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [12.4.0](https://github.com/kufu/smarthr-ui/compare/v12.4.0-1...v12.4.0) (2021-05-27)
+
+
+### Bug Fixes
+
+* modify to be expected width when set percentage width ([#1584](https://github.com/kufu/smarthr-ui/issues/1584)) ([cc7ec72](https://github.com/kufu/smarthr-ui/commit/cc7ec72493097b2f93d4c0e075a4244796b296fa))
+
 ## [12.4.0-1](https://github.com/kufu/smarthr-ui/compare/v12.4.0-0...v12.4.0-1) (2021-04-16)
 
 

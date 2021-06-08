@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -14,12 +14,13 @@ type Props = {
     url: string
     target?: string
   }>
+  children?: ReactNode
   className?: string
 }
 
 const LOGO_HEIGHT = 20
 
-export const MessageScreen: FC<Props> = ({ title, links, children, className = '' }) => {
+export const MessageScreen: VFC<Props> = ({ title, links, children, className = '' }) => {
   const theme = useTheme()
 
   return (
@@ -85,15 +86,14 @@ const Logo = styled.div`
 `
 const Title = styled.h1<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar, palette } = themes
-    const { font } = size
+    const { fontSize, spacingByChar, palette } = themes
 
     return css`
       margin: ${spacingByChar(1.5)} 0 0;
       background-color: ${palette.BACKGROUND};
       color: ${palette.TEXT_BLACK};
       font-weight: normal;
-      font-size: ${font.VENTI}px;
+      font-size: ${fontSize.XL};
       line-height: 1;
     `
   }}
@@ -122,11 +122,11 @@ const Links = styled.ul<{ themes: Theme }>`
 `
 const Link = styled.a<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, size } = themes
+    const { fontSize, palette } = themes
 
     return css`
       color: ${palette.TEXT_LINK};
-      font-size: ${size.font.TALL}px;
+      font-size: ${fontSize.M};
       line-height: 1.4;
       text-decoration: none;
 

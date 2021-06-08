@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -18,7 +18,7 @@ type Props = {
   onClick?: OnClick
 }
 
-export const SideNavItem: FC<Props> = ({
+export const SideNavItem: VFC<Props> = ({
   id,
   title,
   prefix,
@@ -79,7 +79,7 @@ const Wrapper = styled.li<{ themes: Theme }>`
 
 const Button = styled(ResetButton)<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar } = themes
+    const { fontSize, spacingByChar } = themes
 
     return css`
       width: 100%;
@@ -89,12 +89,12 @@ const Button = styled(ResetButton)<{ themes: Theme }>`
 
       &.default {
         padding: ${spacingByChar(1)};
-        font-size: ${size.pxToRem(size.font.TALL)};
+        font-size: ${fontSize.M};
       }
 
       &.s {
         padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-        font-size: ${size.pxToRem(size.font.SHORT)};
+        font-size: ${fontSize.S};
       }
     `
   }}
