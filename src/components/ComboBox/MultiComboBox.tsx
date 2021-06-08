@@ -329,11 +329,11 @@ const SelectedItem = styled.div<{ themes: Theme; disabled: boolean }>`
 
     return css`
       display: flex;
-      border-radius: calc(${fontSize.SHORT}px + (${spacingByChar(0.5)} - ${borderWidth}px) * 2);
+      border-radius: calc(${fontSize.S} + (${spacingByChar(0.5)} - ${borderWidth}px) * 2);
       border: ${border.shorthand};
       background-color: ${disabled ? color.disableColor('#fff') : '#fff'};
       color: ${disabled ? color.TEXT_DISABLED : color.TEXT_BLACK};
-      font-size: ${fontSize.SHORT}px;
+      font-size: ${fontSize.S};
       line-height: 1;
     `
   }}
@@ -383,7 +383,7 @@ const Input = styled.input<{ themes: Theme }>`
       min-width: 80px;
       width: 100%;
       border: none;
-      font-size: ${fontSize.TALL}px;
+      font-size: ${fontSize.M};
       box-sizing: border-box;
       outline: none;
       &[disabled] {
@@ -399,7 +399,7 @@ const Placeholder = styled.p<{ themes: Theme }>`
     return css`
       margin: 0;
       color: ${color.TEXT_GREY};
-      font-size: ${fontSize.TALL}px;
+      font-size: ${fontSize.M};
       line-height: 25px;
     `
   }}

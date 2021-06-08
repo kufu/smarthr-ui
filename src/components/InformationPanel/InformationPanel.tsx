@@ -168,12 +168,10 @@ const ErrorTitleIcon = createTitleIcon(FaExclamationCircleIcon)
 const SyncIcon = createTitleIcon(FaSyncAltIcon)
 
 const Content = styled.div<{ themes: Theme }>`
-  ${({ themes: { size, spacingByChar } }) => {
-    const { pxToRem, font } = size
-
+  ${({ themes: { fontSize, spacingByChar } }) => {
     return css`
       margin-top: ${spacingByChar(1.5)};
-      font-size: ${pxToRem(font.TALL)};
+      font-size: ${fontSize.M};
       &[aria-hidden='true'] {
         display: none;
       }

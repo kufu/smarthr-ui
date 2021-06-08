@@ -175,7 +175,6 @@ const ListWrapper = styled.ul<{ themes: Theme }>`
         padding: 0 20px;
         border: none;
         background-color: #fff;
-        font-size: 14px;
         color: ${palette.TEXT_BLACK};
 
         &:hover {

@@ -99,7 +99,7 @@ const ErrorIcon = styled.div<{ themes: Theme }>`
 const ErrorText = styled.div<{ themes: Theme }>`
   ${({ themes: { fontSize } }) => {
     return css`
-      font-size: ${fontSize.pxToRem(fontSize.SHORT)};
+      font-size: ${fontSize.S};
     `
   }}
 `

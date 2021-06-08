@@ -22,18 +22,12 @@ export const Footer: VFC = () => {
 }
 
 const Wrapper = styled.footer<{ themes: Theme }>`
-  ${({
-    themes: {
-      color,
-      size: { font, pxToRem },
-      spacingByChar,
-    },
-  }) => css`
+  ${({ themes: { color, fontSize, spacingByChar } }) => css`
     overflow: hidden;
     padding: ${spacingByChar(1)} ${spacingByChar(1.5)};
     background-color: ${color.BRAND};
     color: #fff;
-    font-size: ${pxToRem(font.TALL)};
+    font-size: ${fontSize.M};
     white-space: nowrap;
   `}
 `
@@ -78,6 +72,6 @@ const ItemPart = styled.a`
 const Copy = styled.small<{ themes: Theme }>`
   ${({ themes }) => css`
     float: right;
-    font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
+    font-size: ${themes.fontSize.M};
   `}
 `

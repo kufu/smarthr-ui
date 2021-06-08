@@ -143,7 +143,7 @@ const StyledInput = styled.input<
 >`
   ${(props) => {
     const { prefixWidth, suffixWidth, themes } = props
-    const { size, spacingByChar, palette, frame } = themes
+    const { fontSize, spacingByChar, palette, frame } = themes
 
     return css`
       flex-grow: 1;
@@ -155,7 +155,7 @@ const StyledInput = styled.input<
       padding-right: calc(${spacingByChar(0.5)} + ${suffixWidth}px);
       border: none;
       border-radius: ${frame.border.radius.m};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
       box-sizing: border-box;

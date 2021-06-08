@@ -66,7 +66,6 @@ const GrayWrapper = styled(Wrapper)`
 `
 const Text = styled.p`
   margin: 0 0 16px 0;
-  font-size: 18px;
 `
 const List = styled.dl`
   margin: 1rem;
