@@ -75,6 +75,7 @@ const Box = styled.span<{ themes: Theme }>`
       &.disabled {
         background-color: ${palette.BORDER};
         border-color: ${palette.BORDER};
+        cursor: not-allowed;
 
         &.active {
           border-color: ${palette.BORDER};
