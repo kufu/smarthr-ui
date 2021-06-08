@@ -14,7 +14,7 @@ type Props = RadioButtonProps & {
 export const RadioButtonNew: FC<Props> = ({ children, className = '', ...props }) => {
   const theme = useTheme()
   const classNames = useClassNames()
-  const radioButtonId = useId()
+  const radioButtonId = useId(props.id)
 
   if (!children) {
     return <RadioButton className={`${className} ${classNames.radioButton}`} {...props} />
