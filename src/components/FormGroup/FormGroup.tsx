@@ -122,7 +122,7 @@ const HelpMessage = styled.span<{ themes: Theme }>`
     css`
       display: block;
       margin-top: ${spacingByChar(0.5)};
-      font-size: ${fontSize.pxToRem(fontSize.TALL)};
+      font-size: ${fontSize.M};
     `}
 `
 
@@ -132,7 +132,7 @@ const ErrorMessage = styled.span<{ themes: Theme }>`
       display: flex;
       align-items: center;
       margin-top: ${spacingByChar(0.5)};
-      font-size: ${fontSize.pxToRem(fontSize.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1;
     `}
 `

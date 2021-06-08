@@ -89,7 +89,7 @@ const IsFilteredIconWrapper = styled.span<{ isFiltered: boolean; themes: Theme }
 `
 const StatusText = styled.span<{ themes: Theme }>`
   margin-left: ${({ themes }) => themes.spacing.XXS};
-  font-size: ${({ themes }) => themes.size.pxToRem(themes.fontSize.SHORT)};
+  font-size: ${({ themes }) => themes.fontSize.S};
 `
 const ContentLayout = styled.div`
   padding: 24px;
