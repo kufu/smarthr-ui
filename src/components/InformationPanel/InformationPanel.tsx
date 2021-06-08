@@ -5,7 +5,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
 import { useClassNames } from './useClassNames'
 
-import { Base } from '../Base'
+import { Base, BaseElementProps } from '../Base'
 import {
   FaCaretDownIcon,
   FaCaretUpIcon,
@@ -31,7 +31,7 @@ type Props = {
   onClickTrigger?: (active: boolean) => void
 }
 
-export const InformationPanel: VFC<Props> = ({
+export const InformationPanel: VFC<Props & BaseElementProps> = ({
   title,
   titleTag = 'h3',
   type = 'info',
@@ -42,6 +42,7 @@ export const InformationPanel: VFC<Props> = ({
   className = '',
   children,
   onClickTrigger,
+  ...props
 }) => {
   const theme = useTheme()
 
@@ -90,6 +91,7 @@ export const InformationPanel: VFC<Props> = ({
 
   return (
     <Wrapper
+      {...props}
       className={`${className} ${classNames.wrapper}`}
       themes={theme}
       role="region"
