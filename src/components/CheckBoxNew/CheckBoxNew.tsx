@@ -12,7 +12,7 @@ type Props = CheckBoxProps & {
   children?: ReactNode
 }
 
-export const CheckBoxLabelNew: FC<Props> = ({
+export const CheckBoxNew: FC<Props> = ({
   lineHeight = 1.5,
   className = '',
   children,

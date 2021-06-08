@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
-import { CheckBoxLabelNew } from './CheckBoxLabelNew'
+import { CheckBoxNew } from './CheckBoxNew'
 
 export function useClassNames() {
-  const generate = useClassNameGenerator(CheckBoxLabelNew.displayName || 'CheckBoxLabelNew')
+  const generate = useClassNameGenerator(CheckBoxNew.displayName || 'CheckBoxNew')
 
   return useMemo(
     () => ({

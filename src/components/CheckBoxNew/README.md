@@ -1,16 +1,16 @@
-# CheckBoxLabelNew
+# CheckBoxNew
 
 ```tsx
-import { CheckBoxLabelNew } from 'smarthr-ui'
+import { CheckBoxNew } from 'smarthr-ui'
 
-<CheckBoxLabelNew name="sample" checked mixed onChange={(e) => console.log(e)}>
+<CheckBoxNew name="sample" checked mixed onChange={(e) => console.log(e)}>
   checkbox label
-</CheckBoxLabelNew>
+</CheckBoxNew>
 ```
 
 ## props
 
-CheckBoxLabelNew props extends Checkbox props.
+CheckBoxNew props extends Checkbox props.
 
 In addition to it...
 
