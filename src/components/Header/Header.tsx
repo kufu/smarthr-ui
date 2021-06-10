@@ -165,11 +165,11 @@ const HeaderLogo = styled.button<{ themes: Theme }>`
 `
 const TenantName = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar } = themes
+    const { fontSize, spacingByChar } = themes
 
     return css`
       margin: 0 0 0 ${spacingByChar(1)};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       color: #fff;
     `
   }}

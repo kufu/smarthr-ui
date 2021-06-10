@@ -109,7 +109,7 @@ export const HeaderCrewDropdown: VFC<Props> = ({
 
 const TriggerButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, interaction } = themes
+    const { size, fontSize, interaction } = themes
 
     return css`
       display: flex;
@@ -120,7 +120,7 @@ const TriggerButton = styled.button<{ themes: Theme }>`
       border: none;
       background: none;
       color: #fff;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       transition: background-color ${interaction.hover.animation};
       cursor: pointer;
 
@@ -180,7 +180,7 @@ const MenuListItemIcon = styled.figure<{ themes: Theme }>`
 `
 const MenuListItemButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette, interaction } = themes
+    const { size, fontSize, palette, interaction } = themes
 
     return css`
       display: flex;
@@ -190,7 +190,7 @@ const MenuListItemButton = styled.button<{ themes: Theme }>`
       border: none;
       background: none;
       color: ${palette.TEXT_BLACK};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1.5;
       white-space: nowrap;
       box-sizing: border-box;

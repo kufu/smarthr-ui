@@ -5,15 +5,16 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
+import { Item } from './types'
 
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
-type Args = {
-  items: Array<{ value: string; label: string; disabled?: boolean; isSelected?: boolean }>
+type Args<T> = {
+  items: Array<Item<T> & { isSelected?: boolean }>
   inputValue: string
   onAdd?: (label: string) => void
-  onSelect: (option: { value: string; label: string }) => void
+  onSelect: (item: Item<T>) => void
   isExpanded: boolean
   isAddable: boolean
   isDuplicate: boolean
@@ -21,15 +22,17 @@ type Args = {
   isLoading?: boolean
 }
 
-type Option = {
-  label: string
-  value: string
-  disabled?: boolean
+type Option<T> = Item<T> & {
   isAdding?: boolean
   isSelected?: boolean
 }
 
-export function useListBox({
+function optionToItem<T>(option: Option<T>): Item<T> {
+  const { isAdding, isSelected, ...props } = option
+  return { ...props }
+}
+
+export function useListBox<T>({
   items,
   inputValue,
   onAdd,
@@ -39,7 +42,7 @@ export function useListBox({
   isDuplicate,
   hasNoMatch,
   isLoading,
-}: Args) {
+}: Args<T>) {
   const [dropdownStyle, setDropdownStyle] = useState({
     top: 0,
     left: 0,
@@ -47,9 +50,10 @@ export function useListBox({
   })
   const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
 
-  const options: Option[] = useMemo(() => {
+  const options: Array<Option<T>> = useMemo(() => {
     if (isAddable) {
-      return [{ label: inputValue, value: inputValue, isAdding: true }, ...items]
+      const addingOption = { label: inputValue, value: inputValue, isAdding: true }
+      return [addingOption, ...items]
     }
     return items
   }, [inputValue, isAddable, items])
@@ -121,8 +125,7 @@ export function useListBox({
             return
           }
           if (activeOption && !activeOption.disabled) {
-            const { value, label } = activeOption
-            onSelect({ value, label })
+            onSelect(optionToItem(activeOption))
           }
           break
         }
@@ -135,7 +138,7 @@ export function useListBox({
   const addingButtonId = useId()
   const optionIdPrefix = useId()
   const getOptionId = useCallback(
-    (option: Option) => {
+    (option: Option<T>) => {
       if (option.isAdding) {
         return addingButtonId
       }
@@ -177,7 +180,7 @@ export function useListBox({
             {options.map((option, i) => {
               const isActive = activeOptionIndex === i
               const className = isActive ? 'active' : undefined
-              const { value, label, disabled, isAdding, isSelected } = option
+              const { label, disabled, isAdding, isSelected } = option
               if (isAdding) {
                 return (
                   <AddButton
@@ -200,7 +203,7 @@ export function useListBox({
                   type="button"
                   themes={theme}
                   disabled={disabled}
-                  onClick={() => onSelect({ value, label })}
+                  onClick={() => onSelect(optionToItem(option))}
                   onMouseOver={() => setActiveOptionIndex(i)}
                   id={getOptionId(option)}
                   role="option"
@@ -267,19 +270,19 @@ const Container = styled.div<{ top: number; left: number; width: number; themes:
 )
 const NoItems = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar } = themes
+    const { fontSize, spacingByChar } = themes
 
     return css`
       margin: 0;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: #fff;
-      font-size: ${size.font.TALL}px;
+      font-size: ${fontSize.M};
     `
   }}
 `
 const SelectButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar, palette } = themes
+    const { fontSize, spacingByChar, palette } = themes
 
     return css`
       display: block;
@@ -287,7 +290,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
       border: none;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: #fff;
-      font-size: ${size.font.TALL}px;
+      font-size: ${fontSize.M};
       text-align: left;
       cursor: pointer;
 

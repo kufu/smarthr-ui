@@ -97,7 +97,7 @@ const Container = styled.div`
 `
 const YearWrapper = styled.span<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
   ({ themes, isThisYear, isSelected }) => {
-    const { palette, size } = themes
+    const { palette, fontSize } = themes
     return css`
       display: flex;
       align-items: center;
@@ -105,7 +105,7 @@ const YearWrapper = styled.span<{ themes: Theme; isThisYear?: boolean; isSelecte
       width: 51px;
       height: 27px;
       border-radius: 14px;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       box-sizing: border-box;
       line-height: 0;
       ${isThisYear &&

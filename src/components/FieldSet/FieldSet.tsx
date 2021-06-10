@@ -103,17 +103,17 @@ const TitleText = styled(Heading)`
   display: inline-block;
 `
 const Help = styled.div<{ themes: Theme }>`
-  ${({ themes: { color, size, spacingByChar } }) => css`
+  ${({ themes: { color, fontSize, spacingByChar } }) => css`
     margin: ${spacingByChar(0.5)} 0 0 0;
-    font-size: ${size.pxToRem(size.font.SHORT)};
+    font-size: ${fontSize.S};
     line-height: 1;
     color: ${color.TEXT_GREY};
   `}
 `
 const Error = styled.div<{ themes: Theme }>`
-  ${({ themes: { size, spacingByChar } }) => css`
+  ${({ themes: { fontSize, spacingByChar } }) => css`
     margin: ${spacingByChar(0.5)} 0 0 0;
-    font-size: ${size.pxToRem(size.font.SHORT)};
+    font-size: ${fontSize.S};
     line-height: 1;
   `}
 `

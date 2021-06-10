@@ -49,13 +49,13 @@ const Wrapper = styled.div<{ themes: Theme }>`
 `
 const Content = styled.dd<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { size, fontSize, palette } = themes
 
     return css`
       margin: ${size.pxToRem(5)} 0 0;
       padding: 0;
       color: ${palette.TEXT_BLACK};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1.5;
     `
   }}
