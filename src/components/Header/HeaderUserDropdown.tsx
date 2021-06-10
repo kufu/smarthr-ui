@@ -2,6 +2,7 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import {
@@ -39,10 +40,12 @@ export const HeaderUserDropdown: VFC<Props> = ({
   onClickSchool,
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
+
   return (
     <Dropdown>
       <DropdownTrigger>
-        <TriggerButton themes={theme} type="button">
+        <TriggerButton themes={theme} type="button" className={classNames.userDropdownTrigger}>
           {avatar && (
             <Avatar
               src={avatar}
@@ -59,15 +62,21 @@ export const HeaderUserDropdown: VFC<Props> = ({
         </TriggerButton>
       </DropdownTrigger>
 
-      <DropdownContent>
+      <DropdownContent className={classNames.userDropdown}>
         <MenuList themes={theme} role="menu">
           <MenuListItem role="menuitem">
-            <MenuListItemHeader themes={theme}>{displayName}</MenuListItemHeader>
+            <MenuListItemHeader themes={theme} className={classNames.userDropdownDisplayName}>
+              {displayName}
+            </MenuListItemHeader>
           </MenuListItem>
 
           {isCrew && (
             <MenuListItem role="menuitem">
-              <MenuListItemButton onClick={onClickProfile} themes={theme}>
+              <MenuListItemButton
+                onClick={onClickProfile}
+                themes={theme}
+                className={classNames.profileButton}
+              >
                 <MenuListItemIcon themes={theme}>
                   <FaUserAltIcon />
                 </MenuListItemIcon>
@@ -77,7 +86,11 @@ export const HeaderUserDropdown: VFC<Props> = ({
           )}
 
           <MenuListItem role="menuitem">
-            <MenuListItemButton onClick={onClickAccount} themes={theme}>
+            <MenuListItemButton
+              onClick={onClickAccount}
+              themes={theme}
+              className={classNames.accountButton}
+            >
               <MenuListItemIcon themes={theme}>
                 <FaCogIcon />
               </MenuListItemIcon>
@@ -92,11 +105,17 @@ export const HeaderUserDropdown: VFC<Props> = ({
               </MenuListItem>
 
               <MenuListItem role="menuitem">
-                <MenuListItemHeader themes={theme}>{currentTenantName}</MenuListItemHeader>
+                <MenuListItemHeader themes={theme} className={classNames.userDropdownTenantName}>
+                  {currentTenantName}
+                </MenuListItemHeader>
               </MenuListItem>
 
               <MenuListItem role="menuitem">
-                <MenuListItemButton onClick={onClickCompany} themes={theme}>
+                <MenuListItemButton
+                  onClick={onClickCompany}
+                  themes={theme}
+                  className={classNames.companyButton}
+                >
                   <MenuListItemIcon themes={theme}>
                     <FaBuildingIcon />
                   </MenuListItemIcon>
@@ -112,7 +131,11 @@ export const HeaderUserDropdown: VFC<Props> = ({
 
           {isAdmin && (
             <MenuListItem role="menuitem">
-              <MenuListItemButton onClick={onClickSchool} themes={theme}>
+              <MenuListItemButton
+                onClick={onClickSchool}
+                themes={theme}
+                className={classNames.schoolButton}
+              >
                 <MenuListItemIcon themes={theme}>
                   <FaGraduationCapIcon />
                 </MenuListItemIcon>
@@ -122,7 +145,11 @@ export const HeaderUserDropdown: VFC<Props> = ({
           )}
 
           <MenuListItem role="menuitem">
-            <MenuListItemButton onClick={onClickLogout} themes={theme}>
+            <MenuListItemButton
+              onClick={onClickLogout}
+              themes={theme}
+              className={classNames.logoutButton}
+            >
               <MenuListItemIcon themes={theme}>
                 <FaPowerOffIcon />
               </MenuListItemIcon>
