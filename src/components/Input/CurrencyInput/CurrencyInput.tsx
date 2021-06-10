@@ -10,6 +10,7 @@ import React, {
 
 import { Input, Props as InputProps } from '../Input'
 import { formatCurrency } from './currencyInputHelper'
+import { useClassNames } from './useClassNames'
 
 type Props = Omit<InputProps, 'type' | 'value' | 'defaultValue'> & {
   value?: string
@@ -18,7 +19,7 @@ type Props = Omit<InputProps, 'type' | 'value' | 'defaultValue'> & {
 }
 
 export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
-  ({ onFormatValue, onFocus, onBlur, ...props }, ref) => {
+  ({ onFormatValue, onFocus, onBlur, className = '', ...props }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
 
@@ -72,6 +73,17 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
       onBlur && onBlur(e)
     }
 
-    return <Input type="text" onFocus={handleFocus} onBlur={handleBlur} ref={innerRef} {...props} />
+    const classNames = useClassNames()
+
+    return (
+      <Input
+        type="text"
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        ref={innerRef}
+        className={`${className} ${classNames.wrapper}`}
+        {...props}
+      />
+    )
   },
 )
