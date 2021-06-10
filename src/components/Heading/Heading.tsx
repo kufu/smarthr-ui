@@ -1,7 +1,8 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 export type Props = {
   children: ReactNode
@@ -19,16 +20,25 @@ export type HeadingTypes =
 
 export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'
 
-export const Heading: VFC<Props> = ({
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+
+export const Heading: VFC<Props & ElementProps> = ({
   tag = 'h1' as HeadingTagTypes,
   type = 'screenTitle',
   className = '',
   children,
+  ...props
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper as={tag} className={`${type} ${className}`} themes={theme}>
+    <Wrapper
+      as={tag}
+      {...props}
+      className={`${type} ${className} ${classNames.wrapper}`}
+      themes={theme}
+    >
       {children}
     </Wrapper>
   )
