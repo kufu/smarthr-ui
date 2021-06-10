@@ -58,24 +58,23 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
 
 const Title = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar, frame } = themes
+    const { fontSize, spacingByChar, frame } = themes
     return css`
       margin: 0;
       padding: ${spacingByChar(1)} ${spacingByChar(1.5)};
       border-bottom: ${frame.border.default};
-      font-size: ${size.pxToRem(size.font.GRANDE)};
+      font-size: ${fontSize.L};
       line-height: 1;
     `
   }}
 `
 const Description = styled.div<{ themes: Theme; offsetHeight: number }>`
-  ${({ themes: { size, spacingByChar }, offsetHeight }) => {
-    const { pxToRem, font } = size
+  ${({ themes: { fontSize, spacingByChar }, offsetHeight }) => {
     return css`
       max-height: calc(100vh - ${offsetHeight}px);
       overflow: auto;
       padding: 0 ${spacingByChar(1.5)};
-      font-size: ${pxToRem(font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1.5;
     `
   }}

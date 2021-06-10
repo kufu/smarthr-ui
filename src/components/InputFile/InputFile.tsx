@@ -102,9 +102,9 @@ const Wrapper = styled.div`
 `
 
 const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
-  const { palette, size, spacingByChar } = themes
+  const { fontSize, palette, spacingByChar } = themes
   return css`
-    font-size: ${size.pxToRem(size.font.TALL)};
+    font-size: ${fontSize.M};
     padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
     margin-bottom: ${spacingByChar(1)};
     background-color: ${palette.COLUMN};
@@ -170,7 +170,7 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
 })
 
 const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
-  const { frame, palette, size, spacingByChar } = themes
+  const { fontSize, frame, palette, spacingByChar } = themes
   return css`
     font-family: inherit;
     font-weight: bold;
@@ -185,13 +185,13 @@ const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
     }
 
     &.default {
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       height: 40px;
       padding: 0 ${spacingByChar(1)};
     }
 
     &.s {
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       height: 27px;
       padding: 0 ${spacingByChar(0.5)};
     }

@@ -47,8 +47,9 @@ export type ItemStyleProps = {
   isUnclickable?: boolean
 }
 export function getItemStyle({ themes, isActive, isUnclickable }: ItemStyleProps) {
-  const { pxToRem, font } = themes.size
-  const { hoverColor, MAIN, TEXT_BLACK, TEXT_GREY } = themes.palette
+  const { fontSize, palette, size } = themes
+  const { pxToRem } = size
+  const { hoverColor, MAIN, TEXT_BLACK, TEXT_GREY } = palette
 
   return css`
     display: flex;
@@ -60,7 +61,7 @@ export function getItemStyle({ themes, isActive, isUnclickable }: ItemStyleProps
     background: none;
     border: none;
     color: ${TEXT_GREY};
-    font-size: ${pxToRem(font.TALL)};
+    font-size: ${fontSize.M};
     font-weight: bold;
     text-decoration: none;
     transition: background-color 0.3s;
