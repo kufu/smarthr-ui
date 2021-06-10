@@ -7,7 +7,7 @@ type Props = {
   children: ReactNode
   radius?: 's' | 'm'
 }
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+export type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const radiusMap = {
   s: '6px',
