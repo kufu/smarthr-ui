@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -20,13 +20,20 @@ type Props = {
 }
 
 const LOGO_HEIGHT = 20
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const MessageScreen: VFC<Props> = ({ title, links, children, className = '' }) => {
+export const MessageScreen: VFC<Props & ElementProps> = ({
+  title,
+  links,
+  children,
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
   const classNames = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={`${className} ${classNames.wrapper}`}>
+    <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       <Box>
         <Logo className={classNames.logo}>
           <SmartHRLogo width={111} height={LOGO_HEIGHT} fill={theme.palette.BRAND} />
