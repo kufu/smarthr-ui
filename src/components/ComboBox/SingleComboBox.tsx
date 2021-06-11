@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
+import { useClassNames } from './useClassNames'
 
 import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
@@ -162,10 +163,12 @@ export function SingleComboBox<T>({
     }
   }, [isFocused, selectedItem, setDropdownStyle])
 
+  const classNames = useClassNames().single
+
   return (
     <Container
       ref={outerRef}
-      className={`${disabled ? 'disabled' : ''} ${className}`}
+      className={`${disabled ? 'disabled' : ''} ${className} ${classNames.wrapper}`}
       $width={width}
       role="combobox"
       aria-haspopup="listbox"
@@ -189,7 +192,9 @@ export function SingleComboBox<T>({
               }}
               ref={clearButtonRef}
               themes={theme}
-              className={selectedItem === null || disabled ? 'hidden' : undefined}
+              className={`${selectedItem === null || disabled ? 'hidden' : ''} ${
+                classNames.clearButton
+              }`}
             >
               <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
             </ClearButton>
@@ -253,6 +258,7 @@ export function SingleComboBox<T>({
         ref={inputRef}
         aria-activedescendant={aria.activeDescendant}
         aria-autocomplete="list"
+        className={classNames.input}
       />
       {renderListBox()}
     </Container>

@@ -6,6 +6,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
 import { Item } from './types'
+import { useClassNames } from './useClassNames'
 
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
@@ -161,6 +162,8 @@ export function useListBox<T>({
   const { portalRoot } = usePortal()
   const listBoxRef = useRef<HTMLDivElement>(null)
 
+  const classNames = useClassNames().common
+
   const renderListBox = () => {
     return createPortal(
       <Container
@@ -170,6 +173,7 @@ export function useListBox<T>({
         ref={listBoxRef}
         role="listbox"
         aria-hidden={!isExpanded}
+        className={classNames.dropdownList}
       >
         {isLoading ? (
           <LoaderWrapper themes={theme}>
@@ -179,7 +183,7 @@ export function useListBox<T>({
           <>
             {options.map((option, i) => {
               const isActive = activeOptionIndex === i
-              const className = isActive ? 'active' : undefined
+              const className = isActive ? 'active' : ''
               const { label, disabled, isAdding, isSelected } = option
               if (isAdding) {
                 return (
@@ -190,7 +194,7 @@ export function useListBox<T>({
                     onMouseOver={() => setActiveOptionIndex(0)}
                     id={addingButtonId}
                     role="option"
-                    className={className}
+                    className={`${className} ${classNames.addButton}`}
                   >
                     <AddIcon size={14} color={theme.palette.TEXT_LINK} $theme={theme} />
                     <AddText themes={theme}>「{label}」を追加</AddText>
@@ -207,7 +211,7 @@ export function useListBox<T>({
                   onMouseOver={() => setActiveOptionIndex(i)}
                   id={getOptionId(option)}
                   role="option"
-                  className={className}
+                  className={`${className} ${classNames.selectButton}`}
                   aria-selected={isSelected}
                 >
                   {label}
@@ -216,13 +220,23 @@ export function useListBox<T>({
             })}
 
             {isDuplicate && (
-              <NoItems themes={theme} role="alert" aria-live="polite">
+              <NoItems
+                themes={theme}
+                role="alert"
+                aria-live="polite"
+                className={classNames.noItems}
+              >
                 重複する選択肢は追加できません
               </NoItems>
             )}
 
             {hasNoMatch && (
-              <NoItems themes={theme} role="alert" aria-live="polite">
+              <NoItems
+                themes={theme}
+                role="alert"
+                aria-live="polite"
+                className={classNames.noItems}
+              >
                 一致する選択肢がありません
               </NoItems>
             )}

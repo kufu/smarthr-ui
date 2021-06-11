@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
+import { useClassNames } from './useClassNames'
 
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { useListBox } from './useListBox'
@@ -155,12 +156,14 @@ export function MultiComboBox<T>({
     }
   }, [isFocused, selectedItems, setDropdownStyle])
 
+  const classNames = useClassNames().multi
+
   return (
     <Container
       themes={theme}
       width={width}
       ref={outerRef}
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       onClick={(e) => {
         if (
           !hasParentElementByClassName(e.target as HTMLElement, DELETE_BUTTON_CLASS_NAME) &&
@@ -192,14 +195,20 @@ export function MultiComboBox<T>({
             const { deletable = true, ...item } = selectedItem
             return (
               <li key={i}>
-                <SelectedItem themes={theme} disabled={disabled}>
-                  <SelectedItemLabel themes={theme}>{selectedItem.label}</SelectedItemLabel>
+                <SelectedItem
+                  themes={theme}
+                  disabled={disabled}
+                  className={classNames.selectedItem}
+                >
+                  <SelectedItemLabel themes={theme} className={classNames.selectedItemLabel}>
+                    {selectedItem.label}
+                  </SelectedItemLabel>
 
                   {deletable && (
                     <DeleteButton
                       type="button"
                       themes={theme}
-                      className={DELETE_BUTTON_CLASS_NAME}
+                      className={`${DELETE_BUTTON_CLASS_NAME} ${classNames.deleteButton}`}
                       disabled={disabled}
                       onClick={() => onDelete(item)}
                     >
@@ -243,12 +252,15 @@ export function MultiComboBox<T>({
               aria-activedescendant={aria.activeDescendant}
               aria-autocomplete="list"
               aria-controls={aria.listBoxId}
+              className={classNames.input}
             />
           </InputWrapper>
 
           {selectedItems.length === 0 && placeholder && !isFocused && (
             <li>
-              <Placeholder themes={theme}>{placeholder}</Placeholder>
+              <Placeholder themes={theme} className={classNames.placeholder}>
+                {placeholder}
+              </Placeholder>
             </li>
           )}
         </List>
