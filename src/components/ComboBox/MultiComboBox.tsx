@@ -1,4 +1,11 @@
-import React, { ChangeEvent, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import React, {
+  ChangeEvent,
+  HTMLAttributes,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -70,6 +77,8 @@ type Props<T> = {
   onSelect: (item: Item<T>) => void
 }
 
+type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
+
 export function MultiComboBox<T>({
   items,
   selectedItems,
@@ -85,7 +94,8 @@ export function MultiComboBox<T>({
   onAdd,
   onDelete,
   onSelect,
-}: Props<T>) {
+  ...props
+}: Props<T> & ElementProps<T>) {
   const theme = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -158,6 +168,7 @@ export function MultiComboBox<T>({
 
   return (
     <Container
+      {...props}
       themes={theme}
       width={width}
       ref={outerRef}
