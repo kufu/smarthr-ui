@@ -163,6 +163,7 @@ export function SingleComboBox<T>({
     }
   }, [isFocused, selectedItem, setDropdownStyle])
 
+  const needsClearButton = selectedItem !== null && !disabled
   const classNames = useClassNames().single
 
   return (
@@ -192,9 +193,7 @@ export function SingleComboBox<T>({
               }}
               ref={clearButtonRef}
               themes={theme}
-              className={`${selectedItem === null || disabled ? 'hidden' : ''} ${
-                classNames.clearButton
-              }`}
+              className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
             >
               <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
             </ClearButton>
