@@ -9,13 +9,14 @@ type Props = {
   icon: React.ComponentType<IconProps>
   children: ReactNode
   onClick?: () => void
+  className?: string
 }
 
-export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick }) => {
+export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick, className }) => {
   const theme = useTheme()
 
   return (
-    <Wrapper themes={theme} onClick={onClick} type="button">
+    <Wrapper themes={theme} onClick={onClick} type="button" className={className}>
       <IconWrapper themes={theme} role="presentation">
         <Icon />
       </IconWrapper>
@@ -26,7 +27,7 @@ export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick }) => {
 
 const Wrapper = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, interaction } = themes
+    const { size, fontSize, interaction } = themes
 
     return css`
       display: inline-block;
@@ -35,7 +36,7 @@ const Wrapper = styled.button<{ themes: Theme }>`
       border: none;
       background: none;
       color: #fff;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 50px;
       transition: background-color ${interaction.hover.animation};
       cursor: pointer;

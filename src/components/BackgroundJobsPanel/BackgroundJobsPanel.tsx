@@ -129,10 +129,9 @@ const Header = styled.div`
   display: flex;
   align-items: center;
 `
-const Title = styled.div<{ themes: Theme }>(({ themes: { size, spacingByChar } }) => {
-  const { font, pxToRem } = size
+const Title = styled.div<{ themes: Theme }>(({ themes: { fontSize, spacingByChar } }) => {
   return css`
-    font-size: ${pxToRem(font.TALL)};
+    font-size: ${fontSize.M};
     padding: ${spacingByChar(1)};
   `
 })
@@ -181,30 +180,27 @@ const JobIconWrapper = styled.div`
   line-height: 0;
 `
 const JobName = styled(OmittableJobText)<{ themes: Theme }>(
-  ({ themes: { size, spacingByChar } }) => {
-    const { font, pxToRem } = size
+  ({ themes: { fontSize, spacingByChar } }) => {
     return css`
       margin-left: ${spacingByChar(0.5)};
-      font-size: ${pxToRem(font.TALL)};
+      font-size: ${fontSize.M};
     `
   },
 )
 const JobDesc = styled(OmittableJobText)<{ themes: Theme }>(
-  ({ themes: { size, spacingByChar } }) => {
-    const { font, pxToRem } = size
+  ({ themes: { fontSize, spacingByChar } }) => {
     return css`
       margin-left: ${spacingByChar(0.5)};
-      font-size: ${pxToRem(font.SHORT)};
+      font-size: ${fontSize.S};
     `
   },
 )
 const CancelButton = styled(ResetButton)<{ themes: Theme }>(
-  ({ themes: { color, size, spacingByChar } }) => {
-    const { font, pxToRem } = size
+  ({ themes: { color, fontSize, spacingByChar } }) => {
     return css`
       flex-shrink: 0;
       margin-left: ${spacingByChar(0.5)};
-      font-size: ${pxToRem(font.SHORT)};
+      font-size: ${fontSize.S};
       color: ${color.TEXT_LINK};
       cursor: pointer;
       :hover {

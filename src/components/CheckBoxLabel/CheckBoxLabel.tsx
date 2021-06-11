@@ -13,7 +13,7 @@ type Props = CheckBoxProps & {
 }
 
 /**
- * @deprecated The CheckBoxLabel component is deprecated, so use CheckBoxLabelNew component instead.
+ * @deprecated The CheckBoxLabel component is deprecated, so use CheckBoxNew component instead.
  */
 export const CheckBoxLabel: VFC<Props & ElementProps> = ({
   label,
@@ -65,7 +65,7 @@ const Txt = styled.span<{ themes: Theme; lineHeight: number }>`
     // checkbox と text の位置がずれるため、line-height 分を調整する疑似要素を作る
     return css`
       margin: 0 0 0 ${spacingByChar(0.5)};
-      font-size: ${fontSize.pxToRem(fontSize.TALL)};
+      font-size: ${fontSize.M};
       line-height: ${lineHeight};
       &::before {
         content: '';
