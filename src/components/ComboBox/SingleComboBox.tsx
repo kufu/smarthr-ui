@@ -1,4 +1,12 @@
-import React, { ChangeEvent, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  ChangeEvent,
+  HTMLAttributes,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -66,6 +74,8 @@ type Props<T> = {
   onSelect: (item: Item<T> | null) => void
 }
 
+type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
+
 export function SingleComboBox<T>({
   items,
   selectedItem,
@@ -80,7 +90,8 @@ export function SingleComboBox<T>({
   onChange,
   onAdd,
   onSelect,
-}: Props<T>) {
+  ...props
+}: Props<T> & ElementProps<T>) {
   const theme = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -168,6 +179,7 @@ export function SingleComboBox<T>({
 
   return (
     <Container
+      {...props}
       ref={outerRef}
       className={`${disabled ? 'disabled' : ''} ${className} ${classNames.wrapper}`}
       $width={width}
