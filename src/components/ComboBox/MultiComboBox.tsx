@@ -11,8 +11,6 @@ import { useListBox } from './useListBox'
 import { ResetButton } from '../Button/ResetButton'
 import { Item } from './types'
 
-const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
-
 type Props<T> = {
   /**
    * A list of items to choose from.
@@ -166,7 +164,7 @@ export function MultiComboBox<T>({
       className={`${className} ${classNames.wrapper}`}
       onClick={(e) => {
         if (
-          !hasParentElementByClassName(e.target as HTMLElement, DELETE_BUTTON_CLASS_NAME) &&
+          !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
           !disabled &&
           !isFocused
         ) {
@@ -208,7 +206,7 @@ export function MultiComboBox<T>({
                     <DeleteButton
                       type="button"
                       themes={theme}
-                      className={`${DELETE_BUTTON_CLASS_NAME} ${classNames.deleteButton}`}
+                      className={classNames.deleteButton}
                       disabled={disabled}
                       onClick={() => onDelete(item)}
                     >
