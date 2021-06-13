@@ -129,7 +129,8 @@
     "test:build-assets": "node scripts/build-test.ts",
     "test-visual": "reg-suit run",
     "testcafe": "testcafe",
-    "e2e": "ts-node scripts/e2e.ts"
+    "e2e": "ts-node scripts/e2e.ts",
+    "prepare": "husky install"
   },
   "sideEffects": false,
   "typings": "lib/index.d.ts",
