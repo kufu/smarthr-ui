@@ -1,7 +1,8 @@
-import React, { VFC } from 'react'
+import React, { OlHTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 type Props = { items: IndexNavItemProps[] }
 
@@ -12,20 +13,24 @@ export type IndexNavItemProps = {
   children?: IndexNavItemProps[]
 }
 
-export const IndexNav: VFC<Props> = ({ items }) => {
+type ElementProps = Omit<OlHTMLAttributes<HTMLOListElement>, keyof Props>
+
+export const IndexNav: VFC<Props & ElementProps> = ({ items, className = '', ...props }) => {
   const themes = useTheme()
+  const classNames = useClassNames()
 
   if (items.length === 0) return null
 
   return (
-    <List themes={themes}>
+    <List {...props} themes={themes} className={`${className} ${classNames.wrapper}`}>
       {items.map((item, i) => (
-        <Item key={i} themes={themes}>
+        <Item key={i} themes={themes} className={classNames.item}>
           <Anchor
             href={item.href}
             current={item.current}
             aria-current={item.current ? 'page' : undefined}
             themes={themes}
+            className={classNames.anchor}
           >
             {item.label}
           </Anchor>
