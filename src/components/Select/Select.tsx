@@ -158,6 +158,14 @@ const SelectBox = styled.select<{ themes: Theme }>`
         opacity: 1;
       }
 
+      // for IE11
+      &:disabled {
+        &,
+        &::-ms-value {
+          color: ${palette.TEXT_DISABLED};
+        }
+      }
+
       &::-ms-expand {
         display: none;
       }
