@@ -105,25 +105,20 @@ const List = styled.ul<{ themes: Theme }>`
       padding: 0;
       > li {
         list-style: none;
-        margin-left: ${spacingByChar(0.5)};
-        &.prev {
-          margin-right: ${spacingByChar(1)};
-          + li {
-            margin-left: 0;
-          }
+        :not(:first-child) {
+          margin-left: ${spacingByChar(0.5)};
+        }
+        &.prev + li {
+          margin-left: ${spacingByChar(1)};
         }
         &.next {
           margin-left: ${spacingByChar(1)};
-        }
-        &.prevDouble {
-          margin-left: 0;
         }
       }
       &.withoutNumbers {
         > li {
           &.prev {
             margin-left: ${spacingByChar(1)};
-            margin-right: 0;
           }
           &.next {
             margin-left: ${spacingByChar(0.5)};
