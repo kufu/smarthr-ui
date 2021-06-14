@@ -267,8 +267,7 @@ export const Disabled: Story = () => {
         <Select
           disabled={true}
           placeholder="placeholder"
-          options={[{ label: 'label', value: 'value' }]}
-          selected="value"
+          options={[{ label: 'label', value: 'value', selected: true }]}
         />
         <Textarea disabled={true} value="value" />
         <Input placeholder="placeholder" />
@@ -283,8 +282,7 @@ export const Disabled: Story = () => {
         <Input value="value" />
         <Select
           placeholder="placeholder"
-          options={[{ label: 'label', value: 'value' }]}
-          selected="value"
+          options={[{ label: 'label', value: 'value', selected: true }]}
         />
         <Textarea value="value" />
       </dd>
