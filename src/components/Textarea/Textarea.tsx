@@ -76,6 +76,7 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
       background-color: #fff;
       border: ${frame.border.default};
       box-sizing: border-box;
+      opacity: 1;
       ${error
         ? css`
             border-color: ${palette.DANGER};
