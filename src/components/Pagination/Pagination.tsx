@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { range } from '../../libs/lodash'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { PaginationItem } from './PaginationItem'
 import { PaginationControllerItem } from './PaginationControllerItem'
@@ -25,12 +26,13 @@ export const Pagination: VFC<Props> = ({
   withoutNumbers = false,
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   if (total <= 1) return null
 
   const prevPage = (
     <>
-      <li className="prevDouble">
+      <li className={classNames.start}>
         <PaginationControllerItem
           onClick={onClick}
           direction="prev"
@@ -39,7 +41,7 @@ export const Pagination: VFC<Props> = ({
           double
         />
       </li>
-      <li className="prev">
+      <li className={classNames.prev}>
         <PaginationControllerItem
           onClick={onClick}
           direction="prev"
@@ -55,7 +57,7 @@ export const Pagination: VFC<Props> = ({
         ...range(current - padding, current).filter((page) => page >= 1),
         ...range(current, current + padding + 1).filter((page) => page <= total),
       ].map((page) => (
-        <li key={`pagination-${page}`}>
+        <li key={`pagination-${page}`} className={classNames.page}>
           <PaginationItem page={page} currentPage={current} onClick={onClick} />
         </li>
       ))
@@ -63,7 +65,7 @@ export const Pagination: VFC<Props> = ({
 
   const nextPage = (
     <>
-      <li className="next">
+      <li className={classNames.next}>
         <PaginationControllerItem
           onClick={onClick}
           direction="next"
@@ -71,7 +73,7 @@ export const Pagination: VFC<Props> = ({
           disabled={current === total}
         />
       </li>
-      <li className="nextDouble">
+      <li className={classNames.end}>
         <PaginationControllerItem
           onClick={onClick}
           direction="next"
@@ -84,7 +86,7 @@ export const Pagination: VFC<Props> = ({
   )
 
   return (
-    <Wrapper className={className} aria-label="ページネーション">
+    <Wrapper className={`${className} ${classNames.wrapper}`} aria-label="ページネーション">
       <List className={withoutNumbers ? 'withoutNumbers' : ''} themes={theme}>
         {prevPage}
         {pages}
@@ -99,6 +101,8 @@ const Wrapper = styled.nav`
 `
 const List = styled.ul<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => {
+    const classNames = useClassNames()
+
     return css`
       display: flex;
       margin: 0;
@@ -108,22 +112,22 @@ const List = styled.ul<{ themes: Theme }>`
         :not(:first-child) {
           margin-left: ${spacingByChar(0.5)};
         }
-        &.prev + li {
+        &.${classNames.prev} + li {
           margin-left: ${spacingByChar(1)};
         }
-        &.next {
+        &.${classNames.next} {
           margin-left: ${spacingByChar(1)};
         }
       }
       &.withoutNumbers {
         > li {
-          &.prev {
+          &.${classNames.prev} {
             margin-left: ${spacingByChar(1)};
           }
-          &.next {
+          &.${classNames.next} {
             margin-left: ${spacingByChar(0.5)};
           }
-          &.nextDouble {
+          &.${classNames.end} {
             margin-left: ${spacingByChar(1)};
           }
         }
