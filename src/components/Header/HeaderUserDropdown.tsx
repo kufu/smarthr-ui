@@ -2,6 +2,7 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import {
@@ -39,10 +40,12 @@ export const HeaderUserDropdown: VFC<Props> = ({
   onClickSchool,
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
+
   return (
     <Dropdown>
       <DropdownTrigger>
-        <TriggerButton themes={theme} type="button">
+        <TriggerButton themes={theme} type="button" className={classNames.userDropdownTrigger}>
           {avatar && (
             <Avatar
               src={avatar}
@@ -59,15 +62,21 @@ export const HeaderUserDropdown: VFC<Props> = ({
         </TriggerButton>
       </DropdownTrigger>
 
-      <DropdownContent>
+      <DropdownContent className={classNames.userDropdown}>
         <MenuList themes={theme} role="menu">
           <MenuListItem role="menuitem">
-            <MenuListItemHeader themes={theme}>{displayName}</MenuListItemHeader>
+            <MenuListItemHeader themes={theme} className={classNames.userDropdownDisplayName}>
+              {displayName}
+            </MenuListItemHeader>
           </MenuListItem>
 
           {isCrew && (
             <MenuListItem role="menuitem">
-              <MenuListItemButton onClick={onClickProfile} themes={theme}>
+              <MenuListItemButton
+                onClick={onClickProfile}
+                themes={theme}
+                className={classNames.profileButton}
+              >
                 <MenuListItemIcon themes={theme}>
                   <FaUserAltIcon />
                 </MenuListItemIcon>
@@ -77,7 +86,11 @@ export const HeaderUserDropdown: VFC<Props> = ({
           )}
 
           <MenuListItem role="menuitem">
-            <MenuListItemButton onClick={onClickAccount} themes={theme}>
+            <MenuListItemButton
+              onClick={onClickAccount}
+              themes={theme}
+              className={classNames.accountButton}
+            >
               <MenuListItemIcon themes={theme}>
                 <FaCogIcon />
               </MenuListItemIcon>
@@ -92,11 +105,17 @@ export const HeaderUserDropdown: VFC<Props> = ({
               </MenuListItem>
 
               <MenuListItem role="menuitem">
-                <MenuListItemHeader themes={theme}>{currentTenantName}</MenuListItemHeader>
+                <MenuListItemHeader themes={theme} className={classNames.userDropdownTenantName}>
+                  {currentTenantName}
+                </MenuListItemHeader>
               </MenuListItem>
 
               <MenuListItem role="menuitem">
-                <MenuListItemButton onClick={onClickCompany} themes={theme}>
+                <MenuListItemButton
+                  onClick={onClickCompany}
+                  themes={theme}
+                  className={classNames.companyButton}
+                >
                   <MenuListItemIcon themes={theme}>
                     <FaBuildingIcon />
                   </MenuListItemIcon>
@@ -112,7 +131,11 @@ export const HeaderUserDropdown: VFC<Props> = ({
 
           {isAdmin && (
             <MenuListItem role="menuitem">
-              <MenuListItemButton onClick={onClickSchool} themes={theme}>
+              <MenuListItemButton
+                onClick={onClickSchool}
+                themes={theme}
+                className={classNames.schoolButton}
+              >
                 <MenuListItemIcon themes={theme}>
                   <FaGraduationCapIcon />
                 </MenuListItemIcon>
@@ -122,7 +145,11 @@ export const HeaderUserDropdown: VFC<Props> = ({
           )}
 
           <MenuListItem role="menuitem">
-            <MenuListItemButton onClick={onClickLogout} themes={theme}>
+            <MenuListItemButton
+              onClick={onClickLogout}
+              themes={theme}
+              className={classNames.logoutButton}
+            >
               <MenuListItemIcon themes={theme}>
                 <FaPowerOffIcon />
               </MenuListItemIcon>
@@ -137,7 +164,7 @@ export const HeaderUserDropdown: VFC<Props> = ({
 
 const TriggerButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, interaction } = themes
+    const { fontSize, size, interaction } = themes
 
     return css`
       display: flex;
@@ -148,7 +175,7 @@ const TriggerButton = styled.button<{ themes: Theme }>`
       border: none;
       background: none;
       color: #fff;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       transition: background-color ${interaction.hover.animation};
       cursor: pointer;
 
@@ -205,7 +232,7 @@ const MenuListItemIcon = styled.figure<{ themes: Theme }>`
 `
 const MenuListItemButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette, interaction } = themes
+    const { fontSize, size, palette, interaction } = themes
 
     return css`
       display: flex;
@@ -215,7 +242,7 @@ const MenuListItemButton = styled.button<{ themes: Theme }>`
       border: none;
       background: none;
       color: ${palette.TEXT_BLACK};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1.5;
       white-space: nowrap;
       box-sizing: border-box;
@@ -230,12 +257,12 @@ const MenuListItemButton = styled.button<{ themes: Theme }>`
 `
 const MenuListItemHeader = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { fontSize, size, palette } = themes
 
     return css`
       padding: ${size.pxToRem(3)} ${size.pxToRem(20)};
       color: ${palette.TEXT_GREY};
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       line-height: 1.6;
       white-space: nowrap;
     `

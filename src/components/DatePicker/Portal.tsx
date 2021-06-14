@@ -12,6 +12,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { usePortal } from '../../hooks/usePortal'
 import { getPortalPosition } from './datePickerHelper'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   inputRect: DOMRect
@@ -41,8 +42,15 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, children }
     })
   }, [inputRect])
 
+  const classNames = useClassNames()
+
   return createPortal(
-    <Container {...position} themes={themes} className={isReady ? 'ready' : ''} ref={containerRef}>
+    <Container
+      {...position}
+      themes={themes}
+      className={`${isReady ? 'ready' : ''} ${classNames.calendarContainer}`}
+      ref={containerRef}
+    >
       {children}
     </Container>,
     portalRoot,

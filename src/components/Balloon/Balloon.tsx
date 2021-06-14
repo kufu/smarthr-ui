@@ -40,12 +40,12 @@ export const DarkBalloon = balloonFactory('dark')
 
 const Base = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, frame, size } = themes
+    const { palette, frame, fontSize } = themes
 
     return css`
       position: relative;
       display: inline-block;
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       border-radius: 4px;
       box-shadow: 0 2px 8px 0 rgba(51, 51, 51, 0.35);
       white-space: nowrap;

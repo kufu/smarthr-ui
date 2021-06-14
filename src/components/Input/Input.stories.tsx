@@ -88,8 +88,6 @@ const StyledInput = styled(Input)`
 const Note = styled.div<{ themes: Theme }>`
   ${({ themes }) => css`
     margin-top: 8px;
-    font-size: 12px;
-    font-size: 14px;
     color: ${themes.color.TEXT_GREY};
   `}
 `
