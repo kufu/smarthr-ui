@@ -1,7 +1,8 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+
 import { Base } from '../Base'
 import {
   FaCheckCircleIcon,
@@ -11,14 +12,16 @@ import {
 } from '../Icon'
 
 type IconType = 'info' | 'success' | 'warning' | 'error'
-export const CompactInformationPanel: React.VFC<{
+
+export const CompactInformationPanel: VFC<{
   type?: IconType
+  className?: string
   children: ReactNode
-}> = ({ type = 'info', children }) => {
+}> = ({ type = 'info', className = '', children }) => {
   const theme = useTheme()
 
   return (
-    <Wrapper themes={theme}>
+    <Wrapper className={className} themes={theme}>
       {callIcon(type, theme)}
       <Content>{children}</Content>
     </Wrapper>
