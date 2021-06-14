@@ -9,7 +9,7 @@
     "lodash.range": "^3.2.0",
     "polished": "^4.1.2",
     "react-icons": "^4.2.0",
-    "react-transition-group": "^4.4.1"
+    "react-transition-group": "^4.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.14.5",
