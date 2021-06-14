@@ -2,6 +2,7 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   length: number
@@ -10,6 +11,7 @@ type Props = {
 
 export const HeaderNotification: VFC<Props> = ({ length, onClick }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
     <Wrapper themes={theme}>
@@ -19,6 +21,7 @@ export const HeaderNotification: VFC<Props> = ({ length, onClick }) => {
         aria-label="通知履歴"
         themes={theme}
         type="button"
+        className={classNames.notificationButton}
       >
         {length >= 10 ? '9+' : length}
       </Button>
@@ -39,7 +42,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
 `
 const Button = styled.button<{ themes: Theme; isZero: boolean }>`
   ${({ themes, isZero }) => {
-    const { size, interaction } = themes
+    const { fontSize, interaction } = themes
 
     return css`
       display: inline-block;
@@ -50,7 +53,7 @@ const Button = styled.button<{ themes: Theme; isZero: boolean }>`
       border-radius: 4px;
       background-color: ${isZero ? '#aaa' : '#fcb156'};
       color: #fff;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       transition: background-color ${interaction.hover.animation};
       cursor: pointer;
 

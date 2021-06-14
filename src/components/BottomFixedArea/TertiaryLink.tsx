@@ -66,11 +66,10 @@ const Button = styled.button<{ themes: Theme }>`
   }}
 `
 const Text = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, font } = themes.size
+  ${({ themes: { fontSize } }) => {
     return css`
       margin: 0;
-      font-size: ${pxToRem(font.GRANDE)};
+      font-size: ${fontSize.L};
     `
   }}
 `

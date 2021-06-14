@@ -65,7 +65,7 @@ storiesOf('FieldSet', module)
             labelSuffix={
               <Suffix>
                 <FaExclamationCircleIcon size={12} color={themes.palette.TEXT_GREY} />
-                <SuffixText>suffix text</SuffixText>
+                <SuffixText themes={themes}>suffix text</SuffixText>
               </Suffix>
             }
           />
@@ -83,7 +83,7 @@ storiesOf('FieldSet', module)
             labelSuffix={
               <Suffix>
                 <FaExclamationCircleIcon size={12} color={themes.palette.TEXT_GREY} />
-                <SuffixText>suffix text</SuffixText>
+                <SuffixText themes={themes}>suffix text</SuffixText>
               </Suffix>
             }
             required
@@ -111,9 +111,9 @@ const Suffix = styled.div`
     margin-right: 4px;
   }
 `
-const SuffixText = styled.p`
+const SuffixText = styled.p<{ themes: Theme }>`
   margin: 0;
-  font-size: 11px;
+  font-size: ${({ themes }) => themes.fontSize.S};
 `
 const CustomTag = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
