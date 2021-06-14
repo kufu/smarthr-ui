@@ -9,6 +9,7 @@ Array [
   </span>,
   <svg
     aria-hidden={true}
+    className=" smarthr-ui-Icon"
     fill="currentColor"
     focusable={false}
     height="1em"
@@ -51,6 +52,7 @@ Array [
   </span>,
   <svg
     aria-hidden={true}
+    className=" smarthr-ui-Icon"
     fill="currentColor"
     focusable={false}
     height="1em"
@@ -72,6 +74,7 @@ Array [
   </svg>,
   <svg
     aria-label="連絡帳"
+    className=" smarthr-ui-Icon"
     fill="currentColor"
     focusable={false}
     height="1em"
@@ -93,6 +96,7 @@ Array [
   </svg>,
   <svg
     aria-labelledby="text"
+    className=" smarthr-ui-Icon"
     fill="currentColor"
     focusable={false}
     height="1em"
