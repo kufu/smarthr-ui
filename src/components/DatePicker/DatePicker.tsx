@@ -6,11 +6,13 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { useGlobalKeyDown } from './useGlobalKeyDown'
 import { parseJpnDateString } from './datePickerHelper'
+import { useClassNames } from './useClassNames'
 
 import { Input } from '../Input'
 import { FaCalendarAltIcon } from '../Icon'
 import { Calendar } from '../Calendar'
 import { Portal } from './Portal'
+import { useId } from '../../hooks/useId'
 
 type Props = {
   value?: string | null
@@ -33,7 +35,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   to,
   disabled,
   error,
-  className,
+  className = '',
   parseInput,
   formatDate,
   onChangeDate,
@@ -70,6 +72,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   const [inputRect, setInputRect] = useState<DOMRect | null>(null)
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [isCalendarShown, setIsCalendarShown] = useState(false)
+  const calenderId = useId()
 
   const updateDate = useCallback(
     (newDate: Date | null) => {
@@ -171,9 +174,11 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   )
   useGlobalKeyDown(handleKeyDown)
 
+  const classNames = useClassNames()
+
   return (
     <Container
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       onClick={() => {
         if (!disabled && !isCalendarShown) {
           switchCalendarVisibility(true)
@@ -235,11 +240,16 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
           disabled={disabled}
           error={error}
           ref={inputRef}
+          className={classNames.inputContainer}
+          aria-expanded={isCalendarShown}
+          aria-controls={calenderId}
+          aria-haspopup={true}
         />
       </InputWrapper>
       {isCalendarShown && inputRect && (
         <Portal inputRect={inputRect} ref={calendarPortalRef}>
           <Calendar
+            id={calenderId}
             value={selectedDate || undefined}
             from={from}
             to={to}

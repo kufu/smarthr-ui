@@ -13,7 +13,7 @@ type Props = CheckBoxProps & {
 }
 
 /**
- * @deprecated The CheckBoxLabel component is deprecated, so use CheckBoxLabelNew component instead.
+ * @deprecated The CheckBoxLabel component is deprecated, so use CheckBoxNew component instead.
  */
 export const CheckBoxLabel: VFC<Props & ElementProps> = ({
   label,
