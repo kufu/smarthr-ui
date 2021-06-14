@@ -1,7 +1,8 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { SmartHRLogo } from '../SmartHRLogo'
 import { Footer } from '../Footer'
@@ -19,29 +20,46 @@ type Props = {
 }
 
 const LOGO_HEIGHT = 20
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const MessageScreen: VFC<Props> = ({ title, links, children, className = '' }) => {
+export const MessageScreen: VFC<Props & ElementProps> = ({
+  title,
+  links,
+  children,
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={className}>
+    <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       <Box>
-        <Logo>
+        <Logo className={classNames.logo}>
           <SmartHRLogo width={111} height={LOGO_HEIGHT} fill={theme.palette.BRAND} />
         </Logo>
 
-        {title && <Title themes={theme}>{title}</Title>}
+        {title && (
+          <Title themes={theme} className={classNames.title}>
+            {title}
+          </Title>
+        )}
 
-        {children && <Content themes={theme}>{children}</Content>}
+        {children && (
+          <Content themes={theme} className={classNames.content}>
+            {children}
+          </Content>
+        )}
 
         {links && links.length && (
-          <Links themes={theme}>
+          <Links themes={theme} className={classNames.linkList}>
             {links.map((link) => (
               <li key={link.label}>
                 <Link
                   href={link.url}
                   {...(link.target ? { target: link.target } : {})}
                   themes={theme}
+                  className={classNames.link}
                 >
                   {link.label}
                   {link.target === '_blank' && (
@@ -54,7 +72,7 @@ export const MessageScreen: VFC<Props> = ({ title, links, children, className = 
         )}
       </Box>
 
-      <FooterArea themes={theme}>
+      <FooterArea themes={theme} className={classNames.footer}>
         <Footer />
       </FooterArea>
     </Wrapper>
