@@ -158,6 +158,13 @@ const SelectBox = styled.select<{ themes: Theme }>`
         opacity: 1;
       }
 
+      &:disabled {
+        &,
+        &::-ms-value {
+          color: ${palette.TEXT_DISABLED};
+        }
+      }
+
       &::-ms-expand {
         display: none;
       }
