@@ -26,17 +26,52 @@ const data = [
   },
   {
     name: 'Smoothie',
-    calories: 135,
+    calories: 10,
     fat: 0,
     carbs: 34.5,
     protein: 1.0,
   },
   {
     name: 'Milk',
-    calories: 138,
+    calories: 199,
     fat: 7.8,
     carbs: 9.9,
     protein: 6.8,
+  },
+  {
+    name: 'Coffee',
+    calories: 39,
+    fat: 7.8,
+    carbs: 10.9,
+    protein: 0,
+  },
+  {
+    name: 'Orange Juice',
+    calories: 200,
+    fat: 100.0,
+    carbs: 10,
+    protein: 300,
+  },
+  {
+    name: 'Apple Juice',
+    calories: 130,
+    fat: 200,
+    carbs: 99,
+    protein: 68,
+  },
+  {
+    name: 'Green Tea',
+    calories: 300,
+    fat: 100,
+    carbs: 10,
+    protein: 41,
+  },
+  {
+    name: 'Oolong Tea',
+    calories: 100,
+    fat: 10,
+    carbs: 9,
+    protein: 600,
   },
 ]
 
@@ -52,6 +87,55 @@ storiesOf('Table', module)
         table
         <Table>
           <Head bulkActionArea={'Bulk action area'}>
+            <Row>
+              <Cell>
+                <VisuallyHiddenText>行を選択</VisuallyHiddenText>
+                <label htmlFor="tableAllCheckBox">
+                  <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
+                  <CheckBox name="tableAllCheckBox" checked={false} id="tableAllCheckBox" />
+                </label>
+              </Cell>
+              <Cell aria-sort="ascending" highlighted={true}>
+                <ClickableCellInner onClick={action('clicked')}>
+                  <span style={{ lineHeight: '1.5' }}>Name</span>
+                  <Arrow visuallyHiddenText="昇順" />
+                </ClickableCellInner>
+              </Cell>
+              <Cell>Calories</Cell>
+              <Cell>Fat (g)</Cell>
+              <Cell>Carbs (g)</Cell>
+              <Cell>Protein (g)</Cell>
+              <Cell>Button</Cell>
+            </Row>
+          </Head>
+          <Body>
+            {data.map(({ name, calories, fat, carbs, protein }) => {
+              return (
+                <Row key={name}>
+                  <Cell>
+                    <label htmlFor="tableCheckBox">
+                      <VisuallyHiddenText>{name}</VisuallyHiddenText>
+                      <CheckBox name="tableCheckBox" checked={false} id="tableCheckBox" />
+                    </label>
+                  </Cell>
+                  <Cell>{name}</Cell>
+                  <Cell>{calories}</Cell>
+                  <Cell>{fat}</Cell>
+                  <Cell>{carbs}</Cell>
+                  <Cell>{protein}</Cell>
+                  <Cell>
+                    <Button size="s">Button</Button>
+                  </Cell>
+                </Row>
+              )
+            })}
+          </Body>
+        </Table>
+      </li>
+      <li>
+        table fixed header
+        <Table>
+          <Head bulkActionArea={'Bulk action area'} fixedHead={true}>
             <Row>
               <Cell>
                 <VisuallyHiddenText>行を選択</VisuallyHiddenText>
