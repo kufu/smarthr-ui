@@ -27,10 +27,18 @@ const defaultItems = [
   {
     label: 'option 1',
     value: 'value-1',
+    data: {
+      name: 'test',
+      age: 23,
+    },
   },
   {
     label: 'option 2',
     value: 'value-2',
+    data: {
+      name: 'test 2',
+      age: 34,
+    },
   },
   {
     label: 'option 3',
@@ -75,8 +83,9 @@ export const Default: Story = () => {
           selectedItems={selectedItems}
           width={400}
           placeholder="Enter the text for filtering"
-          onDelete={({ value }) => {
-            setSelectedItems(selectedItems.filter((item) => item.value !== value))
+          onDelete={(option) => {
+            action('onDelete')(option)
+            setSelectedItems(selectedItems.filter((item) => item.value !== option.value))
           }}
           onSelect={(option) => {
             action('onSelect')(option)
