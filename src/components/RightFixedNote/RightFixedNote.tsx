@@ -5,6 +5,7 @@ import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem
 import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
 import { SecondaryButton } from '../Button'
+import { useClassNames } from './useClassNames'
 
 interface Props {
   title?: string
@@ -27,7 +28,7 @@ export const RightFixedNote: VFC<Props> = ({
   textareaLabel,
   onClickEdit,
   onSubmit,
-  className,
+  className = '',
 }) => {
   const theme = useTheme()
 
@@ -43,10 +44,17 @@ export const RightFixedNote: VFC<Props> = ({
     [onSubmit],
   )
 
+  const classNames = useClassNames()
+
   return (
-    <Wrapper themes={theme} $width={width} onSubmit={handleSubmit} className={className}>
+    <Wrapper
+      themes={theme}
+      $width={width}
+      onSubmit={handleSubmit}
+      className={`${className} ${classNames.wrapper}`}
+    >
       {title && (
-        <Title type="sectionTitle" themes={theme}>
+        <Title type="sectionTitle" themes={theme} className={classNames.title}>
           {title}
         </Title>
       )}
@@ -60,9 +68,12 @@ export const RightFixedNote: VFC<Props> = ({
         name={TEXT_AREA_NAME}
         themes={theme}
         aria-label={textareaLabel ? textareaLabel : title}
+        className={classNames.textarea}
       />
 
-      <SubmitButton type="submit">{submitLabel}</SubmitButton>
+      <SubmitButton type="submit" className={classNames.submitButton}>
+        {submitLabel}
+      </SubmitButton>
     </Wrapper>
   )
 }
