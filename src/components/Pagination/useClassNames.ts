@@ -10,10 +10,10 @@ export function useClassNames() {
       wrapper: generate(),
       page: generate('page'),
       current: generate('current'),
-      start: generate('start'),
+      first: generate('first'),
       prev: generate('prev'),
       next: generate('next'),
-      end: generate('end'),
+      last: generate('last'),
     }),
     [generate],
   )

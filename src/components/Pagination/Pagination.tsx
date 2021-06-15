@@ -32,7 +32,7 @@ export const Pagination: VFC<Props> = ({
 
   const prevPage = (
     <>
-      <li className={classNames.start}>
+      <li className={classNames.first}>
         <PaginationControllerItem
           onClick={onClick}
           direction="prev"
@@ -76,7 +76,7 @@ export const Pagination: VFC<Props> = ({
           disabled={current === total}
         />
       </li>
-      <li className={classNames.end}>
+      <li className={classNames.last}>
         <PaginationControllerItem
           onClick={onClick}
           direction="next"
@@ -131,7 +131,7 @@ const List = styled.ul<{ themes: Theme }>`
           &.${classNames.prev} {
             margin-left: ${spacingByChar(1)};
           }
-          &.${classNames.end} {
+          &.${classNames.last} {
             margin-left: ${spacingByChar(1)};
           }
         }
