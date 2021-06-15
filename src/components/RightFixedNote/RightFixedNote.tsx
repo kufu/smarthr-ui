@@ -1,4 +1,4 @@
-import React, { VFC, useCallback } from 'react'
+import React, { FormHTMLAttributes, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
@@ -17,10 +17,11 @@ interface Props {
   onSubmit: (e: React.FormEvent<HTMLFormElement>, text: string) => void
   className?: string
 }
+type ElementProps = Omit<FormHTMLAttributes<HTMLFormElement>, keyof Props>
 
 const TEXT_AREA_NAME = 'admin_memo_new_text'
 
-export const RightFixedNote: VFC<Props> = ({
+export const RightFixedNote: VFC<Props & ElementProps> = ({
   title,
   items,
   submitLabel = '送信',
@@ -29,6 +30,7 @@ export const RightFixedNote: VFC<Props> = ({
   onClickEdit,
   onSubmit,
   className = '',
+  ...props
 }) => {
   const theme = useTheme()
 
@@ -48,6 +50,7 @@ export const RightFixedNote: VFC<Props> = ({
 
   return (
     <Wrapper
+      {...props}
       themes={theme}
       $width={width}
       onSubmit={handleSubmit}
