@@ -2,6 +2,7 @@ import React, { ReactNode, VFC, useCallback, useEffect, useRef, useState } from 
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 import { SecondaryButton } from '../Button'
 
 export type Option = {
@@ -26,7 +27,7 @@ export const SegmentedControl: VFC<Props> = ({
   onClickOption,
   size = 'default',
   isSquare = false,
-  className,
+  className = '',
   ...props
 }) => {
   const themes = useTheme()
@@ -97,10 +98,12 @@ export const SegmentedControl: VFC<Props> = ({
     [includesSelected, isFocused, value],
   )
 
+  const classNames = useClassNames()
+
   return (
     <Container
       {...props}
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       onFocus={() => setIsFocused(true)}
       onBlur={() => setIsFocused(false)}
       ref={containerRef}
@@ -122,6 +125,7 @@ export const SegmentedControl: VFC<Props> = ({
               tabIndex={getRovingTabIndex(option, i)}
               role="radio"
               aria-checked={isSelected}
+              className={classNames.button}
             >
               {option.content}
             </Button>
