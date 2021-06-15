@@ -1,4 +1,4 @@
-import React, { VFC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useClassNames } from './useClassNames'
@@ -10,18 +10,21 @@ type Props = {
   fill?: string
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const SmartHRLogo: VFC<Props> = ({
+export const SmartHRLogo: VFC<Props & ElementProps> = ({
   title = 'SmartHR',
   width = 150,
   height = 27,
   fill = '#fff',
   className = '',
+  ...props
 }) => {
   const classNames = useClassNames()
 
   return (
     <Wrapper
+      {...props}
       $width={width}
       $height={height}
       $fill={fill}
