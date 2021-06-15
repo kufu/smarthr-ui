@@ -2,6 +2,7 @@
 export { LightBalloon, DarkBalloon } from './components/Balloon'
 export { CheckBox } from './components/CheckBox'
 export { CheckBoxLabel } from './components/CheckBoxLabel'
+export { CheckBoxNew } from './components/CheckBoxNew'
 export {
   Dropdown,
   DropdownTrigger,
@@ -11,11 +12,16 @@ export {
   FilterDropdown,
 } from './components/Dropdown'
 export { FieldSet } from './components/FieldSet'
-export { FlashMessage } from './components/FlashMessage'
+export {
+  FlashMessage,
+  FlashMessageListProvider,
+  useFlashMessageList,
+} from './components/FlashMessage'
 export { FloatArea } from './components/FloatArea'
 export { Input, CurrencyInput } from './components/Input'
 export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
+export { TextLink } from './components/TextLink'
 export { Loader } from './components/Loader'
 export {
   Dialog,
@@ -31,6 +37,7 @@ export {
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
 export { RadioButtonLabel } from './components/RadioButtonLabel'
+export { RadioButtonNew } from './components/RadioButtonNew'
 export {
   PrimaryButton,
   PrimaryButtonAnchor,
@@ -79,6 +86,7 @@ export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { IndexNav, IndexNavItemProps } from './components/IndexNav'
 export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'
+export { FormGroup } from './components/FormGroup'
 export {
   BackgroundJobsPanel,
   BackgroundJobsList,
@@ -86,6 +94,11 @@ export {
 } from './components/BackgroundJobsPanel'
 export { MultiComboBox, SingleComboBox } from './components/ComboBox'
 export { SideNav } from './components/SideNav'
+export { CompactInformationPanel } from './components/CompactInformationPanel'
+export { Text } from './components/Text'
+
+// layout components
+export { LineUp, Stack } from './components/Layout'
 
 // themes
 export { createTheme } from './themes/createTheme'

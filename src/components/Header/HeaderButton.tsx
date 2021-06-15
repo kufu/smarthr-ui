@@ -1,23 +1,24 @@
 import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Icon as DuplicatedIcon, IconNames, ComponentProps as IconProps } from '../Icon/Icon'
+import { ComponentProps as IconProps } from '../Icon/Icon'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Props = {
-  icon: IconNames | React.ComponentType<IconProps>
+  icon: React.ComponentType<IconProps>
   children: ReactNode
   onClick?: () => void
+  className?: string
 }
 
-export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick }) => {
+export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick, className }) => {
   const theme = useTheme()
 
   return (
-    <Wrapper themes={theme} onClick={onClick} type="button">
+    <Wrapper themes={theme} onClick={onClick} type="button" className={className}>
       <IconWrapper themes={theme} role="presentation">
-        {typeof Icon === 'string' ? <DuplicatedIcon name={Icon}></DuplicatedIcon> : <Icon />}
+        <Icon />
       </IconWrapper>
       {children}
     </Wrapper>
@@ -26,7 +27,7 @@ export const HeaderButton: VFC<Props> = ({ icon: Icon, children, onClick }) => {
 
 const Wrapper = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, interaction } = themes
+    const { size, fontSize, interaction } = themes
 
     return css`
       display: inline-block;
@@ -35,7 +36,7 @@ const Wrapper = styled.button<{ themes: Theme }>`
       border: none;
       background: none;
       color: #fff;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 50px;
       transition: background-color ${interaction.hover.animation};
       cursor: pointer;
@@ -47,13 +48,11 @@ const Wrapper = styled.button<{ themes: Theme }>`
   }}
 `
 const IconWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 ${size.pxToRem(size.space.XXS)} 0 0;
+      margin: 0 ${spacingByChar(0.5)} 0 0;
       vertical-align: middle;
     `
   }}

@@ -6,12 +6,12 @@ exports[`StatusLabel should be match snapshot 1`] = `
   display: inline-block;
   margin: 0;
   border: 1px solid transparent;
-  padding: 0.25rem 0.5rem;
+  padding: 4px 8px;
   background-color: #fff;
   text-align: center;
   white-space: nowrap;
   min-width: 3.75rem;
-  font-size: 0.6875rem;
+  font-size: 0.8571428571428571rem;
   font-weight: bold;
   line-height: 1;
 }

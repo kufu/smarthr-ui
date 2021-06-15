@@ -6,7 +6,7 @@ export type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLTableRowElement>, keyof Props>
 
-export const Row: React.FC<Props & ElementProps> = ({ className = '', children, ...props }) => (
+export const Row: React.VFC<Props & ElementProps> = ({ className = '', children, ...props }) => (
   <tr className={className} {...props}>
     {children}
   </tr>

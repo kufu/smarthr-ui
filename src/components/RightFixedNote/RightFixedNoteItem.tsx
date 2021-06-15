@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
@@ -20,7 +20,7 @@ type Props = ItemProps & {
   onClickEdit: OnClickEdit
 }
 
-export const RightFixedNoteItem: FC<Props> = ({
+export const RightFixedNoteItem: VFC<Props> = ({
   id,
   text,
   date,
@@ -46,36 +46,30 @@ export const RightFixedNoteItem: FC<Props> = ({
 }
 
 const Wrapper = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      margin-bottom: ${pxToRem(space.S)};
+      margin-bottom: ${spacingByChar(1.5)};
     `
   }}
 `
 
 const TextBase = styled(Base)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      padding: ${pxToRem(space.XXS)};
-      margin-bottom: ${pxToRem(space.XXS)};
+      padding: ${spacingByChar(0.5)};
+      margin-bottom: ${spacingByChar(0.5)};
       overflow: hidden;
     `
   }}
 `
 
 const Text = styled.p<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { font, pxToRem } = themes.size
-
+  ${({ themes: { fontSize } }) => {
     return css`
       display: block;
       padding: 0;
       margin: 0;
-      font-size: ${pxToRem(font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1.5;
     `
   }}
@@ -86,12 +80,10 @@ const EditButton = styled(SecondaryButton)`
 `
 
 const Info = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size, palette } = themes
-
+  ${({ themes: { fontSize, palette } }) => {
     return css`
       color: ${palette.TEXT_GREY};
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       text-align: right;
     `
   }}

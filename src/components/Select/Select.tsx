@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, SelectHTMLAttributes, useCallback } from 'react'
+import React, { ChangeEvent, SelectHTMLAttributes, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isMobileSafari, isTouchDevice } from '../../libs/ua'
@@ -14,7 +14,7 @@ type Optgroup = {
   options: Option[]
 } & React.OptgroupHTMLAttributes<HTMLOptGroupElement>
 
-type Props = SelectHTMLAttributes<HTMLSelectElement> & {
+type Props = {
   options: Array<Option | Optgroup>
   error?: boolean
   width?: number | string
@@ -22,7 +22,9 @@ type Props = SelectHTMLAttributes<HTMLSelectElement> & {
   blankLabel?: string
 }
 
-export const Select: FC<Props> = ({
+type ElementProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children'>
+
+export const Select: VFC<Props & ElementProps> = ({
   options,
   onChange,
   error = false,
@@ -49,7 +51,12 @@ export const Select: FC<Props> = ({
       disabled={props.disabled}
       themes={theme}
     >
-      <SelectBox onChange={handleChange} themes={theme} {...props}>
+      <SelectBox
+        onChange={handleChange}
+        aria-invalid={error || undefined}
+        themes={theme}
+        {...props}
+      >
         {hasBlank && <option value="">{blankLabel}</option>}
         {options.map((option) => {
           if ('value' in option) {
@@ -123,17 +130,17 @@ const Wrapper = styled.div<{
 })
 const SelectBox = styled.select<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame, palette } = themes
+    const { fontSize, spacingByChar, frame, palette } = themes
 
     return css`
       display: inline-block;
       width: 100%;
-      padding: ${size.pxToRem(size.space.XXS)};
-      padding-right: ${size.pxToRem(size.space.M)};
+      padding: ${spacingByChar(0.5)};
+      padding-right: ${spacingByChar(2)};
       border-radius: ${frame.border.radius.m};
       border: none;
       background-color: transparent;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
       outline: none;

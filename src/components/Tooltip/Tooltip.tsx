@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, VFC, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
@@ -19,7 +19,7 @@ type Props = {
 }
 
 const tooltipFactory = (balloonTheme: BalloonTheme) => {
-  const Tooltip: FC<Props> = ({
+  const Tooltip: VFC<Props> = ({
     message,
     children,
     triggerType,
@@ -151,12 +151,9 @@ const StyledDarkBalloon = StyledLightBalloon.withComponent(DarkBalloon)
 
 const StyledBalloonText = styled.p<{ themes: Theme }>`
   margin: 0;
-  ${(props) => {
-    const { themes } = props
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
     `
   }}
 `

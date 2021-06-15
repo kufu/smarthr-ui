@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react'
+import React, { VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
@@ -19,7 +19,7 @@ interface Props {
 
 const TEXT_AREA_NAME = 'admin_memo_new_text'
 
-export const RightFixedNote: FC<Props> = ({
+export const RightFixedNote: VFC<Props> = ({
   title,
   items,
   submitLabel = '送信',
@@ -69,11 +69,11 @@ export const RightFixedNote: FC<Props> = ({
 
 const Wrapper = styled.form<{ themes: Theme; $width: number }>`
   ${({ themes, $width }) => {
-    const { size, palette } = themes
+    const { size, spacingByChar, palette } = themes
 
     return css`
       width: ${size.pxToRem($width)};
-      padding: ${size.pxToRem(size.space.XS)};
+      padding: ${spacingByChar(1)};
       background-color: ${palette.COLUMN};
       box-shadow: rgba(0, 0, 0, 0.1) 0 0 8px;
       overflow: hidden scroll;
@@ -86,27 +86,23 @@ const Wrapper = styled.form<{ themes: Theme; $width: number }>`
 `
 
 const Title = styled(Heading)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: block;
-      margin-bottom: ${pxToRem(space.XS)};
+      margin-bottom: ${spacingByChar(1)};
     `
   }}
 `
 
 const TextArea = styled(Textarea)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: block;
       width: 100%;
       max-width: 100%;
       min-width: 100%;
       box-sizing: border-box;
-      margin-bottom: ${pxToRem(space.XS)};
+      margin-bottom: ${spacingByChar(1)};
     `
   }}
 `

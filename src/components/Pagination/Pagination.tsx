@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { range } from '../../libs/lodash'
@@ -16,7 +16,7 @@ interface Props {
   withoutNumbers?: boolean
 }
 
-export const Pagination: FC<Props> = ({
+export const Pagination: VFC<Props> = ({
   total,
   current,
   onClick,
@@ -98,24 +98,22 @@ const Wrapper = styled.nav`
   display: inline-block;
 `
 const List = styled.ul<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: flex;
       margin: 0;
       padding: 0;
       > li {
         list-style: none;
-        margin-left: ${pxToRem(space.XXS)};
+        margin-left: ${spacingByChar(0.5)};
         &.prev {
-          margin-right: ${pxToRem(space.XS)};
+          margin-right: ${spacingByChar(1)};
           + li {
             margin-left: 0;
           }
         }
         &.next {
-          margin-left: ${pxToRem(space.XS)};
+          margin-left: ${spacingByChar(1)};
         }
         &.prevDouble {
           margin-left: 0;
@@ -124,14 +122,14 @@ const List = styled.ul<{ themes: Theme }>`
       &.withoutNumbers {
         > li {
           &.prev {
-            margin-left: ${pxToRem(space.XS)};
+            margin-left: ${spacingByChar(1)};
             margin-right: 0;
           }
           &.next {
-            margin-left: ${pxToRem(space.XXS)};
+            margin-left: ${spacingByChar(0.5)};
           }
           &.nextDouble {
-            margin-left: ${pxToRem(space.XS)};
+            margin-left: ${spacingByChar(1)};
           }
         }
       }

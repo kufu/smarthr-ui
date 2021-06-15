@@ -1,35 +1,40 @@
-import React, { FC } from 'react'
+import React, { OlHTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 type Props = { items: IndexNavItemProps[] }
 
 export type IndexNavItemProps = {
   label: string
   href: string
-  children?: IndexNavItemProps[]
   current?: boolean
+  children?: IndexNavItemProps[]
 }
 
-export const IndexNav: FC<Props> = ({ items }) => {
+type ElementProps = Omit<OlHTMLAttributes<HTMLOListElement>, keyof Props>
+
+export const IndexNav: VFC<Props & ElementProps> = ({ items, className = '', ...props }) => {
   const themes = useTheme()
-  if (items.length === 0) {
-    return null
-  }
+  const classNames = useClassNames()
+
+  if (items.length === 0) return null
 
   return (
-    <List themes={themes}>
+    <List {...props} themes={themes} className={`${className} ${classNames.wrapper}`}>
       {items.map((item, i) => (
-        <Item key={i} themes={themes}>
+        <Item key={i} themes={themes} className={classNames.item}>
           <Anchor
             href={item.href}
             current={item.current}
             aria-current={item.current ? 'page' : undefined}
             themes={themes}
+            className={classNames.anchor}
           >
             {item.label}
           </Anchor>
+
           {item.children && <IndexNav items={item.children} />}
         </Item>
       ))}
@@ -37,41 +42,45 @@ export const IndexNav: FC<Props> = ({ items }) => {
   )
 }
 
-const List = styled.ul<{ themes: Theme }>(({ themes }) => {
-  const { size } = themes
+const List = styled.ol<{ themes: Theme }>(({ themes: { fontSize } }) => {
   return css`
     list-style: none;
     margin: 0;
     padding: 0;
-    font-size: ${size.pxToRem(size.font.TALL)};
+    font-size: ${fontSize.M};
   `
 })
 const Item = styled.li<{ themes: Theme }>(({ themes }) => {
-  const { size } = themes
+  const { fontSize, spacingByChar } = themes
+
   return css`
     line-height: 1em;
+
     &:not(:first-child) {
-      margin-top: ${size.pxToRem(size.space.XS)};
+      margin-top: ${spacingByChar(1)};
     }
+
     & > ${List} {
-      margin-top: ${size.pxToRem(size.space.XS)};
-      margin-left: ${size.pxToRem(size.space.S)};
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      margin-top: ${spacingByChar(1)};
+      margin-left: ${spacingByChar(1.5)};
+      font-size: ${fontSize.S};
     }
   `
 })
 const Anchor = styled.a<{ themes: Theme; current?: boolean }>(({ themes, current }) => {
-  const { palette, size } = themes
+  const { color, spacingByChar } = themes
+
   return css`
     display: inline-block;
-    padding-left: ${size.pxToRem(size.space.XXS)};
+    padding-left: ${spacingByChar(0.5)};
     border-left: 2px solid;
-    border-color: ${current ? palette.MAIN : 'transparent'};
+    border-color: ${current ? color.MAIN : 'transparent'};
     line-height: 1em;
-    color: ${palette.TEXT_BLACK};
+    color: ${color.TEXT_BLACK};
     font-weight: ${current ? 'bold' : 'normal'};
     text-decoration: none;
-    :hover {
+
+    &:hover {
       text-decoration: underline;
     }
   `

@@ -1,4 +1,4 @@
-import React, { FC, TextareaHTMLAttributes, useEffect, useRef, useState } from 'react'
+import React, { TextareaHTMLAttributes, VFC, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -22,7 +22,7 @@ const getStringLength = (value: string | number | readonly string[]) => {
   return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
 
-export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) => {
+export const Textarea: VFC<Props> = ({ autoFocus, maxLength, width, ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
   const currentValue = props.defaultValue || props.value
@@ -47,6 +47,7 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) =
         textAreaWidth={textAreaWidth}
         ref={ref}
         themes={theme}
+        aria-invalid={props.error || undefined}
       />
       {maxLength && (
         <Counter themes={theme}>
@@ -64,11 +65,11 @@ export const Textarea: FC<Props> = ({ autoFocus, maxLength, width, ...props }) =
 const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: string | number }>`
   ${(props) => {
     const { themes, textAreaWidth = 'auto', error } = props
-    const { size, frame, palette } = themes
+    const { fontSize, spacingByChar, frame, palette } = themes
 
     return css`
-      padding: ${size.pxToRem(size.space.XXS)};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      padding: ${spacingByChar(0.5)};
+      font-size: ${fontSize.M};
       color: ${palette.TEXT_BLACK};
       border-radius: ${frame.border.radius.m};
       width: ${textAreaWidth};
@@ -95,9 +96,9 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
 
 const Counter = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, size } = themes
+    const { fontSize, palette } = themes
     return css`
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       > span {
         font-weight: bold;
         color: ${palette.TEXT_GREY};

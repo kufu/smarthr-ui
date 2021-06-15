@@ -41,5 +41,4 @@ const List = styled.ul`
 `
 const Text = styled.p`
   margin: 0 0 8px 0;
-  font-size: 16px;
 `

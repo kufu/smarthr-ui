@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -13,7 +13,7 @@ type Props = {
   onClick: (tabId: string) => void
 }
 
-export const TabItem: FC<Props> = ({
+export const TabItem: VFC<Props> = ({
   id,
   children,
   onClick,
@@ -49,14 +49,14 @@ const resetButtonStyle = css`
 const Wrapper = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
-    const { size, palette, interaction } = themes
+    const { fontSize, spacingByChar, palette, interaction } = themes
     return css`
       font-weight: bold;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       color: ${palette.TEXT_GREY};
       height: 40px;
       border-bottom: solid 3px transparent;
-      padding: 0 ${size.pxToRem(size.space.S)};
+      padding: 0 ${spacingByChar(1.5)};
       box-sizing: border-box;
       transition: ${isTouchDevice
         ? 'none'

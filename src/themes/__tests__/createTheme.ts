@@ -1,6 +1,7 @@
 import { createTheme } from '../createTheme'
 import { defaultColor } from '../createColor'
 import { defaultFontSize } from '../createFontSize'
+import { defaultLeading } from '../createLeading'
 import { defaultBreakpoint } from '../createBreakpoint'
 import { defaultBorder } from '../createBorder'
 import { defaultRadius } from '../createRadius'
@@ -154,38 +155,31 @@ describe('createTheme', () => {
 
   it('returns theme reflecting "spacing" settings', () => {
     const actual1 = createTheme({
-      spacing: {
-        XXS: 21,
-        XS: 22,
-        S: 23,
-        M: 24,
-        L: 25,
-        XL: 26,
-        XXL: 27,
-      },
+      spacing: { baseSize: 20 },
     })
 
-    expect(actual1.spacing.XXS).toBe(21)
-    expect(actual1.spacing.XS).toBe(22)
-    expect(actual1.spacing.S).toBe(23)
-    expect(actual1.spacing.M).toBe(24)
-    expect(actual1.spacing.L).toBe(25)
-    expect(actual1.spacing.XL).toBe(26)
-    expect(actual1.spacing.XXL).toBe(27)
+    expect(actual1.spacing.X3S).toBe('10px')
+    expect(actual1.spacing.XXS).toBe('20px')
+    expect(actual1.spacing.XS).toBe('40px')
+    expect(actual1.spacing.S).toBe('60px')
+    expect(actual1.spacing.M).toBe('80px')
+    expect(actual1.spacing.L).toBe('100px')
+    expect(actual1.spacing.XL).toBe('120px')
+    expect(actual1.spacing.XXL).toBe('140px')
+    expect(actual1.spacing.X3L).toBe('160px')
+  })
 
-    const actual2 = createTheme({
-      spacing: {
-        baseSize: 17,
-      },
-    })
+  it('default settings, createSpace and createSpacing are set the same', () => {
+    const actual = createTheme()
+    const toPx = (size: number) => `${size}px`
 
-    expect(actual2.spacing.XXS).toBe(17)
-    expect(actual2.spacing.XS).toBe(17 * 2)
-    expect(actual2.spacing.S).toBe(17 * 3)
-    expect(actual2.spacing.M).toBe(17 * 4)
-    expect(actual2.spacing.L).toBe(17 * 5)
-    expect(actual2.spacing.XL).toBe(17 * 6)
-    expect(actual2.spacing.XXL).toBe(17 * 7)
+    expect(actual.spacing.XXS).toBe(toPx(actual.size.space.XXS))
+    expect(actual.spacing.XS).toBe(toPx(actual.size.space.XS))
+    expect(actual.spacing.S).toBe(toPx(actual.size.space.S))
+    expect(actual.spacing.M).toBe(toPx(actual.size.space.M))
+    expect(actual.spacing.L).toBe(toPx(actual.size.space.L))
+    expect(actual.spacing.XL).toBe(toPx(actual.size.space.XL))
+    expect(actual.spacing.XXL).toBe(toPx(actual.size.space.XXL))
   })
 
   it('returns theme reflecting "fontSize" settings', () => {
@@ -196,6 +190,7 @@ describe('createTheme', () => {
         TALL: 13,
         GRANDE: 14,
         VENTI: 15,
+        scaleFactor: 8,
       },
     })
 
@@ -204,6 +199,26 @@ describe('createTheme', () => {
     expect(actual.fontSize.TALL).toBe(13)
     expect(actual.fontSize.GRANDE).toBe(14)
     expect(actual.fontSize.VENTI).toBe(15)
+    expect(actual.fontSize.XXS).toBe(`${8 / 11}rem`)
+    expect(actual.fontSize.XS).toBe(`${8 / 10}rem`)
+    expect(actual.fontSize.S).toBe(`${8 / 9}rem`)
+    expect(actual.fontSize.M).toBe(`${8 / 8}rem`)
+    expect(actual.fontSize.L).toBe(`${8 / 7}rem`)
+    expect(actual.fontSize.XL).toBe(`${8 / 6}rem`)
+    expect(actual.fontSize.XXL).toBe(`${8 / 5}rem`)
+  })
+
+  it('returns theme reflecting "leading" settings', () => {
+    const actual = createTheme({
+      leading: {
+        NORMAL: 1.6,
+        TIGHT: 1.125,
+      },
+    })
+
+    expect(actual.leading.NORMAL).toBe(1.6)
+    expect(actual.leading.TIGHT).toBe(1.125)
+    expect(actual.leading.RELAXED).toBe(defaultLeading.RELAXED)
   })
 
   it('returns theme reflecting "breakpoint" settings', () => {
@@ -362,9 +377,11 @@ describe('createTheme', () => {
     expect(actual.size.space.XXS).toBe(11)
     expect(actual.size.space.XS).toBe(10 * 2)
     expect(actual.size.space.S).toBe(10 * 3)
-    expect(actual.spacing.XXS).toBe(11)
-    expect(actual.spacing.XS).toBe(10 * 2)
-    expect(actual.spacing.S).toBe(10 * 3)
+
+    // size does not affect spacing
+    expect(actual.spacing.XXS).not.toBe(11)
+    expect(actual.spacing.XS).not.toBe(10 * 2)
+    expect(actual.spacing.S).not.toBe(10 * 3)
 
     expect(actual.size.font.SHORT).toBe(100)
     expect(actual.size.font.TALL).toBe(defaultFontSize.TALL)
@@ -375,22 +392,6 @@ describe('createTheme', () => {
     expect(actual.size.mediaQuery.TABLET).toBe(defaultBreakpoint.TABLET)
     expect(actual.breakpoint.SP).toBe(1000)
     expect(actual.breakpoint.TABLET).toBe(defaultBreakpoint.TABLET)
-  })
-
-  it('returns theme reflecting "spacing" settings to "size.space"', () => {
-    const actual = createTheme({
-      spacing: {
-        baseSize: 20,
-        XXS: 21,
-      },
-    })
-
-    expect(actual.size.space.XXS).toBe(21)
-    expect(actual.size.space.XS).toBe(20 * 2)
-    expect(actual.size.space.S).toBe(20 * 3)
-    expect(actual.spacing.XXS).toBe(21)
-    expect(actual.spacing.XS).toBe(20 * 2)
-    expect(actual.spacing.S).toBe(20 * 3)
   })
 
   it('returns theme reflecting "fontSize" settings to "size.fontSize"', () => {
@@ -419,15 +420,10 @@ describe('createTheme', () => {
     expect(actual.breakpoint.TABLET).toBe(defaultBreakpoint.TABLET)
   })
 
-  it('returns theme prioritizing "spacing", "fontSize" and "breakpoint" settings over "size" when given size, spacing, fontSize and breakpoint settings', () => {
+  it('returns theme prioritizing "fontSize" and "breakpoint" settings over "size" when given size, fontSize and breakpoint settings', () => {
     const actual = createTheme({
       size: {
         htmlFontSize: 2,
-        space: {
-          defaultRem: 10,
-          XXS: 11,
-          XS: 12,
-        },
         font: {
           SHORT: 100,
           TALL: 101,
@@ -436,10 +432,6 @@ describe('createTheme', () => {
           SP: 1000,
           TABLET: 1001,
         },
-      },
-      spacing: {
-        baseSize: 13,
-        XS: 14,
       },
       fontSize: {
         htmlFontSize: 8,
@@ -452,13 +444,6 @@ describe('createTheme', () => {
 
     expect(actual.size.pxToRem(400)).toBe(`${400 / 8}rem`)
     expect(actual.fontSize.pxToRem(400)).toBe(`${400 / 8}rem`)
-
-    expect(actual.size.space.XXS).toBe(11)
-    expect(actual.size.space.XS).toBe(14)
-    expect(actual.size.space.S).toBe(13 * 3)
-    expect(actual.spacing.XXS).toBe(11)
-    expect(actual.spacing.XS).toBe(14)
-    expect(actual.spacing.S).toBe(13 * 3)
 
     expect(actual.size.font.SHORT).toBe(100)
     expect(actual.size.font.TALL).toBe(200)

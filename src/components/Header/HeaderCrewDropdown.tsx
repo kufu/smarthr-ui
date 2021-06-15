@@ -2,6 +2,7 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import {
@@ -27,11 +28,12 @@ export const HeaderCrewDropdown: VFC<Props> = ({
   onClickInvite,
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
     <Dropdown>
       <DropdownTrigger>
-        <TriggerButton themes={theme} type="button">
+        <TriggerButton themes={theme} type="button" className={classNames.crewDropdownTrigger}>
           <TriggerIcon themes={theme} role="presentation">
             <FaUsersIcon />
           </TriggerIcon>
@@ -42,10 +44,14 @@ export const HeaderCrewDropdown: VFC<Props> = ({
         </TriggerButton>
       </DropdownTrigger>
 
-      <DropdownContent>
+      <DropdownContent className={classNames.crewDropdown}>
         <MenuList themes={theme} role="menu">
           <MenuListItem role="menuitem">
-            <MenuListItemButton themes={theme} onClick={onClickNew}>
+            <MenuListItemButton
+              themes={theme}
+              onClick={onClickNew}
+              className={classNames.newCrewButton}
+            >
               <MenuListItemIcon themes={theme}>
                 <FaEditIcon />
               </MenuListItemIcon>
@@ -54,7 +60,11 @@ export const HeaderCrewDropdown: VFC<Props> = ({
           </MenuListItem>
 
           <MenuListItem role="menuitem">
-            <MenuListItemButton themes={theme} onClick={onClickBulkInsert}>
+            <MenuListItemButton
+              themes={theme}
+              onClick={onClickBulkInsert}
+              className={classNames.bulkInsertCrewsButton}
+            >
               <MenuListItemIcon themes={theme}>
                 <FaPlusSquareIcon />
               </MenuListItemIcon>
@@ -63,7 +73,11 @@ export const HeaderCrewDropdown: VFC<Props> = ({
           </MenuListItem>
 
           <MenuListItem role="menuitem">
-            <MenuListItemButton themes={theme} onClick={onClickBulkUpdate}>
+            <MenuListItemButton
+              themes={theme}
+              onClick={onClickBulkUpdate}
+              className={classNames.bulkUpdateCrewsButton}
+            >
               <MenuListItemIcon themes={theme}>
                 <FaSyncAltIcon />
               </MenuListItemIcon>
@@ -76,7 +90,11 @@ export const HeaderCrewDropdown: VFC<Props> = ({
           </MenuListItem>
 
           <MenuListItem role="menuitem">
-            <MenuListItemButton themes={theme} onClick={onClickInvite}>
+            <MenuListItemButton
+              themes={theme}
+              onClick={onClickInvite}
+              className={classNames.inviteCrewButton}
+            >
               <MenuListItemIcon themes={theme}>
                 <FaPaperPlaneIcon />
               </MenuListItemIcon>
@@ -91,7 +109,7 @@ export const HeaderCrewDropdown: VFC<Props> = ({
 
 const TriggerButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, interaction } = themes
+    const { size, fontSize, interaction } = themes
 
     return css`
       display: flex;
@@ -102,7 +120,7 @@ const TriggerButton = styled.button<{ themes: Theme }>`
       border: none;
       background: none;
       color: #fff;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       transition: background-color ${interaction.hover.animation};
       cursor: pointer;
 
@@ -113,26 +131,22 @@ const TriggerButton = styled.button<{ themes: Theme }>`
   }}
 `
 const TriggerIcon = styled.figure<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: inline-block;
       height: 14px;
       padding: 0;
-      margin: 0 ${size.pxToRem(size.space.XXS)} 0 0;
+      margin: 0 ${spacingByChar(0.5)} 0 0;
       vertical-align: middle;
     `
   }}
 `
 const CaretIcon = styled.figure<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: inline-block;
       padding: 0;
-      margin: 0 0 0 ${size.pxToRem(size.space.XXS)};
+      margin: 0 0 0 ${spacingByChar(0.5)};
       vertical-align: middle;
     `
   }}
@@ -155,20 +169,18 @@ const MenuListItem = styled.div`
   padding: 0;
 `
 const MenuListItemIcon = styled.figure<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: flex;
       align-items: center;
       padding: 0;
-      margin: 0 ${size.pxToRem(size.space.XXS)} 0 0;
+      margin: 0 ${spacingByChar(0.5)} 0 0;
     `
   }}
 `
 const MenuListItemButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette, interaction } = themes
+    const { size, fontSize, palette, interaction } = themes
 
     return css`
       display: flex;
@@ -178,7 +190,7 @@ const MenuListItemButton = styled.button<{ themes: Theme }>`
       border: none;
       background: none;
       color: ${palette.TEXT_BLACK};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1.5;
       white-space: nowrap;
       box-sizing: border-box;

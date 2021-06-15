@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, useEffect } from 'react'
+import React, { HTMLAttributes, VFC, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -30,9 +30,8 @@ export type Props = {
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 const REMOVE_DELAY = 8000
-let timerId: any = 0
 
-export const FlashMessage: FC<Props & ElementProps> = ({
+export const FlashMessage: VFC<Props & ElementProps> = ({
   visible,
   type,
   text,
@@ -45,11 +44,10 @@ export const FlashMessage: FC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   useEffect(() => {
-    if (visible) {
-      timerId = setTimeout(onClose, REMOVE_DELAY)
-    } else {
-      clearTimeout(timerId)
+    if (!visible) {
+      return
     }
+    const timerId = setTimeout(onClose, REMOVE_DELAY)
 
     return () => {
       clearTimeout(timerId)
@@ -93,7 +91,7 @@ export const FlashMessage: FC<Props & ElementProps> = ({
         {text}
       </Txt>
       <SecondaryButton className={`close ${classNames.button}`} onClick={onClose} size="s" square>
-        <FaTimesIcon size={16} />
+        <FaTimesIcon size={16} visuallyHiddenText="閉じる" />
       </SecondaryButton>
     </Wrapper>
   )
@@ -134,7 +132,7 @@ const fadeAnimation = keyframes`
 
 const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
   ${({ themes, animation }) => {
-    const { size, spacing, radius, color, zIndex } = themes
+    const { spacingByChar, radius, color, zIndex } = themes
 
     let keyframe = bounceAnimation
     switch (animation) {
@@ -153,13 +151,15 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
       z-index: ${zIndex.FLASH_MESSAGE};
       display: flex;
       position: fixed;
-      bottom: ${size.pxToRem(spacing.XXS)};
-      left: ${size.pxToRem(spacing.XXS)};
+      bottom: ${spacingByChar(0.5)};
+      left: ${spacingByChar(0.5)};
       box-sizing: border-box;
       align-items: center;
-      min-width: ${size.pxToRem(200)};
-      padding: ${size.pxToRem(spacing.XXS)} ${size.pxToRem(spacing.XS)};
-      padding-right: ${size.pxToRem(spacing.XXS)};
+
+      /* border + padding + Icon + 10em + Button + margin */
+      min-width: calc(2px + ${spacingByChar(1.5)} + 14px + 8em + 27px + ${spacingByChar(1)});
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
+      padding-right: ${spacingByChar(0.5)};
       background-color: #fff;
       border: 1px solid ${color.BORDER};
       border-radius: ${radius.m};
@@ -171,7 +171,7 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
       }
 
       & > * + * {
-        margin-left: ${size.space.XXS}px;
+        margin-left: ${spacingByChar(0.5)};
       }
     `
   }}
@@ -182,16 +182,14 @@ const IconWrapper = styled.span`
 `
 
 const Txt = styled.p<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, font } = themes.size
-
+  ${({ themes: { fontSize } }) => {
     return css`
       flex-grow: 1;
       flex-shrink: 1;
       margin-top: 0;
       margin-bottom: 0;
       padding: 0;
-      font-size: ${pxToRem(font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1.5;
     `
   }}

@@ -128,18 +128,14 @@ const Wrapper = styled.nav<{ themes: Theme }>`
   }}
 `
 const StatusLabel = styled(StatusLabelComponent)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      margin-right: ${pxToRem(space.XS)};
+      margin-right: ${spacingByChar(1)};
     `
   }}
 `
 const Buttons = styled.ul<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: flex;
       align-items: center;
@@ -150,7 +146,7 @@ const Buttons = styled.ul<{ themes: Theme }>`
         list-style: none;
 
         &:not(:first-child) {
-          margin-left: ${pxToRem(space.XS)};
+          margin-left: ${spacingByChar(1)};
         }
       }
     `

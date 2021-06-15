@@ -78,7 +78,7 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   ${({ themes, wide }) => {
-    const { frame, size, interaction } = themes
+    const { frame, fontSize, spacingByChar, interaction, shadow } = themes
 
     return css`
       display: inline-flex;
@@ -98,15 +98,15 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       white-space: nowrap;
 
       &.default {
-        font-size: ${size.pxToRem(size.font.TALL)};
+        font-size: ${fontSize.M};
         height: 40px;
-        padding: 0 ${size.pxToRem(size.space.XS)};
+        padding: 0 ${spacingByChar(1)};
       }
 
       &.s {
-        font-size: ${size.pxToRem(size.font.SHORT)};
+        font-size: ${fontSize.S};
         height: 27px;
-        padding: 0 ${size.pxToRem(size.space.XXS)};
+        padding: 0 ${spacingByChar(0.5)};
       }
 
       &.square {
@@ -135,24 +135,27 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       &:focus {
         text-decoration: none;
       }
+
+      &:focus {
+        outline: 0;
+        box-shadow: ${shadow.OUTLINE};
+      }
     `
   }}
 `
 const Prefix = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: inline-flex;
-      margin-right: ${pxToRem(space.XXS)};
+      margin-right: ${spacingByChar(0.5)};
     `
   }}
 `
 const Suffix = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
+  ${({ themes: { spacingByChar } }) => {
     return css`
       display: inline-flex;
-      margin-left: ${pxToRem(space.XXS)};
+      margin-left: ${spacingByChar(0.5)};
     `
   }}
 `
@@ -162,4 +165,10 @@ const tagStore = {
 }
 
 export const BaseButton: VFC<ButtonProps> = buttonFactory<ButtonProps>('button')
-export const BaseButtonAnchor: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')
+
+const AnchorButton: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')
+export const BaseButtonAnchor = styled(AnchorButton)`
+  &:not([href]) {
+    cursor: not-allowed;
+  }
+`

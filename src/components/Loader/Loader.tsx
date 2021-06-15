@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
@@ -24,7 +24,7 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const Loader: FC<Props & ElementProps> = ({
+export const Loader: VFC<Props & ElementProps> = ({
   size = 'm',
   text = '',
   type = 'primary',
@@ -183,11 +183,11 @@ const Ticker = styled.div`
 
 const Text = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, size } = themes
+    const { fontSize, palette, spacingByChar } = themes
 
     return css`
-      margin-top: ${size.pxToRem(size.space.XS)};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      margin-top: ${spacingByChar(1)};
+      font-size: ${fontSize.M};
       text-align: center;
 
       &.primary {

@@ -3,8 +3,9 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
+import { useClassNames } from './useClassNames'
 
-import { Base } from '../Base'
+import { Base, BaseElementProps } from '../Base'
 import {
   FaCaretDownIcon,
   FaCaretUpIcon,
@@ -30,9 +31,9 @@ type Props = {
   onClickTrigger?: (active: boolean) => void
 }
 
-export const InformationPanel: VFC<Props> = ({
+export const InformationPanel: VFC<Props & BaseElementProps> = ({
   title,
-  titleTag = 'span',
+  titleTag = 'h3',
   type = 'info',
   togglable = true,
   openButtonLabel = '開く',
@@ -41,6 +42,7 @@ export const InformationPanel: VFC<Props> = ({
   className = '',
   children,
   onClickTrigger,
+  ...props
 }) => {
   const theme = useTheme()
 
@@ -85,12 +87,20 @@ export const InformationPanel: VFC<Props> = ({
     setActive(activeProps)
   }, [activeProps])
 
+  const classNames = useClassNames()
+
   return (
-    <Wrapper className={className} themes={theme} role="region" aria-labelledby={titleId}>
-      <Header themes={theme}>
-        <Title themes={theme} id={titleId}>
-          <Icon color={iconColor} $theme={theme} />
+    <Wrapper
+      {...props}
+      className={`${className} ${classNames.wrapper}`}
+      themes={theme}
+      role="region"
+      aria-labelledby={titleId}
+    >
+      <Header themes={theme} togglable={togglable}>
+        <Title themes={theme} id={titleId} className={classNames.title}>
           <StyledHeading type="blockTitle" tag={titleTag}>
+            <Icon color={iconColor} $theme={theme} />
             {title}
           </StyledHeading>
         </Title>
@@ -102,13 +112,14 @@ export const InformationPanel: VFC<Props> = ({
               onClick={handleClickTrigger}
               aria-expanded={togglable ? active : undefined}
               aria-controls={contentId}
+              className={classNames.closeButton}
             >
               {active ? closeButtonLabel : openButtonLabel}
             </SecondaryButton>
           </div>
         )}
       </Header>
-      <Content themes={theme} id={contentId} aria-hidden={!active}>
+      <Content themes={theme} id={contentId} aria-hidden={!active} className={classNames.content}>
         {children}
       </Content>
     </Wrapper>
@@ -116,29 +127,37 @@ export const InformationPanel: VFC<Props> = ({
 }
 
 const Wrapper = styled(Base)<{ themes: Theme; role: string }>`
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      padding: ${pxToRem(space.S)};
+      padding: ${spacingByChar(1.5)};
       box-shadow: rgba(51, 51, 51, 0.3) 0 4px 10px 0;
     `
   }}
 `
 
-const Header = styled.div<{ themes: Theme }>`
+const Header = styled.div<{ themes: Theme; togglable: boolean }>(
+  ({ togglable }) => `
   display: flex;
   justify-content: space-between;
   align-items: center;
-`
+
+  ${
+    togglable &&
+    // (SecondaryButton(27px) - Heading(14px)) / 2 = 6.5px
+    `
+    margin-top: -6.5px;
+    margin-bottom: -6.5px;
+  `
+  }
+`,
+)
 
 const Title = styled.div<{ themes: Theme }>`
   vertical-align: middle;
-  ${({ themes }) => {
-    const { pxToRem, space } = themes.size
-
+  line-height: 1;
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      margin-right: ${pxToRem(space.XXS)};
+      margin-right: ${spacingByChar(0.5)};
     `
   }}
 `
@@ -146,11 +165,9 @@ const Title = styled.div<{ themes: Theme }>`
 const createTitleIcon = (Icon: typeof FaCheckCircleIcon) => {
   return styled(Icon)<{ $theme: Theme }>`
     vertical-align: text-top;
-    ${({ $theme }) => {
-      const { pxToRem, space } = $theme.size
-
+    ${({ $theme: { spacingByChar } }) => {
       return css`
-        margin-right: ${pxToRem(space.XXS)};
+        margin-right: ${spacingByChar(0.5)};
       `
     }}
   `
@@ -162,12 +179,10 @@ const ErrorTitleIcon = createTitleIcon(FaExclamationCircleIcon)
 const SyncIcon = createTitleIcon(FaSyncAltIcon)
 
 const Content = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem, space, font } = themes.size
-
+  ${({ themes: { fontSize, spacingByChar } }) => {
     return css`
-      margin-top: ${pxToRem(space.S)};
-      font-size: ${pxToRem(font.TALL)};
+      margin-top: ${spacingByChar(1.5)};
+      font-size: ${fontSize.M};
       &[aria-hidden='true'] {
         display: none;
       }

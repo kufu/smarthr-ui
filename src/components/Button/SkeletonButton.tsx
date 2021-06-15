@@ -49,17 +49,24 @@ const skeletonStyle = css`
         background-color: ${palette.OVERLAY};
         color: #fff;
       }
-
-      &[disabled] {
-        background-color: transparent;
-        color: ${palette.disableColor('#fff')};
-      }
     `
   }}
 `
+const disabledStyle = css`
+  ${({ themes: { color } }: { themes: Theme }) => css`
+    background-color: transparent;
+    color: ${color.disableColor('#fff')};
+  `}
+`
 const SkeletonStyleButton = styled(BaseButton)`
   ${skeletonStyle}
+  &[disabled] {
+    ${disabledStyle}
+  }
 `
 const SkeletonStyleButtonAnchor = styled(BaseButtonAnchor)`
   ${skeletonStyle}
+  &:not([href]) {
+    ${disabledStyle}
+  }
 `

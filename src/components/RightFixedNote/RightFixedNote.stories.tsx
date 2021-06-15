@@ -44,6 +44,7 @@ storiesOf('RightFixedNote', module)
       items={sampleItems}
       onSubmit={action('submit!')}
       onClickEdit={action('click edit!!')}
+      textareaLabel="コメント"
     />
   ))
   .add('without items', () => (
@@ -54,5 +55,9 @@ storiesOf('RightFixedNote', module)
     />
   ))
   .add('without title and items', () => (
-    <RightFixedNote onSubmit={action('submit!')} onClickEdit={action('click edit!!')} />
+    <RightFixedNote
+      onSubmit={action('submit!')}
+      onClickEdit={action('click edit!!')}
+      textareaLabel="コメント"
+    />
   ))

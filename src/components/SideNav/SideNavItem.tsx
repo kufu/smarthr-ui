@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -18,7 +18,7 @@ type Props = {
   onClick?: OnClick
 }
 
-export const SideNavItem: FC<Props> = ({
+export const SideNavItem: VFC<Props> = ({
   id,
   title,
   prefix,
@@ -79,7 +79,7 @@ const Wrapper = styled.li<{ themes: Theme }>`
 
 const Button = styled(ResetButton)<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize, spacingByChar } = themes
 
     return css`
       width: 100%;
@@ -88,23 +88,21 @@ const Button = styled(ResetButton)<{ themes: Theme }>`
       cursor: pointer;
 
       &.default {
-        padding: ${size.pxToRem(size.space.XS)};
-        font-size: ${size.pxToRem(size.font.TALL)};
+        padding: ${spacingByChar(1)};
+        font-size: ${fontSize.M};
       }
 
       &.s {
-        padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
-        font-size: ${size.pxToRem(size.font.SHORT)};
+        padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
+        font-size: ${fontSize.S};
       }
     `
   }}
 `
 const PrefixWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      margin-right: ${size.pxToRem(size.space.XXS)};
+      margin-right: ${spacingByChar(0.5)};
     `
   }}
 `

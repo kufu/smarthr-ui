@@ -637,8 +637,10 @@ export const All: Story = () => {
         return (
           <>
             <CatalogItem key={`${Component.displayName}`}>
-              <Component />
               <IconName>{Component.displayName?.replace(/Icon$/, '')}</IconName>
+              <dd>
+                <Component />
+              </dd>
             </CatalogItem>
           </>
         )
@@ -676,6 +678,45 @@ Size.parameters = {
   },
 }
 
+export const AltText: Story = () => (
+  <div>
+    <p>
+      <span id="text">連絡帳</span>
+    </p>
+    <dl>
+      <dt>visually hidden text</dt>
+      <dd>
+        <FaAddressBookIcon visuallyHiddenText="連絡帳" />
+      </dd>
+      <dt>
+        <code>aria-labelledby</code>
+      </dt>
+      <dd>
+        <FaAddressBookIcon aria-labelledby="text" />
+      </dd>
+      <dt>
+        <code>aria-label</code>
+      </dt>
+      <dd>
+        <FaAddressBookIcon aria-label="連絡帳" />
+      </dd>
+      <dt>
+        none ( <code>aria-hidden</code> )
+      </dt>
+      <dd>
+        <FaAddressBookIcon />
+      </dd>
+    </dl>
+  </div>
+)
+Size.parameters = {
+  docs: {
+    description: {
+      story: 'An icon can be any size.',
+    },
+  },
+}
+
 export const Color: Story = () => (
   <List>
     <FaAddressBookIcon size={40} color="#D4F4F5" />
@@ -698,15 +739,18 @@ const Container = styled.div`
   align-items: center;
   flex-wrap: wrap;
 `
-const CatalogItem = styled.div`
+const CatalogItem = styled.dl`
   margin: 10px;
   padding: 10px;
   background-color: #eee;
   text-align: center;
+
+  & > dd {
+    margin: 0;
+  }
 `
-const IconName = styled.p`
-  margin-top: 10px;
-  font-size: 14px;
+const IconName = styled.dt`
+  margin-bottom: 10px;
   color: #222;
 `
 const List = styled.div`

@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, ReactNode, useContext } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -17,7 +17,7 @@ export type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLTableDataCellElement>, keyof Props>
 
-export const Cell: FC<Props & ElementProps> = ({
+export const Cell: VFC<Props & ElementProps> = ({
   className = '',
   children,
   onClick,
@@ -53,13 +53,13 @@ export const Cell: FC<Props & ElementProps> = ({
 
 const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
   ${({ themes, onClick }) => {
-    const { size, palette, interaction } = themes
+    const { fontSize, size, spacingByChar, palette, interaction } = themes
 
     return css`
       height: ${size.pxToRem(40)};
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       font-weight: bold;
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       color: ${palette.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
       text-align: left;
@@ -91,14 +91,14 @@ const Td = styled.td<{ themes: Theme }>`
   }
 
   ${({ themes }) => {
-    const { size, palette, frame } = themes
+    const { fontSize, size, spacingByChar, palette, frame } = themes
 
     return css`
       color: ${palette.TEXT_BLACK};
       height: ${size.pxToRem(44)};
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       border-top: ${frame.border.default};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1.5;
       vertical-align: middle;
       box-sizing: border-box;

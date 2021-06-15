@@ -55,7 +55,7 @@ jobs:
         if: ${{ env.IS_PRERELEASE == 'true' }}
         run: echo ISSUE_LABELS='release candidate, prerelease' >> $GITHUB_ENV
       - name: create issue
-        uses: peter-evans/create-issue-from-file@v2
+        uses: peter-evans/create-issue-from-file@v3
         with:
           title: Release candidate
           content-filepath: ${{ env.RESULT_PATH }}

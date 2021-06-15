@@ -1,7 +1,8 @@
-import React, { VFC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { SmartHRLogo } from '../SmartHRLogo'
 import { HeaderButton } from './HeaderButton'
@@ -35,8 +36,9 @@ type Props = {
   onClickSchool?: () => void
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const Header: VFC<Props> = ({
+export const Header: VFC<Props & ElementProps> = ({
   isAdmin = false,
   isCrew = false,
   user,
@@ -56,28 +58,45 @@ export const Header: VFC<Props> = ({
   onClickProfile,
   onClickCompany,
   onClickSchool,
-  className,
+  className = '',
+  ...props
 }) => {
   const theme = useTheme()
   const { displayName, avatar } = user
+  const classNames = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={className}>
+    <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       <HeaderColumn>
-        <HeaderLogo onClick={onClickLogo} aria-label="SmartHR" themes={theme}>
+        <HeaderLogo
+          onClick={onClickLogo}
+          aria-label="SmartHR"
+          themes={theme}
+          className={classNames.logoButton}
+        >
           <SmartHRLogo />
         </HeaderLogo>
-        <TenantName themes={theme}>{tenantContent ? tenantContent : currentTenantName}</TenantName>
+        <TenantName themes={theme} className={classNames.tenantName}>
+          {tenantContent ? tenantContent : currentTenantName}
+        </TenantName>
       </HeaderColumn>
 
       <HeaderColumn>
-        <HeaderButton icon={FaQuestionCircleIcon} onClick={onClickHelp}>
+        <HeaderButton
+          icon={FaQuestionCircleIcon}
+          onClick={onClickHelp}
+          className={classNames.helpButton}
+        >
           ヘルプ
         </HeaderButton>
 
         {isAdmin && (
           <>
-            <HeaderButton icon={FaThListIcon} onClick={onClickCrewList}>
+            <HeaderButton
+              icon={FaThListIcon}
+              onClick={onClickCrewList}
+              className={classNames.crewListButton}
+            >
               従業員リスト
             </HeaderButton>
 
@@ -110,15 +129,13 @@ export const Header: VFC<Props> = ({
 }
 
 const Wrapper = styled.header<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size, palette } = themes
-
+  ${({ themes: { spacingByChar, palette } }) => {
     return css`
       display: flex;
       align-items: center;
       justify-content: space-between;
       height: 50px;
-      padding: 0 ${size.pxToRem(size.space.XS)};
+      padding: 0 ${spacingByChar(1)};
       background-color: ${palette.BRAND};
     `
   }}
@@ -148,11 +165,11 @@ const HeaderLogo = styled.button<{ themes: Theme }>`
 `
 const TenantName = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize, spacingByChar } = themes
 
     return css`
-      margin: 0 0 0 ${size.pxToRem(size.space.XS)};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      margin: 0 0 0 ${spacingByChar(1)};
+      font-size: ${fontSize.M};
       color: #fff;
     `
   }}

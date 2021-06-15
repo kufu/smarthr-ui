@@ -58,7 +58,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
 }
 
 .c3:focus + span {
-  box-shadow: 0 0 0 2px rgba(0,119,199,0.5);
+  box-shadow: 0 0 0 2px white,0 0 0 4px #0077c7;
 }
 
 .c5 {
@@ -102,8 +102,8 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
 }
 
 .c6 {
-  margin: 0 0 0 0.5rem;
-  font-size: 0.875rem;
+  margin: 0 0 0 8px;
+  font-size: 1rem;
   line-height: 1.5;
 }
 
@@ -140,6 +140,7 @@ exports[`CheckBoxLabel should be match snapshot 1`] = `
       >
         <svg
           aria-hidden={true}
+          className=" smarthr-ui-Icon"
           color="#fff"
           fill="currentColor"
           focusable={false}

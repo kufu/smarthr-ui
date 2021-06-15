@@ -2,13 +2,13 @@ import React, { ReactNode, VFC } from 'react'
 import styled from 'styled-components'
 import { useTheme } from '../../hooks/useTheme'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
-import { IconNames, ComponentProps as IconProps } from '../Icon'
+import { ComponentProps as IconProps } from '../Icon'
 import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
 
 export type AppNaviDropdownProps = {
   children: ReactNode
   dropdownContent: ReactNode
-  icon?: IconNames | React.ComponentType<IconProps>
+  icon?: React.ComponentType<IconProps>
   current?: boolean
 }
 

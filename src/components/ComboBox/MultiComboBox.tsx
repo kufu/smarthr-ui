@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -8,18 +8,19 @@ import { hasParentElementByClassName } from './multiComboBoxHelper'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { useListBox } from './useListBox'
 import { ResetButton } from '../Button/ResetButton'
+import { Item } from './types'
 
 const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
 
-type Props = {
+type Props<T> = {
   /**
    * A list of items to choose from.
    */
-  items: Array<{ value: string; label: string; disabled?: boolean }>
+  items: Array<Item<T>>
   /**
    * A list of items that have already been selected.
    */
-  selectedItems: Array<{ value: string; label: string; deletable?: boolean }>
+  selectedItems: Array<Item<T> & { deletable?: boolean }>
   /**
    * The value of the input `name` attribute.
    */
@@ -41,6 +42,10 @@ type Props = {
    */
   placeholder?: string
   /**
+   * If `true`, a loader is displayed on the dropdown list.
+   */
+  isLoading?: boolean
+  /**
    * The value given to the width style of input.
    */
   width?: number | string
@@ -59,14 +64,14 @@ type Props = {
   /**
    *  Fire when clicking the delete element of `selectedItems` button.
    */
-  onDelete: (option: { value: string; label: string }) => void
+  onDelete: (item: Item<T>) => void
   /**
    * Fire when clicking an element of `items`.
    */
-  onSelect: (option: { value: string; label: string }) => void
+  onSelect: (item: Item<T>) => void
 }
 
-export const MultiComboBox: FC<Props> = ({
+export function MultiComboBox<T>({
   items,
   selectedItems,
   name,
@@ -74,13 +79,14 @@ export const MultiComboBox: FC<Props> = ({
   error = false,
   creatable = false,
   placeholder = '',
+  isLoading,
   width = 'auto',
   className = '',
   onChange,
   onAdd,
   onDelete,
   onSelect,
-}) => {
+}: Props<T>) {
   const theme = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -113,16 +119,8 @@ export const MultiComboBox: FC<Props> = ({
     hasNoMatch:
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
+    isLoading,
   })
-
-  const classNames = [
-    isFocused ? 'active' : '',
-    disabled ? 'disabled' : '',
-    error ? 'error' : '',
-    className,
-  ]
-    .filter((item) => item)
-    .join(' ')
 
   const focus = useCallback(() => {
     setIsFocused(true)
@@ -162,7 +160,7 @@ export const MultiComboBox: FC<Props> = ({
       themes={theme}
       width={width}
       ref={outerRef}
-      className={classNames}
+      className={className}
       onClick={(e) => {
         if (
           !hasParentElementByClassName(e.target as HTMLElement, DELETE_BUTTON_CLASS_NAME) &&
@@ -185,31 +183,33 @@ export const MultiComboBox: FC<Props> = ({
       aria-owns={aria.listBoxId}
       aria-haspopup="listbox"
       aria-expanded={isFocused}
+      aria-invalid={error || undefined}
+      aria-disabled={disabled}
     >
       <InputArea themes={theme}>
         <List themes={theme}>
-          {selectedItems.map(({ value, label, deletable = true }, i) => (
-            <li key={i}>
-              <SelectedItem themes={theme}>
-                <SelectedItemLabel themes={theme}>{label}</SelectedItemLabel>
+          {selectedItems.map((selectedItem, i) => {
+            const { deletable = true, ...item } = selectedItem
+            return (
+              <li key={i}>
+                <SelectedItem themes={theme} disabled={disabled}>
+                  <SelectedItemLabel themes={theme}>{selectedItem.label}</SelectedItemLabel>
 
-                {deletable && (
-                  <DeleteButton
-                    type="button"
-                    themes={theme}
-                    className={DELETE_BUTTON_CLASS_NAME}
-                    onClick={() => onDelete({ value, label })}
-                  >
-                    <DeleteIcon
-                      size={11}
-                      color={theme.palette.TEXT_BLACK}
-                      visuallyHiddenText="delete"
-                    />
-                  </DeleteButton>
-                )}
-              </SelectedItem>
-            </li>
-          ))}
+                  {deletable && (
+                    <DeleteButton
+                      type="button"
+                      themes={theme}
+                      className={DELETE_BUTTON_CLASS_NAME}
+                      disabled={disabled}
+                      onClick={() => onDelete(item)}
+                    >
+                      <FaTimesCircleIcon size={11} color={'inherit'} visuallyHiddenText="delete" />
+                    </DeleteButton>
+                  )}
+                </SelectedItem>
+              </li>
+            )
+          })}
 
           <InputWrapper className={isFocused ? undefined : 'hidden'}>
             <Input
@@ -265,11 +265,11 @@ export const MultiComboBox: FC<Props> = ({
 
 const Container = styled.div<{ themes: Theme; width: number | string }>`
   ${({ themes, width }) => {
-    const { frame, size, palette } = themes
+    const { frame, palette, shadow, spacingByChar } = themes
 
     return css`
       display: inline-flex;
-      min-width: calc(62px + 32px + ${size.pxToRem(size.space.XXS)} * 2);
+      min-width: calc(62px + 32px + ${spacingByChar(0.5)} * 2);
       width: ${typeof width === 'number' ? `${width}px` : width};
       min-height: 40px;
       border-radius: ${frame.border.radius.m};
@@ -278,15 +278,15 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       background-color: #fff;
       cursor: text;
 
-      &.active {
-        border-color: ${palette.MAIN};
+      &[aria-expanded='true'] {
+        box-shadow: ${shadow.OUTLINE};
       }
 
-      &.error {
+      &[aria-invalid='true'] {
         border-color: ${palette.DANGER};
       }
 
-      &.disabled {
+      &[aria-disabled='true'] {
         background-color: ${palette.COLUMN};
         cursor: not-allowed;
       }
@@ -294,18 +294,14 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
   }}
 `
 const InputArea = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, spacing } = themes
-
-    return css`
-      /* for IE */
-      /* stylelint-disable-next-line length-zero-no-unit */
-      flex: 1 1 0px;
-      overflow-y: auto;
-      max-height: 300px;
-      padding-left: ${fontSize.pxToRem(spacing.XXS)};
-    `
-  }}
+  ${({ themes: { spacingByChar } }) => css`
+    /* for IE */
+    /* stylelint-disable-next-line length-zero-no-unit */
+    flex: 1 1 0px;
+    overflow-y: auto;
+    max-height: 300px;
+    padding-left: ${spacingByChar(0.5)};
+  `}
 `
 const smallMargin = 6.5
 const borderWidth = 1
@@ -313,7 +309,7 @@ const List = styled.ul<{ themes: Theme }>`
   ${({ themes }) => {
     const {
       fontSize: { pxToRem },
-      spacing,
+      spacingByChar,
     } = themes
 
     return css`
@@ -325,57 +321,52 @@ const List = styled.ul<{ themes: Theme }>`
 
       > li {
         min-height: 27px;
-        margin-right: ${pxToRem(spacing.XXS)};
+        margin-right: ${spacingByChar(0.5)};
         margin-bottom: ${pxToRem(smallMargin - borderWidth)};
       }
     `
   }}
 `
-const SelectedItem = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { border, color, fontSize, spacing } = themes
-    const { pxToRem } = fontSize
+const SelectedItem = styled.div<{ themes: Theme; disabled: boolean }>`
+  ${({ themes, disabled }) => {
+    const { border, color, fontSize, spacingByChar } = themes
 
     return css`
       display: flex;
-      border-radius: calc(${fontSize.SHORT}px + ${pxToRem(spacing.XXS - borderWidth)} * 2);
+      border-radius: calc(${fontSize.S} + (${spacingByChar(0.5)} - ${borderWidth}px) * 2);
       border: ${border.shorthand};
-      background-color: #fff;
-      color: ${color.TEXT_BLACK};
-      font-size: ${fontSize.SHORT}px;
+      background-color: ${disabled ? color.disableColor('#fff') : '#fff'};
+      color: ${disabled ? color.TEXT_DISABLED : color.TEXT_BLACK};
+      font-size: ${fontSize.S};
       line-height: 1;
     `
   }}
 `
 const SelectedItemLabel = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const {
-      fontSize: { pxToRem },
-      spacing,
-    } = themes
-
+  ${({ themes: { spacingByChar } }) => {
     return css`
-      padding: ${pxToRem(spacing.XXS - borderWidth)};
+      padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);
     `
   }}
 `
-const DeleteButton = styled(ResetButton)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const {
-      fontSize: { pxToRem },
-      spacing,
-    } = themes
-
+const DeleteButton = styled(ResetButton)<{ themes: Theme; disabled: boolean }>`
+  ${({ themes: { spacingByChar, shadow }, disabled }) => {
     return css`
-      padding: ${pxToRem(spacing.XXS - borderWidth)};
+      padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);
       border-radius: 50%;
-      cursor: pointer;
+      cursor: ${disabled ? 'not-allowed' : 'pointer'};
       line-height: 0;
+
+      &:focus {
+        outline: 0;
+      }
+
+      &:focus > svg {
+        border-radius: 50%;
+        box-shadow: ${shadow.OUTLINE};
+      }
     `
   }}
-`
-const DeleteIcon = styled(FaTimesCircleIcon)`
-  vertical-align: 1px;
 `
 const InputWrapper = styled.li`
   &.hidden {
@@ -396,7 +387,7 @@ const Input = styled.input<{ themes: Theme }>`
       min-width: 80px;
       width: 100%;
       border: none;
-      font-size: ${fontSize.TALL}px;
+      font-size: ${fontSize.M};
       box-sizing: border-box;
       outline: none;
       &[disabled] {
@@ -412,23 +403,20 @@ const Placeholder = styled.p<{ themes: Theme }>`
     return css`
       margin: 0;
       color: ${color.TEXT_GREY};
-      font-size: ${fontSize.TALL}px;
+      font-size: ${fontSize.M};
       line-height: 25px;
     `
   }}
 `
 const Suffix = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { spacing, fontSize, border } = themes
-
-    return css`
+  ${({ themes: { spacingByChar, border } }) =>
+    css`
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: ${fontSize.pxToRem(spacing.XXS)} 0;
-      padding: 0 ${fontSize.pxToRem(spacing.XXS)};
+      margin: ${spacingByChar(0.5)} 0;
+      padding: 0 ${spacingByChar(0.5)};
       border-left: ${border.shorthand};
       box-sizing: border-box;
-    `
-  }}
+    `}
 `

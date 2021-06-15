@@ -6,11 +6,13 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { useGlobalKeyDown } from './useGlobalKeyDown'
 import { parseJpnDateString } from './datePickerHelper'
+import { useClassNames } from './useClassNames'
 
 import { Input } from '../Input'
 import { FaCalendarAltIcon } from '../Icon'
 import { Calendar } from '../Calendar'
 import { Portal } from './Portal'
+import { useId } from '../../hooks/useId'
 
 type Props = {
   value?: string | null
@@ -33,7 +35,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   to,
   disabled,
   error,
-  className,
+  className = '',
   parseInput,
   formatDate,
   onChangeDate,
@@ -67,9 +69,10 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const calendarPortalRef = useRef<HTMLDivElement>(null)
-  const [inputRect, setInputRect] = useState<DOMRect>(new DOMRect())
+  const [inputRect, setInputRect] = useState<DOMRect | null>(null)
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [isCalendarShown, setIsCalendarShown] = useState(false)
+  const calenderId = useId()
 
   const updateDate = useCallback(
     (newDate: Date | null) => {
@@ -171,9 +174,11 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   )
   useGlobalKeyDown(handleKeyDown)
 
+  const classNames = useClassNames()
+
   return (
     <Container
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       onClick={() => {
         if (!disabled && !isCalendarShown) {
           switchCalendarVisibility(true)
@@ -235,11 +240,16 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
           disabled={disabled}
           error={error}
           ref={inputRef}
+          className={classNames.inputContainer}
+          aria-expanded={isCalendarShown}
+          aria-controls={calenderId}
+          aria-haspopup={true}
         />
       </InputWrapper>
-      {isCalendarShown && (
+      {isCalendarShown && inputRect && (
         <Portal inputRect={inputRect} ref={calendarPortalRef}>
           <Calendar
+            id={calenderId}
             value={selectedDate || undefined}
             from={from}
             to={to}
@@ -265,24 +275,23 @@ const InputWrapper = styled.div``
 const StyledInput = styled(Input)`
   width: 100%;
 `
-const CalendarIconLayout = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { size } = themes
+const CalendarIconLayout = styled.span<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
   return css`
     height: 100%;
-    padding: ${size.pxToRem(size.space.XXS)} 0;
+    padding: ${spacingByChar(0.5)} 0;
     box-sizing: border-box;
   `
 })
 const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { palette, size } = themes
+  const { fontSize, palette, spacingByChar } = themes
   return css`
     display: flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
     height: 100%;
-    padding-left: ${size.pxToRem(size.space.XXS)};
+    padding-left: ${spacingByChar(0.5)};
     border-left: 1px solid ${palette.BORDER};
-    font-size: ${size.pxToRem(size.font.TALL)};
+    font-size: ${fontSize.M};
   `
 })

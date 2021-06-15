@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, RefObject, VFC, useCallback, useContext, useRef } from 'react'
+import React, { HTMLAttributes, VFC, useCallback, useContext, useRef } from 'react'
 import styled from 'styled-components'
 import { Transition } from 'react-transition-group'
 
@@ -13,10 +13,7 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-const updateNodeHeight = (node: HTMLElement, wrapperRef: RefObject<HTMLDivElement>) => {
-  const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
-  node.style.height = `${wrapperHeight}px`
-}
+const duration = 200
 
 export const AccordionPanelContent: VFC<Props & ElementProps> = ({
   children,
@@ -29,47 +26,33 @@ export const AccordionPanelContent: VFC<Props & ElementProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const classNames = useClassNames()
 
-  const handleEntering = useCallback(
+  const recalculateHeight = useCallback(
     (node: HTMLElement) => {
-      updateNodeHeight(node, wrapperRef)
+      const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
+      node.style.height = `${wrapperHeight}px`
     },
     [wrapperRef],
   )
 
   const handleEntered = (node: HTMLElement) => {
     node.style.height = 'auto'
+    node.style.visibility = 'visible'
   }
-
-  const handleExit = useCallback(
-    (node: HTMLElement) => {
-      updateNodeHeight(node, wrapperRef)
-    },
-    [wrapperRef],
-  )
-
-  const handleExiting = useCallback(
-    (node: HTMLElement) => {
-      updateNodeHeight(node, wrapperRef)
-    },
-    [wrapperRef],
-  )
 
   const handleExited = (node: HTMLElement) => {
     node.style.height = '0px'
+    node.style.visibility = 'hidden'
   }
 
   return (
     <Transition
       in={isInclude}
-      onEntering={handleEntering}
+      onEntering={recalculateHeight}
       onEntered={handleEntered}
-      onExit={handleExit}
-      onExiting={handleExiting}
+      onExit={recalculateHeight}
+      onExiting={recalculateHeight}
       onExited={handleExited}
-      timeout={{
-        enter: 300,
-        exit: 0,
-      }}
+      timeout={duration}
     >
       {(status) => (
         <CollapseContainer
@@ -86,13 +69,15 @@ export const AccordionPanelContent: VFC<Props & ElementProps> = ({
   )
 }
 
-const CollapseContainer = styled.div`
+const CollapseContainer = styled.section`
   height: 0;
   overflow: hidden;
-  transition: height 0.3s ease;
+  transition: height ${duration}ms ease;
+  visibility: hidden;
 
   &.entered {
     height: auto;
     overflow: visible;
+    visibility: visible;
   }
 `

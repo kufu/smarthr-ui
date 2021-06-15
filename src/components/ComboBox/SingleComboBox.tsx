@@ -1,12 +1,4 @@
-import React, {
-  ChangeEvent,
-  VFC,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { ChangeEvent, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -16,16 +8,17 @@ import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { ResetButton } from '../Button/ResetButton'
 import { useListBox } from './useListBox'
+import { Item } from './types'
 
-type Props = {
+type Props<T> = {
   /**
    * A list of items to choose from.
    */
-  items: Array<{ value: string; label: string; disabled?: boolean }>
+  items: Array<Item<T>>
   /**
    * An item that have already been selected.
    */
-  selectedItem: { value: string; label: string } | null
+  selectedItem: Item<T> | null
   /**
    * The value of the input `name` attribute.
    */
@@ -47,6 +40,10 @@ type Props = {
    */
   placeholder?: string
   /**
+   * If `true`, a loader is displayed on the dropdown list.
+   */
+  isLoading?: boolean
+  /**
    * The value given to the width style of input.
    */
   width?: number | string
@@ -65,10 +62,10 @@ type Props = {
   /**
    * Fire when the selected item is changed.
    */
-  onSelect: (item: { value: string; label: string } | null) => void
+  onSelect: (item: Item<T> | null) => void
 }
 
-export const SingleComboBox: VFC<Props> = ({
+export function SingleComboBox<T>({
   items,
   selectedItem,
   name,
@@ -76,12 +73,13 @@ export const SingleComboBox: VFC<Props> = ({
   error = false,
   creatable = false,
   placeholder = '',
+  isLoading,
   width = 'auto',
   className = '',
   onChange,
   onAdd,
   onSelect,
-}) => {
+}: Props<T>) {
   const theme = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -124,6 +122,7 @@ export const SingleComboBox: VFC<Props> = ({
     hasNoMatch:
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
+    isLoading,
   })
 
   const focus = useCallback(() => {
@@ -172,6 +171,7 @@ export const SingleComboBox: VFC<Props> = ({
       aria-haspopup="listbox"
       aria-controls={aria.listBoxId}
       aria-expanded={isFocused}
+      aria-invalid={error || undefined}
     >
       <StyledInput
         type="text"
@@ -273,34 +273,34 @@ const StyledInput = styled(Input)`
   }
 `
 const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, spacing } = themes
+  const { spacingByChar } = themes
   return css`
     height: 100%;
     box-sizing: border-box;
-    padding: ${fontSize.pxToRem(spacing.XXS)} 0;
+    padding: ${spacingByChar(0.5)} 0;
   `
 })
 const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { border, fontSize, spacing } = themes
+  const { border, spacingByChar } = themes
   return css`
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
     box-sizing: border-box;
-    padding-left: ${fontSize.pxToRem(spacing.XXS)};
+    padding-left: ${spacingByChar(0.5)};
     border-left: ${border.shorthand};
   `
 })
 const ClearButton = styled(ResetButton)<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacing } = themes
+    const { spacingByChar } = themes
     return css`
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100%;
-      padding: 0 ${fontSize.pxToRem(spacing.XXS)};
+      padding: 0 ${spacingByChar(0.5)};
       cursor: pointer;
       &.hidden {
         display: none;

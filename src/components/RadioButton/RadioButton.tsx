@@ -1,11 +1,14 @@
-import React, { ChangeEvent, FC, InputHTMLAttributes, useCallback } from 'react'
+import React, { ChangeEvent, InputHTMLAttributes, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 export type Props = InputHTMLAttributes<HTMLInputElement>
 
-export const RadioButton: FC<Props> = ({ className = '', onChange, ...props }) => {
+/**
+ * @deprecated The RadioButton component is deprecated, so use RadioButtonNew component instead.
+ */
+export const RadioButton: VFC<Props> = ({ className = '', onChange, ...props }) => {
   const theme = useTheme()
   const { checked, disabled } = props
   const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
@@ -72,6 +75,7 @@ const Box = styled.span<{ themes: Theme }>`
       &.disabled {
         background-color: ${palette.BORDER};
         border-color: ${palette.BORDER};
+        cursor: not-allowed;
 
         &.active {
           border-color: ${palette.BORDER};
@@ -86,7 +90,7 @@ const Box = styled.span<{ themes: Theme }>`
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
-    const { OUTLINE } = themes.palette
+    const { OUTLINE } = themes.shadow
 
     return css`
       opacity: 0;
@@ -103,7 +107,7 @@ const Input = styled.input<{ themes: Theme }>`
       }
 
       &:focus + span {
-        box-shadow: 0 0 0 2px ${OUTLINE};
+        box-shadow: ${OUTLINE};
       }
     `
   }}

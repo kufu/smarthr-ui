@@ -1,5 +1,5 @@
 import { merge } from '../libs/lodash'
-import { darken, rgba, transparentize } from 'polished'
+import { darken, rgba } from 'polished'
 
 // Allow deviations from the JavaScript naming convention to match SmartHR design guidelines
 export interface PaletteProperty {
@@ -74,13 +74,11 @@ export const createPalette = (userPalette: PaletteProperty = {}) => {
       hoverColor: (value: string, darkenAmount: 0.05 | 0.15 = 0.05): string =>
         darken(darkenAmount, value),
       disableColor: (value: string): string => rgba(value, 0.5),
-      OUTLINE: transparentize(0.5, defaultPalette.MAIN),
+      OUTLINE: defaultPalette.MAIN,
       ...defaultPalette,
     },
     userPalette,
-    userPalette.OUTLINE == null && userPalette.MAIN != null
-      ? { OUTLINE: transparentize(0.5, userPalette.MAIN) }
-      : null,
+    userPalette.OUTLINE == null && userPalette.MAIN != null ? { OUTLINE: userPalette.MAIN } : null,
   )
   return created
 }

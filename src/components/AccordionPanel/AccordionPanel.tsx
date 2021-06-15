@@ -1,7 +1,14 @@
-import React, { HTMLAttributes, useCallback, useEffect, useState } from 'react'
+import React, { HTMLAttributes, useCallback, useEffect, useRef, useState } from 'react'
 
 import { flatArrayToMap } from '../../libs/map'
-import { getNewExpandedItems } from './accordionPanelHelper'
+import {
+  focusFirstSibling,
+  focusLastSibling,
+  focusNextSibling,
+  focusPreviousSibling,
+  getNewExpandedItems,
+  keycodes,
+} from './accordionPanelHelper'
 import { useClassNames } from './useClassNames'
 
 type Props = {
@@ -20,6 +27,7 @@ export const AccordionPanelContext = React.createContext<{
   displayIcon: boolean
   expandedItems: Map<string, string>
   expandableMultiply: boolean
+  parentRef: React.RefObject<HTMLDivElement> | null
   onClickTrigger?: (itemName: string, isExpanded: boolean) => void
   onClickProps?: (expandedItems: string[]) => void
 }>({
@@ -27,6 +35,7 @@ export const AccordionPanelContext = React.createContext<{
   displayIcon: true,
   expandedItems: new Map(),
   expandableMultiply: false,
+  parentRef: null,
 })
 
 export const AccordionPanel: React.VFC<Props & ElementProps> = ({
@@ -40,6 +49,7 @@ export const AccordionPanel: React.VFC<Props & ElementProps> = ({
   ...props
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
+  const parentRef = useRef<HTMLDivElement>(null)
   const classNames = useClassNames()
 
   const onClickTrigger = useCallback(
@@ -48,6 +58,40 @@ export const AccordionPanel: React.VFC<Props & ElementProps> = ({
     },
     [expandableMultiply, expandedItems],
   )
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+    if (!parentRef?.current) {
+      return
+    }
+
+    const keyCode = event.keyCode
+    const item = event.target as HTMLElement
+
+    switch (keyCode) {
+      case keycodes.HOME: {
+        event.preventDefault()
+        focusFirstSibling(parentRef.current)
+        break
+      }
+      case keycodes.END: {
+        event.preventDefault()
+        focusLastSibling(parentRef.current)
+        break
+      }
+      case keycodes.LEFT:
+      case keycodes.UP: {
+        event.preventDefault()
+        focusPreviousSibling(item, parentRef.current)
+        break
+      }
+      case keycodes.RIGHT:
+      case keycodes.DOWN: {
+        event.preventDefault()
+        focusNextSibling(item, parentRef.current)
+        break
+      }
+    }
+  }
 
   useEffect(() => {
     if (defaultExpanded.length > 0) setExpanded(flatArrayToMap(defaultExpanded))
@@ -62,9 +106,16 @@ export const AccordionPanel: React.VFC<Props & ElementProps> = ({
         iconPosition,
         displayIcon,
         expandableMultiply,
+        parentRef,
       }}
     >
-      <div className={`${className} ${classNames.wrapper}`} {...props}>
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+      <div
+        className={`${className} ${classNames.wrapper}`}
+        ref={parentRef}
+        onKeyDown={handleKeyPress}
+        {...props}
+      >
         {children}
       </div>
     </AccordionPanelContext.Provider>

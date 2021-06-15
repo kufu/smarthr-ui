@@ -5,29 +5,34 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
+import { Item } from './types'
 
 import { FaPlusCircleIcon } from '../Icon'
+import { Loader } from '../Loader'
 
-type Args = {
-  items: Array<{ value: string; label: string; disabled?: boolean; isSelected?: boolean }>
+type Args<T> = {
+  items: Array<Item<T> & { isSelected?: boolean }>
   inputValue: string
   onAdd?: (label: string) => void
-  onSelect: (option: { value: string; label: string }) => void
+  onSelect: (item: Item<T>) => void
   isExpanded: boolean
   isAddable: boolean
   isDuplicate: boolean
   hasNoMatch: boolean
+  isLoading?: boolean
 }
 
-type Option = {
-  label: string
-  value: string
-  disabled?: boolean
+type Option<T> = Item<T> & {
   isAdding?: boolean
   isSelected?: boolean
 }
 
-export function useListBox({
+function optionToItem<T>(option: Option<T>): Item<T> {
+  const { isAdding, isSelected, ...props } = option
+  return { ...props }
+}
+
+export function useListBox<T>({
   items,
   inputValue,
   onAdd,
@@ -36,7 +41,8 @@ export function useListBox({
   isAddable,
   isDuplicate,
   hasNoMatch,
-}: Args) {
+  isLoading,
+}: Args<T>) {
   const [dropdownStyle, setDropdownStyle] = useState({
     top: 0,
     left: 0,
@@ -44,9 +50,10 @@ export function useListBox({
   })
   const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
 
-  const options: Option[] = useMemo(() => {
+  const options: Array<Option<T>> = useMemo(() => {
     if (isAddable) {
-      return [{ label: inputValue, value: inputValue, isAdding: true }, ...items]
+      const addingOption = { label: inputValue, value: inputValue, isAdding: true }
+      return [addingOption, ...items]
     }
     return items
   }, [inputValue, isAddable, items])
@@ -93,6 +100,9 @@ export function useListBox({
 
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (isLoading) {
+        return
+      }
       switch (e.key) {
         case 'ArrowDown':
         case 'Down':
@@ -115,21 +125,20 @@ export function useListBox({
             return
           }
           if (activeOption && !activeOption.disabled) {
-            const { value, label } = activeOption
-            onSelect({ value, label })
+            onSelect(optionToItem(activeOption))
           }
           break
         }
       }
     },
-    [activeOptionIndex, moveActiveOptionIndex, onAdd, onSelect, options],
+    [activeOptionIndex, isLoading, moveActiveOptionIndex, onAdd, onSelect, options],
   )
 
   const listBoxId = useId()
   const addingButtonId = useId()
   const optionIdPrefix = useId()
   const getOptionId = useCallback(
-    (option: Option) => {
+    (option: Option<T>) => {
       if (option.isAdding) {
         return addingButtonId
       }
@@ -162,54 +171,62 @@ export function useListBox({
         role="listbox"
         aria-hidden={!isExpanded}
       >
-        {options.map((option, i) => {
-          const isActive = activeOptionIndex === i
-          const className = isActive ? 'active' : undefined
-          const { value, label, disabled, isAdding, isSelected } = option
-          if (isAdding) {
-            return (
-              <AddButton
-                key={`add-${label}`}
-                themes={theme}
-                onClick={() => onAdd && onAdd(label)}
-                onMouseOver={() => setActiveOptionIndex(0)}
-                id={addingButtonId}
-                role="option"
-                className={className}
-              >
-                <AddIcon size={14} color={theme.palette.TEXT_LINK} $theme={theme} />
-                <AddText themes={theme}>「{label}」を追加</AddText>
-              </AddButton>
-            )
-          }
-          return (
-            <SelectButton
-              key={`item-${label}`}
-              type="button"
-              themes={theme}
-              disabled={disabled}
-              onClick={() => onSelect({ value, label })}
-              onMouseOver={() => setActiveOptionIndex(i)}
-              id={getOptionId(option)}
-              role="option"
-              className={className}
-              aria-selected={isSelected}
-            >
-              {label}
-            </SelectButton>
-          )
-        })}
+        {isLoading ? (
+          <LoaderWrapper themes={theme}>
+            <Loader />
+          </LoaderWrapper>
+        ) : (
+          <>
+            {options.map((option, i) => {
+              const isActive = activeOptionIndex === i
+              const className = isActive ? 'active' : undefined
+              const { label, disabled, isAdding, isSelected } = option
+              if (isAdding) {
+                return (
+                  <AddButton
+                    key={`add-${label}`}
+                    themes={theme}
+                    onClick={() => onAdd && onAdd(label)}
+                    onMouseOver={() => setActiveOptionIndex(0)}
+                    id={addingButtonId}
+                    role="option"
+                    className={className}
+                  >
+                    <AddIcon size={14} color={theme.palette.TEXT_LINK} $theme={theme} />
+                    <AddText themes={theme}>「{label}」を追加</AddText>
+                  </AddButton>
+                )
+              }
+              return (
+                <SelectButton
+                  key={`item-${label}`}
+                  type="button"
+                  themes={theme}
+                  disabled={disabled}
+                  onClick={() => onSelect(optionToItem(option))}
+                  onMouseOver={() => setActiveOptionIndex(i)}
+                  id={getOptionId(option)}
+                  role="option"
+                  className={className}
+                  aria-selected={isSelected}
+                >
+                  {label}
+                </SelectButton>
+              )
+            })}
 
-        {isDuplicate && (
-          <NoItems themes={theme} role="alert" aria-live="polite">
-            重複する選択肢は追加できません
-          </NoItems>
-        )}
+            {isDuplicate && (
+              <NoItems themes={theme} role="alert" aria-live="polite">
+                重複する選択肢は追加できません
+              </NoItems>
+            )}
 
-        {hasNoMatch && (
-          <NoItems themes={theme} role="alert" aria-live="polite">
-            一致する選択肢がありません
-          </NoItems>
+            {hasNoMatch && (
+              <NoItems themes={theme} role="alert" aria-live="polite">
+                一致する選択肢がありません
+              </NoItems>
+            )}
+          </>
         )}
       </Container>,
       portalRoot,
@@ -230,7 +247,7 @@ export function useListBox({
 
 const Container = styled.div<{ top: number; left: number; width: number; themes: Theme }>(
   ({ top, left, width, themes }) => {
-    const { size, frame } = themes
+    const { spacingByChar, frame } = themes
     return css`
       position: absolute;
       top: ${top}px;
@@ -238,7 +255,7 @@ const Container = styled.div<{ top: number; left: number; width: number; themes:
       overflow-y: auto;
       max-height: 300px;
       width: ${width}px;
-      padding: ${size.pxToRem(size.space.XXS)} 0;
+      padding: ${spacingByChar(0.5)} 0;
       border-radius: ${frame.border.radius.m};
       box-shadow: rgba(51, 51, 51, 0.3) 0 4px 10px 0;
       background-color: #fff;
@@ -253,27 +270,27 @@ const Container = styled.div<{ top: number; left: number; width: number; themes:
 )
 const NoItems = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize, spacingByChar } = themes
 
     return css`
       margin: 0;
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: #fff;
-      font-size: ${size.font.TALL}px;
+      font-size: ${fontSize.M};
     `
   }}
 `
 const SelectButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, palette } = themes
+    const { fontSize, spacingByChar, palette } = themes
 
     return css`
       display: block;
       width: 100%;
       border: none;
-      padding: ${size.pxToRem(size.space.XXS)} ${size.pxToRem(size.space.XS)};
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: #fff;
-      font-size: ${size.font.TALL}px;
+      font-size: ${fontSize.M};
       text-align: left;
       cursor: pointer;
 
@@ -315,6 +332,16 @@ const AddText = styled.span<{ themes: Theme }>`
 
     return css`
       color: ${palette.TEXT_LINK};
+    `
+  }}
+`
+const LoaderWrapper = styled.div<{ themes: Theme }>`
+  ${({ themes: { spacingByChar } }) => {
+    return css`
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: ${spacingByChar(1)};
     `
   }}
 `

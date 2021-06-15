@@ -30,11 +30,11 @@ exports[`TabBar should be match snapshot 1`] = `
   -moz-appearance: none;
   appearance: none;
   font-weight: bold;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: #706d65;
   height: 40px;
   border-bottom: solid 3px transparent;
-  padding: 0 1.5rem;
+  padding: 0 24px;
   box-sizing: border-box;
   -webkit-transition: background-color .3s ease-out,color .3s ease-out;
   transition: background-color .3s ease-out,color .3s ease-out;

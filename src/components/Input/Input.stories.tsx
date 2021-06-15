@@ -57,11 +57,11 @@ storiesOf('Input', module).add('all', () => {
       </li>
       <li>
         <Txt>prefix</Txt>
-        <Input prefix={<FaSearchIcon color={theme.palette.BORDER} />} />
+        <Input prefix={<FaSearchIcon color={theme.color.TEXT_GREY} />} />
       </li>
       <li>
         <Txt>suffix</Txt>
-        <Input suffix={<FaSearchIcon color={theme.palette.BORDER} />} />
+        <Input suffix={<FaSearchIcon color={theme.color.TEXT_GREY} />} />
       </li>
       <li>
         <Txt>extending style (width 50%)</Txt>
@@ -88,8 +88,6 @@ const StyledInput = styled(Input)`
 const Note = styled.div<{ themes: Theme }>`
   ${({ themes }) => css`
     margin-top: 8px;
-    font-size: 12px;
-    font-size: 14px;
-    color: ${themes.palette.TEXT_GREY};
+    color: ${themes.color.TEXT_GREY};
   `}
 `
