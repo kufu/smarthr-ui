@@ -10,13 +10,18 @@ export function useClassNames() {
   const generateForMulti = useClassNameGenerator(
     (MultiComboBox as VFC).displayName || 'MultiComboBox',
   )
-  const generateForCommon = useClassNameGenerator('ComboBox')
   return useMemo(
     () => ({
       single: {
         wrapper: generateForSingle(),
         input: generateForSingle('input'),
         clearButton: generateForSingle('clearButton'),
+        listBox: {
+          dropdownList: generateForSingle('dropdownList'),
+          addButton: generateForSingle('addButton'),
+          selectButton: generateForSingle('selectButton'),
+          noItems: generateForSingle('noItems'),
+        },
       },
       multi: {
         wrapper: generateForMulti(),
@@ -25,14 +30,14 @@ export function useClassNames() {
         deleteButton: generateForMulti('deleteButton'),
         input: generateForMulti('input'),
         placeholder: generateForMulti('placeholder'),
-      },
-      common: {
-        dropdownList: generateForCommon('dropdownList'),
-        addButton: generateForCommon('addButton'),
-        selectButton: generateForCommon('selectButton'),
-        noItems: generateForCommon('noItems'),
+        listBox: {
+          dropdownList: generateForMulti('dropdownList'),
+          addButton: generateForMulti('addButton'),
+          selectButton: generateForMulti('selectButton'),
+          noItems: generateForMulti('noItems'),
+        },
       },
     }),
-    [generateForCommon, generateForMulti, generateForSingle],
+    [generateForMulti, generateForSingle],
   )
 }

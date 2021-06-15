@@ -97,6 +97,7 @@ export function MultiComboBox<T>({
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
+  const classNames = useClassNames().multi
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
@@ -129,6 +130,7 @@ export function MultiComboBox<T>({
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
     isLoading,
+    classNames: classNames.listBox,
   })
 
   const focus = useCallback(() => {
@@ -163,8 +165,6 @@ export function MultiComboBox<T>({
       })
     }
   }, [isFocused, selectedItems, setDropdownStyle])
-
-  const classNames = useClassNames().multi
 
   return (
     <Container

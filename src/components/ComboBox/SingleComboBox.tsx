@@ -93,6 +93,7 @@ export function SingleComboBox<T>({
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
+  const classNames = useClassNames().single
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -135,6 +136,7 @@ export function SingleComboBox<T>({
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
     isLoading,
+    classNames: classNames.listBox,
   })
 
   const focus = useCallback(() => {
@@ -175,7 +177,6 @@ export function SingleComboBox<T>({
   }, [isFocused, selectedItem, setDropdownStyle])
 
   const needsClearButton = selectedItem !== null && !disabled
-  const classNames = useClassNames().single
 
   return (
     <Container

@@ -6,7 +6,6 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
 import { Item } from './types'
-import { useClassNames } from './useClassNames'
 
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
@@ -21,6 +20,12 @@ type Args<T> = {
   isDuplicate: boolean
   hasNoMatch: boolean
   isLoading?: boolean
+  classNames: {
+    dropdownList: string
+    addButton: string
+    selectButton: string
+    noItems: string
+  }
 }
 
 type Option<T> = Item<T> & {
@@ -43,6 +48,7 @@ export function useListBox<T>({
   isDuplicate,
   hasNoMatch,
   isLoading,
+  classNames,
 }: Args<T>) {
   const [dropdownStyle, setDropdownStyle] = useState({
     top: 0,
@@ -161,8 +167,6 @@ export function useListBox<T>({
   const theme = useTheme()
   const { portalRoot } = usePortal()
   const listBoxRef = useRef<HTMLDivElement>(null)
-
-  const classNames = useClassNames().common
 
   const renderListBox = () => {
     return createPortal(
