@@ -2,6 +2,7 @@ import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { Base } from '../Base'
 import {
@@ -19,11 +20,12 @@ export const CompactInformationPanel: VFC<{
   children: ReactNode
 }> = ({ type = 'info', className = '', children }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper className={className} themes={theme}>
+    <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
       {callIcon(type, theme)}
-      <Content>{children}</Content>
+      <Content className={classNames.content}>{children}</Content>
     </Wrapper>
   )
 }
