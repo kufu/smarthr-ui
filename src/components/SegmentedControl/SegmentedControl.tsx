@@ -1,4 +1,12 @@
-import React, { ReactNode, VFC, useCallback, useEffect, useRef, useState } from 'react'
+import React, {
+  HTMLAttributes,
+  ReactNode,
+  VFC,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -20,8 +28,9 @@ type Props = {
   isSquare?: boolean
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const SegmentedControl: VFC<Props> = ({
+export const SegmentedControl: VFC<Props & ElementProps> = ({
   options,
   value,
   onClickOption,
