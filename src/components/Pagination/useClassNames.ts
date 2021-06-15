@@ -9,6 +9,7 @@ export function useClassNames() {
     () => ({
       wrapper: generate(),
       page: generate('page'),
+      current: generate('current'),
       start: generate('start'),
       prev: generate('prev'),
       next: generate('next'),

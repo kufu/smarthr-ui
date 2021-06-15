@@ -57,7 +57,10 @@ export const Pagination: VFC<Props> = ({
         ...range(current - padding, current).filter((page) => page >= 1),
         ...range(current, current + padding + 1).filter((page) => page <= total),
       ].map((page) => (
-        <li key={`pagination-${page}`} className={classNames.page}>
+        <li
+          key={`pagination-${page}`}
+          className={page === current ? classNames.current : classNames.page}
+        >
           <PaginationItem page={page} currentPage={current} onClick={onClick} />
         </li>
       ))
