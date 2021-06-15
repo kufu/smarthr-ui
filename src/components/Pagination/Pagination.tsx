@@ -1,4 +1,4 @@
-import React, { VFC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { range } from '../../libs/lodash'
@@ -16,14 +16,16 @@ interface Props {
   className?: string
   withoutNumbers?: boolean
 }
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const Pagination: VFC<Props> = ({
+export const Pagination: VFC<Props & ElementProps> = ({
   total,
   current,
   onClick,
   padding = 4,
   className = '',
   withoutNumbers = false,
+  ...props
 }) => {
   const theme = useTheme()
   const classNames = useClassNames()
@@ -89,7 +91,11 @@ export const Pagination: VFC<Props> = ({
   )
 
   return (
-    <Wrapper className={`${className} ${classNames.wrapper}`} aria-label="ページネーション">
+    <Wrapper
+      className={`${className} ${classNames.wrapper}`}
+      aria-label="ページネーション"
+      {...props}
+    >
       <List className={withoutNumbers ? 'withoutNumbers' : ''} themes={theme}>
         {prevPage}
         {pages}
