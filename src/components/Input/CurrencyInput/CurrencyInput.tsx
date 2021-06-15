@@ -77,12 +77,12 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
 
     return (
       <Input
+        {...props}
         type="text"
         onFocus={handleFocus}
         onBlur={handleBlur}
         ref={innerRef}
         className={`${className} ${classNames.wrapper}`}
-        {...props}
       />
     )
   },
