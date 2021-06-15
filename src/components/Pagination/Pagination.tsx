@@ -112,20 +112,21 @@ const List = styled.ul<{ themes: Theme }>`
         :not(:first-child) {
           margin-left: ${spacingByChar(0.5)};
         }
-        &.${classNames.prev} + li {
-          margin-left: ${spacingByChar(1)};
-        }
-        &.${classNames.next} {
-          margin-left: ${spacingByChar(1)};
+      }
+      &:not(.withoutNumbers) {
+        > li {
+          &.${classNames.prev} + li {
+            margin-left: ${spacingByChar(1)};
+          }
+          &.${classNames.next} {
+            margin-left: ${spacingByChar(1)};
+          }
         }
       }
       &.withoutNumbers {
         > li {
           &.${classNames.prev} {
             margin-left: ${spacingByChar(1)};
-          }
-          &.${classNames.next} {
-            margin-left: ${spacingByChar(0.5)};
           }
           &.${classNames.end} {
             margin-left: ${spacingByChar(1)};
