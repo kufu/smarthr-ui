@@ -13,7 +13,10 @@ type Props = {
   className?: string
   onClick: (tabId: string) => void
 }
-type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
+type ElementProps = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  keyof Props | 'role' | 'aria-selected' | 'type'
+>
 
 export const TabItem: VFC<Props & ElementProps> = ({
   id,

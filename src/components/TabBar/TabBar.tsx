@@ -9,7 +9,7 @@ type Props = {
   bordered?: boolean
   className?: string
 }
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'role'>
 
 export const TabBar: VFC<Props & ElementProps> = ({
   className = '',
