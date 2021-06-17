@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { TableGroupContext } from './Table'
+import { useClassNames } from './useClassNames'
 
 export type Props = {
   bulkActionArea?: ReactNode
@@ -12,11 +13,12 @@ export type Props = {
 
 export const Head: VFC<Props> = ({ bulkActionArea, className = '', children }) => {
   const themes = useTheme()
+  const classNames = useClassNames().head
   return (
-    <thead className={className}>
+    <thead className={`${className} ${classNames.wrapper}`}>
       <TableGroupContext.Provider value={{ group: 'head' }}>{children}</TableGroupContext.Provider>
       {bulkActionArea && (
-        <tr>
+        <tr className={classNames.bulkActionArea}>
           <BulkActionTD colSpan={1000} themes={themes}>
             {bulkActionArea}
           </BulkActionTD>

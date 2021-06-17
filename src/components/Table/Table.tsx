@@ -2,6 +2,7 @@ import React, { ReactNode, VFC, createContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 export const TableGroupContext = createContext<{
   group: 'head' | 'body'
@@ -16,9 +17,10 @@ type Props = {
 
 export const Table: VFC<Props> = ({ children, className = '' }) => {
   const theme = useTheme()
+  const classNames = useClassNames().table
 
   return (
-    <Wrapper themes={theme} className={className}>
+    <Wrapper themes={theme} className={`${className} ${classNames.wrapper}`}>
       {children}
     </Wrapper>
   )

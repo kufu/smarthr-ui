@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { TableGroupContext } from './Table'
 
@@ -29,7 +30,13 @@ export const Cell: VFC<Props & ElementProps> = ({
 }) => {
   const theme = useTheme()
   const { group } = useContext(TableGroupContext)
-  const classNames = [className, highlighted && 'highlighted', nullable && 'nullable']
+  const classNames = useClassNames().cell
+  const wrapperClass = [
+    className,
+    highlighted && 'highlighted',
+    nullable && 'nullable',
+    classNames.wrapper,
+  ]
     .filter((c) => !!c)
     .join(' ')
   const props = {
@@ -37,7 +44,7 @@ export const Cell: VFC<Props & ElementProps> = ({
     onClick,
     colSpan,
     rowSpan,
-    className: classNames,
+    className: wrapperClass,
     themes: theme,
     ...elementProps,
   }
