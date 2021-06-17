@@ -1,16 +1,22 @@
-import React, { ChangeEvent, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import React, {
+  ChangeEvent,
+  HTMLAttributes,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
+import { useClassNames } from './useClassNames'
 
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { useListBox } from './useListBox'
 import { ResetButton } from '../Button/ResetButton'
 import { Item } from './types'
-
-const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
 
 type Props<T> = {
   /**
@@ -71,6 +77,8 @@ type Props<T> = {
   onSelect: (item: Item<T>) => void
 }
 
+type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
+
 export function MultiComboBox<T>({
   items,
   selectedItems,
@@ -86,8 +94,10 @@ export function MultiComboBox<T>({
   onAdd,
   onDelete,
   onSelect,
-}: Props<T>) {
+  ...props
+}: Props<T> & ElementProps<T>) {
   const theme = useTheme()
+  const classNames = useClassNames().multi
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
@@ -120,6 +130,7 @@ export function MultiComboBox<T>({
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
     isLoading,
+    classNames: classNames.listBox,
   })
 
   const focus = useCallback(() => {
@@ -157,13 +168,14 @@ export function MultiComboBox<T>({
 
   return (
     <Container
+      {...props}
       themes={theme}
       width={width}
       ref={outerRef}
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       onClick={(e) => {
         if (
-          !hasParentElementByClassName(e.target as HTMLElement, DELETE_BUTTON_CLASS_NAME) &&
+          !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
           !disabled &&
           !isFocused
         ) {
@@ -192,14 +204,20 @@ export function MultiComboBox<T>({
             const { deletable = true, ...item } = selectedItem
             return (
               <li key={i}>
-                <SelectedItem themes={theme} disabled={disabled}>
-                  <SelectedItemLabel themes={theme}>{selectedItem.label}</SelectedItemLabel>
+                <SelectedItem
+                  themes={theme}
+                  disabled={disabled}
+                  className={classNames.selectedItem}
+                >
+                  <SelectedItemLabel themes={theme} className={classNames.selectedItemLabel}>
+                    {selectedItem.label}
+                  </SelectedItemLabel>
 
                   {deletable && (
                     <DeleteButton
                       type="button"
                       themes={theme}
-                      className={DELETE_BUTTON_CLASS_NAME}
+                      className={classNames.deleteButton}
                       disabled={disabled}
                       onClick={() => onDelete(item)}
                     >
@@ -243,12 +261,15 @@ export function MultiComboBox<T>({
               aria-activedescendant={aria.activeDescendant}
               aria-autocomplete="list"
               aria-controls={aria.listBoxId}
+              className={classNames.input}
             />
           </InputWrapper>
 
           {selectedItems.length === 0 && placeholder && !isFocused && (
             <li>
-              <Placeholder themes={theme}>{placeholder}</Placeholder>
+              <Placeholder themes={theme} className={classNames.placeholder}>
+                {placeholder}
+              </Placeholder>
             </li>
           )}
         </List>
