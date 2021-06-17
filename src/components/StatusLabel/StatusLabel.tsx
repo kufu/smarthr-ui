@@ -2,6 +2,7 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   type?: 'done' | 'success' | 'process' | 'required' | 'disabled' | 'must' | 'warning' | 'error'
@@ -11,9 +12,10 @@ type Props = {
 
 export const StatusLabel: VFC<Props> = ({ type = 'done', className = '', children }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper className={`${type} ${className}`} themes={theme}>
+    <Wrapper className={`${type} ${className} ${classNames.wrapper}`} themes={theme}>
       {children}
     </Wrapper>
   )
