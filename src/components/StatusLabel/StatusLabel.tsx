@@ -1,4 +1,4 @@
-import React, { VFC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -9,13 +9,19 @@ type Props = {
   className?: string
   children: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLSpanElement>, keyof Props>
 
-export const StatusLabel: VFC<Props> = ({ type = 'done', className = '', children }) => {
+export const StatusLabel: VFC<Props & ElementProps> = ({
+  type = 'done',
+  className = '',
+  children,
+  ...props
+}) => {
   const theme = useTheme()
   const classNames = useClassNames()
 
   return (
-    <Wrapper className={`${type} ${className} ${classNames.wrapper}`} themes={theme}>
+    <Wrapper {...props} className={`${type} ${className} ${classNames.wrapper}`} themes={theme}>
       {children}
     </Wrapper>
   )
