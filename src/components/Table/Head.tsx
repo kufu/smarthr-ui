@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -10,12 +10,18 @@ export type Props = {
   children?: ReactNode
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLTableSectionElement>, keyof Props>
 
-export const Head: VFC<Props> = ({ bulkActionArea, className = '', children }) => {
+export const Head: VFC<Props & ElementProps> = ({
+  bulkActionArea,
+  className = '',
+  children,
+  ...props
+}) => {
   const themes = useTheme()
   const classNames = useClassNames().head
   return (
-    <thead className={`${className} ${classNames.wrapper}`}>
+    <thead {...props} className={`${className} ${classNames.wrapper}`}>
       <TableGroupContext.Provider value={{ group: 'head' }}>{children}</TableGroupContext.Provider>
       {bulkActionArea && (
         <tr className={classNames.bulkActionArea}>

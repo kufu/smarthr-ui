@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC, createContext } from 'react'
+import React, { ReactNode, TableHTMLAttributes, VFC, createContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -14,13 +14,14 @@ type Props = {
   children?: ReactNode
   className?: string
 }
+type ElementProps = Omit<TableHTMLAttributes<HTMLTableElement>, keyof Props>
 
-export const Table: VFC<Props> = ({ children, className = '' }) => {
+export const Table: VFC<Props & ElementProps> = ({ children, className = '', ...props }) => {
   const theme = useTheme()
   const classNames = useClassNames().table
 
   return (
-    <Wrapper themes={theme} className={`${className} ${classNames.wrapper}`}>
+    <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       {children}
     </Wrapper>
   )
