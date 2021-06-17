@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { ButtonHTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -13,14 +13,16 @@ type Props = {
   className?: string
   onClick: (tabId: string) => void
 }
+type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
-export const TabItem: VFC<Props> = ({
+export const TabItem: VFC<Props & ElementProps> = ({
   id,
   children,
   onClick,
   selected = false,
   className = '',
   disabled = false,
+  ...props
 }) => {
   const theme = useTheme()
   const classNames = useClassNames().tabItem
@@ -28,6 +30,7 @@ export const TabItem: VFC<Props> = ({
 
   return (
     <Wrapper
+      {...props}
       role="tab"
       aria-selected={selected}
       className={wrapperClass}

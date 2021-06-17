@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -9,14 +9,20 @@ type Props = {
   bordered?: boolean
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const TabBar: VFC<Props> = ({ className = '', bordered = true, children }) => {
+export const TabBar: VFC<Props & ElementProps> = ({
+  className = '',
+  bordered = true,
+  children,
+  ...props
+}) => {
   const theme = useTheme()
   const classNames = useClassNames().tabBar
   const wrapperClass = `${className} ${bordered ? 'bordered' : ''} ${classNames.wrapper}`
 
   return (
-    <Wrapper role="tablist" className={wrapperClass} themes={theme}>
+    <Wrapper {...props} role="tablist" className={wrapperClass} themes={theme}>
       {children}
     </Wrapper>
   )
