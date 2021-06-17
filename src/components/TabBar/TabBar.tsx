@@ -2,6 +2,7 @@ import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   children: ReactNode
@@ -11,10 +12,11 @@ type Props = {
 
 export const TabBar: VFC<Props> = ({ className = '', bordered = true, children }) => {
   const theme = useTheme()
-  const classNames = `${className} ${bordered ? 'bordered' : ''}`
+  const classNames = useClassNames().tabBar
+  const wrapperClass = `${className} ${bordered ? 'bordered' : ''} ${classNames.wrapper}`
 
   return (
-    <Wrapper role="tablist" className={classNames} themes={theme}>
+    <Wrapper role="tablist" className={wrapperClass} themes={theme}>
       {children}
     </Wrapper>
   )

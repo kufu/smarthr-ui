@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { isTouchDevice } from '../../libs/ua'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   id: string
@@ -22,13 +23,14 @@ export const TabItem: VFC<Props> = ({
   disabled = false,
 }) => {
   const theme = useTheme()
-  const classNames = `${className} ${selected ? 'selected' : ''}`
+  const classNames = useClassNames().tabItem
+  const wrapperClass = `${className} ${selected ? 'selected' : ''} ${classNames.wrapper}`
 
   return (
     <Wrapper
       role="tab"
       aria-selected={selected}
-      className={classNames}
+      className={wrapperClass}
       onClick={() => onClick(id)}
       disabled={disabled}
       themes={theme}
