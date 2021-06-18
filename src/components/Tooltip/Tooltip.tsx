@@ -6,6 +6,7 @@ import { Props as BalloonProps, BalloonTheme, DarkBalloon, LightBalloon } from '
 import { TooltipPortal } from './TooltipPortal'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   message: ReactNode
@@ -27,7 +28,7 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
     ellipsisOnly = false,
     horizontal = 'left',
     vertical = 'bottom',
-    className,
+    className = '',
   }) => {
     const themes = useTheme()
     const [isVisible, setIsVisible] = useState(false)
@@ -88,6 +89,8 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
       }
     }, [portalRoot])
 
+    const classNames = useClassNames()
+
     return (
       <Wrapper
         aria-describedby={isVisible ? tooltipId : undefined}
@@ -100,7 +103,7 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
         onBlur={outAction}
         tabIndex={0}
         isIcon={isIcon}
-        className={className}
+        className={`${className} ${classNames.wrapper}`}
       >
         {isVisible &&
           rect &&

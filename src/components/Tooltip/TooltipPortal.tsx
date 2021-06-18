@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { getTooltipRect } from './tooltipHelper'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   id: string
@@ -52,8 +53,17 @@ export const TooltipPortal: VFC<Props> = ({
     )
   }, [horizontal, isIcon, isMultiLine, parentRect, vertical])
 
+  const classNames = useClassNames()
+
   return (
-    <Container id={id} ref={portalRef} themes={theme} role="tooltip" {...rect}>
+    <Container
+      id={id}
+      ref={portalRef}
+      themes={theme}
+      role="tooltip"
+      className={classNames.popup}
+      {...rect}
+    >
       {children}
     </Container>
   )
