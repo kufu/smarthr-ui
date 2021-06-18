@@ -2,6 +2,7 @@ import React, { TextareaHTMLAttributes, VFC, useEffect, useRef, useState } from 
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   error?: boolean
@@ -22,7 +23,7 @@ const getStringLength = (value: string | number | readonly string[]) => {
   return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
 
-export const Textarea: VFC<Props> = ({ autoFocus, maxLength, width, ...props }) => {
+export const Textarea: VFC<Props> = ({ autoFocus, maxLength, width, className = '', ...props }) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
   const currentValue = props.defaultValue || props.value
@@ -39,6 +40,8 @@ export const Textarea: VFC<Props> = ({ autoFocus, maxLength, width, ...props }) 
     setCount(getStringLength(event.currentTarget.value))
   }
 
+  const classNames = useClassNames()
+
   return (
     <>
       <StyledTextarea
@@ -48,9 +51,10 @@ export const Textarea: VFC<Props> = ({ autoFocus, maxLength, width, ...props }) 
         ref={ref}
         themes={theme}
         aria-invalid={props.error || undefined}
+        className={`${className} ${classNames.textarea}`}
       />
       {maxLength && (
-        <Counter themes={theme}>
+        <Counter themes={theme} className={classNames.counter}>
           あと
           <span className={maxLength && maxLength - count <= 0 ? 'error' : ''}>
             {maxLength - count}
