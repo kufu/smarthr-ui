@@ -4,11 +4,12 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
-type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+type Props = {
   error?: boolean
   width?: number | string
   autoFocus?: boolean
 }
+type ElementProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, keyof Props>
 
 const getStringLength = (value: string | number | readonly string[]) => {
   const formattedValue =
@@ -23,7 +24,13 @@ const getStringLength = (value: string | number | readonly string[]) => {
   return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
 
-export const Textarea: VFC<Props> = ({ autoFocus, maxLength, width, className = '', ...props }) => {
+export const Textarea: VFC<Props & ElementProps> = ({
+  autoFocus,
+  maxLength,
+  width,
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
   const currentValue = props.defaultValue || props.value
@@ -46,12 +53,12 @@ export const Textarea: VFC<Props> = ({ autoFocus, maxLength, width, className = 
     <>
       <StyledTextarea
         {...(maxLength ? { onKeyUp: handleKeyup } : {})}
-        {...props}
         textAreaWidth={textAreaWidth}
         ref={ref}
         themes={theme}
         aria-invalid={props.error || undefined}
         className={`${className} ${classNames.textarea}`}
+        {...props}
       />
       {maxLength && (
         <Counter themes={theme} className={classNames.counter}>
