@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC, useEffect, useRef, useState } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
@@ -18,9 +18,20 @@ type Props = {
   vertical?: BalloonProps['vertical']
   className?: string
 }
+type ElementProps = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  | keyof Props
+  | 'onMouseEnter'
+  | 'onMouseLeave'
+  | 'onTouchStart'
+  | 'onTouchEnd'
+  | 'onFocus'
+  | 'onBlur'
+  | 'aria-describedby'
+>
 
 const tooltipFactory = (balloonTheme: BalloonTheme) => {
-  const Tooltip: VFC<Props> = ({
+  const Tooltip: VFC<Props & ElementProps> = ({
     message,
     children,
     triggerType,
@@ -29,6 +40,7 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
     horizontal = 'left',
     vertical = 'bottom',
     className = '',
+    ...props
   }) => {
     const themes = useTheme()
     const [isVisible, setIsVisible] = useState(false)
@@ -93,6 +105,7 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
 
     return (
       <Wrapper
+        {...props}
         aria-describedby={isVisible ? tooltipId : undefined}
         ref={ref}
         onMouseEnter={overAction}
