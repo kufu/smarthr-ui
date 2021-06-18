@@ -98,7 +98,7 @@ export { CompactInformationPanel } from './components/CompactInformationPanel'
 export { Text } from './components/Text'
 
 // layout components
-export { LineUp, Stack } from './components/Layout'
+export { Cluster, LineUp, Stack } from './components/Layout'
 
 // themes
 export { createTheme } from './themes/createTheme'
