@@ -18,6 +18,7 @@ import { LineClamp } from 'smarthr-ui'
 | Name        | Required | Type          | DefaultValue | Description                                    |
 | ----------- | -------- | ------------- | ------------ | ---------------------------------------------- |
 | maxLines    | -        | **number**    | 3          | Number of lines to be ellipsis.                |
+| withTooltip | -        | **boolean**   | false      | ToolTip is enabled when ellipsis is displayed. |
+| tooltipType | -        | **'light' &#124; 'dark'**   | 'light'      | Theme type of ToolTip. |
 | className   | -        | **string**    | -           | Overwrite style.                               |
 | children    | ✓        | **ReactNode** | -           | The Description of this area.                  |
-| withTooltip | -        | **boolean**   | false      | ToolTip is enabled when ellipsis is displayed. |

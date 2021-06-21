@@ -1,11 +1,13 @@
 import React, { HTMLAttributes, ReactNode, VFC, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { LightTooltip } from '../Tooltip'
+import { BalloonTheme } from '../Balloon'
+import { DarkTooltip, LightTooltip } from '../Tooltip'
 import { useClassNames } from './useClassNames'
 
 type Props = {
   maxLines?: number
   withTooltip?: boolean
+  toolTipType?: BalloonTheme
   children: ReactNode
 }
 type ElementProps = Omit<HTMLAttributes<HTMLSpanElement>, keyof Props>
@@ -13,6 +15,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLSpanElement>, keyof Props>
 export const LineClamp: VFC<Props & ElementProps> = ({
   maxLines = 3,
   withTooltip = false,
+  toolTipType = 'light',
   children,
   className = '',
   ...props
@@ -42,13 +45,18 @@ export const LineClamp: VFC<Props & ElementProps> = ({
     </Wrapper>
   )
 
-  return withTooltip && isTooltipVisible ? (
-    <LightTooltip message={children} multiLine>
-      <LineClampPart />
-    </LightTooltip>
-  ) : (
-    <LineClampPart />
-  )
+  const Tooltip = () =>
+    toolTipType === 'light' ? (
+      <LightTooltip message={children} multiLine>
+        <LineClampPart />
+      </LightTooltip>
+    ) : (
+      <DarkTooltip message={children} multiLine>
+        <LineClampPart />
+      </DarkTooltip>
+    )
+
+  return withTooltip && isTooltipVisible ? <Tooltip /> : <LineClampPart />
 }
 
 const Wrapper = styled.span<{ maxLines: number }>`
