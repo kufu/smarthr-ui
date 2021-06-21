@@ -56,6 +56,7 @@ export const LineClamp: VFC<Props & ElementProps> = ({
 }
 
 const Wrapper = styled.span<{ maxLines: number }>`
+  /* stylelint-disable */
   display: box;
   display: -webkit-box;
   display: -moz-box;
@@ -64,6 +65,7 @@ const Wrapper = styled.span<{ maxLines: number }>`
   -moz-box-orient: vertical;
   line-clamp: ${({ maxLines }) => maxLines};
   -webkit-line-clamp: ${({ maxLines }) => maxLines};
+  /* stylelint-enable */
   overflow-y: hidden;
   word-break: break-word;
 `
