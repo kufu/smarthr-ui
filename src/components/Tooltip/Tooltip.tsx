@@ -18,17 +18,7 @@ type Props = {
   vertical?: BalloonProps['vertical']
   className?: string
 }
-type ElementProps = Omit<
-  HTMLAttributes<HTMLDivElement>,
-  | keyof Props
-  | 'onMouseEnter'
-  | 'onMouseLeave'
-  | 'onTouchStart'
-  | 'onTouchEnd'
-  | 'onFocus'
-  | 'onBlur'
-  | 'aria-describedby'
->
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-describedby'>
 
 const tooltipFactory = (balloonTheme: BalloonTheme) => {
   const Tooltip: VFC<Props & ElementProps> = ({
@@ -40,6 +30,12 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
     horizontal = 'left',
     vertical = 'bottom',
     className = '',
+    onMouseEnter,
+    onMouseLeave,
+    onTouchStart,
+    onTouchEnd,
+    onFocus,
+    onBlur,
     ...props
   }) => {
     const themes = useTheme()
@@ -67,28 +63,37 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
         10,
       )
     }
-    const overAction = () => {
-      if (ref.current) {
-        setRect(ref.current.getBoundingClientRect())
-      }
 
-      if (!ellipsisOnly) {
+    const getHandlerToShow = <T extends unknown>(handler?: (e: T) => void) => {
+      return (e: T) => {
+        handler && handler(e)
+
+        if (ref.current) {
+          setRect(ref.current.getBoundingClientRect())
+        }
+
+        if (!ellipsisOnly) {
+          setIsVisible(true)
+          return
+        }
+
+        const parentWidth = getParentWidth()
+
+        if (parentWidth < 0 || parentWidth > getBalloonWrapperWidth()) {
+          return
+        }
+
         setIsVisible(true)
-
-        return
       }
+    }
 
-      const parentWidth = getParentWidth()
-
-      if (parentWidth < 0 || parentWidth > getBalloonWrapperWidth()) {
-        return
+    const getHandlerToHide = <T extends unknown>(handler?: (e: T) => void) => {
+      return (e: T) => {
+        handler && handler(e)
+        setIsVisible(false)
       }
+    }
 
-      setIsVisible(true)
-    }
-    const outAction = () => {
-      setIsVisible(false)
-    }
     const StyledBalloon = balloonTheme === 'light' ? StyledLightBalloon : StyledDarkBalloon
     const isIcon = triggerType === 'icon'
 
@@ -108,12 +113,12 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
         {...props}
         aria-describedby={isVisible ? tooltipId : undefined}
         ref={ref}
-        onMouseEnter={overAction}
-        onTouchStart={overAction}
-        onFocus={overAction}
-        onMouseLeave={outAction}
-        onTouchEnd={outAction}
-        onBlur={outAction}
+        onMouseEnter={getHandlerToShow(onMouseEnter)}
+        onTouchStart={getHandlerToShow(onTouchStart)}
+        onFocus={getHandlerToShow(onFocus)}
+        onMouseLeave={getHandlerToHide(onMouseLeave)}
+        onTouchEnd={getHandlerToHide(onTouchEnd)}
+        onBlur={getHandlerToHide(onBlur)}
         tabIndex={0}
         isIcon={isIcon}
         className={`${className} ${classNames.wrapper}`}
