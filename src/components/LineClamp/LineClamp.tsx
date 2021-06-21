@@ -19,10 +19,10 @@ export const LineClamp: VFC<Props & ElementProps> = ({
 }) => {
   const classNames = useClassNames()
   const [isTooltipVisible, setTooltipVisible] = useState(false)
-  const wrapper = useRef<HTMLSpanElement>(null)
+  const ref = useRef<HTMLSpanElement>(null)
 
   const isMultiLineOverflow = () => {
-    const el = wrapper.current
+    const el = ref.current
     return el ? el.scrollHeight > el.clientHeight : false
   }
 
@@ -30,28 +30,24 @@ export const LineClamp: VFC<Props & ElementProps> = ({
     setTooltipVisible(isMultiLineOverflow())
   }
 
-  return withTooltip && isTooltipVisible ? (
-    <LightTooltip message={children} multiLine>
-      <Wrapper
-        ref={wrapper}
-        maxLines={maxLines}
-        className={`${className} ${classNames.wrapper}`}
-        onMouseEnter={overAction}
-        {...props}
-      >
-        {children}
-      </Wrapper>
-    </LightTooltip>
-  ) : (
+  const LineClampPart = () => (
     <Wrapper
-      ref={wrapper}
-      maxLines={maxLines}
-      onMouseEnter={overAction}
-      className={`${className} ${classNames.wrapper}`}
       {...props}
+      ref={ref}
+      maxLines={maxLines}
+      className={`${className} ${classNames.wrapper}`}
+      onMouseEnter={overAction}
     >
       {children}
     </Wrapper>
+  )
+
+  return withTooltip && isTooltipVisible ? (
+    <LightTooltip message={children} multiLine>
+      <LineClampPart />
+    </LightTooltip>
+  ) : (
+    <LineClampPart />
   )
 }
 
