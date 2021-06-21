@@ -47,9 +47,6 @@ export const PaginationControllerItem: VFC<Props> = ({
 
   return (
     <ItemButton
-      square
-      size="s"
-      className="paginationItem"
       onClick={() => onClick(targetPage)}
       disabled={disabled}
       themes={theme}

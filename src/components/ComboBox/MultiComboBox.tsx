@@ -202,6 +202,7 @@ export function MultiComboBox<T>({
         <List themes={theme}>
           {selectedItems.map((selectedItem, i) => {
             const { deletable = true, ...item } = selectedItem
+
             return (
               <li key={i}>
                 <SelectedItem
@@ -221,7 +222,11 @@ export function MultiComboBox<T>({
                       disabled={disabled}
                       onClick={() => onDelete(item)}
                     >
-                      <FaTimesCircleIcon size={11} color={'inherit'} visuallyHiddenText="delete" />
+                      <FaTimesCircleIcon
+                        size={11}
+                        color={'inherit'}
+                        visuallyHiddenText={`${item.label}を削除`}
+                      />
                     </DeleteButton>
                   )}
                 </SelectedItem>
