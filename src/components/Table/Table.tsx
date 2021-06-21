@@ -30,7 +30,7 @@ const Wrapper = styled.table<{ themes: Theme }>`
 
     return css`
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
       border-spacing: 0;
       background-color: ${COLUMN};
 
