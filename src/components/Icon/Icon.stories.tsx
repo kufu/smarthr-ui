@@ -736,6 +736,7 @@ const IconList = styled.dl`
   justify-content: start;
   align-items: center;
   flex-wrap: wrap;
+  margin: 0;
 `
 const ItemWrapper = styled.div`
   margin: 10px;
