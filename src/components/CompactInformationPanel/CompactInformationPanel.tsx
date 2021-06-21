@@ -2,8 +2,9 @@ import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
-import { Base } from '../Base'
+import { Base, BaseElementProps } from '../Base'
 import {
   FaCheckCircleIcon,
   FaExclamationCircleIcon,
@@ -13,17 +14,25 @@ import {
 
 type IconType = 'info' | 'success' | 'warning' | 'error'
 
-export const CompactInformationPanel: VFC<{
+type Props = {
   type?: IconType
   className?: string
   children: ReactNode
-}> = ({ type = 'info', className = '', children }) => {
+}
+
+export const CompactInformationPanel: VFC<Props & BaseElementProps> = ({
+  type = 'info',
+  className = '',
+  children,
+  ...props
+}) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper className={className} themes={theme}>
+    <Wrapper {...props} className={`${className} ${classNames.wrapper}`} themes={theme}>
       {callIcon(type, theme)}
-      <Content>{children}</Content>
+      <Content className={classNames.content}>{children}</Content>
     </Wrapper>
   )
 }
