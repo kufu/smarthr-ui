@@ -3,7 +3,7 @@
 ```tsx
 import { MessageScreen } from 'smarthr-ui'
 
-;<MessageScreen
+<MessageScreen
   title="お探しのページはみつかりませんでした"
   links={[
     {
@@ -31,8 +31,8 @@ import { MessageScreen } from 'smarthr-ui'
 
 ### type of Link
 
-| Name   | Required | Type       | DefaultValue | Description                                                        |
-| ------ | -------- | ---------- | ------------ | ------------------------------------------------------------------ |
-| label  | ✓        | **string** | -            | inner text of anchor element                                       |
-| url    | ✓        | **string** | -            | href of anchor element                                             |
+| Name   | Required | Type       | DefaultValue | Description                                                         |
+| ------ | -------- | ---------- | ------------ | ------------------------------------------------------------------- |
+| label  | ✓        | **string** | -            | inner text of anchor element                                        |
+| url    | ✓        | **string** | -            | href of anchor element                                              |
 | target | -        | **string** | -            | target of anchor element. For "\_blank", ExternalIcon is displayed |
