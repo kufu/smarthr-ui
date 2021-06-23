@@ -5,10 +5,6 @@ import styled from 'styled-components'
 
 import { MultiComboBox, SingleComboBox } from '.'
 
-import { Input } from '../Input'
-import { Select } from '../Select'
-import { Textarea } from '../Textarea'
-
 import readme from './README.md'
 
 export default {
@@ -250,41 +246,6 @@ export const Disabled: Story = () => {
             ])
           }}
         />
-      </dd>
-      <dd>
-        <div>確認用</div>
-        <Input disabled={true} placeholder="placeholder" />
-        <Select
-          disabled={true}
-          placeholder="placeholder"
-          options={[
-            { label: '', value: '' },
-            { label: 'label', value: 'value' },
-          ]}
-        />
-        <Textarea disabled={true} placeholder="placeholder" />
-        <Input disabled={true} value="value" />
-        <Select
-          disabled={true}
-          placeholder="placeholder"
-          options={[{ label: 'label', value: 'value', selected: true }]}
-        />
-        <Textarea disabled={true} value="value" />
-        <Input placeholder="placeholder" />
-        <Select
-          placeholder="placeholder"
-          options={[
-            { label: '', value: '' },
-            { label: 'label', value: 'value' },
-          ]}
-        />
-        <Textarea placeholder="placeholder" />
-        <Input value="value" />
-        <Select
-          placeholder="placeholder"
-          options={[{ label: 'label', value: 'value', selected: true }]}
-        />
-        <Textarea value="value" />
       </dd>
     </List>
   )
