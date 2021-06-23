@@ -1,10 +1,11 @@
-import React, { VFC, useCallback } from 'react'
+import React, { FormHTMLAttributes, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
 import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
 import { SecondaryButton } from '../Button'
+import { useClassNames } from './useClassNames'
 
 interface Props {
   title?: string
@@ -16,10 +17,11 @@ interface Props {
   onSubmit: (e: React.FormEvent<HTMLFormElement>, text: string) => void
   className?: string
 }
+type ElementProps = Omit<FormHTMLAttributes<HTMLFormElement>, keyof Props>
 
 const TEXT_AREA_NAME = 'admin_memo_new_text'
 
-export const RightFixedNote: VFC<Props> = ({
+export const RightFixedNote: VFC<Props & ElementProps> = ({
   title,
   items,
   submitLabel = '送信',
@@ -27,7 +29,8 @@ export const RightFixedNote: VFC<Props> = ({
   textareaLabel,
   onClickEdit,
   onSubmit,
-  className,
+  className = '',
+  ...props
 }) => {
   const theme = useTheme()
 
@@ -43,10 +46,18 @@ export const RightFixedNote: VFC<Props> = ({
     [onSubmit],
   )
 
+  const classNames = useClassNames()
+
   return (
-    <Wrapper themes={theme} $width={width} onSubmit={handleSubmit} className={className}>
+    <Wrapper
+      {...props}
+      themes={theme}
+      $width={width}
+      onSubmit={handleSubmit}
+      className={`${className} ${classNames.wrapper}`}
+    >
       {title && (
-        <Title type="sectionTitle" themes={theme}>
+        <Title type="sectionTitle" themes={theme} className={classNames.title}>
           {title}
         </Title>
       )}
@@ -60,9 +71,12 @@ export const RightFixedNote: VFC<Props> = ({
         name={TEXT_AREA_NAME}
         themes={theme}
         aria-label={textareaLabel ? textareaLabel : title}
+        className={classNames.textarea}
       />
 
-      <SubmitButton type="submit">{submitLabel}</SubmitButton>
+      <SubmitButton type="submit" className={classNames.submitButton}>
+        {submitLabel}
+      </SubmitButton>
     </Wrapper>
   )
 }

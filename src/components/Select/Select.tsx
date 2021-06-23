@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { isMobileSafari, isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { FaSortIcon } from '../Icon'
 
@@ -42,10 +43,11 @@ export const Select: VFC<Props & ElementProps> = ({
     },
     [onChange],
   )
+  const classNames = useClassNames()
 
   return (
     <Wrapper
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       $width={widthStyle}
       error={error}
       disabled={props.disabled}
