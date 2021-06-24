@@ -87,6 +87,7 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
       background-color: #fff;
       border: ${frame.border.default};
       box-sizing: border-box;
+      opacity: 1;
       ${error
         ? css`
             border-color: ${palette.DANGER};
@@ -96,10 +97,18 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
               border-color: ${palette.hoverColor(palette.MAIN)};
             }
           `}
+
+      &::placeholder {
+        color: ${palette.TEXT_GREY};
+      }
       &[disabled] {
         background-color: ${palette.COLUMN};
         pointer-events: none;
-        color: ${palette.TEXT_DISABLED};
+
+        &,
+        &::placeholder {
+          color: ${palette.TEXT_DISABLED};
+        }
       }
     `
   }}

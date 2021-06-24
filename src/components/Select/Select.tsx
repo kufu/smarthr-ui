@@ -125,7 +125,7 @@ const Wrapper = styled.div<{
     `}
     ${disabled &&
     css`
-      background-color: ${palette.BASE_GREY};
+      background-color: ${palette.COLUMN};
       color: ${palette.TEXT_DISABLED};
     `}
   `
@@ -158,6 +158,14 @@ const SelectBox = styled.select<{ themes: Theme }>`
         cursor: not-allowed;
         color: ${palette.TEXT_DISABLED};
         opacity: 1;
+      }
+
+      /* for IE11 */
+      &:disabled {
+        &,
+        &::-ms-value {
+          color: ${palette.TEXT_DISABLED};
+        }
       }
 
       &::-ms-expand {
