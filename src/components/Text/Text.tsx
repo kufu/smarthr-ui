@@ -1,18 +1,20 @@
-import React from 'react'
+import React, { HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 import { useTheme } from '../../hooks/useTheme'
 import { FontSizes } from '../../themes/createFontSize'
 import { TextColors } from '../../themes/createColor'
 import { Leadings } from '../../themes/createLeading'
 
-export interface TextProps {
+export type TextProps = {
   size?: FontSizes
   weight?: 'normal' | 'bold'
   italic?: boolean
   color?: TextColors | 'inherit'
   leading?: Leadings
   emphasis?: boolean
+  className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof TextProps>
 
 /**
  * @param [size] フォントサイズの抽象値（font-size）
@@ -25,10 +27,11 @@ export interface TextProps {
  * @param [children]
  */
 export const Text: React.VFC<
-  TextProps & {
-    as?: 'address' | 'b' | 'em' | 'i' | 'mark' | 'p' | 'q' | 'small' | 'span' | 'strong' | 'time'
-    children: React.ReactNode
-  }
+  TextProps &
+    ElementProps & {
+      as?: 'address' | 'b' | 'em' | 'i' | 'mark' | 'p' | 'q' | 'small' | 'span' | 'strong' | 'time'
+      children: React.ReactNode
+    }
 > = ({ as = 'span', ...props }) => {
   return <Wrapper as={props.emphasis ? 'em' : as} {...props} />
 }

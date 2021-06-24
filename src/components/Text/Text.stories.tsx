@@ -1,8 +1,5 @@
 import React from 'react'
 import { Story } from '@storybook/react'
-
-// import { useTheme } from '../../hooks/useTheme'
-
 import { Text } from './Text'
 
 import readme from './README.md'
