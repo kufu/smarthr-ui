@@ -126,7 +126,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledby}
       >
-        <Wrapper ref={domRef} themes={theme} className={`${className} ${classNames.wrapper}`}>
+        <Wrapper ref={domRef} themes={theme} className={classNames.wrapper}>
           <Background
             onClick={handleClickOverlay}
             themes={theme}
@@ -138,7 +138,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
               themes={theme}
               role="dialog"
               aria-modal="true"
-              className={classNames.dialog}
+              className={`${className} ${classNames.dialog}`}
               {...props}
             >
               {/* dummy element for focus management. */}
