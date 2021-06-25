@@ -2,7 +2,13 @@ import { merge } from '../libs/lodash'
 import { defaultColor } from './createColor'
 
 export interface ShadowProperty {
+  /**
+   * @deprecated The BASE property will be deprecated, please use LAYER0~4 property instead
+   */
   BASE?: string
+  /**
+   * @deprecated The DIALOG property will be deprecated, please use LAYER0~4 property instead
+   */
   DIALOG?: string
   LAYER0?: string
   LAYER1?: string
@@ -13,7 +19,13 @@ export interface ShadowProperty {
 }
 
 export interface CreatedShadowTheme {
+  /**
+   * @deprecated The BASE property will be deprecated, please use LAYER0~4 property instead
+   */
   BASE: string
+  /**
+   * @deprecated The DIALOG property will be deprecated, please use LAYER0~4 property instead
+   */
   DIALOG: string
   LAYER0?: string
   LAYER1?: string
