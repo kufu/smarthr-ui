@@ -10,6 +10,7 @@ import { useClassNames } from './useClassNames'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
 import { FaCaretRightIcon, FaCaretUpIcon } from '../Icon'
 import { radiusMap } from '../Base'
+import { focusOutline } from '../../utils/focusOutline'
 
 type Props = {
   children: React.ReactNode
@@ -89,7 +90,7 @@ const resetButtonStyle = css`
 const Button = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
-    const { color, spacingByChar, shadow } = themes
+    const { color, spacingByChar } = themes
 
     return css`
       display: flex;
@@ -108,15 +109,14 @@ const Button = styled.button<{ themes: Theme }>`
         border-radius: 0 0 ${radiusMap.m} ${radiusMap.m};
       }
 
-      &:focus {
-        outline: none;
-        box-shadow: ${shadow.OUTLINE};
-      }
-
       &:hover,
       &:focus:not(:focus-visible) {
         background-color: ${color.hoverColor('#fff')};
         box-shadow: none;
+      }
+
+      &:focus {
+        ${focusOutline(themes)}
       }
 
       /* TODO replace if impremented Layout component */
