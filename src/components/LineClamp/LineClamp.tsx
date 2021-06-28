@@ -1,5 +1,5 @@
-import React, { HTMLAttributes, ReactNode, VFC, useRef, useState } from 'react'
-import styled from 'styled-components'
+import React, { HTMLAttributes, ReactNode, VFC, useEffect, useRef, useState } from 'react'
+import styled, { css } from 'styled-components'
 import { BalloonTheme } from '../Balloon'
 import { DarkTooltip, LightTooltip } from '../Tooltip'
 import { useClassNames } from './useClassNames'
@@ -26,12 +26,12 @@ export const LineClamp: VFC<Props & ElementProps> = ({
 
   const isMultiLineOverflow = () => {
     const el = ref.current
-    return el ? el.scrollHeight > el.clientHeight : false
+    return el ? el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight : false
   }
 
-  const overAction = () => {
-    setTooltipVisible(isMultiLineOverflow())
-  }
+  useEffect(() => {
+    setTooltipVisible(withTooltip && isMultiLineOverflow())
+  }, [maxLines, withTooltip, children])
 
   const LineClampPart = () => (
     <Wrapper
@@ -39,7 +39,6 @@ export const LineClamp: VFC<Props & ElementProps> = ({
       ref={ref}
       maxLines={maxLines}
       className={`${className} ${classNames.wrapper}`}
-      onMouseEnter={overAction}
     >
       {children}
     </Wrapper>
@@ -56,20 +55,32 @@ export const LineClamp: VFC<Props & ElementProps> = ({
       </DarkTooltip>
     )
 
-  return withTooltip && isTooltipVisible ? <Tooltip /> : <LineClampPart />
+  return isTooltipVisible ? <Tooltip /> : <LineClampPart />
 }
 
 const Wrapper = styled.span<{ maxLines: number }>`
-  /* stylelint-disable */
-  display: box;
-  display: -webkit-box;
-  display: -moz-box;
-  box-orient: vertical;
-  -webkit-box-orient: vertical;
-  -moz-box-orient: vertical;
-  line-clamp: ${({ maxLines }) => maxLines};
-  -webkit-line-clamp: ${({ maxLines }) => maxLines};
-  /* stylelint-enable */
-  overflow-y: hidden;
   word-break: break-word;
+  ${({ maxLines }) =>
+    maxLines === 1
+      ? css`
+          display: inline-block;
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          vertical-align: middle;
+        `
+      : css`
+          /* stylelint-disable */
+          display: box;
+          display: -webkit-box;
+          display: -moz-box;
+          box-orient: vertical;
+          -webkit-box-orient: vertical;
+          -moz-box-orient: vertical;
+          line-clamp: ${maxLines};
+          -webkit-line-clamp: ${maxLines};
+          /* stylelint-enable */
+          overflow-y: hidden;
+        `}
 `
