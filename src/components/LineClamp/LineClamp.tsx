@@ -33,6 +33,10 @@ export const LineClamp: VFC<Props & ElementProps> = ({
     setTooltipVisible(withTooltip && isMultiLineOverflow())
   }, [maxLines, withTooltip, children])
 
+  if (maxLines < 1) {
+    throw new Error('"maxLines" cannot be less than 0.')
+  }
+
   const LineClampPart = () => (
     <Wrapper
       {...props}
