@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { isMobileSafari, isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { FaSortIcon } from '../Icon'
 
@@ -42,10 +43,11 @@ export const Select: VFC<Props & ElementProps> = ({
     },
     [onChange],
   )
+  const classNames = useClassNames()
 
   return (
     <Wrapper
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       $width={widthStyle}
       error={error}
       disabled={props.disabled}
@@ -123,7 +125,7 @@ const Wrapper = styled.div<{
     `}
     ${disabled &&
     css`
-      background-color: ${palette.BASE_GREY};
+      background-color: ${palette.COLUMN};
       color: ${palette.TEXT_DISABLED};
     `}
   `
@@ -156,6 +158,14 @@ const SelectBox = styled.select<{ themes: Theme }>`
         cursor: not-allowed;
         color: ${palette.TEXT_DISABLED};
         opacity: 1;
+      }
+
+      /* for IE11 */
+      &:disabled {
+        &,
+        &::-ms-value {
+          color: ${palette.TEXT_DISABLED};
+        }
       }
 
       &::-ms-expand {
