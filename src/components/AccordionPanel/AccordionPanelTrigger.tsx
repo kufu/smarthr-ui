@@ -108,15 +108,14 @@ const Button = styled.button<{ themes: Theme }>`
         border-radius: 0 0 ${radiusMap.m} ${radiusMap.m};
       }
 
-      &:focus {
-        outline: none;
-        box-shadow: ${shadow.OUTLINE};
-      }
-
       &:hover,
       &:focus:not(:focus-visible) {
         background-color: ${color.hoverColor('#fff')};
         box-shadow: none;
+      }
+
+      &:focus {
+        ${shadow.focusIndicatorStyles}
       }
 
       /* TODO replace if impremented Layout component */
