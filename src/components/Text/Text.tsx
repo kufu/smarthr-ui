@@ -12,7 +12,6 @@ export type TextProps = {
   color?: TextColors | 'inherit'
   leading?: Leadings
   emphasis?: boolean
-  className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof TextProps>
 
