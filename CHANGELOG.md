@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [13.1.0](https://github.com/kufu/smarthr-ui/compare/v13.0.0...v13.1.0) (2021-06-29)
+
+
+### Features
+
+* `CompactInformationPanel` の属性の改善 (SHRUI-435) ([#1676](https://github.com/kufu/smarthr-ui/issues/1676)) ([b501e4f](https://github.com/kufu/smarthr-ui/commit/b501e4f43b4f0343badd8a593cb7daec2d599124))
+* `Input` の属性の改善 (SHRUI-273) ([#1658](https://github.com/kufu/smarthr-ui/issues/1658)) ([9672209](https://github.com/kufu/smarthr-ui/commit/9672209c3a5c800dc23c03c3c9a9d1bb4b366d6b))
+* `Pagination` の属性の改善 (SHRUI-278) ([#1673](https://github.com/kufu/smarthr-ui/issues/1673)) ([94f09a7](https://github.com/kufu/smarthr-ui/commit/94f09a7a13be6e90931fbbb882a8593d8529f577))
+* `RightFixedNote` の属性の改善 (SHRUI-282) ([#1677](https://github.com/kufu/smarthr-ui/issues/1677)) ([b09193f](https://github.com/kufu/smarthr-ui/commit/b09193f5860d75f130d29e84631ecf95c44c01c4))
+* `SegmentedControl` の属性の改善 (SHRUI-283) ([#1678](https://github.com/kufu/smarthr-ui/issues/1678)) ([6371479](https://github.com/kufu/smarthr-ui/commit/6371479fb85ffc57068916f18a1e37cfec2b2144))
+* `SmartHRLogo` の属性の改善 (SHRUI-285) ([#1680](https://github.com/kufu/smarthr-ui/issues/1680)) ([8efa186](https://github.com/kufu/smarthr-ui/commit/8efa18614b40736fd687d42af10ae9edd101681a))
+* `StatusLabel` の属性の改善 (SHRUI-286) ([#1682](https://github.com/kufu/smarthr-ui/issues/1682)) ([81238f2](https://github.com/kufu/smarthr-ui/commit/81238f2b69e03684603d5f580bbba9d47f385d4d))
+* `TabBar` の属性の改善 (SHRUI-287) ([#1683](https://github.com/kufu/smarthr-ui/issues/1683)) ([e273575](https://github.com/kufu/smarthr-ui/commit/e2735755d556b9fdedad44e68b10d2c0dfec9e0f))
+* `Textarea` の属性の改善 ([#1686](https://github.com/kufu/smarthr-ui/issues/1686)) ([426b9e9](https://github.com/kufu/smarthr-ui/commit/426b9e9fab1e7164af2d9b086463e42f88ab3b27))
+* `Tooltip` の属性の改善 (SHRUI-290) ([#1687](https://github.com/kufu/smarthr-ui/issues/1687)) ([65ba763](https://github.com/kufu/smarthr-ui/commit/65ba76397b29b4889ac00fb5f319e445a400dbdf))
+* add default class name ([#1679](https://github.com/kufu/smarthr-ui/issues/1679)) ([394a077](https://github.com/kufu/smarthr-ui/commit/394a0775363820bd71ef0a2d2288281be1e34eb0))
+* ComboBox の属性の改善 (SHRUI-277) ([#1662](https://github.com/kufu/smarthr-ui/issues/1662)) ([c93aa18](https://github.com/kufu/smarthr-ui/commit/c93aa18649473ecc8a701242018cfcf4f522ce88))
+* Table の属性の改善 (SHRUI-288) ([#1684](https://github.com/kufu/smarthr-ui/issues/1684)) ([ef4995f](https://github.com/kufu/smarthr-ui/commit/ef4995f3c4b0aa93663fcb78d0ed0022ee69903b))
+* Text コンポーネントに whiteSpace を追加 ([#1704](https://github.com/kufu/smarthr-ui/issues/1704)) ([9b95ae7](https://github.com/kufu/smarthr-ui/commit/9b95ae73a396d7981d8a6399754d64b3a494371a))
+
+
+### Bug Fixes
+
+* Cluster のインポートを追加 ([#1685](https://github.com/kufu/smarthr-ui/issues/1685)) ([379ea1c](https://github.com/kufu/smarthr-ui/commit/379ea1ca9fedeaeb6ea96628aac2f98efa6d6d9e))
+* DialogContentInner の className が Wrraper にあたっていたのを Inner に戻す ([#1695](https://github.com/kufu/smarthr-ui/issues/1695)) ([9fd9791](https://github.com/kufu/smarthr-ui/commit/9fd97910bfb85aac6885663eb28b82c9a21928f9))
+* MultiComboBox の削除アイコンの visuallyHiddenText をアイテムごとに分ける ([#1694](https://github.com/kufu/smarthr-ui/issues/1694)) ([c0acf2a](https://github.com/kufu/smarthr-ui/commit/c0acf2a0ec77adb3ed76b717c5454fb4899d46ce))
+* Text を styled-component で wrap できなかったので修正｜ SHRUI-439 ([#1696](https://github.com/kufu/smarthr-ui/issues/1696)) ([c0e79f5](https://github.com/kufu/smarthr-ui/commit/c0e79f5d3e4064c4970840f9f3363ad4fe8594aa))
+
 ## [13.0.0](https://github.com/kufu/smarthr-ui/compare/v12.4.0...v13.0.0) (2021-06-15)
 
 
