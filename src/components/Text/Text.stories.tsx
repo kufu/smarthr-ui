@@ -1,8 +1,5 @@
 import React from 'react'
 import { Story } from '@storybook/react'
-
-// import { useTheme } from '../../hooks/useTheme'
-
 import { Text } from './Text'
 
 import readme from './README.md'
@@ -27,7 +24,8 @@ export const Default: Story = () => (
       styled-components と同じく <code>as</code> で要素を差し替えられます。
     </Text>
     <Text as="p">
-      <Text color="TEXT_GREY">色</Text>や<Text weight="bold">ウェイト</Text>を変えられます。
+      <Text color="TEXT_GREY">色</Text>や<Text weight="bold">ウェイト</Text>、
+      <Text whiteSpace="nowrap">ホワイトスペース</Text>を変えられます。
     </Text>
     <Text as="p">
       <code>emphasis</code> を渡すとそのテキストは<Text emphasis>強調</Text>を示し、<code>em</code>{' '}
