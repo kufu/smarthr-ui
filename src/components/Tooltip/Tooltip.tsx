@@ -110,6 +110,7 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
 
     return (
       <Wrapper
+        tabIndex={0}
         {...props}
         aria-describedby={isVisible ? tooltipId : undefined}
         ref={ref}
@@ -119,7 +120,6 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
         onMouseLeave={getHandlerToHide(onMouseLeave)}
         onTouchEnd={getHandlerToHide(onTouchEnd)}
         onBlur={getHandlerToHide(onBlur)}
-        tabIndex={0}
         isIcon={isIcon}
         className={`${className} ${classNames.wrapper}`}
       >
