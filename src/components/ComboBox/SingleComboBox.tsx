@@ -15,7 +15,7 @@ import { useClassNames } from './useClassNames'
 
 import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
-import { ResetButton } from '../Button/ResetButton'
+import { UnstyledButton } from '../Button'
 import { useListBox } from './useListBox'
 import { Item } from './types'
 
@@ -310,7 +310,7 @@ const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     border-left: ${border.shorthand};
   `
 })
-const ClearButton = styled(ResetButton)<{ themes: Theme }>`
+const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
   ${({ themes }) => {
     const { spacingByChar } = themes
     return css`

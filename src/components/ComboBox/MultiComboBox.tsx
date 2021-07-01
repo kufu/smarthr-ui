@@ -15,7 +15,7 @@ import { useClassNames } from './useClassNames'
 
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { useListBox } from './useListBox'
-import { ResetButton } from '../Button/ResetButton'
+import { UnstyledButton } from '../Button'
 import { Item } from './types'
 
 type Props<T> = {
@@ -375,7 +375,7 @@ const SelectedItemLabel = styled.span<{ themes: Theme }>`
     `
   }}
 `
-const DeleteButton = styled(ResetButton)<{ themes: Theme; disabled: boolean }>`
+const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled: boolean }>`
   ${({ themes: { spacingByChar, shadow }, disabled }) => {
     return css`
       padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);

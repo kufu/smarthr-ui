@@ -4,8 +4,7 @@ import { useId } from '../../hooks/useId'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
-import { SecondaryButton } from '../Button'
-import { ResetButton } from '../Button/ResetButton'
+import { SecondaryButton, UnstyledButton } from '../Button'
 import { FaMinusIcon, FaTimesIcon, FaWindowMaximizeIcon } from '../Icon'
 import { JobIcon } from './JobIcon'
 import { OmittableJobText } from './OmittableJobText'
@@ -195,7 +194,7 @@ const JobDesc = styled(OmittableJobText)<{ themes: Theme }>(
     `
   },
 )
-const CancelButton = styled(ResetButton)<{ themes: Theme }>(
+const CancelButton = styled(UnstyledButton)<{ themes: Theme }>(
   ({ themes: { color, fontSize, spacingByChar } }) => {
     return css`
       flex-shrink: 0;

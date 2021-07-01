@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
-import { ResetButton } from './ResetButton'
+import { UnstyledButton } from '../Button'
 
 type Props = {
   selectedYear?: number
@@ -120,7 +120,7 @@ const YearWrapper = styled.span<{ themes: Theme; isThisYear?: boolean; isSelecte
     `
   },
 )
-const YearButton = styled(ResetButton)<{ themes: Theme }>`
+const YearButton = styled(UnstyledButton)<{ themes: Theme }>`
   width: 25%;
   height: 43px;
   display: flex;
