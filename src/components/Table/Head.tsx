@@ -8,18 +8,13 @@ export type Props = {
   bulkActionArea?: ReactNode
   children?: ReactNode
   className?: string
-  fixedHead?: boolean
+  fixed?: boolean
 }
 
-export const Head: VFC<Props> = ({
-  bulkActionArea,
-  className = '',
-  fixedHead = false,
-  children,
-}) => {
+export const Head: VFC<Props> = ({ bulkActionArea, className = '', fixed = false, children }) => {
   const themes = useTheme()
   return (
-    <StyledThead className={className} $fixedHead={fixedHead}>
+    <StyledThead className={className} $fixed={fixed}>
       <TableGroupContext.Provider value={{ group: 'head' }}>{children}</TableGroupContext.Provider>
       {bulkActionArea && (
         <tr>
@@ -32,12 +27,13 @@ export const Head: VFC<Props> = ({
   )
 }
 
-const StyledThead = styled.thead<{ $fixedHead: boolean }>(({ $fixedHead }) => {
+const StyledThead = styled.thead<{ $fixed: boolean }>(({ $fixed }) => {
   return (
-    $fixedHead &&
+    $fixed &&
     css`
       position: sticky;
       top: 0;
+      left: 0;
       z-index: 1;
     `
   )
