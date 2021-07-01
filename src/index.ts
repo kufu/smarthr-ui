@@ -96,9 +96,10 @@ export { MultiComboBox, SingleComboBox } from './components/ComboBox'
 export { SideNav } from './components/SideNav'
 export { CompactInformationPanel } from './components/CompactInformationPanel'
 export { Text } from './components/Text'
+export { LineClamp } from './components/LineClamp'
 
 // layout components
-export { LineUp, Stack } from './components/Layout'
+export { Cluster, LineUp, Stack } from './components/Layout'
 
 // themes
 export { createTheme } from './themes/createTheme'

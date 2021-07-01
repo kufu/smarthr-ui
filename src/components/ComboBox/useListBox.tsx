@@ -20,6 +20,12 @@ type Args<T> = {
   isDuplicate: boolean
   hasNoMatch: boolean
   isLoading?: boolean
+  classNames: {
+    dropdownList: string
+    addButton: string
+    selectButton: string
+    noItems: string
+  }
 }
 
 type Option<T> = Item<T> & {
@@ -42,6 +48,7 @@ export function useListBox<T>({
   isDuplicate,
   hasNoMatch,
   isLoading,
+  classNames,
 }: Args<T>) {
   const [dropdownStyle, setDropdownStyle] = useState({
     top: 0,
@@ -170,6 +177,7 @@ export function useListBox<T>({
         ref={listBoxRef}
         role="listbox"
         aria-hidden={!isExpanded}
+        className={classNames.dropdownList}
       >
         {isLoading ? (
           <LoaderWrapper themes={theme}>
@@ -179,7 +187,7 @@ export function useListBox<T>({
           <>
             {options.map((option, i) => {
               const isActive = activeOptionIndex === i
-              const className = isActive ? 'active' : undefined
+              const className = isActive ? 'active' : ''
               const { label, disabled, isAdding, isSelected } = option
               if (isAdding) {
                 return (
@@ -190,7 +198,7 @@ export function useListBox<T>({
                     onMouseOver={() => setActiveOptionIndex(0)}
                     id={addingButtonId}
                     role="option"
-                    className={className}
+                    className={`${className} ${classNames.addButton}`}
                   >
                     <AddIcon size={14} color={theme.palette.TEXT_LINK} $theme={theme} />
                     <AddText themes={theme}>「{label}」を追加</AddText>
@@ -207,7 +215,7 @@ export function useListBox<T>({
                   onMouseOver={() => setActiveOptionIndex(i)}
                   id={getOptionId(option)}
                   role="option"
-                  className={className}
+                  className={`${className} ${classNames.selectButton}`}
                   aria-selected={isSelected}
                 >
                   {label}
@@ -216,13 +224,23 @@ export function useListBox<T>({
             })}
 
             {isDuplicate && (
-              <NoItems themes={theme} role="alert" aria-live="polite">
+              <NoItems
+                themes={theme}
+                role="alert"
+                aria-live="polite"
+                className={classNames.noItems}
+              >
                 重複する選択肢は追加できません
               </NoItems>
             )}
 
             {hasNoMatch && (
-              <NoItems themes={theme} role="alert" aria-live="polite">
+              <NoItems
+                themes={theme}
+                role="alert"
+                aria-live="polite"
+                className={classNames.noItems}
+              >
                 一致する選択肢がありません
               </NoItems>
             )}

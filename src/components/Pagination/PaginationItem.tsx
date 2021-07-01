@@ -17,9 +17,7 @@ export const PaginationItem: VFC<Props> = ({ page, currentPage, onClick }) => {
   if (page === currentPage) {
     return (
       <ItemButton
-        square
-        size="s"
-        className="paginationItem active"
+        className="active"
         themes={theme}
         aria-current="page"
         aria-label={`${page}ページ目、現在のページ`}
@@ -31,34 +29,28 @@ export const PaginationItem: VFC<Props> = ({ page, currentPage, onClick }) => {
   }
 
   return (
-    <ItemButton
-      square
-      size="s"
-      className="paginationItem"
-      onClick={() => onClick(page)}
-      themes={theme}
-      aria-label={`${page}ページ目`}
-    >
+    <ItemButton onClick={() => onClick(page)} themes={theme} aria-label={`${page}ページ目`}>
       {page}
     </ItemButton>
   )
 }
 
-export const ItemButton = styled(SecondaryButton)<{ themes: Theme }>`
+export const ItemButton = styled(SecondaryButton).attrs({
+  square: true,
+  size: 's',
+})<{ themes: Theme }>`
   ${({ themes }) => {
     const { MAIN } = themes.palette
 
     return css`
-      &.paginationItem.s.square {
-        line-height: 25px;
-        border-radius: 4px;
-        &.active {
-          color: #fff;
-          background-color: ${MAIN};
-          border: solid 1px ${MAIN};
-          cursor: default;
-          outline: none;
-        }
+      line-height: 25px;
+      border-radius: 4px;
+      &.active {
+        color: #fff;
+        background-color: ${MAIN};
+        border: solid 1px ${MAIN};
+        cursor: default;
+        outline: none;
       }
     `
   }}

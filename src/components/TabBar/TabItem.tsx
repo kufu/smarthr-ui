@@ -1,8 +1,9 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { ButtonHTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { isTouchDevice } from '../../libs/ua'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   id: string
@@ -12,23 +13,30 @@ type Props = {
   className?: string
   onClick: (tabId: string) => void
 }
+type ElementProps = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  keyof Props | 'role' | 'aria-selected' | 'type'
+>
 
-export const TabItem: VFC<Props> = ({
+export const TabItem: VFC<Props & ElementProps> = ({
   id,
   children,
   onClick,
   selected = false,
   className = '',
   disabled = false,
+  ...props
 }) => {
   const theme = useTheme()
-  const classNames = `${className} ${selected ? 'selected' : ''}`
+  const classNames = useClassNames().tabItem
+  const wrapperClass = `${className} ${selected ? 'selected' : ''} ${classNames.wrapper}`
 
   return (
     <Wrapper
+      {...props}
       role="tab"
       aria-selected={selected}
-      className={classNames}
+      className={wrapperClass}
       onClick={() => onClick(id)}
       disabled={disabled}
       themes={theme}

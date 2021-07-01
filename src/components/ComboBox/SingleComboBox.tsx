@@ -1,12 +1,21 @@
-import React, { ChangeEvent, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  ChangeEvent,
+  HTMLAttributes,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
+import { useClassNames } from './useClassNames'
 
 import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
-import { ResetButton } from '../Button/ResetButton'
+import { UnstyledButton } from '../Button'
 import { useListBox } from './useListBox'
 import { Item } from './types'
 
@@ -65,6 +74,8 @@ type Props<T> = {
   onSelect: (item: Item<T> | null) => void
 }
 
+type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
+
 export function SingleComboBox<T>({
   items,
   selectedItem,
@@ -79,8 +90,10 @@ export function SingleComboBox<T>({
   onChange,
   onAdd,
   onSelect,
-}: Props<T>) {
+  ...props
+}: Props<T> & ElementProps<T>) {
   const theme = useTheme()
+  const classNames = useClassNames().single
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -123,6 +136,7 @@ export function SingleComboBox<T>({
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
     isLoading,
+    classNames: classNames.listBox,
   })
 
   const focus = useCallback(() => {
@@ -162,10 +176,13 @@ export function SingleComboBox<T>({
     }
   }, [isFocused, selectedItem, setDropdownStyle])
 
+  const needsClearButton = selectedItem !== null && !disabled
+
   return (
     <Container
+      {...props}
       ref={outerRef}
-      className={`${disabled ? 'disabled' : ''} ${className}`}
+      className={`${disabled ? 'disabled' : ''} ${className} ${classNames.wrapper}`}
       $width={width}
       role="combobox"
       aria-haspopup="listbox"
@@ -189,7 +206,7 @@ export function SingleComboBox<T>({
               }}
               ref={clearButtonRef}
               themes={theme}
-              className={selectedItem === null || disabled ? 'hidden' : undefined}
+              className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
             >
               <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
             </ClearButton>
@@ -253,6 +270,7 @@ export function SingleComboBox<T>({
         ref={inputRef}
         aria-activedescendant={aria.activeDescendant}
         aria-autocomplete="list"
+        className={classNames.input}
       />
       {renderListBox()}
     </Container>
@@ -292,7 +310,7 @@ const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     border-left: ${border.shorthand};
   `
 })
-const ClearButton = styled(ResetButton)<{ themes: Theme }>`
+const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
   ${({ themes }) => {
     const { spacingByChar } = themes
     return css`

@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 import { daysInWeek, getMonthArray, isBetween } from './calendarHelper'
-import { ResetButton } from './ResetButton'
+import { UnstyledButton } from '../Button'
 
 type Props = {
   current: Date
@@ -136,7 +136,7 @@ const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: bo
     `}
   `}
 `
-const CellButton = styled(ResetButton)<{ themes: Theme }>(
+const CellButton = styled(UnstyledButton)<{ themes: Theme }>(
   ({ themes }) => css`
     display: flex;
     align-items: center;
