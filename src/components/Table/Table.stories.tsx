@@ -134,55 +134,53 @@ storiesOf('Table', module)
       </li>
       <li>
         table fixed header
-        <div>
-          <div style={{ overflow: 'clip' }}>
-            <Table>
-              <Head bulkActionArea={'Bulk action area'} fixed={true}>
-                <Row>
-                  <Cell>
-                    <VisuallyHiddenText>行を選択</VisuallyHiddenText>
-                    <label htmlFor="tableAllCheckBox">
-                      <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
-                      <CheckBox name="tableAllCheckBox" checked={false} id="tableAllCheckBox" />
-                    </label>
-                  </Cell>
-                  <Cell aria-sort="ascending" highlighted={true}>
-                    <ClickableCellInner onClick={action('clicked')}>
-                      <span style={{ lineHeight: '1.5' }}>Name</span>
-                      <Arrow visuallyHiddenText="昇順" />
-                    </ClickableCellInner>
-                  </Cell>
-                  <Cell>Calories</Cell>
-                  <Cell>Fat (g)</Cell>
-                  <Cell>Carbs (g)</Cell>
-                  <Cell>Protein (g)</Cell>
-                  <Cell>Button</Cell>
-                </Row>
-              </Head>
-              <Body>
-                {data.map(({ name, calories, fat, carbs, protein }) => {
-                  return (
-                    <Row key={name}>
-                      <Cell>
-                        <label htmlFor="tableCheckBox">
-                          <VisuallyHiddenText>{name}</VisuallyHiddenText>
-                          <CheckBox name="tableCheckBox" checked={false} id="tableCheckBox" />
-                        </label>
-                      </Cell>
-                      <Cell>{name}</Cell>
-                      <Cell>{calories}</Cell>
-                      <Cell>{fat}</Cell>
-                      <Cell>{carbs}</Cell>
-                      <Cell>{protein}</Cell>
-                      <Cell>
-                        <Button size="s">Button</Button>
-                      </Cell>
-                    </Row>
-                  )
-                })}
-              </Body>
-            </Table>
-          </div>
+        <div style={{ overflow: 'clip' }}>
+          <Table>
+            <Head bulkActionArea={'Bulk action area'} fixed={true}>
+              <Row>
+                <Cell>
+                  <VisuallyHiddenText>行を選択</VisuallyHiddenText>
+                  <label htmlFor="tableAllCheckBox">
+                    <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
+                    <CheckBox name="tableAllCheckBox" checked={false} id="tableAllCheckBox" />
+                  </label>
+                </Cell>
+                <Cell aria-sort="ascending" highlighted={true}>
+                  <ClickableCellInner onClick={action('clicked')}>
+                    <span style={{ lineHeight: '1.5' }}>Name</span>
+                    <Arrow visuallyHiddenText="昇順" />
+                  </ClickableCellInner>
+                </Cell>
+                <Cell>Calories</Cell>
+                <Cell>Fat (g)</Cell>
+                <Cell>Carbs (g)</Cell>
+                <Cell>Protein (g)</Cell>
+                <Cell>Button</Cell>
+              </Row>
+            </Head>
+            <Body>
+              {data.map(({ name, calories, fat, carbs, protein }) => {
+                return (
+                  <Row key={name}>
+                    <Cell>
+                      <label htmlFor="tableCheckBox">
+                        <VisuallyHiddenText>{name}</VisuallyHiddenText>
+                        <CheckBox name="tableCheckBox" checked={false} id="tableCheckBox" />
+                      </label>
+                    </Cell>
+                    <Cell>{name}</Cell>
+                    <Cell>{calories}</Cell>
+                    <Cell>{fat}</Cell>
+                    <Cell>{carbs}</Cell>
+                    <Cell>{protein}</Cell>
+                    <Cell>
+                      <Button size="s">Button</Button>
+                    </Cell>
+                  </Row>
+                )
+              })}
+            </Body>
+          </Table>
         </div>
       </li>
       <li>
