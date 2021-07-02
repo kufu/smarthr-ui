@@ -113,18 +113,16 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
           </ActionButton>
         </ButtonArea>
         {responseMessage && (
-          <div role="alert" className={classNames.alert}>
-            <MessageWrapper themes={theme}>
-              {responseMessage.status === 'success' ? (
-                <FaCheckCircleIcon color={theme.color.MAIN} />
-              ) : responseMessage.status === 'error' ? (
-                <FaExclamationTriangleIcon color={theme.color.DANGER} />
-              ) : (
-                <Spinner size="s" themes={theme} />
-              )}
-              <Message>{responseMessage.text}</Message>
-            </MessageWrapper>
-          </div>
+          <MessageWrapper role="alert" className={classNames.alert} themes={theme}>
+            {responseMessage.status === 'success' ? (
+              <FaCheckCircleIcon color={theme.color.MAIN} />
+            ) : responseMessage.status === 'error' ? (
+              <FaExclamationTriangleIcon color={theme.color.DANGER} />
+            ) : (
+              <Spinner size="s" themes={theme} />
+            )}
+            <Message>{responseMessage.text}</Message>
+          </MessageWrapper>
         )}
       </ActionArea>
     </>
@@ -172,7 +170,7 @@ const ButtonArea = styled.div<{ themes: Theme }>(({ themes: { spacing } }) => {
     }
   `
 })
-const MessageWrapper = styled.p<{ themes: Theme }>`
+const MessageWrapper = styled.div<{ themes: Theme }>`
   display: flex;
   align-items: center;
   justify-content: flex-end;
