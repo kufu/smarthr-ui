@@ -16,7 +16,7 @@ type Props = {
   ellipsisOnly?: boolean
   horizontal?: BalloonProps['horizontal']
   vertical?: BalloonProps['vertical']
-  className?: string
+  tabIndex?: number
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-describedby'>
 
@@ -29,6 +29,7 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
     ellipsisOnly = false,
     horizontal = 'left',
     vertical = 'bottom',
+    tabIndex = 0,
     className = '',
     onMouseEnter,
     onMouseLeave,
@@ -119,8 +120,8 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
         onMouseLeave={getHandlerToHide(onMouseLeave)}
         onTouchEnd={getHandlerToHide(onTouchEnd)}
         onBlur={getHandlerToHide(onBlur)}
-        tabIndex={0}
         isIcon={isIcon}
+        tabIndex={tabIndex}
         className={`${className} ${classNames.wrapper}`}
       >
         {isVisible &&
