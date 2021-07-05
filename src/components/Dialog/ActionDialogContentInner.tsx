@@ -121,7 +121,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
             ) : (
               <Spinner size="s" themes={theme} />
             )}
-            <Message>{responseMessage.text}</Message>
+            <Message themes={theme}>{responseMessage.text}</Message>
           </MessageWrapper>
         )}
       </ActionArea>
@@ -190,6 +190,6 @@ const Spinner = styled(Loader)<{ themes: Theme }>`
     }
   }
 `
-const Message = styled.span`
-  margin-left: 0.25rem;
+const Message = styled.span<{ themes: Theme }>`
+  margin-left: ${({ themes }) => themes.spacingByChar(0.25)};
 `
