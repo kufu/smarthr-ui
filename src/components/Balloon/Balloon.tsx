@@ -11,6 +11,7 @@ export type Props = {
   vertical: 'top' | 'middle' | 'bottom'
   className?: string
   children?: ReactNode
+  as?: 'div' | 'span'
 }
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
