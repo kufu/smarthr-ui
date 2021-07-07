@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { isTouchDevice } from '../../libs/ua'
-import { ResetButton } from '../Button/ResetButton'
+import { UnstyledButton } from '../Button'
 import { useClassNames } from './useClassNames'
 
 export type SideNavSizeType = 'default' | 's'
@@ -77,9 +77,9 @@ const Wrapper = styled.li<{ themes: Theme }>`
   }}
 `
 
-const Button = styled(ResetButton)<{ themes: Theme }>`
+const Button = styled(UnstyledButton)<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar } = themes
+    const { fontSize, spacingByChar } = themes
 
     return css`
       width: 100%;
@@ -89,12 +89,12 @@ const Button = styled(ResetButton)<{ themes: Theme }>`
 
       &.default {
         padding: ${spacingByChar(1)};
-        font-size: ${size.pxToRem(size.font.TALL)};
+        font-size: ${fontSize.M};
       }
 
       &.s {
         padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-        font-size: ${size.pxToRem(size.font.SHORT)};
+        font-size: ${fontSize.S};
       }
     `
   }}

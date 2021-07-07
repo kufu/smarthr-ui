@@ -1,26 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TabBar should be match snapshot 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c0.bordered {
-  position: relative;
-}
-
-.c0.bordered::before {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-bottom: 1px solid #d6d3d0;
-  content: '';
-}
-
 .c1 {
   background-color: transparent;
   border: none;
@@ -30,7 +10,7 @@ exports[`TabBar should be match snapshot 1`] = `
   -moz-appearance: none;
   appearance: none;
   font-weight: bold;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: #706d65;
   height: 40px;
   border-bottom: solid 3px transparent;
@@ -57,13 +37,33 @@ exports[`TabBar should be match snapshot 1`] = `
   cursor: not-allowed;
 }
 
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c0.bordered {
+  position: relative;
+}
+
+.c0.bordered::before {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom: 1px solid #d6d3d0;
+  content: '';
+}
+
 <div
-  className="c0  bordered"
+  className="c0  bordered smarthr-ui-TabBar"
   role="tablist"
 >
   <button
     aria-selected={false}
-    className="c1  "
+    className="c1   smarthr-ui-TabItem"
     disabled={false}
     onClick={[Function]}
     role="tab"
@@ -73,7 +73,7 @@ exports[`TabBar should be match snapshot 1`] = `
   </button>
   <button
     aria-selected={true}
-    className="c1  selected"
+    className="c1  selected smarthr-ui-TabItem"
     disabled={false}
     onClick={[Function]}
     role="tab"
@@ -83,7 +83,7 @@ exports[`TabBar should be match snapshot 1`] = `
   </button>
   <button
     aria-selected={false}
-    className="c1  "
+    className="c1   smarthr-ui-TabItem"
     disabled={true}
     onClick={[Function]}
     role="tab"

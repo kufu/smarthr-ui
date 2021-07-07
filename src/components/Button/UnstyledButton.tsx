@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const ResetButton = styled.button`
+export const UnstyledButton = styled.button`
   appearance: none;
   display: inline;
   align-items: stretch;

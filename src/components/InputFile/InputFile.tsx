@@ -5,6 +5,7 @@ import { isTouchDevice } from '../../libs/ua'
 import { TextButton } from '../Button'
 import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 type Size = 'default' | 's'
 
@@ -21,7 +22,7 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
 
 export const InputFile: VFC<Props> = ({
   id,
-  className,
+  className = '',
   size = 'default',
   label,
   files = [],
@@ -49,18 +50,21 @@ export const InputFile: VFC<Props> = ({
     onDelete && onDelete(index)
   }
 
+  const classNames = useClassNames()
+
   return (
-    <Wrapper className={className}>
+    <Wrapper className={`${className} ${classNames.wrapper}`}>
       {!disabled && hasFileList && files.length > 0 && (
-        <FileList themes={theme}>
+        <FileList themes={theme} className={classNames.fileList}>
           {files.map((file, index) => {
             return (
               <li key={index}>
-                <span>{file.name}</span>
+                <span className={classNames.fileName}>{file.name}</span>
                 <span>
                   <TextButton
                     prefix={<FaTrashAltIcon size={14} />}
                     onClick={() => handleDelete(index)}
+                    className={classNames.deleteButton}
                   >
                     削除
                   </TextButton>
@@ -78,10 +82,11 @@ export const InputFile: VFC<Props> = ({
           onChange={(e) => handleChange(e)}
           disabled={disabled}
           tabIndex={-1}
+          className={classNames.input}
         />
         <FileButton
           themes={theme}
-          className={FileButtonClassName}
+          className={`${FileButtonClassName} ${classNames.button}`}
           disabled={disabled}
           type="button"
         >
@@ -102,9 +107,9 @@ const Wrapper = styled.div`
 `
 
 const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
-  const { palette, size, spacingByChar } = themes
+  const { fontSize, palette, spacingByChar } = themes
   return css`
-    font-size: ${size.pxToRem(size.font.TALL)};
+    font-size: ${fontSize.M};
     padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
     margin-bottom: ${spacingByChar(1)};
     background-color: ${palette.COLUMN};
@@ -170,7 +175,7 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
 })
 
 const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
-  const { frame, palette, size, spacingByChar } = themes
+  const { fontSize, frame, palette, spacingByChar } = themes
   return css`
     font-family: inherit;
     font-weight: bold;
@@ -185,13 +190,13 @@ const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
     }
 
     &.default {
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       height: 40px;
       padding: 0 ${spacingByChar(1)};
     }
 
     &.s {
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       height: 27px;
       padding: 0 ${spacingByChar(0.5)};
     }

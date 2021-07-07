@@ -308,6 +308,7 @@ import {
 import type { IconType } from 'react-icons'
 import styled from 'styled-components'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
+import { useClassNames } from './useClassNames'
 
 export interface IconProps {
   /**
@@ -344,11 +345,14 @@ const IconComponent: React.VFC<IconComponentProps> = ({
 }) => {
   const hasLabelByAria = props['aria-label'] !== undefined || props['aria-labelledby'] !== undefined
   const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasLabelByAria
+
+  const classNames = useClassNames()
+
   return (
     <>
       {visuallyHiddenText && <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>}
       <Component
-        className={className}
+        className={`${className} ${classNames.wrapper}`}
         role={role}
         aria-hidden={isAriaHidden || visuallyHiddenText !== undefined || undefined}
         focusable={focusable}

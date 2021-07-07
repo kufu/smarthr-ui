@@ -98,5 +98,5 @@ const Alert = styled.span`
 const AlertText = styled.span<{ themes: Theme }>`
   margin-left: 4px;
   color: ${({ themes }) => themes.palette.TEXT_BLACK};
-  font-size: 11px;
+  font-size: ${({ themes }) => themes.fontSize.S};
 `

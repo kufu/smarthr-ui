@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC, useEffect, useRef, useState } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
@@ -6,6 +6,7 @@ import { Props as BalloonProps, BalloonTheme, DarkBalloon, LightBalloon } from '
 import { TooltipPortal } from './TooltipPortal'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   message: ReactNode
@@ -15,11 +16,12 @@ type Props = {
   ellipsisOnly?: boolean
   horizontal?: BalloonProps['horizontal']
   vertical?: BalloonProps['vertical']
-  className?: string
+  tabIndex?: number
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-describedby'>
 
 const tooltipFactory = (balloonTheme: BalloonTheme) => {
-  const Tooltip: VFC<Props> = ({
+  const Tooltip: VFC<Props & ElementProps> = ({
     message,
     children,
     triggerType,
@@ -27,7 +29,15 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
     ellipsisOnly = false,
     horizontal = 'left',
     vertical = 'bottom',
-    className,
+    tabIndex = 0,
+    className = '',
+    onMouseEnter,
+    onMouseLeave,
+    onTouchStart,
+    onTouchEnd,
+    onFocus,
+    onBlur,
+    ...props
   }) => {
     const themes = useTheme()
     const [isVisible, setIsVisible] = useState(false)
@@ -54,28 +64,37 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
         10,
       )
     }
-    const overAction = () => {
-      if (ref.current) {
-        setRect(ref.current.getBoundingClientRect())
-      }
 
-      if (!ellipsisOnly) {
+    const getHandlerToShow = <T extends unknown>(handler?: (e: T) => void) => {
+      return (e: T) => {
+        handler && handler(e)
+
+        if (ref.current) {
+          setRect(ref.current.getBoundingClientRect())
+        }
+
+        if (!ellipsisOnly) {
+          setIsVisible(true)
+          return
+        }
+
+        const parentWidth = getParentWidth()
+
+        if (parentWidth < 0 || parentWidth > getBalloonWrapperWidth()) {
+          return
+        }
+
         setIsVisible(true)
-
-        return
       }
+    }
 
-      const parentWidth = getParentWidth()
-
-      if (parentWidth < 0 || parentWidth > getBalloonWrapperWidth()) {
-        return
+    const getHandlerToHide = <T extends unknown>(handler?: (e: T) => void) => {
+      return (e: T) => {
+        handler && handler(e)
+        setIsVisible(false)
       }
+    }
 
-      setIsVisible(true)
-    }
-    const outAction = () => {
-      setIsVisible(false)
-    }
     const StyledBalloon = balloonTheme === 'light' ? StyledLightBalloon : StyledDarkBalloon
     const isIcon = triggerType === 'icon'
 
@@ -88,19 +107,22 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
       }
     }, [portalRoot])
 
+    const classNames = useClassNames()
+
     return (
       <Wrapper
+        {...props}
         aria-describedby={isVisible ? tooltipId : undefined}
         ref={ref}
-        onMouseEnter={overAction}
-        onTouchStart={overAction}
-        onFocus={overAction}
-        onMouseLeave={outAction}
-        onTouchEnd={outAction}
-        onBlur={outAction}
-        tabIndex={0}
+        onMouseEnter={getHandlerToShow(onMouseEnter)}
+        onTouchStart={getHandlerToShow(onTouchStart)}
+        onFocus={getHandlerToShow(onFocus)}
+        onMouseLeave={getHandlerToHide(onMouseLeave)}
+        onTouchEnd={getHandlerToHide(onTouchEnd)}
+        onBlur={getHandlerToHide(onBlur)}
         isIcon={isIcon}
-        className={className}
+        tabIndex={tabIndex}
+        className={`${className} ${classNames.wrapper}`}
       >
         {isVisible &&
           rect &&

@@ -1,8 +1,9 @@
-import React, { HTMLAttributes, ReactNode, VFC, useContext } from 'react'
+import React, { ReactNode, TdHTMLAttributes, VFC, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { TableGroupContext } from './Table'
 
@@ -15,7 +16,7 @@ export type Props = {
   className?: string
   onClick?: () => void
 }
-type ElementProps = Omit<HTMLAttributes<HTMLTableDataCellElement>, keyof Props>
+type ElementProps = Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof Props>
 
 export const Cell: VFC<Props & ElementProps> = ({
   className = '',
@@ -29,7 +30,13 @@ export const Cell: VFC<Props & ElementProps> = ({
 }) => {
   const theme = useTheme()
   const { group } = useContext(TableGroupContext)
-  const classNames = [className, highlighted && 'highlighted', nullable && 'nullable']
+  const classNames = useClassNames().cell
+  const wrapperClass = [
+    className,
+    highlighted && 'highlighted',
+    nullable && 'nullable',
+    classNames.wrapper,
+  ]
     .filter((c) => !!c)
     .join(' ')
   const props = {
@@ -37,7 +44,7 @@ export const Cell: VFC<Props & ElementProps> = ({
     onClick,
     colSpan,
     rowSpan,
-    className: classNames,
+    className: wrapperClass,
     themes: theme,
     ...elementProps,
   }
@@ -53,11 +60,11 @@ export const Cell: VFC<Props & ElementProps> = ({
 
 const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
   ${({ themes, onClick }) => {
-    const { size, spacingByChar, palette, interaction } = themes
+    const { fontSize, size, spacingByChar, palette, interaction } = themes
 
     return css`
       height: ${size.pxToRem(40)};
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       font-weight: bold;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       color: ${palette.TEXT_BLACK};
@@ -91,14 +98,14 @@ const Td = styled.td<{ themes: Theme }>`
   }
 
   ${({ themes }) => {
-    const { size, spacingByChar, palette, frame } = themes
+    const { fontSize, size, spacingByChar, palette, frame } = themes
 
     return css`
       color: ${palette.TEXT_BLACK};
       height: ${size.pxToRem(44)};
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       border-top: ${frame.border.default};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       line-height: 1.5;
       vertical-align: middle;
       box-sizing: border-box;

@@ -122,7 +122,7 @@ storiesOf('MessageScreen', module)
 const Description = styled.div<{ themes: Theme }>`
   ${({ themes }) => css`
     color: ${themes.palette.TEXT_BLACK};
-    font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
+    font-size: ${themes.fontSize.M};
     line-height: 21px;
     text-align: center;
   `}
@@ -156,7 +156,7 @@ const Bottom = styled.div`
 const Link = styled.a<{ themes: Theme }>`
   ${({ themes }) => css`
     color: ${themes.palette.TEXT_LINK};
-    font-size: ${themes.size.pxToRem(themes.size.font.TALL)};
+    font-size: ${themes.fontSize.M};
     text-decoration: none;
 
     &:hover {
@@ -170,7 +170,7 @@ const Headline = styled.span<{ themes: Theme }>`
     width: 100%;
     margin-top: 16px;
     color: ${themes.palette.TEXT_BLACK};
-    font-size: ${themes.size.pxToRem(themes.size.font.GRANDE)};
+    font-size: ${themes.fontSize.L};
     text-align: center;
   `}
 `

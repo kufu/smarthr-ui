@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 import { daysInWeek, getMonthArray, isBetween } from './calendarHelper'
-import { ResetButton } from './ResetButton'
+import { UnstyledButton } from '../Button'
 
 type Props = {
   current: Date
@@ -92,10 +92,10 @@ export const CalendarTable: VFC<Props & ElementProps> = ({
 }
 
 const Table = styled.table<{ themes: Theme }>(({ themes }) => {
-  const { palette, size } = themes
+  const { palette, fontSize } = themes
   return css`
     color: ${palette.TEXT_BLACK};
-    font-size: ${size.pxToRem(size.font.TALL)};
+    font-size: ${fontSize.M};
     border-spacing: 0;
     margin: 4px 8px 13px;
 
@@ -136,7 +136,7 @@ const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: bo
     `}
   `}
 `
-const CellButton = styled(ResetButton)<{ themes: Theme }>(
+const CellButton = styled(UnstyledButton)<{ themes: Theme }>(
   ({ themes }) => css`
     display: flex;
     align-items: center;

@@ -1,19 +1,27 @@
-import React, { VFC } from 'react'
+import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   type?: 'done' | 'success' | 'process' | 'required' | 'disabled' | 'must' | 'warning' | 'error'
   className?: string
   children: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLSpanElement>, keyof Props>
 
-export const StatusLabel: VFC<Props> = ({ type = 'done', className = '', children }) => {
+export const StatusLabel: VFC<Props & ElementProps> = ({
+  type = 'done',
+  className = '',
+  children,
+  ...props
+}) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Wrapper className={`${type} ${className}`} themes={theme}>
+    <Wrapper {...props} className={`${type} ${className} ${classNames.wrapper}`} themes={theme}>
       {children}
     </Wrapper>
   )
@@ -21,7 +29,7 @@ export const StatusLabel: VFC<Props> = ({ type = 'done', className = '', childre
 
 const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar, palette } = themes
+    const { fontSize, size, spacingByChar, palette } = themes
 
     return css`
       box-sizing: border-box;
@@ -33,7 +41,7 @@ const Wrapper = styled.span<{ themes: Theme }>`
       text-align: center;
       white-space: nowrap;
       min-width: ${size.pxToRem(60)};
-      font-size: ${size.pxToRem(size.font.SHORT)};
+      font-size: ${fontSize.S};
       font-weight: bold;
       line-height: 1;
 

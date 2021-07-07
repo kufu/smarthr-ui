@@ -12,6 +12,7 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> & {
   type?:
@@ -36,7 +37,7 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> & {
 }
 
 export const Input = forwardRef<HTMLInputElement, Props>(
-  ({ onFocus, onBlur, autoFocus, prefix, suffix, className, width, ...props }, ref) => {
+  ({ onFocus, onBlur, autoFocus, prefix, suffix, className = '', width, ...props }, ref) => {
     const theme = useTheme()
     const innerRef = useRef<HTMLInputElement>(null)
     const prefixRef = useRef<HTMLSpanElement>(null)
@@ -74,6 +75,8 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       }
     }, [suffix])
 
+    const classNames = useClassNames()
+
     return (
       <Wrapper
         themes={theme}
@@ -81,10 +84,10 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         $disabled={props.disabled}
         error={props.error}
         onClick={() => innerRef.current?.focus()}
-        className={className}
+        className={`${className} ${classNames.wrapper}`}
       >
         {prefix && (
-          <Prefix themes={theme} ref={prefixRef}>
+          <Prefix themes={theme} ref={prefixRef} className={classNames.prefix}>
             {prefix}
           </Prefix>
         )}
@@ -97,9 +100,10 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           ref={innerRef}
           themes={theme}
           aria-invalid={props.error || undefined}
+          className={classNames.input}
         />
         {suffix && (
-          <Suffix themes={theme} ref={suffixRef}>
+          <Suffix themes={theme} ref={suffixRef} className={classNames.suffix}>
             {suffix}
           </Suffix>
         )}
@@ -143,7 +147,7 @@ const StyledInput = styled.input<
 >`
   ${(props) => {
     const { prefixWidth, suffixWidth, themes } = props
-    const { size, spacingByChar, palette, frame } = themes
+    const { fontSize, spacingByChar, palette, frame } = themes
 
     return css`
       flex-grow: 1;
@@ -155,10 +159,11 @@ const StyledInput = styled.input<
       padding-right: calc(${spacingByChar(0.5)} + ${suffixWidth}px);
       border: none;
       border-radius: ${frame.border.radius.m};
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
       box-sizing: border-box;
+      background-color: transparent;
 
       &::placeholder {
         color: ${palette.TEXT_GREY};
@@ -173,7 +178,7 @@ const StyledInput = styled.input<
   }}
 `
 const Prefix = styled.span<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) =>
+  ({ themes: { color, spacingByChar } }) =>
     css`
       position: absolute;
       top: 0;
@@ -182,10 +187,11 @@ const Prefix = styled.span<{ themes: Theme }>(
       display: flex;
       align-items: center;
       padding-left: ${spacingByChar(0.5)};
+      color: ${color.TEXT_GREY};
     `,
 )
 const Suffix = styled.span<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) =>
+  ({ themes: { color, spacingByChar } }) =>
     css`
       position: absolute;
       top: 0;
@@ -194,5 +200,6 @@ const Suffix = styled.span<{ themes: Theme }>(
       display: flex;
       align-items: center;
       padding-right: ${spacingByChar(0.5)};
+      color: ${color.TEXT_GREY};
     `,
 )

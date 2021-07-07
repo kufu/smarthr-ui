@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { isMobileSafari, isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { FaSortIcon } from '../Icon'
 
@@ -42,10 +43,11 @@ export const Select: VFC<Props & ElementProps> = ({
     },
     [onChange],
   )
+  const classNames = useClassNames()
 
   return (
     <Wrapper
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       $width={widthStyle}
       error={error}
       disabled={props.disabled}
@@ -123,14 +125,14 @@ const Wrapper = styled.div<{
     `}
     ${disabled &&
     css`
-      background-color: ${palette.BASE_GREY};
+      background-color: ${palette.COLUMN};
       color: ${palette.TEXT_DISABLED};
     `}
   `
 })
 const SelectBox = styled.select<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, spacingByChar, frame, palette } = themes
+    const { fontSize, spacingByChar, frame, palette } = themes
 
     return css`
       display: inline-block;
@@ -140,7 +142,7 @@ const SelectBox = styled.select<{ themes: Theme }>`
       border-radius: ${frame.border.radius.m};
       border: none;
       background-color: transparent;
-      font-size: ${size.pxToRem(size.font.TALL)};
+      font-size: ${fontSize.M};
       color: ${palette.TEXT_BLACK};
       line-height: 1.6;
       outline: none;
@@ -156,6 +158,14 @@ const SelectBox = styled.select<{ themes: Theme }>`
         cursor: not-allowed;
         color: ${palette.TEXT_DISABLED};
         opacity: 1;
+      }
+
+      /* for IE11 */
+      &:disabled {
+        &,
+        &::-ms-value {
+          color: ${palette.TEXT_DISABLED};
+        }
       }
 
       &::-ms-expand {

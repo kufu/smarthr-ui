@@ -1,7 +1,16 @@
-import React, { ReactNode, VFC, useCallback, useEffect, useRef, useState } from 'react'
+import React, {
+  HTMLAttributes,
+  ReactNode,
+  VFC,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 import { SecondaryButton } from '../Button'
 
 export type Option = {
@@ -19,14 +28,15 @@ type Props = {
   isSquare?: boolean
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const SegmentedControl: VFC<Props> = ({
+export const SegmentedControl: VFC<Props & ElementProps> = ({
   options,
   value,
   onClickOption,
   size = 'default',
   isSquare = false,
-  className,
+  className = '',
   ...props
 }) => {
   const themes = useTheme()
@@ -97,10 +107,12 @@ export const SegmentedControl: VFC<Props> = ({
     [includesSelected, isFocused, value],
   )
 
+  const classNames = useClassNames()
+
   return (
     <Container
       {...props}
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       onFocus={() => setIsFocused(true)}
       onBlur={() => setIsFocused(false)}
       ref={containerRef}
@@ -122,6 +134,7 @@ export const SegmentedControl: VFC<Props> = ({
               tabIndex={getRovingTabIndex(option, i)}
               role="radio"
               aria-checked={isSelected}
+              className={classNames.button}
             >
               {option.content}
             </Button>
@@ -136,7 +149,7 @@ const Container = styled.div`
   display: inline-flex;
 `
 const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
-  const { color, border, frame } = themes
+  const { color, border, frame, shadow } = themes
   return css`
     border: ${border.shorthand};
     border-radius: 0;
@@ -150,6 +163,10 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
         background-color: ${color.hoverColor(color.MAIN)};
         border-color: ${color.hoverColor(color.MAIN)};
       }
+    }
+
+    &:focus {
+      ${shadow.focusIndicatorStyles}
     }
 
     /* active時、buttonの両端にborder.defaultが表示されることを防ぐための処置 */

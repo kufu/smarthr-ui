@@ -160,11 +160,10 @@ Message_Dialog.parameters = {
 export const Action_Dialog: Story = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = React.useState('Apple')
-  const [responseMessage, setResponseMessage] =
-    useState<{
-      status: 'success' | 'error' | 'processing'
-      text: string
-    }>()
+  const [responseMessage, setResponseMessage] = useState<{
+    status: 'success' | 'error' | 'processing'
+    text: string
+  }>()
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => {
     setIsOpen(false)
@@ -484,18 +483,16 @@ RegOpendAction.parameters = { docs: { disable: true } }
 const Title = styled.p<{ themes: Theme }>`
   padding: 16px 24px;
   margin: 0;
-  font-size: 18px;
+  font-size: ${({ themes }) => themes.fontSize.L};
   line-height: 1;
   border-bottom: ${({ themes }) => themes.frame.border.default};
 `
 const Description = styled.p`
   margin: 16px 24px;
-  font-size: 14px;
   line-height: 1.5;
 `
 const Content = styled.div`
   margin: 16px 24px;
-  font-size: 14px;
   line-height: 1.5;
 `
 const RadioList = styled.ul`

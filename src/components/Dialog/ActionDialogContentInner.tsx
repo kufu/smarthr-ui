@@ -113,9 +113,16 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
           </ActionButton>
         </ButtonArea>
         {responseMessage && (
-          <div role="alert" className={classNames.alert}>
-            <ResponseMessage themes={theme} responseMessage={responseMessage} />
-          </div>
+          <MessageWrapper role="alert" className={classNames.alert} themes={theme}>
+            {responseMessage.status === 'success' ? (
+              <FaCheckCircleIcon color={theme.color.MAIN} />
+            ) : responseMessage.status === 'error' ? (
+              <FaExclamationTriangleIcon color={theme.color.DANGER} />
+            ) : (
+              <Spinner size="s" themes={theme} />
+            )}
+            <Message themes={theme}>{responseMessage.text}</Message>
+          </MessageWrapper>
         )}
       </ActionArea>
     </>
@@ -124,12 +131,11 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
 
 const Title = styled.p<{ themes: Theme }>`
   ${({ themes: { fontSize, border, spacing } }) => {
-    const { pxToRem } = fontSize
     return css`
       margin: 0;
       padding: ${spacing.XS} ${spacing.S};
       border-bottom: ${border.shorthand};
-      font-size: ${pxToRem(fontSize.GRANDE)};
+      font-size: ${fontSize.L};
       line-height: 1;
     `
   }}
@@ -154,58 +160,6 @@ const ActionArea = styled.div<{ themes: Theme }>(({ themes: { spacing, border } 
     }
   `
 })
-const ResponseMessage: React.VFC<{
-  themes: Theme
-  responseMessage?: responseMessageType
-}> = ({ themes, responseMessage }) => {
-  if (!responseMessage) {
-    return null
-  }
-
-  const {
-    color,
-    fontSize: { pxToRem, TALL },
-  } = themes
-  const { status, text } = responseMessage
-  const Wrapper = styled.p`
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-top: 0;
-    margin-bottom: 0;
-    font-size: ${pxToRem(TALL)};
-  `
-  const Spinner = styled(Loader)`
-    &&& {
-      > div {
-        width: 1rem;
-        height: 1rem;
-      }
-
-      > div > div {
-        border-color: ${color.TEXT_GREY};
-      }
-    }
-  `
-  const Icon =
-    status === 'success' ? (
-      <FaCheckCircleIcon color={color.MAIN} />
-    ) : status === 'error' ? (
-      <FaExclamationTriangleIcon color={color.DANGER} />
-    ) : (
-      <Spinner size="s" />
-    )
-  const Message = styled.span`
-    margin-left: 0.25rem;
-  `
-
-  return (
-    <Wrapper>
-      {Icon}
-      <Message>{text}</Message>
-    </Wrapper>
-  )
-}
 const ButtonArea = styled.div<{ themes: Theme }>(({ themes: { spacing } }) => {
   return css`
     display: flex;
@@ -216,3 +170,26 @@ const ButtonArea = styled.div<{ themes: Theme }>(({ themes: { spacing } }) => {
     }
   `
 })
+const MessageWrapper = styled.div<{ themes: Theme }>`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: ${({ themes }) => themes.fontSize.M};
+`
+const Spinner = styled(Loader)<{ themes: Theme }>`
+  &&& {
+    > div {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    > div > div {
+      border-color: ${({ themes }) => themes.color.TEXT_GREY};
+    }
+  }
+`
+const Message = styled.span<{ themes: Theme }>`
+  margin-left: ${({ themes }) => themes.spacingByChar(0.25)};
+`

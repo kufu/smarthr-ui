@@ -28,7 +28,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
   border-radius: 6px;
   box-shadow: rgba(51, 51, 51, 0.3) 1px 1px 4px 0;
   color: ${({ themes }) => themes.palette.TEXT_BLACK};
-  font-size: ${({ themes }) => themes.size.font.TALL};
+  font-size: ${({ themes }) => themes.fontSize.M};
   text-align: center;
   line-height: 1;
   position: absolute;

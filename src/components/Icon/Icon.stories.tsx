@@ -632,20 +632,18 @@ export const Default: Story = () => <FaAddressBookIcon />
 
 export const All: Story = () => {
   return (
-    <Container>
+    <IconList>
       {icons.map((Component) => {
         return (
-          <>
-            <CatalogItem key={`${Component.displayName}`}>
-              <IconName>{Component.displayName?.replace(/Icon$/, '')}</IconName>
-              <dd>
-                <Component />
-              </dd>
-            </CatalogItem>
-          </>
+          <ItemWrapper key={`${Component.displayName}`}>
+            <IconName>{Component.displayName?.replace(/Icon$/, '')}</IconName>
+            <dd>
+              <Component />
+            </dd>
+          </ItemWrapper>
         )
       })}
-    </Container>
+    </IconList>
   )
 }
 All.parameters = {
@@ -733,13 +731,14 @@ Color.parameters = {
   },
 }
 
-const Container = styled.div`
+const IconList = styled.dl`
   display: flex;
   justify-content: start;
   align-items: center;
   flex-wrap: wrap;
+  margin: 0;
 `
-const CatalogItem = styled.dl`
+const ItemWrapper = styled.div`
   margin: 10px;
   padding: 10px;
   background-color: #eee;
@@ -751,7 +750,6 @@ const CatalogItem = styled.dl`
 `
 const IconName = styled.dt`
   margin-bottom: 10px;
-  font-size: 14px;
   color: #222;
 `
 const List = styled.div`

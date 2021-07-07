@@ -1,25 +1,32 @@
-import React, { ChangeEvent, VFC, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import React, {
+  ChangeEvent,
+  HTMLAttributes,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
+import { useClassNames } from './useClassNames'
 
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { useListBox } from './useListBox'
-import { ResetButton } from '../Button/ResetButton'
+import { UnstyledButton } from '../Button'
+import { Item } from './types'
 
-const DELETE_BUTTON_CLASS_NAME = 'DELETE_BUTTON_CLASS_NAME'
-
-type Props = {
+type Props<T> = {
   /**
    * A list of items to choose from.
    */
-  items: Array<{ value: string; label: string; disabled?: boolean }>
+  items: Array<Item<T>>
   /**
    * A list of items that have already been selected.
    */
-  selectedItems: Array<{ value: string; label: string; deletable?: boolean }>
+  selectedItems: Array<Item<T> & { deletable?: boolean }>
   /**
    * The value of the input `name` attribute.
    */
@@ -63,14 +70,16 @@ type Props = {
   /**
    *  Fire when clicking the delete element of `selectedItems` button.
    */
-  onDelete: (option: { value: string; label: string }) => void
+  onDelete: (item: Item<T>) => void
   /**
    * Fire when clicking an element of `items`.
    */
-  onSelect: (option: { value: string; label: string }) => void
+  onSelect: (item: Item<T>) => void
 }
 
-export const MultiComboBox: VFC<Props> = ({
+type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
+
+export function MultiComboBox<T>({
   items,
   selectedItems,
   name,
@@ -85,8 +94,10 @@ export const MultiComboBox: VFC<Props> = ({
   onAdd,
   onDelete,
   onSelect,
-}) => {
+  ...props
+}: Props<T> & ElementProps<T>) {
   const theme = useTheme()
+  const classNames = useClassNames().multi
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
@@ -119,6 +130,7 @@ export const MultiComboBox: VFC<Props> = ({
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
     isLoading,
+    classNames: classNames.listBox,
   })
 
   const focus = useCallback(() => {
@@ -156,13 +168,14 @@ export const MultiComboBox: VFC<Props> = ({
 
   return (
     <Container
+      {...props}
       themes={theme}
       width={width}
       ref={outerRef}
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       onClick={(e) => {
         if (
-          !hasParentElementByClassName(e.target as HTMLElement, DELETE_BUTTON_CLASS_NAME) &&
+          !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
           !disabled &&
           !isFocused
         ) {
@@ -187,25 +200,39 @@ export const MultiComboBox: VFC<Props> = ({
     >
       <InputArea themes={theme}>
         <List themes={theme}>
-          {selectedItems.map(({ value, label, deletable = true }, i) => (
-            <li key={i}>
-              <SelectedItem themes={theme} disabled={disabled}>
-                <SelectedItemLabel themes={theme}>{label}</SelectedItemLabel>
+          {selectedItems.map((selectedItem, i) => {
+            const { deletable = true, ...item } = selectedItem
 
-                {deletable && (
-                  <DeleteButton
-                    type="button"
-                    themes={theme}
-                    className={DELETE_BUTTON_CLASS_NAME}
-                    disabled={disabled}
-                    onClick={() => onDelete({ value, label })}
-                  >
-                    <FaTimesCircleIcon size={11} color={'inherit'} visuallyHiddenText="delete" />
-                  </DeleteButton>
-                )}
-              </SelectedItem>
-            </li>
-          ))}
+            return (
+              <li key={i}>
+                <SelectedItem
+                  themes={theme}
+                  disabled={disabled}
+                  className={classNames.selectedItem}
+                >
+                  <SelectedItemLabel themes={theme} className={classNames.selectedItemLabel}>
+                    {selectedItem.label}
+                  </SelectedItemLabel>
+
+                  {deletable && (
+                    <DeleteButton
+                      type="button"
+                      themes={theme}
+                      className={classNames.deleteButton}
+                      disabled={disabled}
+                      onClick={() => onDelete(item)}
+                    >
+                      <FaTimesCircleIcon
+                        size={11}
+                        color={'inherit'}
+                        visuallyHiddenText={`${item.label}を削除`}
+                      />
+                    </DeleteButton>
+                  )}
+                </SelectedItem>
+              </li>
+            )
+          })}
 
           <InputWrapper className={isFocused ? undefined : 'hidden'}>
             <Input
@@ -239,12 +266,15 @@ export const MultiComboBox: VFC<Props> = ({
               aria-activedescendant={aria.activeDescendant}
               aria-autocomplete="list"
               aria-controls={aria.listBoxId}
+              className={classNames.input}
             />
           </InputWrapper>
 
           {selectedItems.length === 0 && placeholder && !isFocused && (
             <li>
-              <Placeholder themes={theme}>{placeholder}</Placeholder>
+              <Placeholder themes={theme} className={classNames.placeholder}>
+                {placeholder}
+              </Placeholder>
             </li>
           )}
         </List>
@@ -329,11 +359,11 @@ const SelectedItem = styled.div<{ themes: Theme; disabled: boolean }>`
 
     return css`
       display: flex;
-      border-radius: calc(${fontSize.SHORT}px + (${spacingByChar(0.5)} - ${borderWidth}px) * 2);
+      border-radius: calc(${fontSize.S} + (${spacingByChar(0.5)} - ${borderWidth}px) * 2);
       border: ${border.shorthand};
       background-color: ${disabled ? color.disableColor('#fff') : '#fff'};
       color: ${disabled ? color.TEXT_DISABLED : color.TEXT_BLACK};
-      font-size: ${fontSize.SHORT}px;
+      font-size: ${fontSize.S};
       line-height: 1;
     `
   }}
@@ -345,7 +375,7 @@ const SelectedItemLabel = styled.span<{ themes: Theme }>`
     `
   }}
 `
-const DeleteButton = styled(ResetButton)<{ themes: Theme; disabled: boolean }>`
+const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled: boolean }>`
   ${({ themes: { spacingByChar, shadow }, disabled }) => {
     return css`
       padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);
@@ -383,7 +413,7 @@ const Input = styled.input<{ themes: Theme }>`
       min-width: 80px;
       width: 100%;
       border: none;
-      font-size: ${fontSize.TALL}px;
+      font-size: ${fontSize.M};
       box-sizing: border-box;
       outline: none;
       &[disabled] {
@@ -399,7 +429,7 @@ const Placeholder = styled.p<{ themes: Theme }>`
     return css`
       margin: 0;
       color: ${color.TEXT_GREY};
-      font-size: ${fontSize.TALL}px;
+      font-size: ${fontSize.M};
       line-height: 25px;
     `
   }}

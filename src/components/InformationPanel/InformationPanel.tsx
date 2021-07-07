@@ -3,8 +3,9 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
+import { useClassNames } from './useClassNames'
 
-import { Base } from '../Base'
+import { Base, BaseElementProps } from '../Base'
 import {
   FaCaretDownIcon,
   FaCaretUpIcon,
@@ -30,7 +31,7 @@ type Props = {
   onClickTrigger?: (active: boolean) => void
 }
 
-export const InformationPanel: VFC<Props> = ({
+export const InformationPanel: VFC<Props & BaseElementProps> = ({
   title,
   titleTag = 'h3',
   type = 'info',
@@ -41,6 +42,7 @@ export const InformationPanel: VFC<Props> = ({
   className = '',
   children,
   onClickTrigger,
+  ...props
 }) => {
   const theme = useTheme()
 
@@ -85,10 +87,18 @@ export const InformationPanel: VFC<Props> = ({
     setActive(activeProps)
   }, [activeProps])
 
+  const classNames = useClassNames()
+
   return (
-    <Wrapper className={className} themes={theme} role="region" aria-labelledby={titleId}>
+    <Wrapper
+      {...props}
+      className={`${className} ${classNames.wrapper}`}
+      themes={theme}
+      role="region"
+      aria-labelledby={titleId}
+    >
       <Header themes={theme} togglable={togglable}>
-        <Title themes={theme} id={titleId}>
+        <Title themes={theme} id={titleId} className={classNames.title}>
           <StyledHeading type="blockTitle" tag={titleTag}>
             <Icon color={iconColor} $theme={theme} />
             {title}
@@ -102,13 +112,14 @@ export const InformationPanel: VFC<Props> = ({
               onClick={handleClickTrigger}
               aria-expanded={togglable ? active : undefined}
               aria-controls={contentId}
+              className={classNames.closeButton}
             >
               {active ? closeButtonLabel : openButtonLabel}
             </SecondaryButton>
           </div>
         )}
       </Header>
-      <Content themes={theme} id={contentId} aria-hidden={!active}>
+      <Content themes={theme} id={contentId} aria-hidden={!active} className={classNames.content}>
         {children}
       </Content>
     </Wrapper>
@@ -168,12 +179,10 @@ const ErrorTitleIcon = createTitleIcon(FaExclamationCircleIcon)
 const SyncIcon = createTitleIcon(FaSyncAltIcon)
 
 const Content = styled.div<{ themes: Theme }>`
-  ${({ themes: { size, spacingByChar } }) => {
-    const { pxToRem, font } = size
-
+  ${({ themes: { fontSize, spacingByChar } }) => {
     return css`
       margin-top: ${spacingByChar(1.5)};
-      font-size: ${pxToRem(font.TALL)};
+      font-size: ${fontSize.M};
       &[aria-hidden='true'] {
         display: none;
       }
