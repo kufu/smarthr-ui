@@ -6,7 +6,6 @@ import { hoverable } from '../../hocs/hoverable'
 import { isTouchDevice } from '../../libs/ua'
 
 type Tag = 'button' | 'a'
-type Size = 'default' | 's'
 
 export type ButtonProps = BaseProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
@@ -18,7 +17,7 @@ export type BaseProps = {
    * Size of button.
    * @default 'default'
    */
-  size?: Size
+  size?: 'default' | 's'
   /**
    * The content of the component.
    */

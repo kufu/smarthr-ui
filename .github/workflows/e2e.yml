@@ -8,6 +8,7 @@ on:
 jobs:
   e2e-win-matrix:
     runs-on: windows-latest
+    timeout-minutes: 30
     strategy:
       matrix:
         browser: [ie, chrome]

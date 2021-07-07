@@ -149,7 +149,7 @@ const Container = styled.div`
   display: inline-flex;
 `
 const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
-  const { color, border, frame } = themes
+  const { color, border, frame, shadow } = themes
   return css`
     border: ${border.shorthand};
     border-radius: 0;
@@ -163,6 +163,10 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
         background-color: ${color.hoverColor(color.MAIN)};
         border-color: ${color.hoverColor(color.MAIN)};
       }
+    }
+
+    &:focus {
+      ${shadow.focusIndicatorStyles}
     }
 
     /* active時、buttonの両端にborder.defaultが表示されることを防ぐための処置 */
