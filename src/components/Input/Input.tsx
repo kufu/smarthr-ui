@@ -178,7 +178,7 @@ const StyledInput = styled.input<
   }}
 `
 const Prefix = styled.span<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) =>
+  ({ themes: { color, spacingByChar } }) =>
     css`
       position: absolute;
       top: 0;
@@ -187,10 +187,11 @@ const Prefix = styled.span<{ themes: Theme }>(
       display: flex;
       align-items: center;
       padding-left: ${spacingByChar(0.5)};
+      color: ${color.TEXT_GREY};
     `,
 )
 const Suffix = styled.span<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) =>
+  ({ themes: { color, spacingByChar } }) =>
     css`
       position: absolute;
       top: 0;
@@ -199,5 +200,6 @@ const Suffix = styled.span<{ themes: Theme }>(
       display: flex;
       align-items: center;
       padding-right: ${spacingByChar(0.5)};
+      color: ${color.TEXT_GREY};
     `,
 )

@@ -127,10 +127,10 @@ export const InformationPanel: VFC<Props & BaseElementProps> = ({
 }
 
 const Wrapper = styled(Base)<{ themes: Theme; role: string }>`
-  ${({ themes: { spacingByChar } }) => {
+  ${({ themes: { spacingByChar, shadow } }) => {
     return css`
       padding: ${spacingByChar(1.5)};
-      box-shadow: rgba(51, 51, 51, 0.3) 0 4px 10px 0;
+      box-shadow: ${shadow.LAYER3};
     `
   }}
 `

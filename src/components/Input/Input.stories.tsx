@@ -57,11 +57,11 @@ storiesOf('Input', module).add('all', () => {
       </li>
       <li>
         <Txt>prefix</Txt>
-        <Input prefix={<FaSearchIcon color={theme.color.TEXT_GREY} />} />
+        <Input prefix={<FaSearchIcon />} />
       </li>
       <li>
         <Txt>suffix</Txt>
-        <Input suffix={<FaSearchIcon color={theme.color.TEXT_GREY} />} />
+        <Input suffix={<FaSearchIcon />} />
       </li>
       <li>
         <Txt>extending style (width 50%)</Txt>

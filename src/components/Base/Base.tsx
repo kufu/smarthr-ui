@@ -34,7 +34,7 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
 const Wrapper = styled.div<{ themes: Theme; $radius: string }>`
   ${({ themes, $radius }) => {
     return css`
-      box-shadow: ${themes.shadow.BASE};
+      box-shadow: ${themes.shadow.LAYER1};
       border-radius: ${$radius};
       background-color: #fff;
     `
