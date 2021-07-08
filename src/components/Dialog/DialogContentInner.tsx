@@ -190,7 +190,7 @@ const Wrapper = styled.div<{ themes: Theme }>(({ themes }) => {
 
 const Inner = styled.div<StyleProps & { themes: Theme }>`
   ${({ themes, top, right, bottom, left }) => {
-    const { zIndex, frame } = themes
+    const { zIndex, frame, shadow } = themes
     const positionRight = exist(right) ? `${right}px` : 'auto'
     const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
     let positionTop = exist(top) ? `${top}px` : 'auto'
@@ -217,7 +217,7 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
       left: ${positionLeft};
       border-radius: ${frame.border.radius.m};
       background-color: #fff;
-      box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
+      box-shadow: ${shadow.LAYER3};
       transform: translate(${translateX}, ${translateY});
     `
   }}
