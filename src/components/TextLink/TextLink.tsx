@@ -58,7 +58,7 @@ export const TextLink: VFC<Props & ElementProps> = ({
       onClick={actualOnClick}
       themes={theme}
     >
-      <LineUp gap={0.5} inline vAlign="center" as="span">
+      <LineUp gap={0.25} inline vAlign="center" as="span">
         {prefix}
         {children}
         {actualSuffix}
