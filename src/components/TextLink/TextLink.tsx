@@ -2,6 +2,7 @@ import React, { AnchorHTMLAttributes, ReactNode, VFC, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaExternalLinkAltIcon } from '../Icon'
+import { LineUp } from '../Layout/LineUp'
 
 type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Props>
 type Props = {
@@ -57,9 +58,11 @@ export const TextLink: VFC<Props & ElementProps> = ({
       onClick={actualOnClick}
       themes={theme}
     >
-      {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
-      {children}
-      {actualSuffix && <SuffixWrapper themes={theme}>{actualSuffix}</SuffixWrapper>}
+      <LineUp gap={0.5} inline vAlign="center" as="span">
+        {prefix}
+        {children}
+        {actualSuffix}
+      </LineUp>
     </StyledAncher>
   )
 }
@@ -74,23 +77,6 @@ const StyledAncher = styled.a<{ themes: Theme }>`
       &:hover {
         color: ${color.hoverColor(color.TEXT_LINK)};
       }
-    `
-  }}
-`
-
-const PrefixWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { spacingByChar } = themes
-    return css`
-      margin-right: ${spacingByChar(0.5)};
-    `
-  }}
-`
-const SuffixWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { spacingByChar } = themes
-    return css`
-      margin-left: ${spacingByChar(0.5)};
     `
   }}
 `
