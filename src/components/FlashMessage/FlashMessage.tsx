@@ -132,7 +132,7 @@ const fadeAnimation = keyframes`
 
 const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
   ${({ themes, animation }) => {
-    const { spacingByChar, radius, color, zIndex } = themes
+    const { spacingByChar, radius, color, zIndex, shadow } = themes
 
     let keyframe = bounceAnimation
     switch (animation) {
@@ -163,7 +163,7 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
       background-color: #fff;
       border: 1px solid ${color.BORDER};
       border-radius: ${radius.m};
-      box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
+      box-shadow: ${shadow.LAYER4};
       animation: ${keyframe} ${animation === 'none' ? '0.01s' : '1s'} 0s both;
 
       @media (prefers-reduced-motion) {

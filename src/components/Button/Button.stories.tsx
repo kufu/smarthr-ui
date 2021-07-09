@@ -1,7 +1,7 @@
 import { Story } from '@storybook/react'
 import React from 'react'
 import { action } from '@storybook/addon-actions'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import {
   DangerButton,
@@ -16,9 +16,8 @@ import {
   TextButtonAnchor,
 } from '.'
 import { FaPlusCircleIcon } from '../Icon'
-
-import readme from './README.md'
-import { RegStory } from './Reg.stories'
+import { AnchorProps, ButtonProps } from './BaseButton'
+import { LineUp, Stack } from '../Layout'
 
 export default {
   title: 'Button',
@@ -34,159 +33,335 @@ export default {
     TextButton,
     TextButtonAnchor,
   },
-  parameters: {
-    docs: {
-      description: { component: readme },
-    },
-  },
 }
 
-export const Default: Story = () => (
-  <PrimaryButton onClick={action('clicked')}>Button</PrimaryButton>
-)
-
-export const ButtonType: Story = () => (
-  <Wrapper>
-    <PrimaryButton onClick={action('clicked')}>Primary</PrimaryButton>
-    <SecondaryButton onClick={action('clicked')}>Secondary</SecondaryButton>
-    <DangerButton onClick={action('clicked')}>Danger</DangerButton>
-    <SkeletonButton onClick={action('clicked')}>Skeleton</SkeletonButton>
-    <TextButton onClick={action('clicked')}>Text</TextButton>
-  </Wrapper>
-)
-ButtonType.parameters = {
-  docs: {
-    description: {
-      story:
-        'You can choose  `Primary`, `Secondary`, `Danger`, `Skeleton` or `Text` type according to your use.',
-    },
-  },
-  backgrounds: {
-    default: '_grey',
-    values: [{ name: '_grey', value: '#ddd' }],
-  },
+export const _PrimaryButton: Story = () => {
+  return renderButtons(PrimaryButton, ExPrimaryButton)
 }
 
-export const AnchorButton: Story = () => (
-  <PrimaryButtonAnchor href="#" onClick={action('clicked')}>
-    Anchor
-  </PrimaryButtonAnchor>
-)
-AnchorButton.parameters = {
-  docs: {
-    description: {
-      story: 'You can use a button as `<a>` tag.',
-    },
-  },
+export const _PrimaryButtonAnchor: Story = () => {
+  return renderAnchors(PrimaryButtonAnchor, ExPrimaryButtonAnchor)
 }
 
-export const Disabled: Story = () => (
-  <Wrapper onClick={() => console.log('wapper')}>
-    <PrimaryButton disabled onClick={action('clicked')}>
-      Button
-    </PrimaryButton>
-    <PrimaryButtonAnchor href={undefined} onClick={action('clicked')}>
-      Anchor
-    </PrimaryButtonAnchor>
-  </Wrapper>
-)
-Disabled.parameters = {
-  docs: {
-    description: {
-      story: 'A button can be disabled.',
-    },
-  },
+export const _SecondaryButton: Story = () => {
+  return renderButtons(SecondaryButton, ExSecondaryButton)
 }
 
-export const Size: Story = () => (
-  <Wrapper>
-    <PrimaryButton size="default" onClick={action('clicked')}>
-      Default Size
-    </PrimaryButton>
-    <PrimaryButton size="s" onClick={action('clicked')}>
-      Small Size
-    </PrimaryButton>
-  </Wrapper>
-)
-Size.parameters = {
-  docs: {
-    description: {
-      story: 'You can choose a button size from `default` or `s`.',
-    },
-  },
+export const _SecondaryButtonAnchor: Story = () => {
+  return renderAnchors(SecondaryButtonAnchor, ExSecondaryButtonAnchor)
 }
 
-export const Square: Story = () => (
-  <Wrapper>
-    <PrimaryButton square onClick={action('clicked')}>
-      M
-    </PrimaryButton>
-    <PrimaryButton square size="s" onClick={action('clicked')}>
-      M
-    </PrimaryButton>
-  </Wrapper>
-)
-Square.parameters = {
-  docs: {
-    description: {
-      story: 'A button can be square.',
-    },
-  },
+export const _DangerButton: Story = () => {
+  return renderButtons(DangerButton, ExDangerButton)
 }
 
-export const WithIcon: Story = () => (
-  <Wrapper>
-    <PrimaryButton prefix={<FaPlusCircleIcon size={16} />} onClick={action('clicked')}>
-      Prefix
-    </PrimaryButton>
-    <PrimaryButton suffix={<FaPlusCircleIcon size={16} />} onClick={action('clicked')}>
-      Suffix
-    </PrimaryButton>
-    <PrimaryButton square onClick={action('clicked')}>
-      <FaPlusCircleIcon size={16} />
-    </PrimaryButton>
-  </Wrapper>
-)
-WithIcon.parameters = {
-  docs: {
-    description: {
-      story: 'A button can contain an icon.',
-    },
-  },
+export const _DangerButtonAnchor: Story = () => {
+  return renderAnchors(DangerButtonAnchor, ExDangerButtonAnchor)
 }
 
-export const Wide: Story = () => (
-  <PrimaryButton wide onClick={action('clicked')}>
-    Wide
-  </PrimaryButton>
-)
-Wide.parameters = {
-  docs: {
-    description: {
-      story: 'A button can be extended to its full width.',
-    },
-  },
+export const _SkeletonButton: Story = () => {
+  return <DarkBackground>{renderButtons(SkeletonButton, ExSkeletonButton)}</DarkBackground>
 }
 
-export const ExtendingStyle: Story = () => (
-  <Extended onClick={action('clicked')}>width: 300px</Extended>
-)
-ExtendingStyle.parameters = {
-  docs: {
-    description: {
-      story:
-        'A button style can be customized by [Extending Styles](https://styled-components.com/docs/basics#extending-styles) of `styled-compontns`.',
-    },
-  },
+export const _SkeletonButtonAnchor: Story = () => {
+  return (
+    <DarkBackground>{renderAnchors(SkeletonButtonAnchor, ExSkeletonButtonAnchor)}</DarkBackground>
+  )
 }
 
-export const Reg = RegStory
+export const _TextButton: Story = () => {
+  return renderButtons(TextButton, ExTextButton, true)
+}
 
-const Wrapper = styled.div`
-  > * {
-    margin-right: 1rem;
+export const _TextButtonAnchor: Story = () => {
+  return renderAnchors(TextButtonAnchor, ExTextButtonAnchor, true)
+}
+
+function renderButtons(
+  Button: React.VFC<ButtonProps>,
+  ExButton: React.VFC<ButtonProps>,
+  noSquare = false,
+) {
+  return (
+    <List>
+      <dt>Default</dt>
+      <dd>
+        <Stack>
+          <WrapLineUp>
+            <Button onClick={action('clicked')}>ボタン</Button>
+            <Button prefix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button suffix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+              ボタン
+            </Button>
+            {!noSquare && (
+              <Button square onClick={action('clicked')}>
+                <FaPlusCircleIcon size={16} visuallyHiddenText="プラスボタン" />
+              </Button>
+            )}
+          </WrapLineUp>
+          <WrapLineUp>
+            <Button disabled onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button disabled prefix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button disabled suffix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+              ボタン
+            </Button>
+            {!noSquare && (
+              <Button disabled square onClick={action('clicked')}>
+                <FaPlusCircleIcon size={16} visuallyHiddenText="プラスボタン" />
+              </Button>
+            )}
+          </WrapLineUp>
+        </Stack>
+      </dd>
+
+      <dt>Small</dt>
+      <dd>
+        <Stack>
+          <WrapLineUp>
+            <Button size="s" onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button size="s" prefix={<FaPlusCircleIcon size={11} />} onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button size="s" suffix={<FaPlusCircleIcon size={11} />} onClick={action('clicked')}>
+              ボタン
+            </Button>
+            {!noSquare && (
+              <Button size="s" square onClick={action('clicked')}>
+                <FaPlusCircleIcon size={13} visuallyHiddenText="プラスボタン" />
+              </Button>
+            )}
+          </WrapLineUp>
+          <WrapLineUp>
+            <Button disabled size="s" onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button
+              disabled
+              size="s"
+              prefix={<FaPlusCircleIcon size={11} />}
+              onClick={action('clicked')}
+            >
+              ボタン
+            </Button>
+            <Button
+              disabled
+              size="s"
+              suffix={<FaPlusCircleIcon size={11} />}
+              onClick={action('clicked')}
+            >
+              ボタン
+            </Button>
+            {!noSquare && (
+              <Button disabled size="s" square onClick={action('clicked')}>
+                <FaPlusCircleIcon size={13} visuallyHiddenText="プラスボタン" />
+              </Button>
+            )}
+          </WrapLineUp>
+        </Stack>
+      </dd>
+
+      <dt>Wide</dt>
+      <dd>
+        <Stack>
+          <Button wide onClick={action('clicked')}>
+            ボタン
+          </Button>
+          <Button disabled wide onClick={action('clicked')}>
+            ボタン
+          </Button>
+          <Button size="s" wide onClick={action('clicked')}>
+            ボタン
+          </Button>
+          <Button disabled size="s" wide onClick={action('clicked')}>
+            ボタン
+          </Button>
+        </Stack>
+      </dd>
+
+      <dt>Extending Style</dt>
+      <dd>
+        <ExButton onClick={action('clicked')}>width: 300px</ExButton>
+      </dd>
+    </List>
+  )
+}
+
+function renderAnchors(
+  Anchor: React.VFC<AnchorProps>,
+  ExAnchor: React.VFC<AnchorProps>,
+  noSquare = false,
+) {
+  return (
+    <List>
+      <dt>Default</dt>
+      <dd>
+        <Stack>
+          <WrapLineUp>
+            <Anchor href="#" onClick={action('clicked')}>
+              ボタン
+            </Anchor>
+            <Anchor href="#" prefix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+              ボタン
+            </Anchor>
+            <Anchor href="#" suffix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+              ボタン
+            </Anchor>
+            {!noSquare && (
+              <Anchor href="#" square onClick={action('clicked')}>
+                <FaPlusCircleIcon size={16} visuallyHiddenText="プラスボタン" />
+              </Anchor>
+            )}
+          </WrapLineUp>
+          <WrapLineUp>
+            <Anchor onClick={action('clicked')}>ボタン</Anchor>
+            <Anchor prefix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+              ボタン
+            </Anchor>
+            <Anchor suffix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+              ボタン
+            </Anchor>
+            {!noSquare && (
+              <Anchor square onClick={action('clicked')}>
+                <FaPlusCircleIcon size={16} visuallyHiddenText="プラスボタン" />
+              </Anchor>
+            )}
+          </WrapLineUp>
+        </Stack>
+      </dd>
+
+      <dt>Small</dt>
+      <dd>
+        <Stack>
+          <WrapLineUp>
+            <Anchor size="s" href="#" onClick={action('clicked')}>
+              ボタン
+            </Anchor>
+            <Anchor
+              size="s"
+              href="#"
+              prefix={<FaPlusCircleIcon size={11} />}
+              onClick={action('clicked')}
+            >
+              ボタン
+            </Anchor>
+            <Anchor
+              size="s"
+              href="#"
+              suffix={<FaPlusCircleIcon size={11} />}
+              onClick={action('clicked')}
+            >
+              ボタン
+            </Anchor>
+            {!noSquare && (
+              <Anchor size="s" href="#" square onClick={action('clicked')}>
+                <FaPlusCircleIcon size={13} visuallyHiddenText="プラスボタン" />
+              </Anchor>
+            )}
+          </WrapLineUp>
+          <WrapLineUp>
+            <Anchor size="s" onClick={action('clicked')}>
+              ボタン
+            </Anchor>
+            <Anchor size="s" prefix={<FaPlusCircleIcon size={11} />} onClick={action('clicked')}>
+              ボタン
+            </Anchor>
+            <Anchor size="s" suffix={<FaPlusCircleIcon size={11} />} onClick={action('clicked')}>
+              ボタン
+            </Anchor>
+            {!noSquare && (
+              <Anchor size="s" square onClick={action('clicked')}>
+                <FaPlusCircleIcon size={13} visuallyHiddenText="プラスボタン" />
+              </Anchor>
+            )}
+          </WrapLineUp>
+        </Stack>
+      </dd>
+
+      <dt>Wide</dt>
+      <dd>
+        <Stack>
+          <Anchor href="#" wide onClick={action('clicked')}>
+            ボタン
+          </Anchor>
+
+          <Anchor wide onClick={action('clicked')}>
+            ボタン
+          </Anchor>
+          <Anchor size="s" href="#" wide onClick={action('clicked')}>
+            ボタン
+          </Anchor>
+          <Anchor size="s" wide onClick={action('clicked')}>
+            ボタン
+          </Anchor>
+        </Stack>
+      </dd>
+
+      <dt>Extending Style</dt>
+      <dd>
+        <ExAnchor href="#" onClick={action('clicked')}>
+          width: 300px
+        </ExAnchor>
+      </dd>
+    </List>
+  )
+}
+
+const List = styled.dl`
+  margin: 0;
+  padding: 1rem;
+  dt {
+    margin: 0 0 1rem;
+  }
+  dd {
+    margin: 0 0 1rem;
   }
 `
-const Extended = styled(PrimaryButton)`
+const WrapLineUp = styled(LineUp)`
+  flex-wrap: wrap;
+`
+const DarkBackground = styled.div`
+  background-color: #5c5c5c;
+  color: #fff;
+`
+
+const extendingStlye = css`
   width: 300px;
+`
+const ExPrimaryButton = styled(PrimaryButton)`
+  ${extendingStlye}
+`
+const ExPrimaryButtonAnchor = styled(PrimaryButtonAnchor)`
+  ${extendingStlye}
+`
+const ExSecondaryButton = styled(SecondaryButton)`
+  ${extendingStlye}
+`
+const ExSecondaryButtonAnchor = styled(SecondaryButtonAnchor)`
+  ${extendingStlye}
+`
+const ExDangerButton = styled(DangerButton)`
+  ${extendingStlye}
+`
+const ExDangerButtonAnchor = styled(DangerButtonAnchor)`
+  ${extendingStlye}
+`
+const ExSkeletonButton = styled(SkeletonButton)`
+  ${extendingStlye}
+`
+const ExSkeletonButtonAnchor = styled(SkeletonButtonAnchor)`
+  ${extendingStlye}
+`
+const ExTextButton = styled(TextButton)`
+  ${extendingStlye}
+`
+const ExTextButtonAnchor = styled(TextButtonAnchor)`
+  ${extendingStlye}
 `
