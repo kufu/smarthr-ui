@@ -206,9 +206,12 @@ export function SingleComboBox<T>({
         suffix={
           <>
             <ClearButton
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation()
                 onSelect(null)
-                setIsExpanded(true)
+                if (isFocused) {
+                  setIsExpanded(true)
+                }
               }}
               ref={clearButtonRef}
               themes={theme}
