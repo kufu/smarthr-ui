@@ -9,7 +9,7 @@ fixture('Calendar')
 test('日付が選択できること', async (t) => {
   const dateButton = Selector('[data-test=calendar-1] .smarthr-ui-CalendarTable-dataCell')
     .withText('10')
-    .child('button')
+    .find('button')
   await t.click(dateButton).expect(dateButton.getAttribute('aria-pressed')).ok()
 })
 
