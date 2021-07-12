@@ -130,6 +130,7 @@
     "test-visual": "reg-suit run",
     "testcafe": "testcafe",
     "e2e": "ts-node scripts/e2e.ts",
+    "e2e:dev": "testcafe chrome --host localhost --skip-js-errors",
     "prepare": "husky install"
   },
   "sideEffects": false,
