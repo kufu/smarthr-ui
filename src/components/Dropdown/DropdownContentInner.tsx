@@ -113,7 +113,7 @@ const Wrapper = styled.div<{
   contentBox: ContentBoxStyle
 }>`
   ${({ contentBox, themes }) => {
-    const { frame, zIndex } = themes
+    const { frame, zIndex, shadow } = themes
 
     return css`
       display: flex;
@@ -123,7 +123,7 @@ const Wrapper = styled.div<{
       top: ${contentBox.top};
       left: ${contentBox.left};
       border-radius: ${frame.border.radius.m};
-      box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
+      box-shadow: ${shadow.LAYER3};
       background-color: #fff;
       white-space: nowrap;
 

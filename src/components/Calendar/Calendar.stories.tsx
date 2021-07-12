@@ -26,6 +26,7 @@ storiesOf('Calendar', module)
               setValue(date)
             }}
             value={value}
+            data-test="calendar-1"
           />
         </dd>
         <dt>You can set term of selectable date by setting [from] and [to].</dt>

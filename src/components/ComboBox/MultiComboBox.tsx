@@ -61,8 +61,13 @@ type Props<T> = {
   className?: string
   /**
    * Fire when the value of input changes.
+   * @deprecated The onChange handler is deprecated, so use onChangeInput handler instead.
    */
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  /**
+   * Fire when the value of input changes.
+   */
+  onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
   /**
    * Fire when adding an item that does not exist in `items` props.
    */
@@ -91,6 +96,7 @@ export function MultiComboBox<T>({
   width = 'auto',
   className = '',
   onChange,
+  onChangeInput,
   onAdd,
   onDelete,
   onSelect,
@@ -241,6 +247,7 @@ export function MultiComboBox<T>({
               themes={theme}
               onChange={(e) => {
                 if (onChange) onChange(e)
+                if (onChangeInput) onChangeInput(e)
                 setInputValue(e.currentTarget.value)
               }}
               onFocus={() => {
