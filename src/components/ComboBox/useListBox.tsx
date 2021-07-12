@@ -265,7 +265,7 @@ export function useListBox<T>({
 
 const Container = styled.div<{ top: number; left: number; width: number; themes: Theme }>(
   ({ top, left, width, themes }) => {
-    const { spacingByChar, frame } = themes
+    const { spacingByChar, frame, shadow } = themes
     return css`
       position: absolute;
       top: ${top}px;
@@ -275,7 +275,7 @@ const Container = styled.div<{ top: number; left: number; width: number; themes:
       width: ${width}px;
       padding: ${spacingByChar(0.5)} 0;
       border-radius: ${frame.border.radius.m};
-      box-shadow: rgba(51, 51, 51, 0.3) 0 4px 10px 0;
+      box-shadow: ${shadow.LAYER3};
       background-color: #fff;
       white-space: nowrap;
       box-sizing: border-box;

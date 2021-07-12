@@ -11,6 +11,7 @@ export type Props = {
   vertical: 'top' | 'middle' | 'bottom'
   className?: string
   children?: ReactNode
+  as?: 'div' | 'span'
 }
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
@@ -40,14 +41,14 @@ export const DarkBalloon = balloonFactory('dark')
 
 const Base = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, frame, fontSize } = themes
+    const { palette, frame, fontSize, shadow } = themes
 
     return css`
       position: relative;
       display: inline-block;
       font-size: ${fontSize.S};
       border-radius: 4px;
-      box-shadow: 0 2px 8px 0 rgba(51, 51, 51, 0.35);
+      box-shadow: ${shadow.LAYER2};
       white-space: nowrap;
 
       &::before,

@@ -62,8 +62,13 @@ type Props<T> = {
   className?: string
   /**
    * Fire when the value of input changes.
+   * @deprecated The onChange handler is deprecated, so use onChangeInput handler instead.
    */
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  /**
+   * Fire when the value of input changes.
+   */
+  onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
   /**
    * Fire when adding an item that does not exist in `items` props.
    */
@@ -88,6 +93,7 @@ export function SingleComboBox<T>({
   width = 'auto',
   className = '',
   onChange,
+  onChangeInput,
   onAdd,
   onSelect,
   ...props
@@ -234,6 +240,7 @@ export function SingleComboBox<T>({
         }}
         onChange={(e) => {
           if (onChange) onChange(e)
+          if (onChangeInput) onChangeInput(e)
           const { value } = e.currentTarget
           setInputValue(value)
           if (value === '') {

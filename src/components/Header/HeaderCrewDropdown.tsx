@@ -153,13 +153,13 @@ const CaretIcon = styled.figure<{ themes: Theme }>`
 `
 const MenuList = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame } = themes
+    const { size, frame, shadow } = themes
 
     return css`
       border: ${frame.border.default};
       border-radius: ${frame.border.radius.s};
       background-color: #fff;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+      box-shadow: ${shadow.LAYER3};
       padding: ${size.pxToRem(5)} 0;
     `
   }}
