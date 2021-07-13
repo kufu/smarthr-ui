@@ -123,7 +123,7 @@ const Wrapper = styled.nav<{ themes: Theme }>`
       padding: 0 ${pxToRem(20)};
       background-color: #fff;
       box-sizing: border-box;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+      box-shadow: ${themes.shadow.LAYER1};
     `
   }}
 `

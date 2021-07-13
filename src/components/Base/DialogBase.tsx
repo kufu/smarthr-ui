@@ -34,7 +34,7 @@ export const DialogBase = forwardRef<HTMLDivElement, Props & ElementProps>(
 const Wrapper = styled.div<{ themes: Theme; $radius: string }>`
   ${({ themes, $radius }) => {
     return css`
-      box-shadow: ${themes.shadow.DIALOG};
+      box-shadow: ${themes.shadow.LAYER3};
       border-radius: ${$radius};
       background-color: #fff;
     `
