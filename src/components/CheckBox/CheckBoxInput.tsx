@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 import { transparentize } from 'polished'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
@@ -10,12 +11,7 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   mixed?: boolean
 }
 
-export const CheckBoxInput: VFC<Props> = ({
-  mixed = false,
-  className = '',
-  onChange,
-  ...props
-}) => {
+export const CheckBoxInput: VFC<Props> = ({ mixed = false, onChange, ...props }) => {
   const theme = useTheme()
   const { checked, disabled } = props
   const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
@@ -25,13 +21,15 @@ export const CheckBoxInput: VFC<Props> = ({
     },
     [onChange],
   )
+  const classNames = useClassNames()
 
   return (
-    <Wrapper className={className} themes={theme}>
+    <Wrapper themes={theme}>
       <Input
         {...props}
         type="checkbox"
         onChange={handleChange}
+        className={classNames.checkBox}
         themes={theme}
         {...(mixed && { 'aria-checked': 'mixed' })}
       />
