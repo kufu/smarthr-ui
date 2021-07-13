@@ -9,8 +9,8 @@ export const useClassNames = () => {
       wrapper: generate(),
       closer: generate('closer'),
       content: generate('content'),
-      contentInner: generate('content-inner'),
-      scrollArea: generate('scroll-area'),
+      contentInner: generate('contentInner'),
+      scrollArea: generate('scrollArea'),
     }),
     [generate],
   )
