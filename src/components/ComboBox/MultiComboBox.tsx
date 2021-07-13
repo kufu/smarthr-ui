@@ -15,7 +15,7 @@ import { useClassNames } from './useClassNames'
 
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { useListBox } from './useListBox'
-import { ResetButton } from '../Button/ResetButton'
+import { UnstyledButton } from '../Button'
 import { Item } from './types'
 
 type Props<T> = {
@@ -61,8 +61,13 @@ type Props<T> = {
   className?: string
   /**
    * Fire when the value of input changes.
+   * @deprecated The onChange handler is deprecated, so use onChangeInput handler instead.
    */
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  /**
+   * Fire when the value of input changes.
+   */
+  onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
   /**
    * Fire when adding an item that does not exist in `items` props.
    */
@@ -91,6 +96,7 @@ export function MultiComboBox<T>({
   width = 'auto',
   className = '',
   onChange,
+  onChangeInput,
   onAdd,
   onDelete,
   onSelect,
@@ -181,9 +187,6 @@ export function MultiComboBox<T>({
         ) {
           focus()
         }
-        if (inputRef.current) {
-          inputRef.current.focus()
-        }
       }}
       onKeyDown={(e) => {
         if ((e.key === 'Escape' || e.key === 'Esc') && isFocused) {
@@ -244,6 +247,7 @@ export function MultiComboBox<T>({
               themes={theme}
               onChange={(e) => {
                 if (onChange) onChange(e)
+                if (onChangeInput) onChangeInput(e)
                 setInputValue(e.currentTarget.value)
               }}
               onFocus={() => {
@@ -375,7 +379,7 @@ const SelectedItemLabel = styled.span<{ themes: Theme }>`
     `
   }}
 `
-const DeleteButton = styled(ResetButton)<{ themes: Theme; disabled: boolean }>`
+const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled: boolean }>`
   ${({ themes: { spacingByChar, shadow }, disabled }) => {
     return css`
       padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);

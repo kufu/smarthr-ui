@@ -15,7 +15,7 @@ import { useClassNames } from './useClassNames'
 
 import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
-import { ResetButton } from '../Button/ResetButton'
+import { UnstyledButton } from '../Button'
 import { useListBox } from './useListBox'
 import { Item } from './types'
 
@@ -62,8 +62,13 @@ type Props<T> = {
   className?: string
   /**
    * Fire when the value of input changes.
+   * @deprecated The onChange handler is deprecated, so use onChangeInput handler instead.
    */
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  /**
+   * Fire when the value of input changes.
+   */
+  onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
   /**
    * Fire when adding an item that does not exist in `items` props.
    */
@@ -88,6 +93,7 @@ export function SingleComboBox<T>({
   width = 'auto',
   className = '',
   onChange,
+  onChangeInput,
   onAdd,
   onSelect,
   ...props
@@ -200,9 +206,12 @@ export function SingleComboBox<T>({
         suffix={
           <>
             <ClearButton
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation()
                 onSelect(null)
-                setIsExpanded(true)
+                if (isFocused) {
+                  setIsExpanded(true)
+                }
               }}
               ref={clearButtonRef}
               themes={theme}
@@ -234,6 +243,7 @@ export function SingleComboBox<T>({
         }}
         onChange={(e) => {
           if (onChange) onChange(e)
+          if (onChangeInput) onChangeInput(e)
           const { value } = e.currentTarget
           setInputValue(value)
           if (value === '') {
@@ -310,7 +320,7 @@ const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     border-left: ${border.shorthand};
   `
 })
-const ClearButton = styled(ResetButton)<{ themes: Theme }>`
+const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
   ${({ themes }) => {
     const { spacingByChar } = themes
     return css`

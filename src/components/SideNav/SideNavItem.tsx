@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { isTouchDevice } from '../../libs/ua'
-import { ResetButton } from '../Button/ResetButton'
+import { UnstyledButton } from '../Button'
 import { useClassNames } from './useClassNames'
 
 export type SideNavSizeType = 'default' | 's'
@@ -77,7 +77,7 @@ const Wrapper = styled.li<{ themes: Theme }>`
   }}
 `
 
-const Button = styled(ResetButton)<{ themes: Theme }>`
+const Button = styled(UnstyledButton)<{ themes: Theme }>`
   ${({ themes }) => {
     const { fontSize, spacingByChar } = themes
 
