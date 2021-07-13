@@ -6,7 +6,6 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { ContentBoxStyle, Rect, getContentBoxStyle, getFirstTabbable } from './dropdownHelper'
 import { DropdownCloser } from './DropdownCloser'
 import { useKeyboardNavigation } from './useKeyboardNavigation'
-import { useClassNames } from './useClassNames'
 
 type Props = {
   triggerRect: Rect
@@ -39,7 +38,6 @@ export const DropdownContentInner: VFC<Props> = ({
     maxHeight: '',
   })
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const classNames = useClassNames()
 
   useLayoutEffect(() => {
     if (wrapperRef.current) {
@@ -94,7 +92,7 @@ export const DropdownContentInner: VFC<Props> = ({
     <Wrapper
       ref={wrapperRef}
       contentBox={contentBox}
-      className={`${className} ${classNames.contentInner} ${isActive ? 'active' : ''}`}
+      className={`${className} ${isActive ? 'active' : ''}`}
       themes={theme}
     >
       {controllable ? (
