@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [13.2.0](https://github.com/kufu/smarthr-ui/compare/v13.1.0...v13.2.0) (2021-07-13)
+
+
+### Features
+
+* Stack をインライン要素のように振る舞えるように inline を追加 ([#1729](https://github.com/kufu/smarthr-ui/issues/1729)) ([95413d4](https://github.com/kufu/smarthr-ui/commit/95413d4a026b548c30276028870690746912d365))
+* 影のテーマの追加と置き換え (SHRUI-417) ([#1699](https://github.com/kufu/smarthr-ui/issues/1699)) ([8737ad1](https://github.com/kufu/smarthr-ui/commit/8737ad15702b7586f6513955b42f03b0abf2e303))
+
+
+### Bug Fixes
+
+* `AccordionPanel` のフォーカスインジケータが隠れないように修正 (SHRUI-412) ([#1698](https://github.com/kufu/smarthr-ui/issues/1698)) ([f82fe2c](https://github.com/kufu/smarthr-ui/commit/f82fe2cb8a0c2362f79af8b9f12fd16c281ebadd))
+* `ActionDialog` の warning 解消 ([#1713](https://github.com/kufu/smarthr-ui/issues/1713)) ([c077991](https://github.com/kufu/smarthr-ui/commit/c077991335b900627913bcbe062d7389d16b661c))
+* Baloon に span を渡せるように修正 ([#1723](https://github.com/kufu/smarthr-ui/issues/1723)) ([54f1240](https://github.com/kufu/smarthr-ui/commit/54f124019be960e636dc4c3c2dd4f7d4240ea59c))
+* change default color of affix of `Input` ([#1726](https://github.com/kufu/smarthr-ui/issues/1726)) ([2099eaa](https://github.com/kufu/smarthr-ui/commit/2099eaac870db0dcf63dabcf24b112bf889dde29))
+* fix focus indicator not to be hidden by sibling elements ([#1725](https://github.com/kufu/smarthr-ui/issues/1725)) ([dfc08de](https://github.com/kufu/smarthr-ui/commit/dfc08de31843f97bffe008ac00b25c97f7a2bf53))
+* rename onChange to onChangeInput ([#1727](https://github.com/kufu/smarthr-ui/issues/1727)) ([0ebcc40](https://github.com/kufu/smarthr-ui/commit/0ebcc403eeee793dfa343f5cbd9587aa8059b865))
+* Tooltip の tabIndex を利用側で上書きできないので修正 ([#1709](https://github.com/kufu/smarthr-ui/issues/1709)) ([6cf8f01](https://github.com/kufu/smarthr-ui/commit/6cf8f017b2d3d8e8ba31eef4b21c54026e8fb9dc))
+* コンボボックスのフォーカス挙動を変更 (SHRUI-423) ([#1724](https://github.com/kufu/smarthr-ui/issues/1724)) ([b682a36](https://github.com/kufu/smarthr-ui/commit/b682a364b03c870c9dab1845e46887816fba32b0))
+
 ## [13.1.0](https://github.com/kufu/smarthr-ui/compare/v13.0.0...v13.1.0) (2021-06-29)
 
 
