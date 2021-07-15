@@ -5,9 +5,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
 import { useClassNames } from './useClassNames'
 
-import { RadioButton, Props as RadioButtonProps } from '../RadioButton'
+import { RadioButtonInput, Props as RadioButtonInputProps } from './RadioButtonInput'
 
-type Props = RadioButtonProps & {
+type Props = RadioButtonInputProps & {
   children?: ReactNode
 }
 
@@ -19,14 +19,14 @@ export const RadioButtonNew: FC<Props> = ({ children, className = '', ...props }
   if (!children) {
     return (
       <Wrapper className={`${className} ${classNames.wrapper}`}>
-        <RadioButton className={classNames.radioButton} {...props} />
+        <RadioButtonInput className={classNames.radioButton} {...props} />
       </Wrapper>
     )
   }
 
   return (
     <Wrapper className={`${className} ${classNames.wrapper}`}>
-      <RadioButton id={radioButtonId} className={classNames.radioButton} {...props} />
+      <RadioButtonInput id={radioButtonId} className={classNames.radioButton} {...props} />
 
       <Label
         htmlFor={radioButtonId}
