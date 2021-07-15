@@ -48,20 +48,20 @@ const Wrapper = styled.span<{ themes: Theme }>`
 `
 const Box = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame, palette } = themes
+    const { size, border, color } = themes
 
     return css`
       display: inline-block;
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      border: ${frame.border.default};
+      border: ${border.shorthand};
       background-color: #fff;
       box-sizing: border-box;
 
       &.active {
-        border-color: ${palette.MAIN};
-        background-color: ${palette.MAIN};
+        border-color: ${color.MAIN};
+        background-color: ${color.MAIN};
 
         &::before {
           position: absolute;
@@ -78,12 +78,12 @@ const Box = styled.span<{ themes: Theme }>`
       }
 
       &.disabled {
-        background-color: ${palette.BORDER};
-        border-color: ${palette.BORDER};
+        background-color: ${color.BORDER};
+        border-color: ${color.BORDER};
         cursor: not-allowed;
 
         &.active {
-          border-color: ${palette.BORDER};
+          border-color: ${color.BORDER};
 
           &::before {
             background-color: #fff;
