@@ -12,12 +12,7 @@ type Props = CheckBoxInputProps & {
   children?: ReactNode
 }
 
-export const CheckBoxNew: FC<Props> = ({
-  lineHeight = 1.5,
-  className = '',
-  children,
-  ...props
-}) => {
+export const CheckBox: FC<Props> = ({ lineHeight = 1.5, className = '', children, ...props }) => {
   const theme = useTheme()
   const classNames = useClassNames()
   const checkBoxId = useId(props.id)

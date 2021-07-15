@@ -4,9 +4,9 @@ import { storiesOf } from '@storybook/react'
 
 import readme from './README.md'
 
-import { CheckBoxNew } from './CheckBoxNew'
+import { CheckBox } from './CheckBox'
 
-storiesOf('CheckBoxNew', module)
+storiesOf('CheckBox', module)
   .addParameters({
     readme: {
       sidebar: readme,
@@ -31,21 +31,21 @@ storiesOf('CheckBoxNew', module)
 
           <InnerList>
             <li>
-              <CheckBoxNew name="1" checked={checkedName.includes('1')} onChange={handleChange}>
-                CheckBoxNew
-              </CheckBoxNew>
+              <CheckBox name="1" checked={checkedName.includes('1')} onChange={handleChange}>
+                CheckBox
+              </CheckBox>
             </li>
 
             <li>
-              <CheckBoxNew disabled onChange={handleChange}>
-                CheckBoxNew / disabled
-              </CheckBoxNew>
+              <CheckBox disabled onChange={handleChange}>
+                CheckBox / disabled
+              </CheckBox>
             </li>
 
             <li>
-              <CheckBoxNew checked disabled onChange={handleChange}>
-                CheckBoxNew / disabled /checked
-              </CheckBoxNew>
+              <CheckBox checked disabled onChange={handleChange}>
+                CheckBox / disabled /checked
+              </CheckBox>
             </li>
           </InnerList>
         </li>
@@ -55,15 +55,15 @@ storiesOf('CheckBoxNew', module)
 
           <InnerList>
             <li>
-              <CheckBoxNew name="2" checked={checkedName.includes('2')} onChange={handleChange} />
+              <CheckBox name="2" checked={checkedName.includes('2')} onChange={handleChange} />
             </li>
 
             <li>
-              <CheckBoxNew disabled onChange={handleChange} />
+              <CheckBox disabled onChange={handleChange} />
             </li>
 
             <li>
-              <CheckBoxNew checked disabled onChange={handleChange} />
+              <CheckBox checked disabled onChange={handleChange} />
             </li>
           </InnerList>
         </li>
@@ -73,26 +73,21 @@ storiesOf('CheckBoxNew', module)
 
           <InnerList>
             <li>
-              <CheckBoxNew
-                name="3"
-                checked={checkedName.includes('3')}
-                mixed
-                onChange={handleChange}
-              >
-                CheckBoxNew / mixed
-              </CheckBoxNew>
+              <CheckBox name="3" checked={checkedName.includes('3')} mixed onChange={handleChange}>
+                CheckBox / mixed
+              </CheckBox>
             </li>
 
             <li>
-              <CheckBoxNew mixed disabled onChange={handleChange}>
-                CheckBoxNew / mixed / disabled
-              </CheckBoxNew>
+              <CheckBox mixed disabled onChange={handleChange}>
+                CheckBox / mixed / disabled
+              </CheckBox>
             </li>
 
             <li>
-              <CheckBoxNew checked mixed disabled onChange={handleChange}>
-                CheckBoxNew / mixed / disabled / checked
-              </CheckBoxNew>
+              <CheckBox checked mixed disabled onChange={handleChange}>
+                CheckBox / mixed / disabled / checked
+              </CheckBox>
             </li>
           </InnerList>
         </li>
@@ -102,7 +97,7 @@ storiesOf('CheckBoxNew', module)
 
           <InnerList>
             <li>
-              <CheckBoxNew name="4" checked={checkedName.includes('4')} onChange={handleChange}>
+              <CheckBox name="4" checked={checkedName.includes('4')} onChange={handleChange}>
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
                 Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an
                 unknown printer took a galley of type and scrambled it to make a type specimen book.
@@ -111,7 +106,7 @@ storiesOf('CheckBoxNew', module)
                 the release of Letraset sheets containing Lorem Ipsum passages, and more recently
                 with desktop publishing software like Aldus PageMaker including versions of Lorem
                 Ipsum.
-              </CheckBoxNew>
+              </CheckBox>
             </li>
           </InnerList>
         </li>
