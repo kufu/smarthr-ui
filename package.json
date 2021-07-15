@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "13.1.0",
+  "version": "13.2.0",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "dayjs": "^1.10.6",
@@ -25,7 +25,7 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
     "@types/node": "^14.17.5",
-    "@types/react": "^17.0.13",
+    "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.4.2",
@@ -61,10 +61,10 @@
     "stylelint-config-smarthr": "^1.0.0",
     "stylelint-config-standard": "^22.0.0",
     "stylelint-config-styled-components": "^0.1.1",
-    "testcafe": "^1.14.2",
+    "testcafe": "^1.15.0",
     "ts-jest": "^27.0.3",
     "ts-loader": "^9.2.3",
-    "ts-node": "^10.0.0",
+    "ts-node": "^10.1.0",
     "typescript": "^4.2.4",
     "wait-for-localhost": "^3.3.0",
     "webpack": "^5.39.1"
@@ -139,7 +139,7 @@
     "minimist": "1.2.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "@types/react": "^17.0.13",
+    "@types/react": "^17.0.14",
     "@babel/helper-compilation-targets": "^7.14.5"
   }
 }
