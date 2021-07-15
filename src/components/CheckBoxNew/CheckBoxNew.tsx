@@ -5,9 +5,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
 import { useClassNames } from './useClassNames'
 
-import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
+import { CheckBoxInput, Props as CheckBoxInputProps } from './CheckBoxInput'
 
-type Props = CheckBoxProps & {
+type Props = CheckBoxInputProps & {
   lineHeight?: number
   children?: ReactNode
 }
@@ -25,13 +25,13 @@ export const CheckBoxNew: FC<Props> = ({
   if (!children)
     return (
       <Wrapper className={`${className} ${classNames.wrapper}`}>
-        <CheckBox className={classNames.checkBox} {...props} />
+        <CheckBoxInput className={classNames.checkBox} {...props} />
       </Wrapper>
     )
 
   return (
     <Wrapper className={`${className} ${classNames.wrapper}`}>
-      <CheckBox id={checkBoxId} className={classNames.checkBox} {...props} />
+      <CheckBoxInput id={checkBoxId} className={classNames.checkBox} {...props} />
 
       <Label
         className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}

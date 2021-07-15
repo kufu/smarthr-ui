@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components'
 import { transparentize } from 'polished'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
 
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
@@ -11,12 +10,13 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   mixed?: boolean
 }
 
-/**
- * @deprecated The CheckBox component is deprecated, so use CheckBoxNew component instead.
- */
-export const CheckBox: VFC<Props> = ({ mixed = false, className = '', onChange, ...props }) => {
+export const CheckBoxInput: VFC<Props> = ({
+  mixed = false,
+  className = '',
+  onChange,
+  ...props
+}) => {
   const theme = useTheme()
-  const classNames = useClassNames()
   const { checked, disabled } = props
   const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
   const handleChange = useCallback(
@@ -27,7 +27,7 @@ export const CheckBox: VFC<Props> = ({ mixed = false, className = '', onChange, 
   )
 
   return (
-    <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
+    <Wrapper className={className} themes={theme}>
       <Input
         {...props}
         type="checkbox"
