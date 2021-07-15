@@ -2,10 +2,11 @@ import React, { ChangeEvent, InputHTMLAttributes, VFC, useCallback } from 'react
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 
 export type Props = InputHTMLAttributes<HTMLInputElement>
 
-export const RadioButtonInput: VFC<Props> = ({ className = '', onChange, ...props }) => {
+export const RadioButtonInput: VFC<Props> = ({ onChange, ...props }) => {
   const theme = useTheme()
   const { checked, disabled } = props
   const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
@@ -15,10 +16,17 @@ export const RadioButtonInput: VFC<Props> = ({ className = '', onChange, ...prop
     },
     [onChange],
   )
+  const classNames = useClassNames()
 
   return (
-    <Wrapper className={className} themes={theme}>
-      <Input type="radio" onChange={handleChange} themes={theme} {...props} />
+    <Wrapper themes={theme}>
+      <Input
+        type="radio"
+        onChange={handleChange}
+        className={classNames.radioButton}
+        themes={theme}
+        {...props}
+      />
       <Box className={boxClassName} themes={theme} />
     </Wrapper>
   )

@@ -26,7 +26,7 @@ export const RadioButton: FC<Props> = ({ children, className = '', ...props }) =
 
   return (
     <Wrapper className={`${className} ${classNames.wrapper}`}>
-      <RadioButtonInput id={radioButtonId} className={classNames.radioButton} {...props} />
+      <RadioButtonInput id={radioButtonId} {...props} />
 
       <Label
         htmlFor={radioButtonId}
