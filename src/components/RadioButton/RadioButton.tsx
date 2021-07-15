@@ -11,7 +11,7 @@ type Props = RadioButtonInputProps & {
   children?: ReactNode
 }
 
-export const RadioButtonNew: FC<Props> = ({ children, className = '', ...props }) => {
+export const RadioButton: FC<Props> = ({ children, className = '', ...props }) => {
   const theme = useTheme()
   const classNames = useClassNames()
   const radioButtonId = useId(props.id)

@@ -35,7 +35,7 @@ export {
   ActionDialogContent,
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
-export { RadioButtonNew } from './components/RadioButtonNew'
+export { RadioButton } from './components/RadioButton'
 export {
   PrimaryButton,
   PrimaryButtonAnchor,
