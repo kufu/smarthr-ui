@@ -131,7 +131,7 @@ const Title = styled.dt<{ themes: Theme }>`
     display: block;
     padding: 0;
     margin: 0 0 16px;
-    color: ${themes.palette.TEXT_GREY};
+    color: ${themes.color.TEXT_GREY};
     font-style: italic;
   `}
 `

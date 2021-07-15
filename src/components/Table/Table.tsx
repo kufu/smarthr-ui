@@ -29,7 +29,7 @@ export const Table: VFC<Props & ElementProps> = ({ children, className = '', ...
 
 const Wrapper = styled.table<{ themes: Theme }>`
   ${({ themes }) => {
-    const { COLUMN, HEAD } = themes.palette
+    const { COLUMN, HEAD } = themes.color
 
     return css`
       width: 100%;

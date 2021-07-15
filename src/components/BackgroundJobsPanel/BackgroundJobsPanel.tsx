@@ -121,7 +121,7 @@ const Container = styled(Base)<{ themes: Theme }>(({ themes }) => {
     flex-direction: column;
     min-width: 420px;
     max-width: 600px;
-    color: ${themes.palette.TEXT_BLACK};
+    color: ${themes.color.TEXT_BLACK};
   `
 })
 const Header = styled.div`

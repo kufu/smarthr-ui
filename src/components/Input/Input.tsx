@@ -118,7 +118,7 @@ const Wrapper = styled.span<{
   $disabled?: boolean
   error?: boolean
 }>(({ themes, $width = 'auto', $disabled, error }) => {
-  const { frame, palette } = themes
+  const { frame, color } = themes
   return css`
     position: relative;
     display: inline-flex;
@@ -133,11 +133,11 @@ const Wrapper = styled.span<{
     ${!$disabled &&
     error &&
     css`
-      border-color: ${palette.DANGER};
+      border-color: ${color.DANGER};
     `}
     ${$disabled &&
     css`
-      background-color: ${palette.COLUMN};
+      background-color: ${color.COLUMN};
       pointer-events: none;
     `}
   `
@@ -147,7 +147,7 @@ const StyledInput = styled.input<
 >`
   ${(props) => {
     const { prefixWidth, suffixWidth, themes } = props
-    const { fontSize, spacingByChar, palette, frame } = themes
+    const { fontSize, spacingByChar, color, frame } = themes
 
     return css`
       flex-grow: 1;
@@ -160,18 +160,18 @@ const StyledInput = styled.input<
       border: none;
       border-radius: ${frame.border.radius.m};
       font-size: ${fontSize.M};
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       line-height: 1.6;
       box-sizing: border-box;
       background-color: transparent;
 
       &::placeholder {
-        color: ${palette.TEXT_GREY};
+        color: ${color.TEXT_GREY};
       }
 
       &[disabled] {
-        color: ${palette.TEXT_DISABLED};
-        -webkit-text-fill-color: ${palette.TEXT_DISABLED};
+        color: ${color.TEXT_DISABLED};
+        -webkit-text-fill-color: ${color.TEXT_DISABLED};
         opacity: 1;
       }
     `

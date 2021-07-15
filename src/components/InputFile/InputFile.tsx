@@ -107,12 +107,12 @@ const Wrapper = styled.div`
 `
 
 const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, palette, spacingByChar } = themes
+  const { fontSize, color, spacingByChar } = themes
   return css`
     font-size: ${fontSize.M};
     padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
     margin-bottom: ${spacingByChar(1)};
-    background-color: ${palette.COLUMN};
+    background-color: ${color.COLUMN};
     list-style: none;
 
     > li {
@@ -123,7 +123,7 @@ const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
 })
 
 const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
-  const { palette, interaction } = themes
+  const { color, interaction } = themes
 
   return css`
     position: relative;
@@ -157,11 +157,11 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
 
     &:hover {
       > button {
-        background-color: ${palette.hoverColor('#fff')};
+        background-color: ${color.hoverColor('#fff')};
       }
       &.disabled {
         > button {
-          background-color: ${palette.COLUMN};
+          background-color: ${color.COLUMN};
         }
       }
     }
@@ -175,12 +175,12 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
 })
 
 const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, frame, palette, spacingByChar } = themes
+  const { fontSize, frame, color, spacingByChar } = themes
   return css`
     font-family: inherit;
     font-weight: bold;
     border-radius: ${frame.border.radius.m};
-    color: ${palette.TEXT_BLACK};
+    color: ${color.TEXT_BLACK};
     background-color: #fff;
     border: ${frame.border.default};
 
@@ -217,8 +217,8 @@ const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
 
     &[disabled] {
       cursor: not-allowed;
-      background-color: ${palette.COLUMN};
-      color: ${palette.TEXT_DISABLED};
+      background-color: ${color.COLUMN};
+      color: ${color.TEXT_DISABLED};
       > label {
         cursor: not-allowed;
       }

@@ -76,12 +76,12 @@ export const Textarea: VFC<Props & ElementProps> = ({
 const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: string | number }>`
   ${(props) => {
     const { themes, textAreaWidth = 'auto', error } = props
-    const { fontSize, spacingByChar, frame, palette } = themes
+    const { fontSize, spacingByChar, frame, color } = themes
 
     return css`
       padding: ${spacingByChar(0.5)};
       font-size: ${fontSize.M};
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       border-radius: ${frame.border.radius.m};
       width: ${textAreaWidth};
       background-color: #fff;
@@ -90,24 +90,24 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
       opacity: 1;
       ${error
         ? css`
-            border-color: ${palette.DANGER};
+            border-color: ${color.DANGER};
           `
         : css`
             &:focus {
-              border-color: ${palette.hoverColor(palette.MAIN)};
+              border-color: ${color.hoverColor(color.MAIN)};
             }
           `}
 
       &::placeholder {
-        color: ${palette.TEXT_GREY};
+        color: ${color.TEXT_GREY};
       }
       &[disabled] {
-        background-color: ${palette.COLUMN};
+        background-color: ${color.COLUMN};
         pointer-events: none;
 
         &,
         &::placeholder {
-          color: ${palette.TEXT_DISABLED};
+          color: ${color.TEXT_DISABLED};
         }
       }
     `
@@ -116,14 +116,14 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
 
 const Counter = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, palette } = themes
+    const { fontSize, color } = themes
     return css`
       font-size: ${fontSize.S};
       > span {
         font-weight: bold;
-        color: ${palette.TEXT_GREY};
+        color: ${color.TEXT_GREY};
         &.error {
-          color: ${palette.DANGER};
+          color: ${color.DANGER};
         }
       }
     `
