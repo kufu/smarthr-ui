@@ -36,16 +36,16 @@ export const DangerButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props 
 
 const dangerStyle = css`
   ${({ themes }: { themes: Theme }) => {
-    const { palette, interaction } = themes
+    const { color, interaction } = themes
 
     return css`
       color: #fff;
       border: none;
-      background-color: ${palette.DANGER};
+      background-color: ${color.DANGER};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
       &.hover {
-        background-color: ${palette.hoverColor(palette.DANGER)};
+        background-color: ${color.hoverColor(color.DANGER)};
       }
     `
   }}

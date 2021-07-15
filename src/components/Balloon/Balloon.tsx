@@ -41,7 +41,7 @@ export const DarkBalloon = balloonFactory('dark')
 
 const Base = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, frame, fontSize, shadow } = themes
+    const { color, frame, fontSize, shadow } = themes
 
     return css`
       position: relative;
@@ -61,16 +61,16 @@ const Base = styled.div<{ themes: Theme }>`
 
       &.light {
         background-color: #fff;
-        color: ${palette.TEXT_BLACK};
+        color: ${color.TEXT_BLACK};
       }
       &.dark {
-        background-color: ${palette.TEXT_BLACK};
+        background-color: ${color.TEXT_BLACK};
         color: #fff;
       }
 
       &.light.top {
         &::before {
-          border-color: transparent transparent ${palette.BORDER};
+          border-color: transparent transparent ${color.BORDER};
         }
         &::after {
           border-color: transparent transparent #fff;
@@ -78,7 +78,7 @@ const Base = styled.div<{ themes: Theme }>`
       }
       &.light.bottom {
         &::before {
-          border-color: ${palette.BORDER} transparent transparent;
+          border-color: ${color.BORDER} transparent transparent;
         }
         &::after {
           border-color: #fff transparent transparent;
@@ -88,13 +88,13 @@ const Base = styled.div<{ themes: Theme }>`
       &.dark.top {
         &::before,
         &::after {
-          border-color: transparent transparent ${palette.TEXT_BLACK};
+          border-color: transparent transparent ${color.TEXT_BLACK};
         }
       }
       &.dark.bottom {
         &::before,
         &::after {
-          border-color: ${palette.TEXT_BLACK} transparent transparent;
+          border-color: ${color.TEXT_BLACK} transparent transparent;
         }
       }
 
@@ -162,7 +162,7 @@ const Base = styled.div<{ themes: Theme }>`
           }
           &.light {
             &::before {
-              border-color: transparent ${palette.BORDER} transparent transparent;
+              border-color: transparent ${color.BORDER} transparent transparent;
             }
             &::after {
               border-color: transparent #fff transparent transparent;
@@ -171,7 +171,7 @@ const Base = styled.div<{ themes: Theme }>`
           &.dark {
             &::before,
             &::after {
-              border-color: transparent ${palette.TEXT_BLACK} transparent transparent;
+              border-color: transparent ${color.TEXT_BLACK} transparent transparent;
             }
           }
         }
@@ -188,7 +188,7 @@ const Base = styled.div<{ themes: Theme }>`
           }
           &.light {
             &::before {
-              border-color: transparent transparent transparent ${palette.BORDER};
+              border-color: transparent transparent transparent ${color.BORDER};
             }
             &::after {
               border-color: transparent transparent transparent #fff;
@@ -197,7 +197,7 @@ const Base = styled.div<{ themes: Theme }>`
           &.dark {
             &::before,
             &::after {
-              border-color: transparent transparent transparent ${palette.TEXT_BLACK};
+              border-color: transparent transparent transparent ${color.TEXT_BLACK};
             }
           }
         }

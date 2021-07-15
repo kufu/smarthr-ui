@@ -180,7 +180,7 @@ const MenuListItemIcon = styled.figure<{ themes: Theme }>`
 `
 const MenuListItemButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, fontSize, palette, interaction } = themes
+    const { size, fontSize, color, interaction } = themes
 
     return css`
       display: flex;
@@ -189,7 +189,7 @@ const MenuListItemButton = styled.button<{ themes: Theme }>`
       padding: ${size.pxToRem(3)} ${size.pxToRem(20)};
       border: none;
       background: none;
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       font-size: ${fontSize.M};
       line-height: 1.5;
       white-space: nowrap;
@@ -198,7 +198,7 @@ const MenuListItemButton = styled.button<{ themes: Theme }>`
       cursor: pointer;
 
       &:hover {
-        background-color: ${palette.OVERLAY};
+        background-color: ${color.OVERLAY};
       }
     `
   }}

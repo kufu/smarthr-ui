@@ -83,12 +83,12 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
 
 const Wrapper = styled.form<{ themes: Theme; $width: number }>`
   ${({ themes, $width }) => {
-    const { size, spacingByChar, palette, shadow } = themes
+    const { size, spacingByChar, color, shadow } = themes
 
     return css`
       width: ${size.pxToRem($width)};
       padding: ${spacingByChar(1)};
-      background-color: ${palette.COLUMN};
+      background-color: ${color.COLUMN};
       box-shadow: ${shadow.LAYER2};
       overflow: hidden scroll;
       position: fixed;

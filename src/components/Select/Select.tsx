@@ -99,7 +99,7 @@ const Wrapper = styled.div<{
   disabled?: boolean
   themes: Theme
 }>(({ $width, error, disabled, themes }) => {
-  const { frame, palette, interaction } = themes
+  const { frame, color, interaction } = themes
   return css`
     position: relative;
     width: ${$width};
@@ -112,27 +112,27 @@ const Wrapper = styled.div<{
     &:hover {
       ${!disabled &&
       css`
-        background-color: ${palette.hoverColor('#fff')};
+        background-color: ${color.hoverColor('#fff')};
       `}
     }
     :focus-within {
-      border-color: ${palette.MAIN};
+      border-color: ${color.MAIN};
     }
 
     ${error &&
     css`
-      border-color: ${palette.DANGER} !important;
+      border-color: ${color.DANGER} !important;
     `}
     ${disabled &&
     css`
-      background-color: ${palette.COLUMN};
-      color: ${palette.TEXT_DISABLED};
+      background-color: ${color.COLUMN};
+      color: ${color.TEXT_DISABLED};
     `}
   `
 })
 const SelectBox = styled.select<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar, frame, palette } = themes
+    const { fontSize, spacingByChar, frame, color } = themes
 
     return css`
       display: inline-block;
@@ -143,20 +143,20 @@ const SelectBox = styled.select<{ themes: Theme }>`
       border: none;
       background-color: transparent;
       font-size: ${fontSize.M};
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       line-height: 1.6;
       outline: none;
       appearance: none;
       cursor: pointer;
 
       &::placeholder {
-        color: ${palette.TEXT_GREY};
+        color: ${color.TEXT_GREY};
       }
 
       &[disabled] {
         pointer-events: none;
         cursor: not-allowed;
-        color: ${palette.TEXT_DISABLED};
+        color: ${color.TEXT_DISABLED};
         opacity: 1;
       }
 
@@ -164,7 +164,7 @@ const SelectBox = styled.select<{ themes: Theme }>`
       &:disabled {
         &,
         &::-ms-value {
-          color: ${palette.TEXT_DISABLED};
+          color: ${color.TEXT_DISABLED};
         }
       }
 
