@@ -230,7 +230,7 @@ const Background = styled.div<{ themes: Theme }>`
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: ${themes.palette.SCRIM};
+      background-color: ${themes.color.SCRIM};
     `
   }}
 `

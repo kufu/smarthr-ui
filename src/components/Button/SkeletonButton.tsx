@@ -36,7 +36,7 @@ export const SkeletonButtonAnchor: VFC<AnchorProps> = ({ className = '', ...prop
 
 const skeletonStyle = css`
   ${({ themes }: { themes: Theme }) => {
-    const { palette, interaction, frame } = themes
+    const { color, interaction, frame } = themes
 
     return css`
       background-color: transparent;
@@ -46,7 +46,7 @@ const skeletonStyle = css`
 
       &.hover,
       &:focus {
-        background-color: ${palette.OVERLAY};
+        background-color: ${color.OVERLAY};
         color: #fff;
       }
     `

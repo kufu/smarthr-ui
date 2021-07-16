@@ -60,14 +60,14 @@ export const Cell: VFC<Props & ElementProps> = ({
 
 const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
   ${({ themes, onClick }) => {
-    const { fontSize, size, spacingByChar, palette, interaction } = themes
+    const { fontSize, size, spacingByChar, color, interaction } = themes
 
     return css`
       height: ${size.pxToRem(40)};
       font-size: ${fontSize.S};
       font-weight: bold;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
       text-align: left;
       line-height: 1.5;
@@ -75,13 +75,13 @@ const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
       box-sizing: border-box;
 
       &.highlighted {
-        background-color: ${palette.hoverColor(palette.HEAD)};
+        background-color: ${color.hoverColor(color.HEAD)};
       }
 
       ${onClick &&
       css`
         :hover {
-          background-color: ${palette.hoverColor(palette.HEAD)};
+          background-color: ${color.hoverColor(color.HEAD)};
           cursor: pointer;
         }
       `}
@@ -98,10 +98,10 @@ const Td = styled.td<{ themes: Theme }>`
   }
 
   ${({ themes }) => {
-    const { fontSize, size, spacingByChar, palette, frame } = themes
+    const { fontSize, size, spacingByChar, color, frame } = themes
 
     return css`
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       height: ${size.pxToRem(44)};
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       border-top: ${frame.border.default};

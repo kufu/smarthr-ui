@@ -232,7 +232,7 @@ const MenuListItemIcon = styled.figure<{ themes: Theme }>`
 `
 const MenuListItemButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, size, palette, interaction } = themes
+    const { fontSize, size, color, interaction } = themes
 
     return css`
       display: flex;
@@ -241,7 +241,7 @@ const MenuListItemButton = styled.button<{ themes: Theme }>`
       padding: ${size.pxToRem(3)} ${size.pxToRem(20)};
       border: none;
       background: none;
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       font-size: ${fontSize.M};
       line-height: 1.5;
       white-space: nowrap;
@@ -250,18 +250,18 @@ const MenuListItemButton = styled.button<{ themes: Theme }>`
       cursor: pointer;
 
       &:hover {
-        background-color: ${palette.OVERLAY};
+        background-color: ${color.OVERLAY};
       }
     `
   }}
 `
 const MenuListItemHeader = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, size, palette } = themes
+    const { fontSize, size, color } = themes
 
     return css`
       padding: ${size.pxToRem(3)} ${size.pxToRem(20)};
-      color: ${palette.TEXT_GREY};
+      color: ${color.TEXT_GREY};
       font-size: ${fontSize.S};
       line-height: 1.6;
       white-space: nowrap;

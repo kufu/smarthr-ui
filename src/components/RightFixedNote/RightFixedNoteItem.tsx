@@ -98,9 +98,9 @@ const EditButton = styled(SecondaryButton)`
 `
 
 const Info = styled.div<{ themes: Theme }>`
-  ${({ themes: { fontSize, palette } }) => {
+  ${({ themes: { fontSize, color } }) => {
     return css`
-      color: ${palette.TEXT_GREY};
+      color: ${color.TEXT_GREY};
       font-size: ${fontSize.S};
       text-align: right;
     `
