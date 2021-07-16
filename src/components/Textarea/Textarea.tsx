@@ -76,16 +76,16 @@ export const Textarea: VFC<Props & ElementProps> = ({
 const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: string | number }>`
   ${(props) => {
     const { themes, textAreaWidth = 'auto', error } = props
-    const { fontSize, spacingByChar, frame, color } = themes
+    const { fontSize, spacingByChar, border, radius, color } = themes
 
     return css`
       padding: ${spacingByChar(0.5)};
       font-size: ${fontSize.M};
       color: ${color.TEXT_BLACK};
-      border-radius: ${frame.border.radius.m};
+      border-radius: ${radius.m};
       width: ${textAreaWidth};
       background-color: #fff;
-      border: ${frame.border.default};
+      border: ${border.shorthand};
       box-sizing: border-box;
       opacity: 1;
       ${error

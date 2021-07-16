@@ -205,11 +205,11 @@ const CaretIcon = styled.figure<{ themes: Theme }>`
 `
 const MenuList = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame, shadow } = themes
+    const { size, border, radius, shadow } = themes
 
     return css`
-      border: ${frame.border.default};
-      border-radius: ${frame.border.radius.s};
+      border: ${border.shorthand};
+      border-radius: ${radius.s};
       background-color: #fff;
       box-shadow: ${shadow.LAYER3};
       padding: ${size.pxToRem(5)} 0;
@@ -270,12 +270,12 @@ const MenuListItemHeader = styled.div<{ themes: Theme }>`
 `
 const MenuListItemDivider = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame } = themes
+    const { size, border } = themes
 
     return css`
       padding: 0;
       margin: ${size.pxToRem(10)} 0;
-      border-top: ${frame.border.default};
+      border-top: ${border.shorthand};
     `
   }}
 `

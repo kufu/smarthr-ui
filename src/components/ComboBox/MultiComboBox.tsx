@@ -295,15 +295,15 @@ export function MultiComboBox<T>({
 
 const Container = styled.div<{ themes: Theme; width: number | string }>`
   ${({ themes, width }) => {
-    const { frame, color, shadow, spacingByChar } = themes
+    const { border, radius, color, shadow, spacingByChar } = themes
 
     return css`
       display: inline-flex;
       min-width: calc(62px + 32px + ${spacingByChar(0.5)} * 2);
       width: ${typeof width === 'number' ? `${width}px` : width};
       min-height: 40px;
-      border-radius: ${frame.border.radius.m};
-      border: ${frame.border.default};
+      border-radius: ${radius.m};
+      border: ${border.shorthand};
       box-sizing: border-box;
       background-color: #fff;
       cursor: text;
