@@ -33,7 +33,7 @@ const Wrapper = styled.table<{ themes: Theme }>`
 
     return css`
       width: 100%;
-      border-collapse: separate;
+      border-collapse: separate; // Headがfixed=trueの場合、separate以外だとHeadとBodyの間に隙間が生まれるため、明示的に指定しています
       border-spacing: 0;
       background-color: ${COLUMN};
 
