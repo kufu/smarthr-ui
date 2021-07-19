@@ -6,7 +6,6 @@ import { hoverable } from '../../hocs/hoverable'
 import { isTouchDevice } from '../../libs/ua'
 
 type Tag = 'button' | 'a'
-type Size = 'default' | 's'
 
 export type ButtonProps = BaseProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
@@ -18,7 +17,7 @@ export type BaseProps = {
    * Size of button.
    * @default 'default'
    */
-  size?: Size
+  size?: 'default' | 's'
   /**
    * The content of the component.
    */
@@ -78,7 +77,7 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   ${({ themes, wide }) => {
-    const { frame, fontSize, spacingByChar, interaction, shadow } = themes
+    const { radius, fontSize, spacingByChar, interaction, shadow } = themes
 
     return css`
       display: inline-flex;
@@ -87,7 +86,7 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       width: ${wide ? '100%;' : 'auto'};
       min-width: 2rem;
       vertical-align: middle;
-      border-radius: ${frame.border.radius.m};
+      border-radius: ${radius.m};
       font-family: inherit;
       font-weight: bold;
       text-align: center;

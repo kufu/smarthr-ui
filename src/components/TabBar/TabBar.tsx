@@ -30,7 +30,7 @@ export const TabBar: VFC<Props & ElementProps> = ({
 
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { frame } = themes
+    const { border } = themes
 
     return css`
       display: flex;
@@ -43,7 +43,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
           left: 0;
           right: 0;
           bottom: 0;
-          border-bottom: ${frame.border.default};
+          border-bottom: ${border.shorthand};
           content: '';
         }
       }

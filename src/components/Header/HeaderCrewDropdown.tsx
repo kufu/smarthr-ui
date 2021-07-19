@@ -153,13 +153,13 @@ const CaretIcon = styled.figure<{ themes: Theme }>`
 `
 const MenuList = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame } = themes
+    const { size, border, radius, shadow } = themes
 
     return css`
-      border: ${frame.border.default};
-      border-radius: ${frame.border.radius.s};
+      border: ${border.shorthand};
+      border-radius: ${radius.s};
       background-color: #fff;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+      box-shadow: ${shadow.LAYER3};
       padding: ${size.pxToRem(5)} 0;
     `
   }}
@@ -180,7 +180,7 @@ const MenuListItemIcon = styled.figure<{ themes: Theme }>`
 `
 const MenuListItemButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, fontSize, palette, interaction } = themes
+    const { size, fontSize, color, interaction } = themes
 
     return css`
       display: flex;
@@ -189,7 +189,7 @@ const MenuListItemButton = styled.button<{ themes: Theme }>`
       padding: ${size.pxToRem(3)} ${size.pxToRem(20)};
       border: none;
       background: none;
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       font-size: ${fontSize.M};
       line-height: 1.5;
       white-space: nowrap;
@@ -198,19 +198,19 @@ const MenuListItemButton = styled.button<{ themes: Theme }>`
       cursor: pointer;
 
       &:hover {
-        background-color: ${palette.OVERLAY};
+        background-color: ${color.OVERLAY};
       }
     `
   }}
 `
 const MenuListItemDivider = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, frame } = themes
+    const { size, border } = themes
 
     return css`
       padding: 0;
       margin: ${size.pxToRem(10)} 0;
-      border-top: ${frame.border.default};
+      border-top: ${border.shorthand};
     `
   }}
 `

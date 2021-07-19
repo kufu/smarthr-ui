@@ -14,7 +14,7 @@ export const getIconComponent = (
     current: false,
     ...options,
   }
-  const { TEXT_BLACK, TEXT_GREY } = theme.palette
+  const { TEXT_BLACK, TEXT_GREY } = theme.color
 
   if (!opts.icon) return null
 
@@ -47,9 +47,9 @@ export type ItemStyleProps = {
   isUnclickable?: boolean
 }
 export function getItemStyle({ themes, isActive, isUnclickable }: ItemStyleProps) {
-  const { fontSize, palette, size } = themes
+  const { fontSize, color, size } = themes
   const { pxToRem } = size
-  const { hoverColor, MAIN, TEXT_BLACK, TEXT_GREY } = palette
+  const { hoverColor, MAIN, TEXT_BLACK, TEXT_GREY } = color
 
   return css`
     display: flex;

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { DropdownContext } from './Dropdown'
 import { tabbable } from '../../libs/tabbable'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   children: React.ReactNode
@@ -11,6 +12,7 @@ type Props = {
 
 export const DropdownTrigger: React.VFC<Props> = ({ children, className = '' }) => {
   const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
+  const classNames = useClassNames()
 
   useEffect(() => {
     if (!triggerElementRef.current) {
@@ -36,7 +38,7 @@ export const DropdownTrigger: React.VFC<Props> = ({ children, className = '' }) 
           left: rect.left,
         })
       }}
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
     >
       {React.Children.map(children, (child: any) => {
         const props = child.props ? child.props : {}

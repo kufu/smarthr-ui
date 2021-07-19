@@ -46,18 +46,18 @@ SecondaryButtonAnchor.displayName = 'SecondaryButtonAnchor'
 
 const secondaryStyle = css`
   ${({ themes }: { themes: Theme }) => {
-    const { palette, interaction, frame } = themes
+    const { color, interaction, border } = themes
 
     return css`
       background-color: #fff;
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
-      border: ${frame.border.default};
+      border: ${border.shorthand};
 
       &.hover,
       &:focus {
-        background-color: ${palette.hoverColor('#fff')};
-        color: ${palette.TEXT_BLACK};
+        background-color: ${color.hoverColor('#fff')};
+        color: ${color.TEXT_BLACK};
       }
     `
   }}

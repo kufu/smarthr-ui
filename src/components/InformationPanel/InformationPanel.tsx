@@ -47,28 +47,28 @@ export const InformationPanel: VFC<Props & BaseElementProps> = ({
   const theme = useTheme()
 
   let Icon = InfoTitleIcon
-  let iconColor = theme.palette.TEXT_GREY
+  let iconColor = theme.color.TEXT_GREY
 
   switch (type) {
     case 'success':
       Icon = SuccessTitleIcon
-      iconColor = theme.palette.MAIN
+      iconColor = theme.color.MAIN
       break
     case 'info':
       Icon = InfoTitleIcon
-      iconColor = theme.palette.TEXT_GREY
+      iconColor = theme.color.TEXT_GREY
       break
     case 'warning':
       Icon = WarningTitleIcon
-      iconColor = theme.palette.WARNING
+      iconColor = theme.color.WARNING
       break
     case 'error':
       Icon = ErrorTitleIcon
-      iconColor = theme.palette.DANGER
+      iconColor = theme.color.DANGER
       break
     case 'sync':
       Icon = SyncIcon
-      iconColor = theme.palette.MAIN
+      iconColor = theme.color.MAIN
   }
 
   const [active, setActive] = useState(activeProps)
@@ -127,10 +127,10 @@ export const InformationPanel: VFC<Props & BaseElementProps> = ({
 }
 
 const Wrapper = styled(Base)<{ themes: Theme; role: string }>`
-  ${({ themes: { spacingByChar } }) => {
+  ${({ themes: { spacingByChar, shadow } }) => {
     return css`
       padding: ${spacingByChar(1.5)};
-      box-shadow: rgba(51, 51, 51, 0.3) 0 4px 10px 0;
+      box-shadow: ${shadow.LAYER3};
     `
   }}
 `

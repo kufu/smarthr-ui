@@ -68,7 +68,7 @@ export const FieldSet: VFC<Props & ElementProps> = ({
       {errorMessage &&
         (typeof errorMessage === 'string' ? [errorMessage] : errorMessage).map((message) => (
           <Error themes={theme} key={message} className={classNames.error}>
-            <ErrorIcon color={theme.palette.DANGER} className={classNames.errorIcon} />
+            <ErrorIcon color={theme.color.DANGER} className={classNames.errorIcon} />
             <ErrorText className={classNames.errorText}>{message}</ErrorText>
           </Error>
         ))}
