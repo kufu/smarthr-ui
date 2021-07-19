@@ -37,14 +37,15 @@ storiesOf('RightFixedNote', module)
       items={sampleItems}
       onSubmit={action('submit!')}
       onClickEdit={action('click edit!!')}
+      textareaLabel="コメント"
     />
   ))
-  .add('without title', () => (
+  .add('without textarea label', () => (
     <RightFixedNote
+      title="RightFixedNote"
       items={sampleItems}
       onSubmit={action('submit!')}
       onClickEdit={action('click edit!!')}
-      textareaLabel="コメント"
     />
   ))
   .add('without items', () => (
@@ -52,12 +53,13 @@ storiesOf('RightFixedNote', module)
       title="RightFixedNote"
       onSubmit={action('submit!')}
       onClickEdit={action('click edit!!')}
+      textareaLabel="コメント"
     />
   ))
-  .add('without title and items', () => (
+  .add('without items and textarea label', () => (
     <RightFixedNote
+      title="RightFixedNote"
       onSubmit={action('submit!')}
       onClickEdit={action('click edit!!')}
-      textareaLabel="コメント"
     />
   ))
