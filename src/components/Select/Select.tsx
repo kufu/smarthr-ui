@@ -99,12 +99,12 @@ const Wrapper = styled.div<{
   disabled?: boolean
   themes: Theme
 }>(({ $width, error, disabled, themes }) => {
-  const { frame, color, interaction } = themes
+  const { border, radius, color, interaction } = themes
   return css`
     position: relative;
     width: ${$width};
-    border-radius: ${frame.border.radius.m};
-    border: ${frame.border.default};
+    border-radius: ${radius.m};
+    border: ${border.shorthand};
     background-color: #fff;
     box-sizing: border-box;
     transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
@@ -132,14 +132,14 @@ const Wrapper = styled.div<{
 })
 const SelectBox = styled.select<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar, frame, color } = themes
+    const { fontSize, spacingByChar, radius, color } = themes
 
     return css`
       display: inline-block;
       width: 100%;
       padding: ${spacingByChar(0.5)};
       padding-right: ${spacingByChar(2)};
-      border-radius: ${frame.border.radius.m};
+      border-radius: ${radius.m};
       border: none;
       background-color: transparent;
       font-size: ${fontSize.M};

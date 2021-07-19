@@ -44,13 +44,13 @@ export const TextButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props })
 
 const textStyle = css`
   ${({ themes }: { themes: Theme }) => {
-    const { color, interaction, frame } = themes
+    const { color, interaction, border } = themes
 
     return css`
       background-color: transparent;
       color: ${color.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
-      border: ${frame.border.lineWidth} ${frame.border.lineStyle} transparent;
+      border: ${border.lineWidth} ${border.lineStyle} transparent;
 
       &.hover,
       &:focus {

@@ -41,7 +41,7 @@ export const DarkBalloon = balloonFactory('dark')
 
 const Base = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { color, frame, fontSize, shadow } = themes
+    const { color, border, fontSize, shadow } = themes
 
     return css`
       position: relative;
@@ -55,7 +55,7 @@ const Base = styled.div<{ themes: Theme }>`
       &::after {
         display: block;
         position: absolute;
-        border-style: ${frame.border.lineStyle};
+        border-style: ${border.lineStyle};
         content: '';
       }
 

@@ -35,9 +35,9 @@ export const Head: VFC<Props & ElementProps> = ({
 }
 
 const BulkActionTD = styled.td<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, frame, color, spacingByChar } = themes
+  const { fontSize, border, color, spacingByChar } = themes
   return css`
-    border-top: ${frame.border.default};
+    border-top: ${border.shorthand};
     background-color: ${color.ACTION_BACKGROUND};
     padding: ${spacingByChar(1)};
     font-size: ${fontSize.M};

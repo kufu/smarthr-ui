@@ -118,15 +118,15 @@ const Wrapper = styled.span<{
   $disabled?: boolean
   error?: boolean
 }>(({ themes, $width = 'auto', $disabled, error }) => {
-  const { frame, color } = themes
+  const { border, radius, color } = themes
   return css`
     position: relative;
     display: inline-flex;
     align-items: stretch;
     width: ${typeof $width === 'number' ? `${$width}px` : $width};
     background-color: #fff;
-    border-radius: ${frame.border.radius.m};
-    border: ${frame.border.default};
+    border-radius: ${radius.m};
+    border: ${border.shorthand};
     box-sizing: border-box;
     cursor: text;
 
@@ -147,7 +147,7 @@ const StyledInput = styled.input<
 >`
   ${(props) => {
     const { prefixWidth, suffixWidth, themes } = props
-    const { fontSize, spacingByChar, color, frame } = themes
+    const { fontSize, spacingByChar, color, radius } = themes
 
     return css`
       flex-grow: 1;
@@ -158,7 +158,7 @@ const StyledInput = styled.input<
       padding-left: calc(${spacingByChar(0.5)} + ${prefixWidth}px);
       padding-right: calc(${spacingByChar(0.5)} + ${suffixWidth}px);
       border: none;
-      border-radius: ${frame.border.radius.m};
+      border-radius: ${radius.m};
       font-size: ${fontSize.M};
       color: ${color.TEXT_BLACK};
       line-height: 1.6;
