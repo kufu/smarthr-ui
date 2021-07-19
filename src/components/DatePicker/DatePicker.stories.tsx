@@ -18,7 +18,7 @@ storiesOf('DatePicker', module)
       <List>
         <dt>DatePicker</dt>
         <dd>
-          <DatePicker onChangeDate={action('change')} />
+          <DatePicker onChangeDate={action('change')} data-test="datepicker-1" />
         </dd>
         <dt>Pass `from`, `to`</dt>
         <dd>
