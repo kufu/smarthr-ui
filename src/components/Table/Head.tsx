@@ -45,7 +45,7 @@ const StyledThead = styled.thead<{ themes: Theme; $fixed: boolean }>(({ themes, 
       position: sticky;
       top: 0;
       left: 0;
-      z-index: ${zIndex.FIXED_MENU};
+      z-index: ${zIndex.FIXED_MENU}; /* zIndexの値はセマンティクストークンとして管理しているため、明示的に値を指定しないと重なり順が崩れるため設定しています */
     `
   )
 })
