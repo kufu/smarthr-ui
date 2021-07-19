@@ -1,129 +1,74 @@
-import React, { VFC, useCallback } from 'react'
+import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
-import { transparentize } from 'polished'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useId } from '../../hooks/useId'
 import { useClassNames } from './useClassNames'
 
-import { FaCheckIcon, FaMinusIcon } from '../Icon'
+import { CheckBoxInput, Props as CheckBoxInputProps } from './CheckBoxInput'
 
-export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
-  mixed?: boolean
+type Props = CheckBoxInputProps & {
+  lineHeight?: number
+  children?: ReactNode
 }
 
-/**
- * @deprecated The CheckBox component is deprecated, so use CheckBoxNew component instead.
- */
-export const CheckBox: VFC<Props> = ({ mixed = false, className = '', onChange, ...props }) => {
+export const CheckBox: FC<Props> = ({ lineHeight = 1.5, className = '', children, ...props }) => {
   const theme = useTheme()
   const classNames = useClassNames()
-  const { checked, disabled } = props
-  const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (onChange) onChange(e)
-    },
-    [onChange],
-  )
+  const checkBoxId = useId(props.id)
+
+  if (!children)
+    return (
+      <Wrapper className={`${className} ${classNames.wrapper}`}>
+        <CheckBoxInput {...props} />
+      </Wrapper>
+    )
 
   return (
-    <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
-      <Input
-        {...props}
-        type="checkbox"
-        onChange={handleChange}
+    <Wrapper className={`${className} ${classNames.wrapper}`}>
+      <CheckBoxInput id={checkBoxId} {...props} />
+
+      <Label
+        className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
+        htmlFor={checkBoxId}
+        $lineHeight={lineHeight}
         themes={theme}
-        {...(mixed && { 'aria-checked': 'mixed' })}
-      />
-      <Box className={boxClassName} themes={theme} />
-      {checked && (
-        <IconWrap themes={theme}>
-          {mixed ? <FaMinusIcon size={10} color="#fff" /> : <FaCheckIcon size={10} color="#fff" />}
-        </IconWrap>
-      )}
+      >
+        {children}
+      </Label>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
-    return css`
-      position: relative;
-      display: inline-block;
-      width: ${size.pxToRem(16)};
-      height: ${size.pxToRem(16)};
-      flex-shrink: 0;
-      line-height: 1;
-      box-sizing: border-box;
-    `
-  }}
+// Use flex-start to support multi-line text.
+const Wrapper = styled.div`
+  display: inline-flex;
+  align-items: flex-start;
 `
-const Box = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { frame, palette } = themes
-    return css`
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 4px;
-      border: ${frame.border.default};
-      background-color: #fff;
-      box-sizing: border-box;
-      pointer-events: none;
-      &.active {
-        border-color: ${palette.MAIN};
-        background-color: ${palette.MAIN};
-      }
-      &.disabled {
-        background-color: ${palette.BORDER};
-        border-color: ${palette.BORDER};
-        &.active {
-          border-color: ${palette.BORDER};
-        }
-      }
-    `
-  }}
-`
-const Input = styled.input<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { shadow, color } = themes
-    return css`
-      opacity: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      cursor: pointer;
-      &[disabled] {
-        pointer-events: none;
-      }
-      &:hover + span {
-        box-shadow: 0 0 0 2px ${transparentize(0.78, color.MAIN)};
-      }
-      &:focus + span {
-        box-shadow: ${shadow.OUTLINE};
-      }
-    `
-  }}
-`
-const IconWrap = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { size } = themes
+const Label = styled.label<{ themes: Theme; $lineHeight: number }>`
+  ${({ themes, $lineHeight }) => {
+    const { spacingByChar, color, fontSize } = themes
 
     return css`
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      display: inline-block;
-      width: ${size.pxToRem(10)};
-      height: ${size.pxToRem(10)};
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      & > svg {
-        vertical-align: top;
+      margin-left: ${spacingByChar(0.5)};
+      color: ${color.TEXT_BLACK};
+      font-size: ${fontSize.M};
+      line-height: ${$lineHeight};
+      cursor: pointer;
+
+      &.disabled {
+        color: ${color.TEXT_DISABLED};
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      /* Since the positions of checkbox and text are misaligned, create a pseudo element that adjusts the line-height. */
+      &::before {
+        display: block;
+        width: 0;
+        height: 0;
+        margin-top: calc((1 - ${$lineHeight}) * 0.4em);
+        content: '';
       }
     `
   }}

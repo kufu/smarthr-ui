@@ -1,8 +1,6 @@
 // components
 export { LightBalloon, DarkBalloon } from './components/Balloon'
 export { CheckBox } from './components/CheckBox'
-export { CheckBoxLabel } from './components/CheckBoxLabel'
-export { CheckBoxNew } from './components/CheckBoxNew'
 export {
   Dropdown,
   DropdownTrigger,
