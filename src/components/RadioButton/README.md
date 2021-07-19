@@ -3,7 +3,7 @@
 ```tsx
 import { RadioButton } from 'smarthr-ui'
 
-;<RadioButton name="sample" checked onChange={(e) => console.log(e)}>
+<RadioButton name="sample" checked onChange={(e) => console.log(e)}>
   Radio button label sample.
 </RadioButton>
 ```
