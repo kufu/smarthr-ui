@@ -97,7 +97,7 @@ const Container = styled.div`
 `
 const YearWrapper = styled.span<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
   ({ themes, isThisYear, isSelected }) => {
-    const { palette, fontSize } = themes
+    const { color, fontSize } = themes
     return css`
       display: flex;
       align-items: center;
@@ -110,12 +110,12 @@ const YearWrapper = styled.span<{ themes: Theme; isThisYear?: boolean; isSelecte
       line-height: 0;
       ${isThisYear &&
       css`
-        border: solid 1px ${palette.BORDER};
+        border: solid 1px ${color.BORDER};
       `};
       ${isSelected &&
       css`
         color: #fff !important;
-        background-color: ${palette.MAIN} !important;
+        background-color: ${color.MAIN} !important;
       `}
     `
   },
@@ -130,8 +130,8 @@ const YearButton = styled(UnstyledButton)<{ themes: Theme }>`
   &:hover {
     ${YearWrapper} {
       ${({ themes }) => css`
-        color: ${themes.palette.TEXT_BLACK};
-        background-color: ${themes.palette.BASE_GREY};
+        color: ${themes.color.TEXT_BLACK};
+        background-color: ${themes.color.BASE_GREY};
       `}
     }
   }

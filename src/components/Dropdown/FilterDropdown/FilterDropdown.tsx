@@ -97,7 +97,7 @@ const ContentLayout = styled.div`
 const BottomLayout = styled.div<{ themes: Theme }>`
   display: flex;
   align-items: center;
-  border-top: 1px solid ${({ themes }) => themes.palette.BORDER};
+  border-top: 1px solid ${({ themes }) => themes.color.BORDER};
   padding: 16px 24px;
 `
 const ResetButtonLayout = styled.div`

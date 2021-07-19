@@ -74,7 +74,7 @@ const Wrapper = styled(Base)<{ themes: Theme }>`
   ${({ themes: { spacingByChar, shadow } }) => {
     return css`
       display: flex;
-      box-shadow: ${shadow.DIALOG};
+      box-shadow: ${shadow.LAYER3};
       padding: ${spacingByChar(1)};
     `
   }}

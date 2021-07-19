@@ -5,15 +5,7 @@ import addons from '@storybook/addons'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { addReadme } from 'storybook-readme'
 import { Reset } from 'styled-reset'
-import {
-  ArgsTable,
-  Description,
-  Heading,
-  Primary,
-  Stories,
-  Subtitle,
-  Title,
-} from '@storybook/addon-docs/blocks'
+import { ArgsTable, Title } from '@storybook/addon-docs'
 
 import { createTheme } from '../src/themes/createTheme'
 import { ThemeProvider } from '../src/themes/ThemeProvider'
@@ -48,17 +40,11 @@ export const parameters = {
     // This setting is needed not to apply css of storybook-readme to DocsPage
     highlightContent: false,
   },
-  controls: { disable: true },
   docs: {
     source: { type: 'dynamic' },
     page: () => (
       <>
         <Title />
-        <Subtitle />
-        <Description />
-        <Primary />
-        <Stories title="Usage" />
-        <Heading>Props</Heading>
         <ArgsTable />
       </>
     ),

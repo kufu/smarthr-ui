@@ -114,24 +114,26 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
 )
 
 const Container = styled.section<{ themes: Theme }>`
-  display: inline-block;
-  border-radius: 6px;
-  background-color: #fff;
-  box-shadow: 0 4px 10px 0 rgba(51, 51, 51, 0.3);
-  color: ${(props) => props.themes.palette.TEXT_BLACK};
-  overflow: hidden;
+  ${({ themes: { color, shadow } }) => css`
+    display: inline-block;
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: ${shadow.LAYER3};
+    color: ${color.TEXT_BLACK};
+    overflow: hidden;
+  `}
 `
 const YearMonth = styled.div`
   margin-right: 8px;
   font-weight: bold;
 `
 const Header = styled.header<{ themes: Theme }>(({ themes }) => {
-  const { palette, fontSize } = themes
+  const { color, fontSize } = themes
   return css`
     display: flex;
     align-items: center;
     padding: 16px;
-    border-bottom: solid 1px ${palette.BORDER};
+    border-bottom: solid 1px ${color.BORDER};
     ${YearMonth} {
       font-size: ${fontSize.M};
     }

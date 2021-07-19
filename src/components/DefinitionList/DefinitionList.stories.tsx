@@ -62,7 +62,7 @@ storiesOf('DefinitionList', module).add('all', () => {
                 <Term>
                   <span>term 2</span>
                   <Alert>
-                    <FaExclamationCircleIcon size={11} color={themes.palette.DANGER} />
+                    <FaExclamationCircleIcon size={11} color={themes.color.DANGER} />
                     <AlertText themes={themes}>error occurred</AlertText>
                   </Alert>
                 </Term>
@@ -97,6 +97,6 @@ const Alert = styled.span`
 `
 const AlertText = styled.span<{ themes: Theme }>`
   margin-left: 4px;
-  color: ${({ themes }) => themes.palette.TEXT_BLACK};
+  color: ${({ themes }) => themes.color.TEXT_BLACK};
   font-size: ${({ themes }) => themes.fontSize.S};
 `

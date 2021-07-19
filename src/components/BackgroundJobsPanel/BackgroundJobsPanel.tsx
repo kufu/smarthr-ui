@@ -121,7 +121,7 @@ const Container = styled(Base)<{ themes: Theme }>(({ themes }) => {
     flex-direction: column;
     min-width: 420px;
     max-width: 600px;
-    color: ${themes.palette.TEXT_BLACK};
+    color: ${themes.color.TEXT_BLACK};
   `
 })
 const Header = styled.div`
@@ -145,12 +145,12 @@ const HeaderButtonLayout = styled.div<{ themes: Theme }>(({ themes: { spacingByC
   `
 })
 const JobList = styled.ul<{ isExpanded: boolean; themes: Theme }>(
-  ({ isExpanded, themes: { frame, spacingByChar } }) => {
+  ({ isExpanded, themes: { border, spacingByChar } }) => {
     return css`
       margin: 0;
       list-style: none;
       padding: ${spacingByChar(1)};
-      border-top: ${frame.border.default};
+      border-top: ${border.shorthand};
       ${!isExpanded &&
       css`
         height: 0;

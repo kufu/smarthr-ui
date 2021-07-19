@@ -200,7 +200,7 @@ export function useListBox<T>({
                     role="option"
                     className={`${className} ${classNames.addButton}`}
                   >
-                    <AddIcon size={14} color={theme.palette.TEXT_LINK} $theme={theme} />
+                    <AddIcon size={14} color={theme.color.TEXT_LINK} $theme={theme} />
                     <AddText themes={theme}>「{label}」を追加</AddText>
                   </AddButton>
                 )
@@ -265,7 +265,7 @@ export function useListBox<T>({
 
 const Container = styled.div<{ top: number; left: number; width: number; themes: Theme }>(
   ({ top, left, width, themes }) => {
-    const { spacingByChar, frame } = themes
+    const { spacingByChar, radius, shadow } = themes
     return css`
       position: absolute;
       top: ${top}px;
@@ -274,8 +274,8 @@ const Container = styled.div<{ top: number; left: number; width: number; themes:
       max-height: 300px;
       width: ${width}px;
       padding: ${spacingByChar(0.5)} 0;
-      border-radius: ${frame.border.radius.m};
-      box-shadow: rgba(51, 51, 51, 0.3) 0 4px 10px 0;
+      border-radius: ${radius.m};
+      box-shadow: ${shadow.LAYER3};
       background-color: #fff;
       white-space: nowrap;
       box-sizing: border-box;
@@ -300,7 +300,7 @@ const NoItems = styled.p<{ themes: Theme }>`
 `
 const SelectButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar, palette } = themes
+    const { fontSize, spacingByChar, color } = themes
 
     return css`
       display: block;
@@ -313,17 +313,17 @@ const SelectButton = styled.button<{ themes: Theme }>`
       cursor: pointer;
 
       &.active {
-        background-color: ${palette.COLUMN};
+        background-color: ${color.COLUMN};
         color: inherit;
       }
 
       &[aria-selected='true'] {
-        background-color: ${palette.MAIN};
+        background-color: ${color.MAIN};
         color: #fff;
       }
 
       &[disabled] {
-        color: ${palette.TEXT_DISABLED};
+        color: ${color.TEXT_DISABLED};
         cursor: not-allowed;
       }
     `
@@ -346,10 +346,10 @@ const AddIcon = styled(FaPlusCircleIcon)<{ $theme: Theme }>`
 `
 const AddText = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette } = themes
+    const { color } = themes
 
     return css`
-      color: ${palette.TEXT_LINK};
+      color: ${color.TEXT_LINK};
     `
   }}
 `

@@ -59,7 +59,7 @@ storiesOf('Header', module)
       isCrew
       user={{
         displayName: 'example@example.com',
-        avatar: 'https://placehold.jp/150x150.png',
+        avatar: '/images/150x150.png',
       }}
       currentTenantName="example, Inc."
       notificationLength={2}
@@ -72,7 +72,7 @@ storiesOf('Header', module)
       isCrew={false}
       user={{
         displayName: 'example@example.com',
-        avatar: 'https://placehold.jp/150x150.png',
+        avatar: '/images/150x150.png',
       }}
       currentTenantName="example, Inc."
       notificationLength={999}

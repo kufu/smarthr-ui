@@ -1,23 +1,26 @@
 version: 2.1
 
 commands:
-  run-npm-test:
+  setup-for-test:
     steps:
       - checkout
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - dependencies-test-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - modules-cache-
-      - run: yarn install
+            - dependencies-test-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - modules-cache-
+      - run: yarn install --frozen-lockfile
       - save_cache:
           paths:
             - node_modules
           key: dependencies-test-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
-      # run tests!
+  check-source:
+    steps:
       - run: yarn audit --groups dependencies
       - run: yarn lint
+  run-npm-test:
+    steps:
       - run: yarn test -w 1
       - run: yarn test:build-assets
   # visual regression testing
@@ -35,7 +38,7 @@ commands:
           keys:
             - dependencies-reg-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
             - modules-cache-
-      - run: yarn install
+      - run: yarn install --frozen-lockfile
       - save_cache:
           paths:
             - node_modules
@@ -63,6 +66,7 @@ jobs:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
     steps:
+      - setup-for-test
       - run-npm-test
   node-v14:
     docker:
@@ -71,6 +75,8 @@ jobs:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
     steps:
+      - setup-for-test
+      - check-source
       - run-npm-test
   reg-suit:
     docker:
@@ -86,6 +92,9 @@ jobs:
 workflows:
   multiple_builds:
     jobs:
-      - node-v12
-      - node-v14
-      - reg-suit
+      - node-v12:
+          context: smarthr-dockerhub
+      - node-v14:
+          context: smarthr-dockerhub
+      - reg-suit:
+          context: smarthr-dockerhub

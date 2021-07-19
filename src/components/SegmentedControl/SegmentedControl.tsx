@@ -149,7 +149,7 @@ const Container = styled.div`
   display: inline-flex;
 `
 const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
-  const { color, border, frame } = themes
+  const { color, border, radius, shadow } = themes
   return css`
     border: ${border.shorthand};
     border-radius: 0;
@@ -165,6 +165,10 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
       }
     }
 
+    &:focus {
+      ${shadow.focusIndicatorStyles}
+    }
+
     /* active時、buttonの両端にborder.defaultが表示されることを防ぐための処置 */
     &[aria-checked='true'] + & {
       border-right-width: 0;
@@ -173,12 +177,12 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
       }
     }
     &:first-child {
-      border-top-left-radius: ${frame.border.radius.m};
-      border-bottom-left-radius: ${frame.border.radius.m};
+      border-top-left-radius: ${radius.m};
+      border-bottom-left-radius: ${radius.m};
     }
     &:last-child {
-      border-top-right-radius: ${frame.border.radius.m};
-      border-bottom-right-radius: ${frame.border.radius.m};
+      border-top-right-radius: ${radius.m};
+      border-bottom-right-radius: ${radius.m};
     }
     :not(:last-child) {
       border-right-width: 0;
