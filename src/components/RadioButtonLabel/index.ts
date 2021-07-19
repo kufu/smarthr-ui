@@ -1,1 +1,0 @@
-export { RadioButtonLabel } from './RadioButtonLabel'

@@ -16,7 +16,7 @@ import {
 } from '.'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
-import { RadioButtonLabel } from '../RadioButtonLabel'
+import { RadioButton } from '../RadioButton'
 import { DatePicker } from '../DatePicker'
 
 import readme from './README.md'
@@ -78,28 +78,19 @@ export const Default: Story = () => {
         </Content>
         <RadioList>
           <li>
-            <RadioButtonLabel
-              name="Apple"
-              label="Apple"
-              checked={value === 'Apple'}
-              onChange={onChangeValue}
-            />
+            <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChangeValue}>
+              Apple
+            </RadioButton>
           </li>
           <li>
-            <RadioButtonLabel
-              name="Orange"
-              label="Orange"
-              checked={value === 'Orange'}
-              onChange={onChangeValue}
-            />
+            <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChangeValue}>
+              Orange
+            </RadioButton>
           </li>
           <li>
-            <RadioButtonLabel
-              name="Grape"
-              label="Grape"
-              checked={value === 'Grape'}
-              onChange={onChangeValue}
-            />
+            <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChangeValue}>
+              Grape
+            </RadioButton>
           </li>
         </RadioList>
         <Footer themes={themes}>
@@ -195,28 +186,19 @@ export const Action_Dialog: Story = () => {
       >
         <RadioList>
           <li>
-            <RadioButtonLabel
-              name="Apple"
-              label="Apple"
-              checked={value === 'Apple'}
-              onChange={onChange}
-            />
+            <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
+              Apple
+            </RadioButton>
           </li>
           <li>
-            <RadioButtonLabel
-              name="Orange"
-              label="Orange"
-              checked={value === 'Orange'}
-              onChange={onChange}
-            />
+            <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChange}>
+              Orange
+            </RadioButton>
           </li>
           <li>
-            <RadioButtonLabel
-              name="Grape"
-              label="Grape"
-              checked={value === 'Grape'}
-              onChange={onChange}
-            />
+            <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChange}>
+              Grape
+            </RadioButton>
           </li>
         </RadioList>
         <Buttons>

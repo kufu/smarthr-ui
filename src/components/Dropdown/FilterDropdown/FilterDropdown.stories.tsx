@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 
 import { FilterDropdown } from './FilterDropdown'
-import { RadioButtonLabel } from '../../RadioButtonLabel'
+import { RadioButton } from '../../RadioButton'
 import { Input } from '../../Input'
 
 import readme from './README.md'
@@ -54,28 +54,19 @@ export const Default: Story = () => {
             </Text>
             <RadioButtonList>
               <li>
-                <RadioButtonLabel
-                  name="hoge"
-                  label="hoge"
-                  checked={value === 'hoge'}
-                  onChange={onChangeValue}
-                />
+                <RadioButton name="hoge" checked={value === 'hoge'} onChange={onChangeValue}>
+                  hoge
+                </RadioButton>
               </li>
               <li>
-                <RadioButtonLabel
-                  name="fuga"
-                  label="fuga"
-                  checked={value === 'fuga'}
-                  onChange={onChangeValue}
-                />
+                <RadioButton name="fuga" checked={value === 'fuga'} onChange={onChangeValue}>
+                  fuga
+                </RadioButton>
               </li>
               <li>
-                <RadioButtonLabel
-                  name="piyo"
-                  label="piyo"
-                  checked={value === 'piyo'}
-                  onChange={onChangeValue}
-                />
+                <RadioButton name="piyo" checked={value === 'piyo'} onChange={onChangeValue}>
+                  piyo
+                </RadioButton>
               </li>
               <li>
                 <Input name="test" value={text} onChange={onChangeText} />

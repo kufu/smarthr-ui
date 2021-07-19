@@ -11,7 +11,7 @@ import { DropdownContent } from './DropdownContent'
 import { DropdownCloser } from './DropdownCloser'
 import { DropdownScrollArea } from './DropdownScrollArea'
 import { PrimaryButton, SecondaryButton } from '../Button'
-import { RadioButtonLabel } from '../RadioButtonLabel'
+import { RadioButton } from '../RadioButton'
 import { Input } from '../Input'
 
 import readme from './README.md'
@@ -62,28 +62,19 @@ const ControllableDropdown = () => {
             </Text>
             <RadioButtonList>
               <li>
-                <RadioButtonLabel
-                  name="hoge"
-                  label="hoge"
-                  checked={value === 'hoge'}
-                  onChange={onChangeValue}
-                />
+                <RadioButton name="hoge" checked={value === 'hoge'} onChange={onChangeValue}>
+                  hoge
+                </RadioButton>
               </li>
               <li>
-                <RadioButtonLabel
-                  name="fuga"
-                  label="fuga"
-                  checked={value === 'fuga'}
-                  onChange={onChangeValue}
-                />
+                <RadioButton name="fuga" checked={value === 'fuga'} onChange={onChangeValue}>
+                  fuga
+                </RadioButton>
               </li>
               <li>
-                <RadioButtonLabel
-                  name="piyo"
-                  label="piyo"
-                  checked={value === 'piyo'}
-                  onChange={onChangeValue}
-                />
+                <RadioButton name="piyo" checked={value === 'piyo'} onChange={onChangeValue}>
+                  piyo
+                </RadioButton>
               </li>
               <li>
                 <Input name="test" value={text} onChange={onChangeText} />
