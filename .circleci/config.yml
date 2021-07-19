@@ -10,7 +10,7 @@ commands:
             - dependencies-test-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
             - modules-cache-
-      - run: yarn install
+      - run: yarn install --frozen-lockfile
       - save_cache:
           paths:
             - node_modules
@@ -38,7 +38,7 @@ commands:
           keys:
             - dependencies-reg-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
             - modules-cache-
-      - run: yarn install
+      - run: yarn install --frozen-lockfile
       - save_cache:
           paths:
             - node_modules
@@ -92,6 +92,9 @@ jobs:
 workflows:
   multiple_builds:
     jobs:
-      - node-v12
-      - node-v14
-      - reg-suit
+      - node-v12:
+          context: smarthr-dockerhub
+      - node-v14:
+          context: smarthr-dockerhub
+      - reg-suit:
+          context: smarthr-dockerhub

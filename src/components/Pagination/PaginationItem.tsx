@@ -40,7 +40,7 @@ export const ItemButton = styled(SecondaryButton).attrs({
   size: 's',
 })<{ themes: Theme }>`
   ${({ themes }) => {
-    const { MAIN } = themes.palette
+    const { MAIN } = themes.color
 
     return css`
       line-height: 25px;

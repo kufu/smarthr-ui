@@ -31,7 +31,7 @@ jobs:
           BASE_TAG=v$(npx -c 'echo "$npm_package_version"')
           git checkout $BASE_TAG
           git merge --no-edit ${{ github.ref }}
-      - run: yarn install
+      - run: yarn install --frozen-lockfile
       - name: release dry run
         if: ${{ env.IS_PRERELEASE == 'false' }}
         run: yarn release:dryrun > ${{ env.RESULT_PATH }}

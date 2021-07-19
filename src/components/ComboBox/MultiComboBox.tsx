@@ -285,7 +285,7 @@ export function MultiComboBox<T>({
       </InputArea>
 
       <Suffix themes={theme}>
-        <FaCaretDownIcon color={isFocused ? theme.palette.TEXT_BLACK : theme.palette.BORDER} />
+        <FaCaretDownIcon color={isFocused ? theme.color.TEXT_BLACK : theme.color.BORDER} />
       </Suffix>
 
       {renderListBox()}
@@ -295,15 +295,15 @@ export function MultiComboBox<T>({
 
 const Container = styled.div<{ themes: Theme; width: number | string }>`
   ${({ themes, width }) => {
-    const { frame, palette, shadow, spacingByChar } = themes
+    const { border, radius, color, shadow, spacingByChar } = themes
 
     return css`
       display: inline-flex;
       min-width: calc(62px + 32px + ${spacingByChar(0.5)} * 2);
       width: ${typeof width === 'number' ? `${width}px` : width};
       min-height: 40px;
-      border-radius: ${frame.border.radius.m};
-      border: ${frame.border.default};
+      border-radius: ${radius.m};
+      border: ${border.shorthand};
       box-sizing: border-box;
       background-color: #fff;
       cursor: text;
@@ -313,11 +313,11 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       }
 
       &[aria-invalid='true'] {
-        border-color: ${palette.DANGER};
+        border-color: ${color.DANGER};
       }
 
       &[aria-disabled='true'] {
-        background-color: ${palette.COLUMN};
+        background-color: ${color.COLUMN};
         cursor: not-allowed;
       }
     `

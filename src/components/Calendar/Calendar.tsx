@@ -128,12 +128,12 @@ const YearMonth = styled.div`
   font-weight: bold;
 `
 const Header = styled.header<{ themes: Theme }>(({ themes }) => {
-  const { palette, fontSize } = themes
+  const { color, fontSize } = themes
   return css`
     display: flex;
     align-items: center;
     padding: 16px;
-    border-bottom: solid 1px ${palette.BORDER};
+    border-bottom: solid 1px ${color.BORDER};
     ${YearMonth} {
       font-size: ${fontSize.M};
     }

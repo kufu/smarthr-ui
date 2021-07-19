@@ -53,7 +53,7 @@ export const PaginationControllerItem: VFC<Props> = ({
       aria-label={iconProps.visuallyHiddenText}
     >
       <Icon
-        color={disabled ? theme.palette.TEXT_DISABLED : theme.palette.TEXT_BLACK}
+        color={disabled ? theme.color.TEXT_DISABLED : theme.color.TEXT_BLACK}
         visuallyHiddenText={iconProps.visuallyHiddenText}
         size={13}
       />
