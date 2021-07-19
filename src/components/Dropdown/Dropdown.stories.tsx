@@ -285,7 +285,7 @@ const ControllableBoxBottom = styled.div<{ themes: Theme }>`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  border-top: ${({ themes }) => themes.frame.border.default};
+  border-top: ${({ themes }) => themes.border.shorthand};
   padding: 16px 24px;
 
   & > *:not(:first-child) {

@@ -145,12 +145,12 @@ const HeaderButtonLayout = styled.div<{ themes: Theme }>(({ themes: { spacingByC
   `
 })
 const JobList = styled.ul<{ isExpanded: boolean; themes: Theme }>(
-  ({ isExpanded, themes: { frame, spacingByChar } }) => {
+  ({ isExpanded, themes: { border, spacingByChar } }) => {
     return css`
       margin: 0;
       list-style: none;
       padding: ${spacingByChar(1)};
-      border-top: ${frame.border.default};
+      border-top: ${border.shorthand};
       ${!isExpanded &&
       css`
         height: 0;

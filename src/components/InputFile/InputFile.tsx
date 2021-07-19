@@ -175,14 +175,14 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
 })
 
 const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, frame, color, spacingByChar } = themes
+  const { fontSize, border, radius, color, spacingByChar } = themes
   return css`
     font-family: inherit;
     font-weight: bold;
-    border-radius: ${frame.border.radius.m};
+    border-radius: ${radius.m};
     color: ${color.TEXT_BLACK};
     background-color: #fff;
-    border: ${frame.border.default};
+    border: ${border.shorthand};
 
     > label {
       display: flex;
