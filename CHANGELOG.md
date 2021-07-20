@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [13.3.0](https://github.com/kufu/smarthr-ui/compare/v13.2.0...v13.3.0) (2021-07-20)
+
+
+### Features
+
+* add option for fixedhead ([#1672](https://github.com/kufu/smarthr-ui/issues/1672)) ([21f5c86](https://github.com/kufu/smarthr-ui/commit/21f5c864ff9cd837a32a85e880df2b19d88862db))
+* DropDown コンポーネントの属性の改善 SHRUI-262 ([#1670](https://github.com/kufu/smarthr-ui/issues/1670)) ([e7813d7](https://github.com/kufu/smarthr-ui/commit/e7813d75ff9e978595724e0fcc1c7aad51f0615b))
+* Stack に align を追加 ([#1753](https://github.com/kufu/smarthr-ui/issues/1753)) ([5d00d6b](https://github.com/kufu/smarthr-ui/commit/5d00d6b4f7349154aaeeee93b10f16a84076935b))
+
 ## [13.2.0](https://github.com/kufu/smarthr-ui/compare/v13.1.0...v13.2.0) (2021-07-13)
 
 
