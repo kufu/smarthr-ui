@@ -9,19 +9,21 @@ export type Props = {
   bulkActionArea?: ReactNode
   children?: ReactNode
   className?: string
+  fixed?: boolean
 }
 type ElementProps = Omit<HTMLAttributes<HTMLTableSectionElement>, keyof Props>
 
 export const Head: VFC<Props & ElementProps> = ({
   bulkActionArea,
   className = '',
+  fixed = false,
   children,
   ...props
 }) => {
   const themes = useTheme()
   const classNames = useClassNames().head
   return (
-    <thead {...props} className={`${className} ${classNames.wrapper}`}>
+    <StyledThead {...props} className={className} themes={themes} $fixed={fixed}>
       <TableGroupContext.Provider value={{ group: 'head' }}>{children}</TableGroupContext.Provider>
       {bulkActionArea && (
         <tr className={classNames.bulkActionArea}>
@@ -30,9 +32,23 @@ export const Head: VFC<Props & ElementProps> = ({
           </BulkActionTD>
         </tr>
       )}
-    </thead>
+    </StyledThead>
   )
 }
+
+const StyledThead = styled.thead<{ themes: Theme; $fixed: boolean }>(({ themes, $fixed }) => {
+  const { zIndex } = themes
+
+  return (
+    $fixed &&
+    css`
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: ${zIndex.FIXED_MENU}; /* zIndexの値はセマンティクストークンとして管理しているため、明示的に値を指定しないと重なり順が崩れるため設定しています */
+    `
+  )
+})
 
 const BulkActionTD = styled.td<{ themes: Theme }>(({ themes }) => {
   const { fontSize, border, color, spacingByChar } = themes
