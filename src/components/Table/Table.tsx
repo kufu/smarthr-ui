@@ -29,11 +29,11 @@ export const Table: VFC<Props & ElementProps> = ({ children, className = '', ...
 
 const Wrapper = styled.table<{ themes: Theme }>`
   ${({ themes }) => {
-    const { COLUMN, HEAD } = themes.palette
+    const { COLUMN, HEAD } = themes.color
 
     return css`
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate; /* Headがfixed=trueの場合、separate以外だとHeadとBodyの間に隙間が生まれるため、明示的に指定しています */
       border-spacing: 0;
       background-color: ${COLUMN};
 

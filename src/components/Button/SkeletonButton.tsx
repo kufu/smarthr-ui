@@ -36,17 +36,17 @@ export const SkeletonButtonAnchor: VFC<AnchorProps> = ({ className = '', ...prop
 
 const skeletonStyle = css`
   ${({ themes }: { themes: Theme }) => {
-    const { palette, interaction, frame } = themes
+    const { color, interaction, border } = themes
 
     return css`
       background-color: transparent;
       color: #fff;
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
-      border: ${frame.border.lineWidth} ${frame.border.lineStyle} #fff;
+      border: ${border.lineWidth} ${border.lineStyle} #fff;
 
       &.hover,
       &:focus {
-        background-color: ${palette.OVERLAY};
+        background-color: ${color.OVERLAY};
         color: #fff;
       }
     `

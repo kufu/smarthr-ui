@@ -92,9 +92,9 @@ export const CalendarTable: VFC<Props & ElementProps> = ({
 }
 
 const Table = styled.table<{ themes: Theme }>(({ themes }) => {
-  const { palette, fontSize } = themes
+  const { color, fontSize } = themes
   return css`
-    color: ${palette.TEXT_BLACK};
+    color: ${color.TEXT_BLACK};
     font-size: ${fontSize.M};
     border-spacing: 0;
     margin: 4px 8px 13px;
@@ -105,7 +105,7 @@ const Table = styled.table<{ themes: Theme }>(({ themes }) => {
       vertical-align: middle;
       text-align: center;
       font-weight: normal;
-      color: ${palette.TEXT_GREY};
+      color: ${color.TEXT_GREY};
     }
     td {
       width: 43px;
@@ -126,12 +126,12 @@ const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: bo
   ${({ themes, isToday, isSelected }) => css`
     ${isToday &&
     css`
-      border: solid 1px ${themes.palette.BORDER};
+      border: solid 1px ${themes.color.BORDER};
     `}
 
     ${isSelected &&
     css`
-      background-color: ${themes.palette.MAIN} !important;
+      background-color: ${themes.color.MAIN} !important;
       color: #fff !important;
     `}
   `}
@@ -146,14 +146,14 @@ const CellButton = styled(UnstyledButton)<{ themes: Theme }>(
     cursor: pointer;
 
     :disabled {
-      color: ${themes.palette.TEXT_DISABLED};
+      color: ${themes.color.TEXT_DISABLED};
       cursor: not-allowed;
     }
     :not(:disabled) {
       &:hover {
         ${DateCell} {
-          background-color: ${themes.palette.BASE_GREY};
-          color: ${themes.palette.TEXT_BLACK};
+          background-color: ${themes.color.BASE_GREY};
+          color: ${themes.color.TEXT_BLACK};
         }
       }
     }

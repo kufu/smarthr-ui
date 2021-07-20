@@ -47,28 +47,28 @@ export const InformationPanel: VFC<Props & BaseElementProps> = ({
   const theme = useTheme()
 
   let Icon = InfoTitleIcon
-  let iconColor = theme.palette.TEXT_GREY
+  let iconColor = theme.color.TEXT_GREY
 
   switch (type) {
     case 'success':
       Icon = SuccessTitleIcon
-      iconColor = theme.palette.MAIN
+      iconColor = theme.color.MAIN
       break
     case 'info':
       Icon = InfoTitleIcon
-      iconColor = theme.palette.TEXT_GREY
+      iconColor = theme.color.TEXT_GREY
       break
     case 'warning':
       Icon = WarningTitleIcon
-      iconColor = theme.palette.WARNING
+      iconColor = theme.color.WARNING
       break
     case 'error':
       Icon = ErrorTitleIcon
-      iconColor = theme.palette.DANGER
+      iconColor = theme.color.DANGER
       break
     case 'sync':
       Icon = SyncIcon
-      iconColor = theme.palette.MAIN
+      iconColor = theme.color.MAIN
   }
 
   const [active, setActive] = useState(activeProps)

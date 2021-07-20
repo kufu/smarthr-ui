@@ -94,7 +94,7 @@ const Spinner = styled.div`
 
 const Line = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette } = themes
+    const { color } = themes
 
     return css`
       position: absolute;
@@ -122,7 +122,7 @@ const Line = styled.div<{ themes: Theme }>`
       /* stylelint-enable */
 
       &.primary {
-        border-color: ${palette.BRAND};
+        border-color: ${color.BRAND};
       }
       &.light {
         border-color: #fff;
@@ -183,7 +183,7 @@ const Ticker = styled.div`
 
 const Text = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, palette, spacingByChar } = themes
+    const { fontSize, color, spacingByChar } = themes
 
     return css`
       margin-top: ${spacingByChar(1)};
@@ -191,7 +191,7 @@ const Text = styled.p<{ themes: Theme }>`
       text-align: center;
 
       &.primary {
-        color: ${palette.TEXT_BLACK};
+        color: ${color.TEXT_BLACK};
       }
       &.light {
         color: #fff;
