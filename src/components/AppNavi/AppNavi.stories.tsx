@@ -145,11 +145,11 @@ storiesOf('AppNavi', module)
 
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette } = themes
+    const { color } = themes
 
     return css`
       padding: 32px 0;
-      background-color: ${palette.BACKGROUND};
+      background-color: ${color.BACKGROUND};
     `
   }}
 `
@@ -162,7 +162,7 @@ const InnerWrapper = styled.div`
 
 const ListWrapper = styled.ul<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette } = themes
+    const { color } = themes
 
     return css`
       margin: 0;
@@ -175,10 +175,10 @@ const ListWrapper = styled.ul<{ themes: Theme }>`
         padding: 0 20px;
         border: none;
         background-color: #fff;
-        color: ${palette.TEXT_BLACK};
+        color: ${color.TEXT_BLACK};
 
         &:hover {
-          background-color: ${palette.hoverColor('#fff')};
+          background-color: ${color.hoverColor('#fff')};
         }
       }
     `

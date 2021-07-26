@@ -129,14 +129,14 @@ export const Header: VFC<Props & ElementProps> = ({
 }
 
 const Wrapper = styled.header<{ themes: Theme }>`
-  ${({ themes: { spacingByChar, palette } }) => {
+  ${({ themes: { spacingByChar, color } }) => {
     return css`
       display: flex;
       align-items: center;
       justify-content: space-between;
       height: 50px;
       padding: 0 ${spacingByChar(1)};
-      background-color: ${palette.BRAND};
+      background-color: ${color.BRAND};
     `
   }}
 `

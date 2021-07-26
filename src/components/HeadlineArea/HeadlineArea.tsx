@@ -47,11 +47,11 @@ const Wrapper = styled.div`
 `
 const Description = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar, palette } = themes
+    const { fontSize, spacingByChar, color } = themes
 
     return css`
       margin-top: ${spacingByChar(1)};
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       font-size: ${fontSize.M};
       line-height: 1.5;
     `

@@ -39,15 +39,15 @@ function getIcon(status: Status): React.ComponentType<IconProps> {
 
 function useIconColor(status: Status) {
   const theme = useTheme()
-  const { palette } = theme
+  const { color } = theme
   switch (status) {
     case 'warning':
-      return palette.WARNING
+      return color.WARNING
     case 'error':
-      return palette.DANGER
+      return color.DANGER
     case 'done':
-      return palette.TEXT_GREY
+      return color.TEXT_GREY
     default:
-      return palette.TEXT_BLACK
+      return color.TEXT_BLACK
   }
 }

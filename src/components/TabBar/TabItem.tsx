@@ -57,11 +57,11 @@ const resetButtonStyle = css`
 const Wrapper = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
-    const { fontSize, spacingByChar, palette, interaction } = themes
+    const { fontSize, spacingByChar, color, interaction } = themes
     return css`
       font-weight: bold;
       font-size: ${fontSize.M};
-      color: ${palette.TEXT_GREY};
+      color: ${color.TEXT_GREY};
       height: 40px;
       border-bottom: solid 3px transparent;
       padding: 0 ${spacingByChar(1.5)};
@@ -72,18 +72,18 @@ const Wrapper = styled.button<{ themes: Theme }>`
 
       &.selected {
         position: relative;
-        color: ${palette.TEXT_BLACK};
-        border-color: ${palette.MAIN};
+        color: ${color.TEXT_BLACK};
+        border-color: ${color.MAIN};
       }
 
       :hover {
-        background-color: ${palette.COLUMN};
-        color: ${palette.TEXT_BLACK};
+        background-color: ${color.COLUMN};
+        color: ${color.TEXT_BLACK};
       }
 
       :disabled {
         background-color: transparent;
-        color: ${palette.disableColor(palette.TEXT_GREY)};
+        color: ${color.disableColor(color.TEXT_GREY)};
         cursor: not-allowed;
       }
     `

@@ -27,7 +27,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
   padding: 24px;
   border-radius: 6px;
   box-shadow: rgba(51, 51, 51, 0.3) 1px 1px 4px 0;
-  color: ${({ themes }) => themes.palette.TEXT_BLACK};
+  color: ${({ themes }) => themes.color.TEXT_BLACK};
   font-size: ${({ themes }) => themes.fontSize.M};
   text-align: center;
   line-height: 1;
@@ -49,7 +49,7 @@ const Description = styled.div`
 `
 
 const Link = styled.a<{ themes: Theme }>`
-  color: ${({ themes }) => themes.palette.TEXT_LINK};
+  color: ${({ themes }) => themes.color.TEXT_LINK};
 `
 const LinkText = styled.span`
   vertical-align: middle;
