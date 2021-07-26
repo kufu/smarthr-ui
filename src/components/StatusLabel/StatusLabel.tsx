@@ -29,7 +29,7 @@ export const StatusLabel: VFC<Props & ElementProps> = ({
 
 const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, size, spacingByChar, palette } = themes
+    const { fontSize, size, spacingByChar, color } = themes
 
     return css`
       box-sizing: border-box;
@@ -46,42 +46,42 @@ const Wrapper = styled.span<{ themes: Theme }>`
       line-height: 1;
 
       &.done {
-        border-color: ${palette.BORDER};
-        color: ${palette.TEXT_GREY};
+        border-color: ${color.BORDER};
+        color: ${color.TEXT_GREY};
       }
 
       &.success {
-        border-color: ${palette.MAIN};
-        color: ${palette.MAIN};
+        border-color: ${color.MAIN};
+        color: ${color.MAIN};
       }
 
       &.process {
-        border-color: ${palette.WARNING};
-        color: ${palette.WARNING};
+        border-color: ${color.WARNING};
+        color: ${color.WARNING};
       }
 
       &.required {
-        border-color: ${palette.DANGER};
-        color: ${palette.DANGER};
+        border-color: ${color.DANGER};
+        color: ${color.DANGER};
       }
 
       &.disabled {
-        background-color: ${palette.TEXT_GREY};
+        background-color: ${color.TEXT_GREY};
         color: #fff;
       }
 
       &.must {
-        background-color: ${palette.MAIN};
+        background-color: ${color.MAIN};
         color: #fff;
       }
 
       &.warning {
-        background-color: ${palette.WARNING};
+        background-color: ${color.WARNING};
         color: #fff;
       }
 
       &.error {
-        background-color: ${palette.DANGER};
+        background-color: ${color.DANGER};
         color: #fff;
       }
     `

@@ -467,7 +467,7 @@ const Title = styled.p<{ themes: Theme }>`
   margin: 0;
   font-size: ${({ themes }) => themes.fontSize.L};
   line-height: 1;
-  border-bottom: ${({ themes }) => themes.frame.border.default};
+  border-bottom: ${({ themes }) => themes.border.shorthand};
 `
 const Description = styled.p`
   margin: 16px 24px;
@@ -486,7 +486,7 @@ const Footer = styled.div<{ themes: Theme }>`
   display: flex;
   justify-content: flex-end;
   padding: 16px 24px;
-  border-top: ${({ themes }) => themes.frame.border.default};
+  border-top: ${({ themes }) => themes.border.shorthand};
 
   & > *:not(:first-child) {
     margin-left: 16px;

@@ -77,7 +77,7 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   ${({ themes, wide }) => {
-    const { frame, fontSize, spacingByChar, interaction, shadow } = themes
+    const { radius, fontSize, spacingByChar, interaction, shadow } = themes
 
     return css`
       display: inline-flex;
@@ -86,7 +86,7 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       width: ${wide ? '100%;' : 'auto'};
       min-width: 2rem;
       vertical-align: middle;
-      border-radius: ${frame.border.radius.m};
+      border-radius: ${radius.m};
       font-family: inherit;
       font-weight: bold;
       text-align: center;

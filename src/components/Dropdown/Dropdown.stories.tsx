@@ -228,7 +228,7 @@ storiesOf('Dropdown', module)
 
 const List = styled.ul<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette } = themes
+    const { color } = themes
     return css`
       margin: 0;
       padding: 8px 0;
@@ -240,10 +240,10 @@ const List = styled.ul<{ themes: Theme }>`
         padding: 0 20px;
         border: none;
         background-color: #fff;
-        color: ${palette.TEXT_BLACK};
+        color: ${color.TEXT_BLACK};
 
         &:hover {
-          background-color: ${palette.hoverColor('#fff')};
+          background-color: ${color.hoverColor('#fff')};
         }
       }
     `
@@ -251,7 +251,7 @@ const List = styled.ul<{ themes: Theme }>`
 `
 const Wrapper = styled.div<{ themes: Theme }>`
   padding: 24px;
-  color: ${({ themes }) => themes.palette.TEXT_BLACK};
+  color: ${({ themes }) => themes.color.TEXT_BLACK};
 `
 const Legends = styled.ul`
   margin: 0;
@@ -270,13 +270,13 @@ const ControllableBoxMain = styled.div`
 `
 const Text = styled.p<{ themes: Theme }>`
   margin: 0;
-  color: ${({ themes }) => themes.palette.TEXT_BLACK};
+  color: ${({ themes }) => themes.color.TEXT_BLACK};
 `
 const ControllableBoxBottom = styled.div<{ themes: Theme }>`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  border-top: ${({ themes }) => themes.frame.border.default};
+  border-top: ${({ themes }) => themes.border.shorthand};
   padding: 16px 24px;
 
   & > *:not(:first-child) {
@@ -304,5 +304,5 @@ const Fixed = styled.div<{ themes: Theme }>`
   border: none;
   font-weight: bold;
   line-height: 40px;
-  color: ${({ themes }) => themes.palette.TEXT_BLACK};
+  color: ${({ themes }) => themes.color.TEXT_BLACK};
 `

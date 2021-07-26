@@ -99,12 +99,12 @@ const Wrapper = styled.div<{
   disabled?: boolean
   themes: Theme
 }>(({ $width, error, disabled, themes }) => {
-  const { frame, palette, interaction } = themes
+  const { border, radius, color, interaction } = themes
   return css`
     position: relative;
     width: ${$width};
-    border-radius: ${frame.border.radius.m};
-    border: ${frame.border.default};
+    border-radius: ${radius.m};
+    border: ${border.shorthand};
     background-color: #fff;
     box-sizing: border-box;
     transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
@@ -112,51 +112,51 @@ const Wrapper = styled.div<{
     &:hover {
       ${!disabled &&
       css`
-        background-color: ${palette.hoverColor('#fff')};
+        background-color: ${color.hoverColor('#fff')};
       `}
     }
     :focus-within {
-      border-color: ${palette.MAIN};
+      border-color: ${color.MAIN};
     }
 
     ${error &&
     css`
-      border-color: ${palette.DANGER} !important;
+      border-color: ${color.DANGER} !important;
     `}
     ${disabled &&
     css`
-      background-color: ${palette.COLUMN};
-      color: ${palette.TEXT_DISABLED};
+      background-color: ${color.COLUMN};
+      color: ${color.TEXT_DISABLED};
     `}
   `
 })
 const SelectBox = styled.select<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar, frame, palette } = themes
+    const { fontSize, spacingByChar, radius, color } = themes
 
     return css`
       display: inline-block;
       width: 100%;
       padding: ${spacingByChar(0.5)};
       padding-right: ${spacingByChar(2)};
-      border-radius: ${frame.border.radius.m};
+      border-radius: ${radius.m};
       border: none;
       background-color: transparent;
       font-size: ${fontSize.M};
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       line-height: 1.6;
       outline: none;
       appearance: none;
       cursor: pointer;
 
       &::placeholder {
-        color: ${palette.TEXT_GREY};
+        color: ${color.TEXT_GREY};
       }
 
       &[disabled] {
         pointer-events: none;
         cursor: not-allowed;
-        color: ${palette.TEXT_DISABLED};
+        color: ${color.TEXT_DISABLED};
         opacity: 1;
       }
 
@@ -164,7 +164,7 @@ const SelectBox = styled.select<{ themes: Theme }>`
       &:disabled {
         &,
         &::-ms-value {
-          color: ${palette.TEXT_DISABLED};
+          color: ${color.TEXT_DISABLED};
         }
       }
 
