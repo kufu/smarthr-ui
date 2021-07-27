@@ -80,6 +80,10 @@ type Props<T> = {
    * Fire when clicking an element of `items`.
    */
   onSelect: (item: Item<T>) => void
+  /**
+   * Fire when the item selections are changed.
+   */
+  onChangeSelected?: (selectedItems: Array<Item<T>>) => void
 }
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
@@ -100,6 +104,7 @@ export function MultiComboBox<T>({
   onAdd,
   onDelete,
   onSelect,
+  onChangeSelected,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -128,7 +133,10 @@ export function MultiComboBox<T>({
     items: filteredItems,
     inputValue,
     onAdd,
-    onSelect,
+    onSelect: (selected) => {
+      onSelect(selected)
+      onChangeSelected && onChangeSelected(selectedItems.concat(selected))
+    },
     isExpanded: isFocused,
     isAddable: creatable && !!inputValue && !isDuplicate,
     isDuplicate: creatable && !!inputValue && isDuplicate && !hasSelectableExactMatch,
@@ -223,7 +231,16 @@ export function MultiComboBox<T>({
                       themes={theme}
                       className={classNames.deleteButton}
                       disabled={disabled}
-                      onClick={() => onDelete(item)}
+                      onClick={() => {
+                        onDelete(item)
+                        onChangeSelected &&
+                          onChangeSelected(
+                            selectedItems.filter(
+                              (selected) =>
+                                selected.label !== item.label || selected.value !== item.value,
+                            ),
+                          )
+                      }}
                     >
                       <FaTimesCircleIcon
                         size={11}
