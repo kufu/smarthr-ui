@@ -60,10 +60,10 @@ export const Cell: VFC<Props & ElementProps> = ({
 
 const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
   ${({ themes, onClick }) => {
-    const { fontSize, size, spacingByChar, color, interaction } = themes
+    const { fontSize, spacingByChar, color, interaction } = themes
 
     return css`
-      height: ${size.pxToRem(40)};
+      height: 1.5rem;
       font-size: ${fontSize.S};
       font-weight: bold;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
@@ -72,7 +72,6 @@ const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
       text-align: left;
       line-height: 1.5;
       vertical-align: middle;
-      box-sizing: border-box;
 
       &.highlighted {
         background-color: ${color.hoverColor(color.HEAD)};
@@ -98,17 +97,16 @@ const Td = styled.td<{ themes: Theme }>`
   }
 
   ${({ themes }) => {
-    const { fontSize, size, spacingByChar, color, border } = themes
+    const { fontSize, spacingByChar, color, border } = themes
 
     return css`
       color: ${color.TEXT_BLACK};
-      height: ${size.pxToRem(44)};
+      height: 1.75rem;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       border-top: ${border.shorthand};
       font-size: ${fontSize.M};
       line-height: 1.5;
       vertical-align: middle;
-      box-sizing: border-box;
     `
   }};
 `
