@@ -19,7 +19,7 @@ import waitForLocalhost from 'wait-for-localhost'
   await waitForLocalhost({ port: PORT, path: '/iframe.html' })
 
   const browser = process.env.TESTCAFE_BROWSER || 'chrome'
-  const testcafeArgs = `e2e/**/*.test.ts --host localhost --skip-js-errors`
+  const testcafeArgs = `"e2e/**/*.test.ts" --host localhost --skip-js-errors`
   const testcafe = spawn('yarn', ['run', 'testcafe', browser, ...testcafeArgs.split(' ')], {
     stdio: 'inherit',
     shell: true,
