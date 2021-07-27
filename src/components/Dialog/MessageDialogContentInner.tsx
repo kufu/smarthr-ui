@@ -48,7 +48,7 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
         {description}
       </Description>
       <Bottom themes={theme} ref={bottomRef} className={classNames.buttonArea}>
-        <SecondaryButton onClick={onClickClose} className={classNames.secondaryButton}>
+        <SecondaryButton onClick={onClickClose} className={classNames.closeButton}>
           {closeText}
         </SecondaryButton>
       </Bottom>
@@ -58,11 +58,11 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
 
 const Title = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar, frame } = themes
+    const { fontSize, spacingByChar, border } = themes
     return css`
       margin: 0;
       padding: ${spacingByChar(1)} ${spacingByChar(1.5)};
-      border-bottom: ${frame.border.default};
+      border-bottom: ${border.shorthand};
       font-size: ${fontSize.L};
       line-height: 1;
     `
@@ -81,12 +81,12 @@ const Description = styled.div<{ themes: Theme; offsetHeight: number }>`
 `
 const Bottom = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { spacingByChar, frame } = themes
+    const { spacingByChar, border } = themes
     return css`
       display: flex;
       justify-content: flex-end;
       padding: ${spacingByChar(1)} ${spacingByChar(1.5)};
-      border-top: ${frame.border.default};
+      border-top: ${border.shorthand};
     `
   }}
 `

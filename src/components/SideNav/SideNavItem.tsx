@@ -45,20 +45,20 @@ export const SideNavItem: VFC<Props> = ({
 
 const Wrapper = styled.li<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, interaction } = themes
+    const { color, interaction } = themes
 
     return css`
-      color: ${palette.TEXT_BLACK};
+      color: ${color.TEXT_BLACK};
       transition: ${isTouchDevice
         ? 'none'
         : `background-color ${interaction.hover.animation}, color ${interaction.hover.animation}`};
 
       &:hover {
-        background-color: ${palette.hoverColor(palette.COLUMN)};
+        background-color: ${color.hoverColor(color.COLUMN)};
       }
 
       &.selected {
-        background-color: ${palette.MAIN};
+        background-color: ${color.MAIN};
         color: #fff;
         position: relative;
 
@@ -69,7 +69,7 @@ const Wrapper = styled.li<{ themes: Theme }>`
           transform: translate(0, -50%);
           border-style: solid;
           border-width: 4px 0 4px 4px;
-          border-color: transparent transparent transparent ${palette.MAIN};
+          border-color: transparent transparent transparent ${color.MAIN};
           content: '';
         }
       }

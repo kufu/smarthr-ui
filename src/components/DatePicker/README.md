@@ -32,5 +32,5 @@ import { DatePicker } from 'smarthr-ui'
 | error        | -        | **boolean**                                     | -                      | `error` of input.                          |
 | className    | -        | **string**                                      | -                      | `className` of component.                  |
 | parseInput   | -        | **(input: string) => Date \| null**             | -                      | Custom parsing function for input.         |
-| formatDate   | -        | **(date: Date \| null) => string**              | -                      | Custom formatting function to displa date. |
+| formatDate   | -        | **(date: Date \| null) => string**              | -                      | Custom formatting function to display date. |
 | onChangeDate | -        | **(date: Date \| null, value: string) => void** | -                      | Fired when date is changed.                |

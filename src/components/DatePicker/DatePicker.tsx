@@ -230,8 +230,8 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
                 <FaCalendarAltIcon
                   color={
                     isInputFocused || isCalendarShown
-                      ? themes.palette.TEXT_BLACK
-                      : themes.palette.BORDER
+                      ? themes.color.TEXT_BLACK
+                      : themes.color.BORDER
                   }
                 />
               </CalendarIconWrapper>
@@ -283,7 +283,7 @@ const CalendarIconLayout = styled.span<{ themes: Theme }>(({ themes: { spacingBy
   `
 })
 const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, palette, spacingByChar } = themes
+  const { fontSize, color, spacingByChar } = themes
   return css`
     display: flex;
     align-items: center;
@@ -291,7 +291,7 @@ const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     box-sizing: border-box;
     height: 100%;
     padding-left: ${spacingByChar(0.5)};
-    border-left: 1px solid ${palette.BORDER};
+    border-left: 1px solid ${color.BORDER};
     font-size: ${fontSize.M};
   `
 })

@@ -36,7 +36,7 @@ export const MessageScreen: VFC<Props & ElementProps> = ({
     <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       <Box>
         <Logo className={classNames.logo}>
-          <SmartHRLogo width={111} height={LOGO_HEIGHT} fill={theme.palette.BRAND} />
+          <SmartHRLogo width={111} height={LOGO_HEIGHT} fill={theme.color.BRAND} />
         </Logo>
 
         {title && (
@@ -63,7 +63,7 @@ export const MessageScreen: VFC<Props & ElementProps> = ({
                 >
                   {link.label}
                   {link.target === '_blank' && (
-                    <ExternalIcon color={theme.palette.TEXT_LINK} aria-label="別タブで開く" />
+                    <ExternalIcon color={theme.color.TEXT_LINK} aria-label="別タブで開く" />
                   )}
                 </Link>
               </li>
@@ -81,7 +81,7 @@ export const MessageScreen: VFC<Props & ElementProps> = ({
 
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette } = themes
+    const { color } = themes
 
     return css`
       display: flex;
@@ -89,7 +89,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      background-color: ${palette.BACKGROUND};
+      background-color: ${color.BACKGROUND};
     `
   }}
 `
@@ -104,12 +104,12 @@ const Logo = styled.div`
 `
 const Title = styled.h1<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar, palette } = themes
+    const { fontSize, spacingByChar, color } = themes
 
     return css`
       margin: ${spacingByChar(1.5)} 0 0;
-      background-color: ${palette.BACKGROUND};
-      color: ${palette.TEXT_BLACK};
+      background-color: ${color.BACKGROUND};
+      color: ${color.TEXT_BLACK};
       font-weight: normal;
       font-size: ${fontSize.XL};
       line-height: 1;
@@ -140,10 +140,10 @@ const Links = styled.ul<{ themes: Theme }>`
 `
 const Link = styled.a<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, palette } = themes
+    const { fontSize, color } = themes
 
     return css`
-      color: ${palette.TEXT_LINK};
+      color: ${color.TEXT_LINK};
       font-size: ${fontSize.M};
       line-height: 1.4;
       text-decoration: none;

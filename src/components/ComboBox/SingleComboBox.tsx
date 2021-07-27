@@ -226,9 +226,7 @@ export function SingleComboBox<T>({
             </ClearButton>
             <CaretDownLayout themes={theme}>
               <CaretDownWrapper themes={theme}>
-                <FaCaretDownIcon
-                  color={isFocused ? theme.palette.TEXT_BLACK : theme.palette.BORDER}
-                />
+                <FaCaretDownIcon color={isFocused ? theme.color.TEXT_BLACK : theme.color.BORDER} />
               </CaretDownWrapper>
             </CaretDownLayout>
           </>
