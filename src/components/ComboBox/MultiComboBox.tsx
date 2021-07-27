@@ -75,11 +75,11 @@ type Props<T> = {
   /**
    *  Fire when clicking the delete element of `selectedItems` button.
    */
-  onDelete: (item: Item<T>) => void
+  onDelete?: (item: Item<T>) => void
   /**
    * Fire when clicking an element of `items`.
    */
-  onSelect: (item: Item<T>) => void
+  onSelect?: (item: Item<T>) => void
   /**
    * Fire when the item selections are changed.
    */
@@ -134,7 +134,7 @@ export function MultiComboBox<T>({
     inputValue,
     onAdd,
     onSelect: (selected) => {
-      onSelect(selected)
+      onSelect && onSelect(selected)
       onChangeSelected && onChangeSelected(selectedItems.concat(selected))
     },
     isExpanded: isFocused,
@@ -232,7 +232,7 @@ export function MultiComboBox<T>({
                       className={classNames.deleteButton}
                       disabled={disabled}
                       onClick={() => {
-                        onDelete(item)
+                        onDelete && onDelete(item)
                         onChangeSelected &&
                           onChangeSelected(
                             selectedItems.filter(

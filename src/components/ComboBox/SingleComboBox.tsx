@@ -74,9 +74,9 @@ type Props<T> = {
    */
   onAdd?: (label: string) => void
   /**
-   * Fire when the selected item is changed.
+   * Fire when an item is selected.
    */
-  onSelect: (item: Item<T>) => void
+  onSelect?: (item: Item<T>) => void
   /**
    * Fire when the selected item is cleared.
    */
@@ -142,7 +142,7 @@ export function SingleComboBox<T>({
     inputValue,
     onAdd,
     onSelect: (selected) => {
-      onSelect(selected)
+      onSelect && onSelect(selected)
       onChangeSelected && onChangeSelected(selected)
       setIsExpanded(false)
     },
