@@ -1,21 +1,22 @@
-import React, { useContext } from 'react'
+import React, { HTMLAttributes, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { DropdownContentContext } from './DropdownContent'
 import { DropdownContentInnerContext } from './DropdownContentInner'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   children: React.ReactNode
-  className?: string
-}
+} & HTMLAttributes<HTMLDivElement>
 
 export const DropdownCloser: React.VFC<Props> = ({ children, className = '' }) => {
   const { onClickCloser, controllable, scrollable } = useContext(DropdownContentContext)
   const { maxHeight } = useContext(DropdownContentInnerContext)
+  const classNames = useClassNames()
 
   return (
     <Wrapper
-      className={className}
+      className={`${className} ${classNames.closer}`}
       onClick={onClickCloser}
       maxHeight={maxHeight}
       controllable={controllable}

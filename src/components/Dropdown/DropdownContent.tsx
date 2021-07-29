@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 
 import { DropdownContext } from './Dropdown'
 import { DropdownContentInner } from './DropdownContentInner'
+import { useClassNames } from './useClassNames'
 
 export const DropdownContentContext = React.createContext<{
   onClickCloser: () => void
@@ -29,6 +30,7 @@ export const DropdownContent: React.VFC<Props> = ({
   children,
 }) => {
   const { DropdownContentRoot, triggerRect, onClickCloser } = useContext(DropdownContext)
+  const classNames = useClassNames()
 
   return (
     <DropdownContentRoot>
@@ -36,7 +38,7 @@ export const DropdownContent: React.VFC<Props> = ({
         <DropdownContentInner
           triggerRect={triggerRect}
           scrollable={scrollable}
-          className={className}
+          className={`${className} ${classNames.content}`}
           controllable={controllable}
         >
           {children}

@@ -46,7 +46,7 @@ export const Heading: VFC<Props & ElementProps> = ({
 
 const Wrapper = styled.h1<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette, fontSize } = themes
+    const { color, fontSize } = themes
 
     return css`
       display: block;
@@ -55,31 +55,31 @@ const Wrapper = styled.h1<{ themes: Theme }>`
       line-height: 1;
 
       &.screenTitle {
-        color: ${palette.TEXT_BLACK};
+        color: ${color.TEXT_BLACK};
         font-size: ${fontSize.XL};
         font-weight: normal;
       }
 
       &.sectionTitle {
-        color: ${palette.TEXT_BLACK};
+        color: ${color.TEXT_BLACK};
         font-size: ${fontSize.L};
         font-weight: normal;
       }
 
       &.blockTitle {
-        color: ${palette.TEXT_BLACK};
+        color: ${color.TEXT_BLACK};
         font-size: ${fontSize.M};
         font-weight: bold;
       }
 
       &.subBlockTitle {
-        color: ${palette.TEXT_GREY};
+        color: ${color.TEXT_GREY};
         font-size: ${fontSize.M};
         font-weight: bold;
       }
 
       &.subSubBlockTitle {
-        color: ${palette.TEXT_GREY};
+        color: ${color.TEXT_GREY};
         font-size: ${fontSize.S};
         font-weight: bold;
       }

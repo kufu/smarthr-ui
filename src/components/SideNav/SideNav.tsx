@@ -37,10 +37,10 @@ export const SideNav: VFC<Props> = ({ items, size = 'default', onClick, classNam
 
 const Wrapper = styled.ul<{ themes: Theme }>`
   ${({ themes }) => {
-    const { palette } = themes
+    const { color } = themes
 
     return css`
-      background-color: ${palette.COLUMN};
+      background-color: ${color.COLUMN};
       list-style: none;
       padding: 0;
     `

@@ -55,7 +55,12 @@ export const Default: Story = () => {
 
   return (
     <>
-      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog" aria-controls="dialog-default">
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-default"
+        data-test="dialog-trigger"
+      >
         Dialog
       </SecondaryButton>
       <Dialog
@@ -64,6 +69,7 @@ export const Default: Story = () => {
         onPressEscape={onClickClose}
         id="dialog-default"
         ariaLabel="Dialog"
+        data-test="dialog-content"
       >
         <Title themes={themes}>Dialog</Title>
         <Description>
@@ -103,7 +109,9 @@ export const Default: Story = () => {
           </li>
         </RadioList>
         <Footer themes={themes}>
-          <SecondaryButton onClick={onClickClose}>close</SecondaryButton>
+          <SecondaryButton onClick={onClickClose} data-test="dialog-closer">
+            close
+          </SecondaryButton>
         </Footer>
       </Dialog>
     </>
@@ -133,7 +141,12 @@ export const Message_Dialog: Story = () => {
 
   return (
     <>
-      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog" aria-controls="dialog-message">
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-message"
+        data-test="dialog-trigger"
+      >
         MessageDialog
       </SecondaryButton>
       <MessageDialog
@@ -145,6 +158,7 @@ export const Message_Dialog: Story = () => {
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
         id="dialog-message"
+        data-test="dialog-content"
       />
     </>
   )
@@ -173,7 +187,12 @@ export const Action_Dialog: Story = () => {
 
   return (
     <>
-      <SecondaryButton onClick={onClickOpen} aria-haspopup="dialog" aria-controls="dialog-action">
+      <SecondaryButton
+        onClick={onClickOpen}
+        aria-haspopup="dialog"
+        aria-controls="dialog-action"
+        data-test="dialog-trigger"
+      >
         ActionDialog
       </SecondaryButton>
       <ActionDialog
@@ -192,6 +211,7 @@ export const Action_Dialog: Story = () => {
         onPressEscape={onClickClose}
         responseMessage={responseMessage}
         id="dialog-action"
+        data-test="dialog-content"
       >
         <RadioList>
           <li>
@@ -278,15 +298,19 @@ export const Uncontrolled: Story = () => {
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-uncontrolled">
+            <SecondaryButton
+              aria-haspopup="dialog"
+              aria-controls="dialog-uncontrolled"
+              data-test="dialog-trigger"
+            >
               Dialog
             </SecondaryButton>
           </DialogTrigger>
-          <DialogContent id="dialog-uncontrolled">
+          <DialogContent id="dialog-uncontrolled" data-test="dialog-content">
             <Description>Uncontrolled Dialog.</Description>
             <Content>
               <DialogCloser>
-                <SecondaryButton>Close</SecondaryButton>
+                <SecondaryButton data-test="dialog-closer">Close</SecondaryButton>
               </DialogCloser>
             </Content>
           </DialogContent>
@@ -295,7 +319,11 @@ export const Uncontrolled: Story = () => {
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-uncontrolled-message">
+            <SecondaryButton
+              aria-haspopup="dialog"
+              aria-controls="dialog-uncontrolled-message"
+              data-test="message-dialog-trigger"
+            >
               MessageDialog
             </SecondaryButton>
           </DialogTrigger>
@@ -304,13 +332,18 @@ export const Uncontrolled: Story = () => {
             description={<p>{dummyText} </p>}
             closeText="Close"
             id="dialog-uncontrolled-message"
+            data-test="message-dialog-content"
           />
         </DialogWrapper>
       </li>
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-uncontrolled-action">
+            <SecondaryButton
+              aria-haspopup="dialog"
+              aria-controls="dialog-uncontrolled-action"
+              data-test="action-dialog-trigger"
+            >
               ActionDialog
             </SecondaryButton>
           </DialogTrigger>
@@ -325,6 +358,7 @@ export const Uncontrolled: Story = () => {
               closeDialog()
             }}
             id="dialog-uncontrolled-action"
+            data-test="action-dialog-content"
           >
             <Description>
               The content of ActionDialogContent is freely implemented by the user as children.
@@ -485,7 +519,7 @@ const Title = styled.p<{ themes: Theme }>`
   margin: 0;
   font-size: ${({ themes }) => themes.fontSize.L};
   line-height: 1;
-  border-bottom: ${({ themes }) => themes.frame.border.default};
+  border-bottom: ${({ themes }) => themes.border.shorthand};
 `
 const Description = styled.p`
   margin: 16px 24px;
@@ -504,7 +538,7 @@ const Footer = styled.div<{ themes: Theme }>`
   display: flex;
   justify-content: flex-end;
   padding: 16px 24px;
-  border-top: ${({ themes }) => themes.frame.border.default};
+  border-top: ${({ themes }) => themes.border.shorthand};
 
   & > *:not(:first-child) {
     margin-left: 16px;
