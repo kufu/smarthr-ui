@@ -12,14 +12,41 @@ import { DialogTransition } from './DialogTransition'
 import { useTriggerFocusControl } from './FocusTrap'
 
 type Props = {
+  /**
+   * ダイアログのヘッダ部分に表示されるノード
+   */
   header?: ReactNode
+  /**
+   * ダイアログのコンテンツ部分に表示されるノード
+   */
   children: ReactNode
+  /**
+   * ダイアログが開かれているかどうかの真偽値
+   */
   isOpen: boolean
+  /**
+   * 閉じるボタンを押下したときのハンドラ
+   */
   onClickClose?: (e: MouseEvent<HTMLButtonElement>) => void
+  /**
+   * ダイアログが開いている状態で Escape キーを押下したときのハンドラ
+   */
   onPressEscape?: () => void
+  /**
+   * ダイアログを開いたときの初期 top 位置
+   */
   top?: string
+  /**
+   * ダイアログを開いたときの初期 left 位置
+   */
   left?: string
+  /**
+   * ダイアログを開いたときの初期 right 位置
+   */
   right?: string
+  /**
+   * ダイアログを開いたときの初期 bottom 位置
+   */
   bottom?: string
 }
 
