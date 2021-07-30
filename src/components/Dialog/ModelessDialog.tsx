@@ -8,6 +8,7 @@ import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { BaseElementProps, DialogBase } from '../Base'
 import { SecondaryButton } from '../Button'
 import { FaTimesIcon } from '../Icon'
+import { useTriggerFocusControl } from './FocusTrap'
 
 type Props = {
   header?: ReactNode
@@ -35,6 +36,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   ...props
 }) => {
   const portalParent = useRef(document.createElement('div')).current
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const theme = useTheme()
 
   useEffect(() => {
@@ -52,6 +54,15 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }, [isOpen, onPressEscape]),
   )
 
+  const { moveFocusFromTrigger, returnFocusToTrigger } = useTriggerFocusControl(wrapperRef)
+  useEffect(() => {
+    if (isOpen) {
+      moveFocusFromTrigger()
+    } else {
+      returnFocusToTrigger()
+    }
+  }, [isOpen, moveFocusFromTrigger, returnFocusToTrigger])
+
   const posStyles = useMemo(() => {
     const isXCenter = left === undefined && right === undefined
     const isYCenter = top === undefined && bottom === undefined
@@ -65,7 +76,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   }, [bottom, left, right, top])
 
   return createPortal(
-    <Fixed className={className} style={posStyles} themes={theme} {...props}>
+    <Fixed className={className} style={posStyles} ref={wrapperRef} themes={theme} {...props}>
       <Draggable handle=".handle">
         <DialogBase radius="m">
           <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
