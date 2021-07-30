@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import Draggable from 'react-draggable'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useId } from '../../hooks/useId'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { BaseElementProps, DialogBase } from '../Base'
 import { SecondaryButton } from '../Button'
@@ -14,11 +15,11 @@ import { useClassNames } from './useClassNames'
 
 type Props = {
   /**
-   * ダイアログのヘッダ部分に表示されるノード
+   * ダイアログのヘッダ部分の内容
    */
-  header?: ReactNode
+  header: ReactNode
   /**
-   * ダイアログのコンテンツ部分に表示されるノード
+   * ダイアログのコンテンツ部分の内容
    */
   children: ReactNode
   /**
@@ -54,7 +55,7 @@ type Props = {
 export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   header,
   children,
-  isOpen = false,
+  isOpen,
   onClickClose,
   onPressEscape,
   top,
@@ -104,6 +105,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }
   }, [bottom, left, right, top])
 
+  const labelId = useId()
   const classNames = useClassNames().modelessDialog
 
   return createPortal(
@@ -113,13 +115,17 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
         style={posStyles}
         ref={wrapperRef}
         themes={theme}
+        role="dialog"
+        aria-labelledby={labelId}
         {...props}
       >
         <Draggable handle={`.${classNames.header}`}>
-          <DialogBase radius="m">
+          <DialogBase radius="m" className={classNames.box}>
             <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
-            <Header themes={theme} className={classNames.header}>
-              {header}
+            <Header className={classNames.header} themes={theme}>
+              <div id={labelId}>
+                {typeof header === 'string' ? <Title themes={theme}>{header}</Title> : header}
+              </div>
               <CloseButtonLayout themes={theme}>
                 <SecondaryButton
                   type="button"
@@ -156,10 +162,15 @@ const Header = styled.div<{ themes: Theme }>`
     user-select: none;
   `}
 `
+const Title = styled.div<{ themes: Theme }>`
+  ${({ themes: { spacingByChar } }) => css`
+    margin: ${spacingByChar(1)};
+  `}
+`
 const CloseButtonLayout = styled.div<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
     flex-shrink: 0;
+    margin: ${spacingByChar(1)};
     margin-left: auto;
-    padding: ${spacingByChar(1)};
   `}
 `

@@ -22,6 +22,7 @@ export function useClassNames() {
       },
       modelessDialog: {
         wrapper: generateForModeless(),
+        box: generateForModeless('box'),
         header: generateForModeless('header'),
         closeButton: generateForModeless('closeButton'),
         content: generateForModeless('content'),
