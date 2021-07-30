@@ -13,6 +13,7 @@ import {
   DialogWrapper,
   MessageDialog,
   MessageDialogContent,
+  ModelessDialog,
 } from '.'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
@@ -495,6 +496,23 @@ export const RegOpendAction: Story = () => {
   )
 }
 RegOpendAction.parameters = { docs: { disable: true } }
+
+export const Modeless: Story = () => {
+  const [isOpen, setIsOpen] = useState(false)
+  return (
+    <div style={{ height: '200vh' }}>
+      <SecondaryButton onClick={() => setIsOpen(true)}>モードレスダイアログを開く</SecondaryButton>
+      <ModelessDialog
+        isOpen={isOpen}
+        header="title"
+        onClickClose={() => setIsOpen(false)}
+        onPressEscape={() => setIsOpen(false)}
+      >
+        test
+      </ModelessDialog>
+    </div>
+  )
+}
 
 const Title = styled.p<{ themes: Theme }>`
   padding: 16px 24px;
