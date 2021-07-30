@@ -8,6 +8,7 @@ import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { BaseElementProps, DialogBase } from '../Base'
 import { SecondaryButton } from '../Button'
 import { FaTimesIcon } from '../Icon'
+import { DialogTransition } from './DialogTransition'
 import { useTriggerFocusControl } from './FocusTrap'
 
 type Props = {
@@ -76,22 +77,24 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   }, [bottom, left, right, top])
 
   return createPortal(
-    <Fixed className={className} style={posStyles} ref={wrapperRef} themes={theme} {...props}>
-      <Draggable handle=".handle">
-        <DialogBase radius="m">
-          <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
-          <Header themes={theme} className="handle">
-            {header}
-            <CloseButtonLayout themes={theme}>
-              <SecondaryButton type="button" size="s" square onClick={onClickClose}>
-                <FaTimesIcon size={13} visuallyHiddenText="閉じる" />
-              </SecondaryButton>
-            </CloseButtonLayout>
-          </Header>
-          {children}
-        </DialogBase>
-      </Draggable>
-    </Fixed>,
+    <DialogTransition isOpen={isOpen}>
+      <Fixed className={className} style={posStyles} ref={wrapperRef} themes={theme} {...props}>
+        <Draggable handle=".handle">
+          <DialogBase radius="m">
+            <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
+            <Header themes={theme} className="handle">
+              {header}
+              <CloseButtonLayout themes={theme}>
+                <SecondaryButton type="button" size="s" square onClick={onClickClose}>
+                  <FaTimesIcon size={13} visuallyHiddenText="閉じる" />
+                </SecondaryButton>
+              </CloseButtonLayout>
+            </Header>
+            {children}
+          </DialogBase>
+        </Draggable>
+      </Fixed>
+    </DialogTransition>,
     portalParent,
   )
 }
