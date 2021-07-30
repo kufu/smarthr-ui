@@ -85,7 +85,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
   className = '',
   ...props
 }) => {
-  const classNames = useClassNames()
+  const classNames = useClassNames().dialog
   const theme = useTheme()
   const innerRef = useRef<HTMLDivElement>(null)
   const focusTarget = useRef<HTMLDivElement>(null)

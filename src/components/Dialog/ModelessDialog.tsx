@@ -10,6 +10,7 @@ import { SecondaryButton } from '../Button'
 import { FaTimesIcon } from '../Icon'
 import { DialogTransition } from './DialogTransition'
 import { useTriggerFocusControl } from './FocusTrap'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   /**
@@ -103,21 +104,35 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }
   }, [bottom, left, right, top])
 
+  const classNames = useClassNames().modelessDialog
+
   return createPortal(
     <DialogTransition isOpen={isOpen}>
-      <Fixed className={className} style={posStyles} ref={wrapperRef} themes={theme} {...props}>
-        <Draggable handle=".handle">
+      <Fixed
+        className={`${className} ${classNames.wrapper}`}
+        style={posStyles}
+        ref={wrapperRef}
+        themes={theme}
+        {...props}
+      >
+        <Draggable handle={`.${classNames.header}`}>
           <DialogBase radius="m">
             <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
-            <Header themes={theme} className="handle">
+            <Header themes={theme} className={classNames.header}>
               {header}
               <CloseButtonLayout themes={theme}>
-                <SecondaryButton type="button" size="s" square onClick={onClickClose}>
+                <SecondaryButton
+                  type="button"
+                  size="s"
+                  square
+                  onClick={onClickClose}
+                  className={classNames.closeButton}
+                >
                   <FaTimesIcon size={13} visuallyHiddenText="閉じる" />
                 </SecondaryButton>
               </CloseButtonLayout>
             </Header>
-            {children}
+            <div className={classNames.content}>{children}</div>
           </DialogBase>
         </Draggable>
       </Fixed>

@@ -74,7 +74,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   actionDisabled = false,
   closeDisabled,
 }) => {
-  const classNames = useClassNames()
+  const classNames = useClassNames().dialog
   const theme = useTheme()
   const handleClickAction = useCallback(() => {
     onClickAction(onClickClose)

@@ -35,7 +35,7 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   closeText,
   onClickClose,
 }) => {
-  const classNames = useClassNames()
+  const classNames = useClassNames().dialog
   const theme = useTheme()
   const { offsetHeight, titleRef, bottomRef } = useOffsetHeight()
 
