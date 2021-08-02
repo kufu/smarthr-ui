@@ -48,7 +48,7 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
         {description}
       </Description>
       <Bottom themes={theme} ref={bottomRef} className={classNames.buttonArea}>
-        <SecondaryButton onClick={onClickClose} className={classNames.secondaryButton}>
+        <SecondaryButton onClick={onClickClose} className={classNames.closeButton}>
           {closeText}
         </SecondaryButton>
       </Bottom>
