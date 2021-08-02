@@ -1,6 +1,7 @@
 import React, { FormHTMLAttributes, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useId } from '../../hooks/useId'
 import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
 import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
@@ -8,7 +9,7 @@ import { SecondaryButton } from '../Button'
 import { useClassNames } from './useClassNames'
 
 interface Props {
-  title?: string
+  title: string
   items?: ItemProps[]
   submitLabel?: string
   width?: number
@@ -46,6 +47,7 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
     [onSubmit],
   )
 
+  const textareaId = useId()
   const classNames = useClassNames()
 
   return (
@@ -56,18 +58,24 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
       onSubmit={handleSubmit}
       className={`${className} ${classNames.wrapper}`}
     >
-      {title && (
-        <Title type="sectionTitle" themes={theme} className={classNames.title}>
-          {title}
-        </Title>
-      )}
+      <Title type="sectionTitle" themes={theme} className={classNames.title}>
+        {title}
+      </Title>
 
       {items &&
         items.map((item) => (
           <RightFixedNoteItem key={item.id} {...item} onClickEdit={onClickEdit} />
         ))}
 
+      {textareaLabel && (
+        <label htmlFor={textareaId}>
+          <TextareaLabel tag="span" type="subBlockTitle" themes={theme}>
+            {textareaLabel}
+          </TextareaLabel>
+        </label>
+      )}
       <TextArea
+        id={textareaId}
         name={TEXT_AREA_NAME}
         themes={theme}
         aria-label={textareaLabel ? textareaLabel : title}
@@ -106,6 +114,11 @@ const Title = styled(Heading)<{ themes: Theme }>`
       margin-bottom: ${spacingByChar(1)};
     `
   }}
+`
+
+const TextareaLabel = styled(Heading)<{ themes: Theme }>`
+  display: inline-block;
+  margin-bottom: ${({ themes }) => themes.spacingByChar(1)};
 `
 
 const TextArea = styled(Textarea)<{ themes: Theme }>`

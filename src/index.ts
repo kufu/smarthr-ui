@@ -1,8 +1,6 @@
 // components
 export { LightBalloon, DarkBalloon } from './components/Balloon'
 export { CheckBox } from './components/CheckBox'
-export { CheckBoxLabel } from './components/CheckBoxLabel'
-export { CheckBoxNew } from './components/CheckBoxNew'
 export {
   Dropdown,
   DropdownTrigger,
@@ -36,8 +34,6 @@ export {
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
-export { RadioButtonLabel } from './components/RadioButtonLabel'
-export { RadioButtonNew } from './components/RadioButtonNew'
 export {
   PrimaryButton,
   PrimaryButtonAnchor,
@@ -54,7 +50,6 @@ export { StatusLabel } from './components/StatusLabel'
 export { Base, DialogBase } from './components/Base'
 export * from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
-export { Header } from './components/Header'
 export { Table, Head, Row, Cell, Body } from './components/Table'
 export {
   AppNavi,
