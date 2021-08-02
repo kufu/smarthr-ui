@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
-import { RadioButtonNew } from './RadioButtonNew'
+import { RadioButton } from './RadioButton'
 
 export function useClassNames() {
-  const generate = useClassNameGenerator(RadioButtonNew.displayName || 'RadioButtonNew')
+  const generate = useClassNameGenerator(RadioButton.displayName || 'RadioButton')
 
   return useMemo(
     () => ({

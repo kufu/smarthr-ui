@@ -36,8 +36,6 @@ export {
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
-export { RadioButtonLabel } from './components/RadioButtonLabel'
-export { RadioButtonNew } from './components/RadioButtonNew'
 export {
   PrimaryButton,
   PrimaryButtonAnchor,
