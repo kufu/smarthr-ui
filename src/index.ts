@@ -50,7 +50,6 @@ export { StatusLabel } from './components/StatusLabel'
 export { Base, DialogBase } from './components/Base'
 export * from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
-export { Header } from './components/Header'
 export { Table, Head, Row, Cell, Body } from './components/Table'
 export {
   AppNavi,
