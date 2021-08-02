@@ -93,15 +93,20 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }
   }, [isOpen, moveFocusFromTrigger, returnFocusToTrigger])
 
-  const posStyles = useMemo(() => {
+  const adjustedPosition = useMemo(() => {
     const isXCenter = left === undefined && right === undefined
     const isYCenter = top === undefined && bottom === undefined
     return {
-      top: isYCenter ? '50%' : top,
-      left: isXCenter ? '50%' : left,
-      right,
-      bottom,
-      transform: `translate(${isXCenter ? '-50%' : 0}, ${isYCenter ? '-50%' : 0}) `,
+      position: {
+        top: isYCenter ? '50%' : top,
+        left: isXCenter ? '50%' : left,
+        right,
+        bottom,
+      },
+      offset: {
+        x: isXCenter ? '-50%' : 0,
+        y: isYCenter ? '-50%' : 0,
+      },
     }
   }, [bottom, left, right, top])
 
@@ -110,16 +115,16 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
 
   return createPortal(
     <DialogTransition isOpen={isOpen}>
-      <Fixed
-        className={`${className} ${classNames.wrapper}`}
-        style={posStyles}
-        ref={wrapperRef}
-        themes={theme}
-        role="dialog"
-        aria-labelledby={labelId}
-        {...props}
-      >
-        <Draggable handle={`.${classNames.header}`}>
+      <Draggable handle={`.${classNames.header}`} positionOffset={adjustedPosition.offset}>
+        <Fixed
+          className={`${className} ${classNames.wrapper}`}
+          style={adjustedPosition.position}
+          ref={wrapperRef}
+          themes={theme}
+          role="dialog"
+          aria-labelledby={labelId}
+          {...props}
+        >
           <DialogBase radius="m" className={classNames.box}>
             <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
             <Header className={classNames.header} themes={theme}>
@@ -140,8 +145,8 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
             </Header>
             <div className={classNames.content}>{children}</div>
           </DialogBase>
-        </Draggable>
-      </Fixed>
+        </Fixed>
+      </Draggable>
     </DialogTransition>,
     portalParent,
   )
