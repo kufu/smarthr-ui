@@ -1,8 +1,6 @@
 // components
 export { LightBalloon, DarkBalloon } from './components/Balloon'
 export { CheckBox } from './components/CheckBox'
-export { CheckBoxLabel } from './components/CheckBoxLabel'
-export { CheckBoxNew } from './components/CheckBoxNew'
 export {
   Dropdown,
   DropdownTrigger,
@@ -36,8 +34,6 @@ export {
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
-export { RadioButtonLabel } from './components/RadioButtonLabel'
-export { RadioButtonNew } from './components/RadioButtonNew'
 export {
   PrimaryButton,
   PrimaryButtonAnchor,

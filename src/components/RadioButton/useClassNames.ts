@@ -1,15 +1,15 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
-import { CheckBoxNew } from './CheckBoxNew'
+import { RadioButton } from './RadioButton'
 
 export function useClassNames() {
-  const generate = useClassNameGenerator(CheckBoxNew.displayName || 'CheckBoxNew')
+  const generate = useClassNameGenerator(RadioButton.displayName || 'RadioButton')
 
   return useMemo(
     () => ({
       wrapper: generate(),
-      checkBox: generate('checkBox'),
+      radioButton: generate('radioButton'),
       label: generate('label'),
     }),
     [generate],
