@@ -100,7 +100,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
           <SecondaryButton
             onClick={onClickClose}
             disabled={closeDisabled || isRequestProcessing}
-            className={classNames.secondaryButton}
+            className={classNames.closeButton}
           >
             {closeText}
           </SecondaryButton>

@@ -70,6 +70,10 @@ export const Default: Story = () => {
             action('onSelect')(option)
             setSelectedItem(option)
           }}
+          onClear={() => {
+            action('onClear')()
+            setSelectedItem(null)
+          }}
         />
       </dd>
       <dt>Multi</dt>
@@ -129,6 +133,10 @@ export const Creatable: Story = () => {
           onSelect={(option) => {
             action('onSelect')(option)
             setSingleSelected(option)
+          }}
+          onClear={() => {
+            action('onClear')()
+            setSingleSelected(null)
           }}
         />
       </dd>
@@ -200,6 +208,7 @@ export const Disabled: Story = () => {
           width={400}
           onAdd={action('onAdd')}
           onSelect={action('onSelect')}
+          onClear={action('onClear')}
         />
       </dd>
       <dt>Multi</dt>
@@ -271,6 +280,7 @@ export const Error: Story = () => {
           width={400}
           onAdd={action('onAdd')}
           onSelect={action('onSelect')}
+          onClear={action('onClear')}
         />
       </dd>
       <dt>Multi</dt>
@@ -308,6 +318,7 @@ export const Loading: Story = () => {
           width={400}
           placeholder="Loading"
           onSelect={action('onSelect')}
+          onClear={action('onClear')}
           isLoading
         />
       </dd>
