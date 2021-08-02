@@ -1,1 +1,0 @@
-export { CheckBoxLabel } from './CheckBoxLabel'
