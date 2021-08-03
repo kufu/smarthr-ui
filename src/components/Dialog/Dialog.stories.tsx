@@ -19,6 +19,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
 import { RadioButton } from '../RadioButton'
 import { DatePicker } from '../DatePicker'
+import { LineUp, Stack } from '../Layout'
+import { Body, Cell, Head, Row, Table } from '../Table'
+import { CheckBox } from '../CheckBox'
 
 import readme from './README.md'
 
@@ -34,6 +37,7 @@ export default {
     MessageDialogContent,
     ActionDialog,
     ActionDialogContent,
+    ModelessDialog,
   },
   parameters: {
     docs: {
@@ -497,20 +501,79 @@ export const RegOpendAction: Story = () => {
 }
 RegOpendAction.parameters = { docs: { disable: true } }
 
-export const Modeless: Story = () => {
-  const [isOpen, setIsOpen] = useState(false)
+export const Modeless_Dialog: Story = () => {
+  const [isOpen1, setIsOpen1] = useState(true)
+  const [isOpen2, setIsOpen2] = useState(false)
   return (
-    <div style={{ height: '200vh' }}>
-      <SecondaryButton onClick={() => setIsOpen(true)}>モードレスダイアログを開く</SecondaryButton>
-      <ModelessDialog
-        isOpen={isOpen}
-        header="title"
-        onClickClose={() => setIsOpen(false)}
-        onPressEscape={() => setIsOpen(false)}
-      >
-        test
-      </ModelessDialog>
-    </div>
+    <TriggerList style={{ height: '200vh' }}>
+      <li>
+        <SecondaryButton onClick={() => setIsOpen1(!isOpen1)}>中央表示</SecondaryButton>
+        <ModelessDialog
+          isOpen={isOpen1}
+          header="モードレスダイアログ"
+          onClickClose={() => setIsOpen1(false)}
+          onPressEscape={() => setIsOpen1(false)}
+          width="50%"
+          height="50%"
+        >
+          <ModelessContent>
+            <Stack gap="S">
+              <Wrapper>
+                <LineUp gap="S">
+                  <RadioButton>ラジオボタン1</RadioButton>
+                  <RadioButton>ラジオボタン2</RadioButton>
+                </LineUp>
+              </Wrapper>
+              <Wrapper>
+                <DatePicker />
+              </Wrapper>
+              <Table>
+                <Head>
+                  <Row>
+                    <Cell>
+                      <CheckBox />
+                    </Cell>
+                    <Cell>テーブル見出し1</Cell>
+                    <Cell>テーブル見出し2</Cell>
+                    <Cell>テーブル見出し3</Cell>
+                  </Row>
+                </Head>
+                <Body>
+                  {Array.from(Array(20).keys()).map((i) => (
+                    <Row key={i}>
+                      <Cell>
+                        <CheckBox />
+                      </Cell>
+                      <Cell>データ1-{i}</Cell>
+                      <Cell>データ2-{i}</Cell>
+                      <Cell>データ3-{i}</Cell>
+                    </Row>
+                  ))}
+                </Body>
+              </Table>
+            </Stack>
+          </ModelessContent>
+        </ModelessDialog>
+      </li>
+      <li>
+        <SecondaryButton onClick={() => setIsOpen2(!isOpen2)}>座標指定</SecondaryButton>
+        <ModelessDialog
+          isOpen={isOpen2}
+          header="座標指定表示"
+          onClickClose={() => setIsOpen2(false)}
+          onPressEscape={() => setIsOpen2(false)}
+          bottom="100px"
+          right="100px"
+        >
+          <ModelessContent>
+            <Wrapper>
+              bottom: 100px
+              <br /> left:100px
+            </Wrapper>
+          </ModelessContent>
+        </ModelessDialog>
+      </li>
+    </TriggerList>
   )
 }
 
@@ -552,4 +615,10 @@ const TriggerList = styled.ul`
     display: inline-block;
     margin: 8px;
   }
+`
+const ModelessContent = styled.div`
+  margin: 1rem 0;
+`
+const Wrapper = styled.div`
+  margin: 0 1rem;
 `
