@@ -456,51 +456,6 @@ const ContentWrapper = styled.div`
   }
 `
 
-export const RegOpendMessage: Story = () => {
-  return (
-    <MessageDialog
-      isOpen={true}
-      title="MessageDialog"
-      description={<p>{dummyText}</p>}
-      closeText="close"
-      onClickClose={action('clicked close')}
-    />
-  )
-}
-RegOpendMessage.parameters = { docs: { disable: true } }
-
-export const RegOpendAction: Story = () => {
-  return (
-    <ActionDialog
-      isOpen={true}
-      title="ActionDialog"
-      closeText="close"
-      actionText="execute"
-      actionTheme="primary"
-      onClickAction={action('clicked action')}
-      onClickClose={action('clicked close')}
-    >
-      <Description>
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-      </Description>
-      <Content>
-        <label>
-          <input type="checkbox" />
-          Agree
-        </label>
-      </Content>
-    </ActionDialog>
-  )
-}
-RegOpendAction.parameters = { docs: { disable: true } }
-
 export const Modeless_Dialog: Story = () => {
   const [isOpen1, setIsOpen1] = useState(false)
   const [isOpen2, setIsOpen2] = useState(false)
@@ -575,6 +530,65 @@ export const Modeless_Dialog: Story = () => {
         </ModelessDialog>
       </li>
     </TriggerList>
+  )
+}
+
+export const RegOpendMessage: Story = () => {
+  return (
+    <MessageDialog
+      isOpen={true}
+      title="MessageDialog"
+      description={<p>{dummyText}</p>}
+      closeText="close"
+      onClickClose={action('clicked close')}
+    />
+  )
+}
+RegOpendMessage.parameters = { docs: { disable: true } }
+
+export const RegOpendAction: Story = () => {
+  return (
+    <ActionDialog
+      isOpen={true}
+      title="ActionDialog"
+      closeText="close"
+      actionText="execute"
+      actionTheme="primary"
+      onClickAction={action('clicked action')}
+      onClickClose={action('clicked close')}
+    >
+      <Description>
+        {dummyText}
+        {dummyText}
+        {dummyText}
+        {dummyText}
+        {dummyText}
+        {dummyText}
+        {dummyText}
+        {dummyText}
+      </Description>
+      <Content>
+        <label>
+          <input type="checkbox" />
+          Agree
+        </label>
+      </Content>
+    </ActionDialog>
+  )
+}
+RegOpendAction.parameters = { docs: { disable: true } }
+
+export const RegOpenedModeless: Story = () => {
+  return (
+    <ModelessDialog isOpen header="モードレスダイアログ" height={500} width={600}>
+      <div style={{ margin: '1rem' }}>
+        {dummyText}
+        {dummyText}
+        {dummyText}
+        {dummyText}
+        {dummyText}
+      </div>
+    </ModelessDialog>
   )
 }
 
