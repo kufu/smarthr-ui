@@ -502,12 +502,14 @@ export const RegOpendAction: Story = () => {
 RegOpendAction.parameters = { docs: { disable: true } }
 
 export const Modeless_Dialog: Story = () => {
-  const [isOpen1, setIsOpen1] = useState(true)
+  const [isOpen1, setIsOpen1] = useState(false)
   const [isOpen2, setIsOpen2] = useState(false)
   return (
     <TriggerList style={{ height: '200vh' }}>
       <li>
-        <SecondaryButton onClick={() => setIsOpen1(!isOpen1)}>中央表示</SecondaryButton>
+        <SecondaryButton onClick={() => setIsOpen1(!isOpen1)} data-test="dialog-trigger">
+          中央表示
+        </SecondaryButton>
         <ModelessDialog
           isOpen={isOpen1}
           header="モードレスダイアログ"
@@ -515,6 +517,7 @@ export const Modeless_Dialog: Story = () => {
           onPressEscape={() => setIsOpen1(false)}
           width="50%"
           height="50%"
+          data-test="dialog"
         >
           <ModelessContent>
             <Stack gap="S">
@@ -565,12 +568,10 @@ export const Modeless_Dialog: Story = () => {
           bottom="100px"
           right="100px"
         >
-          <ModelessContent>
-            <Wrapper>
-              bottom: 100px
-              <br /> left:100px
-            </Wrapper>
-          </ModelessContent>
+          <div style={{ margin: '1rem' }}>
+            bottom: 100px
+            <br /> left:100px
+          </div>
         </ModelessDialog>
       </li>
     </TriggerList>
