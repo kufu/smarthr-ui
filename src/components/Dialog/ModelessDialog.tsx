@@ -1,4 +1,12 @@
-import React, { MouseEvent, ReactNode, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, {
+  MouseEvent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 import Draggable from 'react-draggable'
@@ -95,7 +103,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   )
 
   const { moveFocusFromTrigger, returnFocusToTrigger } = useTriggerFocusControl(wrapperRef)
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isOpen) {
       moveFocusFromTrigger()
     } else {
