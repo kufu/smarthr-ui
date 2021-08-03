@@ -128,7 +128,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   return createPortal(
     <DialogTransition isOpen={isOpen}>
       <Draggable handle={`.${classNames.header}`} positionOffset={positionProps.offset}>
-        <Fixed
+        <Layout
           className={`${className} ${classNames.wrapper}`}
           style={positionProps.rect}
           ref={wrapperRef}
@@ -157,14 +157,14 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
             </Header>
             <Content className={classNames.content}>{children}</Content>
           </Box>
-        </Fixed>
+        </Layout>
       </Draggable>
     </DialogTransition>,
     portalParent,
   )
 }
 
-const Fixed = styled.div<{ themes: Theme }>`
+const Layout = styled.div<{ themes: Theme }>`
   ${({ themes: { zIndex } }) => css`
     position: fixed;
     z-index: ${zIndex.OVERLAP};
