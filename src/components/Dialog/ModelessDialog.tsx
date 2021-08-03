@@ -35,6 +35,14 @@ type Props = {
    */
   onPressEscape?: () => void
   /**
+   * ダイアログの幅
+   */
+  width?: string | number
+  /**
+   * ダイアログの高さ
+   */
+  height?: string | number
+  /**
    * ダイアログを開いたときの初期 top 位置
    */
   top?: string
@@ -58,6 +66,8 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   isOpen,
   onClickClose,
   onPressEscape,
+  width,
+  height,
   top,
   left,
   right,
@@ -93,39 +103,41 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }
   }, [isOpen, moveFocusFromTrigger, returnFocusToTrigger])
 
-  const adjustedPosition = useMemo(() => {
+  const positionProps = useMemo(() => {
     const isXCenter = left === undefined && right === undefined
     const isYCenter = top === undefined && bottom === undefined
     return {
-      position: {
+      rect: {
         top: isYCenter ? '50%' : top,
         left: isXCenter ? '50%' : left,
         right,
         bottom,
+        width,
+        height,
       },
       offset: {
         x: isXCenter ? '-50%' : 0,
         y: isYCenter ? '-50%' : 0,
       },
     }
-  }, [bottom, left, right, top])
+  }, [bottom, height, left, right, top, width])
 
   const labelId = useId()
   const classNames = useClassNames().modelessDialog
 
   return createPortal(
     <DialogTransition isOpen={isOpen}>
-      <Draggable handle={`.${classNames.header}`} positionOffset={adjustedPosition.offset}>
+      <Draggable handle={`.${classNames.header}`} positionOffset={positionProps.offset}>
         <Fixed
           className={`${className} ${classNames.wrapper}`}
-          style={adjustedPosition.position}
+          style={positionProps.rect}
           ref={wrapperRef}
           themes={theme}
           role="dialog"
           aria-labelledby={labelId}
           {...props}
         >
-          <DialogBase radius="m" className={classNames.box}>
+          <Box className={classNames.box}>
             <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
             <Header className={classNames.header} themes={theme}>
               <div id={labelId}>
@@ -143,8 +155,8 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                 </SecondaryButton>
               </CloseButtonLayout>
             </Header>
-            <div className={classNames.content}>{children}</div>
-          </DialogBase>
+            <Content className={classNames.content}>{children}</Content>
+          </Box>
         </Fixed>
       </Draggable>
     </DialogTransition>,
@@ -157,6 +169,13 @@ const Fixed = styled.div<{ themes: Theme }>`
     position: fixed;
     z-index: ${zIndex.OVERLAP};
   `}
+`
+const Box = styled(DialogBase).attrs({ radius: 'm' })`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
 `
 const Header = styled.div<{ themes: Theme }>`
   ${({ themes: { border } }) => css`
@@ -178,4 +197,7 @@ const CloseButtonLayout = styled.div<{ themes: Theme }>`
     margin: ${spacingByChar(1)};
     margin-left: auto;
   `}
+`
+const Content = styled.div`
+  overflow: auto;
 `
