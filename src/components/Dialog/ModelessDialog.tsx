@@ -53,19 +53,19 @@ type Props = {
   /**
    * ダイアログを開いたときの初期 top 位置
    */
-  top?: string
+  top?: string | number
   /**
    * ダイアログを開いたときの初期 left 位置
    */
-  left?: string
+  left?: string | number
   /**
    * ダイアログを開いたときの初期 right 位置
    */
-  right?: string
+  right?: string | number
   /**
    * ダイアログを開いたときの初期 bottom 位置
    */
-  bottom?: string
+  bottom?: string | number
 }
 
 export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({

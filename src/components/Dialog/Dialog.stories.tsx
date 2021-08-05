@@ -520,12 +520,12 @@ export const Modeless_Dialog: Story = () => {
           header="座標指定表示"
           onClickClose={() => setIsOpen2(false)}
           onPressEscape={() => setIsOpen2(false)}
-          bottom="100px"
-          right="100px"
+          bottom={100}
+          right="10%"
         >
           <div style={{ margin: '1rem' }}>
             bottom: 100px
-            <br /> left:100px
+            <br /> right: 10%
           </div>
         </ModelessDialog>
       </li>
