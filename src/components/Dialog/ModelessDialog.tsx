@@ -31,6 +31,10 @@ type Props = {
    */
   children: ReactNode
   /**
+   * ダイアログのフッタ部分の内容
+   */
+  footer?: ReactNode
+  /**
    * ダイアログが開かれているかどうかの真偽値
    */
   isOpen: boolean
@@ -71,6 +75,7 @@ type Props = {
 export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   header,
   children,
+  footer,
   isOpen,
   onClickClose,
   onPressEscape,
@@ -172,6 +177,11 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
               </CloseButtonLayout>
             </Header>
             <Content className={classNames.content}>{children}</Content>
+            {footer && (
+              <Footer className={classNames.footer} themes={theme}>
+                {footer}
+              </Footer>
+            )}
           </Box>
         </Layout>
       </Draggable>
@@ -216,4 +226,9 @@ const CloseButtonLayout = styled.div<{ themes: Theme }>`
 `
 const Content = styled.div`
   overflow: auto;
+`
+const Footer = styled.div<{ themes: Theme }>`
+  ${({ themes: { border } }) => css`
+    border-top: ${border.shorthand};
+  `}
 `

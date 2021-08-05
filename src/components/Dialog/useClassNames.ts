@@ -26,6 +26,7 @@ export function useClassNames() {
         header: generateForModeless('header'),
         closeButton: generateForModeless('closeButton'),
         content: generateForModeless('content'),
+        footer: generateForModeless('footer'),
       },
     }),
     [generateForDialog, generateForModeless],

@@ -468,6 +468,7 @@ export const Modeless_Dialog: Story = () => {
         <ModelessDialog
           isOpen={isOpen1}
           header="モードレスダイアログ"
+          footer={<ModelessFooter>フッタ</ModelessFooter>}
           onClickClose={() => setIsOpen1(false)}
           onPressEscape={() => setIsOpen1(false)}
           width="50%"
@@ -476,15 +477,15 @@ export const Modeless_Dialog: Story = () => {
         >
           <ModelessContent>
             <Stack gap="S">
-              <Wrapper>
+              <ModelessContentPart>
                 <LineUp gap="S">
                   <RadioButton>ラジオボタン1</RadioButton>
                   <RadioButton>ラジオボタン2</RadioButton>
                 </LineUp>
-              </Wrapper>
-              <Wrapper>
+              </ModelessContentPart>
+              <ModelessContentPart>
                 <DatePicker />
-              </Wrapper>
+              </ModelessContentPart>
               <Table>
                 <Head>
                   <Row>
@@ -580,7 +581,13 @@ RegOpendAction.parameters = { docs: { disable: true } }
 
 export const RegOpenedModeless: Story = () => {
   return (
-    <ModelessDialog isOpen header="モードレスダイアログ" height={500} width={600}>
+    <ModelessDialog
+      isOpen
+      header="モードレスダイアログ"
+      footer={<ModelessFooter>フッタ</ModelessFooter>}
+      height={500}
+      width={600}
+    >
       <div style={{ margin: '1rem' }}>
         {dummyText}
         {dummyText}
@@ -634,6 +641,9 @@ const TriggerList = styled.ul`
 const ModelessContent = styled.div`
   margin: 1rem 0;
 `
-const Wrapper = styled.div`
+const ModelessContentPart = styled.div`
   margin: 0 1rem;
+`
+const ModelessFooter = styled.div`
+  padding: 1rem;
 `
