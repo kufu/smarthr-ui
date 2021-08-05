@@ -4,8 +4,8 @@ import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
+  useState,
 } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
@@ -85,6 +85,10 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
 }) => {
   const portalParent = useRef(document.createElement('div')).current
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const [centering, setCentering] = useState<{
+    top?: number
+    left?: number
+  }>({})
   const theme = useTheme()
 
   useEffect(() => {
@@ -111,34 +115,38 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }
   }, [isOpen, moveFocusFromTrigger, returnFocusToTrigger])
 
-  const positionProps = useMemo(() => {
+  useLayoutEffect(() => {
+    // 中央寄せの座標計算を行う
+    if (!wrapperRef.current || !isOpen) {
+      return
+    }
     const isXCenter = left === undefined && right === undefined
     const isYCenter = top === undefined && bottom === undefined
-    return {
-      rect: {
-        top: isYCenter ? '50%' : top,
-        left: isXCenter ? '50%' : left,
-        right,
-        bottom,
-        width,
-        height,
-      },
-      offset: {
-        x: isXCenter ? '-50%' : 0,
-        y: isYCenter ? '-50%' : 0,
-      },
+    if (isXCenter || isYCenter) {
+      const rect = wrapperRef.current.getBoundingClientRect()
+      setCentering({
+        top: isYCenter ? window.innerHeight / 2 - rect.height / 2 : undefined,
+        left: isXCenter ? window.innerWidth / 2 - rect.width / 2 : undefined,
+      })
     }
-  }, [bottom, height, left, right, top, width])
+  }, [bottom, isOpen, left, right, top])
 
   const labelId = useId()
   const classNames = useClassNames().modelessDialog
 
   return createPortal(
     <DialogTransition isOpen={isOpen}>
-      <Draggable handle={`.${classNames.header}`} positionOffset={positionProps.offset}>
+      <Draggable handle={`.${classNames.header}`}>
         <Layout
           className={`${className} ${classNames.wrapper}`}
-          style={positionProps.rect}
+          style={{
+            top: centering.top !== undefined ? centering.top : top,
+            left: centering.left !== undefined ? centering.left : left,
+            right,
+            bottom,
+            width,
+            height,
+          }}
           ref={wrapperRef}
           themes={theme}
           role="dialog"
