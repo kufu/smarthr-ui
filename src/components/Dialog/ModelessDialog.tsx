@@ -209,7 +209,6 @@ const Header = styled.div<{ themes: Theme }>`
     align-items: center;
     border-bottom: ${border.shorthand};
     cursor: move;
-    user-select: none;
   `}
 `
 const Title = styled.div<{ themes: Theme }>`
