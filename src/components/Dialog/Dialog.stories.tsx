@@ -462,7 +462,12 @@ export const Modeless_Dialog: Story = () => {
   return (
     <TriggerList style={{ height: '200vh' }}>
       <li>
-        <SecondaryButton onClick={() => setIsOpen1(!isOpen1)} data-test="dialog-trigger">
+        <SecondaryButton
+          onClick={() => setIsOpen1(!isOpen1)}
+          data-test="dialog-trigger"
+          aria-haspopup="dialog"
+          aria-controls="modeless-dialog-1"
+        >
           中央表示
         </SecondaryButton>
         <ModelessDialog
@@ -473,6 +478,7 @@ export const Modeless_Dialog: Story = () => {
           onPressEscape={() => setIsOpen1(false)}
           width="50%"
           height="50%"
+          id="modeless-dialog-1"
           data-test="dialog"
         >
           <ModelessContent>
@@ -515,7 +521,13 @@ export const Modeless_Dialog: Story = () => {
         </ModelessDialog>
       </li>
       <li>
-        <SecondaryButton onClick={() => setIsOpen2(!isOpen2)}>座標指定</SecondaryButton>
+        <SecondaryButton
+          onClick={() => setIsOpen2(!isOpen2)}
+          aria-haspopup="dialog"
+          aria-controls="modeless-dialog-2"
+        >
+          座標指定
+        </SecondaryButton>
         <ModelessDialog
           isOpen={isOpen2}
           header="座標指定表示"
@@ -523,6 +535,7 @@ export const Modeless_Dialog: Story = () => {
           onPressEscape={() => setIsOpen2(false)}
           bottom={100}
           right="10%"
+          id="modeless-dialog-2"
         >
           <div style={{ margin: '1rem' }}>
             bottom: 100px
