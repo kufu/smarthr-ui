@@ -161,10 +161,10 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
           <Box className={classNames.box}>
             <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
             <Header className={classNames.header} themes={theme}>
-              <div id={labelId}>
-                {typeof header === 'string' ? <Title themes={theme}>{header}</Title> : header}
-              </div>
-              <CloseButtonLayout themes={theme}>
+              <Title id={labelId} themes={theme}>
+                {header}
+              </Title>
+              <CloseButtonLayout>
                 <SecondaryButton
                   type="button"
                   size="s"
@@ -204,24 +204,22 @@ const Box = styled(DialogBase).attrs({ radius: 'm' })`
   max-height: 100vh;
 `
 const Header = styled.div<{ themes: Theme }>`
-  ${({ themes: { border } }) => css`
+  ${({ themes: { border, spacingByChar } }) => css`
     display: flex;
     align-items: center;
+    padding: ${spacingByChar(1)} ${spacingByChar(1)} ${spacingByChar(1)} ${spacingByChar(1.5)};
     border-bottom: ${border.shorthand};
     cursor: move;
   `}
 `
 const Title = styled.div<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-    margin: ${spacingByChar(1)};
+    margin-right: ${spacingByChar(1)};
   `}
 `
-const CloseButtonLayout = styled.div<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
-    flex-shrink: 0;
-    margin: ${spacingByChar(1)};
-    margin-left: auto;
-  `}
+const CloseButtonLayout = styled.div`
+  flex-shrink: 0;
+  margin-left: auto;
 `
 const Content = styled.div`
   overflow: auto;
