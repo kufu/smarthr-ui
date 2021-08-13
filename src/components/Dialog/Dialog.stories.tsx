@@ -472,7 +472,7 @@ export const Modeless_Dialog: Story = () => {
         </SecondaryButton>
         <ModelessDialog
           isOpen={isOpen1}
-          header="モードレスダイアログ"
+          header={<ModelessHeading>モードレスダイアログ</ModelessHeading>}
           footer={<ModelessFooter>フッタ</ModelessFooter>}
           onClickClose={() => setIsOpen1(false)}
           onPressEscape={() => setIsOpen1(false)}
@@ -530,7 +530,7 @@ export const Modeless_Dialog: Story = () => {
         </SecondaryButton>
         <ModelessDialog
           isOpen={isOpen2}
-          header="座標指定表示"
+          header={<ModelessHeading>座標指定表示</ModelessHeading>}
           onClickClose={() => setIsOpen2(false)}
           onPressEscape={() => setIsOpen2(false)}
           bottom={100}
@@ -596,7 +596,7 @@ export const RegOpenedModeless: Story = () => {
   return (
     <ModelessDialog
       isOpen
-      header="モードレスダイアログ"
+      header={<ModelessHeading>モードレスダイアログ</ModelessHeading>}
       footer={<ModelessFooter>フッタ</ModelessFooter>}
       height={500}
       width={600}
@@ -650,6 +650,11 @@ const TriggerList = styled.ul`
     display: inline-block;
     margin: 8px;
   }
+`
+const ModelessHeading = styled.h3`
+  font-size: 1em;
+  margin: 0;
+  font-weight: normal;
 `
 const ModelessContent = styled.div`
   margin: 1rem 0;
