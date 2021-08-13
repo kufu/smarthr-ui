@@ -90,10 +90,15 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
 }) => {
   const portalParent = useRef(document.createElement('div')).current
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
   const [centering, setCentering] = useState<{
     top?: number
     left?: number
   }>({})
+  const [position, setPosition] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  })
   const theme = useTheme()
 
   useEffect(() => {
@@ -114,6 +119,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   const { moveFocusFromTrigger, returnFocusToTrigger } = useTriggerFocusControl(wrapperRef)
   useLayoutEffect(() => {
     if (isOpen) {
+      setPosition({ x: 0, y: 0 })
       moveFocusFromTrigger()
     } else {
       returnFocusToTrigger()
@@ -136,12 +142,69 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }
   }, [bottom, isOpen, left, right, top])
 
+  const handleArrowKey = useCallback(
+    (e: KeyboardEvent) => {
+      if (!isOpen || headerRef.current === null || document.activeElement !== headerRef.current) {
+        return
+      }
+      const movingDistance = 20
+      switch (e.key) {
+        case 'ArrowUp':
+          setPosition((prev) => ({
+            x: prev.x,
+            y: prev.y - movingDistance,
+          }))
+          e.preventDefault()
+          break
+        case 'ArrowDown':
+          setPosition((prev) => ({
+            x: prev.x,
+            y: prev.y + movingDistance,
+          }))
+          e.preventDefault()
+          break
+        case 'ArrowLeft':
+          setPosition((prev) => ({
+            x: prev.x - movingDistance,
+            y: prev.y,
+          }))
+          e.preventDefault()
+          break
+        case 'ArrowRight':
+          setPosition((prev) => ({
+            x: prev.x + movingDistance,
+            y: prev.y,
+          }))
+          e.preventDefault()
+          break
+      }
+    },
+    [isOpen],
+  )
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleArrowKey)
+    return () => document.removeEventListener('keydown', handleArrowKey)
+  }, [handleArrowKey])
+
   const labelId = useId()
   const classNames = useClassNames().modelessDialog
 
   return createPortal(
     <DialogTransition isOpen={isOpen}>
-      <Draggable handle={`.${classNames.header}`}>
+      <Draggable
+        handle={`.${classNames.header}`}
+        onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
+        onDrag={(_, data) => {
+          setPosition((prev) => {
+            return {
+              x: prev.x + data.deltaX,
+              y: prev.y + data.deltaY,
+            }
+          })
+        }}
+        position={position}
+      >
         <Layout
           className={`${className} ${classNames.wrapper}`}
           style={{
@@ -160,7 +223,13 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
         >
           <Box className={classNames.box}>
             <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
-            <Header className={classNames.header} themes={theme}>
+            <Header
+              className={classNames.header}
+              tabIndex={0}
+              ref={headerRef}
+              aria-label="ドラッグまたは矢印キーでダイアログを移動させることができます"
+              themes={theme}
+            >
               <Title id={labelId} themes={theme}>
                 {header}
               </Title>
