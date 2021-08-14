@@ -32,19 +32,19 @@ storiesOf('CheckBox', module)
           <InnerList>
             <li>
               <CheckBox name="1" checked={checkedName.includes('1')} onChange={handleChange}>
-                CheckBox
+                チェックボックス
               </CheckBox>
             </li>
 
             <li>
               <CheckBox disabled onChange={handleChange}>
-                CheckBox / disabled
+                チェックボックス / disabled
               </CheckBox>
             </li>
 
             <li>
               <CheckBox checked disabled onChange={handleChange}>
-                CheckBox / disabled /checked
+                チェックボックス / disabled /checked
               </CheckBox>
             </li>
           </InnerList>
@@ -74,19 +74,19 @@ storiesOf('CheckBox', module)
           <InnerList>
             <li>
               <CheckBox name="3" checked={checkedName.includes('3')} mixed onChange={handleChange}>
-                CheckBox / mixed
+                チェックボックス / mixed
               </CheckBox>
             </li>
 
             <li>
               <CheckBox mixed disabled onChange={handleChange}>
-                CheckBox / mixed / disabled
+                チェックボックス / mixed / disabled
               </CheckBox>
             </li>
 
             <li>
               <CheckBox checked mixed disabled onChange={handleChange}>
-                CheckBox / mixed / disabled / checked
+                チェックボックス / mixed / disabled / checked
               </CheckBox>
             </li>
           </InnerList>
@@ -97,15 +97,20 @@ storiesOf('CheckBox', module)
 
           <InnerList>
             <li>
-              <CheckBox name="4" checked={checkedName.includes('4')} onChange={handleChange}>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                Ipsum has been the industry&apos;s standard dummy text ever since the 1500s, when an
-                unknown printer took a galley of type and scrambled it to make a type specimen book.
-                It has survived not only five centuries, but also the leap into electronic
-                typesetting, remaining essentially unchanged. It was popularised in the 1960s with
-                the release of Letraset sheets containing Lorem Ipsum passages, and more recently
-                with desktop publishing software like Aldus PageMaker including versions of Lorem
-                Ipsum.
+              <CheckBox
+                name="4"
+                checked={checkedName.includes('4')}
+                onChange={handleChange}
+                checkBoxPosition="top"
+              >
+                ローレムイプサム is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry&apos;s standard dummy text ever since the 1500s,
+                when an unknown printer took a galley of type and scrambled it to make a type
+                specimen book. It has survived not only five centuries, but also the leap into
+                electronic typesetting, remaining essentially unchanged. It was popularised in the
+                1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+                recently with desktop publishing software like Aldus PageMaker including versions of
+                Lorem Ipsum.
               </CheckBox>
             </li>
           </InnerList>
