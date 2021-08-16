@@ -13,7 +13,7 @@ storiesOf('FloatArea', module)
       sidebar: readme,
     },
   })
-  .add('FloatArea', () => (
+  .add('all', () => (
     <FloatArea
       primaryButton={<PrimaryButton>Submit</PrimaryButton>}
       secondaryButton={<SecondaryButton>Cancel</SecondaryButton>}
@@ -23,4 +23,17 @@ storiesOf('FloatArea', module)
       width="80%"
       top={40}
     />
+  ))
+  .add('withoutTertiary', () => (
+    <FloatArea
+      primaryButton={<PrimaryButton>Submit</PrimaryButton>}
+      secondaryButton={<SecondaryButton>Cancel</SecondaryButton>}
+      errorIcon={<FaExclamationTriangleIcon color="#e01e5a" />}
+      errorText="This is the error text."
+      width="80%"
+      top={40}
+    />
+  ))
+  .add('onlyPrimary', () => (
+    <FloatArea primaryButton={<PrimaryButton>Submit</PrimaryButton>} top={40} />
   ))
