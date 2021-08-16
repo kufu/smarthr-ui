@@ -90,7 +90,6 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
 }) => {
   const portalParent = useRef(document.createElement('div')).current
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const headerRef = useRef<HTMLDivElement>(null)
   const [centering, setCentering] = useState<{
     top?: number
     left?: number
@@ -143,8 +142,8 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   }, [bottom, isOpen, left, right, top])
 
   const handleArrowKey = useCallback(
-    (e: KeyboardEvent) => {
-      if (!isOpen || headerRef.current === null || document.activeElement !== headerRef.current) {
+    (e: React.KeyboardEvent) => {
+      if (!isOpen || document.activeElement !== e.currentTarget) {
         return
       }
       const movingDistance = 20
@@ -181,11 +180,6 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     },
     [isOpen],
   )
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleArrowKey)
-    return () => document.removeEventListener('keydown', handleArrowKey)
-  }, [handleArrowKey])
 
   const labelId = useId()
   const classNames = useClassNames().modelessDialog
@@ -226,7 +220,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
             <Header
               className={classNames.header}
               tabIndex={0}
-              ref={headerRef}
+              onKeyDown={handleArrowKey}
               aria-label="ドラッグまたは矢印キーでダイアログを移動させることができます"
               themes={theme}
             >
