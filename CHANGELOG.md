@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [14.0.0](https://github.com/kufu/smarthr-ui/compare/v13.3.0...v14.0.0) (2021-08-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* 利用されていなかった `Header` コンポーネントを削除しました。
+* `RightFixedNote` において `title`
+が必須プロパティになります。
+* 旧 `CheckBox` および `CheckBoxLabel`
+を削除しました。新しい `CheckBox` を使用してください。
+* 旧 `RadioButton` および `RadioButtonLabel`
+を削除しました。新しい `RadioButton` を使用してください。
+* `SingleComboBox` の `onSelect`
+が選択クリア時に発火しなくなります。選択クリアのハンドリングは `onClear`
+で行ってください。
+
+### Features
+
+* add onClear handler ([#1747](https://github.com/kufu/smarthr-ui/issues/1747)) ([cc0fd58](https://github.com/kufu/smarthr-ui/commit/cc0fd580569a24067ef99e04c32bd3211ffb319e))
+* make title required, and display textarea label ([#1744](https://github.com/kufu/smarthr-ui/issues/1744)) ([e14c01d](https://github.com/kufu/smarthr-ui/commit/e14c01dab4305a814fb8e472893e16d0bf76e8bc))
+* remove unused <Header> ([#1761](https://github.com/kufu/smarthr-ui/issues/1761)) ([5a67dc5](https://github.com/kufu/smarthr-ui/commit/5a67dc5f6834911cf7a9968ecb3dfc77df4de9f4))
+
+
+### Bug Fixes
+
+* CheckBox コンポーネントのリネームと整理 (SHRUI-419) ([#1748](https://github.com/kufu/smarthr-ui/issues/1748)) ([4ed6875](https://github.com/kufu/smarthr-ui/commit/4ed68752b13eafbf156472f9f022bb99a81044c9))
+* RadioButton コンポーネントのリネームと整理 (SHRUI-419) ([#1754](https://github.com/kufu/smarthr-ui/issues/1754)) ([d6c0fa5](https://github.com/kufu/smarthr-ui/commit/d6c0fa587e0ec9dd5dab0256e9f4be1be134730d))
+
+## [13.3.0](https://github.com/kufu/smarthr-ui/compare/v13.2.0...v13.3.0) (2021-07-20)
+
+
+### Features
+
+* add option for fixedhead ([#1672](https://github.com/kufu/smarthr-ui/issues/1672)) ([21f5c86](https://github.com/kufu/smarthr-ui/commit/21f5c864ff9cd837a32a85e880df2b19d88862db))
+* DropDown コンポーネントの属性の改善 SHRUI-262 ([#1670](https://github.com/kufu/smarthr-ui/issues/1670)) ([e7813d7](https://github.com/kufu/smarthr-ui/commit/e7813d75ff9e978595724e0fcc1c7aad51f0615b))
+* Stack に align を追加 ([#1753](https://github.com/kufu/smarthr-ui/issues/1753)) ([5d00d6b](https://github.com/kufu/smarthr-ui/commit/5d00d6b4f7349154aaeeee93b10f16a84076935b))
+
 ## [13.2.0](https://github.com/kufu/smarthr-ui/compare/v13.1.0...v13.2.0) (2021-07-13)
 
 
