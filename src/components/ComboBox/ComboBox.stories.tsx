@@ -91,6 +91,7 @@ export const Single: Story = () => {
           placeholder="入力でフィルタリングできます"
           onSelect={handleSelectItem}
           onClear={handleClear}
+          data-test="single-combobox-default"
         />
       </dd>
       <dt>アイテム追加可能</dt>
@@ -104,6 +105,7 @@ export const Single: Story = () => {
           onSelect={handleSelectItem}
           onClear={handleClear}
           onAdd={handleAddItem}
+          data-test="single-combobox-creatable"
         />
       </dd>
       <dt>Disabled</dt>
@@ -116,6 +118,7 @@ export const Single: Story = () => {
           disabled
           onSelect={handleSelectItem}
           onClear={handleClear}
+          data-test="single-combobox-disabled"
         />
       </dd>
       <dt>エラー表示</dt>
@@ -201,6 +204,7 @@ export const Multi: Story = () => {
           placeholder="入力でフィルタリングできます"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
+          data-test="multi-combobox-default"
         />
       </dd>
       <dt>アイテム追加可能</dt>
@@ -214,6 +218,7 @@ export const Multi: Story = () => {
           onDelete={handleDelete}
           onSelect={handleSelectItem}
           onAdd={handleAddItem}
+          data-test="multi-combobox-creatable"
         />
       </dd>
       <dt>Disabled</dt>
@@ -226,6 +231,7 @@ export const Multi: Story = () => {
           disabled
           onDelete={handleDelete}
           onSelect={handleSelectItem}
+          data-test="multi-combobox-disabled"
         />
       </dd>
       <dt>エラー表示</dt>
