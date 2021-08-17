@@ -14,7 +14,7 @@ export function useClassNames() {
       description: generate('description'),
       actionArea: generate('actionArea'),
       buttonArea: generate('buttonArea'),
-      secondaryButton: generate('secondaryButton'),
+      closeButton: generate('closeButton'),
       actionButton: generate('actionButton'),
       alert: generate('alert'),
     }),
