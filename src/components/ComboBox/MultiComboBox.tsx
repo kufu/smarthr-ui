@@ -185,7 +185,10 @@ export function MultiComboBox<T>({
           !disabled &&
           !isFocused
         ) {
-          focus()
+          // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
+          setTimeout(() => {
+            focus()
+          }, 0)
         }
       }}
       onKeyDown={(e) => {
@@ -223,7 +226,12 @@ export function MultiComboBox<T>({
                       themes={theme}
                       className={classNames.deleteButton}
                       disabled={disabled}
-                      onClick={() => onDelete(item)}
+                      onClick={() => {
+                        // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
+                        setTimeout(() => {
+                          onDelete(item)
+                        }, 0)
+                      }}
                     >
                       <FaTimesCircleIcon
                         size={11}
