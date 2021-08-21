@@ -6,7 +6,7 @@ import { useClassNames } from './useClassNames'
 type Props = {
   children: ReactNode
   radius?: RadiusKeys
-  layer: LayerKeys
+  layer?: LayerKeys
 }
 type RadiusKeys = keyof typeof radiusMap
 
