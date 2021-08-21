@@ -8,16 +8,16 @@ type Props = {
   radius?: RadiusKeys
   layer?: LayerKeys
 }
-type RadiusKeys = keyof typeof radiusMap
 
-type LayerKeys = keyof typeof shadowMap
+export type RadiusKeys = keyof typeof radiusMap
+export type LayerKeys = keyof typeof layerMap
 
 export const radiusMap = {
   s: '6px',
   m: '8px',
 } as const
 
-const shadowMap = {
+export const layerMap = {
   0: 'LAYER0',
   1: 'LAYER1',
   2: 'LAYER2',
@@ -37,7 +37,7 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
         className={`${className} ${classNames.base.wrapper}`}
         themes={themes}
         $radius={radiusMap[radius]}
-        $layer={shadowMap[layer]}
+        $layer={layerMap[layer]}
         ref={ref}
         {...props}
       />
@@ -48,7 +48,7 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
 const Wrapper = styled.div<{
   themes: Theme
   $radius: typeof radiusMap[RadiusKeys]
-  $layer: typeof shadowMap[LayerKeys]
+  $layer: typeof layerMap[LayerKeys]
 }>`
   ${({ themes, $radius, $layer }) => {
     return css`
