@@ -24,8 +24,8 @@
     "@types/jest": "^26.0.24",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
-    "@types/node": "^14.17.9",
-    "@types/react": "^17.0.18",
+    "@types/node": "^14.17.11",
+    "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.4.2",
@@ -61,8 +61,8 @@
     "stylelint-config-smarthr": "^1.0.0",
     "stylelint-config-standard": "^22.0.0",
     "stylelint-config-styled-components": "^0.1.1",
-    "testcafe": "^1.15.2",
-    "ts-jest": "^27.0.4",
+    "testcafe": "^1.15.3",
+    "ts-jest": "^27.0.5",
     "ts-loader": "^9.2.5",
     "ts-node": "^10.2.0",
     "typescript": "^4.3.5",
@@ -140,7 +140,7 @@
     "minimist": "1.2.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "@types/react": "^17.0.18",
+    "@types/react": "^17.0.19",
     "@babel/helper-compilation-targets": "^7.14.5"
   }
 }
