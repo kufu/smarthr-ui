@@ -12,9 +12,13 @@ import { FaCaretRightIcon, FaCaretUpIcon } from '../Icon'
 import { radiusMap } from '../Base'
 
 type Props = {
+  /** ヘッダ部分の内容 */
   children: React.ReactNode
+  /** ヘッダ部分のクラス名 */
   className?: string
+  /** ヘッダ部分のテキストのスタイル */
   headingType?: HeadingTypes
+  /** ヘッダ部分のタグ指定 */
   headingTag?: HeadingTagTypes
 }
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
