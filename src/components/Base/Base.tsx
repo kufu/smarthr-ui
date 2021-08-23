@@ -5,17 +5,30 @@ import { useClassNames } from './useClassNames'
 
 type Props = {
   children: ReactNode
-  radius?: 's' | 'm'
+  radius?: RadiusKeys
+  layer?: LayerKeys
 }
-export type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+
+export type RadiusKeys = keyof typeof radiusMap
+export type LayerKeys = keyof typeof layerMap
 
 export const radiusMap = {
   s: '6px',
   m: '8px',
-}
+} as const
+
+export const layerMap = {
+  0: 'LAYER0',
+  1: 'LAYER1',
+  2: 'LAYER2',
+  3: 'LAYER3',
+  4: 'LAYER4',
+} as const
+
+export type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
-  ({ radius = 'm', className = '', ...props }, ref) => {
+  ({ radius = 'm', layer = 1, className = '', ...props }, ref) => {
     const themes = useTheme()
     const classNames = useClassNames()
 
@@ -24,6 +37,7 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
         className={`${className} ${classNames.base.wrapper}`}
         themes={themes}
         $radius={radiusMap[radius]}
+        $layer={layerMap[layer]}
         ref={ref}
         {...props}
       />
@@ -31,10 +45,14 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
   },
 )
 
-const Wrapper = styled.div<{ themes: Theme; $radius: string }>`
-  ${({ themes, $radius }) => {
+const Wrapper = styled.div<{
+  themes: Theme
+  $radius: typeof radiusMap[RadiusKeys]
+  $layer: typeof layerMap[LayerKeys]
+}>`
+  ${({ themes, $radius, $layer }) => {
     return css`
-      box-shadow: ${themes.shadow.LAYER1};
+      box-shadow: ${themes.shadow[$layer]};
       border-radius: ${$radius};
       background-color: #fff;
     `
