@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [14.1.0](https://github.com/kufu/smarthr-ui/compare/v14.0.1...v14.1.0) (2021-08-23)
+
+
+### Features
+
+* ActionDialog と MessageDialog に副題を追加 ([#1812](https://github.com/kufu/smarthr-ui/issues/1812)) ([e2a6344](https://github.com/kufu/smarthr-ui/commit/e2a6344e9af1733064d0cfbf122a2f4dd776af34))
+
+
+### Bug Fixes
+
+* Calendar の年選択ボタンのイベント伝播を阻止する ([#1803](https://github.com/kufu/smarthr-ui/issues/1803)) ([bcf378d](https://github.com/kufu/smarthr-ui/commit/bcf378d8064e7b64731ad13e03080df81c541570))
+
 ## [14.0.1](https://github.com/kufu/smarthr-ui/compare/v14.0.0...v14.0.1) (2021-08-16)
 
 
