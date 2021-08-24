@@ -49,10 +49,10 @@ export const FloatArea: VFC<Props> = ({
         {tertiaryButton && tertiaryButton}
         <RightSide gap={1} vAlign="center">
           {errorText && (
-            <LineUp gap={0.25} vAlign="center" as="p">
+            <ErrorMessage gap={0.25} vAlign="center" as="p">
               {errorIcon && <ErrorIcon themes={theme}>{errorIcon}</ErrorIcon>}
               <Text size="S">{errorText}</Text>
-            </LineUp>
+            </ErrorMessage>
           )}
           {secondaryButton && secondaryButton}
           {primaryButton && primaryButton}
@@ -75,6 +75,10 @@ const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string 
 `
 const RightSide = styled(LineUp)`
   margin-left: auto;
+`
+const ErrorMessage = styled(LineUp)`
+  margin-top: 0;
+  margin-bottom: 0;
 `
 const ErrorIcon = styled.span<{ themes: Theme }>`
   flex-shrink: 0;
