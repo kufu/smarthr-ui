@@ -1,5 +1,5 @@
 // components
-export { LightBalloon, DarkBalloon } from './components/Balloon'
+export { Balloon, LightBalloon, DarkBalloon } from './components/Balloon'
 export { CheckBox } from './components/CheckBox'
 export {
   Dropdown,
