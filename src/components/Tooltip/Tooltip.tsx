@@ -148,7 +148,10 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
   return Tooltip
 }
 
-export const LightTooltip = tooltipFactory('light')
+export const Tooltip = tooltipFactory('light')
+/** @deprecated このコンポーネントは非推奨です。 Tooltip コンポーネントを使用してください。 */
+export const LightTooltip = Tooltip
+/** @deprecated このコンポーネントは非推奨です。 Tooltip コンポーネントを使用してください。 */
 export const DarkTooltip = tooltipFactory('dark')
 
 const Wrapper = styled.div<{ isIcon?: boolean }>`
