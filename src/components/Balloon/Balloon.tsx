@@ -36,7 +36,10 @@ const balloonFactory = (theme: BalloonTheme) => {
   return Balloon
 }
 
-export const LightBalloon = balloonFactory('light')
+export const Balloon = balloonFactory('light')
+/** @deprecated このコンポーネントは非推奨です。 Balloon コンポーネントを使用してください。 */
+export const LightBalloon = Balloon
+/** @deprecated このコンポーネントは非推奨です。 Balloon コンポーネントを使用してください。 */
 export const DarkBalloon = balloonFactory('dark')
 
 const Base = styled.div<{ themes: Theme }>`
