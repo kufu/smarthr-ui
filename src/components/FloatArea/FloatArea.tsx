@@ -1,4 +1,10 @@
-import React, { ComponentProps, FunctionComponentElement, ReactNode, VFC } from 'react'
+import React, {
+  ComponentProps,
+  FunctionComponentElement,
+  HTMLAttributes,
+  ReactNode,
+  VFC,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { DialogBase as BaseComponent } from '../Base'
@@ -7,16 +13,14 @@ import { Text } from '../Text'
 import { LineUp } from '../Layout'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-type ErrorIcons =
-  | FunctionComponentElement<ComponentProps<typeof FaExclamationTriangleIcon>>
-  | FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
-
 type StyleProps = {
   top?: number
   bottom?: number
   zIndex?: number
 }
-
+type ErrorIcons =
+  | FunctionComponentElement<ComponentProps<typeof FaExclamationTriangleIcon>>
+  | FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
 type Props = StyleProps & {
   primaryButton: ReactNode
   secondaryButton?: ReactNode
@@ -26,12 +30,13 @@ type Props = StyleProps & {
   width?: string
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 const exist = (value: any) => {
   return value !== undefined && value !== null
 }
 
-export const FloatArea: VFC<Props> = ({
+export const FloatArea: VFC<Props & ElementProps> = ({
   primaryButton,
   secondaryButton,
   tertiaryButton,
