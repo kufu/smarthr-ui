@@ -16,6 +16,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const MessageDialog: React.VFC<Props & ElementProps> = ({
   title,
+  subtitle,
   description,
   closeText,
   onClickClose,
@@ -40,9 +41,10 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
   }, [onClickClose, props.isOpen])
 
   return createPortal(
-    <DialogContentInner ariaLabel={title} className={className} {...props}>
+    <DialogContentInner ariaLabel={`${subtitle} ${title}`} className={className} {...props}>
       <MessageDialogContentInner
         title={title}
+        subtitle={subtitle}
         description={description}
         closeText={closeText}
         onClickClose={handleClickClose}

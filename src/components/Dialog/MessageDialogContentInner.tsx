@@ -5,13 +5,16 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 import { useOffsetHeight } from './dialogHelper'
+import { Stack } from '../Layout'
 import { SecondaryButton } from '../Button'
+import { Text } from '../Text'
 
 export type BaseProps = {
   /**
    * Title of the dialog.
    */
   title: string
+  subtitle?: string
   /**
    * Description of the dialog.
    */
@@ -31,6 +34,7 @@ export type MessageDialogContentInnerProps = BaseProps & {
 
 export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   title,
+  subtitle,
   description,
   closeText,
   onClickClose,
@@ -41,9 +45,16 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
 
   return (
     <>
-      <Title themes={theme} ref={titleRef} className={classNames.title}>
-        {title}
-      </Title>
+      <TitleArea gap={0.25} themes={theme} ref={titleRef} className={classNames.titleArea}>
+        {subtitle && (
+          <Text as="p" size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
+            {subtitle}
+          </Text>
+        )}
+        <Text as="p" size="L" leading="TIGHT" className={classNames.title}>
+          {title}
+        </Text>
+      </TitleArea>
       <Description themes={theme} offsetHeight={offsetHeight} className={classNames.description}>
         {description}
       </Description>
@@ -56,18 +67,12 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   )
 }
 
-const Title = styled.p<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, spacingByChar, border } = themes
-    return css`
-      margin: 0;
-      padding: ${spacingByChar(1)} ${spacingByChar(1.5)};
-      border-bottom: ${border.shorthand};
-      font-size: ${fontSize.L};
-      line-height: 1;
-    `
-  }}
-`
+const TitleArea = styled(Stack)<{ themes: Theme }>(
+  ({ themes: { border, spacing } }) => css`
+    border-bottom: ${border.shorthand};
+    padding: ${spacing.XS} ${spacing.S};
+  `,
+)
 const Description = styled.div<{ themes: Theme; offsetHeight: number }>`
   ${({ themes: { fontSize, spacingByChar }, offsetHeight }) => {
     return css`

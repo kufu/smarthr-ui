@@ -1,20 +1,27 @@
-import React, { ComponentProps, FunctionComponentElement, ReactNode, VFC } from 'react'
+import React, {
+  ComponentProps,
+  FunctionComponentElement,
+  HTMLAttributes,
+  ReactNode,
+  VFC,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { DialogBase as BaseComponent } from '../Base'
 import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
+import { Text } from '../Text'
+import { LineUp } from '../Layout'
 import { Theme, useTheme } from '../../hooks/useTheme'
-
-type ErrorIcons =
-  | FunctionComponentElement<ComponentProps<typeof FaExclamationTriangleIcon>>
-  | FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
+import { useClassNames } from './useClassNames'
 
 type StyleProps = {
   top?: number
   bottom?: number
   zIndex?: number
 }
-
+type ErrorIcons =
+  | FunctionComponentElement<ComponentProps<typeof FaExclamationTriangleIcon>>
+  | FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
 type Props = StyleProps & {
   primaryButton: ReactNode
   secondaryButton?: ReactNode
@@ -24,12 +31,13 @@ type Props = StyleProps & {
   width?: string
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 const exist = (value: any) => {
   return value !== undefined && value !== null
 }
 
-export const FloatArea: VFC<Props> = ({
+export const FloatArea: VFC<Props & ElementProps> = ({
   primaryButton,
   secondaryButton,
   tertiaryButton,
@@ -40,20 +48,23 @@ export const FloatArea: VFC<Props> = ({
   ...props
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Base themes={theme} className={className} $width={width} {...props}>
-      {tertiaryButton && tertiaryButton}
-      {errorText && (
-        <ErrorTextArea>
-          {errorIcon && <ErrorIcon themes={theme}>{errorIcon}</ErrorIcon>}
-          <ErrorText themes={theme}>{errorText}</ErrorText>
-        </ErrorTextArea>
-      )}
-      <ActionArea themes={theme}>
-        {secondaryButton && secondaryButton}
-        {primaryButton && primaryButton}
-      </ActionArea>
+    <Base themes={theme} className={`${className} ${classNames.wrapper}`} $width={width} {...props}>
+      <LineUp align="space-between" vAlign="center">
+        {tertiaryButton && tertiaryButton}
+        <RightSide gap={1} vAlign="center">
+          {errorText && (
+            <ErrorMessage gap={0.25} vAlign="center" as="p" className={classNames.errorText}>
+              {errorIcon && <ErrorIcon themes={theme}>{errorIcon}</ErrorIcon>}
+              <Text size="S">{errorText}</Text>
+            </ErrorMessage>
+          )}
+          {secondaryButton && secondaryButton}
+          {primaryButton && primaryButton}
+        </RightSide>
+      </LineUp>
     </Base>
   )
 }
@@ -61,8 +72,6 @@ export const FloatArea: VFC<Props> = ({
 const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string }>`
   ${({ themes: { spacingByChar }, top, bottom, $width, zIndex = 500 }) =>
     css`
-      display: flex;
-      align-items: center;
       position: fixed;
       ${exist(top) && `top: ${top}px;`}
       ${exist(bottom) && `bottom: ${bottom}px;`}
@@ -71,35 +80,17 @@ const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string 
       padding: ${spacingByChar(1)};
     `}
 `
+const RightSide = styled(LineUp)`
+  margin-left: auto;
+`
+const ErrorMessage = styled(LineUp)`
+  margin-top: 0;
+  margin-bottom: 0;
+`
+const ErrorIcon = styled.span<{ themes: Theme }>`
+  flex-shrink: 0;
 
-const ActionArea = styled.div<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) =>
-    css`
-      > button,
-      > a {
-        margin-left: ${spacingByChar(1)};
-      }
-    `}
-`
-const ErrorTextArea = styled.p`
-  display: flex;
-  align-items: center;
-  margin: 0 0 0 auto;
-  line-height: 1;
-  max-width: 40%;
-`
-const ErrorIcon = styled.div<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) =>
-    css`
-      margin-right: ${spacingByChar(0.5)};
-      flex-shrink: 0;
-    `}
-`
-
-const ErrorText = styled.div<{ themes: Theme }>`
-  ${({ themes: { fontSize } }) => {
-    return css`
-      font-size: ${fontSize.S};
-    `
-  }}
+  > svg {
+    display: block; /* 隙間対策 */
+  }
 `

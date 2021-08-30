@@ -4,8 +4,10 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { useOffsetHeight } from './dialogHelper'
+import { Stack } from '../Layout'
 import { DangerButton, PrimaryButton, SecondaryButton } from '../Button'
 import { FaCheckCircleIcon, FaExclamationTriangleIcon } from '../Icon'
+import { Text } from '../Text'
 import { Loader } from '../Loader'
 import { useClassNames } from './useClassNames'
 
@@ -18,6 +20,7 @@ export type BaseProps = {
    * Title of the dialog.
    */
   title: string
+  subtitle?: string
   /**
    * Label of close button.
    */
@@ -65,6 +68,7 @@ export type ActionDialogContentInnerProps = BaseProps & {
 export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   children,
   title,
+  subtitle,
   closeText,
   actionText,
   actionTheme,
@@ -89,9 +93,16 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
 
   return (
     <>
-      <Title themes={theme} ref={titleRef} className={classNames.title}>
-        {title}
-      </Title>
+      <TitleArea gap={0.25} themes={theme} ref={titleRef} className={classNames.titleArea}>
+        {subtitle && (
+          <Text as="p" size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
+            {subtitle}
+          </Text>
+        )}
+        <Text as="p" size="L" leading="TIGHT" className={classNames.title}>
+          {title}
+        </Text>
+      </TitleArea>
       <Body offsetHeight={offsetHeight} className={classNames.body}>
         {children}
       </Body>
@@ -129,17 +140,12 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   )
 }
 
-const Title = styled.p<{ themes: Theme }>`
-  ${({ themes: { fontSize, border, spacing } }) => {
-    return css`
-      margin: 0;
-      padding: ${spacing.XS} ${spacing.S};
-      border-bottom: ${border.shorthand};
-      font-size: ${fontSize.L};
-      line-height: 1;
-    `
-  }}
-`
+const TitleArea = styled(Stack)<{ themes: Theme }>(
+  ({ themes: { border, spacing } }) => css`
+    border-bottom: ${border.shorthand};
+    padding: ${spacing.XS} ${spacing.S};
+  `,
+)
 const Body = styled.div<{ offsetHeight: number }>`
   ${({ offsetHeight }) => {
     return css`

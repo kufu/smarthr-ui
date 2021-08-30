@@ -54,7 +54,10 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
             {currentMonth.year()}年{currentMonth.month() + 1}月
           </YearMonth>
           <SecondaryButton
-            onClick={() => setIsSelectingYear(!isSelectingYear)}
+            onClick={(e) => {
+              e.stopPropagation()
+              setIsSelectingYear(!isSelectingYear)
+            }}
             size="s"
             square
             aria-expanded={isSelectingYear}
