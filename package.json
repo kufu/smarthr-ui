@@ -77,9 +77,6 @@
   "bugs": {
     "url": "https://github.com/kufu/smarthr-ui/issues"
   },
-  "engines": {
-    "node": ">=v12.20"
-  },
   "files": [
     "esm",
     "lib"
