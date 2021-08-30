@@ -80,7 +80,7 @@ jobs:
       - run-npm-test
   reg-suit:
     docker:
-      - image: regviz/node-xcb
+      - image: andoshin11/node-xcb
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
