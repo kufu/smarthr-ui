@@ -15,6 +15,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 export const ActionDialog: React.VFC<Props & ElementProps> = ({
   children,
   title,
+  subtitle,
   closeText,
   actionText,
   actionTheme,
@@ -51,9 +52,10 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   }, [onClickAction, onClickClose, props.isOpen])
 
   return createPortal(
-    <DialogContentInner ariaLabel={title} className={className} {...props}>
+    <DialogContentInner ariaLabel={`${subtitle} ${title}`} className={className} {...props}>
       <ActionDialogContentInner
         title={title}
+        subtitle={subtitle}
         closeText={closeText}
         actionText={actionText}
         actionTheme={actionTheme}

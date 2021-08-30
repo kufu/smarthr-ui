@@ -1,28 +1,49 @@
 import { storiesOf } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
+import { useTheme } from '../../hooks/useTheme'
 
-import { Base } from './Base'
+import { Base, LayerKeys, RadiusKeys, layerMap, radiusMap } from './Base'
 import { DialogBase } from './DialogBase'
 
-storiesOf('Base', module).add('Base', () => (
-  <List>
-    <li>
-      <Base radius="s">
-        <Txt>
-          If radius props is specified as <Bold>s</Bold>, border-radius becomes <Bold>6px</Bold>.
-        </Txt>
-      </Base>
-    </li>
-    <li>
-      <Base radius="m">
-        <Txt>
-          If radius props is specified as <Bold>m</Bold>, border-radius becomes <Bold>8px</Bold>.
-        </Txt>
-      </Base>
-    </li>
-  </List>
-))
+storiesOf('Base', module).add('Base', () => {
+  const themes = useTheme()
+
+  return (
+    <List>
+      <dt>radius</dt>
+      <dd>
+        <List>
+          {Object.keys(radiusMap).map((radius, index) => (
+            <li key={`${radius}-${index}`}>
+              <Base radius={radius as RadiusKeys}>
+                <Txt>
+                  If radius props is specified as <Bold>{radius}</Bold>, border-radius becomes
+                  <Bold> {radiusMap[radius as RadiusKeys]}</Bold>.
+                </Txt>
+              </Base>
+            </li>
+          ))}
+        </List>
+      </dd>
+      <dt>box-shadow</dt>
+      <dd>
+        <List>
+          {Object.keys(layerMap).map((layer, index) => (
+            <li key={`${layer}-${index}`}>
+              <Base layer={Number(layer) as LayerKeys}>
+                <Txt>
+                  If layer props is specified as <Bold>{layer}</Bold>, box-shadow becomes
+                  <Bold> {themes.shadow[layerMap[Number(layer) as LayerKeys]]}</Bold>.
+                </Txt>
+              </Base>
+            </li>
+          ))}
+        </List>
+      </dd>
+    </List>
+  )
+})
 
 storiesOf('Base', module).add('DialogBase', () => (
   <List>

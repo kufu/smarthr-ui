@@ -143,6 +143,7 @@ export const Message_Dialog: Story = () => {
       <MessageDialog
         isOpen={isOpen}
         title="MessageDialog"
+        subtitle="副題"
         description={<p>{dummyText} </p>}
         closeText="Close"
         onClickClose={onClickClose}
@@ -189,6 +190,7 @@ export const Action_Dialog: Story = () => {
       <ActionDialog
         isOpen={isOpen}
         title="ActionDialog"
+        subtitle="副題"
         closeText="Close"
         actionText="Execute"
         actionTheme="primary"
