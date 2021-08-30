@@ -1,4 +1,10 @@
-import React, { ComponentProps, FunctionComponentElement, ReactNode, VFC } from 'react'
+import React, {
+  ComponentProps,
+  FunctionComponentElement,
+  HTMLAttributes,
+  ReactNode,
+  VFC,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { DialogBase as BaseComponent } from '../Base'
@@ -6,17 +12,16 @@ import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
 import { Text } from '../Text'
 import { LineUp } from '../Layout'
 import { Theme, useTheme } from '../../hooks/useTheme'
-
-type ErrorIcons =
-  | FunctionComponentElement<ComponentProps<typeof FaExclamationTriangleIcon>>
-  | FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
+import { useClassNames } from './useClassNames'
 
 type StyleProps = {
   top?: number
   bottom?: number
   zIndex?: number
 }
-
+type ErrorIcons =
+  | FunctionComponentElement<ComponentProps<typeof FaExclamationTriangleIcon>>
+  | FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
 type Props = StyleProps & {
   primaryButton: ReactNode
   secondaryButton?: ReactNode
@@ -26,12 +31,13 @@ type Props = StyleProps & {
   width?: string
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 const exist = (value: any) => {
   return value !== undefined && value !== null
 }
 
-export const FloatArea: VFC<Props> = ({
+export const FloatArea: VFC<Props & ElementProps> = ({
   primaryButton,
   secondaryButton,
   tertiaryButton,
@@ -42,14 +48,15 @@ export const FloatArea: VFC<Props> = ({
   ...props
 }) => {
   const theme = useTheme()
+  const classNames = useClassNames()
 
   return (
-    <Base themes={theme} className={className} $width={width} {...props}>
+    <Base themes={theme} className={`${className} ${classNames.wrapper}`} $width={width} {...props}>
       <LineUp align="space-between" vAlign="center">
         {tertiaryButton && tertiaryButton}
         <RightSide gap={1} vAlign="center">
           {errorText && (
-            <ErrorMessage gap={0.25} vAlign="center" as="p">
+            <ErrorMessage gap={0.25} vAlign="center" as="p" className={classNames.errorText}>
               {errorIcon && <ErrorIcon themes={theme}>{errorIcon}</ErrorIcon>}
               <Text size="S">{errorText}</Text>
             </ErrorMessage>
