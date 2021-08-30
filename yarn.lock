@@ -16535,10 +16535,10 @@ w3c-xmlserializer@^2.0.0:
   dependencies:
     xml-name-validator "^3.0.0"
 
-wait-for-localhost@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/wait-for-localhost/-/wait-for-localhost-3.3.0.tgz#aa3df1aeb7067a29630683a42e06515d18006061"
-  integrity sha512-/9FDq1qaRXfFwVpRSDiybxHSt6TakGscBqyhO3tsPB1ToRVyjOXVSI2IvW1T04MqM2Mq3a+6J8PdzAlscrCQzg==
+wait-for-localhost@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/wait-for-localhost/-/wait-for-localhost-4.0.0.tgz#87ea0331a656c818186d2cab8c3da27eb937deaa"
+  integrity sha512-XkP+FzzqJC1zVaB5xK4Z9/IErtszPsns232opPlMaskmBHVudmpSZxv8cTtw6FkXCk78Vw0236Prv35YOwGvfg==
 
 wait-on@^5.0.0:
   version "5.3.0"
