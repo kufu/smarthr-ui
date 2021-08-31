@@ -22,8 +22,8 @@ export const defaultZIndex = {
   AUTO: 'auto',
   DEFAULT: 0,
   FIXED_MENU: 100,
-  OVERLAP_BASE: 9000,
-  OVERLAP: 10000,
+  OVERLAP_BASE: 10000,
+  OVERLAP: 10500,
   FLASH_MESSAGE: 11000,
 }
 
