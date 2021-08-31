@@ -4,6 +4,7 @@ export interface ZIndexProperty {
   AUTO?: 'auto'
   DEFAULT?: number
   FIXED_MENU?: number
+  OVERLAP_BASE?: number
   OVERLAP?: number
   FLASH_MESSAGE?: number
 }
@@ -12,6 +13,7 @@ export interface CreatedZindexTheme {
   AUTO: 'auto'
   DEFAULT: number
   FIXED_MENU: number
+  OVERLAP_BASE: number
   OVERLAP: number
   FLASH_MESSAGE: number
 }
@@ -20,6 +22,7 @@ export const defaultZIndex = {
   AUTO: 'auto',
   DEFAULT: 0,
   FIXED_MENU: 100,
+  OVERLAP_BASE: 9000,
   OVERLAP: 10000,
   FLASH_MESSAGE: 11000,
 }
