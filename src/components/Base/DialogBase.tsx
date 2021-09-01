@@ -14,6 +14,9 @@ const radiusMap = {
   m: '8px',
 }
 
+/**
+ * @deprecated The DialogBase component is deprecated, so use Base component instead.
+ */
 export const DialogBase = forwardRef<HTMLDivElement, Props & ElementProps>(
   ({ radius = 'm', className = '', ...props }, ref) => {
     const themes = useTheme()

@@ -2,6 +2,68 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [14.2.0](https://github.com/kufu/smarthr-ui/compare/v14.1.0...v14.2.0) (2021-09-01)
+
+
+### Features
+
+* FloatArea に HTML 属性と className を足す ([#1827](https://github.com/kufu/smarthr-ui/issues/1827)) ([b762212](https://github.com/kufu/smarthr-ui/commit/b7622121b8aaf875af9e4286ff307e2498f5d07b))
+
+
+### Bug Fixes
+
+* change selected item of listbox of `SingleComboBox` not to cut off ([#1826](https://github.com/kufu/smarthr-ui/issues/1826)) ([483b153](https://github.com/kufu/smarthr-ui/commit/483b153544d79c0e7efde81184973146c00e2bba))
+* FloatArea エラーメッセージの余分な余白を取り除く ([#1820](https://github.com/kufu/smarthr-ui/issues/1820)) ([4ea4356](https://github.com/kufu/smarthr-ui/commit/4ea435644cc6bd0329147279d898624c410beceb))
+* ツールチップ、バルーンのダークモードを非推奨にする (SHRUI-444) ([#1825](https://github.com/kufu/smarthr-ui/issues/1825)) ([cbabedd](https://github.com/kufu/smarthr-ui/commit/cbabedd39547dede86334fd6e47903904be10bf7))
+
+## [14.1.0](https://github.com/kufu/smarthr-ui/compare/v14.0.1...v14.1.0) (2021-08-23)
+
+
+### Features
+
+* ActionDialog と MessageDialog に副題を追加 ([#1812](https://github.com/kufu/smarthr-ui/issues/1812)) ([e2a6344](https://github.com/kufu/smarthr-ui/commit/e2a6344e9af1733064d0cfbf122a2f4dd776af34))
+
+
+### Bug Fixes
+
+* Calendar の年選択ボタンのイベント伝播を阻止する ([#1803](https://github.com/kufu/smarthr-ui/issues/1803)) ([bcf378d](https://github.com/kufu/smarthr-ui/commit/bcf378d8064e7b64731ad13e03080df81c541570))
+
+## [14.0.1](https://github.com/kufu/smarthr-ui/compare/v14.0.0...v14.0.1) (2021-08-16)
+
+
+### Bug Fixes
+
+- TextLink に prefix/suffix を含まない場合はレイアウトコンポーネントを使わない (#1766) (4e05ff4e9251db9cee287b2955032c1b1aaa280e)
+- FloatArea で p > div になっていたので修正 (#1788) (992f9cab2440bf397490b4ba87d74d571a37a0ae)
+
+## [14.0.0](https://github.com/kufu/smarthr-ui/compare/v13.3.0...v14.0.0) (2021-08-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* 利用されていなかった `Header` コンポーネントを削除しました。
+* `RightFixedNote` において `title`
+が必須プロパティになります。
+* 旧 `CheckBox` および `CheckBoxLabel`
+を削除しました。新しい `CheckBox` を使用してください。
+* 旧 `RadioButton` および `RadioButtonLabel`
+を削除しました。新しい `RadioButton` を使用してください。
+* `SingleComboBox` の `onSelect`
+が選択クリア時に発火しなくなります。選択クリアのハンドリングは `onClear`
+で行ってください。
+
+### Features
+
+* add onClear handler ([#1747](https://github.com/kufu/smarthr-ui/issues/1747)) ([cc0fd58](https://github.com/kufu/smarthr-ui/commit/cc0fd580569a24067ef99e04c32bd3211ffb319e))
+* make title required, and display textarea label ([#1744](https://github.com/kufu/smarthr-ui/issues/1744)) ([e14c01d](https://github.com/kufu/smarthr-ui/commit/e14c01dab4305a814fb8e472893e16d0bf76e8bc))
+* remove unused <Header> ([#1761](https://github.com/kufu/smarthr-ui/issues/1761)) ([5a67dc5](https://github.com/kufu/smarthr-ui/commit/5a67dc5f6834911cf7a9968ecb3dfc77df4de9f4))
+
+
+### Bug Fixes
+
+* CheckBox コンポーネントのリネームと整理 (SHRUI-419) ([#1748](https://github.com/kufu/smarthr-ui/issues/1748)) ([4ed6875](https://github.com/kufu/smarthr-ui/commit/4ed68752b13eafbf156472f9f022bb99a81044c9))
+* RadioButton コンポーネントのリネームと整理 (SHRUI-419) ([#1754](https://github.com/kufu/smarthr-ui/issues/1754)) ([d6c0fa5](https://github.com/kufu/smarthr-ui/commit/d6c0fa587e0ec9dd5dab0256e9f4be1be134730d))
+
 ## [13.3.0](https://github.com/kufu/smarthr-ui/compare/v13.2.0...v13.3.0) (2021-07-20)
 
 
