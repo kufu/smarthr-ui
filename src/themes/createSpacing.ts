@@ -20,7 +20,7 @@ export interface CreatedSpacingTheme {
 export type CreatedSpacingByCharTheme = (size: CharRelativeSize) => string
 
 const primitiveTokens = [
-  0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4, 8, -0.25, -0.5, -0.75, -1, -1.25, -1.5, -2,
+  0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4, 8, -0.25, -0.5, -0.75, -1, -1.25, -1.5, -2,
   -2.5, -3, -3.5, -4, -8,
 ] as const
 
@@ -39,6 +39,7 @@ const getSpacing = (baseSize: number) => {
     XL: spacingByChar(3),
     XXL: spacingByChar(3.5),
     X3L: spacingByChar(4),
+    NONE: spacingByChar(0),
   }
 }
 
@@ -46,7 +47,8 @@ const getSpacingByChar = (baseSize: number) => {
   const charSize = baseSize * 2
   return primitiveTokens
     .map((size) => {
-      return { [size]: `${charSize * size}px` }
+      const value = !size ? '0' : `${charSize * size}px`
+      return { [size]: value }
     })
     .reduce((a, c) => Object.assign(a, c), {})
 }
