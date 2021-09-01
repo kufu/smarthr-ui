@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [14.2.0](https://github.com/kufu/smarthr-ui/compare/v14.1.0...v14.2.0) (2021-09-01)
+
+
+### Features
+
+* FloatArea に HTML 属性と className を足す ([#1827](https://github.com/kufu/smarthr-ui/issues/1827)) ([b762212](https://github.com/kufu/smarthr-ui/commit/b7622121b8aaf875af9e4286ff307e2498f5d07b))
+
+
+### Bug Fixes
+
+* change selected item of listbox of `SingleComboBox` not to cut off ([#1826](https://github.com/kufu/smarthr-ui/issues/1826)) ([483b153](https://github.com/kufu/smarthr-ui/commit/483b153544d79c0e7efde81184973146c00e2bba))
+* FloatArea エラーメッセージの余分な余白を取り除く ([#1820](https://github.com/kufu/smarthr-ui/issues/1820)) ([4ea4356](https://github.com/kufu/smarthr-ui/commit/4ea435644cc6bd0329147279d898624c410beceb))
+* ツールチップ、バルーンのダークモードを非推奨にする (SHRUI-444) ([#1825](https://github.com/kufu/smarthr-ui/issues/1825)) ([cbabedd](https://github.com/kufu/smarthr-ui/commit/cbabedd39547dede86334fd6e47903904be10bf7))
+
 ## [14.1.0](https://github.com/kufu/smarthr-ui/compare/v14.0.1...v14.1.0) (2021-08-23)
 
 
