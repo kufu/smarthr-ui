@@ -420,7 +420,7 @@ export const WithScroll: Story = () => {
       <DialogWrapper>
         <DialogTrigger>
           <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-with-scroll-1">
-            Opne Dialog
+            Open Dialog
           </SecondaryButton>
         </DialogTrigger>
         <DialogContent id="dialog-with-scroll-1">
