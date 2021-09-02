@@ -22,19 +22,19 @@ const SampleChildren: React.VFC<SampleChildrenProps> = ({ id1, id2, disabled }) 
         title="first name"
         titleType="subSubBlockTitle"
         innerMargin="XXS"
-        labelId={id1}
+        htmlFor={id1}
         disabled={disabled}
       >
-        <Input aria-labelledby={id1} disabled={disabled} />
+        <Input id={id1} disabled={disabled} />
       </SampleFormGroup>
       <SampleFormGroup
         title="last name"
         titleType="subSubBlockTitle"
         innerMargin="XXS"
-        labelId={id2}
+        htmlFor={id2}
         disabled={disabled}
       >
-        <Input aria-labelledby={id2} disabled={disabled} />
+        <Input id={id2} disabled={disabled} />
       </SampleFormGroup>
     </SampleWrapper>
   )
