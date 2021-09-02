@@ -148,7 +148,7 @@ const Wrapper = styled.div<{ themes: Theme }>(({ themes }) => {
   const { zIndex } = themes
 
   return css`
-    z-index: ${zIndex.OVERLAP};
+    z-index: ${zIndex.OVERLAP_BASE};
     position: fixed;
     top: 0;
     left: 0;
@@ -159,7 +159,7 @@ const Wrapper = styled.div<{ themes: Theme }>(({ themes }) => {
 
 const Inner = styled.div<StyleProps & { themes: Theme }>`
   ${({ themes, top, right, bottom, left }) => {
-    const { zIndex, radius, shadow } = themes
+    const { radius, shadow } = themes
     const positionRight = exist(right) ? `${right}px` : 'auto'
     const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
     let positionTop = exist(top) ? `${top}px` : 'auto'
@@ -179,7 +179,6 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
 
     return css`
       position: absolute;
-      z-index: ${zIndex.OVERLAP};
       top: ${positionTop};
       right: ${positionRight};
       bottom: ${positionBottom};

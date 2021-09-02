@@ -8,7 +8,9 @@ import { AccordionPanelContext } from './AccordionPanel'
 import { useClassNames } from './useClassNames'
 
 type Props = {
+  /** パネル部分の内容 */
   children: React.ReactNode
+  /** パネル部分のクラス名 */
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>

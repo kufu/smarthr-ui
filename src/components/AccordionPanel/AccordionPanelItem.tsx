@@ -2,8 +2,11 @@ import React, { HTMLAttributes, VFC, createContext } from 'react'
 import { useClassNames } from './useClassNames'
 
 type Props = {
+  /** アイテムを識別するための名前 */
   name: string
+  /** アコーディオンのアイテムの内容 */
   children: React.ReactNode
+  /** アイテムのクラス名 */
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
