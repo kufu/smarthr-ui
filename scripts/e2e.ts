@@ -3,10 +3,13 @@ import waitForLocalhost from 'wait-for-localhost'
 ;(async () => {
   const PORT = 6006
 
-  spawnSync('yarn', ['run', 'build-storybook', '--quiet'], {
+  const buildSpawn = spawnSync('yarn', ['run', 'build-storybook', '--quiet'], {
     stdio: 'inherit',
     shell: true,
   })
+  if (buildSpawn.status !== 0) {
+    process.exit(1)
+  }
   const httpServer = spawn(
     'yarn',
     ['http-server', 'storybook-static', '--port', `${PORT}`, '--silent'],
