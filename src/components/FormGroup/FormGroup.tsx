@@ -9,6 +9,7 @@ type innerMarginType = 'XXS' | 'XS' | 'S'
 type Props = {
   title: string
   titleType?: HeadingTypes
+  htmlFor?: string
   labelId?: string
   innerMargin?: innerMarginType
   statusLabelProps?: Array<ComponentProps<typeof StatusLabel>>
@@ -22,6 +23,7 @@ type Props = {
 export const FormGroup: VFC<Props> = ({
   title,
   titleType,
+  htmlFor,
   labelId,
   innerMargin = 'XS',
   statusLabelProps = [],
@@ -35,57 +37,48 @@ export const FormGroup: VFC<Props> = ({
   const disabledClass = disabled ? 'disabled' : ''
 
   return (
-    <Wrapper>
-      <Label id={labelId} className={`${className} ${disabledClass}`} themes={theme}>
-        <TitleWrapper>
+    <Wrapper className={`${className} ${disabledClass}`} themes={theme}>
+      <TitleWrapper>
+        <label htmlFor={htmlFor} id={labelId}>
           <Title tag="span" type={titleType} themes={theme} className={disabledClass}>
             {title}
           </Title>
-          {statusLabelProps.length > 0 && (
-            <StatusLabels themes={theme}>
-              {statusLabelProps.map((statusLabelProp, index) => (
-                <StyledStatusLabel {...statusLabelProp} key={index} themes={theme} />
-              ))}
-            </StatusLabels>
-          )}
-        </TitleWrapper>
+        </label>
+        {statusLabelProps.length > 0 && (
+          <StatusLabels themes={theme}>
+            {statusLabelProps.map((statusLabelProp, index) => (
+              <StyledStatusLabel {...statusLabelProp} key={index} themes={theme} />
+            ))}
+          </StatusLabels>
+        )}
+      </TitleWrapper>
 
-        {helpMessage && <HelpMessage themes={theme}>{helpMessage}</HelpMessage>}
+      {helpMessage && <HelpMessage themes={theme}>{helpMessage}</HelpMessage>}
 
-        {errorMessages &&
-          (typeof errorMessages === 'string' ? [errorMessages] : errorMessages).map(
-            (message, index) => (
-              <ErrorMessage themes={theme} key={index}>
-                <ErrorIcon
-                  color={disabled ? theme.color.TEXT_DISABLED : theme.color.DANGER}
-                  themes={theme}
-                  size={14}
-                />
-                <span>{message}</span>
-              </ErrorMessage>
-            ),
-          )}
-        <Body themes={theme} margin={innerMargin}>
-          {children}
-        </Body>
-      </Label>
+      {errorMessages &&
+        (typeof errorMessages === 'string' ? [errorMessages] : errorMessages).map(
+          (message, index) => (
+            <ErrorMessage themes={theme} key={index}>
+              <ErrorIcon
+                color={disabled ? theme.color.TEXT_DISABLED : theme.color.DANGER}
+                themes={theme}
+                size={14}
+              />
+              <span>{message}</span>
+            </ErrorMessage>
+          ),
+        )}
+      <Body themes={theme} margin={innerMargin}>
+        {children}
+      </Body>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div``
-
-const Label = styled.label<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color } = themes
-    return css`
-      display: inline-block;
-
-      &.disabled {
-        color: ${color.TEXT_DISABLED};
-      }
-    `
-  }}
+const Wrapper = styled.div<{ themes: Theme }>`
+  &.disabled {
+    color: ${({ themes }) => themes.color.TEXT_DISABLED};
+  }
 `
 
 const TitleWrapper = styled.span`

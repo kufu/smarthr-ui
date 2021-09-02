@@ -7,6 +7,7 @@ import { useClassNames } from './useClassNames'
 type Props = {
   maxLines?: number
   withTooltip?: boolean
+  /** @deprecated このプロパティは廃止予定です。 */
   toolTipType?: BalloonTheme
   children: ReactNode
 }

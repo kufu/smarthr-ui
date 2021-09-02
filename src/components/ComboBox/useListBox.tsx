@@ -314,7 +314,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
 
     return css`
       display: block;
-      width: 100%;
+      min-width: 100%;
       border: none;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: #fff;
@@ -342,6 +342,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
 const AddButton = styled(SelectButton)`
   display: flex;
   align-items: center;
+  min-width: 100%;
 `
 const AddIcon = styled(FaPlusCircleIcon)<{ $theme: Theme }>`
   ${({ $theme }) => {
