@@ -9,7 +9,6 @@ import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { useClassNames } from './useClassNames'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
 import { FaCaretRightIcon, FaCaretUpIcon } from '../Icon'
-import { radiusMap } from '../Base'
 
 type Props = {
   /** ヘッダ部分の内容 */
@@ -103,14 +102,6 @@ const Button = styled.button<{ themes: Theme }>`
       cursor: pointer;
       font-size: inherit;
       text-align: left;
-
-      .smarthr-ui-AccordionPanel > * > *:first-child & {
-        border-radius: ${radiusMap.m} ${radiusMap.m} 0 0;
-      }
-
-      .smarthr-ui-AccordionPanel > * > *:last-child & {
-        border-radius: 0 0 ${radiusMap.m} ${radiusMap.m};
-      }
 
       &:hover,
       &:focus:not(:focus-visible) {
