@@ -58,7 +58,7 @@
     "styled-reset": "^4.3.4",
     "stylelint": "^13.13.1",
     "stylelint-config-prettier": "^8.0.2",
-    "stylelint-config-smarthr": "^1.0.0",
+    "stylelint-config-smarthr": "^1.0.1",
     "stylelint-config-standard": "^22.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "testcafe": "^1.15.3",
