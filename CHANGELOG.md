@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [14.3.0](https://github.com/kufu/smarthr-ui/compare/v14.2.0...v14.3.0) (2021-09-06)
+
+
+### Features
+
+* `Icon` の color に抽象トークンを渡せるようにする (SHRUI-446) ([#1855](https://github.com/kufu/smarthr-ui/issues/1855)) ([df38807](https://github.com/kufu/smarthr-ui/commit/df38807203628256911deef5e4a0df195c38ceb9))
+* `ModelessDialog` を追加 (SHRUI-454) ([#1786](https://github.com/kufu/smarthr-ui/issues/1786)) ([173e380](https://github.com/kufu/smarthr-ui/commit/173e380a42d7bffcc59550379605331a881bb102))
+* コンボボックスに `onChangeSelected` を追加 (SHRUI-436) ([#1777](https://github.com/kufu/smarthr-ui/issues/1777)) ([54198fe](https://github.com/kufu/smarthr-ui/commit/54198fe2d885c5e3dc1a10aa3677835eca1c55c8))
+* 余白トークンに 0 を追加 ([#1841](https://github.com/kufu/smarthr-ui/issues/1841)) ([5976a82](https://github.com/kufu/smarthr-ui/commit/5976a82da65f6cc10a715b7e6126c2af8acc016d))
+
+
+### Bug Fixes
+
+* change labeling structure and add htmlFor props ([#1778](https://github.com/kufu/smarthr-ui/issues/1778)) ([6511898](https://github.com/kufu/smarthr-ui/commit/6511898c7ed3167697faf5ae07c427a4d29c05c1))
+* defaultLeading がエクスポートされていなかった ([#1842](https://github.com/kufu/smarthr-ui/issues/1842)) ([158e5b0](https://github.com/kufu/smarthr-ui/commit/158e5b06eff7e51cfb3f720e15f4e3d4024a8d8c))
+* OVERLAP の重なり順序の改善 (SHRUI-445) ([#1837](https://github.com/kufu/smarthr-ui/issues/1837)) ([7970eb0](https://github.com/kufu/smarthr-ui/commit/7970eb02a41570de5b1fb91f8371e57fe58e14f6))
+
 ## [14.2.0](https://github.com/kufu/smarthr-ui/compare/v14.1.0...v14.2.0) (2021-09-01)
 
 
