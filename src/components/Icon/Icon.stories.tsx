@@ -721,6 +721,8 @@ export const Color: Story = () => (
     <FaAddressBookIcon size={40} color="#69D9DE" />
     <FaAddressBookIcon size={40} color="#12ABB1" />
     <FaAddressBookIcon size={40} color="#0F7F85" />
+    <FaAddressBookIcon size={40} color="WARNING" />
+    <FaAddressBookIcon size={40} color="DANGER" />
   </List>
 )
 Color.parameters = {
