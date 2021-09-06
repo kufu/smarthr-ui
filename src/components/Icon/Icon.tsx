@@ -308,20 +308,47 @@ import {
 import type { IconType } from 'react-icons'
 import styled from 'styled-components'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
+import { useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+
+/**
+ * literal union type に補完を効かせるためのハック
+ * https://github.com/microsoft/TypeScript/issues/29729
+ */
+type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
+
+const definedColors = [
+  'TEXT_BLACK',
+  'TEXT_GREY',
+  'TEXT_DISABLED',
+  'TEXT_LINK',
+  'MAIN',
+  'DANGER',
+  'WARNING',
+  'BRAND',
+] as const
+type DefinedColor = typeof definedColors[number]
+
+const knwonColorSet: Set<string> = new Set(definedColors)
+function isDefinedColor(color: string): color is DefinedColor {
+  return knwonColorSet.has(color)
+}
 
 export interface IconProps {
   /**
    * Color of Icon.
+   * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
    */
-  color?: string
+  color?: LiteralUnion<DefinedColor>
   /**
    * Size of icon.
    */
   size?: number
 }
 
-export interface ComponentProps extends IconProps, React.SVGAttributes<SVGAElement> {
+type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
+
+export interface ComponentProps extends IconProps, ElementProps {
   /**
    * The text that is not displayed but exists in DOM for accessibility purposes.
    */
@@ -336,6 +363,7 @@ type IconComponentProps = ComponentProps & { Component: IconType }
 // This should be inlined in the createIcon function after the Icon component had been removed
 const IconComponent: React.VFC<IconComponentProps> = ({
   Component,
+  color,
   className = '',
   role = 'img',
   visuallyHiddenText,
@@ -346,12 +374,22 @@ const IconComponent: React.VFC<IconComponentProps> = ({
   const hasLabelByAria = props['aria-label'] !== undefined || props['aria-labelledby'] !== undefined
   const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasLabelByAria
 
+  const theme = useTheme()
+  const replacedColor = React.useMemo(() => {
+    const asserted = color as string | undefined
+    if (asserted && isDefinedColor(asserted)) {
+      return theme.color[asserted]
+    }
+    return color
+  }, [color, theme.color])
+
   const classNames = useClassNames()
 
   return (
     <>
       {visuallyHiddenText && <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>}
       <Component
+        color={replacedColor}
         className={`${className} ${classNames.wrapper}`}
         role={role}
         aria-hidden={isAriaHidden || visuallyHiddenText !== undefined || undefined}
