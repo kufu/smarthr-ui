@@ -66,13 +66,11 @@ export const Default: Story = () => {
           selectedItem={selectedItem}
           width={400}
           placeholder="Enter the text for filtering"
-          onSelect={(option) => {
-            action('onSelect')(option)
-            setSelectedItem(option)
-          }}
-          onClear={() => {
-            action('onClear')()
-            setSelectedItem(null)
+          onSelect={action('onSelect')}
+          onClear={action('onClear')}
+          onChangeSelected={(item) => {
+            action('onChangeSelected')(item)
+            setSelectedItem(item)
           }}
         />
       </dd>
@@ -83,13 +81,11 @@ export const Default: Story = () => {
           selectedItems={selectedItems}
           width={400}
           placeholder="Enter the text for filtering"
-          onDelete={(option) => {
-            action('onDelete')(option)
-            setSelectedItems(selectedItems.filter((item) => item.value !== option.value))
-          }}
-          onSelect={(option) => {
-            action('onSelect')(option)
-            setSelectedItems([...selectedItems, option])
+          onDelete={action('onDelete')}
+          onSelect={action('onSelect')}
+          onChangeSelected={(items) => {
+            action('onChangeSelected')(items)
+            setSelectedItems(items)
           }}
         />
       </dd>
