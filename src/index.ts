@@ -31,6 +31,7 @@ export {
   DialogContent,
   MessageDialogContent,
   ActionDialogContent,
+  ModelessDialog,
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
@@ -107,6 +108,7 @@ export { defaultBorder } from './themes/createBorder'
 export { defaultRadius } from './themes/createRadius'
 export { defaultSize } from './themes/createSize'
 export { defaultFontSize } from './themes/createFontSize'
+export { defaultLeading } from './themes/createLeading'
 export { defaultSpacing } from './themes/createSpacing'
 export { defaultBreakpoint } from './themes/createBreakpoint'
 

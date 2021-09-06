@@ -75,11 +75,15 @@ type Props<T> = {
   /**
    *  Fire when clicking the delete element of `selectedItems` button.
    */
-  onDelete: (item: Item<T>) => void
+  onDelete?: (item: Item<T>) => void
   /**
    * Fire when clicking an element of `items`.
    */
-  onSelect: (item: Item<T>) => void
+  onSelect?: (item: Item<T>) => void
+  /**
+   * Fire when the item selections are changed.
+   */
+  onChangeSelected?: (selectedItems: Array<Item<T>>) => void
 }
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
@@ -100,6 +104,7 @@ export function MultiComboBox<T>({
   onAdd,
   onDelete,
   onSelect,
+  onChangeSelected,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -128,7 +133,10 @@ export function MultiComboBox<T>({
     items: filteredItems,
     inputValue,
     onAdd,
-    onSelect,
+    onSelect: (selected) => {
+      onSelect && onSelect(selected)
+      onChangeSelected && onChangeSelected(selectedItems.concat(selected))
+    },
     isExpanded: isFocused,
     isAddable: creatable && !!inputValue && !isDuplicate,
     isDuplicate: creatable && !!inputValue && isDuplicate && !hasSelectableExactMatch,
@@ -229,7 +237,14 @@ export function MultiComboBox<T>({
                       onClick={() => {
                         // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
                         setTimeout(() => {
-                          onDelete(item)
+                          onDelete && onDelete(item)
+                          onChangeSelected &&
+                            onChangeSelected(
+                              selectedItems.filter(
+                                (selected) =>
+                                  selected.label !== item.label || selected.value !== item.value,
+                              ),
+                            )
                         }, 0)
                       }}
                     >
