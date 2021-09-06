@@ -74,13 +74,17 @@ type Props<T> = {
    */
   onAdd?: (label: string) => void
   /**
-   * Fire when the selected item is changed.
+   * Fire when an item is selected.
    */
-  onSelect: (item: Item<T>) => void
+  onSelect?: (item: Item<T>) => void
   /**
    * Fire when the selected item is cleared.
    */
   onClear?: () => void
+  /**
+   * Fire when the item selection is changed.
+   */
+  onChangeSelected?: (selectedItem: Item<T> | null) => void
 }
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
@@ -101,6 +105,7 @@ export function SingleComboBox<T>({
   onAdd,
   onSelect,
   onClear,
+  onChangeSelected,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -137,7 +142,8 @@ export function SingleComboBox<T>({
     inputValue,
     onAdd,
     onSelect: (selected) => {
-      onSelect(selected)
+      onSelect && onSelect(selected)
+      onChangeSelected && onChangeSelected(selected)
       setIsExpanded(false)
     },
     isExpanded,
@@ -214,6 +220,7 @@ export function SingleComboBox<T>({
               onClick={(e) => {
                 e.stopPropagation()
                 onClear && onClear()
+                onChangeSelected && onChangeSelected(null)
                 if (isFocused) {
                   setIsExpanded(true)
                 }
@@ -251,6 +258,7 @@ export function SingleComboBox<T>({
           setInputValue(value)
           if (value === '') {
             onClear && onClear()
+            onChangeSelected && onChangeSelected(null)
           }
         }}
         onFocus={() => {

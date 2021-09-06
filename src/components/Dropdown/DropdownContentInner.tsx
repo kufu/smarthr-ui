@@ -118,7 +118,7 @@ const Wrapper = styled.div<{
     return css`
       display: flex;
       visibility: hidden;
-      z-index: ${zIndex.OVERLAP};
+      z-index: ${zIndex.OVERLAP_BASE};
       position: absolute;
       top: ${contentBox.top};
       left: ${contentBox.left};
