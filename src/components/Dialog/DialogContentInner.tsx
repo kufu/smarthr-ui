@@ -1,6 +1,5 @@
 import React, { HTMLAttributes, ReactNode, VFC, useCallback, useRef } from 'react'
 import styled, { css } from 'styled-components'
-import { CSSTransition } from 'react-transition-group'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
@@ -8,6 +7,7 @@ import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
 import { useClassNames } from './useClassNames'
 import { BodyScrollSuppressor } from './BodyScrollSuppressor'
+import { DialogTransition } from './DialogTransition'
 
 export type DialogContentInnerProps = {
   /**
@@ -85,9 +85,8 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
   className = '',
   ...props
 }) => {
-  const classNames = useClassNames()
+  const classNames = useClassNames().dialog
   const theme = useTheme()
-  const domRef = useRef(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const focusTarget = useRef<HTMLDivElement>(null)
   useHandleEscape(
@@ -108,25 +107,16 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
 
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
-      <CSSTransition
-        nodeRef={domRef}
-        className="wrapper"
-        classNames="wrapper"
-        in={isOpen}
-        timeout={{
-          appear: 500,
-          enter: 300,
-          exit: 300,
-        }}
-        appear
-        unmountOnExit
-        id={id}
-        role="dialog"
-        aria-modal="true"
-        aria-label={ariaLabel}
-        aria-labelledby={ariaLabelledby}
-      >
-        <Wrapper ref={domRef} themes={theme} className={classNames.wrapper}>
+      <DialogTransition isOpen={isOpen}>
+        <Wrapper
+          themes={theme}
+          className={classNames.wrapper}
+          id={id}
+          role="dialog"
+          aria-modal="true"
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledby}
+        >
           <Background
             onClick={handleClickOverlay}
             themes={theme}
@@ -149,7 +139,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
           {/* Suppresses scrolling of body while modal is displayed */}
           <BodyScrollSuppressor />
         </Wrapper>
-      </CSSTransition>
+      </DialogTransition>
     </DialogPositionProvider>
   )
 }
@@ -164,27 +154,6 @@ const Wrapper = styled.div<{ themes: Theme }>(({ themes }) => {
     left: 0;
     width: 100%;
     height: 100%;
-    &.wrapper-appear {
-      opacity: 0;
-    }
-    &.wrapper-appear-active {
-      transition: opacity 500ms;
-      opacity: 1;
-    }
-    &.wrapper-enter {
-      opacity: 0;
-    }
-    &.wrapper-enter-active {
-      transition: opacity 300ms;
-      opacity: 1;
-    }
-    &.wrapper-exit {
-      opacity: 1;
-    }
-    &.wrapper-exit-active {
-      transition: opacity 300ms;
-      opacity: 0;
-    }
   `
 })
 

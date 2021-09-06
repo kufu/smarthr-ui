@@ -13,11 +13,15 @@ import {
   DialogWrapper,
   MessageDialog,
   MessageDialogContent,
+  ModelessDialog,
 } from '.'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { SecondaryButton } from '../Button'
 import { RadioButton } from '../RadioButton'
 import { DatePicker } from '../DatePicker'
+import { LineUp, Stack } from '../Layout'
+import { Body, Cell, Head, Row, Table } from '../Table'
+import { CheckBox } from '../CheckBox'
 
 import readme from './README.md'
 
@@ -33,6 +37,7 @@ export default {
     MessageDialogContent,
     ActionDialog,
     ActionDialogContent,
+    ModelessDialog,
   },
   parameters: {
     docs: {
@@ -453,6 +458,97 @@ const ContentWrapper = styled.div`
   }
 `
 
+export const Modeless_Dialog: Story = () => {
+  const [isOpen1, setIsOpen1] = useState(false)
+  const [isOpen2, setIsOpen2] = useState(false)
+  return (
+    <TriggerList style={{ height: '200vh' }}>
+      <li>
+        <SecondaryButton
+          onClick={() => setIsOpen1(!isOpen1)}
+          data-test="dialog-trigger"
+          aria-haspopup="dialog"
+          aria-controls="modeless-dialog-1"
+        >
+          中央表示
+        </SecondaryButton>
+        <ModelessDialog
+          isOpen={isOpen1}
+          header={<ModelessHeading>モードレスダイアログ</ModelessHeading>}
+          footer={<ModelessFooter>フッタ</ModelessFooter>}
+          onClickClose={() => setIsOpen1(false)}
+          onPressEscape={() => setIsOpen1(false)}
+          width="50%"
+          height="50%"
+          id="modeless-dialog-1"
+          data-test="dialog"
+        >
+          <ModelessContent>
+            <Stack gap="S">
+              <ModelessContentPart>
+                <LineUp gap="S">
+                  <RadioButton>ラジオボタン1</RadioButton>
+                  <RadioButton>ラジオボタン2</RadioButton>
+                </LineUp>
+              </ModelessContentPart>
+              <ModelessContentPart>
+                <DatePicker />
+              </ModelessContentPart>
+              <Table>
+                <Head>
+                  <Row>
+                    <Cell>
+                      <CheckBox />
+                    </Cell>
+                    <Cell>テーブル見出し1</Cell>
+                    <Cell>テーブル見出し2</Cell>
+                    <Cell>テーブル見出し3</Cell>
+                  </Row>
+                </Head>
+                <Body>
+                  {Array.from(Array(20).keys()).map((i) => (
+                    <Row key={i}>
+                      <Cell>
+                        <CheckBox />
+                      </Cell>
+                      <Cell>データ1-{i}</Cell>
+                      <Cell>データ2-{i}</Cell>
+                      <Cell>データ3-{i}</Cell>
+                    </Row>
+                  ))}
+                </Body>
+              </Table>
+            </Stack>
+          </ModelessContent>
+        </ModelessDialog>
+      </li>
+      <li>
+        <SecondaryButton
+          onClick={() => setIsOpen2(!isOpen2)}
+          aria-haspopup="dialog"
+          aria-controls="modeless-dialog-2"
+        >
+          座標指定
+        </SecondaryButton>
+        <ModelessDialog
+          isOpen={isOpen2}
+          header={<ModelessHeading>座標指定表示</ModelessHeading>}
+          onClickClose={() => setIsOpen2(false)}
+          onPressEscape={() => setIsOpen2(false)}
+          bottom={100}
+          right="10%"
+          id="modeless-dialog-2"
+        >
+          <div style={{ margin: '1rem' }}>
+            bottom: 100px
+            <br /> right: 10%
+          </div>
+        </ModelessDialog>
+      </li>
+    </TriggerList>
+  )
+}
+
 export const RegOpendMessage: Story = () => {
   return (
     <MessageDialog
@@ -498,6 +594,26 @@ export const RegOpendAction: Story = () => {
 }
 RegOpendAction.parameters = { docs: { disable: true } }
 
+export const RegOpenedModeless: Story = () => {
+  return (
+    <ModelessDialog
+      isOpen
+      header={<ModelessHeading>モードレスダイアログ</ModelessHeading>}
+      footer={<ModelessFooter>フッタ</ModelessFooter>}
+      height={500}
+      width={600}
+    >
+      <div style={{ margin: '1rem' }}>
+        {dummyText}
+        {dummyText}
+        {dummyText}
+        {dummyText}
+        {dummyText}
+      </div>
+    </ModelessDialog>
+  )
+}
+
 const Title = styled.p<{ themes: Theme }>`
   padding: 16px 24px;
   margin: 0;
@@ -536,4 +652,18 @@ const TriggerList = styled.ul`
     display: inline-block;
     margin: 8px;
   }
+`
+const ModelessHeading = styled.h3`
+  font-size: 1em;
+  margin: 0;
+  font-weight: normal;
+`
+const ModelessContent = styled.div`
+  margin: 1rem 0;
+`
+const ModelessContentPart = styled.div`
+  margin: 0 1rem;
+`
+const ModelessFooter = styled.div`
+  padding: 1rem;
 `
