@@ -5,9 +5,16 @@ import { useSpacing } from '../../../hooks/useSpacing'
 
 type alignMethod = 'normal' | 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 type justifyMethod = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around'
+type Gap = CharRelativeSize | AbstractSize
+type SeparateGap = {
+  row: Gap
+  column: Gap
+}
 
 /**
  * @param gap 間隔の指定（基準フォントサイズの相対値または抽象値）
+ * @param rowGap 垂直方向の間隔の指定（基準フォントサイズの相対値または抽象値）
+ * @param columnGap 水平方向の間隔の指定（基準フォントサイズの相対値または抽象値）
  * @param align 垂直方向の揃え方（align-items）
  * @param justify 水平方向の揃え方（justify-content）
  * @param as ネガティブマージンを隠す要素の HTML タグ名
@@ -15,7 +22,7 @@ type justifyMethod = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 's
  * @param children 均等に間隔を空けたい要素群
  */
 export const Cluster: React.VFC<{
-  gap?: CharRelativeSize | AbstractSize
+  gap?: Gap | SeparateGap
   align?: alignMethod
   justify?: justifyMethod
   as?: React.ElementType
@@ -40,28 +47,32 @@ const Wrapper = styled.div`
   }
 `
 const Body = styled.div<{
-  gap: CharRelativeSize | AbstractSize
+  gap: Gap | SeparateGap
   align?: alignMethod
   justify?: justifyMethod
-}>(
-  ({ gap, align, justify }) => css`
+}>(({ gap, align, justify }) => {
+  const rowGap = gap instanceof Object ? useSpacing(gap.row) : useSpacing(gap)
+  const columnGap = gap instanceof Object ? useSpacing(gap.column) : useSpacing(gap)
+
+  return css`
     display: flex;
     flex-wrap: wrap;
     ${align && `align-items: ${align};`}
     ${justify && `justify-content: ${justify};`}
-    margin: calc(${useSpacing(gap)} / 2 * -1);
+    margin: calc(${rowGap} / 2 * -1) calc(${columnGap} / 2 * -1);
 
     > * {
-      margin: calc(${useSpacing(gap)} / 2);
+      margin: calc(${rowGap} / 2) calc(${columnGap} / 2);
     }
 
     @supports (gap: 1px) {
       margin: revert;
-      gap: ${useSpacing(gap)};
+      row-gap: ${rowGap};
+      column-gap: ${columnGap};
 
       > * {
         margin: revert;
       }
     }
-  `,
-)
+  `
+})
