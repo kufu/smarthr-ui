@@ -193,7 +193,10 @@ export function MultiComboBox<T>({
           !disabled &&
           !isFocused
         ) {
-          focus()
+          // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
+          setTimeout(() => {
+            focus()
+          }, 0)
         }
       }}
       onKeyDown={(e) => {
@@ -232,14 +235,17 @@ export function MultiComboBox<T>({
                       className={classNames.deleteButton}
                       disabled={disabled}
                       onClick={() => {
-                        onDelete && onDelete(item)
-                        onChangeSelected &&
-                          onChangeSelected(
-                            selectedItems.filter(
-                              (selected) =>
-                                selected.label !== item.label || selected.value !== item.value,
-                            ),
-                          )
+                        // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
+                        setTimeout(() => {
+                          onDelete && onDelete(item)
+                          onChangeSelected &&
+                            onChangeSelected(
+                              selectedItems.filter(
+                                (selected) =>
+                                  selected.label !== item.label || selected.value !== item.value,
+                              ),
+                            )
+                        }, 0)
                       }}
                     >
                       <FaTimesCircleIcon
