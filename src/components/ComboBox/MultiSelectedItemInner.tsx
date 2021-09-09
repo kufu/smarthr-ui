@@ -74,7 +74,6 @@ export function MultiSelectedItemInner<T>({
   )
 }
 
-const borderWidth = 1
 const SelectedItem = styled.div<{ themes: Theme; disabled?: boolean }>`
   ${({ themes, disabled }) => {
     const { border, color, fontSize } = themes
@@ -92,10 +91,10 @@ const SelectedItem = styled.div<{ themes: Theme; disabled?: boolean }>`
   }}
 `
 const SelectedItemLabel = styled.div<{ enableEllipsis?: boolean; themes: Theme }>`
-  ${({ enableEllipsis, themes: { spacingByChar } }) => {
+  ${({ enableEllipsis, themes: { border, spacingByChar } }) => {
     return css`
       flex: 1;
-      padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);
+      padding: calc(${spacingByChar(0.5)} - ${border.lineWidth});
 
       ${enableEllipsis &&
       css`
@@ -107,10 +106,10 @@ const SelectedItemLabel = styled.div<{ enableEllipsis?: boolean; themes: Theme }
   }}
 `
 const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled?: boolean }>`
-  ${({ themes: { spacingByChar, shadow }, disabled }) => {
+  ${({ themes: { border, spacingByChar, shadow }, disabled }) => {
     return css`
       flex: 0;
-      padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);
+      padding: calc(${spacingByChar(0.5)} - ${border.lineWidth});
       border-radius: 50%;
       cursor: ${disabled ? 'not-allowed' : 'pointer'};
       line-height: 0;
