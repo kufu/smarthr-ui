@@ -40,15 +40,15 @@ export function MultiSelectedItemInner<T>({
   const classNames = useClassNames().multi
 
   return (
-    <SelectedItem themes={theme} disabled={disabled} className={classNames.selectedItem}>
-      <SelectedItemLabel
+    <Wrapper themes={theme} disabled={disabled} className={classNames.selectedItem}>
+      <ItemLabel
         themes={theme}
         enableEllipsis={enableEllipsis}
         className={classNames.selectedItemLabel}
         ref={labelRef}
       >
         {item.label}
-      </SelectedItemLabel>
+      </ItemLabel>
 
       {deletable && (
         <DeleteButton
@@ -70,11 +70,11 @@ export function MultiSelectedItemInner<T>({
           />
         </DeleteButton>
       )}
-    </SelectedItem>
+    </Wrapper>
   )
 }
 
-const SelectedItem = styled.div<{ themes: Theme; disabled?: boolean }>`
+const Wrapper = styled.div<{ themes: Theme; disabled?: boolean }>`
   ${({ themes, disabled }) => {
     const { border, color, fontSize } = themes
 
@@ -90,7 +90,7 @@ const SelectedItem = styled.div<{ themes: Theme; disabled?: boolean }>`
     `
   }}
 `
-const SelectedItemLabel = styled.div<{ enableEllipsis?: boolean; themes: Theme }>`
+const ItemLabel = styled.div<{ enableEllipsis?: boolean; themes: Theme }>`
   ${({ enableEllipsis, themes: { border, spacingByChar } }) => {
     return css`
       flex: 1;
