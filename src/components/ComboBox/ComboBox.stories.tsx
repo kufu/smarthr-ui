@@ -1,5 +1,5 @@
 import { Story } from '@storybook/react'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { action } from '@storybook/addon-actions'
 import styled from 'styled-components'
 
@@ -53,312 +53,248 @@ const defaultItems = [
 
 type Item = { label: string; value: string }
 
-export const Default: Story = () => {
+export const Single: Story = () => {
+  const [items, setItems] = useState(defaultItems)
   const [selectedItem, setSelectedItem] = useState<Item | null>(null)
-  const [selectedItems, setSelectedItems] = useState<Item[]>([])
+  const [seq, setSeq] = useState(0)
+
+  const handleSelectItem = useCallback((item: Item) => {
+    action('onSelect')(item)
+    setSelectedItem(item)
+  }, [])
+  const handleClear = useCallback(() => {
+    action('onClear')()
+    setSelectedItem(null)
+  }, [])
+  const handleAddItem = useCallback(
+    (label: string) => {
+      action('onAdd')(label)
+      const newItem = {
+        label,
+        value: `new-value-${seq}`,
+      }
+      setItems([...items, newItem])
+      setSelectedItem(newItem)
+      setSeq(seq + 1)
+    },
+    [items, seq],
+  )
 
   return (
     <List>
-      <dt>Single</dt>
+      <dt>デフォルト</dt>
       <dd>
         <SingleComboBox
-          items={defaultItems}
+          items={items}
           selectedItem={selectedItem}
           width={400}
-          placeholder="Enter the text for filtering"
-          onSelect={action('onSelect')}
-          onClear={action('onClear')}
+          placeholder="入力でフィルタリングできます"
+          onSelect={handleSelectItem}
+          onClear={handleClear}
           onChangeSelected={(item) => {
             action('onChangeSelected')(item)
             setSelectedItem(item)
           }}
+          data-test="single-combobox-default"
         />
       </dd>
-      <dt>Multi</dt>
+      <dt>アイテム追加可能</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          placeholder="新しいアイテムを追加できます"
+          creatable
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+          onAdd={handleAddItem}
+          data-test="single-combobox-creatable"
+        />
+      </dd>
+      <dt>Disabled</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          placeholder="Disabled なコンボボックス"
+          disabled
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+          data-test="single-combobox-disabled"
+        />
+      </dd>
+      <dt>エラー表示</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          placeholder="入力でフィルタリングできます"
+          error
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+        />
+      </dd>
+      <dt>読込中</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          placeholder="入力でフィルタリングできます"
+          isLoading
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+        />
+      </dd>
+      <dt>100%幅</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width="100%"
+          placeholder="入力でフィルタリングできます"
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+        />
+      </dd>
+    </List>
+  )
+}
+
+export const Multi: Story = () => {
+  const [items, setItems] = useState(defaultItems)
+  const [selectedItems, setSelectedItems] = useState<Item[]>([])
+  const [seq, setSeq] = useState(0)
+
+  const handleSelectItem = useCallback(
+    (item: Item) => {
+      action('onSelect')(item)
+      setSelectedItems([...selectedItems, item])
+    },
+    [selectedItems],
+  )
+  const handleDelete = useCallback(
+    (deleted) => {
+      action('onDelete')()
+      setSelectedItems(selectedItems.filter((item) => item.value !== deleted.value))
+    },
+    [selectedItems],
+  )
+  const handleAddItem = useCallback(
+    (label: string) => {
+      action('onAdd')(label)
+      const newItem = {
+        label,
+        value: `new-value-${seq}`,
+      }
+      setItems([...items, newItem])
+      setSelectedItems([...selectedItems, newItem])
+      setSeq(seq + 1)
+    },
+    [items, selectedItems, seq],
+  )
+
+  return (
+    <List>
+      <dt>デフォルト</dt>
       <dd>
         <MultiComboBox
-          items={defaultItems}
+          items={items}
           selectedItems={selectedItems}
           width={400}
-          placeholder="Enter the text for filtering"
-          onDelete={action('onDelete')}
-          onSelect={action('onSelect')}
-          onChangeSelected={(items) => {
-            action('onChangeSelected')(items)
-            setSelectedItems(items)
+          placeholder="入力でフィルタリングできます"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+          onChangeSelected={(selected) => {
+            action('onChangeSelected')(selected)
+            setSelectedItems(selected)
           }}
+          data-test="multi-combobox-default"
         />
       </dd>
-    </List>
-  )
-}
-
-export const Creatable: Story = () => {
-  const [singleItems, setSingleItems] = useState(defaultItems)
-  const [multiItems, setMultiItems] = useState(defaultItems)
-  const [singleSelected, setSingleSelected] = useState<Item | null>(null)
-  const [multiSelected, setMultiSelected] = useState<Item[]>([])
-  const [seq, setSeq] = useState(0)
-
-  return (
-    <List>
-      <dt>Single</dt>
+      <dt>アイテム追加可能</dt>
       <dd>
-        <SingleComboBox
-          items={singleItems}
-          selectedItem={singleSelected}
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          placeholder="新しいアイテムを追加できます"
           creatable
-          placeholder="You can add new items."
-          width={400}
-          onAdd={(label) => {
-            action('onAdd')(label)
-            setSingleItems([
-              ...singleItems,
-              {
-                label: label,
-                value: `new-value-${seq}`,
-                disabled: label === 'disabled',
-              },
-            ])
-            setSingleSelected({
-              label,
-              value: `new-value-${seq}`,
-            })
-            setSeq(seq + 1)
-          }}
-          onSelect={(option) => {
-            action('onSelect')(option)
-            setSingleSelected(option)
-          }}
-          onClear={() => {
-            action('onClear')()
-            setSingleSelected(null)
-          }}
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+          onAdd={handleAddItem}
+          data-test="multi-combobox-creatable"
         />
       </dd>
-      <dt>Multi</dt>
+      <dt>Disabled</dt>
       <dd>
         <MultiComboBox
-          items={multiItems}
-          selectedItems={multiSelected}
-          creatable
-          placeholder="You can add new items."
+          items={items}
+          selectedItems={selectedItems}
           width={400}
-          onAdd={(label) => {
-            setMultiItems([
-              ...multiItems,
-              {
-                label: label,
-                value: `new-value-${seq}`,
-                disabled: label === 'disabled',
-              },
-            ])
-            setMultiSelected([
-              ...multiSelected,
-              {
-                label,
-                value: `new-value-${seq}`,
-              },
-            ])
-            setSeq(seq + 1)
-          }}
-          onDelete={({ value }) => {
-            setMultiSelected(multiSelected.filter((item) => item.value !== value))
-          }}
-          onSelect={({ value, label }) => {
-            setMultiSelected([
-              ...multiSelected,
-              {
-                value,
-                label,
-              },
-            ])
-          }}
-        />
-      </dd>
-    </List>
-  )
-}
-Creatable.parameters = {
-  docs: {
-    description: {
-      story: 'A combobox can be added new items fron input.',
-    },
-  },
-}
-
-export const Disabled: Story = () => {
-  const [multiItems, setMultiItems] = useState(defaultItems)
-  const [multiSelected, setMultiSelected] = useState<Item[]>([])
-  const [seq, setSeq] = useState(0)
-
-  return (
-    <List>
-      <dt>Single</dt>
-      <dd>
-        <SingleComboBox
-          items={[]}
-          selectedItem={null}
+          placeholder="Disabled なコンボボックス"
           disabled
-          placeholder="Disabled"
-          width={400}
-          onAdd={action('onAdd')}
-          onSelect={action('onSelect')}
-          onClear={action('onClear')}
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+          data-test="multi-combobox-disabled"
         />
       </dd>
-      <dt>Multi</dt>
+      <dt>エラー表示</dt>
       <dd>
         <MultiComboBox
-          items={multiItems}
-          selectedItems={[
-            {
-              label: 'option 1',
-              value: 'value-1',
-            },
-          ]}
-          disabled
-          placeholder="Disabled"
+          items={items}
+          selectedItems={selectedItems}
           width={400}
-          onAdd={(label) => {
-            setMultiItems([
-              ...multiItems,
-              {
-                label: label,
-                value: `new-value-${seq}`,
-                disabled: label === 'disabled',
-              },
-            ])
-            setMultiSelected([
-              ...multiSelected,
-              {
-                label,
-                value: `new-value-${seq}`,
-              },
-            ])
-            setSeq(seq + 1)
-          }}
-          onDelete={({ value }) => {
-            setMultiSelected(multiSelected.filter((item) => item.value !== value))
-          }}
-          onSelect={({ value, label }) => {
-            setMultiSelected([
-              ...multiSelected,
-              {
-                value,
-                label,
-              },
-            ])
-          }}
-        />
-      </dd>
-    </List>
-  )
-}
-Disabled.parameters = {
-  docs: {
-    description: {
-      story: 'A combobox can be disabled.',
-    },
-  },
-}
-
-export const Error: Story = () => {
-  return (
-    <List>
-      <dt>Single</dt>
-      <dd>
-        <SingleComboBox
-          items={[]}
-          selectedItem={null}
+          placeholder="入力でフィルタリングできます"
           error
-          placeholder="Error"
-          width={400}
-          onAdd={action('onAdd')}
-          onSelect={action('onSelect')}
-          onClear={action('onClear')}
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
         />
       </dd>
-      <dt>Multi</dt>
+      <dt>読込中</dt>
       <dd>
         <MultiComboBox
-          items={[]}
-          selectedItems={[]}
-          error
-          placeholder="Error"
+          items={items}
+          selectedItems={selectedItems}
           width={400}
-          onAdd={action('onAdd')}
-          onDelete={action('onDelete')}
-          onSelect={action('onSelect')}
+          placeholder="入力でフィルタリングできます"
+          isLoading
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>選択解除ボタンを非表示</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems.map((item) => ({ ...item, deletable: false }))}
+          width={400}
+          placeholder="入力でフィルタリングできます"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>100%幅</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width="100%"
+          placeholder="入力でフィルタリングできます"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
         />
       </dd>
     </List>
   )
-}
-Error.parameters = {
-  docs: {
-    description: {
-      story: 'A combobox can represent its error status.',
-    },
-  },
-}
-
-export const Loading: Story = () => {
-  return (
-    <List>
-      <dt>Single</dt>
-      <dd>
-        <SingleComboBox
-          items={defaultItems}
-          selectedItem={null}
-          width={400}
-          placeholder="Loading"
-          onSelect={action('onSelect')}
-          onClear={action('onClear')}
-          isLoading
-        />
-      </dd>
-      <dt>Multi</dt>
-      <dd>
-        <MultiComboBox
-          items={defaultItems}
-          selectedItems={[]}
-          width={400}
-          placeholder="Loading"
-          onDelete={action('onDelete')}
-          onSelect={action('onSelect')}
-          isLoading
-        />
-      </dd>
-    </List>
-  )
-}
-
-export const Deletable: Story = () => {
-  return (
-    <MultiComboBox
-      items={[]}
-      selectedItems={[
-        { label: 'deletable', value: 'deletable' },
-        { label: 'undeletable', value: 'undeletable', deletable: false },
-      ]}
-      width={400}
-      onDelete={action('onDelete')}
-      onSelect={action('onSelect')}
-    />
-  )
-}
-Deletable.parameters = {
-  docs: {
-    description: {
-      story: 'The selected items of `MultiConboBox` can be undeletable.',
-    },
-  },
 }
 
 const List = styled.dl`
-  margin: 0;
+  margin: 1rem 1.5rem;
   dd {
-    margin: 1rem 0;
+    margin: 1rem 0 2rem;
   }
 `

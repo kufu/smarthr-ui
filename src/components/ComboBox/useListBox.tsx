@@ -194,7 +194,12 @@ export function useListBox<T>({
                   <AddButton
                     key={`add-${label}`}
                     themes={theme}
-                    onClick={() => onAdd && onAdd(label)}
+                    onClick={() => {
+                      // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
+                      setTimeout(() => {
+                        onAdd && onAdd(label)
+                      }, 0)
+                    }}
                     onMouseOver={() => setActiveOptionIndex(0)}
                     id={addingButtonId}
                     role="option"
@@ -211,7 +216,12 @@ export function useListBox<T>({
                   type="button"
                   themes={theme}
                   disabled={disabled}
-                  onClick={() => onSelect(optionToItem(option))}
+                  onClick={() => {
+                    // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
+                    setTimeout(() => {
+                      onSelect(optionToItem(option))
+                    }, 0)
+                  }}
                   onMouseOver={() => setActiveOptionIndex(i)}
                   id={getOptionId(option)}
                   role="option"
