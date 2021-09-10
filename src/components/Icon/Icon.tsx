@@ -359,51 +359,45 @@ export interface ComponentProps extends IconProps, ElementProps {
    */
   className?: string
 }
-type IconComponentProps = ComponentProps & { Component: IconType }
-
-// This should be inlined in the createIcon function after the Icon component had been removed
-const IconComponent: React.VFC<IconComponentProps> = ({
-  Component,
-  color,
-  className = '',
-  role = 'img',
-  visuallyHiddenText,
-  'aria-hidden': ariaHidden,
-  focusable = false,
-  ...props
-}) => {
-  const hasLabelByAria = props['aria-label'] !== undefined || props['aria-labelledby'] !== undefined
-  const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasLabelByAria
-
-  const theme = useTheme()
-  const replacedColor = React.useMemo(() => {
-    const asserted = color as string | undefined
-    if (asserted && isDefinedColor(asserted)) {
-      return theme.color[asserted]
-    }
-    return color
-  }, [color, theme.color])
-
-  const classNames = useClassNames()
-
-  return (
-    <>
-      {visuallyHiddenText && <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>}
-      <Component
-        color={replacedColor}
-        className={`${className} ${classNames.wrapper}`}
-        role={role}
-        aria-hidden={isAriaHidden || visuallyHiddenText !== undefined || undefined}
-        focusable={focusable}
-        {...props}
-      />
-    </>
-  )
-}
 
 const createIcon = (SvgIcon: IconType) => {
-  const Icon: React.VFC<ComponentProps> = (props: ComponentProps) => {
-    return <IconComponent {...props} Component={SvgIcon} />
+  const Icon: React.VFC<ComponentProps> = ({
+    color,
+    className = '',
+    role = 'img',
+    visuallyHiddenText,
+    'aria-hidden': ariaHidden,
+    focusable = false,
+    ...props
+  }) => {
+    const hasLabelByAria =
+      props['aria-label'] !== undefined || props['aria-labelledby'] !== undefined
+    const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasLabelByAria
+
+    const theme = useTheme()
+    const replacedColor = React.useMemo(() => {
+      const asserted = color as string | undefined
+      if (asserted && isDefinedColor(asserted)) {
+        return theme.color[asserted]
+      }
+      return color
+    }, [color, theme.color])
+
+    const classNames = useClassNames()
+
+    return (
+      <>
+        {visuallyHiddenText && <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>}
+        <SvgIcon
+          color={replacedColor}
+          className={`${className} ${classNames.wrapper}`}
+          role={role}
+          aria-hidden={isAriaHidden || visuallyHiddenText !== undefined || undefined}
+          focusable={focusable}
+          {...props}
+        />
+      </>
+    )
   }
   return Icon
 }
