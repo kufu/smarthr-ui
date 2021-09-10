@@ -47,7 +47,7 @@ const primaryStyle = css`
     const { color, interaction } = themes
 
     return css`
-      color: #fff;
+      color: ${color.TEXT_WHITE};
       border: none;
       background-color: ${color.MAIN};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
@@ -55,7 +55,7 @@ const primaryStyle = css`
       &.hover,
       &:focus {
         background-color: ${color.hoverColor(color.MAIN)};
-        color: #fff;
+        color: ${color.TEXT_WHITE};
       }
     `
   }}
@@ -63,7 +63,7 @@ const primaryStyle = css`
 const disabledStyle = css`
   ${({ themes: { color } }: { themes: Theme }) => css`
     background-color: ${color.disableColor(color.MAIN)};
-    color: ${color.disableColor('#fff')};
+    color: ${color.disableColor(color.TEXT_WHITE)};
   `}
 `
 const PrimaryStyleButton = styled(BaseButton)`

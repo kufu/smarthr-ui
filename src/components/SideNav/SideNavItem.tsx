@@ -59,7 +59,7 @@ const Wrapper = styled.li<{ themes: Theme }>`
 
       &.selected {
         background-color: ${color.MAIN};
-        color: #fff;
+        color: ${color.TEXT_WHITE};
         position: relative;
 
         &::after {

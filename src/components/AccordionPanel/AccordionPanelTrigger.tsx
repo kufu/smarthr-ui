@@ -105,7 +105,7 @@ const Button = styled.button<{ themes: Theme }>`
 
       &:hover,
       &:focus:not(:focus-visible) {
-        background-color: ${color.hoverColor('#fff')};
+        background-color: ${color.hoverColor(color.WHITE)};
         box-shadow: none;
       }
 

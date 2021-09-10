@@ -55,9 +55,11 @@ describe('createTheme', () => {
     const actual = createTheme({
       color: {
         TEXT_BLACK: '#001',
+        TEXT_WHITE: '#fff',
         TEXT_GREY: '#002',
         TEXT_DISABLED: '#003',
         TEXT_LINK: '#004',
+        WHITE: 'white',
         BORDER: '#005',
         ACTION_BACKGROUND: '#006',
         BACKGROUND: '#007',
@@ -74,9 +76,11 @@ describe('createTheme', () => {
       },
     })
     expect(actual.color.TEXT_BLACK).toBe('#001')
+    expect(actual.color.TEXT_WHITE).toBe('#fff')
     expect(actual.color.TEXT_GREY).toBe('#002')
     expect(actual.color.TEXT_DISABLED).toBe('#003')
     expect(actual.color.TEXT_LINK).toBe('#004')
+    expect(actual.color.WHITE).toBe('white')
     expect(actual.color.BORDER).toBe('#005')
     expect(actual.color.ACTION_BACKGROUND).toBe('#006')
     expect(actual.color.BACKGROUND).toBe('#007')

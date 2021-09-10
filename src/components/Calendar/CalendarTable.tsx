@@ -123,16 +123,16 @@ const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: bo
   height: 27px;
   border-radius: 50%;
   line-height: 0;
-  ${({ themes, isToday, isSelected }) => css`
+  ${({ themes: { color }, isToday, isSelected }) => css`
     ${isToday &&
     css`
-      border: solid 1px ${themes.color.BORDER};
+      border: solid 1px ${color.BORDER};
     `}
 
     ${isSelected &&
     css`
-      background-color: ${themes.color.MAIN} !important;
-      color: #fff !important;
+      background-color: ${color.MAIN} !important;
+      color: ${color.TEXT_WHITE} !important;
     `}
   `}
 `
