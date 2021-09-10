@@ -125,7 +125,7 @@ const Line = styled.div<{ themes: Theme }>`
         border-color: ${color.BRAND};
       }
       &.light {
-        border-color: #fff;
+        border-color: ${color.WHITE};
       }
     `
   }}
@@ -194,7 +194,7 @@ const Text = styled.p<{ themes: Theme }>`
         color: ${color.TEXT_BLACK};
       }
       &.light {
-        color: #fff;
+        color: ${color.TEXT_WHITE};
       }
     `
   }}

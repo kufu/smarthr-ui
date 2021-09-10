@@ -54,7 +54,7 @@ const textStyle = css`
 
       &.hover,
       &:focus {
-        background-color: ${color.hoverColor('#fff')};
+        background-color: ${color.hoverColor(color.WHITE)};
         color: ${color.TEXT_BLACK};
       }
     `

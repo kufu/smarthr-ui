@@ -44,7 +44,7 @@ const Wrapper = styled.footer<{ themes: Theme }>`
     overflow: hidden;
     padding: ${spacingByChar(1)} ${spacingByChar(1.5)};
     background-color: ${color.BRAND};
-    color: #fff;
+    color: ${color.TEXT_WHITE};
     font-size: ${fontSize.M};
     white-space: nowrap;
   `}
@@ -73,16 +73,19 @@ type ItemProp = {
   className?: string
 }
 
-const Item: VFC<ItemProp> = ({ children, href, className = '' }) => (
-  <li className={className}>
-    <ItemPart target="_blank" rel="noopener noreferrer" href={href}>
-      {children}
-    </ItemPart>
-  </li>
-)
+const Item: VFC<ItemProp> = ({ children, href, className = '' }) => {
+  const theme = useTheme()
+  return (
+    <li className={className}>
+      <ItemPart themes={theme} target="_blank" rel="noopener noreferrer" href={href}>
+        {children}
+      </ItemPart>
+    </li>
+  )
+}
 
-const ItemPart = styled.a`
-  color: #fff;
+const ItemPart = styled.a<{ themes: Theme }>`
+  color: ${({ themes }) => themes.color.TEXT_WHITE};
   text-decoration: none;
 
   &:hover {

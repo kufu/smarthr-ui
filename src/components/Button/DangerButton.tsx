@@ -39,7 +39,7 @@ const dangerStyle = css`
     const { color, interaction } = themes
 
     return css`
-      color: #fff;
+      color: ${color.TEXT_WHITE};
       border: none;
       background-color: ${color.DANGER};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
@@ -53,7 +53,7 @@ const dangerStyle = css`
 const disabledStyle = css`
   ${({ themes: { color } }: { themes: Theme }) => css`
     background-color: ${color.disableColor(color.DANGER)};
-    color: ${color.disableColor('#fff')};
+    color: ${color.disableColor(color.TEXT_WHITE)};
   `}
 `
 const DangerStyleButton = styled(BaseButton)`

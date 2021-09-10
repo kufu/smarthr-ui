@@ -63,12 +63,12 @@ const Base = styled.div<{ themes: Theme }>`
       }
 
       &.light {
-        background-color: #fff;
+        background-color: ${color.WHITE};
         color: ${color.TEXT_BLACK};
       }
       &.dark {
         background-color: ${color.TEXT_BLACK};
-        color: #fff;
+        color: ${color.TEXT_WHITE};
       }
 
       &.light.top {
@@ -76,7 +76,7 @@ const Base = styled.div<{ themes: Theme }>`
           border-color: transparent transparent ${color.BORDER};
         }
         &::after {
-          border-color: transparent transparent #fff;
+          border-color: transparent transparent ${color.WHITE};
         }
       }
       &.light.bottom {
@@ -84,7 +84,7 @@ const Base = styled.div<{ themes: Theme }>`
           border-color: ${color.BORDER} transparent transparent;
         }
         &::after {
-          border-color: #fff transparent transparent;
+          border-color: ${color.WHITE} transparent transparent;
         }
       }
 
@@ -168,7 +168,7 @@ const Base = styled.div<{ themes: Theme }>`
               border-color: transparent ${color.BORDER} transparent transparent;
             }
             &::after {
-              border-color: transparent #fff transparent transparent;
+              border-color: transparent ${color.WHITE} transparent transparent;
             }
           }
           &.dark {
@@ -194,7 +194,7 @@ const Base = styled.div<{ themes: Theme }>`
               border-color: transparent transparent transparent ${color.BORDER};
             }
             &::after {
-              border-color: transparent transparent transparent #fff;
+              border-color: transparent transparent transparent ${color.WHITE};
             }
           }
           &.dark {

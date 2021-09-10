@@ -157,7 +157,7 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
 
     &:hover {
       > button {
-        background-color: ${color.hoverColor('#fff')};
+        background-color: ${color.hoverColor(color.WHITE)};
       }
       &.disabled {
         > button {
@@ -181,7 +181,7 @@ const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
     font-weight: bold;
     border-radius: ${radius.m};
     color: ${color.TEXT_BLACK};
-    background-color: #fff;
+    background-color: ${color.WHITE};
     border: ${border.shorthand};
 
     > label {

@@ -49,14 +49,14 @@ const secondaryStyle = css`
     const { color, interaction, border } = themes
 
     return css`
-      background-color: #fff;
+      background-color: ${color.WHITE};
       color: ${color.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       border: ${border.shorthand};
 
       &.hover,
       &:focus {
-        background-color: ${color.hoverColor('#fff')};
+        background-color: ${color.hoverColor(color.WHITE)};
         color: ${color.TEXT_BLACK};
       }
     `

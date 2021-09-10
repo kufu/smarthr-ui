@@ -105,14 +105,14 @@ const Wrapper = styled.div<{
     width: ${$width};
     border-radius: ${radius.m};
     border: ${border.shorthand};
-    background-color: #fff;
+    background-color: ${color.WHITE};
     box-sizing: border-box;
     transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
     &:hover {
       ${!disabled &&
       css`
-        background-color: ${color.hoverColor('#fff')};
+        background-color: ${color.hoverColor(color.WHITE)};
       `}
     }
     :focus-within {

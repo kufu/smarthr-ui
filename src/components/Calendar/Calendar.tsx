@@ -120,7 +120,7 @@ const Container = styled.section<{ themes: Theme }>`
   ${({ themes: { color, shadow } }) => css`
     display: inline-block;
     border-radius: 6px;
-    background-color: #fff;
+    background-color: ${color.WHITE};
     box-shadow: ${shadow.LAYER3};
     color: ${color.TEXT_BLACK};
     overflow: hidden;

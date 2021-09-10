@@ -239,11 +239,11 @@ const List = styled.ul<{ themes: Theme }>`
         width: 100%;
         padding: 0 20px;
         border: none;
-        background-color: #fff;
+        background-color: ${color.WHITE};
         color: ${color.TEXT_BLACK};
 
         &:hover {
-          background-color: ${color.hoverColor('#fff')};
+          background-color: ${color.hoverColor(color.WHITE)};
         }
       }
     `

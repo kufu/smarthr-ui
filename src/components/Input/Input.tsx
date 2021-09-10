@@ -124,7 +124,7 @@ const Wrapper = styled.span<{
     display: inline-flex;
     align-items: stretch;
     width: ${typeof $width === 'number' ? `${$width}px` : $width};
-    background-color: #fff;
+    background-color: ${color.WHITE};
     border-radius: ${radius.m};
     border: ${border.shorthand};
     box-sizing: border-box;

@@ -84,7 +84,7 @@ export function getItemStyle({ themes, isActive, isUnclickable }: ItemStyleProps
     css`
       cursor: pointer;
       &:hover {
-        background-color: ${hoverColor('#fff')};
+        background-color: ${hoverColor(color.WHITE)};
       }
     `}
   `
