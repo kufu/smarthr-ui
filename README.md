@@ -2,6 +2,8 @@
 
 <div align="center">
 
+hello!
+
 React components for creating SmartHR applications.
 
 [![npm version](https://badge.fury.io/js/smarthr-ui.svg)](https://badge.fury.io/js/smarthr-ui)
