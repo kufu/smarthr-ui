@@ -319,6 +319,7 @@ type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
 const definedColors = [
   'TEXT_BLACK',
+  'TEXT_WHITE',
   'TEXT_GREY',
   'TEXT_DISABLED',
   'TEXT_LINK',
