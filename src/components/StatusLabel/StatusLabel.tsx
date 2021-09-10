@@ -37,7 +37,7 @@ const Wrapper = styled.span<{ themes: Theme }>`
       margin: 0;
       border: 1px solid transparent;
       padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
-      background-color: #fff;
+      background-color: ${color.WHITE};
       text-align: center;
       white-space: nowrap;
       min-width: ${size.pxToRem(60)};
@@ -67,22 +67,22 @@ const Wrapper = styled.span<{ themes: Theme }>`
 
       &.disabled {
         background-color: ${color.TEXT_GREY};
-        color: #fff;
+        color: ${color.TEXT_WHITE};
       }
 
       &.must {
         background-color: ${color.MAIN};
-        color: #fff;
+        color: ${color.TEXT_WHITE};
       }
 
       &.warning {
         background-color: ${color.WARNING};
-        color: #fff;
+        color: ${color.TEXT_WHITE};
       }
 
       &.error {
         background-color: ${color.DANGER};
-        color: #fff;
+        color: ${color.TEXT_WHITE};
       }
     `
   }}

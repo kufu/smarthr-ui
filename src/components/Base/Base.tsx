@@ -50,11 +50,11 @@ const Wrapper = styled.div<{
   $radius: typeof radiusMap[RadiusKeys]
   $layer: typeof layerMap[LayerKeys]
 }>`
-  ${({ themes, $radius, $layer }) => {
+  ${({ themes: { color, shadow }, $radius, $layer }) => {
     return css`
-      box-shadow: ${themes.shadow[$layer]};
+      box-shadow: ${shadow[$layer]};
       border-radius: ${$radius};
-      background-color: #fff;
+      background-color: ${color.WHITE};
     `
   }}
 `

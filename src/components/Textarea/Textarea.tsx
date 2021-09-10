@@ -84,7 +84,7 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
       color: ${color.TEXT_BLACK};
       border-radius: ${radius.m};
       width: ${textAreaWidth};
-      background-color: #fff;
+      background-color: ${color.WHITE};
       border: ${border.shorthand};
       box-sizing: border-box;
       opacity: 1;

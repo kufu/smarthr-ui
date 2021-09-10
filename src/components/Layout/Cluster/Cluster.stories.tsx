@@ -116,7 +116,7 @@ const ColorBox = styled.div(() => {
     justify-content: center;
     border-radius: ${radius.m};
     background-color: ${color.BRAND};
-    color: white;
+    color: ${color.TEXT_WHITE};
     width: 80px;
     height: 80px;
   `

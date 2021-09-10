@@ -328,7 +328,7 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       border-radius: ${radius.m};
       border: ${border.shorthand};
       box-sizing: border-box;
-      background-color: #fff;
+      background-color: ${color.WHITE};
       cursor: text;
 
       &[aria-expanded='true'] {
@@ -388,7 +388,7 @@ const SelectedItem = styled.div<{ themes: Theme; disabled: boolean }>`
       display: flex;
       border-radius: calc(${fontSize.S} + (${spacingByChar(0.5)} - ${borderWidth}px) * 2);
       border: ${border.shorthand};
-      background-color: ${disabled ? color.disableColor('#fff') : '#fff'};
+      background-color: ${disabled ? color.disableColor(color.WHITE) : color.WHITE};
       color: ${disabled ? color.TEXT_DISABLED : color.TEXT_BLACK};
       font-size: ${fontSize.S};
       line-height: 1;

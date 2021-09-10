@@ -40,14 +40,14 @@ const skeletonStyle = css`
 
     return css`
       background-color: transparent;
-      color: #fff;
+      color: ${color.TEXT_WHITE};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
-      border: ${border.lineWidth} ${border.lineStyle} #fff;
+      border: ${border.lineWidth} ${border.lineStyle} ${color.WHITE};
 
       &.hover,
       &:focus {
         background-color: ${color.OVERLAY};
-        color: #fff;
+        color: ${color.TEXT_WHITE};
       }
     `
   }}
@@ -55,7 +55,7 @@ const skeletonStyle = css`
 const disabledStyle = css`
   ${({ themes: { color } }: { themes: Theme }) => css`
     background-color: transparent;
-    color: ${color.disableColor('#fff')};
+    color: ${color.disableColor(color.TEXT_WHITE)};
   `}
 `
 const SkeletonStyleButton = styled(BaseButton)`
