@@ -49,6 +49,10 @@ const defaultItems = [
     label: 'option 5',
     value: 'value-5',
   },
+  {
+    label: 'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
+    value: 'value-6',
+  },
 ]
 
 type Item = { label: string; value: string }
@@ -252,6 +256,18 @@ export const Multi: Story = () => {
           error
           onDelete={handleDelete}
           onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>選択済みアイテムを省略表示 + ツールチップ</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          placeholder="入力でフィルタリングできます"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+          selectedItemEllipsis
         />
       </dd>
       <dt>読込中</dt>

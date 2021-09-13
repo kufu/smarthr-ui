@@ -13,9 +13,9 @@ import { useOuterClick } from '../../hooks/useOuterClick'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 import { useClassNames } from './useClassNames'
 
-import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
+import { FaCaretDownIcon } from '../Icon'
 import { useListBox } from './useListBox'
-import { UnstyledButton } from '../Button'
+import { MultiSelectedItem } from './MultiSelectedItem'
 import { Item } from './types'
 
 type Props<T> = {
@@ -51,6 +51,10 @@ type Props<T> = {
    * If `true`, a loader is displayed on the dropdown list.
    */
   isLoading?: boolean
+  /**
+   * Whether to omit label of selected items with ellipsis
+   */
+  selectedItemEllipsis?: boolean
   /**
    * The value given to the width style of input.
    */
@@ -97,6 +101,7 @@ export function MultiComboBox<T>({
   creatable = false,
   placeholder = '',
   isLoading,
+  selectedItemEllipsis,
   width = 'auto',
   className = '',
   onChange,
@@ -214,51 +219,26 @@ export function MultiComboBox<T>({
     >
       <InputArea themes={theme}>
         <List themes={theme}>
-          {selectedItems.map((selectedItem, i) => {
-            const { deletable = true, ...item } = selectedItem
-
-            return (
-              <li key={i}>
-                <SelectedItem
-                  themes={theme}
-                  disabled={disabled}
-                  className={classNames.selectedItem}
-                >
-                  <SelectedItemLabel themes={theme} className={classNames.selectedItemLabel}>
-                    {selectedItem.label}
-                  </SelectedItemLabel>
-
-                  {deletable && (
-                    <DeleteButton
-                      type="button"
-                      themes={theme}
-                      className={classNames.deleteButton}
-                      disabled={disabled}
-                      onClick={() => {
-                        // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
-                        setTimeout(() => {
-                          onDelete && onDelete(item)
-                          onChangeSelected &&
-                            onChangeSelected(
-                              selectedItems.filter(
-                                (selected) =>
-                                  selected.label !== item.label || selected.value !== item.value,
-                              ),
-                            )
-                        }, 0)
-                      }}
-                    >
-                      <FaTimesCircleIcon
-                        size={11}
-                        color={'inherit'}
-                        visuallyHiddenText={`${item.label}を削除`}
-                      />
-                    </DeleteButton>
-                  )}
-                </SelectedItem>
-              </li>
-            )
-          })}
+          {selectedItems.map((selectedItem) => (
+            <li key={selectedItem.label}>
+              <MultiSelectedItem
+                item={selectedItem}
+                disabled={disabled}
+                onDelete={() => {
+                  onDelete && onDelete(selectedItem)
+                  onChangeSelected &&
+                    onChangeSelected(
+                      selectedItems.filter(
+                        (selected) =>
+                          selected.label !== selectedItem.label ||
+                          selected.value !== selectedItem.value,
+                      ),
+                    )
+                }}
+                enableEllipsis={selectedItemEllipsis}
+              />
+            </li>
+          ))}
 
           <InputWrapper className={isFocused ? undefined : 'hidden'}>
             <Input
@@ -374,49 +354,9 @@ const List = styled.ul<{ themes: Theme }>`
 
       > li {
         min-height: 27px;
+        max-width: calc(100% - ${spacingByChar(0.5)});
         margin-right: ${spacingByChar(0.5)};
         margin-bottom: ${pxToRem(smallMargin - borderWidth)};
-      }
-    `
-  }}
-`
-const SelectedItem = styled.div<{ themes: Theme; disabled: boolean }>`
-  ${({ themes, disabled }) => {
-    const { border, color, fontSize, spacingByChar } = themes
-
-    return css`
-      display: flex;
-      border-radius: calc(${fontSize.S} + (${spacingByChar(0.5)} - ${borderWidth}px) * 2);
-      border: ${border.shorthand};
-      background-color: ${disabled ? color.disableColor(color.WHITE) : color.WHITE};
-      color: ${disabled ? color.TEXT_DISABLED : color.TEXT_BLACK};
-      font-size: ${fontSize.S};
-      line-height: 1;
-    `
-  }}
-`
-const SelectedItemLabel = styled.span<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
-      padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);
-    `
-  }}
-`
-const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled: boolean }>`
-  ${({ themes: { spacingByChar, shadow }, disabled }) => {
-    return css`
-      padding: calc(${spacingByChar(0.5)} - ${borderWidth}px);
-      border-radius: 50%;
-      cursor: ${disabled ? 'not-allowed' : 'pointer'};
-      line-height: 0;
-
-      &:focus {
-        outline: 0;
-      }
-
-      &:focus > svg {
-        border-radius: 50%;
-        box-shadow: ${shadow.OUTLINE};
       }
     `
   }}
