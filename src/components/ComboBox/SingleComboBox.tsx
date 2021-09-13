@@ -217,6 +217,7 @@ export function SingleComboBox<T>({
         suffix={
           <>
             <ClearButton
+              type="button"
               onClick={(e) => {
                 e.stopPropagation()
                 onClear && onClear()
