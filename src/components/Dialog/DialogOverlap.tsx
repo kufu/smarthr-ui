@@ -11,7 +11,7 @@ type Props = {
 
 const transitionClassName = 'shr-dialog-transition'
 
-export const DialogTransition: VFC<Props> = ({ isOpen, children }) => {
+export const DialogOverlap: VFC<Props> = ({ isOpen, children }) => {
   const theme = useTheme()
   return (
     <CSSTransition

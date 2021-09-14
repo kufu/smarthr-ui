@@ -17,7 +17,7 @@ import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { BaseElementProps, DialogBase } from '../Base'
 import { SecondaryButton } from '../Button'
 import { FaTimesIcon } from '../Icon'
-import { DialogTransition } from './DialogTransition'
+import { DialogOverlap } from './DialogOverlap'
 import { useTriggerFocusControl } from './FocusTrap'
 import { useClassNames } from './useClassNames'
 
@@ -185,7 +185,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   const classNames = useClassNames().modelessDialog
 
   return createPortal(
-    <DialogTransition isOpen={isOpen}>
+    <DialogOverlap isOpen={isOpen}>
       <Draggable
         handle={`.${classNames.header}`}
         onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
@@ -210,7 +210,6 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
             height,
           }}
           ref={wrapperRef}
-          themes={theme}
           role="dialog"
           aria-labelledby={labelId}
           {...props}
@@ -248,16 +247,13 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
           </Box>
         </Layout>
       </Draggable>
-    </DialogTransition>,
+    </DialogOverlap>,
     portalParent,
   )
 }
 
-const Layout = styled.div<{ themes: Theme }>`
-  ${({ themes: { zIndex } }) => css`
-    position: fixed;
-    z-index: ${zIndex.OVERLAP};
-  `}
+const Layout = styled.div`
+  position: fixed;
 `
 const Box = styled(DialogBase).attrs({ radius: 'm' })`
   display: flex;
