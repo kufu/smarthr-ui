@@ -2,6 +2,8 @@ import React, { ReactNode, VFC } from 'react'
 import styled from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
+import { Theme, useTheme } from '../../hooks/useTheme'
+
 type Props = {
   isOpen: boolean
   children: ReactNode
@@ -10,6 +12,7 @@ type Props = {
 const transitionClassName = 'shr-dialog-transition'
 
 export const DialogTransition: VFC<Props> = ({ isOpen, children }) => {
+  const theme = useTheme()
   return (
     <CSSTransition
       classNames={transitionClassName}
@@ -22,12 +25,15 @@ export const DialogTransition: VFC<Props> = ({ isOpen, children }) => {
       appear
       unmountOnExit
     >
-      <Wrapper>{children}</Wrapper>
+      <Wrapper themes={theme}>{children}</Wrapper>
     </CSSTransition>
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ themes: Theme }>`
+  position: absolute;
+  z-index: ${({ themes }) => themes.zIndex.OVERLAP_BASE};
+
   &.${transitionClassName}-appear {
     opacity: 0;
   }
