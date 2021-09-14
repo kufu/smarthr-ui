@@ -44,6 +44,7 @@ export const YearPicker: VFC<Props & ElementProps> = ({
   return (
     <Overlay
       {...props}
+      themes={themes}
       isDisplayed={isDisplayed}
       id={id}
       className={`${props.className} ${classNames.yearPicker.wrapper}`}
@@ -72,7 +73,7 @@ export const YearPicker: VFC<Props & ElementProps> = ({
   )
 }
 
-const Overlay = styled.div<{ isDisplayed: boolean }>`
+const Overlay = styled.div<{ themes: Theme; isDisplayed: boolean }>`
   ${({ isDisplayed }) =>
     !isDisplayed &&
     css`
@@ -83,7 +84,7 @@ const Overlay = styled.div<{ isDisplayed: boolean }>`
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #fff;
+  background-color: ${({ themes }) => themes.color.WHITE};
 `
 
 const Container = styled.div`
@@ -114,7 +115,7 @@ const YearWrapper = styled.span<{ themes: Theme; isThisYear?: boolean; isSelecte
       `};
       ${isSelected &&
       css`
-        color: #fff !important;
+        color: ${color.TEXT_WHITE} !important;
         background-color: ${color.MAIN} !important;
       `}
     `

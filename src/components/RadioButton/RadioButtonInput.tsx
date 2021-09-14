@@ -56,7 +56,7 @@ const Box = styled.span<{ themes: Theme }>`
       height: 100%;
       border-radius: 50%;
       border: ${border.shorthand};
-      background-color: #fff;
+      background-color: ${color.WHITE};
       box-sizing: border-box;
 
       &.active {
@@ -70,7 +70,7 @@ const Box = styled.span<{ themes: Theme }>`
           width: ${size.pxToRem(6)};
           height: ${size.pxToRem(6)};
           border-radius: 50%;
-          background-color: #fff;
+          background-color: ${color.WHITE};
           transform: translate(-50%, -50%);
           content: '';
           pointer-events: none;
@@ -86,7 +86,7 @@ const Box = styled.span<{ themes: Theme }>`
           border-color: ${color.BORDER};
 
           &::before {
-            background-color: #fff;
+            background-color: ${color.WHITE};
           }
         }
       }

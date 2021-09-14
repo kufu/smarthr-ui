@@ -160,7 +160,7 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
       min-width: calc(2px + ${spacingByChar(1.5)} + 14px + 8em + 27px + ${spacingByChar(1)});
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       padding-right: ${spacingByChar(0.5)};
-      background-color: #fff;
+      background-color: ${color.WHITE};
       border: 1px solid ${color.BORDER};
       border-radius: ${radius.m};
       box-shadow: ${shadow.LAYER4};

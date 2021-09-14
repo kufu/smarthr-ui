@@ -194,7 +194,12 @@ export function useListBox<T>({
                   <AddButton
                     key={`add-${label}`}
                     themes={theme}
-                    onClick={() => onAdd && onAdd(label)}
+                    onClick={() => {
+                      // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
+                      setTimeout(() => {
+                        onAdd && onAdd(label)
+                      }, 0)
+                    }}
                     onMouseOver={() => setActiveOptionIndex(0)}
                     id={addingButtonId}
                     role="option"
@@ -211,7 +216,12 @@ export function useListBox<T>({
                   type="button"
                   themes={theme}
                   disabled={disabled}
-                  onClick={() => onSelect(optionToItem(option))}
+                  onClick={() => {
+                    // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
+                    setTimeout(() => {
+                      onSelect(optionToItem(option))
+                    }, 0)
+                  }}
                   onMouseOver={() => setActiveOptionIndex(i)}
                   id={getOptionId(option)}
                   role="option"
@@ -265,7 +275,7 @@ export function useListBox<T>({
 
 const Container = styled.div<{ top: number; left: number; width: number; themes: Theme }>(
   ({ top, left, width, themes }) => {
-    const { spacingByChar, radius, shadow } = themes
+    const { color, spacingByChar, radius, shadow, zIndex } = themes
     return css`
       position: absolute;
       top: ${top}px;
@@ -276,24 +286,24 @@ const Container = styled.div<{ top: number; left: number; width: number; themes:
       padding: ${spacingByChar(0.5)} 0;
       border-radius: ${radius.m};
       box-shadow: ${shadow.LAYER3};
-      background-color: #fff;
+      background-color: ${color.WHITE};
       white-space: nowrap;
       box-sizing: border-box;
       &[aria-hidden='true'] {
         display: none;
       }
-      z-index: ${themes.zIndex.OVERLAP};
+      z-index: ${zIndex.OVERLAP};
     `
   },
 )
 const NoItems = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar } = themes
+    const { color, fontSize, spacingByChar } = themes
 
     return css`
       margin: 0;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-      background-color: #fff;
+      background-color: ${color.WHITE};
       font-size: ${fontSize.M};
     `
   }}
@@ -307,7 +317,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
       min-width: 100%;
       border: none;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-      background-color: #fff;
+      background-color: ${color.WHITE};
       font-size: ${fontSize.M};
       text-align: left;
       cursor: pointer;
@@ -319,7 +329,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
 
       &[aria-selected='true'] {
         background-color: ${color.MAIN};
-        color: #fff;
+        color: ${color.TEXT_WHITE};
       }
 
       &[disabled] {

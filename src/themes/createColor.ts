@@ -4,9 +4,11 @@ import { darken, rgba, transparentize } from 'polished'
 // Allow deviations from the JavaScript naming convention to match SmartHR design guidelines
 type Palette = {
   TEXT_BLACK: string
+  TEXT_WHITE: string
   TEXT_GREY: string
   TEXT_DISABLED: string
   TEXT_LINK: string
+  WHITE: string
   BORDER: string
   ACTION_BACKGROUND: string
   BACKGROUND: string
@@ -34,9 +36,11 @@ export type TextColors = 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LI
 
 const baseColor = {
   TEXT_BLACK: '#23221f',
+  TEXT_WHITE: '#fff',
   TEXT_GREY: '#706d65',
   TEXT_DISABLED: '#c1bdb7',
   TEXT_LINK: '#0071c1',
+  WHITE: '#fff',
   BORDER: '#d6d3d0',
   ACTION_BACKGROUND: '#d6d3d0',
   BACKGROUND: '#f8f7f6',

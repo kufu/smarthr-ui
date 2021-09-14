@@ -155,7 +155,7 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
     border-radius: 0;
 
     &[aria-checked='true'] {
-      color: #fff;
+      color: ${color.TEXT_WHITE};
       background-color: ${color.MAIN};
       border: ${border.lineWidth} ${border.lineStyle} ${color.MAIN};
       border-left: ${border.lineWidth} ${border.lineStyle} transparent;

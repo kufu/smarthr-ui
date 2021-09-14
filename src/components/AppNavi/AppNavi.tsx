@@ -112,8 +112,8 @@ export const AppNavi: VFC<Props & ElementProps> = ({
 }
 
 const Wrapper = styled.nav<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { pxToRem } = themes.size
+  ${({ themes: { color, shadow, size } }) => {
+    const { pxToRem } = size
 
     return css`
       display: flex;
@@ -121,9 +121,9 @@ const Wrapper = styled.nav<{ themes: Theme }>`
       width: 100%;
       height: 40px;
       padding: 0 ${pxToRem(20)};
-      background-color: #fff;
+      background-color: ${color.WHITE};
       box-sizing: border-box;
-      box-shadow: ${themes.shadow.LAYER1};
+      box-shadow: ${shadow.LAYER1};
     `
   }}
 `
