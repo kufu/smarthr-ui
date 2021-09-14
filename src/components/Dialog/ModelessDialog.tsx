@@ -14,7 +14,7 @@ import Draggable from 'react-draggable'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { BaseElementProps, DialogBase } from '../Base'
+import { Base, BaseElementProps } from '../Base'
 import { SecondaryButton } from '../Button'
 import { FaTimesIcon } from '../Icon'
 import { DialogOverlap } from './DialogOverlap'
@@ -255,7 +255,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
 const Layout = styled.div`
   position: fixed;
 `
-const Box = styled(DialogBase).attrs({ radius: 'm' })`
+const Box = styled(Base).attrs({ radius: 'm', layer: 3 })`
   display: flex;
   flex-direction: column;
   width: 100%;
