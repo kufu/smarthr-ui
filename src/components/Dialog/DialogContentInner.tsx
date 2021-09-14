@@ -7,7 +7,7 @@ import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
 import { useClassNames } from './useClassNames'
 import { BodyScrollSuppressor } from './BodyScrollSuppressor'
-import { DialogTransition } from './DialogTransition'
+import { DialogOverlap } from './DialogOverlap'
 
 export type DialogContentInnerProps = {
   /**
@@ -107,9 +107,8 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
 
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
-      <DialogTransition isOpen={isOpen}>
-        <Wrapper
-          themes={theme}
+      <DialogOverlap isOpen={isOpen}>
+        <Layout
           className={classNames.wrapper}
           id={id}
           role="dialog"
@@ -138,25 +137,19 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
           </FocusTrap>
           {/* Suppresses scrolling of body while modal is displayed */}
           <BodyScrollSuppressor />
-        </Wrapper>
-      </DialogTransition>
+        </Layout>
+      </DialogOverlap>
     </DialogPositionProvider>
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme }>(({ themes }) => {
-  const { zIndex } = themes
-
-  return css`
-    z-index: ${zIndex.OVERLAP_BASE};
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  `
-})
-
+const Layout = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+`
 const Inner = styled.div<StyleProps & { themes: Theme }>`
   ${({ themes, top, right, bottom, left }) => {
     const { color, radius, shadow } = themes
@@ -195,9 +188,9 @@ const Background = styled.div<{ themes: Theme }>`
     return css`
       position: fixed;
       top: 0;
+      right: 0;
+      bottom: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
       background-color: ${themes.color.SCRIM};
     `
   }}
