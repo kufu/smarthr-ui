@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [14.4.0](https://github.com/kufu/smarthr-ui/compare/v14.3.0...v14.4.0) (2021-09-14)
+
+
+### Features
+
+* `MultiComboBox` に選択済みアイテムを省略表示できるオプションを追加 (SHRUI-450) ([#1860](https://github.com/kufu/smarthr-ui/issues/1860)) ([8178a53](https://github.com/kufu/smarthr-ui/commit/8178a53184f3d6f56c1096b5c6dd586caedcecda))
+* add row column gap Cluster ([#1836](https://github.com/kufu/smarthr-ui/issues/1836)) ([c59b6ec](https://github.com/kufu/smarthr-ui/commit/c59b6ec4cb5f9c7e6d85e4066e33409c8b234fe0))
+* color に WHITE を追加 ([#1864](https://github.com/kufu/smarthr-ui/issues/1864)) ([694ee8d](https://github.com/kufu/smarthr-ui/commit/694ee8d594c624224f5756dd0a08007abbc09629))
+
 ## [14.3.0](https://github.com/kufu/smarthr-ui/compare/v14.2.0...v14.3.0) (2021-09-06)
 
 
