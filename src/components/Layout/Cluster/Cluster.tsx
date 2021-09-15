@@ -1,15 +1,10 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { AbstractSize, CharRelativeSize } from '../../../themes/createSpacing'
 import { useSpacing } from '../../../hooks/useSpacing'
+import type { Gap, SeparateGap } from '../type'
 
 type alignMethod = 'normal' | 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 type justifyMethod = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around'
-type Gap = CharRelativeSize | AbstractSize
-type SeparateGap = {
-  row: Gap
-  column: Gap
-}
 
 /**
  * @param gap 間隔の指定（基準フォントサイズの相対値または抽象値）
