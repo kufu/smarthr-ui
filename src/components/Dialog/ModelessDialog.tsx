@@ -106,10 +106,6 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   const theme = useTheme()
 
   useEffect(() => {
-    if (!portalParent) {
-      return
-    }
-
     portalParent.appendChild(portalContainer)
     return () => {
       portalParent.removeChild(portalContainer)

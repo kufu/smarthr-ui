@@ -8,16 +8,8 @@ type Props = ActionDialogContentInnerProps & {
   onClickClose: () => void
 } & Pick<
     DialogContentInnerProps,
-    | 'isOpen'
-    | 'onClickOverlay'
-    | 'onPressEscape'
-    | 'top'
-    | 'right'
-    | 'bottom'
-    | 'left'
-    | 'id'
-    | 'portalParent'
-  >
+    'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
+  > & { portalParent?: HTMLElement }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const ActionDialog: React.VFC<Props & ElementProps> = ({
@@ -39,10 +31,6 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   const portalContainer = useRef(document.createElement('div')).current
 
   useEffect(() => {
-    if (!portalParent) {
-      return
-    }
-
     portalParent.appendChild(portalContainer)
 
     return () => {

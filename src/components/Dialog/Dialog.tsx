@@ -2,7 +2,7 @@ import React, { HTMLAttributes, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 
-type Props = DialogContentInnerProps
+type Props = DialogContentInnerProps & { portalParent?: HTMLElement }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const Dialog: React.VFC<Props & ElementProps> = ({
@@ -14,10 +14,6 @@ export const Dialog: React.VFC<Props & ElementProps> = ({
   const portalContainer = useRef(document.createElement('div')).current
 
   useEffect(() => {
-    if (!portalParent) {
-      return
-    }
-
     portalParent.appendChild(portalContainer)
 
     return () => {
