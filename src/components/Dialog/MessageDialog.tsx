@@ -10,7 +10,15 @@ import {
 type Props = MessageDialogContentInnerProps &
   Pick<
     DialogContentInnerProps,
-    'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
+    | 'isOpen'
+    | 'onClickOverlay'
+    | 'onPressEscape'
+    | 'top'
+    | 'right'
+    | 'bottom'
+    | 'left'
+    | 'id'
+    | 'portalParent'
   >
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
@@ -21,17 +29,22 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
   closeText,
   onClickClose,
   className = '',
+  portalParent = document.body,
   ...props
 }) => {
-  const element = useRef(document.createElement('div')).current
+  const portalContainer = useRef(document.createElement('div')).current
 
   useEffect(() => {
-    document.body.appendChild(element)
+    if (!portalParent) {
+      return
+    }
+
+    portalParent.appendChild(portalContainer)
 
     return () => {
-      document.body.removeChild(element)
+      portalParent.removeChild(portalContainer)
     }
-  }, [element])
+  }, [portalContainer, portalParent])
 
   const handleClickClose = useCallback(() => {
     if (!props.isOpen) {
@@ -50,6 +63,6 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
         onClickClose={handleClickClose}
       />
     </DialogContentInner>,
-    element,
+    portalContainer,
   )
 }

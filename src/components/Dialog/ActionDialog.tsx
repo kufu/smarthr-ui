@@ -8,7 +8,15 @@ type Props = ActionDialogContentInnerProps & {
   onClickClose: () => void
 } & Pick<
     DialogContentInnerProps,
-    'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
+    | 'isOpen'
+    | 'onClickOverlay'
+    | 'onPressEscape'
+    | 'top'
+    | 'right'
+    | 'bottom'
+    | 'left'
+    | 'id'
+    | 'portalParent'
   >
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
@@ -25,17 +33,22 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   actionDisabled = false,
   closeDisabled,
   className = '',
+  portalParent = document.body,
   ...props
 }) => {
-  const element = useRef(document.createElement('div')).current
+  const portalContainer = useRef(document.createElement('div')).current
 
   useEffect(() => {
-    document.body.appendChild(element)
+    if (!portalParent) {
+      return
+    }
+
+    portalParent.appendChild(portalContainer)
 
     return () => {
-      document.body.removeChild(element)
+      portalParent.removeChild(portalContainer)
     }
-  }, [element])
+  }, [portalContainer, portalParent])
 
   const handleClickClose = useCallback(() => {
     if (!props.isOpen) {
@@ -68,6 +81,6 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
         {children}
       </ActionDialogContentInner>
     </DialogContentInner>,
-    element,
+    portalContainer,
   )
 }

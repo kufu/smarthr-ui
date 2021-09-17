@@ -5,21 +5,30 @@ import { DialogContentInner, DialogContentInnerProps } from './DialogContentInne
 type Props = DialogContentInnerProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const Dialog: React.VFC<Props & ElementProps> = ({ children, className = '', ...props }) => {
-  const element = useRef(document.createElement('div')).current
+export const Dialog: React.VFC<Props & ElementProps> = ({
+  children,
+  className = '',
+  portalParent = document.body,
+  ...props
+}) => {
+  const portalContainer = useRef(document.createElement('div')).current
 
   useEffect(() => {
-    document.body.appendChild(element)
+    if (!portalParent) {
+      return
+    }
+
+    portalParent.appendChild(portalContainer)
 
     return () => {
-      document.body.removeChild(element)
+      portalParent.removeChild(portalContainer)
     }
-  }, [element])
+  }, [portalContainer, portalParent])
 
   return createPortal(
     <DialogContentInner className={className} {...props}>
       {children}
     </DialogContentInner>,
-    element,
+    portalContainer,
   )
 }

@@ -51,6 +51,10 @@ export type DialogContentInnerProps = {
    */
   ariaLabelledby?: string
   /**
+   * ポータルの container となる DOM 要素を追加する親要素
+   */
+  portalParent?: HTMLElement
+  /**
    * `className` of the component.
    */
   className?: string
