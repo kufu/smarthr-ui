@@ -61,7 +61,7 @@ commands:
 jobs:
   node-v12:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:16
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
@@ -70,7 +70,7 @@ jobs:
       - run-npm-test
   node-v14:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
