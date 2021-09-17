@@ -97,6 +97,9 @@ export { LineClamp } from './components/LineClamp'
 // layout components
 export { Cluster, LineUp, Stack } from './components/Layout'
 
+// hooks
+export { useTheme } from './hooks/useTheme'
+
 // themes
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
