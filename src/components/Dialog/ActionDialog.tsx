@@ -6,10 +6,11 @@ import { ActionDialogContentInner, ActionDialogContentInnerProps } from './Actio
 
 type Props = ActionDialogContentInnerProps & {
   onClickClose: () => void
+  portalParent?: HTMLElement
 } & Pick<
     DialogContentInnerProps,
     'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
-  > & { portalParent?: HTMLElement }
+  >
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const ActionDialog: React.VFC<Props & ElementProps> = ({
@@ -25,16 +26,17 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   actionDisabled = false,
   closeDisabled,
   className = '',
-  portalParent = document.body,
+  portalParent,
   ...props
 }) => {
   const portalContainer = useRef(document.createElement('div')).current
 
   useEffect(() => {
-    portalParent.appendChild(portalContainer)
-
+    // SSR を考慮し、useEffect 内で初期値 document.body を指定
+    const pp = portalParent || document.body
+    pp.appendChild(portalContainer)
     return () => {
-      portalParent.removeChild(portalContainer)
+      pp.removeChild(portalContainer)
     }
   }, [portalContainer, portalParent])
 
