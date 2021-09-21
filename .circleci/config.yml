@@ -36,13 +36,12 @@ commands:
           fi
       - restore_cache:
           keys:
-            - dependencies-reg-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
-            - modules-cache-
+            - yarn-packages-reg-{{ checksum "yarn.lock" }}
       - run: yarn install --frozen-lockfile
       - save_cache:
           paths:
-            - node_modules
-          key: dependencies-reg-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+            - ~/.cache/yarn
+          key: yarn-packages-reg-{{ checksum "yarn.lock" }}
       - run: yarn test-visual
   install-noto-sans-cjk-jp:
     steps:
