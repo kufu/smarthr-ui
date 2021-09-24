@@ -40,11 +40,12 @@ const dangerStyle = css`
 
     return css`
       color: ${color.TEXT_WHITE};
-      border: none;
+      border-color: ${color.DANGER};
       background-color: ${color.DANGER};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
       &.hover {
+        border-color: ${color.hoverColor(color.DANGER)};
         background-color: ${color.hoverColor(color.DANGER)};
       }
     `
@@ -52,6 +53,7 @@ const dangerStyle = css`
 `
 const disabledStyle = css`
   ${({ themes: { color } }: { themes: Theme }) => css`
+    border-color: ${color.disableColor(color.DANGER)};
     background-color: ${color.disableColor(color.DANGER)};
     color: ${color.disableColor(color.TEXT_WHITE)};
   `}

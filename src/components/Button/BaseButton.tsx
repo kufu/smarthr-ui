@@ -77,14 +77,13 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   ${({ themes, wide }) => {
-    const { radius, fontSize, spacingByChar, interaction, shadow } = themes
+    const { radius, fontSize, leading, spacingByChar, interaction, shadow } = themes
 
     return css`
       display: inline-flex;
       justify-content: center;
       align-items: center;
       width: ${wide ? '100%;' : 'auto'};
-      min-width: 2rem;
       vertical-align: middle;
       border-radius: ${radius.m};
       font-family: inherit;
@@ -96,30 +95,29 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       white-space: nowrap;
 
+      /* ボタンの高さを合わせるために指定 */
+      border: 1px solid transparent;
+      line-height: ${leading.NONE};
+
       &.default {
         font-size: ${fontSize.M};
-        height: 40px;
-        padding: 0 ${spacingByChar(1)};
+        padding: ${spacingByChar(0.75)} ${spacingByChar(1)};
+      }
+
+      &.square {
+        padding: ${spacingByChar(0.75)};
       }
 
       &.s {
         font-size: ${fontSize.S};
-        height: 27px;
-        padding: 0 ${spacingByChar(0.5)};
-      }
-
-      &.square {
-        width: 40px;
-        padding: 0;
-
-        &.s {
-          width: 27px;
-          min-width: 27px;
-        }
+        padding: ${spacingByChar(0.5)};
       }
 
       &[disabled] {
         cursor: not-allowed;
+
+        /* alpha color を使用しているので、背景色と干渉させない */
+        background-clip: padding-box;
       }
 
       &.suffix {

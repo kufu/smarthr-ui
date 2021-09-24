@@ -48,12 +48,13 @@ const primaryStyle = css`
 
     return css`
       color: ${color.TEXT_WHITE};
-      border: none;
+      border-color: ${color.MAIN};
       background-color: ${color.MAIN};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
       &.hover,
       &:focus {
+        border-color: ${color.hoverColor(color.MAIN)};
         background-color: ${color.hoverColor(color.MAIN)};
         color: ${color.TEXT_WHITE};
       }
@@ -62,6 +63,7 @@ const primaryStyle = css`
 `
 const disabledStyle = css`
   ${({ themes: { color } }: { themes: Theme }) => css`
+    border-color: ${color.disableColor(color.MAIN)};
     background-color: ${color.disableColor(color.MAIN)};
     color: ${color.disableColor(color.TEXT_WHITE)};
   `}
