@@ -1,7 +1,6 @@
 import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import {
@@ -44,12 +43,11 @@ export const TextButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props })
 
 const textStyle = css`
   ${({ themes }: { themes: Theme }) => {
-    const { color, interaction, border } = themes
+    const { color, border } = themes
 
     return css`
       background-color: transparent;
       color: ${color.TEXT_BLACK};
-      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       border: ${border.lineWidth} ${border.lineStyle} transparent;
 
       &.hover,

@@ -1,7 +1,6 @@
 import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
@@ -46,12 +45,11 @@ SecondaryButtonAnchor.displayName = 'SecondaryButtonAnchor'
 
 const secondaryStyle = css`
   ${({ themes }: { themes: Theme }) => {
-    const { color, interaction, border } = themes
+    const { color, border } = themes
 
     return css`
       background-color: ${color.WHITE};
       color: ${color.TEXT_BLACK};
-      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       border: ${border.shorthand};
 
       &.hover,

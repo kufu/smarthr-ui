@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { hoverable } from '../../hocs/hoverable'
-import { isTouchDevice } from '../../libs/ua'
 
 type Tag = 'button' | 'a'
 
@@ -77,62 +76,46 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   ${({ themes, wide }) => {
-    const { radius, fontSize, spacingByChar, interaction, shadow } = themes
+    const { radius, fontSize, leading, spacingByChar, shadow } = themes
 
     return css`
+      box-sizing: border-box;
+      cursor: pointer;
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      width: ${wide ? '100%;' : 'auto'};
-      min-width: 2rem;
-      vertical-align: middle;
-      border-radius: ${radius.m};
-      font-family: inherit;
-      font-weight: bold;
       text-align: center;
-      text-decoration: none;
-      box-sizing: border-box;
-      cursor: pointer;
-      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       white-space: nowrap;
+      border-radius: ${radius.m};
 
-      &.default {
-        font-size: ${fontSize.M};
-        height: 40px;
-        padding: 0 ${spacingByChar(1)};
-      }
+      /* ボタンの高さを合わせるために指定 */
+      border: 1px solid transparent;
+
+      /* disabled で alpha color を使用しているので、背景色が影響しないように指定 */
+      background-clip: padding-box;
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
+      font-family: inherit;
+      font-size: ${fontSize.M};
+      font-weight: bold;
+      line-height: ${leading.NORMAL};
+      ${wide && 'width: 100%;'}
 
       &.s {
+        padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
         font-size: ${fontSize.S};
-        height: 27px;
-        padding: 0 ${spacingByChar(0.5)};
       }
 
       &.square {
-        width: 40px;
-        padding: 0;
+        padding: ${spacingByChar(0.75)};
 
         &.s {
-          width: 27px;
-          min-width: 27px;
+          /* fontSize.S（1rem * (6 / 7)) の調和数列分だけ調整する */
+          padding: calc(${spacingByChar(0.5)} * (6 / 7));
         }
       }
 
       &[disabled] {
         cursor: not-allowed;
-      }
-
-      &.suffix {
-        justify-content: space-between;
-      }
-
-      &.prefix {
-        justify-content: left;
-      }
-
-      &:hover,
-      &:focus {
-        text-decoration: none;
       }
 
       &:focus {
@@ -167,6 +150,8 @@ export const BaseButton: VFC<ButtonProps> = buttonFactory<ButtonProps>('button')
 
 const AnchorButton: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')
 export const BaseButtonAnchor = styled(AnchorButton)`
+  text-decoration: none;
+
   &:not([href]) {
     cursor: not-allowed;
   }

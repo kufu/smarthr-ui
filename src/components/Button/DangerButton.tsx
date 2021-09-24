@@ -1,7 +1,6 @@
 import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
@@ -36,15 +35,15 @@ export const DangerButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props 
 
 const dangerStyle = css`
   ${({ themes }: { themes: Theme }) => {
-    const { color, interaction } = themes
+    const { color } = themes
 
     return css`
-      color: ${color.TEXT_WHITE};
-      border: none;
+      border-color: ${color.DANGER};
       background-color: ${color.DANGER};
-      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+      color: ${color.TEXT_WHITE};
 
       &.hover {
+        border-color: ${color.hoverColor(color.DANGER)};
         background-color: ${color.hoverColor(color.DANGER)};
       }
     `
@@ -52,6 +51,7 @@ const dangerStyle = css`
 `
 const disabledStyle = css`
   ${({ themes: { color } }: { themes: Theme }) => css`
+    border-color: ${color.disableColor(color.DANGER)};
     background-color: ${color.disableColor(color.DANGER)};
     color: ${color.disableColor(color.TEXT_WHITE)};
   `}
