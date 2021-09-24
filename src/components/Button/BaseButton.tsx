@@ -107,6 +107,7 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
 
       &.square {
         padding: ${spacingByChar(0.75)};
+        line-height: ${leading.NONE};
 
         &.s {
           /* fontSize.S（1rem * (6 / 7)) の調和数列分だけ調整する */
