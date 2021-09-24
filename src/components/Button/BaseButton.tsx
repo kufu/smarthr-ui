@@ -98,14 +98,12 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
 
       &.default {
         font-size: ${fontSize.M};
-        height: 40px;
-        padding: 0 ${spacingByChar(1)};
+        padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       }
 
       &.s {
         font-size: ${fontSize.S};
-        height: 27px;
-        padding: 0 ${spacingByChar(0.5)};
+        padding: calc(${spacingByChar(0.25)} - 1px) ${spacingByChar(0.5)};
       }
 
       &.square {

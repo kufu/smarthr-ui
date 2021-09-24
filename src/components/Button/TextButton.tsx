@@ -44,13 +44,24 @@ export const TextButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props })
 
 const textStyle = css`
   ${({ themes }: { themes: Theme }) => {
-    const { color, interaction, border } = themes
+    const { color, interaction, border, spacingByChar } = themes
 
     return css`
       background-color: transparent;
       color: ${color.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       border: ${border.lineWidth} ${border.lineStyle} transparent;
+
+      /** border-widthの余白を引いてborderがないBaseButtonと高さを揃える */
+      &&& {
+        padding-top: calc(${spacingByChar(0.5)} - 1px);
+        padding-bottom: calc(${spacingByChar(0.5)} - 1px);
+      }
+
+      &&&.s {
+        padding-top: calc(${spacingByChar(0.25)} - 2px);
+        padding-bottom: calc(${spacingByChar(0.25)} - 2px);
+      }
 
       &.hover,
       &:focus {
