@@ -47,13 +47,13 @@ const primaryStyle = css`
     const { color, interaction } = themes
 
     return css`
-      color: ${color.TEXT_WHITE};
       border-color: ${color.MAIN};
       background-color: ${color.MAIN};
+      color: ${color.TEXT_WHITE};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
-      &.hover,
-      &:focus {
+      &:focus,
+      &:hover {
         border-color: ${color.hoverColor(color.MAIN)};
         background-color: ${color.hoverColor(color.MAIN)};
         color: ${color.TEXT_WHITE};

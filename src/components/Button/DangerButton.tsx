@@ -39,12 +39,13 @@ const dangerStyle = css`
     const { color, interaction } = themes
 
     return css`
-      color: ${color.TEXT_WHITE};
       border-color: ${color.DANGER};
       background-color: ${color.DANGER};
+      color: ${color.TEXT_WHITE};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
-      &.hover {
+      &:focus,
+      &:hover {
         border-color: ${color.hoverColor(color.DANGER)};
         background-color: ${color.hoverColor(color.DANGER)};
       }

@@ -46,16 +46,17 @@ SecondaryButtonAnchor.displayName = 'SecondaryButtonAnchor'
 
 const secondaryStyle = css`
   ${({ themes }: { themes: Theme }) => {
-    const { color, interaction, border } = themes
+    const { color, interaction } = themes
 
     return css`
+      border-color: ${color.BORDER};
       background-color: ${color.WHITE};
       color: ${color.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
-      border: ${border.shorthand};
 
-      &.hover,
-      &:focus {
+      &:focus,
+      &:hover {
+        border-color: ${color.hoverColor(color.BORDER)};
         background-color: ${color.hoverColor(color.WHITE)};
         color: ${color.TEXT_BLACK};
       }
@@ -64,7 +65,8 @@ const secondaryStyle = css`
 `
 const disabledStyle = css`
   ${({ themes: { color } }: { themes: Theme }) => css`
-    background-color: ${color.COLUMN};
+    border-color: ${color.disableColor(color.BORDER)};
+    background-color: ${color.disableColor(color.WHITE)};
     color: ${color.TEXT_DISABLED};
   `}
 `

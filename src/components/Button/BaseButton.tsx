@@ -77,40 +77,36 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   ${({ themes, wide }) => {
-    const { radius, fontSize, leading, spacingByChar, interaction, shadow } = themes
+    const { border, fontSize, interaction, leading, radius, shadow, spacingByChar } = themes
 
     return css`
+      box-sizing: border-box;
+      cursor: pointer;
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      width: ${wide ? '100%;' : 'auto'};
-      vertical-align: middle;
-      border-radius: ${radius.m};
-      font-family: inherit;
-      font-weight: bold;
       text-align: center;
-      text-decoration: none;
-      box-sizing: border-box;
-      cursor: pointer;
-      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
       white-space: nowrap;
+      border-radius: ${radius.m};
 
       /* ボタンの高さを合わせるために指定 */
-      border: 1px solid transparent;
+      border: ${border.lineWidth} ${border.lineStyle} transparent;
+      padding: ${spacingByChar(0.75)} ${spacingByChar(1)};
+      font-family: inherit;
+      font-size: ${fontSize.M};
+      font-weight: bold;
       line-height: ${leading.NONE};
+      ${wide && 'width: 100%;'}
 
-      &.default {
-        font-size: ${fontSize.M};
-        padding: ${spacingByChar(0.75)} ${spacingByChar(1)};
-      }
+      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
       &.square {
         padding: ${spacingByChar(0.75)};
       }
 
       &.s {
-        font-size: ${fontSize.S};
         padding: ${spacingByChar(0.5)};
+        font-size: ${fontSize.S};
       }
 
       &[disabled] {
@@ -118,19 +114,6 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
 
         /* alpha color を使用しているので、背景色と干渉させない */
         background-clip: padding-box;
-      }
-
-      &.suffix {
-        justify-content: space-between;
-      }
-
-      &.prefix {
-        justify-content: left;
-      }
-
-      &:hover,
-      &:focus {
-        text-decoration: none;
       }
 
       &:focus {
@@ -165,7 +148,12 @@ export const BaseButton: VFC<ButtonProps> = buttonFactory<ButtonProps>('button')
 
 const AnchorButton: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')
 export const BaseButtonAnchor = styled(AnchorButton)`
+  text-decoration: none;
+
   &:not([href]) {
     cursor: not-allowed;
+
+    /* alpha color を使用しているので、背景色と干渉させない */
+    background-clip: padding-box;
   }
 `
