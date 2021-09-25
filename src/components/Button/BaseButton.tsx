@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { hoverable } from '../../hocs/hoverable'
-import { isTouchDevice } from '../../libs/ua'
 
 type Tag = 'button' | 'a'
 
@@ -77,7 +76,7 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
 
 const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   ${({ themes, wide }) => {
-    const { border, fontSize, interaction, leading, radius, shadow, spacingByChar } = themes
+    const { border, fontSize, leading, radius, shadow, spacingByChar } = themes
 
     return css`
       box-sizing: border-box;
@@ -97,8 +96,6 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       font-weight: bold;
       line-height: ${leading.NONE};
       ${wide && 'width: 100%;'}
-
-      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
       &.square {
         padding: ${spacingByChar(0.75)};

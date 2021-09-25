@@ -1,7 +1,6 @@
 import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
@@ -36,13 +35,12 @@ export const SkeletonButtonAnchor: VFC<AnchorProps> = ({ className = '', ...prop
 
 const skeletonStyle = css`
   ${({ themes }: { themes: Theme }) => {
-    const { color, interaction } = themes
+    const { color } = themes
 
     return css`
       border-color: ${color.WHITE};
       background-color: transparent;
       color: ${color.TEXT_WHITE};
-      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
 
       &:focus,
       &:hover {
