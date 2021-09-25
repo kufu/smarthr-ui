@@ -5,9 +5,7 @@ import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
-  useLayoutEffect,
   useRef,
-  useState,
 } from 'react'
 import styled, { css } from 'styled-components'
 
@@ -40,10 +38,6 @@ export const Input = forwardRef<HTMLInputElement, Props>(
   ({ onFocus, onBlur, autoFocus, prefix, suffix, className = '', width, ...props }, ref) => {
     const theme = useTheme()
     const innerRef = useRef<HTMLInputElement>(null)
-    const prefixRef = useRef<HTMLSpanElement>(null)
-    const suffixRef = useRef<HTMLScriptElement>(null)
-    const [prefixWidth, setPrefixWidth] = useState(0)
-    const [suffixWidth, setSuffixWidth] = useState(0)
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
@@ -64,17 +58,6 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       }
     }, [autoFocus])
 
-    useLayoutEffect(() => {
-      if (prefixRef.current) {
-        setPrefixWidth(prefixRef.current.clientWidth)
-      }
-    }, [prefix])
-    useLayoutEffect(() => {
-      if (suffixRef.current) {
-        setSuffixWidth(suffixRef.current.clientWidth)
-      }
-    }, [suffix])
-
     const classNames = useClassNames()
 
     return (
@@ -87,7 +70,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         className={`${className} ${classNames.wrapper}`}
       >
         {prefix && (
-          <Prefix themes={theme} ref={prefixRef} className={classNames.prefix}>
+          <Prefix themes={theme} className={classNames.prefix}>
             {prefix}
           </Prefix>
         )}
@@ -95,15 +78,13 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           onFocus={handleFocus}
           onBlur={handleBlur}
           {...props}
-          prefixWidth={prefixWidth}
-          suffixWidth={suffixWidth}
           ref={innerRef}
           themes={theme}
           aria-invalid={props.error || undefined}
           className={classNames.input}
         />
         {suffix && (
-          <Suffix themes={theme} ref={suffixRef} className={classNames.suffix}>
+          <Suffix themes={theme} className={classNames.suffix}>
             {suffix}
           </Suffix>
         )}
@@ -118,13 +99,15 @@ const Wrapper = styled.span<{
   $disabled?: boolean
   error?: boolean
 }>(({ themes, $width = 'auto', $disabled, error }) => {
-  const { border, radius, color } = themes
+  const { border, radius, color, spacingByChar } = themes
   return css`
-    position: relative;
     display: inline-flex;
-    align-items: stretch;
+    gap: ${spacingByChar(0.5)};
+    align-items: center;
     width: ${typeof $width === 'number' ? `${$width}px` : $width};
     background-color: ${color.WHITE};
+    padding-right: ${spacingByChar(0.5)};
+    padding-left: ${spacingByChar(0.5)};
     border-radius: ${radius.m};
     border: ${border.shorthand};
     box-sizing: border-box;
@@ -142,28 +125,25 @@ const Wrapper = styled.span<{
     `}
   `
 })
-const StyledInput = styled.input<
-  Props & { prefixWidth: number; suffixWidth: number; themes: Theme }
->`
+const StyledInput = styled.input<Props & { themes: Theme }>`
   ${(props) => {
-    const { prefixWidth, suffixWidth, themes } = props
-    const { fontSize, spacingByChar, color, radius } = themes
+    const { themes } = props
+    const { fontSize, leading, spacingByChar, color, radius } = themes
 
     return css`
       flex-grow: 1;
       display: inline-block;
       width: 100%;
-      padding-top: ${spacingByChar(0.5)};
-      padding-bottom: ${spacingByChar(0.5)};
-      padding-left: calc(${spacingByChar(0.5)} + ${prefixWidth}px);
-      padding-right: calc(${spacingByChar(0.5)} + ${suffixWidth}px);
+      padding: ${spacingByChar(0.75)} 0;
       border: none;
       border-radius: ${radius.m};
       font-size: ${fontSize.M};
       color: ${color.TEXT_BLACK};
-      line-height: 1.6;
-      box-sizing: border-box;
+      line-height: ${leading.NONE};
       background-color: transparent;
+
+      /* font-size * line-height で高さが思うように行かないので、相対値の font-size で高さを指定 */
+      height: ${fontSize.M};
 
       &::placeholder {
         color: ${color.TEXT_GREY};
@@ -178,28 +158,16 @@ const StyledInput = styled.input<
   }}
 `
 const Prefix = styled.span<{ themes: Theme }>(
-  ({ themes: { color, spacingByChar } }) =>
+  ({ themes: { color } }) =>
     css`
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
       display: flex;
-      align-items: center;
-      padding-left: ${spacingByChar(0.5)};
       color: ${color.TEXT_GREY};
     `,
 )
 const Suffix = styled.span<{ themes: Theme }>(
-  ({ themes: { color, spacingByChar } }) =>
+  ({ themes: { color } }) =>
     css`
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
       display: flex;
-      align-items: center;
-      padding-right: ${spacingByChar(0.5)};
       color: ${color.TEXT_GREY};
     `,
 )
