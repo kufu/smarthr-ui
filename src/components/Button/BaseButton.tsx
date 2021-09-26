@@ -114,8 +114,7 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       }
 
       &:focus {
-        outline: 0;
-        box-shadow: ${shadow.OUTLINE};
+        ${shadow.focusIndicatorStyles}
       }
     `
   }}
