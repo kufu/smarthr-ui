@@ -86,8 +86,8 @@ export const Select: VFC<Props & ElementProps> = ({
           isMobileSafari && <BlankOptgroup />
         }
       </SelectBox>
-      <IconWrap>
-        <FaSortIcon size={13} />
+      <IconWrap themes={theme}>
+        <FaSortIcon />
       </IconWrap>
     </Wrapper>
   )
@@ -132,19 +132,20 @@ const Wrapper = styled.div<{
 })
 const SelectBox = styled.select<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar, radius, color } = themes
+    const { fontSize, leading, spacingByChar, radius, color } = themes
 
     return css`
       display: inline-block;
       width: 100%;
-      padding: ${spacingByChar(0.5)};
+      padding: ${spacingByChar(0.75)};
       padding-right: ${spacingByChar(2)};
+      padding-left: ${spacingByChar(0.5)};
       border-radius: ${radius.m};
       border: none;
       background-color: transparent;
       font-size: ${fontSize.M};
       color: ${color.TEXT_BLACK};
-      line-height: 1.6;
+      line-height: ${leading.NONE};
       outline: none;
       appearance: none;
       cursor: pointer;
@@ -174,14 +175,13 @@ const SelectBox = styled.select<{ themes: Theme }>`
     `
   }}
 `
-const IconWrap = styled.span`
+const IconWrap = styled.span<{ themes: Theme }>`
   position: absolute;
-  top: 50%;
-  right: 6px;
-  display: inline-block;
-  width: 13px;
-  height: 13px;
-  transform: translate(-50%, -50%);
+  top: 0;
+  right: ${({ themes: { spacingByChar } }) => spacingByChar(0.75)};
+  bottom: 0;
+  display: inline-flex;
+  align-items: center;
   pointer-events: none;
 
   & > svg {
