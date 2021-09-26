@@ -1,7 +1,7 @@
 import React, { ChangeEvent, SelectHTMLAttributes, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isMobileSafari, isTouchDevice } from '../../libs/ua'
+import { isMobileSafari } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
@@ -29,7 +29,7 @@ export const Select: VFC<Props & ElementProps> = ({
   options,
   onChange,
   error = false,
-  width = 260,
+  width = '16.25em',
   hasBlank = false,
   blankLabel = '選択してください',
   className = '',
@@ -99,15 +99,14 @@ const Wrapper = styled.div<{
   disabled?: boolean
   themes: Theme
 }>(({ $width, error, disabled, themes }) => {
-  const { border, radius, color, interaction } = themes
+  const { border, color, radius, shadow } = themes
   return css`
+    box-sizing: border-box;
     position: relative;
-    width: ${$width};
     border-radius: ${radius.m};
     border: ${border.shorthand};
     background-color: ${color.WHITE};
-    box-sizing: border-box;
-    transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
+    width: ${$width};
 
     &:hover {
       ${!disabled &&
@@ -115,13 +114,13 @@ const Wrapper = styled.div<{
         background-color: ${color.hoverColor(color.WHITE)};
       `}
     }
-    :focus-within {
-      border-color: ${color.MAIN};
+    &:focus-within {
+      ${shadow.focusIndicatorStyles}
     }
 
     ${error &&
     css`
-      border-color: ${color.DANGER} !important;
+      border-color: ${color.DANGER};
     `}
     ${disabled &&
     css`
@@ -132,23 +131,22 @@ const Wrapper = styled.div<{
 })
 const SelectBox = styled.select<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, leading, spacingByChar, radius, color } = themes
+    const { color, fontSize, leading, spacingByChar } = themes
 
     return css`
+      appearance: none;
+      cursor: pointer;
       display: inline-block;
-      width: 100%;
+      outline: none;
+      border: none;
+      background-color: transparent;
       padding: ${spacingByChar(0.75)};
       padding-right: ${spacingByChar(2)};
       padding-left: ${spacingByChar(0.5)};
-      border-radius: ${radius.m};
-      border: none;
-      background-color: transparent;
       font-size: ${fontSize.M};
       color: ${color.TEXT_BLACK};
       line-height: ${leading.NONE};
-      outline: none;
-      appearance: none;
-      cursor: pointer;
+      width: 100%;
 
       &::placeholder {
         color: ${color.TEXT_GREY};
@@ -157,8 +155,8 @@ const SelectBox = styled.select<{ themes: Theme }>`
       &[disabled] {
         pointer-events: none;
         cursor: not-allowed;
-        color: ${color.TEXT_DISABLED};
         opacity: 1;
+        color: ${color.TEXT_DISABLED};
       }
 
       /* for IE11 */
@@ -176,17 +174,13 @@ const SelectBox = styled.select<{ themes: Theme }>`
   }}
 `
 const IconWrap = styled.span<{ themes: Theme }>`
+  pointer-events: none;
   position: absolute;
   top: 0;
   right: ${({ themes: { spacingByChar } }) => spacingByChar(0.75)};
   bottom: 0;
   display: inline-flex;
   align-items: center;
-  pointer-events: none;
-
-  & > svg {
-    vertical-align: top;
-  }
 `
 const BlankOptgroup = styled.optgroup`
   display: none;
