@@ -16,7 +16,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 export const ActionDialog: React.VFC<Props & ElementProps> = ({
   children,
   title,
-  subtitle = '',
+  subtitle,
   closeText,
   actionText,
   actionTheme,
