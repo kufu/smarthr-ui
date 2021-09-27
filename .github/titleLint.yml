@@ -1,0 +1,3 @@
+regex: (feat|fix|docs|chore|style|refactor|perf|test)!?: .*
+exclude_users:
+  - dependabot
