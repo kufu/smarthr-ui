@@ -150,6 +150,7 @@ const Affix = styled.span<{ themes: Theme }>(
     flex-shrink: 0;
 
     display: flex;
+    align-items: center;
     color: ${color.TEXT_GREY};
   `,
 )
