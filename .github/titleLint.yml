@@ -1,3 +1,4 @@
-regex: (feat|fix|docs|chore|style|refactor|perf|test)!?: .*
-exclude_users:
-  - dependabot
+settings:
+  regex: (feat|fix|docs|chore|style|refactor|perf|test)!?: .*
+  exclude_users:
+    - dependabot
