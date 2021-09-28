@@ -3,6 +3,7 @@ import React, {
   HTMLAttributes,
   useCallback,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -60,6 +61,10 @@ type Props<T> = {
    */
   width?: number | string
   /**
+   * The value of textbox. If the value is given, the textbox is controlled.
+   */
+  inputValue?: string
+  /**
    *  The `className` given to the outermost element of this component.
    */
   className?: string
@@ -103,6 +108,7 @@ export function MultiComboBox<T>({
   isLoading,
   selectedItemEllipsis,
   width = 'auto',
+  inputValue: controlledInputValue,
   className = '',
   onChange,
   onChangeInput,
@@ -117,7 +123,12 @@ export function MultiComboBox<T>({
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
-  const [inputValue, setInputValue] = useState('')
+  const isInputControlled = useMemo(
+    () => controlledInputValue !== undefined,
+    [controlledInputValue],
+  )
+  const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
+  const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
   const selectedLabels = selectedItems.map(({ label }) => label)
   const filteredItems = items.filter(({ label }) => {
@@ -168,7 +179,9 @@ export function MultiComboBox<T>({
   )
 
   useLayoutEffect(() => {
-    setInputValue('')
+    if (!isInputControlled) {
+      setUncontrolledInputValue('')
+    }
 
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
@@ -183,7 +196,7 @@ export function MultiComboBox<T>({
         width: outerRef.current.clientWidth,
       })
     }
-  }, [isFocused, selectedItems, setDropdownStyle])
+  }, [isFocused, isInputControlled, selectedItems, setDropdownStyle])
 
   return (
     <Container
@@ -251,7 +264,9 @@ export function MultiComboBox<T>({
               onChange={(e) => {
                 if (onChange) onChange(e)
                 if (onChangeInput) onChangeInput(e)
-                setInputValue(e.currentTarget.value)
+                if (!isInputControlled) {
+                  setUncontrolledInputValue(e.currentTarget.value)
+                }
               }}
               onFocus={() => {
                 if (!isFocused) {

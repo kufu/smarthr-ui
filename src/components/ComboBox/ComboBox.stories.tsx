@@ -172,6 +172,7 @@ export const Multi: Story = () => {
   const [items, setItems] = useState(defaultItems)
   const [selectedItems, setSelectedItems] = useState<Item[]>([])
   const [seq, setSeq] = useState(0)
+  const [controlledInputValue, setControlledInputValue] = useState<string>('')
 
   const handleSelectItem = useCallback(
     (item: Item) => {
@@ -291,6 +292,25 @@ export const Multi: Story = () => {
           placeholder="入力でフィルタリングできます"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>テキストボックスの挙動を制御</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          placeholder="入力でフィルタリングできます"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+          onChangeSelected={(selected) => {
+            action('onChangeSelected')(selected)
+            setSelectedItems(selected)
+          }}
+          inputValue={controlledInputValue}
+          onChangeInput={(e) => {
+            setControlledInputValue(e.target.value)
+          }}
         />
       </dd>
       <dt>100%幅</dt>
