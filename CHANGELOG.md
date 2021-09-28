@@ -7,9 +7,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### ⚠ BREAKING CHANGES
 
-* Button / Input / Selectの高さの計算を変更しました。Buttonの高さが固定でなくなり、フォントサイズ依存になります。
-* Input のスタイリングを見直す｜SHRUI-460 (#1909)
-* Button の width / height の固定値をやめる｜SHRUI-427  (#1908)
+* Button / Input / Selectの高さの計算を変更しました。Buttonの高さが固定でなくなり、フォントサイズやフレックスコンテナーの `align` の値など外部に依存します。
 
 ### Features
 
@@ -18,7 +16,7 @@ All notable changes to this project will be documented in this file. See [standa
 * Input のスタイリングを見直す｜SHRUI-460 ([#1909](https://github.com/kufu/smarthr-ui/issues/1909)) ([6351125](https://github.com/kufu/smarthr-ui/commit/635112525495d32f4aa2366168bbd261f4d8d444))
 * Select のスタイリングを見直す ([#1919](https://github.com/kufu/smarthr-ui/issues/1919)) ([49b32d4](https://github.com/kufu/smarthr-ui/commit/49b32d44814783fc3fc0bb6670e8ea2ee1d1328c))
 * 各種 Dialog を body 直下以外からも生成できるようにする｜SHRUI-474 ([#1891](https://github.com/kufu/smarthr-ui/issues/1891)) ([fa8eab8](https://github.com/kufu/smarthr-ui/commit/fa8eab8ab71e353cfc893d1e6c3322399854ae46))
-
+* `<Sidebar>` Component を追加  ([#1888](https://github.com/kufu/smarthr-ui/issues/1888))
 
 ### Bug Fixes
 
