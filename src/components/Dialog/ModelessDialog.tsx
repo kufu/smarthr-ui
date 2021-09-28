@@ -14,10 +14,10 @@ import Draggable from 'react-draggable'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { BaseElementProps, DialogBase } from '../Base'
+import { Base, BaseElementProps } from '../Base'
 import { SecondaryButton } from '../Button'
 import { FaTimesIcon } from '../Icon'
-import { DialogTransition } from './DialogTransition'
+import { DialogOverlap } from './DialogOverlap'
 import { useTriggerFocusControl } from './FocusTrap'
 import { useClassNames } from './useClassNames'
 
@@ -70,6 +70,10 @@ type Props = {
    * ダイアログを開いたときの初期 bottom 位置
    */
   bottom?: string | number
+  /**
+   * ポータルの container となる DOM 要素を追加する親要素
+   */
+  portalParent?: HTMLElement
 }
 
 export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
@@ -85,10 +89,11 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   left,
   right,
   bottom,
+  portalParent,
   className = '',
   ...props
 }) => {
-  const portalParent = useRef(document.createElement('div')).current
+  const portalContainer = useRef(document.createElement('div')).current
   const wrapperRef = useRef<HTMLDivElement>(null)
   const [centering, setCentering] = useState<{
     top?: number
@@ -101,11 +106,13 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   const theme = useTheme()
 
   useEffect(() => {
-    document.body.appendChild(portalParent)
+    // SSR を考慮し、useEffect 内で初期値 document.body を指定
+    const pp = portalParent || document.body
+    pp.appendChild(portalContainer)
     return () => {
-      document.body.removeChild(portalParent)
+      pp.removeChild(portalContainer)
     }
-  }, [portalParent])
+  }, [portalContainer, portalParent])
 
   useHandleEscape(
     useCallback(() => {
@@ -185,7 +192,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   const classNames = useClassNames().modelessDialog
 
   return createPortal(
-    <DialogTransition isOpen={isOpen}>
+    <DialogOverlap isOpen={isOpen}>
       <Draggable
         handle={`.${classNames.header}`}
         onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
@@ -210,7 +217,6 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
             height,
           }}
           ref={wrapperRef}
-          themes={theme}
           role="dialog"
           aria-labelledby={labelId}
           {...props}
@@ -248,18 +254,15 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
           </Box>
         </Layout>
       </Draggable>
-    </DialogTransition>,
-    portalParent,
+    </DialogOverlap>,
+    portalContainer,
   )
 }
 
-const Layout = styled.div<{ themes: Theme }>`
-  ${({ themes: { zIndex } }) => css`
-    position: fixed;
-    z-index: ${zIndex.OVERLAP};
-  `}
+const Layout = styled.div`
+  position: fixed;
 `
-const Box = styled(DialogBase).attrs({ radius: 'm' })`
+const Box = styled(Base).attrs({ radius: 'm', layer: 3 })`
   display: flex;
   flex-direction: column;
   width: 100%;

@@ -1,5 +1,5 @@
 import { Story } from '@storybook/react'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { action } from '@storybook/addon-actions'
 import styled from 'styled-components'
 
@@ -611,6 +611,117 @@ export const RegOpenedModeless: Story = () => {
         {dummyText}
       </div>
     </ModelessDialog>
+  )
+}
+
+export const Body以外のPortalParent: Story = () => {
+  const [isOpen, setIsOpen] = useState<'deault' | 'actiion' | 'message' | 'modeless'>()
+  const onClickOpen = (type: 'deault' | 'actiion' | 'message' | 'modeless') => setIsOpen(type)
+  const onClickClose = () => setIsOpen(undefined)
+  const portalParentRef = useRef<HTMLDivElement>(null)
+  const themes = useTheme()
+
+  return (
+    <div ref={portalParentRef}>
+      <Stack align="flex-start">
+        <SecondaryButton
+          onClick={() => onClickOpen('deault')}
+          aria-haspopup="dialog"
+          aria-controls="portal-default"
+          data-test="dialog-trigger"
+        >
+          Dialog を開く
+        </SecondaryButton>
+        <SecondaryButton
+          onClick={() => onClickOpen('actiion')}
+          aria-haspopup="dialog"
+          aria-controls="portal-action"
+          data-test="dialog-trigger"
+        >
+          ActionDialog を開く
+        </SecondaryButton>
+        <SecondaryButton
+          onClick={() => onClickOpen('message')}
+          aria-haspopup="dialog"
+          aria-controls="portal-message"
+          data-test="dialog-trigger"
+        >
+          MessageDialog を開く
+        </SecondaryButton>
+        <SecondaryButton
+          onClick={() => onClickOpen('modeless')}
+          aria-haspopup="dialog"
+          aria-controls="portal-modeless"
+        >
+          ModelessDialog を開く
+        </SecondaryButton>
+      </Stack>
+
+      <Dialog
+        isOpen={isOpen === 'deault'}
+        onClickOverlay={onClickClose}
+        onPressEscape={onClickClose}
+        id="portal-default"
+        ariaLabel="Dialog"
+        data-test="dialog-content"
+        portalParent={portalParentRef.current || undefined}
+      >
+        <Title themes={themes}>Dialog</Title>
+        <Content>
+          <p>Dialog を近接要素に生成しています。</p>
+        </Content>
+        <Footer themes={themes}>
+          <SecondaryButton onClick={onClickClose} data-test="dialog-closer">
+            閉じる
+          </SecondaryButton>
+        </Footer>
+      </Dialog>
+      <ActionDialog
+        isOpen={isOpen === 'actiion'}
+        title="ActionDialog"
+        closeText="閉じる"
+        actionText="実行"
+        actionTheme="primary"
+        onClickAction={(closeDialog) => {
+          action('executed')()
+          closeDialog()
+        }}
+        onClickClose={onClickClose}
+        onClickOverlay={onClickClose}
+        onPressEscape={onClickClose}
+        id="portal-action"
+        data-test="dialog-content"
+        portalParent={portalParentRef.current || undefined}
+      >
+        <Content>
+          <p>ActionDialog を近接要素に生成しています</p>
+        </Content>
+      </ActionDialog>
+      <MessageDialog
+        isOpen={isOpen === 'message'}
+        title="MessageDialog"
+        description={<p>MessageDialog を近接要素に生成しています</p>}
+        closeText="閉じる"
+        onClickClose={onClickClose}
+        onClickOverlay={onClickClose}
+        onPressEscape={onClickClose}
+        id="portal-message"
+        data-test="dialog-content"
+        portalParent={portalParentRef.current || undefined}
+      />
+      <ModelessDialog
+        isOpen={isOpen === 'modeless'}
+        header={<ModelessHeading>ModelessDialog</ModelessHeading>}
+        onClickClose={onClickClose}
+        onPressEscape={onClickClose}
+        id="portal-modeless"
+        portalParent={portalParentRef.current || undefined}
+      >
+        <Content>
+          <p>ModelessDialog を近接要素に生成しています。</p>
+        </Content>
+      </ModelessDialog>
+    </div>
   )
 }
 
