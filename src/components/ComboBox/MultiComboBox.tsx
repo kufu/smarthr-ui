@@ -93,6 +93,8 @@ type Props<T> = {
    * Fire when the item selections are changed.
    */
   onChangeSelected?: (selectedItems: Array<Item<T>>) => void
+  onFocus?: () => void
+  onBlur?: () => void
 }
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
@@ -116,6 +118,8 @@ export function MultiComboBox<T>({
   onDelete,
   onSelect,
   onChangeSelected,
+  onFocus,
+  onBlur,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -164,12 +168,15 @@ export function MultiComboBox<T>({
   })
 
   const focus = useCallback(() => {
+    onFocus && onFocus()
     setIsFocused(true)
     resetActiveOptionIndex()
-  }, [resetActiveOptionIndex])
+  }, [onFocus, resetActiveOptionIndex])
   const blur = useCallback(() => {
+    if (!isFocused) return
+    onBlur && onBlur()
     setIsFocused(false)
-  }, [])
+  }, [isFocused, onBlur])
 
   useOuterClick(
     [outerRef, listBoxRef],
@@ -218,7 +225,7 @@ export function MultiComboBox<T>({
         }
       }}
       onKeyDown={(e) => {
-        if ((e.key === 'Escape' || e.key === 'Esc') && isFocused) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
           e.stopPropagation()
           blur()
         }

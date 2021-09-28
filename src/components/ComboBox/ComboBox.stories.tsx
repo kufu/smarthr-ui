@@ -217,6 +217,8 @@ export const Multi: Story = () => {
             action('onChangeSelected')(selected)
             setSelectedItems(selected)
           }}
+          onFocus={action('onFocus')}
+          onBlur={action('onBlur')}
           data-test="multi-combobox-default"
         />
       </dd>
@@ -311,6 +313,7 @@ export const Multi: Story = () => {
           onChangeInput={(e) => {
             setControlledInputValue(e.target.value)
           }}
+          onBlur={() => setControlledInputValue('')}
         />
       </dd>
       <dt>100%幅</dt>
