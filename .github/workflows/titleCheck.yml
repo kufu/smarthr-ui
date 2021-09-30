@@ -1,0 +1,19 @@
+name: PR Title Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  conventional_commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check title
+        run: |
+          regex="^(feat|fix|docs|chore|style|refactor|perf|test)!?(\([^\)]+\))?:[[:space:]].+"
+          if [[ "${{ github.event.pull_request.title }}" =~ $regex ]]; then
+              echo OK
+          else
+              echo "::error::Pull Request のタイトルが Conventional Commits 形式にマッチしません"
+              exit 1
+          fi

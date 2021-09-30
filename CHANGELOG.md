@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [15.0.0](https://github.com/kufu/smarthr-ui/compare/v14.4.0...v15.0.0) (2021-09-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* Button / Input / Selectの高さの計算を変更しました。Buttonの高さが固定でなくなり、フォントサイズやフレックスコンテナーの `align` の値など外部に依存します。
+
+### Features
+
+* Button の width / height の固定値をやめる｜SHRUI-427  ([#1908](https://github.com/kufu/smarthr-ui/issues/1908)) ([d4784da](https://github.com/kufu/smarthr-ui/commit/d4784da4ad7e744178a8f0da08d69f0e4e4c9abb))
+* export useTheme hook ([#1893](https://github.com/kufu/smarthr-ui/issues/1893)) ([dac62fd](https://github.com/kufu/smarthr-ui/commit/dac62fde2a10a51f44037bd2a2956350a2bb00e4))
+* Input のスタイリングを見直す｜SHRUI-460 ([#1909](https://github.com/kufu/smarthr-ui/issues/1909)) ([6351125](https://github.com/kufu/smarthr-ui/commit/635112525495d32f4aa2366168bbd261f4d8d444))
+* Select のスタイリングを見直す ([#1919](https://github.com/kufu/smarthr-ui/issues/1919)) ([49b32d4](https://github.com/kufu/smarthr-ui/commit/49b32d44814783fc3fc0bb6670e8ea2ee1d1328c))
+* 各種 Dialog を body 直下以外からも生成できるようにする｜SHRUI-474 ([#1891](https://github.com/kufu/smarthr-ui/issues/1891)) ([fa8eab8](https://github.com/kufu/smarthr-ui/commit/fa8eab8ab71e353cfc893d1e6c3322399854ae46))
+* `<Sidebar>` Component を追加  ([#1888](https://github.com/kufu/smarthr-ui/issues/1888))
+
+### Bug Fixes
+
+* Dialogのsubtitle未指定の場合のaria-labelを調整する ([#1921](https://github.com/kufu/smarthr-ui/issues/1921)) ([d8e96ef](https://github.com/kufu/smarthr-ui/commit/d8e96ef221c5741d038ec990c212cb36d4b5fb75))
+* display all items when refocus SingleCombobox ([#1922](https://github.com/kufu/smarthr-ui/issues/1922)) ([ad93e3e](https://github.com/kufu/smarthr-ui/commit/ad93e3e382bc78ae5ae84a5dbfb100462d910ceb))
+* SingleCombobox の削除ボタンが Input の suffix を使っていたため、縦位置がずれていたので修正 ([#1923](https://github.com/kufu/smarthr-ui/issues/1923)) ([03026f6](https://github.com/kufu/smarthr-ui/commit/03026f617e58af126f04f9233aad8a9f8ac1612c))
+* TextColors に TEXT_WHITE を追加し忘れていた ([#1886](https://github.com/kufu/smarthr-ui/issues/1886)) ([09d437d](https://github.com/kufu/smarthr-ui/commit/09d437db45bccd376806c4667432d3565667c3fb))
+* ダイアログがアニメーション中に低いスタッキングコンテキストにならないように修正 ([#1887](https://github.com/kufu/smarthr-ui/issues/1887)) ([0e53afe](https://github.com/kufu/smarthr-ui/commit/0e53afea2934fcd2c0aa82a6435ca4a11cddc0e6))
+
 ## [14.4.0](https://github.com/kufu/smarthr-ui/compare/v14.3.0...v14.4.0) (2021-09-14)
 
 

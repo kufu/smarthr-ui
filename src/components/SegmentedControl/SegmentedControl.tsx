@@ -148,44 +148,34 @@ export const SegmentedControl: VFC<Props & ElementProps> = ({
 const Container = styled.div`
   display: inline-flex;
 `
-const Button = styled(SecondaryButton)<{ themes: Theme }>(({ themes }) => {
-  const { color, border, radius, shadow } = themes
-  return css`
-    border: ${border.shorthand};
-    border-radius: 0;
+const Button = styled(SecondaryButton)<{ themes: Theme }>(
+  ({ themes: { border, color, radius, shadow } }) =>
+    css`
+      border-radius: 0;
 
-    &[aria-checked='true'] {
-      color: ${color.TEXT_WHITE};
-      background-color: ${color.MAIN};
-      border: ${border.lineWidth} ${border.lineStyle} ${color.MAIN};
-      border-left: ${border.lineWidth} ${border.lineStyle} transparent;
-      &.hover {
-        background-color: ${color.hoverColor(color.MAIN)};
-        border-color: ${color.hoverColor(color.MAIN)};
+      &[aria-checked='true'] {
+        border-color: ${color.MAIN};
+        background-color: ${color.MAIN};
+        color: ${color.TEXT_WHITE};
+        &.hover {
+          border-color: ${color.hoverColor(color.MAIN)};
+          background-color: ${color.hoverColor(color.MAIN)};
+        }
       }
-    }
 
-    &:focus {
-      ${shadow.focusIndicatorStyles}
-    }
-
-    /* active時、buttonの両端にborder.defaultが表示されることを防ぐための処置 */
-    &[aria-checked='true'] + & {
-      border-right-width: 0;
+      &:focus {
+        ${shadow.focusIndicatorStyles}
+      }
+      &:first-child {
+        border-top-left-radius: ${radius.m};
+        border-bottom-left-radius: ${radius.m};
+      }
       &:last-child {
-        border-right-width: ${border.lineWidth};
+        border-top-right-radius: ${radius.m};
+        border-bottom-right-radius: ${radius.m};
       }
-    }
-    &:first-child {
-      border-top-left-radius: ${radius.m};
-      border-bottom-left-radius: ${radius.m};
-    }
-    &:last-child {
-      border-top-right-radius: ${radius.m};
-      border-bottom-right-radius: ${radius.m};
-    }
-    :not(:last-child) {
-      border-right-width: 0;
-    }
-  `
-})
+      & + & {
+        margin-left: -${border.lineWidth};
+      }
+    `,
+)

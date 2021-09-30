@@ -55,7 +55,11 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   }, [onClickAction, onClickClose, props.isOpen])
 
   return createPortal(
-    <DialogContentInner ariaLabel={`${subtitle} ${title}`} className={className} {...props}>
+    <DialogContentInner
+      ariaLabel={subtitle ? `${subtitle} ${title}` : title}
+      className={className}
+      {...props}
+    >
       <ActionDialogContentInner
         title={title}
         subtitle={subtitle}
