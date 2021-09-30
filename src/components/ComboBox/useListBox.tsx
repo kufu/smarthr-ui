@@ -10,6 +10,8 @@ import { Item } from './types'
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
+const MAX_HEIGHT = 300
+
 type Args<T> = {
   items: Array<Item<T> & { isSelected?: boolean }>
   inputValue: string
@@ -54,15 +56,44 @@ export function useListBox<T>({
     top: 0,
     left: 0,
     width: 0,
+    maxHeight: MAX_HEIGHT,
   })
   const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
 
   const calculateDropdownRect = useCallback((triggerElement: Element) => {
+    if (!listBoxRef.current || listBoxRef.current.offsetHeight === 0) {
+      return
+    }
     const rect = triggerElement.getBoundingClientRect()
+    const bottomSpace = window.innerHeight - rect.bottom
+    const topSpace = rect.top
+    const listBoxHeight = listBoxRef.current.offsetHeight
+    const offset = 2
+
+    let top = 0
+    let maxHeight = MAX_HEIGHT
+
+    if (bottomSpace >= listBoxHeight) {
+      // 下側に十分なスペースがある場合は下側に通常表示
+      top = rect.top + rect.height - offset + window.pageYOffset
+    } else if (topSpace >= listBoxHeight) {
+      // 上側に十分なスペースがある場合は上側に通常表示
+      top = rect.top - listBoxHeight + offset + window.pageYOffset
+    } else if (topSpace > bottomSpace) {
+      // 上下に十分なスペースがなく、上側の方がスペースが大きい場合は上側に縮めて表示
+      top = rect.top - topSpace + offset + window.pageYOffset
+      maxHeight = topSpace
+    } else {
+      // 下側に縮めて表示
+      top = rect.top + rect.height - offset + window.pageYOffset
+      maxHeight = bottomSpace
+    }
+
     setDropdownStyle({
-      top: rect.top + rect.height - 2 + window.pageYOffset,
+      top,
       left: rect.left + window.pageXOffset,
       width: rect.width,
+      maxHeight,
     })
   }, [])
 
@@ -282,29 +313,33 @@ export function useListBox<T>({
   }
 }
 
-const Container = styled.div<{ top: number; left: number; width: number; themes: Theme }>(
-  ({ top, left, width, themes }) => {
-    const { color, spacingByChar, radius, shadow, zIndex } = themes
-    return css`
-      position: absolute;
-      top: ${top}px;
-      left: ${left}px;
-      overflow-y: auto;
-      max-height: 300px;
-      width: ${width}px;
-      padding: ${spacingByChar(0.5)} 0;
-      border-radius: ${radius.m};
-      box-shadow: ${shadow.LAYER3};
-      background-color: ${color.WHITE};
-      white-space: nowrap;
-      box-sizing: border-box;
-      &[aria-hidden='true'] {
-        display: none;
-      }
-      z-index: ${zIndex.OVERLAP};
-    `
-  },
-)
+const Container = styled.div<{
+  top: number
+  left: number
+  width: number
+  maxHeight: number
+  themes: Theme
+}>(({ top, left, width, maxHeight, themes }) => {
+  const { color, spacingByChar, radius, shadow, zIndex } = themes
+  return css`
+    position: absolute;
+    top: ${top}px;
+    left: ${left}px;
+    overflow-y: auto;
+    max-height: ${maxHeight}px;
+    width: ${width}px;
+    padding: ${spacingByChar(0.5)} 0;
+    border-radius: ${radius.m};
+    box-shadow: ${shadow.LAYER3};
+    background-color: ${color.WHITE};
+    white-space: nowrap;
+    box-sizing: border-box;
+    &[aria-hidden='true'] {
+      display: none;
+    }
+    z-index: ${zIndex.OVERLAP};
+  `
+})
 const NoItems = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
     const { color, fontSize, spacingByChar } = themes
