@@ -39,16 +39,15 @@ export const ItemButton = styled(SecondaryButton).attrs({
   square: true,
   size: 's',
 })<{ themes: Theme }>`
-  ${({ themes: { color } }) =>
+  ${({ themes: { color, radius } }) =>
     css`
-      line-height: 25px;
-      border-radius: 4px;
+      border-radius: ${radius.s};
       &.active {
-        color: ${color.TEXT_WHITE};
-        background-color: ${color.MAIN};
-        border: solid 1px ${color.MAIN};
         cursor: default;
         outline: none;
+        border: 1px solid ${color.MAIN};
+        background-color: ${color.MAIN};
+        color: ${color.TEXT_WHITE};
       }
     `}
 `

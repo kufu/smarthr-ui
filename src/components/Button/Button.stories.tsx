@@ -15,7 +15,7 @@ import {
   TextButton,
   TextButtonAnchor,
 } from '.'
-import { FaPlusCircleIcon } from '../Icon'
+import { FaPlusCircleIcon, FaPlusIcon, FaPlusSquareIcon } from '../Icon'
 import { AnchorProps, ButtonProps } from './BaseButton'
 import { LineUp, Stack } from '../Layout'
 
@@ -87,33 +87,33 @@ function renderButtons(
       <dt>Default</dt>
       <dd>
         <Stack>
-          <WrapLineUp>
+          <WrapLineUp vAlign="center">
             <Button onClick={action('clicked')}>ボタン</Button>
-            <Button prefix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+            <Button prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button suffix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+            <Button suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
             {!noSquare && (
               <Button square onClick={action('clicked')}>
-                <FaPlusCircleIcon size={16} visuallyHiddenText="プラスボタン" />
+                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Button>
             )}
           </WrapLineUp>
-          <WrapLineUp>
+          <WrapLineUp vAlign="center">
             <Button disabled onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button disabled prefix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+            <Button disabled prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button disabled suffix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+            <Button disabled suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
             {!noSquare && (
               <Button disabled square onClick={action('clicked')}>
-                <FaPlusCircleIcon size={16} visuallyHiddenText="プラスボタン" />
+                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Button>
             )}
           </WrapLineUp>
@@ -123,45 +123,35 @@ function renderButtons(
       <dt>Small</dt>
       <dd>
         <Stack>
-          <WrapLineUp>
+          <WrapLineUp vAlign="center">
             <Button size="s" onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button size="s" prefix={<FaPlusCircleIcon size={11} />} onClick={action('clicked')}>
+            <Button size="s" prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button size="s" suffix={<FaPlusCircleIcon size={11} />} onClick={action('clicked')}>
+            <Button size="s" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
             {!noSquare && (
               <Button size="s" square onClick={action('clicked')}>
-                <FaPlusCircleIcon size={13} visuallyHiddenText="プラスボタン" />
+                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Button>
             )}
           </WrapLineUp>
-          <WrapLineUp>
+          <WrapLineUp vAlign="center">
             <Button disabled size="s" onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button
-              disabled
-              size="s"
-              prefix={<FaPlusCircleIcon size={11} />}
-              onClick={action('clicked')}
-            >
+            <Button disabled size="s" prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button
-              disabled
-              size="s"
-              suffix={<FaPlusCircleIcon size={11} />}
-              onClick={action('clicked')}
-            >
+            <Button disabled size="s" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
             {!noSquare && (
               <Button disabled size="s" square onClick={action('clicked')}>
-                <FaPlusCircleIcon size={13} visuallyHiddenText="プラスボタン" />
+                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Button>
             )}
           </WrapLineUp>
@@ -204,33 +194,33 @@ function renderAnchors(
       <dt>Default</dt>
       <dd>
         <Stack>
-          <WrapLineUp>
+          <WrapLineUp vAlign="center">
             <Anchor href="#" onClick={action('clicked')}>
               ボタン
             </Anchor>
-            <Anchor href="#" prefix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+            <Anchor href="#" prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Anchor>
-            <Anchor href="#" suffix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+            <Anchor href="#" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
               ボタン
             </Anchor>
             {!noSquare && (
               <Anchor href="#" square onClick={action('clicked')}>
-                <FaPlusCircleIcon size={16} visuallyHiddenText="プラスボタン" />
+                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Anchor>
             )}
           </WrapLineUp>
-          <WrapLineUp>
+          <WrapLineUp vAlign="center">
             <Anchor onClick={action('clicked')}>ボタン</Anchor>
-            <Anchor prefix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+            <Anchor prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Anchor>
-            <Anchor suffix={<FaPlusCircleIcon size={14} />} onClick={action('clicked')}>
+            <Anchor suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
               ボタン
             </Anchor>
             {!noSquare && (
               <Anchor square onClick={action('clicked')}>
-                <FaPlusCircleIcon size={16} visuallyHiddenText="プラスボタン" />
+                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Anchor>
             )}
           </WrapLineUp>
@@ -240,45 +230,35 @@ function renderAnchors(
       <dt>Small</dt>
       <dd>
         <Stack>
-          <WrapLineUp>
+          <WrapLineUp vAlign="center">
             <Anchor size="s" href="#" onClick={action('clicked')}>
               ボタン
             </Anchor>
-            <Anchor
-              size="s"
-              href="#"
-              prefix={<FaPlusCircleIcon size={11} />}
-              onClick={action('clicked')}
-            >
+            <Anchor size="s" href="#" prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Anchor>
-            <Anchor
-              size="s"
-              href="#"
-              suffix={<FaPlusCircleIcon size={11} />}
-              onClick={action('clicked')}
-            >
+            <Anchor size="s" href="#" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
               ボタン
             </Anchor>
             {!noSquare && (
               <Anchor size="s" href="#" square onClick={action('clicked')}>
-                <FaPlusCircleIcon size={13} visuallyHiddenText="プラスボタン" />
+                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Anchor>
             )}
           </WrapLineUp>
-          <WrapLineUp>
+          <WrapLineUp vAlign="center">
             <Anchor size="s" onClick={action('clicked')}>
               ボタン
             </Anchor>
-            <Anchor size="s" prefix={<FaPlusCircleIcon size={11} />} onClick={action('clicked')}>
+            <Anchor size="s" prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Anchor>
-            <Anchor size="s" suffix={<FaPlusCircleIcon size={11} />} onClick={action('clicked')}>
+            <Anchor size="s" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
               ボタン
             </Anchor>
             {!noSquare && (
               <Anchor size="s" square onClick={action('clicked')}>
-                <FaPlusCircleIcon size={13} visuallyHiddenText="プラスボタン" />
+                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Anchor>
             )}
           </WrapLineUp>

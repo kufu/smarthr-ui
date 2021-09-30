@@ -117,7 +117,13 @@ export function SingleComboBox<T>({
   const [isExpanded, setIsExpanded] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [isComposing, setIsComposing] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+
   const filteredItems = useMemo(() => {
+    if (!isEditing) {
+      return items
+    }
+
     return items
       .filter(({ label }) => {
         if (!inputValue) return true
@@ -127,7 +133,7 @@ export function SingleComboBox<T>({
         ...item,
         isSelected: selectedItem === null ? false : item.label === selectedItem.label,
       }))
-  }, [inputValue, items, selectedItem])
+  }, [inputValue, isEditing, items, selectedItem])
   const isDuplicate = items.some((item) => item.label === inputValue)
   const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
   const {
@@ -145,6 +151,7 @@ export function SingleComboBox<T>({
       onSelect && onSelect(selected)
       onChangeSelected && onChangeSelected(selected)
       setIsExpanded(false)
+      setIsEditing(false)
     },
     isExpanded,
     isAddable: creatable && !!inputValue && !isDuplicate,
@@ -255,12 +262,16 @@ export function SingleComboBox<T>({
         onChange={(e) => {
           if (onChange) onChange(e)
           if (onChangeInput) onChangeInput(e)
+          if (!isEditing) setIsEditing(true)
           const { value } = e.currentTarget
           setInputValue(value)
           if (value === '') {
             onClear && onClear()
             onChangeSelected && onChangeSelected(null)
           }
+        }}
+        onBlur={() => {
+          setIsEditing(false)
         }}
         onFocus={() => {
           if (!isFocused) {

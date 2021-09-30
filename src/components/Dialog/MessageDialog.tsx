@@ -43,7 +43,11 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
   }, [onClickClose, props.isOpen])
 
   return createPortal(
-    <DialogContentInner ariaLabel={`${subtitle} ${title}`} className={className} {...props}>
+    <DialogContentInner
+      ariaLabel={subtitle ? `${subtitle} ${title}` : title}
+      className={className}
+      {...props}
+    >
       <MessageDialogContentInner
         title={title}
         subtitle={subtitle}
