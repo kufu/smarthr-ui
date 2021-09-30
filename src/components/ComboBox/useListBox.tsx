@@ -57,6 +57,15 @@ export function useListBox<T>({
   })
   const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
 
+  const calculateDropdownRect = useCallback((triggerElement: Element) => {
+    const rect = triggerElement.getBoundingClientRect()
+    setDropdownStyle({
+      top: rect.top + rect.height - 2 + window.pageYOffset,
+      left: rect.left + window.pageXOffset,
+      width: rect.width,
+    })
+  }, [])
+
   const options: Array<Option<T>> = useMemo(() => {
     if (isAddable) {
       const addingOption = { label: inputValue, value: inputValue, isAdding: true }
@@ -262,7 +271,7 @@ export function useListBox<T>({
   }
   return {
     renderListBox,
-    setDropdownStyle,
+    calculateDropdownRect,
     resetActiveOptionIndex: () => setActiveOptionIndex(null),
     handleInputKeyDown,
     listBoxRef,

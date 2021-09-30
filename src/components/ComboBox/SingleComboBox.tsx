@@ -138,7 +138,7 @@ export function SingleComboBox<T>({
   const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
   const {
     renderListBox,
-    setDropdownStyle,
+    calculateDropdownRect,
     resetActiveOptionIndex,
     handleInputKeyDown,
     listBoxRef,
@@ -190,15 +190,9 @@ export function SingleComboBox<T>({
     }
 
     if (outerRef.current) {
-      const rect = outerRef.current.getBoundingClientRect()
-
-      setDropdownStyle({
-        top: rect.top + rect.height - 2 + window.pageYOffset,
-        left: rect.left + window.pageXOffset,
-        width: outerRef.current.clientWidth,
-      })
+      calculateDropdownRect(outerRef.current)
     }
-  }, [isFocused, selectedItem, setDropdownStyle])
+  }, [calculateDropdownRect, isFocused, selectedItem])
 
   const needsClearButton = selectedItem !== null && !disabled
 
