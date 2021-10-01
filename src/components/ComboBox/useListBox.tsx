@@ -10,8 +10,6 @@ import { Item } from './types'
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
-const MAX_HEIGHT = 300
-
 type Args<T> = {
   items: Array<Item<T> & { isSelected?: boolean }>
   inputValue: string
@@ -40,6 +38,13 @@ function optionToItem<T>(option: Option<T>): Item<T> {
   return { ...props }
 }
 
+type DropDownStyle = {
+  top: number
+  left: number
+  width: number
+  maxHeight?: number
+}
+
 export function useListBox<T>({
   items,
   inputValue,
@@ -52,11 +57,10 @@ export function useListBox<T>({
   isLoading,
   classNames,
 }: Args<T>) {
-  const [dropdownStyle, setDropdownStyle] = useState({
+  const [dropdownStyle, setDropdownStyle] = useState<DropDownStyle>({
     top: 0,
     left: 0,
     width: 0,
-    maxHeight: MAX_HEIGHT,
   })
   const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
 
@@ -66,7 +70,7 @@ export function useListBox<T>({
         top: 0,
         left: 0,
         width: 0,
-        maxHeight: MAX_HEIGHT,
+        maxHeight: undefined,
       })
       return
     }
@@ -77,7 +81,7 @@ export function useListBox<T>({
     const offset = 2
 
     let top = 0
-    let maxHeight = MAX_HEIGHT
+    let maxHeight: number | undefined = undefined
 
     if (bottomSpace >= listBoxHeight) {
       // 下側に十分なスペースがある場合は下側に通常表示
@@ -319,20 +323,24 @@ export function useListBox<T>({
   }
 }
 
-const Container = styled.div<{
-  top: number
-  left: number
-  width: number
-  maxHeight: number
-  themes: Theme
-}>(({ top, left, width, maxHeight, themes }) => {
-  const { color, spacingByChar, radius, shadow, zIndex } = themes
+const Container = styled.div<
+  DropDownStyle & {
+    themes: Theme
+  }
+>(({ top, left, width, maxHeight, themes }) => {
+  const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
   return css`
     position: absolute;
     top: ${top}px;
     left: ${left}px;
     overflow-y: auto;
-    max-height: ${maxHeight}px;
+    max-height: ${maxHeight !== undefined
+      ? `${maxHeight}px`
+      : /**
+         * 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
+         * = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding
+         */
+        `calc((${fontSize.M} + ${spacingByChar(0.5)} * 2) * 7.5 + ${spacingByChar(0.5)}) `};
     width: ${width}px;
     padding: ${spacingByChar(0.5)} 0;
     border-radius: ${radius.m};
@@ -360,7 +368,7 @@ const NoItems = styled.p<{ themes: Theme }>`
 `
 const SelectButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar, color } = themes
+    const { fontSize, leading, spacingByChar, color } = themes
 
     return css`
       display: block;
@@ -369,6 +377,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: ${color.WHITE};
       font-size: ${fontSize.M};
+      line-height: ${leading.NONE};
       text-align: left;
       cursor: pointer;
 
