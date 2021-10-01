@@ -173,11 +173,14 @@ export function MultiComboBox<T>({
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     }
+  }, [isFocused, selectedItems])
 
-    if (outerRef.current) {
+  useLayoutEffect(() => {
+    // ドロップダウン表示時に位置を計算する
+    if (outerRef.current && isFocused) {
       calculateDropdownRect(outerRef.current)
     }
-  }, [calculateDropdownRect, isFocused, selectedItems])
+  }, [calculateDropdownRect, isFocused])
 
   return (
     <Container

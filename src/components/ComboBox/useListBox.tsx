@@ -42,7 +42,7 @@ type DropDownStyle = {
   top: number
   left: number
   width: number
-  maxHeight?: number
+  height?: number
 }
 
 export function useListBox<T>({
@@ -65,23 +65,20 @@ export function useListBox<T>({
   const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
 
   const calculateDropdownRect = useCallback((triggerElement: Element) => {
-    if (!listBoxRef.current || listBoxRef.current.offsetHeight === 0) {
-      setDropdownStyle({
-        top: 0,
-        left: 0,
-        width: 0,
-        maxHeight: undefined,
-      })
+    if (!listBoxRef.current) {
       return
     }
     const rect = triggerElement.getBoundingClientRect()
     const bottomSpace = window.innerHeight - rect.bottom
     const topSpace = rect.top
-    const listBoxHeight = listBoxRef.current.offsetHeight
+    const listBoxHeight = Math.min(
+      listBoxRef.current.scrollHeight,
+      parseInt(getComputedStyle(listBoxRef.current).maxHeight, 10),
+    )
     const offset = 2
 
     let top = 0
-    let maxHeight: number | undefined = undefined
+    let height: number | undefined = undefined
 
     if (bottomSpace >= listBoxHeight) {
       // 下側に十分なスペースがある場合は下側に通常表示
@@ -92,18 +89,18 @@ export function useListBox<T>({
     } else if (topSpace > bottomSpace) {
       // 上下に十分なスペースがなく、上側の方がスペースが大きい場合は上側に縮めて表示
       top = rect.top - topSpace + offset + window.pageYOffset
-      maxHeight = topSpace
+      height = topSpace
     } else {
       // 下側に縮めて表示
       top = rect.top + rect.height - offset + window.pageYOffset
-      maxHeight = bottomSpace
+      height = bottomSpace
     }
 
     setDropdownStyle({
       top,
       left: rect.left + window.pageXOffset,
       width: rect.width,
-      maxHeight,
+      height,
     })
   }, [])
 
@@ -327,20 +324,23 @@ const Container = styled.div<
   DropDownStyle & {
     themes: Theme
   }
->(({ top, left, width, maxHeight, themes }) => {
+>(({ top, left, width, height, themes }) => {
   const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
   return css`
     position: absolute;
     top: ${top}px;
     left: ${left}px;
     overflow-y: auto;
-    max-height: ${maxHeight !== undefined
-      ? `${maxHeight}px`
-      : /**
-         * 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
-         * = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding
-         */
-        `calc((${fontSize.M} + ${spacingByChar(0.5)} * 2) * 7.5 + ${spacingByChar(0.5)}) `};
+
+    /*
+     縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
+     = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding
+    */
+    max-height: calc((${fontSize.M} + ${spacingByChar(0.5)} * 2) * 7.5 + ${spacingByChar(0.5)});
+    ${height !== undefined &&
+    css`
+      height: ${height}px;
+    `}
     width: ${width}px;
     padding: ${spacingByChar(0.5)} 0;
     border-radius: ${radius.m};

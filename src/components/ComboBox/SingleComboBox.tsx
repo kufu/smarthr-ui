@@ -188,11 +188,14 @@ export function SingleComboBox<T>({
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     }
+  }, [isFocused, selectedItem])
 
-    if (outerRef.current) {
+  useLayoutEffect(() => {
+    // ドロップダウン表示時に位置を計算する
+    if (outerRef.current && isExpanded) {
       calculateDropdownRect(outerRef.current)
     }
-  }, [calculateDropdownRect, isFocused, selectedItem])
+  }, [calculateDropdownRect, isExpanded])
 
   const needsClearButton = selectedItem !== null && !disabled
 
