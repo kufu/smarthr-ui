@@ -62,6 +62,12 @@ export function useListBox<T>({
 
   const calculateDropdownRect = useCallback((triggerElement: Element) => {
     if (!listBoxRef.current || listBoxRef.current.offsetHeight === 0) {
+      setDropdownStyle({
+        top: 0,
+        left: 0,
+        width: 0,
+        maxHeight: MAX_HEIGHT,
+      })
       return
     }
     const rect = triggerElement.getBoundingClientRect()
