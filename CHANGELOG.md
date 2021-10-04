@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [15.0.1](https://github.com/kufu/smarthr-ui/compare/v15.0.0...v15.0.1) (2021-10-04)
+
+
+### Bug Fixes
+
+* fix flex shorthand for IE ([#1932](https://github.com/kufu/smarthr-ui/issues/1932)) ([4e14559](https://github.com/kufu/smarthr-ui/commit/4e1455942dd01dec91e7a975f07af918a552232e))
+* SegmentedControl の border が消えているので修正 ([#1920](https://github.com/kufu/smarthr-ui/issues/1920)) ([8d63135](https://github.com/kufu/smarthr-ui/commit/8d63135b35e38a54536be8a59029abc796c30efa))
+
 ## [15.0.0](https://github.com/kufu/smarthr-ui/compare/v14.4.0...v15.0.0) (2021-09-28)
 
 
