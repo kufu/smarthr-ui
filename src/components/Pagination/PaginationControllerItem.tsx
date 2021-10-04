@@ -55,7 +55,6 @@ export const PaginationControllerItem: VFC<Props> = ({
       <Icon
         color={disabled ? theme.color.TEXT_DISABLED : theme.color.TEXT_BLACK}
         visuallyHiddenText={iconProps.visuallyHiddenText}
-        size={13}
       />
     </ItemButton>
   )

@@ -36,7 +36,7 @@ export const FilterDropdown: VFC<Props> = ({
           <SecondaryButton
             suffix={
               <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
-                <FaFilterIcon size={13} />
+                <FaFilterIcon />
                 {isFiltered ? (
                   <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : '適用中'} />
                 ) : null}
