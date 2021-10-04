@@ -68,7 +68,8 @@ const StyledAncher = styled.a<{ themes: Theme }>`
   ${({ themes }) => {
     const { color } = themes
     return css`
-      text-underline-position: under;
+      text-decoration: none;
+      box-shadow: 0 1px 0 0;
       color: ${color.TEXT_LINK};
 
       &:hover {
