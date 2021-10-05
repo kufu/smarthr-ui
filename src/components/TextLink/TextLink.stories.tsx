@@ -15,21 +15,21 @@ storiesOf('TextLink', module)
     <Wrapper>
       <li>
         <TextLink href="/" prefix={<FaFlagIcon />}>
-          Link to Root.
+          ルートへのリンク
         </TextLink>
       </li>
       <li>
         <TextLink href="/" target="_blank">
-          Link to Root with new Tabs.
+          別タブで開くルートへのリンク
         </TextLink>
       </li>
       <li>
         <TextLink onClick={() => alert('click!')}>
-          Even if only onClick is set, it is focusable.
+          onClick しか設定していなくてもフォーカスできます。
         </TextLink>
       </li>
       <li>
-        <TextLink>unuse href attribute: can tab focasable.</TextLink>
+        <TextLink>onClick も href も指定されていない場合はフォーカスできません</TextLink>
       </li>
       <li>
         <TextLink href="/?path=/story/textlink--all" prefix={<FaFlagIcon />} target="_blank">
