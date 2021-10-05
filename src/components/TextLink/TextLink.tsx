@@ -75,6 +75,10 @@ const StyledAncher = styled.a<{ themes: Theme }>`
       &:hover {
         color: ${color.hoverColor(color.TEXT_LINK)};
       }
+
+      &:not([href]) {
+        box-shadow: none;
+      }
     `
   }}
 `
