@@ -74,7 +74,7 @@ export const DropZone: React.VFC<DropZoneProps & ElementProps> = ({
       className={classNames.wrapper}
     >
       {children}
-      <SecondaryButton prefix={<FaFolderOpenIcon size={14} />} onClick={onClickButton}>
+      <SecondaryButton prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
         ファイルを選択
       </SecondaryButton>
       <input ref={fileRef} type="file" multiple accept={accept} onChange={onChange} />

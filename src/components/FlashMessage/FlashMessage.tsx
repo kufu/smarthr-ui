@@ -85,13 +85,13 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
       role={role}
     >
       <IconWrapper>
-        <Icon size={14} color={iconColor} className={classNames.icon} />
+        <Icon color={iconColor} className={classNames.icon} />
       </IconWrapper>
       <Txt themes={theme} className={classNames.text}>
         {text}
       </Txt>
       <SecondaryButton className={`close ${classNames.button}`} onClick={onClose} size="s" square>
-        <FaTimesIcon size={16} visuallyHiddenText="閉じる" />
+        <FaTimesIcon visuallyHiddenText="閉じる" />
       </SecondaryButton>
     </Wrapper>
   )
