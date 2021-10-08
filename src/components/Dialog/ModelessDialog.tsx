@@ -241,7 +241,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                   onClick={onClickClose}
                   className={classNames.closeButton}
                 >
-                  <FaTimesIcon size={13} visuallyHiddenText="閉じる" />
+                  <FaTimesIcon visuallyHiddenText="閉じる" />
                 </SecondaryButton>
               </CloseButtonLayout>
             </Header>

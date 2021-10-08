@@ -62,7 +62,6 @@ export const FormGroup: VFC<Props> = ({
               <ErrorIcon
                 color={disabled ? theme.color.TEXT_DISABLED : theme.color.DANGER}
                 themes={theme}
-                size={14}
               />
               <span>{message}</span>
             </ErrorMessage>

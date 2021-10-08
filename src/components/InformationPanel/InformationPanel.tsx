@@ -107,7 +107,7 @@ export const InformationPanel: VFC<Props & BaseElementProps> = ({
         {togglable && (
           <div>
             <SecondaryButton
-              suffix={active ? <FaCaretUpIcon size={14} /> : <FaCaretDownIcon size={14} />}
+              suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
               size="s"
               onClick={handleClickTrigger}
               aria-expanded={togglable ? active : undefined}
