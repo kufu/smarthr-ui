@@ -15722,10 +15722,10 @@ testcafe-browser-tools@2.0.16:
     read-file-relative "^1.2.0"
     which-promise "^1.0.0"
 
-testcafe-hammerhead@24.5.1:
-  version "24.5.1"
-  resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-24.5.1.tgz#31caf40ad3d877f9b63d10ae8971ab3dfbe85122"
-  integrity sha512-upLFJbEH3unQ8dq65AZdevYgWaJtWiALKW5YO5uWbx7lLvMMeQbyA7gnwrlGbIaepUdi+PlW4dORjncrU+lY/Q==
+testcafe-hammerhead@24.5.4:
+  version "24.5.4"
+  resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-24.5.4.tgz#e64fa961215596347e8f4be49e192cab53745990"
+  integrity sha512-ve2rgOQEh4R48L8eu945DDeLOH/Owj8ZmJL0lQBnsLrZA60vsSxpvOczuj98f2u1jtgGjcxOeRTIkNypcRZAyA==
   dependencies:
     acorn-hammerhead "0.5.0"
     asar "^2.0.1"
@@ -15784,10 +15784,10 @@ testcafe-hammerhead@>=19.4.0:
     tunnel-agent "0.6.0"
     webauth "^1.1.0"
 
-testcafe-legacy-api@5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/testcafe-legacy-api/-/testcafe-legacy-api-5.0.2.tgz#7b7e1345a2f700494e995d270aac7ce6a343807c"
-  integrity sha512-2BWjCIN5YOUOTyOT4B0wy2TiaJgV8dWhIGpKqE3S34RjNEH62WR+JNhcnh4BSE+btp6H8n1TefcP/AObqSDSDQ==
+testcafe-legacy-api@5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/testcafe-legacy-api/-/testcafe-legacy-api-5.1.1.tgz#04f9e4a97960a757f1c52bb4a8ea414d2bcd8dd0"
+  integrity sha512-WRy9XvH/u+HE19oXs70xuxlcC+x4Yhydhhy5PadK/Ro9ssupSjEFxc/gzTWWcvdxAXO8JWgsXl/x4v5RMYtMow==
   dependencies:
     async "0.2.6"
     dedent "^0.6.0"
@@ -15829,16 +15829,17 @@ testcafe-reporter-xunit@^2.1.0:
   resolved "https://registry.yarnpkg.com/testcafe-reporter-xunit/-/testcafe-reporter-xunit-2.1.0.tgz#e6d66c572ce15af266706af0fd610b2a841dd443"
   integrity sha1-5tZsVyzhWvJmcGrw/WELKoQd1EM=
 
-testcafe@^1.16.0:
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-1.16.0.tgz#fba3c804e69129237ff49749b5ac5d320c2220b4"
-  integrity sha512-Fkx4gcCb7fxKVnLIEOGD89/qneB8hiQO0jmX8+XmfP89xo3JBBshA5ihO9rhSILxdJvd0ii/EqTDUKE7CFvHfg==
+testcafe@^1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-1.16.1.tgz#1757d09b5d28059be00ab10e6f214ff9b289e0a9"
+  integrity sha512-efb4S7YIyu8BpG4dZQBCgPE3V1YWU8J32v7/cPr1zW1yY/9F2B0y1lMTpeFJ3rUMdHSZpwYi6y00dEfEnNeN/Q==
   dependencies:
     "@babel/core" "^7.12.1"
     "@babel/plugin-proposal-async-generator-functions" "^7.12.1"
     "@babel/plugin-proposal-class-properties" "^7.12.1"
     "@babel/plugin-proposal-decorators" "^7.12.1"
     "@babel/plugin-proposal-object-rest-spread" "^7.12.1"
+    "@babel/plugin-proposal-private-methods" "^7.14.5"
     "@babel/plugin-syntax-dynamic-import" "^7.8.3"
     "@babel/plugin-syntax-import-meta" "^7.10.4"
     "@babel/plugin-transform-async-to-generator" "^7.12.1"
@@ -15909,8 +15910,8 @@ testcafe@^1.16.0:
     source-map-support "^0.5.16"
     strip-bom "^2.0.0"
     testcafe-browser-tools "2.0.16"
-    testcafe-hammerhead "24.5.1"
-    testcafe-legacy-api "5.0.2"
+    testcafe-hammerhead "24.5.4"
+    testcafe-legacy-api "5.1.1"
     testcafe-reporter-json "^2.1.0"
     testcafe-reporter-list "^2.1.0"
     testcafe-reporter-minimal "^2.1.0"
