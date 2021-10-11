@@ -76,9 +76,9 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
             className={classNames.toggleButton}
           >
             {isExpanded ? (
-              <FaMinusIcon size={13} visuallyHiddenText="折りたたむ" />
+              <FaMinusIcon visuallyHiddenText="折りたたむ" />
             ) : (
-              <FaWindowMaximizeIcon size={13} visuallyHiddenText="展開する" />
+              <FaWindowMaximizeIcon visuallyHiddenText="展開する" />
             )}
           </SecondaryButton>
           <SecondaryButton
@@ -88,7 +88,7 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
             onClick={onClickClose}
             className={classNames.closeButton}
           >
-            <FaTimesIcon size={13} visuallyHiddenText="閉じる" />
+            <FaTimesIcon visuallyHiddenText="閉じる" />
           </SecondaryButton>
         </HeaderButtonLayout>
       </Header>
