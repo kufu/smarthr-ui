@@ -129,7 +129,7 @@ export function MultiComboBox<T>({
   const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
   const {
     renderListBox,
-    setDropdownStyle,
+    calculateDropdownRect,
     resetActiveOptionIndex,
     handleInputKeyDown,
     listBoxRef,
@@ -173,17 +173,14 @@ export function MultiComboBox<T>({
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     }
+  }, [isFocused, selectedItems])
 
-    if (outerRef.current) {
-      const rect = outerRef.current.getBoundingClientRect()
-
-      setDropdownStyle({
-        top: rect.top + rect.height - 2 + window.pageYOffset,
-        left: rect.left + window.pageXOffset,
-        width: outerRef.current.clientWidth,
-      })
+  useLayoutEffect(() => {
+    // ドロップダウン表示時に位置を計算する
+    if (outerRef.current && isFocused) {
+      calculateDropdownRect(outerRef.current)
     }
-  }, [isFocused, selectedItems, setDropdownStyle])
+  }, [calculateDropdownRect, isFocused])
 
   return (
     <Container
