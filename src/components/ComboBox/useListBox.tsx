@@ -252,7 +252,7 @@ export function useListBox<T>({
                     role="option"
                     className={`${className} ${classNames.addButton}`}
                   >
-                    <AddIcon size={14} color={theme.color.TEXT_LINK} $theme={theme} />
+                    <AddIcon color={theme.color.TEXT_LINK} $theme={theme} />
                     <AddText themes={theme}>「{label}」を追加</AddText>
                   </AddButton>
                 )
