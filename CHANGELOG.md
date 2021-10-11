@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [15.1.0](https://github.com/kufu/smarthr-ui/compare/v15.0.1...v15.1.0) (2021-10-11)
+
+
+### Features
+
+* `MultiComboBox` のテキストボックスを制御できるようにするオプションを追加 (SHRUI-458) ([#1929](https://github.com/kufu/smarthr-ui/issues/1929)) ([12e2af3](https://github.com/kufu/smarthr-ui/commit/12e2af3137586d3423312ed23b1c9af31829a15f))
+* TextLink の折返しに対応し、Affix にも下線を引く｜SHRUI-481 ([#1943](https://github.com/kufu/smarthr-ui/issues/1943)) ([63e216b](https://github.com/kufu/smarthr-ui/commit/63e216b26661ca8f4887d4c948abab4065d08666))
+
+
+### Bug Fixes
+
+* change position of radio button with multi line label to top ([#1945](https://github.com/kufu/smarthr-ui/issues/1945)) ([4bbe3c3](https://github.com/kufu/smarthr-ui/commit/4bbe3c3edbd0bb2973b9301c300e3310770b1b22))
+* コンボボックスのドロップダウンが画面からはみ出さないようにする (SHRUI-478) ([#1930](https://github.com/kufu/smarthr-ui/issues/1930)) ([229ae02](https://github.com/kufu/smarthr-ui/commit/229ae020d8f359bf8fd4aaf6213ba7274cf43a57))
+* 不要なアイコンサイズを削除 ([#1941](https://github.com/kufu/smarthr-ui/issues/1941)) ([12e06d5](https://github.com/kufu/smarthr-ui/commit/12e06d5816fc5132e54fc588169d87c33e4a375f))
+
 ### [15.0.1](https://github.com/kufu/smarthr-ui/compare/v15.0.0...v15.0.1) (2021-10-04)
 
 
