@@ -51,7 +51,7 @@ const Box = styled.span<{ themes: Theme }>`
     const { size, border, color } = themes
 
     return css`
-      display: inline-block;
+      display: block;
       width: 100%;
       height: 100%;
       border-radius: 50%;
