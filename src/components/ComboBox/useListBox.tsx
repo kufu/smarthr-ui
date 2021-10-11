@@ -12,7 +12,7 @@ import { Loader } from '../Loader'
 
 type Args<T> = {
   items: Array<Item<T> & { isSelected?: boolean }>
-  inputValue: string
+  inputValue?: string
   onAdd?: (label: string) => void
   onSelect: (item: Item<T>) => void
   isExpanded: boolean
@@ -47,7 +47,7 @@ type DropDownStyle = {
 
 export function useListBox<T>({
   items,
-  inputValue,
+  inputValue = '',
   onAdd,
   onSelect,
   isExpanded,
