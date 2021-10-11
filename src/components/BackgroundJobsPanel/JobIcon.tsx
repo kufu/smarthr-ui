@@ -19,7 +19,7 @@ export const JobIcon: VFC<Props> = ({ status }) => {
   const Icon = getIcon(status)
   const color = useIconColor(status)
 
-  return <Icon color={color} size={16} />
+  return <Icon color={color} />
 }
 
 function getIcon(status: Status): React.ComponentType<IconProps> {

@@ -114,6 +114,7 @@ const List = styled.ul<{ themes: Theme }>`
 
     return css`
       display: flex;
+      align-items: center;
       margin: 0;
       padding: 0;
       > li {

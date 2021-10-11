@@ -60,7 +60,7 @@ storiesOf('SegmentedControl', module)
           <SegmentedControl
             options={options.map((option) => ({
               ...option,
-              content: <FaPlusCircleIcon size={16} />,
+              content: <FaPlusCircleIcon />,
             }))}
             value={value3}
             onClickOption={(value) => {
@@ -76,7 +76,7 @@ storiesOf('SegmentedControl', module)
           <SegmentedControl
             options={options.map((option) => ({
               ...option,
-              content: <FaPlusCircleIcon size={13} />,
+              content: <FaPlusCircleIcon />,
             }))}
             value={value4}
             onClickOption={(value) => {

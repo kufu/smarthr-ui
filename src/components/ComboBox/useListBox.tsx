@@ -12,7 +12,7 @@ import { Loader } from '../Loader'
 
 type Args<T> = {
   items: Array<Item<T> & { isSelected?: boolean }>
-  inputValue: string
+  inputValue?: string
   onAdd?: (label: string) => void
   onSelect: (item: Item<T>) => void
   isExpanded: boolean
@@ -38,9 +38,16 @@ function optionToItem<T>(option: Option<T>): Item<T> {
   return { ...props }
 }
 
+type DropDownStyle = {
+  top: number
+  left: number
+  width: number
+  height?: number
+}
+
 export function useListBox<T>({
   items,
-  inputValue,
+  inputValue = '',
   onAdd,
   onSelect,
   isExpanded,
@@ -50,12 +57,52 @@ export function useListBox<T>({
   isLoading,
   classNames,
 }: Args<T>) {
-  const [dropdownStyle, setDropdownStyle] = useState({
+  const [dropdownStyle, setDropdownStyle] = useState<DropDownStyle>({
     top: 0,
     left: 0,
     width: 0,
   })
   const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
+
+  const calculateDropdownRect = useCallback((triggerElement: Element) => {
+    if (!listBoxRef.current) {
+      return
+    }
+    const rect = triggerElement.getBoundingClientRect()
+    const bottomSpace = window.innerHeight - rect.bottom
+    const topSpace = rect.top
+    const listBoxHeight = Math.min(
+      listBoxRef.current.scrollHeight,
+      parseInt(getComputedStyle(listBoxRef.current).maxHeight, 10),
+    )
+    const offset = 2
+
+    let top = 0
+    let height: number | undefined = undefined
+
+    if (bottomSpace >= listBoxHeight) {
+      // 下側に十分なスペースがある場合は下側に通常表示
+      top = rect.top + rect.height - offset + window.pageYOffset
+    } else if (topSpace >= listBoxHeight) {
+      // 上側に十分なスペースがある場合は上側に通常表示
+      top = rect.top - listBoxHeight + offset + window.pageYOffset
+    } else if (topSpace > bottomSpace) {
+      // 上下に十分なスペースがなく、上側の方がスペースが大きい場合は上側に縮めて表示
+      top = rect.top - topSpace + offset + window.pageYOffset
+      height = topSpace
+    } else {
+      // 下側に縮めて表示
+      top = rect.top + rect.height - offset + window.pageYOffset
+      height = bottomSpace
+    }
+
+    setDropdownStyle({
+      top,
+      left: rect.left + window.pageXOffset,
+      width: rect.width,
+      height,
+    })
+  }, [])
 
   const options: Array<Option<T>> = useMemo(() => {
     if (isAddable) {
@@ -205,7 +252,7 @@ export function useListBox<T>({
                     role="option"
                     className={`${className} ${classNames.addButton}`}
                   >
-                    <AddIcon size={14} color={theme.color.TEXT_LINK} $theme={theme} />
+                    <AddIcon color={theme.color.TEXT_LINK} $theme={theme} />
                     <AddText themes={theme}>「{label}」を追加</AddText>
                   </AddButton>
                 )
@@ -262,7 +309,7 @@ export function useListBox<T>({
   }
   return {
     renderListBox,
-    setDropdownStyle,
+    calculateDropdownRect,
     resetActiveOptionIndex: () => setActiveOptionIndex(null),
     handleInputKeyDown,
     listBoxRef,
@@ -273,29 +320,40 @@ export function useListBox<T>({
   }
 }
 
-const Container = styled.div<{ top: number; left: number; width: number; themes: Theme }>(
-  ({ top, left, width, themes }) => {
-    const { color, spacingByChar, radius, shadow, zIndex } = themes
-    return css`
-      position: absolute;
-      top: ${top}px;
-      left: ${left}px;
-      overflow-y: auto;
-      max-height: 300px;
-      width: ${width}px;
-      padding: ${spacingByChar(0.5)} 0;
-      border-radius: ${radius.m};
-      box-shadow: ${shadow.LAYER3};
-      background-color: ${color.WHITE};
-      white-space: nowrap;
-      box-sizing: border-box;
-      &[aria-hidden='true'] {
-        display: none;
-      }
-      z-index: ${zIndex.OVERLAP};
-    `
-  },
-)
+const Container = styled.div<
+  DropDownStyle & {
+    themes: Theme
+  }
+>(({ top, left, width, height, themes }) => {
+  const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
+  return css`
+    position: absolute;
+    top: ${top}px;
+    left: ${left}px;
+    overflow-y: auto;
+
+    /*
+     縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
+     = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding
+    */
+    max-height: calc((${fontSize.M} + ${spacingByChar(0.5)} * 2) * 7.5 + ${spacingByChar(0.5)});
+    ${height !== undefined &&
+    css`
+      height: ${height}px;
+    `}
+    width: ${width}px;
+    padding: ${spacingByChar(0.5)} 0;
+    border-radius: ${radius.m};
+    box-shadow: ${shadow.LAYER3};
+    background-color: ${color.WHITE};
+    white-space: nowrap;
+    box-sizing: border-box;
+    &[aria-hidden='true'] {
+      display: none;
+    }
+    z-index: ${zIndex.OVERLAP};
+  `
+})
 const NoItems = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
     const { color, fontSize, spacingByChar } = themes
@@ -310,7 +368,7 @@ const NoItems = styled.p<{ themes: Theme }>`
 `
 const SelectButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar, color } = themes
+    const { fontSize, leading, spacingByChar, color } = themes
 
     return css`
       display: block;
@@ -319,6 +377,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: ${color.WHITE};
       font-size: ${fontSize.M};
+      line-height: ${leading.NONE};
       text-align: left;
       cursor: pointer;
 

@@ -65,9 +65,9 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
             className={classNames.calendar.selectingYear}
           >
             {isSelectingYear ? (
-              <FaCaretUpIcon size={13} visuallyHiddenText="年を選択する" />
+              <FaCaretUpIcon visuallyHiddenText="年を選択する" />
             ) : (
-              <FaCaretDownIcon size={13} visuallyHiddenText="年を選択する" />
+              <FaCaretDownIcon visuallyHiddenText="年を選択する" />
             )}
           </SecondaryButton>
           <MonthButtons className={classNames.calendar.monthButtons}>
@@ -78,7 +78,7 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
               square
               className={classNames.calendar.monthButtonPrev}
             >
-              <FaChevronLeftIcon visuallyHiddenText="前の月へ" size={13} />
+              <FaChevronLeftIcon visuallyHiddenText="前の月へ" />
             </SecondaryButton>
             <SecondaryButton
               disabled={isSelectingYear || nextMonth.isAfter(toDay, 'month')}
@@ -87,7 +87,7 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
               square
               className={classNames.calendar.monthButtonNext}
             >
-              <FaChevronRightIcon visuallyHiddenText="次の月へ" size={13} />
+              <FaChevronRightIcon visuallyHiddenText="次の月へ" />
             </SecondaryButton>
           </MonthButtons>
         </Header>

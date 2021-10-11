@@ -62,7 +62,7 @@ export const InputFile: VFC<Props> = ({
                 <span className={classNames.fileName}>{file.name}</span>
                 <span>
                   <TextButton
-                    prefix={<FaTrashAltIcon size={14} />}
+                    prefix={<FaTrashAltIcon />}
                     onClick={() => handleDelete(index)}
                     className={classNames.deleteButton}
                   >
@@ -92,7 +92,7 @@ export const InputFile: VFC<Props> = ({
         >
           <label htmlFor={id}>
             <Prefix themes={theme}>
-              <FaFolderOpenIcon size={14} />
+              <FaFolderOpenIcon />
             </Prefix>
             {label}
           </label>

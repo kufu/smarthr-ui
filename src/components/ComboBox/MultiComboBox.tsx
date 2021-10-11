@@ -3,6 +3,7 @@ import React, {
   HTMLAttributes,
   useCallback,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -60,6 +61,10 @@ type Props<T> = {
    */
   width?: number | string
   /**
+   * The value of textbox. If the value is given, the textbox is controlled.
+   */
+  inputValue?: string
+  /**
    *  The `className` given to the outermost element of this component.
    */
   className?: string
@@ -88,6 +93,8 @@ type Props<T> = {
    * Fire when the item selections are changed.
    */
   onChangeSelected?: (selectedItems: Array<Item<T>>) => void
+  onFocus?: () => void
+  onBlur?: () => void
 }
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
@@ -103,6 +110,7 @@ export function MultiComboBox<T>({
   isLoading,
   selectedItemEllipsis,
   width = 'auto',
+  inputValue: controlledInputValue,
   className = '',
   onChange,
   onChangeInput,
@@ -110,6 +118,8 @@ export function MultiComboBox<T>({
   onDelete,
   onSelect,
   onChangeSelected,
+  onFocus,
+  onBlur,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -117,7 +127,12 @@ export function MultiComboBox<T>({
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
-  const [inputValue, setInputValue] = useState('')
+  const isInputControlled = useMemo(
+    () => controlledInputValue !== undefined,
+    [controlledInputValue],
+  )
+  const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
+  const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
   const selectedLabels = selectedItems.map(({ label }) => label)
   const filteredItems = items.filter(({ label }) => {
@@ -129,7 +144,7 @@ export function MultiComboBox<T>({
   const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
   const {
     renderListBox,
-    setDropdownStyle,
+    calculateDropdownRect,
     resetActiveOptionIndex,
     handleInputKeyDown,
     listBoxRef,
@@ -153,12 +168,15 @@ export function MultiComboBox<T>({
   })
 
   const focus = useCallback(() => {
+    onFocus && onFocus()
     setIsFocused(true)
     resetActiveOptionIndex()
-  }, [resetActiveOptionIndex])
+  }, [onFocus, resetActiveOptionIndex])
   const blur = useCallback(() => {
+    if (!isFocused) return
+    onBlur && onBlur()
     setIsFocused(false)
-  }, [])
+  }, [isFocused, onBlur])
 
   useOuterClick(
     [outerRef, listBoxRef],
@@ -168,22 +186,21 @@ export function MultiComboBox<T>({
   )
 
   useLayoutEffect(() => {
-    setInputValue('')
+    if (!isInputControlled) {
+      setUncontrolledInputValue('')
+    }
 
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     }
+  }, [isFocused, isInputControlled, selectedItems])
 
-    if (outerRef.current) {
-      const rect = outerRef.current.getBoundingClientRect()
-
-      setDropdownStyle({
-        top: rect.top + rect.height - 2 + window.pageYOffset,
-        left: rect.left + window.pageXOffset,
-        width: outerRef.current.clientWidth,
-      })
+  useLayoutEffect(() => {
+    // ドロップダウン表示時に位置を計算する
+    if (outerRef.current && isFocused) {
+      calculateDropdownRect(outerRef.current)
     }
-  }, [isFocused, selectedItems, setDropdownStyle])
+  }, [calculateDropdownRect, isFocused])
 
   return (
     <Container
@@ -205,7 +222,7 @@ export function MultiComboBox<T>({
         }
       }}
       onKeyDown={(e) => {
-        if ((e.key === 'Escape' || e.key === 'Esc') && isFocused) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
           e.stopPropagation()
           blur()
         }
@@ -251,7 +268,9 @@ export function MultiComboBox<T>({
               onChange={(e) => {
                 if (onChange) onChange(e)
                 if (onChangeInput) onChangeInput(e)
-                setInputValue(e.currentTarget.value)
+                if (!isInputControlled) {
+                  setUncontrolledInputValue(e.currentTarget.value)
+                }
               }}
               onFocus={() => {
                 if (!isFocused) {
