@@ -8,29 +8,38 @@ import { useClassNames } from './useClassNames'
 import { RadioButtonInput, Props as RadioButtonInputProps } from './RadioButtonInput'
 
 type Props = RadioButtonInputProps & {
+  lineHeight?: number
   children?: ReactNode
 }
 
-export const RadioButton: FC<Props> = ({ children, className = '', ...props }) => {
+export const RadioButton: FC<Props> = ({
+  lineHeight = 1.5,
+  children,
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
   const classNames = useClassNames()
   const radioButtonId = useId(props.id)
 
   if (!children) {
     return (
-      <Wrapper className={`${className} ${classNames.wrapper}`}>
+      <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
         <RadioButtonInput className={classNames.radioButton} {...props} />
       </Wrapper>
     )
   }
 
   return (
-    <Wrapper className={`${className} ${classNames.wrapper}`}>
-      <RadioButtonInput id={radioButtonId} {...props} />
+    <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
+      <ButtonLayout $height={`${lineHeight}em`}>
+        <RadioButtonInput id={radioButtonId} {...props} />
+      </ButtonLayout>
 
       <Label
         htmlFor={radioButtonId}
         className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
+        $lineHeight={lineHeight}
         themes={theme}
       >
         {children}
@@ -39,18 +48,28 @@ export const RadioButton: FC<Props> = ({ children, className = '', ...props }) =
   )
 }
 
-const Wrapper = styled.div`
-  display: inline-flex;
-  align-items: center;
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes: { fontSize } }) => css`
+    display: inline-flex;
+    align-items: start;
+    font-size: ${fontSize.M};
+  `}
 `
-const Label = styled.label<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { spacingByChar, fontSize, color } = themes
+const ButtonLayout = styled.div<{ $height: string }>`
+  ${({ $height }) => css`
+    display: flex;
+    align-items: center;
+    height: ${$height};
+  `}
+`
+const Label = styled.label<{ themes: Theme; $lineHeight: number }>`
+  ${({ themes, $lineHeight }) => {
+    const { spacingByChar, color } = themes
 
     return css`
       margin-left: ${spacingByChar(0.5)};
       color: ${color.TEXT_BLACK};
-      font-size: ${fontSize.M};
+      line-height: ${$lineHeight};
       cursor: pointer;
 
       &.disabled {
