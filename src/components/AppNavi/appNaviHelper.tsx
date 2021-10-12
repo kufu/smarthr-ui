@@ -21,7 +21,6 @@ export const getIconComponent = (
   const Icon = opts.icon
 
   const iconProps = {
-    size: 14,
     color: opts.current ? TEXT_BLACK : TEXT_GREY,
   }
 
