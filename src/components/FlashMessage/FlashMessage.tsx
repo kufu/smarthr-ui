@@ -13,7 +13,7 @@ import {
 } from '../Icon'
 import { SecondaryButton } from '../Button'
 
-export const messageTypes = ['success', 'info', 'warning', 'error', ''] as const
+export const messageTypes = ['success', 'info', 'warning', 'error'] as const
 export const animationTypes = ['bounce', 'fade', 'none'] as const
 export const roles = ['alert', 'status'] as const
 
@@ -56,11 +56,12 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
 
   if (!visible) return null
 
-  let Icon = FaCheckCircleIcon
-  let iconColor = theme.color.TEXT_GREY
+  let Icon
+  let iconColor
 
   switch (type) {
     case 'success':
+    default:
       Icon = FaCheckCircleIcon
       iconColor = theme.color.MAIN
       break
@@ -75,6 +76,7 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
     case 'error':
       Icon = FaExclamationCircleIcon
       iconColor = theme.color.DANGER
+      break
   }
 
   return (
