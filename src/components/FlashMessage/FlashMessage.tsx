@@ -138,7 +138,7 @@ const fadeAnimation = keyframes`
 
 const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
   ${({ themes, animation }) => {
-    const { spacingByChar, radius, color, zIndex, shadow } = themes
+    const { border, fontSize, spacingByChar, radius, color, zIndex, shadow } = themes
 
     let keyframe = bounceAnimation
     switch (animation) {
@@ -155,28 +155,29 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
 
     return css`
       z-index: ${zIndex.FLASH_MESSAGE};
-      display: flex;
       position: fixed;
       bottom: ${spacingByChar(0.5)};
       left: ${spacingByChar(0.5)};
-      box-sizing: border-box;
-      align-items: center;
 
-      /* border + padding + Icon + 10em + Button + margin */
-      min-width: calc(2px + ${spacingByChar(1.5)} + 14px + 8em + 27px + ${spacingByChar(1)});
-      padding: ${spacingByChar(1)};
-      background-color: ${color.WHITE};
-      border: 1px solid ${color.BORDER};
-      border-radius: ${radius.m};
+      display: flex;
+      align-items: center;
+      gap: ${spacingByChar(0.5)};
+
       box-shadow: ${shadow.LAYER4};
+      border: ${border.shorthand};
+      border-radius: ${radius.m};
+      background-color: ${color.WHITE};
+      padding: ${spacingByChar(1)};
+
+      /* Icon + margin + 8文字 + margin + Button(border + padding + fontSize) */
+      min-width: calc(
+        1em + ${spacingByChar(0.5)} + 8em + ${spacingByChar(0.5)} + (${border.lineWidth} * 2) +
+          (${spacingByChar(0.5)} * 2) + ${fontSize.S}
+      );
       animation: ${keyframe} ${animation === 'none' ? '0.01s' : '1s'} 0s both;
 
       @media (prefers-reduced-motion) {
         animation-duration: 0.01s;
-      }
-
-      & > * + * {
-        margin-left: ${spacingByChar(0.5)};
       }
     `
   }}
@@ -188,7 +189,6 @@ const IconWrapper = styled.span`
     display: block;
   }
 `
-
 const Txt = styled.p<{ themes: Theme }>`
   ${({ themes: { fontSize, leading } }) => {
     return css`
