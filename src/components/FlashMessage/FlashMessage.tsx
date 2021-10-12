@@ -179,6 +179,10 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
 
 const IconWrapper = styled.span`
   flex-shrink: 0;
+
+  svg {
+    display: block;
+  }
 `
 
 const Txt = styled.p<{ themes: Theme }>`
