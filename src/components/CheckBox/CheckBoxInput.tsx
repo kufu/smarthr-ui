@@ -36,11 +36,7 @@ export const CheckBoxInput: VFC<Props> = ({ mixed = false, onChange, ...props })
       <Box className={boxClassName} themes={theme} />
       {checked && (
         <IconWrap themes={theme}>
-          {mixed ? (
-            <FaMinusIcon size={10} color="TEXT_WHITE" />
-          ) : (
-            <FaCheckIcon size={10} color="TEXT_WHITE" />
-          )}
+          {mixed ? <FaMinusIcon color="TEXT_WHITE" /> : <FaCheckIcon color="TEXT_WHITE" />}
         </IconWrap>
       )}
     </Wrapper>
@@ -122,6 +118,7 @@ const IconWrap = styled.span<{ themes: Theme }>`
       display: inline-block;
       width: ${size.pxToRem(10)};
       height: ${size.pxToRem(10)};
+      font-size: 0.625rem;
       transform: translate(-50%, -50%);
       pointer-events: none;
       & > svg {
