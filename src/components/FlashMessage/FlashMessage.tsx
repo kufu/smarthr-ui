@@ -90,9 +90,15 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
       <Txt themes={theme} className={classNames.text}>
         {text}
       </Txt>
-      <SecondaryButton className={`close ${classNames.button}`} onClick={onClose} size="s" square>
+      <CloseButton
+        themes={theme}
+        className={`close ${classNames.button}`}
+        onClick={onClose}
+        size="s"
+        square
+      >
         <FaTimesIcon visuallyHiddenText="閉じる" />
-      </SecondaryButton>
+      </CloseButton>
     </Wrapper>
   )
 }
@@ -158,8 +164,7 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
 
       /* border + padding + Icon + 10em + Button + margin */
       min-width: calc(2px + ${spacingByChar(1.5)} + 14px + 8em + 27px + ${spacingByChar(1)});
-      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-      padding-right: ${spacingByChar(0.5)};
+      padding: ${spacingByChar(1)};
       background-color: ${color.WHITE};
       border: 1px solid ${color.BORDER};
       border-radius: ${radius.m};
@@ -176,7 +181,6 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
     `
   }}
 `
-
 const IconWrapper = styled.span`
   flex-shrink: 0;
 
@@ -186,15 +190,24 @@ const IconWrapper = styled.span`
 `
 
 const Txt = styled.p<{ themes: Theme }>`
-  ${({ themes: { fontSize } }) => {
+  ${({ themes: { fontSize, leading } }) => {
     return css`
       flex-grow: 1;
       flex-shrink: 1;
-      margin-top: 0;
-      margin-bottom: 0;
+
+      /* line-height 分 padding が広がってしまうのを調整 */
+      margin-top: calc(((${fontSize.M} * ${leading.NORMAL}) - ${fontSize.M}) / -2);
+      margin-bottom: calc(((${fontSize.M} * ${leading.NORMAL}) - ${fontSize.M}) / -2);
       padding: 0;
       font-size: ${fontSize.M};
-      line-height: 1.5;
+      line-height: ${leading.NORMAL};
     `
   }}
 `
+const CloseButton = styled(SecondaryButton)<{ themes: Theme }>(
+  ({ themes: { spacingByChar } }) => css`
+    margin-top: ${spacingByChar(-0.5)};
+    margin-right: ${spacingByChar(-0.5)};
+    margin-bottom: ${spacingByChar(-0.5)};
+  `,
+)
