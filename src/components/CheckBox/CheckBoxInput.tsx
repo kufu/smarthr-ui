@@ -45,12 +45,12 @@ export const CheckBoxInput: VFC<Props> = ({ mixed = false, onChange, ...props })
 
 const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize } = themes
     return css`
       position: relative;
       display: inline-block;
-      width: ${size.pxToRem(16)};
-      height: ${size.pxToRem(16)};
+      width: ${fontSize.M};
+      height: ${fontSize.M};
       flex-shrink: 0;
       line-height: 1;
       box-sizing: border-box;
@@ -109,16 +109,16 @@ const Input = styled.input<{ themes: Theme }>`
 `
 const IconWrap = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { fontSize } = themes
 
     return css`
       position: absolute;
       top: 50%;
       left: 50%;
       display: inline-block;
-      width: ${size.pxToRem(10)};
-      height: ${size.pxToRem(10)};
-      font-size: 0.625rem;
+      width: ${fontSize.XXS};
+      height: ${fontSize.XXS};
+      font-size: ${fontSize.XXS};
       transform: translate(-50%, -50%);
       pointer-events: none;
       & > svg {
