@@ -83,7 +83,7 @@ storiesOf('AppNavi', module)
 
     return (
       <Wrapper themes={theme}>
-        <AppNavi label="プラスメニュー" buttons={withoutIconButtons} displayDrodownCaret>
+        <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret>
           <Child>Some child components</Child>
         </AppNavi>
       </Wrapper>
@@ -94,7 +94,7 @@ storiesOf('AppNavi', module)
 
     return (
       <Wrapper themes={theme}>
-        <AppNavi label="プラスメニュー" buttons={withoutIconButtons} displayDrodownCaret />
+        <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret />
       </Wrapper>
     )
   })
@@ -125,7 +125,7 @@ storiesOf('AppNavi', module)
         {items.map((_, currentIndex) => (
           <InnerWrapper key={currentIndex}>
             <AppNavi
-              label="プラスメニュー"
+              label="機能名"
               buttons={items.map((item, index) => {
                 if (index === currentIndex) {
                   return { ...item, current: true }
@@ -145,7 +145,7 @@ storiesOf('AppNavi', module)
 
     return (
       <Wrapper themes={theme}>
-        <AppNavi label="プラスメニュー" buttons={withoutIconButtons} />
+        <AppNavi label="機能名" buttons={withoutIconButtons} />
       </Wrapper>
     )
   })
