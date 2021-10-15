@@ -142,15 +142,12 @@ const Buttons = styled.ul<{ themes: Theme }>`
     return css`
       display: flex;
       align-items: center;
+      gap: ${spacingByChar(1)};
       margin: 0;
       padding: 0;
 
       > li {
         list-style: none;
-
-        &:not(:first-child) {
-          margin-left: ${spacingByChar(1)};
-        }
       }
     `
   }}

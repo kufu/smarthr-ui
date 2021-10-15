@@ -69,9 +69,6 @@ const TriggerButton = styled.button<ItemStyleProps & { displayCaret?: boolean }>
     `}
   `,
 )
-const IconWrapper = styled.span<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) => css`
-    display: flex;
-    margin-left: ${spacingByChar(0.5)};
-  `,
-)
+const IconWrapper = styled.span<{ themes: Theme }>`
+  display: flex;
+`

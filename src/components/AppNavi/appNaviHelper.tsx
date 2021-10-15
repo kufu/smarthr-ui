@@ -33,13 +33,8 @@ export const getIconComponent = (
 }
 
 const IconWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
-      display: flex;
-      padding: 0;
-      margin: 0 ${spacingByChar(0.5)} 0 0;
-    `
-  }}
+  display: flex;
+  padding: 0;
 `
 export type ItemStyleProps = {
   themes: Theme
@@ -47,13 +42,14 @@ export type ItemStyleProps = {
   isUnclickable?: boolean
 }
 export function getItemStyle({ themes, isActive, isUnclickable }: ItemStyleProps) {
-  const { fontSize, color, size } = themes
+  const { fontSize, color, size, spacingByChar } = themes
   const { pxToRem } = size
   const { hoverColor, MAIN, TEXT_BLACK, TEXT_GREY } = color
 
   return css`
     display: flex;
     align-items: center;
+    gap: ${spacingByChar(0.5)};
     box-sizing: border-box;
     height: 40px;
     padding: 0 0.4rem;
