@@ -119,10 +119,10 @@ const Wrapper = styled.nav<{ themes: Theme }>`
     return css`
       display: flex;
       align-items: center;
+      box-shadow: ${shadow.LAYER1};
+      background-color: ${color.WHITE};
       padding-right: ${spacingByChar(1.5)};
       padding-left: ${spacingByChar(1.5)};
-      background-color: ${color.WHITE};
-      box-shadow: ${shadow.LAYER1};
     `
   }}
 `

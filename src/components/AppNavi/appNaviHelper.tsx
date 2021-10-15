@@ -33,44 +33,51 @@ export type ItemStyleProps = {
   isActive?: boolean
   isUnclickable?: boolean
 }
-export function getItemStyle({ themes, isActive, isUnclickable }: ItemStyleProps) {
-  const { fontSize, color, spacingByChar, leading } = themes
-  const { hoverColor, MAIN, TEXT_BLACK, TEXT_GREY } = color
-
-  return css`
+export const getItemStyle = ({
+  themes: {
+    color: { hoverColor, MAIN, TEXT_BLACK, TEXT_GREY, WHITE },
+    fontSize,
+    leading,
+    radius,
+    spacingByChar,
+  },
+  isActive,
+  isUnclickable,
+}: ItemStyleProps) =>
+  css`
     display: flex;
     align-items: center;
     gap: ${spacingByChar(0.5)};
-    padding: ${spacingByChar(0.75)} ${spacingByChar(0.5)};
     margin: 0;
-    background: none;
     border: none;
-    color: ${TEXT_GREY};
+    background-color: transparent;
+    padding: ${spacingByChar(0.75)} ${spacingByChar(0.5)};
+    text-decoration: none;
     font-size: ${fontSize.M};
     font-weight: bold;
     line-height: ${leading.NONE};
-    text-decoration: none;
+    color: ${TEXT_GREY};
+
     ${isActive &&
     css`
       color: ${TEXT_BLACK};
       position: relative;
       &::after {
         content: '';
-        display: block;
-        height: calc(${spacingByChar(0.25)} / 2);
-        background-color: ${MAIN};
         position: absolute;
-        left: 0;
         right: 0;
         bottom: 0;
+        left: 0;
+        display: block;
+        background-color: ${MAIN};
+        height: calc(${spacingByChar(0.25)} / 2);
       }
     `}
     ${!isUnclickable &&
     css`
       cursor: pointer;
       &:hover {
-        background-color: ${hoverColor(color.WHITE)};
+        background-color: ${hoverColor(WHITE)};
       }
     `}
   `
-}
