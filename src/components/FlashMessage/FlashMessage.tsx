@@ -13,7 +13,7 @@ import {
 } from '../Icon'
 import { SecondaryButton } from '../Button'
 
-export const messageTypes = ['success', 'info', 'warning', 'error', ''] as const
+export const messageTypes = ['success', 'info', 'warning', 'error'] as const
 export const animationTypes = ['bounce', 'fade', 'none'] as const
 export const roles = ['alert', 'status'] as const
 
@@ -56,8 +56,8 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
 
   if (!visible) return null
 
-  let Icon = FaCheckCircleIcon
-  let iconColor = theme.color.TEXT_GREY
+  let Icon
+  let iconColor
 
   switch (type) {
     case 'success':
@@ -75,6 +75,7 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
     case 'error':
       Icon = FaExclamationCircleIcon
       iconColor = theme.color.DANGER
+      break
   }
 
   return (
@@ -90,9 +91,15 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
       <Txt themes={theme} className={classNames.text}>
         {text}
       </Txt>
-      <SecondaryButton className={`close ${classNames.button}`} onClick={onClose} size="s" square>
+      <CloseButton
+        themes={theme}
+        className={`close ${classNames.button}`}
+        onClick={onClose}
+        size="s"
+        square
+      >
         <FaTimesIcon visuallyHiddenText="閉じる" />
-      </SecondaryButton>
+      </CloseButton>
     </Wrapper>
   )
 }
@@ -132,7 +139,7 @@ const fadeAnimation = keyframes`
 
 const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
   ${({ themes, animation }) => {
-    const { spacingByChar, radius, color, zIndex, shadow } = themes
+    const { border, fontSize, spacingByChar, radius, color, zIndex, shadow } = themes
 
     let keyframe = bounceAnimation
     switch (animation) {
@@ -149,48 +156,59 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
 
     return css`
       z-index: ${zIndex.FLASH_MESSAGE};
-      display: flex;
       position: fixed;
       bottom: ${spacingByChar(0.5)};
       left: ${spacingByChar(0.5)};
-      box-sizing: border-box;
-      align-items: center;
 
-      /* border + padding + Icon + 10em + Button + margin */
-      min-width: calc(2px + ${spacingByChar(1.5)} + 14px + 8em + 27px + ${spacingByChar(1)});
-      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-      padding-right: ${spacingByChar(0.5)};
-      background-color: ${color.WHITE};
-      border: 1px solid ${color.BORDER};
-      border-radius: ${radius.m};
+      display: flex;
+      align-items: center;
+      gap: ${spacingByChar(0.5)};
+
       box-shadow: ${shadow.LAYER4};
+      border: ${border.shorthand};
+      border-radius: ${radius.m};
+      background-color: ${color.WHITE};
+      padding: ${spacingByChar(1)};
+
+      /* Icon + margin + 8文字 + margin + Button(border + padding + fontSize) */
+      min-width: calc(
+        1em + ${spacingByChar(0.5)} + 8em + ${spacingByChar(0.5)} + (${border.lineWidth} * 2) +
+          (${spacingByChar(0.5)} * 2) + ${fontSize.S}
+      );
       animation: ${keyframe} ${animation === 'none' ? '0.01s' : '1s'} 0s both;
 
       @media (prefers-reduced-motion) {
         animation-duration: 0.01s;
       }
-
-      & > * + * {
-        margin-left: ${spacingByChar(0.5)};
-      }
     `
   }}
 `
-
 const IconWrapper = styled.span`
   flex-shrink: 0;
-`
 
+  svg {
+    display: block;
+  }
+`
 const Txt = styled.p<{ themes: Theme }>`
-  ${({ themes: { fontSize } }) => {
+  ${({ themes: { fontSize, leading } }) => {
     return css`
       flex-grow: 1;
       flex-shrink: 1;
-      margin-top: 0;
-      margin-bottom: 0;
+
+      /* line-height 分 padding が広がってしまうのを調整 */
+      margin-top: calc(((${fontSize.M} * ${leading.NORMAL}) - ${fontSize.M}) / -2);
+      margin-bottom: calc(((${fontSize.M} * ${leading.NORMAL}) - ${fontSize.M}) / -2);
       padding: 0;
       font-size: ${fontSize.M};
-      line-height: 1.5;
+      line-height: ${leading.NORMAL};
     `
   }}
 `
+const CloseButton = styled(SecondaryButton)<{ themes: Theme }>(
+  ({ themes: { spacingByChar } }) => css`
+    margin-top: ${spacingByChar(-0.5)};
+    margin-right: ${spacingByChar(-0.5)};
+    margin-bottom: ${spacingByChar(-0.5)};
+  `,
+)

@@ -140,7 +140,7 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
       margin: 0;
 
       /* HINT: input[type=file] が button ボタンを覆うようにサイズを調整
-      Hanica のようにデフォルト font-size に !important がついているプロダクトの場合、上書きされてしまうため念のため !important を入れる */
+      デフォルト font-size に !important がついているプロダクトの場合、上書きされてしまうため念のため !important を入れる */
       font-size: 128px !important;
       opacity: 0;
       appearance: none;
