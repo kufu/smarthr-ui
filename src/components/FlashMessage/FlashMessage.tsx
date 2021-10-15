@@ -61,7 +61,6 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
 
   switch (type) {
     case 'success':
-    default:
       Icon = FaCheckCircleIcon
       iconColor = theme.color.MAIN
       break
