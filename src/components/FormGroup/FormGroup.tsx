@@ -1,6 +1,7 @@
-import React, { ComponentProps, ReactNode, VFC } from 'react'
+import React, { ComponentProps, HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { useId } from '../../hooks/useId'
 import { StatusLabel } from '../StatusLabel'
 import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
@@ -19,8 +20,9 @@ type Props = {
   className?: string
   children: ReactNode
 }
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-labelledby'>
 
-export const FormGroup: VFC<Props> = ({
+export const FormGroup: VFC<Props & ElementProps> = ({
   title,
   titleType,
   htmlFor,
@@ -32,14 +34,22 @@ export const FormGroup: VFC<Props> = ({
   disabled,
   className = '',
   children,
+  ...props
 }) => {
   const theme = useTheme()
   const disabledClass = disabled ? 'disabled' : ''
+  const managedLabelId = useId(labelId)
+  const isRoleGroup = props.role === 'group'
 
   return (
-    <Wrapper className={`${className} ${disabledClass}`} themes={theme}>
+    <Wrapper
+      {...props}
+      className={`${className} ${disabledClass}`}
+      themes={theme}
+      aria-labelledby={isRoleGroup ? managedLabelId : undefined}
+    >
       <TitleWrapper>
-        <label htmlFor={htmlFor} id={labelId}>
+        <label htmlFor={htmlFor} id={managedLabelId}>
           <Title tag="span" type={titleType} themes={theme} className={disabledClass}>
             {title}
           </Title>
