@@ -69,8 +69,10 @@ export const getItemStyle = ({
         bottom: 0;
         left: 0;
         display: block;
+        border-top-right-radius: ${radius.s};
+        border-top-left-radius: ${radius.s};
         background-color: ${MAIN};
-        height: calc(${spacingByChar(0.25)} / 2);
+        height: ${spacingByChar(0.25)};
       }
     `}
     ${!isUnclickable &&
