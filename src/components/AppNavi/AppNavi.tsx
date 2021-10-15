@@ -18,6 +18,7 @@ type Props = {
   isCurrentUnclickable?: boolean
   children?: ReactNode
   className?: string
+  displayCaret?: boolean
 }
 
 export const AppNavi: VFC<Props & ElementProps> = ({
@@ -26,6 +27,7 @@ export const AppNavi: VFC<Props & ElementProps> = ({
   isCurrentUnclickable,
   className = '',
   children = null,
+  displayCaret = false,
   ...props
 }) => {
   const theme = useTheme()
@@ -66,6 +68,7 @@ export const AppNavi: VFC<Props & ElementProps> = ({
                     icon={button.icon}
                     current={button.current}
                     isUnclickable={isUnclickable}
+                    displayCaret={displayCaret}
                   >
                     {button.children}
                   </AppNaviDropdown>
