@@ -1,6 +1,6 @@
 import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import { FaCaretDownIcon, ComponentProps as IconProps } from '../Icon'
 import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
@@ -42,11 +42,7 @@ export const AppNaviDropdown: VFC<InnerProps> = ({
         >
           {iconComponent}
           {children}
-          {displayCaret && (
-            <IconWrapper themes={theme}>
-              <FaCaretDownIcon />
-            </IconWrapper>
-          )}
+          {displayCaret && <FaCaretDownIcon />}
         </TriggerButton>
       </DropdownTrigger>
 
@@ -69,6 +65,3 @@ const TriggerButton = styled.button<ItemStyleProps & { displayCaret?: boolean }>
     `}
   `,
 )
-const IconWrapper = styled.span<{ themes: Theme }>`
-  display: flex;
-`

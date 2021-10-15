@@ -25,17 +25,9 @@ export const getIconComponent = (
     color: opts.current ? TEXT_BLACK : TEXT_GREY,
   }
 
-  return (
-    <IconWrapper themes={theme}>
-      <Icon {...iconProps} />
-    </IconWrapper>
-  )
+  return <Icon {...iconProps} />
 }
 
-const IconWrapper = styled.span<{ themes: Theme }>`
-  display: flex;
-  padding: 0;
-`
 export type ItemStyleProps = {
   themes: Theme
   isActive?: boolean
