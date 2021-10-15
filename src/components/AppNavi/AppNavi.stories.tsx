@@ -70,6 +70,7 @@ const buttons = [
     to: 'http://www.google.com',
   },
 ]
+const withoutIconButtons = buttons.map(({ icon, ...button }) => button)
 
 storiesOf('AppNavi', module)
   .addParameters({
@@ -82,7 +83,7 @@ storiesOf('AppNavi', module)
 
     return (
       <Wrapper themes={theme}>
-        <AppNavi label="プラスメニュー" buttons={buttons}>
+        <AppNavi label="プラスメニュー" buttons={withoutIconButtons} displayDrodownCaret>
           <Child>Some child components</Child>
         </AppNavi>
       </Wrapper>
@@ -93,7 +94,7 @@ storiesOf('AppNavi', module)
 
     return (
       <Wrapper themes={theme}>
-        <AppNavi label="プラスメニュー" buttons={buttons} />
+        <AppNavi label="プラスメニュー" buttons={withoutIconButtons} displayDrodownCaret />
       </Wrapper>
     )
   })
@@ -103,22 +104,18 @@ storiesOf('AppNavi', module)
     const items = [
       {
         children: 'ボタン',
-        icon: FaUserAltIcon,
         onClick: action('click!!'),
       },
       {
         children: 'アンカー',
-        icon: FaCogIcon,
         href: 'http://www.google.com',
       },
       {
         children: 'ドロップダウン',
-        icon: FaChartPieIcon,
         dropdownContent: <List />,
       },
       {
         children: 'カスタムタグ',
-        icon: FaBirthdayCakeIcon,
         tag: Link,
         to: 'http://www.google.com',
       },
@@ -136,9 +133,19 @@ storiesOf('AppNavi', module)
                 return item
               })}
               isCurrentUnclickable
+              displayDrodownCaret
             />
           </InnerWrapper>
         ))}
+      </Wrapper>
+    )
+  })
+  .add('アイコンありドロップダウン示唆なし', () => {
+    const theme = useTheme()
+
+    return (
+      <Wrapper themes={theme}>
+        <AppNavi label="プラスメニュー" buttons={withoutIconButtons} />
       </Wrapper>
     )
   })
