@@ -56,7 +56,7 @@ const buttons = [
   {
     children: 'アンカー',
     icon: FaCogIcon,
-    href: 'http://www.google.com',
+    href: '/',
   },
   {
     children: 'ドロップダウン',
@@ -67,7 +67,7 @@ const buttons = [
     children: 'カスタムタグ',
     icon: FaBirthdayCakeIcon,
     tag: Link,
-    to: 'http://www.google.com',
+    href: '/',
   },
 ]
 const withoutIconButtons = buttons.map(({ icon, ...button }) => button)
@@ -100,26 +100,8 @@ storiesOf('AppNavi', module)
   })
   .add('unclickable current', () => {
     const theme = useTheme()
+    const items = buttons.map(({ current, ...button }) => button)
 
-    const items = [
-      {
-        children: 'ボタン',
-        onClick: action('click!!'),
-      },
-      {
-        children: 'アンカー',
-        href: 'http://www.google.com',
-      },
-      {
-        children: 'ドロップダウン',
-        dropdownContent: <List />,
-      },
-      {
-        children: 'カスタムタグ',
-        tag: Link,
-        to: 'http://www.google.com',
-      },
-    ]
     return (
       <Wrapper themes={theme}>
         {items.map((_, currentIndex) => (
@@ -145,7 +127,7 @@ storiesOf('AppNavi', module)
 
     return (
       <Wrapper themes={theme}>
-        <AppNavi label="機能名" buttons={withoutIconButtons} />
+        <AppNavi label="機能名" buttons={buttons} />
       </Wrapper>
     )
   })
