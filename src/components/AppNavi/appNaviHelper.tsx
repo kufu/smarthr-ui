@@ -38,7 +38,6 @@ export const getItemStyle = ({
     color: { hoverColor, MAIN, TEXT_BLACK, TEXT_GREY, WHITE },
     fontSize,
     leading,
-    radius,
     spacingByChar,
   },
   isActive,
