@@ -273,14 +273,15 @@ const Header = styled.div<{ themes: Theme }>`
   ${({ themes: { border, spacingByChar } }) => css`
     display: flex;
     align-items: center;
-    padding: ${spacingByChar(1)} ${spacingByChar(1)} ${spacingByChar(1)} ${spacingByChar(1.5)};
+    padding-left: ${spacingByChar(1.5)};
+    padding-right: ${spacingByChar(1)};
     border-bottom: ${border.shorthand};
     cursor: move;
   `}
 `
 const Title = styled.div<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-    margin-right: ${spacingByChar(1)};
+    margin: ${spacingByChar(1)} ${spacingByChar(1)} ${spacingByChar(1)} 0;
   `}
 `
 const CloseButtonLayout = styled.div`
