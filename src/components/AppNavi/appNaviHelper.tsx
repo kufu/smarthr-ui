@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import { css } from 'styled-components'
 
 import { Theme } from '../../hooks/useTheme'
 
@@ -24,67 +24,58 @@ export const getIconComponent = (
     color: opts.current ? TEXT_BLACK : TEXT_GREY,
   }
 
-  return (
-    <IconWrapper themes={theme}>
-      <Icon {...iconProps} />
-    </IconWrapper>
-  )
+  return <Icon {...iconProps} />
 }
 
-const IconWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
-      display: flex;
-      padding: 0;
-      margin: 0 ${spacingByChar(0.5)} 0 0;
-    `
-  }}
-`
 export type ItemStyleProps = {
   themes: Theme
   isActive?: boolean
   isUnclickable?: boolean
 }
-export function getItemStyle({ themes, isActive, isUnclickable }: ItemStyleProps) {
-  const { fontSize, color, size } = themes
-  const { pxToRem } = size
-  const { hoverColor, MAIN, TEXT_BLACK, TEXT_GREY } = color
-
-  return css`
+export const getItemStyle = ({
+  themes: {
+    color: { hoverColor, MAIN, TEXT_BLACK, TEXT_GREY, WHITE },
+    fontSize,
+    leading,
+    spacingByChar,
+  },
+  isActive,
+  isUnclickable,
+}: ItemStyleProps) =>
+  css`
     display: flex;
     align-items: center;
-    box-sizing: border-box;
-    height: 40px;
-    padding: 0 0.4rem;
+    gap: ${spacingByChar(0.5)};
     margin: 0;
-    background: none;
     border: none;
-    color: ${TEXT_GREY};
+    background-color: transparent;
+    padding: ${spacingByChar(0.75)} ${spacingByChar(0.5)};
+    text-decoration: none;
     font-size: ${fontSize.M};
     font-weight: bold;
-    text-decoration: none;
-    transition: background-color 0.3s;
+    line-height: ${leading.NONE};
+    color: ${TEXT_GREY};
+
     ${isActive &&
     css`
       color: ${TEXT_BLACK};
       position: relative;
       &::after {
         content: '';
-        display: block;
-        height: ${pxToRem(3)};
-        background-color: ${MAIN};
         position: absolute;
-        left: 0;
         right: 0;
         bottom: 0;
+        left: 0;
+        display: block;
+        background-color: ${MAIN};
+        height: ${spacingByChar(0.25)};
       }
     `}
     ${!isUnclickable &&
     css`
       cursor: pointer;
       &:hover {
-        background-color: ${hoverColor(color.WHITE)};
+        background-color: ${hoverColor(WHITE)};
       }
     `}
   `
-}
