@@ -31,7 +31,7 @@ type Props = {
   title: string
   /** バックグラウンドジョブデータの配列 */
   jobs: JobProps[]
-  /** パネルが広げて表示されているかどうか */
+  /** パネルを広げるかどうか */
   isExpanded?: boolean
   /** ジョブのキャンセルボタンクリックのハンドラ */
   onClickCancelJob?: (jobId: JobId) => void
