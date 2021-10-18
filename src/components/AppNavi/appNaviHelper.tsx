@@ -69,8 +69,6 @@ export const getItemStyle = ({
         bottom: 0;
         left: 0;
         display: block;
-        border-top-right-radius: ${radius.s};
-        border-top-left-radius: ${radius.s};
         background-color: ${MAIN};
         height: ${spacingByChar(0.25)};
       }
