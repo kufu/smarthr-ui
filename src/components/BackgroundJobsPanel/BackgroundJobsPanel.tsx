@@ -14,19 +14,30 @@ type JobId = string | number
 export type Status = 'processing' | 'downloading' | 'warning' | 'error' | 'done'
 
 export type JobProps = {
+  /** ジョブの ID */
   id: JobId
+  /** ジョブのステータス */
   status: Status
+  /** ジョブ名 */
   name: string
+  /** ジョブの説明 */
   description: string
+  /** ジョブがキャンセル可能かどうか */
   isCancelable?: boolean
 }
 
 type Props = {
+  /** パネルのタイトル */
   title: string
+  /** バックグラウンドジョブデータの配列 */
   jobs: JobProps[]
+  /** パネルを広げるかどうか */
   isExpanded?: boolean
+  /** ジョブのキャンセルボタンクリックのハンドラ */
   onClickCancelJob?: (jobId: JobId) => void
+  /** パネルの開閉ボタンクリックのハンドラ */
   onClickExpansion?: (isExpanded: boolean) => void
+  /** パネルの閉じるボタンクリックのハンドラ */
   onClickClose?: () => void
 }
 
