@@ -56,7 +56,7 @@ const buttons = [
   {
     children: 'アンカー',
     icon: FaCogIcon,
-    href: 'http://www.google.com',
+    href: '/',
   },
   {
     children: 'ドロップダウン',
@@ -67,9 +67,10 @@ const buttons = [
     children: 'カスタムタグ',
     icon: FaBirthdayCakeIcon,
     tag: Link,
-    to: 'http://www.google.com',
+    href: '/',
   },
 ]
+const withoutIconButtons = buttons.map(({ icon, ...button }) => button)
 
 storiesOf('AppNavi', module)
   .addParameters({
@@ -82,7 +83,7 @@ storiesOf('AppNavi', module)
 
     return (
       <Wrapper themes={theme}>
-        <AppNavi label="プラスメニュー" buttons={buttons}>
+        <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret>
           <Child>Some child components</Child>
         </AppNavi>
       </Wrapper>
@@ -93,42 +94,20 @@ storiesOf('AppNavi', module)
 
     return (
       <Wrapper themes={theme}>
-        <AppNavi label="プラスメニュー" buttons={buttons} />
+        <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret />
       </Wrapper>
     )
   })
   .add('unclickable current', () => {
     const theme = useTheme()
+    const items = buttons.map(({ current, ...button }) => button)
 
-    const items = [
-      {
-        children: 'ボタン',
-        icon: FaUserAltIcon,
-        onClick: action('click!!'),
-      },
-      {
-        children: 'アンカー',
-        icon: FaCogIcon,
-        href: 'http://www.google.com',
-      },
-      {
-        children: 'ドロップダウン',
-        icon: FaChartPieIcon,
-        dropdownContent: <List />,
-      },
-      {
-        children: 'カスタムタグ',
-        icon: FaBirthdayCakeIcon,
-        tag: Link,
-        to: 'http://www.google.com',
-      },
-    ]
     return (
       <Wrapper themes={theme}>
         {items.map((_, currentIndex) => (
           <InnerWrapper key={currentIndex}>
             <AppNavi
-              label="プラスメニュー"
+              label="機能名"
               buttons={items.map((item, index) => {
                 if (index === currentIndex) {
                   return { ...item, current: true }
@@ -136,9 +115,19 @@ storiesOf('AppNavi', module)
                 return item
               })}
               isCurrentUnclickable
+              displayDrodownCaret
             />
           </InnerWrapper>
         ))}
+      </Wrapper>
+    )
+  })
+  .add('アイコンありドロップダウン示唆なし', () => {
+    const theme = useTheme()
+
+    return (
+      <Wrapper themes={theme}>
+        <AppNavi label="機能名" buttons={buttons} />
       </Wrapper>
     )
   })
