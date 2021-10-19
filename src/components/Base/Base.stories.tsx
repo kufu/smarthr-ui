@@ -1,4 +1,4 @@
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 import { useTheme } from '../../hooks/useTheme'
@@ -6,7 +6,12 @@ import { useTheme } from '../../hooks/useTheme'
 import { Base, LayerKeys, RadiusKeys, layerMap, radiusMap } from './Base'
 import { DialogBase } from './DialogBase'
 
-storiesOf('Base', module).add('Base', () => {
+export default {
+  title: 'Base',
+  component: Base,
+}
+
+export const BaseStory: Story = () => {
   const themes = useTheme()
 
   return (
@@ -43,9 +48,10 @@ storiesOf('Base', module).add('Base', () => {
       </dd>
     </List>
   )
-})
+}
+BaseStory.storyName = 'Base'
 
-storiesOf('Base', module).add('DialogBase', () => (
+export const DialogBaseStory: Story = () => (
   <List>
     <li>
       <DialogBase radius="s">
@@ -62,7 +68,8 @@ storiesOf('Base', module).add('DialogBase', () => (
       </DialogBase>
     </li>
   </List>
-))
+)
+DialogBaseStory.storyName = 'DialogBase'
 
 const List = styled.ul`
   margin: 0;
