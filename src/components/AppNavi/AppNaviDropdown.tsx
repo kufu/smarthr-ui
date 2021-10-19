@@ -6,9 +6,13 @@ import { FaCaretDownIcon, ComponentProps as IconProps } from '../Icon'
 import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
 
 export type AppNaviDropdownProps = {
+  /** ボタンのテキスト */
   children: ReactNode
+  /** ドロップダウンのコンテンツ */
   dropdownContent: ReactNode
+  /** 表示するアイコンタイプ */
   icon?: React.ComponentType<IconProps>
+  /** アクティブ状態であるかどうか */
   current?: boolean
   displayCaret?: boolean
 }

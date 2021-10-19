@@ -11,13 +11,19 @@ import { useClassNames } from './useClassNames'
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 type Props = {
+  /** ラベルのテキスト */
   label?: string
+  /** 表示するボタンの Props の配列 */
   buttons?: Array<
     AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
   >
+  /** アクティブ状態のボタンがクリック可能かどうか */
   isCurrentUnclickable?: boolean
+  /** 追加で表示する内容 */
   children?: ReactNode
+  /** コンポーネントに適用するクラス名 */
   className?: string
+  /** ドロップダウンにキャレットを表示するかどうか */
   displayDrodownCaret?: boolean
 }
 
