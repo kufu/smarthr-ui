@@ -298,6 +298,7 @@ export function SingleComboBox<T>({
           }
         }}
         ref={inputRef}
+        autoComplete="off"
         aria-activedescendant={aria.activeDescendant}
         aria-autocomplete="list"
         className={classNames.input}
