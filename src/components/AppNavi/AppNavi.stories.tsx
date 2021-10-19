@@ -1,12 +1,23 @@
 import { action } from '@storybook/addon-actions'
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { FaBirthdayCakeIcon, FaChartPieIcon, FaCogIcon, FaFileIcon, FaUserAltIcon } from '../Icon/'
 import { AppNavi } from './AppNavi'
-import readme from './README.md'
 import { Theme, useTheme } from '../../hooks/useTheme'
+
+import readme from './README.md'
+
+export default {
+  title: 'AppNavi',
+  component: AppNavi,
+  parameters: {
+    readme: {
+      sidebar: readme,
+    },
+  },
+}
 
 const Link: VFC<{ to: string; children: ReactNode; disabled?: boolean; className?: string }> = ({
   to,
@@ -72,65 +83,66 @@ const buttons = [
 ]
 const withoutIconButtons = buttons.map(({ icon, ...button }) => button)
 
-storiesOf('AppNavi', module)
-  .addParameters({
-    readme: {
-      sidebar: readme,
-    },
-  })
-  .add('with children', () => {
-    const theme = useTheme()
+export const WithChildren: Story = () => {
+  const theme = useTheme()
 
-    return (
-      <Wrapper themes={theme}>
-        <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret>
-          <Child>Some child components</Child>
-        </AppNavi>
-      </Wrapper>
-    )
-  })
-  .add('without children', () => {
-    const theme = useTheme()
+  return (
+    <Wrapper themes={theme}>
+      <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret>
+        <Child>Some child components</Child>
+      </AppNavi>
+    </Wrapper>
+  )
+}
+WithChildren.storyName = 'with children'
 
-    return (
-      <Wrapper themes={theme}>
-        <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret />
-      </Wrapper>
-    )
-  })
-  .add('unclickable current', () => {
-    const theme = useTheme()
-    const items = buttons.map(({ current, ...button }) => button)
+export const WithoutChildren: Story = () => {
+  const theme = useTheme()
 
-    return (
-      <Wrapper themes={theme}>
-        {items.map((_, currentIndex) => (
-          <InnerWrapper key={currentIndex}>
-            <AppNavi
-              label="機能名"
-              buttons={items.map((item, index) => {
-                if (index === currentIndex) {
-                  return { ...item, current: true }
-                }
-                return item
-              })}
-              isCurrentUnclickable
-              displayDrodownCaret
-            />
-          </InnerWrapper>
-        ))}
-      </Wrapper>
-    )
-  })
-  .add('アイコンありドロップダウン示唆なし', () => {
-    const theme = useTheme()
+  return (
+    <Wrapper themes={theme}>
+      <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret />
+    </Wrapper>
+  )
+}
+WithoutChildren.storyName = 'without children'
 
-    return (
-      <Wrapper themes={theme}>
-        <AppNavi label="機能名" buttons={buttons} />
-      </Wrapper>
-    )
-  })
+export const UnclickableCurrent: Story = () => {
+  const theme = useTheme()
+  const items = buttons.map(({ current, ...button }) => button)
+
+  return (
+    <Wrapper themes={theme}>
+      {items.map((_, currentIndex) => (
+        <InnerWrapper key={currentIndex}>
+          <AppNavi
+            label="機能名"
+            buttons={items.map((item, index) => {
+              if (index === currentIndex) {
+                return { ...item, current: true }
+              }
+              return item
+            })}
+            isCurrentUnclickable
+            displayDrodownCaret
+          />
+        </InnerWrapper>
+      ))}
+    </Wrapper>
+  )
+}
+UnclickableCurrent.storyName = 'unclickable current'
+
+export const NoIconAndCaret: Story = () => {
+  const theme = useTheme()
+
+  return (
+    <Wrapper themes={theme}>
+      <AppNavi label="機能名" buttons={buttons} />
+    </Wrapper>
+  )
+}
+NoIconAndCaret.storyName = 'アイコンありドロップダウン示唆なし'
 
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {

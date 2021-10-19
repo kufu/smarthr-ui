@@ -6,9 +6,13 @@ import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
 import { useClassNames } from './useClassNames'
 
 export type AppNaviButtonProps = {
+  /** ボタンのテキスト */
   children: ReactNode
+  /** 表示するアイコンタイプ */
   icon?: React.ComponentType<IconProps>
+  /** アクティブ状態であるかどうか */
   current?: boolean
+  /** クリックイベントのハンドラ */
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 

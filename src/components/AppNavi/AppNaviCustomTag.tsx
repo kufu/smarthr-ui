@@ -6,9 +6,13 @@ import { getIconComponent, getItemStyle } from './appNaviHelper'
 import { useClassNames } from './useClassNames'
 
 export type AppNaviCustomTagProps = {
+  /** ボタンのテキスト */
   children: ReactNode
+  /** このボタンのカスタムタグ */
   tag: ComponentType<any>
+  /** 表示するアイコンタイプ */
   icon?: React.ComponentType<IconProps>
+  /** アクティブ状態であるかどうか */
   current?: boolean
 } & { [key: string]: any }
 type InnerProps = AppNaviCustomTagProps & {
