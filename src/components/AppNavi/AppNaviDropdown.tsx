@@ -14,11 +14,11 @@ export type AppNaviDropdownProps = {
   icon?: React.ComponentType<IconProps>
   /** アクティブ状態であるかどうか */
   current?: boolean
-  displayCaret?: boolean
 }
 
 type InnerProps = AppNaviDropdownProps & {
   isUnclickable?: boolean
+  displayCaret?: boolean
 }
 
 export const AppNaviDropdown: VFC<InnerProps> = ({
