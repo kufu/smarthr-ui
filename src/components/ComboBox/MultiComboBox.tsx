@@ -307,7 +307,15 @@ export function MultiComboBox<T>({
       </InputArea>
 
       <Suffix themes={theme}>
-        <FaCaretDownIcon color={isFocused ? theme.color.TEXT_BLACK : theme.color.BORDER} />
+        <FaCaretDownIcon
+          color={
+            !disabled
+              ? isFocused
+                ? theme.color.TEXT_BLACK
+                : theme.color.TEXT_GREY
+              : theme.color.BORDER
+          }
+        />
       </Suffix>
 
       {renderListBox()}
