@@ -1,4 +1,11 @@
-import React, { ChangeEvent, SelectHTMLAttributes, VFC, useCallback } from 'react'
+import React, {
+  ChangeEvent,
+  SelectHTMLAttributes,
+  VFC,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { isMobileSafari } from '../../libs/ua'
@@ -33,6 +40,7 @@ export const Select: VFC<Props & ElementProps> = ({
   hasBlank = false,
   blankLabel = '選択してください',
   className = '',
+  disabled,
   ...props
 }) => {
   const theme = useTheme()
@@ -44,19 +52,32 @@ export const Select: VFC<Props & ElementProps> = ({
     [onChange],
   )
   const classNames = useClassNames()
+  const [isFocused, setIsFocused] = useState(false)
+
+  const caretIconColor = useMemo(() => {
+    if (isFocused) return theme.color.TEXT_BLACK
+    if (disabled) return theme.color.TEXT_DISABLED
+    return theme.color.TEXT_GREY
+  }, [isFocused, disabled, theme])
 
   return (
     <Wrapper
       className={`${className} ${classNames.wrapper}`}
       $width={widthStyle}
       error={error}
-      disabled={props.disabled}
+      disabled={disabled}
       themes={theme}
     >
       <SelectBox
         onChange={handleChange}
         aria-invalid={error || undefined}
         themes={theme}
+        onFocus={() => {
+          setIsFocused(true)
+        }}
+        onBlur={() => {
+          setIsFocused(false)
+        }}
         {...props}
       >
         {hasBlank && <option value="">{blankLabel}</option>}
@@ -87,7 +108,7 @@ export const Select: VFC<Props & ElementProps> = ({
         }
       </SelectBox>
       <IconWrap themes={theme}>
-        <FaSortIcon />
+        <FaSortIcon color={caretIconColor} />
       </IconWrap>
     </Wrapper>
   )
