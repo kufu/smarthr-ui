@@ -64,19 +64,29 @@ storiesOf('FormGroup', module)
       <Wrapper>
         <Title themes={theme}>default</Title>
         <Body>
-          <FormGroup title="Title" titleType="blockTitle">
+          <FormGroup title="Title" titleType="blockTitle" role="group">
             <SampleChildren id1="id_1-1" id2="id_1-2" />
           </FormGroup>
         </Body>
         <Title themes={theme}>with status label</Title>
         <Body>
-          <FormGroup title="Title" titleType="blockTitle" statusLabelProps={SampleStatusLabelProps}>
+          <FormGroup
+            title="Title"
+            titleType="blockTitle"
+            statusLabelProps={SampleStatusLabelProps}
+            role="group"
+          >
             <SampleChildren id1="id_2-1" id2="id_2-2" />
           </FormGroup>
         </Body>
         <Title themes={theme}>with help message</Title>
         <Body>
-          <FormGroup title="Title" titleType="blockTitle" helpMessage="help message text">
+          <FormGroup
+            title="Title"
+            titleType="blockTitle"
+            helpMessage="help message text"
+            role="group"
+          >
             <SampleChildren id1="id_3-1" id2="id_3-2" />
           </FormGroup>
         </Body>
@@ -87,6 +97,7 @@ storiesOf('FormGroup', module)
             titleType="blockTitle"
             statusLabelProps={SampleStatusLabelProps}
             errorMessages={['error message 1', 'error message 2']}
+            role="group"
           >
             <SampleChildren id1="id_4-1" id2="id_4-2" />
           </FormGroup>
@@ -99,6 +110,7 @@ storiesOf('FormGroup', module)
             statusLabelProps={SampleStatusLabelProps}
             helpMessage="help message text"
             errorMessages={['error message 1', 'error message 2']}
+            role="group"
           >
             <SampleChildren id1="id_5-1" id2="id_5-2" />
           </FormGroup>
@@ -112,6 +124,7 @@ storiesOf('FormGroup', module)
             helpMessage="help message text"
             errorMessages="error message"
             disabled
+            role="group"
           >
             <SampleChildren id1="id_6-1" id2="id_6-2" disabled />
           </FormGroup>
