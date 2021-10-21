@@ -88,7 +88,7 @@ export const Select: VFC<Props & ElementProps> = ({
           isMobileSafari && <BlankOptgroup />
         }
       </SelectBox>
-      <IconWrap themes={theme} className="caret">
+      <IconWrap themes={theme}>
         <FaSortIcon color="inherit" />
       </IconWrap>
     </Wrapper>
