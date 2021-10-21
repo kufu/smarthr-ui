@@ -159,10 +159,6 @@ const SelectBox = styled.select<{ themes: Theme }>`
         cursor: not-allowed;
         opacity: 1;
         color: ${color.TEXT_DISABLED};
-
-        + .caret {
-          color: ${color.TEXT_DISABLED};
-        }
       }
 
       /* for IE11 */
@@ -193,6 +189,9 @@ const IconWrap = styled.span<{ themes: Theme }>`
       align-items: center;
       color: ${color.TEXT_GREY};
 
+      ${SelectBox}:disabled + & {
+        color: ${color.TEXT_DISABLED};
+      }
       ${SelectBox}:focus + & {
         color: ${color.TEXT_BLACK};
       }
