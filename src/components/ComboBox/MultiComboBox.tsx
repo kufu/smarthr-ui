@@ -289,6 +289,7 @@ export function MultiComboBox<T>({
                 }
                 handleInputKeyDown(e)
               }}
+              autoComplete="off"
               aria-activedescendant={aria.activeDescendant}
               aria-autocomplete="list"
               aria-controls={aria.listBoxId}
