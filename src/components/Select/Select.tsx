@@ -89,7 +89,7 @@ export const Select: VFC<Props & ElementProps> = ({
         }
       </SelectBox>
       <IconWrap themes={theme} className="caret">
-        <StyledIcon />
+        <FaSortIcon color="inherit" />
       </IconWrap>
     </Wrapper>
   )
@@ -150,10 +150,6 @@ const SelectBox = styled.select<{ themes: Theme }>`
       line-height: ${leading.NONE};
       width: 100%;
 
-      + .caret {
-        color: ${color.TEXT_GREY};
-      }
-
       &::placeholder {
         color: ${color.TEXT_GREY};
       }
@@ -195,17 +191,14 @@ const IconWrap = styled.span<{ themes: Theme }>`
       bottom: 0;
       display: inline-flex;
       align-items: center;
+      color: ${color.TEXT_GREY};
+
       ${SelectBox}:focus + & {
         color: ${color.TEXT_BLACK};
       }
     `
   }}
 `
-
-const StyledIcon = styled(FaSortIcon)`
-  color: inherit;
-`
-
 const BlankOptgroup = styled.optgroup`
   display: none;
 `
