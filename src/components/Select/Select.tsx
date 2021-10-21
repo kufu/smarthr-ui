@@ -1,11 +1,4 @@
-import React, {
-  ChangeEvent,
-  SelectHTMLAttributes,
-  VFC,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react'
+import React, { ChangeEvent, SelectHTMLAttributes, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isMobileSafari } from '../../libs/ua'
@@ -52,13 +45,6 @@ export const Select: VFC<Props & ElementProps> = ({
     [onChange],
   )
   const classNames = useClassNames()
-  const [isFocused, setIsFocused] = useState(false)
-
-  const caretIconColor = useMemo(() => {
-    if (isFocused) return theme.color.TEXT_BLACK
-    if (disabled) return theme.color.TEXT_DISABLED
-    return theme.color.TEXT_GREY
-  }, [isFocused, disabled, theme])
 
   return (
     <Wrapper
@@ -72,12 +58,7 @@ export const Select: VFC<Props & ElementProps> = ({
         onChange={handleChange}
         aria-invalid={error || undefined}
         themes={theme}
-        onFocus={() => {
-          setIsFocused(true)
-        }}
-        onBlur={() => {
-          setIsFocused(false)
-        }}
+        disabled={disabled}
         {...props}
       >
         {hasBlank && <option value="">{blankLabel}</option>}
@@ -107,8 +88,8 @@ export const Select: VFC<Props & ElementProps> = ({
           isMobileSafari && <BlankOptgroup />
         }
       </SelectBox>
-      <IconWrap themes={theme}>
-        <FaSortIcon color={caretIconColor} />
+      <IconWrap themes={theme} className="caret">
+        <StyledIcon />
       </IconWrap>
     </Wrapper>
   )
@@ -169,6 +150,10 @@ const SelectBox = styled.select<{ themes: Theme }>`
       line-height: ${leading.NONE};
       width: 100%;
 
+      + .caret {
+        color: ${color.TEXT_GREY};
+      }
+
       &::placeholder {
         color: ${color.TEXT_GREY};
       }
@@ -178,6 +163,10 @@ const SelectBox = styled.select<{ themes: Theme }>`
         cursor: not-allowed;
         opacity: 1;
         color: ${color.TEXT_DISABLED};
+
+        + .caret {
+          color: ${color.TEXT_DISABLED};
+        }
       }
 
       /* for IE11 */
@@ -195,14 +184,28 @@ const SelectBox = styled.select<{ themes: Theme }>`
   }}
 `
 const IconWrap = styled.span<{ themes: Theme }>`
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  right: ${({ themes: { spacingByChar } }) => spacingByChar(0.75)};
-  bottom: 0;
-  display: inline-flex;
-  align-items: center;
+  ${({ themes }) => {
+    const { color, spacingByChar } = themes
+
+    return css`
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      right: ${spacingByChar(0.75)};
+      bottom: 0;
+      display: inline-flex;
+      align-items: center;
+      ${SelectBox}:focus + & {
+        color: ${color.TEXT_BLACK};
+      }
+    `
+  }}
 `
+
+const StyledIcon = styled(FaSortIcon)`
+  color: inherit;
+`
+
 const BlankOptgroup = styled.optgroup`
   display: none;
 `
