@@ -5,7 +5,9 @@ import { useClassNames } from './useClassNames'
 
 type Props = {
   children: ReactNode
+  /** 角丸のサイズ */
   radius?: RadiusKeys
+  /** レイヤの重なり方向の高さ（影の付き方に影響する） */
   layer?: LayerKeys
 }
 
