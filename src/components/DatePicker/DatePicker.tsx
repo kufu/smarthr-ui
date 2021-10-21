@@ -1,4 +1,4 @@
-import React, { VFC, useCallback, useEffect, useRef, useState } from 'react'
+import React, { VFC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -174,6 +174,12 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   )
   useGlobalKeyDown(handleKeyDown)
 
+  const caretIconColor = useMemo(() => {
+    if (isInputFocused || isCalendarShown) return themes.color.TEXT_BLACK
+    if (disabled) return themes.color.TEXT_DISABLED
+    return themes.color.TEXT_GREY
+  }, [isCalendarShown, isInputFocused, disabled, themes])
+
   const classNames = useClassNames()
 
   return (
@@ -227,13 +233,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
           suffix={
             <CalendarIconLayout themes={themes}>
               <CalendarIconWrapper themes={themes}>
-                <FaCalendarAltIcon
-                  color={
-                    isInputFocused || isCalendarShown
-                      ? themes.color.TEXT_BLACK
-                      : themes.color.BORDER
-                  }
-                />
+                <FaCalendarAltIcon color={caretIconColor} />
               </CalendarIconWrapper>
             </CalendarIconLayout>
           }
