@@ -11,13 +11,20 @@ import { useClassNames } from './useClassNames'
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 type Props = {
+  /** ラベルのテキスト */
   label?: string
+  /** 表示するボタンの Props の配列 */
   buttons?: Array<
     AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
   >
+  /** アクティブ状態のボタンがクリック可能かどうか */
   isCurrentUnclickable?: boolean
+  /** 追加で表示する内容 */
   children?: ReactNode
+  /** コンポーネントに適用するクラス名 */
   className?: string
+  /** ドロップダウンにキャレットを表示するかどうか */
+  displayDrodownCaret?: boolean
 }
 
 export const AppNavi: VFC<Props & ElementProps> = ({
@@ -26,6 +33,7 @@ export const AppNavi: VFC<Props & ElementProps> = ({
   isCurrentUnclickable,
   className = '',
   children = null,
+  displayDrodownCaret = false,
   ...props
 }) => {
   const theme = useTheme()
@@ -66,6 +74,7 @@ export const AppNavi: VFC<Props & ElementProps> = ({
                     icon={button.icon}
                     current={button.current}
                     isUnclickable={isUnclickable}
+                    displayCaret={displayDrodownCaret}
                   >
                     {button.children}
                   </AppNaviDropdown>
@@ -112,18 +121,14 @@ export const AppNavi: VFC<Props & ElementProps> = ({
 }
 
 const Wrapper = styled.nav<{ themes: Theme }>`
-  ${({ themes: { color, shadow, size } }) => {
-    const { pxToRem } = size
-
+  ${({ themes: { color, shadow, spacingByChar } }) => {
     return css`
       display: flex;
       align-items: center;
-      width: 100%;
-      height: 40px;
-      padding: 0 ${pxToRem(20)};
-      background-color: ${color.WHITE};
-      box-sizing: border-box;
       box-shadow: ${shadow.LAYER1};
+      background-color: ${color.WHITE};
+      padding-right: ${spacingByChar(1.5)};
+      padding-left: ${spacingByChar(1.5)};
     `
   }}
 `
@@ -139,15 +144,12 @@ const Buttons = styled.ul<{ themes: Theme }>`
     return css`
       display: flex;
       align-items: center;
+      gap: ${spacingByChar(1)};
       margin: 0;
       padding: 0;
 
       > li {
         list-style: none;
-
-        &:not(:first-child) {
-          margin-left: ${spacingByChar(1)};
-        }
       }
     `
   }}

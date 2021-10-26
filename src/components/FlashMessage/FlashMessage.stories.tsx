@@ -29,7 +29,17 @@ const Template: Story = (arg) => {
           <FlashMessage
             type={messageType}
             visible={true}
-            text={messageType}
+            text={
+              messageType === 'success'
+                ? '成功しました'
+                : messageType === 'info'
+                ? '開始しました'
+                : messageType === 'warning'
+                ? '保存されていない可能性があります'
+                : messageType === 'error'
+                ? '9 件のエラーがあります'
+                : ''
+            }
             animation={arg.animation}
             onClose={() => {
               console.log('close')

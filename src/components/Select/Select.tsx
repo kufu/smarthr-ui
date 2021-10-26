@@ -33,6 +33,7 @@ export const Select: VFC<Props & ElementProps> = ({
   hasBlank = false,
   blankLabel = '選択してください',
   className = '',
+  disabled,
   ...props
 }) => {
   const theme = useTheme()
@@ -50,13 +51,14 @@ export const Select: VFC<Props & ElementProps> = ({
       className={`${className} ${classNames.wrapper}`}
       $width={widthStyle}
       error={error}
-      disabled={props.disabled}
+      disabled={disabled}
       themes={theme}
     >
       <SelectBox
         onChange={handleChange}
         aria-invalid={error || undefined}
         themes={theme}
+        disabled={disabled}
         {...props}
       >
         {hasBlank && <option value="">{blankLabel}</option>}
@@ -87,7 +89,7 @@ export const Select: VFC<Props & ElementProps> = ({
         }
       </SelectBox>
       <IconWrap themes={theme}>
-        <FaSortIcon />
+        <FaSortIcon color="inherit" />
       </IconWrap>
     </Wrapper>
   )
@@ -174,13 +176,27 @@ const SelectBox = styled.select<{ themes: Theme }>`
   }}
 `
 const IconWrap = styled.span<{ themes: Theme }>`
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  right: ${({ themes: { spacingByChar } }) => spacingByChar(0.75)};
-  bottom: 0;
-  display: inline-flex;
-  align-items: center;
+  ${({ themes }) => {
+    const { color, spacingByChar } = themes
+
+    return css`
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      right: ${spacingByChar(0.75)};
+      bottom: 0;
+      display: inline-flex;
+      align-items: center;
+      color: ${color.TEXT_GREY};
+
+      ${SelectBox}:disabled + & {
+        color: ${color.TEXT_DISABLED};
+      }
+      ${SelectBox}:focus + & {
+        color: ${color.TEXT_BLACK};
+      }
+    `
+  }}
 `
 const BlankOptgroup = styled.optgroup`
   display: none;

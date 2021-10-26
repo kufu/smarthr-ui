@@ -1,4 +1,4 @@
-import { merge } from 'lodash'
+import { merge } from '../libs/lodash'
 
 interface Leading {
   NONE: number

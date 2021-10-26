@@ -175,6 +175,12 @@ export function SingleComboBox<T>({
     setIsExpanded(false)
   }, [])
 
+  const caretIconColor = useMemo(() => {
+    if (isFocused) return theme.color.TEXT_BLACK
+    if (disabled) return theme.color.TEXT_DISABLED
+    return theme.color.TEXT_GREY
+  }, [disabled, isFocused, theme])
+
   useOuterClick(
     [outerRef, listBoxRef, clearButtonRef],
     useCallback(() => {
@@ -238,7 +244,7 @@ export function SingleComboBox<T>({
             </ClearButton>
             <CaretDownLayout themes={theme}>
               <CaretDownWrapper themes={theme}>
-                <FaCaretDownIcon color={isFocused ? theme.color.TEXT_BLACK : theme.color.BORDER} />
+                <FaCaretDownIcon color={caretIconColor} />
               </CaretDownWrapper>
             </CaretDownLayout>
           </>
@@ -298,6 +304,7 @@ export function SingleComboBox<T>({
           }
         }}
         ref={inputRef}
+        autoComplete="off"
         aria-activedescendant={aria.activeDescendant}
         aria-autocomplete="list"
         className={classNames.input}

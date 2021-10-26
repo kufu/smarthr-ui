@@ -459,14 +459,13 @@ const ContentWrapper = styled.div`
 `
 
 export const Modeless_Dialog: Story = () => {
-  const [isOpen1, setIsOpen1] = useState(false)
+  const [isOpen1, setIsOpen1] = useState(true)
   const [isOpen2, setIsOpen2] = useState(false)
   return (
     <TriggerList style={{ height: '200vh' }}>
       <li>
         <SecondaryButton
           onClick={() => setIsOpen1(!isOpen1)}
-          data-test="dialog-trigger"
           aria-haspopup="dialog"
           aria-controls="modeless-dialog-1"
         >
@@ -474,14 +473,13 @@ export const Modeless_Dialog: Story = () => {
         </SecondaryButton>
         <ModelessDialog
           isOpen={isOpen1}
-          header={<ModelessHeading>モードレスダイアログ</ModelessHeading>}
+          header={<ModelessHeading>モードレスダイアログ（中央表示）</ModelessHeading>}
           footer={<ModelessFooter>フッタ</ModelessFooter>}
           onClickClose={() => setIsOpen1(false)}
           onPressEscape={() => setIsOpen1(false)}
           width="50%"
           height="50%"
           id="modeless-dialog-1"
-          data-test="dialog"
         >
           <ModelessContent>
             <Stack gap="S">
@@ -525,6 +523,7 @@ export const Modeless_Dialog: Story = () => {
       <li>
         <SecondaryButton
           onClick={() => setIsOpen2(!isOpen2)}
+          data-test="dialog-trigger"
           aria-haspopup="dialog"
           aria-controls="modeless-dialog-2"
         >
@@ -538,6 +537,7 @@ export const Modeless_Dialog: Story = () => {
           bottom={100}
           right="10%"
           id="modeless-dialog-2"
+          data-test="dialog"
         >
           <div style={{ margin: '1rem' }}>
             bottom: 100px

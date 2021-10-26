@@ -6,9 +6,13 @@ import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
 import { useClassNames } from './useClassNames'
 
 export type AppNaviAnchorProps = {
+  /** アンカーのテキスト */
   children: ReactNode
+  /** アンカーの href */
   href: string
+  /** 表示するアイコンタイプ */
   icon?: React.ComponentType<IconProps>
+  /** アクティブ状態であるかどうか */
   current?: boolean
 }
 type InnerProps = AppNaviAnchorProps & {
