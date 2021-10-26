@@ -178,6 +178,12 @@ export function MultiComboBox<T>({
     setIsFocused(false)
   }, [isFocused, onBlur])
 
+  const caretIconColor = useMemo(() => {
+    if (isFocused) return theme.color.TEXT_BLACK
+    if (disabled) return theme.color.TEXT_DISABLED
+    return theme.color.TEXT_GREY
+  }, [disabled, isFocused, theme])
+
   useOuterClick(
     [outerRef, listBoxRef],
     useCallback(() => {
@@ -289,6 +295,7 @@ export function MultiComboBox<T>({
                 }
                 handleInputKeyDown(e)
               }}
+              autoComplete="off"
               aria-activedescendant={aria.activeDescendant}
               aria-autocomplete="list"
               aria-controls={aria.listBoxId}
@@ -307,7 +314,7 @@ export function MultiComboBox<T>({
       </InputArea>
 
       <Suffix themes={theme}>
-        <FaCaretDownIcon color={isFocused ? theme.color.TEXT_BLACK : theme.color.BORDER} />
+        <FaCaretDownIcon color={caretIconColor} />
       </Suffix>
 
       {renderListBox()}

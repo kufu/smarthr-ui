@@ -16,7 +16,7 @@ import { useId } from '../../hooks/useId'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { Base, BaseElementProps } from '../Base'
 import { SecondaryButton } from '../Button'
-import { FaTimesIcon } from '../Icon'
+import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
 import { DialogOverlap } from './DialogOverlap'
 import { useTriggerFocusControl } from './FocusTrap'
 import { useClassNames } from './useClassNames'
@@ -95,6 +95,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
 }) => {
   const portalContainer = useRef(document.createElement('div')).current
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const [wrapperPosition, setWrapperPosition] = useState<DOMRect | undefined>(undefined)
   const [centering, setCentering] = useState<{
     top?: number
     left?: number
@@ -113,6 +114,12 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
       pp.removeChild(portalContainer)
     }
   }, [portalContainer, portalParent])
+
+  useEffect(() => {
+    if (wrapperRef.current instanceof Element) {
+      setWrapperPosition(wrapperRef.current.getBoundingClientRect())
+    }
+  }, [position])
 
   useHandleEscape(
     useCallback(() => {
@@ -223,16 +230,24 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
         >
           <Box className={classNames.box}>
             <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
-            <Header
-              className={classNames.header}
-              tabIndex={0}
-              onKeyDown={handleArrowKey}
-              aria-label="ドラッグまたは矢印キーでダイアログを移動させることができます"
-              themes={theme}
-            >
+            <Header className={classNames.header} themes={theme}>
               <Title id={labelId} themes={theme}>
                 {header}
               </Title>
+              <DialogHandler
+                themes={theme}
+                tabIndex={0}
+                role="slider"
+                aria-label="ダイアログの位置"
+                aria-valuetext={
+                  wrapperPosition &&
+                  `上から${Math.trunc(wrapperPosition.top)}px、
+                  左から${Math.trunc(wrapperPosition.left)}px`
+                }
+                onKeyDown={handleArrowKey}
+              >
+                <FaGripHorizontalIcon />
+              </DialogHandler>
               <CloseButtonLayout>
                 <SecondaryButton
                   type="button"
@@ -271,6 +286,7 @@ const Box = styled(Base).attrs({ radius: 'm', layer: 3 })`
 `
 const Header = styled.div<{ themes: Theme }>`
   ${({ themes: { border, spacingByChar } }) => css`
+    position: relative;
     display: flex;
     align-items: center;
     padding-left: ${spacingByChar(1.5)};
@@ -284,7 +300,37 @@ const Title = styled.div<{ themes: Theme }>`
     margin: ${spacingByChar(1)} ${spacingByChar(1)} ${spacingByChar(1)} 0;
   `}
 `
+
+const DialogHandler = styled.div<{ themes: Theme }>`
+  ${({ themes: { color, shadow, radius } }) => css`
+    position: absolute;
+    top: 2px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    border-top-right-radius: ${radius.s};
+    border-top-left-radius: ${radius.s};
+    color: transparent;
+    display: flex;
+    justify-content: center;
+    transition: color 0.1s ease;
+
+    .smarthr-ui-ModelessDialog-header:hover > & {
+      color: ${color.TEXT_GREY};
+    }
+
+    &:focus-visible {
+      color: ${color.TEXT_GREY};
+      outline: none;
+      box-shadow: ${shadow.OUTLINE};
+    }
+  `}
+`
+
 const CloseButtonLayout = styled.div`
+  /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */
+  position: relative;
   flex-shrink: 0;
   margin-left: auto;
 `
