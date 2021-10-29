@@ -8,7 +8,9 @@ import { useClassNames } from './useClassNames'
 import { CheckBoxInput, Props as CheckBoxInputProps } from './CheckBoxInput'
 
 type Props = CheckBoxInputProps & {
+  /** ラベル部分の `line-height` */
   lineHeight?: number
+  /** ラベルの内容 */
   children?: ReactNode
 }
 

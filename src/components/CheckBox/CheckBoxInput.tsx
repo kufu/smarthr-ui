@@ -8,6 +8,7 @@ import { useClassNames } from './useClassNames'
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
+  /** `true` のとき、チェック状態を `mixed` にする */
   mixed?: boolean
 }
 
