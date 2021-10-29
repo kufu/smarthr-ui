@@ -173,6 +173,7 @@ export function SingleComboBox<T>({
   const blur = useCallback(() => {
     setIsFocused(false)
     setIsExpanded(false)
+    setIsEditing(false)
   }, [])
 
   const caretIconColor = useMemo(() => {
@@ -272,9 +273,6 @@ export function SingleComboBox<T>({
             onClear && onClear()
             onChangeSelected && onChangeSelected(null)
           }
-        }}
-        onBlur={() => {
-          setIsEditing(false)
         }}
         onFocus={() => {
           if (!isFocused) {
