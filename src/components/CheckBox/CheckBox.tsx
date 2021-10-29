@@ -7,12 +7,12 @@ import { useClassNames } from './useClassNames'
 
 import { CheckBoxInput, Props as CheckBoxInputProps } from './CheckBoxInput'
 
-type Props = CheckBoxInputProps & {
+type Props = {
   /** ラベル部分の `line-height` */
   lineHeight?: number
   /** ラベルの内容 */
   children?: ReactNode
-}
+} & CheckBoxInputProps
 
 export const CheckBox: FC<Props> = ({ lineHeight = 1.5, className = '', children, ...props }) => {
   const theme = useTheme()
