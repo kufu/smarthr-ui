@@ -21,79 +21,86 @@ import { Item } from './types'
 
 type Props<T> = {
   /**
-   * A list of items to choose from.
+   * 選択可能なアイテムのリスト
    */
   items: Array<Item<T>>
   /**
-   * A list of items that have already been selected.
+   * 選択されているアイテムのリスト
    */
   selectedItems: Array<Item<T> & { deletable?: boolean }>
   /**
-   * The value of the input `name` attribute.
+   * input 要素の `name` 属性の値
    */
   name?: string
   /**
-   * The value of the input `disabled` attribute.
+   * input 要素の `disabled` 属性の値
    */
   disabled?: boolean
   /**
-   * If true, the outline of this component will be DANGER color.
+   * `true` のとき、コンポーネントの外枠が `DANGER` カラーになる
    */
   error?: boolean
   /**
-   *  If true, you can add new item that do not exist in `items` props.
+   * `true` のとき、 `items` 内に存在しないアイテムを新しく追加できるようになる
    */
   creatable?: boolean
   /**
-   * The value of the input `placeholder` attribute.
+   * input 要素の `placeholder` 属性の値
    */
   placeholder?: string
   /**
-   * If `true`, a loader is displayed on the dropdown list.
+   * `true` のとき、ドロップダウンリスト内にローダーを表示する
    */
   isLoading?: boolean
   /**
-   * Whether to omit label of selected items with ellipsis
+   * 選択されているアイテムのラベルを省略表示するかどうか
    */
   selectedItemEllipsis?: boolean
   /**
-   * The value given to the width style of input.
+   * input 要素の `width` スタイルに適用する値
    */
   width?: number | string
   /**
-   * The value of textbox. If the value is given, the textbox is controlled.
+   * テキストボックスの `value` 属性の値。
+   * `onChangeInput` と併せて設定することで、テキストボックスの挙動が制御可能になる。
    */
   inputValue?: string
   /**
-   *  The `className` given to the outermost element of this component.
+   * コンポーネント内の一番外側の要素に適用するクラス名
    */
   className?: string
   /**
-   * Fire when the value of input changes.
-   * @deprecated The onChange handler is deprecated, so use onChangeInput handler instead.
+   * input 要素の `value` が変わった時に発火するコールバック関数
+   * @deprecated `onChange` は非推奨なため、代わりに `onChangeInput` を使用してください。
    */
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   /**
-   * Fire when the value of input changes.
+   * input 要素の `value` が変わった時に発火するコールバック関数
    */
   onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
   /**
-   * Fire when adding an item that does not exist in `items` props.
+   * `items` 内に存在しないアイテムが追加されたときに発火するコールバック関数
    */
   onAdd?: (label: string) => void
   /**
-   *  Fire when clicking the delete element of `selectedItems` button.
+   * 選択されているアイテムの削除ボタンがクリックされた時に発火するコールバック関数
    */
   onDelete?: (item: Item<T>) => void
   /**
-   * Fire when clicking an element of `items`.
+   * アイテムが選択された時に発火するコールバック関数
    */
   onSelect?: (item: Item<T>) => void
   /**
-   * Fire when the item selections are changed.
+   * 選択されているアイテムのリストが変わった時に発火するコールバック関数
    */
   onChangeSelected?: (selectedItems: Array<Item<T>>) => void
+  /**
+   * コンポーネントがフォーカスされたときに発火するコールバック関数
+   */
   onFocus?: () => void
+  /**
+   * コンポーネントからフォーカスが外れた時に発火するコールバック関数
+   */
   onBlur?: () => void
 }
 

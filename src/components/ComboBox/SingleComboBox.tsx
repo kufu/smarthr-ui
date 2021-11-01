@@ -21,68 +21,68 @@ import { Item } from './types'
 
 type Props<T> = {
   /**
-   * A list of items to choose from.
+   * 選択可能なアイテムのリスト
    */
   items: Array<Item<T>>
   /**
-   * An item that have already been selected.
+   * 選択されているアイテムのリスト
    */
   selectedItem: Item<T> | null
   /**
-   * The value of the input `name` attribute.
+   * input 要素の `name` 属性の値
    */
   name?: string
   /**
-   * The value of the input `disabled` attribute.
+   * input 要素の `disabled` 属性の値
    */
   disabled?: boolean
   /**
-   * If true, the outline of this component will be DANGER color.
+   * `true` のとき、コンポーネントの外枠が `DANGER` カラーになる
    */
   error?: boolean
   /**
-   *  If true, you can add new item that do not exist in `items` props.
+   * `true` のとき、 `items` 内に存在しないアイテムを新しく追加できるようになる
    */
   creatable?: boolean
   /**
-   * The value of the input `placeholder` attribute.
+   * input 要素の `placeholder` 属性の値
    */
   placeholder?: string
   /**
-   * If `true`, a loader is displayed on the dropdown list.
+   * `true` のとき、ドロップダウンリスト内にローダーを表示する
    */
   isLoading?: boolean
   /**
-   * The value given to the width style of input.
+   * input 要素の `width` スタイルに適用する値
    */
   width?: number | string
   /**
-   *  The `className` given to the outermost element of this component.
+   * コンポーネント内の一番外側の要素に適用するクラス名
    */
   className?: string
   /**
-   * Fire when the value of input changes.
-   * @deprecated The onChange handler is deprecated, so use onChangeInput handler instead.
+   * input 要素の `value` が変わった時に発火するコールバック関数
+   * @deprecated `onChange` は非推奨なため、 代わりに `onChangeInput` を使用してください。
    */
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   /**
-   * Fire when the value of input changes.
+   * input 要素の `value` が変わった時に発火するコールバック関数
    */
   onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
   /**
-   * Fire when adding an item that does not exist in `items` props.
+   * `items` 内に存在しないアイテムが追加されたときに発火するコールバック関数
    */
   onAdd?: (label: string) => void
   /**
-   * Fire when an item is selected.
+   * アイテムが選択された時に発火するコールバック関数
    */
   onSelect?: (item: Item<T>) => void
   /**
-   * Fire when the selected item is cleared.
+   * 選択されているアイテムがクリアされた時に発火するコールバック関数
    */
   onClear?: () => void
   /**
-   * Fire when the item selection is changed.
+   * 選択されているアイテムのリストが変わった時に発火するコールバック関数
    */
   onChangeSelected?: (selectedItem: Item<T> | null) => void
 }
@@ -120,19 +120,19 @@ export function SingleComboBox<T>({
   const [isEditing, setIsEditing] = useState(false)
 
   const filteredItems = useMemo(() => {
+    const itemsWithSelected = items.map((item) => ({
+      ...item,
+      isSelected: selectedItem === null ? false : item.label === selectedItem.label,
+    }))
+
     if (!isEditing) {
-      return items
+      return itemsWithSelected
     }
 
-    return items
-      .filter(({ label }) => {
-        if (!inputValue) return true
-        return label.includes(inputValue)
-      })
-      .map((item) => ({
-        ...item,
-        isSelected: selectedItem === null ? false : item.label === selectedItem.label,
-      }))
+    return itemsWithSelected.filter(({ label }) => {
+      if (!inputValue) return true
+      return label.includes(inputValue)
+    })
   }, [inputValue, isEditing, items, selectedItem])
   const isDuplicate = items.some((item) => item.label === inputValue)
   const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
@@ -173,6 +173,7 @@ export function SingleComboBox<T>({
   const blur = useCallback(() => {
     setIsFocused(false)
     setIsExpanded(false)
+    setIsEditing(false)
   }, [])
 
   const caretIconColor = useMemo(() => {
@@ -272,9 +273,6 @@ export function SingleComboBox<T>({
             onClear && onClear()
             onChangeSelected && onChangeSelected(null)
           }
-        }}
-        onBlur={() => {
-          setIsEditing(false)
         }}
         onFocus={() => {
           if (!isFocused) {
