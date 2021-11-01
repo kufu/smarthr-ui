@@ -13,7 +13,7 @@ export type AnchorProps = BaseProps &
 
 export type BaseProps = {
   /**
-   * ボタンのサイズ
+   * ボタンの大きさ
    * @default 'default'
    */
   size?: 'default' | 's'
