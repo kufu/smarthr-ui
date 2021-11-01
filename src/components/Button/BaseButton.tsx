@@ -13,35 +13,35 @@ export type AnchorProps = BaseProps &
 
 export type BaseProps = {
   /**
-   * Size of button.
+   * ボタンの大きさ
    * @default 'default'
    */
   size?: 'default' | 's'
   /**
-   * The content of the component.
+   * ボタン内に表示する内容
    */
   children?: React.ReactNode
   /**
-   * `className` of component.
+   * コンポーネントに適用するクラス名
    */
   className?: string
   /**
-   * The content of the prefix of button content.
-   * Normally, this is for icon insertion.
+   * ボタン内の先頭に表示する内容。
+   * 通常は、アイコンを表示するために用いる。
    */
   prefix?: React.ReactNode
   /**
-   * The content of the suffix of button content.
-   * Normally, this is for icon insertion.
+   * ボタン内の末尾に表示する内容。
+   * 通常は、アイコンを表示するために用いる。
    */
   suffix?: React.ReactNode
   /**
-   * If `true`, the component shape changes to square.
+   * `true` のとき、ボタンを正方形にする。
    * @default false
    */
   square?: boolean
   /**
-   * If `true`, the component shape changes width is 100%
+   * `true` のとき、ボタンの `width` を 100% にする。
    */
   wide?: boolean
 }
