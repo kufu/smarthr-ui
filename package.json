@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "15.2.0",
+  "version": "15.2.1",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "dayjs": "^1.10.7",
@@ -13,7 +13,7 @@
     "react-transition-group": "^4.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.8",
+    "@babel/core": "^7.16.0",
     "@commitlint/cli": "^13.2.1",
     "@commitlint/config-conventional": "^13.2.0",
     "@storybook/addon-a11y": "^6.3.12",
@@ -142,6 +142,6 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "@types/react": "^17.0.33",
-    "@babel/helper-compilation-targets": "^7.15.4"
+    "@babel/helper-compilation-targets": "^7.16.0"
   }
 }

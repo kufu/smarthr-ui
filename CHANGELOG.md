@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [15.2.1](https://github.com/kufu/smarthr-ui/compare/v15.2.0...v15.2.1) (2021-11-01)
+
+
+### Bug Fixes
+
+* can not select search item ([#2008](https://github.com/kufu/smarthr-ui/issues/2008)) ([d820cc9](https://github.com/kufu/smarthr-ui/commit/d820cc9192e85fd6a2cf2aa3360eeeacb722fdf4))
+* fix to activate selected item on SingleComboBox ([#2018](https://github.com/kufu/smarthr-ui/issues/2018)) ([3e82a21](https://github.com/kufu/smarthr-ui/commit/3e82a212b5e9e5012f6858d4db13ef8741fd27d6))
+
 ## [15.2.0](https://github.com/kufu/smarthr-ui/compare/v15.1.0...v15.2.0) (2021-10-26)
 
 
