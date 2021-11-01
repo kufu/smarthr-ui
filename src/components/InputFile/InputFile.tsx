@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, VFC, useCallback, useEffect, useRef, useState } from 'react'
+import React, { InputHTMLAttributes, VFC, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -36,20 +36,16 @@ export const InputFile: VFC<Props> = ({
   const FileButtonWrapperClassName = `${disabled ? 'disabled' : ''}`
   const FileButtonClassName = `${size}`
 
-  const [isFocused, setIsFocused] = useState(false)
   const InputRef = useRef<HTMLInputElement>(null)
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (!isFocused || !InputRef.current || !document.activeElement) {
-        return
-      }
-      if (e.code === 'Enter' || e.code === 'Space') {
-        InputRef.current.click()
-      }
-    },
-    [isFocused],
-  )
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!InputRef.current) {
+      return
+    }
+    if (e.code === 'Enter' || e.code === 'Space') {
+      InputRef.current.click()
+    }
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onAdd && e.target.files && e.target.files?.length > 0) {
@@ -105,8 +101,6 @@ export const InputFile: VFC<Props> = ({
           className={`${FileButtonClassName} ${classNames.button}`}
           disabled={disabled}
           type="button"
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
           onKeyDown={(e) => handleKeyDown(e)}
         >
           <label htmlFor={id}>
