@@ -33,7 +33,7 @@ storiesOf('Input/currency', module)
   })
 
 const Txt = styled.p`
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
 `
 const Wrapper = styled.div`
   padding: 24px;

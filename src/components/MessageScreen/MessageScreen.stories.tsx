@@ -136,7 +136,7 @@ const Box = styled(Base)`
   box-sizing: border-box;
 `
 const List = styled.ul`
-  margin: 0 0 24px 0;
+  margin: 0 0 24px;
   padding: 0;
   list-style: none;
 

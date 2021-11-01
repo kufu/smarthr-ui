@@ -10,11 +10,7 @@ export const UnstyledButton = styled.button`
   border-style: none;
   border-width: medium;
   border-color: currentColor;
-  border-image-source: none;
-  border-image-slice: 100%;
-  border-image-width: 1;
-  border-image-outset: 0;
-  border-image-repeat: stretch;
+  border-image: none 100% 1 0 stretch;
   box-sizing: content-box;
   background-color: transparent;
   background-image: none;
