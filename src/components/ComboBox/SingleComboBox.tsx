@@ -120,19 +120,19 @@ export function SingleComboBox<T>({
   const [isEditing, setIsEditing] = useState(false)
 
   const filteredItems = useMemo(() => {
+    const itemsWithSelected = items.map((item) => ({
+      ...item,
+      isSelected: selectedItem === null ? false : item.label === selectedItem.label,
+    }))
+
     if (!isEditing) {
-      return items
+      return itemsWithSelected
     }
 
-    return items
-      .filter(({ label }) => {
-        if (!inputValue) return true
-        return label.includes(inputValue)
-      })
-      .map((item) => ({
-        ...item,
-        isSelected: selectedItem === null ? false : item.label === selectedItem.label,
-      }))
+    return itemsWithSelected.filter(({ label }) => {
+      if (!inputValue) return true
+      return label.includes(inputValue)
+    })
   }, [inputValue, isEditing, items, selectedItem])
   const isDuplicate = items.some((item) => item.label === inputValue)
   const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
