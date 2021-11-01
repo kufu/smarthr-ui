@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [15.2.0](https://github.com/kufu/smarthr-ui/compare/v15.1.0...v15.2.0) (2021-10-26)
+
+
+### Features
+
+* AppNavi にドロップダウン示唆プロパティを追加 ([#1969](https://github.com/kufu/smarthr-ui/issues/1969)) ([eaaf5f7](https://github.com/kufu/smarthr-ui/commit/eaaf5f73d020e642cb8ff38dce68fb67c80d6265))
+* ComboBox・DatePicker・Selectのキャレットの色を変更・統一 ([#1975](https://github.com/kufu/smarthr-ui/issues/1975)) ([fbfe05c](https://github.com/kufu/smarthr-ui/commit/fbfe05c1824ed529145c19f515cfbae51599d51f))
+* comboboxのautoComplete属性をoffに変更 ([#1974](https://github.com/kufu/smarthr-ui/issues/1974)) ([c8e3228](https://github.com/kufu/smarthr-ui/commit/c8e3228b9ea8988e10006b0c38f4a328e32d36c2))
+* comboboxのautoComplete属性をoffに変更 ([#1974](https://github.com/kufu/smarthr-ui/issues/1974)) ([1d5efdd](https://github.com/kufu/smarthr-ui/commit/1d5efdded8a188761585b1d13a92ba0816828984))
+
+
+### Bug Fixes
+
+* `CheckBox` 内のアイコンサイズがブラウザのフォントサイズ設定に追従するように変更 ([#1965](https://github.com/kufu/smarthr-ui/issues/1965)) ([2a9b09b](https://github.com/kufu/smarthr-ui/commit/2a9b09b288274ac822c80f9efcdd73a11775fd2b))
+* add value, role, name to `<ModelessDialog>` handle ([#1967](https://github.com/kufu/smarthr-ui/issues/1967)) ([342aef9](https://github.com/kufu/smarthr-ui/commit/342aef9eab52f1ad792d8fd95305738492069464))
+* change `FormGroup` to be able to indicate that is a group ([#1968](https://github.com/kufu/smarthr-ui/issues/1968)) ([7f1ec03](https://github.com/kufu/smarthr-ui/commit/7f1ec03689a51f63ecba6052907dc62a779ea2e3))
+* change header height of `ModelessDialog` not to expand by padding ([#1963](https://github.com/kufu/smarthr-ui/issues/1963)) ([748b31f](https://github.com/kufu/smarthr-ui/commit/748b31f7c767aafa1a8e8114d04090a89012246d))
+* change not to set icon size in `AppNavi` ([#1964](https://github.com/kufu/smarthr-ui/issues/1964)) ([4242aee](https://github.com/kufu/smarthr-ui/commit/4242aeed53d77091deae250f0e07a13d1d46d27e))
+* FlashMessage のアイコン縦位置のズレを直しました ([#1966](https://github.com/kufu/smarthr-ui/issues/1966)) ([ca14c52](https://github.com/kufu/smarthr-ui/commit/ca14c5274299a96ebd399cd41c893562106b5e06))
+
 ## [15.1.0](https://github.com/kufu/smarthr-ui/compare/v15.0.1...v15.1.0) (2021-10-11)
 
 
