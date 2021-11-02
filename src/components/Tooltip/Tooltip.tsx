@@ -13,8 +13,8 @@ type Props = {
   triggerType?: 'icon' | 'text'
   multiLine?: boolean
   ellipsisOnly?: boolean
-  horizontal?: BalloonProps['horizontal']
-  vertical?: BalloonProps['vertical']
+  horizontal?: BalloonProps['horizontal'] | 'auto'
+  vertical?: BalloonProps['vertical'] | 'auto'
   tabIndex?: number
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-describedby'>
