@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, VFC, useRef } from 'react'
+import React, { InputHTMLAttributes, VFC, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -38,6 +38,17 @@ export const InputFile: VFC<Props> = ({
 
   const InputRef = useRef<HTMLInputElement>(null)
 
+  useEffect(() => {
+    if (InputRef.current) {
+      const buff = new DataTransfer()
+      files.forEach((file) => {
+        buff.items.add(file)
+      })
+
+      InputRef.current.files = buff.files
+    }
+  }, [files])
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (!InputRef.current) {
       return
@@ -51,9 +62,6 @@ export const InputFile: VFC<Props> = ({
     if (onAdd && e.target.files && e.target.files?.length > 0) {
       const uploadFile = Array.from(e.target.files)
       onAdd(uploadFile)
-
-      const target = e.target as HTMLInputElement
-      target.value = ''
     }
   }
 
