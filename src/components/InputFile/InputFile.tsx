@@ -36,14 +36,14 @@ export const InputFile: VFC<Props> = ({
   const FileButtonWrapperClassName = `${disabled ? 'disabled' : ''}`
   const FileButtonClassName = `${size}`
 
-  const InputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (!InputRef.current) {
+    if (!inputRef.current) {
       return
     }
     if (e.code === 'Enter' || e.code === 'Space') {
-      InputRef.current.click()
+      inputRef.current.click()
     }
   }
 
@@ -94,7 +94,7 @@ export const InputFile: VFC<Props> = ({
           disabled={disabled}
           tabIndex={-1}
           className={classNames.input}
-          ref={InputRef}
+          ref={inputRef}
         />
         <FileButton
           themes={theme}
