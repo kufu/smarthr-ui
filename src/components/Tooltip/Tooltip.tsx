@@ -45,45 +45,28 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
     const ref = React.createRef<HTMLDivElement>()
     const tooltipId = useId()
 
-    const getBalloonWrapperWidth = (): number => {
-      if (!ref.current) {
-        return 0
-      }
-
-      return ref.current.clientWidth
-    }
-    const getParentWidth = (): number => {
-      if (!ref.current) {
-        return 0
-      }
-
-      return parseInt(
-        window
-          .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
-          .width.match(/\d+/)![0],
-        10,
-      )
-    }
-
     const getHandlerToShow = <T extends unknown>(handler?: (e: T) => void) => {
       return (e: T) => {
         handler && handler(e)
-
-        if (ref.current) {
-          setRect(ref.current.getBoundingClientRect())
-        }
-
-        if (!ellipsisOnly) {
-          setIsVisible(true)
+        if (!ref.current) {
           return
         }
 
-        const parentWidth = getParentWidth()
-
-        if (parentWidth < 0 || parentWidth > getBalloonWrapperWidth()) {
-          return
+        if (ellipsisOnly) {
+          const outerWidth = parseInt(
+            window
+              .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
+              .width.match(/\d+/)![0],
+            10,
+          )
+          const wrapperWidth = ref.current.clientWidth
+          const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
+          if (!existsEllipsis) {
+            return
+          }
         }
 
+        setRect(ref.current.getBoundingClientRect())
         setIsVisible(true)
       }
     }
