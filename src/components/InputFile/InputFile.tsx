@@ -39,13 +39,13 @@ export const InputFile: VFC<Props> = ({
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (InputRef.current) {
+    if (inputRef.current) {
       const buff = new DataTransfer()
       files.forEach((file) => {
         buff.items.add(file)
       })
 
-      InputRef.current.files = buff.files
+      inputRef.current.files = buff.files
     }
   }, [files])
 
