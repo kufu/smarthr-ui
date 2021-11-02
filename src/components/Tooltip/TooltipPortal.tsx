@@ -1,14 +1,16 @@
 import React, { ReactNode, VFC, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
+import { BalloonTheme, DarkBalloon, LightBalloon } from '../Balloon'
 import { getTooltipRect } from './tooltipHelper'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 type Props = {
+  message: ReactNode
+  balloonTheme: BalloonTheme
   id: string
   parentRect: DOMRect
-  children: ReactNode
   isIcon?: boolean
   isMultiLine?: boolean
   horizontal: 'left' | 'center' | 'right'
@@ -16,9 +18,10 @@ type Props = {
 }
 
 export const TooltipPortal: VFC<Props> = ({
+  message,
+  balloonTheme,
   id,
   parentRect,
-  children,
   isIcon = false,
   isMultiLine = false,
   horizontal,
@@ -53,6 +56,7 @@ export const TooltipPortal: VFC<Props> = ({
     )
   }, [horizontal, isIcon, isMultiLine, parentRect, vertical])
 
+  const StyledBalloon = balloonTheme === 'light' ? StyledLightBalloon : StyledDarkBalloon
   const classNames = useClassNames()
 
   return (
@@ -64,7 +68,9 @@ export const TooltipPortal: VFC<Props> = ({
       className={classNames.popup}
       {...rect}
     >
-      {children}
+      <StyledBalloon horizontal={horizontal} vertical={vertical} isMultiLine={isMultiLine}>
+        <StyledBalloonText themes={theme}>{message}</StyledBalloonText>
+      </StyledBalloon>
     </Container>
   )
 }
@@ -90,6 +96,24 @@ const Container = styled.div<{
         height: ${$height}px;
       `}
         z-index: ${themes.zIndex.OVERLAP};
+    `
+  }}
+`
+const StyledLightBalloon = styled(LightBalloon)<{ isMultiLine?: boolean }>(
+  ({ isMultiLine }) =>
+    isMultiLine &&
+    css`
+      max-width: 100%;
+      white-space: normal;
+    `,
+)
+const StyledDarkBalloon = StyledLightBalloon.withComponent(DarkBalloon)
+
+const StyledBalloonText = styled.p<{ themes: Theme }>`
+  margin: 0;
+  ${({ themes: { spacingByChar } }) => {
+    return css`
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
     `
   }}
 `

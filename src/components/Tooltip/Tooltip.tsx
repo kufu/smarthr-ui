@@ -2,9 +2,8 @@ import React, { HTMLAttributes, ReactNode, VFC, useEffect, useRef, useState } fr
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
-import { Props as BalloonProps, BalloonTheme, DarkBalloon, LightBalloon } from '../Balloon'
+import { Props as BalloonProps, BalloonTheme } from '../Balloon'
 import { TooltipPortal } from './TooltipPortal'
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
 import { useClassNames } from './useClassNames'
 
@@ -39,7 +38,6 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
     onBlur,
     ...props
   }) => {
-    const themes = useTheme()
     const [isVisible, setIsVisible] = useState(false)
     const [rect, setRect] = useState<DOMRect | null>(null)
     const ref = React.createRef<HTMLDivElement>()
@@ -78,7 +76,6 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
       }
     }
 
-    const StyledBalloon = balloonTheme === 'light' ? StyledLightBalloon : StyledDarkBalloon
     const isIcon = triggerType === 'icon'
 
     const portalRoot = useRef(document.createElement('div')).current
@@ -111,17 +108,15 @@ const tooltipFactory = (balloonTheme: BalloonTheme) => {
           rect &&
           createPortal(
             <TooltipPortal
+              message={message}
+              balloonTheme={balloonTheme}
               id={tooltipId}
               parentRect={rect}
               isIcon={isIcon}
               isMultiLine={multiLine}
               horizontal={horizontal}
               vertical={vertical}
-            >
-              <StyledBalloon horizontal={horizontal} vertical={vertical} isMultiLine={multiLine}>
-                <StyledBalloonText themes={themes}>{message}</StyledBalloonText>
-              </StyledBalloon>
-            </TooltipPortal>,
+            />,
             portalRoot,
           )}
         {children}
@@ -145,23 +140,4 @@ const Wrapper = styled.div<{ isIcon?: boolean }>`
     css`
       line-height: 0;
     `}
-`
-
-const StyledLightBalloon = styled(LightBalloon)<{ isMultiLine?: boolean }>(
-  ({ isMultiLine }) =>
-    isMultiLine &&
-    css`
-      max-width: 100%;
-      white-space: normal;
-    `,
-)
-const StyledDarkBalloon = StyledLightBalloon.withComponent(DarkBalloon)
-
-const StyledBalloonText = styled.p<{ themes: Theme }>`
-  margin: 0;
-  ${({ themes: { spacingByChar } }) => {
-    return css`
-      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-    `
-  }}
 `
