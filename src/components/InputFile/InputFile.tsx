@@ -101,7 +101,7 @@ export const InputFile: VFC<Props> = ({
           className={`${FileButtonClassName} ${classNames.button}`}
           disabled={disabled}
           type="button"
-          onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => handleKeyDown(e)}
+          onKeyDown={(e) => handleKeyDown(e)}
         >
           <label htmlFor={id}>
             <Prefix themes={theme}>
