@@ -5,8 +5,8 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 import { SmartHRLogo } from '../SmartHRLogo'
+import { TextLink } from '../TextLink'
 import { Footer } from '../Footer'
-import { FaExternalLinkAltIcon } from '../Icon'
 
 type Props = {
   title?: ReactNode
@@ -55,17 +55,13 @@ export const MessageScreen: VFC<Props & ElementProps> = ({
           <Links themes={theme} className={classNames.linkList}>
             {links.map((link) => (
               <li key={link.label}>
-                <Link
+                <TextLink
                   href={link.url}
                   {...(link.target ? { target: link.target } : {})}
-                  themes={theme}
                   className={classNames.link}
                 >
                   {link.label}
-                  {link.target === '_blank' && (
-                    <ExternalIcon color={theme.color.TEXT_LINK} aria-label="別タブで開く" />
-                  )}
-                </Link>
+                </TextLink>
               </li>
             ))}
           </Links>
@@ -137,28 +133,6 @@ const Links = styled.ul<{ themes: Theme }>`
       }
     `
   }}
-`
-const Link = styled.a<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, color } = themes
-
-    return css`
-      color: ${color.TEXT_LINK};
-      font-size: ${fontSize.M};
-      line-height: 1.4;
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    `
-  }}
-`
-const ExternalIcon = styled(FaExternalLinkAltIcon).attrs(() => ({
-  size: 14,
-}))`
-  margin-left: 0.4rem;
-  vertical-align: -1px;
 `
 const FooterArea = styled.div<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => {

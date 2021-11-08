@@ -7,6 +7,7 @@ import { Base } from '../Base'
 import { FieldSet } from '../FieldSet'
 import { MessageScreen } from './MessageScreen'
 import { PrimaryButton } from '../Button'
+import { TextLink } from '../TextLink'
 
 import readme from './README.md'
 
@@ -40,7 +41,6 @@ storiesOf('MessageScreen', module)
     )
   })
   .add('without title', () => {
-    const themes = useTheme()
     return (
       <MessageScreen
         links={[
@@ -66,9 +66,7 @@ storiesOf('MessageScreen', module)
             </List>
             <Bottom>
               <PrimaryButton wide>ログイン</PrimaryButton>
-              <Link href="http://example.com" themes={themes}>
-                パスワードをお忘れの方
-              </Link>
+              <TextLink href="http://example.com">パスワードをお忘れの方</TextLink>
             </Bottom>
           </Box>
         </BoxWrapper>
@@ -98,9 +96,7 @@ storiesOf('MessageScreen', module)
           </List>
           <Bottom>
             <PrimaryButton wide>ログイン</PrimaryButton>
-            <Link href="http://example.com" themes={themes}>
-              パスワードをお忘れの方
-            </Link>
+            <TextLink href="http://example.com">パスワードをお忘れの方</TextLink>
           </Bottom>
         </Box>
       </MessageScreen>
@@ -152,17 +148,6 @@ const Bottom = styled.div`
   > *:first-child {
     margin-bottom: 24px;
   }
-`
-const Link = styled.a<{ themes: Theme }>`
-  ${({ themes }) => css`
-    color: ${themes.color.TEXT_LINK};
-    font-size: ${themes.fontSize.M};
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  `}
 `
 const Headline = styled.span<{ themes: Theme }>`
   ${({ themes }) => css`
