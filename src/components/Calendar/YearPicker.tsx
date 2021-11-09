@@ -55,7 +55,7 @@ export const YearPicker: VFC<Props & ElementProps> = ({
       id={id}
       className={`${props.className} ${classNames.yearPicker.wrapper}`}
     >
-      <Container>
+      <Container themes={themes}>
         {yearArray.map((year) => {
           const isThisYear = thisYear === year
           const isSelectedYear = selectedYear === year
@@ -93,31 +93,31 @@ const Overlay = styled.div<{ themes: Theme; isDisplayed: boolean }>`
   background-color: ${({ themes }) => themes.color.WHITE};
 `
 
-const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  height: 100%;
-  padding: 8px 3px;
-  box-sizing: border-box;
-  overflow-y: scroll;
+const Container = styled.div<{ themes: Theme }>`
+  ${({ themes: { spacingByChar } }) => css`
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    padding: ${spacingByChar(0.5)} ${spacingByChar(0.25)};
+    box-sizing: border-box;
+    overflow-y: auto;
+  `}
 `
 const YearWrapper = styled.span<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
   ({ themes, isThisYear, isSelected }) => {
-    const { color, fontSize } = themes
+    const { border, color, fontSize, leading, spacingByChar } = themes
     return css`
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 51px;
-      height: 27px;
-      border-radius: 14px;
+      display: inline-block;
+      padding: ${spacingByChar(0.5)} ${spacingByChar(0.75)};
+      border-radius: 2rem;
       font-size: ${fontSize.M};
       box-sizing: border-box;
-      line-height: 0;
+      line-height: ${leading.NONE};
       ${isThisYear &&
       css`
-        border: solid 1px ${color.BORDER};
+        border: ${border.shorthand};
       `};
       ${isSelected &&
       css`
@@ -128,18 +128,19 @@ const YearWrapper = styled.span<{ themes: Theme; isThisYear?: boolean; isSelecte
   },
 )
 const YearButton = styled(UnstyledButton)<{ themes: Theme }>`
-  width: 25%;
-  height: 43px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  &:hover {
-    ${YearWrapper} {
-      ${({ themes }) => css`
-        color: ${themes.color.TEXT_BLACK};
-        background-color: ${themes.color.BASE_GREY};
-      `}
+  ${({ themes: { color, leading, spacingByChar } }) => css`
+    width: 25%;
+    padding: ${spacingByChar(0.5)} 0;
+    line-height: ${leading.NONE};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    &:hover {
+      ${YearWrapper} {
+        color: ${color.TEXT_BLACK};
+        background-color: ${color.BASE_GREY};
+      }
     }
-  }
+  `}
 `
