@@ -123,6 +123,7 @@ const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: bo
   justify-content: center;
   width: 1.75rem;
   height: 1.75rem;
+  box-sizing: border-box;
   border-radius: 50%;
   line-height: 0;
   ${({ themes: { border, color }, isToday, isSelected }) => css`
