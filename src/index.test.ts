@@ -18,33 +18,49 @@ describe('index', () => {
     const IGNORE_FILES = ['index.ts', 'type.ts']
 
     it('components/Layout ディレクトリの全てのコンポーネントが components/Layout/index.ts 経由で index.ts から export されていること', async () => {
-      const expected = await getExistingComponents('./src/components/Layout/', IGNORE_FILES)
       const actual = await getExportedDirectoryComponents('./src/index.ts', './components/Layout')
+      const expected = await getExistingComponents('./src/components/Layout/', IGNORE_FILES)
       expect(expected.sort()).toEqual(actual.sort())
     })
   })
 })
 
-const getAllExportPaths = (sourceFile: ts.SourceFile): string[] => {
-  const exportPaths: string[] = []
-  ts.forEachChild(sourceFile, (node) => {
-    if (ts.isExportDeclaration(node)) {
-      node.forEachChild((child: ts.Node) => {
-        if (ts.isStringLiteral(child)) {
-          exportPaths.push(`${child.text}`)
-        }
-      })
+const getExportPath = (node: ts.ExportDeclaration) => {
+  let path = ''
+
+  node.forEachChild((child: ts.Node) => {
+    if (ts.isStringLiteral(child)) {
+      path = `${child.text}`
     }
   })
+
+  return path
+}
+
+const getAllExportPaths = (sourceFile: ts.SourceFile): string[] => {
+  const exportPaths: string[] = []
+
+  ts.forEachChild(sourceFile, (node) => {
+    if (ts.isExportDeclaration(node)) {
+      exportPaths.push(getExportPath(node))
+    }
+  })
+
   return exportPaths
 }
 
 const isNonComponentsExports = (file: string) => file.indexOf('./components/') !== -1
 const getComponentName = (file: string) => file.replace('./components/', '')
 
-const parseFile = async (filePath: string): Promise<string[]> => {
+const getSourceFile = async (filePath: string) => {
   const source = await readFile(filePath)
   const sourceFile = ts.createSourceFile(filePath, source.toString(), ts.ScriptTarget.Latest)
+
+  return sourceFile
+}
+
+const parseFile = async (filePath: string): Promise<string[]> => {
+  const sourceFile = await getSourceFile(filePath)
   return getAllExportPaths(sourceFile)
 }
 
@@ -59,12 +75,10 @@ const getExistingComponents = async (file: string, filterDirs: string[]): Promis
 }
 
 const getExportedDirectoryComponents = async (
-  file: string,
+  filePath: string,
   directoryPath: string,
 ): Promise<string[]> => {
-  const source = await readFile(file)
-  const sourceFile = ts.createSourceFile(file, source.toString(), ts.ScriptTarget.Latest)
-
+  const sourceFile = await getSourceFile(filePath)
   const exportComponents: string[] = []
 
   ts.forEachChild(sourceFile, (node) => {
@@ -80,16 +94,4 @@ const getExportedDirectoryComponents = async (
   })
 
   return exportComponents
-}
-
-const getExportPath = (node: ts.ExportDeclaration) => {
-  let path = ''
-
-  node.forEachChild((child: ts.Node) => {
-    if (ts.isStringLiteral(child)) {
-      path = `${child.text}`
-    }
-  })
-
-  return path
 }
