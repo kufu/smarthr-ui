@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, VFC, useEffect, useRef } from 'react'
+import React, { HTMLAttributes, VFC, useLayoutEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -40,7 +40,7 @@ export const YearPicker: VFC<Props & ElementProps> = ({
     .fill(null)
     .map((_, i) => fromYear + i)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (focusingRef.current && isDisplayed) {
       focusingRef.current.focus()
       focusingRef.current.blur()
