@@ -95,7 +95,7 @@ export { Text } from './components/Text'
 export { LineClamp } from './components/LineClamp'
 
 // layout components
-export { Cluster, LineUp, Stack } from './components/Layout'
+export { Cluster, LineUp, Stack, Sidebar } from './components/Layout'
 
 // hooks
 export { useTheme } from './hooks/useTheme'
