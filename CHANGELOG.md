@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [15.2.2](https://github.com/kufu/smarthr-ui/compare/v15.2.1...v15.2.2) (2021-11-08)
+
+
+### Bug Fixes
+
+* InputFileでキーボード操作でファイル選択ダイアログを表示できないのを修正します SHRUI-484 ([#2024](https://github.com/kufu/smarthr-ui/issues/2024)) ([d0b2e08](https://github.com/kufu/smarthr-ui/commit/d0b2e083a4ea93d4f403d850b0540d16c443560e))
+* MessageScreen のリンクに下線を引く｜SHRUI-368 ([#2026](https://github.com/kufu/smarthr-ui/issues/2026)) ([bd1bdf8](https://github.com/kufu/smarthr-ui/commit/bd1bdf89d603491da4744152e2cc998e4f2f40b5))
+
 ### [15.2.1](https://github.com/kufu/smarthr-ui/compare/v15.2.0...v15.2.1) (2021-11-01)
 
 

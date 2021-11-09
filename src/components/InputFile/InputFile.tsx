@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, VFC } from 'react'
+import React, { InputHTMLAttributes, VFC, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -35,6 +35,17 @@ export const InputFile: VFC<Props> = ({
   const theme = useTheme()
   const FileButtonWrapperClassName = `${disabled ? 'disabled' : ''}`
   const FileButtonClassName = `${size}`
+
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (!inputRef.current) {
+      return
+    }
+    if (e.code === 'Enter' || e.code === 'Space') {
+      inputRef.current.click()
+    }
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onAdd && e.target.files && e.target.files?.length > 0) {
@@ -83,12 +94,14 @@ export const InputFile: VFC<Props> = ({
           disabled={disabled}
           tabIndex={-1}
           className={classNames.input}
+          ref={inputRef}
         />
         <FileButton
           themes={theme}
           className={`${FileButtonClassName} ${classNames.button}`}
           disabled={disabled}
           type="button"
+          onKeyDown={(e) => handleKeyDown(e)}
         >
           <label htmlFor={id}>
             <Prefix themes={theme}>

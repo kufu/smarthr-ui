@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "15.2.1",
+  "version": "15.2.2",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "dayjs": "^1.10.7",
@@ -14,8 +14,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
-    "@commitlint/cli": "^13.2.1",
-    "@commitlint/config-conventional": "^13.2.0",
+    "@commitlint/cli": "^14.1.0",
+    "@commitlint/config-conventional": "^14.1.0",
     "@storybook/addon-a11y": "^6.3.12",
     "@storybook/addon-essentials": "^6.3.12",
     "@storybook/addons": "^6.3.12",
@@ -26,7 +26,7 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
     "@types/node": "^14.17.32",
-    "@types/react": "^17.0.33",
+    "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.4.4",
@@ -48,7 +48,7 @@
     "postcss-syntax": "^0.36.2",
     "prettier": "^2.4.1",
     "prettier-config-smarthr": "^1.0.0",
-    "puppeteer": "^10.4.0",
+    "puppeteer": "^11.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
@@ -66,7 +66,7 @@
     "stylelint-config-smarthr": "^1.0.2",
     "stylelint-config-standard": "^23.0.0",
     "stylelint-config-styled-components": "^0.1.1",
-    "testcafe": "^1.16.1",
+    "testcafe": "^1.17.0",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",
     "typescript": "^4.4.4",
@@ -143,7 +143,7 @@
     "minimist": "1.2.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "@types/react": "^17.0.33",
+    "@types/react": "^17.0.34",
     "@babel/helper-compilation-targets": "^7.16.0"
   }
 }
