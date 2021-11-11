@@ -57,7 +57,7 @@ const Group = styled.ul`
 `
 
 const Text = styled.p`
-  margin: 0 0 16px 0;
+  margin: 0 0 16px;
 `
 
 const DropZoneText = styled.p<{ theme: Theme }>`
