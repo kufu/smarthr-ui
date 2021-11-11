@@ -8,8 +8,11 @@ import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListIte
 
 type LayoutType = 'single' | 'double' | 'triple'
 type Props = {
+  /** 定義リストのアイテムの配列 */
   items: DefinitionListItemProps[]
+  /** 列のレイアウト */
   layout?: LayoutType
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDListElement>, keyof Props>
