@@ -77,7 +77,7 @@ const Wrapper = styled.div`
 `
 const Text = styled.p`
   width: 400px;
-  margin: 0 0 16px 0;
+  margin: 0 0 16px;
   font-size: 16px;
 `
 const List = styled.dl`
