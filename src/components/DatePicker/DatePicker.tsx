@@ -15,15 +15,25 @@ import { Portal } from './Portal'
 import { useId } from '../../hooks/useId'
 
 type Props = {
+  /** input 要素の `value` 属性の値 */
   value?: string | null
+  /** input 要素の `name` 属性の値 */
   name?: string
+  /** 選択可能な期間の開始日 */
   from?: Date
+  /** 選択可能な期間の終了日 */
   to?: Date
+  /** フォームを無効にするかどうか */
   disabled?: boolean
+  /** フォームにエラーがあるかどうか */
   error?: boolean
+  /** コンポーネントに適用するクラス名 */
   className?: string
+  /** 入力を独自にパースする場合に、パース処理を記述する関数 */
   parseInput?: (input: string) => Date | null
+  /** 表示する日付を独自にフォーマットする場合に、フォーマット処理を記述する関数 */
   formatDate?: (date: Date | null) => string
+  /** 選択された日付が変わった時に発火するコールバック関数 */
   onChangeDate?: (date: Date | null, value: string) => void
 }
 type InputAttributes = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof Props>
