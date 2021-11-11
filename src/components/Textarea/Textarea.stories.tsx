@@ -55,5 +55,5 @@ const List = styled.ul`
   }
 `
 const Txt = styled.p`
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
 `
