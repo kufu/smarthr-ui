@@ -2,7 +2,7 @@ import { createRadius } from '../createRadius'
 import { createFrame } from '../createFrame'
 
 describe('createRadius', () => {
-  it('retuns same radius theme with createFrame', () => {
+  it('returns same radius theme with createFrame', () => {
     const actual = createRadius()
     const expected = createFrame()
 

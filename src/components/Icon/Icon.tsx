@@ -330,9 +330,9 @@ const definedColors = [
 ] as const
 type DefinedColor = typeof definedColors[number]
 
-const knwonColorSet: Set<string> = new Set(definedColors)
+const knownColorSet: Set<string> = new Set(definedColors)
 function isDefinedColor(color: string): color is DefinedColor {
-  return knwonColorSet.has(color)
+  return knownColorSet.has(color)
 }
 
 export interface IconProps {
