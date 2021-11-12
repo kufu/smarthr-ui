@@ -8,19 +8,11 @@ import { Base as shrBase } from '../../Base'
 import { Heading } from '../../Heading'
 import { LineUp } from '../LineUp'
 
-import readme from './README.md'
-
 export default {
-  title: 'Stack',
-  component: Stack,
-  parameters: {
-    docs: {
-      description: { component: readme },
-    },
-  },
+  title: 'Layout',
 }
 
-export const Default: Story = () => (
+export const _Stack: Story = () => (
   <LineUp gap={2}>
     <Content>
       <Stack recursive>
