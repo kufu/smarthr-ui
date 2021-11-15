@@ -10,11 +10,7 @@ import { Heading } from '../../Heading'
 import { StatusLabel } from '../../StatusLabel'
 import { FaExternalLinkAltIcon } from '../../Icon'
 
-export default {
-  title: 'Layout',
-}
-
-export const _LineUp: Story = () => (
+export const LineUpStory: Story = () => (
   <Stack>
     <figure>
       <figcaption>

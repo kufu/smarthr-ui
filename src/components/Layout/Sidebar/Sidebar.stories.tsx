@@ -6,11 +6,7 @@ import { Sidebar } from './Sidebar'
 
 import styled, { css } from 'styled-components'
 
-export default {
-  title: 'Layout',
-}
-
-export const _Sidebar: Story = () => {
+export const SidebarStory: Story = () => {
   return (
     <div style={{ margin: '32px' }}>
       <h1>Sidebar</h1>
