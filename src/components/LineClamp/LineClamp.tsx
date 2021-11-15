@@ -51,11 +51,11 @@ export const LineClamp: VFC<Props & ElementProps> = ({
 
   const Tooltip = () =>
     toolTipType === 'light' ? (
-      <LightTooltip message={children} multiLine>
+      <LightTooltip message={children} multiLine vertical="auto">
         <LineClampPart />
       </LightTooltip>
     ) : (
-      <DarkTooltip message={children} multiLine>
+      <DarkTooltip message={children} multiLine vertical="auto">
         <LineClampPart />
       </DarkTooltip>
     )

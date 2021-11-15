@@ -8,7 +8,7 @@ import {
   FaArrowAltCircleRightIcon,
   FaArrowAltCircleUpIcon,
 } from '../Icon'
-import { DarkTooltip, LightTooltip } from './Tooltip'
+import { DarkTooltip, LightTooltip, Tooltip } from './Tooltip'
 
 import readme from './README.md'
 
@@ -198,6 +198,28 @@ storiesOf('Tooltip', module)
         >
           <FaArrowAltCircleDownIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
         </LightTooltip>
+      </dd>
+      <dt>自動位置決め</dt>
+      {[undefined, 'center', 'right'].map((className) => (
+        <dd className={className} key={className}>
+          <Tooltip
+            message="メッセージメッセージメッセージメッセージメッセージメッセージメッセージ"
+            horizontal="auto"
+            vertical="auto"
+          >
+            horizontal=auto & vertical=auto
+          </Tooltip>
+        </dd>
+      ))}
+      <dd style={{ marginBottom: '100vh' }}>
+        <Tooltip
+          message="メッセージメッセージメッセージメッセージメッセージメッセージメッセージ"
+          horizontal="auto"
+          vertical="auto"
+          multiLine
+        >
+          multiLine 指定時
+        </Tooltip>
       </dd>
     </List>
   ))
