@@ -10,7 +10,6 @@ import { useClassNames } from './useClassNames'
 type Size = 'default' | 's'
 
 export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
-  id?: string
   className?: string
   size?: Size
   label: string
@@ -21,7 +20,6 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
 }
 
 export const InputFile: VFC<Props> = ({
-  id,
   className = '',
   size = 'default',
   label,
@@ -102,7 +100,6 @@ export const InputFile: VFC<Props> = ({
         <input
           {...props}
           type="file"
-          id={id}
           onChange={(e) => handleChange(e)}
           disabled={disabled}
           tabIndex={-1}
@@ -116,12 +113,10 @@ export const InputFile: VFC<Props> = ({
           type="button"
           onKeyDown={(e) => handleKeyDown(e)}
         >
-          <label htmlFor={id}>
-            <Prefix themes={theme}>
-              <FaFolderOpenIcon />
-            </Prefix>
-            {label}
-          </label>
+          <Prefix themes={theme}>
+            <FaFolderOpenIcon />
+          </Prefix>
+          {label}
         </FileButton>
       </FileButtonWrapper>
     </Wrapper>
