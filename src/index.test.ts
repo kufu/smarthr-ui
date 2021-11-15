@@ -15,7 +15,7 @@ describe('index', () => {
   })
 
   describe('Layout', () => {
-    const IGNORE_FILES = ['index.ts', 'type.ts']
+    const IGNORE_FILES = ['index.ts', 'type.ts', 'Layout.stories.tsx']
 
     it('components/Layout ディレクトリの全てのコンポーネントが components/Layout/index.ts 経由で index.ts から export されていること', async () => {
       const actual = await getExportedDirectoryComponents('./src/index.ts', './components/Layout')
