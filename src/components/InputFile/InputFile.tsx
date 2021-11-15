@@ -40,12 +40,17 @@ export const InputFile: VFC<Props> = ({
 
   useEffect(() => {
     if (inputRef.current) {
-      const buff = new DataTransfer()
-      files.forEach((file) => {
-        buff.items.add(file)
-      })
+      // IE は DataTransfer constructor をサポートしていないので try catch でクラッシュを防ぐ
+      try {
+        const buff = new DataTransfer()
+        files.forEach((file) => {
+          buff.items.add(file)
+        })
 
-      inputRef.current.files = buff.files
+        inputRef.current.files = buff.files
+      } catch {
+        // no-op
+      }
     }
   }, [files])
 
