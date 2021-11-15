@@ -3,25 +3,20 @@ name: start release
 on:
   workflow_dispatch:
     inputs:
-      mode:
-        description: 'リリースモードを入力 ("normal" または "prerelease")'
-        required: true
-        default: ''
-      branch_preparation:
-        description: '前リリースタグに合流させる方法 (通常は "auto" で自動処理。コンフリクトが発生して自動マージ出来ない場合は、手動でマージしたブランチを指定した上で "manual" を入力)'
-        required: true
-        default: 'auto'
+      prerelease:
+        type: boolean
+        description: 'プレリリース'
+      manual_preparation:
+        type: boolean
+        description: '前リリースタグとの合流を手動で行う'
 
 jobs:
   start_release:
-    if: |
-      (github.event.inputs.mode == 'normal' || github.event.inputs.mode == 'prerelease')
-      && (github.event.inputs.branch_preparation == 'auto' || github.event.inputs.branch_preparation == 'manual')
     runs-on: ubuntu-latest
     env:
       RESULT_PATH: /tmp/result.txt
-      IS_PRERELEASE: ${{ github.event.inputs.mode == 'prerelease' }}
-      NO_BRANCH_PREPARATION: ${{ github.event.inputs.branch_preparation == 'manual' }}
+      IS_PRERELEASE: ${{ github.event.inputs.prerelease == 'true' }}
+      NO_BRANCH_PREPARATION: ${{ github.event.inputs.manual_preparation == 'true' }}
     steps:
       - uses: actions/checkout@v2
         with:
