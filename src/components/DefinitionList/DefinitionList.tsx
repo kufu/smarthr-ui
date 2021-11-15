@@ -8,8 +8,11 @@ import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListIte
 
 type LayoutType = 'single' | 'double' | 'triple'
 type Props = {
+  /** 定義リストのアイテムの配列 */
   items: DefinitionListItemProps[]
+  /** 列のレイアウト */
   layout?: LayoutType
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDListElement>, keyof Props>
@@ -66,7 +69,7 @@ const Wrapper = styled.dl<{ layout: LayoutType }>`
           &::after {
             content: '';
             display: block;
-            flex-basis: calc(33.333333% - 12px);
+            flex-basis: calc(33.3333% - 12px);
           }
         `
       default:
@@ -97,7 +100,7 @@ const Item = styled(DefinitionListItem)<{ themes: Theme; layout: LayoutType }>`
       case 'triple':
         return css`
           ${basicStyle}
-          flex-basis: calc(33.333333% - 12px);
+          flex-basis: calc(33.3333% - 12px);
 
           &:last-child,
           &:nth-last-child(2),

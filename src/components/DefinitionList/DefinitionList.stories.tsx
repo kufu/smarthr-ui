@@ -1,4 +1,4 @@
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -6,6 +6,11 @@ import { Heading } from '../Heading'
 import { Base } from '../Base'
 import { DefinitionList } from './DefinitionList'
 import { FaExclamationCircleIcon } from '../Icon'
+
+export default {
+  title: 'DefinitionList',
+  component: DefinitionList,
+}
 
 const DefinitionListItems = [
   {
@@ -30,7 +35,7 @@ const DefinitionListItems = [
   },
 ]
 
-storiesOf('DefinitionList', module).add('all', () => {
+export const All: Story = () => {
   const themes = useTheme()
   return (
     <Wrapper>
@@ -74,7 +79,8 @@ storiesOf('DefinitionList', module).add('all', () => {
       </Content>
     </Wrapper>
   )
-})
+}
+All.storyName = 'all'
 
 const Wrapper = styled.div`
   padding: 24px;
