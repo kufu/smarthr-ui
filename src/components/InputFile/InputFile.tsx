@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, VFC, useRef } from 'react'
+import React, { InputHTMLAttributes, VFC, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -38,6 +38,22 @@ export const InputFile: VFC<Props> = ({
 
   const inputRef = useRef<HTMLInputElement>(null)
 
+  useEffect(() => {
+    if (inputRef.current) {
+      // IE は DataTransfer constructor をサポートしていないので try catch でクラッシュを防ぐ
+      try {
+        const buff = new DataTransfer()
+        files.forEach((file) => {
+          buff.items.add(file)
+        })
+
+        inputRef.current.files = buff.files
+      } catch {
+        // no-op
+      }
+    }
+  }, [files])
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (!inputRef.current) {
       return
@@ -51,9 +67,6 @@ export const InputFile: VFC<Props> = ({
     if (onAdd && e.target.files && e.target.files?.length > 0) {
       const uploadFile = Array.from(e.target.files)
       onAdd(uploadFile)
-
-      const target = e.target as HTMLInputElement
-      target.value = ''
     }
   }
 

@@ -7,22 +7,11 @@ import { Stack } from '../Stack'
 import { Heading as shrHeading } from '../../Heading'
 import { StatusLabel } from '../../StatusLabel'
 
-import readme from './README.md'
 import styled, { css } from 'styled-components'
 import { Base } from '../../Base'
 import { RadioButton } from '../../RadioButton'
 
-export default {
-  title: 'Cluster',
-  component: Cluster,
-  parameters: {
-    docs: {
-      description: { component: readme },
-    },
-  },
-}
-
-export const Default: Story = () => {
+export const ClusterStory: Story = () => {
   const themes = useTheme()
   const { spacing } = themes
 
