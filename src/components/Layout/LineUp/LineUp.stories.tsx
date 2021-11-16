@@ -10,19 +10,7 @@ import { Heading } from '../../Heading'
 import { StatusLabel } from '../../StatusLabel'
 import { FaExternalLinkAltIcon } from '../../Icon'
 
-import readme from './README.md'
-
-export default {
-  title: 'LineUp',
-  component: LineUp,
-  parameters: {
-    docs: {
-      description: { component: readme },
-    },
-  },
-}
-
-export const Default: Story = () => (
+export const LineUpStory: Story = () => (
   <Stack>
     <figure>
       <figcaption>
