@@ -11,11 +11,7 @@ import styled, { css } from 'styled-components'
 import { Base } from '../../Base'
 import { RadioButton } from '../../RadioButton'
 
-export default {
-  title: 'Layout',
-}
-
-export const _Cluster: Story = () => {
+export const ClusterStory: Story = () => {
   const themes = useTheme()
   const { spacing } = themes
 

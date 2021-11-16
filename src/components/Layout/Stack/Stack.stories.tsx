@@ -8,11 +8,7 @@ import { Base as shrBase } from '../../Base'
 import { Heading } from '../../Heading'
 import { LineUp } from '../LineUp'
 
-export default {
-  title: 'Layout',
-}
-
-export const _Stack: Story = () => (
+export const StackStory: Story = () => (
   <LineUp gap={2}>
     <Content>
       <Stack recursive>
