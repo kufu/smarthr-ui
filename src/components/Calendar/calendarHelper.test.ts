@@ -58,7 +58,7 @@ describe('calendarHelper', () => {
   })
 
   describe('getMonthArray', () => {
-    it('returns calendar array of month of the begining of year', () => {
+    it('returns calendar array of month of the beginning of year', () => {
       const date = new Date(2020, 0, 1) // 2020-01-01
       const expected = [
         [null, null, null, 1, 2, 3, 4],

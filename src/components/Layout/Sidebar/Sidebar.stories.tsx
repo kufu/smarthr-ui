@@ -4,20 +4,9 @@ import { Story } from '@storybook/react'
 import { useTheme } from '../../../hooks/useTheme'
 import { Sidebar } from './Sidebar'
 
-import readme from './README.md'
 import styled, { css } from 'styled-components'
 
-export default {
-  title: 'Sidebar',
-  component: Sidebar,
-  parameters: {
-    docs: {
-      description: { component: readme },
-    },
-  },
-}
-
-export const Default: Story = () => {
+export const SidebarStory: Story = () => {
   return (
     <div style={{ margin: '32px' }}>
       <h1>Sidebar</h1>

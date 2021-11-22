@@ -151,6 +151,7 @@ const Container = styled.div`
 const Button = styled(SecondaryButton)<{ themes: Theme }>(
   ({ themes: { border, color, radius, shadow } }) =>
     css`
+      margin: 0;
       border-radius: 0;
 
       &[aria-checked='true'] {

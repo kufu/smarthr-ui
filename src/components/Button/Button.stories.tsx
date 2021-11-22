@@ -312,36 +312,36 @@ const DarkBackground = styled.div`
   color: #fff;
 `
 
-const extendingStlye = css`
+const extendingStyle = css`
   width: 300px;
 `
 const ExPrimaryButton = styled(PrimaryButton)`
-  ${extendingStlye}
+  ${extendingStyle}
 `
 const ExPrimaryButtonAnchor = styled(PrimaryButtonAnchor)`
-  ${extendingStlye}
+  ${extendingStyle}
 `
 const ExSecondaryButton = styled(SecondaryButton)`
-  ${extendingStlye}
+  ${extendingStyle}
 `
 const ExSecondaryButtonAnchor = styled(SecondaryButtonAnchor)`
-  ${extendingStlye}
+  ${extendingStyle}
 `
 const ExDangerButton = styled(DangerButton)`
-  ${extendingStlye}
+  ${extendingStyle}
 `
 const ExDangerButtonAnchor = styled(DangerButtonAnchor)`
-  ${extendingStlye}
+  ${extendingStyle}
 `
 const ExSkeletonButton = styled(SkeletonButton)`
-  ${extendingStlye}
+  ${extendingStyle}
 `
 const ExSkeletonButtonAnchor = styled(SkeletonButtonAnchor)`
-  ${extendingStlye}
+  ${extendingStyle}
 `
 const ExTextButton = styled(TextButton)`
-  ${extendingStlye}
+  ${extendingStyle}
 `
 const ExTextButtonAnchor = styled(TextButtonAnchor)`
-  ${extendingStlye}
+  ${extendingStyle}
 `
