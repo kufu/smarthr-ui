@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [15.3.0](https://github.com/kufu/smarthr-ui/compare/v15.2.2...v15.3.0) (2021-11-22)
+
+
+### Features
+
+* `Tooltip` に自動位置決め機能を追加し、`LineClamp` のツールチップが見切れないようにする (SHRUI-483) ([#2035](https://github.com/kufu/smarthr-ui/issues/2035)) ([8652e9c](https://github.com/kufu/smarthr-ui/commit/8652e9cc6e91cee3118336272e226f9e71094dfb))
+
+
+### Bug Fixes
+
+* `Calendar` がブラウザのフォントサイズによってスタイル崩れを起こさないように修正 (SHRUI-466) ([#2040](https://github.com/kufu/smarthr-ui/issues/2040)) ([ba5fcf1](https://github.com/kufu/smarthr-ui/commit/ba5fcf12d3d12aabcbb438708de4e56b10b4193b))
+* `InputFile` が IE でクラッシュしないように修正 ([#2056](https://github.com/kufu/smarthr-ui/issues/2056)) ([6314229](https://github.com/kufu/smarthr-ui/commit/6314229de3541d32a30d03bb2aab6ec0e7e2372c))
+* fix typos ([#2043](https://github.com/kufu/smarthr-ui/issues/2043)) ([49788ca](https://github.com/kufu/smarthr-ui/commit/49788caa4e29582ca47e1bdb035a22685a698db8))
+* inputFileコンポーネントでコンポーネント内部のinput要素のvalueが変化しないのを修正します ([#2025](https://github.com/kufu/smarthr-ui/issues/2025)) ([0ac322d](https://github.com/kufu/smarthr-ui/commit/0ac322d812610a6471c268589a41f74954daddd4))
+* reset margin of button on SegmentedControl ([#2060](https://github.com/kufu/smarthr-ui/issues/2060)) ([9054c71](https://github.com/kufu/smarthr-ui/commit/9054c710970d3fe632b94f220711e43bc5b0bb5a))
+* Sidebar を export ([#2038](https://github.com/kufu/smarthr-ui/issues/2038)) ([30405cb](https://github.com/kufu/smarthr-ui/commit/30405cb3e9d96c8432089c4fd6e1463ff34e7141))
+
 ### [15.2.2](https://github.com/kufu/smarthr-ui/compare/v15.2.1...v15.2.2) (2021-11-08)
 
 
