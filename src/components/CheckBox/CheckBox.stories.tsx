@@ -139,5 +139,5 @@ const InnerList = styled.ul`
   }
 `
 const Title = styled.p`
-  margin: 0 0 16px 0;
+  margin: 0 0 16px;
 `

@@ -97,24 +97,21 @@ export const CalendarTable: VFC<Props & ElementProps> = ({
 }
 
 const Table = styled.table<{ themes: Theme }>(({ themes }) => {
-  const { color, fontSize } = themes
+  const { color, fontSize, spacingByChar } = themes
   return css`
     color: ${color.TEXT_BLACK};
     font-size: ${fontSize.M};
     border-spacing: 0;
-    margin: 4px 8px 13px;
+    padding: ${spacingByChar(0.25)} ${spacingByChar(0.75)} ${spacingByChar(1)};
 
     th {
-      height: 37px;
-      padding: 0;
+      padding: ${spacingByChar(0.5)} 0;
       vertical-align: middle;
       text-align: center;
       font-weight: normal;
       color: ${color.TEXT_GREY};
     }
     td {
-      width: 43px;
-      height: 35px;
       padding: 0;
       vertical-align: middle;
     }
@@ -124,14 +121,15 @@ const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: bo
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 27px;
-  height: 27px;
+  width: 1.75rem;
+  height: 1.75rem;
+  box-sizing: border-box;
   border-radius: 50%;
   line-height: 0;
-  ${({ themes: { color }, isToday, isSelected }) => css`
+  ${({ themes: { border, color }, isToday, isSelected }) => css`
     ${isToday &&
     css`
-      border: solid 1px ${color.BORDER};
+      border: ${border.shorthand};
     `}
 
     ${isSelected &&
@@ -142,23 +140,22 @@ const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: bo
   `}
 `
 const CellButton = styled(UnstyledButton)<{ themes: Theme }>(
-  ({ themes }) => css`
+  ({ themes: { color, spacingByChar } }) => css`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
+    padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
     cursor: pointer;
 
     :disabled {
-      color: ${themes.color.TEXT_DISABLED};
+      color: ${color.TEXT_DISABLED};
       cursor: not-allowed;
     }
     :not(:disabled) {
       &:hover {
         ${DateCell} {
-          background-color: ${themes.color.BASE_GREY};
-          color: ${themes.color.TEXT_BLACK};
+          background-color: ${color.BASE_GREY};
+          color: ${color.TEXT_BLACK};
         }
       }
     }
