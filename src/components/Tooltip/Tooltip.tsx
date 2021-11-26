@@ -135,6 +135,7 @@ export const DarkTooltip = tooltipFactory('dark')
 const Wrapper = styled.div<{ isIcon?: boolean }>`
   display: inline-block;
   max-width: 100%;
+  overflow-y: hidden;
   ${({ isIcon }) =>
     isIcon &&
     css`
