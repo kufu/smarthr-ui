@@ -213,7 +213,8 @@ export function MultiComboBox<T>({
     if (outerRef.current && isFocused) {
       calculateDropdownRect(outerRef.current)
     }
-  }, [calculateDropdownRect, isFocused])
+    // 選択済みアイテムによってコンボボックスの高さが変わりうるので selectedItems を依存に含める
+  }, [calculateDropdownRect, isFocused, selectedItems])
 
   return (
     <Container
