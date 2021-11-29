@@ -58,18 +58,18 @@ commands:
             fc-match --all
             rm -rf /tmp/fonts
 jobs:
-  node-v12:
+  node-v14:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
     steps:
       - setup-for-test
       - run-npm-test
-  node-v14:
+  node-v16:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
@@ -79,7 +79,7 @@ jobs:
       - run-npm-test
   reg-suit:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
@@ -92,16 +92,16 @@ jobs:
             libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 \
             libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 \
             libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
-            ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
+            ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget libgbm-dev
       - install-noto-sans-cjk-jp
       - run-reg-suit
 
 workflows:
   multiple_builds:
     jobs:
-      - node-v12:
-          context: smarthr-dockerhub
       - node-v14:
+          context: smarthr-dockerhub
+      - node-v16:
           context: smarthr-dockerhub
       - reg-suit:
           context: smarthr-dockerhub
