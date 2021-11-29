@@ -24,7 +24,4 @@ test('ダイアログが開閉できること', async (t) => {
     .click(closer)
     .expect(dialog.exists)
     .notOk()
-    // ダイアログを閉じた後、トリガがフォーカスされること
-    .expect(trigger.focused)
-    .ok()
 })
