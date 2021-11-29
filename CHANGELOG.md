@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [16.0.0](https://github.com/kufu/smarthr-ui/compare/v15.3.0...v16.0.0) (2021-11-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* サポートする node バージョンを更新 (#2022)
+
+### Bug Fixes
+
+* adjust LineClamp height in safari ([#2074](https://github.com/kufu/smarthr-ui/issues/2074)) ([515b691](https://github.com/kufu/smarthr-ui/commit/515b691452c6ccc11b7242fd6d0b54b81d01455a))
+* fix to re-calcurate position of listbox on `MultiComboBox` ([#2075](https://github.com/kufu/smarthr-ui/issues/2075)) ([5aec65c](https://github.com/kufu/smarthr-ui/commit/5aec65c3be8fc2daba3916e246863c829cc23456))
+
+
+* サポートする node バージョンを更新 ([#2022](https://github.com/kufu/smarthr-ui/issues/2022)) ([0d052f6](https://github.com/kufu/smarthr-ui/commit/0d052f65b14a5693e07de82d1dab61eb55c3cfe8))
+
 ## [15.3.0](https://github.com/kufu/smarthr-ui/compare/v15.2.2...v15.3.0) (2021-11-22)
 
 
