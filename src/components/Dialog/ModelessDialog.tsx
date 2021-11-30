@@ -129,15 +129,13 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }, [isOpen, onPressEscape]),
   )
 
-  const { moveFocusFromTrigger, returnFocusToTrigger } = useTriggerFocusControl(wrapperRef)
+  const { moveFocusFromTrigger } = useTriggerFocusControl(wrapperRef)
   useLayoutEffect(() => {
     if (isOpen) {
       setPosition({ x: 0, y: 0 })
       moveFocusFromTrigger()
-    } else {
-      returnFocusToTrigger()
     }
-  }, [isOpen, moveFocusFromTrigger, returnFocusToTrigger])
+  }, [isOpen, moveFocusFromTrigger])
 
   useEffect(() => {
     // 中央寄せの座標計算を行う
