@@ -251,7 +251,7 @@ export function MultiComboBox<T>({
       aria-disabled={disabled}
     >
       <InputArea themes={theme}>
-        <List themes={theme}>
+        <SelectedList themes={theme}>
           {selectedItems.map((selectedItem) => (
             <li key={selectedItem.label}>
               <MultiSelectedItem
@@ -272,55 +272,53 @@ export function MultiComboBox<T>({
               />
             </li>
           ))}
+        </SelectedList>
 
-          <InputWrapper className={isFocused ? undefined : 'hidden'}>
-            <Input
-              type="text"
-              name={name}
-              value={inputValue}
-              disabled={disabled}
-              ref={inputRef}
-              themes={theme}
-              onChange={(e) => {
-                if (onChange) onChange(e)
-                if (onChangeInput) onChangeInput(e)
-                if (!isInputControlled) {
-                  setUncontrolledInputValue(e.currentTarget.value)
-                }
-              }}
-              onFocus={() => {
-                if (!isFocused) {
-                  focus()
-                }
-              }}
-              onCompositionStart={() => setIsComposing(true)}
-              onCompositionEnd={() => setIsComposing(false)}
-              onKeyDown={(e) => {
-                if (isComposing) {
-                  return
-                }
-                if (e.key === 'Tab') {
-                  blur()
-                  return
-                }
-                handleInputKeyDown(e)
-              }}
-              autoComplete="off"
-              aria-activedescendant={aria.activeDescendant}
-              aria-autocomplete="list"
-              aria-controls={aria.listBoxId}
-              className={classNames.input}
-            />
-          </InputWrapper>
+        <InputWrapper className={isFocused ? undefined : 'hidden'}>
+          <Input
+            type="text"
+            name={name}
+            value={inputValue}
+            disabled={disabled}
+            ref={inputRef}
+            themes={theme}
+            onChange={(e) => {
+              if (onChange) onChange(e)
+              if (onChangeInput) onChangeInput(e)
+              if (!isInputControlled) {
+                setUncontrolledInputValue(e.currentTarget.value)
+              }
+            }}
+            onFocus={() => {
+              if (!isFocused) {
+                focus()
+              }
+            }}
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={() => setIsComposing(false)}
+            onKeyDown={(e) => {
+              if (isComposing) {
+                return
+              }
+              if (e.key === 'Tab') {
+                blur()
+                return
+              }
+              handleInputKeyDown(e)
+            }}
+            autoComplete="off"
+            aria-activedescendant={aria.activeDescendant}
+            aria-autocomplete="list"
+            aria-controls={aria.listBoxId}
+            className={classNames.input}
+          />
+        </InputWrapper>
 
-          {selectedItems.length === 0 && placeholder && !isFocused && (
-            <li>
-              <Placeholder themes={theme} className={classNames.placeholder}>
-                {placeholder}
-              </Placeholder>
-            </li>
-          )}
-        </List>
+        {selectedItems.length === 0 && placeholder && !isFocused && (
+          <Placeholder themes={theme} className={classNames.placeholder}>
+            {placeholder}
+          </Placeholder>
+        )}
       </InputArea>
 
       <Suffix themes={theme}>
@@ -340,7 +338,6 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       display: inline-flex;
       min-width: calc(62px + 32px + ${spacingByChar(0.5)} * 2);
       width: ${typeof width === 'number' ? `${width}px` : width};
-      min-height: 40px;
       border-radius: ${radius.m};
       border: ${border.shorthand};
       box-sizing: border-box;
@@ -367,53 +364,72 @@ const InputArea = styled.div<{ themes: Theme }>`
     flex: 1;
     overflow-y: auto;
     max-height: 300px;
-    padding-left: ${spacingByChar(0.5)};
-  `}
-`
-const smallMargin = 6.5
-const borderWidth = 1
-const List = styled.ul<{ themes: Theme }>`
-  ${({ themes }) => {
-    const {
-      fontSize: { pxToRem },
-      spacingByChar,
-    } = themes
+    padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
 
-    return css`
+    /**
+     * for IE
+     * display: contents がサポートされていれば（IE以外）、 input要素は flex によって選択済み項目リストの横に並べて配置するが、
+     * IE では flex レイアウトを使わずに、input要素は選択済み項目リストの下に配置する。
+     */
+    @supports (display: contents) and (gap: 1px) {
       display: flex;
       flex-wrap: wrap;
-      margin: ${pxToRem(smallMargin - borderWidth)} 0 0;
+      gap: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
+    }
+  `}
+`
+const SelectedList = styled.ul<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { spacingByChar } = themes
+
+    return css`
       padding: 0;
       list-style: none;
 
+      /* for IE: gap フォールバック用の margin の外側の打ち消し */
+      margin: calc(-${spacingByChar(0.25)} / 2) calc(-${spacingByChar(0.5)} / 2);
       > li {
-        min-height: 27px;
         max-width: calc(100% - ${spacingByChar(0.5)});
-        margin-right: ${spacingByChar(0.5)};
-        margin-bottom: ${pxToRem(smallMargin - borderWidth)};
+
+        /* for IE: gap のフォールバック */
+        margin: calc(${spacingByChar(0.25)} / 2) calc(${spacingByChar(0.5)} / 2);
+      }
+
+      display: flex;
+      flex-wrap: wrap;
+      @supports (display: contents) and (gap: 1px) {
+        display: contents;
+
+        /* for IE の gap フォールバックを打ち消し */
+        flex-wrap: revert;
+        > li {
+          margin: revert;
+        }
       }
     `
   }}
 `
-const InputWrapper = styled.li`
+const InputWrapper = styled.div`
+  flex: 1;
   &.hidden {
     position: absolute;
     opacity: 0;
     pointer-events: none;
   }
-
-  flex: 1;
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize } = themes
+    const { fontSize, leading, spacingByChar } = themes
 
     return css`
       min-width: 80px;
       width: 100%;
+      height: 1rem;
+      padding: ${spacingByChar(0.5)} 0;
       border: none;
       font-size: ${fontSize.M};
-      box-sizing: border-box;
+      line-height: ${leading.NONE};
+      box-sizing: content-box;
       outline: none;
       &[disabled] {
         display: none;
@@ -423,13 +439,15 @@ const Input = styled.input<{ themes: Theme }>`
 `
 const Placeholder = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { color, fontSize } = themes
+    const { color, fontSize, leading, spacingByChar } = themes
 
     return css`
+      height: 1rem;
       margin: 0;
+      padding: ${spacingByChar(0.5)} 0;
       color: ${color.TEXT_GREY};
       font-size: ${fontSize.M};
-      line-height: 25px;
+      line-height: ${leading.NONE};
     `
   }}
 `

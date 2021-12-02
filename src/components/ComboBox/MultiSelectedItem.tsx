@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react'
+import styled from 'styled-components'
 
 import { Tooltip } from '../Tooltip'
 import { Props as InnerProps, MultiSelectedItemInner } from './MultiSelectedItemInner'
@@ -12,10 +13,14 @@ export function MultiSelectedItem<T>(props: Props<T>) {
   }, [])
 
   return props.enableEllipsis && hasEllipsis ? (
-    <Tooltip message={props.item.label} multiLine>
+    <StyledTooltip message={props.item.label} multiLine>
       <MultiSelectedItemInner {...props} />
-    </Tooltip>
+    </StyledTooltip>
   ) : (
     <MultiSelectedItemInner {...props} onEllipsis={handleEllipsis} />
   )
 }
+
+const StyledTooltip = styled(Tooltip)`
+  display: block;
+`
