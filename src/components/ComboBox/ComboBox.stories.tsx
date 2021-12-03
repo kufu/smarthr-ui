@@ -180,33 +180,64 @@ export const Single: Story = () => {
 
 export const Multi: Story = () => {
   const [items, setItems] = useState(defaultItems)
-  const [selectedItems, setSelectedItems] = useState<Item[]>([])
+  const [selectedItems, setSelectedItems] = useState<{
+    default: Item[]
+    creatable: Item[]
+    disabled: Item[]
+    error: Item[]
+    tooltip: Item[]
+    loading: Item[]
+    undeletable: Item[]
+    controllable: Item[]
+    fullWidth: Item[]
+  }>({
+    default: [],
+    creatable: [],
+    disabled: [],
+    error: [],
+    tooltip: [],
+    loading: [],
+    undeletable: [],
+    controllable: [],
+    fullWidth: [],
+  })
   const [seq, setSeq] = useState(0)
   const [controlledInputValue, setControlledInputValue] = useState<string>('')
 
   const handleSelectItem = useCallback(
-    (item: Item) => {
+    (key: keyof typeof selectedItems) => (item: Item) => {
       action('onSelect')(item)
-      setSelectedItems([...selectedItems, item])
+      const oldSelected = selectedItems[key] || []
+      setSelectedItems({
+        ...selectedItems,
+        [key]: [...oldSelected, item],
+      })
     },
     [selectedItems],
   )
   const handleDelete = useCallback(
-    (deleted) => {
+    (key: keyof typeof selectedItems) => (deleted: Item) => {
       action('onDelete')()
-      setSelectedItems(selectedItems.filter((item) => item.value !== deleted.value))
+      setSelectedItems({
+        ...selectedItems,
+        [key]: selectedItems[key].filter((item) => item.value !== deleted.value),
+      })
     },
     [selectedItems],
   )
   const handleAddItem = useCallback(
-    (label: string) => {
+    (key: keyof typeof selectedItems) => (label: string) => {
       action('onAdd')(label)
       const newItem = {
         label,
         value: `new-value-${seq}`,
       }
       setItems([...items, newItem])
-      setSelectedItems([...selectedItems, newItem])
+      const oldSelected = selectedItems[key] || []
+      setSelectedItems({
+        ...selectedItems,
+        [key]: [...oldSelected, newItem],
+      })
       setSeq(seq + 1)
     },
     [items, selectedItems, seq],
@@ -218,11 +249,11 @@ export const Multi: Story = () => {
       <dd>
         <MultiComboBox
           items={items}
-          selectedItems={selectedItems}
+          selectedItems={selectedItems['default']}
           width={400}
           placeholder="入力でフィルタリングできます"
-          onDelete={handleDelete}
-          onSelect={handleSelectItem}
+          onDelete={handleDelete('default')}
+          onSelect={handleSelectItem('default')}
           onChangeSelected={action('onChangeSelected')}
           onFocus={action('onFocus')}
           onBlur={action('onBlur')}
@@ -233,13 +264,13 @@ export const Multi: Story = () => {
       <dd>
         <MultiComboBox
           items={items}
-          selectedItems={selectedItems}
+          selectedItems={selectedItems['creatable']}
           width={400}
           placeholder="新しいアイテムを追加できます"
           creatable
-          onDelete={handleDelete}
-          onSelect={handleSelectItem}
-          onAdd={handleAddItem}
+          onDelete={handleDelete('creatable')}
+          onSelect={handleSelectItem('creatable')}
+          onAdd={handleAddItem('creatable')}
           data-test="multi-combobox-creatable"
         />
       </dd>
@@ -247,12 +278,12 @@ export const Multi: Story = () => {
       <dd>
         <MultiComboBox
           items={items}
-          selectedItems={selectedItems}
+          selectedItems={selectedItems['disabled']}
           width={400}
           placeholder="Disabled なコンボボックス"
           disabled
-          onDelete={handleDelete}
-          onSelect={handleSelectItem}
+          onDelete={handleDelete('disabled')}
+          onSelect={handleSelectItem('disabled')}
           data-test="multi-combobox-disabled"
         />
       </dd>
@@ -260,23 +291,23 @@ export const Multi: Story = () => {
       <dd>
         <MultiComboBox
           items={items}
-          selectedItems={selectedItems}
+          selectedItems={selectedItems['error']}
           width={400}
           placeholder="入力でフィルタリングできます"
           error
-          onDelete={handleDelete}
-          onSelect={handleSelectItem}
+          onDelete={handleDelete('error')}
+          onSelect={handleSelectItem('error')}
         />
       </dd>
       <dt>選択済みアイテムを省略表示 + ツールチップ</dt>
       <dd>
         <MultiComboBox
           items={items}
-          selectedItems={selectedItems}
+          selectedItems={selectedItems['tooltip']}
           width={400}
           placeholder="入力でフィルタリングできます"
-          onDelete={handleDelete}
-          onSelect={handleSelectItem}
+          onDelete={handleDelete('tooltip')}
+          onSelect={handleSelectItem('tooltip')}
           selectedItemEllipsis
         />
       </dd>
@@ -284,34 +315,37 @@ export const Multi: Story = () => {
       <dd>
         <MultiComboBox
           items={items}
-          selectedItems={selectedItems}
+          selectedItems={selectedItems['loading']}
           width={400}
           placeholder="入力でフィルタリングできます"
           isLoading
-          onDelete={handleDelete}
-          onSelect={handleSelectItem}
+          onDelete={handleDelete('loading')}
+          onSelect={handleSelectItem('loading')}
         />
       </dd>
       <dt>選択解除ボタンを非表示</dt>
       <dd>
         <MultiComboBox
           items={items}
-          selectedItems={selectedItems.map((item) => ({ ...item, deletable: false }))}
+          selectedItems={selectedItems['undeletable'].map((item) => ({
+            ...item,
+            deletable: false,
+          }))}
           width={400}
           placeholder="入力でフィルタリングできます"
-          onDelete={handleDelete}
-          onSelect={handleSelectItem}
+          onDelete={handleDelete('undeletable')}
+          onSelect={handleSelectItem('undeletable')}
         />
       </dd>
       <dt>テキストボックスの挙動を制御</dt>
       <dd>
         <MultiComboBox
           items={items}
-          selectedItems={selectedItems}
+          selectedItems={selectedItems['controllable']}
           width={400}
           placeholder="入力でフィルタリングできます"
-          onDelete={handleDelete}
-          onSelect={handleSelectItem}
+          onDelete={handleDelete('controllable')}
+          onSelect={handleSelectItem('controllable')}
           inputValue={controlledInputValue}
           onChangeInput={(e) => {
             setControlledInputValue(e.target.value)
@@ -323,11 +357,11 @@ export const Multi: Story = () => {
       <dd>
         <MultiComboBox
           items={items}
-          selectedItems={selectedItems}
+          selectedItems={selectedItems['fullWidth']}
           width="100%"
           placeholder="入力でフィルタリングできます"
-          onDelete={handleDelete}
-          onSelect={handleSelectItem}
+          onDelete={handleDelete('fullWidth')}
+          onSelect={handleSelectItem('fullWidth')}
         />
       </dd>
       <dt>アイテム数が多い時</dt>
