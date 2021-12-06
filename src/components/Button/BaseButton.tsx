@@ -66,7 +66,7 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
     return (
       <BaseTag className={classNames} themes={theme} {...props}>
         {prefix}
-        <Label>{children}</Label>
+        <TextLabel>{children}</TextLabel>
         {suffix}
       </BaseTag>
     )
@@ -129,7 +129,7 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
     `
   }}
 `
-const Label = styled.span`
+const TextLabel = styled.span`
   .s & {
     /* FIXME! SVG とテキストコンテンツの縦位置が揃わないので暫定対応 */
     line-height: 0;
