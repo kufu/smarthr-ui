@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [16.0.1](https://github.com/kufu/smarthr-ui/compare/v16.0.0...v16.0.1) (2021-12-06)
+
+
+### Bug Fixes
+
+* change not to focus trigger when `ModelessDialog` is closed ([#2083](https://github.com/kufu/smarthr-ui/issues/2083)) ([2838bda](https://github.com/kufu/smarthr-ui/commit/2838bda1be7d3d8dfefdec6317b77f6653f87c30))
+* change to pass ElementProps to Wrapper of `FlashMessage` ([#2095](https://github.com/kufu/smarthr-ui/issues/2095)) ([7711350](https://github.com/kufu/smarthr-ui/commit/77113506d1224ea3e07793a313d821e573e42a71))
+* fontSize.S の影響で Button[size=s] の縦揃えに影響していたので修正 ([#2058](https://github.com/kufu/smarthr-ui/issues/2058)) ([33912ee](https://github.com/kufu/smarthr-ui/commit/33912eefcb32cbe7b36f58003367c0c0aecd5965))
+
 ## [16.0.0](https://github.com/kufu/smarthr-ui/compare/v15.3.0...v16.0.0) (2021-11-29)
 
 
