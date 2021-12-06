@@ -30,7 +30,7 @@
     "@types/react-dom": "^17.0.11",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.4.4",
-    "@types/styled-components": "^5.1.15",
+    "@types/styled-components": "^5.1.16",
     "babel-loader": "^8.2.3",
     "ecma-version-validator-webpack-plugin": "^1.1.0",
     "esbuild": "^0.14.0",
