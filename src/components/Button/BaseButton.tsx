@@ -130,6 +130,9 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
   }}
 `
 const TextLabel = styled.span`
+  /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
+  min-width: 0;
+
   .s & {
     /* FIXME! SVG とテキストコンテンツの縦位置が揃わないので暫定対応 */
     line-height: 0;
