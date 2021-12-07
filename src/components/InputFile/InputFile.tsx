@@ -88,7 +88,7 @@ export const InputFile: VFC<Props> = ({
           })}
         </FileList>
       )}
-      <InputLabel
+      <InputWrapper
         className={`${labelSmallClassName} ${labelDisabledClassName} ${labelFocusedClassName}`}
         themes={theme}
       >
@@ -106,7 +106,7 @@ export const InputFile: VFC<Props> = ({
           <FaFolderOpenIcon />
         </Prefix>
         {label}
-      </InputLabel>
+      </InputWrapper>
     </Wrapper>
   )
 }
@@ -131,7 +131,7 @@ const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
   `
 })
 
-const InputLabel = styled.label<{ themes: Theme }>(({ themes }) => {
+const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
   const { border, color, fontSize, leading, radius, shadow, spacingByChar } = themes
   return css`
     position: relative;
