@@ -23,6 +23,7 @@ type Palette = {
   OVERLAY: string
   BRAND: string
   OUTLINE: string
+  FOCUS: string
 }
 
 export type ColorProperty = Partial<Palette>
@@ -54,6 +55,7 @@ const baseColor = {
   SCRIM: 'rgba(0,0,0,0.5)',
   OVERLAY: 'rgba(0,0,0,0.15)',
   BRAND: '#00c4cc',
+  FOCUS: 'rgb(0, 95, 204)',
 }
 
 export const defaultColor = { ...baseColor, OUTLINE: baseColor.MAIN }
