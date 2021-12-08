@@ -60,17 +60,25 @@ const Wrapper = styled.li<{ themes: Theme }>`
       &.selected {
         background-color: ${color.MAIN};
         color: ${color.TEXT_WHITE};
-        position: relative;
 
-        &::after {
-          position: absolute;
-          top: 50%;
-          right: -4px;
-          transform: translate(0, -50%);
-          border-style: solid;
-          border-width: 4px 0 4px 4px;
-          border-color: transparent transparent transparent ${color.MAIN};
-          content: '';
+        > button {
+          position: relative;
+          &::after {
+            position: absolute;
+            top: 50%;
+            right: -4px;
+            transform: translate(0, -50%);
+            border-style: solid;
+            border-width: 4px 0 4px 4px;
+            border-color: transparent transparent transparent ${color.MAIN};
+            content: '';
+          }
+
+          &:focus-visible {
+            &::after {
+              border-color: transparent transparent transparent ${color.FOCUS};
+            }
+          }
         }
       }
     `
