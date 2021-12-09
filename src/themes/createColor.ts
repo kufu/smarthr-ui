@@ -50,7 +50,7 @@ const baseColor = {
   BASE_GREY: '#f5f4f3',
   MAIN: '#0077c7',
   DANGER: '#e01e5a',
-  WARNING: '#ff8800',
+  WARNING: '#f56121',
   SCRIM: 'rgba(0,0,0,0.5)',
   OVERLAY: 'rgba(0,0,0,0.15)',
   BRAND: '#00c4cc',
