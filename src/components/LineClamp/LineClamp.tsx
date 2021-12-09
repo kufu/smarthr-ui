@@ -87,5 +87,9 @@ const Wrapper = styled.span<{ maxLines: number }>`
           -webkit-line-clamp: ${maxLines};
           /* stylelint-enable */
           overflow-y: hidden;
+
+          /* inline-block に overflow: visible 以外を指定すると、vertical-align が bottom margin edge に揃ってしまう
+           * https://ja.stackoverflow.com/questions/2603/ */
+          vertical-align: bottom;
         `}
 `
