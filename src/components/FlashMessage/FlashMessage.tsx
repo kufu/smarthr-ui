@@ -39,6 +39,7 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
   role = 'alert',
   className = '',
   onClose,
+  ...props
 }) => {
   const theme = useTheme()
   const classNames = useClassNames()
@@ -80,6 +81,7 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
 
   return (
     <Wrapper
+      {...props}
       className={`${type} ${classNames.wrapper}  ${className}`}
       themes={theme}
       animation={animation}
