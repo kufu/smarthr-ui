@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [16.0.2](https://github.com/kufu/smarthr-ui/compare/v16.0.1...v16.0.2) (2021-12-13)
+
+
+### Bug Fixes
+
+* `Input`のwidthをデフォルト値より小さく設定すると表示が崩れる不具合の修正 ([#2102](https://github.com/kufu/smarthr-ui/issues/2102)) ([d57c02b](https://github.com/kufu/smarthr-ui/commit/d57c02bd83a9f9997ad0a02fe62c170ef3921376))
+* change not to show external link icon when suffix is null ([#2098](https://github.com/kufu/smarthr-ui/issues/2098)) ([36f4ce9](https://github.com/kufu/smarthr-ui/commit/36f4ce99bb0f3646d847436fc02585e05aef8379))
+* LineClamp と Tooltip の baseline ズレを修正 ([#2101](https://github.com/kufu/smarthr-ui/issues/2101)) ([27ab76f](https://github.com/kufu/smarthr-ui/commit/27ab76fcf1179ebb9148019132d48b7341e169f8))
+* SideNav のフォーカスインジケーターを新しい装飾に置き換える ([#2104](https://github.com/kufu/smarthr-ui/issues/2104)) ([b9f85ee](https://github.com/kufu/smarthr-ui/commit/b9f85ee76319410215abcdef3eb11a4a33881a22))
+* TextLink のアイコン縦位置を正す ([#2100](https://github.com/kufu/smarthr-ui/issues/2100)) ([f8791b2](https://github.com/kufu/smarthr-ui/commit/f8791b26868b6c97437c4b8ae645d82340b88412))
+
 ### [16.0.1](https://github.com/kufu/smarthr-ui/compare/v16.0.0...v16.0.1) (2021-12-06)
 
 
