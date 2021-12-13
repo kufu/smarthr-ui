@@ -27,3 +27,4 @@ export const _BottomFixedArea: Story = () => {
     />
   )
 }
+_BottomFixedArea.storyName = 'BottomFixedArea'
