@@ -21,6 +21,7 @@ export type BaseProps = {
    */
   title: string
   subtitle?: string
+  titleId: string
   /**
    * Label of close button.
    */
@@ -68,6 +69,7 @@ export type ActionDialogContentInnerProps = BaseProps & {
 export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   children,
   title,
+  titleId,
   subtitle,
   closeText,
   actionText,
@@ -99,7 +101,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
             {subtitle}
           </Text>
         )}
-        <Text as="p" size="L" leading="TIGHT" className={classNames.title}>
+        <Text id={titleId} as="p" size="L" leading="TIGHT" className={classNames.title}>
           {title}
         </Text>
       </TitleArea>
