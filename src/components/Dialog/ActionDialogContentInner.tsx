@@ -1,4 +1,4 @@
-import React, { VFC, useCallback } from 'react'
+import React, { ReactNode, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -15,21 +15,21 @@ export type BaseProps = {
   /**
    * Body of the dialog.
    */
-  children: React.ReactNode
+  children: ReactNode
   /**
    * Title of the dialog.
    */
-  title: string
-  subtitle?: string
+  title: ReactNode
+  subtitle?: ReactNode
   titleId: string
   /**
    * Label of close button.
    */
-  closeText: string
+  closeText: ReactNode
   /**
    * Label of action button.
    */
-  actionText: string
+  actionText: ReactNode
   /**
    * Action button style theme.
    */
