@@ -86,10 +86,12 @@ const StyledAncher = styled.a<{ themes: Theme }>`
 const PrefixWrapper = styled.span<{ themes: Theme }>(
   ({ themes: { spacingByChar } }) => css`
     margin-right: ${spacingByChar(0.25)};
+    vertical-align: middle;
   `,
 )
 const SuffixWrapper = styled.span<{ themes: Theme }>(
   ({ themes: { spacingByChar } }) => css`
     margin-left: ${spacingByChar(0.25)};
+    vertical-align: middle;
   `,
 )
