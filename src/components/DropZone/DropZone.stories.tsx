@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
@@ -7,46 +7,51 @@ import { DropZone } from './DropZone'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import readme from './README.md'
 
-const onSelectFiles = action('onSelectFiles')
-
-storiesOf('DropZone', module)
-  .addParameters({
+export default {
+  title: 'DropZone',
+  component: DropZone,
+  parameters: {
     readme: {
       sidebar: readme,
     },
-  })
-  .add('all', () => {
-    const theme = useTheme()
+  },
+}
 
-    return (
-      <Group>
-        <li>
-          <Text>Default</Text>
-          <DropZone onSelectFiles={onSelectFiles} />
-        </li>
+const onSelectFiles = action('onSelectFiles')
 
-        <li>
-          <Text>With children</Text>
-          <DropZone onSelectFiles={onSelectFiles}>
-            <DropZoneText theme={theme}>
-              <span>ここにドラッグ&ドロップ</span>
-              <span>または</span>
-            </DropZoneText>
-          </DropZone>
-        </li>
+export const All: Story = () => {
+  const theme = useTheme()
 
-        <li>
-          <Text>Button accepting only image files</Text>
-          <DropZone onSelectFiles={onSelectFiles} accept="image/*">
-            <DropZoneText theme={theme}>
-              <span>ここにドラッグ&ドロップ</span>
-              <span>または</span>
-            </DropZoneText>
-          </DropZone>
-        </li>
-      </Group>
-    )
-  })
+  return (
+    <Group>
+      <li>
+        <Text>Default</Text>
+        <DropZone onSelectFiles={onSelectFiles} />
+      </li>
+
+      <li>
+        <Text>With children</Text>
+        <DropZone onSelectFiles={onSelectFiles}>
+          <DropZoneText theme={theme}>
+            <span>ここにドラッグ&ドロップ</span>
+            <span>または</span>
+          </DropZoneText>
+        </DropZone>
+      </li>
+
+      <li>
+        <Text>Button accepting only image files</Text>
+        <DropZone onSelectFiles={onSelectFiles} accept="image/*">
+          <DropZoneText theme={theme}>
+            <span>ここにドラッグ&ドロップ</span>
+            <span>または</span>
+          </DropZoneText>
+        </DropZone>
+      </li>
+    </Group>
+  )
+}
+All.storyName = 'all'
 
 const Group = styled.ul`
   list-style: none;
