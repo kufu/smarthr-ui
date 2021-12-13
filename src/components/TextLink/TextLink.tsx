@@ -20,11 +20,12 @@ export const TextLink: VFC<Props & ElementProps> = ({
   ...props
 }) => {
   const theme = useTheme()
-  const actualSuffix = useMemo(
-    () =>
-      suffix || (target === '_blank' ? <FaExternalLinkAltIcon aria-label="別タブで開く" /> : null),
-    [suffix, target],
-  )
+  const actualSuffix = useMemo(() => {
+    if (target === '_blank' && suffix === undefined) {
+      return <FaExternalLinkAltIcon aria-label="別タブで開く" />
+    }
+    return suffix
+  }, [suffix, target])
   const actualHref = useMemo(() => {
     if (href) {
       return href
