@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [16.0.1](https://github.com/kufu/smarthr-ui/compare/v16.0.0...v16.0.1) (2021-12-06)
+
+
+### Bug Fixes
+
+* change not to focus trigger when `ModelessDialog` is closed ([#2083](https://github.com/kufu/smarthr-ui/issues/2083)) ([2838bda](https://github.com/kufu/smarthr-ui/commit/2838bda1be7d3d8dfefdec6317b77f6653f87c30))
+* change to pass ElementProps to Wrapper of `FlashMessage` ([#2095](https://github.com/kufu/smarthr-ui/issues/2095)) ([7711350](https://github.com/kufu/smarthr-ui/commit/77113506d1224ea3e07793a313d821e573e42a71))
+* fontSize.S の影響で Button[size=s] の縦揃えに影響していたので修正 ([#2058](https://github.com/kufu/smarthr-ui/issues/2058)) ([33912ee](https://github.com/kufu/smarthr-ui/commit/33912eefcb32cbe7b36f58003367c0c0aecd5965))
+
+## [16.0.0](https://github.com/kufu/smarthr-ui/compare/v15.3.0...v16.0.0) (2021-11-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* サポートする node バージョンを更新 (#2022)
+
+### Bug Fixes
+
+* adjust LineClamp height in safari ([#2074](https://github.com/kufu/smarthr-ui/issues/2074)) ([515b691](https://github.com/kufu/smarthr-ui/commit/515b691452c6ccc11b7242fd6d0b54b81d01455a))
+* fix to re-calcurate position of listbox on `MultiComboBox` ([#2075](https://github.com/kufu/smarthr-ui/issues/2075)) ([5aec65c](https://github.com/kufu/smarthr-ui/commit/5aec65c3be8fc2daba3916e246863c829cc23456))
+
+
+* サポートする node バージョンを更新 ([#2022](https://github.com/kufu/smarthr-ui/issues/2022)) ([0d052f6](https://github.com/kufu/smarthr-ui/commit/0d052f65b14a5693e07de82d1dab61eb55c3cfe8))
+
 ## [15.3.0](https://github.com/kufu/smarthr-ui/compare/v15.2.2...v15.3.0) (2021-11-22)
 
 

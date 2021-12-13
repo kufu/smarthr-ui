@@ -65,9 +65,9 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
 
     return (
       <BaseTag className={classNames} themes={theme} {...props}>
-        {prefix && <Prefix themes={theme}>{prefix}</Prefix>}
-        {children}
-        {suffix && <Suffix themes={theme}>{suffix}</Suffix>}
+        {prefix}
+        <TextLabel>{children}</TextLabel>
+        {suffix}
       </BaseTag>
     )
   }
@@ -84,6 +84,7 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       display: inline-flex;
       justify-content: center;
       align-items: center;
+      gap: ${spacingByChar(0.5)};
       text-align: center;
       white-space: nowrap;
       border-radius: ${radius.m};
@@ -104,6 +105,9 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       &.s {
         padding: ${spacingByChar(0.5)};
         font-size: ${fontSize.S};
+
+        /* ボタンラベルの line-height を 0 にしたため、高さを担保する */
+        min-height: calc(${fontSize.S} + ${spacingByChar(1)} + (${border.lineWidth} * 2));
       }
 
       &[disabled] {
@@ -116,25 +120,25 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
       &:focus {
         ${shadow.focusIndicatorStyles}
       }
+
+      /* baseline より下の leading などの余白を埋める */
+      .smarthr-ui-Icon,
+      svg {
+        display: block;
+      }
     `
   }}
 `
-const Prefix = styled.span<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
-      display: inline-flex;
-      margin-right: ${spacingByChar(0.5)};
-    `
-  }}
+const TextLabel = styled.span`
+  /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
+  min-width: 0;
+
+  .s & {
+    /* FIXME! SVG とテキストコンテンツの縦位置が揃わないので暫定対応 */
+    line-height: 0;
+  }
 `
-const Suffix = styled.span<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
-      display: inline-flex;
-      margin-left: ${spacingByChar(0.5)};
-    `
-  }}
-`
+
 const tagStore = {
   button: Base.withComponent('button'),
   a: Base.withComponent('a'),

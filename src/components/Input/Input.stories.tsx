@@ -31,8 +31,12 @@ storiesOf('Input', module).add('all', () => {
         <Input placeholder="string" />
       </li>
       <li>
-        <Txt>width</Txt>
+        <Txt>width (with %)</Txt>
         <Input defaultValue="width: 100%" width="100%" />
+      </li>
+      <li>
+        <Txt>width (with px)</Txt>
+        <Input defaultValue="width: 100px" width="100px" />
       </li>
       <li>
         <Txt>onChange</Txt>
