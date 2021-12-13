@@ -45,7 +45,7 @@ export const SideNavItem: VFC<Props> = ({
 
 const Wrapper = styled.li<{ themes: Theme }>`
   ${({ themes }) => {
-    const { color, interaction } = themes
+    const { color, interaction, shadow } = themes
 
     return css`
       color: ${color.TEXT_BLACK};
@@ -73,6 +73,10 @@ const Wrapper = styled.li<{ themes: Theme }>`
           content: '';
         }
       }
+
+      &:focus-within {
+        ${shadow.focusIndicatorStyles}
+      }
     `
   }}
 `
@@ -82,6 +86,7 @@ const Button = styled(UnstyledButton)<{ themes: Theme }>`
     const { fontSize, spacingByChar } = themes
 
     return css`
+      outline: none;
       width: 100%;
       line-height: 1;
       box-sizing: border-box;

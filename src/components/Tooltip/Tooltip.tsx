@@ -136,6 +136,11 @@ const Wrapper = styled.div<{ isIcon?: boolean }>`
   display: inline-block;
   max-width: 100%;
   overflow-y: hidden;
+
+  /* inline-block に overflow: visible 以外を指定すると、vertical-align が bottom margin edge に揃ってしまう
+   * https://ja.stackoverflow.com/questions/2603/ */
+  vertical-align: bottom;
+
   ${({ isIcon }) =>
     isIcon &&
     css`

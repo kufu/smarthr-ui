@@ -24,6 +24,11 @@ storiesOf('TextLink', module)
         </TextLink>
       </li>
       <li>
+        <TextLink href="/" target="_blank" suffix={null}>
+          別タブで開くルートへのリンク（suffix なし）
+        </TextLink>
+      </li>
+      <li>
         <TextLink onClick={() => alert('click!')}>
           onClick しか設定していなくてもフォーカスできます。
         </TextLink>
