@@ -75,7 +75,7 @@ export {
 export { InformationPanel } from './components/InformationPanel'
 export { Footer } from './components/Footer'
 export { RightFixedNote } from './components/RightFixedNote'
-export { Tooltip, LightTooltip, DarkTooltip } from './components/Tooltip'
+export { Tooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
 export { MessageScreen } from './components/MessageScreen'
 export { Calendar } from './components/Calendar'
