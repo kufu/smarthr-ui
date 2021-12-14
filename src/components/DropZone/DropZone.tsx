@@ -9,10 +9,17 @@ import { useClassNames } from './useClassNames'
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DropZoneProps>
 
 type DropZoneProps = {
+  /**
+   * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
+   */
   onSelectFiles: (
     e: DragEvent<HTMLElement> | ChangeEvent<HTMLInputElement>,
     files: FileList | null,
   ) => void
+  /**
+   * 許可するファイル型を表す1つ以上の固有ファイル型指定子
+   * <b>（ドラッグ&ドロップの挙動には影響しません）</b>
+   */
   accept?: string
   children?: React.ReactNode
 }
