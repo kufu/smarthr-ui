@@ -115,6 +115,7 @@
     "build:lib": "tsc -p tsconfig.build.json",
     "build:esm": "tsc -p tsconfig.esm.build.json",
     "build-storybook": "build-storybook --quiet -s ./public",
+    "build-stylesheet": "node scripts/build-stylesheet.ts",
     "clean": "rimraf ./lib",
     "format": "eslint --fix './**/*.ts{,x}'",
     "lint": "run-p lint:*",
