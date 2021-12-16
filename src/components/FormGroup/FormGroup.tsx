@@ -8,15 +8,25 @@ import { FaExclamationCircleIcon } from '../Icon'
 
 type innerMarginType = 'XXS' | 'XS' | 'S'
 type Props = {
+  /** グループのタイトル名 */
   title: string
+  /** タイトルの見出しのタイプ */
   titleType?: HeadingTypes
+  /** label 要素に適用する `htmlFor` 値 */
   htmlFor?: string
+  /** label 要素に適用する `id` 値 */
   labelId?: string
+  /** タイトルと子要素の間のマージン */
   innerMargin?: innerMarginType
+  /** タイトルの隣に表示する `StatusLabel` の Props の配列 */
   statusLabelProps?: Array<ComponentProps<typeof StatusLabel>>
+  /** タイトルの下に表示するヘルプメッセージ */
   helpMessage?: ReactNode
+  /** タイトルの下に表示するエラーメッセージ */
   errorMessages?: string | string[]
+  /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
+  /** コンポーネントに適用するクラス名 */
   className?: string
   children: ReactNode
 }
