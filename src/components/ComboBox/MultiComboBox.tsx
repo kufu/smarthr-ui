@@ -248,7 +248,7 @@ export function MultiComboBox<T>({
       }}
     >
       <InputArea themes={theme}>
-        <SelectedList themes={theme} aria-label="選択済みの項目" aria-live="polite">
+        <SelectedList themes={theme} aria-label="選択済みの項目" aria-live="polite" aria-atomic>
           {selectedItems.map((selectedItem) => (
             <li key={selectedItem.label}>
               <MultiSelectedItem
