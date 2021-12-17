@@ -18,17 +18,6 @@
     "allowSyntheticDefaultImports": true,
     "noEmitOnError": true,
     "esModuleInterop": true,
-    "plugins": [
-      {
-        "transform": "typescript-plugin-styled-components",
-        "type": "config",
-
-        // other typescript-plugin-styled-components options can be added here
-        "ssr": true,
-        "displayName": true,
-        "minify": true,
-      }
-    ]
   },
   "exclude": ["node_modules"],
   "include": ["src/**/*"]
