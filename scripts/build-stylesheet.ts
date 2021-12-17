@@ -2,7 +2,7 @@ const React = require('react')
 const { renderToString } = require('react-dom/server')
 const { ServerStyleSheet, StyleSheetManager } = require('styled-components')
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs-extra')
 const AccordionPanel = require('../css/components/AccordionPanel/style')
 const Button = require('../css/components/Button/style')
 
@@ -71,4 +71,5 @@ const styleTags = (() => {
 })()
 
 console.log(styleTags)
-fs.writeFileSync(path.resolve('css', 'style.css'), styleTags)
+fs.removeSync(path.resolve('css'))
+fs.outputFileSync(path.resolve('css', 'style.css'), styleTags)
