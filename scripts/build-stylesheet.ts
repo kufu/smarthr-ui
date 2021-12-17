@@ -1,7 +1,7 @@
 const React = require('react')
 const { renderToString } = require('react-dom/server')
 const { ServerStyleSheet, StyleSheetManager } = require('styled-components')
-const { PrimaryButtonAnchor } = require('../lib')
+const { Style } = require('../lib/style')
 
 const sheet = new ServerStyleSheet()
 const styleTags = (() => {
@@ -12,7 +12,7 @@ const styleTags = (() => {
       React.createElement(
         StyleSheetManager,
         { sheet: sheet.instance },
-        React.createElement(PrimaryButtonAnchor, {}, 'PrimaryButtonAnchor'),
+        React.createElement(Style, {}),
       ),
     )
     style = sheet.getStyleTags()
