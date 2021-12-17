@@ -27,7 +27,6 @@
         "ssr": true,
         "displayName": true,
         "minify": true,
-        "componentIdPrefix": "static-style-temp-",
       }
     ]
   },
