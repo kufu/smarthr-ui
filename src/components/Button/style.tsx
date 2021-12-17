@@ -28,3 +28,4 @@ export const Style: VFC = () => (
     <UnstyledButton />
   </>
 )
+export const PREFIX = 'Button'

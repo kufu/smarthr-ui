@@ -1,7 +1,7 @@
 const React = require('react')
 const { renderToString } = require('react-dom/server')
 const { ServerStyleSheet, StyleSheetManager } = require('styled-components')
-const { Style: ButtonStyle } = require('../lib/components/Button/style')
+const Button = require('../lib/components/Button/style')
 
 const compact = (ary) => ary.filter((i) => !!i)
 
@@ -14,7 +14,7 @@ const styleTags = (() => {
       React.createElement(
         StyleSheetManager,
         { sheet: sheet.instance },
-        React.createElement(ButtonStyle, {}),
+        React.createElement(Button.Style, {}),
       ),
     )
     style = sheet.getStyleTags()
@@ -38,14 +38,17 @@ const styleTags = (() => {
     const [_line, _gid, id, content] = m.match(
       /^data-styled(.+?)\[id="(.+?)"\]\{content:"(.+?)"\}\n?$/,
     )
-    const parsedId = compact(id.split('-')).filter((_i, index) => index !== 1)
+    const nextStyleName = [
+      Button.PREFIX,
+      ...compact(id.split('-')).filter((_i, index) => index !== 1),
+    ].join('-')
     const parsedContent = compact(content.split(','))
 
-    console.log(parsedId, parsedContent)
+    console.log(nextStyleName, parsedContent)
 
     const styleNameFormatter = (key) => {
       // eslint-disable-next-line no-useless-escape
-      style = style.replace(new RegExp(`\.${key}([\{|\.|\[|\: ])`, 'g'), `.${parsedId.join('-')}$1`)
+      style = style.replace(new RegExp(`\.${key}([\{|\.|\[|\: ])`, 'g'), `.${nextStyleName}$1`)
     }
 
     styleNameFormatter(parsedContent[0])
