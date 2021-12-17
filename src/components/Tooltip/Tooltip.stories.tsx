@@ -8,7 +8,7 @@ import {
   FaArrowAltCircleRightIcon,
   FaArrowAltCircleUpIcon,
 } from '../Icon'
-import { DarkTooltip, LightTooltip, Tooltip } from './Tooltip'
+import { Tooltip } from './Tooltip'
 
 import readme from './README.md'
 
@@ -22,99 +22,84 @@ storiesOf('Tooltip', module)
     <List>
       <dt>Default</dt>
       <dd>
-        <LightTooltip message="LightBalloon">LightTooltip</LightTooltip>
-      </dd>
-      <dd>
-        <DarkTooltip message="DarkBalloon">DarkTooltip</DarkTooltip>
+        <Tooltip message="LightBalloon">LightTooltip</Tooltip>
       </dd>
       <dt>horizontal & vertical</dt>
       <dd>
-        <LightTooltip
+        <Tooltip
           message="horizontal=left & vertical=bottom (default)"
           horizontal="left"
           vertical="bottom"
         >
           horizontal=left & vertical=bottom (default)
-        </LightTooltip>
+        </Tooltip>
       </dd>
       <dd className="center">
-        <LightTooltip
+        <Tooltip
           message="horizontal=center & vertical=bottom"
           horizontal="center"
           vertical="bottom"
         >
           horizontal=center & vertical=bottom
-        </LightTooltip>
+        </Tooltip>
       </dd>
       <dd className="right">
-        <LightTooltip
-          message="horizontal=right & vertical=bottom"
-          horizontal="right"
-          vertical="bottom"
-        >
+        <Tooltip message="horizontal=right & vertical=bottom" horizontal="right" vertical="bottom">
           horizontal=right & vertical=bottom
-        </LightTooltip>
+        </Tooltip>
       </dd>
       <dd>
-        <DarkTooltip
-          message="horizontal=left & vertical=middle"
-          horizontal="left"
-          vertical="middle"
-        >
+        <Tooltip message="horizontal=left & vertical=middle" horizontal="left" vertical="middle">
           horizontal=left & vertical=middle
-        </DarkTooltip>
+        </Tooltip>
       </dd>
       <dd className="right">
-        <DarkTooltip
-          message="horizontal=right & vertical=middle"
-          horizontal="right"
-          vertical="middle"
-        >
+        <Tooltip message="horizontal=right & vertical=middle" horizontal="right" vertical="middle">
           horizontal=right & vertical=middle
-        </DarkTooltip>
+        </Tooltip>
       </dd>
       <dd>
-        <LightTooltip message="horizontal=left & vertical=top" horizontal="left" vertical="top">
+        <Tooltip message="horizontal=left & vertical=top" horizontal="left" vertical="top">
           horizontal=left & vertical=top
-        </LightTooltip>
+        </Tooltip>
       </dd>
       <dd className="center">
-        <LightTooltip message="horizontal=center & vertical=top" horizontal="center" vertical="top">
+        <Tooltip message="horizontal=center & vertical=top" horizontal="center" vertical="top">
           horizontal=center & vertical=top
-        </LightTooltip>
+        </Tooltip>
       </dd>
       <dd className="right">
-        <LightTooltip message="horizontal=right & vertical=top" horizontal="right" vertical="top">
+        <Tooltip message="horizontal=right & vertical=top" horizontal="right" vertical="top">
           horizontal=right & vertical=top
-        </LightTooltip>
+        </Tooltip>
       </dd>
       <dt>ellipsisOnly</dt>
       <dd className="limit">
-        <DarkTooltip message="invisible message" ellipsisOnly={true}>
+        <Tooltip message="invisible message" ellipsisOnly={true}>
           ellipsisOnly: invisible
-        </DarkTooltip>
+        </Tooltip>
       </dd>
       <dd className="limit">
-        <DarkTooltip message="visible message" ellipsisOnly={true}>
+        <Tooltip message="visible message" ellipsisOnly={true}>
           <Text>
             ellipsisOnly: visible: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de
             la Santísima Trinidad Ruiz Picasso
           </Text>
-        </DarkTooltip>
+        </Tooltip>
       </dd>
       <dt>multiLine</dt>
       <dd className="limit">
-        <LightTooltip
+        <Tooltip
           message="Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la Santísima Trinidad Ruiz Picasso"
           multiLine={true}
         >
           MultiLineMessage: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la
           Santísima Trinidad Ruiz Picasso
-        </LightTooltip>
+        </Tooltip>
       </dd>
       <dt>ReactNode message attribute</dt>
       <dd>
-        <LightTooltip
+        <Tooltip
           message={
             <>
               MultiLineMessage
@@ -130,74 +115,74 @@ storiesOf('Tooltip', module)
             MultiLineMessage: Pablo Diego José Francisco de Paula Juan Nepomuceno Cipriano de la
             Santísima Trinidad Ruiz Picasso
           </Text>
-        </LightTooltip>
+        </Tooltip>
       </dd>
       <dt>triggerType</dt>
       <dd className="center">
-        <LightTooltip
+        <Tooltip
           message="horizontal=left & vertical=bottom (default)"
           horizontal="left"
           vertical="bottom"
           triggerType="icon"
         >
           <FaArrowAltCircleUpIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
-        </LightTooltip>
-        <LightTooltip
+        </Tooltip>
+        <Tooltip
           message="horizontal=center & vertical=bottom"
           horizontal="center"
           vertical="bottom"
           triggerType="icon"
         >
           <FaArrowAltCircleUpIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
-        </LightTooltip>
-        <LightTooltip
+        </Tooltip>
+        <Tooltip
           message="horizontal=right & vertical=bottom"
           horizontal="right"
           vertical="bottom"
           triggerType="icon"
         >
           <FaArrowAltCircleUpIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
-        </LightTooltip>
-        <DarkTooltip
+        </Tooltip>
+        <Tooltip
           message="horizontal=left & vertical=middle"
           horizontal="left"
           vertical="middle"
           triggerType="icon"
         >
           <FaArrowAltCircleRightIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
-        </DarkTooltip>
-        <DarkTooltip
+        </Tooltip>
+        <Tooltip
           message="horizontal=right & vertical=middle"
           horizontal="right"
           vertical="middle"
           triggerType="icon"
         >
           <FaArrowAltCircleLeftIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
-        </DarkTooltip>
-        <LightTooltip
+        </Tooltip>
+        <Tooltip
           message="horizontal=left & vertical=top"
           horizontal="left"
           vertical="top"
           triggerType="icon"
         >
           <FaArrowAltCircleDownIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
-        </LightTooltip>
-        <LightTooltip
+        </Tooltip>
+        <Tooltip
           message="horizontal=center & vertical=top"
           horizontal="center"
           vertical="top"
           triggerType="icon"
         >
           <FaArrowAltCircleDownIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
-        </LightTooltip>
-        <LightTooltip
+        </Tooltip>
+        <Tooltip
           message="horizontal=right & vertical=top"
           horizontal="right"
           vertical="top"
           triggerType="icon"
         >
           <FaArrowAltCircleDownIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
-        </LightTooltip>
+        </Tooltip>
       </dd>
       <dt>自動位置決め</dt>
       {[undefined, 'center', 'right'].map((className) => (
