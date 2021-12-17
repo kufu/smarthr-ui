@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, VFC } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -7,7 +7,7 @@ import { useClassNames } from './useClassNames'
 type Props = {
   type?: 'done' | 'success' | 'process' | 'required' | 'disabled' | 'must' | 'warning' | 'error'
   className?: string
-  children: string
+  children: ReactNode
 }
 type ElementProps = Omit<HTMLAttributes<HTMLSpanElement>, keyof Props>
 

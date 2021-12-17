@@ -7,6 +7,7 @@ import { useClassNames } from './useClassNames'
 
 type Props = {
   children: React.ReactNode
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 
