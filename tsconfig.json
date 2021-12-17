@@ -24,9 +24,9 @@
         "type": "config",
 
         // other typescript-plugin-styled-components options can be added here
-        "minify": true,
         "ssr": true,
         "displayName": true,
+        "minify": true,
         "componentIdPrefix": "static-style-temp-",
       }
     ]
