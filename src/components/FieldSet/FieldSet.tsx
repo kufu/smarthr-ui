@@ -11,12 +11,19 @@ import { StatusLabel } from '../StatusLabel'
 import { FaExclamationCircleIcon } from '../Icon'
 
 type Props = Omit<InputProps, 'error'> & {
+  /** ラベル名 */
   label: string
+  /** ラベルのタイプ */
   labelType?: HeadingTypes
+  /** ラベル名の HTML 要素のタイプ */
   labelTagType?: HeadingTagTypes
+  /** input 要素の下に表示するエラーメッセージ */
   errorMessage?: string | string[]
+  /** input 要素の下に表示するヘルプメッセージ */
   helpMessage?: string
+  /** ラベル部分の末尾に表示する内容 */
   labelSuffix?: ReactNode
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>

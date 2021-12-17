@@ -17,6 +17,7 @@ import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
 import { useListBox } from './useListBox'
+import { convertMatchableString } from './comboBoxHelper'
 import { Item } from './types'
 
 type Props<T> = {
@@ -131,7 +132,7 @@ export function SingleComboBox<T>({
 
     return itemsWithSelected.filter(({ label }) => {
       if (!inputValue) return true
-      return label.includes(inputValue)
+      return convertMatchableString(label).includes(convertMatchableString(inputValue))
     })
   }, [inputValue, isEditing, items, selectedItem])
   const isDuplicate = items.some((item) => item.label === inputValue)

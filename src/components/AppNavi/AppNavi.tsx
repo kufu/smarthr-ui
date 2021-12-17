@@ -12,7 +12,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 type Props = {
   /** ラベルのテキスト */
-  label?: string
+  label?: ReactNode
   /** 表示するボタンの Props の配列 */
   buttons?: Array<
     AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
