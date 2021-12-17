@@ -21,31 +21,22 @@ export type Props = {
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-const balloonFactory = (theme: BalloonTheme) => {
-  const Balloon: VFC<Props & ElementProps> = ({
-    horizontal,
-    vertical,
-    className = '',
-    ...props
-  }) => {
-    if (horizontal === 'center' && vertical === 'middle') {
-      throw new Error('"vertical" can not be specified as "middle" when "horizontal" is "center".')
-    }
-
-    const themes = useTheme()
-    const { wrapper } = useClassNames()
-    const classNames = `${theme} ${horizontal} ${vertical} ${className} ${wrapper}`
-
-    return <Base className={classNames} themes={themes} {...props} />
+export const Balloon: VFC<Props & ElementProps> = ({
+  horizontal,
+  vertical,
+  className = '',
+  ...props
+}) => {
+  if (horizontal === 'center' && vertical === 'middle') {
+    throw new Error('"vertical" can not be specified as "middle" when "horizontal" is "center".')
   }
-  return Balloon
-}
 
-export const Balloon = balloonFactory('light')
-/** @deprecated このコンポーネントは非推奨です。 Balloon コンポーネントを使用してください。 */
-export const LightBalloon = Balloon
-/** @deprecated このコンポーネントは非推奨です。 Balloon コンポーネントを使用してください。 */
-export const DarkBalloon = balloonFactory('dark')
+  const themes = useTheme()
+  const { wrapper } = useClassNames()
+  const classNames = `${horizontal} ${vertical} ${className} ${wrapper}`
+
+  return <Base className={classNames} themes={themes} {...props} />
+}
 
 const Base = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
@@ -67,44 +58,8 @@ const Base = styled.div<{ themes: Theme }>`
         content: '';
       }
 
-      &.light {
-        background-color: ${color.WHITE};
-        color: ${color.TEXT_BLACK};
-      }
-      &.dark {
-        background-color: ${color.TEXT_BLACK};
-        color: ${color.TEXT_WHITE};
-      }
-
-      &.light.top {
-        &::before {
-          border-color: transparent transparent ${color.BORDER};
-        }
-        &::after {
-          border-color: transparent transparent ${color.WHITE};
-        }
-      }
-      &.light.bottom {
-        &::before {
-          border-color: ${color.BORDER} transparent transparent;
-        }
-        &::after {
-          border-color: ${color.WHITE} transparent transparent;
-        }
-      }
-
-      &.dark.top {
-        &::before,
-        &::after {
-          border-color: transparent transparent ${color.TEXT_BLACK};
-        }
-      }
-      &.dark.bottom {
-        &::before,
-        &::after {
-          border-color: ${color.TEXT_BLACK} transparent transparent;
-        }
-      }
+      background-color: ${color.WHITE};
+      color: ${color.TEXT_BLACK};
 
       &.top {
         &::before,
@@ -113,9 +68,11 @@ const Base = styled.div<{ themes: Theme }>`
         }
         &::before {
           top: -5px;
+          border-color: transparent transparent ${color.BORDER};
         }
         &::after {
           top: -4px;
+          border-color: transparent transparent ${color.WHITE};
         }
       }
       &.bottom {
@@ -125,9 +82,11 @@ const Base = styled.div<{ themes: Theme }>`
         }
         &::before {
           bottom: -5px;
+          border-color: ${color.BORDER} transparent transparent;
         }
         &::after {
           bottom: -4px;
+          border-color: ${color.WHITE} transparent transparent;
         }
       }
 
@@ -164,23 +123,11 @@ const Base = styled.div<{ themes: Theme }>`
           }
           &::before {
             left: -5px;
+            border-color: transparent ${color.BORDER} transparent transparent;
           }
           &::after {
             left: -4px;
-          }
-          &.light {
-            &::before {
-              border-color: transparent ${color.BORDER} transparent transparent;
-            }
-            &::after {
-              border-color: transparent ${color.WHITE} transparent transparent;
-            }
-          }
-          &.dark {
-            &::before,
-            &::after {
-              border-color: transparent ${color.TEXT_BLACK} transparent transparent;
-            }
+            border-color: transparent ${color.WHITE} transparent transparent;
           }
         }
         &.right {
@@ -190,23 +137,11 @@ const Base = styled.div<{ themes: Theme }>`
           }
           &::before {
             right: -5px;
+            border-color: transparent transparent transparent ${color.BORDER};
           }
           &::after {
             right: -4px;
-          }
-          &.light {
-            &::before {
-              border-color: transparent transparent transparent ${color.BORDER};
-            }
-            &::after {
-              border-color: transparent transparent transparent ${color.WHITE};
-            }
-          }
-          &.dark {
-            &::before,
-            &::after {
-              border-color: transparent transparent transparent ${color.TEXT_BLACK};
-            }
+            border-color: transparent transparent transparent ${color.WHITE};
           }
         }
       }

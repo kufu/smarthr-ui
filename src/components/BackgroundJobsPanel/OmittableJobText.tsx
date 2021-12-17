@@ -1,7 +1,7 @@
 import React, { VFC, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { LightTooltip } from '../Tooltip'
+import { Tooltip } from '../Tooltip'
 
 type Props = {
   children: string
@@ -24,7 +24,7 @@ export const OmittableJobText: VFC<Props> = ({ children, className }) => {
 
   return (
     <Wrapper ref={ref} className={className}>
-      {needsOmitting ? <Tooltip message={children}>{children}</Tooltip> : children}
+      {needsOmitting ? <StyledTooltip message={children}>{children}</StyledTooltip> : children}
     </Wrapper>
   )
 }
@@ -34,7 +34,7 @@ const Wrapper = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
 `
-const Tooltip = styled(LightTooltip)`
+const StyledTooltip = styled(Tooltip)`
   display: block;
   text-overflow: ellipsis;
   overflow: hidden;
