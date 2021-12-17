@@ -1,10 +1,14 @@
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaExternalLinkAltIcon } from '../Icon'
 
-storiesOf('[TBD] Downloader', module).add('all', () => {
+export default {
+  title: '[TBD] Downloader',
+}
+
+export const All: Story = () => {
   const themes = useTheme()
   return (
     <Wrapper themes={themes}>
@@ -20,7 +24,8 @@ storiesOf('[TBD] Downloader', module).add('all', () => {
       </Link>
     </Wrapper>
   )
-})
+}
+All.storyName = 'all'
 
 const Wrapper = styled.div<{ themes: Theme }>`
   box-sizing: border-box;

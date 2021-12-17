@@ -6,9 +6,9 @@ const MemoryFS = require('memory-fs')
 const compiler = webpack({
   mode: 'development',
   entry: path.resolve('src', 'index.ts'),
-  target: ['web', 'es5'],
+  target: ['web', 'es2020'],
   devtool: 'nosources-source-map',
-  plugins: [new ECMAVersionValidatorPlugin()],
+  plugins: [new ECMAVersionValidatorPlugin({ ecmaVersion: 2020 })],
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
   },
