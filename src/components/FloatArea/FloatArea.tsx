@@ -15,20 +15,32 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 type StyleProps = {
+  /** コンポーネントの上端から、包含ブロックの上端までの距離 */
   top?: number
+  /** コンポーネントの下端から、包含ブロックの下端までの距離 */
   bottom?: number
+  /** コンポーネントの `z-index` 値 */
   zIndex?: number
 }
 type ErrorIcons =
   | FunctionComponentElement<ComponentProps<typeof FaExclamationTriangleIcon>>
   | FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
 type Props = StyleProps & {
+  /** 表示する `PrimaryButton` または `PrimaryButtonAnchor` コンポーネント */
   primaryButton: ReactNode
+  /** 表示する `SecondaryButton` または `SecondaryButtonAnchor` コンポーネント */
   secondaryButton?: ReactNode
+  /** tertiary 領域に表示するボタン */
   tertiaryButton?: ReactNode
+  /** エラーメッセージ */
   errorText?: string
+  /**
+   * エラーメッセージのアイコン（`FaExclamationCircleIcon` または `FaExclamationTriangleIcon` を指定）
+   */
   errorIcon?: ErrorIcons
+  /** コンポーネントの幅 */
   width?: string
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
