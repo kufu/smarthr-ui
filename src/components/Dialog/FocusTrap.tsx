@@ -1,6 +1,7 @@
 import React, { ReactNode, VFC, useCallback, useEffect, useRef, useState } from 'react'
 
 import { tabbable } from '../../libs/tabbable'
+import useEventListener from '../../hooks/useEventListener'
 
 type Props = {
   children: ReactNode
@@ -29,12 +30,7 @@ export const FocusTrap: VFC<Props> = ({ children }) => {
     }
   }, [])
 
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [handleKeyDown])
+  useEventListener(window, 'keydown', handleKeyDown)
 
   const { moveFocusFromTrigger, returnFocusToTrigger } = useTriggerFocusControl(ref)
   useEffect(() => {

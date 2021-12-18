@@ -1,14 +1,7 @@
-import React, {
-  HTMLAttributes,
-  ReactNode,
-  VFC,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { HTMLAttributes, ReactNode, VFC, useCallback, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
+import useEventListener from '../../hooks/useEventListener'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 import { SecondaryButton } from '../Button'
@@ -86,12 +79,7 @@ export const SegmentedControl: VFC<Props & ElementProps> = ({
     [isFocused],
   )
 
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown)
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [handleKeyDown])
+  useEventListener(document, 'keydown', handleKeyDown)
 
   const includesSelected = value && options.some((option) => option.value === value)
   const getRovingTabIndex = useCallback(

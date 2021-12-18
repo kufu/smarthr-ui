@@ -67,6 +67,7 @@ export const Dropdown: VFC<Props> = ({ children }) => {
       }
       setActive(false)
     }
+
     document.body.addEventListener('click', onClickBody, false)
 
     return () => {

@@ -1,10 +1,5 @@
-import { useEffect } from 'react'
+import useEventListener from '../../hooks/useEventListener'
 
 export function useGlobalKeyDown(callback: (e: KeyboardEvent) => void) {
-  useEffect(() => {
-    window.addEventListener('keydown', callback)
-    return () => {
-      window.removeEventListener('keydown', callback)
-    }
-  }, [callback])
+  useEventListener(window, 'keydown', callback)
 }

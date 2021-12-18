@@ -1,4 +1,5 @@
-import { RefObject, useCallback, useEffect } from 'react'
+import { RefObject, useCallback } from 'react'
+import useEventListener from './useEventListener'
 
 export function useOuterClick(
   targets: Array<RefObject<HTMLElement>>,
@@ -16,12 +17,7 @@ export function useOuterClick(
     [...targets, callback],
   )
 
-  useEffect(() => {
-    window.addEventListener('click', handleOuterClick)
-    return () => {
-      window.removeEventListener('click', handleOuterClick)
-    }
-  }, [handleOuterClick])
+  useEventListener(window, 'click', handleOuterClick)
 }
 
 function isElementIncludedParent(target: Element | null, parent: Element | null): boolean {

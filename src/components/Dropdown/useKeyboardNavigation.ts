@@ -1,4 +1,6 @@
-import { RefObject, useCallback, useContext, useEffect } from 'react'
+import { RefObject, useCallback, useContext } from 'react'
+
+import useEventListener from '../../hooks/useEventListener'
 import { tabbable } from '../../libs/tabbable'
 
 import { DropdownContext } from './Dropdown'
@@ -73,10 +75,5 @@ export function useKeyboardNavigation(wrapperRef: RefObject<HTMLDivElement>) {
     },
     [wrapperRef, triggerElementRef, rootTriggerRef, onClickCloser],
   )
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [handleKeyDown])
+  useEventListener(window, 'keydown', handleKeyDown)
 }

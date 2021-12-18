@@ -16,7 +16,7 @@ master branch's storybook: https://smarthr-ui.netlify.com/
 
 ## Installation
 
-SmartHR-UI is available as an  [npm package](https://www.npmjs.com/package/smarthr-ui).
+SmartHR-UI is available as an [npm package](https://www.npmjs.com/package/smarthr-ui).
 
 ```sh
 // with npm
@@ -24,6 +24,9 @@ npm install smarthr-ui
 
 // with yarn
 yarn add smarthr-ui
+
+// with pnpm
+pnpm add smarthr-ui
 ```
 
 Install peerDependencies.
@@ -65,6 +68,7 @@ We'd greatly appreciate any [contribution](https://github.com/kufu/smarthr-ui/bl
 Please read the [changelog](https://github.com/kufu/smarthr-ui/releases).
 
 ## Design
+
 We released design in [Figma](https://www.figma.com/community/file/978607227374353992/SmartHR-UI).
 If you use our service logo, please read the [SmartHR Design System](https://smarthr.design/)
 

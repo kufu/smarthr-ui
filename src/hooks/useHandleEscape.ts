@@ -1,4 +1,5 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
+import useEventListener from './useEventListener'
 
 export const useHandleEscape = (cb: () => void) => {
   const handleKeyPress = useCallback(
@@ -11,8 +12,6 @@ export const useHandleEscape = (cb: () => void) => {
     },
     [cb],
   )
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyPress)
-    return () => document.removeEventListener('keydown', handleKeyPress)
-  }, [handleKeyPress])
+
+  useEventListener(document, 'keydown', handleKeyPress)
 }
