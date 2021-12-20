@@ -40,17 +40,12 @@ export const InputFile: VFC<Props> = ({
 
   useEffect(() => {
     if (inputRef.current) {
-      // IE は DataTransfer constructor をサポートしていないので try catch でクラッシュを防ぐ
-      try {
-        const buff = new DataTransfer()
-        files.forEach((file) => {
-          buff.items.add(file)
-        })
+      const buff = new DataTransfer()
+      files.forEach((file) => {
+        buff.items.add(file)
+      })
 
-        inputRef.current.files = buff.files
-      } catch {
-        // no-op
-      }
+      inputRef.current.files = buff.files
     }
   }, [files])
 
@@ -160,8 +155,7 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
       position: absolute;
       height: 100%;
 
-      /* Prevent to show caret on the upload button on IE11 */
-      left: -10px;
+      left: 0;
       top: 0;
       margin: 0;
 
