@@ -1,21 +1,9 @@
 # Tooltip
 
 ```tsx
-import { LightTooltip, DarkTooltip } from 'smarthr-ui'
+import { Tooltip } from 'smarthr-ui'
 
-// LightTooltip
-<LightTooltip message="Text in tooltip">
-  Displayed text
-</LightTooltip>
-
-// DarkTooltip
-<DarkTooltip
-  message={<span>You can also add ReactNode</span>}
-  horizontal="right"
-  vertical="middle"
->
-  Displayed text
-</DarkTooltip>
+;<Tooltip message="Text in tooltip">Displayed text</Tooltip>
 ```
 
 ## props

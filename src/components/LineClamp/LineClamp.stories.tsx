@@ -33,7 +33,7 @@ storiesOf('LineClamp', module)
                 <LineClamp>{longText}</LineClamp>
               </Text>
             </dd>
-            <dt>Max Lines 1 / with Light Tooltip</dt>
+            <dt>Max Lines 1</dt>
             <dd>
               <Text>
                 <LineClamp maxLines={1} withTooltip>
@@ -41,7 +41,7 @@ storiesOf('LineClamp', module)
                 </LineClamp>
               </Text>
             </dd>
-            <dt>Max Lines 2 / with Light Tooltip</dt>
+            <dt>Max Lines 2</dt>
             <dd>
               <Text>
                 <LineClamp maxLines={2} withTooltip>
@@ -49,10 +49,10 @@ storiesOf('LineClamp', module)
                 </LineClamp>
               </Text>
             </dd>
-            <dt>Max Lines 4 / with Dark Tooltip</dt>
+            <dt>Max Lines 4</dt>
             <dd>
               <Text>
-                <LineClamp maxLines={4} toolTipType="dark" withTooltip>
+                <LineClamp maxLines={4} withTooltip>
                   {longText}
                 </LineClamp>
               </Text>
@@ -60,7 +60,7 @@ storiesOf('LineClamp', module)
             <dt>with button</dt>
             <dd>
               <Button>
-                <LineClamp maxLines={1} toolTipType="dark" withTooltip>
+                <LineClamp maxLines={1} withTooltip>
                   Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
                   Ipsum has been the industry&apos;s standard dummy text ever since the 1500s.
                 </LineClamp>

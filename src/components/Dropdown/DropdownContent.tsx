@@ -17,8 +17,14 @@ export const DropdownContentContext = React.createContext<{
 })
 
 type Props = {
+  /**
+   * `true` のとき、ドロップダウン内のコンテンツをクリックしてもドロップダウンが閉じなくなる。。
+   *  この場合は、 `DropdownCloser` を用いてドロップダウンを閉じることができる。
+   */
   controllable?: boolean
+  /** `true` のとき、ウィンドウサイズに応じてドロップダウン内が自動的にスクロール可能になる */
   scrollable?: boolean
+  /** コンポーネントに適用するクラス名 */
   className?: string
   children?: React.ReactNode
 }

@@ -10,13 +10,10 @@ import { SecondaryButton } from '../Button'
 
 export default {
   title: 'FlashMessage',
-  Component: FlashMessage,
+  component: FlashMessage,
   parameters: {
-    docs: {
-      description: { component: readme },
-      source: {
-        type: 'code',
-      },
+    readme: {
+      sidebar: readme,
     },
   },
 }
