@@ -33,7 +33,7 @@
     "@types/styled-components": "^5.1.18",
     "babel-loader": "^8.2.3",
     "ecma-version-validator-webpack-plugin": "^1.1.0",
-    "esbuild": "^0.14.3",
+    "esbuild": "^0.14.8",
     "esbuild-jest": "^0.5.0",
     "eslint": "^7.32.0",
     "eslint-config-smarthr": "^5.0.3",
