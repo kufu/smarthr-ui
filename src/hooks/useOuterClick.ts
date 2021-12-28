@@ -24,32 +24,8 @@ export function useOuterClick(
   }, [handleOuterClick])
 }
 
-function isElementIncludedParent(target: Element | null, parent: Element | null): boolean {
-  if (!target || !parent) return false
-  return target === parent || isElementIncludedParent(getParent(target), parent)
-}
-
 function isEventIncludedParent(e: MouseEvent, parent: Element | null): boolean {
-  const path = e.composedPath && e.composedPath()
-  if (!path) {
-    // IE11 では composedPath は使えないため、再帰的に親を辿る
-    if (e.target instanceof Element) {
-      return isElementIncludedParent(e.target, parent)
-    }
-    return false
-  }
+  const path = e.composedPath()
   if (path.length === 0 || !parent) return false
   return path.includes(parent)
-}
-
-function getParent(element: Element): HTMLElement | SVGElement | null {
-  if (element.parentElement) {
-    return element.parentElement
-  }
-  // IE11 では SVG 要素の parentElement が定義されていないため parentNode を参照する
-  const node = element.parentNode
-  if (node instanceof HTMLElement || node instanceof SVGElement) {
-    return node
-  }
-  return null
 }
