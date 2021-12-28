@@ -322,9 +322,6 @@ const Container = styled.div<{ $width: number | string }>`
 `
 const StyledInput = styled(Input)`
   width: 100%;
-  input::-ms-clear {
-    display: none;
-  }
 `
 const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
   const { spacingByChar } = themes

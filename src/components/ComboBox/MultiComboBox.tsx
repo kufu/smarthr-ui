@@ -230,10 +230,7 @@ export function MultiComboBox<T>({
           !disabled &&
           !isFocused
         ) {
-          // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
-          setTimeout(() => {
-            focus()
-          }, 0)
+          focus()
         }
       }}
       onKeyDown={(e) => {
@@ -363,9 +360,7 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
 `
 const InputArea = styled.div<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-    /* for IE */
-    /* stylelint-disable-next-line length-zero-no-unit */
-    flex: 1 1 0px;
+    flex: 1;
     overflow-y: auto;
     max-height: 300px;
     padding-left: ${spacingByChar(0.5)};
@@ -403,9 +398,7 @@ const InputWrapper = styled.li`
     pointer-events: none;
   }
 
-  /* for IE */
-  /* stylelint-disable-next-line length-zero-no-unit */
-  flex: 1 1 0px;
+  flex: 1;
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
