@@ -24,7 +24,7 @@
     "@storybook/theming": "^6.4.9",
     "@swc/core": "^1.2.125",
     "@swc/jest": "^0.2.15",
-    "@types/jest": "^27.0.3",
+    "@types/jest": "^27.4.0",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
     "@types/node": "^14.18.4",
