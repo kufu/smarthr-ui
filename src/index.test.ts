@@ -6,18 +6,19 @@ import path from 'path'
 const readFile = util.promisify(fs.readFile)
 const readdir = util.promisify(fs.readdir)
 
+const IGNORE_COMPONENTS = ['Downloader', 'ProgressBar']
+const IGNORE_INNER_DIRS = ['FlashMessage/FlashMessageList']
+
 describe('index', () => {
   const indexPath = './src/index.ts'
   const componentsPath = './src/components'
 
-  const IGNORE_COMPONENTS = ['Downloader', 'ProgressBar']
   it('src/components 配下に存在する全てのディレクトリからコンポーネントが export されていること', async () => {
     const exported = await getExportedComponents(indexPath)
     const componentDirs = await getComponentDirs(componentsPath, IGNORE_COMPONENTS)
     expect(componentDirs.sort()).toEqual(exported.sort())
   })
 
-  const IGNORE_INNER_DIRS = ['FlashMessageList']
   it('各コンポーネントディレクトリ直下に存在する子ディレクトリ名と同名のコンポーネントが export されていること', async () => {
     const componentDirs = await getComponentDirs(componentsPath, IGNORE_COMPONENTS)
     componentDirs.forEach(async (dirName) => {
@@ -88,7 +89,7 @@ const getComponentDirs = async (dirPath: string, ignoreDirs: string[] = []) => {
       (file) =>
         file.isDirectory() &&
         !file.name.match(/^__.+__$/) && // __tests__ や __snapshots__ ディレクトリを除外
-        !ignoreDirs.includes(file.name),
+        !ignoreDirs.find((ignoreDir) => path.join(dirPath, file.name).match(`${ignoreDir}$`)),
     )
     .map((file) => file.name)
 }
