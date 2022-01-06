@@ -35,22 +35,20 @@ export const InputFile: VFC<Props> = ({
   const theme = useTheme()
   const FileButtonWrapperClassName = `${disabled ? 'disabled' : ''}`
   const FileButtonClassName = `${size}`
+  const isUpdatingFiles = React.useRef(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (inputRef.current) {
-      // IE は DataTransfer constructor をサポートしていないので try catch でクラッシュを防ぐ
-      try {
-        const buff = new DataTransfer()
-        files.forEach((file) => {
-          buff.items.add(file)
-        })
+      const buff = new DataTransfer()
+      files.forEach((file) => {
+        buff.items.add(file)
+      })
 
-        inputRef.current.files = buff.files
-      } catch {
-        // no-op
-      }
+      isUpdatingFiles.current = true
+      inputRef.current.files = buff.files
+      isUpdatingFiles.current = false
     }
   }, [files])
 
@@ -64,7 +62,7 @@ export const InputFile: VFC<Props> = ({
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onAdd && e.target.files && e.target.files?.length > 0) {
+    if (!isUpdatingFiles.current && onAdd && e.target.files && e.target.files?.length > 0) {
       const uploadFile = Array.from(e.target.files)
       onAdd(uploadFile)
     }
@@ -160,8 +158,7 @@ const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
       position: absolute;
       height: 100%;
 
-      /* Prevent to show caret on the upload button on IE11 */
-      left: -10px;
+      left: 0;
       top: 0;
       margin: 0;
 
