@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [17.0.1](https://github.com/kufu/smarthr-ui/compare/v17.0.0...v17.0.1) (2022-01-06)
+
+
+### Bug Fixes
+
+* change to prevent to fire onAdd when assigning to input.files ([#2165](https://github.com/kufu/smarthr-ui/issues/2165)) ([3c5e8f2](https://github.com/kufu/smarthr-ui/commit/3c5e8f24cf0fb977865fecf136d37789de34934e))
+* fix broken layout of FlaotArea on mobile device ([#2164](https://github.com/kufu/smarthr-ui/issues/2164)) ([b72c43e](https://github.com/kufu/smarthr-ui/commit/b72c43edc1e28d8c5b2771e7e60c8deffd8eb757))
+
 ## [17.0.0](https://github.com/kufu/smarthr-ui/compare/v16.0.2...v17.0.0) (2021-12-21)
 
 
