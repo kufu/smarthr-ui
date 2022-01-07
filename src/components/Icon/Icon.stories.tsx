@@ -646,17 +646,6 @@ export const All: Story = () => {
     </IconList>
   )
 }
-All.parameters = {
-  docs: {
-    description: {
-      story: 'There are a variety of icons.',
-    },
-    source: {
-      // It is needed because the dynamic source is too long.
-      type: 'code',
-    },
-  },
-}
 
 export const Size: Story = () => (
   <List>
@@ -668,13 +657,6 @@ export const Size: Story = () => (
     <FaAddressBookIcon size={56} />
   </List>
 )
-Size.parameters = {
-  docs: {
-    description: {
-      story: 'An icon can be any size.',
-    },
-  },
-}
 
 export const AltText: Story = () => (
   <div>
@@ -707,13 +689,6 @@ export const AltText: Story = () => (
     </dl>
   </div>
 )
-Size.parameters = {
-  docs: {
-    description: {
-      story: 'An icon can be any size.',
-    },
-  },
-}
 
 export const Color: Story = () => (
   <List>
@@ -725,13 +700,6 @@ export const Color: Story = () => (
     <FaAddressBookIcon size={40} color="DANGER" />
   </List>
 )
-Color.parameters = {
-  docs: {
-    description: {
-      story: 'An icon can be any color.',
-    },
-  },
-}
 
 const IconList = styled.dl`
   display: flex;
