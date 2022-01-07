@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { useClassNames } from './useClassNames'
 
-interface Props {
+type Props = {
   title?: string
   size?: 's' | 'm' | 'l'
   className?: string
