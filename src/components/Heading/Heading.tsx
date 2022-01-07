@@ -5,9 +5,13 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 export type Props = {
+  /** 表示するテキスト */
   children: ReactNode
+  /** テキストのスタイル */
   type?: HeadingTypes
+  /** コンポーネントの HTML タグ */
   tag?: HeadingTagTypes
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 
