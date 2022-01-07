@@ -4,8 +4,11 @@ import styled from 'styled-components'
 import { useClassNames } from './useClassNames'
 
 type Props = {
+  /** 画像のタイトル */
   title?: string
+  /** 画像の大きさ */
   size?: 's' | 'm' | 'l'
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 
