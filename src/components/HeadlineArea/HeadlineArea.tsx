@@ -7,11 +7,16 @@ import { useClassNames } from './useClassNames'
 import { Heading, Props as HeadingProps } from '../Heading'
 
 type Props = {
+  /** 見出し領域に表示する内容 */
   heading: {
+    /** 見出しの内容 */
     children: HeadingProps['children']
+    /** 見出しの HTML タグ */
     tag?: HeadingProps['tag']
   }
+  /** 説明テキスト */
   description?: ReactNode
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 
