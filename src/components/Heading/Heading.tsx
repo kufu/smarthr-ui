@@ -27,7 +27,7 @@ export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 export const Heading: VFC<Props & ElementProps> = ({
-  tag = 'h1' as HeadingTagTypes,
+  tag = 'h1',
   type = 'screenTitle',
   className = '',
   children,
