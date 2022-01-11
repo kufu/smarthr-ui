@@ -337,12 +337,12 @@ function isDefinedColor(color: string): color is DefinedColor {
 
 export interface IconProps {
   /**
-   * Color of Icon.
+   * アイコンの色
    * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
    */
   color?: LiteralUnion<DefinedColor>
   /**
-   * Size of icon.
+   * アイコンの大きさ
    */
   size?: number
 }
@@ -351,11 +351,12 @@ type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
 
 export interface ComponentProps extends IconProps, ElementProps {
   /**
-   * The text that is not displayed but exists in DOM for accessibility purposes.
+   * アイコンの説明テキスト
+   * （表示はされないが、 DOM 上に存在することで意味を明示可能）
    */
   visuallyHiddenText?: string
   /**
-   * `className` of component.
+   * コンポーネントに適用するクラス名
    */
   className?: string
 }

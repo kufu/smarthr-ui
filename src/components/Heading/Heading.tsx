@@ -5,9 +5,13 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 export type Props = {
+  /** 表示するテキスト */
   children: ReactNode
+  /** テキストのスタイル */
   type?: HeadingTypes
+  /** コンポーネントの HTML タグ */
   tag?: HeadingTagTypes
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 
@@ -23,7 +27,7 @@ export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 export const Heading: VFC<Props & ElementProps> = ({
-  tag = 'h1' as HeadingTagTypes,
+  tag = 'h1',
   type = 'screenTitle',
   className = '',
   children,
