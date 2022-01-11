@@ -34,7 +34,7 @@ export const InputFile: VFC<Props> = ({
   const labelDisabledClassName = disabled ? 'disabled' : ''
   const labelSmallClassName = size === 's' ? 'small' : ''
   const labelFocusedClassName = isFocused ? 'focus' : ''
-  const isUpdatingFiles = React.useRef(false)
+  const isUpdatingFiles = useRef(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
