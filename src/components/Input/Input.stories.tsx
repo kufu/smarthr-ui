@@ -6,11 +6,13 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Input } from './Input'
+import { CurrencyInput } from './CurrencyInput'
 import { FaSearchIcon } from '../Icon'
 
 export default {
   title: 'Input',
   component: Input,
+  subcomponents: { CurrencyInput },
 }
 
 export const All: Story = () => {
@@ -81,6 +83,27 @@ export const All: Story = () => {
 }
 All.storyName = 'all'
 
+export const Currency: Story = () => {
+  const [value, setValue] = React.useState('1234567890')
+  return (
+    <Wrapper>
+      <Txt>currency (add comma to integer every 3 digits)</Txt>
+      <CurrencyInput
+        value={value}
+        onChange={(e) => {
+          action('changed')(e)
+          setValue(e.target.value)
+        }}
+        onFormatValue={(formatted) => {
+          action('formatted')(formatted)
+          setValue(formatted)
+        }}
+      />
+    </Wrapper>
+  )
+}
+All.storyName = 'all'
+
 const List = styled.ul`
   padding: 0 24px;
   list-style: none;
@@ -100,4 +123,7 @@ const Note = styled.div<{ themes: Theme }>`
     margin-top: 8px;
     color: ${themes.color.TEXT_GREY};
   `}
+`
+const Wrapper = styled.div`
+  padding: 24px;
 `
