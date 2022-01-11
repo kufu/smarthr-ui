@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
@@ -8,7 +8,12 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { Input } from './Input'
 import { FaSearchIcon } from '../Icon'
 
-storiesOf('Input', module).add('all', () => {
+export default {
+  title: 'Input',
+  component: Input,
+}
+
+export const All: Story = () => {
   const theme = useTheme()
 
   return (
@@ -57,7 +62,7 @@ storiesOf('Input', module).add('all', () => {
       <li>
         <Txt>disabled and error</Txt>
         <Input disabled={true} error={true} />
-        <Note themes={theme}>`disabled` takes precedence over `error`</Note>
+        <Note themes={theme}> `disabled` takes precedence over `error`</Note>
       </li>
       <li>
         <Txt>prefix</Txt>
@@ -73,7 +78,8 @@ storiesOf('Input', module).add('all', () => {
       </li>
     </List>
   )
-})
+}
+All.storyName = 'all'
 
 const List = styled.ul`
   padding: 0 24px;
