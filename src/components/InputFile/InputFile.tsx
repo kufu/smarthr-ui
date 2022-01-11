@@ -34,27 +34,25 @@ export const InputFile: VFC<Props> = ({
   const labelDisabledClassName = disabled ? 'disabled' : ''
   const labelSmallClassName = size === 's' ? 'small' : ''
   const labelFocusedClassName = isFocused ? 'focus' : ''
+  const isUpdatingFiles = React.useRef(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (inputRef.current) {
-      // IE は DataTransfer constructor をサポートしていないので try catch でクラッシュを防ぐ
-      try {
-        const buff = new DataTransfer()
-        files.forEach((file) => {
-          buff.items.add(file)
-        })
+      const buff = new DataTransfer()
+      files.forEach((file) => {
+        buff.items.add(file)
+      })
 
-        inputRef.current.files = buff.files
-      } catch {
-        // no-op
-      }
+      isUpdatingFiles.current = true
+      inputRef.current.files = buff.files
+      isUpdatingFiles.current = false
     }
   }, [files])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onAdd && e.target.files && e.target.files?.length > 0) {
+    if (!isUpdatingFiles.current && onAdd && e.target.files && e.target.files?.length > 0) {
       const uploadFile = Array.from(e.target.files)
       onAdd(uploadFile)
     }

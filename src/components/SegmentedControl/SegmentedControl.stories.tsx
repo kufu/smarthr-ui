@@ -3,8 +3,14 @@ import { action } from '@storybook/addon-actions'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { SegmentedControl } from './SegmentedControl'
-import { FaPlusCircleIcon } from '../Icon'
+import { Option, SegmentedControl } from './SegmentedControl'
+import {
+  FaChartAreaIcon,
+  FaChartBarIcon,
+  FaChartLineIcon,
+  FaChartPieIcon,
+  FaTableIcon,
+} from '../Icon'
 
 import readme from './README.md'
 
@@ -15,25 +21,31 @@ storiesOf('SegmentedControl', module)
     },
   })
   .add('all', () => {
-    const [value1, setValue1] = React.useState<string | null>('segment1')
-    const [value2, setValue2] = React.useState<string | null>('segment5')
-    const [value3, setValue3] = React.useState<string | null>('segment3')
+    const departmentAndCrewOptions: Option[] = [
+      { value: 'departments', content: '部署' },
+      { value: 'crews', content: '従業員' },
+      { value: 'both', content: '部署と従業員' },
+    ]
+    const graphOptions: Option[] = [
+      { value: 'table', ariaLabel: 'テーブル', content: <FaTableIcon /> },
+      { value: 'chartBar', ariaLabel: 'バーチャート', content: <FaChartBarIcon /> },
+      { value: 'chartArea', ariaLabel: 'エリアチャート', content: <FaChartAreaIcon /> },
+      { value: 'chartLine', ariaLabel: 'ラインチャート', content: <FaChartLineIcon /> },
+      { value: 'chartPie', ariaLabel: 'パイチャート', content: <FaChartPieIcon /> },
+    ]
+
+    const [value1, setValue1] = React.useState<string | null>('departments')
+    const [value2, setValue2] = React.useState<string | null>('both')
+    const [value3, setValue3] = React.useState<string | null>('chartArea')
     const [value4, setValue4] = React.useState<string | null>(null)
     const [value5, setValue5] = React.useState<string | null>(null)
 
-    const options = [
-      { value: 'segment1', ariaLabel: 'segment1' },
-      { value: 'segment2', ariaLabel: 'segment2' },
-      { value: 'segment3', ariaLabel: 'segment3' },
-      { value: 'segment4', ariaLabel: 'segment4' },
-      { value: 'segment5', ariaLabel: 'segment5' },
-    ]
     return (
       <List>
         <dt id="dt-default">Default</dt>
         <dd>
           <SegmentedControl
-            options={options.map((option) => ({ ...option, content: 'Button' }))}
+            options={departmentAndCrewOptions}
             value={value1}
             onClickOption={(value) => {
               action('clicked')(value)
@@ -45,7 +57,7 @@ storiesOf('SegmentedControl', module)
         <dt id="dt-small">Small</dt>
         <dd>
           <SegmentedControl
-            options={options.map((option) => ({ ...option, content: 'Button' }))}
+            options={departmentAndCrewOptions}
             value={value2}
             onClickOption={(value) => {
               action('clicked')(value)
@@ -58,10 +70,7 @@ storiesOf('SegmentedControl', module)
         <dt id="dt-icon">Icon</dt>
         <dd>
           <SegmentedControl
-            options={options.map((option) => ({
-              ...option,
-              content: <FaPlusCircleIcon />,
-            }))}
+            options={graphOptions}
             value={value3}
             onClickOption={(value) => {
               action('clicked')(value)
@@ -74,10 +83,7 @@ storiesOf('SegmentedControl', module)
         <dt id="dt-small-icon">Small icon</dt>
         <dd>
           <SegmentedControl
-            options={options.map((option) => ({
-              ...option,
-              content: <FaPlusCircleIcon />,
-            }))}
+            options={graphOptions}
             value={value4}
             onClickOption={(value) => {
               action('clicked')(value)
@@ -91,10 +97,9 @@ storiesOf('SegmentedControl', module)
         <dt id="dt-disabled">Disabled</dt>
         <dd>
           <SegmentedControl
-            options={options.map((option, i) => ({
+            options={graphOptions.map((option, i) => ({
               ...option,
-              content: 'Button',
-              disabled: i > 2,
+              disabled: i === 2 || i === 4,
             }))}
             value={value5}
             onClickOption={(value) => {

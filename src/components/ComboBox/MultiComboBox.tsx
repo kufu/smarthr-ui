@@ -17,6 +17,7 @@ import { useClassNames } from './useClassNames'
 import { FaCaretDownIcon } from '../Icon'
 import { useListBox } from './useListBox'
 import { MultiSelectedItem } from './MultiSelectedItem'
+import { convertMatchableString } from './comboBoxHelper'
 import { Item } from './types'
 
 type Props<T> = {
@@ -145,7 +146,7 @@ export function MultiComboBox<T>({
   const filteredItems = items.filter(({ label }) => {
     if (selectedLabels.includes(label)) return false
     if (!inputValue) return true
-    return label.includes(inputValue)
+    return convertMatchableString(label).includes(convertMatchableString(inputValue))
   })
   const isDuplicate = items.some((item) => item.label === inputValue)
   const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
@@ -213,7 +214,8 @@ export function MultiComboBox<T>({
     if (outerRef.current && isFocused) {
       calculateDropdownRect(outerRef.current)
     }
-  }, [calculateDropdownRect, isFocused])
+    // 選択済みアイテムによってコンボボックスの高さが変わりうるので selectedItems を依存に含める
+  }, [calculateDropdownRect, isFocused, selectedItems])
 
   return (
     <Container
@@ -228,10 +230,7 @@ export function MultiComboBox<T>({
           !disabled &&
           !isFocused
         ) {
-          // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
-          setTimeout(() => {
-            focus()
-          }, 0)
+          focus()
         }
       }}
       onKeyDown={(e) => {
@@ -361,9 +360,7 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
 `
 const InputArea = styled.div<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-    /* for IE */
-    /* stylelint-disable-next-line length-zero-no-unit */
-    flex: 1 1 0px;
+    flex: 1;
     overflow-y: auto;
     max-height: 300px;
     padding-left: ${spacingByChar(0.5)};
@@ -401,9 +398,7 @@ const InputWrapper = styled.li`
     pointer-events: none;
   }
 
-  /* for IE */
-  /* stylelint-disable-next-line length-zero-no-unit */
-  flex: 1 1 0px;
+  flex: 1;
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {

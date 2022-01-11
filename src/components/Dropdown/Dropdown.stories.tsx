@@ -1,4 +1,4 @@
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
@@ -15,6 +15,22 @@ import { RadioButton } from '../RadioButton'
 import { Input } from '../Input'
 
 import readme from './README.md'
+
+export default {
+  title: 'Dropdown',
+  component: Dropdown,
+  subcomponents: {
+    DropdownTrigger,
+    DropdownContent,
+    DropdownCloser,
+    DropdownScrollArea,
+  },
+  parameters: {
+    readme: {
+      sidebar: readme,
+    },
+  },
+}
 
 const ListMenu = () => {
   const themes = useTheme()
@@ -96,99 +112,108 @@ const ControllableDropdown = () => {
   )
 }
 
-storiesOf('Dropdown', module)
-  .addParameters({
-    readme: {
-      sidebar: readme,
-    },
-  })
-  .add('all', () => {
-    const themes = useTheme()
-    return (
-      <Wrapper themes={themes}>
-        <Legends>
-          <li>
-            <Box>
-              <Dropdown>
-                <DropdownTrigger>
-                  <SecondaryButton id="dropdown-button-1">Uncontrollable Dropdown</SecondaryButton>
-                </DropdownTrigger>
-                <DropdownContent>
-                  <DropdownScrollArea>
-                    <ListMenu />
-                  </DropdownScrollArea>
-                </DropdownContent>
-              </Dropdown>
-            </Box>
-          </li>
-          <li>
-            <Box>
-              <Dropdown>
-                <DropdownTrigger>
-                  <SecondaryButton>static area</SecondaryButton>
-                </DropdownTrigger>
-                <DropdownContent>
-                  <Fixed themes={themes}>fixed header</Fixed>
-                  <DropdownScrollArea>
-                    <ListMenu />
-                  </DropdownScrollArea>
-                  <Fixed themes={themes}>fixed footer</Fixed>
-                </DropdownContent>
-              </Dropdown>
-            </Box>
-          </li>
-          <li>
-            <Box>
-              <ControllableDropdown />
-            </Box>
-          </li>
-          <li>
+export const All: Story = () => {
+  const themes = useTheme()
+  return (
+    <Wrapper themes={themes}>
+      <Legends>
+        <li>
+          <Box>
             <Dropdown>
               <DropdownTrigger>
-                <SecondaryButton>Nested Dropdown</SecondaryButton>
+                <SecondaryButton id="dropdown-button-1">Uncontrollable Dropdown</SecondaryButton>
               </DropdownTrigger>
-              <DropdownContent controllable>
+              <DropdownContent>
                 <DropdownScrollArea>
-                  <ControllableBoxMain>
-                    <Dropdown>
-                      <DropdownTrigger>
-                        <SecondaryButton>Nested Dropdown</SecondaryButton>
-                      </DropdownTrigger>
-                      <DropdownContent controllable>
-                        <DropdownScrollArea>
-                          <ControllableBoxMain>
-                            <Dropdown>
-                              <DropdownTrigger>
-                                <SecondaryButton>Nested Dropdown</SecondaryButton>
-                              </DropdownTrigger>
-                              <DropdownContent>
-                                <DropdownScrollArea>
-                                  <ListMenu />
-                                </DropdownScrollArea>
-                              </DropdownContent>
-                            </Dropdown>
-                          </ControllableBoxMain>
-                        </DropdownScrollArea>
-                      </DropdownContent>
-                    </Dropdown>
-                  </ControllableBoxMain>
+                  <ListMenu />
                 </DropdownScrollArea>
               </DropdownContent>
             </Dropdown>
-          </li>
-          <li>
-            <Description>
-              Depending on where `DropdownTrigger` is on window, the position to display
-              `DropdownContent` is automatically determined.
-            </Description>
-            <Description>
-              ↓<br />↓
-            </Description>
-            <Description>
-              ↓<br />↓
-            </Description>
-          </li>
-          <li>
+          </Box>
+        </li>
+        <li>
+          <Box>
+            <Dropdown>
+              <DropdownTrigger>
+                <SecondaryButton>static area</SecondaryButton>
+              </DropdownTrigger>
+              <DropdownContent>
+                <Fixed themes={themes}>fixed header</Fixed>
+                <DropdownScrollArea>
+                  <ListMenu />
+                </DropdownScrollArea>
+                <Fixed themes={themes}>fixed footer</Fixed>
+              </DropdownContent>
+            </Dropdown>
+          </Box>
+        </li>
+        <li>
+          <Box>
+            <ControllableDropdown />
+          </Box>
+        </li>
+        <li>
+          <Dropdown>
+            <DropdownTrigger>
+              <SecondaryButton>Nested Dropdown</SecondaryButton>
+            </DropdownTrigger>
+            <DropdownContent controllable>
+              <DropdownScrollArea>
+                <ControllableBoxMain>
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <SecondaryButton>Nested Dropdown</SecondaryButton>
+                    </DropdownTrigger>
+                    <DropdownContent controllable>
+                      <DropdownScrollArea>
+                        <ControllableBoxMain>
+                          <Dropdown>
+                            <DropdownTrigger>
+                              <SecondaryButton>Nested Dropdown</SecondaryButton>
+                            </DropdownTrigger>
+                            <DropdownContent>
+                              <DropdownScrollArea>
+                                <ListMenu />
+                              </DropdownScrollArea>
+                            </DropdownContent>
+                          </Dropdown>
+                        </ControllableBoxMain>
+                      </DropdownScrollArea>
+                    </DropdownContent>
+                  </Dropdown>
+                </ControllableBoxMain>
+              </DropdownScrollArea>
+            </DropdownContent>
+          </Dropdown>
+        </li>
+        <li>
+          <Description>
+            Depending on where `DropdownTrigger` is on window, the position to display
+            `DropdownContent` is automatically determined.
+          </Description>
+          <Description>
+            ↓<br />↓
+          </Description>
+          <Description>
+            ↓<br />↓
+          </Description>
+        </li>
+        <li>
+          <Box>
+            <Dropdown>
+              <DropdownTrigger>
+                <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
+              </DropdownTrigger>
+              <DropdownContent>
+                <DropdownScrollArea>
+                  <ListMenu />
+                </DropdownScrollArea>
+              </DropdownContent>
+            </Dropdown>
+          </Box>
+        </li>
+        <li>
+          <RightAlign>
             <Box>
               <Dropdown>
                 <DropdownTrigger>
@@ -201,30 +226,16 @@ storiesOf('Dropdown', module)
                 </DropdownContent>
               </Dropdown>
             </Box>
-          </li>
-          <li>
-            <RightAlign>
-              <Box>
-                <Dropdown>
-                  <DropdownTrigger>
-                    <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
-                  </DropdownTrigger>
-                  <DropdownContent>
-                    <DropdownScrollArea>
-                      <ListMenu />
-                    </DropdownScrollArea>
-                  </DropdownContent>
-                </Dropdown>
-              </Box>
-            </RightAlign>
-          </li>
-          <li>
-            <Bottom />
-          </li>
-        </Legends>
-      </Wrapper>
-    )
-  })
+          </RightAlign>
+        </li>
+        <li>
+          <Bottom />
+        </li>
+      </Legends>
+    </Wrapper>
+  )
+}
+All.storyName = 'all'
 
 const List = styled.ul<{ themes: Theme }>`
   ${({ themes }) => {

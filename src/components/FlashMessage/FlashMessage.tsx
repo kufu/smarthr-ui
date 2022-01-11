@@ -18,12 +18,19 @@ export const animationTypes = ['bounce', 'fade', 'none'] as const
 export const roles = ['alert', 'status'] as const
 
 export type Props = {
+  /** true のときに FlashMessage を表示する */
   visible: boolean
+  /** 表示するアイコンのタイプ */
   type: typeof messageTypes[number]
+  /** メッセージの内容 */
   text: string
+  /** アニメーションのタイプ */
   animation?: typeof animationTypes[number]
+  /** コンポーネントに適用する role 属性 */
   role?: typeof roles[number]
+  /** コンポーネントに適用するクラス名 */
   className?: string
+  /** 閉じるボタンを押下、または表示してから8秒後に発火するコールバック関数 */
   onClose: () => void
 }
 
@@ -39,6 +46,7 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
   role = 'alert',
   className = '',
   onClose,
+  ...props
 }) => {
   const theme = useTheme()
   const classNames = useClassNames()
@@ -80,6 +88,7 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
 
   return (
     <Wrapper
+      {...props}
       className={`${type} ${classNames.wrapper}  ${className}`}
       themes={theme}
       animation={animation}

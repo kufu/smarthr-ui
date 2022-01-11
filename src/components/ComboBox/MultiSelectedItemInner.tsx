@@ -57,10 +57,7 @@ export function MultiSelectedItemInner<T>({
           className={classNames.deleteButton}
           disabled={disabled}
           onClick={() => {
-            // IE対応: 外側クリック判定が完了するまで要素が除去されないようにディレイを入れる
-            setTimeout(() => {
-              onDelete && onDelete(item)
-            }, 0)
+            onDelete && onDelete(item)
           }}
         >
           <FaTimesCircleIcon

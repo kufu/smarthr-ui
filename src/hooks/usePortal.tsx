@@ -73,15 +73,5 @@ function _isChildPortal(
   if (!element) return false
   const childOf = element.dataset?.portalChildOf || ''
   const includesSeq = childOf.split(',').includes(String(parentPortalSeq))
-  const parent =
-    element.parentElement ||
-    (() => {
-      // In IE11, parentElement is undefined for SVGEelement, whereas parentNode is defined
-      const node = element.parentNode
-      if (node instanceof HTMLElement || node instanceof SVGElement) {
-        return node
-      }
-      return null
-    })()
-  return includesSeq || _isChildPortal(parent, parentPortalSeq)
+  return includesSeq || _isChildPortal(element.parentElement, parentPortalSeq)
 }

@@ -130,6 +130,7 @@ const StyledInput = styled.input<Props & { themes: Theme }>(
       font-size: ${fontSize.M};
       line-height: ${leading.NONE};
       color: ${color.TEXT_BLACK};
+      width: 100%;
 
       /* font-size * line-height で高さが思うように行かないので、相対値の font-size で高さを指定 */
       height: ${fontSize.M};
