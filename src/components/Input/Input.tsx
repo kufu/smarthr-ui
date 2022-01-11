@@ -13,11 +13,17 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> & {
+  /** input 要素の `type` 値 */
   type?: HTMLInputElement['type']
+  /** フォームにエラーがあるかどうか */
   error?: boolean
+  /** コンポーネントの幅 */
   width?: number | string
+  /** オートフォーカスを行うかどうか */
   autoFocus?: boolean
+  /** コンポーネント内の先頭に表示する内容 */
   prefix?: ReactNode
+  /** コンポーネント内の末尾に表示する内容 */
   suffix?: ReactNode
 }
 
