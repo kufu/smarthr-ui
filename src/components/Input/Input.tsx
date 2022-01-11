@@ -12,7 +12,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
-export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> & {
+export type Props = {
   /** input 要素の `type` 値 */
   type?: HTMLInputElement['type']
   /** フォームにエラーがあるかどうか */
@@ -25,7 +25,7 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> & {
   prefix?: ReactNode
   /** コンポーネント内の末尾に表示する内容 */
   suffix?: ReactNode
-}
+} & Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'>
 
 export const Input = forwardRef<HTMLInputElement, Props>(
   ({ onFocus, onBlur, autoFocus, prefix, suffix, className = '', width, ...props }, ref) => {
