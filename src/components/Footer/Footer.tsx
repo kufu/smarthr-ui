@@ -41,18 +41,18 @@ export const Footer: VFC<ElementProps> = ({ className = '', ...props }) => {
 
 const Wrapper = styled.footer<{ themes: Theme }>`
   ${({ themes: { color, fontSize, spacingByChar } }) => css`
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     padding: ${spacingByChar(1)} ${spacingByChar(1.5)};
     background-color: ${color.BRAND};
     color: ${color.TEXT_WHITE};
     font-size: ${fontSize.M};
-    white-space: nowrap;
   `}
 `
 
 const List = styled.ul<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-    float: left;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -95,7 +95,7 @@ const ItemPart = styled.a<{ themes: Theme }>`
 
 const Copy = styled.small<{ themes: Theme }>`
   ${({ themes }) => css`
-    float: right;
+    margin-left: auto;
     font-size: ${themes.fontSize.M};
   `}
 `
