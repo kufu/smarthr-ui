@@ -32,14 +32,14 @@ We use [conventional commit messages](https://www.conventionalcommits.org/en/v1.
 
 ## CI
 
-The SmartHR UI uses [CircleCI] (https://circleci.com/).
+The SmartHR UI uses [CircleCI](https://circleci.com/).
 
 - lint
   - Grammar check with ESLint
   - Style description check by stylelint
   - TypeScript grammar check with `tsc --noEmit`
 - Unit test
-  - Unit and component testing with [Jest] (https://jestjs.io/ja/), [jest-styled-components] (https://github.com/styled-components/jest-styled-components)
+  - Unit and component testing with [Jest](https://jestjs.io/ja/), [jest-styled-components](https://github.com/styled-components/jest-styled-components)
 - visual regression test
   - [reg-suit](https://github.com/reg-viz/reg-suit)
 - Host on Netlify
