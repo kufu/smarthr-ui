@@ -1,5 +1,7 @@
 import React, { HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
+
+import { useClassNames } from './useClassNames'
 import { useSpacing } from '../../../hooks/useSpacing'
 import type { Gap, SeparateGap } from '../type'
 
@@ -39,14 +41,19 @@ export const Cluster: React.VFC<Props & ElementProps> = ({
   as,
   bodyAs,
   children,
+  className,
   ...props
-}) => (
-  <Wrapper as={as} {...props}>
-    <Body as={bodyAs} gap={gap} align={align} justify={justify}>
-      {children}
-    </Body>
-  </Wrapper>
-)
+}) => {
+  const classNames = useClassNames()
+
+  return (
+    <Wrapper as={as} {...props} className={`${classNames.wrapper}${className && ` ${className}`}`}>
+      <Body as={bodyAs} gap={gap} align={align} justify={justify} className={`${classNames.body}`}>
+        {children}
+      </Body>
+    </Wrapper>
+  )
+}
 
 // gap のネガティブマージンを隠すための要素、gap が利用できる場合は不要
 // Wrapper to hide the negative margin of gap, not required if gap is available.
