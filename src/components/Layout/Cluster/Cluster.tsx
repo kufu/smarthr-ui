@@ -17,11 +17,17 @@ type justifyMethod = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 's
  * @param children 均等に間隔を空けたい要素群
  */
 export const Cluster: React.VFC<{
+  /** 間隔の指定（基準フォントサイズの相対値または抽象値） */
   gap?: Gap | SeparateGap
+  /** 垂直方向の揃え方（align-items） */
   align?: alignMethod
+  /** 水平方向の揃え方（justify-content） */
   justify?: justifyMethod
+  /** ネガティブマージンを隠す要素の HTML タグ名 */
   as?: React.ElementType
+  /** Cluster 本体の HTML タグ名 */
   bodyAs?: React.ElementType
+  /** 均等に間隔を空けたい要素群 */
   children?: React.ReactNode
 }> = ({ gap = 0.5, align, justify, as, bodyAs, children }) => (
   <Wrapper as={as}>

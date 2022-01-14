@@ -35,6 +35,7 @@ export const InputFile: VFC<Props> = ({
   const theme = useTheme()
   const FileButtonWrapperClassName = `${disabled ? 'disabled' : ''}`
   const FileButtonClassName = `${size}`
+  const isUpdatingFiles = React.useRef(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -45,7 +46,9 @@ export const InputFile: VFC<Props> = ({
         buff.items.add(file)
       })
 
+      isUpdatingFiles.current = true
       inputRef.current.files = buff.files
+      isUpdatingFiles.current = false
     }
   }, [files])
 
@@ -59,7 +62,7 @@ export const InputFile: VFC<Props> = ({
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onAdd && e.target.files && e.target.files?.length > 0) {
+    if (!isUpdatingFiles.current && onAdd && e.target.files && e.target.files?.length > 0) {
       const uploadFile = Array.from(e.target.files)
       onAdd(uploadFile)
     }

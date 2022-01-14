@@ -185,7 +185,7 @@ module.exports = {
 
   roots: ['<rootDir>/src'],
   transform: {
-    '^.+\\.tsx?$': 'esbuild-jest',
+    '^.+\\.tsx?$': '@swc/jest',
   },
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   testEnvironment: 'jsdom',
