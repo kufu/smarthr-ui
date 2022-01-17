@@ -1,7 +1,6 @@
-import React, { InputHTMLAttributes, VFC, useEffect, useRef } from 'react'
+import React, { InputHTMLAttributes, VFC, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isTouchDevice } from '../../libs/ua'
 import { TextButton } from '../Button'
 import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -10,7 +9,6 @@ import { useClassNames } from './useClassNames'
 type Size = 'default' | 's'
 
 export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
-  id?: string
   className?: string
   size?: Size
   label: string
@@ -21,7 +19,6 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
 }
 
 export const InputFile: VFC<Props> = ({
-  id,
   className = '',
   size = 'default',
   label,
@@ -33,9 +30,11 @@ export const InputFile: VFC<Props> = ({
   ...props
 }) => {
   const theme = useTheme()
-  const FileButtonWrapperClassName = `${disabled ? 'disabled' : ''}`
-  const FileButtonClassName = `${size}`
-  const isUpdatingFiles = React.useRef(false)
+  const [isFocused, setIsFocused] = useState(false)
+  const labelDisabledClassName = disabled ? 'disabled' : ''
+  const labelSmallClassName = size === 's' ? 'small' : ''
+  const labelFocusedClassName = isFocused ? 'focus' : ''
+  const isUpdatingFiles = useRef(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -51,15 +50,6 @@ export const InputFile: VFC<Props> = ({
       isUpdatingFiles.current = false
     }
   }, [files])
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (!inputRef.current) {
-      return
-    }
-    if (e.code === 'Enter' || e.code === 'Space') {
-      inputRef.current.click()
-    }
-  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!isUpdatingFiles.current && onAdd && e.target.files && e.target.files?.length > 0) {
@@ -96,32 +86,25 @@ export const InputFile: VFC<Props> = ({
           })}
         </FileList>
       )}
-      <FileButtonWrapper themes={theme} className={FileButtonWrapperClassName}>
+      <InputWrapper
+        className={`${labelSmallClassName} ${labelDisabledClassName} ${labelFocusedClassName}`}
+        themes={theme}
+      >
         <input
           {...props}
           type="file"
-          id={id}
           onChange={(e) => handleChange(e)}
           disabled={disabled}
-          tabIndex={-1}
           className={classNames.input}
           ref={inputRef}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
-        <FileButton
-          themes={theme}
-          className={`${FileButtonClassName} ${classNames.button}`}
-          disabled={disabled}
-          type="button"
-          onKeyDown={(e) => handleKeyDown(e)}
-        >
-          <label htmlFor={id}>
-            <Prefix themes={theme}>
-              <FaFolderOpenIcon />
-            </Prefix>
-            {label}
-          </label>
-        </FileButton>
-      </FileButtonWrapper>
+        <Prefix themes={theme}>
+          <FaFolderOpenIcon />
+        </Prefix>
+        {label}
+      </InputWrapper>
     </Wrapper>
   )
 }
@@ -146,104 +129,54 @@ const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
   `
 })
 
-const FileButtonWrapper = styled.div<{ themes: Theme }>(({ themes }) => {
-  const { color, interaction } = themes
-
+const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
+  const { border, color, fontSize, leading, radius, shadow, spacingByChar } = themes
   return css`
     position: relative;
-    overflow: hidden;
-    display: inline-block;
+    display: inline-flex;
+    font-weight: bold;
+    line-height: ${leading.NONE};
+    border: ${border.shorthand};
+    border-radius: ${radius.m};
+    padding: ${spacingByChar(0.75)} ${spacingByChar(1)};
+    font-size: ${fontSize.M};
+
+    &.small {
+      padding: ${spacingByChar(0.5)};
+      font-size: ${fontSize.S};
+    }
+    &.focus {
+      ${shadow.focusIndicatorStyles}
+    }
+    &.disabled {
+      border-color: ${color.disableColor(color.BORDER)};
+      background-color: ${color.disableColor(color.WHITE)};
+      color: ${color.TEXT_DISABLED};
+    }
+    &:not(.disabled) {
+      &:hover {
+        border-color: ${color.hoverColor(color.BORDER)};
+        background-color: ${color.hoverColor(color.WHITE)};
+        color: ${color.TEXT_BLACK};
+      }
+    }
 
     > input[type='file'] {
       position: absolute;
-      height: 100%;
-
-      left: 0;
       top: 0;
-      margin: 0;
-
-      /* HINT: input[type=file] が button ボタンを覆うようにサイズを調整
-      デフォルト font-size に !important がついているプロダクトの場合、上書きされてしまうため念のため !important を入れる */
-      font-size: 128px !important;
+      left: 0;
+      width: 100%;
+      height: 100%;
       opacity: 0;
-      appearance: none;
-      cursor: pointer;
-
-      &::-webkit-file-upload-button {
+      ::file-selector-button {
+        width: 100%;
+        height: 100%;
         cursor: pointer;
       }
-    }
-
-    > button {
-      transition: ${isTouchDevice ? 'none' : `all ${interaction.hover.animation}`};
-    }
-
-    &:hover {
-      > button {
-        background-color: ${color.hoverColor(color.WHITE)};
-      }
-      &.disabled {
-        > button {
-          background-color: ${color.COLUMN};
+      &[disabled] {
+        ::file-selector-button {
+          cursor: not-allowed;
         }
-      }
-    }
-
-    &.disabled {
-      > input[type='file'] {
-        display: none;
-      }
-    }
-  `
-})
-
-const FileButton = styled.button<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, border, radius, color, spacingByChar } = themes
-  return css`
-    font-family: inherit;
-    font-weight: bold;
-    border-radius: ${radius.m};
-    color: ${color.TEXT_BLACK};
-    background-color: ${color.WHITE};
-    border: ${border.shorthand};
-
-    > label {
-      display: flex;
-      align-items: center;
-    }
-
-    &.default {
-      font-size: ${fontSize.M};
-      height: 40px;
-      padding: 0 ${spacingByChar(1)};
-    }
-
-    &.s {
-      font-size: ${fontSize.S};
-      height: 27px;
-      padding: 0 ${spacingByChar(0.5)};
-    }
-
-    &.square {
-      width: 40px;
-      padding: 0;
-
-      &.s {
-        width: 27px;
-        min-width: 27px;
-      }
-    }
-
-    &.prefix {
-      justify-content: left;
-    }
-
-    &[disabled] {
-      cursor: not-allowed;
-      background-color: ${color.COLUMN};
-      color: ${color.TEXT_DISABLED};
-      > label {
-        cursor: not-allowed;
       }
     }
   `
