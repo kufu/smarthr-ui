@@ -23,7 +23,7 @@
     "@storybook/react": "^6.4.13",
     "@storybook/theming": "^6.4.13",
     "@swc/core": "^1.2.129",
-    "@swc/jest": "^0.2.15",
+    "@swc/jest": "^0.2.17",
     "@types/jest": "^27.4.0",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
