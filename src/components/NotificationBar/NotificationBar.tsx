@@ -85,13 +85,20 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
       role={role}
       themes={theme}
       colorSet={colorSet}
+      align="center"
+      justify="space-between"
     >
-      <ContentsWrapper>
+      <ContentsWrapper align="center">
         <Icon color={iconColor} />
-        <MessageWrapper>
+        <MessageWrapper align="center" gap={{ row: 0.75, column: 1 }} right>
           <Text>{message}</Text>
           {children && (
-            <ActionWrapper themes={theme} className={classNames.actions}>
+            <ActionWrapper
+              themes={theme}
+              className={classNames.actions}
+              align="center"
+              justify="flex-end"
+            >
               {children}
             </ActionWrapper>
           )}
@@ -103,6 +110,7 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
           themes={theme}
           onClick={onClose}
           className={classNames.closeButton}
+          size="s"
         >
           <FaTimesIcon visuallyHiddenText="閉じる" />
         </CloseButton>
@@ -111,16 +119,13 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
   )
 }
 
-const Wrapper = styled(Cluster).attrs({ align: 'center', justify: 'space-between' })<{
+const Wrapper = styled(Cluster)<{
   themes: Theme
   colorSet: { fgColor: string; bgColor: string }
 }>(
   ({ themes: { spacingByChar }, colorSet: { fgColor, bgColor } }) => css`
     background-color: ${bgColor};
-    padding-top: ${spacingByChar(0.75)};
-    padding-right: ${spacingByChar(1)};
-    padding-bottom: ${spacingByChar(0.75)};
-    padding-left: ${spacingByChar(0.75)};
+    padding: ${spacingByChar(0.75)};
     color: ${fgColor};
 
     .smarthr-ui-Cluster {
@@ -128,8 +133,9 @@ const Wrapper = styled(Cluster).attrs({ align: 'center', justify: 'space-between
     }
   `,
 )
-const ContentsWrapper = styled(Cluster).attrs({ align: 'center' })`
+const ContentsWrapper = styled(Cluster)`
   flex-grow: 1;
+
   /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
   min-width: 0;
 
@@ -137,16 +143,13 @@ const ContentsWrapper = styled(Cluster).attrs({ align: 'center' })`
     flex-shrink: 0;
   }
 `
-const MessageWrapper = styled(Sidebar).attrs({
-  align: 'center',
-  gap: { row: 0.75, column: 1 },
-  right: true,
-})`
+const MessageWrapper = styled(Sidebar)`
   flex-grow: 1;
+
   /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
   min-width: 0;
 `
-const ActionWrapper = styled(Cluster).attrs({ align: 'center', justify: 'flex-end' })<{
+const ActionWrapper = styled(Cluster)<{
   themes: Theme
 }>(
   ({ themes: { spacingByChar } }) => css`
@@ -154,7 +157,7 @@ const ActionWrapper = styled(Cluster).attrs({ align: 'center', justify: 'flex-en
     margin-bottom: ${spacingByChar(-0.5)};
   `,
 )
-const CloseButton = styled(TextButton).attrs({ size: 's' })<{
+const CloseButton = styled(TextButton)<{
   bgColor: string
   themes: Theme
 }>(
