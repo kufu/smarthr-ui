@@ -32,6 +32,8 @@ export type Props = {
   className?: string
   /** 閉じるボタンを押下、または表示してから8秒後に発火するコールバック関数 */
   onClose: () => void
+  /** FlashMessage が表示されてから一定時間後に自動で閉じるかどうか */
+  autoClose?: boolean
 }
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
@@ -46,13 +48,14 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
   role = 'alert',
   className = '',
   onClose,
+  autoClose = true,
   ...props
 }) => {
   const theme = useTheme()
   const classNames = useClassNames()
 
   useEffect(() => {
-    if (!visible) {
+    if (!visible || !autoClose) {
       return
     }
     const timerId = setTimeout(onClose, REMOVE_DELAY)
@@ -60,7 +63,7 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
     return () => {
       clearTimeout(timerId)
     }
-  }, [onClose, visible])
+  }, [autoClose, onClose, visible])
 
   if (!visible) return null
 

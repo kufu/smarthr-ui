@@ -19,15 +19,25 @@ import { Heading, HeadingTagTypes } from '../Heading'
 import { SecondaryButton } from '../Button'
 
 type Props = {
+  /** パネルのタイトル */
   title: string
+  /** タイトル部分の HTML タグ */
   titleTag?: HeadingTagTypes
+  /** 表示する情報のタイプ */
   type?: 'success' | 'info' | 'warning' | 'error' | 'sync' | ''
+  /** `true` のとき、開閉ボタンを表示する */
   togglable?: boolean
+  /** 開くボタンのラベル */
   openButtonLabel?: string
+  /** 閉じるボタンのラベル */
   closeButtonLabel?: string
+  /** パネルの開閉の状態 */
   active?: boolean
+  /** コンポーネントに適用するクラス名 */
   className?: string
+  /** パネル内に表示する内容 */
   children: React.ReactNode
+  /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
 }
 
