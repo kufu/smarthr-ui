@@ -16,13 +16,13 @@
     "@babel/core": "^7.16.7",
     "@commitlint/cli": "^16.0.2",
     "@commitlint/config-conventional": "^16.0.0",
-    "@storybook/addon-a11y": "^6.4.9",
-    "@storybook/addon-essentials": "^6.4.9",
-    "@storybook/addons": "^6.4.9",
-    "@storybook/cli": "^6.4.9",
-    "@storybook/react": "^6.4.9",
-    "@storybook/theming": "^6.4.9",
-    "@swc/core": "^1.2.127",
+    "@storybook/addon-a11y": "^6.4.13",
+    "@storybook/addon-essentials": "^6.4.13",
+    "@storybook/addons": "^6.4.13",
+    "@storybook/cli": "^6.4.13",
+    "@storybook/react": "^6.4.13",
+    "@storybook/theming": "^6.4.13",
+    "@swc/core": "^1.2.129",
     "@swc/jest": "^0.2.15",
     "@types/jest": "^27.4.0",
     "@types/lodash.merge": "^4.6.6",
@@ -81,7 +81,7 @@
     "url": "https://github.com/kufu/smarthr-ui/issues"
   },
   "engines": {
-    "node": ">=v14.18.2"
+    "node": ">=v14.18.3"
   },
   "files": [
     "esm",

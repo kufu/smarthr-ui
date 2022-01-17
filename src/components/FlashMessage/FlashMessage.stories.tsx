@@ -67,6 +67,7 @@ None.args = { animation: 'none' }
 
 export const Demo: Story = () => {
   const [visible, setVisible] = React.useState<boolean>(true)
+  const [autoClose, setAutoClose] = React.useState<boolean>(true)
   const [type, setType] = React.useState<Props['type']>('success')
   const [animation, setAnimation] = React.useState<Props['animation']>('bounce')
   const [text, setText] = React.useState<string>('自動保存しました')
@@ -83,19 +84,30 @@ export const Demo: Story = () => {
     <div style={{ padding: '20px' }}>
       <p>
         <label>
-          visible
           <input
             type="checkbox"
             name="visible"
             checked={visible}
             onChange={() => setVisible(!visible)}
           />
+          visible
         </label>
       </p>
       <p>
         <label>
           text
           <input type="text" value={text} onChange={(e) => setText(e.currentTarget.value)} />
+        </label>
+      </p>
+      <p>
+        <label>
+          <input
+            type="checkbox"
+            name="autoClose"
+            checked={autoClose}
+            onChange={(e) => setAutoClose(e.target.checked)}
+          />
+          auto close
         </label>
       </p>
       <fieldset>
@@ -130,6 +142,7 @@ export const Demo: Story = () => {
 
       <FlashMessage
         visible={visible}
+        autoClose={autoClose}
         type={type}
         text={text}
         animation={animation}

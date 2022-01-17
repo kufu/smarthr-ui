@@ -1,40 +1,53 @@
 import ts from 'typescript'
 import util from 'util'
 import fs from 'fs'
+import path from 'path'
 
 const readFile = util.promisify(fs.readFile)
 const readdir = util.promisify(fs.readdir)
 
-const IGNORE_DIRS = ['__tests__', 'Downloader', 'ProgressBar']
+const IGNORE_COMPONENTS = ['Downloader', 'ProgressBar']
+const IGNORE_INNER_DIRS = ['FlashMessage/FlashMessageList']
 
 describe('index', () => {
-  it('should export all components in the components directory from index.ts', async () => {
-    const actual = await getExportedComponents('./src/index.ts')
-    const expected = await getExistingComponents('./src/components/', IGNORE_DIRS)
-    expect(expected.sort()).toEqual(actual.sort())
+  const indexPath = './src/index.ts'
+  const componentsPath = './src/components'
+
+  it('src/components 配下に存在する全てのディレクトリからコンポーネントが export されていること', async () => {
+    const exported = await getExportedComponents(indexPath)
+    const componentDirs = await getComponentDirs(componentsPath, IGNORE_COMPONENTS)
+    expect(componentDirs.sort()).toEqual(exported.sort())
   })
 
-  describe('Layout', () => {
-    const IGNORE_FILES = ['index.ts', 'type.ts', 'Layout.stories.tsx']
-
-    it('components/Layout ディレクトリの全てのコンポーネントが components/Layout/index.ts 経由で index.ts から export されていること', async () => {
-      const actual = await getExportedDirectoryComponents('./src/index.ts', './components/Layout')
-      const expected = await getExistingComponents('./src/components/Layout/', IGNORE_FILES)
-      expect(expected.sort()).toEqual(actual.sort())
+  it('各コンポーネントディレクトリ直下に存在する子ディレクトリ名と同名のコンポーネントが export されていること', async () => {
+    const componentDirs = await getComponentDirs(componentsPath, IGNORE_COMPONENTS)
+    componentDirs.forEach(async (dirName) => {
+      const componentDirPath = path.join(componentsPath, dirName)
+      const innerComponents = await getComponentDirs(componentDirPath, IGNORE_INNER_DIRS)
+      if (innerComponents.length === 0) {
+        return
+      }
+      const exportedCompoenntsFromInnerDir = await getExportedDirectoryComponents(
+        indexPath,
+        `./components/${dirName}`,
+      )
+      expect(exportedCompoenntsFromInnerDir.sort()).toEqual(
+        expect.arrayContaining(innerComponents.sort()),
+      )
     })
   })
 })
 
 const getExportPath = (node: ts.ExportDeclaration) => {
-  let path = ''
+  let exportPath = ''
 
   node.forEachChild((child: ts.Node) => {
     if (ts.isStringLiteral(child)) {
-      path = `${child.text}`
+      exportPath = `${child.text}`
     }
   })
 
-  return path
+  return exportPath
 }
 
 const getAllExportPaths = (sourceFile: ts.SourceFile): string[] => {
@@ -69,9 +82,16 @@ const getExportedComponents = async (file: string): Promise<string[]> => {
   return files.filter(isNonComponentsExports).map(getComponentName)
 }
 
-const getExistingComponents = async (file: string, filterDirs: string[]): Promise<string[]> => {
-  const dirs = await readdir(file)
-  return dirs.filter((dir) => !filterDirs.includes(dir))
+const getComponentDirs = async (dirPath: string, ignoreDirs: string[] = []) => {
+  const files = await readdir(dirPath, { withFileTypes: true })
+  return files
+    .filter(
+      (file) =>
+        file.isDirectory() &&
+        !file.name.match(/^__.+__$/) && // __tests__ や __snapshots__ ディレクトリを除外
+        !ignoreDirs.find((ignoreDir) => path.join(dirPath, file.name).match(`${ignoreDir}$`)),
+    )
+    .map((file) => file.name)
 }
 
 const getExportedDirectoryComponents = async (

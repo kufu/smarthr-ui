@@ -187,8 +187,8 @@ const MessageWrapper = styled.div<{ themes: Theme }>`
 const Spinner = styled(Loader)<{ themes: Theme }>`
   &&& {
     > div {
-      width: 1rem;
-      height: 1rem;
+      width: 18px;
+      height: 18px;
     }
 
     > div > div {

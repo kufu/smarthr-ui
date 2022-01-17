@@ -4,12 +4,19 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
-type Props = { items: IndexNavItemProps[] }
+type Props = {
+  /** 各見出しの情報の配列 */
+  items: IndexNavItemProps[]
+}
 
 export type IndexNavItemProps = {
+  /** 見出しのラベル */
   label: string
+  /** anchor 要素の `href` 値 */
   href: string
+  /** ナビゲーション内の現在の項目を表すフラグ */
   current?: boolean
+  /** 子の見出しの情報の配列 */
   children?: IndexNavItemProps[]
 }
 
