@@ -91,7 +91,7 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
       <ContentsWrapper align="center">
         <Icon color={iconColor} />
         <MessageWrapper align="center" gap={{ row: 0.75, column: 1 }} right>
-          <Text>{message}</Text>
+          <Text leading="TIGHT">{message}</Text>
           {children && (
             <ActionWrapper
               themes={theme}
@@ -106,7 +106,7 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
       </ContentsWrapper>
       {onClose && (
         <CloseButton
-          bgColor={colorSet.bgColor}
+          colorSet={colorSet}
           themes={theme}
           onClick={onClose}
           className={classNames.closeButton}
@@ -158,17 +158,19 @@ const ActionWrapper = styled(Cluster)<{
   `,
 )
 const CloseButton = styled(TextButton)<{
-  bgColor: string
+  colorSet: { fgColor: string; bgColor: string }
   themes: Theme
 }>(
-  ({ bgColor, themes: { color, spacingByChar } }) => css`
+  ({ colorSet: { fgColor, bgColor }, themes: { color, spacingByChar } }) => css`
     margin-top: ${spacingByChar(-0.5)};
     margin-right: ${spacingByChar(-0.5)};
     margin-bottom: ${spacingByChar(-0.5)};
+    color: ${fgColor};
 
     &:hover,
     &:focus {
       background-color: ${color.hoverColor(bgColor)};
+      color: ${fgColor};
     }
   `,
 )
