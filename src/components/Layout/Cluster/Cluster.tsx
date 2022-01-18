@@ -1,22 +1,14 @@
-import React from 'react'
+import React, { HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
+
+import { useClassNames } from './useClassNames'
 import { useSpacing } from '../../../hooks/useSpacing'
 import type { Gap, SeparateGap } from '../type'
 
 type alignMethod = 'normal' | 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 type justifyMethod = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around'
 
-/**
- * @param gap 間隔の指定（基準フォントサイズの相対値または抽象値）
- * @param rowGap 垂直方向の間隔の指定（基準フォントサイズの相対値または抽象値）
- * @param columnGap 水平方向の間隔の指定（基準フォントサイズの相対値または抽象値）
- * @param align 垂直方向の揃え方（align-items）
- * @param justify 水平方向の揃え方（justify-content）
- * @param as ネガティブマージンを隠す要素の HTML タグ名
- * @param bodyAs Cluster 本体の HTML タグ名
- * @param children 均等に間隔を空けたい要素群
- */
-export const Cluster: React.VFC<{
+type Props = {
   /** 間隔の指定（基準フォントサイズの相対値または抽象値） */
   gap?: Gap | SeparateGap
   /** 垂直方向の揃え方（align-items） */
@@ -29,13 +21,39 @@ export const Cluster: React.VFC<{
   bodyAs?: React.ElementType
   /** 均等に間隔を空けたい要素群 */
   children?: React.ReactNode
-}> = ({ gap = 0.5, align, justify, as, bodyAs, children }) => (
-  <Wrapper as={as}>
-    <Body as={bodyAs} gap={gap} align={align} justify={justify}>
-      {children}
-    </Body>
-  </Wrapper>
-)
+}
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+
+/**
+ * @param gap 間隔の指定（基準フォントサイズの相対値または抽象値）
+ * @param rowGap 垂直方向の間隔の指定（基準フォントサイズの相対値または抽象値）
+ * @param columnGap 水平方向の間隔の指定（基準フォントサイズの相対値または抽象値）
+ * @param align 垂直方向の揃え方（align-items）
+ * @param justify 水平方向の揃え方（justify-content）
+ * @param as ネガティブマージンを隠す要素の HTML タグ名
+ * @param bodyAs Cluster 本体の HTML タグ名
+ * @param children 均等に間隔を空けたい要素群
+ */
+export const Cluster: React.VFC<Props & ElementProps> = ({
+  gap = 0.5,
+  align,
+  justify,
+  as,
+  bodyAs,
+  children,
+  className,
+  ...props
+}) => {
+  const classNames = useClassNames()
+
+  return (
+    <Wrapper as={as} {...props} className={`${classNames.wrapper}${className && ` ${className}`}`}>
+      <Body as={bodyAs} gap={gap} align={align} justify={justify} className={`${classNames.body}`}>
+        {children}
+      </Body>
+    </Wrapper>
+  )
+}
 
 // gap のネガティブマージンを隠すための要素、gap が利用できる場合は不要
 // Wrapper to hide the negative margin of gap, not required if gap is available.
