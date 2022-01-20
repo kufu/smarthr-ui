@@ -15,6 +15,7 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   files?: File[]
   onAdd?: (addFiles: File[]) => void
   onDelete?: (index: number) => void
+  error?: boolean
   hasFileList?: boolean
 }
 
@@ -27,6 +28,7 @@ export const InputFile: VFC<Props> = ({
   onAdd,
   onDelete,
   disabled = false,
+  error,
   ...props
 }) => {
   const theme = useTheme()
@@ -34,6 +36,7 @@ export const InputFile: VFC<Props> = ({
   const labelDisabledClassName = disabled ? 'disabled' : ''
   const labelSmallClassName = size === 's' ? 'small' : ''
   const labelFocusedClassName = isFocused ? 'focus' : ''
+  const errorClassName = error ? 'error' : ''
   const isUpdatingFiles = useRef(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -87,7 +90,7 @@ export const InputFile: VFC<Props> = ({
         </FileList>
       )}
       <InputWrapper
-        className={`${labelSmallClassName} ${labelDisabledClassName} ${labelFocusedClassName}`}
+        className={`${labelSmallClassName} ${labelDisabledClassName} ${labelFocusedClassName} ${errorClassName}`}
         themes={theme}
       >
         <input
@@ -99,6 +102,7 @@ export const InputFile: VFC<Props> = ({
           ref={inputRef}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          aria-invalid={error || undefined}
         />
         <Prefix themes={theme}>
           <FaFolderOpenIcon />
@@ -118,7 +122,7 @@ const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
   return css`
     font-size: ${fontSize.M};
     padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-    margin-bottom: ${spacingByChar(1)};
+    margin: 0 0 ${spacingByChar(1)};
     background-color: ${color.COLUMN};
     list-style: none;
 
@@ -159,6 +163,9 @@ const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
         background-color: ${color.hoverColor(color.WHITE)};
         color: ${color.TEXT_BLACK};
       }
+    }
+    &&.error {
+      border-color: ${color.DANGER};
     }
 
     > input[type='file'] {

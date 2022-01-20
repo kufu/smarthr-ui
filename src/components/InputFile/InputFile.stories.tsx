@@ -72,6 +72,10 @@ storiesOf('InputFile', module)
           <p>Disabled input</p>
           <InputFile label="Choose File" files={[]} disabled />
         </Wrapper>
+        <Wrapper>
+          <p>エラー</p>
+          <InputFile label="Choose File" files={[]} error />
+        </Wrapper>
       </>
     )
   })
