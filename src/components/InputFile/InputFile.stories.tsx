@@ -18,9 +18,9 @@ storiesOf('InputFile', module)
     const [files3, setFiles3] = React.useState<File[]>([])
 
     return (
-      <>
-        <Wrapper>
-          <p>Default</p>
+      <List>
+        <dt>Default</dt>
+        <dd>
           <InputFile
             label="Choose File"
             onAdd={(addFiles) => {
@@ -34,9 +34,9 @@ storiesOf('InputFile', module)
             files={files1}
             multiple
           />
-        </Wrapper>
-        <Wrapper>
-          <p>Size S</p>
+        </dd>
+        <dt>Size S</dt>
+        <dd>
           <InputFile
             label="Choose File"
             onAdd={(addFiles) => {
@@ -51,9 +51,9 @@ storiesOf('InputFile', module)
             size="s"
             multiple
           />
-        </Wrapper>
-        <Wrapper>
-          <p>Disabled file list</p>
+        </dd>
+        <dt>Disabled file list</dt>
+        <dd>
           <InputFile
             label="Choose File"
             onAdd={(addFiles) => {
@@ -67,27 +67,27 @@ storiesOf('InputFile', module)
             files={files3}
             hasFileList={false}
           />
-        </Wrapper>
-        <Wrapper>
-          <p>Disabled input</p>
+        </dd>
+        <dt>Disabled input</dt>
+        <dd>
           <InputFile label="Choose File" files={[]} disabled />
-        </Wrapper>
-        <Wrapper>
-          <p>エラー</p>
+        </dd>
+        <dt>エラー</dt>
+        <dd>
           <InputFile label="Choose File" files={[]} error />
-        </Wrapper>
-      </>
+        </dd>
+      </List>
     )
   })
 
-const Wrapper = styled.div`
+const List = styled.dl`
   margin: 1rem;
 
-  > * {
-    margin-right: 1rem;
+  & > dt {
+    margin-bottom: 0.5rem;
   }
 
-  p {
-    margin-bottom: 0.5rem;
+  & > dd {
+    margin: 0 0 1rem;
   }
 `
