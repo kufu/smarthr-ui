@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [17.2.0](https://github.com/kufu/smarthr-ui/compare/v17.1.0...v17.2.0) (2022-01-24)
+
+
+### Features
+
+* Change <ActionDialog>'s string props to ReactNode ([#2117](https://github.com/kufu/smarthr-ui/issues/2117)) ([bc325f1](https://github.com/kufu/smarthr-ui/commit/bc325f1c72cbce49968c5ad2ff61b7cae7455d1d))
+* NotificationBar を作成｜SHRUI-508 ([#2193](https://github.com/kufu/smarthr-ui/issues/2193)) ([28ed290](https://github.com/kufu/smarthr-ui/commit/28ed290a77282748eaaedd4f7bd70640e046f805))
+
 ## [17.1.0](https://github.com/kufu/smarthr-ui/compare/v17.0.1...v17.1.0) (2022-01-17)
 
 
