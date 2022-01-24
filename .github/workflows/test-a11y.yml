@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      ACOT_GITHUB_APP_TOKEN: ${{ secrets.ACOT_GITHUB_APP_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'yarn'
+      - run: yarn install --frozen-lockfile
+      - run: yarn build-storybook && yarn extract-storybook
+      - run: yarn test:a11y

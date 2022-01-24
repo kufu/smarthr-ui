@@ -1,3 +1,6 @@
+const data = require('./storybook-static/stories.json')
+const paths = Object.keys(data.stories).map((key) => `/iframe.html?id=${key}`)
+
 module.exports = {
   presets: ['@acot/wcag'],
   extends: ['preset:@acot/wcag/recommended'],
@@ -12,7 +15,7 @@ module.exports = {
     '@acot/wcag/interactive-has-enough-size': 'off',
     '@acot/wcag/interactive-supports-focus': 'warn',
   },
-  paths: ['/iframe.html?id=dialog--default&args=&viewMode=story'],
+  paths,
   origin: 'http://localhost:6006',
   reporters: ['@acot/github'],
 }
