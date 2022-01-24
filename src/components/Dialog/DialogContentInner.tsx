@@ -108,14 +108,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
   return (
     <DialogPositionProvider top={props.top} bottom={props.bottom}>
       <DialogOverlap isOpen={isOpen}>
-        <Layout
-          className={classNames.wrapper}
-          id={id}
-          role="dialog"
-          aria-modal="true"
-          aria-label={ariaLabel}
-          aria-labelledby={ariaLabelledby}
-        >
+        <Layout className={classNames.wrapper} id={id}>
           <Background
             onClick={handleClickOverlay}
             themes={theme}
@@ -126,6 +119,8 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
               ref={innerRef}
               themes={theme}
               role="dialog"
+              aria-label={ariaLabel}
+              aria-labelledby={ariaLabelledby}
               aria-modal="true"
               className={`${className} ${classNames.dialog}`}
               {...props}
