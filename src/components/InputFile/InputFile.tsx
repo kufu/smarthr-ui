@@ -122,7 +122,8 @@ const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
   return css`
     font-size: ${fontSize.M};
     padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-    margin: 0 0 ${spacingByChar(1)};
+    margin-top: 0;
+    margin-bottom: ${spacingByChar(1)};
     background-color: ${color.COLUMN};
     list-style: none;
 
