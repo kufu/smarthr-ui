@@ -37,7 +37,7 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
   onClose,
   children,
   role = type === 'info' ? 'status' : 'alert',
-  className,
+  className = '',
   ...props
 }) => {
   const theme = useTheme()
