@@ -35,8 +35,31 @@ const DefinitionListItems = [
   },
 ]
 
-export const All: Story = () => {
+const Item = () => {
   const themes = useTheme()
+  return (
+    <Term>
+      <span>term 2</span>
+      <Alert>
+        <FaExclamationCircleIcon size={11} color={themes.color.DANGER} />
+        <AlertText themes={themes}>error occurred</AlertText>
+      </Alert>
+    </Term>
+  )
+}
+
+const customizedItems = [
+  {
+    term: 'term 1',
+    description: 'description 1',
+  },
+  {
+    term: <Item />,
+    description: 'description 2',
+  },
+]
+
+export const All: Story = () => {
   return (
     <Wrapper>
       <Title type="sectionTitle">single column</Title>
@@ -56,26 +79,7 @@ export const All: Story = () => {
 
       <Title type="sectionTitle">customized</Title>
       <Content>
-        <DefinitionList
-          items={[
-            {
-              term: 'term 1',
-              description: 'description 1',
-            },
-            {
-              term: (
-                <Term>
-                  <span>term 2</span>
-                  <Alert>
-                    <FaExclamationCircleIcon size={11} color={themes.color.DANGER} />
-                    <AlertText themes={themes}>error occurred</AlertText>
-                  </Alert>
-                </Term>
-              ),
-              description: 'description 2',
-            },
-          ]}
-        ></DefinitionList>
+        <DefinitionList items={customizedItems} />
       </Content>
     </Wrapper>
   )
