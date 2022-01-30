@@ -22,7 +22,7 @@
     "@storybook/cli": "^6.4.14",
     "@storybook/react": "^6.4.14",
     "@storybook/theming": "^6.4.14",
-    "@swc/core": "^1.2.133",
+    "@swc/core": "^1.2.135",
     "@swc/jest": "^0.2.17",
     "@types/jest": "^27.4.0",
     "@types/lodash.merge": "^4.6.6",
