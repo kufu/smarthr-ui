@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [17.2.0](https://github.com/kufu/smarthr-ui/compare/v17.1.0...v17.2.0) (2022-01-24)
+
+
+### Features
+
+* Change <ActionDialog>'s string props to ReactNode ([#2117](https://github.com/kufu/smarthr-ui/issues/2117)) ([bc325f1](https://github.com/kufu/smarthr-ui/commit/bc325f1c72cbce49968c5ad2ff61b7cae7455d1d))
+* NotificationBar を作成｜SHRUI-508 ([#2193](https://github.com/kufu/smarthr-ui/issues/2193)) ([28ed290](https://github.com/kufu/smarthr-ui/commit/28ed290a77282748eaaedd4f7bd70640e046f805))
+
+## [17.1.0](https://github.com/kufu/smarthr-ui/compare/v17.0.1...v17.1.0) (2022-01-17)
+
+
+### Features
+
+* add autoClose prop into FlashMessage ([#2168](https://github.com/kufu/smarthr-ui/issues/2168)) ([a0dd906](https://github.com/kufu/smarthr-ui/commit/a0dd90696d65a967c035651a486b50a2f1727655))
+
+
+### Bug Fixes
+
+* `InputFile` の DOM 構造を変更 (SHRUI-453) ([#2059](https://github.com/kufu/smarthr-ui/issues/2059)) ([f6def9f](https://github.com/kufu/smarthr-ui/commit/f6def9fc52c395722d88f09c414b42b62485194d))
+* actionDialogのLoaderの表示崩れを修正 ([#2145](https://github.com/kufu/smarthr-ui/issues/2145)) ([a1ace9f](https://github.com/kufu/smarthr-ui/commit/a1ace9f66fb5605a2e323d4784a6a602bf2a6dc7))
+* change layout of Footer to flex box ([#2181](https://github.com/kufu/smarthr-ui/issues/2181)) ([82b5c6a](https://github.com/kufu/smarthr-ui/commit/82b5c6abe630e63962bc2c89ba3950115f547df2))
+
 ### [17.0.1](https://github.com/kufu/smarthr-ui/compare/v17.0.0...v17.0.1) (2022-01-06)
 
 

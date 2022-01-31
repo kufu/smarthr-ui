@@ -1,10 +1,11 @@
 import React, { HTMLAttributes, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
+import { useId } from '../../hooks/useId'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 import { ActionDialogContentInner, ActionDialogContentInnerProps } from './ActionDialogContentInner'
 
-type Props = ActionDialogContentInnerProps & {
+type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & {
   onClickClose: () => void
   portalParent?: HTMLElement
 } & Pick<
@@ -30,6 +31,7 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   ...props
 }) => {
   const portalContainer = useRef(document.createElement('div')).current
+  const titleId = useId()
 
   useEffect(() => {
     // SSR を考慮し、useEffect 内で初期値 document.body を指定
@@ -55,13 +57,10 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   }, [onClickAction, onClickClose, props.isOpen])
 
   return createPortal(
-    <DialogContentInner
-      ariaLabel={subtitle ? `${subtitle} ${title}` : title}
-      className={className}
-      {...props}
-    >
+    <DialogContentInner ariaLabelledby={titleId} className={className} {...props}>
       <ActionDialogContentInner
         title={title}
+        titleId={titleId}
         subtitle={subtitle}
         closeText={closeText}
         actionText={actionText}

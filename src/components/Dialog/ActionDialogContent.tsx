@@ -3,8 +3,10 @@ import React, { HTMLAttributes, useCallback, useContext } from 'react'
 import { DialogContext } from './DialogWrapper'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 import { ActionDialogContentInner, BaseProps } from './ActionDialogContentInner'
+import { useId } from '../../hooks/useId'
 
-type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
+type Props = Omit<BaseProps, 'titleId'> &
+  Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const ActionDialogContent: React.VFC<Props & ElementProps> = ({
@@ -34,18 +36,21 @@ export const ActionDialogContent: React.VFC<Props & ElementProps> = ({
     onClickAction(onClickClose)
   }, [active, onClickAction, onClickClose])
 
+  const titleId = useId()
+
   return (
     <DialogContentRoot>
       <DialogContentInner
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
         isOpen={active}
-        ariaLabel={title}
+        ariaLabelledby={titleId}
         className={className}
         {...props}
       >
         <ActionDialogContentInner
           title={title}
+          titleId={titleId}
           closeText={closeText}
           actionText={actionText}
           actionTheme={actionTheme}

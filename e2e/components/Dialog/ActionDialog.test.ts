@@ -10,7 +10,9 @@ test('ダイアログが開閉できること', async (t) => {
   const trigger = Selector('[data-test=dialog-trigger]')
   const content = Selector('[data-test=dialog-content]')
   const closer = content.find('.smarthr-ui-Dialog-closeButton')
-  const background = content.parent('[role=dialog]').find('.smarthr-ui-Dialog-background')
+  const background = content
+    .parent('.smarthr-ui-Dialog-wrapper')
+    .find('.smarthr-ui-Dialog-background')
 
   await t
     .click(trigger)
