@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.12",
-    "@commitlint/cli": "^16.0.3",
+    "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
     "@storybook/addon-a11y": "^6.4.16",
     "@storybook/addon-essentials": "^6.4.16",
