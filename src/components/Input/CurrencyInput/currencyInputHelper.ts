@@ -9,11 +9,10 @@ export function formatCurrency(value?: string) {
   const nonNumericRegExp = /[^0-9.-]/g
   if (converted.match(nonNumericRegExp) || isNaN(Number(converted))) {
     // if value includes non-numeric characters, return value as it is
+    // otherwise, we assume `converted` contains only numeric characters
     return value
   }
-  const numeric = converted.replace(nonNumericRegExp, '') // remove non-numeric characters
-  const splited = numeric.split('.')
-  const [integerPart, decimalPart] = splited
+  const [integerPart, decimalPart] = converted.split('.')
   const commaed = integerPart.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') // add comma to integer every 3 digits
   if (!decimalPart) {
     return commaed
