@@ -2,9 +2,11 @@ import React, {
   FocusEvent,
   InputHTMLAttributes,
   ReactNode,
+  WheelEvent,
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
 } from 'react'
 import styled, { css } from 'styled-components'
@@ -37,13 +39,23 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       () => innerRef.current,
     )
 
-    const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
-      onFocus && onFocus(e)
-    }
+    const handleFocus = useMemo(() => {
+      if (!onFocus) {
+        return undefined
+      }
 
-    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-      onBlur && onBlur(e)
-    }
+      return (e: FocusEvent<HTMLInputElement>) => onFocus(e)
+    }, [onFocus])
+
+    const handleBlur = useMemo(() => {
+      if (!onBlur) {
+        return undefined
+      }
+
+      return (e: FocusEvent<HTMLInputElement>) => onBlur(e)
+    }, [onBlur])
+
+    const handleWheel = useMemo(() => (props.type === 'number' ? disableWheel : undefined), [])
 
     useEffect(() => {
       if (autoFocus && innerRef.current) {
@@ -70,6 +82,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         <StyledInput
           onFocus={handleFocus}
           onBlur={handleBlur}
+          onWheel={handleWheel}
           {...props}
           ref={innerRef}
           themes={theme}
@@ -85,6 +98,11 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     )
   },
 )
+
+const disableWheel = (e: WheelEvent) => {
+  // wheel イベントに preventDefault はないため
+  e.target && (e.target as HTMLInputElement).blur()
+}
 
 const Wrapper = styled.span<{
   themes: Theme
