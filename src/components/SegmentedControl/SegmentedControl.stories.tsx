@@ -14,6 +14,19 @@ import {
 
 import readme from './README.md'
 
+const departmentAndCrewOptions: Option[] = [
+  { value: 'departments', content: '部署' },
+  { value: 'crews', content: '従業員' },
+  { value: 'both', content: '部署と従業員' },
+]
+const graphOptions: Option[] = [
+  { value: 'table', ariaLabel: 'テーブル', content: <FaTableIcon /> },
+  { value: 'chartBar', ariaLabel: 'バーチャート', content: <FaChartBarIcon /> },
+  { value: 'chartArea', ariaLabel: 'エリアチャート', content: <FaChartAreaIcon /> },
+  { value: 'chartLine', ariaLabel: 'ラインチャート', content: <FaChartLineIcon /> },
+  { value: 'chartPie', ariaLabel: 'パイチャート', content: <FaChartPieIcon /> },
+]
+
 storiesOf('SegmentedControl', module)
   .addParameters({
     readme: {
@@ -21,19 +34,6 @@ storiesOf('SegmentedControl', module)
     },
   })
   .add('all', () => {
-    const departmentAndCrewOptions: Option[] = [
-      { value: 'departments', content: '部署' },
-      { value: 'crews', content: '従業員' },
-      { value: 'both', content: '部署と従業員' },
-    ]
-    const graphOptions: Option[] = [
-      { value: 'table', ariaLabel: 'テーブル', content: <FaTableIcon /> },
-      { value: 'chartBar', ariaLabel: 'バーチャート', content: <FaChartBarIcon /> },
-      { value: 'chartArea', ariaLabel: 'エリアチャート', content: <FaChartAreaIcon /> },
-      { value: 'chartLine', ariaLabel: 'ラインチャート', content: <FaChartLineIcon /> },
-      { value: 'chartPie', ariaLabel: 'パイチャート', content: <FaChartPieIcon /> },
-    ]
-
     const [value1, setValue1] = React.useState<string | null>('departments')
     const [value2, setValue2] = React.useState<string | null>('both')
     const [value3, setValue3] = React.useState<string | null>('chartArea')
