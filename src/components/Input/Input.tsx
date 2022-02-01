@@ -39,13 +39,15 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       () => innerRef.current,
     )
 
-    const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
-      onFocus && onFocus(e)
-    }
+    const handleFocus = useCallback(
+      (e: FocusEvent<HTMLInputElement>) => onFocus && onFocus(e),
+      [onFocus],
+    )
 
-    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-      onBlur && onBlur(e)
-    }
+    const handleBlur = useCallback(
+      (e: FocusEvent<HTMLInputElement>) => onBlur && onBlur(e),
+      [onBlur],
+    )
 
     const handleWheel = useCallback(
       (e: WheelEvent) => {
