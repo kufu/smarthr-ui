@@ -2,7 +2,9 @@ import React, {
   FocusEvent,
   InputHTMLAttributes,
   ReactNode,
+  WheelEvent,
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -45,6 +47,16 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       onBlur && onBlur(e)
     }
 
+    const handleWheel = useCallback(
+      (e: WheelEvent) => {
+        if (props.type === 'number') {
+          // wheel イベントに preventDefault はないため
+          e.target && (e.target as HTMLInputElement).blur()
+        }
+      },
+      [props.type],
+    )
+
     useEffect(() => {
       if (autoFocus && innerRef.current) {
         innerRef.current.focus()
@@ -70,6 +82,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         <StyledInput
           onFocus={handleFocus}
           onBlur={handleBlur}
+          onWheel={handleWheel}
           {...props}
           ref={innerRef}
           themes={theme}
