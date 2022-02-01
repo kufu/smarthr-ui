@@ -7,6 +7,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
 } from 'react'
 import styled, { css } from 'styled-components'
@@ -49,15 +50,11 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       [onBlur],
     )
 
-    const handleWheel = useCallback(
-      (e: WheelEvent) => {
-        if (props.type === 'number') {
-          // wheel イベントに preventDefault はないため
-          e.target && (e.target as HTMLInputElement).blur()
-        }
-      },
-      [props.type],
-    )
+    const disableWheel = useCallback((e: WheelEvent) => {
+      // wheel イベントに preventDefault はないため
+      e.target && (e.target as HTMLInputElement).blur()
+    }, [])
+    const handleWheel = useMemo(() => (props.type === 'number' ? disableWheel : null), [])
 
     useEffect(() => {
       if (autoFocus && innerRef.current) {
