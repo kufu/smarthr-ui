@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [17.3.0](https://github.com/kufu/smarthr-ui/compare/v17.2.0...v17.3.0) (2022-02-01)
+
+
+### Features
+
+* `Select` に `onChangeValue` を追加 (SHRUI-528) ([#2220](https://github.com/kufu/smarthr-ui/issues/2220)) ([471bbf8](https://github.com/kufu/smarthr-ui/commit/471bbf8e6f57557200a9f32d683455cf6569411e))
+* InputFile にエラーオプションを追加 (SHRUI-486) ([#2197](https://github.com/kufu/smarthr-ui/issues/2197)) ([6189d37](https://github.com/kufu/smarthr-ui/commit/6189d3784ebd58f0cfe339c12dd7a3cc30822ba6))
+
+
+### Bug Fixes
+
+* BottomFixedArea のシャドウを調整する ([#2223](https://github.com/kufu/smarthr-ui/issues/2223)) ([a100e68](https://github.com/kufu/smarthr-ui/commit/a100e688dcae42eaaf26bbdeabc9646968c84e9c))
+* Input[type=number] のスクロールで数値が変更されるのを防ぐ ([#2233](https://github.com/kufu/smarthr-ui/issues/2233)) ([a5c84a1](https://github.com/kufu/smarthr-ui/commit/a5c84a18a86e104021a0833e63f970996a16f697))
+* NotificationBar の className に undefined が混じるバグを修正 ([#2222](https://github.com/kufu/smarthr-ui/issues/2222)) ([264cb73](https://github.com/kufu/smarthr-ui/commit/264cb7351b2e217efd7667a0cca908d4728b68f0))
+
 ## [17.2.0](https://github.com/kufu/smarthr-ui/compare/v17.1.0...v17.2.0) (2022-01-24)
 
 
