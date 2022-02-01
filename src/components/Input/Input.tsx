@@ -4,7 +4,6 @@ import React, {
   ReactNode,
   WheelEvent,
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -40,21 +39,23 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       () => innerRef.current,
     )
 
-    const handleFocus = useCallback(
-      (e: FocusEvent<HTMLInputElement>) => onFocus && onFocus(e),
-      [onFocus],
-    )
+    const handleFocus = useMemo(() => {
+      if (!onFocus) {
+        return undefined
+      }
 
-    const handleBlur = useCallback(
-      (e: FocusEvent<HTMLInputElement>) => onBlur && onBlur(e),
-      [onBlur],
-    )
+      return (e: FocusEvent<HTMLInputElement>) => onFocus(e)
+    }, [onFocus])
 
-    const disableWheel = useCallback((e: WheelEvent) => {
-      // wheel イベントに preventDefault はないため
-      e.target && (e.target as HTMLInputElement).blur()
-    }, [])
-    const handleWheel = useMemo(() => (props.type === 'number' ? disableWheel : null), [])
+    const handleBlur = useMemo(() => {
+      if (!onBlur) {
+        return undefined
+      }
+
+      return (e: FocusEvent<HTMLInputElement>) => onBlur && onBlur(e)
+    }, [onBlur])
+
+    const handleWheel = useMemo(() => (props.type === 'number' ? disableWheel : undefined), [])
 
     useEffect(() => {
       if (autoFocus && innerRef.current) {
@@ -97,6 +98,11 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     )
   },
 )
+
+const disableWheel = (e: WheelEvent) => {
+  // wheel イベントに preventDefault はないため
+  e.target && (e.target as HTMLInputElement).blur()
+}
 
 const Wrapper = styled.span<{
   themes: Theme
