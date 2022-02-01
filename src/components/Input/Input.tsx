@@ -2,9 +2,11 @@ import React, {
   FocusEvent,
   InputHTMLAttributes,
   ReactNode,
+  WheelEvent,
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
 } from 'react'
 import styled, { css } from 'styled-components'
@@ -12,14 +14,20 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
-export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> & {
+export type Props = {
+  /** input 要素の `type` 値 */
   type?: HTMLInputElement['type']
+  /** フォームにエラーがあるかどうか */
   error?: boolean
+  /** コンポーネントの幅 */
   width?: number | string
+  /** オートフォーカスを行うかどうか */
   autoFocus?: boolean
+  /** コンポーネント内の先頭に表示する内容 */
   prefix?: ReactNode
+  /** コンポーネント内の末尾に表示する内容 */
   suffix?: ReactNode
-}
+} & Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'>
 
 export const Input = forwardRef<HTMLInputElement, Props>(
   ({ onFocus, onBlur, autoFocus, prefix, suffix, className = '', width, ...props }, ref) => {
@@ -31,13 +39,23 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       () => innerRef.current,
     )
 
-    const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
-      onFocus && onFocus(e)
-    }
+    const handleFocus = useMemo(() => {
+      if (!onFocus) {
+        return undefined
+      }
 
-    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-      onBlur && onBlur(e)
-    }
+      return (e: FocusEvent<HTMLInputElement>) => onFocus(e)
+    }, [onFocus])
+
+    const handleBlur = useMemo(() => {
+      if (!onBlur) {
+        return undefined
+      }
+
+      return (e: FocusEvent<HTMLInputElement>) => onBlur(e)
+    }, [onBlur])
+
+    const handleWheel = useMemo(() => (props.type === 'number' ? disableWheel : undefined), [])
 
     useEffect(() => {
       if (autoFocus && innerRef.current) {
@@ -64,6 +82,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
         <StyledInput
           onFocus={handleFocus}
           onBlur={handleBlur}
+          onWheel={handleWheel}
           {...props}
           ref={innerRef}
           themes={theme}
@@ -79,6 +98,11 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     )
   },
 )
+
+const disableWheel = (e: WheelEvent) => {
+  // wheel イベントに preventDefault はないため
+  e.target && (e.target as HTMLInputElement).blur()
+}
 
 const Wrapper = styled.span<{
   themes: Theme

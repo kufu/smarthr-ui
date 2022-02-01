@@ -100,6 +100,9 @@ const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
       padding: ${spacingByChar(1.5)};
       text-align: center;
       z-index: ${zIndex};
+      box-shadow: 0 -4px 8px 2px rgba(0, 0, 0, 0.24);
+      border-radius: 0;
+      box-sizing: border-box;
     `
   }}
 `

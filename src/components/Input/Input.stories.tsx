@@ -1,14 +1,21 @@
 import { action } from '@storybook/addon-actions'
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Input } from './Input'
+import { CurrencyInput } from './CurrencyInput'
 import { FaSearchIcon } from '../Icon'
 
-storiesOf('Input', module).add('all', () => {
+export default {
+  title: 'Input',
+  component: Input,
+  subcomponents: { CurrencyInput },
+}
+
+export const All: Story = () => {
   const theme = useTheme()
 
   return (
@@ -57,7 +64,7 @@ storiesOf('Input', module).add('all', () => {
       <li>
         <Txt>disabled and error</Txt>
         <Input disabled={true} error={true} />
-        <Note themes={theme}>`disabled` takes precedence over `error`</Note>
+        <Note themes={theme}> `disabled` takes precedence over `error`</Note>
       </li>
       <li>
         <Txt>prefix</Txt>
@@ -73,7 +80,29 @@ storiesOf('Input', module).add('all', () => {
       </li>
     </List>
   )
-})
+}
+All.storyName = 'all'
+
+export const Currency: Story = () => {
+  const [value, setValue] = React.useState('1234567890')
+  return (
+    <Wrapper>
+      <Txt>currency (add comma to integer every 3 digits)</Txt>
+      <CurrencyInput
+        value={value}
+        onChange={(e) => {
+          action('changed')(e)
+          setValue(e.target.value)
+        }}
+        onFormatValue={(formatted) => {
+          action('formatted')(formatted)
+          setValue(formatted)
+        }}
+      />
+    </Wrapper>
+  )
+}
+All.storyName = 'all'
 
 const List = styled.ul`
   padding: 0 24px;
@@ -94,4 +123,7 @@ const Note = styled.div<{ themes: Theme }>`
     margin-top: 8px;
     color: ${themes.color.TEXT_GREY};
   `}
+`
+const Wrapper = styled.div`
+  padding: 24px;
 `
