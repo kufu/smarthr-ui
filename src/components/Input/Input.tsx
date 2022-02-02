@@ -55,7 +55,10 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       return (e: FocusEvent<HTMLInputElement>) => onBlur(e)
     }, [onBlur])
 
-    const handleWheel = useMemo(() => (props.type === 'number' ? disableWheel : undefined), [])
+    const handleWheel = useMemo(
+      () => (props.type === 'number' ? disableWheel : undefined),
+      [props.type],
+    )
 
     useEffect(() => {
       if (autoFocus && innerRef.current) {
