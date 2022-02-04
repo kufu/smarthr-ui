@@ -76,7 +76,7 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
           bgColor: '#ffcc17',
         }
     }
-  }, [type])
+  }, [color, type])
 
   return (
     <Wrapper
