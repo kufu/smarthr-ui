@@ -1,13 +1,13 @@
 # FloatArea
 
 ```tsx
-import { FloatArea, PrimaryButton, SecondaryButton, FaExclamationTriangleIcon } from 'smarthr-ui'
+import { FloatArea, PrimaryButton, SecondaryButton, FaExclamationCircleIcon } from 'smarthr-ui'
 
 <FloatArea
   primaryButton={<PrimaryButton>Submit</PrimaryButton>}
   secondaryButton={<SecondaryButton>Cancel</SecondaryButton>}
   tertiaryButton={<SecondaryButton>preview</SecondaryButton>}
-  errorIcon={<FaExclamationTriangleIcon color="#e01e5a" />}
+  errorIcon={<FaExclamationCircleIcon color="#e01e5a" />}
   errorText="This is the error text."
   width="80%"
   top={40}
