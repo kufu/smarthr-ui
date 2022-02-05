@@ -33,6 +33,8 @@ type Props = {
   parseInput?: (input: string) => Date | null
   /** 表示する日付を独自にフォーマットする場合に、フォーマット処理を記述する関数 */
   formatDate?: (date: Date | null) => string
+  /** 入出力用文字列と併記する形で用いる別フォーマットの日付 */
+  alternativeFormattedDate?: string
   /** 選択された日付が変わった時に発火するコールバック関数 */
   onChangeDate?: (date: Date | null, value: string) => void
 }
@@ -48,6 +50,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   className = '',
   parseInput,
   formatDate,
+  alternativeFormattedDate,
   onChangeDate,
   ...inputAttrs
 }) => {
@@ -255,6 +258,9 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
           aria-controls={calenderId}
           aria-haspopup={true}
         />
+        {alternativeFormattedDate && (
+          <OverlayText themes={themes}>{alternativeFormattedDate}</OverlayText>
+        )}
       </InputWrapper>
       {isCalendarShown && inputRect && (
         <Portal inputRect={inputRect} ref={calendarPortalRef}>
@@ -281,7 +287,9 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
 const Container = styled.div`
   display: inline-block;
 `
-const InputWrapper = styled.div``
+const InputWrapper = styled.div`
+  position: relative;
+`
 const StyledInput = styled(Input)`
   width: 100%;
 `
@@ -303,5 +311,17 @@ const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     padding-left: ${spacingByChar(0.5)};
     border-left: 1px solid ${color.BORDER};
     font-size: ${fontSize.M};
+  `
+})
+
+const OverlayText = styled.span<{ themes: Theme }>(({ themes }) => {
+  const { fontSize, color, spacingByChar } = themes
+  return css`
+    position: absolute;
+    right: ${spacingByChar(2.5)};
+    top: 50%;
+    transform: translateY(-50%);
+    color: ${color.TEXT_GREY};
+    font-size: ${fontSize.S};
   `
 })
