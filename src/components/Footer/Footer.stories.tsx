@@ -1,13 +1,18 @@
 import React from 'react'
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import readme from './README.md'
 
 import { Footer } from './Footer'
 
-storiesOf('Footer', module)
-  .addParameters({
+export default {
+  title: 'Footer',
+  component: Footer,
+  parameters: {
     readme: {
       sidebar: readme,
     },
-  })
-  .add('all', () => <Footer />)
+  },
+}
+
+export const All: Story = () => <Footer />
+All.storyName = 'all'

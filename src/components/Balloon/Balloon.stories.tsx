@@ -2,7 +2,7 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Balloon, DarkBalloon, LightBalloon } from './Balloon'
+import { Balloon } from './Balloon'
 
 import readme from './README.md'
 
@@ -17,42 +17,34 @@ export default {
 export const All: Story = () => (
   <List>
     <li>
-      <LightBalloon horizontal="center" vertical="bottom">
-        <Txt>LightBalloon</Txt>
-      </LightBalloon>
-      <DarkBalloon horizontal="center" vertical="bottom">
-        <Txt>DarkBalloon</Txt>
-      </DarkBalloon>
-    </li>
-    <li>
-      <DarkBalloon horizontal="left" vertical="top">
+      <Balloon horizontal="left" vertical="top">
         <Txt>top left</Txt>
-      </DarkBalloon>
-      <DarkBalloon horizontal="center" vertical="top">
+      </Balloon>
+      <Balloon horizontal="center" vertical="top">
         <Txt>top center</Txt>
-      </DarkBalloon>
-      <DarkBalloon horizontal="right" vertical="top">
+      </Balloon>
+      <Balloon horizontal="right" vertical="top">
         <Txt>top right</Txt>
-      </DarkBalloon>
+      </Balloon>
     </li>
     <li>
-      <LightBalloon horizontal="left" vertical="bottom">
+      <Balloon horizontal="left" vertical="bottom">
         <Txt>bottom left</Txt>
-      </LightBalloon>
-      <LightBalloon horizontal="center" vertical="bottom">
+      </Balloon>
+      <Balloon horizontal="center" vertical="bottom">
         <Txt>bottom center</Txt>
-      </LightBalloon>
-      <LightBalloon horizontal="right" vertical="bottom">
+      </Balloon>
+      <Balloon horizontal="right" vertical="bottom">
         <Txt>bottom right</Txt>
-      </LightBalloon>
+      </Balloon>
     </li>
     <li>
-      <DarkBalloon horizontal="left" vertical="middle">
+      <Balloon horizontal="left" vertical="middle">
         <Txt>middle left</Txt>
-      </DarkBalloon>
-      <DarkBalloon horizontal="right" vertical="middle">
+      </Balloon>
+      <Balloon horizontal="right" vertical="middle">
         <Txt>middle right</Txt>
-      </DarkBalloon>
+      </Balloon>
     </li>
   </List>
 )

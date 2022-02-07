@@ -125,10 +125,19 @@ storiesOf('Select', module)
         <Text>onChange</Text>
         <Select
           onChange={action('onChange!!')}
+          onChangeValue={action('onChangeValue')}
           options={[
             { label: 'apple', value: 'apple' },
             { label: 'orange', value: 'orange' },
             { label: 'banana', value: 'banana' },
+            {
+              label: 'Fruit vegetables',
+              options: [
+                { label: 'Strawberry', value: 'strawberry' },
+                { label: 'Melon', value: 'melon' },
+                { label: 'Water melon', value: 'water melon' },
+              ],
+            },
           ]}
         />
       </li>

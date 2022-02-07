@@ -10,25 +10,37 @@ import styled, { css } from 'styled-components'
 import { DialogBase as BaseComponent } from '../Base'
 import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
 import { Text } from '../Text'
-import { LineUp } from '../Layout'
+import { Cluster, LineUp } from '../Layout'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 type StyleProps = {
+  /** コンポーネントの上端から、包含ブロックの上端までの距離 */
   top?: number
+  /** コンポーネントの下端から、包含ブロックの下端までの距離 */
   bottom?: number
+  /** コンポーネントの `z-index` 値 */
   zIndex?: number
 }
 type ErrorIcons =
   | FunctionComponentElement<ComponentProps<typeof FaExclamationTriangleIcon>>
   | FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
 type Props = StyleProps & {
+  /** 表示する `PrimaryButton` または `PrimaryButtonAnchor` コンポーネント */
   primaryButton: ReactNode
+  /** 表示する `SecondaryButton` または `SecondaryButtonAnchor` コンポーネント */
   secondaryButton?: ReactNode
+  /** tertiary 領域に表示するボタン */
   tertiaryButton?: ReactNode
+  /** エラーメッセージ */
   errorText?: string
+  /**
+   * エラーメッセージのアイコン（`FaExclamationCircleIcon` または `FaExclamationTriangleIcon` を指定）
+   */
   errorIcon?: ErrorIcons
+  /** コンポーネントの幅 */
   width?: string
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
@@ -52,19 +64,23 @@ export const FloatArea: VFC<Props & ElementProps> = ({
 
   return (
     <Base themes={theme} className={`${className} ${classNames.wrapper}`} $width={width} {...props}>
-      <LineUp align="space-between" vAlign="center">
+      <Cluster gap={1}>
         {tertiaryButton && tertiaryButton}
-        <RightSide gap={1} vAlign="center">
-          {errorText && (
-            <ErrorMessage gap={0.25} vAlign="center" as="p" className={classNames.errorText}>
-              {errorIcon && <ErrorIcon themes={theme}>{errorIcon}</ErrorIcon>}
-              <Text size="S">{errorText}</Text>
-            </ErrorMessage>
-          )}
-          {secondaryButton && secondaryButton}
-          {primaryButton && primaryButton}
+        <RightSide>
+          <Cluster gap={1}>
+            {errorText && (
+              <ErrorMessage gap={0.25} vAlign="center" as="p" className={classNames.errorText}>
+                {errorIcon && <ErrorIcon themes={theme}>{errorIcon}</ErrorIcon>}
+                <Text size="S">{errorText}</Text>
+              </ErrorMessage>
+            )}
+            <Cluster gap={1}>
+              {secondaryButton && secondaryButton}
+              {primaryButton && primaryButton}
+            </Cluster>
+          </Cluster>
         </RightSide>
-      </LineUp>
+      </Cluster>
     </Base>
   )
 }
@@ -80,7 +96,7 @@ const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string 
       padding: ${spacingByChar(1)};
     `}
 `
-const RightSide = styled(LineUp)`
+const RightSide = styled.div`
   margin-left: auto;
 `
 const ErrorMessage = styled(LineUp)`

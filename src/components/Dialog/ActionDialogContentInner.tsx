@@ -1,4 +1,4 @@
-import React, { VFC, useCallback } from 'react'
+import React, { ReactNode, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -15,20 +15,21 @@ export type BaseProps = {
   /**
    * Body of the dialog.
    */
-  children: React.ReactNode
+  children: ReactNode
   /**
    * Title of the dialog.
    */
-  title: string
-  subtitle?: string
+  title: ReactNode
+  subtitle?: ReactNode
+  titleId: string
   /**
    * Label of close button.
    */
-  closeText: string
+  closeText: ReactNode
   /**
    * Label of action button.
    */
-  actionText: string
+  actionText: ReactNode
   /**
    * Action button style theme.
    */
@@ -68,6 +69,7 @@ export type ActionDialogContentInnerProps = BaseProps & {
 export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   children,
   title,
+  titleId,
   subtitle,
   closeText,
   actionText,
@@ -99,7 +101,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
             {subtitle}
           </Text>
         )}
-        <Text as="p" size="L" leading="TIGHT" className={classNames.title}>
+        <Text id={titleId} as="p" size="L" leading="TIGHT" className={classNames.title}>
           {title}
         </Text>
       </TitleArea>
@@ -187,8 +189,8 @@ const MessageWrapper = styled.div<{ themes: Theme }>`
 const Spinner = styled(Loader)<{ themes: Theme }>`
   &&& {
     > div {
-      width: 1rem;
-      height: 1rem;
+      width: 18px;
+      height: 18px;
     }
 
     > div > div {

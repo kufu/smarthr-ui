@@ -17,6 +17,7 @@ describe('currencyInputHelper', () => {
 
     it('removes the 0 at the front of integer part', () => {
       expect(formatCurrency('000001234')).toBe('1,234')
+      expect(formatCurrency('-000001234')).toBe('-1,234')
     })
 
     it('does not remove the 0 if integer part is 0', () => {

@@ -1,14 +1,13 @@
 import React, { ReactNode, VFC, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import { BalloonTheme, DarkBalloon, LightBalloon } from '../Balloon'
+import { Balloon } from '../Balloon'
 import { getTooltipRect } from './tooltipHelper'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 type Props = {
   message: ReactNode
-  balloonTheme: BalloonTheme
   id: string
   parentRect: DOMRect
   isIcon?: boolean
@@ -19,7 +18,6 @@ type Props = {
 
 export const TooltipPortal: VFC<Props> = ({
   message,
-  balloonTheme,
   id,
   parentRect,
   isIcon = false,
@@ -104,7 +102,6 @@ export const TooltipPortal: VFC<Props> = ({
     )
   }, [actualHorizontal, actualVertical, isIcon, isMultiLine, parentRect])
 
-  const StyledBalloon = balloonTheme === 'light' ? StyledLightBalloon : StyledDarkBalloon
   const classNames = useClassNames()
 
   return (
@@ -151,7 +148,7 @@ const Container = styled.div<{
     `
   }}
 `
-const StyledLightBalloon = styled(LightBalloon)<{ isMultiLine?: boolean }>(
+const StyledBalloon = styled(Balloon)<{ isMultiLine?: boolean }>(
   ({ isMultiLine }) =>
     isMultiLine &&
     css`
@@ -159,7 +156,6 @@ const StyledLightBalloon = styled(LightBalloon)<{ isMultiLine?: boolean }>(
       white-space: normal;
     `,
 )
-const StyledDarkBalloon = StyledLightBalloon.withComponent(DarkBalloon)
 
 const StyledBalloonText = styled.p<{ themes: Theme }>`
   margin: 0;

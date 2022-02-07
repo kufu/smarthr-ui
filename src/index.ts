@@ -1,5 +1,5 @@
 // components
-export { Balloon, LightBalloon, DarkBalloon } from './components/Balloon'
+export { Balloon } from './components/Balloon'
 export { CheckBox } from './components/CheckBox'
 export {
   Dropdown,
@@ -75,7 +75,7 @@ export {
 export { InformationPanel } from './components/InformationPanel'
 export { Footer } from './components/Footer'
 export { RightFixedNote } from './components/RightFixedNote'
-export { Tooltip, LightTooltip, DarkTooltip } from './components/Tooltip'
+export { Tooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
 export { MessageScreen } from './components/MessageScreen'
 export { Calendar } from './components/Calendar'
@@ -93,6 +93,7 @@ export { SideNav } from './components/SideNav'
 export { CompactInformationPanel } from './components/CompactInformationPanel'
 export { Text } from './components/Text'
 export { LineClamp } from './components/LineClamp'
+export { NotificationBar } from './components/NotificationBar'
 
 // layout components
 export { Cluster, LineUp, Stack, Sidebar } from './components/Layout'

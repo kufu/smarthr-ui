@@ -13,8 +13,11 @@ import { formatCurrency } from './currencyInputHelper'
 import { useClassNames } from './useClassNames'
 
 type Props = Omit<InputProps, 'type' | 'value' | 'defaultValue'> & {
+  /** 通貨の値 */
   value?: string
+  /** デフォルトで表示する通貨の値 */
   defaultValue?: string
+  /** 入力値がフォーマットされたときに発火するコールバック関数 */
   onFormatValue?: (value: string) => void
 }
 

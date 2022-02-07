@@ -1,4 +1,4 @@
-import React, { ChangeEvent, SelectHTMLAttributes, VFC, useCallback } from 'react'
+import React, { ChangeEvent, SelectHTMLAttributes, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { isMobileSafari } from '../../libs/ua'
@@ -7,16 +7,17 @@ import { useClassNames } from './useClassNames'
 
 import { FaSortIcon } from '../Icon'
 
-type Option = {
-  value: string
+type Option<T extends string> = {
+  value: T
 } & Omit<React.OptionHTMLAttributes<HTMLOptionElement>, 'value'>
-type Optgroup = {
+type Optgroup<T extends string> = {
   label: string
-  options: Option[]
+  options: Array<Option<T>>
 } & React.OptgroupHTMLAttributes<HTMLOptGroupElement>
 
-type Props = {
-  options: Array<Option | Optgroup>
+type Props<T extends string> = {
+  options: Array<Option<T> | Optgroup<T>>
+  onChangeValue?: (value: T) => void
   error?: boolean
   width?: number | string
   hasBlank?: boolean
@@ -25,9 +26,10 @@ type Props = {
 
 type ElementProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children'>
 
-export const Select: VFC<Props & ElementProps> = ({
+export function Select<T extends string>({
   options,
   onChange,
+  onChangeValue,
   error = false,
   width = '16.25em',
   hasBlank = false,
@@ -35,14 +37,24 @@ export const Select: VFC<Props & ElementProps> = ({
   className = '',
   disabled,
   ...props
-}) => {
+}: Props<T> & ElementProps) {
   const theme = useTheme()
   const widthStyle = typeof width === 'number' ? `${width}px` : width
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       if (onChange) onChange(e)
+      if (onChangeValue) {
+        const flattenOptions = options.reduce(
+          (pre, cur) => pre.concat('value' in cur ? cur : cur.options),
+          [] as Array<Option<T>>,
+        )
+        const selectedOption = flattenOptions.find((option) => option.value === e.target.value)
+        if (selectedOption) {
+          onChangeValue(selectedOption.value)
+        }
+      }
     },
-    [onChange],
+    [onChange, onChangeValue, options],
   )
   const classNames = useClassNames()
 
@@ -159,18 +171,6 @@ const SelectBox = styled.select<{ themes: Theme }>`
         cursor: not-allowed;
         opacity: 1;
         color: ${color.TEXT_DISABLED};
-      }
-
-      /* for IE11 */
-      &:disabled {
-        &,
-        &::-ms-value {
-          color: ${color.TEXT_DISABLED};
-        }
-      }
-
-      &::-ms-expand {
-        display: none;
       }
     `
   }}
