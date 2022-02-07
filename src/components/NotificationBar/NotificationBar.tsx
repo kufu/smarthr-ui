@@ -85,10 +85,8 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
       role={role}
       themes={theme}
       colorSet={colorSet}
-      align="center"
-      justify="space-between"
     >
-      <ContentsWrapper align="center">
+      <ContentsWrapper themes={theme}>
         <Icon color={iconColor} />
         <MessageWrapper align="center" gap={{ row: 0.75, column: 1 }} right>
           <Text leading="TIGHT">{message}</Text>
@@ -119,30 +117,36 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
   )
 }
 
-const Wrapper = styled(Cluster)<{
+const Wrapper = styled.div<{
   themes: Theme
   colorSet: { fgColor: string; bgColor: string }
 }>(
   ({ themes: { spacingByChar }, colorSet: { fgColor, bgColor } }) => css`
+    display: flex;
+    gap: ${spacingByChar(0.5)};
+    align-items: center;
+    justify-content: space-between;
     background-color: ${bgColor};
     padding: ${spacingByChar(0.75)};
     color: ${fgColor};
+  `,
+)
+const ContentsWrapper = styled.div<{ themes: Theme }>(
+  ({ themes: { spacingByChar } }) => css`
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    gap: ${spacingByChar(0.5)};
 
-    .smarthr-ui-Cluster {
-      flex-wrap: revert;
+    /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
+    min-width: 0;
+
+    .smarthr-ui-Icon {
+      flex-shrink: 0;
     }
   `,
 )
-const ContentsWrapper = styled(Cluster)`
-  flex-grow: 1;
 
-  /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
-  min-width: 0;
-
-  .smarthr-ui-Icon {
-    flex-shrink: 0;
-  }
-`
 const MessageWrapper = styled(Sidebar)`
   flex-grow: 1;
 
