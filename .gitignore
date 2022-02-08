@@ -66,6 +66,7 @@ typings/
 
 lib/
 esm/
+css/
 .cache
 .DS_Store
 
