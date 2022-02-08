@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [18.0.0](https://github.com/kufu/smarthr-ui/compare/v17.3.0...v18.0.0) (2022-02-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove gap fallback from `<Cluster>` (#2218)
+
+### Features
+
+* add `yarn build-stylesheet` command ([#2128](https://github.com/kufu/smarthr-ui/issues/2128)) ([5cae94b](https://github.com/kufu/smarthr-ui/commit/5cae94bec37115ec712082d38ee0dac098d3a382))
+* remove gap fallback from `<Cluster>` ([#2218](https://github.com/kufu/smarthr-ui/issues/2218)) ([fd5b680](https://github.com/kufu/smarthr-ui/commit/fd5b68083281cd7a8bb65072caa17ac878d1f448))
+
+
+### Bug Fixes
+
+* Input の useMemo 記述漏れ依存配列を追記 ([#2236](https://github.com/kufu/smarthr-ui/issues/2236)) ([d8efab5](https://github.com/kufu/smarthr-ui/commit/d8efab58b9f3f19eac861b00e8c2f5bd8235fdb4))
+* マイナス値でも先頭の0が除去されるようにしたい ([#2241](https://github.com/kufu/smarthr-ui/issues/2241)) ([2a0e205](https://github.com/kufu/smarthr-ui/commit/2a0e20528de0f62511045b6b292c99b0eaa847d3))
+
 ## [17.3.0](https://github.com/kufu/smarthr-ui/compare/v17.2.0...v17.3.0) (2022-02-01)
 
 
