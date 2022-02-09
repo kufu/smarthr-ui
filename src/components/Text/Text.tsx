@@ -5,7 +5,7 @@ import { FontSizes } from '../../themes/createFontSize'
 import { TextColors } from '../../themes/createColor'
 import { Leadings } from '../../themes/createLeading'
 
-export type TextProps = {
+type TextProps = {
   size?: FontSizes
   weight?: 'normal' | 'bold' | 'inherit'
   italic?: boolean
@@ -15,6 +15,12 @@ export type TextProps = {
   emphasis?: boolean
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof TextProps>
+
+export type Props = TextProps &
+  ElementProps & {
+    as?: string | React.ComponentType<any> | undefined
+    children: React.ReactNode
+  }
 
 /**
  * @param [size] フォントサイズの抽象値（font-size）
@@ -27,13 +33,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof TextProps>
  * @param [as] テキストコンポーネントの HTML タグ名。初期値は span
  * @param [children]
  */
-export const Text: React.VFC<
-  TextProps &
-    ElementProps & {
-      as?: 'address' | 'b' | 'em' | 'i' | 'mark' | 'p' | 'q' | 'small' | 'span' | 'strong' | 'time'
-      children: React.ReactNode
-    }
-> = ({ as = 'span', ...props }) => {
+export const Text: React.VFC<Props> = ({ as = 'span', ...props }) => {
   return <Wrapper as={props.emphasis ? 'em' : as} {...props} />
 }
 
