@@ -7,7 +7,7 @@ import { Leadings } from '../../themes/createLeading'
 
 type TextProps = {
   size?: FontSizes
-  weight?: 'normal' | 'bold' | 'inherit'
+  weight?: CSSProperties['fontWeight']
   italic?: boolean
   color?: TextColors | 'inherit'
   leading?: Leadings
