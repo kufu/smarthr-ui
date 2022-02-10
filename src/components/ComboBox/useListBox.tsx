@@ -10,6 +10,8 @@ import { Item } from './types'
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
+const ITEM_INCREMENT_AMOUNT = 100
+
 type Args<T> = {
   items: Array<Item<T> & { isSelected?: boolean }>
   inputValue?: string
@@ -104,13 +106,19 @@ export function useListBox<T>({
     })
   }, [])
 
+  const [optionLength, setOptionLength] = useState(ITEM_INCREMENT_AMOUNT)
+  useEffect(() => {
+    // 表示 option 数を初期化
+    setOptionLength(ITEM_INCREMENT_AMOUNT)
+  }, [items])
   const options: Array<Option<T>> = useMemo(() => {
+    const limitedItems = items.slice(0, optionLength + 1)
     if (isAddable) {
       const addingOption = { label: inputValue, value: inputValue, isAdding: true }
-      return [addingOption, ...items]
+      return [addingOption, ...limitedItems]
     }
-    return items
-  }, [inputValue, isAddable, items])
+    return limitedItems
+  }, [inputValue, isAddable, items, optionLength])
 
   const moveActiveOptionIndex = useCallback(
     (currentIndex: number | null, delta: -1 | 1) => {
@@ -215,6 +223,26 @@ export function useListBox<T>({
   const { portalRoot } = usePortal()
   const listBoxRef = useRef<HTMLDivElement>(null)
 
+  const intersectionRef = useRef<HTMLDivElement>(null)
+  const scrollObserver = useMemo(
+    // スクロール最下部に到達する度に表示する option 数を増加させるための IntersectionObserver
+    () =>
+      new IntersectionObserver((entries) => {
+        const entry = entries[0]
+        if (entry && entry.isIntersecting && optionLength < items.length) {
+          setOptionLength(optionLength + ITEM_INCREMENT_AMOUNT)
+        }
+      }),
+    [items.length, optionLength],
+  )
+  useEffect(() => {
+    // IntersectionObserver を設定
+    if (intersectionRef.current) {
+      scrollObserver.observe(intersectionRef.current)
+    }
+    return () => scrollObserver.disconnect()
+  }, [scrollObserver])
+
   const renderListBox = () => {
     return createPortal(
       <Container
@@ -297,6 +325,7 @@ export function useListBox<T>({
             )}
           </>
         )}
+        <Intersection ref={intersectionRef} isHidden={optionLength >= items.length} />
       </Container>,
       portalRoot,
     )
@@ -426,4 +455,11 @@ const LoaderWrapper = styled.div<{ themes: Theme }>`
       padding: ${spacingByChar(1)};
     `
   }}
+`
+const Intersection = styled.div<{ isHidden: boolean }>`
+  ${({ isHidden }) =>
+    isHidden &&
+    css`
+      display: none;
+    `}
 `
