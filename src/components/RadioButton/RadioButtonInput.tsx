@@ -77,7 +77,7 @@ const Box = styled.span<{ themes: Theme }>`
         }
       }
 
-      input[disabled] + & {
+      input:disabled + & {
         background-color: ${color.BORDER};
         border-color: ${color.BORDER};
         cursor: not-allowed;
@@ -107,7 +107,7 @@ const Input = styled.input<{ themes: Theme }>`
       margin: 0;
       cursor: pointer;
 
-      &[disabled] {
+      &:disabled {
         pointer-events: none;
       }
 

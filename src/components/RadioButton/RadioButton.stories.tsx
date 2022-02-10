@@ -5,6 +5,7 @@ import { Story } from '@storybook/react'
 import readme from './README.md'
 
 import { RadioButton } from './RadioButton'
+import { Cluster } from '../Layout'
 
 export default {
   title: 'RadioButton',
@@ -38,6 +39,16 @@ export const All: Story = () => {
             </RadioButton>
           </li>
         </InnerList>
+      </li>
+
+      <li>
+        <fieldset disabled>
+          <legend>disabled by fieldset</legend>
+          <Cluster>
+            <RadioButton name="disabled_by_fieldset">RadioButton1</RadioButton>
+            <RadioButton name="disabled_by_fieldset">RadioButton2</RadioButton>
+          </Cluster>
+        </fieldset>
       </li>
 
       <li>
