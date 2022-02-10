@@ -23,7 +23,7 @@ import { FloatArea, PrimaryButton, SecondaryButton, FaExclamationCircleIcon } fr
 | primaryButton   | ✓        | **ReactNode**                                           | -            | This is for PrimaryButton or PrimaryButtonAnchor component.                         |
 | secondaryButton      |          | **ReactNode** | -            | This is for SecondaryButton or SecondaryButtonAnchor component.                               |
 | tertiaryButton      |          | **ReactNode**                                            | -            | Use a button that will be placed in the tertiaryArea.                                                         |
-| errorIcon |          | **FaExclamationCircleIcon \| FaExclamationTriangleIcon**                                            | -            | This is for FaExclamationCircleIcon or FaExclamationTriangleIcon component.                                |
+| errorIcon |          | **FaExclamationCircleIcon**                                            | -            | This is for FaExclamationCircleIcon component.                                |
 | errorText   |          | **string**                                        | -            | The error text. 
 | width   |          | **string**                                         | 80%            | FloatArea width.
 | top   |          | **number**                                         | -            | value of position.
