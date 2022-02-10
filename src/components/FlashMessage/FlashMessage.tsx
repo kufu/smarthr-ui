@@ -41,7 +41,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 const REMOVE_DELAY = 8000
 
 /**
- * @deprecated `FlashMessage` はアテンションとして強くないため、安易な使用はお勧めしません。`NotificationBar` や `Dialog` を使用することを検討してください。
+ * @deprecated `FlashMessage` は気づきにくいため、安易な使用はお勧めしません。`NotificationBar` や `Dialog` を使用することを検討してください。
  */
 export const FlashMessage: VFC<Props & ElementProps> = ({
   visible,
