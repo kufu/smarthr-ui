@@ -22,9 +22,6 @@ type StyleProps = {
   /** コンポーネントの `z-index` 値 */
   zIndex?: number
 }
-type ErrorIcons =
-  | FunctionComponentElement<ComponentProps<typeof FaExclamationTriangleIcon>>
-  | FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
 type Props = StyleProps & {
   /** 表示する `PrimaryButton` または `PrimaryButtonAnchor` コンポーネント */
   primaryButton: ReactNode
@@ -35,9 +32,9 @@ type Props = StyleProps & {
   /** エラーメッセージ */
   errorText?: string
   /**
-   * エラーメッセージのアイコン（`FaExclamationCircleIcon` または `FaExclamationTriangleIcon` を指定）
+   * エラーメッセージのアイコン（`FaExclamationCircleIcon` を指定）
    */
-  errorIcon?: ErrorIcons
+  errorIcon?: FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
   /** コンポーネントの幅 */
   width?: string
   /** コンポーネントに適用するクラス名 */
