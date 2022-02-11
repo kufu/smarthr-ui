@@ -223,7 +223,7 @@ export function useListBox<T>({
   const { portalRoot } = usePortal()
   const listBoxRef = useRef<HTMLDivElement>(null)
 
-  const intersectionRef = useRef<HTMLDivElement>(null)
+  const bottomIntersectionRef = useRef<HTMLDivElement>(null)
   const isDisplayingPartial = optionLength < items.length
   const scrollObserver = useMemo(
     // スクロール最下部に到達する度に表示する option 数を増加させるための IntersectionObserver
@@ -238,10 +238,10 @@ export function useListBox<T>({
   )
   useEffect(() => {
     // IntersectionObserver を設定
-    if (!intersectionRef.current) {
+    if (!bottomIntersectionRef.current) {
       return
     }
-    scrollObserver.observe(intersectionRef.current)
+    scrollObserver.observe(bottomIntersectionRef.current)
     return () => scrollObserver.disconnect()
   }, [scrollObserver])
 
@@ -327,7 +327,7 @@ export function useListBox<T>({
             )}
           </>
         )}
-        <div ref={intersectionRef} />
+        <div ref={bottomIntersectionRef} />
       </Container>,
       portalRoot,
     )
