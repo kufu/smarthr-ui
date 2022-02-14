@@ -6,7 +6,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOffsetHeight } from './dialogHelper'
 import { Stack } from '../Layout'
 import { DangerButton, PrimaryButton, SecondaryButton } from '../Button'
-import { FaCheckCircleIcon, FaExclamationTriangleIcon } from '../Icon'
+import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../Icon'
 import { Text } from '../Text'
 import { Loader } from '../Loader'
 import { useClassNames } from './useClassNames'
@@ -130,7 +130,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
             {responseMessage.status === 'success' ? (
               <FaCheckCircleIcon color={theme.color.MAIN} />
             ) : responseMessage.status === 'error' ? (
-              <FaExclamationTriangleIcon color={theme.color.DANGER} />
+              <FaExclamationCircleIcon color={theme.color.DANGER} />
             ) : (
               <Spinner size="s" themes={theme} />
             )}
