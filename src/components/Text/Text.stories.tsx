@@ -16,8 +16,11 @@ export default {
 
 export const Default: Story = () => (
   <>
-    <Text>
-      デフォルトの出力要素は <code>span</code> で、文字サイズは <code>M</code>、行間は{' '}
+    <Text as="h1" size="XXL" leading="TIGHT">
+      &lt;Text&gt;
+    </Text>
+    <Text as="p">
+      デフォルトの出力要素は <code>span</code> で、文字サイズは <code>M</code>、行間は
       <code>NORMAL</code>、色は <code>inherit</code> です。
     </Text>
     <Text as="p">
@@ -28,14 +31,14 @@ export const Default: Story = () => (
       <Text whiteSpace="nowrap">ホワイトスペース</Text>を変えられます。
     </Text>
     <Text as="p">
-      <code>emphasis</code> を渡すとそのテキストは<Text emphasis>強調</Text>を示し、<code>em</code>{' '}
+      <code>emphasis</code> を渡すとそのテキストは<Text emphasis>強調</Text>を示し、<code>em</code>
       要素の太字装飾で出力します。
     </Text>
     <Text as="p">
       <Text emphasis>入れ子</Text>もできますが、
       <Text color="TEXT_LINK" weight="bold">
         Valid
-      </Text>{' '}
+      </Text>
       な HTML になるよう注意してください。
     </Text>
   </>

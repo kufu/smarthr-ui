@@ -42,7 +42,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   const ref = React.createRef<HTMLDivElement>()
   const tooltipId = useId()
 
-  const getHandlerToShow = <T extends unknown>(handler?: (e: T) => void) => {
+  const getHandlerToShow = <T,>(handler?: (e: T) => void) => {
     return (e: T) => {
       handler && handler(e)
       if (!ref.current) {
@@ -68,7 +68,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
     }
   }
 
-  const getHandlerToHide = <T extends unknown>(handler?: (e: T) => void) => {
+  const getHandlerToHide = <T,>(handler?: (e: T) => void) => {
     return (e: T) => {
       handler && handler(e)
       setIsVisible(false)

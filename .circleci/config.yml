@@ -60,7 +60,7 @@ commands:
 jobs:
   node-v14:
     docker:
-      - image: cimg/node:14.18
+      - image: cimg/node:14.19
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
