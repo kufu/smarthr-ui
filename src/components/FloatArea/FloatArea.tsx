@@ -8,7 +8,7 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { DialogBase as BaseComponent } from '../Base'
-import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
+import { FaExclamationCircleIcon } from '../Icon'
 import { Text } from '../Text'
 import { Cluster, LineUp } from '../Layout'
 import { Theme, useTheme } from '../../hooks/useTheme'
