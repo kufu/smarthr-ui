@@ -8,6 +8,8 @@ import {
   FaArrowAltCircleRightIcon,
   FaArrowAltCircleUpIcon,
 } from '../Icon'
+import { SecondaryButton } from '../Button'
+import { Cluster } from '../Layout'
 import { Tooltip } from './Tooltip'
 
 import readme from './README.md'
@@ -183,6 +185,17 @@ storiesOf('Tooltip', module)
         >
           <FaArrowAltCircleDownIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
         </Tooltip>
+      </dd>
+      <dt>ボタン</dt>
+      <dd>
+        <Cluster>
+          <Tooltip message="ボタンに表示するツールチップです">
+            <SecondaryButton>ボタン</SecondaryButton>
+          </Tooltip>
+          <Tooltip message="disabled なボタンに表示するツールチップです">
+            <SecondaryButton disabled>ボタン</SecondaryButton>
+          </Tooltip>
+        </Cluster>
       </dd>
       <dt>自動位置決め</dt>
       {[undefined, 'center', 'right'].map((className) => (
