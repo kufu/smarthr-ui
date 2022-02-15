@@ -199,7 +199,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   return createPortal(
     <DialogOverlap isOpen={isOpen}>
       <Draggable
-        handle={`.${classNames.header}`}
+        handle={`.${classNames.handle}`}
         onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
         onDrag={(_, data) => {
           setPosition((prev) => {
@@ -233,6 +233,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                 {header}
               </Title>
               <DialogHandler
+                className={classNames.handle}
                 themes={theme}
                 tabIndex={0}
                 role="slider"
@@ -314,7 +315,7 @@ const DialogHandler = styled.div<{ themes: Theme }>`
     justify-content: center;
     transition: color 0.1s ease;
 
-    .smarthr-ui-ModelessDialog-header:hover > & {
+    &:hover {
       color: ${color.TEXT_GREY};
     }
 
