@@ -4,6 +4,7 @@ import { action } from '@storybook/addon-actions'
 import styled from 'styled-components'
 
 import { MultiComboBox, SingleComboBox } from '.'
+import { FaSearchIcon } from '../..'
 
 import readme from './README.md'
 
@@ -160,6 +161,19 @@ export const Single: Story = () => {
           selectedItem={selectedItem}
           width="100%"
           placeholder="入力でフィルタリングできます"
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+        />
+      </dd>
+      <dt>アイコン設定、クリアボタンの非表示</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          placeholder="入力でフィルタリングできます"
+          prefix={<FaSearchIcon />}
+          showClear={false}
           onSelect={handleSelectItem}
           onClear={handleClear}
         />

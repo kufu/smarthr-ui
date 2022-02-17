@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   HTMLAttributes,
+  ReactNode,
   useCallback,
   useLayoutEffect,
   useMemo,
@@ -62,6 +63,14 @@ type Props<T> = {
    */
   className?: string
   /**
+   * インプット内の接頭辞に入る要素。通常はアイコン挿入用として使う
+   */
+  prefix?: ReactNode
+  /**
+   * `true` のとき、クリアボタンを表示する
+   */
+  showClear?: boolean
+  /**
    * input 要素の `value` が変わった時に発火するコールバック関数
    * @deprecated `onChange` は非推奨なため、 代わりに `onChangeInput` を使用してください。
    */
@@ -101,6 +110,8 @@ export function SingleComboBox<T>({
   isLoading,
   width = 'auto',
   className = '',
+  prefix,
+  showClear = true,
   onChange,
   onChangeInput,
   onAdd,
@@ -226,24 +237,27 @@ export function SingleComboBox<T>({
         disabled={disabled}
         error={error}
         placeholder={placeholder}
+        prefix={prefix}
         suffix={
           <>
-            <ClearButton
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation()
-                onClear && onClear()
-                onChangeSelected && onChangeSelected(null)
-                if (isFocused) {
-                  setIsExpanded(true)
-                }
-              }}
-              ref={clearButtonRef}
-              themes={theme}
-              className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
-            >
-              <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
-            </ClearButton>
+            {showClear && (
+              <ClearButton
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onClear && onClear()
+                  onChangeSelected && onChangeSelected(null)
+                  if (isFocused) {
+                    setIsExpanded(true)
+                  }
+                }}
+                ref={clearButtonRef}
+                themes={theme}
+                className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
+              >
+                <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
+              </ClearButton>
+            )}
             <CaretDownLayout themes={theme}>
               <CaretDownWrapper themes={theme}>
                 <FaCaretDownIcon color={caretIconColor} />
