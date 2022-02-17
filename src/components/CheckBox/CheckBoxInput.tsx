@@ -35,11 +35,9 @@ export const CheckBoxInput: VFC<Props> = ({ mixed = false, onChange, ...props })
         {...(mixed && { 'aria-checked': 'mixed' })}
       />
       <Box className={boxClassName} themes={theme} />
-      {checked && (
-        <IconWrap themes={theme}>
-          {mixed ? <FaMinusIcon color="TEXT_WHITE" /> : <FaCheckIcon color="TEXT_WHITE" />}
-        </IconWrap>
-      )}
+      <IconWrap themes={theme}>
+        {mixed ? <FaMinusIcon color="TEXT_WHITE" /> : <FaCheckIcon color="TEXT_WHITE" />}
+      </IconWrap>
     </Wrapper>
   )
 }
@@ -47,6 +45,7 @@ export const CheckBoxInput: VFC<Props> = ({ mixed = false, onChange, ...props })
 const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { fontSize } = themes
+
     return css`
       position: relative;
       display: inline-block;
@@ -70,16 +69,15 @@ const Box = styled.span<{ themes: Theme }>`
       background-color: ${color.WHITE};
       box-sizing: border-box;
       pointer-events: none;
-      &.active {
+
+      input:checked + & {
         border-color: ${color.MAIN};
         background-color: ${color.MAIN};
       }
-      &.disabled {
+
+      input[disabled] + & {
         background-color: ${color.BORDER};
         border-color: ${color.BORDER};
-        &.active {
-          border-color: ${color.BORDER};
-        }
       }
     `
   }}
@@ -122,6 +120,11 @@ const IconWrap = styled.span<{ themes: Theme }>`
       font-size: ${fontSize.XXS};
       transform: translate(-50%, -50%);
       pointer-events: none;
+
+      input:not(:checked) ~ & > svg {
+        fill: transparent;
+      }
+
       & > svg {
         vertical-align: top;
       }

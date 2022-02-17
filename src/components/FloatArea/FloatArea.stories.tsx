@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { FloatArea } from './FloatArea'
 import { PrimaryButton, SecondaryButton } from '../Button'
-import { FaExclamationTriangleIcon } from '../Icon'
+import { FaExclamationCircleIcon } from '../Icon'
 
 import readme from './README.md'
 
@@ -22,7 +22,7 @@ export const All: Story = () => (
     primaryButton={<PrimaryButton>Submit</PrimaryButton>}
     secondaryButton={<SecondaryButton>Cancel</SecondaryButton>}
     tertiaryButton={<SecondaryButton>preview</SecondaryButton>}
-    errorIcon={<FaExclamationTriangleIcon color="#e01e5a" />}
+    errorIcon={<FaExclamationCircleIcon color="#e01e5a" />}
     errorText="This is the error text."
     width="80%"
     top={40}
@@ -34,7 +34,7 @@ export const WithoutTertiary: Story = () => (
   <FloatArea
     primaryButton={<PrimaryButton>Submit</PrimaryButton>}
     secondaryButton={<SecondaryButton>Cancel</SecondaryButton>}
-    errorIcon={<FaExclamationTriangleIcon color="#e01e5a" />}
+    errorIcon={<FaExclamationCircleIcon color="#e01e5a" />}
     errorText="This is the error text."
     width="80%"
     top={40}

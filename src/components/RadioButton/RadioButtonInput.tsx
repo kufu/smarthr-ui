@@ -59,7 +59,7 @@ const Box = styled.span<{ themes: Theme }>`
       background-color: ${color.WHITE};
       box-sizing: border-box;
 
-      &.active {
+      input:checked + & {
         border-color: ${color.MAIN};
         background-color: ${color.MAIN};
 
@@ -77,7 +77,7 @@ const Box = styled.span<{ themes: Theme }>`
         }
       }
 
-      &.disabled {
+      input[disabled] + & {
         background-color: ${color.BORDER};
         border-color: ${color.BORDER};
         cursor: not-allowed;
