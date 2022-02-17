@@ -34,7 +34,7 @@ export const AppNaviDropdown: VFC<InnerProps> = ({
 
   return (
     <Dropdown>
-      <DropdownTrigger>
+      <StyledDropdownTrigger>
         <TriggerButton
           themes={theme}
           aria-current={current ? 'page' : undefined}
@@ -48,13 +48,16 @@ export const AppNaviDropdown: VFC<InnerProps> = ({
           {children}
           {displayCaret && <FaCaretDownIcon />}
         </TriggerButton>
-      </DropdownTrigger>
+      </StyledDropdownTrigger>
 
       <DropdownContent>{dropdownContent}</DropdownContent>
     </Dropdown>
   )
 }
 
+const StyledDropdownTrigger = styled(DropdownTrigger)`
+  height: 100%;
+`
 const TriggerButton = styled.button<ItemStyleProps & { displayCaret?: boolean }>(
   ({ displayCaret, ...props }) => css`
     ${getItemStyle(props)}

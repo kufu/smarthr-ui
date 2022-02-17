@@ -142,8 +142,9 @@ const StatusLabel = styled(StatusLabelComponent)<{ themes: Theme }>`
 const Buttons = styled.ul<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => {
     return css`
+      align-self: stretch;
       display: flex;
-      align-items: center;
+      align-items: stretch;
       gap: ${spacingByChar(1)};
       margin: 0;
       padding: 0;
