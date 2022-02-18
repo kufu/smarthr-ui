@@ -23,18 +23,6 @@ export const _BottomFixedArea: Story = () => {
       description="This is description."
       primaryButton={<PrimaryButton>Primary Button</PrimaryButton>}
       secondaryButton={<SecondaryButton>Secondary Button</SecondaryButton>}
-      tertiaryLinks={[{ text: 'Tertiary_1', icon: FaTrashIcon, onClick: action('click_1') }]}
-    />
-  )
-}
-_BottomFixedArea.storyName = 'BottomFixedArea'
-
-export const MobileViewport: Story = () => {
-  return (
-    <BottomFixedArea
-      description="This is description."
-      primaryButton={<PrimaryButton>Primary Button</PrimaryButton>}
-      secondaryButton={<SecondaryButton>Secondary Button</SecondaryButton>}
       tertiaryLinks={[
         { text: 'Tertiary_1', icon: FaTrashIcon, onClick: action('click_1') },
         { text: 'Tertiary_2', icon: FaTrashIcon, onClick: action('click_2') },
@@ -44,8 +32,4 @@ export const MobileViewport: Story = () => {
     />
   )
 }
-MobileViewport.parameters = {
-  viewport: {
-    defaultViewport: 'iphone5',
-  },
-}
+_BottomFixedArea.storyName = 'BottomFixedArea'
