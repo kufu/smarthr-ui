@@ -171,7 +171,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          placeholder="入力でフィルタリングできます"
+          placeholder="入力で検索できます"
           prefix={<FaSearchIcon />}
           showClear={false}
           onSelect={handleSelectItem}
