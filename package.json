@@ -13,7 +13,7 @@
     "react-transition-group": "^4.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.2",
+    "@babel/core": "^7.17.5",
     "@commitlint/cli": "^16.2.1",
     "@commitlint/config-conventional": "^16.2.1",
     "@storybook/addon-a11y": "^6.4.19",
