@@ -125,6 +125,7 @@ const Wrapper = styled.nav<{ themes: Theme }>`
     return css`
       display: flex;
       align-items: center;
+      min-width: max-content;
       box-shadow: ${shadow.LAYER1};
       background-color: ${color.WHITE};
       padding-right: ${spacingByChar(1.5)};

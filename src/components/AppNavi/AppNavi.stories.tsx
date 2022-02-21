@@ -150,6 +150,7 @@ const Wrapper = styled.div<{ themes: Theme }>`
 
     return css`
       padding: 32px 0;
+      overflow-x: auto;
       background-color: ${color.BACKGROUND};
     `
   }}
