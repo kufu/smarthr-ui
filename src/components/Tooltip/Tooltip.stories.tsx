@@ -8,6 +8,7 @@ import {
   FaArrowAltCircleRightIcon,
   FaArrowAltCircleUpIcon,
 } from '../Icon'
+import { SecondaryButton } from '../Button'
 import { Tooltip } from './Tooltip'
 
 import readme from './README.md'
@@ -182,6 +183,12 @@ storiesOf('Tooltip', module)
           triggerType="icon"
         >
           <FaArrowAltCircleDownIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
+        </Tooltip>
+      </dd>
+      <dt>disabled ボタン</dt>
+      <dd>
+        <Tooltip message="disabled なボタンに表示するツールチップです">
+          <SecondaryButton disabled>ボタン</SecondaryButton>
         </Tooltip>
       </dd>
       <dt>自動位置決め</dt>
