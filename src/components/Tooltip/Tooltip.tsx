@@ -29,8 +29,8 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   vertical = 'bottom',
   tabIndex = 0,
   className = '',
-  onMouseEnter,
-  onMouseLeave,
+  onPointerEnter,
+  onPointerLeave,
   onTouchStart,
   onTouchEnd,
   onFocus,
@@ -93,10 +93,10 @@ export const Tooltip: VFC<Props & ElementProps> = ({
       {...props}
       aria-describedby={isVisible ? tooltipId : undefined}
       ref={ref}
-      onMouseEnter={getHandlerToShow(onMouseEnter)}
+      onPointerEnter={getHandlerToShow(onPointerEnter)}
       onTouchStart={getHandlerToShow(onTouchStart)}
       onFocus={getHandlerToShow(onFocus)}
-      onMouseLeave={getHandlerToHide(onMouseLeave)}
+      onPointerLeave={getHandlerToHide(onPointerLeave)}
       onTouchEnd={getHandlerToHide(onTouchEnd)}
       onBlur={getHandlerToHide(onBlur)}
       isIcon={isIcon}
