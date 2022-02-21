@@ -144,16 +144,31 @@ export const NoIconAndCaret: Story = () => {
 }
 NoIconAndCaret.storyName = 'アイコンありドロップダウン示唆なし'
 
+export const ContainerScrollX: Story = () => {
+  const theme = useTheme()
+
+  return (
+    <OverflowWrapper themes={theme}>
+      <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret>
+        <Child>Some child components</Child>
+      </AppNavi>
+    </OverflowWrapper>
+  )
+}
+ContainerScrollX.storyName = '横スクロールさせる場合'
+
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { color } = themes
 
     return css`
       padding: 32px 0;
-      overflow-x: auto;
       background-color: ${color.BACKGROUND};
     `
   }}
+`
+const OverflowWrapper = styled(Wrapper)`
+  overflow-x: auto;
 `
 const Child = styled.p`
   margin: 0 0 0 auto;
