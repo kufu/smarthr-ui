@@ -36,7 +36,7 @@
     "babel-loader": "^8.2.3",
     "ecma-version-validator-webpack-plugin": "^1.1.0",
     "eslint": "^8.9.0",
-    "eslint-config-smarthr": "^6.0.4",
+    "eslint-config-smarthr": "^6.0.5",
     "fs-extra": "^10.0.0",
     "http-server": "^14.1.0",
     "husky": "^7.0.4",
