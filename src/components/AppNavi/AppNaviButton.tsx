@@ -4,6 +4,7 @@ import { useTheme } from '../../hooks/useTheme'
 import { ComponentProps as IconProps } from '../Icon'
 import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
 import { useClassNames } from './useClassNames'
+import { UnstyledButton } from '../Button'
 
 export type AppNaviButtonProps = {
   /** ボタンのテキスト */
@@ -48,4 +49,4 @@ export const AppNaviButton: VFC<InnerProps> = ({
   )
 }
 
-const Button = styled.button<ItemStyleProps>((props) => getItemStyle(props))
+const Button = styled(UnstyledButton)<ItemStyleProps>((props) => getItemStyle(props))
