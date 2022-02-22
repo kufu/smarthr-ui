@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [19.0.0](https://github.com/kufu/smarthr-ui/compare/v18.0.0...v19.0.0) (2022-02-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* smarthr-uiにおけるエラーアイコンを `FaExclamationCircleIcon` に統一する (#2240)
+
+### Features
+
+* smarthr-uiにおけるエラーアイコンを `FaExclamationCircleIcon` に統一する ([#2240](https://github.com/kufu/smarthr-ui/issues/2240)) ([8e3da84](https://github.com/kufu/smarthr-ui/commit/8e3da8465424e3bf296f1dbccce280e70a7970fd))
+
+
+### Bug Fixes
+
+* change not to use lookbehind regular expression ([#2264](https://github.com/kufu/smarthr-ui/issues/2264)) ([5c6918c](https://github.com/kufu/smarthr-ui/commit/5c6918ce8cffc4606b1df5c101b7f51f1ebedbce))
+* make `<Text>` as props like a styled-components ([#2261](https://github.com/kufu/smarthr-ui/issues/2261)) ([9105024](https://github.com/kufu/smarthr-ui/commit/91050248bc9e2b5e28cf7724b28a7e6cb9fa53f0))
+* NotificationBar の useMemo dependency 漏れを追記 ([#2239](https://github.com/kufu/smarthr-ui/issues/2239)) ([fb0c56f](https://github.com/kufu/smarthr-ui/commit/fb0c56f7238e94a0d86a3644dcc7118bf4528270))
+* style of `defaultChecked` ([#2259](https://github.com/kufu/smarthr-ui/issues/2259)) ([dd6486b](https://github.com/kufu/smarthr-ui/commit/dd6486bb7b5b2dadd4a185609c02a6f357e0d3b9))
+
 ## [18.0.0](https://github.com/kufu/smarthr-ui/compare/v17.3.0...v18.0.0) (2022-02-08)
 
 
