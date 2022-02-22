@@ -30,5 +30,13 @@ export const LineUp = styled.div<{
     ${align && `justify-content: ${align};`}
     ${vAlign && `align-items: ${vAlign};`}
     gap: ${useSpacing(gap)};
+
+    /* 
+      Chromeで空の要素にflex-gapがあると印刷時にレイアウトが崩れるので gap の値を0にする
+      See https://bugs.chromium.org/p/chromium/issues/detail?id=1161709
+    */
+    &:empty {
+      gap: 0;
+    }
   `
 })
