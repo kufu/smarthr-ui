@@ -142,12 +142,16 @@ export function MultiComboBox<T>({
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
-  const selectedLabels = selectedItems.map(({ label }) => label)
-  const filteredItems = items.filter(({ label }) => {
-    if (selectedLabels.includes(label)) return false
-    if (!inputValue) return true
-    return convertMatchableString(label).includes(convertMatchableString(inputValue))
-  })
+  const selectedLabels = useMemo(() => selectedItems.map(({ label }) => label), [selectedItems])
+  const filteredItems = useMemo(
+    () =>
+      items.filter(({ label }) => {
+        if (selectedLabels.includes(label)) return false
+        if (!inputValue) return true
+        return convertMatchableString(label).includes(convertMatchableString(inputValue))
+      }),
+    [inputValue, items, selectedLabels],
+  )
   const isDuplicate = items.some((item) => item.label === inputValue)
   const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
   const {
