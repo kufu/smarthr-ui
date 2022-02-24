@@ -6,12 +6,12 @@ import { useClassNames } from './useClassNames'
 
 import { FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
-import { Item } from './types'
+import { ComboBoxItem } from './types'
 
 export type Props<T> = {
-  item: Item<T> & { deletable?: boolean }
+  item: ComboBoxItem<T> & { deletable?: boolean }
   disabled: boolean
-  onDelete: (item: Item<T>) => void
+  onDelete: (item: ComboBoxItem<T>) => void
   enableEllipsis?: boolean
   onEllipsis?: () => void
 }

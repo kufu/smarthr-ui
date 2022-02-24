@@ -18,17 +18,17 @@ import { FaCaretDownIcon } from '../Icon'
 import { useListBox } from './useListBox'
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { convertMatchableString } from './comboBoxHelper'
-import { Item } from './types'
+import { ComboBoxItem } from './types'
 
 type Props<T> = {
   /**
    * 選択可能なアイテムのリスト
    */
-  items: Array<Item<T>>
+  items: Array<ComboBoxItem<T>>
   /**
    * 選択されているアイテムのリスト
    */
-  selectedItems: Array<Item<T> & { deletable?: boolean }>
+  selectedItems: Array<ComboBoxItem<T> & { deletable?: boolean }>
   /**
    * input 要素の `name` 属性の値
    */
@@ -86,15 +86,15 @@ type Props<T> = {
   /**
    * 選択されているアイテムの削除ボタンがクリックされた時に発火するコールバック関数
    */
-  onDelete?: (item: Item<T>) => void
+  onDelete?: (item: ComboBoxItem<T>) => void
   /**
    * アイテムが選択された時に発火するコールバック関数
    */
-  onSelect?: (item: Item<T>) => void
+  onSelect?: (item: ComboBoxItem<T>) => void
   /**
    * 選択されているアイテムのリストが変わった時に発火するコールバック関数
    */
-  onChangeSelected?: (selectedItems: Array<Item<T>>) => void
+  onChangeSelected?: (selectedItems: Array<ComboBoxItem<T>>) => void
   /**
    * コンポーネントがフォーカスされたときに発火するコールバック関数
    */
