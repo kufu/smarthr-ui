@@ -226,7 +226,13 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
           aria-labelledby={labelId}
           {...props}
         >
-          <Box className={classNames.box}>
+          <Box
+            isWidthAuto={width === undefined}
+            left={left}
+            right={right}
+            themes={theme}
+            className={classNames.box}
+          >
             <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
             <Header className={classNames.header} themes={theme}>
               <Title id={labelId} themes={theme}>
@@ -276,12 +282,33 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
 const Layout = styled.div`
   position: fixed;
 `
-const Box = styled(Base).attrs({ radius: 'm', layer: 3 })`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  max-height: 100vh;
+const Box = styled(Base).attrs({ radius: 'm', layer: 3 })<{
+  isWidthAuto: boolean
+  left?: string | number
+  right?: string | number
+  themes: Theme
+}>`
+  ${({ isWidthAuto, left = 0, right = 0, themes: { spacingByChar } }) => {
+    const leftMargin = typeof left === 'number' ? `${left}px` : left
+    const rightMargin = typeof right === 'number' ? `${right}px` : right
+
+    return css`
+      display: flex;
+      flex-direction: column;
+      ${isWidthAuto &&
+      css`
+        max-width: min(
+          calc(
+            100vw - max(${leftMargin}, ${spacingByChar(0.5)}) -
+              max(${rightMargin}, ${spacingByChar(0.5)})
+          ),
+          800px
+        );
+      `}
+      height: 100%;
+      max-height: 100vh;
+    `
+  }}
 `
 const Header = styled.div<{ themes: Theme }>`
   ${({ themes: { border, spacingByChar } }) => css`
@@ -334,6 +361,7 @@ const CloseButtonLayout = styled.div`
   margin-left: auto;
 `
 const Content = styled.div`
+  flex: 1;
   overflow: auto;
 `
 const Footer = styled.div<{ themes: Theme }>`
