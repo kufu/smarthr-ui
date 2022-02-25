@@ -366,20 +366,12 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
 const InputArea = styled.div<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
     flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
     overflow-y: auto;
     max-height: 300px;
     padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
-
-    /**
-     * for IE
-     * display: contents がサポートされていれば（IE以外）、 input要素は flex によって選択済み項目リストの横に並べて配置するが、
-     * IE では flex レイアウトを使わずに、input要素は選択済み項目リストの下に配置する。
-     */
-    @supports (display: contents) and (gap: 1px) {
-      display: flex;
-      flex-wrap: wrap;
-      gap: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
-    }
   `}
 `
 const SelectedList = styled.ul<{ themes: Theme }>`
@@ -387,28 +379,12 @@ const SelectedList = styled.ul<{ themes: Theme }>`
     const { spacingByChar } = themes
 
     return css`
+      display: contents;
       padding: 0;
       list-style: none;
 
-      /* for IE: gap フォールバック用の margin の外側の打ち消し */
-      margin: calc(-${spacingByChar(0.25)} / 2) calc(-${spacingByChar(0.5)} / 2);
       > li {
         max-width: calc(100% - ${spacingByChar(0.5)});
-
-        /* for IE: gap のフォールバック */
-        margin: calc(${spacingByChar(0.25)} / 2) calc(${spacingByChar(0.5)} / 2);
-      }
-
-      display: flex;
-      flex-wrap: wrap;
-      @supports (display: contents) and (gap: 1px) {
-        display: contents;
-
-        /* for IE の gap フォールバックを打ち消し */
-        flex-wrap: revert;
-        > li {
-          margin: revert;
-        }
       }
     `
   }}
