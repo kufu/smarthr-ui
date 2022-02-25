@@ -1,4 +1,4 @@
-export type Item<T> = {
+export type ComboBoxItem<T> = {
   value: string
   label: string
   disabled?: boolean
