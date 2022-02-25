@@ -9,13 +9,21 @@ import { useClassNames } from './useClassNames'
 type Size = 'default' | 's'
 
 export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
+  /** コンポーネントに適用するクラス名 */
   className?: string
+  /** コンポーネントの大きさ */
   size?: Size
+  /** フォームのラベル */
   label: string
+  /** 選択中のファイル */
   files?: File[]
+  /** ファイルが選択された時に発火するコールバック関数 */
   onAdd?: (addFiles: File[]) => void
+  /** ファイルが削除された時に発火するコールバック関数 */
   onDelete?: (index: number) => void
+  /** `true` の時、フォームの枠の色が `DANGER` になる */
   error?: boolean
+  /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
 }
 
