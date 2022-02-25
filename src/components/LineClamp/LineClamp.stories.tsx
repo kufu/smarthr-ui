@@ -1,10 +1,20 @@
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 import { PrimaryButton } from '../Button'
 
 import { LineClamp } from './LineClamp'
 import readme from './README.md'
+
+export default {
+  title: 'LineClamp',
+  component: LineClamp,
+  parameters: {
+    readme: {
+      sidebar: readme,
+    },
+  },
+}
 
 const longText = `
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
@@ -16,61 +26,54 @@ the release of Letraset sheets containing Lorem Ipsum passages, and more recentl
 with desktop publishing software like Aldus PageMaker including versions of Lorem
 Ipsum.`
 
-storiesOf('LineClamp', module)
-  .addParameters({
-    readme: {
-      sidebar: readme,
-    },
-  })
-  .add('all', () => {
-    return (
-      <>
-        <Wrapper>
-          <List>
-            <dt>Default</dt>
-            <dd>
-              <Text>
-                <LineClamp>{longText}</LineClamp>
-              </Text>
-            </dd>
-            <dt>Max Lines 1</dt>
-            <dd>
-              <Text>
-                <LineClamp maxLines={1} withTooltip>
-                  {longText}
-                </LineClamp>
-              </Text>
-            </dd>
-            <dt>Max Lines 2</dt>
-            <dd>
-              <Text>
-                <LineClamp maxLines={2} withTooltip>
-                  {longText}
-                </LineClamp>
-              </Text>
-            </dd>
-            <dt>Max Lines 4</dt>
-            <dd>
-              <Text>
-                <LineClamp maxLines={4} withTooltip>
-                  {longText}
-                </LineClamp>
-              </Text>
-            </dd>
-            <dt>with button</dt>
-            <dd>
-              <Button>
-                <LineClamp maxLines={1} withTooltip>
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                  Ipsum has been the industry&apos;s standard dummy text ever since the 1500s.
-                </LineClamp>
-              </Button>
-            </dd>
-          </List>
-        </Wrapper>
-      </>
-    )
-  })
+export const All: Story = () => {
+  return (
+    <Wrapper>
+      <List>
+        <dt>Default</dt>
+        <dd>
+          <Text>
+            <LineClamp>{longText}</LineClamp>
+          </Text>
+        </dd>
+        <dt>Max Lines 1</dt>
+        <dd>
+          <Text>
+            <LineClamp maxLines={1} withTooltip>
+              {longText}
+            </LineClamp>
+          </Text>
+        </dd>
+        <dt>Max Lines 2</dt>
+        <dd>
+          <Text>
+            <LineClamp maxLines={2} withTooltip>
+              {longText}
+            </LineClamp>
+          </Text>
+        </dd>
+        <dt>Max Lines 4</dt>
+        <dd>
+          <Text>
+            <LineClamp maxLines={4} withTooltip>
+              {longText}
+            </LineClamp>
+          </Text>
+        </dd>
+        <dt>with button</dt>
+        <dd>
+          <Button>
+            <LineClamp maxLines={1} withTooltip>
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+              has been the industry&apos;s standard dummy text ever since the 1500s.
+            </LineClamp>
+          </Button>
+        </dd>
+      </List>
+    </Wrapper>
+  )
+}
+All.storyName = 'all'
 
 const Wrapper = styled.div`
   padding: 24px;
