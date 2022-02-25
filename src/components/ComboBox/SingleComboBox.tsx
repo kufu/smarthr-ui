@@ -18,17 +18,17 @@ import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
 import { useListBox } from './useListBox'
 import { convertMatchableString } from './comboBoxHelper'
-import { Item } from './types'
+import { ComboBoxItem } from './types'
 
 type Props<T> = {
   /**
    * 選択可能なアイテムのリスト
    */
-  items: Array<Item<T>>
+  items: Array<ComboBoxItem<T>>
   /**
    * 選択されているアイテムのリスト
    */
-  selectedItem: Item<T> | null
+  selectedItem: ComboBoxItem<T> | null
   /**
    * input 要素の `name` 属性の値
    */
@@ -77,7 +77,7 @@ type Props<T> = {
   /**
    * アイテムが選択された時に発火するコールバック関数
    */
-  onSelect?: (item: Item<T>) => void
+  onSelect?: (item: ComboBoxItem<T>) => void
   /**
    * 選択されているアイテムがクリアされた時に発火するコールバック関数
    */
@@ -85,7 +85,7 @@ type Props<T> = {
   /**
    * 選択されているアイテムのリストが変わった時に発火するコールバック関数
    */
-  onChangeSelected?: (selectedItem: Item<T> | null) => void
+  onChangeSelected?: (selectedItem: ComboBoxItem<T> | null) => void
 }
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
