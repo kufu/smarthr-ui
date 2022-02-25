@@ -8,7 +8,7 @@ import { useClassNames } from './useClassNames'
 import { PaginationItem } from './PaginationItem'
 import { PaginationControllerItem } from './PaginationControllerItem'
 
-interface Props {
+type Props = {
   total: number
   current: number
   onClick: (pageNumber: number) => void
