@@ -23,7 +23,12 @@ export const _BottomFixedArea: Story = () => {
       description="This is description."
       primaryButton={<PrimaryButton>Primary Button</PrimaryButton>}
       secondaryButton={<SecondaryButton>Secondary Button</SecondaryButton>}
-      tertiaryLinks={[{ text: 'Tertiary_1', icon: FaTrashIcon, onClick: action('click_1') }]}
+      tertiaryLinks={[
+        { text: 'Tertiary_1', icon: FaTrashIcon, onClick: action('click_1') },
+        { text: 'Tertiary_2', icon: FaTrashIcon, onClick: action('click_2') },
+        { text: 'Tertiary_3', icon: FaTrashIcon, onClick: action('click_3') },
+        { text: 'Tertiary_4', icon: FaTrashIcon, onClick: action('click_4') },
+      ]}
     />
   )
 }
