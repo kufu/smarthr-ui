@@ -16054,10 +16054,10 @@ stylelint-config-styled-components@^0.1.1:
   resolved "https://registry.yarnpkg.com/stylelint-config-styled-components/-/stylelint-config-styled-components-0.1.1.tgz#b408388d7c687833ab4be4c4e6522d97d2827ede"
   integrity sha512-z5Xz/9GmvxO6e/DLzBMwkB85zHxEEjN6K7Cj80Bi+o/9vR9eS3GX3E9VuMnX9WLFYulqbqLtTapGGY28JBiy9Q==
 
-stylelint@^14.5.1:
-  version "14.5.1"
-  resolved "https://registry.yarnpkg.com/stylelint/-/stylelint-14.5.1.tgz#2b2575ccaf14bb057209d48fc87c17d5b684f8db"
-  integrity sha512-8Hf4HtnhxlWlf7iXF9zFfhSc3X0teRnVzl6PqPs2JEFx+dy/mhMhghZfiTDW4QG0ihDw9+WP7GZw5Nzx7cQF5A==
+stylelint@^14.5.3:
+  version "14.5.3"
+  resolved "https://registry.yarnpkg.com/stylelint/-/stylelint-14.5.3.tgz#103b6670128ba3dea69fe3a1a07c4a5d3e0e3450"
+  integrity sha512-omHETL+kGHR+fCXFK1SkZD/A+emCP9esggAdWEl8GPjTNeyRYj+H6uetRDcU+7E451zwWiUYGVAX+lApsAZgsQ==
   dependencies:
     balanced-match "^2.0.0"
     colord "^2.9.2"
