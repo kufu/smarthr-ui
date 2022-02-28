@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   stories: ['../**/*.stories.tsx'],
   addons: [
@@ -9,5 +11,25 @@ module.exports = {
       },
     },
     '@storybook/addon-a11y',
+    {
+      name: '@storybook/addon-docs',
+      options: {
+        sourceLoaderOptions: {
+          injectStoryParameters: false,
+        },
+      },
+    },
+    {
+      name: '@storybook/addon-storysource',
+      options: {
+        rule: {
+          test: [/\.stories\.tsx?$/],
+          include: [path.resolve(__dirname, '../src/components')],
+        },
+        loaderOptions: {
+          prettierConfig: { printWidth: 80, singleQuote: false },
+        },
+      },
+    },
   ],
 }
