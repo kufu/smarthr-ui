@@ -1,11 +1,16 @@
 import { action } from '@storybook/addon-actions'
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
 import { Pagination } from './Pagination'
 
-storiesOf('Pagination', module).add('all', () => (
+export default {
+  title: 'Pagination',
+  component: Pagination,
+}
+
+export const All: Story = () => (
   <List>
     <li>
       <Txt>default</Txt>
@@ -44,7 +49,8 @@ storiesOf('Pagination', module).add('all', () => (
       <Pagination current={2} total={5} onClick={action('click!!')} withoutNumbers />
     </li>
   </List>
-))
+)
+All.storyName = 'all'
 
 const List = styled.ul`
   padding: 0 20px;

@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
-import { Item } from './types'
+import { ComboBoxItem } from './types'
 
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
@@ -13,10 +13,10 @@ import { Loader } from '../Loader'
 const OPTION_INCREMENT_AMOUNT = 100
 
 type Args<T> = {
-  items: Array<Item<T> & { isSelected?: boolean }>
+  items: Array<ComboBoxItem<T> & { isSelected?: boolean }>
   inputValue?: string
   onAdd?: (label: string) => void
-  onSelect: (item: Item<T>) => void
+  onSelect: (item: ComboBoxItem<T>) => void
   isExpanded: boolean
   isAddable: boolean
   isDuplicate: boolean
@@ -30,12 +30,12 @@ type Args<T> = {
   }
 }
 
-type Option<T> = Item<T> & {
+type Option<T> = ComboBoxItem<T> & {
   isAdding?: boolean
   isSelected?: boolean
 }
 
-function optionToItem<T>(option: Option<T>): Item<T> {
+function optionToItem<T>(option: Option<T>): ComboBoxItem<T> {
   const { isAdding, isSelected, ...props } = option
   return { ...props }
 }
