@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [19.0.2](https://github.com/kufu/smarthr-ui/compare/v19.0.1...v19.0.2) (2022-02-28)
+
+
+### Bug Fixes
+
+* `BottomFixedArea` のモバイル表示調整 ([#2285](https://github.com/kufu/smarthr-ui/issues/2285)) ([ff5989c](https://github.com/kufu/smarthr-ui/commit/ff5989c4e59a638f23d952622a6a59559d5d6ac5))
+* ComboBoxItem を Storybook や SmartHR Design System での Props 表示のために、よりわかりやすい名前に変える ([#2299](https://github.com/kufu/smarthr-ui/issues/2299)) ([b715b60](https://github.com/kufu/smarthr-ui/commit/b715b600e939539ac76202adf401252b24379694))
+* workaround empty flex gap bug ([#2298](https://github.com/kufu/smarthr-ui/issues/2298)) ([0bb4ff5](https://github.com/kufu/smarthr-ui/commit/0bb4ff562859bb9776870a8f31e32999fd97a45c))
+
 ### [19.0.1](https://github.com/kufu/smarthr-ui/compare/v19.0.0...v19.0.1) (2022-02-22)
 
 
