@@ -33,8 +33,7 @@ export const DropdownContentInner: VFC<Props> = ({
   const theme = useTheme()
   const [isActive, setIsActive] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
-    top: '0',
-    left: '0',
+    top: 'auto',
     maxHeight: '',
   })
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -49,12 +48,12 @@ export const DropdownContentInner: VFC<Props> = ({
             height: wrapperRef.current.offsetHeight,
           },
           {
-            width: innerWidth,
+            width: document.body.clientWidth,
             height: innerHeight,
           },
           {
-            top: pageYOffset,
-            left: pageXOffset,
+            top: scrollY,
+            left: scrollX,
           },
         ),
       )
@@ -113,7 +112,11 @@ const Wrapper = styled.div<{
   contentBox: ContentBoxStyle
 }>`
   ${({ contentBox, themes }) => {
-    const { color, radius, zIndex, shadow } = themes
+    const { color, radius, zIndex, shadow, spacingByChar } = themes
+    const leftMargin =
+      contentBox.left === undefined ? spacingByChar(0.5) : `max(${contentBox.left}, 0px)`
+    const rightMargin =
+      contentBox.right === undefined ? spacingByChar(0.5) : `max(${contentBox.right}, 0px)`
 
     return css`
       display: flex;
@@ -121,11 +124,19 @@ const Wrapper = styled.div<{
       z-index: ${zIndex.OVERLAP_BASE};
       position: absolute;
       top: ${contentBox.top};
-      left: ${contentBox.left};
+      ${contentBox.left !== undefined &&
+      css`
+        left: ${contentBox.left};
+      `}
+      ${contentBox.right !== undefined &&
+      css`
+        right: ${contentBox.right};
+      `}
+      max-width: calc(100% - ${leftMargin} - ${rightMargin});
+      word-break: break-word;
       border-radius: ${radius.m};
       box-shadow: ${shadow.LAYER3};
       background-color: ${color.WHITE};
-      white-space: nowrap;
 
       &.active {
         visibility: visible;
