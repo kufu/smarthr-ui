@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [19.0.2](https://github.com/kufu/smarthr-ui/compare/v19.0.1...v19.0.2) (2022-02-28)
+
+
+### Bug Fixes
+
+* `BottomFixedArea` のモバイル表示調整 ([#2285](https://github.com/kufu/smarthr-ui/issues/2285)) ([ff5989c](https://github.com/kufu/smarthr-ui/commit/ff5989c4e59a638f23d952622a6a59559d5d6ac5))
+* ComboBoxItem を Storybook や SmartHR Design System での Props 表示のために、よりわかりやすい名前に変える ([#2299](https://github.com/kufu/smarthr-ui/issues/2299)) ([b715b60](https://github.com/kufu/smarthr-ui/commit/b715b600e939539ac76202adf401252b24379694))
+* workaround empty flex gap bug ([#2298](https://github.com/kufu/smarthr-ui/issues/2298)) ([0bb4ff5](https://github.com/kufu/smarthr-ui/commit/0bb4ff562859bb9776870a8f31e32999fd97a45c))
+
+### [19.0.1](https://github.com/kufu/smarthr-ui/compare/v19.0.0...v19.0.1) (2022-02-22)
+
+
+### Bug Fixes
+
+* `AppNavi` のアイテムのテキストが折り返されないように修正 ([#2283](https://github.com/kufu/smarthr-ui/issues/2283)) ([a58b2ac](https://github.com/kufu/smarthr-ui/commit/a58b2ac0c66d778cb631f6c4cdc79aa643218e03))
+* disabled なボタンに表示するツールチップが正常に動作するように修正 (SHRUI-529) ([#2280](https://github.com/kufu/smarthr-ui/issues/2280)) ([7bdbfb2](https://github.com/kufu/smarthr-ui/commit/7bdbfb2f58f6d47e03717ed9c5549ab42109a891))
+* fix ModelessDialog to be able to close on mobile ([#2279](https://github.com/kufu/smarthr-ui/issues/2279)) ([0f89dba](https://github.com/kufu/smarthr-ui/commit/0f89dba82328db0ff2bcc50d2f84e3a525163fa4))
+* コンボボックスのドロップダウンに表示するオプション数を段階的に増やすように変更 (SHRUI-540) ([#2263](https://github.com/kufu/smarthr-ui/issues/2263)) ([33251bf](https://github.com/kufu/smarthr-ui/commit/33251bf20bda02981a5fa1f56fc95e65594f4d09))
+
 ## [19.0.0](https://github.com/kufu/smarthr-ui/compare/v18.0.0...v19.0.0) (2022-02-17)
 
 

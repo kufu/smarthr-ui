@@ -46,6 +46,8 @@ export const getItemStyle = ({
     display: flex;
     align-items: center;
     gap: ${spacingByChar(0.5)};
+    height: 100%;
+    box-sizing: border-box;
     margin: 0;
     border: none;
     background-color: transparent;
@@ -55,6 +57,7 @@ export const getItemStyle = ({
     font-weight: bold;
     line-height: ${leading.NONE};
     color: ${TEXT_GREY};
+    white-space: nowrap;
 
     ${isActive &&
     css`

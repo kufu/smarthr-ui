@@ -1,4 +1,4 @@
-import React, { VFC, useEffect, useState } from 'react'
+import React, { VFC, useCallback, useEffect, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -24,7 +24,7 @@ type Props = {
   /** タイトル部分の HTML タグ */
   titleTag?: HeadingTagTypes
   /** 表示する情報のタイプ */
-  type?: 'success' | 'info' | 'warning' | 'error' | 'sync' | ''
+  type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
   /** `true` のとき、開閉ボタンを表示する */
   togglable?: boolean
   /** 開くボタンのラベル */
@@ -44,7 +44,7 @@ type Props = {
 export const InformationPanel: VFC<Props & BaseElementProps> = ({
   title,
   titleTag = 'h3',
-  type = 'info',
+  type,
   togglable = true,
   openButtonLabel = '開く',
   closeButtonLabel = '閉じる',
@@ -56,42 +56,48 @@ export const InformationPanel: VFC<Props & BaseElementProps> = ({
 }) => {
   const theme = useTheme()
 
-  let Icon = InfoTitleIcon
-  let iconColor = theme.color.TEXT_GREY
-
-  switch (type) {
-    case 'success':
-      Icon = SuccessTitleIcon
-      iconColor = theme.color.MAIN
-      break
-    case 'info':
-      Icon = InfoTitleIcon
-      iconColor = theme.color.TEXT_GREY
-      break
-    case 'warning':
-      Icon = WarningTitleIcon
-      iconColor = theme.color.WARNING
-      break
-    case 'error':
-      Icon = ErrorTitleIcon
-      iconColor = theme.color.DANGER
-      break
-    case 'sync':
-      Icon = SyncIcon
-      iconColor = theme.color.MAIN
-  }
+  const { Icon, iconColor } = useMemo(() => {
+    switch (type) {
+      case 'success':
+        return {
+          Icon: SuccessTitleIcon,
+          iconColor: theme.color.MAIN,
+        }
+      case 'info':
+      default:
+        return {
+          Icon: InfoTitleIcon,
+          iconColor: theme.color.TEXT_GREY,
+        }
+      case 'warning':
+        return {
+          Icon: WarningTitleIcon,
+          iconColor: theme.color.WARNING,
+        }
+      case 'error':
+        return {
+          Icon: ErrorTitleIcon,
+          iconColor: theme.color.DANGER,
+        }
+      case 'sync':
+        return {
+          Icon: SyncIcon,
+          iconColor: theme.color.MAIN,
+        }
+    }
+  }, [type, theme.color.DANGER, theme.color.MAIN, theme.color.TEXT_GREY, theme.color.WARNING])
 
   const [active, setActive] = useState(activeProps)
   const titleId = useId()
   const contentId = useId()
 
-  const handleClickTrigger = () => {
+  const handleClickTrigger = useCallback(() => {
     if (onClickTrigger) {
       onClickTrigger(active)
     } else {
       setActive(!active)
     }
-  }
+  }, [active, onClickTrigger])
 
   useEffect(() => {
     setActive(activeProps)

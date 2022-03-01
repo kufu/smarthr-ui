@@ -164,6 +164,19 @@ export const Single: Story = () => {
           onClear={handleClear}
         />
       </dd>
+      <dt>アイテム数が多い時</dt>
+      <dd>
+        <SingleComboBox
+          items={Array.from({ length: 5000 }).map((_, i) => ({
+            label: String(i),
+            value: String(i),
+          }))}
+          selectedItem={null}
+          width={400}
+          placeholder="入力でフィルタリングできます"
+          onSelect={action('onSelect')}
+        />
+      </dd>
     </List>
   )
 }
@@ -325,6 +338,19 @@ export const Multi: Story = () => {
           placeholder="入力でフィルタリングできます"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>アイテム数が多い時</dt>
+      <dd>
+        <MultiComboBox
+          items={Array.from({ length: 5000 }).map((_, i) => ({
+            label: String(i),
+            value: String(i),
+          }))}
+          selectedItems={[]}
+          width={400}
+          placeholder="入力でフィルタリングできます"
+          onSelect={action('onSelect')}
         />
       </dd>
     </List>

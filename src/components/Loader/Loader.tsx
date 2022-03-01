@@ -18,8 +18,11 @@ import {
 import { useClassNames } from './useClassNames'
 
 type Props = {
+  /** ローダーの大きさ */
   size?: 's' | 'm'
+  /** 表示するメッセージ */
   text?: string
+  /** コンポーネントの色調 */
   type?: 'primary' | 'light'
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
