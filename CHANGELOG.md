@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [19.1.0](https://github.com/kufu/smarthr-ui/compare/v19.0.2...v19.1.0) (2022-03-03)
+
+
+### Features
+
+* change to ReactNode for i18n ([#2321](https://github.com/kufu/smarthr-ui/issues/2321)) ([773e522](https://github.com/kufu/smarthr-ui/commit/773e5228c9c5d25ca80f66ea4eb1002b59cd7f24))
+
+
+### Bug Fixes
+
+* InformationPanel の内部処理を memo 化 ([#2315](https://github.com/kufu/smarthr-ui/issues/2315)) ([3255546](https://github.com/kufu/smarthr-ui/commit/3255546c2971cf6030728d9fe287d561f7e18c29))
+
 ### [19.0.2](https://github.com/kufu/smarthr-ui/compare/v19.0.1...v19.0.2) (2022-02-28)
 
 
