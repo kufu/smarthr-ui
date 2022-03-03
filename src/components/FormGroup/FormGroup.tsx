@@ -9,7 +9,7 @@ import { FaExclamationCircleIcon } from '../Icon'
 type innerMarginType = 'XXS' | 'XS' | 'S'
 type Props = {
   /** グループのタイトル名 */
-  title: string
+  title: ReactNode
   /** タイトルの見出しのタイプ */
   titleType?: HeadingTypes
   /** label 要素に適用する `htmlFor` 値 */
