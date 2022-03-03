@@ -10,6 +10,8 @@ import { ArgsTable, Title } from '@storybook/addon-docs'
 import { createTheme } from '../src/themes/createTheme'
 import { ThemeProvider } from '../src/themes/ThemeProvider'
 
+const AXE_LOCALE_JA = require('axe-core/locales/ja.json');
+
 export const globalTypes = {
   reset: {
     name: 'Reset',
@@ -48,6 +50,11 @@ export const parameters = {
         <ArgsTable />
       </>
     ),
+  },
+  a11y: {
+    config: {
+      locale: AXE_LOCALE_JA
+    },
   },
 }
 
