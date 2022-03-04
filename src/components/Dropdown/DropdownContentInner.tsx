@@ -1,9 +1,9 @@
-import React, { VFC, createContext, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import React, { VFC, createContext, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { ContentBoxStyle, Rect, getContentBoxStyle, getFirstTabbable } from './dropdownHelper'
+import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
 import { DropdownCloser } from './DropdownCloser'
 import { useKeyboardNavigation } from './useKeyboardNavigation'
 
@@ -37,6 +37,7 @@ export const DropdownContentInner: VFC<Props> = ({
     maxHeight: '',
   })
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const focusTargetRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     if (wrapperRef.current) {
@@ -61,29 +62,11 @@ export const DropdownContentInner: VFC<Props> = ({
     }
   }, [triggerRect])
 
-  const focusContent = useCallback(() => {
-    // delay for waiting to change the inner contents to visible
-    const firstTabbale = getFirstTabbable(wrapperRef)
-    if (firstTabbale) {
-      firstTabbale.focus()
-      return true
-    }
-    return false
-  }, [])
-
   useLayoutEffect(() => {
-    if (isActive) {
-      // when the dropdwon content becomes active, focus a first tabbable element in it
-      setTimeout(() => {
-        // delay for waiting to change the inner contents to visible
-        if (!focusContent()) {
-          setTimeout(() => {
-            focusContent()
-          }, 100)
-        }
-      }, 30)
+    if (isActive && focusTargetRef.current) {
+      focusTargetRef.current.focus()
     }
-  }, [isActive, focusContent])
+  }, [isActive])
 
   useKeyboardNavigation(wrapperRef)
 
@@ -94,6 +77,8 @@ export const DropdownContentInner: VFC<Props> = ({
       className={`${className} ${isActive ? 'active' : ''}`}
       themes={theme}
     >
+      {/* dummy element for focus management. */}
+      <div tabIndex={-1} ref={focusTargetRef} />
       {controllable ? (
         <ControllableWrapper scrollable={scrollable} contentBox={contentBox}>
           {children}
