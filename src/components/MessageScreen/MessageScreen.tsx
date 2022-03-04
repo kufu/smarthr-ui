@@ -9,13 +9,17 @@ import { TextLink } from '../TextLink'
 import { Footer } from '../Footer'
 
 type Props = {
+  /** コンテンツの上に表示されるタイトル */
   title?: ReactNode
+  /** コンテンツの下に表示されるアンカー要素のリスト */
   links?: Array<{
     label: string
     url: string
     target?: string
   }>
+  /** 表示するコンテンツ */
   children?: ReactNode
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 
