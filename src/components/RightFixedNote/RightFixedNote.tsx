@@ -8,7 +8,7 @@ import { Textarea } from '../Textarea'
 import { SecondaryButton } from '../Button'
 import { useClassNames } from './useClassNames'
 
-interface Props {
+type Props = {
   title: string
   items?: ItemProps[]
   submitLabel?: string
