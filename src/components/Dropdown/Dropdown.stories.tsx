@@ -13,6 +13,8 @@ import { DropdownScrollArea } from './DropdownScrollArea'
 import { PrimaryButton, SecondaryButton } from '../Button'
 import { RadioButton } from '../RadioButton'
 import { Input } from '../Input'
+import { Stack } from '../Layout'
+import { Text } from '../Text'
 
 import readme from './README.md'
 
@@ -35,22 +37,22 @@ export default {
 const ListMenu = () => {
   const themes = useTheme()
   return (
-    <List themes={themes}>
+    <ActionList themes={themes}>
       <li>
-        <button id="dropdown-list-item-1" onClick={action('clicked item 1')}>
-          Dropdown list item 1, click me.
-        </button>
+        <SecondaryButton id="dropdown-list-item-1" onClick={action('clicked 編集')}>
+          編集
+        </SecondaryButton>
       </li>
       <li>
-        <button onClick={action('clicked item 2')}>Dropdown list item 2, click me.</button>
+        <SecondaryButton onClick={action('clicked 複製')}>複製</SecondaryButton>
       </li>
       <li>
-        <button onClick={action('clicked item 3')}>Dropdown list item 3, click me.</button>
+        <SecondaryButton onClick={action('clicked プレビュー')}>プレビュー</SecondaryButton>
       </li>
       <li>
-        <button onClick={action('clicked item 4')}>Dropdown list item 4, click me.</button>
+        <SecondaryButton onClick={action('clicked 削除')}>削除</SecondaryButton>
       </li>
-    </List>
+    </ActionList>
   )
 }
 
@@ -64,17 +66,16 @@ const ControllableDropdown = () => {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <SecondaryButton>trigger button</SecondaryButton>
+        <SecondaryButton>制御可能な Dropdown</SecondaryButton>
       </DropdownTrigger>
       <DropdownContent controllable>
         <DropdownScrollArea>
           <ControllableBoxMain>
-            <Text themes={themes}>
-              Use `DropdownControllableContent` to get a controllable dropdown.
+            <Text as="p">`DropdownControllableContent` を使うとドロップダウン制御できます。</Text>
+            <Text as="p">
+              制御可能なドロップダウン内のコンテンツをクリックしても、ドロップダウンは閉じません。
               <br />
-              Clicking inside content of controllable dropdown does not close dropdown.
-              <br />
-              In that case, you can use `DropdownCloser` to close the dropdown.
+              ドロップダウンを閉じたいときは、`DropdownCloser` を使います。
             </Text>
             <RadioButtonList>
               <li>
@@ -121,12 +122,10 @@ export const All: Story = () => {
           <Box>
             <Dropdown>
               <DropdownTrigger>
-                <SecondaryButton id="dropdown-button-1">Uncontrollable Dropdown</SecondaryButton>
+                <SecondaryButton id="dropdown-button-1">制御不能な Dropdown</SecondaryButton>
               </DropdownTrigger>
               <DropdownContent>
-                <DropdownScrollArea>
-                  <ListMenu />
-                </DropdownScrollArea>
+                <ListMenu />
               </DropdownContent>
             </Dropdown>
           </Box>
@@ -135,14 +134,14 @@ export const All: Story = () => {
           <Box>
             <Dropdown>
               <DropdownTrigger>
-                <SecondaryButton>static area</SecondaryButton>
+                <SecondaryButton>固定領域</SecondaryButton>
               </DropdownTrigger>
               <DropdownContent>
-                <Fixed themes={themes}>fixed header</Fixed>
+                <Fixed themes={themes}>固定ヘッダー</Fixed>
                 <DropdownScrollArea>
                   <ListMenu />
                 </DropdownScrollArea>
-                <Fixed themes={themes}>fixed footer</Fixed>
+                <Fixed themes={themes}>固定フッター</Fixed>
               </DropdownContent>
             </Dropdown>
           </Box>
@@ -155,26 +154,24 @@ export const All: Story = () => {
         <li>
           <Dropdown>
             <DropdownTrigger>
-              <SecondaryButton>Nested Dropdown</SecondaryButton>
+              <SecondaryButton>入れ子にできる Dropdown</SecondaryButton>
             </DropdownTrigger>
             <DropdownContent controllable>
               <DropdownScrollArea>
                 <ControllableBoxMain>
                   <Dropdown>
                     <DropdownTrigger>
-                      <SecondaryButton>Nested Dropdown</SecondaryButton>
+                      <SecondaryButton>さらに入れ子にできる Dropdown</SecondaryButton>
                     </DropdownTrigger>
                     <DropdownContent controllable>
                       <DropdownScrollArea>
                         <ControllableBoxMain>
                           <Dropdown>
                             <DropdownTrigger>
-                              <SecondaryButton>Nested Dropdown</SecondaryButton>
+                              <SecondaryButton>いくらでも入れ子にできる Dropdown</SecondaryButton>
                             </DropdownTrigger>
                             <DropdownContent>
-                              <DropdownScrollArea>
-                                <ListMenu />
-                              </DropdownScrollArea>
+                              <ListMenu />
                             </DropdownContent>
                           </Dropdown>
                         </ControllableBoxMain>
@@ -187,27 +184,26 @@ export const All: Story = () => {
           </Dropdown>
         </li>
         <li>
-          <Description>
-            Depending on where `DropdownTrigger` is on window, the position to display
-            `DropdownContent` is automatically determined.
-          </Description>
-          <Description>
-            ↓<br />↓
-          </Description>
-          <Description>
-            ↓<br />↓
-          </Description>
+          <Stack gap={8}>
+            <Text as="p">
+              `DropdownTrigger` の場所に依って、`DropdownContent` が表示される場所は決まります。
+            </Text>
+            <Text as="p">
+              ↓<br />↓
+            </Text>
+            <Text as="p">
+              ↓<br />↓
+            </Text>
+          </Stack>
         </li>
         <li>
           <Box>
             <Dropdown>
               <DropdownTrigger>
-                <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
+                <SecondaryButton>制御不能な Dropdown</SecondaryButton>
               </DropdownTrigger>
               <DropdownContent>
-                <DropdownScrollArea>
-                  <ListMenu />
-                </DropdownScrollArea>
+                <ListMenu />
               </DropdownContent>
             </Dropdown>
           </Box>
@@ -217,12 +213,10 @@ export const All: Story = () => {
             <Box>
               <Dropdown>
                 <DropdownTrigger>
-                  <SecondaryButton>Uncontrollable Dropdown</SecondaryButton>
+                  <SecondaryButton>制御不能な Dropdown</SecondaryButton>
                 </DropdownTrigger>
                 <DropdownContent>
-                  <DropdownScrollArea>
-                    <ListMenu />
-                  </DropdownScrollArea>
+                  <ListMenu />
                 </DropdownContent>
               </Dropdown>
             </Box>
@@ -237,29 +231,22 @@ export const All: Story = () => {
 }
 All.storyName = 'all'
 
-const List = styled.ul<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color } = themes
-    return css`
-      margin: 0;
-      padding: 8px 0;
-      list-style: none;
+const ActionList = styled(Stack).attrs({ as: 'ul', gap: 0 })<{ themes: Theme }>(
+  ({ themes: { spacingByChar } }) => css`
+    list-style: none;
+    margin-block: 0;
+    padding-block: ${spacingByChar(0.5)};
+    padding-inline-start: 0;
 
-      & > li > button {
-        line-height: 40px;
-        width: 100%;
-        padding: 0 20px;
-        border: none;
-        background-color: ${color.WHITE};
-        color: ${color.TEXT_BLACK};
-
-        &:hover {
-          background-color: ${color.hoverColor(color.WHITE)};
-        }
-      }
-    `
-  }}
-`
+    .smarthr-ui-SecondaryButton {
+      justify-content: flex-start;
+      border: none;
+      padding-block: ${spacingByChar(0.5)};
+      width: 100%;
+      font-weight: normal;
+    }
+  `,
+)
 const Wrapper = styled.div<{ themes: Theme }>`
   padding: 24px;
   color: ${({ themes }) => themes.color.TEXT_BLACK};
@@ -276,12 +263,8 @@ const Legends = styled.ul`
 const Box = styled.div`
   display: inline-block;
 `
-const ControllableBoxMain = styled.div`
+const ControllableBoxMain = styled(Stack)`
   padding: 24px;
-`
-const Text = styled.p<{ themes: Theme }>`
-  margin: 0;
-  color: ${({ themes }) => themes.color.TEXT_BLACK};
 `
 const ControllableBoxBottom = styled.div<{ themes: Theme }>`
   display: flex;
@@ -293,10 +276,6 @@ const ControllableBoxBottom = styled.div<{ themes: Theme }>`
   & > *:not(:first-child) {
     margin-left: 16px;
   }
-`
-const Description = styled.p`
-  margin: 0;
-  padding: 100px 0;
 `
 const RightAlign = styled.div`
   display: flex;
