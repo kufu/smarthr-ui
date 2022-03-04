@@ -15,6 +15,7 @@ import { RadioButton } from '../RadioButton'
 import { Input } from '../Input'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
+import { FaCaretDownIcon } from '../Icon'
 
 import readme from './README.md'
 
@@ -66,7 +67,7 @@ const ControllableDropdown = () => {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <SecondaryButton>制御可能な Dropdown</SecondaryButton>
+        <TriggerButton>制御可能な Dropdown</TriggerButton>
       </DropdownTrigger>
       <DropdownContent controllable>
         <DropdownScrollArea>
@@ -122,7 +123,7 @@ export const All: Story = () => {
           <Box>
             <Dropdown>
               <DropdownTrigger>
-                <SecondaryButton id="dropdown-button-1">制御不能な Dropdown</SecondaryButton>
+                <TriggerButton id="dropdown-button-1">制御不能な Dropdown</TriggerButton>
               </DropdownTrigger>
               <DropdownContent>
                 <ListMenu />
@@ -134,7 +135,7 @@ export const All: Story = () => {
           <Box>
             <Dropdown>
               <DropdownTrigger>
-                <SecondaryButton>固定領域</SecondaryButton>
+                <TriggerButton>固定領域</TriggerButton>
               </DropdownTrigger>
               <DropdownContent>
                 <Fixed themes={themes}>固定ヘッダー</Fixed>
@@ -168,7 +169,7 @@ export const All: Story = () => {
                         <ControllableBoxMain>
                           <Dropdown>
                             <DropdownTrigger>
-                              <SecondaryButton>いくらでも入れ子にできる Dropdown</SecondaryButton>
+                              <TriggerButton>いくらでも入れ子にできる Dropdown</TriggerButton>
                             </DropdownTrigger>
                             <DropdownContent>
                               <ListMenu />
@@ -200,7 +201,7 @@ export const All: Story = () => {
           <Box>
             <Dropdown>
               <DropdownTrigger>
-                <SecondaryButton>制御不能な Dropdown</SecondaryButton>
+                <TriggerButton>制御不能な Dropdown</TriggerButton>
               </DropdownTrigger>
               <DropdownContent>
                 <ListMenu />
@@ -213,7 +214,7 @@ export const All: Story = () => {
             <Box>
               <Dropdown>
                 <DropdownTrigger>
-                  <SecondaryButton>制御不能な Dropdown</SecondaryButton>
+                  <TriggerButton>制御不能な Dropdown</TriggerButton>
                 </DropdownTrigger>
                 <DropdownContent>
                   <ListMenu />
@@ -247,6 +248,7 @@ const ActionList = styled(Stack).attrs({ as: 'ul', gap: 0 })<{ themes: Theme }>(
     }
   `,
 )
+const TriggerButton = styled(SecondaryButton).attrs({ suffix: <FaCaretDownIcon /> })``
 const Wrapper = styled.div<{ themes: Theme }>`
   padding: 24px;
   color: ${({ themes }) => themes.color.TEXT_BLACK};
