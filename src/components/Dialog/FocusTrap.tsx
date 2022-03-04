@@ -8,6 +8,7 @@ type Props = {
 
 export const FocusTrap: VFC<Props> = ({ children }) => {
   const ref = useRef<HTMLDivElement | null>(null)
+  const focusTargetRef = useRef<HTMLDivElement>(null)
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key !== 'Tab' || ref.current === null) {
@@ -36,32 +37,23 @@ export const FocusTrap: VFC<Props> = ({ children }) => {
     }
   }, [handleKeyDown])
 
-  const { moveFocusFromTrigger, returnFocusToTrigger } = useTriggerFocusControl(ref)
+  const { returnFocusToTrigger } = useTriggerFocusControl()
   useEffect(() => {
-    moveFocusFromTrigger()
+    focusTargetRef.current?.focus()
     return returnFocusToTrigger
-  }, [moveFocusFromTrigger, returnFocusToTrigger])
+  }, [returnFocusToTrigger])
 
-  return <div ref={ref}>{children}</div>
+  return (
+    <div ref={ref}>
+      {/* dummy element for focus management. */}
+      <div ref={focusTargetRef} tabIndex={-1} />
+      {children}
+    </div>
+  )
 }
 
-export function useTriggerFocusControl(targetRef: React.RefObject<HTMLElement>) {
+export function useTriggerFocusControl() {
   const [triggerElement, setTriggerElement] = useState<Element | null>(null)
-
-  const moveFocusFromTrigger = useCallback(() => {
-    setTriggerElement(document.activeElement)
-    setTimeout(() => {
-      // delay focus on the first element so that is occurs last
-      if (targetRef.current === null) {
-        return
-      }
-      const tabbables = tabbable(targetRef.current)
-      const firstTabbale = tabbables[0]
-      if (firstTabbale) {
-        firstTabbale.focus()
-      }
-    }, 1)
-  }, [targetRef])
 
   const returnFocusToTrigger = useCallback(() => {
     if (triggerElement instanceof HTMLElement) {
@@ -70,5 +62,5 @@ export function useTriggerFocusControl(targetRef: React.RefObject<HTMLElement>) 
     setTriggerElement(null)
   }, [triggerElement])
 
-  return { moveFocusFromTrigger, returnFocusToTrigger }
+  return { returnFocusToTrigger }
 }

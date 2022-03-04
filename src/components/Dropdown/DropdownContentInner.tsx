@@ -63,8 +63,8 @@ export const DropdownContentInner: VFC<Props> = ({
   }, [triggerRect])
 
   useLayoutEffect(() => {
-    if (isActive && focusTargetRef.current) {
-      focusTargetRef.current.focus()
+    if (isActive) {
+      focusTargetRef.current?.focus()
     }
   }, [isActive])
 
