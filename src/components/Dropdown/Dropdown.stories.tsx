@@ -38,7 +38,7 @@ export default {
 const ListMenu = () => {
   const themes = useTheme()
   return (
-    <ActionList themes={themes}>
+    <ActionList as="ul" themes={themes}>
       <li>
         <SecondaryButton id="dropdown-list-item-1" onClick={action('clicked 編集')}>
           編集
@@ -232,7 +232,7 @@ export const All: Story = () => {
 }
 All.storyName = 'all'
 
-const ActionList = styled(Stack).attrs({ as: 'ul', gap: 0 })<{ themes: Theme }>(
+const ActionList = styled(Stack).attrs({ gap: 0 })<{ themes: Theme }>(
   ({ themes: { spacingByChar } }) => css`
     list-style: none;
     margin-block: 0;
