@@ -9,13 +9,21 @@ import { SecondaryButton } from '../Button'
 import { useClassNames } from './useClassNames'
 
 type Props = {
+  /** コンポーネントのタイトル */
   title: string
+  /** 表示するアイテムの配列 */
   items?: ItemProps[]
+  /** submit ボタンのラベル */
   submitLabel?: string
+  /** コンポーネントの幅 */
   width?: number
+  /** textarea のラベル */
   textareaLabel?: string
+  /** edit ボタンを押下したときに発火するコールバック関数 */
   onClickEdit: OnClickEdit
+  /** submit ボタンを押下したときに発火するコールバック関数 */
   onSubmit: (e: React.FormEvent<HTMLFormElement>, text: string) => void
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<FormHTMLAttributes<HTMLFormElement>, keyof Props>
