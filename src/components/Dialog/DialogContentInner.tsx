@@ -177,7 +177,7 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
               100vw - max(${left || 0}px, ${spacingByChar(0.5)}) -
                 max(${right || 0}px, ${spacingByChar(0.5)})
             ),
-            800px
+            800px /* TODO: 幅の定義が決まり theme に入ったら差し替える */
           );
         `
 

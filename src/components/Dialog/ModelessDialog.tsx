@@ -302,7 +302,7 @@ const Box = styled(Base).attrs({ radius: 'm', layer: 3 })<{
             100vw - max(${leftMargin}, ${spacingByChar(0.5)}) -
               max(${rightMargin}, ${spacingByChar(0.5)})
           ),
-          800px
+          800px /* TODO: 幅の定義が決まり theme に入ったら差し替える */
         );
       `}
       height: 100%;
