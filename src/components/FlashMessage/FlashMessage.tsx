@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, VFC, useEffect } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -23,7 +23,7 @@ export type Props = {
   /** 表示するアイコンのタイプ */
   type: typeof messageTypes[number]
   /** メッセージの内容 */
-  text: string
+  text: ReactNode
   /** アニメーションのタイプ */
   animation?: typeof animationTypes[number]
   /** コンポーネントに適用する role 属性 */
