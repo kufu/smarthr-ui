@@ -13,11 +13,11 @@ const transitionClassName = 'shr-dialog-transition'
 
 export const DialogOverlap: VFC<Props> = ({ isOpen, children }) => {
   const theme = useTheme()
-  const [current, setCurrent] = useState<ReactNode>(null)
+  const [childrenBuffer, setChildrenBuffer] = useState<ReactNode>(null)
 
   useEffect(() => {
     if (isOpen) {
-      setCurrent(children)
+      setChildrenBuffer(children)
     }
   }, [isOpen, children])
 
@@ -33,7 +33,7 @@ export const DialogOverlap: VFC<Props> = ({ isOpen, children }) => {
       appear
       unmountOnExit
     >
-      <Wrapper themes={theme}>{isOpen ? children : current}</Wrapper>
+      <Wrapper themes={theme}>{isOpen ? children : childrenBuffer}</Wrapper>
     </CSSTransition>
   )
 }
