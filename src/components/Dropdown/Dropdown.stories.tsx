@@ -133,22 +133,6 @@ export const All: Story = () => {
         </li>
         <li>
           <Box>
-            <Dropdown>
-              <DropdownTrigger>
-                <TriggerButton>固定領域</TriggerButton>
-              </DropdownTrigger>
-              <DropdownContent>
-                <Fixed themes={themes}>固定ヘッダー</Fixed>
-                <DropdownScrollArea>
-                  <ListMenu />
-                </DropdownScrollArea>
-                <Fixed themes={themes}>固定フッター</Fixed>
-              </DropdownContent>
-            </Dropdown>
-          </Box>
-        </li>
-        <li>
-          <Box>
             <ControllableDropdown />
           </Box>
         </li>
@@ -289,12 +273,4 @@ const Bottom = styled.div`
 `
 const RadioButtonList = styled.ul`
   list-style: none;
-`
-const Fixed = styled.div<{ themes: Theme }>`
-  width: 100%;
-  padding: 0 20px;
-  border: none;
-  font-weight: bold;
-  line-height: 40px;
-  color: ${({ themes }) => themes.color.TEXT_BLACK};
 `
