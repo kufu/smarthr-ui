@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react'
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { TextLink } from './TextLink'
 import { FaFlagIcon } from '../Icon'
 import readme from './README.md'
@@ -44,13 +44,11 @@ storiesOf('TextLink', module)
     </Wrapper>
   ))
 
-const Wrapper = styled.ul(
-  ({ theme: { spacingByChar } }) => css`
-    list-style: none;
-    margin: ${spacingByChar(1.5)};
+const Wrapper = styled.ul`
+  list-style: none;
+  margin: 24px;
 
-    li + li {
-      margin-top: ${spacingByChar(1)};
-    }
-  `,
-)
+  li + li {
+    margin-top: 16px;
+  }
+`

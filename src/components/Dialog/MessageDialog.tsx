@@ -10,7 +10,15 @@ import {
 type Props = MessageDialogContentInnerProps &
   Pick<
     DialogContentInnerProps,
-    'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
+    | 'isOpen'
+    | 'onClickOverlay'
+    | 'onPressEscape'
+    | 'width'
+    | 'top'
+    | 'right'
+    | 'bottom'
+    | 'left'
+    | 'id'
   > & { portalParent?: HTMLElement }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 

@@ -9,5 +9,6 @@ module.exports = {
       },
     },
     '@storybook/addon-a11y',
+    'storycap',
   ],
 }
