@@ -6,7 +6,7 @@ import { useClassNames } from './useClassNames'
 
 import { SmartHRLogo } from '../SmartHRLogo'
 import { TextLink } from '../TextLink'
-import { Footer } from '../Footer'
+import { Footer } from './Footer'
 
 type Props = {
   /** コンテンツの上に表示されるタイトル */
