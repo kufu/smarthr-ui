@@ -13,7 +13,7 @@ jobs:
       CHANGELOG_PATH: /tmp/CHANGELOG.md
       IS_PRERELEASE: ${{ contains(github.event.issue.labels.*.name, 'prerelease') }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: release-candidate
           fetch-depth: 0
