@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [20.0.0](https://github.com/kufu/smarthr-ui/compare/v19.1.0...v20.0.0) (2022-03-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* `Footer` コンポーネントを削除 (SHRUI-525) (#2320)
+* ダイアログのデフォルト幅を変更 (SHRUI-535) (#2300)
+
+### Features
+
+* ダイアログのデフォルト幅を変更 (SHRUI-535) ([#2300](https://github.com/kufu/smarthr-ui/issues/2300)) ([3dfa93d](https://github.com/kufu/smarthr-ui/commit/3dfa93d4abdb253e937b9939ee3b62e4d5ba50c2))
+
+
+### Bug Fixes
+
+* `Footer` コンポーネントを削除 (SHRUI-525) ([#2320](https://github.com/kufu/smarthr-ui/issues/2320)) ([0faca49](https://github.com/kufu/smarthr-ui/commit/0faca497050004a8f722377107f560da4a472e38))
+* change type of text props to ReactNode ([#2327](https://github.com/kufu/smarthr-ui/issues/2327)) ([0f6b58a](https://github.com/kufu/smarthr-ui/commit/0f6b58a6cf0ad5d6a220ee3ea9b75ad3f776fe3d))
+* ダイアログのフェードアニメーション中にDOMが更新されてちらつくのを防ぎたい ([#2319](https://github.com/kufu/smarthr-ui/issues/2319)) ([42945d0](https://github.com/kufu/smarthr-ui/commit/42945d0f1b446aba4d1023bfeafda5d4e7a22e70))
+
 ## [19.1.0](https://github.com/kufu/smarthr-ui/compare/v19.0.2...v19.1.0) (2022-03-03)
 
 
