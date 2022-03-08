@@ -50,8 +50,7 @@ const Base = styled.div<{ themes: Theme }>`
       box-shadow: ${shadow.LAYER2};
       white-space: nowrap;
 
-      &::before,
-      &::after {
+      &::before {
         display: block;
         position: absolute;
         border-style: ${border.lineStyle};
@@ -62,86 +61,62 @@ const Base = styled.div<{ themes: Theme }>`
       color: ${color.TEXT_BLACK};
 
       &.top {
-        &::before,
-        &::after {
+        &::before {
           border-width: 0 5px 5px;
         }
         &::before {
           top: -5px;
           border-color: transparent transparent ${color.BORDER};
         }
-        &::after {
-          top: -4px;
-          border-color: transparent transparent ${color.WHITE};
-        }
       }
       &.bottom {
-        &::before,
-        &::after {
+        &::before {
           border-width: 5px 5px 0;
         }
         &::before {
           bottom: -5px;
           border-color: ${color.BORDER} transparent transparent;
         }
-        &::after {
-          bottom: -4px;
-          border-color: ${color.WHITE} transparent transparent;
-        }
       }
 
       &.right {
-        &::before,
-        &::after {
+        &::before {
           right: 24px;
         }
       }
       &.center {
-        &::before,
-        &::after {
+        &::before {
           left: 50%;
           transform: translateX(-5px);
         }
       }
       &.left {
-        &::before,
-        &::after {
+        &::before {
           left: 24px;
         }
       }
 
       &.middle {
-        &::before,
-        &::after {
+        &::before {
           top: 50%;
           transform: translateY(-5px);
         }
         &.left {
-          &::before,
-          &::after {
+          &::before {
             border-width: 5px 5px 5px 0;
           }
           &::before {
             left: -5px;
             border-color: transparent ${color.BORDER} transparent transparent;
           }
-          &::after {
-            left: -4px;
-            border-color: transparent ${color.WHITE} transparent transparent;
-          }
         }
         &.right {
-          &::before,
-          &::after {
+          &::before {
             border-width: 5px 0 5px 5px;
           }
           &::before {
             right: -5px;
             border-color: transparent transparent transparent ${color.BORDER};
-          }
-          &::after {
-            right: -4px;
-            border-color: transparent transparent transparent ${color.WHITE};
           }
         }
       }
