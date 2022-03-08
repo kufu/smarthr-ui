@@ -6,6 +6,7 @@ import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { addReadme } from 'storybook-readme'
 import { Reset } from 'styled-reset'
 import { ArgsTable, Title } from '@storybook/addon-docs'
+import { withScreenshot } from 'storycap'
 
 import { createTheme } from '../src/themes/createTheme'
 import { ThemeProvider } from '../src/themes/ThemeProvider'
@@ -49,6 +50,13 @@ export const parameters = {
       </>
     ),
   },
+  screenshot: {
+    variants: {
+      mobile: {
+        viewport: 'iPhone 5',
+      },
+    },
+  },
 }
 
 addDecorator(addReadme)
@@ -61,3 +69,4 @@ addDecorator((Story, context) => {
     </ThemeProvider>
   )
 })
+addDecorator(withScreenshot)

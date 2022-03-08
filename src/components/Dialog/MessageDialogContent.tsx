@@ -4,7 +4,8 @@ import { DialogContext } from './DialogWrapper'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
 
-type Props = BaseProps & Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
+type Props = BaseProps &
+  Pick<DialogContentInnerProps, 'width' | 'top' | 'right' | 'bottom' | 'left' | 'id'>
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const MessageDialogContent: React.VFC<Props & ElementProps> = ({

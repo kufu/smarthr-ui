@@ -6,7 +6,7 @@ import { ActionDialogContentInner, BaseProps } from './ActionDialogContentInner'
 import { useId } from '../../hooks/useId'
 
 type Props = Omit<BaseProps, 'titleId'> &
-  Pick<DialogContentInnerProps, 'top' | 'right' | 'bottom' | 'left' | 'id'>
+  Pick<DialogContentInnerProps, 'width' | 'top' | 'right' | 'bottom' | 'left' | 'id'>
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const ActionDialogContent: React.VFC<Props & ElementProps> = ({

@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { ReactNode, VFC, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
 
@@ -13,6 +13,14 @@ const transitionClassName = 'shr-dialog-transition'
 
 export const DialogOverlap: VFC<Props> = ({ isOpen, children }) => {
   const theme = useTheme()
+  const [childrenBuffer, setChildrenBuffer] = useState<ReactNode>(null)
+
+  useEffect(() => {
+    if (isOpen) {
+      setChildrenBuffer(children)
+    }
+  }, [isOpen, children])
+
   return (
     <CSSTransition
       classNames={transitionClassName}
@@ -25,7 +33,7 @@ export const DialogOverlap: VFC<Props> = ({ isOpen, children }) => {
       appear
       unmountOnExit
     >
-      <Wrapper themes={theme}>{children}</Wrapper>
+      <Wrapper themes={theme}>{isOpen ? children : childrenBuffer}</Wrapper>
     </CSSTransition>
   )
 }

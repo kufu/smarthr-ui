@@ -7,11 +7,17 @@ import { FaPenIcon } from '../Icon'
 import { useClassNames } from './useClassNames'
 
 export type ItemProps = {
+  /** アイテムを特定するための識別子 */
   id: string
+  /** 表示するテキスト */
   text: string
+  /** このアイテムが追加された日付 */
   date?: string
+  /** このアイテムの著者 */
   author?: string
+  /** edit ボタンの aria-label */
   editLabel?: string
+  /** このコンポーネントに適用するクラス名 */
   className?: string
 }
 
