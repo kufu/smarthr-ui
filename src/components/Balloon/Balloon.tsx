@@ -40,21 +40,21 @@ export const Balloon: VFC<Props & ElementProps> = ({
 
 const Base = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { color, border, fontSize, shadow } = themes
+    const { color, fontSize } = themes
 
     return css`
       position: relative;
       display: inline-block;
       font-size: ${fontSize.S};
       border-radius: 4px;
-      box-shadow: ${shadow.LAYER2};
+      filter: drop-shadow(0 2px 2.5px rgba(0, 0, 0, 0.33));
       white-space: nowrap;
 
       &::before {
         display: block;
         position: absolute;
-        border-style: ${border.lineStyle};
         content: '';
+        background-color: ${color.WHITE};
       }
 
       background-color: ${color.WHITE};
@@ -62,20 +62,18 @@ const Base = styled.div<{ themes: Theme }>`
 
       &.top {
         &::before {
-          border-width: 0 5px 5px;
-        }
-        &::before {
           top: -5px;
-          border-color: transparent transparent ${color.BORDER};
+          width: 10px;
+          height: 5px;
+          clip-path: polygon(50% 0, 100% 100%, 0 100%);
         }
       }
       &.bottom {
         &::before {
-          border-width: 5px 5px 0;
-        }
-        &::before {
           bottom: -5px;
-          border-color: ${color.BORDER} transparent transparent;
+          width: 10px;
+          height: 5px;
+          clip-path: polygon(0 0, 100% 0, 50% 100%);
         }
       }
 
@@ -103,20 +101,18 @@ const Base = styled.div<{ themes: Theme }>`
         }
         &.left {
           &::before {
-            border-width: 5px 5px 5px 0;
-          }
-          &::before {
             left: -5px;
-            border-color: transparent ${color.BORDER} transparent transparent;
+            width: 5px;
+            height: 10px;
+            clip-path: polygon(100% 0, 100% 100%, 0 50%);
           }
         }
         &.right {
           &::before {
-            border-width: 5px 0 5px 5px;
-          }
-          &::before {
             right: -5px;
-            border-color: transparent transparent transparent ${color.BORDER};
+            width: 5px;
+            height: 10px;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
           }
         }
       }
