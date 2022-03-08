@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC, useCallback, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, VFC, useCallback, useEffect, useRef } from 'react'
 
 import { tabbable } from '../../libs/tabbable'
 
@@ -37,11 +37,17 @@ export const FocusTrap: VFC<Props> = ({ children }) => {
     }
   }, [handleKeyDown])
 
-  const { returnFocusToTrigger } = useTriggerFocusControl()
   useEffect(() => {
+    const triggerElement = document.activeElement
     focusTargetRef.current?.focus()
-    return returnFocusToTrigger
-  }, [returnFocusToTrigger])
+
+    return () => {
+      // フォーカストラップ終了時にトリガにフォーカスを戻す
+      if (triggerElement instanceof HTMLElement) {
+        triggerElement.focus()
+      }
+    }
+  }, [])
 
   return (
     <div ref={ref}>
@@ -50,17 +56,4 @@ export const FocusTrap: VFC<Props> = ({ children }) => {
       {children}
     </div>
   )
-}
-
-export function useTriggerFocusControl() {
-  const [triggerElement, setTriggerElement] = useState<Element | null>(null)
-
-  const returnFocusToTrigger = useCallback(() => {
-    if (triggerElement instanceof HTMLElement) {
-      triggerElement.focus()
-    }
-    setTriggerElement(null)
-  }, [triggerElement])
-
-  return { returnFocusToTrigger }
 }
