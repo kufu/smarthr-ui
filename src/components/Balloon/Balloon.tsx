@@ -63,56 +63,56 @@ const Base = styled.div<{ themes: Theme }>`
 
       &.top {
         &::before {
-          top: -5px;
-          width: 10px;
-          height: 5px;
+          top: -4px;
+          width: 8px;
+          height: 4px;
           clip-path: polygon(50% 0, 100% 100%, 0 100%);
         }
       }
       &.bottom {
         &::before {
-          bottom: -5px;
-          width: 10px;
-          height: 5px;
+          bottom: -4px;
+          width: 8px;
+          height: 4px;
           clip-path: polygon(0 0, 100% 0, 50% 100%);
         }
       }
 
       &.right {
         &::before {
-          right: 24px;
+          right: 25px;
         }
       }
       &.center {
         &::before {
           left: 50%;
-          transform: translateX(-5px);
+          transform: translateX(-4px);
         }
       }
       &.left {
         &::before {
-          left: 24px;
+          left: 25px;
         }
       }
 
       &.middle {
         &::before {
           top: 50%;
-          transform: translateY(-5px);
+          transform: translateY(-4px);
         }
         &.left {
           &::before {
-            left: -5px;
-            width: 5px;
-            height: 10px;
+            left: -4px;
+            width: 4px;
+            height: 8px;
             clip-path: polygon(100% 0, 100% 100%, 0 50%);
           }
         }
         &.right {
           &::before {
-            right: -5px;
-            width: 5px;
-            height: 10px;
+            right: -4px;
+            width: 4px;
+            height: 8px;
             clip-path: polygon(0 0, 100% 50%, 0 100%);
           }
         }
