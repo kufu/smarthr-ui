@@ -49,6 +49,7 @@ const Base = styled.div<{ themes: Theme }>`
       border-radius: 4px;
       filter: drop-shadow(0 2px 2.5px rgba(0, 0, 0, 0.33));
       white-space: nowrap;
+      transform: translateZ(0); /* safari で filter を正しく描画するために必要 */
 
       &::before {
         display: block;
