@@ -47,7 +47,9 @@ const Base = styled.div<{ themes: Theme }>`
       display: inline-block;
       font-size: ${fontSize.S};
       border-radius: 4px;
-      filter: drop-shadow(0 2px 2.5px rgba(0, 0, 0, 0.33));
+      filter: drop-shadow(
+        0 2px 2.5px rgba(0, 0, 0, 0.33)
+      ); /* drop-shadow は spread-radius を受け付けないので shadow.LAYER2 に近い値をハードコーディングしている */
       white-space: nowrap;
       transform: translateZ(0); /* safari で filter を正しく描画するために必要 */
 
