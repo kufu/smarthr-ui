@@ -54,6 +54,34 @@ export const parameters = {
     variants: {
       mobile: {
         viewport: 'iPhone 5',
+        /**
+         * storycap にて、初回以降の variants で CSS アニメーションを無効にするスタイルが効かないバグが存在するようなので、
+         * キャプチャ前に DOM にスタイルを差し込む処理を追加
+         * 参考: https://github.com/reg-viz/storycap/issues/327
+         */
+        waitFor: () =>
+          new Promise((resolve) => {
+            const stylesId = 'smarthr-ui-storycap-disable-css-animation'
+            if (!document.getElementById(stylesId)) {
+              const styles = document.createElement('style')
+              styles.setAttribute('id', stylesId)
+              styles.appendChild(
+                document.createTextNode(`
+                  *,
+                  *::before,
+                  *::after {
+                    transition: none !important;
+                    animation: none !important;
+                  }
+                  input {
+                    caret-color: transparent !important;
+                  }
+                `),
+              )
+              document.querySelector('head').appendChild(styles)
+            }
+            resolve()
+          }),
       },
     },
   },
