@@ -61,10 +61,10 @@ export function getContentBoxStyle(
 
   if (triggerAlignCenter <= windowSize.width / 2) {
     // トリガが画面左寄りの場合
-    contentBox.left = `${scroll.left + triggerRect.left}px`
+    contentBox.left = `${scroll.left + triggerRect.left - 5}px`
   } else {
     // トリガが画面右寄りの場合
-    contentBox.right = `${windowSize.width - triggerRect.right - scroll.left}px`
+    contentBox.right = `${windowSize.width - triggerRect.right - scroll.left - 5}px`
   }
 
   return contentBox
