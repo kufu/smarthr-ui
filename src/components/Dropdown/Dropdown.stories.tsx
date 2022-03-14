@@ -13,7 +13,7 @@ import { DropdownScrollArea } from './DropdownScrollArea'
 import { PrimaryButton, SecondaryButton } from '../Button'
 import { RadioButton } from '../RadioButton'
 import { Input } from '../Input'
-import { Stack } from '../Layout'
+import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
 import { FaCaretDownIcon } from '../Icon'
 
@@ -100,13 +100,15 @@ const ControllableDropdown = () => {
             </RadioButtonList>
           </ControllableBoxMain>
           <ControllableBoxBottom themes={themes}>
-            <DropdownCloser>
-              <SecondaryButton>Close only</SecondaryButton>
-            </DropdownCloser>
-            <DropdownCloser>
-              <PrimaryButton onClick={action('clicked button 1')}>Action and close</PrimaryButton>
-            </DropdownCloser>
-            <PrimaryButton onClick={action('clicked button 2')}>Action only</PrimaryButton>
+            <Cluster justify="flex-end">
+              <DropdownCloser>
+                <SecondaryButton>Close only</SecondaryButton>
+              </DropdownCloser>
+              <DropdownCloser>
+                <PrimaryButton onClick={action('clicked button 1')}>Action and close</PrimaryButton>
+              </DropdownCloser>
+              <PrimaryButton onClick={action('clicked button 2')}>Action only</PrimaryButton>
+            </Cluster>
           </ControllableBoxBottom>
         </DropdownScrollArea>
       </DropdownContent>
@@ -253,15 +255,8 @@ const ControllableBoxMain = styled(Stack)`
   padding: 24px;
 `
 const ControllableBoxBottom = styled.div<{ themes: Theme }>`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
   border-top: ${({ themes }) => themes.border.shorthand};
   padding: 16px 24px;
-
-  & > *:not(:first-child) {
-    margin-left: 16px;
-  }
 `
 const RightAlign = styled.div`
   display: flex;

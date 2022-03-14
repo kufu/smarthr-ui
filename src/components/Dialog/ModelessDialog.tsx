@@ -18,7 +18,6 @@ import { Base, BaseElementProps } from '../Base'
 import { SecondaryButton } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
 import { DialogOverlap } from './DialogOverlap'
-import { useTriggerFocusControl } from './FocusTrap'
 import { useClassNames } from './useClassNames'
 
 type Props = {
@@ -95,6 +94,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
 }) => {
   const portalContainer = useRef(document.createElement('div')).current
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const focusTargetRef = useRef<HTMLDivElement>(null)
   const [wrapperPosition, setWrapperPosition] = useState<DOMRect | undefined>(undefined)
   const [centering, setCentering] = useState<{
     top?: number
@@ -129,13 +129,12 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }, [isOpen, onPressEscape]),
   )
 
-  const { moveFocusFromTrigger } = useTriggerFocusControl(wrapperRef)
   useLayoutEffect(() => {
     if (isOpen) {
       setPosition({ x: 0, y: 0 })
-      moveFocusFromTrigger()
+      focusTargetRef.current?.focus()
     }
-  }, [isOpen, moveFocusFromTrigger])
+  }, [isOpen])
 
   useEffect(() => {
     // 中央寄せの座標計算を行う
@@ -233,7 +232,9 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
             themes={theme}
             className={classNames.box}
           >
-            <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
+            <div tabIndex={-1} ref={focusTargetRef}>
+              {/* dummy element for focus management. */}
+            </div>
             <Header className={classNames.header} themes={theme}>
               <Title id={labelId} themes={theme}>
                 {header}
