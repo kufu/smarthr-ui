@@ -4534,7 +4534,7 @@ acorn@^7.1.1, acorn@^7.4.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.4.1.tgz#feaed255973d2e77555b83dbc08851a6c63520fa"
   integrity sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==
 
-acorn@^8.0.4, acorn@^8.2.4, acorn@^8.4.1:
+acorn@^8.2.4, acorn@^8.4.1:
   version "8.4.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.4.1.tgz#56c36251fc7cabc7096adc18f05afe814321a28c"
   integrity sha512-asabaBSkEKosYKMITunzX177CXxQ4Q8BSSzMTKD+FefUhipQC70gfW5SiUDhYQ3vk8G+81HqQk7Fv9OXwwn9KA==
@@ -7572,12 +7572,12 @@ ecdsa-sig-formatter@1.0.11:
   dependencies:
     safe-buffer "^5.0.1"
 
-ecma-version-validator-webpack-plugin@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/ecma-version-validator-webpack-plugin/-/ecma-version-validator-webpack-plugin-1.1.0.tgz#ee711d74267d0534e550cb90526c6928aceef7db"
-  integrity sha512-gaADOe6CZ6WkAxE/UpIcU2bXuJB7QwP+Atv6JtZG4wCp9HBy+VS11H+1OTXtPyo0vTLSO5a8LjvTo7OG3ke3kw==
+ecma-version-validator-webpack-plugin@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/ecma-version-validator-webpack-plugin/-/ecma-version-validator-webpack-plugin-1.2.1.tgz#0e1d30b8ec626cc6ab6728bb7ad434b77e4ff026"
+  integrity sha512-8hOYmTQVv+POO3OCAfFfv4frF49rEAuGnZ4oQ9PBCRBFRGWIyTexa7KKA2gS9vnVNrsMWEizw+0bEOeCLnIMcw==
   dependencies:
-    acorn "^8.0.4"
+    acorn "^8.7.0"
 
 ee-first@1.1.1:
   version "1.1.1"
