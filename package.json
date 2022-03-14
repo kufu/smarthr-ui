@@ -35,7 +35,7 @@
     "@types/styled-components": "^5.1.24",
     "babel-loader": "^8.2.3",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
-    "eslint": "^8.10.0",
+    "eslint": "^8.11.0",
     "eslint-config-smarthr": "^6.0.7",
     "fs-extra": "^10.0.1",
     "http-server": "^14.1.0",
