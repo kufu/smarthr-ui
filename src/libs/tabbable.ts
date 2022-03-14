@@ -24,7 +24,9 @@ export function tabbable(el: HTMLElement, option?: Partial<Option>) {
     ...defaultOption,
     ...option,
   }
-  const candidates = Array.from(el.querySelectorAll<HTMLElement>(candidateSelector))
+  const candidates = Array.from(el.querySelectorAll<HTMLElement>(candidateSelector)).filter(
+    (element) => element.tabIndex >= 0,
+  )
   if (mergedOption.shouldIgnoreVisibility) {
     return candidates
   }

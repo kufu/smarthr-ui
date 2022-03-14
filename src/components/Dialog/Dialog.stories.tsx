@@ -372,9 +372,33 @@ Uncontrolled.parameters = {
   },
 }
 
-export const Position: Story = () => {
+export const WidthAndPosition: Story = () => {
   return (
     <TriggerList>
+      <li>
+        <DialogWrapper>
+          <DialogTrigger>
+            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-width-1">
+              幅 400px
+            </SecondaryButton>
+          </DialogTrigger>
+          <DialogContent width={400} id="dialog-width-1">
+            <Description>幅 400px のダイアログ</Description>
+          </DialogContent>
+        </DialogWrapper>
+      </li>
+      <li>
+        <DialogWrapper>
+          <DialogTrigger>
+            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-width-2">
+              幅 80%
+            </SecondaryButton>
+          </DialogTrigger>
+          <DialogContent width="80%" id="dialog-width-2">
+            <Description>幅 80% のダイアログ</Description>
+          </DialogContent>
+        </DialogWrapper>
+      </li>
       <li>
         <DialogWrapper>
           <DialogTrigger>
@@ -402,7 +426,7 @@ export const Position: Story = () => {
     </TriggerList>
   )
 }
-Position.parameters = {
+WidthAndPosition.parameters = {
   docs: {
     description: {
       story: 'The position of Dialog can be changed.',
@@ -546,6 +570,30 @@ export const Modeless_Dialog: Story = () => {
         </ModelessDialog>
       </li>
     </TriggerList>
+  )
+}
+
+export const RegDialogOpenedDialog: Story = () => {
+  return (
+    <Dialog isOpen>
+      <Description>{dummyText}</Description>
+    </Dialog>
+  )
+}
+
+export const RegDialogOpenedDialogWidth: Story = () => {
+  return (
+    <Dialog isOpen width={500}>
+      <Description>{dummyText}</Description>
+    </Dialog>
+  )
+}
+
+export const RegDialogOpenedDialogPosition: Story = () => {
+  return (
+    <Dialog isOpen top={20} right={40} bottom={60} left={80}>
+      <Description>{dummyText}</Description>
+    </Dialog>
   )
 }
 

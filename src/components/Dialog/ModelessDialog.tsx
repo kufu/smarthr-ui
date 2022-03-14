@@ -18,7 +18,6 @@ import { Base, BaseElementProps } from '../Base'
 import { SecondaryButton } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
 import { DialogOverlap } from './DialogOverlap'
-import { useTriggerFocusControl } from './FocusTrap'
 import { useClassNames } from './useClassNames'
 
 type Props = {
@@ -95,6 +94,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
 }) => {
   const portalContainer = useRef(document.createElement('div')).current
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const focusTargetRef = useRef<HTMLDivElement>(null)
   const [wrapperPosition, setWrapperPosition] = useState<DOMRect | undefined>(undefined)
   const [centering, setCentering] = useState<{
     top?: number
@@ -129,13 +129,12 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }, [isOpen, onPressEscape]),
   )
 
-  const { moveFocusFromTrigger } = useTriggerFocusControl(wrapperRef)
   useLayoutEffect(() => {
     if (isOpen) {
       setPosition({ x: 0, y: 0 })
-      moveFocusFromTrigger()
+      focusTargetRef.current?.focus()
     }
-  }, [isOpen, moveFocusFromTrigger])
+  }, [isOpen])
 
   useEffect(() => {
     // 中央寄せの座標計算を行う
@@ -226,8 +225,16 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
           aria-labelledby={labelId}
           {...props}
         >
-          <Box className={classNames.box}>
-            <div tabIndex={-1}>{/* dummy element for focus management. */}</div>
+          <Box
+            isWidthAuto={width === undefined}
+            left={left}
+            right={right}
+            themes={theme}
+            className={classNames.box}
+          >
+            <div tabIndex={-1} ref={focusTargetRef}>
+              {/* dummy element for focus management. */}
+            </div>
             <Header className={classNames.header} themes={theme}>
               <Title id={labelId} themes={theme}>
                 {header}
@@ -276,12 +283,33 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
 const Layout = styled.div`
   position: fixed;
 `
-const Box = styled(Base).attrs({ radius: 'm', layer: 3 })`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  max-height: 100vh;
+const Box = styled(Base).attrs({ radius: 'm', layer: 3 })<{
+  isWidthAuto: boolean
+  left?: string | number
+  right?: string | number
+  themes: Theme
+}>`
+  ${({ isWidthAuto, left = 0, right = 0, themes: { spacingByChar } }) => {
+    const leftMargin = typeof left === 'number' ? `${left}px` : left
+    const rightMargin = typeof right === 'number' ? `${right}px` : right
+
+    return css`
+      display: flex;
+      flex-direction: column;
+      ${isWidthAuto &&
+      css`
+        max-width: min(
+          calc(
+            100vw - max(${leftMargin}, ${spacingByChar(0.5)}) -
+              max(${rightMargin}, ${spacingByChar(0.5)})
+          ),
+          800px /* TODO: 幅の定義が決まり theme に入ったら差し替える */
+        );
+      `}
+      height: 100%;
+      max-height: 100vh;
+    `
+  }}
 `
 const Header = styled.div<{ themes: Theme }>`
   ${({ themes: { border, spacingByChar } }) => css`
@@ -334,6 +362,7 @@ const CloseButtonLayout = styled.div`
   margin-left: auto;
 `
 const Content = styled.div`
+  flex: 1;
   overflow: auto;
 `
 const Footer = styled.div<{ themes: Theme }>`

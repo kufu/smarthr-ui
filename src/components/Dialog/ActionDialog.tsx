@@ -10,7 +10,15 @@ type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & {
   portalParent?: HTMLElement
 } & Pick<
     DialogContentInnerProps,
-    'isOpen' | 'onClickOverlay' | 'onPressEscape' | 'top' | 'right' | 'bottom' | 'left' | 'id'
+    | 'isOpen'
+    | 'onClickOverlay'
+    | 'onPressEscape'
+    | 'width'
+    | 'top'
+    | 'right'
+    | 'bottom'
+    | 'left'
+    | 'id'
   >
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 

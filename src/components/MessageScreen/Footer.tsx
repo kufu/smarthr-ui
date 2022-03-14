@@ -7,32 +7,18 @@ type ElementProps = HTMLAttributes<HTMLElement>
 
 export const Footer: VFC<ElementProps> = ({ className = '', ...props }) => {
   const theme = useTheme()
-  const { wrapper, list, listItem } = useClassNames()
+  const { footer } = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={`${wrapper} ${className}`} {...props}>
-      <List themes={theme} className={list}>
-        <Item href="https://smarthr.jp/help" className={listItem}>
-          ヘルプ
-        </Item>
-        <Item href="https://smarthr.jp/info" className={listItem}>
-          お知らせ
-        </Item>
-        <Item href="https://smarthr.jp/terms" className={listItem}>
-          利用規約
-        </Item>
-        <Item href="https://smarthr.jp/policy" className={listItem}>
-          プライバシーポリシー
-        </Item>
-        <Item href="https://smarthr.jp/law" className={listItem}>
-          特定商取引法に基づく表記
-        </Item>
-        <Item href="https://smarthr.co.jp" className={listItem}>
-          運営会社
-        </Item>
-        <Item href="https://developer.smarthr.jp" className={listItem}>
-          開発者向けAPI{' '}
-        </Item>
+    <Wrapper themes={theme} className={`${footer} ${className}`} {...props}>
+      <List themes={theme}>
+        <Item href="https://smarthr.jp/help">ヘルプ</Item>
+        <Item href="https://smarthr.jp/info">お知らせ</Item>
+        <Item href="https://smarthr.jp/terms">利用規約</Item>
+        <Item href="https://smarthr.jp/policy">プライバシーポリシー</Item>
+        <Item href="https://smarthr.jp/law">特定商取引法に基づく表記</Item>
+        <Item href="https://smarthr.co.jp">運営会社</Item>
+        <Item href="https://developer.smarthr.jp">開発者向けAPI </Item>
       </List>
       <Copy themes={theme}>&copy; SmartHR, Inc.</Copy>
     </Wrapper>
