@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import { range } from '../../libs/lodash'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+import { Reel } from '../Layout'
 
 import { PaginationItem } from './PaginationItem'
 import { PaginationControllerItem } from './PaginationControllerItem'
@@ -102,17 +103,20 @@ export const Pagination: VFC<Props & ElementProps> = ({
       aria-label="ページネーション"
       {...props}
     >
-      <List className={withoutNumbers ? 'withoutNumbers' : ''} themes={theme}>
-        {prevPage}
-        {pages}
-        {nextPage}
-      </List>
+      <Reel>
+        <List className={withoutNumbers ? 'withoutNumbers' : ''} themes={theme}>
+          {prevPage}
+          {pages}
+          {nextPage}
+        </List>
+      </Reel>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.nav`
   display: inline-block;
+  max-width: 100%;
 `
 const List = styled.ul<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => {
