@@ -9,7 +9,8 @@ import { ArgsTable, Title } from '@storybook/addon-docs'
 import { withScreenshot } from 'storycap'
 
 import { createTheme } from '../src/themes/createTheme'
-import { ThemeProvider } from '../src/themes/ThemeProvider'
+import { ThemeProvider as ShrThemeProvider } from '../src/themes/ThemeProvider'
+import { ThemeProvider } from 'styled-components'
 
 const AXE_LOCALE_JA = require('axe-core/locales/ja.json');
 
@@ -97,10 +98,13 @@ export const parameters = {
 addDecorator(addReadme)
 addDecorator((Story, context) => {
   const shouldReset = context.globals.reset === 'styled-reset'
+  const theme = createTheme()
   return (
-    <ThemeProvider theme={createTheme()}>
-      {shouldReset && <Reset />}
-      <Story />
+    <ThemeProvider theme={theme}>
+      <ShrThemeProvider theme={theme}>
+        {shouldReset && <Reset />}
+        <Story />
+      </ShrThemeProvider>
     </ThemeProvider>
   )
 })

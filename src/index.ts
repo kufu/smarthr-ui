@@ -95,7 +95,7 @@ export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
 
 // layout components
-export { Cluster, LineUp, Stack, Sidebar } from './components/Layout'
+export { Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'
 
 // hooks
 export { useTheme } from './hooks/useTheme'
