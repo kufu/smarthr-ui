@@ -22,7 +22,7 @@ export type HeadingTypes =
   | 'subBlockTitle'
   | 'subSubBlockTitle'
 
-export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'
+export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'legend'
 
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
