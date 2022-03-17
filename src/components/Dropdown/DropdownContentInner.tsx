@@ -1,9 +1,9 @@
-import React, { VFC, createContext, useCallback, useLayoutEffect, useRef, useState } from 'react'
+import React, { VFC, createContext, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { ContentBoxStyle, Rect, getContentBoxStyle, getFirstTabbable } from './dropdownHelper'
+import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
 import { DropdownCloser } from './DropdownCloser'
 import { useKeyboardNavigation } from './useKeyboardNavigation'
 
@@ -33,11 +33,11 @@ export const DropdownContentInner: VFC<Props> = ({
   const theme = useTheme()
   const [isActive, setIsActive] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
-    top: '0',
-    left: '0',
+    top: 'auto',
     maxHeight: '',
   })
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const focusTargetRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     if (wrapperRef.current) {
@@ -49,12 +49,12 @@ export const DropdownContentInner: VFC<Props> = ({
             height: wrapperRef.current.offsetHeight,
           },
           {
-            width: innerWidth,
+            width: document.body.clientWidth,
             height: innerHeight,
           },
           {
-            top: pageYOffset,
-            left: pageXOffset,
+            top: scrollY,
+            left: scrollX,
           },
         ),
       )
@@ -62,29 +62,11 @@ export const DropdownContentInner: VFC<Props> = ({
     }
   }, [triggerRect])
 
-  const focusContent = useCallback(() => {
-    // delay for waiting to change the inner contents to visible
-    const firstTabbale = getFirstTabbable(wrapperRef)
-    if (firstTabbale) {
-      firstTabbale.focus()
-      return true
-    }
-    return false
-  }, [])
-
   useLayoutEffect(() => {
     if (isActive) {
-      // when the dropdwon content becomes active, focus a first tabbable element in it
-      setTimeout(() => {
-        // delay for waiting to change the inner contents to visible
-        if (!focusContent()) {
-          setTimeout(() => {
-            focusContent()
-          }, 100)
-        }
-      }, 30)
+      focusTargetRef.current?.focus()
     }
-  }, [isActive, focusContent])
+  }, [isActive])
 
   useKeyboardNavigation(wrapperRef)
 
@@ -95,6 +77,8 @@ export const DropdownContentInner: VFC<Props> = ({
       className={`${className} ${isActive ? 'active' : ''}`}
       themes={theme}
     >
+      {/* dummy element for focus management. */}
+      <div tabIndex={-1} ref={focusTargetRef} />
       {controllable ? (
         <ControllableWrapper scrollable={scrollable} contentBox={contentBox}>
           {children}
@@ -113,7 +97,11 @@ const Wrapper = styled.div<{
   contentBox: ContentBoxStyle
 }>`
   ${({ contentBox, themes }) => {
-    const { color, radius, zIndex, shadow } = themes
+    const { color, radius, zIndex, shadow, spacingByChar } = themes
+    const leftMargin =
+      contentBox.left === undefined ? spacingByChar(0.5) : `max(${contentBox.left}, 0px)`
+    const rightMargin =
+      contentBox.right === undefined ? spacingByChar(0.5) : `max(${contentBox.right}, 0px)`
 
     return css`
       display: flex;
@@ -121,11 +109,19 @@ const Wrapper = styled.div<{
       z-index: ${zIndex.OVERLAP_BASE};
       position: absolute;
       top: ${contentBox.top};
-      left: ${contentBox.left};
+      ${contentBox.left !== undefined &&
+      css`
+        left: ${contentBox.left};
+      `}
+      ${contentBox.right !== undefined &&
+      css`
+        right: ${contentBox.right};
+      `}
+      max-width: calc(100% - ${leftMargin} - ${rightMargin});
+      word-break: break-word;
       border-radius: ${radius.m};
       box-shadow: ${shadow.LAYER3};
       background-color: ${color.WHITE};
-      white-space: nowrap;
 
       &.active {
         visibility: visible;

@@ -94,7 +94,6 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
   const classNames = useClassNames().dialog
   const theme = useTheme()
   const innerRef = useRef<HTMLDivElement>(null)
-  const focusTarget = useRef<HTMLDivElement>(null)
   useHandleEscape(
     useCallback(() => {
       if (!isOpen) {
@@ -120,23 +119,19 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
             themes={theme}
             className={classNames.background}
           />
-          <FocusTrap>
-            <Inner
-              $width={width}
-              ref={innerRef}
-              themes={theme}
-              role="dialog"
-              aria-label={ariaLabel}
-              aria-labelledby={ariaLabelledby}
-              aria-modal="true"
-              className={`${className} ${classNames.dialog}`}
-              {...props}
-            >
-              {/* dummy element for focus management. */}
-              <div ref={focusTarget} tabIndex={-1} aria-label={ariaLabel}></div>
-              {children}
-            </Inner>
-          </FocusTrap>
+          <Inner
+            $width={width}
+            ref={innerRef}
+            themes={theme}
+            role="dialog"
+            aria-label={ariaLabel}
+            aria-labelledby={ariaLabelledby}
+            aria-modal="true"
+            className={`${className} ${classNames.dialog}`}
+            {...props}
+          >
+            <FocusTrap>{children}</FocusTrap>
+          </Inner>
           {/* Suppresses scrolling of body while modal is displayed */}
           <BodyScrollSuppressor />
         </Layout>

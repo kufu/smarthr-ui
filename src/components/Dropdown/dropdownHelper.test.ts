@@ -9,7 +9,7 @@ describe('dropdownHelper', () => {
       const scroll = { top: 0, left: 0 }
       expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
         top: '135px', // 140 - 5
-        left: '-5px', // 0 - 5
+        left: '-5px', // trigger left - 5
         maxHeight: '',
       })
     })
@@ -21,7 +21,7 @@ describe('dropdownHelper', () => {
       const scroll = { top: 0, left: 0 }
       expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
         top: '205px', // 600 - 400 + 5
-        left: '-5px', // 0 - 5
+        left: '-5px', // trigger left - 5
         maxHeight: '',
       })
     })
@@ -33,7 +33,7 @@ describe('dropdownHelper', () => {
       const scroll = { top: 0, left: 0 }
       expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
         top: '135px', // 140 - 5
-        left: '-5px', // 0 - 5
+        left: '-5px', // trigger left - 5
         maxHeight: '220px', // 370 - 140 - 10
       })
     })
@@ -45,7 +45,7 @@ describe('dropdownHelper', () => {
       const scroll = { top: 0, left: 0 }
       expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
         top: '15px', // 0 + 10 + 5
-        left: '-5px', // 0 - 5
+        left: '-5px', // trigger left - 5
         maxHeight: '190px', // 200 - 10
       })
     })
@@ -57,7 +57,7 @@ describe('dropdownHelper', () => {
       const scroll = { top: 0, left: 0 }
       expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
         top: '135px', // 140 - 5
-        left: '325px', // 620 - 300 + 5
+        right: '375px', // window width - trigger right - 5
         maxHeight: '',
       })
     })
@@ -69,7 +69,7 @@ describe('dropdownHelper', () => {
       const scroll = { top: 500, left: 600 }
       expect(getContentBoxStyle(triggerRect, contentSize, windowSize, scroll)).toEqual({
         top: '635px', // 140 - 5 + 500
-        left: '595px', // 0 - 5 + 600
+        left: '595px', // trigger left + scroll left - 5
         maxHeight: '',
       })
     })

@@ -11,7 +11,8 @@ export type Rect = {
 type Size = { width: number; height: number }
 export type ContentBoxStyle = {
   top: string
-  left: string
+  left?: string
+  right?: string
   maxHeight: string
 }
 
@@ -32,21 +33,25 @@ export function getContentBoxStyle(
 ) {
   const contentBox: ContentBoxStyle = {
     top: 'auto',
-    left: 'auto',
     maxHeight: '',
   }
 
   if (triggerRect.bottom + contentSize.height <= windowSize.height) {
+    // ドロップダウンのサイズがトリガの下側の領域に収まる場合
     contentBox.top = `${scroll.top + triggerRect.bottom - 5}px`
   } else if (triggerRect.top - contentSize.height >= 0) {
+    // ドロップダウンのサイズがトリガの上川の領域に収まる場合
     contentBox.top = `${scroll.top + triggerRect.top - contentSize.height + 5}px`
   } else {
     const padding = 10
+    const triggerHeight = triggerRect.bottom - triggerRect.top
 
-    if (triggerRect.top + (triggerRect.bottom - triggerRect.top) / 2 < windowSize.height / 2) {
+    if (triggerRect.top + triggerHeight / 2 < windowSize.height / 2) {
+      // 下側の領域のほうが広い場合
       contentBox.top = `${scroll.top + triggerRect.bottom - 5}px`
       contentBox.maxHeight = `${windowSize.height - triggerRect.bottom - padding}px`
     } else {
+      // 上側の領域のほうが広い場合
       contentBox.top = `${scroll.top + padding + 5}px`
       contentBox.maxHeight = `${triggerRect.top - padding}px`
     }
@@ -55,9 +60,11 @@ export function getContentBoxStyle(
   const triggerAlignCenter = triggerRect.left + (triggerRect.right - triggerRect.left) / 2
 
   if (triggerAlignCenter <= windowSize.width / 2) {
+    // トリガが画面左寄りの場合
     contentBox.left = `${scroll.left + triggerRect.left - 5}px`
   } else {
-    contentBox.left = `${scroll.left + triggerRect.right - contentSize.width + 5}px`
+    // トリガが画面右寄りの場合
+    contentBox.right = `${windowSize.width - triggerRect.right - scroll.left - 5}px`
   }
 
   return contentBox
