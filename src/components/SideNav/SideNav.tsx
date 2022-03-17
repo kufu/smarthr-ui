@@ -8,9 +8,13 @@ import { useClassNames } from './useClassNames'
 type SideNavItemProps = Omit<ComponentProps<typeof SideNavItem>, 'size' | 'onClick'>
 
 type Props = {
+  /** 各アイテムのデータの配列 */
   items: SideNavItemProps[]
+  /** 各アイテムの大きさ */
   size?: SideNavSizeType
+  /** アイテムを押下したときに発火するコールバック関数 */
   onClick?: OnClick
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 
