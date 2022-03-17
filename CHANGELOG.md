@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [20.1.0](https://github.com/kufu/smarthr-ui/compare/v20.0.0...v20.1.0) (2022-03-17)
+
+
+### Features
+
+* add Reel component ([#2345](https://github.com/kufu/smarthr-ui/issues/2345)) ([2b14f5b](https://github.com/kufu/smarthr-ui/commit/2b14f5b64dec8d313af1691ccc5483ebe30795d7))
+
+
+### Bug Fixes
+
+* `Dropdown` のモバイル表示調整 (SHRUI-536) ([#2325](https://github.com/kufu/smarthr-ui/issues/2325)) ([4f95c3f](https://github.com/kufu/smarthr-ui/commit/4f95c3feb9d19402dfa92826181a71b3982c400d))
+* add Reel wrapper to Pagination ([#2350](https://github.com/kufu/smarthr-ui/issues/2350)) ([c28baaa](https://github.com/kufu/smarthr-ui/commit/c28baaa88b584a5ad388044b7691e57928e7ad45))
+* Balloon の三角形関連のスタイルを改善 ([#2348](https://github.com/kufu/smarthr-ui/issues/2348)) ([ab1a65c](https://github.com/kufu/smarthr-ui/commit/ab1a65c0624775fab3e07883228aea45d92a800b))
+
 ## [20.0.0](https://github.com/kufu/smarthr-ui/compare/v19.1.0...v20.0.0) (2022-03-08)
 
 

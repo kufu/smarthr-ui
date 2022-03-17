@@ -4,10 +4,15 @@ import styled, { css } from 'styled-components'
 import { useClassNames } from './useClassNames'
 
 type Props = {
+  /** コンポーネントのタイトル */
   title?: string
+  /** コンポーネントの幅 */
   width?: number
+  /** コンポーネントの高さ */
   height?: number
+  /** ロゴの色 */
   fill?: string
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>

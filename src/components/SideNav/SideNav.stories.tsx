@@ -1,4 +1,4 @@
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
 import * as React from 'react'
 import styled from 'styled-components'
@@ -8,6 +8,16 @@ import { StatusLabel } from '../StatusLabel'
 import { Heading } from '../Heading'
 
 import readme from './README.md'
+
+export default {
+  title: 'SideNav',
+  component: SideNav,
+  parameters: {
+    readme: {
+      sidebar: readme,
+    },
+  },
+}
 
 const Label = styled(StatusLabel)`
   &.done {
@@ -76,24 +86,19 @@ const SideNavPrefixItems = [
   },
 ]
 
-storiesOf('SideNav', module)
-  .addParameters({
-    readme: {
-      sidebar: readme,
-    },
-  })
-  .add('all', () => (
-    <Wrapper>
-      <Title type="sectionTitle">default</Title>
-      <SideNav items={SideNavItems} onClick={action('clicked')} />
+export const All: Story = () => (
+  <Wrapper>
+    <Title type="sectionTitle">default</Title>
+    <SideNav items={SideNavItems} onClick={action('clicked')} />
 
-      <Title type="sectionTitle">Small Size</Title>
-      <SideNav size="s" items={SideNavItems} onClick={action('clicked')} />
+    <Title type="sectionTitle">Small Size</Title>
+    <SideNav size="s" items={SideNavItems} onClick={action('clicked')} />
 
-      <Title type="sectionTitle">With Prefix</Title>
-      <SideNav items={SideNavPrefixItems} onClick={action('clicked')} />
-    </Wrapper>
-  ))
+    <Title type="sectionTitle">With Prefix</Title>
+    <SideNav items={SideNavPrefixItems} onClick={action('clicked')} />
+  </Wrapper>
+)
+All.storyName = 'all'
 
 const Wrapper = styled.div`
   padding: 24px;
