@@ -46,7 +46,7 @@ export const All: Story = () => (
 )
 All.storyName = 'all'
 
-export const WithoutTextareLabel: Story = () => (
+export const WithoutTextareaLabel: Story = () => (
   <RightFixedNote
     title="RightFixedNote"
     items={sampleItems}
@@ -54,7 +54,7 @@ export const WithoutTextareLabel: Story = () => (
     onClickEdit={action('click edit!!')}
   />
 )
-WithoutTextareLabel.storyName = 'without textarea label'
+WithoutTextareaLabel.storyName = 'without textarea label'
 
 export const WithoutItems: Story = () => (
   <RightFixedNote
