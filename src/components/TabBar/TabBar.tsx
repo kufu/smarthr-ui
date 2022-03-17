@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+import { Reel } from '../Layout'
 
 type Props = {
   children: ReactNode
@@ -19,21 +20,23 @@ export const TabBar: VFC<Props & ElementProps> = ({
 }) => {
   const theme = useTheme()
   const classNames = useClassNames().tabBar
-  const wrapperClass = `${className} ${bordered ? 'bordered' : ''} ${classNames.wrapper}`
+  const wrapperClass = `${className} ${classNames.wrapper}`
 
   return (
-    <Wrapper {...props} role="tablist" className={wrapperClass} themes={theme}>
-      {children}
-    </Wrapper>
+    <Reel {...props} role="tablist" className={wrapperClass}>
+      <Inner className={bordered ? 'bordered' : undefined} themes={theme}>
+        {children}
+      </Inner>
+    </Reel>
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme }>`
+const Inner = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { border } = themes
 
     return css`
-      display: flex;
+      flex-grow: 1;
 
       &.bordered {
         position: relative;
