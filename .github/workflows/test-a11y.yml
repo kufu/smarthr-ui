@@ -19,4 +19,4 @@ jobs:
           cache: 'yarn'
       - run: yarn install --frozen-lockfile
       - run: yarn build-storybook && yarn extract-storybook
-      - run: yarn test:a11y
+      - run: yarn test:a11y --debug
