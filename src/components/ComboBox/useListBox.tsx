@@ -204,7 +204,7 @@ export function useListBox<T>({
       if (option.isAdding) {
         return addingButtonId
       }
-      return `${optionIdPrefix}-${option.label}`
+      return `${optionIdPrefix}-${option.label.replace(/\s/g, '_')}`
     },
     [addingButtonId, optionIdPrefix],
   )
