@@ -407,13 +407,16 @@ const SelectButton = styled.button<{ themes: Theme }>`
       cursor: pointer;
 
       &.active {
-        background-color: ${color.COLUMN};
+        background-color: ${color.hoverColor(color.WHITE)};
         color: inherit;
       }
 
       &[aria-selected='true'] {
         background-color: ${color.MAIN};
         color: ${color.TEXT_WHITE};
+        &.active {
+          background-color: ${color.hoverColor(color.MAIN)};
+        }
       }
 
       &[disabled] {
