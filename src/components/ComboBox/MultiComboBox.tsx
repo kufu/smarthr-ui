@@ -145,15 +145,28 @@ export function MultiComboBox<T>({
   const selectedLabels = useMemo(() => selectedItems.map(({ label }) => label), [selectedItems])
   const filteredItems = useMemo(
     () =>
-      items.filter(({ label }) => {
-        if (selectedLabels.includes(label)) return false
-        if (!inputValue) return true
-        return convertMatchableString(label).includes(convertMatchableString(inputValue))
-      }),
+      items
+        .filter(({ label }) => {
+          if (!inputValue) return true
+          return convertMatchableString(label).includes(convertMatchableString(inputValue))
+        })
+        .map((item) => ({ ...item, isSelected: selectedLabels.includes(item.label) })),
     [inputValue, items, selectedLabels],
   )
   const isDuplicate = items.some((item) => item.label === inputValue)
   const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
+  const handleDelete = useCallback(
+    (item: ComboBoxItem<T>) => {
+      onDelete && onDelete(item)
+      onChangeSelected &&
+        onChangeSelected(
+          selectedItems.filter(
+            (selected) => selected.label !== item.label || selected.value !== item.value,
+          ),
+        )
+    },
+    [onChangeSelected, onDelete, selectedItems],
+  )
   const {
     renderListBox,
     calculateDropdownRect,
@@ -166,8 +179,13 @@ export function MultiComboBox<T>({
     inputValue,
     onAdd,
     onSelect: (selected) => {
-      onSelect && onSelect(selected)
-      onChangeSelected && onChangeSelected(selectedItems.concat(selected))
+      const isSelectedItem = selectedLabels.includes(selected.label)
+      if (isSelectedItem) {
+        handleDelete(selected)
+      } else {
+        onSelect && onSelect(selected)
+        onChangeSelected && onChangeSelected(selectedItems.concat(selected))
+      }
     },
     isExpanded: isFocused,
     isAddable: creatable && !!inputValue && !isDuplicate,
@@ -258,15 +276,7 @@ export function MultiComboBox<T>({
                 item={selectedItem}
                 disabled={disabled}
                 onDelete={() => {
-                  onDelete && onDelete(selectedItem)
-                  onChangeSelected &&
-                    onChangeSelected(
-                      selectedItems.filter(
-                        (selected) =>
-                          selected.label !== selectedItem.label ||
-                          selected.value !== selectedItem.value,
-                      ),
-                    )
+                  handleDelete(selectedItem)
                 }}
                 enableEllipsis={selectedItemEllipsis}
               />
