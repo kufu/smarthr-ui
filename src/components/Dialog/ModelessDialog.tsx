@@ -296,16 +296,18 @@ const Box = styled(Base).attrs({ radius: 'm', layer: 3 })<{
     return css`
       display: flex;
       flex-direction: column;
-      ${isWidthAuto &&
-      css`
-        max-width: min(
-          calc(
-            100vw - max(${leftMargin}, ${spacingByChar(0.5)}) -
-              max(${rightMargin}, ${spacingByChar(0.5)})
-          ),
-          800px /* TODO: 幅の定義が決まり theme に入ったら差し替える */
-        );
-      `}
+      ${
+        isWidthAuto &&
+        css`
+          max-width: min(
+            calc(
+              100vw - max(${leftMargin}, ${spacingByChar(0.5)}) -
+                max(${rightMargin}, ${spacingByChar(0.5)})
+            ),
+            800px
+          );
+        ` /* TODO: 幅の定数指定は、トークンが決まり theme に入ったら差し替える */
+      }
       height: 100%;
       max-height: 100vh;
     `
