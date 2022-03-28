@@ -12,6 +12,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
+import { useId } from '../../hooks/useId'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 import { useClassNames } from './useClassNames'
 
@@ -169,6 +170,7 @@ export function MultiComboBox<T>({
     },
     [onChangeSelected, onDelete, selectedItems],
   )
+  const listBoxId = useId()
   const {
     renderListBox,
     calculateDropdownRect,
@@ -196,6 +198,7 @@ export function MultiComboBox<T>({
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
     isLoading,
+    listBoxId,
     classNames: classNames.listBox,
   })
 
@@ -309,7 +312,7 @@ export function MultiComboBox<T>({
         }
       }}
       role="combobox"
-      aria-owns={aria.listBoxId}
+      aria-owns={listBoxId}
       aria-haspopup="listbox"
       aria-expanded={isFocused}
       aria-invalid={error || undefined}
@@ -358,7 +361,7 @@ export function MultiComboBox<T>({
               tabIndex={focusedSelectedItemIndex === null ? 0 : -1}
               aria-activedescendant={aria.activeDescendant}
               aria-autocomplete="list"
-              aria-controls={aria.listBoxId}
+              aria-controls={listBoxId}
               className={classNames.input}
             />
           </InputWrapper>

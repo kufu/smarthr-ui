@@ -11,6 +11,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
+import { useId } from '../../hooks/useId'
 import { useClassNames } from './useClassNames'
 
 import { Input } from '../Input'
@@ -137,6 +138,7 @@ export function SingleComboBox<T>({
   }, [inputValue, isEditing, items, selectedItem])
   const isDuplicate = items.some((item) => item.label === inputValue)
   const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
+  const listBoxId = useId()
   const {
     renderListBox,
     calculateDropdownRect,
@@ -161,6 +163,7 @@ export function SingleComboBox<T>({
       (!creatable && filteredItems.length === 0) ||
       (creatable && filteredItems.length === 0 && !inputValue),
     isLoading,
+    listBoxId,
     classNames: classNames.listBox,
   })
 
@@ -215,7 +218,7 @@ export function SingleComboBox<T>({
       $width={width}
       role="combobox"
       aria-haspopup="listbox"
-      aria-controls={aria.listBoxId}
+      aria-controls={listBoxId}
       aria-expanded={isFocused}
       aria-invalid={error || undefined}
     >

@@ -22,6 +22,7 @@ type Args<T> = {
   isDuplicate: boolean
   hasNoMatch: boolean
   isLoading?: boolean
+  listBoxId: string
   classNames: {
     dropdownList: string
     addButton: string
@@ -57,6 +58,7 @@ export function useListBox<T>({
   isDuplicate,
   hasNoMatch,
   isLoading,
+  listBoxId,
   classNames,
 }: Args<T>) {
   const [dropdownStyle, setDropdownStyle] = useState<DropDownStyle>({
@@ -196,7 +198,6 @@ export function useListBox<T>({
     [activeOptionIndex, isLoading, moveActiveOptionIndex, onAdd, onSelect, options],
   )
 
-  const listBoxId = useId()
   const addingButtonId = useId()
   const optionIdPrefix = useId()
   const getOptionId = useCallback(
@@ -339,7 +340,6 @@ export function useListBox<T>({
     handleInputKeyDown,
     listBoxRef,
     aria: {
-      listBoxId,
       activeDescendant,
     },
   }
