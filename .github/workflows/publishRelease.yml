@@ -52,7 +52,7 @@ jobs:
           commitish: master
           prerelease: ${{ env.IS_PRERELEASE }}
       - name: close issue
-        uses: peter-evans/close-issue@v1
+        uses: peter-evans/close-issue@v2
       - name: delete branch
         run: git push origin :release-candidate
       - name: cherry-pick release commit
