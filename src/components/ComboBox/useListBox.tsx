@@ -198,27 +198,17 @@ export function useListBox<T>({
     [activeOptionIndex, isLoading, moveActiveOptionIndex, onAdd, onSelect, options],
   )
 
-  const addingButtonId = useId()
   const optionIdPrefix = useId()
   const getOptionId = useCallback(
-    (option: Option<T>) => {
-      if (option.isAdding) {
-        return addingButtonId
+    (optionIndex: number | null) => {
+      if (optionIndex === null) {
+        return undefined
       }
-      return `${optionIdPrefix}-${option.label.replace(/\s/g, '_')}`
+      return `${optionIdPrefix}-${optionIndex}`
     },
-    [addingButtonId, optionIdPrefix],
+    [optionIdPrefix],
   )
-  const activeDescendant = (() => {
-    if (activeOptionIndex === null) {
-      return undefined
-    }
-    const activeOption = options[activeOptionIndex]
-    if (activeOption) {
-      return getOptionId(activeOption)
-    }
-    return undefined
-  })()
+  const activeDescendant = getOptionId(activeOptionIndex)
 
   const theme = useTheme()
   const { portalRoot } = usePortal()
@@ -264,6 +254,7 @@ export function useListBox<T>({
         ) : (
           <>
             {options.map((option, i) => {
+              const id = getOptionId(i)
               const isActive = activeOptionIndex === i
               const className = isActive ? 'active' : ''
               const { label, disabled, isAdding, isSelected } = option
@@ -276,7 +267,7 @@ export function useListBox<T>({
                       onAdd && onAdd(label)
                     }}
                     onMouseOver={() => setActiveOptionIndex(0)}
-                    id={addingButtonId}
+                    id={id}
                     role="option"
                     className={`${className} ${classNames.addButton}`}
                   >
@@ -295,7 +286,7 @@ export function useListBox<T>({
                     onSelect(optionToItem(option))
                   }}
                   onMouseOver={() => setActiveOptionIndex(i)}
-                  id={getOptionId(option)}
+                  id={id}
                   role="option"
                   className={`${className} ${classNames.selectButton}`}
                   aria-selected={isSelected}
@@ -339,9 +330,7 @@ export function useListBox<T>({
     resetActiveOptionIndex: () => setActiveOptionIndex(null),
     handleInputKeyDown,
     listBoxRef,
-    aria: {
-      activeDescendant,
-    },
+    activeOptionId: activeDescendant,
   }
 }
 

@@ -145,7 +145,7 @@ export function SingleComboBox<T>({
     resetActiveOptionIndex,
     handleInputKeyDown,
     listBoxRef,
-    aria,
+    activeOptionId,
   } = useListBox({
     items: filteredItems,
     inputValue,
@@ -307,7 +307,7 @@ export function SingleComboBox<T>({
         }}
         ref={inputRef}
         autoComplete="off"
-        aria-activedescendant={aria.activeDescendant}
+        aria-activedescendant={activeOptionId}
         aria-autocomplete="list"
         className={classNames.input}
       />

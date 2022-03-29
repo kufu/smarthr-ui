@@ -177,7 +177,7 @@ export function MultiComboBox<T>({
     resetActiveOptionIndex,
     handleInputKeyDown,
     listBoxRef,
-    aria,
+    activeOptionId,
   } = useListBox({
     items: filteredItems,
     inputValue,
@@ -359,7 +359,7 @@ export function MultiComboBox<T>({
               onCompositionEnd={() => setIsComposing(false)}
               autoComplete="off"
               tabIndex={focusedSelectedItemIndex === null ? 0 : -1}
-              aria-activedescendant={aria.activeDescendant}
+              aria-activedescendant={activeOptionId}
               aria-autocomplete="list"
               aria-controls={listBoxId}
               className={classNames.input}
