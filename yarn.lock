@@ -6756,7 +6756,7 @@ core-js@^2.4.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
-core-js@^3.0.1, core-js@^3.0.4, core-js@^3.2.1, core-js@^3.6.5, core-js@^3.8.2:
+core-js@^3.0.1, core-js@^3.0.4, core-js@^3.6.5, core-js@^3.8.2:
   version "3.15.2"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.15.2.tgz#740660d2ff55ef34ce664d7e2455119c5bdd3d61"
   integrity sha512-tKs41J7NJVuaya8DxIOCnl8QuPHx5/ZVbFo1oKgVl1qHFBBrDctzQGtuLjPpRdNTWmKPH6oEvgN/MUID+l485Q==
@@ -15750,10 +15750,10 @@ storybook-readme@^5.0.9:
     string-raw "^1.0.1"
     vuex "^3.1.0"
 
-storycap@^3.1.5:
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/storycap/-/storycap-3.1.5.tgz#f9dc8609b310e88d223bbbe211e7cd930ffaf34f"
-  integrity sha512-5OXbMd5A20ToFk5cQxvVzPnC5mPIUlJbsvcdDNyHWBkd6hhKOZocA9729eiv/tM8UohBMpjNQ9fyXaxclfUh2g==
+storycap@^3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/storycap/-/storycap-3.1.6.tgz#833c1a3ac2cf4b0c544789b9bedf9000f925904e"
+  integrity sha512-zxOZbBOC/vTGSov8ErmCsPtv4iXY8ryEFvyjV9KwAQSmwVn+QNxdcQZqJKBs2jJ2ZPkO+rkEKyTHA4wx++HQ/w==
   dependencies:
     "@types/minimatch" "^3.0.3"
     "@types/mkdirp" "^1.0.0"
@@ -15761,19 +15761,18 @@ storycap@^3.1.5:
     "@types/rimraf" "^3.0.0"
     "@types/wait-on" "^5.0.0"
     "@types/yargs" "^16.0.0"
-    core-js "^3.2.1"
     minimatch "^3.0.4"
     mkdirp "^1.0.0"
     puppeteer-core "^9.0.0"
     rimraf "^3.0.0"
     sanitize-filename "^1.6.3"
-    storycrawler "^3.1.5"
+    storycrawler "^3.1.6"
     yargs "^16.0.0"
 
-storycrawler@^3.1.5:
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/storycrawler/-/storycrawler-3.1.5.tgz#a84e4c5f83c0dbd288a336dd2107973040df1398"
-  integrity sha512-QvxBci0n38PQZX7ggZcsgsNPa2Nuc1N04U+1xgKcSHF5pKQwaEayodpHvmX0Wk5hWJGfvlalBNC/2q++TU5MqA==
+storycrawler@^3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/storycrawler/-/storycrawler-3.1.6.tgz#0986cdbe25b5a24db1471e0f08729a2a8ba8ef55"
+  integrity sha512-82yVk5mj0uXghwOZXZmiZINMSHcYHmy+1X1bjqQR0v2To+5LYb5ww6Mc/YaGr/U4KEBkkFgufuuJy6mQgUTlOw==
   dependencies:
     "@types/chalk" "^2.2.0"
     "@types/node" "^16.0.0"
