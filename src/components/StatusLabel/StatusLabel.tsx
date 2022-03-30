@@ -5,7 +5,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 type Props = {
+  /** ラベルが表す状態の種類 */
   type?: 'done' | 'success' | 'process' | 'required' | 'disabled' | 'must' | 'warning' | 'error'
+  /** コンポーネントに適用するクラス名 */
   className?: string
   children: ReactNode
 }

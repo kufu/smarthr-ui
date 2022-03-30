@@ -16,11 +16,17 @@ type Optgroup<T extends string> = {
 } & React.OptgroupHTMLAttributes<HTMLOptGroupElement>
 
 type Props<T extends string> = {
+  /** 選択肢のデータの配列 */
   options: Array<Option<T> | Optgroup<T>>
+  /** フォームの値が変わったときに発火するコールバック関数 */
   onChangeValue?: (value: T) => void
+  /** フォームの値にエラーがあるかどうか */
   error?: boolean
+  /** コンポーネントの幅 */
   width?: number | string
+  /** 空の選択肢を表示するかどうか */
   hasBlank?: boolean
+  /** 空の選択肢のラベル */
   blankLabel?: string
 }
 
