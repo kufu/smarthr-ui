@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [20.1.1](https://github.com/kufu/smarthr-ui/compare/v20.1.0...v20.1.1) (2022-03-30)
+
+
+### Bug Fixes
+
+* `TabBar` のモバイル表示調整 (SHRUI-539) ([#2358](https://github.com/kufu/smarthr-ui/issues/2358)) ([f3f658b](https://github.com/kufu/smarthr-ui/commit/f3f658baf14fbe5ad51384fcc57fde405a00796e))
+
 ## [20.1.0](https://github.com/kufu/smarthr-ui/compare/v20.0.0...v20.1.0) (2022-03-17)
 
 
