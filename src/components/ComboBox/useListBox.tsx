@@ -6,11 +6,10 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
 import { ComboBoxItem } from './types'
+import { usePartialRendering } from './usePartialRendering'
 
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
-
-const OPTION_INCREMENT_AMOUNT = 100
 
 type Args<T> = {
   items: Array<ComboBoxItem<T> & { isSelected?: boolean }>
@@ -108,19 +107,16 @@ export function useListBox<T>({
     })
   }, [])
 
-  const [optionLength, setOptionLength] = useState(OPTION_INCREMENT_AMOUNT)
-  useEffect(() => {
-    // 表示 option 数を初期化
-    setOptionLength(OPTION_INCREMENT_AMOUNT)
-  }, [items])
+  const bottomIntersectionRef = useRef<HTMLDivElement>(null)
+  const partialItems = usePartialRendering({ items, bottomElement: bottomIntersectionRef.current })
+
   const options: Array<Option<T>> = useMemo(() => {
-    const limitedItems = items.slice(0, optionLength + 1)
     if (isAddable) {
       const addingOption = { label: inputValue, value: inputValue, isAdding: true }
-      return [addingOption, ...limitedItems]
+      return [addingOption, ...partialItems]
     }
-    return limitedItems
-  }, [inputValue, isAddable, items, optionLength])
+    return partialItems
+  }, [inputValue, isAddable, partialItems])
 
   const moveActiveOptionIndex = useCallback(
     (currentIndex: number | null, delta: -1 | 1) => {
@@ -213,28 +209,6 @@ export function useListBox<T>({
   const theme = useTheme()
   const { portalRoot } = usePortal()
   const listBoxRef = useRef<HTMLDivElement>(null)
-
-  const bottomIntersectionRef = useRef<HTMLDivElement>(null)
-  const isDisplayingPartial = optionLength < items.length
-  const scrollObserver = useMemo(
-    // スクロール最下部に到達する度に表示する option 数を増加させるための IntersectionObserver
-    () =>
-      new IntersectionObserver((entries) => {
-        const entry = entries[0]
-        if (entry && entry.isIntersecting && isDisplayingPartial) {
-          setOptionLength((current) => current + OPTION_INCREMENT_AMOUNT)
-        }
-      }),
-    [isDisplayingPartial],
-  )
-  useEffect(() => {
-    // IntersectionObserver を設定
-    if (!bottomIntersectionRef.current) {
-      return
-    }
-    scrollObserver.observe(bottomIntersectionRef.current)
-    return () => scrollObserver.disconnect()
-  }, [scrollObserver])
 
   const renderListBox = () => {
     return createPortal(
