@@ -82,25 +82,25 @@ const Base = styled.div<{ themes: Theme }>`
 
       &.right {
         &::before {
-          right: 25px;
+          right: 24px;
         }
       }
       &.center {
         &::before {
           left: 50%;
-          transform: translateX(-4px);
+          transform: translateX(-5px);
         }
       }
       &.left {
         &::before {
-          left: 25px;
+          left: 24px;
         }
       }
 
       &.middle {
         &::before {
           top: 50%;
-          transform: translateY(-4px);
+          transform: translateY(-5px);
         }
         &.left {
           &::before {
