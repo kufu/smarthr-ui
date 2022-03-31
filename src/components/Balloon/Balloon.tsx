@@ -38,6 +38,8 @@ export const Balloon: VFC<Props & ElementProps> = ({
   return <Base className={classNames} themes={themes} {...props} />
 }
 
+// HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
+// 1pxほど大きめに描画してbody部分と被るようにしています。
 const Base = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { color, fontSize } = themes
