@@ -66,16 +66,16 @@ const Base = styled.div<{ themes: Theme }>`
       &.top {
         &::before {
           top: -4px;
-          width: 8px;
-          height: 4px;
+          width: 10px;
+          height: 5px;
           clip-path: polygon(50% 0, 100% 100%, 0 100%);
         }
       }
       &.bottom {
         &::before {
           bottom: -4px;
-          width: 8px;
-          height: 4px;
+          width: 10px;
+          height: 5px;
           clip-path: polygon(0 0, 100% 0, 50% 100%);
         }
       }
@@ -105,16 +105,16 @@ const Base = styled.div<{ themes: Theme }>`
         &.left {
           &::before {
             left: -4px;
-            width: 4px;
-            height: 8px;
+            width: 5px;
+            height: 10px;
             clip-path: polygon(100% 0, 100% 100%, 0 50%);
           }
         }
         &.right {
           &::before {
             right: -4px;
-            width: 4px;
-            height: 8px;
+            width: 5px;
+            height: 10px;
             clip-path: polygon(0 0, 100% 50%, 0 100%);
           }
         }
