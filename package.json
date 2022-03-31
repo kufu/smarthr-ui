@@ -60,7 +60,7 @@
     "standard-version": "^9.3.2",
     "storybook-readme": "^5.0.9",
     "storycap": "^3.1.6",
-    "styled-components": "^5.3.3",
+    "styled-components": "^5.3.5",
     "styled-reset": "^4.3.4",
     "stylelint": "^14.6.1",
     "stylelint-config-prettier": "^9.0.3",
