@@ -4,3 +4,10 @@ export type ComboBoxItem<T> = {
   disabled?: boolean
   data?: T
 }
+
+export type ComboBoxOption<T> = {
+  id: string
+  selected: boolean
+  isNew?: boolean
+  item: ComboBoxItem<T>
+}

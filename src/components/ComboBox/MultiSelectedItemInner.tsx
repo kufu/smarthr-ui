@@ -68,6 +68,11 @@ export function MultiSelectedItemInner<T>({
           onClick={() => {
             onDelete && onDelete(item)
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.stopPropagation()
+            }
+          }}
           ref={buttonRef}
           tabIndex={-1}
         >

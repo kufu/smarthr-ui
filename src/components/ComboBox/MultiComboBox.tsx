@@ -18,6 +18,7 @@ import { useClassNames } from './useClassNames'
 
 import { FaCaretDownIcon } from '../Icon'
 import { useListBox } from './useListBox'
+import { useOptions } from './useOptions'
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
@@ -148,16 +149,12 @@ export function MultiComboBox<T>({
   const selectedLabels = useMemo(() => selectedItems.map(({ label }) => label), [selectedItems])
   const filteredItems = useMemo(
     () =>
-      items
-        .filter(({ label }) => {
-          if (!inputValue) return true
-          return convertMatchableString(label).includes(convertMatchableString(inputValue))
-        })
-        .map((item) => ({ ...item, isSelected: selectedLabels.includes(item.label) })),
-    [inputValue, items, selectedLabels],
+      items.filter(({ label }) => {
+        if (!inputValue) return true
+        return convertMatchableString(label).includes(convertMatchableString(inputValue))
+      }),
+    [inputValue, items],
   )
-  const isDuplicate = items.some((item) => item.label === inputValue)
-  const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
   const handleDelete = useCallback(
     (item: ComboBoxItem<T>) => {
       onDelete && onDelete(item)
@@ -170,17 +167,20 @@ export function MultiComboBox<T>({
     },
     [onChangeSelected, onDelete, selectedItems],
   )
+
+  const { options, activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
+    useOptions({
+      items: filteredItems,
+      selected: selectedItems,
+      creatable,
+      inputValue,
+    })
+
   const listBoxId = useId()
-  const {
-    renderListBox,
-    calculateDropdownRect,
-    resetActiveOptionIndex,
-    handleInputKeyDown,
-    listBoxRef,
-    activeOptionId,
-  } = useListBox({
-    items: filteredItems,
-    inputValue,
+  const { renderListBox, calculateDropdownRect, listBoxRef } = useListBox({
+    options,
+    activeOptionId: activeOption?.id || null,
+    onHoverOption: (option) => setActiveOption(option),
     onAdd,
     onSelect: (selected) => {
       const isSelectedItem = selectedLabels.includes(selected.label)
@@ -192,11 +192,6 @@ export function MultiComboBox<T>({
       }
     },
     isExpanded: isFocused,
-    isAddable: creatable && !!inputValue && !isDuplicate,
-    isDuplicate: creatable && !!inputValue && isDuplicate && !hasSelectableExactMatch,
-    hasNoMatch:
-      (!creatable && filteredItems.length === 0) ||
-      (creatable && filteredItems.length === 0 && !inputValue),
     isLoading,
     listBoxId,
     classNames: classNames.listBox,
@@ -205,8 +200,8 @@ export function MultiComboBox<T>({
   const focus = useCallback(() => {
     onFocus && onFocus()
     setIsFocused(true)
-    resetActiveOptionIndex()
-  }, [onFocus, resetActiveOptionIndex])
+    setActiveOption(null)
+  }, [onFocus, setActiveOption])
   const blur = useCallback(() => {
     if (!isFocused) return
     onBlur && onBlur()
@@ -282,7 +277,7 @@ export function MultiComboBox<T>({
           blur()
         } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
           if (focusedSelectedItemIndex === null) {
-            if (selectedItems.length > 0) {
+            if (inputRef.current?.selectionStart === 0 && selectedItems.length > 0) {
               setFocusedSelectedItemIndex(selectedItems.length - 1)
             }
           } else {
@@ -298,17 +293,33 @@ export function MultiComboBox<T>({
               inputRef.current?.focus()
             }
           }
-        } else if (
-          e.key === 'Up' ||
-          e.key === 'ArrowUp' ||
-          e.key === 'Down' ||
-          e.key === 'ArrowDown'
-        ) {
+        } else if (e.key === 'Down' || e.key === 'ArrowDown') {
+          e.preventDefault()
           inputRef.current?.focus()
           setFocusedSelectedItemIndex(null)
-          handleInputKeyDown(e)
+          moveActivePositionDown()
+        } else if (e.key === 'Up' || e.key === 'ArrowUp') {
+          e.preventDefault()
+          inputRef.current?.focus()
+          setFocusedSelectedItemIndex(null)
+          moveActivePositionUp()
         } else if (e.key === 'Enter' && document.activeElement === inputRef.current) {
-          handleInputKeyDown(e)
+          if (activeOption === null) {
+            return
+          }
+          e.preventDefault()
+          if (activeOption.selected) {
+            handleDelete(activeOption.item)
+          } else if (activeOption.isNew) {
+            onAdd && onAdd(activeOption.item.label)
+          } else {
+            onSelect && onSelect(activeOption.item)
+          }
+        } else {
+          e.stopPropagation()
+          inputRef.current?.focus()
+          setFocusedSelectedItemIndex(null)
+          setActiveOption(null)
         }
       }}
       role="combobox"
@@ -359,7 +370,7 @@ export function MultiComboBox<T>({
               onCompositionEnd={() => setIsComposing(false)}
               autoComplete="off"
               tabIndex={focusedSelectedItemIndex === null ? 0 : -1}
-              aria-activedescendant={activeOptionId}
+              aria-activedescendant={activeOption?.id}
               aria-autocomplete="list"
               aria-controls={listBoxId}
               className={classNames.input}

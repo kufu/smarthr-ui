@@ -18,6 +18,7 @@ import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
 import { useListBox } from './useListBox'
+import { useOptions } from './useOptions'
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
 
@@ -122,33 +123,29 @@ export function SingleComboBox<T>({
   const [isEditing, setIsEditing] = useState(false)
 
   const filteredItems = useMemo(() => {
-    const itemsWithSelected = items.map((item) => ({
-      ...item,
-      isSelected: selectedItem === null ? false : item.label === selectedItem.label,
-    }))
-
     if (!isEditing) {
-      return itemsWithSelected
+      return items
     }
 
-    return itemsWithSelected.filter(({ label }) => {
+    return items.filter(({ label }) => {
       if (!inputValue) return true
       return convertMatchableString(label).includes(convertMatchableString(inputValue))
     })
-  }, [inputValue, isEditing, items, selectedItem])
-  const isDuplicate = items.some((item) => item.label === inputValue)
-  const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
+  }, [inputValue, isEditing, items])
+
+  const { options, activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
+    useOptions({
+      items: filteredItems,
+      selected: selectedItem,
+      creatable,
+      inputValue,
+    })
+
   const listBoxId = useId()
-  const {
-    renderListBox,
-    calculateDropdownRect,
-    resetActiveOptionIndex,
-    handleInputKeyDown,
-    listBoxRef,
-    activeOptionId,
-  } = useListBox({
-    items: filteredItems,
-    inputValue,
+  const { renderListBox, calculateDropdownRect, listBoxRef } = useListBox({
+    options,
+    activeOptionId: activeOption?.id || null,
+    onHoverOption: (option) => setActiveOption(option),
     onAdd,
     onSelect: (selected) => {
       onSelect && onSelect(selected)
@@ -157,11 +154,6 @@ export function SingleComboBox<T>({
       setIsEditing(false)
     },
     isExpanded,
-    isAddable: creatable && !!inputValue && !isDuplicate,
-    isDuplicate: creatable && !!inputValue && isDuplicate && !hasSelectableExactMatch,
-    hasNoMatch:
-      (!creatable && filteredItems.length === 0) ||
-      (creatable && filteredItems.length === 0 && !inputValue),
     isLoading,
     listBoxId,
     classNames: classNames.listBox,
@@ -169,11 +161,11 @@ export function SingleComboBox<T>({
 
   const focus = useCallback(() => {
     setIsFocused(true)
-    resetActiveOptionIndex()
+    setActiveOption(null)
     if (!isFocused) {
       setIsExpanded(true)
     }
-  }, [isFocused, resetActiveOptionIndex])
+  }, [isFocused, setActiveOption])
   const blur = useCallback(() => {
     setIsFocused(false)
     setIsExpanded(false)
@@ -289,25 +281,42 @@ export function SingleComboBox<T>({
           if (isComposing) {
             return
           }
-          if (e.key === 'Tab') {
-            blur()
-            return
-          }
-          handleInputKeyDown(e)
           if (e.key === 'Escape' || e.key === 'Exc') {
             if (isExpanded) {
               e.stopPropagation()
               setIsExpanded(false)
             }
-            return
-          }
-          if (!isExpanded) {
-            setIsExpanded(true)
+          } else if (e.key === 'Tab') {
+            blur()
+          } else if (e.key === 'Down' || e.key === 'ArrowDown') {
+            e.preventDefault()
+            inputRef.current?.focus()
+            moveActivePositionDown()
+          } else if (e.key === 'Up' || e.key === 'ArrowUp') {
+            e.preventDefault()
+            inputRef.current?.focus()
+            moveActivePositionUp()
+          } else if (e.key === 'Enter' && document.activeElement === inputRef.current) {
+            if (activeOption === null || activeOption.selected) {
+              return
+            }
+            e.preventDefault()
+            if (activeOption.isNew) {
+              onAdd && onAdd(activeOption.item.label)
+            } else {
+              onSelect && onSelect(activeOption.item)
+            }
+          } else {
+            inputRef.current?.focus()
+            setActiveOption(null)
+            if (!isExpanded) {
+              setIsExpanded(true)
+            }
           }
         }}
         ref={inputRef}
         autoComplete="off"
-        aria-activedescendant={activeOptionId}
+        aria-activedescendant={activeOption?.id}
         aria-autocomplete="list"
         className={classNames.input}
       />

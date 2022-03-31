@@ -1,25 +1,22 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
-import { useId } from '../../hooks/useId'
-import { ComboBoxItem } from './types'
+import { ComboBoxItem, ComboBoxOption } from './types'
 import { usePartialRendering } from './usePartialRendering'
 
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
 type Args<T> = {
-  items: Array<ComboBoxItem<T> & { isSelected?: boolean }>
-  inputValue?: string
+  options: Array<ComboBoxOption<T>>
+  activeOptionId: string | null
+  onHoverOption: (option: ComboBoxOption<T>) => void
   onAdd?: (label: string) => void
   onSelect: (item: ComboBoxItem<T>) => void
   isExpanded: boolean
-  isAddable: boolean
-  isDuplicate: boolean
-  hasNoMatch: boolean
   isLoading?: boolean
   listBoxId: string
   classNames: {
@@ -30,16 +27,6 @@ type Args<T> = {
   }
 }
 
-type Option<T> = ComboBoxItem<T> & {
-  isAdding?: boolean
-  isSelected?: boolean
-}
-
-function optionToItem<T>(option: Option<T>): ComboBoxItem<T> {
-  const { isAdding, isSelected, ...props } = option
-  return { ...props }
-}
-
 type DropDownStyle = {
   top: number
   left: number
@@ -48,14 +35,12 @@ type DropDownStyle = {
 }
 
 export function useListBox<T>({
-  items,
-  inputValue = '',
+  options,
+  activeOptionId,
+  onHoverOption,
   onAdd,
   onSelect,
   isExpanded,
-  isAddable,
-  isDuplicate,
-  hasNoMatch,
   isLoading,
   listBoxId,
   classNames,
@@ -65,8 +50,6 @@ export function useListBox<T>({
     left: 0,
     width: 0,
   })
-  const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
-
   const calculateDropdownRect = useCallback((triggerElement: Element) => {
     if (!listBoxRef.current) {
       return
@@ -108,103 +91,10 @@ export function useListBox<T>({
   }, [])
 
   const bottomIntersectionRef = useRef<HTMLDivElement>(null)
-  const partialItems = usePartialRendering({ items, bottomElement: bottomIntersectionRef.current })
-
-  const options: Array<Option<T>> = useMemo(() => {
-    if (isAddable) {
-      const addingOption = { label: inputValue, value: inputValue, isAdding: true }
-      return [addingOption, ...partialItems]
-    }
-    return partialItems
-  }, [inputValue, isAddable, partialItems])
-
-  const moveActiveOptionIndex = useCallback(
-    (currentIndex: number | null, delta: -1 | 1) => {
-      if (options.filter((option) => !option.disabled).length === 0) {
-        return
-      }
-      const nextIndex = (() => {
-        if (currentIndex === null) {
-          if (delta === 1) {
-            return 0
-          } else {
-            return options.length - 1
-          }
-        }
-        return (currentIndex + delta + options.length) % options.length
-      })()
-      const nextActive = options[nextIndex]
-      if (nextActive && nextActive.disabled) {
-        // skip disabled item
-        moveActiveOptionIndex(nextIndex, delta)
-        return
-      }
-      setActiveOptionIndex(nextIndex)
-    },
-    [options],
-  )
-
-  useEffect(() => {
-    // correct the focus index in dropdown to fit actual row count
-    if (activeOptionIndex === null) {
-      return
-    }
-    const corrected = Math.max(Math.min(activeOptionIndex, options.length - 1), 0)
-    const active = options[corrected]
-    if (!active || active.disabled) {
-      setActiveOptionIndex(null)
-      return
-    }
-    setActiveOptionIndex(corrected)
-  }, [activeOptionIndex, options])
-
-  const handleInputKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLElement>) => {
-      if (isLoading) {
-        return
-      }
-      switch (e.key) {
-        case 'ArrowDown':
-        case 'Down':
-          e.preventDefault()
-          moveActiveOptionIndex(activeOptionIndex, 1)
-          break
-        case 'ArrowUp':
-        case 'Up':
-          e.preventDefault()
-          moveActiveOptionIndex(activeOptionIndex, -1)
-          break
-        case 'Enter': {
-          e.preventDefault()
-          if (activeOptionIndex === null) {
-            return
-          }
-          const activeOption = options[activeOptionIndex]
-          if (activeOption.isAdding) {
-            onAdd && onAdd(activeOption.label)
-            return
-          }
-          if (activeOption && !activeOption.disabled) {
-            onSelect(optionToItem(activeOption))
-          }
-          break
-        }
-      }
-    },
-    [activeOptionIndex, isLoading, moveActiveOptionIndex, onAdd, onSelect, options],
-  )
-
-  const optionIdPrefix = useId()
-  const getOptionId = useCallback(
-    (optionIndex: number | null) => {
-      if (optionIndex === null) {
-        return undefined
-      }
-      return `${optionIdPrefix}-${optionIndex}`
-    },
-    [optionIdPrefix],
-  )
-  const activeDescendant = getOptionId(activeOptionIndex)
+  const partialOptions = usePartialRendering({
+    items: options,
+    bottomElement: bottomIntersectionRef.current,
+  })
 
   const theme = useTheme()
   const { portalRoot } = usePortal()
@@ -227,12 +117,12 @@ export function useListBox<T>({
           </LoaderWrapper>
         ) : (
           <>
-            {options.map((option, i) => {
-              const id = getOptionId(i)
-              const isActive = activeOptionIndex === i
+            {partialOptions.map((option) => {
+              const isActive = option.id === activeOptionId
               const className = isActive ? 'active' : ''
-              const { label, disabled, isAdding, isSelected } = option
-              if (isAdding) {
+              const { item, selected, isNew } = option
+              const { label, disabled } = item
+              if (isNew) {
                 return (
                   <AddButton
                     key={`add-${label}`}
@@ -240,8 +130,8 @@ export function useListBox<T>({
                     onClick={() => {
                       onAdd && onAdd(label)
                     }}
-                    onMouseOver={() => setActiveOptionIndex(0)}
-                    id={id}
+                    onMouseOver={() => onHoverOption(option)}
+                    id={option.id}
                     role="option"
                     className={`${className} ${classNames.addButton}`}
                   >
@@ -257,31 +147,20 @@ export function useListBox<T>({
                   themes={theme}
                   disabled={disabled}
                   onClick={() => {
-                    onSelect(optionToItem(option))
+                    onSelect(item)
                   }}
-                  onMouseOver={() => setActiveOptionIndex(i)}
-                  id={id}
+                  onMouseOver={() => onHoverOption(option)}
+                  id={option.id}
                   role="option"
                   className={`${className} ${classNames.selectButton}`}
-                  aria-selected={isSelected}
+                  aria-selected={selected}
                 >
                   {label}
                 </SelectButton>
               )
             })}
 
-            {isDuplicate && (
-              <NoItems
-                themes={theme}
-                role="alert"
-                aria-live="polite"
-                className={classNames.noItems}
-              >
-                重複する選択肢は追加できません
-              </NoItems>
-            )}
-
-            {hasNoMatch && (
+            {options.length === 0 && (
               <NoItems
                 themes={theme}
                 role="alert"
@@ -301,10 +180,7 @@ export function useListBox<T>({
   return {
     renderListBox,
     calculateDropdownRect,
-    resetActiveOptionIndex: () => setActiveOptionIndex(null),
-    handleInputKeyDown,
     listBoxRef,
-    activeOptionId: activeDescendant,
   }
 }
 
