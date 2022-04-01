@@ -19,6 +19,7 @@ import { useClassNames } from './useClassNames'
 import { FaCaretDownIcon } from '../Icon'
 import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
+import { useActiveOption } from './useActiveOption'
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
@@ -147,14 +148,22 @@ export function MultiComboBox<T>({
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
   const selectedLabels = useMemo(() => selectedItems.map(({ label }) => label), [selectedItems])
-  const filteredItems = useMemo(
+  const { options } = useOptions({
+    items,
+    selected: selectedItems,
+    creatable,
+    inputValue,
+  })
+  const filteredOptions = useMemo(
     () =>
-      items.filter(({ label }) => {
+      options.filter(({ item: { label } }) => {
         if (!inputValue) return true
         return convertMatchableString(label).includes(convertMatchableString(inputValue))
       }),
-    [inputValue, items],
+    [inputValue, options],
   )
+  const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
+    useActiveOption({ options: filteredOptions })
   const handleDelete = useCallback(
     (item: ComboBoxItem<T>) => {
       onDelete && onDelete(item)
@@ -168,17 +177,9 @@ export function MultiComboBox<T>({
     [onChangeSelected, onDelete, selectedItems],
   )
 
-  const { options, activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
-    useOptions({
-      items: filteredItems,
-      selected: selectedItems,
-      creatable,
-      inputValue,
-    })
-
   const listBoxId = useId()
   const { renderListBox, calculateDropdownRect, listBoxRef } = useListBox({
-    options,
+    options: filteredOptions,
     activeOptionId: activeOption?.id || null,
     onHoverOption: (option) => setActiveOption(option),
     onAdd,
@@ -200,14 +201,14 @@ export function MultiComboBox<T>({
   const focus = useCallback(() => {
     onFocus && onFocus()
     setIsFocused(true)
-    setActiveOption(null)
-  }, [onFocus, setActiveOption])
+  }, [onFocus])
   const blur = useCallback(() => {
     if (!isFocused) return
     onBlur && onBlur()
     setIsFocused(false)
+    setActiveOption(null)
     setTimeout(() => setFocusedSelectedItemIndex(null))
-  }, [isFocused, onBlur])
+  }, [isFocused, onBlur, setActiveOption])
 
   const caretIconColor = useMemo(() => {
     if (isFocused) return theme.color.TEXT_BLACK
@@ -319,7 +320,6 @@ export function MultiComboBox<T>({
           e.stopPropagation()
           inputRef.current?.focus()
           setFocusedSelectedItemIndex(null)
-          setActiveOption(null)
         }
       }}
       role="combobox"

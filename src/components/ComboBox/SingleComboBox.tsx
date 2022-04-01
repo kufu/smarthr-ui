@@ -19,6 +19,7 @@ import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
 import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
+import { useActiveOption } from './useActiveOption'
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
 
@@ -122,28 +123,28 @@ export function SingleComboBox<T>({
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  const filteredItems = useMemo(() => {
+  const { options } = useOptions({
+    items,
+    selected: selectedItem,
+    creatable,
+    inputValue,
+  })
+  const filteredOptions = useMemo(() => {
     if (!isEditing) {
-      return items
+      return options
     }
 
-    return items.filter(({ label }) => {
+    return options.filter(({ item: { label } }) => {
       if (!inputValue) return true
       return convertMatchableString(label).includes(convertMatchableString(inputValue))
     })
-  }, [inputValue, isEditing, items])
-
-  const { options, activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
-    useOptions({
-      items: filteredItems,
-      selected: selectedItem,
-      creatable,
-      inputValue,
-    })
+  }, [inputValue, isEditing, options])
+  const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
+    useActiveOption({ options: filteredOptions })
 
   const listBoxId = useId()
   const { renderListBox, calculateDropdownRect, listBoxRef } = useListBox({
-    options,
+    options: filteredOptions,
     activeOptionId: activeOption?.id || null,
     onHoverOption: (option) => setActiveOption(option),
     onAdd,
@@ -161,16 +162,16 @@ export function SingleComboBox<T>({
 
   const focus = useCallback(() => {
     setIsFocused(true)
-    setActiveOption(null)
     if (!isFocused) {
       setIsExpanded(true)
     }
-  }, [isFocused, setActiveOption])
+  }, [isFocused])
   const blur = useCallback(() => {
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
-  }, [])
+    setActiveOption(null)
+  }, [setActiveOption])
 
   const caretIconColor = useMemo(() => {
     if (isFocused) return theme.color.TEXT_BLACK
@@ -308,7 +309,6 @@ export function SingleComboBox<T>({
             }
           } else {
             inputRef.current?.focus()
-            setActiveOption(null)
             if (!isExpanded) {
               setIsExpanded(true)
             }
