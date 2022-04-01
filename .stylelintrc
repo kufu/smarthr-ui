@@ -1,5 +1,4 @@
 {
-  "extends": [
-    "stylelint-config-smarthr"
-  ]
+  "extends": ["stylelint-config-smarthr"],
+  "processors": ["stylelint-processor-styled-components"]
 }
