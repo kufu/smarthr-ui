@@ -14,6 +14,7 @@ export type Props<T> = {
   onDelete: (item: ComboBoxItem<T>) => void
   enableEllipsis?: boolean
   onEllipsis?: () => void
+  focused: boolean
 }
 
 export function MultiSelectedItemInner<T>({
@@ -22,9 +23,11 @@ export function MultiSelectedItemInner<T>({
   onDelete,
   enableEllipsis,
   onEllipsis,
+  focused,
 }: Props<T>) {
   const theme = useTheme()
   const labelRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
   const { deletable = true } = item
 
   useEffect(() => {
@@ -36,6 +39,12 @@ export function MultiSelectedItemInner<T>({
       onEllipsis()
     }
   }, [enableEllipsis, onEllipsis])
+
+  useEffect(() => {
+    if (focused) {
+      buttonRef.current?.focus()
+    }
+  }, [focused])
 
   const classNames = useClassNames().multi
 
@@ -59,6 +68,8 @@ export function MultiSelectedItemInner<T>({
           onClick={() => {
             onDelete && onDelete(item)
           }}
+          ref={buttonRef}
+          tabIndex={-1}
         >
           <FaTimesCircleIcon
             size={11}

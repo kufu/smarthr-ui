@@ -2,6 +2,7 @@ import React, {
   ChangeEvent,
   HTMLAttributes,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -135,6 +136,7 @@ export function MultiComboBox<T>({
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
+  const [focusedSelectedItemIndex, setFocusedSelectedItemIndex] = useState<number | null>(null)
   const isInputControlled = useMemo(
     () => controlledInputValue !== undefined,
     [controlledInputValue],
@@ -206,6 +208,7 @@ export function MultiComboBox<T>({
     if (!isFocused) return
     onBlur && onBlur()
     setIsFocused(false)
+    setTimeout(() => setFocusedSelectedItemIndex(null))
   }, [isFocused, onBlur])
 
   const caretIconColor = useMemo(() => {
@@ -239,6 +242,17 @@ export function MultiComboBox<T>({
     // 選択済みアイテムによってコンボボックスの高さが変わりうるので selectedItems を依存に含める
   }, [calculateDropdownRect, isFocused, selectedItems])
 
+  useEffect(() => {
+    if (focusedSelectedItemIndex === null) {
+      return
+    }
+    if (selectedItems.length === 0) {
+      setFocusedSelectedItemIndex(null)
+    } else {
+      setFocusedSelectedItemIndex(Math.min(focusedSelectedItemIndex, selectedItems.length - 1))
+    }
+  }, [focusedSelectedItemIndex, selectedItems.length])
+
   return (
     <Container
       {...props}
@@ -256,9 +270,42 @@ export function MultiComboBox<T>({
         }
       }}
       onKeyDown={(e) => {
-        if (e.key === 'Escape' || e.key === 'Esc') {
+        if (isComposing) {
+          return
+        } else if (e.key === 'Escape' || e.key === 'Esc') {
           e.stopPropagation()
           blur()
+        } else if (e.key === 'Tab') {
+          blur()
+        } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+          if (focusedSelectedItemIndex === null) {
+            if (selectedItems.length > 0) {
+              setFocusedSelectedItemIndex(selectedItems.length - 1)
+            }
+          } else {
+            setFocusedSelectedItemIndex(Math.max(focusedSelectedItemIndex - 1, 0))
+          }
+        } else if (e.key === 'Right' || e.key === 'ArrowRight') {
+          if (focusedSelectedItemIndex !== null) {
+            const nextIndex = focusedSelectedItemIndex + 1
+            if (nextIndex < selectedItems.length) {
+              setFocusedSelectedItemIndex(nextIndex)
+            } else {
+              setFocusedSelectedItemIndex(null)
+              inputRef.current?.focus()
+            }
+          }
+        } else if (
+          e.key === 'Up' ||
+          e.key === 'ArrowUp' ||
+          e.key === 'Down' ||
+          e.key === 'ArrowDown'
+        ) {
+          inputRef.current?.focus()
+          setFocusedSelectedItemIndex(null)
+          handleInputKeyDown(e)
+        } else if (e.key === 'Enter' && document.activeElement === inputRef.current) {
+          handleInputKeyDown(e)
         }
       }}
       role="combobox"
@@ -270,7 +317,7 @@ export function MultiComboBox<T>({
     >
       <InputArea themes={theme}>
         <List themes={theme}>
-          {selectedItems.map((selectedItem) => (
+          {selectedItems.map((selectedItem, i) => (
             <li key={selectedItem.label}>
               <MultiSelectedItem
                 item={selectedItem}
@@ -279,6 +326,7 @@ export function MultiComboBox<T>({
                   handleDelete(selectedItem)
                 }}
                 enableEllipsis={selectedItemEllipsis}
+                focused={i === focusedSelectedItemIndex}
               />
             </li>
           ))}
@@ -299,23 +347,15 @@ export function MultiComboBox<T>({
                 }
               }}
               onFocus={() => {
+                setFocusedSelectedItemIndex(null)
                 if (!isFocused) {
                   focus()
                 }
               }}
               onCompositionStart={() => setIsComposing(true)}
               onCompositionEnd={() => setIsComposing(false)}
-              onKeyDown={(e) => {
-                if (isComposing) {
-                  return
-                }
-                if (e.key === 'Tab') {
-                  blur()
-                  return
-                }
-                handleInputKeyDown(e)
-              }}
               autoComplete="off"
+              tabIndex={focusedSelectedItemIndex === null ? 0 : -1}
               aria-activedescendant={aria.activeDescendant}
               aria-autocomplete="list"
               aria-controls={aria.listBoxId}

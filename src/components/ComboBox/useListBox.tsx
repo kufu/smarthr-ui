@@ -161,7 +161,7 @@ export function useListBox<T>({
   }, [activeOptionIndex, options])
 
   const handleInputKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
+    (e: React.KeyboardEvent<HTMLElement>) => {
       if (isLoading) {
         return
       }
