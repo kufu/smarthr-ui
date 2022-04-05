@@ -65,7 +65,7 @@
     "stylelint": "^14.6.1",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-smarthr": "^1.0.2",
-    "stylelint-config-standard": "^24.0.0",
+    "stylelint-config-standard": "^25.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "testcafe": "^1.18.4",
     "ts-loader": "^9.2.8",
