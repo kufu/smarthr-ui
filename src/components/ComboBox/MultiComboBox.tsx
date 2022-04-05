@@ -17,10 +17,10 @@ import { hasParentElementByClassName } from './multiComboBoxHelper'
 import { useClassNames } from './useClassNames'
 
 import { FaCaretDownIcon } from '../Icon'
-import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
 import { useActiveOption } from './useActiveOption'
 import { MultiSelectedItem } from './MultiSelectedItem'
+import { ListBox } from './ListBox'
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
 
@@ -177,27 +177,6 @@ export function MultiComboBox<T>({
     [onChangeSelected, onDelete, selectedItems],
   )
 
-  const listBoxId = useId()
-  const { renderListBox, calculateDropdownRect, listBoxRef } = useListBox({
-    options: filteredOptions,
-    activeOptionId: activeOption?.id || null,
-    onHoverOption: (option) => setActiveOption(option),
-    onAdd,
-    onSelect: (selected) => {
-      const isSelectedItem = selectedLabels.includes(selected.label)
-      if (isSelectedItem) {
-        handleDelete(selected)
-      } else {
-        onSelect && onSelect(selected)
-        onChangeSelected && onChangeSelected(selectedItems.concat(selected))
-      }
-    },
-    isExpanded: isFocused,
-    isLoading,
-    listBoxId,
-    classNames: classNames.listBox,
-  })
-
   const focus = useCallback(() => {
     onFocus && onFocus()
     setIsFocused(true)
@@ -216,12 +195,10 @@ export function MultiComboBox<T>({
     return theme.color.TEXT_GREY
   }, [disabled, isFocused, theme])
 
-  useOuterClick(
-    [outerRef, listBoxRef],
-    useCallback(() => {
-      blur()
-    }, [blur]),
-  )
+  const listBoxId = useId()
+  const listBoxRef = useRef<HTMLDivElement>(null)
+
+  useOuterClick([outerRef, listBoxRef], blur)
 
   useLayoutEffect(() => {
     if (!isInputControlled) {
@@ -232,14 +209,6 @@ export function MultiComboBox<T>({
       inputRef.current.focus()
     }
   }, [isFocused, isInputControlled, selectedItems])
-
-  useLayoutEffect(() => {
-    // ドロップダウン表示時に位置を計算する
-    if (outerRef.current && isFocused) {
-      calculateDropdownRect(outerRef.current)
-    }
-    // 選択済みアイテムによってコンボボックスの高さが変わりうるので selectedItems を依存に含める
-  }, [calculateDropdownRect, isFocused, selectedItems])
 
   useEffect(() => {
     if (focusedSelectedItemIndex === null) {
@@ -391,7 +360,27 @@ export function MultiComboBox<T>({
         <FaCaretDownIcon color={caretIconColor} />
       </Suffix>
 
-      {renderListBox()}
+      <ListBox
+        options={options}
+        activeOptionId={activeOption?.id ?? null}
+        onHoverOption={(option) => setActiveOption(option)}
+        onAdd={onAdd}
+        onSelect={(selected) => {
+          const isSelectedItem = selectedLabels.includes(selected.label)
+          if (isSelectedItem) {
+            handleDelete(selected)
+          } else {
+            onSelect && onSelect(selected)
+            onChangeSelected && onChangeSelected(selectedItems.concat(selected))
+          }
+        }}
+        isExpanded={isFocused}
+        isLoading={isLoading}
+        listBoxId={listBoxId}
+        listBoxRef={listBoxRef}
+        triggerRef={outerRef}
+        classNames={classNames.listBox}
+      />
     </Container>
   )
 }

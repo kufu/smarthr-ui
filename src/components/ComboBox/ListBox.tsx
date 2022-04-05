@@ -1,16 +1,16 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
-import { ComboBoxItem, ComboBoxOption } from './types'
-import { usePartialRendering } from './usePartialRendering'
-
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
-type Args<T> = {
+import { ComboBoxItem, ComboBoxOption } from './types'
+import { usePartialRendering } from './usePartialRendering'
+
+type Props<T> = {
   options: Array<ComboBoxOption<T>>
   activeOptionId: string | null
   onHoverOption: (option: ComboBoxOption<T>) => void
@@ -19,6 +19,8 @@ type Args<T> = {
   isExpanded: boolean
   isLoading?: boolean
   listBoxId: string
+  listBoxRef: RefObject<HTMLDivElement>
+  triggerRef: RefObject<HTMLElement>
   classNames: {
     dropdownList: string
     addButton: string
@@ -27,14 +29,14 @@ type Args<T> = {
   }
 }
 
-type DropDownStyle = {
+type Rect = {
   top: number
   left: number
   width: number
   height?: number
 }
 
-export function useListBox<T>({
+export function ListBox<T>({
   options,
   activeOptionId,
   onHoverOption,
@@ -43,18 +45,27 @@ export function useListBox<T>({
   isExpanded,
   isLoading,
   listBoxId,
+  listBoxRef,
+  triggerRef,
   classNames,
-}: Args<T>) {
-  const [dropdownStyle, setDropdownStyle] = useState<DropDownStyle>({
+}: Props<T>) {
+  const bottomIntersectionRef = useRef<HTMLDivElement>(null)
+  const partialOptions = usePartialRendering({
+    items: options,
+    bottomElement: bottomIntersectionRef.current,
+  })
+
+  const [listBoxRect, setListBoxRect] = useState<Rect>({
     top: 0,
     left: 0,
     width: 0,
   })
-  const calculateDropdownRect = useCallback((triggerElement: Element) => {
-    if (!listBoxRef.current) {
+
+  const calculateRect = useCallback(() => {
+    if (!listBoxRef.current || !triggerRef.current) {
       return
     }
-    const rect = triggerElement.getBoundingClientRect()
+    const rect = triggerRef.current.getBoundingClientRect()
     const bottomSpace = window.innerHeight - rect.bottom
     const topSpace = rect.top
     const listBoxHeight = Math.min(
@@ -82,110 +93,103 @@ export function useListBox<T>({
       height = bottomSpace
     }
 
-    setDropdownStyle({
+    setListBoxRect({
       top,
       left: rect.left + window.pageXOffset,
       width: rect.width,
       height,
     })
-  }, [])
+  }, [listBoxRef, triggerRef])
 
-  const bottomIntersectionRef = useRef<HTMLDivElement>(null)
-  const partialOptions = usePartialRendering({
-    items: options,
-    bottomElement: bottomIntersectionRef.current,
-  })
+  useEffect(() => {
+    if (!isExpanded || !triggerRef.current) {
+      return
+    }
+    // 初回表示時とトリガ要素のりサイズ時に矩形の再計算を行う
+    const resizeObserver = new ResizeObserver(() => {
+      calculateRect()
+    })
+    resizeObserver.observe(triggerRef.current)
+    return () => resizeObserver.disconnect()
+  }, [calculateRect, isExpanded, triggerRef])
 
   const theme = useTheme()
   const { portalRoot } = usePortal()
-  const listBoxRef = useRef<HTMLDivElement>(null)
 
-  const renderListBox = () => {
-    return createPortal(
-      <Container
-        {...dropdownStyle}
-        themes={theme}
-        id={listBoxId}
-        ref={listBoxRef}
-        role="listbox"
-        aria-hidden={!isExpanded}
-        className={classNames.dropdownList}
-      >
-        {isLoading ? (
-          <LoaderWrapper themes={theme}>
-            <Loader />
-          </LoaderWrapper>
-        ) : (
-          <>
-            {partialOptions.map((option) => {
-              const isActive = option.id === activeOptionId
-              const className = isActive ? 'active' : ''
-              const { item, selected, isNew } = option
-              const { label, disabled } = item
-              if (isNew) {
-                return (
-                  <AddButton
-                    key={`add-${label}`}
-                    themes={theme}
-                    onClick={() => {
-                      onAdd && onAdd(label)
-                    }}
-                    onMouseOver={() => onHoverOption(option)}
-                    id={option.id}
-                    role="option"
-                    className={`${className} ${classNames.addButton}`}
-                  >
-                    <AddIcon color={theme.color.TEXT_LINK} $theme={theme} />
-                    <AddText themes={theme}>「{label}」を追加</AddText>
-                  </AddButton>
-                )
-              }
+  return createPortal(
+    <Container
+      {...listBoxRect}
+      themes={theme}
+      id={listBoxId}
+      ref={listBoxRef}
+      role="listbox"
+      aria-hidden={!isExpanded}
+      className={classNames.dropdownList}
+    >
+      {isLoading ? (
+        <LoaderWrapper themes={theme}>
+          <Loader />
+        </LoaderWrapper>
+      ) : (
+        <>
+          {partialOptions.map((option) => {
+            const isActive = option.id === activeOptionId
+            const className = isActive ? 'active' : ''
+            const { item, selected, isNew } = option
+            const { label, disabled } = item
+            if (isNew) {
               return (
-                <SelectButton
-                  key={`item-${label}`}
-                  type="button"
+                <AddButton
+                  key={`add-${label}`}
                   themes={theme}
-                  disabled={disabled}
                   onClick={() => {
-                    onSelect(item)
+                    onAdd && onAdd(label)
                   }}
                   onMouseOver={() => onHoverOption(option)}
                   id={option.id}
                   role="option"
-                  className={`${className} ${classNames.selectButton}`}
-                  aria-selected={selected}
+                  className={`${className} ${classNames.addButton}`}
                 >
-                  {label}
-                </SelectButton>
+                  <AddIcon color={theme.color.TEXT_LINK} themes={theme} />
+                  <AddText themes={theme}>「{label}」を追加</AddText>
+                </AddButton>
               )
-            })}
-
-            {options.length === 0 && (
-              <NoItems
+            }
+            return (
+              <SelectButton
+                key={`item-${label}`}
+                type="button"
                 themes={theme}
-                role="alert"
-                aria-live="polite"
-                className={classNames.noItems}
+                disabled={disabled}
+                onClick={() => {
+                  onSelect(item)
+                }}
+                onMouseOver={() => onHoverOption(option)}
+                id={option.id}
+                role="option"
+                className={`${className} ${classNames.selectButton}`}
+                aria-selected={selected}
               >
-                一致する選択肢がありません
-              </NoItems>
-            )}
-          </>
-        )}
-        <div ref={bottomIntersectionRef} />
-      </Container>,
-      portalRoot,
-    )
-  }
-  return {
-    renderListBox,
-    calculateDropdownRect,
-    listBoxRef,
-  }
+                {label}
+              </SelectButton>
+            )
+          })}
+
+          {options.length === 0 && (
+            <NoItems themes={theme} role="alert" aria-live="polite" className={classNames.noItems}>
+              一致する選択肢がありません
+            </NoItems>
+          )}
+        </>
+      )}
+      <div ref={bottomIntersectionRef} />
+    </Container>,
+    portalRoot,
+  )
 }
 
 const Container = styled.div<
-  DropDownStyle & {
+  Rect & {
     themes: Theme
   }
 >(({ top, left, width, height, themes }) => {
@@ -270,14 +274,14 @@ const AddButton = styled(SelectButton)`
   align-items: center;
   min-width: 100%;
 `
-const AddIcon = styled(FaPlusCircleIcon)<{ $theme: Theme }>`
-  ${({ $theme }) => {
-    const { size } = $theme
+const AddIcon = styled(FaPlusCircleIcon)<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { spacingByChar } = themes
 
     return css`
       position: relative;
       top: -1px;
-      margin-right: ${size.pxToRem(4)};
+      margin-right: ${spacingByChar(0.25)};
     `
   }}
 `

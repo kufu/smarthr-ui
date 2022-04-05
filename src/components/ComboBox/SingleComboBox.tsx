@@ -17,9 +17,9 @@ import { useClassNames } from './useClassNames'
 import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
-import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
 import { useActiveOption } from './useActiveOption'
+import { ListBox } from './ListBox'
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
 
@@ -142,24 +142,6 @@ export function SingleComboBox<T>({
   const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
     useActiveOption({ options: filteredOptions })
 
-  const listBoxId = useId()
-  const { renderListBox, calculateDropdownRect, listBoxRef } = useListBox({
-    options: filteredOptions,
-    activeOptionId: activeOption?.id || null,
-    onHoverOption: (option) => setActiveOption(option),
-    onAdd,
-    onSelect: (selected) => {
-      onSelect && onSelect(selected)
-      onChangeSelected && onChangeSelected(selected)
-      setIsExpanded(false)
-      setIsEditing(false)
-    },
-    isExpanded,
-    isLoading,
-    listBoxId,
-    classNames: classNames.listBox,
-  })
-
   const focus = useCallback(() => {
     setIsFocused(true)
     if (!isFocused) {
@@ -179,6 +161,9 @@ export function SingleComboBox<T>({
     return theme.color.TEXT_GREY
   }, [disabled, isFocused, theme])
 
+  const listBoxId = useId()
+  const listBoxRef = useRef<HTMLDivElement>(null)
+
   useOuterClick(
     [outerRef, listBoxRef, clearButtonRef],
     useCallback(() => {
@@ -193,13 +178,6 @@ export function SingleComboBox<T>({
       inputRef.current.focus()
     }
   }, [isFocused, selectedItem])
-
-  useLayoutEffect(() => {
-    // ドロップダウン表示時に位置を計算する
-    if (outerRef.current && isExpanded) {
-      calculateDropdownRect(outerRef.current)
-    }
-  }, [calculateDropdownRect, isExpanded])
 
   const needsClearButton = selectedItem !== null && !disabled
 
@@ -320,7 +298,24 @@ export function SingleComboBox<T>({
         aria-autocomplete="list"
         className={classNames.input}
       />
-      {renderListBox()}
+      <ListBox
+        options={options}
+        activeOptionId={activeOption?.id ?? null}
+        onHoverOption={(option) => setActiveOption(option)}
+        onAdd={onAdd}
+        onSelect={(selected) => {
+          onSelect && onSelect(selected)
+          onChangeSelected && onChangeSelected(selected)
+          setIsExpanded(false)
+          setIsEditing(false)
+        }}
+        isExpanded={isExpanded}
+        isLoading={isLoading}
+        listBoxId={listBoxId}
+        listBoxRef={listBoxRef}
+        triggerRef={outerRef}
+        classNames={classNames.listBox}
+      />
     </Container>
   )
 }
