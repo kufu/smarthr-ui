@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { RefObject, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -14,7 +14,7 @@ export type Props<T> = {
   disabled: boolean
   onDelete: (item: ComboBoxItem<T>) => void
   enableEllipsis?: boolean
-  focused: boolean
+  buttonRef: RefObject<HTMLButtonElement>
 }
 
 export function MultiSelectedItem<T>({
@@ -22,11 +22,10 @@ export function MultiSelectedItem<T>({
   disabled,
   onDelete,
   enableEllipsis,
-  focused,
+  buttonRef,
 }: Props<T>) {
   const theme = useTheme()
   const labelRef = useRef<HTMLDivElement>(null)
-  const buttonRef = useRef<HTMLButtonElement>(null)
   const [needsTooltip, setNeedsTooltip] = useState(false)
   const { deletable = true } = item
 
@@ -39,12 +38,6 @@ export function MultiSelectedItem<T>({
       setNeedsTooltip(true)
     }
   }, [enableEllipsis])
-
-  useEffect(() => {
-    if (focused) {
-      buttonRef.current?.focus()
-    }
-  }, [focused])
 
   const classNames = useClassNames().multi
 
