@@ -38,6 +38,8 @@ export const Balloon: VFC<Props & ElementProps> = ({
   return <Base className={classNames} themes={themes} {...props} />
 }
 
+// HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
+// 1pxほど大きめに描画してbody部分と被るようにしています。
 const Base = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { color, fontSize } = themes
@@ -66,55 +68,55 @@ const Base = styled.div<{ themes: Theme }>`
       &.top {
         &::before {
           top: -4px;
-          width: 8px;
-          height: 4px;
+          width: 10px;
+          height: 5px;
           clip-path: polygon(50% 0, 100% 100%, 0 100%);
         }
       }
       &.bottom {
         &::before {
           bottom: -4px;
-          width: 8px;
-          height: 4px;
+          width: 10px;
+          height: 5px;
           clip-path: polygon(0 0, 100% 0, 50% 100%);
         }
       }
 
       &.right {
         &::before {
-          right: 25px;
+          right: 24px;
         }
       }
       &.center {
         &::before {
           left: 50%;
-          transform: translateX(-4px);
+          transform: translateX(-5px);
         }
       }
       &.left {
         &::before {
-          left: 25px;
+          left: 24px;
         }
       }
 
       &.middle {
         &::before {
           top: 50%;
-          transform: translateY(-4px);
+          transform: translateY(-5px);
         }
         &.left {
           &::before {
             left: -4px;
-            width: 4px;
-            height: 8px;
+            width: 5px;
+            height: 10px;
             clip-path: polygon(100% 0, 100% 100%, 0 50%);
           }
         }
         &.right {
           &::before {
             right: -4px;
-            width: 4px;
-            height: 8px;
+            width: 5px;
+            height: 10px;
             clip-path: polygon(0 0, 100% 50%, 0 100%);
           }
         }
