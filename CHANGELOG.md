@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [20.1.2](https://github.com/kufu/smarthr-ui/compare/v20.1.1...v20.1.2) (2022-04-06)
+
+
+### Bug Fixes
+
+* ballonのtriangleがretinaディスプレイなどで条件が揃うと表示崩れするバグを修正 ([#2399](https://github.com/kufu/smarthr-ui/issues/2399)) ([2d41e03](https://github.com/kufu/smarthr-ui/commit/2d41e0357f9ac2ca413d7733cf22ae95cabe75b0))
+
 ### [20.1.1](https://github.com/kufu/smarthr-ui/compare/v20.1.0...v20.1.1) (2022-03-30)
 
 
