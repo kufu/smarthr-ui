@@ -52,7 +52,7 @@ export function ListBox<T>({
   const bottomIntersectionRef = useRef<HTMLDivElement>(null)
   const partialOptions = usePartialRendering({
     items: options,
-    bottomElement: bottomIntersectionRef.current,
+    bottomIntersectionRef,
   })
 
   const [listBoxRect, setListBoxRect] = useState<Rect>({

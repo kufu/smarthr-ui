@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useState } from 'react'
+import { RefObject, useEffect, useMemo, useState } from 'react'
 
 const OPTION_INCREMENT_AMOUNT = 100
 
 export function usePartialRendering<T, U extends Element>({
   items,
-  bottomElement,
+  bottomIntersectionRef,
 }: {
   items: T[]
-  bottomElement: U | null
+  bottomIntersectionRef: RefObject<U>
 }) {
   const [currentItemLength, setCurrentItemLength] = useState(OPTION_INCREMENT_AMOUNT)
   const partialItems = useMemo(
@@ -32,13 +32,14 @@ export function usePartialRendering<T, U extends Element>({
   // IntersectionObserver を設定
   useEffect(() => {
     const isAllItemsShown = currentItemLength >= items.length
-    if (!bottomElement || isAllItemsShown) {
+    const target = bottomIntersectionRef.current
+    if (!target || isAllItemsShown) {
       return
     }
 
-    observer.observe(bottomElement)
-    return () => observer.unobserve(bottomElement)
-  }, [bottomElement, currentItemLength, items.length, observer])
+    observer.observe(target)
+    return () => observer.unobserve(target)
+  }, [bottomIntersectionRef, currentItemLength, items.length, observer])
 
   return partialItems
 }
