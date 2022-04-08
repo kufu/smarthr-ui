@@ -7,7 +7,6 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 import Draggable from 'react-draggable'
 
@@ -17,6 +16,7 @@ import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { Base, BaseElementProps } from '../Base'
 import { SecondaryButton } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
+import { useDialogPortal } from './useDialogPortal'
 import { DialogOverlap } from './DialogOverlap'
 import { useClassNames } from './useClassNames'
 
@@ -92,7 +92,6 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   className = '',
   ...props
 }) => {
-  const portalContainer = useRef(document.createElement('div')).current
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
   const [wrapperPosition, setWrapperPosition] = useState<DOMRect | undefined>(undefined)
@@ -104,16 +103,8 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     x: 0,
     y: 0,
   })
+  const { Portal, isReady } = useDialogPortal(portalParent)
   const theme = useTheme()
-
-  useEffect(() => {
-    // SSR を考慮し、useEffect 内で初期値 document.body を指定
-    const pp = portalParent || document.body
-    pp.appendChild(portalContainer)
-    return () => {
-      pp.removeChild(portalContainer)
-    }
-  }, [portalContainer, portalParent])
 
   useEffect(() => {
     if (wrapperRef.current instanceof Element) {
@@ -130,15 +121,15 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   )
 
   useLayoutEffect(() => {
-    if (isOpen) {
+    if (isOpen && isReady) {
       setPosition({ x: 0, y: 0 })
       focusTargetRef.current?.focus()
     }
-  }, [isOpen])
+  }, [isOpen, isReady])
 
   useEffect(() => {
     // 中央寄せの座標計算を行う
-    if (!wrapperRef.current || !isOpen) {
+    if (!wrapperRef.current || !isOpen || !isReady) {
       return
     }
     const isXCenter = left === undefined && right === undefined
@@ -150,7 +141,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
         left: isXCenter ? window.innerWidth / 2 - rect.width / 2 : undefined,
       })
     }
-  }, [bottom, isOpen, left, right, top])
+  }, [bottom, isOpen, isReady, left, right, top])
 
   const handleArrowKey = useCallback(
     (e: React.KeyboardEvent) => {
@@ -195,88 +186,89 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   const labelId = useId()
   const classNames = useClassNames().modelessDialog
 
-  return createPortal(
-    <DialogOverlap isOpen={isOpen}>
-      <Draggable
-        handle={`.${classNames.handle}`}
-        onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
-        onDrag={(_, data) => {
-          setPosition((prev) => {
-            return {
-              x: prev.x + data.deltaX,
-              y: prev.y + data.deltaY,
-            }
-          })
-        }}
-        position={position}
-      >
-        <Layout
-          className={`${className} ${classNames.wrapper}`}
-          style={{
-            top: centering.top !== undefined ? centering.top : top,
-            left: centering.left !== undefined ? centering.left : left,
-            right,
-            bottom,
-            width,
-            height,
+  return (
+    <Portal>
+      <DialogOverlap isOpen={isOpen}>
+        <Draggable
+          handle={`.${classNames.handle}`}
+          onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
+          onDrag={(_, data) => {
+            setPosition((prev) => {
+              return {
+                x: prev.x + data.deltaX,
+                y: prev.y + data.deltaY,
+              }
+            })
           }}
-          ref={wrapperRef}
-          role="dialog"
-          aria-labelledby={labelId}
-          {...props}
+          position={position}
         >
-          <Box
-            isWidthAuto={width === undefined}
-            left={left}
-            right={right}
-            themes={theme}
-            className={classNames.box}
+          <Layout
+            className={`${className} ${classNames.wrapper}`}
+            style={{
+              top: centering.top !== undefined ? centering.top : top,
+              left: centering.left !== undefined ? centering.left : left,
+              right,
+              bottom,
+              width,
+              height,
+            }}
+            ref={wrapperRef}
+            role="dialog"
+            aria-labelledby={labelId}
+            {...props}
           >
-            <div tabIndex={-1} ref={focusTargetRef}>
-              {/* dummy element for focus management. */}
-            </div>
-            <Header className={classNames.header} themes={theme}>
-              <Title id={labelId} themes={theme}>
-                {header}
-              </Title>
-              <DialogHandler
-                className={classNames.handle}
-                themes={theme}
-                tabIndex={0}
-                role="slider"
-                aria-label="ダイアログの位置"
-                aria-valuetext={
-                  wrapperPosition &&
-                  `上から${Math.trunc(wrapperPosition.top)}px、
+            <Box
+              isWidthAuto={width === undefined}
+              left={left}
+              right={right}
+              themes={theme}
+              className={classNames.box}
+            >
+              <div tabIndex={-1} ref={focusTargetRef}>
+                {/* dummy element for focus management. */}
+              </div>
+              <Header className={classNames.header} themes={theme}>
+                <Title id={labelId} themes={theme}>
+                  {header}
+                </Title>
+                <DialogHandler
+                  className={classNames.handle}
+                  themes={theme}
+                  tabIndex={0}
+                  role="slider"
+                  aria-label="ダイアログの位置"
+                  aria-valuetext={
+                    wrapperPosition &&
+                    `上から${Math.trunc(wrapperPosition.top)}px、
                   左から${Math.trunc(wrapperPosition.left)}px`
-                }
-                onKeyDown={handleArrowKey}
-              >
-                <FaGripHorizontalIcon />
-              </DialogHandler>
-              <CloseButtonLayout>
-                <SecondaryButton
-                  type="button"
-                  size="s"
-                  square
-                  onClick={onClickClose}
-                  className={classNames.closeButton}
+                  }
+                  onKeyDown={handleArrowKey}
                 >
-                  <FaTimesIcon visuallyHiddenText="閉じる" />
-                </SecondaryButton>
-              </CloseButtonLayout>
-            </Header>
-            <Content className={classNames.content}>{children}</Content>
-            {footer && (
-              <Footer className={classNames.footer} themes={theme}>
-                {footer}
-              </Footer>
-            )}
-          </Box>
-        </Layout>
-      </Draggable>
-    </DialogOverlap>,
-    portalContainer,
+                  <FaGripHorizontalIcon />
+                </DialogHandler>
+                <CloseButtonLayout>
+                  <SecondaryButton
+                    type="button"
+                    size="s"
+                    square
+                    onClick={onClickClose}
+                    className={classNames.closeButton}
+                  >
+                    <FaTimesIcon visuallyHiddenText="閉じる" />
+                  </SecondaryButton>
+                </CloseButtonLayout>
+              </Header>
+              <Content className={classNames.content}>{children}</Content>
+              {footer && (
+                <Footer className={classNames.footer} themes={theme}>
+                  {footer}
+                </Footer>
+              )}
+            </Box>
+          </Layout>
+        </Draggable>
+      </DialogOverlap>
+    </Portal>
   )
 }
 
