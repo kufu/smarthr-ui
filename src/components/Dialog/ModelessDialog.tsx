@@ -92,6 +92,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   className = '',
   ...props
 }) => {
+  const { Portal, isReady } = useDialogPortal(portalParent)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
   const [wrapperPosition, setWrapperPosition] = useState<DOMRect | undefined>(undefined)
@@ -103,7 +104,6 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     x: 0,
     y: 0,
   })
-  const { Portal, isReady } = useDialogPortal(portalParent)
   const theme = useTheme()
 
   useEffect(() => {

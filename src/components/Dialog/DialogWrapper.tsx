@@ -21,8 +21,8 @@ export const DialogContext = createContext<DialogContextType>({
 })
 
 export const DialogWrapper: React.VFC<{ children?: React.ReactNode }> = ({ children }) => {
-  const { Portal } = useDialogPortal()
   const [active, setActive] = useState(false)
+  const { Portal } = useDialogPortal()
 
   // This is the root container of a dialog content located in outside the DOM tree
   const DialogContentRoot = useMemo<React.VFC<{ children: React.ReactNode }>>(
