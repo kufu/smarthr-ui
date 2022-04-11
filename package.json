@@ -50,9 +50,9 @@
     "prettier": "^2.6.1",
     "prettier-config-smarthr": "^1.0.0",
     "puppeteer": "^13.5.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-test-renderer": "^17.0.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-test-renderer": "^18.0.0",
     "reg-keygen-git-hash-plugin": "^0.11.1",
     "reg-notify-github-plugin": "^0.11.1",
     "reg-publish-s3-plugin": "^0.11.0",
@@ -76,8 +76,8 @@
     "webpack": "^5.70.0"
   },
   "peerDependencies": {
-    "react": "16.13.0 || ^17.0.1",
-    "react-dom": "16.13.0 || ^17.0.1",
+    "react": "16.13.0 || ^17.0.1 || ^18.0.0",
+    "react-dom": "16.13.0 || ^17.0.1 || ^18.0.0",
     "styled-components": "^5.0.1"
   },
   "bugs": {
@@ -145,8 +145,8 @@
   "resolutions": {
     "reg-suit/**/braces": "3.0.2",
     "minimist": "1.2.6",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "@types/react": "^17.0.43",
     "@babel/helper-compilation-targets": "^7.17.7"
   }
