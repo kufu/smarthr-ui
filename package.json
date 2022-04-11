@@ -29,7 +29,7 @@
     "@types/lodash.range": "^3.2.6",
     "@types/node": "^14.18.10",
     "@types/react": "^17.0.43",
-    "@types/react-dom": "^17.0.14",
+    "@types/react-dom": "^17.0.15",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.4.4",
     "@types/styled-components": "^5.1.25",
