@@ -13,7 +13,7 @@
     "react-transition-group": "^4.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.8",
+    "@babel/core": "^7.17.9",
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
     "@storybook/addon-a11y": "^6.4.19",
@@ -22,13 +22,13 @@
     "@storybook/cli": "^6.4.19",
     "@storybook/react": "^6.4.19",
     "@storybook/theming": "^6.4.19",
-    "@swc/core": "^1.2.160",
+    "@swc/core": "^1.2.165",
     "@swc/jest": "^0.2.20",
     "@types/jest": "^27.4.1",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
     "@types/node": "^14.18.10",
-    "@types/react": "^17.0.43",
+    "@types/react": "^17.0.44",
     "@types/react-dom": "^17.0.14",
     "@types/react-test-renderer": "^17.0.1",
     "@types/react-transition-group": "^4.4.4",
@@ -47,9 +47,9 @@
     "npm-run-all": "^4.1.5",
     "postcss-jsx": "^0.36.4",
     "postcss-syntax": "^0.36.2",
-    "prettier": "^2.6.1",
+    "prettier": "^2.6.2",
     "prettier-config-smarthr": "^1.0.0",
-    "puppeteer": "^13.5.1",
+    "puppeteer": "^13.5.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
@@ -147,7 +147,7 @@
     "minimist": "1.2.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "@types/react": "^17.0.43",
+    "@types/react": "^17.0.44",
     "@babel/helper-compilation-targets": "^7.17.7"
   }
 }
