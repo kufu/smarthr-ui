@@ -15762,10 +15762,10 @@ storybook-readme@^5.0.9:
     string-raw "^1.0.1"
     vuex "^3.1.0"
 
-storycap@^3.1.6:
-  version "3.1.6"
-  resolved "https://registry.yarnpkg.com/storycap/-/storycap-3.1.6.tgz#833c1a3ac2cf4b0c544789b9bedf9000f925904e"
-  integrity sha512-zxOZbBOC/vTGSov8ErmCsPtv4iXY8ryEFvyjV9KwAQSmwVn+QNxdcQZqJKBs2jJ2ZPkO+rkEKyTHA4wx++HQ/w==
+storycap@^3.1.7:
+  version "3.1.7"
+  resolved "https://registry.yarnpkg.com/storycap/-/storycap-3.1.7.tgz#9447de6bbb97bd001d631fbff954005a8cc35ac1"
+  integrity sha512-f5oOyI2YYeRin8qjn7vmUXGYiqIlXRmVPOoDlSMGKjHT0Fycuj1GIURL2nG5vrznxyKToAYBiGPyn8ljQW9h+A==
   dependencies:
     "@types/minimatch" "^3.0.3"
     "@types/mkdirp" "^1.0.0"
@@ -15778,13 +15778,13 @@ storycap@^3.1.6:
     puppeteer-core "^9.0.0"
     rimraf "^3.0.0"
     sanitize-filename "^1.6.3"
-    storycrawler "^3.1.6"
+    storycrawler "^3.1.7"
     yargs "^16.0.0"
 
-storycrawler@^3.1.6:
-  version "3.1.6"
-  resolved "https://registry.yarnpkg.com/storycrawler/-/storycrawler-3.1.6.tgz#0986cdbe25b5a24db1471e0f08729a2a8ba8ef55"
-  integrity sha512-82yVk5mj0uXghwOZXZmiZINMSHcYHmy+1X1bjqQR0v2To+5LYb5ww6Mc/YaGr/U4KEBkkFgufuuJy6mQgUTlOw==
+storycrawler@^3.1.7:
+  version "3.1.7"
+  resolved "https://registry.yarnpkg.com/storycrawler/-/storycrawler-3.1.7.tgz#004acc195a545a815b675206d7286811ccb39bce"
+  integrity sha512-pvdThBPJmXjknv+lRNgB44HzNZkT4XVXKw5g6k7/8SeM/+zYjvHj9PM1SauQfTJ1UtLJtRCGge8qDfeboatreQ==
   dependencies:
     "@types/chalk" "^2.2.0"
     "@types/node" "^16.0.0"
