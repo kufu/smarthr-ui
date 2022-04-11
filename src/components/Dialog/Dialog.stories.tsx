@@ -712,7 +712,7 @@ export const Body以外のPortalParent: Story = () => {
         id="portal-default"
         ariaLabel="Dialog"
         data-test="dialog-content"
-        portalParent={portalParentRef.current || undefined}
+        portalParent={portalParentRef}
       >
         <Title themes={themes}>Dialog</Title>
         <Content>
@@ -739,7 +739,7 @@ export const Body以外のPortalParent: Story = () => {
         onPressEscape={onClickClose}
         id="portal-action"
         data-test="dialog-content"
-        portalParent={portalParentRef.current || undefined}
+        portalParent={portalParentRef}
       >
         <Content>
           <p>ActionDialog を近接要素に生成しています</p>
@@ -755,7 +755,7 @@ export const Body以外のPortalParent: Story = () => {
         onPressEscape={onClickClose}
         id="portal-message"
         data-test="dialog-content"
-        portalParent={portalParentRef.current || undefined}
+        portalParent={portalParentRef}
       />
       <ModelessDialog
         isOpen={isOpen === 'modeless'}
@@ -763,7 +763,7 @@ export const Body以外のPortalParent: Story = () => {
         onClickClose={onClickClose}
         onPressEscape={onClickClose}
         id="portal-modeless"
-        portalParent={portalParentRef.current || undefined}
+        portalParent={portalParentRef}
       >
         <Content>
           <p>ModelessDialog を近接要素に生成しています。</p>

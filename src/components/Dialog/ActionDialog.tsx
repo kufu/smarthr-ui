@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useCallback } from 'react'
+import React, { HTMLAttributes, RefObject, useCallback } from 'react'
 
 import { useId } from '../../hooks/useId'
 import { useDialogPortal } from './useDialogPortal'
@@ -7,7 +7,7 @@ import { ActionDialogContentInner, ActionDialogContentInnerProps } from './Actio
 
 type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & {
   onClickClose: () => void
-  portalParent?: HTMLElement
+  portalParent?: HTMLElement | RefObject<HTMLElement>
 } & Pick<
     DialogContentInnerProps,
     | 'isOpen'

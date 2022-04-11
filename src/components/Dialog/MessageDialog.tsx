@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useCallback } from 'react'
+import React, { HTMLAttributes, RefObject, useCallback } from 'react'
 
 import { useDialogPortal } from './useDialogPortal'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
@@ -19,7 +19,7 @@ type Props = MessageDialogContentInnerProps &
     | 'bottom'
     | 'left'
     | 'id'
-  > & { portalParent?: HTMLElement }
+  > & { portalParent?: HTMLElement | RefObject<HTMLElement> }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const MessageDialog: React.VFC<Props & ElementProps> = ({

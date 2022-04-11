@@ -1,13 +1,14 @@
-import { ReactNode, VFC, useCallback, useEffect, useRef, useState } from 'react'
+import { ReactNode, RefObject, VFC, useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-export function useDialogPortal(parent?: HTMLElement) {
+export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>) {
   const portalContainer = useRef(document.createElement('div')).current
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
+    const parentElement = parent != null && 'current' in parent ? parent.current : parent
     // SSR を考慮し、useEffect 内で初期値 document.body を指定
-    const actualParent = parent || document.body
+    const actualParent = parentElement || document.body
     // 前状態のクリンナップと同ループで処理しないようにタイミングを遅らせる
     setTimeout(() => {
       actualParent.appendChild(portalContainer)

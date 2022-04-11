@@ -1,9 +1,9 @@
-import React, { HTMLAttributes } from 'react'
+import React, { HTMLAttributes, RefObject } from 'react'
 
 import { useDialogPortal } from './useDialogPortal'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 
-type Props = DialogContentInnerProps & { portalParent?: HTMLElement }
+type Props = DialogContentInnerProps & { portalParent?: HTMLElement | RefObject<HTMLElement> }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const Dialog: React.VFC<Props & ElementProps> = ({

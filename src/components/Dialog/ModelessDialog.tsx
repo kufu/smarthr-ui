@@ -1,6 +1,7 @@
 import React, {
   MouseEvent,
   ReactNode,
+  RefObject,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -72,7 +73,7 @@ type Props = {
   /**
    * ポータルの container となる DOM 要素を追加する親要素
    */
-  portalParent?: HTMLElement
+  portalParent?: HTMLElement | RefObject<HTMLElement>
 }
 
 export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
