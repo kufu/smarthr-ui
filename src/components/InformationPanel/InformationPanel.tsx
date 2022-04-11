@@ -20,7 +20,7 @@ import { SecondaryButton } from '../Button'
 
 type Props = {
   /** パネルのタイトル */
-  title: string
+  title: React.ReactNode
   /** タイトル部分の HTML タグ */
   titleTag?: HeadingTagTypes
   /** 表示する情報のタイプ */
@@ -28,9 +28,9 @@ type Props = {
   /** `true` のとき、開閉ボタンを表示する */
   togglable?: boolean
   /** 開くボタンのラベル */
-  openButtonLabel?: string
+  openButtonLabel?: React.ReactNode
   /** 閉じるボタンのラベル */
-  closeButtonLabel?: string
+  closeButtonLabel?: React.ReactNode
   /** パネルの開閉の状態 */
   active?: boolean
   /** コンポーネントに適用するクラス名 */
