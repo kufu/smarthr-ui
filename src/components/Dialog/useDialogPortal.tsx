@@ -8,8 +8,11 @@ export function useDialogPortal(parent?: HTMLElement) {
   useEffect(() => {
     // SSR を考慮し、useEffect 内で初期値 document.body を指定
     const actualParent = parent || document.body
-    actualParent.appendChild(portalContainer)
-    setIsReady(true)
+    // 前状態のクリンナップと同ループで処理しないようにタイミングを遅らせる
+    setTimeout(() => {
+      actualParent.appendChild(portalContainer)
+      setIsReady(true)
+    })
     return () => {
       setIsReady(false)
       actualParent.removeChild(portalContainer)
