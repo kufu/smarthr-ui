@@ -1,5 +1,6 @@
-import React, { createContext, useEffect, useMemo, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
+import React, { createContext, useMemo, useState } from 'react'
+
+import { useDialogPortal } from './useDialogPortal'
 
 type DialogContextType = {
   onClickTrigger: () => void
@@ -21,22 +22,14 @@ export const DialogContext = createContext<DialogContextType>({
 
 export const DialogWrapper: React.VFC<{ children?: React.ReactNode }> = ({ children }) => {
   const [active, setActive] = useState(false)
-  const element = useRef(document.createElement('div')).current
-
-  useEffect(() => {
-    document.body.appendChild(element)
-
-    return () => {
-      document.body.removeChild(element)
-    }
-  }, [element])
+  const { Portal } = useDialogPortal()
 
   // This is the root container of a dialog content located in outside the DOM tree
   const DialogContentRoot = useMemo<React.VFC<{ children: React.ReactNode }>>(
     () => (props) => {
-      return createPortal(props.children, element)
+      return <Portal>{props.children}</Portal>
     },
-    [element],
+    [Portal],
   )
   // set the displayName explicit for DevTools
   DialogContentRoot.displayName = 'DialogContentRoot'
