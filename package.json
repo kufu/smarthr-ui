@@ -59,7 +59,7 @@
     "reg-suit": "^0.11.1",
     "standard-version": "^9.3.2",
     "storybook-readme": "^5.0.9",
-    "storycap": "^3.1.6",
+    "storycap": "^3.1.7",
     "styled-components": "^5.3.5",
     "styled-reset": "^4.3.4",
     "stylelint": "^14.6.1",
