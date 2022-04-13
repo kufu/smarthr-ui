@@ -67,7 +67,7 @@
     "stylelint-config-smarthr": "^1.0.2",
     "stylelint-config-standard": "^25.0.0",
     "stylelint-config-styled-components": "^0.1.1",
-    "testcafe": "^1.18.4",
+    "testcafe": "^1.18.5",
     "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
     "ttypescript": "^1.5.13",
