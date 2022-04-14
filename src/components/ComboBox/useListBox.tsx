@@ -1,4 +1,12 @@
-import React, { KeyboardEvent, RefObject, useCallback, useEffect, useRef, useState } from 'react'
+import React, {
+  KeyboardEvent,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
@@ -57,6 +65,10 @@ export function useListBox<T>({
   const partialOptions = usePartialRendering({
     items: options,
     bottomIntersectionRef,
+    minLength: useMemo(
+      () => (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
+      [activeOption, options],
+    ),
   })
 
   const listBoxRef = useRef<HTMLDivElement>(null)
