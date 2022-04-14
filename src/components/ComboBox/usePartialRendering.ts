@@ -11,11 +11,12 @@ export function usePartialRendering<T, U extends Element>({
   bottomIntersectionRef: RefObject<U>
   minLength?: number
 }) {
-  const [currentItemLength, setCurrentItemLength] = useState(OPTION_INCREMENT_AMOUNT)
-  const actualLength = useMemo(
-    () => Math.max(currentItemLength, minLength),
-    [currentItemLength, minLength],
+  const [currentItemLength, setCurrentItemLength] = useState(
+    Math.max(OPTION_INCREMENT_AMOUNT, minLength),
   )
+  const actualLength = useMemo(() => {
+    return Math.max(currentItemLength, minLength)
+  }, [currentItemLength, minLength])
   const partialItems = useMemo(() => items.slice(0, actualLength), [actualLength, items])
 
   useEffect(() => {
