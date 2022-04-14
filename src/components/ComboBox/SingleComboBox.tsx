@@ -11,7 +11,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { useClassNames } from './useClassNames'
+import { useSingleComboBoxClassNames } from './useClassNames'
 
 import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
@@ -20,6 +20,7 @@ import { useOptions } from './useOptions'
 import { useListBox } from './useListBox'
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
+import { ComboBoxContext } from './ComboBoxContext'
 
 type Props<T> = {
   /**
@@ -111,7 +112,7 @@ export function SingleComboBox<T>({
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
-  const classNames = useClassNames().single
+  const classNames = useSingleComboBoxClassNames()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -158,7 +159,6 @@ export function SingleComboBox<T>({
     isExpanded,
     isLoading,
     triggerRef: outerRef,
-    classNames: classNames.listBox,
   })
 
   const focus = useCallback(() => {
@@ -195,117 +195,125 @@ export function SingleComboBox<T>({
   }, [isFocused, selectedItem])
 
   const needsClearButton = selectedItem !== null && !disabled
+  const contextValue = useMemo(
+    () => ({
+      listBoxClassNames: classNames.listBox,
+    }),
+    [classNames.listBox],
+  )
 
   return (
-    <Container
-      {...props}
-      ref={outerRef}
-      className={`${disabled ? 'disabled' : ''} ${className} ${classNames.wrapper}`}
-      $width={width}
-      role="combobox"
-      aria-haspopup="listbox"
-      aria-controls={listBoxId}
-      aria-expanded={isFocused}
-      aria-invalid={error || undefined}
-    >
-      <StyledInput
-        type="text"
-        name={name}
-        value={inputValue}
-        disabled={disabled}
-        error={error}
-        placeholder={placeholder}
-        suffix={
-          <>
-            <ClearButton
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation()
-                onClear && onClear()
-                onChangeSelected && onChangeSelected(null)
-                if (isFocused) {
-                  setIsExpanded(true)
-                }
-              }}
-              ref={clearButtonRef}
-              themes={theme}
-              className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
-            >
-              <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
-            </ClearButton>
-            <CaretDownLayout themes={theme}>
-              <CaretDownWrapper themes={theme}>
-                <FaCaretDownIcon color={caretIconColor} />
-              </CaretDownWrapper>
-            </CaretDownLayout>
-          </>
-        }
-        onClick={(e) => {
-          if (disabled) {
-            e.stopPropagation()
-            return
+    <ComboBoxContext.Provider value={contextValue}>
+      <Container
+        {...props}
+        ref={outerRef}
+        className={`${disabled ? 'disabled' : ''} ${className} ${classNames.wrapper}`}
+        $width={width}
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-controls={listBoxId}
+        aria-expanded={isFocused}
+        aria-invalid={error || undefined}
+      >
+        <StyledInput
+          type="text"
+          name={name}
+          value={inputValue}
+          disabled={disabled}
+          error={error}
+          placeholder={placeholder}
+          suffix={
+            <>
+              <ClearButton
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onClear && onClear()
+                  onChangeSelected && onChangeSelected(null)
+                  if (isFocused) {
+                    setIsExpanded(true)
+                  }
+                }}
+                ref={clearButtonRef}
+                themes={theme}
+                className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
+              >
+                <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
+              </ClearButton>
+              <CaretDownLayout themes={theme}>
+                <CaretDownWrapper themes={theme}>
+                  <FaCaretDownIcon color={caretIconColor} />
+                </CaretDownWrapper>
+              </CaretDownLayout>
+            </>
           }
-          focus()
-          if (inputRef.current) {
-            inputRef.current.focus()
-          }
-          if (!isExpanded) {
-            setIsExpanded(true)
-          }
-        }}
-        onChange={(e) => {
-          if (onChange) onChange(e)
-          if (onChangeInput) onChangeInput(e)
-          if (!isEditing) setIsEditing(true)
-          const { value } = e.currentTarget
-          setInputValue(value)
-          if (value === '') {
-            onClear && onClear()
-            onChangeSelected && onChangeSelected(null)
-          }
-        }}
-        onFocus={() => {
-          if (!isFocused) {
-            focus()
-          }
-        }}
-        onCompositionStart={() => setIsComposing(true)}
-        onCompositionEnd={() => setIsComposing(false)}
-        onKeyDown={(e) => {
-          if (isComposing) {
-            return
-          }
-          if (e.key === 'Escape' || e.key === 'Exc') {
-            if (isExpanded) {
+          onClick={(e) => {
+            if (disabled) {
               e.stopPropagation()
-              setIsExpanded(false)
+              return
             }
-          } else if (e.key === 'Tab') {
-            blur()
-          } else {
-            if (
-              e.key === 'Down' ||
-              e.key === 'ArrowDown' ||
-              e.key === 'Up' ||
-              e.key === 'ArrowUp'
-            ) {
-              e.preventDefault()
+            focus()
+            if (inputRef.current) {
+              inputRef.current.focus()
             }
-            handleListBoxKeyDown(e)
-            inputRef.current?.focus()
             if (!isExpanded) {
               setIsExpanded(true)
             }
-          }
-        }}
-        ref={inputRef}
-        autoComplete="off"
-        aria-activedescendant={activeOption?.id}
-        aria-autocomplete="list"
-        className={classNames.input}
-      />
-      {renderListBox()}
-    </Container>
+          }}
+          onChange={(e) => {
+            if (onChange) onChange(e)
+            if (onChangeInput) onChangeInput(e)
+            if (!isEditing) setIsEditing(true)
+            const { value } = e.currentTarget
+            setInputValue(value)
+            if (value === '') {
+              onClear && onClear()
+              onChangeSelected && onChangeSelected(null)
+            }
+          }}
+          onFocus={() => {
+            if (!isFocused) {
+              focus()
+            }
+          }}
+          onCompositionStart={() => setIsComposing(true)}
+          onCompositionEnd={() => setIsComposing(false)}
+          onKeyDown={(e) => {
+            if (isComposing) {
+              return
+            }
+            if (e.key === 'Escape' || e.key === 'Exc') {
+              if (isExpanded) {
+                e.stopPropagation()
+                setIsExpanded(false)
+              }
+            } else if (e.key === 'Tab') {
+              blur()
+            } else {
+              if (
+                e.key === 'Down' ||
+                e.key === 'ArrowDown' ||
+                e.key === 'Up' ||
+                e.key === 'ArrowUp'
+              ) {
+                e.preventDefault()
+              }
+              handleListBoxKeyDown(e)
+              inputRef.current?.focus()
+              if (!isExpanded) {
+                setIsExpanded(true)
+              }
+            }
+          }}
+          ref={inputRef}
+          autoComplete="off"
+          aria-activedescendant={activeOption?.id}
+          aria-autocomplete="list"
+          className={classNames.input}
+        />
+        {renderListBox()}
+      </Container>
+    </ComboBoxContext.Provider>
   )
 }
 

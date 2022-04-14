@@ -2,6 +2,7 @@ import React, {
   KeyboardEvent,
   RefObject,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -19,6 +20,7 @@ import { ComboBoxItem, ComboBoxOption } from './types'
 import { usePartialRendering } from './usePartialRendering'
 import { useActiveOption } from './useActiveOption'
 import { ListBoxItem } from './ListBoxItem'
+import { ComboBoxContext } from './ComboBoxContext'
 
 type Props<T> = {
   options: Array<ComboBoxOption<T>>
@@ -27,12 +29,6 @@ type Props<T> = {
   isExpanded: boolean
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
-  classNames: {
-    dropdownList: string
-    addButton: string
-    selectButton: string
-    noItems: string
-  }
 }
 
 type Rect = {
@@ -49,7 +45,6 @@ export function useListBox<T>({
   isExpanded,
   isLoading,
   triggerRef,
-  classNames,
 }: Props<T>) {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
@@ -184,6 +179,7 @@ export function useListBox<T>({
   const theme = useTheme()
   const { portalRoot } = usePortal()
   const listBoxId = useId()
+  const { listBoxClassNames: classNames } = useContext(ComboBoxContext)
 
   const handleAdd = useCallback(
     (option: ComboBoxOption<T>) => {
@@ -232,7 +228,6 @@ export function useListBox<T>({
                   onSelect={handleSelect}
                   onMouseOver={handleHoverOption}
                   activeRef={activeRef}
-                  classNames={classNames}
                 />
               )
             })}

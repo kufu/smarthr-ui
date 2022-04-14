@@ -12,7 +12,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
-import { useClassNames } from './useClassNames'
+import { useMultiComboBoxClassNames } from './useClassNames'
 
 import { FaCaretDownIcon } from '../Icon'
 import { useOptions } from './useOptions'
@@ -21,6 +21,7 @@ import { MultiSelectedItem } from './MultiSelectedItem'
 import { useListBox } from './useListBox'
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
+import { ComboBoxContext } from './ComboBoxContext'
 
 type Props<T> = {
   /**
@@ -133,7 +134,7 @@ export function MultiComboBox<T>({
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
-  const classNames = useClassNames().multi
+  const classNames = useMultiComboBoxClassNames()
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const isInputControlled = useMemo(
@@ -193,7 +194,6 @@ export function MultiComboBox<T>({
     isExpanded: isFocused,
     isLoading,
     triggerRef: outerRef,
-    classNames: classNames.listBox,
   })
 
   const {
@@ -233,124 +233,133 @@ export function MultiComboBox<T>({
     }
   }, [inputRef, isFocused, isInputControlled, selectedItems])
 
+  const contextValue = useMemo(
+    () => ({
+      listBoxClassNames: classNames.listBox,
+    }),
+    [classNames.listBox],
+  )
+
   return (
-    <Container
-      {...props}
-      themes={theme}
-      width={width}
-      ref={outerRef}
-      className={`${className} ${classNames.wrapper}`}
-      onClick={(e) => {
-        if (
-          !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
-          !disabled &&
-          !isFocused
-        ) {
-          focus()
-        }
-      }}
-      onKeyDown={(e) => {
-        if (isComposing) {
-          return
-        } else if (e.key === 'Escape' || e.key === 'Esc') {
-          e.stopPropagation()
-          blur()
-        } else if (e.key === 'Tab') {
-          blur()
-        } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
-          e.stopPropagation()
-          focusPrevDeleteButton()
-        } else if (e.key === 'Right' || e.key === 'ArrowRight') {
-          e.stopPropagation()
-          focusNextDeleteButton()
-        } else {
-          e.stopPropagation()
-          handleListBoxKeyDown(e)
-          inputRef.current?.focus()
-          resetDeleteButtonFocus()
-        }
-      }}
-      role="combobox"
-      aria-owns={listBoxId}
-      aria-haspopup="listbox"
-      aria-expanded={isFocused}
-      aria-invalid={error || undefined}
-      aria-disabled={disabled}
-    >
-      <InputArea themes={theme}>
-        <List themes={theme}>
-          {selectedItems.map((selectedItem, i) => (
-            <li key={selectedItem.label}>
-              <MultiSelectedItem
-                item={selectedItem}
+    <ComboBoxContext.Provider value={contextValue}>
+      <Container
+        {...props}
+        themes={theme}
+        width={width}
+        ref={outerRef}
+        className={`${className} ${classNames.wrapper}`}
+        onClick={(e) => {
+          if (
+            !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
+            !disabled &&
+            !isFocused
+          ) {
+            focus()
+          }
+        }}
+        onKeyDown={(e) => {
+          if (isComposing) {
+            return
+          } else if (e.key === 'Escape' || e.key === 'Esc') {
+            e.stopPropagation()
+            blur()
+          } else if (e.key === 'Tab') {
+            blur()
+          } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+            e.stopPropagation()
+            focusPrevDeleteButton()
+          } else if (e.key === 'Right' || e.key === 'ArrowRight') {
+            e.stopPropagation()
+            focusNextDeleteButton()
+          } else {
+            e.stopPropagation()
+            handleListBoxKeyDown(e)
+            inputRef.current?.focus()
+            resetDeleteButtonFocus()
+          }
+        }}
+        role="combobox"
+        aria-owns={listBoxId}
+        aria-haspopup="listbox"
+        aria-expanded={isFocused}
+        aria-invalid={error || undefined}
+        aria-disabled={disabled}
+      >
+        <InputArea themes={theme}>
+          <List themes={theme}>
+            {selectedItems.map((selectedItem, i) => (
+              <li key={selectedItem.label}>
+                <MultiSelectedItem
+                  item={selectedItem}
+                  disabled={disabled}
+                  onDelete={() => {
+                    handleDelete(selectedItem)
+                  }}
+                  enableEllipsis={selectedItemEllipsis}
+                  buttonRef={deleteButtonRefs[i]}
+                />
+              </li>
+            ))}
+
+            <InputWrapper className={isFocused ? undefined : 'hidden'}>
+              <Input
+                type="text"
+                name={name}
+                value={inputValue}
                 disabled={disabled}
-                onDelete={() => {
-                  handleDelete(selectedItem)
+                ref={inputRef}
+                themes={theme}
+                onChange={(e) => {
+                  if (onChange) onChange(e)
+                  if (onChangeInput) onChangeInput(e)
+                  if (!isInputControlled) {
+                    setUncontrolledInputValue(e.currentTarget.value)
+                  }
                 }}
-                enableEllipsis={selectedItemEllipsis}
-                buttonRef={deleteButtonRefs[i]}
+                onFocus={() => {
+                  resetDeleteButtonFocus()
+                  if (!isFocused) {
+                    focus()
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (
+                    e.key === 'Down' ||
+                    e.key === 'ArrowDown' ||
+                    e.key === 'Up' ||
+                    e.key === 'ArrowUp'
+                  ) {
+                    e.preventDefault()
+                  }
+                }}
+                onCompositionStart={() => setIsComposing(true)}
+                onCompositionEnd={() => setIsComposing(false)}
+                autoComplete="off"
+                tabIndex={0}
+                aria-activedescendant={activeOption?.id}
+                aria-autocomplete="list"
+                aria-controls={listBoxId}
+                className={classNames.input}
               />
-            </li>
-          ))}
+            </InputWrapper>
 
-          <InputWrapper className={isFocused ? undefined : 'hidden'}>
-            <Input
-              type="text"
-              name={name}
-              value={inputValue}
-              disabled={disabled}
-              ref={inputRef}
-              themes={theme}
-              onChange={(e) => {
-                if (onChange) onChange(e)
-                if (onChangeInput) onChangeInput(e)
-                if (!isInputControlled) {
-                  setUncontrolledInputValue(e.currentTarget.value)
-                }
-              }}
-              onFocus={() => {
-                resetDeleteButtonFocus()
-                if (!isFocused) {
-                  focus()
-                }
-              }}
-              onKeyDown={(e) => {
-                if (
-                  e.key === 'Down' ||
-                  e.key === 'ArrowDown' ||
-                  e.key === 'Up' ||
-                  e.key === 'ArrowUp'
-                ) {
-                  e.preventDefault()
-                }
-              }}
-              onCompositionStart={() => setIsComposing(true)}
-              onCompositionEnd={() => setIsComposing(false)}
-              autoComplete="off"
-              tabIndex={0}
-              aria-activedescendant={activeOption?.id}
-              aria-autocomplete="list"
-              aria-controls={listBoxId}
-              className={classNames.input}
-            />
-          </InputWrapper>
+            {selectedItems.length === 0 && placeholder && !isFocused && (
+              <li>
+                <Placeholder themes={theme} className={classNames.placeholder}>
+                  {placeholder}
+                </Placeholder>
+              </li>
+            )}
+          </List>
+        </InputArea>
 
-          {selectedItems.length === 0 && placeholder && !isFocused && (
-            <li>
-              <Placeholder themes={theme} className={classNames.placeholder}>
-                {placeholder}
-              </Placeholder>
-            </li>
-          )}
-        </List>
-      </InputArea>
+        <Suffix themes={theme}>
+          <FaCaretDownIcon color={caretIconColor} />
+        </Suffix>
 
-      <Suffix themes={theme}>
-        <FaCaretDownIcon color={caretIconColor} />
-      </Suffix>
-
-      {renderListBox()}
-    </Container>
+        {renderListBox()}
+      </Container>
+    </ComboBoxContext.Provider>
   )
 }
 

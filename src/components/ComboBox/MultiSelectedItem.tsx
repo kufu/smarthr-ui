@@ -2,7 +2,7 @@ import React, { RefObject, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
+import { useMultiComboBoxClassNames } from './useClassNames'
 
 import { FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
@@ -39,7 +39,7 @@ export function MultiSelectedItem<T>({
     }
   }, [enableEllipsis])
 
-  const classNames = useClassNames().multi
+  const classNames = useMultiComboBoxClassNames()
 
   return (
     <MultiSelectedItemTooltip needsTooltip={needsTooltip} text={item.label}>

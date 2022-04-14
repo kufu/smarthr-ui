@@ -1,10 +1,11 @@
-import React, { RefObject, useCallback } from 'react'
+import React, { RefObject, useCallback, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaPlusCircleIcon } from '../Icon'
 
 import { ComboBoxOption } from './types'
+import { ComboBoxContext } from './ComboBoxContext'
 
 type Props<T> = {
   option: ComboBoxOption<T>
@@ -13,23 +14,9 @@ type Props<T> = {
   onSelect: (option: ComboBoxOption<T>) => void
   onMouseOver: (option: ComboBoxOption<T>) => void
   activeRef: RefObject<HTMLButtonElement>
-  classNames: {
-    dropdownList: string
-    addButton: string
-    selectButton: string
-    noItems: string
-  }
 }
 
-function ListBoxItem<T>({
-  option,
-  isActive,
-  onAdd,
-  onSelect,
-  onMouseOver,
-  activeRef,
-  classNames,
-}: Props<T>) {
+function ListBoxItem<T>({ option, isActive, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) {
   const className = isActive ? 'active' : ''
   const { item, selected, isNew } = option
   const { label, disabled } = item
@@ -47,6 +34,7 @@ function ListBoxItem<T>({
   }, [onMouseOver, option])
 
   const theme = useTheme()
+  const { listBoxClassNames: classNames } = useContext(ComboBoxContext)
 
   return isNew ? (
     <AddButton
