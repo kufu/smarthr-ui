@@ -216,33 +216,24 @@ export function useListBox<T>({
           <LoaderWrapper themes={theme}>
             <Loader />
           </LoaderWrapper>
+        ) : options.length === 0 ? (
+          <NoItems themes={theme} role="alert" aria-live="polite" className={classNames.noItems}>
+            一致する選択肢がありません
+          </NoItems>
         ) : (
-          <>
-            {partialOptions.map((option) => {
-              return (
-                <ListBoxItem
-                  key={option.id}
-                  option={option}
-                  isActive={option.id === activeOption?.id}
-                  onAdd={handleAdd}
-                  onSelect={handleSelect}
-                  onMouseOver={handleHoverOption}
-                  activeRef={activeRef}
-                />
-              )
-            })}
-
-            {options.length === 0 && (
-              <NoItems
-                themes={theme}
-                role="alert"
-                aria-live="polite"
-                className={classNames.noItems}
-              >
-                一致する選択肢がありません
-              </NoItems>
-            )}
-          </>
+          partialOptions.map((option) => {
+            return (
+              <ListBoxItem
+                key={option.id}
+                option={option}
+                isActive={option.id === activeOption?.id}
+                onAdd={handleAdd}
+                onSelect={handleSelect}
+                onMouseOver={handleHoverOption}
+                activeRef={activeRef}
+              />
+            )
+          })
         )}
         <div ref={bottomIntersectionRef} />
       </Container>,
