@@ -21,7 +21,10 @@ export const FocusTrap: VFC<Props> = ({ children }) => {
     const firstTabbale = tabbables[0]
     const lastTabbale = tabbables[tabbables.length - 1]
     const currentFocused = Array.from(tabbables).find((elm) => elm === e.target)
-    if (e.shiftKey && currentFocused === firstTabbale) {
+    if (
+      e.shiftKey &&
+      (currentFocused === firstTabbale || document.activeElement === focusTargetRef.current)
+    ) {
       lastTabbale.focus()
       e.preventDefault()
     } else if (!e.shiftKey && currentFocused === lastTabbale) {

@@ -85,6 +85,7 @@ export const Default: Story = () => {
             value={date?.toDateString()}
             formatDate={(_date) => (_date ? _date.toDateString() : '')}
             onChangeDate={(_date) => setDate(_date)}
+            data-test="dialog-datepicker"
           />
         </Content>
         <RadioList>
