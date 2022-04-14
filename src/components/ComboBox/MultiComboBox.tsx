@@ -143,7 +143,6 @@ export function MultiComboBox<T>({
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
-  const selectedLabels = useMemo(() => selectedItems.map(({ label }) => label), [selectedItems])
   const { options } = useOptions({
     items,
     selected: selectedItems,
@@ -162,25 +161,23 @@ export function MultiComboBox<T>({
     (item: ComboBoxItem<T>) => {
       onDelete && onDelete(item)
       onChangeSelected &&
-        onChangeSelected(
-          selectedItems.filter(
-            (selected) => selected.label !== item.label || selected.value !== item.value,
-          ),
-        )
+        onChangeSelected(selectedItems.filter((selected) => selected.label !== item.label))
     },
     [onChangeSelected, onDelete, selectedItems],
   )
   const handleSelect = useCallback(
     (selected: ComboBoxItem<T>) => {
-      const isSelectedItem = selectedLabels.includes(selected.label)
-      if (isSelectedItem) {
-        handleDelete(selected)
+      const matchedSelectedItem = selectedItems.find((item) => item.label === selected.label)
+      if (matchedSelectedItem !== undefined) {
+        if (matchedSelectedItem.deletable !== false) {
+          handleDelete(selected)
+        }
       } else {
         onSelect && onSelect(selected)
         onChangeSelected && onChangeSelected(selectedItems.concat(selected))
       }
     },
-    [handleDelete, onChangeSelected, onSelect, selectedItems, selectedLabels],
+    [handleDelete, onChangeSelected, onSelect, selectedItems],
   )
 
   const {
