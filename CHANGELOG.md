@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [20.2.1](https://github.com/kufu/smarthr-ui/compare/v20.2.0...v20.2.1) (2022-04-14)
+
+
+### Bug Fixes
+
+* fix timing of appending portal ([#2424](https://github.com/kufu/smarthr-ui/issues/2424)) ([29cd62a](https://github.com/kufu/smarthr-ui/commit/29cd62afd113c840b81abeef3326e583c774ba61))
+* ダイアログのフォーカストラップを抜けてしまう問題を修正 ([#2404](https://github.com/kufu/smarthr-ui/issues/2404)) ([91c3b90](https://github.com/kufu/smarthr-ui/commit/91c3b90721c33bbcb9d1a8d0d50561873cf4c356))
+
 ## [20.2.0](https://github.com/kufu/smarthr-ui/compare/v20.1.2...v20.2.0) (2022-04-12)
 
 
