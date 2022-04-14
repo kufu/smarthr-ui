@@ -11,16 +11,14 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { useId } from '../../hooks/useId'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 import { useClassNames } from './useClassNames'
 
 import { FaCaretDownIcon } from '../Icon'
 import { useOptions } from './useOptions'
-import { useActiveOption } from './useActiveOption'
 import { useFocusControl } from './useFocusControl'
 import { MultiSelectedItem } from './MultiSelectedItem'
-import { ListBox } from './ListBox'
+import { useListBox } from './useListBox'
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
 
@@ -160,8 +158,6 @@ export function MultiComboBox<T>({
       }),
     [inputValue, options],
   )
-  const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
-    useActiveOption({ options: filteredOptions })
   const handleDelete = useCallback(
     (item: ComboBoxItem<T>) => {
       onDelete && onDelete(item)
@@ -174,6 +170,34 @@ export function MultiComboBox<T>({
     },
     [onChangeSelected, onDelete, selectedItems],
   )
+  const handleSelect = useCallback(
+    (selected: ComboBoxItem<T>) => {
+      const isSelectedItem = selectedLabels.includes(selected.label)
+      if (isSelectedItem) {
+        handleDelete(selected)
+      } else {
+        onSelect && onSelect(selected)
+        onChangeSelected && onChangeSelected(selectedItems.concat(selected))
+      }
+    },
+    [handleDelete, onChangeSelected, onSelect, selectedItems, selectedLabels],
+  )
+
+  const {
+    renderListBox,
+    activeOption,
+    handleKeyDwon: handleListBoxKeyDown,
+    listBoxId,
+    listBoxRef,
+  } = useListBox({
+    options: filteredOptions,
+    onAdd,
+    onSelect: handleSelect,
+    isExpanded: isFocused,
+    isLoading,
+    triggerRef: outerRef,
+    classNames: classNames.listBox,
+  })
 
   const {
     deleteButtonRefs,
@@ -191,18 +215,14 @@ export function MultiComboBox<T>({
     if (!isFocused) return
     onBlur && onBlur()
     setIsFocused(false)
-    setActiveOption(null)
     resetDeleteButtonFocus()
-  }, [isFocused, onBlur, resetDeleteButtonFocus, setActiveOption])
+  }, [isFocused, onBlur, resetDeleteButtonFocus])
 
   const caretIconColor = useMemo(() => {
     if (isFocused) return theme.color.TEXT_BLACK
     if (disabled) return theme.color.TEXT_DISABLED
     return theme.color.TEXT_GREY
   }, [disabled, isFocused, theme])
-
-  const listBoxId = useId()
-  const listBoxRef = useRef<HTMLDivElement>(null)
 
   useOuterClick([outerRef, listBoxRef], blur)
 
@@ -241,36 +261,17 @@ export function MultiComboBox<T>({
         } else if (e.key === 'Tab') {
           blur()
         } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+          e.stopPropagation()
           focusPrevDeleteButton()
         } else if (e.key === 'Right' || e.key === 'ArrowRight') {
+          e.stopPropagation()
           focusNextDeleteButton()
-        } else if (e.key === 'Down' || e.key === 'ArrowDown') {
-          e.preventDefault()
-          inputRef.current?.focus()
-          moveActivePositionDown()
-          resetDeleteButtonFocus()
-        } else if (e.key === 'Up' || e.key === 'ArrowUp') {
-          e.preventDefault()
-          inputRef.current?.focus()
-          moveActivePositionUp()
-          resetDeleteButtonFocus()
-        } else if (e.key === 'Enter' && document.activeElement === inputRef.current) {
-          if (activeOption === null) {
-            return
-          }
-          e.preventDefault()
-          if (activeOption.selected) {
-            handleDelete(activeOption.item)
-          } else if (activeOption.isNew) {
-            onAdd && onAdd(activeOption.item.label)
-          } else {
-            onSelect && onSelect(activeOption.item)
-          }
         } else {
           e.stopPropagation()
           inputRef.current?.focus()
           resetDeleteButtonFocus()
         }
+        handleListBoxKeyDown(e)
       }}
       role="combobox"
       aria-owns={listBoxId}
@@ -316,6 +317,16 @@ export function MultiComboBox<T>({
                   focus()
                 }
               }}
+              onKeyDown={(e) => {
+                if (
+                  e.key === 'Down' ||
+                  e.key === 'ArrowDown' ||
+                  e.key === 'Up' ||
+                  e.key === 'ArrowUp'
+                ) {
+                  e.preventDefault()
+                }
+              }}
               onCompositionStart={() => setIsComposing(true)}
               onCompositionEnd={() => setIsComposing(false)}
               autoComplete="off"
@@ -341,27 +352,7 @@ export function MultiComboBox<T>({
         <FaCaretDownIcon color={caretIconColor} />
       </Suffix>
 
-      <ListBox
-        options={filteredOptions}
-        activeOptionId={activeOption?.id ?? null}
-        onHoverOption={(option) => setActiveOption(option)}
-        onAdd={onAdd}
-        onSelect={(selected) => {
-          const isSelectedItem = selectedLabels.includes(selected.label)
-          if (isSelectedItem) {
-            handleDelete(selected)
-          } else {
-            onSelect && onSelect(selected)
-            onChangeSelected && onChangeSelected(selectedItems.concat(selected))
-          }
-        }}
-        isExpanded={isFocused}
-        isLoading={isLoading}
-        listBoxId={listBoxId}
-        listBoxRef={listBoxRef}
-        triggerRef={outerRef}
-        classNames={classNames.listBox}
-      />
+      {renderListBox()}
     </Container>
   )
 }
