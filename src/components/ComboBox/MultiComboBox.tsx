@@ -268,10 +268,10 @@ export function MultiComboBox<T>({
           focusNextDeleteButton()
         } else {
           e.stopPropagation()
+          handleListBoxKeyDown(e)
           inputRef.current?.focus()
           resetDeleteButtonFocus()
         }
-        handleListBoxKeyDown(e)
       }}
       role="combobox"
       aria-owns={listBoxId}

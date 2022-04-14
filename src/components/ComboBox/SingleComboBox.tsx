@@ -11,15 +11,13 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { useId } from '../../hooks/useId'
 import { useClassNames } from './useClassNames'
 
 import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
 import { useOptions } from './useOptions'
-import { useActiveOption } from './useActiveOption'
-import { ListBox } from './ListBox'
+import { useListBox } from './useListBox'
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
 
@@ -139,8 +137,29 @@ export function SingleComboBox<T>({
       return convertMatchableString(label).includes(convertMatchableString(inputValue))
     })
   }, [inputValue, isEditing, options])
-  const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
-    useActiveOption({ options: filteredOptions })
+  const {
+    renderListBox,
+    activeOption,
+    handleKeyDwon: handleListBoxKeyDown,
+    listBoxId,
+    listBoxRef,
+  } = useListBox({
+    options: filteredOptions,
+    onAdd,
+    onSelect: useCallback(
+      (selected: ComboBoxItem<T>) => {
+        onSelect && onSelect(selected)
+        onChangeSelected && onChangeSelected(selected)
+        setIsExpanded(false)
+        setIsEditing(false)
+      },
+      [onChangeSelected, onSelect],
+    ),
+    isExpanded,
+    isLoading,
+    triggerRef: outerRef,
+    classNames: classNames.listBox,
+  })
 
   const focus = useCallback(() => {
     setIsFocused(true)
@@ -152,17 +171,13 @@ export function SingleComboBox<T>({
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
-    setActiveOption(null)
-  }, [setActiveOption])
+  }, [])
 
   const caretIconColor = useMemo(() => {
     if (isFocused) return theme.color.TEXT_BLACK
     if (disabled) return theme.color.TEXT_DISABLED
     return theme.color.TEXT_GREY
   }, [disabled, isFocused, theme])
-
-  const listBoxId = useId()
-  const listBoxRef = useRef<HTMLDivElement>(null)
 
   useOuterClick(
     [outerRef, listBoxRef, clearButtonRef],
@@ -267,25 +282,16 @@ export function SingleComboBox<T>({
             }
           } else if (e.key === 'Tab') {
             blur()
-          } else if (e.key === 'Down' || e.key === 'ArrowDown') {
-            e.preventDefault()
-            inputRef.current?.focus()
-            moveActivePositionDown()
-          } else if (e.key === 'Up' || e.key === 'ArrowUp') {
-            e.preventDefault()
-            inputRef.current?.focus()
-            moveActivePositionUp()
-          } else if (e.key === 'Enter' && document.activeElement === inputRef.current) {
-            if (activeOption === null || activeOption.selected) {
-              return
-            }
-            e.preventDefault()
-            if (activeOption.isNew) {
-              onAdd && onAdd(activeOption.item.label)
-            } else {
-              onSelect && onSelect(activeOption.item)
-            }
           } else {
+            if (
+              e.key === 'Down' ||
+              e.key === 'ArrowDown' ||
+              e.key === 'Up' ||
+              e.key === 'ArrowUp'
+            ) {
+              e.preventDefault()
+            }
+            handleListBoxKeyDown(e)
             inputRef.current?.focus()
             if (!isExpanded) {
               setIsExpanded(true)
@@ -298,24 +304,7 @@ export function SingleComboBox<T>({
         aria-autocomplete="list"
         className={classNames.input}
       />
-      <ListBox
-        options={options}
-        activeOptionId={activeOption?.id ?? null}
-        onHoverOption={(option) => setActiveOption(option)}
-        onAdd={onAdd}
-        onSelect={(selected) => {
-          onSelect && onSelect(selected)
-          onChangeSelected && onChangeSelected(selected)
-          setIsExpanded(false)
-          setIsEditing(false)
-        }}
-        isExpanded={isExpanded}
-        isLoading={isLoading}
-        listBoxId={listBoxId}
-        listBoxRef={listBoxRef}
-        triggerRef={outerRef}
-        classNames={classNames.listBox}
-      />
+      {renderListBox()}
     </Container>
   )
 }
