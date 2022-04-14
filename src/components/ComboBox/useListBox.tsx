@@ -13,12 +13,12 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
-import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
 import { ComboBoxItem, ComboBoxOption } from './types'
 import { usePartialRendering } from './usePartialRendering'
 import { useActiveOption } from './useActiveOption'
+import { ListBoxItem } from './ListBoxItem'
 
 type Props<T> = {
   options: Array<ComboBoxOption<T>>
@@ -185,6 +185,26 @@ export function useListBox<T>({
   const { portalRoot } = usePortal()
   const listBoxId = useId()
 
+  const handleAdd = useCallback(
+    (option: ComboBoxOption<T>) => {
+      onAdd && onAdd(option.item.label)
+    },
+    [onAdd],
+  )
+  const handleSelect = useCallback(
+    (option: ComboBoxOption<T>) => {
+      onSelect(option.item)
+    },
+    [onSelect],
+  )
+  const handleHoverOption = useCallback(
+    (option: ComboBoxOption<T>) => {
+      setNavigationType('pointer')
+      setActiveOption(option)
+    },
+    [setActiveOption],
+  )
+
   const renderListBox = useCallback(() => {
     return createPortal(
       <Container
@@ -203,53 +223,17 @@ export function useListBox<T>({
         ) : (
           <>
             {partialOptions.map((option) => {
-              const isActive = option.id === activeOption?.id
-              const className = isActive ? 'active' : ''
-              const { item, selected, isNew } = option
-              const { label, disabled } = item
-              if (isNew) {
-                return (
-                  <AddButton
-                    key={option.id}
-                    themes={theme}
-                    onClick={() => {
-                      onAdd && onAdd(label)
-                    }}
-                    onMouseOver={() => {
-                      setNavigationType('pointer')
-                      setActiveOption(option)
-                    }}
-                    id={option.id}
-                    role="option"
-                    className={`${className} ${classNames.addButton}`}
-                    ref={isActive ? activeRef : undefined}
-                  >
-                    <AddIcon color={theme.color.TEXT_LINK} themes={theme} />
-                    <AddText themes={theme}>「{label}」を追加</AddText>
-                  </AddButton>
-                )
-              }
               return (
-                <SelectButton
+                <ListBoxItem
                   key={option.id}
-                  type="button"
-                  themes={theme}
-                  disabled={disabled}
-                  onClick={() => {
-                    onSelect(item)
-                  }}
-                  onMouseOver={() => {
-                    setNavigationType('pointer')
-                    setActiveOption(option)
-                  }}
-                  id={option.id}
-                  role="option"
-                  className={`${className} ${classNames.selectButton}`}
-                  aria-selected={selected}
-                  ref={isActive ? activeRef : undefined}
-                >
-                  {label}
-                </SelectButton>
+                  option={option}
+                  isActive={option.id === activeOption?.id}
+                  onAdd={handleAdd}
+                  onSelect={handleSelect}
+                  onMouseOver={handleHoverOption}
+                  activeRef={activeRef}
+                  classNames={classNames}
+                />
               )
             })}
 
@@ -271,21 +255,17 @@ export function useListBox<T>({
     )
   }, [
     activeOption?.id,
-    classNames.addButton,
-    classNames.dropdownList,
-    classNames.noItems,
-    classNames.selectButton,
+    classNames,
+    handleAdd,
+    handleHoverOption,
+    handleSelect,
     isExpanded,
     isLoading,
     listBoxId,
     listBoxRect,
-    listBoxRef,
-    onAdd,
-    onSelect,
     options.length,
     partialOptions,
     portalRoot,
-    setActiveOption,
     theme,
   ])
 
@@ -341,66 +321,6 @@ const NoItems = styled.p<{ themes: Theme }>`
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: ${color.WHITE};
       font-size: ${fontSize.M};
-    `
-  }}
-`
-const SelectButton = styled.button<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, leading, spacingByChar, color } = themes
-
-    return css`
-      display: block;
-      min-width: 100%;
-      border: none;
-      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-      background-color: ${color.WHITE};
-      font-size: ${fontSize.M};
-      line-height: ${leading.NONE};
-      text-align: left;
-      cursor: pointer;
-
-      &.active {
-        background-color: ${color.hoverColor(color.WHITE)};
-        color: inherit;
-      }
-
-      &[aria-selected='true'] {
-        background-color: ${color.MAIN};
-        color: ${color.TEXT_WHITE};
-        &.active {
-          background-color: ${color.hoverColor(color.MAIN)};
-        }
-      }
-
-      &[disabled] {
-        color: ${color.TEXT_DISABLED};
-        cursor: not-allowed;
-      }
-    `
-  }}
-`
-const AddButton = styled(SelectButton)`
-  display: flex;
-  align-items: center;
-  min-width: 100%;
-`
-const AddIcon = styled(FaPlusCircleIcon)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { spacingByChar } = themes
-
-    return css`
-      position: relative;
-      top: -1px;
-      margin-right: ${spacingByChar(0.25)};
-    `
-  }}
-`
-const AddText = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color } = themes
-
-    return css`
-      color: ${color.TEXT_LINK};
     `
   }}
 `
