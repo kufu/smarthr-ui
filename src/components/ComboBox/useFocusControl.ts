@@ -38,7 +38,10 @@ export function useFocusControl(selectedItemLength: number) {
         setFocusedIndex(nextIndex)
       } else {
         setFocusedIndex(null)
-        inputRef.current?.focus()
+        // キー入力が input に影響しないようにフォーカスタイミングを遅らせる
+        setTimeout(() => {
+          inputRef.current?.focus()
+        })
       }
     }
   }, [deleteButtonRefs, focusedIndex])
