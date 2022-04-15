@@ -51,20 +51,11 @@ export function useListBox<T>({
     useActiveOption({ options })
 
   useEffect(() => {
+    // 閉じたときに activeOption を初期化
     if (!isExpanded) {
       setActiveOption(null)
     }
   }, [isExpanded, setActiveOption])
-
-  const bottomIntersectionRef = useRef<HTMLDivElement>(null)
-  const partialOptions = usePartialRendering({
-    items: options,
-    bottomIntersectionRef,
-    minLength: useMemo(
-      () => (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
-      [activeOption, options],
-    ),
-  })
 
   const listBoxRef = useRef<HTMLDivElement>(null)
   const [listBoxRect, setListBoxRect] = useState<Rect>({
@@ -179,6 +170,15 @@ export function useListBox<T>({
   const theme = useTheme()
   const { portalRoot } = usePortal()
   const listBoxId = useId()
+  const bottomIntersectionRef = useRef<HTMLDivElement>(null)
+  const partialOptions = usePartialRendering({
+    items: options,
+    bottomIntersectionRef,
+    minLength: useMemo(
+      () => (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
+      [activeOption, options],
+    ),
+  })
   const { listBoxClassNames: classNames } = useContext(ComboBoxContext)
 
   const handleAdd = useCallback(

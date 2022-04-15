@@ -292,9 +292,7 @@ export function MultiComboBox<T>({
                 <MultiSelectedItem
                   item={selectedItem}
                   disabled={disabled}
-                  onDelete={() => {
-                    handleDelete(selectedItem)
-                  }}
+                  onDelete={handleDelete}
                   enableEllipsis={selectedItemEllipsis}
                   buttonRef={deleteButtonRefs[i]}
                 />
@@ -322,6 +320,8 @@ export function MultiComboBox<T>({
                     focus()
                   }
                 }}
+                onCompositionStart={() => setIsComposing(true)}
+                onCompositionEnd={() => setIsComposing(false)}
                 onKeyDown={(e) => {
                   if (
                     e.key === 'Down' ||
@@ -332,8 +332,6 @@ export function MultiComboBox<T>({
                     e.preventDefault()
                   }
                 }}
-                onCompositionStart={() => setIsComposing(true)}
-                onCompositionEnd={() => setIsComposing(false)}
                 autoComplete="off"
                 tabIndex={0}
                 aria-activedescendant={activeOption?.id}
