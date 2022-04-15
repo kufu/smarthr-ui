@@ -13,8 +13,9 @@ export type BaseProps = {
   /**
    * Title of the dialog.
    */
-  title: string
-  subtitle?: string
+  title: React.ReactNode
+  subtitle?: React.ReactNode
+  titleId: string
   /**
    * Description of the dialog.
    */
@@ -22,7 +23,7 @@ export type BaseProps = {
   /**
    * Label of close button.
    */
-  closeText: string
+  closeText: React.ReactNode
 }
 
 export type MessageDialogContentInnerProps = BaseProps & {
@@ -35,6 +36,7 @@ export type MessageDialogContentInnerProps = BaseProps & {
 export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   title,
   subtitle,
+  titleId,
   description,
   closeText,
   onClickClose,
@@ -51,7 +53,7 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
             {subtitle}
           </Text>
         )}
-        <Text as="p" size="L" leading="TIGHT" className={classNames.title}>
+        <Text as="p" id={titleId} size="L" leading="TIGHT" className={classNames.title}>
           {title}
         </Text>
       </TitleArea>
