@@ -107,6 +107,27 @@ export const WithoutChildren: Story = () => {
 }
 WithoutChildren.storyName = 'without children'
 
+export const SwitchDropdown: Story = () => {
+  const theme = useTheme()
+
+  return (
+    <Wrapper themes={theme}>
+      <AppNavi
+        switchMenuScreenWidth="800px"
+        label="従業員サーベイ"
+        buttons={withoutIconButtons}
+        displayDrodownCaret
+      />
+    </Wrapper>
+  )
+}
+SwitchDropdown.storyName = 'switch dropdown'
+SwitchDropdown.parameters = {
+  viewport: {
+    defaultViewport: 'iphone6',
+  },
+}
+
 export const UnclickableCurrent: Story = () => {
   const theme = useTheme()
   const items = buttons.map(({ current, ...button }) => button)

@@ -13,6 +13,7 @@ export function useClassNames() {
       anchor: generate('anchor'),
       customTag: generate('customTag'),
       button: generate('button'),
+      menuWrapper: generate('menuWrapper'),
     }),
     [generate],
   )
