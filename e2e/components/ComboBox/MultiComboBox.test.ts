@@ -19,14 +19,21 @@ test('アイテムの選択と選択解除ができること', async (t) => {
     .ok()
     // アイテムを選択できること
     .click(listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText('option 1'))
+    .click(listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText('option 2'))
     .expect(selectedItems.withText('option 1').exists)
+    .ok()
+    .expect(selectedItems.withText('option 2').exists)
     .ok()
     // リストボックスが表示されたままであること
     .expect(listbox.visible)
     .ok()
-    // 選択したアイテムを選択解除できること
+    // 選択したアイテムを削除ボタンで選択解除できること
     .click(selectedItems.withText('option 1').find('.smarthr-ui-MultiComboBox-deleteButton'))
     .expect(selectedItems.withText('option 1').exists)
+    .notOk()
+    // 選択したアイテムをリストボックスから選択解除できること
+    .click(listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText('option 2'))
+    .expect(selectedItems.withText('option 2').exists)
     .notOk()
 })
 
@@ -113,10 +120,101 @@ test('disabled なコンボボックスではアイテムの選択と選択解�
     // 有効なコンボボックスでアイテム選択
     .click(normal)
     .click(normalListbox.find('.smarthr-ui-MultiComboBox-selectButton').withText('option 1'))
-    // disabled なコンボボックスの選択済みアイテムを選択解除できないこと
-    .click(
-      disabledSelectedItems.withText('option 1').find('.smarthr-ui-MultiComboBox-deleteButton'),
+    // disabled なコンボボックスの選択済みアイテムの削除ボタンが disabled であること
+    .expect(
+      disabledSelectedItems
+        .withText('option 1')
+        .find('.smarthr-ui-MultiComboBox-deleteButton')
+        .hasAttribute('disabled'),
     )
-    .expect(disabledSelectedItems.withText('option 1').exists)
     .ok()
+})
+
+test('キーボードで選択済みアイテムリストが操作できること', async (t) => {
+  const combobox = Selector('[data-test=multi-combobox-default]')
+  const textbox = combobox.find('input[type=text]')
+  const listbox = Selector(`#${await combobox.getAttribute('aria-owns')}`)
+
+  const findOption = (label: string) =>
+    listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText(label)
+  const fidnDeleteButton = (label: string) =>
+    combobox
+      .find('.smarthr-ui-MultiComboBox-selectedItem')
+      .withText(label)
+      .find('.smarthr-ui-MultiComboBox-deleteButton')
+
+  await t
+    // アイテムを選択
+    .click(combobox)
+    .click(findOption('option 1'))
+    .click(findOption('option 2'))
+    .click(findOption('option 5'))
+    .typeText(textbox, 'opt')
+    // テキストボックス内のキャレットが先頭にない場合は削除ボタンにフォーカスが移動しないこと
+    .pressKey('left')
+    .expect(textbox.focused)
+    .ok()
+    .pressKey('left')
+    .expect(textbox.focused)
+    .ok()
+    .pressKey('left')
+    .expect(textbox.focused)
+    .ok()
+    // テキストボックス内のキャレットが先頭にある状態で左矢印キーを押下すると、削除ボタンにフォーカスが移動すること
+    .pressKey('left')
+    .expect(fidnDeleteButton('option 5').focused)
+    .ok()
+    .pressKey('left')
+    .expect(fidnDeleteButton('option 2').focused)
+    .ok()
+    .pressKey('left')
+    .expect(fidnDeleteButton('option 1').focused)
+    .ok()
+    // 最初の削除ボタンがフォーカスされている上代で左矢印キーを押下しても、フォーカスが移動しないこと
+    .pressKey('left')
+    .expect(fidnDeleteButton('option 1').focused)
+    .ok()
+    // 削除ボタンがフォーカスされている状態で右矢印キーを押下すると、フォーカスが移動すること
+    .pressKey('right')
+    .expect(fidnDeleteButton('option 2').focused)
+    .ok()
+    .pressKey('right')
+    .expect(fidnDeleteButton('option 5').focused)
+    .ok()
+    // 最後の削除ボタンがフォーカスされている状態で右矢印キーを押下すると、input にフォーカスが移動すること
+    .pressKey('right')
+    .expect(textbox.focused)
+    .ok()
+    // 削除ボタンを操作できること
+    .pressKey('left')
+    .pressKey('enter')
+    .expect(combobox.find('.smarthr-ui-MultiComboBox-selectedItem').withText('option 5').exists)
+    .notOk()
+})
+
+test('キーボードでリストボックスが操作できること', async (t) => {
+  const combobox = Selector('[data-test=multi-combobox-default]')
+  const comboBoxSelected = combobox.find('.smarthr-ui-MultiComboBox-selectedItem')
+
+  await t
+    // タブキーでフォーカスされたとき、テキストボックスがフォーカスされること
+    .pressKey('tab')
+    .expect(combobox.find('.smarthr-ui-MultiComboBox-input').focused)
+    .ok()
+    // アイテムが選択できること
+    .pressKey('down')
+    .pressKey('enter')
+    .expect(comboBoxSelected.withText('option 1').exists)
+    .ok()
+    .pressKey('up')
+    .pressKey('up')
+    .pressKey('enter')
+    .expect(comboBoxSelected.withText('option 5').exists)
+    .ok()
+    // 選択解除ができること
+    .pressKey('down')
+    .pressKey('down')
+    .pressKey('enter')
+    .expect(comboBoxSelected.withText('option 1').exists)
+    .notOk()
 })

@@ -119,3 +119,22 @@ test('disabled なコンボボックスではアイテムの選択と選択解�
     .expect(disabled.find('.smarthr-ui-SingleComboBox-clearButton').visible)
     .notOk()
 })
+
+test('キーボードで操作できること', async (t) => {
+  const combobox = Selector('[data-test=single-combobox-default]')
+  const comboboxInput = combobox.find('.smarthr-ui-Input-input')
+
+  await t
+    .pressKey('tab')
+    .expect(comboboxInput.focused)
+    .ok()
+    .pressKey('down')
+    .pressKey('enter')
+    .expect(comboboxInput.value)
+    .eql('option 1')
+    .pressKey('up')
+    .pressKey('up')
+    .pressKey('enter')
+    .expect(comboboxInput.value)
+    .eql('option 5')
+})
