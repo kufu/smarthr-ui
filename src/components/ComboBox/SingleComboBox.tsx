@@ -298,12 +298,12 @@ export function SingleComboBox<T>({
               ) {
                 e.preventDefault()
               }
-              handleListBoxKeyDown(e)
               inputRef.current?.focus()
               if (!isExpanded) {
                 setIsExpanded(true)
               }
             }
+            handleListBoxKeyDown(e)
           }}
           ref={inputRef}
           autoComplete="off"
