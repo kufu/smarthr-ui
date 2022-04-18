@@ -30,7 +30,7 @@
     "@types/node": "^14.18.10",
     "@types/react": "^17.0.44",
     "@types/react-dom": "^17.0.15",
-    "@types/react-test-renderer": "^17.0.1",
+    "@types/react-test-renderer": "^17.0.2",
     "@types/react-transition-group": "^4.4.4",
     "@types/styled-components": "^5.1.25",
     "babel-loader": "^8.2.4",
