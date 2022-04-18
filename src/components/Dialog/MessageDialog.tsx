@@ -1,13 +1,14 @@
-import React, { HTMLAttributes, useCallback, useEffect, useRef } from 'react'
-import { createPortal } from 'react-dom'
+import React, { HTMLAttributes, RefObject, useCallback } from 'react'
 
+import { useDialogPortal } from './useDialogPortal'
 import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
 import {
   MessageDialogContentInner,
   MessageDialogContentInnerProps,
 } from './MessageDialogContentInner'
+import { useId } from '../../hooks/useId'
 
-type Props = MessageDialogContentInnerProps &
+type Props = Omit<MessageDialogContentInnerProps, 'titleId'> &
   Pick<
     DialogContentInnerProps,
     | 'isOpen'
@@ -19,7 +20,7 @@ type Props = MessageDialogContentInnerProps &
     | 'bottom'
     | 'left'
     | 'id'
-  > & { portalParent?: HTMLElement }
+  > & { portalParent?: HTMLElement | RefObject<HTMLElement> }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const MessageDialog: React.VFC<Props & ElementProps> = ({
@@ -32,38 +33,27 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
   portalParent,
   ...props
 }) => {
-  const portalContainer = useRef(document.createElement('div')).current
-
-  useEffect(() => {
-    // SSR を考慮し、useEffect 内で初期値 document.body を指定
-    const pp = portalParent || document.body
-    pp.appendChild(portalContainer)
-    return () => {
-      pp.removeChild(portalContainer)
-    }
-  }, [portalContainer, portalParent])
-
+  const { Portal } = useDialogPortal(portalParent)
   const handleClickClose = useCallback(() => {
     if (!props.isOpen) {
       return
     }
     onClickClose()
   }, [onClickClose, props.isOpen])
+  const titleId = useId()
 
-  return createPortal(
-    <DialogContentInner
-      ariaLabel={subtitle ? `${subtitle} ${title}` : title}
-      className={className}
-      {...props}
-    >
-      <MessageDialogContentInner
-        title={title}
-        subtitle={subtitle}
-        description={description}
-        closeText={closeText}
-        onClickClose={handleClickClose}
-      />
-    </DialogContentInner>,
-    portalContainer,
+  return (
+    <Portal>
+      <DialogContentInner aria-labelledby={titleId} className={className} {...props}>
+        <MessageDialogContentInner
+          title={title}
+          titleId={titleId}
+          subtitle={subtitle}
+          description={description}
+          closeText={closeText}
+          onClickClose={handleClickClose}
+        />
+      </DialogContentInner>
+    </Portal>
   )
 }

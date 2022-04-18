@@ -32,3 +32,18 @@ test('ダイアログが開閉できること', async (t) => {
     .expect(content.exists)
     .notOk()
 })
+
+test('フォーカストラップが動作すること', async (t) => {
+  const trigger = Selector('[data-test=dialog-trigger]')
+  const datePicker = Selector('[data-test=dialog-datepicker]')
+  const closer = Selector('[data-test=dialog-closer]')
+
+  await t
+    .click(trigger)
+    .pressKey('shift+tab')
+    .expect(closer.focused)
+    .ok()
+    .pressKey('tab')
+    .expect(datePicker.focused)
+    .ok()
+})

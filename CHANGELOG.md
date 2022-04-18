@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [20.2.1](https://github.com/kufu/smarthr-ui/compare/v20.2.0...v20.2.1) (2022-04-14)
+
+
+### Bug Fixes
+
+* fix timing of appending portal ([#2424](https://github.com/kufu/smarthr-ui/issues/2424)) ([29cd62a](https://github.com/kufu/smarthr-ui/commit/29cd62afd113c840b81abeef3326e583c774ba61))
+* ダイアログのフォーカストラップを抜けてしまう問題を修正 ([#2404](https://github.com/kufu/smarthr-ui/issues/2404)) ([91c3b90](https://github.com/kufu/smarthr-ui/commit/91c3b90721c33bbcb9d1a8d0d50561873cf4c356))
+
+## [20.2.0](https://github.com/kufu/smarthr-ui/compare/v20.1.2...v20.2.0) (2022-04-12)
+
+
+### Features
+
+* string to ReactNode ([#2400](https://github.com/kufu/smarthr-ui/issues/2400)) ([200947d](https://github.com/kufu/smarthr-ui/commit/200947dd4483e6171c61c35c1753763d3828a12f))
+
+
+### Bug Fixes
+
+* ダイアログのポータルが DOM に追加される前に子のライフサイクルが開始されないように修正 ([#2403](https://github.com/kufu/smarthr-ui/issues/2403)) ([062a564](https://github.com/kufu/smarthr-ui/commit/062a5645cbebccf25f0de7ef4e1113e764379066))
+
 ### [20.1.2](https://github.com/kufu/smarthr-ui/compare/v20.1.1...v20.1.2) (2022-04-06)
 
 
