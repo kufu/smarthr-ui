@@ -6,8 +6,9 @@ import {
   MessageDialogContentInner,
   MessageDialogContentInnerProps,
 } from './MessageDialogContentInner'
+import { useId } from '../../hooks/useId'
 
-type Props = MessageDialogContentInnerProps &
+type Props = Omit<MessageDialogContentInnerProps, 'titleId'> &
   Pick<
     DialogContentInnerProps,
     | 'isOpen'
@@ -39,16 +40,14 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
     }
     onClickClose()
   }, [onClickClose, props.isOpen])
+  const titleId = useId()
 
   return (
     <Portal>
-      <DialogContentInner
-        ariaLabel={subtitle ? `${subtitle} ${title}` : title}
-        className={className}
-        {...props}
-      >
+      <DialogContentInner aria-labelledby={titleId} className={className} {...props}>
         <MessageDialogContentInner
           title={title}
+          titleId={titleId}
           subtitle={subtitle}
           description={description}
           closeText={closeText}
