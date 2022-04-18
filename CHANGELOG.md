@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [20.3.0](https://github.com/kufu/smarthr-ui/compare/v20.2.1...v20.3.0) (2022-04-18)
+
+
+### Features
+
+* use ReactNode for i18n ([#2428](https://github.com/kufu/smarthr-ui/issues/2428)) ([a50cb2f](https://github.com/kufu/smarthr-ui/commit/a50cb2f48f2897bfa5516e96c49f8d1a7e0e16c2))
+
 ### [20.2.1](https://github.com/kufu/smarthr-ui/compare/v20.2.0...v20.2.1) (2022-04-14)
 
 
