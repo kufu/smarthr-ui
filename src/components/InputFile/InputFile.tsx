@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, VFC, useRef, useState } from 'react'
+import React, { ComponentProps, VFC, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { TextButton } from '../Button'
@@ -8,7 +8,7 @@ import { useClassNames } from './useClassNames'
 
 type Size = 'default' | 's'
 
-export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
+export type Props = {
   /** コンポーネントに適用するクラス名 */
   className?: string
   /** コンポーネントの大きさ */
@@ -22,8 +22,9 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
 }
+type ElementProps = Omit<ComponentProps<'input'>, keyof Props>
 
-export const InputFile: VFC<Props> = ({
+export const InputFile: VFC<Props & ElementProps> = ({
   className = '',
   size = 'default',
   label,
