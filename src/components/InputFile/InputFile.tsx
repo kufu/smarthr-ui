@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, VFC, useEffect, useRef, useState } from 'react'
+import React, { InputHTMLAttributes, VFC, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { TextButton } from '../Button'
@@ -15,12 +15,8 @@ export type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   size?: Size
   /** フォームのラベル */
   label: string
-  /** 選択中のファイル */
-  files?: File[]
-  /** ファイルが選択された時に発火するコールバック関数 */
-  onAdd?: (addFiles: File[]) => void
-  /** ファイルが削除された時に発火するコールバック関数 */
-  onDelete?: (index: number) => void
+  /** ファイルの選択に変更があったときに発火するコールバック関数 */
+  onChange?: (files: File[]) => void
   /** `true` の時、フォームの枠の色が `DANGER` になる */
   error?: boolean
   /** ファイルリストを表示するかどうか */
@@ -31,46 +27,51 @@ export const InputFile: VFC<Props> = ({
   className = '',
   size = 'default',
   label,
-  files = [],
   hasFileList = true,
-  onAdd,
-  onDelete,
+  onChange,
   disabled = false,
   error,
   ...props
 }) => {
   const theme = useTheme()
+  const [files, setFiles] = useState<File[]>([])
   const [isFocused, setIsFocused] = useState(false)
   const labelDisabledClassName = disabled ? 'disabled' : ''
   const labelSmallClassName = size === 's' ? 'small' : ''
   const labelFocusedClassName = isFocused ? 'focus' : ''
   const errorClassName = error ? 'error' : ''
-  const isUpdatingFiles = useRef(false)
+  // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
+  const isUpdatingFilesDirectly = useRef(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    if (inputRef.current) {
-      const buff = new DataTransfer()
-      files.forEach((file) => {
-        buff.items.add(file)
-      })
-
-      isUpdatingFiles.current = true
-      inputRef.current.files = buff.files
-      isUpdatingFiles.current = false
-    }
-  }, [files])
+  const updateFiles = (newFiles: File[]) => {
+    onChange && onChange(newFiles)
+    setFiles(newFiles)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isUpdatingFiles.current && onAdd && e.target.files && e.target.files?.length > 0) {
-      const uploadFile = Array.from(e.target.files)
-      onAdd(uploadFile)
+    if (isUpdatingFilesDirectly.current) {
+      return
     }
+    const newFiles = Array.from(e.target.files ?? [])
+    updateFiles(newFiles)
   }
 
   const handleDelete = (index: number) => {
-    onDelete && onDelete(index)
+    if (!inputRef.current) {
+      return
+    }
+    const newFiles = files.filter((_, i) => index !== i)
+    updateFiles(newFiles)
+
+    const buff = new DataTransfer()
+    newFiles.forEach((file) => {
+      buff.items.add(file)
+    })
+    isUpdatingFilesDirectly.current = true
+    inputRef.current.files = buff.files
+    isUpdatingFilesDirectly.current = false
   }
 
   const classNames = useClassNames()
@@ -81,7 +82,7 @@ export const InputFile: VFC<Props> = ({
         <FileList themes={theme} className={classNames.fileList}>
           {files.map((file, index) => {
             return (
-              <li key={index}>
+              <li key={`${file.name}-${index}`}>
                 <span className={classNames.fileName}>{file.name}</span>
                 <span>
                   <TextButton
