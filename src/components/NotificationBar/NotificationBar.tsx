@@ -166,6 +166,8 @@ const CloseButton = styled(TextButton)<{
   themes: Theme
 }>(
   ({ colorSet: { fgColor, bgColor }, themes: { color, spacingByChar } }) => css`
+    flex-shrink: 0;
+
     margin-top: ${spacingByChar(-0.5)};
     margin-right: ${spacingByChar(-0.5)};
     margin-bottom: ${spacingByChar(-0.5)};
