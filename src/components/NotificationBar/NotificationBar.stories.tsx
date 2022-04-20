@@ -24,8 +24,7 @@ export default {
 const TextLink = styled(shrTextLink)`
   color: inherit;
 
-  &:hover,
-  &:focus {
+  &:hover {
     color: inherit;
   }
 `

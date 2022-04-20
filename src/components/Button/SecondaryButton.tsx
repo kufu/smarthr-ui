@@ -52,7 +52,7 @@ const secondaryStyle = css`
       background-color: ${color.WHITE};
       color: ${color.TEXT_BLACK};
 
-      &:focus,
+      &:focus-visible,
       &:hover {
         border-color: ${color.hoverColor(color.BORDER)};
         background-color: ${color.hoverColor(color.WHITE)};

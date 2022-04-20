@@ -128,7 +128,7 @@ const Wrapper = styled.span<{
     width: ${typeof $width === 'number' ? `${$width}px` : $width};
 
     &:focus-within {
-      box-shadow: ${shadow.OUTLINE};
+      ${shadow.focusIndicatorStyles};
     }
 
     ${!$disabled &&

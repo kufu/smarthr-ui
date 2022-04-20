@@ -174,7 +174,7 @@ const Button = styled(SecondaryButton)<{ themes: Theme }>(
         }
       }
 
-      &:focus {
+      &:focus-visible {
         ${shadow.focusIndicatorStyles}
       }
       &:first-child {

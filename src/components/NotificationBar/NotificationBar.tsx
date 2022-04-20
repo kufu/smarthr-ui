@@ -172,7 +172,7 @@ const CloseButton = styled(TextButton)<{
     color: ${fgColor};
 
     &:hover,
-    &:focus {
+    &:focus-visible {
       background-color: ${color.hoverColor(bgColor)};
       color: ${fgColor};
     }
