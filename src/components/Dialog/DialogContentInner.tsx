@@ -23,6 +23,10 @@ export type DialogContentInnerProps = {
    */
   isOpen: boolean
   /**
+   * ダイアログの幅
+   */
+  width?: string | number
+  /**
    * Specifies the top position of the Dialog content.
    */
   top?: number
@@ -62,6 +66,7 @@ export type DialogContentInnerProps = {
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DialogContentInnerProps>
 
 type StyleProps = {
+  $width?: string | number
   top?: number
   right?: number
   bottom?: number
@@ -79,6 +84,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
   },
   isOpen,
   id,
+  width,
   ariaLabel,
   ariaLabelledby,
   children,
@@ -88,7 +94,6 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
   const classNames = useClassNames().dialog
   const theme = useTheme()
   const innerRef = useRef<HTMLDivElement>(null)
-  const focusTarget = useRef<HTMLDivElement>(null)
   useHandleEscape(
     useCallback(() => {
       if (!isOpen) {
@@ -114,22 +119,19 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
             themes={theme}
             className={classNames.background}
           />
-          <FocusTrap>
-            <Inner
-              ref={innerRef}
-              themes={theme}
-              role="dialog"
-              aria-label={ariaLabel}
-              aria-labelledby={ariaLabelledby}
-              aria-modal="true"
-              className={`${className} ${classNames.dialog}`}
-              {...props}
-            >
-              {/* dummy element for focus management. */}
-              <div ref={focusTarget} tabIndex={-1} aria-label={ariaLabel}></div>
-              {children}
-            </Inner>
-          </FocusTrap>
+          <Inner
+            $width={width}
+            ref={innerRef}
+            themes={theme}
+            role="dialog"
+            aria-label={ariaLabel}
+            aria-labelledby={ariaLabelledby}
+            aria-modal="true"
+            className={`${className} ${classNames.dialog}`}
+            {...props}
+          >
+            <FocusTrap>{children}</FocusTrap>
+          </Inner>
           {/* Suppresses scrolling of body while modal is displayed */}
           <BodyScrollSuppressor />
         </Layout>
@@ -146,24 +148,33 @@ const Layout = styled.div`
   left: 0;
 `
 const Inner = styled.div<StyleProps & { themes: Theme }>`
-  ${({ themes, top, right, bottom, left }) => {
-    const { color, radius, shadow } = themes
+  ${({ themes, $width, top, right, bottom, left }) => {
+    const { color, radius, shadow, spacingByChar } = themes
     const positionRight = exist(right) ? `${right}px` : 'auto'
     const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
-    let positionTop = exist(top) ? `${top}px` : 'auto'
-    let positionLeft = exist(left) ? `${left}px` : 'auto'
-    let translateX = '0'
-    let translateY = '0'
+    const positionTop = exist(top) ? `${top}px` : 'auto'
+    const positionLeft = exist(left) ? `${left}px` : 'auto'
+    const translateX = exist(right) || exist(left) ? '0' : 'calc((100vw - 100%) / 2)'
+    const translateY = exist(top) || exist(bottom) ? '0' : 'calc((100vh - 100%) / 2)'
 
-    if (top === undefined && bottom === undefined) {
-      positionTop = '50%'
-      translateY = '-50%'
-    }
-
-    if (right === undefined && left === undefined) {
-      positionLeft = '50%'
-      translateX = '-50%'
-    }
+    const widthStyles = exist($width)
+      ? // width が指定されているときは width 設定
+        css`
+          width: ${typeof $width === 'number' ? `${$width}px` : $width};
+        `
+      : exist(left) && exist(right)
+      ? // left, right が両方指定されているときは、それに任せる
+        null
+      : // 幅を確定できる指定がされていない場合は、viewport を超えないように上限設定
+        css`
+          max-width: min(
+            calc(
+              100vw - max(${left || 0}px, ${spacingByChar(0.5)}) -
+                max(${right || 0}px, ${spacingByChar(0.5)})
+            ),
+            800px
+          );
+        ` /* TODO: 幅の定数指定は、トークンが決まり theme に入ったら差し替える */
 
     return css`
       position: absolute;
@@ -171,6 +182,7 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
       right: ${positionRight};
       bottom: ${positionBottom};
       left: ${positionLeft};
+      ${widthStyles};
       border-radius: ${radius.m};
       background-color: ${color.WHITE};
       box-shadow: ${shadow.LAYER3};

@@ -24,30 +24,19 @@ export const LineUp = styled.div<{
   /** 縦位置の揃え方（align-items） */
   vAlign?: verticalAlignMethod
 }>(({ inline = false, gap = 0.5, reverse, align = 'flex-start', vAlign = 'normal' }) => {
-  const direction = reverse ? 'right' : 'left'
-
   return css`
     display: ${inline ? 'inline-flex' : 'flex'};
     ${reverse && 'flex-direction: row-reverse;'}
     ${align && `justify-content: ${align};`}
     ${vAlign && `align-items: ${vAlign};`}
+    gap: ${useSpacing(gap)};
 
-    /* For greater specificity than element type selectors */
-    &&& {
-      ${(align === 'flex-start' || align === 'flex-end' || align === 'center') &&
-      css`
-          > * + * {
-            margin-${direction}: ${useSpacing(gap)};
-          }
-      `}
-
-      @supports (gap: 1px) {
-        gap: ${useSpacing(gap)};
-
-        > * + * {
-          ${`margin-${direction}: revert`}
-        }
-      }
+    /* 
+      Chromeで空の要素にflex-gapがあると印刷時にレイアウトが崩れるので gap の値を0にする
+      See https://bugs.chromium.org/p/chromium/issues/detail?id=1161709
+    */
+    &:empty {
+      gap: 0;
     }
   `
 })

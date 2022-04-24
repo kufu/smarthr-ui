@@ -73,7 +73,6 @@ export {
   AccordionPanelTrigger,
 } from './components/AccordionPanel'
 export { InformationPanel } from './components/InformationPanel'
-export { Footer } from './components/Footer'
 export { RightFixedNote } from './components/RightFixedNote'
 export { Tooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
@@ -96,7 +95,7 @@ export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
 
 // layout components
-export { Cluster, LineUp, Stack, Sidebar } from './components/Layout'
+export { Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'
 
 // hooks
 export { useTheme } from './hooks/useTheme'

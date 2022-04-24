@@ -4,16 +4,23 @@ import styled, { css } from 'styled-components'
 import { range } from '../../libs/lodash'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+import { Reel } from '../Layout'
 
 import { PaginationItem } from './PaginationItem'
 import { PaginationControllerItem } from './PaginationControllerItem'
 
-interface Props {
+type Props = {
+  /** 全ページ数 */
   total: number
+  /** 現在のページ */
   current: number
+  /** ボタンを押下したときに発火するコールバック関数 */
   onClick: (pageNumber: number) => void
+  /** 現在のページの前後に表示するページ番号のボタンの数 */
   padding?: number
+  /** コンポーネントに適用するクラス名 */
   className?: string
+  /** `true` のとき、ページ番号のボタンを表示しない */
   withoutNumbers?: boolean
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
@@ -96,17 +103,20 @@ export const Pagination: VFC<Props & ElementProps> = ({
       aria-label="ページネーション"
       {...props}
     >
-      <List className={withoutNumbers ? 'withoutNumbers' : ''} themes={theme}>
-        {prevPage}
-        {pages}
-        {nextPage}
-      </List>
+      <Reel>
+        <List className={withoutNumbers ? 'withoutNumbers' : ''} themes={theme}>
+          {prevPage}
+          {pages}
+          {nextPage}
+        </List>
+      </Reel>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.nav`
   display: inline-block;
+  max-width: 100%;
 `
 const List = styled.ul<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => {

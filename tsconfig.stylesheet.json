@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["node_modules", "src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.stories.tsx"],
+  "compilerOptions": {
+    "outDir": "./css",
+    "plugins": [
+      {
+        "transform": "typescript-plugin-styled-components",
+        "type": "config",
+
+        // other typescript-plugin-styled-components options can be added here
+        "ssr": true,
+        "displayName": true,
+        "minify": true,
+      }
+    ]
+  }
+}

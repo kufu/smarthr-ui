@@ -5,16 +5,18 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
-import { Item } from './types'
+import { ComboBoxItem } from './types'
 
 import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
+const OPTION_INCREMENT_AMOUNT = 100
+
 type Args<T> = {
-  items: Array<Item<T> & { isSelected?: boolean }>
+  items: Array<ComboBoxItem<T> & { isSelected?: boolean }>
   inputValue?: string
   onAdd?: (label: string) => void
-  onSelect: (item: Item<T>) => void
+  onSelect: (item: ComboBoxItem<T>) => void
   isExpanded: boolean
   isAddable: boolean
   isDuplicate: boolean
@@ -28,12 +30,12 @@ type Args<T> = {
   }
 }
 
-type Option<T> = Item<T> & {
+type Option<T> = ComboBoxItem<T> & {
   isAdding?: boolean
   isSelected?: boolean
 }
 
-function optionToItem<T>(option: Option<T>): Item<T> {
+function optionToItem<T>(option: Option<T>): ComboBoxItem<T> {
   const { isAdding, isSelected, ...props } = option
   return { ...props }
 }
@@ -104,13 +106,19 @@ export function useListBox<T>({
     })
   }, [])
 
+  const [optionLength, setOptionLength] = useState(OPTION_INCREMENT_AMOUNT)
+  useEffect(() => {
+    // 表示 option 数を初期化
+    setOptionLength(OPTION_INCREMENT_AMOUNT)
+  }, [items])
   const options: Array<Option<T>> = useMemo(() => {
+    const limitedItems = items.slice(0, optionLength + 1)
     if (isAddable) {
       const addingOption = { label: inputValue, value: inputValue, isAdding: true }
-      return [addingOption, ...items]
+      return [addingOption, ...limitedItems]
     }
-    return items
-  }, [inputValue, isAddable, items])
+    return limitedItems
+  }, [inputValue, isAddable, items, optionLength])
 
   const moveActiveOptionIndex = useCallback(
     (currentIndex: number | null, delta: -1 | 1) => {
@@ -215,6 +223,28 @@ export function useListBox<T>({
   const { portalRoot } = usePortal()
   const listBoxRef = useRef<HTMLDivElement>(null)
 
+  const bottomIntersectionRef = useRef<HTMLDivElement>(null)
+  const isDisplayingPartial = optionLength < items.length
+  const scrollObserver = useMemo(
+    // スクロール最下部に到達する度に表示する option 数を増加させるための IntersectionObserver
+    () =>
+      new IntersectionObserver((entries) => {
+        const entry = entries[0]
+        if (entry && entry.isIntersecting && isDisplayingPartial) {
+          setOptionLength((current) => current + OPTION_INCREMENT_AMOUNT)
+        }
+      }),
+    [isDisplayingPartial],
+  )
+  useEffect(() => {
+    // IntersectionObserver を設定
+    if (!bottomIntersectionRef.current) {
+      return
+    }
+    scrollObserver.observe(bottomIntersectionRef.current)
+    return () => scrollObserver.disconnect()
+  }, [scrollObserver])
+
   const renderListBox = () => {
     return createPortal(
       <Container
@@ -297,6 +327,7 @@ export function useListBox<T>({
             )}
           </>
         )}
+        <div ref={bottomIntersectionRef} />
       </Container>,
       portalRoot,
     )

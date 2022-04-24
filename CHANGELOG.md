@@ -2,6 +2,148 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [20.3.0](https://github.com/kufu/smarthr-ui/compare/v20.2.1...v20.3.0) (2022-04-18)
+
+
+### Features
+
+* use ReactNode for i18n ([#2428](https://github.com/kufu/smarthr-ui/issues/2428)) ([a50cb2f](https://github.com/kufu/smarthr-ui/commit/a50cb2f48f2897bfa5516e96c49f8d1a7e0e16c2))
+
+### [20.2.1](https://github.com/kufu/smarthr-ui/compare/v20.2.0...v20.2.1) (2022-04-14)
+
+
+### Bug Fixes
+
+* fix timing of appending portal ([#2424](https://github.com/kufu/smarthr-ui/issues/2424)) ([29cd62a](https://github.com/kufu/smarthr-ui/commit/29cd62afd113c840b81abeef3326e583c774ba61))
+* ダイアログのフォーカストラップを抜けてしまう問題を修正 ([#2404](https://github.com/kufu/smarthr-ui/issues/2404)) ([91c3b90](https://github.com/kufu/smarthr-ui/commit/91c3b90721c33bbcb9d1a8d0d50561873cf4c356))
+
+## [20.2.0](https://github.com/kufu/smarthr-ui/compare/v20.1.2...v20.2.0) (2022-04-12)
+
+
+### Features
+
+* string to ReactNode ([#2400](https://github.com/kufu/smarthr-ui/issues/2400)) ([200947d](https://github.com/kufu/smarthr-ui/commit/200947dd4483e6171c61c35c1753763d3828a12f))
+
+
+### Bug Fixes
+
+* ダイアログのポータルが DOM に追加される前に子のライフサイクルが開始されないように修正 ([#2403](https://github.com/kufu/smarthr-ui/issues/2403)) ([062a564](https://github.com/kufu/smarthr-ui/commit/062a5645cbebccf25f0de7ef4e1113e764379066))
+
+### [20.1.2](https://github.com/kufu/smarthr-ui/compare/v20.1.1...v20.1.2) (2022-04-06)
+
+
+### Bug Fixes
+
+* ballonのtriangleがretinaディスプレイなどで条件が揃うと表示崩れするバグを修正 ([#2399](https://github.com/kufu/smarthr-ui/issues/2399)) ([2d41e03](https://github.com/kufu/smarthr-ui/commit/2d41e0357f9ac2ca413d7733cf22ae95cabe75b0))
+
+### [20.1.1](https://github.com/kufu/smarthr-ui/compare/v20.1.0...v20.1.1) (2022-03-30)
+
+
+### Bug Fixes
+
+* `TabBar` のモバイル表示調整 (SHRUI-539) ([#2358](https://github.com/kufu/smarthr-ui/issues/2358)) ([f3f658b](https://github.com/kufu/smarthr-ui/commit/f3f658baf14fbe5ad51384fcc57fde405a00796e))
+
+## [20.1.0](https://github.com/kufu/smarthr-ui/compare/v20.0.0...v20.1.0) (2022-03-17)
+
+
+### Features
+
+* add Reel component ([#2345](https://github.com/kufu/smarthr-ui/issues/2345)) ([2b14f5b](https://github.com/kufu/smarthr-ui/commit/2b14f5b64dec8d313af1691ccc5483ebe30795d7))
+
+
+### Bug Fixes
+
+* `Dropdown` のモバイル表示調整 (SHRUI-536) ([#2325](https://github.com/kufu/smarthr-ui/issues/2325)) ([4f95c3f](https://github.com/kufu/smarthr-ui/commit/4f95c3feb9d19402dfa92826181a71b3982c400d))
+* add Reel wrapper to Pagination ([#2350](https://github.com/kufu/smarthr-ui/issues/2350)) ([c28baaa](https://github.com/kufu/smarthr-ui/commit/c28baaa88b584a5ad388044b7691e57928e7ad45))
+* Balloon の三角形関連のスタイルを改善 ([#2348](https://github.com/kufu/smarthr-ui/issues/2348)) ([ab1a65c](https://github.com/kufu/smarthr-ui/commit/ab1a65c0624775fab3e07883228aea45d92a800b))
+
+## [20.0.0](https://github.com/kufu/smarthr-ui/compare/v19.1.0...v20.0.0) (2022-03-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* `Footer` コンポーネントを削除 (SHRUI-525) (#2320)
+* ダイアログのデフォルト幅を変更 (SHRUI-535) (#2300)
+
+### Features
+
+* ダイアログのデフォルト幅を変更 (SHRUI-535) ([#2300](https://github.com/kufu/smarthr-ui/issues/2300)) ([3dfa93d](https://github.com/kufu/smarthr-ui/commit/3dfa93d4abdb253e937b9939ee3b62e4d5ba50c2))
+
+
+### Bug Fixes
+
+* `Footer` コンポーネントを削除 (SHRUI-525) ([#2320](https://github.com/kufu/smarthr-ui/issues/2320)) ([0faca49](https://github.com/kufu/smarthr-ui/commit/0faca497050004a8f722377107f560da4a472e38))
+* change type of text props to ReactNode ([#2327](https://github.com/kufu/smarthr-ui/issues/2327)) ([0f6b58a](https://github.com/kufu/smarthr-ui/commit/0f6b58a6cf0ad5d6a220ee3ea9b75ad3f776fe3d))
+* ダイアログのフェードアニメーション中にDOMが更新されてちらつくのを防ぎたい ([#2319](https://github.com/kufu/smarthr-ui/issues/2319)) ([42945d0](https://github.com/kufu/smarthr-ui/commit/42945d0f1b446aba4d1023bfeafda5d4e7a22e70))
+
+## [19.1.0](https://github.com/kufu/smarthr-ui/compare/v19.0.2...v19.1.0) (2022-03-03)
+
+
+### Features
+
+* change to ReactNode for i18n ([#2321](https://github.com/kufu/smarthr-ui/issues/2321)) ([773e522](https://github.com/kufu/smarthr-ui/commit/773e5228c9c5d25ca80f66ea4eb1002b59cd7f24))
+
+
+### Bug Fixes
+
+* InformationPanel の内部処理を memo 化 ([#2315](https://github.com/kufu/smarthr-ui/issues/2315)) ([3255546](https://github.com/kufu/smarthr-ui/commit/3255546c2971cf6030728d9fe287d561f7e18c29))
+
+### [19.0.2](https://github.com/kufu/smarthr-ui/compare/v19.0.1...v19.0.2) (2022-02-28)
+
+
+### Bug Fixes
+
+* `BottomFixedArea` のモバイル表示調整 ([#2285](https://github.com/kufu/smarthr-ui/issues/2285)) ([ff5989c](https://github.com/kufu/smarthr-ui/commit/ff5989c4e59a638f23d952622a6a59559d5d6ac5))
+* ComboBoxItem を Storybook や SmartHR Design System での Props 表示のために、よりわかりやすい名前に変える ([#2299](https://github.com/kufu/smarthr-ui/issues/2299)) ([b715b60](https://github.com/kufu/smarthr-ui/commit/b715b600e939539ac76202adf401252b24379694))
+* workaround empty flex gap bug ([#2298](https://github.com/kufu/smarthr-ui/issues/2298)) ([0bb4ff5](https://github.com/kufu/smarthr-ui/commit/0bb4ff562859bb9776870a8f31e32999fd97a45c))
+
+### [19.0.1](https://github.com/kufu/smarthr-ui/compare/v19.0.0...v19.0.1) (2022-02-22)
+
+
+### Bug Fixes
+
+* `AppNavi` のアイテムのテキストが折り返されないように修正 ([#2283](https://github.com/kufu/smarthr-ui/issues/2283)) ([a58b2ac](https://github.com/kufu/smarthr-ui/commit/a58b2ac0c66d778cb631f6c4cdc79aa643218e03))
+* disabled なボタンに表示するツールチップが正常に動作するように修正 (SHRUI-529) ([#2280](https://github.com/kufu/smarthr-ui/issues/2280)) ([7bdbfb2](https://github.com/kufu/smarthr-ui/commit/7bdbfb2f58f6d47e03717ed9c5549ab42109a891))
+* fix ModelessDialog to be able to close on mobile ([#2279](https://github.com/kufu/smarthr-ui/issues/2279)) ([0f89dba](https://github.com/kufu/smarthr-ui/commit/0f89dba82328db0ff2bcc50d2f84e3a525163fa4))
+* コンボボックスのドロップダウンに表示するオプション数を段階的に増やすように変更 (SHRUI-540) ([#2263](https://github.com/kufu/smarthr-ui/issues/2263)) ([33251bf](https://github.com/kufu/smarthr-ui/commit/33251bf20bda02981a5fa1f56fc95e65594f4d09))
+
+## [19.0.0](https://github.com/kufu/smarthr-ui/compare/v18.0.0...v19.0.0) (2022-02-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* smarthr-uiにおけるエラーアイコンを `FaExclamationCircleIcon` に統一する (#2240)
+
+### Features
+
+* smarthr-uiにおけるエラーアイコンを `FaExclamationCircleIcon` に統一する ([#2240](https://github.com/kufu/smarthr-ui/issues/2240)) ([8e3da84](https://github.com/kufu/smarthr-ui/commit/8e3da8465424e3bf296f1dbccce280e70a7970fd))
+
+
+### Bug Fixes
+
+* change not to use lookbehind regular expression ([#2264](https://github.com/kufu/smarthr-ui/issues/2264)) ([5c6918c](https://github.com/kufu/smarthr-ui/commit/5c6918ce8cffc4606b1df5c101b7f51f1ebedbce))
+* make `<Text>` as props like a styled-components ([#2261](https://github.com/kufu/smarthr-ui/issues/2261)) ([9105024](https://github.com/kufu/smarthr-ui/commit/91050248bc9e2b5e28cf7724b28a7e6cb9fa53f0))
+* NotificationBar の useMemo dependency 漏れを追記 ([#2239](https://github.com/kufu/smarthr-ui/issues/2239)) ([fb0c56f](https://github.com/kufu/smarthr-ui/commit/fb0c56f7238e94a0d86a3644dcc7118bf4528270))
+* style of `defaultChecked` ([#2259](https://github.com/kufu/smarthr-ui/issues/2259)) ([dd6486b](https://github.com/kufu/smarthr-ui/commit/dd6486bb7b5b2dadd4a185609c02a6f357e0d3b9))
+
+## [18.0.0](https://github.com/kufu/smarthr-ui/compare/v17.3.0...v18.0.0) (2022-02-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove gap fallback from `<Cluster>` (#2218)
+
+### Features
+
+* add `yarn build-stylesheet` command ([#2128](https://github.com/kufu/smarthr-ui/issues/2128)) ([5cae94b](https://github.com/kufu/smarthr-ui/commit/5cae94bec37115ec712082d38ee0dac098d3a382))
+* remove gap fallback from `<Cluster>` ([#2218](https://github.com/kufu/smarthr-ui/issues/2218)) ([fd5b680](https://github.com/kufu/smarthr-ui/commit/fd5b68083281cd7a8bb65072caa17ac878d1f448))
+
+
+### Bug Fixes
+
+* Input の useMemo 記述漏れ依存配列を追記 ([#2236](https://github.com/kufu/smarthr-ui/issues/2236)) ([d8efab5](https://github.com/kufu/smarthr-ui/commit/d8efab58b9f3f19eac861b00e8c2f5bd8235fdb4))
+* マイナス値でも先頭の0が除去されるようにしたい ([#2241](https://github.com/kufu/smarthr-ui/issues/2241)) ([2a0e205](https://github.com/kufu/smarthr-ui/commit/2a0e20528de0f62511045b6b292c99b0eaa847d3))
+
 ## [17.3.0](https://github.com/kufu/smarthr-ui/compare/v17.2.0...v17.3.0) (2022-02-01)
 
 

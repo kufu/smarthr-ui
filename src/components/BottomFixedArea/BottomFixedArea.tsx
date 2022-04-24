@@ -18,6 +18,7 @@ import {
   SecondaryButton,
   SecondaryButtonAnchor,
 } from '../Button'
+import { Cluster, Stack } from '../Layout'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
@@ -69,22 +70,24 @@ export const BottomFixedArea: VFC<Props & ElementProps> = ({
       className={`${className} ${classNames.wrapper}`}
       {...props}
     >
-      {description && <Text className={classNames.description}>{description}</Text>}
-      {(secondaryButton || primaryButton) && (
-        <ButtonList themes={theme} className={classNames.buttonList}>
-          {secondaryButton && <li className={classNames.secondaryButton}>{secondaryButton}</li>}
-          {primaryButton && <li className={classNames.primaryButton}>{primaryButton}</li>}
-        </ButtonList>
-      )}
-      {tertiaryLinks && tertiaryLinks.length > 0 && (
-        <TertiaryList themes={theme} className={classNames.tertiaryList}>
-          {tertiaryLinks.map((tertiaryLink, index) => (
-            <li key={index} className={classNames.tertiaryListItem}>
-              <TertiaryLink {...tertiaryLink} />
-            </li>
-          ))}
-        </TertiaryList>
-      )}
+      <Stack>
+        {description && <Text className={classNames.description}>{description}</Text>}
+        {(secondaryButton || primaryButton) && (
+          <ListCluster justify="center" gap={{ row: 0.5, column: 1 }}>
+            {secondaryButton && <li className={classNames.secondaryButton}>{secondaryButton}</li>}
+            {primaryButton && <li className={classNames.primaryButton}>{primaryButton}</li>}
+          </ListCluster>
+        )}
+        {tertiaryLinks && tertiaryLinks.length > 0 && (
+          <ListCluster justify="center" gap={{ row: 0.5, column: 1 }}>
+            {tertiaryLinks.map((tertiaryLink, index) => (
+              <li key={index} className={classNames.tertiaryListItem}>
+                <TertiaryLink {...tertiaryLink} />
+              </li>
+            ))}
+          </ListCluster>
+        )}
+      </Stack>
     </Base>
   )
 }
@@ -92,8 +95,6 @@ export const BottomFixedArea: VFC<Props & ElementProps> = ({
 const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
   ${({ themes: { spacingByChar }, zIndex }) => {
     return css`
-      display: flex;
-      flex-direction: column;
       position: fixed;
       bottom: 0;
       width: 100%;
@@ -109,41 +110,10 @@ const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
 const Text = styled.div`
   margin: 0;
 `
-const ButtonList = styled.ul<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
-      margin: ${spacingByChar(1)} 0 0 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-
-      > li {
-        list-style: none;
-        margin-right: ${spacingByChar(1)};
-
-        &:last-of-type {
-          margin-right: 0;
-        }
-      }
-    `
-  }}
-`
-const TertiaryList = styled.ul<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
-      margin: ${spacingByChar(1)} 0 0 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-
-      > li {
-        list-style: none;
-        margin-right: ${spacingByChar(1)};
-
-        &:last-of-type {
-          margin-right: 0;
-        }
-      }
-    `
-  }}
+const ListCluster = styled(Cluster).attrs({
+  as: 'ul',
+})`
+  list-style: none;
+  margin: 0;
+  padding: 0;
 `

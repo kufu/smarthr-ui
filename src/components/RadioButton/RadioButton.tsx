@@ -7,10 +7,12 @@ import { useClassNames } from './useClassNames'
 
 import { RadioButtonInput, Props as RadioButtonInputProps } from './RadioButtonInput'
 
-type Props = RadioButtonInputProps & {
+type Props = {
+  /** ラベルの行高 */
   lineHeight?: number
+  /** ラジオボタンのラベル */
   children?: ReactNode
-}
+} & RadioButtonInputProps
 
 export const RadioButton: FC<Props> = ({
   lineHeight = 1.5,

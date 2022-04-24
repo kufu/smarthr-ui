@@ -1,33 +1,38 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { storiesOf } from '@storybook/react'
+import { Story } from '@storybook/react'
 
 import readme from './README.md'
 
 import { SmartHRLogo } from './SmartHRLogo'
 
-storiesOf('SmartHRLogo', module)
-  .addParameters({
+export default {
+  title: 'SmartHRLogo',
+  component: SmartHRLogo,
+  parameters: {
     readme: {
       sidebar: readme,
     },
-  })
-  .add('all', () => (
-    <List>
-      <li>
-        <Text>default</Text>
-        <SmartHRLogo />
-      </li>
-      <li>
-        <Text>You can set custom title and custom fill color</Text>
-        <SmartHRLogo title="custom title" fill="#008d91" />
-      </li>
-      <li>
-        <Text>You can set custom width and height</Text>
-        <SmartHRLogo title="custom title" width={111} height={20} />
-      </li>
-    </List>
-  ))
+  },
+}
+
+export const All: Story = () => (
+  <List>
+    <li>
+      <Text>default</Text>
+      <SmartHRLogo />
+    </li>
+    <li>
+      <Text>You can set custom title and custom fill color</Text>
+      <SmartHRLogo title="custom title" fill="#008d91" />
+    </li>
+    <li>
+      <Text>You can set custom width and height</Text>
+      <SmartHRLogo title="custom title" width={111} height={20} />
+    </li>
+  </List>
+)
+All.storyName = 'all'
 
 const List = styled.ul`
   margin: 0;

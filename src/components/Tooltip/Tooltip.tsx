@@ -29,8 +29,8 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   vertical = 'bottom',
   tabIndex = 0,
   className = '',
-  onMouseEnter,
-  onMouseLeave,
+  onPointerEnter,
+  onPointerLeave,
   onTouchStart,
   onTouchEnd,
   onFocus,
@@ -42,7 +42,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   const ref = React.createRef<HTMLDivElement>()
   const tooltipId = useId()
 
-  const getHandlerToShow = <T extends unknown>(handler?: (e: T) => void) => {
+  const getHandlerToShow = <T,>(handler?: (e: T) => void) => {
     return (e: T) => {
       handler && handler(e)
       if (!ref.current) {
@@ -68,7 +68,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
     }
   }
 
-  const getHandlerToHide = <T extends unknown>(handler?: (e: T) => void) => {
+  const getHandlerToHide = <T,>(handler?: (e: T) => void) => {
     return (e: T) => {
       handler && handler(e)
       setIsVisible(false)
@@ -93,10 +93,10 @@ export const Tooltip: VFC<Props & ElementProps> = ({
       {...props}
       aria-describedby={isVisible ? tooltipId : undefined}
       ref={ref}
-      onMouseEnter={getHandlerToShow(onMouseEnter)}
+      onPointerEnter={getHandlerToShow(onPointerEnter)}
       onTouchStart={getHandlerToShow(onTouchStart)}
       onFocus={getHandlerToShow(onFocus)}
-      onMouseLeave={getHandlerToHide(onMouseLeave)}
+      onPointerLeave={getHandlerToHide(onPointerLeave)}
       onTouchEnd={getHandlerToHide(onTouchEnd)}
       onBlur={getHandlerToHide(onBlur)}
       isIcon={isIcon}

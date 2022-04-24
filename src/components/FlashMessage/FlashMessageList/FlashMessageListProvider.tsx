@@ -22,6 +22,9 @@ export const FlashMessageListContext = createContext<{
   isProvided: false,
 })
 
+/**
+ * @deprecated `FlashMessage` は気づきにくいため、安易な使用はお勧めしません。`NotificationBar` や `Dialog` の使用を検討してください。
+ */
 export const FlashMessageListProvider: VFC<{ children: ReactNode }> = ({ children }) => {
   const [currentSeq, setCurrentSeq] = useState(0)
   const [messages, setMessages] = useState<NumberedMessage[]>([])

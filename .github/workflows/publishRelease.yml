@@ -13,11 +13,11 @@ jobs:
       CHANGELOG_PATH: /tmp/CHANGELOG.md
       IS_PRERELEASE: ${{ contains(github.event.issue.labels.*.name, 'prerelease') }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: release-candidate
           fetch-depth: 0
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: 14
           registry-url: 'https://registry.npmjs.org'
@@ -52,7 +52,7 @@ jobs:
           commitish: master
           prerelease: ${{ env.IS_PRERELEASE }}
       - name: close issue
-        uses: peter-evans/close-issue@v1
+        uses: peter-evans/close-issue@v2
       - name: delete branch
         run: git push origin :release-candidate
       - name: cherry-pick release commit
@@ -60,7 +60,7 @@ jobs:
           git checkout master
           git cherry-pick $NEW_TAG
       - name: craete pull request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         with:
           title: 'chore(release): ${{ env.NEW_TAG }}'
           branch: 'merge-release-${{ env.NEW_TAG }}'
