@@ -260,11 +260,16 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
             updateDate(newDate)
           }}
           suffix={
-            <CalendarIconLayout themes={themes}>
-              <CalendarIconWrapper themes={themes}>
-                <FaCalendarAltIcon color={caretIconColor} />
-              </CalendarIconWrapper>
-            </CalendarIconLayout>
+            <>
+              <InputSuffixLayout themes={themes}>
+                <InputSuffixWrapper themes={themes}>
+                  {showAlternative && (
+                    <InputSuffixText themes={themes}>{alternativeFormat}</InputSuffixText>
+                  )}
+                  <FaCalendarAltIcon color={caretIconColor} />
+                </InputSuffixWrapper>
+              </InputSuffixLayout>
+            </>
           }
           disabled={disabled}
           error={error}
@@ -274,7 +279,6 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
           aria-controls={calenderId}
           aria-haspopup={true}
         />
-        {showAlternative && <OverlayText themes={themes}>{alternativeFormat}</OverlayText>}
       </InputWrapper>
       {isCalendarShown && inputRect && (
         <Portal inputRect={inputRect} ref={calendarPortalRef}>
@@ -307,14 +311,14 @@ const InputWrapper = styled.div`
 const StyledInput = styled(Input)`
   width: 100%;
 `
-const CalendarIconLayout = styled.span<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
+const InputSuffixLayout = styled.span<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
   return css`
     height: 100%;
     padding: ${spacingByChar(0.5)} 0;
     box-sizing: border-box;
   `
 })
-const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
+const InputSuffixWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
   const { fontSize, color, spacingByChar } = themes
   return css`
     display: flex;
@@ -328,13 +332,10 @@ const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
   `
 })
 
-const OverlayText = styled.span<{ themes: Theme }>(({ themes }) => {
+const InputSuffixText = styled.span<{ themes: Theme }>(({ themes }) => {
   const { fontSize, color, spacingByChar } = themes
   return css`
-    position: absolute;
-    right: ${spacingByChar(2.5)};
-    top: 50%;
-    transform: translateY(-50%);
+    margin-right: ${spacingByChar(0.5)};
     color: ${color.TEXT_GREY};
     font-size: ${fontSize.S};
   `
