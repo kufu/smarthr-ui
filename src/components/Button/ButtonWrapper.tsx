@@ -65,7 +65,7 @@ const baseStyles = css<StyleProps>(({ wide, themes }) => {
       min-height: calc(${fontSize.S} + ${spacingByChar(1)} + (${border.lineWidth} * 2));
     }
 
-    &:focus {
+    &:focus-visible {
       ${shadow.focusIndicatorStyles}
     }
 
@@ -83,7 +83,7 @@ const Button = styled.button<StyleProps>(({ variant, themes }) => {
     ${baseStyles}
     ${styles.default}
 
-    &:focus,
+    &:focus-visible,
     &:hover {
       ${styles.focus}
     }
@@ -104,7 +104,7 @@ const Anchor = styled.a<StyleProps>(({ variant, themes }) => {
     ${styles.default}
     text-decoration: none;
 
-    &:focus,
+    &:focus-visible,
     &:hover {
       ${styles.focus}
     }
