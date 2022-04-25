@@ -76,7 +76,7 @@ export const Textarea: VFC<Props & ElementProps> = ({
 const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: string | number }>`
   ${(props) => {
     const { themes, textAreaWidth = 'auto', error } = props
-    const { fontSize, spacingByChar, border, radius, color } = themes
+    const { fontSize, spacingByChar, border, radius, color, shadow } = themes
 
     return css`
       padding: ${spacingByChar(0.5)};
@@ -88,20 +88,18 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
       border: ${border.shorthand};
       box-sizing: border-box;
       opacity: 1;
-      ${error
-        ? css`
-            border-color: ${color.DANGER};
-          `
-        : css`
-            &:focus {
-              border-color: ${color.hoverColor(color.MAIN)};
-            }
-          `}
 
+      ${error &&
+      css`
+        border-color: ${color.DANGER};
+      `}
       &::placeholder {
         color: ${color.TEXT_GREY};
       }
-      &[disabled] {
+      &:focus-visible {
+        ${shadow.focusIndicatorStyles}
+      }
+      &:disabled {
         background-color: ${color.COLUMN};
         pointer-events: none;
 

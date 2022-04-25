@@ -50,7 +50,7 @@ const primaryStyle = css`
       background-color: ${color.MAIN};
       color: ${color.TEXT_WHITE};
 
-      &:focus,
+      &:focus-visible,
       &:hover {
         border-color: ${color.hoverColor(color.MAIN)};
         background-color: ${color.hoverColor(color.MAIN)};

@@ -117,7 +117,7 @@ const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
         background-clip: padding-box;
       }
 
-      &:focus {
+      &:focus-visible {
         ${shadow.focusIndicatorStyles}
       }
 
