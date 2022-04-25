@@ -227,7 +227,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
         }
       }}
     >
-      <InputWrapper ref={inputWrapperRef}>
+      <div ref={inputWrapperRef}>
         <StyledInput
           {...inputAttrs}
           type="text"
@@ -274,7 +274,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
           aria-controls={calenderId}
           aria-haspopup={true}
         />
-      </InputWrapper>
+      </div>
       {isCalendarShown && inputRect && (
         <Portal inputRect={inputRect} ref={calendarPortalRef}>
           <Calendar
@@ -299,9 +299,6 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
 
 const Container = styled.div`
   display: inline-block;
-`
-const InputWrapper = styled.div`
-  position: relative;
 `
 const StyledInput = styled(Input)`
   width: 100%;
