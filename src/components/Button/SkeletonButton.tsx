@@ -42,7 +42,7 @@ const skeletonStyle = css`
       background-color: transparent;
       color: ${color.TEXT_WHITE};
 
-      &:focus,
+      &:focus-visible,
       &:hover {
         border-color: ${color.hoverColor(color.WHITE)};
         background-color: ${color.OVERLAY};
