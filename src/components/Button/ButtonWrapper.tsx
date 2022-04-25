@@ -92,7 +92,7 @@ const Button = styled.button<StyleProps>(({ variant, themes }) => {
       ${styles.disabled}
 
       /* alpha color を使用しているので、背景色と干渉させない */
-        background-clip: padding-box;
+      background-clip: padding-box;
     }
   `
 })
@@ -113,7 +113,7 @@ const Anchor = styled.a<StyleProps>(({ variant, themes }) => {
       ${styles.disabled}
 
       /* alpha color を使用しているので、背景色と干渉させない */
-        background-clip: padding-box;
+      background-clip: padding-box;
     }
   `
 })
