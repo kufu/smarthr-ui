@@ -257,16 +257,14 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
             updateDate(newDate)
           }}
           suffix={
-            <>
-              <InputSuffixLayout themes={themes}>
-                <InputSuffixWrapper themes={themes}>
-                  {showAlternative && (
-                    <InputSuffixText themes={themes}>{alternativeFormat}</InputSuffixText>
-                  )}
-                  <FaCalendarAltIcon color={caretIconColor} />
-                </InputSuffixWrapper>
-              </InputSuffixLayout>
-            </>
+            <InputSuffixLayout themes={themes}>
+              <InputSuffixWrapper themes={themes}>
+                {showAlternative && (
+                  <InputSuffixText themes={themes}>{alternativeFormat}</InputSuffixText>
+                )}
+                <FaCalendarAltIcon color={caretIconColor} />
+              </InputSuffixWrapper>
+            </InputSuffixLayout>
           }
           disabled={disabled}
           error={error}
