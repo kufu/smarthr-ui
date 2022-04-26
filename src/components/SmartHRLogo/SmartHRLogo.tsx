@@ -31,12 +31,12 @@ export const SmartHRLogo: VFC<Props & ElementProps> = ({
 
   const fillColor = useMemo(() => {
     switch (fill) {
-      case 'white':
-        return theme.color.WHITE
-      case 'brand':
-        return theme.color.BRAND
       case 'black':
         return '#000000'
+      case 'brand':
+        return theme.color.BRAND
+      default:
+        return theme.color.WHITE
     }
   }, [fill, theme.color])
 
