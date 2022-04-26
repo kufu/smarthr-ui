@@ -1,6 +1,7 @@
-import React, { HTMLAttributes, VFC } from 'react'
+import React, { HTMLAttributes, VFC, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
+import { useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 type Props = {
@@ -11,7 +12,7 @@ type Props = {
   /** コンポーネントの高さ */
   height?: number
   /** ロゴの色 */
-  fill?: string
+  fill?: 'white' | 'brand' | 'black'
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
@@ -21,18 +22,30 @@ export const SmartHRLogo: VFC<Props & ElementProps> = ({
   title = 'SmartHR',
   width = 150,
   height = 27,
-  fill = '#fff',
+  fill = 'white',
   className = '',
   ...props
 }) => {
   const classNames = useClassNames()
+  const theme = useTheme()
+
+  const fillColor = useMemo(() => {
+    switch (fill) {
+      case 'white':
+        return theme.color.WHITE
+      case 'brand':
+        return theme.color.BRAND
+      case 'black':
+        return '#000000'
+    }
+  }, [fill, theme.color])
 
   return (
     <Wrapper
       {...props}
       $width={width}
       $height={height}
-      $fill={fill}
+      $fill={fillColor}
       className={`${className} ${classNames.wrapper}`}
     >
       <svg role="img" viewBox="0, 0, 100, 19" width={width} height={height} aria-label={title}>
