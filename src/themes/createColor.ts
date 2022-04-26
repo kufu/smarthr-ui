@@ -34,29 +34,55 @@ export type CreatedColorTheme = Palette & {
 
 export type TextColors = 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK'
 
-const baseColor = {
-  TEXT_BLACK: '#23221f',
-  TEXT_WHITE: '#fff',
-  TEXT_GREY: '#706d65',
-  TEXT_DISABLED: '#c1bdb7',
-  TEXT_LINK: '#0071c1',
+const BLACK = '#23221f'
+const greyScale = {
+  GREY_5: '#f8f7f6',
+  GREY_6: '#f5f4f3',
+  GREY_7: '#f2f1f0',
+  GREY_9: '#edebe8',
+  GREY_20: '#d6d3d0',
+  GREY_30: '#c1bdb7',
+  GREY_65: '#706d65',
+}
+const transparencyScale = {
+  TRANSPARENCY_15: rgba(BLACK, 0.15),
+  TRANSPARENCY_30: rgba(BLACK, 0.3),
+  TRANSPARENCY_50: rgba(BLACK, 0.5),
+}
+const primitiveTokens = {
   WHITE: '#fff',
-  BORDER: '#d6d3d0',
-  ACTION_BACKGROUND: '#d6d3d0',
-  BACKGROUND: '#f8f7f6',
-  COLUMN: '#f8f7f6',
-  OVER_BACKGROUND: '#f2f1f0',
-  HEAD: '#edebe8',
-  BASE_GREY: '#f5f4f3',
-  MAIN: '#0077c7',
-  DANGER: '#e01e5a',
-  WARNING: '#ff8800',
-  SCRIM: 'rgba(0,0,0,0.5)',
-  OVERLAY: 'rgba(0,0,0,0.15)',
-  BRAND: '#00c4cc',
+  BLACK,
+  BLUE_100: '#0077c7',
+  BLUE_101: '#0071c1',
+  RED_100: '#e01e5a',
+  ORANGE_100: '#ff8800',
+  SMARTHR_BLUE: '#00c4cc',
 }
 
-export const defaultColor = { ...baseColor, OUTLINE: baseColor.MAIN }
+const semanticTokens = {
+  TEXT_BLACK: primitiveTokens.BLACK,
+  TEXT_WHITE: primitiveTokens.WHITE,
+  TEXT_GREY: greyScale.GREY_65,
+  TEXT_DISABLED: greyScale.GREY_30,
+  TEXT_LINK: primitiveTokens.BLUE_101,
+  WHITE: primitiveTokens.WHITE,
+  BACKGROUND: greyScale.GREY_5,
+  COLUMN: greyScale.GREY_5,
+  BASE_GREY: greyScale.GREY_6,
+  OVER_BACKGROUND: greyScale.GREY_7,
+  HEAD: greyScale.GREY_9,
+  BORDER: greyScale.GREY_20,
+  ACTION_BACKGROUND: greyScale.GREY_20,
+  MAIN: primitiveTokens.BLUE_100,
+  OUTLINE: primitiveTokens.BLUE_100,
+  DANGER: primitiveTokens.RED_100,
+  WARNING: primitiveTokens.ORANGE_100,
+  OVERLAY: transparencyScale.TRANSPARENCY_15,
+  SCRIM: transparencyScale.TRANSPARENCY_50,
+  BRAND: primitiveTokens.SMARTHR_BLUE,
+}
+
+export const defaultColor = { ...semanticTokens, ...greyScale, ...transparencyScale }
 
 export const createColor = (userColor: ColorProperty = {}) => {
   const created: CreatedColorTheme = merge(
