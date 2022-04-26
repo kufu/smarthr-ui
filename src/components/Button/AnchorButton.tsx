@@ -1,6 +1,7 @@
 import React, { AnchorHTMLAttributes, VFC } from 'react'
 
 import { BaseProps } from './types'
+import { useClassNames } from './useClassNames'
 import { ButtonWrapper } from './ButtonWrapper'
 import { ButtonInner } from './ButtonInner'
 
@@ -17,6 +18,8 @@ export const AnchorButton: VFC<BaseProps & ElementProps> = ({
   children,
   ...props
 }) => {
+  const classNames = useClassNames().anchorButton
+
   return (
     <ButtonWrapper
       {...props}
@@ -24,7 +27,7 @@ export const AnchorButton: VFC<BaseProps & ElementProps> = ({
       square={square}
       wide={wide}
       variant={variant}
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
       isAnchor
     >
       <ButtonInner prefix={prefix} suffix={suffix}>

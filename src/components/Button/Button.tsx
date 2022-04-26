@@ -1,6 +1,7 @@
 import React, { ButtonHTMLAttributes, VFC } from 'react'
 
 import { BaseProps } from './types'
+import { useClassNames } from './useClassNames'
 import { ButtonWrapper } from './ButtonWrapper'
 import { ButtonInner } from './ButtonInner'
 
@@ -17,6 +18,8 @@ export const Button: VFC<BaseProps & ElementProps> = ({
   children,
   ...props
 }) => {
+  const classNames = useClassNames().button
+
   return (
     <ButtonWrapper
       {...props}
@@ -24,7 +27,7 @@ export const Button: VFC<BaseProps & ElementProps> = ({
       square={square}
       wide={wide}
       variant={variant}
-      className={className}
+      className={`${className} ${classNames.wrapper}`}
     >
       <ButtonInner prefix={prefix} suffix={suffix}>
         {children}
