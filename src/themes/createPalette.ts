@@ -63,8 +63,8 @@ export const defaultPalette = {
   MAIN: '#0077c7',
   DANGER: '#e01e5a',
   WARNING: '#ff8800',
-  SCRIM: 'rgba(0,0,0,0.5)',
-  OVERLAY: 'rgba(0,0,0,0.15)',
+  SCRIM: rgba('#23221f', 0.5),
+  OVERLAY: rgba('#23221f', 0.15),
   BRAND: '#00c4cc',
 }
 
