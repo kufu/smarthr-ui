@@ -9,6 +9,7 @@ import { useClassNames } from './useClassNames'
 type Props = {
   message: ReactNode
   id: string
+  isVisible: boolean
   parentRect: DOMRect
   isIcon?: boolean
   isMultiLine?: boolean
@@ -19,6 +20,7 @@ type Props = {
 export const TooltipPortal: VFC<Props> = ({
   message,
   id,
+  isVisible,
   parentRect,
   isIcon = false,
   isMultiLine = false,
@@ -30,7 +32,7 @@ export const TooltipPortal: VFC<Props> = ({
   const [rect, setRect] = useState({
     top: 0,
     left: 0,
-    $width: isMultiLine ? parentRect.width : 0,
+    $width: 0,
     $height: 0,
   })
   const [actualHorizontal, setActualHorizontal] = useState<'left' | 'center' | 'right' | null>(
@@ -82,7 +84,7 @@ export const TooltipPortal: VFC<Props> = ({
   }, [horizontal, parentRect, vertical])
 
   useLayoutEffect(() => {
-    if (!portalRef.current || !actualHorizontal || !actualVertical) {
+    if (!isVisible || !portalRef.current || !actualHorizontal || !actualVertical) {
       return
     }
     const { offsetWidth, offsetHeight } = portalRef.current
@@ -95,12 +97,11 @@ export const TooltipPortal: VFC<Props> = ({
         },
         vertical: actualVertical,
         horizontal: actualHorizontal,
-        isMultiLine,
         isIcon,
         outerMargin,
       }),
     )
-  }, [actualHorizontal, actualVertical, isIcon, isMultiLine, parentRect])
+  }, [actualHorizontal, actualVertical, isIcon, isVisible, parentRect])
 
   const classNames = useClassNames()
 
@@ -111,7 +112,9 @@ export const TooltipPortal: VFC<Props> = ({
       themes={theme}
       role="tooltip"
       className={classNames.popup}
+      aria-hidden={!isVisible}
       {...rect}
+      maxWidth={isMultiLine ? parentRect.width : undefined}
     >
       <StyledBalloon
         horizontal={actualHorizontal || 'left'}
@@ -129,9 +132,10 @@ const Container = styled.div<{
   left: number
   $width: number
   $height: number
+  maxWidth?: number
   themes: Theme
 }>`
-  ${({ top, left, $width, $height, themes }) => {
+  ${({ top, left, $width, $height, maxWidth, themes }) => {
     return css`
       position: absolute;
       top: ${top}px;
@@ -144,7 +148,14 @@ const Container = styled.div<{
       css`
         height: ${$height}px;
       `}
-        z-index: ${themes.zIndex.OVERLAP};
+      ${maxWidth &&
+      css`
+        max-width: ${maxWidth}px;
+      `}
+      z-index: ${themes.zIndex.OVERLAP};
+      &[aria-hidden='true'] {
+        display: none;
+      }
     `
   }}
 `
