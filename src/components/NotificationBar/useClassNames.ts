@@ -11,6 +11,7 @@ export const useClassNames = () => {
       wrapper: generate(),
       actions: generate('actions'),
       closeButton: generate('closeButton'),
+      rightArea: generate('rightArea'),
     }),
     [generate],
   )

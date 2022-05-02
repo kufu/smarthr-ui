@@ -90,7 +90,7 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
         <Icon color={iconColor} />
       </IconLayout>
       <StyledText leading="TIGHT">{message}</StyledText>
-      <RightArea themes={theme}>
+      <RightArea themes={theme} className={classNames.rightArea}>
         {children && (
           <ActionWrapper
             themes={theme}
