@@ -148,7 +148,7 @@ const Container = styled.div<{
       css`
         height: ${$height}px;
       `}
-      ${maxWidth &&
+      ${maxWidth !== undefined &&
       css`
         max-width: ${maxWidth}px;
       `}
