@@ -11,7 +11,7 @@ import {
   FaInfoCircleIcon,
   FaTimesIcon,
 } from '../Icon'
-import { Cluster, Sidebar } from '../Layout'
+import { Cluster } from '../Layout'
 import { Text } from '../Text'
 import { TextButton } from '../Button'
 
@@ -86,33 +86,33 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
       themes={theme}
       colorSet={colorSet}
     >
-      <ContentsWrapper themes={theme}>
+      <IconLayout>
         <Icon color={iconColor} />
-        <MessageWrapper align="center" gap={{ row: 0.75, column: 1 }} right>
-          <Text leading="TIGHT">{message}</Text>
-          {children && (
-            <ActionWrapper
-              themes={theme}
-              className={classNames.actions}
-              align="center"
-              justify="flex-end"
-            >
-              {children}
-            </ActionWrapper>
-          )}
-        </MessageWrapper>
-      </ContentsWrapper>
-      {onClose && (
-        <CloseButton
-          colorSet={colorSet}
-          themes={theme}
-          onClick={onClose}
-          className={classNames.closeButton}
-          size="s"
-        >
-          <FaTimesIcon visuallyHiddenText="閉じる" />
-        </CloseButton>
-      )}
+      </IconLayout>
+      <StyledText leading="TIGHT">{message}</StyledText>
+      <RightArea themes={theme}>
+        {children && (
+          <ActionWrapper
+            themes={theme}
+            className={classNames.actions}
+            align="center"
+            justify="flex-end"
+          >
+            {children}
+          </ActionWrapper>
+        )}
+        {onClose && (
+          <CloseButton
+            colorSet={colorSet}
+            themes={theme}
+            onClick={onClose}
+            className={classNames.closeButton}
+            size="s"
+          >
+            <FaTimesIcon visuallyHiddenText="閉じる" />
+          </CloseButton>
+        )}
+      </RightArea>
     </Wrapper>
   )
 }
@@ -125,40 +125,40 @@ const Wrapper = styled.div<{
     display: flex;
     gap: ${spacingByChar(0.5)};
     align-items: center;
-    justify-content: space-between;
     background-color: ${bgColor};
     padding: ${spacingByChar(0.75)};
     color: ${fgColor};
   `,
 )
-const ContentsWrapper = styled.div<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) => css`
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    gap: ${spacingByChar(0.5)};
-
-    /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
-    min-width: 0;
-
-    .smarthr-ui-Icon {
-      flex-shrink: 0;
-    }
-  `,
-)
-
-const MessageWrapper = styled(Sidebar)`
+const IconLayout = styled.div`
+  & > svg {
+    display: block;
+  }
+`
+const StyledText = styled(Text)`
   flex-grow: 1;
 
   /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
   min-width: 0;
 `
+const RightArea = styled.div<{
+  themes: Theme
+}>(
+  ({ themes: { spacingByChar } }) => css`
+    display: flex;
+    gap: ${spacingByChar(0.5)};
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: auto;
+  `,
+)
 const ActionWrapper = styled(Cluster)<{
   themes: Theme
 }>(
   ({ themes: { spacingByChar } }) => css`
     margin-top: ${spacingByChar(-0.5)};
     margin-bottom: ${spacingByChar(-0.5)};
+    margin-left: ${spacingByChar(0.25)};
   `,
 )
 const CloseButton = styled(TextButton)<{
