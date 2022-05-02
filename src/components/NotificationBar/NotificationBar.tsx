@@ -158,7 +158,7 @@ const ActionWrapper = styled(Cluster)<{
   ({ themes: { spacingByChar } }) => css`
     margin-top: ${spacingByChar(-0.5)};
     margin-bottom: ${spacingByChar(-0.5)};
-    margin-left: ${spacingByChar(0.25)};
+    margin-left: ${spacingByChar(0.5)};
   `,
 )
 const CloseButton = styled(TextButton)<{
