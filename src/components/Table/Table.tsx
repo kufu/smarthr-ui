@@ -58,6 +58,10 @@ const Wrapper = styled.table<{ fixedHead: boolean; themes: Theme }>`
         `}
       }
 
+      tbody {
+        background-color: ${color.WHITE};
+      }
+
       th {
         background-color: ${color.HEAD};
       }

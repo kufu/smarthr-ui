@@ -4,9 +4,6 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { Table } from './Table'
-import { Body } from './Body'
-import { Head } from './Head'
-import { Row } from './Row'
 import { BulkActionRow, Td, Th } from './'
 import { FaArrowDownIcon } from '../Icon'
 import { CheckBox as CheckBoxComponent } from '../CheckBox'
@@ -87,7 +84,7 @@ storiesOf('Table', module)
         table
         <Table>
           <thead>
-            <Row>
+            <tr>
               <Th>
                 <VisuallyHiddenText>行を選択</VisuallyHiddenText>
                 <label htmlFor="tableAllCheckBox">
@@ -106,13 +103,13 @@ storiesOf('Table', module)
               <Th>Carbs (g)</Th>
               <Th>Protein (g)</Th>
               <Th>Button</Th>
-            </Row>
+            </tr>
             <BulkActionRow>Bulk action area</BulkActionRow>
           </thead>
-          <Body>
+          <tbody>
             {data.map(({ name, calories, fat, carbs, protein }) => {
               return (
-                <Row key={name}>
+                <tr key={name}>
                   <Td>
                     <label htmlFor="tableCheckBox">
                       <VisuallyHiddenText>{name}</VisuallyHiddenText>
@@ -127,10 +124,10 @@ storiesOf('Table', module)
                   <Td>
                     <Button size="s">Button</Button>
                   </Td>
-                </Row>
+                </tr>
               )
             })}
-          </Body>
+          </tbody>
         </Table>
       </li>
       <li>
@@ -138,7 +135,7 @@ storiesOf('Table', module)
         <div style={{ overflow: 'clip' }}>
           <Table fixedHead>
             <thead>
-              <Row>
+              <tr>
                 <Th>
                   <VisuallyHiddenText>行を選択</VisuallyHiddenText>
                   <label htmlFor="tableAllCheckBox">
@@ -157,13 +154,13 @@ storiesOf('Table', module)
                 <Th>Carbs (g)</Th>
                 <Th>Protein (g)</Th>
                 <Th>Button</Th>
-              </Row>
+              </tr>
               <BulkActionRow>Bulk action area</BulkActionRow>
             </thead>
-            <Body>
+            <tbody>
               {data.map(({ name, calories, fat, carbs, protein }) => {
                 return (
-                  <Row key={name}>
+                  <tr key={name}>
                     <Td>
                       <label htmlFor="tableCheckBox">
                         <VisuallyHiddenText>{name}</VisuallyHiddenText>
@@ -178,74 +175,74 @@ storiesOf('Table', module)
                     <Td>
                       <Button size="s">Button</Button>
                     </Td>
-                  </Row>
+                  </tr>
                 )
               })}
-            </Body>
+            </tbody>
           </Table>
         </div>
       </li>
       <li>
         colSpan / rowSpan
         <Table>
-          <Head>
-            <Row>
+          <thead>
+            <tr>
               <Th colSpan={3}>colSpan=3</Th>
               <Th>cell</Th>
               <Th>cell</Th>
               <Th>cell</Th>
-            </Row>
-          </Head>
-          <Body>
-            <Row>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
-            </Row>
-            <Row>
+            </tr>
+            <tr>
               <Td rowSpan={2}>rowSpan=2</Td>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
-            </Row>
-            <Row>
+            </tr>
+            <tr>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
-            </Row>
-          </Body>
+            </tr>
+          </tbody>
         </Table>
       </li>
       <li>
         Table on Base
         <Base>
           <Table>
-            <Head>
-              <Row>
+            <thead>
+              <tr>
                 <Th>cell</Th>
                 <Th>cell</Th>
                 <Th>cell</Th>
-              </Row>
-            </Head>
-            <Body>
-              <Row>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
                 <Td>cell</Td>
                 <Td>cell</Td>
                 <Td>cell</Td>
-              </Row>
-              <Row>
+              </tr>
+              <tr>
                 <Td>cell</Td>
                 <Td>cell</Td>
                 <Td>cell</Td>
-              </Row>
-              <Row>
+              </tr>
+              <tr>
                 <Td>cell</Td>
                 <Td>cell</Td>
                 <Td>
@@ -253,13 +250,13 @@ storiesOf('Table', module)
                   <br />
                   line
                 </Td>
-              </Row>
-              <Row>
+              </tr>
+              <tr>
                 <Td nullable={true}></Td>
                 <Td nullable={true}>not null</Td>
                 <Td nullable={false}></Td>
-              </Row>
-            </Body>
+              </tr>
+            </tbody>
           </Table>
         </Base>
       </li>
