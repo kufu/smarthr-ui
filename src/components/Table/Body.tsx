@@ -6,6 +6,9 @@ import { useClassNames } from './useClassNames'
 
 type ElementType = HTMLAttributes<HTMLTableSectionElement>
 
+/**
+ * @deprecated Body コンポーネントは非推奨です。tbody 要素に置き換えてください。
+ */
 export const Body: VFC<ElementType> = ({ className = '', children, ...props }) => {
   const classNames = useClassNames().body
   const theme = useTheme()
