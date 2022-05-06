@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
-import { Body, Cell, Head, Row, Table } from './'
+import { Body, Cell, Head, Row, Table, Td, Th } from './'
 
 export function useClassNames() {
   const generateForTable = useClassNameGenerator(Table.displayName || 'Table')
@@ -29,5 +29,25 @@ export function useClassNames() {
       },
     }),
     [generateForBody, generateForCell, generateForHead, generateForRow, generateForTable],
+  )
+}
+
+export function useThClassNames() {
+  const generate = useClassNameGenerator(Th.displayName || 'Th')
+  return useMemo(
+    () => ({
+      wrapper: generate(),
+    }),
+    [generate],
+  )
+}
+
+export function useTdClassNames() {
+  const generate = useClassNameGenerator(Td.displayName || 'Td')
+  return useMemo(
+    () => ({
+      wrapper: generate(),
+    }),
+    [generate],
   )
 }
