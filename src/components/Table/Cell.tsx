@@ -18,6 +18,9 @@ export type Props = {
 }
 type ElementProps = Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof Props>
 
+/**
+ * @deprecated Cell コンポーネントは非推奨です。td 要素または th 要素に置き換えてください。
+ */
 export const Cell: VFC<Props & ElementProps> = ({
   className = '',
   children,
