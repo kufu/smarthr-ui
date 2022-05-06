@@ -7,7 +7,7 @@ import { Table } from './Table'
 import { Body } from './Body'
 import { Head } from './Head'
 import { Row } from './Row'
-import { Td, Th } from './'
+import { BulkActionRow, Td, Th } from './'
 import { FaArrowDownIcon } from '../Icon'
 import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { SecondaryButton as Button } from '../Button'
@@ -86,7 +86,7 @@ storiesOf('Table', module)
       <li>
         table
         <Table>
-          <Head bulkActionArea={'Bulk action area'}>
+          <thead>
             <Row>
               <Th>
                 <VisuallyHiddenText>行を選択</VisuallyHiddenText>
@@ -107,7 +107,8 @@ storiesOf('Table', module)
               <Th>Protein (g)</Th>
               <Th>Button</Th>
             </Row>
-          </Head>
+            <BulkActionRow>Bulk action area</BulkActionRow>
+          </thead>
           <Body>
             {data.map(({ name, calories, fat, carbs, protein }) => {
               return (
@@ -135,8 +136,8 @@ storiesOf('Table', module)
       <li>
         table fixed header
         <div style={{ overflow: 'clip' }}>
-          <Table>
-            <Head bulkActionArea={'Bulk action area'} fixed={true}>
+          <Table fixedHead>
+            <thead>
               <Row>
                 <Th>
                   <VisuallyHiddenText>行を選択</VisuallyHiddenText>
@@ -157,7 +158,8 @@ storiesOf('Table', module)
                 <Th>Protein (g)</Th>
                 <Th>Button</Th>
               </Row>
-            </Head>
+              <BulkActionRow>Bulk action area</BulkActionRow>
+            </thead>
             <Body>
               {data.map(({ name, calories, fat, carbs, protein }) => {
                 return (
