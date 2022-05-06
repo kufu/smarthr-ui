@@ -28,11 +28,18 @@ export const BulkActionRow: VFC<Props & ElementProps> = ({
 const Cell = styled.td<{ themes: Theme }>(({ themes }) => {
   const { fontSize, border, color, spacingByChar } = themes
   return css`
-    &&& {
+    && {
       border-top: ${border.shorthand};
       background-color: ${color.ACTION_BACKGROUND};
       padding: ${spacingByChar(1)};
       font-size: ${fontSize.M};
+
+      /** Table での td に対するスタイルをキャンセル */
+      color: revert;
+      height: revert;
+      line-height: revert;
+      vertical-align: revert;
+      box-sizing: revert;
     }
   `
 })
