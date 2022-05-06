@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
-import { Body, Cell, Head, Row, Table } from './'
+import { Body, BulkActionRow, Cell, Head, Row, Table } from './'
 
 export function useClassNames() {
   const generateForTable = useClassNameGenerator(Table.displayName || 'Table')
@@ -29,5 +29,15 @@ export function useClassNames() {
       },
     }),
     [generateForBody, generateForCell, generateForHead, generateForRow, generateForTable],
+  )
+}
+
+export function useBulkActionRowCalssNames() {
+  const generate = useClassNameGenerator(BulkActionRow.displayName || 'BulkActionRow')
+  return useMemo(
+    () => ({
+      wrapper: generate(),
+    }),
+    [generate],
   )
 }
