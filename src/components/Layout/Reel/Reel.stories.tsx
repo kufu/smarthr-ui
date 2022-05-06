@@ -5,7 +5,7 @@ import { Story } from '@storybook/react'
 import { Reel } from '.'
 import { Stack } from '../Stack'
 import { TabBar, TabItem } from '../../TabBar'
-import { Body, Cell, Head, Row, Table } from '../../Table'
+import { Table } from '../../Table'
 import { SecondaryButton } from '../../Button'
 import { FaPenIcon } from '../../Icon'
 import { StatusLabel } from '../../StatusLabel'
@@ -58,200 +58,200 @@ export const ReelStory: Story = () => {
         </Heading>
         <Reel>
           <Table>
-            <Head>
-              <Row>
-                <Cell>社員番号</Cell>
-                <Cell>ステータス</Cell>
-                <Cell>姓</Cell>
-                <Cell>名</Cell>
-                <Cell>姓（カタカナ）</Cell>
-                <Cell>名（カタカナ）</Cell>
-                <Cell>生年月日</Cell>
-                <Cell>操作</Cell>
-              </Row>
-            </Head>
-            <Body>
-              <Row>
+            <thead>
+              <tr>
+                <th>社員番号</th>
+                <th>ステータス</th>
+                <th>姓</th>
+                <th>名</th>
+                <th>姓（カタカナ）</th>
+                <th>名（カタカナ）</th>
+                <th>生年月日</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
                 <th>000111</th>
-                <Cell>
+                <td>
                   <StatusLabel type="process">入社手続き中</StatusLabel>
-                </Cell>
-                <Cell>草野</Cell>
-                <Cell>栄一郎</Cell>
-                <Cell>クサノ</Cell>
-                <Cell>エイイチロウ</Cell>
-                <Cell>
+                </td>
+                <td>草野</td>
+                <td>栄一郎</td>
+                <td>クサノ</td>
+                <td>エイイチロウ</td>
+                <td>
                   <time dateTime="1971-03-01">1971/03/01</time>
-                </Cell>
-                <Cell>
+                </td>
+                <td>
                   <SecondaryButton prefix={<FaPenIcon />} size="s">
                     編集
                   </SecondaryButton>
-                </Cell>
-              </Row>
-              <Row>
+                </td>
+              </tr>
+              <tr>
                 <th>000110</th>
-                <Cell>
+                <td>
                   <StatusLabel type="done">在籍</StatusLabel>
-                </Cell>
-                <Cell>岩下</Cell>
-                <Cell>香澄</Cell>
-                <Cell>イワシタ</Cell>
-                <Cell>カスミ</Cell>
-                <Cell>
+                </td>
+                <td>岩下</td>
+                <td>香澄</td>
+                <td>イワシタ</td>
+                <td>カスミ</td>
+                <td>
                   <time dateTime="1985-01-01">1985/01/01</time>
-                </Cell>
-                <Cell>
+                </td>
+                <td>
                   <SecondaryButton prefix={<FaPenIcon />} size="s">
                     編集
                   </SecondaryButton>
-                </Cell>
-              </Row>
-              <Row>
+                </td>
+              </tr>
+              <tr>
                 <th>000109</th>
-                <Cell>
+                <td>
                   <StatusLabel type="done">在籍</StatusLabel>
-                </Cell>
-                <Cell>島袋</Cell>
-                <Cell>月代</Cell>
-                <Cell>シマブクロ</Cell>
-                <Cell>ツキヨ</Cell>
-                <Cell>
+                </td>
+                <td>島袋</td>
+                <td>月代</td>
+                <td>シマブクロ</td>
+                <td>ツキヨ</td>
+                <td>
                   <time dateTime="1980-01-01">1980/01/01</time>
-                </Cell>
-                <Cell>
+                </td>
+                <td>
                   <SecondaryButton prefix={<FaPenIcon />} size="s">
                     編集
                   </SecondaryButton>
-                </Cell>
-              </Row>
-              <Row>
+                </td>
+              </tr>
+              <tr>
                 <th>000108</th>
-                <Cell>
+                <td>
                   <StatusLabel type="done">在籍</StatusLabel>
-                </Cell>
-                <Cell>永山</Cell>
-                <Cell>侑太郎</Cell>
-                <Cell>ナガヤマ</Cell>
-                <Cell>ユウタロウ</Cell>
-                <Cell>
+                </td>
+                <td>永山</td>
+                <td>侑太郎</td>
+                <td>ナガヤマ</td>
+                <td>ユウタロウ</td>
+                <td>
                   <time dateTime="1971-03-01">1984/04/04</time>
-                </Cell>
-                <Cell>
+                </td>
+                <td>
                   <SecondaryButton prefix={<FaPenIcon />} size="s">
                     編集
                   </SecondaryButton>
-                </Cell>
-              </Row>
-              <Row>
+                </td>
+              </tr>
+              <tr>
                 <th>000107</th>
-                <Cell>
+                <td>
                   <StatusLabel type="done">在籍</StatusLabel>
-                </Cell>
-                <Cell>上原</Cell>
-                <Cell>玲子</Cell>
-                <Cell>ウエハラ</Cell>
-                <Cell>レイコ</Cell>
-                <Cell>
+                </td>
+                <td>上原</td>
+                <td>玲子</td>
+                <td>ウエハラ</td>
+                <td>レイコ</td>
+                <td>
                   <time dateTime="1985-05-05">1985/05/05</time>
-                </Cell>
-                <Cell>
+                </td>
+                <td>
                   <SecondaryButton prefix={<FaPenIcon />} size="s">
                     編集
                   </SecondaryButton>
-                </Cell>
-              </Row>
-              <Row>
+                </td>
+              </tr>
+              <tr>
                 <th>000106</th>
-                <Cell>
+                <td>
                   <StatusLabel type="done">在籍</StatusLabel>
-                </Cell>
-                <Cell>Robert</Cell>
-                <Cell>Smith</Cell>
-                <Cell>ロバート</Cell>
-                <Cell>スミス</Cell>
-                <Cell>
+                </td>
+                <td>Robert</td>
+                <td>Smith</td>
+                <td>ロバート</td>
+                <td>スミス</td>
+                <td>
                   <time dateTime="1986-06-06">1986/06/06</time>
-                </Cell>
-                <Cell>
+                </td>
+                <td>
                   <SecondaryButton prefix={<FaPenIcon />} size="s">
                     編集
                   </SecondaryButton>
-                </Cell>
-              </Row>
-              <Row>
+                </td>
+              </tr>
+              <tr>
                 <th>000105</th>
-                <Cell>
+                <td>
                   <StatusLabel type="done">在籍</StatusLabel>
-                </Cell>
-                <Cell>大和</Cell>
-                <Cell>真</Cell>
-                <Cell>ヤマト</Cell>
-                <Cell>マコト</Cell>
-                <Cell>
+                </td>
+                <td>大和</td>
+                <td>真</td>
+                <td>ヤマト</td>
+                <td>マコト</td>
+                <td>
                   <time dateTime="1991-08-17">1991/08/17</time>
-                </Cell>
-                <Cell>
+                </td>
+                <td>
                   <SecondaryButton prefix={<FaPenIcon />} size="s">
                     編集
                   </SecondaryButton>
-                </Cell>
-              </Row>
-              <Row>
+                </td>
+              </tr>
+              <tr>
                 <th>000104</th>
-                <Cell>
+                <td>
                   <StatusLabel type="done">在籍</StatusLabel>
-                </Cell>
-                <Cell>松原</Cell>
-                <Cell>英太</Cell>
-                <Cell>マツバラ</Cell>
-                <Cell>エイタ</Cell>
-                <Cell>
+                </td>
+                <td>松原</td>
+                <td>英太</td>
+                <td>マツバラ</td>
+                <td>エイタ</td>
+                <td>
                   <time dateTime="1990-04-01">1990/04/01</time>
-                </Cell>
-                <Cell>
+                </td>
+                <td>
                   <SecondaryButton prefix={<FaPenIcon />} size="s">
                     編集
                   </SecondaryButton>
-                </Cell>
-              </Row>
-              <Row>
+                </td>
+              </tr>
+              <tr>
                 <th>000103</th>
-                <Cell>
+                <td>
                   <StatusLabel type="done">在籍</StatusLabel>
-                </Cell>
-                <Cell>阿久津</Cell>
-                <Cell>雄一</Cell>
-                <Cell>アクツ</Cell>
-                <Cell>ユウイチ</Cell>
-                <Cell>
+                </td>
+                <td>阿久津</td>
+                <td>雄一</td>
+                <td>アクツ</td>
+                <td>ユウイチ</td>
+                <td>
                   <time dateTime="1980-05-21">1980/05/21</time>
-                </Cell>
-                <Cell>
+                </td>
+                <td>
                   <SecondaryButton prefix={<FaPenIcon />} size="s">
                     編集
                   </SecondaryButton>
-                </Cell>
-              </Row>
-              <Row>
+                </td>
+              </tr>
+              <tr>
                 <th>000102</th>
-                <Cell>
+                <td>
                   <StatusLabel type="done">退職</StatusLabel>
-                </Cell>
-                <Cell>高美</Cell>
-                <Cell>ひなこ</Cell>
-                <Cell>タカミ</Cell>
-                <Cell>ヒナコ</Cell>
-                <Cell>
+                </td>
+                <td>高美</td>
+                <td>ひなこ</td>
+                <td>タカミ</td>
+                <td>ヒナコ</td>
+                <td>
                   <time dateTime="1977-05-22">1977/05/22</time>
-                </Cell>
-                <Cell>
+                </td>
+                <td>
                   <SecondaryButton prefix={<FaPenIcon />} size="s">
                     編集
                   </SecondaryButton>
-                </Cell>
-              </Row>
-            </Body>
+                </td>
+              </tr>
+            </tbody>
           </Table>
         </Reel>
       </Stack>
