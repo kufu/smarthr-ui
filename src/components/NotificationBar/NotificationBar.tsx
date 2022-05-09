@@ -149,7 +149,6 @@ const RightArea = styled.div<{
     gap: ${spacingByChar(0.5)};
     align-items: center;
     flex-shrink: 0;
-    margin-left: auto;
   `,
 )
 const ActionWrapper = styled(Cluster)<{
