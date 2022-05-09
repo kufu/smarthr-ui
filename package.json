@@ -13,7 +13,7 @@
     "react-transition-group": "^4.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.9",
+    "@babel/core": "^7.17.10",
     "@commitlint/cli": "^16.2.4",
     "@commitlint/config-conventional": "^16.2.4",
     "@storybook/addon-a11y": "^6.4.22",
@@ -33,7 +33,7 @@
     "@types/react-test-renderer": "^17.0.2",
     "@types/react-transition-group": "^4.4.4",
     "@types/styled-components": "^5.1.25",
-    "babel-loader": "^8.2.4",
+    "babel-loader": "^8.2.5",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
     "eslint": "^8.14.0",
     "eslint-config-smarthr": "^6.0.7",
@@ -148,6 +148,6 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "@types/react": "^17.0.44",
-    "@babel/helper-compilation-targets": "^7.17.7"
+    "@babel/helper-compilation-targets": "^7.17.10"
   }
 }
