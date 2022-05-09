@@ -88,7 +88,7 @@ export const WithChildren: Story = () => {
 
   return (
     <Wrapper themes={theme}>
-      <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret>
+      <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
         <Child>Some child components</Child>
       </AppNavi>
     </Wrapper>
@@ -101,7 +101,7 @@ export const WithoutChildren: Story = () => {
 
   return (
     <Wrapper themes={theme}>
-      <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret />
+      <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret />
     </Wrapper>
   )
 }
@@ -124,7 +124,7 @@ export const UnclickableCurrent: Story = () => {
               return item
             })}
             isCurrentUnclickable
-            displayDrodownCaret
+            displayDropdownCaret
           />
         </InnerWrapper>
       ))}
@@ -149,7 +149,7 @@ export const ContainerScrollX: Story = () => {
 
   return (
     <OverflowWrapper themes={theme}>
-      <AppNavi label="機能名" buttons={withoutIconButtons} displayDrodownCaret>
+      <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
         <Child>Some child components</Child>
       </AppNavi>
     </OverflowWrapper>
