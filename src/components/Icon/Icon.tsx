@@ -344,7 +344,7 @@ export interface IconProps {
   /**
    * アイコンの大きさ
    */
-  size?: number
+  size?: number | string
 }
 
 type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
