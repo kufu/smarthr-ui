@@ -49,7 +49,7 @@ const textStyle = css`
       background-color: transparent;
       color: ${color.TEXT_BLACK};
 
-      &:focus,
+      &:focus-visible,
       &:hover {
         background-color: ${color.hoverColor(color.WHITE)};
         color: ${color.TEXT_BLACK};

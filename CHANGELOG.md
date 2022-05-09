@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [20.4.0](https://github.com/kufu/smarthr-ui/compare/v20.3.0...v20.4.0) (2022-04-25)
+
+
+### Features
+
+* :focus を :focus-visible に置き換える ([#2442](https://github.com/kufu/smarthr-ui/issues/2442)) ([34d27de](https://github.com/kufu/smarthr-ui/commit/34d27def8fb02c54627379ad8b4d673d6aaa784b))
+
+
+### Bug Fixes
+
+* NotificationBar の閉じるボタンが縮まないように修正 ([#2441](https://github.com/kufu/smarthr-ui/issues/2441)) ([2ff5ffc](https://github.com/kufu/smarthr-ui/commit/2ff5ffc1e8678020b3f60e54e2c02de25db654f2))
+
 ## [20.3.0](https://github.com/kufu/smarthr-ui/compare/v20.2.1...v20.3.0) (2022-04-18)
 
 

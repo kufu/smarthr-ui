@@ -42,7 +42,7 @@ const dangerStyle = css`
       background-color: ${color.DANGER};
       color: ${color.TEXT_WHITE};
 
-      &:focus,
+      &:focus-visible,
       &:hover {
         border-color: ${color.hoverColor(color.DANGER)};
         background-color: ${color.hoverColor(color.DANGER)};

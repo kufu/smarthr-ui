@@ -100,8 +100,8 @@ const Input = styled.input<{ themes: Theme }>`
       &:hover + span {
         box-shadow: 0 0 0 2px ${transparentize(0.78, color.MAIN)};
       }
-      &:focus + span {
-        box-shadow: ${shadow.OUTLINE};
+      &:focus-visible + span {
+        box-shadow: ${shadow.focusIndicatorStyles};
       }
     `
   }}
