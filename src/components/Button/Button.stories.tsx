@@ -3,116 +3,100 @@ import React from 'react'
 import { action } from '@storybook/addon-actions'
 import styled, { css } from 'styled-components'
 
-import {
-  DangerButton,
-  DangerButtonAnchor,
-  PrimaryButton,
-  PrimaryButtonAnchor,
-  SecondaryButton,
-  SecondaryButtonAnchor,
-  SkeletonButton,
-  SkeletonButtonAnchor,
-  TextButton,
-  TextButtonAnchor,
-} from '.'
+import { AnchorButton, Button } from '.'
 import { FaPlusCircleIcon, FaPlusIcon, FaPlusSquareIcon } from '../Icon'
-import { AnchorProps, ButtonProps } from './BaseButton'
 import { LineUp, Stack } from '../Layout'
 
 export default {
   title: 'Button',
-  component: PrimaryButton,
+  component: Button,
   subcomponents: {
-    PrimaryButtonAnchor,
-    SecondaryButton,
-    SecondaryButtonAnchor,
-    DangerButton,
-    DangerButtonAnchor,
-    SkeletonButton,
-    SkeletonButtonAnchor,
-    TextButton,
-    TextButtonAnchor,
+    AnchorButton,
   },
 }
 
+type ButtonProps = React.ComponentProps<typeof Button>
+type AnchorButtonProps = React.ComponentProps<typeof AnchorButton>
+
 export const _PrimaryButton: Story = () => {
-  return renderButtons(PrimaryButton, ExPrimaryButton)
+  return renderButtons('primary')
 }
 
 export const _PrimaryButtonAnchor: Story = () => {
-  return renderAnchors(PrimaryButtonAnchor, ExPrimaryButtonAnchor)
+  return renderAnchors('primary')
 }
 
 export const _SecondaryButton: Story = () => {
-  return renderButtons(SecondaryButton, ExSecondaryButton)
+  return renderButtons('secondary')
 }
 
 export const _SecondaryButtonAnchor: Story = () => {
-  return renderAnchors(SecondaryButtonAnchor, ExSecondaryButtonAnchor)
+  return renderAnchors('secondary')
 }
 
 export const _DangerButton: Story = () => {
-  return renderButtons(DangerButton, ExDangerButton)
+  return renderButtons('danger')
 }
 
 export const _DangerButtonAnchor: Story = () => {
-  return renderAnchors(DangerButtonAnchor, ExDangerButtonAnchor)
+  return renderAnchors('danger')
 }
 
 export const _SkeletonButton: Story = () => {
-  return <DarkBackground>{renderButtons(SkeletonButton, ExSkeletonButton)}</DarkBackground>
+  return <DarkBackground>{renderButtons('skeleton')}</DarkBackground>
 }
 
 export const _SkeletonButtonAnchor: Story = () => {
-  return (
-    <DarkBackground>{renderAnchors(SkeletonButtonAnchor, ExSkeletonButtonAnchor)}</DarkBackground>
-  )
+  return <DarkBackground>{renderAnchors('skeleton')}</DarkBackground>
 }
 
 export const _TextButton: Story = () => {
-  return renderButtons(TextButton, ExTextButton, true)
+  return renderButtons('text', true)
 }
 
 export const _TextButtonAnchor: Story = () => {
-  return renderAnchors(TextButtonAnchor, ExTextButtonAnchor, true)
+  return renderAnchors('text', true)
 }
 
-function renderButtons(
-  Button: React.VFC<ButtonProps>,
-  ExButton: React.VFC<ButtonProps>,
-  noSquare = false,
-) {
+function renderButtons(variant: ButtonProps['variant'], noSquare = false) {
   return (
     <List>
       <dt>Default</dt>
       <dd>
         <Stack>
           <WrapLineUp vAlign="center">
-            <Button onClick={action('clicked')}>ボタン</Button>
-            <Button prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            <Button variant={variant} onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
+            <Button variant={variant} prefix={<FaPlusIcon />} onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button variant={variant} suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
             {!noSquare && (
-              <Button square onClick={action('clicked')}>
+              <Button variant={variant} square onClick={action('clicked')}>
                 <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Button>
             )}
           </WrapLineUp>
           <WrapLineUp vAlign="center">
-            <Button disabled onClick={action('clicked')}>
+            <Button variant={variant} disabled onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button disabled prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            <Button variant={variant} disabled prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button disabled suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
+            <Button
+              variant={variant}
+              disabled
+              suffix={<FaPlusSquareIcon />}
+              onClick={action('clicked')}
+            >
               ボタン
             </Button>
             {!noSquare && (
-              <Button disabled square onClick={action('clicked')}>
+              <Button variant={variant} disabled square onClick={action('clicked')}>
                 <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Button>
             )}
@@ -124,33 +108,50 @@ function renderButtons(
       <dd>
         <Stack>
           <WrapLineUp vAlign="center">
-            <Button size="s" onClick={action('clicked')}>
+            <Button variant={variant} size="s" onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button size="s" prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            <Button variant={variant} size="s" prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button size="s" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
+            <Button
+              variant={variant}
+              size="s"
+              suffix={<FaPlusSquareIcon />}
+              onClick={action('clicked')}
+            >
               ボタン
             </Button>
             {!noSquare && (
-              <Button size="s" square onClick={action('clicked')}>
+              <Button variant={variant} size="s" square onClick={action('clicked')}>
                 <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Button>
             )}
           </WrapLineUp>
           <WrapLineUp vAlign="center">
-            <Button disabled size="s" onClick={action('clicked')}>
+            <Button variant={variant} disabled size="s" onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button disabled size="s" prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            <Button
+              variant={variant}
+              disabled
+              size="s"
+              prefix={<FaPlusIcon />}
+              onClick={action('clicked')}
+            >
               ボタン
             </Button>
-            <Button disabled size="s" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
+            <Button
+              variant={variant}
+              disabled
+              size="s"
+              suffix={<FaPlusSquareIcon />}
+              onClick={action('clicked')}
+            >
               ボタン
             </Button>
             {!noSquare && (
-              <Button disabled size="s" square onClick={action('clicked')}>
+              <Button variant={variant} disabled size="s" square onClick={action('clicked')}>
                 <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
               </Button>
             )}
@@ -161,16 +162,16 @@ function renderButtons(
       <dt>Wide</dt>
       <dd>
         <Stack>
-          <Button wide onClick={action('clicked')}>
+          <Button variant={variant} wide onClick={action('clicked')}>
             ボタン
           </Button>
-          <Button disabled wide onClick={action('clicked')}>
+          <Button variant={variant} disabled wide onClick={action('clicked')}>
             ボタン
           </Button>
-          <Button size="s" wide onClick={action('clicked')}>
+          <Button variant={variant} size="s" wide onClick={action('clicked')}>
             ボタン
           </Button>
-          <Button disabled size="s" wide onClick={action('clicked')}>
+          <Button variant={variant} disabled size="s" wide onClick={action('clicked')}>
             ボタン
           </Button>
         </Stack>
@@ -178,50 +179,64 @@ function renderButtons(
 
       <dt>Extending Style</dt>
       <dd>
-        <ExButton onClick={action('clicked')}>width: 300px</ExButton>
+        <ExtendingButton variant={variant} onClick={action('clicked')}>
+          width: 300px
+        </ExtendingButton>
       </dd>
     </List>
   )
 }
 
-function renderAnchors(
-  Anchor: React.VFC<AnchorProps>,
-  ExAnchor: React.VFC<AnchorProps>,
-  noSquare = false,
-) {
+function renderAnchors(variant: AnchorButtonProps['variant'], noSquare = false) {
   return (
     <List>
       <dt>Default</dt>
       <dd>
         <Stack>
           <WrapLineUp vAlign="center">
-            <Anchor href="#" onClick={action('clicked')}>
+            <AnchorButton variant={variant} href="#" onClick={action('clicked')}>
               ボタン
-            </Anchor>
-            <Anchor href="#" prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            </AnchorButton>
+            <AnchorButton
+              variant={variant}
+              href="#"
+              prefix={<FaPlusIcon />}
+              onClick={action('clicked')}
+            >
               ボタン
-            </Anchor>
-            <Anchor href="#" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
+            </AnchorButton>
+            <AnchorButton
+              variant={variant}
+              href="#"
+              suffix={<FaPlusSquareIcon />}
+              onClick={action('clicked')}
+            >
               ボタン
-            </Anchor>
+            </AnchorButton>
             {!noSquare && (
-              <Anchor href="#" square onClick={action('clicked')}>
+              <AnchorButton variant={variant} href="#" square onClick={action('clicked')}>
                 <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
-              </Anchor>
+              </AnchorButton>
             )}
           </WrapLineUp>
           <WrapLineUp vAlign="center">
-            <Anchor onClick={action('clicked')}>ボタン</Anchor>
-            <Anchor prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            <AnchorButton variant={variant} onClick={action('clicked')}>
               ボタン
-            </Anchor>
-            <Anchor suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
+            </AnchorButton>
+            <AnchorButton variant={variant} prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
-            </Anchor>
+            </AnchorButton>
+            <AnchorButton
+              variant={variant}
+              suffix={<FaPlusSquareIcon />}
+              onClick={action('clicked')}
+            >
+              ボタン
+            </AnchorButton>
             {!noSquare && (
-              <Anchor square onClick={action('clicked')}>
+              <AnchorButton variant={variant} square onClick={action('clicked')}>
                 <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
-              </Anchor>
+              </AnchorButton>
             )}
           </WrapLineUp>
         </Stack>
@@ -231,35 +246,57 @@ function renderAnchors(
       <dd>
         <Stack>
           <WrapLineUp vAlign="center">
-            <Anchor size="s" href="#" onClick={action('clicked')}>
+            <AnchorButton variant={variant} size="s" href="#" onClick={action('clicked')}>
               ボタン
-            </Anchor>
-            <Anchor size="s" href="#" prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            </AnchorButton>
+            <AnchorButton
+              variant={variant}
+              size="s"
+              href="#"
+              prefix={<FaPlusIcon />}
+              onClick={action('clicked')}
+            >
               ボタン
-            </Anchor>
-            <Anchor size="s" href="#" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
+            </AnchorButton>
+            <AnchorButton
+              variant={variant}
+              size="s"
+              href="#"
+              suffix={<FaPlusSquareIcon />}
+              onClick={action('clicked')}
+            >
               ボタン
-            </Anchor>
+            </AnchorButton>
             {!noSquare && (
-              <Anchor size="s" href="#" square onClick={action('clicked')}>
+              <AnchorButton variant={variant} size="s" href="#" square onClick={action('clicked')}>
                 <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
-              </Anchor>
+              </AnchorButton>
             )}
           </WrapLineUp>
           <WrapLineUp vAlign="center">
-            <Anchor size="s" onClick={action('clicked')}>
+            <AnchorButton variant={variant} size="s" onClick={action('clicked')}>
               ボタン
-            </Anchor>
-            <Anchor size="s" prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            </AnchorButton>
+            <AnchorButton
+              variant={variant}
+              size="s"
+              prefix={<FaPlusIcon />}
+              onClick={action('clicked')}
+            >
               ボタン
-            </Anchor>
-            <Anchor size="s" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
+            </AnchorButton>
+            <AnchorButton
+              variant={variant}
+              size="s"
+              suffix={<FaPlusSquareIcon />}
+              onClick={action('clicked')}
+            >
               ボタン
-            </Anchor>
+            </AnchorButton>
             {!noSquare && (
-              <Anchor size="s" square onClick={action('clicked')}>
+              <AnchorButton variant={variant} size="s" square onClick={action('clicked')}>
                 <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
-              </Anchor>
+              </AnchorButton>
             )}
           </WrapLineUp>
         </Stack>
@@ -268,27 +305,27 @@ function renderAnchors(
       <dt>Wide</dt>
       <dd>
         <Stack>
-          <Anchor href="#" wide onClick={action('clicked')}>
+          <AnchorButton variant={variant} href="#" wide onClick={action('clicked')}>
             ボタン
-          </Anchor>
+          </AnchorButton>
 
-          <Anchor wide onClick={action('clicked')}>
+          <AnchorButton variant={variant} wide onClick={action('clicked')}>
             ボタン
-          </Anchor>
-          <Anchor size="s" href="#" wide onClick={action('clicked')}>
+          </AnchorButton>
+          <AnchorButton variant={variant} size="s" href="#" wide onClick={action('clicked')}>
             ボタン
-          </Anchor>
-          <Anchor size="s" wide onClick={action('clicked')}>
+          </AnchorButton>
+          <AnchorButton variant={variant} size="s" wide onClick={action('clicked')}>
             ボタン
-          </Anchor>
+          </AnchorButton>
         </Stack>
       </dd>
 
       <dt>Extending Style</dt>
       <dd>
-        <ExAnchor href="#" onClick={action('clicked')}>
+        <ExtendingAnchorButton variant={variant} href="#" onClick={action('clicked')}>
           width: 300px
-        </ExAnchor>
+        </ExtendingAnchorButton>
       </dd>
     </List>
   )
@@ -315,33 +352,9 @@ const DarkBackground = styled.div`
 const extendingStyle = css`
   width: 300px;
 `
-const ExPrimaryButton = styled(PrimaryButton)`
+const ExtendingButton = styled(Button)`
   ${extendingStyle}
 `
-const ExPrimaryButtonAnchor = styled(PrimaryButtonAnchor)`
-  ${extendingStyle}
-`
-const ExSecondaryButton = styled(SecondaryButton)`
-  ${extendingStyle}
-`
-const ExSecondaryButtonAnchor = styled(SecondaryButtonAnchor)`
-  ${extendingStyle}
-`
-const ExDangerButton = styled(DangerButton)`
-  ${extendingStyle}
-`
-const ExDangerButtonAnchor = styled(DangerButtonAnchor)`
-  ${extendingStyle}
-`
-const ExSkeletonButton = styled(SkeletonButton)`
-  ${extendingStyle}
-`
-const ExSkeletonButtonAnchor = styled(SkeletonButtonAnchor)`
-  ${extendingStyle}
-`
-const ExTextButton = styled(TextButton)`
-  ${extendingStyle}
-`
-const ExTextButtonAnchor = styled(TextButtonAnchor)`
+const ExtendingAnchorButton = styled(AnchorButton)`
   ${extendingStyle}
 `

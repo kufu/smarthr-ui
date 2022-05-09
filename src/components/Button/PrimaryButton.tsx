@@ -6,6 +6,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 import { useClassNames } from './useClassNames'
 
+/**
+ * @deprecated `PrimaryButton` コンポーネントは非推奨です。代わりに `Button` コンポーネントと `variant` プロパティを使用してください。
+ */
 export const PrimaryButton: VFC<ButtonProps> = ({ type = 'button', className = '', ...props }) => {
   const theme = useTheme()
   const { primaryButton } = useClassNames()
@@ -24,6 +27,9 @@ export const PrimaryButton: VFC<ButtonProps> = ({ type = 'button', className = '
 // This is for error message of BottomFixedArea component.
 PrimaryButton.displayName = 'PrimaryButton'
 
+/**
+ * @deprecated `PrimaryButtonAnchor` コンポーネントは非推奨です。代わりに `AnchorButton` コンポーネントと `variant` プロパティを使用してください。
+ */
 export const PrimaryButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props }) => {
   const theme = useTheme()
   const { primaryButtonAnchor } = useClassNames()
