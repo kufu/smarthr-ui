@@ -14,6 +14,9 @@ import { useClassNames } from './useClassNames'
 type ButtonProps = Omit<BaseButtonProps, 'square'>
 type AnchorProps = Omit<BaseAnchorProps, 'square'>
 
+/**
+ * @deprecated `TextButton` コンポーネントは非推奨です。代わりに `Button` コンポーネントと `variant` プロパティを使用してください。
+ */
 export const TextButton: VFC<ButtonProps> = ({ type = 'button', className = '', ...props }) => {
   const theme = useTheme()
   const { textButton } = useClassNames()
@@ -28,6 +31,9 @@ export const TextButton: VFC<ButtonProps> = ({ type = 'button', className = '', 
   )
 }
 
+/**
+ * @deprecated `TextButtonAnchor` コンポーネントは非推奨です。代わりに `AnchorButton` コンポーネントと `variant` プロパティを使用してください。
+ */
 export const TextButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props }) => {
   const theme = useTheme()
   const { textButtonAnchor } = useClassNames()

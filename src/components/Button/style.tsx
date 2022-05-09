@@ -1,5 +1,7 @@
 import React, { VFC } from 'react'
 import {
+  AnchorButton,
+  Button,
   DangerButton,
   DangerButtonAnchor,
   PrimaryButton,
@@ -15,6 +17,8 @@ import {
 
 export const Style: VFC = () => (
   <>
+    <Button />
+    <AnchorButton />
     <PrimaryButton />
     <PrimaryButtonAnchor />
     <SecondaryButton />

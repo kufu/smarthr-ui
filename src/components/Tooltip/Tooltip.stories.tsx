@@ -192,8 +192,8 @@ storiesOf('Tooltip', module)
         </Tooltip>
       </dd>
       <dt>自動位置決め</dt>
-      {[undefined, 'center', 'right'].map((className) => (
-        <dd className={className} key={className}>
+      {[undefined, 'center', 'right'].map((className, i) => (
+        <dd className={className} key={i}>
           <Tooltip
             message="メッセージメッセージメッセージメッセージメッセージメッセージメッセージ"
             horizontal="auto"

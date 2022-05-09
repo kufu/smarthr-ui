@@ -38,8 +38,8 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   ...props
 }) => {
   const [isVisible, setIsVisible] = useState(false)
-  const [rect, setRect] = useState<DOMRect | null>(null)
-  const ref = React.createRef<HTMLDivElement>()
+  const [rect, setRect] = useState<DOMRect>(new DOMRect())
+  const ref = useRef<HTMLDivElement>(null)
   const tooltipId = useId()
 
   const getHandlerToShow = <T,>(handler?: (e: T) => void) => {
@@ -91,7 +91,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   return (
     <Wrapper
       {...props}
-      aria-describedby={isVisible ? tooltipId : undefined}
+      aria-describedby={tooltipId}
       ref={ref}
       onPointerEnter={getHandlerToShow(onPointerEnter)}
       onTouchStart={getHandlerToShow(onTouchStart)}
@@ -103,20 +103,19 @@ export const Tooltip: VFC<Props & ElementProps> = ({
       tabIndex={tabIndex}
       className={`${className} ${classNames.wrapper}`}
     >
-      {isVisible &&
-        rect &&
-        createPortal(
-          <TooltipPortal
-            message={message}
-            id={tooltipId}
-            parentRect={rect}
-            isIcon={isIcon}
-            isMultiLine={multiLine}
-            horizontal={horizontal}
-            vertical={vertical}
-          />,
-          portalRoot,
-        )}
+      {createPortal(
+        <TooltipPortal
+          message={message}
+          id={tooltipId}
+          isVisible={isVisible}
+          parentRect={rect}
+          isIcon={isIcon}
+          isMultiLine={multiLine}
+          horizontal={horizontal}
+          vertical={vertical}
+        />,
+        portalRoot,
+      )}
       {children}
     </Wrapper>
   )

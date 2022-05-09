@@ -1,6 +1,7 @@
 import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
+import { action } from '@storybook/addon-actions'
 
 import { InputFile } from './InputFile'
 
@@ -17,68 +18,27 @@ export default {
 }
 
 export const All: Story = () => {
-  const [files1, setFiles1] = React.useState<File[]>([])
-  const [files2, setFiles2] = React.useState<File[]>([])
-  const [files3, setFiles3] = React.useState<File[]>([])
-
   return (
     <List>
       <dt>Default</dt>
       <dd>
-        <InputFile
-          label="Choose File"
-          onAdd={(addFiles) => {
-            setFiles1([...files1, ...addFiles])
-          }}
-          onDelete={(index) => {
-            const newFiles = [...files1]
-            newFiles.splice(index, 1)
-            setFiles1(newFiles)
-          }}
-          files={files1}
-          multiple
-        />
+        <InputFile label="Choose File" onChange={action('onChange')} multiple />
       </dd>
       <dt>Size S</dt>
       <dd>
-        <InputFile
-          label="Choose File"
-          onAdd={(addFiles) => {
-            setFiles2([...files2, ...addFiles])
-          }}
-          onDelete={(index) => {
-            const newFiles = [...files2]
-            newFiles.splice(index, 1)
-            setFiles2(newFiles)
-          }}
-          files={files2}
-          size="s"
-          multiple
-        />
+        <InputFile label="Choose File" onChange={action('onChange')} size="s" multiple />
       </dd>
       <dt>Disabled file list</dt>
       <dd>
-        <InputFile
-          label="Choose File"
-          onAdd={(addFiles) => {
-            setFiles3([...files3, ...addFiles])
-          }}
-          onDelete={(index) => {
-            const newFiles = [...files3]
-            newFiles.splice(index, 1)
-            setFiles3(newFiles)
-          }}
-          files={files3}
-          hasFileList={false}
-        />
+        <InputFile label="Choose File" onChange={action('onChange')} hasFileList={false} />
       </dd>
       <dt>Disabled input</dt>
       <dd>
-        <InputFile label="Choose File" files={[]} disabled />
+        <InputFile label="Choose File" disabled />
       </dd>
       <dt>エラー</dt>
       <dd>
-        <InputFile label="Choose File" files={[]} error />
+        <InputFile label="Choose File" error />
       </dd>
     </List>
   )
