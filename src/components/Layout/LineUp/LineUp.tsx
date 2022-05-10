@@ -6,6 +6,7 @@ type alignMethod = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'spa
 type verticalAlignMethod = 'normal' | 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch'
 
 /**
+ * @deprecated LineUp コンポーネントは非推奨です。Cluster または Sidebar コンポーネントを使用してください。
  * @param inline true の場合は inline-flex
  * @param gap 間隔の指定（基準フォントサイズの相対値または抽象値）。align が space-between や space-around を取る場合は無視されます
  * @param reverse 並べる方向の指定（flex-direction）
