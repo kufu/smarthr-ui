@@ -305,7 +305,7 @@ import {
   FaWrench,
   FaYenSign,
 } from 'react-icons/fa'
-import type { IconType } from 'react-icons'
+import type { IconBaseProps, IconType } from 'react-icons'
 import styled from 'styled-components'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 import { useTheme } from '../../hooks/useTheme'
@@ -344,7 +344,7 @@ export interface IconProps {
   /**
    * アイコンの大きさ
    */
-  size?: number | string
+  size?: IconBaseProps['size']
 }
 
 type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
