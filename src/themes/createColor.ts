@@ -34,15 +34,16 @@ export type CreatedColorTheme = Palette & {
 
 export type TextColors = 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK'
 
-const BLACK = '#23221f'
+const BLACK = '#030302' // hwb(56, 17, 1)
 const greyScale = {
-  GREY_5: '#f8f7f6',
-  GREY_6: '#f5f4f3',
-  GREY_7: '#f2f1f0',
-  GREY_9: '#edebe8',
-  GREY_20: '#d6d3d0',
-  GREY_30: '#c1bdb7',
-  GREY_65: '#706d65',
+  GREY_5: '#f8f7f6', // hwb(31, 1, 97)
+  GREY_6: '#f5f4f3', // hwb(31, 1, 96)
+  GREY_7: '#f2f1f0', // hwb(31, 1, 95)
+  GREY_9: '#edebe8', // hwb(31, 2, 92)
+  GREY_20: '#d6d3d0', // hwb(33, 3, 84)
+  GREY_30: '#c1bdb7', // hwb(36, 5, 76)
+  GREY_65: '#706d65', // hwb(44, 10, 44)
+  GREY_100: '#23221e', // hwb(52, 15, 14)
 }
 const transparencyScale = {
   TRANSPARENCY_15: rgba(BLACK, 0.15),
@@ -51,7 +52,6 @@ const transparencyScale = {
 }
 const primitiveTokens = {
   WHITE: '#fff',
-  BLACK,
   BLUE_100: '#0077c7',
   BLUE_101: '#0071c1',
   RED_100: '#e01e5a',
@@ -60,7 +60,7 @@ const primitiveTokens = {
 }
 
 const semanticTokens = {
-  TEXT_BLACK: primitiveTokens.BLACK,
+  TEXT_BLACK: greyScale.GREY_100,
   TEXT_WHITE: primitiveTokens.WHITE,
   TEXT_GREY: greyScale.GREY_65,
   TEXT_DISABLED: greyScale.GREY_30,
