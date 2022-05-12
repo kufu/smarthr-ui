@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+import { AnchorButton, Button } from './'
 import { PrimaryButton, PrimaryButtonAnchor } from './PrimaryButton'
 import { SecondaryButton, SecondaryButtonAnchor } from './SecondaryButton'
 import { DangerButton, DangerButtonAnchor } from './DangerButton'
@@ -8,6 +9,8 @@ import { SkeletonButton, SkeletonButtonAnchor } from './SkeletonButton'
 import { TextButton, TextButtonAnchor } from './TextButton'
 
 export const useClassNames = () => {
+  const generateButotn = useClassNameGenerator(Button.displayName || 'Button')
+  const generateAnchorButotn = useClassNameGenerator(AnchorButton.displayName || 'AnchorButton')
   const generatePrimaryButton = useClassNameGenerator(PrimaryButton.displayName || 'PrimaryButton')
   const generatePrimaryButtonAnchor = useClassNameGenerator(
     PrimaryButtonAnchor.displayName || 'PrimaryButtonAnchor',
@@ -35,6 +38,12 @@ export const useClassNames = () => {
 
   return useMemo(
     () => ({
+      button: {
+        wrapper: generateButotn(),
+      },
+      anchorButton: {
+        wrapper: generateAnchorButotn(),
+      },
       primaryButton: {
         wrapper: generatePrimaryButton(),
       },
@@ -67,6 +76,8 @@ export const useClassNames = () => {
       },
     }),
     [
+      generateAnchorButotn,
+      generateButotn,
       generateDangerButton,
       generateDangerButtonAnchor,
       generatePrimaryButton,

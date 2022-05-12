@@ -36,6 +36,8 @@ export {
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
 export {
+  AnchorButton,
+  Button,
   PrimaryButton,
   PrimaryButtonAnchor,
   SecondaryButton,
