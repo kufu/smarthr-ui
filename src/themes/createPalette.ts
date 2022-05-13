@@ -49,7 +49,7 @@ export interface CreatedPaletteTheme {
  * @deprecated The defaultPelette will be deprecated, please use defaultColor instead
  */
 export const defaultPalette = {
-  TEXT_BLACK: '#23221f',
+  TEXT_BLACK: '#23221e',
   TEXT_GREY: '#706d65',
   TEXT_DISABLED: '#c1bdb7',
   TEXT_LINK: '#0071c1',
@@ -63,8 +63,8 @@ export const defaultPalette = {
   MAIN: '#0077c7',
   DANGER: '#e01e5a',
   WARNING: '#ff8800',
-  SCRIM: 'rgba(0,0,0,0.5)',
-  OVERLAY: 'rgba(0,0,0,0.15)',
+  SCRIM: rgba('#030302', 0.5),
+  OVERLAY: rgba('#030302', 0.15),
   BRAND: '#00c4cc',
 }
 
