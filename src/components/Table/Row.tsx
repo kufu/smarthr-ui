@@ -7,6 +7,9 @@ export type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLTableRowElement>, keyof Props>
 
+/**
+ * @deprecated Row コンポーネントは非推奨です。tr 要素に置き換えてください。
+ */
 export const Row: React.VFC<Props & ElementProps> = ({ className = '', children, ...props }) => {
   const classNames = useClassNames().row
   return (
