@@ -6,6 +6,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 import { useClassNames } from './useClassNames'
 
+/**
+ * @deprecated `SecondaryButton` コンポーネントは非推奨です。代わりに `Button` コンポーネントと `variant` プロパティを使用してください。
+ */
 export const SecondaryButton: VFC<ButtonProps> = ({
   type = 'button',
   className = '',
@@ -27,6 +30,9 @@ export const SecondaryButton: VFC<ButtonProps> = ({
 // This is for error message of BottomFixedArea component.
 SecondaryButton.displayName = 'SecondaryButton'
 
+/**
+ * @deprecated `SecondaryButtonAnchor` コンポーネントは非推奨です。代わりに `AnchorButton` コンポーネントと `variant` プロパティを使用してください。
+ */
 export const SecondaryButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props }) => {
   const theme = useTheme()
   const { secondaryButtonAnchor } = useClassNames()
@@ -52,7 +58,7 @@ const secondaryStyle = css`
       background-color: ${color.WHITE};
       color: ${color.TEXT_BLACK};
 
-      &:focus,
+      &:focus-visible,
       &:hover {
         border-color: ${color.hoverColor(color.BORDER)};
         background-color: ${color.hoverColor(color.WHITE)};

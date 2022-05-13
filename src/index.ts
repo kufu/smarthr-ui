@@ -36,6 +36,8 @@ export {
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
 export {
+  AnchorButton,
+  Button,
   PrimaryButton,
   PrimaryButtonAnchor,
   SecondaryButton,
@@ -51,7 +53,7 @@ export { StatusLabel } from './components/StatusLabel'
 export { Base, DialogBase } from './components/Base'
 export * from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
-export { Table, Head, Row, Cell, Body } from './components/Table'
+export { Table, Head, Row, Cell, Body, Th, Td, BulkActionRow } from './components/Table'
 export {
   AppNavi,
   AppNaviAnchorProps,

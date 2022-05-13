@@ -103,13 +103,12 @@ const Button = styled.button<{ themes: Theme }>`
       font-size: inherit;
       text-align: left;
 
-      &:hover,
-      &:focus:not(:focus-visible) {
+      &:hover {
         background-color: ${color.hoverColor(color.WHITE)};
         box-shadow: none;
       }
 
-      &:focus {
+      &:focus-visible {
         ${shadow.focusIndicatorStyles}
       }
 

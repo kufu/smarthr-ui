@@ -6,6 +6,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { AnchorProps, BaseButton, BaseButtonAnchor, ButtonProps } from './BaseButton'
 import { useClassNames } from './useClassNames'
 
+/**
+ * @deprecated `SkeletonButton` コンポーネントは非推奨です。代わりに `Button` コンポーネントと `variant` プロパティを使用してください。
+ */
 export const SkeletonButton: VFC<ButtonProps> = ({ type = 'button', className = '', ...props }) => {
   const theme = useTheme()
   const { skeletonButton } = useClassNames()
@@ -20,6 +23,9 @@ export const SkeletonButton: VFC<ButtonProps> = ({ type = 'button', className = 
   )
 }
 
+/**
+ * @deprecated `SkeletonButtonAnchor` コンポーネントは非推奨です。代わりに `AnchorButton` コンポーネントと `variant` プロパティを使用してください。
+ */
 export const SkeletonButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props }) => {
   const theme = useTheme()
   const { skeletonButtonAnchor } = useClassNames()
@@ -42,7 +48,7 @@ const skeletonStyle = css`
       background-color: transparent;
       color: ${color.TEXT_WHITE};
 
-      &:focus,
+      &:focus-visible,
       &:hover {
         border-color: ${color.hoverColor(color.WHITE)};
         background-color: ${color.OVERLAY};

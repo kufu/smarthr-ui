@@ -13,6 +13,11 @@ export type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLTableSectionElement>, keyof Props>
 
+/**
+ * @deprecated Head コンポーネントは非推奨です。thead 要素に置き換えてください。
+ * thead 部分を固定表示する場合は Table コンポーネントの fixedHead Props を指定してください。
+ * bulkActionArea を使う場合は BulkActionRow コンポーネントを使用してください。
+ */
 export const Head: VFC<Props & ElementProps> = ({
   bulkActionArea,
   className = '',

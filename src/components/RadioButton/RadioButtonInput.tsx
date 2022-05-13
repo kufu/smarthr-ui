@@ -1,5 +1,6 @@
 import React, { ChangeEvent, InputHTMLAttributes, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
+import { transparentize } from 'polished'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
@@ -94,9 +95,7 @@ const Box = styled.span<{ themes: Theme }>`
   }}
 `
 const Input = styled.input<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { OUTLINE } = themes.shadow
-
+  ${({ themes: { color, shadow } }) => {
     return css`
       opacity: 0;
       position: absolute;
@@ -110,9 +109,11 @@ const Input = styled.input<{ themes: Theme }>`
       &[disabled] {
         pointer-events: none;
       }
-
-      &:focus + span {
-        box-shadow: ${OUTLINE};
+      &:hover:not([disabled]) + span {
+        box-shadow: 0 0 0 2px ${transparentize(0.78, color.MAIN)};
+      }
+      &:focus-visible + span {
+        box-shadow: ${shadow.focusIndicatorStyles};
       }
     `
   }}

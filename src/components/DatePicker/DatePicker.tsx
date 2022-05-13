@@ -33,6 +33,8 @@ type Props = {
   parseInput?: (input: string) => Date | null
   /** 表示する日付を独自にフォーマットする場合に、フォーマット処理を記述する関数 */
   formatDate?: (date: Date | null) => string
+  /** 入出力用文字列と併記する別フォーマット処理を記述する関数 */
+  showAlternative?: (date: Date | null) => string
   /** 選択された日付が変わった時に発火するコールバック関数 */
   onChangeDate?: (date: Date | null, value: string) => void
 }
@@ -48,6 +50,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   className = '',
   parseInput,
   formatDate,
+  showAlternative,
   onChangeDate,
   ...inputAttrs
 }) => {
@@ -74,6 +77,16 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
     [formatDate],
   )
 
+  const dateToAlternativeFormat = useCallback(
+    (_date: Date | null) => {
+      if (!_date || !showAlternative) {
+        return null
+      }
+      return showAlternative(_date)
+    },
+    [showAlternative],
+  )
+
   const themes = useTheme()
   const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
   const inputRef = useRef<HTMLInputElement>(null)
@@ -82,6 +95,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   const [inputRect, setInputRect] = useState<DOMRect | null>(null)
   const [isInputFocused, setIsInputFocused] = useState(false)
   const [isCalendarShown, setIsCalendarShown] = useState(false)
+  const [alternativeFormat, setAlternativeFormat] = useState<null | string>(null)
   const calenderId = useId()
 
   const updateDate = useCallback(
@@ -100,11 +114,12 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
       // Do not change input value if new date is invalid date
       if (!newDate || dayjs(newDate).isValid()) {
         inputRef.current.value = dateToString(newDate)
+        setAlternativeFormat(dateToAlternativeFormat(newDate))
       }
       setSelectedDate(newDate)
       onChangeDate && onChangeDate(newDate, inputRef.current.value)
     },
-    [selectedDate, dateToString, onChangeDate],
+    [selectedDate, dateToString, dateToAlternativeFormat, onChangeDate],
   )
 
   const switchCalendarVisibility = useCallback((isVisible: boolean) => {
@@ -132,13 +147,14 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
       const newDate = stringToDate(value)
       if (newDate && dayjs(newDate).isValid()) {
         inputRef.current.value = dateToString(newDate)
+        setAlternativeFormat(dateToAlternativeFormat(newDate))
         setSelectedDate(newDate)
         return
       }
       setSelectedDate(null)
     }
     inputRef.current.value = value || ''
-  }, [value, isInputFocused, dateToString, stringToDate])
+  }, [value, isInputFocused, dateToString, dateToAlternativeFormat, stringToDate])
 
   useOuterClick(
     [inputWrapperRef, calendarPortalRef],
@@ -211,7 +227,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
         }
       }}
     >
-      <InputWrapper ref={inputWrapperRef}>
+      <div ref={inputWrapperRef}>
         <StyledInput
           {...inputAttrs}
           type="text"
@@ -241,11 +257,14 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
             updateDate(newDate)
           }}
           suffix={
-            <CalendarIconLayout themes={themes}>
-              <CalendarIconWrapper themes={themes}>
+            <InputSuffixLayout themes={themes}>
+              <InputSuffixWrapper themes={themes}>
+                {showAlternative && (
+                  <InputSuffixText themes={themes}>{alternativeFormat}</InputSuffixText>
+                )}
                 <FaCalendarAltIcon color={caretIconColor} />
-              </CalendarIconWrapper>
-            </CalendarIconLayout>
+              </InputSuffixWrapper>
+            </InputSuffixLayout>
           }
           disabled={disabled}
           error={error}
@@ -255,7 +274,7 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
           aria-controls={calenderId}
           aria-haspopup={true}
         />
-      </InputWrapper>
+      </div>
       {isCalendarShown && inputRect && (
         <Portal inputRect={inputRect} ref={calendarPortalRef}>
           <Calendar
@@ -281,18 +300,17 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
 const Container = styled.div`
   display: inline-block;
 `
-const InputWrapper = styled.div``
 const StyledInput = styled(Input)`
   width: 100%;
 `
-const CalendarIconLayout = styled.span<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
+const InputSuffixLayout = styled.span<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
   return css`
     height: 100%;
     padding: ${spacingByChar(0.5)} 0;
     box-sizing: border-box;
   `
 })
-const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
+const InputSuffixWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
   const { fontSize, color, spacingByChar } = themes
   return css`
     display: flex;
@@ -303,5 +321,14 @@ const CalendarIconWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     padding-left: ${spacingByChar(0.5)};
     border-left: 1px solid ${color.BORDER};
     font-size: ${fontSize.M};
+  `
+})
+
+const InputSuffixText = styled.span<{ themes: Theme }>(({ themes }) => {
+  const { fontSize, color, spacingByChar } = themes
+  return css`
+    margin-right: ${spacingByChar(0.5)};
+    color: ${color.TEXT_GREY};
+    font-size: ${fontSize.S};
   `
 })

@@ -65,17 +65,12 @@ export function Select<T extends string>({
   const classNames = useClassNames()
 
   return (
-    <Wrapper
-      className={`${className} ${classNames.wrapper}`}
-      $width={widthStyle}
-      error={error}
-      disabled={disabled}
-      themes={theme}
-    >
+    <Wrapper className={`${className} ${classNames.wrapper}`} $width={widthStyle}>
       <SelectBox
         onChange={handleChange}
         aria-invalid={error || undefined}
         themes={theme}
+        error={error}
         disabled={disabled}
         {...props}
       >
@@ -107,59 +102,33 @@ export function Select<T extends string>({
         }
       </SelectBox>
       <IconWrap themes={theme}>
-        <FaSortIcon color="inherit" />
+        <FaSortIcon />
       </IconWrap>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div<{
-  $width: string
-  error?: boolean
-  disabled?: boolean
-  themes: Theme
-}>(({ $width, error, disabled, themes }) => {
-  const { border, color, radius, shadow } = themes
+const Wrapper = styled.div<{ $width: string }>(({ $width }) => {
   return css`
     box-sizing: border-box;
     position: relative;
-    border-radius: ${radius.m};
-    border: ${border.shorthand};
-    background-color: ${color.WHITE};
     width: ${$width};
-
-    &:hover {
-      ${!disabled &&
-      css`
-        background-color: ${color.hoverColor(color.WHITE)};
-      `}
-    }
-    &:focus-within {
-      ${shadow.focusIndicatorStyles}
-    }
-
-    ${error &&
-    css`
-      border-color: ${color.DANGER};
-    `}
-    ${disabled &&
-    css`
-      background-color: ${color.COLUMN};
-      color: ${color.TEXT_DISABLED};
-    `}
   `
 })
-const SelectBox = styled.select<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color, fontSize, leading, spacingByChar } = themes
+const SelectBox = styled.select<{
+  error?: boolean
+  themes: Theme
+}>`
+  ${({ error, themes }) => {
+    const { border, color, fontSize, leading, radius, shadow, spacingByChar } = themes
 
     return css`
       appearance: none;
       cursor: pointer;
-      display: inline-block;
       outline: none;
-      border: none;
-      background-color: transparent;
+      border-radius: ${radius.m};
+      border: ${border.shorthand};
+      background-color: ${color.WHITE};
       padding: ${spacingByChar(0.75)};
       padding-right: ${spacingByChar(2)};
       padding-left: ${spacingByChar(0.5)};
@@ -168,14 +137,23 @@ const SelectBox = styled.select<{ themes: Theme }>`
       line-height: ${leading.NONE};
       width: 100%;
 
-      &::placeholder {
-        color: ${color.TEXT_GREY};
+      ${error &&
+      css`
+        border-color: ${color.DANGER};
+      `}
+
+      &:hover {
+        background-color: ${color.hoverColor(color.WHITE)};
       }
 
-      &[disabled] {
+      &:focus-visible {
+        ${shadow.focusIndicatorStyles}
+      }
+
+      &:disabled {
         pointer-events: none;
-        cursor: not-allowed;
         opacity: 1;
+        background-color: ${color.COLUMN};
         color: ${color.TEXT_DISABLED};
       }
     `
@@ -198,7 +176,7 @@ const IconWrap = styled.span<{ themes: Theme }>`
       ${SelectBox}:disabled + & {
         color: ${color.TEXT_DISABLED};
       }
-      ${SelectBox}:focus + & {
+      ${SelectBox}:focus-visible + & {
         color: ${color.TEXT_BLACK};
       }
     `

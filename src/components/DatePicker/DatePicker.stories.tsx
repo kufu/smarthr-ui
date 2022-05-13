@@ -46,6 +46,10 @@ export const All: Story = () => {
           }}
         />
       </dd>
+      <dt>Show Alternative Formatted Date</dt>
+      <dd>
+        <DatePicker value="1994/09/28" showAlternative={() => '平成6年9月28日'} />
+      </dd>
       <dt>Disabled</dt>
       <dd>
         <DatePicker disabled />
