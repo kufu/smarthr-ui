@@ -218,6 +218,7 @@ import {
   FaRedo,
   FaRedoAlt,
   FaRegDotCircle,
+  FaRegLightbulb,
   FaReply,
   FaReplyAll,
   FaRocket,
@@ -625,6 +626,7 @@ export const FaReceiptIcon = /*#__PURE__*/ createIcon(FaReceipt)
 export const FaRedoIcon = /*#__PURE__*/ createIcon(FaRedo)
 export const FaRedoAltIcon = /*#__PURE__*/ createIcon(FaRedoAlt)
 export const FaRegDotCircleIcon = /*#__PURE__*/ createIcon(FaRegDotCircle)
+export const FaRegLightbulbIcon = /*#__PURE__*/ createIcon(FaRegLightbulb)
 export const FaReplyIcon = /*#__PURE__*/ createIcon(FaReply)
 export const FaReplyAllIcon = /*#__PURE__*/ createIcon(FaReplyAll)
 export const FaRocketIcon = /*#__PURE__*/ createIcon(FaRocket)
