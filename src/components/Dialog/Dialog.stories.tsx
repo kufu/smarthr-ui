@@ -151,10 +151,8 @@ export const Message_Dialog: Story = () => {
         title="MessageDialog"
         subtitle="副題"
         description={<p>{dummyText} </p>}
-        closeText="Close"
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
-        onPressEscape={onClickClose}
         id="dialog-message"
         data-test="dialog-content"
       />
@@ -197,17 +195,13 @@ export const Action_Dialog: Story = () => {
         isOpen={isOpen}
         title="ActionDialog"
         subtitle="副題"
-        closeText="Close"
-        actionText="Execute"
-        actionTheme="primary"
+        actionText="保存"
         onClickAction={(closeDialog) => {
           action('executed')()
           setResponseMessage(undefined)
           closeDialog()
         }}
         onClickClose={onClickClose}
-        onClickOverlay={onClickClose}
-        onPressEscape={onClickClose}
         responseMessage={responseMessage}
         id="dialog-action"
         data-test="dialog-content"
@@ -320,7 +314,6 @@ export const Uncontrolled: Story = () => {
           <MessageDialogContent
             title="Uncontrolled Message Dialog"
             description={<p>{dummyText} </p>}
-            closeText="Close"
             id="dialog-uncontrolled-message"
             data-test="message-dialog-content"
           />
@@ -339,9 +332,7 @@ export const Uncontrolled: Story = () => {
           </DialogTrigger>
           <ActionDialogContent
             title="Uncontrolled Action Dialog"
-            closeText="Close"
-            actionText="Execute"
-            actionTheme="primary"
+            actionText="実行"
             actionDisabled={false}
             onClickAction={(closeDialog) => {
               action('executed')()
@@ -604,7 +595,6 @@ export const RegOpendMessage: Story = () => {
       isOpen={true}
       title="MessageDialog"
       description={<p>{dummyText}</p>}
-      closeText="close"
       onClickClose={action('clicked close')}
     />
   )
@@ -616,9 +606,7 @@ export const RegOpendAction: Story = () => {
     <ActionDialog
       isOpen={true}
       title="ActionDialog"
-      closeText="close"
-      actionText="execute"
-      actionTheme="primary"
+      actionText="保存"
       onClickAction={action('clicked action')}
       onClickClose={action('clicked close')}
     >
@@ -728,16 +716,12 @@ export const Body以外のPortalParent: Story = () => {
       <ActionDialog
         isOpen={isOpen === 'actiion'}
         title="ActionDialog"
-        closeText="閉じる"
-        actionText="実行"
-        actionTheme="primary"
+        actionText="保存"
         onClickAction={(closeDialog) => {
           action('executed')()
           closeDialog()
         }}
         onClickClose={onClickClose}
-        onClickOverlay={onClickClose}
-        onPressEscape={onClickClose}
         id="portal-action"
         data-test="dialog-content"
         portalParent={portalParentRef}
@@ -750,10 +734,8 @@ export const Body以外のPortalParent: Story = () => {
         isOpen={isOpen === 'message'}
         title="MessageDialog"
         description={<p>MessageDialog を近接要素に生成しています</p>}
-        closeText="閉じる"
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
-        onPressEscape={onClickClose}
         id="portal-message"
         data-test="dialog-content"
         portalParent={portalParentRef}
