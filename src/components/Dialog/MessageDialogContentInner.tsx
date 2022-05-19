@@ -23,7 +23,7 @@ export type BaseProps = {
   /**
    * Label of close button.
    */
-  closeText: React.ReactNode
+  closeText?: React.ReactNode
 }
 
 export type MessageDialogContentInnerProps = BaseProps & {
@@ -38,7 +38,7 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   subtitle,
   titleId,
   description,
-  closeText,
+  closeText = '閉じる',
   onClickClose,
 }) => {
   const classNames = useClassNames().dialog
