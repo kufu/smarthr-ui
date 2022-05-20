@@ -3,11 +3,7 @@ import { action } from '@storybook/addon-actions'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Table } from './Table'
-import { Body } from './Body'
-import { Head } from './Head'
-import { Row } from './Row'
-import { Cell } from './Cell'
+import { BulkActionRow, Table, Td, Th } from './'
 import { FaArrowDownIcon } from '../Icon'
 import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { SecondaryButton as Button } from '../Button'
@@ -86,178 +82,180 @@ storiesOf('Table', module)
       <li>
         table
         <Table>
-          <Head bulkActionArea={'Bulk action area'}>
-            <Row>
-              <Cell>
+          <thead>
+            <tr>
+              <Th>
                 <VisuallyHiddenText>行を選択</VisuallyHiddenText>
                 <label htmlFor="tableAllCheckBox">
                   <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
                   <CheckBox name="tableAllCheckBox" checked={false} id="tableAllCheckBox" />
                 </label>
-              </Cell>
-              <Cell aria-sort="ascending" highlighted={true}>
+              </Th>
+              <Th aria-sort="ascending" highlighted={true}>
                 <ClickableCellInner onClick={action('clicked')}>
                   <span style={{ lineHeight: '1.5' }}>Name</span>
                   <Arrow visuallyHiddenText="昇順" />
                 </ClickableCellInner>
-              </Cell>
-              <Cell>Calories</Cell>
-              <Cell>Fat (g)</Cell>
-              <Cell>Carbs (g)</Cell>
-              <Cell>Protein (g)</Cell>
-              <Cell>Button</Cell>
-            </Row>
-          </Head>
-          <Body>
+              </Th>
+              <Th>Calories</Th>
+              <Th>Fat (g)</Th>
+              <Th>Carbs (g)</Th>
+              <Th>Protein (g)</Th>
+              <Th>Button</Th>
+            </tr>
+            <BulkActionRow>Bulk action area</BulkActionRow>
+          </thead>
+          <tbody>
             {data.map(({ name, calories, fat, carbs, protein }) => {
               return (
-                <Row key={name}>
-                  <Cell>
+                <tr key={name}>
+                  <Td>
                     <label htmlFor="tableCheckBox">
                       <VisuallyHiddenText>{name}</VisuallyHiddenText>
                       <CheckBox name="tableCheckBox" checked={false} id="tableCheckBox" />
                     </label>
-                  </Cell>
-                  <Cell>{name}</Cell>
-                  <Cell>{calories}</Cell>
-                  <Cell>{fat}</Cell>
-                  <Cell>{carbs}</Cell>
-                  <Cell>{protein}</Cell>
-                  <Cell>
+                  </Td>
+                  <Td>{name}</Td>
+                  <Td>{calories}</Td>
+                  <Td>{fat}</Td>
+                  <Td>{carbs}</Td>
+                  <Td>{protein}</Td>
+                  <Td>
                     <Button size="s">Button</Button>
-                  </Cell>
-                </Row>
+                  </Td>
+                </tr>
               )
             })}
-          </Body>
+          </tbody>
         </Table>
       </li>
       <li>
         table fixed header
         <div style={{ overflow: 'clip' }}>
-          <Table>
-            <Head bulkActionArea={'Bulk action area'} fixed={true}>
-              <Row>
-                <Cell>
+          <Table fixedHead>
+            <thead>
+              <tr>
+                <Th>
                   <VisuallyHiddenText>行を選択</VisuallyHiddenText>
                   <label htmlFor="tableAllCheckBox">
                     <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
                     <CheckBox name="tableAllCheckBox" checked={false} id="tableAllCheckBox" />
                   </label>
-                </Cell>
-                <Cell aria-sort="ascending" highlighted={true}>
+                </Th>
+                <Th aria-sort="ascending" highlighted={true}>
                   <ClickableCellInner onClick={action('clicked')}>
                     <span style={{ lineHeight: '1.5' }}>Name</span>
                     <Arrow visuallyHiddenText="昇順" />
                   </ClickableCellInner>
-                </Cell>
-                <Cell>Calories</Cell>
-                <Cell>Fat (g)</Cell>
-                <Cell>Carbs (g)</Cell>
-                <Cell>Protein (g)</Cell>
-                <Cell>Button</Cell>
-              </Row>
-            </Head>
-            <Body>
+                </Th>
+                <Th>Calories</Th>
+                <Th>Fat (g)</Th>
+                <Th>Carbs (g)</Th>
+                <Th>Protein (g)</Th>
+                <Th>Button</Th>
+              </tr>
+              <BulkActionRow>Bulk action area</BulkActionRow>
+            </thead>
+            <tbody>
               {data.map(({ name, calories, fat, carbs, protein }) => {
                 return (
-                  <Row key={name}>
-                    <Cell>
+                  <tr key={name}>
+                    <Td>
                       <label htmlFor="tableCheckBox">
                         <VisuallyHiddenText>{name}</VisuallyHiddenText>
                         <CheckBox name="tableCheckBox" checked={false} id="tableCheckBox" />
                       </label>
-                    </Cell>
-                    <Cell>{name}</Cell>
-                    <Cell>{calories}</Cell>
-                    <Cell>{fat}</Cell>
-                    <Cell>{carbs}</Cell>
-                    <Cell>{protein}</Cell>
-                    <Cell>
+                    </Td>
+                    <Td>{name}</Td>
+                    <Td>{calories}</Td>
+                    <Td>{fat}</Td>
+                    <Td>{carbs}</Td>
+                    <Td>{protein}</Td>
+                    <Td>
                       <Button size="s">Button</Button>
-                    </Cell>
-                  </Row>
+                    </Td>
+                  </tr>
                 )
               })}
-            </Body>
+            </tbody>
           </Table>
         </div>
       </li>
       <li>
         colSpan / rowSpan
         <Table>
-          <Head>
-            <Row>
-              <Cell colSpan={3}>colSpan=3</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-            </Row>
-          </Head>
-          <Body>
-            <Row>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-            </Row>
-            <Row>
-              <Cell rowSpan={2}>rowSpan=2</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-            </Row>
-            <Row>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-              <Cell>cell</Cell>
-            </Row>
-          </Body>
+          <thead>
+            <tr>
+              <Th colSpan={3}>colSpan=3</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+            </tr>
+            <tr>
+              <Td rowSpan={2}>rowSpan=2</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+            </tr>
+            <tr>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+            </tr>
+          </tbody>
         </Table>
       </li>
       <li>
         Table on Base
         <Base>
           <Table>
-            <Head>
-              <Row>
-                <Cell>cell</Cell>
-                <Cell>cell</Cell>
-                <Cell>cell</Cell>
-              </Row>
-            </Head>
-            <Body>
-              <Row>
-                <Cell>cell</Cell>
-                <Cell>cell</Cell>
-                <Cell>cell</Cell>
-              </Row>
-              <Row>
-                <Cell>cell</Cell>
-                <Cell>cell</Cell>
-                <Cell>cell</Cell>
-              </Row>
-              <Row>
-                <Cell>cell</Cell>
-                <Cell>cell</Cell>
-                <Cell>
+            <thead>
+              <tr>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+              </tr>
+              <tr>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+              </tr>
+              <tr>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>
                   multi
                   <br />
                   line
-                </Cell>
-              </Row>
-              <Row>
-                <Cell nullable={true}></Cell>
-                <Cell nullable={true}>not null</Cell>
-                <Cell nullable={false}></Cell>
-              </Row>
-            </Body>
+                </Td>
+              </tr>
+              <tr>
+                <Td nullable={true}></Td>
+                <Td nullable={true}>not null</Td>
+                <Td nullable={false}></Td>
+              </tr>
+            </tbody>
           </Table>
         </Base>
       </li>

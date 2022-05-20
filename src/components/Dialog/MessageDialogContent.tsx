@@ -1,22 +1,25 @@
 import React, { HTMLAttributes, useCallback, useContext } from 'react'
 
+import { UncontrolledDialogProps } from './types'
+import { useDialogPortal } from './useDialogPortal'
 import { DialogContext } from './DialogWrapper'
-import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
+import { DialogContentInner } from './DialogContentInner'
 import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
 import { useId } from '../../hooks/useId'
 
-type Props = Omit<BaseProps, 'titleId'> &
-  Pick<DialogContentInnerProps, 'width' | 'top' | 'right' | 'bottom' | 'left' | 'id'>
+type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
   title,
   description,
   closeText,
+  portalParent,
   className = '',
   ...props
 }) => {
-  const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
+  const { onClickClose, active } = useContext(DialogContext)
+  const { Portal } = useDialogPortal(portalParent)
 
   const handleClickClose = useCallback(() => {
     if (!active) {
@@ -27,7 +30,7 @@ export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
   const titleId = useId()
 
   return (
-    <DialogContentRoot>
+    <Portal>
       <DialogContentInner
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
@@ -43,6 +46,6 @@ export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
           onClickClose={handleClickClose}
         />
       </DialogContentInner>
-    </DialogContentRoot>
+    </Portal>
   )
 }
