@@ -1,7 +1,9 @@
 import React, { createContext, useContext } from 'react'
 
+import { DireactChildren, UncontrolledDialogProps } from './types'
+import { useDialogPortal } from './useDialogPortal'
 import { DialogContext } from './DialogWrapper'
-import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
+import { DialogContentInner } from './DialogContentInner'
 
 type DialogContentContextType = {
   onClickClose: () => void
@@ -13,16 +15,14 @@ export const DialogContentContext = createContext<DialogContentContextType>({
   },
 })
 
-type Props = Pick<
-  DialogContentInnerProps,
-  'width' | 'top' | 'right' | 'bottom' | 'left' | 'id' | 'ariaLabel' | 'ariaLabelledby' | 'children'
->
+type Props = UncontrolledDialogProps & DireactChildren
 
-export const DialogContent: React.VFC<Props> = ({ children, ...props }) => {
-  const { DialogContentRoot, onClickClose, active } = useContext(DialogContext)
+export const DialogContent: React.VFC<Props> = ({ portalParent, children, ...props }) => {
+  const { onClickClose, active } = useContext(DialogContext)
+  const { Portal } = useDialogPortal(portalParent)
 
   return (
-    <DialogContentRoot>
+    <Portal>
       <DialogContentContext.Provider value={{ onClickClose }}>
         <DialogContentInner
           isOpen={active}
@@ -33,6 +33,6 @@ export const DialogContent: React.VFC<Props> = ({ children, ...props }) => {
           {children}
         </DialogContentInner>
       </DialogContentContext.Provider>
-    </DialogContentRoot>
+    </Portal>
   )
 }
