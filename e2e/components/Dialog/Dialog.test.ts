@@ -47,3 +47,10 @@ test('フォーカストラップが動作すること', async (t) => {
     .expect(datePicker.focused)
     .ok()
 })
+
+test('開いた時に特定の要素をフォーカスできること', async (t) => {
+  const trigger = Selector('[data-test=dialog-focus-trigger]')
+  const input = Selector('[data-test=input-focus-target]')
+
+  await t.click(trigger).expect(input.focused).ok()
+})
