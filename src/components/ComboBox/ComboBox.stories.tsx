@@ -195,7 +195,7 @@ export const Multi: Story = () => {
     [selectedItems],
   )
   const handleDelete = useCallback(
-    (deleted) => {
+    (deleted: Item) => {
       action('onDelete')()
       setSelectedItems(selectedItems.filter((item) => item.value !== deleted.value))
     },
