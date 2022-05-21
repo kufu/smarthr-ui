@@ -18,6 +18,7 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
   description,
   closeText,
   onClickClose,
+  onPressEscape = onClickClose,
   className = '',
   portalParent,
   ...props
@@ -33,7 +34,12 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
 
   return (
     <Portal>
-      <DialogContentInner aria-labelledby={titleId} className={className} {...props}>
+      <DialogContentInner
+        aria-labelledby={titleId}
+        className={className}
+        onPressEscape={onPressEscape}
+        {...props}
+      >
         <MessageDialogContentInner
           title={title}
           titleId={titleId}

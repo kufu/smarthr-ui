@@ -18,6 +18,7 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   actionTheme,
   onClickAction,
   onClickClose,
+  onPressEscape = onClickClose,
   responseMessage,
   actionDisabled = false,
   closeDisabled,
@@ -44,7 +45,12 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
 
   return (
     <Portal>
-      <DialogContentInner ariaLabelledby={titleId} className={className} {...props}>
+      <DialogContentInner
+        ariaLabelledby={titleId}
+        className={className}
+        onPressEscape={onPressEscape}
+        {...props}
+      >
         <ActionDialogContentInner
           title={title}
           titleId={titleId}
