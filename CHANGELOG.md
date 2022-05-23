@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [21.1.0](https://github.com/kufu/smarthr-ui/compare/v21.0.0...v21.1.0) (2022-05-23)
+
+
+### Features
+
+* `Icon` の size を string で指定できるように変更 (SHRUI-559) ([#2481](https://github.com/kufu/smarthr-ui/issues/2481)) ([3cd7ef5](https://github.com/kufu/smarthr-ui/commit/3cd7ef52234a3d07c5dd22c40ae5482428c946b8))
+* `Th`, `Td` コンポーネントを追加 (SHRUI-557) ([#2471](https://github.com/kufu/smarthr-ui/issues/2471)) ([4bd8270](https://github.com/kufu/smarthr-ui/commit/4bd8270af711025ffefaa5928247753bb0679b18))
+* ActionDialog と MessageDialog の良いデフォルトを実装 ([#2489](https://github.com/kufu/smarthr-ui/issues/2489)) ([e15d78d](https://github.com/kufu/smarthr-ui/commit/e15d78d6d2fa968985711eead91444931563ac25))
+* add new icon, fa-reg-light-bulb ([#2486](https://github.com/kufu/smarthr-ui/issues/2486)) ([23bea0c](https://github.com/kufu/smarthr-ui/commit/23bea0c5e3fd04649f6df789e1e9cde111e9a3b3))
+* ダイアログにおいて最初にフォーカスする要素を指定できるようにする (SHRUI-562) ([#2485](https://github.com/kufu/smarthr-ui/issues/2485)) ([c14ec72](https://github.com/kufu/smarthr-ui/commit/c14ec72e0023158ccb948f4c8be603431194269a))
+* 色のデザイントークンを整理｜SHRUI-560 ([#2447](https://github.com/kufu/smarthr-ui/issues/2447)) ([8c9bb71](https://github.com/kufu/smarthr-ui/commit/8c9bb71adf7c478348a862b5ed138e25d4af01e9))
+
 ## [21.0.0](https://github.com/kufu/smarthr-ui/compare/v20.4.0...v21.0.0) (2022-05-09)
 
 
