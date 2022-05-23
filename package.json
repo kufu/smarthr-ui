@@ -40,7 +40,7 @@
     "eslint-config-smarthr": "^6.0.7",
     "fs-extra": "^10.1.0",
     "http-server": "^14.1.0",
-    "husky": "^8.0.0",
+    "husky": "^8.0.1",
     "jest": "^28.1.0",
     "jest-styled-components": "^7.0.8",
     "lint-staged": "^12.4.1",
