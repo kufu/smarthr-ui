@@ -1,25 +1,12 @@
-import React, { HTMLAttributes, RefObject, useCallback } from 'react'
+import React, { HTMLAttributes, useCallback } from 'react'
 
 import { useId } from '../../hooks/useId'
+import { DialogProps } from './types'
 import { useDialogPortal } from './useDialogPortal'
-import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
+import { DialogContentInner } from './DialogContentInner'
 import { ActionDialogContentInner, ActionDialogContentInnerProps } from './ActionDialogContentInner'
 
-type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & {
-  onClickClose: () => void
-  portalParent?: HTMLElement | RefObject<HTMLElement>
-} & Pick<
-    DialogContentInnerProps,
-    | 'isOpen'
-    | 'onClickOverlay'
-    | 'onPressEscape'
-    | 'width'
-    | 'top'
-    | 'right'
-    | 'bottom'
-    | 'left'
-    | 'id'
-  >
+type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const ActionDialog: React.VFC<Props & ElementProps> = ({
@@ -31,6 +18,7 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   actionTheme,
   onClickAction,
   onClickClose,
+  onPressEscape = onClickClose,
   responseMessage,
   actionDisabled = false,
   closeDisabled,
@@ -57,7 +45,12 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
 
   return (
     <Portal>
-      <DialogContentInner ariaLabelledby={titleId} className={className} {...props}>
+      <DialogContentInner
+        ariaLabelledby={titleId}
+        className={className}
+        onPressEscape={onPressEscape}
+        {...props}
+      >
         <ActionDialogContentInner
           title={title}
           titleId={titleId}

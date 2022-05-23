@@ -22,13 +22,13 @@ exports[`TabBar should be match snapshot 1`] = `
 
 .c2.selected {
   position: relative;
-  color: #23221f;
+  color: #23221e;
   border-color: #0077c7;
 }
 
 .c2:hover {
   background-color: #f8f7f6;
-  color: #23221f;
+  color: #23221e;
 }
 
 .c2:disabled {

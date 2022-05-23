@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, VFC, useCallback, useRef } from 'react'
+import React, { HTMLAttributes, ReactNode, RefObject, VFC, useCallback, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -47,6 +47,10 @@ export type DialogContentInnerProps = {
    */
   id?: string
   /**
+   * ダイアログを開いた時にフォーカスする対象
+   */
+  firstFocusTarget?: RefObject<HTMLElement>
+  /**
    * `aria-label` of the component.
    */
   ariaLabel?: string
@@ -85,6 +89,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
   isOpen,
   id,
   width,
+  firstFocusTarget,
   ariaLabel,
   ariaLabelledby,
   children,
@@ -130,7 +135,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
             className={`${className} ${classNames.dialog}`}
             {...props}
           >
-            <FocusTrap>{children}</FocusTrap>
+            <FocusTrap firstFocusTarget={firstFocusTarget}>{children}</FocusTrap>
           </Inner>
           {/* Suppresses scrolling of body while modal is displayed */}
           <BodyScrollSuppressor />

@@ -218,6 +218,7 @@ import {
   FaRedo,
   FaRedoAlt,
   FaRegDotCircle,
+  FaRegLightbulb,
   FaReply,
   FaReplyAll,
   FaRocket,
@@ -305,7 +306,7 @@ import {
   FaWrench,
   FaYenSign,
 } from 'react-icons/fa'
-import type { IconType } from 'react-icons'
+import type { IconBaseProps, IconType } from 'react-icons'
 import styled from 'styled-components'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 import { useTheme } from '../../hooks/useTheme'
@@ -344,7 +345,7 @@ export interface IconProps {
   /**
    * アイコンの大きさ
    */
-  size?: number
+  size?: IconBaseProps['size']
 }
 
 type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
@@ -625,6 +626,7 @@ export const FaReceiptIcon = /*#__PURE__*/ createIcon(FaReceipt)
 export const FaRedoIcon = /*#__PURE__*/ createIcon(FaRedo)
 export const FaRedoAltIcon = /*#__PURE__*/ createIcon(FaRedoAlt)
 export const FaRegDotCircleIcon = /*#__PURE__*/ createIcon(FaRegDotCircle)
+export const FaRegLightbulbIcon = /*#__PURE__*/ createIcon(FaRegLightbulb)
 export const FaReplyIcon = /*#__PURE__*/ createIcon(FaReply)
 export const FaReplyAllIcon = /*#__PURE__*/ createIcon(FaReplyAll)
 export const FaRocketIcon = /*#__PURE__*/ createIcon(FaRocket)

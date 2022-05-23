@@ -16,7 +16,8 @@ import {
   ModelessDialog,
 } from '.'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
+import { Input } from '../Input'
 import { RadioButton } from '../RadioButton'
 import { DatePicker } from '../DatePicker'
 import { LineUp, Stack } from '../Layout'
@@ -50,68 +51,98 @@ export default {
 }
 
 export const Default: Story = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [opened, setOpended] = useState<'default' | 'focus' | null>(null)
   const [value, setValue] = useState('Apple')
   const [date, setDate] = useState<Date | null>(null)
-  const onClickOpen = () => setIsOpen(true)
-  const onClickClose = () => setIsOpen(false)
+  const onClickClose = () => setOpended(null)
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+  const inputRef = useRef<HTMLInputElement>(null)
   const themes = useTheme()
 
   return (
-    <>
-      <SecondaryButton
-        onClick={onClickOpen}
-        aria-haspopup="dialog"
-        aria-controls="dialog-default"
-        data-test="dialog-trigger"
-      >
-        Dialog
-      </SecondaryButton>
-      <Dialog
-        isOpen={isOpen}
-        onClickOverlay={onClickClose}
-        onPressEscape={onClickClose}
-        id="dialog-default"
-        ariaLabel="Dialog"
-        data-test="dialog-content"
-      >
-        <Title themes={themes}>Dialog</Title>
-        <Description>
-          The value of isOpen must be managed by you, but you can customize content freely.
-        </Description>
-        <Content>
-          <DatePicker
-            value={date?.toDateString()}
-            formatDate={(_date) => (_date ? _date.toDateString() : '')}
-            onChangeDate={(_date) => setDate(_date)}
-            data-test="dialog-datepicker"
-          />
-        </Content>
-        <RadioList>
-          <li>
-            <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChangeValue}>
-              Apple
-            </RadioButton>
-          </li>
-          <li>
-            <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChangeValue}>
-              Orange
-            </RadioButton>
-          </li>
-          <li>
-            <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChangeValue}>
-              Grape
-            </RadioButton>
-          </li>
-        </RadioList>
-        <Footer themes={themes}>
-          <SecondaryButton onClick={onClickClose} data-test="dialog-closer">
-            close
-          </SecondaryButton>
-        </Footer>
-      </Dialog>
-    </>
+    <TriggerList>
+      <li>
+        <Button
+          onClick={() => setOpended('default')}
+          aria-haspopup="dialog"
+          aria-controls="dialog-default"
+          data-test="dialog-trigger"
+        >
+          Dialog
+        </Button>
+        <Dialog
+          isOpen={opened === 'default'}
+          onClickOverlay={onClickClose}
+          onPressEscape={onClickClose}
+          id="dialog-default"
+          ariaLabel="Dialog"
+          data-test="dialog-content"
+        >
+          <Title themes={themes}>Dialog</Title>
+          <Description>
+            The value of isOpen must be managed by you, but you can customize content freely.
+          </Description>
+          <Content>
+            <DatePicker
+              value={date?.toDateString()}
+              formatDate={(_date) => (_date ? _date.toDateString() : '')}
+              onChangeDate={(_date) => setDate(_date)}
+              data-test="dialog-datepicker"
+            />
+          </Content>
+          <RadioList>
+            <li>
+              <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChangeValue}>
+                Apple
+              </RadioButton>
+            </li>
+            <li>
+              <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChangeValue}>
+                Orange
+              </RadioButton>
+            </li>
+            <li>
+              <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChangeValue}>
+                Grape
+              </RadioButton>
+            </li>
+          </RadioList>
+          <Footer themes={themes}>
+            <Button onClick={onClickClose} data-test="dialog-closer">
+              close
+            </Button>
+          </Footer>
+        </Dialog>
+      </li>
+      <li>
+        <Button
+          onClick={() => setOpended('focus')}
+          aria-haspopup="dialog"
+          aria-controls="dialog-focus"
+          data-test="dialog-focus-trigger"
+        >
+          特定の要素をフォーカス
+        </Button>
+        <Dialog
+          isOpen={opened === 'focus'}
+          onClickOverlay={onClickClose}
+          onPressEscape={onClickClose}
+          firstFocusTarget={inputRef}
+          id="dialog-focus"
+          ariaLabel="特定の要素をフォーカスするダイアログ"
+        >
+          <Title themes={themes}>特定の要素をフォーカスするダイアログ</Title>
+          <Content>
+            <Input ref={inputRef} data-test="input-focus-target" />
+          </Content>
+          <Footer themes={themes}>
+            <Button onClick={onClickClose} data-test="dialog-closer">
+              close
+            </Button>
+          </Footer>
+        </Dialog>
+      </li>
+    </TriggerList>
   )
 }
 
@@ -138,23 +169,21 @@ export const Message_Dialog: Story = () => {
 
   return (
     <>
-      <SecondaryButton
+      <Button
         onClick={onClickOpen}
         aria-haspopup="dialog"
         aria-controls="dialog-message"
         data-test="dialog-trigger"
       >
         MessageDialog
-      </SecondaryButton>
+      </Button>
       <MessageDialog
         isOpen={isOpen}
         title="MessageDialog"
         subtitle="副題"
         description={<p>{dummyText} </p>}
-        closeText="Close"
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
-        onPressEscape={onClickClose}
         id="dialog-message"
         data-test="dialog-content"
       />
@@ -185,29 +214,25 @@ export const Action_Dialog: Story = () => {
 
   return (
     <>
-      <SecondaryButton
+      <Button
         onClick={onClickOpen}
         aria-haspopup="dialog"
         aria-controls="dialog-action"
         data-test="dialog-trigger"
       >
         ActionDialog
-      </SecondaryButton>
+      </Button>
       <ActionDialog
         isOpen={isOpen}
         title="ActionDialog"
         subtitle="副題"
-        closeText="Close"
-        actionText="Execute"
-        actionTheme="primary"
+        actionText="保存"
         onClickAction={(closeDialog) => {
           action('executed')()
           setResponseMessage(undefined)
           closeDialog()
         }}
         onClickClose={onClickClose}
-        onClickOverlay={onClickClose}
-        onPressEscape={onClickClose}
         responseMessage={responseMessage}
         id="dialog-action"
         data-test="dialog-content"
@@ -231,7 +256,7 @@ export const Action_Dialog: Story = () => {
         </RadioList>
         <Buttons>
           <p>切り替えボタン：</p>
-          <SecondaryButton
+          <Button
             onClick={() =>
               setResponseMessage({
                 status: 'success',
@@ -240,8 +265,8 @@ export const Action_Dialog: Story = () => {
             }
           >
             保存
-          </SecondaryButton>
-          <SecondaryButton
+          </Button>
+          <Button
             onClick={() =>
               setResponseMessage({
                 status: 'error',
@@ -250,8 +275,8 @@ export const Action_Dialog: Story = () => {
             }
           >
             エラー
-          </SecondaryButton>
-          <SecondaryButton
+          </Button>
+          <Button
             onClick={() =>
               setResponseMessage({
                 status: 'processing',
@@ -260,7 +285,7 @@ export const Action_Dialog: Story = () => {
             }
           >
             保存中
-          </SecondaryButton>
+          </Button>
         </Buttons>
       </ActionDialog>
     </>
@@ -288,19 +313,19 @@ export const Uncontrolled: Story = () => {
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton
+            <Button
               aria-haspopup="dialog"
               aria-controls="dialog-uncontrolled"
               data-test="dialog-trigger"
             >
               Dialog
-            </SecondaryButton>
+            </Button>
           </DialogTrigger>
           <DialogContent id="dialog-uncontrolled" data-test="dialog-content">
             <Description>Uncontrolled Dialog.</Description>
             <Content>
               <DialogCloser>
-                <SecondaryButton data-test="dialog-closer">Close</SecondaryButton>
+                <Button data-test="dialog-closer">Close</Button>
               </DialogCloser>
             </Content>
           </DialogContent>
@@ -309,18 +334,17 @@ export const Uncontrolled: Story = () => {
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton
+            <Button
               aria-haspopup="dialog"
               aria-controls="dialog-uncontrolled-message"
               data-test="message-dialog-trigger"
             >
               MessageDialog
-            </SecondaryButton>
+            </Button>
           </DialogTrigger>
           <MessageDialogContent
             title="Uncontrolled Message Dialog"
             description={<p>{dummyText} </p>}
-            closeText="Close"
             id="dialog-uncontrolled-message"
             data-test="message-dialog-content"
           />
@@ -329,19 +353,17 @@ export const Uncontrolled: Story = () => {
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton
+            <Button
               aria-haspopup="dialog"
               aria-controls="dialog-uncontrolled-action"
               data-test="action-dialog-trigger"
             >
               ActionDialog
-            </SecondaryButton>
+            </Button>
           </DialogTrigger>
           <ActionDialogContent
             title="Uncontrolled Action Dialog"
-            closeText="Close"
-            actionText="Execute"
-            actionTheme="primary"
+            actionText="実行"
             actionDisabled={false}
             onClickAction={(closeDialog) => {
               action('executed')()
@@ -379,9 +401,9 @@ export const WidthAndPosition: Story = () => {
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-width-1">
+            <Button aria-haspopup="dialog" aria-controls="dialog-width-1">
               幅 400px
-            </SecondaryButton>
+            </Button>
           </DialogTrigger>
           <DialogContent width={400} id="dialog-width-1">
             <Description>幅 400px のダイアログ</Description>
@@ -391,9 +413,9 @@ export const WidthAndPosition: Story = () => {
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-width-2">
+            <Button aria-haspopup="dialog" aria-controls="dialog-width-2">
               幅 80%
-            </SecondaryButton>
+            </Button>
           </DialogTrigger>
           <DialogContent width="80%" id="dialog-width-2">
             <Description>幅 80% のダイアログ</Description>
@@ -403,9 +425,9 @@ export const WidthAndPosition: Story = () => {
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-position-1">
+            <Button aria-haspopup="dialog" aria-controls="dialog-position-1">
               top-left
-            </SecondaryButton>
+            </Button>
           </DialogTrigger>
           <DialogContent top={50} left={200} id="dialog-position-1">
             <Description>This Dialog is set to `top: 50px, left: 200px`.</Description>
@@ -415,9 +437,9 @@ export const WidthAndPosition: Story = () => {
       <li>
         <DialogWrapper>
           <DialogTrigger>
-            <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-position-2">
+            <Button aria-haspopup="dialog" aria-controls="dialog-position-2">
               bottom-right
-            </SecondaryButton>
+            </Button>
           </DialogTrigger>
           <DialogContent right={50} bottom={100} id="dialog-position-2">
             <Description>This Dialog is set to `right: 50px, bottom: 100px`.</Description>
@@ -444,9 +466,9 @@ export const WithScroll: Story = () => {
       </BorderedWrapper>
       <DialogWrapper>
         <DialogTrigger>
-          <SecondaryButton aria-haspopup="dialog" aria-controls="dialog-with-scroll-1">
+          <Button aria-haspopup="dialog" aria-controls="dialog-with-scroll-1">
             Open Dialog
-          </SecondaryButton>
+          </Button>
         </DialogTrigger>
         <DialogContent id="dialog-with-scroll-1">
           <ContentWrapper>
@@ -489,13 +511,13 @@ export const Modeless_Dialog: Story = () => {
   return (
     <TriggerList style={{ height: '200vh' }}>
       <li>
-        <SecondaryButton
+        <Button
           onClick={() => setIsOpen1(!isOpen1)}
           aria-haspopup="dialog"
           aria-controls="modeless-dialog-1"
         >
           中央表示
-        </SecondaryButton>
+        </Button>
         <ModelessDialog
           isOpen={isOpen1}
           header={<ModelessHeading>モードレスダイアログ（中央表示）</ModelessHeading>}
@@ -546,14 +568,14 @@ export const Modeless_Dialog: Story = () => {
         </ModelessDialog>
       </li>
       <li>
-        <SecondaryButton
+        <Button
           onClick={() => setIsOpen2(!isOpen2)}
           data-test="dialog-trigger"
           aria-haspopup="dialog"
           aria-controls="modeless-dialog-2"
         >
           座標指定
-        </SecondaryButton>
+        </Button>
         <ModelessDialog
           isOpen={isOpen2}
           header={<ModelessHeading>座標指定表示</ModelessHeading>}
@@ -604,7 +626,6 @@ export const RegOpendMessage: Story = () => {
       isOpen={true}
       title="MessageDialog"
       description={<p>{dummyText}</p>}
-      closeText="close"
       onClickClose={action('clicked close')}
     />
   )
@@ -616,9 +637,7 @@ export const RegOpendAction: Story = () => {
     <ActionDialog
       isOpen={true}
       title="ActionDialog"
-      closeText="close"
-      actionText="execute"
-      actionTheme="primary"
+      actionText="保存"
       onClickAction={action('clicked action')}
       onClickClose={action('clicked close')}
     >
@@ -673,37 +692,37 @@ export const Body以外のPortalParent: Story = () => {
   return (
     <div ref={portalParentRef}>
       <Stack align="flex-start">
-        <SecondaryButton
+        <Button
           onClick={() => onClickOpen('deault')}
           aria-haspopup="dialog"
           aria-controls="portal-default"
           data-test="dialog-trigger"
         >
           Dialog を開く
-        </SecondaryButton>
-        <SecondaryButton
+        </Button>
+        <Button
           onClick={() => onClickOpen('actiion')}
           aria-haspopup="dialog"
           aria-controls="portal-action"
           data-test="dialog-trigger"
         >
           ActionDialog を開く
-        </SecondaryButton>
-        <SecondaryButton
+        </Button>
+        <Button
           onClick={() => onClickOpen('message')}
           aria-haspopup="dialog"
           aria-controls="portal-message"
           data-test="dialog-trigger"
         >
           MessageDialog を開く
-        </SecondaryButton>
-        <SecondaryButton
+        </Button>
+        <Button
           onClick={() => onClickOpen('modeless')}
           aria-haspopup="dialog"
           aria-controls="portal-modeless"
         >
           ModelessDialog を開く
-        </SecondaryButton>
+        </Button>
       </Stack>
 
       <Dialog
@@ -720,24 +739,20 @@ export const Body以外のPortalParent: Story = () => {
           <p>Dialog を近接要素に生成しています。</p>
         </Content>
         <Footer themes={themes}>
-          <SecondaryButton onClick={onClickClose} data-test="dialog-closer">
+          <Button onClick={onClickClose} data-test="dialog-closer">
             閉じる
-          </SecondaryButton>
+          </Button>
         </Footer>
       </Dialog>
       <ActionDialog
         isOpen={isOpen === 'actiion'}
         title="ActionDialog"
-        closeText="閉じる"
-        actionText="実行"
-        actionTheme="primary"
+        actionText="保存"
         onClickAction={(closeDialog) => {
           action('executed')()
           closeDialog()
         }}
         onClickClose={onClickClose}
-        onClickOverlay={onClickClose}
-        onPressEscape={onClickClose}
         id="portal-action"
         data-test="dialog-content"
         portalParent={portalParentRef}
@@ -750,10 +765,8 @@ export const Body以外のPortalParent: Story = () => {
         isOpen={isOpen === 'message'}
         title="MessageDialog"
         description={<p>MessageDialog を近接要素に生成しています</p>}
-        closeText="閉じる"
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
-        onPressEscape={onClickClose}
         id="portal-message"
         data-test="dialog-content"
         portalParent={portalParentRef}
