@@ -150,8 +150,8 @@
     "react-dom": "^18.1.0",
     "@types/react": "^18.0.5",
     "@babel/helper-compilation-targets": "^7.17.10",
-    "@emotion/core": "^10.3.1",
-    "@emotion/styled-base": "^10.3.0",
-    "emotion-theming": "^10.3.0"
+    "@emotion/core": "^11.0.0",
+    "@emotion/styled-base": "^11.0.0",
+    "emotion-theming": "^11.0.0"
   }
 }
