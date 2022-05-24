@@ -70,12 +70,12 @@ const Box = styled.span<{ themes: Theme }>`
       box-sizing: border-box;
       pointer-events: none;
 
-      input:checked + & {
+      input:checked + && {
         border-color: ${color.MAIN};
         background-color: ${color.MAIN};
       }
 
-      input[disabled] + & {
+      input[disabled] + && {
         background-color: ${color.BORDER};
         border-color: ${color.BORDER};
       }
