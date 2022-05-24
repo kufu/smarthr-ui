@@ -41,9 +41,9 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 type Props = {
   /** この領域の説明 */
   description?: ReactNode
-  /** 表示する `PrimaryButton` または `PrimaryButtonAnchor` */
+  /** 表示する `Button` または `AnchorButton` （`variant="primary"` である必要がある） */
   primaryButton?: Primary
-  /** 表示する `SecondaryButton` または `SecondaryButtonAnchor` */
+  /** 表示する `Button` または `AnchorButton` （`variant="secondary"` である必要がある）*/
   secondaryButton?: Secondary
   /** 表示する tertialy link のプロパティの配列 */
   tertiaryLinks?: Array<React.ComponentProps<typeof TertiaryLink>>
