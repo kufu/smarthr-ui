@@ -16,7 +16,7 @@ import {
   FaSyncAltIcon,
 } from '../Icon'
 import { Heading, HeadingTagTypes } from '../Heading'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 
 type Props = {
   /** パネルのタイトル */
@@ -122,7 +122,7 @@ export const InformationPanel: VFC<Props & BaseElementProps> = ({
         </Title>
         {togglable && (
           <div>
-            <SecondaryButton
+            <Button
               suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
               size="s"
               onClick={handleClickTrigger}
@@ -131,7 +131,7 @@ export const InformationPanel: VFC<Props & BaseElementProps> = ({
               className={classNames.closeButton}
             >
               {active ? closeButtonLabel : openButtonLabel}
-            </SecondaryButton>
+            </Button>
           </div>
         )}
       </Header>
@@ -159,7 +159,7 @@ const Header = styled.div<{ themes: Theme; togglable: boolean }>(
 
   ${
     togglable &&
-    // (SecondaryButton(27px) - Heading(14px)) / 2 = 6.5px
+    // (Button(27px) - Heading(14px)) / 2 = 6.5px
     `
     margin-top: -6.5px;
     margin-bottom: -6.5px;

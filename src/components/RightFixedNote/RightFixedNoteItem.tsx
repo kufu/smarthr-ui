@@ -2,7 +2,7 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { FaPenIcon } from '../Icon'
 import { useClassNames } from './useClassNames'
 
@@ -99,7 +99,7 @@ const Text = styled.p<{ themes: Theme }>`
   }}
 `
 
-const EditButton = styled(SecondaryButton)`
+const EditButton = styled(Button)`
   float: right;
 `
 

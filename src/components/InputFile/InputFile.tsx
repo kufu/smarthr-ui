@@ -1,7 +1,7 @@
 import React, { ComponentProps, VFC, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import { TextButton } from '../Button'
+import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
@@ -86,13 +86,14 @@ export const InputFile: VFC<Props & ElementProps> = ({
               <li key={`${file.name}-${index}`}>
                 <span className={classNames.fileName}>{file.name}</span>
                 <span>
-                  <TextButton
+                  <Button
+                    variant="text"
                     prefix={<FaTrashAltIcon />}
                     onClick={() => handleDelete(index)}
                     className={classNames.deleteButton}
                   >
                     削除
-                  </TextButton>
+                  </Button>
                 </span>
               </li>
             )
