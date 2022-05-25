@@ -25,40 +25,35 @@ export const _Button: Story = () => {
       <dd>
         <Stack>
           <Cluster>
-            <Button variant={'primary'} onClick={action('clicked')}>
+            <Button variant="primary" onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant={'primary'} prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            <Button variant="primary" prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant={'primary'} suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
+            <Button variant="primary" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant={'primary'} square onClick={action('clicked')}>
+            <Button variant="primary" square onClick={action('clicked')}>
               <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
             </Button>
           </Cluster>
           <Cluster>
-            <Button variant={'primary'} disabled onClick={action('clicked')}>
+            <Button variant="primary" disabled onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button variant="primary" disabled prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
             <Button
-              variant={'primary'}
-              disabled
-              prefix={<FaPlusIcon />}
-              onClick={action('clicked')}
-            >
-              ボタン
-            </Button>
-            <Button
-              variant={'primary'}
+              variant="primary"
               disabled
               suffix={<FaPlusSquareIcon />}
               onClick={action('clicked')}
             >
               ボタン
             </Button>
-            <Button variant={'primary'} disabled square onClick={action('clicked')}>
+            <Button variant="primary" disabled square onClick={action('clicked')}>
               <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
             </Button>
           </Cluster>
@@ -69,44 +64,44 @@ export const _Button: Story = () => {
       <dd>
         <Stack>
           <Cluster>
-            <Button variant={'primary'} onClick={action('clicked')}>
+            <Button variant="primary" onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant={'primary'} disabled onClick={action('clicked')}>
-              ボタン
-            </Button>
-          </Cluster>
-          <Cluster>
-            <Button variant={'secondary'} onClick={action('clicked')}>
-              ボタン
-            </Button>
-            <Button variant={'secondary'} disabled onClick={action('clicked')}>
+            <Button variant="primary" disabled onClick={action('clicked')}>
               ボタン
             </Button>
           </Cluster>
           <Cluster>
-            <Button variant={'danger'} onClick={action('clicked')}>
+            <Button variant="secondary" onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant={'danger'} disabled onClick={action('clicked')}>
+            <Button variant="secondary" disabled onClick={action('clicked')}>
+              ボタン
+            </Button>
+          </Cluster>
+          <Cluster>
+            <Button variant="danger" onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button variant="danger" disabled onClick={action('clicked')}>
               ボタン
             </Button>
           </Cluster>
           <DarkBackground>
             <Cluster>
-              <Button variant={'skeleton'} onClick={action('clicked')}>
+              <Button variant="skeleton" onClick={action('clicked')}>
                 ボタン
               </Button>
-              <Button variant={'skeleton'} disabled onClick={action('clicked')}>
+              <Button variant="skeleton" disabled onClick={action('clicked')}>
                 ボタン
               </Button>
             </Cluster>
           </DarkBackground>
           <Cluster>
-            <Button variant={'text'} onClick={action('clicked')}>
+            <Button variant="text" onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant={'text'} disabled onClick={action('clicked')}>
+            <Button variant="text" disabled onClick={action('clicked')}>
               ボタン
             </Button>
           </Cluster>
@@ -117,12 +112,12 @@ export const _Button: Story = () => {
       <dd>
         <Stack>
           <Cluster>
-            <Button variant={'primary'} size="s" onClick={action('clicked')}>
+            <Button variant="primary" size="s" onClick={action('clicked')}>
               ボタン
             </Button>
           </Cluster>
           <Cluster>
-            <Button variant={'primary'} disabled size="s" onClick={action('clicked')}>
+            <Button variant="primary" disabled size="s" onClick={action('clicked')}>
               ボタン
             </Button>
           </Cluster>
@@ -132,10 +127,10 @@ export const _Button: Story = () => {
       <dt>Wide</dt>
       <dd>
         <Stack>
-          <Button variant={'primary'} wide onClick={action('clicked')}>
+          <Button variant="primary" wide onClick={action('clicked')}>
             ボタン
           </Button>
-          <Button variant={'primary'} disabled wide onClick={action('clicked')}>
+          <Button variant="primary" disabled wide onClick={action('clicked')}>
             ボタン
           </Button>
         </Stack>
@@ -143,7 +138,7 @@ export const _Button: Story = () => {
 
       <dt>Extending Style</dt>
       <dd>
-        <ExtendingButton variant={'primary'} onClick={action('clicked')}>
+        <ExtendingButton variant="primary" onClick={action('clicked')}>
           width: 300px
         </ExtendingButton>
       </dd>
@@ -159,14 +154,14 @@ export const _ButtonControl: Story = (args: ButtonProps) => {
   return (
     <Wrapper>
       <Button onClick={action('clicked')} {...args}>
-        ボタン
+        {args.children}
       </Button>
     </Wrapper>
   )
 }
 
 _ButtonControl.argTypes = {
-  children: { control: 'text' },
+  children: { control: 'text', defaultValue: 'ボタン' },
   prefix: { control: 'text' },
   suffix: { control: 'text' },
 }
@@ -178,12 +173,12 @@ export const _ButtonAnchor: Story = () => {
       <dd>
         <Stack>
           <Cluster>
-            <AnchorButton href="#" variant={'primary'} onClick={action('clicked')}>
+            <AnchorButton href="#" variant="primary" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
             <AnchorButton
               href="#"
-              variant={'primary'}
+              variant="primary"
               prefix={<FaPlusIcon />}
               onClick={action('clicked')}
             >
@@ -191,31 +186,31 @@ export const _ButtonAnchor: Story = () => {
             </AnchorButton>
             <AnchorButton
               href="#"
-              variant={'primary'}
+              variant="primary"
               suffix={<FaPlusSquareIcon />}
               onClick={action('clicked')}
             >
               ボタン
             </AnchorButton>
-            <AnchorButton href="#" variant={'primary'} square onClick={action('clicked')}>
+            <AnchorButton href="#" variant="primary" square onClick={action('clicked')}>
               <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
             </AnchorButton>
           </Cluster>
           <Cluster>
-            <AnchorButton variant={'primary'} onClick={action('clicked')}>
+            <AnchorButton variant="primary" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
-            <AnchorButton variant={'primary'} prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            <AnchorButton variant="primary" prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </AnchorButton>
             <AnchorButton
-              variant={'primary'}
+              variant="primary"
               suffix={<FaPlusSquareIcon />}
               onClick={action('clicked')}
             >
               ボタン
             </AnchorButton>
-            <AnchorButton variant={'primary'} square onClick={action('clicked')}>
+            <AnchorButton variant="primary" square onClick={action('clicked')}>
               <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
             </AnchorButton>
           </Cluster>
@@ -226,44 +221,44 @@ export const _ButtonAnchor: Story = () => {
       <dd>
         <Stack>
           <Cluster>
-            <AnchorButton href="#" variant={'primary'} onClick={action('clicked')}>
+            <AnchorButton href="#" variant="primary" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
-            <AnchorButton variant={'primary'} onClick={action('clicked')}>
-              ボタン
-            </AnchorButton>
-          </Cluster>
-          <Cluster>
-            <AnchorButton href="#" variant={'secondary'} onClick={action('clicked')}>
-              ボタン
-            </AnchorButton>
-            <AnchorButton variant={'secondary'} onClick={action('clicked')}>
+            <AnchorButton variant="primary" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
           </Cluster>
           <Cluster>
-            <AnchorButton href="#" variant={'danger'} onClick={action('clicked')}>
+            <AnchorButton href="#" variant="secondary" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
-            <AnchorButton variant={'danger'} onClick={action('clicked')}>
+            <AnchorButton variant="secondary" onClick={action('clicked')}>
+              ボタン
+            </AnchorButton>
+          </Cluster>
+          <Cluster>
+            <AnchorButton href="#" variant="danger" onClick={action('clicked')}>
+              ボタン
+            </AnchorButton>
+            <AnchorButton variant="danger" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
           </Cluster>
           <DarkBackground>
             <Cluster>
-              <AnchorButton href="#" variant={'skeleton'} onClick={action('clicked')}>
+              <AnchorButton href="#" variant="skeleton" onClick={action('clicked')}>
                 ボタン
               </AnchorButton>
-              <AnchorButton variant={'skeleton'} onClick={action('clicked')}>
+              <AnchorButton variant="skeleton" onClick={action('clicked')}>
                 ボタン
               </AnchorButton>
             </Cluster>
           </DarkBackground>
           <Cluster>
-            <AnchorButton href="#" variant={'text'} onClick={action('clicked')}>
+            <AnchorButton href="#" variant="text" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
-            <AnchorButton variant={'text'} onClick={action('clicked')}>
+            <AnchorButton variant="text" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
           </Cluster>
@@ -274,12 +269,12 @@ export const _ButtonAnchor: Story = () => {
       <dd>
         <Stack>
           <Cluster>
-            <AnchorButton href="#" variant={'primary'} size="s" onClick={action('clicked')}>
+            <AnchorButton href="#" variant="primary" size="s" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
           </Cluster>
           <Cluster>
-            <AnchorButton variant={'primary'} size="s" onClick={action('clicked')}>
+            <AnchorButton variant="primary" size="s" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
           </Cluster>
@@ -289,10 +284,10 @@ export const _ButtonAnchor: Story = () => {
       <dt>Wide</dt>
       <dd>
         <Stack>
-          <AnchorButton href="#" variant={'primary'} wide onClick={action('clicked')}>
+          <AnchorButton href="#" variant="primary" wide onClick={action('clicked')}>
             ボタン
           </AnchorButton>
-          <AnchorButton variant={'primary'} wide onClick={action('clicked')}>
+          <AnchorButton variant="primary" wide onClick={action('clicked')}>
             ボタン
           </AnchorButton>
         </Stack>
@@ -300,7 +295,7 @@ export const _ButtonAnchor: Story = () => {
 
       <dt>Extending Style</dt>
       <dd>
-        <ExtendingAnchorButton href="#" variant={'primary'} onClick={action('clicked')}>
+        <ExtendingAnchorButton href="#" variant="primary" onClick={action('clicked')}>
           width: 300px
         </ExtendingAnchorButton>
       </dd>
@@ -316,24 +311,20 @@ export const _ButtonAnchorControl: Story = (args: AnchorButtonProps) => {
   return (
     <Wrapper>
       <AnchorButton href="#" onClick={action('clicked')} {...args}>
-        ボタン
+        {args.children}
       </AnchorButton>
     </Wrapper>
   )
 }
 
 _ButtonAnchorControl.argTypes = {
-  children: { control: 'text' },
+  children: { control: 'text', defaultValue: 'ボタン' },
   prefix: { control: 'text' },
   suffix: { control: 'text' },
 }
 
 const Wrapper = styled.div`
   padding: 24px;
-
-  > * + * {
-    margin-top: 24px;
-  }
 `
 const List = styled.dl`
   margin: 0;
