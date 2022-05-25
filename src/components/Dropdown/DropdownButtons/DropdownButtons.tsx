@@ -12,6 +12,7 @@ import {
   Stack,
 } from '../../../'
 import { Theme, useTheme } from '../../../hooks/useTheme'
+import { BaseProps as ButtonProps } from '../../Button/types'
 
 type Actions = ActionItem | ActionItem[]
 // これでコンポーネントを絞れるわけではないが Button[variant=text] を使ってほしいんだよ! という気持ち
@@ -24,7 +25,7 @@ type Props = {
   /** 操作群 */
   children: Actions
   /** 引き金となるボタンの大きさ */
-  triggerSize?: 's'
+  triggerSize?: ButtonProps['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIconTrigger?: boolean
   /** 引き金となるボタンの `disabled` 属性の値 */
