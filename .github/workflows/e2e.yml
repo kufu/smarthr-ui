@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        browser: ['chrome:headles']
+        browser: ['chrome:headless']
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v2-beta
