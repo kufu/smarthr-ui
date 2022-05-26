@@ -4,8 +4,8 @@ import { action } from '@storybook/addon-actions'
 import styled, { css } from 'styled-components'
 
 import { AnchorButton, Button } from '.'
+import { Cluster, Stack } from '../Layout'
 import { FaPlusCircleIcon, FaPlusIcon, FaPlusSquareIcon } from '../Icon'
-import { LineUp, Stack } from '../Layout'
 
 export default {
   title: 'Button',
@@ -18,160 +18,119 @@ export default {
 type ButtonProps = React.ComponentProps<typeof Button>
 type AnchorButtonProps = React.ComponentProps<typeof AnchorButton>
 
-export const _PrimaryButton: Story = () => {
-  return renderButtons('primary')
-}
-
-export const _PrimaryButtonAnchor: Story = () => {
-  return renderAnchors('primary')
-}
-
-export const _SecondaryButton: Story = () => {
-  return renderButtons('secondary')
-}
-
-export const _SecondaryButtonAnchor: Story = () => {
-  return renderAnchors('secondary')
-}
-
-export const _DangerButton: Story = () => {
-  return renderButtons('danger')
-}
-
-export const _DangerButtonAnchor: Story = () => {
-  return renderAnchors('danger')
-}
-
-export const _SkeletonButton: Story = () => {
-  return <DarkBackground>{renderButtons('skeleton')}</DarkBackground>
-}
-
-export const _SkeletonButtonAnchor: Story = () => {
-  return <DarkBackground>{renderAnchors('skeleton')}</DarkBackground>
-}
-
-export const _TextButton: Story = () => {
-  return renderButtons('text', true)
-}
-
-export const _TextButtonAnchor: Story = () => {
-  return renderAnchors('text', true)
-}
-
-function renderButtons(variant: ButtonProps['variant'], noSquare = false) {
+export const _Button: Story = () => {
   return (
     <List>
       <dt>Default</dt>
       <dd>
         <Stack>
-          <WrapLineUp vAlign="center">
-            <Button variant={variant} onClick={action('clicked')}>
+          <Cluster>
+            <Button variant="primary" onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant={variant} prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            <Button variant="primary" prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant={variant} suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
+            <Button variant="primary" suffix={<FaPlusSquareIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
-            {!noSquare && (
-              <Button variant={variant} square onClick={action('clicked')}>
-                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
-              </Button>
-            )}
-          </WrapLineUp>
-          <WrapLineUp vAlign="center">
-            <Button variant={variant} disabled onClick={action('clicked')}>
+            <Button variant="primary" square onClick={action('clicked')}>
+              <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
+            </Button>
+          </Cluster>
+          <Cluster>
+            <Button variant="primary" disabled onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant={variant} disabled prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            <Button variant="primary" disabled prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </Button>
             <Button
-              variant={variant}
+              variant="primary"
               disabled
               suffix={<FaPlusSquareIcon />}
               onClick={action('clicked')}
             >
               ボタン
             </Button>
-            {!noSquare && (
-              <Button variant={variant} disabled square onClick={action('clicked')}>
-                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
+            <Button variant="primary" disabled square onClick={action('clicked')}>
+              <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
+            </Button>
+          </Cluster>
+        </Stack>
+      </dd>
+
+      <dt>Variants</dt>
+      <dd>
+        <Stack>
+          <Cluster>
+            <Button variant="primary" onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button variant="primary" disabled onClick={action('clicked')}>
+              ボタン
+            </Button>
+          </Cluster>
+          <Cluster>
+            <Button variant="secondary" onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button variant="secondary" disabled onClick={action('clicked')}>
+              ボタン
+            </Button>
+          </Cluster>
+          <Cluster>
+            <Button variant="danger" onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button variant="danger" disabled onClick={action('clicked')}>
+              ボタン
+            </Button>
+          </Cluster>
+          <DarkBackground>
+            <Cluster>
+              <Button variant="skeleton" onClick={action('clicked')}>
+                ボタン
               </Button>
-            )}
-          </WrapLineUp>
+              <Button variant="skeleton" disabled onClick={action('clicked')}>
+                ボタン
+              </Button>
+            </Cluster>
+          </DarkBackground>
+          <Cluster>
+            <Button variant="text" onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button variant="text" disabled onClick={action('clicked')}>
+              ボタン
+            </Button>
+          </Cluster>
         </Stack>
       </dd>
 
       <dt>Small</dt>
       <dd>
         <Stack>
-          <WrapLineUp vAlign="center">
-            <Button variant={variant} size="s" onClick={action('clicked')}>
+          <Cluster>
+            <Button variant="primary" size="s" onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant={variant} size="s" prefix={<FaPlusIcon />} onClick={action('clicked')}>
+          </Cluster>
+          <Cluster>
+            <Button variant="primary" disabled size="s" onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button
-              variant={variant}
-              size="s"
-              suffix={<FaPlusSquareIcon />}
-              onClick={action('clicked')}
-            >
-              ボタン
-            </Button>
-            {!noSquare && (
-              <Button variant={variant} size="s" square onClick={action('clicked')}>
-                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
-              </Button>
-            )}
-          </WrapLineUp>
-          <WrapLineUp vAlign="center">
-            <Button variant={variant} disabled size="s" onClick={action('clicked')}>
-              ボタン
-            </Button>
-            <Button
-              variant={variant}
-              disabled
-              size="s"
-              prefix={<FaPlusIcon />}
-              onClick={action('clicked')}
-            >
-              ボタン
-            </Button>
-            <Button
-              variant={variant}
-              disabled
-              size="s"
-              suffix={<FaPlusSquareIcon />}
-              onClick={action('clicked')}
-            >
-              ボタン
-            </Button>
-            {!noSquare && (
-              <Button variant={variant} disabled size="s" square onClick={action('clicked')}>
-                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
-              </Button>
-            )}
-          </WrapLineUp>
+          </Cluster>
         </Stack>
       </dd>
 
       <dt>Wide</dt>
       <dd>
         <Stack>
-          <Button variant={variant} wide onClick={action('clicked')}>
+          <Button variant="primary" wide onClick={action('clicked')}>
             ボタン
           </Button>
-          <Button variant={variant} disabled wide onClick={action('clicked')}>
-            ボタン
-          </Button>
-          <Button variant={variant} size="s" wide onClick={action('clicked')}>
-            ボタン
-          </Button>
-          <Button variant={variant} disabled size="s" wide onClick={action('clicked')}>
+          <Button variant="primary" disabled wide onClick={action('clicked')}>
             ボタン
           </Button>
         </Stack>
@@ -179,7 +138,7 @@ function renderButtons(variant: ButtonProps['variant'], noSquare = false) {
 
       <dt>Extending Style</dt>
       <dd>
-        <ExtendingButton variant={variant} onClick={action('clicked')}>
+        <ExtendingButton variant="primary" onClick={action('clicked')}>
           width: 300px
         </ExtendingButton>
       </dd>
@@ -187,135 +146,148 @@ function renderButtons(variant: ButtonProps['variant'], noSquare = false) {
   )
 }
 
-function renderAnchors(variant: AnchorButtonProps['variant'], noSquare = false) {
+_Button.parameters = {
+  controls: { hideNoControlsWarning: true },
+}
+
+export const _ButtonControl: Story = (args: ButtonProps) => {
+  return (
+    <Wrapper>
+      <Button onClick={action('clicked')} {...args}>
+        {args.children}
+      </Button>
+    </Wrapper>
+  )
+}
+
+_ButtonControl.argTypes = {
+  children: { control: 'text', defaultValue: 'ボタン' },
+  prefix: { control: 'text' },
+  suffix: { control: 'text' },
+}
+
+export const _ButtonAnchor: Story = () => {
   return (
     <List>
       <dt>Default</dt>
       <dd>
         <Stack>
-          <WrapLineUp vAlign="center">
-            <AnchorButton variant={variant} href="#" onClick={action('clicked')}>
+          <Cluster>
+            <AnchorButton href="#" variant="primary" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
             <AnchorButton
-              variant={variant}
               href="#"
+              variant="primary"
               prefix={<FaPlusIcon />}
               onClick={action('clicked')}
             >
               ボタン
             </AnchorButton>
             <AnchorButton
-              variant={variant}
               href="#"
+              variant="primary"
               suffix={<FaPlusSquareIcon />}
               onClick={action('clicked')}
             >
               ボタン
             </AnchorButton>
-            {!noSquare && (
-              <AnchorButton variant={variant} href="#" square onClick={action('clicked')}>
-                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
-              </AnchorButton>
-            )}
-          </WrapLineUp>
-          <WrapLineUp vAlign="center">
-            <AnchorButton variant={variant} onClick={action('clicked')}>
+            <AnchorButton href="#" variant="primary" square onClick={action('clicked')}>
+              <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
+            </AnchorButton>
+          </Cluster>
+          <Cluster>
+            <AnchorButton variant="primary" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
-            <AnchorButton variant={variant} prefix={<FaPlusIcon />} onClick={action('clicked')}>
+            <AnchorButton variant="primary" prefix={<FaPlusIcon />} onClick={action('clicked')}>
               ボタン
             </AnchorButton>
             <AnchorButton
-              variant={variant}
+              variant="primary"
               suffix={<FaPlusSquareIcon />}
               onClick={action('clicked')}
             >
               ボタン
             </AnchorButton>
-            {!noSquare && (
-              <AnchorButton variant={variant} square onClick={action('clicked')}>
-                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
+            <AnchorButton variant="primary" square onClick={action('clicked')}>
+              <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
+            </AnchorButton>
+          </Cluster>
+        </Stack>
+      </dd>
+
+      <dt>Variants</dt>
+      <dd>
+        <Stack>
+          <Cluster>
+            <AnchorButton href="#" variant="primary" onClick={action('clicked')}>
+              ボタン
+            </AnchorButton>
+            <AnchorButton variant="primary" onClick={action('clicked')}>
+              ボタン
+            </AnchorButton>
+          </Cluster>
+          <Cluster>
+            <AnchorButton href="#" variant="secondary" onClick={action('clicked')}>
+              ボタン
+            </AnchorButton>
+            <AnchorButton variant="secondary" onClick={action('clicked')}>
+              ボタン
+            </AnchorButton>
+          </Cluster>
+          <Cluster>
+            <AnchorButton href="#" variant="danger" onClick={action('clicked')}>
+              ボタン
+            </AnchorButton>
+            <AnchorButton variant="danger" onClick={action('clicked')}>
+              ボタン
+            </AnchorButton>
+          </Cluster>
+          <DarkBackground>
+            <Cluster>
+              <AnchorButton href="#" variant="skeleton" onClick={action('clicked')}>
+                ボタン
               </AnchorButton>
-            )}
-          </WrapLineUp>
+              <AnchorButton variant="skeleton" onClick={action('clicked')}>
+                ボタン
+              </AnchorButton>
+            </Cluster>
+          </DarkBackground>
+          <Cluster>
+            <AnchorButton href="#" variant="text" onClick={action('clicked')}>
+              ボタン
+            </AnchorButton>
+            <AnchorButton variant="text" onClick={action('clicked')}>
+              ボタン
+            </AnchorButton>
+          </Cluster>
         </Stack>
       </dd>
 
       <dt>Small</dt>
       <dd>
         <Stack>
-          <WrapLineUp vAlign="center">
-            <AnchorButton variant={variant} size="s" href="#" onClick={action('clicked')}>
+          <Cluster>
+            <AnchorButton href="#" variant="primary" size="s" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
-            <AnchorButton
-              variant={variant}
-              size="s"
-              href="#"
-              prefix={<FaPlusIcon />}
-              onClick={action('clicked')}
-            >
+          </Cluster>
+          <Cluster>
+            <AnchorButton variant="primary" size="s" onClick={action('clicked')}>
               ボタン
             </AnchorButton>
-            <AnchorButton
-              variant={variant}
-              size="s"
-              href="#"
-              suffix={<FaPlusSquareIcon />}
-              onClick={action('clicked')}
-            >
-              ボタン
-            </AnchorButton>
-            {!noSquare && (
-              <AnchorButton variant={variant} size="s" href="#" square onClick={action('clicked')}>
-                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
-              </AnchorButton>
-            )}
-          </WrapLineUp>
-          <WrapLineUp vAlign="center">
-            <AnchorButton variant={variant} size="s" onClick={action('clicked')}>
-              ボタン
-            </AnchorButton>
-            <AnchorButton
-              variant={variant}
-              size="s"
-              prefix={<FaPlusIcon />}
-              onClick={action('clicked')}
-            >
-              ボタン
-            </AnchorButton>
-            <AnchorButton
-              variant={variant}
-              size="s"
-              suffix={<FaPlusSquareIcon />}
-              onClick={action('clicked')}
-            >
-              ボタン
-            </AnchorButton>
-            {!noSquare && (
-              <AnchorButton variant={variant} size="s" square onClick={action('clicked')}>
-                <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
-              </AnchorButton>
-            )}
-          </WrapLineUp>
+          </Cluster>
         </Stack>
       </dd>
 
       <dt>Wide</dt>
       <dd>
         <Stack>
-          <AnchorButton variant={variant} href="#" wide onClick={action('clicked')}>
+          <AnchorButton href="#" variant="primary" wide onClick={action('clicked')}>
             ボタン
           </AnchorButton>
-
-          <AnchorButton variant={variant} wide onClick={action('clicked')}>
-            ボタン
-          </AnchorButton>
-          <AnchorButton variant={variant} size="s" href="#" wide onClick={action('clicked')}>
-            ボタン
-          </AnchorButton>
-          <AnchorButton variant={variant} size="s" wide onClick={action('clicked')}>
+          <AnchorButton variant="primary" wide onClick={action('clicked')}>
             ボタン
           </AnchorButton>
         </Stack>
@@ -323,7 +295,7 @@ function renderAnchors(variant: AnchorButtonProps['variant'], noSquare = false) 
 
       <dt>Extending Style</dt>
       <dd>
-        <ExtendingAnchorButton variant={variant} href="#" onClick={action('clicked')}>
+        <ExtendingAnchorButton href="#" variant="primary" onClick={action('clicked')}>
           width: 300px
         </ExtendingAnchorButton>
       </dd>
@@ -331,6 +303,29 @@ function renderAnchors(variant: AnchorButtonProps['variant'], noSquare = false) 
   )
 }
 
+_ButtonAnchor.parameters = {
+  controls: { hideNoControlsWarning: true },
+}
+
+export const _ButtonAnchorControl: Story = (args: AnchorButtonProps) => {
+  return (
+    <Wrapper>
+      <AnchorButton href="#" onClick={action('clicked')} {...args}>
+        {args.children}
+      </AnchorButton>
+    </Wrapper>
+  )
+}
+
+_ButtonAnchorControl.argTypes = {
+  children: { control: 'text', defaultValue: 'ボタン' },
+  prefix: { control: 'text' },
+  suffix: { control: 'text' },
+}
+
+const Wrapper = styled.div`
+  padding: 24px;
+`
 const List = styled.dl`
   margin: 0;
   padding: 1rem;
@@ -341,10 +336,8 @@ const List = styled.dl`
     margin: 0 0 1rem;
   }
 `
-const WrapLineUp = styled(LineUp)`
-  flex-wrap: wrap;
-`
 const DarkBackground = styled.div`
+  padding: 1rem;
   background-color: #5c5c5c;
   color: #fff;
 `
