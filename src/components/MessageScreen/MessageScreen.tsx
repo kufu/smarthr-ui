@@ -43,7 +43,7 @@ export const MessageScreen: VFC<Props & ElementProps> = ({
     <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       <Box>
         <Logo className={classNames.logo}>
-          <SmartHRLogo width={111} height={LOGO_HEIGHT} fill={theme.color.BRAND} />
+          <SmartHRLogo width={111} height={LOGO_HEIGHT} fill="brand" />
         </Logo>
 
         {title && (

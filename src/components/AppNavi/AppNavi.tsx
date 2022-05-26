@@ -24,7 +24,7 @@ type Props = {
   /** コンポーネントに適用するクラス名 */
   className?: string
   /** ドロップダウンにキャレットを表示するかどうか */
-  displayDrodownCaret?: boolean
+  displayDropdownCaret?: boolean
 }
 
 export const AppNavi: VFC<Props & ElementProps> = ({
@@ -33,7 +33,7 @@ export const AppNavi: VFC<Props & ElementProps> = ({
   isCurrentUnclickable,
   className = '',
   children = null,
-  displayDrodownCaret = false,
+  displayDropdownCaret = false,
   ...props
 }) => {
   const theme = useTheme()
@@ -74,7 +74,7 @@ export const AppNavi: VFC<Props & ElementProps> = ({
                     icon={button.icon}
                     current={button.current}
                     isUnclickable={isUnclickable}
-                    displayCaret={displayDrodownCaret}
+                    displayCaret={displayDropdownCaret}
                   >
                     {button.children}
                   </AppNaviDropdown>

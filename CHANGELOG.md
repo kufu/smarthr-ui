@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [21.1.0](https://github.com/kufu/smarthr-ui/compare/v21.0.0...v21.1.0) (2022-05-23)
+
+
+### Features
+
+* `Icon` の size を string で指定できるように変更 (SHRUI-559) ([#2481](https://github.com/kufu/smarthr-ui/issues/2481)) ([3cd7ef5](https://github.com/kufu/smarthr-ui/commit/3cd7ef52234a3d07c5dd22c40ae5482428c946b8))
+* `Th`, `Td` コンポーネントを追加 (SHRUI-557) ([#2471](https://github.com/kufu/smarthr-ui/issues/2471)) ([4bd8270](https://github.com/kufu/smarthr-ui/commit/4bd8270af711025ffefaa5928247753bb0679b18))
+* ActionDialog と MessageDialog の良いデフォルトを実装 ([#2489](https://github.com/kufu/smarthr-ui/issues/2489)) ([e15d78d](https://github.com/kufu/smarthr-ui/commit/e15d78d6d2fa968985711eead91444931563ac25))
+* add new icon, fa-reg-light-bulb ([#2486](https://github.com/kufu/smarthr-ui/issues/2486)) ([23bea0c](https://github.com/kufu/smarthr-ui/commit/23bea0c5e3fd04649f6df789e1e9cde111e9a3b3))
+* ダイアログにおいて最初にフォーカスする要素を指定できるようにする (SHRUI-562) ([#2485](https://github.com/kufu/smarthr-ui/issues/2485)) ([c14ec72](https://github.com/kufu/smarthr-ui/commit/c14ec72e0023158ccb948f4c8be603431194269a))
+* 色のデザイントークンを整理｜SHRUI-560 ([#2447](https://github.com/kufu/smarthr-ui/issues/2447)) ([8c9bb71](https://github.com/kufu/smarthr-ui/commit/8c9bb71adf7c478348a862b5ed138e25d4af01e9))
+
+## [21.0.0](https://github.com/kufu/smarthr-ui/compare/v20.4.0...v21.0.0) (2022-05-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* `InputFile` のファイル選択の制御方法を変更 (#2440)
+* `SmartHRLogo` の I/F 変更 (SHRUI-551) (#2446)
+* props の typo を修正 (#2448)
+
+### Features
+
+* `Button`, `AnchorButton` コンポーネントを追加 (SHRUI-545) ([#2443](https://github.com/kufu/smarthr-ui/issues/2443)) ([98bedf6](https://github.com/kufu/smarthr-ui/commit/98bedf663a9b537d05c1d133d89f78dfd7bc9693))
+* `InputFile` のファイル選択の制御方法を変更 ([#2440](https://github.com/kufu/smarthr-ui/issues/2440)) ([dc62eb6](https://github.com/kufu/smarthr-ui/commit/dc62eb60420a5479a10ac19fd18ed0c53e09b517))
+* DatePickerで別フォーマット日付の併記をサポートしたい ([#2242](https://github.com/kufu/smarthr-ui/issues/2242)) ([3fcf128](https://github.com/kufu/smarthr-ui/commit/3fcf12893df7d625586d9a3ffc60a32b43088b82)), closes [/github.com/kufu/smarthr-ui/pull/2242#discussion_r800413336](https://github.com/kufu//github.com/kufu/smarthr-ui/pull/2242/issues/discussion_r800413336) [/github.com/kufu/smarthr-ui/pull/2242#discussion_r857246590](https://github.com/kufu//github.com/kufu/smarthr-ui/pull/2242/issues/discussion_r857246590) [/github.com/kufu/smarthr-ui/pull/2242#discussion_r857246886](https://github.com/kufu//github.com/kufu/smarthr-ui/pull/2242/issues/discussion_r857246886) [/github.com/kufu/smarthr-ui/pull/2242#discussion_r857250131](https://github.com/kufu//github.com/kufu/smarthr-ui/pull/2242/issues/discussion_r857250131)
+
+
+### Bug Fixes
+
+* `SmartHRLogo` の I/F 変更 (SHRUI-551) ([#2446](https://github.com/kufu/smarthr-ui/issues/2446)) ([0a4487f](https://github.com/kufu/smarthr-ui/commit/0a4487ffdfac45ec0eafa665b6115e71682fd915))
+* `Tooltip` のメッセージがスクリーンリーダーで読めるように修正 (SHRUI-556) ([#2468](https://github.com/kufu/smarthr-ui/issues/2468)) ([3e6b7bc](https://github.com/kufu/smarthr-ui/commit/3e6b7bc094ebf5957470bfffc1df04a7d8a9f166))
+* props の typo を修正 ([#2448](https://github.com/kufu/smarthr-ui/issues/2448)) ([45cfd69](https://github.com/kufu/smarthr-ui/commit/45cfd6971fd90694945fc93f909d1a8f91048ba2))
+
 ## [20.4.0](https://github.com/kufu/smarthr-ui/compare/v20.3.0...v20.4.0) (2022-04-25)
 
 

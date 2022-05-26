@@ -1,26 +1,15 @@
-import React, { HTMLAttributes, RefObject, useCallback } from 'react'
+import React, { HTMLAttributes, useCallback } from 'react'
 
+import { DialogProps } from './types'
 import { useDialogPortal } from './useDialogPortal'
-import { DialogContentInner, DialogContentInnerProps } from './DialogContentInner'
+import { DialogContentInner } from './DialogContentInner'
 import {
   MessageDialogContentInner,
   MessageDialogContentInnerProps,
 } from './MessageDialogContentInner'
 import { useId } from '../../hooks/useId'
 
-type Props = Omit<MessageDialogContentInnerProps, 'titleId'> &
-  Pick<
-    DialogContentInnerProps,
-    | 'isOpen'
-    | 'onClickOverlay'
-    | 'onPressEscape'
-    | 'width'
-    | 'top'
-    | 'right'
-    | 'bottom'
-    | 'left'
-    | 'id'
-  > & { portalParent?: HTMLElement | RefObject<HTMLElement> }
+type Props = Omit<MessageDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const MessageDialog: React.VFC<Props & ElementProps> = ({
@@ -29,6 +18,7 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
   description,
   closeText,
   onClickClose,
+  onPressEscape = onClickClose,
   className = '',
   portalParent,
   ...props
@@ -44,7 +34,12 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
 
   return (
     <Portal>
-      <DialogContentInner aria-labelledby={titleId} className={className} {...props}>
+      <DialogContentInner
+        aria-labelledby={titleId}
+        className={className}
+        onPressEscape={onPressEscape}
+        {...props}
+      >
         <MessageDialogContentInner
           title={title}
           titleId={titleId}

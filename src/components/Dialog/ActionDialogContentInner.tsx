@@ -25,7 +25,7 @@ export type BaseProps = {
   /**
    * Label of close button.
    */
-  closeText: ReactNode
+  closeText?: ReactNode
   /**
    * Label of action button.
    */
@@ -33,7 +33,7 @@ export type BaseProps = {
   /**
    * Action button style theme.
    */
-  actionTheme: 'primary' | 'secondary' | 'danger'
+  actionTheme?: 'primary' | 'secondary' | 'danger'
   /**
    * Handler function when clicking on action button.<br />
    * Accepts a function that closes dialog as an argument.
@@ -71,9 +71,9 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   title,
   titleId,
   subtitle,
-  closeText,
+  closeText = 'キャンセル',
   actionText,
-  actionTheme,
+  actionTheme = 'primary',
   onClickAction,
   onClickClose,
   responseMessage,
