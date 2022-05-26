@@ -6,11 +6,17 @@ import { isTouchDevice } from '../../libs/ua'
 import { useClassNames } from './useClassNames'
 
 type Props = {
+  /** タブの ID */
   id: string
+  /** タブの内容 */
   children: ReactNode
+  /** `true` のとき、タブが選択状態のスタイルになる */
   selected?: boolean
+  /** `true` のとき、タブを無効状態にしてクリック不能にする */
   disabled?: boolean
+  /** コンポーネントに適用するクラス名 */
   className?: string
+  /** タブをクリックした時に発火するコールバック関数 */
   onClick: (tabId: string) => void
 }
 type ElementProps = Omit<
