@@ -5,7 +5,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useTdClassNames } from './useClassNames'
 
 export type Props = {
+  /** `true` のとき、セル内が空であれば "----" を表示する */
   nullable?: boolean
+  /** セルの内容 */
   children?: ReactNode
 }
 type ElementProps = Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof Props>
