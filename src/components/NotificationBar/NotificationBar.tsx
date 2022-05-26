@@ -131,9 +131,7 @@ const Wrapper = styled.div<{
   `,
 )
 const IconLayout = styled.div`
-  & > svg {
-    display: block;
-  }
+  display: flex;
 `
 const StyledText = styled(Text)`
   flex-grow: 1;
