@@ -13,42 +13,44 @@ import { useClassNames } from './useClassNames'
 
 export type BaseProps = {
   /**
-   * Body of the dialog.
+   * ダイアログの内容
    */
   children: ReactNode
   /**
-   * Title of the dialog.
+   * ダイアログのタイトル
    */
   title: ReactNode
-  subtitle?: ReactNode
-  titleId: string
   /**
-   * Label of close button.
+   * ダイアログのサブタイトル
+   */
+  subtitle?: ReactNode
+  /**
+   * 閉じるボタンのラベル
    */
   closeText?: ReactNode
   /**
-   * Label of action button.
+   * アクションボタンのラベル
    */
   actionText: ReactNode
   /**
-   * Action button style theme.
+   * アクションボタンのスタイル
    */
   actionTheme?: 'primary' | 'secondary' | 'danger'
   /**
-   * Handler function when clicking on action button.<br />
-   * Accepts a function that closes dialog as an argument.
+   * アクションボタンをクリックした時に発火するコールバック関数
+   * @param closeDialog - ダイアログを閉じる関数
    */
   onClickAction: (closeDialog: () => void) => void
   /**
-   * Whether action button should be disabled.
+   * アクションボタンを無効にするかどうか
    */
   actionDisabled?: boolean
   /**
-   * Whether close button should be disabled.
+   * 閉じるボタンを無効にするかどうか
    */
   closeDisabled?: boolean
   /**
-   * `className` of the component.
+   * コンポーネントに適用するクラス名
    */
   className?: string
 }
@@ -59,11 +61,9 @@ type responseMessageType = {
 }
 
 export type ActionDialogContentInnerProps = BaseProps & {
-  /**
-   * Handler function when clicking on close button.
-   */
   onClickClose: () => void
   responseMessage?: responseMessageType
+  titleId: string
 }
 
 export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
