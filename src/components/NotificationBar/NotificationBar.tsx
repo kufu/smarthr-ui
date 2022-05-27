@@ -86,11 +86,13 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
       themes={theme}
       colorSet={colorSet}
     >
-      <IconLayout>
-        <Icon color={iconColor} />
-      </IconLayout>
-      <StyledText leading="TIGHT">{message}</StyledText>
-      <RightArea themes={theme} className={classNames.rightArea}>
+      <MessageArea themes={theme} className={classNames.messageArea}>
+        <IconLayout>
+          <Icon color={iconColor} />
+        </IconLayout>
+        <StyledText leading="TIGHT">{message}</StyledText>
+      </MessageArea>
+      <ActionArea themes={theme} className={classNames.actionArea}>
         {children && (
           <ActionWrapper
             themes={theme}
@@ -112,7 +114,7 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
             <FaTimesIcon visuallyHiddenText="閉じる" />
           </CloseButton>
         )}
-      </RightArea>
+      </ActionArea>
     </Wrapper>
   )
 }
@@ -123,11 +125,24 @@ const Wrapper = styled.div<{
 }>(
   ({ themes: { spacingByChar }, colorSet: { fgColor, bgColor } }) => css`
     display: flex;
-    gap: ${spacingByChar(0.5)};
+    gap: ${spacingByChar(1)};
     align-items: center;
     background-color: ${bgColor};
     padding: ${spacingByChar(0.75)};
     color: ${fgColor};
+  `,
+)
+const MessageArea = styled.div<{
+  themes: Theme
+}>(
+  ({ themes: { spacingByChar } }) => css`
+    display: flex;
+    gap: ${spacingByChar(0.5)};
+    align-items: center;
+    flex-grow: 1;
+
+    /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
+    min-width: 0;
   `,
 )
 const IconLayout = styled.div`
@@ -135,12 +150,10 @@ const IconLayout = styled.div`
   display: flex;
 `
 const StyledText = styled(Text)`
-  flex-grow: 1;
-
   /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
   min-width: 0;
 `
-const RightArea = styled.div<{
+const ActionArea = styled.div<{
   themes: Theme
 }>(
   ({ themes: { spacingByChar } }) => css`
@@ -156,7 +169,6 @@ const ActionWrapper = styled(Cluster)<{
   ({ themes: { spacingByChar } }) => css`
     margin-top: ${spacingByChar(-0.5)};
     margin-bottom: ${spacingByChar(-0.5)};
-    margin-left: ${spacingByChar(0.5)};
   `,
 )
 const CloseButton = styled(TextButton)<{
