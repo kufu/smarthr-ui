@@ -13,7 +13,7 @@ import {
 } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
-import { TextButton } from '../Button'
+import { Button } from '../Button'
 
 export const messageTypes = ['info', 'success', 'error', 'warning'] as const
 
@@ -105,6 +105,7 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
         )}
         {onClose && (
           <CloseButton
+            variant="text"
             colorSet={colorSet}
             themes={theme}
             onClick={onClose}
@@ -171,7 +172,7 @@ const ActionWrapper = styled(Cluster)<{
     margin-bottom: ${spacingByChar(-0.5)};
   `,
 )
-const CloseButton = styled(TextButton)<{
+const CloseButton = styled(Button)<{
   colorSet: { fgColor: string; bgColor: string }
   themes: Theme
 }>(

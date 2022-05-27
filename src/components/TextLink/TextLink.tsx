@@ -5,8 +5,11 @@ import { FaExternalLinkAltIcon } from '../Icon'
 
 type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Props>
 type Props = {
+  /** リンクをクリックした時に発火するコールバック関数 */
   onClick?: (e: React.MouseEvent) => void
+  /** テキストの前に表示するアイコン */
   prefix?: ReactNode
+  /** テキストの後ろに表示するアイコン */
   suffix?: ReactNode
 }
 

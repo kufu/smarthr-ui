@@ -6,7 +6,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Base } from '../Base'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { AccordionPanel } from './AccordionPanel'
 import { AccordionPanelItem } from './AccordionPanelItem'
 import { AccordionPanelTrigger } from './AccordionPanelTrigger'
@@ -53,13 +53,13 @@ const AccordionPanelController: VFC<{ theme: Theme }> = ({ theme }) => {
     <Wrapper>
       <Buttons>
         {arr.map((_, i) => (
-          <SecondaryButton
+          <Button
             key={`button-${i}`}
             onClick={() => setExpandedId(`accordion-panel-${i}`)}
             aria-controls={`accordion-panel-${i}-content`}
           >
             open {i}
-          </SecondaryButton>
+          </Button>
         ))}
       </Buttons>
 

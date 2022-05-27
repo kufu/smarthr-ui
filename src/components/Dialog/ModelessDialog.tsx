@@ -15,7 +15,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { Base, BaseElementProps } from '../Base'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
 import { useDialogPortal } from './useDialogPortal'
 import { DialogOverlap } from './DialogOverlap'
@@ -248,7 +248,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                   <FaGripHorizontalIcon />
                 </DialogHandler>
                 <CloseButtonLayout>
-                  <SecondaryButton
+                  <Button
                     type="button"
                     size="s"
                     square
@@ -256,7 +256,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                     className={classNames.closeButton}
                   >
                     <FaTimesIcon visuallyHiddenText="閉じる" />
-                  </SecondaryButton>
+                  </Button>
                 </CloseButtonLayout>
               </Header>
               <Content className={classNames.content}>{children}</Content>

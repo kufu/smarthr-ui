@@ -1,7 +1,7 @@
 import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { PrimaryButton } from '../Button'
+import { Button } from '../Button'
 
 import { LineClamp } from './LineClamp'
 import readme from './README.md'
@@ -62,12 +62,12 @@ export const All: Story = () => {
         </dd>
         <dt>with button</dt>
         <dd>
-          <Button>
+          <StyledButton variant="primary">
             <LineClamp maxLines={1} withTooltip>
               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
               has been the industry&apos;s standard dummy text ever since the 1500s.
             </LineClamp>
-          </Button>
+          </StyledButton>
         </dd>
       </List>
     </Wrapper>
@@ -89,6 +89,6 @@ const List = styled.dl`
     margin: 16px 0 40px;
   }
 `
-const Button = styled(PrimaryButton)`
+const StyledButton = styled(Button)`
   width: 200px;
 `

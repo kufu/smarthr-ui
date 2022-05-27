@@ -7,7 +7,7 @@ import { DialogContentInner } from './DialogContentInner'
 import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
 import { useId } from '../../hooks/useId'
 
-type Props = Omit<BaseProps, 'titleId'> & UncontrolledDialogProps
+type Props = BaseProps & UncontrolledDialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const MessageDialogContent: React.VFC<Props & ElementProps> = ({

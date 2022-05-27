@@ -6,7 +6,7 @@ import { NotificationBar } from './NotificationBar'
 import readme from './README.md'
 
 import { LineClamp } from '../LineClamp'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 import { TextLink as shrTextLink } from '../TextLink'
@@ -31,7 +31,7 @@ const TextLink = styled(shrTextLink)`
 
 const Actions = () => (
   <>
-    <SecondaryButton size="s">編集</SecondaryButton>
+    <Button size="s">編集</Button>
     <TextLink href="#">
       <Text size="S">ヘルプ</Text>
     </TextLink>
