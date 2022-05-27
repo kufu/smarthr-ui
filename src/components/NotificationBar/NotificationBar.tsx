@@ -131,6 +131,7 @@ const Wrapper = styled.div<{
   `,
 )
 const IconLayout = styled.div`
+  /* 子のアイコンの line-height を打ち消すために指定 */
   display: flex;
 `
 const StyledText = styled(Text)`
