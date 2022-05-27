@@ -5,7 +5,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useBulkActionRowClassNames } from './useClassNames'
 
 export type Props = {
+  /** 一括操作エリアの内容 */
   children?: ReactNode
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLTableRowElement>, keyof Props>
