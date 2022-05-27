@@ -10,7 +10,7 @@ import {
   FaCaretDownIcon,
   FaEllipsisHIcon,
   Stack,
-} from '../../../'
+} from '../../..'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { BaseProps as ButtonProps } from '../../Button/types'
 
@@ -32,7 +32,7 @@ type Props = {
   disabled?: boolean
 }
 
-export const DropdownButtons: VFC<Props> = ({
+export const DropdownButton: VFC<Props> = ({
   label = 'その他の操作',
   children,
   triggerSize,

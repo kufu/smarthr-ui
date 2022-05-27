@@ -8,7 +8,7 @@ export {
   DropdownCloser,
   DropdownScrollArea,
   FilterDropdown,
-  DropdownButtons,
+  DropdownButton,
 } from './components/Dropdown'
 export { FieldSet } from './components/FieldSet'
 export {
