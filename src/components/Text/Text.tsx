@@ -5,7 +5,7 @@ import { FontSizes } from '../../themes/createFontSize'
 import { TextColors } from '../../themes/createColor'
 import { Leadings } from '../../themes/createLeading'
 
-type TextProps = {
+export type TextProps = {
   size?: FontSizes
   weight?: CSSProperties['fontWeight']
   italic?: boolean

@@ -1,8 +1,10 @@
-import React, { HTMLAttributes, ReactNode, VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { HTMLAttributes, ReactNode, VFC, useMemo } from 'react'
+import styled from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+
+import { Text } from '../Text'
+import { TextProps } from '../Text/Text'
 
 export type Props = {
   /** 表示するテキスト */
@@ -22,71 +24,60 @@ export type HeadingTypes =
   | 'subBlockTitle'
   | 'subSubBlockTitle'
 
-export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'
+export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'legend'
 
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props | keyof TextProps>
 
 export const Heading: VFC<Props & ElementProps> = ({
   tag = 'h1',
   type = 'screenTitle',
   className = '',
-  children,
   ...props
 }) => {
-  const theme = useTheme()
   const classNames = useClassNames()
+  const textProps = useMemo<TextProps>(() => {
+    switch (type) {
+      case 'screenTitle':
+        return {
+          size: 'XL',
+          weight: 'normal',
+        }
+      case 'sectionTitle':
+        return {
+          size: 'L',
+          weight: 'normal',
+        }
+      case 'blockTitle':
+        return {
+          size: 'M',
+          weight: 'bold',
+        }
+      case 'subBlockTitle':
+        return {
+          size: 'M',
+          weight: 'bold',
+          color: 'TEXT_GREY',
+        }
+      case 'subSubBlockTitle':
+        return {
+          size: 'S',
+          weight: 'bold',
+          color: 'TEXT_GREY',
+        }
+    }
+  }, [type])
 
   return (
-    <Wrapper
-      as={tag}
-      {...props}
+    <ResetText
+      forwardedAs={tag}
+      leading="TIGHT"
       className={`${type} ${className} ${classNames.wrapper}`}
-      themes={theme}
-    >
-      {children}
-    </Wrapper>
+      {...props}
+      {...textProps}
+    />
   )
 }
 
-const Wrapper = styled.h1<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color, fontSize } = themes
-
-    return css`
-      display: block;
-      margin: 0;
-      padding: 0;
-      line-height: 1;
-
-      &.screenTitle {
-        color: ${color.TEXT_BLACK};
-        font-size: ${fontSize.XL};
-        font-weight: normal;
-      }
-
-      &.sectionTitle {
-        color: ${color.TEXT_BLACK};
-        font-size: ${fontSize.L};
-        font-weight: normal;
-      }
-
-      &.blockTitle {
-        color: ${color.TEXT_BLACK};
-        font-size: ${fontSize.M};
-        font-weight: bold;
-      }
-
-      &.subBlockTitle {
-        color: ${color.TEXT_GREY};
-        font-size: ${fontSize.M};
-        font-weight: bold;
-      }
-
-      &.subSubBlockTitle {
-        color: ${color.TEXT_GREY};
-        font-size: ${fontSize.S};
-        font-weight: bold;
-      }
-    `
-  }}
+const ResetText = styled(Text)`
+  margin: unset;
 `
