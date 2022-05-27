@@ -2,7 +2,7 @@ import React, { ChangeEvent, DragEvent, HTMLAttributes, useCallback, useRef, use
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 import { useClassNames } from './useClassNames'
 
@@ -81,9 +81,9 @@ export const DropZone: React.VFC<DropZoneProps & ElementProps> = ({
       className={classNames.wrapper}
     >
       {children}
-      <SecondaryButton prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
+      <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
         ファイルを選択
-      </SecondaryButton>
+      </Button>
       <input ref={fileRef} type="file" multiple accept={accept} onChange={onChange} />
     </Wrapper>
   )

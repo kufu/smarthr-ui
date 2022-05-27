@@ -5,7 +5,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { useOffsetHeight } from './dialogHelper'
 import { Stack } from '../Layout'
-import { DangerButton, PrimaryButton, SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../Icon'
 import { Text } from '../Text'
 import { Loader } from '../Loader'
@@ -87,10 +87,6 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   }, [onClickAction, onClickClose])
   const { offsetHeight, titleRef, bottomRef } = useOffsetHeight()
 
-  let ActionButton = PrimaryButton
-  if (actionTheme === 'secondary') ActionButton = SecondaryButton
-  if (actionTheme === 'danger') ActionButton = DangerButton
-
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
   return (
@@ -110,20 +106,21 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
       </Body>
       <ActionArea themes={theme} ref={bottomRef} className={classNames.actionArea}>
         <ButtonArea themes={theme} className={classNames.buttonArea}>
-          <SecondaryButton
+          <Button
             onClick={onClickClose}
             disabled={closeDisabled || isRequestProcessing}
             className={classNames.closeButton}
           >
             {closeText}
-          </SecondaryButton>
-          <ActionButton
+          </Button>
+          <Button
+            variant={actionTheme}
             onClick={handleClickAction}
             disabled={actionDisabled || isRequestProcessing}
             className={classNames.actionButton}
           >
             {actionText}
-          </ActionButton>
+          </Button>
         </ButtonArea>
         {responseMessage && (
           <MessageWrapper role="alert" className={classNames.alert} themes={theme}>

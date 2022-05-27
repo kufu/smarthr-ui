@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { FaCaretDownIcon, FaCaretUpIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
@@ -57,7 +57,7 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
           <YearMonth className={classNames.calendar.yearMonth}>
             {currentMonth.year()}年{currentMonth.month() + 1}月
           </YearMonth>
-          <SecondaryButton
+          <Button
             onClick={(e) => {
               e.stopPropagation()
               setIsSelectingYear(!isSelectingYear)
@@ -73,9 +73,9 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
             ) : (
               <FaCaretDownIcon visuallyHiddenText="年を選択する" />
             )}
-          </SecondaryButton>
+          </Button>
           <MonthButtons className={classNames.calendar.monthButtons}>
-            <SecondaryButton
+            <Button
               disabled={isSelectingYear || prevMonth.isBefore(fromDay, 'month')}
               onClick={() => setCurrentMonth(prevMonth)}
               size="s"
@@ -83,8 +83,8 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
               className={classNames.calendar.monthButtonPrev}
             >
               <FaChevronLeftIcon visuallyHiddenText="前の月へ" />
-            </SecondaryButton>
-            <SecondaryButton
+            </Button>
+            <Button
               disabled={isSelectingYear || nextMonth.isAfter(toDay, 'month')}
               onClick={() => setCurrentMonth(nextMonth)}
               size="s"
@@ -92,7 +92,7 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
               className={classNames.calendar.monthButtonNext}
             >
               <FaChevronRightIcon visuallyHiddenText="次の月へ" />
-            </SecondaryButton>
+            </Button>
           </MonthButtons>
         </Header>
         <TableLayout>

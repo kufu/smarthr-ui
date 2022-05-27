@@ -23,9 +23,9 @@ type StyleProps = {
   zIndex?: number
 }
 type Props = StyleProps & {
-  /** 表示する `PrimaryButton` または `PrimaryButtonAnchor` コンポーネント */
+  /** 表示する `Button` または `AnchorButton` コンポーネント */
   primaryButton: ReactNode
-  /** 表示する `SecondaryButton` または `SecondaryButtonAnchor` コンポーネント */
+  /** 表示する `Button` または `AnchorButton` コンポーネント */
   secondaryButton?: ReactNode
   /** tertiary 領域に表示するボタン */
   tertiaryButton?: ReactNode
