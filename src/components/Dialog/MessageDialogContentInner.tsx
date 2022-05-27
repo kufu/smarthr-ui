@@ -11,26 +11,26 @@ import { Text } from '../Text'
 
 export type BaseProps = {
   /**
-   * Title of the dialog.
+   * ダイアログのタイトル
    */
   title: React.ReactNode
-  subtitle?: React.ReactNode
-  titleId: string
   /**
-   * Description of the dialog.
+   * ダイアログのサブタイトル
+   */
+  subtitle?: React.ReactNode
+  /**
+   * ダイアログの説明
    */
   description: React.ReactNode
   /**
-   * Label of close button.
+   * 閉じるボタンのラベル
    */
   closeText?: React.ReactNode
 }
 
 export type MessageDialogContentInnerProps = BaseProps & {
-  /**
-   * Handler function when clicking on close button.
-   */
   onClickClose: () => void
+  titleId: string
 }
 
 export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
