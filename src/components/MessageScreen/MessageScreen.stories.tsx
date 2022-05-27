@@ -6,7 +6,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
 import { FieldSet } from '../FieldSet'
 import { MessageScreen } from './MessageScreen'
-import { PrimaryButton } from '../Button'
+import { Button } from '../Button'
 import { TextLink } from '../TextLink'
 
 import readme from './README.md'
@@ -71,7 +71,9 @@ export const WithoutTitle: Story = () => {
             </li>
           </List>
           <Bottom>
-            <PrimaryButton wide>ログイン</PrimaryButton>
+            <Button variant="primary" wide>
+              ログイン
+            </Button>
             <TextLink href="http://example.com">パスワードをお忘れの方</TextLink>
           </Bottom>
         </Box>
@@ -103,7 +105,9 @@ export const WithoutLinks: Story = () => {
           </li>
         </List>
         <Bottom>
-          <PrimaryButton wide>ログイン</PrimaryButton>
+          <Button variant="primary" wide>
+            ログイン
+          </Button>
           <TextLink href="http://example.com">パスワードをお忘れの方</TextLink>
         </Bottom>
       </Box>

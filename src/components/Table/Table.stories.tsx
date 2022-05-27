@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { BulkActionRow, Table, Td, Th } from './'
 import { FaArrowDownIcon } from '../Icon'
 import { CheckBox as CheckBoxComponent } from '../CheckBox'
-import { SecondaryButton as Button } from '../Button'
+import { Button } from '../Button'
 import { Base as BaseComponent } from '../Base'
 
 import readme from './README.md'

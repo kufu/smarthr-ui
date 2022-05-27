@@ -8,7 +8,7 @@ import {
   FaArrowAltCircleRightIcon,
   FaArrowAltCircleUpIcon,
 } from '../Icon'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { Tooltip } from './Tooltip'
 
 import readme from './README.md'
@@ -188,7 +188,7 @@ storiesOf('Tooltip', module)
       <dt>disabled ボタン</dt>
       <dd>
         <Tooltip message="disabled なボタンに表示するツールチップです">
-          <SecondaryButton disabled>ボタン</SecondaryButton>
+          <Button disabled>ボタン</Button>
         </Tooltip>
       </dd>
       <dt>自動位置決め</dt>

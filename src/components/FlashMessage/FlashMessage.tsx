@@ -11,7 +11,7 @@ import {
   FaInfoCircleIcon,
   FaTimesIcon,
 } from '../Icon'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 
 export const messageTypes = ['success', 'info', 'warning', 'error'] as const
 export const animationTypes = ['bounce', 'fade', 'none'] as const
@@ -220,7 +220,7 @@ const Txt = styled.p<{ themes: Theme }>`
     `
   }}
 `
-const CloseButton = styled(SecondaryButton)<{ themes: Theme }>(
+const CloseButton = styled(Button)<{ themes: Theme }>(
   ({ themes: { spacingByChar } }) => css`
     margin-top: ${spacingByChar(-0.5)};
     margin-right: ${spacingByChar(-0.5)};
