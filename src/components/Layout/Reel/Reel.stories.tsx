@@ -6,7 +6,7 @@ import { Reel } from '.'
 import { Stack } from '../Stack'
 import { TabBar, TabItem } from '../../TabBar'
 import { Body, Cell, Head, Row, Table } from '../../Table'
-import { SecondaryButton } from '../../Button'
+import { Button } from '../../Button'
 import { FaPenIcon } from '../../Icon'
 import { StatusLabel } from '../../StatusLabel'
 import { Heading } from '../../Heading'
@@ -84,9 +84,9 @@ export const ReelStory: Story = () => {
                   <time dateTime="1971-03-01">1971/03/01</time>
                 </Cell>
                 <Cell>
-                  <SecondaryButton prefix={<FaPenIcon />} size="s">
+                  <Button prefix={<FaPenIcon />} size="s">
                     編集
-                  </SecondaryButton>
+                  </Button>
                 </Cell>
               </Row>
               <Row>
@@ -102,9 +102,9 @@ export const ReelStory: Story = () => {
                   <time dateTime="1985-01-01">1985/01/01</time>
                 </Cell>
                 <Cell>
-                  <SecondaryButton prefix={<FaPenIcon />} size="s">
+                  <Button prefix={<FaPenIcon />} size="s">
                     編集
-                  </SecondaryButton>
+                  </Button>
                 </Cell>
               </Row>
               <Row>
@@ -120,9 +120,9 @@ export const ReelStory: Story = () => {
                   <time dateTime="1980-01-01">1980/01/01</time>
                 </Cell>
                 <Cell>
-                  <SecondaryButton prefix={<FaPenIcon />} size="s">
+                  <Button prefix={<FaPenIcon />} size="s">
                     編集
-                  </SecondaryButton>
+                  </Button>
                 </Cell>
               </Row>
               <Row>
@@ -138,9 +138,9 @@ export const ReelStory: Story = () => {
                   <time dateTime="1971-03-01">1984/04/04</time>
                 </Cell>
                 <Cell>
-                  <SecondaryButton prefix={<FaPenIcon />} size="s">
+                  <Button prefix={<FaPenIcon />} size="s">
                     編集
-                  </SecondaryButton>
+                  </Button>
                 </Cell>
               </Row>
               <Row>
@@ -156,9 +156,9 @@ export const ReelStory: Story = () => {
                   <time dateTime="1985-05-05">1985/05/05</time>
                 </Cell>
                 <Cell>
-                  <SecondaryButton prefix={<FaPenIcon />} size="s">
+                  <Button prefix={<FaPenIcon />} size="s">
                     編集
-                  </SecondaryButton>
+                  </Button>
                 </Cell>
               </Row>
               <Row>
@@ -174,9 +174,9 @@ export const ReelStory: Story = () => {
                   <time dateTime="1986-06-06">1986/06/06</time>
                 </Cell>
                 <Cell>
-                  <SecondaryButton prefix={<FaPenIcon />} size="s">
+                  <Button prefix={<FaPenIcon />} size="s">
                     編集
-                  </SecondaryButton>
+                  </Button>
                 </Cell>
               </Row>
               <Row>
@@ -192,9 +192,9 @@ export const ReelStory: Story = () => {
                   <time dateTime="1991-08-17">1991/08/17</time>
                 </Cell>
                 <Cell>
-                  <SecondaryButton prefix={<FaPenIcon />} size="s">
+                  <Button prefix={<FaPenIcon />} size="s">
                     編集
-                  </SecondaryButton>
+                  </Button>
                 </Cell>
               </Row>
               <Row>
@@ -210,9 +210,9 @@ export const ReelStory: Story = () => {
                   <time dateTime="1990-04-01">1990/04/01</time>
                 </Cell>
                 <Cell>
-                  <SecondaryButton prefix={<FaPenIcon />} size="s">
+                  <Button prefix={<FaPenIcon />} size="s">
                     編集
-                  </SecondaryButton>
+                  </Button>
                 </Cell>
               </Row>
               <Row>
@@ -228,9 +228,9 @@ export const ReelStory: Story = () => {
                   <time dateTime="1980-05-21">1980/05/21</time>
                 </Cell>
                 <Cell>
-                  <SecondaryButton prefix={<FaPenIcon />} size="s">
+                  <Button prefix={<FaPenIcon />} size="s">
                     編集
-                  </SecondaryButton>
+                  </Button>
                 </Cell>
               </Row>
               <Row>
@@ -246,9 +246,9 @@ export const ReelStory: Story = () => {
                   <time dateTime="1977-05-22">1977/05/22</time>
                 </Cell>
                 <Cell>
-                  <SecondaryButton prefix={<FaPenIcon />} size="s">
+                  <Button prefix={<FaPenIcon />} size="s">
                     編集
-                  </SecondaryButton>
+                  </Button>
                 </Cell>
               </Row>
             </Body>

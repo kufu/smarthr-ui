@@ -7,7 +7,7 @@ import { DropdownTrigger } from '../DropdownTrigger'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownScrollArea } from '../DropdownScrollArea'
-import { PrimaryButton, SecondaryButton, TextButton } from '../../Button'
+import { Button } from '../../Button'
 import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
 
 type Props = {
@@ -33,7 +33,7 @@ export const FilterDropdown: VFC<Props> = ({
     <Dropdown>
       <DropdownTrigger>
         <>
-          <SecondaryButton
+          <Button
             suffix={
               <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
                 <FaFilterIcon />
@@ -44,7 +44,7 @@ export const FilterDropdown: VFC<Props> = ({
             }
           >
             絞り込み
-          </SecondaryButton>
+          </Button>
           {hasStatusText && isFiltered ? <StatusText themes={themes}>適用中</StatusText> : null}
         </>
       </DropdownTrigger>
@@ -55,17 +55,19 @@ export const FilterDropdown: VFC<Props> = ({
         <BottomLayout themes={themes}>
           {onReset && (
             <ResetButtonLayout>
-              <TextButton size="s" prefix={<FaUndoAltIcon />} onClick={() => onReset()}>
+              <Button variant="text" size="s" prefix={<FaUndoAltIcon />} onClick={() => onReset()}>
                 絞り込み条件を解除
-              </TextButton>
+              </Button>
             </ResetButtonLayout>
           )}
           <RightButtonLayout>
             <DropdownCloser>
-              <SecondaryButton onClick={() => onCancel?.()}>キャンセル</SecondaryButton>
+              <Button onClick={() => onCancel?.()}>キャンセル</Button>
             </DropdownCloser>
             <DropdownCloser>
-              <PrimaryButton onClick={() => onApply()}>適用</PrimaryButton>
+              <Button value="primary" onClick={() => onApply()}>
+                適用
+              </Button>
             </DropdownCloser>
           </RightButtonLayout>
         </BottomLayout>

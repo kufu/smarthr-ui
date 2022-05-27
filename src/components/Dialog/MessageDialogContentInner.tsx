@@ -6,7 +6,7 @@ import { useClassNames } from './useClassNames'
 
 import { useOffsetHeight } from './dialogHelper'
 import { Stack } from '../Layout'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { Text } from '../Text'
 
 export type BaseProps = {
@@ -61,9 +61,9 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
         {description}
       </Description>
       <Bottom themes={theme} ref={bottomRef} className={classNames.buttonArea}>
-        <SecondaryButton onClick={onClickClose} className={classNames.closeButton}>
+        <Button onClick={onClickClose} className={classNames.closeButton}>
           {closeText}
-        </SecondaryButton>
+        </Button>
       </Bottom>
     </>
   )
