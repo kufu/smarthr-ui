@@ -1,5 +1,5 @@
 module.exports = {
-  stories: ['../**/*.stories.tsx'],
+  stories: ['../src/**/*.stories.tsx'],
   addons: [
     'storybook-readme',
     {
