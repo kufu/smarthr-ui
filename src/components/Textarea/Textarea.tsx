@@ -5,8 +5,11 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 type Props = {
+  /** 入力値にエラーがあるかどうか */
   error?: boolean
+  /** コンポーネントの幅 */
   width?: number | string
+  /** 自動でフォーカスされるかどうか */
   autoFocus?: boolean
 }
 type ElementProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, keyof Props>

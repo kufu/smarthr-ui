@@ -11,8 +11,11 @@ export const TableGroupContext = createContext<{
 })
 
 type Props = {
+  /** `true` のとき、スクロール時にヘッダーを固定表示する */
   fixedHead?: boolean
+  /** テーブルの内容 */
   children?: ReactNode
+  /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<TableHTMLAttributes<HTMLTableElement>, keyof Props>
