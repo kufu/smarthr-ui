@@ -52,7 +52,12 @@ export const DropdownButton: VFC<Props> = ({
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Trigger suffix={triggerSuffix} size={triggerSize} disabled={disabled}>
+        <Trigger
+          suffix={triggerSuffix}
+          size={triggerSize}
+          disabled={disabled}
+          square={onlyIconTrigger}
+        >
           {triggerLabel}
         </Trigger>
       </DropdownTrigger>
