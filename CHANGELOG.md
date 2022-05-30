@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [21.2.0](https://github.com/kufu/smarthr-ui/compare/v21.1.0...v21.2.0) (2022-05-30)
+
+
+### Features
+
+* DropdownButton を追加 ([#2516](https://github.com/kufu/smarthr-ui/issues/2516)) ([360a4d4](https://github.com/kufu/smarthr-ui/commit/360a4d41633d30d37c9d35153fddd9bb38d978da))
+* Storybookにcontrols addonを追加 ([#2488](https://github.com/kufu/smarthr-ui/issues/2488)) ([334e612](https://github.com/kufu/smarthr-ui/commit/334e612139901ef2abc17b97ca9b17e803fe00fb))
+
+
+### Bug Fixes
+
+* CheckBox と RadioButton で static className があたってしまうのを修正 ([#2515](https://github.com/kufu/smarthr-ui/issues/2515)) ([505eedb](https://github.com/kufu/smarthr-ui/commit/505eedbe7afe57edbbcd1cfb9398e59261283e5e))
+* ライブラリの動作に必要ない jest-environment-jsdom を devDependencies に移動 ([#2514](https://github.com/kufu/smarthr-ui/issues/2514)) ([2a30e97](https://github.com/kufu/smarthr-ui/commit/2a30e975c69b0965784b651b77eac404c97ff6d1))
+
 ## [21.1.0](https://github.com/kufu/smarthr-ui/compare/v21.0.0...v21.1.0) (2022-05-23)
 
 
