@@ -26,7 +26,6 @@ type Props = {
   className?: string
 }
 
-const LOGO_HEIGHT = 20
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const MessageScreen: VFC<Props & ElementProps> = ({
@@ -43,7 +42,7 @@ export const MessageScreen: VFC<Props & ElementProps> = ({
     <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       <Box>
         <Logo className={classNames.logo}>
-          <SmartHRLogo width={111} height={LOGO_HEIGHT} fill="brand" />
+          <SmartHRLogo height="1.5em" fill="brand" />
         </Logo>
 
         {title && (
@@ -102,9 +101,7 @@ const Box = styled.div`
   align-items: center;
   margin: auto 0;
 `
-const Logo = styled.div`
-  height: ${LOGO_HEIGHT}px;
-`
+const Logo = styled.div``
 const Title = styled.h1<{ themes: Theme }>`
   ${({ themes }) => {
     const { fontSize, spacingByChar, color } = themes
