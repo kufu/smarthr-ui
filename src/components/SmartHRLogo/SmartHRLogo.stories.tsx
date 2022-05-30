@@ -5,7 +5,7 @@ import { Story } from '@storybook/react'
 import readme from './README.md'
 
 import { SmartHRLogo } from './SmartHRLogo'
-import { useTheme } from '../../hooks/useTheme'
+import { Text } from '../Text'
 
 export default {
   title: 'SmartHRLogo',
@@ -20,21 +20,21 @@ export default {
 export const All: Story = () => (
   <List>
     <li>
-      <Text>default</Text>
       <LogoWrapper>
         <SmartHRLogo />
       </LogoWrapper>
     </li>
     <li>
-      <Text>You can set title and select fill color</Text>
+      <Text as="p">
+        title や色、大きさを指定できます。
+        <br />
+        デザインシステムに則って[アイソレーション](https://smarthr.design/basics/logos/#h3-1)を設けています。
+      </Text>
       <LogoWrapper className="white">
-        <SmartHRLogo title="custom title" fill="brand" />
+        <SmartHRLogo title="株式会社SmartHR（スマートHR）" fill="brand" height="1.5em" />
       </LogoWrapper>
-    </li>
-    <li>
-      <Text>You can set custom width and height</Text>
-      <LogoWrapper>
-        <SmartHRLogo title="custom title" width={111} height={20} />
+      <LogoWrapper className="white">
+        <SmartHRLogo title="株式会社SmartHR（スマートHR）" fill="black" width="10em" />
       </LogoWrapper>
     </li>
   </List>
@@ -43,25 +43,23 @@ All.storyName = 'all'
 
 const List = styled.ul`
   margin: 0;
-  padding: 8px;
+  padding: 0;
 
-  & > li {
+  li {
     display: inline-block;
-    padding: 16px;
+  }
+
+  li + li {
+    margin-inline-start: 16px;
   }
 `
-const Text = styled.p`
-  margin: 0 0 8px;
-`
-const LogoWrapper = styled.div(() => {
-  const { color, spacingByChar } = useTheme()
-  return css`
+const LogoWrapper = styled.div`
+  ${({ theme: { color } }) => css`
     display: inline-block;
-    line-height: 0;
-    padding: ${spacingByChar(1)};
     background-color: ${color.BRAND};
+
     &.white {
       background-color: ${color.WHITE};
     }
-  `
-})
+  `}
+`
