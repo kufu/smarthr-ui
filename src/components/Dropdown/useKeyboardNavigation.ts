@@ -64,6 +64,11 @@ export function useKeyboardNavigation(
           }
         }
 
+        if (e.target && e.target === dummyFocusRef.current) {
+          onClickCloser()
+          return
+        }
+
         if (wrapperRef.current) {
           const tabbablesInContent = tabbable(wrapperRef.current)
           tabbablesInContent.some((inner) => {
