@@ -11,7 +11,7 @@ import {
   FaInfoCircleIcon,
   FaTimesIcon,
 } from '../Icon'
-import { Cluster, Sidebar } from '../Layout'
+import { Cluster } from '../Layout'
 import { Text } from '../Text'
 import { Button } from '../Button'
 
@@ -86,34 +86,36 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
       themes={theme}
       colorSet={colorSet}
     >
-      <ContentsWrapper themes={theme}>
-        <Icon color={iconColor} />
-        <MessageWrapper align="center" gap={{ row: 0.75, column: 1 }} right>
-          <Text leading="TIGHT">{message}</Text>
-          {children && (
-            <ActionWrapper
-              themes={theme}
-              className={classNames.actions}
-              align="center"
-              justify="flex-end"
-            >
-              {children}
-            </ActionWrapper>
-          )}
-        </MessageWrapper>
-      </ContentsWrapper>
-      {onClose && (
-        <CloseButton
-          variant="text"
-          colorSet={colorSet}
-          themes={theme}
-          onClick={onClose}
-          className={classNames.closeButton}
-          size="s"
-        >
-          <FaTimesIcon visuallyHiddenText="閉じる" />
-        </CloseButton>
-      )}
+      <MessageArea themes={theme} className={classNames.messageArea}>
+        <IconLayout>
+          <Icon color={iconColor} />
+        </IconLayout>
+        <StyledText leading="TIGHT">{message}</StyledText>
+      </MessageArea>
+      <ActionArea themes={theme} className={classNames.actionArea}>
+        {children && (
+          <ActionWrapper
+            themes={theme}
+            className={classNames.actions}
+            align="center"
+            justify="flex-end"
+          >
+            {children}
+          </ActionWrapper>
+        )}
+        {onClose && (
+          <CloseButton
+            variant="text"
+            colorSet={colorSet}
+            themes={theme}
+            onClick={onClose}
+            className={classNames.closeButton}
+            size="s"
+          >
+            <FaTimesIcon visuallyHiddenText="閉じる" />
+          </CloseButton>
+        )}
+      </ActionArea>
     </Wrapper>
   )
 }
@@ -124,36 +126,44 @@ const Wrapper = styled.div<{
 }>(
   ({ themes: { spacingByChar }, colorSet: { fgColor, bgColor } }) => css`
     display: flex;
-    gap: ${spacingByChar(0.5)};
+    gap: ${spacingByChar(1)};
     align-items: center;
-    justify-content: space-between;
     background-color: ${bgColor};
     padding: ${spacingByChar(0.75)};
     color: ${fgColor};
   `,
 )
-const ContentsWrapper = styled.div<{ themes: Theme }>(
+const MessageArea = styled.div<{
+  themes: Theme
+}>(
   ({ themes: { spacingByChar } }) => css`
     display: flex;
+    gap: ${spacingByChar(0.5)};
     align-items: center;
     flex-grow: 1;
-    gap: ${spacingByChar(0.5)};
 
     /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
     min-width: 0;
-
-    .smarthr-ui-Icon {
-      flex-shrink: 0;
-    }
   `,
 )
-
-const MessageWrapper = styled(Sidebar)`
-  flex-grow: 1;
-
+const IconLayout = styled.div`
+  /* 子のアイコンの line-height を打ち消すために指定 */
+  display: flex;
+`
+const StyledText = styled(Text)`
   /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
   min-width: 0;
 `
+const ActionArea = styled.div<{
+  themes: Theme
+}>(
+  ({ themes: { spacingByChar } }) => css`
+    display: flex;
+    gap: ${spacingByChar(0.5)};
+    align-items: center;
+    flex-shrink: 0;
+  `,
+)
 const ActionWrapper = styled(Cluster)<{
   themes: Theme
 }>(
