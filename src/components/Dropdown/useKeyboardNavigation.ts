@@ -4,7 +4,10 @@ import { tabbable } from '../../libs/tabbable'
 import { DropdownContext } from './Dropdown'
 import { getFirstTabbable } from './dropdownHelper'
 
-export function useKeyboardNavigation(wrapperRef: RefObject<HTMLDivElement>) {
+export function useKeyboardNavigation(
+  wrapperRef: RefObject<HTMLDivElement>,
+  dummyFocusRef: RefObject<HTMLElement>,
+) {
   const { triggerElementRef, rootTriggerRef, onClickCloser } = useContext(DropdownContext)
 
   const handleKeyDown = useCallback(
@@ -36,7 +39,10 @@ export function useKeyboardNavigation(wrapperRef: RefObject<HTMLDivElement>) {
           e.preventDefault()
           firstTabbable.focus()
           return
-        } else if (e.shiftKey && e.target === firstTabbable) {
+        } else if (
+          e.shiftKey &&
+          (e.target === firstTabbable || e.target === dummyFocusRef.current)
+        ) {
           // focus the Trigger
           e.preventDefault()
           trigger.focus()
@@ -71,7 +77,7 @@ export function useKeyboardNavigation(wrapperRef: RefObject<HTMLDivElement>) {
         }
       }
     },
-    [wrapperRef, triggerElementRef, rootTriggerRef, onClickCloser],
+    [wrapperRef, triggerElementRef, rootTriggerRef, dummyFocusRef, onClickCloser],
   )
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown)
