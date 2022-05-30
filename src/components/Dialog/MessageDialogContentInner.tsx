@@ -6,31 +6,31 @@ import { useClassNames } from './useClassNames'
 
 import { useOffsetHeight } from './dialogHelper'
 import { Stack } from '../Layout'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { Text } from '../Text'
 
 export type BaseProps = {
   /**
-   * Title of the dialog.
+   * ダイアログのタイトル
    */
   title: React.ReactNode
-  subtitle?: React.ReactNode
-  titleId: string
   /**
-   * Description of the dialog.
+   * ダイアログのサブタイトル
+   */
+  subtitle?: React.ReactNode
+  /**
+   * ダイアログの説明
    */
   description: React.ReactNode
   /**
-   * Label of close button.
+   * 閉じるボタンのラベル
    */
   closeText?: React.ReactNode
 }
 
 export type MessageDialogContentInnerProps = BaseProps & {
-  /**
-   * Handler function when clicking on close button.
-   */
   onClickClose: () => void
+  titleId: string
 }
 
 export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
@@ -61,9 +61,9 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
         {description}
       </Description>
       <Bottom themes={theme} ref={bottomRef} className={classNames.buttonArea}>
-        <SecondaryButton onClick={onClickClose} className={classNames.closeButton}>
+        <Button onClick={onClickClose} className={classNames.closeButton}>
           {closeText}
-        </SecondaryButton>
+        </Button>
       </Bottom>
     </>
   )

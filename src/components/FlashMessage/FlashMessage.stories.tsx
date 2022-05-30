@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { FlashMessage, Props, animationTypes, messageTypes } from './FlashMessage'
 import { FlashMessageListProvider, useFlashMessageList } from './'
 
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 
 export default {
   title: 'FlashMessage',
@@ -164,7 +164,7 @@ const ListInner = () => {
       text: `success ${messageCount++}`,
     })
   }
-  return <SecondaryButton onClick={handleClick}>Add message</SecondaryButton>
+  return <Button onClick={handleClick}>Add message</Button>
 }
 export const FlashMessageList: Story = () => {
   return (

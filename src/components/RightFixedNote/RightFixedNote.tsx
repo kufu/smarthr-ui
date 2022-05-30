@@ -5,7 +5,7 @@ import { useId } from '../../hooks/useId'
 import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
 import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { useClassNames } from './useClassNames'
 
 type Props = {
@@ -142,7 +142,7 @@ const TextArea = styled(Textarea)<{ themes: Theme }>`
   }}
 `
 
-const SubmitButton = styled(SecondaryButton)`
+const SubmitButton = styled(Button)`
   display: block;
   float: right;
 `

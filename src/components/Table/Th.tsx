@@ -6,8 +6,11 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useThClassNames } from './useClassNames'
 
 export type Props = {
+  /** `true` のとき、セルの色をハイライトする */
   highlighted?: boolean
+  /** セルの内容 */
   children?: ReactNode
+  /** セルをクリックした時に発火するコールバック関数 */
   onClick?: () => void
 }
 type ElementProps = Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof Props>

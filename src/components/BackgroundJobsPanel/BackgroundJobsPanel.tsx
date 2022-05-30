@@ -4,7 +4,7 @@ import { useId } from '../../hooks/useId'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
-import { SecondaryButton, UnstyledButton } from '../Button'
+import { Button, UnstyledButton } from '../Button'
 import { FaMinusIcon, FaTimesIcon, FaWindowMaximizeIcon } from '../Icon'
 import { JobIcon } from './JobIcon'
 import { OmittableJobText } from './OmittableJobText'
@@ -72,7 +72,7 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
           {title}
         </Title>
         <HeaderButtonLayout themes={themes}>
-          <SecondaryButton
+          <Button
             type="button"
             size="s"
             square
@@ -91,8 +91,8 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
             ) : (
               <FaWindowMaximizeIcon visuallyHiddenText="展開する" />
             )}
-          </SecondaryButton>
-          <SecondaryButton
+          </Button>
+          <Button
             type="button"
             size="s"
             square
@@ -100,7 +100,7 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
             className={classNames.closeButton}
           >
             <FaTimesIcon visuallyHiddenText="閉じる" />
-          </SecondaryButton>
+          </Button>
         </HeaderButtonLayout>
       </Header>
       <JobList themes={themes} isExpanded={isExpanded} id={jobListId} className={classNames.list}>

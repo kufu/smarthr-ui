@@ -11,7 +11,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 
 export type Option = {
   /** 選択時に返される値 */
@@ -133,7 +133,7 @@ export const SegmentedControl: VFC<Props & ElementProps> = ({
           const isSelected = !!value && value === option.value
           const onClick = onClickOption ? () => onClickOption(option.value) : undefined
           return (
-            <Button
+            <StyledButton
               aria-label={option.ariaLabel}
               key={option.value}
               disabled={option.disabled}
@@ -147,7 +147,7 @@ export const SegmentedControl: VFC<Props & ElementProps> = ({
               className={classNames.button}
             >
               {option.content}
-            </Button>
+            </StyledButton>
           )
         })}
       </div>
@@ -158,7 +158,7 @@ export const SegmentedControl: VFC<Props & ElementProps> = ({
 const Container = styled.div`
   display: inline-flex;
 `
-const Button = styled(SecondaryButton)<{ themes: Theme }>(
+const StyledButton = styled(Button)<{ themes: Theme }>(
   ({ themes: { border, color, radius, shadow } }) =>
     css`
       margin: 0;

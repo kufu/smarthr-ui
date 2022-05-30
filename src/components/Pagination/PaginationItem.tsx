@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { SecondaryButton } from '../Button'
+import { Button } from '../Button'
 
 interface Props {
   page: number
@@ -35,7 +35,7 @@ export const PaginationItem: VFC<Props> = ({ page, currentPage, onClick }) => {
   )
 }
 
-export const ItemButton = styled(SecondaryButton).attrs({
+export const ItemButton = styled(Button).attrs({
   square: true,
   size: 's',
 })<{ themes: Theme }>`

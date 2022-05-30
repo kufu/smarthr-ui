@@ -1,14 +1,12 @@
 module.exports = {
-  stories: ['../**/*.stories.tsx'],
+  stories: ['../src/**/*.stories.tsx'],
   addons: [
     'storybook-readme',
     {
       name: '@storybook/addon-essentials',
-      options: {
-        controls: false,
-      },
     },
     '@storybook/addon-a11y',
+    '@storybook/addon-controls',
     'storycap',
   ],
 }

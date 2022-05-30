@@ -70,12 +70,14 @@ const Box = styled.span<{ themes: Theme }>`
       box-sizing: border-box;
       pointer-events: none;
 
-      input:checked + & {
+      /* FIXME: なぜか static classname になってしまうため & を重ねている */
+      input:checked + && {
         border-color: ${color.MAIN};
         background-color: ${color.MAIN};
       }
 
-      input[disabled] + & {
+      /* FIXME: なぜか static classname になってしまうため & を重ねている */
+      input[disabled] + && {
         background-color: ${color.BORDER};
         border-color: ${color.BORDER};
       }

@@ -10,7 +10,7 @@ import { DropdownTrigger } from './DropdownTrigger'
 import { DropdownContent } from './DropdownContent'
 import { DropdownCloser } from './DropdownCloser'
 import { DropdownScrollArea } from './DropdownScrollArea'
-import { PrimaryButton, SecondaryButton } from '../Button'
+import { Button } from '../Button'
 import { RadioButton } from '../RadioButton'
 import { Input } from '../Input'
 import { Cluster, Stack } from '../Layout'
@@ -40,18 +40,18 @@ const ListMenu = () => {
   return (
     <ActionList as="ul" themes={themes}>
       <li>
-        <SecondaryButton id="dropdown-list-item-1" onClick={action('clicked 編集')}>
+        <Button id="dropdown-list-item-1" onClick={action('clicked 編集')}>
           編集
-        </SecondaryButton>
+        </Button>
       </li>
       <li>
-        <SecondaryButton onClick={action('clicked 複製')}>複製</SecondaryButton>
+        <Button onClick={action('clicked 複製')}>複製</Button>
       </li>
       <li>
-        <SecondaryButton onClick={action('clicked プレビュー')}>プレビュー</SecondaryButton>
+        <Button onClick={action('clicked プレビュー')}>プレビュー</Button>
       </li>
       <li>
-        <SecondaryButton onClick={action('clicked 削除')}>削除</SecondaryButton>
+        <Button onClick={action('clicked 削除')}>削除</Button>
       </li>
     </ActionList>
   )
@@ -102,12 +102,16 @@ const ControllableDropdown = () => {
           <ControllableBoxBottom themes={themes}>
             <Cluster justify="flex-end">
               <DropdownCloser>
-                <SecondaryButton>Close only</SecondaryButton>
+                <Button>Close only</Button>
               </DropdownCloser>
               <DropdownCloser>
-                <PrimaryButton onClick={action('clicked button 1')}>Action and close</PrimaryButton>
+                <Button variant="primary" onClick={action('clicked button 1')}>
+                  Action and close
+                </Button>
               </DropdownCloser>
-              <PrimaryButton onClick={action('clicked button 2')}>Action only</PrimaryButton>
+              <Button variant="primary" onClick={action('clicked button 2')}>
+                Action only
+              </Button>
             </Cluster>
           </ControllableBoxBottom>
         </DropdownScrollArea>
@@ -141,14 +145,14 @@ export const All: Story = () => {
         <li>
           <Dropdown>
             <DropdownTrigger>
-              <SecondaryButton>入れ子にできる Dropdown</SecondaryButton>
+              <Button>入れ子にできる Dropdown</Button>
             </DropdownTrigger>
             <DropdownContent controllable>
               <DropdownScrollArea>
                 <ControllableBoxMain>
                   <Dropdown>
                     <DropdownTrigger>
-                      <SecondaryButton>さらに入れ子にできる Dropdown</SecondaryButton>
+                      <Button>さらに入れ子にできる Dropdown</Button>
                     </DropdownTrigger>
                     <DropdownContent controllable>
                       <DropdownScrollArea>
@@ -225,7 +229,7 @@ const ActionList = styled(Stack).attrs({ gap: 0 })<{ themes: Theme }>(
     padding-block: ${spacingByChar(0.5)};
     padding-inline-start: 0;
 
-    .smarthr-ui-SecondaryButton {
+    .smarthr-ui-Button {
       justify-content: flex-start;
       border: none;
       padding-block: ${spacingByChar(0.5)};
@@ -234,7 +238,7 @@ const ActionList = styled(Stack).attrs({ gap: 0 })<{ themes: Theme }>(
     }
   `,
 )
-const TriggerButton = styled(SecondaryButton).attrs({ suffix: <FaCaretDownIcon /> })``
+const TriggerButton = styled(Button).attrs({ suffix: <FaCaretDownIcon /> })``
 const Wrapper = styled.div<{ themes: Theme }>`
   padding: 24px;
   color: ${({ themes }) => themes.color.TEXT_BLACK};

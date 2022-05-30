@@ -11,15 +11,15 @@ import { DialogOverlap } from './DialogOverlap'
 
 export type DialogContentInnerProps = {
   /**
-   * Handler function when clicking on onverlay.
+   * オーバーレイをクリックした時に発火するコールバック関数
    */
   onClickOverlay?: () => void
   /**
-   * Handler function when pressing escape key.
+   * エスケープキーを押下した時に発火するコールバック関数
    */
   onPressEscape?: () => void
   /**
-   * Whether to display a Dialog.
+   * ダイアログを開いているかどうか
    */
   isOpen: boolean
   /**
@@ -27,23 +27,23 @@ export type DialogContentInnerProps = {
    */
   width?: string | number
   /**
-   * Specifies the top position of the Dialog content.
+   * ダイアログを開いたときの初期 top 位置
    */
   top?: number
   /**
-   * Specifies the right position of the Dialog content.
+   * ダイアログを開いたときの初期 right 位置
    */
   right?: number
   /**
-   * Specifies the bottom position of the Dialog content.
+   * ダイアログを開いたときの初期 bottom 位置
    */
   bottom?: number
   /**
-   * Specifies the left position of the Dialog content.
+   * ダイアログを開いたときの初期 left 位置
    */
   left?: number
   /**
-   * `id` of the component.
+   * ダイアログの `id`
    */
   id?: string
   /**
@@ -51,19 +51,19 @@ export type DialogContentInnerProps = {
    */
   firstFocusTarget?: RefObject<HTMLElement>
   /**
-   * `aria-label` of the component.
+   * ダイアログの `aria-label`
    */
   ariaLabel?: string
   /**
-   * `aria-labelledby` of the component.
+   * ダイアログの `aria-labelledby`
    */
   ariaLabelledby?: string
   /**
-   * `className` of the component.
+   * コンポーネントに適用するクラス名
    */
   className?: string
   /**
-   * The content of the component.
+   * ダイアログの内容
    */
   children: ReactNode
 }
