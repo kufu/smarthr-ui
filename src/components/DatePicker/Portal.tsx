@@ -6,7 +6,6 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
@@ -21,7 +20,7 @@ type Props = {
 
 export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, children }, ref) => {
   const themes = useTheme()
-  const { portalRoot } = usePortal()
+  const { createPortal } = usePortal()
 
   const [position, setPosition] = useState({
     top: 0,
@@ -53,7 +52,6 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, children }
     >
       {children}
     </Container>,
-    portalRoot,
   )
 })
 

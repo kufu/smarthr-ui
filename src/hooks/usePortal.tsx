@@ -6,7 +6,9 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useState,
 } from 'react'
+import { createPortal } from 'react-dom'
 
 interface ParentContextValue {
   seqs: number[]
@@ -19,26 +21,22 @@ const ParentContext = createContext<ParentContextValue>({
 let portalSeq = 0
 
 export function usePortal() {
+  const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
   const currentSeq = useMemo(() => ++portalSeq, [])
   const parent = useContext(ParentContext)
   const parentSeqs = parent.seqs.concat(currentSeq)
 
-  const portalRoot = useMemo(() => {
+  useEffect(() => {
     const element = document.createElement('div')
     element.dataset.portalChildOf = parentSeqs.join(',')
-    return element
-    // spread parentSeqs array for deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...parentSeqs])
-
-  useEffect(() => {
-    document.body.appendChild(portalRoot)
+    setPortalRoot(element)
+    document.body.appendChild(element)
     return () => {
-      document.body.removeChild(portalRoot)
+      document.body.removeChild(element)
     }
     // spread parentSeqs array for deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...parentSeqs, portalRoot])
+  }, [...parentSeqs])
 
   const isChildPortal = useCallback(
     (element: HTMLElement | null) => {
@@ -59,10 +57,21 @@ export function usePortal() {
     [...parentSeqs],
   )
 
+  const wrappedCreatePortal = useCallback(
+    (children: ReactNode) => {
+      if (portalRoot === null) {
+        return null
+      }
+      return createPortal(children, portalRoot)
+    },
+    [portalRoot],
+  )
+
   return {
     portalRoot,
     isChildPortal,
     PortalParentProvider,
+    createPortal: wrappedCreatePortal,
   }
 }
 
