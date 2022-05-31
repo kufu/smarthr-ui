@@ -40,7 +40,7 @@ const Inner = styled.div<{ themes: Theme }>`
 
     return css`
       flex-grow: 1;
-      margin: 2px; /* フォーカスリングが見切れないようにするための余白 */
+      margin: 4px; /* フォーカスリングが見切れないようにするための余白 */
 
       &.bordered {
         position: relative;
