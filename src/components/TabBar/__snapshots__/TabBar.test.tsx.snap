@@ -63,6 +63,7 @@ exports[`TabBar should be match snapshot 1`] = `
   -webkit-flex-grow: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
+  margin: 2px;
 }
 
 .c1.bordered {
