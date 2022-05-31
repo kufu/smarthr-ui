@@ -37,14 +37,10 @@ export const TabBar: VFC<Props & ElementProps> = ({
 const Inner = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     const { border } = themes
-    const focusRingMargin = 2
 
     return css`
       flex-grow: 1;
-      margin-top: ${focusRingMargin}px;
-      margin-bottom: ${focusRingMargin}px;
-      padding-left: ${focusRingMargin}px;
-      padding-right: ${focusRingMargin}px;
+      margin: 2px; /* フォーカスリングが見切れないようにするための余白 */
 
       &.bordered {
         position: relative;
