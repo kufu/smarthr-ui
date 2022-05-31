@@ -22,7 +22,6 @@ let portalSeq = 0
 
 export function usePortal() {
   const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
-  const [isReady, setIsReady] = useState(false)
   const currentSeq = useMemo(() => ++portalSeq, [])
   const parent = useContext(ParentContext)
   const parentSeqs = parent.seqs.concat(currentSeq)
@@ -32,9 +31,7 @@ export function usePortal() {
     element.dataset.portalChildOf = parentSeqs.join(',')
     setPortalRoot(element)
     document.body.appendChild(element)
-    setIsReady(true)
     return () => {
-      setIsReady(false)
       document.body.removeChild(element)
     }
     // spread parentSeqs array for deps
@@ -75,7 +72,7 @@ export function usePortal() {
     isChildPortal,
     PortalParentProvider,
     createPortal: wrappedCreatePortal,
-    isReady,
+    isReady: portalRoot !== null,
   }
 }
 
