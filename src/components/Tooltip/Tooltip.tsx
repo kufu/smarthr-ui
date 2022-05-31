@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, VFC, useEffect, useRef, useState } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
@@ -45,6 +45,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   onBlur,
   ...props
 }) => {
+  const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect>(new DOMRect())
   const ref = useRef<HTMLDivElement>(null)
@@ -85,14 +86,14 @@ export const Tooltip: VFC<Props & ElementProps> = ({
 
   const isIcon = triggerType === 'icon'
 
-  const portalRoot = useRef(document.createElement('div')).current
-  useEffect(() => {
-    document.body.appendChild(portalRoot)
-
+  useLayoutEffect(() => {
+    const element = document.createElement('div')
+    setPortalRoot(element)
+    document.body.appendChild(element)
     return () => {
-      document.body.removeChild(portalRoot)
+      document.body.removeChild(element)
     }
-  }, [portalRoot])
+  }, [])
 
   const classNames = useClassNames()
 
@@ -111,19 +112,20 @@ export const Tooltip: VFC<Props & ElementProps> = ({
       tabIndex={tabIndex}
       className={`${className} ${classNames.wrapper}`}
     >
-      {createPortal(
-        <TooltipPortal
-          message={message}
-          id={tooltipId}
-          isVisible={isVisible}
-          parentRect={rect}
-          isIcon={isIcon}
-          isMultiLine={multiLine}
-          horizontal={horizontal}
-          vertical={vertical}
-        />,
-        portalRoot,
-      )}
+      {portalRoot &&
+        createPortal(
+          <TooltipPortal
+            message={message}
+            id={tooltipId}
+            isVisible={isVisible}
+            parentRect={rect}
+            isIcon={isIcon}
+            isMultiLine={multiLine}
+            horizontal={horizontal}
+            vertical={vertical}
+          />,
+          portalRoot,
+        )}
       {children}
     </Wrapper>
   )
