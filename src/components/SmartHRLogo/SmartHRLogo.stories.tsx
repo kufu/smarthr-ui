@@ -6,6 +6,7 @@ import readme from './README.md'
 
 import { SmartHRLogo } from './SmartHRLogo'
 import { Text } from '../Text'
+import { TextLink } from '../TextLink'
 
 export default {
   title: 'SmartHRLogo',
@@ -28,7 +29,11 @@ export const All: Story = () => (
       <Text as="p">
         title や色、大きさを指定できます。
         <br />
-        デザインシステムに則って[アイソレーション](https://smarthr.design/basics/logos/#h3-1)を設けています。
+        デザインシステムに則って
+        <TextLink href="https://smarthr.design/basics/logos/#h3-1" target="_blank">
+          アイソレーション
+        </TextLink>
+        を設けています。
       </Text>
       <LogoWrapper className="white">
         <SmartHRLogo title="株式会社SmartHR（スマートHR）" fill="brand" height="1.5em" />
