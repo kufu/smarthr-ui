@@ -126,7 +126,7 @@ const List = styled.ul<{ themes: Theme }>`
       display: flex;
       align-items: center;
       margin: 0;
-      padding: 0;
+      padding: 4px; /* フォーカスリングが見切れないようにするための余白 */
       > li {
         list-style: none;
         :not(:first-child) {
