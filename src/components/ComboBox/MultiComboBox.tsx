@@ -393,7 +393,7 @@ const InputArea = styled.div<{ themes: Theme }>`
     flex: 1;
     display: flex;
     flex-wrap: wrap;
-    gap: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
+    gap: ${spacingByChar(0.5)};
     min-height: calc(1rem + ${spacingByChar(0.5)} * 2);
     max-height: 300px;
     margin: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
