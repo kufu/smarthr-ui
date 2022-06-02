@@ -280,7 +280,7 @@ export function MultiComboBox<T>({
         }}
       >
         <InputArea themes={theme}>
-          <SelectedList aria-label="選択済みリスト">
+          <SelectedList aria-label="選択済みアイテム">
             {selectedItems.map((selectedItem, i) => (
               <li key={selectedItem.label}>
                 <MultiSelectedItem
@@ -414,6 +414,8 @@ const InputWrapper = styled.div`
   }
 
   flex: 1;
+  display: flex;
+  align-items: center;
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
