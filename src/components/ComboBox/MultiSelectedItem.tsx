@@ -122,11 +122,11 @@ const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled?: boolean 
       cursor: ${disabled ? 'not-allowed' : 'pointer'};
       line-height: 0;
 
-      &:focus {
+      &:focus-visible {
         outline: 0;
       }
 
-      &:focus > svg {
+      &:focus-visible > svg {
         border-radius: 50%;
         box-shadow: ${shadow.OUTLINE};
       }
