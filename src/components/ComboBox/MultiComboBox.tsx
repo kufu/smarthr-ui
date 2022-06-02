@@ -278,15 +278,9 @@ export function MultiComboBox<T>({
           }
           handleListBoxKeyDown(e)
         }}
-        role="combobox"
-        aria-owns={listBoxId}
-        aria-haspopup="listbox"
-        aria-expanded={isFocused}
-        aria-invalid={error || undefined}
-        aria-disabled={disabled}
       >
         <InputArea themes={theme}>
-          <List themes={theme}>
+          <SelectedList aria-label="選択済みリスト">
             {selectedItems.map((selectedItem, i) => (
               <li key={selectedItem.label}>
                 <MultiSelectedItem
@@ -298,57 +292,60 @@ export function MultiComboBox<T>({
                 />
               </li>
             ))}
+          </SelectedList>
 
-            <InputWrapper className={isFocused ? undefined : 'hidden'}>
-              <Input
-                type="text"
-                name={name}
-                value={inputValue}
-                disabled={disabled}
-                ref={inputRef}
-                themes={theme}
-                onChange={(e) => {
-                  if (onChange) onChange(e)
-                  if (onChangeInput) onChangeInput(e)
-                  if (!isInputControlled) {
-                    setUncontrolledInputValue(e.currentTarget.value)
-                  }
-                }}
-                onFocus={() => {
-                  resetDeleteButtonFocus()
-                  if (!isFocused) {
-                    focus()
-                  }
-                }}
-                onCompositionStart={() => setIsComposing(true)}
-                onCompositionEnd={() => setIsComposing(false)}
-                onKeyDown={(e) => {
-                  if (
-                    e.key === 'Down' ||
-                    e.key === 'ArrowDown' ||
-                    e.key === 'Up' ||
-                    e.key === 'ArrowUp'
-                  ) {
-                    e.preventDefault()
-                  }
-                }}
-                autoComplete="off"
-                tabIndex={0}
-                aria-activedescendant={activeOption?.id}
-                aria-autocomplete="list"
-                aria-controls={listBoxId}
-                className={classNames.input}
-              />
-            </InputWrapper>
+          <InputWrapper className={isFocused ? undefined : 'hidden'}>
+            <Input
+              type="text"
+              name={name}
+              value={inputValue}
+              disabled={disabled}
+              ref={inputRef}
+              themes={theme}
+              onChange={(e) => {
+                if (onChange) onChange(e)
+                if (onChangeInput) onChangeInput(e)
+                if (!isInputControlled) {
+                  setUncontrolledInputValue(e.currentTarget.value)
+                }
+              }}
+              onFocus={() => {
+                resetDeleteButtonFocus()
+                if (!isFocused) {
+                  focus()
+                }
+              }}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
+              onKeyDown={(e) => {
+                if (
+                  e.key === 'Down' ||
+                  e.key === 'ArrowDown' ||
+                  e.key === 'Up' ||
+                  e.key === 'ArrowUp'
+                ) {
+                  e.preventDefault()
+                }
+              }}
+              autoComplete="off"
+              tabIndex={0}
+              role="combobox"
+              aria-activedescendant={activeOption?.id}
+              aria-controls={listBoxId}
+              aria-haspopup="listbox"
+              aria-expanded={isFocused}
+              aria-invalid={error || undefined}
+              aria-disabled={disabled}
+              aria-autocomplete="list"
+              className={classNames.input}
+            />
+          </InputWrapper>
 
-            {selectedItems.length === 0 && placeholder && !isFocused && (
-              <li>
-                <Placeholder themes={theme} className={classNames.placeholder}>
-                  {placeholder}
-                </Placeholder>
-              </li>
-            )}
-          </List>
+          {selectedItems.length === 0 && placeholder && !isFocused && (
+            <Placeholder themes={theme} className={classNames.placeholder}>
+              {placeholder}
+            </Placeholder>
+          )}
         </InputArea>
 
         <Suffix themes={theme}>
@@ -394,37 +391,22 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
 const InputArea = styled.div<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
     flex: 1;
-    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
+    min-height: calc(1rem + ${spacingByChar(0.5)} * 2);
     max-height: 300px;
-    padding-left: ${spacingByChar(0.5)};
+    margin: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
+    overflow-y: auto;
   `}
 `
-const smallMargin = 6.5
-const borderWidth = 1
-const List = styled.ul<{ themes: Theme }>`
-  ${({ themes }) => {
-    const {
-      fontSize: { pxToRem },
-      spacingByChar,
-    } = themes
-
-    return css`
-      display: flex;
-      flex-wrap: wrap;
-      margin: ${pxToRem(smallMargin - borderWidth)} 0 0;
-      padding: 0;
-      list-style: none;
-
-      > li {
-        min-height: 27px;
-        max-width: calc(100% - ${spacingByChar(0.5)});
-        margin-right: ${spacingByChar(0.5)};
-        margin-bottom: ${pxToRem(smallMargin - borderWidth)};
-      }
-    `
-  }}
+const SelectedList = styled.ul`
+  display: contents;
+  li {
+    min-width: 0;
+  }
 `
-const InputWrapper = styled.li`
+const InputWrapper = styled.div`
   &.hidden {
     position: absolute;
     opacity: 0;
@@ -456,9 +438,9 @@ const Placeholder = styled.p<{ themes: Theme }>`
 
     return css`
       margin: 0;
+      align-self: center;
       color: ${color.TEXT_GREY};
       font-size: ${fontSize.M};
-      line-height: 25px;
     `
   }}
 `

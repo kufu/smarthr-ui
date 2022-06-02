@@ -94,15 +94,13 @@ const Wrapper = styled.div<{ themes: Theme; disabled?: boolean }>`
       background-color: ${disabled ? color.disableColor(color.WHITE) : color.WHITE};
       color: ${disabled ? color.TEXT_DISABLED : color.TEXT_BLACK};
       font-size: ${fontSize.S};
-      line-height: 1;
     `
   }}
 `
 const ItemLabel = styled.div<{ enableEllipsis?: boolean; themes: Theme }>`
   ${({ enableEllipsis, themes: { border, spacingByChar } }) => {
     return css`
-      flex: 1 1 0;
-      padding: calc(${spacingByChar(0.5)} - ${border.lineWidth});
+      padding: ${spacingByChar(0.25)} calc(${spacingByChar(0.5)} - ${border.lineWidth});
 
       ${enableEllipsis &&
       css`
@@ -116,7 +114,7 @@ const ItemLabel = styled.div<{ enableEllipsis?: boolean; themes: Theme }>`
 const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled?: boolean }>`
   ${({ themes: { border, spacingByChar, shadow }, disabled }) => {
     return css`
-      flex: 0 1 0;
+      flex-shrink: 1;
       padding: calc(${spacingByChar(0.5)} - ${border.lineWidth});
       border-radius: 50%;
       cursor: ${disabled ? 'not-allowed' : 'pointer'};
