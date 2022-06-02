@@ -240,6 +240,16 @@ export function MultiComboBox<T>({
     [classNames.listBox],
   )
 
+  const wrapperClassNames = [
+    className,
+    isFocused && 'focused',
+    error && 'invalid',
+    disabled && 'disabled',
+    classNames.wrapper,
+  ]
+    .filter((text) => text !== false && text !== '')
+    .join(' ')
+
   return (
     <ComboBoxContext.Provider value={contextValue}>
       <Container
@@ -247,7 +257,7 @@ export function MultiComboBox<T>({
         themes={theme}
         width={width}
         ref={outerRef}
-        className={`${className} ${classNames.wrapper}`}
+        className={wrapperClassNames}
         onClick={(e) => {
           if (
             !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
@@ -373,15 +383,15 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       background-color: ${color.WHITE};
       cursor: text;
 
-      &[aria-expanded='true'] {
+      &.focused {
         box-shadow: ${shadow.OUTLINE};
       }
 
-      &[aria-invalid='true'] {
+      &.invalid {
         border-color: ${color.DANGER};
       }
 
-      &[aria-disabled='true'] {
+      &.disabled {
         background-color: ${color.COLUMN};
         cursor: not-allowed;
       }
@@ -402,6 +412,7 @@ const InputArea = styled.div<{ themes: Theme }>`
 `
 const SelectedList = styled.ul`
   display: contents;
+  list-style: none;
   li {
     min-width: 0;
   }
