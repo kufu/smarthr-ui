@@ -1,4 +1,4 @@
-import React, { ComponentProps, ReactElement, VFC, useMemo } from 'react'
+import React, { ComponentProps, HTMLAttributes, ReactElement, VFC, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import {
@@ -12,6 +12,7 @@ import {
   Stack,
 } from '../../..'
 import { Theme, useTheme } from '../../../hooks/useTheme'
+import { useClassNames } from './useClassNames'
 import { BaseProps as ButtonProps } from '../../Button/types'
 
 type Actions = ActionItem | ActionItem[]
@@ -31,15 +32,20 @@ type Props = {
   /** 引き金となるボタンの `disabled` 属性の値 */
   disabled?: boolean
 }
+type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const DropdownButton: VFC<Props> = ({
+export const DropdownButton: VFC<Props & ElementProps> = ({
   label = 'その他の操作',
   children,
   triggerSize,
   onlyIconTrigger = false,
   disabled = false,
+  className = '',
+  ...props
 }) => {
   const themes = useTheme()
+  const classNames = useClassNames()
+
   const triggerLabel = useMemo(
     () => (onlyIconTrigger ? <FaEllipsisHIcon visuallyHiddenText={label} /> : label),
     [onlyIconTrigger, label],
@@ -50,19 +56,20 @@ export const DropdownButton: VFC<Props> = ({
   )
 
   return (
-    <Dropdown>
-      <DropdownTrigger>
+    <Dropdown {...props}>
+      <DropdownTrigger className={`${classNames.wrapper}${className && ` ${className}`}`}>
         <Trigger
           suffix={triggerSuffix}
           size={triggerSize}
           disabled={disabled}
           square={onlyIconTrigger}
+          className={classNames.trigger}
         >
           {triggerLabel}
         </Trigger>
       </DropdownTrigger>
       <DropdownContent>
-        <ActionList themes={themes}>
+        <ActionList themes={themes} className={classNames.panel}>
           {React.Children.map(children, (item, i) => (
             <li key={i}>{actionItem(item)}</li>
           ))}
