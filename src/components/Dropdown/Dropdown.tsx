@@ -100,14 +100,11 @@ export const Dropdown: VFC<Props> = ({ children }) => {
           },
           onClickCloser: () => {
             setActive(false)
-            // wait to re-render
-            requestAnimationFrame(() => {
-              // return focus to the Trigger
-              const trigger = getFirstTabbable(triggerElementRef)
-              if (trigger) {
-                trigger.focus()
-              }
-            })
+            // return focus to the Trigger
+            const trigger = getFirstTabbable(triggerElementRef)
+            if (trigger) {
+              trigger.focus()
+            }
           },
           DropdownContentRoot,
           contentId,
