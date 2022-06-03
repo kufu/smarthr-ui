@@ -11,6 +11,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
+import { useId } from '../../hooks/useId'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 import { useMultiComboBoxClassNames } from './useClassNames'
 
@@ -249,6 +250,7 @@ export function MultiComboBox<T>({
   ]
     .filter((text) => text !== false && text !== '')
     .join(' ')
+  const selectedListId = useId()
 
   return (
     <ComboBoxContext.Provider value={contextValue}>
@@ -288,9 +290,10 @@ export function MultiComboBox<T>({
           }
           handleListBoxKeyDown(e)
         }}
+        role="group"
       >
         <InputArea themes={theme}>
-          <SelectedList aria-label="選択済みアイテム">
+          <SelectedList id={selectedListId} aria-label="選択済みアイテム">
             {selectedItems.map((selectedItem, i) => (
               <li key={selectedItem.label}>
                 <MultiSelectedItem
@@ -341,7 +344,7 @@ export function MultiComboBox<T>({
               tabIndex={0}
               role="combobox"
               aria-activedescendant={activeOption?.id}
-              aria-controls={listBoxId}
+              aria-controls={`${listBoxId} ${selectedListId}`}
               aria-haspopup="listbox"
               aria-expanded={isFocused}
               aria-invalid={error || undefined}
@@ -414,6 +417,7 @@ const SelectedList = styled.ul`
   display: contents;
   list-style: none;
   li {
+    /** 選択済みアイテムのラベルの省略表示のために幅を計算させる */
     min-width: 0;
   }
 `
