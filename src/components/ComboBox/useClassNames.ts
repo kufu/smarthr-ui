@@ -26,6 +26,7 @@ export function useMultiComboBoxClassNames() {
   return useMemo(
     () => ({
       wrapper: generate(),
+      selectedList: generate('selectedList'),
       selectedItem: generate('selectedItem'),
       selectedItemLabel: generate('selectedItemLabel'),
       deleteButton: generate('deleteButton'),

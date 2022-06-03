@@ -293,7 +293,11 @@ export function MultiComboBox<T>({
         role="group"
       >
         <InputArea themes={theme}>
-          <SelectedList id={selectedListId} aria-label="選択済みアイテム">
+          <SelectedList
+            id={selectedListId}
+            aria-label="選択済みアイテム"
+            className={classNames.selectedList}
+          >
             {selectedItems.map((selectedItem, i) => (
               <li key={selectedItem.label}>
                 <MultiSelectedItem
