@@ -17,6 +17,7 @@ export interface ShadowProperty {
   LAYER3?: string
   LAYER4?: string
   OUTLINE?: string
+  OUTLINE_MARGIN?: string
 }
 
 export interface CreatedShadowTheme {
@@ -34,10 +35,12 @@ export interface CreatedShadowTheme {
   LAYER3?: string
   LAYER4?: string
   OUTLINE: string
+  OUTLINE_MARGIN: string
   focusIndicatorStyles: FlattenSimpleInterpolation
 }
 
 const defaultOutline = `0 0 0 2px white, 0 0 0 4px ${defaultColor.OUTLINE}`
+const defaultOutlineMargin = '4px'
 
 export const defaultShadow = {
   BASE: `${defaultColor.TRANSPARENCY_15} 0 0 4px 0`,
@@ -48,6 +51,7 @@ export const defaultShadow = {
   LAYER3: `0 4px 8px 2px ${defaultColor.TRANSPARENCY_30}`,
   LAYER4: `0 8px 16px 4px ${defaultColor.TRANSPARENCY_30}`,
   OUTLINE: defaultOutline,
+  OUTLINE_MARGIN: defaultOutlineMargin,
 }
 
 function createFocusIndicatorStyles(outline?: string) {

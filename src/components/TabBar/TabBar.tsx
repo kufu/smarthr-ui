@@ -36,10 +36,11 @@ export const TabBar: VFC<Props & ElementProps> = ({
 
 const Inner = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { border } = themes
+    const { border, shadow } = themes
 
     return css`
       flex-grow: 1;
+      margin: ${shadow.OUTLINE_MARGIN};
 
       &.bordered {
         position: relative;
