@@ -10,6 +10,7 @@ type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProp
 export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
   (
     {
+      type = 'button',
       size = 'default',
       square = false,
       prefix,
@@ -32,6 +33,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
     return (
       <ButtonWrapper
         {...props}
+        type={type}
         size={size}
         square={square}
         wide={wide}
