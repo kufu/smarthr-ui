@@ -1,4 +1,10 @@
-import React, { ReactNode, RefObject, useMemo } from 'react'
+import React, {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  ReactNode,
+  RefObject,
+  useMemo,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -14,15 +20,18 @@ type BaseProps = {
   children: ReactNode
 }
 
+type ButtonProps = BaseProps & {
+  isAnchor?: never
+  buttonRef?: RefObject<HTMLButtonElement>
+}
+type AnchorProps = BaseProps & {
+  isAnchor: true
+  anchorRef?: RefObject<HTMLAnchorElement>
+}
 type Props =
-  | (BaseProps & {
-      isAnchor?: never
-      buttonRef?: RefObject<HTMLButtonElement>
-    })
-  | (BaseProps & {
-      isAnchor: true
-      anchorRef?: RefObject<HTMLAnchorElement>
-    })
+  | (ButtonProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>)
+  | (AnchorProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof AnchorProps>)
+
 type StyleProps = Pick<Props, 'wide' | 'variant'> & { themes: Theme }
 
 export function ButtonWrapper({ size, square, className, ...props }: Props) {
