@@ -6,10 +6,12 @@ fixture('MultiComboBox')
     await t.maximizeWindow()
   })
 
+const elementWithId = Selector((id) => document.getElementById(id))
+
 test('アイテムの選択と選択解除ができること', async (t) => {
   const combobox = Selector('[data-test=multi-combobox-default]')
   const textbox = combobox.find('input[type=text]')
-  const listbox = Selector(`#${await combobox.getAttribute('aria-owns')}`)
+  const listbox = elementWithId(await combobox.getAttribute('aria-owns'))
   const selectedItems = combobox.find('.smarthr-ui-MultiComboBox-selectedItem')
 
   await t
@@ -32,7 +34,7 @@ test('アイテムの選択と選択解除ができること', async (t) => {
 
 test('リストボックスが開閉できること', async (t) => {
   const combobox = Selector('[data-test=multi-combobox-default]')
-  const listbox = Selector(`#${await combobox.getAttribute('aria-owns')}`)
+  const listbox = elementWithId(await combobox.getAttribute('aria-owns'))
 
   await t
     // コンボボックスをクリックするとリストボックスが表示されること
@@ -59,7 +61,7 @@ test('リストボックスが開閉できること', async (t) => {
 
 test('コンボボックスがフォーカスされていない時に選択解除ボタンを押下してもリストボックスが表示されないこと', async (t) => {
   const combobox = Selector('[data-test=multi-combobox-default]')
-  const listbox = Selector(`#${await combobox.getAttribute('aria-owns')}`)
+  const listbox = elementWithId(await combobox.getAttribute('aria-owns'))
   const selectedItems = combobox.find('.smarthr-ui-MultiComboBox-selectedItem')
 
   await t
@@ -77,7 +79,7 @@ test('コンボボックスがフォーカスされていない時に選択解�
 test('新しいアイテムを追加できること', async (t) => {
   const combobox = Selector('[data-test=multi-combobox-creatable]')
   const textbox = combobox.find('input[type=text]')
-  const listbox = Selector(`#${await combobox.getAttribute('aria-owns')}`)
+  const listbox = elementWithId(await combobox.getAttribute('aria-owns'))
   const addButton = listbox.find('.smarthr-ui-MultiComboBox-addButton')
   const selectedItems = combobox.find('.smarthr-ui-MultiComboBox-selectedItem')
 
@@ -100,9 +102,9 @@ test('新しいアイテムを追加できること', async (t) => {
 
 test('disabled なコンボボックスではアイテムの選択と選択解除ができないこと', async (t) => {
   const normal = Selector('[data-test=multi-combobox-default]')
-  const normalListbox = Selector(`#${await normal.getAttribute('aria-owns')}`)
+  const normalListbox = elementWithId(await normal.getAttribute('aria-owns'))
   const disabled = Selector('[data-test=multi-combobox-disabled]')
-  const disabledListbox = Selector(`#${await disabled.getAttribute('aria-owns')}`)
+  const disabledListbox = elementWithId(await disabled.getAttribute('aria-owns'))
   const disabledSelectedItems = disabled.find('.smarthr-ui-MultiComboBox-selectedItem')
 
   await t
