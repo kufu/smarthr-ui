@@ -68,7 +68,7 @@ export const DropdownContentInner: VFC<Props> = ({
     }
   }, [isActive])
 
-  useKeyboardNavigation(wrapperRef)
+  useKeyboardNavigation(wrapperRef, focusTargetRef)
 
   return (
     <Wrapper
