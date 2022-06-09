@@ -65,7 +65,7 @@ export function Select<T extends string>({
   const classNames = useClassNames()
 
   return (
-    <Wrapper className={`${className} ${classNames.wrapper}`} $width={widthStyle}>
+    <Wrapper className={`${className} ${classNames.wrapper}`} $width={widthStyle} themes={theme}>
       <SelectBox
         onChange={handleChange}
         aria-invalid={error || undefined}
@@ -108,11 +108,18 @@ export function Select<T extends string>({
   )
 }
 
-const Wrapper = styled.div<{ $width: string }>(({ $width }) => {
+const Wrapper = styled.div<{
+  $width: string
+  themes: Theme
+}>(({ $width, theme: { border, radius, spacingByChar } }) => {
   return css`
+    display: flex;
     box-sizing: border-box;
     position: relative;
     width: ${$width};
+    min-height: calc(1rem + ${spacingByChar(0.75)} * 2 + ${border.lineWidth} * 2);
+    border: ${border.shorthand};
+    border-radius: ${radius.m};
   `
 })
 const SelectBox = styled.select<{
@@ -120,21 +127,19 @@ const SelectBox = styled.select<{
   themes: Theme
 }>`
   ${({ error, themes }) => {
-    const { border, color, fontSize, leading, radius, shadow, spacingByChar } = themes
+    const { color, fontSize, radius, shadow, spacingByChar } = themes
 
     return css`
       appearance: none;
       cursor: pointer;
       outline: none;
       border-radius: ${radius.m};
-      border: ${border.shorthand};
+      border: none;
       background-color: ${color.WHITE};
-      padding: ${spacingByChar(0.75)};
       padding-right: ${spacingByChar(2)};
       padding-left: ${spacingByChar(0.5)};
       font-size: ${fontSize.M};
       color: ${color.TEXT_BLACK};
-      line-height: ${leading.NONE};
       width: 100%;
 
       ${error &&
