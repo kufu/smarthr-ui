@@ -21,7 +21,7 @@ export const All: Story = () => (
       借り換え直前の残高3,000万円、借り換え後の借入額2,900万円の場合→借り換え後の借入額が少ないので「借り換え後の借入額の方が少ない・同じ」を選択
     </InformationPanel>
     <InformationPanel
-      title="賃金支払対象期間"
+      title={<span>賃金支払対象期間</span>}
       titleTag="h4"
       type="success"
       openButtonLabel="開く"
