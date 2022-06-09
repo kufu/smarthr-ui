@@ -12,21 +12,17 @@ const defaultContext: IdContextValue = {
 
 const IdContext = createContext<IdContextValue>(defaultContext)
 
-export function useId(defaultId?: string) {
-  // React バージョンによって使うフックを切り替えるためルールを抑止
-  /* eslint-disable react-hooks/rules-of-hooks */
-  if ('useId' in React) {
-    // React v18 以降は React.useId を使う
-    return defaultId || React.useId()
-  }
-
-  const context = useContext(IdContext)
-  return useMemo(
-    () => defaultId || `id-${context.prefix}-${++context.current}`,
-    [defaultId, context],
-  )
-  /* eslint-enable */
-}
+export const useId =
+  // React v18 以降は React.useId を使う
+  'useId' in React
+    ? React.useId
+    : (defaultId?: string) => {
+        const context = useContext(IdContext)
+        return useMemo(
+          () => defaultId || `id-${context.prefix}-${++context.current}`,
+          [defaultId, context],
+        )
+      }
 
 export const SequencePrefixIdProvider: VFC<{ children: ReactNode }> = ({ children }) => {
   const context = useContext(IdContext)
