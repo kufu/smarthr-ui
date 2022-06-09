@@ -32,11 +32,11 @@ const StyledTd = styled.td<{ themes: Theme }>`
   }
 
   ${({ themes }) => {
-    const { fontSize, size, spacingByChar, color, border } = themes
+    const { fontSize, leading, spacingByChar, color, border } = themes
 
     return css`
       color: ${color.TEXT_BLACK};
-      height: ${size.pxToRem(44)};
+      height: calc(${leading.RELAXED}rem + ${spacingByChar(0.5)} * 2);
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       border-top: ${border.shorthand};
       font-size: ${fontSize.M};
