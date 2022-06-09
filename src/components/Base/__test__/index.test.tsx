@@ -1,5 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
+import { act } from 'react-dom/test-utils'
 
 import { Base } from '../Base'
 
@@ -14,12 +15,13 @@ describe('Base', () => {
   })
   it('should render given children', () => {
     const hello = 'hello'
-    ReactDOM.render(
-      <Base>
-        <p>{hello}</p>
-      </Base>,
-      container,
-    )
+    act(() => {
+      createRoot(container).render(
+        <Base>
+          <p>{hello}</p>
+        </Base>,
+      )
+    })
 
     expect(document.querySelectorAll('p')).toHaveLength(1)
     expect(document.querySelector('p')!.textContent).toBe(hello)

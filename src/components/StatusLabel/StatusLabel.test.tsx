@@ -1,6 +1,7 @@
 import { create } from 'react-test-renderer'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
+import { act } from 'react-dom/test-utils'
 
 import { StatusLabel } from './StatusLabel'
 
@@ -19,7 +20,9 @@ describe('StatusLabel', () => {
     expect(testRenderer.toJSON()).toMatchSnapshot()
   })
   it('should render given children', () => {
-    ReactDOM.render(<StatusLabel type="success">{hello}</StatusLabel>, container)
+    act(() => {
+      createRoot(container).render(<StatusLabel type="success">{hello}</StatusLabel>)
+    })
     expect(container.textContent).toBe(hello)
   })
   it('should have given type', () => {
