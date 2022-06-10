@@ -58,7 +58,9 @@ module.exports = {
   // globalTeardown: null,
 
   // A set of global variables that need to be available in all test environments
-  // globals: {},
+  globals: {
+    IS_REACT_ACT_ENVIRONMENT: true,
+  },
 
   // An array of directory names to be searched recursively up from the requiring module's location
   // moduleDirectories: [

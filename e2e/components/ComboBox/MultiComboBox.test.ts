@@ -6,12 +6,14 @@ fixture('MultiComboBox')
     await t.maximizeWindow()
   })
 
+const elementWithId = Selector((id) => document.getElementById(id))
+
 test('アイテムの選択と選択解除ができること', async (t) => {
   const wrapper = Selector('[data-test=multi-combobox-default]')
   const combobox = wrapper.find('input[role=combobox]')
   const comboboxControls = (await combobox.getAttribute('aria-controls')).split(' ')
-  const listbox = Selector(`#${comboboxControls[0]}`)
-  const selectedItems = Selector(`#${comboboxControls[1]}`)
+  const listbox = elementWithId(comboboxControls[0])
+  const selectedItems = elementWithId(comboboxControls[1])
 
   await t
     // コンボボックスをクリックするとテキストボックスがフォーカスされること
@@ -42,7 +44,7 @@ test('リストボックスが開閉できること', async (t) => {
   const wrapper = Selector('[data-test=multi-combobox-default]')
   const combobox = wrapper.find('input[role=combobox]')
   const comboboxControls = (await combobox.getAttribute('aria-controls')).split(' ')
-  const listbox = Selector(`#${comboboxControls[0]}`)
+  const listbox = elementWithId(comboboxControls[0])
 
   await t
     // コンボボックスをクリックするとリストボックスが表示されること
@@ -71,8 +73,8 @@ test('コンボボックスがフォーカスされていない時に選択解�
   const wrapper = Selector('[data-test=multi-combobox-default]')
   const combobox = wrapper.find('input[role=combobox]')
   const comboboxControls = (await combobox.getAttribute('aria-controls')).split(' ')
-  const listbox = Selector(`#${comboboxControls[0]}`)
-  const selectedItems = Selector(`#${comboboxControls[1]}`)
+  const listbox = elementWithId(comboboxControls[0])
+  const selectedItems = elementWithId(comboboxControls[1])
 
   await t
     // アイテムを選択
@@ -90,7 +92,7 @@ test('新しいアイテムを追加できること', async (t) => {
   const wrapper = Selector('[data-test=multi-combobox-creatable]')
   const combobox = wrapper.find('input[role=combobox]')
   const comboboxControls = (await combobox.getAttribute('aria-controls')).split(' ')
-  const listbox = Selector(`#${comboboxControls[0]}`)
+  const listbox = elementWithId(comboboxControls[0])
   const addButton = listbox.find('.smarthr-ui-MultiComboBox-addButton')
   const selectedItems = Selector(`#${comboboxControls[1]}`)
 
@@ -115,13 +117,13 @@ test('disabled なコンボボックスではアイテムの選択と選択解�
   const normal = Selector('[data-test=multi-combobox-default]')
   const normalCombobox = normal.find('input[role=combobox]')
   const normalComboboxControls = (await normalCombobox.getAttribute('aria-controls')).split(' ')
-  const normalListbox = Selector(`#${normalComboboxControls[0]}`)
+  const normalListbox = elementWithId(normalComboboxControls[0])
 
   const disabled = Selector('[data-test=multi-combobox-disabled]')
   const disabledCombobox = disabled.find('input[role=combobox]')
   const disabledComboboxControls = (await disabledCombobox.getAttribute('aria-controls')).split(' ')
-  const disabledListbox = Selector(`#${disabledComboboxControls[0]}`)
-  const disabledSelectedItems = Selector(`#${disabledComboboxControls[1]}`)
+  const disabledListbox = elementWithId(disabledComboboxControls[0])
+  const disabledSelectedItems = elementWithId(disabledComboboxControls[1])
 
   await t
     // disabled なコンボボックスをクリックしてもリストボックスは表示されないこと
@@ -145,7 +147,7 @@ test('キーボードで選択済みアイテムリストが操作できるこ�
   const wrapper = Selector('[data-test=multi-combobox-default]')
   const combobox = wrapper.find('input[role=combobox]')
   const comboboxControls = (await combobox.getAttribute('aria-controls')).split(' ')
-  const listbox = Selector(`#${comboboxControls[0]}`)
+  const listbox = elementWithId(comboboxControls[0])
 
   const findOption = (label: string) =>
     listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText(label)

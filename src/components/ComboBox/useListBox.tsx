@@ -8,7 +8,6 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -168,7 +167,7 @@ export function useListBox<T>({
   )
 
   const theme = useTheme()
-  const { portalRoot } = usePortal()
+  const { createPortal } = usePortal()
   const listBoxId = useId()
   const bottomIntersectionRef = useRef<HTMLDivElement>(null)
   const partialOptions = usePartialRendering({
@@ -237,11 +236,12 @@ export function useListBox<T>({
         )}
         <div ref={bottomIntersectionRef} />
       </Container>,
-      portalRoot,
     )
   }, [
     activeOption?.id,
-    classNames,
+    classNames.dropdownList,
+    classNames.noItems,
+    createPortal,
     handleAdd,
     handleHoverOption,
     handleSelect,
@@ -251,7 +251,6 @@ export function useListBox<T>({
     listBoxRect,
     options.length,
     partialOptions,
-    portalRoot,
     theme,
   ])
 

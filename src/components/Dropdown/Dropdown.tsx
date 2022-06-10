@@ -9,7 +9,6 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { createPortal } from 'react-dom'
 
 import { Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 import { usePortal } from '../../hooks/usePortal'
@@ -52,12 +51,14 @@ export const Dropdown: VFC<Props> = ({ children }) => {
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
   const { rootTriggerRef } = useContext(DropdownContext)
-  const { portalRoot, isChildPortal, PortalParentProvider } = usePortal()
+  const { createPortal, portalRoot, isChildPortal, PortalParentProvider } = usePortal()
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
   const contentId = useId()
 
-  portalRoot.setAttribute('id', contentId)
+  if (portalRoot) {
+    portalRoot.setAttribute('id', contentId)
+  }
 
   useEffect(() => {
     const onClickBody = (e: any) => {
@@ -78,9 +79,9 @@ export const Dropdown: VFC<Props> = ({ children }) => {
   const DropdownContentRoot = useMemo<VFC<{ children: ReactNode }>>(
     () => (props) => {
       if (!active) return null
-      return createPortal(props.children, portalRoot)
+      return createPortal(props.children)
     },
-    [active, portalRoot],
+    [active, createPortal],
   )
   // set the displayName explicit for DevTools
   DropdownContentRoot.displayName = 'DropdownContentRoot'

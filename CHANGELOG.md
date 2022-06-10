@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [21.3.0](https://github.com/kufu/smarthr-ui/compare/v21.2.0...v21.3.0) (2022-06-07)
+
+
+### Features
+
+* Header を追加｜SHRUI-346 ([#2536](https://github.com/kufu/smarthr-ui/issues/2536)) ([3266007](https://github.com/kufu/smarthr-ui/commit/326600773b2c793388827ed862fcec9e209865b2))
+
+
+### Bug Fixes
+
+* `NotificationBar` の右寄せ部分にエスケープハッチを追加 (SHRUI-555) ([#2469](https://github.com/kufu/smarthr-ui/issues/2469)) ([239c6e4](https://github.com/kufu/smarthr-ui/commit/239c6e494ba52cbc7b53c28fbc470339b8502729))
+* apply forwardRef to Button and AnchorButton ([#2540](https://github.com/kufu/smarthr-ui/issues/2540)) ([4378f51](https://github.com/kufu/smarthr-ui/commit/4378f51342fba32a35ca09ac513cd9417a165402))
+* set Button default type to 'button' ([#2542](https://github.com/kufu/smarthr-ui/issues/2542)) ([fa94faf](https://github.com/kufu/smarthr-ui/commit/fa94faf7686200bb22638a7ba24d7b5e67744962))
+* ドロップダウンのフォーカス制御の修正 ([#2535](https://github.com/kufu/smarthr-ui/issues/2535)) ([fe45084](https://github.com/kufu/smarthr-ui/commit/fe45084e71e1537eb4ae5da3dcab6c0c1e6acad6))
+* フォーカスリングが見きれないように修正 (SHRUI-565) ([#2537](https://github.com/kufu/smarthr-ui/issues/2537)) ([9fb9dfd](https://github.com/kufu/smarthr-ui/commit/9fb9dfd42932f64f939383eab666ced5e3e1af66))
+
 ## [21.2.0](https://github.com/kufu/smarthr-ui/compare/v21.1.0...v21.2.0) (2022-05-30)
 
 

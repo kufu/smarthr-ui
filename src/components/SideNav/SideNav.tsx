@@ -1,4 +1,4 @@
-import React, { ComponentProps, VFC } from 'react'
+import React, { ComponentProps, HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -17,13 +17,20 @@ type Props = {
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
+type ElementProps = Omit<HTMLAttributes<HTMLUListElement>, keyof Props>
 
-export const SideNav: VFC<Props> = ({ items, size = 'default', onClick, className = '' }) => {
+export const SideNav: VFC<Props & ElementProps> = ({
+  items,
+  size = 'default',
+  onClick,
+  className = '',
+  ...props
+}) => {
   const theme = useTheme()
   const classNames = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={`${className} ${classNames.wrapper}`}>
+    <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       {items.map((item) => (
         <SideNavItem
           id={item.id}

@@ -13,13 +13,11 @@ export const Dialog: React.VFC<Props & ElementProps> = ({
   portalParent,
   ...props
 }) => {
-  const { Portal } = useDialogPortal(portalParent)
+  const { createPortal } = useDialogPortal(portalParent)
 
-  return (
-    <Portal>
-      <DialogContentInner className={className} {...props}>
-        {children}
-      </DialogContentInner>
-    </Portal>
+  return createPortal(
+    <DialogContentInner className={className} {...props}>
+      {children}
+    </DialogContentInner>,
   )
 }

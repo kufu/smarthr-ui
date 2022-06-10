@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, VFC } from 'react'
+import React, { ButtonHTMLAttributes, forwardRef, useImperativeHandle, useRef } from 'react'
 
 import { BaseProps } from './types'
 import { useClassNames } from './useClassNames'
@@ -7,31 +7,44 @@ import { ButtonInner } from './ButtonInner'
 
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
-export const Button: VFC<BaseProps & ElementProps> = ({
-  size = 'default',
-  square = false,
-  prefix,
-  suffix,
-  wide = false,
-  variant = 'secondary',
-  className = '',
-  children,
-  ...props
-}) => {
-  const classNames = useClassNames().button
+export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
+  (
+    {
+      type = 'button',
+      size = 'default',
+      square = false,
+      prefix,
+      suffix,
+      wide = false,
+      variant = 'secondary',
+      className = '',
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const buttonRef = useRef<HTMLButtonElement>(null)
+    useImperativeHandle<HTMLButtonElement | null, HTMLButtonElement | null>(
+      ref,
+      () => buttonRef.current,
+    )
+    const classNames = useClassNames().button
 
-  return (
-    <ButtonWrapper
-      {...props}
-      size={size}
-      square={square}
-      wide={wide}
-      variant={variant}
-      className={`${className} ${classNames.wrapper}`}
-    >
-      <ButtonInner prefix={prefix} suffix={suffix}>
-        {children}
-      </ButtonInner>
-    </ButtonWrapper>
-  )
-}
+    return (
+      <ButtonWrapper
+        {...props}
+        type={type}
+        size={size}
+        square={square}
+        wide={wide}
+        variant={variant}
+        className={`${className} ${classNames.wrapper}`}
+        buttonRef={buttonRef}
+      >
+        <ButtonInner prefix={prefix} suffix={suffix}>
+          {children}
+        </ButtonInner>
+      </ButtonWrapper>
+    )
+  },
+)

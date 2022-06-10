@@ -1,32 +1,49 @@
-import React, { ReactNode, useMemo } from 'react'
+import React, {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  ReactNode,
+  RefObject,
+  useMemo,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Variant } from './types'
 
-type Props = {
+type BaseProps = {
   size: 'default' | 's'
   square: boolean
   wide: boolean
   variant: Variant
   className: string
   children: ReactNode
-  isAnchor?: boolean
 }
+
+type ButtonProps = BaseProps & {
+  isAnchor?: never
+  buttonRef?: RefObject<HTMLButtonElement>
+}
+type AnchorProps = BaseProps & {
+  isAnchor: true
+  anchorRef?: RefObject<HTMLAnchorElement>
+}
+type Props =
+  | (ButtonProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>)
+  | (AnchorProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof AnchorProps>)
+
 type StyleProps = Pick<Props, 'wide' | 'variant'> & { themes: Theme }
 
-export function ButtonWrapper<T extends Props>({ size, square, className, isAnchor, ...props }: T) {
+export function ButtonWrapper({ size, square, className, ...props }: Props) {
   const theme = useTheme()
   const buttonClassName = useMemo(
     () => `${size} ${className} ${square ? 'square' : ''}`,
     [className, size, square],
   )
-
-  return isAnchor ? (
-    <Anchor {...props} className={buttonClassName} themes={theme} />
+  return props.isAnchor ? (
+    <Anchor {...props} className={buttonClassName} ref={props.anchorRef} themes={theme} />
   ) : (
-    <Button {...props} className={buttonClassName} themes={theme} />
+    <Button {...props} className={buttonClassName} ref={props.buttonRef} themes={theme} />
   )
 }
 

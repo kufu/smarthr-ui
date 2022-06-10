@@ -20,7 +20,7 @@ import { Button } from '../Button'
 import { Input } from '../Input'
 import { RadioButton } from '../RadioButton'
 import { DatePicker } from '../DatePicker'
-import { LineUp, Stack } from '../Layout'
+import { Cluster, LineUp, Stack } from '../Layout'
 import { Body, Cell, Head, Row, Table } from '../Table'
 import { CheckBox } from '../CheckBox'
 
@@ -199,23 +199,23 @@ Message_Dialog.parameters = {
 }
 
 export const Action_Dialog: Story = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
   const [value, setValue] = React.useState('Apple')
   const [responseMessage, setResponseMessage] = useState<{
     status: 'success' | 'error' | 'processing'
     text: string
   }>()
-  const onClickOpen = () => setIsOpen(true)
+  const openedFocusRef = useRef<HTMLInputElement>(null)
   const onClickClose = () => {
-    setIsOpen(false)
+    setOpenedDialog(null)
     setResponseMessage(undefined)
   }
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
 
   return (
-    <>
+    <Cluster>
       <Button
-        onClick={onClickOpen}
+        onClick={() => setOpenedDialog('normal')}
         aria-haspopup="dialog"
         aria-controls="dialog-action"
         data-test="dialog-trigger"
@@ -223,7 +223,7 @@ export const Action_Dialog: Story = () => {
         ActionDialog
       </Button>
       <ActionDialog
-        isOpen={isOpen}
+        isOpen={openedDialog === 'normal'}
         title="ActionDialog"
         subtitle="副題"
         actionText="保存"
@@ -288,7 +288,32 @@ export const Action_Dialog: Story = () => {
           </Button>
         </Buttons>
       </ActionDialog>
-    </>
+      <Button onClick={() => setOpenedDialog('opened')} data-test="opened-dialog-trigger">
+        開いた状態で DOM に投入
+      </Button>
+      {openedDialog === 'opened' && (
+        <ActionDialog
+          isOpen
+          title="開いた状態で投入されたダイアログ"
+          actionText="実行"
+          onClickAction={(closeDialog) => {
+            action('execute')()
+            closeDialog()
+          }}
+          onClickClose={onClickClose}
+          onClickOverlay={onClickClose}
+          firstFocusTarget={openedFocusRef}
+          data-test="opened-dialog"
+        >
+          <div style={{ padding: '2rem' }}>
+            <Stack align="flex-start">
+              <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
+              <Input ref={openedFocusRef} data-test="opened-dialog-focus-target" />
+            </Stack>
+          </div>
+        </ActionDialog>
+      )}
+    </Cluster>
   )
 }
 const Buttons = styled.div`

@@ -119,13 +119,13 @@ const Wrapper = styled.nav`
   max-width: 100%;
 `
 const List = styled.ul<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
+  ${({ themes: { spacingByChar, shadow } }) => {
     const classNames = useClassNames()
 
     return css`
       display: flex;
       align-items: center;
-      margin: 0;
+      margin: ${shadow.OUTLINE_MARGIN};
       padding: 0;
       > li {
         list-style: none;
