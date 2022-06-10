@@ -19,7 +19,7 @@ export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
   ...props
 }) => {
   const { onClickClose, active } = useContext(DialogContext)
-  const { Portal } = useDialogPortal(portalParent)
+  const { createPortal } = useDialogPortal(portalParent)
 
   const handleClickClose = useCallback(() => {
     if (!active) {
@@ -29,23 +29,21 @@ export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
   }, [active, onClickClose])
   const titleId = useId()
 
-  return (
-    <Portal>
-      <DialogContentInner
-        onClickOverlay={onClickClose}
-        onPressEscape={onClickClose}
-        isOpen={active}
-        className={className}
-        {...props}
-      >
-        <MessageDialogContentInner
-          title={title}
-          titleId={titleId}
-          description={description}
-          closeText={closeText}
-          onClickClose={handleClickClose}
-        />
-      </DialogContentInner>
-    </Portal>
+  return createPortal(
+    <DialogContentInner
+      onClickOverlay={onClickClose}
+      onPressEscape={onClickClose}
+      isOpen={active}
+      className={className}
+      {...props}
+    >
+      <MessageDialogContentInner
+        title={title}
+        titleId={titleId}
+        description={description}
+        closeText={closeText}
+        onClickClose={handleClickClose}
+      />
+    </DialogContentInner>,
   )
 }
