@@ -1,4 +1,4 @@
-import React, { VFC, createContext, useLayoutEffect, useRef, useState } from 'react'
+import React, { HTMLAttributes, VFC, createContext, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -15,6 +15,8 @@ type Props = {
   controllable: boolean
 }
 
+export type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+
 type DropdownContentInnerContextType = {
   maxHeight: string
 }
@@ -23,12 +25,13 @@ export const DropdownContentInnerContext = createContext<DropdownContentInnerCon
   maxHeight: '',
 })
 
-export const DropdownContentInner: VFC<Props> = ({
+export const DropdownContentInner: VFC<Props & ElementProps> = ({
   triggerRect,
   scrollable,
   children,
   className,
   controllable,
+  ...props
 }) => {
   const theme = useTheme()
   const [isActive, setIsActive] = useState(false)
@@ -72,6 +75,7 @@ export const DropdownContentInner: VFC<Props> = ({
 
   return (
     <Wrapper
+      {...props}
       ref={wrapperRef}
       contentBox={contentBox}
       className={`${className} ${isActive ? 'active' : ''}`}

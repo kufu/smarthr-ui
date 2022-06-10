@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -220,7 +219,7 @@ export function useListBox<T>({
   })()
 
   const theme = useTheme()
-  const { portalRoot } = usePortal()
+  const { createPortal } = usePortal()
   const listBoxRef = useRef<HTMLDivElement>(null)
 
   const bottomIntersectionRef = useRef<HTMLDivElement>(null)
@@ -329,7 +328,6 @@ export function useListBox<T>({
         )}
         <div ref={bottomIntersectionRef} />
       </Container>,
-      portalRoot,
     )
   }
   return {

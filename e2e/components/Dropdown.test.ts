@@ -41,3 +41,17 @@ test('ドロップダウンが展開後にドロップダウンの外側をク�
     .expect(Selector('#dropdown-list-item-1').exists)
     .notOk()
 })
+
+test('ドロップダウンからダイアログを開いたときフォーカスが移動すること', async (t) => {
+  const trigger = Selector('[data-test=controlled-dropdown-trigger]')
+  const dialogTrigger = Selector('[data-test=dropdown-dialog-trigger]')
+  const dialogCloser = Selector('[data-test=dropdown-dialog-closer]')
+
+  await t
+    .click(trigger)
+    .click(dialogTrigger)
+    // ドロップダウンからダイアログを開いた後、タブキーを押下するとダイアログ内のボタンがフォーカスされること
+    .pressKey('tab')
+    .expect(dialogCloser.focused)
+    .ok()
+})

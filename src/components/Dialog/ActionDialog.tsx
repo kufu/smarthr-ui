@@ -26,7 +26,7 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   portalParent,
   ...props
 }) => {
-  const { Portal } = useDialogPortal(portalParent)
+  const { createPortal } = useDialogPortal(portalParent)
   const titleId = useId()
 
   const handleClickClose = useCallback(() => {
@@ -43,30 +43,28 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
     onClickAction(onClickClose)
   }, [onClickAction, onClickClose, props.isOpen])
 
-  return (
-    <Portal>
-      <DialogContentInner
-        ariaLabelledby={titleId}
-        className={className}
-        onPressEscape={onPressEscape}
-        {...props}
+  return createPortal(
+    <DialogContentInner
+      ariaLabelledby={titleId}
+      className={className}
+      onPressEscape={onPressEscape}
+      {...props}
+    >
+      <ActionDialogContentInner
+        title={title}
+        titleId={titleId}
+        subtitle={subtitle}
+        closeText={closeText}
+        actionText={actionText}
+        actionTheme={actionTheme}
+        actionDisabled={actionDisabled}
+        closeDisabled={closeDisabled}
+        onClickClose={handleClickClose}
+        onClickAction={handleClickAction}
+        responseMessage={responseMessage}
       >
-        <ActionDialogContentInner
-          title={title}
-          titleId={titleId}
-          subtitle={subtitle}
-          closeText={closeText}
-          actionText={actionText}
-          actionTheme={actionTheme}
-          actionDisabled={actionDisabled}
-          closeDisabled={closeDisabled}
-          onClickClose={handleClickClose}
-          onClickAction={handleClickAction}
-          responseMessage={responseMessage}
-        >
-          {children}
-        </ActionDialogContentInner>
-      </DialogContentInner>
-    </Portal>
+        {children}
+      </ActionDialogContentInner>
+    </DialogContentInner>,
   )
 }
