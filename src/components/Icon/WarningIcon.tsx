@@ -20,7 +20,7 @@ export default (props: IconBaseProps) => (
 const Wrapper = styled(IconBase)`
   ${({ theme: { color } }) => css`
     .base {
-      fill: ${color.WARNING};
+      fill: ${color.WARNING_YELLOW};
       stroke: ${color.TEXT_BLACK};
       stroke-width: 1;
     }

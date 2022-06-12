@@ -72,8 +72,7 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
           Icon: FaExclamationTriangleIcon,
           iconColor: color.TEXT_BLACK,
           fgColor: color.TEXT_BLACK,
-          // FIXME: WARNING の色を見直す時に定数化する
-          bgColor: '#ffcc17',
+          bgColor: color.WARNING_YELLOW,
         }
     }
   }, [color, type])
