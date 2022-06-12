@@ -93,7 +93,7 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     shadow: createShadow(theme.shadow),
     zIndex: createZIndex(theme.zIndex),
   }
-  return created
+  return { ...created, space: created.spacingByChar }
 }
 
 function getPaletteProperty(theme: ThemeProperty): PaletteProperty {

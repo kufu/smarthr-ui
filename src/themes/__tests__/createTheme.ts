@@ -545,4 +545,9 @@ describe('createTheme', () => {
     expect(actual.radius.s).toBe('dummy_s')
     expect(actual.radius.m).toBe('dummy_radius_m')
   })
+
+  it('returns theme "space" is the same as "spacingByChar"', () => {
+    const { space, spacingByChar } = createTheme()
+    expect(space).toEqual(spacingByChar)
+  })
 })
