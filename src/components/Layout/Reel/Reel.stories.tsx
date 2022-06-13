@@ -74,7 +74,7 @@ export const ReelStory: Story = () => {
               <Row>
                 <th>000111</th>
                 <Cell>
-                  <StatusLabel type="process">入社手続き中</StatusLabel>
+                  <StatusLabel type="blue">入社手続き中</StatusLabel>
                 </Cell>
                 <Cell>草野</Cell>
                 <Cell>栄一郎</Cell>
@@ -92,7 +92,7 @@ export const ReelStory: Story = () => {
               <Row>
                 <th>000110</th>
                 <Cell>
-                  <StatusLabel type="done">在籍</StatusLabel>
+                  <StatusLabel>在籍</StatusLabel>
                 </Cell>
                 <Cell>岩下</Cell>
                 <Cell>香澄</Cell>
@@ -110,7 +110,7 @@ export const ReelStory: Story = () => {
               <Row>
                 <th>000109</th>
                 <Cell>
-                  <StatusLabel type="done">在籍</StatusLabel>
+                  <StatusLabel>在籍</StatusLabel>
                 </Cell>
                 <Cell>島袋</Cell>
                 <Cell>月代</Cell>
@@ -128,7 +128,7 @@ export const ReelStory: Story = () => {
               <Row>
                 <th>000108</th>
                 <Cell>
-                  <StatusLabel type="done">在籍</StatusLabel>
+                  <StatusLabel>在籍</StatusLabel>
                 </Cell>
                 <Cell>永山</Cell>
                 <Cell>侑太郎</Cell>
@@ -146,7 +146,7 @@ export const ReelStory: Story = () => {
               <Row>
                 <th>000107</th>
                 <Cell>
-                  <StatusLabel type="done">在籍</StatusLabel>
+                  <StatusLabel>在籍</StatusLabel>
                 </Cell>
                 <Cell>上原</Cell>
                 <Cell>玲子</Cell>
@@ -164,7 +164,7 @@ export const ReelStory: Story = () => {
               <Row>
                 <th>000106</th>
                 <Cell>
-                  <StatusLabel type="done">在籍</StatusLabel>
+                  <StatusLabel>在籍</StatusLabel>
                 </Cell>
                 <Cell>Robert</Cell>
                 <Cell>Smith</Cell>
@@ -182,7 +182,7 @@ export const ReelStory: Story = () => {
               <Row>
                 <th>000105</th>
                 <Cell>
-                  <StatusLabel type="done">在籍</StatusLabel>
+                  <StatusLabel>在籍</StatusLabel>
                 </Cell>
                 <Cell>大和</Cell>
                 <Cell>真</Cell>
@@ -200,7 +200,7 @@ export const ReelStory: Story = () => {
               <Row>
                 <th>000104</th>
                 <Cell>
-                  <StatusLabel type="done">在籍</StatusLabel>
+                  <StatusLabel>在籍</StatusLabel>
                 </Cell>
                 <Cell>松原</Cell>
                 <Cell>英太</Cell>
@@ -218,7 +218,7 @@ export const ReelStory: Story = () => {
               <Row>
                 <th>000103</th>
                 <Cell>
-                  <StatusLabel type="done">在籍</StatusLabel>
+                  <StatusLabel>在籍</StatusLabel>
                 </Cell>
                 <Cell>阿久津</Cell>
                 <Cell>雄一</Cell>
@@ -236,7 +236,7 @@ export const ReelStory: Story = () => {
               <Row>
                 <th>000102</th>
                 <Cell>
-                  <StatusLabel type="done">退職</StatusLabel>
+                  <StatusLabel type="red">退職</StatusLabel>
                 </Cell>
                 <Cell>高美</Cell>
                 <Cell>ひなこ</Cell>

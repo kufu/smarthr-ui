@@ -131,7 +131,6 @@ const StyledStatusLabel = styled(StatusLabel)<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) =>
     css`
       margin-right: ${spacingByChar(0.25)};
-      display: inline-block;
     `}
 `
 

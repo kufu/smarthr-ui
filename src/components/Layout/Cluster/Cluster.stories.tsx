@@ -20,14 +20,22 @@ export const ClusterStory: Story = () => {
       <Stack as="figure" gap="X3S">
         <figcaption>幅を狭めて収まり切らなくなると折返します。</figcaption>
         <Cluster>
-          <StatusLabel type="done">アコーディオン</StatusLabel>
-          <StatusLabel type="success">コンボボックス</StatusLabel>
-          <StatusLabel type="process">ディスクロージャ</StatusLabel>
-          <StatusLabel type="required">タブ・コントロール</StatusLabel>
-          <StatusLabel type="disabled">ツリー・ビュー</StatusLabel>
-          <StatusLabel type="must">ツリー・グリッド</StatusLabel>
+          <StatusLabel type="grey">アコーディオン</StatusLabel>
+          <StatusLabel type="blue">コンボボックス</StatusLabel>
+          <StatusLabel type="red">ディスクロージャ</StatusLabel>
+          <StatusLabel type="grey" bold>
+            タブ・コントロール
+          </StatusLabel>
+          <StatusLabel type="red" bold>
+            ツリー・ビュー
+          </StatusLabel>
+          <StatusLabel type="blue" bold>
+            ツリー・グリッド
+          </StatusLabel>
           <StatusLabel type="warning">ウィンドウ・スプリッター</StatusLabel>
-          <StatusLabel type="error">ランドマーク・リージョン</StatusLabel>
+          <StatusLabel type="error" bold>
+            ランドマーク・リージョン
+          </StatusLabel>
         </Cluster>
       </Stack>
       <Stack as="figure" gap="X3S">
@@ -71,9 +79,9 @@ export const ClusterStory: Story = () => {
           <Heading>これは Cluster の構成例です</Heading>
 
           <Cluster>
-            <StatusLabel type="done">アコーディオン</StatusLabel>
-            <StatusLabel type="success">コンボボックス</StatusLabel>
-            <StatusLabel type="process">ディスクロージャ</StatusLabel>
+            <StatusLabel type="grey">アコーディオン</StatusLabel>
+            <StatusLabel type="blue">コンボボックス</StatusLabel>
+            <StatusLabel type="red">ディスクロージャ</StatusLabel>
           </Cluster>
         </Cluster>
       </Stack>
