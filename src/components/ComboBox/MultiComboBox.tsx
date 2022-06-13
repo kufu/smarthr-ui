@@ -276,6 +276,10 @@ export function MultiComboBox<T>({
             e.stopPropagation()
             blur()
           } else if (e.key === 'Tab') {
+            if (isFocused) {
+              // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
+              inputRef.current?.focus()
+            }
             blur()
           } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
             e.stopPropagation()
