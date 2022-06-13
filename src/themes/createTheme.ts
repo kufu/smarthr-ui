@@ -61,6 +61,7 @@ export interface CreatedTheme {
   leading: CreatedLeading
   spacing: CreatedSpacingTheme
   spacingByChar: CreatedSpacingByCharTheme
+  space: CreatedSpacingByCharTheme
   breakpoint: CreatedBreakpointTheme
   /**
    * @deprecated The frame property will be deprecated, please use border or radius property instead
@@ -73,17 +74,19 @@ export interface CreatedTheme {
   zIndex: CreatedZindexTheme
 }
 
-export const createTheme = (theme: ThemeProperty = {}) => {
+export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
   const paletteProperty = getPaletteProperty(theme)
   const colorProperty = getColorProperty(theme)
   const baseSize = getSpacingProperty(theme).baseSize
-  const created: CreatedTheme = {
+  const spacingByChar = createSpacingByChar(baseSize)
+  return {
     palette: createPalette(paletteProperty),
     color: createColor(colorProperty),
     size: createSize(getSizeProperty(theme)),
     fontSize: createFontSize(getFontSizeProperty(theme)),
     spacing: createSpacing(baseSize),
-    spacingByChar: createSpacingByChar(baseSize),
+    spacingByChar,
+    space: spacingByChar,
     leading: createLeading(getLeadingProperty(theme)),
     breakpoint: createBreakpoint(getBreakpointProperty(theme)),
     frame: createFrame(getFrameProperty(theme), paletteProperty),
@@ -93,7 +96,6 @@ export const createTheme = (theme: ThemeProperty = {}) => {
     shadow: createShadow(theme.shadow),
     zIndex: createZIndex(theme.zIndex),
   }
-  return { ...created, space: created.spacingByChar }
 }
 
 function getPaletteProperty(theme: ThemeProperty): PaletteProperty {
