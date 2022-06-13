@@ -7,9 +7,9 @@ import { useClassNames } from './useClassNames'
 import {
   FaCheckCircleIcon,
   FaExclamationCircleIcon,
-  FaExclamationTriangleIcon,
   FaInfoCircleIcon,
   FaTimesIcon,
+  WarningIcon,
 } from '../Icon'
 import { Button } from '../Button'
 
@@ -83,7 +83,7 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
       iconColor = theme.color.TEXT_GREY
       break
     case 'warning':
-      Icon = FaExclamationTriangleIcon
+      Icon = WarningIcon
       iconColor = theme.color.WARNING
       break
     case 'error':
