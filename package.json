@@ -74,7 +74,7 @@
     "ttypescript": "^1.5.13",
     "typescript": "^4.7.2",
     "typescript-plugin-styled-components": "^2.0.0",
-    "webpack": "^5.72.1"
+    "webpack": "^5.73.0"
   },
   "peerDependencies": {
     "react": "16.13.0 || ^17.0.1 || ^18.0.0",
