@@ -415,7 +415,7 @@ const InputArea = styled.div<{ themes: Theme }>`
     display: flex;
     flex-wrap: wrap;
     gap: ${spacingByChar(0.5)};
-    min-height: calc(1rem + ${spacingByChar(0.5)} * 2);
+    min-height: calc(1em + ${spacingByChar(0.5)} * 2);
     max-height: 300px;
     margin: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
     overflow-y: auto;

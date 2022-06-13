@@ -89,7 +89,7 @@ const Wrapper = styled.div<{ themes: Theme; disabled?: boolean }>`
     return css`
       position: relative;
       display: flex;
-      border-radius: 1rem;
+      border-radius: 1em;
       border: ${border.shorthand};
       background-color: ${disabled ? color.disableColor(color.WHITE) : color.WHITE};
       color: ${disabled ? color.TEXT_DISABLED : color.TEXT_BLACK};
