@@ -1,7 +1,7 @@
 import { createRef, useCallback, useMemo, useRef, useState } from 'react'
 
 export function useFocusControl(selectedItemLength: number) {
-  const deleteButtonRefs = useMemo(
+  const deletionButtonRefs = useMemo(
     () => Array.from({ length: selectedItemLength }).map(() => createRef<HTMLButtonElement>()),
     [selectedItemLength],
   )
@@ -9,32 +9,32 @@ export function useFocusControl(selectedItemLength: number) {
 
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
 
-  const focusPrevDeleteButton = useCallback(() => {
+  const focusPrevDeletionButton = useCallback(() => {
     if (selectedItemLength === 0) {
       return
     }
     if (focusedIndex === null) {
       if (inputRef.current?.selectionStart === 0) {
-        const nextIndex = deleteButtonRefs.length - 1
-        deleteButtonRefs[nextIndex].current?.focus()
+        const nextIndex = deletionButtonRefs.length - 1
+        deletionButtonRefs[nextIndex].current?.focus()
         setFocusedIndex(nextIndex)
       }
     } else {
       const nextIndex = Math.max(focusedIndex - 1, 0)
-      deleteButtonRefs[nextIndex].current?.focus()
+      deletionButtonRefs[nextIndex].current?.focus()
       setFocusedIndex(nextIndex)
     }
-  }, [deleteButtonRefs, focusedIndex, selectedItemLength])
+  }, [deletionButtonRefs, focusedIndex, selectedItemLength])
 
-  const focusNextDeleteButton = useCallback(() => {
-    if (deleteButtonRefs.length === 0) {
+  const focusNextDeletionButton = useCallback(() => {
+    if (deletionButtonRefs.length === 0) {
       return
     }
 
     if (focusedIndex !== null) {
       const nextIndex = focusedIndex + 1
-      if (nextIndex < deleteButtonRefs.length) {
-        deleteButtonRefs[nextIndex].current?.focus()
+      if (nextIndex < deletionButtonRefs.length) {
+        deletionButtonRefs[nextIndex].current?.focus()
         setFocusedIndex(nextIndex)
       } else {
         setFocusedIndex(null)
@@ -44,17 +44,17 @@ export function useFocusControl(selectedItemLength: number) {
         })
       }
     }
-  }, [deleteButtonRefs, focusedIndex])
+  }, [deletionButtonRefs, focusedIndex])
 
-  const resetDeleteButtonFocus = useCallback(() => {
+  const resetDeletionButtonFocus = useCallback(() => {
     setFocusedIndex(null)
   }, [])
 
   return {
-    deleteButtonRefs,
+    deletionButtonRefs,
     inputRef,
-    focusPrevDeleteButton,
-    focusNextDeleteButton,
-    resetDeleteButtonFocus,
+    focusPrevDeletionButton,
+    focusNextDeletionButton,
+    resetDeletionButtonFocus,
   }
 }

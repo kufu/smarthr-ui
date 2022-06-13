@@ -198,11 +198,11 @@ export function MultiComboBox<T>({
   })
 
   const {
-    deleteButtonRefs,
+    deletionButtonRefs,
     inputRef,
-    focusPrevDeleteButton,
-    focusNextDeleteButton,
-    resetDeleteButtonFocus,
+    focusPrevDeletionButton,
+    focusNextDeletionButton,
+    resetDeletionButtonFocus,
   } = useFocusControl(selectedItems.length)
 
   const focus = useCallback(() => {
@@ -213,8 +213,8 @@ export function MultiComboBox<T>({
     if (!isFocused) return
     onBlur && onBlur()
     setIsFocused(false)
-    resetDeleteButtonFocus()
-  }, [isFocused, onBlur, resetDeleteButtonFocus])
+    resetDeletionButtonFocus()
+  }, [isFocused, onBlur, resetDeletionButtonFocus])
 
   const caretIconColor = useMemo(() => {
     if (isFocused) return theme.color.TEXT_BLACK
@@ -279,14 +279,14 @@ export function MultiComboBox<T>({
             blur()
           } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
             e.stopPropagation()
-            focusPrevDeleteButton()
+            focusPrevDeletionButton()
           } else if (e.key === 'Right' || e.key === 'ArrowRight') {
             e.stopPropagation()
-            focusNextDeleteButton()
+            focusNextDeletionButton()
           } else {
             e.stopPropagation()
             inputRef.current?.focus()
-            resetDeleteButtonFocus()
+            resetDeletionButtonFocus()
           }
           handleListBoxKeyDown(e)
         }}
@@ -305,7 +305,7 @@ export function MultiComboBox<T>({
                   disabled={disabled}
                   onDelete={handleDelete}
                   enableEllipsis={selectedItemEllipsis}
-                  buttonRef={deleteButtonRefs[i]}
+                  buttonRef={deletionButtonRefs[i]}
                 />
               </li>
             ))}
@@ -327,7 +327,7 @@ export function MultiComboBox<T>({
                 }
               }}
               onFocus={() => {
-                resetDeleteButtonFocus()
+                resetDeletionButtonFocus()
                 if (!isFocused) {
                   focus()
                 }
