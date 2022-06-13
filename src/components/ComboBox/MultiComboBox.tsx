@@ -20,7 +20,6 @@ import { useOptions } from './useOptions'
 import { useFocusControl } from './useFocusControl'
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { useListBox } from './useListBox'
-import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
 import { ComboBoxContext } from './ComboBoxContext'
 
@@ -151,14 +150,6 @@ export function MultiComboBox<T>({
     creatable,
     inputValue,
   })
-  const filteredOptions = useMemo(
-    () =>
-      options.filter(({ item: { label } }) => {
-        if (!inputValue) return true
-        return convertMatchableString(label).includes(convertMatchableString(inputValue))
-      }),
-    [inputValue, options],
-  )
   const handleDelete = useCallback(
     (item: ComboBoxItem<T>) => {
       onDelete && onDelete(item)
@@ -189,7 +180,7 @@ export function MultiComboBox<T>({
     listBoxId,
     listBoxRef,
   } = useListBox({
-    options: filteredOptions,
+    options,
     onAdd,
     onSelect: handleSelect,
     isExpanded: isFocused,

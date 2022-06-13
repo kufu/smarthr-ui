@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { useId } from '../../hooks/useId'
 
 import { ComboBoxItem, ComboBoxOption } from './types'
+import { convertMatchableString } from './comboBoxHelper'
 
 export function useOptions<T>({
   items,
@@ -40,7 +41,7 @@ export function useOptions<T>({
     [selected],
   )
 
-  const options: Array<ComboBoxOption<T>> = useMemo(() => {
+  const allOptions: Array<ComboBoxOption<T>> = useMemo(() => {
     const _options = items.map((item, i) => ({
       id: getOptionId(i),
       selected: isSelected(item),
@@ -59,7 +60,16 @@ export function useOptions<T>({
     return _options
   }, [getOptionId, inputValue, isInputValueAddable, isSelected, items, newItemId])
 
+  const filteredOptions = useMemo(
+    () =>
+      allOptions.filter(({ item: { label } }) => {
+        if (!inputValue) return true
+        return convertMatchableString(label).includes(convertMatchableString(inputValue))
+      }),
+    [allOptions, inputValue],
+  )
+
   return {
-    options,
+    options: filteredOptions,
   }
 }

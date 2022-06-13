@@ -13,7 +13,6 @@ describe('useOptions', () => {
         ],
         selected: [{ label: 'label2', value: 'value2' }],
         creatable: false,
-        inputValue: 'input_data',
       }
       const { result } = renderHook((props) => useOptions(props), { initialProps })
       const options = result.current.options
@@ -30,6 +29,24 @@ describe('useOptions', () => {
       expect(options[2].item).toEqual({ label: 'label3', value: 'value3' })
       expect(options[2].selected).toBeFalsy()
       expect(options[2].isNew).toBeFalsy()
+    })
+
+    it('入力によって options がフィルタリングされること', () => {
+      const initialProps = {
+        items: [
+          { label: 'label1', value: 'value1' },
+          { label: 'label2', value: 'value2' },
+          { label: 'label3', value: 'value3' },
+        ],
+        selected: [{ label: 'label2', value: 'value2' }],
+        creatable: false,
+        inputValue: '2',
+      }
+      const { result } = renderHook((props) => useOptions(props), { initialProps })
+      const options = result.current.options
+
+      expect(options.length).toBe(1)
+      expect(options[0].item).toEqual({ label: 'label2', value: 'value2' })
     })
 
     it('新規追加オプションが取得できること', () => {
