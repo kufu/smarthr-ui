@@ -10,6 +10,7 @@ import {
   FaExclamationTriangleIcon,
   FaInfoCircleIcon,
   FaTimesIcon,
+  WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
@@ -20,6 +21,8 @@ export const messageTypes = ['info', 'success', 'error', 'warning'] as const
 type Props = {
   /** メッセージの種類 */
   type: typeof messageTypes[number]
+  /** 強調するかどうか */
+  bold?: boolean
   /** メッセージ */
   message: React.ReactNode
   /** 閉じるボタン押下時に発火させる関数 */
@@ -31,8 +34,9 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const NotificationBar: React.VFC<Props & ElementProps> = ({
+export const NotificationBar: React.FC<Props & ElementProps> = ({
   type,
+  bold = false,
   message,
   onClose,
   children,
@@ -49,33 +53,52 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
       case 'info':
         return {
           Icon: FaInfoCircleIcon,
-          iconColor: color.MAIN,
-          fgColor: color.TEXT_BLACK,
-          bgColor: color.WHITE,
+          iconColor: color.TEXT_GREY,
         }
-      case 'success':
+      case 'success': {
+        const colors = bold
+          ? {
+              iconColor: color.TEXT_WHITE,
+              fgColor: color.TEXT_WHITE,
+              bgColor: color.MAIN,
+            }
+          : {}
         return {
           Icon: FaCheckCircleIcon,
-          iconColor: color.WHITE,
-          fgColor: color.TEXT_WHITE,
-          bgColor: color.MAIN,
+          iconColor: color.MAIN,
+          ...colors,
         }
-      case 'error':
+      }
+      case 'warning': {
+        const colors = bold
+          ? {
+              Icon: FaExclamationTriangleIcon,
+              fgColor: color.TEXT_BLACK,
+              bgColor: color.WARNING_YELLOW,
+            }
+          : {}
+        return {
+          Icon: WarningIcon,
+          iconColor: color.TEXT_BLACK,
+          ...colors,
+        }
+      }
+      case 'error': {
+        const colors = bold
+          ? {
+              iconColor: color.TEXT_WHITE,
+              fgColor: color.TEXT_WHITE,
+              bgColor: color.DANGER,
+            }
+          : {}
         return {
           Icon: FaExclamationCircleIcon,
-          iconColor: color.WHITE,
-          fgColor: color.TEXT_WHITE,
-          bgColor: color.DANGER,
+          iconColor: color.DANGER,
+          ...colors,
         }
-      case 'warning':
-        return {
-          Icon: FaExclamationTriangleIcon,
-          iconColor: color.TEXT_BLACK,
-          fgColor: color.TEXT_BLACK,
-          bgColor: color.WARNING_YELLOW,
-        }
+      }
     }
-  }, [color, type])
+  }, [color, type, bold])
 
   return (
     <Wrapper
@@ -121,9 +144,12 @@ export const NotificationBar: React.VFC<Props & ElementProps> = ({
 
 const Wrapper = styled.div<{
   themes: Theme
-  colorSet: { fgColor: string; bgColor: string }
+  colorSet: { fgColor?: string; bgColor?: string }
 }>(
-  ({ themes: { spacingByChar }, colorSet: { fgColor, bgColor } }) => css`
+  ({
+    themes: { color, spacingByChar },
+    colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
+  }) => css`
     display: flex;
     gap: ${spacingByChar(1)};
     align-items: center;
@@ -172,10 +198,13 @@ const ActionWrapper = styled(Cluster)<{
   `,
 )
 const CloseButton = styled(Button)<{
-  colorSet: { fgColor: string; bgColor: string }
+  colorSet: { fgColor?: string; bgColor?: string }
   themes: Theme
 }>(
-  ({ colorSet: { fgColor, bgColor }, themes: { color, spacingByChar } }) => css`
+  ({
+    themes: { color, spacingByChar },
+    colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
+  }) => css`
     flex-shrink: 0;
 
     margin-top: ${spacingByChar(-0.5)};
