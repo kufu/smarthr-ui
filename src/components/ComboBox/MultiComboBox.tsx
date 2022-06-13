@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   HTMLAttributes,
+  KeyboardEvent,
   useCallback,
   useLayoutEffect,
   useMemo,
@@ -225,6 +226,51 @@ export function MultiComboBox<T>({
     }
   }, [inputRef, isFocused, isInputControlled, selectedItems])
 
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      if (isComposing) {
+        return
+      } else if (e.key === 'Escape' || e.key === 'Esc') {
+        e.stopPropagation()
+        blur()
+      } else if (e.key === 'Tab') {
+        if (isFocused) {
+          // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
+          inputRef.current?.focus()
+        }
+        blur()
+      } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+        e.stopPropagation()
+        focusPrevDeletionButton()
+      } else if (e.key === 'Right' || e.key === 'ArrowRight') {
+        e.stopPropagation()
+        focusNextDeletionButton()
+      } else {
+        e.stopPropagation()
+        inputRef.current?.focus()
+        resetDeletionButtonFocus()
+      }
+      handleListBoxKeyDown(e)
+    },
+    [
+      blur,
+      focusNextDeletionButton,
+      focusPrevDeletionButton,
+      handleListBoxKeyDown,
+      inputRef,
+      isComposing,
+      isFocused,
+      resetDeletionButtonFocus,
+    ],
+  )
+
+  const handleInputKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Down' || e.key === 'ArrowDown' || e.key === 'Up' || e.key === 'ArrowUp') {
+      // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
+      e.preventDefault()
+    }
+  }, [])
+
   const contextValue = useMemo(
     () => ({
       listBoxClassNames: classNames.listBox,
@@ -260,31 +306,7 @@ export function MultiComboBox<T>({
             focus()
           }
         }}
-        onKeyDown={(e) => {
-          if (isComposing) {
-            return
-          } else if (e.key === 'Escape' || e.key === 'Esc') {
-            e.stopPropagation()
-            blur()
-          } else if (e.key === 'Tab') {
-            if (isFocused) {
-              // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
-              inputRef.current?.focus()
-            }
-            blur()
-          } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
-            e.stopPropagation()
-            focusPrevDeletionButton()
-          } else if (e.key === 'Right' || e.key === 'ArrowRight') {
-            e.stopPropagation()
-            focusNextDeletionButton()
-          } else {
-            e.stopPropagation()
-            inputRef.current?.focus()
-            resetDeletionButtonFocus()
-          }
-          handleListBoxKeyDown(e)
-        }}
+        onKeyDown={handleKeyDown}
         role="group"
       >
         <InputArea themes={theme}>
@@ -329,16 +351,7 @@ export function MultiComboBox<T>({
               }}
               onCompositionStart={() => setIsComposing(true)}
               onCompositionEnd={() => setIsComposing(false)}
-              onKeyDown={(e) => {
-                if (
-                  e.key === 'Down' ||
-                  e.key === 'ArrowDown' ||
-                  e.key === 'Up' ||
-                  e.key === 'ArrowUp'
-                ) {
-                  e.preventDefault()
-                }
-              }}
+              onKeyDown={handleInputKeyDown}
               autoComplete="off"
               tabIndex={0}
               role="combobox"
