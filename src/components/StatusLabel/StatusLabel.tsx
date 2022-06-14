@@ -42,7 +42,7 @@ const Wrapper = styled.span<{ themes: Theme }>`
       background-color: ${color.WHITE};
       text-align: center;
       white-space: nowrap;
-      min-width: 3.75rem;
+      min-width: 4.5em;
       font-size: ${fontSize.S};
       font-weight: bold;
       line-height: 1;
