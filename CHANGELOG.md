@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [21.4.0](https://github.com/kufu/smarthr-ui/compare/v21.3.0...v21.4.0) (2022-06-14)
+
+
+### Features
+
+* spacingByChar の alias として space を追加｜SHRUI-568 ([#2553](https://github.com/kufu/smarthr-ui/issues/2553)) ([949978f](https://github.com/kufu/smarthr-ui/commit/949978f3eaac2b832a817fa735c7a404230d4bcb))
+
+
+### Bug Fixes
+
+* `Select` 内部のテキスト上端が見きれないように修正 (SHRUI-569) ([#2548](https://github.com/kufu/smarthr-ui/issues/2548)) ([c7fdc6a](https://github.com/kufu/smarthr-ui/commit/c7fdc6a3dccaca0e70cf32b8932a3d734b970bfd))
+* fix InformationPanel props not to duplicate element props ([#2550](https://github.com/kufu/smarthr-ui/issues/2550)) ([ebf370e](https://github.com/kufu/smarthr-ui/commit/ebf370eb76ad559abf045a5facf1a3f9c4babaf9))
+* Header に className を渡す ([#2552](https://github.com/kufu/smarthr-ui/issues/2552)) ([83e4a57](https://github.com/kufu/smarthr-ui/commit/83e4a57f87c7133c1cc447b075ec309b09863bbb))
+* React 18 以降であれば ID 生成に `React.useId` を使うように変更 ([#2545](https://github.com/kufu/smarthr-ui/issues/2545)) ([29b4295](https://github.com/kufu/smarthr-ui/commit/29b42950d362a4bf83738a529d43d45904c9410a))
+* useEffect 外で document を参照しないようにする ([#2539](https://github.com/kufu/smarthr-ui/issues/2539)) ([bfd6e19](https://github.com/kufu/smarthr-ui/commit/bfd6e19184d19a4398b83f51bb4409eaff33d4b2))
+
 ## [21.3.0](https://github.com/kufu/smarthr-ui/compare/v21.2.0...v21.3.0) (2022-06-07)
 
 
