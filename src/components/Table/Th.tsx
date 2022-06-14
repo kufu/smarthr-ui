@@ -34,7 +34,7 @@ const StyledTh = styled.th<{ themes: Theme; onClick?: () => void }>`
     const { fontSize, leading, spacingByChar, color, interaction } = themes
 
     return css`
-      height: calc(${leading.NORMAL}rem + ${spacingByChar(0.5)} * 2);
+      height: calc(1em * ${leading.NORMAL} + ${spacingByChar(0.5)} * 2);
       font-size: ${fontSize.S};
       font-weight: bold;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
