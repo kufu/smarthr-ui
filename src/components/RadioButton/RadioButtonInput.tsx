@@ -20,7 +20,7 @@ export const RadioButtonInput: VFC<Props> = ({ onChange, ...props }) => {
   const classNames = useClassNames()
 
   return (
-    <Wrapper>
+    <Wrapper themes={theme}>
       <Input
         type="radio"
         onChange={handleChange}
@@ -33,13 +33,19 @@ export const RadioButtonInput: VFC<Props> = ({ onChange, ...props }) => {
   )
 }
 
-const Wrapper = styled.span`
-  position: relative;
-  display: inline-block;
-  flex-shrink: 0;
-  width: 1em;
-  height: 1em;
-  line-height: 1;
+const Wrapper = styled.span<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { leading } = themes
+
+    return css`
+      position: relative;
+      display: inline-block;
+      flex-shrink: 0;
+      width: 1em;
+      height: 1em;
+      line-height: ${leading.NONE};
+    `
+  }}
 `
 const Box = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
