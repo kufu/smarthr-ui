@@ -1,6 +1,8 @@
 import { Selector } from 'testcafe'
 const dayjs = require('dayjs')
 
+const elementWithId = Selector((id) => document.getElementById(id))
+
 fixture('DatePicker')
   .page('http://localhost:6006/iframe.html?id=datepicker--all&viewMode=story')
   .beforeEach(async (t) => {
@@ -13,7 +15,7 @@ test('カレンダーから日付が選択できること', async (t) => {
     .click(input)
     // コントロール下の Calendar コンポーネントで日付をクリック
     .click(
-      Selector(`#${await input.getAttribute('aria-controls')}`)
+      elementWithId(await input.getAttribute('aria-controls'))
         .find('.smarthr-ui-CalendarTable-dataCell')
         .withText('3')
         .find('button'),
@@ -22,7 +24,7 @@ test('カレンダーから日付が選択できること', async (t) => {
     .expect(input.value)
     .eql(dayjs().date(3).format('YYYY/MM/DD'))
     // 選択後はカレンダーが閉じる確認
-    .expect(Selector(`#${await input.getAttribute('aria-controls')}`).exists)
+    .expect(elementWithId(await input.getAttribute('aria-controls')).exists)
     .notOk()
 })
 
@@ -41,7 +43,7 @@ test('テキストボックスフォーカス後に Tab キーを押すとカレ
     .click(input)
     .pressKey('tab')
     .expect(
-      Selector(`#${await input.getAttribute('aria-controls')}`).find(
+      elementWithId(await input.getAttribute('aria-controls')).find(
         '.smarthr-ui-Calendar-selectingYear',
       ).focused,
     )
@@ -52,9 +54,9 @@ test('カレンダー展開後にカレンダー外をクリックするとカ�
   const input = Selector('[data-test=datepicker-1]')
   await t
     .click(input)
-    .expect(Selector(`#${await input.getAttribute('aria-controls')}`).exists)
+    .expect(elementWithId(await input.getAttribute('aria-controls')).exists)
     .ok()
     .click('body')
-    .expect(Selector(`#${await input.getAttribute('aria-controls')}`).exists)
+    .expect(elementWithId(await input.getAttribute('aria-controls')).exists)
     .notOk()
 })

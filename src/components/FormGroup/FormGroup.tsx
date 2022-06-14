@@ -5,6 +5,7 @@ import { useId } from '../../hooks/useId'
 import { StatusLabel } from '../StatusLabel'
 import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
+import { useClassNames } from './useClassNames'
 
 type innerMarginType = 'XXS' | 'XS' | 'S'
 type Props = {
@@ -50,16 +51,17 @@ export const FormGroup: VFC<Props & ElementProps> = ({
   const disabledClass = disabled ? 'disabled' : ''
   const managedLabelId = useId(labelId)
   const isRoleGroup = props.role === 'group'
+  const classNames = useClassNames()
 
   return (
     <Wrapper
       {...props}
-      className={`${className} ${disabledClass}`}
+      className={`${className} ${disabledClass} ${classNames.wrapper}`}
       themes={theme}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
     >
-      <TitleWrapper>
-        <label htmlFor={htmlFor} id={managedLabelId}>
+      <TitleWrapper className={classNames.title}>
+        <label htmlFor={htmlFor} id={managedLabelId} className={classNames.label}>
           <Title tag="span" type={titleType} themes={theme} className={disabledClass}>
             {title}
           </Title>
@@ -73,12 +75,16 @@ export const FormGroup: VFC<Props & ElementProps> = ({
         )}
       </TitleWrapper>
 
-      {helpMessage && <HelpMessage themes={theme}>{helpMessage}</HelpMessage>}
+      {helpMessage && (
+        <HelpMessage themes={theme} className={classNames.helpMessage}>
+          {helpMessage}
+        </HelpMessage>
+      )}
 
       {errorMessages &&
         (typeof errorMessages === 'string' ? [errorMessages] : errorMessages).map(
           (message, index) => (
-            <ErrorMessage themes={theme} key={index}>
+            <ErrorMessage themes={theme} key={index} className={classNames.errorMessage}>
               <ErrorIcon
                 color={disabled ? theme.color.TEXT_DISABLED : theme.color.DANGER}
                 themes={theme}
@@ -87,7 +93,7 @@ export const FormGroup: VFC<Props & ElementProps> = ({
             </ErrorMessage>
           ),
         )}
-      <Body themes={theme} margin={innerMargin}>
+      <Body themes={theme} margin={innerMargin} className={classNames.body}>
         {children}
       </Body>
     </Wrapper>

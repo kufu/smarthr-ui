@@ -41,7 +41,7 @@ type Props = {
   onClickTrigger?: (active: boolean) => void
 }
 
-export const InformationPanel: VFC<Props & BaseElementProps> = ({
+export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> = ({
   title,
   titleTag = 'h3',
   type,

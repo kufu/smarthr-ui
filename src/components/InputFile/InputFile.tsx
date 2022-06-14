@@ -1,4 +1,4 @@
-import React, { ComponentProps, VFC, useRef, useState } from 'react'
+import React, { InputHTMLAttributes, VFC, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Button } from '../Button'
@@ -22,7 +22,7 @@ export type Props = {
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
 }
-type ElementProps = Omit<ComponentProps<'input'>, keyof Props>
+type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
 export const InputFile: VFC<Props & ElementProps> = ({
   className = '',

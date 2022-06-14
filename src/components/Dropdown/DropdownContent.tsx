@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 
 import { DropdownContext } from './Dropdown'
-import { DropdownContentInner } from './DropdownContentInner'
+import { DropdownContentInner, ElementProps as InnerElementProps } from './DropdownContentInner'
 import { useClassNames } from './useClassNames'
 
 export const DropdownContentContext = React.createContext<{
@@ -29,11 +29,14 @@ type Props = {
   children?: React.ReactNode
 }
 
-export const DropdownContent: React.VFC<Props> = ({
+type ElementProps = Omit<InnerElementProps, keyof Props>
+
+export const DropdownContent: React.VFC<Props & ElementProps> = ({
   controllable = false,
   scrollable = true,
   className = '',
   children,
+  ...props
 }) => {
   const { DropdownContentRoot, triggerRect, onClickCloser } = useContext(DropdownContext)
   const classNames = useClassNames()
@@ -42,6 +45,7 @@ export const DropdownContent: React.VFC<Props> = ({
     <DropdownContentRoot>
       <DropdownContentContext.Provider value={{ onClickCloser, controllable, scrollable }}>
         <DropdownContentInner
+          {...props}
           triggerRect={triggerRect}
           scrollable={scrollable}
           className={`${className} ${classNames.content}`}
