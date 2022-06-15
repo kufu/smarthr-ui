@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [21.4.1](https://github.com/kufu/smarthr-ui/compare/v21.4.0...v21.4.1) (2022-06-15)
+
+
+### Bug Fixes
+
+* `pxToRem` を置き換え ([#2551](https://github.com/kufu/smarthr-ui/issues/2551)) ([6fc6ed9](https://github.com/kufu/smarthr-ui/commit/6fc6ed9768212e992659dbb455762bfae1039071))
+* change not to import from top index ([#2581](https://github.com/kufu/smarthr-ui/issues/2581)) ([33ed5c7](https://github.com/kufu/smarthr-ui/commit/33ed5c74168623c2077e9599820ebc367563ae3f))
+
 ## [21.4.0](https://github.com/kufu/smarthr-ui/compare/v21.3.0...v21.4.0) (2022-06-14)
 
 
