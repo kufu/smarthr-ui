@@ -31,10 +31,10 @@ export const Th: VFC<Props & ElementProps> = ({
 
 const StyledTh = styled.th<{ themes: Theme; onClick?: () => void }>`
   ${({ themes, onClick }) => {
-    const { fontSize, size, spacingByChar, color, interaction } = themes
+    const { fontSize, leading, spacingByChar, color, interaction } = themes
 
     return css`
-      height: ${size.pxToRem(40)};
+      height: calc(1em * ${leading.NORMAL} + ${spacingByChar(0.5)} * 2);
       font-size: ${fontSize.S};
       font-weight: bold;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};

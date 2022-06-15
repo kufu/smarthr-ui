@@ -39,20 +39,20 @@ export const DefinitionListItem: VFC<DefinitionListItemProps & ElementProps> = (
 
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { color, size } = themes
+    const { color, spacingByChar } = themes
 
     return css`
-      padding-bottom: ${size.pxToRem(5)};
+      padding-bottom: ${spacingByChar(0.25)};
       border-bottom: 1px dotted ${color.BORDER};
     `
   }}
 `
 const Content = styled.dd<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, fontSize, color } = themes
+    const { spacingByChar, fontSize, color } = themes
 
     return css`
-      margin: ${size.pxToRem(5)} 0 0;
+      margin: ${spacingByChar(0.25)} 0 0;
       padding: 0;
       color: ${color.TEXT_BLACK};
       font-size: ${fontSize.M};

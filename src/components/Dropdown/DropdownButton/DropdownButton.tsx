@@ -1,16 +1,10 @@
 import React, { ComponentProps, HTMLAttributes, ReactElement, VFC, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
-import {
-  AnchorButton,
-  Button,
-  Dropdown,
-  DropdownContent,
-  DropdownTrigger,
-  FaCaretDownIcon,
-  FaEllipsisHIcon,
-  Stack,
-} from '../../..'
+import { AnchorButton, Button } from '../../Button'
+import { Dropdown, DropdownContent, DropdownTrigger } from '../'
+import { FaCaretDownIcon, FaEllipsisHIcon } from '../../Icon'
+import { Stack } from '../../Layout'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 import { BaseProps as ButtonProps } from '../../Button/types'

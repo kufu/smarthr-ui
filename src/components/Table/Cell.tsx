@@ -63,10 +63,10 @@ export const Cell: VFC<Props & ElementProps> = ({
 
 const Th = styled.th<{ themes: Theme; onClick?: () => void }>`
   ${({ themes, onClick }) => {
-    const { fontSize, size, spacingByChar, color, interaction } = themes
+    const { fontSize, leading, spacingByChar, color, interaction } = themes
 
     return css`
-      height: ${size.pxToRem(40)};
+      height: calc(1em * ${leading.NORMAL} + ${spacingByChar(0.5)} * 2);
       font-size: ${fontSize.S};
       font-weight: bold;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
@@ -101,11 +101,11 @@ const Td = styled.td<{ themes: Theme }>`
   }
 
   ${({ themes }) => {
-    const { fontSize, size, spacingByChar, color, border } = themes
+    const { fontSize, leading, spacingByChar, color, border } = themes
 
     return css`
       color: ${color.TEXT_BLACK};
-      height: ${size.pxToRem(44)};
+      height: calc(1em * ${leading.RELAXED} + ${spacingByChar(0.5)} * 2);
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       border-top: ${border.shorthand};
       font-size: ${fontSize.M};
