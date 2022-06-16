@@ -25,6 +25,8 @@ type Props = {
   onTenantSelect?: (id: string) => void
   /** 操作領域 */
   children?: React.ReactNode
+  /** コンポーネントに適用するクラス名 */
+  className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
@@ -35,6 +37,7 @@ export const Header: React.VFC<Props & ElementProps> = ({
   currentTenantId,
   onTenantSelect,
   children,
+  className,
 }) => {
   const classNames = useClassNames()
   const currentTenantName = useMemo(() => {
@@ -62,7 +65,7 @@ export const Header: React.VFC<Props & ElementProps> = ({
   )
 
   return (
-    <Wrapper className={classNames.wrapper}>
+    <Wrapper className={`${className} ${classNames.wrapper}`}>
       <Cluster align="center" gap={{ column: 0.25, row: 0 }}>
         <LogoLink href={logoHref} className={classNames.logo}>
           {logo}
