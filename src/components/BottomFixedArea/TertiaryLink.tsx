@@ -47,7 +47,7 @@ const resetButtonStyle = css`
 const Button = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
-    const { pxToRem } = themes.size
+    const { spacingByChar } = themes
 
     return css`
       color: ${themes.color.TEXT_LINK};
@@ -60,7 +60,7 @@ const Button = styled.button<{ themes: Theme }>`
       }
 
       > svg {
-        margin-right: ${pxToRem(4)};
+        margin-right: ${spacingByChar(0.25)};
       }
     `
   }}

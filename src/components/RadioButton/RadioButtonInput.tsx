@@ -35,21 +35,21 @@ export const RadioButtonInput: VFC<Props> = ({ onChange, ...props }) => {
 
 const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size } = themes
+    const { leading } = themes
 
     return css`
       position: relative;
       display: inline-block;
       flex-shrink: 0;
-      width: ${size.pxToRem(16)};
-      height: ${size.pxToRem(16)};
-      line-height: 1;
+      width: 1em;
+      height: 1em;
+      line-height: ${leading.NONE};
     `
   }}
 `
 const Box = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { size, border, color } = themes
+    const { border, color } = themes
 
     return css`
       display: block;
@@ -69,8 +69,8 @@ const Box = styled.span<{ themes: Theme }>`
           position: absolute;
           top: 50%;
           left: 50%;
-          width: ${size.pxToRem(6)};
-          height: ${size.pxToRem(6)};
+          width: 0.375em;
+          height: 0.375em;
           border-radius: 50%;
           background-color: ${color.WHITE};
           transform: translate(-50%, -50%);

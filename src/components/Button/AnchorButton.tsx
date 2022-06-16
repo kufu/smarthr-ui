@@ -47,3 +47,5 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
     )
   },
 )
+// BottomFixedArea での判定に用いるために displayName を明示的に設定する
+AnchorButton.displayName = 'AnchorButton'
