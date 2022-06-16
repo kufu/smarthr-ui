@@ -31,7 +31,7 @@ export const StatusLabel: VFC<Props & ElementProps> = ({
 
 const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, size, spacingByChar, color } = themes
+    const { fontSize, spacingByChar, color } = themes
 
     return css`
       box-sizing: border-box;
@@ -42,7 +42,7 @@ const Wrapper = styled.span<{ themes: Theme }>`
       background-color: ${color.WHITE};
       text-align: center;
       white-space: nowrap;
-      min-width: ${size.pxToRem(60)};
+      min-width: 4.5em;
       font-size: ${fontSize.S};
       font-weight: bold;
       line-height: 1;
