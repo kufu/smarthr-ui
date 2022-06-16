@@ -18,7 +18,6 @@ import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
 import { useOptions } from './useOptions'
 import { useListBox } from './useListBox'
-import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
 import { ComboBoxContext } from './ComboBoxContext'
 
@@ -127,17 +126,8 @@ export function SingleComboBox<T>({
     selected: selectedItem,
     creatable,
     inputValue,
+    isFilteringDisabled: !isEditing,
   })
-  const filteredOptions = useMemo(() => {
-    if (!isEditing) {
-      return options
-    }
-
-    return options.filter(({ item: { label } }) => {
-      if (!inputValue) return true
-      return convertMatchableString(label).includes(convertMatchableString(inputValue))
-    })
-  }, [inputValue, isEditing, options])
   const {
     renderListBox,
     activeOption,
@@ -145,7 +135,7 @@ export function SingleComboBox<T>({
     listBoxId,
     listBoxRef,
   } = useListBox({
-    options: filteredOptions,
+    options,
     onAdd,
     onSelect: useCallback(
       (selected: ComboBoxItem<T>) => {

@@ -10,11 +10,13 @@ export function useOptions<T>({
   selected,
   creatable,
   inputValue = '',
+  isFilteringDisabled = false,
 }: {
   items: Array<ComboBoxItem<T>>
   selected: (ComboBoxItem<T> | null) | Array<ComboBoxItem<T>>
   creatable: boolean
   inputValue?: string
+  isFilteringDisabled?: boolean
 }) {
   const isInputValueAddable = useMemo(
     () => creatable && inputValue !== '' && !items.some((item) => item.label === inputValue),
@@ -64,16 +66,17 @@ export function useOptions<T>({
     return _options
   }, [getOptionId, inputValue, isInputValueAddable, isSelected, items, newItemId])
 
-  const filteredOptions = useMemo(
-    () =>
-      allOptions.filter(({ item: { label } }) => {
-        if (!inputValue) return true
-        return convertMatchableString(label).includes(convertMatchableString(inputValue))
-      }),
-    [allOptions, inputValue],
-  )
+  const options = useMemo(() => {
+    if (isFilteringDisabled) {
+      return allOptions
+    }
+    return allOptions.filter(({ item: { label } }) => {
+      if (!inputValue) return true
+      return convertMatchableString(label).includes(convertMatchableString(inputValue))
+    })
+  }, [allOptions, inputValue, isFilteringDisabled])
 
   return {
-    options: filteredOptions,
+    options,
   }
 }
