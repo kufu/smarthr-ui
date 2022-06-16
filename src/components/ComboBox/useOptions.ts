@@ -33,7 +33,11 @@ export function useOptions<T>({
   const isSelected = useCallback(
     (item: ComboBoxItem<T>) => {
       if (Array.isArray(selected)) {
-        return selected.find((_selected) => _selected.label === item.label) !== undefined
+        return (
+          selected.find(
+            (_selected) => _selected.label === item.label && _selected.value === item.value,
+          ) !== undefined
+        )
       } else {
         return selected !== null && selected.label === item.label
       }

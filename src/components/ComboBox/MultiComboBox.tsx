@@ -155,13 +155,19 @@ export function MultiComboBox<T>({
     (item: ComboBoxItem<T>) => {
       onDelete && onDelete(item)
       onChangeSelected &&
-        onChangeSelected(selectedItems.filter((selected) => selected.label !== item.label))
+        onChangeSelected(
+          selectedItems.filter(
+            (selected) => selected.label !== item.label || selected.value !== item.value,
+          ),
+        )
     },
     [onChangeSelected, onDelete, selectedItems],
   )
   const handleSelect = useCallback(
     (selected: ComboBoxItem<T>) => {
-      const matchedSelectedItem = selectedItems.find((item) => item.label === selected.label)
+      const matchedSelectedItem = selectedItems.find(
+        (item) => item.label === selected.label && item.value === selected.value,
+      )
       if (matchedSelectedItem !== undefined) {
         if (matchedSelectedItem.deletable !== false) {
           handleDelete(selected)
@@ -316,7 +322,7 @@ export function MultiComboBox<T>({
             className={classNames.selectedList}
           >
             {selectedItems.map((selectedItem, i) => (
-              <li key={selectedItem.label}>
+              <li key={`${selectedItem.label}-${selectedItem.value}`}>
                 <MultiSelectedItem
                   item={selectedItem}
                   disabled={disabled}
