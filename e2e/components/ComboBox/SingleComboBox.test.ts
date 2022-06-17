@@ -6,7 +6,10 @@ fixture('SingleComboBox')
     await t.maximizeWindow()
   })
 
-const elementWithId = Selector((id) => document.getElementById(id))
+function elementWithId(id: string | null | undefined) {
+  const actualId = id == null ? '' : `#${id.replace(/:/g, '\\:')}`
+  return Selector(actualId)
+}
 
 test('アイテムの選択と選択解除ができること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-default]')

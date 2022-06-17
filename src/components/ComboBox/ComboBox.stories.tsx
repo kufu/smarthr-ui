@@ -350,6 +350,7 @@ export const Multi: Story = () => {
           width={400}
           placeholder="入力でフィルタリングできます"
           onSelect={action('onSelect')}
+          data-test="multi-combobox-many"
         />
       </dd>
     </List>

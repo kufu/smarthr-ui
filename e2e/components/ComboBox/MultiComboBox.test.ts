@@ -6,12 +6,15 @@ fixture('MultiComboBox')
     await t.maximizeWindow()
   })
 
-const elementWithId = Selector((id) => document.getElementById(id))
+function elementWithId(id: string | null | undefined) {
+  const actualId = id == null ? '' : `#${id.replace(/:/g, '\\:')}`
+  return Selector(actualId)
+}
 
 test('アイテムの選択と選択解除ができること', async (t) => {
   const wrapper = Selector('[data-test=multi-combobox-default]')
   const combobox = wrapper.find('input[role=combobox]')
-  const comboboxControls = (await combobox.getAttribute('aria-controls')).split(' ')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
   const listbox = elementWithId(comboboxControls[0])
   const selectedItems = elementWithId(comboboxControls[1])
 
@@ -43,7 +46,7 @@ test('アイテムの選択と選択解除ができること', async (t) => {
 test('リストボックスが開閉できること', async (t) => {
   const wrapper = Selector('[data-test=multi-combobox-default]')
   const combobox = wrapper.find('input[role=combobox]')
-  const comboboxControls = (await combobox.getAttribute('aria-controls')).split(' ')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
   const listbox = elementWithId(comboboxControls[0])
 
   await t
@@ -72,7 +75,7 @@ test('リストボックスが開閉できること', async (t) => {
 test('コンボボックスがフォーカスされていない時に選択解除ボタンを押下してもリストボックスが表示されないこと', async (t) => {
   const wrapper = Selector('[data-test=multi-combobox-default]')
   const combobox = wrapper.find('input[role=combobox]')
-  const comboboxControls = (await combobox.getAttribute('aria-controls')).split(' ')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
   const listbox = elementWithId(comboboxControls[0])
   const selectedItems = elementWithId(comboboxControls[1])
 
@@ -91,7 +94,7 @@ test('コンボボックスがフォーカスされていない時に選択解�
 test('新しいアイテムを追加できること', async (t) => {
   const wrapper = Selector('[data-test=multi-combobox-creatable]')
   const combobox = wrapper.find('input[role=combobox]')
-  const comboboxControls = (await combobox.getAttribute('aria-controls')).split(' ')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
   const listbox = elementWithId(comboboxControls[0])
   const addButton = listbox.find('.smarthr-ui-MultiComboBox-addButton')
   const selectedItems = elementWithId(comboboxControls[1])
@@ -116,12 +119,16 @@ test('新しいアイテムを追加できること', async (t) => {
 test('disabled なコンボボックスではアイテムの選択と選択解除ができないこと', async (t) => {
   const normal = Selector('[data-test=multi-combobox-default]')
   const normalCombobox = normal.find('input[role=combobox]')
-  const normalComboboxControls = (await normalCombobox.getAttribute('aria-controls')).split(' ')
+  const normalComboboxControls = ((await normalCombobox.getAttribute('aria-controls')) || '').split(
+    ' ',
+  )
   const normalListbox = elementWithId(normalComboboxControls[0])
 
   const disabled = Selector('[data-test=multi-combobox-disabled]')
   const disabledCombobox = disabled.find('input[role=combobox]')
-  const disabledComboboxControls = (await disabledCombobox.getAttribute('aria-controls')).split(' ')
+  const disabledComboboxControls = (
+    (await disabledCombobox.getAttribute('aria-controls')) || ''
+  ).split(' ')
   const disabledListbox = elementWithId(disabledComboboxControls[0])
   const disabledSelectedItems = elementWithId(disabledComboboxControls[1])
 
@@ -146,7 +153,7 @@ test('disabled なコンボボックスではアイテムの選択と選択解�
 test('キーボードで選択済みアイテムリストが操作できること', async (t) => {
   const wrapper = Selector('[data-test=multi-combobox-default]')
   const combobox = wrapper.find('input[role=combobox]')
-  const comboboxControls = (await combobox.getAttribute('aria-controls')).split(' ')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
   const listbox = elementWithId(comboboxControls[0])
 
   const findOption = (label: string) =>
@@ -231,4 +238,22 @@ test('キーボードでリストボックスが操作できること', async (t
     .pressKey('enter')
     .expect(comboBoxSelected.withText('option 1').exists)
     .notOk()
+})
+
+test('部分的レンダリングしているアイテム数がスクロールにより順次増加すること', async (t) => {
+  const wrapper = Selector('[data-test=multi-combobox-many]')
+  const combobox = wrapper.find('input[role=combobox]')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
+  const listbox = elementWithId(comboboxControls[0])
+
+  await t
+    .click(wrapper)
+    .expect(listbox.find('.smarthr-ui-MultiComboBox-selectButton').count)
+    .eql(100)
+    .scroll(listbox, 'bottom')
+    .expect(listbox.find('.smarthr-ui-MultiComboBox-selectButton').count)
+    .eql(200)
+    .scroll(listbox, 'bottom')
+    .expect(listbox.find('.smarthr-ui-MultiComboBox-selectButton').count)
+    .eql(300)
 })
