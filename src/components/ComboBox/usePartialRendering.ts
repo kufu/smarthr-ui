@@ -37,13 +37,15 @@ export function usePartialRendering<T, U extends Element>({
   const isAllItemsShown = useMemo(() => actualLength >= items.length, [actualLength, items.length])
   // IntersectionObserver を設定
   useEffect(() => {
-    const target = bottomIntersectionRef.current
-    if (!target || isAllItemsShown) {
-      return
-    }
-
-    observer.observe(target)
-    return () => observer.unobserve(target)
+    // bottomIntersection のレンダリングを待つ
+    setTimeout(() => {
+      const target = bottomIntersectionRef.current
+      if (!target || isAllItemsShown) {
+        return
+      }
+      observer.observe(target)
+    })
+    return () => observer.disconnect()
   }, [bottomIntersectionRef, isAllItemsShown, observer])
 
   return partialItems
