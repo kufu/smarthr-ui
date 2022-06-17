@@ -452,11 +452,12 @@ const InputWrapper = styled.div`
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize } = themes
+    const { fontSize, spacingByChar } = themes
 
     return css`
       min-width: 80px;
       width: 100%;
+      min-height: calc(1em + ${spacingByChar(0.5)} * 2);
       border: none;
       font-size: ${fontSize.M};
       box-sizing: border-box;

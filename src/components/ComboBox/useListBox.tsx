@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -128,17 +129,12 @@ export function useListBox<T>({
     }
   }, [activeOption, listBoxRef, navigationType])
 
-  useEffect(() => {
-    if (!isExpanded || !triggerRef.current) {
-      return
-    }
-    // 初回表示時とトリガ要素のりサイズ時に矩形の再計算を行う
-    const resizeObserver = new ResizeObserver(() => {
+  useLayoutEffect(() => {
+    if (isExpanded) {
+      // options の更新毎に座標を再計算する
       calculateRect()
-    })
-    resizeObserver.observe(triggerRef.current)
-    return () => resizeObserver.disconnect()
-  }, [calculateRect, isExpanded, triggerRef])
+    }
+  }, [calculateRect, isExpanded, options])
 
   const handleKeyDwon = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
