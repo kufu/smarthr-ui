@@ -25,28 +25,29 @@ export function usePartialRendering<T, U extends Element>({
     setCurrentItemLength(actualLength)
   }, [actualLength])
 
-  // スクロール最下部に到達する度に表示するアイテム数を増加させるための IntersectionObserver
-  const observer = useMemo(() => {
-    return new IntersectionObserver(([entry]) => {
+  const isAllItemsShown = useMemo(() => actualLength >= items.length, [actualLength, items.length])
+
+  // IntersectionObserver を設定
+  useEffect(() => {
+    if (isAllItemsShown) {
+      return
+    }
+    // スクロール最下部に到達する度に表示するアイテム数を増加させるための IntersectionObserver
+    const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         setCurrentItemLength((current) => current + OPTION_INCREMENT_AMOUNT)
       }
     })
-  }, [])
 
-  const isAllItemsShown = useMemo(() => actualLength >= items.length, [actualLength, items.length])
-  // IntersectionObserver を設定
-  useEffect(() => {
     // bottomIntersection のレンダリングを待つ
     setTimeout(() => {
       const target = bottomIntersectionRef.current
-      if (!target || isAllItemsShown) {
-        return
+      if (target) {
+        observer.observe(target)
       }
-      observer.observe(target)
     })
     return () => observer.disconnect()
-  }, [bottomIntersectionRef, isAllItemsShown, observer])
+  }, [bottomIntersectionRef, isAllItemsShown])
 
   return partialItems
 }
