@@ -307,6 +307,7 @@ import {
   FaYenSign,
 } from 'react-icons/fa'
 import type { IconBaseProps, IconType } from 'react-icons'
+import Warning from './WarningIcon'
 import styled from 'styled-components'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 import { useTheme } from '../../hooks/useTheme'
@@ -713,3 +714,4 @@ export const FaWindowMinimizeIcon = /*#__PURE__*/ createIcon(FaWindowMinimize)
 export const FaWindowRestoreIcon = /*#__PURE__*/ createIcon(FaWindowRestore)
 export const FaWrenchIcon = /*#__PURE__*/ createIcon(FaWrench)
 export const FaYenSignIcon = /*#__PURE__*/ createIcon(FaYenSign)
+export const WarningIcon = /*#__PURE__*/ createIcon(Warning)

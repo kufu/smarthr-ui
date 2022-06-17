@@ -52,11 +52,11 @@ const SampleChildren: React.VFC<SampleChildrenProps> = ({ id1, id2, disabled }) 
 
 const SampleStatusLabelProps = [
   {
-    type: 'required' as const,
+    type: 'red' as const,
     children: 'label 1' as const,
   },
   {
-    type: 'success' as const,
+    type: 'blue' as const,
     children: 'label 2' as const,
   },
 ]

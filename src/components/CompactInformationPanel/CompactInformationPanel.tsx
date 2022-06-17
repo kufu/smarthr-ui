@@ -8,8 +8,8 @@ import { Base, BaseElementProps } from '../Base'
 import {
   FaCheckCircleIcon,
   FaExclamationCircleIcon,
-  FaExclamationTriangleIcon,
   FaInfoCircleIcon,
+  WarningIcon as shrWarningIcon,
 } from '../Icon'
 
 type IconType = 'info' | 'success' | 'warning' | 'error'
@@ -70,7 +70,7 @@ const createIcon = (Icon: typeof FaInfoCircleIcon) =>
   )
 const InfoIcon = createIcon(FaInfoCircleIcon)
 const SuccessIcon = createIcon(FaCheckCircleIcon)
-const WarningIcon = createIcon(FaExclamationTriangleIcon)
+const WarningIcon = createIcon(shrWarningIcon)
 const ErrorIcon = createIcon(FaExclamationCircleIcon)
 
 const Wrapper = styled(Base)<{ themes: Theme }>`

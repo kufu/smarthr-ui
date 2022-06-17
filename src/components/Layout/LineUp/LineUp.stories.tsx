@@ -62,7 +62,7 @@ export const LineUpStory: Story = () => (
         に準じたプロパティを渡せます。
       </figcaption>
       <LineUp vAlign="center">
-        <StatusLabel type="success">完了</StatusLabel>
+        <StatusLabel type="blue">完了</StatusLabel>
         <Heading>レイアウトコンポーネントの調整</Heading>
       </LineUp>
     </figure>
