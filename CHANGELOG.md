@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [21.4.2](https://github.com/kufu/smarthr-ui/compare/v21.4.1...v21.4.2) (2022-06-17)
+
+
+### Bug Fixes
+
+* fix combobox listbox partial rendering ([#2589](https://github.com/kufu/smarthr-ui/issues/2589)) ([5e73d80](https://github.com/kufu/smarthr-ui/commit/5e73d806683af5161de5c8e25923647357984901))
+* fix reference of theme ([#2586](https://github.com/kufu/smarthr-ui/issues/2586)) ([139ab4e](https://github.com/kufu/smarthr-ui/commit/139ab4e8ebf7a7900814f195d73da9598c7b9b5b))
+* ボタンの displayName を明示的に設定 ([#2585](https://github.com/kufu/smarthr-ui/issues/2585)) ([87b09b0](https://github.com/kufu/smarthr-ui/commit/87b09b0309274d33a5965b246d3aad8ec68cd9a1))
+
 ### [21.4.1](https://github.com/kufu/smarthr-ui/compare/v21.4.0...v21.4.1) (2022-06-15)
 
 
