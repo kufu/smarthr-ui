@@ -236,11 +236,14 @@ export function useListBox<T>({
     [isDisplayingPartial],
   )
   useEffect(() => {
-    // IntersectionObserver を設定
-    if (!bottomIntersectionRef.current) {
-      return
-    }
-    scrollObserver.observe(bottomIntersectionRef.current)
+    // bottomIntersection のレンダリングを待つ
+    setTimeout(() => {
+      // IntersectionObserver を設定
+      if (!bottomIntersectionRef.current) {
+        return
+      }
+      scrollObserver.observe(bottomIntersectionRef.current)
+    })
     return () => scrollObserver.disconnect()
   }, [scrollObserver])
 
