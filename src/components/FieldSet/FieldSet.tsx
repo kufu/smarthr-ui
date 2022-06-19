@@ -12,15 +12,15 @@ import { FaExclamationCircleIcon } from '../Icon'
 
 type Props = Omit<InputProps, 'error'> & {
   /** ラベル名 */
-  label: string
+  label: ReactNode
   /** ラベルのタイプ */
   labelType?: HeadingTypes
   /** ラベル名の HTML 要素のタイプ */
   labelTagType?: HeadingTagTypes
   /** input 要素の下に表示するエラーメッセージ */
-  errorMessage?: string | string[]
+  errorMessage?: ReactNode | ReactNode[]
   /** input 要素の下に表示するヘルプメッセージ */
-  helpMessage?: string
+  helpMessage?: ReactNode
   /** ラベル部分の末尾に表示する内容 */
   labelSuffix?: ReactNode
   /** コンポーネントに適用するクラス名 */
@@ -73,8 +73,8 @@ export const FieldSet: VFC<Props & ElementProps> = ({
       )}
 
       {errorMessage &&
-        (typeof errorMessage === 'string' ? [errorMessage] : errorMessage).map((message) => (
-          <Error themes={theme} key={message} className={classNames.error}>
+        (Array.isArray(errorMessage) ? errorMessage : [errorMessage]).map((message, index) => (
+          <Error themes={theme} key={index} className={classNames.error}>
             <ErrorIcon color={theme.color.DANGER} className={classNames.errorIcon} />
             <ErrorText className={classNames.errorText}>{message}</ErrorText>
           </Error>
