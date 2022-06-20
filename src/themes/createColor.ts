@@ -1,37 +1,6 @@
 import { merge } from '../libs/lodash'
 import { darken, rgba, transparentize } from 'polished'
 
-// Allow deviations from the JavaScript naming convention to match SmartHR design guidelines
-type Palette = {
-  TEXT_BLACK: string
-  TEXT_WHITE: string
-  TEXT_GREY: string
-  TEXT_DISABLED: string
-  TEXT_LINK: string
-  WHITE: string
-  BORDER: string
-  ACTION_BACKGROUND: string
-  BACKGROUND: string
-  COLUMN: string
-  OVER_BACKGROUND: string
-  HEAD: string
-  BASE_GREY: string
-  MAIN: string
-  DANGER: string
-  WARNING: string
-  SCRIM: string
-  OVERLAY: string
-  BRAND: string
-  OUTLINE: string
-}
-
-export type ColorProperty = Partial<Palette>
-
-export type CreatedColorTheme = Palette & {
-  hoverColor: (value: string, darkenAmount?: 0.05 | 0.15) => string
-  disableColor: (value: string) => string
-}
-
 export type TextColors = 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK'
 
 const BLACK = '#030302' // hwb(56, 17, 1)
@@ -56,6 +25,7 @@ const primitiveTokens = {
   BLUE_101: '#0071c1',
   RED_100: '#e01e5a',
   ORANGE_100: '#ff8800',
+  YELLOW_100: '#ffcc17',
   SMARTHR_BLUE: '#00c4cc',
 }
 
@@ -77,12 +47,20 @@ const semanticTokens = {
   OUTLINE: primitiveTokens.BLUE_100,
   DANGER: primitiveTokens.RED_100,
   WARNING: primitiveTokens.ORANGE_100,
+  WARNING_YELLOW: primitiveTokens.YELLOW_100,
   OVERLAY: transparencyScale.TRANSPARENCY_15,
   SCRIM: transparencyScale.TRANSPARENCY_50,
   BRAND: primitiveTokens.SMARTHR_BLUE,
 }
 
 export const defaultColor = { ...semanticTokens, ...greyScale, ...transparencyScale }
+
+type Palette = typeof defaultColor
+export type ColorProperty = Partial<Palette>
+export type CreatedColorTheme = Palette & {
+  hoverColor: (value: string, darkenAmount?: 0.05 | 0.15) => string
+  disableColor: (value: string) => string
+}
 
 export const createColor = (userColor: ColorProperty = {}) => {
   const created: CreatedColorTheme = merge(

@@ -5,10 +5,10 @@ import { Status } from './BackgroundJobsPanel'
 import {
   FaCheckCircleIcon,
   FaCloudDownloadAltIcon,
-  FaExclamationTriangleIcon,
+  FaExclamationCircleIcon,
   FaSyncAltIcon,
-  FaTimesCircleIcon,
   IconProps,
+  WarningIcon,
 } from '../Icon'
 
 type Props = {
@@ -29,9 +29,9 @@ function getIcon(status: Status): React.ComponentType<IconProps> {
     case 'downloading':
       return FaCloudDownloadAltIcon
     case 'warning':
-      return FaExclamationTriangleIcon
+      return WarningIcon
     case 'error':
-      return FaTimesCircleIcon
+      return FaExclamationCircleIcon
     case 'done':
       return FaCheckCircleIcon
   }
@@ -46,7 +46,7 @@ function useIconColor(status: Status) {
     case 'error':
       return color.DANGER
     case 'done':
-      return color.TEXT_GREY
+      return color.MAIN
     default:
       return color.TEXT_BLACK
   }
