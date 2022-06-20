@@ -11,9 +11,9 @@ import {
   FaCaretUpIcon,
   FaCheckCircleIcon,
   FaExclamationCircleIcon,
-  FaExclamationTriangleIcon,
   FaInfoCircleIcon,
   FaSyncAltIcon,
+  WarningIcon,
 } from '../Icon'
 import { Heading, HeadingTagTypes } from '../Heading'
 import { Button } from '../Button'
@@ -190,7 +190,7 @@ const createTitleIcon = (Icon: typeof FaCheckCircleIcon) => {
 }
 const SuccessTitleIcon = createTitleIcon(FaCheckCircleIcon)
 const InfoTitleIcon = createTitleIcon(FaInfoCircleIcon)
-const WarningTitleIcon = createTitleIcon(FaExclamationTriangleIcon)
+const WarningTitleIcon = createTitleIcon(WarningIcon)
 const ErrorTitleIcon = createTitleIcon(FaExclamationCircleIcon)
 const SyncIcon = createTitleIcon(FaSyncAltIcon)
 

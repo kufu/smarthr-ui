@@ -111,7 +111,7 @@ export function Select<T extends string>({
 const Wrapper = styled.div<{
   $width: string
   themes: Theme
-}>(({ $width, theme: { border, spacingByChar } }) => {
+}>(({ $width, themes: { border, spacingByChar } }) => {
   return css`
     display: flex;
     box-sizing: border-box;

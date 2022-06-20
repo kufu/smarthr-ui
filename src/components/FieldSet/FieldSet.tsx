@@ -58,7 +58,7 @@ export const FieldSet: VFC<Props & ElementProps> = ({
         </TitleText>
 
         {props.required && (
-          <StatusLabel type="required" className={classNames.label}>
+          <StatusLabel type="red" className={classNames.label}>
             必須
           </StatusLabel>
         )}

@@ -1,91 +1,118 @@
-import React, { HTMLAttributes, ReactNode, VFC } from 'react'
+import React, { FC, HTMLAttributes, ReactNode, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
+import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
+
+type Color = 'grey' | 'blue' | 'red'
+type State = 'warning' | 'error'
 type Props = {
   /** ラベルが表す状態の種類 */
-  type?: 'done' | 'success' | 'process' | 'required' | 'disabled' | 'must' | 'warning' | 'error'
+  type?: Color | State
+  /** 強調するかどうか */
+  bold?: boolean
+  /** ラベル */
+  children: ReactNode
   /** コンポーネントに適用するクラス名 */
   className?: string
-  children: ReactNode
 }
 type ElementProps = Omit<HTMLAttributes<HTMLSpanElement>, keyof Props>
 
-export const StatusLabel: VFC<Props & ElementProps> = ({
-  type = 'done',
+export const StatusLabel: FC<Props & ElementProps> = ({
+  type = 'grey',
+  bold = false,
   className = '',
   children,
   ...props
 }) => {
   const theme = useTheme()
   const classNames = useClassNames()
+  const Icon = useMemo(() => {
+    switch (true) {
+      case type === 'warning' && bold: {
+        return FaExclamationTriangleIcon
+      }
+      case type === 'error' && bold: {
+        return FaExclamationCircleIcon
+      }
+      default: {
+        return React.Fragment
+      }
+    }
+  }, [type, bold])
 
   return (
-    <Wrapper {...props} className={`${type} ${className} ${classNames.wrapper}`} themes={theme}>
+    <Wrapper
+      {...props}
+      themes={theme}
+      className={`${type}${bold ? ' bold' : ''} ${className} ${classNames.wrapper}`}
+    >
+      <Icon />
       {children}
     </Wrapper>
   )
 }
 
 const Wrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, spacingByChar, color } = themes
-
-    return css`
-      box-sizing: border-box;
-      display: inline-block;
-      margin: 0;
-      border: 1px solid transparent;
-      padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
+  ${({ themes: { border, color, fontSize, spacingByChar } }) =>
+    css`
+      box-sizing: content-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: ${spacingByChar(0.25)};
+      border: ${border.lineWidth} solid transparent;
       background-color: ${color.WHITE};
-      text-align: center;
+      padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
       white-space: nowrap;
-      min-width: 4.5em;
       font-size: ${fontSize.S};
       font-weight: bold;
-      line-height: 1;
 
-      &.done {
+      /** ラベルが天地中央に揃わないため暫定対応 */
+      line-height: 0;
+      min-width: 3.5em;
+      min-height: 1em;
+
+      &.grey {
         border-color: ${color.BORDER};
         color: ${color.TEXT_GREY};
+
+        &.bold {
+          border-color: ${color.TEXT_GREY};
+          background-color: ${color.TEXT_GREY};
+          color: ${color.TEXT_WHITE};
+        }
       }
 
-      &.success {
+      &.blue {
         border-color: ${color.MAIN};
         color: ${color.MAIN};
+
+        &.bold {
+          background-color: ${color.MAIN};
+          color: ${color.TEXT_WHITE};
+        }
       }
 
-      &.process {
-        border-color: ${color.WARNING};
-        color: ${color.WARNING};
-      }
-
-      &.required {
+      &.red {
         border-color: ${color.DANGER};
         color: ${color.DANGER};
       }
-
-      &.disabled {
-        background-color: ${color.TEXT_GREY};
-        color: ${color.TEXT_WHITE};
-      }
-
-      &.must {
-        background-color: ${color.MAIN};
-        color: ${color.TEXT_WHITE};
-      }
-
-      &.warning {
-        background-color: ${color.WARNING};
-        color: ${color.TEXT_WHITE};
-      }
-
+      &.red.bold,
       &.error {
         background-color: ${color.DANGER};
         color: ${color.TEXT_WHITE};
       }
-    `
-  }}
+
+      &.warning {
+        background-color: ${color.WARNING_YELLOW};
+        color: ${color.TEXT_BLACK};
+
+        &.bold {
+          border-color: ${color.TEXT_BLACK};
+        }
+      }
+    `}
 `
