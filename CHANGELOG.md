@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [21.4.3](https://github.com/kufu/smarthr-ui/compare/v21.4.2...v21.4.3) (2022-06-20)
+
+
+### Bug Fixes
+
+* SmartHRLogo の Wrapper が ThemeProvider 前提で書かれていたので修正 ([#2594](https://github.com/kufu/smarthr-ui/issues/2594)) ([a9ce9cb](https://github.com/kufu/smarthr-ui/commit/a9ce9cbd85135d3f7aed38294c78f77f53d99608))
+
 ### [21.4.2](https://github.com/kufu/smarthr-ui/compare/v21.4.1...v21.4.2) (2022-06-17)
 
 
