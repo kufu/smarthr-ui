@@ -57,6 +57,7 @@ const Content = styled.dd<{ themes: Theme }>`
       color: ${color.TEXT_BLACK};
       font-size: ${fontSize.M};
       line-height: 1.5;
+      word-break: break-word;
     `
   }}
 `
