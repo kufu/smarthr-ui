@@ -183,7 +183,7 @@ export function MultiComboBox<T>({
   const {
     renderListBox,
     activeOption,
-    handleKeyDwon: handleListBoxKeyDown,
+    handleKeyDown: handleListBoxKeyDown,
     listBoxId,
     listBoxRef,
   } = useListBox({

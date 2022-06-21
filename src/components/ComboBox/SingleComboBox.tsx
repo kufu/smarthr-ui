@@ -131,7 +131,7 @@ export function SingleComboBox<T>({
   const {
     renderListBox,
     activeOption,
-    handleKeyDwon: handleListBoxKeyDown,
+    handleKeyDown: handleListBoxKeyDown,
     listBoxId,
     listBoxRef,
   } = useListBox({

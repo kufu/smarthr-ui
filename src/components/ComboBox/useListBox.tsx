@@ -136,7 +136,7 @@ export function useListBox<T>({
     }
   }, [calculateRect, isExpanded, options])
 
-  const handleKeyDwon = useCallback(
+  const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
       if (e.key === 'Down' || e.key === 'ArrowDown') {
@@ -253,7 +253,7 @@ export function useListBox<T>({
   return {
     renderListBox,
     activeOption,
-    handleKeyDwon,
+    handleKeyDown,
     listBoxId,
     listBoxRef,
   }
