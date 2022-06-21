@@ -10,7 +10,7 @@ type Props = {
   message: ReactNode
   id: string
   isVisible: boolean
-  parentRect: DOMRect
+  parentRect: DOMRect | null
   isIcon?: boolean
   isMultiLine?: boolean
   horizontal: 'left' | 'center' | 'right' | 'auto'
@@ -44,7 +44,7 @@ export const TooltipPortal: VFC<Props> = ({
 
   const outerMargin = 10
   useLayoutEffect(() => {
-    if (!portalRef.current) {
+    if (!portalRef.current || !parentRect) {
       return
     }
     const { offsetWidth, offsetHeight } = portalRef.current
@@ -84,7 +84,7 @@ export const TooltipPortal: VFC<Props> = ({
   }, [horizontal, parentRect, vertical])
 
   useLayoutEffect(() => {
-    if (!isVisible || !portalRef.current || !actualHorizontal || !actualVertical) {
+    if (!isVisible || !portalRef.current || !actualHorizontal || !actualVertical || !parentRect) {
       return
     }
     const { offsetWidth, offsetHeight } = portalRef.current
@@ -114,7 +114,7 @@ export const TooltipPortal: VFC<Props> = ({
       className={classNames.popup}
       aria-hidden={!isVisible}
       {...rect}
-      maxWidth={isMultiLine ? parentRect.width : undefined}
+      maxWidth={isMultiLine ? parentRect?.width : undefined}
     >
       <StyledBalloon
         horizontal={actualHorizontal || 'left'}

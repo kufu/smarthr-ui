@@ -27,7 +27,7 @@ export const All: Story = () => {
         <FieldSet label="string" defaultValue="string" />
       </li>
       <li>
-        <FieldSet type="number" label="number" defaultValue={1} />
+        <FieldSet type="number" label={<b>number</b>} defaultValue={1} />
       </li>
       <li>
         <FieldSet type="password" label="password" defaultValue="password" />
@@ -82,8 +82,17 @@ export const All: Story = () => {
       <li>
         <FieldSet
           label="many parts"
-          errorMessage={['First error message.', 'Second error message.']}
-          helpMessage="This is help message."
+          errorMessage={[
+            'First error message.',
+            <b key="Second error message.">Second error message.</b>,
+          ]}
+          helpMessage={
+            <>
+              This is help message.
+              <br />
+              This is help message.
+            </>
+          }
           labelSuffix={
             <Suffix>
               <FaExclamationCircleIcon size={12} color={themes.color.TEXT_GREY} />

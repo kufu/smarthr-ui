@@ -1,7 +1,7 @@
 import React, { HTMLAttributes, VFC, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useTheme } from '../../hooks/useTheme'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 type Props = {
@@ -55,6 +55,7 @@ export const SmartHRLogo: VFC<Props & ElementProps> = ({
       $height={height}
       $logoHeight={logoHeight}
       className={`${className} ${classNames.wrapper}`}
+      themes={theme}
     >
       <svg role="img" viewBox="0 0 150 27" fill={fillColor} ref={svgRef} aria-label={title}>
         <path
@@ -70,8 +71,9 @@ const Wrapper = styled.figure<{
   $width?: number | string
   $height?: number | string
   $logoHeight?: number
+  themes: Theme
 }>`
-  ${({ $width, $height, $logoHeight, theme: { leading } }) =>
+  ${({ $width, $height, $logoHeight, themes: { leading } }) =>
     css`
       display: inline-block;
       margin: unset;
