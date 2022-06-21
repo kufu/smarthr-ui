@@ -8,5 +8,6 @@ module.exports = {
     '@storybook/addon-a11y',
     '@storybook/addon-controls',
     'storycap',
+    '@storybook/addon-interactions', 
   ],
 }

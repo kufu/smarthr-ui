@@ -2,6 +2,7 @@ import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
+import { userEvent } from '@storybook/testing-library'
 
 import { Pagination } from './Pagination'
 
@@ -10,7 +11,7 @@ export default {
   component: Pagination,
 }
 
-export const All: Story = () => (
+const Template: Story = () => (
   <List>
     <li>
       <Txt>default</Txt>
@@ -50,7 +51,11 @@ export const All: Story = () => (
     </li>
   </List>
 )
-All.storyName = 'all'
+
+export const All = Template.bind({})
+
+export const RegFocus = Template.bind({})
+RegFocus.play = () => userEvent.tab()
 
 const List = styled.ul`
   padding: 0 20px;
