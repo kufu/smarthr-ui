@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
+import { userEvent } from '@storybook/testing-library'
 
 import styled from 'styled-components'
 
@@ -20,7 +21,7 @@ export default {
   },
 }
 
-export const All: Story = () => (
+const Template: Story = () => (
   <Ul>
     <li>
       <p>Border</p>
@@ -52,7 +53,14 @@ export const All: Story = () => (
     </li>
   </Ul>
 )
-All.storyName = 'all'
+
+export const All = Template.bind({})
+
+export const RegFocusBorder = Template.bind({})
+RegFocusBorder.play = () => userEvent.tab()
+
+export const RegFocusNoBorder = Template.bind({})
+RegFocusNoBorder.play = () => [...Array(3)].forEach((_) => userEvent.tab())
 
 const Ul = styled.ul`
   padding: 0 1rem;

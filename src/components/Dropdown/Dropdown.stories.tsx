@@ -19,6 +19,7 @@ import { Text } from '../Text'
 import { FaCaretDownIcon } from '../Icon'
 
 import readme from './README.md'
+import { userEvent, within } from '@storybook/testing-library'
 
 export default {
   title: 'Dropdown',
@@ -144,7 +145,7 @@ const ControllableDropdown = () => {
   )
 }
 
-export const All: Story = () => {
+const Template: Story = () => {
   const themes = useTheme()
   return (
     <Wrapper themes={themes}>
@@ -244,7 +245,14 @@ export const All: Story = () => {
     </Wrapper>
   )
 }
-All.storyName = 'all'
+export const All = Template.bind({})
+
+export const RegOpenDropdown = Template.bind({})
+RegOpenDropdown.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement)
+  const buttons = await canvas.findAllByRole('button')
+  userEvent.click(buttons[0])
+}
 
 const ActionList = styled(Stack).attrs({ gap: 0 })<{ themes: Theme }>(
   ({ themes: { spacingByChar } }) => css`

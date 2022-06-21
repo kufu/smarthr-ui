@@ -47,7 +47,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
 }) => {
   const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
   const [isVisible, setIsVisible] = useState(false)
-  const [rect, setRect] = useState<DOMRect>(new DOMRect())
+  const [rect, setRect] = useState<DOMRect | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const tooltipId = useId()
 
