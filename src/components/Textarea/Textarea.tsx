@@ -1,8 +1,10 @@
-import React, { TextareaHTMLAttributes, VFC, useEffect, useRef, useState } from 'react'
+import React, { TextareaHTMLAttributes, VFC, useCallback, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+
+import { defaultHtmlFontSize } from '../../themes/createFontSize'
 
 type Props = {
   /** 入力値にエラーがあるかどうか */
@@ -11,6 +13,12 @@ type Props = {
   width?: number | string
   /** 自動でフォーカスされるかどうか */
   autoFocus?: boolean
+  /** 自動で広がるかどうか */
+  autoGrowable?: boolean
+  /** 最大行数。超えるとスクロールする。初期値は無限 */
+  maxRows?: number
+  /** 行数の初期値。省略した場合は2 */
+  rows?: number
 }
 type ElementProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, keyof Props>
 
@@ -32,11 +40,16 @@ export const Textarea: VFC<Props & ElementProps> = ({
   maxLength,
   width,
   className = '',
+  autoGrowable = false,
+  maxRows = Infinity,
+  rows = 2,
+  onInput,
   ...props
 }) => {
   const theme = useTheme()
   const ref = useRef<HTMLTextAreaElement>(null)
   const currentValue = props.defaultValue || props.value
+  const [interimRows, setInterimRows] = useState(rows)
   const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
   const textAreaWidth = typeof width === 'number' ? `${width}px` : width
 
@@ -46,9 +59,35 @@ export const Textarea: VFC<Props & ElementProps> = ({
     }
   }, [autoFocus])
 
-  const handleKeyup = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyup = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     setCount(getStringLength(event.currentTarget.value))
-  }
+  }, [])
+  const handleInput = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      if (!autoGrowable) {
+        return onInput && onInput(e)
+      }
+
+      const previousRows = e.target.rows
+      // 消したことを検知できないので必ず初期化
+      e.target.rows = rows
+
+      const currentRows = Math.floor(
+        e.target.scrollHeight / (defaultHtmlFontSize * theme.leading.NORMAL),
+      )
+
+      if (previousRows === currentRows) {
+        e.target.rows = currentRows
+      } else if (maxRows < currentRows) {
+        // 最大まで達したとき高さが潰れないように代入
+        e.target.rows = maxRows
+      }
+
+      setInterimRows(currentRows < maxRows ? currentRows : maxRows)
+      onInput && onInput(e)
+    },
+    [autoGrowable, maxRows, onInput, rows, theme.leading.NORMAL],
+  )
 
   const classNames = useClassNames()
 
@@ -61,6 +100,8 @@ export const Textarea: VFC<Props & ElementProps> = ({
         themes={theme}
         aria-invalid={props.error || undefined}
         className={`${className} ${classNames.textarea}`}
+        rows={interimRows}
+        onInput={handleInput}
         {...props}
       />
       {maxLength && (
@@ -77,42 +118,42 @@ export const Textarea: VFC<Props & ElementProps> = ({
 }
 
 const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: string | number }>`
-  ${(props) => {
-    const { themes, textAreaWidth = 'auto', error } = props
-    const { fontSize, spacingByChar, border, radius, color, shadow } = themes
+  ${({
+    themes: { border, color, leading, fontSize, radius, shadow, spacingByChar },
+    textAreaWidth = 'auto',
+    error,
+  }) => css`
+    box-sizing: border-box;
+    opacity: 1;
+    border-radius: ${radius.m};
+    border: ${border.shorthand};
+    background-color: ${color.WHITE};
+    padding: ${spacingByChar(0.5)};
+    font-size: ${fontSize.M};
+    line-height: ${leading.NORMAL};
+    color: ${color.TEXT_BLACK};
+    width: ${textAreaWidth};
 
-    return css`
-      padding: ${spacingByChar(0.5)};
-      font-size: ${fontSize.M};
-      color: ${color.TEXT_BLACK};
-      border-radius: ${radius.m};
-      width: ${textAreaWidth};
-      background-color: ${color.WHITE};
-      border: ${border.shorthand};
-      box-sizing: border-box;
-      opacity: 1;
+    ${error &&
+    css`
+      border-color: ${color.DANGER};
+    `}
+    &::placeholder {
+      color: ${color.TEXT_GREY};
+    }
+    &:focus-visible {
+      ${shadow.focusIndicatorStyles}
+    }
+    &:disabled {
+      background-color: ${color.COLUMN};
+      pointer-events: none;
 
-      ${error &&
-      css`
-        border-color: ${color.DANGER};
-      `}
+      &,
       &::placeholder {
-        color: ${color.TEXT_GREY};
+        color: ${color.TEXT_DISABLED};
       }
-      &:focus-visible {
-        ${shadow.focusIndicatorStyles}
-      }
-      &:disabled {
-        background-color: ${color.COLUMN};
-        pointer-events: none;
-
-        &,
-        &::placeholder {
-          color: ${color.TEXT_DISABLED};
-        }
-      }
-    `
-  }}
+    }
+  `}
 `
 
 const Counter = styled.div<{ themes: Theme }>`
