@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { Textarea } from './Textarea'
 
 import readme from './README.md'
+import { Stack } from '../Layout'
 
 export default {
   title: 'Textarea',
@@ -23,28 +24,46 @@ export const All: Story = () => {
   return (
     <List>
       <li>
-        <Txt>normal</Txt>
-        <Textarea />
+        <Label>
+          標準
+          <Textarea />
+        </Label>
       </li>
       <li>
-        <Txt>width</Txt>
-        <Textarea width="100%" />
+        <Label>
+          入力欄を自動で広げる（初期： 3行、最大： 10行）
+          <Textarea cols={35} rows={3} maxRows={10} autoGrowable />
+        </Label>
       </li>
       <li>
-        <Txt>disabled</Txt>
-        <Textarea disabled={true} />
+        <Label>
+          幅指定
+          <Textarea width="100%" />
+        </Label>
       </li>
       <li>
-        <Txt>error</Txt>
-        <Textarea error={true} />
+        <Label>
+          disabled
+          <Textarea disabled={true} />
+        </Label>
       </li>
       <li>
-        <Txt>maxLength (defaultValue)</Txt>
-        <Textarea maxLength={140} defaultValue="message👌" />
+        <Label>
+          エラー時
+          <Textarea error={true} />
+        </Label>
       </li>
       <li>
-        <Txt>maxLength (value)</Txt>
-        <Textarea maxLength={140} value={value} onChange={onChangeValue} />
+        <Label>
+          最大文字数 (defaultValue)
+          <Textarea maxLength={140} defaultValue="message👌" />
+        </Label>
+      </li>
+      <li>
+        <Label>
+          最大文字数 (value)
+          <Textarea maxLength={140} value={value} onChange={onChangeValue} />
+        </Label>
       </li>
     </List>
   )
@@ -52,14 +71,8 @@ export const All: Story = () => {
 
 All.storyName = 'all'
 
-const List = styled.ul`
+const List = styled(Stack).attrs({ as: 'ul', gap: 1.5 })`
   padding: 0 24px;
   list-style: none;
-
-  & > li:not(:first-child) {
-    margin-top: 16px;
-  }
 `
-const Txt = styled.p`
-  margin: 0 0 8px;
-`
+const Label = styled(Stack).attrs({ as: 'label', gap: 0.25, align: 'flex-start' })``
