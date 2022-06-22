@@ -136,9 +136,10 @@ const SelectBox = styled.select<{
     background-color: ${color.WHITE};
     padding-inline: ${spacingByChar(0.5)} ${spacingByChar(2)};
     font-size: ${fontSize.M};
-    leading: ${leading.NONE};
+    line-height: ${leading.NONE};
     color: ${color.TEXT_BLACK};
     width: 100%;
+
     /* padding に依る積み上げでは文字が見切れてしまうため */
     min-height: calc(${fontSize.M} + ${spacingByChar(0.75)} * 2 + ${border.lineWidth} * 2);
 
@@ -165,6 +166,7 @@ const SelectBox = styled.select<{
     .--small & {
       padding-inline: ${spacingByChar(0.5)};
       font-size: ${fontSize.S};
+
       /* padding に依る積み上げでは文字が見切れてしまうため */
       min-height: calc(${fontSize.S} + ${spacingByChar(0.5)} * 2 + ${border.lineWidth} * 2);
     }
