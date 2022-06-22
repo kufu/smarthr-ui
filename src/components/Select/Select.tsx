@@ -28,9 +28,11 @@ type Props<T extends string> = {
   hasBlank?: boolean
   /** 空の選択肢のラベル */
   blankLabel?: string
+  /** コンポーネントの大きさ */
+  size?: 's'
 }
 
-type ElementProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children'>
+type ElementProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, keyof Props<string> | 'children'>
 
 export function Select<T extends string>({
   options,
@@ -40,6 +42,7 @@ export function Select<T extends string>({
   width = '16.25em',
   hasBlank = false,
   blankLabel = '選択してください',
+  size,
   className = '',
   disabled,
   ...props
@@ -62,10 +65,13 @@ export function Select<T extends string>({
     },
     [onChange, onChangeValue, options],
   )
-  const classNames = useClassNames()
+  const classNames = useClassNames(size)
 
   return (
-    <Wrapper className={`${className} ${classNames.wrapper}`} $width={widthStyle} themes={theme}>
+    <Wrapper
+      className={`${className} ${classNames.wrapper} ${classNames.size}`}
+      $width={widthStyle}
+    >
       <SelectBox
         onChange={handleChange}
         aria-invalid={error || undefined}
@@ -110,80 +116,83 @@ export function Select<T extends string>({
 
 const Wrapper = styled.div<{
   $width: string
-  themes: Theme
-}>(({ $width, themes: { border, spacingByChar } }) => {
-  return css`
-    display: flex;
-    box-sizing: border-box;
+}>`
+  ${({ $width }) => css`
     position: relative;
+    box-sizing: border-box;
     width: ${$width};
-    min-height: calc(1rem + ${spacingByChar(0.75)} * 2 + ${border.lineWidth} * 2);
-  `
-})
+  `}
+`
 const SelectBox = styled.select<{
   error?: boolean
   themes: Theme
 }>`
-  ${({ error, themes }) => {
-    const { border, color, fontSize, radius, shadow, spacingByChar } = themes
+  ${({ error, themes: { border, color, fontSize, leading, radius, shadow, spacingByChar } }) => css`
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+    border-radius: ${radius.m};
+    border: ${border.shorthand};
+    background-color: ${color.WHITE};
+    padding-inline: ${spacingByChar(0.5)} ${spacingByChar(2)};
+    font-size: ${fontSize.M};
+    leading: ${leading.NONE};
+    color: ${color.TEXT_BLACK};
+    width: 100%;
+    /* padding に依る積み上げでは文字が見切れてしまうため */
+    min-height: calc(${fontSize.M} + ${spacingByChar(0.75)} * 2 + ${border.lineWidth} * 2);
 
-    return css`
-      appearance: none;
-      cursor: pointer;
-      outline: none;
-      border-radius: ${radius.m};
-      border: ${border.shorthand};
-      background-color: ${color.WHITE};
-      padding-right: ${spacingByChar(2)};
-      padding-left: ${spacingByChar(0.5)};
-      font-size: ${fontSize.M};
-      color: ${color.TEXT_BLACK};
-      width: 100%;
+    ${error &&
+    css`
+      border-color: ${color.DANGER};
+    `}
 
-      ${error &&
-      css`
-        border-color: ${color.DANGER};
-      `}
+    &:hover {
+      background-color: ${color.hoverColor(color.WHITE)};
+    }
 
-      &:hover {
-        background-color: ${color.hoverColor(color.WHITE)};
-      }
+    &:focus-visible {
+      ${shadow.focusIndicatorStyles}
+    }
 
-      &:focus-visible {
-        ${shadow.focusIndicatorStyles}
-      }
+    &:disabled {
+      pointer-events: none;
+      opacity: 1;
+      background-color: ${color.COLUMN};
+      color: ${color.TEXT_DISABLED};
+    }
 
-      &:disabled {
-        pointer-events: none;
-        opacity: 1;
-        background-color: ${color.COLUMN};
-        color: ${color.TEXT_DISABLED};
-      }
-    `
-  }}
+    .--small & {
+      padding-inline: ${spacingByChar(0.5)};
+      font-size: ${fontSize.S};
+      /* padding に依る積み上げでは文字が見切れてしまうため */
+      min-height: calc(${fontSize.S} + ${spacingByChar(0.5)} * 2 + ${border.lineWidth} * 2);
+    }
+  `}
 `
 const IconWrap = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color, spacingByChar } = themes
+  ${({ themes: { color, fontSize, spacingByChar } }) => css`
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    right: ${spacingByChar(0.75)};
+    bottom: 0;
+    display: inline-flex;
+    align-items: center;
+    color: ${color.TEXT_GREY};
 
-    return css`
-      pointer-events: none;
-      position: absolute;
-      top: 0;
-      right: ${spacingByChar(0.75)};
-      bottom: 0;
-      display: inline-flex;
-      align-items: center;
-      color: ${color.TEXT_GREY};
+    ${SelectBox}:disabled + & {
+      color: ${color.TEXT_DISABLED};
+    }
+    ${SelectBox}:focus-visible + & {
+      color: ${color.TEXT_BLACK};
+    }
 
-      ${SelectBox}:disabled + & {
-        color: ${color.TEXT_DISABLED};
-      }
-      ${SelectBox}:focus-visible + & {
-        color: ${color.TEXT_BLACK};
-      }
-    `
-  }}
+    .--small & {
+      right: ${spacingByChar(0.5)};
+      font-size: ${fontSize.S};
+    }
+  `}
 `
 const BlankOptgroup = styled.optgroup`
   display: none;
