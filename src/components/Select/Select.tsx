@@ -29,7 +29,7 @@ type Props<T extends string> = {
   /** 空の選択肢のラベル */
   blankLabel?: string
   /** コンポーネントの大きさ */
-  size?: 's'
+  size?: 'default' | 's'
 }
 
 type ElementProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, keyof Props<string> | 'children'>
@@ -42,7 +42,7 @@ export function Select<T extends string>({
   width = '16.25em',
   hasBlank = false,
   blankLabel = '選択してください',
-  size,
+  size = 'default',
   className = '',
   disabled,
   ...props
