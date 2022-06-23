@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [21.4.4](https://github.com/kufu/smarthr-ui/compare/v21.4.3...v21.4.4) (2022-06-23)
+
+
+### Bug Fixes
+
+* ヘッダーが ThemeProvider 前提で書かれている箇所を useTheme を使うように修正 ([#2602](https://github.com/kufu/smarthr-ui/issues/2602)) ([7d0f105](https://github.com/kufu/smarthr-ui/commit/7d0f1051fa2d69a0b9942080a94edc9eceff8b87))
+
 ### [21.4.3](https://github.com/kufu/smarthr-ui/compare/v21.4.2...v21.4.3) (2022-06-20)
 
 
