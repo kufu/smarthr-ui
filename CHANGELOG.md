@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [21.4.5](https://github.com/kufu/smarthr-ui/compare/v21.4.4...v21.4.5) (2022-06-24)
+
+
+### Bug Fixes
+
+* `Header` の theme 参照修正のバックポート対応 ([#2605](https://github.com/kufu/smarthr-ui/issues/2605)) ([0a79803](https://github.com/kufu/smarthr-ui/commit/0a79803cc5ba27ab44a9230aa9db9c0e71768965))
+
 ### [21.4.4](https://github.com/kufu/smarthr-ui/compare/v21.4.3...v21.4.4) (2022-06-23)
 
 
