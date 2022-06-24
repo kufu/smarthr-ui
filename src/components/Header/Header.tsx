@@ -1,12 +1,14 @@
 import React, { HTMLAttributes, ReactElement, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+
 import { Cluster } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { Text } from '../Text'
-import { HeaderDropdownButton } from './'
 import { Button } from '../Button'
+import { HeaderDropdownButton } from './'
 
 type Tenant = {
   id: string
@@ -39,6 +41,7 @@ export const Header: React.VFC<Props & ElementProps> = ({
   children,
   className,
 }) => {
+  const theme = useTheme()
   const classNames = useClassNames()
   const currentTenantName = useMemo(() => {
     if (Array.isArray(tenants)) {
@@ -59,15 +62,15 @@ export const Header: React.VFC<Props & ElementProps> = ({
           ))}
         </HeaderDropdownButton>
       ) : (
-        <TenantName>{currentTenantName}</TenantName>
+        <TenantName themes={theme}>{currentTenantName}</TenantName>
       ),
-    [currentTenantName, onTenantSelect, tenants],
+    [currentTenantName, onTenantSelect, tenants, theme],
   )
 
   return (
-    <Wrapper className={`${className} ${classNames.wrapper}`}>
+    <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
       <Cluster align="center" gap={{ column: 0.25, row: 0 }}>
-        <LogoLink href={logoHref} className={classNames.logo}>
+        <LogoLink href={logoHref} className={classNames.logo} themes={theme}>
           {logo}
         </LogoLink>
         {currentTenantName && (
@@ -83,8 +86,8 @@ const Wrapper = styled(Cluster).attrs({
   as: 'header',
   justify: 'space-between',
   gap: { column: 0.25, row: 0 },
-})`
-  ${({ theme: { color, spacingByChar } }) => css`
+})<{ themes: Theme }>`
+  ${({ themes: { color, spacingByChar } }) => css`
     background-color: ${color.BRAND};
     padding-inline: ${spacingByChar(1.25)};
 
@@ -93,8 +96,8 @@ const Wrapper = styled(Cluster).attrs({
     }
   `}
 `
-const LogoLink = styled.a`
-  ${({ theme: { shadow, spacingByChar } }) => css`
+const LogoLink = styled.a<{ themes: Theme }>`
+  ${({ themes: { shadow, spacingByChar } }) => css`
     /* ロゴが持つ padding 分だけ調整 */
     margin-inline-start: ${spacingByChar(-0.75)};
 
@@ -106,8 +109,8 @@ const LogoLink = styled.a`
 const TenantInfo = styled.div`
   margin-inline-start: auto;
 `
-const TenantName = styled(Text).attrs({ color: 'TEXT_WHITE' })`
-  ${({ theme: { spacingByChar } }) => css`
+const TenantName = styled(Text).attrs({ color: 'TEXT_WHITE' })<{ themes: Theme }>`
+  ${({ themes: { spacingByChar } }) => css`
     padding-inline: ${spacingByChar(0.25)};
   `}
 `

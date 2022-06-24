@@ -20,9 +20,9 @@ export default {
 }
 
 const Label = styled(StatusLabel)`
-  &.done {
+  /* &.grey {
     background-color: #fff;
-  }
+  } */
 `
 
 const SideNavItems = [
@@ -58,31 +58,47 @@ const SideNavPrefixItems = [
     id: 'id-1',
     title: 'todo 1',
     isSelected: true,
-    prefix: <Label type="done">done</Label>,
+    prefix: <Label>done</Label>,
   },
   {
     id: 'id-2',
     title: 'todo 2',
     isSelected: false,
-    prefix: <Label type="must">must</Label>,
+    prefix: (
+      <Label type="blue" bold>
+        must
+      </Label>
+    ),
   },
   {
     id: 'id-3',
     title: 'todo 3',
     isSelected: false,
-    prefix: <Label type="must">must</Label>,
+    prefix: (
+      <Label type="blue" bold>
+        must
+      </Label>
+    ),
   },
   {
     id: 'id-4',
     title: 'todo 4',
     isSelected: false,
-    prefix: <Label type="must">must</Label>,
+    prefix: (
+      <Label type="blue" bold>
+        must
+      </Label>
+    ),
   },
   {
     id: 'id-5',
     title: 'todo 5',
     isSelected: false,
-    prefix: <Label type="must">must</Label>,
+    prefix: (
+      <Label type="blue" bold>
+        must
+      </Label>
+    ),
   },
 ]
 

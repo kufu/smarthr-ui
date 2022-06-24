@@ -1,6 +1,7 @@
 import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
+import { userEvent } from '@storybook/testing-library'
 
 import {
   FaArrowAltCircleDownIcon,
@@ -23,7 +24,7 @@ export default {
   },
 }
 
-export const All: Story = () => (
+const Template: Story = () => (
   <List>
     <dt>Default</dt>
     <dd>
@@ -215,7 +216,13 @@ export const All: Story = () => (
     </dd>
   </List>
 )
-All.storyName = 'all'
+export const All = Template.bind({})
+
+export const RegHover = Template.bind({})
+RegHover.play = ({ canvasElement }) => {
+  const tooltips = canvasElement.querySelectorAll('.smarthr-ui-Tooltip')
+  tooltips.forEach((tooltip) => userEvent.hover(tooltip))
+}
 
 const List = styled.dl`
   margin: 50px 0;

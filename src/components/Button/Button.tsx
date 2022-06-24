@@ -48,3 +48,5 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
     )
   },
 )
+// BottomFixedArea での判定に用いるために displayName を明示的に設定する
+Button.displayName = 'Button'
