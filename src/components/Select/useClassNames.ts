@@ -1,15 +1,14 @@
-import { ComponentProps, VFC, useMemo } from 'react'
+import { VFC, useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
 import { Select } from './Select'
 
-export const useClassNames = (size?: ComponentProps<typeof Select>['size']) => {
+export const useClassNames = () => {
   const generate = useClassNameGenerator((Select as VFC).displayName || 'Select')
   return useMemo(
     () => ({
       wrapper: generate(),
-      size: size === 's' ? '--small' : '',
     }),
-    [generate, size],
+    [generate],
   )
 }

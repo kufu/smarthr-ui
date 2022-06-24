@@ -65,11 +65,11 @@ export function Select<T extends string>({
     },
     [onChange, onChangeValue, options],
   )
-  const classNames = useClassNames(size)
+  const classNames = useClassNames()
 
   return (
     <Wrapper
-      className={`${className} ${classNames.wrapper} ${classNames.size}`}
+      className={`${className} ${classNames.wrapper} ${generateSizeClassName(size)}`}
       $width={widthStyle}
     >
       <SelectBox
@@ -113,6 +113,8 @@ export function Select<T extends string>({
     </Wrapper>
   )
 }
+
+const generateSizeClassName = (size: Props<string>['size']) => (size === 's' ? '--small' : '')
 
 const Wrapper = styled.div<{
   $width: string
