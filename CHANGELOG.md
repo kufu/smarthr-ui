@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [22.0.0](https://github.com/kufu/smarthr-ui/compare/v21.4.1...v22.0.0) (2022-06-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* 黄色の使い方と注意アイコンの使い方を見直す (#2578)
+
+### Features
+
+* 黄色の使い方と注意アイコンの使い方を見直す ([#2578](https://github.com/kufu/smarthr-ui/issues/2578)) ([f98dfaf](https://github.com/kufu/smarthr-ui/commit/f98dfaf2145473c5daabdffb5f3bb039b6deb180))
+
+
+### Bug Fixes
+
+* `Header` 関連コンポーネントの theme 参照の修正 ([#2604](https://github.com/kufu/smarthr-ui/issues/2604)) ([a2f7e32](https://github.com/kufu/smarthr-ui/commit/a2f7e32df5a2001155b6c601c78566ed3f4fa33d))
+* change not to use DOMRect outside useEffect or handle ([#2596](https://github.com/kufu/smarthr-ui/issues/2596)) ([1ca6a10](https://github.com/kufu/smarthr-ui/commit/1ca6a102e5fc7d02b59d9aec3e0c572273b719da))
+* fix combobox listbox partial rendering ([#2588](https://github.com/kufu/smarthr-ui/issues/2588)) ([dccc06d](https://github.com/kufu/smarthr-ui/commit/dccc06d872482fe7159aa5fa8f18086eccf0caee))
+* fix reference of theme ([#2586](https://github.com/kufu/smarthr-ui/issues/2586)) ([139ab4e](https://github.com/kufu/smarthr-ui/commit/139ab4e8ebf7a7900814f195d73da9598c7b9b5b))
+* SmartHRLogo が ThemeProvider 前提で書かれていたので修正 ([#2593](https://github.com/kufu/smarthr-ui/issues/2593)) ([df1e3c3](https://github.com/kufu/smarthr-ui/commit/df1e3c32d79e71b176b1e6e286fef28b12c924bf))
+* ヘッダーが ThemeProvider 前提で書かれている箇所を useTheme を使うように修正 ([#2601](https://github.com/kufu/smarthr-ui/issues/2601)) ([62c26cb](https://github.com/kufu/smarthr-ui/commit/62c26cbfdc39375544e1d986fcf38db34be4a0f8))
+* ボタンの displayName を明示的に設定 ([#2585](https://github.com/kufu/smarthr-ui/issues/2585)) ([87b09b0](https://github.com/kufu/smarthr-ui/commit/87b09b0309274d33a5965b246d3aad8ec68cd9a1))
+
 ### [21.4.5](https://github.com/kufu/smarthr-ui/compare/v21.4.4...v21.4.5) (2022-06-24)
 
 
