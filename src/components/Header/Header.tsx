@@ -64,7 +64,7 @@ export const Header: React.VFC<Props & ElementProps> = ({
       ) : (
         <TenantName themes={theme}>{currentTenantName}</TenantName>
       ),
-    [currentTenantName, onTenantSelect, tenants],
+    [currentTenantName, onTenantSelect, tenants, theme],
   )
 
   return (
