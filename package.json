@@ -134,6 +134,7 @@
     "release": "standard-version",
     "release:dryrun": "standard-version --dry-run",
     "storybook": "start-storybook -p 6006 -s ./public",
+    "dev": "run-s storybook",
     "test": "jest",
     "test:update-snapshot": "jest --updateSnapshot",
     "test:build-assets": "node scripts/build-test.ts",
