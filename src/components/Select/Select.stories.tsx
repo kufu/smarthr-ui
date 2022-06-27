@@ -4,6 +4,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { Select } from './Select'
+import { Stack } from '../Layout'
 
 import readme from './README.md'
 
@@ -17,146 +18,115 @@ export default {
   },
 }
 
+const options = [
+  { label: '高齢任意加入被保険者', value: 'apple' },
+  { label: 'Orange', value: 'orange' },
+  { label: '評価業務担当者', value: 'banana' },
+  { label: '書類に記載する従業員・扶養家族', value: 'melon', disabled: true },
+]
+
 export const All: Story = () => (
   <List>
     <li>
-      <Text>default</Text>
-      <Select
-        options={[
-          { label: 'Apple', value: 'apple' },
-          { label: 'Orange', value: 'orange' },
-          { label: 'Banana', value: 'banana' },
-          { label: 'Melon', value: 'melon', disabled: true },
-        ]}
-      />
+      <Text>
+        <span>標準</span>
+        <Select options={options} />
+      </Text>
     </li>
     <li>
-      <Text>value</Text>
-      <Select
-        value="orange"
-        options={[
-          { label: 'Apple', value: 'apple' },
-          { label: 'Orange', value: 'orange' },
-          { label: 'Banana', value: 'banana' },
-        ]}
-      />
+      <Text>
+        <span>サイズ小</span>
+        <Select options={options} size="s" />
+      </Text>
     </li>
     <li>
-      <Text>error</Text>
-      <Select
-        error
-        options={[
-          { label: 'Apple', value: 'apple' },
-          { label: 'Orange', value: 'orange' },
-          { label: 'Banana', value: 'banana' },
-        ]}
-      />
+      <Text>
+        <span>value 指定</span>
+        <Select value="orange" options={options} />
+      </Text>
     </li>
     <li>
-      <Text>disabled</Text>
-      <Select
-        disabled
-        options={[
-          { label: 'Apple', value: 'apple' },
-          { label: 'Orange', value: 'orange' },
-          { label: 'Banana', value: 'banana' },
-        ]}
-      />
+      <Text>
+        <span>エラー状態</span>
+        <Select error options={options} />
+      </Text>
     </li>
     <li>
-      <Text>placeholder</Text>
-      <Select
-        value=""
-        options={[
-          { label: 'Select fruit', value: '' },
-          { label: 'Apple', value: 'apple' },
-          { label: 'Orange', value: 'orange' },
-          { label: 'Banana', value: 'banana' },
-        ]}
-      />
+      <Text>
+        <span>disabled 状態</span>
+        <Select disabled options={options} />
+      </Text>
     </li>
     <li>
-      <Text>optgroup</Text>
-      <Select
-        value="orange"
-        options={[
-          { label: 'Select fruit', value: '' },
-          { label: 'Apple', value: 'apple' },
-          {
-            label: 'citrus',
-            options: [
-              { label: 'Orange', value: 'orange' },
-              { label: 'Lemon', value: 'lemon' },
-              { label: 'Grapefruit', value: 'grapefruit' },
-            ],
-          },
-          { label: 'Banana', value: 'banana' },
-          {
-            label: 'Fruit vegetables',
-            disabled: true,
-            options: [
-              { label: 'Strawberry', value: 'strawberry' },
-              { label: 'Melon', value: 'melon' },
-              { label: 'Water melon', value: 'water melon' },
-            ],
-          },
-        ]}
-      />
+      <Text>
+        <span>選択肢グループ要素の使用</span>
+        <Select
+          value="orange"
+          options={[
+            { label: 'Select fruit', value: '' },
+            { label: 'Apple', value: 'apple' },
+            {
+              label: 'citrus',
+              options: [
+                { label: 'Orange', value: 'orange' },
+                { label: 'Lemon', value: 'lemon' },
+                { label: 'Grapefruit', value: 'grapefruit' },
+              ],
+            },
+            { label: 'Banana', value: 'banana' },
+            {
+              label: 'Fruit vegetables',
+              disabled: true,
+              options: [
+                { label: 'Strawberry', value: 'strawberry' },
+                { label: 'Melon', value: 'melon' },
+                { label: 'Water melon', value: 'water melon' },
+              ],
+            },
+          ]}
+        />
+      </Text>
     </li>
     <li>
-      <Text>width</Text>
-      <Select
-        width="100%"
-        options={[
-          { label: 'apple', value: 'apple' },
-          { label: 'orange', value: 'orange' },
-          { label: 'banana', value: 'banana' },
-        ]}
-      />
+      <Text>
+        <span>幅指定</span>
+        <Select width="100%" options={options} />
+      </Text>
     </li>
     <li>
-      <Text>hasBlank</Text>
-      <Select
-        hasBlank
-        options={[
-          { label: 'apple', value: 'apple' },
-          { label: 'orange', value: 'orange' },
-          { label: 'banana', value: 'banana' },
-        ]}
-      />
+      <Text>
+        <span>空の選択肢を表示</span>
+        <Select hasBlank options={options} />
+      </Text>
     </li>
     <li>
-      <Text>onChange</Text>
-      <Select
-        onChange={action('onChange!!')}
-        onChangeValue={action('onChangeValue')}
-        options={[
-          { label: 'apple', value: 'apple' },
-          { label: 'orange', value: 'orange' },
-          { label: 'banana', value: 'banana' },
-          {
-            label: 'Fruit vegetables',
-            options: [
-              { label: 'Strawberry', value: 'strawberry' },
-              { label: 'Melon', value: 'melon' },
-              { label: 'Water melon', value: 'water melon' },
-            ],
-          },
-        ]}
-      />
+      <Text>
+        <span>onChange</span>
+        <Select
+          onChange={action('onChange!!')}
+          onChangeValue={action('onChangeValue')}
+          options={[
+            { label: 'apple', value: 'apple' },
+            { label: 'orange', value: 'orange' },
+            { label: 'banana', value: 'banana' },
+            {
+              label: 'Fruit vegetables',
+              options: [
+                { label: 'Strawberry', value: 'strawberry' },
+                { label: 'Melon', value: 'melon' },
+                { label: 'Water melon', value: 'water melon' },
+              ],
+            },
+          ]}
+        />
+      </Text>
     </li>
   </List>
 )
 All.storyName = 'all'
 
-const List = styled.ul`
-  padding: 0 24px;
+const List = styled(Stack).attrs({ as: 'ul' })`
   list-style: none;
-
-  & > li:not(:first-child) {
-    margin-top: 16px;
-  }
+  padding: 0 24px;
 `
-const Text = styled.p`
-  margin: 0 0 8px;
-`
+const Text = styled(Stack).attrs({ as: 'label', gap: 0.5 })``
