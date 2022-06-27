@@ -16550,10 +16550,10 @@ storybook-readme@^5.0.9:
     string-raw "^1.0.1"
     vuex "^3.1.0"
 
-storycap@^3.1.8:
-  version "3.1.8"
-  resolved "https://registry.yarnpkg.com/storycap/-/storycap-3.1.8.tgz#0e9cc9fb3f4bcaea29f921484cd34fae62d159fc"
-  integrity sha512-fBu+fDUuAWNn+dER+dvjhqxxbahkQzvnXPUnigqOYn+WzVqjcxq08ohjWVu3cq/bXioSNz6peeLTAzStxGk/+Q==
+storycap@^3.1.9:
+  version "3.1.9"
+  resolved "https://registry.yarnpkg.com/storycap/-/storycap-3.1.9.tgz#ae17604f6ff37f9ab5f831a5a2fa0300c8d1d81d"
+  integrity sha512-/o6NbnwFS/afBQkot7xjDWVs/A8TKLyVjwkyhQ1ViEcg9y7sjjYsu5UzE4wUCBAOaqT0xxdOzmjoeaISTgSHzA==
   dependencies:
     "@types/minimatch" "^3.0.3"
     "@types/mkdirp" "^1.0.0"
