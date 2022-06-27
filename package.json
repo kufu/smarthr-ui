@@ -34,7 +34,7 @@
     "@types/react": "^18.0.12",
     "@types/react-dom": "^18.0.5",
     "@types/react-test-renderer": "^17.0.2",
-    "@types/react-transition-group": "^4.4.4",
+    "@types/react-transition-group": "^4.4.5",
     "@types/styled-components": "^5.1.25",
     "babel-loader": "^8.2.5",
     "babel-plugin-polyfill-corejs2": "^0.3.1",
