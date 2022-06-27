@@ -14,7 +14,7 @@ type Props = {
   /** 自動でフォーカスされるかどうか */
   autoFocus?: boolean
   /** 自動で広がるかどうか */
-  autoGrowable?: boolean
+  autoResize?: boolean
   /** 最大行数。超えるとスクロールする。初期値は無限 */
   maxRows?: number
   /** 行数の初期値。省略した場合は2 */
@@ -40,7 +40,7 @@ export const Textarea: VFC<Props & ElementProps> = ({
   maxLength,
   width,
   className = '',
-  autoGrowable = false,
+  autoResize = false,
   maxRows = Infinity,
   rows = 2,
   onInput,
@@ -64,7 +64,7 @@ export const Textarea: VFC<Props & ElementProps> = ({
   }, [])
   const handleInput = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      if (!autoGrowable) {
+      if (!autoResize) {
         return onInput && onInput(e)
       }
 
@@ -86,7 +86,7 @@ export const Textarea: VFC<Props & ElementProps> = ({
       setInterimRows(currentRows < maxRows ? currentRows : maxRows)
       onInput && onInput(e)
     },
-    [autoGrowable, maxRows, onInput, rows, theme.leading.NORMAL],
+    [autoResize, maxRows, onInput, rows, theme.leading.NORMAL],
   )
 
   const classNames = useClassNames()

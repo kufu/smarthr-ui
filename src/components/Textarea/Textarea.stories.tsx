@@ -32,7 +32,7 @@ export const All: Story = () => {
       <li>
         <Label>
           入力欄を自動で広げる（初期： 3行、最大： 10行）
-          <Textarea cols={35} rows={3} maxRows={10} autoGrowable />
+          <Textarea cols={35} rows={3} maxRows={10} autoResize />
         </Label>
       </li>
       <li>
