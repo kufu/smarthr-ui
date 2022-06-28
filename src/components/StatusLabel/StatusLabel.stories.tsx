@@ -24,6 +24,7 @@ export const All: Story = () => (
       <Cluster as="dd">
         <StatusLabel>完了</StatusLabel>
         <StatusLabel type="blue">入力完了</StatusLabel>
+        <StatusLabel type="green">入力中</StatusLabel>
         <StatusLabel type="red">入力必要</StatusLabel>
       </Cluster>
     </Stack>
@@ -33,6 +34,9 @@ export const All: Story = () => (
         <StatusLabel bold>完了</StatusLabel>
         <StatusLabel type="blue" bold>
           入力完了
+        </StatusLabel>
+        <StatusLabel type="green" bold>
+          確認中
         </StatusLabel>
         <StatusLabel type="red" bold>
           入力必要
