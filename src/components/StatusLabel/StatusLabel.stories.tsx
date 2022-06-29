@@ -5,16 +5,9 @@ import styled, { css } from 'styled-components'
 import { StatusLabel } from './StatusLabel'
 import { Cluster, Stack } from '../Layout'
 
-import readme from './README.md'
-
 export default {
   title: 'StatusLabel',
   component: StatusLabel,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => (
