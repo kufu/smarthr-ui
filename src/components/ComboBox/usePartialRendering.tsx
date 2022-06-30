@@ -1,14 +1,20 @@
-import { RefObject, useEffect, useMemo, useState } from 'react'
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 const OPTION_INCREMENT_AMOUNT = 100
 
-export function usePartialRendering<T, U extends Element>({
+export function usePartialRendering<T>({
   items,
-  bottomIntersectionRef,
   minLength = 0,
 }: {
   items: T[]
-  bottomIntersectionRef: RefObject<U>
   minLength?: number
 }) {
   const [currentItemLength, setCurrentItemLength] = useState(
@@ -27,27 +33,41 @@ export function usePartialRendering<T, U extends Element>({
 
   const isAllItemsShown = useMemo(() => actualLength >= items.length, [actualLength, items.length])
 
-  // IntersectionObserver を設定
-  useEffect(() => {
+  const handleIntersect = useCallback(() => {
+    setCurrentItemLength((current) => current + OPTION_INCREMENT_AMOUNT)
+  }, [])
+
+  const renderIntersection = useCallback(() => {
     if (isAllItemsShown) {
+      return null
+    }
+    return <Intersection onIntersect={handleIntersect} />
+  }, [handleIntersect, isAllItemsShown])
+
+  return {
+    items: partialItems,
+    renderIntersection,
+  }
+}
+
+const Intersection: FC<{ onIntersect: () => void }> = ({ onIntersect }) => {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    const target = ref.current
+    if (target === null) {
       return
     }
     // スクロール最下部に到達する度に表示するアイテム数を増加させるための IntersectionObserver
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        setCurrentItemLength((current) => current + OPTION_INCREMENT_AMOUNT)
+        onIntersect()
       }
     })
 
-    // bottomIntersection のレンダリングを待つ
-    setTimeout(() => {
-      const target = bottomIntersectionRef.current
-      if (target) {
-        observer.observe(target)
-      }
-    })
+    observer.observe(target)
     return () => observer.disconnect()
-  }, [bottomIntersectionRef, isAllItemsShown])
+  }, [onIntersect])
 
-  return partialItems
+  return <div ref={ref}></div>
 }
