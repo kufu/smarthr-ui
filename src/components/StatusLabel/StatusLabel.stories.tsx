@@ -22,20 +22,24 @@ export const All: Story = () => (
     <Stack gap={0.5}>
       <dt>色の種類</dt>
       <Cluster as="dd">
-        <StatusLabel>完了</StatusLabel>
-        <StatusLabel type="blue">入力完了</StatusLabel>
-        <StatusLabel type="red">入力必要</StatusLabel>
+        <StatusLabel>ラベル名</StatusLabel>
+        <StatusLabel type="blue">ラベル名</StatusLabel>
+        <StatusLabel type="green">ラベル名</StatusLabel>
+        <StatusLabel type="red">ラベル名</StatusLabel>
       </Cluster>
     </Stack>
     <Stack gap={0.5}>
       <dt>色の種類とその強調</dt>
       <Cluster as="dd">
-        <StatusLabel bold>完了</StatusLabel>
+        <StatusLabel bold>ラベル名</StatusLabel>
         <StatusLabel type="blue" bold>
-          入力完了
+          ラベル名
+        </StatusLabel>
+        <StatusLabel type="green" bold>
+          ラベル名
         </StatusLabel>
         <StatusLabel type="red" bold>
-          入力必要
+          ラベル名
         </StatusLabel>
       </Cluster>
     </Stack>

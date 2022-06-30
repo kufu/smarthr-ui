@@ -6,7 +6,7 @@ import { useClassNames } from './useClassNames'
 
 import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
 
-type Color = 'grey' | 'blue' | 'red'
+type Color = 'grey' | 'blue' | 'green' | 'red'
 type State = 'warning' | 'error'
 type Props = {
   /** ラベルが表す状態の種類 */
@@ -92,6 +92,18 @@ const Wrapper = styled.span<{ themes: Theme }>`
 
         &.bold {
           background-color: ${color.MAIN};
+          color: ${color.TEXT_WHITE};
+        }
+      }
+
+      &.green {
+        /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
+         * https://smarthr.design/basics/colors/#h4-1 */
+        border-color: #0f7f85;
+        color: #0f7f85;
+
+        &.bold {
+          background-color: #0f7f85;
           color: ${color.TEXT_WHITE};
         }
       }
