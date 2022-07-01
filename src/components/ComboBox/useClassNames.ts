@@ -3,41 +3,42 @@ import { VFC, useMemo } from 'react'
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
 import { MultiComboBox, SingleComboBox } from './'
 
-export function useClassNames() {
-  const generateForSingle = useClassNameGenerator(
-    (SingleComboBox as VFC).displayName || 'SingleComboBox',
-  )
-  const generateForMulti = useClassNameGenerator(
-    (MultiComboBox as VFC).displayName || 'MultiComboBox',
-  )
+export function useSingleComboBoxClassNames() {
+  const generate = useClassNameGenerator((SingleComboBox as VFC).displayName || 'SingleComboBox')
   return useMemo(
     () => ({
-      single: {
-        wrapper: generateForSingle(),
-        input: generateForSingle('input'),
-        clearButton: generateForSingle('clearButton'),
-        listBox: {
-          dropdownList: generateForSingle('dropdownList'),
-          addButton: generateForSingle('addButton'),
-          selectButton: generateForSingle('selectButton'),
-          noItems: generateForSingle('noItems'),
-        },
-      },
-      multi: {
-        wrapper: generateForMulti(),
-        selectedItem: generateForMulti('selectedItem'),
-        selectedItemLabel: generateForMulti('selectedItemLabel'),
-        deleteButton: generateForMulti('deleteButton'),
-        input: generateForMulti('input'),
-        placeholder: generateForMulti('placeholder'),
-        listBox: {
-          dropdownList: generateForMulti('dropdownList'),
-          addButton: generateForMulti('addButton'),
-          selectButton: generateForMulti('selectButton'),
-          noItems: generateForMulti('noItems'),
-        },
+      wrapper: generate(),
+      input: generate('input'),
+      clearButton: generate('clearButton'),
+      listBox: {
+        dropdownList: generate('dropdownList'),
+        addButton: generate('addButton'),
+        selectButton: generate('selectButton'),
+        noItems: generate('noItems'),
       },
     }),
-    [generateForMulti, generateForSingle],
+    [generate],
+  )
+}
+
+export function useMultiComboBoxClassNames() {
+  const generate = useClassNameGenerator((MultiComboBox as VFC).displayName || 'MultiComboBox')
+  return useMemo(
+    () => ({
+      wrapper: generate(),
+      selectedList: generate('selectedList'),
+      selectedItem: generate('selectedItem'),
+      selectedItemLabel: generate('selectedItemLabel'),
+      deleteButton: generate('deleteButton'),
+      input: generate('input'),
+      placeholder: generate('placeholder'),
+      listBox: {
+        dropdownList: generate('dropdownList'),
+        addButton: generate('addButton'),
+        selectButton: generate('selectButton'),
+        noItems: generate('noItems'),
+      },
+    }),
+    [generate],
   )
 }

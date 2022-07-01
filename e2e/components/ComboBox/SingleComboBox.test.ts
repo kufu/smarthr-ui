@@ -6,7 +6,10 @@ fixture('SingleComboBox')
     await t.maximizeWindow()
   })
 
-const elementWithId = Selector((id) => document.getElementById(id))
+function elementWithId(id: string | null | undefined) {
+  const actualId = id == null ? '' : `#${id.replace(/:/g, '\\:')}`
+  return Selector(actualId)
+}
 
 test('アイテムの選択と選択解除ができること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-default]')
@@ -119,4 +122,23 @@ test('disabled なコンボボックスではアイテムの選択と選択解�
     // disabled なコンボボックスにクリアボタンが表示されないこと
     .expect(disabled.find('.smarthr-ui-SingleComboBox-clearButton').visible)
     .notOk()
+})
+
+test('キーボードで操作できること', async (t) => {
+  const combobox = Selector('[data-test=single-combobox-default]')
+  const comboboxInput = combobox.find('.smarthr-ui-Input-input')
+
+  await t
+    .pressKey('tab')
+    .expect(comboboxInput.focused)
+    .ok()
+    .pressKey('down')
+    .pressKey('enter')
+    .expect(comboboxInput.value)
+    .eql('option 1')
+    .pressKey('up')
+    .pressKey('up')
+    .pressKey('enter')
+    .expect(comboboxInput.value)
+    .eql('option 5')
 })

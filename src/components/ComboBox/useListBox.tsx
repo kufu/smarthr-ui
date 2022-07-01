@@ -1,45 +1,37 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  KeyboardEvent,
+  RefObject,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
-import { ComboBoxItem } from './types'
-
-import { FaPlusCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
-const OPTION_INCREMENT_AMOUNT = 100
+import { ComboBoxItem, ComboBoxOption } from './types'
+import { usePartialRendering } from './usePartialRendering'
+import { useActiveOption } from './useActiveOption'
+import { ListBoxItem } from './ListBoxItem'
+import { ComboBoxContext } from './ComboBoxContext'
 
-type Args<T> = {
-  items: Array<ComboBoxItem<T> & { isSelected?: boolean }>
-  inputValue?: string
+type Props<T> = {
+  options: Array<ComboBoxOption<T>>
   onAdd?: (label: string) => void
   onSelect: (item: ComboBoxItem<T>) => void
   isExpanded: boolean
-  isAddable: boolean
-  isDuplicate: boolean
-  hasNoMatch: boolean
   isLoading?: boolean
-  classNames: {
-    dropdownList: string
-    addButton: string
-    selectButton: string
-    noItems: string
-  }
+  triggerRef: RefObject<HTMLElement>
 }
 
-type Option<T> = ComboBoxItem<T> & {
-  isAdding?: boolean
-  isSelected?: boolean
-}
-
-function optionToItem<T>(option: Option<T>): ComboBoxItem<T> {
-  const { isAdding, isSelected, ...props } = option
-  return { ...props }
-}
-
-type DropDownStyle = {
+type Rect = {
   top: number
   left: number
   width: number
@@ -47,29 +39,36 @@ type DropDownStyle = {
 }
 
 export function useListBox<T>({
-  items,
-  inputValue = '',
+  options,
   onAdd,
   onSelect,
   isExpanded,
-  isAddable,
-  isDuplicate,
-  hasNoMatch,
   isLoading,
-  classNames,
-}: Args<T>) {
-  const [dropdownStyle, setDropdownStyle] = useState<DropDownStyle>({
+  triggerRef,
+}: Props<T>) {
+  const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
+  const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
+    useActiveOption({ options })
+
+  useEffect(() => {
+    // 閉じたときに activeOption を初期化
+    if (!isExpanded) {
+      setActiveOption(null)
+    }
+  }, [isExpanded, setActiveOption])
+
+  const listBoxRef = useRef<HTMLDivElement>(null)
+  const [listBoxRect, setListBoxRect] = useState<Rect>({
     top: 0,
     left: 0,
     width: 0,
   })
-  const [activeOptionIndex, setActiveOptionIndex] = useState<number | null>(null)
 
-  const calculateDropdownRect = useCallback((triggerElement: Element) => {
-    if (!listBoxRef.current) {
+  const calculateRect = useCallback(() => {
+    if (!listBoxRef.current || !triggerRef.current) {
       return
     }
-    const rect = triggerElement.getBoundingClientRect()
+    const rect = triggerRef.current.getBoundingClientRect()
     const bottomSpace = window.innerHeight - rect.bottom
     const topSpace = rect.top
     const listBoxHeight = Math.min(
@@ -97,160 +96,110 @@ export function useListBox<T>({
       height = bottomSpace
     }
 
-    setDropdownStyle({
+    setListBoxRect({
       top,
       left: rect.left + window.pageXOffset,
       width: rect.width,
       height,
     })
-  }, [])
+  }, [listBoxRef, triggerRef])
 
-  const [optionLength, setOptionLength] = useState(OPTION_INCREMENT_AMOUNT)
-  useEffect(() => {
-    // 表示 option 数を初期化
-    setOptionLength(OPTION_INCREMENT_AMOUNT)
-  }, [items])
-  const options: Array<Option<T>> = useMemo(() => {
-    const limitedItems = items.slice(0, optionLength + 1)
-    if (isAddable) {
-      const addingOption = { label: inputValue, value: inputValue, isAdding: true }
-      return [addingOption, ...limitedItems]
-    }
-    return limitedItems
-  }, [inputValue, isAddable, items, optionLength])
-
-  const moveActiveOptionIndex = useCallback(
-    (currentIndex: number | null, delta: -1 | 1) => {
-      if (options.filter((option) => !option.disabled).length === 0) {
-        return
-      }
-      const nextIndex = (() => {
-        if (currentIndex === null) {
-          if (delta === 1) {
-            return 0
-          } else {
-            return options.length - 1
-          }
-        }
-        return (currentIndex + delta + options.length) % options.length
-      })()
-      const nextActive = options[nextIndex]
-      if (nextActive && nextActive.disabled) {
-        // skip disabled item
-        moveActiveOptionIndex(nextIndex, delta)
-        return
-      }
-      setActiveOptionIndex(nextIndex)
-    },
-    [options],
-  )
+  const activeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    // correct the focus index in dropdown to fit actual row count
-    if (activeOptionIndex === null) {
+    // actionOption の要素が表示される位置までリストボックス内をスクロールさせる
+    if (
+      navigationType !== 'key' ||
+      activeOption === null ||
+      !activeRef.current ||
+      !listBoxRef.current
+    ) {
       return
     }
-    const corrected = Math.max(Math.min(activeOptionIndex, options.length - 1), 0)
-    const active = options[corrected]
-    if (!active || active.disabled) {
-      setActiveOptionIndex(null)
-      return
-    }
-    setActiveOptionIndex(corrected)
-  }, [activeOptionIndex, options])
+    const activeRect = activeRef.current.getBoundingClientRect()
+    const containerRect = listBoxRef.current.getBoundingClientRect()
 
-  const handleInputKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (isLoading) {
-        return
-      }
-      switch (e.key) {
-        case 'ArrowDown':
-        case 'Down':
-          e.preventDefault()
-          moveActiveOptionIndex(activeOptionIndex, 1)
-          break
-        case 'ArrowUp':
-        case 'Up':
-          e.preventDefault()
-          moveActiveOptionIndex(activeOptionIndex, -1)
-          break
-        case 'Enter': {
-          e.preventDefault()
-          if (activeOptionIndex === null) {
-            return
-          }
-          const activeOption = options[activeOptionIndex]
-          if (activeOption.isAdding) {
-            onAdd && onAdd(activeOption.label)
-            return
-          }
-          if (activeOption && !activeOption.disabled) {
-            onSelect(optionToItem(activeOption))
-          }
-          break
+    const isActiveTopOutside = activeRect.top < containerRect.top
+    const isActiveBottomOutside = activeRect.bottom > containerRect.bottom
+
+    if (isActiveTopOutside) {
+      listBoxRef.current.scrollTop -= containerRect.top - activeRect.top
+    } else if (isActiveBottomOutside) {
+      listBoxRef.current.scrollTop += activeRect.bottom - containerRect.bottom
+    }
+  }, [activeOption, listBoxRef, navigationType])
+
+  useLayoutEffect(() => {
+    if (isExpanded) {
+      // options の更新毎に座標を再計算する
+      calculateRect()
+    }
+  }, [calculateRect, isExpanded, options])
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLElement>) => {
+      setNavigationType('key')
+      if (e.key === 'Down' || e.key === 'ArrowDown') {
+        e.stopPropagation()
+        moveActivePositionDown()
+      } else if (e.key === 'Up' || e.key === 'ArrowUp') {
+        e.stopPropagation()
+        moveActivePositionUp()
+      } else if (e.key === 'Enter') {
+        if (activeOption === null) {
+          return
         }
+        e.stopPropagation()
+        if (activeOption.isNew) {
+          onAdd && onAdd(activeOption.item.label)
+        } else {
+          onSelect(activeOption.item)
+        }
+      } else {
+        setActiveOption(null)
       }
     },
-    [activeOptionIndex, isLoading, moveActiveOptionIndex, onAdd, onSelect, options],
+    [activeOption, moveActivePositionDown, moveActivePositionUp, onAdd, onSelect, setActiveOption],
   )
-
-  const listBoxId = useId()
-  const addingButtonId = useId()
-  const optionIdPrefix = useId()
-  const getOptionId = useCallback(
-    (option: Option<T>) => {
-      if (option.isAdding) {
-        return addingButtonId
-      }
-      return `${optionIdPrefix}-${option.label}`
-    },
-    [addingButtonId, optionIdPrefix],
-  )
-  const activeDescendant = (() => {
-    if (activeOptionIndex === null) {
-      return undefined
-    }
-    const activeOption = options[activeOptionIndex]
-    if (activeOption) {
-      return getOptionId(activeOption)
-    }
-    return undefined
-  })()
 
   const theme = useTheme()
   const { createPortal } = usePortal()
-  const listBoxRef = useRef<HTMLDivElement>(null)
-
+  const listBoxId = useId()
   const bottomIntersectionRef = useRef<HTMLDivElement>(null)
-  const isDisplayingPartial = optionLength < items.length
-  const scrollObserver = useMemo(
-    // スクロール最下部に到達する度に表示する option 数を増加させるための IntersectionObserver
-    () =>
-      new IntersectionObserver((entries) => {
-        const entry = entries[0]
-        if (entry && entry.isIntersecting && isDisplayingPartial) {
-          setOptionLength((current) => current + OPTION_INCREMENT_AMOUNT)
-        }
-      }),
-    [isDisplayingPartial],
-  )
-  useEffect(() => {
-    // bottomIntersection のレンダリングを待つ
-    setTimeout(() => {
-      // IntersectionObserver を設定
-      if (!bottomIntersectionRef.current) {
-        return
-      }
-      scrollObserver.observe(bottomIntersectionRef.current)
-    })
-    return () => scrollObserver.disconnect()
-  }, [scrollObserver])
+  const partialOptions = usePartialRendering({
+    items: options,
+    bottomIntersectionRef,
+    minLength: useMemo(
+      () => (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
+      [activeOption, options],
+    ),
+  })
+  const { listBoxClassNames: classNames } = useContext(ComboBoxContext)
 
-  const renderListBox = () => {
+  const handleAdd = useCallback(
+    (option: ComboBoxOption<T>) => {
+      onAdd && onAdd(option.item.label)
+    },
+    [onAdd],
+  )
+  const handleSelect = useCallback(
+    (option: ComboBoxOption<T>) => {
+      onSelect(option.item)
+    },
+    [onSelect],
+  )
+  const handleHoverOption = useCallback(
+    (option: ComboBoxOption<T>) => {
+      setNavigationType('pointer')
+      setActiveOption(option)
+    },
+    [setActiveOption],
+  )
+
+  const renderListBox = useCallback(() => {
     return createPortal(
       <Container
-        {...dropdownStyle}
+        {...listBoxRect}
         themes={theme}
         id={listBoxId}
         ref={listBoxRef}
@@ -258,96 +207,60 @@ export function useListBox<T>({
         aria-hidden={!isExpanded}
         className={classNames.dropdownList}
       >
-        {isLoading ? (
+        {!isExpanded ? null : isLoading ? (
           <LoaderWrapper themes={theme}>
             <Loader />
           </LoaderWrapper>
+        ) : options.length === 0 ? (
+          <NoItems themes={theme} role="alert" aria-live="polite" className={classNames.noItems}>
+            一致する選択肢がありません
+          </NoItems>
         ) : (
-          <>
-            {options.map((option, i) => {
-              const isActive = activeOptionIndex === i
-              const className = isActive ? 'active' : ''
-              const { label, disabled, isAdding, isSelected } = option
-              if (isAdding) {
-                return (
-                  <AddButton
-                    key={`add-${label}`}
-                    themes={theme}
-                    onClick={() => {
-                      onAdd && onAdd(label)
-                    }}
-                    onMouseOver={() => setActiveOptionIndex(0)}
-                    id={addingButtonId}
-                    role="option"
-                    className={`${className} ${classNames.addButton}`}
-                  >
-                    <AddIcon color={theme.color.TEXT_LINK} $theme={theme} />
-                    <AddText themes={theme}>「{label}」を追加</AddText>
-                  </AddButton>
-                )
-              }
-              return (
-                <SelectButton
-                  key={`item-${label}`}
-                  type="button"
-                  themes={theme}
-                  disabled={disabled}
-                  onClick={() => {
-                    onSelect(optionToItem(option))
-                  }}
-                  onMouseOver={() => setActiveOptionIndex(i)}
-                  id={getOptionId(option)}
-                  role="option"
-                  className={`${className} ${classNames.selectButton}`}
-                  aria-selected={isSelected}
-                >
-                  {label}
-                </SelectButton>
-              )
-            })}
-
-            {isDuplicate && (
-              <NoItems
-                themes={theme}
-                role="alert"
-                aria-live="polite"
-                className={classNames.noItems}
-              >
-                重複する選択肢は追加できません
-              </NoItems>
-            )}
-
-            {hasNoMatch && (
-              <NoItems
-                themes={theme}
-                role="alert"
-                aria-live="polite"
-                className={classNames.noItems}
-              >
-                一致する選択肢がありません
-              </NoItems>
-            )}
-          </>
+          partialOptions.map((option) => {
+            return (
+              <ListBoxItem
+                key={option.id}
+                option={option}
+                isActive={option.id === activeOption?.id}
+                onAdd={handleAdd}
+                onSelect={handleSelect}
+                onMouseOver={handleHoverOption}
+                activeRef={activeRef}
+              />
+            )
+          })
         )}
         <div ref={bottomIntersectionRef} />
       </Container>,
     )
-  }
+  }, [
+    activeOption?.id,
+    classNames.dropdownList,
+    classNames.noItems,
+    createPortal,
+    handleAdd,
+    handleHoverOption,
+    handleSelect,
+    isExpanded,
+    isLoading,
+    listBoxId,
+    listBoxRect,
+    options.length,
+    partialOptions,
+    theme,
+  ])
+
   return {
     renderListBox,
-    calculateDropdownRect,
-    resetActiveOptionIndex: () => setActiveOptionIndex(null),
-    handleInputKeyDown,
+    activeOption,
+    handleKeyDown,
+    listBoxId,
     listBoxRef,
-    aria: {
-      listBoxId,
-      activeDescendant,
-    },
   }
 }
 
 const Container = styled.div<
-  DropDownStyle & {
+  Rect & {
     themes: Theme
   }
 >(({ top, left, width, height, themes }) => {
@@ -389,63 +302,6 @@ const NoItems = styled.p<{ themes: Theme }>`
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: ${color.WHITE};
       font-size: ${fontSize.M};
-    `
-  }}
-`
-const SelectButton = styled.button<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, leading, spacingByChar, color } = themes
-
-    return css`
-      display: block;
-      min-width: 100%;
-      border: none;
-      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-      background-color: ${color.WHITE};
-      font-size: ${fontSize.M};
-      line-height: ${leading.NONE};
-      text-align: left;
-      cursor: pointer;
-
-      &.active {
-        background-color: ${color.COLUMN};
-        color: inherit;
-      }
-
-      &[aria-selected='true'] {
-        background-color: ${color.MAIN};
-        color: ${color.TEXT_WHITE};
-      }
-
-      &[disabled] {
-        color: ${color.TEXT_DISABLED};
-        cursor: not-allowed;
-      }
-    `
-  }}
-`
-const AddButton = styled(SelectButton)`
-  display: flex;
-  align-items: center;
-  min-width: 100%;
-`
-const AddIcon = styled(FaPlusCircleIcon)<{ $theme: Theme }>`
-  ${({ $theme }) => {
-    const { size } = $theme
-
-    return css`
-      position: relative;
-      top: -1px;
-      margin-right: ${size.pxToRem(4)};
-    `
-  }}
-`
-const AddText = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color } = themes
-
-    return css`
-      color: ${color.TEXT_LINK};
     `
   }}
 `
