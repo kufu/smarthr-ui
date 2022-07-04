@@ -165,10 +165,8 @@ export function useListBox<T>({
   const theme = useTheme()
   const { createPortal } = usePortal()
   const listBoxId = useId()
-  const bottomIntersectionRef = useRef<HTMLDivElement>(null)
-  const partialOptions = usePartialRendering({
+  const { items: partialOptions, renderIntersection } = usePartialRendering({
     items: options,
-    bottomIntersectionRef,
     minLength: useMemo(
       () => (activeOption === null ? 0 : options.indexOf(activeOption)) + 1,
       [activeOption, options],
@@ -230,7 +228,7 @@ export function useListBox<T>({
             )
           })
         )}
-        <div ref={bottomIntersectionRef} />
+        {renderIntersection()}
       </Container>,
     )
   }, [
@@ -247,6 +245,7 @@ export function useListBox<T>({
     listBoxRect,
     options.length,
     partialOptions,
+    renderIntersection,
     theme,
   ])
 
