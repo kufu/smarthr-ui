@@ -11,14 +11,15 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { useClassNames } from './useClassNames'
+import { useSingleComboBoxClassNames } from './useClassNames'
 
 import { Input } from '../Input'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
+import { useOptions } from './useOptions'
 import { useListBox } from './useListBox'
-import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem } from './types'
+import { ComboBoxContext } from './ComboBoxContext'
 
 type Props<T> = {
   /**
@@ -110,7 +111,7 @@ export function SingleComboBox<T>({
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
-  const classNames = useClassNames().single
+  const classNames = useSingleComboBoxClassNames()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -120,57 +121,42 @@ export function SingleComboBox<T>({
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  const filteredItems = useMemo(() => {
-    const itemsWithSelected = items.map((item) => ({
-      ...item,
-      isSelected: selectedItem === null ? false : item.label === selectedItem.label,
-    }))
-
-    if (!isEditing) {
-      return itemsWithSelected
-    }
-
-    return itemsWithSelected.filter(({ label }) => {
-      if (!inputValue) return true
-      return convertMatchableString(label).includes(convertMatchableString(inputValue))
-    })
-  }, [inputValue, isEditing, items, selectedItem])
-  const isDuplicate = items.some((item) => item.label === inputValue)
-  const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
+  const { options } = useOptions({
+    items,
+    selected: selectedItem,
+    creatable,
+    inputValue,
+    isFilteringDisabled: !isEditing,
+  })
   const {
     renderListBox,
-    calculateDropdownRect,
-    resetActiveOptionIndex,
-    handleInputKeyDown,
+    activeOption,
+    handleKeyDown: handleListBoxKeyDown,
+    listBoxId,
     listBoxRef,
-    aria,
   } = useListBox({
-    items: filteredItems,
-    inputValue,
+    options,
     onAdd,
-    onSelect: (selected) => {
-      onSelect && onSelect(selected)
-      onChangeSelected && onChangeSelected(selected)
-      setIsExpanded(false)
-      setIsEditing(false)
-    },
+    onSelect: useCallback(
+      (selected: ComboBoxItem<T>) => {
+        onSelect && onSelect(selected)
+        onChangeSelected && onChangeSelected(selected)
+        setIsExpanded(false)
+        setIsEditing(false)
+      },
+      [onChangeSelected, onSelect],
+    ),
     isExpanded,
-    isAddable: creatable && !!inputValue && !isDuplicate,
-    isDuplicate: creatable && !!inputValue && isDuplicate && !hasSelectableExactMatch,
-    hasNoMatch:
-      (!creatable && filteredItems.length === 0) ||
-      (creatable && filteredItems.length === 0 && !inputValue),
     isLoading,
-    classNames: classNames.listBox,
+    triggerRef: outerRef,
   })
 
   const focus = useCallback(() => {
     setIsFocused(true)
-    resetActiveOptionIndex()
     if (!isFocused) {
       setIsExpanded(true)
     }
-  }, [isFocused, resetActiveOptionIndex])
+  }, [isFocused])
   const blur = useCallback(() => {
     setIsFocused(false)
     setIsExpanded(false)
@@ -198,118 +184,126 @@ export function SingleComboBox<T>({
     }
   }, [isFocused, selectedItem])
 
-  useLayoutEffect(() => {
-    // ドロップダウン表示時に位置を計算する
-    if (outerRef.current && isExpanded) {
-      calculateDropdownRect(outerRef.current)
-    }
-  }, [calculateDropdownRect, isExpanded])
-
   const needsClearButton = selectedItem !== null && !disabled
+  const contextValue = useMemo(
+    () => ({
+      listBoxClassNames: classNames.listBox,
+    }),
+    [classNames.listBox],
+  )
 
   return (
-    <Container
-      {...props}
-      ref={outerRef}
-      className={`${disabled ? 'disabled' : ''} ${className} ${classNames.wrapper}`}
-      $width={width}
-      role="combobox"
-      aria-haspopup="listbox"
-      aria-controls={aria.listBoxId}
-      aria-expanded={isFocused}
-      aria-invalid={error || undefined}
-    >
-      <StyledInput
-        type="text"
-        name={name}
-        value={inputValue}
-        disabled={disabled}
-        error={error}
-        placeholder={placeholder}
-        suffix={
-          <>
-            <ClearButton
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation()
-                onClear && onClear()
-                onChangeSelected && onChangeSelected(null)
-                if (isFocused) {
-                  setIsExpanded(true)
-                }
-              }}
-              ref={clearButtonRef}
-              themes={theme}
-              className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
-            >
-              <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
-            </ClearButton>
-            <CaretDownLayout themes={theme}>
-              <CaretDownWrapper themes={theme}>
-                <FaCaretDownIcon color={caretIconColor} />
-              </CaretDownWrapper>
-            </CaretDownLayout>
-          </>
-        }
-        onClick={(e) => {
-          if (disabled) {
-            e.stopPropagation()
-            return
+    <ComboBoxContext.Provider value={contextValue}>
+      <Container
+        {...props}
+        ref={outerRef}
+        className={`${disabled ? 'disabled' : ''} ${className} ${classNames.wrapper}`}
+        $width={width}
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-controls={listBoxId}
+        aria-expanded={isFocused}
+        aria-invalid={error || undefined}
+      >
+        <StyledInput
+          type="text"
+          name={name}
+          value={inputValue}
+          disabled={disabled}
+          error={error}
+          placeholder={placeholder}
+          suffix={
+            <>
+              <ClearButton
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onClear && onClear()
+                  onChangeSelected && onChangeSelected(null)
+                  if (isFocused) {
+                    setIsExpanded(true)
+                  }
+                }}
+                ref={clearButtonRef}
+                themes={theme}
+                className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
+              >
+                <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
+              </ClearButton>
+              <CaretDownLayout themes={theme}>
+                <CaretDownWrapper themes={theme}>
+                  <FaCaretDownIcon color={caretIconColor} />
+                </CaretDownWrapper>
+              </CaretDownLayout>
+            </>
           }
-          focus()
-          if (inputRef.current) {
-            inputRef.current.focus()
-          }
-          if (!isExpanded) {
-            setIsExpanded(true)
-          }
-        }}
-        onChange={(e) => {
-          if (onChange) onChange(e)
-          if (onChangeInput) onChangeInput(e)
-          if (!isEditing) setIsEditing(true)
-          const { value } = e.currentTarget
-          setInputValue(value)
-          if (value === '') {
-            onClear && onClear()
-            onChangeSelected && onChangeSelected(null)
-          }
-        }}
-        onFocus={() => {
-          if (!isFocused) {
-            focus()
-          }
-        }}
-        onCompositionStart={() => setIsComposing(true)}
-        onCompositionEnd={() => setIsComposing(false)}
-        onKeyDown={(e) => {
-          if (isComposing) {
-            return
-          }
-          if (e.key === 'Tab') {
-            blur()
-            return
-          }
-          handleInputKeyDown(e)
-          if (e.key === 'Escape' || e.key === 'Exc') {
-            if (isExpanded) {
+          onClick={(e) => {
+            if (disabled) {
               e.stopPropagation()
-              setIsExpanded(false)
+              return
             }
-            return
-          }
-          if (!isExpanded) {
-            setIsExpanded(true)
-          }
-        }}
-        ref={inputRef}
-        autoComplete="off"
-        aria-activedescendant={aria.activeDescendant}
-        aria-autocomplete="list"
-        className={classNames.input}
-      />
-      {renderListBox()}
-    </Container>
+            focus()
+            if (inputRef.current) {
+              inputRef.current.focus()
+            }
+            if (!isExpanded) {
+              setIsExpanded(true)
+            }
+          }}
+          onChange={(e) => {
+            if (onChange) onChange(e)
+            if (onChangeInput) onChangeInput(e)
+            if (!isEditing) setIsEditing(true)
+            const { value } = e.currentTarget
+            setInputValue(value)
+            if (value === '') {
+              onClear && onClear()
+              onChangeSelected && onChangeSelected(null)
+            }
+          }}
+          onFocus={() => {
+            if (!isFocused) {
+              focus()
+            }
+          }}
+          onCompositionStart={() => setIsComposing(true)}
+          onCompositionEnd={() => setIsComposing(false)}
+          onKeyDown={(e) => {
+            if (isComposing) {
+              return
+            }
+            if (e.key === 'Escape' || e.key === 'Exc') {
+              if (isExpanded) {
+                e.stopPropagation()
+                setIsExpanded(false)
+              }
+            } else if (e.key === 'Tab') {
+              blur()
+            } else {
+              if (
+                e.key === 'Down' ||
+                e.key === 'ArrowDown' ||
+                e.key === 'Up' ||
+                e.key === 'ArrowUp'
+              ) {
+                e.preventDefault()
+              }
+              inputRef.current?.focus()
+              if (!isExpanded) {
+                setIsExpanded(true)
+              }
+            }
+            handleListBoxKeyDown(e)
+          }}
+          ref={inputRef}
+          autoComplete="off"
+          aria-activedescendant={activeOption?.id}
+          aria-autocomplete="list"
+          className={classNames.input}
+        />
+        {renderListBox()}
+      </Container>
+    </ComboBoxContext.Provider>
   )
 }
 

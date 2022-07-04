@@ -55,6 +55,11 @@ const defaultItems = [
   },
 ]
 
+const manyItems = Array.from({ length: 2000 }).map((_, i) => ({
+  label: `option ${i}`,
+  value: `option ${i}`,
+}))
+
 type Item = { label: string; value: string }
 
 export const Single: Story = () => {
@@ -167,10 +172,7 @@ export const Single: Story = () => {
       <dt>アイテム数が多い時</dt>
       <dd>
         <SingleComboBox
-          items={Array.from({ length: 5000 }).map((_, i) => ({
-            label: String(i),
-            value: String(i),
-          }))}
+          items={manyItems}
           selectedItem={null}
           width={400}
           placeholder="入力でフィルタリングできます"
@@ -343,14 +345,12 @@ export const Multi: Story = () => {
       <dt>アイテム数が多い時</dt>
       <dd>
         <MultiComboBox
-          items={Array.from({ length: 5000 }).map((_, i) => ({
-            label: String(i),
-            value: String(i),
-          }))}
+          items={manyItems}
           selectedItems={[]}
           width={400}
           placeholder="入力でフィルタリングできます"
           onSelect={action('onSelect')}
+          data-test="multi-combobox-many"
         />
       </dd>
     </List>
