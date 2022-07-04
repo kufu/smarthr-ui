@@ -66,6 +66,7 @@ jobs:
           password: $DOCKER_HUB_ACCESS_TOKEN
     steps:
       - setup-for-test
+      - check-source
       - run-npm-test
   node-v18:
     docker:
@@ -75,11 +76,10 @@ jobs:
           password: $DOCKER_HUB_ACCESS_TOKEN
     steps:
       - setup-for-test
-      - check-source
       - run-npm-test
   reg-suit:
     docker:
-      - image: cimg/node:18.4-browsers
+      - image: cimg/node:16.15-browsers
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
