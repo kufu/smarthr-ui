@@ -58,16 +58,16 @@ commands:
             fc-match --all
             rm -rf /tmp/fonts
 jobs:
-  node-v14:
+  node-v16:
     docker:
-      - image: cimg/node:18.4
+      - image: cimg/node:16.15
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
     steps:
       - setup-for-test
       - run-npm-test
-  node-v16:
+  node-v18:
     docker:
       - image: cimg/node:18.4
         auth:

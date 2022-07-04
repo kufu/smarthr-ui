@@ -14,7 +14,7 @@ jobs:
         browser: [chrome]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
       - name: Get yarn cache directory path
