@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [22.1.0](https://github.com/kufu/smarthr-ui/compare/v22.0.0...v22.1.0) (2022-07-05)
+
+
+### Features
+
+* Select にサイズ小を追加 ([#2600](https://github.com/kufu/smarthr-ui/issues/2600)) ([0fd4b28](https://github.com/kufu/smarthr-ui/commit/0fd4b280b5f70ddf16439cedb876a823cac8ab47))
+* StatusLabel に type=green を追加 ([#2627](https://github.com/kufu/smarthr-ui/issues/2627)) ([de94ce7](https://github.com/kufu/smarthr-ui/commit/de94ce729ff315bdf5a8bbd63d87e075c52a729a))
+* Textarea が入力に依って自動で広がるよう機能追加 ([#2598](https://github.com/kufu/smarthr-ui/issues/2598)) ([d518192](https://github.com/kufu/smarthr-ui/commit/d51819268d0d2fa936f3c67f8a5f97256db53e14))
+
 ## [22.0.0](https://github.com/kufu/smarthr-ui/compare/v21.4.1...v22.0.0) (2022-06-24)
 
 
