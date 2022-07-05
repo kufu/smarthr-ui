@@ -6,39 +6,52 @@ fixture('MultiComboBox')
     await t.maximizeWindow()
   })
 
-const elementWithId = Selector((id) => document.getElementById(id))
+function elementWithId(id: string | null | undefined) {
+  const actualId = id == null ? '' : `#${id.replace(/:/g, '\\:')}`
+  return Selector(actualId)
+}
 
 test('アイテムの選択と選択解除ができること', async (t) => {
-  const combobox = Selector('[data-test=multi-combobox-default]')
-  const textbox = combobox.find('input[type=text]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-owns'))
-  const selectedItems = combobox.find('.smarthr-ui-MultiComboBox-selectedItem')
+  const wrapper = Selector('[data-test=multi-combobox-default]')
+  const combobox = wrapper.find('input[role=combobox]')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
+  const listbox = elementWithId(comboboxControls[0])
+  const selectedItems = elementWithId(comboboxControls[1])
 
   await t
     // コンボボックスをクリックするとテキストボックスがフォーカスされること
-    .click(combobox)
-    .expect(textbox.focused)
+    .click(wrapper)
+    .expect(combobox.focused)
     .ok()
     // アイテムを選択できること
     .click(listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText('option 1'))
+    .click(listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText('option 2'))
     .expect(selectedItems.withText('option 1').exists)
+    .ok()
+    .expect(selectedItems.withText('option 2').exists)
     .ok()
     // リストボックスが表示されたままであること
     .expect(listbox.visible)
     .ok()
-    // 選択したアイテムを選択解除できること
+    // 選択したアイテムを削除ボタンで選択解除できること
     .click(selectedItems.withText('option 1').find('.smarthr-ui-MultiComboBox-deleteButton'))
     .expect(selectedItems.withText('option 1').exists)
+    .notOk()
+    // 選択したアイテムをリストボックスから選択解除できること
+    .click(listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText('option 2'))
+    .expect(selectedItems.withText('option 2').exists)
     .notOk()
 })
 
 test('リストボックスが開閉できること', async (t) => {
-  const combobox = Selector('[data-test=multi-combobox-default]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-owns'))
+  const wrapper = Selector('[data-test=multi-combobox-default]')
+  const combobox = wrapper.find('input[role=combobox]')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
+  const listbox = elementWithId(comboboxControls[0])
 
   await t
     // コンボボックスをクリックするとリストボックスが表示されること
-    .click(combobox)
+    .click(wrapper)
     .expect(listbox.visible)
     .ok()
     // 外側をクリックするとリストボックスが非表示になること
@@ -46,13 +59,13 @@ test('リストボックスが開閉できること', async (t) => {
     .expect(listbox.visible)
     .notOk()
     // 再度リストボックスを開く
-    .click(combobox)
+    .click(wrapper)
     // リストボックス表示中に Escape キーを押下するとリストボックスが非表示になること
     .pressKey('esc')
     .expect(listbox.visible)
     .notOk()
     // 再度リストボックスを開く
-    .click(combobox)
+    .click(wrapper)
     // リストボックス表示中に Tab キーを押下するとリストボックスが非表示になること
     .pressKey('tab')
     .expect(listbox.visible)
@@ -60,13 +73,15 @@ test('リストボックスが開閉できること', async (t) => {
 })
 
 test('コンボボックスがフォーカスされていない時に選択解除ボタンを押下してもリストボックスが表示されないこと', async (t) => {
-  const combobox = Selector('[data-test=multi-combobox-default]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-owns'))
-  const selectedItems = combobox.find('.smarthr-ui-MultiComboBox-selectedItem')
+  const wrapper = Selector('[data-test=multi-combobox-default]')
+  const combobox = wrapper.find('input[role=combobox]')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
+  const listbox = elementWithId(comboboxControls[0])
+  const selectedItems = elementWithId(comboboxControls[1])
 
   await t
     // アイテムを選択
-    .click(combobox)
+    .click(wrapper)
     .click(listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText('option 1'))
     // 外側をクリックしてフォーカスを外す
     .click('body', { offsetX: 0, offsetY: 0 })
@@ -77,16 +92,17 @@ test('コンボボックスがフォーカスされていない時に選択解�
 })
 
 test('新しいアイテムを追加できること', async (t) => {
-  const combobox = Selector('[data-test=multi-combobox-creatable]')
-  const textbox = combobox.find('input[type=text]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-owns'))
+  const wrapper = Selector('[data-test=multi-combobox-creatable]')
+  const combobox = wrapper.find('input[role=combobox]')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
+  const listbox = elementWithId(comboboxControls[0])
   const addButton = listbox.find('.smarthr-ui-MultiComboBox-addButton')
-  const selectedItems = combobox.find('.smarthr-ui-MultiComboBox-selectedItem')
+  const selectedItems = elementWithId(comboboxControls[1])
 
   await t
     // 新しいアイテムを追加できること
-    .click(combobox)
-    .typeText(textbox, 'test new item')
+    .click(wrapper)
+    .typeText(combobox, 'test new item')
     .click(addButton)
     .expect(selectedItems.withText('test new item').exists)
     .ok()
@@ -95,17 +111,26 @@ test('新しいアイテムを追加できること', async (t) => {
     .expect(selectedItems.withText('test new item').exists)
     .notOk()
     // 新しく追加したアイテムがリストボックス内に存在すること
-    .click(combobox)
+    .click(wrapper)
     .expect(listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText('test new item').exists)
     .ok()
 })
 
 test('disabled なコンボボックスではアイテムの選択と選択解除ができないこと', async (t) => {
   const normal = Selector('[data-test=multi-combobox-default]')
-  const normalListbox = elementWithId(await normal.getAttribute('aria-owns'))
+  const normalCombobox = normal.find('input[role=combobox]')
+  const normalComboboxControls = ((await normalCombobox.getAttribute('aria-controls')) || '').split(
+    ' ',
+  )
+  const normalListbox = elementWithId(normalComboboxControls[0])
+
   const disabled = Selector('[data-test=multi-combobox-disabled]')
-  const disabledListbox = elementWithId(await disabled.getAttribute('aria-owns'))
-  const disabledSelectedItems = disabled.find('.smarthr-ui-MultiComboBox-selectedItem')
+  const disabledCombobox = disabled.find('input[role=combobox]')
+  const disabledComboboxControls = (
+    (await disabledCombobox.getAttribute('aria-controls')) || ''
+  ).split(' ')
+  const disabledListbox = elementWithId(disabledComboboxControls[0])
+  const disabledSelectedItems = elementWithId(disabledComboboxControls[1])
 
   await t
     // disabled なコンボボックスをクリックしてもリストボックスは表示されないこと
@@ -115,10 +140,120 @@ test('disabled なコンボボックスではアイテムの選択と選択解�
     // 有効なコンボボックスでアイテム選択
     .click(normal)
     .click(normalListbox.find('.smarthr-ui-MultiComboBox-selectButton').withText('option 1'))
-    // disabled なコンボボックスの選択済みアイテムを選択解除できないこと
-    .click(
-      disabledSelectedItems.withText('option 1').find('.smarthr-ui-MultiComboBox-deleteButton'),
+    // disabled なコンボボックスの選択済みアイテムの削除ボタンが disabled であること
+    .expect(
+      disabledSelectedItems
+        .withText('option 1')
+        .find('.smarthr-ui-MultiComboBox-deleteButton')
+        .hasAttribute('disabled'),
     )
-    .expect(disabledSelectedItems.withText('option 1').exists)
     .ok()
+})
+
+test('キーボードで選択済みアイテムリストが操作できること', async (t) => {
+  const wrapper = Selector('[data-test=multi-combobox-default]')
+  const combobox = wrapper.find('input[role=combobox]')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
+  const listbox = elementWithId(comboboxControls[0])
+
+  const findOption = (label: string) =>
+    listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText(label)
+  const fidnDeleteButton = (label: string) =>
+    wrapper
+      .find('.smarthr-ui-MultiComboBox-selectedItem')
+      .withText(label)
+      .find('.smarthr-ui-MultiComboBox-deleteButton')
+
+  await t
+    // アイテムを選択
+    .click(wrapper)
+    .click(findOption('option 1'))
+    .click(findOption('option 2'))
+    .click(findOption('option 5'))
+    .typeText(combobox, 'opt')
+    // テキストボックス内のキャレットが先頭にない場合は削除ボタンにフォーカスが移動しないこと
+    .pressKey('left')
+    .expect(combobox.focused)
+    .ok()
+    .pressKey('left')
+    .expect(combobox.focused)
+    .ok()
+    .pressKey('left')
+    .expect(combobox.focused)
+    .ok()
+    // テキストボックス内のキャレットが先頭にある状態で左矢印キーを押下すると、削除ボタンにフォーカスが移動すること
+    .pressKey('left')
+    .expect(fidnDeleteButton('option 5').focused)
+    .ok()
+    .pressKey('left')
+    .expect(fidnDeleteButton('option 2').focused)
+    .ok()
+    .pressKey('left')
+    .expect(fidnDeleteButton('option 1').focused)
+    .ok()
+    // 最初の削除ボタンがフォーカスされている状態で左矢印キーを押下しても、フォーカスが移動しないこと
+    .pressKey('left')
+    .expect(fidnDeleteButton('option 1').focused)
+    .ok()
+    // 削除ボタンがフォーカスされている状態で右矢印キーを押下すると、フォーカスが移動すること
+    .pressKey('right')
+    .expect(fidnDeleteButton('option 2').focused)
+    .ok()
+    .pressKey('right')
+    .expect(fidnDeleteButton('option 5').focused)
+    .ok()
+    // 最後の削除ボタンがフォーカスされている状態で右矢印キーを押下すると、input にフォーカスが移動すること
+    .pressKey('right')
+    .expect(combobox.focused)
+    .ok()
+    // 削除ボタンを操作できること
+    .pressKey('left')
+    .pressKey('enter')
+    .expect(wrapper.find('.smarthr-ui-MultiComboBox-selectedItem').withText('option 5').exists)
+    .notOk()
+})
+
+test('キーボードでリストボックスが操作できること', async (t) => {
+  const wrapper = Selector('[data-test=multi-combobox-default]')
+  const comboBoxSelected = wrapper.find('.smarthr-ui-MultiComboBox-selectedItem')
+
+  await t
+    // タブキーでフォーカスされたとき、テキストボックスがフォーカスされること
+    .pressKey('tab')
+    .expect(wrapper.find('.smarthr-ui-MultiComboBox-input').focused)
+    .ok()
+    // アイテムが選択できること
+    .pressKey('down')
+    .pressKey('enter')
+    .expect(comboBoxSelected.withText('option 1').exists)
+    .ok()
+    .pressKey('up')
+    .pressKey('up')
+    .pressKey('enter')
+    .expect(comboBoxSelected.withText('option 5').exists)
+    .ok()
+    // 選択解除ができること
+    .pressKey('down')
+    .pressKey('down')
+    .pressKey('enter')
+    .expect(comboBoxSelected.withText('option 1').exists)
+    .notOk()
+})
+
+test('部分的レンダリングしているアイテム数がスクロールにより順次増加すること', async (t) => {
+  const wrapper = Selector('[data-test=multi-combobox-many]')
+  const combobox = wrapper.find('input[role=combobox]')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
+  const listbox = elementWithId(comboboxControls[0])
+
+  await t
+    .click(wrapper)
+    .expect(listbox.find('.smarthr-ui-MultiComboBox-selectButton').count)
+    .eql(100)
+    .scroll(listbox, 'bottom')
+    .expect(listbox.find('.smarthr-ui-MultiComboBox-selectButton').count)
+    .eql(200)
+    .scroll(listbox, 'bottom')
+    .expect(listbox.find('.smarthr-ui-MultiComboBox-selectButton').count)
+    .eql(300)
 })

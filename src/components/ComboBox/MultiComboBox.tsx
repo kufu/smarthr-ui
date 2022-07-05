@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   HTMLAttributes,
+  KeyboardEvent,
   useCallback,
   useLayoutEffect,
   useMemo,
@@ -11,14 +12,17 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOuterClick } from '../../hooks/useOuterClick'
+import { useId } from '../../hooks/useId'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
-import { useClassNames } from './useClassNames'
+import { useMultiComboBoxClassNames } from './useClassNames'
 
 import { FaCaretDownIcon } from '../Icon'
-import { useListBox } from './useListBox'
+import { useOptions } from './useOptions'
+import { useFocusControl } from './useFocusControl'
 import { MultiSelectedItem } from './MultiSelectedItem'
-import { convertMatchableString } from './comboBoxHelper'
+import { useListBox } from './useListBox'
 import { ComboBoxItem } from './types'
+import { ComboBoxContext } from './ComboBoxContext'
 
 type Props<T> = {
   /**
@@ -131,9 +135,8 @@ export function MultiComboBox<T>({
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
-  const classNames = useClassNames().multi
+  const classNames = useMultiComboBoxClassNames()
   const outerRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const isInputControlled = useMemo(
     () => controlledInputValue !== undefined,
@@ -142,53 +145,74 @@ export function MultiComboBox<T>({
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
   const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
   const [isComposing, setIsComposing] = useState(false)
-  const selectedLabels = useMemo(() => selectedItems.map(({ label }) => label), [selectedItems])
-  const filteredItems = useMemo(
-    () =>
-      items.filter(({ label }) => {
-        if (selectedLabels.includes(label)) return false
-        if (!inputValue) return true
-        return convertMatchableString(label).includes(convertMatchableString(inputValue))
-      }),
-    [inputValue, items, selectedLabels],
+  const { options } = useOptions({
+    items,
+    selected: selectedItems,
+    creatable,
+    inputValue,
+  })
+  const handleDelete = useCallback(
+    (item: ComboBoxItem<T>) => {
+      onDelete && onDelete(item)
+      onChangeSelected &&
+        onChangeSelected(
+          selectedItems.filter(
+            (selected) => selected.label !== item.label || selected.value !== item.value,
+          ),
+        )
+    },
+    [onChangeSelected, onDelete, selectedItems],
   )
-  const isDuplicate = items.some((item) => item.label === inputValue)
-  const hasSelectableExactMatch = filteredItems.some((item) => item.label === inputValue)
+  const handleSelect = useCallback(
+    (selected: ComboBoxItem<T>) => {
+      const matchedSelectedItem = selectedItems.find(
+        (item) => item.label === selected.label && item.value === selected.value,
+      )
+      if (matchedSelectedItem !== undefined) {
+        if (matchedSelectedItem.deletable !== false) {
+          handleDelete(selected)
+        }
+      } else {
+        onSelect && onSelect(selected)
+        onChangeSelected && onChangeSelected(selectedItems.concat(selected))
+      }
+    },
+    [handleDelete, onChangeSelected, onSelect, selectedItems],
+  )
+
   const {
     renderListBox,
-    calculateDropdownRect,
-    resetActiveOptionIndex,
-    handleInputKeyDown,
+    activeOption,
+    handleKeyDown: handleListBoxKeyDown,
+    listBoxId,
     listBoxRef,
-    aria,
   } = useListBox({
-    items: filteredItems,
-    inputValue,
+    options,
     onAdd,
-    onSelect: (selected) => {
-      onSelect && onSelect(selected)
-      onChangeSelected && onChangeSelected(selectedItems.concat(selected))
-    },
+    onSelect: handleSelect,
     isExpanded: isFocused,
-    isAddable: creatable && !!inputValue && !isDuplicate,
-    isDuplicate: creatable && !!inputValue && isDuplicate && !hasSelectableExactMatch,
-    hasNoMatch:
-      (!creatable && filteredItems.length === 0) ||
-      (creatable && filteredItems.length === 0 && !inputValue),
     isLoading,
-    classNames: classNames.listBox,
+    triggerRef: outerRef,
   })
+
+  const {
+    deletionButtonRefs,
+    inputRef,
+    focusPrevDeletionButton,
+    focusNextDeletionButton,
+    resetDeletionButtonFocus,
+  } = useFocusControl(selectedItems.length)
 
   const focus = useCallback(() => {
     onFocus && onFocus()
     setIsFocused(true)
-    resetActiveOptionIndex()
-  }, [onFocus, resetActiveOptionIndex])
+  }, [onFocus])
   const blur = useCallback(() => {
     if (!isFocused) return
     onBlur && onBlur()
     setIsFocused(false)
-  }, [isFocused, onBlur])
+    resetDeletionButtonFocus()
+  }, [isFocused, onBlur, resetDeletionButtonFocus])
 
   const caretIconColor = useMemo(() => {
     if (isFocused) return theme.color.TEXT_BLACK
@@ -196,12 +220,7 @@ export function MultiComboBox<T>({
     return theme.color.TEXT_GREY
   }, [disabled, isFocused, theme])
 
-  useOuterClick(
-    [outerRef, listBoxRef],
-    useCallback(() => {
-      blur()
-    }, [blur]),
-  )
+  useOuterClick([outerRef, listBoxRef], blur)
 
   useLayoutEffect(() => {
     if (!isInputControlled) {
@@ -211,67 +230,109 @@ export function MultiComboBox<T>({
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     }
-  }, [isFocused, isInputControlled, selectedItems])
+  }, [inputRef, isFocused, isInputControlled, selectedItems])
 
-  useLayoutEffect(() => {
-    // ドロップダウン表示時に位置を計算する
-    if (outerRef.current && isFocused) {
-      calculateDropdownRect(outerRef.current)
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      if (isComposing) {
+        return
+      } else if (e.key === 'Escape' || e.key === 'Esc') {
+        e.stopPropagation()
+        blur()
+      } else if (e.key === 'Tab') {
+        if (isFocused) {
+          // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
+          inputRef.current?.focus()
+        }
+        blur()
+      } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+        e.stopPropagation()
+        focusPrevDeletionButton()
+      } else if (e.key === 'Right' || e.key === 'ArrowRight') {
+        e.stopPropagation()
+        focusNextDeletionButton()
+      } else {
+        e.stopPropagation()
+        inputRef.current?.focus()
+        resetDeletionButtonFocus()
+      }
+      handleListBoxKeyDown(e)
+    },
+    [
+      blur,
+      focusNextDeletionButton,
+      focusPrevDeletionButton,
+      handleListBoxKeyDown,
+      inputRef,
+      isComposing,
+      isFocused,
+      resetDeletionButtonFocus,
+    ],
+  )
+
+  const handleInputKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Down' || e.key === 'ArrowDown' || e.key === 'Up' || e.key === 'ArrowUp') {
+      // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
+      e.preventDefault()
     }
-    // 選択済みアイテムによってコンボボックスの高さが変わりうるので selectedItems を依存に含める
-  }, [calculateDropdownRect, isFocused, selectedItems])
+  }, [])
+
+  const contextValue = useMemo(
+    () => ({
+      listBoxClassNames: classNames.listBox,
+    }),
+    [classNames.listBox],
+  )
+
+  const wrapperClassNames = [
+    className,
+    isFocused && 'focused',
+    error && 'invalid',
+    disabled && 'disabled',
+    classNames.wrapper,
+  ]
+    .filter((text) => text !== false && text !== '')
+    .join(' ')
+  const selectedListId = useId()
 
   return (
-    <Container
-      {...props}
-      themes={theme}
-      width={width}
-      ref={outerRef}
-      className={`${className} ${classNames.wrapper}`}
-      onClick={(e) => {
-        if (
-          !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
-          !disabled &&
-          !isFocused
-        ) {
-          focus()
-        }
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape' || e.key === 'Esc') {
-          e.stopPropagation()
-          blur()
-        }
-      }}
-      role="combobox"
-      aria-owns={aria.listBoxId}
-      aria-haspopup="listbox"
-      aria-expanded={isFocused}
-      aria-invalid={error || undefined}
-      aria-disabled={disabled}
-    >
-      <InputArea themes={theme}>
-        <List themes={theme}>
-          {selectedItems.map((selectedItem) => (
-            <li key={selectedItem.label}>
-              <MultiSelectedItem
-                item={selectedItem}
-                disabled={disabled}
-                onDelete={() => {
-                  onDelete && onDelete(selectedItem)
-                  onChangeSelected &&
-                    onChangeSelected(
-                      selectedItems.filter(
-                        (selected) =>
-                          selected.label !== selectedItem.label ||
-                          selected.value !== selectedItem.value,
-                      ),
-                    )
-                }}
-                enableEllipsis={selectedItemEllipsis}
-              />
-            </li>
-          ))}
+    <ComboBoxContext.Provider value={contextValue}>
+      <Container
+        {...props}
+        themes={theme}
+        width={width}
+        ref={outerRef}
+        className={wrapperClassNames}
+        onClick={(e) => {
+          if (
+            !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
+            !disabled &&
+            !isFocused
+          ) {
+            focus()
+          }
+        }}
+        onKeyDown={handleKeyDown}
+        role="group"
+      >
+        <InputArea themes={theme}>
+          <SelectedList
+            id={selectedListId}
+            aria-label="選択済みアイテム"
+            className={classNames.selectedList}
+          >
+            {selectedItems.map((selectedItem, i) => (
+              <li key={`${selectedItem.label}-${selectedItem.value}`}>
+                <MultiSelectedItem
+                  item={selectedItem}
+                  disabled={disabled}
+                  onDelete={handleDelete}
+                  enableEllipsis={selectedItemEllipsis}
+                  buttonRef={deletionButtonRefs[i]}
+                />
+              </li>
+            ))}
+          </SelectedList>
 
           <InputWrapper className={isFocused ? undefined : 'hidden'}>
             <Input
@@ -289,46 +350,42 @@ export function MultiComboBox<T>({
                 }
               }}
               onFocus={() => {
+                resetDeletionButtonFocus()
                 if (!isFocused) {
                   focus()
                 }
               }}
               onCompositionStart={() => setIsComposing(true)}
               onCompositionEnd={() => setIsComposing(false)}
-              onKeyDown={(e) => {
-                if (isComposing) {
-                  return
-                }
-                if (e.key === 'Tab') {
-                  blur()
-                  return
-                }
-                handleInputKeyDown(e)
-              }}
+              onKeyDown={handleInputKeyDown}
               autoComplete="off"
-              aria-activedescendant={aria.activeDescendant}
+              tabIndex={0}
+              role="combobox"
+              aria-activedescendant={activeOption?.id}
+              aria-controls={`${listBoxId} ${selectedListId}`}
+              aria-haspopup="listbox"
+              aria-expanded={isFocused}
+              aria-invalid={error || undefined}
+              aria-disabled={disabled}
               aria-autocomplete="list"
-              aria-controls={aria.listBoxId}
               className={classNames.input}
             />
           </InputWrapper>
 
           {selectedItems.length === 0 && placeholder && !isFocused && (
-            <li>
-              <Placeholder themes={theme} className={classNames.placeholder}>
-                {placeholder}
-              </Placeholder>
-            </li>
+            <Placeholder themes={theme} className={classNames.placeholder}>
+              {placeholder}
+            </Placeholder>
           )}
-        </List>
-      </InputArea>
+        </InputArea>
 
-      <Suffix themes={theme}>
-        <FaCaretDownIcon color={caretIconColor} />
-      </Suffix>
+        <Suffix themes={theme}>
+          <FaCaretDownIcon color={caretIconColor} />
+        </Suffix>
 
-      {renderListBox()}
-    </Container>
+        {renderListBox()}
+      </Container>
+    </ComboBoxContext.Provider>
   )
 }
 
@@ -347,15 +404,15 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       background-color: ${color.WHITE};
       cursor: text;
 
-      &[aria-expanded='true'] {
+      &.focused {
         box-shadow: ${shadow.OUTLINE};
       }
 
-      &[aria-invalid='true'] {
+      &.invalid {
         border-color: ${color.DANGER};
       }
 
-      &[aria-disabled='true'] {
+      &.disabled {
         background-color: ${color.COLUMN};
         cursor: not-allowed;
       }
@@ -365,37 +422,24 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
 const InputArea = styled.div<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
     flex: 1;
-    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: ${spacingByChar(0.5)};
+    min-height: calc(1em + ${spacingByChar(0.5)} * 2);
     max-height: 300px;
-    padding-left: ${spacingByChar(0.5)};
+    margin: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
+    overflow-y: auto;
   `}
 `
-const smallMargin = 6.5
-const borderWidth = 1
-const List = styled.ul<{ themes: Theme }>`
-  ${({ themes }) => {
-    const {
-      fontSize: { pxToRem },
-      spacingByChar,
-    } = themes
-
-    return css`
-      display: flex;
-      flex-wrap: wrap;
-      margin: ${pxToRem(smallMargin - borderWidth)} 0 0;
-      padding: 0;
-      list-style: none;
-
-      > li {
-        min-height: 27px;
-        max-width: calc(100% - ${spacingByChar(0.5)});
-        margin-right: ${spacingByChar(0.5)};
-        margin-bottom: ${pxToRem(smallMargin - borderWidth)};
-      }
-    `
-  }}
+const SelectedList = styled.ul`
+  display: contents;
+  list-style: none;
+  li {
+    /** 選択済みアイテムのラベルの省略表示のために幅を計算させる */
+    min-width: 0;
+  }
 `
-const InputWrapper = styled.li`
+const InputWrapper = styled.div`
   &.hidden {
     position: absolute;
     opacity: 0;
@@ -403,14 +447,17 @@ const InputWrapper = styled.li`
   }
 
   flex: 1;
+  display: flex;
+  align-items: center;
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize } = themes
+    const { fontSize, spacingByChar } = themes
 
     return css`
       min-width: 80px;
       width: 100%;
+      min-height: calc(1em + ${spacingByChar(0.5)} * 2);
       border: none;
       font-size: ${fontSize.M};
       box-sizing: border-box;
@@ -427,9 +474,9 @@ const Placeholder = styled.p<{ themes: Theme }>`
 
     return css`
       margin: 0;
+      align-self: center;
       color: ${color.TEXT_GREY};
       font-size: ${fontSize.M};
-      line-height: 25px;
     `
   }}
 `

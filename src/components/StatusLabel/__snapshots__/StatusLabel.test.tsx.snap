@@ -48,6 +48,16 @@ exports[`StatusLabel should be match snapshot 1`] = `
   color: #fff;
 }
 
+.c0.green {
+  border-color: #0f7f85;
+  color: #0f7f85;
+}
+
+.c0.green.bold {
+  background-color: #0f7f85;
+  color: #fff;
+}
+
 .c0.red {
   border-color: #e01e5a;
   color: #e01e5a;
