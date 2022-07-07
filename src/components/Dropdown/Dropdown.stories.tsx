@@ -10,6 +10,8 @@ import { DropdownTrigger } from './DropdownTrigger'
 import { DropdownContent } from './DropdownContent'
 import { DropdownCloser } from './DropdownCloser'
 import { DropdownScrollArea } from './DropdownScrollArea'
+import { DropdownButton } from './DropdownButton'
+import { FilterDropdown } from './FilterDropdown'
 import { Button } from '../Button'
 import { RadioButton } from '../RadioButton'
 import { Input } from '../Input'
@@ -25,6 +27,8 @@ export default {
   title: 'Dropdown',
   component: Dropdown,
   subcomponents: {
+    DropdownButton,
+    FilterDropdown,
     DropdownTrigger,
     DropdownContent,
     DropdownCloser,
@@ -246,6 +250,9 @@ const Template: Story = () => {
   )
 }
 export const All = Template.bind({})
+
+export { Default as DropdownButton } from './DropdownButton/DropdownButton.stories'
+export { Default as FilterDropdown } from './FilterDropdown/FilterDropdown.stories'
 
 export const RegOpenDropdown = Template.bind({})
 RegOpenDropdown.play = async ({ canvasElement }) => {
