@@ -47,7 +47,7 @@ export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
     }, [href, onClick])
 
     return (
-      <StyledAncher
+      <StyledAnchor
         {...props}
         ref={ref}
         href={actualHref}
@@ -58,12 +58,12 @@ export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
         {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
         {children}
         {actualSuffix && <SuffixWrapper themes={theme}>{actualSuffix}</SuffixWrapper>}
-      </StyledAncher>
+      </StyledAnchor>
     )
   },
 )
 
-const StyledAncher = styled.a<{ themes: Theme }>`
+const StyledAnchor = styled.a<{ themes: Theme }>`
   ${({ themes }) => {
     const { color } = themes
     return css`
