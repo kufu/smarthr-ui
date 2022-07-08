@@ -3,7 +3,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { useTheme } from '../../hooks/useTheme'
 
-import { Base, LayerKeys, RadiusKeys, layerMap, radiusMap } from './Base'
+import { Base, LayerKeys, layerMap } from './Base'
 import { DialogBase } from './DialogBase'
 
 export default {
@@ -19,16 +19,16 @@ export const BaseStory: Story = () => {
       <dt>radius</dt>
       <dd>
         <List>
-          {Object.keys(radiusMap).map((radius, index) => (
-            <li key={`${radius}-${index}`}>
-              <Base radius={radius as RadiusKeys}>
-                <Txt>
-                  If radius props is specified as <Bold>{radius}</Bold>, border-radius becomes
-                  <Bold> {radiusMap[radius as RadiusKeys]}</Bold>.
-                </Txt>
-              </Base>
-            </li>
-          ))}
+          <li>
+            <Base radius="m">
+              <Txt>デフォルト</Txt>
+            </Base>
+          </li>
+          <li>
+            <Base radius="s">
+              <Txt>角丸サイズ小</Txt>
+            </Base>
+          </li>
         </List>
       </dd>
       <dt>box-shadow</dt>
