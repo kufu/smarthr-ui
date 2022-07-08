@@ -5,11 +5,6 @@ import { DropdownButton } from './DropdownButton'
 import { AnchorButton, Button } from '../../Button'
 import { Cluster } from '../../Layout'
 
-export default {
-  title: 'DropdownButton',
-  component: DropdownButton,
-}
-
 export const Default: Story = () => (
   <Cluster align="center">
     <DropdownButton>
@@ -44,3 +39,4 @@ export const Default: Story = () => (
     </DropdownButton>
   </Cluster>
 )
+Default.storyName = 'DropdownButton'

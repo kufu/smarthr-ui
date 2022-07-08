@@ -8,21 +8,6 @@ import { FilterDropdown } from './FilterDropdown'
 import { RadioButton } from '../../RadioButton'
 import { Input } from '../../Input'
 
-import readme from './README.md'
-
-export default {
-  title: 'FilterDropdown',
-  Component: FilterDropdown,
-  parameters: {
-    docs: {
-      description: { component: readme },
-      source: {
-        type: 'code',
-      },
-    },
-  },
-}
-
 export const Default: Story = () => {
   const [value, setValue] = React.useState('hoge')
   const [text, setText] = React.useState('')
@@ -107,6 +92,7 @@ export const Default: Story = () => {
     </Wrapper>
   )
 }
+Default.storyName = 'FilterDropdown'
 
 const Wrapper = styled.div<{ themes: Theme }>`
   padding: 24px;
