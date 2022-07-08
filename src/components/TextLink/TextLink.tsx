@@ -1,4 +1,4 @@
-import React, { AnchorHTMLAttributes, ReactNode, VFC, useMemo } from 'react'
+import React, { AnchorHTMLAttributes, ReactNode, VFC, forwardRef, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaExternalLinkAltIcon } from '../Icon'
@@ -13,60 +13,55 @@ type Props = {
   suffix?: ReactNode
 }
 
-export const TextLink: VFC<Props & ElementProps> = ({
-  href,
-  target,
-  onClick,
-  children,
-  prefix,
-  suffix,
-  ...props
-}) => {
-  const theme = useTheme()
-  const actualSuffix = useMemo(() => {
-    if (target === '_blank' && suffix === undefined) {
-      return <FaExternalLinkAltIcon aria-label="別タブで開く" />
-    }
-    return suffix
-  }, [suffix, target])
-  const actualHref = useMemo(() => {
-    if (href) {
-      return href
-    }
-
-    if (onClick) {
-      return ''
-    }
-
-    return undefined
-  }, [href, onClick])
-  const actualOnClick = useMemo(() => {
-    if (!onClick) {
-      return undefined
-    }
-
-    return (e: React.MouseEvent) => {
-      if (!href) {
-        e.preventDefault()
+export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
+  ({ href, target, onClick, children, prefix, suffix, ...props }, ref) => {
+    const theme = useTheme()
+    const actualSuffix = useMemo(() => {
+      if (target === '_blank' && suffix === undefined) {
+        return <FaExternalLinkAltIcon aria-label="別タブで開く" />
       }
-      onClick(e)
-    }
-  }, [href, onClick])
+      return suffix
+    }, [suffix, target])
+    const actualHref = useMemo(() => {
+      if (href) {
+        return href
+      }
 
-  return (
-    <StyledAncher
-      {...props}
-      href={actualHref}
-      target={target}
-      onClick={actualOnClick}
-      themes={theme}
-    >
-      {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
-      {children}
-      {actualSuffix && <SuffixWrapper themes={theme}>{actualSuffix}</SuffixWrapper>}
-    </StyledAncher>
-  )
-}
+      if (onClick) {
+        return ''
+      }
+
+      return undefined
+    }, [href, onClick])
+    const actualOnClick = useMemo(() => {
+      if (!onClick) {
+        return undefined
+      }
+
+      return (e: React.MouseEvent) => {
+        if (!href) {
+          e.preventDefault()
+        }
+        onClick(e)
+      }
+    }, [href, onClick])
+
+    return (
+      <StyledAncher
+        {...props}
+        ref={ref}
+        href={actualHref}
+        target={target}
+        onClick={actualOnClick}
+        themes={theme}
+      >
+        {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
+        {children}
+        {actualSuffix && <SuffixWrapper themes={theme}>{actualSuffix}</SuffixWrapper>}
+      </StyledAncher>
+    )
+  },
+)
 
 const StyledAncher = styled.a<{ themes: Theme }>`
   ${({ themes }) => {
