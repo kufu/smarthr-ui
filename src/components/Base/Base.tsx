@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, forwardRef } from 'react'
+import React, { HTMLAttributes, ReactNode, forwardRef, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
@@ -6,18 +6,12 @@ import { useClassNames } from './useClassNames'
 type Props = {
   children: ReactNode
   /** 角丸のサイズ */
-  radius?: RadiusKeys
+  radius?: 's' | 'm'
   /** レイヤの重なり方向の高さ（影の付き方に影響する） */
   layer?: LayerKeys
 }
 
-export type RadiusKeys = keyof typeof radiusMap
 export type LayerKeys = keyof typeof layerMap
-
-export const radiusMap = {
-  s: '6px',
-  m: '8px',
-} as const
 
 export const layerMap = {
   0: 'LAYER0',
@@ -33,12 +27,20 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
   ({ radius = 'm', layer = 1, className = '', ...props }, ref) => {
     const themes = useTheme()
     const classNames = useClassNames()
+    const $radius = useMemo(() => {
+      switch (radius) {
+        case 's':
+          return themes.radius.m
+        case 'm':
+          return themes.radius.l
+      }
+    }, [radius, themes.radius.l, themes.radius.m])
 
     return (
       <Wrapper
         className={`${className} ${classNames.base.wrapper}`}
         themes={themes}
-        $radius={radiusMap[radius]}
+        $radius={$radius}
         $layer={layerMap[layer]}
         ref={ref}
         {...props}
@@ -49,7 +51,7 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
 
 const Wrapper = styled.div<{
   themes: Theme
-  $radius: typeof radiusMap[RadiusKeys]
+  $radius: string
   $layer: typeof layerMap[LayerKeys]
 }>`
   ${({ themes: { color, shadow }, $radius, $layer }) => {
