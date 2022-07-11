@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [22.2.0](https://github.com/kufu/smarthr-ui/compare/v22.1.0...v22.2.0) (2022-07-11)
+
+
+### Features
+
+* createRadiusに'L'と'FULL'を追加する ([#2642](https://github.com/kufu/smarthr-ui/issues/2642)) ([ae66fea](https://github.com/kufu/smarthr-ui/commit/ae66feaf50792e976de7b73ae7cfb4b39978af55))
+
+
+### Bug Fixes
+
+* Base の radius をデザイントークンに対応付け ([#2643](https://github.com/kufu/smarthr-ui/issues/2643)) ([b334e80](https://github.com/kufu/smarthr-ui/commit/b334e8008220b22c996161341ffe7ccb082e69a5))
+* TextLink コンポーネントに ref を渡せるようにする ([#2646](https://github.com/kufu/smarthr-ui/issues/2646)) ([0edab22](https://github.com/kufu/smarthr-ui/commit/0edab2225b1b24eff938153ab3bba420f4a87746)), closes [#2633](https://github.com/kufu/smarthr-ui/issues/2633)
+
 ## [22.1.0](https://github.com/kufu/smarthr-ui/compare/v22.0.0...v22.1.0) (2022-07-05)
 
 
