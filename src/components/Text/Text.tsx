@@ -90,7 +90,7 @@ const Wrapper = styled.span<
   TextProps & { existsIcon?: boolean; iconGap?: CharRelativeSize | AbstractSize }
 >(
   ({
-    size = 'M',
+    size,
     weight = 'normal',
     italic,
     color = 'inherit',
@@ -104,7 +104,7 @@ const Wrapper = styled.span<
     const { color: shrColor, fontSize, leading: shrLeading } = useTheme()
     return css`
       ${whiteSpace && `white-space: ${whiteSpace};`}
-      font-size: ${fontSize[size]};
+      font-size: ${size ? fontSize[size] : 'inherit'};
       line-height: ${shrLeading[leading]};
       font-weight: ${emphasis ? 'bold' : weight};
       ${italic && `font-style: italic;`}
