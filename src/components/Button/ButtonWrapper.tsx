@@ -168,7 +168,7 @@ function variantStyles(variant: Variant, theme: Theme) {
         `,
         disabled: css`
           border-color: ${color.disableColor(color.BORDER)};
-          background-color: ${color.disableColor(color.WHITE)};
+          background-color: ${color.hoverColor(color.WHITE)};
           color: ${color.TEXT_DISABLED};
         `,
       }

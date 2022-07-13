@@ -55,7 +55,7 @@ export const All: Story = () => {
       </li>
       <li>
         <Txt>disabled</Txt>
-        <Input disabled={true} />
+        <Input disabled={true} defaultValue="これは disabled なテキスト" />
       </li>
       <li>
         <Txt>error</Txt>
