@@ -1,6 +1,7 @@
 import React from 'react'
 import { Story } from '@storybook/react'
 import { Text } from './Text'
+import { FaBullhornIcon, FaInfoCircleIcon } from '../Icon'
 
 import readme from './README.md'
 
@@ -40,6 +41,19 @@ export const Default: Story = () => (
         Valid
       </Text>
       な HTML になるよう注意してください。
+    </Text>
+    <Text as="h2" size="XL" leading="TIGHT">
+      &lt;With Icon&gt;
+    </Text>
+    <Text as="p">
+      任意で<Text prefixIcon={<FaBullhornIcon />}>アイコン</Text>を入れられます。
+    </Text>
+    <Text as="p" prefixIcon={<FaInfoCircleIcon />} suffixIcon={<FaInfoCircleIcon />} size="XL">
+      これは
+      <Text prefixIcon={<FaBullhornIcon size="3em" color="TEXT_GREY" />} iconGap={0.5}>
+        テスト
+      </Text>
+      です。真似しないでください。
     </Text>
   </>
 )
