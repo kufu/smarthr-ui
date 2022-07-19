@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [22.2.1](https://github.com/kufu/smarthr-ui/compare/v22.2.0...v22.2.1) (2022-07-19)
+
+
+### Bug Fixes
+
+* Button[variant=secondary] の disabled に背景色を追加 ([#2656](https://github.com/kufu/smarthr-ui/issues/2656)) ([b362245](https://github.com/kufu/smarthr-ui/commit/b362245d61598f7c5190f9a7f832a7840c7dbc5f))
+* WarningIcon が ThemeProvider 前提になっているのを修正 ([#2658](https://github.com/kufu/smarthr-ui/issues/2658)) ([5362561](https://github.com/kufu/smarthr-ui/commit/536256167a26439ead1034e9ee47999a6b7606ee))
+
 ## [22.2.0](https://github.com/kufu/smarthr-ui/compare/v22.1.0...v22.2.0) (2022-07-11)
 
 
