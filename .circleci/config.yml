@@ -60,7 +60,7 @@ commands:
 jobs:
   node-v16:
     docker:
-      - image: cimg/node:16.15
+      - image: cimg/node:16.16
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
@@ -79,7 +79,7 @@ jobs:
       - run-npm-test
   reg-suit:
     docker:
-      - image: cimg/node:16.15-browsers
+      - image: cimg/node:16.16-browsers
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
