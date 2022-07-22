@@ -16,7 +16,7 @@ export type TextProps = {
   /** 斜体にするかどうかの真偽値（font-style: italic） */
   italic?: boolean
   /** 色。初期値は inherit（color、） */
-  color?: TextColors
+  color?: TextColors | 'inherit'
   /** 行送りの抽象値（line-height） */
   leading?: Leadings
   /** ホワイトスペース（white-space） */
@@ -93,7 +93,7 @@ const Wrapper = styled.span<
     size,
     weight = 'normal',
     italic,
-    color,
+    color = 'inherit',
     leading = 'NORMAL',
     whiteSpace,
     emphasis,
@@ -108,7 +108,7 @@ const Wrapper = styled.span<
       line-height: ${shrLeading[leading]};
       font-weight: ${emphasis ? 'bold' : weight};
       ${italic && `font-style: italic;`}
-      color: ${color ? shrColor[color] : 'inherit'};
+      color: ${color === 'inherit' ? color : shrColor[color]};
 
       ${existsIcon &&
       css`
