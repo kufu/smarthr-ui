@@ -131,14 +131,14 @@ const Wrapper = styled.span<{
       ${shadow.focusIndicatorStyles};
     }
 
-    ${!$disabled &&
-    error &&
+    ${error &&
     css`
       border-color: ${color.DANGER};
     `}
     ${$disabled &&
     css`
       pointer-events: none;
+      border-color: ${color.disableColor(color.BORDER)};
       background-color: ${color.hoverColor(color.WHITE)};
     `}
   `

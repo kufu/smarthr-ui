@@ -161,7 +161,8 @@ const SelectBox = styled.select<{
     &:disabled {
       pointer-events: none;
       opacity: 1;
-      background-color: ${color.COLUMN};
+      border-color: ${color.disableColor(color.BORDER)};
+      background-color: ${color.hoverColor(color.WHITE)};
       color: ${color.TEXT_DISABLED};
     }
 
