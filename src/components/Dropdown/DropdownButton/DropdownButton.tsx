@@ -14,6 +14,8 @@ type Actions = ActionItem | ActionItem[]
 type ActionItem =
   | ReactElement<ComponentProps<typeof Button>>
   | ReactElement<ComponentProps<typeof AnchorButton>>
+  | null
+  | boolean
 type Props = {
   /** 引き金となるボタンラベル。デフォルトは “その他の操作” */
   label?: string
@@ -64,9 +66,9 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
       </DropdownTrigger>
       <DropdownContent>
         <ActionList themes={themes} className={classNames.panel}>
-          {React.Children.map(children, (item, i) => (
-            <li key={i}>{actionItem(item)}</li>
-          ))}
+          {React.Children.map(children, (item, i) =>
+            item && typeof item !== 'boolean' ? <li key={i}>{actionItem(item)}</li> : null,
+          )}
         </ActionList>
       </DropdownContent>
     </Dropdown>
