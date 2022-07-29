@@ -67,6 +67,7 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
       <DropdownContent>
         <ActionList themes={themes} className={classNames.panel}>
           {React.Children.map(children, (item, i) =>
+            // MEMO: {flag && <Button/>}のような書き方に対応させるためbooleanの判定を入れています
             item && typeof item !== 'boolean' ? <li key={i}>{actionItem(item)}</li> : null,
           )}
         </ActionList>
