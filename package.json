@@ -41,7 +41,7 @@
     "@types/styled-components": "^5.1.25",
     "babel-loader": "^8.2.5",
     "babel-plugin-polyfill-corejs2": "^0.3.2",
-    "babel-plugin-polyfill-regenerator": "^0.3.1",
+    "babel-plugin-polyfill-regenerator": "^0.4.0",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
     "eslint": "^8.20.0",
     "eslint-config-smarthr": "^6.0.8",
