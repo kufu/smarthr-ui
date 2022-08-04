@@ -1,4 +1,5 @@
 import * as React from 'react'
+import styled, { css } from 'styled-components'
 import {
   FaAddressBook,
   FaAddressCard,
@@ -308,10 +309,11 @@ import {
 } from 'react-icons/fa'
 import type { IconBaseProps, IconType } from 'react-icons'
 import Warning from './WarningIcon'
-import styled from 'styled-components'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 import { useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import { useSpacing } from '../../hooks/useSpacing'
 
 /**
  * literal union type に補完を効かせるためのハック
@@ -357,6 +359,12 @@ export interface ComponentProps extends IconProps, ElementProps {
    * （表示はされないが、 DOM 上に存在することで意味を明示可能）
    */
   visuallyHiddenText?: string
+  /** アイコンと並べるテキスト */
+  text?: string
+  /** アイコンと並べるテキストとの溝 */
+  iconGap?: CharRelativeSize | AbstractSize
+  /** `true` のとき、アイコンを右側に表示する */
+  right?: boolean
   /**
    * コンポーネントに適用するクラス名
    */
@@ -371,6 +379,9 @@ const createIcon = (SvgIcon: IconType) => {
     visuallyHiddenText,
     'aria-hidden': ariaHidden,
     focusable = false,
+    text,
+    iconGap = 0.25,
+    right = false,
     ...props
   }) => {
     const hasLabelByAria =
@@ -388,8 +399,12 @@ const createIcon = (SvgIcon: IconType) => {
 
     const classNames = useClassNames()
 
+    const existsText = !!text
+    const Wrapper = existsText ? WithIcon : React.Fragment
+    const wrapperProps = existsText ? { gap: iconGap, right, className: classNames.withText } : {}
+
     return (
-      <>
+      <Wrapper {...wrapperProps}>
         {visuallyHiddenText && <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>}
         <SvgIcon
           color={replacedColor}
@@ -399,12 +414,25 @@ const createIcon = (SvgIcon: IconType) => {
           focusable={focusable}
           {...props}
         />
-      </>
+        {text}
+      </Wrapper>
     )
   }
   return Icon
 }
 
+const WithIcon = styled.span<{ right?: boolean; gap?: CharRelativeSize | AbstractSize }>`
+  ${({ right, gap }) => css`
+    display: inline-flex;
+    ${right && `flex-direction: row-reverse;`}
+    align-items: baseline;
+    ${gap && `column-gap: ${useSpacing(gap)};`}
+
+    .smarthr-ui-Icon {
+      align-self: center;
+    }
+  `}
+`
 const VisuallyHiddenText = styled.span`
   ${VISUALLY_HIDDEN_STYLE}
 `
