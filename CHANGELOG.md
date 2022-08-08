@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [22.3.0](https://github.com/kufu/smarthr-ui/compare/v22.2.1...v22.3.0) (2022-08-08)
+
+
+### Features
+
+* DropDownButtonのchildrenの型に `null | boolean` を追加する   SHRUI-586 ([#2679](https://github.com/kufu/smarthr-ui/issues/2679)) ([7b0200f](https://github.com/kufu/smarthr-ui/commit/7b0200f2ed936463b4194244339f5000af3c60e1))
+* DropZone を単一ファイル選択でも使えるようにする ([#2686](https://github.com/kufu/smarthr-ui/issues/2686)) ([fb2fa68](https://github.com/kufu/smarthr-ui/commit/fb2fa689ef9ef9118b36f438e462c669f33f34a2))
+
+
+### Bug Fixes
+
+* 入力要素の disabled 装飾を Button に合わせる ([#2670](https://github.com/kufu/smarthr-ui/issues/2670)) ([dad3802](https://github.com/kufu/smarthr-ui/commit/dad38022d5673b5dbf9cbd0c03d760e221733f93))
+
 ### [22.2.1](https://github.com/kufu/smarthr-ui/compare/v22.2.0...v22.2.1) (2022-07-19)
 
 
