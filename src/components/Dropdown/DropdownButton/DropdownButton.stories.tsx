@@ -5,6 +5,8 @@ import { DropdownButton } from './DropdownButton'
 import { AnchorButton, Button } from '../../Button'
 import { Cluster } from '../../Layout'
 
+const flag = false
+
 export const Default: Story = () => (
   <Cluster align="center">
     <DropdownButton>
@@ -12,6 +14,7 @@ export const Default: Story = () => (
       <Button disabled>評価を確定</Button>
       <Button>ヒントメッセージの設定</Button>
       <AnchorButton href="#h2-2">ログアウト</AnchorButton>
+      {flag && <Button>非表示になるテキスト</Button>}
     </DropdownButton>
     <DropdownButton disabled>
       <Button>評価を開始</Button>

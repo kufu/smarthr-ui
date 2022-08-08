@@ -48,6 +48,11 @@ export const All: Story = () => {
           </DropZoneText>
         </DropZone>
       </li>
+
+      <li>
+        <Text>単一ファイルは任意（デフォルト複数選択可）</Text>
+        <DropZone onSelectFiles={onSelectFiles} multiple={false} />
+      </li>
     </Group>
   )
 }
