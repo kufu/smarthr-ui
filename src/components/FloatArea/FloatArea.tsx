@@ -16,9 +16,9 @@ import { useClassNames } from './useClassNames'
 
 type StyleProps = {
   /** コンポーネントの上端から、包含ブロックの上端までの距離 */
-  top?: number
+  top?: number | string
   /** コンポーネントの下端から、包含ブロックの下端までの距離 */
-  bottom?: number
+  bottom?: number | string
   /** コンポーネントの `z-index` 値 */
   zIndex?: number
 }
@@ -86,8 +86,14 @@ const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string 
   ${({ themes: { spacingByChar }, top, bottom, $width, zIndex = 500 }) =>
     css`
       position: fixed;
-      ${exist(top) && `top: ${top}px;`}
-      ${exist(bottom) && `bottom: ${bottom}px;`}
+      ${exist(top) &&
+      css`
+        top: ${typeof top === 'number' ? `${top}px` : top};
+      `}
+      ${exist(bottom) &&
+      css`
+        bottom: ${typeof bottom === 'number' ? `${bottom}px` : bottom};
+      `}
       z-index: ${zIndex};
       width: ${$width};
       padding: ${spacingByChar(1)};
