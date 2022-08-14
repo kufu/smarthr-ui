@@ -22,7 +22,7 @@ export const All: Story = () => (
     primaryButton={<Button variant="primary">Submit</Button>}
     secondaryButton={<Button>Cancel</Button>}
     tertiaryButton={<Button>preview</Button>}
-    errorIcon={<FaExclamationCircleIcon color="#e01e5a" />}
+    errorIcon={<FaExclamationCircleIcon color="DANGER" />}
     errorText="This is the error text."
     width="80%"
     top={32}
@@ -34,7 +34,7 @@ export const WithoutTertiary: Story = () => (
   <FloatArea
     primaryButton={<Button variant="primary">Submit</Button>}
     secondaryButton={<Button>Cancel</Button>}
-    errorIcon={<FaExclamationCircleIcon color="#e01e5a" />}
+    errorIcon={<FaExclamationCircleIcon color="DANGER" />}
     errorText="This is the error text."
     width="80%"
     bottom="24px"
