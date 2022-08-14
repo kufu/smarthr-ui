@@ -25,7 +25,7 @@ export const All: Story = () => (
     errorIcon={<FaExclamationCircleIcon color="#e01e5a" />}
     errorText="This is the error text."
     width="80%"
-    top={40}
+    top={32}
   />
 )
 All.storyName = 'all'
@@ -37,12 +37,12 @@ export const WithoutTertiary: Story = () => (
     errorIcon={<FaExclamationCircleIcon color="#e01e5a" />}
     errorText="This is the error text."
     width="80%"
-    top={40}
+    bottom="24px"
   />
 )
 WithoutTertiary.storyName = 'withoutTertiary'
 
 export const OnlyPrimary: Story = () => (
-  <FloatArea primaryButton={<Button variant="primary">Submit</Button>} top={40} />
+  <FloatArea primaryButton={<Button variant="primary">Submit</Button>} top={32} />
 )
 OnlyPrimary.storyName = 'onlyPrimary'
