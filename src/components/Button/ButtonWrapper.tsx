@@ -3,7 +3,6 @@ import React, {
   ButtonHTMLAttributes,
   ForwardedRef,
   ReactNode,
-  RefObject,
   useMemo,
 } from 'react'
 import styled, { css } from 'styled-components'
