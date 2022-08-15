@@ -1,4 +1,4 @@
-import React, { AnchorHTMLAttributes, forwardRef, useImperativeHandle, useRef } from 'react'
+import React, { AnchorHTMLAttributes, forwardRef } from 'react'
 
 import { BaseProps } from './types'
 import { useClassNames } from './useClassNames'
@@ -22,11 +22,6 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
     },
     ref,
   ) => {
-    const anchorRef = useRef<HTMLAnchorElement>(null)
-    useImperativeHandle<HTMLAnchorElement | null, HTMLAnchorElement | null>(
-      ref,
-      () => anchorRef.current,
-    )
     const classNames = useClassNames().anchorButton
 
     return (
@@ -38,7 +33,7 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
         variant={variant}
         className={`${className} ${classNames.wrapper}`}
         isAnchor
-        anchorRef={anchorRef}
+        anchorRef={ref}
       >
         <ButtonInner prefix={prefix} suffix={suffix}>
           {children}
