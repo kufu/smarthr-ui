@@ -4,14 +4,9 @@ import styled from 'styled-components'
 
 import { Balloon } from './Balloon'
 
-import readme from './README.md'
-
 export default {
   title: 'Balloon',
   component: Balloon,
-  parameters: {
-    sidebar: readme,
-  },
 }
 
 export const All: Story = () => (

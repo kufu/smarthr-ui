@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import * as Icons from './Icon'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
-import readme from './README.md'
 
 const icons: Array<React.ComponentType<Icons.ComponentProps>> = Object.values(Icons)
 const { FaAddressBookIcon, FaBullhornIcon, FaInfoCircleIcon } = Icons
@@ -13,11 +12,6 @@ const { FaAddressBookIcon, FaBullhornIcon, FaInfoCircleIcon } = Icons
 export default {
   title: 'Icon',
   component: FaAddressBookIcon,
-  parameters: {
-    docs: {
-      description: { component: readme },
-    },
-  },
 }
 
 export const Default: Story = () => <FaAddressBookIcon />

@@ -4,7 +4,6 @@ module.exports = {
   },
   stories: ['../src/**/*.stories.tsx'],
   addons: [
-    'storybook-readme',
     {
       name: '@storybook/addon-essentials',
     },

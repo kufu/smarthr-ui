@@ -3,16 +3,10 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { TextLink } from './TextLink'
 import { FaFlagIcon } from '../Icon'
-import readme from './README.md'
 
 export default {
   title: 'TextLink ',
   component: TextLink,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => (

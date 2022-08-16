@@ -7,16 +7,9 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { FormGroup } from './FormGroup'
 import { Input } from '../Input'
 
-import readme from './README.md'
-
 export default {
   title: 'FormGroup',
   component: FormGroup,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 type SampleChildrenProps = {

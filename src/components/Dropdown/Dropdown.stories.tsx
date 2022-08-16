@@ -20,7 +20,6 @@ import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
 import { FaCaretDownIcon } from '../Icon'
 
-import readme from './README.md'
 import { userEvent, within } from '@storybook/testing-library'
 
 export default {
@@ -33,11 +32,6 @@ export default {
     DropdownContent,
     DropdownCloser,
     DropdownScrollArea,
-  },
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
   },
 }
 

@@ -3,16 +3,9 @@ import * as React from 'react'
 
 import { HeadlineArea } from './HeadlineArea'
 
-import readme from './README.md'
-
 export default {
   title: 'HeadlineArea',
   component: HeadlineArea,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const heading = {

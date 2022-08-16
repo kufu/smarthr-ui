@@ -12,16 +12,9 @@ import {
   FaTableIcon,
 } from '../Icon'
 
-import readme from './README.md'
-
 export default {
   title: 'SegmentedControl',
   component: SegmentedControl,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const departmentAndCrewOptions: Option[] = [

@@ -6,16 +6,10 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { FaExclamationCircleIcon } from '../Icon'
 import { FieldSet } from './FieldSet'
-import readme from './README.md'
 
 export default {
   title: 'FieldSet',
   component: FieldSet,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => {

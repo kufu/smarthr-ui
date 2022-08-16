@@ -3,16 +3,10 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { Loader } from './Loader'
-import readme from './README.md'
 
 export default {
   title: 'Loader',
   component: Loader,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => {

@@ -24,8 +24,6 @@ import { Cluster, LineUp, Stack } from '../Layout'
 import { Body, Cell, Head, Row, Table } from '../Table'
 import { CheckBox } from '../CheckBox'
 
-import readme from './README.md'
-
 export default {
   title: 'Dialog',
   component: Dialog,
@@ -42,7 +40,6 @@ export default {
   },
   parameters: {
     docs: {
-      description: { component: readme },
       source: {
         type: 'code',
       },

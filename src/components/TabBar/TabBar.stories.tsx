@@ -8,17 +8,10 @@ import styled from 'styled-components'
 import { TabItem } from './TabItem'
 import { TabBar } from './TabBar'
 
-import readme from './README.md'
-
 export default {
   title: 'TabBar',
   component: TabBar,
   subcomponents: { TabItem },
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const Template: Story = () => (

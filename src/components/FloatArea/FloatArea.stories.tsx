@@ -5,16 +5,9 @@ import { FloatArea } from './FloatArea'
 import { Button } from '../Button'
 import { FaExclamationCircleIcon } from '../Icon'
 
-import readme from './README.md'
-
 export default {
   title: 'FloatArea',
   component: FloatArea,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => (

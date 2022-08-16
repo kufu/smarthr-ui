@@ -9,18 +9,12 @@ import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { Button } from '../Button'
 import { Base as BaseComponent } from '../Base'
 
-import readme from './README.md'
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 
 export default {
   title: 'Table',
   component: Table,
   subcomponents: { Th, Td, BulkActionRow },
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const data = [
