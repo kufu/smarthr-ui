@@ -2,16 +2,10 @@ import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
 import * as React from 'react'
 import { RightFixedNote } from './RightFixedNote'
-import readme from './README.md'
 
 export default {
   title: 'RightFixedNote',
   component: RightFixedNote,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const sampleItems = [

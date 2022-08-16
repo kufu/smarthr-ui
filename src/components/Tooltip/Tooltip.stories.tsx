@@ -12,16 +12,9 @@ import {
 import { Button } from '../Button'
 import { Tooltip } from './Tooltip'
 
-import readme from './README.md'
-
 export default {
   title: 'Tooltip',
   component: Tooltip,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const Template: Story = () => (

@@ -5,16 +5,10 @@ import styled, { css } from 'styled-components'
 
 import { DropZone } from './DropZone'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import readme from './README.md'
 
 export default {
   title: 'DropZone',
   component: DropZone,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const onSelectFiles = action('onSelectFiles')

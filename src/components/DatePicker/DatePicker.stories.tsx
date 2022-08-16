@@ -4,16 +4,10 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { DatePicker } from './DatePicker'
-import readme from './README.md'
 
 export default {
   title: 'DatePicker',
   component: DatePicker,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => {

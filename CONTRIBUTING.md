@@ -64,10 +64,6 @@ For the above reasons, it doesn't matter if the reg-suit fails for a repository 
 
 Review the PR and if there are no security issues we will run reg-suit.
 
-## How to update component README
-
-If you add or update a component, update the component README.
-
 ### Template
 
 ````markdown

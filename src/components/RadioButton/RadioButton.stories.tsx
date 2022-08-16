@@ -2,18 +2,11 @@ import React, { ChangeEvent, useState } from 'react'
 import styled from 'styled-components'
 import { Story } from '@storybook/react'
 
-import readme from './README.md'
-
 import { RadioButton } from './RadioButton'
 
 export default {
   title: 'RadioButton',
   component: RadioButton,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => {

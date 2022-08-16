@@ -6,16 +6,9 @@ import styled from 'styled-components'
 import { Select } from './Select'
 import { Stack } from '../Layout'
 
-import readme from './README.md'
-
 export default {
   title: 'Select',
   component: Select,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const options = [

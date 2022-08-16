@@ -7,16 +7,9 @@ import { SideNav } from './SideNav'
 import { StatusLabel } from '../StatusLabel'
 import { Heading } from '../Heading'
 
-import readme from './README.md'
-
 export default {
   title: 'SideNav',
   component: SideNav,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const Label = styled(StatusLabel)`
