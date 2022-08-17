@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [22.4.0](https://github.com/kufu/smarthr-ui/compare/v22.3.0...v22.4.0) (2022-08-17)
+
+
+### Features
+
+* Icon に可視テキストを渡せるようにする ([#2685](https://github.com/kufu/smarthr-ui/issues/2685)) ([30157ef](https://github.com/kufu/smarthr-ui/commit/30157ef582262c7be53d95664f5672f4a05db742))
+
+
+### Bug Fixes
+
+* Button と AnchorButton から不要な ref の詰め替えを消す ([#2706](https://github.com/kufu/smarthr-ui/issues/2706)) ([f1c4524](https://github.com/kufu/smarthr-ui/commit/f1c45245c596abc9608046d00162c8fe2ac609c4))
+* FloatArea の top と bottom に string を渡せるようする ([#2696](https://github.com/kufu/smarthr-ui/issues/2696)) ([5aae8df](https://github.com/kufu/smarthr-ui/commit/5aae8dfbf4f57fae61fae0dd0dba02f0c3462d67))
+
 ## [22.3.0](https://github.com/kufu/smarthr-ui/compare/v22.2.1...v22.3.0) (2022-08-08)
 
 
