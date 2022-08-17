@@ -1,6 +1,5 @@
 import { Story } from '@storybook/react'
 import * as React from 'react'
-import readme from './README.md'
 import styled from 'styled-components'
 
 import { FlashMessage, Props, animationTypes, messageTypes } from './FlashMessage'
@@ -11,11 +10,6 @@ import { Button } from '../Button'
 export default {
   title: 'FlashMessage',
   component: FlashMessage,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const Template: Story = (arg) => {

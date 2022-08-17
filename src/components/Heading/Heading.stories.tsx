@@ -4,16 +4,9 @@ import styled from 'styled-components'
 
 import { Heading } from './Heading'
 
-import readme from './README.md'
-
 export default {
   title: 'Heading',
   component: Heading,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => (

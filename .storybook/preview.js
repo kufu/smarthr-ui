@@ -3,7 +3,6 @@ import { addDecorator } from '@storybook/react'
 import { create } from '@storybook/theming'
 import addons from '@storybook/addons'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
-import { addReadme } from 'storybook-readme'
 import { Reset } from 'styled-reset'
 import { ArgsTable, Title } from '@storybook/addon-docs'
 import { withScreenshot } from 'storycap'
@@ -38,10 +37,6 @@ export const parameters = {
     isToolshown: true,
   },
   viewport: { viewports: INITIAL_VIEWPORTS },
-  readme: {
-    // This setting is needed not to apply css of storybook-readme to DocsPage
-    highlightContent: false,
-  },
   docs: {
     source: { type: 'dynamic' },
     page: () => (
@@ -88,7 +83,6 @@ export const parameters = {
   },
 }
 
-addDecorator(addReadme)
 addDecorator((Story, context) => {
   const shouldReset = context.globals.reset === 'styled-reset'
   const theme = createTheme()

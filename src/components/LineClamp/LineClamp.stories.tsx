@@ -4,16 +4,10 @@ import styled from 'styled-components'
 import { Button } from '../Button'
 
 import { LineClamp } from './LineClamp'
-import readme from './README.md'
 
 export default {
   title: 'LineClamp',
   component: LineClamp,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const longText = `

@@ -4,16 +4,9 @@ import styled from 'styled-components'
 
 import { CompactInformationPanel } from '.'
 
-import readme from './README.md'
-
 export default {
   title: 'CompactInformationPanel',
   component: CompactInformationPanel,
-  parameters: {
-    docs: {
-      description: { component: readme },
-    },
-  },
 }
 
 export const Default: Story = () => (

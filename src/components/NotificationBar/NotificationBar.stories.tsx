@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components'
 import { Story } from '@storybook/react'
 
 import { NotificationBar } from './NotificationBar'
-import readme from './README.md'
 
 import { LineClamp } from '../LineClamp'
 import { Button } from '../Button'
@@ -14,11 +13,6 @@ import { TextLink as shrTextLink } from '../TextLink'
 export default {
   title: 'NotificationBar',
   component: NotificationBar,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const TextLink = styled(shrTextLink)`

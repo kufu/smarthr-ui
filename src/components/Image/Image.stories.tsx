@@ -3,16 +3,10 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { BlankImage } from './BlankImage'
-import readme from './README.md'
 
 export default {
   title: 'Image',
   component: BlankImage,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const _BlankImage: Story = () => (

@@ -19,6 +19,12 @@ commands:
     steps:
       - run: yarn audit --groups dependencies
       - run: yarn lint
+      - run:
+          name: check deduplicated packages
+          command: |
+            # ここで落ちた場合は以下を実行して push してください
+            # npx yarn-deduplicate ; yarn install; git commit -m 'npx yarn-deduplicate ; yarn install' yarn.lock
+            git diff --exit-code --quiet origin/master..origin/${CIRCLE_BRANCH} yarn.lock || npx --yes yarn-deduplicate --fail
   run-npm-test:
     steps:
       - run: yarn test -w 1

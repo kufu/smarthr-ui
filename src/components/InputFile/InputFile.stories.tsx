@@ -5,16 +5,9 @@ import { action } from '@storybook/addon-actions'
 
 import { InputFile } from './InputFile'
 
-import readme from './README.md'
-
 export default {
   title: 'InputFile',
   component: InputFile,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => {

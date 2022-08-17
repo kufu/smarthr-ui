@@ -5,15 +5,12 @@ import styled from 'styled-components'
 
 import { MultiComboBox, SingleComboBox } from '.'
 
-import readme from './README.md'
-
 export default {
   title: 'ComboBox',
   component: SingleComboBox,
   subcomponents: { MultiComboBox },
   parameters: {
     docs: {
-      description: { component: readme },
       source: { type: 'dynamic' },
     },
   },

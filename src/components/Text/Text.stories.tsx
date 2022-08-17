@@ -2,16 +2,9 @@ import React from 'react'
 import { Story } from '@storybook/react'
 import { Text } from './Text'
 
-import readme from './README.md'
-
 export default {
   title: 'Text',
   component: Text,
-  parameters: {
-    docs: {
-      description: { component: readme },
-    },
-  },
 }
 
 export const Default: Story = () => (

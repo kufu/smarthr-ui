@@ -4,18 +4,12 @@ import styled from 'styled-components'
 
 import { Textarea } from './Textarea'
 
-import readme from './README.md'
 import { Stack } from '../Layout'
 import { userEvent, within } from '@storybook/testing-library'
 
 export default {
   title: 'Textarea',
   component: Textarea,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const Template: Story = () => {

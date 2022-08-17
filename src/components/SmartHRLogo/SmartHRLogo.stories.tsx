@@ -2,8 +2,6 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { Story } from '@storybook/react'
 
-import readme from './README.md'
-
 import { SmartHRLogo } from './SmartHRLogo'
 import { Text } from '../Text'
 import { TextLink } from '../TextLink'
@@ -11,11 +9,6 @@ import { TextLink } from '../TextLink'
 export default {
   title: 'SmartHRLogo',
   component: SmartHRLogo,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => (

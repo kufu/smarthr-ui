@@ -5,16 +5,10 @@ import { BottomFixedArea } from './BottomFixedArea'
 import { Button } from '../Button'
 import { FaTrashIcon } from '../Icon/'
 import { action } from '@storybook/addon-actions'
-import readme from './README.md'
 
 export default {
   title: 'BottomFixedArea',
   component: BottomFixedArea,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const _BottomFixedArea: Story = () => {

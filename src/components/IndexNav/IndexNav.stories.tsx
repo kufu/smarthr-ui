@@ -4,16 +4,9 @@ import { Story } from '@storybook/react'
 
 import { IndexNav } from './IndexNav'
 
-import readme from './README.md'
-
 export default {
   title: 'IndexNav',
   component: IndexNav,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => (

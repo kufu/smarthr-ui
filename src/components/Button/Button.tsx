@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, forwardRef, useImperativeHandle, useRef } from 'react'
+import React, { ButtonHTMLAttributes, forwardRef } from 'react'
 
 import { BaseProps } from './types'
 import { useClassNames } from './useClassNames'
@@ -23,11 +23,6 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
     },
     ref,
   ) => {
-    const buttonRef = useRef<HTMLButtonElement>(null)
-    useImperativeHandle<HTMLButtonElement | null, HTMLButtonElement | null>(
-      ref,
-      () => buttonRef.current,
-    )
     const classNames = useClassNames().button
 
     return (
@@ -39,7 +34,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
         wide={wide}
         variant={variant}
         className={`${className} ${classNames.wrapper}`}
-        buttonRef={buttonRef}
+        buttonRef={ref}
       >
         <ButtonInner prefix={prefix} suffix={suffix}>
           {children}
