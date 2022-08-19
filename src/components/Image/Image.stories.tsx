@@ -13,15 +13,15 @@ export const _BlankImage: Story = () => (
   <List>
     <dt>BlankImage size=s</dt>
     <dd>
-      <BlankImage title="S size" size="s" />
+      <BlankImage alt="S size" size="s" />
     </dd>
     <dt>BlankImage size=m</dt>
     <dd>
-      <BlankImage title="M size" size="m" />
+      <BlankImage alt="M size" size="m" />
     </dd>
     <dt>BlankImage size=l</dt>
     <dd>
-      <BlankImage title="L size" size="l" />
+      <BlankImage alt="L size" size="l" />
     </dd>
   </List>
 )

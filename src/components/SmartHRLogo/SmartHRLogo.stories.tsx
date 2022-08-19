@@ -29,10 +29,10 @@ export const All: Story = () => (
         を設けています。
       </Text>
       <LogoWrapper className="white">
-        <SmartHRLogo title="株式会社SmartHR（スマートHR）" fill="brand" height="1.5em" />
+        <SmartHRLogo alt="株式会社SmartHR（スマートHR）" fill="brand" height="1.5em" />
       </LogoWrapper>
       <LogoWrapper className="white">
-        <SmartHRLogo title="株式会社SmartHR（スマートHR）" fill="black" width="10em" />
+        <SmartHRLogo alt="株式会社SmartHR（スマートHR）" fill="black" width="10em" />
       </LogoWrapper>
     </li>
   </List>
