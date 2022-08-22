@@ -33,7 +33,7 @@ type Props = {
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 export const Header: React.VFC<Props & ElementProps> = ({
-  logo = <SmartHRLogo height="1.5em" />,
+  logo = <SmartHRLogo />,
   logoHref = '/',
   tenants,
   currentTenantId,
