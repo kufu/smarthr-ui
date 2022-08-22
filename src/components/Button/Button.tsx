@@ -4,6 +4,7 @@ import { BaseProps } from './types'
 import { useClassNames } from './useClassNames'
 import { ButtonWrapper } from './ButtonWrapper'
 import { ButtonInner } from './ButtonInner'
+import { Loader } from '../Loader'
 
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
@@ -17,13 +18,18 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
       suffix,
       wide = false,
       variant = 'secondary',
+      disabled,
       className = '',
       children,
+      loading = false,
       ...props
     },
     ref,
   ) => {
     const classNames = useClassNames().button
+
+    const actualPrefix = loading ? <Loader size="s" type="light" /> : prefix
+    const disabledOnLoading = loading || disabled
 
     return (
       <ButtonWrapper
@@ -35,8 +41,9 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
         variant={variant}
         className={`${className} ${classNames.wrapper}`}
         buttonRef={ref}
+        disabled={disabledOnLoading}
       >
-        <ButtonInner prefix={prefix} suffix={suffix}>
+        <ButtonInner prefix={actualPrefix} suffix={suffix}>
           {children}
         </ButtonInner>
       </ButtonWrapper>

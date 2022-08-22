@@ -56,6 +56,9 @@ export const _Button: Story = () => {
             <Button variant="primary" disabled square onClick={action('clicked')}>
               <FaPlusCircleIcon alt="プラスボタン" />
             </Button>
+            <Button variant="primary" loading={true} onClick={action('clicked')}>
+              ボタン
+            </Button>
           </Cluster>
         </Stack>
       </dd>
