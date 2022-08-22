@@ -9,16 +9,9 @@ import { MessageScreen } from './MessageScreen'
 import { Button } from '../Button'
 import { TextLink } from '../TextLink'
 
-import readme from './README.md'
-
 export default {
   title: 'MessageScreen',
   component: MessageScreen,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const Full: Story = () => {

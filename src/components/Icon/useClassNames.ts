@@ -7,6 +7,7 @@ export function useClassNames() {
   return useMemo(
     () => ({
       wrapper: generate(),
+      withText: generate('withText'),
     }),
     [generate],
   )

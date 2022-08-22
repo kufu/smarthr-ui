@@ -21,6 +21,8 @@ type DropZoneProps = {
    * <b>（ドラッグ&ドロップの挙動には影響しません）</b>
    */
   accept?: string
+  /** 複数ファイルを選択できるかどうか */
+  multiple?: boolean
   children?: React.ReactNode
 }
 
@@ -33,6 +35,7 @@ export const DropZone: React.VFC<DropZoneProps & ElementProps> = ({
   children,
   onSelectFiles,
   accept,
+  multiple = true,
 }) => {
   const theme = useTheme()
   const classNames = useClassNames()
@@ -84,7 +87,7 @@ export const DropZone: React.VFC<DropZoneProps & ElementProps> = ({
       <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
         ファイルを選択
       </Button>
-      <input ref={fileRef} type="file" multiple accept={accept} onChange={onChange} />
+      <input ref={fileRef} type="file" multiple={multiple} accept={accept} onChange={onChange} />
     </Wrapper>
   )
 }

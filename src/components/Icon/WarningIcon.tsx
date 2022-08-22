@@ -2,6 +2,8 @@ import React from 'react'
 import { IconBase, IconBaseProps } from 'react-icons'
 import styled, { css } from 'styled-components'
 
+import { useTheme } from '../../hooks/useTheme'
+
 export default (props: IconBaseProps) => (
   <Wrapper viewBox="0 0 14 13" {...props}>
     <path
@@ -17,8 +19,9 @@ export default (props: IconBaseProps) => (
   </Wrapper>
 )
 
-const Wrapper = styled(IconBase)`
-  ${({ theme: { color } }) => css`
+const Wrapper = styled(IconBase)(() => {
+  const { color } = useTheme()
+  return css`
     .base {
       fill: ${color.WARNING_YELLOW};
       stroke: ${color.TEXT_BLACK};
@@ -27,5 +30,5 @@ const Wrapper = styled(IconBase)`
     .mark {
       fill: ${color.TEXT_BLACK};
     }
-  `}
-`
+  `
+})

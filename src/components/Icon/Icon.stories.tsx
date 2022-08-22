@@ -3,19 +3,15 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import * as Icons from './Icon'
-import readme from './README.md'
+import { Stack } from '../Layout'
+import { Text } from '../Text'
 
 const icons: Array<React.ComponentType<Icons.ComponentProps>> = Object.values(Icons)
-const { FaAddressBookIcon } = Icons
+const { FaAddressBookIcon, FaBullhornIcon, FaInfoCircleIcon } = Icons
 
 export default {
   title: 'Icon',
   component: FaAddressBookIcon,
-  parameters: {
-    docs: {
-      description: { component: readme },
-    },
-  },
 }
 
 export const Default: Story = () => <FaAddressBookIcon />
@@ -91,6 +87,27 @@ export const Color: Story = () => (
     <FaAddressBookIcon size={40} color="WARNING" />
     <FaAddressBookIcon size={40} color="DANGER" />
   </List>
+)
+
+export const WithText: Story = () => (
+  <Stack align="flex-start">
+    <FaAddressBookIcon text="連絡帳" />
+    <FaAddressBookIcon text="連絡帳（逆位置）" right />
+    <Text as="p">
+      文中にも
+      <FaBullhornIcon text="アイコン付きテキスト" />
+      を使えます。
+    </Text>
+    <Text as="p" size="XL">
+      <FaInfoCircleIcon text="文字サイズは親要素から継承されます。" />
+      <Text size="S">
+        <FaBullhornIcon
+          text="そのため一文の中で別の文字サイズを使いたければ Text コンポーネントを入れ子にしてください。"
+          right
+        />
+      </Text>
+    </Text>
+  </Stack>
 )
 
 const IconList = styled.dl`

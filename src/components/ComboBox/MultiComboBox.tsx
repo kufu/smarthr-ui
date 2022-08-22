@@ -402,6 +402,7 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       border: ${border.shorthand};
       box-sizing: border-box;
       background-color: ${color.WHITE};
+      color: ${color.TEXT_GREY};
       cursor: text;
 
       &.focused {
@@ -413,8 +414,10 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       }
 
       &.disabled {
-        background-color: ${color.COLUMN};
         cursor: not-allowed;
+        border-color: ${color.disableColor(color.BORDER)};
+        background-color: ${color.hoverColor(color.WHITE)};
+        color: ${color.TEXT_DISABLED};
       }
     `
   }}
@@ -452,7 +455,7 @@ const InputWrapper = styled.div`
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize, spacingByChar } = themes
+    const { color, fontSize, spacingByChar } = themes
 
     return css`
       min-width: 80px;
@@ -460,6 +463,7 @@ const Input = styled.input<{ themes: Theme }>`
       min-height: calc(1em + ${spacingByChar(0.5)} * 2);
       border: none;
       font-size: ${fontSize.M};
+      color: ${color.TEXT_BLACK};
       box-sizing: border-box;
       outline: none;
       &[disabled] {
@@ -470,12 +474,11 @@ const Input = styled.input<{ themes: Theme }>`
 `
 const Placeholder = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { color, fontSize } = themes
+    const { fontSize } = themes
 
     return css`
       margin: 0;
       align-self: center;
-      color: ${color.TEXT_GREY};
       font-size: ${fontSize.M};
     `
   }}

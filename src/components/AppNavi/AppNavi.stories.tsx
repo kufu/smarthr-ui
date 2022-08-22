@@ -7,16 +7,9 @@ import { FaBirthdayCakeIcon, FaChartPieIcon, FaCogIcon, FaFileIcon, FaUserAltIco
 import { AppNavi } from './AppNavi'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import readme from './README.md'
-
 export default {
   title: 'AppNavi',
   component: AppNavi,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const Link: VFC<{ to: string; children: ReactNode; disabled?: boolean; className?: string }> = ({

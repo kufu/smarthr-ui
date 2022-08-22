@@ -2,20 +2,12 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { Story } from '@storybook/react'
 
-import readme from './README.md'
-
 import { SmartHRLogo } from './SmartHRLogo'
 import { Text } from '../Text'
-import { TextLink } from '../TextLink'
 
 export default {
   title: 'SmartHRLogo',
   component: SmartHRLogo,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => (
@@ -29,17 +21,13 @@ export const All: Story = () => (
       <Text as="p">
         title や色、大きさを指定できます。
         <br />
-        デザインシステムに則って
-        <TextLink href="https://smarthr.design/basics/logos/#h3-1" target="_blank">
-          アイソレーション
-        </TextLink>
-        を設けています。
+        width は height より優先されます。
       </Text>
       <LogoWrapper className="white">
-        <SmartHRLogo title="株式会社SmartHR（スマートHR）" fill="brand" height="1.5em" />
+        <SmartHRLogo title="株式会社SmartHR（スマートHR）" fill="brand" />
       </LogoWrapper>
       <LogoWrapper className="white">
-        <SmartHRLogo title="株式会社SmartHR（スマートHR）" fill="black" width="10em" />
+        <SmartHRLogo title="株式会社SmartHR（スマートHR）" fill="black" width="20em" />
       </LogoWrapper>
     </li>
   </List>

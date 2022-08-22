@@ -5,16 +5,10 @@ import styled, { css } from 'styled-components'
 
 import { DropZone } from './DropZone'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import readme from './README.md'
 
 export default {
   title: 'DropZone',
   component: DropZone,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 const onSelectFiles = action('onSelectFiles')
@@ -47,6 +41,11 @@ export const All: Story = () => {
             <span>または</span>
           </DropZoneText>
         </DropZone>
+      </li>
+
+      <li>
+        <Text>単一ファイルは任意（デフォルト複数選択可）</Text>
+        <DropZone onSelectFiles={onSelectFiles} multiple={false} />
       </li>
     </Group>
   )

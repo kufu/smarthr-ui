@@ -5,16 +5,9 @@ import { FloatArea } from './FloatArea'
 import { Button } from '../Button'
 import { FaExclamationCircleIcon } from '../Icon'
 
-import readme from './README.md'
-
 export default {
   title: 'FloatArea',
   component: FloatArea,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => (
@@ -22,10 +15,10 @@ export const All: Story = () => (
     primaryButton={<Button variant="primary">Submit</Button>}
     secondaryButton={<Button>Cancel</Button>}
     tertiaryButton={<Button>preview</Button>}
-    errorIcon={<FaExclamationCircleIcon color="#e01e5a" />}
+    errorIcon={<FaExclamationCircleIcon color="DANGER" />}
     errorText="This is the error text."
     width="80%"
-    top={40}
+    top={32}
   />
 )
 All.storyName = 'all'
@@ -34,15 +27,15 @@ export const WithoutTertiary: Story = () => (
   <FloatArea
     primaryButton={<Button variant="primary">Submit</Button>}
     secondaryButton={<Button>Cancel</Button>}
-    errorIcon={<FaExclamationCircleIcon color="#e01e5a" />}
+    errorIcon={<FaExclamationCircleIcon color="DANGER" />}
     errorText="This is the error text."
     width="80%"
-    top={40}
+    bottom="24px"
   />
 )
 WithoutTertiary.storyName = 'withoutTertiary'
 
 export const OnlyPrimary: Story = () => (
-  <FloatArea primaryButton={<Button variant="primary">Submit</Button>} top={40} />
+  <FloatArea primaryButton={<Button variant="primary">Submit</Button>} top={32} />
 )
 OnlyPrimary.storyName = 'onlyPrimary'

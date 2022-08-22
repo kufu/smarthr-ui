@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [22.4.0](https://github.com/kufu/smarthr-ui/compare/v22.3.0...v22.4.0) (2022-08-17)
+
+
+### Features
+
+* Icon に可視テキストを渡せるようにする ([#2685](https://github.com/kufu/smarthr-ui/issues/2685)) ([30157ef](https://github.com/kufu/smarthr-ui/commit/30157ef582262c7be53d95664f5672f4a05db742))
+
+
+### Bug Fixes
+
+* Button と AnchorButton から不要な ref の詰め替えを消す ([#2706](https://github.com/kufu/smarthr-ui/issues/2706)) ([f1c4524](https://github.com/kufu/smarthr-ui/commit/f1c45245c596abc9608046d00162c8fe2ac609c4))
+* FloatArea の top と bottom に string を渡せるようする ([#2696](https://github.com/kufu/smarthr-ui/issues/2696)) ([5aae8df](https://github.com/kufu/smarthr-ui/commit/5aae8dfbf4f57fae61fae0dd0dba02f0c3462d67))
+
+## [22.3.0](https://github.com/kufu/smarthr-ui/compare/v22.2.1...v22.3.0) (2022-08-08)
+
+
+### Features
+
+* DropDownButtonのchildrenの型に `null | boolean` を追加する   SHRUI-586 ([#2679](https://github.com/kufu/smarthr-ui/issues/2679)) ([7b0200f](https://github.com/kufu/smarthr-ui/commit/7b0200f2ed936463b4194244339f5000af3c60e1))
+* DropZone を単一ファイル選択でも使えるようにする ([#2686](https://github.com/kufu/smarthr-ui/issues/2686)) ([fb2fa68](https://github.com/kufu/smarthr-ui/commit/fb2fa689ef9ef9118b36f438e462c669f33f34a2))
+
+
+### Bug Fixes
+
+* 入力要素の disabled 装飾を Button に合わせる ([#2670](https://github.com/kufu/smarthr-ui/issues/2670)) ([dad3802](https://github.com/kufu/smarthr-ui/commit/dad38022d5673b5dbf9cbd0c03d760e221733f93))
+
+### [22.2.1](https://github.com/kufu/smarthr-ui/compare/v22.2.0...v22.2.1) (2022-07-19)
+
+
+### Bug Fixes
+
+* Button[variant=secondary] の disabled に背景色を追加 ([#2656](https://github.com/kufu/smarthr-ui/issues/2656)) ([b362245](https://github.com/kufu/smarthr-ui/commit/b362245d61598f7c5190f9a7f832a7840c7dbc5f))
+* WarningIcon が ThemeProvider 前提になっているのを修正 ([#2658](https://github.com/kufu/smarthr-ui/issues/2658)) ([5362561](https://github.com/kufu/smarthr-ui/commit/536256167a26439ead1034e9ee47999a6b7606ee))
+
+## [22.2.0](https://github.com/kufu/smarthr-ui/compare/v22.1.0...v22.2.0) (2022-07-11)
+
+
+### Features
+
+* createRadiusに'L'と'FULL'を追加する ([#2642](https://github.com/kufu/smarthr-ui/issues/2642)) ([ae66fea](https://github.com/kufu/smarthr-ui/commit/ae66feaf50792e976de7b73ae7cfb4b39978af55))
+
+
+### Bug Fixes
+
+* Base の radius をデザイントークンに対応付け ([#2643](https://github.com/kufu/smarthr-ui/issues/2643)) ([b334e80](https://github.com/kufu/smarthr-ui/commit/b334e8008220b22c996161341ffe7ccb082e69a5))
+* TextLink コンポーネントに ref を渡せるようにする ([#2646](https://github.com/kufu/smarthr-ui/issues/2646)) ([0edab22](https://github.com/kufu/smarthr-ui/commit/0edab2225b1b24eff938153ab3bba420f4a87746)), closes [#2633](https://github.com/kufu/smarthr-ui/issues/2633)
+
 ## [22.1.0](https://github.com/kufu/smarthr-ui/compare/v22.0.0...v22.1.0) (2022-07-05)
 
 

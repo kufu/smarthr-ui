@@ -3,16 +3,10 @@ import React from 'react'
 
 import { InformationPanel } from './InformationPanel'
 import { Stack } from '../Layout'
-import readme from './README.md'
 
 export default {
   title: 'InformationPanel',
   component: InformationPanel,
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
 }
 
 export const All: Story = () => (

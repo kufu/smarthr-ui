@@ -1,8 +1,8 @@
 import React, {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
+  ForwardedRef,
   ReactNode,
-  RefObject,
   useMemo,
 } from 'react'
 import styled, { css } from 'styled-components'
@@ -22,11 +22,11 @@ type BaseProps = {
 
 type ButtonProps = BaseProps & {
   isAnchor?: never
-  buttonRef?: RefObject<HTMLButtonElement>
+  buttonRef?: ForwardedRef<HTMLButtonElement>
 }
 type AnchorProps = BaseProps & {
   isAnchor: true
-  anchorRef?: RefObject<HTMLAnchorElement>
+  anchorRef?: ForwardedRef<HTMLAnchorElement>
 }
 type Props =
   | (ButtonProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>)
@@ -168,7 +168,7 @@ function variantStyles(variant: Variant, theme: Theme) {
         `,
         disabled: css`
           border-color: ${color.disableColor(color.BORDER)};
-          background-color: ${color.disableColor(color.WHITE)};
+          background-color: ${color.hoverColor(color.WHITE)};
           color: ${color.TEXT_DISABLED};
         `,
       }
