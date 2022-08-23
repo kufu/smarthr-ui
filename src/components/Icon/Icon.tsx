@@ -407,12 +407,12 @@ const createIcon = (SvgIcon: IconType) => {
       <Wrapper {...wrapperProps}>
         {visuallyHiddenText && <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>}
         <SvgIcon
+          {...props}
           color={replacedColor}
           className={`${className} ${classNames.wrapper}`}
           role={role}
           aria-hidden={isAriaHidden || visuallyHiddenText !== undefined || undefined}
           focusable={focusable}
-          {...props}
         />
         {text}
       </Wrapper>
