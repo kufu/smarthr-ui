@@ -5,17 +5,17 @@ module.exports = {
     'jsx-a11y/click-events-have-key-events': 'warn',
     'jsx-a11y/no-static-element-interactions': 'warn',
 
-    'smarthr/a11y-clickable-element-has-text': 'warn',
-    'smarthr/a11y-image-has-alt-attribute': 'warn',
-    'smarthr/a11y-trigger-has-button': 'warn',
-    'smarthr/best-practice-for-date': 'warn',
+    'smarthr/a11y-clickable-element-has-text': 'error',
+    'smarthr/a11y-image-has-alt-attribute': 'error',
+    'smarthr/a11y-trigger-has-button': 'error',
+    'smarthr/best-practice-for-date': 'error',
     'smarthr/jsx-start-with-spread-attributes': [
-      'warn',
-      // {
-      //   fix: true,
-      // },
+      'error',
+      {
+        fix: true,
+      },
     ],
-    'smarthr/prohibit-export-array-type': 'warn',
-    'smarthr/require-barrel-import': 'warn',
+    'smarthr/prohibit-export-array-type': 'error',
+    'smarthr/require-barrel-import': 'error',
   },
 }
