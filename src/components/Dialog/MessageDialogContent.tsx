@@ -31,11 +31,11 @@ export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
 
   return createPortal(
     <DialogContentInner
+      {...props}
       onClickOverlay={onClickClose}
       onPressEscape={onClickClose}
       isOpen={active}
       className={className}
-      {...props}
     >
       <MessageDialogContentInner
         title={title}

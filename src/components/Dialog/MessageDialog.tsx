@@ -34,10 +34,10 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
 
   return createPortal(
     <DialogContentInner
+      {...props}
       aria-labelledby={titleId}
       className={className}
       onPressEscape={onPressEscape}
-      {...props}
     >
       <MessageDialogContentInner
         title={title}
