@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [22.4.1](https://github.com/kufu/smarthr-ui/compare/v22.4.0...v22.4.1) (2022-08-23)
+
+
+### Bug Fixes
+
+* ロゴのアイソレーション実装が過剰だったので消す ([#2712](https://github.com/kufu/smarthr-ui/issues/2712)) ([820e3ee](https://github.com/kufu/smarthr-ui/commit/820e3ee61d40d21dc5847ec8065c71e2c8fbeb14))
+
 ## [22.4.0](https://github.com/kufu/smarthr-ui/compare/v22.3.0...v22.4.0) (2022-08-17)
 
 
