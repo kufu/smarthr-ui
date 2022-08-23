@@ -35,7 +35,7 @@ export const Balloon: VFC<Props & ElementProps> = ({
   const { wrapper } = useClassNames()
   const classNames = `${horizontal} ${vertical} ${className} ${wrapper}`
 
-  return <Base className={classNames} themes={themes} {...props} />
+  return <Base {...props} className={classNames} themes={themes} />
 }
 
 // HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
