@@ -22,11 +22,11 @@ export const RadioButtonInput: VFC<Props> = ({ onChange, ...props }) => {
   return (
     <Wrapper themes={theme}>
       <Input
+        {...props}
         type="radio"
         onChange={handleChange}
         className={classNames.radioButton}
         themes={theme}
-        {...props}
       />
       <Box className={boxClassName} themes={theme} />
     </Wrapper>
