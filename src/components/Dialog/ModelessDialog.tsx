@@ -203,6 +203,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
         position={position}
       >
         <Layout
+          {...props}
           className={`${className} ${classNames.wrapper}`}
           style={{
             top: centering.top !== undefined ? centering.top : top,
@@ -215,7 +216,6 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
           ref={wrapperRef}
           role="dialog"
           aria-labelledby={labelId}
-          {...props}
         >
           <Box
             isWidthAuto={width === undefined}
