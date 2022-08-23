@@ -60,7 +60,7 @@ export const FloatArea: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <Base themes={theme} className={`${className} ${classNames.wrapper}`} $width={width} {...props}>
+    <Base {...props} themes={theme} className={`${className} ${classNames.wrapper}`} $width={width}>
       <Cluster gap={1}>
         {tertiaryButton && tertiaryButton}
         <RightSide>
