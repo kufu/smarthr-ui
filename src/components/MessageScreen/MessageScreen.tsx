@@ -62,8 +62,8 @@ export const MessageScreen: VFC<Props & ElementProps> = ({
             {links.map((link) => (
               <li key={link.label}>
                 <TextLink
-                  href={link.url}
                   {...(link.target ? { target: link.target } : {})}
+                  href={link.url}
                   className={classNames.link}
                 >
                   {link.label}
