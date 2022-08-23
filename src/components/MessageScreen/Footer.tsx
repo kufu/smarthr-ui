@@ -10,7 +10,7 @@ export const Footer: VFC<ElementProps> = ({ className = '', ...props }) => {
   const { footer } = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={`${footer} ${className}`} {...props}>
+    <Wrapper {...props} themes={theme} className={`${footer} ${className}`}>
       <List themes={theme}>
         <Item href="https://smarthr.jp/help">ヘルプ</Item>
         <Item href="https://smarthr.jp/info">お知らせ</Item>
