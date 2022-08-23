@@ -160,6 +160,7 @@ const Wrapper = styled.figure`
   margin: 0;
   padding: 0;
 `
+// eslint-disable-next-line smarthr/a11y-image-has-alt-attribute
 const Svg = styled.svg`
   display: block;
 

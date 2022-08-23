@@ -13,14 +13,17 @@ export const _BlankImage: Story = () => (
   <List>
     <dt>BlankImage size=s</dt>
     <dd>
+      {/* eslint-disable-next-line smarthr/a11y-image-has-alt-attribute */}
       <BlankImage title="S size" size="s" />
     </dd>
     <dt>BlankImage size=m</dt>
     <dd>
+      {/* eslint-disable-next-line smarthr/a11y-image-has-alt-attribute */}
       <BlankImage title="M size" size="m" />
     </dd>
     <dt>BlankImage size=l</dt>
     <dd>
+      {/* eslint-disable-next-line smarthr/a11y-image-has-alt-attribute */}
       <BlankImage title="L size" size="l" />
     </dd>
   </List>
