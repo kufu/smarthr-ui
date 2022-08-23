@@ -38,7 +38,7 @@ export const Loader: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <Wrapper className={`${className} ${classNames.wrapper}`} role="status" {...props}>
+    <Wrapper {...props} className={`${className} ${classNames.wrapper}`} role="status">
       <Spinner className={size}>
         {[...Array(4)].map((_, index) => (
           <Line className={`line${index + 1} ${type}`} key={index} themes={theme}>
