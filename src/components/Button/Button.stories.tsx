@@ -153,7 +153,7 @@ _Button.parameters = {
 export const _ButtonControl: Story = (args: ButtonProps) => {
   return (
     <Wrapper>
-      <Button onClick={action('clicked')} {...args}>
+      <Button {...args} onClick={action('clicked')}>
         {args.children}
       </Button>
     </Wrapper>
@@ -310,7 +310,7 @@ _ButtonAnchor.parameters = {
 export const _ButtonAnchorControl: Story = (args: AnchorButtonProps) => {
   return (
     <Wrapper>
-      <AnchorButton href="#" onClick={action('clicked')} {...args}>
+      <AnchorButton {...args} href="#" onClick={action('clicked')}>
         {args.children}
       </AnchorButton>
     </Wrapper>
