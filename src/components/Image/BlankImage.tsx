@@ -15,7 +15,7 @@ type Props = {
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 export const BlankImage: VFC<Props & ElementProps> = ({
-  alt = 'BlankImage',
+  alt = '',
   size = 'm',
   className = '',
   ...props
