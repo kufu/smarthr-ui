@@ -24,15 +24,15 @@ const getIconProps = (
   double: boolean,
 ): {
   Icon: React.ComponentType<IconProps>
-  visuallyHiddenText: '最初へ' | '前へ' | '次へ' | '最後へ'
+  alt: '最初へ' | '前へ' | '次へ' | '最後へ'
 } => {
   return direction === 'prev'
     ? double
-      ? { Icon: FaAngleDoubleLeftIcon, visuallyHiddenText: '最初へ' }
-      : { Icon: FaChevronLeftIcon, visuallyHiddenText: '前へ' }
+      ? { Icon: FaAngleDoubleLeftIcon, alt: '最初へ' }
+      : { Icon: FaChevronLeftIcon, alt: '前へ' }
     : double
-    ? { Icon: FaAngleDoubleRightIcon, visuallyHiddenText: '最後へ' }
-    : { Icon: FaChevronRightIcon, visuallyHiddenText: '次へ' }
+    ? { Icon: FaAngleDoubleRightIcon, alt: '最後へ' }
+    : { Icon: FaChevronRightIcon, alt: '次へ' }
 }
 
 export const PaginationControllerItem: VFC<Props> = ({
@@ -50,11 +50,11 @@ export const PaginationControllerItem: VFC<Props> = ({
       onClick={() => onClick(targetPage)}
       disabled={disabled}
       themes={theme}
-      aria-label={iconProps.visuallyHiddenText}
+      aria-label={iconProps.alt}
     >
       <Icon
         color={disabled ? theme.color.TEXT_DISABLED : theme.color.TEXT_BLACK}
-        visuallyHiddenText={iconProps.visuallyHiddenText}
+        alt={iconProps.alt}
       />
     </ItemButton>
   )

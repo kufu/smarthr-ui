@@ -228,7 +228,7 @@ export function SingleComboBox<T>({
                 themes={theme}
                 className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
               >
-                <FaTimesCircleIcon color={theme.color.TEXT_BLACK} visuallyHiddenText="clear" />
+                <FaTimesCircleIcon color={theme.color.TEXT_BLACK} alt="clear" />
               </ClearButton>
               <CaretDownLayout themes={theme}>
                 <CaretDownWrapper themes={theme}>

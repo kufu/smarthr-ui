@@ -134,7 +134,7 @@ export const NotificationBar: React.FC<Props & ElementProps> = ({
             className={classNames.closeButton}
             size="s"
           >
-            <FaTimesIcon visuallyHiddenText="閉じる" />
+            <FaTimesIcon alt="閉じる" />
           </CloseButton>
         )}
       </ActionArea>
