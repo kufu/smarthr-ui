@@ -35,6 +35,8 @@ type Props = StyleProps & {
    * エラーメッセージのアイコン（`FaExclamationCircleIcon` を指定）
    */
   errorIcon?: FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
+  /** 上下の位置を固定するかどうか */
+  fixed?: boolean
   /** コンポーネントの幅 */
   width?: string
   /** コンポーネントに適用するクラス名 */
@@ -52,6 +54,7 @@ export const FloatArea: VFC<Props & ElementProps> = ({
   tertiaryButton,
   errorText,
   errorIcon,
+  fixed = false,
   className = '',
   width = '80%',
   ...props
@@ -60,7 +63,13 @@ export const FloatArea: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <Base themes={theme} className={`${className} ${classNames.wrapper}`} $width={width} {...props}>
+    <Base
+      themes={theme}
+      className={`${className} ${classNames.wrapper}`}
+      $width={width}
+      fixed={fixed}
+      {...props}
+    >
       <Cluster gap={1}>
         {tertiaryButton && tertiaryButton}
         <RightSide>
@@ -82,10 +91,10 @@ export const FloatArea: VFC<Props & ElementProps> = ({
   )
 }
 
-const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string }>`
-  ${({ themes: { spacingByChar }, top, bottom, $width, zIndex = 500 }) =>
+const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string; fixed: boolean }>`
+  ${({ themes: { spacingByChar }, top, bottom, $width, fixed, zIndex = 500 }) =>
     css`
-      position: fixed;
+      position: ${fixed ? 'fixed' : 'sticky'};
       ${exist(top) &&
       css`
         top: ${typeof top === 'number' ? `${top}px` : top};
