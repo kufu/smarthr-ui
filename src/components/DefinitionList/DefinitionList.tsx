@@ -58,7 +58,7 @@ const Wrapper = styled(Cluster).attrs({ as: 'dl', gap: 1.5 })`
 `
 
 const Item = styled(DefinitionListItem)<{ themes: Theme; layout: LayoutType }>`
-  ${({ layout, theme: { space } }) => {
+  ${({ layout, themes: { space } }) => {
     const $columns = column(layout)
     return css`
       flex-basis: calc((100% - (${space(1.5)} * ${$columns - 1})) / ${$columns});
