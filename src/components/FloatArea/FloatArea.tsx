@@ -56,7 +56,7 @@ export const FloatArea: VFC<Props & ElementProps> = ({
   errorIcon,
   fixed = false,
   className = '',
-  width = '80%',
+  width,
   ...props
 }) => {
   const theme = useTheme()
@@ -91,7 +91,7 @@ export const FloatArea: VFC<Props & ElementProps> = ({
   )
 }
 
-const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string; fixed: boolean }>`
+const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width?: string; fixed: boolean }>`
   ${({ themes: { spacingByChar }, top, bottom, $width, fixed, zIndex = 500 }) =>
     css`
       position: ${fixed ? 'fixed' : 'sticky'};
@@ -104,7 +104,10 @@ const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width: string;
         bottom: ${typeof bottom === 'number' ? `${bottom}px` : bottom};
       `}
       z-index: ${zIndex};
-      width: ${$width};
+      ${$width &&
+      css`
+        width: ${$width};
+      `}
       padding: ${spacingByChar(1)};
     `}
 `
