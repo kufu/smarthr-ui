@@ -54,7 +54,7 @@ export const AltText: Story = () => (
     <dl>
       <dt>visually hidden text</dt>
       <dd>
-        <FaAddressBookIcon visuallyHiddenText="連絡帳" />
+        <FaAddressBookIcon alt="連絡帳" />
       </dd>
       <dt>
         <code>aria-labelledby</code>

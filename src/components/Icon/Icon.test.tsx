@@ -7,7 +7,7 @@ const Icon = () => (
   <>
     <span id="text">連絡帳</span>
     <FaAddressBookIcon />
-    <FaAddressBookIcon visuallyHiddenText="連絡帳" />
+    <FaAddressBookIcon alt="連絡帳" />
     <FaAddressBookIcon aria-label="連絡帳" />
     <FaAddressBookIcon aria-labelledby="text" />
   </>

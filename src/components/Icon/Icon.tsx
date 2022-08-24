@@ -354,11 +354,8 @@ export interface IconProps {
 type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
 
 export interface ComponentProps extends IconProps, ElementProps {
-  /**
-   * アイコンの説明テキスト
-   * （表示はされないが、 DOM 上に存在することで意味を明示可能）
-   */
-  visuallyHiddenText?: string
+  /**アイコンの説明テキスト*/
+  alt?: string
   /** アイコンと並べるテキスト */
   text?: string
   /** アイコンと並べるテキストとの溝 */
@@ -376,7 +373,7 @@ const createIcon = (SvgIcon: IconType) => {
     color,
     className = '',
     role = 'img',
-    visuallyHiddenText,
+    alt,
     'aria-hidden': ariaHidden,
     focusable = false,
     text,
@@ -405,12 +402,12 @@ const createIcon = (SvgIcon: IconType) => {
 
     return (
       <Wrapper {...wrapperProps}>
-        {visuallyHiddenText && <VisuallyHiddenText>{visuallyHiddenText}</VisuallyHiddenText>}
+        {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
         <SvgIcon
           color={replacedColor}
           className={`${className} ${classNames.wrapper}`}
           role={role}
-          aria-hidden={isAriaHidden || visuallyHiddenText !== undefined || undefined}
+          aria-hidden={isAriaHidden || alt !== undefined || undefined}
           focusable={focusable}
           {...props}
         />

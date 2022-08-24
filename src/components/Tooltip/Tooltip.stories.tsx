@@ -120,7 +120,7 @@ const Template: Story = () => (
         vertical="bottom"
         triggerType="icon"
       >
-        <FaArrowAltCircleUpIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
+        <FaArrowAltCircleUpIcon alt="フォーカスすると情報が表示されます" />
       </Tooltip>
       <Tooltip
         message="horizontal=center & vertical=bottom"
@@ -128,7 +128,7 @@ const Template: Story = () => (
         vertical="bottom"
         triggerType="icon"
       >
-        <FaArrowAltCircleUpIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
+        <FaArrowAltCircleUpIcon alt="フォーカスすると情報が表示されます" />
       </Tooltip>
       <Tooltip
         message="horizontal=right & vertical=bottom"
@@ -136,7 +136,7 @@ const Template: Story = () => (
         vertical="bottom"
         triggerType="icon"
       >
-        <FaArrowAltCircleUpIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
+        <FaArrowAltCircleUpIcon alt="フォーカスすると情報が表示されます" />
       </Tooltip>
       <Tooltip
         message="horizontal=left & vertical=middle"
@@ -144,7 +144,7 @@ const Template: Story = () => (
         vertical="middle"
         triggerType="icon"
       >
-        <FaArrowAltCircleRightIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
+        <FaArrowAltCircleRightIcon alt="フォーカスすると情報が表示されます" />
       </Tooltip>
       <Tooltip
         message="horizontal=right & vertical=middle"
@@ -152,7 +152,7 @@ const Template: Story = () => (
         vertical="middle"
         triggerType="icon"
       >
-        <FaArrowAltCircleLeftIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
+        <FaArrowAltCircleLeftIcon alt="フォーカスすると情報が表示されます" />
       </Tooltip>
       <Tooltip
         message="horizontal=left & vertical=top"
@@ -160,7 +160,7 @@ const Template: Story = () => (
         vertical="top"
         triggerType="icon"
       >
-        <FaArrowAltCircleDownIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
+        <FaArrowAltCircleDownIcon alt="フォーカスすると情報が表示されます" />
       </Tooltip>
       <Tooltip
         message="horizontal=center & vertical=top"
@@ -168,7 +168,7 @@ const Template: Story = () => (
         vertical="top"
         triggerType="icon"
       >
-        <FaArrowAltCircleDownIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
+        <FaArrowAltCircleDownIcon alt="フォーカスすると情報が表示されます" />
       </Tooltip>
       <Tooltip
         message="horizontal=right & vertical=top"
@@ -176,7 +176,7 @@ const Template: Story = () => (
         vertical="top"
         triggerType="icon"
       >
-        <FaArrowAltCircleDownIcon visuallyHiddenText="フォーカスすると情報が表示されます" />
+        <FaArrowAltCircleDownIcon alt="フォーカスすると情報が表示されます" />
       </Tooltip>
     </dd>
     <dt>disabled ボタン</dt>

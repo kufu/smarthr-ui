@@ -4,8 +4,8 @@ import styled from 'styled-components'
 import { useClassNames } from './useClassNames'
 
 type Props = {
-  /** 画像のタイトル */
-  title?: string
+  /** 画像の代替テキスト */
+  alt?: string
   /** 画像の大きさ */
   size?: 's' | 'm' | 'l'
   /** コンポーネントに適用するクラス名 */
@@ -15,7 +15,7 @@ type Props = {
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 export const BlankImage: VFC<Props & ElementProps> = ({
-  title = 'BlankImage',
+  alt = 'BlankImage',
   size = 'm',
   className = '',
   ...props
@@ -24,8 +24,7 @@ export const BlankImage: VFC<Props & ElementProps> = ({
 
   return (
     <Wrapper {...props} className={`${className} ${classNames.blankImage.wrapper}`}>
-      <Svg className={size} viewBox="0 0 250 250" role="img" aria-label={title}>
-        <title>{title}</title>
+      <Svg className={size} viewBox="0 0 250 250" role="img" aria-label={alt}>
         <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <g transform="translate(20.283019, 12.735849)">
             <path
