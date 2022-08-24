@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { BlankImage } from './BlankImage'
 
 export default {
-  alt: 'Image',
+  title: 'Image',
   component: BlankImage,
 }
 
