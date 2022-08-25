@@ -8,6 +8,9 @@ import { Text } from '../Text'
 export default {
   alt: 'SmartHRLogo',
   component: SmartHRLogo,
+  parameters: {
+    withTheming: true,
+  },
 }
 
 export const All: Story = () => (
