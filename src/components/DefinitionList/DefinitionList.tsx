@@ -1,10 +1,11 @@
-import React, { HTMLAttributes, VFC } from 'react'
+import React, { FC, HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListItem'
+import { Cluster } from '../Layout'
 
 type LayoutType = 'single' | 'double' | 'triple'
 type Props = {
@@ -17,7 +18,7 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDListElement>, keyof Props>
 
-export const DefinitionList: VFC<Props & ElementProps> = ({
+export const DefinitionList: FC<Props & ElementProps> = ({
   items,
   layout = 'single',
   className = '',
@@ -26,7 +27,7 @@ export const DefinitionList: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <Wrapper className={`${className} ${classNames.definitionList.wrapper}`} layout={layout}>
+    <Wrapper className={`${className} ${classNames.definitionList.wrapper}`}>
       {items.map(({ term, description, className: itemClassName }, index) => (
         <Item
           term={term}
@@ -41,81 +42,27 @@ export const DefinitionList: VFC<Props & ElementProps> = ({
   )
 }
 
-const Wrapper = styled.dl<{ layout: LayoutType }>`
-  ${({ layout }) => {
-    const baseStyle = css`
-      padding: 0;
-      margin: 0;
-    `
+const column = (layout: LayoutType) => {
+  switch (layout) {
+    case 'single':
+      return 1
+    case 'double':
+      return 2
+    case 'triple':
+      return 3
+  }
+}
 
-    const flexStyle = css`
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      align-content: flex-start;
-      flex-wrap: wrap;
-    `
-
-    switch (layout) {
-      case 'double':
-        return css`
-          ${baseStyle}
-          ${flexStyle}
-        `
-      case 'triple':
-        return css`
-          ${baseStyle}
-          ${flexStyle}
-          &::after {
-            content: '';
-            display: block;
-            flex-basis: calc(33.3333% - 12px);
-          }
-        `
-      default:
-        return css`
-          ${baseStyle}
-          display: block;
-        `
-    }
-  }}
+const Wrapper = styled(Cluster).attrs({ as: 'dl', gap: 1.5 })`
+  margin-block: initial;
 `
+
 const Item = styled(DefinitionListItem)<{ themes: Theme; layout: LayoutType }>`
-  ${({ themes: { spacingByChar }, layout }) => {
-    const basicStyle = css`
-      margin-bottom: ${spacingByChar(1.5)};
+  ${({ layout, themes: { space } }) => {
+    const $columns = column(layout)
+    return css`
+      flex-basis: calc((100% - (${space(1.5)} * ${$columns - 1})) / ${$columns});
+      flex-shrink: 1;
     `
-
-    switch (layout) {
-      case 'double':
-        return css`
-          ${basicStyle}
-          flex-basis: calc(50% - 12px);
-
-          &:last-child,
-          &:nth-last-child(2) {
-            margin-bottom: 0;
-          }
-        `
-      case 'triple':
-        return css`
-          ${basicStyle}
-          flex-basis: calc(33.3333% - 12px);
-
-          &:last-child,
-          &:nth-last-child(2),
-          &:nth-last-child(3) {
-            margin-bottom: 0;
-          }
-        `
-      default:
-        return css`
-          ${basicStyle}
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-        `
-    }
   }}
 `
