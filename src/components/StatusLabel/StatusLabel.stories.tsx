@@ -8,6 +8,9 @@ import { Cluster, Stack } from '../Layout'
 export default {
   title: 'StatusLabel',
   component: StatusLabel,
+  parameters: {
+    withTheming: true,
+  },
 }
 
 export const All: Story = () => (
