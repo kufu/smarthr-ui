@@ -6,7 +6,7 @@ import { SmartHRLogo } from './SmartHRLogo'
 import { Text } from '../Text'
 
 export default {
-  alt: 'SmartHRLogo',
+  title: 'SmartHRLogo',
   component: SmartHRLogo,
 }
 
