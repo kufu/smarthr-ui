@@ -51,29 +51,37 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
     [onlyIconTrigger],
   )
 
-  return (
-    <Dropdown {...props}>
-      <DropdownTrigger className={`${classNames.wrapper}${className && ` ${className}`}`}>
-        <Trigger
-          suffix={triggerSuffix}
-          size={triggerSize}
-          disabled={disabled}
-          square={onlyIconTrigger}
-          className={classNames.trigger}
-        >
-          {triggerLabel}
-        </Trigger>
-      </DropdownTrigger>
-      <DropdownContent>
-        <ActionList themes={themes} className={classNames.panel}>
-          {React.Children.map(children, (item, i) =>
-            // MEMO: {flag && <Button/>}のような書き方に対応させるためbooleanの判定を入れています
-            item && typeof item !== 'boolean' ? <li key={i}>{actionItem(item)}</li> : null,
-          )}
-        </ActionList>
-      </DropdownContent>
-    </Dropdown>
+  const TriggerButton = (
+    <Trigger
+      suffix={triggerSuffix}
+      size={triggerSize}
+      disabled={disabled}
+      square={onlyIconTrigger}
+      className={classNames.trigger}
+    >
+      {triggerLabel}
+    </Trigger>
   )
+
+  if (disabled) {
+    return TriggerButton
+  } else {
+    return (
+      <Dropdown {...props}>
+        <DropdownTrigger className={`${classNames.wrapper}${className && ` ${className}`}`}>
+          {TriggerButton}
+        </DropdownTrigger>
+        <DropdownContent>
+          <ActionList themes={themes} className={classNames.panel}>
+            {React.Children.map(children, (item, i) =>
+              // MEMO: {flag && <Button/>}のような書き方に対応させるためbooleanの判定を入れています
+              item && typeof item !== 'boolean' ? <li key={i}>{actionItem(item)}</li> : null,
+            )}
+          </ActionList>
+        </DropdownContent>
+      </Dropdown>
+    )
+  }
 }
 
 const Trigger = styled(Button)`
