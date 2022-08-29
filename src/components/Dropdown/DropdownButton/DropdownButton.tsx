@@ -42,11 +42,11 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   const triggerLabel = useMemo(
-    () => (onlyIconTrigger ? <FaEllipsisHIcon visuallyHiddenText={label} /> : label),
+    () => (onlyIconTrigger ? <FaEllipsisHIcon alt={label} /> : label),
     [onlyIconTrigger, label],
   )
   const triggerSuffix = useMemo(
-    () => (onlyIconTrigger ? <></> : <FaCaretDownIcon visuallyHiddenText="候補を開く" />),
+    () => (onlyIconTrigger ? <></> : <FaCaretDownIcon alt="候補を開く" />),
     [onlyIconTrigger],
   )
 

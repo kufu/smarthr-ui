@@ -93,7 +93,7 @@ export const All: Story = () => (
             <Th aria-sort="ascending" highlighted={true}>
               <ClickableCellButton onClick={action('clicked')}>
                 <span style={{ lineHeight: '1.5' }}>Name</span>
-                <ArrowIcon visuallyHiddenText="昇順" />
+                <ArrowIcon alt="昇順" />
               </ClickableCellButton>
             </Th>
             <Th>Calories</Th>
@@ -144,7 +144,7 @@ export const All: Story = () => (
               <Th aria-sort="ascending" highlighted={true}>
                 <ClickableCellButton onClick={action('clicked')}>
                   <span style={{ lineHeight: '1.5' }}>Name</span>
-                  <ArrowIcon visuallyHiddenText="昇順" />
+                  <ArrowIcon alt="昇順" />
                 </ClickableCellButton>
               </Th>
               <Th>Calories</Th>

@@ -7,6 +7,9 @@ import { FaFlagIcon } from '../Icon'
 export default {
   title: 'TextLink ',
   component: TextLink,
+  parameters: {
+    withTheming: true,
+  },
 }
 
 export const All: Story = () => (

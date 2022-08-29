@@ -70,11 +70,7 @@ export function MultiSelectedItem<T>({
             ref={buttonRef}
             tabIndex={-1}
           >
-            <FaTimesCircleIcon
-              size={11}
-              color={'inherit'}
-              visuallyHiddenText={`${item.label}を削除`}
-            />
+            <FaTimesCircleIcon size={11} color={'inherit'} alt={`${item.label}を削除`} />
           </DeleteButton>
         )}
       </Wrapper>

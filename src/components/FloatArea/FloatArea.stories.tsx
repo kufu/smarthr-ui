@@ -4,6 +4,9 @@ import * as React from 'react'
 import { FloatArea } from './FloatArea'
 import { Button } from '../Button'
 import { FaExclamationCircleIcon } from '../Icon'
+import { Heading } from '../Heading'
+import { Stack } from '../Layout'
+import { Base } from '../Base'
 
 export default {
   title: 'FloatArea',
@@ -11,15 +14,38 @@ export default {
 }
 
 export const All: Story = () => (
-  <FloatArea
-    primaryButton={<Button variant="primary">Submit</Button>}
-    secondaryButton={<Button>Cancel</Button>}
-    tertiaryButton={<Button>preview</Button>}
-    errorIcon={<FaExclamationCircleIcon color="DANGER" />}
-    errorText="This is the error text."
-    width="80%"
-    top={32}
-  />
+  <>
+    <Heading>書類に記載する扶養家族</Heading>
+    <FloatArea
+      primaryButton={<Button variant="primary">Submit</Button>}
+      secondaryButton={<Button>Cancel</Button>}
+      tertiaryButton={<Button>preview</Button>}
+      errorIcon={<FaExclamationCircleIcon color="DANGER" />}
+      errorText="これはfixedのFloatAreaです。"
+      top={36}
+      width="80%"
+      fixed
+    />
+    <Stack>
+      {[...Array(15)].map((_, index) => (
+        <>
+          {index === 13 && (
+            <FloatArea
+              primaryButton={<Button variant="primary">Submit</Button>}
+              secondaryButton={<Button>Cancel</Button>}
+              tertiaryButton={<Button>preview</Button>}
+              errorIcon={<FaExclamationCircleIcon color="DANGER" />}
+              errorText="これはstickyのFloatAreaです。"
+              bottom={24}
+            />
+          )}
+          <Base key={index}>
+            <p>複数の従業員項目を掛け合わせて（クロス集計）分析できる「レポート」を作成します。</p>
+          </Base>
+        </>
+      ))}
+    </Stack>
+  </>
 )
 All.storyName = 'all'
 
@@ -29,7 +55,6 @@ export const WithoutTertiary: Story = () => (
     secondaryButton={<Button>Cancel</Button>}
     errorIcon={<FaExclamationCircleIcon color="DANGER" />}
     errorText="This is the error text."
-    width="80%"
     bottom="24px"
   />
 )

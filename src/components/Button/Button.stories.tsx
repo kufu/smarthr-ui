@@ -35,7 +35,7 @@ export const _Button: Story = () => {
               ボタン
             </Button>
             <Button variant="primary" square onClick={action('clicked')}>
-              <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
+              <FaPlusCircleIcon alt="プラスボタン" />
             </Button>
           </Cluster>
           <Cluster>
@@ -54,7 +54,7 @@ export const _Button: Story = () => {
               ボタン
             </Button>
             <Button variant="primary" disabled square onClick={action('clicked')}>
-              <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
+              <FaPlusCircleIcon alt="プラスボタン" />
             </Button>
           </Cluster>
         </Stack>
@@ -193,7 +193,7 @@ export const _ButtonAnchor: Story = () => {
               ボタン
             </AnchorButton>
             <AnchorButton href="#" variant="primary" square onClick={action('clicked')}>
-              <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
+              <FaPlusCircleIcon alt="プラスボタン" />
             </AnchorButton>
           </Cluster>
           <Cluster>
@@ -211,7 +211,7 @@ export const _ButtonAnchor: Story = () => {
               ボタン
             </AnchorButton>
             <AnchorButton variant="primary" square onClick={action('clicked')}>
-              <FaPlusCircleIcon visuallyHiddenText="プラスボタン" />
+              <FaPlusCircleIcon alt="プラスボタン" />
             </AnchorButton>
           </Cluster>
         </Stack>

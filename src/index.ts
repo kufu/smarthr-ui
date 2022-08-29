@@ -63,7 +63,6 @@ export {
   AppNaviCustomTagProps,
 } from './components/AppNavi'
 export { TabBar, TabItem } from './components/TabBar'
-export { BlankImage } from './components/Image'
 export { Heading } from './components/Heading'
 export { HeadlineArea } from './components/HeadlineArea'
 export { Select } from './components/Select'

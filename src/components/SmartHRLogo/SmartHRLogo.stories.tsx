@@ -8,6 +8,9 @@ import { Text } from '../Text'
 export default {
   title: 'SmartHRLogo',
   component: SmartHRLogo,
+  parameters: {
+    withTheming: true,
+  },
 }
 
 export const All: Story = () => (
@@ -19,15 +22,15 @@ export const All: Story = () => (
     </li>
     <li>
       <Text as="p">
-        title や色、大きさを指定できます。
+        alt や色、大きさを指定できます。
         <br />
         width は height より優先されます。
       </Text>
       <LogoWrapper className="white">
-        <SmartHRLogo title="株式会社SmartHR（スマートHR）" fill="brand" />
+        <SmartHRLogo alt="株式会社SmartHR（スマートHR）" fill="brand" />
       </LogoWrapper>
       <LogoWrapper className="white">
-        <SmartHRLogo title="株式会社SmartHR（スマートHR）" fill="black" width="20em" />
+        <SmartHRLogo alt="株式会社SmartHR（スマートHR）" fill="black" width="20em" />
       </LogoWrapper>
     </li>
   </List>
