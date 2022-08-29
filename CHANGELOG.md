@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [23.0.0](https://github.com/kufu/smarthr-ui/compare/v22.4.1...v23.0.0) (2022-08-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* BlankImage を削除 (#2729)
+* DefinitionList の description に空文字を許容させる｜SHRUI-601 (#2727)
+* FloatAreaにfixed propsを追加 | SHRUI-574 (#2728)
+* 画像系コンポーネントの title,  visuallyHiddenText など、 代替テキストが期待される属性を altに変更する (#2723)
+
+### Features
+
+* DefinitionList の description に空文字を許容させる｜SHRUI-601 ([#2727](https://github.com/kufu/smarthr-ui/issues/2727)) ([a1eefe3](https://github.com/kufu/smarthr-ui/commit/a1eefe3e8ec333a765d6b113291b7514b400da40))
+* 画像系コンポーネントの title,  visuallyHiddenText など、 代替テキストが期待される属性を altに変更する ([#2723](https://github.com/kufu/smarthr-ui/issues/2723)) ([181b40d](https://github.com/kufu/smarthr-ui/commit/181b40df75c72d758afda0c8771b145166818243))
+
+
+### Bug Fixes
+
+* BlankImage を削除 ([#2729](https://github.com/kufu/smarthr-ui/issues/2729)) ([382b5a2](https://github.com/kufu/smarthr-ui/commit/382b5a294320a5b169fae061ff54da854bd2a71d))
+* FloatAreaにfixed propsを追加 | SHRUI-574 ([#2728](https://github.com/kufu/smarthr-ui/issues/2728)) ([5604b53](https://github.com/kufu/smarthr-ui/commit/5604b5319e10cbb2c36b3026d258a9eb6a1f9df4))
+
 ### [22.4.1](https://github.com/kufu/smarthr-ui/compare/v22.4.0...v22.4.1) (2022-08-23)
 
 
