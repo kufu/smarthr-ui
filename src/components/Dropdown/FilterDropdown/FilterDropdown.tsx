@@ -44,8 +44,8 @@ export const FilterDropdown: VFC<Props> = ({
         >
           絞り込み
         </Button>
-        {hasStatusText && isFiltered ? <StatusText themes={themes}>適用中</StatusText> : null}
       </DropdownTrigger>
+      {hasStatusText && isFiltered ? <StatusText themes={themes}>適用中</StatusText> : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
           <ContentLayout>{children}</ContentLayout>
