@@ -19,7 +19,7 @@
     "noEmitOnError": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
     },
   },
   "exclude": ["node_modules"],
