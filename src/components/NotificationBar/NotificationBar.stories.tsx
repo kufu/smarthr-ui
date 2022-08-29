@@ -13,6 +13,9 @@ import { TextLink as shrTextLink } from '../TextLink'
 export default {
   title: 'NotificationBar',
   component: NotificationBar,
+  parameters: {
+    withTheming: true,
+  },
 }
 
 const TextLink = styled(shrTextLink)`

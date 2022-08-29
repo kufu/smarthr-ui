@@ -113,7 +113,7 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
         size="s"
         square
       >
-        <FaTimesIcon visuallyHiddenText="閉じる" />
+        <FaTimesIcon alt="閉じる" />
       </CloseButton>
     </Wrapper>
   )

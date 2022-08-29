@@ -1,62 +1,56 @@
-import React, { HTMLAttributes, ReactNode, VFC } from 'react'
+import React, { FC, HTMLAttributes, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
-import { Heading, Props as HeadingProps } from '../Heading'
+import { Text } from '../Text'
+import { Stack } from '../Layout'
 
 export type DefinitionListItemProps = {
   term: ReactNode
-  description: ReactNode
-  termTag?: HeadingProps['tag']
+  description?: ReactNode
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DefinitionListItemProps>
 
-export const DefinitionListItem: VFC<DefinitionListItemProps & ElementProps> = ({
+export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
   term,
   description,
-  termTag = 'span',
   className = '',
 }) => {
   const theme = useTheme()
   const { definitionListItem } = useClassNames()
 
   return (
-    <Wrapper className={`${className} ${definitionListItem.wrapper}`} themes={theme}>
-      <dt className={definitionListItem.term}>
-        <Heading tag={termTag} type="subSubBlockTitle">
-          {term}
-        </Heading>
-      </dt>
-      <Content themes={theme} className={definitionListItem.description}>
+    <Stack gap={0.25} className={`${className} ${definitionListItem.wrapper}`}>
+      <Term className={definitionListItem.term}>{term}</Term>
+      <Description themes={theme} className={definitionListItem.description}>
         {description}
-      </Content>
-    </Wrapper>
+      </Description>
+    </Stack>
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color, spacingByChar } = themes
+const Term = styled(Text).attrs({
+  forwardedAs: 'dt',
+  size: 'S',
+  weight: 'bold',
+  color: 'TEXT_GREY',
+  leading: 'TIGHT',
+})``
 
-    return css`
-      padding-bottom: ${spacingByChar(0.25)};
-      border-bottom: 1px dotted ${color.BORDER};
-    `
-  }}
-`
-const Content = styled.dd<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { spacingByChar, fontSize, color } = themes
-
-    return css`
-      margin: ${spacingByChar(0.25)} 0 0;
-      padding: 0;
-      color: ${color.TEXT_BLACK};
-      font-size: ${fontSize.M};
-      line-height: 1.5;
-    `
-  }}
+const Description = styled(Text).attrs({
+  forwardedAs: 'dd',
+  size: 'M',
+  color: 'TEXT_BLACK',
+  leading: 'NORMAL',
+})<{ themes: Theme }>`
+  ${({ themes: { border, leading, space } }) => css`
+    margin-inline-start: initial;
+    padding-bottom: ${space(0.25)};
+    border-bottom: ${border.shorthand};
+    border-bottom-style: dotted;
+    min-height: ${leading.NORMAL}em;
+  `}
 `
