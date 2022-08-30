@@ -36,9 +36,9 @@ export const PrimaryButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props
 
   return (
     <PrimaryStyleButtonAnchor
+      {...props}
       themes={theme}
       className={`${className} ${primaryButtonAnchor.wrapper}`}
-      {...props}
     />
   )
 }

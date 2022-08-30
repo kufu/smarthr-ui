@@ -24,11 +24,11 @@ export const DialogBase = forwardRef<HTMLDivElement, Props & ElementProps>(
 
     return (
       <Wrapper
+        {...props}
         className={`${className} ${classNames.dialogBase.wrapper}`}
         themes={themes}
         $radius={radiusMap[radius]}
         ref={ref}
-        {...props}
       />
     )
   },

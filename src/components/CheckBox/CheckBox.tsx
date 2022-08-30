@@ -28,7 +28,7 @@ export const CheckBox: FC<Props> = ({ lineHeight = 1.5, className = '', children
 
   return (
     <Wrapper className={`${className} ${classNames.wrapper}`}>
-      <CheckBoxInput id={checkBoxId} {...props} />
+      <CheckBoxInput {...props} id={checkBoxId} />
 
       <Label
         className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}

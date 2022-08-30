@@ -94,6 +94,7 @@ export const Textarea: VFC<Props & ElementProps> = ({
   return (
     <>
       <StyledTextarea
+        {...props}
         {...(maxLength ? { onKeyUp: handleKeyup } : {})}
         textAreaWidth={textAreaWidth}
         ref={ref}
@@ -102,7 +103,6 @@ export const Textarea: VFC<Props & ElementProps> = ({
         className={`${className} ${classNames.textarea}`}
         rows={interimRows}
         onInput={handleInput}
-        {...props}
       />
       {maxLength && (
         <Counter themes={theme} className={classNames.counter}>

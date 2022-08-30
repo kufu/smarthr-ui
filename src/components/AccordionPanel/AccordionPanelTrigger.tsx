@@ -61,6 +61,7 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
   return (
     <Heading tag={headingTag} type={headingType}>
       <Button
+        {...props}
         id={`${name}-trigger`}
         className={buttonClassNames}
         aria-expanded={isExpanded}
@@ -69,7 +70,6 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
         onClick={handleClick}
         type="button"
         data-component="AccordionHeaderButton"
-        {...props}
       >
         {displayIcon && iconPosition === 'left' && <LeftIcon />}
         <TriggerTitle>{children}</TriggerTitle>

@@ -24,10 +24,10 @@ export const DialogContent: React.VFC<Props> = ({ portalParent, children, ...pro
   return createPortal(
     <DialogContentContext.Provider value={{ onClickClose }}>
       <DialogContentInner
+        {...props}
         isOpen={active}
         onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
-        {...props}
       >
         {children}
       </DialogContentInner>

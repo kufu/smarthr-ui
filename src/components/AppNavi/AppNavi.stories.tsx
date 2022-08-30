@@ -19,7 +19,7 @@ const Link: VFC<{ to: string; children: ReactNode; disabled?: boolean; className
   className = '',
   ...props
 }) => (
-  <a className={className} {...(disabled ? {} : { href: to })} {...props}>
+  <a {...props} {...(disabled ? {} : { href: to })} className={className}>
     {children}
   </a>
 )

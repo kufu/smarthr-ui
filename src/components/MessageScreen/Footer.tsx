@@ -10,7 +10,7 @@ export const Footer: VFC<ElementProps> = ({ className = '', ...props }) => {
   const { footer } = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={`${footer} ${className}`} {...props}>
+    <Wrapper {...props} themes={theme} className={`${footer} ${className}`}>
       <List themes={theme}>
         <Item href="https://smarthr.jp/help">ヘルプ</Item>
         <Item href="https://smarthr.jp/info">お知らせ</Item>
@@ -63,14 +63,14 @@ const Item: VFC<ItemProp> = ({ children, href, className = '' }) => {
   const theme = useTheme()
   return (
     <li className={className}>
-      <ItemPart themes={theme} target="_blank" rel="noopener noreferrer" href={href}>
+      <ItemAnchor themes={theme} target="_blank" rel="noopener noreferrer" href={href}>
         {children}
-      </ItemPart>
+      </ItemAnchor>
     </li>
   )
 }
 
-const ItemPart = styled.a<{ themes: Theme }>`
+const ItemAnchor = styled.a<{ themes: Theme }>`
   color: ${({ themes }) => themes.color.TEXT_WHITE};
   text-decoration: none;
 
