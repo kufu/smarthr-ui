@@ -27,7 +27,7 @@
     "@storybook/react": "^6.5.10",
     "@storybook/testing-library": "^0.0.13",
     "@storybook/theming": "^6.5.10",
-    "@swc/core": "^1.2.244",
+    "@swc/core": "^1.2.247",
     "@swc/jest": "^0.2.22",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^28.1.3",
