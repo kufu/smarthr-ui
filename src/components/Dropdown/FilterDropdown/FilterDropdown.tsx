@@ -17,11 +17,11 @@ type Props = {
   onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
+  statusText?: string
   filterButtonText?: ReactNode
-  isFilteredText?: string
-  onApplyText?: ReactNode
-  onCancelText?: ReactNode
-  onResetText?: ReactNode
+  applyButtonText?: ReactNode
+  cancelButtonText?: ReactNode
+  resetButtonText?: ReactNode
 }
 
 export const FilterDropdown: VFC<Props> = ({
@@ -32,10 +32,10 @@ export const FilterDropdown: VFC<Props> = ({
   children,
   hasStatusText,
   filterButtonText = '絞り込み',
-  isFilteredText = '適用中',
-  onApplyText = '適用',
-  onCancelText = 'キャンセル',
-  onResetText = '絞り込み条件を解除',
+  statusText = '適用中',
+  applyButtonText = '適用',
+  cancelButtonText = 'キャンセル',
+  resetButtonText = '絞り込み条件を解除',
 }: Props) => {
   const themes = useTheme()
 
@@ -47,10 +47,7 @@ export const FilterDropdown: VFC<Props> = ({
             <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
               <FaFilterIcon />
               {isFiltered ? (
-                <FaCheckCircleIcon
-                  size={8}
-                  aria-label={hasStatusText ? undefined : isFilteredText}
-                />
+                <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : statusText} />
               ) : null}
             </IsFilteredIconWrapper>
           }
@@ -58,9 +55,7 @@ export const FilterDropdown: VFC<Props> = ({
           {filterButtonText}
         </Button>
       </DropdownTrigger>
-      {hasStatusText && isFiltered ? (
-        <StatusText themes={themes}>{isFilteredText}</StatusText>
-      ) : null}
+      {hasStatusText && isFiltered ? <StatusText themes={themes}>{statusText}</StatusText> : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
           <ContentLayout>{children}</ContentLayout>
@@ -69,17 +64,17 @@ export const FilterDropdown: VFC<Props> = ({
           {onReset && (
             <ResetButtonLayout>
               <Button variant="text" size="s" prefix={<FaUndoAltIcon />} onClick={() => onReset()}>
-                {onResetText}
+                {resetButtonText}
               </Button>
             </ResetButtonLayout>
           )}
           <RightButtonLayout>
             <DropdownCloser>
-              <Button onClick={() => onCancel?.()}>{onCancelText}</Button>
+              <Button onClick={() => onCancel?.()}>{cancelButtonText}</Button>
             </DropdownCloser>
             <DropdownCloser>
               <Button value="primary" onClick={() => onApply()}>
-                {onApplyText}
+                {applyButtonText}
               </Button>
             </DropdownCloser>
           </RightButtonLayout>

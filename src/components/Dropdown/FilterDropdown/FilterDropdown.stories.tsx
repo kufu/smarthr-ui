@@ -95,11 +95,11 @@ export const Default: Story = () => {
             onApply={() => setIsFiltered3(true)}
             onReset={() => setIsFiltered3(false)}
             hasStatusText
+            statusText="Filtered"
             filterButtonText={<span>Fliter</span>}
-            isFilteredText="Filtered"
-            onCancelText={<span>Cancel</span>}
-            onResetText={<span>Reset</span>}
-            onApplyText={<span>Apply</span>}
+            applyButtonText={<span>Apply</span>}
+            cancelButtonText={<span>Cancel</span>}
+            resetButtonText={<span>Reset</span>}
           >
             <Text themes={themes}>
               You can change border text and color of the trigger button by setting `isFiltered`.
