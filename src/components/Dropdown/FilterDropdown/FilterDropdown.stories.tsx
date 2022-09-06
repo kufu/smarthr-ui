@@ -88,6 +88,24 @@ export const Default: Story = () => {
             </Text>
           </FilterDropdown>
         </dd>
+        <dt>Custom text</dt>
+        <dd>
+          <FilterDropdown
+            isFiltered={isFiltered3}
+            onApply={() => setIsFiltered3(true)}
+            onReset={() => setIsFiltered3(false)}
+            hasStatusText
+            filterButtonText={<span>Fliter</span>}
+            isFilteredText="Filtered"
+            onCancelText={<span>Cancel</span>}
+            onResetText={<span>Reset</span>}
+            onApplyText={<span>Apply</span>}
+          >
+            <Text themes={themes}>
+              You can change border text and color of the trigger button by setting `isFiltered`.
+            </Text>
+          </FilterDropdown>
+        </dd>
       </List>
     </Wrapper>
   )
