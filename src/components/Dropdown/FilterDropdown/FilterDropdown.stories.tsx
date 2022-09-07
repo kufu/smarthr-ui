@@ -96,7 +96,7 @@ export const Default: Story = () => {
             onReset={() => setIsFiltered3(false)}
             hasStatusText
             statusText="Filtered"
-            filterButtonText={<span>Fliter</span>}
+            filterButtonText={<span>Filter</span>}
             applyButtonText={<span>Apply</span>}
             cancelButtonText={<span>Cancel</span>}
             resetButtonText={<span>Reset</span>}
