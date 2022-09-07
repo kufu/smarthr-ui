@@ -17,7 +17,8 @@ type Props = {
   onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
-  statusText?: ReactNode
+  statusText?: string
+  statusTextDecorator?: (statusText: ReactNode) => ReactNode
   filterButtonText?: ReactNode
   applyButtonText?: ReactNode
   cancelButtonText?: ReactNode
@@ -32,6 +33,7 @@ export const FilterDropdown: VFC<Props> = ({
   children,
   hasStatusText,
   statusText = '適用中',
+  statusTextDecorator,
   filterButtonText = '絞り込み',
   applyButtonText = '適用',
   cancelButtonText = 'キャンセル',
@@ -39,27 +41,27 @@ export const FilterDropdown: VFC<Props> = ({
 }: Props) => {
   const themes = useTheme()
 
+  const FilteredIcons = (
+    <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
+      <FaFilterIcon />
+      {isFiltered ? (
+        <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : statusText} />
+      ) : null}
+    </IsFilteredIconWrapper>
+  )
+
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button
-          suffix={
-            <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
-              <FaFilterIcon />
-              {isFiltered ? (
-                typeof statusText === 'string' ? (
-                  <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : statusText} />
-                ) : (
-                  statusText
-                )
-              ) : null}
-            </IsFilteredIconWrapper>
-          }
-        >
+        <Button suffix={statusTextDecorator ? statusTextDecorator(FilteredIcons) : FilteredIcons}>
           {filterButtonText}
         </Button>
       </DropdownTrigger>
-      {hasStatusText && isFiltered ? <StatusText themes={themes}>{statusText}</StatusText> : null}
+      {hasStatusText && isFiltered ? (
+        <StatusText themes={themes}>
+          {statusTextDecorator ? statusTextDecorator(statusText) : statusText}
+        </StatusText>
+      ) : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
           <ContentLayout>{children}</ContentLayout>
