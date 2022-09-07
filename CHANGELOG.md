@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [23.0.1](https://github.com/kufu/smarthr-ui/compare/v23.0.0...v23.0.1) (2022-09-07)
+
+
+### Bug Fixes
+
+* eslintのruleを適用する ([#2743](https://github.com/kufu/smarthr-ui/issues/2743)) ([9a905c3](https://github.com/kufu/smarthr-ui/commit/9a905c35b60ff89b669d591999d15dc33a8ad799))
+
 ## [23.0.0](https://github.com/kufu/smarthr-ui/compare/v22.4.1...v23.0.0) (2022-08-29)
 
 
