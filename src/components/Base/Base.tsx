@@ -38,12 +38,12 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
 
     return (
       <Wrapper
+        {...props}
         className={`${className} ${classNames.base.wrapper}`}
         themes={themes}
         $radius={$radius}
         $layer={layerMap[layer]}
         ref={ref}
-        {...props}
       />
     )
   },

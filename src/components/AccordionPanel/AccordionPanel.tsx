@@ -118,10 +118,10 @@ export const AccordionPanel: React.VFC<Props & ElementProps> = ({
     >
       {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
+        {...props}
         className={`${className} ${classNames.wrapper}`}
         ref={parentRef}
         onKeyDown={handleKeyPress}
-        {...props}
       >
         {children}
       </div>

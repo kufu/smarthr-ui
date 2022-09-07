@@ -73,18 +73,18 @@ export function Select<T extends string>({
       $width={widthStyle}
     >
       <SelectBox
+        {...props}
         onChange={handleChange}
         aria-invalid={error || undefined}
         themes={theme}
         error={error}
         disabled={disabled}
-        {...props}
       >
         {hasBlank && <option value="">{blankLabel}</option>}
         {options.map((option) => {
           if ('value' in option) {
             return (
-              <option key={option.value} {...option}>
+              <option {...option} key={option.value}>
                 {option.label}
               </option>
             )
@@ -93,9 +93,9 @@ export function Select<T extends string>({
           const { options: groupedOptions, ...optgroup } = option
 
           return (
-            <optgroup key={optgroup.label} {...optgroup}>
+            <optgroup {...optgroup} key={optgroup.label}>
               {groupedOptions.map((groupedOption) => (
-                <option key={groupedOption.value} {...groupedOption}>
+                <option {...groupedOption} key={groupedOption.value}>
                   {groupedOption.label}
                 </option>
               ))}

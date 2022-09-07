@@ -32,9 +32,9 @@ export const SkeletonButtonAnchor: VFC<AnchorProps> = ({ className = '', ...prop
 
   return (
     <SkeletonStyleButtonAnchor
+      {...props}
       themes={theme}
       className={`${className} ${skeletonButtonAnchor.wrapper}`}
-      {...props}
     />
   )
 }

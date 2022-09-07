@@ -3,8 +3,7 @@ import styled from 'styled-components'
 
 import { useClassNames } from './useClassNames'
 
-import { Text } from '../Text'
-import { TextProps } from '../Text/Text'
+import { Text, TextProps } from '../Text'
 
 export type Props = {
   /** 表示するテキスト */
@@ -69,11 +68,11 @@ export const Heading: VFC<Props & ElementProps> = ({
 
   return (
     <ResetText
+      {...props}
+      {...textProps}
       forwardedAs={tag}
       leading="TIGHT"
       className={`${type} ${className} ${classNames.wrapper}`}
-      {...props}
-      {...textProps}
     />
   )
 }

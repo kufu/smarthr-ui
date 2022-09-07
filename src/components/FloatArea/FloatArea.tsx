@@ -64,11 +64,11 @@ export const FloatArea: VFC<Props & ElementProps> = ({
 
   return (
     <Base
+      {...props}
       themes={theme}
       className={`${className} ${classNames.wrapper}`}
       $width={width}
       fixed={fixed}
-      {...props}
     >
       <Cluster gap={1}>
         {tertiaryButton && tertiaryButton}

@@ -32,22 +32,20 @@ export const FilterDropdown: VFC<Props> = ({
   return (
     <Dropdown>
       <DropdownTrigger>
-        <>
-          <Button
-            suffix={
-              <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
-                <FaFilterIcon />
-                {isFiltered ? (
-                  <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : '適用中'} />
-                ) : null}
-              </IsFilteredIconWrapper>
-            }
-          >
-            絞り込み
-          </Button>
-          {hasStatusText && isFiltered ? <StatusText themes={themes}>適用中</StatusText> : null}
-        </>
+        <Button
+          suffix={
+            <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
+              <FaFilterIcon />
+              {isFiltered ? (
+                <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : '適用中'} />
+              ) : null}
+            </IsFilteredIconWrapper>
+          }
+        >
+          絞り込み
+        </Button>
       </DropdownTrigger>
+      {hasStatusText && isFiltered ? <StatusText themes={themes}>適用中</StatusText> : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
           <ContentLayout>{children}</ContentLayout>

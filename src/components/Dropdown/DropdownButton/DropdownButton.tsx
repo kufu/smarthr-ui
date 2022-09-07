@@ -1,13 +1,12 @@
 import React, { ComponentProps, HTMLAttributes, ReactElement, VFC, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
-import { AnchorButton, Button } from '../../Button'
+import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../'
 import { FaCaretDownIcon, FaEllipsisHIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
-import { BaseProps as ButtonProps } from '../../Button/types'
 
 type Actions = ActionItem | ActionItem[]
 // これでコンポーネントを絞れるわけではないが Button[variant=text] を使ってほしいんだよ! という気持ち
@@ -54,7 +53,7 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
   return (
     <Dropdown {...props}>
       <DropdownTrigger className={`${classNames.wrapper}${className && ` ${className}`}`}>
-        <Trigger
+        <TriggerButton
           suffix={triggerSuffix}
           size={triggerSize}
           disabled={disabled}
@@ -62,7 +61,7 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
           className={classNames.trigger}
         >
           {triggerLabel}
-        </Trigger>
+        </TriggerButton>
       </DropdownTrigger>
       <DropdownContent>
         <ActionList themes={themes} className={classNames.panel}>
@@ -76,7 +75,7 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
   )
 }
 
-const Trigger = styled(Button)`
+const TriggerButton = styled(Button)`
   &[aria-expanded='true'] .smarthr-ui-Icon {
     transform: rotate(0.5turn);
   }

@@ -10,7 +10,7 @@ export const DropdownScrollArea: React.VFC<Props> = ({ children, className = '',
   const classNames = useClassNames()
 
   return (
-    <Wrapper className={`${className} ${classNames.scrollArea}`} {...props}>
+    <Wrapper {...props} className={`${className} ${classNames.scrollArea}`}>
       {children}
     </Wrapper>
   )

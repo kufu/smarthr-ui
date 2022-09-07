@@ -28,11 +28,11 @@ export const CheckBoxInput: VFC<Props> = ({ mixed = false, onChange, ...props })
     <Wrapper themes={theme}>
       <Input
         {...props}
+        {...(mixed && { 'aria-checked': 'mixed' })}
         type="checkbox"
         onChange={handleChange}
         className={classNames.checkBox}
         themes={theme}
-        {...(mixed && { 'aria-checked': 'mixed' })}
       />
       <Box className={boxClassName} themes={theme} />
       <IconWrap themes={theme}>

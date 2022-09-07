@@ -72,7 +72,7 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
 
       {items &&
         items.map((item) => (
-          <RightFixedNoteItem key={item.id} {...item} onClickEdit={onClickEdit} />
+          <RightFixedNoteItem {...item} key={item.id} onClickEdit={onClickEdit} />
         ))}
 
       {textareaLabel && (

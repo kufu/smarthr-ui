@@ -34,7 +34,7 @@ export type Props = TextProps &
  * @param [children]
  */
 export const Text: React.VFC<Props> = ({ as = 'span', ...props }) => {
-  return <Wrapper as={props.emphasis ? 'em' : as} {...props} />
+  return <Wrapper {...props} as={props.emphasis ? 'em' : as} />
 }
 
 const Wrapper = styled.span<TextProps>(

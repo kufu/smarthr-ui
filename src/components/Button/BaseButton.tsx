@@ -64,7 +64,7 @@ export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
     const classNames = `${size} ${className} ${square ? 'square' : ''} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
 
     return (
-      <BaseTag className={classNames} themes={theme} {...props}>
+      <BaseTag {...props} className={classNames} themes={theme}>
         {prefix}
         <TextLabel>{children}</TextLabel>
         {suffix}
@@ -146,8 +146,8 @@ const tagStore = {
 
 export const BaseButton: VFC<ButtonProps> = buttonFactory<ButtonProps>('button')
 
-const AnchorButton: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')
-export const BaseButtonAnchor = styled(AnchorButton)`
+const ButtonAnchor: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')
+export const BaseButtonAnchor = styled(ButtonAnchor)`
   text-decoration: none;
 
   &:not([href]) {
