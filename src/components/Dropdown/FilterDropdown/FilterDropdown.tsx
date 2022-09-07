@@ -41,11 +41,11 @@ export const FilterDropdown: VFC<Props> = ({
 }: Props) => {
   const themes = useTheme()
 
-  const FilteredIcons = (
+  const FilteredIcon = (text: string) => (
     <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
       <FaFilterIcon />
       {isFiltered ? (
-        <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : statusText} />
+        <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : text} />
       ) : null}
     </IsFilteredIconWrapper>
   )
@@ -53,7 +53,13 @@ export const FilterDropdown: VFC<Props> = ({
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button suffix={statusTextDecorator ? statusTextDecorator(FilteredIcons) : FilteredIcons}>
+        <Button
+          suffix={
+            statusTextDecorator
+              ? statusTextDecorator(FilteredIcon(statusText))
+              : FilteredIcon(statusText)
+          }
+        >
           {filterButtonText}
         </Button>
       </DropdownTrigger>
