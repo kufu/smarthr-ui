@@ -17,7 +17,7 @@ type Props = {
   onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
-  statusText?: string
+  statusText?: ReactNode
   filterButtonText?: ReactNode
   applyButtonText?: ReactNode
   cancelButtonText?: ReactNode
@@ -47,7 +47,11 @@ export const FilterDropdown: VFC<Props> = ({
             <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
               <FaFilterIcon />
               {isFiltered ? (
-                <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : statusText} />
+                typeof statusText === 'string' ? (
+                  <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : statusText} />
+                ) : (
+                  statusText
+                )
               ) : null}
             </IsFilteredIconWrapper>
           }
