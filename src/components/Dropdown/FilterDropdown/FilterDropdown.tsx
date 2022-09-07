@@ -18,7 +18,7 @@ type Props = {
   children: ReactNode
   hasStatusText?: boolean
   statusText?: string
-  statusTextDecorator?: (statusText: ReactNode) => ReactNode
+  statusTextDecorator?: (statusTextNode: ReactNode) => ReactNode
   filterButtonText?: ReactNode
   applyButtonText?: ReactNode
   cancelButtonText?: ReactNode
