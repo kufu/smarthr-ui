@@ -56,9 +56,6 @@ export const _Button: Story = () => {
             <Button variant="primary" disabled square onClick={action('clicked')}>
               <FaPlusCircleIcon alt="プラスボタン" />
             </Button>
-            <Button variant="primary" loading={true} onClick={action('clicked')}>
-              ボタン
-            </Button>
           </Cluster>
         </Stack>
       </dd>
@@ -73,6 +70,9 @@ export const _Button: Story = () => {
             <Button variant="primary" disabled onClick={action('clicked')}>
               ボタン
             </Button>
+            <Button variant="primary" onClick={action('clicked')} loading>
+              ボタン
+            </Button>
           </Cluster>
           <Cluster>
             <Button variant="secondary" onClick={action('clicked')}>
@@ -81,12 +81,18 @@ export const _Button: Story = () => {
             <Button variant="secondary" disabled onClick={action('clicked')}>
               ボタン
             </Button>
+            <Button variant="secondary" onClick={action('clicked')} loading>
+              ボタン
+            </Button>
           </Cluster>
           <Cluster>
             <Button variant="danger" onClick={action('clicked')}>
               ボタン
             </Button>
             <Button variant="danger" disabled onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button variant="danger" onClick={action('clicked')} loading>
               ボタン
             </Button>
           </Cluster>
@@ -121,6 +127,11 @@ export const _Button: Story = () => {
           </Cluster>
           <Cluster>
             <Button variant="primary" disabled size="s" onClick={action('clicked')}>
+              ボタン
+            </Button>
+          </Cluster>
+          <Cluster>
+            <Button variant="primary" disabled size="s" onClick={action('clicked')} loading>
               ボタン
             </Button>
           </Cluster>
