@@ -95,8 +95,9 @@ export const Default: Story = () => {
             onApply={() => setIsFiltered3(true)}
             onReset={() => setIsFiltered3(false)}
             hasStatusText
-            statusText="Custom text"
-            statusTextDecorator={(statusText) => <span>{statusText}</span>}
+            statusTextDecorator={(statusText = 'filtered') => (
+              <span data-some-attr="true">{statusText}</span>
+            )}
             filterButtonText={<span>Filter</span>}
             applyButtonText={<span>Apply</span>}
             cancelButtonText={<span>Cancel</span>}

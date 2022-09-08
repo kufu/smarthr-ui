@@ -9,6 +9,7 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownScrollArea } from '../DropdownScrollArea'
 import { Button } from '../../Button'
 import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
+import innerText from 'react-innertext'
 
 type Props = {
   isFiltered?: boolean
@@ -17,8 +18,7 @@ type Props = {
   onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
-  statusText?: string
-  statusTextDecorator?: (statusTextNode: ReactNode) => ReactNode
+  statusTextDecorator?: (statusTextNode?: ReactNode) => ReactNode
   filterButtonText?: ReactNode
   applyButtonText?: ReactNode
   cancelButtonText?: ReactNode
@@ -32,8 +32,7 @@ export const FilterDropdown: VFC<Props> = ({
   onReset,
   children,
   hasStatusText,
-  statusText = '適用中',
-  statusTextDecorator,
+  statusTextDecorator = (text = '適用中') => text,
   filterButtonText = '絞り込み',
   applyButtonText = '適用',
   cancelButtonText = 'キャンセル',
@@ -41,32 +40,27 @@ export const FilterDropdown: VFC<Props> = ({
 }: Props) => {
   const themes = useTheme()
 
-  const FilteredIcon = (text: string) => (
-    <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
-      <FaFilterIcon />
-      {isFiltered ? (
-        <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : text} />
-      ) : null}
-    </IsFilteredIconWrapper>
-  )
-
   return (
     <Dropdown>
       <DropdownTrigger>
         <Button
-          suffix={
-            statusTextDecorator
-              ? statusTextDecorator(FilteredIcon(statusText))
-              : FilteredIcon(statusText)
-          }
+          suffix={statusTextDecorator(
+            <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
+              <FaFilterIcon />
+              {isFiltered ? (
+                <FaCheckCircleIcon
+                  size={8}
+                  aria-label={hasStatusText ? undefined : innerText(statusTextDecorator())}
+                />
+              ) : null}
+            </IsFilteredIconWrapper>,
+          )}
         >
           {filterButtonText}
         </Button>
       </DropdownTrigger>
       {hasStatusText && isFiltered ? (
-        <StatusText themes={themes}>
-          {statusTextDecorator ? statusTextDecorator(statusText) : statusText}
-        </StatusText>
+        <StatusText themes={themes}>{statusTextDecorator()}</StatusText>
       ) : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
