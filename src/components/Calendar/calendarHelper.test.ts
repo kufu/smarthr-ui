@@ -14,7 +14,7 @@ describe('calendarHelper', () => {
       expect(actual.getMonth()).toBe(0)
       expect(actual.getDate()).toBe(1)
     })
-    it('returns 1970-01-01 when date is invalid', () => {
+    it('returns 1900-01-01 when date is invalid', () => {
       // eslint-disable-next-line smarthr/best-practice-for-date
       const actual = getFromDate(new Date('aaa'))
       expect(actual.getFullYear()).toBe(1900)
