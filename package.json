@@ -13,7 +13,7 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.13",
+    "@babel/core": "^7.19.0",
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
     "@storybook/addon-a11y": "^6.5.10",
@@ -154,6 +154,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "@types/react": "^18.0.19",
-    "@babel/helper-compilation-targets": "^7.18.9"
+    "@babel/helper-compilation-targets": "^7.19.0"
   }
 }
