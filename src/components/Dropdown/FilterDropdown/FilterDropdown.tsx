@@ -20,10 +20,12 @@ type Props = {
   hasStatusText?: boolean
   decorator?: {
     status?: (text: string) => ReactNode
+    triggerButton?: (text: string) => ReactNode
   }
 }
 
 const STATUS_FILTERD_TEXT = '適用中'
+const TRIGGER_BUTTON_TEXT = '絞り込み'
 
 export const FilterDropdown: VFC<Props> = ({
   isFiltered = false,
@@ -38,6 +40,11 @@ export const FilterDropdown: VFC<Props> = ({
   const status: ReactNode = useMemo(
     () => (decorator?.status ? decorator.status(STATUS_FILTERD_TEXT) : STATUS_FILTERD_TEXT),
     [decorator?.status],
+  )
+  const triggerButton: ReactNode = useMemo(
+    () =>
+      decorator?.triggerButton ? decorator.triggerButton(TRIGGER_BUTTON_TEXT) : TRIGGER_BUTTON_TEXT,
+    [decorator?.triggerButton],
   )
 
   const filteredIconAriaLabel = useMemo(() =>
@@ -57,7 +64,7 @@ export const FilterDropdown: VFC<Props> = ({
             </IsFilteredIconWrapper>
           }
         >
-          絞り込み
+          {triggerButton}
         </Button>
       </DropdownTrigger>
       {hasStatusText && isFiltered ? <StatusText themes={themes}>{status}</StatusText> : null}
