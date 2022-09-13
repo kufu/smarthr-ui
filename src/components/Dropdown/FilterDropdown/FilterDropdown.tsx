@@ -21,14 +21,17 @@ type Props = {
   decorator?: {
     status?: (text: ReactNode) => ReactNode
     triggerButton?: (text: string) => ReactNode
+    applyButton?: (text: string) => ReactNode
+    cancelButton?: (text: string) => ReactNode
+    resetButton?: (text: string) => ReactNode
   }
-  applyButtonText?: ReactNode // TODO
-  cancelButtonText?: ReactNode // TODO
-  resetButtonText?: ReactNode // TODO
 }
 
 const STATUS_FILTERD_TEXT = '適用中'
 const TRIGGER_BUTTON_TEXT = '絞り込み'
+const APPLY_BUTTON_TEXT = '適用'
+const CANCEL_BUTTON_TEXT = 'キャンセル'
+const RESET_BUTTON_TEXT = '絞り込み条件を解除'
 
 export const FilterDropdown: VFC<Props> = ({
   isFiltered = false,
@@ -38,9 +41,6 @@ export const FilterDropdown: VFC<Props> = ({
   children,
   hasStatusText,
   decorator,
-  applyButtonText = '適用',
-  cancelButtonText = 'キャンセル',
-  resetButtonText = '絞り込み条件を解除',
 }: Props) => {
   const themes = useTheme()
   const status: ReactNode = useMemo(
@@ -52,23 +52,38 @@ export const FilterDropdown: VFC<Props> = ({
       decorator?.triggerButton ? decorator.triggerButton(TRIGGER_BUTTON_TEXT) : TRIGGER_BUTTON_TEXT,
     [decorator],
   )
+  const applyButton: ReactNode = useMemo(
+    () => (decorator?.applyButton ? decorator.applyButton(APPLY_BUTTON_TEXT) : APPLY_BUTTON_TEXT),
+    [decorator],
+  )
+  const cancelButton: ReactNode = useMemo(
+    () =>
+      decorator?.cancelButton ? decorator.cancelButton(CANCEL_BUTTON_TEXT) : CANCEL_BUTTON_TEXT,
+    [decorator],
+  )
+  const resetButton: ReactNode = useMemo(
+    () => (decorator?.resetButton ? decorator.resetButton(RESET_BUTTON_TEXT) : RESET_BUTTON_TEXT),
+    [decorator],
+  )
   // TODO: iconのWrapがうまくいっていない
   const filteredIconAriaLabel = useMemo(
     () => (hasStatusText ? undefined : innerText(status)),
     [status, hasStatusText],
   )
 
-  const FilteredIcon = (
-    <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
-      <FaFilterIcon />
-      {isFiltered ? <FaCheckCircleIcon size={8} aria-label={filteredIconAriaLabel} /> : null}
-    </IsFilteredIconWrapper>
-  )
-
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button suffix={decorator?.status ? decorator.status(FilteredIcon) : FilteredIcon}>
+        <Button
+          suffix={
+            <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
+              <FaFilterIcon />
+              {isFiltered ? (
+                <FaCheckCircleIcon size={8} aria-label={filteredIconAriaLabel} />
+              ) : null}
+            </IsFilteredIconWrapper>
+          }
+        >
           {triggerButton}
         </Button>
       </DropdownTrigger>
@@ -81,17 +96,17 @@ export const FilterDropdown: VFC<Props> = ({
           {onReset && (
             <ResetButtonLayout>
               <Button variant="text" size="s" prefix={<FaUndoAltIcon />} onClick={() => onReset()}>
-                {resetButtonText}
+                {resetButton}
               </Button>
             </ResetButtonLayout>
           )}
           <RightButtonLayout>
             <DropdownCloser>
-              <Button onClick={() => onCancel?.()}>{cancelButtonText}</Button>
+              <Button onClick={() => onCancel?.()}>{cancelButton}</Button>
             </DropdownCloser>
             <DropdownCloser>
               <Button value="primary" onClick={() => onApply()}>
-                {applyButtonText}
+                {applyButton}
               </Button>
             </DropdownCloser>
           </RightButtonLayout>
