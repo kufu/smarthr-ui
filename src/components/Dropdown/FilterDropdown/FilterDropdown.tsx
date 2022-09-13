@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { ReactNode, VFC, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
@@ -35,9 +35,14 @@ export const FilterDropdown: VFC<Props> = ({
   decorator,
 }: Props) => {
   const themes = useTheme()
-  const status: ReactNode = decorator?.status
-    ? decorator.status(STATUS_FILTERD_TEXT)
-    : STATUS_FILTERD_TEXT
+  const status: ReactNode = useMemo(
+    () => (decorator?.status ? decorator.status(STATUS_FILTERD_TEXT) : STATUS_FILTERD_TEXT),
+    [decorator?.status],
+  )
+
+  const filteredIconAriaLabel = useMemo(() =>
+    hasStatusText ? undefined : innerText(status)[(status, hasStatusText)],
+  )
 
   return (
     <Dropdown>
@@ -47,10 +52,7 @@ export const FilterDropdown: VFC<Props> = ({
             <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
               <FaFilterIcon />
               {isFiltered ? (
-                <FaCheckCircleIcon
-                  size={8}
-                  aria-label={hasStatusText ? undefined : innerText(status)}
-                />
+                <FaCheckCircleIcon size={8} aria-label={filteredIconAriaLabel} />
               ) : null}
             </IsFilteredIconWrapper>
           }
