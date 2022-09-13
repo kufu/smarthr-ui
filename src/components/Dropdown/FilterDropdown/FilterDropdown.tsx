@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { ReactNode, VFC, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
@@ -18,12 +18,17 @@ type Props = {
   onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
-  statusTextDecorator?: (statusTextNode?: ReactNode) => ReactNode
-  filterButtonText?: ReactNode
+  decorator?: {
+    status?: (text: ReactNode) => ReactNode
+    triggerButton?: (text: string) => ReactNode
+  }
   applyButtonText?: ReactNode
   cancelButtonText?: ReactNode
   resetButtonText?: ReactNode
 }
+
+const STATUS_FILTERD_TEXT = '適用中'
+const TRIGGER_BUTTON_TEXT = '絞り込み'
 
 export const FilterDropdown: VFC<Props> = ({
   isFiltered = false,
@@ -32,44 +37,42 @@ export const FilterDropdown: VFC<Props> = ({
   onReset,
   children,
   hasStatusText,
-  statusTextDecorator,
-  filterButtonText = '絞り込み',
+  decorator,
   applyButtonText = '適用',
   cancelButtonText = 'キャンセル',
   resetButtonText = '絞り込み条件を解除',
 }: Props) => {
   const themes = useTheme()
+  const status: ReactNode = useMemo(
+    () => (decorator?.status ? decorator.status(STATUS_FILTERD_TEXT) : STATUS_FILTERD_TEXT),
+    [decorator],
+  )
+  const triggerButton: ReactNode = useMemo(
+    () =>
+      decorator?.triggerButton ? decorator.triggerButton(TRIGGER_BUTTON_TEXT) : TRIGGER_BUTTON_TEXT,
+    [decorator],
+  )
+
+  const filteredIconAriaLabel = useMemo(
+    () => (hasStatusText ? undefined : innerText(status)),
+    [status, hasStatusText],
+  )
 
   const FilteredIcon = (
     <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
       <FaFilterIcon />
-      {isFiltered ? (
-        <FaCheckCircleIcon
-          size={8}
-          aria-label={
-            hasStatusText
-              ? undefined
-              : statusTextDecorator
-              ? innerText(statusTextDecorator())
-              : '適用中'
-          }
-        />
-      ) : null}
+      {isFiltered ? <FaCheckCircleIcon size={8} aria-label={filteredIconAriaLabel} /> : null}
     </IsFilteredIconWrapper>
   )
 
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button suffix={statusTextDecorator ? statusTextDecorator(FilteredIcon) : FilteredIcon}>
-          {filterButtonText}
+        <Button suffix={decorator?.status ? decorator.status(FilteredIcon) : FilteredIcon}>
+          {triggerButton}
         </Button>
       </DropdownTrigger>
-      {hasStatusText && isFiltered ? (
-        <StatusText themes={themes}>
-          {statusTextDecorator ? statusTextDecorator() : '適用中'}
-        </StatusText>
-      ) : null}
+      {hasStatusText && isFiltered ? <StatusText themes={themes}>{status}</StatusText> : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
           <ContentLayout>{children}</ContentLayout>
