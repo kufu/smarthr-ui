@@ -18,12 +18,12 @@ type Props = {
   onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
-  statusTextDecorator?: (statusTextNode?: ReactNode) => ReactNode
-  filterButtonText?: ReactNode
-  applyButtonText?: ReactNode
-  cancelButtonText?: ReactNode
-  resetButtonText?: ReactNode
+  decorator?: {
+    status?: (text: string) => ReactNode
+  }
 }
+
+const STATUS_FILTERD_TEXT = '適用中'
 
 export const FilterDropdown: VFC<Props> = ({
   isFiltered = false,
@@ -32,44 +32,33 @@ export const FilterDropdown: VFC<Props> = ({
   onReset,
   children,
   hasStatusText,
-  statusTextDecorator,
-  filterButtonText = '絞り込み',
-  applyButtonText = '適用',
-  cancelButtonText = 'キャンセル',
-  resetButtonText = '絞り込み条件を解除',
+  decorator,
 }: Props) => {
   const themes = useTheme()
-
-  const FilteredIcon = (
-    <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
-      <FaFilterIcon />
-      {isFiltered ? (
-        <FaCheckCircleIcon
-          size={8}
-          aria-label={
-            hasStatusText
-              ? undefined
-              : statusTextDecorator
-              ? innerText(statusTextDecorator())
-              : '適用中'
-          }
-        />
-      ) : null}
-    </IsFilteredIconWrapper>
-  )
+  const status: ReactNode = decorator?.status
+    ? decorator.status(STATUS_FILTERD_TEXT)
+    : STATUS_FILTERD_TEXT
 
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button suffix={statusTextDecorator ? statusTextDecorator(FilteredIcon) : FilteredIcon}>
-          {filterButtonText}
+        <Button
+          suffix={
+            <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
+              <FaFilterIcon />
+              {isFiltered ? (
+                <FaCheckCircleIcon
+                  size={8}
+                  aria-label={hasStatusText ? undefined : innerText(status)}
+                />
+              ) : null}
+            </IsFilteredIconWrapper>
+          }
+        >
+          絞り込み
         </Button>
       </DropdownTrigger>
-      {hasStatusText && isFiltered ? (
-        <StatusText themes={themes}>
-          {statusTextDecorator ? statusTextDecorator() : '適用中'}
-        </StatusText>
-      ) : null}
+      {hasStatusText && isFiltered ? <StatusText themes={themes}>{status}</StatusText> : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
           <ContentLayout>{children}</ContentLayout>
@@ -78,17 +67,17 @@ export const FilterDropdown: VFC<Props> = ({
           {onReset && (
             <ResetButtonLayout>
               <Button variant="text" size="s" prefix={<FaUndoAltIcon />} onClick={() => onReset()}>
-                {resetButtonText}
+                絞り込み条件を解除
               </Button>
             </ResetButtonLayout>
           )}
           <RightButtonLayout>
             <DropdownCloser>
-              <Button onClick={() => onCancel?.()}>{cancelButtonText}</Button>
+              <Button onClick={() => onCancel?.()}>キャンセル</Button>
             </DropdownCloser>
             <DropdownCloser>
               <Button value="primary" onClick={() => onApply()}>
-                {applyButtonText}
+                適用
               </Button>
             </DropdownCloser>
           </RightButtonLayout>
