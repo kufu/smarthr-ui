@@ -22,9 +22,9 @@ type Props = {
     status?: (text: ReactNode) => ReactNode
     triggerButton?: (text: string) => ReactNode
   }
-  applyButtonText?: ReactNode
-  cancelButtonText?: ReactNode
-  resetButtonText?: ReactNode
+  applyButtonText?: ReactNode // TODO
+  cancelButtonText?: ReactNode // TODO
+  resetButtonText?: ReactNode // TODO
 }
 
 const STATUS_FILTERD_TEXT = '適用中'
@@ -52,7 +52,7 @@ export const FilterDropdown: VFC<Props> = ({
       decorator?.triggerButton ? decorator.triggerButton(TRIGGER_BUTTON_TEXT) : TRIGGER_BUTTON_TEXT,
     [decorator],
   )
-
+  // TODO: iconのWrapがうまくいっていない
   const filteredIconAriaLabel = useMemo(
     () => (hasStatusText ? undefined : innerText(status)),
     [status, hasStatusText],
