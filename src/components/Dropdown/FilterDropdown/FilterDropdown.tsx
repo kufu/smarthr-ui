@@ -47,8 +47,9 @@ export const FilterDropdown: VFC<Props> = ({
     [decorator?.triggerButton],
   )
 
-  const filteredIconAriaLabel = useMemo(() =>
-    hasStatusText ? undefined : innerText(status)[(status, hasStatusText)],
+  const filteredIconAriaLabel = useMemo(
+    () => (hasStatusText ? undefined : innerText(status)),
+    [status, hasStatusText],
   )
 
   return (
