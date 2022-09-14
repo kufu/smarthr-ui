@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [23.0.2](https://github.com/kufu/smarthr-ui/compare/v23.0.1...v23.0.2) (2022-09-14)
+
+
+### Bug Fixes
+
+* DefinitionListItem の破線を折返しがあっても下端で揃える ([#2758](https://github.com/kufu/smarthr-ui/issues/2758)) ([6ebb0bb](https://github.com/kufu/smarthr-ui/commit/6ebb0bbeabafc8d6d4aff6e88eae8927176f00f6))
+
 ### [23.0.1](https://github.com/kufu/smarthr-ui/compare/v23.0.0...v23.0.1) (2022-09-07)
 
 
