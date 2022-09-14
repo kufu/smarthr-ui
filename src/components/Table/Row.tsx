@@ -13,7 +13,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLTableRowElement>, keyof Props>
 export const Row: React.VFC<Props & ElementProps> = ({ className = '', children, ...props }) => {
   const classNames = useClassNames().row
   return (
-    <tr className={`${className} ${classNames.wrapper}`} {...props}>
+    <tr {...props} className={`${className} ${classNames.wrapper}`}>
       {children}
     </tr>
   )

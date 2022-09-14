@@ -203,6 +203,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
         position={position}
       >
         <Layout
+          {...props}
           className={`${className} ${classNames.wrapper}`}
           style={{
             top: centering.top !== undefined ? centering.top : top,
@@ -215,7 +216,6 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
           ref={wrapperRef}
           role="dialog"
           aria-labelledby={labelId}
-          {...props}
         >
           <Box
             isWidthAuto={width === undefined}
@@ -254,7 +254,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                   onClick={onClickClose}
                   className={classNames.closeButton}
                 >
-                  <FaTimesIcon visuallyHiddenText="閉じる" />
+                  <FaTimesIcon alt="閉じる" />
                 </Button>
               </CloseButtonLayout>
             </Header>

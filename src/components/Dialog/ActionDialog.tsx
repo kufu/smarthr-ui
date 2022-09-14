@@ -45,10 +45,10 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
 
   return createPortal(
     <DialogContentInner
+      {...props}
       ariaLabelledby={titleId}
       className={className}
       onPressEscape={onPressEscape}
-      {...props}
     >
       <ActionDialogContentInner
         title={title}

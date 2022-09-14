@@ -71,10 +71,10 @@ export const BottomFixedArea: VFC<Props & ElementProps> = ({
 
   return (
     <Base
+      {...props}
       themes={theme}
       zIndex={zIndex}
       className={`${className} ${classNames.wrapper}`}
-      {...props}
     >
       <Stack>
         {description && <Text className={classNames.description}>{description}</Text>}

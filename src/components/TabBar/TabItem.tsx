@@ -38,7 +38,7 @@ export const TabItem: VFC<Props & ElementProps> = ({
   const wrapperClass = `${className} ${selected ? 'selected' : ''} ${classNames.wrapper}`
 
   return (
-    <Wrapper
+    <ItemButton
       {...props}
       role="tab"
       aria-selected={selected}
@@ -49,7 +49,7 @@ export const TabItem: VFC<Props & ElementProps> = ({
       type="button"
     >
       {children}
-    </Wrapper>
+    </ItemButton>
   )
 }
 
@@ -60,7 +60,7 @@ const resetButtonStyle = css`
   padding: 0;
   appearance: none;
 `
-const Wrapper = styled.button<{ themes: Theme }>`
+const ItemButton = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
     const { fontSize, spacingByChar, color, interaction } = themes

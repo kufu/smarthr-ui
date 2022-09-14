@@ -7,9 +7,9 @@ import { Reset } from 'styled-reset'
 import { ArgsTable, Title } from '@storybook/addon-docs'
 import { withScreenshot } from 'storycap'
 
-import { createTheme } from '../src/themes/createTheme'
+import { createTheme, CreatedTheme } from '../src/themes/createTheme'
 import { ThemeProvider as ShrThemeProvider } from '../src/themes/ThemeProvider'
-import { ThemeProvider } from 'styled-components'
+import { ThemeProvider as SCThemeProvider } from 'styled-components'
 
 export const globalTypes = {
   reset: {
@@ -56,7 +56,7 @@ export const parameters = {
          * 参考: https://github.com/reg-viz/storycap/issues/327
          */
         waitFor: () =>
-          new Promise((resolve) => {
+          new Promise<void>((resolve) => {
             const stylesId = 'smarthr-ui-storycap-disable-css-animation'
             if (!document.getElementById(stylesId)) {
               const styles = document.createElement('style')
@@ -74,7 +74,11 @@ export const parameters = {
                   }
                 `),
               )
-              document.querySelector('head').appendChild(styles)
+
+              const head = document.querySelector('head')
+              if (head) {
+                head.appendChild(styles)
+              }
             }
             resolve()
           }),
@@ -83,11 +87,22 @@ export const parameters = {
   },
 }
 
+const callThemeProvider =
+  (withThemeProvider: boolean, theme: CreatedTheme) =>
+  ({ children }) => {
+    if (withThemeProvider) {
+      return <SCThemeProvider theme={theme}>{children}</SCThemeProvider>
+    }
+
+    return <>{children}</>
+  }
+
 addDecorator((Story, context) => {
   const shouldReset = context.globals.reset === 'styled-reset'
   const theme = createTheme()
+  const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider>
       <ShrThemeProvider theme={theme}>
         {shouldReset && <Reset />}
         <Story />

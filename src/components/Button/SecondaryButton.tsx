@@ -39,9 +39,9 @@ export const SecondaryButtonAnchor: VFC<AnchorProps> = ({ className = '', ...pro
 
   return (
     <SecondaryStyleButtonAnchor
+      {...props}
       themes={theme}
       className={`${className} ${secondaryButtonAnchor.wrapper}`}
-      {...props}
     />
   )
 }

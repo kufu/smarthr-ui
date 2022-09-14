@@ -1,7 +1,7 @@
 import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { StatusLabel as StatusLabelComponent } from '../StatusLabel/StatusLabel'
+import { StatusLabel as StatusLabelComponent } from '../StatusLabel'
 import { AppNaviButton, AppNaviButtonProps } from './AppNaviButton'
 import { AppNaviAnchor, AppNaviAnchorProps } from './AppNaviAnchor'
 import { AppNaviDropdown, AppNaviDropdownProps } from './AppNaviDropdown'
@@ -40,7 +40,7 @@ export const AppNavi: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={`${className} ${classNames.wrapper}`} {...props}>
+    <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       {label && (
         <StatusLabel themes={theme} className={classNames.label}>
           {label}
@@ -87,11 +87,11 @@ export const AppNavi: VFC<Props & ElementProps> = ({
               return (
                 <li key={i} className={classNames.listItem}>
                   <AppNaviCustomTag
+                    {...buttonProps}
                     tag={tag}
                     icon={icon}
                     current={current}
                     isUnclickable={isUnclickable}
-                    {...buttonProps}
                   >
                     {buttonChildren}
                   </AppNaviCustomTag>

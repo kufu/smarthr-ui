@@ -32,9 +32,9 @@ export const DangerButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props 
 
   return (
     <DangerStyleButtonAnchor
+      {...props}
       themes={theme}
       className={`${className} ${dangerButtonAnchor.wrapper}`}
-      {...props}
     />
   )
 }

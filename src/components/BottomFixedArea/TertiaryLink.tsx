@@ -25,11 +25,11 @@ export const TertiaryLink: VFC<Props & ElementProps> = ({
 
   return (
     <Button
+      {...props}
       onClick={onClick}
       themes={theme}
       type={type}
       className={classNames.tertiaryLink}
-      {...props}
     >
       {Icon && <Icon />}
       <Text themes={theme}>{text}</Text>

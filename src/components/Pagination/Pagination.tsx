@@ -99,9 +99,9 @@ export const Pagination: VFC<Props & ElementProps> = ({
 
   return (
     <Wrapper
+      {...props}
       className={`${className} ${classNames.wrapper}`}
       aria-label="ページネーション"
-      {...props}
     >
       <Reel>
         <List className={withoutNumbers ? 'withoutNumbers' : ''} themes={theme}>

@@ -27,7 +27,7 @@ export const RadioButton: FC<Props> = ({
   if (!children) {
     return (
       <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
-        <RadioButtonInput className={classNames.radioButton} {...props} />
+        <RadioButtonInput {...props} className={classNames.radioButton} />
       </Wrapper>
     )
   }
@@ -35,7 +35,7 @@ export const RadioButton: FC<Props> = ({
   return (
     <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
       <ButtonLayout $height={`${lineHeight}em`}>
-        <RadioButtonInput id={radioButtonId} {...props} />
+        <RadioButtonInput {...props} id={radioButtonId} />
       </ButtonLayout>
 
       <Label

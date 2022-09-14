@@ -36,12 +36,12 @@ export const AppNaviCustomTag: VFC<InnerProps> = ({
       const unclickableProps = { href: undefined, disabled: true }
       return (
         <UnclickableActive
+          {...props}
+          {...unclickableProps}
           as={tag}
           $themes={theme}
           aria-current="page"
           className={classNames.customTag}
-          {...props}
-          {...unclickableProps}
         >
           {iconComponent}
           {children}
@@ -50,11 +50,11 @@ export const AppNaviCustomTag: VFC<InnerProps> = ({
     }
     return (
       <Active
+        {...props}
         as={tag}
         $themes={theme}
         aria-current="page"
         className={classNames.customTag}
-        {...props}
       >
         {iconComponent}
         {children}
@@ -63,7 +63,7 @@ export const AppNaviCustomTag: VFC<InnerProps> = ({
   }
 
   return (
-    <InActive as={tag} $themes={theme} className={classNames.customTag} {...props}>
+    <InActive {...props} as={tag} $themes={theme} className={classNames.customTag}>
       {iconComponent}
       {children}
     </InActive>

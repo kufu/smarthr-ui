@@ -6,6 +6,7 @@ import { Heading } from '../Heading'
 import { Base } from '../Base'
 import { DefinitionList } from './DefinitionList'
 import { FaExclamationCircleIcon } from '../Icon'
+import { Text } from '../Text'
 
 export default {
   title: 'DefinitionList',
@@ -19,7 +20,7 @@ const DefinitionListItems = [
   },
   {
     term: 'term 2',
-    description: 'description 2',
+    description: '-',
   },
   {
     term: 'term 3',
@@ -31,7 +32,6 @@ const DefinitionListItems = [
   },
   {
     term: 'term 5',
-    description: 'description 5',
   },
 ]
 
@@ -39,7 +39,7 @@ const Item = () => {
   const themes = useTheme()
   return (
     <Term>
-      <span>term 2</span>
+      <span>term 7</span>
       <Alert>
         <FaExclamationCircleIcon size={11} color={themes.color.DANGER} />
         <AlertText themes={themes}>error occurred</AlertText>
@@ -49,13 +49,26 @@ const Item = () => {
 }
 
 const customizedItems = [
+  ...DefinitionListItems,
   {
-    term: 'term 1',
-    description: 'description 1',
+    term: 'term 6',
+    description: 'description 6',
   },
   {
     term: <Item />,
-    description: 'description 2',
+    description: 'description 7',
+  },
+  {
+    term: '折り返されたくない要素は nowrap',
+    description: <Text whiteSpace="nowrap">so-much-longer-email-address@example.com</Text>,
+  },
+  {
+    term: '標準は折返し',
+    description: 'so-much-longer-email-address@example.com',
+  },
+  {
+    term: 'term 9',
+    description: 'description 9',
   },
 ]
 
@@ -79,7 +92,7 @@ export const All: Story = () => {
 
       <Title type="sectionTitle">customized</Title>
       <Content>
-        <DefinitionList items={customizedItems} />
+        <DefinitionList items={customizedItems} layout="double" />
       </Content>
     </Wrapper>
   )

@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components'
 import { useTheme } from '../../hooks/useTheme'
 
 export default (props: IconBaseProps) => (
-  <Wrapper viewBox="0 0 14 13" {...props}>
+  <Wrapper {...props} viewBox="0 0 14 13">
     <path
       d="M13.536 10.308v-.002L8.145.944C7.65.088 6.354.05 5.85.944l-.001.001-5.387 9.36c-.503.867.141 1.969 1.16 1.969h10.753a1.318 1.318 0 0 0 1.161-1.967Z"
       className="base"
