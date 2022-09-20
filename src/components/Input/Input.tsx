@@ -83,10 +83,10 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           </Affix>
         )}
         <StyledInput
+          {...props}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onWheel={handleWheel}
-          {...props}
           ref={innerRef}
           themes={theme}
           aria-invalid={props.error || undefined}

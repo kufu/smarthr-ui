@@ -107,13 +107,13 @@ export const TooltipPortal: VFC<Props> = ({
 
   return (
     <Container
+      {...rect}
       id={id}
       ref={portalRef}
       themes={theme}
       role="tooltip"
       className={classNames.popup}
       aria-hidden={!isVisible}
-      {...rect}
       maxWidth={isMultiLine ? parentRect?.width : undefined}
     >
       <StyledBalloon

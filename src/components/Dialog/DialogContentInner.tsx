@@ -125,6 +125,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
             className={classNames.background}
           />
           <Inner
+            {...props}
             $width={width}
             ref={innerRef}
             themes={theme}
@@ -133,7 +134,6 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
             aria-labelledby={ariaLabelledby}
             aria-modal="true"
             className={`${className} ${classNames.dialog}`}
-            {...props}
           >
             <FocusTrap firstFocusTarget={firstFocusTarget}>{children}</FocusTrap>
           </Inner>

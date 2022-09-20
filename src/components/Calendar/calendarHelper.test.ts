@@ -21,6 +21,7 @@ describe('calendarHelper', () => {
       expect(actual.getDate()).toBe(1)
     })
     it('returns 1970-01-01 when date is invalid', () => {
+      // eslint-disable-next-line smarthr/best-practice-for-date
       const actual = getFromDate(new Date('aaa'))
       expect(actual.getFullYear()).toBe(1970)
       expect(actual.getMonth()).toBe(0)
@@ -50,6 +51,7 @@ describe('calendarHelper', () => {
     })
     it('returns date of today in 50 years time when date is invalid', () => {
       const now = new Date()
+      // eslint-disable-next-line smarthr/best-practice-for-date
       const actual = getToDate(new Date('aaa'))
       expect(actual.getFullYear()).toBe(now.getFullYear() + 50)
       expect(actual.getMonth()).toBe(now.getMonth())

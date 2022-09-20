@@ -58,11 +58,11 @@ export const AccordionPanelContent: VFC<Props & ElementProps> = ({
     >
       {(status) => (
         <CollapseContainer
+          {...props}
           id={`${name}-content`}
           className={`${status} ${className} ${classNames.content}`}
           aria-labelledby={`${name}-trigger`}
           aria-hidden={!isInclude}
-          {...props}
         >
           <div ref={wrapperRef}>{children}</div>
         </CollapseContainer>

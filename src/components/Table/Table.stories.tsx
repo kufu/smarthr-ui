@@ -91,10 +91,10 @@ export const All: Story = () => (
               </label>
             </Th>
             <Th aria-sort="ascending" highlighted={true}>
-              <ClickableCellInner onClick={action('clicked')}>
+              <ClickableCellButton onClick={action('clicked')}>
                 <span style={{ lineHeight: '1.5' }}>Name</span>
-                <Arrow alt="昇順" />
-              </ClickableCellInner>
+                <ArrowIcon alt="昇順" />
+              </ClickableCellButton>
             </Th>
             <Th>Calories</Th>
             <Th>Fat (g)</Th>
@@ -142,10 +142,10 @@ export const All: Story = () => (
                 </label>
               </Th>
               <Th aria-sort="ascending" highlighted={true}>
-                <ClickableCellInner onClick={action('clicked')}>
+                <ClickableCellButton onClick={action('clicked')}>
                   <span style={{ lineHeight: '1.5' }}>Name</span>
-                  <Arrow alt="昇順" />
-                </ClickableCellInner>
+                  <ArrowIcon alt="昇順" />
+                </ClickableCellButton>
               </Th>
               <Th>Calories</Th>
               <Th>Fat (g)</Th>
@@ -276,7 +276,7 @@ const CheckBox = styled(CheckBoxComponent)`
   vertical-align: middle;
 `
 
-const ClickableCellInner = styled.button`
+const ClickableCellButton = styled.button`
   appearance: none;
   padding: 8px 16px;
   border: 0;
@@ -293,7 +293,7 @@ const ClickableCellInner = styled.button`
   font-weight: inherit;
 `
 
-const Arrow = styled(FaArrowDownIcon)`
+const ArrowIcon = styled(FaArrowDownIcon)`
   transform: rotate(180deg);
 `
 

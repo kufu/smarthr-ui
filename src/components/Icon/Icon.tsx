@@ -98,6 +98,7 @@ import {
   FaCommentSlash,
   FaComments,
   FaCompress,
+  FaCompressAlt,
   FaCopy,
   FaCreditCard,
   FaCube,
@@ -116,6 +117,7 @@ import {
   FaExclamationCircle,
   FaExclamationTriangle,
   FaExpand,
+  FaExpandAlt,
   FaExpandArrowsAlt,
   FaExternalLinkAlt,
   FaEye,
@@ -404,12 +406,12 @@ const createIcon = (SvgIcon: IconType) => {
       <Wrapper {...wrapperProps}>
         {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
         <SvgIcon
+          {...props}
           color={replacedColor}
           className={`${className} ${classNames.wrapper}`}
           role={role}
           aria-hidden={isAriaHidden || alt !== undefined || undefined}
           focusable={focusable}
-          {...props}
         />
         {text}
       </Wrapper>
@@ -531,6 +533,7 @@ export const FaCommentDotsIcon = /*#__PURE__*/ createIcon(FaCommentDots)
 export const FaCommentSlashIcon = /*#__PURE__*/ createIcon(FaCommentSlash)
 export const FaCommentsIcon = /*#__PURE__*/ createIcon(FaComments)
 export const FaCompressIcon = /*#__PURE__*/ createIcon(FaCompress)
+export const FaCompressAltIcon = /*#__PURE__*/ createIcon(FaCompressAlt)
 export const FaCopyIcon = /*#__PURE__*/ createIcon(FaCopy)
 export const FaCreditCardIcon = /*#__PURE__*/ createIcon(FaCreditCard)
 export const FaCubeIcon = /*#__PURE__*/ createIcon(FaCube)
@@ -549,6 +552,7 @@ export const FaExclamationIcon = /*#__PURE__*/ createIcon(FaExclamation)
 export const FaExclamationCircleIcon = /*#__PURE__*/ createIcon(FaExclamationCircle)
 export const FaExclamationTriangleIcon = /*#__PURE__*/ createIcon(FaExclamationTriangle)
 export const FaExpandIcon = /*#__PURE__*/ createIcon(FaExpand)
+export const FaExpandAltIcon = /*#__PURE__*/ createIcon(FaExpandAlt)
 export const FaExpandArrowsAltIcon = /*#__PURE__*/ createIcon(FaExpandArrowsAlt)
 export const FaExternalLinkAltIcon = /*#__PURE__*/ createIcon(FaExternalLinkAlt)
 export const FaEyeIcon = /*#__PURE__*/ createIcon(FaEye)

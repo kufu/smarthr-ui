@@ -28,7 +28,7 @@ export const AccordionPanelItem: VFC<Props & ElementProps> = ({
         name,
       }}
     >
-      <div className={`${className} ${classNames.item}`} {...props}>
+      <div {...props} className={`${className} ${classNames.item}`}>
         {children}
       </div>
     </AccordionPanelItemContext.Provider>

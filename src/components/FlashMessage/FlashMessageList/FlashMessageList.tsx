@@ -12,7 +12,7 @@ export const FlashMessageList: VFC = () => {
   return (
     <List themes={theme}>
       {messages.map((message) => (
-        <Item key={message.seq} {...message} />
+        <Item {...message} key={message.seq} />
       ))}
     </List>
   )

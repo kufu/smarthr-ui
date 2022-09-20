@@ -40,9 +40,9 @@ export const TextButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props })
 
   return (
     <TextStyleButtonAnchor
+      {...props}
       themes={theme}
       className={`${className} ${textButtonAnchor.wrapper}`}
-      {...props}
     />
   )
 }
