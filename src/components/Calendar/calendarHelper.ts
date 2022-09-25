@@ -30,8 +30,9 @@ export function getToDate(date?: Date): Date {
 export function getMonthArray(date: Date) {
   const startDay = dayjs(date).date(1).day()
   const lastDate = dayjs(date).add(1, 'month').date(0).date()
+  const numOfWeek = Math.ceil((lastDate + startDay) / 7)
 
-  return Array.from({ length: Math.ceil((lastDate + startDay) / 7) }).map((_, weekIndex) => {
+  return Array.from({ length: numOfWeek }).map((_, weekIndex) => {
     // 週毎の配列を形成
     const startDateInWeek = weekIndex * 7 - startDay + 1
     return Array.from({ length: 7 }).map((__, dateIndex) => {
