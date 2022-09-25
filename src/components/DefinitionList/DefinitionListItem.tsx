@@ -23,14 +23,21 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
   const { definitionListItem } = useClassNames()
 
   return (
-    <Stack gap={0.25} className={`${className} ${definitionListItem.wrapper}`}>
+    <Wrapper themes={theme} className={`${className} ${definitionListItem.wrapper}`}>
       <Term className={definitionListItem.term}>{term}</Term>
       <Description themes={theme} className={definitionListItem.description}>
         {description}
       </Description>
-    </Stack>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled(Stack).attrs({ gap: 0.25 })<{ themes: Theme }>`
+  ${({ themes: { border } }) => css`
+    border-bottom: ${border.shorthand};
+    border-bottom-style: dotted;
+  `}
+`
 
 const Term = styled(Text).attrs({
   forwardedAs: 'dt',
@@ -46,11 +53,9 @@ const Description = styled(Text).attrs({
   color: 'TEXT_BLACK',
   leading: 'NORMAL',
 })<{ themes: Theme }>`
-  ${({ themes: { border, leading, space } }) => css`
+  ${({ themes: { leading, space } }) => css`
     margin-inline-start: initial;
     padding-bottom: ${space(0.25)};
-    border-bottom: ${border.shorthand};
-    border-bottom-style: dotted;
     min-height: ${leading.NORMAL}em;
   `}
 `
