@@ -17,7 +17,7 @@ export {
   useFlashMessageList,
 } from './components/FlashMessage'
 export { FloatArea } from './components/FloatArea'
-export { Input, CurrencyInput } from './components/Input'
+export { Input, Props as InputProps, CurrencyInput } from './components/Input'
 export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
 export { TextLink } from './components/TextLink'
