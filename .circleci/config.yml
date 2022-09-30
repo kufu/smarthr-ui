@@ -23,6 +23,22 @@ commands:
     steps:
       - run: yarn test -w 1
       - run: yarn test:build-assets
+  run-a11y-test:
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-packages-reg-{{ checksum "yarn.lock" }}
+      - run: yarn install --frozen-lockfile
+      - save_cache:
+          paths:
+            - ~/.cache/yarn
+          key: yarn-packages-reg-{{ checksum "yarn.lock" }}
+      - run:
+          command: yarn storybook
+          background: true
+      - run:
+          command: yarn test-storybook:ci
   # visual regression testing
   run-reg-suit:
     steps:
@@ -87,6 +103,16 @@ jobs:
     steps:
       - install-noto-sans-cjk-jp
       - run-reg-suit
+  a11y-test:
+    docker:
+      - image: cimg/node:18.9-browsers
+        auth:
+          username: smarthrinc
+          password: $DOCKER_HUB_ACCESS_TOKEN
+    working_directory: ~/repo
+    steps:
+      - install-noto-sans-cjk-jp
+      - run-a11y-test
 
 workflows:
   multiple_builds:
@@ -96,4 +122,6 @@ workflows:
       - node-v18:
           context: smarthr-dockerhub
       - reg-suit:
+          context: smarthr-dockerhub
+      - a11y-test:
           context: smarthr-dockerhub
