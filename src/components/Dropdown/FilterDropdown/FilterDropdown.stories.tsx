@@ -95,6 +95,7 @@ export const Default: Story = () => {
             isFiltered={isFiltered4}
             onApply={() => setIsFiltered4(true)}
             onReset={() => setIsFiltered4(false)}
+            hasStatusText
             decorator={{
               status: () => <span data-wovn-enable="true">filtered</span>,
               triggerButton: () => <span data-wovn-enable="true">filter</span>,

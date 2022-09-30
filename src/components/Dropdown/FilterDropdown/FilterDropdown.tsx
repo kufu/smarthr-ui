@@ -65,7 +65,6 @@ export const FilterDropdown: VFC<Props> = ({
     () => (decorator?.resetButton ? decorator.resetButton(RESET_BUTTON_TEXT) : RESET_BUTTON_TEXT),
     [decorator],
   )
-  // TODO: iconのWrapがうまくいっていない
   const filteredIconAriaLabel = useMemo(
     () => (hasStatusText ? undefined : innerText(status)),
     [status, hasStatusText],
