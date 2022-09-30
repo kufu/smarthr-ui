@@ -19,13 +19,15 @@ type Props = {
   children: ReactNode
   hasStatusText?: boolean
   decorator?: {
-    status?: (text: ReactNode) => ReactNode
-    triggerButton?: (text: string) => ReactNode
-    applyButton?: (text: string) => ReactNode
-    cancelButton?: (text: string) => ReactNode
-    resetButton?: (text: string) => ReactNode
+    status?: DecoratorFunctionType
+    triggerButton?: DecoratorFunctionType
+    applyButton?: DecoratorFunctionType
+    cancelButton?: DecoratorFunctionType
+    resetButton?: DecoratorFunctionType
   }
 }
+
+type DecoratorFunctionType = (text: string) => ReactNode
 
 const STATUS_FILTERD_TEXT = '適用中'
 const TRIGGER_BUTTON_TEXT = '絞り込み'
@@ -40,29 +42,29 @@ export const FilterDropdown: VFC<Props> = ({
   onReset,
   children,
   hasStatusText,
-  decorator,
+  decorator = {},
 }: Props) => {
   const themes = useTheme()
   const status: ReactNode = useMemo(
-    () => (decorator?.status ? decorator.status(STATUS_FILTERD_TEXT) : STATUS_FILTERD_TEXT),
+    () => (decorator.status ? decorator.status(STATUS_FILTERD_TEXT) : STATUS_FILTERD_TEXT),
     [decorator],
   )
   const triggerButton: ReactNode = useMemo(
     () =>
-      decorator?.triggerButton ? decorator.triggerButton(TRIGGER_BUTTON_TEXT) : TRIGGER_BUTTON_TEXT,
+      decorator.triggerButton ? decorator.triggerButton(TRIGGER_BUTTON_TEXT) : TRIGGER_BUTTON_TEXT,
     [decorator],
   )
   const applyButton: ReactNode = useMemo(
-    () => (decorator?.applyButton ? decorator.applyButton(APPLY_BUTTON_TEXT) : APPLY_BUTTON_TEXT),
+    () => (decorator.applyButton ? decorator.applyButton(APPLY_BUTTON_TEXT) : APPLY_BUTTON_TEXT),
     [decorator],
   )
   const cancelButton: ReactNode = useMemo(
     () =>
-      decorator?.cancelButton ? decorator.cancelButton(CANCEL_BUTTON_TEXT) : CANCEL_BUTTON_TEXT,
+      decorator.cancelButton ? decorator.cancelButton(CANCEL_BUTTON_TEXT) : CANCEL_BUTTON_TEXT,
     [decorator],
   )
   const resetButton: ReactNode = useMemo(
-    () => (decorator?.resetButton ? decorator.resetButton(RESET_BUTTON_TEXT) : RESET_BUTTON_TEXT),
+    () => (decorator.resetButton ? decorator.resetButton(RESET_BUTTON_TEXT) : RESET_BUTTON_TEXT),
     [decorator],
   )
   const filteredIconAriaLabel = useMemo(
