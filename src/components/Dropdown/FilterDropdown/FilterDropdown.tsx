@@ -35,6 +35,9 @@ const APPLY_BUTTON_TEXT = '適用'
 const CANCEL_BUTTON_TEXT = 'キャンセル'
 const RESET_BUTTON_TEXT = '絞り込み条件を解除'
 
+const executeDecorator = (defaultText: string, decorator: DecoratorFunctionType | undefined) =>
+  decorator ? decorator(defaultText) : defaultText
+
 export const FilterDropdown: VFC<Props> = ({
   isFiltered = false,
   onApply,
@@ -44,28 +47,33 @@ export const FilterDropdown: VFC<Props> = ({
   hasStatusText,
   decorator = {},
 }: Props) => {
+  const {
+    status: statusDecorator,
+    triggerButton: triggerButtonDecorator,
+    applyButton: applyButtonDecorator,
+    cancelButton: cancelButtonDecorator,
+    resetButton: resetButtonDecorator,
+  } = decorator
   const themes = useTheme()
   const status: ReactNode = useMemo(
-    () => (decorator.status ? decorator.status(STATUS_FILTERD_TEXT) : STATUS_FILTERD_TEXT),
-    [decorator],
+    () => executeDecorator(STATUS_FILTERD_TEXT, statusDecorator),
+    [statusDecorator],
   )
   const triggerButton: ReactNode = useMemo(
-    () =>
-      decorator.triggerButton ? decorator.triggerButton(TRIGGER_BUTTON_TEXT) : TRIGGER_BUTTON_TEXT,
-    [decorator],
+    () => executeDecorator(TRIGGER_BUTTON_TEXT, triggerButtonDecorator),
+    [triggerButtonDecorator],
   )
   const applyButton: ReactNode = useMemo(
-    () => (decorator.applyButton ? decorator.applyButton(APPLY_BUTTON_TEXT) : APPLY_BUTTON_TEXT),
-    [decorator],
+    () => executeDecorator(APPLY_BUTTON_TEXT, applyButtonDecorator),
+    [applyButtonDecorator],
   )
   const cancelButton: ReactNode = useMemo(
-    () =>
-      decorator.cancelButton ? decorator.cancelButton(CANCEL_BUTTON_TEXT) : CANCEL_BUTTON_TEXT,
-    [decorator],
+    () => executeDecorator(CANCEL_BUTTON_TEXT, cancelButtonDecorator),
+    [cancelButtonDecorator],
   )
   const resetButton: ReactNode = useMemo(
-    () => (decorator.resetButton ? decorator.resetButton(RESET_BUTTON_TEXT) : RESET_BUTTON_TEXT),
-    [decorator],
+    () => executeDecorator(RESET_BUTTON_TEXT, resetButtonDecorator),
+    [resetButtonDecorator],
   )
   const filteredIconAriaLabel = useMemo(
     () => (hasStatusText ? undefined : innerText(status)),
