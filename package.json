@@ -144,7 +144,7 @@
     "test:update-snapshot": "jest --updateSnapshot",
     "test:build-assets": "node scripts/build-test.ts",
     "test-visual": "reg-suit run",
-    "test-storybook:ci": "wait-on tcp:6006 && yarn test-storybook --maxWorkers=2",
+    "test-storybook:ci": "wait-on tcp:6006 && yarn test-storybook --maxWorkers=2 --junit",
     "testcafe": "testcafe",
     "e2e": "ts-node scripts/e2e.ts",
     "e2e:dev": "testcafe chrome --host localhost --skip-js-errors",

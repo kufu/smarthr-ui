@@ -39,6 +39,8 @@ commands:
           background: true
       - run:
           command: yarn test-storybook:ci
+      - store_test_results:
+          path: junit.xml
   # visual regression testing
   run-reg-suit:
     steps:
