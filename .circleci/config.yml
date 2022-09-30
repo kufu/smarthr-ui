@@ -114,11 +114,7 @@ jobs:
       - install-noto-sans-cjk-jp
       - run-reg-suit
   a11y-test:
-    docker:
-      - image: cimg/node:18.9-browsers
-        auth:
-          username: smarthrinc
-          password: $DOCKER_HUB_ACCESS_TOKEN
+    executor: node-active-lts-browsers
     working_directory: ~/repo
     steps:
       - install-noto-sans-cjk-jp
