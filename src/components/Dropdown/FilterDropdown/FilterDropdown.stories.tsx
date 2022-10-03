@@ -17,6 +17,7 @@ export const Default: Story = () => {
   const [isFiltered, setIsFiltered] = React.useState(false)
   const [isFiltered2, setIsFiltered2] = React.useState(true)
   const [isFiltered3, setIsFiltered3] = React.useState(true)
+  const [isFiltered4, setIsFiltered4] = React.useState(true)
 
   return (
     <Wrapper themes={themes}>
@@ -82,6 +83,26 @@ export const Default: Story = () => {
             onApply={() => setIsFiltered3(true)}
             onReset={() => setIsFiltered3(false)}
             hasStatusText
+          >
+            <Text themes={themes}>
+              You can change border text and color of the trigger button by setting `isFiltered`.
+            </Text>
+          </FilterDropdown>
+        </dd>
+        <dt>Custom text</dt>
+        <dd>
+          <FilterDropdown
+            isFiltered={isFiltered4}
+            onApply={() => setIsFiltered4(true)}
+            onReset={() => setIsFiltered4(false)}
+            hasStatusText
+            decorator={{
+              status: () => <span data-wovn-enable="true">filtered</span>,
+              triggerButton: () => <span data-wovn-enable="true">filter</span>,
+              applyButton: () => <span data-wovn-enable="true">apply</span>,
+              cancelButton: () => <span data-wovn-enable="true">cancel</span>,
+              resetButton: (txt) => <span data-wovn-enable="true">{txt}</span>,
+            }}
           >
             <Text themes={themes}>
               You can change border text and color of the trigger button by setting `isFiltered`.

@@ -61,6 +61,7 @@
     "puppeteer": "^18.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-innertext": "^1.1.5",
     "react-test-renderer": "^18.2.0",
     "reg-keygen-git-hash-plugin": "^0.12.1",
     "reg-notify-github-plugin": "^0.12.1",
