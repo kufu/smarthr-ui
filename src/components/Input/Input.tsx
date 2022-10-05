@@ -28,7 +28,7 @@ type Props = {
   /** コンポーネント内の末尾に表示する内容 */
   suffix?: ReactNode
   /**
-   * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください
+   * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
    */
   placeholder?: string
 }
