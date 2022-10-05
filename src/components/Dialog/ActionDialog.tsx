@@ -13,6 +13,7 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   children,
   title,
   subtitle,
+  titleTag,
   closeText,
   actionText,
   actionTheme,
@@ -54,6 +55,7 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
         title={title}
         titleId={titleId}
         subtitle={subtitle}
+        titleTag={titleTag}
         closeText={closeText}
         actionText={actionText}
         actionTheme={actionTheme}

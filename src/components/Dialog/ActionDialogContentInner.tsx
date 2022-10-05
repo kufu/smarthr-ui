@@ -10,6 +10,7 @@ import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../Icon'
 import { Text } from '../Text'
 import { Loader } from '../Loader'
 import { useClassNames } from './useClassNames'
+import { HeadingTagTypes } from '../Heading'
 
 export type BaseProps = {
   /**
@@ -24,6 +25,10 @@ export type BaseProps = {
    * ダイアログのサブタイトル
    */
   subtitle?: ReactNode
+  /**
+   * ダイアログタイトルの HTML タグ
+   */
+  titleTag?: HeadingTagTypes
   /**
    * 閉じるボタンのラベル
    */
@@ -71,6 +76,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   title,
   titleId,
   subtitle,
+  titleTag = 'h2',
   closeText = 'キャンセル',
   actionText,
   actionTheme = 'primary',
@@ -91,13 +97,19 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
 
   return (
     <>
-      <TitleArea gap={0.25} themes={theme} ref={titleRef} className={classNames.titleArea}>
+      <TitleArea
+        gap={0.25}
+        themes={theme}
+        ref={titleRef}
+        className={classNames.titleArea}
+        as={titleTag}
+      >
         {subtitle && (
-          <Text as="p" size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
+          <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
             {subtitle}
           </Text>
         )}
-        <Text id={titleId} as="p" size="L" leading="TIGHT" className={classNames.title}>
+        <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
           {title}
         </Text>
       </TitleArea>
@@ -139,8 +151,9 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   )
 }
 
-const TitleArea = styled(Stack)<{ themes: Theme }>(
+const TitleArea = styled(Stack)<{ themes: Theme; as: HeadingTagTypes }>(
   ({ themes: { border, spacing } }) => css`
+    margin-block: unset;
     border-bottom: ${border.shorthand};
     padding: ${spacing.XS} ${spacing.S};
   `,
