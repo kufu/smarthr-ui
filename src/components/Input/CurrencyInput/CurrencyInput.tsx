@@ -23,7 +23,7 @@ type Props = Omit<
   /** 入力値がフォーマットされたときに発火するコールバック関数 */
   onFormatValue?: (value: string) => void
   /**
-   * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください
+   * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
    */
   placeholder?: string
 }
