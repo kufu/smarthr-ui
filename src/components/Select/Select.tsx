@@ -39,7 +39,7 @@ export function Select<T extends string>({
   onChange,
   onChangeValue,
   error = false,
-  width = '16.25em',
+  width = 'auto',
   hasBlank = false,
   blankLabel = '選択してください',
   size = 'default',
