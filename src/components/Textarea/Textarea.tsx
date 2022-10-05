@@ -20,7 +20,7 @@ type Props = {
   /** 行数の初期値。省略した場合は2 */
   rows?: number
   /**
-   * @deprecated placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください
+   * @deprecated placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
    */
   placeholder?: string
 }
