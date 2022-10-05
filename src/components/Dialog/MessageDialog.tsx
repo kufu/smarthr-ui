@@ -15,6 +15,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 export const MessageDialog: React.VFC<Props & ElementProps> = ({
   title,
   subtitle,
+  titleTag,
   description,
   closeText,
   onClickClose,
