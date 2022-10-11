@@ -5,12 +5,12 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useId } from '../../hooks/useId'
 import { useClassNames } from './useClassNames'
 
-import { Input, Props as InputProps } from '../Input'
+import { Input } from '../Input'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
 import { StatusLabel } from '../StatusLabel'
 import { FaExclamationCircleIcon } from '../Icon'
 
-type Props = Omit<InputProps, 'error'> & {
+type Props = Omit<React.ComponentProps<typeof Input>, 'error'> & {
   /** ラベル名 */
   label: ReactNode
   /** ラベルのタイプ */
