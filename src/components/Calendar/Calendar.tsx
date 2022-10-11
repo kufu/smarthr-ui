@@ -8,7 +8,7 @@ import { Button } from '../Button'
 import { FaCaretDownIcon, FaCaretUpIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
-import { getFromDate, getToDate, isBetween } from './calendarHelper'
+import { getFromDate, getToDate, isBetween, minDate } from './calendarHelper'
 import { useId } from '../../hooks/useId'
 
 type Props = {
@@ -24,7 +24,7 @@ type Props = {
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
-  ({ from, to, onSelectDate, value, ...props }, ref) => {
+  ({ from = minDate, to, onSelectDate, value, ...props }, ref) => {
     const themes = useTheme()
     const classNames = useClassNames()
     const now = dayjs().startOf('date')

@@ -1,5 +1,24 @@
 version: 2.1
 
+executors:
+  node-maintenance:
+    docker:
+      - image: cimg/node:16.17.1
+        auth:
+          username: smarthrinc
+          password: $DOCKER_HUB_ACCESS_TOKEN
+  node-active-lts:
+    docker:
+      - image: cimg/node:18.9.0
+        auth:
+          username: smarthrinc
+          password: $DOCKER_HUB_ACCESS_TOKEN
+  node-active-lts-browsers:
+    docker:
+      - image: cimg/node:18.9.0-browsers
+        auth:
+          username: smarthrinc
+          password: $DOCKER_HUB_ACCESS_TOKEN
 commands:
   setup-for-test:
     steps:
@@ -58,31 +77,20 @@ commands:
             fc-match --all
             rm -rf /tmp/fonts
 jobs:
-  node-v16:
-    docker:
-      - image: cimg/node:18.8
-        auth:
-          username: smarthrinc
-          password: $DOCKER_HUB_ACCESS_TOKEN
+  node-maintenance:
+    executor: node-maintenance
     steps:
       - setup-for-test
       - check-source
       - run-npm-test
-  node-v18:
-    docker:
-      - image: cimg/node:18.8
-        auth:
-          username: smarthrinc
-          password: $DOCKER_HUB_ACCESS_TOKEN
+  node-active-lts:
+    executor: node-active-lts
     steps:
       - setup-for-test
+      - check-source
       - run-npm-test
   reg-suit:
-    docker:
-      - image: cimg/node:18.8-browsers
-        auth:
-          username: smarthrinc
-          password: $DOCKER_HUB_ACCESS_TOKEN
+    executor: node-active-lts-browsers
     working_directory: ~/repo
     steps:
       - install-noto-sans-cjk-jp
@@ -91,9 +99,9 @@ jobs:
 workflows:
   multiple_builds:
     jobs:
-      - node-v16:
+      - node-maintenance:
           context: smarthr-dockerhub
-      - node-v18:
+      - node-active-lts:
           context: smarthr-dockerhub
       - reg-suit:
           context: smarthr-dockerhub

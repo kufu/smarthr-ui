@@ -14,7 +14,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
-export type Props = {
+type Props = {
   /** input 要素の `type` 値 */
   type?: HTMLInputElement['type']
   /** フォームにエラーがあるかどうか */
@@ -27,9 +27,14 @@ export type Props = {
   prefix?: ReactNode
   /** コンポーネント内の末尾に表示する内容 */
   suffix?: ReactNode
-} & Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'>
+  /**
+   * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
+   */
+  placeholder?: string
+}
+type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
-export const Input = forwardRef<HTMLInputElement, Props>(
+export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
   ({ onFocus, onBlur, autoFocus, prefix, suffix, className = '', width, ...props }, ref) => {
     const theme = useTheme()
     const innerRef = useRef<HTMLInputElement>(null)

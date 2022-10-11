@@ -40,10 +40,12 @@ type Props = {
 }
 type InputAttributes = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
+export const DEFAULT_FROM = new Date(1900, 0, 1)
+
 export const DatePicker: VFC<Props & InputAttributes> = ({
   value,
   name,
-  from,
+  from = DEFAULT_FROM,
   to,
   disabled,
   error,
