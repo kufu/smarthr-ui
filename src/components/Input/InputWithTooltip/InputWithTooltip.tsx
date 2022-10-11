@@ -11,7 +11,7 @@ type Props = ComponentProps<typeof Input> & {
 
 export const InputWithTooltip: React.FC<Props> = ({ tooltipMessage, ...props }) => {
   return (
-    <Tooltip message={tooltipMessage} tabIndex={-1} directLinkInner>
+    <Tooltip message={tooltipMessage} tabIndex={-1} ariaDescribedbyTarget="inner">
       <Input {...props} />
     </Tooltip>
   )

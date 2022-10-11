@@ -33,7 +33,7 @@ type Props = {
   /** ツールチップを表示する対象の tabIndex 値 */
   tabIndex?: number
   /** ツールチップを内包要素に紐付けるかどうか */
-  directLinkInner?: boolean
+  ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-describedby'>
 
@@ -46,7 +46,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   horizontal = 'left',
   vertical = 'bottom',
   tabIndex = 0,
-  directLinkInner = false,
+  ariaDescribedbyTarget = 'wrapper',
   className = '',
   onPointerEnter,
   onPointerLeave,
@@ -107,14 +107,15 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   }, [])
 
   const classNames = useClassNames()
-  const childrenWithProps = directLinkInner
-    ? React.cloneElement(children as ReactElement, { 'aria-describedby': tooltipId })
-    : children
+  const childrenWithProps =
+    ariaDescribedbyTarget === 'inner'
+      ? React.cloneElement(children as ReactElement, { 'aria-describedby': tooltipId })
+      : children
 
   return (
     <Wrapper
       {...props}
-      aria-describedby={!directLinkInner ? tooltipId : undefined}
+      aria-describedby={ariaDescribedbyTarget === 'wrapper' ? tooltipId : undefined}
       ref={ref}
       onPointerEnter={getHandlerToShow(onPointerEnter)}
       onTouchStart={getHandlerToShow(onTouchStart)}
