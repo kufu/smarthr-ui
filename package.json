@@ -10,6 +10,7 @@
     "polished": "^4.2.2",
     "react-draggable": "^4.4.5",
     "react-icons": "^4.4.0",
+    "react-innertext": "^1.1.5",
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
@@ -61,7 +62,6 @@
     "puppeteer": "^18.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-innertext": "^1.1.5",
     "react-test-renderer": "^18.2.0",
     "reg-keygen-git-hash-plugin": "^0.12.1",
     "reg-notify-github-plugin": "^0.12.1",
