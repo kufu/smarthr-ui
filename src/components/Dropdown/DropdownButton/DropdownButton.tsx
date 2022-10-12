@@ -1,4 +1,4 @@
-import React, { ComponentProps, HTMLAttributes, ReactElement, VFC, useMemo } from 'react'
+import React, { ComponentProps, HTMLAttributes, ReactElement, ReactNode, VFC, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
@@ -7,6 +7,7 @@ import { FaCaretDownIcon, FaEllipsisHIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+import innerText from 'react-innertext'
 
 type Actions = ActionItem | ActionItem[]
 // これでコンポーネントを絞れるわけではないが Button[variant=text] を使ってほしいんだよ! という気持ち
@@ -18,6 +19,8 @@ type ActionItem =
 type Props = {
   /** 引き金となるボタンラベル。デフォルトは “その他の操作” */
   label?: string
+  /** 引き金となるボタンラベルの装飾 */
+  labelDecorator?: (text: string) => ReactNode
   /** 操作群 */
   children: Actions
   /** 引き金となるボタンの大きさ */
@@ -30,20 +33,33 @@ type Props = {
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 export const DropdownButton: VFC<Props & ElementProps> = ({
-  label = 'その他の操作',
+  label = '適用中',
   children,
   triggerSize,
   onlyIconTrigger = false,
   disabled = false,
   className = '',
+  labelDecorator,
   ...props
 }) => {
   const themes = useTheme()
   const classNames = useClassNames()
 
+  const labelComponent = useMemo(
+    () => (labelDecorator ? labelDecorator(label) : label),
+    [label, labelDecorator],
+  )
+
   const triggerLabel = useMemo(
-    () => (onlyIconTrigger ? <FaEllipsisHIcon alt={label} /> : label),
-    [onlyIconTrigger, label],
+    () =>
+      onlyIconTrigger ? (
+        <FaEllipsisHIcon
+          alt={typeof labelComponent === 'string' ? labelComponent : innerText(labelComponent)}
+        />
+      ) : (
+        labelComponent
+      ),
+    [onlyIconTrigger, labelComponent],
   )
   const triggerSuffix = useMemo(
     () => (onlyIconTrigger ? <></> : <FaCaretDownIcon alt="候補を開く" />),
