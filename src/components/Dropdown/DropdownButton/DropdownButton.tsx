@@ -18,9 +18,7 @@ type ActionItem =
   | boolean
 type Props = {
   /** 引き金となるボタンラベル。デフォルトは “その他の操作” */
-  label?: string
-  /** 引き金となるボタンラベルの装飾 */
-  labelDecorator?: (text: string) => ReactNode
+  label?: ReactNode
   /** 操作群 */
   children: Actions
   /** 引き金となるボタンの大きさ */
@@ -39,27 +37,19 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
   onlyIconTrigger = false,
   disabled = false,
   className = '',
-  labelDecorator,
   ...props
 }) => {
   const themes = useTheme()
   const classNames = useClassNames()
 
-  const labelComponent = useMemo(
-    () => (labelDecorator ? labelDecorator(label) : label),
-    [label, labelDecorator],
-  )
-
   const triggerLabel = useMemo(
     () =>
       onlyIconTrigger ? (
-        <FaEllipsisHIcon
-          alt={typeof labelComponent === 'string' ? labelComponent : innerText(labelComponent)}
-        />
+        <FaEllipsisHIcon alt={typeof label === 'string' ? label : innerText(label)} />
       ) : (
-        labelComponent
+        label
       ),
-    [onlyIconTrigger, labelComponent],
+    [onlyIconTrigger, label],
   )
   const triggerSuffix = useMemo(
     () => (onlyIconTrigger ? <></> : <FaCaretDownIcon alt="候補を開く" />),

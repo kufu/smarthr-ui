@@ -34,21 +34,7 @@ export const Default: Story = () => (
       <Button>ヒントメッセージの設定</Button>
       <AnchorButton href="#h2-2">ログアウト</AnchorButton>
     </DropdownButton>
-    <DropdownButton
-      triggerSize="s"
-      label="操作"
-      labelDecorator={(text) => <span style={{ color: 'red' }}>{text}</span>}
-    >
-      <Button>評価を開始</Button>
-      <Button disabled>評価を確定</Button>
-      <Button>ヒントメッセージの設定</Button>
-      <AnchorButton href="#h2-2">ログアウト</AnchorButton>
-    </DropdownButton>
-    <DropdownButton
-      triggerSize="s"
-      label="操作"
-      labelDecorator={(text) => <span style={{ color: 'red' }}>{text}</span>}
-    >
+    <DropdownButton triggerSize="s" label={<span style={{ color: 'red' }}>操作</span>}>
       <Button>評価を開始</Button>
       <Button disabled>評価を確定</Button>
       <Button>ヒントメッセージの設定</Button>
