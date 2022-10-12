@@ -29,7 +29,7 @@ type Props = {
 
 type DecoratorFunctionType = (text: string) => ReactNode
 
-const STATUS_FILTERD_TEXT = '適用中'
+const STATUS_FILTERED_TEXT = '適用中'
 const TRIGGER_BUTTON_TEXT = '絞り込み'
 const APPLY_BUTTON_TEXT = '適用'
 const CANCEL_BUTTON_TEXT = 'キャンセル'
@@ -56,7 +56,7 @@ export const FilterDropdown: VFC<Props> = ({
   } = decorator
   const themes = useTheme()
   const status: ReactNode = useMemo(
-    () => executeDecorator(STATUS_FILTERD_TEXT, statusDecorator),
+    () => executeDecorator(STATUS_FILTERED_TEXT, statusDecorator),
     [statusDecorator],
   )
   const triggerButton: ReactNode = useMemo(
