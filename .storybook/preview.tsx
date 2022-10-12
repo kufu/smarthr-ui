@@ -10,12 +10,15 @@ import { withScreenshot } from 'storycap'
 import { createTheme, CreatedTheme } from '../src/themes/createTheme'
 import { ThemeProvider as ShrThemeProvider } from '../src/themes/ThemeProvider'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
+import { CssBaseLine } from 'smarthr-normalize-css'
 
 export const globalTypes = {
   reset: {
     name: 'Reset',
+    defaultValue: 'smarthr-normalize',
     toolbar: {
       items: [
+        { value: 'smarthr-normalize', title: 'smarthr-normalize' },
         { value: 'styled-reset', title: 'styled-reset' },
         { value: null, title: 'off' },
       ],
@@ -98,13 +101,18 @@ const callThemeProvider =
   }
 
 addDecorator((Story, context) => {
-  const shouldReset = context.globals.reset === 'styled-reset'
+  const resetStyle =
+    context.globals.reset === 'smarthr-normalize' ? (
+      <CssBaseLine />
+    ) : context.globals.reset === 'styled-reset' ? (
+      <Reset />
+    ) : undefined
   const theme = createTheme()
   const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
   return (
     <ThemeProvider>
       <ShrThemeProvider theme={theme}>
-        {shouldReset && <Reset />}
+        {resetStyle}
         <Story />
       </ShrThemeProvider>
     </ThemeProvider>
