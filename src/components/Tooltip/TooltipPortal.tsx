@@ -113,7 +113,7 @@ export const TooltipPortal: VFC<Props> = ({
       themes={theme}
       role="tooltip"
       className={classNames.popup}
-      aria-hidden={!isVisible}
+      // aria-hidden={!isVisible}
       maxWidth={isMultiLine ? parentRect?.width : undefined}
     >
       <StyledBalloon
