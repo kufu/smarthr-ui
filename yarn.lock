@@ -14247,6 +14247,13 @@ slice-ansi@^5.0.0:
     ansi-styles "^6.0.0"
     is-fullwidth-code-point "^4.0.0"
 
+smarthr-normalize-css@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/smarthr-normalize-css/-/smarthr-normalize-css-1.0.4.tgz#0deb8672ad91217fefee3cca16e900c5520a137c"
+  integrity sha512-az9xuSgU3fJMugZwt7pyqQbiJ5p7JX+neKsZTotULdFvMvWXrjE/BhRZrZGrCZ/qyzzI8amr7reqdSCYl0kbUA==
+  dependencies:
+    styled-reset "^4.3.4"
+
 snapdragon-node@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/snapdragon-node/-/snapdragon-node-2.1.1.tgz#6c175f86ff14bdb0724563e8f3c1b021a286853b"
@@ -14805,7 +14812,7 @@ styled-components@^5.3.6:
     shallowequal "^1.1.0"
     supports-color "^5.5.0"
 
-styled-reset@^4.4.2:
+styled-reset@^4.3.4, styled-reset@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/styled-reset/-/styled-reset-4.4.2.tgz#4da1becb2f6d22a2b22c7ee7ca09b739fe6a685f"
   integrity sha512-VzVhEZHpO/CD/F5ZllqTAY+GTaKlNDZt5mTrtPf/kXZSe85+wMkhRIiPARgvCP9/HQMk+ZGaEWk1IkdP2SYAUQ==
