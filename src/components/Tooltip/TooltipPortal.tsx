@@ -154,7 +154,7 @@ const Container = styled.div<{
       `}
       z-index: ${themes.zIndex.OVERLAP};
       &[aria-hidden='true'] {
-        display: none;
+        /* display: none; */
       }
     `
   }}
