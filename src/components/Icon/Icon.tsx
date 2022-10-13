@@ -359,7 +359,7 @@ export interface ComponentProps extends IconProps, ElementProps {
   /**アイコンの説明テキスト*/
   alt?: string
   /** アイコンと並べるテキスト */
-  text?: string
+  text?: React.ReactNode
   /** アイコンと並べるテキストとの溝 */
   iconGap?: CharRelativeSize | AbstractSize
   /** `true` のとき、アイコンを右側に表示する */
