@@ -9,8 +9,9 @@ import { withScreenshot } from 'storycap'
 
 import { createTheme, CreatedTheme } from '../src/themes/createTheme'
 import { ThemeProvider as ShrThemeProvider } from '../src/themes/ThemeProvider'
-import { ThemeProvider as SCThemeProvider } from 'styled-components'
-import { CssBaseLine } from 'smarthr-normalize-css'
+import { ThemeProvider as SCThemeProvider, createGlobalStyle } from 'styled-components'
+import CssBaseLine from 'smarthr-normalize-css'
+import { defaultLeading, defaultColor } from '../src/'
 
 export const globalTypes = {
   reset: {
@@ -103,7 +104,7 @@ const callThemeProvider =
 addDecorator((Story, context) => {
   const resetStyle =
     context.globals.reset === 'smarthr-normalize' ? (
-      <CssBaseLine />
+      <SmartHRGlobalStyle />
     ) : context.globals.reset === 'styled-reset' ? (
       <Reset />
     ) : undefined
@@ -119,3 +120,12 @@ addDecorator((Story, context) => {
   )
 })
 addDecorator(withScreenshot)
+
+const SmartHRGlobalStyle = createGlobalStyle`
+  ${CssBaseLine}
+
+  body {
+    line-height: ${defaultLeading.NORMAL};
+    color: ${defaultColor.TEXT_BLACK};
+  }
+`
