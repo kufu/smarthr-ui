@@ -16,7 +16,7 @@ type BaseProps = {
   square: boolean
   wide: boolean
   variant: Variant
-  loading: boolean
+  loading?: boolean
   className: string
   children: ReactNode
 }
