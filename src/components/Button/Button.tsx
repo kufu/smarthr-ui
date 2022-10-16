@@ -29,9 +29,11 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
   ) => {
     const classNames = useClassNames().button
 
+    const loader = <Loader size="s" type="light" variant={variant} />
     const actualPrefix = !loading && prefix
-    const actualSuffix = loading ? <Loader size="s" type="light" variant={variant} /> : suffix
+    const actualSuffix = loading && !square ? loader : suffix
     const disabledOnLoading = loading || disabled
+    const actualChildren = loading && square ? loader : children
 
     return (
       <ButtonWrapper
@@ -47,7 +49,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
         loading={loading}
       >
         <ButtonInner prefix={actualPrefix} suffix={actualSuffix}>
-          {children}
+          {actualChildren}
         </ButtonInner>
       </ButtonWrapper>
     )
@@ -58,6 +60,8 @@ Button.displayName = 'Button'
 
 const Loader = styled(shrLoader)<{ variant: Variant }>`
   ${({ variant, theme: { color } }) => css`
+    vertical-align: bottom;
+
     &&& {
       .s {
         width: 1em;
