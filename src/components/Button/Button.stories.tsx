@@ -1,5 +1,5 @@
 import { Story } from '@storybook/react'
-import React from 'react'
+import React, { useState } from 'react'
 import { action } from '@storybook/addon-actions'
 import styled, { css } from 'styled-components'
 
@@ -60,6 +60,25 @@ export const _Button: Story = () => {
               <FaPlusCircleIcon alt="プラスボタン" />
             </Button>
           </Cluster>
+          <Cluster>
+            <Button variant="primary" loading onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button variant="primary" loading prefix={<FaPlusIcon />} onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button
+              variant="primary"
+              loading
+              suffix={<FaPlusSquareIcon />}
+              onClick={action('clicked')}
+            >
+              ボタン
+            </Button>
+            <Button variant="primary" loading square onClick={action('clicked')}>
+              <FaPlusCircleIcon alt="プラスボタン" />
+            </Button>
+          </Cluster>
         </Stack>
       </dd>
 
@@ -73,9 +92,6 @@ export const _Button: Story = () => {
             <Button variant="primary" disabled onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant="primary" onClick={action('clicked')} loading>
-              ボタン
-            </Button>
           </Cluster>
           <Cluster>
             <Button variant="secondary" onClick={action('clicked')}>
@@ -84,18 +100,12 @@ export const _Button: Story = () => {
             <Button variant="secondary" disabled onClick={action('clicked')}>
               ボタン
             </Button>
-            <Button variant="secondary" onClick={action('clicked')} loading>
-              ボタン
-            </Button>
           </Cluster>
           <Cluster>
             <Button variant="danger" onClick={action('clicked')}>
               ボタン
             </Button>
             <Button variant="danger" disabled onClick={action('clicked')}>
-              ボタン
-            </Button>
-            <Button variant="danger" onClick={action('clicked')} loading>
               ボタン
             </Button>
           </Cluster>
@@ -135,6 +145,9 @@ export const _Button: Story = () => {
           </Cluster>
           <Cluster>
             <Button variant="primary" disabled size="s" onClick={action('clicked')} loading>
+              ボタン
+            </Button>
+            <Button variant="primary" square disabled size="s" onClick={action('clicked')} loading>
               ボタン
             </Button>
           </Cluster>
@@ -338,6 +351,20 @@ _ButtonAnchorControl.argTypes = {
   children: { control: 'text', defaultValue: 'ボタン' },
   prefix: { control: 'text' },
   suffix: { control: 'text' },
+}
+
+export const WithLoading: Story = (args: ButtonProps) => {
+  const [loading, setLoading] = useState(false)
+  const handleClick = () => {
+    setLoading(true)
+    setTimeout(() => setLoading(false), 1000)
+  }
+
+  return (
+    <Button {...args} prefix={<FaPlusCircleIcon />} loading={loading} onClick={handleClick}>
+      読み込み
+    </Button>
+  )
 }
 
 const Wrapper = styled.div`
