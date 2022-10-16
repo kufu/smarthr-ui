@@ -20,6 +20,8 @@ import { useClassNames } from './useClassNames'
 type Props = {
   /** ローダーの大きさ */
   size?: 's' | 'm'
+  /** 代替テキスト */
+  alt?: string
   /** 表示するメッセージ */
   text?: string
   /** コンポーネントの色調 */
@@ -29,6 +31,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const Loader: VFC<Props & ElementProps> = ({
   size = 'm',
+  alt = '処理中',
   text = '',
   type = 'primary',
   className = '',
@@ -59,7 +62,7 @@ export const Loader: VFC<Props & ElementProps> = ({
           {text}
         </Text>
       )}
-      <VisuallyHidden>Loading</VisuallyHidden>
+      <VisuallyHidden>{alt}</VisuallyHidden>
     </Wrapper>
   )
 }
