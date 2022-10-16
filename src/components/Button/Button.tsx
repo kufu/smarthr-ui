@@ -29,7 +29,8 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
   ) => {
     const classNames = useClassNames().button
 
-    const actualPrefix = loading ? <Loader size="s" type="light" variant={variant} /> : prefix
+    const actualPrefix = !loading && prefix
+    const actualSuffix = loading ? <Loader size="s" type="light" variant={variant} /> : suffix
     const disabledOnLoading = loading || disabled
 
     return (
@@ -43,8 +44,9 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
         className={`${className} ${classNames.wrapper}`}
         buttonRef={ref}
         disabled={disabledOnLoading}
+        loading={loading}
       >
-        <ButtonInner prefix={actualPrefix} suffix={suffix}>
+        <ButtonInner prefix={actualPrefix} suffix={actualSuffix}>
           {children}
         </ButtonInner>
       </ButtonWrapper>
@@ -64,9 +66,9 @@ const Loader = styled(shrLoader)<{ variant: Variant }>`
     }
 
     .light {
-      border-color: ${color.disableColor(
-        variant === 'secondary' ? color.TEXT_BLACK : color.TEXT_WHITE,
-      )};
+      border-color: ${variant === 'secondary'
+        ? color.TEXT_DISABLED
+        : color.disableColor(color.TEXT_WHITE)};
     }
   `}
 `
