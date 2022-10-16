@@ -13,6 +13,9 @@ export default {
   subcomponents: {
     AnchorButton,
   },
+  parameters: {
+    withTheming: true,
+  },
 }
 
 type ButtonProps = React.ComponentProps<typeof Button>
