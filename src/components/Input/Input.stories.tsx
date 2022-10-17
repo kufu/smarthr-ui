@@ -106,6 +106,7 @@ export const Currency: Story = () => {
     </Wrapper>
   )
 }
+Currency.storyName = 'CurrencyInput'
 
 export { Default as SearchInput } from './SearchInput/SearchInput.stories'
 

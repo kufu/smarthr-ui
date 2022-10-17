@@ -11,6 +11,7 @@ export const Default: Story = () => (
     <SearchInput tooltipMessage="氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。" />
   </Container>
 )
+Default.storyName = 'SearchInput'
 
 const Container = styled(Stack)`
   ${({ theme: { space } }) => css`
