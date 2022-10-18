@@ -2,9 +2,13 @@ import React, { HTMLAttributes, ReactNode, forwardRef, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+import { useSpacing } from '../../hooks/useSpacing'
+import { Gap } from '../Layout'
 
 type Props = {
   children: ReactNode
+  /** 境界とコンテンツの間の余白 */
+  padding?: Gap | SeparatePadding
   /** 角丸のサイズ */
   radius?: 's' | 'm'
   /** レイヤの重なり方向の高さ（影の付き方に影響する） */
@@ -21,12 +25,33 @@ export const layerMap = {
   4: 'LAYER4',
 } as const
 
+type SeparatePadding = {
+  block?: Gap
+  inline?: Gap
+}
+
 export type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
+const separatePadding = (padding: Props['padding']) => {
+  if (padding instanceof Object) {
+    return {
+      block: padding.block,
+      inline: padding.inline,
+    }
+  }
+
+  return {
+    block: padding,
+    inline: padding,
+  }
+}
+
 export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
-  ({ radius = 'm', layer = 1, className = '', ...props }, ref) => {
+  ({ padding, radius = 'm', layer = 1, className = '', ...props }, ref) => {
     const themes = useTheme()
     const classNames = useClassNames()
+
+    const $padding = separatePadding(padding)
     const $radius = useMemo(() => {
       switch (radius) {
         case 's':
@@ -41,6 +66,7 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
         {...props}
         className={`${className} ${classNames.base.wrapper}`}
         themes={themes}
+        $padding={$padding}
         $radius={$radius}
         $layer={layerMap[layer]}
         ref={ref}
@@ -51,14 +77,15 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
 
 const Wrapper = styled.div<{
   themes: Theme
+  $padding: { block?: Gap; inline?: Gap }
   $radius: string
   $layer: typeof layerMap[LayerKeys]
 }>`
-  ${({ themes: { color, shadow }, $radius, $layer }) => {
-    return css`
-      box-shadow: ${shadow[$layer]};
-      border-radius: ${$radius};
-      background-color: ${color.WHITE};
-    `
-  }}
+  ${({ themes: { color, shadow }, $padding, $radius, $layer }) => css`
+    box-shadow: ${shadow[$layer]};
+    border-radius: ${$radius};
+    background-color: ${color.WHITE};
+    ${$padding.block && `padding-block: ${useSpacing($padding.block)};`}
+    ${$padding.inline && `padding-inline: ${useSpacing($padding.inline)};`}
+  `}
 `
