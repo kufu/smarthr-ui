@@ -1,4 +1,12 @@
-import React, { HTMLAttributes, ReactNode, VFC, useLayoutEffect, useRef, useState } from 'react'
+import React, {
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+  VFC,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
@@ -24,6 +32,8 @@ type Props = {
   vertical?: BalloonProps['vertical'] | 'auto'
   /** ツールチップを表示する対象の tabIndex 値 */
   tabIndex?: number
+  /** ツールチップを内包要素に紐付けるかどうか */
+  ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-describedby'>
 
@@ -36,6 +46,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   horizontal = 'left',
   vertical = 'bottom',
   tabIndex = 0,
+  ariaDescribedbyTarget = 'wrapper',
   className = '',
   onPointerEnter,
   onPointerLeave,
@@ -96,11 +107,15 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   }, [])
 
   const classNames = useClassNames()
+  const childrenWithProps =
+    ariaDescribedbyTarget === 'inner'
+      ? React.cloneElement(children as ReactElement, { 'aria-describedby': tooltipId })
+      : children
 
   return (
     <Wrapper
       {...props}
-      aria-describedby={tooltipId}
+      aria-describedby={ariaDescribedbyTarget === 'wrapper' ? tooltipId : undefined}
       ref={ref}
       onPointerEnter={getHandlerToShow(onPointerEnter)}
       onTouchStart={getHandlerToShow(onTouchStart)}
@@ -126,7 +141,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
           />,
           portalRoot,
         )}
-      {children}
+      {childrenWithProps}
     </Wrapper>
   )
 }

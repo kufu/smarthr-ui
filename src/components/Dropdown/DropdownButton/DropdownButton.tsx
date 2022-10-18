@@ -1,4 +1,4 @@
-import React, { ComponentProps, HTMLAttributes, ReactElement, VFC, useMemo } from 'react'
+import React, { ComponentProps, HTMLAttributes, ReactElement, ReactNode, VFC, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
@@ -7,6 +7,7 @@ import { FaCaretDownIcon, FaEllipsisHIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+import innerText from 'react-innertext'
 
 type Actions = ActionItem | ActionItem[]
 // これでコンポーネントを絞れるわけではないが Button[variant=text] を使ってほしいんだよ! という気持ち
@@ -17,7 +18,7 @@ type ActionItem =
   | boolean
 type Props = {
   /** 引き金となるボタンラベル。デフォルトは “その他の操作” */
-  label?: string
+  label?: ReactNode
   /** 操作群 */
   children: Actions
   /** 引き金となるボタンの大きさ */
@@ -42,7 +43,12 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   const triggerLabel = useMemo(
-    () => (onlyIconTrigger ? <FaEllipsisHIcon alt={label} /> : label),
+    () =>
+      onlyIconTrigger ? (
+        <FaEllipsisHIcon alt={typeof label === 'string' ? label : innerText(label)} />
+      ) : (
+        label
+      ),
     [onlyIconTrigger, label],
   )
   const triggerSuffix = useMemo(

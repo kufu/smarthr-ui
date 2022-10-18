@@ -7,12 +7,16 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Input } from './Input'
 import { CurrencyInput } from './CurrencyInput'
+import { SearchInput } from './SearchInput'
 import { FaSearchIcon } from '../Icon'
 
 export default {
   title: 'Input',
   component: Input,
-  subcomponents: { CurrencyInput },
+  subcomponents: { CurrencyInput, SearchInput },
+  parameters: {
+    withTheming: true,
+  },
 }
 
 export const All: Story = () => {
@@ -102,7 +106,9 @@ export const Currency: Story = () => {
     </Wrapper>
   )
 }
-All.storyName = 'all'
+Currency.storyName = 'CurrencyInput'
+
+export { Default as SearchInput } from './SearchInput/SearchInput.stories'
 
 const List = styled.ul`
   padding: 0 24px;

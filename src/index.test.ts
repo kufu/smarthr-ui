@@ -7,7 +7,7 @@ const readFile = util.promisify(fs.readFile)
 const readdir = util.promisify(fs.readdir)
 
 const IGNORE_COMPONENTS = ['Downloader', 'ProgressBar']
-const IGNORE_INNER_DIRS = ['FlashMessage/FlashMessageList']
+const IGNORE_INNER_DIRS = ['FlashMessage/FlashMessageList', 'Input/InputWithTooltip']
 
 describe('index', () => {
   const indexPath = './src/index.ts'
