@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [23.2.0](https://github.com/kufu/smarthr-ui/compare/v23.1.0...v23.2.0) (2022-10-18)
+
+
+### Features
+
+* Loader に alt を追加 ([#2824](https://github.com/kufu/smarthr-ui/issues/2824)) ([65d8561](https://github.com/kufu/smarthr-ui/commit/65d856160942bcfb97b22675d983ce6e09d59422))
+* SearchInput を追加｜SHRUI-608 ([#2807](https://github.com/kufu/smarthr-ui/issues/2807)) ([ef0d3f3](https://github.com/kufu/smarthr-ui/commit/ef0d3f375b506cbef4ce61e38b011ac97c9c6ad0))
+
+
+### Bug Fixes
+
+* DropDownButtonのlabelにReactNodeを渡せるよう修正 ([#2816](https://github.com/kufu/smarthr-ui/issues/2816)) ([5678318](https://github.com/kufu/smarthr-ui/commit/5678318d7f8236b19860aa5bd865d9709afa0301))
+
 ## [23.1.0](https://github.com/kufu/smarthr-ui/compare/v23.0.2...v23.1.0) (2022-10-11)
 
 
