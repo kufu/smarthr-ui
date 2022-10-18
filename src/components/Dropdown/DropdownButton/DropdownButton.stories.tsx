@@ -34,7 +34,7 @@ export const Default: Story = () => (
       <Button>ヒントメッセージの設定</Button>
       <AnchorButton href="#h2-2">ログアウト</AnchorButton>
     </DropdownButton>
-    <DropdownButton triggerSize="s" label={<span>操作</span>}>
+    <DropdownButton triggerSize="s" label={<span>操作</span>} disabled>
       <Button>評価を開始</Button>
       <Button disabled>評価を確定</Button>
       <Button>ヒントメッセージの設定</Button>
