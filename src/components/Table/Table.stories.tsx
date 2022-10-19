@@ -85,9 +85,9 @@ export const All: Story = () => (
           <tr>
             <Th>
               <VisuallyHiddenText>行を選択</VisuallyHiddenText>
-              <label htmlFor="tableAllCheckBox">
+              <label htmlFor="tableAllCheckBox-table">
                 <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
-                <CheckBox name="tableAllCheckBox" checked={false} id="tableAllCheckBox" />
+                <CheckBox name="tableAllCheckBox" checked={false} id="tableAllCheckBox-table" />
               </label>
             </Th>
             <Th aria-sort="ascending" highlighted={true}>
@@ -106,12 +106,13 @@ export const All: Story = () => (
         </thead>
         <tbody>
           {data.map(({ name, calories, fat, carbs, protein }) => {
+            const checkboxId = `tableCheckBox-table-${name}`
             return (
               <tr key={name}>
                 <Td>
-                  <label htmlFor="tableCheckBox">
+                  <label htmlFor={checkboxId}>
                     <VisuallyHiddenText>{name}</VisuallyHiddenText>
-                    <CheckBox name="tableCheckBox" checked={false} id="tableCheckBox" />
+                    <CheckBox name="tableCheckBox" checked={false} id={checkboxId} />
                   </label>
                 </Td>
                 <Td>{name}</Td>
@@ -136,9 +137,13 @@ export const All: Story = () => (
             <tr>
               <Th>
                 <VisuallyHiddenText>行を選択</VisuallyHiddenText>
-                <label htmlFor="tableAllCheckBox">
+                <label htmlFor="tableAllCheckBox-tableFixedHeader">
                   <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
-                  <CheckBox name="tableAllCheckBox" checked={false} id="tableAllCheckBox" />
+                  <CheckBox
+                    name="tableAllCheckBox"
+                    checked={false}
+                    id="tableAllCheckBox-tableFixedHeader"
+                  />
                 </label>
               </Th>
               <Th aria-sort="ascending" highlighted={true}>
@@ -157,12 +162,13 @@ export const All: Story = () => (
           </thead>
           <tbody>
             {data.map(({ name, calories, fat, carbs, protein }) => {
+              const checkboxId = `tableCheckBox-tableFixedHeader-${name}`
               return (
                 <tr key={name}>
                   <Td>
-                    <label htmlFor="tableCheckBox">
+                    <label htmlFor={checkboxId}>
                       <VisuallyHiddenText>{name}</VisuallyHiddenText>
-                      <CheckBox name="tableCheckBox" checked={false} id="tableCheckBox" />
+                      <CheckBox name="tableCheckBox" checked={false} id={checkboxId} />
                     </label>
                   </Td>
                   <Td>{name}</Td>

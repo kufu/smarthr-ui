@@ -56,7 +56,7 @@ const Wrapper = styled.div`
   padding: 24px;
 `
 const GrayWrapper = styled(Wrapper)`
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.75);
 
   p,
   dt {
