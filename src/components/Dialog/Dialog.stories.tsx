@@ -809,10 +809,11 @@ export const Body以外のPortalParent: Story = () => {
   )
 }
 
-const Title = styled.p<{ themes: Theme }>`
+const Title = styled.h2<{ themes: Theme }>`
   padding: 16px 24px;
   margin: 0;
   font-size: ${({ themes }) => themes.fontSize.L};
+  font-weight: normal;
   line-height: 1;
   border-bottom: ${({ themes }) => themes.border.shorthand};
 `
@@ -848,7 +849,7 @@ const TriggerList = styled.ul`
     margin: 8px;
   }
 `
-const ModelessHeading = styled.h3`
+const ModelessHeading = styled.h2`
   font-size: 1em;
   margin: 0;
   font-weight: normal;

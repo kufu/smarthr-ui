@@ -80,7 +80,7 @@ export const All: Story = () => (
         />
       </Text>
     </li>
-    <li>
+    <li style={{ alignSelf: 'stretch' }}>
       <Text>
         <span>幅指定</span>
         <Select width="100%" options={options} />
@@ -118,7 +118,7 @@ export const All: Story = () => (
 )
 All.storyName = 'all'
 
-const List = styled(Stack).attrs({ as: 'ul' })`
+const List = styled(Stack).attrs({ as: 'ul', align: 'flex-start' })`
   list-style: none;
   padding: 0 24px;
 `

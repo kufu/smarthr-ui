@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [23.2.0](https://github.com/kufu/smarthr-ui/compare/v23.1.0...v23.2.0) (2022-10-18)
+
+
+### Features
+
+* Loader に alt を追加 ([#2824](https://github.com/kufu/smarthr-ui/issues/2824)) ([65d8561](https://github.com/kufu/smarthr-ui/commit/65d856160942bcfb97b22675d983ce6e09d59422))
+* SearchInput を追加｜SHRUI-608 ([#2807](https://github.com/kufu/smarthr-ui/issues/2807)) ([ef0d3f3](https://github.com/kufu/smarthr-ui/commit/ef0d3f375b506cbef4ce61e38b011ac97c9c6ad0))
+
+
+### Bug Fixes
+
+* DropDownButtonのlabelにReactNodeを渡せるよう修正 ([#2816](https://github.com/kufu/smarthr-ui/issues/2816)) ([5678318](https://github.com/kufu/smarthr-ui/commit/5678318d7f8236b19860aa5bd865d9709afa0301))
+
+## [23.1.0](https://github.com/kufu/smarthr-ui/compare/v23.0.2...v23.1.0) (2022-10-11)
+
+
+### Features
+
+* add compressalt icon and expandalt icon ([#2773](https://github.com/kufu/smarthr-ui/issues/2773)) ([b43c4b3](https://github.com/kufu/smarthr-ui/commit/b43c4b3656a36a34edb726516fee62c26c547df0))
+* datepicker calendar range ([#2754](https://github.com/kufu/smarthr-ui/issues/2754)) ([e87f1ef](https://github.com/kufu/smarthr-ui/commit/e87f1efb19ca1138e4237a53f0ea7583281dda37))
+* Dialog タイトルのデフォルトを h2 に統一｜SHRUI-572 ([#2805](https://github.com/kufu/smarthr-ui/issues/2805)) ([175dea9](https://github.com/kufu/smarthr-ui/commit/175dea98b1a1a37c5ee09bca8e23f9a76204e543))
+
+
+### Bug Fixes
+
+* FilterDropDownのボタンにReactNodeを渡せるように修正 ([#2755](https://github.com/kufu/smarthr-ui/issues/2755)) ([14b65f5](https://github.com/kufu/smarthr-ui/commit/14b65f501a394f37774af79f8dbd9df919d7e0dd))
+* Select の width を初期値 auto に変更 ([#2806](https://github.com/kufu/smarthr-ui/issues/2806)) ([f402cc1](https://github.com/kufu/smarthr-ui/commit/f402cc11354497b5c9cd1d36d12e7d8d20f7a432))
+
 ### [23.0.2](https://github.com/kufu/smarthr-ui/compare/v23.0.1...v23.0.2) (2022-09-14)
 
 

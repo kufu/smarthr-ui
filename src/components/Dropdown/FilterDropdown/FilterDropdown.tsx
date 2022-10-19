@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC } from 'react'
+import React, { ReactNode, VFC, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
@@ -9,6 +9,7 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownScrollArea } from '../DropdownScrollArea'
 import { Button } from '../../Button'
 import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
+import innerText from 'react-innertext'
 
 type Props = {
   isFiltered?: boolean
@@ -17,7 +18,25 @@ type Props = {
   onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
+  decorator?: {
+    status?: DecoratorFunctionType
+    triggerButton?: DecoratorFunctionType
+    applyButton?: DecoratorFunctionType
+    cancelButton?: DecoratorFunctionType
+    resetButton?: DecoratorFunctionType
+  }
 }
+
+type DecoratorFunctionType = (text: string) => ReactNode
+
+const STATUS_FILTERED_TEXT = '適用中'
+const TRIGGER_BUTTON_TEXT = '絞り込み'
+const APPLY_BUTTON_TEXT = '適用'
+const CANCEL_BUTTON_TEXT = 'キャンセル'
+const RESET_BUTTON_TEXT = '絞り込み条件を解除'
+
+const executeDecorator = (defaultText: string, decorator: DecoratorFunctionType | undefined) =>
+  decorator ? decorator(defaultText) : defaultText
 
 export const FilterDropdown: VFC<Props> = ({
   isFiltered = false,
@@ -26,8 +45,40 @@ export const FilterDropdown: VFC<Props> = ({
   onReset,
   children,
   hasStatusText,
+  decorator = {},
 }: Props) => {
+  const {
+    status: statusDecorator,
+    triggerButton: triggerButtonDecorator,
+    applyButton: applyButtonDecorator,
+    cancelButton: cancelButtonDecorator,
+    resetButton: resetButtonDecorator,
+  } = decorator
   const themes = useTheme()
+  const status: ReactNode = useMemo(
+    () => executeDecorator(STATUS_FILTERED_TEXT, statusDecorator),
+    [statusDecorator],
+  )
+  const triggerButton: ReactNode = useMemo(
+    () => executeDecorator(TRIGGER_BUTTON_TEXT, triggerButtonDecorator),
+    [triggerButtonDecorator],
+  )
+  const applyButton: ReactNode = useMemo(
+    () => executeDecorator(APPLY_BUTTON_TEXT, applyButtonDecorator),
+    [applyButtonDecorator],
+  )
+  const cancelButton: ReactNode = useMemo(
+    () => executeDecorator(CANCEL_BUTTON_TEXT, cancelButtonDecorator),
+    [cancelButtonDecorator],
+  )
+  const resetButton: ReactNode = useMemo(
+    () => executeDecorator(RESET_BUTTON_TEXT, resetButtonDecorator),
+    [resetButtonDecorator],
+  )
+  const filteredIconAriaLabel = useMemo(
+    () => (hasStatusText ? undefined : innerText(status)),
+    [status, hasStatusText],
+  )
 
   return (
     <Dropdown>
@@ -37,15 +88,15 @@ export const FilterDropdown: VFC<Props> = ({
             <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
               <FaFilterIcon />
               {isFiltered ? (
-                <FaCheckCircleIcon size={8} aria-label={hasStatusText ? undefined : '適用中'} />
+                <FaCheckCircleIcon size={8} aria-label={filteredIconAriaLabel} />
               ) : null}
             </IsFilteredIconWrapper>
           }
         >
-          絞り込み
+          {triggerButton}
         </Button>
       </DropdownTrigger>
-      {hasStatusText && isFiltered ? <StatusText themes={themes}>適用中</StatusText> : null}
+      {hasStatusText && isFiltered ? <StatusText themes={themes}>{status}</StatusText> : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
           <ContentLayout>{children}</ContentLayout>
@@ -54,17 +105,17 @@ export const FilterDropdown: VFC<Props> = ({
           {onReset && (
             <ResetButtonLayout>
               <Button variant="text" size="s" prefix={<FaUndoAltIcon />} onClick={() => onReset()}>
-                絞り込み条件を解除
+                {resetButton}
               </Button>
             </ResetButtonLayout>
           )}
           <RightButtonLayout>
             <DropdownCloser>
-              <Button onClick={() => onCancel?.()}>キャンセル</Button>
+              <Button onClick={() => onCancel?.()}>{cancelButton}</Button>
             </DropdownCloser>
             <DropdownCloser>
               <Button value="primary" onClick={() => onApply()}>
-                適用
+                {applyButton}
               </Button>
             </DropdownCloser>
           </RightButtonLayout>

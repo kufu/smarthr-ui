@@ -8,6 +8,7 @@ import { useOffsetHeight } from './dialogHelper'
 import { Stack } from '../Layout'
 import { Button } from '../Button'
 import { Text } from '../Text'
+import { HeadingTagTypes } from '../Heading'
 
 export type BaseProps = {
   /**
@@ -18,6 +19,10 @@ export type BaseProps = {
    * ダイアログのサブタイトル
    */
   subtitle?: React.ReactNode
+  /**
+   * ダイアログタイトルの HTML タグ
+   */
+  titleTag?: HeadingTagTypes
   /**
    * ダイアログの説明
    */
@@ -36,6 +41,7 @@ export type MessageDialogContentInnerProps = BaseProps & {
 export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   title,
   subtitle,
+  titleTag = 'h2',
   titleId,
   description,
   closeText = '閉じる',
@@ -47,13 +53,19 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
 
   return (
     <>
-      <TitleArea gap={0.25} themes={theme} ref={titleRef} className={classNames.titleArea}>
+      <TitleArea
+        gap={0.25}
+        themes={theme}
+        ref={titleRef}
+        className={classNames.titleArea}
+        as={titleTag}
+      >
         {subtitle && (
-          <Text as="p" size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
+          <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
             {subtitle}
           </Text>
         )}
-        <Text as="p" id={titleId} size="L" leading="TIGHT" className={classNames.title}>
+        <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
           {title}
         </Text>
       </TitleArea>
@@ -69,8 +81,9 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   )
 }
 
-const TitleArea = styled(Stack)<{ themes: Theme }>(
+const TitleArea = styled(Stack)<{ themes: Theme; as: HeadingTagTypes }>(
   ({ themes: { border, spacing } }) => css`
+    margin-block: unset;
     border-bottom: ${border.shorthand};
     padding: ${spacing.XS} ${spacing.S};
   `,
