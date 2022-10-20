@@ -1,5 +1,5 @@
 import React, { HTMLAttributes, useMemo } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
@@ -23,6 +23,8 @@ type Props = {
   type: typeof messageTypes[number]
   /** 強調するかどうか */
   bold?: boolean
+  /** スライドインするかどうか */
+  animate?: boolean
   /** メッセージ */
   message: React.ReactNode
   /** 閉じるボタン押下時に発火させる関数 */
@@ -145,19 +147,36 @@ export const NotificationBar: React.FC<Props & ElementProps> = ({
 const Wrapper = styled.div<{
   themes: Theme
   colorSet: { fgColor?: string; bgColor?: string }
+  animate?: boolean
 }>(
   ({
-    themes: { color, spacingByChar },
+    themes: { color, fontSize, leading, space },
     colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
+    animate,
   }) => css`
     display: flex;
-    gap: ${spacingByChar(1)};
+    gap: ${space(1)};
     align-items: center;
     background-color: ${bgColor};
-    padding: ${spacingByChar(0.75)};
+    padding: ${space(0.75)};
     color: ${fgColor};
+    ${animate &&
+    css`
+      /* 1行の場合の高さ分だけスライドさせる */
+      animation: ${slideIn(`calc(${fontSize.M} * ${leading.TIGHT} + ${space(1.5)})`)} 0.2s ease-out;
+    `}
   `,
 )
+const slideIn = (translateLength: string) => keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * ${translateLength}));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`
 const MessageArea = styled.div<{
   themes: Theme
 }>(
