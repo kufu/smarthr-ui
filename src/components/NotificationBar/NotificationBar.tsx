@@ -163,6 +163,7 @@ const Wrapper = styled.div<{
     ${animate &&
     css`
       /* 1行の場合の高さ分だけスライドさせる */
+      /* stylelint-disable-next-line */
       animation: ${slideIn(`calc(${fontSize.M} * ${leading.TIGHT} + ${space(1.5)})`)} 0.2s ease-out;
     `}
   `,
