@@ -1,7 +1,7 @@
 import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme'
 import { Heading } from '../Heading'
 import { Base } from '../Base'
 import { DefinitionList } from './DefinitionList'
@@ -11,6 +11,9 @@ import { Text } from '../Text'
 export default {
   title: 'DefinitionList',
   component: DefinitionList,
+  parameters: {
+    withTheming: true,
+  },
 }
 
 const DefinitionListItems = [
@@ -42,7 +45,7 @@ const Item = () => {
       <span>term 7</span>
       <Alert>
         <FaExclamationCircleIcon size={11} color={themes.color.DANGER} />
-        <AlertText themes={themes}>error occurred</AlertText>
+        <AlertText>error occurred</AlertText>
       </Alert>
     </Term>
   )
@@ -118,8 +121,8 @@ const Alert = styled.span`
   align-items: center;
   margin-left: 8px;
 `
-const AlertText = styled.span<{ themes: Theme }>`
+const AlertText = styled.span`
   margin-left: 4px;
-  color: ${({ themes }) => themes.color.TEXT_BLACK};
-  font-size: ${({ themes }) => themes.fontSize.S};
+  color: ${({ theme }) => theme.color.TEXT_BLACK};
+  font-size: ${({ theme }) => theme.fontSize.S};
 `
