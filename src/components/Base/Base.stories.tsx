@@ -16,7 +16,7 @@ export const BaseStory: Story = () => {
   const themes = useTheme()
 
   return (
-    <List>
+    <DescriptionList>
       <dt>padding</dt>
       <dd>
         <List>
@@ -66,7 +66,7 @@ export const BaseStory: Story = () => {
           ))}
         </List>
       </dd>
-    </List>
+    </DescriptionList>
   )
 }
 BaseStory.storyName = 'Base'
@@ -91,6 +91,11 @@ export const DialogBaseStory: Story = () => (
 )
 DialogBaseStory.storyName = 'DialogBase'
 
+const DescriptionList = styled.dl`
+  padding: 24px;
+  background-color: #eee;
+`
+
 const List = styled.ul`
   margin: 0;
   padding: 24px;
@@ -101,6 +106,7 @@ const List = styled.ul`
     margin-top: 24px;
   }
 `
+
 const Bold = styled.span`
   font-weight: bold;
 `

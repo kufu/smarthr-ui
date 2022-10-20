@@ -85,9 +85,9 @@ export const All: Story = () => (
           <tr>
             <Th>
               <VisuallyHiddenText>行を選択</VisuallyHiddenText>
-              <label htmlFor="tableAllCheckBox">
+              <label>
                 <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
-                <CheckBox name="tableAllCheckBox" checked={false} id="tableAllCheckBox" />
+                <CheckBox name="tableAllCheckBox" checked={false} />
               </label>
             </Th>
             <Th aria-sort="ascending" highlighted={true}>
@@ -105,26 +105,25 @@ export const All: Story = () => (
           <BulkActionRow>Bulk action area</BulkActionRow>
         </thead>
         <tbody>
-          {data.map(({ name, calories, fat, carbs, protein }) => {
-            return (
-              <tr key={name}>
-                <Td>
-                  <label htmlFor="tableCheckBox">
-                    <VisuallyHiddenText>{name}</VisuallyHiddenText>
-                    <CheckBox name="tableCheckBox" checked={false} id="tableCheckBox" />
-                  </label>
-                </Td>
-                <Td>{name}</Td>
-                <Td>{calories}</Td>
-                <Td>{fat}</Td>
-                <Td>{carbs}</Td>
-                <Td>{protein}</Td>
-                <Td>
-                  <Button size="s">Button</Button>
-                </Td>
-              </tr>
-            )
-          })}
+          {data.map(({ name, calories, fat, carbs, protein }) => (
+            <tr key={name}>
+              <Td>
+                <label>
+                  <VisuallyHiddenText>{name}</VisuallyHiddenText>
+                  <CheckBox name="tableCheckBox" checked={false} />
+                </label>
+              </Td>
+              <Td>{name}</Td>
+              <Td>{calories}</Td>
+              <Td>{fat}</Td>
+              <Td>{carbs}</Td>
+              <Td>{protein}</Td>
+              <Td>
+                <Button size="s">Button</Button>
+              </Td>
+            </tr>
+          ))}
+          )
         </tbody>
       </Table>
     </li>
@@ -136,9 +135,9 @@ export const All: Story = () => (
             <tr>
               <Th>
                 <VisuallyHiddenText>行を選択</VisuallyHiddenText>
-                <label htmlFor="tableAllCheckBox">
+                <label>
                   <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
-                  <CheckBox name="tableAllCheckBox" checked={false} id="tableAllCheckBox" />
+                  <CheckBox name="tableAllCheckBox" checked={false} />
                 </label>
               </Th>
               <Th aria-sort="ascending" highlighted={true}>
@@ -156,26 +155,25 @@ export const All: Story = () => (
             <BulkActionRow>Bulk action area</BulkActionRow>
           </thead>
           <tbody>
-            {data.map(({ name, calories, fat, carbs, protein }) => {
-              return (
-                <tr key={name}>
-                  <Td>
-                    <label htmlFor="tableCheckBox">
-                      <VisuallyHiddenText>{name}</VisuallyHiddenText>
-                      <CheckBox name="tableCheckBox" checked={false} id="tableCheckBox" />
-                    </label>
-                  </Td>
-                  <Td>{name}</Td>
-                  <Td>{calories}</Td>
-                  <Td>{fat}</Td>
-                  <Td>{carbs}</Td>
-                  <Td>{protein}</Td>
-                  <Td>
-                    <Button size="s">Button</Button>
-                  </Td>
-                </tr>
-              )
-            })}
+            {data.map(({ name, calories, fat, carbs, protein }) => (
+              <tr key={name}>
+                <Td>
+                  <label>
+                    <VisuallyHiddenText>{name}</VisuallyHiddenText>
+                    <CheckBox name="tableCheckBox" checked={false} />
+                  </label>
+                </Td>
+                <Td>{name}</Td>
+                <Td>{calories}</Td>
+                <Td>{fat}</Td>
+                <Td>{carbs}</Td>
+                <Td>{protein}</Td>
+                <Td>
+                  <Button size="s">Button</Button>
+                </Td>
+              </tr>
+            ))}
+            )
           </tbody>
         </Table>
       </div>

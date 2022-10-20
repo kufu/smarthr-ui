@@ -11,7 +11,8 @@ import { AccordionPanel } from './AccordionPanel'
 import { AccordionPanelItem } from './AccordionPanelItem'
 import { AccordionPanelTrigger } from './AccordionPanelTrigger'
 import { AccordionPanelContent } from './AccordionPanelContent'
-import { FieldSet } from '../FieldSet'
+import { FormGroup } from '../FormGroup'
+import { Input } from '../Input'
 
 export default {
   title: 'AccordionPanel',
@@ -26,17 +27,34 @@ export default {
 const arr = Array.from({ length: 3 })
 // prettier-ignore
 const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-const content = () => (
-  <Stack>
-    <div>{lorem}</div>
-    <div>
-      <FieldSet label="Name" required={true} />
-    </div>
-    <div>
-      <FieldSet label="Email" />
-    </div>
-  </Stack>
-)
+const content = () => {
+  const id = Math.random()
+  return (
+    <Stack>
+      <div>{lorem}</div>
+      <div>
+        <FormGroup
+          title="Name"
+          titleType="subBlockTitle"
+          innerMargin="XXS"
+          htmlFor={`id-name-${id}`}
+        >
+          <Input id={`id-name-${id}`} />
+        </FormGroup>
+      </div>
+      <div>
+        <FormGroup
+          title="Email"
+          titleType="subBlockTitle"
+          innerMargin="XXS"
+          htmlFor={`id-email-${id}`}
+        >
+          <Input id={`id-email-${id}`} />
+        </FormGroup>
+      </div>
+    </Stack>
+  )
+}
 
 const AccordionPanelController: VFC<{ theme: Theme }> = ({ theme }) => {
   const [expandedId, setExpandedId] = useState('')
