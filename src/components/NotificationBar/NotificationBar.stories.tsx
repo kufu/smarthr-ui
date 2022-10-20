@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { ComponentProps, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { Story } from '@storybook/react'
 
-import { NotificationBar } from './NotificationBar'
+import { NotificationBar, messageTypes } from './NotificationBar'
 
 import { LineClamp } from '../LineClamp'
 import { Button } from '../Button'
-import { Stack } from '../Layout'
+import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
 import { TextLink as shrTextLink } from '../TextLink'
+import { CheckBox } from '../CheckBox'
+import { RadioButton } from '../RadioButton'
 
 export default {
   title: 'NotificationBar',
@@ -117,4 +119,77 @@ const Wrapper = styled(Stack).attrs({ as: 'dl', gap: 1.5 })`
       margin-inline-start: unset;
     }
   `}
+`
+
+export const Demo: Story = () => {
+  const [visible, setVisible] = useState(false)
+  const [animate, setAnimate] = useState(true)
+  const [messageType, setMessageType] = useState<typeof messageTypes[number]>('success')
+  const [bold, setBold] = useState(true)
+
+  return (
+    <DemoWrapper>
+      {visible && (
+        <NotificationBar
+          type={messageType}
+          bold={bold}
+          message="NotificationBar が表示されました"
+          animate={animate}
+        />
+      )}
+      <Center>
+        <Stack>
+          <label>
+            <CheckBox onChange={() => setBold(!bold)} checked={bold}>
+              bold
+            </CheckBox>
+          </label>
+          <label>
+            <CheckBox onChange={() => setAnimate(!animate)} checked={animate}>
+              animate
+            </CheckBox>
+          </label>
+          <Stack as="fieldset">
+            <Text as="legend">メッセージの種類</Text>
+            <Cluster gap={0.75}>
+              {messageTypes.map((type) => (
+                <label key={type}>
+                  <RadioButton
+                    value={type}
+                    checked={messageType === type}
+                    onChange={({ currentTarget: { value } }) =>
+                      setMessageType(value as ComponentProps<typeof NotificationBar>['type'])
+                    }
+                  >
+                    {type}
+                  </RadioButton>
+                </label>
+              ))}
+            </Cluster>
+          </Stack>
+          <Button onClick={() => setVisible(!visible)}>
+            NotificationBar を{visible ? '隠す' : '表示'}
+          </Button>
+        </Stack>
+      </Center>
+    </DemoWrapper>
+  )
+}
+Demo.parameters = {
+  layout: 'fullscreen',
+  withTheming: true,
+}
+
+const DemoWrapper = styled.div`
+  ${({ theme: { color } }) => css`
+    position: relative;
+    overflow: auto;
+    background-color: ${color.BACKGROUND};
+  `}
+`
+const Center = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
 `
