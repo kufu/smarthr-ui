@@ -1,6 +1,7 @@
 import React from 'react'
 import { Story } from '@storybook/react'
 
+import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Cluster } from '.'
 import { Stack } from '../Stack'
 import { Heading as shrHeading } from '../../Heading'
@@ -11,8 +12,11 @@ import { Base } from '../../Base'
 import { RadioButton } from '../../RadioButton'
 
 export const ClusterStory: Story = () => {
+  const themes = useTheme()
+  const { spacing } = themes
+
   return (
-    <StyledStack gap="L">
+    <Stack gap="L" style={{ padding: spacing.L }}>
       <Stack as="figure" gap="X3S">
         <figcaption>幅を狭めて収まり切らなくなると折返します。</figcaption>
         <Cluster>
@@ -46,7 +50,7 @@ export const ClusterStory: Story = () => {
       </Stack>
       <Stack as="figure" gap="X3S">
         <figcaption>垂直方向と水平方向で異なった余白を設定できます。</figcaption>
-        <StyledBase>
+        <StyledBase themes={themes}>
           <Cluster gap={{ row: 'X3S', column: 'XS' }}>
             <RadioButton name="部署" defaultChecked={true}>
               申請者に戻す
@@ -81,24 +85,17 @@ export const ClusterStory: Story = () => {
           </Cluster>
         </Cluster>
       </Stack>
-    </StyledStack>
+    </Stack>
   )
 }
-ClusterStory.parameters = { withTheming: true }
 
 const Heading = styled(shrHeading)`
   margin-top: 0;
   margin-bottom: 0;
 `
 
-const StyledStack = styled(Stack)(
-  ({ theme }) => css`
-    padding: ${theme.spacing.L};
-  `,
-)
-
-const StyledBase = styled(Base)(({ theme }) => {
-  const { color, spacing } = theme
+const StyledBase = styled(Base)<{ themes: Theme }>(({ themes }) => {
+  const { color, spacing } = themes
 
   return css`
     width: 50%;
@@ -107,8 +104,10 @@ const StyledBase = styled(Base)(({ theme }) => {
   `
 })
 
-const ColorBox = styled.div(
-  ({ theme: { radius, color } }) => css`
+const ColorBox = styled.div(() => {
+  const { color, radius } = useTheme()
+
+  return css`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -117,5 +116,5 @@ const ColorBox = styled.div(
     color: ${color.TEXT_WHITE};
     width: 80px;
     height: 80px;
-  `,
-)
+  `
+})

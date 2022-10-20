@@ -2,15 +2,14 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
+import { Theme, useTheme } from '../../hooks/useTheme'
+
 import { FormGroup } from './FormGroup'
 import { Input } from '../Input'
 
 export default {
   title: 'FormGroup',
   component: FormGroup,
-  parameters: {
-    withTheming: true,
-  },
 }
 
 type SampleChildrenProps = {
@@ -56,15 +55,17 @@ const SampleStatusLabelProps = [
 ]
 
 export const All: Story = () => {
+  const theme = useTheme()
+
   return (
     <Wrapper>
-      <Title>default</Title>
+      <Title themes={theme}>default</Title>
       <Body>
         <FormGroup title="Title" titleType="blockTitle" role="group">
           <SampleChildren id1="id_1-1" id2="id_1-2" />
         </FormGroup>
       </Body>
-      <Title>with status label</Title>
+      <Title themes={theme}>with status label</Title>
       <Body>
         <FormGroup
           title="Title"
@@ -75,7 +76,7 @@ export const All: Story = () => {
           <SampleChildren id1="id_2-1" id2="id_2-2" />
         </FormGroup>
       </Body>
-      <Title>with help message</Title>
+      <Title themes={theme}>with help message</Title>
       <Body>
         <FormGroup
           title="Title"
@@ -86,7 +87,7 @@ export const All: Story = () => {
           <SampleChildren id1="id_3-1" id2="id_3-2" />
         </FormGroup>
       </Body>
-      <Title>with error messages</Title>
+      <Title themes={theme}>with error messages</Title>
       <Body>
         <FormGroup
           title="Title"
@@ -98,7 +99,7 @@ export const All: Story = () => {
           <SampleChildren id1="id_4-1" id2="id_4-2" />
         </FormGroup>
       </Body>
-      <Title>with all options</Title>
+      <Title themes={theme}>with all options</Title>
       <Body>
         <FormGroup
           title="Title"
@@ -111,7 +112,7 @@ export const All: Story = () => {
           <SampleChildren id1="id_5-1" id2="id_5-2" />
         </FormGroup>
       </Body>
-      <Title>disabled</Title>
+      <Title themes={theme}>disabled</Title>
       <Body>
         <FormGroup
           title="Title"
@@ -136,15 +137,15 @@ const Wrapper = styled.dl`
   margin: 0;
 `
 
-const Title = styled.dt(
-  ({ theme }) => css`
+const Title = styled.dt<{ themes: Theme }>`
+  ${({ themes }) => css`
     display: block;
     padding: 0;
     margin: 0 0 16px;
-    color: ${theme.color.TEXT_GREY};
+    color: ${themes.color.TEXT_GREY};
     font-style: italic;
-  `,
-)
+  `}
+`
 
 const Body = styled.dd`
   display: block;

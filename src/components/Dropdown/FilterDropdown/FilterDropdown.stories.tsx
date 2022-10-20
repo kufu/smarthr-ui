@@ -2,6 +2,8 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { Theme, useTheme } from '../../../hooks/useTheme'
+
 import { FilterDropdown } from './FilterDropdown'
 import { RadioButton } from '../../RadioButton'
 import { Input } from '../../Input'
@@ -11,13 +13,14 @@ export const Default: Story = () => {
   const [text, setText] = React.useState('')
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.currentTarget.value)
+  const themes = useTheme()
   const [isFiltered, setIsFiltered] = React.useState(false)
   const [isFiltered2, setIsFiltered2] = React.useState(true)
   const [isFiltered3, setIsFiltered3] = React.useState(true)
   const [isFiltered4, setIsFiltered4] = React.useState(true)
 
   return (
-    <Wrapper>
+    <Wrapper themes={themes}>
       <List>
         <dt>nonFiltered</dt>
         <dd>
@@ -30,7 +33,7 @@ export const Default: Story = () => {
             }}
             isFiltered={isFiltered}
           >
-            <Text>
+            <Text themes={themes}>
               `FilterDropdown` provide specific interface to be able to filter data.
               <br />
               You can control inputs for filtering conditions as children components.
@@ -58,7 +61,7 @@ export const Default: Story = () => {
             <Description>
               ↓<br />↓
             </Description>
-            <Text>Children content is scrollable.</Text>
+            <Text themes={themes}>Children content is scrollable.</Text>
           </FilterDropdown>
         </dd>
         <dt>Filtered</dt>
@@ -68,7 +71,9 @@ export const Default: Story = () => {
             onApply={() => setIsFiltered2(true)}
             onReset={() => setIsFiltered2(false)}
           >
-            <Text>You can change border color of the trigger button by setting `isFiltered`.</Text>
+            <Text themes={themes}>
+              You can change border color of the trigger button by setting `isFiltered`.
+            </Text>
           </FilterDropdown>
         </dd>
         <dt>Filtered has status text</dt>
@@ -79,7 +84,7 @@ export const Default: Story = () => {
             onReset={() => setIsFiltered3(false)}
             hasStatusText
           >
-            <Text>
+            <Text themes={themes}>
               You can change border text and color of the trigger button by setting `isFiltered`.
             </Text>
           </FilterDropdown>
@@ -99,7 +104,7 @@ export const Default: Story = () => {
               resetButton: (txt) => <span data-wovn-enable="true">{txt}</span>,
             }}
           >
-            <Text>
+            <Text themes={themes}>
               You can change border text and color of the trigger button by setting `isFiltered`.
             </Text>
           </FilterDropdown>
@@ -109,11 +114,10 @@ export const Default: Story = () => {
   )
 }
 Default.storyName = 'FilterDropdown'
-Default.parameters = { withTheming: true }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ themes: Theme }>`
   padding: 24px;
-  color: ${({ theme }) => theme.color.TEXT_BLACK};
+  color: ${({ themes }) => themes.color.TEXT_BLACK};
 `
 const List = styled.dl`
   margin: 0;
@@ -127,9 +131,9 @@ const List = styled.dl`
     margin: 0;
   }
 `
-const Text = styled.p`
+const Text = styled.p<{ themes: Theme }>`
   margin: 0;
-  color: ${({ theme }) => theme.color.TEXT_BLACK};
+  color: ${({ themes }) => themes.color.TEXT_BLACK};
 `
 const Description = styled.p`
   margin: 0;

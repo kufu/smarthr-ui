@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { Story } from '@storybook/react'
 
 import { Reel } from '.'
@@ -10,9 +10,11 @@ import { Button } from '../../Button'
 import { FaPenIcon } from '../../Icon'
 import { StatusLabel } from '../../StatusLabel'
 import { Heading } from '../../Heading'
+import { useTheme } from '../../../hooks/useTheme'
 
 export const ReelStory: Story = () => {
   const [currentTab, setCurrentTab] = React.useState(0)
+  const theme = useTheme()
 
   return (
     <Stack as="article" gap="M" style={{ padding: '20px' }}>
@@ -23,11 +25,13 @@ export const ReelStory: Story = () => {
         <Heading tag="h2" type="sectionTitle">
           with <code>gap</code>, <code>padding</code>
         </Heading>
-        <ColoredReel padding="S" gap="S">
+        <Reel padding="S" gap="S" style={{ backgroundColor: theme.color.BACKGROUND }}>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, i) => (
-            <Box key={i}>Item</Box>
+            <Box key={i} style={{ backgroundColor: theme.color.MAIN }}>
+              Item
+            </Box>
           ))}
-        </ColoredReel>
+        </Reel>
       </Stack>
       <Stack as="section">
         <Heading tag="h2" type="sectionTitle">
@@ -255,26 +259,16 @@ export const ReelStory: Story = () => {
   )
 }
 
-const ColoredReel = styled(Reel)(
-  ({ theme }) => css`
-    background-color: ${theme.color.BACKGROUND};
-  `,
-)
-
-const Box = styled.div(
-  ({ theme }) => css`
-    display: grid;
-    place-items: center;
-    width: 300px;
-    height: 300px;
-    color: white;
-    background-color: ${theme.color.main};
-  `,
-)
+const Box = styled.div`
+  display: grid;
+  place-items: center;
+  width: 300px;
+  height: 300px;
+  color: white;
+`
 
 ReelStory.parameters = {
   viewport: {
     defaultViewport: 'iphone6',
   },
-  withTheming: true,
 }

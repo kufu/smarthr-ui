@@ -1,6 +1,7 @@
 import React from 'react'
 import { Story } from '@storybook/react'
 
+import { useTheme } from '../../../hooks/useTheme'
 import { Sidebar } from './Sidebar'
 
 import styled, { css } from 'styled-components'
@@ -54,11 +55,9 @@ export const SidebarStory: Story = () => {
     </div>
   )
 }
-SidebarStory.parameters = {
-  withTheming: true,
-}
 
-const Main = styled.main(({ theme }) => {
+const Main = styled.main(() => {
+  const theme = useTheme()
   const { color, spacing } = theme
 
   return css`
@@ -68,7 +67,8 @@ const Main = styled.main(({ theme }) => {
   `
 })
 
-const Side = styled.aside(({ theme }) => {
+const Side = styled.aside(() => {
+  const theme = useTheme()
   const { color, spacing } = theme
 
   return css`
@@ -80,7 +80,8 @@ const Side = styled.aside(({ theme }) => {
   `
 })
 
-const Code = styled.code(({ theme }) => {
+const Code = styled.code(() => {
+  const theme = useTheme()
   const { color, radius, spacing } = theme
 
   return css`

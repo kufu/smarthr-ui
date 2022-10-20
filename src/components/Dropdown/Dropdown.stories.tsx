@@ -3,6 +3,8 @@ import { action } from '@storybook/addon-actions'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
+import { Theme, useTheme } from '../../hooks/useTheme'
+
 import { Dropdown } from './Dropdown'
 import { DropdownTrigger } from './DropdownTrigger'
 import { DropdownContent } from './DropdownContent'
@@ -31,14 +33,12 @@ export default {
     DropdownCloser,
     DropdownScrollArea,
   },
-  parameters: {
-    withTheming: true,
-  },
 }
 
 const ListMenu = () => {
+  const themes = useTheme()
   return (
-    <ActionList as="ul">
+    <ActionList as="ul" themes={themes}>
       <li>
         <Button id="dropdown-list-item-1" onClick={action('clicked 編集')}>
           編集
@@ -63,6 +63,7 @@ const ControllableDropdown = () => {
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.currentTarget.value)
   const [isDialogOpen, setIsDialogOpen] = React.useState(false)
+  const themes = useTheme()
 
   return (
     <>
@@ -110,7 +111,7 @@ const ControllableDropdown = () => {
                 </DropdownCloser>
               </Stack>
             </ControllableBoxMain>
-            <ControllableBoxBottom>
+            <ControllableBoxBottom themes={themes}>
               <Cluster justify="flex-end">
                 <DropdownCloser>
                   <Button>Close only</Button>
@@ -143,8 +144,9 @@ const ControllableDropdown = () => {
 }
 
 const Template: Story = () => {
+  const themes = useTheme()
   return (
-    <Wrapper>
+    <Wrapper themes={themes}>
       <Legends>
         <li>
           <Box>
@@ -253,8 +255,8 @@ RegOpenDropdown.play = async ({ canvasElement }) => {
   userEvent.click(buttons[0])
 }
 
-const ActionList = styled(Stack).attrs({ gap: 0 })(
-  ({ theme: { spacingByChar } }) => css`
+const ActionList = styled(Stack).attrs({ gap: 0 })<{ themes: Theme }>(
+  ({ themes: { spacingByChar } }) => css`
     list-style: none;
     margin-block: 0;
     padding-block: ${spacingByChar(0.5)};
@@ -270,9 +272,9 @@ const ActionList = styled(Stack).attrs({ gap: 0 })(
   `,
 )
 const TriggerButton = styled(Button).attrs({ suffix: <FaCaretDownIcon /> })``
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ themes: Theme }>`
   padding: 24px;
-  color: ${({ theme }) => theme.color.TEXT_BLACK};
+  color: ${({ themes }) => themes.color.TEXT_BLACK};
 `
 const Legends = styled.ul`
   margin: 0;
@@ -289,8 +291,8 @@ const Box = styled.div`
 const ControllableBoxMain = styled(Stack)`
   padding: 24px;
 `
-const ControllableBoxBottom = styled.div`
-  border-top: ${({ theme }) => theme.border.shorthand};
+const ControllableBoxBottom = styled.div<{ themes: Theme }>`
+  border-top: ${({ themes }) => themes.border.shorthand};
   padding: 16px 24px;
 `
 const RightAlign = styled.div`

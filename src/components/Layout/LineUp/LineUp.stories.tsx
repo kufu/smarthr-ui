@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { Story } from '@storybook/react'
 
+import { useTheme } from '../../../hooks/useTheme'
 import { Stack } from '../Stack'
 import { LineUp } from '.'
 
@@ -82,10 +83,11 @@ export const LineUpStory: Story = () => (
     </figure>
   </Stack>
 )
-LineUpStory.parameters = { withTheming: true }
 
-const ColorBox = styled.div(
-  ({ theme: { color } }) => css`
+const ColorBox = styled.div(() => {
+  const { color } = useTheme()
+
+  return css`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -93,13 +95,14 @@ const ColorBox = styled.div(
     color: ${color.TEXT_WHITE};
     width: 80px;
     height: 80px;
-  `,
-)
+  `
+})
 
-const Link = styled.a(
-  ({ theme: { color } }) => css`
+const Link = styled.a(() => {
+  const { color } = useTheme()
+  return css`
     color: ${color.TEXT_LINK};
     text-decoration: underline;
     text-underline-position: under;
-  `,
-)
+  `
+})

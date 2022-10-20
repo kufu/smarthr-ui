@@ -4,18 +4,18 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { DropZone } from './DropZone'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 export default {
   title: 'DropZone',
   component: DropZone,
-  parameters: {
-    withTheming: true,
-  },
 }
 
 const onSelectFiles = action('onSelectFiles')
 
 export const All: Story = () => {
+  const theme = useTheme()
+
   return (
     <Group>
       <li>
@@ -26,7 +26,7 @@ export const All: Story = () => {
       <li>
         <Text>With children</Text>
         <DropZone onSelectFiles={onSelectFiles}>
-          <DropZoneText>
+          <DropZoneText theme={theme}>
             <span>ここにドラッグ&ドロップ</span>
             <span>または</span>
           </DropZoneText>
@@ -36,7 +36,7 @@ export const All: Story = () => {
       <li>
         <Text>Button accepting only image files</Text>
         <DropZone onSelectFiles={onSelectFiles} accept="image/*">
-          <DropZoneText>
+          <DropZoneText theme={theme}>
             <span>ここにドラッグ&ドロップ</span>
             <span>または</span>
           </DropZoneText>
@@ -64,9 +64,10 @@ const Text = styled.p`
   margin: 0 0 16px;
 `
 
-const DropZoneText = styled.p(
-  ({ theme: { palette } }) =>
-    css`
+const DropZoneText = styled.p<{ theme: Theme }>`
+  ${({ theme }) => {
+    const { palette } = theme
+    return css`
       margin: 0;
       span {
         display: block;
@@ -75,5 +76,6 @@ const DropZoneText = styled.p(
         line-height: 1;
         color: ${palette.TEXT_GREY};
       }
-    `,
-)
+    `
+  }}
+`

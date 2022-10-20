@@ -1,21 +1,21 @@
 import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaExternalLinkAltIcon } from '../Icon'
 
 export default {
   title: '[TBD] ProgressBar',
-  parameters: {
-    withTheming: true,
-  },
 }
 
 export const All: Story = () => {
+  const themes = useTheme()
   return (
-    <Wrapper>
+    <Wrapper themes={themes}>
       <Title>To Be Developed</Title>
       <Description>This component will develop in the near future.</Description>
       <Link
+        themes={themes}
         href="https://smarthr.invisionapp.com/share/ADUDJ8BW74C#/391861064_progress_Bar"
         target="_blank"
       >
@@ -27,12 +27,12 @@ export const All: Story = () => {
 }
 All.storyName = 'all'
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ themes: Theme }>`
   box-sizing: border-box;
   padding: 24px;
   border-radius: 6px;
   box-shadow: rgba(51, 51, 51, 0.3) 1px 1px 4px 0;
-  color: ${({ theme }) => theme.color.TEXT_BLACK};
+  color: ${({ themes }) => themes.color.TEXT_BLACK};
   text-align: center;
   line-height: 1;
   position: absolute;
@@ -52,8 +52,8 @@ const Description = styled.div`
   margin-bottom: 16px;
 `
 
-const Link = styled.a`
-  color: ${({ theme }) => theme.color.TEXT_LINK};
+const Link = styled.a<{ themes: Theme }>`
+  color: ${({ themes }) => themes.color.TEXT_LINK};
 `
 const LinkText = styled.span`
   vertical-align: middle;

@@ -1,7 +1,9 @@
 import { Story } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import React, { FC, useState } from 'react'
+import React, { VFC, useState } from 'react'
 import styled, { css } from 'styled-components'
+
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Base } from '../Base'
 import { Button } from '../Button'
@@ -19,9 +21,6 @@ export default {
     AccordionPanelItem,
     AccordionPanelContent,
     AccordionPanelTrigger,
-  },
-  parameters: {
-    withTheming: true,
   },
 }
 
@@ -57,7 +56,7 @@ const content = () => {
   )
 }
 
-const AccordionPanelController: FC = () => {
+const AccordionPanelController: VFC<{ theme: Theme }> = ({ theme }) => {
   const [expandedId, setExpandedId] = useState('')
 
   const Buttons = styled.div`
@@ -88,7 +87,7 @@ const AccordionPanelController: FC = () => {
             <AccordionPanelItem key={i} name={`accordion-panel-${i}`}>
               <AccordionPanelTrigger>AccordionPanelItem {i}</AccordionPanelTrigger>
               <AccordionPanelContent>
-                <Content>{content()}</Content>
+                <Content themes={theme}>{content()}</Content>
               </AccordionPanelContent>
             </AccordionPanelItem>
           ))}
@@ -99,17 +98,19 @@ const AccordionPanelController: FC = () => {
 }
 
 export const AccordionStyle: Story = () => {
+  const theme = useTheme()
+
   return (
     <Wrapper>
       <Base>
         <AccordionPanel>
-          <BorderList>
+          <BorderList themes={theme}>
             {arr.map((_, i) => (
               <li key={i}>
                 <AccordionPanelItem name={`left-icon-${i}`}>
                   <AccordionPanelTrigger>Left Icon (default) {i}</AccordionPanelTrigger>
                   <AccordionPanelContent>
-                    <Content>{content()}</Content>
+                    <Content themes={theme}>{content()}</Content>
                   </AccordionPanelContent>
                 </AccordionPanelItem>
               </li>
@@ -119,13 +120,13 @@ export const AccordionStyle: Story = () => {
       </Base>
       <Base>
         <AccordionPanel iconPosition="right">
-          <BorderList>
+          <BorderList themes={theme}>
             {arr.map((_, i) => (
               <li key={i}>
                 <AccordionPanelItem name={`right-icon-${i}`}>
                   <AccordionPanelTrigger>Right Icon {i}</AccordionPanelTrigger>
                   <AccordionPanelContent>
-                    <Content>{content()}</Content>
+                    <Content themes={theme}>{content()}</Content>
                   </AccordionPanelContent>
                 </AccordionPanelItem>
               </li>
@@ -135,13 +136,13 @@ export const AccordionStyle: Story = () => {
       </Base>
       <Base>
         <AccordionPanel displayIcon={false}>
-          <BorderList>
+          <BorderList themes={theme}>
             {arr.map((_, i) => (
               <li key={i}>
                 <AccordionPanelItem name={`no-icon-${i}`}>
                   <AccordionPanelTrigger>No Icon {i}</AccordionPanelTrigger>
                   <AccordionPanelContent>
-                    <Content>{content()}</Content>
+                    <Content themes={theme}>{content()}</Content>
                   </AccordionPanelContent>
                 </AccordionPanelItem>
               </li>
@@ -155,6 +156,8 @@ export const AccordionStyle: Story = () => {
 AccordionStyle.storyName = 'Accordion style'
 
 export const ExpandedOptions: Story = () => {
+  const theme = useTheme()
+
   return (
     <Wrapper>
       <Base>
@@ -163,7 +166,7 @@ export const ExpandedOptions: Story = () => {
             <AccordionPanelItem key={i} name={`expandable-multiply-${i}`}>
               <AccordionPanelTrigger>Expandable Multiply {i}</AccordionPanelTrigger>
               <AccordionPanelContent>
-                <Content>{content()}</Content>
+                <Content themes={theme}>{content()}</Content>
               </AccordionPanelContent>
             </AccordionPanelItem>
           ))}
@@ -175,7 +178,7 @@ export const ExpandedOptions: Story = () => {
             <AccordionPanelItem key={i} name={`default-expanded-${i}`}>
               <AccordionPanelTrigger>Default Expanded {i}</AccordionPanelTrigger>
               <AccordionPanelContent>
-                <Content>{content()}</Content>
+                <Content themes={theme}>{content()}</Content>
               </AccordionPanelContent>
             </AccordionPanelItem>
           ))}
@@ -187,6 +190,8 @@ export const ExpandedOptions: Story = () => {
 ExpandedOptions.storyName = 'Expanded options'
 
 export const Callback: Story = () => {
+  const theme = useTheme()
+
   return (
     <Wrapper>
       <Base>
@@ -195,7 +200,7 @@ export const Callback: Story = () => {
             <AccordionPanelItem key={i} name={`expandable-multiply-${i}`}>
               <AccordionPanelTrigger>Expandable Multiply {i}</AccordionPanelTrigger>
               <AccordionPanelContent>
-                <Content>{content()}</Content>
+                <Content themes={theme}>{content()}</Content>
               </AccordionPanelContent>
             </AccordionPanelItem>
           ))}
@@ -206,7 +211,8 @@ export const Callback: Story = () => {
 }
 
 export const ChangeDefaultExpanded: Story = () => {
-  return <AccordionPanelController />
+  const theme = useTheme()
+  return <AccordionPanelController theme={theme} />
 }
 ChangeDefaultExpanded.storyName = 'Change defaultExpanded'
 
@@ -217,8 +223,8 @@ const Wrapper = styled.div`
     margin-top: 24px;
   }
 `
-const BorderList = styled.ul(
-  ({ theme: { color } }) => css`
+const BorderList = styled.ul<{ themes: Theme }>(
+  ({ themes: { color } }) => css`
     margin: 0;
     padding: 0;
     list-style: none;
@@ -228,8 +234,8 @@ const BorderList = styled.ul(
     }
   `,
 )
-const Content = styled.div(
-  ({ theme: { color } }) => css`
+const Content = styled.div<{ themes: Theme }>(
+  ({ themes: { color } }) => css`
     background-color: ${color.BACKGROUND};
     padding: 16px;
   `,

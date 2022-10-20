@@ -1,20 +1,18 @@
 import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { FaBirthdayCakeIcon, FaChartPieIcon, FaCogIcon, FaFileIcon, FaUserAltIcon } from '../Icon/'
 import { AppNavi } from './AppNavi'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 export default {
   title: 'AppNavi',
   component: AppNavi,
-  parameters: {
-    withTheming: true,
-  },
 }
 
-const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?: string }> = ({
+const Link: VFC<{ to: string; children: ReactNode; disabled?: boolean; className?: string }> = ({
   to,
   children,
   disabled = false,
@@ -26,9 +24,11 @@ const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?
   </a>
 )
 
-const List: FC = () => {
+const List: VFC = () => {
+  const theme = useTheme()
+
   return (
-    <ListWrapper>
+    <ListWrapper themes={theme}>
       <li>
         <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
       </li>
@@ -77,8 +77,10 @@ const buttons = [
 const withoutIconButtons = buttons.map(({ icon, ...button }) => button)
 
 export const WithChildren: Story = () => {
+  const theme = useTheme()
+
   return (
-    <Wrapper>
+    <Wrapper themes={theme}>
       <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
         <Child>Some child components</Child>
       </AppNavi>
@@ -88,8 +90,10 @@ export const WithChildren: Story = () => {
 WithChildren.storyName = 'with children'
 
 export const WithoutChildren: Story = () => {
+  const theme = useTheme()
+
   return (
-    <Wrapper>
+    <Wrapper themes={theme}>
       <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret />
     </Wrapper>
   )
@@ -97,10 +101,11 @@ export const WithoutChildren: Story = () => {
 WithoutChildren.storyName = 'without children'
 
 export const UnclickableCurrent: Story = () => {
+  const theme = useTheme()
   const items = buttons.map(({ current, ...button }) => button)
 
   return (
-    <Wrapper>
+    <Wrapper themes={theme}>
       {items.map((_, currentIndex) => (
         <InnerWrapper key={currentIndex}>
           <AppNavi
@@ -122,8 +127,10 @@ export const UnclickableCurrent: Story = () => {
 UnclickableCurrent.storyName = 'unclickable current'
 
 export const NoIconAndCaret: Story = () => {
+  const theme = useTheme()
+
   return (
-    <Wrapper>
+    <Wrapper themes={theme}>
       <AppNavi label="機能名" buttons={buttons} />
     </Wrapper>
   )
@@ -131,8 +138,10 @@ export const NoIconAndCaret: Story = () => {
 NoIconAndCaret.storyName = 'アイコンありドロップダウン示唆なし'
 
 export const ContainerScrollX: Story = () => {
+  const theme = useTheme()
+
   return (
-    <OverflowWrapper>
+    <OverflowWrapper themes={theme}>
       <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
         <Child>Some child components</Child>
       </AppNavi>
@@ -141,9 +150,9 @@ export const ContainerScrollX: Story = () => {
 }
 ContainerScrollX.storyName = '横スクロールさせる場合'
 
-const Wrapper = styled.div`
-  ${({ theme }) => {
-    const { color } = theme
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { color } = themes
 
     return css`
       padding: 32px 0;
@@ -161,23 +170,27 @@ const InnerWrapper = styled.div`
   margin-bottom: 40px;
 `
 
-const ListWrapper = styled.ul(
-  ({ theme: { color } }) => css`
-    margin: 0;
-    padding: 8px 0;
-    list-style: none;
+const ListWrapper = styled.ul<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { color } = themes
 
-    & > li > button {
-      line-height: 40px;
-      width: 100%;
-      padding: 0 20px;
-      border: none;
-      background-color: ${color.WHITE};
-      color: ${color.TEXT_BLACK};
+    return css`
+      margin: 0;
+      padding: 8px 0;
+      list-style: none;
 
-      &:hover {
-        background-color: ${color.hoverColor(color.WHITE)};
+      & > li > button {
+        line-height: 40px;
+        width: 100%;
+        padding: 0 20px;
+        border: none;
+        background-color: ${color.WHITE};
+        color: ${color.TEXT_BLACK};
+
+        &:hover {
+          background-color: ${color.hoverColor(color.WHITE)};
+        }
       }
-    }
-  `,
-)
+    `
+  }}
+`

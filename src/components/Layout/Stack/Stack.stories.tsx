@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { Story } from '@storybook/react'
 
+import { useTheme } from '../../../hooks/useTheme'
 import { Stack } from '.'
 import { Base as shrBase } from '../../Base'
 import { Heading } from '../../Heading'
@@ -45,7 +46,6 @@ export const StackStory: Story = () => (
     </SideAreaStack>
   </LineUp>
 )
-StackStory.parameters = { withTheming: true }
 
 const SideAreaStack = styled(Stack)`
   flex: 1;
@@ -54,17 +54,19 @@ const Content = styled.div`
   flex: 3;
   min-height: 30vw;
 `
-const Base = styled(shrBase)(
-  ({ theme: { spacingByChar } }) => css`
+const Base = styled(shrBase)(() => {
+  const { spacingByChar } = useTheme()
+  return css`
     padding: ${spacingByChar(1.5)};
-  `,
-)
-const InnerBase = styled(shrBase)(
-  ({ theme: { color, spacingByChar } }) => css`
+  `
+})
+const InnerBase = styled(shrBase)(() => {
+  const { color, spacingByChar } = useTheme()
+  return css`
     background-color: ${color.OVER_BACKGROUND};
     padding: ${spacingByChar(1)};
-  `,
-)
+  `
+})
 const P = styled.p`
   margin-top: 0;
   margin-bottom: 0;
