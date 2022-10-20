@@ -15,7 +15,6 @@ import {
   MessageDialogContent,
   ModelessDialog,
 } from '.'
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
 import { Input } from '../Input'
 import { RadioButton } from '../RadioButton'
@@ -44,6 +43,7 @@ export default {
         type: 'code',
       },
     },
+    withTheming: true,
   },
 }
 
@@ -54,7 +54,6 @@ export const Default: Story = () => {
   const onClickClose = () => setOpended(null)
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
   const inputRef = useRef<HTMLInputElement>(null)
-  const themes = useTheme()
 
   return (
     <TriggerList>
@@ -75,7 +74,7 @@ export const Default: Story = () => {
           ariaLabel="Dialog"
           data-test="dialog-content"
         >
-          <Title themes={themes}>Dialog</Title>
+          <Title>Dialog</Title>
           <Description>
             The value of isOpen must be managed by you, but you can customize content freely.
           </Description>
@@ -104,7 +103,7 @@ export const Default: Story = () => {
               </RadioButton>
             </li>
           </RadioList>
-          <Footer themes={themes}>
+          <Footer>
             <Button onClick={onClickClose} data-test="dialog-closer">
               close
             </Button>
@@ -128,11 +127,11 @@ export const Default: Story = () => {
           id="dialog-focus"
           ariaLabel="特定の要素をフォーカスするダイアログ"
         >
-          <Title themes={themes}>特定の要素をフォーカスするダイアログ</Title>
+          <Title>特定の要素をフォーカスするダイアログ</Title>
           <Content>
             <Input ref={inputRef} data-test="input-focus-target" />
           </Content>
-          <Footer themes={themes}>
+          <Footer>
             <Button onClick={onClickClose} data-test="dialog-closer">
               close
             </Button>
@@ -709,7 +708,6 @@ export const Body以外のPortalParent: Story = () => {
   const onClickOpen = (type: 'deault' | 'actiion' | 'message' | 'modeless') => setIsOpen(type)
   const onClickClose = () => setIsOpen(undefined)
   const portalParentRef = useRef<HTMLDivElement>(null)
-  const themes = useTheme()
 
   return (
     <div ref={portalParentRef}>
@@ -756,11 +754,11 @@ export const Body以外のPortalParent: Story = () => {
         data-test="dialog-content"
         portalParent={portalParentRef}
       >
-        <Title themes={themes}>Dialog</Title>
+        <Title>Dialog</Title>
         <Content>
           <p>Dialog を近接要素に生成しています。</p>
         </Content>
-        <Footer themes={themes}>
+        <Footer>
           <Button onClick={onClickClose} data-test="dialog-closer">
             閉じる
           </Button>
@@ -809,13 +807,13 @@ export const Body以外のPortalParent: Story = () => {
   )
 }
 
-const Title = styled.h2<{ themes: Theme }>`
+const Title = styled.h2`
   padding: 16px 24px;
   margin: 0;
-  font-size: ${({ themes }) => themes.fontSize.L};
+  font-size: ${({ theme }) => theme.fontSize.L};
   font-weight: normal;
   line-height: 1;
-  border-bottom: ${({ themes }) => themes.border.shorthand};
+  border-bottom: ${({ theme }) => theme.border.shorthand};
 `
 const Description = styled.p`
   margin: 16px 24px;
@@ -830,11 +828,11 @@ const RadioList = styled.ul`
   padding: 0;
   list-style: none;
 `
-const Footer = styled.div<{ themes: Theme }>`
+const Footer = styled.div`
   display: flex;
   justify-content: flex-end;
   padding: 16px 24px;
-  border-top: ${({ themes }) => themes.border.shorthand};
+  border-top: ${({ theme }) => theme.border.shorthand};
 
   & > *:not(:first-child) {
     margin-left: 16px;
