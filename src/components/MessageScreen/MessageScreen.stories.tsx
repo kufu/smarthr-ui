@@ -4,10 +4,11 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Base } from '../Base'
-import { FieldSet } from '../FieldSet'
 import { MessageScreen } from './MessageScreen'
 import { Button } from '../Button'
 import { TextLink } from '../TextLink'
+import { FormGroup } from '../FormGroup'
+import { Input } from '../Input'
 
 export default {
   title: 'MessageScreen',
@@ -57,10 +58,24 @@ export const WithoutTitle: Story = () => {
         <Box>
           <List>
             <li>
-              <FieldSet label="メールアドレス" width="100%" />
+              <FormGroup
+                title="メールアドレス"
+                titleType="subBlockTitle"
+                innerMargin="XXS"
+                htmlFor="id-email"
+              >
+                <Input id="id-email" width="100%" />
+              </FormGroup>
             </li>
             <li>
-              <FieldSet label="パスワード" width="100%" />
+              <FormGroup
+                title="パスワード"
+                titleType="subBlockTitle"
+                innerMargin="XXS"
+                htmlFor="id-password"
+              >
+                <Input id="id-password" width="100%" />
+              </FormGroup>
             </li>
           </List>
           <Bottom>
@@ -91,10 +106,24 @@ export const WithoutLinks: Story = () => {
       <Box>
         <List>
           <li>
-            <FieldSet label="社員番号またはメールアドレス" width="100%" />
+            <FormGroup
+              title="社員番号またはメールアドレス"
+              titleType="subBlockTitle"
+              innerMargin="XXS"
+              htmlFor="id-email"
+            >
+              <Input id="id-email" width="100%" />
+            </FormGroup>
           </li>
           <li>
-            <FieldSet label="パスワード" width="100%" />
+            <FormGroup
+              title="パスワード"
+              titleType="subBlockTitle"
+              innerMargin="XXS"
+              htmlFor="id-password"
+            >
+              <Input id="id-password" width="100%" />
+            </FormGroup>
           </li>
         </List>
         <Bottom>
