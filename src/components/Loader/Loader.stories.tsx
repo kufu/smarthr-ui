@@ -1,6 +1,7 @@
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { Story } from '@storybook/react'
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { Loader } from './Loader'
 
@@ -10,6 +11,8 @@ export default {
 }
 
 export const All: Story = () => {
+  const theme = useTheme()
+
   return (
     <>
       <Wrapper>
@@ -30,7 +33,7 @@ export const All: Story = () => {
         </List>
       </Wrapper>
 
-      <GrayWrapper>
+      <GrayWrapper themes={theme}>
         <Text>Light</Text>
         <List>
           <dt>Default</dt>
@@ -55,14 +58,21 @@ All.storyName = 'all'
 const Wrapper = styled.div`
   padding: 24px;
 `
-const GrayWrapper = styled(Wrapper)`
-  background-color: rgba(0, 0, 0, 0.75);
+const GrayWrapper = styled(Wrapper)<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { color } = themes
 
-  p,
-  dt {
-    color: #fff;
-  }
+    return css`
+      background-color: ${color.SCRIM};
+
+      p,
+      dt {
+        color: #fff;
+      }
+    `
+  }}
 `
+
 const Text = styled.p`
   margin: 0 0 16px;
 `
