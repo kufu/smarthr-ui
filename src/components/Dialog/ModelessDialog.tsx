@@ -106,7 +106,8 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     x: 0,
     y: 0,
   })
-  const [bounds, setBounds] = useState<ComponentProps<typeof Draggable>['bounds']>()
+  const [draggableBounds, setDraggableBounds] =
+    useState<ComponentProps<typeof Draggable>['bounds']>()
   const theme = useTheme()
 
   useEffect(() => {
@@ -190,13 +191,13 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     if (!isOpen || !isReady) return
 
     if (centering.top) {
-      setBounds({ top: centering.top * -1 })
+      setDraggableBounds({ top: centering.top * -1 })
       return
     }
 
     if (wrapperRef.current) {
       const rect = wrapperRef.current.getBoundingClientRect()
-      setBounds({ top: rect.top * -1 })
+      setDraggableBounds({ top: rect.top * -1 })
     }
   }, [isOpen, isReady, centering.top])
 
@@ -217,7 +218,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
           })
         }}
         position={position}
-        bounds={bounds}
+        bounds={draggableBounds}
       >
         <Layout
           {...props}
