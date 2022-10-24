@@ -176,6 +176,20 @@ export const Single: Story = () => {
           onSelect={action('onSelect')}
         />
       </dd>
+      <dt>デフォルトの選択肢あり</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          defaultItem={items[0]}
+          width={400}
+          onSelect={(item: Item) => {
+            console.log('select')
+            handleSelectItem(item)
+          }}
+          onClear={handleClear}
+        />
+      </dd>
     </List>
   )
 }

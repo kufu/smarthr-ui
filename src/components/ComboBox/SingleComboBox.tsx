@@ -31,6 +31,10 @@ type Props<T> = {
    */
   selectedItem: ComboBoxItem<T> | null
   /**
+   * 選択されているアイテムのリスト
+   */
+  defaultItem?: ComboBoxItem<T>
+  /**
    * input 要素の `name` 属性の値
    */
   name?: string
@@ -94,6 +98,7 @@ type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
 export function SingleComboBox<T>({
   items,
   selectedItem,
+  defaultItem,
   name,
   disabled = false,
   error = false,
@@ -157,11 +162,16 @@ export function SingleComboBox<T>({
       setIsExpanded(true)
     }
   }, [isFocused])
-  const blur = useCallback(() => {
+  const unfocus = useCallback(() => {
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
-  }, [])
+
+    if (!selectedItem & defaultItem) {
+      setInputValue(defaultItem.label)
+      onSelect && onSelect(defaultItem)
+    }
+  }, [selectedItem, defaultItem, onSelect])
 
   const caretIconColor = useMemo(() => {
     if (isFocused) return theme.color.TEXT_BLACK
@@ -172,17 +182,23 @@ export function SingleComboBox<T>({
   useOuterClick(
     [outerRef, listBoxRef, clearButtonRef],
     useCallback(() => {
-      blur()
-    }, [blur]),
+      unfocus()
+    }, [unfocus]),
   )
 
   useLayoutEffect(() => {
-    setInputValue(selectedItem ? selectedItem.label : '')
+    if (selectedItem) {
+      setInputValue(selectedItem.label)
+    } else {
+      setInputValue('')
+    }
 
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
+    } else if (!selectedItem && defaultItem) {
+      onSelect(defaultItem)
     }
-  }, [isFocused, selectedItem])
+  }, [isFocused, selectedItem, defaultItem, onSelect])
 
   const needsClearButton = selectedItem !== null && !disabled
   const contextValue = useMemo(
@@ -220,9 +236,10 @@ export function SingleComboBox<T>({
                   e.stopPropagation()
                   onClear && onClear()
                   onChangeSelected && onChangeSelected(null)
-                  if (isFocused) {
-                    setIsExpanded(true)
-                  }
+
+                  inputRef.current?.focus()
+                  setIsFocused(true)
+                  setIsExpanded(true)
                 }}
                 ref={clearButtonRef}
                 themes={theme}
@@ -278,7 +295,7 @@ export function SingleComboBox<T>({
                 setIsExpanded(false)
               }
             } else if (e.key === 'Tab') {
-              blur()
+              unfocus()
             } else {
               if (
                 e.key === 'Down' ||
@@ -294,6 +311,13 @@ export function SingleComboBox<T>({
               }
             }
             handleListBoxKeyDown(e)
+          }}
+          onBlur={() => {
+            setTimeout(() => {
+              if (!selectedItem && defaultItem) {
+                onSelect && onSelect(defaultItem)
+              }
+            }, 10)
           }}
           ref={inputRef}
           autoComplete="off"
