@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react'
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { Loader } from './Loader'
 
@@ -51,18 +51,22 @@ export const All: Story = () => {
   )
 }
 All.storyName = 'all'
+All.parameters = { withTheming: true }
 
 const Wrapper = styled.div`
   padding: 24px;
 `
-const GrayWrapper = styled(Wrapper)`
-  background-color: rgba(0, 0, 0, 0.5);
+const GrayWrapper = styled(Wrapper)(
+  ({ theme: { color } }) => css`
+    background-color: ${color.SCRIM};
 
-  p,
-  dt {
-    color: #fff;
-  }
-`
+    p,
+    dt {
+      color: #fff;
+    }
+  `,
+)
+
 const Text = styled.p`
   margin: 0 0 16px;
 `

@@ -15,7 +15,7 @@ export const all: Story = () => (
   <Stack gap={0.25}>
     <Header />
     <Header tenants="株式会社SmartHR">
-      <HeaderLink href="https://knowledge.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
+      <HeaderLink href="https://support.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
         ヘルプ
       </HeaderLink>
       <HeaderDropdownButton label="info@example.com">
@@ -33,7 +33,7 @@ export const all: Story = () => (
       <HeaderLink href="https://school.smarthr.jp/" prefix={<FaGraduationCapIcon />}>
         スクール
       </HeaderLink>
-      <HeaderLink href="https://knowledge.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
+      <HeaderLink href="https://support.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
         ヘルプ
       </HeaderLink>
       <HeaderLink href="https://support.smarthr.jp/">リリースノート</HeaderLink>

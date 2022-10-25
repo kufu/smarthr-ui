@@ -31,6 +31,16 @@ export const DropdownTrigger: React.VFC<Props> = ({ children, className = '' }) 
     <Wrapper
       ref={triggerElementRef}
       onClick={(e) => {
+        // 引き金となる要素が disabled な場合は発火させない
+        const includeDisabledTrigger = React.Children.map(
+          children,
+          (child) => React.isValidElement(child) && child.props.disabled,
+        )?.some((bool: boolean) => bool)
+
+        if (includeDisabledTrigger) {
+          return
+        }
+
         const rect = e.currentTarget.getBoundingClientRect()
         onClickTrigger({
           top: rect.top,

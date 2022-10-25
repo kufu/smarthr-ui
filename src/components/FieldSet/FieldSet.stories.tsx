@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme'
 
 import { FaExclamationCircleIcon } from '../Icon'
 import { FieldSet } from './FieldSet'
@@ -10,6 +10,9 @@ import { FieldSet } from './FieldSet'
 export default {
   title: 'FieldSet',
   component: FieldSet,
+  parameters: {
+    withTheming: true,
+  },
 }
 
 export const All: Story = () => {
@@ -63,14 +66,14 @@ export const All: Story = () => {
           labelSuffix={
             <Suffix>
               <FaExclamationCircleIcon size={12} color={themes.color.TEXT_GREY} />
-              <SuffixText themes={themes}>suffix text</SuffixText>
+              <SuffixText>suffix text</SuffixText>
             </Suffix>
           }
         />
       </li>
       <li>
         <FieldSet label="custom field">
-          <CustomTag themes={themes}>It is a field where tags can be freely inserted.</CustomTag>
+          <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
         </FieldSet>
       </li>
       <li>
@@ -90,12 +93,12 @@ export const All: Story = () => {
           labelSuffix={
             <Suffix>
               <FaExclamationCircleIcon size={12} color={themes.color.TEXT_GREY} />
-              <SuffixText themes={themes}>suffix text</SuffixText>
+              <SuffixText>suffix text</SuffixText>
             </Suffix>
           }
           required
         >
-          <CustomTag themes={themes}>It is a field where tags can be freely inserted.</CustomTag>
+          <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
         </FieldSet>
       </li>
     </List>
@@ -119,16 +122,14 @@ const Suffix = styled.div`
     margin-right: 4px;
   }
 `
-const SuffixText = styled.p<{ themes: Theme }>`
+const SuffixText = styled.p`
   margin: 0;
-  font-size: ${({ themes }) => themes.fontSize.S};
+  font-size: ${({ theme }) => theme.fontSize.S};
 `
-const CustomTag = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    return css`
-      padding: 10px;
-      border: 1px solid ${themes.color.BORDER};
-      border-radius: 5px;
-    `
-  }}
-`
+const CustomTag = styled.div(
+  ({ theme }) => css`
+    padding: 10px;
+    border: 1px solid ${theme.color.BORDER};
+    border-radius: 5px;
+  `,
+)

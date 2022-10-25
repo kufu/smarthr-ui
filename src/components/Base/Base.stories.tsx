@@ -5,6 +5,7 @@ import { useTheme } from '../../hooks/useTheme'
 
 import { Base, LayerKeys, layerMap } from './Base'
 import { DialogBase } from './DialogBase'
+import { Text } from '../Text'
 
 export default {
   title: 'Base',
@@ -15,18 +16,37 @@ export const BaseStory: Story = () => {
   const themes = useTheme()
 
   return (
-    <List>
+    <DescriptionList>
+      <dt>padding</dt>
+      <dd>
+        <List>
+          <li>
+            <Base>初期値は padding なし</Base>
+          </li>
+          <li>
+            <Base padding={1.5}>padding props の値には余白のデザイントークンを利用できます。</Base>
+          </li>
+          <li>
+            <Base padding={{ block: 1, inline: 1.5 }}>
+              論理的プロパティに依るブロック方向とインライン方向の別指定もできます。
+            </Base>
+          </li>
+          <li>
+            <Base padding={{ block: 1 }}>いずれか一方向の利用もできます。</Base>
+          </li>
+        </List>
+      </dd>
       <dt>radius</dt>
       <dd>
         <List>
           <li>
             <Base radius="m">
-              <Txt>デフォルト</Txt>
+              <Text>デフォルト</Text>
             </Base>
           </li>
           <li>
             <Base radius="s">
-              <Txt>角丸サイズ小</Txt>
+              <Text>角丸サイズ小</Text>
             </Base>
           </li>
         </List>
@@ -37,16 +57,16 @@ export const BaseStory: Story = () => {
           {Object.keys(layerMap).map((layer, index) => (
             <li key={`${layer}-${index}`}>
               <Base layer={Number(layer) as LayerKeys}>
-                <Txt>
+                <Text>
                   If layer props is specified as <Bold>{layer}</Bold>, box-shadow becomes
                   <Bold> {themes.shadow[layerMap[Number(layer) as LayerKeys]]}</Bold>.
-                </Txt>
+                </Text>
               </Base>
             </li>
           ))}
         </List>
       </dd>
-    </List>
+    </DescriptionList>
   )
 }
 BaseStory.storyName = 'Base'
@@ -55,21 +75,26 @@ export const DialogBaseStory: Story = () => (
   <List>
     <li>
       <DialogBase radius="s">
-        <Txt>
+        <Text>
           If radius props is specified as <Bold>s</Bold>, border-radius becomes <Bold>6px</Bold>.
-        </Txt>
+        </Text>
       </DialogBase>
     </li>
     <li>
       <DialogBase radius="m">
-        <Txt>
+        <Text>
           If radius props is specified as <Bold>m</Bold>, border-radius becomes <Bold>8px</Bold>.
-        </Txt>
+        </Text>
       </DialogBase>
     </li>
   </List>
 )
 DialogBaseStory.storyName = 'DialogBase'
+
+const DescriptionList = styled.dl`
+  padding: 24px;
+  background-color: #eee;
+`
 
 const List = styled.ul`
   margin: 0;
@@ -81,10 +106,7 @@ const List = styled.ul`
     margin-top: 24px;
   }
 `
-const Txt = styled.p`
-  margin: 0;
-  padding: 24px;
-`
+
 const Bold = styled.span`
   font-weight: bold;
 `

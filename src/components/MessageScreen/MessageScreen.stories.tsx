@@ -1,21 +1,23 @@
 import * as React from 'react'
 import { Story } from '@storybook/react'
 import styled, { css } from 'styled-components'
-import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { Base } from '../Base'
-import { FieldSet } from '../FieldSet'
 import { MessageScreen } from './MessageScreen'
 import { Button } from '../Button'
 import { TextLink } from '../TextLink'
+import { FormGroup } from '../FormGroup'
+import { Input } from '../Input'
 
 export default {
   title: 'MessageScreen',
   component: MessageScreen,
+  parameters: {
+    withTheming: true,
+  },
 }
 
 export const Full: Story = () => {
-  const themes = useTheme()
   return (
     <MessageScreen
       title="SmartHR は現在メンテナンス中です"
@@ -27,7 +29,7 @@ export const Full: Story = () => {
         },
       ]}
     >
-      <Description themes={themes}>
+      <Description>
         いつも SmartHR をご利用いただきありがとうございます。
         <br />
         ただいまメンテナンスのため、一時サービスを停止しております。
@@ -57,10 +59,24 @@ export const WithoutTitle: Story = () => {
         <Box>
           <List>
             <li>
-              <FieldSet label="メールアドレス" width="100%" />
+              <FormGroup
+                title="メールアドレス"
+                titleType="subBlockTitle"
+                innerMargin="XXS"
+                htmlFor="id-email"
+              >
+                <Input id="id-email" width="100%" />
+              </FormGroup>
             </li>
             <li>
-              <FieldSet label="パスワード" width="100%" />
+              <FormGroup
+                title="パスワード"
+                titleType="subBlockTitle"
+                innerMargin="XXS"
+                htmlFor="id-password"
+              >
+                <Input id="id-password" width="100%" />
+              </FormGroup>
             </li>
           </List>
           <Bottom>
@@ -77,24 +93,37 @@ export const WithoutTitle: Story = () => {
 WithoutTitle.storyName = 'without title'
 
 export const WithoutLinks: Story = () => {
-  const themes = useTheme()
   return (
     <MessageScreen
       title={
         <>
           株式会社 TEST INC
           <br />
-          <Headline themes={themes}>専用ログイン画面</Headline>
+          <Headline>専用ログイン画面</Headline>
         </>
       }
     >
       <Box>
         <List>
           <li>
-            <FieldSet label="社員番号またはメールアドレス" width="100%" />
+            <FormGroup
+              title="社員番号またはメールアドレス"
+              titleType="subBlockTitle"
+              innerMargin="XXS"
+              htmlFor="id-email"
+            >
+              <Input id="id-email" width="100%" />
+            </FormGroup>
           </li>
           <li>
-            <FieldSet label="パスワード" width="100%" />
+            <FormGroup
+              title="パスワード"
+              titleType="subBlockTitle"
+              innerMargin="XXS"
+              htmlFor="id-password"
+            >
+              <Input id="id-password" width="100%" />
+            </FormGroup>
           </li>
         </List>
         <Bottom>
@@ -125,14 +154,15 @@ WithoutChildren.storyName = 'without children'
 export const WithoutAllOptionalProps: Story = () => <MessageScreen />
 WithoutAllOptionalProps.storyName = 'without all optional props'
 
-const Description = styled.div<{ themes: Theme }>`
-  ${({ themes }) => css`
-    color: ${themes.color.TEXT_BLACK};
-    font-size: ${themes.fontSize.M};
+const Description = styled.div(
+  ({ theme }) => css`
+    color: ${theme.color.TEXT_BLACK};
+    font-size: ${theme.fontSize.M};
     line-height: 21px;
     text-align: center;
-  `}
-`
+  `,
+)
+
 const BoxWrapper = styled.div`
   margin-bottom: 16px;
 `
@@ -159,13 +189,13 @@ const Bottom = styled.div`
     margin-bottom: 24px;
   }
 `
-const Headline = styled.span<{ themes: Theme }>`
-  ${({ themes }) => css`
+const Headline = styled.span(
+  ({ theme }) => css`
     display: inline-block;
     width: 100%;
     margin-top: 16px;
-    color: ${themes.color.TEXT_BLACK};
-    font-size: ${themes.fontSize.L};
+    color: ${theme.color.TEXT_BLACK};
+    font-size: ${theme.fontSize.L};
     text-align: center;
-  `}
-`
+  `,
+)
