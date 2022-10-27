@@ -161,7 +161,7 @@ const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
       padding: ${spacingByChar(0.5)};
       font-size: ${fontSize.S};
     }
-    &.focus {
+    &:focus-within {
       ${shadow.focusIndicatorStyles}
     }
     &.disabled {
