@@ -15,23 +15,23 @@ export const All: Story = () => {
     <List>
       <dt>Default</dt>
       <dd>
-        <InputFile label="Choose File" onChange={action('onChange')} multiple />
+        <InputFile label="ファイルを選択" onChange={action('onChange')} multiple />
       </dd>
       <dt>Size S</dt>
       <dd>
-        <InputFile label="Choose File" onChange={action('onChange')} size="s" multiple />
+        <InputFile label="ファイルを選択" onChange={action('onChange')} size="s" multiple />
       </dd>
       <dt>Disabled file list</dt>
       <dd>
-        <InputFile label="Choose File" onChange={action('onChange')} hasFileList={false} />
+        <InputFile label="ファイルを選択" onChange={action('onChange')} hasFileList={false} />
       </dd>
       <dt>Disabled input</dt>
       <dd>
-        <InputFile label="Choose File" disabled />
+        <InputFile label="ファイルを選択" disabled />
       </dd>
       <dt>エラー</dt>
       <dd>
-        <InputFile label="Choose File" error />
+        <InputFile label="ファイルを選択" error />
       </dd>
     </List>
   )
