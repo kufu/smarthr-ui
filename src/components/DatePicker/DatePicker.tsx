@@ -38,7 +38,17 @@ type Props = {
   /** 選択された日付が変わった時に発火するコールバック関数 */
   onChangeDate?: (date: Date | null, value: string) => void
 }
-type InputAttributes = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof Props>
+type OmitInputAttributes =
+  | keyof Props
+  | 'type'
+  | 'onChange'
+  | 'onKeyPress'
+  | 'onFocus'
+  | 'onBlur'
+  | 'aria-expanded'
+  | 'aria-controls'
+  | 'aria-haspopup'
+type InputAttributes = Omit<React.InputHTMLAttributes<HTMLInputElement>, OmitInputAttributes>
 
 export const DEFAULT_FROM = new Date(1900, 0, 1)
 
