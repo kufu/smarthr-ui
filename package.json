@@ -160,6 +160,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "@types/react": "^18.0.21",
-    "@babel/helper-compilation-targets": "^7.19.3"
+    "@babel/helper-compilation-targets": "^7.20.0"
   }
 }
