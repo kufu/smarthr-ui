@@ -339,7 +339,7 @@ const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
 })
 const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
   ${({ themes }) => {
-    const { spacingByChar } = themes
+    const { shadow, spacingByChar } = themes
     return css`
       display: flex;
       align-items: center;
@@ -349,6 +349,15 @@ const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
       cursor: pointer;
       &.hidden {
         display: none;
+      }
+
+      &:focus-visible {
+        box-shadow: unset;
+      }
+
+      &:focus-visible > svg {
+        border-radius: 50%;
+        ${shadow.focusIndicatorStyles};
       }
     `
   }}
