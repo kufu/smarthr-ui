@@ -93,7 +93,7 @@ export const createTheme = (theme: ThemeProperty = {}): CreatedTheme => {
     border: createBorder(getBorderProperty(theme), colorProperty),
     radius: createRadius(getRadiusProperty(theme)),
     interaction: createInteraction(theme.interaction),
-    shadow: createShadow(theme.shadow),
+    shadow: createShadow(theme.shadow, colorProperty),
     zIndex: createZIndex(theme.zIndex),
   }
 }
