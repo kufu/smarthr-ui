@@ -36,10 +36,8 @@ export const InputFile: VFC<Props & ElementProps> = ({
 }) => {
   const theme = useTheme()
   const [files, setFiles] = useState<File[]>([])
-  const [isFocused, setIsFocused] = useState(false)
   const labelDisabledClassName = disabled ? 'disabled' : ''
   const labelSmallClassName = size === 's' ? 'small' : ''
-  const labelFocusedClassName = isFocused ? 'focus' : ''
   const errorClassName = error ? 'error' : ''
   // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
   const isUpdatingFilesDirectly = useRef(false)
@@ -101,7 +99,7 @@ export const InputFile: VFC<Props & ElementProps> = ({
         </FileList>
       )}
       <InputWrapper
-        className={`${labelSmallClassName} ${labelDisabledClassName} ${labelFocusedClassName} ${errorClassName}`}
+        className={`${labelSmallClassName} ${labelDisabledClassName} ${errorClassName}`}
         themes={theme}
       >
         <input
@@ -111,8 +109,6 @@ export const InputFile: VFC<Props & ElementProps> = ({
           disabled={disabled}
           className={classNames.input}
           ref={inputRef}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
           aria-invalid={error || undefined}
         />
         <Prefix themes={theme}>
@@ -161,7 +157,7 @@ const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
       padding: ${spacingByChar(0.5)};
       font-size: ${fontSize.S};
     }
-    &.focus {
+    &:focus-within {
       ${shadow.focusIndicatorStyles}
     }
     &.disabled {
