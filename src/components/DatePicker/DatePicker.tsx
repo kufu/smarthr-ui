@@ -113,23 +113,26 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   const updateDate = useCallback(
     (newDate: Date | null) => {
       if (
+        !inputRef.current ||
         newDate === selectedDate ||
         (newDate && selectedDate && newDate.getTime() === selectedDate.getTime())
       ) {
         // Do not update date if the new date is same with the old one.
         return
       }
-      if (!inputRef.current) {
-        return
+
+      const isValid = !newDate || dayjs(newDate).isValid()
+      // 要検討: !isValidの場合、null or selectedDate
+      const nextDate = isValid ? newDate : null
+
+      if (!isValid) {
+        // TODO: !isValid の場合、UI上でエラーにする
       }
 
-      // Do not change input value if new date is invalid date
-      if (!newDate || dayjs(newDate).isValid()) {
-        inputRef.current.value = dateToString(newDate)
-        setAlternativeFormat(dateToAlternativeFormat(newDate))
-      }
-      setSelectedDate(newDate)
-      onChangeDate && onChangeDate(newDate, inputRef.current.value)
+      inputRef.current.value = dateToString(nextDate)
+      setAlternativeFormat(dateToAlternativeFormat(nextDate))
+      setSelectedDate(nextDate)
+      onChangeDate && onChangeDate(nextDate, inputRef.current.value)
     },
     [selectedDate, dateToString, dateToAlternativeFormat, onChangeDate],
   )
