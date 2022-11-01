@@ -77,24 +77,24 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   )
 
   const dateToString = useCallback(
-    (_date: Date | null) => {
+    (d: Date | null) => {
       if (formatDate) {
-        return formatDate(_date)
+        return formatDate(d)
       }
-      if (!_date) {
+      if (!d) {
         return ''
       }
-      return dayjs(_date).format('YYYY/MM/DD')
+      return dayjs(d).format('YYYY/MM/DD')
     },
     [formatDate],
   )
 
   const dateToAlternativeFormat = useCallback(
-    (_date: Date | null) => {
-      if (!_date || !showAlternative) {
+    (d: Date | null) => {
+      if (!d || !showAlternative) {
         return null
       }
-      return showAlternative(_date)
+      return showAlternative(d)
     },
     [showAlternative],
   )
