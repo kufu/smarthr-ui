@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [23.4.0](https://github.com/kufu/smarthr-ui/compare/v23.3.0...v23.4.0) (2022-11-01)
+
+
+### Features
+
+* Button に処理中の状態を追加 ([#2774](https://github.com/kufu/smarthr-ui/issues/2774)) ([53532bc](https://github.com/kufu/smarthr-ui/commit/53532bccf956c16dae5c98d669821fa9cca65927))
+
+
+### Bug Fixes
+
+* Icon with Text の複数行表示を修正 ([#2859](https://github.com/kufu/smarthr-ui/issues/2859)) ([9118737](https://github.com/kufu/smarthr-ui/commit/91187378e37c93570cef8e33a3291c05edb7e1c6))
+* InformationPanel のスタイリングを微調整 ([#2819](https://github.com/kufu/smarthr-ui/issues/2819)) ([7f5d0a0](https://github.com/kufu/smarthr-ui/commit/7f5d0a025980553746a6a892de19a5df4abcbacb))
+* InputFile のフォーカススタイルをクラス名で行わないように修正 ([#2862](https://github.com/kufu/smarthr-ui/issues/2862)) ([7f2da44](https://github.com/kufu/smarthr-ui/commit/7f2da44794814d6cc795f75399b7aaed563af15d))
+* Text の color が DOM に反映されないように修正 ([#2863](https://github.com/kufu/smarthr-ui/issues/2863)) ([90fd351](https://github.com/kufu/smarthr-ui/commit/90fd3510821db6fc39482ec9a60e5cb8909263af))
+
 ## [23.3.0](https://github.com/kufu/smarthr-ui/compare/v23.2.0...v23.3.0) (2022-10-25)
 
 
