@@ -359,7 +359,7 @@ export interface ComponentProps extends IconProps, ElementProps {
   /**アイコンの説明テキスト*/
   alt?: string
   /** アイコンと並べるテキスト */
-  text?: string
+  text?: React.ReactNode
   /** アイコンと並べるテキストとの溝 */
   iconGap?: CharRelativeSize | AbstractSize
   /** `true` のとき、アイコンを右側に表示する */
@@ -399,39 +399,59 @@ const createIcon = (SvgIcon: IconType) => {
     const classNames = useClassNames()
 
     const existsText = !!text
-    const Wrapper = existsText ? WithIcon : React.Fragment
-    const wrapperProps = existsText ? { gap: iconGap, right, className: classNames.withText } : {}
+    const svgIcon = (
+      <SvgIcon
+        {...props}
+        color={replacedColor}
+        className={`${className} ${classNames.wrapper}`}
+        role={role}
+        aria-hidden={isAriaHidden || alt !== undefined || undefined}
+        focusable={focusable}
+      />
+    )
+
+    if (existsText) {
+      return (
+        <WithIcon gap={iconGap} right={right} className={classNames.withText}>
+          {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
+          {right && text}
+          {svgIcon}
+          {!right && text}
+        </WithIcon>
+      )
+    }
 
     return (
-      <Wrapper {...wrapperProps}>
+      <>
         {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
-        <SvgIcon
-          {...props}
-          color={replacedColor}
-          className={`${className} ${classNames.wrapper}`}
-          role={role}
-          aria-hidden={isAriaHidden || alt !== undefined || undefined}
-          focusable={focusable}
-        />
-        {text}
-      </Wrapper>
+        {svgIcon}
+      </>
     )
   }
+
   return Icon
 }
 
-const WithIcon = styled.span<{ right?: boolean; gap?: CharRelativeSize | AbstractSize }>`
+const WithIcon = styled.span<{
+  right: ComponentProps['right']
+  gap: ComponentProps['iconGap']
+}>`
   ${({ right, gap }) => css`
-    display: inline-flex;
-    ${right && `flex-direction: row-reverse;`}
-    align-items: baseline;
-    ${gap && `column-gap: ${useSpacing(gap)};`}
+    ${!right &&
+    css`
+      display: inline-flex;
+      align-items: baseline;
+      ${gap && `column-gap: ${useSpacing(gap)};`}
+    `}
 
     .smarthr-ui-Icon {
-      align-self: center;
+      flex-shrink: 0;
+      transform: translateY(0.125em);
+      ${right && gap && `margin-inline-start: ${useSpacing(gap)};`}
     }
   `}
 `
+
 const VisuallyHiddenText = styled.span`
   ${VISUALLY_HIDDEN_STYLE}
 `

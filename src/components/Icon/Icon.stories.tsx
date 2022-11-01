@@ -100,12 +100,6 @@ export const WithText: Story = () => (
     </Text>
     <Text as="p" size="XL">
       <FaInfoCircleIcon text="文字サイズは親要素から継承されます。" />
-      <Text size="S">
-        <FaBullhornIcon
-          text="そのため一文の中で別の文字サイズを使いたければ Text コンポーネントを入れ子にしてください。"
-          right
-        />
-      </Text>
     </Text>
   </Stack>
 )

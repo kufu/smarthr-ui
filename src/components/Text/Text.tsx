@@ -33,16 +33,20 @@ export type Props = TextProps &
  * @param [as] テキストコンポーネントの HTML タグ名。初期値は span
  * @param [children]
  */
-export const Text: React.VFC<Props> = ({ as = 'span', ...props }) => {
-  return <Wrapper {...props} as={props.emphasis ? 'em' : as} />
+export const Text: React.FC<Props> = ({ color, as = 'span', ...props }) => {
+  return <Wrapper {...props} $color={color} as={props.emphasis ? 'em' : as} />
 }
 
-const Wrapper = styled.span<TextProps>(
+const Wrapper = styled.span<
+  Omit<TextProps, 'color'> & {
+    $color: TextProps['color']
+  }
+>(
   ({
     size = 'M',
     weight = 'normal',
     italic,
-    color = 'inherit',
+    $color = 'inherit',
     leading = 'NORMAL',
     whiteSpace,
     emphasis,
@@ -54,7 +58,7 @@ const Wrapper = styled.span<TextProps>(
       line-height: ${shrLeading[leading]};
       font-weight: ${emphasis ? 'bold' : weight};
       ${italic && `font-style: italic;`}
-      color: ${color === 'inherit' ? color : shrColor[color]};
+      color: ${$color === 'inherit' ? $color : shrColor[$color]};
     `
   },
 )

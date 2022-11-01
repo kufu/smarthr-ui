@@ -6,6 +6,7 @@ import { useId } from '../../hooks/useId'
 import { useClassNames } from './useClassNames'
 
 import { Base, BaseElementProps } from '../Base'
+import { Cluster, Stack } from '../Layout'
 import {
   FaCaretDownIcon,
   FaCaretUpIcon,
@@ -113,16 +114,13 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
       role="region"
       aria-labelledby={titleId}
     >
-      <Header themes={theme} togglable={togglable}>
-        <Title themes={theme} id={titleId} className={classNames.title}>
-          <StyledHeading type="blockTitle" tag={titleTag}>
-            <Icon color={iconColor} $theme={theme} />
-            {title}
-          </StyledHeading>
-        </Title>
-        {togglable && (
-          <div>
-            <Button
+      <Stack gap={1.25}>
+        <Header themes={theme} togglable={togglable}>
+          <Heading type="blockTitle" tag={titleTag} id={titleId} className={classNames.title}>
+            <Icon color={iconColor} text={title} iconGap={0.5} />
+          </Heading>
+          {togglable && (
+            <TogglableButton
               suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
               size="s"
               onClick={handleClickTrigger}
@@ -131,63 +129,53 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
               className={classNames.closeButton}
             >
               {active ? closeButtonLabel : openButtonLabel}
-            </Button>
-          </div>
-        )}
-      </Header>
-      <Content themes={theme} id={contentId} aria-hidden={!active} className={classNames.content}>
-        {children}
-      </Content>
+            </TogglableButton>
+          )}
+        </Header>
+        <Content themes={theme} id={contentId} aria-hidden={!active} className={classNames.content}>
+          {children}
+        </Content>
+      </Stack>
     </Wrapper>
   )
 }
 
-const Wrapper = styled(Base)<{ themes: Theme; role: string }>`
-  ${({ themes: { spacingByChar, shadow } }) => {
+const Wrapper = styled(Base)<{ themes: Theme }>`
+  ${({ themes: { spacingByChar, shadow } }) => css`
+    padding: ${spacingByChar(1.5)};
+    box-shadow: ${shadow.LAYER3};
+  `}
+`
+
+const Header = styled(Cluster).attrs({
+  align: 'center',
+  justify: 'space-between',
+})<{ themes: Theme; togglable: boolean }>`
+  ${({ themes: { border, fontSize, leading, space }, togglable }) => {
+    // (Button(1rem + padding-block + border) - Heading(1rem * 1.25) / 2)
+    const adjust = `calc((
+        (${fontSize.S} + ${space(1)} + ${border.lineWidth} * 2)
+        - (${fontSize.M} * ${leading.TIGHT})
+      ) / -2)
+    `
     return css`
-      padding: ${spacingByChar(1.5)};
-      box-shadow: ${shadow.LAYER3};
+      ${togglable &&
+      css`
+        &&& {
+          margin-block: ${adjust};
+        }
+      `}
     `
   }}
 `
 
-const Header = styled.div<{ themes: Theme; togglable: boolean }>(
-  ({ togglable }) => `
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  ${
-    togglable &&
-    // (Button(27px) - Heading(14px)) / 2 = 6.5px
-    `
-    margin-top: -6.5px;
-    margin-bottom: -6.5px;
-  `
-  }
-`,
-)
-
-const Title = styled.div<{ themes: Theme }>`
-  vertical-align: middle;
-  line-height: 1;
-  ${({ themes: { spacingByChar } }) => {
-    return css`
-      margin-right: ${spacingByChar(0.5)};
-    `
-  }}
+const TogglableButton = styled(Button)`
+  margin-inline-start: auto;
 `
 
-const createTitleIcon = (Icon: typeof FaCheckCircleIcon) => {
-  return styled(Icon)<{ $theme: Theme }>`
-    vertical-align: text-top;
-    ${({ $theme: { spacingByChar } }) => {
-      return css`
-        margin-right: ${spacingByChar(0.5)};
-      `
-    }}
-  `
-}
+const createTitleIcon = (Icon: typeof FaCheckCircleIcon) => styled(Icon)`
+  flex-shrink: 0;
+`
 const SuccessTitleIcon = createTitleIcon(FaCheckCircleIcon)
 const InfoTitleIcon = createTitleIcon(FaInfoCircleIcon)
 const WarningTitleIcon = createTitleIcon(WarningIcon)
@@ -195,17 +183,11 @@ const ErrorTitleIcon = createTitleIcon(FaExclamationCircleIcon)
 const SyncIcon = createTitleIcon(FaSyncAltIcon)
 
 const Content = styled.div<{ themes: Theme }>`
-  ${({ themes: { fontSize, spacingByChar } }) => {
-    return css`
-      margin-top: ${spacingByChar(1.5)};
-      font-size: ${fontSize.M};
-      &[aria-hidden='true'] {
-        display: none;
-      }
-    `
-  }}
-`
+  ${({ themes: { fontSize } }) => css`
+    font-size: ${fontSize.M};
 
-const StyledHeading = styled(Heading)`
-  display: inline;
+    &[aria-hidden='true'] {
+      display: none;
+    }
+  `}
 `
