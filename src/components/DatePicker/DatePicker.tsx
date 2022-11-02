@@ -122,17 +122,17 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
       }
 
       const isValid = !newDate || dayjs(newDate).isValid()
-      // 要検討: !isValidの場合、null or selectedDate
       const nextDate = isValid ? newDate : null
+      const errors: string[] = []
 
       if (!isValid) {
-        // TODO: !isValid の場合、UI上でエラーにする
+        errors.push('INVALID_DATE')
       }
 
       inputRef.current.value = dateToString(nextDate)
       setAlternativeFormat(dateToAlternativeFormat(nextDate))
       setSelectedDate(nextDate)
-      onChangeDate && onChangeDate(nextDate, inputRef.current.value)
+      onChangeDate && onChangeDate(nextDate, inputRef.current.value, { errors })
     },
     [selectedDate, dateToString, dateToAlternativeFormat, onChangeDate],
   )
