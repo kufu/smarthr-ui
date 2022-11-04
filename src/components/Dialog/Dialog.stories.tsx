@@ -22,6 +22,7 @@ import { DatePicker } from '../DatePicker'
 import { Cluster, LineUp, Stack } from '../Layout'
 import { Body, Cell, Head, Row, Table } from '../Table'
 import { CheckBox } from '../CheckBox'
+import { Text } from '../Text'
 
 export default {
   title: 'Dialog',
@@ -208,6 +209,14 @@ export const Action_Dialog: Story = () => {
   }
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
 
+  const handleResponseMessage = (handleRequest: () => void) => {
+    setResponseMessage({
+      status: 'processing',
+      text: '保存しました。',
+    })
+    handleRequest()
+  }
+
   return (
     <Cluster>
       <Button
@@ -223,10 +232,10 @@ export const Action_Dialog: Story = () => {
         title="ActionDialog"
         subtitle="副題"
         actionText="保存"
-        onClickAction={(closeDialog) => {
+        onClickAction={(handleRequest) => {
           action('executed')()
           setResponseMessage(undefined)
-          closeDialog()
+          handleRequest()
         }}
         onClickClose={onClickClose}
         responseMessage={responseMessage}
@@ -253,20 +262,29 @@ export const Action_Dialog: Story = () => {
         <Buttons>
           <p>切り替えボタン：</p>
           <Button
-            onClick={() =>
-              setResponseMessage({
-                status: 'success',
-                text: '保存しました。',
+            onClick={() => {
+              handleResponseMessage(() => {
+                setTimeout(() => {
+                  setResponseMessage({
+                    status: 'success',
+                    text: '保存しました。',
+                  })
+                  setOpenedDialog(null)
+                }, 1000)
               })
-            }
+            }}
           >
             保存
           </Button>
           <Button
             onClick={() =>
-              setResponseMessage({
-                status: 'error',
-                text: '何らかのエラーが発生しました。',
+              handleResponseMessage(() => {
+                setTimeout(() => {
+                  setResponseMessage({
+                    status: 'error',
+                    text: '何らかのエラーが発生しました。',
+                  })
+                }, 1000)
               })
             }
           >
@@ -284,6 +302,7 @@ export const Action_Dialog: Story = () => {
           </Button>
         </Buttons>
       </ActionDialog>
+
       <Button onClick={() => setOpenedDialog('opened')} data-test="opened-dialog-trigger">
         開いた状態で DOM に投入
       </Button>
@@ -292,9 +311,9 @@ export const Action_Dialog: Story = () => {
           isOpen
           title="開いた状態で投入されたダイアログ"
           actionText="実行"
-          onClickAction={(closeDialog) => {
+          onClickAction={(handleRequest) => {
             action('execute')()
-            closeDialog()
+            handleRequest()
           }}
           onClickClose={onClickClose}
           onClickOverlay={onClickClose}
@@ -312,6 +331,57 @@ export const Action_Dialog: Story = () => {
     </Cluster>
   )
 }
+
+// export const Action_Dialog_With_Loading_Button: Story = () => {
+//   const [isOpened, setIsOpened] = useState<boolean>(false)
+//   const [responseMessage, setResponseMessage] = useState<{
+//     status: 'success' | 'error' | 'processing'
+//     text: string
+//   }>()
+//   const inputValue = useRef<HTMLInputElement>(null)
+
+//   return (
+//     <>
+//       <ActionDialog
+//         isOpen={isOpened}
+//         title="Action Dialog with a loading button"
+//         onClickClose={() => setIsOpened(false)}
+//         onClickAction={() => {
+//           setResponseMessage({
+//             status: 'processing',
+//             text: 'loading',
+//           })
+//           setTimeout(() => {
+//             setResponseMessage({
+//               status: 'success',
+//               text: 'success',
+//             })
+//           }, 1000)
+
+//           if (responseMessage?.status === 'success') {
+//             setIsOpened(false)
+//           }
+//         }}
+//         actionText="送信"
+//         responseMessage={responseMessage}
+//       >
+//         <Content>
+//           <Stack>
+//             <Text>「apple」以外を入力して送信するとエラーが出ます</Text>
+//             <Input ref={inputValue} error={inputValue.current?.value !== 'apple'}></Input>
+//           </Stack>
+//         </Content>
+//       </ActionDialog>
+//       <Button
+//         onClick={() => {
+//           setIsOpened(true)
+//         }}
+//       >
+//         test
+//       </Button>
+//     </>
+//   )
+// }
 const Buttons = styled.div`
   margin-top: -2rem;
   padding: 1rem 1.5rem;
@@ -320,6 +390,7 @@ const Buttons = styled.div`
     margin-left: 0.5rem;
   }
 `
+
 Action_Dialog.parameters = {
   docs: {
     description: {
@@ -386,9 +457,9 @@ export const Uncontrolled: Story = () => {
             title="Uncontrolled Action Dialog"
             actionText="実行"
             actionDisabled={false}
-            onClickAction={(closeDialog) => {
+            onClickAction={(handleRequest) => {
               action('executed')()
-              closeDialog()
+              handleRequest()
             }}
             id="dialog-uncontrolled-action"
             data-test="action-dialog-content"
@@ -768,9 +839,9 @@ export const Body以外のPortalParent: Story = () => {
         isOpen={isOpen === 'actiion'}
         title="ActionDialog"
         actionText="保存"
-        onClickAction={(closeDialog) => {
+        onClickAction={(handleRequest) => {
           action('executed')()
-          closeDialog()
+          handleRequest()
         }}
         onClickClose={onClickClose}
         id="portal-action"

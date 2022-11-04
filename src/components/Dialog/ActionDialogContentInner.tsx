@@ -6,7 +6,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { useOffsetHeight } from './dialogHelper'
 import { Stack } from '../Layout'
 import { Button } from '../Button'
-import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../Icon'
+import { FaCheckCircleIcon, FaExclamationCircleIcon, FaInfoCircleIcon } from '../Icon'
 import { Text } from '../Text'
 import { Loader } from '../Loader'
 import { useClassNames } from './useClassNames'
@@ -69,6 +69,7 @@ export type ActionDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
   responseMessage?: responseMessageType
   titleId: string
+  // forceShowSuccessMessage?: boolean
 }
 
 export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
@@ -85,6 +86,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   responseMessage,
   actionDisabled = false,
   closeDisabled,
+  // forceShowSuccessMessage,
 }) => {
   const classNames = useClassNames().dialog
   const theme = useTheme()
@@ -126,6 +128,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
             {closeText}
           </Button>
           <Button
+            loading={responseMessage?.status === 'processing'}
             variant={actionTheme}
             onClick={handleClickAction}
             disabled={actionDisabled || isRequestProcessing}
@@ -134,15 +137,15 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
             {actionText}
           </Button>
         </ButtonArea>
-        {responseMessage && (
+        {/* {forceShowSuccessMessage && responseMessage?.status === 'success' && (
           <MessageWrapper role="alert" className={classNames.alert} themes={theme}>
-            {responseMessage.status === 'success' ? (
-              <FaCheckCircleIcon color={theme.color.MAIN} />
-            ) : responseMessage.status === 'error' ? (
-              <FaExclamationCircleIcon color={theme.color.DANGER} />
-            ) : (
-              <Spinner size="s" themes={theme} />
-            )}
+            <FaInfoCircleIcon color={theme.color.MAIN} />
+            <Message themes={theme}>{responseMessage.text}</Message>
+          </MessageWrapper>
+        )} */}
+        {responseMessage?.status === 'error' && (
+          <MessageWrapper role="alert" className={classNames.alert} themes={theme}>
+            <FaExclamationCircleIcon color={theme.color.DANGER} />
             <Message themes={theme}>{responseMessage.text}</Message>
           </MessageWrapper>
         )}
