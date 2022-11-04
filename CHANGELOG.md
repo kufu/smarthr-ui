@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [23.4.1](https://github.com/kufu/smarthr-ui/compare/v23.4.0...v23.4.1) (2022-11-04)
+
+
+### Bug Fixes
+
+* Button with Loader が ThemeProvider 前提になっていたので修正 ([#2879](https://github.com/kufu/smarthr-ui/issues/2879)) ([6eadea4](https://github.com/kufu/smarthr-ui/commit/6eadea404f77d2d0dc553587d51c51ba88ef856f))
+
 ## [23.4.0](https://github.com/kufu/smarthr-ui/compare/v23.3.0...v23.4.0) (2022-11-01)
 
 
