@@ -167,7 +167,7 @@ export function SingleComboBox<T>({
     setIsExpanded(false)
     setIsEditing(false)
 
-    if (!selectedItem & defaultItem) {
+    if (!selectedItem && defaultItem) {
       setInputValue(defaultItem.label)
       onSelect && onSelect(defaultItem)
     }
@@ -196,7 +196,7 @@ export function SingleComboBox<T>({
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     } else if (!selectedItem && defaultItem) {
-      onSelect(defaultItem)
+      onSelect && onSelect(defaultItem)
     }
   }, [isFocused, selectedItem, defaultItem, onSelect])
 
