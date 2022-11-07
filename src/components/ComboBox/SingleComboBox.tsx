@@ -205,8 +205,11 @@ export function SingleComboBox<T>({
       if (onChange) onChange(e)
       if (onChangeInput) onChangeInput(e)
       if (!isEditing) setIsEditing(true)
+
       const { value } = e.currentTarget
+
       setInputValue(value)
+
       if (value === '') {
         onClear && onClear()
         onChangeSelected && onChangeSelected(null)

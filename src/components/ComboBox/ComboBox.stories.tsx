@@ -178,19 +178,34 @@ export const Single: Story = () => {
       </dd>
       <dt>デフォルトの選択肢あり</dt>
       <dd>
-        <SingleComboBox
-          items={items}
-          selectedItem={selectedItem}
-          defaultItem={items[0]}
-          width={400}
-          onSelect={(item: Item) => {
-            console.log('select')
-            handleSelectItem(item)
-          }}
-          onClear={handleClear}
-        />
+        <SingleWithDefaultItem />
       </dd>
     </List>
+  )
+}
+
+const SingleWithDefaultItem: React.VFC = () => {
+  const [items, setItems] = useState(defaultItems)
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null)
+
+  const handleSelectItem = useCallback((item: Item) => {
+    action('onSelect')(item)
+    setSelectedItem(item)
+  }, [])
+  const handleClear = useCallback(() => {
+    action('onClear')()
+    setSelectedItem(null)
+  }, [])
+
+  return (
+    <SingleComboBox
+      items={items}
+      selectedItem={selectedItem}
+      defaultItem={items[0]}
+      width={400}
+      onSelect={handleSelectItem}
+      onClear={handleClear}
+    />
   )
 }
 
