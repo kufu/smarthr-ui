@@ -117,12 +117,12 @@ const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled?: boolean 
       line-height: 0;
 
       &:focus-visible {
-        outline: 0;
+        box-shadow: unset;
       }
 
       &:focus-visible > svg {
         border-radius: 50%;
-        box-shadow: ${shadow.OUTLINE};
+        ${shadow.focusIndicatorStyles};
       }
     `
   }}
