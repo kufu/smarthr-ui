@@ -1,6 +1,7 @@
 import React, { ButtonHTMLAttributes, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { BaseProps, Variant } from './types'
 import { useClassNames } from './useClassNames'
 import { ButtonWrapper } from './ButtonWrapper'
@@ -27,9 +28,10 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
     },
     ref,
   ) => {
+    const theme = useTheme()
     const classNames = useClassNames().button
 
-    const loader = <Loader size="s" type="light" variant={variant} />
+    const loader = <Loader size="s" type="light" variant={variant} themes={theme} />
     const actualPrefix = !loading && prefix
     const actualSuffix = loading && !square ? loader : suffix
     const disabledOnLoading = loading || disabled
@@ -58,8 +60,8 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
 // BottomFixedArea での判定に用いるために displayName を明示的に設定する
 Button.displayName = 'Button'
 
-const Loader = styled(shrLoader)<{ variant: Variant }>`
-  ${({ variant, theme: { color } }) => css`
+const Loader = styled(shrLoader)<{ variant: Variant; themes: Theme }>`
+  ${({ variant, themes: { color } }) => css`
     vertical-align: bottom;
 
     &&& {
