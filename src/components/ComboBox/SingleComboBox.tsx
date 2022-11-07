@@ -27,11 +27,11 @@ type Props<T> = {
    */
   items: Array<ComboBoxItem<T>>
   /**
-   * 選択されているアイテムのリスト
+   * 選択されているアイテム
    */
   selectedItem: ComboBoxItem<T> | null
   /**
-   * 選択されているアイテムのリスト
+   * デフォルトで選択されるアイテム
    */
   defaultItem?: ComboBoxItem<T>
   /**
@@ -201,7 +201,7 @@ export function SingleComboBox<T>({
     [disabled, inputRef, isExpanded, setIsExpanded],
   )
   const actualOnChangeInput = useCallback(
-    (e: React.ChangeEvent) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       if (onChange) onChange(e)
       if (onChangeInput) onChangeInput(e)
       if (!isEditing) setIsEditing(true)
@@ -222,11 +222,11 @@ export function SingleComboBox<T>({
   const onCompositionStart = useCallback(() => setIsComposing(true), [setIsComposing])
   const onCompositionEnd = useCallback(() => setIsComposing(false), [setIsComposing])
   const onKeyDownInput = useCallback(
-    (e: React.KeyboardEvent) => {
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (isComposing) {
         return
       }
-      if (e.key === 'Escape' || e.key === 'Exc') {
+      if (['Escape', 'Exc'].includes(e.key)) {
         if (isExpanded) {
           e.stopPropagation()
           setIsExpanded(false)
@@ -234,7 +234,7 @@ export function SingleComboBox<T>({
       } else if (e.key === 'Tab') {
         unfocus()
       } else {
-        if (e.key === 'Down' || e.key === 'ArrowDown' || e.key === 'Up' || e.key === 'ArrowUp') {
+        if (['Down', 'ArrowDown', 'Up', 'ArrowUp'].includes(e.key)) {
           e.preventDefault()
         }
         inputRef.current?.focus()
@@ -247,6 +247,7 @@ export function SingleComboBox<T>({
     [isComposing, isExpanded, setIsExpanded, unfocus, handleListBoxKeyDown],
   )
   const onBlurInput = useCallback(() => {
+    // HINT: useOuterClickよりあとに発火させたいためsetTimeoutでキューに積む
     setTimeout(() => {
       if (!selectedItem && defaultItem) {
         onSelect && onSelect(defaultItem)
