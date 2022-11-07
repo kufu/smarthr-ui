@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [23.4.1](https://github.com/kufu/smarthr-ui/compare/v23.4.0...v23.4.1) (2022-11-04)
+
+
+### Bug Fixes
+
+* Button with Loader が ThemeProvider 前提になっていたので修正 ([#2879](https://github.com/kufu/smarthr-ui/issues/2879)) ([6eadea4](https://github.com/kufu/smarthr-ui/commit/6eadea404f77d2d0dc553587d51c51ba88ef856f))
+
+## [23.4.0](https://github.com/kufu/smarthr-ui/compare/v23.3.0...v23.4.0) (2022-11-01)
+
+
+### Features
+
+* Button に処理中の状態を追加 ([#2774](https://github.com/kufu/smarthr-ui/issues/2774)) ([53532bc](https://github.com/kufu/smarthr-ui/commit/53532bccf956c16dae5c98d669821fa9cca65927))
+
+
+### Bug Fixes
+
+* Icon with Text の複数行表示を修正 ([#2859](https://github.com/kufu/smarthr-ui/issues/2859)) ([9118737](https://github.com/kufu/smarthr-ui/commit/91187378e37c93570cef8e33a3291c05edb7e1c6))
+* InformationPanel のスタイリングを微調整 ([#2819](https://github.com/kufu/smarthr-ui/issues/2819)) ([7f5d0a0](https://github.com/kufu/smarthr-ui/commit/7f5d0a025980553746a6a892de19a5df4abcbacb))
+* InputFile のフォーカススタイルをクラス名で行わないように修正 ([#2862](https://github.com/kufu/smarthr-ui/issues/2862)) ([7f2da44](https://github.com/kufu/smarthr-ui/commit/7f2da44794814d6cc795f75399b7aaed563af15d))
+* Text の color が DOM に反映されないように修正 ([#2863](https://github.com/kufu/smarthr-ui/issues/2863)) ([90fd351](https://github.com/kufu/smarthr-ui/commit/90fd3510821db6fc39482ec9a60e5cb8909263af))
+
+## [23.3.0](https://github.com/kufu/smarthr-ui/compare/v23.2.0...v23.3.0) (2022-10-25)
+
+
+### Features
+
+* Base に余白のデザイントークンを渡せるようにする ([#2839](https://github.com/kufu/smarthr-ui/issues/2839)) ([a5b5440](https://github.com/kufu/smarthr-ui/commit/a5b5440c0ae77aa4c193786facd0d01036167db7))
+* NotificationBar にスライドインアニメーションを追加 ([#2842](https://github.com/kufu/smarthr-ui/issues/2842)) ([985d521](https://github.com/kufu/smarthr-ui/commit/985d521fcc63b1acaa9f52cc267ffda437cf2508))
+
+
+### Bug Fixes
+
+* `ModelessDialog` を画面上部の境界外にドラッグ&ドロップできないようにする ([#2843](https://github.com/kufu/smarthr-ui/issues/2843)) ([48d98b7](https://github.com/kufu/smarthr-ui/commit/48d98b7846a6fa43ffbcca3aec1bd41535f2635f))
+* disabled な DropdownButton で onClick が発火してしまう問題を修正 ([#2840](https://github.com/kufu/smarthr-ui/issues/2840)) ([e005994](https://github.com/kufu/smarthr-ui/commit/e005994aa7ac9ba2d74b53af0d21dfd15524440f))
+* SmartHR Logo を最新化 ([#2838](https://github.com/kufu/smarthr-ui/issues/2838)) ([162475b](https://github.com/kufu/smarthr-ui/commit/162475b51a8721a0b64ef39b5c1fe0ca873f9a35))
+* ヘルプセンターのURLを置き換え ([#2844](https://github.com/kufu/smarthr-ui/issues/2844)) ([174808a](https://github.com/kufu/smarthr-ui/commit/174808a36f9e2fe1c0d9b8f15fefeeb2f7c4302d))
+
 ## [23.2.0](https://github.com/kufu/smarthr-ui/compare/v23.1.0...v23.2.0) (2022-10-18)
 
 

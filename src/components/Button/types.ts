@@ -33,6 +33,10 @@ export type BaseProps = {
    * ボタンのスタイルの種類
    */
   variant?: Variant
+  /**
+   * 処理が走ってるかどうか
+   */
+  loading?: boolean
 }
 
 export type Variant = 'primary' | 'secondary' | 'danger' | 'skeleton' | 'text'
