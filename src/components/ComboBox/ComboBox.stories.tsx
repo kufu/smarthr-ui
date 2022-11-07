@@ -185,7 +185,7 @@ export const Single: Story = () => {
 }
 
 const SingleWithDefaultItem: React.VFC = () => {
-  const [items, setItems] = useState(defaultItems)
+  const [items, _setItems] = useState(defaultItems)
   const [selectedItem, setSelectedItem] = useState<Item | null>(null)
 
   const handleSelectItem = useCallback((item: Item) => {
