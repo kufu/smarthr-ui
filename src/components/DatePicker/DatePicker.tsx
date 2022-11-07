@@ -36,7 +36,7 @@ type Props = {
   /** 入出力用文字列と併記する別フォーマット処理を記述する関数 */
   showAlternative?: (date: Date | null) => string
   /** 選択された日付が変わった時に発火するコールバック関数 */
-  onChangeDate?: (date: Date | null, value: string) => void
+  onChangeDate?: (date: Date | null, value: string, other: { errors: string[] }) => void
 }
 type OmitInputAttributes =
   | keyof Props
