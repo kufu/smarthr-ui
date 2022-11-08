@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [23.5.0](https://github.com/kufu/smarthr-ui/compare/v23.4.1...v23.5.0) (2022-11-08)
+
+
+### Features
+
+* add defaultItem option for single-combo-box ([#2858](https://github.com/kufu/smarthr-ui/issues/2858)) ([bb1ce1c](https://github.com/kufu/smarthr-ui/commit/bb1ce1cdb70775eab27dca23c081590d6391831c))
+
+
+### Bug Fixes
+
+* ButtonWrapper に渡していた loading を Transient Props に変更 ([#2883](https://github.com/kufu/smarthr-ui/issues/2883)) ([c19d180](https://github.com/kufu/smarthr-ui/commit/c19d180b62b4061dff13f4a5a8f4e6589a1d3b73))
+* フォーカススタイルにユーザー指定の OUTLINE を反映 ([#2875](https://github.com/kufu/smarthr-ui/issues/2875)) ([39b749a](https://github.com/kufu/smarthr-ui/commit/39b749a15055af139d767f06bf546c680eff6fa3))
+
 ### [23.4.1](https://github.com/kufu/smarthr-ui/compare/v23.4.0...v23.4.1) (2022-11-04)
 
 
