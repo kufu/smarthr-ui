@@ -62,7 +62,7 @@ test('リストボックスが開閉できること', async (t) => {
     .notOk()
 })
 
-test('コンボボックスがフォーカスされていない時に選択解除ボタンを押下してもリストボックスが表示されないこと', async (t) => {
+test('コンボボックスがフォーカスされていない時に選択解除ボタンを押下してもリストボックスが表示されること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-default]')
   const listbox = elementWithId(await combobox.getAttribute('aria-controls'))
   const clearButton = combobox.find('.smarthr-ui-SingleComboBox-clearButton')
@@ -76,7 +76,7 @@ test('コンボボックスがフォーカスされていない時に選択解�
     // 選択したアイテムを選択解除できること
     .click(clearButton)
     .expect(listbox.visible)
-    .notOk()
+    .ok()
 })
 
 test('新しいアイテムを追加できること', async (t) => {

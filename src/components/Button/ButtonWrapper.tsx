@@ -16,7 +16,7 @@ type BaseProps = {
   square: boolean
   wide: boolean
   variant: Variant
-  loading?: boolean
+  $loading?: boolean
   className: string
   children: ReactNode
 }
@@ -33,7 +33,7 @@ type Props =
   | (ButtonProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>)
   | (AnchorProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof AnchorProps>)
 
-type StyleProps = Pick<Props, 'wide' | 'variant' | 'loading'> & { themes: Theme }
+type StyleProps = Pick<Props, 'wide' | 'variant' | '$loading'> & { themes: Theme }
 
 export function ButtonWrapper({ size, square, className, ...props }: Props) {
   const theme = useTheme()
@@ -48,14 +48,14 @@ export function ButtonWrapper({ size, square, className, ...props }: Props) {
   )
 }
 
-const baseStyles = css<StyleProps>(({ wide, loading, themes }) => {
+const baseStyles = css<StyleProps>(({ wide, $loading, themes }) => {
   const { border, fontSize, leading, radius, shadow, spacingByChar } = themes
 
   return css`
     box-sizing: border-box;
     cursor: pointer;
     display: inline-flex;
-    ${loading && `flex-direction: row-reverse;`}
+    ${$loading && `flex-direction: row-reverse;`}
     justify-content: center;
     align-items: center;
     gap: ${spacingByChar(0.5)};

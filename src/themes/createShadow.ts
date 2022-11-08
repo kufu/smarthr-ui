@@ -1,6 +1,6 @@
 import { FlattenSimpleInterpolation, css } from 'styled-components'
 import { merge } from '../libs/lodash'
-import { defaultColor } from './createColor'
+import { ColorProperty, defaultColor } from './createColor'
 
 export interface ShadowProperty {
   /**
@@ -39,7 +39,8 @@ export interface CreatedShadowTheme {
   focusIndicatorStyles: FlattenSimpleInterpolation
 }
 
-const defaultOutline = `0 0 0 2px white, 0 0 0 4px ${defaultColor.OUTLINE}`
+const createOutline = (color: string) => `0 0 0 2px white, 0 0 0 4px ${color}`
+const defaultOutline = createOutline(defaultColor.OUTLINE)
 const defaultOutlineMargin = '4px'
 
 export const defaultShadow = {
@@ -54,17 +55,20 @@ export const defaultShadow = {
   OUTLINE_MARGIN: defaultOutlineMargin,
 }
 
-function createFocusIndicatorStyles(outline?: string) {
-  return css`
-    outline: none;
-    isolation: isolate;
-    box-shadow: ${outline || defaultOutline};
-  `
-}
+const createFocusIndicatorStyles = (outline: string) => css`
+  outline: none;
+  isolation: isolate;
+  box-shadow: ${outline};
+`
 
-export const createShadow = (userShadow: ShadowProperty = {}) => {
+export const createShadow = (userShadow: ShadowProperty = {}, userColor: ColorProperty = {}) => {
+  const outline = createOutline(userColor.OUTLINE || defaultColor.OUTLINE)
   const created: CreatedShadowTheme = merge(
-    { ...defaultShadow, focusIndicatorStyles: createFocusIndicatorStyles(userShadow.OUTLINE) },
+    {
+      ...defaultShadow,
+      OUTLINE: outline,
+      focusIndicatorStyles: createFocusIndicatorStyles(outline),
+    },
     userShadow,
   )
   return created

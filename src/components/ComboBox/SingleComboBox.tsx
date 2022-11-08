@@ -27,9 +27,13 @@ type Props<T> = {
    */
   items: Array<ComboBoxItem<T>>
   /**
-   * 選択されているアイテムのリスト
+   * 選択されているアイテム
    */
   selectedItem: ComboBoxItem<T> | null
+  /**
+   * デフォルトで選択されるアイテム
+   */
+  defaultItem?: ComboBoxItem<T>
   /**
    * input 要素の `name` 属性の値
    */
@@ -94,6 +98,7 @@ type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
 export function SingleComboBox<T>({
   items,
   selectedItem,
+  defaultItem,
   name,
   disabled = false,
   error = false,
@@ -157,11 +162,101 @@ export function SingleComboBox<T>({
       setIsExpanded(true)
     }
   }, [isFocused])
-  const blur = useCallback(() => {
+  const unfocus = useCallback(() => {
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
-  }, [])
+
+    if (!selectedItem && defaultItem) {
+      setInputValue(defaultItem.label)
+      onSelect && onSelect(defaultItem)
+    }
+  }, [selectedItem, defaultItem, onSelect])
+  const onClickClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      onClear && onClear()
+      onChangeSelected && onChangeSelected(null)
+
+      inputRef.current?.focus()
+      setIsFocused(true)
+      setIsExpanded(true)
+    },
+    [setIsFocused, setIsExpanded, onClear, onChangeSelected],
+  )
+  const onClickInput = useCallback(
+    (e: React.MouseEvent) => {
+      if (disabled) {
+        e.stopPropagation()
+        return
+      }
+      focus()
+      if (inputRef.current) {
+        inputRef.current.focus()
+      }
+      if (!isExpanded) {
+        setIsExpanded(true)
+      }
+    },
+    [disabled, inputRef, isExpanded, setIsExpanded],
+  )
+  const actualOnChangeInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (onChange) onChange(e)
+      if (onChangeInput) onChangeInput(e)
+      if (!isEditing) setIsEditing(true)
+
+      const { value } = e.currentTarget
+
+      setInputValue(value)
+
+      if (value === '') {
+        onClear && onClear()
+        onChangeSelected && onChangeSelected(null)
+      }
+    },
+    [isEditing, setIsEditing, setInputValue, onChange, onChangeInput, onClear, onChangeSelected],
+  )
+  const onFocus = useCallback(() => {
+    if (!isFocused) {
+      focus()
+    }
+  }, [isFocused, focus])
+  const onCompositionStart = useCallback(() => setIsComposing(true), [setIsComposing])
+  const onCompositionEnd = useCallback(() => setIsComposing(false), [setIsComposing])
+  const onKeyDownInput = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (isComposing) {
+        return
+      }
+      if (['Escape', 'Exc'].includes(e.key)) {
+        if (isExpanded) {
+          e.stopPropagation()
+          setIsExpanded(false)
+        }
+      } else if (e.key === 'Tab') {
+        unfocus()
+      } else {
+        if (['Down', 'ArrowDown', 'Up', 'ArrowUp'].includes(e.key)) {
+          e.preventDefault()
+        }
+        inputRef.current?.focus()
+        if (!isExpanded) {
+          setIsExpanded(true)
+        }
+      }
+      handleListBoxKeyDown(e)
+    },
+    [isComposing, isExpanded, setIsExpanded, unfocus, handleListBoxKeyDown],
+  )
+  const onBlurInput = useCallback(() => {
+    // HINT: useOuterClickよりあとに発火させたいためsetTimeoutでキューに積む
+    setTimeout(() => {
+      if (!selectedItem && defaultItem) {
+        onSelect && onSelect(defaultItem)
+      }
+    }, 10)
+  }, [selectedItem, defaultItem, onSelect])
 
   const caretIconColor = useMemo(() => {
     if (isFocused) return theme.color.TEXT_BLACK
@@ -172,17 +267,23 @@ export function SingleComboBox<T>({
   useOuterClick(
     [outerRef, listBoxRef, clearButtonRef],
     useCallback(() => {
-      blur()
-    }, [blur]),
+      unfocus()
+    }, [unfocus]),
   )
 
   useLayoutEffect(() => {
-    setInputValue(selectedItem ? selectedItem.label : '')
+    if (selectedItem) {
+      setInputValue(selectedItem.label)
+    } else {
+      setInputValue('')
+    }
 
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
+    } else if (!selectedItem && defaultItem) {
+      onSelect && onSelect(defaultItem)
     }
-  }, [isFocused, selectedItem])
+  }, [isFocused, selectedItem, defaultItem, onSelect])
 
   const needsClearButton = selectedItem !== null && !disabled
   const contextValue = useMemo(
@@ -216,14 +317,7 @@ export function SingleComboBox<T>({
             <>
               <ClearButton
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onClear && onClear()
-                  onChangeSelected && onChangeSelected(null)
-                  if (isFocused) {
-                    setIsExpanded(true)
-                  }
-                }}
+                onClick={onClickClear}
                 ref={clearButtonRef}
                 themes={theme}
                 className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
@@ -237,64 +331,13 @@ export function SingleComboBox<T>({
               </CaretDownLayout>
             </>
           }
-          onClick={(e) => {
-            if (disabled) {
-              e.stopPropagation()
-              return
-            }
-            focus()
-            if (inputRef.current) {
-              inputRef.current.focus()
-            }
-            if (!isExpanded) {
-              setIsExpanded(true)
-            }
-          }}
-          onChange={(e) => {
-            if (onChange) onChange(e)
-            if (onChangeInput) onChangeInput(e)
-            if (!isEditing) setIsEditing(true)
-            const { value } = e.currentTarget
-            setInputValue(value)
-            if (value === '') {
-              onClear && onClear()
-              onChangeSelected && onChangeSelected(null)
-            }
-          }}
-          onFocus={() => {
-            if (!isFocused) {
-              focus()
-            }
-          }}
-          onCompositionStart={() => setIsComposing(true)}
-          onCompositionEnd={() => setIsComposing(false)}
-          onKeyDown={(e) => {
-            if (isComposing) {
-              return
-            }
-            if (e.key === 'Escape' || e.key === 'Exc') {
-              if (isExpanded) {
-                e.stopPropagation()
-                setIsExpanded(false)
-              }
-            } else if (e.key === 'Tab') {
-              blur()
-            } else {
-              if (
-                e.key === 'Down' ||
-                e.key === 'ArrowDown' ||
-                e.key === 'Up' ||
-                e.key === 'ArrowUp'
-              ) {
-                e.preventDefault()
-              }
-              inputRef.current?.focus()
-              if (!isExpanded) {
-                setIsExpanded(true)
-              }
-            }
-            handleListBoxKeyDown(e)
-          }}
+          onClick={onClickInput}
+          onChange={actualOnChangeInput}
+          onFocus={onFocus}
+          onCompositionStart={onCompositionStart}
+          onCompositionEnd={onCompositionEnd}
+          onKeyDown={onKeyDownInput}
+          onBlur={onBlurInput}
           ref={inputRef}
           autoComplete="off"
           aria-activedescendant={activeOption?.id}
@@ -339,7 +382,7 @@ const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
 })
 const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
   ${({ themes }) => {
-    const { spacingByChar } = themes
+    const { shadow, spacingByChar } = themes
     return css`
       display: flex;
       align-items: center;
@@ -349,6 +392,15 @@ const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
       cursor: pointer;
       &.hidden {
         display: none;
+      }
+
+      &:focus-visible {
+        box-shadow: unset;
+      }
+
+      &:focus-visible > svg {
+        border-radius: 50%;
+        ${shadow.focusIndicatorStyles};
       }
     `
   }}
