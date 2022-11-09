@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   HTMLAttributes,
+  ReactNode,
   useCallback,
   useLayoutEffect,
   useMemo,
@@ -55,6 +56,10 @@ type Props<T> = {
    */
   placeholder?: string
   /**
+   * ドロップダウンリスト内に表示するヘルプメッセージ
+   */
+  dropdownHelpMessage?: ReactNode
+  /**
    * `true` のとき、ドロップダウンリスト内にローダーを表示する
    */
   isLoading?: boolean
@@ -104,6 +109,7 @@ export function SingleComboBox<T>({
   error = false,
   creatable = false,
   placeholder = '',
+  dropdownHelpMessage,
   isLoading,
   width = 'auto',
   className = '',
@@ -141,6 +147,7 @@ export function SingleComboBox<T>({
     listBoxRef,
   } = useListBox({
     options,
+    dropdownHelpMessage,
     onAdd,
     onSelect: useCallback(
       (selected: ComboBoxItem<T>) => {
