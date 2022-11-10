@@ -205,7 +205,7 @@ export function SingleComboBox<T>({
         setIsExpanded(true)
       }
     },
-    [disabled, inputRef, isExpanded, setIsExpanded],
+    [disabled, inputRef, isExpanded, setIsExpanded, focus],
   )
   const actualOnChangeInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -313,13 +313,14 @@ export function SingleComboBox<T>({
         aria-expanded={isFocused}
         aria-invalid={error || undefined}
       >
+        {/* eslint-disable smarthr/a11y-prohibit-input-placeholder */}
         <StyledInput
+          placeholder={placeholder}
           type="text"
           name={name}
           value={inputValue}
           disabled={disabled}
           error={error}
-          placeholder={placeholder}
           suffix={
             <>
               <ClearButton
@@ -351,6 +352,7 @@ export function SingleComboBox<T>({
           aria-autocomplete="list"
           className={classNames.input}
         />
+        {/* eslint-enable smarthr/a11y-prohibit-input-placeholder */}
         {renderListBox()}
       </Container>
     </ComboBoxContext.Provider>

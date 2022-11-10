@@ -259,6 +259,7 @@ export function useListBox<T>({
     options.length,
     partialOptions,
     renderIntersection,
+    dropdownHelpMessage,
     theme,
   ])
 
