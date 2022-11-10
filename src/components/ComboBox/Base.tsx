@@ -104,7 +104,7 @@ type Props<T> = {
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
 
-export function SingleComboBox<T>({
+export function Base<T>({
   items,
   selectedItem,
   defaultItem,
