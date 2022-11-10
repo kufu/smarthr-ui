@@ -1,5 +1,6 @@
 import React, {
   KeyboardEvent,
+  ReactNode,
   RefObject,
   useCallback,
   useContext,
@@ -21,9 +22,11 @@ import { usePartialRendering } from './usePartialRendering'
 import { useActiveOption } from './useActiveOption'
 import { ListBoxItem } from './ListBoxItem'
 import { ComboBoxContext } from './ComboBoxContext'
+import { FaInfoCircleIcon } from '../Icon'
 
 type Props<T> = {
   options: Array<ComboBoxOption<T>>
+  dropdownHelpMessage?: ReactNode
   onAdd?: (label: string) => void
   onSelect: (item: ComboBoxItem<T>) => void
   isExpanded: boolean
@@ -40,6 +43,7 @@ type Rect = {
 
 export function useListBox<T>({
   options,
+  dropdownHelpMessage,
   onAdd,
   onSelect,
   isExpanded,
@@ -205,6 +209,15 @@ export function useListBox<T>({
         aria-hidden={!isExpanded}
         className={classNames.dropdownList}
       >
+        {dropdownHelpMessage && (
+          <HelpMessage themes={theme}>
+            <FaInfoCircleIcon
+              color={theme.color.TEXT_GREY}
+              text={dropdownHelpMessage}
+              iconGap={0.25}
+            />
+          </HelpMessage>
+        )}
         {!isExpanded ? null : isLoading ? (
           <LoaderWrapper themes={theme}>
             <Loader />
@@ -292,6 +305,20 @@ const Container = styled.div<
     z-index: ${zIndex.OVERLAP};
   `
 })
+
+const HelpMessage = styled.p<{ themes: Theme }>`
+  ${({ themes }) => {
+    const { color, fontSize, spacingByChar } = themes
+
+    return css`
+      margin: 0 ${spacingByChar(0.5)} ${spacingByChar(0.5)};
+      padding: 0 ${spacingByChar(0.5)} ${spacingByChar(0.5)};
+      border-bottom: 1px dotted ${color.BORDER};
+      font-size: ${fontSize.S};
+    `
+  }}
+`
+
 const NoItems = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
     const { color, fontSize, spacingByChar } = themes
@@ -304,6 +331,7 @@ const NoItems = styled.p<{ themes: Theme }>`
     `
   }}
 `
+
 const LoaderWrapper = styled.div<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => {
     return css`
