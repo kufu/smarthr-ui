@@ -3,12 +3,12 @@ import React, { useCallback, useState } from 'react'
 import { action } from '@storybook/addon-actions'
 import styled from 'styled-components'
 
-import { MultiComboBox, SingleComboBox } from '.'
+import { MultiComboBox, SearchSingleComboBox, SingleComboBox } from '.'
 
 export default {
   title: 'ComboBox',
   component: SingleComboBox,
-  subcomponents: { MultiComboBox },
+  subcomponents: { SearchSingleComboBox, MultiComboBox },
   parameters: {
     docs: {
       source: { type: 'dynamic' },
@@ -179,6 +179,127 @@ export const Single: Story = () => {
       <dt>デフォルトの選択肢あり</dt>
       <dd>
         <SingleWithDefaultItem />
+      </dd>
+    </List>
+  )
+}
+
+export const SearchSingle: Story = () => {
+  const [items, setItems] = useState(defaultItems)
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null)
+  const [seq, setSeq] = useState(0)
+
+  const handleSelectItem = useCallback((item: Item) => {
+    action('onSelect')(item)
+    setSelectedItem(item)
+  }, [])
+  const handleClear = useCallback(() => {
+    action('onClear')()
+    setSelectedItem(null)
+  }, [])
+  const handleAddItem = useCallback(
+    (label: string) => {
+      action('onAdd')(label)
+      const newItem = {
+        label,
+        value: `new-value-${seq}`,
+      }
+      setItems([...items, newItem])
+      setSelectedItem(newItem)
+      setSeq(seq + 1)
+    },
+    [items, seq],
+  )
+
+  return (
+    <List>
+      <dt>デフォルト</dt>
+      <dd>
+        <SearchSingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="入力でフィルタリングできます"
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+          onChangeSelected={(item) => {
+            action('onChangeSelected')(item)
+            setSelectedItem(item)
+          }}
+          data-test="single-combobox-default"
+        />
+      </dd>
+      <dt>アイテム追加可能</dt>
+      <dd>
+        <SearchSingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="新しいアイテムを追加できます"
+          creatable
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+          onAdd={handleAddItem}
+          data-test="single-combobox-creatable"
+        />
+      </dd>
+      <dt>Disabled</dt>
+      <dd>
+        <SearchSingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="Disabled なコンボボックス"
+          disabled
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+          data-test="single-combobox-disabled"
+        />
+      </dd>
+      <dt>エラー表示</dt>
+      <dd>
+        <SearchSingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="入力でフィルタリングできます"
+          error
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+        />
+      </dd>
+      <dt>読込中</dt>
+      <dd>
+        <SearchSingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="入力でフィルタリングできます"
+          isLoading
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+        />
+      </dd>
+      <dt>100%幅</dt>
+      <dd>
+        <SearchSingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width="100%"
+          dropdownHelpMessage="入力でフィルタリングできます"
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+        />
+      </dd>
+      <dt>アイテム数が多い時</dt>
+      <dd>
+        <SearchSingleComboBox
+          items={manyItems}
+          selectedItem={null}
+          width={400}
+          dropdownHelpMessage="入力でフィルタリングできます"
+          onSelect={action('onSelect')}
+        />
       </dd>
     </List>
   )
