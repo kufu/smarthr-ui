@@ -85,6 +85,7 @@ export const All: Story = () => (
           <tr>
             <Th>
               <VisuallyHiddenText>行を選択</VisuallyHiddenText>
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label>
                 <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
                 <CheckBox name="tableAllCheckBox" checked={false} />
@@ -135,6 +136,7 @@ export const All: Story = () => (
             <tr>
               <Th>
                 <VisuallyHiddenText>行を選択</VisuallyHiddenText>
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                 <label>
                   <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
                   <CheckBox name="tableAllCheckBox" checked={false} />

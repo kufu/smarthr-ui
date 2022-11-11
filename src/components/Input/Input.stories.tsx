@@ -37,11 +37,6 @@ export const All: Story = () => {
         <Input type="password" defaultValue="password" />{' '}
       </li>{' '}
       <li>
-        {' '}
-        <Txt>placeholder</Txt>
-        <Input placeholder="string" />
-      </li>
-      <li>
         <Txt>width (with %)</Txt>
         <Input defaultValue="width: 100%" width="100%" />
       </li>
