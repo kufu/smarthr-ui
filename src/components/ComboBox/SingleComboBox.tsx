@@ -44,6 +44,10 @@ type Props<T> = {
    */
   disabled?: boolean
   /**
+   * コンポーネント内の先頭に表示する内容
+   */
+  prefix?: ReactNode
+  /**
    * `true` のとき、コンポーネントの外枠が `DANGER` カラーになる
    */
   error?: boolean
@@ -106,6 +110,7 @@ export function SingleComboBox<T>({
   defaultItem,
   name,
   disabled = false,
+  prefix,
   error = false,
   creatable = false,
   placeholder = '',
@@ -320,6 +325,7 @@ export function SingleComboBox<T>({
           name={name}
           value={inputValue}
           disabled={disabled}
+          prefix={prefix}
           error={error}
           suffix={
             <>
