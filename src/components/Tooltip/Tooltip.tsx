@@ -13,6 +13,7 @@ import styled, { css } from 'styled-components'
 import { Props as BalloonProps } from '../Balloon'
 import { TooltipPortal } from './TooltipPortal'
 import { useId } from '../../hooks/useId'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 type Props = {
@@ -106,6 +107,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
     }
   }, [])
 
+  const theme = useTheme()
   const classNames = useClassNames()
   const childrenWithProps =
     ariaDescribedbyTarget === 'inner'
@@ -126,6 +128,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
       isIcon={isIcon}
       tabIndex={tabIndex}
       className={`${className} ${classNames.wrapper}`}
+      themes={theme}
     >
       {portalRoot &&
         createPortal(
@@ -146,18 +149,23 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   )
 }
 
-const Wrapper = styled.div<{ isIcon?: boolean }>`
-  display: inline-block;
-  max-width: 100%;
-  overflow-y: hidden;
+const Wrapper = styled.div<{ isIcon?: boolean; themes: Theme }>`
+  ${({ isIcon, themes: { shadow } }) => css`
+    display: inline-block;
+    max-width: 100%;
+    overflow-y: hidden;
 
-  /* inline-block に overflow: visible 以外を指定すると、vertical-align が bottom margin edge に揃ってしまう
-   * https://ja.stackoverflow.com/questions/2603/ */
-  vertical-align: bottom;
+    /* inline-block に overflow: visible 以外を指定すると、vertical-align が bottom margin edge に揃ってしまう
+     * https://ja.stackoverflow.com/questions/2603/ */
+    vertical-align: bottom;
 
-  ${({ isIcon }) =>
-    isIcon &&
+    ${isIcon &&
     css`
       line-height: 0;
     `}
+
+    &:focus-visible {
+      ${shadow.focusIndicatorStyles}
+    }
+  `}
 `
