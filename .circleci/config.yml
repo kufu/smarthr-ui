@@ -3,7 +3,7 @@ version: 2.1
 executors:
   node-maintenance:
     docker:
-      - image: cimg/node:16.18.0
+      - image: cimg/node:16.18.1
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
