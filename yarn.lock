@@ -1885,9 +1885,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@smarthr/wareki@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@smarthr/wareki/-/wareki-1.1.0.tgz#c7db4af2c770bb8533b4131b0a00eedda0bdd7dd"
+"@smarthr/wareki@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@smarthr/wareki/-/wareki-1.2.0.tgz#140fc252f1cf2f5b93abf29f50be9d714a1b078b"
+  integrity sha512-uoJQhnvPD8/iWrLWxmqk1yS6w4A+GJhxOZ1mG7lSsRgAOIL59gToyTIz0fM9w7irYfcPWXA+WnPCWZWu1p4pHA==
 
 "@storybook/addon-a11y@^6.5.13":
   version "6.5.13"
