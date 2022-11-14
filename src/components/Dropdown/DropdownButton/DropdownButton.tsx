@@ -87,18 +87,28 @@ const TriggerButton = styled(Button)`
   }
 `
 const ActionList = styled(Stack).attrs({ as: 'ul', gap: 0 })<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
+  ${({ themes: { space } }) => css`
     list-style: none;
     margin-block: 0;
-    padding-block: ${spacingByChar(0.5)};
+    padding-block: ${space(0.5)};
     padding-inline-start: 0;
 
     .smarthr-ui-Button,
     .smarthr-ui-AnchorButton {
       justify-content: flex-start;
 
-      padding-block: ${spacingByChar(0.5)};
+      padding-block: ${space(0.5)};
       font-weight: normal;
+    }
+
+    .smarthr-ui-Button-disabledWrapper {
+      /* unset した Button の右 padding 分 */
+      padding-inline-end: ${space(1)};
+
+      > [disabled] {
+        padding-inline-end: unset;
+        width: unset;
+      }
     }
   `}
 `
