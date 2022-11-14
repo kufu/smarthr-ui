@@ -7,6 +7,9 @@ import { useClassNames } from './useClassNames'
 import { ButtonWrapper } from './ButtonWrapper'
 import { ButtonInner } from './ButtonInner'
 import { Loader as shrLoader } from '../Loader'
+import { Cluster } from '../Layout'
+import { Tooltip } from '../Tooltip'
+import { FaInfoCircleIcon } from '../Icon'
 
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
@@ -21,6 +24,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
       wide = false,
       variant = 'secondary',
       disabled,
+      disabledDetail,
       className = '',
       children,
       loading = false,
@@ -37,7 +41,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
     const disabledOnLoading = loading || disabled
     const actualChildren = loading && square ? loader : children
 
-    return (
+    const button = (
       <ButtonWrapper
         {...props}
         type={type}
@@ -55,6 +59,21 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
         </ButtonInner>
       </ButtonWrapper>
     )
+
+    if (disabled && disabledDetail) {
+      const DisabledDetailIcon = disabledDetail.icon || FaInfoCircleIcon
+
+      return (
+        <DisabledDetailWrapper themes={theme} className={classNames.disabledWrapper}>
+          {button}
+          <Tooltip message={disabledDetail.message} triggerType="icon">
+            <DisabledDetailIcon />
+          </Tooltip>
+        </DisabledDetailWrapper>
+      )
+    }
+
+    return button
   },
 )
 // BottomFixedArea での判定に用いるために displayName を明示的に設定する
@@ -75,6 +94,24 @@ const Loader = styled(shrLoader)<{ variant: Variant; themes: Theme }>`
       border-color: ${variant === 'secondary'
         ? color.TEXT_DISABLED
         : color.disableColor(color.TEXT_WHITE)};
+    }
+  `}
+`
+
+const DisabledDetailWrapper = styled(Cluster).attrs({
+  inline: true,
+  align: 'center',
+})<{ themes: Theme }>`
+  ${({ themes: { color, space } }) => css`
+    > .smarthr-ui-Tooltip {
+      overflow-y: unset;
+
+      .smarthr-ui-Icon {
+        /* Tooltip との距離を変えずに反応範囲を広げるために negative space を使う */
+        margin: ${space(-0.25)};
+        padding: ${space(0.25)};
+        color: ${color.TEXT_GREY};
+      }
     }
   `}
 `

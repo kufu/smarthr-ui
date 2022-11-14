@@ -40,6 +40,7 @@ export const useClassNames = () => {
     () => ({
       button: {
         wrapper: generateButotn(),
+        disabledWrapper: generateButotn('disabledWrapper'),
       },
       anchorButton: {
         wrapper: generateAnchorButotn(),
