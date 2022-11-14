@@ -1,20 +1,10 @@
 import dayjs from 'dayjs'
 import { warekiToDate } from '@smarthr/wareki'
 
-const fullWidthToHalfWidth = (dateString: string) =>
-  dateString.replace(/[ａ-ｚＡ-Ｚ０-９．]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0))
-
 export function parseJpnDateString(dateString: string): Date {
-  const { isValid, result } = warekiToDate(dateString)
+  const { isValid, result, formatted } = warekiToDate(dateString)
 
-  if (isValid) {
-    return result
-  }
-
-  // TODO: warekiToDateには全角文字列渡しても問題無い
-  // warekiToDateが数字を半角に直した値をreturnするようになったら
-  // fullWidthToHalfWidth(dateString) をその値と差し替える
-  return dayjs(fullWidthToHalfWidth(dateString)).toDate()
+  return isValid ? result : dayjs(formatted).toDate()
 }
 
 export function getPortalPosition(inputRect: DOMRect, contentHeihgt: number) {
