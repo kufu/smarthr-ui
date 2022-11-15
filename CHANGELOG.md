@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [23.6.0](https://github.com/kufu/smarthr-ui/compare/v23.5.0...v23.6.0) (2022-11-15)
+
+
+### Features
+
+* comboboxのドロップダウンメニューリスト内にヒントを設置できるオプションを追加 ([#2896](https://github.com/kufu/smarthr-ui/issues/2896)) ([7c5babf](https://github.com/kufu/smarthr-ui/commit/7c5babf4ac3a4f587374f9ffb83cf5d979b3f5d4))
+* DropdownButton に disabled な理由を渡せるようにする ([#2910](https://github.com/kufu/smarthr-ui/issues/2910)) ([917227e](https://github.com/kufu/smarthr-ui/commit/917227eade7faa45a9b776e828ec79a0d219f708))
+* faRegClockアイコンを追加 ([#2911](https://github.com/kufu/smarthr-ui/issues/2911)) ([d390e2f](https://github.com/kufu/smarthr-ui/commit/d390e2f7132277441394cffc5bf6092a28221b84))
+* single combo box に prefix optionを追加する ([#2899](https://github.com/kufu/smarthr-ui/issues/2899)) ([7dd1169](https://github.com/kufu/smarthr-ui/commit/7dd1169385f9527f262b249cd5e6c2ac4bf92e79))
+
+
+### Bug Fixes
+
+* DatePicker に invalidな日付文字列が渡された場合の動作を修正する ([#2876](https://github.com/kufu/smarthr-ui/issues/2876)) ([1741524](https://github.com/kufu/smarthr-ui/commit/1741524d0deeb1a697c7667e5a202e28e16b5c7f))
+* hooksの設定漏れを修正する ([#2897](https://github.com/kufu/smarthr-ui/issues/2897)) ([5df553e](https://github.com/kufu/smarthr-ui/commit/5df553e34f2656b58dfbe1d042ca9a075673d1ee))
+* Tooltip のフォーカスリングを SmartHR UI 化 ([#2900](https://github.com/kufu/smarthr-ui/issues/2900)) ([74d44d6](https://github.com/kufu/smarthr-ui/commit/74d44d674548993015153f66c2c67317d8495cd8))
+
 ## [23.5.0](https://github.com/kufu/smarthr-ui/compare/v23.4.1...v23.5.0) (2022-11-08)
 
 
