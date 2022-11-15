@@ -34,8 +34,8 @@ export const All: Story = () => {
             if (!_date) return ''
             return _date.toDateString()
           }}
-          onChangeDate={(_date, _value) => {
-            action('change')(_date, _value)
+          onChangeDate={(_date, _value, _other) => {
+            action('change')(_date, _value, _other)
             setValue(_value)
           }}
         />

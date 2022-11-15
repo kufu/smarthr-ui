@@ -82,7 +82,7 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
           </TextareaLabel>
         </label>
       )}
-      <TextArea
+      <StyledTextarea
         id={textareaId}
         name={TEXT_AREA_NAME}
         themes={theme}
@@ -129,7 +129,7 @@ const TextareaLabel = styled(Heading)<{ themes: Theme }>`
   margin-bottom: ${({ themes }) => themes.spacingByChar(1)};
 `
 
-const TextArea = styled(Textarea)<{ themes: Theme }>`
+const StyledTextarea = styled(Textarea)<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => {
     return css`
       display: block;

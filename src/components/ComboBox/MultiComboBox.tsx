@@ -2,6 +2,7 @@ import React, {
   ChangeEvent,
   HTMLAttributes,
   KeyboardEvent,
+  ReactNode,
   useCallback,
   useLayoutEffect,
   useMemo,
@@ -53,6 +54,10 @@ type Props<T> = {
    * input 要素の `placeholder` 属性の値
    */
   placeholder?: string
+  /**
+   * ドロップダウンリスト内に表示するヘルプメッセージ
+   */
+  dropdownHelpMessage?: ReactNode
   /**
    * `true` のとき、ドロップダウンリスト内にローダーを表示する
    */
@@ -119,6 +124,7 @@ export function MultiComboBox<T>({
   error = false,
   creatable = false,
   placeholder = '',
+  dropdownHelpMessage,
   isLoading,
   selectedItemEllipsis,
   width = 'auto',
@@ -188,6 +194,7 @@ export function MultiComboBox<T>({
     listBoxRef,
   } = useListBox({
     options,
+    dropdownHelpMessage,
     onAdd,
     onSelect: handleSelect,
     isExpanded: isFocused,

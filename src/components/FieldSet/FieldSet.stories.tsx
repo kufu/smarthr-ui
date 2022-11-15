@@ -46,9 +46,6 @@ export const All: Story = () => {
         <FieldSet label="width" defaultValue="width: 100%" width="100%" />
       </li>
       <li>
-        <FieldSet label="placeholder" placeholder="placeholder" />
-      </li>
-      <li>
         <FieldSet label="onChange" onChange={action('onChange!!')} />
       </li>
       <li>

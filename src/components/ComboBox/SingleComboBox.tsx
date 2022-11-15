@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   HTMLAttributes,
+  ReactNode,
   useCallback,
   useLayoutEffect,
   useMemo,
@@ -43,6 +44,10 @@ type Props<T> = {
    */
   disabled?: boolean
   /**
+   * コンポーネント内の先頭に表示する内容
+   */
+  prefix?: ReactNode
+  /**
    * `true` のとき、コンポーネントの外枠が `DANGER` カラーになる
    */
   error?: boolean
@@ -54,6 +59,10 @@ type Props<T> = {
    * input 要素の `placeholder` 属性の値
    */
   placeholder?: string
+  /**
+   * ドロップダウンリスト内に表示するヘルプメッセージ
+   */
+  dropdownHelpMessage?: ReactNode
   /**
    * `true` のとき、ドロップダウンリスト内にローダーを表示する
    */
@@ -101,9 +110,11 @@ export function SingleComboBox<T>({
   defaultItem,
   name,
   disabled = false,
+  prefix,
   error = false,
   creatable = false,
   placeholder = '',
+  dropdownHelpMessage,
   isLoading,
   width = 'auto',
   className = '',
@@ -141,6 +152,7 @@ export function SingleComboBox<T>({
     listBoxRef,
   } = useListBox({
     options,
+    dropdownHelpMessage,
     onAdd,
     onSelect: useCallback(
       (selected: ComboBoxItem<T>) => {
@@ -198,7 +210,7 @@ export function SingleComboBox<T>({
         setIsExpanded(true)
       }
     },
-    [disabled, inputRef, isExpanded, setIsExpanded],
+    [disabled, inputRef, isExpanded, setIsExpanded, focus],
   )
   const actualOnChangeInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -306,13 +318,15 @@ export function SingleComboBox<T>({
         aria-expanded={isFocused}
         aria-invalid={error || undefined}
       >
+        {/* eslint-disable smarthr/a11y-prohibit-input-placeholder */}
         <StyledInput
+          placeholder={placeholder}
           type="text"
           name={name}
           value={inputValue}
           disabled={disabled}
+          prefix={prefix}
           error={error}
-          placeholder={placeholder}
           suffix={
             <>
               <ClearButton
@@ -344,6 +358,7 @@ export function SingleComboBox<T>({
           aria-autocomplete="list"
           className={classNames.input}
         />
+        {/* eslint-enable smarthr/a11y-prohibit-input-placeholder */}
         {renderListBox()}
       </Container>
     </ComboBoxContext.Provider>

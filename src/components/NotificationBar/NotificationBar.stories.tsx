@@ -139,11 +139,13 @@ export const Demo: Story = () => {
       )}
       <Center>
         <Stack>
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label>
             <CheckBox onChange={() => setBold(!bold)} checked={bold}>
               bold
             </CheckBox>
           </label>
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label>
             <CheckBox onChange={() => setAnimate(!animate)} checked={animate}>
               animate

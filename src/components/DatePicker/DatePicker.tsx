@@ -36,9 +36,19 @@ type Props = {
   /** 入出力用文字列と併記する別フォーマット処理を記述する関数 */
   showAlternative?: (date: Date | null) => string
   /** 選択された日付が変わった時に発火するコールバック関数 */
-  onChangeDate?: (date: Date | null, value: string) => void
+  onChangeDate?: (date: Date | null, value: string, other: { errors: string[] }) => void
 }
-type InputAttributes = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof Props>
+type OmitInputAttributes =
+  | keyof Props
+  | 'type'
+  | 'onChange'
+  | 'onKeyPress'
+  | 'onFocus'
+  | 'onBlur'
+  | 'aria-expanded'
+  | 'aria-controls'
+  | 'aria-haspopup'
+type InputAttributes = Omit<React.InputHTMLAttributes<HTMLInputElement>, OmitInputAttributes>
 
 export const DEFAULT_FROM = new Date(1900, 0, 1)
 
@@ -67,24 +77,24 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   )
 
   const dateToString = useCallback(
-    (_date: Date | null) => {
+    (d: Date | null) => {
       if (formatDate) {
-        return formatDate(_date)
+        return formatDate(d)
       }
-      if (!_date) {
+      if (!d) {
         return ''
       }
-      return dayjs(_date).format('YYYY/MM/DD')
+      return dayjs(d).format('YYYY/MM/DD')
     },
     [formatDate],
   )
 
   const dateToAlternativeFormat = useCallback(
-    (_date: Date | null) => {
-      if (!_date || !showAlternative) {
+    (d: Date | null) => {
+      if (!d || !showAlternative) {
         return null
       }
-      return showAlternative(_date)
+      return showAlternative(d)
     },
     [showAlternative],
   )
@@ -103,23 +113,26 @@ export const DatePicker: VFC<Props & InputAttributes> = ({
   const updateDate = useCallback(
     (newDate: Date | null) => {
       if (
+        !inputRef.current ||
         newDate === selectedDate ||
         (newDate && selectedDate && newDate.getTime() === selectedDate.getTime())
       ) {
         // Do not update date if the new date is same with the old one.
         return
       }
-      if (!inputRef.current) {
-        return
+
+      const isValid = !newDate || dayjs(newDate).isValid()
+      const nextDate = isValid ? newDate : null
+      const errors: string[] = []
+
+      if (!isValid) {
+        errors.push('INVALID_DATE')
       }
 
-      // Do not change input value if new date is invalid date
-      if (!newDate || dayjs(newDate).isValid()) {
-        inputRef.current.value = dateToString(newDate)
-        setAlternativeFormat(dateToAlternativeFormat(newDate))
-      }
-      setSelectedDate(newDate)
-      onChangeDate && onChangeDate(newDate, inputRef.current.value)
+      inputRef.current.value = dateToString(nextDate)
+      setAlternativeFormat(dateToAlternativeFormat(nextDate))
+      setSelectedDate(nextDate)
+      onChangeDate && onChangeDate(nextDate, inputRef.current.value, { errors })
     },
     [selectedDate, dateToString, dateToAlternativeFormat, onChangeDate],
   )

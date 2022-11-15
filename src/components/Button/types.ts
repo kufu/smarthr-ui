@@ -12,6 +12,13 @@ export type BaseProps = {
    */
   className?: string
   /**
+   * 無効な理由
+   */
+  disabledDetail?: {
+    icon?: React.FunctionComponent
+    message: React.ReactNode
+  }
+  /**
    * ボタン内の先頭に表示する内容。
    * 通常は、アイコンを表示するために用いる。
    */

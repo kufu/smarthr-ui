@@ -220,6 +220,7 @@ import {
   FaReceipt,
   FaRedo,
   FaRedoAlt,
+  FaRegClock,
   FaRegDotCircle,
   FaRegLightbulb,
   FaReply,
@@ -764,3 +765,4 @@ export const FaWindowRestoreIcon = /*#__PURE__*/ createIcon(FaWindowRestore)
 export const FaWrenchIcon = /*#__PURE__*/ createIcon(FaWrench)
 export const FaYenSignIcon = /*#__PURE__*/ createIcon(FaYenSign)
 export const WarningIcon = /*#__PURE__*/ createIcon(Warning)
+export const FaRegClockIcon = /*#__PURE__*/ createIcon(FaRegClock)
