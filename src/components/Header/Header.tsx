@@ -1,14 +1,25 @@
 import React, { HTMLAttributes, ReactElement, useMemo } from 'react'
 import styled, { css } from 'styled-components'
-
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
-
 import { Cluster } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { Text } from '../Text'
 import { Button } from '../Button'
-import { HeaderDropdownButton } from './'
+import { FaQuestionCircleIcon, FaToolboxIcon } from '../Icon'
+import { HeaderDropdownButton, HeaderLink } from './'
+import { AppLauncher } from './AppLaucher'
+
+type Launcher = {
+  apps: {
+    [key: string]: Array<{
+      label: string
+      url: string
+      target?: string
+    }>
+  }
+  urlToShowAll: string
+}
 
 type Tenant = {
   id: string
@@ -29,6 +40,7 @@ type Props = {
   children?: React.ReactNode
   /** コンポーネントに適用するクラス名 */
   className?: string
+  launcher?: Launcher
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
@@ -40,6 +52,7 @@ export const Header: React.VFC<Props & ElementProps> = ({
   onTenantSelect,
   children,
   className,
+  launcher,
 }) => {
   const theme = useTheme()
   const classNames = useClassNames()
@@ -77,7 +90,19 @@ export const Header: React.VFC<Props & ElementProps> = ({
           <TenantInfo className={classNames.tenantInfo}>{tenantInfo}</TenantInfo>
         )}
       </Cluster>
-      <Actions className={classNames.actions}>{children}</Actions>
+      <Actions className={classNames.actions}>
+        <HeaderLink href="https://support.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
+          ヘルプ
+        </HeaderLink>
+        {launcher && (
+          <HeaderDropdownButton label="アプリ" prefix={<FaToolboxIcon />}>
+            <AppLauncher launcher={launcher} />
+          </HeaderDropdownButton>
+        )}
+        <HeaderDropdownButton label="info@example.com">
+          <Button>ログアウト</Button>
+        </HeaderDropdownButton>
+      </Actions>
     </Wrapper>
   )
 }

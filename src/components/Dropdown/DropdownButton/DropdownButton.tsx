@@ -27,6 +27,7 @@ type Props = {
   onlyIconTrigger?: boolean
   /** 引き金となるボタンの `disabled` 属性の値 */
   disabled?: boolean
+  prefix?: ReactNode
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
@@ -37,6 +38,7 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
   onlyIconTrigger = false,
   disabled = false,
   className = '',
+  prefix,
   ...props
 }) => {
   const themes = useTheme()
@@ -60,6 +62,7 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
     <Dropdown {...props}>
       <DropdownTrigger className={`${classNames.wrapper}${className && ` ${className}`}`}>
         <TriggerButton
+          prefix={prefix}
           suffix={triggerSuffix}
           size={triggerSize}
           disabled={disabled}
@@ -82,7 +85,7 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
 }
 
 const TriggerButton = styled(Button)`
-  &[aria-expanded='true'] .smarthr-ui-Icon {
+  &[aria-expanded='true'] span + .smarthr-ui-Icon {
     transform: rotate(0.5turn);
   }
 `
