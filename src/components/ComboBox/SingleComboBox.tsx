@@ -11,7 +11,7 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useOuterClick } from '../../hooks/useOuterClick'
+import { useClick } from '../../hooks/useClick'
 import { useSingleComboBoxClassNames } from './useClassNames'
 
 import { Input } from '../Input'
@@ -261,14 +261,6 @@ export function SingleComboBox<T>({
     },
     [isComposing, isExpanded, setIsExpanded, unfocus, handleListBoxKeyDown],
   )
-  const onBlurInput = useCallback(() => {
-    // HINT: useOuterClickよりあとに発火させたいためsetTimeoutでキューに積む
-    setTimeout(() => {
-      if (!selectedItem && defaultItem) {
-        onSelect && onSelect(defaultItem)
-      }
-    }, 10)
-  }, [selectedItem, defaultItem, onSelect])
 
   const caretIconColor = useMemo(() => {
     if (isFocused) return theme.color.TEXT_BLACK
@@ -276,8 +268,13 @@ export function SingleComboBox<T>({
     return theme.color.TEXT_GREY
   }, [disabled, isFocused, theme])
 
-  useOuterClick(
+  useClick(
     [outerRef, listBoxRef, clearButtonRef],
+    useCallback(() => {
+      if (!isFocused && onSelect && !selectedItem && defaultItem) {
+        onSelect(defaultItem)
+      }
+    }, [isFocused, selectedItem, onSelect, defaultItem]),
     useCallback(() => {
       unfocus()
     }, [unfocus]),
@@ -351,7 +348,6 @@ export function SingleComboBox<T>({
           onCompositionStart={onCompositionStart}
           onCompositionEnd={onCompositionEnd}
           onKeyDown={onKeyDownInput}
-          onBlur={onBlurInput}
           ref={inputRef}
           autoComplete="off"
           aria-activedescendant={activeOption?.id}
