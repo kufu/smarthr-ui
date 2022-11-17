@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactElement, useMemo } from 'react'
+import React, { ComponentProps, HTMLAttributes, ReactElement, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
@@ -8,18 +8,7 @@ import { Text } from '../Text'
 import { Button } from '../Button'
 import { FaQuestionCircleIcon, FaToolboxIcon } from '../Icon'
 import { HeaderDropdownButton, HeaderLink } from './'
-import { AppLauncher } from './AppLaucher'
-
-type Launcher = {
-  apps: {
-    [key: string]: Array<{
-      label: string
-      url: string
-      target?: string
-    }>
-  }
-  urlToShowAll: string
-}
+import { AppLauncher } from './AppLauncher'
 
 type Tenant = {
   id: string
@@ -40,8 +29,9 @@ type Props = {
   children?: React.ReactNode
   /** コンポーネントに適用するクラス名 */
   className?: string
-  launcher?: Launcher
+  launcher?: ComponentProps<typeof AppLauncher>
 }
+
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 export const Header: React.VFC<Props & ElementProps> = ({
@@ -96,7 +86,7 @@ export const Header: React.VFC<Props & ElementProps> = ({
         </HeaderLink>
         {launcher && (
           <HeaderDropdownButton label="アプリ" prefix={<FaToolboxIcon />}>
-            <AppLauncher launcher={launcher} />
+            <AppLauncher apps={launcher.apps} urlToShowAll={launcher.urlToShowAll} />
           </HeaderDropdownButton>
         )}
         <HeaderDropdownButton label="info@example.com">
