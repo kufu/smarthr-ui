@@ -27,6 +27,7 @@ import { FaInfoCircleIcon } from '../Icon'
 type Props<T> = {
   options: Array<ComboBoxOption<T>>
   dropdownHelpMessage?: ReactNode
+  dropdownWidth?: string | number
   onAdd?: (label: string) => void
   onSelect: (item: ComboBoxItem<T>) => void
   isExpanded: boolean
@@ -44,6 +45,7 @@ type Rect = {
 export function useListBox<T>({
   options,
   dropdownHelpMessage,
+  dropdownWidth,
   onAdd,
   onSelect,
   isExpanded,
@@ -200,49 +202,52 @@ export function useListBox<T>({
 
   const renderListBox = useCallback(() => {
     return createPortal(
-      <Container
-        {...listBoxRect}
-        themes={theme}
-        id={listBoxId}
-        ref={listBoxRef}
-        role="listbox"
-        aria-hidden={!isExpanded}
-        className={classNames.dropdownList}
-      >
-        {dropdownHelpMessage && (
-          <HelpMessage themes={theme}>
-            <FaInfoCircleIcon
-              color={theme.color.TEXT_GREY}
-              text={dropdownHelpMessage}
-              iconGap={0.25}
-            />
-          </HelpMessage>
-        )}
-        {!isExpanded ? null : isLoading ? (
-          <LoaderWrapper themes={theme}>
-            <Loader />
-          </LoaderWrapper>
-        ) : options.length === 0 ? (
-          <NoItems themes={theme} role="alert" aria-live="polite" className={classNames.noItems}>
-            一致する選択肢がありません
-          </NoItems>
-        ) : (
-          partialOptions.map((option) => {
-            return (
-              <ListBoxItem
-                key={option.id}
-                option={option}
-                isActive={option.id === activeOption?.id}
-                onAdd={handleAdd}
-                onSelect={handleSelect}
-                onMouseOver={handleHoverOption}
-                activeRef={activeRef}
+      <Wrapper {...listBoxRect}>
+        <Container
+          {...listBoxRect}
+          themes={theme}
+          width={dropdownWidth || listBoxRect.width}
+          id={listBoxId}
+          ref={listBoxRef}
+          role="listbox"
+          aria-hidden={!isExpanded}
+          className={classNames.dropdownList}
+        >
+          {dropdownHelpMessage && (
+            <HelpMessage themes={theme}>
+              <FaInfoCircleIcon
+                color={theme.color.TEXT_GREY}
+                text={dropdownHelpMessage}
+                iconGap={0.25}
               />
-            )
-          })
-        )}
-        {renderIntersection()}
-      </Container>,
+            </HelpMessage>
+          )}
+          {!isExpanded ? null : isLoading ? (
+            <LoaderWrapper themes={theme}>
+              <Loader />
+            </LoaderWrapper>
+          ) : options.length === 0 ? (
+            <NoItems themes={theme} role="alert" aria-live="polite" className={classNames.noItems}>
+              一致する選択肢がありません
+            </NoItems>
+          ) : (
+            partialOptions.map((option) => {
+              return (
+                <ListBoxItem
+                  key={option.id}
+                  option={option}
+                  isActive={option.id === activeOption?.id}
+                  onAdd={handleAdd}
+                  onSelect={handleSelect}
+                  onMouseOver={handleHoverOption}
+                  activeRef={activeRef}
+                />
+              )
+            })
+          )}
+          {renderIntersection()}
+        </Container>
+      </Wrapper>,
     )
   }, [
     activeOption?.id,
@@ -272,6 +277,15 @@ export function useListBox<T>({
   }
 }
 
+const Wrapper = styled.div<Rect>(({ top, left, width }) => {
+  return css`
+    position: absolute;
+    top: ${top}px;
+    left: ${left}px;
+    width: ${width}px;
+  `
+})
+
 const Container = styled.div<
   Rect & {
     themes: Theme
@@ -280,8 +294,8 @@ const Container = styled.div<
   const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
   return css`
     position: absolute;
-    top: ${top}px;
-    left: ${left}px;
+    top: 0;
+    left: 0;
     overflow-y: auto;
 
     /*
@@ -293,7 +307,7 @@ const Container = styled.div<
     css`
       height: ${height}px;
     `}
-    width: ${width}px;
+    width: ${typeof width === 'string' ? width : `${width}px`};
     padding: ${spacingByChar(0.5)} 0;
     border-radius: ${radius.m};
     box-shadow: ${shadow.LAYER3};
