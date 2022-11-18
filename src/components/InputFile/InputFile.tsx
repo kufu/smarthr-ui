@@ -1,4 +1,12 @@
-import React, { InputHTMLAttributes, VFC, useRef, useState } from 'react'
+import React, {
+  InputHTMLAttributes,
+  ReactNode,
+  VFC,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Button } from '../Button'
@@ -14,15 +22,21 @@ export type Props = {
   /** コンポーネントの大きさ */
   size?: Size
   /** フォームのラベル */
-  label: string
+  label: ReactNode
   /** ファイルの選択に変更があったときに発火するコールバック関数 */
   onChange?: (files: File[]) => void
   /** `true` の時、フォームの枠の色が `DANGER` になる */
   error?: boolean
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
+  /** コンポーネント内のテキストを変更する関数 */
+  decorator?: {
+    destroy?: (text: string) => ReactNode
+  }
 }
 type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
+
+const DESTROY_BUTTON_TEXT = '削除'
 
 export const InputFile: VFC<Props & ElementProps> = ({
   className = '',
@@ -32,48 +46,66 @@ export const InputFile: VFC<Props & ElementProps> = ({
   onChange,
   disabled = false,
   error,
+  decorator = {},
   ...props
 }) => {
   const theme = useTheme()
   const [files, setFiles] = useState<File[]>([])
-  const labelDisabledClassName = disabled ? 'disabled' : ''
-  const labelSmallClassName = size === 's' ? 'small' : ''
-  const errorClassName = error ? 'error' : ''
+  const { destroy: destroyDecorator } = decorator
+
   // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
   const isUpdatingFilesDirectly = useRef(false)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const updateFiles = (newFiles: File[]) => {
-    onChange && onChange(newFiles)
-    setFiles(newFiles)
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (isUpdatingFilesDirectly.current) {
-      return
-    }
-    const newFiles = Array.from(e.target.files ?? [])
-    updateFiles(newFiles)
-  }
-
-  const handleDelete = (index: number) => {
-    if (!inputRef.current) {
-      return
-    }
-    const newFiles = files.filter((_, i) => index !== i)
-    updateFiles(newFiles)
-
-    const buff = new DataTransfer()
-    newFiles.forEach((file) => {
-      buff.items.add(file)
-    })
-    isUpdatingFilesDirectly.current = true
-    inputRef.current.files = buff.files
-    isUpdatingFilesDirectly.current = false
-  }
+  const destroyButtonText = useMemo(
+    () => (destroyDecorator ? destroyDecorator(DESTROY_BUTTON_TEXT) : DESTROY_BUTTON_TEXT),
+    [destroyDecorator],
+  )
+  const inputWrapperClassName = useMemo(
+    () => `${size === 's' ? 'small' : ''} ${disabled ? 'disabled' : ''} ${error ? 'error' : ''}`,
+    [disabled, error, size],
+  )
 
   const classNames = useClassNames()
+
+  const updateFiles = useCallback(
+    (newFiles: File[]) => {
+      onChange && onChange(newFiles)
+      setFiles(newFiles)
+    },
+    [setFiles, onChange],
+  )
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (isUpdatingFilesDirectly.current) {
+        return
+      }
+      const newFiles = Array.from(e.target.files ?? [])
+      updateFiles(newFiles)
+    },
+    [isUpdatingFilesDirectly, updateFiles],
+  )
+
+  const handleDelete = useCallback(
+    (index: number) => {
+      if (!inputRef.current) {
+        return
+      }
+      const newFiles = files.filter((_, i) => index !== i)
+      updateFiles(newFiles)
+
+      const buff = new DataTransfer()
+      newFiles.forEach((file) => {
+        buff.items.add(file)
+      })
+      isUpdatingFilesDirectly.current = true
+      inputRef.current.files = buff.files
+      isUpdatingFilesDirectly.current = false
+    },
+    [files, isUpdatingFilesDirectly, inputRef, updateFiles],
+  )
 
   return (
     <Wrapper className={`${className} ${classNames.wrapper}`}>
@@ -90,7 +122,7 @@ export const InputFile: VFC<Props & ElementProps> = ({
                     onClick={() => handleDelete(index)}
                     className={classNames.deleteButton}
                   >
-                    削除
+                    {destroyButtonText}
                   </Button>
                 </span>
               </li>
@@ -98,14 +130,11 @@ export const InputFile: VFC<Props & ElementProps> = ({
           })}
         </FileList>
       )}
-      <InputWrapper
-        className={`${labelSmallClassName} ${labelDisabledClassName} ${errorClassName}`}
-        themes={theme}
-      >
+      <InputWrapper className={inputWrapperClassName} themes={theme}>
         <input
           {...props}
           type="file"
-          onChange={(e) => handleChange(e)}
+          onChange={handleChange}
           disabled={disabled}
           className={classNames.input}
           ref={inputRef}
