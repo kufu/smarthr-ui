@@ -33,6 +33,10 @@ export const All: Story = () => {
       <dd>
         <InputFile label="ファイルを選択" error />
       </dd>
+      <dt>decoratorで文言変更</dt>
+      <dd>
+        <InputFile label="select file." decorator={{ destroy: (text) => `delete(${text})` }} />
+      </dd>
     </List>
   )
 }
