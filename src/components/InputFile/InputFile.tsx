@@ -29,6 +29,7 @@ export type Props = {
   error?: boolean
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
+  /** コンポーネント内のテキストを変更する関数 */
   decorator?: {
     destroy?: (text: string) => ReactNode
   }
