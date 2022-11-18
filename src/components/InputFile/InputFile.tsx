@@ -14,7 +14,7 @@ export type Props = {
   /** コンポーネントの大きさ */
   size?: Size
   /** フォームのラベル */
-  label: string
+  label: React.ReactNode
   /** ファイルの選択に変更があったときに発火するコールバック関数 */
   onChange?: (files: File[]) => void
   /** `true` の時、フォームの枠の色が `DANGER` になる */
