@@ -265,6 +265,7 @@ export function useListBox<T>({
     partialOptions,
     renderIntersection,
     dropdownHelpMessage,
+    dropdownWidth,
     theme,
   ])
 
@@ -290,7 +291,7 @@ const Container = styled.div<
   Rect & {
     themes: Theme
   }
->(({ top, left, width, height, themes }) => {
+>(({ width, height, themes }) => {
   const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
   return css`
     position: absolute;
