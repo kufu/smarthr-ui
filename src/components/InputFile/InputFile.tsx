@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, VFC, useRef, useState } from 'react'
+import React, { InputHTMLAttributes, ReactNode, VFC, useMemo, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Button } from '../Button'
@@ -14,15 +14,20 @@ export type Props = {
   /** コンポーネントの大きさ */
   size?: Size
   /** フォームのラベル */
-  label: React.ReactNode
+  label: ReactNode
   /** ファイルの選択に変更があったときに発火するコールバック関数 */
   onChange?: (files: File[]) => void
   /** `true` の時、フォームの枠の色が `DANGER` になる */
   error?: boolean
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
+  decorator?: {
+    destroy?: (text: string) => ReactNode
+  }
 }
 type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
+
+const DESTROY_BUTTON_TEXT = '削除'
 
 export const InputFile: VFC<Props & ElementProps> = ({
   className = '',
@@ -32,10 +37,16 @@ export const InputFile: VFC<Props & ElementProps> = ({
   onChange,
   disabled = false,
   error,
+  decorator = {},
   ...props
 }) => {
   const theme = useTheme()
   const [files, setFiles] = useState<File[]>([])
+  const { destroy: destroyDecorator } = decorator
+  const destroyButtonText = useMemo(
+    () => (destroyDecorator ? destroyDecorator(DESTROY_BUTTON_TEXT) : DESTROY_BUTTON_TEXT),
+    [destroyDecorator],
+  )
   const labelDisabledClassName = disabled ? 'disabled' : ''
   const labelSmallClassName = size === 's' ? 'small' : ''
   const errorClassName = error ? 'error' : ''
@@ -90,7 +101,7 @@ export const InputFile: VFC<Props & ElementProps> = ({
                     onClick={() => handleDelete(index)}
                     className={classNames.deleteButton}
                   >
-                    削除
+                    {destroyButtonText}
                   </Button>
                 </span>
               </li>
