@@ -145,6 +145,7 @@ export function useListBox<T>({
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
+
       if (e.key === 'Down' || e.key === 'ArrowDown') {
         e.stopPropagation()
         moveActivePositionDown()
@@ -200,39 +201,44 @@ export function useListBox<T>({
     [setActiveOption],
   )
 
-  const renderListBox = useCallback(() => {
-    return createPortal(
-      <Wrapper {...listBoxRect}>
-        <Container
-          {...listBoxRect}
-          themes={theme}
-          width={dropdownWidth || listBoxRect.width}
-          id={listBoxId}
-          ref={listBoxRef}
-          role="listbox"
-          aria-hidden={!isExpanded}
-          className={classNames.dropdownList}
-        >
-          {dropdownHelpMessage && (
-            <HelpMessage themes={theme}>
-              <FaInfoCircleIcon
-                color={theme.color.TEXT_GREY}
-                text={dropdownHelpMessage}
-                iconGap={0.25}
-              />
-            </HelpMessage>
-          )}
-          {!isExpanded ? null : isLoading ? (
-            <LoaderWrapper themes={theme}>
-              <Loader />
-            </LoaderWrapper>
-          ) : options.length === 0 ? (
-            <NoItems themes={theme} role="alert" aria-live="polite" className={classNames.noItems}>
-              一致する選択肢がありません
-            </NoItems>
-          ) : (
-            partialOptions.map((option) => {
-              return (
+  const renderListBox = useCallback(
+    () =>
+      createPortal(
+        <Wrapper {...listBoxRect}>
+          <Container
+            {...listBoxRect}
+            themes={theme}
+            $width={dropdownWidth || listBoxRect.width}
+            id={listBoxId}
+            ref={listBoxRef}
+            role="listbox"
+            aria-hidden={!isExpanded}
+            className={classNames.dropdownList}
+          >
+            {dropdownHelpMessage && (
+              <HelpMessage themes={theme}>
+                <FaInfoCircleIcon
+                  color={theme.color.TEXT_GREY}
+                  text={dropdownHelpMessage}
+                  iconGap={0.25}
+                />
+              </HelpMessage>
+            )}
+            {!isExpanded ? null : isLoading ? (
+              <LoaderWrapper themes={theme}>
+                <Loader />
+              </LoaderWrapper>
+            ) : options.length === 0 ? (
+              <NoItems
+                themes={theme}
+                role="alert"
+                aria-live="polite"
+                className={classNames.noItems}
+              >
+                一致する選択肢がありません
+              </NoItems>
+            ) : (
+              partialOptions.map((option) => (
                 <ListBoxItem
                   key={option.id}
                   option={option}
@@ -242,32 +248,32 @@ export function useListBox<T>({
                   onMouseOver={handleHoverOption}
                   activeRef={activeRef}
                 />
-              )
-            })
-          )}
-          {renderIntersection()}
-        </Container>
-      </Wrapper>,
-    )
-  }, [
-    activeOption?.id,
-    classNames.dropdownList,
-    classNames.noItems,
-    createPortal,
-    handleAdd,
-    handleHoverOption,
-    handleSelect,
-    isExpanded,
-    isLoading,
-    listBoxId,
-    listBoxRect,
-    options.length,
-    partialOptions,
-    renderIntersection,
-    dropdownHelpMessage,
-    dropdownWidth,
-    theme,
-  ])
+              ))
+            )}
+            {renderIntersection()}
+          </Container>
+        </Wrapper>,
+      ),
+    [
+      activeOption?.id,
+      classNames.dropdownList,
+      classNames.noItems,
+      createPortal,
+      handleAdd,
+      handleHoverOption,
+      handleSelect,
+      isExpanded,
+      isLoading,
+      listBoxId,
+      listBoxRect,
+      options.length,
+      partialOptions,
+      renderIntersection,
+      dropdownHelpMessage,
+      dropdownWidth,
+      theme,
+    ],
+  )
 
   return {
     renderListBox,
@@ -290,8 +296,9 @@ const Wrapper = styled.div<Rect>(({ top, left, width }) => {
 const Container = styled.div<
   Rect & {
     themes: Theme
+    $width: string | number
   }
->(({ width, height, themes }) => {
+>(({ $width, height, themes }) => {
   const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
   return css`
     position: absolute;
@@ -308,7 +315,7 @@ const Container = styled.div<
     css`
       height: ${height}px;
     `}
-    width: ${typeof width === 'string' ? width : `${width}px`};
+    width: ${typeof $width === 'string' ? $width : `${$width}px`};
     padding: ${spacingByChar(0.5)} 0;
     border-radius: ${radius.m};
     box-shadow: ${shadow.LAYER3};
