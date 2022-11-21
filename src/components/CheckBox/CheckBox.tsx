@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -14,33 +14,35 @@ type Props = {
   children?: ReactNode
 } & CheckBoxInputProps
 
-export const CheckBox: FC<Props> = ({ lineHeight = 1.5, className = '', children, ...props }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
-  const checkBoxId = useId(props.id)
+export const CheckBox = forwardRef<HTMLInputElement, Props>(
+  ({ lineHeight = 1.5, className = '', children, ...props }, ref) => {
+    const theme = useTheme()
+    const classNames = useClassNames()
+    const checkBoxId = useId(props.id)
 
-  if (!children)
+    if (!children)
+      return (
+        <Wrapper className={`${className} ${classNames.wrapper}`}>
+          <CheckBoxInput {...props} ref={ref} />
+        </Wrapper>
+      )
+
     return (
       <Wrapper className={`${className} ${classNames.wrapper}`}>
-        <CheckBoxInput {...props} />
+        <CheckBoxInput {...props} ref={ref} id={checkBoxId} />
+
+        <Label
+          className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
+          htmlFor={checkBoxId}
+          $lineHeight={lineHeight}
+          themes={theme}
+        >
+          {children}
+        </Label>
       </Wrapper>
     )
-
-  return (
-    <Wrapper className={`${className} ${classNames.wrapper}`}>
-      <CheckBoxInput {...props} id={checkBoxId} />
-
-      <Label
-        className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
-        htmlFor={checkBoxId}
-        $lineHeight={lineHeight}
-        themes={theme}
-      >
-        {children}
-      </Label>
-    </Wrapper>
-  )
-}
+  },
+)
 
 // Use flex-start to support multi-line text.
 const Wrapper = styled.div`
