@@ -166,7 +166,19 @@ export const Single: Story = () => {
           onClear={handleClear}
         />
       </dd>
-      <dt>ドロップダウンリストの幅を指定した時（200%）</dt>
+      <dt>ドロップダウンリストの幅をアイテムの幅に合わせる</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownWidth="auto"
+          dropdownHelpMessage="入力でフィルタリングできます"
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+        />
+      </dd>
+      <dt>ドロップダウンリストの幅を相対指定（Inputの200%幅）</dt>
       <dd>
         <SingleComboBox
           items={items}
