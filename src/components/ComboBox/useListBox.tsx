@@ -27,6 +27,7 @@ import { FaInfoCircleIcon } from '../Icon'
 type Props<T> = {
   options: Array<ComboBoxOption<T>>
   dropdownHelpMessage?: ReactNode
+  dropdownWidth?: string | number
   onAdd?: (label: string) => void
   onSelect: (item: ComboBoxItem<T>) => void
   isExpanded: boolean
@@ -44,6 +45,7 @@ type Rect = {
 export function useListBox<T>({
   options,
   dropdownHelpMessage,
+  dropdownWidth,
   onAdd,
   onSelect,
   isExpanded,
@@ -143,6 +145,7 @@ export function useListBox<T>({
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
       setNavigationType('key')
+
       if (e.key === 'Down' || e.key === 'ArrowDown') {
         e.stopPropagation()
         moveActivePositionDown()
@@ -198,70 +201,79 @@ export function useListBox<T>({
     [setActiveOption],
   )
 
-  const renderListBox = useCallback(() => {
-    return createPortal(
-      <Container
-        {...listBoxRect}
-        themes={theme}
-        id={listBoxId}
-        ref={listBoxRef}
-        role="listbox"
-        aria-hidden={!isExpanded}
-        className={classNames.dropdownList}
-      >
-        {dropdownHelpMessage && (
-          <HelpMessage themes={theme}>
-            <FaInfoCircleIcon
-              color={theme.color.TEXT_GREY}
-              text={dropdownHelpMessage}
-              iconGap={0.25}
-            />
-          </HelpMessage>
-        )}
-        {!isExpanded ? null : isLoading ? (
-          <LoaderWrapper themes={theme}>
-            <Loader />
-          </LoaderWrapper>
-        ) : options.length === 0 ? (
-          <NoItems themes={theme} role="alert" aria-live="polite" className={classNames.noItems}>
-            一致する選択肢がありません
-          </NoItems>
-        ) : (
-          partialOptions.map((option) => {
-            return (
-              <ListBoxItem
-                key={option.id}
-                option={option}
-                isActive={option.id === activeOption?.id}
-                onAdd={handleAdd}
-                onSelect={handleSelect}
-                onMouseOver={handleHoverOption}
-                activeRef={activeRef}
-              />
-            )
-          })
-        )}
-        {renderIntersection()}
-      </Container>,
-    )
-  }, [
-    activeOption?.id,
-    classNames.dropdownList,
-    classNames.noItems,
-    createPortal,
-    handleAdd,
-    handleHoverOption,
-    handleSelect,
-    isExpanded,
-    isLoading,
-    listBoxId,
-    listBoxRect,
-    options.length,
-    partialOptions,
-    renderIntersection,
-    dropdownHelpMessage,
-    theme,
-  ])
+  const renderListBox = useCallback(
+    () =>
+      createPortal(
+        <Wrapper {...listBoxRect}>
+          <Container
+            {...listBoxRect}
+            themes={theme}
+            $width={dropdownWidth || listBoxRect.width}
+            id={listBoxId}
+            ref={listBoxRef}
+            role="listbox"
+            aria-hidden={!isExpanded}
+            className={classNames.dropdownList}
+          >
+            {dropdownHelpMessage && (
+              <HelpMessage themes={theme}>
+                <FaInfoCircleIcon
+                  color={theme.color.TEXT_GREY}
+                  text={dropdownHelpMessage}
+                  iconGap={0.25}
+                />
+              </HelpMessage>
+            )}
+            {!isExpanded ? null : isLoading ? (
+              <LoaderWrapper themes={theme}>
+                <Loader />
+              </LoaderWrapper>
+            ) : options.length === 0 ? (
+              <NoItems
+                themes={theme}
+                role="alert"
+                aria-live="polite"
+                className={classNames.noItems}
+              >
+                一致する選択肢がありません
+              </NoItems>
+            ) : (
+              partialOptions.map((option) => (
+                <ListBoxItem
+                  key={option.id}
+                  option={option}
+                  isActive={option.id === activeOption?.id}
+                  onAdd={handleAdd}
+                  onSelect={handleSelect}
+                  onMouseOver={handleHoverOption}
+                  activeRef={activeRef}
+                />
+              ))
+            )}
+            {renderIntersection()}
+          </Container>
+        </Wrapper>,
+      ),
+    [
+      activeOption?.id,
+      classNames.dropdownList,
+      classNames.noItems,
+      createPortal,
+      handleAdd,
+      handleHoverOption,
+      handleSelect,
+      isExpanded,
+      isLoading,
+      listBoxId,
+      listBoxRect,
+      options.length,
+      partialOptions,
+      renderIntersection,
+      dropdownHelpMessage,
+      dropdownWidth,
+      theme,
+    ],
+  )
 
   return {
     renderListBox,
@@ -272,16 +284,27 @@ export function useListBox<T>({
   }
 }
 
-const Container = styled.div<
-  Rect & {
-    themes: Theme
-  }
->(({ top, left, width, height, themes }) => {
-  const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
+const Wrapper = styled.div<Rect>(({ top, left, width }) => {
   return css`
+    /*
+    ドロップダウンリストをInputの幅に対する相対値で指定できるように、Inputの幅のdivを親要素にする
+    */
     position: absolute;
     top: ${top}px;
     left: ${left}px;
+    width: ${width}px;
+  `
+})
+
+const Container = styled.div<
+  Rect & {
+    themes: Theme
+    $width: string | number
+  }
+>(({ left, $width, height, themes }) => {
+  const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
+  return css`
+    position: absolute;
     overflow-y: auto;
 
     /*
@@ -293,7 +316,15 @@ const Container = styled.div<
     css`
       height: ${height}px;
     `}
-    width: ${width}px;
+
+    /*
+    dropdownWidthの指定があれば、ドロップダウンリストの幅として設定する。
+    ドロップダウンリストは、viewportの幅を超えないように、かつInputの幅より小さくならないようにする。
+    */
+    width: ${typeof $width === 'string' ? $width : `${$width}px`};
+    max-width: calc(100vw - ${left}px - ${spacingByChar(0.5)});
+    min-width: 100%;
+
     padding: ${spacingByChar(0.5)} 0;
     border-radius: ${radius.m};
     box-shadow: ${shadow.LAYER3};
