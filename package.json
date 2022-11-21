@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "23.6.0",
+  "version": "24.0.0",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "@smarthr/wareki": "^1.2.0",
@@ -84,7 +84,7 @@
     "ts-loader": "^9.4.1",
     "ts-node": "^10.9.1",
     "ttypescript": "^1.5.13",
-    "typescript": "^4.8.4",
+    "typescript": "^4.9.3",
     "typescript-plugin-styled-components": "^2.0.0",
     "wait-on": "^6.0.1",
     "webpack": "^5.75.0"
