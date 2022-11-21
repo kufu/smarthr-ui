@@ -298,7 +298,7 @@ const Container = styled.div<
     themes: Theme
     $width: string | number
   }
->(({ $width, height, themes }) => {
+>(({ left, $width, height, themes }) => {
   const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
   return css`
     position: absolute;
@@ -316,6 +316,7 @@ const Container = styled.div<
       height: ${height}px;
     `}
     width: ${typeof $width === 'string' ? $width : `${$width}px`};
+    max-width: calc(100vw - ${left}px - ${spacingByChar(0.5)});
     padding: ${spacingByChar(0.5)} 0;
     border-radius: ${radius.m};
     box-shadow: ${shadow.LAYER3};
