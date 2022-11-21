@@ -1,4 +1,4 @@
-import React, { VFC, useCallback } from 'react'
+import React, { forwardRef, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { transparentize } from 'polished'
 
@@ -12,35 +12,38 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   mixed?: boolean
 }
 
-export const CheckBoxInput: VFC<Props> = ({ mixed = false, onChange, ...props }) => {
-  const theme = useTheme()
-  const { checked, disabled } = props
-  const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (onChange) onChange(e)
-    },
-    [onChange],
-  )
-  const classNames = useClassNames()
+export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
+  ({ mixed = false, onChange, ...props }, ref) => {
+    const theme = useTheme()
+    const { checked, disabled } = props
+    const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
+    const handleChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (onChange) onChange(e)
+      },
+      [onChange],
+    )
+    const classNames = useClassNames()
 
-  return (
-    <Wrapper themes={theme}>
-      <Input
-        {...props}
-        {...(mixed && { 'aria-checked': 'mixed' })}
-        type="checkbox"
-        onChange={handleChange}
-        className={classNames.checkBox}
-        themes={theme}
-      />
-      <Box className={boxClassName} themes={theme} />
-      <IconWrap themes={theme}>
-        {mixed ? <FaMinusIcon color="TEXT_WHITE" /> : <FaCheckIcon color="TEXT_WHITE" />}
-      </IconWrap>
-    </Wrapper>
-  )
-}
+    return (
+      <Wrapper themes={theme}>
+        <Input
+          {...props}
+          {...(mixed && { 'aria-checked': 'mixed' })}
+          type="checkbox"
+          onChange={handleChange}
+          className={classNames.checkBox}
+          themes={theme}
+          ref={ref}
+        />
+        <Box className={boxClassName} themes={theme} />
+        <IconWrap themes={theme}>
+          {mixed ? <FaMinusIcon color="TEXT_WHITE" /> : <FaCheckIcon color="TEXT_WHITE" />}
+        </IconWrap>
+      </Wrapper>
+    )
+  },
+)
 
 const Wrapper = styled.span<{ themes: Theme }>`
   ${({ themes }) => {

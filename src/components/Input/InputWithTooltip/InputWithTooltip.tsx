@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react'
+import React, { ComponentProps, forwardRef } from 'react'
 import styled from 'styled-components'
 
 import { Input } from '../Input'
@@ -9,13 +9,13 @@ type Props = ComponentProps<typeof Input> & {
   tooltipMessage: React.ReactNode
 }
 
-export const InputWithTooltip: React.FC<Props> = ({ tooltipMessage, ...props }) => {
-  return (
+export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
+  ({ tooltipMessage, ...props }, ref) => (
     <Tooltip message={tooltipMessage} tabIndex={-1} ariaDescribedbyTarget="inner">
-      <Input {...props} />
+      <Input {...props} ref={ref} />
     </Tooltip>
-  )
-}
+  ),
+)
 
 const Tooltip = styled(shrTooltip)`
   /* Input のフォーカスリングを表示するため */
