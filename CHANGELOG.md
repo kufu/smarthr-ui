@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [24.0.0](https://github.com/kufu/smarthr-ui/compare/v23.6.0...v24.0.0) (2022-11-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop IndexNav component (#2917)
+
+### Features
+
+* InputFileの文言を変更可能にする ([#2919](https://github.com/kufu/smarthr-ui/issues/2919)) ([214036d](https://github.com/kufu/smarthr-ui/commit/214036d436c78420669576ba6ba47a72e481fe9c))
+* 一部の入力系コンポーネントに ref を渡せるよう修正 ([#2929](https://github.com/kufu/smarthr-ui/issues/2929)) ([1af55af](https://github.com/kufu/smarthr-ui/commit/1af55afab4a1745d75b66413848c91b353961f47))
+
+
+### Bug Fixes
+
+* combobox default-item optionのバグを修正する ([#2914](https://github.com/kufu/smarthr-ui/issues/2914)) ([9ed78ad](https://github.com/kufu/smarthr-ui/commit/9ed78ada4e7cbd44d083166d8be973a1add69866))
+* Tooltip を div から span に変更 ([#2918](https://github.com/kufu/smarthr-ui/issues/2918)) ([6afa0b4](https://github.com/kufu/smarthr-ui/commit/6afa0b4ff4acb84a5ce47a0958f715707b44b4fe))
+
+
+* drop IndexNav component ([#2917](https://github.com/kufu/smarthr-ui/issues/2917)) ([d2a78d5](https://github.com/kufu/smarthr-ui/commit/d2a78d5a7918ed2f780cd44276c7a23f3571e106))
+
 ## [23.6.0](https://github.com/kufu/smarthr-ui/compare/v23.5.0...v23.6.0) (2022-11-15)
 
 
