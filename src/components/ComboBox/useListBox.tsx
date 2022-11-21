@@ -286,6 +286,9 @@ export function useListBox<T>({
 
 const Wrapper = styled.div<Rect>(({ top, left, width }) => {
   return css`
+    /*
+    ドロップダウンリストをInputの幅に対する相対値で指定できるように、Inputの幅のdivを親要素にする
+    */
     position: absolute;
     top: ${top}px;
     left: ${left}px;
@@ -302,8 +305,6 @@ const Container = styled.div<
   const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
   return css`
     position: absolute;
-    top: 0;
-    left: 0;
     overflow-y: auto;
 
     /*
@@ -315,8 +316,15 @@ const Container = styled.div<
     css`
       height: ${height}px;
     `}
+
+    /*
+    dropdownWidthの指定があれば、ドロップダウンリストの幅として設定する。
+    ドロップダウンリストは、viewportの幅を超えないように、かつInputの幅より小さくならないようにする。
+    */
     width: ${typeof $width === 'string' ? $width : `${$width}px`};
     max-width: calc(100vw - ${left}px - ${spacingByChar(0.5)});
+    min-width: 100%;
+
     padding: ${spacingByChar(0.5)} 0;
     border-radius: ${radius.m};
     box-shadow: ${shadow.LAYER3};
