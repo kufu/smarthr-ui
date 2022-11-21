@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 
 import { ComponentProps } from 'react'
 import { InputWithTooltip } from '../InputWithTooltip'
@@ -9,8 +9,8 @@ type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'p
   tooltipMessage: React.ReactNode
 }
 
-export const SearchInput: React.FC<Props> = ({ ...props }) => (
+export const SearchInput = forwardRef<HTMLInputElement, Props>((props, ref) => (
   <label>
-    <InputWithTooltip {...props} prefix={<FaSearchIcon alt="検索" color="TEXT_GREY" />} />
+    <InputWithTooltip {...props} ref={ref} prefix={<FaSearchIcon alt="検索" color="TEXT_GREY" />} />
   </label>
-)
+))
