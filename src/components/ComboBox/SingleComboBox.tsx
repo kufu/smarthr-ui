@@ -72,6 +72,10 @@ type Props<T> = {
    */
   width?: number | string
   /**
+   * ドロップダウンリストの `width` スタイルに適用する値
+   */
+  dropdownWidth?: number | string
+  /**
    * コンポーネント内の一番外側の要素に適用するクラス名
    */
   className?: string
@@ -126,6 +130,7 @@ export function SingleComboBox<T>({
   dropdownHelpMessage,
   isLoading,
   width = 'auto',
+  dropdownWidth = '100%',
   className = '',
   onChange,
   onChangeInput,
@@ -163,6 +168,7 @@ export function SingleComboBox<T>({
   } = useListBox({
     options,
     dropdownHelpMessage,
+    dropdownWidth,
     onAdd,
     onSelect: useCallback(
       (selected: ComboBoxItem<T>) => {
