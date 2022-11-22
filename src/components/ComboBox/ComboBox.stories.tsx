@@ -166,6 +166,7 @@ export const Single: Story = () => {
           onClear={handleClear}
           decorator={{
             noResultText: (text) => `no result.(${text})`,
+            destroyButtonIconAlt: (text) => `destroy.(${text})`,
           }}
         />
       </dd>
