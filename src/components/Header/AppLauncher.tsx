@@ -1,5 +1,4 @@
 import React, { HTMLAttributes } from 'react'
-import styled, { css } from 'styled-components'
 import { Text } from '../Text'
 import { Stack } from '../Layout'
 
@@ -16,7 +15,7 @@ type Props = {
 
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const AppLauncher: React.VFC<Props & ElementProps> = ({ apps, urlToShowAll }) => {
+export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll }) => {
   return (
     <Stack>
       {apps.base && <Text>yes</Text>}

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Story } from '@storybook/react'
-
 import { Header, HeaderDropdownButton, HeaderLink } from './'
 import { Stack } from '../Layout'
 import { FaGraduationCapIcon, FaQuestionCircleIcon, FaToolboxIcon } from '../Icon'
@@ -53,9 +52,6 @@ export const all: Story = () => (
       onTenantSelect={(id) => console.log(id)}
       launcher={launcher}
     >
-      <HeaderLink href="https://school.smarthr.jp/" prefix={<FaGraduationCapIcon />}>
-        スクール
-      </HeaderLink>
       <HeaderLink href="https://support.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
         ヘルプ
       </HeaderLink>
