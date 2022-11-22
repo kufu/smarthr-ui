@@ -1,4 +1,4 @@
-import React, { ComponentProps, HTMLAttributes } from 'react'
+import React, { HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 import { Cluster, Stack } from '../Layout'
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -23,27 +23,13 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
   const { base, roumu, jinmane, renkei, plus } = apps
   const themes = useTheme()
   return (
-    <Wrapper themes={themes}>
-      {base && (
-        <Stack gap={0.5}>
-          <Heading type="subBlockTitle">基本機能</Heading>
-          <Stack as="ul" gap={0.5}>
-            {base.map((item, index) => (
-              <li key={index}>
-                <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
-                  {item.label}
-                </TextLink>
-              </li>
-            ))}
-          </Stack>
-        </Stack>
-      )}
-      <Cluster gap={1.5}>
-        {roumu && (
+    <Wrapper>
+      <UpperWrapper themes={themes}>
+        {base && (
           <Stack gap={0.5}>
-            <Heading type="subBlockTitle">人事労務</Heading>
+            <Heading type="subSubBlockTitle">基本機能</Heading>
             <Stack as="ul" gap={0.5}>
-              {roumu.map((item, index) => (
+              {base.map((item, index) => (
                 <li key={index}>
                   <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
                     {item.label}
@@ -53,11 +39,41 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
             </Stack>
           </Stack>
         )}
-        {jinmane && (
+        <Cluster gap={1.5}>
+          {roumu && (
+            <Stack gap={0.5}>
+              <Heading type="subSubBlockTitle">人事労務</Heading>
+              <Stack as="ul" gap={0.5}>
+                {roumu.map((item, index) => (
+                  <li key={index}>
+                    <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
+                      {item.label}
+                    </TextLink>
+                  </li>
+                ))}
+              </Stack>
+            </Stack>
+          )}
+          {jinmane && (
+            <Stack gap={0.5}>
+              <Heading type="subSubBlockTitle">人材マネジメント</Heading>
+              <Stack as="ul" gap={0.5}>
+                {jinmane.map((item, index) => (
+                  <li key={index}>
+                    <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
+                      {item.label}
+                    </TextLink>
+                  </li>
+                ))}
+              </Stack>
+            </Stack>
+          )}
+        </Cluster>
+        {renkei && (
           <Stack gap={0.5}>
-            <Heading type="subBlockTitle">人材マネジメント</Heading>
+            <Heading type="subSubBlockTitle">連携</Heading>
             <Stack as="ul" gap={0.5}>
-              {jinmane.map((item, index) => (
+              {renkei.map((item, index) => (
                 <li key={index}>
                   <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
                     {item.label}
@@ -67,44 +83,51 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
             </Stack>
           </Stack>
         )}
-      </Cluster>
-      {renkei && (
-        <Stack gap={0.5}>
-          <Heading type="subBlockTitle">連携</Heading>
-          <Stack as="ul" gap={0.5}>
-            {renkei.map((item, index) => (
-              <li key={index}>
-                <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
-                  {item.label}
-                </TextLink>
-              </li>
-            ))}
+        {plus && (
+          <Stack gap={0.5}>
+            <Heading type="subSubBlockTitle">SmartHR Plus</Heading>
+            <Stack as="ul" gap={0.5}>
+              {plus.map((item, index) => (
+                <li key={index}>
+                  <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
+                    {item.label}
+                  </TextLink>
+                </li>
+              ))}
+            </Stack>
           </Stack>
-        </Stack>
-      )}
-      {plus && (
-        <Stack gap={0.5}>
-          <Heading type="subBlockTitle">SmartHR Plus</Heading>
-          <Stack as="ul" gap={0.5}>
-            {plus.map((item, index) => (
-              <li key={index}>
-                <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
-                  {item.label}
-                </TextLink>
-              </li>
-            ))}
-          </Stack>
-        </Stack>
-      )}
-      <TextLink href={urlToShowAll} suffix={<FaExternalLinkAlt />} style={{ width: 'fit-content' }}>
-        {urlToShowAll}
-      </TextLink>
+        )}
+      </UpperWrapper>
+      <Border themes={themes} />
+
+      <LowerWrapper themes={themes}>
+        <TextLink
+          href={urlToShowAll}
+          suffix={<FaExternalLinkAlt />}
+          style={{ width: 'fit-content' }}
+        >
+          {urlToShowAll}
+        </TextLink>
+      </LowerWrapper>
     </Wrapper>
   )
 }
 
-const Wrapper = styled(Stack)<{ themes: Theme }>(
+const Wrapper = styled.div``
+
+const Border = styled.div<{ themes: Theme }>(
+  ({ themes: { border } }) => css`
+    border-bottom: ${border.shorthand};
+  `,
+)
+const UpperWrapper = styled(Stack)<{ themes: Theme }>(
   ({ themes: { space } }) => css`
-    padding: ${space(1)};
+    padding: ${space(0.5)} ${space(1)} ${space(1)} ${space(1)};
+  `,
+)
+
+const LowerWrapper = styled(Stack)<{ themes: Theme }>(
+  ({ themes: { space } }) => css`
+    padding: ${space(0.75)} ${space(1)} ${space(0.5)} ${space(1)};
   `,
 )
