@@ -85,7 +85,7 @@ export const Header: React.VFC<Props & ElementProps> = ({
           ヘルプ
         </HeaderLink>
         {launcher && (
-          <HeaderDropdownButton label="アプリ" prefix={<FaToolboxIcon />}>
+          <HeaderDropdownButton label="アプリ" prefix={<FaToolboxIcon />} isPrefixOnly>
             <AppLauncher apps={launcher.apps} urlToShowAll={launcher.urlToShowAll} />
           </HeaderDropdownButton>
         )}
