@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { ReactNode, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -14,41 +14,38 @@ type Props = {
   children?: ReactNode
 } & RadioButtonInputProps
 
-export const RadioButton: FC<Props> = ({
-  lineHeight = 1.5,
-  children,
-  className = '',
-  ...props
-}) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
-  const radioButtonId = useId(props.id)
+export const RadioButton = forwardRef<HTMLInputElement, Props>(
+  ({ lineHeight = 1.5, children, className = '', ...props }, ref) => {
+    const theme = useTheme()
+    const classNames = useClassNames()
+    const radioButtonId = useId(props.id)
 
-  if (!children) {
+    if (!children) {
+      return (
+        <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
+          <RadioButtonInput {...props} ref={ref} className={classNames.radioButton} />
+        </Wrapper>
+      )
+    }
+
     return (
       <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
-        <RadioButtonInput {...props} className={classNames.radioButton} />
+        <ButtonLayout $height={`${lineHeight}em`}>
+          <RadioButtonInput {...props} ref={ref} id={radioButtonId} />
+        </ButtonLayout>
+
+        <Label
+          htmlFor={radioButtonId}
+          className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
+          $lineHeight={lineHeight}
+          themes={theme}
+        >
+          {children}
+        </Label>
       </Wrapper>
     )
-  }
-
-  return (
-    <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
-      <ButtonLayout $height={`${lineHeight}em`}>
-        <RadioButtonInput {...props} id={radioButtonId} />
-      </ButtonLayout>
-
-      <Label
-        htmlFor={radioButtonId}
-        className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
-        $lineHeight={lineHeight}
-        themes={theme}
-      >
-        {children}
-      </Label>
-    </Wrapper>
-  )
-}
+  },
+)
 
 const Wrapper = styled.div<{ themes: Theme }>`
   ${({ themes: { fontSize } }) => css`

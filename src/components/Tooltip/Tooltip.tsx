@@ -149,7 +149,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
   )
 }
 
-const Wrapper = styled.div<{ isIcon?: boolean; themes: Theme }>`
+const Wrapper = styled.span<{ isIcon?: boolean; themes: Theme }>`
   ${({ isIcon, themes: { shadow } }) => css`
     display: inline-block;
     max-width: 100%;

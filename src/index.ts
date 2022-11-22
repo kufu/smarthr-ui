@@ -81,7 +81,6 @@ export { BottomFixedArea } from './components/BottomFixedArea'
 export { MessageScreen } from './components/MessageScreen'
 export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
-export { IndexNav, IndexNavItemProps } from './components/IndexNav'
 export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'
 export { FormGroup } from './components/FormGroup'
 export {
