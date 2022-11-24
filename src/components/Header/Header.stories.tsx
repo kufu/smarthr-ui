@@ -85,6 +85,26 @@ const launcher = {
         label: 'おまかせ はたラクサポート連携',
         url: 'http://',
       },
+      {
+        label: 'KING OF TIME連携',
+        url: 'http://',
+      },
+      {
+        label: 'freee人事労務連携',
+        url: 'http://',
+      },
+      {
+        label: 'Touch On Time連携',
+        url: 'http://',
+      },
+      {
+        label: 'おまかせ はたラクサポート連携',
+        url: 'http://',
+      },
+      {
+        label: 'ジョブカン連携',
+        url: 'http://',
+      },
     ],
     plus: [
       {

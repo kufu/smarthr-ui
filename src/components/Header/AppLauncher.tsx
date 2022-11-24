@@ -31,7 +31,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
             <Stack as="ul" gap={0.5}>
               {base.map((item, index) => (
                 <li key={index}>
-                  <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
+                  <TextLink href={item.url} target={item.target}>
                     {item.label}
                   </TextLink>
                 </li>
@@ -46,7 +46,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
               <Stack as="ul" gap={0.5}>
                 {roumu.map((item, index) => (
                   <li key={index}>
-                    <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
+                    <TextLink href={item.url} target={item.target}>
                       {item.label}
                     </TextLink>
                   </li>
@@ -60,7 +60,35 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
               <Stack as="ul" gap={0.5}>
                 {jinmane.map((item, index) => (
                   <li key={index}>
-                    <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
+                    <TextLink href={item.url} target={item.target}>
+                      {item.label}
+                    </TextLink>
+                  </li>
+                ))}
+              </Stack>
+            </Stack>
+          )}
+          {renkei && (
+            <Stack gap={0.5}>
+              <Heading type="subSubBlockTitle">連携</Heading>
+              <Stack as="ul" gap={0.5}>
+                {renkei.map((item, index) => (
+                  <li key={index}>
+                    <TextLink href={item.url} target={item.target}>
+                      {item.label}
+                    </TextLink>
+                  </li>
+                ))}
+              </Stack>
+            </Stack>
+          )}
+          {plus && (
+            <Stack gap={0.5}>
+              <Heading type="subSubBlockTitle">SmartHR Plus</Heading>
+              <Stack as="ul" gap={0.5}>
+                {plus.map((item, index) => (
+                  <li key={index}>
+                    <TextLink href={item.url} target={item.target}>
                       {item.label}
                     </TextLink>
                   </li>
@@ -69,43 +97,11 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
             </Stack>
           )}
         </Cluster>
-        {renkei && (
-          <Stack gap={0.5}>
-            <Heading type="subSubBlockTitle">連携</Heading>
-            <Stack as="ul" gap={0.5}>
-              {renkei.map((item, index) => (
-                <li key={index}>
-                  <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
-                    {item.label}
-                  </TextLink>
-                </li>
-              ))}
-            </Stack>
-          </Stack>
-        )}
-        {plus && (
-          <Stack gap={0.5}>
-            <Heading type="subSubBlockTitle">SmartHR Plus</Heading>
-            <Stack as="ul" gap={0.5}>
-              {plus.map((item, index) => (
-                <li key={index}>
-                  <TextLink href={item.url} target={item.target} suffix={<FaExternalLinkAlt />}>
-                    {item.label}
-                  </TextLink>
-                </li>
-              ))}
-            </Stack>
-          </Stack>
-        )}
       </UpperWrapper>
       <Border themes={themes} />
 
       <LowerWrapper themes={themes}>
-        <TextLink
-          href={urlToShowAll}
-          suffix={<FaExternalLinkAlt />}
-          style={{ width: 'fit-content' }}
-        >
+        <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
           {urlToShowAll}
         </TextLink>
       </LowerWrapper>
