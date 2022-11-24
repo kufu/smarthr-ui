@@ -94,7 +94,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={handleSelectItem}
           onClear={handleClear}
           onChangeSelected={(item) => {
@@ -110,7 +110,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownHelpMessage="新しいアイテムを追加できます"
+          dropdownHelpMessage="新しいアイテムを追加できます。"
           creatable
           onSelect={handleSelectItem}
           onClear={handleClear}
@@ -124,7 +124,6 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownHelpMessage="Disabled なコンボボックス"
           disabled
           onSelect={handleSelectItem}
           onClear={handleClear}
@@ -137,7 +136,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           error
           onSelect={handleSelectItem}
           onClear={handleClear}
@@ -149,7 +148,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           isLoading
           onSelect={handleSelectItem}
           onClear={handleClear}
@@ -161,7 +160,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width="100%"
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={handleSelectItem}
           onClear={handleClear}
         />
@@ -173,7 +172,7 @@ export const Single: Story = () => {
           selectedItem={selectedItem}
           width={400}
           dropdownWidth="auto"
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={handleSelectItem}
           onClear={handleClear}
         />
@@ -185,7 +184,7 @@ export const Single: Story = () => {
           selectedItem={selectedItem}
           width={400}
           dropdownWidth="200%"
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={handleSelectItem}
           onClear={handleClear}
         />
@@ -196,7 +195,7 @@ export const Single: Story = () => {
           items={manyItems}
           selectedItem={null}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={action('onSelect')}
         />
       </dd>
@@ -275,7 +274,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
           onChangeSelected={(selected) => {
@@ -293,7 +292,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="新しいアイテムを追加できます"
+          dropdownHelpMessage="新しいアイテムを追加できます。"
           creatable
           onDelete={handleDelete}
           onSelect={handleSelectItem}
@@ -307,7 +306,6 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="Disabled なコンボボックス"
           disabled
           onDelete={handleDelete}
           onSelect={handleSelectItem}
@@ -320,7 +318,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           error
           onDelete={handleDelete}
           onSelect={handleSelectItem}
@@ -332,7 +330,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
           selectedItemEllipsis
@@ -344,7 +342,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           isLoading
           onDelete={handleDelete}
           onSelect={handleSelectItem}
@@ -356,7 +354,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems.map((item) => ({ ...item, deletable: false }))}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
         />
@@ -367,7 +365,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
           onChangeSelected={(selected) => {
@@ -387,7 +385,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width="100%"
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
         />
@@ -399,7 +397,7 @@ export const Multi: Story = () => {
           selectedItems={selectedItems}
           width={400}
           dropdownWidth="auto"
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
         />
@@ -411,7 +409,7 @@ export const Multi: Story = () => {
           selectedItems={selectedItems}
           width={400}
           dropdownWidth="200%"
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
         />
@@ -422,7 +420,7 @@ export const Multi: Story = () => {
           items={manyItems}
           selectedItems={[]}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={action('onSelect')}
           data-test="multi-combobox-many"
         />
