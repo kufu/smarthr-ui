@@ -172,7 +172,7 @@ export const Single: Story = () => {
           selectedItem={selectedItem}
           width={400}
           dropdownWidth="auto"
-          dropdownHelpMessage="入力でフィルタリングできます。"
+          dropdownHelpMessage="入力でフィルタリングできます。（ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキスト）"
           onSelect={handleSelectItem}
           onClear={handleClear}
         />
@@ -397,7 +397,7 @@ export const Multi: Story = () => {
           selectedItems={selectedItems}
           width={400}
           dropdownWidth="auto"
-          dropdownHelpMessage="入力でフィルタリングできます。"
+          dropdownHelpMessage="入力でフィルタリングできます。（ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキスト）"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
         />
