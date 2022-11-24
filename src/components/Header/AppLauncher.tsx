@@ -28,7 +28,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
         {base && (
           <Stack gap={0.5}>
             <Heading type="subSubBlockTitle">基本機能</Heading>
-            <Stack as="ul" gap={0.5}>
+            <Cluster as="ul" gap={1}>
               {base.map((item, index) => (
                 <li key={index}>
                   <TextLink href={item.url} target={item.target}>
@@ -36,7 +36,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
                   </TextLink>
                 </li>
               ))}
-            </Stack>
+            </Cluster>
           </Stack>
         )}
         <Cluster gap={1.5}>
