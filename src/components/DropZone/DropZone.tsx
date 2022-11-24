@@ -1,4 +1,13 @@
-import React, { ChangeEvent, DragEvent, HTMLAttributes, useCallback, useRef, useState } from 'react'
+import React, {
+  ChangeEvent,
+  DragEvent,
+  HTMLAttributes,
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -31,66 +40,68 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.stopPropagation()
 }
 
-export const DropZone: React.VFC<DropZoneProps & ElementProps> = ({
-  children,
-  onSelectFiles,
-  accept,
-  multiple = true,
-}) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
-  const fileRef = useRef<HTMLInputElement>(null)
-  const [filesDraggedOver, setFilesDraggedOver] = useState(false)
+export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProps>(
+  ({ children, onSelectFiles, accept, multiple = true }, ref) => {
+    const theme = useTheme()
+    const classNames = useClassNames()
+    const fileRef = useRef<HTMLInputElement>(null)
+    const [filesDraggedOver, setFilesDraggedOver] = useState(false)
 
-  const onDrop = useCallback(
-    (e: DragEvent<HTMLElement>) => {
-      overrideEventDefault(e)
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => fileRef.current,
+    )
+
+    const onDrop = useCallback(
+      (e: DragEvent<HTMLElement>) => {
+        overrideEventDefault(e)
+        setFilesDraggedOver(false)
+        onSelectFiles(e, e.dataTransfer.files)
+      },
+      [setFilesDraggedOver, onSelectFiles],
+    )
+
+    const onDragOver = useCallback(
+      (e: DragEvent<HTMLElement>) => {
+        overrideEventDefault(e)
+        setFilesDraggedOver(true)
+      },
+      [setFilesDraggedOver],
+    )
+
+    const onDragLeave = useCallback(() => {
       setFilesDraggedOver(false)
-      onSelectFiles(e, e.dataTransfer.files)
-    },
-    [setFilesDraggedOver, onSelectFiles],
-  )
+    }, [setFilesDraggedOver])
 
-  const onDragOver = useCallback(
-    (e: DragEvent<HTMLElement>) => {
-      overrideEventDefault(e)
-      setFilesDraggedOver(true)
-    },
-    [setFilesDraggedOver],
-  )
+    const onChange = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        onSelectFiles(e, e.target.files)
+      },
+      [onSelectFiles],
+    )
 
-  const onDragLeave = useCallback(() => {
-    setFilesDraggedOver(false)
-  }, [setFilesDraggedOver])
+    const onClickButton = () => {
+      fileRef.current!.click()
+    }
 
-  const onChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      onSelectFiles(e, e.target.files)
-    },
-    [onSelectFiles],
-  )
-
-  const onClickButton = () => {
-    fileRef.current!.click()
-  }
-
-  return (
-    <Wrapper
-      theme={theme}
-      filesDraggedOver={filesDraggedOver}
-      onDrop={onDrop}
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
-      className={classNames.wrapper}
-    >
-      {children}
-      <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
-        ファイルを選択
-      </Button>
-      <input ref={fileRef} type="file" multiple={multiple} accept={accept} onChange={onChange} />
-    </Wrapper>
-  )
-}
+    return (
+      <Wrapper
+        theme={theme}
+        filesDraggedOver={filesDraggedOver}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        className={classNames.wrapper}
+      >
+        {children}
+        <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
+          ファイルを選択
+        </Button>
+        <input ref={fileRef} type="file" multiple={multiple} accept={accept} onChange={onChange} />
+      </Wrapper>
+    )
+  },
+)
 
 const Wrapper = styled.div<{ theme: Theme; filesDraggedOver: boolean }>`
   ${({ theme, filesDraggedOver }) => {

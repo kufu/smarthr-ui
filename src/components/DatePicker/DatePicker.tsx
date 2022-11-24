@@ -1,4 +1,12 @@
-import React, { VFC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
 
@@ -25,6 +33,10 @@ type Props = {
   to?: Date
   /** フォームを無効にするかどうか */
   disabled?: boolean
+  /**
+   * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
+   */
+  placeholder?: string
   /** フォームにエラーがあるかどうか */
   error?: boolean
   /** コンポーネントに適用するクラス名 */
@@ -52,265 +64,275 @@ type InputAttributes = Omit<React.InputHTMLAttributes<HTMLInputElement>, OmitInp
 
 export const DEFAULT_FROM = new Date(1900, 0, 1)
 
-export const DatePicker: VFC<Props & InputAttributes> = ({
-  value,
-  name,
-  from = DEFAULT_FROM,
-  to,
-  disabled,
-  error,
-  className = '',
-  parseInput,
-  formatDate,
-  showAlternative,
-  onChangeDate,
-  ...inputAttrs
-}) => {
-  const stringToDate = useCallback(
-    (str?: string | null) => {
-      if (!str) {
-        return null
-      }
-      return parseInput ? parseInput(str) : parseJpnDateString(str)
+export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
+  (
+    {
+      value,
+      name,
+      from = DEFAULT_FROM,
+      to,
+      disabled,
+      error,
+      className = '',
+      parseInput,
+      formatDate,
+      showAlternative,
+      onChangeDate,
+      ...inputAttrs
     },
-    [parseInput],
-  )
+    ref,
+  ) => {
+    const stringToDate = useCallback(
+      (str?: string | null) => {
+        if (!str) {
+          return null
+        }
+        return parseInput ? parseInput(str) : parseJpnDateString(str)
+      },
+      [parseInput],
+    )
 
-  const dateToString = useCallback(
-    (d: Date | null) => {
-      if (formatDate) {
-        return formatDate(d)
-      }
-      if (!d) {
-        return ''
-      }
-      return dayjs(d).format('YYYY/MM/DD')
-    },
-    [formatDate],
-  )
+    const dateToString = useCallback(
+      (d: Date | null) => {
+        if (formatDate) {
+          return formatDate(d)
+        }
+        if (!d) {
+          return ''
+        }
+        return dayjs(d).format('YYYY/MM/DD')
+      },
+      [formatDate],
+    )
 
-  const dateToAlternativeFormat = useCallback(
-    (d: Date | null) => {
-      if (!d || !showAlternative) {
-        return null
-      }
-      return showAlternative(d)
-    },
-    [showAlternative],
-  )
+    const dateToAlternativeFormat = useCallback(
+      (d: Date | null) => {
+        if (!d || !showAlternative) {
+          return null
+        }
+        return showAlternative(d)
+      },
+      [showAlternative],
+    )
 
-  const themes = useTheme()
-  const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
-  const inputRef = useRef<HTMLInputElement>(null)
-  const inputWrapperRef = useRef<HTMLDivElement>(null)
-  const calendarPortalRef = useRef<HTMLDivElement>(null)
-  const [inputRect, setInputRect] = useState<DOMRect | null>(null)
-  const [isInputFocused, setIsInputFocused] = useState(false)
-  const [isCalendarShown, setIsCalendarShown] = useState(false)
-  const [alternativeFormat, setAlternativeFormat] = useState<null | string>(null)
-  const calenderId = useId()
+    const themes = useTheme()
+    const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
+    const inputRef = useRef<HTMLInputElement>(null)
+    const inputWrapperRef = useRef<HTMLDivElement>(null)
+    const calendarPortalRef = useRef<HTMLDivElement>(null)
+    const [inputRect, setInputRect] = useState<DOMRect | null>(null)
+    const [isInputFocused, setIsInputFocused] = useState(false)
+    const [isCalendarShown, setIsCalendarShown] = useState(false)
+    const [alternativeFormat, setAlternativeFormat] = useState<null | string>(null)
+    const calenderId = useId()
 
-  const updateDate = useCallback(
-    (newDate: Date | null) => {
-      if (
-        !inputRef.current ||
-        newDate === selectedDate ||
-        (newDate && selectedDate && newDate.getTime() === selectedDate.getTime())
-      ) {
-        // Do not update date if the new date is same with the old one.
-        return
-      }
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => inputRef.current,
+    )
 
-      const isValid = !newDate || dayjs(newDate).isValid()
-      const nextDate = isValid ? newDate : null
-      const errors: string[] = []
-
-      if (!isValid) {
-        errors.push('INVALID_DATE')
-      }
-
-      inputRef.current.value = dateToString(nextDate)
-      setAlternativeFormat(dateToAlternativeFormat(nextDate))
-      setSelectedDate(nextDate)
-      onChangeDate && onChangeDate(nextDate, inputRef.current.value, { errors })
-    },
-    [selectedDate, dateToString, dateToAlternativeFormat, onChangeDate],
-  )
-
-  const switchCalendarVisibility = useCallback((isVisible: boolean) => {
-    if (!isVisible) {
-      setIsCalendarShown(false)
-      return
-    }
-    if (!inputWrapperRef.current) {
-      return
-    }
-    setIsCalendarShown(true)
-    setInputRect(inputWrapperRef.current.getBoundingClientRect())
-  }, [])
-
-  useEffect(() => {
-    if (value === undefined || !inputRef.current) {
-      return
-    }
-    /**
-     * Do not format the given value in the following cases
-     * - while input element is focused.
-     * - if the given value is not date formattable.
-     */
-    if (!isInputFocused) {
-      const newDate = stringToDate(value)
-      if (newDate && dayjs(newDate).isValid()) {
-        inputRef.current.value = dateToString(newDate)
-        setAlternativeFormat(dateToAlternativeFormat(newDate))
-        setSelectedDate(newDate)
-        return
-      }
-      setSelectedDate(null)
-    }
-    inputRef.current.value = value || ''
-  }, [value, isInputFocused, dateToString, dateToAlternativeFormat, stringToDate])
-
-  useOuterClick(
-    [inputWrapperRef, calendarPortalRef],
-    useCallback(() => {
-      switchCalendarVisibility(false)
-    }, [switchCalendarVisibility]),
-  )
-
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key !== 'Tab' || !inputRef.current || !calendarPortalRef.current) {
-        return
-      }
-      const calendarButtons = calendarPortalRef.current.querySelectorAll('button')
-      if (calendarButtons.length === 0) {
-        return
-      }
-      const firstCalendarButton = calendarButtons[0]
-      const lastCalendarButton = calendarButtons[calendarButtons.length - 1]
-      if (isInputFocused) {
-        if (e.shiftKey) {
-          // move focus from Input to previous elements of DatePicker
-          switchCalendarVisibility(false)
+    const updateDate = useCallback(
+      (newDate: Date | null) => {
+        if (
+          !inputRef.current ||
+          newDate === selectedDate ||
+          (newDate && selectedDate && newDate.getTime() === selectedDate.getTime())
+        ) {
+          // Do not update date if the new date is same with the old one.
           return
         }
-        // move focus from Input to Calendar
-        e.preventDefault()
-        firstCalendarButton.focus()
+
+        const isValid = !newDate || dayjs(newDate).isValid()
+        const nextDate = isValid ? newDate : null
+        const errors: string[] = []
+
+        if (!isValid) {
+          errors.push('INVALID_DATE')
+        }
+
+        inputRef.current.value = dateToString(nextDate)
+        setAlternativeFormat(dateToAlternativeFormat(nextDate))
+        setSelectedDate(nextDate)
+        onChangeDate && onChangeDate(nextDate, inputRef.current.value, { errors })
+      },
+      [selectedDate, dateToString, dateToAlternativeFormat, onChangeDate],
+    )
+
+    const switchCalendarVisibility = useCallback((isVisible: boolean) => {
+      if (!isVisible) {
+        setIsCalendarShown(false)
         return
       }
-      const currentFocused = Array.from(calendarButtons).find((button) => button === e.target)
-      if (e.shiftKey && currentFocused === firstCalendarButton) {
-        // move focus from Calendar to Input
-        inputRef.current.focus()
-        e.preventDefault()
-      } else if (!e.shiftKey && currentFocused === lastCalendarButton) {
-        // move focus from Calendar to next elements of DatePicker
-        inputRef.current.focus()
-        switchCalendarVisibility(false)
+      if (!inputWrapperRef.current) {
+        return
       }
-    },
-    [isInputFocused, switchCalendarVisibility],
-  )
-  useGlobalKeyDown(handleKeyDown)
+      setIsCalendarShown(true)
+      setInputRect(inputWrapperRef.current.getBoundingClientRect())
+    }, [])
 
-  const caretIconColor = useMemo(() => {
-    if (isInputFocused || isCalendarShown) return themes.color.TEXT_BLACK
-    if (disabled) return themes.color.TEXT_DISABLED
-    return themes.color.TEXT_GREY
-  }, [isCalendarShown, isInputFocused, disabled, themes])
-
-  const classNames = useClassNames()
-
-  return (
-    <Container
-      className={`${className} ${classNames.wrapper}`}
-      onClick={() => {
-        if (!disabled && !isCalendarShown) {
-          switchCalendarVisibility(true)
+    useEffect(() => {
+      if (value === undefined || !inputRef.current) {
+        return
+      }
+      /**
+       * Do not format the given value in the following cases
+       * - while input element is focused.
+       * - if the given value is not date formattable.
+       */
+      if (!isInputFocused) {
+        const newDate = stringToDate(value)
+        if (newDate && dayjs(newDate).isValid()) {
+          inputRef.current.value = dateToString(newDate)
+          setAlternativeFormat(dateToAlternativeFormat(newDate))
+          setSelectedDate(newDate)
+          return
         }
-      }}
-      onKeyDown={(e) => {
-        if ((e.key === 'Escape' || e.key === 'Esc') && isCalendarShown) {
-          e.stopPropagation()
-          requestAnimationFrame(() => {
-            // delay hiding calendar because calendar will be displayed when input is focused
+        setSelectedDate(null)
+      }
+      inputRef.current.value = value || ''
+    }, [value, isInputFocused, dateToString, dateToAlternativeFormat, stringToDate])
+
+    useOuterClick(
+      [inputWrapperRef, calendarPortalRef],
+      useCallback(() => {
+        switchCalendarVisibility(false)
+      }, [switchCalendarVisibility]),
+    )
+
+    const handleKeyDown = useCallback(
+      (e: KeyboardEvent) => {
+        if (e.key !== 'Tab' || !inputRef.current || !calendarPortalRef.current) {
+          return
+        }
+        const calendarButtons = calendarPortalRef.current.querySelectorAll('button')
+        if (calendarButtons.length === 0) {
+          return
+        }
+        const firstCalendarButton = calendarButtons[0]
+        const lastCalendarButton = calendarButtons[calendarButtons.length - 1]
+        if (isInputFocused) {
+          if (e.shiftKey) {
+            // move focus from Input to previous elements of DatePicker
             switchCalendarVisibility(false)
-          })
-          inputRef.current && inputRef.current.focus()
-        }
-      }}
-    >
-      <div ref={inputWrapperRef}>
-        <StyledInput
-          {...inputAttrs}
-          type="text"
-          name={name}
-          onChange={() => {
-            if (isCalendarShown) {
-              switchCalendarVisibility(false)
-            }
-          }}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              switchCalendarVisibility(!isCalendarShown)
-            }
-          }}
-          onFocus={() => {
-            setIsInputFocused(true)
-            switchCalendarVisibility(true)
-          }}
-          onBlur={(e) => {
-            setIsInputFocused(false)
-            const inputString = e.target.value
-            if (inputString === '') {
-              updateDate(null)
-              return
-            }
-            const newDate = parseInput ? parseInput(inputString) : parseJpnDateString(inputString)
-            updateDate(newDate)
-          }}
-          suffix={
-            <InputSuffixLayout themes={themes}>
-              <InputSuffixWrapper themes={themes}>
-                {showAlternative && (
-                  <InputSuffixText themes={themes}>{alternativeFormat}</InputSuffixText>
-                )}
-                <FaCalendarAltIcon color={caretIconColor} />
-              </InputSuffixWrapper>
-            </InputSuffixLayout>
+            return
           }
-          disabled={disabled}
-          error={error}
-          ref={inputRef}
-          className={classNames.inputContainer}
-          aria-expanded={isCalendarShown}
-          aria-controls={calenderId}
-          aria-haspopup={true}
-        />
-      </div>
-      {isCalendarShown && inputRect && (
-        <Portal inputRect={inputRect} ref={calendarPortalRef}>
-          <Calendar
-            id={calenderId}
-            value={selectedDate || undefined}
-            from={from}
-            to={to}
-            onSelectDate={(_, selected) => {
-              updateDate(selected)
-              requestAnimationFrame(() => {
-                // delay hiding calendar because calendar will be displayed when input is focused
+          // move focus from Input to Calendar
+          e.preventDefault()
+          firstCalendarButton.focus()
+          return
+        }
+        const currentFocused = Array.from(calendarButtons).find((button) => button === e.target)
+        if (e.shiftKey && currentFocused === firstCalendarButton) {
+          // move focus from Calendar to Input
+          inputRef.current.focus()
+          e.preventDefault()
+        } else if (!e.shiftKey && currentFocused === lastCalendarButton) {
+          // move focus from Calendar to next elements of DatePicker
+          inputRef.current.focus()
+          switchCalendarVisibility(false)
+        }
+      },
+      [isInputFocused, switchCalendarVisibility],
+    )
+    useGlobalKeyDown(handleKeyDown)
+
+    const caretIconColor = useMemo(() => {
+      if (isInputFocused || isCalendarShown) return themes.color.TEXT_BLACK
+      if (disabled) return themes.color.TEXT_DISABLED
+      return themes.color.TEXT_GREY
+    }, [isCalendarShown, isInputFocused, disabled, themes])
+
+    const classNames = useClassNames()
+
+    return (
+      <Container
+        className={`${className} ${classNames.wrapper}`}
+        onClick={() => {
+          if (!disabled && !isCalendarShown) {
+            switchCalendarVisibility(true)
+          }
+        }}
+        onKeyDown={(e) => {
+          if ((e.key === 'Escape' || e.key === 'Esc') && isCalendarShown) {
+            e.stopPropagation()
+            requestAnimationFrame(() => {
+              // delay hiding calendar because calendar will be displayed when input is focused
+              switchCalendarVisibility(false)
+            })
+            inputRef.current && inputRef.current.focus()
+          }
+        }}
+      >
+        <div ref={inputWrapperRef}>
+          <StyledInput
+            {...inputAttrs}
+            type="text"
+            name={name}
+            onChange={() => {
+              if (isCalendarShown) {
                 switchCalendarVisibility(false)
-              })
-              inputRef.current && inputRef.current.focus()
+              }
             }}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                switchCalendarVisibility(!isCalendarShown)
+              }
+            }}
+            onFocus={() => {
+              setIsInputFocused(true)
+              switchCalendarVisibility(true)
+            }}
+            onBlur={(e) => {
+              setIsInputFocused(false)
+              const inputString = e.target.value
+              if (inputString === '') {
+                updateDate(null)
+                return
+              }
+              const newDate = parseInput ? parseInput(inputString) : parseJpnDateString(inputString)
+              updateDate(newDate)
+            }}
+            suffix={
+              <InputSuffixLayout themes={themes}>
+                <InputSuffixWrapper themes={themes}>
+                  {showAlternative && (
+                    <InputSuffixText themes={themes}>{alternativeFormat}</InputSuffixText>
+                  )}
+                  <FaCalendarAltIcon color={caretIconColor} />
+                </InputSuffixWrapper>
+              </InputSuffixLayout>
+            }
+            disabled={disabled}
+            error={error}
+            ref={inputRef}
+            className={classNames.inputContainer}
+            aria-expanded={isCalendarShown}
+            aria-controls={calenderId}
+            aria-haspopup={true}
           />
-        </Portal>
-      )}
-    </Container>
-  )
-}
+        </div>
+        {isCalendarShown && inputRect && (
+          <Portal inputRect={inputRect} ref={calendarPortalRef}>
+            <Calendar
+              id={calenderId}
+              value={selectedDate || undefined}
+              from={from}
+              to={to}
+              onSelectDate={(_, selected) => {
+                updateDate(selected)
+                requestAnimationFrame(() => {
+                  // delay hiding calendar because calendar will be displayed when input is focused
+                  switchCalendarVisibility(false)
+                })
+                inputRef.current && inputRef.current.focus()
+              }}
+            />
+          </Portal>
+        )}
+      </Container>
+    )
+  },
+)
 
 const Container = styled.div`
   display: inline-block;
