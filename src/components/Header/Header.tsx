@@ -8,7 +8,7 @@ import { Text } from '../Text'
 import { Button } from '../Button'
 import { FaQuestionCircleIcon, FaToolboxIcon } from '../Icon'
 import { HeaderDropdownButton, HeaderLink } from './'
-import { AppLauncher } from './AppLauncher'
+import { AppLauncher } from '../AppLauncher'
 
 type Tenant = {
   id: string

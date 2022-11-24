@@ -4,6 +4,7 @@ import { Cluster, Stack } from '../Layout'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { TextLink } from '../TextLink'
 import { Heading } from '../Heading'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   apps: {
@@ -19,18 +20,19 @@ type Props = {
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll, ...props }) => {
+  const className = useClassNames()
   const { base, roumu, jinmane, renkei, plus } = apps
   const themes = useTheme()
   return (
-    <Wrapper {...props}>
+    <Wrapper {...props} className={className.wrapper}>
       <UpperWrapper themes={themes}>
         {base && (
-          <Stack gap={0.5}>
+          <Stack gap={0.5} className={className.category}>
             <Heading type="subSubBlockTitle">基本機能</Heading>
             <Cluster as="ul" gap={1}>
               {base.map((item, index) => (
                 <li key={index}>
-                  <TextLink href={item.url} target={item.target}>
+                  <TextLink href={item.url} target={item.target} className={className.link}>
                     {item.label}
                   </TextLink>
                 </li>
@@ -40,12 +42,12 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
         )}
         <Cluster gap={1.5}>
           {roumu && (
-            <Stack gap={0.5}>
+            <Stack gap={0.5} className={className.category}>
               <Heading type="subSubBlockTitle">人事労務</Heading>
               <Stack as="ul" gap={0.5}>
                 {roumu.map((item, index) => (
                   <li key={index}>
-                    <TextLink href={item.url} target={item.target}>
+                    <TextLink href={item.url} target={item.target} className={className.link}>
                       {item.label}
                     </TextLink>
                   </li>
@@ -54,12 +56,12 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
             </Stack>
           )}
           {jinmane && (
-            <Stack gap={0.5}>
+            <Stack gap={0.5} className={className.category}>
               <Heading type="subSubBlockTitle">人材マネジメント</Heading>
               <Stack as="ul" gap={0.5}>
                 {jinmane.map((item, index) => (
                   <li key={index}>
-                    <TextLink href={item.url} target={item.target}>
+                    <TextLink href={item.url} target={item.target} className={className.link}>
                       {item.label}
                     </TextLink>
                   </li>
@@ -68,12 +70,12 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
             </Stack>
           )}
           {renkei && (
-            <Stack gap={0.5}>
+            <Stack gap={0.5} className={className.category}>
               <Heading type="subSubBlockTitle">連携</Heading>
               <Stack as="ul" gap={0.5}>
                 {renkei.map((item, index) => (
                   <li key={index}>
-                    <TextLink href={item.url} target={item.target}>
+                    <TextLink href={item.url} target={item.target} className={className.link}>
                       {item.label}
                     </TextLink>
                   </li>
@@ -82,12 +84,12 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
             </Stack>
           )}
           {plus && (
-            <Stack gap={0.5}>
+            <Stack gap={0.5} className={className.category}>
               <Heading type="subSubBlockTitle">SmartHR Plus</Heading>
               <Stack as="ul" gap={0.5}>
                 {plus.map((item, index) => (
                   <li key={index}>
-                    <TextLink href={item.url} target={item.target}>
+                    <TextLink href={item.url} target={item.target} className={className.link}>
                       {item.label}
                     </TextLink>
                   </li>
