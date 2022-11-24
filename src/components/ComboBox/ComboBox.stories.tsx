@@ -124,6 +124,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
+          dropdownHelpMessage="Disabled なコンボボックス"
           disabled
           onSelect={handleSelectItem}
           onClear={handleClear}
@@ -306,6 +307,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
+          dropdownHelpMessage="Disabled なコンボボックス"
           disabled
           onDelete={handleDelete}
           onSelect={handleSelectItem}
