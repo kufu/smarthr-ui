@@ -4,7 +4,6 @@ import { Cluster, Stack } from '../Layout'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { TextLink } from '../TextLink'
 import { Heading } from '../Heading'
-import { FaExternalLinkAlt } from 'react-icons/fa'
 
 type Props = {
   apps: {
@@ -19,11 +18,11 @@ type Props = {
 
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll }) => {
+export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll, ...props }) => {
   const { base, roumu, jinmane, renkei, plus } = apps
   const themes = useTheme()
   return (
-    <Wrapper>
+    <Wrapper {...props}>
       <UpperWrapper themes={themes}>
         {base && (
           <Stack gap={0.5}>

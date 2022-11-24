@@ -3,8 +3,8 @@ import styled, { css } from 'styled-components'
 import { useTheme } from '../../hooks/useTheme'
 import { DropdownButton } from '../Dropdown'
 
-export const HeaderDropdownButton = styled(DropdownButton)<{ isPrefixOnly?: boolean }>(
-  ({ isPrefixOnly }) => css`
+export const HeaderDropdownButton = styled(DropdownButton)<{ removeSuffix?: boolean }>(
+  ({ removeSuffix }) => css`
     > .smarthr-ui-DropdownButton-trigger {
       ${() => {
         const { color, spacingByChar } = useTheme()
@@ -24,7 +24,7 @@ export const HeaderDropdownButton = styled(DropdownButton)<{ isPrefixOnly?: bool
     }
 
     /* アプリボタンで例外的にsuffixを取る */
-    ${isPrefixOnly &&
+    ${removeSuffix &&
     css`
       span + .smarthr-ui-Icon {
         display: none;
