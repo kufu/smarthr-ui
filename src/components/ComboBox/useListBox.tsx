@@ -340,13 +340,14 @@ const Container = styled.div<
 
 const HelpMessage = styled.p<{ themes: Theme }>`
   ${({ themes }) => {
-    const { color, fontSize, spacingByChar } = themes
+    const { border, fontSize, spacingByChar } = themes
 
     return css`
       margin: 0 ${spacingByChar(0.5)} ${spacingByChar(0.5)};
       padding: 0 ${spacingByChar(0.5)} ${spacingByChar(0.5)};
-      border-bottom: 1px dotted ${color.BORDER};
+      border-bottom: ${border.shorthand};
       font-size: ${fontSize.S};
+      white-space: initial;
     `
   }}
 `
