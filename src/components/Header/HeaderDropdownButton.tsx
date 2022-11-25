@@ -4,31 +4,29 @@ import { useTheme } from '../../hooks/useTheme'
 import { DropdownButton } from '../Dropdown'
 
 export const HeaderDropdownButton = styled(DropdownButton)<{ removeSuffix?: boolean }>(
-  ({ removeSuffix }) => css`
-    > .smarthr-ui-DropdownButton-trigger {
-      ${() => {
-        const { color, spacingByChar } = useTheme()
-        return css`
-          border-color: transparent;
-          background-color: transparent;
-          padding-inline: ${spacingByChar(0.25)};
-          color: ${color.TEXT_WHITE};
-          font-weight: normal;
+  ({ removeSuffix }) => {
+    const { color, space } = useTheme()
+    return css`
+      > .smarthr-ui-DropdownButton-trigger {
+        border-color: transparent;
+        background-color: transparent;
+        padding-inline: ${space(0.25)};
+        color: ${color.TEXT_WHITE};
+        font-weight: normal;
 
-          &:last-of-type {
-            /* ボタンの余白分だけ微調整 */
-            margin-inline-end: ${spacingByChar(-0.25)};
-          }
-        `
-      }}
-    }
-
-    /* アプリボタンで例外的にsuffixを取る */
-    ${removeSuffix &&
-    css`
-      span + .smarthr-ui-Icon {
-        display: none;
+        &:last-of-type {
+          /* ボタンの余白分だけ微調整 */
+          margin-inline-end: ${space(-0.25)};
+        }
       }
-    `}
-  `,
+
+      /* アプリボタンで例外的にsuffixを取る */
+      ${removeSuffix &&
+      css`
+        .smarthr-ui-Icon:last-child {
+          display: none;
+        }
+      `}
+    `
+  },
 )
