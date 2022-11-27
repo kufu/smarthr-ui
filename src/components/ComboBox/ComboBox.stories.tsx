@@ -166,13 +166,13 @@ export const Single: Story = () => {
           onClear={handleClear}
         />
       </dd>
-      <dt>ドロップダウンリストの幅をアイテムの幅に合わせる</dt>
+      <dt>ドロップダウンリストの幅を絶対指定(600px)</dt>
       <dd>
         <SingleComboBox
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownWidth="auto"
+          dropdownWidth={600}
           dropdownHelpMessage="入力でフィルタリングできます"
           onSelect={handleSelectItem}
           onClear={handleClear}
@@ -387,6 +387,30 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width="100%"
+          dropdownHelpMessage="入力でフィルタリングできます"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>ドロップダウンリストの幅を絶対指定(600px)</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          dropdownWidth={600}
+          dropdownHelpMessage="入力でフィルタリングできます"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>ドロップダウンリストの幅を相対指定（Inputの200%幅）</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          dropdownWidth="200%"
           dropdownHelpMessage="入力でフィルタリングできます"
           onDelete={handleDelete}
           onSelect={handleSelectItem}

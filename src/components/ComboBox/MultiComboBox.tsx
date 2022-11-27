@@ -71,6 +71,10 @@ type Props<T> = {
    */
   width?: number | string
   /**
+   * ドロップダウンリストの `width` スタイルに適用する値
+   */
+  dropdownWidth?: number | string
+  /**
    * テキストボックスの `value` 属性の値。
    * `onChangeInput` と併せて設定することで、テキストボックスの挙動が制御可能になる。
    */
@@ -128,6 +132,7 @@ export function MultiComboBox<T>({
   isLoading,
   selectedItemEllipsis,
   width = 'auto',
+  dropdownWidth = 'auto',
   inputValue: controlledInputValue,
   className = '',
   onChange,
@@ -195,6 +200,7 @@ export function MultiComboBox<T>({
   } = useListBox({
     options,
     dropdownHelpMessage,
+    dropdownWidth,
     onAdd,
     onSelect: handleSelect,
     isExpanded: isFocused,

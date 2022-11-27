@@ -121,7 +121,7 @@ export function SingleComboBox<T>({
   dropdownHelpMessage,
   isLoading,
   width = 'auto',
-  dropdownWidth = '100%',
+  dropdownWidth = 'auto',
   className = '',
   onChange,
   onChangeInput,
