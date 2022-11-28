@@ -81,7 +81,7 @@ export function MultiSelectedItem<T>({
               color="inherit"
               alt={
                 decorator?.destroyButtonIconAlt
-                  ? decorator?.destroyButtonIconAlt(DESTROY_BUTTON_TEXT)
+                  ? decorator.destroyButtonIconAlt(DESTROY_BUTTON_TEXT)
                   : DESTROY_BUTTON_TEXT
               }
             />
