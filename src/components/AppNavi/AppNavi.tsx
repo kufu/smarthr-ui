@@ -51,6 +51,23 @@ export const AppNavi: VFC<Props & ElementProps> = ({
         <Buttons themes={theme} className={classNames.buttons}>
           {buttons.map((button, i) => {
             const isUnclickable = button.current && isCurrentUnclickable
+            if ('tag' in button) {
+              const { tag, icon, current, children: buttonChildren, ...buttonProps } = button
+              return (
+                <li key={i} className={classNames.listItem}>
+                  <AppNaviCustomTag
+                    {...buttonProps}
+                    tag={tag}
+                    icon={icon}
+                    current={current}
+                    isUnclickable={isUnclickable}
+                  >
+                    {buttonChildren}
+                  </AppNaviCustomTag>
+                </li>
+              )
+            }
+
             if ('href' in button) {
               return (
                 <li key={i} className={classNames.listItem}>
@@ -78,23 +95,6 @@ export const AppNavi: VFC<Props & ElementProps> = ({
                   >
                     {button.children}
                   </AppNaviDropdown>
-                </li>
-              )
-            }
-
-            if ('tag' in button) {
-              const { tag, icon, current, children: buttonChildren, ...buttonProps } = button
-              return (
-                <li key={i} className={classNames.listItem}>
-                  <AppNaviCustomTag
-                    {...buttonProps}
-                    tag={tag}
-                    icon={icon}
-                    current={current}
-                    isUnclickable={isUnclickable}
-                  >
-                    {buttonChildren}
-                  </AppNaviCustomTag>
                 </li>
               )
             }
