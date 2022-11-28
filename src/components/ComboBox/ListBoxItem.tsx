@@ -83,7 +83,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: ${color.WHITE};
       font-size: ${fontSize.M};
-      line-height: ${leading.NONE};
+      line-height: ${leading.TIGHT};
       text-align: left;
       cursor: pointer;
 
