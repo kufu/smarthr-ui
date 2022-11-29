@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 
-import { DropdownContext } from './Dropdown'
 import { tabbable } from '../../libs/tabbable'
+
+import { DropdownContext } from './Dropdown'
 import { useClassNames } from './useClassNames'
 
 type Props = {

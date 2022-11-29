@@ -1,7 +1,9 @@
 import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
-import { ComponentProps as IconProps } from '../Icon'
+
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { ComponentProps as IconProps } from '../Icon'
+
 import { useClassNames } from './useClassNames'
 
 type ElementProps = Omit<HTMLAttributes<HTMLButtonElement>, keyof Props>

@@ -1,9 +1,9 @@
 import React, { AnchorHTMLAttributes, forwardRef } from 'react'
 
+import { ButtonInner } from './ButtonInner'
+import { ButtonWrapper } from './ButtonWrapper'
 import { BaseProps } from './types'
 import { useClassNames } from './useClassNames'
-import { ButtonWrapper } from './ButtonWrapper'
-import { ButtonInner } from './ButtonInner'
 
 type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseProps>
 

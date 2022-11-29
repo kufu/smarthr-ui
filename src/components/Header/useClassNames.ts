@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { Header } from './Header'
 
 export function useClassNames() {

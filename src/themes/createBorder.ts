@@ -1,4 +1,5 @@
 import { merge } from '../libs/lodash'
+
 import { ColorProperty, defaultColor } from './createColor'
 
 const defaultLineWidth = '1px'

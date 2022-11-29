@@ -1,6 +1,8 @@
 import { RefObject, useContext, useEffect, useRef, useState } from 'react'
-import { PositionContext } from './DialogPositionProvider'
+
 import { useTheme } from '../../hooks/useTheme'
+
+import { PositionContext } from './DialogPositionProvider'
 
 type offsetHeightValues = {
   offsetHeight: number

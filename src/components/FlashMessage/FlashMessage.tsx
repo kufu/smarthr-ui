@@ -2,8 +2,7 @@ import React, { HTMLAttributes, ReactNode, VFC, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
+import { Button } from '../Button'
 import {
   FaCheckCircleIcon,
   FaExclamationCircleIcon,
@@ -11,7 +10,8 @@ import {
   FaTimesIcon,
   WarningIcon,
 } from '../Icon'
-import { Button } from '../Button'
+
+import { useClassNames } from './useClassNames'
 
 export const messageTypes = ['success', 'info', 'warning', 'error'] as const
 export const animationTypes = ['bounce', 'fade', 'none'] as const

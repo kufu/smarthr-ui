@@ -1,9 +1,10 @@
 import React, { ReactNode, VFC, useLayoutEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Balloon } from '../Balloon'
-import { getTooltipRect } from './tooltipHelper'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { Balloon } from '../Balloon'
+
+import { getTooltipRect } from './tooltipHelper'
 import { useClassNames } from './useClassNames'
 
 type Props = {

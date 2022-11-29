@@ -1,9 +1,9 @@
 import React, { HTMLAttributes, ReactNode, VFC, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { useClassNames } from './useClassNames'
-
 import { Text, TextProps } from '../Text'
+
+import { useClassNames } from './useClassNames'
 
 export type Props = {
   /** 表示するテキスト */

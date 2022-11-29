@@ -13,6 +13,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
+
 import { useClassNames } from './useClassNames'
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DropZoneProps>

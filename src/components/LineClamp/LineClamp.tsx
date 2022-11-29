@@ -1,6 +1,8 @@
 import React, { HTMLAttributes, ReactNode, VFC, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
+
 import { Tooltip } from '../Tooltip'
+
 import { useClassNames } from './useClassNames'
 
 type Props = {

@@ -1,12 +1,14 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
-import { AnchorButton, Button } from './'
+
+import { DangerButton, DangerButtonAnchor } from './DangerButton'
 import { PrimaryButton, PrimaryButtonAnchor } from './PrimaryButton'
 import { SecondaryButton, SecondaryButtonAnchor } from './SecondaryButton'
-import { DangerButton, DangerButtonAnchor } from './DangerButton'
 import { SkeletonButton, SkeletonButtonAnchor } from './SkeletonButton'
 import { TextButton, TextButtonAnchor } from './TextButton'
+
+import { AnchorButton, Button } from '.'
 
 export const useClassNames = () => {
   const generateButotn = useClassNameGenerator(Button.displayName || 'Button')

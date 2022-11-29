@@ -7,7 +7,7 @@ fixture('MultiComboBox')
   })
 
 function elementWithId(id: string | null | undefined) {
-  const actualId = id == null ? '' : `#${id.replace(/:/g, '\\:')}`
+  const actualId = !id ? '' : `#${id.replace(/:/g, '\\:')}`
   return Selector(actualId)
 }
 

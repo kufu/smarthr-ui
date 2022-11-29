@@ -10,9 +10,10 @@ import React, {
 } from 'react'
 import styled, { css } from 'styled-components'
 
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
-import { Theme, useTheme } from '../../hooks/useTheme'
+
 import { useClassNames } from './useClassNames'
 
 type Size = 'default' | 's'

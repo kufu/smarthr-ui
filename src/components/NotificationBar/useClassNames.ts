@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { NotificationBar } from './NotificationBar'
 
 export const useClassNames = () => {

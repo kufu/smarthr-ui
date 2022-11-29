@@ -1,4 +1,4 @@
-import { Cluster, LineUp, Reel, Sidebar, Stack } from './'
+import { Cluster, LineUp, Reel, Sidebar, Stack } from '.'
 
 export default {
   title: 'Layout',

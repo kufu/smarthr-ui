@@ -1,5 +1,5 @@
-import { createRadius } from '../createRadius'
 import { createFrame } from '../createFrame'
+import { createRadius } from '../createRadius'
 
 describe('createRadius', () => {
   it('returns same radius theme with createFrame', () => {

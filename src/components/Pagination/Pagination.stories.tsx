@@ -1,8 +1,8 @@
 import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
+import { userEvent } from '@storybook/testing-library'
 import * as React from 'react'
 import styled from 'styled-components'
-import { userEvent } from '@storybook/testing-library'
 
 import { Pagination } from './Pagination'
 

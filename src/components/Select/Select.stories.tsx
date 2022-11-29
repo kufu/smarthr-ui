@@ -3,8 +3,9 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Select } from './Select'
 import { Stack } from '../Layout'
+
+import { Select } from './Select'
 
 export default {
   title: 'Select',

@@ -1,9 +1,9 @@
 import React, { createContext, useContext } from 'react'
 
+import { DialogContentInner } from './DialogContentInner'
+import { DialogContext } from './DialogWrapper'
 import { DireactChildren, UncontrolledDialogProps } from './types'
 import { useDialogPortal } from './useDialogPortal'
-import { DialogContext } from './DialogWrapper'
-import { DialogContentInner } from './DialogContentInner'
 
 type DialogContentContextType = {
   onClickClose: () => void

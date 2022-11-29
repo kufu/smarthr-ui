@@ -7,9 +7,10 @@ import React, {
   useState,
 } from 'react'
 import styled, { css } from 'styled-components'
-import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { usePortal } from '../../hooks/usePortal'
+import { Theme, useTheme } from '../../hooks/useTheme'
+
 import { getPortalPosition } from './datePickerHelper'
 import { useClassNames } from './useClassNames'
 

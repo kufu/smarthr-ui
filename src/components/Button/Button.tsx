@@ -2,14 +2,15 @@ import React, { ButtonHTMLAttributes, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { FaInfoCircleIcon } from '../Icon'
+import { Cluster } from '../Layout'
+import { Loader as shrLoader } from '../Loader'
+import { Tooltip } from '../Tooltip'
+
+import { ButtonInner } from './ButtonInner'
+import { ButtonWrapper } from './ButtonWrapper'
 import { BaseProps, Variant } from './types'
 import { useClassNames } from './useClassNames'
-import { ButtonWrapper } from './ButtonWrapper'
-import { ButtonInner } from './ButtonInner'
-import { Loader as shrLoader } from '../Loader'
-import { Cluster } from '../Layout'
-import { Tooltip } from '../Tooltip'
-import { FaInfoCircleIcon } from '../Icon'
 
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 

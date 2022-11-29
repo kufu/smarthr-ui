@@ -4,8 +4,8 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaPlusCircleIcon } from '../Icon'
 
-import { ComboBoxOption } from './types'
 import { ComboBoxContext } from './ComboBoxContext'
+import { ComboBoxOption } from './types'
 
 type Props<T> = {
   option: ComboBoxOption<T>

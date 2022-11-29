@@ -2,8 +2,7 @@ import React, { HTMLAttributes, useMemo } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
+import { Button } from '../Button'
 import {
   FaCheckCircleIcon,
   FaExclamationCircleIcon,
@@ -14,7 +13,8 @@ import {
 } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
-import { Button } from '../Button'
+
+import { useClassNames } from './useClassNames'
 
 export const messageTypes = ['info', 'success', 'error', 'warning'] as const
 

@@ -1,5 +1,7 @@
 import { FlattenSimpleInterpolation, css } from 'styled-components'
+
 import { merge } from '../libs/lodash'
+
 import { ColorProperty, defaultColor } from './createColor'
 
 export interface ShadowProperty {

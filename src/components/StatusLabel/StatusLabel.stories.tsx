@@ -2,8 +2,9 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { StatusLabel } from './StatusLabel'
 import { Cluster, Stack } from '../Layout'
+
+import { StatusLabel } from './StatusLabel'
 
 export default {
   title: 'StatusLabel',

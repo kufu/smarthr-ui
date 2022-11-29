@@ -9,18 +9,19 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import styled, { css } from 'styled-components'
 import Draggable from 'react-draggable'
+import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { useId } from '../../hooks/useId'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
+import { useId } from '../../hooks/useId'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
-import { useDialogPortal } from './useDialogPortal'
+
 import { DialogOverlap } from './DialogOverlap'
 import { useClassNames } from './useClassNames'
+import { useDialogPortal } from './useDialogPortal'
 
 type Props = {
   /**

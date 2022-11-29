@@ -7,11 +7,12 @@ import React, {
 } from 'react'
 import styled, { css } from 'styled-components'
 
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { DialogBase as BaseComponent } from '../Base'
 import { FaExclamationCircleIcon } from '../Icon'
-import { Text } from '../Text'
 import { Cluster, LineUp } from '../Layout'
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { Text } from '../Text'
+
 import { useClassNames } from './useClassNames'
 
 type StyleProps = {

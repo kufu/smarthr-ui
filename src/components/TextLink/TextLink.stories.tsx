@@ -1,8 +1,10 @@
 import { Story } from '@storybook/react'
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { TextLink } from './TextLink'
+
 import { FaFlagIcon } from '../Icon'
+
+import { TextLink } from './TextLink'
 
 export default {
   title: 'TextLink ',

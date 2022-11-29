@@ -1,5 +1,6 @@
-import { useSpacing } from '../../../hooks/useSpacing'
 import styled, { css } from 'styled-components'
+
+import { useSpacing } from '../../../hooks/useSpacing'
 import { Gap } from '../type'
 
 export const Center = styled.div<{

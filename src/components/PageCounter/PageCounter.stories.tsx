@@ -1,7 +1,9 @@
-import React, { ComponentProps } from 'react'
 import { Story } from '@storybook/react'
-import { PageCounter } from './PageCounter'
+import React, { ComponentProps } from 'react'
+
 import { Stack } from '../Layout'
+
+import { PageCounter } from './PageCounter'
 
 export default {
   title: 'PageCounter',

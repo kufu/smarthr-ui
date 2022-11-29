@@ -1,7 +1,8 @@
 import { VFC, useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
-import { MultiComboBox, SingleComboBox } from './'
+
+import { MultiComboBox, SingleComboBox } from '.'
 
 export function useSingleComboBoxClassNames() {
   const generate = useClassNameGenerator((SingleComboBox as VFC).displayName || 'SingleComboBox')

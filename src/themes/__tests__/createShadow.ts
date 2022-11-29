@@ -1,4 +1,5 @@
 import { FlattenSimpleInterpolation, css } from 'styled-components'
+
 import { createShadow } from '../createShadow'
 
 const replaceSpaces = (str: FlattenSimpleInterpolation) => String(str).replace(/\s/g, '')

@@ -1,11 +1,12 @@
 import React, { ComponentProps, VFC, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
-import { useId } from '../../hooks/useId'
 
+import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
 import { Button, UnstyledButton } from '../Button'
 import { FaMinusIcon, FaTimesIcon, FaWindowMaximizeIcon } from '../Icon'
+
 import { JobIcon } from './JobIcon'
 import { OmittableJobText } from './OmittableJobText'
 import { useClassNames } from './useClassNames'

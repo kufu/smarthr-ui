@@ -10,9 +10,9 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
+
+import { useClassNames } from './useClassNames'
 
 type Props = {
   /** 入力値にエラーがあるかどうか */

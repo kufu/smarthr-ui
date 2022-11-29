@@ -1,6 +1,7 @@
 import React, { ReactNode, VFC, createContext, useCallback, useState } from 'react'
 
 import { Props as FlashMessageProps } from '../FlashMessage'
+
 import { FlashMessageList } from './FlashMessageList'
 
 type Message = Omit<FlashMessageProps, 'visible' | 'onClose'>

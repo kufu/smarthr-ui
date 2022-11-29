@@ -1,7 +1,8 @@
-import React from 'react'
 import { Story } from '@storybook/react'
+import React from 'react'
 import styled, { css } from 'styled-components'
-import { Button, Center, Heading, Stack } from '../../../'
+
+import { Button, Center, Heading, Stack } from '../../..'
 
 export const CenterStory: Story = () => {
   return (

@@ -1,6 +1,6 @@
+import { Story } from '@storybook/react'
 import React, { ChangeEvent, useState } from 'react'
 import styled from 'styled-components'
-import { Story } from '@storybook/react'
 
 import { RadioButton } from './RadioButton'
 

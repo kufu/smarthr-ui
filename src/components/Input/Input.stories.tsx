@@ -4,11 +4,11 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-
-import { Input } from './Input'
-import { CurrencyInput } from './CurrencyInput'
-import { SearchInput } from './SearchInput'
 import { FaSearchIcon } from '../Icon'
+
+import { CurrencyInput } from './CurrencyInput'
+import { Input } from './Input'
+import { SearchInput } from './SearchInput'
 
 export default {
   title: 'Input',

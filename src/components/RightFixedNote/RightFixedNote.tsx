@@ -1,11 +1,13 @@
 import React, { FormHTMLAttributes, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
-import { Theme, useTheme } from '../../hooks/useTheme'
+
 import { useId } from '../../hooks/useId'
-import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
+import { Theme, useTheme } from '../../hooks/useTheme'
+import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
-import { Button } from '../Button'
+
+import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
 import { useClassNames } from './useClassNames'
 
 type Props = {

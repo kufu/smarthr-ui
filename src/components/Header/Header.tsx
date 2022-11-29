@@ -2,13 +2,14 @@ import React, { HTMLAttributes, ReactElement, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
+import { Button } from '../Button'
 import { Cluster } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { Text } from '../Text'
-import { Button } from '../Button'
-import { HeaderDropdownButton } from './'
+
+import { useClassNames } from './useClassNames'
+
+import { HeaderDropdownButton } from '.'
 
 type Tenant = {
   id: string

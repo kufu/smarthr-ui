@@ -1,8 +1,9 @@
-import React from 'react'
 import { Story } from '@storybook/react'
+import React from 'react'
 import styled, { css } from 'styled-components'
 
 import { Stack } from '../../Layout'
+
 import { SearchInput } from './SearchInput'
 
 export const Default: Story = () => (

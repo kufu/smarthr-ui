@@ -2,11 +2,11 @@ import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
 import { SmartHRLogo } from '../SmartHRLogo'
 import { TextLink } from '../TextLink'
+
 import { Footer } from './Footer'
+import { useClassNames } from './useClassNames'
 
 type Props = {
   /** コンテンツの上に表示されるタイトル */

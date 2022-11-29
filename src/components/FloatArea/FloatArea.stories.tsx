@@ -1,12 +1,13 @@
 import { Story } from '@storybook/react'
 import * as React from 'react'
 
-import { FloatArea } from './FloatArea'
-import { Button } from '../Button'
-import { FaExclamationCircleIcon } from '../Icon'
-import { Heading } from '../Heading'
-import { Stack } from '../Layout'
 import { Base } from '../Base'
+import { Button } from '../Button'
+import { Heading } from '../Heading'
+import { FaExclamationCircleIcon } from '../Icon'
+import { Stack } from '../Layout'
+
+import { FloatArea } from './FloatArea'
 
 export default {
   title: 'FloatArea',

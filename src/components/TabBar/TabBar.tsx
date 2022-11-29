@@ -2,8 +2,9 @@ import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
 import { Reel } from '../Layout'
+
+import { useClassNames } from './useClassNames'
 
 type Props = {
   /** タブバーの内容。通常は TabItem を並べる。 */

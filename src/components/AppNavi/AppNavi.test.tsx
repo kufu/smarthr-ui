@@ -1,8 +1,9 @@
 import { create } from 'react-test-renderer'
 
-import { getIconComponent } from './appNaviHelper'
 import { createTheme } from '../../themes/createTheme'
-import { FaArchiveIcon } from '../Icon/'
+import { FaArchiveIcon } from '../Icon'
+
+import { getIconComponent } from './appNaviHelper'
 
 describe('AppNavi', () => {
   describe('getIconComponent', () => {

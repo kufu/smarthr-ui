@@ -12,17 +12,17 @@ import React, {
 } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
+import { usePortal } from '../../hooks/usePortal'
+import { Theme, useTheme } from '../../hooks/useTheme'
+import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
-import { ComboBoxItem, ComboBoxOption } from './types'
-import { usePartialRendering } from './usePartialRendering'
-import { useActiveOption } from './useActiveOption'
-import { ListBoxItem } from './ListBoxItem'
 import { ComboBoxContext } from './ComboBoxContext'
-import { FaInfoCircleIcon } from '../Icon'
+import { ListBoxItem } from './ListBoxItem'
+import { ComboBoxItem, ComboBoxOption } from './types'
+import { useActiveOption } from './useActiveOption'
+import { usePartialRendering } from './usePartialRendering'
 
 type Props<T> = {
   options: Array<ComboBoxOption<T>>

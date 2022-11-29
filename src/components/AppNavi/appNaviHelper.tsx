@@ -2,7 +2,6 @@ import React from 'react'
 import { css } from 'styled-components'
 
 import { Theme } from '../../hooks/useTheme'
-
 import { ComponentProps as IconProps } from '../Icon'
 
 export const getIconComponent = (

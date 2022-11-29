@@ -1,16 +1,17 @@
+import { Story } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
-import { Story } from '@storybook/react'
 
-import { Reel } from '.'
-import { Stack } from '../Stack'
-import { TabBar, TabItem } from '../../TabBar'
-import { Body, Cell, Head, Row, Table } from '../../Table'
+import { useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
+import { Heading } from '../../Heading'
 import { FaPenIcon } from '../../Icon'
 import { StatusLabel } from '../../StatusLabel'
-import { Heading } from '../../Heading'
-import { useTheme } from '../../../hooks/useTheme'
+import { TabBar, TabItem } from '../../TabBar'
+import { Body, Cell, Head, Row, Table } from '../../Table'
+import { Stack } from '../Stack'
+
+import { Reel } from '.'
 
 export const ReelStory: Story = () => {
   const [currentTab, setCurrentTab] = React.useState(0)

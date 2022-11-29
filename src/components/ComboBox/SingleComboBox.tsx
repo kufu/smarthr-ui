@@ -10,17 +10,17 @@ import React, {
 } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClick } from '../../hooks/useClick'
-import { useSingleComboBoxClassNames } from './useClassNames'
-
-import { Input } from '../Input'
-import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { UnstyledButton } from '../Button'
-import { useOptions } from './useOptions'
-import { useListBox } from './useListBox'
-import { ComboBoxItem } from './types'
+import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
+import { Input } from '../Input'
+
 import { ComboBoxContext } from './ComboBoxContext'
+import { ComboBoxItem } from './types'
+import { useSingleComboBoxClassNames } from './useClassNames'
+import { useListBox } from './useListBox'
+import { useOptions } from './useOptions'
 
 type Props<T> = {
   /**
