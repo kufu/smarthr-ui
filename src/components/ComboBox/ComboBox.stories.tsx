@@ -155,6 +155,21 @@ export const Single: Story = () => {
           onClear={handleClear}
         />
       </dd>
+      <dt>文言変更</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="入力でフィルタリングできます"
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+          decorator={{
+            noResultText: (text) => `no result.(${text})`,
+            destroyButtonIconAlt: (text) => `destroy.(${text})`,
+          }}
+        />
+      </dd>
       <dt>100%幅</dt>
       <dd>
         <SingleComboBox
@@ -348,6 +363,22 @@ export const Multi: Story = () => {
           isLoading
           onDelete={handleDelete}
           onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>文言変更</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          dropdownHelpMessage="入力でフィルタリングできます"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+          decorator={{
+            noResultText: (text) => `no result.(${text})`,
+            destroyButtonIconAlt: (text) => `destroy.(${text})`,
+            selectedListAriaLabel: (text) => `selected item list.(${text})`,
+          }}
         />
       </dd>
       <dt>選択解除ボタンを非表示</dt>

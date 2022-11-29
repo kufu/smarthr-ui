@@ -33,6 +33,7 @@ type Props<T> = {
   isExpanded: boolean
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
+  decorator: { noResultText?: (text: string) => ReactNode } | undefined
 }
 
 type Rect = {
@@ -41,6 +42,8 @@ type Rect = {
   width: number
   height?: number
 }
+
+const NO_RESULT_TEXT = '一致する選択肢がありません'
 
 export function useListBox<T>({
   options,
@@ -51,6 +54,7 @@ export function useListBox<T>({
   isExpanded,
   isLoading,
   triggerRef,
+  decorator,
 }: Props<T>) {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
@@ -235,7 +239,7 @@ export function useListBox<T>({
                 aria-live="polite"
                 className={classNames.noItems}
               >
-                一致する選択肢がありません
+                {decorator?.noResultText ? decorator.noResultText(NO_RESULT_TEXT) : NO_RESULT_TEXT}
               </NoItems>
             ) : (
               partialOptions.map((option) => (
@@ -272,6 +276,7 @@ export function useListBox<T>({
       dropdownHelpMessage,
       dropdownWidth,
       theme,
+      decorator,
     ],
   )
 

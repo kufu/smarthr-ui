@@ -116,9 +116,19 @@ type Props<T> = {
    * コンポーネントからフォーカスが外れた時に発火するコールバック関数
    */
   onBlur?: () => void
+  /**
+   * コンポーネント内のテキストを変更する関数/
+   */
+  decorator?: {
+    noResultText?: (text: string) => ReactNode
+    destroyButtonIconAlt?: (text: string) => string
+    selectedListAriaLabel?: (text: string) => string
+  }
 }
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
+
+const SELECTED_LIST_ARIA_LABEL = '選択済みアイテム'
 
 export function MultiComboBox<T>({
   items,
@@ -143,6 +153,7 @@ export function MultiComboBox<T>({
   onChangeSelected,
   onFocus,
   onBlur,
+  decorator,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -206,6 +217,7 @@ export function MultiComboBox<T>({
     isExpanded: isFocused,
     isLoading,
     triggerRef: outerRef,
+    decorator,
   })
 
   const {
@@ -331,7 +343,11 @@ export function MultiComboBox<T>({
         <InputArea themes={theme}>
           <SelectedList
             id={selectedListId}
-            aria-label="選択済みアイテム"
+            aria-label={
+              decorator?.selectedListAriaLabel
+                ? decorator.selectedListAriaLabel(SELECTED_LIST_ARIA_LABEL)
+                : SELECTED_LIST_ARIA_LABEL
+            }
             className={classNames.selectedList}
           >
             {selectedItems.map((selectedItem, i) => (
@@ -342,6 +358,7 @@ export function MultiComboBox<T>({
                   onDelete={handleDelete}
                   enableEllipsis={selectedItemEllipsis}
                   buttonRef={deletionButtonRefs[i]}
+                  decorator={decorator}
                 />
               </li>
             ))}

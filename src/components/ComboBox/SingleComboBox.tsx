@@ -104,9 +104,18 @@ type Props<T> = {
    * 選択されているアイテムのリストが変わった時に発火するコールバック関数
    */
   onChangeSelected?: (selectedItem: ComboBoxItem<T> | null) => void
+  /**
+   * コンポーネント内のテキストを変更する関数/
+   */
+  decorator?: {
+    noResultText?: (text: string) => ReactNode
+    destroyButtonIconAlt?: (text: string) => string
+  }
 }
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
+
+const DESTROY_BUTTON_TEXT = '削除'
 
 export function SingleComboBox<T>({
   items,
@@ -129,6 +138,7 @@ export function SingleComboBox<T>({
   onSelect,
   onClear,
   onChangeSelected,
+  decorator,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -172,6 +182,7 @@ export function SingleComboBox<T>({
     isExpanded,
     isLoading,
     triggerRef: outerRef,
+    decorator,
   })
 
   const focus = useCallback(() => {
@@ -339,7 +350,14 @@ export function SingleComboBox<T>({
                 themes={theme}
                 className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
               >
-                <FaTimesCircleIcon color={theme.color.TEXT_BLACK} alt="clear" />
+                <FaTimesCircleIcon
+                  color={theme.color.TEXT_BLACK}
+                  alt={
+                    decorator?.destroyButtonIconAlt
+                      ? decorator.destroyButtonIconAlt(DESTROY_BUTTON_TEXT)
+                      : DESTROY_BUTTON_TEXT
+                  }
+                />
               </ClearButton>
               <CaretDownLayout themes={theme}>
                 <CaretDownWrapper themes={theme}>
