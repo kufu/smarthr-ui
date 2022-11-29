@@ -334,7 +334,6 @@ const Container = styled.div<
     border-radius: ${radius.m};
     box-shadow: ${shadow.LAYER3};
     background-color: ${color.WHITE};
-    white-space: nowrap;
     box-sizing: border-box;
     &[aria-hidden='true'] {
       display: none;

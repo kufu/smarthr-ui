@@ -142,7 +142,7 @@ export function MultiComboBox<T>({
   isLoading,
   selectedItemEllipsis,
   width = 'auto',
-  dropdownWidth = '100%',
+  dropdownWidth = 'auto',
   inputValue: controlledInputValue,
   className = '',
   onChange,
