@@ -1,13 +1,14 @@
-import * as React from 'react'
 import { Story } from '@storybook/react'
+import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { Base } from '../Base'
-import { MessageScreen } from './MessageScreen'
 import { Button } from '../Button'
-import { TextLink } from '../TextLink'
 import { FormGroup } from '../FormGroup'
 import { Input } from '../Input'
+import { TextLink } from '../TextLink'
+
+import { MessageScreen } from './MessageScreen'
 
 export default {
   title: 'MessageScreen',

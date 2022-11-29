@@ -8,9 +8,7 @@ import React, {
 } from 'react'
 import styled, { css } from 'styled-components'
 
-import { TertiaryLink } from './TertiaryLink'
-import { validateElement } from './bottomFixedAreaHelper'
-
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base as BaseComponent } from '../Base'
 import {
   AnchorButton,
@@ -21,7 +19,9 @@ import {
   SecondaryButtonAnchor,
 } from '../Button'
 import { Cluster, Stack } from '../Layout'
-import { Theme, useTheme } from '../../hooks/useTheme'
+
+import { TertiaryLink } from './TertiaryLink'
+import { validateElement } from './bottomFixedAreaHelper'
 import { useClassNames } from './useClassNames'
 
 export type Primary =

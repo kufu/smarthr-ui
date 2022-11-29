@@ -1,13 +1,14 @@
 import React, { HTMLAttributes, useCallback } from 'react'
 
-import { DialogProps } from './types'
-import { useDialogPortal } from './useDialogPortal'
+import { useId } from '../../hooks/useId'
+
 import { DialogContentInner } from './DialogContentInner'
 import {
   MessageDialogContentInner,
   MessageDialogContentInnerProps,
 } from './MessageDialogContentInner'
-import { useId } from '../../hooks/useId'
+import { DialogProps } from './types'
+import { useDialogPortal } from './useDialogPortal'
 
 type Props = Omit<MessageDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>

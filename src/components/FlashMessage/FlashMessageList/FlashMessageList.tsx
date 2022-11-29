@@ -2,6 +2,7 @@ import React, { VFC, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
+
 import { FlashMessageListContext } from './FlashMessageListProvider'
 import { Item } from './Item'
 

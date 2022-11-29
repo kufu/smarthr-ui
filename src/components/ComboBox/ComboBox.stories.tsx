@@ -1,6 +1,6 @@
+import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
 import React, { useCallback, useState } from 'react'
-import { action } from '@storybook/addon-actions'
 import styled from 'styled-components'
 
 import { MultiComboBox, SingleComboBox } from '.'

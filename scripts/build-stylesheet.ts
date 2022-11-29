@@ -1,8 +1,10 @@
+const path = require('path')
+
+const fs = require('fs-extra')
 const React = require('react')
 const { renderToString } = require('react-dom/server')
 const { ServerStyleSheet, StyleSheetManager } = require('styled-components')
-const path = require('path')
-const fs = require('fs-extra')
+
 const AccordionPanel = require('../css/components/AccordionPanel/style')
 const Button = require('../css/components/Button/style')
 

@@ -11,19 +11,19 @@ import React, {
 } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { useOuterClick } from '../../hooks/useOuterClick'
 import { useId } from '../../hooks/useId'
-import { hasParentElementByClassName } from './multiComboBoxHelper'
-import { useMultiComboBoxClassNames } from './useClassNames'
-
+import { useOuterClick } from '../../hooks/useOuterClick'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaCaretDownIcon } from '../Icon'
-import { useOptions } from './useOptions'
-import { useFocusControl } from './useFocusControl'
-import { MultiSelectedItem } from './MultiSelectedItem'
-import { useListBox } from './useListBox'
-import { ComboBoxItem } from './types'
+
 import { ComboBoxContext } from './ComboBoxContext'
+import { MultiSelectedItem } from './MultiSelectedItem'
+import { hasParentElementByClassName } from './multiComboBoxHelper'
+import { ComboBoxItem } from './types'
+import { useMultiComboBoxClassNames } from './useClassNames'
+import { useFocusControl } from './useFocusControl'
+import { useListBox } from './useListBox'
+import { useOptions } from './useOptions'
 
 type Props<T> = {
   /**

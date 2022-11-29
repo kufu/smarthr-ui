@@ -2,12 +2,12 @@ import React, { RefObject, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useMultiComboBoxClassNames } from './useClassNames'
-
-import { FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
-import { ComboBoxItem } from './types'
+import { FaTimesCircleIcon } from '../Icon'
+
 import { MultiSelectedItemTooltip } from './MultiSelectedItemTooltip'
+import { ComboBoxItem } from './types'
+import { useMultiComboBoxClassNames } from './useClassNames'
 
 export type Props<T> = {
   item: ComboBoxItem<T> & { deletable?: boolean }

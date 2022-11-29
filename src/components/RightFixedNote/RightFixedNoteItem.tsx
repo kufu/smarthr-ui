@@ -1,9 +1,11 @@
 import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
+
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
 import { Button } from '../Button'
 import { FaPenIcon } from '../Icon'
+
 import { useClassNames } from './useClassNames'
 
 export type ItemProps = {

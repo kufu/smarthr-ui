@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { InformationPanel } from './InformationPanel'
 
 export function useClassNames() {

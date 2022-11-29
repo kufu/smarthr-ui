@@ -2,10 +2,11 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { FlashMessage, Props, animationTypes, messageTypes } from './FlashMessage'
-import { FlashMessageListProvider, useFlashMessageList } from './'
-
 import { Button } from '../Button'
+
+import { FlashMessage, Props, animationTypes, messageTypes } from './FlashMessage'
+
+import { FlashMessageListProvider, useFlashMessageList } from '.'
 
 export default {
   title: 'FlashMessage',

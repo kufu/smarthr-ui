@@ -1,10 +1,11 @@
 import React, { HTMLAttributes, useCallback } from 'react'
 
 import { useId } from '../../hooks/useId'
+
+import { ActionDialogContentInner, ActionDialogContentInnerProps } from './ActionDialogContentInner'
+import { DialogContentInner } from './DialogContentInner'
 import { DialogProps } from './types'
 import { useDialogPortal } from './useDialogPortal'
-import { DialogContentInner } from './DialogContentInner'
-import { ActionDialogContentInner, ActionDialogContentInnerProps } from './ActionDialogContentInner'
 
 type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>

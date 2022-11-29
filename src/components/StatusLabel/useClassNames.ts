@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { StatusLabel } from './StatusLabel'
 
 export function useClassNames() {

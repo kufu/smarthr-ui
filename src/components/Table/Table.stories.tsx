@@ -1,15 +1,15 @@
-import { Story } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { BulkActionRow, Table, Td, Th } from './'
-import { FaArrowDownIcon } from '../Icon'
-import { CheckBox as CheckBoxComponent } from '../CheckBox'
-import { Button } from '../Button'
-import { Base as BaseComponent } from '../Base'
-
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
+import { Base as BaseComponent } from '../Base'
+import { Button } from '../Button'
+import { CheckBox as CheckBoxComponent } from '../CheckBox'
+import { FaArrowDownIcon } from '../Icon'
+
+import { BulkActionRow, Table, Td, Th } from '.'
 
 export default {
   title: 'Table',

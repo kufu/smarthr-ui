@@ -1,15 +1,16 @@
 import { Story } from '@storybook/react'
+import { userEvent } from '@storybook/testing-library'
 import * as React from 'react'
 import styled from 'styled-components'
-import { userEvent } from '@storybook/testing-library'
 
+import { Button } from '../Button'
 import {
   FaArrowAltCircleDownIcon,
   FaArrowAltCircleLeftIcon,
   FaArrowAltCircleRightIcon,
   FaArrowAltCircleUpIcon,
 } from '../Icon'
-import { Button } from '../Button'
+
 import { Tooltip } from './Tooltip'
 
 export default {

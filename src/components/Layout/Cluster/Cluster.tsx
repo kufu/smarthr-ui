@@ -1,7 +1,9 @@
-import type { CSSProperties } from 'react'
 import styled, { css } from 'styled-components'
+
 import { useSpacing } from '../../../hooks/useSpacing'
+
 import type { Gap, SeparateGap } from '../type'
+import type { CSSProperties } from 'react'
 
 export const Cluster = styled.div<{
   /** true の場合は inline-flex */

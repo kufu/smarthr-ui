@@ -1,13 +1,13 @@
+import { Story } from '@storybook/react'
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { Story } from '@storybook/react'
-
-import { Stack } from '../Stack'
-import { LineUp } from '.'
 
 import { Heading } from '../../Heading'
-import { StatusLabel } from '../../StatusLabel'
 import { FaExternalLinkAltIcon } from '../../Icon'
+import { StatusLabel } from '../../StatusLabel'
+import { Stack } from '../Stack'
+
+import { LineUp } from '.'
 
 export const LineUpStory: Story = () => (
   <Stack>

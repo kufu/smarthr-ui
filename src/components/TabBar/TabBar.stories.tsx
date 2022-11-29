@@ -1,12 +1,11 @@
-import * as React from 'react'
 import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
 import { userEvent } from '@storybook/testing-library'
-
+import * as React from 'react'
 import styled from 'styled-components'
 
-import { TabItem } from './TabItem'
 import { TabBar } from './TabBar'
+import { TabItem } from './TabItem'
 
 export default {
   title: 'TabBar',

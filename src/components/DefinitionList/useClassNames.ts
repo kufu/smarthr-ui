@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
+
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { DefinitionList } from './DefinitionList'
 import { DefinitionListItem } from './DefinitionListItem'
 

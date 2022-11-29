@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { SmartHRLogo } from './SmartHRLogo'
 
 export function useClassNames() {

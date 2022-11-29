@@ -1,4 +1,5 @@
 import React, { VFC } from 'react'
+
 import {
   AnchorButton,
   Button,
@@ -13,7 +14,7 @@ import {
   TextButton,
   TextButtonAnchor,
   UnstyledButton,
-} from './'
+} from '.'
 
 export const Style: VFC = () => (
   <>

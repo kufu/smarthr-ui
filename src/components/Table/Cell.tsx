@@ -1,11 +1,11 @@
 import React, { ReactNode, TdHTMLAttributes, VFC, useContext } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
+import { isTouchDevice } from '../../libs/ua'
 
 import { TableGroupContext } from './Table'
+import { useClassNames } from './useClassNames'
 
 export type Props = {
   colSpan?: number

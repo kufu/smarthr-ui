@@ -1,6 +1,6 @@
 import React, { ReactNode, VFC, useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { CSSTransition } from 'react-transition-group'
+import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 

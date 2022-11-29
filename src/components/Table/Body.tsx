@@ -1,7 +1,9 @@
 import React, { HTMLAttributes, VFC } from 'react'
 import styled from 'styled-components'
-import { TableGroupContext } from './Table'
+
 import { Theme, useTheme } from '../../hooks/useTheme'
+
+import { TableGroupContext } from './Table'
 import { useClassNames } from './useClassNames'
 
 type ElementType = HTMLAttributes<HTMLTableSectionElement>

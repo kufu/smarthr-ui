@@ -1,5 +1,5 @@
-import { Story } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 

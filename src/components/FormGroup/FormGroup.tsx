@@ -1,10 +1,12 @@
 import React, { ComponentProps, HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
-import { Theme, useTheme } from '../../hooks/useTheme'
+
 import { useId } from '../../hooks/useId'
-import { StatusLabel } from '../StatusLabel'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
+import { StatusLabel } from '../StatusLabel'
+
 import { useClassNames } from './useClassNames'
 
 type innerMarginType = 'XXS' | 'XS' | 'S'

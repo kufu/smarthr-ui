@@ -1,7 +1,9 @@
-import type { CSSProperties } from 'react'
-import type { Gap, SeparateGap } from '../type'
 import styled, { css } from 'styled-components'
+
 import { useSpacing } from '../../../hooks/useSpacing'
+
+import type { Gap, SeparateGap } from '../type'
+import type { CSSProperties } from 'react'
 
 type Props = {
   /** 各領域の縦位置の揃え方（align-items） */
