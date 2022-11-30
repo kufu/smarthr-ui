@@ -1,7 +1,9 @@
 import React, { HTMLAttributes, ReactElement, useMemo } from 'react'
 import styled, { css } from 'styled-components'
+
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
+
 import { Cluster } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { Text } from '../Text'
@@ -28,7 +30,6 @@ type Props = {
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
-
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 export const Header: React.VFC<Props & ElementProps> = ({
