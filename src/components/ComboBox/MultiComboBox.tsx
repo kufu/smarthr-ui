@@ -11,19 +11,19 @@ import React, {
 } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { useOuterClick } from '../../hooks/useOuterClick'
 import { useId } from '../../hooks/useId'
-import { hasParentElementByClassName } from './multiComboBoxHelper'
-import { useMultiComboBoxClassNames } from './useClassNames'
-
+import { useOuterClick } from '../../hooks/useOuterClick'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaCaretDownIcon } from '../Icon'
-import { useOptions } from './useOptions'
-import { useFocusControl } from './useFocusControl'
-import { MultiSelectedItem } from './MultiSelectedItem'
-import { useListBox } from './useListBox'
-import { ComboBoxItem } from './types'
+
 import { ComboBoxContext } from './ComboBoxContext'
+import { MultiSelectedItem } from './MultiSelectedItem'
+import { hasParentElementByClassName } from './multiComboBoxHelper'
+import { ComboBoxItem } from './types'
+import { useMultiComboBoxClassNames } from './useClassNames'
+import { useFocusControl } from './useFocusControl'
+import { useListBox } from './useListBox'
+import { useOptions } from './useOptions'
 
 type Props<T> = {
   /**
@@ -71,6 +71,10 @@ type Props<T> = {
    */
   width?: number | string
   /**
+   * ドロップダウンリストの `width` スタイルに適用する値
+   */
+  dropdownWidth?: number | string
+  /**
    * テキストボックスの `value` 属性の値。
    * `onChangeInput` と併せて設定することで、テキストボックスの挙動が制御可能になる。
    */
@@ -112,9 +116,19 @@ type Props<T> = {
    * コンポーネントからフォーカスが外れた時に発火するコールバック関数
    */
   onBlur?: () => void
+  /**
+   * コンポーネント内のテキストを変更する関数/
+   */
+  decorator?: {
+    noResultText?: (text: string) => ReactNode
+    destroyButtonIconAlt?: (text: string) => string
+    selectedListAriaLabel?: (text: string) => string
+  }
 }
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
+
+const SELECTED_LIST_ARIA_LABEL = '選択済みアイテム'
 
 export function MultiComboBox<T>({
   items,
@@ -128,6 +142,7 @@ export function MultiComboBox<T>({
   isLoading,
   selectedItemEllipsis,
   width = 'auto',
+  dropdownWidth = 'auto',
   inputValue: controlledInputValue,
   className = '',
   onChange,
@@ -138,6 +153,7 @@ export function MultiComboBox<T>({
   onChangeSelected,
   onFocus,
   onBlur,
+  decorator,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -195,11 +211,13 @@ export function MultiComboBox<T>({
   } = useListBox({
     options,
     dropdownHelpMessage,
+    dropdownWidth,
     onAdd,
     onSelect: handleSelect,
     isExpanded: isFocused,
     isLoading,
     triggerRef: outerRef,
+    decorator,
   })
 
   const {
@@ -325,7 +343,11 @@ export function MultiComboBox<T>({
         <InputArea themes={theme}>
           <SelectedList
             id={selectedListId}
-            aria-label="選択済みアイテム"
+            aria-label={
+              decorator?.selectedListAriaLabel
+                ? decorator.selectedListAriaLabel(SELECTED_LIST_ARIA_LABEL)
+                : SELECTED_LIST_ARIA_LABEL
+            }
             className={classNames.selectedList}
           >
             {selectedItems.map((selectedItem, i) => (
@@ -336,6 +358,7 @@ export function MultiComboBox<T>({
                   onDelete={handleDelete}
                   enableEllipsis={selectedItemEllipsis}
                   buttonRef={deletionButtonRefs[i]}
+                  decorator={decorator}
                 />
               </li>
             ))}

@@ -1,5 +1,6 @@
-import { merge } from '../libs/lodash'
 import { darken, rgba, transparentize } from 'polished'
+
+import { merge } from '../libs/lodash'
 
 export type TextColors = 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK'
 
@@ -71,9 +72,7 @@ export const createColor = (userColor: ColorProperty = {}) => {
       ...defaultColor,
     },
     userColor,
-    userColor.OUTLINE == null && userColor.MAIN != null
-      ? { OUTLINE: transparentize(0.5, userColor.MAIN) }
-      : null,
+    !userColor.OUTLINE && userColor.MAIN ? { OUTLINE: transparentize(0.5, userColor.MAIN) } : null,
   )
   return created
 }

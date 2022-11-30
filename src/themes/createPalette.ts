@@ -1,5 +1,6 @@
-import { merge } from '../libs/lodash'
 import { darken, rgba } from 'polished'
+
+import { merge } from '../libs/lodash'
 
 // Allow deviations from the JavaScript naming convention to match SmartHR design guidelines
 export interface PaletteProperty {
@@ -78,7 +79,7 @@ export const createPalette = (userPalette: PaletteProperty = {}) => {
       ...defaultPalette,
     },
     userPalette,
-    userPalette.OUTLINE == null && userPalette.MAIN != null ? { OUTLINE: userPalette.MAIN } : null,
+    !userPalette.OUTLINE && userPalette.MAIN ? { OUTLINE: userPalette.MAIN } : null,
   )
   return created
 }

@@ -1,11 +1,12 @@
 import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
+
 import { useTheme } from '../../hooks/useTheme'
+import { Text } from '../Text'
 
 import { Base, LayerKeys, layerMap } from './Base'
 import { DialogBase } from './DialogBase'
-import { Text } from '../Text'
 
 export default {
   title: 'Base',

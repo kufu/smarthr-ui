@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
-import { Story } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
+import { Story } from '@storybook/react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { BackgroundJobsPanel, JobProps } from './BackgroundJobsPanel'
+
 import { BackgroundJobsList } from './BackgroundJobsList'
+import { BackgroundJobsPanel, JobProps } from './BackgroundJobsPanel'
 
 export default {
   title: 'BackgroundJobsPanel',

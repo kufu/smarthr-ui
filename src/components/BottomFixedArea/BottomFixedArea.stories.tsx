@@ -1,10 +1,11 @@
+import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
 import * as React from 'react'
 
-import { BottomFixedArea } from './BottomFixedArea'
 import { Button } from '../Button'
-import { FaTrashIcon } from '../Icon/'
-import { action } from '@storybook/addon-actions'
+import { FaTrashIcon } from '../Icon'
+
+import { BottomFixedArea } from './BottomFixedArea'
 
 export default {
   title: 'BottomFixedArea',

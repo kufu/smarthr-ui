@@ -1,6 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
+
 import { FlashMessage } from './FlashMessage'
 
 describe('FlashMessage', () => {

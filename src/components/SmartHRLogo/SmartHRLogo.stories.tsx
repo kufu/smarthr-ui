@@ -1,9 +1,10 @@
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
-import { Story } from '@storybook/react'
+
+import { Text } from '../Text'
 
 import { SmartHRLogo } from './SmartHRLogo'
-import { Text } from '../Text'
 
 export default {
   title: 'SmartHRLogo',

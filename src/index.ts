@@ -95,9 +95,10 @@ export { Text } from './components/Text'
 export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
 export { Header, HeaderLink, HeaderDropdownButton } from './components/Header'
+export { PageCounter } from './components/PageCounter'
 
 // layout components
-export { Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'
+export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'
 
 // hooks
 export { useTheme } from './hooks/useTheme'

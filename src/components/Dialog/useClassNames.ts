@@ -1,6 +1,8 @@
 import { useMemo } from 'react'
+
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
-import { Dialog, ModelessDialog } from './'
+
+import { Dialog, ModelessDialog } from '.'
 
 export function useClassNames() {
   const generateForDialog = useClassNameGenerator(Dialog.displayName || 'Dialog')

@@ -2,6 +2,7 @@ import React, { ComponentProps, HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+
 import { OnClick, SideNavItem, SideNavSizeType } from './SideNavItem'
 import { useClassNames } from './useClassNames'
 

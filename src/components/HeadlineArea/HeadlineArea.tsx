@@ -2,9 +2,9 @@ import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
 import { Heading, Props as HeadingProps } from '../Heading'
+
+import { useClassNames } from './useClassNames'
 
 type Props = {
   /** 見出し領域に表示する内容 */

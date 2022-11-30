@@ -1,11 +1,17 @@
-import React, { ChangeEvent, SelectHTMLAttributes, useCallback } from 'react'
+import React, {
+  ChangeEvent,
+  ForwardedRef,
+  SelectHTMLAttributes,
+  forwardRef,
+  useCallback,
+} from 'react'
 import styled, { css } from 'styled-components'
 
-import { isMobileSafari } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
+import { isMobileSafari } from '../../libs/ua'
 import { FaSortIcon } from '../Icon'
+
+import { useClassNames } from './useClassNames'
 
 type Option<T extends string> = {
   value: T
@@ -34,85 +40,91 @@ type Props<T extends string> = {
 
 type ElementProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, keyof Props<string> | 'children'>
 
-export function Select<T extends string>({
-  options,
-  onChange,
-  onChangeValue,
-  error = false,
-  width = 'auto',
-  hasBlank = false,
-  blankLabel = '選択してください',
-  size = 'default',
-  className = '',
-  disabled,
-  ...props
-}: Props<T> & ElementProps) {
-  const theme = useTheme()
-  const widthStyle = typeof width === 'number' ? `${width}px` : width
-  const handleChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) => {
-      if (onChange) onChange(e)
-      if (onChangeValue) {
-        const flattenOptions = options.reduce(
-          (pre, cur) => pre.concat('value' in cur ? cur : cur.options),
-          [] as Array<Option<T>>,
-        )
-        const selectedOption = flattenOptions.find((option) => option.value === e.target.value)
-        if (selectedOption) {
-          onChangeValue(selectedOption.value)
-        }
-      }
-    },
-    [onChange, onChangeValue, options],
-  )
-  const classNames = useClassNames()
-
-  return (
-    <Wrapper
-      className={`${className} ${classNames.wrapper} ${generateSizeClassName(size)}`}
-      $width={widthStyle}
-    >
-      <SelectBox
-        {...props}
-        onChange={handleChange}
-        aria-invalid={error || undefined}
-        themes={theme}
-        error={error}
-        disabled={disabled}
-      >
-        {hasBlank && <option value="">{blankLabel}</option>}
-        {options.map((option) => {
-          if ('value' in option) {
-            return (
-              <option {...option} key={option.value}>
-                {option.label}
-              </option>
-            )
-          }
-
-          const { options: groupedOptions, ...optgroup } = option
-
-          return (
-            <optgroup {...optgroup} key={optgroup.label}>
-              {groupedOptions.map((groupedOption) => (
-                <option {...groupedOption} key={groupedOption.value}>
-                  {groupedOption.label}
-                </option>
-              ))}
-            </optgroup>
+export const Select = forwardRef(
+  <T extends string>(
+    {
+      options,
+      onChange,
+      onChangeValue,
+      error = false,
+      width = 'auto',
+      hasBlank = false,
+      blankLabel = '選択してください',
+      size = 'default',
+      className = '',
+      disabled,
+      ...props
+    }: Props<T> & ElementProps,
+    ref: ForwardedRef<HTMLSelectElement>,
+  ) => {
+    const theme = useTheme()
+    const widthStyle = typeof width === 'number' ? `${width}px` : width
+    const handleChange = useCallback(
+      (e: ChangeEvent<HTMLSelectElement>) => {
+        if (onChange) onChange(e)
+        if (onChangeValue) {
+          const flattenOptions = options.reduce(
+            (pre, cur) => pre.concat('value' in cur ? cur : cur.options),
+            [] as Array<Option<T>>,
           )
-        })}
-        {
-          // Support for not omitting labels in Mobile Safari
-          isMobileSafari && <BlankOptgroup />
+          const selectedOption = flattenOptions.find((option) => option.value === e.target.value)
+          if (selectedOption) {
+            onChangeValue(selectedOption.value)
+          }
         }
-      </SelectBox>
-      <IconWrap themes={theme}>
-        <FaSortIcon />
-      </IconWrap>
-    </Wrapper>
-  )
-}
+      },
+      [onChange, onChangeValue, options],
+    )
+    const classNames = useClassNames()
+
+    return (
+      <Wrapper
+        className={`${className} ${classNames.wrapper} ${generateSizeClassName(size)}`}
+        $width={widthStyle}
+      >
+        <SelectBox
+          {...props}
+          onChange={handleChange}
+          aria-invalid={error || undefined}
+          themes={theme}
+          error={error}
+          disabled={disabled}
+          ref={ref}
+        >
+          {hasBlank && <option value="">{blankLabel}</option>}
+          {options.map((option) => {
+            if ('value' in option) {
+              return (
+                <option {...option} key={option.value}>
+                  {option.label}
+                </option>
+              )
+            }
+
+            const { options: groupedOptions, ...optgroup } = option
+
+            return (
+              <optgroup {...optgroup} key={optgroup.label}>
+                {groupedOptions.map((groupedOption) => (
+                  <option {...groupedOption} key={groupedOption.value}>
+                    {groupedOption.label}
+                  </option>
+                ))}
+              </optgroup>
+            )
+          })}
+          {
+            // Support for not omitting labels in Mobile Safari
+            isMobileSafari && <BlankOptgroup />
+          }
+        </SelectBox>
+        <IconWrap themes={theme}>
+          <FaSortIcon />
+        </IconWrap>
+      </Wrapper>
+    )
+  },
+)
 
 const generateSizeClassName = (size: Props<string>['size']) => (size === 's' ? '--small' : '')
 

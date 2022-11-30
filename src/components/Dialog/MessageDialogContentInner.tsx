@@ -2,13 +2,13 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
+import { Button } from '../Button'
+import { HeadingTagTypes } from '../Heading'
+import { Stack } from '../Layout'
+import { Text } from '../Text'
 
 import { useOffsetHeight } from './dialogHelper'
-import { Stack } from '../Layout'
-import { Button } from '../Button'
-import { Text } from '../Text'
-import { HeadingTagTypes } from '../Heading'
+import { useClassNames } from './useClassNames'
 
 export type BaseProps = {
   /**

@@ -1,11 +1,12 @@
+import { Story } from '@storybook/react'
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { Story } from '@storybook/react'
 
-import { Stack } from '.'
 import { Base as shrBase } from '../../Base'
 import { Heading } from '../../Heading'
 import { LineUp } from '../LineUp'
+
+import { Stack } from '.'
 
 export const StackStory: Story = () => (
   <LineUp gap={2}>

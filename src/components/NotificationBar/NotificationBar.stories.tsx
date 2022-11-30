@@ -1,16 +1,16 @@
+import { Story } from '@storybook/react'
 import React, { ComponentProps, useState } from 'react'
 import styled, { css } from 'styled-components'
-import { Story } from '@storybook/react'
 
-import { NotificationBar, messageTypes } from './NotificationBar'
-
-import { LineClamp } from '../LineClamp'
 import { Button } from '../Button'
+import { CheckBox } from '../CheckBox'
 import { Cluster, Stack } from '../Layout'
+import { LineClamp } from '../LineClamp'
+import { RadioButton } from '../RadioButton'
 import { Text } from '../Text'
 import { TextLink as shrTextLink } from '../TextLink'
-import { CheckBox } from '../CheckBox'
-import { RadioButton } from '../RadioButton'
+
+import { NotificationBar, messageTypes } from './NotificationBar'
 
 export default {
   title: 'NotificationBar',

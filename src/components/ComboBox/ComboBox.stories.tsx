@@ -1,6 +1,6 @@
+import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
 import React, { useCallback, useState } from 'react'
-import { action } from '@storybook/addon-actions'
 import styled from 'styled-components'
 
 import { MultiComboBox, SingleComboBox } from '.'
@@ -94,7 +94,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={handleSelectItem}
           onClear={handleClear}
           onChangeSelected={(item) => {
@@ -110,7 +110,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownHelpMessage="新しいアイテムを追加できます"
+          dropdownHelpMessage="新しいアイテムを追加できます。"
           creatable
           onSelect={handleSelectItem}
           onClear={handleClear}
@@ -137,7 +137,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           error
           onSelect={handleSelectItem}
           onClear={handleClear}
@@ -149,10 +149,25 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           isLoading
           onSelect={handleSelectItem}
           onClear={handleClear}
+        />
+      </dd>
+      <dt>文言変更</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="入力でフィルタリングできます"
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+          decorator={{
+            noResultText: (text) => `no result.(${text})`,
+            destroyButtonIconAlt: (text) => `destroy.(${text})`,
+          }}
         />
       </dd>
       <dt>100%幅</dt>
@@ -161,7 +176,31 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width="100%"
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+        />
+      </dd>
+      <dt>ドロップダウンリストの幅を絶対指定(600px)</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownWidth={600}
+          dropdownHelpMessage="入力でフィルタリングできます。（ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキスト）"
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+        />
+      </dd>
+      <dt>ドロップダウンリストの幅を相対指定（Inputの200%幅）</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownWidth="200%"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={handleSelectItem}
           onClear={handleClear}
         />
@@ -172,7 +211,7 @@ export const Single: Story = () => {
           items={manyItems}
           selectedItem={null}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={action('onSelect')}
         />
       </dd>
@@ -251,7 +290,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
           onChangeSelected={(selected) => {
@@ -269,7 +308,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="新しいアイテムを追加できます"
+          dropdownHelpMessage="新しいアイテムを追加できます。"
           creatable
           onDelete={handleDelete}
           onSelect={handleSelectItem}
@@ -296,7 +335,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           error
           onDelete={handleDelete}
           onSelect={handleSelectItem}
@@ -308,7 +347,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
           selectedItemEllipsis
@@ -320,10 +359,26 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           isLoading
           onDelete={handleDelete}
           onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>文言変更</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          dropdownHelpMessage="入力でフィルタリングできます"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+          decorator={{
+            noResultText: (text) => `no result.(${text})`,
+            destroyButtonIconAlt: (text) => `destroy.(${text})`,
+            selectedListAriaLabel: (text) => `selected item list.(${text})`,
+          }}
         />
       </dd>
       <dt>選択解除ボタンを非表示</dt>
@@ -332,7 +387,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems.map((item) => ({ ...item, deletable: false }))}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
         />
@@ -343,7 +398,7 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
           onChangeSelected={(selected) => {
@@ -363,6 +418,54 @@ export const Multi: Story = () => {
           items={items}
           selectedItems={selectedItems}
           width="100%"
+          dropdownHelpMessage="入力でフィルタリングできます。"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>ドロップダウンリストの幅をアイテムの幅に合わせる</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          dropdownWidth="auto"
+          dropdownHelpMessage="入力でフィルタリングできます。（ダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキストダミーテキスト）"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>ドロップダウンリストの幅を相対指定（Inputの200%幅）</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          dropdownWidth="200%"
+          dropdownHelpMessage="入力でフィルタリングできます。"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>ドロップダウンリストの幅を絶対指定(600px)</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          dropdownWidth={600}
+          dropdownHelpMessage="入力でフィルタリングできます"
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+        />
+      </dd>
+      <dt>ドロップダウンリストの幅を相対指定（Inputの200%幅）</dt>
+      <dd>
+        <MultiComboBox
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          dropdownWidth="200%"
           dropdownHelpMessage="入力でフィルタリングできます"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
@@ -374,7 +477,7 @@ export const Multi: Story = () => {
           items={manyItems}
           selectedItems={[]}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={action('onSelect')}
           data-test="multi-combobox-many"
         />

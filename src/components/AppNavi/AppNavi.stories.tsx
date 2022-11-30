@@ -3,7 +3,8 @@ import { Story } from '@storybook/react'
 import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
-import { FaBirthdayCakeIcon, FaChartPieIcon, FaCogIcon, FaFileIcon, FaUserAltIcon } from '../Icon/'
+import { FaBirthdayCakeIcon, FaChartPieIcon, FaCogIcon, FaFileIcon, FaUserAltIcon } from '../Icon'
+
 import { AppNavi } from './AppNavi'
 
 export default {

@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { isTouchDevice } from '../../libs/ua'
 import { UnstyledButton } from '../Button'
+
 import { useClassNames } from './useClassNames'
 
 export type SideNavSizeType = 'default' | 's'

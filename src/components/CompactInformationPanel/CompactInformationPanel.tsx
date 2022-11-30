@@ -2,8 +2,6 @@ import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
 import { Base, BaseElementProps } from '../Base'
 import {
   FaCheckCircleIcon,
@@ -11,6 +9,8 @@ import {
   FaInfoCircleIcon,
   WarningIcon as shrWarningIcon,
 } from '../Icon'
+
+import { useClassNames } from './useClassNames'
 
 type IconType = 'info' | 'success' | 'warning' | 'error'
 

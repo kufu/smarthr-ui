@@ -1,8 +1,10 @@
 import { useMemo } from 'react'
+
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { Calendar } from './Calendar'
-import { YearPicker } from './YearPicker'
 import { CalendarTable } from './CalendarTable'
+import { YearPicker } from './YearPicker'
 
 export const useClassNames = () => {
   const generateCalendar = useClassNameGenerator(Calendar.displayName || 'Calendar')

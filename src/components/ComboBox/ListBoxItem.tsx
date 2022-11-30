@@ -4,8 +4,8 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaPlusCircleIcon } from '../Icon'
 
-import { ComboBoxOption } from './types'
 import { ComboBoxContext } from './ComboBoxContext'
+import { ComboBoxOption } from './types'
 
 type Props<T> = {
   option: ComboBoxOption<T>
@@ -83,7 +83,7 @@ const SelectButton = styled.button<{ themes: Theme }>`
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: ${color.WHITE};
       font-size: ${fontSize.M};
-      line-height: ${leading.NONE};
+      line-height: ${leading.TIGHT};
       text-align: left;
       cursor: pointer;
 

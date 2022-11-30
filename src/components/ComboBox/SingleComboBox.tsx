@@ -10,17 +10,17 @@ import React, {
 } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { useClick } from '../../hooks/useClick'
-import { useSingleComboBoxClassNames } from './useClassNames'
-
-import { Input } from '../Input'
-import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { UnstyledButton } from '../Button'
-import { useOptions } from './useOptions'
-import { useListBox } from './useListBox'
-import { ComboBoxItem } from './types'
+import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
+import { Input } from '../Input'
+
 import { ComboBoxContext } from './ComboBoxContext'
+import { ComboBoxItem } from './types'
+import { useSingleComboBoxClassNames } from './useClassNames'
+import { useListBox } from './useListBox'
+import { useOptions } from './useOptions'
 
 type Props<T> = {
   /**
@@ -72,6 +72,10 @@ type Props<T> = {
    */
   width?: number | string
   /**
+   * ドロップダウンリストの `width` スタイルに適用する値
+   */
+  dropdownWidth?: number | string
+  /**
    * コンポーネント内の一番外側の要素に適用するクラス名
    */
   className?: string
@@ -100,9 +104,18 @@ type Props<T> = {
    * 選択されているアイテムのリストが変わった時に発火するコールバック関数
    */
   onChangeSelected?: (selectedItem: ComboBoxItem<T> | null) => void
+  /**
+   * コンポーネント内のテキストを変更する関数/
+   */
+  decorator?: {
+    noResultText?: (text: string) => ReactNode
+    destroyButtonIconAlt?: (text: string) => string
+  }
 }
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
+
+const DESTROY_BUTTON_TEXT = '削除'
 
 export function SingleComboBox<T>({
   items,
@@ -117,6 +130,7 @@ export function SingleComboBox<T>({
   dropdownHelpMessage,
   isLoading,
   width = 'auto',
+  dropdownWidth = 'auto',
   className = '',
   onChange,
   onChangeInput,
@@ -124,6 +138,7 @@ export function SingleComboBox<T>({
   onSelect,
   onClear,
   onChangeSelected,
+  decorator,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -153,6 +168,7 @@ export function SingleComboBox<T>({
   } = useListBox({
     options,
     dropdownHelpMessage,
+    dropdownWidth,
     onAdd,
     onSelect: useCallback(
       (selected: ComboBoxItem<T>) => {
@@ -166,6 +182,7 @@ export function SingleComboBox<T>({
     isExpanded,
     isLoading,
     triggerRef: outerRef,
+    decorator,
   })
 
   const focus = useCallback(() => {
@@ -333,7 +350,14 @@ export function SingleComboBox<T>({
                 themes={theme}
                 className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
               >
-                <FaTimesCircleIcon color={theme.color.TEXT_BLACK} alt="clear" />
+                <FaTimesCircleIcon
+                  color={theme.color.TEXT_BLACK}
+                  alt={
+                    decorator?.destroyButtonIconAlt
+                      ? decorator.destroyButtonIconAlt(DESTROY_BUTTON_TEXT)
+                      : DESTROY_BUTTON_TEXT
+                  }
+                />
               </ClearButton>
               <CaretDownLayout themes={theme}>
                 <CaretDownWrapper themes={theme}>

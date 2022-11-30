@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { FlashMessage } from './FlashMessage'
 
 export const useClassNames = () => {

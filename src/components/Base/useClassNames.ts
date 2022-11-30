@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
+
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { Base } from './Base'
 import { DialogBase } from './DialogBase'
 

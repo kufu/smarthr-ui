@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { FlashMessage } from '../FlashMessage'
+
 import { FlashMessageListContext, NumberedMessage } from './FlashMessageListProvider'
 
 export const Item: VFC<NumberedMessage> = ({ seq, ...message }) => {

@@ -1,8 +1,9 @@
 import { Story } from '@storybook/react'
 import React from 'react'
 
-import { InformationPanel } from './InformationPanel'
 import { Stack } from '../Layout'
+
+import { InformationPanel } from './InformationPanel'
 
 export default {
   title: 'InformationPanel',

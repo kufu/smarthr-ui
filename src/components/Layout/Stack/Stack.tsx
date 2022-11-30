@@ -1,7 +1,8 @@
 import { CSSProperties } from 'react'
 import styled, { css } from 'styled-components'
-import { AbstractSize, CharRelativeSize } from '../../../themes/createSpacing'
+
 import { useSpacing } from '../../../hooks/useSpacing'
+import { AbstractSize, CharRelativeSize } from '../../../themes/createSpacing'
 
 /**
  * @param inline true の場合は inline-flex

@@ -1,17 +1,19 @@
 import React, {
   InputHTMLAttributes,
   ReactNode,
-  VFC,
+  forwardRef,
   useCallback,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import styled, { css } from 'styled-components'
 
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
-import { Theme, useTheme } from '../../hooks/useTheme'
+
 import { useClassNames } from './useClassNames'
 
 type Size = 'default' | 's'
@@ -38,116 +40,125 @@ type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
 const DESTROY_BUTTON_TEXT = '削除'
 
-export const InputFile: VFC<Props & ElementProps> = ({
-  className = '',
-  size = 'default',
-  label,
-  hasFileList = true,
-  onChange,
-  disabled = false,
-  error,
-  decorator = {},
-  ...props
-}) => {
-  const theme = useTheme()
-  const [files, setFiles] = useState<File[]>([])
-  const { destroy: destroyDecorator } = decorator
-
-  // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
-  const isUpdatingFilesDirectly = useRef(false)
-
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  const destroyButtonText = useMemo(
-    () => (destroyDecorator ? destroyDecorator(DESTROY_BUTTON_TEXT) : DESTROY_BUTTON_TEXT),
-    [destroyDecorator],
-  )
-  const inputWrapperClassName = useMemo(
-    () => `${size === 's' ? 'small' : ''} ${disabled ? 'disabled' : ''} ${error ? 'error' : ''}`,
-    [disabled, error, size],
-  )
-
-  const classNames = useClassNames()
-
-  const updateFiles = useCallback(
-    (newFiles: File[]) => {
-      onChange && onChange(newFiles)
-      setFiles(newFiles)
+export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
+  (
+    {
+      className = '',
+      size = 'default',
+      label,
+      hasFileList = true,
+      onChange,
+      disabled = false,
+      error,
+      decorator = {},
+      ...props
     },
-    [setFiles, onChange],
-  )
+    ref,
+  ) => {
+    const theme = useTheme()
+    const [files, setFiles] = useState<File[]>([])
+    const { destroy: destroyDecorator } = decorator
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (isUpdatingFilesDirectly.current) {
-        return
-      }
-      const newFiles = Array.from(e.target.files ?? [])
-      updateFiles(newFiles)
-    },
-    [isUpdatingFilesDirectly, updateFiles],
-  )
+    // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
+    const isUpdatingFilesDirectly = useRef(false)
 
-  const handleDelete = useCallback(
-    (index: number) => {
-      if (!inputRef.current) {
-        return
-      }
-      const newFiles = files.filter((_, i) => index !== i)
-      updateFiles(newFiles)
+    const inputRef = useRef<HTMLInputElement>(null)
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => inputRef.current,
+    )
 
-      const buff = new DataTransfer()
-      newFiles.forEach((file) => {
-        buff.items.add(file)
-      })
-      isUpdatingFilesDirectly.current = true
-      inputRef.current.files = buff.files
-      isUpdatingFilesDirectly.current = false
-    },
-    [files, isUpdatingFilesDirectly, inputRef, updateFiles],
-  )
+    const destroyButtonText = useMemo(
+      () => (destroyDecorator ? destroyDecorator(DESTROY_BUTTON_TEXT) : DESTROY_BUTTON_TEXT),
+      [destroyDecorator],
+    )
+    const inputWrapperClassName = useMemo(
+      () => `${size === 's' ? 'small' : ''} ${disabled ? 'disabled' : ''} ${error ? 'error' : ''}`,
+      [disabled, error, size],
+    )
 
-  return (
-    <Wrapper className={`${className} ${classNames.wrapper}`}>
-      {!disabled && hasFileList && files.length > 0 && (
-        <FileList themes={theme} className={classNames.fileList}>
-          {files.map((file, index) => {
-            return (
-              <li key={`${file.name}-${index}`}>
-                <span className={classNames.fileName}>{file.name}</span>
-                <span>
-                  <Button
-                    variant="text"
-                    prefix={<FaTrashAltIcon />}
-                    onClick={() => handleDelete(index)}
-                    className={classNames.deleteButton}
-                  >
-                    {destroyButtonText}
-                  </Button>
-                </span>
-              </li>
-            )
-          })}
-        </FileList>
-      )}
-      <InputWrapper className={inputWrapperClassName} themes={theme}>
-        <input
-          {...props}
-          type="file"
-          onChange={handleChange}
-          disabled={disabled}
-          className={classNames.input}
-          ref={inputRef}
-          aria-invalid={error || undefined}
-        />
-        <Prefix themes={theme}>
-          <FaFolderOpenIcon />
-        </Prefix>
-        {label}
-      </InputWrapper>
-    </Wrapper>
-  )
-}
+    const classNames = useClassNames()
+
+    const updateFiles = useCallback(
+      (newFiles: File[]) => {
+        onChange && onChange(newFiles)
+        setFiles(newFiles)
+      },
+      [setFiles, onChange],
+    )
+
+    const handleChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (isUpdatingFilesDirectly.current) {
+          return
+        }
+        const newFiles = Array.from(e.target.files ?? [])
+        updateFiles(newFiles)
+      },
+      [isUpdatingFilesDirectly, updateFiles],
+    )
+
+    const handleDelete = useCallback(
+      (index: number) => {
+        if (!inputRef.current) {
+          return
+        }
+        const newFiles = files.filter((_, i) => index !== i)
+        updateFiles(newFiles)
+
+        const buff = new DataTransfer()
+        newFiles.forEach((file) => {
+          buff.items.add(file)
+        })
+        isUpdatingFilesDirectly.current = true
+        inputRef.current.files = buff.files
+        isUpdatingFilesDirectly.current = false
+      },
+      [files, isUpdatingFilesDirectly, inputRef, updateFiles],
+    )
+
+    return (
+      <Wrapper className={`${className} ${classNames.wrapper}`}>
+        {!disabled && hasFileList && files.length > 0 && (
+          <FileList themes={theme} className={classNames.fileList}>
+            {files.map((file, index) => {
+              return (
+                <li key={`${file.name}-${index}`}>
+                  <span className={classNames.fileName}>{file.name}</span>
+                  <span>
+                    <Button
+                      variant="text"
+                      prefix={<FaTrashAltIcon />}
+                      onClick={() => handleDelete(index)}
+                      className={classNames.deleteButton}
+                    >
+                      {destroyButtonText}
+                    </Button>
+                  </span>
+                </li>
+              )
+            })}
+          </FileList>
+        )}
+        <InputWrapper className={inputWrapperClassName} themes={theme}>
+          <input
+            {...props}
+            type="file"
+            onChange={handleChange}
+            disabled={disabled}
+            className={classNames.input}
+            ref={inputRef}
+            aria-invalid={error || undefined}
+          />
+          <Prefix themes={theme}>
+            <FaFolderOpenIcon />
+          </Prefix>
+          {label}
+        </InputWrapper>
+      </Wrapper>
+    )
+  },
+)
 
 const Wrapper = styled.div`
   display: block;

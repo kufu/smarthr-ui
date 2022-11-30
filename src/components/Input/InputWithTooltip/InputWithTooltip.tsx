@@ -1,8 +1,8 @@
 import React, { ComponentProps, forwardRef } from 'react'
 import styled from 'styled-components'
 
-import { Input } from '../Input'
 import { Tooltip as shrTooltip } from '../../Tooltip'
+import { Input } from '../Input'
 
 type Props = ComponentProps<typeof Input> & {
   /** 入力欄に紐付けるツールチップに表示するメッセージ */

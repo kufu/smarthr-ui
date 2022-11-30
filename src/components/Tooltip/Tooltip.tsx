@@ -10,10 +10,11 @@ import React, {
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
-import { Props as BalloonProps } from '../Balloon'
-import { TooltipPortal } from './TooltipPortal'
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { Props as BalloonProps } from '../Balloon'
+
+import { TooltipPortal } from './TooltipPortal'
 import { useClassNames } from './useClassNames'
 
 type Props = {

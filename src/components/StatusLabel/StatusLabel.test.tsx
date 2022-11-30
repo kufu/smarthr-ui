@@ -1,7 +1,7 @@
-import { create } from 'react-test-renderer'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
+import { create } from 'react-test-renderer'
 
 import { StatusLabel } from './StatusLabel'
 

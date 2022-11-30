@@ -2,8 +2,9 @@ import React, { HTMLAttributes, VFC, useLayoutEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
 import { UnstyledButton } from '../Button'
+
+import { useClassNames } from './useClassNames'
 
 type Props = {
   /** 選択された年 */

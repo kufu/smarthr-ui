@@ -1,16 +1,17 @@
-import { Story } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
+import { Story } from '@storybook/react'
 import React, { FC, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Base } from '../Base'
 import { Button } from '../Button'
-import { AccordionPanel } from './AccordionPanel'
-import { AccordionPanelItem } from './AccordionPanelItem'
-import { AccordionPanelTrigger } from './AccordionPanelTrigger'
-import { AccordionPanelContent } from './AccordionPanelContent'
 import { FormGroup } from '../FormGroup'
 import { Input } from '../Input'
+
+import { AccordionPanel } from './AccordionPanel'
+import { AccordionPanelContent } from './AccordionPanelContent'
+import { AccordionPanelItem } from './AccordionPanelItem'
+import { AccordionPanelTrigger } from './AccordionPanelTrigger'
 
 export default {
   title: 'AccordionPanel',

@@ -1,13 +1,14 @@
 import React, { HTMLAttributes, ReactNode, RefObject, VFC, useCallback, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
+import { Theme, useTheme } from '../../hooks/useTheme'
+
+import { BodyScrollSuppressor } from './BodyScrollSuppressor'
+import { DialogOverlap } from './DialogOverlap'
 import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
 import { useClassNames } from './useClassNames'
-import { BodyScrollSuppressor } from './BodyScrollSuppressor'
-import { DialogOverlap } from './DialogOverlap'
 
 export type DialogContentInnerProps = {
   /**

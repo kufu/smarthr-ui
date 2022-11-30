@@ -1,12 +1,14 @@
 import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
+
 import { useTheme } from '../../hooks/useTheme'
-import { Heading } from '../Heading'
 import { Base } from '../Base'
-import { DefinitionList } from './DefinitionList'
+import { Heading } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 import { Text } from '../Text'
+
+import { DefinitionList } from './DefinitionList'
 
 export default {
   title: 'DefinitionList',

@@ -1,8 +1,9 @@
 import React, { ReactNode, TdHTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isTouchDevice } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { isTouchDevice } from '../../libs/ua'
+
 import { useThClassNames } from './useClassNames'
 
 export type Props = {
