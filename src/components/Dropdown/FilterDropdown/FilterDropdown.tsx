@@ -98,7 +98,12 @@ export const FilterDropdown: VFC<Props> = ({
       </DropdownTrigger>
       {hasStatusText && isFiltered ? <StatusText themes={themes}>{status}</StatusText> : null}
       <DropdownContent controllable>
-        <DropdownScrollArea>
+        <DropdownScrollArea
+          onClick={
+            // FIXME: 暫定対応。コンボボックスを内包した時、ドロップダウンポータルの親子判定できずに外側クリック判定になりドロップダウンが閉じてしまっている
+            (e) => e.stopPropagation()
+          }
+        >
           <ContentLayout>{children}</ContentLayout>
         </DropdownScrollArea>
         <BottomLayout themes={themes}>
