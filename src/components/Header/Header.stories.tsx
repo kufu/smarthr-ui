@@ -1,11 +1,12 @@
-import React from 'react'
 import { Story } from '@storybook/react'
+import React from 'react'
 
+import { AppLauncher } from '../AppLauncher'
 import { Button } from '../Button'
-import { Header, HeaderDropdownButton, HeaderLink } from './'
 import { FaQuestionCircleIcon } from '../Icon'
 import { Stack } from '../Layout'
-import { AppLauncher } from '../AppLauncher'
+
+import { Header, HeaderDropdownButton, HeaderLink } from '.'
 
 export default {
   title: 'Header',

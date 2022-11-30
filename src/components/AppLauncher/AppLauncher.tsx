@@ -1,7 +1,6 @@
 import React, { HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import {
   Button,
   Cluster,
@@ -13,7 +12,8 @@ import {
   Heading,
   Stack,
   TextLink,
-} from '../../'
+} from '../..'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { useClassNames } from './useClassNames'
 

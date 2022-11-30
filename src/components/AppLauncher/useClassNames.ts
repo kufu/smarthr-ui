@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
+
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { AppLauncher } from './AppLauncher'
 
 export function useClassNames() {
