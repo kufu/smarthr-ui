@@ -1,11 +1,11 @@
 import { Story } from '@storybook/react'
+import { userEvent, within } from '@storybook/testing-library'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { Textarea } from './Textarea'
-
 import { Stack } from '../Layout'
-import { userEvent, within } from '@storybook/testing-library'
+
+import { Textarea } from './Textarea'
 
 export default {
   title: 'Textarea',

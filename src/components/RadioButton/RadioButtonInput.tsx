@@ -1,8 +1,9 @@
+import { transparentize } from 'polished'
 import React, { ChangeEvent, InputHTMLAttributes, forwardRef, useCallback } from 'react'
 import styled, { css } from 'styled-components'
-import { transparentize } from 'polished'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+
 import { useClassNames } from './useClassNames'
 
 export type Props = InputHTMLAttributes<HTMLInputElement>

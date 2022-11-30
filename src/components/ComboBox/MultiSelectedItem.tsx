@@ -2,12 +2,12 @@ import React, { RefObject, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useMultiComboBoxClassNames } from './useClassNames'
-
-import { FaTimesCircleIcon } from '../Icon'
 import { UnstyledButton } from '../Button'
-import { ComboBoxItem } from './types'
+import { FaTimesCircleIcon } from '../Icon'
+
 import { MultiSelectedItemTooltip } from './MultiSelectedItemTooltip'
+import { ComboBoxItem } from './types'
+import { useMultiComboBoxClassNames } from './useClassNames'
 
 export type Props<T> = {
   item: ComboBoxItem<T> & { deletable?: boolean }
@@ -15,7 +15,12 @@ export type Props<T> = {
   onDelete: (item: ComboBoxItem<T>) => void
   enableEllipsis?: boolean
   buttonRef: RefObject<HTMLButtonElement>
+  decorator?: {
+    destroyButtonIconAlt?: (text: string) => string
+  }
 }
+
+const DESTROY_BUTTON_TEXT = '削除'
 
 export function MultiSelectedItem<T>({
   item,
@@ -23,6 +28,7 @@ export function MultiSelectedItem<T>({
   onDelete,
   enableEllipsis,
   buttonRef,
+  decorator,
 }: Props<T>) {
   const theme = useTheme()
   const labelRef = useRef<HTMLDivElement>(null)
@@ -70,7 +76,15 @@ export function MultiSelectedItem<T>({
             ref={buttonRef}
             tabIndex={-1}
           >
-            <FaTimesCircleIcon size={11} color={'inherit'} alt={`${item.label}を削除`} />
+            <FaTimesCircleIcon
+              size={11}
+              color="inherit"
+              alt={
+                decorator?.destroyButtonIconAlt
+                  ? decorator.destroyButtonIconAlt(DESTROY_BUTTON_TEXT)
+                  : DESTROY_BUTTON_TEXT
+              }
+            />
           </DeleteButton>
         )}
       </Wrapper>

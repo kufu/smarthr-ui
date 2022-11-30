@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
-import { AbstractSize, CharRelativeSize } from '../../../themes/createSpacing'
+
 import { useSpacing } from '../../../hooks/useSpacing'
+import { AbstractSize, CharRelativeSize } from '../../../themes/createSpacing'
 
 type alignMethod = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around'
 type verticalAlignMethod = 'normal' | 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch'

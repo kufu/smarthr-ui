@@ -99,7 +99,7 @@ export { PageCounter } from './components/PageCounter'
 export { AppLauncher } from './components/AppLauncher'
 
 // layout components
-export { Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'
+export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'
 
 // hooks
 export { useTheme } from './hooks/useTheme'

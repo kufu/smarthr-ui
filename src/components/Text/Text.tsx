@@ -1,8 +1,9 @@
 import React, { CSSProperties, HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
+
 import { useTheme } from '../../hooks/useTheme'
-import { FontSizes } from '../../themes/createFontSize'
 import { TextColors } from '../../themes/createColor'
+import { FontSizes } from '../../themes/createFontSize'
 import { Leadings } from '../../themes/createLeading'
 
 export type TextProps = {

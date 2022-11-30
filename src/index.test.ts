@@ -1,7 +1,8 @@
-import ts from 'typescript'
-import util from 'util'
 import fs from 'fs'
 import path from 'path'
+import util from 'util'
+
+import ts from 'typescript'
 
 const readFile = util.promisify(fs.readFile)
 const readdir = util.promisify(fs.readdir)

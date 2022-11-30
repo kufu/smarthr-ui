@@ -9,18 +9,19 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import styled, { css } from 'styled-components'
 import Draggable from 'react-draggable'
+import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { useId } from '../../hooks/useId'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
+import { useId } from '../../hooks/useId'
+import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
-import { useDialogPortal } from './useDialogPortal'
+
 import { DialogOverlap } from './DialogOverlap'
 import { useClassNames } from './useClassNames'
+import { useDialogPortal } from './useDialogPortal'
 
 type Props = {
   /**
@@ -94,7 +95,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   className = '',
   ...props
 }) => {
-  const { createPortal, isReady } = useDialogPortal(portalParent)
+  const { createPortal } = useDialogPortal(portalParent)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
   const [wrapperPosition, setWrapperPosition] = useState<DOMRect | undefined>(undefined)
@@ -125,15 +126,15 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   )
 
   useLayoutEffect(() => {
-    if (isOpen && isReady) {
+    if (isOpen) {
       setPosition({ x: 0, y: 0 })
       focusTargetRef.current?.focus()
     }
-  }, [isOpen, isReady])
+  }, [isOpen])
 
   useEffect(() => {
     // 中央寄せの座標計算を行う
-    if (!wrapperRef.current || !isOpen || !isReady) {
+    if (!wrapperRef.current || !isOpen) {
       return
     }
     const isXCenter = left === undefined && right === undefined
@@ -145,7 +146,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
         left: isXCenter ? window.innerWidth / 2 - rect.width / 2 : undefined,
       })
     }
-  }, [bottom, isOpen, isReady, left, right, top])
+  }, [bottom, isOpen, left, right, top])
 
   const handleArrowKey = useCallback(
     (e: React.KeyboardEvent) => {
@@ -188,7 +189,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   )
 
   useEffect(() => {
-    if (!isOpen || !isReady) return
+    if (!isOpen) return
 
     if (centering.top) {
       setDraggableBounds({ top: centering.top * -1 })
@@ -199,7 +200,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
       const rect = wrapperRef.current.getBoundingClientRect()
       setDraggableBounds({ top: rect.top * -1 })
     }
-  }, [isOpen, isReady, centering.top])
+  }, [isOpen, centering.top])
 
   const labelId = useId()
   const classNames = useClassNames().modelessDialog

@@ -1,16 +1,18 @@
-import { CreatedFrameTheme, FrameProperty, createFrame } from './createFrame'
 import { BorderProperty, CreatedBorderTheme, createBorder } from './createBorder'
-import { CreatedRadiusTheme, RadiusProperty, createRadius } from './createRadius'
+import { BreakpointProperty, CreatedBreakpointTheme, createBreakpoint } from './createBreakpoint'
+import { ColorProperty, CreatedColorTheme, createColor } from './createColor'
+import { CreatedFontSizeTheme, FontSizeProperty, createFontSize } from './createFontSize'
+import { CreatedFrameTheme, FrameProperty, createFrame } from './createFrame'
 import {
   CreatedInteractionTheme,
   InteractionProperty,
   createInteraction,
 } from './createInteraction'
-import { CreatedPaletteTheme, PaletteProperty, createPalette } from './createPalette'
-import { ColorProperty, CreatedColorTheme, createColor } from './createColor'
-import { CreatedSizeTheme, SizeProperty, createSize } from './createSize'
-import { CreatedFontSizeTheme, FontSizeProperty, createFontSize } from './createFontSize'
 import { CreatedLeading, LeadingProperty, createLeading } from './createLeading'
+import { CreatedPaletteTheme, PaletteProperty, createPalette } from './createPalette'
+import { CreatedRadiusTheme, RadiusProperty, createRadius } from './createRadius'
+import { CreatedShadowTheme, ShadowProperty, createShadow } from './createShadow'
+import { CreatedSizeTheme, SizeProperty, createSize } from './createSize'
 import {
   CreatedSpacingByCharTheme,
   CreatedSpacingTheme,
@@ -18,8 +20,6 @@ import {
   createSpacing,
   createSpacingByChar,
 } from './createSpacing'
-import { BreakpointProperty, CreatedBreakpointTheme, createBreakpoint } from './createBreakpoint'
-import { CreatedShadowTheme, ShadowProperty, createShadow } from './createShadow'
 import { CreatedZindexTheme, ZIndexProperty, createZIndex } from './createZIndex'
 
 interface ThemeProperty {

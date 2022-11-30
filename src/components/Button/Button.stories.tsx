@@ -1,11 +1,12 @@
+import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
 import React, { useState } from 'react'
-import { action } from '@storybook/addon-actions'
 import styled, { css } from 'styled-components'
 
-import { AnchorButton, Button } from '.'
-import { Cluster, Stack } from '../Layout'
 import { FaPlusCircleIcon, FaPlusIcon, FaPlusSquareIcon } from '../Icon'
+import { Cluster, Stack } from '../Layout'
+
+import { AnchorButton, Button } from '.'
 
 export default {
   title: 'Button',

@@ -1,8 +1,10 @@
 import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
+
 import { useTheme } from '../../hooks/useTheme'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import { FaCaretDownIcon, ComponentProps as IconProps } from '../Icon'
+
 import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
 
 export type AppNaviDropdownProps = {

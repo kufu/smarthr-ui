@@ -1,6 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TabBar should be match snapshot 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 8px;
+  padding: 0;
+}
+
+.c0 > * {
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+
+.c0:empty {
+  gap: 0;
+}
+
 .c2 {
   background-color: transparent;
   border: none;
@@ -35,27 +56,6 @@ exports[`TabBar should be match snapshot 1`] = `
   background-color: transparent;
   color: rgba(112,109,101,0.5);
   cursor: not-allowed;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  overflow-x: auto;
-  overflow-y: hidden;
-  gap: 8px;
-  padding: 0;
-}
-
-.c0 > * {
-  -webkit-flex: 0 0 auto;
-  -ms-flex: 0 0 auto;
-  flex: 0 0 auto;
-}
-
-.c0:empty {
-  gap: 0;
 }
 
 .c1 {

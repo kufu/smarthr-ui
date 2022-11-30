@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { Story } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
+import { Story } from '@storybook/react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { Calendar } from './Calendar'

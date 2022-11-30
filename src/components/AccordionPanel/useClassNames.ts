@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { AccordionPanel } from './AccordionPanel'
 
 export function useClassNames() {

@@ -2,10 +2,10 @@ import React, { FC, HTMLAttributes, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
-import { Text } from '../Text'
 import { Stack } from '../Layout'
+import { Text } from '../Text'
+
+import { useClassNames } from './useClassNames'
 
 export type DefinitionListItemProps = {
   term: ReactNode

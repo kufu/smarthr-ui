@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import React, {
   forwardRef,
   useCallback,
@@ -8,19 +9,18 @@ import React, {
   useState,
 } from 'react'
 import styled, { css } from 'styled-components'
-import dayjs from 'dayjs'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useId } from '../../hooks/useId'
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { useGlobalKeyDown } from './useGlobalKeyDown'
+import { Theme, useTheme } from '../../hooks/useTheme'
+import { Calendar } from '../Calendar'
+import { FaCalendarAltIcon } from '../Icon'
+import { Input } from '../Input'
+
+import { Portal } from './Portal'
 import { parseJpnDateString } from './datePickerHelper'
 import { useClassNames } from './useClassNames'
-
-import { Input } from '../Input'
-import { FaCalendarAltIcon } from '../Icon'
-import { Calendar } from '../Calendar'
-import { Portal } from './Portal'
-import { useId } from '../../hooks/useId'
+import { useGlobalKeyDown } from './useGlobalKeyDown'
 
 type Props = {
   /** input 要素の `value` 属性の値 */
@@ -33,6 +33,10 @@ type Props = {
   to?: Date
   /** フォームを無効にするかどうか */
   disabled?: boolean
+  /**
+   * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
+   */
+  placeholder?: string
   /** フォームにエラーがあるかどうか */
   error?: boolean
   /** コンポーネントに適用するクラス名 */

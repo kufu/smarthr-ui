@@ -10,9 +10,10 @@ import React, {
   useState,
 } from 'react'
 
-import { Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
-import { usePortal } from '../../hooks/usePortal'
 import { useId } from '../../hooks/useId'
+import { usePortal } from '../../hooks/usePortal'
+
+import { Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 
 type Props = {
   children: ReactNode

@@ -1,20 +1,25 @@
-import { ReactNode, RefObject, useCallback, useLayoutEffect, useState } from 'react'
+import { ReactNode, RefObject, useCallback, useLayoutEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>) {
-  const [portalContainer, setPortalContainer] = useState<HTMLDivElement | null>(null)
+  const portalContainer = useRef<HTMLDivElement | null>(
+    parent ?? typeof document === undefined
+      ? null
+      : (document.createElement('div') as HTMLDivElement),
+  ).current
 
   useLayoutEffect(() => {
-    const createdPortalContainer = document.createElement('div')
-    setPortalContainer(createdPortalContainer)
-    const parentElement = parent != null && 'current' in parent ? parent.current : parent
+    if (!portalContainer) {
+      return
+    }
+    const parentElement = parent && 'current' in parent ? parent.current : parent
     // SSR を考慮し、useEffect 内で初期値 document.body を指定
     const actualParent = parentElement || document.body
-    actualParent.appendChild(createdPortalContainer)
+    actualParent.appendChild(portalContainer)
     return () => {
-      actualParent.removeChild(createdPortalContainer)
+      actualParent.removeChild(portalContainer)
     }
-  }, [parent])
+  }, [parent, portalContainer])
 
   const wrappedCreatePortal = useCallback(
     (children: ReactNode) => {
@@ -28,6 +33,5 @@ export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>) {
 
   return {
     createPortal: wrappedCreatePortal,
-    isReady: portalContainer !== null,
   }
 }

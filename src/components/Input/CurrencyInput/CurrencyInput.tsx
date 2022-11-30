@@ -9,6 +9,7 @@ import React, {
 } from 'react'
 
 import { Input } from '../Input'
+
 import { formatCurrency } from './currencyInputHelper'
 import { useClassNames } from './useClassNames'
 

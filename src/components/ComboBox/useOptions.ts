@@ -2,8 +2,8 @@ import { useCallback, useMemo } from 'react'
 
 import { useId } from '../../hooks/useId'
 
-import { ComboBoxItem, ComboBoxOption } from './types'
 import { convertMatchableString } from './comboBoxHelper'
+import { ComboBoxItem, ComboBoxOption } from './types'
 
 export function useOptions<T>({
   items,

@@ -1,4 +1,4 @@
-import { Cluster, LineUp, Reel, Sidebar, Stack } from './'
+import { Cluster, LineUp, Reel, Sidebar, Stack } from '.'
 
 export default {
   title: 'Layout',
@@ -6,6 +6,7 @@ export default {
   subcomponents: { Cluster, LineUp, Reel, Sidebar, Stack },
 }
 
+export { CenterStory as Center } from './Center/Center.stories'
 export { ClusterStory as Cluster } from './Cluster/Cluster.stories'
 export { ReelStory as Reel } from './Reel/Reel.stories'
 export { LineUpStory as LineUp } from './LineUp/LineUp.stories'

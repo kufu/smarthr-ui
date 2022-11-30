@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
+
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
 
-import { FormGroup } from './'
+import { FormGroup } from '.'
 
 export function useClassNames() {
   const generate = useClassNameGenerator(FormGroup.displayName || 'FormGroup')

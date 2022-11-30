@@ -2,9 +2,9 @@ import React, { FC, HTMLAttributes, ReactNode, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
 import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
+
+import { useClassNames } from './useClassNames'
 
 type Color = 'grey' | 'blue' | 'green' | 'red'
 type State = 'warning' | 'error'

@@ -2,10 +2,10 @@ import React, { FC, HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
+import { Cluster } from '../Layout'
 
 import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListItem'
-import { Cluster } from '../Layout'
+import { useClassNames } from './useClassNames'
 
 type LayoutType = 'single' | 'double' | 'triple'
 type Props = {

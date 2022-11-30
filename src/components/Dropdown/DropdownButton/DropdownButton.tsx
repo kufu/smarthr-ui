@@ -1,13 +1,14 @@
 import React, { ComponentProps, HTMLAttributes, ReactElement, ReactNode, VFC, useMemo } from 'react'
+import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
+import { Dropdown, DropdownContent, DropdownTrigger } from '..'
+import { Theme, useTheme } from '../../../hooks/useTheme'
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
-import { Dropdown, DropdownContent, DropdownTrigger } from '../'
 import { FaCaretDownIcon, FaEllipsisHIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-import { Theme, useTheme } from '../../../hooks/useTheme'
+
 import { useClassNames } from './useClassNames'
-import innerText from 'react-innertext'
 
 type Actions = ActionItem | ActionItem[]
 // これでコンポーネントを絞れるわけではないが Button[variant=text] を使ってほしいんだよ! という気持ち
@@ -52,6 +53,7 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
     [onlyIconTrigger, label],
   )
   const triggerSuffix = useMemo(
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     () => (onlyIconTrigger ? <></> : <FaCaretDownIcon alt="候補を開く" />),
     [onlyIconTrigger],
   )

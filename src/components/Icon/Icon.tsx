@@ -1,5 +1,4 @@
 import * as React from 'react'
-import styled, { css } from 'styled-components'
 import {
   FaAddressBook,
   FaAddressCard,
@@ -310,13 +309,17 @@ import {
   FaWrench,
   FaYenSign,
 } from 'react-icons/fa'
-import type { IconBaseProps, IconType } from 'react-icons'
-import Warning from './WarningIcon'
+import styled, { css } from 'styled-components'
+
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
-import { useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import { useSpacing } from '../../hooks/useSpacing'
+import { useTheme } from '../../hooks/useTheme'
+import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+
+import Warning from './WarningIcon'
+import { useClassNames } from './useClassNames'
+
+import type { IconBaseProps, IconType } from 'react-icons'
 
 /**
  * literal union type に補完を効かせるためのハック

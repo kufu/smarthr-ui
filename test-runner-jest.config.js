@@ -17,6 +17,7 @@ module.exports = {
     'Reel.stories.tsx',
     'Sidebar.stories.tsx',
     'Stack.stories.tsx',
+    'Center.stories.tsx',
     'FilterDropdown.stories.tsx',
     'DropdownButton.stories.tsx',
     'SearchInput.stories.tsx',

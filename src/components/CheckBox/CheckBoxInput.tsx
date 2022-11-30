@@ -1,11 +1,11 @@
+import { transparentize } from 'polished'
 import React, { forwardRef, useCallback } from 'react'
 import styled, { css } from 'styled-components'
-import { transparentize } from 'polished'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
+
+import { useClassNames } from './useClassNames'
 
 export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   /** `true` のとき、チェック状態を `mixed` にする */

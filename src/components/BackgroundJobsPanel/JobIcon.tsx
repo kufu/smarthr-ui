@@ -1,7 +1,6 @@
 import React, { VFC } from 'react'
 
 import { useTheme } from '../../hooks/useTheme'
-import { Status } from './BackgroundJobsPanel'
 import {
   FaCheckCircleIcon,
   FaCloudDownloadAltIcon,
@@ -10,6 +9,8 @@ import {
   IconProps,
   WarningIcon,
 } from '../Icon'
+
+import { Status } from './BackgroundJobsPanel'
 
 type Props = {
   status: Status

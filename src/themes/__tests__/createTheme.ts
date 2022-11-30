@@ -1,10 +1,10 @@
-import { createTheme } from '../createTheme'
+import { defaultBorder } from '../createBorder'
+import { defaultBreakpoint } from '../createBreakpoint'
 import { defaultColor } from '../createColor'
 import { defaultFontSize } from '../createFontSize'
 import { defaultLeading } from '../createLeading'
-import { defaultBreakpoint } from '../createBreakpoint'
-import { defaultBorder } from '../createBorder'
 import { defaultRadius } from '../createRadius'
+import { createTheme } from '../createTheme'
 
 describe('createTheme', () => {
   it('returns theme reflecting "palette" settings', () => {

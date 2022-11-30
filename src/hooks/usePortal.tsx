@@ -6,7 +6,7 @@ import React, {
   useContext,
   useLayoutEffect,
   useMemo,
-  useState,
+  useRef,
 } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -21,18 +21,21 @@ const ParentContext = createContext<ParentContextValue>({
 let portalSeq = 0
 
 export function usePortal() {
-  const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
+  const portalRoot = useRef<HTMLDivElement | null>(
+    typeof document === undefined ? null : (document.createElement('div') as HTMLDivElement),
+  ).current
   const currentSeq = useMemo(() => ++portalSeq, [])
   const parent = useContext(ParentContext)
   const parentSeqs = parent.seqs.concat(currentSeq)
 
   useLayoutEffect(() => {
-    const element = document.createElement('div')
-    element.dataset.portalChildOf = parentSeqs.join(',')
-    setPortalRoot(element)
-    document.body.appendChild(element)
+    if (!portalRoot) {
+      return
+    }
+    portalRoot.dataset.portalChildOf = parentSeqs.join(',')
+    document.body.appendChild(portalRoot)
     return () => {
-      document.body.removeChild(element)
+      document.body.removeChild(portalRoot)
     }
     // spread parentSeqs array for deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,7 +75,6 @@ export function usePortal() {
     isChildPortal,
     PortalParentProvider,
     createPortal: wrappedCreatePortal,
-    isReady: portalRoot !== null,
   }
 }
 

@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+
 import { RightFixedNote } from './RightFixedNote'
 
 export function useClassNames() {

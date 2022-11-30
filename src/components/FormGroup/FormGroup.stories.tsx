@@ -2,8 +2,9 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { FormGroup } from './FormGroup'
 import { Input } from '../Input'
+
+import { FormGroup } from './FormGroup'
 
 export default {
   title: 'FormGroup',

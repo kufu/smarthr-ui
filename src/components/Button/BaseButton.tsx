@@ -1,8 +1,8 @@
 import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { hoverable } from '../../hocs/hoverable'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 type Tag = 'button' | 'a'
 

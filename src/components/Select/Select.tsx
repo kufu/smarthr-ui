@@ -7,11 +7,11 @@ import React, {
 } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isMobileSafari } from '../../libs/ua'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { useClassNames } from './useClassNames'
-
+import { isMobileSafari } from '../../libs/ua'
 import { FaSortIcon } from '../Icon'
+
+import { useClassNames } from './useClassNames'
 
 type Option<T extends string> = {
   value: T

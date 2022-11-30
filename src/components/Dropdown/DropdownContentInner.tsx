@@ -3,8 +3,8 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
 import { DropdownCloser } from './DropdownCloser'
+import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
 import { useKeyboardNavigation } from './useKeyboardNavigation'
 
 type Props = {

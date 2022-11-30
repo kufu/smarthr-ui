@@ -1,15 +1,15 @@
 import React, { ReactNode, VFC, useMemo } from 'react'
+import innerText from 'react-innertext'
 import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
-import { Dropdown } from '../Dropdown'
-import { DropdownTrigger } from '../DropdownTrigger'
-import { DropdownContent } from '../DropdownContent'
-import { DropdownCloser } from '../DropdownCloser'
-import { DropdownScrollArea } from '../DropdownScrollArea'
 import { Button } from '../../Button'
 import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
-import innerText from 'react-innertext'
+import { Dropdown } from '../Dropdown'
+import { DropdownCloser } from '../DropdownCloser'
+import { DropdownContent } from '../DropdownContent'
+import { DropdownScrollArea } from '../DropdownScrollArea'
+import { DropdownTrigger } from '../DropdownTrigger'
 
 type Props = {
   isFiltered?: boolean

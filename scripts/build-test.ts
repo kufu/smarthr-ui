@@ -1,7 +1,8 @@
-const { ECMAVersionValidatorPlugin } = require('ecma-version-validator-webpack-plugin')
-const webpack = require('webpack')
 const path = require('path')
+
+const { ECMAVersionValidatorPlugin } = require('ecma-version-validator-webpack-plugin')
 const MemoryFS = require('memory-fs')
+const webpack = require('webpack')
 
 const compiler = webpack({
   mode: 'development',

@@ -2,9 +2,10 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import * as Icons from './Icon'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
+
+import * as Icons from './Icon'
 
 const icons: Array<React.ComponentType<Icons.ComponentProps>> = Object.values(Icons)
 const { FaAddressBookIcon, FaBullhornIcon, FaInfoCircleIcon } = Icons

@@ -1,9 +1,8 @@
-import React from 'react'
 import { Story } from '@storybook/react'
+import React from 'react'
+import styled, { css } from 'styled-components'
 
 import { Sidebar } from './Sidebar'
-
-import styled, { css } from 'styled-components'
 
 export const SidebarStory: Story = () => {
   return (

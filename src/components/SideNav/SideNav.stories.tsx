@@ -1,11 +1,12 @@
-import { Story } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
+import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { SideNav } from './SideNav'
-import { StatusLabel } from '../StatusLabel'
 import { Heading } from '../Heading'
+import { StatusLabel } from '../StatusLabel'
+
+import { SideNav } from './SideNav'
 
 export default {
   title: 'SideNav',

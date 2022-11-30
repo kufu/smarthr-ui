@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components'
+
 import { useSpacing } from '../../../hooks/useSpacing'
+
 import type { Gap } from '../type'
 
 export const Reel = styled.div<{

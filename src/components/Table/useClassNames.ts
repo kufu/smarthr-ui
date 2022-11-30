@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
-import { Body, BulkActionRow, Cell, Head, Row, Table, Td, Th } from './'
+
+import { Body, BulkActionRow, Cell, Head, Row, Table, Td, Th } from '.'
 
 export function useClassNames() {
   const generateForTable = useClassNameGenerator(Table.displayName || 'Table')

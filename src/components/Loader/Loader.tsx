@@ -1,7 +1,9 @@
 import React, { HTMLAttributes, VFC } from 'react'
 import styled, { css } from 'styled-components'
-import { Theme, useTheme } from '../../hooks/useTheme'
+
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
+import { Theme, useTheme } from '../../hooks/useTheme'
+
 import {
   cogDuration,
   containerRotate,

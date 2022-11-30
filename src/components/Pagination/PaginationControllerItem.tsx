@@ -1,8 +1,6 @@
 import React, { VFC } from 'react'
 
 import { useTheme } from '../../hooks/useTheme'
-
-import { ItemButton } from './PaginationItem'
 import {
   FaAngleDoubleLeftIcon,
   FaAngleDoubleRightIcon,
@@ -10,6 +8,8 @@ import {
   FaChevronRightIcon,
   ComponentProps as IconProps,
 } from '../Icon'
+
+import { ItemButton } from './PaginationItem'
 
 type Props = {
   targetPage: number
