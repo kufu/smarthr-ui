@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [24.1.0](https://github.com/kufu/smarthr-ui/compare/v24.0.0...v24.1.0) (2022-11-30)
+
+
+### Features
+
+* `Center` の追加 ([#2928](https://github.com/kufu/smarthr-ui/issues/2928)) ([4c97960](https://github.com/kufu/smarthr-ui/commit/4c9796005cd15dda687dc7f87eb28688f365b3a1))
+* combo box に decorator option を追加する ([#2932](https://github.com/kufu/smarthr-ui/issues/2932)) ([cfa30bb](https://github.com/kufu/smarthr-ui/commit/cfa30bb91ad9863ce13edd605504da96420b0c84))
+* dropdown width option の初期値をautoにする ([#2938](https://github.com/kufu/smarthr-ui/issues/2938)) ([883573e](https://github.com/kufu/smarthr-ui/commit/883573ec8eeec70273f8c096f7714455a2cbf573))
+* MultiComboBoxのドロップダウンリストの幅を指定可能にする ([#2935](https://github.com/kufu/smarthr-ui/issues/2935)) ([404a57e](https://github.com/kufu/smarthr-ui/commit/404a57ed097163d75cb903df8d44e9769a3603f1))
+* PageCounter を追加 ([#2921](https://github.com/kufu/smarthr-ui/issues/2921)) ([07f4c10](https://github.com/kufu/smarthr-ui/commit/07f4c10e59a169db3e5790fe1c92fe447911b61e))
+* SingleComboBoxのドロップダウンリストの幅を指定可能にする ([#2920](https://github.com/kufu/smarthr-ui/issues/2920)) ([b00160d](https://github.com/kufu/smarthr-ui/commit/b00160d0cab4e812c3c41f876a2e6f63319a1e8f))
+* 入力系コンポーネントに ref を渡せるよう修正 ([#2933](https://github.com/kufu/smarthr-ui/issues/2933)) ([37af5e5](https://github.com/kufu/smarthr-ui/commit/37af5e598ae5221eda1aada2ce91ddc4bafaf441))
+
+
+### Bug Fixes
+
+* portal root 要素の管理方法を state から ref に変更 ([#2936](https://github.com/kufu/smarthr-ui/issues/2936)) ([7de4fd3](https://github.com/kufu/smarthr-ui/commit/7de4fd3db3a65f536e0f8b91488a9366e5cdc4e5))
+* カスタムボタン判定を最初に行うように変更 ([#2937](https://github.com/kufu/smarthr-ui/issues/2937)) ([fa1cf47](https://github.com/kufu/smarthr-ui/commit/fa1cf4792c766bfdffe783ad0e37a687f133c020))
+
 ## [24.0.0](https://github.com/kufu/smarthr-ui/compare/v23.6.0...v24.0.0) (2022-11-21)
 
 
