@@ -152,6 +152,14 @@ export function SingleComboBox<T>({
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
+  // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+  // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+  const closeDropdown = useCallback(() => {
+    requestAnimationFrame(() => {
+      setIsExpanded(false)
+    })
+  }, [setIsExpanded])
+
   const { options } = useOptions({
     items,
     selected: selectedItem,
@@ -174,7 +182,7 @@ export function SingleComboBox<T>({
       (selected: ComboBoxItem<T>) => {
         onSelect && onSelect(selected)
         onChangeSelected && onChangeSelected(selected)
-        setIsExpanded(false)
+        closeDropdown()
         setIsEditing(false)
       },
       [onChangeSelected, onSelect],
@@ -193,7 +201,7 @@ export function SingleComboBox<T>({
   }, [isFocused])
   const unfocus = useCallback(() => {
     setIsFocused(false)
-    setIsExpanded(false)
+    closeDropdown()
     setIsEditing(false)
 
     if (!selectedItem && defaultItem) {
@@ -261,7 +269,7 @@ export function SingleComboBox<T>({
       if (['Escape', 'Exc'].includes(e.key)) {
         if (isExpanded) {
           e.stopPropagation()
-          setIsExpanded(false)
+          closeDropdown()
         }
       } else if (e.key === 'Tab') {
         unfocus()
