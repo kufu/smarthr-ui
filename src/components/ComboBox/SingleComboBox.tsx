@@ -185,7 +185,7 @@ export function SingleComboBox<T>({
         closeDropdown()
         setIsEditing(false)
       },
-      [onChangeSelected, onSelect],
+      [onChangeSelected, onSelect, closeDropdown],
     ),
     isExpanded,
     isLoading,
@@ -208,7 +208,7 @@ export function SingleComboBox<T>({
       setInputValue(defaultItem.label)
       onSelect && onSelect(defaultItem)
     }
-  }, [selectedItem, defaultItem, onSelect])
+  }, [selectedItem, defaultItem, onSelect, closeDropdown])
   const onClickClear = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation()
@@ -284,7 +284,7 @@ export function SingleComboBox<T>({
       }
       handleListBoxKeyDown(e)
     },
-    [isComposing, isExpanded, setIsExpanded, unfocus, handleListBoxKeyDown],
+    [isComposing, isExpanded, setIsExpanded, closeDropdown, unfocus, handleListBoxKeyDown],
   )
 
   const caretIconColor = useMemo(() => {
