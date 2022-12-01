@@ -8,8 +8,9 @@ import { Base as BaseComponent } from '../Base'
 import { Button } from '../Button'
 import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { FaArrowDownIcon } from '../Icon'
+import { Text } from '../Text'
 
-import { BulkActionRow, Table, Td, Th } from '.'
+import { BulkActionRow, EmptyTableBody, Table, Td, Th } from '.'
 
 export default {
   title: 'Table',
@@ -255,6 +256,25 @@ export const All: Story = () => (
               <Td nullable={false}></Td>
             </tr>
           </tbody>
+        </Table>
+      </Base>
+    </li>
+
+    <li>
+      Table with empty state
+      <Base>
+        <Table>
+          <thead>
+            <tr>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+            </tr>
+          </thead>
+          <EmptyTableBody>
+            <Text as="p">お探しの条件に該当する項目はありません。</Text>
+            <Text as="p">別の条件をお試しください。</Text>
+          </EmptyTableBody>
         </Table>
       </Base>
     </li>
