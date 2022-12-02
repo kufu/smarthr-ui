@@ -12,8 +12,8 @@ import {
   Heading,
   Stack,
   TextLink,
-} from '../..'
-import { Theme, useTheme } from '../../hooks/useTheme'
+} from '../../..'
+import { Theme, useTheme } from '../../../hooks/useTheme'
 
 import { useClassNames } from './useClassNames'
 
@@ -41,7 +41,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   ...props
 }) => {
   const theme = useTheme()
-  const className = useClassNames()
+  const classNames = useClassNames()
 
   return (
     <Dropdown {...props}>
@@ -51,17 +51,17 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
         </AppsButton>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <Wrapper themes={theme}>
+        <Wrapper themes={theme} className={classNames.wrapper}>
           <DropdownScrollArea>
             <Stack gap={1.5}>
-              <Stack gap={0.5} className={className.category}>
+              <Stack gap={0.5} className={classNames.category}>
                 <Heading type="subSubBlockTitle" tag="h3">
                   {base.heading}
                 </Heading>
                 <Cluster as="ul" gap={1}>
                   {base.items.map((item, index) => (
                     <li key={index}>
-                      <TextLink href={item.url} target={item.target} className={className.link}>
+                      <TextLink href={item.url} target={item.target} className={classNames.link}>
                         {item.label}
                       </TextLink>
                     </li>
@@ -70,14 +70,18 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
               </Stack>
               <Cluster gap={1.5}>
                 {others.map(({ heading, items }, i) => (
-                  <Stack gap={0.5} className={className.category} key={i} recursive>
+                  <Stack gap={0.5} className={classNames.category} key={i} recursive>
                     <Heading type="subSubBlockTitle" tag="h3">
                       {heading}
                     </Heading>
                     <ul>
                       {items.map((item, index) => (
                         <li key={index}>
-                          <TextLink href={item.url} target={item.target} className={className.link}>
+                          <TextLink
+                            href={item.url}
+                            target={item.target}
+                            className={classNames.link}
+                          >
                             {item.label}
                           </TextLink>
                         </li>
@@ -88,7 +92,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
               </Cluster>
             </Stack>
           </DropdownScrollArea>
-          <Footer themes={theme}>
+          <Footer themes={theme} className={classNames.footer}>
             <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
               すべて見る
             </TextLink>

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+import { useClassNameGenerator } from '../../../hooks/useClassNameGenerator'
 
 import { AppLauncher } from './AppLauncher'
 
@@ -9,6 +9,7 @@ export function useClassNames() {
   return useMemo(
     () => ({
       wrapper: generate(),
+      footer: generate('footer'),
       category: generate('category'),
       link: generate('link'),
     }),
