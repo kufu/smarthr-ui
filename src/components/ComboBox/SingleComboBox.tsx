@@ -152,14 +152,6 @@ export function SingleComboBox<T>({
   const [isComposing, setIsComposing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
-  // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-  // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-  const closeDropdown = useCallback(() => {
-    requestAnimationFrame(() => {
-      setIsExpanded(false)
-    })
-  }, [setIsExpanded])
-
   const { options } = useOptions({
     items,
     selected: selectedItem,
@@ -182,10 +174,14 @@ export function SingleComboBox<T>({
       (selected: ComboBoxItem<T>) => {
         onSelect && onSelect(selected)
         onChangeSelected && onChangeSelected(selected)
-        closeDropdown()
+        // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        requestAnimationFrame(() => {
+          setIsExpanded(false)
+        })
         setIsEditing(false)
       },
-      [onChangeSelected, onSelect, closeDropdown],
+      [onChangeSelected, onSelect],
     ),
     isExpanded,
     isLoading,
@@ -201,14 +197,14 @@ export function SingleComboBox<T>({
   }, [isFocused])
   const unfocus = useCallback(() => {
     setIsFocused(false)
-    closeDropdown()
+    setIsExpanded(false)
     setIsEditing(false)
 
     if (!selectedItem && defaultItem) {
       setInputValue(defaultItem.label)
       onSelect && onSelect(defaultItem)
     }
-  }, [selectedItem, defaultItem, onSelect, closeDropdown])
+  }, [selectedItem, defaultItem, onSelect])
   const onClickClear = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation()
@@ -269,7 +265,7 @@ export function SingleComboBox<T>({
       if (['Escape', 'Exc'].includes(e.key)) {
         if (isExpanded) {
           e.stopPropagation()
-          closeDropdown()
+          setIsExpanded(false)
         }
       } else if (e.key === 'Tab') {
         unfocus()
@@ -284,7 +280,7 @@ export function SingleComboBox<T>({
       }
       handleListBoxKeyDown(e)
     },
-    [isComposing, isExpanded, setIsExpanded, closeDropdown, unfocus, handleListBoxKeyDown],
+    [isComposing, isExpanded, setIsExpanded, unfocus, handleListBoxKeyDown],
   )
 
   const caretIconColor = useMemo(() => {
