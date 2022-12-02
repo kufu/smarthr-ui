@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   HTMLAttributes,
+  MouseEvent,
   ReactNode,
   useCallback,
   useLayoutEffect,
@@ -99,7 +100,7 @@ type Props<T> = {
   /**
    * 選択されているアイテムがクリアされた時に発火するコールバック関数
    */
-  onClear?: () => void
+  onClear?: (e: MouseEvent | ChangeEvent<HTMLInputElement>) => void
   /**
    * 選択されているアイテムのリストが変わった時に発火するコールバック関数
    */
@@ -202,9 +203,9 @@ export function SingleComboBox<T>({
     }
   }, [selectedItem, defaultItem, onSelect])
   const onClickClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.stopPropagation()
-      onClear && onClear()
+      onClear && onClear(e)
       onChangeSelected && onChangeSelected(null)
 
       inputRef.current?.focus()
@@ -214,7 +215,7 @@ export function SingleComboBox<T>({
     [setIsFocused, setIsExpanded, onClear, onChangeSelected],
   )
   const onClickInput = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       if (disabled) {
         e.stopPropagation()
         return
@@ -240,7 +241,7 @@ export function SingleComboBox<T>({
       setInputValue(value)
 
       if (value === '') {
-        onClear && onClear()
+        onClear && onClear(e)
         onChangeSelected && onChangeSelected(null)
       }
     },
