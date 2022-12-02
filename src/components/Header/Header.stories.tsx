@@ -1,5 +1,5 @@
 import { Story } from '@storybook/react'
-import React from 'react'
+import React, { ComponentProps } from 'react'
 
 import { Button } from '../Button'
 import { FaQuestionCircleIcon } from '../Icon'
@@ -42,9 +42,10 @@ export const all: Story = () => (
   </Stack>
 )
 
-const launcher = {
-  apps: {
-    base: {
+const launcher: ComponentProps<typeof AppLauncher> = {
+  apps: [
+    {
+      type: 'base',
       heading: '基本機能',
       items: [
         {
@@ -61,92 +62,90 @@ const launcher = {
         },
       ],
     },
-    others: [
-      {
-        heading: '人事労務',
-        items: [
-          {
-            label: '電子申請',
-            url: 'http://',
-          },
-          {
-            label: '給与明細',
-            url: 'http://',
-          },
-          {
-            label: 'マイナンバー',
-            url: 'http://',
-          },
-          {
-            label: '文書配布',
-            url: 'http://',
-          },
-        ],
-      },
-      {
-        heading: '人材マネジメント',
-        items: [
-          {
-            label: '人事評価',
-            url: 'http://',
-          },
-          {
-            label: '分析レポート',
-            url: 'http://',
-          },
-          {
-            label: '従業員サーベイ',
-            url: 'http://',
-          },
-        ],
-      },
-      {
-        heading: '連携',
-        items: [
-          {
-            label: 'おまかせ はたラクサポート連携',
-            url: 'http://',
-          },
-          {
-            label: 'KING OF TIME連携',
-            url: 'http://',
-          },
-          {
-            label: 'freee人事労務連携',
-            url: 'http://',
-          },
-          {
-            label: 'Touch On Time連携',
-            url: 'http://',
-          },
-          {
-            label: 'おまかせ はたラクサポート連携',
-            url: 'http://',
-          },
-          {
-            label: 'ジョブカン連携',
-            url: 'http://',
-          },
-        ],
-      },
-      {
-        heading: 'SmartHR Plus',
-        items: [
-          {
-            label: 'Smart打刻',
-            url: 'http://',
-          },
-          {
-            label: 'KING OF TIME',
-            url: 'http://',
-          },
-          {
-            label: '検診予約・結果管理システム',
-            url: 'http://',
-          },
-        ],
-      },
-    ],
-  },
+    {
+      heading: '人事労務',
+      items: [
+        {
+          label: '電子申請',
+          url: 'http://',
+        },
+        {
+          label: '給与明細',
+          url: 'http://',
+        },
+        {
+          label: 'マイナンバー',
+          url: 'http://',
+        },
+        {
+          label: '文書配布',
+          url: 'http://',
+        },
+      ],
+    },
+    {
+      heading: '人材マネジメント',
+      items: [
+        {
+          label: '人事評価',
+          url: 'http://',
+        },
+        {
+          label: '分析レポート',
+          url: 'http://',
+        },
+        {
+          label: '従業員サーベイ',
+          url: 'http://',
+        },
+      ],
+    },
+    {
+      heading: '連携',
+      items: [
+        {
+          label: 'おまかせ はたラクサポート連携',
+          url: 'http://',
+        },
+        {
+          label: 'KING OF TIME連携',
+          url: 'http://',
+        },
+        {
+          label: 'freee人事労務連携',
+          url: 'http://',
+        },
+        {
+          label: 'Touch On Time連携',
+          url: 'http://',
+        },
+        {
+          label: 'おまかせ はたラクサポート連携',
+          url: 'http://',
+        },
+        {
+          label: 'ジョブカン連携',
+          url: 'http://',
+        },
+      ],
+    },
+    {
+      heading: 'SmartHR Plus',
+      items: [
+        {
+          label: 'Smart打刻',
+          url: 'http://',
+        },
+        {
+          label: 'KING OF TIME',
+          url: 'http://',
+        },
+        {
+          label: '検診予約・結果管理システム',
+          url: 'http://',
+        },
+      ],
+    },
+  ],
   urlToShowAll: 'すべて見る',
 }

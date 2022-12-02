@@ -18,6 +18,7 @@ import { Theme, useTheme } from '../../../hooks/useTheme'
 import { useClassNames } from './useClassNames'
 
 type Category = {
+  type?: 'base'
   heading: string
   items: Array<{
     label: string
@@ -26,22 +27,18 @@ type Category = {
   }>
 }
 type Props = {
-  apps: {
-    base: Category
-    others: Category[]
-  }
+  apps: Category[]
   urlToShowAll: string
 }
 
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const AppLauncher: React.FC<Props & ElementProps> = ({
-  apps: { base, others },
-  urlToShowAll,
-  ...props
-}) => {
+export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll, ...props }) => {
   const theme = useTheme()
   const classNames = useClassNames()
+
+  const baseApps = apps.find(({ type }) => type === 'base')
+  const others = apps.filter((category) => category !== baseApps)
 
   return (
     <Dropdown {...props}>
@@ -54,20 +51,22 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
         <Wrapper themes={theme} className={classNames.wrapper}>
           <DropdownScrollArea>
             <Stack gap={1.5}>
-              <Stack gap={0.5} className={classNames.category}>
-                <Heading type="subSubBlockTitle" tag="h3">
-                  {base.heading}
-                </Heading>
-                <Cluster as="ul" gap={1}>
-                  {base.items.map((item, index) => (
-                    <li key={index}>
-                      <TextLink href={item.url} target={item.target} className={classNames.link}>
-                        {item.label}
-                      </TextLink>
-                    </li>
-                  ))}
-                </Cluster>
-              </Stack>
+              {baseApps && (
+                <Stack gap={0.5} className={classNames.category}>
+                  <Heading type="subSubBlockTitle" tag="h3">
+                    {baseApps.heading}
+                  </Heading>
+                  <Cluster as="ul" gap={1}>
+                    {baseApps.items.map((item, index) => (
+                      <li key={index}>
+                        <TextLink href={item.url} target={item.target} className={classNames.link}>
+                          {item.label}
+                        </TextLink>
+                      </li>
+                    ))}
+                  </Cluster>
+                </Stack>
+              )}
               <Cluster gap={1.5}>
                 {others.map(({ heading, items }, i) => (
                   <Stack gap={0.5} className={classNames.category} key={i} recursive>
