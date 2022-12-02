@@ -84,7 +84,7 @@ export const DropdownButton: VFC<Props & ElementProps> = ({
 }
 
 const TriggerButton = styled(Button)`
-  &[aria-expanded='true'] .smarthr-ui-Icon {
+  &[aria-expanded='true'] .smarthr-ui-Icon:last-child {
     transform: rotate(0.5turn);
   }
 `
