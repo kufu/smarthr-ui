@@ -359,7 +359,7 @@ export function SingleComboBox<T>({
                   }
                 />
               </ClearButton>
-              <CaretDownLayout themes={theme}>
+              <CaretDownLayout themes={theme} onClick={onClickInput}>
                 <CaretDownWrapper themes={theme}>
                   <FaCaretDownIcon color={caretIconColor} />
                 </CaretDownWrapper>
