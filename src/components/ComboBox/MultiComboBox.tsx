@@ -514,14 +514,26 @@ const Placeholder = styled.p<{ themes: Theme }>`
   }}
 `
 const Suffix = styled.div<{ themes: Theme }>`
-  ${({ themes: { spacingByChar, border } }) =>
+  ${({ themes: { color, spacingByChar } }) =>
     css`
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: ${spacingByChar(0.5)} 0;
-      padding: 0 ${spacingByChar(0.5)};
-      border-left: ${border.shorthand};
+      padding: ${spacingByChar(0.5)};
+      padding-left: calc(${spacingByChar(0.5)} + 1px);
       box-sizing: border-box;
+      cursor: pointer;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: ${spacingByChar(0.5)};
+        left: 0;
+        display: block;
+        width: 1px;
+        background-color: ${color.BORDER};
+        height: calc(100% - ${spacingByChar(0.5)} * 2);
+      }
     `}
 `
