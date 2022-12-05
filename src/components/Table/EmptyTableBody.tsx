@@ -6,9 +6,11 @@ import { Center, Gap } from '../Layout'
 
 import { Td } from './Td'
 
+type Padding = Gap | { vertical?: Gap; horizontal?: Gap }
+
 type Props = PropsWithChildren<{
   /** 境界とコンテンツの間の余白 */
-  padding?: Gap
+  padding?: Padding
 }>
 
 export const EmptyTableBody: React.FC<Props> = ({ children, padding = 4 }) => {
@@ -23,8 +25,25 @@ export const EmptyTableBody: React.FC<Props> = ({ children, padding = 4 }) => {
   )
 }
 
-const StyledTd = styled(Td)<{ padding: Gap }>`
-  ${({ padding }) => css`
-    ${padding && `padding: ${useSpacing(padding)};`}
-  `}
+const StyledTd = styled(Td)<{ padding: Padding }>`
+  ${({ padding }) => {
+    if (padding instanceof Object) {
+      return css`
+        ${padding.vertical &&
+        `
+          padding-top: ${useSpacing(padding.vertical)};
+          padding-bottom: ${useSpacing(padding.vertical)};
+        `}
+        ${padding.horizontal &&
+        `
+          padding-left: ${useSpacing(padding.horizontal)};
+          padding-right: ${useSpacing(padding.horizontal)};
+        `}
+      `
+    } else {
+      return css`
+        ${padding && `padding: ${useSpacing(padding)};`}
+      `
+    }
+  }}
 `
