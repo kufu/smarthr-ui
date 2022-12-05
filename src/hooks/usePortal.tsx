@@ -22,7 +22,7 @@ let portalSeq = 0
 
 export function usePortal() {
   const portalRoot = useRef<HTMLDivElement | null>(
-    typeof document === undefined ? null : (document.createElement('div') as HTMLDivElement),
+    typeof document === 'undefined' ? null : (document.createElement('div') as HTMLDivElement),
   ).current
   const currentSeq = useMemo(() => ++portalSeq, [])
   const parent = useContext(ParentContext)
