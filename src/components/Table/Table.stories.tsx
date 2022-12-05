@@ -272,8 +272,8 @@ export const All: Story = () => (
             </tr>
           </thead>
           <EmptyTableBody>
-            <Text as="p">お探しの条件に該当する項目はありません。</Text>
-            <Text as="p">別の条件をお試しください。</Text>
+            <Text>お探しの条件に該当する項目はありません。</Text>
+            <Text>別の条件をお試しください。</Text>
           </EmptyTableBody>
         </Table>
       </Base>
