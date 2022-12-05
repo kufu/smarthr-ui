@@ -401,6 +401,9 @@ const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
     height: 100%;
     box-sizing: border-box;
     padding: ${spacingByChar(0.5)} 0;
+    cursor: pointer;
+    margin-right: -${spacingByChar(0.5)};
+    padding-right: ${spacingByChar(0.5)};
   `
 })
 const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
@@ -415,6 +418,7 @@ const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     border-left: ${border.shorthand};
   `
 })
+
 const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
   ${({ themes }) => {
     const { shadow, spacingByChar } = themes
