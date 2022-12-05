@@ -409,7 +409,7 @@ export function MultiComboBox<T>({
           )}
         </InputArea>
 
-        <Suffix themes={theme}>
+        <Suffix themes={theme} disabled={disabled}>
           <FaCaretDownIcon color={caretIconColor} />
         </Suffix>
 
@@ -513,8 +513,8 @@ const Placeholder = styled.p<{ themes: Theme }>`
     `
   }}
 `
-const Suffix = styled.div<{ themes: Theme }>`
-  ${({ themes: { color, spacingByChar } }) =>
+const Suffix = styled.div<{ themes: Theme; disabled: boolean }>`
+  ${({ themes: { color, spacingByChar }, disabled }) =>
     css`
       position: relative;
       display: flex;
@@ -523,7 +523,7 @@ const Suffix = styled.div<{ themes: Theme }>`
       padding: ${spacingByChar(0.5)};
       padding-left: calc(${spacingByChar(0.5)} + 1px);
       box-sizing: border-box;
-      cursor: pointer;
+      cursor: ${disabled ? 'not-allowed' : 'pointer'};
 
       &::before {
         content: '';
