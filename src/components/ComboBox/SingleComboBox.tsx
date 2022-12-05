@@ -397,13 +397,15 @@ const StyledInput = styled(Input)`
 `
 const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
   const { spacingByChar } = themes
+  const space = spacingByChar(0.5)
+
   return css`
     height: 100%;
     box-sizing: border-box;
-    padding: ${spacingByChar(0.5)} 0;
+    padding: ${space};
+    padding-left: 0;
+    margin-right: -${space};
     cursor: pointer;
-    margin-right: -${spacingByChar(0.5)};
-    padding-right: ${spacingByChar(0.5)};
   `
 })
 const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {

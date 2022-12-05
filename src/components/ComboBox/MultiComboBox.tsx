@@ -514,26 +514,29 @@ const Placeholder = styled.p<{ themes: Theme }>`
   }}
 `
 const Suffix = styled.div<{ themes: Theme; disabled: boolean }>`
-  ${({ themes: { color, spacingByChar }, disabled }) =>
-    css`
+  ${({ themes: { color, spacingByChar }, disabled }) => {
+    const space = spacingByChar(0.5)
+
+    return css`
       position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: ${spacingByChar(0.5)};
-      padding-left: calc(${spacingByChar(0.5)} + 1px);
+      padding: ${space};
+      padding-left: calc(${space} + 1px);
       box-sizing: border-box;
       cursor: ${disabled ? 'not-allowed' : 'pointer'};
 
       &::before {
         content: '';
         position: absolute;
-        top: ${spacingByChar(0.5)};
+        top: ${space};
         left: 0;
         display: block;
         width: 1px;
         background-color: ${color.BORDER};
-        height: calc(100% - ${spacingByChar(0.5)} * 2);
+        height: calc(100% - ${space} * 2);
       }
-    `}
+    `
+  }}
 `
