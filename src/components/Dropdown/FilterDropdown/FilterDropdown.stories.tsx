@@ -1,7 +1,9 @@
+import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
-import * as React from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
+import { MultiComboBox, SingleComboBox } from '../../ComboBox'
 import { Input } from '../../Input'
 import { RadioButton } from '../../RadioButton'
 
@@ -60,6 +62,8 @@ export const Default: Story = () => {
               ↓<br />↓
             </Description>
             <Text>Children content is scrollable.</Text>
+            <PartSingleComboBox />
+            <PartMultiComboBox />
           </FilterDropdown>
         </dd>
         <dt>Filtered</dt>
@@ -139,3 +143,139 @@ const Description = styled.p`
 const RadioButtonList = styled.ul`
   list-style: none;
 `
+
+type Item = { label: string; value: string }
+const PartSingleComboBox: React.VFC = () => {
+  const [items, _setItems] = useState([
+    {
+      label: 'option 1',
+      value: 'value-1',
+      data: {
+        name: 'test',
+        age: 23,
+      },
+    },
+    {
+      label: 'option 2',
+      value: 'value-2',
+      data: {
+        name: 'test 2',
+        age: 34,
+      },
+    },
+    {
+      label: 'option 3',
+      value: 'value-3',
+      disabled: true,
+    },
+    {
+      label: 'option 4',
+      value: 'value-4',
+    },
+    {
+      label: 'option 5',
+      value: 'value-5',
+    },
+    {
+      label:
+        'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
+      value: 'value-6',
+    },
+  ])
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null)
+
+  const handleSelectItem = useCallback((item: Item) => {
+    action('onSelect')(item)
+    setSelectedItem(item)
+  }, [])
+  const handleClear = useCallback(() => {
+    action('onClear')()
+    setSelectedItem(null)
+  }, [])
+
+  return (
+    <div>
+      <SingleComboBox
+        items={items}
+        selectedItem={selectedItem}
+        defaultItem={items[0]}
+        width={400}
+        onSelect={handleSelectItem}
+        onClear={handleClear}
+      />
+    </div>
+  )
+}
+const PartMultiComboBox: React.VFC = () => {
+  const [items, _setItems] = useState([
+    {
+      label: 'option 1',
+      value: 'value-1',
+      data: {
+        name: 'test',
+        age: 23,
+      },
+    },
+    {
+      label: 'option 2',
+      value: 'value-2',
+      data: {
+        name: 'test 2',
+        age: 34,
+      },
+    },
+    {
+      label: 'option 3',
+      value: 'value-3',
+      disabled: true,
+    },
+    {
+      label: 'option 4',
+      value: 'value-4',
+    },
+    {
+      label: 'option 5',
+      value: 'value-5',
+    },
+    {
+      label:
+        'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
+      value: 'value-6',
+    },
+  ])
+  const [selectedItems, setSelectedItems] = useState<Item[]>([])
+
+  const handleSelectItem = useCallback(
+    (item: Item) => {
+      action('onSelect')(item)
+      setSelectedItems([...selectedItems, item])
+    },
+    [selectedItems],
+  )
+  const handleDelete = useCallback(
+    (deleted: Item) => {
+      action('onDelete')()
+      setSelectedItems(selectedItems.filter((item) => item.value !== deleted.value))
+    },
+    [selectedItems],
+  )
+
+  return (
+    <div>
+      <MultiComboBox
+        items={items}
+        selectedItems={selectedItems}
+        width={400}
+        dropdownHelpMessage="入力でフィルタリングできます。"
+        onDelete={handleDelete}
+        onSelect={handleSelectItem}
+        onChangeSelected={(selected) => {
+          action('onChangeSelected')(selected)
+          setSelectedItems(selected)
+        }}
+        onFocus={action('onFocus')}
+        onBlur={action('onBlur')}
+      />
+    </div>
+  )
+}
