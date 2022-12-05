@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 
 export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>) {
   const portalContainer = useRef<HTMLDivElement | null>(
-    parent ?? typeof document === undefined
+    parent ?? typeof document === 'undefined'
       ? null
       : (document.createElement('div') as HTMLDivElement),
   ).current
