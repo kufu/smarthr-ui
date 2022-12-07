@@ -100,7 +100,12 @@ type Props<T> = {
   /**
    * 選択されているアイテムがクリアされた時に発火するコールバック関数
    */
-  onClear?: (e: MouseEvent | ChangeEvent<HTMLInputElement>) => void
+  onClear?: () => void
+  /**
+   * 選択されているアイテムがクリアされた時に発火するコールバック関数
+   * 指定している場合、クリア時にonClickを実行せずにonClearClickのみ実行する
+   */
+  onClearClick?: (e: MouseEvent) => void
   /**
    * 選択されているアイテムのリストが変わった時に発火するコールバック関数
    */
@@ -138,6 +143,7 @@ export function SingleComboBox<T>({
   onAdd,
   onSelect,
   onClear,
+  onClearClick,
   onChangeSelected,
   decorator,
   ...props
@@ -205,14 +211,15 @@ export function SingleComboBox<T>({
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
-      onClear && onClear(e)
+      onClearClick && onClearClick(e)
+      !onClearClick && onClear && onClear()
       onChangeSelected && onChangeSelected(null)
 
       inputRef.current?.focus()
       setIsFocused(true)
       setIsExpanded(true)
     },
-    [setIsFocused, setIsExpanded, onClear, onChangeSelected],
+    [setIsFocused, setIsExpanded, onClear, onClearClick, onChangeSelected],
   )
   const onClickInput = useCallback(
     (e: MouseEvent) => {
@@ -241,7 +248,7 @@ export function SingleComboBox<T>({
       setInputValue(value)
 
       if (value === '') {
-        onClear && onClear(e)
+        onClear && onClear()
         onChangeSelected && onChangeSelected(null)
       }
     },
