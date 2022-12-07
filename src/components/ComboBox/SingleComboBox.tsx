@@ -363,7 +363,7 @@ export function SingleComboBox<T>({
                   }
                 />
               </ClearButton>
-              <CaretDownLayout themes={theme}>
+              <CaretDownLayout themes={theme} onClick={onClickInput}>
                 <CaretDownWrapper themes={theme}>
                   <FaCaretDownIcon color={caretIconColor} />
                 </CaretDownWrapper>
@@ -401,10 +401,15 @@ const StyledInput = styled(Input)`
 `
 const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
   const { spacingByChar } = themes
+  const space = spacingByChar(0.5)
+
   return css`
     height: 100%;
     box-sizing: border-box;
-    padding: ${spacingByChar(0.5)} 0;
+    padding: ${space};
+    padding-left: 0;
+    margin-right: -${space};
+    cursor: pointer;
   `
 })
 const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
@@ -419,6 +424,7 @@ const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     border-left: ${border.shorthand};
   `
 })
+
 const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
   ${({ themes }) => {
     const { shadow, spacingByChar } = themes
