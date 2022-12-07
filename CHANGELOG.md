@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [24.2.0](https://github.com/kufu/smarthr-ui/compare/v24.1.0...v24.2.0) (2022-12-07)
+
+
+### Features
+
+* アプリランチャーを追加 ([#2916](https://github.com/kufu/smarthr-ui/issues/2916)) ([ed84167](https://github.com/kufu/smarthr-ui/commit/ed8416763383134500105bc5eb7fac0f3f6fd0c3))
+
+
+### Bug Fixes
+
+* Dropdown系コンポーネント内で SingleComboBoxの選択肢をclickすると Dropdownが閉じてしまうバグを修正する ([#2949](https://github.com/kufu/smarthr-ui/issues/2949)) ([41c3728](https://github.com/kufu/smarthr-ui/commit/41c3728f171a1c0baf559fa1c51b323001c39c90))
+* typeof の比較を修正 ([#2963](https://github.com/kufu/smarthr-ui/issues/2963)) ([af36505](https://github.com/kufu/smarthr-ui/commit/af36505e70fafcc45c9a479ab22067434ca42044))
+
 ## [24.1.0](https://github.com/kufu/smarthr-ui/compare/v24.0.0...v24.1.0) (2022-11-30)
 
 
