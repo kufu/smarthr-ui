@@ -94,7 +94,7 @@ export { CompactInformationPanel } from './components/CompactInformationPanel'
 export { Text } from './components/Text'
 export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
-export { Header, HeaderLink, HeaderDropdownButton } from './components/Header'
+export { AppLauncher, Header, HeaderLink, HeaderDropdownButton } from './components/Header'
 export { PageCounter } from './components/PageCounter'
 
 // layout components

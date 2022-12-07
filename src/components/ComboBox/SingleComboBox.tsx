@@ -174,7 +174,11 @@ export function SingleComboBox<T>({
       (selected: ComboBoxItem<T>) => {
         onSelect && onSelect(selected)
         onChangeSelected && onChangeSelected(selected)
-        setIsExpanded(false)
+        // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+        requestAnimationFrame(() => {
+          setIsExpanded(false)
+        })
         setIsEditing(false)
       },
       [onChangeSelected, onSelect],
