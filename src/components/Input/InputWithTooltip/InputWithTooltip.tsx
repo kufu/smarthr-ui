@@ -1,5 +1,5 @@
 import React, { ComponentProps, forwardRef } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { Tooltip as shrTooltip } from '../../Tooltip'
 import { Input } from '../Input'
@@ -10,14 +10,25 @@ type Props = ComponentProps<typeof Input> & {
 }
 
 export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
-  ({ tooltipMessage, ...props }, ref) => (
-    <Tooltip message={tooltipMessage} tabIndex={-1} ariaDescribedbyTarget="inner">
-      <Input {...props} ref={ref} />
-    </Tooltip>
-  ),
+  ({ tooltipMessage, width, ...props }, ref) => {
+    const widthStyle = typeof width === 'number' ? `${width}px` : width
+    return (
+      <Tooltip
+        width={widthStyle}
+        message={tooltipMessage}
+        tabIndex={-1}
+        ariaDescribedbyTarget="inner"
+      >
+        <Input {...props} width={widthStyle} ref={ref} />
+      </Tooltip>
+    )
+  },
 )
 
-const Tooltip = styled(shrTooltip)`
-  /* Input のフォーカスリングを表示するため */
-  overflow: revert;
-`
+const Tooltip = styled(shrTooltip)<{ width?: string }>(
+  ({ width }) => css`
+    /* Input のフォーカスリングを表示するため */
+    overflow: revert;
+    ${width && `width: ${width};`}
+  `,
+)
