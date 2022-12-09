@@ -28,7 +28,7 @@ type Category = {
 }
 type Props = {
   apps: Category[]
-  urlToShowAll: string
+  urlToShowAll?: string
 }
 
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
@@ -91,11 +91,14 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
               </Cluster>
             </Stack>
           </DropdownScrollArea>
-          <Footer themes={theme} className={classNames.footer}>
-            <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
-              すべて見る
-            </TextLink>
-          </Footer>
+
+          {urlToShowAll && (
+            <Footer themes={theme} className={classNames.footer}>
+              <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
+                すべて見る
+              </TextLink>
+            </Footer>
+          )}
         </Wrapper>
       </DropdownContent>
     </Dropdown>
