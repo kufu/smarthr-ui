@@ -1,19 +1,13 @@
 import React, { HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
-import {
-  Button,
-  Cluster,
-  Dropdown,
-  DropdownContent,
-  DropdownScrollArea,
-  DropdownTrigger,
-  FaToolboxIcon,
-  Heading,
-  Stack,
-  TextLink,
-} from '../../..'
 import { Theme, useTheme } from '../../../hooks/useTheme'
+import { Button } from '../../Button'
+import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '../../Dropdown'
+import { Heading } from '../../Heading'
+import { FaToolboxIcon } from '../../Icon'
+import { Cluster, Stack } from '../../Layout'
+import { TextLink } from '../../TextLink'
 
 import { useClassNames } from './useClassNames'
 
