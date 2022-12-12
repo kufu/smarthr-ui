@@ -1,19 +1,13 @@
 import React, { HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
-import {
-  Button,
-  Cluster,
-  Dropdown,
-  DropdownContent,
-  DropdownScrollArea,
-  DropdownTrigger,
-  FaToolboxIcon,
-  Heading,
-  Stack,
-  TextLink,
-} from '../../..'
 import { Theme, useTheme } from '../../../hooks/useTheme'
+import { Button } from '../../Button'
+import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '../../Dropdown'
+import { Heading } from '../../Heading'
+import { FaToolboxIcon } from '../../Icon'
+import { Cluster, Stack } from '../../Layout'
+import { TextLink } from '../../TextLink'
 
 import { useClassNames } from './useClassNames'
 
@@ -28,7 +22,7 @@ type Category = {
 }
 type Props = {
   apps: Category[]
-  urlToShowAll: string
+  urlToShowAll?: string
 }
 
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
@@ -91,11 +85,14 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
               </Cluster>
             </Stack>
           </DropdownScrollArea>
-          <Footer themes={theme} className={classNames.footer}>
-            <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
-              すべて見る
-            </TextLink>
-          </Footer>
+
+          {urlToShowAll && (
+            <Footer themes={theme} className={classNames.footer}>
+              <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
+                すべて見る
+              </TextLink>
+            </Footer>
+          )}
         </Wrapper>
       </DropdownContent>
     </Dropdown>

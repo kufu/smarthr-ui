@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   HTMLAttributes,
+  MouseEvent,
   ReactNode,
   useCallback,
   useLayoutEffect,
@@ -101,6 +102,11 @@ type Props<T> = {
    */
   onClear?: () => void
   /**
+   * 選択されているアイテムがクリアされた時に発火するコールバック関数
+   * 指定している場合、クリア時にonClickを実行せずにonClearClickのみ実行する
+   */
+  onClearClick?: (e: MouseEvent) => void
+  /**
    * 選択されているアイテムのリストが変わった時に発火するコールバック関数
    */
   onChangeSelected?: (selectedItem: ComboBoxItem<T> | null) => void
@@ -137,6 +143,7 @@ export function SingleComboBox<T>({
   onAdd,
   onSelect,
   onClear,
+  onClearClick,
   onChangeSelected,
   decorator,
   ...props
@@ -206,19 +213,32 @@ export function SingleComboBox<T>({
     }
   }, [selectedItem, defaultItem, onSelect])
   const onClickClear = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       e.stopPropagation()
-      onClear && onClear()
-      onChangeSelected && onChangeSelected(null)
 
-      inputRef.current?.focus()
-      setIsFocused(true)
-      setIsExpanded(true)
+      let isExecutedPreventDefault = false
+
+      onClearClick &&
+        onClearClick({
+          ...e,
+          preventDefault: () => {
+            e.preventDefault()
+            isExecutedPreventDefault = true
+          },
+        })
+
+      if (!isExecutedPreventDefault) {
+        onClear && onClear()
+        onChangeSelected && onChangeSelected(null)
+        inputRef.current?.focus()
+        setIsFocused(true)
+        setIsExpanded(true)
+      }
     },
-    [setIsFocused, setIsExpanded, onClear, onChangeSelected],
+    [onClearClick, onClear, onChangeSelected],
   )
   const onClickInput = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       if (disabled) {
         e.stopPropagation()
         return
@@ -363,7 +383,7 @@ export function SingleComboBox<T>({
                   }
                 />
               </ClearButton>
-              <CaretDownLayout themes={theme}>
+              <CaretDownLayout themes={theme} onClick={onClickInput}>
                 <CaretDownWrapper themes={theme}>
                   <FaCaretDownIcon color={caretIconColor} />
                 </CaretDownWrapper>
@@ -401,10 +421,15 @@ const StyledInput = styled(Input)`
 `
 const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
   const { spacingByChar } = themes
+  const space = spacingByChar(0.5)
+
   return css`
     height: 100%;
     box-sizing: border-box;
-    padding: ${spacingByChar(0.5)} 0;
+    padding: ${space};
+    padding-left: 0;
+    margin-right: -${space};
+    cursor: pointer;
   `
 })
 const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
@@ -419,6 +444,7 @@ const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     border-left: ${border.shorthand};
   `
 })
+
 const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
   ${({ themes }) => {
     const { shadow, spacingByChar } = themes
