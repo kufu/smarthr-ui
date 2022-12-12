@@ -211,15 +211,27 @@ export function SingleComboBox<T>({
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
-      onClearClick && onClearClick(e)
-      !onClearClick && onClear && onClear()
-      onChangeSelected && onChangeSelected(null)
 
-      inputRef.current?.focus()
-      setIsFocused(true)
-      setIsExpanded(true)
+      let isExecutedPreventDefault = false
+
+      onClearClick &&
+        onClearClick({
+          ...e,
+          preventDefault: () => {
+            e.preventDefault()
+            isExecutedPreventDefault = true
+          },
+        })
+
+      if (!isExecutedPreventDefault) {
+        onClear && onClear()
+        onChangeSelected && onChangeSelected(null)
+        inputRef.current?.focus()
+        setIsFocused(true)
+        setIsExpanded(true)
+      }
     },
-    [setIsFocused, setIsExpanded, onClear, onClearClick, onChangeSelected],
+    [onClearClick, onClear, onChangeSelected],
   )
   const onClickInput = useCallback(
     (e: MouseEvent) => {
