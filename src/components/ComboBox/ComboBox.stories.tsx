@@ -215,6 +215,25 @@ export const Single: Story = () => {
           onSelect={action('onSelect')}
         />
       </dd>
+      <dt>クリアボタンクリック時のデフォルトの挙動を無効化</dt>
+      <dd>
+        <SingleComboBox
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="入力でフィルタリングできます。"
+          onSelect={handleSelectItem}
+          onClearClick={(e) => {
+            e.preventDefault()
+            handleClear()
+          }}
+          onChangeSelected={(item) => {
+            action('onChangeSelected')(item)
+            setSelectedItem(item)
+          }}
+          data-test="single-combobox-default"
+        />
+      </dd>
       <dt>デフォルトの選択肢あり</dt>
       <dd>
         <SingleWithDefaultItem />
