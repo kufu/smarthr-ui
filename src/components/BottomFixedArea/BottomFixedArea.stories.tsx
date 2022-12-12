@@ -22,7 +22,11 @@ export const _BottomFixedArea: Story = () => {
         { text: 'Tertiary_1', icon: FaTrashIcon, onClick: action('click_1') },
         { text: 'Tertiary_2', icon: FaTrashIcon, onClick: action('click_2') },
         { text: 'Tertiary_3', icon: FaTrashIcon, onClick: action('click_3') },
-        { text: 'Tertiary_4', icon: FaTrashIcon, onClick: action('click_4') },
+        {
+          text: <span>Tertiary_4</span>,
+          icon: FaTrashIcon,
+          onClick: action('click_4'),
+        },
       ]}
     />
   )
