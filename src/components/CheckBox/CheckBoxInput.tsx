@@ -37,6 +37,7 @@ export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
           className={classNames.checkBox}
           themes={theme}
           ref={ref}
+          aria-invalid={props.error || undefined}
         />
         <Box className={boxClassName} themes={theme} error={props.error} />
         <IconWrap themes={theme}>
