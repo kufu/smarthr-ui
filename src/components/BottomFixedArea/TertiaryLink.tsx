@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, VFC } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -9,7 +9,7 @@ import { useClassNames } from './useClassNames'
 type ElementProps = Omit<HTMLAttributes<HTMLButtonElement>, keyof Props>
 
 type Props = {
-  text: string
+  text: ReactNode
   icon?: React.ComponentType<IconProps>
   type?: 'button' | 'reset'
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
