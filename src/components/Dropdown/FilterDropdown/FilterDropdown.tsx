@@ -114,7 +114,7 @@ export const FilterDropdown: VFC<Props> = ({
               <Button onClick={() => onCancel?.()}>{cancelButton}</Button>
             </DropdownCloser>
             <DropdownCloser>
-              <Button value="primary" onClick={() => onApply()}>
+              <Button variant="primary" onClick={() => onApply()}>
                 {applyButton}
               </Button>
             </DropdownCloser>
