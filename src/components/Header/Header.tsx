@@ -20,8 +20,8 @@ type Props = {
   logo?: ReactElement
   /** ロゴリンク */
   logoHref?: string
-  /** テナント */
-  tenants?: string | Tenant[]
+  /** テナント一覧 */
+  tenants?: Tenant[]
   /** 現在のテナント ID */
   currentTenantId?: string
   /** テナントが選択された時に発火するコールバック関数 */
@@ -45,16 +45,16 @@ export const Header: React.VFC<Props & ElementProps> = ({
   const theme = useTheme()
   const classNames = useClassNames()
   const currentTenantName = useMemo(() => {
-    if (Array.isArray(tenants)) {
+    if (tenants) {
       const current = tenants.find(({ id }) => id === currentTenantId)
       return current ? current.name : tenants[0].name
     }
 
-    return tenants
+    return undefined
   }, [currentTenantId, tenants])
   const tenantInfo = useMemo(
     () =>
-      Array.isArray(tenants) ? (
+      tenants && tenants.length > 1 ? (
         <HeaderDropdownButton label={currentTenantName}>
           {tenants.map(({ id, name }) => (
             <Button key={id} onClick={() => onTenantSelect && onTenantSelect(id)}>
