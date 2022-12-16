@@ -10,6 +10,8 @@ import { useClassNames } from './useClassNames'
 export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   /** `true` のとき、チェック状態を `mixed` にする */
   mixed?: boolean
+  /** チェックボックスにエラーがあるかどうか */
+  error?: boolean
 }
 
 export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
@@ -35,8 +37,9 @@ export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
           className={classNames.checkBox}
           themes={theme}
           ref={ref}
+          aria-invalid={props.error || undefined}
         />
-        <Box className={boxClassName} themes={theme} />
+        <Box className={boxClassName} themes={theme} error={props.error} />
         <IconWrap themes={theme}>
           {mixed ? <FaMinusIcon color="TEXT_WHITE" /> : <FaCheckIcon color="TEXT_WHITE" />}
         </IconWrap>
@@ -60,8 +63,8 @@ const Wrapper = styled.span<{ themes: Theme }>`
     `
   }}
 `
-const Box = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
+const Box = styled.span<{ themes: Theme; error?: boolean }>`
+  ${({ themes, error }) => {
     const { border, color } = themes
     return css`
       position: absolute;
@@ -84,6 +87,11 @@ const Box = styled.span<{ themes: Theme }>`
         background-color: ${color.BORDER};
         border-color: ${color.BORDER};
       }
+
+      ${error &&
+      css`
+        border-color: ${color.DANGER};
+      `}
     `
   }}
 `
