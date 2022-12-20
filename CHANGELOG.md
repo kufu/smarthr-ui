@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [25.0.0](https://github.com/kufu/smarthr-ui/compare/v24.3.0...v25.0.0) (2022-12-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* ヘッダーの tenants props 型を変更 (#2983)
+
+### Features
+
+* CheckBoxにエラーのステータスを追加する ([#2985](https://github.com/kufu/smarthr-ui/issues/2985)) ([f9d6d44](https://github.com/kufu/smarthr-ui/commit/f9d6d447cc7c5cbd3449b2b4e67c0ff4585e3cbe))
+
+
+### Bug Fixes
+
+* tertiaryLinkのtextにReactNodeを渡せるよう修正 ([#2984](https://github.com/kufu/smarthr-ui/issues/2984)) ([4da379f](https://github.com/kufu/smarthr-ui/commit/4da379fe29918b13135db73e0a3e220509e735ac))
+* valueからvariantに変更 ([#2986](https://github.com/kufu/smarthr-ui/issues/2986)) ([2ab98df](https://github.com/kufu/smarthr-ui/commit/2ab98df883d0ca3da8650579d9a041d774a25629))
+* インポートしやすいよう、トップレベルで EmptyTableBody を export ([#2988](https://github.com/kufu/smarthr-ui/issues/2988)) ([f15942f](https://github.com/kufu/smarthr-ui/commit/f15942f9de637787f9ed140374a6bc683dd4307c))
+* ヘッダーの tenants props 型を変更 ([#2983](https://github.com/kufu/smarthr-ui/issues/2983)) ([73ae3a7](https://github.com/kufu/smarthr-ui/commit/73ae3a76040afd6204f24965c9eb38da02ee199c))
+
 ## [24.3.0](https://github.com/kufu/smarthr-ui/compare/v24.2.0...v24.3.0) (2022-12-12)
 
 
