@@ -15,7 +15,7 @@ export default {
 export const all: Story = () => (
   <Stack gap={0.25}>
     <Header />
-    <Header tenants="株式会社SmartHR">
+    <Header tenants={[{ id: 'test', name: '株式会社SmartHR' }]}>
       <HeaderLink href="https://support.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
         ヘルプ
       </HeaderLink>

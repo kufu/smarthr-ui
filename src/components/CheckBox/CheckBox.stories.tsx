@@ -34,6 +34,12 @@ export const All: Story = () => {
           </li>
 
           <li>
+            <CheckBox error onChange={handleChange}>
+              CheckBox / error
+            </CheckBox>
+          </li>
+
+          <li>
             <CheckBox disabled onChange={handleChange}>
               CheckBox / disabled
             </CheckBox>
@@ -56,6 +62,10 @@ export const All: Story = () => {
           </li>
 
           <li>
+            <CheckBox error onChange={handleChange} />
+          </li>
+
+          <li>
             <CheckBox disabled onChange={handleChange} />
           </li>
 
@@ -72,6 +82,12 @@ export const All: Story = () => {
           <li>
             <CheckBox name="3" checked={checkedName.includes('3')} mixed onChange={handleChange}>
               CheckBox / mixed
+            </CheckBox>
+          </li>
+
+          <li>
+            <CheckBox mixed error onChange={handleChange}>
+              CheckBox / mixed / error
             </CheckBox>
           </li>
 
