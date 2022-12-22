@@ -12,7 +12,7 @@ import { TextLink } from '../../TextLink'
 import { useClassNames } from './useClassNames'
 
 type Category = {
-  type?: 'base'
+  type?: string
   heading: string
   items: Array<{
     label: string
@@ -22,7 +22,7 @@ type Category = {
 }
 type Props = {
   apps: Category[]
-  urlToShowAll?: string
+  urlToShowAll?: string | null
 }
 
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>

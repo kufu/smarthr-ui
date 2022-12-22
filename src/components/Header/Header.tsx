@@ -45,7 +45,7 @@ export const Header: React.VFC<Props & ElementProps> = ({
   const theme = useTheme()
   const classNames = useClassNames()
   const currentTenantName = useMemo(() => {
-    if (tenants) {
+    if (tenants && tenants.length >= 1) {
       const current = tenants.find(({ id }) => id === currentTenantId)
       return current ? current.name : tenants[0].name
     }
