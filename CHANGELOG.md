@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [25.0.1](https://github.com/kufu/smarthr-ui/compare/v25.0.0...v25.0.1) (2022-12-22)
+
+
+### Bug Fixes
+
+* Header, AppLauncher の props で入れられる値を広げる ([#2995](https://github.com/kufu/smarthr-ui/issues/2995)) ([4337492](https://github.com/kufu/smarthr-ui/commit/4337492677e79205c93e9d009d6f4550e24d6910))
+
 ## [25.0.0](https://github.com/kufu/smarthr-ui/compare/v24.3.0...v25.0.0) (2022-12-20)
 
 
