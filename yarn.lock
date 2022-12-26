@@ -2888,10 +2888,10 @@
     read-pkg-up "^7.0.1"
     regenerator-runtime "^0.13.7"
 
-"@storybook/test-runner@^0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@storybook/test-runner/-/test-runner-0.9.1.tgz#466916961680d2550ab442ec8ae1ef4067718adb"
-  integrity sha512-oTtiFPziHcK3N2TMqiw9p//8CpEhDVFA14vAYeLvWqZ9D2oJMBLi/XevKt8ev6PymI5Kp2o7EuxEeXMREOj9yg==
+"@storybook/test-runner@^0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@storybook/test-runner/-/test-runner-0.9.2.tgz#46416a72dc4fc83c1eb06c7951b56afcb25f56bf"
+  integrity sha512-S2TJqslCWaxM9Z9Y9qt5soYUNFlgNJZ1qS8rsvUcyzofG0BXvKlRviuM15/lj58KGA2FnhoX6IPGOJtuNVaoBQ==
   dependencies:
     "@babel/core" "^7.18.13"
     "@babel/generator" "^7.18.13"
