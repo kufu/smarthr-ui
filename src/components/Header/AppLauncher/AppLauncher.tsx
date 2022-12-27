@@ -115,8 +115,9 @@ const AppsButton = styled(Button)<{ themes: Theme }>`
   `}
 `
 const Wrapper = styled(Stack).attrs({ as: 'nav', gap: 1.5 })<{ themes: Theme }>`
-  ${({ themes: { space } }) => css`
+  ${({ themes: { space, leading } }) => css`
     padding: ${space(1.5)};
+    line-height: ${leading.NORMAL};
   `}
 `
 const Footer = styled(Stack)<{ themes: Theme }>`
