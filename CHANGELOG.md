@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [25.0.2](https://github.com/kufu/smarthr-ui/compare/v25.0.1...v25.0.2) (2022-12-27)
+
+
+### Bug Fixes
+
+* add line-height to AppLauncher ([#3005](https://github.com/kufu/smarthr-ui/issues/3005)) ([c04f16f](https://github.com/kufu/smarthr-ui/commit/c04f16f1c5bc961bc86edde36abc48737d0ce441))
+
 ### [25.0.1](https://github.com/kufu/smarthr-ui/compare/v25.0.0...v25.0.1) (2022-12-22)
 
 
