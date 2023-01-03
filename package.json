@@ -156,11 +156,11 @@
   "sideEffects": false,
   "typings": "lib/index.d.ts",
   "resolutions": {
-    "reg-suit/**/braces": "3.0.2",
+    "@babel/helper-compilation-targets": "^7.20.7",
+    "@types/react": "^18.0.27",
     "minimist": "1.2.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@types/react": "^18.0.27",
-    "@babel/helper-compilation-targets": "^7.20.7"
+    "stylelint/postcss": "8.4.14"
   }
 }
