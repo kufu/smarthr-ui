@@ -20,7 +20,7 @@ export const messageTypes = ['info', 'success', 'error', 'warning'] as const
 
 type Props = {
   /** メッセージの種類 */
-  type: typeof messageTypes[number]
+  type: (typeof messageTypes)[number]
   /** 強調するかどうか */
   bold?: boolean
   /** スライドインするかどうか */

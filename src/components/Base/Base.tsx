@@ -81,7 +81,7 @@ const Wrapper = styled.div<{
   themes: Theme
   $padding: { block?: Gap; inline?: Gap }
   $radius: string
-  $layer: typeof layerMap[LayerKeys]
+  $layer: (typeof layerMap)[LayerKeys]
 }>`
   ${({ themes: { color, shadow }, $padding, $radius, $layer }) => css`
     box-shadow: ${shadow[$layer]};
