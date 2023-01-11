@@ -12,15 +12,17 @@ export const Cluster = styled.div<{
   gap?: Gap | SeparateGap
   /** 垂直方向の揃え方（align-items） */
   align?: CSSProperties['alignItems']
+  /** 折返しの指定（flex-wrap） */
+  wrap?: CSSProperties['flexWrap']
   /** 水平方向の揃え方（justify-content） */
   justify?: CSSProperties['justifyContent']
-}>(({ gap = 0.5, align, justify, inline }) => {
+}>(({ gap = 0.5, wrap = 'wrap', align, justify, inline }) => {
   const rowGap = gap instanceof Object ? useSpacing(gap.row) : useSpacing(gap)
   const columnGap = gap instanceof Object ? useSpacing(gap.column) : useSpacing(gap)
 
   return css`
     display: ${inline ? 'inline-flex' : 'flex'};
-    flex-wrap: wrap;
+    ${wrap && `flex-wrap: ${wrap};`}
     ${align && `align-items: ${align};`}
     ${justify && `justify-content: ${justify};`}
     row-gap: ${rowGap};

@@ -45,6 +45,16 @@ export const ClusterStory: Story = () => {
         </Cluster>
       </Stack>
       <Stack as="figure" gap="X3S">
+        <figcaption>
+          折り返し指定を <code>wrap</code> で変えられます。
+        </figcaption>
+        <Cluster wrap="nowrap">
+          {[...Array(5)].map((_, i) => (
+            <ColorBox key={i} />
+          ))}
+        </Cluster>
+      </Stack>
+      <Stack as="figure" gap="X3S">
         <figcaption>垂直方向と水平方向で異なった余白を設定できます。</figcaption>
         <StyledBase>
           <Cluster gap={{ row: 'X3S', column: 'XS' }}>
