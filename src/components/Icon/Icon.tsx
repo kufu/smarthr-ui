@@ -338,7 +338,7 @@ const definedColors = [
   'WARNING',
   'BRAND',
 ] as const
-type DefinedColor = typeof definedColors[number]
+type DefinedColor = (typeof definedColors)[number]
 
 const knownColorSet: Set<string> = new Set(definedColors)
 function isDefinedColor(color: string): color is DefinedColor {

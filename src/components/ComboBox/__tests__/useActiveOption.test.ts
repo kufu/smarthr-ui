@@ -20,8 +20,8 @@ describe('useActiveOption', () => {
     initialProps,
   })
 
-  let result: typeof resultDummy['result']
-  let rerender: typeof resultDummy['rerender']
+  let result: (typeof resultDummy)['result']
+  let rerender: (typeof resultDummy)['rerender']
   beforeEach(() => {
     const renderHookResult = renderHook((props) => useActiveOption(props), { initialProps })
     result = renderHookResult.result
