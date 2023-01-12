@@ -90,7 +90,7 @@ export const DialogBaseStory: Story = () => (
     </li>
   </List>
 )
-DialogBaseStory.storyName = 'DialogBase'
+DialogBaseStory.storyName = 'DialogBase（非推奨）'
 
 const DescriptionList = styled.dl`
   padding: 24px;

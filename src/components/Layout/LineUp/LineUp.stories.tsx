@@ -10,7 +10,7 @@ import { Stack } from '../Stack'
 import { LineUp } from '.'
 
 export default {
-  title: 'Layouts（レイアウト）/LineUp',
+  title: 'Layouts（レイアウト）/LineUp（非推奨）',
   component: LineUp,
   parameters: {
     withTheming: true,

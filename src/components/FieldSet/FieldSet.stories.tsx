@@ -9,7 +9,7 @@ import { FaExclamationCircleIcon } from '../Icon'
 import { FieldSet } from './FieldSet'
 
 export default {
-  title: 'Forms（フォーム）/FieldSet',
+  title: 'Forms（フォーム）/FieldSet（非推奨）',
   component: FieldSet,
   parameters: {
     withTheming: true,
