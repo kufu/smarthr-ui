@@ -124,7 +124,7 @@ const Wrapper = styled(Stack).attrs({ as: 'dl', gap: 1.5 })`
 export const Demo: Story = () => {
   const [visible, setVisible] = useState(false)
   const [animate, setAnimate] = useState(true)
-  const [messageType, setMessageType] = useState<typeof messageTypes[number]>('success')
+  const [messageType, setMessageType] = useState<(typeof messageTypes)[number]>('success')
   const [bold, setBold] = useState(true)
 
   return (
