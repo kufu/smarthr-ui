@@ -8,7 +8,7 @@ import { FaBirthdayCakeIcon, FaChartPieIcon, FaCogIcon, FaFileIcon, FaUserAltIco
 import { AppNavi } from './AppNavi'
 
 export default {
-  title: 'AppNavi',
+  title: 'Navigation（ナビゲーション）/AppNavi',
   component: AppNavi,
   parameters: {
     withTheming: true,

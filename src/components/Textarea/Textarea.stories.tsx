@@ -8,7 +8,7 @@ import { Stack } from '../Layout'
 import { Textarea } from './Textarea'
 
 export default {
-  title: 'Textarea',
+  title: 'Forms（フォーム）/Textarea',
   component: Textarea,
 }
 

@@ -1,7 +1,7 @@
 import { Cluster, LineUp, Reel, Sidebar, Stack } from '.'
 
 export default {
-  title: 'Layout',
+  title: 'Layouts（レイアウト）/Layout',
   component: Cluster,
   subcomponents: { Cluster, LineUp, Reel, Sidebar, Stack },
 }

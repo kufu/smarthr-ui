@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { DatePicker } from './DatePicker'
 
 export default {
-  title: 'DatePicker',
+  title: 'Forms（フォーム）/DatePicker',
   component: DatePicker,
 }
 

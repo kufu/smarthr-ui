@@ -7,7 +7,7 @@ import { Input } from '../Input'
 import { FormGroup } from './FormGroup'
 
 export default {
-  title: 'FormGroup',
+  title: 'Forms（フォーム）/FormGroup',
   component: FormGroup,
   parameters: {
     withTheming: true,

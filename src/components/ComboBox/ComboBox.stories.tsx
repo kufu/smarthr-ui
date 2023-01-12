@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { MultiComboBox, SingleComboBox } from '.'
 
 export default {
-  title: 'ComboBox',
+  title: 'Forms（フォーム）/ComboBox',
   component: SingleComboBox,
   subcomponents: { MultiComboBox },
   parameters: {

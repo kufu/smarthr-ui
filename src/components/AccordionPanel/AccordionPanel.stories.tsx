@@ -14,7 +14,7 @@ import { AccordionPanelItem } from './AccordionPanelItem'
 import { AccordionPanelTrigger } from './AccordionPanelTrigger'
 
 export default {
-  title: 'AccordionPanel',
+  title: 'Data Display（データ表示）/AccordionPanel',
   component: AccordionPanel,
   subcomponents: {
     AccordionPanelItem,

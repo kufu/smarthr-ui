@@ -13,7 +13,7 @@ import { TextLink as shrTextLink } from '../TextLink'
 import { NotificationBar, messageTypes } from './NotificationBar'
 
 export default {
-  title: 'NotificationBar',
+  title: 'States（状態）/NotificationBar',
   component: NotificationBar,
   parameters: {
     withTheming: true,
@@ -124,7 +124,7 @@ const Wrapper = styled(Stack).attrs({ as: 'dl', gap: 1.5 })`
 export const Demo: Story = () => {
   const [visible, setVisible] = useState(false)
   const [animate, setAnimate] = useState(true)
-  const [messageType, setMessageType] = useState<(typeof messageTypes)[number]>('success')
+  const [messageType, setMessageType] = useState<typeof messageTypes[number]>('success')
   const [bold, setBold] = useState(true)
 
   return (

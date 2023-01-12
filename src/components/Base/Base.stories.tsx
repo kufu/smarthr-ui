@@ -9,7 +9,7 @@ import { Base, LayerKeys, layerMap } from './Base'
 import { DialogBase } from './DialogBase'
 
 export default {
-  title: 'Base',
+  title: 'Data Display（データ表示）/Base',
   component: Base,
 }
 

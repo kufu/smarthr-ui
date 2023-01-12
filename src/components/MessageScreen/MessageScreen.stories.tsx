@@ -11,7 +11,7 @@ import { TextLink } from '../TextLink'
 import { MessageScreen } from './MessageScreen'
 
 export default {
-  title: 'MessageScreen',
+  title: 'Page Templates（ページテンプレート）/MessageScreen',
   component: MessageScreen,
   parameters: {
     withTheming: true,

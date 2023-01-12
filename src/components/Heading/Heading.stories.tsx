@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { Heading } from './Heading'
 
 export default {
-  title: 'Heading',
+  title: 'Text（テキスト）/Heading',
   component: Heading,
 }
 

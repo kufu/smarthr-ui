@@ -25,7 +25,7 @@ import {
 } from '.'
 
 export default {
-  title: 'Dialog',
+  title: 'Overlays（オーバーレイ）/Dialog',
   component: Dialog,
   subcomponents: {
     DialogContent,

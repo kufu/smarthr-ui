@@ -21,7 +21,7 @@ import { DropdownTrigger } from './DropdownTrigger'
 import { FilterDropdown } from './FilterDropdown'
 
 export default {
-  title: 'Dropdown',
+  title: 'Buttons（ボタン）/Dropdown',
   component: Dropdown,
   subcomponents: {
     DropdownButton,

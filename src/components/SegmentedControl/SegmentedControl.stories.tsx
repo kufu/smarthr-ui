@@ -14,7 +14,7 @@ import {
 import { Option, SegmentedControl } from './SegmentedControl'
 
 export default {
-  title: 'SegmentedControl',
+  title: 'Buttons（ボタン）/SegmentedControl',
   component: SegmentedControl,
 }
 
