@@ -9,7 +9,15 @@ import { Stack } from '../Stack'
 
 import { LineUp } from '.'
 
-export const LineUpStory: Story = () => (
+export default {
+  title: 'Layouts（レイアウト）/LineUp',
+  component: LineUp,
+  parameters: {
+    withTheming: true,
+  },
+}
+
+export const All: Story = () => (
   <Stack>
     <figure>
       <figcaption>
@@ -82,7 +90,6 @@ export const LineUpStory: Story = () => (
     </figure>
   </Stack>
 )
-LineUpStory.parameters = { withTheming: true }
 
 const ColorBox = styled.div(
   ({ theme: { color } }) => css`

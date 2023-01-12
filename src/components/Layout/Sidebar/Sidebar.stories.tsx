@@ -4,7 +4,15 @@ import styled, { css } from 'styled-components'
 
 import { Sidebar } from './Sidebar'
 
-export const SidebarStory: Story = () => {
+export default {
+  title: 'Layouts（レイアウト）/Sidebar',
+  component: Sidebar,
+  parameters: {
+    withTheming: true,
+  },
+}
+
+export const All: Story = () => {
   return (
     <div style={{ margin: '32px' }}>
       <h1>Sidebar</h1>
@@ -52,9 +60,6 @@ export const SidebarStory: Story = () => {
       </Sidebar>
     </div>
   )
-}
-SidebarStory.parameters = {
-  withTheming: true,
 }
 
 const Main = styled.main(({ theme }) => {

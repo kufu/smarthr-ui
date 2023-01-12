@@ -4,7 +4,15 @@ import styled, { css } from 'styled-components'
 
 import { Button, Center, Heading, Stack } from '../../..'
 
-export const CenterStory: Story = () => {
+export default {
+  title: 'Layouts（レイアウト）/Center',
+  component: Center,
+  parameters: {
+    withTheming: true,
+  },
+}
+
+export const All: Story = () => {
   return (
     <Stack as="article">
       <header>
@@ -57,7 +65,6 @@ export const CenterStory: Story = () => {
     </Stack>
   )
 }
-CenterStory.parameters = { withTheming: true }
 
 const DemoWrapper = styled.div`
   ${({ theme: { color } }) => css`
