@@ -125,6 +125,14 @@ export const _Button: Story = () => {
               ボタン
             </Button>
           </Cluster>
+          <Cluster>
+            <Button variant="pseudoAnchor" onClick={action('clicked')}>
+              ボタン
+            </Button>
+            <Button variant="pseudoAnchor" disabled onClick={action('clicked')}>
+              ボタン
+            </Button>
+          </Cluster>
         </Stack>
       </dd>
 

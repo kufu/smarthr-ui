@@ -46,4 +46,4 @@ export type BaseProps = {
   loading?: boolean
 }
 
-export type Variant = 'primary' | 'secondary' | 'danger' | 'skeleton' | 'text'
+export type Variant = 'primary' | 'secondary' | 'danger' | 'skeleton' | 'text' | 'pseudoAnchor'

@@ -223,5 +223,25 @@ function variantStyles(variant: Variant, theme: Theme) {
           color: ${color.TEXT_DISABLED};
         `,
       }
+    case 'pseudoAnchor':
+      return {
+        default: css`
+          background-color: transparent;
+          border-radius: 0;
+          color: ${color.TEXT_LINK};
+          font-weight: normal;
+          padding: 0;
+        `,
+        focus: css`
+          background-color: transparent;
+          color: ${color.hoverColor(color.TEXT_LINK)};
+          text-decoration: underline;
+        `,
+        disabled: css`
+          background-color: transparent;
+          color: ${color.TEXT_DISABLED};
+          text-decoration: none;
+        `,
+      }
   }
 }
