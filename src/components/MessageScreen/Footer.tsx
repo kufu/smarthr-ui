@@ -18,7 +18,6 @@ export const Footer: VFC<ElementProps> = ({ className = '', ...props }) => {
         <Item href="https://smarthr.jp/update/">お知らせ</Item>
         <Item href="https://smarthr.jp/terms/">利用規約</Item>
         <Item href="https://smarthr.co.jp/privacy/">プライバシーポリシー</Item>
-        <Item href="https://smarthr.jp/law/">特定商取引法に基づく表記</Item>
         <Item href="https://smarthr.co.jp">運営会社</Item>
         <Item href="https://developer.smarthr.jp">開発者向けAPI </Item>
       </List>
