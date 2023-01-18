@@ -42,7 +42,7 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 }
 
 export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProps>(
-  ({ children, onSelectFiles, accept, multiple = true }, ref) => {
+  ({ children, onSelectFiles, accept, multiple = true, name }, ref) => {
     const theme = useTheme()
     const classNames = useClassNames()
     const fileRef = useRef<HTMLInputElement>(null)
@@ -98,7 +98,14 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
         <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
           ファイルを選択
         </Button>
-        <input ref={fileRef} type="file" multiple={multiple} accept={accept} onChange={onChange} />
+        <input
+          ref={fileRef}
+          name={name}
+          type="file"
+          multiple={multiple}
+          accept={accept}
+          onChange={onChange}
+        />
       </Wrapper>
     )
   },
