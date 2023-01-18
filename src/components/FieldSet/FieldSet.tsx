@@ -40,7 +40,6 @@ export const FieldSet: VFC<Props & ElementProps> = ({
   className = '',
   labelSuffix,
   children,
-  name,
   ...props
 }) => {
   const theme = useTheme()
@@ -70,7 +69,8 @@ export const FieldSet: VFC<Props & ElementProps> = ({
       {children ? (
         children
       ) : (
-        <Input {...props} name={name} error={!!errorMessage} className={classNames.input} />
+        // eslint-disable-next-line smarthr/a11y-input-has-name-attribute
+        <Input {...props} error={!!errorMessage} className={classNames.input} />
       )}
 
       {errorMessage &&

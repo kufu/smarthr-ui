@@ -10,7 +10,7 @@ type Props = ComponentProps<typeof Input> & {
 }
 
 export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
-  ({ tooltipMessage, width, name, ...props }, ref) => {
+  ({ tooltipMessage, width, ...props }, ref) => {
     const widthStyle = typeof width === 'number' ? `${width}px` : width
     return (
       <Tooltip
@@ -19,7 +19,8 @@ export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
         tabIndex={-1}
         ariaDescribedbyTarget="inner"
       >
-        <Input {...props} name={name} width={widthStyle} ref={ref} />
+        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+        <Input {...props} width={widthStyle} ref={ref} />
       </Tooltip>
     )
   },

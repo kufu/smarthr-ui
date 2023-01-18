@@ -30,7 +30,7 @@ type Props = Omit<
 }
 
 export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
-  ({ onFormatValue, onFocus, onBlur, className = '', name, ...props }, ref) => {
+  ({ onFormatValue, onFocus, onBlur, className = '', ...props }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
 
@@ -87,9 +87,9 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     const classNames = useClassNames()
 
     return (
+      // eslint-disable-next-line smarthr/a11y-input-has-name-attribute
       <Input
         {...props}
-        name={name}
         type="text"
         onFocus={handleFocus}
         onBlur={handleBlur}

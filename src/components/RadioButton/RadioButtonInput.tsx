@@ -9,7 +9,7 @@ import { useClassNames } from './useClassNames'
 export type Props = InputHTMLAttributes<HTMLInputElement>
 
 export const RadioButtonInput = forwardRef<HTMLInputElement, Props>(
-  ({ onChange, name, ...props }, ref) => {
+  ({ onChange, ...props }, ref) => {
     const theme = useTheme()
     const { checked, disabled } = props
     const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
@@ -23,9 +23,9 @@ export const RadioButtonInput = forwardRef<HTMLInputElement, Props>(
 
     return (
       <Wrapper themes={theme}>
+        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <Input
           {...props}
-          name={name}
           type="radio"
           onChange={handleChange}
           className={classNames.radioButton}

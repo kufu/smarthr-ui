@@ -53,7 +53,6 @@ export const Select = forwardRef(
       size = 'default',
       className = '',
       disabled,
-      name,
       ...props
     }: Props<T> & ElementProps,
     ref: ForwardedRef<HTMLSelectElement>,
@@ -83,9 +82,9 @@ export const Select = forwardRef(
         className={`${className} ${classNames.wrapper} ${generateSizeClassName(size)}`}
         $width={widthStyle}
       >
+        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <StyledSelect
           {...props}
-          name={name}
           onChange={handleChange}
           aria-invalid={error || undefined}
           themes={theme}

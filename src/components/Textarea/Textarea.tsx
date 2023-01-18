@@ -58,7 +58,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       maxRows = Infinity,
       rows = 2,
       onInput,
-      name,
       ...props
     },
     ref,
@@ -115,10 +114,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
     return (
       <>
+        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <StyledTextarea
           {...props}
           {...(maxLength ? { onKeyUp: handleKeyup } : {})}
-          name={name}
           textAreaWidth={textAreaWidth}
           ref={textareaRef}
           themes={theme}

@@ -15,7 +15,7 @@ type Props = {
 } & CheckBoxInputProps
 
 export const CheckBox = forwardRef<HTMLInputElement, Props>(
-  ({ lineHeight = 1.5, className = '', children, name, ...props }, ref) => {
+  ({ lineHeight = 1.5, className = '', children, ...props }, ref) => {
     const theme = useTheme()
     const classNames = useClassNames()
     const checkBoxId = useId(props.id)
@@ -23,13 +23,15 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
     if (!children)
       return (
         <Wrapper className={`${className} ${classNames.wrapper}`}>
-          <CheckBoxInput {...props} name={name} ref={ref} />
+          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+          <CheckBoxInput {...props} ref={ref} />
         </Wrapper>
       )
 
     return (
       <Wrapper className={`${className} ${classNames.wrapper}`}>
-        <CheckBoxInput {...props} name={name} ref={ref} id={checkBoxId} />
+        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+        <CheckBoxInput {...props} ref={ref} id={checkBoxId} />
 
         <Label
           className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
