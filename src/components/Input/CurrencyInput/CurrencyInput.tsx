@@ -30,7 +30,7 @@ type Props = Omit<
 }
 
 export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
-  ({ onFormatValue, onFocus, onBlur, className = '', ...props }, ref) => {
+  ({ onFormatValue, onFocus, onBlur, className = '', name, ...props }, ref) => {
     const innerRef = useRef<HTMLInputElement>(null)
     const [isFocused, setIsFocused] = useState(false)
 
@@ -89,6 +89,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     return (
       <Input
         {...props}
+        name={name}
         type="text"
         onFocus={handleFocus}
         onBlur={handleBlur}
