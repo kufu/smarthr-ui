@@ -1,7 +1,9 @@
 import { Selector } from 'testcafe'
 
 fixture('DialogWrapper')
-  .page('http://localhost:6006/iframe.html?id=dialog--uncontrolled&viewMode=story')
+  .page(
+    'http://localhost:6006/iframe.html?args=&id=dialog（ダイアログ）-dialog--uncontrolled&viewMode=story',
+  )
   .beforeEach(async (t) => {
     await t.maximizeWindow()
   })
