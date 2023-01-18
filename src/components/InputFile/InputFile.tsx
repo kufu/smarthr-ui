@@ -51,6 +51,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       disabled = false,
       error,
       decorator = {},
+      name,
       ...props
     },
     ref,
@@ -143,6 +144,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         <InputWrapper className={inputWrapperClassName} themes={theme}>
           <input
             {...props}
+            name={name}
             type="file"
             onChange={handleChange}
             disabled={disabled}
