@@ -10,7 +10,7 @@ type Props = ComponentProps<typeof Input> & {
 }
 
 export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
-  ({ tooltipMessage, width, ...props }, ref) => {
+  ({ tooltipMessage, width, name, ...props }, ref) => {
     const widthStyle = typeof width === 'number' ? `${width}px` : width
     return (
       <Tooltip
@@ -19,7 +19,7 @@ export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
         tabIndex={-1}
         ariaDescribedbyTarget="inner"
       >
-        <Input {...props} width={widthStyle} ref={ref} />
+        <Input {...props} name={name} width={widthStyle} ref={ref} />
       </Tooltip>
     )
   },
