@@ -30,7 +30,7 @@ const SampleChildren: React.VFC<SampleChildrenProps> = ({ id1, id2, disabled }) 
         htmlFor={id1}
         disabled={disabled}
       >
-        <Input id={id1} disabled={disabled} />
+        <Input name="id1" id={id1} disabled={disabled} />
       </SampleFormGroup>
       <SampleFormGroup
         title="last name"
@@ -39,7 +39,7 @@ const SampleChildren: React.VFC<SampleChildrenProps> = ({ id1, id2, disabled }) 
         htmlFor={id2}
         disabled={disabled}
       >
-        <Input id={id2} disabled={disabled} />
+        <Input name="id2" id={id2} disabled={disabled} />
       </SampleFormGroup>
     </SampleWrapper>
   )
