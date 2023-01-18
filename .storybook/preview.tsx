@@ -34,11 +34,11 @@ export const parameters = {
       order: [
         'Buttons（ボタン）',
         'Data Display（データ表示）',
+        'Dialog（ダイアログ）',
         'Forms（フォーム）',
         'Layouts（レイアウト）',
         'Media（メディア）',
         'Navigation（ナビゲーション）',
-        'Overlays（オーバーレイ）',
         'Page Templates（ページテンプレート）',
         'States（状態）',
         'Text（テキスト）',

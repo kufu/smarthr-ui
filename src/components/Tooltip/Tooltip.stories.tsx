@@ -14,7 +14,7 @@ import {
 import { Tooltip } from './Tooltip'
 
 export default {
-  title: 'Overlays（オーバーレイ）/Tooltip',
+  title: 'Data Display（データ表示）/Tooltip',
   component: Tooltip,
 }
 

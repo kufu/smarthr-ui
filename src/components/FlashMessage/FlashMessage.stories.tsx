@@ -9,7 +9,7 @@ import { FlashMessage, Props, animationTypes, messageTypes } from './FlashMessag
 import { FlashMessageListProvider, useFlashMessageList } from '.'
 
 export default {
-  title: 'Overlays（オーバーレイ）/FlashMessage（非推奨）',
+  title: 'States（状態）/FlashMessage（非推奨）',
   component: FlashMessage,
 }
 
