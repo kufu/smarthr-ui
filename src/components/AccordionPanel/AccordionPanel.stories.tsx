@@ -41,7 +41,7 @@ const content = () => {
           innerMargin="XXS"
           htmlFor={`id-name-${id}`}
         >
-          <Input id={`id-name-${id}`} />
+          <Input name={`name_${id}`} id={`id-name-${id}`} />
         </FormGroup>
       </div>
       <div>
@@ -51,7 +51,7 @@ const content = () => {
           innerMargin="XXS"
           htmlFor={`id-email-${id}`}
         >
-          <Input id={`id-email-${id}`} />
+          <Input name={`email_${id}`} id={`id-email-${id}`} />
         </FormGroup>
       </div>
     </Stack>
