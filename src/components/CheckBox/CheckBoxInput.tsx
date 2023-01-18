@@ -15,7 +15,7 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
 }
 
 export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
-  ({ mixed = false, onChange, ...props }, ref) => {
+  ({ mixed = false, onChange, name, ...props }, ref) => {
     const theme = useTheme()
     const { checked, disabled } = props
     const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
@@ -32,6 +32,7 @@ export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
         <Input
           {...props}
           {...(mixed && { 'aria-checked': 'mixed' })}
+          name={name}
           type="checkbox"
           onChange={handleChange}
           className={classNames.checkBox}
