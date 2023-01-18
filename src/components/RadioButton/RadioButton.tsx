@@ -15,7 +15,7 @@ type Props = {
 } & RadioButtonInputProps
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ lineHeight = 1.5, children, className = '', ...props }, ref) => {
+  ({ lineHeight = 1.5, children, className = '', name, ...props }, ref) => {
     const theme = useTheme()
     const classNames = useClassNames()
     const radioButtonId = useId(props.id)
@@ -23,7 +23,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     if (!children) {
       return (
         <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
-          <RadioButtonInput {...props} ref={ref} className={classNames.radioButton} />
+          <RadioButtonInput {...props} name={name} ref={ref} className={classNames.radioButton} />
         </Wrapper>
       )
     }
@@ -31,7 +31,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     return (
       <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
         <ButtonLayout $height={`${lineHeight}em`}>
-          <RadioButtonInput {...props} ref={ref} id={radioButtonId} />
+          <RadioButtonInput {...props} name={name} ref={ref} id={radioButtonId} />
         </ButtonLayout>
 
         <Label

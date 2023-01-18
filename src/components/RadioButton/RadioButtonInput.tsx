@@ -9,7 +9,7 @@ import { useClassNames } from './useClassNames'
 export type Props = InputHTMLAttributes<HTMLInputElement>
 
 export const RadioButtonInput = forwardRef<HTMLInputElement, Props>(
-  ({ onChange, ...props }, ref) => {
+  ({ onChange, name, ...props }, ref) => {
     const theme = useTheme()
     const { checked, disabled } = props
     const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
@@ -25,6 +25,7 @@ export const RadioButtonInput = forwardRef<HTMLInputElement, Props>(
       <Wrapper themes={theme}>
         <Input
           {...props}
+          name={name}
           type="radio"
           onChange={handleChange}
           className={classNames.radioButton}
