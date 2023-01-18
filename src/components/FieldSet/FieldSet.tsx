@@ -40,6 +40,7 @@ export const FieldSet: VFC<Props & ElementProps> = ({
   className = '',
   labelSuffix,
   children,
+  name,
   ...props
 }) => {
   const theme = useTheme()
@@ -69,7 +70,7 @@ export const FieldSet: VFC<Props & ElementProps> = ({
       {children ? (
         children
       ) : (
-        <Input {...props} error={!!errorMessage} className={classNames.input} />
+        <Input {...props} name={name} error={!!errorMessage} className={classNames.input} />
       )}
 
       {errorMessage &&
