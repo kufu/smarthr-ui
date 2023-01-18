@@ -24,37 +24,38 @@ export const All: Story = () => (
     <li>
       <Text>
         <span>標準</span>
-        <Select options={options} />
+        <Select name="default" options={options} />
       </Text>
     </li>
     <li>
       <Text>
         <span>サイズ小</span>
-        <Select options={options} size="s" />
+        <Select name="s" options={options} size="s" />
       </Text>
     </li>
     <li>
       <Text>
         <span>value 指定</span>
-        <Select value="orange" options={options} />
+        <Select name="value" value="orange" options={options} />
       </Text>
     </li>
     <li>
       <Text>
         <span>エラー状態</span>
-        <Select error options={options} />
+        <Select name="error" error options={options} />
       </Text>
     </li>
     <li>
       <Text>
         <span>disabled 状態</span>
-        <Select disabled options={options} />
+        <Select name="disabled" disabled options={options} />
       </Text>
     </li>
     <li>
       <Text>
         <span>選択肢グループ要素の使用</span>
         <Select
+          name="group"
           value="orange"
           options={[
             { label: 'Select fruit', value: '' },
@@ -84,19 +85,20 @@ export const All: Story = () => (
     <li style={{ alignSelf: 'stretch' }}>
       <Text>
         <span>幅指定</span>
-        <Select width="100%" options={options} />
+        <Select name="width" width="100%" options={options} />
       </Text>
     </li>
     <li>
       <Text>
         <span>空の選択肢を表示</span>
-        <Select hasBlank options={options} />
+        <Select name="hasBlank" hasBlank options={options} />
       </Text>
     </li>
     <li>
       <Text>
         <span>onChange</span>
         <Select
+          name="onChange"
           onChange={action('onChange!!')}
           onChangeValue={action('onChangeValue')}
           options={[
