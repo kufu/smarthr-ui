@@ -15,27 +15,42 @@ export const All: Story = () => {
     <List>
       <dt>Default</dt>
       <dd>
-        <InputFile label="ファイルを選択" onChange={action('onChange')} multiple />
+        <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
       </dd>
       <dt>Size S</dt>
       <dd>
-        <InputFile label="ファイルを選択" onChange={action('onChange')} size="s" multiple />
+        <InputFile
+          name="size"
+          label="ファイルを選択"
+          onChange={action('onChange')}
+          size="s"
+          multiple
+        />
       </dd>
       <dt>Disabled file list</dt>
       <dd>
-        <InputFile label="ファイルを選択" onChange={action('onChange')} hasFileList={false} />
+        <InputFile
+          name="hasFileList"
+          label="ファイルを選択"
+          onChange={action('onChange')}
+          hasFileList={false}
+        />
       </dd>
       <dt>Disabled input</dt>
       <dd>
-        <InputFile label="ファイルを選択" disabled />
+        <InputFile name="disabled" label="ファイルを選択" disabled />
       </dd>
       <dt>エラー</dt>
       <dd>
-        <InputFile label="ファイルを選択" error />
+        <InputFile name="error" label="ファイルを選択" error />
       </dd>
       <dt>decoratorで文言変更</dt>
       <dd>
-        <InputFile label="select file." decorator={{ destroy: (text) => `delete(${text})` }} />
+        <InputFile
+          name="decorator"
+          label="select file."
+          decorator={{ destroy: (text) => `delete(${text})` }}
+        />
       </dd>
     </List>
   )

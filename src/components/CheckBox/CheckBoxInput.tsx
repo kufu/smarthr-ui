@@ -29,6 +29,7 @@ export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
 
     return (
       <Wrapper themes={theme}>
+        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <Input
           {...props}
           {...(mixed && { 'aria-checked': 'mixed' })}

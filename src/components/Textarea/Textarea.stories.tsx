@@ -21,43 +21,48 @@ const Template: Story = () => {
       <li>
         <Label>
           標準
-          <Textarea />
+          <Textarea name="default" />
         </Label>
       </li>
       <li>
         <Label>
           入力欄を自動で広げる（初期： 3行、最大： 10行）
-          <Textarea cols={35} rows={3} maxRows={10} autoResize />
+          <Textarea name="auto_resize" cols={35} rows={3} maxRows={10} autoResize />
         </Label>
       </li>
       <li>
         <Label>
           幅指定
-          <Textarea width="100%" />
+          <Textarea name="width" width="100%" />
         </Label>
       </li>
       <li>
         <Label>
           disabled
-          <Textarea disabled={true} />
+          <Textarea name="disabled" disabled={true} />
         </Label>
       </li>
       <li>
         <Label>
           エラー時
-          <Textarea error={true} />
+          <Textarea name="error" error={true} />
         </Label>
       </li>
       <li>
         <Label>
           最大文字数 (defaultValue)
-          <Textarea maxLength={140} defaultValue="message👌" />
+          <Textarea name="max_length_with_default_value" maxLength={140} defaultValue="message👌" />
         </Label>
       </li>
       <li>
         <Label>
           最大文字数 (value)
-          <Textarea maxLength={140} value={value} onChange={onChangeValue} />
+          <Textarea
+            name="max_length_with_value"
+            maxLength={140}
+            value={value}
+            onChange={onChangeValue}
+          />
         </Label>
       </li>
     </List>

@@ -91,6 +91,7 @@ export const Single: Story = () => {
       <dt>デフォルト</dt>
       <dd>
         <SingleComboBox
+          name="default"
           items={items}
           selectedItem={selectedItem}
           width={400}
@@ -107,6 +108,7 @@ export const Single: Story = () => {
       <dt>アイテム追加可能</dt>
       <dd>
         <SingleComboBox
+          name="onAdd"
           items={items}
           selectedItem={selectedItem}
           width={400}
@@ -121,6 +123,7 @@ export const Single: Story = () => {
       <dt>Disabled</dt>
       <dd>
         <SingleComboBox
+          name="disabled"
           items={items}
           selectedItem={selectedItem}
           width={400}
@@ -134,6 +137,7 @@ export const Single: Story = () => {
       <dt>エラー表示</dt>
       <dd>
         <SingleComboBox
+          name="error"
           items={items}
           selectedItem={selectedItem}
           width={400}
@@ -146,6 +150,7 @@ export const Single: Story = () => {
       <dt>読込中</dt>
       <dd>
         <SingleComboBox
+          name="isLoading"
           items={items}
           selectedItem={selectedItem}
           width={400}
@@ -158,6 +163,7 @@ export const Single: Story = () => {
       <dt>文言変更</dt>
       <dd>
         <SingleComboBox
+          name="decorator"
           items={items}
           selectedItem={selectedItem}
           width={400}
@@ -173,6 +179,7 @@ export const Single: Story = () => {
       <dt>100%幅</dt>
       <dd>
         <SingleComboBox
+          name="width100Par"
           items={items}
           selectedItem={selectedItem}
           width="100%"
@@ -184,6 +191,7 @@ export const Single: Story = () => {
       <dt>ドロップダウンリストの幅を絶対指定(600px)</dt>
       <dd>
         <SingleComboBox
+          name="dropdownWidth600px"
           items={items}
           selectedItem={selectedItem}
           width={400}
@@ -196,6 +204,7 @@ export const Single: Story = () => {
       <dt>ドロップダウンリストの幅を相対指定（Inputの200%幅）</dt>
       <dd>
         <SingleComboBox
+          name="dropdownWidth200Par"
           items={items}
           selectedItem={selectedItem}
           width={400}
@@ -208,6 +217,7 @@ export const Single: Story = () => {
       <dt>アイテム数が多い時</dt>
       <dd>
         <SingleComboBox
+          name="manyItems"
           items={manyItems}
           selectedItem={null}
           width={400}
@@ -218,6 +228,7 @@ export const Single: Story = () => {
       <dt>クリアボタンクリック時のデフォルトの挙動を無効化</dt>
       <dd>
         <SingleComboBox
+          name="onClearClick"
           items={items}
           selectedItem={selectedItem}
           width={400}
@@ -257,6 +268,7 @@ const SingleWithDefaultItem: React.VFC = () => {
 
   return (
     <SingleComboBox
+      name="default_item"
       items={items}
       selectedItem={selectedItem}
       defaultItem={items[0]}
@@ -306,6 +318,7 @@ export const Multi: Story = () => {
       <dt>デフォルト</dt>
       <dd>
         <MultiComboBox
+          name="default"
           items={items}
           selectedItems={selectedItems}
           width={400}
@@ -324,6 +337,7 @@ export const Multi: Story = () => {
       <dt>アイテム追加可能</dt>
       <dd>
         <MultiComboBox
+          name="onAdd"
           items={items}
           selectedItems={selectedItems}
           width={400}
@@ -338,6 +352,7 @@ export const Multi: Story = () => {
       <dt>Disabled</dt>
       <dd>
         <MultiComboBox
+          name="disabled"
           items={items}
           selectedItems={selectedItems}
           width={400}
@@ -351,6 +366,7 @@ export const Multi: Story = () => {
       <dt>エラー表示</dt>
       <dd>
         <MultiComboBox
+          name="error"
           items={items}
           selectedItems={selectedItems}
           width={400}
@@ -363,6 +379,7 @@ export const Multi: Story = () => {
       <dt>選択済みアイテムを省略表示 + ツールチップ</dt>
       <dd>
         <MultiComboBox
+          name="selectedItemEllipsis"
           items={items}
           selectedItems={selectedItems}
           width={400}
@@ -375,6 +392,7 @@ export const Multi: Story = () => {
       <dt>読込中</dt>
       <dd>
         <MultiComboBox
+          name="isLoading"
           items={items}
           selectedItems={selectedItems}
           width={400}
@@ -387,6 +405,7 @@ export const Multi: Story = () => {
       <dt>文言変更</dt>
       <dd>
         <MultiComboBox
+          name="decorator"
           items={items}
           selectedItems={selectedItems}
           width={400}
@@ -403,6 +422,7 @@ export const Multi: Story = () => {
       <dt>選択解除ボタンを非表示</dt>
       <dd>
         <MultiComboBox
+          name="invisible_unselected_button"
           items={items}
           selectedItems={selectedItems.map((item) => ({ ...item, deletable: false }))}
           width={400}
@@ -414,6 +434,7 @@ export const Multi: Story = () => {
       <dt>テキストボックスの挙動を制御</dt>
       <dd>
         <MultiComboBox
+          name="textbox_controllable"
           items={items}
           selectedItems={selectedItems}
           width={400}
@@ -434,6 +455,7 @@ export const Multi: Story = () => {
       <dt>100%幅</dt>
       <dd>
         <MultiComboBox
+          name="width100Par"
           items={items}
           selectedItems={selectedItems}
           width="100%"
@@ -445,6 +467,7 @@ export const Multi: Story = () => {
       <dt>ドロップダウンリストの幅をアイテムの幅に合わせる</dt>
       <dd>
         <MultiComboBox
+          name="dropdownWidthAuto"
           items={items}
           selectedItems={selectedItems}
           width={400}
@@ -454,21 +477,10 @@ export const Multi: Story = () => {
           onSelect={handleSelectItem}
         />
       </dd>
-      <dt>ドロップダウンリストの幅を相対指定（Inputの200%幅）</dt>
-      <dd>
-        <MultiComboBox
-          items={items}
-          selectedItems={selectedItems}
-          width={400}
-          dropdownWidth="200%"
-          dropdownHelpMessage="入力でフィルタリングできます。"
-          onDelete={handleDelete}
-          onSelect={handleSelectItem}
-        />
-      </dd>
       <dt>ドロップダウンリストの幅を絶対指定(600px)</dt>
       <dd>
         <MultiComboBox
+          name="dropdownWidth600px"
           items={items}
           selectedItems={selectedItems}
           width={400}
@@ -481,6 +493,7 @@ export const Multi: Story = () => {
       <dt>ドロップダウンリストの幅を相対指定（Inputの200%幅）</dt>
       <dd>
         <MultiComboBox
+          name="dropdownWidth200Par"
           items={items}
           selectedItems={selectedItems}
           width={400}
@@ -493,6 +506,7 @@ export const Multi: Story = () => {
       <dt>アイテム数が多い時</dt>
       <dd>
         <MultiComboBox
+          name="manyItems"
           items={manyItems}
           selectedItems={[]}
           width={400}

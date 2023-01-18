@@ -88,6 +88,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
             {prefix}
           </Affix>
         )}
+        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <StyledInput
           {...props}
           onFocus={handleFocus}
