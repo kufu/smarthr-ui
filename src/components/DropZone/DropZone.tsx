@@ -34,6 +34,7 @@ type DropZoneProps = {
   /** 複数ファイルを選択できるかどうか */
   multiple?: boolean
   children?: React.ReactNode
+  name?: string
 }
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
