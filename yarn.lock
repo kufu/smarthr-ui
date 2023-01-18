@@ -6915,10 +6915,10 @@ eslint-config-prettier@^8.6.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.6.0.tgz#dec1d29ab728f4fa63061774e1672ac4e363d207"
   integrity sha512-bAF0eLpLVqP5oEVUFKpMA+NnRFICwn9X8B5jrR9FcqnYBuPbqWEjTEspPWMj5ye6czoSLDweCzSo3Ko7gGrZaA==
 
-eslint-config-smarthr@^6.6.1:
-  version "6.6.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-smarthr/-/eslint-config-smarthr-6.6.1.tgz#a14e25f0e75a60874c657b46723c0284380258a5"
-  integrity sha512-lp/XJCJ2euxcsJ85mK53KS/0We1XmHP4HvMOVAlxhyvRt4/rqZK2oRAq/jBNkOCAxArkIiVfuIIz0514E95JUw==
+eslint-config-smarthr@^6.6.2:
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/eslint-config-smarthr/-/eslint-config-smarthr-6.6.2.tgz#807003f31e2fa965a31bd19b13cd34ffa7327df4"
+  integrity sha512-JuyZZGAonQMesem0/mqHFbPHw8H3j5qu32TDoVXaZ0N5jaL4kDHd+zE+wuzzgCG/gS62nT7qvdl5d/t+WtjO+g==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.48.1"
     "@typescript-eslint/parser" "^5.48.1"
@@ -6928,7 +6928,7 @@ eslint-config-smarthr@^6.6.1:
     eslint-plugin-prettier "^4.2.1"
     eslint-plugin-react "^7.32.0"
     eslint-plugin-react-hooks "^4.6.0"
-    eslint-plugin-smarthr "^0.2.18"
+    eslint-plugin-smarthr "^0.2.19"
 
 eslint-import-resolver-node@^0.3.7:
   version "0.3.7"
@@ -7020,10 +7020,10 @@ eslint-plugin-react@^7.32.0:
     semver "^6.3.0"
     string.prototype.matchall "^4.0.8"
 
-eslint-plugin-smarthr@^0.2.18:
-  version "0.2.18"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-smarthr/-/eslint-plugin-smarthr-0.2.18.tgz#12e59166e1ba0be7534db2e9c762e9846610eecc"
-  integrity sha512-9iDbzhi5iZFHq6y2NiltcdAbyum4oflCkmCHTgnOj6o9kjLjEF2S5paI6chG0FCziQH4X7i9yIbSvOMhLpD5mA==
+eslint-plugin-smarthr@^0.2.19:
+  version "0.2.19"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-smarthr/-/eslint-plugin-smarthr-0.2.19.tgz#e8e7a08b38cbfba3c4439cf65378af3d1e167bcf"
+  integrity sha512-/Bx2UkEUhLUfp/G9ypV0fTc8lkvx62kRSIurvWPhledw95ho1ENTSJeDR/uOI68D4Yb+TShWs+8VWHMnKAj8TA==
   dependencies:
     inflected "^2.1.0"
     json5 "^2.2.0"
