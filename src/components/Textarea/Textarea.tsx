@@ -58,6 +58,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       maxRows = Infinity,
       rows = 2,
       onInput,
+      name,
       ...props
     },
     ref,
@@ -117,6 +118,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         <StyledTextarea
           {...props}
           {...(maxLength ? { onKeyUp: handleKeyup } : {})}
+          name={name}
           textAreaWidth={textAreaWidth}
           ref={textareaRef}
           themes={theme}
