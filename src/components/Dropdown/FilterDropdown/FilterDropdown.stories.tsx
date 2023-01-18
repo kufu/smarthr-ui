@@ -62,8 +62,8 @@ export const Default: Story = () => {
               ↓<br />↓
             </Description>
             <Text>Children content is scrollable.</Text>
-            <PartSingleComboBox />
-            <PartMultiComboBox />
+            <PartSingleComboBox name="single" />
+            <PartMultiComboBox name="multi" />
           </FilterDropdown>
         </dd>
         <dt>Filtered</dt>
@@ -145,7 +145,7 @@ const RadioButtonList = styled.ul`
 `
 
 type Item = { label: string; value: string }
-const PartSingleComboBox: React.VFC = () => {
+const PartSingleComboBox: React.FC<{ name: string }> = ({ name }) => {
   const [items, _setItems] = useState([
     {
       label: 'option 1',
@@ -196,6 +196,7 @@ const PartSingleComboBox: React.VFC = () => {
   return (
     <div>
       <SingleComboBox
+        name={name}
         items={items}
         selectedItem={selectedItem}
         defaultItem={items[0]}
@@ -206,7 +207,7 @@ const PartSingleComboBox: React.VFC = () => {
     </div>
   )
 }
-const PartMultiComboBox: React.VFC = () => {
+const PartMultiComboBox: React.FC<{ name: string }> = ({ name }) => {
   const [items, _setItems] = useState([
     {
       label: 'option 1',
@@ -263,6 +264,7 @@ const PartMultiComboBox: React.VFC = () => {
   return (
     <div>
       <MultiComboBox
+        name={name}
         items={items}
         selectedItems={selectedItems}
         width={400}
