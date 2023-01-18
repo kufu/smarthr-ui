@@ -40,7 +40,10 @@ function ListBoxItem<T>({ option, isActive, onAdd, onSelect, onMouseOver, active
     <AddButton
       key={option.id}
       themes={theme}
-      onClick={handleAdd}
+      onClick={(e) => {
+        e.stopPropagation()
+        handleAdd()
+      }}
       onMouseOver={handleMouseOver}
       id={option.id}
       role="option"
@@ -56,7 +59,10 @@ function ListBoxItem<T>({ option, isActive, onAdd, onSelect, onMouseOver, active
       type="button"
       themes={theme}
       disabled={disabled}
-      onClick={handleSelect}
+      onClick={(e) => {
+        e.stopPropagation()
+        handleSelect()
+      }}
       onMouseOver={handleMouseOver}
       id={option.id}
       role="option"

@@ -65,7 +65,8 @@ export function MultiSelectedItem<T>({
             themes={theme}
             className={classNames.deleteButton}
             disabled={disabled}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation()
               onDelete && onDelete(item)
             }}
             onKeyDown={(e) => {
