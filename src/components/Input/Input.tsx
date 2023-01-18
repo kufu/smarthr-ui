@@ -36,7 +36,7 @@ type Props = {
 type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
 export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
-  ({ onFocus, onBlur, autoFocus, prefix, suffix, className = '', width, ...props }, ref) => {
+  ({ onFocus, onBlur, autoFocus, prefix, suffix, className = '', width, name, ...props }, ref) => {
     const theme = useTheme()
     const innerRef = useRef<HTMLInputElement>(null)
 
@@ -90,6 +90,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
         )}
         <StyledInput
           {...props}
+          name={name}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onWheel={handleWheel}
