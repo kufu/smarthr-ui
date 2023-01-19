@@ -20,12 +20,12 @@ export const All: Story = () => {
     <Group>
       <li>
         <Text>Default</Text>
-        <DropZone onSelectFiles={onSelectFiles} />
+        <DropZone name="default" onSelectFiles={onSelectFiles} />
       </li>
 
       <li>
         <Text>With children</Text>
-        <DropZone onSelectFiles={onSelectFiles}>
+        <DropZone name="with_children" onSelectFiles={onSelectFiles}>
           <DropZoneText>
             <span>ここにドラッグ&ドロップ</span>
             <span>または</span>
@@ -35,7 +35,7 @@ export const All: Story = () => {
 
       <li>
         <Text>Button accepting only image files</Text>
-        <DropZone onSelectFiles={onSelectFiles} accept="image/*">
+        <DropZone name="accept" onSelectFiles={onSelectFiles} accept="image/*">
           <DropZoneText>
             <span>ここにドラッグ&ドロップ</span>
             <span>または</span>
@@ -45,7 +45,7 @@ export const All: Story = () => {
 
       <li>
         <Text>単一ファイルは任意（デフォルト複数選択可）</Text>
-        <DropZone onSelectFiles={onSelectFiles} multiple={false} />
+        <DropZone name="single" onSelectFiles={onSelectFiles} multiple={false} />
       </li>
     </Group>
   )

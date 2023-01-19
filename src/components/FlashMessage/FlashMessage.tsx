@@ -21,13 +21,13 @@ export type Props = {
   /** true のときに FlashMessage を表示する */
   visible: boolean
   /** 表示するアイコンのタイプ */
-  type: typeof messageTypes[number]
+  type: (typeof messageTypes)[number]
   /** メッセージの内容 */
   text: ReactNode
   /** アニメーションのタイプ */
-  animation?: typeof animationTypes[number]
+  animation?: (typeof animationTypes)[number]
   /** コンポーネントに適用する role 属性 */
-  role?: typeof roles[number]
+  role?: (typeof roles)[number]
   /** コンポーネントに適用するクラス名 */
   className?: string
   /** 閉じるボタンを押下、または表示してから8秒後に発火するコールバック関数 */

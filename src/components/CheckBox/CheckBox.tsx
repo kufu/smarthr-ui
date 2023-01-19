@@ -23,12 +23,14 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
     if (!children)
       return (
         <Wrapper className={`${className} ${classNames.wrapper}`}>
+          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
           <CheckBoxInput {...props} ref={ref} />
         </Wrapper>
       )
 
     return (
       <Wrapper className={`${className} ${classNames.wrapper}`}>
+        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <CheckBoxInput {...props} ref={ref} id={checkBoxId} />
 
         <Label

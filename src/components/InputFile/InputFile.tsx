@@ -141,6 +141,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
           </FileList>
         )}
         <InputWrapper className={inputWrapperClassName} themes={theme}>
+          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
           <input
             {...props}
             type="file"

@@ -34,19 +34,19 @@ export const All: Story = () => {
           </li>
 
           <li>
-            <CheckBox error onChange={handleChange}>
+            <CheckBox name="error" error onChange={handleChange}>
               CheckBox / error
             </CheckBox>
           </li>
 
           <li>
-            <CheckBox disabled onChange={handleChange}>
+            <CheckBox name="disabled" disabled onChange={handleChange}>
               CheckBox / disabled
             </CheckBox>
           </li>
 
           <li>
-            <CheckBox checked disabled onChange={handleChange}>
+            <CheckBox name="disabled_checked" checked disabled onChange={handleChange}>
               CheckBox / disabled /checked
             </CheckBox>
           </li>
@@ -62,15 +62,15 @@ export const All: Story = () => {
           </li>
 
           <li>
-            <CheckBox error onChange={handleChange} />
+            <CheckBox name="error" error onChange={handleChange} />
           </li>
 
           <li>
-            <CheckBox disabled onChange={handleChange} />
+            <CheckBox name="disabled" disabled onChange={handleChange} />
           </li>
 
           <li>
-            <CheckBox checked disabled onChange={handleChange} />
+            <CheckBox name="checked_disabled" checked disabled onChange={handleChange} />
           </li>
         </InnerList>
       </li>
@@ -86,19 +86,19 @@ export const All: Story = () => {
           </li>
 
           <li>
-            <CheckBox mixed error onChange={handleChange}>
+            <CheckBox name="mixed_error" mixed error onChange={handleChange}>
               CheckBox / mixed / error
             </CheckBox>
           </li>
 
           <li>
-            <CheckBox mixed disabled onChange={handleChange}>
+            <CheckBox name="mixed_disabled" mixed disabled onChange={handleChange}>
               CheckBox / mixed / disabled
             </CheckBox>
           </li>
 
           <li>
-            <CheckBox checked mixed disabled onChange={handleChange}>
+            <CheckBox name="mixed_disabled_checked" checked mixed disabled onChange={handleChange}>
               CheckBox / mixed / disabled / checked
             </CheckBox>
           </li>

@@ -124,7 +124,7 @@ const Wrapper = styled(Stack).attrs({ as: 'dl', gap: 1.5 })`
 export const Demo: Story = () => {
   const [visible, setVisible] = useState(false)
   const [animate, setAnimate] = useState(true)
-  const [messageType, setMessageType] = useState<typeof messageTypes[number]>('success')
+  const [messageType, setMessageType] = useState<(typeof messageTypes)[number]>('success')
   const [bold, setBold] = useState(true)
 
   return (
@@ -141,13 +141,13 @@ export const Demo: Story = () => {
         <Stack>
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label>
-            <CheckBox onChange={() => setBold(!bold)} checked={bold}>
+            <CheckBox name="bold" onChange={() => setBold(!bold)} checked={bold}>
               bold
             </CheckBox>
           </label>
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label>
-            <CheckBox onChange={() => setAnimate(!animate)} checked={animate}>
+            <CheckBox name="animate" onChange={() => setAnimate(!animate)} checked={animate}>
               animate
             </CheckBox>
           </label>
@@ -157,6 +157,7 @@ export const Demo: Story = () => {
               {messageTypes.map((type) => (
                 <label key={type}>
                   <RadioButton
+                    name="message_type"
                     value={type}
                     checked={messageType === type}
                     onChange={({ currentTarget: { value } }) =>

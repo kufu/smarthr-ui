@@ -316,10 +316,10 @@ import { useSpacing } from '../../hooks/useSpacing'
 import { useTheme } from '../../hooks/useTheme'
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 
+import type { IconBaseProps, IconType } from 'react-icons'
+
 import Warning from './WarningIcon'
 import { useClassNames } from './useClassNames'
-
-import type { IconBaseProps, IconType } from 'react-icons'
 
 /**
  * literal union type に補完を効かせるためのハック
@@ -338,7 +338,7 @@ const definedColors = [
   'WARNING',
   'BRAND',
 ] as const
-type DefinedColor = typeof definedColors[number]
+type DefinedColor = (typeof definedColors)[number]
 
 const knownColorSet: Set<string> = new Set(definedColors)
 function isDefinedColor(color: string): color is DefinedColor {

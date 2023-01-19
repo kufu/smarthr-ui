@@ -69,6 +69,7 @@ export const FieldSet: VFC<Props & ElementProps> = ({
       {children ? (
         children
       ) : (
+        // eslint-disable-next-line smarthr/a11y-input-has-name-attribute
         <Input {...props} error={!!errorMessage} className={classNames.input} />
       )}
 
