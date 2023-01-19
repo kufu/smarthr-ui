@@ -66,7 +66,7 @@ export const WithoutTitle: Story = () => {
                 innerMargin="XXS"
                 htmlFor="id-email"
               >
-                <Input id="id-email" width="100%" />
+                <Input name="email" id="id-email" width="100%" />
               </FormGroup>
             </li>
             <li>
@@ -76,7 +76,7 @@ export const WithoutTitle: Story = () => {
                 innerMargin="XXS"
                 htmlFor="id-password"
               >
-                <Input id="id-password" width="100%" />
+                <Input name="password" id="id-password" width="100%" />
               </FormGroup>
             </li>
           </List>
@@ -113,7 +113,7 @@ export const WithoutLinks: Story = () => {
               innerMargin="XXS"
               htmlFor="id-email"
             >
-              <Input id="id-email" width="100%" />
+              <Input name="email" id="id-email" width="100%" />
             </FormGroup>
           </li>
           <li>
@@ -123,7 +123,7 @@ export const WithoutLinks: Story = () => {
               innerMargin="XXS"
               htmlFor="id-password"
             >
-              <Input id="id-password" width="100%" />
+              <Input name="password" id="id-password" width="100%" />
             </FormGroup>
           </li>
         </List>

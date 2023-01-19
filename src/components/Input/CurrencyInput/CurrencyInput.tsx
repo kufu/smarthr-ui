@@ -87,6 +87,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
     const classNames = useClassNames()
 
     return (
+      // eslint-disable-next-line smarthr/a11y-input-has-name-attribute
       <Input
         {...props}
         type="text"

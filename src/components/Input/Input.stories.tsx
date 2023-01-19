@@ -26,56 +26,56 @@ export const All: Story = () => {
     <List>
       <li>
         <Txt>text</Txt>
-        <Input type="text" defaultValue="string" />
+        <Input name="text" type="text" defaultValue="string" />
       </li>
       <li>
         <Txt>number</Txt>
-        <Input type="number" defaultValue="1" />
+        <Input name="number" type="number" defaultValue="1" />
       </li>
       <li>
         <Txt>password</Txt>
-        <Input type="password" defaultValue="password" />{' '}
+        <Input name="password" type="password" defaultValue="password" />{' '}
       </li>{' '}
       <li>
         <Txt>width (with %)</Txt>
-        <Input defaultValue="width: 100%" width="100%" />
+        <Input name="width_with_percent" defaultValue="width: 100%" width="100%" />
       </li>
       <li>
         <Txt>width (with px)</Txt>
-        <Input defaultValue="width: 100px" width="100px" />
+        <Input name="width_with_px" defaultValue="width: 100px" width="100px" />
       </li>
       <li>
         <Txt>onChange</Txt>
-        <Input onChange={action('onChange!!')} />
+        <Input name="onChange" onChange={action('onChange!!')} />
       </li>
       <li>
         <Txt>onBlur</Txt>
-        <Input onBlur={action('onBlur!!')} />
+        <Input name="onBlur" onBlur={action('onBlur!!')} />
       </li>
       <li>
         <Txt>disabled</Txt>
-        <Input disabled={true} defaultValue="これは disabled なテキスト" />
+        <Input name="disabled" disabled={true} defaultValue="これは disabled なテキスト" />
       </li>
       <li>
         <Txt>error</Txt>
-        <Input error={true} />
+        <Input name="error" error={true} />
       </li>
       <li>
         <Txt>disabled and error</Txt>
-        <Input disabled={true} error={true} />
+        <Input name="disabled" disabled={true} error={true} />
         <Note themes={theme}> `disabled` takes precedence over `error`</Note>
       </li>
       <li>
         <Txt>prefix</Txt>
-        <Input prefix={<FaSearchIcon />} />
+        <Input name="prefix" prefix={<FaSearchIcon />} />
       </li>
       <li>
         <Txt>suffix</Txt>
-        <Input suffix={<FaSearchIcon />} />
+        <Input name="suffix" suffix={<FaSearchIcon />} />
       </li>
       <li>
         <Txt>extending style (width 50%)</Txt>
-        <StyledInput />
+        <StyledInput name="extending_style" />
       </li>
     </List>
   )
@@ -88,6 +88,7 @@ export const Currency: Story = () => {
     <Wrapper>
       <Txt>currency (add comma to integer every 3 digits)</Txt>
       <CurrencyInput
+        name="currency"
         value={value}
         onChange={(e) => {
           action('changed')(e)

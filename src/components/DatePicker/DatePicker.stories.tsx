@@ -16,11 +16,12 @@ export const All: Story = () => {
     <List>
       <dt>DatePicker</dt>
       <dd>
-        <DatePicker onChangeDate={action('change')} data-test="datepicker-1" />
+        <DatePicker name="default" onChangeDate={action('change')} data-test="datepicker-1" />
       </dd>
       <dt>Pass `from`, `to`</dt>
       <dd>
         <DatePicker
+          name="from_to"
           from={new Date(1901, 0, 1)}
           to={new Date(2100, 11, 30)}
           onChangeDate={action('change')}
@@ -29,6 +30,7 @@ export const All: Story = () => {
       <dt>Custom format (ex. Date.toDateString)</dt>
       <dd>
         <DatePicker
+          name="custom_format"
           value={value}
           formatDate={(_date) => {
             if (!_date) return ''
@@ -42,19 +44,23 @@ export const All: Story = () => {
       </dd>
       <dt>Show Alternative Formatted Date</dt>
       <dd>
-        <DatePicker value="1994/09/28" showAlternative={() => '平成6年9月28日'} />
+        <DatePicker
+          name="show_alternative"
+          value="1994/09/28"
+          showAlternative={() => '平成6年9月28日'}
+        />
       </dd>
       <dt>Disabled</dt>
       <dd>
-        <DatePicker disabled />
+        <DatePicker name="disabled" disabled />
       </dd>
       <dt>Extending style (width: 50%)</dt>
       <dd>
-        <ExtendingDatePicker onChangeDate={action('change')} />
+        <ExtendingDatePicker name="extending_style" onChangeDate={action('change')} />
       </dd>
       <dt className="bottom">Place on the page bottom</dt>
       <dd>
-        <DatePicker onChangeDate={action('change')} />
+        <DatePicker name="place_on_the_page_bottom" onChangeDate={action('change')} />
       </dd>
     </List>
   )

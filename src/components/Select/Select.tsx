@@ -82,7 +82,8 @@ export const Select = forwardRef(
         className={`${className} ${classNames.wrapper} ${generateSizeClassName(size)}`}
         $width={widthStyle}
       >
-        <SelectBox
+        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+        <StyledSelect
           {...props}
           onChange={handleChange}
           aria-invalid={error || undefined}
@@ -117,7 +118,7 @@ export const Select = forwardRef(
             // Support for not omitting labels in Mobile Safari
             isMobileSafari && <BlankOptgroup />
           }
-        </SelectBox>
+        </StyledSelect>
         <IconWrap themes={theme}>
           <FaSortIcon />
         </IconWrap>
@@ -137,7 +138,7 @@ const Wrapper = styled.div<{
     width: ${$width};
   `}
 `
-const SelectBox = styled.select<{
+const StyledSelect = styled.select<{
   error?: boolean
   themes: Theme
 }>`
@@ -198,10 +199,10 @@ const IconWrap = styled.span<{ themes: Theme }>`
     align-items: center;
     color: ${color.TEXT_GREY};
 
-    ${SelectBox}:disabled + & {
+    ${StyledSelect}:disabled + & {
       color: ${color.TEXT_DISABLED};
     }
-    ${SelectBox}:focus-visible + & {
+    ${StyledSelect}:focus-visible + & {
       color: ${color.TEXT_BLACK};
     }
 

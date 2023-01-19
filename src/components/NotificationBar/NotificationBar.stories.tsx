@@ -141,13 +141,13 @@ export const Demo: Story = () => {
         <Stack>
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label>
-            <CheckBox onChange={() => setBold(!bold)} checked={bold}>
+            <CheckBox name="bold" onChange={() => setBold(!bold)} checked={bold}>
               bold
             </CheckBox>
           </label>
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label>
-            <CheckBox onChange={() => setAnimate(!animate)} checked={animate}>
+            <CheckBox name="animate" onChange={() => setAnimate(!animate)} checked={animate}>
               animate
             </CheckBox>
           </label>
@@ -157,6 +157,7 @@ export const Demo: Story = () => {
               {messageTypes.map((type) => (
                 <label key={type}>
                   <RadioButton
+                    name="message_type"
                     value={type}
                     checked={messageType === type}
                     onChange={({ currentTarget: { value } }) =>

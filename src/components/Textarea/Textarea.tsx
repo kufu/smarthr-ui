@@ -114,6 +114,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
     return (
       <>
+        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <StyledTextarea
           {...props}
           {...(maxLength ? { onKeyUp: handleKeyup } : {})}

@@ -48,19 +48,19 @@ export const ClusterStory: Story = () => {
         <figcaption>垂直方向と水平方向で異なった余白を設定できます。</figcaption>
         <StyledBase>
           <Cluster gap={{ row: 'X3S', column: 'XS' }}>
-            <RadioButton name="部署" defaultChecked={true}>
+            <RadioButton name="department" defaultChecked={true}>
               申請者に戻す
             </RadioButton>
-            <RadioButton name="部署" defaultChecked={false}>
+            <RadioButton name="department" defaultChecked={false}>
               ステップ1に戻す
             </RadioButton>
-            <RadioButton name="部署" defaultChecked={false}>
+            <RadioButton name="department" defaultChecked={false}>
               ステップ2に戻す
             </RadioButton>
-            <RadioButton name="部署" defaultChecked={false}>
+            <RadioButton name="department" defaultChecked={false}>
               ステップ3に戻す
             </RadioButton>
-            <RadioButton name="部署" defaultChecked={false}>
+            <RadioButton name="department" defaultChecked={false}>
               ステップ4に戻す
             </RadioButton>
           </Cluster>
