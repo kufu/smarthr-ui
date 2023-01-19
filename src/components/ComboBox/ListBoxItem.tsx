@@ -25,19 +25,13 @@ function ListBoxItem<T>({ option, isActive, onAdd, onSelect, onMouseOver, active
     onAdd(option)
   }, [onAdd, option])
 
-  const handleSelect = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      onSelect(option)
-    },
-    [onSelect, option],
-  )
+  const handleSelect = useCallback(() => {
+    onSelect(option)
+  }, [onSelect, option])
 
-  const handleMouseOver = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      onMouseOver(option)
-    },
-    [onMouseOver, option],
-  )
+  const handleMouseOver = useCallback(() => {
+    onMouseOver(option)
+  }, [onMouseOver, option])
 
   const theme = useTheme()
   const { listBoxClassNames: classNames } = useContext(ComboBoxContext)
