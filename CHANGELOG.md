@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [25.1.0](https://github.com/kufu/smarthr-ui/compare/v25.0.2...v25.1.0) (2023-01-19)
+
+
+### Features
+
+* グラフ色を追加 ([#3023](https://github.com/kufu/smarthr-ui/issues/3023)) ([dff34e8](https://github.com/kufu/smarthr-ui/commit/dff34e866c9d0ad076c2a7f6d8ca5609a3e7128a))
+
+
+### Bug Fixes
+
+* MultiComboBox と FilterDropdown を組み合わせて使うと特定の状況で意図せずドロップダウンが閉じるのを修正した ([#3035](https://github.com/kufu/smarthr-ui/issues/3035)) ([8afd405](https://github.com/kufu/smarthr-ui/commit/8afd405d4621effdf6d09de654c6aeba16834946))
+
 ### [25.0.2](https://github.com/kufu/smarthr-ui/compare/v25.0.1...v25.0.2) (2022-12-27)
 
 
