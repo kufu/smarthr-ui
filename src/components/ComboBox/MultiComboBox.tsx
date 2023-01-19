@@ -175,29 +175,37 @@ export function MultiComboBox<T>({
   })
   const handleDelete = useCallback(
     (item: ComboBoxItem<T>) => {
-      onDelete && onDelete(item)
-      onChangeSelected &&
-        onChangeSelected(
-          selectedItems.filter(
-            (selected) => selected.label !== item.label || selected.value !== item.value,
-          ),
-        )
+      // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+      requestAnimationFrame(() => {
+        onDelete && onDelete(item)
+        onChangeSelected &&
+          onChangeSelected(
+            selectedItems.filter(
+              (selected) => selected.label !== item.label || selected.value !== item.value,
+            ),
+          )
+      })
     },
     [onChangeSelected, onDelete, selectedItems],
   )
   const handleSelect = useCallback(
     (selected: ComboBoxItem<T>) => {
-      const matchedSelectedItem = selectedItems.find(
-        (item) => item.label === selected.label && item.value === selected.value,
-      )
-      if (matchedSelectedItem !== undefined) {
-        if (matchedSelectedItem.deletable !== false) {
-          handleDelete(selected)
+      // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+      requestAnimationFrame(() => {
+        const matchedSelectedItem = selectedItems.find(
+          (item) => item.label === selected.label && item.value === selected.value,
+        )
+        if (matchedSelectedItem !== undefined) {
+          if (matchedSelectedItem.deletable !== false) {
+            handleDelete(selected)
+          }
+        } else {
+          onSelect && onSelect(selected)
+          onChangeSelected && onChangeSelected(selectedItems.concat(selected))
         }
-      } else {
-        onSelect && onSelect(selected)
-        onChangeSelected && onChangeSelected(selectedItems.concat(selected))
-      }
+      })
     },
     [handleDelete, onChangeSelected, onSelect, selectedItems],
   )

@@ -27,7 +27,6 @@ function ListBoxItem<T>({ option, isActive, onAdd, onSelect, onMouseOver, active
 
   const handleSelect = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation()
       onSelect(option)
     },
     [onSelect, option],
@@ -35,7 +34,6 @@ function ListBoxItem<T>({ option, isActive, onAdd, onSelect, onMouseOver, active
 
   const handleMouseOver = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation()
       onMouseOver(option)
     },
     [onMouseOver, option],
