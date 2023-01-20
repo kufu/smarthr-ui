@@ -81,14 +81,14 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         decorators.beforeMaxLengthCount
           ? decorators.beforeMaxLengthCount(TEXT_BEFORE_MAXlENGTH_COUNT)
           : TEXT_BEFORE_MAXlENGTH_COUNT,
-      [decorators.beforeMaxLengthCount],
+      [decorators],
     )
     const afterMaxLengthCount = useMemo(
       () =>
         decorators.afterMaxLengthCount
           ? decorators.afterMaxLengthCount(TEXT_AFTER_MAXlENGTH_COUNT)
           : TEXT_AFTER_MAXlENGTH_COUNT,
-      [decorators.afterMaxLengthCount],
+      [decorators],
     )
 
     useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(

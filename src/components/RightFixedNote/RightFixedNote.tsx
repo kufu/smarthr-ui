@@ -50,7 +50,7 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
 
   const submitLabel = useMemo(
     () => (decorators.submitLabel ? decorators.submitLabel(SUBMIT_LABEL) : SUBMIT_LABEL),
-    [decorators.submitLabel],
+    [decorators],
   )
 
   const handleSubmit = useCallback(
