@@ -25,7 +25,7 @@ import {
 } from '.'
 
 export default {
-  title: 'Dialog',
+  title: 'Dialog（ダイアログ）/Dialog',
   component: Dialog,
   subcomponents: {
     DialogContent,

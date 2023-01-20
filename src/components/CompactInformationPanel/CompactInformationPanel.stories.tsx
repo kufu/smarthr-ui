@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { CompactInformationPanel } from '.'
 
 export default {
-  title: 'CompactInformationPanel',
+  title: 'Data Display（データ表示）/CompactInformationPanel',
   component: CompactInformationPanel,
 }
 

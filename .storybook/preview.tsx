@@ -29,6 +29,21 @@ export const parameters = {
   options: {
     isFullscreen: false,
     isToolshown: true,
+    storySort: {
+      // 並び替え方針がないためアルファベット順
+      order: [
+        'Buttons（ボタン）',
+        'Data Display（データ表示）',
+        'Dialog（ダイアログ）',
+        'Forms（フォーム）',
+        'Layouts（レイアウト）',
+        'Media（メディア）',
+        'Navigation（ナビゲーション）',
+        'Page Templates（ページテンプレート）',
+        'States（状態）',
+        'Text（テキスト）',
+      ],
+    },
   },
   viewport: { viewports: INITIAL_VIEWPORTS },
   docs: {

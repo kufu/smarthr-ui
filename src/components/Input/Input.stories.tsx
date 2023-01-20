@@ -11,7 +11,7 @@ import { Input } from './Input'
 import { SearchInput } from './SearchInput'
 
 export default {
-  title: 'Input',
+  title: 'Forms（フォーム）/Input',
   component: Input,
   subcomponents: { CurrencyInput, SearchInput },
   parameters: {

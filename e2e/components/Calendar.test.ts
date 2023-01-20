@@ -1,7 +1,9 @@
 import { Selector } from 'testcafe'
 
 fixture('Calendar')
-  .page('http://localhost:6006/iframe.html?id=calendar--all&viewMode=story')
+  .page(
+    'http://localhost:6006/iframe.html?args=&id=data-display（データ表示）-calendar--all&viewMode=story',
+  )
   .beforeEach(async (t) => {
     await t.maximizeWindow()
   })

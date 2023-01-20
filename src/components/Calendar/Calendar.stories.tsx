@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { Calendar } from './Calendar'
 
 export default {
-  title: 'Calendar',
+  title: 'Data Display（データ表示）/Calendar',
   component: Calendar,
 }
 

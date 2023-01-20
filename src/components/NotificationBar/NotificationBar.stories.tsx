@@ -13,7 +13,7 @@ import { TextLink as shrTextLink } from '../TextLink'
 import { NotificationBar, messageTypes } from './NotificationBar'
 
 export default {
-  title: 'NotificationBar',
+  title: 'States（状態）/NotificationBar',
   component: NotificationBar,
   parameters: {
     withTheming: true,

@@ -6,7 +6,7 @@ import { Stack } from '../Layout'
 import { PageCounter } from './PageCounter'
 
 export default {
-  title: 'PageCounter',
+  title: 'Data Display（データ表示）/PageCounter',
   component: PageCounter,
 }
 

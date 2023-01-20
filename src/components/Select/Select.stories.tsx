@@ -8,7 +8,7 @@ import { Stack } from '../Layout'
 import { Select } from './Select'
 
 export default {
-  title: 'Select',
+  title: 'Forms（フォーム）/Select',
   component: Select,
 }
 

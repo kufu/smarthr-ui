@@ -7,7 +7,7 @@ import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from './StatusLabel'
 
 export default {
-  title: 'StatusLabel',
+  title: 'States（状態）/StatusLabel',
   component: StatusLabel,
   parameters: {
     withTheming: true,
