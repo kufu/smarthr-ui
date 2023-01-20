@@ -8,7 +8,15 @@ import { LineUp } from '../LineUp'
 
 import { Stack } from '.'
 
-export const StackStory: Story = () => (
+export default {
+  title: 'Layouts（レイアウト）/Stack',
+  component: Stack,
+  parameters: {
+    withTheming: true,
+  },
+}
+
+export const All: Story = () => (
   <LineUp gap={2}>
     <Content>
       <Stack recursive>
@@ -46,7 +54,6 @@ export const StackStory: Story = () => (
     </SideAreaStack>
   </LineUp>
 )
-StackStory.parameters = { withTheming: true }
 
 const SideAreaStack = styled(Stack)`
   flex: 1;

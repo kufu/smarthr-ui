@@ -1,7 +1,9 @@
 import { Selector } from 'testcafe'
 
 fixture('MultiComboBox')
-  .page('http://localhost:6006/iframe.html?id=combobox--multi&viewMode=story')
+  .page(
+    'http://localhost:6006/iframe.html?args=&id=forms（フォーム）-combobox--multi&viewMode=story',
+  )
   .beforeEach(async (t) => {
     await t.maximizeWindow()
   })

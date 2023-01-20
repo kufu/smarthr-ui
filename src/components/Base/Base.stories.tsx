@@ -9,7 +9,7 @@ import { Base, LayerKeys, layerMap } from './Base'
 import { DialogBase } from './DialogBase'
 
 export default {
-  title: 'Base',
+  title: 'Data Display（データ表示）/Base',
   component: Base,
 }
 
@@ -90,7 +90,7 @@ export const DialogBaseStory: Story = () => (
     </li>
   </List>
 )
-DialogBaseStory.storyName = 'DialogBase'
+DialogBaseStory.storyName = 'DialogBase（非推奨）'
 
 const DescriptionList = styled.dl`
   padding: 24px;

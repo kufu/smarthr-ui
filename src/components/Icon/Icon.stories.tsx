@@ -11,7 +11,7 @@ const icons: Array<React.ComponentType<Icons.ComponentProps>> = Object.values(Ic
 const { FaAddressBookIcon, FaBullhornIcon, FaInfoCircleIcon } = Icons
 
 export default {
-  title: 'Icon',
+  title: 'Media（メディア）/Icon',
   component: FaAddressBookIcon,
 }
 

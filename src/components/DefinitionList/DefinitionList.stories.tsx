@@ -11,7 +11,7 @@ import { Text } from '../Text'
 import { DefinitionList } from './DefinitionList'
 
 export default {
-  title: 'DefinitionList',
+  title: 'Data Display（データ表示）/DefinitionList',
   component: DefinitionList,
   parameters: {
     withTheming: true,

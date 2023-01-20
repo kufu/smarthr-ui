@@ -7,7 +7,7 @@ import { FaFlagIcon } from '../Icon'
 import { TextLink } from './TextLink'
 
 export default {
-  title: 'TextLink ',
+  title: 'Text（テキスト）/TextLink',
   component: TextLink,
   parameters: {
     withTheming: true,

@@ -8,7 +8,7 @@ import { Stack } from '../Layout'
 import { AppLauncher, Header, HeaderDropdownButton, HeaderLink } from '.'
 
 export default {
-  title: 'Header',
+  title: 'Navigation（ナビゲーション）/Header',
   component: Header,
 }
 

@@ -10,7 +10,7 @@ import { Stack } from '../Layout'
 import { FloatArea } from './FloatArea'
 
 export default {
-  title: 'FloatArea',
+  title: 'Navigation（ナビゲーション）/FloatArea',
   component: FloatArea,
 }
 

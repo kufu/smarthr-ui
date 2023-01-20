@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { Balloon } from './Balloon'
 
 export default {
-  title: 'Balloon',
+  title: 'Data Display（データ表示）/Balloon',
   component: Balloon,
 }
 

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { CheckBox } from './CheckBox'
 
 export default {
-  title: 'CheckBox',
+  title: 'Forms（フォーム）/CheckBox',
   component: CheckBox,
 }
 

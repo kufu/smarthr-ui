@@ -6,7 +6,7 @@ import { Stack } from '../Layout'
 import { InformationPanel } from './InformationPanel'
 
 export default {
-  title: 'InformationPanel',
+  title: 'Data Display（データ表示）/InformationPanel',
   component: InformationPanel,
 }
 
