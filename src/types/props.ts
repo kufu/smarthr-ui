@@ -17,3 +17,7 @@ export interface StyledProperties {
   tabletSize?: Size
   spSize?: Size
 }
+
+export type DecoratorsType<T> = {
+  [K in T]: (text: string) => ReactNode
+}
