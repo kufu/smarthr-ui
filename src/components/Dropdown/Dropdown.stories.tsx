@@ -13,9 +13,9 @@ import { RadioButton } from '../RadioButton'
 import { Text } from '../Text'
 
 import { Dropdown } from './Dropdown'
-import { DropdownButton } from './DropdownButton'
 import { DropdownCloser } from './DropdownCloser'
 import { DropdownContent } from './DropdownContent'
+import { DropdownMenuButton } from './DropdownMenuButton'
 import { DropdownScrollArea } from './DropdownScrollArea'
 import { DropdownTrigger } from './DropdownTrigger'
 import { FilterDropdown } from './FilterDropdown'
@@ -24,7 +24,7 @@ export default {
   title: 'Dropdown',
   component: Dropdown,
   subcomponents: {
-    DropdownButton,
+    DropdownMenuButton,
     FilterDropdown,
     DropdownTrigger,
     DropdownContent,
@@ -243,7 +243,7 @@ const Template: Story = () => {
 }
 export const All = Template.bind({})
 
-export { Default as DropdownButton } from './DropdownButton/DropdownButton.stories'
+export { Default as DropdownMenuButton } from './DropdownMenuButton/DropdownMenuButton.stories'
 export { Default as FilterDropdown } from './FilterDropdown/FilterDropdown.stories'
 
 export const RegOpenDropdown = Template.bind({})
