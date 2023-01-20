@@ -1,4 +1,5 @@
-import React, { FormHTMLAttributes, VFC, useCallback } from 'react'
+import React, { FormHTMLAttributes, ReactNode, VFC, useCallback } from 'react'
+import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
@@ -12,7 +13,7 @@ import { useClassNames } from './useClassNames'
 
 type Props = {
   /** コンポーネントのタイトル */
-  title: string
+  title: ReactNode
   /** 表示するアイテムの配列 */
   items?: ItemProps[]
   /** submit ボタンのラベル */
@@ -20,7 +21,7 @@ type Props = {
   /** コンポーネントの幅 */
   width?: number
   /** textarea のラベル */
-  textareaLabel?: string
+  textareaLabel?: ReactNode
   /** edit ボタンを押下したときに発火するコールバック関数 */
   onClickEdit: OnClickEdit
   /** submit ボタンを押下したときに発火するコールバック関数 */
@@ -88,7 +89,7 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
         id={textareaId}
         name={TEXT_AREA_NAME}
         themes={theme}
-        aria-label={textareaLabel ? textareaLabel : title}
+        aria-label={innerText(textareaLabel || title)}
         className={classNames.textarea}
       />
 
