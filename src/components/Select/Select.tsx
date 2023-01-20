@@ -9,6 +9,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { isMobileSafari } from '../../libs/ua'
+import { DecoratorsType } from '../../types'
 import { FaSortIcon } from '../Icon'
 
 import { useClassNames } from './useClassNames'
@@ -36,16 +37,19 @@ type BaseProps<T extends string> = {
 type WithBlankProps<T extends string> = BaseProps<T> & {
   /** 空の選択肢を表示するかどうか */
   hasBlank: true
-  /** 空の選択肢のラベル */
-  blankLabel?: string
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'blankLabel'>
 }
 type WithoutBlankProps<T extends string> = BaseProps<T> & {
   /** 空の選択肢を表示するかどうか */
   hasBlank?: false
+  decorators?: undefined
 }
 type Props<T extends string> = WithBlankProps<T> | WithoutBlankProps<T>
 
 type ElementProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, keyof Props<string> | 'children'>
+
+const BLANK_LABEL = '選択してください'
 
 export const Select = forwardRef(
   <T extends string>(
@@ -56,7 +60,7 @@ export const Select = forwardRef(
       error = false,
       width = 'auto',
       hasBlank = false,
-      blankLabel = '選択してください',
+      decorators = {},
       size = 'default',
       className = '',
       disabled,
@@ -99,7 +103,11 @@ export const Select = forwardRef(
           disabled={disabled}
           ref={ref}
         >
-          {hasBlank && <option value="">{blankLabel}</option>}
+          {hasBlank && (
+            <option value="">
+              {decorators.blankLabel ? decorators.blankLabel(BLANK_LABEL) : BLANK_LABEL}
+            </option>
+          )}
           {options.map((option) => {
             if ('value' in option) {
               return (

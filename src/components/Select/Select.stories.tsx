@@ -96,6 +96,17 @@ export const All: Story = () => (
     </li>
     <li>
       <Text>
+        <span>空の選択肢を表示(文言も変更)</span>
+        <Select
+          name="hasBlank"
+          hasBlank
+          decorators={{ blankLabel: (txt) => `blank.(${txt})` }}
+          options={options}
+        />
+      </Text>
+    </li>
+    <li>
+      <Text>
         <span>onChange</span>
         <Select
           name="onChange"
