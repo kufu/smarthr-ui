@@ -11,6 +11,7 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
 
@@ -32,9 +33,7 @@ export type Props = {
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
   /** コンポーネント内のテキストを変更する関数 */
-  decorator?: {
-    destroy?: (text: string) => ReactNode
-  }
+  decorators?: DecoratorsType<'destroy'>
 }
 type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
@@ -50,14 +49,14 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       onChange,
       disabled = false,
       error,
-      decorator = {},
+      decorators = {},
       ...props
     },
     ref,
   ) => {
     const theme = useTheme()
     const [files, setFiles] = useState<File[]>([])
-    const { destroy: destroyDecorator } = decorator
+    const { destroy: destroyDecorator } = decorators
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesDirectly = useRef(false)
