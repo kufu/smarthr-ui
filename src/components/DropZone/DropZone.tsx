@@ -11,6 +11,7 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 
@@ -35,7 +36,11 @@ type DropZoneProps = {
   multiple?: boolean
   children?: React.ReactNode
   name?: string
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'selectButtonLabel'>
 }
+
+const SELECT_BUTTON_LABEL = 'ファイルを選択'
 
 const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
   e.preventDefault()
@@ -43,7 +48,7 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 }
 
 export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProps>(
-  ({ children, onSelectFiles, accept, multiple = true, name }, ref) => {
+  ({ children, onSelectFiles, accept, multiple = true, name, decorators = {} }, ref) => {
     const theme = useTheme()
     const classNames = useClassNames()
     const fileRef = useRef<HTMLInputElement>(null)
@@ -97,7 +102,7 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
       >
         {children}
         <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
-          ファイルを選択
+          {decorators.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL}
         </Button>
         <input
           ref={fileRef}
