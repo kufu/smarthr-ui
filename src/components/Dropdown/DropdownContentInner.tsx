@@ -13,6 +13,7 @@ type Props = {
   children: React.ReactNode
   className: string
   controllable: boolean
+  width?: number | string
 }
 
 export type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
@@ -31,6 +32,7 @@ export const DropdownContentInner: VFC<Props & ElementProps> = ({
   children,
   className,
   controllable,
+  width,
   ...props
 }) => {
   const theme = useTheme()
@@ -76,6 +78,7 @@ export const DropdownContentInner: VFC<Props & ElementProps> = ({
   return (
     <Wrapper
       {...props}
+      $width={width}
       ref={wrapperRef}
       contentBox={contentBox}
       className={`${className} ${isActive ? 'active' : ''}`}
@@ -99,8 +102,9 @@ export const DropdownContentInner: VFC<Props & ElementProps> = ({
 const Wrapper = styled.div<{
   themes: Theme
   contentBox: ContentBoxStyle
+  $width?: number | string
 }>`
-  ${({ contentBox, themes }) => {
+  ${({ contentBox, themes, $width }) => {
     const { color, radius, zIndex, shadow, spacingByChar } = themes
     const leftMargin =
       contentBox.left === undefined ? spacingByChar(0.5) : `max(${contentBox.left}, 0px)`
@@ -121,7 +125,14 @@ const Wrapper = styled.div<{
       css`
         right: ${contentBox.right};
       `}
-      max-width: calc(100% - ${leftMargin} - ${rightMargin});
+      ${$width === undefined &&
+      css`
+        max-width: ${`calc(100% - ${leftMargin} - ${rightMargin}) `};
+      `}
+      ${$width &&
+      css`
+        width: ${typeof $width === 'number' ? `${$width}px` : $width};
+      `}
       word-break: break-word;
       border-radius: ${radius.m};
       box-shadow: ${shadow.LAYER3};

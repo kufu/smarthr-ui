@@ -109,6 +109,20 @@ export const Default: Story = () => {
             </Text>
           </FilterDropdown>
         </dd>
+        <dt>with contentWidth</dt>
+        <dd>
+          <FilterDropdown
+            isFiltered={isFiltered4}
+            onApply={() => setIsFiltered4(true)}
+            onReset={() => setIsFiltered4(false)}
+            contentWidth="700px"
+          >
+            <Text>
+              The width of this dropbox is fixed to `contentWidth`. And does not shrink even if the
+              window width gets smaller.
+            </Text>
+          </FilterDropdown>
+        </dd>
       </List>
     </Wrapper>
   )

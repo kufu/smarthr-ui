@@ -26,6 +26,7 @@ type Props = {
   scrollable?: boolean
   /** コンポーネントに適用するクラス名 */
   className?: string
+  width?: number | string
   children?: React.ReactNode
 }
 

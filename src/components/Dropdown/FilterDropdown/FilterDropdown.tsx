@@ -18,6 +18,7 @@ type Props = {
   onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
+  contentWidth?: string | number
   decorator?: {
     status?: DecoratorFunctionType
     triggerButton?: DecoratorFunctionType
@@ -45,6 +46,7 @@ export const FilterDropdown: VFC<Props> = ({
   onReset,
   children,
   hasStatusText,
+  contentWidth,
   decorator = {},
 }: Props) => {
   const {
@@ -97,7 +99,7 @@ export const FilterDropdown: VFC<Props> = ({
         </Button>
       </DropdownTrigger>
       {hasStatusText && isFiltered ? <StatusText themes={themes}>{status}</StatusText> : null}
-      <DropdownContent controllable>
+      <DropdownContent controllable width={contentWidth}>
         <DropdownScrollArea>
           <ContentLayout>{children}</ContentLayout>
         </DropdownScrollArea>
