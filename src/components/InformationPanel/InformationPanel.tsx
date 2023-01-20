@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, HeadingTagTypes } from '../Heading'
@@ -28,10 +29,8 @@ type Props = {
   type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
   /** `true` のとき、開閉ボタンを表示する */
   togglable?: boolean
-  /** 開くボタンのラベル */
-  openButtonLabel?: React.ReactNode
-  /** 閉じるボタンのラベル */
-  closeButtonLabel?: React.ReactNode
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'openButtonLabel' | 'closeButtonLabel'>
   /** パネルの開閉の状態 */
   active?: boolean
   /** コンポーネントに適用するクラス名 */
@@ -42,13 +41,15 @@ type Props = {
   onClickTrigger?: (active: boolean) => void
 }
 
+const OPEN_BUTTON_LABEL = '開く'
+const CLOSE_BUTTON_LABEL = '閉じる'
+
 export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> = ({
   title,
   titleTag = 'h3',
   type,
   togglable = true,
-  openButtonLabel = '開く',
-  closeButtonLabel = '閉じる',
+  decorators = {},
   active: activeProps = true,
   className = '',
   children,
@@ -128,7 +129,13 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
               aria-controls={contentId}
               className={classNames.closeButton}
             >
-              {active ? closeButtonLabel : openButtonLabel}
+              {active
+                ? decorators.closeButtonLabel
+                  ? decorators.closeButtonLabel(CLOSE_BUTTON_LABEL)
+                  : CLOSE_BUTTON_LABEL
+                : decorators.openButtonLabel
+                ? decorators.openButtonLabel(OPEN_BUTTON_LABEL)
+                : OPEN_BUTTON_LABEL}
             </TogglableButton>
           )}
         </Header>
