@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -11,6 +12,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
+import { DecoratorsType } from '../../types/props'
 
 import { useClassNames } from './useClassNames'
 
@@ -27,6 +29,8 @@ type Props = {
   maxRows?: number
   /** 行数の初期値。省略した場合は2 */
   rows?: number
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'beforeMaxLengthCount' | 'afterMaxLengthCount'>
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
    */
@@ -47,6 +51,9 @@ const getStringLength = (value: string | number | readonly string[]) => {
   return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
 
+const TEXT_BEFORE_MAXlENGTH_COUNT = 'あと'
+const TEXT_AFTER_MAXlENGTH_COUNT = '文字'
+
 export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
   (
     {
@@ -58,6 +65,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       maxRows = Infinity,
       rows = 2,
       onInput,
+      decorators,
       ...props
     },
     ref,
@@ -68,6 +76,17 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
     const textAreaWidth = typeof width === 'number' ? `${width}px` : width
+    const beforeMaxLengthCount = useMemo(
+      () =>
+        decorators?.beforeMaxLengthCount?.(TEXT_BEFORE_MAXlENGTH_COUNT) ||
+        TEXT_BEFORE_MAXlENGTH_COUNT,
+      [decorators],
+    )
+    const afterMaxLengthCount = useMemo(
+      () =>
+        decorators?.afterMaxLengthCount?.(TEXT_AFTER_MAXlENGTH_COUNT) || TEXT_AFTER_MAXlENGTH_COUNT,
+      [decorators],
+    )
 
     useImperativeHandle<HTMLTextAreaElement | null, HTMLTextAreaElement | null>(
       ref,
@@ -128,11 +147,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         />
         {maxLength && (
           <Counter themes={theme} className={classNames.counter}>
-            あと
+            {beforeMaxLengthCount}
             <span className={maxLength && maxLength - count <= 0 ? 'error' : ''}>
               {maxLength - count}
             </span>
-            文字
+            {afterMaxLengthCount}
           </Counter>
         )}
       </>
