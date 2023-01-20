@@ -13,7 +13,7 @@ import { HeaderDropdownButton } from '.'
 
 type Tenant = {
   id: string
-  name: string
+  name: React.ReactNode
 }
 type Props = {
   /** ロゴ */
