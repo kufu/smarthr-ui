@@ -81,6 +81,7 @@ export const Default: Story = () => {
           </Description>
           <Content>
             <DatePicker
+              name="dialog_datepicker"
               value={date?.toDateString()}
               formatDate={(_date) => (_date ? _date.toDateString() : '')}
               onChangeDate={(_date) => setDate(_date)}
@@ -130,7 +131,7 @@ export const Default: Story = () => {
         >
           <Title>特定の要素をフォーカスするダイアログ</Title>
           <Content>
-            <Input ref={inputRef} data-test="input-focus-target" />
+            <Input ref={inputRef} name="input_focus_target" data-test="input-focus-target" />
           </Content>
           <Footer>
             <Button onClick={onClickClose} data-test="dialog-closer">
@@ -305,7 +306,11 @@ export const Action_Dialog: Story = () => {
           <div style={{ padding: '2rem' }}>
             <Stack align="flex-start">
               <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
-              <Input ref={openedFocusRef} data-test="opened-dialog-focus-target" />
+              <Input
+                ref={openedFocusRef}
+                name="opened_dialog_focus_target"
+                data-test="opened-dialog-focus-target"
+              />
             </Stack>
           </div>
         </ActionDialog>
@@ -554,18 +559,18 @@ export const Modeless_Dialog: Story = () => {
             <Stack gap="S">
               <ModelessContentPart>
                 <LineUp gap="S">
-                  <RadioButton>ラジオボタン1</RadioButton>
-                  <RadioButton>ラジオボタン2</RadioButton>
+                  <RadioButton name="modeless_dialog_center_radio_1">ラジオボタン1</RadioButton>
+                  <RadioButton name="modeless_dialog_center_radio_2">ラジオボタン2</RadioButton>
                 </LineUp>
               </ModelessContentPart>
               <ModelessContentPart>
-                <DatePicker />
+                <DatePicker name="modeless_dialog_center_datepicker" />
               </ModelessContentPart>
               <Table>
                 <Head>
                   <Row>
                     <Cell>
-                      <CheckBox />
+                      <CheckBox name="modeless_dialog_center_checkbox" />
                     </Cell>
                     <Cell>テーブル見出し1</Cell>
                     <Cell>テーブル見出し2</Cell>
@@ -576,7 +581,7 @@ export const Modeless_Dialog: Story = () => {
                   {Array.from(Array(20).keys()).map((i) => (
                     <Row key={i}>
                       <Cell>
-                        <CheckBox />
+                        <CheckBox name={`modeless_dialog_center_checkbox_${i}`} />
                       </Cell>
                       <Cell>データ1-{i}</Cell>
                       <Cell>データ2-{i}</Cell>
@@ -675,7 +680,7 @@ export const RegOpendAction: Story = () => {
       </Description>
       <Content>
         <label>
-          <input type="checkbox" />
+          <input name="reg_opend_action_checkbox" type="checkbox" />
           Agree
         </label>
       </Content>

@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "25.0.2",
+  "version": "25.1.0",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "@smarthr/wareki": "^1.2.0",
@@ -48,7 +48,7 @@
     "babel-plugin-polyfill-regenerator": "^0.4.1",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
     "eslint": "^8.32.0",
-    "eslint-config-smarthr": "^6.6.1",
+    "eslint-config-smarthr": "^6.6.2",
     "fs-extra": "^11.1.0",
     "http-server": "^14.1.1",
     "husky": "^8.0.3",

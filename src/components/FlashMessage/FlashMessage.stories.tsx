@@ -91,7 +91,12 @@ export const Demo: Story = () => {
       <p>
         <label>
           text
-          <input type="text" value={text} onChange={(e) => setText(e.currentTarget.value)} />
+          <input
+            name="text"
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.currentTarget.value)}
+          />
         </label>
       </p>
       <p>
@@ -110,6 +115,7 @@ export const Demo: Story = () => {
         {messageTypes.map((messageType) => (
           <label key={messageType}>
             <input
+              name="messageType"
               type="radio"
               onChange={handleTypeChange}
               value={messageType}
@@ -125,6 +131,7 @@ export const Demo: Story = () => {
         {animationTypes.map((animationType) => (
           <label key={animationType}>
             <input
+              name="animationType"
               type="radio"
               onChange={handleAnimationChange}
               value={animationType}

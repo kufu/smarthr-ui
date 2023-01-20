@@ -23,6 +23,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     if (!children) {
       return (
         <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
+          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
           <RadioButtonInput {...props} ref={ref} className={classNames.radioButton} />
         </Wrapper>
       )
@@ -31,6 +32,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     return (
       <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
         <ButtonLayout $height={`${lineHeight}em`}>
+          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
           <RadioButtonInput {...props} ref={ref} id={radioButtonId} />
         </ButtonLayout>
 
