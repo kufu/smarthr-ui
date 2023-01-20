@@ -18,7 +18,7 @@ type Props = {
   onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
-  decorator?: {
+  decorators?: {
     status?: DecoratorFunctionType
     triggerButton?: DecoratorFunctionType
     applyButton?: DecoratorFunctionType
@@ -36,7 +36,7 @@ const CANCEL_BUTTON_TEXT = 'キャンセル'
 const RESET_BUTTON_TEXT = '絞り込み条件を解除'
 
 const executeDecorator = (defaultText: string, decorator: DecoratorFunctionType | undefined) =>
-  decorator ? decorator(defaultText) : defaultText
+  decorator?.(defaultText) || defaultText
 
 export const FilterDropdown: VFC<Props> = ({
   isFiltered = false,
@@ -45,7 +45,7 @@ export const FilterDropdown: VFC<Props> = ({
   onReset,
   children,
   hasStatusText,
-  decorator = {},
+  decorators = {},
 }: Props) => {
   const {
     status: statusDecorator,
@@ -53,7 +53,7 @@ export const FilterDropdown: VFC<Props> = ({
     applyButton: applyButtonDecorator,
     cancelButton: cancelButtonDecorator,
     resetButton: resetButtonDecorator,
-  } = decorator
+  } = decorators
   const themes = useTheme()
   const status: ReactNode = useMemo(
     () => executeDecorator(STATUS_FILTERED_TEXT, statusDecorator),
