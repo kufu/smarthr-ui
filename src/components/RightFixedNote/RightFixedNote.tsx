@@ -49,7 +49,7 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
   const theme = useTheme()
 
   const submitLabel = useMemo(
-    () => (decorators.submitLabel ? decorators.submitLabel(SUBMIT_LABEL) : SUBMIT_LABEL),
+    () => decorators.submitLabel?.(SUBMIT_LABEL) || SUBMIT_LABEL,
     [decorators],
   )
 

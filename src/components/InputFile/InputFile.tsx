@@ -68,7 +68,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     const destroyButtonText = useMemo(
-      () => (destroyDecorator ? destroyDecorator(DESTROY_BUTTON_TEXT) : DESTROY_BUTTON_TEXT),
+      () => destroyDecorator?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT,
       [destroyDecorator],
     )
     const inputWrapperClassName = useMemo(

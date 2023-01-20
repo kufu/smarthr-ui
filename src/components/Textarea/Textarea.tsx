@@ -78,16 +78,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const textAreaWidth = typeof width === 'number' ? `${width}px` : width
     const beforeMaxLengthCount = useMemo(
       () =>
-        decorators.beforeMaxLengthCount
-          ? decorators.beforeMaxLengthCount(TEXT_BEFORE_MAXlENGTH_COUNT)
-          : TEXT_BEFORE_MAXlENGTH_COUNT,
+        decorators.beforeMaxLengthCount?.(TEXT_BEFORE_MAXlENGTH_COUNT) ||
+        TEXT_BEFORE_MAXlENGTH_COUNT,
       [decorators],
     )
     const afterMaxLengthCount = useMemo(
       () =>
-        decorators.afterMaxLengthCount
-          ? decorators.afterMaxLengthCount(TEXT_AFTER_MAXlENGTH_COUNT)
-          : TEXT_AFTER_MAXlENGTH_COUNT,
+        decorators.afterMaxLengthCount?.(TEXT_AFTER_MAXlENGTH_COUNT) || TEXT_AFTER_MAXlENGTH_COUNT,
       [decorators],
     )
 
@@ -150,15 +147,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         />
         {maxLength && (
           <Counter themes={theme} className={classNames.counter}>
-            {decorators.beforeMaxLengthCount
-              ? decorators.beforeMaxLengthCount(TEXT_BEFORE_MAXlENGTH_COUNT)
-              : TEXT_BEFORE_MAXlENGTH_COUNT}
+            {beforeMaxLengthCount}
             <span className={maxLength && maxLength - count <= 0 ? 'error' : ''}>
               {maxLength - count}
             </span>
-            {decorators.afterMaxLengthCount
-              ? decorators.afterMaxLengthCount(TEXT_AFTER_MAXlENGTH_COUNT)
-              : TEXT_AFTER_MAXlENGTH_COUNT}
+            {afterMaxLengthCount}
           </Counter>
         )}
       </>

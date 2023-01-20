@@ -104,9 +104,7 @@ export const Select = forwardRef(
           ref={ref}
         >
           {hasBlank && (
-            <option value="">
-              {decorators.blankLabel ? decorators.blankLabel(BLANK_LABEL) : BLANK_LABEL}
-            </option>
+            <option value="">{decorators.blankLabel?.(BLANK_LABEL) || BLANK_LABEL}</option>
           )}
           {options.map((option) => {
             if ('value' in option) {

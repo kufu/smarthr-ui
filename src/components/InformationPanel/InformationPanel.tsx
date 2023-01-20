@@ -130,12 +130,8 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
               className={classNames.closeButton}
             >
               {active
-                ? decorators.closeButtonLabel
-                  ? decorators.closeButtonLabel(CLOSE_BUTTON_LABEL)
-                  : CLOSE_BUTTON_LABEL
-                : decorators.openButtonLabel
-                ? decorators.openButtonLabel(OPEN_BUTTON_LABEL)
-                : OPEN_BUTTON_LABEL}
+                ? decorators.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
+                : decorators.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
             </TogglableButton>
           )}
         </Header>
