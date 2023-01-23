@@ -19,8 +19,18 @@ export const All: Story = () => (
       title={<span>SmartHRの項目一覧表をダウンロード</span>}
       titleTag="h4"
       type="success"
-      openButtonLabel="開く"
-      closeButtonLabel="閉じる"
+      active={false}
+    >
+      従業員リストをダウンロードする際に指定するフォーマットを、カスタマイズして登録、管理できます。登録したフォーマットを利用することで、外部システムへの取り込みに適したファイルを書き出せます。詳しくは、カスタムダウンロードフォーマットの追加・編集・削除を参照してください。
+    </InformationPanel>
+    <InformationPanel
+      title={<span>SmartHRの項目一覧表をダウンロード</span>}
+      titleTag="h4"
+      type="success"
+      decorators={{
+        openButtonLabel: (txt) => `open.(${txt})`,
+        closeButtonLabel: (txt) => `close.(${txt})`,
+      }}
       active={false}
     >
       従業員リストをダウンロードする際に指定するフォーマットを、カスタマイズして登録、管理できます。登録したフォーマットを利用することで、外部システムへの取り込みに適したファイルを書き出せます。詳しくは、カスタムダウンロードフォーマットの追加・編集・削除を参照してください。
