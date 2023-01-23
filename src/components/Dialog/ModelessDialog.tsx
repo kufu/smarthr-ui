@@ -354,11 +354,10 @@ const DialogHandler = styled.div<{ themes: Theme }>`
     margin: auto;
     border-top-right-radius: ${radius.s};
     border-top-left-radius: ${radius.s};
-    color: transparent;
+    color: ${color.TEXT_GREY};
     display: flex;
     justify-content: center;
     transition: color 0.1s ease;
-    color: ${color.TEXT_GREY};
 
     &:focus-visible {
       color: ${color.TEXT_GREY};
