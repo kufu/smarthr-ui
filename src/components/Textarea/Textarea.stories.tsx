@@ -65,6 +65,21 @@ const Template: Story = () => {
           />
         </Label>
       </li>
+      <li>
+        <Label>
+          最大文字数 (decorators)
+          <Textarea
+            name="max_length_with_value_and_decorators"
+            maxLength={140}
+            value={value}
+            onChange={onChangeValue}
+            decorators={{
+              beforeMaxLengthCount: (txt) => `entry limit(${txt})`,
+              afterMaxLengthCount: (txt) => ` characters(${txt})`,
+            }}
+          />
+        </Label>
+      </li>
     </List>
   )
 }
