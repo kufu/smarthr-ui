@@ -19,7 +19,7 @@ module.exports = {
     'Stack.stories.tsx',
     'Center.stories.tsx',
     'FilterDropdown.stories.tsx',
-    'DropdownButton.stories.tsx',
+    'DropdownMenuButton.stories.tsx',
     'SearchInput.stories.tsx',
     /**
      * test-runner 導入時にエラーが出ていたコンポーネント
