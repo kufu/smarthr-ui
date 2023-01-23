@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { RadioButton } from './RadioButton'
 
 export default {
-  title: 'RadioButton',
+  title: 'Forms（フォーム）/RadioButton',
   component: RadioButton,
 }
 

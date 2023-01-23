@@ -7,7 +7,7 @@ import { BackgroundJobsList } from './BackgroundJobsList'
 import { BackgroundJobsPanel, JobProps } from './BackgroundJobsPanel'
 
 export default {
-  title: 'BackgroundJobsPanel',
+  title: 'Data Display（データ表示）/BackgroundJobsPanel',
   component: BackgroundJobsPanel,
   subcomponents: {
     BackgroundJobsList,

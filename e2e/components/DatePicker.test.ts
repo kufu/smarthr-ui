@@ -5,7 +5,9 @@ const dayjs = require('dayjs')
 const elementWithId = Selector((id) => document.getElementById(id))
 
 fixture('DatePicker')
-  .page('http://localhost:6006/iframe.html?id=datepicker--all&viewMode=story')
+  .page(
+    'http://localhost:6006/iframe.html?args=&id=forms（フォーム）-datepicker--all&viewMode=story',
+  )
   .beforeEach(async (t) => {
     await t.maximizeWindow()
   })

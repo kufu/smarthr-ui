@@ -9,7 +9,7 @@ import { StatusLabel } from '../StatusLabel'
 import { SideNav } from './SideNav'
 
 export default {
-  title: 'SideNav',
+  title: 'Navigation（ナビゲーション）/SideNav',
   component: SideNav,
 }
 

@@ -5,10 +5,10 @@ import { Button } from '../Button'
 import { FaQuestionCircleIcon } from '../Icon'
 import { Stack } from '../Layout'
 
-import { AppLauncher, Header, HeaderDropdownButton, HeaderLink } from '.'
+import { AppLauncher, Header, HeaderDropdownMenuButton, HeaderLink } from '.'
 
 export default {
-  title: 'Header',
+  title: 'Navigation（ナビゲーション）/Header',
   component: Header,
 }
 
@@ -19,9 +19,9 @@ export const all: Story = () => (
       <HeaderLink href="https://support.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
         ヘルプ
       </HeaderLink>
-      <HeaderDropdownButton label="info@example.com">
+      <HeaderDropdownMenuButton label="info@example.com">
         <Button>ログアウト</Button>
-      </HeaderDropdownButton>
+      </HeaderDropdownMenuButton>
     </Header>
     <Header
       tenants={[
@@ -35,9 +35,9 @@ export const all: Story = () => (
         ヘルプ
       </HeaderLink>
       <AppLauncher apps={launcher.apps} urlToShowAll={launcher.urlToShowAll} />
-      <HeaderDropdownButton label="info@example.com">
+      <HeaderDropdownMenuButton label="info@example.com">
         <Button>ログアウト</Button>
-      </HeaderDropdownButton>
+      </HeaderDropdownMenuButton>
     </Header>
   </Stack>
 )

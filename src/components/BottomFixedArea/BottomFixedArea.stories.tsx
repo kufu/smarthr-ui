@@ -8,7 +8,7 @@ import { FaTrashIcon } from '../Icon'
 import { BottomFixedArea } from './BottomFixedArea'
 
 export default {
-  title: 'BottomFixedArea',
+  title: 'Navigation（ナビゲーション）/BottomFixedArea',
   component: BottomFixedArea,
 }
 
