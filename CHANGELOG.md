@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [26.0.0](https://github.com/kufu/smarthr-ui/compare/v25.1.1...v26.0.0) (2023-01-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* dropdown-button を dropdown-menu-button にrename (#3038)
+
+* dropdown-button を dropdown-menu-button にrename ([#3038](https://github.com/kufu/smarthr-ui/issues/3038)) ([cadb652](https://github.com/kufu/smarthr-ui/commit/cadb65229692719c28cbcb2dbd4176770ab8d89a))
+
+### [25.1.1](https://github.com/kufu/smarthr-ui/compare/v25.1.0...v25.1.1) (2023-01-20)
+
 ## [25.1.0](https://github.com/kufu/smarthr-ui/compare/v25.0.2...v25.1.0) (2023-01-19)
 
 

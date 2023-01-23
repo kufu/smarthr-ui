@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { InputFile } from './InputFile'
 
 export default {
-  title: 'InputFile',
+  title: 'Forms（フォーム）/InputFile',
   component: InputFile,
 }
 

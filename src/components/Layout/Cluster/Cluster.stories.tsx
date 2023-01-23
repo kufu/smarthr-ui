@@ -10,7 +10,15 @@ import { Stack } from '../Stack'
 
 import { Cluster } from '.'
 
-export const ClusterStory: Story = () => {
+export default {
+  title: 'Layouts（レイアウト）/Cluster',
+  component: Cluster,
+  parameters: {
+    withTheming: true,
+  },
+}
+
+export const All: Story = () => {
   return (
     <StyledStack gap="L">
       <Stack as="figure" gap="X3S">
@@ -84,7 +92,6 @@ export const ClusterStory: Story = () => {
     </StyledStack>
   )
 }
-ClusterStory.parameters = { withTheming: true }
 
 const Heading = styled(shrHeading)`
   margin-top: 0;

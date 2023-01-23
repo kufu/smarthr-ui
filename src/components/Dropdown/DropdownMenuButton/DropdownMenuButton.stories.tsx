@@ -4,12 +4,12 @@ import React, { ComponentProps } from 'react'
 import { AnchorButton, Button } from '../../Button'
 import { Cluster } from '../../Layout'
 
-import { DropdownButton } from './DropdownButton'
+import { DropdownMenuButton } from './DropdownMenuButton'
 
 const flag = false
 
-const Template: React.FC<Omit<ComponentProps<typeof DropdownButton>, 'children'>> = (props) => (
-  <DropdownButton {...props}>
+const Template: React.FC<Omit<ComponentProps<typeof DropdownMenuButton>, 'children'>> = (props) => (
+  <DropdownMenuButton {...props}>
     <Button>評価を開始</Button>
     <Button
       disabled
@@ -22,7 +22,7 @@ const Template: React.FC<Omit<ComponentProps<typeof DropdownButton>, 'children'>
     <Button>ヒントメッセージの設定</Button>
     <AnchorButton href="#h2-2">ログアウト</AnchorButton>
     {flag && <Button>非表示になるテキスト</Button>}
-  </DropdownButton>
+  </DropdownMenuButton>
 )
 
 export const Default: Story = () => (
@@ -35,4 +35,4 @@ export const Default: Story = () => (
     <Template triggerSize="s" onlyIconTrigger label="操作" />
   </Cluster>
 )
-Default.storyName = 'DropdownButton'
+Default.storyName = 'DropdownMenuButton'

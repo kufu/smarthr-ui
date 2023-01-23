@@ -13,7 +13,17 @@ import { Stack } from '../Stack'
 
 import { Reel } from '.'
 
-export const ReelStory: Story = () => {
+export default {
+  title: 'Layouts（レイアウト）/Reel',
+  component: Reel,
+  parameters: {
+    viewport: {
+      defaultViewport: 'iphone6',
+    },
+  },
+}
+
+export const All: Story = () => {
   const [currentTab, setCurrentTab] = React.useState(0)
   const theme = useTheme()
 
@@ -267,9 +277,3 @@ const Box = styled.div`
   height: 300px;
   color: white;
 `
-
-ReelStory.parameters = {
-  viewport: {
-    defaultViewport: 'iphone6',
-  },
-}

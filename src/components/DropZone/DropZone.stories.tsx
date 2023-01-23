@@ -6,7 +6,7 @@ import styled, { css } from 'styled-components'
 import { DropZone } from './DropZone'
 
 export default {
-  title: 'DropZone',
+  title: 'Forms（フォーム）/DropZone',
   component: DropZone,
   parameters: {
     withTheming: true,

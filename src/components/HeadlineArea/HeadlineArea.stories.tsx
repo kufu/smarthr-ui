@@ -4,7 +4,7 @@ import * as React from 'react'
 import { HeadlineArea } from './HeadlineArea'
 
 export default {
-  title: 'HeadlineArea',
+  title: 'Data Display（データ表示）/HeadlineArea',
   component: HeadlineArea,
 }
 

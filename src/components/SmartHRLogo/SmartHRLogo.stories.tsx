@@ -7,7 +7,7 @@ import { Text } from '../Text'
 import { SmartHRLogo } from './SmartHRLogo'
 
 export default {
-  title: 'SmartHRLogo',
+  title: 'Media（メディア）/SmartHRLogo',
   component: SmartHRLogo,
   parameters: {
     withTheming: true,

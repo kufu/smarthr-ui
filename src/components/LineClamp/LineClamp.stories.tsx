@@ -7,7 +7,7 @@ import { Button } from '../Button'
 import { LineClamp } from './LineClamp'
 
 export default {
-  title: 'LineClamp',
+  title: 'Data Display（データ表示）/LineClamp',
   component: LineClamp,
 }
 

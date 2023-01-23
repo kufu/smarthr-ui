@@ -9,7 +9,7 @@ import { Text } from '../Text'
 
 import { useClassNames } from './useClassNames'
 
-import { HeaderDropdownButton } from '.'
+import { HeaderDropdownMenuButton } from '.'
 
 type Tenant = {
   id: string
@@ -55,13 +55,13 @@ export const Header: React.VFC<Props & ElementProps> = ({
   const tenantInfo = useMemo(
     () =>
       tenants && tenants.length > 1 ? (
-        <HeaderDropdownButton label={currentTenantName}>
+        <HeaderDropdownMenuButton label={currentTenantName}>
           {tenants.map(({ id, name }) => (
             <Button key={id} onClick={() => onTenantSelect && onTenantSelect(id)}>
               {name}
             </Button>
           ))}
-        </HeaderDropdownButton>
+        </HeaderDropdownMenuButton>
       ) : (
         <TenantName themes={theme}>{currentTenantName}</TenantName>
       ),

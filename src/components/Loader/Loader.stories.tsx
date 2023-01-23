@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components'
 import { Loader } from './Loader'
 
 export default {
-  title: 'Loader',
+  title: 'States（状態）/Loader',
   component: Loader,
 }
 

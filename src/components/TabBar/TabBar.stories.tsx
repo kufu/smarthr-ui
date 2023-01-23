@@ -8,7 +8,7 @@ import { TabBar } from './TabBar'
 import { TabItem } from './TabItem'
 
 export default {
-  title: 'TabBar',
+  title: 'Navigation（ナビゲーション）/TabBar',
   component: TabBar,
   subcomponents: { TabItem },
 }

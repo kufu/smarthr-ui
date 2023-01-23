@@ -9,7 +9,7 @@ import { Cluster, Stack } from '../Layout'
 import { AnchorButton, Button } from '.'
 
 export default {
-  title: 'Button',
+  title: 'Buttons（ボタン）/Button',
   component: Button,
   subcomponents: {
     AnchorButton,

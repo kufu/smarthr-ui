@@ -31,8 +31,8 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const DropdownButton: VFC<Props & ElementProps> = ({
-  label,
+export const DropdownMenuButton: VFC<Props & ElementProps> = ({
+  label = 'その他の操作',
   children,
   triggerSize,
   onlyIconTrigger = false,

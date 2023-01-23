@@ -5,7 +5,7 @@ import * as React from 'react'
 import { RightFixedNote } from './RightFixedNote'
 
 export default {
-  title: 'RightFixedNote',
+  title: 'Data Display（データ表示）/RightFixedNote',
   component: RightFixedNote,
 }
 

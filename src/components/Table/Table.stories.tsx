@@ -13,7 +13,7 @@ import { Text } from '../Text'
 import { BulkActionRow, EmptyTableBody, Table, Td, Th } from '.'
 
 export default {
-  title: 'Table',
+  title: 'Data Display（データ表示）/Table',
   component: Table,
   subcomponents: { Th, Td, BulkActionRow },
 }
