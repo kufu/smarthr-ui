@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 
 export type FineSize = 'xs' | 's' | 'm' | 'l' | 'xl'
 export type Size = 's' | 'm' | 'l'
@@ -18,6 +18,6 @@ export interface StyledProperties {
   spSize?: Size
 }
 
-export type DecoratorsType<T> = {
+export type DecoratorsType<T extends string> = {
   [K in T]: (text: string) => ReactNode
 }

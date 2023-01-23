@@ -15,7 +15,6 @@ import styled, { css } from 'styled-components'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
@@ -78,9 +77,11 @@ type Props = {
    */
   portalParent?: HTMLElement | RefObject<HTMLElement>
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<
-    'dialogHandlerAriaLabel' | 'dialogHandlerAriaValuetext' | 'closeButtonIconAlt'
-  >
+  decorators?: {
+    dialogHandlerAriaLabel?: (txt: string) => string
+    dialogHandlerAriaValuetext?: (txt: string) => string
+    closeButtonIconAlt?: (txt: string) => string
+  }
 }
 
 const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
@@ -102,7 +103,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   bottom,
   portalParent,
   className = '',
-  decorators = {},
+  decorators,
   ...props
 }) => {
   const { createPortal } = useDialogPortal(portalParent)
@@ -266,17 +267,17 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                 tabIndex={0}
                 role="slider"
                 aria-label={
-                  decorators.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) ||
+                  decorators?.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) ||
                   DIALOG_HANDLER_ARIA_LABEL
                 }
                 aria-valuetext={
                   wrapperPosition &&
                   (
-                    decorators.dialogHandlerAriaValuetext?.(DIALOG_HANDLER_ARIA_VALUETEXT) ||
+                    decorators?.dialogHandlerAriaValuetext?.(DIALOG_HANDLER_ARIA_VALUETEXT) ||
                     DIALOG_HANDLER_ARIA_VALUETEXT
                   )
-                    .replace('{{top}}', Math.trunc(wrapperPosition.top))
-                    .replace('{{left}}', Math.trunc(wrapperPosition.left))
+                    .replace('{{top}}', `${Math.trunc(wrapperPosition.top)}`)
+                    .replace('{{left}}', `${Math.trunc(wrapperPosition.left)}`)
                 }
                 onKeyDown={handleArrowKey}
               >
@@ -292,7 +293,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                 >
                   <FaTimesIcon
                     alt={
-                      decorators.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) ||
+                      decorators?.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) ||
                       CLOSE_BUTTON_ICON_ALT
                     }
                   />

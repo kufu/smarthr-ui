@@ -14,7 +14,6 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
   title,
   description,
-  closeText,
   portalParent,
   className = '',
   decorators,
@@ -43,7 +42,6 @@ export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
         title={title}
         titleId={titleId}
         description={description}
-        closeText={closeText}
         onClickClose={handleClickClose}
         decorators={decorators}
       />

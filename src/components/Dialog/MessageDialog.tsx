@@ -18,7 +18,6 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
   subtitle,
   titleTag,
   description,
-  closeText,
   onClickClose,
   onPressEscape = onClickClose,
   className = '',
@@ -47,7 +46,6 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
         titleId={titleId}
         subtitle={subtitle}
         description={description}
-        closeText={closeText}
         onClickClose={handleClickClose}
         decorators={decorators}
       />

@@ -2,7 +2,7 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types'
+import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { HeadingTagTypes } from '../Heading'
 import { Stack } from '../Layout'
@@ -46,7 +46,7 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   titleId,
   description,
   onClickClose,
-  decorators = {},
+  decorators,
 }) => {
   const classNames = useClassNames().dialog
   const theme = useTheme()
@@ -75,7 +75,7 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
       </Description>
       <Bottom themes={theme} ref={bottomRef} className={classNames.buttonArea}>
         <Button onClick={onClickClose} className={classNames.closeButton}>
-          {decorators.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
+          {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
         </Button>
       </Bottom>
     </>

@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types'
+import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
@@ -43,13 +43,13 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
   onClickEdit,
   onSubmit,
   className = '',
-  decorators = {},
+  decorators,
   ...props
 }) => {
   const theme = useTheme()
 
   const submitLabel = useMemo(
-    () => decorators.submitLabel?.(SUBMIT_LABEL) || SUBMIT_LABEL,
+    () => decorators?.submitLabel?.(SUBMIT_LABEL) || SUBMIT_LABEL,
     [decorators],
   )
 

@@ -11,7 +11,7 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types'
+import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 
@@ -48,7 +48,7 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 }
 
 export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProps>(
-  ({ children, onSelectFiles, accept, multiple = true, name, decorators = {} }, ref) => {
+  ({ children, onSelectFiles, accept, multiple = true, name, decorators }, ref) => {
     const theme = useTheme()
     const classNames = useClassNames()
     const fileRef = useRef<HTMLInputElement>(null)
@@ -102,7 +102,7 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
       >
         {children}
         <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
-          {decorators.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL}
+          {decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL}
         </Button>
         <input
           ref={fileRef}

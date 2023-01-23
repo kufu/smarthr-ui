@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types'
+import { DecoratorsType } from '../../types/props'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, HeadingTagTypes } from '../Heading'
@@ -49,7 +49,7 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
   titleTag = 'h3',
   type,
   togglable = true,
-  decorators = {},
+  decorators,
   active: activeProps = true,
   className = '',
   children,
@@ -130,8 +130,8 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
               className={classNames.closeButton}
             >
               {active
-                ? decorators.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
-                : decorators.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
+                ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
+                : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
             </TogglableButton>
           )}
         </Header>

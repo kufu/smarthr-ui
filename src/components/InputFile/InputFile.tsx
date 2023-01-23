@@ -49,14 +49,13 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       onChange,
       disabled = false,
       error,
-      decorators = {},
+      decorators,
       ...props
     },
     ref,
   ) => {
     const theme = useTheme()
     const [files, setFiles] = useState<File[]>([])
-    const { destroy: destroyDecorator } = decorators
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesDirectly = useRef(false)
@@ -68,8 +67,8 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     const destroyButtonText = useMemo(
-      () => destroyDecorator?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT,
-      [destroyDecorator],
+      () => decorators?.destroy?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT,
+      [decorators],
     )
     const inputWrapperClassName = useMemo(
       () => `${size === 's' ? 'small' : ''} ${disabled ? 'disabled' : ''} ${error ? 'error' : ''}`,

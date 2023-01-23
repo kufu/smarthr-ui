@@ -12,7 +12,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
-import { DecoratorsType } from '../../types'
+import { DecoratorsType } from '../../types/props'
 
 import { useClassNames } from './useClassNames'
 
@@ -65,7 +65,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       maxRows = Infinity,
       rows = 2,
       onInput,
-      decorators = {},
+      decorators,
       ...props
     },
     ref,
@@ -78,13 +78,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const textAreaWidth = typeof width === 'number' ? `${width}px` : width
     const beforeMaxLengthCount = useMemo(
       () =>
-        decorators.beforeMaxLengthCount?.(TEXT_BEFORE_MAXlENGTH_COUNT) ||
+        decorators?.beforeMaxLengthCount?.(TEXT_BEFORE_MAXlENGTH_COUNT) ||
         TEXT_BEFORE_MAXlENGTH_COUNT,
       [decorators],
     )
     const afterMaxLengthCount = useMemo(
       () =>
-        decorators.afterMaxLengthCount?.(TEXT_AFTER_MAXlENGTH_COUNT) || TEXT_AFTER_MAXlENGTH_COUNT,
+        decorators?.afterMaxLengthCount?.(TEXT_AFTER_MAXlENGTH_COUNT) || TEXT_AFTER_MAXlENGTH_COUNT,
       [decorators],
     )
 

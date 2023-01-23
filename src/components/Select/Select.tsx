@@ -9,7 +9,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { isMobileSafari } from '../../libs/ua'
-import { DecoratorsType } from '../../types'
+import { DecoratorsType } from '../../types/props'
 import { FaSortIcon } from '../Icon'
 
 import { useClassNames } from './useClassNames'
@@ -60,7 +60,7 @@ export const Select = forwardRef(
       error = false,
       width = 'auto',
       hasBlank = false,
-      decorators = {},
+      decorators,
       size = 'default',
       className = '',
       disabled,
@@ -104,7 +104,7 @@ export const Select = forwardRef(
           ref={ref}
         >
           {hasBlank && (
-            <option value="">{decorators.blankLabel?.(BLANK_LABEL) || BLANK_LABEL}</option>
+            <option value="">{decorators?.blankLabel?.(BLANK_LABEL) || BLANK_LABEL}</option>
           )}
           {options.map((option) => {
             if ('value' in option) {
