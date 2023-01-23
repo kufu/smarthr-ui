@@ -2,6 +2,7 @@ import React, { ReactNode, VFC, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types'
 import { Button } from '../Button'
 import { HeadingTagTypes } from '../Heading'
 import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../Icon'
@@ -58,6 +59,8 @@ export type BaseProps = {
    * コンポーネントに適用するクラス名
    */
   className?: string
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'closeButtonLabel'>
 }
 
 type responseMessageType = {
@@ -70,6 +73,8 @@ export type ActionDialogContentInnerProps = BaseProps & {
   responseMessage?: responseMessageType
   titleId: string
 }
+
+const CLOSE_BUTTON_LABEL = 'キャンセル'
 
 export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   children,
@@ -85,6 +90,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   responseMessage,
   actionDisabled = false,
   closeDisabled,
+  decorators = {},
 }) => {
   const classNames = useClassNames().dialog
   const theme = useTheme()
@@ -123,7 +129,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
             disabled={closeDisabled || isRequestProcessing}
             className={classNames.closeButton}
           >
-            {closeText}
+            {decorators.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
           </Button>
           <Button
             variant={actionTheme}
