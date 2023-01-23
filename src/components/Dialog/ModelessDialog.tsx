@@ -324,7 +324,7 @@ const Box = styled(Base).attrs({ radius: 'm', layer: 3 })<{
   }}
 `
 const Header = styled.div<{ themes: Theme }>`
-  ${({ themes: { border, spacingByChar } }) => css`
+  ${({ themes: { color, border, spacingByChar } }) => css`
     position: relative;
     display: flex;
     align-items: center;
@@ -332,6 +332,10 @@ const Header = styled.div<{ themes: Theme }>`
     padding-right: ${spacingByChar(1)};
     border-bottom: ${border.shorthand};
     cursor: move;
+
+    &:hover {
+      background-color: ${color.hoverColor(color.WHITE)};
+    }
   `}
 `
 const Title = styled.div<{ themes: Theme }>`
@@ -354,10 +358,7 @@ const DialogHandler = styled.div<{ themes: Theme }>`
     display: flex;
     justify-content: center;
     transition: color 0.1s ease;
-
-    &:hover {
-      color: ${color.TEXT_GREY};
-    }
+    color: ${color.TEXT_GREY};
 
     &:focus-visible {
       color: ${color.TEXT_GREY};
