@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../../hooks/useClassNameGenerator'
 
-import { DropdownButton } from './DropdownButton'
+import { DropdownMenuButton } from './DropdownMenuButton'
 
 export function useClassNames() {
-  const generate = useClassNameGenerator(DropdownButton.displayName || 'DropdownButton')
+  const generate = useClassNameGenerator(DropdownMenuButton.displayName || 'DropdownMenuButton')
   return useMemo(
     () => ({
       wrapper: generate(),

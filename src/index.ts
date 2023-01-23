@@ -8,7 +8,7 @@ export {
   DropdownCloser,
   DropdownScrollArea,
   FilterDropdown,
-  DropdownButton,
+  DropdownMenuButton,
 } from './components/Dropdown'
 export { FieldSet } from './components/FieldSet'
 export {
@@ -104,7 +104,7 @@ export { CompactInformationPanel } from './components/CompactInformationPanel'
 export { Text } from './components/Text'
 export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
-export { AppLauncher, Header, HeaderLink, HeaderDropdownButton } from './components/Header'
+export { AppLauncher, Header, HeaderLink, HeaderDropdownMenuButton } from './components/Header'
 export { PageCounter } from './components/PageCounter'
 
 // layout components
