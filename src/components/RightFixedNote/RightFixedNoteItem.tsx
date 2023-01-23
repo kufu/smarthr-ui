@@ -1,4 +1,4 @@
-import React, { VFC } from 'react'
+import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -12,11 +12,11 @@ export type ItemProps = {
   /** アイテムを特定するための識別子 */
   id: string
   /** 表示するテキスト */
-  text: string
+  text: ReactNode
   /** このアイテムが追加された日付 */
-  date?: string
+  date?: ReactNode
   /** このアイテムの著者 */
-  author?: string
+  author?: ReactNode
   /** edit ボタンの aria-label */
   editLabel?: string
   /** このコンポーネントに適用するクラス名 */
