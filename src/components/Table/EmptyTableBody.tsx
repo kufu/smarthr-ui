@@ -11,11 +11,12 @@ type Padding = Gap | { vertical?: Gap; horizontal?: Gap }
 type Props = PropsWithChildren<{
   /** 境界とコンテンツの間の余白 */
   padding?: Padding
+  className?: string
 }>
 
-export const EmptyTableBody: React.FC<Props> = ({ children, padding = 4 }) => {
+export const EmptyTableBody: React.FC<Props> = ({ children, padding = 4, className }) => {
   return (
-    <tbody>
+    <tbody className={className}>
       <tr>
         <StyledTd colSpan={1000} padding={padding}>
           <Center>{children}</Center>
