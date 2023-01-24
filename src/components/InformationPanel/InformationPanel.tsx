@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types/props'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, HeadingTagTypes } from '../Heading'
@@ -28,10 +29,6 @@ type Props = {
   type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
   /** `true` のとき、開閉ボタンを表示する */
   togglable?: boolean
-  /** 開くボタンのラベル */
-  openButtonLabel?: React.ReactNode
-  /** 閉じるボタンのラベル */
-  closeButtonLabel?: React.ReactNode
   /** パネルの開閉の状態 */
   active?: boolean
   /** コンポーネントに適用するクラス名 */
@@ -40,19 +37,35 @@ type Props = {
   children: React.ReactNode
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'openButtonLabel' | 'closeButtonLabel'>
+  /**
+   * @deprecated openButtonLabel属性は非推奨です。decorators属性を利用してください
+   */
+  /** 開くボタンのラベル */
+  openButtonLabel?: React.ReactNode
+  /**
+   * @deprecated closeButtonLabel属性は非推奨です。decorators属性を利用してください
+   */
+  /** 閉じるボタンのラベル */
+  closeButtonLabel?: React.ReactNode
 }
+
+const OPEN_BUTTON_LABEL = '開く'
+const CLOSE_BUTTON_LABEL = '閉じる'
 
 export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> = ({
   title,
   titleTag = 'h3',
   type,
   togglable = true,
-  openButtonLabel = '開く',
-  closeButtonLabel = '閉じる',
+  openButtonLabel,
+  closeButtonLabel,
   active: activeProps = true,
   className = '',
   children,
   onClickTrigger,
+  decorators,
   ...props
 }) => {
   const theme = useTheme()
@@ -87,6 +100,20 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
         }
     }
   }, [type, theme.color.DANGER, theme.color.MAIN, theme.color.TEXT_GREY, theme.color.WARNING])
+  const actualOpenButtonLabel = useMemo(() => {
+    if (openButtonLabel) {
+      return openButtonLabel
+    }
+
+    return decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL
+  }, [openButtonLabel, decorators])
+  const actualCloseButtonLabel = useMemo(() => {
+    if (closeButtonLabel) {
+      return closeButtonLabel
+    }
+
+    return decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
+  }, [closeButtonLabel, decorators])
 
   const [active, setActive] = useState(activeProps)
   const titleId = useId()
@@ -128,7 +155,7 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
               aria-controls={contentId}
               className={classNames.closeButton}
             >
-              {active ? closeButtonLabel : openButtonLabel}
+              {active ? actualCloseButtonLabel : actualOpenButtonLabel}
             </TogglableButton>
           )}
         </Header>
