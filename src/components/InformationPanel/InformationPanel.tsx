@@ -39,6 +39,8 @@ type Props = {
   children: React.ReactNode
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'openButtonLabel' | 'closeButtonLabel'>
 }
 
 const OPEN_BUTTON_LABEL = '開く'
@@ -54,6 +56,7 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
   className = '',
   children,
   onClickTrigger,
+  decorators,
   ...props
 }) => {
   const theme = useTheme()

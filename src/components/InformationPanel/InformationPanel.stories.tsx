@@ -23,6 +23,18 @@ export const All: Story = () => (
     >
       従業員リストをダウンロードする際に指定するフォーマットを、カスタマイズして登録、管理できます。登録したフォーマットを利用することで、外部システムへの取り込みに適したファイルを書き出せます。詳しくは、カスタムダウンロードフォーマットの追加・編集・削除を参照してください。
     </InformationPanel>
+    <InformationPanel
+      title={<span>SmartHRの項目一覧表をダウンロード</span>}
+      titleTag="h4"
+      type="success"
+      decorators={{
+        openButtonLabel: (txt) => `open.(${txt})`,
+        closeButtonLabel: (txt) => `close.(${txt})`,
+      }}
+      active={false}
+    >
+      従業員リストをダウンロードする際に指定するフォーマットを、カスタマイズして登録、管理できます。登録したフォーマットを利用することで、外部システムへの取り込みに適したファイルを書き出せます。詳しくは、カスタムダウンロードフォーマットの追加・編集・削除を参照してください。
+    </InformationPanel>
     <InformationPanel title="項目全体がわかるよう撮影してください" type="warning" togglable={false}>
       離職日の翌日から1ヶ月ごとにさかのぼって区切り、それぞれの期間中に賃金支払基礎日数が11日以上ある、または、賃金支払の基礎となった時間が80時間以上ある期間を入力します。この期間を被保険者期間と言い、失業給付を受けるためには原則としてこの被保険者期間が2年間のうち12ヶ月必要となります。
     </InformationPanel>
