@@ -247,9 +247,6 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
               {/* dummy element for focus management. */}
             </div>
             <Header className={classNames.header} themes={theme}>
-              <Title id={labelId} themes={theme}>
-                {header}
-              </Title>
               <DialogHandler
                 className={classNames.handle}
                 themes={theme}
@@ -265,6 +262,9 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
               >
                 <FaGripHorizontalIcon />
               </DialogHandler>
+              <Title id={labelId} themes={theme}>
+                {header}
+              </Title>
               <CloseButtonLayout>
                 <Button
                   type="button"
@@ -340,6 +340,8 @@ const Header = styled.div<{ themes: Theme }>`
 `
 const Title = styled.div<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
+    /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */
+    position: relative;
     margin: ${spacingByChar(1)} ${spacingByChar(1)} ${spacingByChar(1)} 0;
   `}
 `
@@ -360,9 +362,9 @@ const DialogHandler = styled.div<{ themes: Theme }>`
     transition: color 0.1s ease;
 
     &:focus-visible {
-      color: ${color.TEXT_GREY};
       outline: none;
       box-shadow: ${shadow.OUTLINE};
+      background-color: ${color.hoverColor(color.WHITE)};
     }
   `}
 `
