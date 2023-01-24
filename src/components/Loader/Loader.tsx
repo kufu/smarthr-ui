@@ -71,6 +71,7 @@ export const Loader: VFC<Props & ElementProps> = ({
 
 const Wrapper = styled.div`
   display: inline-block;
+  overflow: hidden;
 `
 
 const VisuallyHidden = styled.span`
