@@ -2,7 +2,9 @@
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
   "version": "26.0.0",
-  "author": "SmartHR-UI Team",
+  "author": {
+    "name": "SmartHR-UI Team"
+  },
   "dependencies": {
     "@smarthr/wareki": "^1.2.0",
     "dayjs": "^1.11.7",
@@ -46,6 +48,7 @@
     "babel-loader": "^9.1.2",
     "babel-plugin-polyfill-corejs2": "^0.3.3",
     "babel-plugin-polyfill-regenerator": "^0.4.1",
+    "chromatic": "^6.15.0",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
     "eslint": "^8.32.0",
     "eslint-config-smarthr": "^6.6.4",
@@ -151,7 +154,8 @@
     "testcafe": "testcafe",
     "e2e": "ts-node scripts/e2e.ts",
     "e2e:dev": "testcafe chrome --host localhost --skip-js-errors",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "chromatic": "npx chromatic --project-token=8996142b5ba1"
   },
   "sideEffects": false,
   "typings": "lib/index.d.ts",
@@ -162,5 +166,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "stylelint/postcss": "8.4.14"
-  }
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "smarthr-ui@26.0.0"
 }
