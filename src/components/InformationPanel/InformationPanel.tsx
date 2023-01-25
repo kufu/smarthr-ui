@@ -29,8 +29,6 @@ type Props = {
   type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
   /** `true` のとき、開閉ボタンを表示する */
   togglable?: boolean
-  /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'openButtonLabel' | 'closeButtonLabel'>
   /** パネルの開閉の状態 */
   active?: boolean
   /** コンポーネントに適用するクラス名 */
@@ -51,7 +49,6 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
   titleTag = 'h3',
   type,
   togglable = true,
-  decorators,
   active: activeProps = true,
   className = '',
   children,

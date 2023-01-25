@@ -100,7 +100,7 @@ export const All: Story = () => (
         <Select
           name="hasBlank"
           hasBlank
-          decorators={{ blankLabel: (txt) => `blank.(${txt})` }}
+          decorators={{ blankLabel: (txt) => `select.(${txt})` }}
           options={options}
         />
       </Text>

@@ -58,19 +58,20 @@ export const Loader: VFC<Props & ElementProps> = ({
             </Cog>
           </Line>
         ))}
+        <VisuallyHidden>{alt}</VisuallyHidden>
       </Spinner>
       {text && (
         <Text className={type} themes={theme}>
           {text}
         </Text>
       )}
-      <VisuallyHidden>{alt}</VisuallyHidden>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   display: inline-block;
+  overflow: hidden;
 `
 
 const VisuallyHidden = styled.span`
