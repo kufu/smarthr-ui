@@ -1,14 +1,12 @@
-import { ReactNode, RefObject, useCallback, useLayoutEffect, useRef } from 'react'
+import { ReactNode, RefObject, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 export function useDialogPortal(parent?: HTMLElement | RefObject<HTMLElement>) {
   const portalContainer = useRef<HTMLDivElement | null>(
-    parent ?? typeof document === 'undefined'
-      ? null
-      : (document.createElement('div') as HTMLDivElement),
+    typeof document === 'undefined' ? null : (document.createElement('div') as HTMLDivElement),
   ).current
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!portalContainer) {
       return
     }
