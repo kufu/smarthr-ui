@@ -125,14 +125,13 @@ const Wrapper = styled.div<{
       css`
         right: ${contentBox.right};
       `}
-      ${$width === undefined &&
-      css`
-        max-width: ${`calc(100% - ${leftMargin} - ${rightMargin}) `};
-      `}
-      ${$width &&
-      css`
-        width: ${typeof $width === 'number' ? `${$width}px` : $width};
-      `}
+      ${$width === undefined
+        ? css`
+            max-width: ${`calc(100% - ${leftMargin} - ${rightMargin}) `};
+          `
+        : css`
+            width: ${typeof $width === 'number' ? `${$width}px` : $width};
+          `}
       word-break: break-word;
       border-radius: ${radius.m};
       box-shadow: ${shadow.LAYER3};
