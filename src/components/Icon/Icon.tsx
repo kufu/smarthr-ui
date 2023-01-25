@@ -361,7 +361,7 @@ type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
 
 export interface ComponentProps extends IconProps, ElementProps {
   /**アイコンの説明テキスト*/
-  alt?: string
+  alt?: React.ReactNode
   /** アイコンと並べるテキスト */
   text?: React.ReactNode
   /** アイコンと並べるテキストとの溝 */
