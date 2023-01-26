@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactElement, useMemo } from 'react'
+import React, { HTMLAttributes, ReactElement, ReactNode, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -13,7 +13,7 @@ import { HeaderDropdownMenuButton } from '.'
 
 type Tenant = {
   id: string
-  name: React.ReactNode
+  name: ReactNode
 }
 type Props = {
   /** ロゴ */
