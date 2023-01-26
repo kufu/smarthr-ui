@@ -125,7 +125,7 @@ jobs:
       - install-noto-sans-cjk-jp
       - run-a11y-test
   chromatic-deployment:
-    executor: node
+    executor: node-active-lts
     steps:
       - setup-for-test
       - run-chromatic
