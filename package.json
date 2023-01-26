@@ -166,7 +166,5 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "stylelint/postcss": "8.4.14"
-  },
-  "readme": "ERROR: No README data found!",
-  "_id": "smarthr-ui@26.0.0"
+  }
 }
