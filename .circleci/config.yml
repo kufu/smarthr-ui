@@ -119,6 +119,13 @@ jobs:
     steps:
       - install-noto-sans-cjk-jp
       - run-a11y-test
+  chromatic-deployment:
+    executor: node
+    steps:
+      - checkout
+      - setup-yarn
+      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes
+      - notify-on-fail
 
 workflows:
   multiple_builds:
@@ -130,4 +137,6 @@ workflows:
       - reg-suit:
           context: smarthr-dockerhub
       - a11y-test:
+          context: smarthr-dockerhub
+      - chromatic-deployment:
           context: smarthr-dockerhub
