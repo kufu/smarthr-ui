@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, VFC } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { VISUALLY_HIDDEN_STYLE } from '../../constants'
@@ -23,9 +23,9 @@ type Props = {
   /** ローダーの大きさ */
   size?: 's' | 'm'
   /** 代替テキスト */
-  alt?: string
+  alt?: ReactNode
   /** 表示するメッセージ */
-  text?: string
+  text?: ReactNode
   /** コンポーネントの色調 */
   type?: 'primary' | 'light'
 }
@@ -34,7 +34,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 export const Loader: VFC<Props & ElementProps> = ({
   size = 'm',
   alt = '処理中',
-  text = '',
+  text,
   type = 'primary',
   className = '',
   ...props
@@ -58,19 +58,20 @@ export const Loader: VFC<Props & ElementProps> = ({
             </Cog>
           </Line>
         ))}
+        <VisuallyHidden>{alt}</VisuallyHidden>
       </Spinner>
       {text && (
         <Text className={type} themes={theme}>
           {text}
         </Text>
       )}
-      <VisuallyHidden>{alt}</VisuallyHidden>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   display: inline-block;
+  overflow: hidden;
 `
 
 const VisuallyHidden = styled.span`

@@ -11,6 +11,7 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
 
@@ -32,9 +33,12 @@ export type Props = {
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
   /** コンポーネント内のテキストを変更する関数 */
-  decorator?: {
-    destroy?: (text: string) => ReactNode
-  }
+  /**
+   * @deprecated decorator属性は非推奨です。decorators属性を利用してください。
+   */
+  decorator?: DecoratorsType<'destroy'>
+  /** コンポーネント内のテキストを変更する関数 */
+  decorators?: DecoratorsType<'destroy'>
 }
 type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
@@ -50,14 +54,14 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       onChange,
       disabled = false,
       error,
-      decorator = {},
+      decorator,
+      decorators,
       ...props
     },
     ref,
   ) => {
     const theme = useTheme()
     const [files, setFiles] = useState<File[]>([])
-    const { destroy: destroyDecorator } = decorator
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesDirectly = useRef(false)
@@ -69,8 +73,11 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     const destroyButtonText = useMemo(
-      () => (destroyDecorator ? destroyDecorator(DESTROY_BUTTON_TEXT) : DESTROY_BUTTON_TEXT),
-      [destroyDecorator],
+      () =>
+        decorator?.destroy?.(DESTROY_BUTTON_TEXT) ||
+        decorators?.destroy?.(DESTROY_BUTTON_TEXT) ||
+        DESTROY_BUTTON_TEXT,
+      [decorator, decorators],
     )
     const inputWrapperClassName = useMemo(
       () => `${size === 's' ? 'small' : ''} ${disabled ? 'disabled' : ''} ${error ? 'error' : ''}`,
