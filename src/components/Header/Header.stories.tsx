@@ -25,8 +25,8 @@ export const all: Story = () => (
     </Header>
     <Header
       tenants={[
-        { id: 'smart-hr', name: '株式会社スマートHR' },
-        { id: 'smarthr', name: '株式会社SmartHR' },
+        { id: 'smart-hr', name: <span>株式会社スマートHR</span> },
+        { id: 'smarthr', name: <span>株式会社SmartHR</span> },
       ]}
       currentTenantId="smarthr"
       onTenantSelect={(id) => console.log(id)}
