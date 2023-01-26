@@ -730,7 +730,6 @@ export const Body以外のPortalParent: Story = () => {
           onClick={() => onClickOpen('actiion')}
           aria-haspopup="dialog"
           aria-controls="portal-action"
-          data-test="dialog-trigger"
         >
           ActionDialog を開く
         </Button>
@@ -738,7 +737,6 @@ export const Body以外のPortalParent: Story = () => {
           onClick={() => onClickOpen('message')}
           aria-haspopup="dialog"
           aria-controls="portal-message"
-          data-test="dialog-trigger"
         >
           MessageDialog を開く
         </Button>
@@ -780,7 +778,6 @@ export const Body以外のPortalParent: Story = () => {
         }}
         onClickClose={onClickClose}
         id="portal-action"
-        data-test="dialog-content"
         portalParent={portalParentRef}
       >
         <Content>
@@ -794,7 +791,6 @@ export const Body以外のPortalParent: Story = () => {
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
         id="portal-message"
-        data-test="dialog-content"
         portalParent={portalParentRef}
       />
       <ModelessDialog
