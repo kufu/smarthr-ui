@@ -80,6 +80,11 @@ commands:
             - ~/.cache/yarn
           key: yarn-packages-reg-{{ checksum "yarn.lock" }}
       - run: yarn test-visual
+  # chromatic
+  run-chromatic:
+    steps:
+      - checkout
+      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes
   install-noto-sans-cjk-jp:
     steps:
       - run:
@@ -122,11 +127,8 @@ jobs:
   chromatic-deployment:
     executor: node
     steps:
-      - checkout
-      - setup-yarn
-      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes
-      - notify-on-fail
-
+      - setup-for-test
+      - run-chromatic
 workflows:
   multiple_builds:
     jobs:
