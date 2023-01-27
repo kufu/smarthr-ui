@@ -1,7 +1,7 @@
 import React, { ComponentProps, FC, PropsWithChildren } from 'react'
 import styled from 'styled-components'
 
-import { Stack } from '../Layout'
+import { Stack } from '../../Layout'
 
 import { SideMenuGroup } from './SideMenuGroup'
 import { SideMenuItem } from './SideMenuItem'

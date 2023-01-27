@@ -106,7 +106,6 @@ export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
 export { AppLauncher, Header, HeaderLink, HeaderDropdownMenuButton } from './components/Header'
 export { PageCounter } from './components/PageCounter'
-export * from './components/SideMenu'
 
 // layout components
 export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'

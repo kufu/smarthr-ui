@@ -1,9 +1,9 @@
 import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { Stack } from '../Layout'
-import { Text } from '../Text'
+import { Theme, useTheme } from '../../../hooks/useTheme'
+import { Stack } from '../../Layout'
+import { Text } from '../../Text'
 
 import { useClassNames } from './useClassNames'
 

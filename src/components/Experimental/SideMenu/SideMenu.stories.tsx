@@ -4,7 +4,7 @@ import React from 'react'
 import { SideMenu } from './SideMenu'
 
 export default {
-  title: 'Navigation（ナビゲーション）/SideMenu',
+  title: 'Experimental（実験的）/SideMenu',
   component: SideMenu,
 }
 

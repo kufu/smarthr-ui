@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
+import { useClassNameGenerator } from '../../../hooks/useClassNameGenerator'
 
 import { SideMenu } from './SideMenu'
 
