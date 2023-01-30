@@ -3,6 +3,7 @@ import innerText from 'react-innertext'
 import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
+import { DecoratorType, DecoratorsType } from '../../../types/props'
 import { Button } from '../../Button'
 import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
 import { Dropdown } from '../Dropdown'
@@ -18,16 +19,10 @@ type Props = {
   onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
-  decorators?: {
-    status?: DecoratorFunctionType
-    triggerButton?: DecoratorFunctionType
-    applyButton?: DecoratorFunctionType
-    cancelButton?: DecoratorFunctionType
-    resetButton?: DecoratorFunctionType
-  }
+  decorators?: DecoratorsType<
+    'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
+  >
 }
-
-type DecoratorFunctionType = (text: string) => ReactNode
 
 const STATUS_FILTERED_TEXT = '適用中'
 const TRIGGER_BUTTON_TEXT = '絞り込み'
@@ -35,7 +30,7 @@ const APPLY_BUTTON_TEXT = '適用'
 const CANCEL_BUTTON_TEXT = 'キャンセル'
 const RESET_BUTTON_TEXT = '絞り込み条件を解除'
 
-const executeDecorator = (defaultText: string, decorator: DecoratorFunctionType | undefined) =>
+const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
   decorator?.(defaultText) || defaultText
 
 export const FilterDropdown: VFC<Props> = ({
@@ -45,35 +40,29 @@ export const FilterDropdown: VFC<Props> = ({
   onReset,
   children,
   hasStatusText,
-  decorators = {},
+  decorators,
 }: Props) => {
-  const {
-    status: statusDecorator,
-    triggerButton: triggerButtonDecorator,
-    applyButton: applyButtonDecorator,
-    cancelButton: cancelButtonDecorator,
-    resetButton: resetButtonDecorator,
-  } = decorators
   const themes = useTheme()
   const status: ReactNode = useMemo(
-    () => executeDecorator(STATUS_FILTERED_TEXT, statusDecorator),
-    [statusDecorator],
+    () => executeDecorator(STATUS_FILTERED_TEXT, decorator?.status || decorators?.status),
+    [decorator, decorators],
   )
   const triggerButton: ReactNode = useMemo(
-    () => executeDecorator(TRIGGER_BUTTON_TEXT, triggerButtonDecorator),
-    [triggerButtonDecorator],
+    () =>
+      executeDecorator(TRIGGER_BUTTON_TEXT, decorator?.triggerButton || decorators?.triggerButton),
+    [decorator, decorators],
   )
   const applyButton: ReactNode = useMemo(
-    () => executeDecorator(APPLY_BUTTON_TEXT, applyButtonDecorator),
-    [applyButtonDecorator],
+    () => executeDecorator(APPLY_BUTTON_TEXT, decorator?.applyButton || decorators?.applyButton),
+    [decorator, decorators],
   )
   const cancelButton: ReactNode = useMemo(
-    () => executeDecorator(CANCEL_BUTTON_TEXT, cancelButtonDecorator),
-    [cancelButtonDecorator],
+    () => executeDecorator(CANCEL_BUTTON_TEXT, decorator?.cancelButton || decorators?.cancelButton),
+    [decorator, decorators],
   )
   const resetButton: ReactNode = useMemo(
-    () => executeDecorator(RESET_BUTTON_TEXT, resetButtonDecorator),
-    [resetButtonDecorator],
+    () => executeDecorator(RESET_BUTTON_TEXT, decorator?.resetButton || decorators?.resetButton),
+    [decorator, decorators],
   )
   const filteredIconAriaLabel = useMemo(
     () => (hasStatusText ? undefined : innerText(status)),
