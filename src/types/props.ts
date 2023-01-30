@@ -19,5 +19,7 @@ export interface StyledProperties {
 }
 
 export type DecoratorsType<T extends string> = {
-  [K in T]: (text: string) => ReactNode
+  [K in T]: DecoratorType
 }
+
+export type DecoratorType = (text: string) => ReactNode
