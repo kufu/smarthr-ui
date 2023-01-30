@@ -27,9 +27,9 @@ const Template: React.FC<Omit<ComponentProps<typeof DropdownMenuButton>, 'childr
 
 export const Default: Story = () => (
   <Cluster align="center">
-    <Template label="デフォルト" />
-    <Template disabled label="無効化" />
-    <Template onlyIconTrigger label="アイコンのみ" />
+    <Template label="その他の操作" />
+    <Template disabled label="その他の操作" />
+    <Template onlyIconTrigger label="その他の操作" />
     <Template triggerSize="s" label="操作" />
     <Template triggerSize="s" label={<span>操作</span>} disabled />
     <Template triggerSize="s" onlyIconTrigger label="操作" />
