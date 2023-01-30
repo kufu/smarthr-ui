@@ -27,12 +27,12 @@ const Template: React.FC<Omit<ComponentProps<typeof DropdownMenuButton>, 'childr
 
 export const Default: Story = () => (
   <Cluster align="center">
-    <Template />
-    <Template disabled />
-    <Template onlyIconTrigger />
+    <Template label="デフォルト" />
+    <Template disabled label="無効化" />
+    <Template onlyIconTrigger label="アイコンのみ" />
     <Template triggerSize="s" label="操作" />
     <Template triggerSize="s" label={<span>操作</span>} disabled />
-    <Template triggerSize="s" onlyIconTrigger />
+    <Template triggerSize="s" onlyIconTrigger label="操作" />
   </Cluster>
 )
 Default.storyName = 'DropdownMenuButton'
