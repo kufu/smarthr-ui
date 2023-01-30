@@ -37,6 +37,30 @@ export const BaseStory: Story = () => {
           </li>
         </List>
       </dd>
+      <dt>color</dt>
+      <dd>
+        <p>styled-components で wrap することなく背景色を変えられます。</p>
+        <List>
+          <li>
+            <Base>初期値</Base>
+          </li>
+          <li>
+            <Base color="BACKGROUND">color: BACKGROUND</Base>
+          </li>
+          <li>
+            <Base color="BASE_GREY">color: BASE_GREY</Base>
+          </li>
+          <li>
+            <Base color="OVER_BACKGROUND">color: OVER_BACKGROUND</Base>
+          </li>
+          <li>
+            <Base color="HEAD">color: HEAD</Base>
+          </li>
+          <li>
+            <Base color="ACTION_BACKGROUND">color: ACTION_BACKGROUND</Base>
+          </li>
+        </List>
+      </dd>
       <dt>radius</dt>
       <dd>
         <List>
