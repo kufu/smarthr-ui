@@ -14,7 +14,7 @@ type Props = {
   /** コンテンツの下に表示されるアンカー要素のリスト */
   links?: Array<{
     /** アンカー要素のテキスト */
-    label: string
+    label: ReactNode
     /** アンカー要素の href */
     url: string
     /** アンカー要素の target。`_blank` を設定すると外部リンクアイコンが表示されます。*/
@@ -59,8 +59,8 @@ export const MessageScreen: VFC<Props & ElementProps> = ({
 
         {links && links.length && (
           <Links themes={theme} className={classNames.linkList}>
-            {links.map((link) => (
-              <li key={link.label}>
+            {links.map((link, index) => (
+              <li key={index}>
                 <TextLink
                   {...(link.target ? { target: link.target } : {})}
                   href={link.url}
