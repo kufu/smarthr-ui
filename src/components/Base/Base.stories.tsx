@@ -53,19 +53,19 @@ export const BaseStory: Story = () => {
             <Base>初期値</Base>
           </li>
           <li>
-            <Base color="BACKGROUND">color: BACKGROUND</Base>
+            <Base bgColor="BACKGROUND">bgColor: BACKGROUND</Base>
           </li>
           <li>
-            <Base color="BASE_GREY">color: BASE_GREY</Base>
+            <Base bgColor="BASE_GREY">bgColor: BASE_GREY</Base>
           </li>
           <li>
-            <Base color="OVER_BACKGROUND">color: OVER_BACKGROUND</Base>
+            <Base bgColor="OVER_BACKGROUND">bgColor: OVER_BACKGROUND</Base>
           </li>
           <li>
-            <Base color="HEAD">color: HEAD</Base>
+            <Base bgColor="HEAD">bgColor: HEAD</Base>
           </li>
           <li>
-            <Base color="ACTION_BACKGROUND">color: ACTION_BACKGROUND</Base>
+            <Base bgColor="ACTION_BACKGROUND">bgColor: ACTION_BACKGROUND</Base>
           </li>
         </List>
       </dd>
