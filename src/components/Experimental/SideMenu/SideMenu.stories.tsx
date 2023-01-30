@@ -11,14 +11,7 @@ export default {
 export const Default: Story = () => (
   <SideMenu>
     <SideMenu.Group name="基本設定">
-      <SideMenu.Item
-        href="#"
-        onClick={() =>
-          console.log('設定がリンクじゃない可能性ってある? そしたらボタンにしないといけない')
-        }
-      >
-        評価シート
-      </SideMenu.Item>
+      <SideMenu.Item href="#">評価シート</SideMenu.Item>
       <SideMenu.Item href="#" current>
         評価ロール
       </SideMenu.Item>
