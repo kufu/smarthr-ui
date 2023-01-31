@@ -1,8 +1,9 @@
 import { Story } from '@storybook/react'
-import * as React from 'react'
-import styled from 'styled-components'
+import React from 'react'
+import styled, { css } from 'styled-components'
 
 import { useTheme } from '../../hooks/useTheme'
+import { Stack } from '../Layout'
 import { Text } from '../Text'
 
 import { Base, LayerKeys, layerMap } from './Base'
@@ -11,6 +12,10 @@ import { DialogBase } from './DialogBase'
 export default {
   title: 'Data Display（データ表示）/Base',
   component: Base,
+  parameters: {
+    layout: 'fullscreen',
+    withTheming: true,
+  },
 }
 
 export const BaseStory: Story = () => {
@@ -18,7 +23,9 @@ export const BaseStory: Story = () => {
 
   return (
     <DescriptionList>
-      <dt>padding</dt>
+      <Text as="dt" weight="bold">
+        padding
+      </Text>
       <dd>
         <List>
           <li>
@@ -37,7 +44,34 @@ export const BaseStory: Story = () => {
           </li>
         </List>
       </dd>
-      <dt>radius</dt>
+      <Text as="dt" weight="bold">
+        color
+      </Text>
+      <dd>
+        <List>
+          <li>
+            <Base>初期値</Base>
+          </li>
+          <li>
+            <Base bgColor="BACKGROUND">bgColor: BACKGROUND</Base>
+          </li>
+          <li>
+            <Base bgColor="BASE_GREY">bgColor: BASE_GREY</Base>
+          </li>
+          <li>
+            <Base bgColor="OVER_BACKGROUND">bgColor: OVER_BACKGROUND</Base>
+          </li>
+          <li>
+            <Base bgColor="HEAD">bgColor: HEAD</Base>
+          </li>
+          <li>
+            <Base bgColor="ACTION_BACKGROUND">bgColor: ACTION_BACKGROUND</Base>
+          </li>
+        </List>
+      </dd>
+      <Text as="dt" weight="bold">
+        radius
+      </Text>
       <dd>
         <List>
           <li>
@@ -52,15 +86,18 @@ export const BaseStory: Story = () => {
           </li>
         </List>
       </dd>
-      <dt>box-shadow</dt>
+      <Text as="dt" weight="bold">
+        box-shadow
+      </Text>
       <dd>
         <List>
           {Object.keys(layerMap).map((layer, index) => (
             <li key={`${layer}-${index}`}>
               <Base layer={Number(layer) as LayerKeys}>
                 <Text>
-                  If layer props is specified as <Bold>{layer}</Bold>, box-shadow becomes
-                  <Bold> {themes.shadow[layerMap[Number(layer) as LayerKeys]]}</Bold>.
+                  If layer props is specified as <Text weight="bold">{layer}</Text>, box-shadow
+                  becomes
+                  <Text weight="bold"> {themes.shadow[layerMap[Number(layer) as LayerKeys]]}</Text>.
                 </Text>
               </Base>
             </li>
@@ -77,14 +114,16 @@ export const DialogBaseStory: Story = () => (
     <li>
       <DialogBase radius="s">
         <Text>
-          If radius props is specified as <Bold>s</Bold>, border-radius becomes <Bold>6px</Bold>.
+          If radius props is specified as <Text weight="bold">s</Text>, border-radius becomes{' '}
+          <Text weight="bold">6px</Text>.
         </Text>
       </DialogBase>
     </li>
     <li>
       <DialogBase radius="m">
         <Text>
-          If radius props is specified as <Bold>m</Bold>, border-radius becomes <Bold>8px</Bold>.
+          If radius props is specified as <Text weight="bold">m</Text>, border-radius becomes{' '}
+          <Text weight="bold">8px</Text>.
         </Text>
       </DialogBase>
     </li>
@@ -92,22 +131,11 @@ export const DialogBaseStory: Story = () => (
 )
 DialogBaseStory.storyName = 'DialogBase（非推奨）'
 
-const DescriptionList = styled.dl`
-  padding: 24px;
-  background-color: #eee;
+const DescriptionList = styled(Stack).attrs({ as: 'dl', gap: 1.5 })`
+  ${({ theme: { color, space } }) => css`
+    background-color: ${color.BACKGROUND};
+    padding: ${space(1.5)};
+  `}
 `
 
-const List = styled.ul`
-  margin: 0;
-  padding: 24px;
-  background-color: #eee;
-  list-style: none;
-
-  & > li:not(:first-child) {
-    margin-top: 24px;
-  }
-`
-
-const Bold = styled.span`
-  font-weight: bold;
-`
+const List = styled(Stack).attrs({ as: 'ul', gap: 0.75 })``

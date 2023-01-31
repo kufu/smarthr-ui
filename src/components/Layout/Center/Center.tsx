@@ -10,9 +10,9 @@ export const Center = styled.div<{
   maxWidth?: number | string
   /** 境界とコンテンツの間の余白 */
   padding?: Gap
-  /** true の場合は垂直中央揃えを有効化 */
-  vAlign?: boolean
-}>(({ minHeight, maxWidth, padding, vAlign = false }) => {
+  /** 天地中央揃えも有効化するかどうか */
+  verticalCentering?: boolean
+}>(({ minHeight, maxWidth, padding, verticalCentering = false }) => {
   return css`
     box-sizing: content-box;
     margin-left: auto;
@@ -24,6 +24,6 @@ export const Center = styled.div<{
     ${minHeight && `min-height: ${minHeight};`}
     ${maxWidth && `max-width: ${maxWidth};`}
     ${padding && `padding: ${useSpacing(padding)};`}
-    ${vAlign && 'justify-content: center;'}
+    ${verticalCentering && 'justify-content: center;'}
   `
 })
