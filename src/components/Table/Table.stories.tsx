@@ -125,7 +125,6 @@ export const All: Story = () => (
               </Td>
             </tr>
           ))}
-          )
         </tbody>
       </Table>
     </li>
@@ -176,7 +175,6 @@ export const All: Story = () => (
                 </Td>
               </tr>
             ))}
-            )
           </tbody>
         </Table>
       </div>
