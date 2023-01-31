@@ -5,6 +5,7 @@ import React, {
   forwardRef,
   useCallback,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -59,6 +60,11 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
       () => fileRef.current,
     )
 
+    const selectButtonLabel = useMemo(
+      () => decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL,
+      [decorators],
+    )
+
     const onDrop = useCallback(
       (e: DragEvent<HTMLElement>) => {
         overrideEventDefault(e)
@@ -102,7 +108,7 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
       >
         {children}
         <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
-          {decorators?.selectButtonLabel?.(SELECT_BUTTON_LABEL) || SELECT_BUTTON_LABEL}
+          {selectButtonLabel}
         </Button>
         <input
           ref={fileRef}

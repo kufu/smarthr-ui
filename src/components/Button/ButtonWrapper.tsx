@@ -42,6 +42,7 @@ export function ButtonWrapper({ size, square, className, ...props }: Props) {
     [className, size, square],
   )
   return props.isAnchor ? (
+    // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute
     <Anchor {...props} className={buttonClassName} ref={props.anchorRef} themes={theme} />
   ) : (
     <Button {...props} className={buttonClassName} ref={props.buttonRef} themes={theme} />

@@ -31,6 +31,7 @@ export const SkeletonButtonAnchor: VFC<AnchorProps> = ({ className = '', ...prop
   const { skeletonButtonAnchor } = useClassNames()
 
   return (
+    // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute
     <SkeletonStyleButtonAnchor
       {...props}
       themes={theme}

@@ -42,6 +42,7 @@ export const parameters = {
         'Page Templates（ページテンプレート）',
         'States（状態）',
         'Text（テキスト）',
+        'Experimental（実験的）'
       ],
     },
   },
