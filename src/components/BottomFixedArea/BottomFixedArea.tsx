@@ -88,6 +88,7 @@ export const BottomFixedArea: VFC<Props & ElementProps> = ({
           <ListCluster justify="center" gap={{ row: 0.5, column: 1 }}>
             {tertiaryLinks.map((tertiaryLink, index) => (
               <li key={index} className={classNames.tertiaryListItem}>
+                {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
                 <TertiaryLink {...tertiaryLink} />
               </li>
             ))}
