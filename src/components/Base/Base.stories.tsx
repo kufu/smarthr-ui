@@ -76,7 +76,9 @@ BaseStory.storyName = 'Base'
 
 export const BaseColumnStory: Story = () => (
   <Stack as="ul">
-    <p>padding / bgColor で余白と背景色を変えることもできます</p>
+    <li>
+      <p>padding / bgColor で余白と背景色を変えることもできます</p>
+    </li>
     <li>
       <BaseColumn>初期状態。padding は1文字分。背景は COLUMN。</BaseColumn>
     </li>
