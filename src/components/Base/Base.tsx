@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { GreyScaleColors } from '../../themes/createColor'
 import { Gap } from '../Layout'
 
 import { useClassNames } from './useClassNames'
@@ -11,6 +12,8 @@ type Props = {
   children: ReactNode
   /** 境界とコンテンツの間の余白 */
   padding?: Gap | SeparatePadding
+  /** 背景色 */
+  bgColor?: GreyScaleColors | 'inherit'
   /** 角丸のサイズ */
   radius?: 's' | 'm'
   /** レイヤの重なり方向の高さ（影の付き方に影響する） */
@@ -49,7 +52,7 @@ const separatePadding = (padding: Props['padding']) => {
 }
 
 export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
-  ({ padding, radius = 'm', layer = 1, className = '', ...props }, ref) => {
+  ({ padding, bgColor, radius = 'm', layer = 1, className = '', ...props }, ref) => {
     const themes = useTheme()
     const classNames = useClassNames()
 
@@ -69,6 +72,7 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
         className={`${className} ${classNames.base.wrapper}`}
         themes={themes}
         $padding={$padding}
+        $bgColor={bgColor}
         $radius={$radius}
         $layer={layerMap[layer]}
         ref={ref}
@@ -80,13 +84,18 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
 const Wrapper = styled.div<{
   themes: Theme
   $padding: { block?: Gap; inline?: Gap }
+  $bgColor?: Props['bgColor']
   $radius: string
   $layer: (typeof layerMap)[LayerKeys]
 }>`
-  ${({ themes: { color, shadow }, $padding, $radius, $layer }) => css`
+  ${({ themes: { color, shadow }, $padding, $bgColor, $radius, $layer }) => css`
     box-shadow: ${shadow[$layer]};
     border-radius: ${$radius};
-    background-color: ${color.WHITE};
+    background-color: ${$bgColor
+      ? $bgColor === 'inherit'
+        ? $bgColor
+        : color[$bgColor]
+      : color.WHITE};
     ${$padding.block && `padding-block: ${useSpacing($padding.block)};`}
     ${$padding.inline && `padding-inline: ${useSpacing($padding.inline)};`}
   `}
