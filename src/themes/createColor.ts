@@ -3,15 +3,6 @@ import { darken, rgba, transparentize } from 'polished'
 import { merge } from '../libs/lodash'
 
 export type TextColors = 'TEXT_BLACK' | 'TEXT_WHITE' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK'
-export type GreyScaleColors =
-  | keyof typeof greyScale
-  | 'BACKGROUND'
-  | 'COLUMN'
-  | 'BASE_GREY'
-  | 'OVER_BACKGROUND'
-  | 'HEAD'
-  | 'BORDER'
-  | 'ACTION_BACKGROUND'
 
 const BLACK = '#030302' // hwb(56, 17, 1)
 const greyScale = {
