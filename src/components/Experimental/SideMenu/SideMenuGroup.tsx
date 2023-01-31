@@ -8,7 +8,7 @@ import { Text } from '../../Text'
 import { useClassNames } from './useClassNames'
 
 type Props = PropsWithChildren<{
-  /** 分類グラベル */
+  /** 分類ラベル */
   name: ReactNode
   /** 分類ラベルの HTML タグ */
   nameTag?: ComponentProps<typeof Text>['as']
