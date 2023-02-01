@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, forwardRef, useMemo } from 'react'
+import React, { HTMLAttributes, PropsWithChildren, forwardRef, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useSpacing } from '../../hooks/useSpacing'
@@ -7,15 +7,14 @@ import { Gap } from '../Layout'
 
 import { useClassNames } from './useClassNames'
 
-type Props = {
-  children: ReactNode
+type Props = PropsWithChildren<{
   /** 境界とコンテンツの間の余白 */
   padding?: Gap | SeparatePadding
   /** 角丸のサイズ */
   radius?: 's' | 'm'
   /** レイヤの重なり方向の高さ（影の付き方に影響する） */
   layer?: LayerKeys
-}
+}>
 
 export type LayerKeys = keyof typeof layerMap
 

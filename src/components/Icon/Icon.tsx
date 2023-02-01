@@ -316,10 +316,10 @@ import { useSpacing } from '../../hooks/useSpacing'
 import { useTheme } from '../../hooks/useTheme'
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 
-import type { IconBaseProps, IconType } from 'react-icons'
-
 import Warning from './WarningIcon'
 import { useClassNames } from './useClassNames'
+
+import type { IconBaseProps, IconType } from 'react-icons'
 
 /**
  * literal union type に補完を効かせるためのハック
@@ -361,7 +361,7 @@ type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
 
 export interface ComponentProps extends IconProps, ElementProps {
   /**アイコンの説明テキスト*/
-  alt?: string
+  alt?: React.ReactNode
   /** アイコンと並べるテキスト */
   text?: React.ReactNode
   /** アイコンと並べるテキストとの溝 */
