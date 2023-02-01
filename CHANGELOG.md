@@ -2,6 +2,57 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [27.0.0](https://github.com/kufu/smarthr-ui/compare/v26.1.0...v27.0.0) (2023-02-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* Center の天地中央揃えを verticalCentering に変更 (#3079)
+* DropdownMenuButton の labelのデフォルト値を削除 (#3078)
+
+### Features
+
+* Base に背景色を指定するための color を追加 ([#3081](https://github.com/kufu/smarthr-ui/issues/3081)) ([99d11e2](https://github.com/kufu/smarthr-ui/commit/99d11e2e8ac1e8e10d30161e0c28718ca9aec2ed))
+* BaseColumn を追加 ([#3085](https://github.com/kufu/smarthr-ui/issues/3085)) ([8dd0ae1](https://github.com/kufu/smarthr-ui/commit/8dd0ae11a23cba8af67602313bfa4f8abd0de807)), closes [#3081](https://github.com/kufu/smarthr-ui/issues/3081)
+* DropZone に decorators 属性を追加 ([#3084](https://github.com/kufu/smarthr-ui/issues/3084)) ([6cc5240](https://github.com/kufu/smarthr-ui/commit/6cc524098688282d03db7cfbc0c204b19eb0577a))
+* filter-dropdown に decorators 属性を追加 ([#3064](https://github.com/kufu/smarthr-ui/issues/3064)) ([c5116e8](https://github.com/kufu/smarthr-ui/commit/c5116e889bd09193741be9cab12ebac5c4e143ae))
+* header コンポーネントのtenants[number].name を string から ReactNode に変更 ([#3063](https://github.com/kufu/smarthr-ui/issues/3063)) ([9e827fe](https://github.com/kufu/smarthr-ui/commit/9e827fe3fbbda1bcfee7a172700f1b7216e3366e))
+* icon の alt属性を ReactNode に変更する ([#3060](https://github.com/kufu/smarthr-ui/issues/3060)) ([49ecb5b](https://github.com/kufu/smarthr-ui/commit/49ecb5b6e2f691fbd8cbef9a09089408c1f724c0))
+* message-screen の links[number]label を string から ReactNode に変更 ([#3055](https://github.com/kufu/smarthr-ui/issues/3055)) ([5d59b81](https://github.com/kufu/smarthr-ui/commit/5d59b81b171914707f1987d21e9101c41774ff8c))
+* search-input に decorators 属性を追加 ([#3068](https://github.com/kufu/smarthr-ui/issues/3068)) ([a5434d5](https://github.com/kufu/smarthr-ui/commit/a5434d5bfbb5adb4d32f1ff5061edc61b9ffe6e7))
+* SideMenu を実験的に追加 ([#3070](https://github.com/kufu/smarthr-ui/issues/3070)) ([847cecf](https://github.com/kufu/smarthr-ui/commit/847cecf55b793698afcd4500e9f05a0acb548349))
+
+
+### Bug Fixes
+
+* Center の天地中央揃えを verticalCentering に変更 ([#3079](https://github.com/kufu/smarthr-ui/issues/3079)) ([6a277d3](https://github.com/kufu/smarthr-ui/commit/6a277d3dc4862cc85518d3868e8b430618697f3e))
+* SideMenu の current が iOS の VoiceOver で効いていなかったので修正 ([#3086](https://github.com/kufu/smarthr-ui/issues/3086)) ([897c0db](https://github.com/kufu/smarthr-ui/commit/897c0dbd5a6bcb8a30721505e4bf551bc22acefb))
+
+
+* DropdownMenuButton の labelのデフォルト値を削除 ([#3078](https://github.com/kufu/smarthr-ui/issues/3078)) ([e5cc491](https://github.com/kufu/smarthr-ui/commit/e5cc4916c545068e52c5c25996bae5b66826b920))
+
+## [26.1.0](https://github.com/kufu/smarthr-ui/compare/v26.0.0...v26.1.0) (2023-01-26)
+
+
+### Features
+
+* information-panel に decoratorsオプションを追加 ([#3052](https://github.com/kufu/smarthr-ui/issues/3052)) ([e68a584](https://github.com/kufu/smarthr-ui/commit/e68a5840493d7e7b93a0873c98c7c7eb27c6e088))
+* input-file に decoratorsオプションを追加 ([#3056](https://github.com/kufu/smarthr-ui/issues/3056)) ([e2aa566](https://github.com/kufu/smarthr-ui/commit/e2aa566160bf4760e4d2aee6186ac5f1235df99a))
+* loader の alt, text オプションを ReactNode に変更 ([#3057](https://github.com/kufu/smarthr-ui/issues/3057)) ([fa63a4e](https://github.com/kufu/smarthr-ui/commit/fa63a4e18f0b348cda5d8472a821623bccc899f1))
+* right-fixed-note に decoratorsオプションを追加 ([#3054](https://github.com/kufu/smarthr-ui/issues/3054)) ([42eadda](https://github.com/kufu/smarthr-ui/commit/42eadda559a962ac777f2cfade5fc09c0a5cc5ad))
+* select に decoratorsオプションを追加 ([#3053](https://github.com/kufu/smarthr-ui/issues/3053)) ([a8147fd](https://github.com/kufu/smarthr-ui/commit/a8147fd838632ce7ba640804d56b1e3d6295c50e))
+* textarea に decorators props を追加 ([#3048](https://github.com/kufu/smarthr-ui/issues/3048)) ([7eb8cde](https://github.com/kufu/smarthr-ui/commit/7eb8cdeddf8500f01170ae598df6d0666095e86b))
+* ドラッグハンドルの色を常時表示・ホバーカラーを設定する ([#3051](https://github.com/kufu/smarthr-ui/issues/3051)) ([bc24a40](https://github.com/kufu/smarthr-ui/commit/bc24a404ab28dd267dd3b0d82e6e2c892a93c256))
+
+
+### Bug Fixes
+
+* add overflow: hidden; to Loader ([#3058](https://github.com/kufu/smarthr-ui/issues/3058)) ([af691af](https://github.com/kufu/smarthr-ui/commit/af691af6a78e29a0f6e3974c05a89a25a3e4feff))
+* classNameを追加 ([#3059](https://github.com/kufu/smarthr-ui/issues/3059)) ([83dab22](https://github.com/kufu/smarthr-ui/commit/83dab224ae11bab48a4b8e8b786e080cb398fbe0))
+* EmptyTableBody に要素 props を追加 ([89a016c](https://github.com/kufu/smarthr-ui/commit/89a016c5e649c262e4a52d4a138b645cdeac4399))
+* ダイアログが `portalParent` 指定時に動かなくなっていた問題の修正 ([#3061](https://github.com/kufu/smarthr-ui/issues/3061)) ([5fdba7e](https://github.com/kufu/smarthr-ui/commit/5fdba7eaed233c9e7a91767192ec2950e0cb7318))
+* チャート色を30色に拡張 ([#3062](https://github.com/kufu/smarthr-ui/issues/3062)) ([6317954](https://github.com/kufu/smarthr-ui/commit/6317954fa1c91033a6556e9be04f4eefe5e10baf))
+
 ## [26.0.0](https://github.com/kufu/smarthr-ui/compare/v25.1.1...v26.0.0) (2023-01-23)
 
 

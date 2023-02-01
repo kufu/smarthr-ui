@@ -18,8 +18,8 @@ type ActionItem =
   | null
   | boolean
 type Props = {
-  /** 引き金となるボタンラベル。デフォルトは “その他の操作” */
-  label?: ReactNode
+  /** 引き金となるボタンラベル */
+  label: ReactNode
   /** 操作群 */
   children: Actions
   /** 引き金となるボタンの大きさ */
@@ -32,7 +32,7 @@ type Props = {
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 export const DropdownMenuButton: VFC<Props & ElementProps> = ({
-  label = 'その他の操作',
+  label,
   children,
   triggerSize,
   onlyIconTrigger = false,

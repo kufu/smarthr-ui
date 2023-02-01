@@ -39,6 +39,7 @@ export const TextButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props })
   const { textButtonAnchor } = useClassNames()
 
   return (
+    // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute
     <TextStyleButtonAnchor
       {...props}
       themes={theme}

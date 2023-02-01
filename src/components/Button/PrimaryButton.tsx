@@ -35,6 +35,7 @@ export const PrimaryButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props
   const { primaryButtonAnchor } = useClassNames()
 
   return (
+    // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute
     <PrimaryStyleButtonAnchor
       {...props}
       themes={theme}

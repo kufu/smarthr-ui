@@ -47,6 +47,15 @@ export const All: Story = () => {
         <Text>単一ファイルは任意（デフォルト複数選択可）</Text>
         <DropZone name="single" onSelectFiles={onSelectFiles} multiple={false} />
       </li>
+
+      <li>
+        <Text>ボタンの文言を変更</Text>
+        <DropZone
+          name="decorators"
+          onSelectFiles={onSelectFiles}
+          decorators={{ selectButtonLabel: (txt) => `select file.(${txt})` }}
+        />
+      </li>
     </Group>
   )
 }

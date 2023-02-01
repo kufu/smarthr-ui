@@ -31,6 +31,7 @@ export const DangerButtonAnchor: VFC<AnchorProps> = ({ className = '', ...props 
   const { dangerButtonAnchor } = useClassNames()
 
   return (
+    // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute
     <DangerStyleButtonAnchor
       {...props}
       themes={theme}

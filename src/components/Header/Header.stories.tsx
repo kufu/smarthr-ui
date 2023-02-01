@@ -25,8 +25,8 @@ export const all: Story = () => (
     </Header>
     <Header
       tenants={[
-        { id: 'smart-hr', name: '株式会社スマートHR' },
-        { id: 'smarthr', name: '株式会社SmartHR' },
+        { id: 'smart-hr', name: <span>株式会社スマートHR</span> },
+        { id: 'smarthr', name: <span>株式会社SmartHR</span> },
       ]}
       currentTenantId="smarthr"
       onTenantSelect={(id) => console.log(id)}
@@ -50,15 +50,15 @@ const launcher: ComponentProps<typeof AppLauncher> = {
       items: [
         {
           label: 'ホーム',
-          url: 'http://',
+          url: '#',
         },
         {
           label: '従業員リスト',
-          url: 'http://',
+          url: '#',
         },
         {
           label: '共通設定',
-          url: 'http://',
+          url: '#',
         },
       ],
     },
@@ -67,19 +67,19 @@ const launcher: ComponentProps<typeof AppLauncher> = {
       items: [
         {
           label: '電子申請',
-          url: 'http://',
+          url: '#',
         },
         {
           label: '給与明細',
-          url: 'http://',
+          url: '#',
         },
         {
           label: 'マイナンバー',
-          url: 'http://',
+          url: '#',
         },
         {
-          label: '文書配布',
-          url: 'http://',
+          label: '文書配付',
+          url: '#',
         },
       ],
     },
@@ -88,15 +88,15 @@ const launcher: ComponentProps<typeof AppLauncher> = {
       items: [
         {
           label: '人事評価',
-          url: 'http://',
+          url: '#',
         },
         {
           label: '分析レポート',
-          url: 'http://',
+          url: '#',
         },
         {
           label: '従業員サーベイ',
-          url: 'http://',
+          url: '#',
         },
       ],
     },
@@ -104,28 +104,28 @@ const launcher: ComponentProps<typeof AppLauncher> = {
       heading: '連携',
       items: [
         {
-          label: 'おまかせ はたラクサポート連携',
-          url: 'http://',
+          label: 'アプリケーション1',
+          url: '#',
         },
         {
-          label: 'KING OF TIME連携',
-          url: 'http://',
+          label: 'アプリケーション2',
+          url: '#',
         },
         {
-          label: 'freee人事労務連携',
-          url: 'http://',
+          label: 'アプリケーション3',
+          url: '#',
         },
         {
-          label: 'Touch On Time連携',
-          url: 'http://',
+          label: 'アプリケーション4',
+          url: '#',
         },
         {
-          label: 'おまかせ はたラクサポート連携',
-          url: 'http://',
+          label: 'アプリケーション5',
+          url: '#',
         },
         {
-          label: 'ジョブカン連携',
-          url: 'http://',
+          label: 'アプリケーション6',
+          url: '#',
         },
       ],
     },
@@ -133,16 +133,16 @@ const launcher: ComponentProps<typeof AppLauncher> = {
       heading: 'SmartHR Plus',
       items: [
         {
-          label: 'Smart打刻',
-          url: 'http://',
+          label: 'アプリケーション1',
+          url: '#',
         },
         {
-          label: 'KING OF TIME',
-          url: 'http://',
+          label: 'アプリケーション2',
+          url: '#',
         },
         {
-          label: '検診予約・結果管理システム',
-          url: 'http://',
+          label: 'アプリケーション3',
+          url: '#',
         },
       ],
     },

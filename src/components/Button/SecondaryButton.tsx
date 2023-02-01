@@ -38,6 +38,7 @@ export const SecondaryButtonAnchor: VFC<AnchorProps> = ({ className = '', ...pro
   const { secondaryButtonAnchor } = useClassNames()
 
   return (
+    // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute
     <SecondaryStyleButtonAnchor
       {...props}
       themes={theme}

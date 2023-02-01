@@ -54,10 +54,10 @@ export const All: Story = () => {
 
       <Stack as="section">
         <Heading tag="h2" type="sectionTitle">
-          vAlign (with minHeight: 200px)
+          with Vertical Centering (with minHeight: 200px)
         </Heading>
         <DemoWrapper>
-          <Center vAlign minHeight="200px">
+          <Center verticalCentering minHeight="200px">
             <Button>水平垂直中央揃え</Button>
           </Center>
         </DemoWrapper>
