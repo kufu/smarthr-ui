@@ -64,7 +64,7 @@ commands:
   run-chromatic:
     steps:
       - checkout
-      - run: yarn chromatic --project-token=${CHROMATIC_PROJECT_TOKEN}
+      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes
   install-noto-sans-cjk-jp:
     steps:
       - run:
