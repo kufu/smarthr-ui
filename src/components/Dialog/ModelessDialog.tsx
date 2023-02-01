@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -15,6 +16,7 @@ import styled, { css } from 'styled-components'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types/props'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
@@ -76,7 +78,15 @@ type Props = {
    * ポータルの container となる DOM 要素を追加する親要素
    */
   portalParent?: HTMLElement | RefObject<HTMLElement>
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'closeButtonIconAlt'> & {
+    dialogHandlerAriaLabel?: (txt: string) => string
+    dialogHandlerAriaValuetext?: (txt: string, data: DOMRect | undefined) => string
+  }
 }
+
+const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
+const CLOSE_BUTTON_ICON_ALT = '閉じる'
 
 export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   header,
@@ -93,6 +103,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   bottom,
   portalParent,
   className = '',
+  decorators,
   ...props
 }) => {
   const { createPortal } = useDialogPortal(portalParent)
@@ -204,6 +215,13 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
 
   const labelId = useId()
   const classNames = useClassNames().modelessDialog
+  const defaultAriaValuetext = useMemo(
+    () =>
+      wrapperPosition
+        ? `上から${Math.trunc(wrapperPosition.top)}px、左から${Math.trunc(wrapperPosition.left)}px`
+        : '',
+    [wrapperPosition],
+  )
 
   return createPortal(
     <DialogOverlap isOpen={isOpen}>
@@ -252,11 +270,17 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                 themes={theme}
                 tabIndex={0}
                 role="slider"
-                aria-label="ダイアログの位置"
+                aria-label={
+                  decorators?.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) ||
+                  DIALOG_HANDLER_ARIA_LABEL
+                }
                 aria-valuetext={
-                  wrapperPosition &&
-                  `上から${Math.trunc(wrapperPosition.top)}px、
-                  左から${Math.trunc(wrapperPosition.left)}px`
+                  defaultAriaValuetext
+                    ? decorators?.dialogHandlerAriaValuetext?.(
+                        defaultAriaValuetext,
+                        wrapperPosition,
+                      ) || defaultAriaValuetext
+                    : undefined
                 }
                 onKeyDown={handleArrowKey}
               >
@@ -273,7 +297,12 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                   onClick={onClickClose}
                   className={classNames.closeButton}
                 >
-                  <FaTimesIcon alt="閉じる" />
+                  <FaTimesIcon
+                    alt={
+                      decorators?.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) ||
+                      CLOSE_BUTTON_ICON_ALT
+                    }
+                  />
                 </Button>
               </CloseButtonLayout>
             </Header>
