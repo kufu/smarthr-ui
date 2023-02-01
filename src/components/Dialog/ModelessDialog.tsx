@@ -106,9 +106,14 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   decorators,
   ...props
 }) => {
+  const labelId = useId()
+  const classNames = useClassNames().modelessDialog
   const { createPortal } = useDialogPortal(portalParent)
+  const theme = useTheme()
+
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
+
   const [wrapperPosition, setWrapperPosition] = useState<DOMRect | undefined>(undefined)
   const [centering, setCentering] = useState<{
     top?: number
@@ -120,44 +125,14 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   })
   const [draggableBounds, setDraggableBounds] =
     useState<ComponentProps<typeof Draggable>['bounds']>()
-  const theme = useTheme()
 
-  useEffect(() => {
-    if (wrapperRef.current instanceof Element) {
-      setWrapperPosition(wrapperRef.current.getBoundingClientRect())
-    }
-  }, [position])
-
-  useHandleEscape(
-    useCallback(() => {
-      if (isOpen) {
-        onPressEscape && onPressEscape()
-      }
-    }, [isOpen, onPressEscape]),
+  const defaultAriaValuetext = useMemo(
+    () =>
+      wrapperPosition
+        ? `上から${Math.trunc(wrapperPosition.top)}px、左から${Math.trunc(wrapperPosition.left)}px`
+        : '',
+    [wrapperPosition],
   )
-
-  useLayoutEffect(() => {
-    if (isOpen) {
-      setPosition({ x: 0, y: 0 })
-      focusTargetRef.current?.focus()
-    }
-  }, [isOpen])
-
-  useEffect(() => {
-    // 中央寄せの座標計算を行う
-    if (!wrapperRef.current || !isOpen) {
-      return
-    }
-    const isXCenter = left === undefined && right === undefined
-    const isYCenter = top === undefined && bottom === undefined
-    if (isXCenter || isYCenter) {
-      const rect = wrapperRef.current.getBoundingClientRect()
-      setCentering({
-        top: isYCenter ? window.innerHeight / 2 - rect.height / 2 : undefined,
-        left: isXCenter ? window.innerWidth / 2 - rect.width / 2 : undefined,
-      })
-    }
-  }, [bottom, isOpen, left, right, top])
 
   const handleArrowKey = useCallback(
     (e: React.KeyboardEvent) => {
@@ -200,6 +175,28 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   )
 
   useEffect(() => {
+    if (wrapperRef.current instanceof Element) {
+      setWrapperPosition(wrapperRef.current.getBoundingClientRect())
+    }
+  }, [position])
+
+  useEffect(() => {
+    // 中央寄せの座標計算を行う
+    if (!wrapperRef.current || !isOpen) {
+      return
+    }
+    const isXCenter = left === undefined && right === undefined
+    const isYCenter = top === undefined && bottom === undefined
+    if (isXCenter || isYCenter) {
+      const rect = wrapperRef.current.getBoundingClientRect()
+      setCentering({
+        top: isYCenter ? window.innerHeight / 2 - rect.height / 2 : undefined,
+        left: isXCenter ? window.innerWidth / 2 - rect.width / 2 : undefined,
+      })
+    }
+  }, [bottom, isOpen, left, right, top])
+
+  useEffect(() => {
     if (!isOpen) return
 
     if (centering.top) {
@@ -213,14 +210,19 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }
   }, [isOpen, centering.top])
 
-  const labelId = useId()
-  const classNames = useClassNames().modelessDialog
-  const defaultAriaValuetext = useMemo(
-    () =>
-      wrapperPosition
-        ? `上から${Math.trunc(wrapperPosition.top)}px、左から${Math.trunc(wrapperPosition.left)}px`
-        : '',
-    [wrapperPosition],
+  useLayoutEffect(() => {
+    if (isOpen) {
+      setPosition({ x: 0, y: 0 })
+      focusTargetRef.current?.focus()
+    }
+  }, [isOpen])
+
+  useHandleEscape(
+    useCallback(() => {
+      if (isOpen) {
+        onPressEscape && onPressEscape()
+      }
+    }, [isOpen, onPressEscape]),
   )
 
   return createPortal(
