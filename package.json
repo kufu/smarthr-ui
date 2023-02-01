@@ -148,7 +148,7 @@
     "e2e": "ts-node scripts/e2e.ts",
     "e2e:dev": "testcafe chrome --host localhost --skip-js-errors",
     "prepare": "husky install",
-    "chromatic": "npx chromatic --project-token=8996142b5ba1"
+    "chromatic": "chromatic"
   },
   "sideEffects": false,
   "typings": "lib/index.d.ts",
