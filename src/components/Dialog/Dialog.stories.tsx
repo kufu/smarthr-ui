@@ -558,7 +558,7 @@ export const Modeless_Dialog: Story = () => {
             closeButtonIconAlt: (txt) => `close.(${txt})`,
             dialogHandlerAriaLabel: (txt) => `label.(${txt})`,
             dialogHandlerAriaValuetext: (txt, data) =>
-              `valuetext.(${txt}: ${data.left}, ${data.top})`,
+              `valuetext.(${txt}: ${data?.left}, ${data?.top})`,
           }}
         >
           <ModelessContent>

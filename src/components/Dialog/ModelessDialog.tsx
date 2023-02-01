@@ -126,12 +126,29 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   const [draggableBounds, setDraggableBounds] =
     useState<ComponentProps<typeof Draggable>['bounds']>()
 
+  const dialogHandlerAriaLabel = useMemo(
+    () =>
+      decorators?.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) || DIALOG_HANDLER_ARIA_LABEL,
+    [decorators],
+  )
   const defaultAriaValuetext = useMemo(
     () =>
       wrapperPosition
         ? `上から${Math.trunc(wrapperPosition.top)}px、左から${Math.trunc(wrapperPosition.left)}px`
         : '',
     [wrapperPosition],
+  )
+  const dialogHandlerAriaValuetext = useMemo(
+    () =>
+      defaultAriaValuetext
+        ? decorators?.dialogHandlerAriaValuetext?.(defaultAriaValuetext, wrapperPosition) ||
+          defaultAriaValuetext
+        : undefined,
+    [defaultAriaValuetext, wrapperPosition, decorators],
+  )
+  const closeButtonIconAlt = useMemo(
+    () => decorators?.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) || CLOSE_BUTTON_ICON_ALT,
+    [decorators],
   )
 
   const handleArrowKey = useCallback(
@@ -272,18 +289,8 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                 themes={theme}
                 tabIndex={0}
                 role="slider"
-                aria-label={
-                  decorators?.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) ||
-                  DIALOG_HANDLER_ARIA_LABEL
-                }
-                aria-valuetext={
-                  defaultAriaValuetext
-                    ? decorators?.dialogHandlerAriaValuetext?.(
-                        defaultAriaValuetext,
-                        wrapperPosition,
-                      ) || defaultAriaValuetext
-                    : undefined
-                }
+                aria-label={dialogHandlerAriaLabel}
+                aria-valuetext={dialogHandlerAriaValuetext}
                 onKeyDown={handleArrowKey}
               >
                 <FaGripHorizontalIcon />
@@ -299,12 +306,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                   onClick={onClickClose}
                   className={classNames.closeButton}
                 >
-                  <FaTimesIcon
-                    alt={
-                      decorators?.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) ||
-                      CLOSE_BUTTON_ICON_ALT
-                    }
-                  />
+                  <FaTimesIcon alt={closeButtonIconAlt} />
                 </Button>
               </CloseButtonLayout>
             </Header>
