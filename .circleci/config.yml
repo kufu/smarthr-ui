@@ -60,26 +60,6 @@ commands:
           command: yarn test-storybook:ci
       - store_test_results:
           path: junit.xml
-  # visual regression testing
-  run-reg-suit:
-    steps:
-      - checkout
-      - run: |
-          if [ -z "$AWS_ACCESS_KEY_ID" ]; then
-            echo "No AWS_ACCESS_KEY_ID is set! Failing..."
-            exit 1;
-          else
-            echo "Credentials are available."
-          fi
-      - restore_cache:
-          keys:
-            - yarn-packages-reg-{{ checksum "yarn.lock" }}
-      - run: yarn install --frozen-lockfile
-      - save_cache:
-          paths:
-            - ~/.cache/yarn
-          key: yarn-packages-reg-{{ checksum "yarn.lock" }}
-      - run: yarn test-visual
   # chromatic
   run-chromatic:
     steps:
@@ -112,12 +92,6 @@ jobs:
       - setup-for-test
       - check-source
       - run-npm-test
-  reg-suit:
-    executor: node-active-lts-browsers
-    working_directory: ~/repo
-    steps:
-      - install-noto-sans-cjk-jp
-      - run-reg-suit
   a11y-test:
     executor: node-active-lts-browsers
     working_directory: ~/repo
@@ -135,8 +109,6 @@ workflows:
       - node-maintenance:
           context: smarthr-dockerhub
       - node-active-lts:
-          context: smarthr-dockerhub
-      - reg-suit:
           context: smarthr-dockerhub
       - a11y-test:
           context: smarthr-dockerhub
