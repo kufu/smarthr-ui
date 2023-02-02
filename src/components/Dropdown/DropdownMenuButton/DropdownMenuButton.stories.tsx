@@ -26,7 +26,7 @@ const Template: React.FC<Omit<ComponentProps<typeof DropdownMenuButton>, 'childr
 )
 
 export const Default: Story = () => (
-  <Cluster align="center">
+  <Cluster align="center" justify="flex-end">
     <Template label="その他の操作" />
     <Template disabled label="その他の操作" />
     <Template onlyIconTrigger label="その他の操作" />
