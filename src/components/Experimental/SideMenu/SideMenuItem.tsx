@@ -28,26 +28,24 @@ export const SideMenuItem: React.FC<Props & ElementProps & InnerLinkProps> = ({
   return (
     <Item
       {...props}
-      aria-current={current && 'page'}
+      current={current}
       className={`${className || ''} ${classNames.item}`}
       themes={theme}
     >
-      <a href={href}>{children}</a>
+      <a href={href} aria-current={current && 'page'}>
+        {children}
+      </a>
     </Item>
   )
 }
 
-const Item = styled.li<{ themes: Theme }>`
-  ${({ themes: { color, radius, shadow, space } }) => css`
+const Item = styled.li<{ current: Props['current']; themes: Theme }>`
+  ${({ current, themes: { color, radius, shadow, space } }) => css`
     position: relative;
     padding-inline-start: ${space(0.75)};
 
-    &[aria-current='page'] {
-      a {
-        background-color: ${color.hoverColor(color.WHITE)};
-        font-weight: bold;
-      }
-
+    ${current &&
+    css`
       &::before {
         content: '';
         position: absolute;
@@ -57,7 +55,7 @@ const Item = styled.li<{ themes: Theme }>`
         width: 3px;
         background-color: ${color.MAIN};
       }
-    }
+    `}
 
     a {
       /* 親要素ではなくリンクにスタイリングするため block でいっぱいに広げている */
@@ -65,6 +63,11 @@ const Item = styled.li<{ themes: Theme }>`
       border-radius: ${radius.m};
       padding: ${space(0.75)} ${space(1)};
       text-decoration: unset;
+
+      &[aria-current='page'] {
+        background-color: ${color.hoverColor(color.WHITE)};
+        font-weight: bold;
+      }
 
       &:hover {
         background-color: ${color.hoverColor(color.hoverColor(color.WHITE))};

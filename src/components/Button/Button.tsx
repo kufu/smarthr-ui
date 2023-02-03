@@ -67,7 +67,12 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
       return (
         <DisabledDetailWrapper themes={theme} className={classNames.disabledWrapper}>
           {button}
-          <Tooltip message={disabledDetail.message} triggerType="icon">
+          <Tooltip
+            message={disabledDetail.message}
+            triggerType="icon"
+            horizontal="auto"
+            vertical="auto"
+          >
             <DisabledDetailIcon />
           </Tooltip>
         </DisabledDetailWrapper>
