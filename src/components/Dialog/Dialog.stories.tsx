@@ -180,9 +180,9 @@ export const Message_Dialog: Story = () => {
         title="MessageDialog"
         subtitle="副題"
         description={<p>{dummyText} </p>}
-        decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
+        decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
         id="dialog-message"
         data-test="dialog-content"
       />
