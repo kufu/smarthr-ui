@@ -17,6 +17,7 @@ export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
   closeText,
   portalParent,
   className = '',
+  decorators,
   ...props
 }) => {
   const { onClickClose, active } = useContext(DialogContext)
@@ -44,6 +45,7 @@ export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
         description={description}
         closeText={closeText}
         onClickClose={handleClickClose}
+        decorators={decorators}
       />
     </DialogContentInner>,
   )

@@ -182,6 +182,7 @@ export const Message_Dialog: Story = () => {
         description={<p>{dummyText} </p>}
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
+        decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
         id="dialog-message"
         data-test="dialog-content"
       />
