@@ -21,6 +21,7 @@ export const ActionDialogContent: React.VFC<Props & ElementProps> = ({
   actionDisabled = false,
   portalParent,
   className = '',
+  decorators,
   ...props
 }) => {
   const { onClickClose, active } = useContext(DialogContext)
@@ -60,6 +61,7 @@ export const ActionDialogContent: React.VFC<Props & ElementProps> = ({
         onClickAction={handleClickAction}
         onClickClose={handleClickClose}
         actionDisabled={actionDisabled}
+        decorators={decorators}
       >
         {children}
       </ActionDialogContentInner>
