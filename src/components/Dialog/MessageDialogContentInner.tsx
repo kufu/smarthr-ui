@@ -2,6 +2,7 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { HeadingTagTypes } from '../Heading'
 import { Stack } from '../Layout'
@@ -31,6 +32,8 @@ export type BaseProps = {
    * 閉じるボタンのラベル
    */
   closeText?: React.ReactNode
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'closeButtonLabel'>
 }
 
 export type MessageDialogContentInnerProps = BaseProps & {
@@ -38,14 +41,17 @@ export type MessageDialogContentInnerProps = BaseProps & {
   titleId: string
 }
 
+const CLOSE_BUTTON_LABEL = '閉じる'
+
 export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   title,
   subtitle,
   titleTag = 'h2',
   titleId,
   description,
-  closeText = '閉じる',
+  closeText,
   onClickClose,
+  decorators,
 }) => {
   const classNames = useClassNames().dialog
   const theme = useTheme()
@@ -74,7 +80,7 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
       </Description>
       <Bottom themes={theme} ref={bottomRef} className={classNames.buttonArea}>
         <Button onClick={onClickClose} className={classNames.closeButton}>
-          {closeText}
+          {closeText || decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
         </Button>
       </Bottom>
     </>

@@ -23,6 +23,7 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
   onPressEscape = onClickClose,
   className = '',
   portalParent,
+  decorators,
   ...props
 }) => {
   const { createPortal } = useDialogPortal(portalParent)
@@ -48,6 +49,7 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
         description={description}
         closeText={closeText}
         onClickClose={handleClickClose}
+        decorators={decorators}
       />
     </DialogContentInner>,
   )
