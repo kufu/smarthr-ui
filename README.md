@@ -43,13 +43,13 @@ The simplest and easiest example to get you started.
 ```tsx
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { createTheme, ThemeProvider, PrimaryButton } from 'smarthr-ui'
+import { createTheme, ThemeProvider, Button } from 'smarthr-ui'
 
 const theme = createTheme({})
 
 const App: React.FC<Record<string, unknown>> = () => (
   <ThemeProvider theme={theme}>
-    <PrimaryButton>Hello World</PrimaryButton>
+    <Button variant="primary">Hello World</Button>
   </ThemeProvider>
 )
 
