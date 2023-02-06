@@ -70,7 +70,7 @@
     "react-test-renderer": "^18.2.0",
     "smarthr-normalize-css": "^1.0.4",
     "standard-version": "^9.3.2",
-    "storycap": "^3.1.9",
+    "storycap": "^4.0.0",
     "styled-components": "^5.3.6",
     "styled-reset": "^4.4.5",
     "stylelint": "^14.16.1",
