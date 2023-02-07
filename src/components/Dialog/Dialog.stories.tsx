@@ -302,6 +302,7 @@ export const Action_Dialog: Story = () => {
           }}
           onClickClose={onClickClose}
           onClickOverlay={onClickClose}
+          decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
           firstFocusTarget={openedFocusRef}
           data-test="opened-dialog"
         >

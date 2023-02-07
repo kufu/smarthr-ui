@@ -28,7 +28,7 @@
     "@storybook/jest": "^0.0.10",
     "@storybook/manager-webpack5": "^6.5.16",
     "@storybook/react": "^6.5.16",
-    "@storybook/test-runner": "^0.9.3",
+    "@storybook/test-runner": "^0.9.4",
     "@storybook/testing-library": "^0.0.13",
     "@storybook/theming": "^6.5.16",
     "@swc/core": "^1.3.30",
@@ -82,7 +82,7 @@
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
     "ttypescript": "^1.5.15",
-    "typescript": "^4.9.4",
+    "typescript": "^4.9.5",
     "typescript-plugin-styled-components": "^2.0.0",
     "wait-on": "^7.0.1",
     "webpack": "^5.75.0"
