@@ -49,7 +49,7 @@ import { createTheme, ThemeProvider, Button } from 'smarthr-ui'
 
 const theme = createTheme()
 
-const App: React.FC<Record<string, unknown>> = () => (
+const App: React.FC = () => (
   <ThemeProvider theme={theme}>
     <Button variant="primary">Hello World</Button>
   </ThemeProvider>
