@@ -3,7 +3,7 @@
 <div align="center">
 
 SmartHR は、SmartHR 基本機能からはじまり、今では多くのオプション機能を提供しています。
-SmartHR UI はそのすべてのアプリケーションの UI コンポーネントを共通化して、デザイン・実装の速度や完成度を向上させるための UI コンポーネントライブラリです。
+SmartHR UI はそのすべてのアプリケーションの UI コンポーネントを共通化して、開発生産性や完成度を向上させるための UI コンポーネントライブラリです。
 
 [![npm version](https://badge.fury.io/js/smarthr-ui.svg)](https://badge.fury.io/js/smarthr-ui)
 [![CircleCI](https://circleci.com/gh/kufu/smarthr-ui.svg?style=shield)](https://circleci.com/gh/kufu/smarthr-ui)
