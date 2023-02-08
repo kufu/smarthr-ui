@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [27.1.0](https://github.com/kufu/smarthr-ui/compare/v27.0.0...v27.1.0) (2023-02-08)
+
+
+### Features
+
+* ActionDialog に decorators オプションを追加する ([#3095](https://github.com/kufu/smarthr-ui/issues/3095)) ([4c05b57](https://github.com/kufu/smarthr-ui/commit/4c05b575052cec8b787073338e039a815c64a5c2))
+* circleciにchromaticを追加 ([#3067](https://github.com/kufu/smarthr-ui/issues/3067)) ([a86dc8d](https://github.com/kufu/smarthr-ui/commit/a86dc8d6998c9f27e8992dff8494fa931b9dc0f2))
+* MessageDialog に decorators オプションを追加する ([#3094](https://github.com/kufu/smarthr-ui/issues/3094)) ([0935372](https://github.com/kufu/smarthr-ui/commit/093537204fe077b735573e3121a2ba84a13b41ea))
+* ModelessDialog に decorators属性を追加する ([#3087](https://github.com/kufu/smarthr-ui/issues/3087)) ([75e27e2](https://github.com/kufu/smarthr-ui/commit/75e27e2f90b8c155bf029fbb0c2798c59414809c))
+* storysourceを追加 ([#3090](https://github.com/kufu/smarthr-ui/issues/3090)) ([2a8acf9](https://github.com/kufu/smarthr-ui/commit/2a8acf91edefcd45d8607a24cbe84c56fd678d2d))
+
+
+### Bug Fixes
+
+* Button の無効理由が見きれないように Tooltip の位置を自動に変更 ([#3092](https://github.com/kufu/smarthr-ui/issues/3092)) ([5d2df56](https://github.com/kufu/smarthr-ui/commit/5d2df5660797328b6e7d2be4f2a28c1edacfd972))
+* SideMenu の現在地色が背景色の上に載ると見えなかったので調整 ([#3091](https://github.com/kufu/smarthr-ui/issues/3091)) ([60d669d](https://github.com/kufu/smarthr-ui/commit/60d669d1dfb4b9db13ad766dc1dd26d7316002e4))
+
 ## [27.0.0](https://github.com/kufu/smarthr-ui/compare/v26.1.0...v27.0.0) (2023-02-01)
 
 
