@@ -18,7 +18,7 @@ https://story.smarthr-ui.dev
 
 ## インストール
 
-SmartHR-UI は[npm package](https://www.npmjs.com/package/smarthr-ui)として提供されています。
+SmartHR-UI は[npm package](https://www.npmjs.com/package/smarthr-ui)として提供しています。
 
 ```sh
 // with npm
