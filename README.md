@@ -28,7 +28,7 @@ npm install smarthr-ui
 yarn add smarthr-ui
 ```
 
-Install peerDependencies.
+peerDependencies として React, React-DOM, styled-components が必要です。
 
 ```sh
 // with npm
@@ -62,7 +62,7 @@ root.render(<App />)
 
 ## コントリビュート
 
-Smart [コントリビュート](https://github.com/kufu/smarthr-ui/blob/master/CONTRIBUTING.md)をお待ちしています。
+SmartHR UI は OSS です。[コントリビュート](https://github.com/kufu/smarthr-ui/blob/master/CONTRIBUTING.md)をお待ちしています。
 
 ## 更新履歴
 
