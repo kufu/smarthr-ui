@@ -15,6 +15,7 @@ import styled, { css } from 'styled-components'
 import { useId } from '../../hooks/useId'
 import { usePortal } from '../../hooks/usePortal'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types/props'
 import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
@@ -33,7 +34,7 @@ type Props<T> = {
   isExpanded: boolean
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
-  decorator: { noResultText?: (text: string) => ReactNode } | undefined
+  decorators?: DecoratorsType<'noResultText'>
 }
 
 type Rect = {
@@ -54,7 +55,7 @@ export function useListBox<T>({
   isExpanded,
   isLoading,
   triggerRef,
-  decorator,
+  decorators,
 }: Props<T>) {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
@@ -243,7 +244,9 @@ export function useListBox<T>({
                 aria-live="polite"
                 className={classNames.noItems}
               >
-                {decorator?.noResultText ? decorator.noResultText(NO_RESULT_TEXT) : NO_RESULT_TEXT}
+                {decorators?.noResultText
+                  ? decorators.noResultText(NO_RESULT_TEXT)
+                  : NO_RESULT_TEXT}
               </NoItems>
             ) : (
               partialOptions.map((option) => (
@@ -280,7 +283,7 @@ export function useListBox<T>({
       dropdownHelpMessage,
       dropdownWidth,
       theme,
-      decorator,
+      decorators,
     ],
   )
 

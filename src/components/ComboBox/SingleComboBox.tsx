@@ -172,7 +172,7 @@ export function SingleComboBox<T>({
     handleKeyDown: handleListBoxKeyDown,
     listBoxId,
     listBoxRef,
-  } = useListBox({
+  } = useListBox<T>({
     options,
     dropdownHelpMessage,
     dropdownWidth,
