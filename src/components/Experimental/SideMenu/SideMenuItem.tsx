@@ -65,12 +65,12 @@ const Item = styled.li<{ current: Props['current']; themes: Theme }>`
       text-decoration: unset;
 
       &[aria-current='page'] {
-        background-color: ${color.hoverColor(color.WHITE)};
+        background-color: ${color.GREY_9};
         font-weight: bold;
       }
 
       &:hover {
-        background-color: ${color.hoverColor(color.hoverColor(color.WHITE))};
+        background-color: ${color.hoverColor(color.GREY_9)};
       }
 
       &:focus {
