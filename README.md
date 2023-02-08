@@ -2,7 +2,8 @@
 
 <div align="center">
 
-React components for creating SmartHR applications.
+SmartHR は、SmartHR 基本機能からはじまり、今では多くのオプション機能を提供しています。
+SmartHR UI はそのすべてのアプリケーションの UI コンポーネントを共通化して、開発生産性や完成度を向上させるための UI コンポーネントライブラリです。
 
 [![npm version](https://badge.fury.io/js/smarthr-ui.svg)](https://badge.fury.io/js/smarthr-ui)
 [![CircleCI](https://circleci.com/gh/kufu/smarthr-ui.svg?style=shield)](https://circleci.com/gh/kufu/smarthr-ui)
@@ -10,13 +11,14 @@ React components for creating SmartHR applications.
 
 </div>
 
-## Components
+## コンポーネント
 
-master branch's storybook: https://smarthr-ui.netlify.com/
+`master`ブランチのコンポーネント一覧は Storybook から確認できます。
+https://story.smarthr-ui.dev
 
-## Installation
+## インストール
 
-SmartHR-UI is available as an  [npm package](https://www.npmjs.com/package/smarthr-ui).
+SmartHR-UI は[npm package](https://www.npmjs.com/package/smarthr-ui)として提供しています。
 
 ```sh
 // with npm
@@ -26,7 +28,7 @@ npm install smarthr-ui
 yarn add smarthr-ui
 ```
 
-Install peerDependencies.
+peerDependencies として React, React-DOM, styled-components が必要です。
 
 ```sh
 // with npm
@@ -36,38 +38,41 @@ npm install react react-dom styled-components
 yarn add react react-dom styled-components
 ```
 
-## Usage
+## 使いかた
 
-The simplest and easiest example to get you started.
+最もシンプルで簡単な使用例を紹介します。
 
 ```tsx
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { createTheme, ThemeProvider, PrimaryButton } from 'smarthr-ui'
+import { createRoot } from 'react-dom/client'
+import { createTheme, ThemeProvider, Button } from 'smarthr-ui'
 
-const theme = createTheme({})
+const theme = createTheme()
 
-const App: React.FC<Record<string, unknown>> = () => (
+const App: React.FC = () => (
   <ThemeProvider theme={theme}>
-    <PrimaryButton>Hello World</PrimaryButton>
+    <Button variant="primary">Hello World</Button>
   </ThemeProvider>
 )
 
-ReactDOM.render(<App />, document.getElementById('app'))
+const container = document.getElementById('app')
+const root = createRoot(container)
+root.render(<App />)
 ```
 
-## Contributing
+## コントリビュート
 
-We'd greatly appreciate any [contribution](https://github.com/kufu/smarthr-ui/blob/master/CONTRIBUTING.md) you make.
+SmartHR UI は OSS です。[コントリビュート](https://github.com/kufu/smarthr-ui/blob/master/CONTRIBUTING.md)をお待ちしています。
 
-## Changelog
+## 更新履歴
 
-Please read the [changelog](https://github.com/kufu/smarthr-ui/releases).
+更新履歴は[Releases](https://github.com/kufu/smarthr-ui/releases)を確認してください。
 
-## Design
-We released design in [Figma](https://www.figma.com/community/file/978607227374353992/SmartHR-UI).
-If you use our service logo, please read the [SmartHR Design System](https://smarthr.design/)
+## デザイン・ロゴの利用について
 
-## License
+- SmartHR UI のデザインデータは[Figma](https://www.figma.com/community/file/978607227374353992/SmartHR-UI)で公開しています。
+- SmartHR のロゴを利用する場合は[SmartHR Design System](https://smarthr.design/)の利用規約を確認してください。
 
-This project is licensed under the terms of the [MIT license](https://github.com/kufu/smarthr-ui/blob/master/LICENSE).
+## ライセンス
+
+このプロダクトは[MIT](https://github.com/kufu/smarthr-ui/blob/master/LICENSE)の条件に従ってライセンスされています。
