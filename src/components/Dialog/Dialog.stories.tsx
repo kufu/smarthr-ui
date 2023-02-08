@@ -182,6 +182,7 @@ export const Message_Dialog: Story = () => {
         description={<p>{dummyText} </p>}
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
+        decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
         id="dialog-message"
         data-test="dialog-content"
       />
@@ -300,6 +301,7 @@ export const Action_Dialog: Story = () => {
           }}
           onClickClose={onClickClose}
           onClickOverlay={onClickClose}
+          decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
           firstFocusTarget={openedFocusRef}
           data-test="opened-dialog"
         >
@@ -554,6 +556,12 @@ export const Modeless_Dialog: Story = () => {
           width="50%"
           height="50%"
           id="modeless-dialog-1"
+          decorators={{
+            closeButtonIconAlt: (txt) => `close.(${txt})`,
+            dialogHandlerAriaLabel: (txt) => `label.(${txt})`,
+            dialogHandlerAriaValuetext: (txt, data) =>
+              `valuetext.(${txt}: ${data?.left}, ${data?.top})`,
+          }}
         >
           <ModelessContent>
             <Stack gap="S">

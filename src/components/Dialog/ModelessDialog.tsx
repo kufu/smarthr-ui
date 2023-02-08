@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -15,6 +16,7 @@ import styled, { css } from 'styled-components'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types/props'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
@@ -76,7 +78,15 @@ type Props = {
    * ポータルの container となる DOM 要素を追加する親要素
    */
   portalParent?: HTMLElement | RefObject<HTMLElement>
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'closeButtonIconAlt'> & {
+    dialogHandlerAriaLabel?: (txt: string) => string
+    dialogHandlerAriaValuetext?: (txt: string, data: DOMRect | undefined) => string
+  }
 }
+
+const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
+const CLOSE_BUTTON_ICON_ALT = '閉じる'
 
 export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   header,
@@ -93,11 +103,17 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   bottom,
   portalParent,
   className = '',
+  decorators,
   ...props
 }) => {
+  const labelId = useId()
+  const classNames = useClassNames().modelessDialog
   const { createPortal } = useDialogPortal(portalParent)
+  const theme = useTheme()
+
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
+
   const [wrapperPosition, setWrapperPosition] = useState<DOMRect | undefined>(undefined)
   const [centering, setCentering] = useState<{
     top?: number
@@ -109,44 +125,31 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   })
   const [draggableBounds, setDraggableBounds] =
     useState<ComponentProps<typeof Draggable>['bounds']>()
-  const theme = useTheme()
 
-  useEffect(() => {
-    if (wrapperRef.current instanceof Element) {
-      setWrapperPosition(wrapperRef.current.getBoundingClientRect())
-    }
-  }, [position])
-
-  useHandleEscape(
-    useCallback(() => {
-      if (isOpen) {
-        onPressEscape && onPressEscape()
-      }
-    }, [isOpen, onPressEscape]),
+  const dialogHandlerAriaLabel = useMemo(
+    () =>
+      decorators?.dialogHandlerAriaLabel?.(DIALOG_HANDLER_ARIA_LABEL) || DIALOG_HANDLER_ARIA_LABEL,
+    [decorators],
   )
-
-  useLayoutEffect(() => {
-    if (isOpen) {
-      setPosition({ x: 0, y: 0 })
-      focusTargetRef.current?.focus()
-    }
-  }, [isOpen])
-
-  useEffect(() => {
-    // 中央寄せの座標計算を行う
-    if (!wrapperRef.current || !isOpen) {
-      return
-    }
-    const isXCenter = left === undefined && right === undefined
-    const isYCenter = top === undefined && bottom === undefined
-    if (isXCenter || isYCenter) {
-      const rect = wrapperRef.current.getBoundingClientRect()
-      setCentering({
-        top: isYCenter ? window.innerHeight / 2 - rect.height / 2 : undefined,
-        left: isXCenter ? window.innerWidth / 2 - rect.width / 2 : undefined,
-      })
-    }
-  }, [bottom, isOpen, left, right, top])
+  const defaultAriaValuetext = useMemo(
+    () =>
+      wrapperPosition
+        ? `上から${Math.trunc(wrapperPosition.top)}px、左から${Math.trunc(wrapperPosition.left)}px`
+        : '',
+    [wrapperPosition],
+  )
+  const dialogHandlerAriaValuetext = useMemo(
+    () =>
+      defaultAriaValuetext
+        ? decorators?.dialogHandlerAriaValuetext?.(defaultAriaValuetext, wrapperPosition) ||
+          defaultAriaValuetext
+        : undefined,
+    [defaultAriaValuetext, wrapperPosition, decorators],
+  )
+  const closeButtonIconAlt = useMemo(
+    () => decorators?.closeButtonIconAlt?.(CLOSE_BUTTON_ICON_ALT) || CLOSE_BUTTON_ICON_ALT,
+    [decorators],
+  )
 
   const handleArrowKey = useCallback(
     (e: React.KeyboardEvent) => {
@@ -189,6 +192,28 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
   )
 
   useEffect(() => {
+    if (wrapperRef.current instanceof Element) {
+      setWrapperPosition(wrapperRef.current.getBoundingClientRect())
+    }
+  }, [position])
+
+  useEffect(() => {
+    // 中央寄せの座標計算を行う
+    if (!wrapperRef.current || !isOpen) {
+      return
+    }
+    const isXCenter = left === undefined && right === undefined
+    const isYCenter = top === undefined && bottom === undefined
+    if (isXCenter || isYCenter) {
+      const rect = wrapperRef.current.getBoundingClientRect()
+      setCentering({
+        top: isYCenter ? window.innerHeight / 2 - rect.height / 2 : undefined,
+        left: isXCenter ? window.innerWidth / 2 - rect.width / 2 : undefined,
+      })
+    }
+  }, [bottom, isOpen, left, right, top])
+
+  useEffect(() => {
     if (!isOpen) return
 
     if (centering.top) {
@@ -202,8 +227,20 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }
   }, [isOpen, centering.top])
 
-  const labelId = useId()
-  const classNames = useClassNames().modelessDialog
+  useLayoutEffect(() => {
+    if (isOpen) {
+      setPosition({ x: 0, y: 0 })
+      focusTargetRef.current?.focus()
+    }
+  }, [isOpen])
+
+  useHandleEscape(
+    useCallback(() => {
+      if (isOpen) {
+        onPressEscape && onPressEscape()
+      }
+    }, [isOpen, onPressEscape]),
+  )
 
   return createPortal(
     <DialogOverlap isOpen={isOpen}>
@@ -252,12 +289,8 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                 themes={theme}
                 tabIndex={0}
                 role="slider"
-                aria-label="ダイアログの位置"
-                aria-valuetext={
-                  wrapperPosition &&
-                  `上から${Math.trunc(wrapperPosition.top)}px、
-                  左から${Math.trunc(wrapperPosition.left)}px`
-                }
+                aria-label={dialogHandlerAriaLabel}
+                aria-valuetext={dialogHandlerAriaValuetext}
                 onKeyDown={handleArrowKey}
               >
                 <FaGripHorizontalIcon />
@@ -273,7 +306,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
                   onClick={onClickClose}
                   className={classNames.closeButton}
                 >
-                  <FaTimesIcon alt="閉じる" />
+                  <FaTimesIcon alt={closeButtonIconAlt} />
                 </Button>
               </CloseButtonLayout>
             </Header>
