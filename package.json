@@ -68,7 +68,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
-    "smarthr-normalize-css": "^1.0.4",
+    "smarthr-normalize-css": "^1.1.0",
     "standard-version": "^9.3.2",
     "storycap": "^4.0.0",
     "styled-components": "^5.3.6",
