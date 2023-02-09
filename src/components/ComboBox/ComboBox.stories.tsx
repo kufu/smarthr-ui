@@ -170,7 +170,7 @@ export const Single: Story = () => {
           dropdownHelpMessage="入力でフィルタリングできます"
           onSelect={handleSelectItem}
           onClear={handleClear}
-          decorator={{
+          decorators={{
             noResultText: (text) => `no result.(${text})`,
             destroyButtonIconAlt: (text) => `destroy.(${text})`,
           }}
@@ -412,7 +412,7 @@ export const Multi: Story = () => {
           dropdownHelpMessage="入力でフィルタリングできます"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
-          decorator={{
+          decorators={{
             noResultText: (text) => `no result.(${text})`,
             destroyButtonIconAlt: (text) => `destroy.(${text})`,
             selectedListAriaLabel: (text) => `selected item list.(${text})`,

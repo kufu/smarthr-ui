@@ -28,10 +28,6 @@ export type BaseProps = {
    * ダイアログの説明
    */
   description: React.ReactNode
-  /**
-   * 閉じるボタンのラベル
-   */
-  closeText?: React.ReactNode
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'closeButtonLabel'>
 }
@@ -49,7 +45,6 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   titleTag = 'h2',
   titleId,
   description,
-  closeText,
   onClickClose,
   decorators,
 }) => {
@@ -80,7 +75,7 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
       </Description>
       <Bottom themes={theme} ref={bottomRef} className={classNames.buttonArea}>
         <Button onClick={onClickClose} className={classNames.closeButton}>
-          {closeText || decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
+          {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
         </Button>
       </Bottom>
     </>

@@ -31,10 +31,6 @@ export type BaseProps = {
    */
   titleTag?: HeadingTagTypes
   /**
-   * 閉じるボタンのラベル
-   */
-  closeText?: ReactNode
-  /**
    * アクションボタンのラベル
    */
   actionText: ReactNode
@@ -82,7 +78,6 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
   titleId,
   subtitle,
   titleTag = 'h2',
-  closeText,
   actionText,
   actionTheme = 'primary',
   onClickAction,
@@ -129,7 +124,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
             disabled={closeDisabled || isRequestProcessing}
             className={classNames.closeButton}
           >
-            {closeText || decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
+            {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
           </Button>
           <Button
             variant={actionTheme}

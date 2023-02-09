@@ -4,7 +4,6 @@ import React, {
   SelectHTMLAttributes,
   forwardRef,
   useCallback,
-  useMemo,
 } from 'react'
 import styled, { css } from 'styled-components'
 
@@ -32,10 +31,6 @@ type BaseProps<T extends string> = {
   error?: boolean
   /** コンポーネントの幅 */
   width?: number | string
-  /** 空の選択肢を表示するかどうか */
-  hasBlank?: boolean
-  /** 空の選択肢のラベル */
-  blankLabel?: string
   /** コンポーネントの大きさ */
   size?: 'default' | 's'
 }
@@ -46,20 +41,12 @@ type WithBlankProps<T extends string> = BaseProps<T> & {
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'blankLabel'>
   /** 空の選択肢のラベル */
-  /**
-   * @deprecated blankLabel属性は非推奨です。decorators属性を利用してください。
-   */
-  blankLabel?: string
 }
 type WithoutBlankProps<T extends string> = BaseProps<T> & {
   /** 空の選択肢を表示するかどうか */
   hasBlank?: false
   decorators?: undefined
   /** 空の選択肢のラベル */
-  /**
-   * @deprecated blankLabel属性は非推奨です。decorators属性を利用してください。
-   */
-  blankLabel?: undefined
 }
 type Props<T extends string> = WithBlankProps<T> | WithoutBlankProps<T>
 
@@ -76,7 +63,6 @@ export const Select = forwardRef(
       error = false,
       width = 'auto',
       hasBlank = false,
-      blankLabel,
       decorators,
       size = 'default',
       className = '',
@@ -87,13 +73,6 @@ export const Select = forwardRef(
   ) => {
     const theme = useTheme()
     const widthStyle = typeof width === 'number' ? `${width}px` : width
-    const actualBlankLabel = useMemo(() => {
-      if (blankLabel) {
-        return blankLabel
-      }
-
-      return decorators?.blankLabel?.(BLANK_LABEL) || BLANK_LABEL
-    }, [blankLabel, decorators])
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLSelectElement>) => {
         if (onChange) onChange(e)
@@ -127,7 +106,9 @@ export const Select = forwardRef(
           disabled={disabled}
           ref={ref}
         >
-          {hasBlank && <option value="">{actualBlankLabel}</option>}
+          {hasBlank && (
+            <option value="">{decorators?.blankLabel?.(BLANK_LABEL) || BLANK_LABEL}</option>
+          )}
           {options.map((option) => {
             if ('value' in option) {
               return (

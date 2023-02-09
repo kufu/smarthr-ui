@@ -19,12 +19,6 @@ type Props = {
   onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
-  /**
-   * @deprecated decorator属性は非推奨です。decorators属性を利用してください。
-   */
-  decorator?: DecoratorsType<
-    'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
-  >
   decorators?: DecoratorsType<
     'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
   >
@@ -46,30 +40,28 @@ export const FilterDropdown: VFC<Props> = ({
   onReset,
   children,
   hasStatusText,
-  decorator,
   decorators,
 }: Props) => {
   const themes = useTheme()
   const status: ReactNode = useMemo(
-    () => executeDecorator(STATUS_FILTERED_TEXT, decorator?.status || decorators?.status),
-    [decorator, decorators],
+    () => executeDecorator(STATUS_FILTERED_TEXT, decorators?.status),
+    [decorators],
   )
   const triggerButton: ReactNode = useMemo(
-    () =>
-      executeDecorator(TRIGGER_BUTTON_TEXT, decorator?.triggerButton || decorators?.triggerButton),
-    [decorator, decorators],
+    () => executeDecorator(TRIGGER_BUTTON_TEXT, decorators?.triggerButton),
+    [decorators],
   )
   const applyButton: ReactNode = useMemo(
-    () => executeDecorator(APPLY_BUTTON_TEXT, decorator?.applyButton || decorators?.applyButton),
-    [decorator, decorators],
+    () => executeDecorator(APPLY_BUTTON_TEXT, decorators?.applyButton),
+    [decorators],
   )
   const cancelButton: ReactNode = useMemo(
-    () => executeDecorator(CANCEL_BUTTON_TEXT, decorator?.cancelButton || decorators?.cancelButton),
-    [decorator, decorators],
+    () => executeDecorator(CANCEL_BUTTON_TEXT, decorators?.cancelButton),
+    [decorators],
   )
   const resetButton: ReactNode = useMemo(
-    () => executeDecorator(RESET_BUTTON_TEXT, decorator?.resetButton || decorators?.resetButton),
-    [decorator, decorators],
+    () => executeDecorator(RESET_BUTTON_TEXT, decorators?.resetButton),
+    [decorators],
   )
   const filteredIconAriaLabel = useMemo(
     () => (hasStatusText ? undefined : innerText(status)),

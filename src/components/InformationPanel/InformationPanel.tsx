@@ -39,16 +39,6 @@ type Props = {
   onClickTrigger?: (active: boolean) => void
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'openButtonLabel' | 'closeButtonLabel'>
-  /**
-   * @deprecated openButtonLabel属性は非推奨です。decorators属性を利用してください
-   */
-  /** 開くボタンのラベル */
-  openButtonLabel?: React.ReactNode
-  /**
-   * @deprecated closeButtonLabel属性は非推奨です。decorators属性を利用してください
-   */
-  /** 閉じるボタンのラベル */
-  closeButtonLabel?: React.ReactNode
 }
 
 const OPEN_BUTTON_LABEL = '開く'
@@ -59,8 +49,6 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
   titleTag = 'h3',
   type,
   togglable = true,
-  openButtonLabel,
-  closeButtonLabel,
   active: activeProps = true,
   className = '',
   children,
@@ -100,20 +88,6 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
         }
     }
   }, [type, theme.color.DANGER, theme.color.MAIN, theme.color.TEXT_GREY, theme.color.WARNING])
-  const actualOpenButtonLabel = useMemo(() => {
-    if (openButtonLabel) {
-      return openButtonLabel
-    }
-
-    return decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL
-  }, [openButtonLabel, decorators])
-  const actualCloseButtonLabel = useMemo(() => {
-    if (closeButtonLabel) {
-      return closeButtonLabel
-    }
-
-    return decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
-  }, [closeButtonLabel, decorators])
 
   const [active, setActive] = useState(activeProps)
   const titleId = useId()
@@ -155,7 +129,9 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
               aria-controls={contentId}
               className={classNames.closeButton}
             >
-              {active ? actualCloseButtonLabel : actualOpenButtonLabel}
+              {active
+                ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
+                : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
             </TogglableButton>
           )}
         </Header>

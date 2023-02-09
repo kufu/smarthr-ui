@@ -13,6 +13,7 @@ import styled, { css } from 'styled-components'
 
 import { useClick } from '../../hooks/useClick'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types/props'
 import { UnstyledButton } from '../Button'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { Input } from '../Input'
@@ -113,8 +114,7 @@ type Props<T> = {
   /**
    * コンポーネント内のテキストを変更する関数/
    */
-  decorator?: {
-    noResultText?: (text: string) => ReactNode
+  decorators?: DecoratorsType<'noResultText'> & {
     destroyButtonIconAlt?: (text: string) => string
   }
 }
@@ -145,7 +145,7 @@ export function SingleComboBox<T>({
   onClear,
   onClearClick,
   onChangeSelected,
-  decorator,
+  decorators,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -172,7 +172,7 @@ export function SingleComboBox<T>({
     handleKeyDown: handleListBoxKeyDown,
     listBoxId,
     listBoxRef,
-  } = useListBox({
+  } = useListBox<T>({
     options,
     dropdownHelpMessage,
     dropdownWidth,
@@ -193,7 +193,7 @@ export function SingleComboBox<T>({
     isExpanded,
     isLoading,
     triggerRef: outerRef,
-    decorator,
+    decorators,
   })
 
   const focus = useCallback(() => {
@@ -377,9 +377,7 @@ export function SingleComboBox<T>({
                 <FaTimesCircleIcon
                   color={theme.color.TEXT_BLACK}
                   alt={
-                    decorator?.destroyButtonIconAlt
-                      ? decorator.destroyButtonIconAlt(DESTROY_BUTTON_TEXT)
-                      : DESTROY_BUTTON_TEXT
+                    decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT
                   }
                 />
               </ClearButton>
