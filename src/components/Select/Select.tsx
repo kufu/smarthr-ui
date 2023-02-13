@@ -22,7 +22,7 @@ type Optgroup<T extends string> = {
   options: Array<Option<T>>
 } & React.OptgroupHTMLAttributes<HTMLOptGroupElement>
 
-type BaseProps<T extends string> = {
+type Props<T extends string> = {
   /** 選択肢のデータの配列 */
   options: Array<Option<T> | Optgroup<T>>
   /** フォームの値が変わったときに発火するコールバック関数 */
@@ -33,22 +33,11 @@ type BaseProps<T extends string> = {
   width?: number | string
   /** コンポーネントの大きさ */
   size?: 'default' | 's'
-}
-
-type WithBlankProps<T extends string> = BaseProps<T> & {
   /** 空の選択肢を表示するかどうか */
-  hasBlank: true
+  hasBlank?: boolean
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'blankLabel'>
-  /** 空の選択肢のラベル */
 }
-type WithoutBlankProps<T extends string> = BaseProps<T> & {
-  /** 空の選択肢を表示するかどうか */
-  hasBlank?: false
-  decorators?: undefined
-  /** 空の選択肢のラベル */
-}
-type Props<T extends string> = WithBlankProps<T> | WithoutBlankProps<T>
 
 type ElementProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, keyof Props<string> | 'children'>
 
