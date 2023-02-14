@@ -3,12 +3,12 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 import { Base as BaseComponent } from '../Base'
 import { Button } from '../Button'
 import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { FaArrowDownIcon } from '../Icon'
 import { Text } from '../Text'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { BulkActionRow, EmptyTableBody, Table, Td, Th } from '.'
 
@@ -317,8 +317,4 @@ const ArrowIcon = styled(FaArrowDownIcon)`
 
 const Base = styled(BaseComponent)`
   overflow-x: auto;
-`
-
-const VisuallyHiddenText = styled.span`
-  ${VISUALLY_HIDDEN_STYLE}
 `

@@ -1,6 +1,9 @@
 import { shade, tint } from 'polished'
 import { css } from 'styled-components'
 
+/**
+ * @deprecated VISUALLY_HIDDEN_STYLE は非推奨です。spanタグで問題ない場合は VisuallyHiddenText コンポーネントを使用してください。
+ */
 export const VISUALLY_HIDDEN_STYLE = css`
   position: absolute;
   top: -1px;
