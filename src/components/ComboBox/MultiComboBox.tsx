@@ -14,6 +14,7 @@ import styled, { css } from 'styled-components'
 import { useId } from '../../hooks/useId'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types/props'
 import { FaCaretDownIcon } from '../Icon'
 
 import { ComboBoxContext } from './ComboBoxContext'
@@ -119,8 +120,7 @@ type Props<T> = {
   /**
    * コンポーネント内のテキストを変更する関数/
    */
-  decorator?: {
-    noResultText?: (text: string) => ReactNode
+  decorators?: DecoratorsType<'noResultText'> & {
     destroyButtonIconAlt?: (text: string) => string
     selectedListAriaLabel?: (text: string) => string
   }
@@ -153,7 +153,7 @@ export function MultiComboBox<T>({
   onChangeSelected,
   onFocus,
   onBlur,
-  decorator,
+  decorators,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -225,7 +225,7 @@ export function MultiComboBox<T>({
     isExpanded: isFocused,
     isLoading,
     triggerRef: outerRef,
-    decorator,
+    decorators,
   })
 
   const {
@@ -352,9 +352,8 @@ export function MultiComboBox<T>({
           <SelectedList
             id={selectedListId}
             aria-label={
-              decorator?.selectedListAriaLabel
-                ? decorator.selectedListAriaLabel(SELECTED_LIST_ARIA_LABEL)
-                : SELECTED_LIST_ARIA_LABEL
+              decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) ||
+              SELECTED_LIST_ARIA_LABEL
             }
             className={classNames.selectedList}
           >
@@ -366,7 +365,7 @@ export function MultiComboBox<T>({
                   onDelete={handleDelete}
                   enableEllipsis={selectedItemEllipsis}
                   buttonRef={deletionButtonRefs[i]}
-                  decorator={decorator}
+                  decorators={decorators}
                 />
               </li>
             ))}

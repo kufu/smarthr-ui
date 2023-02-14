@@ -15,7 +15,6 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   title,
   subtitle,
   titleTag,
-  closeText,
   actionText,
   actionTheme,
   onClickAction,
@@ -58,7 +57,6 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
         titleId={titleId}
         subtitle={subtitle}
         titleTag={titleTag}
-        closeText={closeText}
         actionText={actionText}
         actionTheme={actionTheme}
         actionDisabled={actionDisabled}

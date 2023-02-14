@@ -49,7 +49,7 @@ export const All: Story = () => {
         <InputFile
           name="decorator"
           label="select file."
-          decorator={{ destroy: (text) => `delete(${text})` }}
+          decorators={{ destroy: (text) => `delete(${text})` }}
         />
       </dd>
     </List>

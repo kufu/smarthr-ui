@@ -15,7 +15,7 @@ export type Props<T> = {
   onDelete: (item: ComboBoxItem<T>) => void
   enableEllipsis?: boolean
   buttonRef: RefObject<HTMLButtonElement>
-  decorator?: {
+  decorators?: {
     destroyButtonIconAlt?: (text: string) => string
   }
 }
@@ -28,7 +28,7 @@ export function MultiSelectedItem<T>({
   onDelete,
   enableEllipsis,
   buttonRef,
-  decorator,
+  decorators,
 }: Props<T>) {
   const theme = useTheme()
   const labelRef = useRef<HTMLDivElement>(null)
@@ -79,11 +79,7 @@ export function MultiSelectedItem<T>({
             <FaTimesCircleIcon
               size={11}
               color="inherit"
-              alt={
-                decorator?.destroyButtonIconAlt
-                  ? decorator.destroyButtonIconAlt(DESTROY_BUTTON_TEXT)
-                  : DESTROY_BUTTON_TEXT
-              }
+              alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
             />
           </DeleteButton>
         )}

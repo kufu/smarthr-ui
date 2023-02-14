@@ -17,11 +17,6 @@ type Props = {
   title: ReactNode
   /** 表示するアイテムの配列 */
   items?: ItemProps[]
-  /** submit ボタンのラベル */
-  /**
-   * @deprecated submitLabel属性は非推奨です。decorators属性を利用してください。
-   */
-  submitLabel?: string
   /** コンポーネントの幅 */
   width?: number
   /** textarea のラベル */
@@ -43,24 +38,20 @@ const SUBMIT_LABEL = '送信'
 export const RightFixedNote: VFC<Props & ElementProps> = ({
   title,
   items,
-  submitLabel,
-  decorators,
   width = 270,
   textareaLabel,
   onClickEdit,
   onSubmit,
   className = '',
+  decorators,
   ...props
 }) => {
   const theme = useTheme()
 
-  const actualSubmitLabel = useMemo(() => {
-    if (submitLabel) {
-      return submitLabel
-    }
-
-    return decorators?.submitLabel?.(SUBMIT_LABEL) || SUBMIT_LABEL
-  }, [])
+  const submitLabel = useMemo(
+    () => decorators?.submitLabel?.(SUBMIT_LABEL) || SUBMIT_LABEL,
+    [decorators],
+  )
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -110,7 +101,7 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
       />
 
       <SubmitButton type="submit" className={classNames.submitButton}>
-        {actualSubmitLabel}
+        {submitLabel}
       </SubmitButton>
     </Wrapper>
   )

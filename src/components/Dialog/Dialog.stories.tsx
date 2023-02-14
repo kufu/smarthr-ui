@@ -226,6 +226,7 @@ export const Action_Dialog: Story = () => {
         title="ActionDialog"
         subtitle="副題"
         actionText="保存"
+        decorators={{ closeButtonLabel: (txt) => `cancel.(${txt})` }}
         onClickAction={(closeDialog) => {
           action('executed')()
           setResponseMessage(undefined)

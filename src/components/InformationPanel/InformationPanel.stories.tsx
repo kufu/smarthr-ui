@@ -44,7 +44,10 @@ export const All: Story = () => (
     <InformationPanel
       title="サンプルの分析を作成して自由に分析機能を試せます"
       type="sync"
-      togglable={false}
+      decorators={{
+        openButtonLabel: (txt) => `open.(${txt})`,
+        closeButtonLabel: (txt) => `close.(${txt})`,
+      }}
     >
       借り入れしている金融機関が3つ以上ある場合は、SmartHRで住宅ローン控除申告書を作成できません。回答履歴から［住宅ローン控除申告書作成対象外確認］の設問に戻って、「対象外に該当する」を選択してください。「対象外に該当する」を選択すると、これまでに作成した書類の最終確認画面に移動します。住宅ローン控除については手書きで申告書を作成し、必要な原本を添えて担当者に提出してください。
     </InformationPanel>

@@ -33,11 +33,6 @@ export type Props = {
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
   /** コンポーネント内のテキストを変更する関数 */
-  /**
-   * @deprecated decorator属性は非推奨です。decorators属性を利用してください。
-   */
-  decorator?: DecoratorsType<'destroy'>
-  /** コンポーネント内のテキストを変更する関数 */
   decorators?: DecoratorsType<'destroy'>
 }
 type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
@@ -54,7 +49,6 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       onChange,
       disabled = false,
       error,
-      decorator,
       decorators,
       ...props
     },
@@ -73,11 +67,8 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     const destroyButtonText = useMemo(
-      () =>
-        decorator?.destroy?.(DESTROY_BUTTON_TEXT) ||
-        decorators?.destroy?.(DESTROY_BUTTON_TEXT) ||
-        DESTROY_BUTTON_TEXT,
-      [decorator, decorators],
+      () => decorators?.destroy?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT,
+      [decorators],
     )
     const inputWrapperClassName = useMemo(
       () => `${size === 's' ? 'small' : ''} ${disabled ? 'disabled' : ''} ${error ? 'error' : ''}`,
