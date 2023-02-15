@@ -1,3 +1,4 @@
+import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
@@ -90,8 +91,12 @@ export const All: Story = () => (
                 <CheckBox name="tableAllCheckBox" checked={false} />
               </label>
             </Th>
-            <Th sort="ascending">Name</Th>
-            <Th sort="none">Calories</Th>
+            <Th sort="ascending" onClick={action('降順に並び替え')}>
+              Name
+            </Th>
+            <Th sort="none" onClick={action('昇順に並び替え')}>
+              Calories
+            </Th>
             <Th>Fat (g)</Th>
             <Th>Carbs (g)</Th>
             <Th>Protein (g)</Th>
@@ -122,6 +127,39 @@ export const All: Story = () => (
       </Table>
     </li>
     <li>
+      行頭で改行が発生する場合
+      <Table>
+        <thead>
+          <tr>
+            <Th>
+              <VisuallyHiddenText>行を選択</VisuallyHiddenText>
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+              <label>
+                <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
+                <CheckBox name="tableAllCheckBox" checked={false} />
+              </label>
+            </Th>
+            <Th sort="ascending" onClick={action('降順に並び替え')}>
+              Name
+            </Th>
+            <Th sort="none" onClick={action('昇順に並び替え')}>
+              Calories
+              <br />
+              (kcal)
+            </Th>
+            <Th>
+              Fat
+              <br />
+              (g)
+            </Th>
+            <Th>Carbs (g)</Th>
+            <Th>Protein (g)</Th>
+            <Th>Button</Th>
+          </tr>
+        </thead>
+      </Table>
+    </li>
+    <li>
       table fixed header
       <div style={{ overflow: 'clip' }}>
         <Table fixedHead>
@@ -137,6 +175,7 @@ export const All: Story = () => (
               </Th>
               <Th
                 sort="descending"
+                onClick={action('昇順に並び替え')}
                 decorators={{ sortDirectionLabel: (text, { sort }) => `${sort} (${text})` }}
               >
                 Name
