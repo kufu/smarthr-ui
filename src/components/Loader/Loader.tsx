@@ -1,8 +1,8 @@
 import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
-import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import {
   cogDuration,
@@ -58,7 +58,7 @@ export const Loader: VFC<Props & ElementProps> = ({
             </Cog>
           </Line>
         ))}
-        <VisuallyHidden>{alt}</VisuallyHidden>
+        <VisuallyHiddenText>{alt}</VisuallyHiddenText>
       </Spinner>
       {text && (
         <Text className={type} themes={theme}>
@@ -72,10 +72,6 @@ export const Loader: VFC<Props & ElementProps> = ({
 const Wrapper = styled.div`
   display: inline-block;
   overflow: hidden;
-`
-
-const VisuallyHidden = styled.span`
-  ${VISUALLY_HIDDEN_STYLE}
 `
 
 const Spinner = styled.div`

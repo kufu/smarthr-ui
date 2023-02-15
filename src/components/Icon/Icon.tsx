@@ -311,10 +311,10 @@ import {
 } from 'react-icons/fa'
 import styled, { css } from 'styled-components'
 
-import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 import { useSpacing } from '../../hooks/useSpacing'
 import { useTheme } from '../../hooks/useTheme'
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import Warning from './WarningIcon'
 import { useClassNames } from './useClassNames'
@@ -454,10 +454,6 @@ const WithIcon = styled.span<{
       ${right && gap && `margin-inline-start: ${useSpacing(gap)};`}
     }
   `}
-`
-
-const VisuallyHiddenText = styled.span`
-  ${VISUALLY_HIDDEN_STYLE}
 `
 
 export const FaAddressBookIcon = /*#__PURE__*/ createIcon(FaAddressBook)
