@@ -2,7 +2,6 @@ import React, { FC, PropsWithChildren, ReactNode, ThHTMLAttributes, useMemo } fr
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { Button } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { Stack } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -51,8 +50,9 @@ export const Th: FC<Props & ElementProps> = ({
   return (
     <Wrapper {...props} aria-sort={sort} className={wrapperClass} themes={theme}>
       {sort ? (
-        <SortButton onClick={onClick} suffix={<SortIcon sort={sort} />} themes={theme}>
+        <SortButton onClick={onClick} themes={theme}>
           {children}
+          <SortIcon sort={sort} />
           <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
         </SortButton>
       ) : (
@@ -65,34 +65,42 @@ export const Th: FC<Props & ElementProps> = ({
 const Wrapper = styled.th<{ themes: Theme; onClick?: () => void }>`
   ${({ themes: { fontSize, leading, color, space } }) => css`
     box-sizing: border-box;
-    position: relative;
-    height: calc(1em * ${leading.NORMAL} + ${space(0.5)} * 2);
     font-size: ${fontSize.S};
     font-weight: bold;
-    padding: ${space(0.5)} ${space(1)};
+    padding: ${space(0.75)} ${space(1)};
     color: ${color.TEXT_BLACK};
-    line-height: ${leading.NORMAL};
+    line-height: ${leading.TIGHT};
     vertical-align: middle;
   `}
 `
 
-const SortButton = styled(Button).attrs({ size: 's', wide: true })<{ themes: Theme }>`
-  ${({ themes: { color, fontSize, space } }) => css`
-    position: absolute;
-    inset: 0;
+const SortButton = styled.button<{
+  themes: Theme
+}>`
+  ${({ themes: { color, fontSize, shadow, space } }) => css`
+    cursor: pointer;
+    box-sizing: content-box;
+    display: inline-flex;
+    align-items: center;
+    column-gap: ${space(0.5)};
     justify-content: space-between;
+    margin: ${space(-0.75)} ${space(-1)};
     border: unset;
     background-color: unset;
-    padding: ${space(0.5)} ${space(1)};
+    padding: ${space(0.75)} ${space(1)};
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
 
-    &:hover,
-    &:focus {
+    &:hover {
       background-color: ${color.hoverColor(color.HEAD)};
     }
 
-    &:focus {
-      /* フォーカスリングを前に出すため */
-      z-index: 1;
+    &:focus-visible {
+      ${shadow.focusIndicatorStyles}
     }
 
     .smarthr-ui-Icon {
