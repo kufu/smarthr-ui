@@ -1,8 +1,7 @@
-import React, { FC, PropsWithChildren, ThHTMLAttributes, useMemo } from 'react'
+import React, { FC, PropsWithChildren, ReactNode, ThHTMLAttributes, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { Stack } from '../Layout'
@@ -10,13 +9,16 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { useThClassNames } from './useClassNames'
 
+type sortTypes = keyof typeof SORT_DIRECTION_LABEL
 export type Props = PropsWithChildren<{
   /** 並び替え状態 */
-  sort?: keyof typeof SORT_DIRECTION_LABEL
+  sort?: sortTypes
   /** 並び替えをクリックした時に発火するコールバック関数 */
   onClick?: () => void
   /** 文言を変更するための関数 */
-  decorators?: DecoratorsType<'sortDirectionLabel'>
+  decorators?: {
+    sortDirectionLabel: (text: string, { sort }: { sort: sortTypes }) => ReactNode
+  }
 }>
 type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props>
 
@@ -41,7 +43,8 @@ export const Th: FC<Props & ElementProps> = ({
   const sortLabel = useMemo(
     () =>
       sort &&
-      (decorators?.sortDirectionLabel?.(SORT_DIRECTION_LABEL[sort]) || SORT_DIRECTION_LABEL[sort]),
+      (decorators?.sortDirectionLabel?.(SORT_DIRECTION_LABEL[sort], { sort }) ||
+        SORT_DIRECTION_LABEL[sort]),
     [decorators, sort],
   )
 
