@@ -135,7 +135,16 @@ export const All: Story = () => (
                   <CheckBox name="tableAllCheckBox" checked={false} />
                 </label>
               </Th>
-              <Th sort="descending">Name</Th>
+              <Th
+                sort="descending"
+                decorators={{
+                  descendingLabel: (text) => `descending(${text})`,
+                  ascendingLabel: (text) => `ascending(${text})`,
+                  noSortLabel: (text) => `ascending(${text})`,
+                }}
+              >
+                Name
+              </Th>
               <Th>Calories</Th>
               <Th>Fat (g)</Th>
               <Th>Carbs (g)</Th>

@@ -2,9 +2,11 @@ import React, { FC, PropsWithChildren, ThHTMLAttributes, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { Stack } from '../Layout'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { useThClassNames } from './useClassNames'
 
@@ -13,13 +15,22 @@ export type Props = PropsWithChildren<{
   sort?: 'ascending' | 'descending' | 'none'
   /** 並び替えをクリックした時に発火するコールバック関数 */
   onClick?: () => void
+  /** 文言を変更するための関数 */
+  decorators?: DecoratorsType<'ascendingLabel' | 'descendingLabel' | 'noSortLabel'>
 }>
 type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props>
+
+const LABEL = {
+  ascending: '昇順',
+  descending: '降順',
+  noSort: '並び替えなし',
+}
 
 export const Th: FC<Props & ElementProps> = ({
   children,
   sort,
   onClick,
+  decorators,
   className = '',
   ...props
 }) => {
@@ -27,11 +38,23 @@ export const Th: FC<Props & ElementProps> = ({
   const classNames = useThClassNames()
   const wrapperClass = [className, classNames.wrapper].filter((c) => !!c).join(' ')
 
+  const sortLabel = useMemo(() => {
+    switch (sort) {
+      case 'ascending':
+        return decorators?.ascendingLabel?.(LABEL[sort]) || LABEL[sort]
+      case 'descending':
+        return decorators?.descendingLabel?.(LABEL[sort]) || LABEL[sort]
+      default:
+        return decorators?.noSortLabel?.(LABEL.noSort) || LABEL.noSort
+    }
+  }, [decorators, sort])
+
   return (
     <Wrapper {...props} aria-sort={sort} className={wrapperClass} themes={theme}>
       {sort ? (
         <SortButton onClick={onClick} suffix={<SortIcon sort={sort} />} themes={theme}>
           {children}
+          <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
         </SortButton>
       ) : (
         children
@@ -79,24 +102,11 @@ const SortButton = styled(Button).attrs({ size: 's', wide: true })<{ themes: The
   `}
 `
 
-const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => {
-  const sortLabel = useMemo(() => {
-    switch (sort) {
-      case 'ascending':
-        return '昇順'
-      case 'descending':
-        return '降順'
-      default:
-        return '並び替えなし'
-    }
-  }, [sort])
-
-  return (
-    <SortIconWraper aria-label={sortLabel}>
-      <FaSortUpIcon color={sort === 'ascending' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
-      <FaSortDownIcon color={sort === 'descending' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
-    </SortIconWraper>
-  )
-}
+const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => (
+  <SortIconWraper>
+    <FaSortUpIcon color={sort === 'ascending' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
+    <FaSortDownIcon color={sort === 'descending' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
+  </SortIconWraper>
+)
 
 const SortIconWraper = styled(Stack).attrs({ as: 'span', gap: -1, inline: true })``
