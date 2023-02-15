@@ -1,22 +1,5 @@
 import { shade, tint } from 'polished'
-import { css } from 'styled-components'
 
-/**
- * @deprecated VISUALLY_HIDDEN_STYLE は非推奨です。spanタグで問題ない場合は VisuallyHiddenText コンポーネントを使用してください。
- */
-export const VISUALLY_HIDDEN_STYLE = css`
-  position: absolute;
-  top: -1px;
-  left: 0;
-  width: 1px;
-  height: 1px;
-  border: 0;
-  padding: 0;
-  white-space: nowrap;
-  clip-path: inset(100%);
-  clip: rect(0 0 0 0);
-  overflow: hidden;
-`
 export const FONT_FAMILY = 'system-ui, sans-serif'
 const BASE_CHART_COLORS = [
   'rgb(0, 196, 204)',

@@ -130,7 +130,7 @@ export { defaultSpacing } from './themes/createSpacing'
 export { defaultBreakpoint } from './themes/createBreakpoint'
 
 // constants
-export { FONT_FAMILY, VISUALLY_HIDDEN_STYLE, CHART_COLORS, OTHER_CHART_COLOR } from './constants'
+export { FONT_FAMILY, CHART_COLORS, OTHER_CHART_COLOR } from './constants'
 
 // utils
 export { SequencePrefixIdProvider } from './hooks/useId'
