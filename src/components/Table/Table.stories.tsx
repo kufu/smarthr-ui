@@ -137,11 +137,7 @@ export const All: Story = () => (
               </Th>
               <Th
                 sort="descending"
-                decorators={{
-                  descendingLabel: (text) => `descending(${text})`,
-                  ascendingLabel: (text) => `ascending(${text})`,
-                  noSortLabel: (text) => `ascending(${text})`,
-                }}
+                decorators={{ sortDirectionLabel: (text) => `sort direction (${text})` }}
               >
                 Name
               </Th>

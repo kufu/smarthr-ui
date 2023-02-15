@@ -12,18 +12,18 @@ import { useThClassNames } from './useClassNames'
 
 export type Props = PropsWithChildren<{
   /** 並び替え状態 */
-  sort?: 'ascending' | 'descending' | 'none'
+  sort?: keyof typeof SORT_DIRECTION_LABEL
   /** 並び替えをクリックした時に発火するコールバック関数 */
   onClick?: () => void
   /** 文言を変更するための関数 */
-  decorators?: DecoratorsType<'ascendingLabel' | 'descendingLabel' | 'noSortLabel'>
+  decorators?: DecoratorsType<'sortDirectionLabel'>
 }>
 type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props>
 
-const LABEL = {
+const SORT_DIRECTION_LABEL = {
   ascending: '昇順',
   descending: '降順',
-  noSort: '並び替えなし',
+  none: '並び替えなし',
 }
 
 export const Th: FC<Props & ElementProps> = ({
@@ -38,16 +38,12 @@ export const Th: FC<Props & ElementProps> = ({
   const classNames = useThClassNames()
   const wrapperClass = [className, classNames.wrapper].filter((c) => !!c).join(' ')
 
-  const sortLabel = useMemo(() => {
-    switch (sort) {
-      case 'ascending':
-        return decorators?.ascendingLabel?.(LABEL[sort]) || LABEL[sort]
-      case 'descending':
-        return decorators?.descendingLabel?.(LABEL[sort]) || LABEL[sort]
-      default:
-        return decorators?.noSortLabel?.(LABEL.noSort) || LABEL.noSort
-    }
-  }, [decorators, sort])
+  const sortLabel = useMemo(
+    () =>
+      sort &&
+      (decorators?.sortDirectionLabel?.(SORT_DIRECTION_LABEL[sort]) || SORT_DIRECTION_LABEL[sort]),
+    [decorators, sort],
+  )
 
   return (
     <Wrapper {...props} aria-sort={sort} className={wrapperClass} themes={theme}>
