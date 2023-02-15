@@ -151,6 +151,9 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     [decorators],
   )
 
+  const topStyle = centering.top !== undefined ? centering.top : top
+  const leftStyle = centering.left !== undefined ? centering.left : left
+
   const handleArrowKey = useCallback(
     (e: React.KeyboardEvent) => {
       if (!isOpen || document.activeElement !== e.currentTarget) {
@@ -262,8 +265,8 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
           {...props}
           className={`${className} ${classNames.wrapper}`}
           style={{
-            top: centering.top !== undefined ? centering.top : top,
-            left: centering.left !== undefined ? centering.left : left,
+            top: topStyle,
+            left: leftStyle,
             right,
             bottom,
             width,
