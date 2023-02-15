@@ -106,6 +106,7 @@ export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
 export { AppLauncher, Header, HeaderLink, HeaderDropdownMenuButton } from './components/Header'
 export { PageCounter } from './components/PageCounter'
+export { VisuallyHiddenText } from './components/VisuallyHiddenText'
 
 // layout components
 export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'
@@ -129,7 +130,7 @@ export { defaultSpacing } from './themes/createSpacing'
 export { defaultBreakpoint } from './themes/createBreakpoint'
 
 // constants
-export { FONT_FAMILY, VISUALLY_HIDDEN_STYLE, CHART_COLORS, OTHER_CHART_COLOR } from './constants'
+export { FONT_FAMILY, CHART_COLORS, OTHER_CHART_COLOR } from './constants'
 
 // utils
 export { SequencePrefixIdProvider } from './hooks/useId'

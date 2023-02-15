@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [28.0.0](https://github.com/kufu/smarthr-ui/compare/v27.1.0...v28.0.0) (2023-02-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* コンポーネント内の文言を変更する方法をdecoratorsに統一する ([#3039](https://github.com/kufu/smarthr-ui/issues/3039)) ([5cc10ca](https://github.com/kufu/smarthr-ui/commit/5cc10ca7f119f83d335c642495b0475264fe203d))
+
 ## [27.1.0](https://github.com/kufu/smarthr-ui/compare/v27.0.0...v27.1.0) (2023-02-08)
 
 
