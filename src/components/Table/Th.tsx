@@ -48,9 +48,15 @@ export const Th: FC<Props & ElementProps> = ({
   )
 
   return (
-    <Wrapper {...props} aria-sort={sort} className={wrapperClass} themes={theme}>
+    <Wrapper
+      {...props}
+      onClick={sort && onClick}
+      aria-sort={sort}
+      className={wrapperClass}
+      themes={theme}
+    >
       {sort ? (
-        <SortButton onClick={onClick} themes={theme}>
+        <SortButton themes={theme}>
           {children}
           <SortIcon sort={sort} />
           <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
@@ -63,7 +69,7 @@ export const Th: FC<Props & ElementProps> = ({
 }
 
 const Wrapper = styled.th<{ themes: Theme; onClick?: () => void }>`
-  ${({ themes: { fontSize, leading, color, space } }) => css`
+  ${({ themes: { fontSize, leading, color, shadow, space } }) => css`
     box-sizing: border-box;
     font-size: ${fontSize.S};
     font-weight: bold;
@@ -71,13 +77,26 @@ const Wrapper = styled.th<{ themes: Theme; onClick?: () => void }>`
     color: ${color.TEXT_BLACK};
     line-height: ${leading.TIGHT};
     vertical-align: middle;
+
+    &[aria-sort] {
+      cursor: pointer;
+
+      &:hover {
+        background-color: ${color.hoverColor(color.HEAD)};
+      }
+
+      /* :focus-visible-within の代替 */
+      &:has(:focus-visible) {
+        ${shadow.focusIndicatorStyles}
+      }
+    }
   `}
 `
 
 const SortButton = styled.button<{
   themes: Theme
 }>`
-  ${({ themes: { color, fontSize, shadow, space } }) => css`
+  ${({ themes: { fontSize, space } }) => css`
     cursor: pointer;
     box-sizing: content-box;
     display: inline-flex;
@@ -86,6 +105,7 @@ const SortButton = styled.button<{
     justify-content: space-between;
     margin: ${space(-0.75)} ${space(-1)};
     border: unset;
+    outline: unset;
     background-color: unset;
     padding: ${space(0.75)} ${space(1)};
     text-align: left;
@@ -94,14 +114,6 @@ const SortButton = styled.button<{
     font-size: inherit;
     font-weight: inherit;
     line-height: inherit;
-
-    &:hover {
-      background-color: ${color.hoverColor(color.HEAD)};
-    }
-
-    &:focus-visible {
-      ${shadow.focusIndicatorStyles}
-    }
 
     .smarthr-ui-Icon {
       font-size: ${fontSize.M};
