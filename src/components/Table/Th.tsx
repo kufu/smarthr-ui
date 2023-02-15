@@ -19,6 +19,8 @@ type ElementProps = Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof Props>
 export const Th: VFC<Props & ElementProps> = ({
   highlighted = false,
   className = '',
+  onClick,
+  children,
   ...props
 }) => {
   const theme = useTheme()
@@ -26,19 +28,30 @@ export const Th: VFC<Props & ElementProps> = ({
   const wrapperClass = [className, highlighted && 'highlighted', classNames.wrapper]
     .filter((c) => !!c)
     .join(' ')
+  const actualChildren = onClick ? (
+    <StyledButton themes={theme} onClick={onClick}>
+      {children}
+    </StyledButton>
+  ) : (
+    children
+  )
 
-  return <StyledTh {...props} className={wrapperClass} themes={theme} />
+  return (
+    <StyledTh {...props} className={wrapperClass} themes={theme} isClickable={onClick}>
+      {actualChildren}
+    </StyledTh>
+  )
 }
 
-const StyledTh = styled.th<{ themes: Theme; onClick?: () => void }>`
-  ${({ themes, onClick }) => {
+const StyledTh = styled.th<{ themes: Theme; isClickable?: () => void }>`
+  ${({ themes, isClickable }) => {
     const { fontSize, leading, spacingByChar, color, interaction } = themes
 
     return css`
       height: calc(1em * ${leading.NORMAL} + ${spacingByChar(0.5)} * 2);
       font-size: ${fontSize.S};
       font-weight: bold;
-      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
+      padding: ${isClickable ? '0' : `${spacingByChar(0.5)} ${spacingByChar(1)}`};
       color: ${color.TEXT_BLACK};
       transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
       text-align: left;
@@ -49,14 +62,28 @@ const StyledTh = styled.th<{ themes: Theme; onClick?: () => void }>`
       &.highlighted {
         background-color: ${color.hoverColor(color.HEAD)};
       }
+    `
+  }}
+`
 
-      ${onClick &&
-      css`
-        :hover {
-          background-color: ${color.hoverColor(color.HEAD)};
-          cursor: pointer;
-        }
-      `}
+const StyledButton = styled.button<{ themes: Theme; onClick?: () => void }>`
+  ${({ themes, onClick }) => {
+    const { spacingByChar, color } = themes
+
+    return css`
+      appearance: none;
+      box-sizing: border-box;
+      cursor: pointer;
+      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
+      border: 0;
+      background-color: ${onClick ? color.hoverColor(color.HEAD) : 'transparent'};
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
     `
   }}
 `

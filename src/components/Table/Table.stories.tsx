@@ -92,11 +92,9 @@ export const All: Story = () => (
                 <CheckBox name="tableAllCheckBox" checked={false} />
               </label>
             </Th>
-            <Th aria-sort="ascending" highlighted={true}>
-              <ClickableCellButton onClick={action('clicked')}>
-                <span style={{ lineHeight: '1.5' }}>Name</span>
-                <ArrowIcon alt="昇順" />
-              </ClickableCellButton>
+            <Th aria-sort="ascending" highlighted={true} onClick={action('clicked')}>
+              Name
+              <ArrowIcon alt="昇順" />
             </Th>
             <Th>Calories</Th>
             <Th>Fat (g)</Th>
@@ -142,11 +140,9 @@ export const All: Story = () => (
                   <CheckBox name="tableAllCheckBox" checked={false} />
                 </label>
               </Th>
-              <Th aria-sort="ascending" highlighted={true}>
-                <ClickableCellButton onClick={action('clicked')}>
-                  <span style={{ lineHeight: '1.5' }}>Name</span>
-                  <ArrowIcon alt="昇順" />
-                </ClickableCellButton>
+              <Th aria-sort="ascending" highlighted={true} onClick={action('clicked')}>
+                Name
+                <ArrowIcon alt="昇順" />
               </Th>
               <Th>Calories</Th>
               <Th>Fat (g)</Th>
@@ -292,23 +288,6 @@ const Ul = styled.ul`
 
 const CheckBox = styled(CheckBoxComponent)`
   vertical-align: middle;
-`
-
-const ClickableCellButton = styled.button`
-  appearance: none;
-  padding: 8px 16px;
-  border: 0;
-  box-sizing: border-box;
-  background-color: transparent;
-  width: calc(100% + 32px);
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: -8px -16px;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
 `
 
 const ArrowIcon = styled(FaArrowDownIcon)`
