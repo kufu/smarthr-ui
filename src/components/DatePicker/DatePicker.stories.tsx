@@ -56,7 +56,7 @@ export const All: Story = () => {
       </dd>
       <dt>Extending style (width: 50%)</dt>
       <dd>
-        <ExtendingDatePicker name="extending_style" onChangeDate={action('change')} />
+        <DatePicker name="extending_style" width="50%" onChangeDate={action('change')} />
       </dd>
       <dt className="bottom">Place on the page bottom</dt>
       <dd>
@@ -77,8 +77,4 @@ const List = styled.dl`
   dt.bottom {
     margin-top: 1000px;
   }
-`
-
-const ExtendingDatePicker = styled(DatePicker)`
-  width: 50%;
 `
