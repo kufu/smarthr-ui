@@ -109,6 +109,11 @@ const Wrapper = styled.th<{ themes: Theme; onSort?: () => void }>`
         ${shadow.focusIndicatorStyles}
       }
     }
+
+    /* どんな状況でもチェックボックスの幅で計算するための小さい値 */
+    &:has(input[type='checkbox']) {
+      width: 1px;
+    }
   `}
 `
 
