@@ -282,7 +282,7 @@ export function SingleComboBox<T>({
       if (isComposing) {
         return
       }
-      if (['Escape', 'Exc'].includes(e.key)) {
+      if (['Escape', 'Esc'].includes(e.key)) {
         if (isExpanded) {
           e.stopPropagation()
           setIsExpanded(false)
