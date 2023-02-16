@@ -91,7 +91,7 @@ export const All: Story = () => (
                 <CheckBox name="tableAllCheckBox" checked={false} />
               </label>
             </Th>
-            <Th sort="ascending" onSort={action('降順に並び替え')}>
+            <Th sort="asc" onSort={action('降順に並び替え')}>
               Name
             </Th>
             <Th sort="none" onSort={action('昇順に並び替え')}>
@@ -139,7 +139,7 @@ export const All: Story = () => (
                 <CheckBox name="tableAllCheckBox" checked={false} />
               </label>
             </Th>
-            <Th sort="ascending" onSort={action('降順に並び替え')}>
+            <Th sort="asc" onSort={action('降順に並び替え')}>
               Name
             </Th>
             <Th sort="none" onSort={action('昇順に並び替え')}>
@@ -174,7 +174,7 @@ export const All: Story = () => (
                 </label>
               </Th>
               <Th
-                sort="descending"
+                sort="desc"
                 onSort={action('昇順に並び替え')}
                 decorators={{ sortDirectionIconAlt: (text, { sort }) => `${sort} (${text})` }}
               >

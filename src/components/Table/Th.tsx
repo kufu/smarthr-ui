@@ -1,4 +1,11 @@
-import React, { FC, PropsWithChildren, ReactNode, ThHTMLAttributes, useMemo } from 'react'
+import React, {
+  AriaAttributes,
+  FC,
+  PropsWithChildren,
+  ReactNode,
+  ThHTMLAttributes,
+  useMemo,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -22,8 +29,8 @@ export type Props = PropsWithChildren<{
 type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props | 'onClick'>
 
 const SORT_DIRECTION_LABEL = {
-  ascending: '昇順',
-  descending: '降順',
+  asc: '昇順',
+  desc: '降順',
   none: '並び替えなし',
 }
 
@@ -46,12 +53,24 @@ export const Th: FC<Props & ElementProps> = ({
         SORT_DIRECTION_LABEL[sort]),
     [decorators, sort],
   )
+  const ariaSortProps = useMemo<
+    | {
+        'aria-sort': AriaAttributes['aria-sort']
+      }
+    | undefined
+  >(() => {
+    return (
+      sort && {
+        'aria-sort': sort === 'none' ? 'none' : `${sort}ending`,
+      }
+    )
+  }, [sort])
 
   return (
     <Wrapper
+      {...ariaSortProps}
       {...props}
       onSort={sort && onSort}
-      aria-sort={sort}
       className={wrapperClass}
       themes={theme}
     >
@@ -123,8 +142,8 @@ const SortButton = styled.button<{
 
 const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => (
   <SortIconWraper>
-    <FaSortUpIcon color={sort === 'ascending' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
-    <FaSortDownIcon color={sort === 'descending' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
+    <FaSortUpIcon color={sort === 'asc' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
+    <FaSortDownIcon color={sort === 'desc' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
   </SortIconWraper>
 )
 
