@@ -91,10 +91,10 @@ export const All: Story = () => (
                 <CheckBox name="tableAllCheckBox" checked={false} />
               </label>
             </Th>
-            <Th sort="ascending" onClick={action('降順に並び替え')}>
+            <Th sort="ascending" onSort={action('降順に並び替え')}>
               Name
             </Th>
-            <Th sort="none" onClick={action('昇順に並び替え')}>
+            <Th sort="none" onSort={action('昇順に並び替え')}>
               Calories
             </Th>
             <Th>Fat (g)</Th>
@@ -139,10 +139,10 @@ export const All: Story = () => (
                 <CheckBox name="tableAllCheckBox" checked={false} />
               </label>
             </Th>
-            <Th sort="ascending" onClick={action('降順に並び替え')}>
+            <Th sort="ascending" onSort={action('降順に並び替え')}>
               Name
             </Th>
-            <Th sort="none" onClick={action('昇順に並び替え')}>
+            <Th sort="none" onSort={action('昇順に並び替え')}>
               Calories
               <br />
               (kcal)
@@ -175,7 +175,7 @@ export const All: Story = () => (
               </Th>
               <Th
                 sort="descending"
-                onClick={action('昇順に並び替え')}
+                onSort={action('昇順に並び替え')}
                 decorators={{ sortDirectionLabel: (text, { sort }) => `${sort} (${text})` }}
               >
                 Name

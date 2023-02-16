@@ -13,13 +13,13 @@ export type Props = PropsWithChildren<{
   /** 並び替え状態 */
   sort?: sortTypes
   /** 並び替えをクリックした時に発火するコールバック関数 */
-  onClick?: () => void
+  onSort?: () => void
   /** 文言を変更するための関数 */
   decorators?: {
     sortDirectionLabel: (text: string, { sort }: { sort: sortTypes }) => ReactNode
   }
 }>
-type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props>
+type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props | 'onClick'>
 
 const SORT_DIRECTION_LABEL = {
   ascending: '昇順',
@@ -30,7 +30,7 @@ const SORT_DIRECTION_LABEL = {
 export const Th: FC<Props & ElementProps> = ({
   children,
   sort,
-  onClick,
+  onSort,
   decorators,
   className = '',
   ...props
@@ -50,7 +50,7 @@ export const Th: FC<Props & ElementProps> = ({
   return (
     <Wrapper
       {...props}
-      onClick={sort && onClick}
+      onSort={sort && onSort}
       aria-sort={sort}
       className={wrapperClass}
       themes={theme}
@@ -68,7 +68,7 @@ export const Th: FC<Props & ElementProps> = ({
   )
 }
 
-const Wrapper = styled.th<{ themes: Theme; onClick?: () => void }>`
+const Wrapper = styled.th<{ themes: Theme; onSort?: () => void }>`
   ${({ themes: { fontSize, leading, color, shadow, space } }) => css`
     box-sizing: border-box;
     font-size: ${fontSize.S};
