@@ -16,7 +16,7 @@ export type Props = PropsWithChildren<{
   onSort?: () => void
   /** 文言を変更するための関数 */
   decorators?: {
-    sortDirectionLabel: (text: string, { sort }: { sort: sortTypes }) => ReactNode
+    sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
   }
 }>
 type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props | 'onClick'>
@@ -42,7 +42,7 @@ export const Th: FC<Props & ElementProps> = ({
   const sortLabel = useMemo(
     () =>
       sort &&
-      (decorators?.sortDirectionLabel?.(SORT_DIRECTION_LABEL[sort], { sort }) ||
+      (decorators?.sortDirectionIconAlt?.(SORT_DIRECTION_LABEL[sort], { sort }) ||
         SORT_DIRECTION_LABEL[sort]),
     [decorators, sort],
   )

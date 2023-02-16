@@ -176,7 +176,7 @@ export const All: Story = () => (
               <Th
                 sort="descending"
                 onSort={action('昇順に並び替え')}
-                decorators={{ sortDirectionLabel: (text, { sort }) => `${sort} (${text})` }}
+                decorators={{ sortDirectionIconAlt: (text, { sort }) => `${sort} (${text})` }}
               >
                 Name
               </Th>
