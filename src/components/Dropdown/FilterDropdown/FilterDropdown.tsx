@@ -1,11 +1,12 @@
 import React, { ReactNode, VFC, useMemo } from 'react'
 import innerText from 'react-innertext'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { DecoratorType, DecoratorsType } from '../../../types/props'
 import { Button } from '../../Button'
 import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
+import { Cluster } from '../../Layout'
 import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
@@ -87,7 +88,7 @@ export const FilterDropdown: VFC<Props> = ({
       {hasStatusText && isFiltered ? <StatusText themes={themes}>{status}</StatusText> : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
-          <ContentLayout>{children}</ContentLayout>
+          <ContentLayout themes={themes}>{children}</ContentLayout>
         </DropdownScrollArea>
         <BottomLayout themes={themes}>
           {onReset && (
@@ -99,12 +100,12 @@ export const FilterDropdown: VFC<Props> = ({
           )}
           <RightButtonLayout>
             <DropdownCloser>
-              <Button onClick={() => onCancel?.()}>{cancelButton}</Button>
-            </DropdownCloser>
-            <DropdownCloser>
               <Button variant="primary" onClick={() => onApply()}>
                 {applyButton}
               </Button>
+            </DropdownCloser>
+            <DropdownCloser>
+              <Button onClick={() => onCancel?.()}>{cancelButton}</Button>
             </DropdownCloser>
           </RightButtonLayout>
         </BottomLayout>
@@ -130,22 +131,25 @@ const StatusText = styled.span<{ themes: Theme }>`
   margin-left: ${({ themes }) => themes.spacing.XXS};
   font-size: ${({ themes }) => themes.fontSize.S};
 `
-const ContentLayout = styled.div`
-  padding: 24px;
+const ContentLayout = styled.div<{ themes: Theme }>`
+  ${({ themes: { space } }) => css`
+    padding: ${space(1.5)};
+  `}
 `
-const BottomLayout = styled.div<{ themes: Theme }>`
-  display: flex;
-  align-items: center;
-  border-top: 1px solid ${({ themes }) => themes.color.BORDER};
-  padding: 16px 24px;
+const BottomLayout = styled(Cluster).attrs({ gap: 1, align: 'center', justify: 'space-between' })<{
+  themes: Theme
+}>`
+  ${({ themes: { border, space } }) => css`
+    border-block-start: ${border.shorthand};
+    padding: ${space(1)} ${space(1.5)};
+  `}
 `
 const ResetButtonLayout = styled.div`
-  margin-left: -8px;
+  ${({ theme: { space } }) => css`
+    margin-block-start: ${space(-5)};
+  `}
 `
-const RightButtonLayout = styled.div`
-  display: flex;
-  margin-left: auto;
-  & > *:not(:first-child) {
-    margin-left: 16px;
-  }
+const RightButtonLayout = styled(Cluster).attrs({ gap: 1 })`
+  flex-direction: row-reverse;
+  margin-inline-start: auto;
 `
