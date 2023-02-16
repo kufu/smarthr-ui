@@ -1,62 +1,150 @@
-import React, { ReactNode, TdHTMLAttributes, VFC } from 'react'
+import React, {
+  AriaAttributes,
+  FC,
+  PropsWithChildren,
+  ReactNode,
+  ThHTMLAttributes,
+  useMemo,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { isTouchDevice } from '../../libs/ua'
+import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
+import { Stack } from '../Layout'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { useThClassNames } from './useClassNames'
 
-export type Props = {
-  /** `true` のとき、セルの色をハイライトする */
-  highlighted?: boolean
-  /** セルの内容 */
-  children?: ReactNode
-  /** セルをクリックした時に発火するコールバック関数 */
-  onClick?: () => void
-}
-type ElementProps = Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof Props>
+type sortTypes = keyof typeof SORT_DIRECTION_LABEL
+export type Props = PropsWithChildren<{
+  /** 並び替え状態 */
+  sort?: sortTypes
+  /** 並び替えをクリックした時に発火するコールバック関数 */
+  onSort?: () => void
+  /** 文言を変更するための関数 */
+  decorators?: {
+    sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
+  }
+}>
+type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props | 'onClick'>
 
-export const Th: VFC<Props & ElementProps> = ({
-  highlighted = false,
+const SORT_DIRECTION_LABEL = {
+  asc: '昇順',
+  desc: '降順',
+  none: '並び替えなし',
+}
+
+export const Th: FC<Props & ElementProps> = ({
+  children,
+  sort,
+  onSort,
+  decorators,
   className = '',
   ...props
 }) => {
   const theme = useTheme()
   const classNames = useThClassNames()
-  const wrapperClass = [className, highlighted && 'highlighted', classNames.wrapper]
-    .filter((c) => !!c)
-    .join(' ')
+  const wrapperClass = [className, classNames.wrapper].filter((c) => !!c).join(' ')
 
-  return <StyledTh {...props} className={wrapperClass} themes={theme} />
+  const sortLabel = useMemo(
+    () =>
+      sort &&
+      (decorators?.sortDirectionIconAlt?.(SORT_DIRECTION_LABEL[sort], { sort }) ||
+        SORT_DIRECTION_LABEL[sort]),
+    [decorators, sort],
+  )
+  const ariaSortProps = useMemo<
+    | {
+        'aria-sort': AriaAttributes['aria-sort']
+      }
+    | undefined
+  >(() => {
+    return (
+      sort && {
+        'aria-sort': sort === 'none' ? 'none' : `${sort}ending`,
+      }
+    )
+  }, [sort])
+
+  return (
+    <Wrapper
+      {...ariaSortProps}
+      {...props}
+      onSort={sort && onSort}
+      className={wrapperClass}
+      themes={theme}
+    >
+      {sort ? (
+        <SortButton themes={theme}>
+          {children}
+          <SortIcon sort={sort} />
+          <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
+        </SortButton>
+      ) : (
+        children
+      )}
+    </Wrapper>
+  )
 }
 
-const StyledTh = styled.th<{ themes: Theme; onClick?: () => void }>`
-  ${({ themes, onClick }) => {
-    const { fontSize, leading, spacingByChar, color, interaction } = themes
+const Wrapper = styled.th<{ themes: Theme; onSort?: () => void }>`
+  ${({ themes: { fontSize, leading, color, shadow, space } }) => css`
+    box-sizing: border-box;
+    font-size: ${fontSize.S};
+    font-weight: bold;
+    padding: ${space(0.75)} ${space(1)};
+    color: ${color.TEXT_BLACK};
+    line-height: ${leading.TIGHT};
+    vertical-align: middle;
 
-    return css`
-      height: calc(1em * ${leading.NORMAL} + ${spacingByChar(0.5)} * 2);
-      font-size: ${fontSize.S};
-      font-weight: bold;
-      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-      color: ${color.TEXT_BLACK};
-      transition: ${isTouchDevice ? 'none' : `background-color ${interaction.hover.animation}`};
-      text-align: left;
-      line-height: 1.5;
-      vertical-align: middle;
-      box-sizing: border-box;
+    &[aria-sort] {
+      cursor: pointer;
 
-      &.highlighted {
+      &:hover {
         background-color: ${color.hoverColor(color.HEAD)};
       }
 
-      ${onClick &&
-      css`
-        :hover {
-          background-color: ${color.hoverColor(color.HEAD)};
-          cursor: pointer;
-        }
-      `}
-    `
-  }}
+      /* :focus-visible-within の代替 */
+      &:has(:focus-visible) {
+        ${shadow.focusIndicatorStyles}
+      }
+    }
+  `}
 `
+
+const SortButton = styled.button<{
+  themes: Theme
+}>`
+  ${({ themes: { fontSize, space } }) => css`
+    cursor: pointer;
+    box-sizing: content-box;
+    display: inline-flex;
+    align-items: center;
+    column-gap: ${space(0.5)};
+    justify-content: space-between;
+    margin: ${space(-0.75)} ${space(-1)};
+    border: unset;
+    outline: unset;
+    background-color: unset;
+    padding: ${space(0.75)} ${space(1)};
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+
+    .smarthr-ui-Icon {
+      font-size: ${fontSize.M};
+    }
+  `}
+`
+
+const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => (
+  <SortIconWraper>
+    <FaSortUpIcon color={sort === 'asc' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
+    <FaSortDownIcon color={sort === 'desc' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
+  </SortIconWraper>
+)
+
+const SortIconWraper = styled(Stack).attrs({ as: 'span', gap: -1, inline: true })``
