@@ -22,6 +22,9 @@ type Props = {
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
+/**
+ * @deprecated `HeadlineArea` は非推奨です。`Stack` で書き換えてください。
+ */
 export const HeadlineArea: VFC<Props & ElementProps> = ({
   heading,
   description,
