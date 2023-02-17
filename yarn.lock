@@ -14438,10 +14438,10 @@ styled-reset@^4.4.2, styled-reset@^4.4.5:
   resolved "https://registry.yarnpkg.com/styled-reset/-/styled-reset-4.4.5.tgz#8c4bf50ee4f53d104473b156d0697ff509d54405"
   integrity sha512-uEQzbCqSBbx1ZT9VuquoGOJyVzs3kMIMCyjxmtSo4/JoTCrq92UFTJx91KcdMncDaymz6NE8sgSvstHHcJjExg==
 
-stylelint-config-prettier@^9.0.4:
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/stylelint-config-prettier/-/stylelint-config-prettier-9.0.4.tgz#1b1dda614d5b3ef6c1f583fa6fa55f88245eb00b"
-  integrity sha512-38nIGTGpFOiK5LjJ8Ma1yUgpKENxoKSOhbDNSemY7Ep0VsJoXIW9Iq/2hSt699oB9tReynfWicTAoIHiq8Rvbg==
+stylelint-config-prettier@^9.0.5:
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/stylelint-config-prettier/-/stylelint-config-prettier-9.0.5.tgz#9f78bbf31c7307ca2df2dd60f42c7014ee9da56e"
+  integrity sha512-U44lELgLZhbAD/xy/vncZ2Pq8sh2TnpiPvo38Ifg9+zeioR+LAkHu0i6YORIOxFafZoVg0xqQwex6e6F25S5XA==
 
 stylelint-config-recommended@^8.0.0:
   version "8.0.0"
@@ -15988,10 +15988,18 @@ write-file-atomic@^3.0.0:
     signal-exit "^3.0.2"
     typedarray-to-buffer "^3.1.5"
 
-write-file-atomic@^4.0.1:
+write-file-atomic@^4.0.1, write-file-atomic@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-4.0.2.tgz#a9df01ae5b77858a027fd2e80768ee433555fcfd"
   integrity sha512-7KxauUdBmSdWnmpaGFg+ppNjKF8uNLry8LyzjauQDOVONfFLNKrKvQOxZ/VuTIcS/gge/YNahf5RIIQWTSarlg==
+  dependencies:
+    imurmurhash "^0.1.4"
+    signal-exit "^3.0.7"
+
+write-file-atomic@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-5.0.0.tgz#54303f117e109bf3d540261125c8ea5a7320fab0"
+  integrity sha512-R7NYMnHSlV42K54lwY9lvW6MnSm1HSJqZL3xiSgi9E7//FYaI74r2G0rd+/X6VAMkHEdzxQaU5HUOXWUz5kA/w==
   dependencies:
     imurmurhash "^0.1.4"
     signal-exit "^3.0.7"
