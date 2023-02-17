@@ -183,6 +183,7 @@ const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
 const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
   const { border, color, fontSize, leading, radius, shadow, spacingByChar } = themes
   return css`
+    background-color: ${color.WHITE};
     position: relative;
     display: inline-flex;
     font-weight: bold;
