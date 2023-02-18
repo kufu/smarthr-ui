@@ -89,7 +89,6 @@ export const Th: FC<Props & ElementProps> = ({
 
 const Wrapper = styled.th<{ themes: Theme; onSort?: () => void }>`
   ${({ themes: { fontSize, leading, color, shadow, space } }) => css`
-    box-sizing: border-box;
     font-size: ${fontSize.S};
     font-weight: bold;
     padding: ${space(0.75)} ${space(1)};

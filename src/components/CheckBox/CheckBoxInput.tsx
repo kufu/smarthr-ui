@@ -111,11 +111,11 @@ const Input = styled.input<{ themes: Theme }>`
       &[disabled] {
         pointer-events: none;
       }
-      &:hover + span {
+      &:hover:not([disabled]) + span {
         box-shadow: 0 0 0 2px ${transparentize(0.78, color.MAIN)};
       }
       &:focus-visible + span {
-        box-shadow: ${shadow.focusIndicatorStyles};
+        ${shadow.focusIndicatorStyles};
       }
     `
   }}
