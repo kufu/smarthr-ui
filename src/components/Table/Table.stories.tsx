@@ -166,8 +166,8 @@ export const All: Story = () => (
           <tbody>
             {data.map(({ name, calories, fat, carbs, protein }, i) => (
               <tr key={name}>
-                <TdCheckbox name={`tableCheckBox-${i}`} aria-labelledby={`name-${i}`} />
-                <Td id={`name-${i}`}>{name}</Td>
+                <TdCheckbox name={`tableCheckBox-${i}`} aria-labelledby={`name-fixed-${i}`} />
+                <Td id={`name-fixed-${i}`}>{name}</Td>
                 <Td>{calories}</Td>
                 <Td>{fat}</Td>
                 <Td>{carbs}</Td>
