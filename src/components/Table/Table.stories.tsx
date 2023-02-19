@@ -5,9 +5,10 @@ import styled from 'styled-components'
 
 import { Base as BaseComponent } from '../Base'
 import { Button } from '../Button'
-import { CheckBox as CheckBoxComponent } from '../CheckBox'
 import { Text } from '../Text'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+
+import { TdCheckbox } from './TdCheckbox'
+import { ThCheckbox } from './ThCheckbox'
 
 import { BulkActionRow, EmptyTableBody, Table, Td, Th } from '.'
 
@@ -83,14 +84,7 @@ export const All: Story = () => (
       <Table>
         <thead>
           <tr>
-            <Th>
-              <VisuallyHiddenText>行を選択</VisuallyHiddenText>
-              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-              <label>
-                <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
-                <CheckBox name="tableAllCheckBox" checked={false} />
-              </label>
-            </Th>
+            <ThCheckbox name="tableAllCheckbox" />
             <Th sort="asc" onSort={action('降順に並び替え')}>
               Name
             </Th>
@@ -105,15 +99,10 @@ export const All: Story = () => (
           <BulkActionRow>Bulk action area</BulkActionRow>
         </thead>
         <tbody>
-          {data.map(({ name, calories, fat, carbs, protein }) => (
+          {data.map(({ name, calories, fat, carbs, protein }, i) => (
             <tr key={name}>
-              <Td>
-                <label>
-                  <VisuallyHiddenText>{name}</VisuallyHiddenText>
-                  <CheckBox name="tableCheckBox" checked={false} />
-                </label>
-              </Td>
-              <Td>{name}</Td>
+              <TdCheckbox name={`tableCheckBox-${i}`} aria-labelledby={`name-${i}`} />
+              <Td id={`name-${i}`}>{name}</Td>
               <Td>{calories}</Td>
               <Td>{fat}</Td>
               <Td>{carbs}</Td>
@@ -131,14 +120,7 @@ export const All: Story = () => (
       <Table>
         <thead>
           <tr>
-            <Th>
-              <VisuallyHiddenText>行を選択</VisuallyHiddenText>
-              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-              <label>
-                <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
-                <CheckBox name="tableAllCheckBox" checked={false} />
-              </label>
-            </Th>
+            <ThCheckbox name="tableAllCheckbox" checked={true} mixed />
             <Th sort="asc" onSort={action('降順に並び替え')}>
               Name
             </Th>
@@ -165,14 +147,7 @@ export const All: Story = () => (
         <Table fixedHead>
           <thead>
             <tr>
-              <Th>
-                <VisuallyHiddenText>行を選択</VisuallyHiddenText>
-                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                <label>
-                  <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
-                  <CheckBox name="tableAllCheckBox" checked={false} />
-                </label>
-              </Th>
+              <ThCheckbox name="tableAllCheckbox" />
               <Th
                 sort="desc"
                 onSort={action('昇順に並び替え')}
@@ -189,15 +164,10 @@ export const All: Story = () => (
             <BulkActionRow>Bulk action area</BulkActionRow>
           </thead>
           <tbody>
-            {data.map(({ name, calories, fat, carbs, protein }) => (
+            {data.map(({ name, calories, fat, carbs, protein }, i) => (
               <tr key={name}>
-                <Td>
-                  <label>
-                    <VisuallyHiddenText>{name}</VisuallyHiddenText>
-                    <CheckBox name="tableCheckBox" checked={false} />
-                  </label>
-                </Td>
-                <Td>{name}</Td>
+                <TdCheckbox name={`tableCheckBox-${i}`} aria-labelledby={`name-${i}`} />
+                <Td id={`name-${i}`}>{name}</Td>
                 <Td>{calories}</Td>
                 <Td>{fat}</Td>
                 <Td>{carbs}</Td>
@@ -320,10 +290,6 @@ const Ul = styled.ul`
     margin-top: 2rem;
     padding: 0 2rem;
   }
-`
-
-const CheckBox = styled(CheckBoxComponent)`
-  vertical-align: middle;
 `
 
 const Base = styled(BaseComponent)`
