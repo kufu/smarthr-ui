@@ -4602,10 +4602,10 @@ axe-html-reporter@2.2.3:
     mustache "^4.0.1"
     rimraf "^3.0.2"
 
-axe-playwright@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/axe-playwright/-/axe-playwright-1.2.1.tgz#bbcc10b3488cf086713e8c593eaeebd656e33534"
-  integrity sha512-6OIinDnRwQIXfYH2LkwJW62vOjwU04oU7Q9pkPoMNOliLAIqj+CMDU82Z7+OShFSgghIEFcum/RVSg+0P34aCg==
+axe-playwright@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/axe-playwright/-/axe-playwright-1.2.3.tgz#b590b4edf3898ed5784c4932cbad2937115b31f2"
+  integrity sha512-bTxCTNp3kx6sQRMjmuLv8pG3+v+kOCvFXATim1+XUXzW6ykulbbuJdQfgB+vQPNAF9uvYbW2qrv9pg81ZSFV/A==
   dependencies:
     axe-core "^4.5.1"
     axe-html-reporter "2.2.3"
