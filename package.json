@@ -64,7 +64,7 @@
     "postcss-syntax": "^0.36.2",
     "prettier": "^2.8.4",
     "prettier-config-smarthr": "^1.0.0",
-    "puppeteer": "^19.6.3",
+    "puppeteer": "^19.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
