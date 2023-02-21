@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import { useTheme } from '../../hooks/useTheme'
 import { Stack } from '../Layout'
+import { Table, Td, Th } from '../Table'
 import { Text } from '../Text'
 
 import { Base, LayerKeys, layerMap } from './Base'
@@ -50,6 +51,31 @@ export const BaseStory: Story = () => {
           <li>
             <Base radius="s">
               <Text>角丸サイズ小</Text>
+            </Base>
+          </li>
+        </List>
+      </dd>
+      <dt>overflow</dt>
+      <dd>
+        <List>
+          <li>
+            <Base overflow="hidden">
+              <Table>
+                <thead>
+                  <tr>
+                    <Th>説明</Th>
+                    <Th>補足</Th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <Td>必要に応じて overflow を使い溢れたコンテンツを処理できます。</Td>
+                    <Td>
+                      <code>overflow=&#123;&#123; x, y &#125;&#125;</code> の形でも書けます。
+                    </Td>
+                  </tr>
+                </tbody>
+              </Table>
             </Base>
           </li>
         </List>

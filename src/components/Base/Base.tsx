@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, PropsWithChildren, forwardRef, useMemo } from 'react'
+import React, { CSSProperties, HTMLAttributes, PropsWithChildren, forwardRef, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useSpacing } from '../../hooks/useSpacing'
@@ -12,6 +12,10 @@ type Props = PropsWithChildren<{
   padding?: Gap | SeparatePadding
   /** 角丸のサイズ */
   radius?: 's' | 'm'
+  /** コンテンツが要素内に収まらない場合の処理方法 */
+  overflow?:
+    | CSSProperties['overflow']
+    | { x: CSSProperties['overflowX']; y: CSSProperties['overflowY'] }
   /** レイヤの重なり方向の高さ（影の付き方に影響する） */
   layer?: LayerKeys
 }>
@@ -48,7 +52,7 @@ const separatePadding = (padding: Props['padding']) => {
 }
 
 export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
-  ({ padding, radius = 'm', layer = 1, className = '', ...props }, ref) => {
+  ({ padding, radius = 'm', overflow, layer = 1, className = '', ...props }, ref) => {
     const themes = useTheme()
     const classNames = useClassNames()
 
@@ -69,6 +73,7 @@ export const Base = forwardRef<HTMLDivElement, Props & ElementProps>(
         themes={themes}
         $padding={$padding}
         $radius={$radius}
+        $overflow={overflow}
         $layer={layerMap[layer]}
         ref={ref}
       />
@@ -80,13 +85,23 @@ const Wrapper = styled.div<{
   themes: Theme
   $padding: { block?: Gap; inline?: Gap }
   $radius: string
+  $overflow: Props['overflow']
   $layer: (typeof layerMap)[LayerKeys]
 }>`
-  ${({ themes: { color, shadow }, $padding, $radius, $layer }) => css`
+  ${({ themes: { color, shadow }, $padding, $radius, $overflow, $layer }) => css`
     box-shadow: ${shadow[$layer]};
     border-radius: ${$radius};
     background-color: ${color.WHITE};
     ${$padding.block && `padding-block: ${useSpacing($padding.block)};`}
     ${$padding.inline && `padding-inline: ${useSpacing($padding.inline)};`}
+    ${$overflow &&
+    ($overflow instanceof Object
+      ? css`
+          overflow-x: ${$overflow.x};
+          overflow-y: ${$overflow.y};
+        `
+      : css`
+          overflow: ${$overflow};
+        `)}
   `}
 `

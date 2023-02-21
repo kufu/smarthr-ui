@@ -1,14 +1,14 @@
 import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
-import { VISUALLY_HIDDEN_STYLE } from '../../constants'
 import { Base as BaseComponent } from '../Base'
 import { Button } from '../Button'
-import { CheckBox as CheckBoxComponent } from '../CheckBox'
-import { FaArrowDownIcon } from '../Icon'
 import { Text } from '../Text'
+
+import { TdCheckbox } from './TdCheckbox'
+import { ThCheckbox } from './ThCheckbox'
 
 import { BulkActionRow, EmptyTableBody, Table, Td, Th } from '.'
 
@@ -84,21 +84,13 @@ export const All: Story = () => (
       <Table>
         <thead>
           <tr>
-            <Th>
-              <VisuallyHiddenText>行を選択</VisuallyHiddenText>
-              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-              <label>
-                <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
-                <CheckBox name="tableAllCheckBox" checked={false} />
-              </label>
+            <ThCheckbox name="tableAllCheckbox" />
+            <Th sort="asc" onSort={action('降順に並び替え')}>
+              Name
             </Th>
-            <Th aria-sort="ascending" highlighted={true}>
-              <ClickableCellButton onClick={action('clicked')}>
-                <span style={{ lineHeight: '1.5' }}>Name</span>
-                <ArrowIcon alt="昇順" />
-              </ClickableCellButton>
+            <Th sort="none" onSort={action('昇順に並び替え')}>
+              Calories
             </Th>
-            <Th>Calories</Th>
             <Th>Fat (g)</Th>
             <Th>Carbs (g)</Th>
             <Th>Protein (g)</Th>
@@ -107,15 +99,10 @@ export const All: Story = () => (
           <BulkActionRow>Bulk action area</BulkActionRow>
         </thead>
         <tbody>
-          {data.map(({ name, calories, fat, carbs, protein }) => (
+          {data.map(({ name, calories, fat, carbs, protein }, i) => (
             <tr key={name}>
-              <Td>
-                <label>
-                  <VisuallyHiddenText>{name}</VisuallyHiddenText>
-                  <CheckBox name="tableCheckBox" checked={false} />
-                </label>
-              </Td>
-              <Td>{name}</Td>
+              <TdCheckbox name={`tableCheckBox-${i}`} aria-labelledby={`name-${i}`} />
+              <Td id={`name-${i}`}>{name}</Td>
               <Td>{calories}</Td>
               <Td>{fat}</Td>
               <Td>{carbs}</Td>
@@ -129,24 +116,44 @@ export const All: Story = () => (
       </Table>
     </li>
     <li>
+      行頭で改行が発生する場合
+      <Table>
+        <thead>
+          <tr>
+            <ThCheckbox name="tableAllCheckbox" checked={true} mixed />
+            <Th sort="asc" onSort={action('降順に並び替え')}>
+              Name
+            </Th>
+            <Th sort="none" onSort={action('昇順に並び替え')}>
+              Calories
+              <br />
+              (kcal)
+            </Th>
+            <Th>
+              Fat
+              <br />
+              (g)
+            </Th>
+            <Th>Carbs (g)</Th>
+            <Th>Protein (g)</Th>
+            <Th>Button</Th>
+          </tr>
+        </thead>
+      </Table>
+    </li>
+    <li>
       table fixed header
       <div style={{ overflow: 'clip' }}>
         <Table fixedHead>
           <thead>
             <tr>
-              <Th>
-                <VisuallyHiddenText>行を選択</VisuallyHiddenText>
-                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                <label>
-                  <VisuallyHiddenText>すべての行を選択</VisuallyHiddenText>
-                  <CheckBox name="tableAllCheckBox" checked={false} />
-                </label>
-              </Th>
-              <Th aria-sort="ascending" highlighted={true}>
-                <ClickableCellButton onClick={action('clicked')}>
-                  <span style={{ lineHeight: '1.5' }}>Name</span>
-                  <ArrowIcon alt="昇順" />
-                </ClickableCellButton>
+              <ThCheckbox name="tableAllCheckbox" />
+              <Th
+                sort="desc"
+                onSort={action('昇順に並び替え')}
+                decorators={{ sortDirectionIconAlt: (text, { sort }) => `${sort} (${text})` }}
+              >
+                Name
               </Th>
               <Th>Calories</Th>
               <Th>Fat (g)</Th>
@@ -157,15 +164,10 @@ export const All: Story = () => (
             <BulkActionRow>Bulk action area</BulkActionRow>
           </thead>
           <tbody>
-            {data.map(({ name, calories, fat, carbs, protein }) => (
+            {data.map(({ name, calories, fat, carbs, protein }, i) => (
               <tr key={name}>
-                <Td>
-                  <label>
-                    <VisuallyHiddenText>{name}</VisuallyHiddenText>
-                    <CheckBox name="tableCheckBox" checked={false} />
-                  </label>
-                </Td>
-                <Td>{name}</Td>
+                <TdCheckbox name={`tableCheckBox-${i}`} aria-labelledby={`name-fixed-${i}`} />
+                <Td id={`name-fixed-${i}`}>{name}</Td>
                 <Td>{calories}</Td>
                 <Td>{fat}</Td>
                 <Td>{carbs}</Td>
@@ -290,35 +292,6 @@ const Ul = styled.ul`
   }
 `
 
-const CheckBox = styled(CheckBoxComponent)`
-  vertical-align: middle;
-`
-
-const ClickableCellButton = styled.button`
-  appearance: none;
-  padding: 8px 16px;
-  border: 0;
-  box-sizing: border-box;
-  background-color: transparent;
-  width: calc(100% + 32px);
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: -8px -16px;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-`
-
-const ArrowIcon = styled(FaArrowDownIcon)`
-  transform: rotate(180deg);
-`
-
 const Base = styled(BaseComponent)`
   overflow-x: auto;
-`
-
-const VisuallyHiddenText = styled.span`
-  ${VISUALLY_HIDDEN_STYLE}
 `

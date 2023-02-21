@@ -1,19 +1,17 @@
-import React, { ReactNode, TdHTMLAttributes, VFC } from 'react'
+import React, { FC, PropsWithChildren, TdHTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { useTdClassNames } from './useClassNames'
 
-export type Props = {
+export type Props = PropsWithChildren<{
   /** `true` のとき、セル内が空であれば "----" を表示する */
   nullable?: boolean
-  /** セルの内容 */
-  children?: ReactNode
-}
+}>
 type ElementProps = Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof Props>
 
-export const Td: VFC<Props & ElementProps> = ({ nullable = false, className = '', ...props }) => {
+export const Td: FC<Props & ElementProps> = ({ nullable = false, className = '', ...props }) => {
   const theme = useTheme()
   const classNames = useTdClassNames()
   const wrapperClass = [className, nullable && 'nullable', classNames.wrapper]
@@ -37,13 +35,12 @@ const StyledTd = styled.td<{ themes: Theme }>`
 
     return css`
       color: ${color.TEXT_BLACK};
-      height: calc(1em * ${leading.RELAXED} + ${spacingByChar(0.5)} * 2);
+      height: calc(1em * ${leading.NORMAL});
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       border-top: ${border.shorthand};
       font-size: ${fontSize.M};
-      line-height: 1.5;
+      line-height: ${leading.NORMAL};
       vertical-align: middle;
-      box-sizing: border-box;
     `
   }};
 `
