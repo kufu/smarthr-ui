@@ -7,7 +7,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { CheckBoxInput, Props as CheckBoxInputProps } from './CheckBoxInput'
 import { useClassNames } from './useClassNames'
 
-type Props = {
+export type Props = {
   /** ラベル部分の `line-height` */
   lineHeight?: number
   /** ラベルの内容 */
