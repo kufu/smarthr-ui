@@ -100,12 +100,12 @@ export const FilterDropdown: VFC<Props> = ({
           )}
           <RightButtonLayout>
             <DropdownCloser>
+              <Button onClick={() => onCancel?.()}>{cancelButton}</Button>
+            </DropdownCloser>
+            <DropdownCloser>
               <Button variant="primary" onClick={() => onApply()}>
                 {applyButton}
               </Button>
-            </DropdownCloser>
-            <DropdownCloser>
-              <Button onClick={() => onCancel?.()}>{cancelButton}</Button>
             </DropdownCloser>
           </RightButtonLayout>
         </BottomLayout>
@@ -149,7 +149,9 @@ const ResetButtonLayout = styled.div`
     margin-block-start: ${space(-5)};
   `}
 `
-const RightButtonLayout = styled(Cluster).attrs({ gap: 1 })`
-  flex-direction: row-reverse;
+const RightButtonLayout = styled(Cluster).attrs({
+  gap: { column: 1, row: 0.5 },
+  justify: 'flex-end',
+})`
   margin-inline-start: auto;
 `
