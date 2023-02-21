@@ -39,6 +39,8 @@ type Props = {
   placeholder?: string
   /** フォームにエラーがあるかどうか */
   error?: boolean
+  /** コンポーネントの幅 */
+  width?: number | string
   /** コンポーネントに適用するクラス名 */
   className?: string
   /** 入力を独自にパースする場合に、パース処理を記述する関数 */
@@ -72,6 +74,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       from = DEFAULT_FROM,
       to,
       disabled,
+      width,
       error,
       className = '',
       parseInput,
@@ -246,6 +249,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
 
     return (
       <Container
+        $width={width}
         className={`${className} ${classNames.wrapper}`}
         onClick={() => {
           if (!disabled && !isCalendarShown) {
@@ -264,9 +268,9 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
         }}
       >
         <div ref={inputWrapperRef}>
-          <StyledInput
+          <Input
             {...inputAttrs}
-            type="text"
+            width="100%"
             name={name}
             onChange={() => {
               if (isCalendarShown) {
@@ -334,11 +338,11 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
   },
 )
 
-const Container = styled.div`
-  display: inline-block;
-`
-const StyledInput = styled(Input)`
-  width: 100%;
+const Container = styled.div<{ $width: Props['width'] }>`
+  ${({ $width = 'auto' }) => css`
+    display: inline-block;
+    width: ${typeof $width === 'number' ? `${$width}px` : $width};
+  `}
 `
 const InputSuffixLayout = styled.span<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
   return css`
