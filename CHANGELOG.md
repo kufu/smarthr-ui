@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [29.0.0](https://github.com/kufu/smarthr-ui/compare/v28.0.0...v29.0.0) (2023-02-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* Th に並び替え機能を追加 (#3128)
+* VisuallyHiddenTextコンポーネントを追加する (#3126)
+
+### Features
+
+* Base に overflow を追加 ([#3129](https://github.com/kufu/smarthr-ui/issues/3129)) ([07e214b](https://github.com/kufu/smarthr-ui/commit/07e214b82a27fc638c28e231bdf4a90598afcc92))
+* Th に並び替え機能を追加 ([#3128](https://github.com/kufu/smarthr-ui/issues/3128)) ([20cb8d0](https://github.com/kufu/smarthr-ui/commit/20cb8d0de1c73c2d357088b0eb68e4abc7bb23a6))
+* ThCheckbox と TdCheckbox を追加 ([#3136](https://github.com/kufu/smarthr-ui/issues/3136)) ([a9b9fd0](https://github.com/kufu/smarthr-ui/commit/a9b9fd0d05ad17b961b7bcbc56378640a8f62bba))
+* VisuallyHiddenTextコンポーネントを追加する ([#3126](https://github.com/kufu/smarthr-ui/issues/3126)) ([20a2ed4](https://github.com/kufu/smarthr-ui/commit/20a2ed4cd85d873707739a33b290a4d6b85695c9))
+
+
+### Bug Fixes
+
+* DatePicker の width を指定できるように修正 ([#3133](https://github.com/kufu/smarthr-ui/issues/3133)) ([4761a93](https://github.com/kufu/smarthr-ui/commit/4761a932c910b8c3ecd852e4856e246db54e5e7a))
+* HeadlineArea を deprecated にする ([#3132](https://github.com/kufu/smarthr-ui/issues/3132)) ([1ddcdcc](https://github.com/kufu/smarthr-ui/commit/1ddcdcc2900d21953ec3c5d327ced15a5076f77d))
+* InputFileの背景色指定漏れに対応する ([#3135](https://github.com/kufu/smarthr-ui/issues/3135)) ([5a082e5](https://github.com/kufu/smarthr-ui/commit/5a082e5a5538f2bfe6df2dd608029595c808d44e))
+* SingleComboBox 内の typo を修正 ([#3134](https://github.com/kufu/smarthr-ui/issues/3134)) ([98ecead](https://github.com/kufu/smarthr-ui/commit/98eceada17dabde20b666d7d5235e88b33706f41))
+
 ## [28.0.0](https://github.com/kufu/smarthr-ui/compare/v27.1.0...v28.0.0) (2023-02-14)
 
 
