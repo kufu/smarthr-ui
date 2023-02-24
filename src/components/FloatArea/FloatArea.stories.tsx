@@ -23,28 +23,28 @@ export const All: Story = () => (
       tertiaryButton={<Button>preview</Button>}
       errorIcon={<FaExclamationCircleIcon color="DANGER" />}
       errorText="これはfixedのFloatAreaです。"
-      top={36}
+      top={2}
       width="80%"
       fixed
     />
     <Stack>
-      {[...Array(15)].map((_, index) => (
-        <>
-          {index === 13 && (
-            <FloatArea
-              primaryButton={<Button variant="primary">Submit</Button>}
-              secondaryButton={<Button>Cancel</Button>}
-              tertiaryButton={<Button>preview</Button>}
-              errorIcon={<FaExclamationCircleIcon color="DANGER" />}
-              errorText="これはstickyのFloatAreaです。"
-              bottom={24}
-            />
-          )}
+      {[...Array(15)].map((_, index) =>
+        index === 13 ? (
+          <FloatArea
+            primaryButton={<Button variant="primary">Submit</Button>}
+            secondaryButton={<Button>Cancel</Button>}
+            tertiaryButton={<Button>preview</Button>}
+            errorIcon={<FaExclamationCircleIcon color="DANGER" />}
+            errorText="これはstickyのFloatAreaです。"
+            bottom={1.5}
+            key={index}
+          />
+        ) : (
           <Base key={index}>
             <p>複数の従業員項目を掛け合わせて（クロス集計）分析できる「レポート」を作成します。</p>
           </Base>
-        </>
-      ))}
+        ),
+      )}
     </Stack>
   </>
 )
@@ -56,12 +56,12 @@ export const WithoutTertiary: Story = () => (
     secondaryButton={<Button>Cancel</Button>}
     errorIcon={<FaExclamationCircleIcon color="DANGER" />}
     errorText="This is the error text."
-    bottom="24px"
+    bottom={1.5}
   />
 )
 WithoutTertiary.storyName = 'withoutTertiary'
 
 export const OnlyPrimary: Story = () => (
-  <FloatArea primaryButton={<Button variant="primary">Submit</Button>} top={32} />
+  <FloatArea primaryButton={<Button variant="primary">Submit</Button>} top={2} />
 )
 OnlyPrimary.storyName = 'onlyPrimary'
