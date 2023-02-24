@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC, useCallback } from 'react'
+import React, { FC, ReactNode, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -6,8 +6,7 @@ import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { HeadingTagTypes } from '../Heading'
 import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../Icon'
-import { Stack } from '../Layout'
-import { Loader } from '../Loader'
+import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
 
 import { useOffsetHeight } from './dialogHelper'
@@ -72,7 +71,7 @@ export type ActionDialogContentInnerProps = BaseProps & {
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
 
-export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
+export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   children,
   title,
   titleId,
@@ -118,7 +117,7 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
         {children}
       </Body>
       <ActionArea themes={theme} ref={bottomRef} className={classNames.actionArea}>
-        <ButtonArea themes={theme} className={classNames.buttonArea}>
+        <ButtonArea className={classNames.buttonArea}>
           <Button
             onClick={onClickClose}
             disabled={closeDisabled || isRequestProcessing}
@@ -129,86 +128,60 @@ export const ActionDialogContentInner: VFC<ActionDialogContentInnerProps> = ({
           <Button
             variant={actionTheme}
             onClick={handleClickAction}
-            disabled={actionDisabled || isRequestProcessing}
+            disabled={actionDisabled}
+            loading={isRequestProcessing}
             className={classNames.actionButton}
           >
             {actionText}
           </Button>
         </ButtonArea>
         {responseMessage && (
-          <MessageWrapper role="alert" className={classNames.alert} themes={theme}>
-            {responseMessage.status === 'success' ? (
-              <FaCheckCircleIcon color={theme.color.MAIN} />
-            ) : responseMessage.status === 'error' ? (
-              <FaExclamationCircleIcon color={theme.color.DANGER} />
-            ) : (
-              <Spinner size="s" themes={theme} />
+          <>
+            {responseMessage.status === 'success' && (
+              <Message>
+                <FaCheckCircleIcon
+                  color={theme.color.MAIN}
+                  text={responseMessage.text}
+                  role="alert"
+                />
+              </Message>
             )}
-            <Message themes={theme}>{responseMessage.text}</Message>
-          </MessageWrapper>
+            {responseMessage.status === 'error' && (
+              <Message>
+                <FaExclamationCircleIcon
+                  color={theme.color.DANGER}
+                  text={responseMessage.text}
+                  role="alert"
+                />
+              </Message>
+            )}
+          </>
         )}
       </ActionArea>
     </>
   )
 }
 
-const TitleArea = styled(Stack)<{ themes: Theme; as: HeadingTagTypes }>(
-  ({ themes: { border, spacing } }) => css`
+const TitleArea = styled(Stack)<{ themes: Theme; as: HeadingTagTypes }>`
+  ${({ themes: { border, space } }) => css`
     margin-block: unset;
     border-bottom: ${border.shorthand};
-    padding: ${spacing.XS} ${spacing.S};
-  `,
-)
+    padding: ${space(1)} ${space(1.5)};
+  `}
+`
 const Body = styled.div<{ offsetHeight: number }>`
-  ${({ offsetHeight }) => {
-    return css`
-      max-height: calc(100vh - ${offsetHeight}px);
-      overflow: auto;
-    `
-  }}
+  ${({ offsetHeight }) => css`
+    max-height: calc(100vh - ${offsetHeight}px);
+    overflow: auto;
+  `}
 `
-const ActionArea = styled.div<{ themes: Theme }>(({ themes: { spacing, border } }) => {
-  return css`
-    display: flex;
-    flex-direction: column;
+const ActionArea = styled(Stack).attrs({ gap: 0.5 })<{ themes: Theme }>`
+  ${({ themes: { space, border } }) => css`
     border-top: ${border.shorthand};
-    padding: ${spacing.XS} ${spacing.S};
-
-    &&& > * + * {
-      margin-top: 0.5rem;
-    }
-  `
-})
-const ButtonArea = styled.div<{ themes: Theme }>(({ themes: { spacing } }) => {
-  return css`
-    display: flex;
-    justify-content: flex-end;
-
-    > * + * {
-      margin-left: ${spacing.XS};
-    }
-  `
-})
-const MessageWrapper = styled.div<{ themes: Theme }>`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: ${({ themes }) => themes.fontSize.M};
+    padding: ${space(1)} ${space(1.5)};
+  `}
 `
-const Spinner = styled(Loader)<{ themes: Theme }>`
-  &&& {
-    > div {
-      width: 18px;
-      height: 18px;
-    }
-
-    > div > div {
-      border-color: ${({ themes }) => themes.color.TEXT_GREY};
-    }
-  }
-`
-const Message = styled.span<{ themes: Theme }>`
-  margin-left: ${({ themes }) => themes.spacingByChar(0.25)};
+const ButtonArea = styled(Cluster).attrs({ gap: { row: 0.5, column: 1 }, justify: 'flex-end' })``
+const Message = styled.div`
+  text-align: right;
 `
