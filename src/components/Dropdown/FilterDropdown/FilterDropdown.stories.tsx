@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { MultiComboBox, SingleComboBox } from '../../ComboBox'
 import { Input } from '../../Input'
+import { Stack } from '../../Layout'
 import { RadioButton } from '../../RadioButton'
 
 import { FilterDropdown } from './FilterDropdown'
@@ -33,11 +34,11 @@ export const Default: Story = () => {
             }}
             isFiltered={isFiltered}
           >
-            <Text>
+            <p>
               `FilterDropdown` provide specific interface to be able to filter data.
               <br />
               You can control inputs for filtering conditions as children components.
-            </Text>
+            </p>
             <RadioButtonList>
               <li>
                 <RadioButton name="hoge" checked={value === 'hoge'} onChange={onChangeValue}>
@@ -61,9 +62,11 @@ export const Default: Story = () => {
             <Description>
               ↓<br />↓
             </Description>
-            <Text>Children content is scrollable.</Text>
-            <PartSingleComboBox name="single" />
-            <PartMultiComboBox name="multi" />
+            <Stack gap={0.5}>
+              <p>Children content is scrollable.</p>
+              <PartSingleComboBox name="single" />
+              <PartMultiComboBox name="multi" />
+            </Stack>
           </FilterDropdown>
         </dd>
         <dt>Filtered</dt>
@@ -73,7 +76,7 @@ export const Default: Story = () => {
             onApply={() => setIsFiltered2(true)}
             onReset={() => setIsFiltered2(false)}
           >
-            <Text>You can change border color of the trigger button by setting `isFiltered`.</Text>
+            <p>You can change border color of the trigger button by setting `isFiltered`.</p>
           </FilterDropdown>
         </dd>
         <dt>Filtered has status text</dt>
@@ -84,9 +87,9 @@ export const Default: Story = () => {
             onReset={() => setIsFiltered3(false)}
             hasStatusText
           >
-            <Text>
+            <p>
               You can change border text and color of the trigger button by setting `isFiltered`.
-            </Text>
+            </p>
           </FilterDropdown>
         </dd>
         <dt>Custom text</dt>
@@ -104,9 +107,9 @@ export const Default: Story = () => {
               resetButton: (txt) => <span data-wovn-enable="true">{`reset.(${txt})`}</span>,
             }}
           >
-            <Text>
+            <p>
               You can change border text and color of the trigger button by setting `isFiltered`.
-            </Text>
+            </p>
           </FilterDropdown>
         </dd>
       </List>
@@ -131,10 +134,6 @@ const List = styled.dl`
   dd {
     margin: 0;
   }
-`
-const Text = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.color.TEXT_BLACK};
 `
 const Description = styled.p`
   margin: 0;
@@ -194,17 +193,14 @@ const PartSingleComboBox: React.FC<{ name: string }> = ({ name }) => {
   }, [])
 
   return (
-    <div>
-      <SingleComboBox
-        name={name}
-        items={items}
-        selectedItem={selectedItem}
-        defaultItem={items[0]}
-        width={400}
-        onSelect={handleSelectItem}
-        onClear={handleClear}
-      />
-    </div>
+    <SingleComboBox
+      name={name}
+      items={items}
+      selectedItem={selectedItem}
+      defaultItem={items[0]}
+      onSelect={handleSelectItem}
+      onClear={handleClear}
+    />
   )
 }
 const PartMultiComboBox: React.FC<{ name: string }> = ({ name }) => {
@@ -262,22 +258,19 @@ const PartMultiComboBox: React.FC<{ name: string }> = ({ name }) => {
   )
 
   return (
-    <div>
-      <MultiComboBox
-        name={name}
-        items={items}
-        selectedItems={selectedItems}
-        width={400}
-        dropdownHelpMessage="入力でフィルタリングできます。"
-        onDelete={handleDelete}
-        onSelect={handleSelectItem}
-        onChangeSelected={(selected) => {
-          action('onChangeSelected')(selected)
-          setSelectedItems(selected)
-        }}
-        onFocus={action('onFocus')}
-        onBlur={action('onBlur')}
-      />
-    </div>
+    <MultiComboBox
+      name={name}
+      items={items}
+      selectedItems={selectedItems}
+      dropdownHelpMessage="入力でフィルタリングできます。"
+      onDelete={handleDelete}
+      onSelect={handleSelectItem}
+      onChangeSelected={(selected) => {
+        action('onChangeSelected')(selected)
+        setSelectedItems(selected)
+      }}
+      onFocus={action('onFocus')}
+      onBlur={action('onBlur')}
+    />
   )
 }
