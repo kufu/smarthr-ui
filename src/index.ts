@@ -62,6 +62,8 @@ export {
   Body,
   Th,
   Td,
+  ThCheckbox,
+  TdCheckbox,
   BulkActionRow,
   EmptyTableBody,
 } from './components/Table'

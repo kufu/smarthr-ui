@@ -40,7 +40,10 @@ const Td = styled(shrTd)<{ themes: Theme }>`
   `}
 `
 const Label = styled(Center).attrs({ as: 'label', verticalCentering: true })`
-  cursor: pointer;
   position: absolute;
   inset: 0;
+
+  &:not(:has([disabled])) {
+    cursor: pointer;
+  }
 `
