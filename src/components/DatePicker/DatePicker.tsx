@@ -277,23 +277,24 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
                 switchCalendarVisibility(false)
               }
             }}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
+            onKeyPress={({ key, currentTarget: { value: inputString } }) => {
+              if (key === 'Enter') {
                 switchCalendarVisibility(!isCalendarShown)
+                const newDate = stringToDate(inputString)
+                updateDate(newDate)
               }
             }}
             onFocus={() => {
               setIsInputFocused(true)
               switchCalendarVisibility(true)
             }}
-            onBlur={(e) => {
+            onBlur={({ target: { value: inputString } }) => {
               setIsInputFocused(false)
-              const inputString = e.target.value
               if (inputString === '') {
                 updateDate(null)
                 return
               }
-              const newDate = parseInput ? parseInput(inputString) : parseJpnDateString(inputString)
+              const newDate = stringToDate(inputString)
               updateDate(newDate)
             }}
             suffix={
