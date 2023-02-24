@@ -58,10 +58,14 @@ export type BaseProps = {
   decorators?: DecoratorsType<'closeButtonLabel'>
 }
 
-type responseMessageType = {
-  status: 'success' | 'error' | 'processing'
-  text: string
-}
+type responseMessageType =
+  | {
+      status: 'success' | 'error'
+      text: string
+    }
+  | {
+      status: 'processing'
+    }
 
 export type ActionDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
