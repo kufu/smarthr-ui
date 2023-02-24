@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [29.0.2](https://github.com/kufu/smarthr-ui/compare/v29.0.1...v29.0.2) (2023-02-24)
+
+
+### Bug Fixes
+
+* DatePicker の和暦入力後に Enter で変換されないバグを修正 ([#3150](https://github.com/kufu/smarthr-ui/issues/3150)) ([48b1292](https://github.com/kufu/smarthr-ui/commit/48b129265cdc9ff21ae35e1b37815edb4fd54949))
+* 存在しない onSort を使っていたため修正 ([#3156](https://github.com/kufu/smarthr-ui/issues/3156)) ([96ee00d](https://github.com/kufu/smarthr-ui/commit/96ee00daf0d8c78784d5ae23d7d5fde168718a05))
+
 ### [29.0.1](https://github.com/kufu/smarthr-ui/compare/v29.0.0...v29.0.1) (2023-02-24)
 
 
