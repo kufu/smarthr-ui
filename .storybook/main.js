@@ -26,4 +26,10 @@ module.exports = {
       },
     },
   ],
+  refs: {
+    'smarthr-patterns': {
+      title: 'SmartHR Patterns',
+      url: 'https://main--62f0ae48c21b0728fd1a5c85.chromatic.com',
+    },
+  },
 }
