@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [29.0.1](https://github.com/kufu/smarthr-ui/compare/v29.0.0...v29.0.1) (2023-02-24)
+
+
+### Bug Fixes
+
+* FilterDropdown が狭い画面幅でも使えるように修正 ([#3130](https://github.com/kufu/smarthr-ui/issues/3130)) ([beb0776](https://github.com/kufu/smarthr-ui/commit/beb0776a1f63aded4068392708c797f5a087b9b2))
+* Th/TdCheckbox の export 漏れを修正 ([#3151](https://github.com/kufu/smarthr-ui/issues/3151)) ([e41208f](https://github.com/kufu/smarthr-ui/commit/e41208fbcd04eff6428053c746c584212b6b5d27))
+
 ## [29.0.0](https://github.com/kufu/smarthr-ui/compare/v28.0.0...v29.0.0) (2023-02-21)
 
 
