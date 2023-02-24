@@ -67,15 +67,9 @@ export const Th: FC<Props & ElementProps> = ({
   }, [sort])
 
   return (
-    <Wrapper
-      {...ariaSortProps}
-      {...props}
-      onSort={sort && onSort}
-      className={wrapperClass}
-      themes={theme}
-    >
+    <Wrapper {...ariaSortProps} {...props} className={wrapperClass} themes={theme}>
       {sort ? (
-        <SortButton themes={theme}>
+        <SortButton themes={theme} onClick={onSort}>
           {children}
           <SortIcon sort={sort} />
           <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
@@ -87,11 +81,12 @@ export const Th: FC<Props & ElementProps> = ({
   )
 }
 
-const Wrapper = styled.th<{ themes: Theme; onSort?: () => void }>`
+const Wrapper = styled.th<{ themes: Theme }>`
   ${({ themes: { fontSize, leading, color, shadow, space } }) => css`
     font-size: ${fontSize.S};
     font-weight: bold;
     padding: ${space(0.75)} ${space(1)};
+    text-align: left;
     color: ${color.TEXT_BLACK};
     line-height: ${leading.TIGHT};
     vertical-align: middle;
@@ -126,7 +121,6 @@ const SortButton = styled.button<{
     outline: unset;
     background-color: unset;
     padding: ${space(0.75)} ${space(1)};
-    text-align: left;
     width: 100%;
     font-family: inherit;
     font-size: inherit;
