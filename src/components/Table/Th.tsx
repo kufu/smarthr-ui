@@ -86,6 +86,7 @@ const Wrapper = styled.th<{ themes: Theme }>`
     font-size: ${fontSize.S};
     font-weight: bold;
     padding: ${space(0.75)} ${space(1)};
+    text-align: left;
     color: ${color.TEXT_BLACK};
     line-height: ${leading.TIGHT};
     vertical-align: middle;
@@ -120,7 +121,6 @@ const SortButton = styled.button<{
     outline: unset;
     background-color: unset;
     padding: ${space(0.75)} ${space(1)};
-    text-align: left;
     width: 100%;
     font-family: inherit;
     font-size: inherit;
