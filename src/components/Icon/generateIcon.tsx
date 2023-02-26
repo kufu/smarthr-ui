@@ -33,7 +33,7 @@ type DefinedColor = (typeof definedColors)[number]
 const knownColorSet: Set<string> = new Set(definedColors)
 const isDefinedColor = (color: string): color is DefinedColor => knownColorSet.has(color)
 
-export interface IconProps {
+interface IconProps {
   /**
    * アイコンの色
    * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
