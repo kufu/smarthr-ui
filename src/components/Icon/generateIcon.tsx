@@ -92,6 +92,11 @@ export const createIcon = (SvgIcon: IconType) => {
     const svgIcon = (
       <SvgIcon
         {...props}
+        stroke="currentColor"
+        fill="currentColor"
+        strokeWidth="0"
+        width="1em"
+        height="1em"
         color={replacedColor}
         className={`${className} ${classNames.wrapper}`}
         role={role}
