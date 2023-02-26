@@ -1,7 +1,7 @@
 import { Story } from '@storybook/react'
 import React from 'react'
 import { IconBase } from 'react-icons'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { BaseColumn } from '../Base'
 import { Cluster, Stack } from '../Layout'
@@ -15,6 +15,9 @@ const { FaAddressBookIcon, FaBullhornIcon, FaInfoCircleIcon } = Icons
 export default {
   title: 'Media（メディア）/Icon',
   component: FaAddressBookIcon,
+  parameters: {
+    withTheming: true,
+  },
 }
 
 export const All: Story = () => {
@@ -22,12 +25,10 @@ export const All: Story = () => {
     <Cluster gap={0.75} as="dl">
       {Object.values(Icons).map((Icon) => (
         <ItemWrapper key={`${Icon.displayName}`}>
-          <Stack gap={0.5} align="center">
-            <dt>{Icon.displayName?.replace(/Icon$/, '')}</dt>
-            <dd>
-              <Icon />
-            </dd>
-          </Stack>
+          <dt>{Icon.displayName?.replace(/Icon$/, '')}</dt>
+          <dd>
+            <Icon />
+          </dd>
         </ItemWrapper>
       ))}
     </Cluster>
@@ -131,5 +132,12 @@ export const アイコンの生成: Story = () => {
 }
 
 const ItemWrapper = styled(BaseColumn)`
-  flex-basis: 10em;
+  ${({ theme: { space } }) => css`
+    flex-basis: 10em;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: ${space(0.5)};
+  `}
 `
