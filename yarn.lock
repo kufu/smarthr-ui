@@ -5472,14 +5472,14 @@ chownr@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
 
-chromatic@^6.17.0:
-  version "6.17.0"
-  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-6.17.0.tgz#c7a1c15262e748abd9e2bc7247653974e6eb2ea0"
-  integrity sha512-0CYJOwAAHrcD0kXqMDvZql7wih+IO7A7E8hdCRotC0cmfHK8gOFWK6ajUsZUVwrr2zF6IFSJ23wsMLuaZxqSlw==
+chromatic@^6.17.1:
+  version "6.17.1"
+  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-6.17.1.tgz#6327fa9df683232bbb09a0f318ea656cc3c3ca8a"
+  integrity sha512-CKCIV+QiNsQUHaZu2uQkm9A140Fd9sPgf61IsbJCwPspb97tHxs6hbqzf1QjaJJL37G6UqR3u12bzPld7JB96w==
   dependencies:
     "@discoveryjs/json-ext" "^0.5.7"
     "@types/webpack-env" "^1.17.0"
-    snyk-nodejs-lockfile-parser "^1.43.1"
+    snyk-nodejs-lockfile-parser "^1.47.4"
 
 chrome-remote-interface@^0.31.3:
   version "0.31.3"
@@ -13905,20 +13905,20 @@ snapdragon@^0.8.1:
     source-map-resolve "^0.5.0"
     use "^3.1.0"
 
-snyk-config@^4.0.0-rc.2:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/snyk-config/-/snyk-config-4.0.0.tgz#21d459f19087991246cc07a7ffb4501dce6f4159"
-  integrity sha512-E6jNe0oUjjzVASWBOAc/mA23DhbzABDF9MI6UZvl0gylh2NSXSXw2/LjlqMNOKL2c1qkbSkzLOdIX5XACoLCAQ==
+snyk-config@^5.0.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/snyk-config/-/snyk-config-5.1.0.tgz#d725739ede0732a7db13be4e120c90b39e496ab7"
+  integrity sha512-wqVMxUGqjjHX+MJrz0WHa/pJTDWU17aRv6cnI/6i7cq93J3TkkJZ8sjgvwCgP8cWX5wTHIlRuMV+IAd59K4X/g==
   dependencies:
     async "^3.2.0"
     debug "^4.1.1"
     lodash.merge "^4.6.2"
     minimist "^1.2.5"
 
-snyk-nodejs-lockfile-parser@^1.43.1:
-  version "1.45.1"
-  resolved "https://registry.yarnpkg.com/snyk-nodejs-lockfile-parser/-/snyk-nodejs-lockfile-parser-1.45.1.tgz#bb9a7bf8802d8339f73800b9ffc5189982b748ec"
-  integrity sha512-uj3dGoruveEZ1l/i5Qv4RS+dTBgAfmXXvTEmvH14fNuTEzDzb/PFe6+H1VPExrihwjrjHci1WIUhm9lQpYZZCQ==
+snyk-nodejs-lockfile-parser@^1.47.4:
+  version "1.47.4"
+  resolved "https://registry.yarnpkg.com/snyk-nodejs-lockfile-parser/-/snyk-nodejs-lockfile-parser-1.47.4.tgz#4e554e9f1400e27aeac51c3f1665a7b7b053c92c"
+  integrity sha512-qNrhOBVR0rw9/ztZqC8BTHrgAOd1+m1fUpC4UE6DkI75bZecSRTkCjTs4cW4hiEck2lMeRxQ07Wci2fqqUyzrQ==
   dependencies:
     "@snyk/dep-graph" "^2.3.0"
     "@snyk/graphlib" "2.1.9-patch.3"
@@ -13931,7 +13931,7 @@ snyk-nodejs-lockfile-parser@^1.43.1:
     lodash.isempty "^4.4.0"
     lodash.topairs "^4.3.0"
     semver "^7.3.5"
-    snyk-config "^4.0.0-rc.2"
+    snyk-config "^5.0.0"
     tslib "^1.9.3"
     uuid "^8.3.0"
 
