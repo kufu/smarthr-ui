@@ -6,7 +6,7 @@ import {
   FaCloudDownloadAltIcon,
   FaExclamationCircleIcon,
   FaSyncAltIcon,
-  IconProps,
+  ComponentProps as IconProps,
   WarningIcon,
 } from '../Icon'
 
