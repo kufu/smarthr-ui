@@ -76,6 +76,17 @@ export const Color: Story = () => (
   </Cluster>
 )
 
+export const Size: Story = () => (
+  <Cluster>
+    <FaAddressBookIcon size={16} />
+    <FaAddressBookIcon size={24} />
+    <FaAddressBookIcon size={32} />
+    <FaAddressBookIcon size="1em" />
+    <FaAddressBookIcon size="1.5em" />
+    <FaAddressBookIcon size="2em" />
+  </Cluster>
+)
+
 export const WithText: Story = () => (
   <Stack align="flex-start">
     <FaAddressBookIcon text="連絡帳" />
