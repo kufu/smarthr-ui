@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [30.0.1](https://github.com/kufu/smarthr-ui/compare/v30.0.0...v30.0.1) (2023-03-01)
+
+
+### Bug Fixes
+
+* alias import を相対パスに置き換え ([#3173](https://github.com/kufu/smarthr-ui/issues/3173)) ([22260f2](https://github.com/kufu/smarthr-ui/commit/22260f22fc6c0191bf648aaf3b1b1d07760ad622))
+
 ## [30.0.0](https://github.com/kufu/smarthr-ui/compare/v29.0.2...v30.0.0) (2023-03-01)
 
 
