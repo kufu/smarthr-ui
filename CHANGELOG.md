@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.0.0](https://github.com/kufu/smarthr-ui/compare/v29.0.2...v30.0.0) (2023-03-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* ActionDialog の processing を Button の loading で置き換え (#3159)
+* FloatArea の top / bottom をデザイントークンで指定するように修正 (#3153)
+
+### Features
+
+* ActionDialog の processing を Button の loading で置き換え ([#3159](https://github.com/kufu/smarthr-ui/issues/3159)) ([ffc6d9a](https://github.com/kufu/smarthr-ui/commit/ffc6d9ab6351dc1f6a377e0f7fe40fa1799e1c43))
+* generateIcon を追加 ([#3161](https://github.com/kufu/smarthr-ui/issues/3161)) ([296b316](https://github.com/kufu/smarthr-ui/commit/296b316bb6e452f48c34e9c0ae038ee6c209fab8))
+
+
+### Bug Fixes
+
+* DropdownMenuButton に渡した props を引き金となるボタンに渡すよう修正 ([#3152](https://github.com/kufu/smarthr-ui/issues/3152)) ([72c669a](https://github.com/kufu/smarthr-ui/commit/72c669ae2e81f4c75d0bd90025bad0d58c4d93fc))
+* FloatArea の top / bottom をデザイントークンで指定するように修正 ([#3153](https://github.com/kufu/smarthr-ui/issues/3153)) ([8028e2e](https://github.com/kufu/smarthr-ui/commit/8028e2e91f776b9de04c4ea21512241f05216a72))
+* Pagination の aria-label の内容が aria-current とダブっているため調整する ([#3147](https://github.com/kufu/smarthr-ui/issues/3147)) ([92ed7d6](https://github.com/kufu/smarthr-ui/commit/92ed7d6b9051b7d1834b0566109e395956fcdc13))
+
 ### [29.0.2](https://github.com/kufu/smarthr-ui/compare/v29.0.1...v29.0.2) (2023-02-24)
 
 
