@@ -1,9 +1,8 @@
 import React, { forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
-import { DecoratorsType } from '@/types/props'
-
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { DecoratorsType } from '../../types/props'
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 import { Center } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'

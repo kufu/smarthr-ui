@@ -1,16 +1,15 @@
 import React, { FC, ReactNode, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types/props'
-import { Button } from '../Button'
-import { HeadingTagTypes } from '../Heading'
-import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../Icon'
-import { Cluster, Stack } from '../Layout'
-import { Text } from '../Text'
-
-import { useOffsetHeight } from './dialogHelper'
-import { useClassNames } from './useClassNames'
+import { Theme, useTheme } from '../../../hooks/useTheme'
+import { DecoratorsType } from '../../../types/props'
+import { Button } from '../../Button'
+import { HeadingTagTypes } from '../../Heading'
+import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../../Icon'
+import { Cluster, Stack } from '../../Layout'
+import { Text } from '../../Text'
+import { useOffsetHeight } from '../dialogHelper'
+import { useClassNames } from '../useClassNames'
 
 export type BaseProps = {
   /**
