@@ -1,4 +1,11 @@
-import React, { ComponentProps, HTMLAttributes, ReactElement, ReactNode, VFC, useMemo } from 'react'
+import React, {
+  ButtonHTMLAttributes,
+  ComponentProps,
+  FC,
+  ReactElement,
+  ReactNode,
+  useMemo,
+} from 'react'
 import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
@@ -26,17 +33,14 @@ type Props = {
   triggerSize?: ButtonProps['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIconTrigger?: boolean
-  /** 引き金となるボタンの `disabled` 属性の値 */
-  disabled?: boolean
 }
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
-export const DropdownMenuButton: VFC<Props & ElementProps> = ({
+export const DropdownMenuButton: FC<Props & ElementProps> = ({
   label,
   children,
   triggerSize,
   onlyIconTrigger = false,
-  disabled = false,
   className = '',
   ...props
 }) => {
@@ -59,12 +63,12 @@ export const DropdownMenuButton: VFC<Props & ElementProps> = ({
   )
 
   return (
-    <Dropdown {...props}>
+    <Dropdown>
       <DropdownTrigger className={`${classNames.wrapper}${className && ` ${className}`}`}>
         <TriggerButton
+          {...props}
           suffix={triggerSuffix}
           size={triggerSize}
-          disabled={disabled}
           square={onlyIconTrigger}
           className={classNames.trigger}
         >

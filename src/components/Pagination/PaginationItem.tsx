@@ -19,7 +19,7 @@ export const PaginationItem: VFC<Props> = ({ page, currentPage, onClick }) => {
         className="active"
         themes={theme}
         aria-current="page"
-        aria-label={`${page}ページ目、現在のページ`}
+        aria-label={`${page}ページ目`}
         disabled
       >
         {page}

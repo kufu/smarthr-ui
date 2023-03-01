@@ -1,14 +1,16 @@
 import React, {
   ComponentProps,
+  FC,
   FunctionComponentElement,
   HTMLAttributes,
   ReactNode,
-  VFC,
 } from 'react'
 import styled, { css } from 'styled-components'
 
+import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DialogBase as BaseComponent } from '../Base'
+import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import { Base as shrBase } from '../Base'
 import { FaExclamationCircleIcon } from '../Icon'
 import { Cluster, LineUp } from '../Layout'
 import { Text } from '../Text'
@@ -16,10 +18,10 @@ import { Text } from '../Text'
 import { useClassNames } from './useClassNames'
 
 type StyleProps = {
-  /** コンポーネントの上端から、包含ブロックの上端までの距離 */
-  top?: number | string
-  /** コンポーネントの下端から、包含ブロックの下端までの距離 */
-  bottom?: number | string
+  /** コンポーネントの上端から、包含ブロックの上端までの間隔（基準フォントサイズの相対値または抽象値） */
+  top?: CharRelativeSize | AbstractSize
+  /** コンポーネントの下端から、包含ブロックの下端までの間隔（基準フォントサイズの相対値または抽象値） */
+  bottom?: CharRelativeSize | AbstractSize
   /** コンポーネントの `z-index` 値 */
   zIndex?: number
 }
@@ -45,11 +47,7 @@ type Props = StyleProps & {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-const exist = (value: any) => {
-  return value !== undefined && value !== null
-}
-
-export const FloatArea: VFC<Props & ElementProps> = ({
+export const FloatArea: FC<Props & ElementProps> = ({
   primaryButton,
   secondaryButton,
   tertiaryButton,
@@ -92,24 +90,17 @@ export const FloatArea: VFC<Props & ElementProps> = ({
   )
 }
 
-const Base = styled(BaseComponent)<StyleProps & { themes: Theme; $width?: string; fixed: boolean }>`
-  ${({ themes: { spacingByChar }, top, bottom, $width, fixed, zIndex = 500 }) =>
+const Base = styled(shrBase).attrs({ layer: 3 })<
+  StyleProps & { themes: Theme; $width: Props['width']; fixed: Props['fixed'] }
+>`
+  ${({ themes: { space }, top, bottom, $width, fixed, zIndex = 500 }) =>
     css`
       position: ${fixed ? 'fixed' : 'sticky'};
-      ${exist(top) &&
-      css`
-        top: ${typeof top === 'number' ? `${top}px` : top};
-      `}
-      ${exist(bottom) &&
-      css`
-        bottom: ${typeof bottom === 'number' ? `${bottom}px` : bottom};
-      `}
+      ${(top || top === 0) && `top: ${useSpacing(top)};`}
+      ${(bottom || bottom === 0) && `bottom: ${useSpacing(bottom)};`}
       z-index: ${zIndex};
-      ${$width &&
-      css`
-        width: ${$width};
-      `}
-      padding: ${spacingByChar(1)};
+      padding: ${space(1)};
+      ${$width && `width: ${$width};`}
     `}
 `
 const RightSide = styled.div`

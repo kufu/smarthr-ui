@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
-import React, { useRef, useState } from 'react'
+import React, { ComponentProps, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Button } from '../Button'
@@ -200,10 +200,8 @@ Message_Dialog.parameters = {
 export const Action_Dialog: Story = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
   const [value, setValue] = React.useState('Apple')
-  const [responseMessage, setResponseMessage] = useState<{
-    status: 'success' | 'error' | 'processing'
-    text: string
-  }>()
+  const [responseMessage, setResponseMessage] =
+    useState<ComponentProps<typeof ActionDialog>['responseMessage']>()
   const openedFocusRef = useRef<HTMLInputElement>(null)
   const onClickClose = () => {
     setOpenedDialog(null)
@@ -280,7 +278,6 @@ export const Action_Dialog: Story = () => {
             onClick={() =>
               setResponseMessage({
                 status: 'processing',
-                text: '保存中',
               })
             }
           >

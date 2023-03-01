@@ -22,7 +22,6 @@ export function useClassNames() {
         buttonArea: generateForDialog('buttonArea'),
         closeButton: generateForDialog('closeButton'),
         actionButton: generateForDialog('actionButton'),
-        alert: generateForDialog('alert'),
       },
       modelessDialog: {
         wrapper: generateForModeless(),
