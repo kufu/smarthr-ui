@@ -14,6 +14,7 @@ import { Body, Cell, Head, Row, Table } from '../Table'
 import {
   ActionDialog,
   ActionDialogContent,
+  ActionDialogWithTrigger,
   Dialog,
   DialogCloser,
   DialogContent,
@@ -332,6 +333,21 @@ Action_Dialog.parameters = {
       story: '`ActionDialog` includes an action button that used for submitting, etc.',
     },
   },
+}
+
+export const Action_Dialog_With_Trigger: Story = () => {
+  return (
+    <ActionDialogWithTrigger
+      trigger={<Button>open.</Button>}
+      title="ActionDialog With Trigger"
+      actionText="保存"
+      onClickAction={(close) => {
+        close()
+      }}
+    >
+      <Description>ActionDialog with Trigger.</Description>
+    </ActionDialogWithTrigger>
+  )
 }
 
 export const Uncontrolled: Story = () => {
