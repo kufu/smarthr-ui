@@ -337,16 +337,29 @@ Action_Dialog.parameters = {
 
 export const Action_Dialog_With_Trigger: Story = () => {
   return (
-    <ActionDialogWithTrigger
-      trigger={<Button>open.</Button>}
-      title="ActionDialog With Trigger"
-      actionText="保存"
-      onClickAction={(close) => {
-        close()
-      }}
-    >
-      <Description>ActionDialog with Trigger.</Description>
-    </ActionDialogWithTrigger>
+    <>
+      <ActionDialogWithTrigger
+        trigger={<Button>open.</Button>}
+        title="ActionDialog With Trigger"
+        actionText="保存"
+        onClickAction={(close) => {
+          close()
+        }}
+      >
+        <Description>ActionDialog with Trigger.</Description>
+      </ActionDialogWithTrigger>
+
+      <ActionDialogWithTrigger
+        trigger={<Button disabled={true}>open.</Button>}
+        title="Disabled ActionDialog With Trigger"
+        actionText="保存"
+        onClickAction={(close) => {
+          close()
+        }}
+      >
+        <Description>ActionDialog with Trigger.</Description>
+      </ActionDialogWithTrigger>
+    </>
   )
 }
 
