@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.1.0](https://github.com/kufu/smarthr-ui/compare/v30.0.1...v30.1.0) (2023-03-07)
+
+
+### Features
+
+* ActionDialogWithTrigger を実装 ([#3172](https://github.com/kufu/smarthr-ui/issues/3172)) ([72bfd6c](https://github.com/kufu/smarthr-ui/commit/72bfd6c23a8ecb39b53fb6469a61259823904894))
+
+
+### Bug Fixes
+
+* FilterDropdownのResetButtonLayoutにthemeを渡すようにする ([#3181](https://github.com/kufu/smarthr-ui/issues/3181)) ([ced8de8](https://github.com/kufu/smarthr-ui/commit/ced8de8d4978344b0c96da352b023c9db0df7eb4))
+
 ### [30.0.1](https://github.com/kufu/smarthr-ui/compare/v30.0.0...v30.0.1) (2023-03-01)
 
 
