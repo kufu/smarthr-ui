@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { tabbable } from '../../libs/tabbable'
+import { includeDisabledTrigger } from '../../libs/util'
 
 import { DropdownContext } from './Dropdown'
 import { useClassNames } from './useClassNames'
@@ -33,12 +34,7 @@ export const DropdownTrigger: React.VFC<Props> = ({ children, className = '' }) 
       ref={triggerElementRef}
       onClick={(e) => {
         // 引き金となる要素が disabled な場合は発火させない
-        const includeDisabledTrigger = React.Children.map(
-          children,
-          (child) => React.isValidElement(child) && child.props.disabled,
-        )?.some((bool: boolean) => bool)
-
-        if (includeDisabledTrigger) {
+        if (includeDisabledTrigger(children)) {
           return
         }
 
