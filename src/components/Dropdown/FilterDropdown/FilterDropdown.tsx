@@ -92,11 +92,9 @@ export const FilterDropdown: VFC<Props> = ({
         </DropdownScrollArea>
         <BottomLayout themes={themes}>
           {onReset && (
-            <ResetButtonLayout themes={themes}>
-              <Button variant="text" size="s" prefix={<FaUndoAltIcon />} onClick={() => onReset()}>
-                {resetButton}
-              </Button>
-            </ResetButtonLayout>
+            <Button variant="text" size="s" prefix={<FaUndoAltIcon />} onClick={() => onReset()}>
+              {resetButton}
+            </Button>
           )}
           <RightButtonLayout>
             <DropdownCloser>
@@ -144,11 +142,7 @@ const BottomLayout = styled(Cluster).attrs({ gap: 1, align: 'center', justify: '
     padding: ${space(1)} ${space(1.5)};
   `}
 `
-const ResetButtonLayout = styled.div<{ themes: Theme }>`
-  ${({ themes: { space } }) => css`
-    margin-block-start: ${space(-5)};
-  `}
-`
+
 const RightButtonLayout = styled(Cluster).attrs({
   gap: { column: 1, row: 0.5 },
   justify: 'flex-end',
