@@ -145,7 +145,7 @@ const BottomLayout = styled(Cluster).attrs({ gap: 1, align: 'center', justify: '
   `}
 `
 const ResetButtonLayout = styled.div<{ themes: Theme }>`
-  ${({ theme: { space } }) => css`
+  ${({ themes: { space } }) => css`
     margin-block-start: ${space(-5)};
   `}
 `
