@@ -4,7 +4,7 @@ import React, {
   MouseEvent,
   ReactNode,
   useCallback,
-  useLayoutEffect,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -321,7 +321,7 @@ export function SingleComboBox<T>({
     }, [unfocus]),
   )
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (selectedItem) {
       setInputValue(selectedItem.label)
     } else {

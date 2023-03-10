@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC, useLayoutEffect, useRef, useState } from 'react'
+import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -18,7 +18,7 @@ type Props = {
   vertical: 'top' | 'middle' | 'bottom' | 'auto'
 }
 
-export const TooltipPortal: VFC<Props> = ({
+export const TooltipPortal: FC<Props> = ({
   message,
   id,
   isVisible,
@@ -44,7 +44,7 @@ export const TooltipPortal: VFC<Props> = ({
   )
 
   const outerMargin = 10
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!portalRef.current || !parentRect) {
       return
     }
@@ -84,7 +84,7 @@ export const TooltipPortal: VFC<Props> = ({
     }
   }, [horizontal, parentRect, vertical])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!isVisible || !portalRef.current || !actualHorizontal || !actualVertical || !parentRect) {
       return
     }

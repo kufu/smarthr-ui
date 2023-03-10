@@ -1,12 +1,4 @@
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 const OPTION_INCREMENT_AMOUNT = 100
 
@@ -53,7 +45,7 @@ export function usePartialRendering<T>({
 const Intersection: FC<{ onIntersect: () => void }> = ({ onIntersect }) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const target = ref.current
     if (target === null) {
       return

@@ -1,15 +1,8 @@
-import React, {
-  HTMLAttributes,
-  ReactElement,
-  ReactNode,
-  VFC,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { FC, HTMLAttributes, ReactElement, ReactNode, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
+import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Props as BalloonProps } from '../Balloon'
@@ -39,7 +32,7 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-describedby'>
 
-export const Tooltip: VFC<Props & ElementProps> = ({
+export const Tooltip: FC<Props & ElementProps> = ({
   message,
   children,
   triggerType,
@@ -99,7 +92,7 @@ export const Tooltip: VFC<Props & ElementProps> = ({
 
   const isIcon = triggerType === 'icon'
 
-  useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     const element = document.createElement('div')
     setPortalRoot(element)
     document.body.appendChild(element)

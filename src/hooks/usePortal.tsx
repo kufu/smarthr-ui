@@ -4,11 +4,12 @@ import React, {
   createContext,
   useCallback,
   useContext,
-  useLayoutEffect,
   useMemo,
   useRef,
 } from 'react'
 import { createPortal } from 'react-dom'
+
+import { useEnhancedEffect } from './useEnhancedEffect'
 
 interface ParentContextValue {
   seqs: number[]
@@ -28,7 +29,7 @@ export function usePortal() {
   const parent = useContext(ParentContext)
   const parentSeqs = parent.seqs.concat(currentSeq)
 
-  useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (!portalRoot) {
       return
     }
