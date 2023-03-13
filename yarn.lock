@@ -1306,6 +1306,18 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
+"@electron/asar@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@electron/asar/-/asar-3.2.3.tgz#f598db50061ae5f90ad651f0255366b4e818000e"
+  integrity sha512-wmOfE6szYyqZhRIiLH+eyZEp+bGcJI0OD/SCvSUrfBE0jvauyGYO2ZhpWxmNCcDojKu5DYrsVqT5BOCZZ01XIg==
+  dependencies:
+    chromium-pickle-js "^0.2.0"
+    commander "^5.0.0"
+    glob "^7.1.6"
+    minimatch "^3.0.4"
+  optionalDependencies:
+    "@types/glob" "^7.1.1"
+
 "@emotion/is-prop-valid@^1.1.0":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-1.1.2.tgz#34ad6e98e871aa6f7a20469b602911b8b11b3a95"
@@ -4498,20 +4510,6 @@ asap@~2.0.3:
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
-asar@^2.0.1:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/asar/-/asar-2.1.0.tgz#97c6a570408c4e38a18d4a3fb748a621b5a7844e"
-  dependencies:
-    chromium-pickle-js "^0.2.0"
-    commander "^2.20.0"
-    cuint "^0.2.2"
-    glob "^7.1.3"
-    minimatch "^3.0.4"
-    mkdirp "^0.5.1"
-    tmp-promise "^1.0.5"
-  optionalDependencies:
-    "@types/glob" "^7.1.1"
-
 asn1.js@^5.2.0:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-5.4.1.tgz#11a980b84ebb91781ce35b0fdc2ee294e3783f07"
@@ -4965,7 +4963,7 @@ bl@^4.0.3:
     inherits "^2.0.4"
     readable-stream "^3.4.0"
 
-bluebird@^3.3.5, bluebird@^3.5.0, bluebird@^3.5.5:
+bluebird@^3.3.5, bluebird@^3.5.5:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
 
@@ -5501,10 +5499,10 @@ chromatic@^6.17.1:
     "@types/webpack-env" "^1.17.0"
     snyk-nodejs-lockfile-parser "^1.47.4"
 
-chrome-remote-interface@^0.31.3:
-  version "0.31.3"
-  resolved "https://registry.yarnpkg.com/chrome-remote-interface/-/chrome-remote-interface-0.31.3.tgz#bd01b89f5f0e968f7eeb37b8b7c5ac20e6e1f4d0"
-  integrity sha512-NTwb1YNPHXLTus1RjqsLxJmdViKwKJg/lrFEcM6pbyQy04Ow2QKWHXyPpxzwE+dFsJghWuvSAdTy4W0trluz1g==
+chrome-remote-interface@^0.32.1:
+  version "0.32.1"
+  resolved "https://registry.yarnpkg.com/chrome-remote-interface/-/chrome-remote-interface-0.32.1.tgz#e3478ca712223e51c4df7294cbc536f868ca0aa6"
+  integrity sha512-CU3/K/8YlU2H0DjsLRbxPsG4piiSGUcIy6GkGXF11SqOYoIeuUBivOsGXScaZnTyC1p4wFSR+GNmAM434/ALWw==
   dependencies:
     commander "2.11.x"
     ws "^7.2.0"
@@ -5738,7 +5736,7 @@ commander@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/commander/-/commander-4.1.1.tgz#9fd602bd936294e9e9ef46a3f4d6964044b18068"
 
-commander@^5.1.0:
+commander@^5.0.0, commander@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
 
@@ -6312,10 +6310,6 @@ cssstyle@^2.3.0:
 csstype@^3.0.2:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.8.tgz#d2266a792729fb227cd216fb572f43728e1ad340"
-
-cuint@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/cuint/-/cuint-0.2.2.tgz#408086d409550c2631155619e9fa7bcadc3b991b"
 
 currently-unhandled@^0.4.1:
   version "0.4.1"
@@ -13829,6 +13823,11 @@ set-blocking@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/set-blocking/-/set-blocking-2.0.0.tgz#045f9782d011ae9a6803ddd382b24392b3d890f7"
 
+set-cookie-parser@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.5.1.tgz#ddd3e9a566b0e8e0862aca974a6ac0e01349430b"
+  integrity sha512-1jeBGaKNGdEq4FgIrORu/N570dwoPYio8lSoYLWmX7sQ//0JY08Xh9o5pBcgmHQ/MbsYp/aZnOe1s1lIsbLprQ==
+
 set-value@^2.0.0, set-value@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/set-value/-/set-value-2.0.1.tgz#a18d40530e6f07de4228c7defe4227af8cad005b"
@@ -14817,13 +14816,13 @@ testcafe-browser-tools@2.0.23:
     read-file-relative "^1.2.0"
     which-promise "^1.0.0"
 
-testcafe-hammerhead@28.4.2, testcafe-hammerhead@>=19.4.0:
-  version "28.4.2"
-  resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-28.4.2.tgz#dabf5b149a7bf0bd87da5f2cfec46c40586a2f01"
-  integrity sha512-Q0Zy4OLOjadyzmEEef2JOsgD4D3GZLCy38x8v2qeGpnQG8FMJ6Yhm7upnYbkx5T3xqWKHro02wQZ61ldclVboQ==
+testcafe-hammerhead@29.0.0, testcafe-hammerhead@>=19.4.0:
+  version "29.0.0"
+  resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-29.0.0.tgz#f06d0644116f888da606d275755c84dbd3922615"
+  integrity sha512-xLYAsv87f1tHrciu7zz1hpqVsg3rnyFc8gnHvXxejHGMFON5iQhbLIAx2Xm7A1Anx5AlxIFyxRc8TFfa7SixBw==
   dependencies:
+    "@electron/asar" "^3.2.3"
     acorn-hammerhead "0.6.1"
-    asar "^2.0.1"
     bowser "1.6.0"
     crypto-md5 "^1.0.0"
     css "2.2.3"
@@ -14907,10 +14906,15 @@ testcafe-safe-storage@^1.1.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/testcafe-safe-storage/-/testcafe-safe-storage-1.1.2.tgz#dacfda9a51c77f61f11b13506d4004dd7f27eb73"
 
-testcafe@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-2.3.1.tgz#22d068a75d9dc3a70851bf2a1d62278e40983d40"
-  integrity sha512-UkYlf0h6BwsmVSGGQFkROIFfWXjW/lSCXfaPd9gK+rbECKFXmSbkvW45xv7k/S4t0LeJJAaF+gZuouc34SuLdQ==
+testcafe-selector-generator@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/testcafe-selector-generator/-/testcafe-selector-generator-0.1.0.tgz#852c86f71565e5d9320da625c2260d040cbed786"
+  integrity sha512-MTw+RigHsEYmFgzUFNErDxui1nTYUk6nm2bmfacQiKPdhJ9AHW/wue4J/l44mhN8x3E8NgOUkHHOI+1TDFXiLQ==
+
+testcafe@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-2.4.0.tgz#41930f6d5cee44726696d80dd1472b2c93fa881c"
+  integrity sha512-RELOes/dlJ1uUcAoDDBwREls6SfO1aMdjHr6juK6T4Ixgz263VYWrBBfSShTuebCyFUzNuA+ol7+rsOZ2dvEqQ==
   dependencies:
     "@babel/core" "^7.12.1"
     "@babel/plugin-proposal-async-generator-functions" "^7.12.1"
@@ -14939,7 +14943,7 @@ testcafe@^2.3.1:
     callsite-record "^4.0.0"
     chai "4.3.4"
     chalk "^2.3.0"
-    chrome-remote-interface "^0.31.3"
+    chrome-remote-interface "^0.32.1"
     coffeescript "^2.3.1"
     commander "^8.3.0"
     debug "^4.3.1"
@@ -14990,10 +14994,11 @@ testcafe@^2.3.1:
     resolve-from "^4.0.0"
     sanitize-filename "^1.6.0"
     semver "^5.6.0"
+    set-cookie-parser "^2.5.1"
     source-map-support "^0.5.16"
     strip-bom "^2.0.0"
     testcafe-browser-tools "2.0.23"
-    testcafe-hammerhead "28.4.2"
+    testcafe-hammerhead "29.0.0"
     testcafe-legacy-api "5.1.6"
     testcafe-reporter-dashboard "^0.2.10"
     testcafe-reporter-json "^2.1.0"
@@ -15002,6 +15007,7 @@ testcafe@^2.3.1:
     testcafe-reporter-spec "^2.1.1"
     testcafe-reporter-xunit "^2.2.1"
     testcafe-safe-storage "^1.1.1"
+    testcafe-selector-generator "^0.1.0"
     time-limit-promise "^1.0.2"
     tmp "0.0.28"
     tree-kill "^1.2.2"
@@ -15048,24 +15054,11 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
-tmp-promise@^1.0.5:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/tmp-promise/-/tmp-promise-1.1.0.tgz#bb924d239029157b9bc1d506a6aa341f8b13e64c"
-  dependencies:
-    bluebird "^3.5.0"
-    tmp "0.1.0"
-
 tmp@0.0.28:
   version "0.0.28"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.28.tgz#172735b7f614ea7af39664fa84cf0de4e515d120"
   dependencies:
     os-tmpdir "~1.0.1"
-
-tmp@0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.1.0.tgz#ee434a4e22543082e294ba6201dcc6eafefa2877"
-  dependencies:
-    rimraf "^2.6.3"
 
 tmpl@1.0.5:
   version "1.0.5"
