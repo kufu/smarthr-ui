@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, VFC, createContext, useLayoutEffect, useRef, useState } from 'react'
+import React, { FC, HTMLAttributes, createContext, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -25,7 +25,7 @@ export const DropdownContentInnerContext = createContext<DropdownContentInnerCon
   maxHeight: '',
 })
 
-export const DropdownContentInner: VFC<Props & ElementProps> = ({
+export const DropdownContentInner: FC<Props & ElementProps> = ({
   triggerRect,
   scrollable,
   children,
@@ -42,7 +42,7 @@ export const DropdownContentInner: VFC<Props & ElementProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (wrapperRef.current) {
       setContentBox(
         getContentBoxStyle(
@@ -65,7 +65,7 @@ export const DropdownContentInner: VFC<Props & ElementProps> = ({
     }
   }, [triggerRect])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (isActive) {
       focusTargetRef.current?.focus()
     }

@@ -4,7 +4,7 @@ import React, {
   KeyboardEvent,
   ReactNode,
   useCallback,
-  useLayoutEffect,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -255,7 +255,7 @@ export function MultiComboBox<T>({
 
   useOuterClick([outerRef, listBoxRef], blur)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!isInputControlled) {
       setUncontrolledInputValue('')
     }
