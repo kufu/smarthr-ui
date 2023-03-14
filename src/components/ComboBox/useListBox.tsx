@@ -5,13 +5,13 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import styled, { css } from 'styled-components'
 
+import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useId } from '../../hooks/useId'
 import { usePortal } from '../../hooks/usePortal'
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -140,7 +140,7 @@ export function useListBox<T>({
     }
   }, [activeOption, listBoxRef, navigationType])
 
-  useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (isExpanded) {
       // options の更新毎に座標を再計算する
       calculateRect()

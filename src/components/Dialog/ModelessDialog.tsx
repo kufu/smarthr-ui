@@ -1,11 +1,11 @@
 import React, {
   ComponentProps,
+  FC,
   MouseEvent,
   ReactNode,
   RefObject,
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -88,7 +88,7 @@ type Props = {
 const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
 const CLOSE_BUTTON_ICON_ALT = '閉じる'
 
-export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
+export const ModelessDialog: FC<Props & BaseElementProps> = ({
   header,
   children,
   footer,
@@ -230,7 +230,7 @@ export const ModelessDialog: React.VFC<Props & BaseElementProps> = ({
     }
   }, [isOpen, centering.top])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       setPosition({ x: 0, y: 0 })
       focusTargetRef.current?.focus()

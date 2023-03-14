@@ -1,13 +1,7 @@
-import React, {
-  ReactNode,
-  forwardRef,
-  useImperativeHandle,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { ReactNode, forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
+import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
 import { Theme, useTheme } from '../../hooks/useTheme'
 
@@ -30,7 +24,7 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, children }
   const containerRef = useRef<HTMLDivElement>(null)
   useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => containerRef.current)
 
-  useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (!containerRef.current) {
       return
     }
