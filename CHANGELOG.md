@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [30.1.1](https://github.com/kufu/smarthr-ui/compare/v30.1.0...v30.1.1) (2023-03-14)
+
+
+### Bug Fixes
+
+* FilterDropdown の効いていないスタイリングを修正 ([#3185](https://github.com/kufu/smarthr-ui/issues/3185)) ([de4f67e](https://github.com/kufu/smarthr-ui/commit/de4f67e1630a107a183bbfe2bab6995f8f8b8b2e))
+* SSRでの使用を考慮し、不必要なuseLayoutEffectの使用をなくす ([#3186](https://github.com/kufu/smarthr-ui/issues/3186)) ([a8b57b1](https://github.com/kufu/smarthr-ui/commit/a8b57b186b057ec8964730d60b05289ceba571f7))
+
 ## [30.1.0](https://github.com/kufu/smarthr-ui/compare/v30.0.1...v30.1.0) (2023-03-07)
 
 
