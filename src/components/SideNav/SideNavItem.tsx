@@ -14,7 +14,7 @@ type Props = {
   /** アイテムの識別子 */
   id: string
   /** アイテムのタイトル */
-  title: string
+  title: ReactNode
   /** タイトルのプレフィックスの内容。通常、StatusLabel の配置に用います。 */
   prefix?: ReactNode
   /** 選択されているアイテムかどうか */
