@@ -1,11 +1,12 @@
 import { Story } from '@storybook/react'
 import React from 'react'
-import styled, { css } from 'styled-components'
 
 import { Base } from '../Base'
 import { Button } from '../Button'
 import { FormGroup } from '../FormGroup'
 import { Input } from '../Input'
+import { Stack } from '../Layout'
+import { Text } from '../Text'
 import { TextLink } from '../TextLink'
 
 import { Footer } from './Footer'
@@ -16,7 +17,6 @@ export default {
   component: MessageScreen,
   parameters: {
     layout: 'fullscreen',
-    withTheming: true,
   },
 }
 
@@ -32,13 +32,13 @@ export const Full: Story = () => {
         },
       ]}
     >
-      <Description>
+      <p>
         いつも SmartHR をご利用いただきありがとうございます。
         <br />
         ただいまメンテナンスのため、一時サービスを停止しております。
         <br />
         ご迷惑をおかけいたしますが、ご理解のほどよろしくお願いいたします。
-      </Description>
+      </p>
     </MessageScreen>
   )
 }
@@ -58,38 +58,34 @@ export const WithoutTitle: Story = () => {
         },
       ]}
     >
-      <BoxWrapper>
-        <Box>
-          <List>
-            <li>
-              <FormGroup
-                title="メールアドレス"
-                titleType="subBlockTitle"
-                innerMargin="XXS"
-                htmlFor="id-email"
-              >
-                <Input name="email" id="id-email" width="100%" />
-              </FormGroup>
-            </li>
-            <li>
-              <FormGroup
-                title="パスワード"
-                titleType="subBlockTitle"
-                innerMargin="XXS"
-                htmlFor="id-password"
-              >
-                <Input name="password" id="id-password" width="100%" />
-              </FormGroup>
-            </li>
-          </List>
-          <Bottom>
+      <Base padding={1.5}>
+        <Stack gap={1.5}>
+          <Stack>
+            <FormGroup
+              title="メールアドレス"
+              titleType="subBlockTitle"
+              innerMargin="XXS"
+              htmlFor="id-email"
+            >
+              <Input name="email" id="id-email" width="22em" />
+            </FormGroup>
+            <FormGroup
+              title="パスワード"
+              titleType="subBlockTitle"
+              innerMargin="XXS"
+              htmlFor="id-password"
+            >
+              <Input name="password" id="id-password" width="22em" />
+            </FormGroup>
+          </Stack>
+          <Stack align="center">
             <Button variant="primary" wide>
               ログイン
             </Button>
             <TextLink href="http://example.com">パスワードをお忘れの方</TextLink>
-          </Bottom>
-        </Box>
-      </BoxWrapper>
+          </Stack>
+        </Stack>
+      </Base>
     </MessageScreen>
   )
 }
@@ -99,43 +95,40 @@ export const WithoutLinks: Story = () => {
   return (
     <MessageScreen
       title={
-        <>
-          株式会社 TEST INC
-          <br />
-          <Headline>専用ログイン画面</Headline>
-        </>
+        <Stack as="span" align="center" gap={0.5}>
+          <span>株式会社 TEST INC</span>
+          <Text size="L">専用ログイン画面</Text>
+        </Stack>
       }
     >
-      <Box>
-        <List>
-          <li>
+      <Base padding={1.5}>
+        <Stack gap={1.5}>
+          <Stack>
             <FormGroup
               title="社員番号またはメールアドレス"
               titleType="subBlockTitle"
               innerMargin="XXS"
               htmlFor="id-email"
             >
-              <Input name="email" id="id-email" width="100%" />
+              <Input name="email" id="id-email" width="22em" />
             </FormGroup>
-          </li>
-          <li>
             <FormGroup
               title="パスワード"
               titleType="subBlockTitle"
               innerMargin="XXS"
               htmlFor="id-password"
             >
-              <Input name="password" id="id-password" width="100%" />
+              <Input name="password" id="id-password" width="22em" />
             </FormGroup>
-          </li>
-        </List>
-        <Bottom>
-          <Button variant="primary" wide>
-            ログイン
-          </Button>
-          <TextLink href="http://example.com">パスワードをお忘れの方</TextLink>
-        </Bottom>
-      </Box>
+          </Stack>
+          <Stack align="center">
+            <Button variant="primary" wide>
+              ログイン
+            </Button>
+            <TextLink href="http://example.com">パスワードをお忘れの方</TextLink>
+          </Stack>
+        </Stack>
+      </Base>
     </MessageScreen>
   )
 }
@@ -159,49 +152,3 @@ WithFooter.storyName = 'with footer'
 
 export const WithoutAllOptionalProps: Story = () => <MessageScreen />
 WithoutAllOptionalProps.storyName = 'without all optional props'
-
-const Description = styled.div(
-  ({ theme }) => css`
-    color: ${theme.color.TEXT_BLACK};
-    font-size: ${theme.fontSize.M};
-    line-height: 21px;
-    text-align: center;
-  `,
-)
-
-const BoxWrapper = styled.div`
-  margin-bottom: 16px;
-`
-const Box = styled(Base)`
-  width: 400px;
-  padding: 24px;
-  box-sizing: border-box;
-`
-const List = styled.ul`
-  margin: 0 0 24px;
-  padding: 0;
-  list-style: none;
-
-  > li:first-child {
-    margin-bottom: 16px;
-  }
-`
-const Bottom = styled.div`
-  width: 180px;
-  margin: 0 auto;
-  text-align: center;
-
-  > *:first-child {
-    margin-bottom: 24px;
-  }
-`
-const Headline = styled.span(
-  ({ theme }) => css`
-    display: inline-block;
-    width: 100%;
-    margin-top: 16px;
-    color: ${theme.color.TEXT_BLACK};
-    font-size: ${theme.fontSize.L};
-    text-align: center;
-  `,
-)
