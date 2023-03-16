@@ -1,4 +1,4 @@
-import React, { ComponentProps, VFC, useEffect, useState } from 'react'
+import React, { ComponentProps, ReactNode, VFC, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
@@ -20,9 +20,9 @@ export type JobProps = {
   /** ジョブのステータス */
   status: Status
   /** ジョブ名 */
-  name: string
+  name: ReactNode
   /** ジョブの説明 */
-  description: string
+  description: ReactNode
   /** ジョブがキャンセル可能かどうか */
   isCancelable?: boolean
 }
