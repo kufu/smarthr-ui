@@ -50,29 +50,27 @@ export const MessageScreen: FC<Props & ElementProps> = ({
       <Box>
         <Logo className={classNames.logo}>{logo}</Logo>
 
-        {(title || children || (links && links.length)) && (
-          <Stack align="center">
-            {title && <Heading className={classNames.title}>{title}</Heading>}
+        <Stack align="center">
+          {title && <Heading className={classNames.title}>{title}</Heading>}
 
-            {children && <Content className={classNames.content}>{children}</Content>}
+          {children && <Content className={classNames.content}>{children}</Content>}
 
-            {links && links.length && (
-              <Links className={classNames.linkList}>
-                {links.map((link, index) => (
-                  <li key={index}>
-                    <TextLink
-                      {...(link.target ? { target: link.target } : {})}
-                      href={link.url}
-                      className={classNames.link}
-                    >
-                      {link.label}
-                    </TextLink>
-                  </li>
-                ))}
-              </Links>
-            )}
-          </Stack>
-        )}
+          {links?.length && (
+            <Links className={classNames.linkList}>
+              {links.map((link, index) => (
+                <li key={index}>
+                  <TextLink
+                    {...(link.target ? { target: link.target } : {})}
+                    href={link.url}
+                    className={classNames.link}
+                  >
+                    {link.label}
+                  </TextLink>
+                </li>
+              ))}
+            </Links>
+          )}
+        </Stack>
       </Box>
 
       {footer && <FooterArea className={classNames.footer}>{footer}</FooterArea>}

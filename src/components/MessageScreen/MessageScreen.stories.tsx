@@ -147,8 +147,7 @@ export const WithoutChildren: Story = () => (
 )
 WithoutChildren.storyName = 'without children'
 
-export const WithFooter: Story = () => <MessageScreen footer={<Footer />} />
+export const WithFooter: Story = () => (
+  <MessageScreen links={[{ label: 'ホームへ', url: 'http://example.com' }]} footer={<Footer />} />
+)
 WithFooter.storyName = 'with footer'
-
-export const WithoutAllOptionalProps: Story = () => <MessageScreen />
-WithoutAllOptionalProps.storyName = 'without all optional props'
