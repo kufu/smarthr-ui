@@ -33,7 +33,7 @@ type Props = StyleProps & {
   /** tertiary 領域に表示するボタン */
   tertiaryButton?: ReactNode
   /** エラーメッセージ */
-  errorText?: string
+  errorText?: ReactNode
   /**
    * エラーメッセージのアイコン（`FaExclamationCircleIcon` を指定）
    */
