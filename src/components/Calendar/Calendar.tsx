@@ -28,12 +28,13 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
   ({ from = minDate, to, onSelectDate, value, ...props }, ref) => {
     const themes = useTheme()
     const classNames = useClassNames()
-    const now = dayjs().startOf('date')
     const fromDay = dayjs(getFromDate(from))
     const toDay = dayjs(getToDate(to))
+    const today = dayjs()
+    const currentDay = toDay.isBefore(today) ? toDay : fromDay.isAfter(today) ? fromDay : today
     const isValidValue = value && isBetween(value, fromDay.toDate(), toDay.toDate())
 
-    const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : now)
+    const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : currentDay)
     const [isSelectingYear, setIsSelectingYear] = useState(false)
 
     const yearPickerId = useId()
