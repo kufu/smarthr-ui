@@ -1,4 +1,7 @@
 import dayjs from 'dayjs'
+import dayjsIsBetween from 'dayjs/plugin/isBetween'
+
+dayjs.extend(dayjsIsBetween)
 
 export const daysInWeek = ['日', '月', '火', '水', '木', '金', '土']
 
@@ -45,11 +48,5 @@ export function getMonthArray(date: Date) {
 }
 
 export function isBetween(date: Date, from: Date, to: Date) {
-  const time = date.getTime()
-
-  return (
-    time >= toRoundDate(from).getTime() && time < dayjs(toRoundDate(to)).add(1, 'day').valueOf()
-  )
+  return dayjs(date).isBetween(from, to, 'day', '[]')
 }
-
-const toRoundDate = (d: Date): Date => new Date(d.getFullYear(), d.getMonth(), d.getDate())
