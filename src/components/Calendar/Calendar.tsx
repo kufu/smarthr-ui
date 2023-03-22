@@ -28,12 +28,13 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
   ({ from = minDate, to, onSelectDate, value, ...props }, ref) => {
     const themes = useTheme()
     const classNames = useClassNames()
-    const now = dayjs().startOf('date')
-    const fromDay = dayjs(getFromDate(from))
-    const toDay = dayjs(getToDate(to))
-    const isValidValue = value && isBetween(value, fromDay.toDate(), toDay.toDate())
+    const fromDate = dayjs(getFromDate(from))
+    const toDate = dayjs(getToDate(to))
+    const today = dayjs()
+    const currentDay = toDate.isBefore(today) ? toDate : fromDate.isAfter(today) ? fromDate : today
+    const isValidValue = value && isBetween(value, fromDate.toDate(), toDate.toDate())
 
-    const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : now)
+    const [currentMonth, setCurrentMonth] = useState(isValidValue ? dayjs(value) : currentDay)
     const [isSelectingYear, setIsSelectingYear] = useState(false)
 
     const yearPickerId = useId()
@@ -77,7 +78,7 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
           </Button>
           <MonthButtons className={classNames.calendar.monthButtons}>
             <Button
-              disabled={isSelectingYear || prevMonth.isBefore(fromDay, 'month')}
+              disabled={isSelectingYear || prevMonth.isBefore(fromDate, 'month')}
               onClick={() => setCurrentMonth(prevMonth)}
               size="s"
               square
@@ -86,7 +87,7 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
               <FaChevronLeftIcon alt="前の月へ" />
             </Button>
             <Button
-              disabled={isSelectingYear || nextMonth.isAfter(toDay, 'month')}
+              disabled={isSelectingYear || nextMonth.isAfter(toDate, 'month')}
               onClick={() => setCurrentMonth(nextMonth)}
               size="s"
               square
@@ -98,8 +99,8 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
         </Header>
         <TableLayout>
           <YearPicker
-            fromYear={fromDay.year()}
-            toYear={toDay.year()}
+            fromYear={fromDate.year()}
+            toYear={toDate.year()}
             selectedYear={value?.getFullYear()}
             onSelectYear={(year) => {
               setCurrentMonth(currentMonth.year(year))
@@ -110,8 +111,8 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
           />
           <CalendarTable
             current={currentMonth.toDate()}
-            from={fromDay.toDate()}
-            to={toDay.toDate()}
+            from={fromDate.toDate()}
+            to={toDate.toDate()}
             onSelectDate={onSelectDate}
             selected={isValidValue ? value : null}
           />
