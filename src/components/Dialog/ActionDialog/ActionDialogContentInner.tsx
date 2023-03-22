@@ -60,7 +60,7 @@ export type BaseProps = {
 type responseMessageType =
   | {
       status: 'success' | 'error'
-      text: string
+      text: ReactNode
     }
   | {
       status: 'processing'

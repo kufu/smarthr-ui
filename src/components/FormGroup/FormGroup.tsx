@@ -26,7 +26,7 @@ type Props = {
   /** タイトルの下に表示するヘルプメッセージ */
   helpMessage?: ReactNode
   /** タイトルの下に表示するエラーメッセージ */
-  errorMessages?: string | string[]
+  errorMessages?: ReactNode | ReactNode[]
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
   /** コンポーネントに適用するクラス名 */
@@ -84,17 +84,15 @@ export const FormGroup: VFC<Props & ElementProps> = ({
       )}
 
       {errorMessages &&
-        (typeof errorMessages === 'string' ? [errorMessages] : errorMessages).map(
-          (message, index) => (
-            <ErrorMessage themes={theme} key={index} className={classNames.errorMessage}>
-              <ErrorIcon
-                color={disabled ? theme.color.TEXT_DISABLED : theme.color.DANGER}
-                themes={theme}
-              />
-              <span>{message}</span>
-            </ErrorMessage>
-          ),
-        )}
+        (Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map((message, index) => (
+          <ErrorMessage themes={theme} key={index} className={classNames.errorMessage}>
+            <ErrorIcon
+              color={disabled ? theme.color.TEXT_DISABLED : theme.color.DANGER}
+              themes={theme}
+            />
+            <span>{message}</span>
+          </ErrorMessage>
+        ))}
       <Body themes={theme} margin={innerMargin} className={classNames.body}>
         {children}
       </Body>

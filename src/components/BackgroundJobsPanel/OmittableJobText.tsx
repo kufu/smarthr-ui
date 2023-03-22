@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Tooltip } from '../Tooltip'
 
 type Props = {
-  children: string
+  children: React.ReactNode
   className?: string
 }
 
