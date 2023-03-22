@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.2.0](https://github.com/kufu/smarthr-ui/compare/v30.1.1...v30.2.0) (2023-03-22)
+
+
+### Features
+
+* MessageScreen のロゴを差し替えられるように修正 ([#3204](https://github.com/kufu/smarthr-ui/issues/3204)) ([a83bce3](https://github.com/kufu/smarthr-ui/commit/a83bce399a71ca1279a6e7687e88d5f146a8fe1e))
+* 翻訳用コンポーネントなどを差し込み可能にするため string型 を ReactNode に変更する ([#3203](https://github.com/kufu/smarthr-ui/issues/3203)) ([4cc6091](https://github.com/kufu/smarthr-ui/commit/4cc609141b85c8f09a0778bc44459a16001d81e0))
+
+
+### Bug Fixes
+
+* Calendar の初期表示を修正 ([#3211](https://github.com/kufu/smarthr-ui/issues/3211)) ([37d668f](https://github.com/kufu/smarthr-ui/commit/37d668f3205586c141aed6d62877cdfffefb91d5))
+
 ### [30.1.1](https://github.com/kufu/smarthr-ui/compare/v30.1.0...v30.1.1) (2023-03-14)
 
 
