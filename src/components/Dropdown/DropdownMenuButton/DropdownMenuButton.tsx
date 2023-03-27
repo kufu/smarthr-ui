@@ -12,6 +12,7 @@ import styled, { css } from 'styled-components'
 import { Dropdown, DropdownContent, DropdownTrigger } from '..'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
+import { RemoteDialogTrigger } from '../../Dialog'
 import { FaCaretDownIcon, FaEllipsisHIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 
@@ -22,6 +23,7 @@ type Actions = ActionItem | ActionItem[]
 type ActionItem =
   | ReactElement<ComponentProps<typeof Button>>
   | ReactElement<ComponentProps<typeof AnchorButton>>
+  | ReactElement<ComponentProps<typeof RemoteDialogTrigger>>
   | null
   | boolean
 type Props = {
@@ -101,6 +103,8 @@ const ActionList = styled(Stack).attrs({ as: 'ul', gap: 0 })<{ themes: Theme }>`
 
     .smarthr-ui-Button,
     .smarthr-ui-AnchorButton {
+      width: 100%;
+      border-style: none;
       justify-content: flex-start;
 
       padding-block: ${space(0.5)};
