@@ -37,7 +37,9 @@ export const All: Story = () => {
             title="氏名"
             statusLabelProps={{ type: 'grey', children: '任意' }}
             helpMessage="氏名を入力してください。"
+            exampleMessage="例：草野栄一郎"
             errorMessages={'氏名が入力されていません。'}
+            supplementaryMessage="※ 補足文はフォームコントロールの下に表示します。"
           >
             <Input name="fullname" />
           </FormGroup>

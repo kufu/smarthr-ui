@@ -13,6 +13,7 @@ import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
+import { Text } from '../Text'
 
 import { useClassNames } from './useClassNames'
 
@@ -34,8 +35,12 @@ type Props = PropsWithChildren<{
   statusLabelProps?: StatusLabelProps | StatusLabelProps[]
   /** タイトルの下に表示するヘルプメッセージ */
   helpMessage?: ReactNode
+  /** タイトルの下に表示する入力例 */
+  exampleMessage?: ReactNode
   /** タイトルの下に表示するエラーメッセージ */
   errorMessages?: ReactNode | ReactNode[]
+  /** フォームコントロールの下に表示する補足メッセージ */
+  supplementaryMessage?: string
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
   /** コンポーネントに適用するクラス名 */
@@ -51,7 +56,9 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
   innerMargin,
   statusLabelProps = [],
   helpMessage,
+  exampleMessage,
   errorMessages,
+  supplementaryMessage,
   disabled,
   className = '',
   children,
@@ -65,73 +72,85 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
 
   const theme = useTheme()
   const classNames = useClassNames()
+  const describedbyIds = `${managedHtmlFor}_helpMessage ${managedHtmlFor}_exampleMessage ${managedHtmlFor}_supplementaryMessage ${managedHtmlFor}_errorMessage`
 
   return (
     <Wrapper
       {...props}
-      gap={innerMargin || isRoleGroup ? 1 : 0.5}
+      gap={0.25}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
-      aria-describedby={
-        isRoleGroup ? `${managedHtmlFor}_helpMessage ${managedHtmlFor}_errorMessage` : undefined
-      }
+      aria-describedby={isRoleGroup ? describedbyIds : undefined}
       themes={theme}
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
     >
-      <Stack gap={0.5}>
-        <Cluster
-          align="center"
-          htmlFor={managedHtmlFor}
-          id={managedLabelId}
-          className={`${classNames.label}`}
-          as="label"
-        >
-          <GroupLabel tag="span" type={titleType}>
-            {title}
-          </GroupLabel>
-          {statusLabelList.length > 0 && (
-            <Cluster gap={0.25} as="span">
-              {statusLabelList.map((statusLabelProp, index) => (
-                <StatusLabel {...statusLabelProp} key={index} />
-              ))}
-            </Cluster>
-          )}
-        </Cluster>
-
-        {helpMessage && (
-          <p className={classNames.helpMessage} id={`${managedHtmlFor}_helpMessage`}>
-            {helpMessage}
-          </p>
-        )}
-
-        {errorMessages && (
-          <Stack gap={0} id={`${managedHtmlFor}_errorMessage`}>
-            {(Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map(
-              (message, index) => (
-                <p key={index}>
-                  <FaExclamationCircleIcon
-                    color={disabled ? 'TEXT_DISABLED' : 'DANGER'}
-                    text={message}
-                    className={classNames.errorMessage}
-                  />
-                </p>
-              ),
+      <Stack gap={innerMargin || isRoleGroup ? 1 : 0.5}>
+        <Stack gap={0.5}>
+          <Cluster
+            align="center"
+            htmlFor={managedHtmlFor}
+            id={managedLabelId}
+            className={`${classNames.label}`}
+            as="label"
+          >
+            <GroupLabel tag="span" type={titleType}>
+              {title}
+            </GroupLabel>
+            {statusLabelList.length > 0 && (
+              <Cluster gap={0.25} as="span">
+                {statusLabelList.map((statusLabelProp, index) => (
+                  <StatusLabel {...statusLabelProp} key={index} />
+                ))}
+              </Cluster>
             )}
-          </Stack>
-        )}
+          </Cluster>
+
+          {helpMessage && (
+            <p className={classNames.helpMessage} id={`${managedHtmlFor}_helpMessage`}>
+              {helpMessage}
+            </p>
+          )}
+          {exampleMessage && (
+            <Text as="p" color="TEXT_GREY" italic id={`${managedHtmlFor}_exampleMessage`}>
+              {exampleMessage}
+            </Text>
+          )}
+
+          {errorMessages && (
+            <Stack gap={0} id={`${managedHtmlFor}_errorMessage`}>
+              {(Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map(
+                (message, index) => (
+                  <p key={index}>
+                    <FaExclamationCircleIcon
+                      color={disabled ? 'TEXT_DISABLED' : 'DANGER'}
+                      text={message}
+                      className={classNames.errorMessage}
+                    />
+                  </p>
+                ),
+              )}
+            </Stack>
+          )}
+        </Stack>
+
+        {React.Children.map(children, (child, i) => {
+          // id があるので、最初の要素以外には付与しない
+          if (!React.isValidElement(child) || i > 0) {
+            return child
+          }
+
+          return React.cloneElement(child as ReactElement, {
+            id: managedHtmlFor,
+            disabled,
+            'aria-describedby': describedbyIds,
+          })
+        })}
       </Stack>
 
-      {React.Children.map(children, (child, i) => {
-        // id があるので、最初の要素以外には付与しない
-        if (!React.isValidElement(child) || i > 0) {
-          return child
-        }
-
-        return React.cloneElement(child as ReactElement, {
-          id: managedHtmlFor,
-          disabled,
-          'aria-describedby': `${managedHtmlFor}_helpMessage ${managedHtmlFor}_errorMessage`,
-        })
-      })}
+      {supplementaryMessage && (
+        <Text as="p" size="S" color="TEXT_GREY" id={`${managedHtmlFor}_supplementaryMessage`}>
+          {supplementaryMessage}
+        </Text>
+      )}
     </Wrapper>
   )
 }
