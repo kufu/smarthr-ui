@@ -12,6 +12,7 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { GreyScaleColors } from '../../themes/createColor'
 
 import { useClassNames } from './useClassNames'
 
@@ -28,6 +29,8 @@ type Props = {
   prefix?: ReactNode
   /** コンポーネント内の末尾に表示する内容 */
   suffix?: ReactNode
+  /** 背景色。readOnly を下地の上に載せる場合に使う */
+  bgColor?: GreyScaleColors | 'WHITE'
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
    */
@@ -37,7 +40,18 @@ type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
 export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
   (
-    { onFocus, onBlur, autoFocus, prefix, suffix, className = '', width, readOnly, ...props },
+    {
+      onFocus,
+      onBlur,
+      autoFocus,
+      prefix,
+      suffix,
+      className = '',
+      width,
+      readOnly,
+      bgColor,
+      ...props
+    },
     ref,
   ) => {
     const theme = useTheme()
@@ -82,6 +96,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
         themes={theme}
         $width={width}
         $readOnly={readOnly} // Firefox に :has が来たら置き換えられそう
+        bgColor={bgColor}
         $disabled={props.disabled}
         error={props.error}
         onClick={() => innerRef.current?.focus()}
@@ -124,6 +139,7 @@ const Wrapper = styled.span<{
   $width?: string | number
   $disabled?: boolean
   $readOnly: ElementProps['readOnly']
+  bgColor?: Props['bgColor']
   error?: boolean
 }>`
   ${({
@@ -132,6 +148,7 @@ const Wrapper = styled.span<{
     $readOnly,
     $disabled,
     error,
+    bgColor,
   }) => css`
     cursor: text;
     box-sizing: border-box;
@@ -140,7 +157,7 @@ const Wrapper = styled.span<{
     align-items: center;
     border-radius: ${radius.m};
     border: ${border.shorthand};
-    background-color: ${color.WHITE};
+    background-color: ${bgColor ? color[bgColor] : color.WHITE};
     padding-inline: ${space(0.5)};
     width: ${typeof $width === 'number' ? `${$width}px` : $width};
 
@@ -154,8 +171,8 @@ const Wrapper = styled.span<{
     `}
     ${$readOnly &&
     css`
-      border-color: ${color.BACKGROUND};
-      background-color: ${color.BACKGROUND};
+      border-color: ${bgColor ? color[bgColor] : color.BACKGROUND};
+      background-color: ${bgColor ? color[bgColor] : color.BACKGROUND};
     `}
     ${$disabled &&
     css`
