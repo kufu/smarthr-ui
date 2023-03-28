@@ -15,9 +15,9 @@ import { DropdownTrigger } from '../DropdownTrigger'
 
 type Props = {
   isFiltered?: boolean
-  onApply: React.MouseEventHandler<HTMLButtonElement>
-  onCancel?: React.MouseEventHandler<HTMLButtonElement>
-  onReset?: React.MouseEventHandler<HTMLButtonElement>
+  onApply: () => void
+  onCancel?: () => void
+  onReset?: () => void
   children: ReactNode
   hasStatusText?: boolean
   decorators?: DecoratorsType<
@@ -93,17 +93,17 @@ export const FilterDropdown: VFC<Props> = ({
         <BottomLayout themes={themes}>
           {onReset && (
             <ResetButtonLayout themes={themes}>
-              <Button variant="text" size="s" prefix={<FaUndoAltIcon />} onClick={onReset}>
+              <Button variant="text" size="s" prefix={<FaUndoAltIcon />} onClick={() => onReset()}>
                 {resetButton}
               </Button>
             </ResetButtonLayout>
           )}
           <RightButtonLayout>
             <DropdownCloser>
-              <Button onClick={onCancel}>{cancelButton}</Button>
+              <Button onClick={() => onCancel?.()}>{cancelButton}</Button>
             </DropdownCloser>
             <DropdownCloser>
-              <Button variant="primary" onClick={onApply}>
+              <Button variant="primary" onClick={() => onApply()}>
                 {applyButton}
               </Button>
             </DropdownCloser>
