@@ -193,6 +193,12 @@ const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     padding: ${spacingByChar(0.75)} ${spacingByChar(1)};
     font-size: ${fontSize.M};
 
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
+
     &.small {
       padding: ${spacingByChar(0.5)};
       font-size: ${fontSize.S};

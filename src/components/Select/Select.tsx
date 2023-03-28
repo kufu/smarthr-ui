@@ -159,6 +159,11 @@ const StyledSelect = styled.select<{
     line-height: ${leading.NONE};
     color: ${color.TEXT_BLACK};
     width: 100%;
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
 
     /* padding に依る積み上げでは文字が見切れてしまうため */
     min-height: calc(${fontSize.M} + ${spacingByChar(0.75)} * 2 + ${border.lineWidth} * 2);

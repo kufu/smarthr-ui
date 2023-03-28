@@ -88,10 +88,16 @@ const Wrapper = styled.div<{
   $overflow: Props['overflow']
   $layer: (typeof layerMap)[LayerKeys]
 }>`
-  ${({ themes: { color, shadow }, $padding, $radius, $overflow, $layer }) => css`
+  ${({ themes: { border, color, shadow }, $padding, $radius, $overflow, $layer }) => css`
     box-shadow: ${shadow[$layer]};
     border-radius: ${$radius};
     background-color: ${color.WHITE};
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
+
     ${$padding.block && `padding-block: ${useSpacing($padding.block)};`}
     ${$padding.inline && `padding-inline: ${useSpacing($padding.inline)};`}
     ${$overflow &&
