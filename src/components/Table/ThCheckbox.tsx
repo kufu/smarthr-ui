@@ -26,7 +26,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
           {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute  */}
           <CheckBox {...others} ref={ref} />
           <VisuallyHiddenText>
-            {decorators?.checkAllInvisibleLabel(CHECK_ALL_INVISIBLE_LABEL) ||
+            {decorators?.checkAllInvisibleLabel?.(CHECK_ALL_INVISIBLE_LABEL) ||
               CHECK_ALL_INVISIBLE_LABEL}
           </VisuallyHiddenText>
         </Label>
