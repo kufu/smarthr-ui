@@ -66,6 +66,7 @@
     "prettier-config-smarthr": "^1.0.0",
     "puppeteer": "^19.8.0",
     "react": "^18.2.0",
+    "react-docgen-typescript-plugin": "^1.0.5",
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
     "smarthr-normalize-css": "^1.1.0",
@@ -82,7 +83,7 @@
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
     "ttypescript": "^1.5.15",
-    "typescript": "^4.9.5",
+    "typescript": "^5.0.2",
     "typescript-plugin-styled-components": "^2.0.0",
     "wait-on": "^7.0.1",
     "webpack": "^5.76.3"
