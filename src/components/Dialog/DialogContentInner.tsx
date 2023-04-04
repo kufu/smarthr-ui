@@ -148,10 +148,7 @@ export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = (
 
 const Layout = styled.div`
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
 `
 const Inner = styled.div<StyleProps & { themes: Theme }>`
   ${({ themes, $width, top, right, bottom, left }) => {
@@ -184,10 +181,7 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
 
     return css`
       position: absolute;
-      top: ${positionTop};
-      right: ${positionRight};
-      bottom: ${positionBottom};
-      left: ${positionLeft};
+      inset: ${positionTop} ${positionRight} ${positionBottom} ${positionLeft};
       ${widthStyles};
       border-radius: ${radius.m};
       background-color: ${color.WHITE};
@@ -200,10 +194,7 @@ const Background = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
     return css`
       position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      inset: 0;
       background-color: ${themes.color.SCRIM};
     `
   }}

@@ -385,10 +385,7 @@ const Title = styled.div<{ themes: Theme }>`
 const DialogHandler = styled.div<{ themes: Theme }>`
   ${({ themes: { color, shadow, radius } }) => css`
     position: absolute;
-    top: 2px;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset: 2px 0 0;
     margin: auto;
     border-top-right-radius: ${radius.s};
     border-top-left-radius: ${radius.s};
@@ -414,6 +411,7 @@ const CloseButtonLayout = styled.div`
 const Content = styled.div`
   flex: 1;
   overflow: auto;
+  overscroll-behavior: contain;
 `
 const Footer = styled.div<{ themes: Theme }>`
   ${({ themes: { border } }) => css`

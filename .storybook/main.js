@@ -1,6 +1,9 @@
 const path = require('path')
 
 module.exports = {
+  typescript: {
+    reactDocgen: 'react-docgen-typescript-plugin',
+  },
   core: {
     builder: 'webpack5',
   },
