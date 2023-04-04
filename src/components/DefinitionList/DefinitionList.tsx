@@ -42,15 +42,10 @@ export const DefinitionList: FC<Props & ElementProps> = ({
   )
 }
 
-const column = (layout: LayoutType) => {
-  switch (layout) {
-    case 'single':
-      return 1
-    case 'double':
-      return 2
-    case 'triple':
-      return 3
-  }
+const column = {
+  single: 1,
+  double: 2,
+  triple: 3,
 }
 
 const Wrapper = styled(Cluster).attrs({ as: 'dl', gap: 1.5 })`
@@ -58,11 +53,27 @@ const Wrapper = styled(Cluster).attrs({ as: 'dl', gap: 1.5 })`
 `
 
 const Item = styled(DefinitionListItem)<{ themes: Theme; layout: LayoutType }>`
-  ${({ layout, themes: { space } }) => {
-    const $columns = column(layout)
+  ${({ layout, themes: { space, size } }) => {
+    const $columns = column[layout]
+    const generateFlexBasis = (cols: number) =>
+      `calc((100% - (${space(1.5)} * ${cols - 1})) / ${cols})`
+
     return css`
-      flex-basis: calc((100% - (${space(1.5)} * ${$columns - 1})) / ${$columns});
+      flex-basis: ${generateFlexBasis($columns)};
       flex-shrink: 1;
+
+      ${$columns > 2 &&
+      css`
+        @media (max-width: ${size.mediaQuery.TABLET}px) {
+          flex-basis: ${generateFlexBasis(2)};
+        }
+      `}
+      ${$columns > 1 &&
+      css`
+        @media (max-width: ${size.mediaQuery.SP}px) {
+          flex-basis: ${generateFlexBasis(1)};
+        }
+      `}
     `
   }}
 `
