@@ -51,7 +51,7 @@ export const FixColumnTable: React.FC<Props & ElementProps> = ({
 
   return (
     <Wrapper ref={tableWrapperRef} className={wrapperClassName}>
-      <StyledTable {...props} className={tableClassName}>
+      <StyledTable {...props} className={tableClassName} fixedHead={false}>
         {children}
       </StyledTable>
     </Wrapper>
