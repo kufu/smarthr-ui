@@ -63,9 +63,8 @@ const StyledTd = styled.td<{ themes: Theme; isFixed: boolean }>`
         &.fixed {
           position: sticky;
           right: 0;
-          overflow: hidden;
           background-color: ${color.WHITE};
-          box-shadow: -4px 4px 4px 0 rgba(3, 3, 2, 0.2);
+          box-shadow: -4px 4px 4px 0 rgba(0, 0, 0, 0.2);
         }
       `}
     `
