@@ -25,6 +25,8 @@ export type Props = PropsWithChildren<{
   decorators?: {
     sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
   }
+  /** `true` のとき、FixColumnTable内で左固定表示になる */
+  isFixed?: boolean
 }>
 type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props | 'onClick'>
 
@@ -39,6 +41,7 @@ export const Th: FC<Props & ElementProps> = ({
   sort,
   onSort,
   decorators,
+  isFixed = false,
   className = '',
   ...props
 }) => {
@@ -67,7 +70,13 @@ export const Th: FC<Props & ElementProps> = ({
   }, [sort])
 
   return (
-    <Wrapper {...ariaSortProps} {...props} className={wrapperClass} themes={theme}>
+    <Wrapper
+      {...ariaSortProps}
+      {...props}
+      className={`${wrapperClass} ${isFixed && 'fixedElement'}`}
+      themes={theme}
+      isFixed={isFixed}
+    >
       {sort ? (
         <SortButton themes={theme} onClick={onSort}>
           {children}
@@ -81,8 +90,8 @@ export const Th: FC<Props & ElementProps> = ({
   )
 }
 
-const Wrapper = styled.th<{ themes: Theme }>`
-  ${({ themes: { fontSize, leading, color, shadow, space } }) => css`
+const Wrapper = styled.th<{ themes: Theme; isFixed: boolean }>`
+  ${({ themes: { fontSize, leading, color, shadow, space }, isFixed }) => css`
     font-size: ${fontSize.S};
     font-weight: bold;
     padding: ${space(0.75)} ${space(1)};
@@ -90,6 +99,8 @@ const Wrapper = styled.th<{ themes: Theme }>`
     color: ${color.TEXT_BLACK};
     line-height: ${leading.TIGHT};
     vertical-align: middle;
+    transition: all 200ms;
+    box-shadow: none;
 
     &[aria-sort] {
       cursor: pointer;
@@ -103,6 +114,15 @@ const Wrapper = styled.th<{ themes: Theme }>`
         ${shadow.focusIndicatorStyles}
       }
     }
+
+    ${isFixed &&
+    css`
+      &.fixed {
+        position: sticky;
+        right: 0;
+        box-shadow: -4px 4px 4px 0 rgba(3, 3, 2, 0.2);
+      }
+    `}
   `}
 `
 
