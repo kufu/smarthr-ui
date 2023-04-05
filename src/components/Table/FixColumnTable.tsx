@@ -21,11 +21,10 @@ export const FixColumnTable: React.FC<Props & ElementProps> = ({
   const tableWrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const currentRef = tableWrapperRef.current
     const handleScroll = () => {
-      if (tableWrapperRef.current) {
-        const currentRef = tableWrapperRef.current
+      if (currentRef) {
         const stickyCells = currentRef.querySelectorAll('.fixedElement') || []
-
         const maxScrollLeft = currentRef.scrollWidth - currentRef.clientWidth || 0
 
         stickyCells.forEach((cell) => {
@@ -42,8 +41,12 @@ export const FixColumnTable: React.FC<Props & ElementProps> = ({
     handleScroll()
 
     window.addEventListener('resize', handleScroll)
-    tableWrapperRef.current?.addEventListener('scroll', handleScroll)
-    return () => tableWrapperRef.current?.removeEventListener('scroll', handleScroll)
+    currentRef?.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('resize', handleScroll)
+      currentRef?.removeEventListener('scroll', handleScroll)
+    }
   }, [tableWrapperRef])
 
   return (
@@ -57,6 +60,7 @@ export const FixColumnTable: React.FC<Props & ElementProps> = ({
 
 const Wrapper = styled.div`
   overflow: auto;
+  /* stylelint-disable */
   background: linear-gradient(to right, white 6%, rgba(0, 0, 0, 0)),
     linear-gradient(to right, rgba(0, 0, 0, 0), white 80%) 0 100%,
     linear-gradient(to right, black, rgba(0, 0, 0, 0) 6%),
