@@ -23,17 +23,19 @@ export { Textarea } from './components/Textarea'
 export { TextLink } from './components/TextLink'
 export { Loader } from './components/Loader'
 export {
-  Dialog,
-  MessageDialog,
   ActionDialog,
-  DialogWrapper,
-  DialogTrigger,
+  ActionDialogContent,
+  ActionDialogWithTrigger,
+  Dialog,
   DialogCloser,
   DialogContent,
+  DialogTrigger,
+  DialogWrapper,
+  MessageDialog,
   MessageDialogContent,
-  ActionDialogContent,
   ModelessDialog,
-  ActionDialogWithTrigger,
+  RemoteDialogTrigger,
+  RemoteTriggerActionDialog,
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'

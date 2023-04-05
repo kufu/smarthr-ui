@@ -23,6 +23,8 @@ import {
   MessageDialog,
   MessageDialogContent,
   ModelessDialog,
+  RemoteDialogTrigger,
+  RemoteTriggerActionDialog,
 } from '.'
 
 export default {
@@ -359,6 +361,49 @@ export const Action_Dialog_With_Trigger: Story = () => {
       >
         <Description>ActionDialog with Trigger.</Description>
       </ActionDialogWithTrigger>
+    </>
+  )
+}
+
+export const Remote_Trigger_Action_Dialog: Story = () => {
+  return (
+    <>
+      <div>
+        <p>複数のトリガーに対応</p>
+        <RemoteDialogTrigger targetId="remote_trigger_action_dialog_1">
+          <Button>Trigger 1.</Button>
+        </RemoteDialogTrigger>
+        <RemoteDialogTrigger targetId="remote_trigger_action_dialog_1">
+          <Button>Trigger 2.</Button>
+        </RemoteDialogTrigger>
+        <RemoteTriggerActionDialog
+          id="remote_trigger_action_dialog_1"
+          title="Remote Trigger Action Dialog 1"
+          actionText="保存"
+          onClickAction={(close) => {
+            close()
+          }}
+        >
+          <Description>Remote Trigger Action Dialog.</Description>
+        </RemoteTriggerActionDialog>
+      </div>
+
+      <div>
+        <p>disabled</p>
+        <RemoteDialogTrigger targetId="remote_trigger_action_dialog_2">
+          <Button disabled={true}>disabled.</Button>
+        </RemoteDialogTrigger>
+        <RemoteTriggerActionDialog
+          id="remote_trigger_action_dialog_2"
+          title="Remote Trigger Action Dialog 2"
+          actionText="保存"
+          onClickAction={(close) => {
+            close()
+          }}
+        >
+          <Description>Remote Trigger Action Dialog.</Description>
+        </RemoteTriggerActionDialog>
+      </div>
     </>
   )
 }
