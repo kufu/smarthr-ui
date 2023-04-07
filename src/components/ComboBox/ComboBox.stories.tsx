@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
-import React, { useCallback, useState } from 'react'
+import React, { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 import { MultiComboBox, SingleComboBox } from '.'
@@ -50,6 +50,17 @@ const defaultItems = [
     label: 'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
     value: 'value-6',
   },
+  {
+    label: (
+      <>
+        <div>
+          アイテムのラベルが<span>ReactNodeの場合</span>
+        </div>
+        <p>（ダミーテキストダミーテキストダミーテキストダミーテキスト）</p>
+      </>
+    ),
+    value: 'value-7',
+  },
 ]
 
 const manyItems = Array.from({ length: 2000 }).map((_, i) => ({
@@ -57,10 +68,11 @@ const manyItems = Array.from({ length: 2000 }).map((_, i) => ({
   value: `option ${i}`,
 }))
 
-type Item = { label: string; value: string }
+type Item = { label: ReactNode; value: string; disabled?: boolean; data?: any }
+// type Item = { label: string; value: string }
 
 export const Single: Story = () => {
-  const [items, setItems] = useState(defaultItems)
+  const [items, setItems] = useState<Item[]>(defaultItems)
   const [selectedItem, setSelectedItem] = useState<Item | null>(null)
   const [seq, setSeq] = useState(0)
 
@@ -73,7 +85,7 @@ export const Single: Story = () => {
     setSelectedItem(null)
   }, [])
   const handleAddItem = useCallback(
-    (label: string) => {
+    (label: ReactNode) => {
       action('onAdd')(label)
       const newItem = {
         label,
@@ -280,7 +292,7 @@ const SingleWithDefaultItem: React.VFC = () => {
 }
 
 export const Multi: Story = () => {
-  const [items, setItems] = useState(defaultItems)
+  const [items, setItems] = useState<Item[]>(defaultItems)
   const [selectedItems, setSelectedItems] = useState<Item[]>([])
   const [seq, setSeq] = useState(0)
   const [controlledInputValue, setControlledInputValue] = useState<string>('')
@@ -300,7 +312,7 @@ export const Multi: Story = () => {
     [selectedItems],
   )
   const handleAddItem = useCallback(
-    (label: string) => {
+    (label: ReactNode) => {
       action('onAdd')(label)
       const newItem = {
         label,

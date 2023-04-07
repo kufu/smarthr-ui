@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
-import React, { useCallback, useState } from 'react'
+import React, { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 import { MultiComboBox, SingleComboBox } from '../../ComboBox'
@@ -143,7 +143,7 @@ const RadioButtonList = styled.ul`
   list-style: none;
 `
 
-type Item = { label: string; value: string }
+type Item = { label: ReactNode; value: string }
 const PartSingleComboBox: React.FC<{ name: string }> = ({ name }) => {
   const [items, _setItems] = useState([
     {

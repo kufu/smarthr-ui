@@ -9,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
 import { useClick } from '../../hooks/useClick'
@@ -93,7 +94,7 @@ type Props<T> = {
   /**
    * `items` 内に存在しないアイテムが追加されたときに発火するコールバック関数
    */
-  onAdd?: (label: string) => void
+  onAdd?: (label: ReactNode) => void
   /**
    * アイテムが選択された時に発火するコールバック関数
    */
@@ -208,7 +209,9 @@ export function SingleComboBox<T>({
     setIsEditing(false)
 
     if (!selectedItem && defaultItem) {
-      setInputValue(defaultItem.label)
+      setInputValue(
+        typeof defaultItem.label === 'string' ? defaultItem.label : innerText(defaultItem.label),
+      )
       onSelect && onSelect(defaultItem)
     }
   }, [selectedItem, defaultItem, onSelect])
@@ -323,7 +326,9 @@ export function SingleComboBox<T>({
 
   useEffect(() => {
     if (selectedItem) {
-      setInputValue(selectedItem.label)
+      setInputValue(
+        typeof selectedItem.label === 'string' ? selectedItem.label : innerText(selectedItem.label),
+      )
     } else {
       setInputValue('')
     }
