@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.3.0](https://github.com/kufu/smarthr-ui/compare/v30.2.0...v30.3.0) (2023-04-04)
+
+
+### Features
+
+* Input に read-only な視覚的表現を追加 ([#3224](https://github.com/kufu/smarthr-ui/issues/3224)) ([510e44f](https://github.com/kufu/smarthr-ui/commit/510e44fcd187adfd669f5626e40bc1d1c522a341))
+* MouseEventを扱えるようにする ([dccd952](https://github.com/kufu/smarthr-ui/commit/dccd95230d58337147845fb3826760f521b1c42d))
+* MouseEventを扱えるようにする ([#3237](https://github.com/kufu/smarthr-ui/issues/3237)) ([6078dc9](https://github.com/kufu/smarthr-ui/commit/6078dc94ae89a10f0cd268caad61a308bf731b9c))
+* RemoteTriggerActionDialogを実装 ([#3227](https://github.com/kufu/smarthr-ui/issues/3227)) ([409a38d](https://github.com/kufu/smarthr-ui/commit/409a38d6673e8836fd985f506fd5918bc4762623))
+
+
+### Bug Fixes
+
+* decorators内の個別のdecoratorの指定を任意にする ([#3235](https://github.com/kufu/smarthr-ui/issues/3235)) ([50b2ec8](https://github.com/kufu/smarthr-ui/commit/50b2ec83801fe1e3cd7ba1c548fdb009c44fcdb0))
+* ModelessDialog 内のスクロールが伝搬しないように制御 ([#3238](https://github.com/kufu/smarthr-ui/issues/3238)) ([4383789](https://github.com/kufu/smarthr-ui/commit/4383789bb52b8b183469d94dedbbf61740064256))
+
 ## [30.2.0](https://github.com/kufu/smarthr-ui/compare/v30.1.1...v30.2.0) (2023-03-22)
 
 

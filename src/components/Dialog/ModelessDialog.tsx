@@ -411,6 +411,7 @@ const CloseButtonLayout = styled.div`
 const Content = styled.div`
   flex: 1;
   overflow: auto;
+  overscroll-behavior: contain;
 `
 const Footer = styled.div<{ themes: Theme }>`
   ${({ themes: { border } }) => css`
