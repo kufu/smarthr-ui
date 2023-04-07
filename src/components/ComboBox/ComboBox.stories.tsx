@@ -69,7 +69,6 @@ const manyItems = Array.from({ length: 2000 }).map((_, i) => ({
 }))
 
 type Item = { label: ReactNode; value: string; disabled?: boolean; data?: any }
-// type Item = { label: string; value: string }
 
 export const Single: Story = () => {
   const [items, setItems] = useState<Item[]>(defaultItems)
