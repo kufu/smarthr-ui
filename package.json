@@ -73,7 +73,7 @@
     "standard-version": "^9.3.2",
     "storycap": "^4.0.0",
     "styled-components": "^5.3.9",
-    "styled-reset": "^4.4.5",
+    "styled-reset": "^4.4.6",
     "stylelint": "^15.3.0",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^1.1.0",
