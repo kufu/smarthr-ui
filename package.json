@@ -50,7 +50,7 @@
     "chromatic": "^6.17.3",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
     "eslint": "^8.36.0",
-    "eslint-config-smarthr": "^6.8.1",
+    "eslint-config-smarthr": "^6.8.2",
     "fs-extra": "^11.1.1",
     "http-server": "^14.1.1",
     "husky": "^8.0.3",
