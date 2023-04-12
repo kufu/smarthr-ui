@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.4.0](https://github.com/kufu/smarthr-ui/compare/v30.3.0...v30.4.0) (2023-04-12)
+
+
+### Features
+
+* FilterDropdown の trigger に任意の button props を渡せるようにする ([#3261](https://github.com/kufu/smarthr-ui/issues/3261)) ([54a75d3](https://github.com/kufu/smarthr-ui/commit/54a75d33eefecf58d0907655d674966872909993))
+
 ## [30.3.0](https://github.com/kufu/smarthr-ui/compare/v30.2.0...v30.3.0) (2023-04-04)
 
 
