@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC, useMemo } from 'react'
+import React, { ButtonHTMLAttributes, FC, ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
@@ -24,6 +24,7 @@ type Props = {
     'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
   >
 }
+type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
 const STATUS_FILTERED_TEXT = '適用中'
 const TRIGGER_BUTTON_TEXT = '絞り込み'
@@ -34,7 +35,7 @@ const RESET_BUTTON_TEXT = '絞り込み条件を解除'
 const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
   decorator?.(defaultText) || defaultText
 
-export const FilterDropdown: VFC<Props> = ({
+export const FilterDropdown: FC<Props & ElementProps> = ({
   isFiltered = false,
   onApply,
   onCancel,
@@ -42,6 +43,7 @@ export const FilterDropdown: VFC<Props> = ({
   children,
   hasStatusText,
   decorators,
+  ...props
 }: Props) => {
   const themes = useTheme()
   const status: ReactNode = useMemo(
@@ -73,6 +75,7 @@ export const FilterDropdown: VFC<Props> = ({
     <Dropdown>
       <DropdownTrigger>
         <Button
+          {...props}
           suffix={
             <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
               <FaFilterIcon />

@@ -92,6 +92,21 @@ export const Default: Story = () => {
             </p>
           </FilterDropdown>
         </dd>
+        <dt>disabled</dt>
+        <dd>
+          <FilterDropdown
+            onApply={() => setIsFiltered(true)}
+            onCancel={() => setIsFiltered(false)}
+            onReset={() => {
+              setValue('hoge')
+              setText('')
+            }}
+            isFiltered={isFiltered}
+            disabled
+          >
+            disabled
+          </FilterDropdown>
+        </dd>
         <dt>Custom text</dt>
         <dd>
           <FilterDropdown
