@@ -1,7 +1,8 @@
-import React, { HTMLAttributes, ReactNode } from 'react'
+import React, { HTMLAttributes, ReactNode, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
+import { DecoratorsType } from '../../../types/props'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
@@ -23,13 +24,26 @@ type Category = {
 type Props = {
   apps: Category[]
   urlToShowAll?: string | null
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'buttonLabel'>
 }
-
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll, ...props }) => {
+const BUTTON_LABEL = 'アプリ'
+
+export const AppLauncher: React.FC<Props & ElementProps> = ({
+  apps,
+  urlToShowAll,
+  decorators,
+  ...props
+}) => {
   const theme = useTheme()
   const classNames = useClassNames()
+
+  const buttonLabel = useMemo(
+    () => decorators?.buttonLabel?.(BUTTON_LABEL) || BUTTON_LABEL,
+    [decorators],
+  )
 
   const baseApps = apps.find(({ type }) => type === 'base')
   const others = apps.filter((category) => category !== baseApps)
@@ -38,7 +52,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
     <Dropdown {...props}>
       <DropdownTrigger>
         <AppsButton themes={theme} prefix={<FaToolboxIcon />}>
-          アプリ
+          {buttonLabel}
         </AppsButton>
       </DropdownTrigger>
       <DropdownContent controllable>
