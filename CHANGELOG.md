@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.5.0](https://github.com/kufu/smarthr-ui/compare/v30.4.0...v30.5.0) (2023-04-13)
+
+
+### Features
+
+* AppLauncher の多言語化対応 ([#3264](https://github.com/kufu/smarthr-ui/issues/3264)) ([96c345f](https://github.com/kufu/smarthr-ui/commit/96c345f9e36c05aedce4e515c489f6ba2f2d6bee))
+
 ## [30.4.0](https://github.com/kufu/smarthr-ui/compare/v30.3.0...v30.4.0) (2023-04-12)
 
 
