@@ -25,11 +25,11 @@ type Props = {
   apps: Category[]
   urlToShowAll?: string | null
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'buttonLabel'>
+  decorators?: DecoratorsType<'triggerLabel'>
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-const BUTTON_LABEL = 'アプリ'
+const TRIGGER_LABEL = 'アプリ'
 
 export const AppLauncher: React.FC<Props & ElementProps> = ({
   apps,
@@ -40,8 +40,8 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   const theme = useTheme()
   const classNames = useClassNames()
 
-  const buttonLabel = useMemo(
-    () => decorators?.buttonLabel?.(BUTTON_LABEL) || BUTTON_LABEL,
+  const triggerLabel = useMemo(
+    () => decorators?.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
     [decorators],
   )
 
@@ -52,7 +52,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
     <Dropdown {...props}>
       <DropdownTrigger>
         <AppsButton themes={theme} prefix={<FaToolboxIcon />}>
-          {buttonLabel}
+          {triggerLabel}
         </AppsButton>
       </DropdownTrigger>
       <DropdownContent controllable>
