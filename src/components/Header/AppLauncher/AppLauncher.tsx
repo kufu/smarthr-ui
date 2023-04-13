@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react'
+import React, { HTMLAttributes, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
@@ -13,9 +13,9 @@ import { useClassNames } from './useClassNames'
 
 type Category = {
   type?: string
-  heading: string
+  heading: ReactNode
   items: Array<{
-    label: string
+    label: ReactNode
     url: string
     target?: string
   }>
