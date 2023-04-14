@@ -9,7 +9,7 @@ import React, {
 import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
-import { Dropdown, DropdownContent, DropdownTrigger } from '..'
+import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '..'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
 import { RemoteDialogTrigger } from '../../Dialog'
@@ -78,12 +78,14 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         </TriggerButton>
       </DropdownTrigger>
       <DropdownContent>
-        <ActionList themes={themes} className={classNames.panel}>
-          {React.Children.map(children, (item, i) =>
-            // MEMO: {flag && <Button/>}のような書き方に対応させるためbooleanの判定を入れています
-            item && typeof item !== 'boolean' ? <li key={i}>{actionItem(item)}</li> : null,
-          )}
-        </ActionList>
+        <DropdownScrollArea>
+          <ActionList themes={themes} className={classNames.panel}>
+            {React.Children.map(children, (item, i) =>
+              // MEMO: {flag && <Button/>}のような書き方に対応させるためbooleanの判定を入れています
+              item && typeof item !== 'boolean' ? <li key={i}>{actionItem(item)}</li> : null,
+            )}
+          </ActionList>
+        </DropdownScrollArea>
       </DropdownContent>
     </Dropdown>
   )
