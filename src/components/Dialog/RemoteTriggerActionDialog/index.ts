@@ -1,1 +1,1 @@
-export { RemoteTriggerActionDialog, RemoteDialogTrigger } from './RemoteTriggerActionDialog'
+export { RemoteTriggerActionDialog } from './RemoteTriggerActionDialog'
