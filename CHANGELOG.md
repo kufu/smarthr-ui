@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.6.0](https://github.com/kufu/smarthr-ui/compare/v30.5.0...v30.6.0) (2023-04-18)
+
+
+### Features
+
+* RemoteTriggerMessageDialog を追加する ([#3260](https://github.com/kufu/smarthr-ui/issues/3260)) ([565d03c](https://github.com/kufu/smarthr-ui/commit/565d03c82a2049837d9a1e633a99f593a2c6f5df))
+
+
+### Bug Fixes
+
+* ドロップダウンメニューの項目が長いときに項目がベースを突き抜けてしまうのを修正した ([#3252](https://github.com/kufu/smarthr-ui/issues/3252)) ([68b6341](https://github.com/kufu/smarthr-ui/commit/68b63417f0d0c3ad7a045df1db6a62aebbb40864))
+
 ## [30.5.0](https://github.com/kufu/smarthr-ui/compare/v30.4.0...v30.5.0) (2023-04-13)
 
 
