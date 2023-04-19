@@ -85,9 +85,9 @@ describe('useOptions', () => {
     describe('ReactNode を含むオプションの場合', () => {
       it('オプションが取得できること', () => {
         const element = (
-          <div>
+          <span>
             label<span>3</span>
-          </div>
+          </span>
         )
         const initialProps = {
           items: [
@@ -117,9 +117,9 @@ describe('useOptions', () => {
 
       it('入力によって options がフィルタリングされること', () => {
         const element = (
-          <div>
+          <span>
             label<span>3</span>
-          </div>
+          </span>
         )
         const initialProps = {
           items: [

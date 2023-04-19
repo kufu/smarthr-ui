@@ -3,6 +3,8 @@ import { Story } from '@storybook/react'
 import React, { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components'
 
+import { Stack } from '../Layout'
+
 import { MultiComboBox, SingleComboBox } from '.'
 
 export default {
@@ -53,10 +55,8 @@ const defaultItems = [
   {
     label: (
       <>
-        <div>
-          アイテムのラベルが<span>ReactNodeの場合</span>
-        </div>
-        <p>（ダミーテキストダミーテキストダミーテキストダミーテキスト）</p>
+        <Stack as="span">アイテムのラベルがReactNodeの場合</Stack>
+        <Stack as="span">（ダミーテキストダミーテキストダミーテキストダミーテキスト）</Stack>
       </>
     ),
     value: 'value-7',
