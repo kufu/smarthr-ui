@@ -209,9 +209,7 @@ export function SingleComboBox<T>({
     setIsEditing(false)
 
     if (!selectedItem && defaultItem) {
-      setInputValue(
-        typeof defaultItem.label === 'string' ? defaultItem.label : innerText(defaultItem.label),
-      )
+      setInputValue(innerText(defaultItem.label))
       onSelect && onSelect(defaultItem)
     }
   }, [selectedItem, defaultItem, onSelect])
@@ -326,9 +324,7 @@ export function SingleComboBox<T>({
 
   useEffect(() => {
     if (selectedItem) {
-      setInputValue(
-        typeof selectedItem.label === 'string' ? selectedItem.label : innerText(selectedItem.label),
-      )
+      setInputValue(innerText(selectedItem.label))
     } else {
       setInputValue('')
     }

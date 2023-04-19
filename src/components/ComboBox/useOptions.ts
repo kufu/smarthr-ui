@@ -73,9 +73,7 @@ export function useOptions<T>({
     }
     return allOptions.filter(({ item: { label } }) => {
       if (!inputValue) return true
-      return convertMatchableString(typeof label === 'string' ? label : innerText(label)).includes(
-        convertMatchableString(inputValue),
-      )
+      return convertMatchableString(innerText(label)).includes(convertMatchableString(inputValue))
     })
   }, [allOptions, inputValue, isFilteringDisabled])
 
