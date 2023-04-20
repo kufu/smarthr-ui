@@ -151,7 +151,8 @@
     "e2e:dev": "testcafe chrome --host localhost --skip-js-errors",
     "prepare": "husky install",
     "chromatic": "chromatic",
-    "export:ui-props": "yarn build:lib && ts-node scripts/exportUIProps.ts"
+    "write:ui-props": "ts-node scripts/exportUIProps.ts",
+    "export:ui-props": "run-s build:lib write:ui-props"
   },
   "sideEffects": false,
   "typings": "lib/index.d.ts",
