@@ -54,10 +54,10 @@ const defaultItems = [
   },
   {
     label: (
-      <>
-        <Stack as="span">アイテムのラベルがReactNodeの場合</Stack>
-        <Stack as="span">（ダミーテキストダミーテキストダミーテキストダミーテキスト）</Stack>
-      </>
+      <Stack as="span" gap={0.25}>
+        <span>アイテムのラベルがReactNodeの場合</span>
+        <span>（ダミーテキストダミーテキストダミーテキストダミーテキスト）</span>
+      </Stack>
     ),
     value: 'value-7',
   },
