@@ -1,6 +1,6 @@
 export type ComboBoxItem<T> = {
   value: string
-  label: string
+  label: React.ReactNode
   disabled?: boolean
   data?: T
 }

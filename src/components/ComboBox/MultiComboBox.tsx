@@ -96,7 +96,7 @@ type Props<T> = {
   /**
    * `items` 内に存在しないアイテムが追加されたときに発火するコールバック関数
    */
-  onAdd?: (label: string) => void
+  onAdd?: (label: ReactNode) => void
   /**
    * 選択されているアイテムの削除ボタンがクリックされた時に発火するコールバック関数
    */

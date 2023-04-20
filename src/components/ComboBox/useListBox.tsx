@@ -29,7 +29,7 @@ type Props<T> = {
   options: Array<ComboBoxOption<T>>
   dropdownHelpMessage?: ReactNode
   dropdownWidth?: string | number
-  onAdd?: (label: string) => void
+  onAdd?: (label: ReactNode) => void
   onSelect: (item: ComboBoxItem<T>) => void
   isExpanded: boolean
   isLoading?: boolean
