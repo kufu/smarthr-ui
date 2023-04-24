@@ -145,6 +145,35 @@ export const Single: Story = () => {
           data-test="single-combobox-disabled"
         />
       </dd>
+      <dt>必須</dt>
+      <dd>
+        <SingleComboBox
+          name="required"
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="Required なコンボボックス"
+          required
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+          data-test="single-combobox-disabled"
+        />
+      </dd>
+      <dt>その他属性</dt>
+      <dd>
+        <SingleComboBox
+          name="inputAttributes"
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          inputAttributes={{
+            'aria-label': 'inputAttributes',
+          }}
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+          data-test="single-combobox-disabled"
+        />
+      </dd>
       <dt>エラー表示</dt>
       <dd>
         <SingleComboBox
@@ -369,6 +398,35 @@ export const Multi: Story = () => {
           width={400}
           dropdownHelpMessage="Disabled なコンボボックス"
           disabled
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+          data-test="multi-combobox-disabled"
+        />
+      </dd>
+      <dt>必須</dt>
+      <dd>
+        <MultiComboBox
+          name="required"
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          dropdownHelpMessage="Required なコンボボックス"
+          required
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+          data-test="multi-combobox-disabled"
+        />
+      </dd>
+      <dt>その他属性</dt>
+      <dd>
+        <MultiComboBox
+          name="inputAttributes"
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          inputAttributes={{
+            'aria-label': 'inputAttributes',
+          }}
           onDelete={handleDelete}
           onSelect={handleSelectItem}
           data-test="multi-combobox-disabled"
