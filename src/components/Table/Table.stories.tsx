@@ -10,7 +10,7 @@ import { Text } from '../Text'
 import { TdCheckbox } from './TdCheckbox'
 import { ThCheckbox } from './ThCheckbox'
 
-import { BulkActionRow, EmptyTableBody, FixColumnTable, Table, Td, Th } from '.'
+import { BulkActionRow, EmptyTableBody, Table, TableReel, Td, Th } from '.'
 
 export default {
   title: 'Data Display（データ表示）/Table',
@@ -282,132 +282,15 @@ export const All: Story = () => {
         </Base>
       </li>
       <li>
-        FixColumnTable
-        <FixColumnTable style={{ whiteSpace: 'nowrap' }}>
-          <thead>
-            <tr>
-              <Th>cell</Th>
-              <Th>cell</Th>
-              <Th>cell</Th>
-              <Th>cell</Th>
-              <Th>cell</Th>
-              <Th>cell</Th>
-              <Th>cell</Th>
-              <Th>cell</Th>
-              <Th>cell</Th>
-              <Th>
-                multi
-                <br />
-                line
-              </Th>
-              <Th isFixed={true}>cell</Th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <Td>株式会社SmartHR</Td>
-              <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>
-                multi
-                <br />
-                line
-              </Td>
-              <Td isFixed={true}>
-                <Button size="s">Button</Button>
-              </Td>
-            </tr>
-            <tr>
-              <Td>株式会社SmartHR</Td>
-              <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>
-                multi
-                <br />
-                line
-              </Td>
-              <Td isFixed={true}>
-                <Button size="s">Button</Button>
-              </Td>
-            </tr>
-            <tr>
-              <Td>株式会社SmartHR</Td>
-              <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>
-                multi
-                <br />
-                line
-              </Td>
-              <Td isFixed={true}>
-                <Button size="s">Button</Button>
-              </Td>
-            </tr>
-            <tr>
-              <Td>株式会社SmartHR</Td>
-              <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>
-                multi
-                <br />
-                line
-              </Td>
-              <Td isFixed={true}>
-                <Button size="s">Button</Button>
-              </Td>
-            </tr>
-            <tr>
-              <Td>株式会社SmartHR</Td>
-              <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>
-                multi
-                <br />
-                line
-              </Td>
-              <Td isFixed={true}>
-                <Button size="s">Button</Button>
-              </Td>
-            </tr>
-          </tbody>
-        </FixColumnTable>
-      </li>
-      <li>
-        BaseにFixColumnTableを入れる
-        <Base>
-          <FixColumnTable style={{ whiteSpace: 'nowrap' }}>
+        TableReel
+        <TableReel style={{ whiteSpace: 'nowrap' }}>
+          <Table>
             <thead>
               <tr>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
                 <Th>cell</Th>
                 <Th>cell</Th>
                 <Th>cell</Th>
@@ -428,18 +311,7 @@ export const All: Story = () => {
                 <Td>cell</Td>
                 <Td>cell</Td>
                 <Td>cell</Td>
-                <Td>
-                  multi
-                  <br />
-                  line
-                </Td>
-                <Td isFixed={true}>
-                  <Button size="s">Button</Button>
-                </Td>
-              </tr>
-              <tr>
-                <Td>株式会社SmartHR</Td>
-                <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                <Td>cell</Td>
                 <Td>cell</Td>
                 <Td>cell</Td>
                 <Td>cell</Td>
@@ -458,18 +330,7 @@ export const All: Story = () => {
                 <Td>cell</Td>
                 <Td>cell</Td>
                 <Td>cell</Td>
-                <Td>
-                  multi
-                  <br />
-                  line
-                </Td>
-                <Td isFixed={true}>
-                  <Button size="s">Button</Button>
-                </Td>
-              </tr>
-              <tr>
-                <Td>株式会社SmartHR</Td>
-                <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                <Td>cell</Td>
                 <Td>cell</Td>
                 <Td>cell</Td>
                 <Td>cell</Td>
@@ -485,6 +346,48 @@ export const All: Story = () => {
               <tr>
                 <Td>株式会社SmartHR</Td>
                 <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>
+                  multi
+                  <br />
+                  line
+                </Td>
+                <Td isFixed={true}>
+                  <Button size="s">Button</Button>
+                </Td>
+              </tr>
+              <tr>
+                <Td>株式会社SmartHR</Td>
+                <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>
+                  multi
+                  <br />
+                  line
+                </Td>
+                <Td isFixed={true}>
+                  <Button size="s">Button</Button>
+                </Td>
+              </tr>
+              <tr>
+                <Td>株式会社SmartHR</Td>
+                <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
                 <Td>cell</Td>
                 <Td>cell</Td>
                 <Td>cell</Td>
@@ -498,7 +401,108 @@ export const All: Story = () => {
                 </Td>
               </tr>
             </tbody>
-          </FixColumnTable>
+          </Table>
+        </TableReel>
+      </li>
+      <li>
+        BaseにTableReelを入れる
+        <Base>
+          <TableReel style={{ whiteSpace: 'nowrap' }}>
+            <Table>
+              <thead>
+                <tr>
+                  <Th>cell</Th>
+                  <Th>cell</Th>
+                  <Th>cell</Th>
+                  <Th>cell</Th>
+                  <Th>cell</Th>
+                  <Th>
+                    multi
+                    <br />
+                    line
+                  </Th>
+                  <Th isFixed={true}>cell</Th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <Td>株式会社SmartHR</Td>
+                  <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>
+                    multi
+                    <br />
+                    line
+                  </Td>
+                  <Td isFixed={true}>
+                    <Button size="s">Button</Button>
+                  </Td>
+                </tr>
+                <tr>
+                  <Td>株式会社SmartHR</Td>
+                  <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>
+                    multi
+                    <br />
+                    line
+                  </Td>
+                  <Td isFixed={true}>
+                    <Button size="s">Button</Button>
+                  </Td>
+                </tr>
+                <tr>
+                  <Td>株式会社SmartHR</Td>
+                  <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>
+                    multi
+                    <br />
+                    line
+                  </Td>
+                  <Td isFixed={true}>
+                    <Button size="s">Button</Button>
+                  </Td>
+                </tr>
+                <tr>
+                  <Td>株式会社SmartHR</Td>
+                  <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>
+                    multi
+                    <br />
+                    line
+                  </Td>
+                  <Td isFixed={true}>
+                    <Button size="s">Button</Button>
+                  </Td>
+                </tr>
+                <tr>
+                  <Td>株式会社SmartHR</Td>
+                  <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>
+                    multi
+                    <br />
+                    line
+                  </Td>
+                  <Td isFixed={true}>
+                    <Button size="s">Button</Button>
+                  </Td>
+                </tr>
+              </tbody>
+            </Table>
+          </TableReel>
         </Base>
       </li>
     </Ul>
