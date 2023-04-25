@@ -55,7 +55,7 @@ const StyledTd = styled.td<{ themes: Theme; isFixed: boolean }>`
       font-size: ${fontSize.M};
       line-height: ${leading.NORMAL};
       vertical-align: middle;
-      transition: all 200ms;
+      transition: all 0.1s;
       box-shadow: none;
 
       ${isFixed &&

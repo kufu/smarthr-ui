@@ -70,7 +70,7 @@ const Shadow = styled.div<{ showShadow: boolean }>`
       z-index: 0;
       left: 0;
       top: 0;
-      width: 5%;
+      width: 1%; /* 影の領域が広すぎるとクリッカブルエリアを侵食するので最低限の幅としている */
       height: 100%;
       background: linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
       opacity: ${showShadow ? 1 : 0};

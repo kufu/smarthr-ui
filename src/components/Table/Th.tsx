@@ -99,7 +99,7 @@ const Wrapper = styled.th<{ themes: Theme; isFixed: boolean }>`
     color: ${color.TEXT_BLACK};
     line-height: ${leading.TIGHT};
     vertical-align: middle;
-    transition: all 200ms;
+    transition: all 0.1s;
     box-shadow: none;
 
     &[aria-sort] {
