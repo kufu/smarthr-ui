@@ -1,7 +1,9 @@
 import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
-import React, { useCallback, useState } from 'react'
+import React, { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components'
+
+import { Stack } from '../Layout'
 
 import { MultiComboBox, SingleComboBox } from '.'
 
@@ -50,6 +52,15 @@ const defaultItems = [
     label: 'アイテムのラベルが長い場合（ダミーテキストダミーテキストダミーテキストダミーテキスト）',
     value: 'value-6',
   },
+  {
+    label: (
+      <Stack as="span" gap={0.25}>
+        <span>アイテムのラベルがReactNodeの場合</span>
+        <span>（ダミーテキストダミーテキストダミーテキストダミーテキスト）</span>
+      </Stack>
+    ),
+    value: 'value-7',
+  },
 ]
 
 const manyItems = Array.from({ length: 2000 }).map((_, i) => ({
@@ -57,10 +68,10 @@ const manyItems = Array.from({ length: 2000 }).map((_, i) => ({
   value: `option ${i}`,
 }))
 
-type Item = { label: string; value: string }
+type Item = { label: ReactNode; value: string; disabled?: boolean; data?: any }
 
 export const Single: Story = () => {
-  const [items, setItems] = useState(defaultItems)
+  const [items, setItems] = useState<Item[]>(defaultItems)
   const [selectedItem, setSelectedItem] = useState<Item | null>(null)
   const [seq, setSeq] = useState(0)
 
@@ -73,7 +84,7 @@ export const Single: Story = () => {
     setSelectedItem(null)
   }, [])
   const handleAddItem = useCallback(
-    (label: string) => {
+    (label: ReactNode) => {
       action('onAdd')(label)
       const newItem = {
         label,
@@ -129,6 +140,35 @@ export const Single: Story = () => {
           width={400}
           dropdownHelpMessage="Disabled なコンボボックス"
           disabled
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+          data-test="single-combobox-disabled"
+        />
+      </dd>
+      <dt>必須</dt>
+      <dd>
+        <SingleComboBox
+          name="required"
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="Required なコンボボックス"
+          required
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+          data-test="single-combobox-disabled"
+        />
+      </dd>
+      <dt>その他属性</dt>
+      <dd>
+        <SingleComboBox
+          name="inputAttributes"
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          inputAttributes={{
+            'aria-label': 'inputAttributes',
+          }}
           onSelect={handleSelectItem}
           onClear={handleClear}
           data-test="single-combobox-disabled"
@@ -280,7 +320,7 @@ const SingleWithDefaultItem: React.VFC = () => {
 }
 
 export const Multi: Story = () => {
-  const [items, setItems] = useState(defaultItems)
+  const [items, setItems] = useState<Item[]>(defaultItems)
   const [selectedItems, setSelectedItems] = useState<Item[]>([])
   const [seq, setSeq] = useState(0)
   const [controlledInputValue, setControlledInputValue] = useState<string>('')
@@ -300,7 +340,7 @@ export const Multi: Story = () => {
     [selectedItems],
   )
   const handleAddItem = useCallback(
-    (label: string) => {
+    (label: ReactNode) => {
       action('onAdd')(label)
       const newItem = {
         label,
@@ -358,6 +398,35 @@ export const Multi: Story = () => {
           width={400}
           dropdownHelpMessage="Disabled なコンボボックス"
           disabled
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+          data-test="multi-combobox-disabled"
+        />
+      </dd>
+      <dt>必須</dt>
+      <dd>
+        <MultiComboBox
+          name="required"
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          dropdownHelpMessage="Required なコンボボックス"
+          required
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+          data-test="multi-combobox-disabled"
+        />
+      </dd>
+      <dt>その他属性</dt>
+      <dd>
+        <MultiComboBox
+          name="inputAttributes"
+          items={items}
+          selectedItems={selectedItems}
+          width={400}
+          inputAttributes={{
+            'aria-label': 'inputAttributes',
+          }}
           onDelete={handleDelete}
           onSelect={handleSelectItem}
           data-test="multi-combobox-disabled"
