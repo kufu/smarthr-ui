@@ -4,7 +4,7 @@ import { Tooltip } from '../Tooltip'
 
 type Props = PropsWithChildren<{
   needsTooltip: boolean
-  text: string
+  text: ReactNode
   children: ReactNode
 }>
 

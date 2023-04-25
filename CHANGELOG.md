@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.7.0](https://github.com/kufu/smarthr-ui/compare/v30.6.0...v30.7.0) (2023-04-25)
+
+
+### Features
+
+* ComboBoxのinput要素にrequired属性と、それ以外の属性を設定できるinputAttributesを追加する ([#3284](https://github.com/kufu/smarthr-ui/issues/3284)) ([1828338](https://github.com/kufu/smarthr-ui/commit/18283383d19bb0eb9056cb06923374a3a6287822))
+* Enable ComboBox item.label to accept ReactNode ([#3270](https://github.com/kufu/smarthr-ui/issues/3270)) ([b1e3a42](https://github.com/kufu/smarthr-ui/commit/b1e3a4215f4dc7a8c201b895171d3119e1113bfc))
+
+## [30.6.0](https://github.com/kufu/smarthr-ui/compare/v30.5.0...v30.6.0) (2023-04-18)
+
+
+### Features
+
+* RemoteTriggerMessageDialog を追加する ([#3260](https://github.com/kufu/smarthr-ui/issues/3260)) ([565d03c](https://github.com/kufu/smarthr-ui/commit/565d03c82a2049837d9a1e633a99f593a2c6f5df))
+
+
+### Bug Fixes
+
+* ドロップダウンメニューの項目が長いときに項目がベースを突き抜けてしまうのを修正した ([#3252](https://github.com/kufu/smarthr-ui/issues/3252)) ([68b6341](https://github.com/kufu/smarthr-ui/commit/68b63417f0d0c3ad7a045df1db6a62aebbb40864))
+
+## [30.5.0](https://github.com/kufu/smarthr-ui/compare/v30.4.0...v30.5.0) (2023-04-13)
+
+
+### Features
+
+* AppLauncher の多言語化対応 ([#3264](https://github.com/kufu/smarthr-ui/issues/3264)) ([96c345f](https://github.com/kufu/smarthr-ui/commit/96c345f9e36c05aedce4e515c489f6ba2f2d6bee))
+
+## [30.4.0](https://github.com/kufu/smarthr-ui/compare/v30.3.0...v30.4.0) (2023-04-12)
+
+
+### Features
+
+* FilterDropdown の trigger に任意の button props を渡せるようにする ([#3261](https://github.com/kufu/smarthr-ui/issues/3261)) ([54a75d3](https://github.com/kufu/smarthr-ui/commit/54a75d33eefecf58d0907655d674966872909993))
+
 ## [30.3.0](https://github.com/kufu/smarthr-ui/compare/v30.2.0...v30.3.0) (2023-04-04)
 
 
