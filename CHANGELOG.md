@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.7.0](https://github.com/kufu/smarthr-ui/compare/v30.6.0...v30.7.0) (2023-04-25)
+
+
+### Features
+
+* ComboBoxのinput要素にrequired属性と、それ以外の属性を設定できるinputAttributesを追加する ([#3284](https://github.com/kufu/smarthr-ui/issues/3284)) ([1828338](https://github.com/kufu/smarthr-ui/commit/18283383d19bb0eb9056cb06923374a3a6287822))
+* Enable ComboBox item.label to accept ReactNode ([#3270](https://github.com/kufu/smarthr-ui/issues/3270)) ([b1e3a42](https://github.com/kufu/smarthr-ui/commit/b1e3a4215f4dc7a8c201b895171d3119e1113bfc))
+
 ## [30.6.0](https://github.com/kufu/smarthr-ui/compare/v30.5.0...v30.6.0) (2023-04-18)
 
 
