@@ -31,15 +31,14 @@ export const TableReel: React.FC<Props & TableElementProps> = ({
 
           if (shouldFix) {
             cell.classList.add('fixed')
-            setShowShadow(scrollLeft > 0)
+            setShowShadow(true)
           } else {
             cell.classList.remove('fixed')
-            setShowShadow(true)
+            setShowShadow(maxScrollLeft === 0 && scrollLeft === 0 ? false : true)
           }
         })
       }
     }
-
     handleScroll()
 
     window.addEventListener('resize', handleScroll)
