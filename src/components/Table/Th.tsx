@@ -25,7 +25,7 @@ export type Props = PropsWithChildren<{
   decorators?: {
     sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
   }
-  /** `true` のとき、FixColumnTable内で左固定表示になる */
+  /** `true` のとき、TableReel内で左固定表示になる */
   isFixed?: boolean
 }>
 type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props | 'onClick'>
