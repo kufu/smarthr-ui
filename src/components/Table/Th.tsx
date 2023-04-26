@@ -10,7 +10,6 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
-import { Stack } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { useThClassNames } from './useClassNames'
@@ -177,4 +176,11 @@ const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => (
   </SortIconWraper>
 )
 
-const SortIconWraper = styled(Stack).attrs({ as: 'span', gap: -1, inline: true })``
+const SortIconWraper = styled.span`
+  display: inline-flex;
+  flex-direction: column;
+
+  .smarthr-ui-Icon + .smarthr-ui-Icon {
+    margin-top: -1em;
+  }
+`
