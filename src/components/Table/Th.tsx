@@ -12,6 +12,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
+import { reelShadow } from './TableReel'
 import { useThClassNames } from './useClassNames'
 
 type sortTypes = keyof typeof SORT_DIRECTION_LABEL
@@ -113,19 +114,7 @@ const Wrapper = styled.th<{ themes: Theme; isFixed: boolean }>`
       }
     }
 
-    &::after {
-      content: '';
-      position: absolute;
-      z-index: 0;
-      left: -12px;
-      top: 0;
-      width: 12px;
-      height: 100%;
-      pointer-events: none; /* 影の領域が広すぎるとクリッカブルエリアを侵食するので無効化 */
-      background: linear-gradient(-90deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
+    ${reelShadow({ showShadow: true, direction: 'right' })}
 
     ${isFixed &&
     css`

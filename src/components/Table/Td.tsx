@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
+import { reelShadow } from './TableReel'
 import { useTdClassNames } from './useClassNames'
 
 export type Props = PropsWithChildren<{
@@ -57,19 +58,7 @@ const StyledTd = styled.td<{ themes: Theme; isFixed: boolean }>`
       vertical-align: middle;
       position: relative;
 
-      &::after {
-        content: '';
-        position: absolute;
-        z-index: 0;
-        left: -12px;
-        top: 0;
-        width: 12px;
-        height: 100%;
-        pointer-events: none; /* 影の領域が広すぎるとクリッカブルエリアを侵食するので無効化 */
-        background: linear-gradient(-90deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
-        opacity: 0;
-        transition: opacity 0.2s;
-      }
+      ${reelShadow({ showShadow: true, direction: 'right' })}
 
       ${isFixed &&
       css`

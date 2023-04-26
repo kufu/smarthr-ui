@@ -7,9 +7,9 @@ export type Props = {
   /** TableのClassName指定 */
   children: React.ReactNode
 }
-type TableElementProps = Omit<HTMLAttributes<HTMLTableElement>, keyof Props>
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const TableReel: React.FC<Props & TableElementProps> = ({
+export const TableReel: React.FC<Props & ElementProps> = ({
   wrapperClassName = '',
   children,
   ...props
@@ -59,28 +59,41 @@ export const TableReel: React.FC<Props & TableElementProps> = ({
   )
 }
 
-const Shadow = styled.div<{ showShadow: boolean }>`
-  ${({ showShadow }) => css`
-    position: relative;
-
+export const reelShadow = ({
+  showShadow = true,
+  direction = 'left',
+}: {
+  showShadow?: boolean
+  direction?: 'left' | 'right'
+}) => {
+  return `
     &::after {
       content: '';
       position: absolute;
       z-index: 0;
-      left: 0;
+      left: ${direction === 'left' ? '0' : '-12px'};
       top: 0;
       width: 12px;
       pointer-events: none; /* 影の領域が広すぎるとクリッカブルエリアを侵食するので無効化 */
       height: 100%;
-      background: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
+      background: linear-gradient(${
+        direction === 'left' ? '90deg' : '-90deg'
+      }, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
       opacity: ${showShadow ? 1 : 0};
       transition: opacity 0.2s;
     }
+  `
+}
+
+const Shadow = styled.div<{ showShadow: boolean }>`
+  ${({ showShadow }) => css`
+    position: relative;
+
+    ${reelShadow({ showShadow })}
   `}
 `
 
 const Wrapper = styled.div`
   position: relative;
   overflow: auto;
-  /* stylelint-disable */
 `
