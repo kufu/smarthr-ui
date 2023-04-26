@@ -114,7 +114,9 @@ const Wrapper = styled.th<{ themes: Theme; isFixed: boolean }>`
       }
     }
 
-    ${reelShadow({ showShadow: true, direction: 'right' })}
+    &.fixedElement {
+      ${reelShadow({ showShadow: false, direction: 'right' })}
+    }
 
     ${isFixed &&
     css`

@@ -58,7 +58,9 @@ const StyledTd = styled.td<{ themes: Theme; isFixed: boolean }>`
       vertical-align: middle;
       position: relative;
 
-      ${reelShadow({ showShadow: true, direction: 'right' })}
+      &.fixedElement {
+        ${reelShadow({ showShadow: false, direction: 'right' })}
+      }
 
       ${isFixed &&
       css`
