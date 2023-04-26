@@ -55,8 +55,21 @@ const StyledTd = styled.td<{ themes: Theme; isFixed: boolean }>`
       font-size: ${fontSize.M};
       line-height: ${leading.NORMAL};
       vertical-align: middle;
-      transition: all 0.1s;
-      box-shadow: none;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        z-index: 0;
+        left: -12px;
+        top: 0;
+        width: 12px;
+        height: 100%;
+        pointer-events: none; /* 影の領域が広すぎるとクリッカブルエリアを侵食するので無効化 */
+        background: linear-gradient(-90deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
 
       ${isFixed &&
       css`
@@ -64,7 +77,10 @@ const StyledTd = styled.td<{ themes: Theme; isFixed: boolean }>`
           position: sticky;
           right: 0;
           background-color: ${color.WHITE};
-          box-shadow: -4px 4px 4px 0 rgba(0, 0, 0, 0.2);
+
+          &::after {
+            opacity: 1;
+          }
         }
       `}
     `

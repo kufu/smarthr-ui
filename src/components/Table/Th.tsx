@@ -100,7 +100,6 @@ const Wrapper = styled.th<{ themes: Theme; isFixed: boolean }>`
     line-height: ${leading.TIGHT};
     vertical-align: middle;
     transition: all 0.1s;
-    box-shadow: none;
 
     &[aria-sort] {
       cursor: pointer;
@@ -115,12 +114,30 @@ const Wrapper = styled.th<{ themes: Theme; isFixed: boolean }>`
       }
     }
 
+    &::after {
+      content: '';
+      position: absolute;
+      z-index: 0;
+      left: -12px;
+      top: 0;
+      width: 12px;
+      height: 100%;
+      pointer-events: none; /* 影の領域が広すぎるとクリッカブルエリアを侵食するので無効化 */
+      background: linear-gradient(-90deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
     ${isFixed &&
     css`
       &.fixed {
         position: sticky;
         right: 0;
-        box-shadow: -4px 4px 4px 0 rgba(0, 0, 0, 0.2);
+        transition: opacity 0.2s;
+
+        &::after {
+          opacity: 1;
+        }
       }
     `}
   `}
