@@ -7,7 +7,7 @@ import { Cluster } from '../../Layout'
 
 import { DropdownMenuButton } from './DropdownMenuButton'
 
-const flag = false
+const nullText: string = ''
 
 const Template: React.FC<Omit<ComponentProps<typeof DropdownMenuButton>, 'children'>> = (props) => (
   <DropdownMenuButton {...props}>
@@ -22,7 +22,11 @@ const Template: React.FC<Omit<ComponentProps<typeof DropdownMenuButton>, 'childr
     </Button>
     <Button>ヒントメッセージの設定</Button>
     <AnchorButton href="#h2-2">ログアウト</AnchorButton>
-    {flag && <Button>非表示になるテキスト</Button>}
+    {nullText}
+    {false}
+    {undefined}
+    {null}
+    {[].length && <Button>非表示になるテキスト</Button>}
     <RemoteDialogTrigger targetId="hoge">
       <Button>Triggerのテスト</Button>
     </RemoteDialogTrigger>
