@@ -31,7 +31,7 @@ export const TableReel: React.FC<Props & TableElementProps> = ({
 
           if (shouldFix) {
             cell.classList.add('fixed')
-            setShowShadow(true)
+            setShowShadow(scrollLeft > 0)
           } else {
             cell.classList.remove('fixed')
             setShowShadow(maxScrollLeft === 0 && scrollLeft === 0 ? false : true)
