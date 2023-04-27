@@ -116,6 +116,9 @@ const DisabledDetailWrapper = styled(Cluster).attrs({
         /* Tooltip との距離を変えずに反応範囲を広げるために negative space を使う */
         margin: ${space(-0.25)};
         padding: ${space(0.25)};
+
+        /* global styleなどでborder-boxが適用されている場合表示崩れを起こす為、content-boxを指定する */
+        box-sizing: content-box;
         color: ${color.TEXT_GREY};
       }
     }
