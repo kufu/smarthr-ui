@@ -2,18 +2,11 @@ import React, { HTMLAttributes, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 export type Props = {
-  /** Tableを囲うDivのClassName指定 */
-  wrapperClassName?: string
-  /** TableのClassName指定 */
   children: React.ReactNode
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const TableReel: React.FC<Props & ElementProps> = ({
-  wrapperClassName = '',
-  children,
-  ...props
-}) => {
+export const TableReel: React.FC<Props & ElementProps> = ({ children, ...props }) => {
   const tableWrapperRef = useRef<HTMLDivElement>(null)
   const [showShadow, setShowShadow] = useState(false)
 
@@ -48,7 +41,7 @@ export const TableReel: React.FC<Props & ElementProps> = ({
       window.removeEventListener('resize', handleScroll)
       currentRef?.removeEventListener('scroll', handleScroll)
     }
-  }, [tableWrapperRef])
+  }, [tableWrapperRef, setShowShadow])
 
   return (
     <Shadow showShadow={showShadow}>
@@ -59,13 +52,12 @@ export const TableReel: React.FC<Props & ElementProps> = ({
   )
 }
 
-export const reelShadow = ({
-  showShadow = true,
-  direction = 'left',
-}: {
+type ReelShadow = {
   showShadow?: boolean
   direction?: 'left' | 'right'
-}) => {
+}
+
+export const reelShadow = ({ showShadow = true, direction = 'left' }: ReelShadow) => {
   return `
     &::after {
       content: '';
