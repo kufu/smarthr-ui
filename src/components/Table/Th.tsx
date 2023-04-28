@@ -123,7 +123,6 @@ const Wrapper = styled.th<{ themes: Theme; isFixed: boolean }>`
       &.fixed {
         position: sticky;
         right: 0;
-        transition: opacity 0.2s;
 
         &::after {
           opacity: 1;
