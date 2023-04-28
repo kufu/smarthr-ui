@@ -2829,7 +2829,7 @@
   resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-7.0.7.tgz#3f3962be97b447752db99a78ef7beea9f94d75a4"
   integrity sha512-Om4ovBLNw8pVrBu83MpOKgAuGO9Dpr1Coh2qp8t64WRPkejX1mxOY9IgH723//zH3igx8LCkf9rvBvcrsyaScQ==
 
-"@storybook/cli@^7.0.7":
+"@storybook/cli@7.0.7", "@storybook/cli@^7.0.7":
   version "7.0.7"
   resolved "https://registry.yarnpkg.com/@storybook/cli/-/cli-7.0.7.tgz#56d8f021fb64b6c07a9795e960a5267c3a411d75"
   integrity sha512-koTkWr7wlaHF14T5moRP/tYM44+Jf4GEzQ/rqx/Jfn7EbNlVUOibdLJj4JnseMGRc7ZP6tKYku2n+B8g7hJX4w==
@@ -14293,6 +14293,13 @@ store2@^2.14.2:
   version "2.14.2"
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.14.2.tgz#56138d200f9fe5f582ad63bc2704dbc0e4a45068"
   integrity sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==
+
+storybook@^7.0.7:
+  version "7.0.7"
+  resolved "https://registry.yarnpkg.com/storybook/-/storybook-7.0.7.tgz#f489c241aee6a5e2b2bfb5cef46ddbda45aa6138"
+  integrity sha512-MaFAhpPm/KsaoIQfGzapnRyXNh1VbS8l38BNZR5ZD97ejGkLukJ7TO4fFS87Hyy6whAXo6tTdtqeCByMQ9gRFA==
+  dependencies:
+    "@storybook/cli" "7.0.7"
 
 storycap@^4.0.0:
   version "4.0.0"
