@@ -1,5 +1,4 @@
 import React from 'react'
-import { addDecorator } from '@storybook/react'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { Reset } from 'styled-reset'
 import { ArgsTable, Title } from '@storybook/addon-docs'
@@ -107,25 +106,27 @@ const callThemeProvider =
     return <>{children}</>
   }
 
-addDecorator((Story, context) => {
-  const resetStyle =
-    context.globals.reset === 'smarthr-normalize' ? (
-      <SmartHRGlobalStyle />
-    ) : context.globals.reset === 'styled-reset' ? (
-      <Reset />
-    ) : undefined
-  const theme = createTheme()
-  const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
-  return (
-    <ThemeProvider>
-      <ShrThemeProvider theme={theme}>
-        {resetStyle}
-        <Story />
-      </ShrThemeProvider>
-    </ThemeProvider>
-  )
-})
-addDecorator(withScreenshot)
+export const decorators = [
+  (Story, context) => {
+    const resetStyle =
+      context.globals.reset === 'smarthr-normalize' ? (
+        <SmartHRGlobalStyle />
+      ) : context.globals.reset === 'styled-reset' ? (
+        <Reset />
+      ) : undefined
+    const theme = createTheme()
+    const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
+    return (
+      <ThemeProvider>
+        <ShrThemeProvider theme={theme}>
+          {resetStyle}
+          <Story />
+        </ShrThemeProvider>
+      </ThemeProvider>
+    )
+  },
+  withScreenshot
+]
 
 const SmartHRGlobalStyle = createGlobalStyle`
   ${CssBaseLine}
