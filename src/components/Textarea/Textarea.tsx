@@ -176,6 +176,12 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
     color: ${color.TEXT_BLACK};
     width: ${textAreaWidth};
 
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
+
     ${error &&
     css`
       border-color: ${color.DANGER};

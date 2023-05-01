@@ -161,6 +161,12 @@ const Wrapper = styled.span<{
     padding-inline: ${space(0.5)};
     width: ${typeof $width === 'number' ? `${$width}px` : $width};
 
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
+
     &:focus-within {
       ${shadow.focusIndicatorStyles};
     }
