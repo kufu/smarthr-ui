@@ -36,6 +36,12 @@ const Wrapper = styled(Stack).attrs({ gap: 0.25 })<{ themes: Theme }>`
   ${({ themes: { border } }) => css`
     border-bottom: ${border.shorthand};
     border-bottom-style: dotted;
+
+    @media (prefers-contrast: more) {
+      & {
+        border-bottom: ${border.highContrast};
+      }
+    }
   `}
 `
 

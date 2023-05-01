@@ -128,6 +128,12 @@ const Line = styled.div<{ themes: Theme }>`
 
       &.primary {
         border-color: ${color.BRAND};
+
+        @media (prefers-contrast: more) {
+          & {
+            border-color: ${color.MAIN};
+          }
+        }
       }
       &.light {
         border-color: ${color.WHITE};

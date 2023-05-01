@@ -44,7 +44,7 @@ export const Table: FC<Props & ElementProps> = ({
 
 const Wrapper = styled.table<{ fixedHead: boolean; themes: Theme }>`
   ${({ fixedHead, themes }) => {
-    const { color, zIndex } = themes
+    const { border, color, zIndex } = themes
 
     return css`
       width: 100%;
@@ -68,6 +68,14 @@ const Wrapper = styled.table<{ fixedHead: boolean; themes: Theme }>`
 
       th {
         background-color: ${color.HEAD};
+      }
+
+      @media (prefers-contrast: more) {
+        &,
+        & th,
+        & td {
+          border: ${border.highContrast};
+        }
       }
     `
   }}
