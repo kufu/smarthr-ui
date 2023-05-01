@@ -281,6 +281,14 @@ export const All: Story = () => {
           </Table>
         </Base>
       </li>
+    </Ul>
+  )
+}
+All.storyName = 'all'
+
+export const WithReel: Story = () => {
+  return (
+    <Ul>
       <li>
         TableReel
         <TableReel style={{ whiteSpace: 'nowrap' }}>
@@ -301,7 +309,7 @@ export const All: Story = () => {
                   <br />
                   line
                 </Th>
-                <Th isFixed={true}>cell</Th>
+                <Th fixed>cell</Th>
               </tr>
             </thead>
             <tbody>
@@ -320,7 +328,7 @@ export const All: Story = () => {
                   <br />
                   line
                 </Td>
-                <Td isFixed={true}>
+                <Td fixed>
                   <Button size="s">Button</Button>
                 </Td>
               </tr>
@@ -339,7 +347,7 @@ export const All: Story = () => {
                   <br />
                   line
                 </Td>
-                <Td isFixed={true}>
+                <Td fixed>
                   <Button size="s">Button</Button>
                 </Td>
               </tr>
@@ -358,7 +366,7 @@ export const All: Story = () => {
                   <br />
                   line
                 </Td>
-                <Td isFixed={true}>
+                <Td fixed>
                   <Button size="s">Button</Button>
                 </Td>
               </tr>
@@ -377,7 +385,7 @@ export const All: Story = () => {
                   <br />
                   line
                 </Td>
-                <Td isFixed={true}>
+                <Td fixed>
                   <Button size="s">Button</Button>
                 </Td>
               </tr>
@@ -396,7 +404,7 @@ export const All: Story = () => {
                   <br />
                   line
                 </Td>
-                <Td isFixed={true}>
+                <Td fixed>
                   <Button size="s">Button</Button>
                 </Td>
               </tr>
@@ -421,7 +429,7 @@ export const All: Story = () => {
                     <br />
                     line
                   </Th>
-                  <Th isFixed={true}>cell</Th>
+                  <Th fixed>cell</Th>
                 </tr>
               </thead>
               <tbody>
@@ -436,7 +444,7 @@ export const All: Story = () => {
                     <br />
                     line
                   </Td>
-                  <Td isFixed={true}>
+                  <Td fixed>
                     <Button size="s">Button</Button>
                   </Td>
                 </tr>
@@ -451,7 +459,7 @@ export const All: Story = () => {
                     <br />
                     line
                   </Td>
-                  <Td isFixed={true}>
+                  <Td fixed>
                     <Button size="s">Button</Button>
                   </Td>
                 </tr>
@@ -466,7 +474,7 @@ export const All: Story = () => {
                     <br />
                     line
                   </Td>
-                  <Td isFixed={true}>
+                  <Td fixed>
                     <Button size="s">Button</Button>
                   </Td>
                 </tr>
@@ -481,7 +489,7 @@ export const All: Story = () => {
                     <br />
                     line
                   </Td>
-                  <Td isFixed={true}>
+                  <Td fixed>
                     <Button size="s">Button</Button>
                   </Td>
                 </tr>
@@ -496,7 +504,7 @@ export const All: Story = () => {
                     <br />
                     line
                   </Td>
-                  <Td isFixed={true}>
+                  <Td fixed>
                     <Button size="s">Button</Button>
                   </Td>
                 </tr>
@@ -508,7 +516,7 @@ export const All: Story = () => {
     </Ul>
   )
 }
-All.storyName = 'all'
+WithReel.storyName = 'Table Reel'
 
 const Ul = styled.ul`
   list-style: none;

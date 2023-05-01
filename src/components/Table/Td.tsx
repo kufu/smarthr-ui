@@ -10,13 +10,13 @@ export type Props = PropsWithChildren<{
   /** `true` のとき、セル内が空であれば "----" を表示する */
   nullable?: boolean
   /** `true` のとき、TableReel内で左固定表示になる */
-  isFixed?: boolean
+  fixed?: boolean
 }>
 type ElementProps = Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof Props>
 
 export const Td: FC<Props & ElementProps> = ({
   nullable = false,
-  isFixed = false,
+  fixed = false,
   className = '',
   ...props
 }) => {
@@ -29,14 +29,14 @@ export const Td: FC<Props & ElementProps> = ({
   return (
     <StyledTd
       {...props}
-      className={`${wrapperClass} ${isFixed && 'fixedElement'}`}
+      className={`${wrapperClass} ${fixed && 'fixedElement'}`}
       themes={theme}
-      isFixed={isFixed}
+      fixed={fixed}
     />
   )
 }
 
-const StyledTd = styled.td<{ themes: Theme; isFixed: boolean }>`
+const StyledTd = styled.td<{ themes: Theme; fixed: boolean }>`
   &.nullable {
     &:empty {
       &::after {
@@ -45,7 +45,7 @@ const StyledTd = styled.td<{ themes: Theme; isFixed: boolean }>`
     }
   }
 
-  ${({ themes, isFixed }) => {
+  ${({ themes, fixed }) => {
     const { fontSize, leading, spacingByChar, color, border } = themes
 
     return css`
@@ -58,11 +58,12 @@ const StyledTd = styled.td<{ themes: Theme; isFixed: boolean }>`
       vertical-align: middle;
       position: relative;
 
+      /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
       &.fixedElement {
         ${reelShadow({ showShadow: false, direction: 'right' })}
       }
 
-      ${isFixed &&
+      ${fixed &&
       css`
         &.fixed {
           position: sticky;

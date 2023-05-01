@@ -26,7 +26,7 @@ export type Props = PropsWithChildren<{
     sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
   }
   /** `true` のとき、TableReel内で左固定表示になる */
-  isFixed?: boolean
+  fixed?: boolean
 }>
 type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props | 'onClick'>
 
@@ -41,7 +41,7 @@ export const Th: FC<Props & ElementProps> = ({
   sort,
   onSort,
   decorators,
-  isFixed = false,
+  fixed = false,
   className = '',
   ...props
 }) => {
@@ -73,9 +73,9 @@ export const Th: FC<Props & ElementProps> = ({
     <Wrapper
       {...ariaSortProps}
       {...props}
-      className={`${wrapperClass} ${isFixed && 'fixedElement'}`}
+      className={`${wrapperClass} ${fixed && 'fixedElement'}`}
       themes={theme}
-      isFixed={isFixed}
+      fixed={fixed}
     >
       {sort ? (
         <SortButton themes={theme} onClick={onSort}>
@@ -90,8 +90,8 @@ export const Th: FC<Props & ElementProps> = ({
   )
 }
 
-const Wrapper = styled.th<{ themes: Theme; isFixed: boolean }>`
-  ${({ themes: { fontSize, leading, color, shadow, space }, isFixed }) => css`
+const Wrapper = styled.th<{ themes: Theme; fixed: boolean }>`
+  ${({ themes: { fontSize, leading, color, shadow, space }, fixed }) => css`
     font-size: ${fontSize.S};
     font-weight: bold;
     padding: ${space(0.75)} ${space(1)};
@@ -114,11 +114,12 @@ const Wrapper = styled.th<{ themes: Theme; isFixed: boolean }>`
       }
     }
 
+    /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
     &.fixedElement {
       ${reelShadow({ showShadow: false, direction: 'right' })}
     }
 
-    ${isFixed &&
+    ${fixed &&
     css`
       &.fixed {
         position: sticky;

@@ -60,6 +60,7 @@ export * from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
 export {
   Table,
+  TableReel,
   Head,
   Row,
   Cell,
