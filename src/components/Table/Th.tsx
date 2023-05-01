@@ -12,7 +12,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { reelShadow } from './TableReel'
+import { reelShadow } from './reelShadow'
 import { useThClassNames } from './useClassNames'
 
 type sortTypes = keyof typeof SORT_DIRECTION_LABEL
