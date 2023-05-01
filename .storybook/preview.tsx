@@ -3,7 +3,6 @@ import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { Title, Subtitle, Description, Primary, ArgsTable, Stories } from '@storybook/blocks';
 
 import { Reset } from 'styled-reset'
-import { withScreenshot } from 'storycap'
 import { Parameters } from '@storybook/react'
 
 import { createTheme, CreatedTheme } from '../src/themes/createTheme'
@@ -63,45 +62,6 @@ export const parameters: Parameters = {
       </>
     ),
   },
-  screenshot: {
-    variants: {
-      mobile: {
-        viewport: 'iPhone 5',
-        /**
-         * storycap にて、初回以降の variants で CSS アニメーションを無効にするスタイルが効かないバグが存在するようなので、
-         * キャプチャ前に DOM にスタイルを差し込む処理を追加
-         * 参考: https://github.com/reg-viz/storycap/issues/327
-         */
-        waitFor: () =>
-          new Promise<void>((resolve) => {
-            const stylesId = 'smarthr-ui-storycap-disable-css-animation'
-            if (!document.getElementById(stylesId)) {
-              const styles = document.createElement('style')
-              styles.setAttribute('id', stylesId)
-              styles.appendChild(
-                document.createTextNode(`
-                  *,
-                  *::before,
-                  *::after {
-                    transition: none !important;
-                    animation: none !important;
-                  }
-                  input {
-                    caret-color: transparent !important;
-                  }
-                `),
-              )
-
-              const head = document.querySelector('head')
-              if (head) {
-                head.appendChild(styles)
-              }
-            }
-            resolve()
-          }),
-      },
-    },
-  },
 }
 
 const callThemeProvider =
@@ -133,7 +93,6 @@ export const decorators = [
       </ThemeProvider>
     )
   },
-  withScreenshot
 ]
 
 const SmartHRGlobalStyle = createGlobalStyle`
