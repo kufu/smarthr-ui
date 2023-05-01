@@ -54,7 +54,9 @@ commands:
             - ~/.cache/yarn
           key: yarn-packages-reg-{{ checksum "yarn.lock" }}
       - run:
-          command: yarn storybook
+          command: yarn build-storybook
+      - run:
+          command: npx http-server storybook-static --port 6006 --silent
           background: true
       - run:
           command: yarn test-storybook:ci
