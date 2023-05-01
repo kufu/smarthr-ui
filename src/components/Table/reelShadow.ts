@@ -4,7 +4,8 @@ type ReelShadow = {
 }
 
 export const reelShadow = ({ showShadow = true, direction = 'left' }: ReelShadow) => {
-  const shadowWidth = '12px' //影の横幅はpx指定で固定とする
+  const theme = useTheme()
+  const shadowWidth = theme.space(0.75)
 
   return `
     &::after {
