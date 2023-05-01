@@ -29,7 +29,7 @@
     "@storybook/manager-webpack5": "^6.5.16",
     "@storybook/react": "^6.5.16",
     "@storybook/test-runner": "^0.9.4",
-    "@storybook/testing-library": "^0.0.13",
+    "@storybook/testing-library": "^0.1.0",
     "@storybook/theming": "^6.5.16",
     "@swc/core": "^1.3.53",
     "@swc/jest": "^0.2.26",
