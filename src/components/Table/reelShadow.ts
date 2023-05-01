@@ -11,11 +11,10 @@ export const reelShadow = ({ showShadow = true, direction = 'left' }: ReelShadow
       content: '';
       position: absolute;
       z-index: 0;
+      inset-block: 0;
       left: ${direction === 'left' ? '0' : `-${shadowWidth}`};
-      top: 0;
       width: ${shadowWidth};
       pointer-events: none; /* 影の領域が広すぎるとクリッカブルエリアを侵食するので無効化 */
-      inset-block: 0;
       background: linear-gradient(${
         direction === 'left' ? '90deg' : '-90deg'
       }, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
