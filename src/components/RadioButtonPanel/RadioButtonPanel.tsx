@@ -40,7 +40,8 @@ const Wrapper = styled(Base).attrs({ padding: 1 })<{ themes: Theme }>`
       cursor: pointer;
     }
 
-    :focus-within {
+    /* :focus-visible-within の代替 */
+    :has(:focus-visible) {
       ${shadow.focusIndicatorStyles}
     }
 
