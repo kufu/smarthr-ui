@@ -1,4 +1,4 @@
-import React, { ReactNode, TableHTMLAttributes, VFC, createContext } from 'react'
+import React, { CSSProperties, FC, ReactNode, TableHTMLAttributes, createContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -18,13 +18,15 @@ type Props = {
   children?: ReactNode
   /** コンポーネントに適用するクラス名 */
   className?: string
+  whiteSpace?: CSSProperties['whiteSpace'] | null
 }
 type ElementProps = Omit<TableHTMLAttributes<HTMLTableElement>, keyof Props>
 
-export const Table: VFC<Props & ElementProps> = ({
+export const Table: FC<Props & ElementProps> = ({
   fixedHead = false,
   children,
   className = '',
+  whiteSpace = null,
   ...props
 }) => {
   const theme = useTheme()
@@ -36,21 +38,27 @@ export const Table: VFC<Props & ElementProps> = ({
       fixedHead={fixedHead}
       themes={theme}
       className={`${className} ${classNames.wrapper}`}
+      $whiteSpace={whiteSpace}
     >
       {children}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.table<{ fixedHead: boolean; themes: Theme }>`
-  ${({ fixedHead, themes }) => {
-    const { border, color, zIndex } = themes
+const Wrapper = styled.table<{
+  fixedHead: boolean
+  themes: Theme
+  $whiteSpace: CSSProperties['whiteSpace'] | null
+}>`
+  ${({ fixedHead, themes, $whiteSpace }) => {
+    const { color, zIndex } = themes
 
     return css`
       width: 100%;
       border-collapse: separate; /* Headがfixed=trueの場合、separate以外だとHeadとBodyの間に隙間が生まれるため、明示的に指定しています */
       border-spacing: 0;
       background-color: ${color.COLUMN};
+      ${$whiteSpace && `white-space: ${$whiteSpace};`}
 
       thead {
         ${fixedHead &&
@@ -68,14 +76,6 @@ const Wrapper = styled.table<{ fixedHead: boolean; themes: Theme }>`
 
       th {
         background-color: ${color.HEAD};
-      }
-
-      @media (prefers-contrast: more) {
-        &,
-        & th,
-        & td {
-          border: ${border.highContrast};
-        }
       }
     `
   }}

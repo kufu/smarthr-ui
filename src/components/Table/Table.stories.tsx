@@ -220,6 +220,47 @@ export const All: Story = () => (
       </Table>
     </li>
     <li>
+      whiteSpace
+      <Table whiteSpace="nowrap">
+        <thead>
+          <tr>
+            <Th>cell</Th>
+            <Th>cell</Th>
+            <Th>cell</Th>
+            <Th>cell</Th>
+            <Th>Lorem Ipsum is simply dummy text of the printing</Th>
+            <Th>cell</Th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <Td>cell</Td>
+            <Td>cell</Td>
+            <Td>cell</Td>
+            <Td>cell</Td>
+            <Td>Lorem Ipsum is simply dummy text of the printing</Td>
+            <Td>cell</Td>
+          </tr>
+          <tr>
+            <Td>cell</Td>
+            <Td>cell</Td>
+            <Td>Lorem Ipsum is simply dummy text of the printing</Td>
+            <Td>cell</Td>
+            <Td>cell</Td>
+            <Td>cell</Td>
+          </tr>
+          <tr>
+            <Td>cell</Td>
+            <Td>cell</Td>
+            <Td>cell</Td>
+            <Td>cell</Td>
+            <Td>Lorem Ipsum is simply dummy text of the printing</Td>
+            <Td>cell</Td>
+          </tr>
+        </tbody>
+      </Table>
+    </li>
+    <li>
       Table on Base
       <Base>
         <Table>
