@@ -25,7 +25,7 @@
     "@storybook/addons": "^6.5.16",
     "@storybook/builder-webpack5": "^6.5.16",
     "@storybook/cli": "^6.5.16",
-    "@storybook/jest": "^0.0.10",
+    "@storybook/jest": "^0.1.0",
     "@storybook/manager-webpack5": "^6.5.16",
     "@storybook/react": "^6.5.16",
     "@storybook/test-runner": "^0.9.4",
