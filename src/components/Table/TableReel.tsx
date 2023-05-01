@@ -7,10 +7,7 @@ import { useReelCells } from './useReelCells'
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof PropsWithChildren>
 
 export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({ children, ...props }) => {
-  const tableWrapperRef = useRef<HTMLDivElement>(null)
-  const [showShadow, setShowShadow] = useState(false)
-
-  useReelCells(tableWrapperRef, setShowShadow)
+  const { showShadow, tableWrapperRef } = useReelCells()
 
   return (
     <Shadow showShadow={showShadow}>
