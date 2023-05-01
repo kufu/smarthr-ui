@@ -7024,6 +7024,13 @@ esotope-hammerhead@0.6.3:
   dependencies:
     "@types/estree" "0.0.46"
 
+esotope-hammerhead@0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/esotope-hammerhead/-/esotope-hammerhead-0.6.4.tgz#e3b8ae5fbe5954aafc5bf507b8399560500be8b0"
+  integrity sha512-QY4HXqvjLSFGoGgHvm3H1QUMNcpwnUpGRBaVVFWE5uqbPQh9HSWcA1YD7KwwL/IrgerDwZn00z5dtYT9Ot/C/A==
+  dependencies:
+    "@types/estree" "0.0.46"
+
 espree@^9.5.1:
   version "9.5.1"
   resolved "https://registry.yarnpkg.com/espree/-/espree-9.5.1.tgz#4f26a4d5f18905bf4f2e0bd99002aab807e96dd4"
@@ -13028,7 +13035,37 @@ testcafe-browser-tools@2.0.23:
     read-file-relative "^1.2.0"
     which-promise "^1.0.0"
 
-testcafe-hammerhead@30.1.0, testcafe-hammerhead@>=19.4.0:
+testcafe-hammerhead@31.2.0:
+  version "31.2.0"
+  resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-31.2.0.tgz#bf33dbac72ca196659638bc39becf2eae8189f91"
+  integrity sha512-RfOXdCtRgsOd4778FRQoJGfltzV5VQqSHekbZhdh/05eHGcYM0QcmDNKgzp5ihbEUx9ZnNeWswCpxsH1G1hWXA==
+  dependencies:
+    "@electron/asar" "^3.2.3"
+    acorn-hammerhead "0.6.1"
+    bowser "1.6.0"
+    crypto-md5 "^1.0.0"
+    css "2.2.3"
+    debug "4.3.1"
+    esotope-hammerhead "0.6.4"
+    http-cache-semantics "^4.1.0"
+    httpntlm "^1.8.10"
+    iconv-lite "0.5.1"
+    lodash "^4.17.20"
+    lru-cache "2.6.3"
+    match-url-wildcard "0.0.4"
+    merge-stream "^1.0.1"
+    mime "~1.4.1"
+    mustache "^2.1.1"
+    nanoid "^3.1.12"
+    os-family "^1.0.0"
+    parse5 "2.2.3"
+    pinkie "2.0.4"
+    read-file-relative "^1.2.0"
+    semver "5.5.0"
+    tough-cookie "4.0.0"
+    tunnel-agent "0.6.0"
+
+testcafe-hammerhead@>=19.4.0:
   version "30.1.0"
   resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-30.1.0.tgz#cbf2af734d95ef1e62a236b57e5752e20a19f3c8"
   integrity sha512-82vSAAQvBEsgUNVIusb6mSEpyUGv0r0bzT0vXRqLqKSSYRjgXSK8k0PR5Q+YErGlR5k5gmBqVQYuFgMsWUQpWg==
@@ -13106,9 +13143,10 @@ testcafe-reporter-minimal@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/testcafe-reporter-minimal/-/testcafe-reporter-minimal-2.1.0.tgz#676f03547634143c6eaf3ab52868273a4bebf421"
 
-testcafe-reporter-spec@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/testcafe-reporter-spec/-/testcafe-reporter-spec-2.1.1.tgz#8156fced0f5132486559ad560bc80676469275ec"
+testcafe-reporter-spec@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/testcafe-reporter-spec/-/testcafe-reporter-spec-2.2.0.tgz#5c17095da6c680702f34bffb8e3d53bf465125ea"
+  integrity sha512-4jUN75Y7eaHQfSjiCLBXt/TvJMW76kBaZGC74sq03FJNBLoo8ibkEFzfjDJzNDCRYo+P7FjCx3vxGrzgfQU26w==
 
 testcafe-reporter-xunit@^2.2.1:
   version "2.2.1"
@@ -13123,10 +13161,10 @@ testcafe-selector-generator@^0.1.0:
   resolved "https://registry.yarnpkg.com/testcafe-selector-generator/-/testcafe-selector-generator-0.1.0.tgz#852c86f71565e5d9320da625c2260d040cbed786"
   integrity sha512-MTw+RigHsEYmFgzUFNErDxui1nTYUk6nm2bmfacQiKPdhJ9AHW/wue4J/l44mhN8x3E8NgOUkHHOI+1TDFXiLQ==
 
-testcafe@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-2.5.0.tgz#5e011ea18fae0aec99cdb8d262e5a24caa7c4bf8"
-  integrity sha512-msRwIRuc7PXmpKzI9T9CFhNVDqW7JO5XGgVs8wHORKm3jfbBjw9ouRgoqTH+eHGTTB8Hnd8Jdt/2off68Z6ONQ==
+testcafe@v2.5.1-rc.1:
+  version "2.5.1-rc.1"
+  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-2.5.1-rc.1.tgz#59b14edaf8e4e1da1cf3282d8f08320373a57fcb"
+  integrity sha512-5gUunuV6JaNels5rZi+GnEw+UcASRFnia0BSvxfHVRdd+z+B4oIfORwvBIpOwONpHAroMBt0D/5g2TaB/RIyyA==
   dependencies:
     "@babel/core" "^7.12.1"
     "@babel/plugin-proposal-async-generator-functions" "^7.12.1"
@@ -13210,13 +13248,13 @@ testcafe@^2.5.0:
     source-map-support "^0.5.16"
     strip-bom "^2.0.0"
     testcafe-browser-tools "2.0.23"
-    testcafe-hammerhead "30.1.0"
+    testcafe-hammerhead "31.2.0"
     testcafe-legacy-api "5.1.6"
     testcafe-reporter-dashboard "^0.2.10"
     testcafe-reporter-json "^2.1.0"
     testcafe-reporter-list "^2.1.0"
     testcafe-reporter-minimal "^2.1.0"
-    testcafe-reporter-spec "^2.1.1"
+    testcafe-reporter-spec "^2.2.0"
     testcafe-reporter-xunit "^2.2.1"
     testcafe-safe-storage "^1.1.1"
     testcafe-selector-generator "^0.1.0"
