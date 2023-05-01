@@ -7,13 +7,21 @@ import { Stack } from '../../Layout'
 import { SearchInput } from './SearchInput'
 
 const meta = {
-  title: 'Input（入力系）/SearchInput',
+  title: 'Forms（フォーム）/Input',
+  component: SearchInput,
+  parameters: {
+    withTheming: true,
+  },
 } satisfies Meta<typeof SearchInput>
 export default meta
 
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
+  name: 'SearchInput',
+  args: {
+    tooltipMessage: '',
+  },
   render: () => (
     <Container>
       <div>

@@ -11,7 +11,11 @@ import { RadioButton } from '../../RadioButton'
 import { FilterDropdown } from './FilterDropdown'
 
 const meta = {
-  title: 'Buttons（ボタン）/Dropdown/FilterDropdown',
+  title: 'Buttons（ボタン）/Dropdown',
+  component: FilterDropdown,
+  parameters: {
+    withTheming: true,
+  },
 } satisfies Meta<typeof FilterDropdown>
 export default meta
 
@@ -139,9 +143,10 @@ const Render: React.FC = () => {
   )
 }
 
-export const Default: Story = {
-  parameters: {
-    withTheming: true,
+export const FilterDropdownStory: Story = {
+  name: 'FilterDropdown',
+  args: {
+    children: null,
   },
   render: () => <Render />,
 }

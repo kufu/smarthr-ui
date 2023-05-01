@@ -8,7 +8,8 @@ import { Cluster } from '../../Layout'
 import { DropdownMenuButton } from './DropdownMenuButton'
 
 const meta = {
-  title: 'Buttons（ボタン）/Dropdown/DropdownMenuButton',
+  title: 'Buttons（ボタン）/Dropdown',
+  component: DropdownMenuButton,
 } satisfies Meta<typeof DropdownMenuButton>
 export default meta
 
@@ -36,7 +37,12 @@ const Template: React.FC<Omit<ComponentProps<typeof DropdownMenuButton>, 'childr
   </DropdownMenuButton>
 )
 
-export const Default: Story = {
+export const DropdownMenuStory: Story = {
+  name: 'DropdownMenuButton',
+  args: {
+    label: '',
+    children: null,
+  },
   render: () => (
     <Cluster align="center" justify="flex-end">
       <Template label="その他の操作" />
