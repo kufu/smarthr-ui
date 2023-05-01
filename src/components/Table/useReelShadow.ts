@@ -20,7 +20,7 @@ export const useReelShadow = ({ showShadow = true, direction = 'left' }: ReelSha
       pointer-events: none; /* 影の領域が広すぎるとクリッカブルエリアを侵食するので無効化 */
       background: linear-gradient(${
         direction === 'left' ? '90deg' : '-90deg'
-      }, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
+      }, rgba(0, 0, 0, 0.2) 0%, transparent 100%);
       opacity: ${showShadow ? 1 : 0};
       transition: opacity 0.2s;
     }
