@@ -516,7 +516,7 @@ export const WithReel: Story = () => {
     </Ul>
   )
 }
-WithReel.storyName = 'Table Reel'
+WithReel.storyName = 'with TableReel'
 
 const Ul = styled.ul`
   list-style: none;
