@@ -51,7 +51,7 @@ module.exports = {
     await injectAxe(page)
   },
   async postRender(page) {
-    const violations = await getViolations(page, '#root', {
+    const violations = await getViolations(page, '#storybook-root', {
       detailedReport: true,
       detailedReportOptions: {
         html: true,
