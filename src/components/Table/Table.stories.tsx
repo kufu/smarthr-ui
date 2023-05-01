@@ -291,7 +291,7 @@ export const WithReel: Story = () => {
     <Ul>
       <li>
         TableReel
-        <TableReel style={{ whiteSpace: 'nowrap' }}>
+        <TableReel>
           <Table>
             <thead>
               <tr>
