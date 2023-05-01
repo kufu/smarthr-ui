@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react'
 import React, { ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components'
 
@@ -10,7 +10,14 @@ import { RadioButton } from '../../RadioButton'
 
 import { FilterDropdown } from './FilterDropdown'
 
-export const Default: Story = () => {
+const meta = {
+  title: 'Buttons（ボタン）/Dropdown/FilterDropdown',
+} satisfies Meta<typeof FilterDropdown>
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+const Render: React.FC = () => {
   const [value, setValue] = React.useState('hoge')
   const [text, setText] = React.useState('')
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
@@ -131,8 +138,13 @@ export const Default: Story = () => {
     </Wrapper>
   )
 }
-Default.storyName = 'FilterDropdown'
-Default.parameters = { withTheming: true }
+
+export const Default: Story = {
+  parameters: {
+    withTheming: true,
+  },
+  render: () => <Render />,
+}
 
 const Wrapper = styled.div`
   padding: 24px;
