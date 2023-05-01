@@ -1,8 +1,8 @@
-import React, { HTMLAttributes, PropsWithChildren, useRef, useState } from 'react'
+import React, { HTMLAttributes, PropsWithChildren } from 'react'
 import styled, { css } from 'styled-components'
 
-import { reelShadow } from './reelShadow'
 import { useReelCells } from './useReelCells'
+import { useReelShadow } from './useReelShadow'
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof PropsWithChildren>
 
@@ -22,7 +22,7 @@ const Shadow = styled.div<{ showShadow: boolean }>`
   ${({ showShadow }) => css`
     position: relative;
 
-    ${reelShadow({ showShadow })}
+    ${useReelShadow({ showShadow })}
   `}
 `
 

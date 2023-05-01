@@ -3,8 +3,8 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { reelShadow } from './reelShadow'
 import { useTdClassNames } from './useClassNames'
+import { useReelShadow } from './useReelShadow'
 
 export type Props = PropsWithChildren<{
   /** `true` のとき、セル内が空であれば "----" を表示する */
@@ -60,7 +60,7 @@ const StyledTd = styled.td<{ themes: Theme; fixed: boolean }>`
 
       /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
       &.fixedElement {
-        ${reelShadow({ showShadow: false, direction: 'right' })}
+        ${useReelShadow({ showShadow: false, direction: 'right' })}
       }
 
       ${fixed &&

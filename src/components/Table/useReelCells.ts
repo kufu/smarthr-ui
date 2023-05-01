@@ -1,9 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-export const useReelCells = (
-  tableWrapperRef: React.RefObject<HTMLDivElement>,
-  setShowShadow: (value: boolean) => void,
-) => {
+export const useReelCells = () => {
+  const tableWrapperRef = useRef<HTMLDivElement>(null)
+  const [showShadow, setShowShadow] = useState(false)
+
   useEffect(() => {
     const currentRef = tableWrapperRef.current
 
@@ -36,4 +36,6 @@ export const useReelCells = (
       currentRef?.removeEventListener('scroll', handleScroll)
     }
   }, [tableWrapperRef, setShowShadow])
+
+  return { tableWrapperRef, showShadow }
 }

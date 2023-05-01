@@ -12,8 +12,8 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { reelShadow } from './reelShadow'
 import { useThClassNames } from './useClassNames'
+import { useReelShadow } from './useReelShadow'
 
 type sortTypes = keyof typeof SORT_DIRECTION_LABEL
 export type Props = PropsWithChildren<{
@@ -116,7 +116,7 @@ const Wrapper = styled.th<{ themes: Theme; fixed: boolean }>`
 
     /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
     &.fixedElement {
-      ${reelShadow({ showShadow: false, direction: 'right' })}
+      ${useReelShadow({ showShadow: false, direction: 'right' })}
     }
 
     ${fixed &&

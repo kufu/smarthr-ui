@@ -1,9 +1,11 @@
+import { useTheme } from '../../hooks/useTheme'
+
 type ReelShadow = {
   showShadow?: boolean
   direction?: 'left' | 'right'
 }
 
-export const reelShadow = ({ showShadow = true, direction = 'left' }: ReelShadow) => {
+export const useReelShadow = ({ showShadow = true, direction = 'left' }: ReelShadow) => {
   const theme = useTheme()
   const shadowWidth = theme.space(0.75)
 
