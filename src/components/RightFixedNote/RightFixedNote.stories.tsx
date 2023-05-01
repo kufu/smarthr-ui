@@ -7,6 +7,14 @@ import { RightFixedNote } from './RightFixedNote'
 export default {
   title: 'Data Display（データ表示）/RightFixedNote',
   component: RightFixedNote,
+  parameters: {
+    docs: {
+      story: {
+        inline: false,
+        iframeHeight: '500px',
+      },
+    },
+  },
 }
 
 const sampleItems = [

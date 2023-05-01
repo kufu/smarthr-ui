@@ -1,8 +1,10 @@
 import React from 'react'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
+import { Title, Subtitle, Description, Primary, ArgsTable, Stories } from '@storybook/blocks';
+
 import { Reset } from 'styled-reset'
-import { ArgsTable, Title } from '@storybook/addon-docs'
 import { withScreenshot } from 'storycap'
+import { Parameters } from '@storybook/react'
 
 import { createTheme, CreatedTheme } from '../src/themes/createTheme'
 import { ThemeProvider as ShrThemeProvider } from '../src/themes/ThemeProvider'
@@ -24,7 +26,7 @@ export const globalTypes = {
   },
 }
 
-export const parameters = {
+export const parameters: Parameters = {
   options: {
     isFullscreen: false,
     isToolshown: true,
@@ -47,11 +49,17 @@ export const parameters = {
   },
   viewport: { viewports: INITIAL_VIEWPORTS },
   docs: {
-    source: { type: 'dynamic' },
+    // ArgsTable は deprecated で、subcomponentsで複数コンポーネントの props を見せる機能は非推奨になった
+    // ここでは、一旦v6.5->v7アップデート時に後方互換を保つために独自のpageを設定している
+    // 参考: https://github.com/storybookjs/storybook/issues/20782#issuecomment-1482771013
     page: () => (
       <>
         <Title />
+        <Subtitle />
+        <Description />
+        <Primary />
         <ArgsTable />
+        <Stories includePrimary={false} />
       </>
     ),
   },

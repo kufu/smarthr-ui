@@ -1,15 +1,13 @@
-const path = require('path')
-module.exports = {
-  typescript: {
-    reactDocgen: 'react-docgen-typescript-plugin',
-  },
+import path from 'path'
+import { StorybookConfig } from '@storybook/react-webpack5'
+
+const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
   addons: [
     {
       name: '@storybook/addon-essentials',
     },
     '@storybook/addon-a11y',
-    '@storybook/addon-controls',
     'storycap',
     '@storybook/addon-interactions',
     {
@@ -42,3 +40,5 @@ module.exports = {
     autodocs: true,
   },
 }
+
+export default config
