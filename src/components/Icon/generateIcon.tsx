@@ -125,6 +125,8 @@ export const createIcon = (SvgIcon: IconType) => {
     )
   }
 
+  Icon.displayName = SvgIcon.name
+
   return Icon
 }
 
