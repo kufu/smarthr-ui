@@ -9,7 +9,7 @@ import { useReelShadow } from './useReelShadow'
 export type Props = PropsWithChildren<{
   /** `true` のとき、セル内が空であれば "----" を表示する */
   nullable?: boolean
-  /** `true` のとき、TableReel内で左固定表示になる */
+  /** `true` のとき、TableReel内で固定表示になる */
   fixed?: boolean
 }>
 type ElementProps = Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof Props>
