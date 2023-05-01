@@ -415,7 +415,7 @@ export const WithReel: Story = () => {
       <li>
         BaseにTableReelを入れる
         <Base>
-          <TableReel style={{ whiteSpace: 'nowrap' }}>
+          <TableReel>
             <Table>
               <thead>
                 <tr>
