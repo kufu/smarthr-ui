@@ -21,7 +21,7 @@ import { useClassNames } from './useClassNames'
 type Actions = ActionItem | ActionItem[]
 
 // これでコンポーネントを絞れるわけではないが Button[variant=text] を使ってほしいんだよ! という気持ち
-type ActionItemTruthlyType =
+type ActionItemTruthyType =
   | ReactElement<ComponentProps<typeof Button>>
   | ReactElement<ComponentProps<typeof AnchorButton>>
   | ReactElement<ComponentProps<typeof RemoteDialogTrigger>>
