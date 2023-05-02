@@ -27,15 +27,8 @@ type ActionItemTruthyType =
   | ReactElement<ComponentProps<typeof RemoteDialogTrigger>>
 // HINT: このコンポーネントは以下のような記法で利用される場合が多いため、判定に利用されうる型を許容する
 // <DropdownMenuButton>{hoge && <Button {...props} />}</DropdownMenuButton>
-type ActionItemFalsyType =
-  | null
-  | undefined
-  | boolean
-  | number
-  | string
-  | ((...props: any[]) => any)
-  | { [key: string]: any }
-type ActionItem = ActionItemTruthlyType | ActionItemFalsyType
+type ActionItemFalsyType = null | undefined | boolean | 0 | ''
+type ActionItem = ActionItemTruthyType | ActionItemFalsyType
 
 type Props = {
   /** 引き金となるボタンラベル */
@@ -94,7 +87,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
             {React.Children.map(children, (item, i) =>
               // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
               // itemの存在チェックでfalsyな値は弾かれている想定
-              item ? <li key={i}>{actionItem(item as ActionItemTruthlyType)}</li> : null,
+              item ? <li key={i}>{actionItem(item as ActionItemTruthyType)}</li> : null,
             )}
           </ActionList>
         </DropdownScrollArea>
