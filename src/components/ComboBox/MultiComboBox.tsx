@@ -412,6 +412,12 @@ const Container = styled.div<{ themes: Theme; width: number | string }>`
       color: ${color.TEXT_GREY};
       cursor: text;
 
+      @media (prefers-contrast: more) {
+        & {
+          border: ${border.highContrast};
+        }
+      }
+
       &.focused {
         box-shadow: ${shadow.OUTLINE};
       }
