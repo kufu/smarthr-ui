@@ -243,9 +243,6 @@ const Template: Story = () => {
 }
 export const All = Template.bind({})
 
-export { Default as DropdownMenuButton } from './DropdownMenuButton/DropdownMenuButton.stories'
-export { Default as FilterDropdown } from './FilterDropdown/FilterDropdown.stories'
-
 export const RegOpenDropdown = Template.bind({})
 RegOpenDropdown.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement)
