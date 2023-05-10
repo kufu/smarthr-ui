@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.8.0](https://github.com/kufu/smarthr-ui/compare/v30.7.0...v30.8.0) (2023-05-10)
+
+
+### Features
+
+* DropdownMenuButton の childrenに型的に渡される可能性のあるfalsyな値を許容する ([#3291](https://github.com/kufu/smarthr-ui/issues/3291)) ([0d8298c](https://github.com/kufu/smarthr-ui/commit/0d8298cc51f36c4a6b1b1820657b86f7eb9d2049))
+* RadioButtonPanel を追加 ([#3317](https://github.com/kufu/smarthr-ui/issues/3317)) ([ae95db5](https://github.com/kufu/smarthr-ui/commit/ae95db5d399855d6a71c5fcd8f47b30f0c570df8))
+* TableReelを追加 ([#3249](https://github.com/kufu/smarthr-ui/issues/3249)) ([1485496](https://github.com/kufu/smarthr-ui/commit/1485496ae7261a7f5400adf564bfaf40da1f0c14))
+* ハイコントラストモードに対応 ([#3236](https://github.com/kufu/smarthr-ui/issues/3236)) ([3032a63](https://github.com/kufu/smarthr-ui/commit/3032a637a0efbf75ce15bbe2a297e3cc1ddb0cf3))
+
+
+### Bug Fixes
+
+* Th のソートアイコンがフォントサイズに依って重なってしまうバグを修正 ([#3290](https://github.com/kufu/smarthr-ui/issues/3290)) ([157b0c2](https://github.com/kufu/smarthr-ui/commit/157b0c2495ad8276385076fc44bb105a17a17598))
+
 ## [30.7.0](https://github.com/kufu/smarthr-ui/compare/v30.6.0...v30.7.0) (2023-04-25)
 
 
