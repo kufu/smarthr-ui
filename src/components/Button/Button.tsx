@@ -107,6 +107,7 @@ const Loader = styled(shrLoader)<{ variant: Variant; themes: Theme }>`
 const DisabledDetailWrapper = styled(Cluster).attrs({
   inline: true,
   align: 'center',
+  gap: 0.25,
 })<{ themes: Theme }>`
   ${({ themes: { color, space } }) => css`
     > .smarthr-ui-Tooltip {

@@ -26,7 +26,7 @@ export const Cluster = styled.div<{
     row-gap: ${rowGap};
     column-gap: ${columnGap};
 
-    /* 
+    /*
       Chromeで空の要素にflex-gapがあると印刷時にレイアウトが崩れるので gap の値を0にする
       See https://bugs.chromium.org/p/chromium/issues/detail?id=1161709
     */
