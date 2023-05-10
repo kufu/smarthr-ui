@@ -131,6 +131,12 @@ const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: bo
     ${isToday &&
     css`
       border: ${border.shorthand};
+
+      @media (prefers-contrast: more) {
+        & {
+          border: ${border.highContrast};
+        }
+      }
     `}
 
     ${isSelected &&

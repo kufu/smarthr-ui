@@ -78,6 +78,12 @@ exports[`StatusLabel should be match snapshot 1`] = `
   border-color: #23221e;
 }
 
+@media (prefers-contrast:more) {
+  .c0.grey {
+    border: 1px solid #23221e;
+  }
+}
+
 <span
   className="c0 grey  smarthr-ui-StatusLabel"
 >

@@ -3,19 +3,19 @@ version: 2.1
 executors:
   node-maintenance:
     docker:
-      - image: cimg/node:16.20.0
+      - image: cimg/node:20.1.0
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
   node-active-lts:
     docker:
-      - image: cimg/node:18.16.0
+      - image: cimg/node:20.1.0
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
   node-active-lts-browsers:
     docker:
-      - image: cimg/node:18.16.0-browsers
+      - image: cimg/node:20.1.0-browsers
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
@@ -54,7 +54,9 @@ commands:
             - ~/.cache/yarn
           key: yarn-packages-reg-{{ checksum "yarn.lock" }}
       - run:
-          command: yarn storybook
+          command: yarn build-storybook
+      - run:
+          command: npx http-server storybook-static --port 6006 --silent
           background: true
       - run:
           command: yarn test-storybook:ci

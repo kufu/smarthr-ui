@@ -1,4 +1,4 @@
-import React, { ReactNode, TableHTMLAttributes, VFC, createContext } from 'react'
+import React, { FC, ReactNode, TableHTMLAttributes, createContext } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -21,7 +21,7 @@ type Props = {
 }
 type ElementProps = Omit<TableHTMLAttributes<HTMLTableElement>, keyof Props>
 
-export const Table: VFC<Props & ElementProps> = ({
+export const Table: FC<Props & ElementProps> = ({
   fixedHead = false,
   children,
   className = '',
@@ -44,7 +44,7 @@ export const Table: VFC<Props & ElementProps> = ({
 
 const Wrapper = styled.table<{ fixedHead: boolean; themes: Theme }>`
   ${({ fixedHead, themes }) => {
-    const { color, zIndex } = themes
+    const { border, color, zIndex } = themes
 
     return css`
       width: 100%;
@@ -68,6 +68,14 @@ const Wrapper = styled.table<{ fixedHead: boolean; themes: Theme }>`
 
       th {
         background-color: ${color.HEAD};
+      }
+
+      @media (prefers-contrast: more) {
+        &,
+        & th,
+        & td {
+          border: ${border.highContrast};
+        }
       }
     `
   }}

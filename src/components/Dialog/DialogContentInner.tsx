@@ -152,7 +152,7 @@ const Layout = styled.div`
 `
 const Inner = styled.div<StyleProps & { themes: Theme }>`
   ${({ themes, $width, top, right, bottom, left }) => {
-    const { color, radius, shadow, spacingByChar } = themes
+    const { border, color, radius, shadow, spacingByChar } = themes
     const positionRight = exist(right) ? `${right}px` : 'auto'
     const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
     const positionTop = exist(top) ? `${top}px` : 'auto'
@@ -187,6 +187,12 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
       background-color: ${color.WHITE};
       box-shadow: ${shadow.LAYER3};
       transform: translate(${translateX}, ${translateY});
+
+      @media (prefers-contrast: more) {
+        & {
+          border: ${border.highContrast};
+        }
+      }
     `
   }}
 `

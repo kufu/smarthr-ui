@@ -12,6 +12,14 @@ import { FloatArea } from './FloatArea'
 export default {
   title: 'Navigation（ナビゲーション）/FloatArea',
   component: FloatArea,
+  parameters: {
+    docs: {
+      story: {
+        inline: false,
+        iframeHeight: '500px',
+      },
+    },
+  },
 }
 
 export const All: Story = () => (

@@ -47,6 +47,10 @@ export default {
       source: {
         type: 'code',
       },
+      story: {
+        inline: false,
+        iframeHeight: '500px',
+      },
     },
     withTheming: true,
   },
