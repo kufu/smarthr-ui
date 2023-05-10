@@ -91,7 +91,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 }) => {
   const classNames = useClassNames().dialog
   const theme = useTheme()
-  const handleClickAction = useCallback(() => {
+  const handleSubmitAction = useCallback(() => {
     onClickAction(onClickClose)
   }, [onClickAction, onClickClose])
   const { offsetHeight, titleRef, bottomRef } = useOffsetHeight()
@@ -99,7 +99,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
   return (
-    <>
+    <form onSubmit={handleSubmitAction}>
       <TitleArea
         gap={0.25}
         themes={theme}
@@ -129,8 +129,8 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
             {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
           </Button>
           <Button
+            type="submit"
             variant={actionTheme}
-            onClick={handleClickAction}
             disabled={actionDisabled}
             loading={isRequestProcessing}
             className={classNames.actionButton}
@@ -161,7 +161,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
           </>
         )}
       </ActionArea>
-    </>
+    </form>
   )
 }
 
