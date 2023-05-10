@@ -15,7 +15,16 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-const flag = false
+const emptyAry: any[] = []
+const falsyText: string = ''
+const falsyAry: any[] | undefined = undefined
+const falsyFunction: (() => void) | undefined = undefined
+const falsyObj: { [key: string]: any } | undefined = undefined
+
+const truthyText: string = 'ok'
+const truthyAry: any[] | undefined = ['ok']
+const truthyFunction: (() => void) | undefined = () => undefined
+const truthyObj: { [key: string]: any } | undefined = {}
 
 const Template: React.FC<Omit<ComponentProps<typeof DropdownMenuButton>, 'children'>> = (props) => (
   <DropdownMenuButton {...props}>
@@ -30,7 +39,22 @@ const Template: React.FC<Omit<ComponentProps<typeof DropdownMenuButton>, 'childr
     </Button>
     <Button>ヒントメッセージの設定</Button>
     <AnchorButton href="#h2-2">ログアウト</AnchorButton>
-    {flag && <Button>非表示になるテキスト</Button>}
+    {null}
+    {undefined}
+    {false}
+    {emptyAry.length && <Button>非表示になるボタン</Button>}
+    {falsyText && <Button>非表示になるボタン</Button>}
+    {falsyAry && <Button>非表示になるボタン</Button>}
+    {falsyFunction && <Button>非表示になるボタン</Button>}
+    {falsyObj && <Button>非表示になるボタン</Button>}
+    {truthyAry.length && <Button>表示になるボタン(length)</Button>}
+    {truthyText && <Button>表示になるボタン(text)</Button>}
+    {emptyAry && <Button>表示になるボタン(array)</Button>}
+    {
+      // @ts-ignore
+      truthyFunction && <Button>表示になるボタン(function)</Button>
+    }
+    {truthyObj && <Button>表示になるボタン(object)</Button>}
     <RemoteDialogTrigger targetId="hoge">
       <Button>Triggerのテスト</Button>
     </RemoteDialogTrigger>
