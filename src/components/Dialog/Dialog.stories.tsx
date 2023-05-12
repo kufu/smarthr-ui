@@ -26,6 +26,7 @@ import {
   ModelessDialog,
   RemoteDialogTrigger,
   RemoteTriggerActionDialog,
+  RemoteTriggerFormDialog,
   RemoteTriggerMessageDialog,
 } from '.'
 
@@ -400,7 +401,7 @@ export const Form_Dialog: Story = () => {
           </Button>
         </Buttons>
       </FormDialog>
-      <Button onClick={() => setOpenedDialog('opened')} data-test="opened-dialog-trigger">
+      <Button onClick={() => setOpenedDialog('opened')} data-test="opened-form-dialog-trigger">
         開いた状態で DOM に投入
       </Button>
       {openedDialog === 'opened' && (
@@ -424,7 +425,7 @@ export const Form_Dialog: Story = () => {
               <Input
                 ref={openedFocusRef}
                 name="opened_dialog_focus_target"
-                data-test="opened-dialog-focus-target"
+                data-test="opened-form-dialog-focus-target"
               />
             </Stack>
           </div>
@@ -516,6 +517,49 @@ export const Remote_Trigger_Action_Dialog: Story = () => {
         >
           <Description>Remote Trigger Action Dialog.</Description>
         </RemoteTriggerActionDialog>
+      </div>
+    </>
+  )
+}
+
+export const Remote_Trigger_Form_Dialog: Story = () => {
+  return (
+    <>
+      <div>
+        <p>複数のトリガーに対応</p>
+        <RemoteDialogTrigger targetId="remote_trigger_form_dialog_1">
+          <Button>Trigger 1.</Button>
+        </RemoteDialogTrigger>
+        <RemoteDialogTrigger targetId="remote_trigger_form_dialog_1">
+          <Button>Trigger 2.</Button>
+        </RemoteDialogTrigger>
+        <RemoteTriggerFormDialog
+          id="remote_trigger_form_dialog_1"
+          title="Remote Trigger Form Dialog 1"
+          actionText="保存"
+          onSubmit={(close) => {
+            close()
+          }}
+        >
+          <Description>Remote Trigger Form Dialog.</Description>
+        </RemoteTriggerFormDialog>
+      </div>
+
+      <div>
+        <p>disabled</p>
+        <RemoteDialogTrigger targetId="remote_trigger_form_dialog_2">
+          <Button disabled={true}>disabled.</Button>
+        </RemoteDialogTrigger>
+        <RemoteTriggerFormDialog
+          id="remote_trigger_form_dialog_2"
+          title="Remote Trigger Form Dialog 2"
+          actionText="保存"
+          onSubmit={(close) => {
+            close()
+          }}
+        >
+          <Description>Remote Trigger Form Dialog.</Description>
+        </RemoteTriggerFormDialog>
       </div>
     </>
   )
