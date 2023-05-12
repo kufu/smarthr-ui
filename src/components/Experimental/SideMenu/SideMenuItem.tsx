@@ -73,7 +73,7 @@ const Item = styled.li<{ current: Props['current']; themes: Theme }>`
         background-color: ${color.hoverColor(color.GREY_9)};
       }
 
-      &:focus {
+      &:focus-visible {
         /* フォーカスリングを前に出したいので、スタッキングコンテキストを発生させている */
         position: relative;
         z-index: 1;
