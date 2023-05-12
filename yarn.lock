@@ -12241,10 +12241,10 @@ styled-components@^5.3.10:
     shallowequal "^1.1.0"
     supports-color "^5.5.0"
 
-styled-reset@^4.4.2, styled-reset@^4.4.6:
-  version "4.4.6"
-  resolved "https://registry.yarnpkg.com/styled-reset/-/styled-reset-4.4.6.tgz#13392404c58fcfc30f228decc815dcb8acf5d1c9"
-  integrity sha512-aLoHHcZBCP3o6Fo5C8gCpUn14ehk2x3bFdFYoPIZJ8K/8rn/26tk+4+la2xJN3Ww4Ek3VFxC8qzkJd408N1Wxg==
+styled-reset@^4.4.2, styled-reset@^4.4.7:
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/styled-reset/-/styled-reset-4.4.7.tgz#6ce97d342d4d7b30b107fc2c5ba49e60da7a90cb"
+  integrity sha512-OxtLqP9/2mXoI8WYa0NrJuTyvVziT+fi0Dp8go5CgTGzSVPQVo5ggaxl1tK+l08ynrVImKswSiDJFaVHxBKJuQ==
 
 stylelint-config-prettier@^9.0.5:
   version "9.0.5"
