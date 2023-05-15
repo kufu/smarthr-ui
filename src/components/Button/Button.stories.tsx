@@ -164,6 +164,13 @@ export const _Button: Story = () => {
         </Stack>
       </dd>
 
+      <dt>disabled な理由</dt>
+      <dd>
+        <Button disabled disabledDetail={{ message: 'どうしても disabled にする理由を書きます。' }}>
+          ボタン
+        </Button>
+      </dd>
+
       <dt>Extending Style</dt>
       <dd>
         <ExtendingButton variant="primary" onClick={action('clicked')}>
