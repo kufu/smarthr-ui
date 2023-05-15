@@ -2,10 +2,8 @@ import React, { ButtonHTMLAttributes, FC, ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
-import { responseMessageType } from '@/components/Dialog'
-
 import { Theme, useTheme } from '../../../hooks/useTheme'
-import { DecoratorType, DecoratorsType } from '../../../types/props'
+import { DecoratorType, DecoratorsType, responseMessageType } from '../../../types/props'
 import { Button } from '../../Button'
 import { FaCheckCircleIcon, FaExclamationCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
