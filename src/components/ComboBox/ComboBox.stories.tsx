@@ -84,11 +84,11 @@ export const Single: Story = () => {
     setSelectedItem(null)
   }, [])
   const handleAddItem = useCallback(
-    (label: ReactNode) => {
+    (label: string) => {
       action('onAdd')(label)
       const newItem = {
         label,
-        value: `new-value-${seq}`,
+        value: label,
       }
       setItems([...items, newItem])
       setSelectedItem(newItem)
@@ -340,11 +340,11 @@ export const Multi: Story = () => {
     [selectedItems],
   )
   const handleAddItem = useCallback(
-    (label: ReactNode) => {
+    (label: string) => {
       action('onAdd')(label)
       const newItem = {
         label,
-        value: `new-value-${seq}`,
+        value: label,
       }
       setItems([...items, newItem])
       setSelectedItems([...selectedItems, newItem])

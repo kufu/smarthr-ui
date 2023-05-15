@@ -26,6 +26,8 @@ export {
   ActionDialog,
   ActionDialogContent,
   ActionDialogWithTrigger,
+  FormDialog,
+  FormDialogContent,
   Dialog,
   DialogCloser,
   DialogContent,
@@ -36,6 +38,7 @@ export {
   ModelessDialog,
   RemoteDialogTrigger,
   RemoteTriggerActionDialog,
+  RemoteTriggerFormDialog,
   RemoteTriggerMessageDialog,
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'

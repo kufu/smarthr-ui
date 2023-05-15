@@ -70,7 +70,7 @@ export type BaseProps<T> = {
   /**
    * `items` 内に存在しないアイテムが追加されたときに発火するコールバック関数
    */
-  onAdd?: (label: ReactNode) => void
+  onAdd?: (label: string) => void
   /**
    * アイテムが選択された時に発火するコールバック関数
    */
