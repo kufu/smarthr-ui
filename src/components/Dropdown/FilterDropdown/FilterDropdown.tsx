@@ -100,7 +100,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
           <ContentLayout themes={themes}>{children}</ContentLayout>
         </DropdownScrollArea>
         <ActionArea themes={themes}>
-          <Cluster gap={1} align={'center'} justify={'space-between'}>
+          <Cluster gap={1} align="center" justify="space-between">
             {onReset && (
               <ResetButtonLayout themes={themes}>
                 <Button
