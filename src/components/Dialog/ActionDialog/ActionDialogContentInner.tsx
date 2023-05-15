@@ -57,7 +57,7 @@ export type BaseProps = {
   decorators?: DecoratorsType<'closeButtonLabel'>
 }
 
-type responseMessageType =
+export type responseMessageType =
   | {
       status: 'success' | 'error'
       text: ReactNode

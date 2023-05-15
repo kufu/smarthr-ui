@@ -138,6 +138,48 @@ const Render: React.FC = () => {
             </p>
           </FilterDropdown>
         </dd>
+        <dt>Has response message success</dt>
+        <dd>
+          <FilterDropdown
+            isFiltered={isFiltered4}
+            onApply={() => setIsFiltered4(true)}
+            onReset={() => setIsFiltered4(false)}
+            responseMessage={{
+              status: 'success',
+              text: '適用しました。',
+            }}
+          >
+            <p>
+              You can change border text and color of the trigger button by setting `isFiltered`.
+            </p>
+          </FilterDropdown>
+        </dd>
+        <dt>Has response message error</dt>
+        <dd>
+          <FilterDropdown
+            isFiltered={isFiltered4}
+            onApply={() => setIsFiltered4(true)}
+            onReset={() => setIsFiltered4(false)}
+            responseMessage={{ status: 'error', text: '何らかのエラーが発生しました。' }}
+          >
+            <p>
+              You can change border text and color of the trigger button by setting `isFiltered`.
+            </p>
+          </FilterDropdown>
+        </dd>
+        <dt>Has response message processing</dt>
+        <dd>
+          <FilterDropdown
+            isFiltered={isFiltered4}
+            onApply={() => setIsFiltered4(true)}
+            onReset={() => setIsFiltered4(false)}
+            responseMessage={{ status: 'processing' }}
+          >
+            <p>
+              You can change border text and color of the trigger button by setting `isFiltered`.
+            </p>
+          </FilterDropdown>
+        </dd>
       </List>
     </Wrapper>
   )
