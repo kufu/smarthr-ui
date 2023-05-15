@@ -67,6 +67,7 @@ commands:
     steps:
       - checkout
       - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes
+      - run: yarn build-stories-json
   install-noto-sans-cjk-jp:
     steps:
       - run:

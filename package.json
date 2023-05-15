@@ -130,7 +130,7 @@
     "build": "run-p build:*",
     "build:lib": "tsc -p tsconfig.build.json",
     "build:esm": "tsc -p tsconfig.esm.build.json",
-    "build-storybook": "storybook build --quiet -s ./public && yarn build-stories-json",
+    "build-storybook": "storybook build --quiet -s ./public",
     "build-stories-json": "npx storybook extract storybook-static storybook-static/exports/stories.json",
     "build-stylesheet": "ttsc -p tsconfig.stylesheet.json; node scripts/build-stylesheet.ts",
     "clean": "rimraf ./lib",
