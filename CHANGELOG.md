@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.9.0](https://github.com/kufu/smarthr-ui/compare/v30.8.0...v30.9.0) (2023-05-15)
+
+
+### Features
+
+* FormDialog & RemoteTriggerFormDialog を実装 ([#3332](https://github.com/kufu/smarthr-ui/issues/3332)) ([f92d857](https://github.com/kufu/smarthr-ui/commit/f92d857fc02da7fb039a4300f5818893b0096ed5))
+
+
+### Bug Fixes
+
+* Button 単体で disabledDetail が使えるように修正 ([#3346](https://github.com/kufu/smarthr-ui/issues/3346)) ([682adca](https://github.com/kufu/smarthr-ui/commit/682adca39c687595bead2c78dfadd2f2ae78158e))
+* onAdd の型を React.ReactNode から string に変更 ([#3329](https://github.com/kufu/smarthr-ui/issues/3329)) ([d03b866](https://github.com/kufu/smarthr-ui/commit/d03b866bb5cea6073d119865903f00e8ab1b8b45))
+* SideMenuItem の focus を focus-visible に変更 ([#3333](https://github.com/kufu/smarthr-ui/issues/3333)) ([224029f](https://github.com/kufu/smarthr-ui/commit/224029fc98db78cf48250fb1ec613629c9e706e8))
+
 ## [30.8.0](https://github.com/kufu/smarthr-ui/compare/v30.7.0...v30.8.0) (2023-05-10)
 
 
