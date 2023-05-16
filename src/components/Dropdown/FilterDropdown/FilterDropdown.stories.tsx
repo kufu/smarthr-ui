@@ -1,11 +1,12 @@
 import { action } from '@storybook/addon-actions'
 import { Meta, StoryObj } from '@storybook/react'
-import React, { ReactNode, useCallback, useState } from 'react'
+import React, { ComponentProps, ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components'
 
+import { Button } from '../../Button'
 import { MultiComboBox, SingleComboBox } from '../../ComboBox'
 import { Input } from '../../Input'
-import { Stack } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { RadioButton } from '../../RadioButton'
 
 import { FilterDropdown } from './FilterDropdown'
@@ -30,6 +31,8 @@ const Render: React.FC = () => {
   const [isFiltered2, setIsFiltered2] = React.useState(true)
   const [isFiltered3, setIsFiltered3] = React.useState(true)
   const [isFiltered4, setIsFiltered4] = React.useState(true)
+  const [responseMessage, setResponseMessage] =
+    useState<ComponentProps<typeof FilterDropdown>['responseMessage']>()
 
   return (
     <Wrapper>
@@ -138,46 +141,43 @@ const Render: React.FC = () => {
             </p>
           </FilterDropdown>
         </dd>
-        <dt>Has response message success</dt>
+        <dt>Has response message</dt>
         <dd>
           <FilterDropdown
             isFiltered={isFiltered4}
             onApply={() => setIsFiltered4(true)}
             onReset={() => setIsFiltered4(false)}
-            responseMessage={{
-              status: 'success',
-              text: '適用しました。',
-            }}
+            responseMessage={responseMessage}
           >
-            <p>
-              You can change border text and color of the trigger button by setting `isFiltered`.
-            </p>
-          </FilterDropdown>
-        </dd>
-        <dt>Has response message error</dt>
-        <dd>
-          <FilterDropdown
-            isFiltered={isFiltered4}
-            onApply={() => setIsFiltered4(true)}
-            onReset={() => setIsFiltered4(false)}
-            responseMessage={{ status: 'error', text: '何らかのエラーが発生しました。' }}
-          >
-            <p>
-              You can change border text and color of the trigger button by setting `isFiltered`.
-            </p>
-          </FilterDropdown>
-        </dd>
-        <dt>Has response message processing</dt>
-        <dd>
-          <FilterDropdown
-            isFiltered={isFiltered4}
-            onApply={() => setIsFiltered4(true)}
-            onReset={() => setIsFiltered4(false)}
-            responseMessage={{ status: 'processing' }}
-          >
-            <p>
-              You can change border text and color of the trigger button by setting `isFiltered`.
-            </p>
+            <Stack gap={1}>
+              <p>
+                You can change border text and color of the trigger button by setting `isFiltered`.
+              </p>
+              <p>切り替えボタン：</p>
+              <Cluster gap={0.5}>
+                <Button
+                  onClick={() => {
+                    setResponseMessage({ status: 'success', text: '適用しました。' })
+                  }}
+                >
+                  保存
+                </Button>
+                <Button
+                  onClick={() => {
+                    setResponseMessage({ status: 'error', text: '何らかのエラーが発生しました。' })
+                  }}
+                >
+                  エラー
+                </Button>
+                <Button
+                  onClick={() => {
+                    setResponseMessage({ status: 'processing' })
+                  }}
+                >
+                  保存中
+                </Button>
+              </Cluster>
+            </Stack>
           </FilterDropdown>
         </dd>
       </List>
