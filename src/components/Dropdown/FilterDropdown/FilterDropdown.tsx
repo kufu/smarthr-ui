@@ -3,10 +3,10 @@ import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
-import { DecoratorType, DecoratorsType } from '../../../types/props'
+import { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types/props'
 import { Button } from '../../Button'
-import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
-import { Cluster } from '../../Layout'
+import { FaCheckCircleIcon, FaExclamationCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
+import { Cluster, Stack } from '../../Layout'
 import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
@@ -23,6 +23,7 @@ type Props = {
   decorators?: DecoratorsType<
     'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
   >
+  responseMessage?: ResponseMessageType
 }
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
@@ -43,6 +44,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   children,
   hasStatusText,
   decorators,
+  responseMessage,
   ...props
 }: Props) => {
   const themes = useTheme()
@@ -70,6 +72,8 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     () => (hasStatusText ? undefined : innerText(status)),
     [status, hasStatusText],
   )
+  const isRequestProcessing =
+    responseMessage !== undefined && responseMessage.status === 'processing'
 
   return (
     <Dropdown>
@@ -93,25 +97,54 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
         <DropdownScrollArea>
           <ContentLayout themes={themes}>{children}</ContentLayout>
         </DropdownScrollArea>
-        <BottomLayout themes={themes}>
-          {onReset && (
-            <ResetButtonLayout themes={themes}>
-              <Button variant="text" size="s" prefix={<FaUndoAltIcon />} onClick={onReset}>
-                {resetButton}
-              </Button>
-            </ResetButtonLayout>
+        <ActionArea themes={themes}>
+          <Cluster gap={1} align="center" justify="space-between">
+            {onReset && (
+              <ResetButtonLayout themes={themes}>
+                <Button
+                  variant="text"
+                  size="s"
+                  prefix={<FaUndoAltIcon />}
+                  onClick={onReset}
+                  disabled={isRequestProcessing}
+                >
+                  {resetButton}
+                </Button>
+              </ResetButtonLayout>
+            )}
+
+            <RightButtonLayout>
+              <DropdownCloser>
+                <Button onClick={onCancel} disabled={isRequestProcessing}>
+                  {cancelButton}
+                </Button>
+              </DropdownCloser>
+              <DropdownCloser>
+                <Button variant="primary" onClick={onApply} loading={isRequestProcessing}>
+                  {applyButton}
+                </Button>
+              </DropdownCloser>
+            </RightButtonLayout>
+          </Cluster>
+          {responseMessage?.status === 'success' && (
+            <Message>
+              <FaCheckCircleIcon
+                color={themes.color.MAIN}
+                text={responseMessage.text}
+                role="alert"
+              />
+            </Message>
           )}
-          <RightButtonLayout>
-            <DropdownCloser>
-              <Button onClick={onCancel}>{cancelButton}</Button>
-            </DropdownCloser>
-            <DropdownCloser>
-              <Button variant="primary" onClick={onApply}>
-                {applyButton}
-              </Button>
-            </DropdownCloser>
-          </RightButtonLayout>
-        </BottomLayout>
+          {responseMessage?.status === 'error' && (
+            <Message>
+              <FaExclamationCircleIcon
+                color={themes.color.DANGER}
+                text={responseMessage.text}
+                role="alert"
+              />
+            </Message>
+          )}
+        </ActionArea>
       </DropdownContent>
     </Dropdown>
   )
@@ -139,10 +172,8 @@ const ContentLayout = styled.div<{ themes: Theme }>`
     padding: ${space(1.5)};
   `}
 `
-const BottomLayout = styled(Cluster).attrs({ gap: 1, align: 'center', justify: 'space-between' })<{
-  themes: Theme
-}>`
-  ${({ themes: { border, space } }) => css`
+const ActionArea = styled(Stack).attrs({ gap: 0.5 })<{ themes: Theme }>`
+  ${({ themes: { space, border } }) => css`
     border-block-start: ${border.shorthand};
     padding: ${space(1)} ${space(1.5)};
   `}
@@ -157,4 +188,7 @@ const RightButtonLayout = styled(Cluster).attrs({
   justify: 'flex-end',
 })`
   margin-inline-start: auto;
+`
+const Message = styled.div`
+  text-align: right;
 `
