@@ -3,7 +3,7 @@ import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
-import { DecoratorType, DecoratorsType, responseMessageType } from '../../../types/props'
+import { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types/props'
 import { Button } from '../../Button'
 import { FaCheckCircleIcon, FaExclamationCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
@@ -23,7 +23,7 @@ type Props = {
   decorators?: DecoratorsType<
     'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
   >
-  responseMessage?: responseMessageType
+  responseMessage?: ResponseMessageType
 }
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
