@@ -126,27 +126,23 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
               </DropdownCloser>
             </RightButtonLayout>
           </Cluster>
-          {responseMessage && (
-            <>
-              {responseMessage.status === 'success' && (
-                <Message>
-                  <FaCheckCircleIcon
-                    color={themes.color.MAIN}
-                    text={responseMessage.text}
-                    role="alert"
-                  />
-                </Message>
-              )}
-              {responseMessage.status === 'error' && (
-                <Message>
-                  <FaExclamationCircleIcon
-                    color={themes.color.DANGER}
-                    text={responseMessage.text}
-                    role="alert"
-                  />
-                </Message>
-              )}
-            </>
+          {responseMessage?.status === 'success' && (
+            <Message>
+              <FaCheckCircleIcon
+                color={themes.color.MAIN}
+                text={responseMessage.text}
+                role="alert"
+              />
+            </Message>
+          )}
+          {responseMessage?.status === 'error' && (
+            <Message>
+              <FaExclamationCircleIcon
+                color={themes.color.DANGER}
+                text={responseMessage.text}
+                role="alert"
+              />
+            </Message>
           )}
         </ActionArea>
       </DropdownContent>
