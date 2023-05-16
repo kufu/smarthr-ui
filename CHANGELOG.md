@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [30.10.0](https://github.com/kufu/smarthr-ui/compare/v30.9.0...v30.10.0) (2023-05-16)
+
+
+### Features
+
+* FilterDropdown に responseMessage を渡せるようにする ([#3348](https://github.com/kufu/smarthr-ui/issues/3348)) ([34cac73](https://github.com/kufu/smarthr-ui/commit/34cac7370c8d506d3cac2b65ceffbfe3e786f6b1))
+
 ## [30.9.0](https://github.com/kufu/smarthr-ui/compare/v30.8.0...v30.9.0) (2023-05-15)
 
 
