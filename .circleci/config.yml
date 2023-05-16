@@ -62,11 +62,14 @@ commands:
           command: yarn test-storybook:ci
       - store_test_results:
           path: junit.xml
-  # chromatic
   run-chromatic:
     steps:
       - checkout
       - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes
+  run-chromatic-master:
+    steps:
+      - checkout
+      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes
   install-noto-sans-cjk-jp:
     steps:
       - run:
@@ -105,6 +108,11 @@ jobs:
     steps:
       - setup-for-test
       - run-chromatic
+  chromatic-deployment-master:
+    executor: node-active-lts
+    steps:
+      - setup-for-test
+      - run-chromatic-master
 workflows:
   multiple_builds:
     jobs:
@@ -115,4 +123,14 @@ workflows:
       - a11y-test:
           context: smarthr-dockerhub
       - chromatic-deployment:
+          filters:
+            branches:
+              ignore:
+                - master
+          context: smarthr-dockerhub
+      - chromatic-deployment-master:
+          filters:
+            branches:
+              only:
+                - master
           context: smarthr-dockerhub
