@@ -48,7 +48,7 @@ type Props = PropsWithChildren<{
   /** タイトルの下に表示するエラーメッセージ */
   errorMessages?: ReactNode | ReactNode[]
   /** フォームコントロールの下に表示する補足メッセージ */
-  supplementaryMessage?: string
+  supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
   /** コンポーネントに適用するクラス名 */
