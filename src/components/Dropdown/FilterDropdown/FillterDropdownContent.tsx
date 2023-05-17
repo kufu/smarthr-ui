@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from 'react'
+import React, { ReactNode, useCallback, useContext, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { DecoratorType, DecoratorsType, ResponseMessageType } from '@/types/props'
@@ -7,12 +7,13 @@ import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
 import { FaCheckCircleIcon, FaExclamationCircleIcon, FaUndoAltIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { DropdownContext } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownScrollArea } from '../DropdownScrollArea'
 
 type Props = {
-  onApply: React.MouseEventHandler<HTMLButtonElement>
+  onApply: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, close: () => void) => void
   onCancel?: React.MouseEventHandler<HTMLButtonElement>
   onReset?: React.MouseEventHandler<HTMLButtonElement>
   children: ReactNode
@@ -36,6 +37,7 @@ export const FilterDropdownContent: React.FC<Props> = ({
   responseMessage,
 }) => {
   const themes = useTheme()
+  const { onClickCloser } = useContext(DropdownContext)
 
   const applyButton: ReactNode = useMemo(
     () => executeDecorator(APPLY_BUTTON_TEXT, decorators?.applyButton),
@@ -52,6 +54,13 @@ export const FilterDropdownContent: React.FC<Props> = ({
 
   const isRequestProcessing =
     responseMessage !== undefined && responseMessage.status === 'processing'
+
+  const handleApply: React.MouseEventHandler<HTMLButtonElement> = useCallback(
+    (e) => {
+      onApply(e, onClickCloser)
+    },
+    [onApply, onClickCloser],
+  )
 
   return (
     <DropdownContent controllable>
@@ -80,7 +89,7 @@ export const FilterDropdownContent: React.FC<Props> = ({
                 {cancelButton}
               </Button>
             </DropdownCloser>
-            <Button variant="primary" onClick={onApply} loading={isRequestProcessing}>
+            <Button variant="primary" onClick={handleApply} loading={isRequestProcessing}>
               {applyButton}
             </Button>
           </RightButtonLayout>
