@@ -140,7 +140,7 @@
     "lint:tsc": "tsc --noEmit",
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepublishOnly": "run-s clean lint build",
-    "release": "standard-version",
+    "release": "standard-version -a",
     "release:dryrun": "standard-version --dry-run",
     "storybook": "storybook dev -p 6006 -s ./public",
     "dev": "run-s storybook",
@@ -165,5 +165,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "postcss": "8.4.23"
+  },
+  "standard-version": {
+    "scripts": {
+      "prerelease": "run-s build:lib write:ui-props && git add public/exports/smarthr-ui-props.json"
+    }
   }
 }
