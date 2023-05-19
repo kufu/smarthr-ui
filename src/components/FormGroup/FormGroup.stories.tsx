@@ -47,11 +47,11 @@ export const All: Story = () => {
         </Text>
         <dd>
           <FormGroup
+            as="fieldset"
             title="姓名"
             statusLabelProps={{ type: 'grey', children: '任意' }}
             helpMessage="姓名を入力してください。"
             errorMessages="姓名が入力されていません。"
-            role="group"
           >
             <Cluster gap={1}>
               <FormGroup
@@ -97,11 +97,11 @@ export const All: Story = () => {
         </Text>
         <dd>
           <FormGroup
+            as="fieldset"
             title="disabled なフォームグループ"
             helpMessage="このフォームグループは disabled です。内包するフォームグループを個別に disabled する必要はありません。"
             errorMessages="すべてのフォームコントロールが disabled です。"
             disabled
-            role="group"
           >
             <Cluster gap={1}>
               <FormGroup

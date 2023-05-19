@@ -34,6 +34,7 @@ type Props = PropsWithChildren<{
   disabled?: boolean
   /** コンポーネントに適用するクラス名 */
   className?: string
+  as?: string | React.ComponentType<any>
 }>
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-labelledby'>
 
@@ -47,13 +48,14 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
   helpMessage,
   errorMessages,
   disabled,
+  as = 'div',
   className = '',
   children,
   ...props
 }) => {
   const disabledClass = disabled ? 'disabled' : ''
   const managedLabelId = useId(labelId)
-  const isRoleGroup = props.role === 'group'
+  const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
   const theme = useTheme()
@@ -66,7 +68,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
       themes={theme}
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
-      as={isRoleGroup ? 'fieldset' : 'div'}
+      as={as}
     >
       <Cluster
         align="center"
