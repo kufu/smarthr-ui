@@ -142,7 +142,7 @@
     "prepublishOnly": "run-s clean lint build",
     "release": "standard-version",
     "release:dryrun": "standard-version --dry-run",
-    "storybook": "storybook dev -p 6006 -s ./public",
+    "storybook": "storybook dev -p 6006",
     "dev": "run-s storybook",
     "test": "jest",
     "test:update-snapshot": "jest --updateSnapshot",
