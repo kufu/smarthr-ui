@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React from 'react'
 
 import { Input } from '../Input'
@@ -8,11 +8,11 @@ import { Text } from '../Text'
 import { FormGroup } from './FormGroup'
 
 export default {
-  title: 'Forms（フォーム）/FormGroup',
+  title: 'Forms（フォーム）/FormGroup（非推奨）',
   component: FormGroup,
 }
 
-export const All: Story = () => {
+export const All: StoryFn = () => {
   return (
     <Stack gap={2} as="dl">
       <Stack>
@@ -79,7 +79,7 @@ export const All: Story = () => {
           読み取り専用
         </Text>
         <dd>
-          <FormGroup title="姓名" role="group">
+          <FormGroup title="姓名" as="fieldset">
             <Cluster gap={1}>
               <FormGroup title="姓" titleType="subSubBlockTitle" htmlFor="form_5">
                 <Input name="lastName" value="草野" readOnly id="form_5" />

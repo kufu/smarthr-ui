@@ -104,6 +104,8 @@ export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'
 export { FormGroup } from './components/FormGroup'
+export { FormControl } from './components/FormControl'
+export { Fieldset } from './components/NewFieldset'
 export {
   BackgroundJobsPanel,
   BackgroundJobsList,

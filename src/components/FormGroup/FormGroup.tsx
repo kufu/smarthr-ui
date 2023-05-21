@@ -2,6 +2,7 @@ import React, { ComponentProps, HTMLAttributes, PropsWithChildren, ReactNode } f
 import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
+import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
@@ -38,6 +39,9 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-labelledby'>
 
+/**
+ * @deprecated `FormGroup` コンポーネントは非推奨です。代わりに `FormControl` や `Fieldset` を使ってください。
+ */
 export const FormGroup: React.FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
@@ -101,7 +105,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         </Stack>
       )}
 
-      <ChildrenWrapper innerMargin={innerMargin} isRoleGroup={isRoleGroup} themes={theme}>
+      <ChildrenWrapper innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
         {children}
       </ChildrenWrapper>
     </Wrapper>
@@ -120,13 +124,31 @@ const Wrapper = styled(Stack).attrs({
 
       /* 個別指定されている色を上書く */
       .smarthr-ui-Heading,
-      .smarthr-ui-FormGroup-errorMessage {
+      .smarthr-ui-FormGroup-errorMessage,
+      .smarthr-ui-RadioButton-label,
+      .smarthr-ui-CheckBox-label {
+        cursor: revert;
         color: inherit;
       }
 
       .smarthr-ui-Input {
         border-color: ${color.disableColor(color.BORDER)};
         background-color: ${color.hoverColor(color.WHITE)};
+      }
+
+      .smarthr-ui-RadioButton-radioButton,
+      .smarthr-ui-CheckBox-checkBox {
+        cursor: revert;
+
+        &[checked] + span,
+        & + span {
+          border-color: ${color.disableColor(color.BORDER)};
+          background-color: ${color.disableColor(color.BORDER)};
+        }
+
+        &:hover + span {
+          box-shadow: none;
+        }
       }
     }
   `}
@@ -145,13 +167,12 @@ const ErrorMessage = styled.p<{ themes: Theme }>`
 const ChildrenWrapper = styled.div<{
   innerMargin: Props['innerMargin']
   isRoleGroup: boolean
-  themes: Theme
 }>`
-  ${({ innerMargin, isRoleGroup, themes: { space } }) => css`
+  ${({ innerMargin, isRoleGroup }) => css`
     ${(innerMargin || isRoleGroup) &&
     css`
       &&& {
-        margin-block-start: ${space(innerMargin || isRoleGroup ? 1 : 0.5)};
+        margin-block-start: ${useSpacing(innerMargin || (isRoleGroup ? 1 : 0.5))};
       }
     `}
   `}
