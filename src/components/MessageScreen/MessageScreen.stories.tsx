@@ -104,20 +104,10 @@ export const WithoutLinks: Story = () => {
       <Base padding={1.5}>
         <Stack gap={1.5}>
           <Stack>
-            <FormGroup
-              title="社員番号またはメールアドレス"
-              titleType="subBlockTitle"
-              innerMargin="XXS"
-              htmlFor="id-email"
-            >
+            <FormGroup title="社員番号またはメールアドレス" htmlFor="id-email">
               <Input name="email" id="id-email" width="22em" />
             </FormGroup>
-            <FormGroup
-              title="パスワード"
-              titleType="subBlockTitle"
-              innerMargin="XXS"
-              htmlFor="id-password"
-            >
+            <FormGroup title="パスワード" htmlFor="id-password">
               <Input name="password" id="id-password" width="22em" />
             </FormGroup>
           </Stack>
