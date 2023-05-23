@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [31.0.0](https://github.com/kufu/smarthr-ui/compare/v30.10.0...v31.0.0) (2023-05-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* FormGroup をセマンティックに扱えるよう修正 (#3356)
+
+### Features
+
+* FormGroup をセマンティックに扱えるよう修正 ([#3356](https://github.com/kufu/smarthr-ui/issues/3356)) ([797e851](https://github.com/kufu/smarthr-ui/commit/797e8518ba0fed36f77a579cb797a9e686e6faa7))
+
 ## [30.10.0](https://github.com/kufu/smarthr-ui/compare/v30.9.0...v30.10.0) (2023-05-16)
 
 
