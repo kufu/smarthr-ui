@@ -1,4 +1,10 @@
-import React, { ComponentProps, HTMLAttributes, PropsWithChildren, ReactNode } from 'react'
+import React, {
+  ComponentProps,
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
@@ -58,25 +64,28 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
   ...props
 }) => {
   const disabledClass = disabled ? 'disabled' : ''
+  const managedHtmlFor = useId(htmlFor)
   const managedLabelId = useId(labelId)
   const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
   const theme = useTheme()
   const classNames = useClassNames()
+  const describedbyIds = `${managedHtmlFor}_helpMessage ${managedHtmlFor}_errorMessage`
 
   return (
     <Wrapper
       {...props}
       disabled={disabled}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
+      aria-describedby={isRoleGroup ? describedbyIds : undefined}
       themes={theme}
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
       as={as}
     >
       <Cluster
         align="center"
-        htmlFor={htmlFor}
+        htmlFor={managedHtmlFor}
         id={managedLabelId}
         className={`${classNames.label}`}
         as={isRoleGroup ? 'legend' : 'label'}
@@ -91,10 +100,14 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         )}
       </Cluster>
 
-      {helpMessage && <p className={classNames.helpMessage}>{helpMessage}</p>}
+      {helpMessage && (
+        <p className={classNames.helpMessage} id={`${managedHtmlFor}_helpMessage`}>
+          {helpMessage}
+        </p>
+      )}
 
       {errorMessages && (
-        <Stack gap={0}>
+        <Stack gap={0} id={`${managedHtmlFor}_errorMessage`}>
           {(Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map(
             (message, index) => (
               <ErrorMessage themes={theme} key={index}>
@@ -106,7 +119,17 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       )}
 
       <ChildrenWrapper innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
-        {children}
+        {React.Children.map(children, (child, i) => {
+          // id があるので、最初の要素以外には付与しない
+          if (!React.isValidElement(child) || i > 0) {
+            return child
+          }
+
+          return React.cloneElement(child as ReactElement, {
+            id: managedHtmlFor,
+            'aria-describedby': describedbyIds,
+          })
+        })}
       </ChildrenWrapper>
     </Wrapper>
   )
