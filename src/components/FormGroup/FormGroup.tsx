@@ -10,10 +10,14 @@ import styled, { css } from 'styled-components'
 import { useId } from '../../hooks/useId'
 import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { MultiComboBox, SingleComboBox } from '../ComboBox'
 import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
+import { Input } from '../Input'
 import { Cluster, Stack } from '../Layout'
+import { Select } from '../Select'
 import { StatusLabel } from '../StatusLabel'
+import { Textarea } from '../Textarea'
 
 import { useClassNames } from './useClassNames'
 
@@ -119,20 +123,42 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       )}
 
       <ChildrenWrapper innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
-        {React.Children.map(children, (child, i) => {
-          // id があるので、最初の要素以外には付与しない
-          if (!React.isValidElement(child) || i > 0) {
-            return child
-          }
-
-          return React.cloneElement(child as ReactElement, {
-            id: managedHtmlFor,
-            'aria-describedby': describedbyIds,
-          })
-        })}
+        {addIdToFirstInput(children, managedHtmlFor, describedbyIds)}
       </ChildrenWrapper>
     </Wrapper>
   )
+}
+
+const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describedbyIds: string) => {
+  let foundFirstInput = false
+
+  const addId = (targets: ReactNode): ReactNode[] | ReactNode => {
+    return React.Children.map(targets, (child) => {
+      if (foundFirstInput || !React.isValidElement(child)) {
+        return child
+      }
+
+      const { type } = child
+
+      if (
+        type === Input ||
+        type === Textarea ||
+        type === Select ||
+        type === SingleComboBox ||
+        type === MultiComboBox
+      ) {
+        foundFirstInput = true
+        return React.cloneElement(child as ReactElement, {
+          id: managedHtmlFor,
+          'aria-describedby': describedbyIds,
+        })
+      }
+
+      return React.cloneElement(child, {}, addId(child.props.children))
+    })
+  }
+
+  return addId(children)
 }
 
 const Wrapper = styled(Stack).attrs({
