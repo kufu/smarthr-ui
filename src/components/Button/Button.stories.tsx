@@ -164,6 +164,13 @@ export const _Button: Story = () => {
         </Stack>
       </dd>
 
+      <dt>disabled な理由</dt>
+      <dd>
+        <Button disabled disabledDetail={{ message: 'どうしても disabled にする理由を書きます。' }}>
+          ボタン
+        </Button>
+      </dd>
+
       <dt>Extending Style</dt>
       <dd>
         <ExtendingButton variant="primary" onClick={action('clicked')}>
@@ -187,11 +194,8 @@ export const _ButtonControl: Story = (args: ButtonProps) => {
     </Wrapper>
   )
 }
-
-_ButtonControl.argTypes = {
-  children: { control: 'text', defaultValue: 'ボタン' },
-  prefix: { control: 'text' },
-  suffix: { control: 'text' },
+_ButtonControl.args = {
+  children: 'ボタン',
 }
 
 export const _ButtonAnchor: Story = () => {
@@ -344,11 +348,8 @@ export const _ButtonAnchorControl: Story = (args: AnchorButtonProps) => {
     </Wrapper>
   )
 }
-
-_ButtonAnchorControl.argTypes = {
-  children: { control: 'text', defaultValue: 'ボタン' },
-  prefix: { control: 'text' },
-  suffix: { control: 'text' },
+_ButtonAnchorControl.args = {
+  children: 'ボタン',
 }
 
 export const WithLoading: Story = (args: ButtonProps) => {

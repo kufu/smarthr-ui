@@ -2,7 +2,7 @@ import React, { FC, ReactNode, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
-import { DecoratorsType } from '../../../types/props'
+import { DecoratorsType, ResponseMessageType } from '../../../types/props'
 import { Button } from '../../Button'
 import { HeadingTagTypes } from '../../Heading'
 import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../../Icon'
@@ -57,18 +57,9 @@ export type BaseProps = {
   decorators?: DecoratorsType<'closeButtonLabel'>
 }
 
-type responseMessageType =
-  | {
-      status: 'success' | 'error'
-      text: ReactNode
-    }
-  | {
-      status: 'processing'
-    }
-
 export type ActionDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
-  responseMessage?: responseMessageType
+  responseMessage?: ResponseMessageType
   titleId: string
 }
 

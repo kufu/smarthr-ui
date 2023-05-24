@@ -77,10 +77,21 @@ const Box = styled.span<{ themes: Theme; error?: boolean }>`
       box-sizing: border-box;
       pointer-events: none;
 
+      @media (prefers-contrast: more) {
+        & {
+          border: ${border.highContrast};
+        }
+      }
+
       /* FIXME: なぜか static classname になってしまうため & を重ねている */
       input:checked + && {
         border-color: ${color.MAIN};
         background-color: ${color.MAIN};
+        @media (prefers-contrast: more) {
+          & {
+            border: ${border.highContrast};
+          }
+        }
       }
 
       /* FIXME: なぜか static classname になってしまうため & を重ねている */

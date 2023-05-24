@@ -11,6 +11,14 @@ import { FlashMessageListProvider, useFlashMessageList } from '.'
 export default {
   title: 'States（状態）/FlashMessage（非推奨）',
   component: FlashMessage,
+  parameters: {
+    docs: {
+      story: {
+        inline: false,
+        iframeHeight: '500px',
+      },
+    },
+  },
 }
 
 const Template: Story = (arg) => {

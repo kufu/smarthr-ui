@@ -231,10 +231,12 @@ test('キーボードでリストボックスが操作できること', async (t
     .ok()
     .pressKey('up')
     .pressKey('up')
+    .pressKey('up')
     .pressKey('enter')
     .expect(comboBoxSelected.withText('option 5').exists)
     .ok()
     // 選択解除ができること
+    .pressKey('down')
     .pressKey('down')
     .pressKey('down')
     .pressKey('enter')
