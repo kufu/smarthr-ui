@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react'
 import React from 'react'
+import styled from 'styled-components'
 
 import { Input } from '../Input'
 import { Cluster, Stack } from '../Layout'
@@ -38,6 +39,16 @@ export const All: StoryFn = () => {
             htmlFor="form_2"
           >
             <Input name="fullname" id="form_2" />
+          </FormGroup>
+        </dd>
+      </Stack>
+      <Stack>
+        <Text italic color="TEXT_GREY" as="dt">
+          入力要素幅100%
+        </Text>
+        <dd>
+          <FormGroup title="フォームコントロール名" htmlFor="form_1">
+            <FullWidthInput name="defaultInput" id="form_1" />
           </FormGroup>
         </dd>
       </Stack>
@@ -128,3 +139,7 @@ export const All: StoryFn = () => {
   )
 }
 All.storyName = 'all'
+
+const FullWidthInput = styled(Input)`
+  width: 100%;
+`

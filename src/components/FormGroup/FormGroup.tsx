@@ -105,7 +105,11 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         </Stack>
       )}
 
-      <ChildrenWrapper innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
+      <ChildrenWrapper
+        className={classNames.childrenWrapper}
+        innerMargin={innerMargin}
+        isRoleGroup={isRoleGroup}
+      >
         {children}
       </ChildrenWrapper>
     </Wrapper>
@@ -169,6 +173,8 @@ const ChildrenWrapper = styled.div<{
   isRoleGroup: boolean
 }>`
   ${({ innerMargin, isRoleGroup }) => css`
+    width: 100%;
+
     ${(innerMargin || isRoleGroup) &&
     css`
       &&& {
