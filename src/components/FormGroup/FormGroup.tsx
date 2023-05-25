@@ -11,9 +11,11 @@ import { useId } from '../../hooks/useId'
 import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { MultiComboBox, SingleComboBox } from '../ComboBox'
+import { DatePicker } from '../DatePicker'
 import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
-import { Input } from '../Input'
+import { CurrencyInput, Input } from '../Input'
+import { InputFile } from '../InputFile'
 import { Cluster, Stack } from '../Layout'
 import { Select } from '../Select'
 import { StatusLabel } from '../StatusLabel'
@@ -140,13 +142,7 @@ const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describe
 
       const { type } = child
 
-      if (
-        type === Input ||
-        type === Textarea ||
-        type === Select ||
-        type === SingleComboBox ||
-        type === MultiComboBox
-      ) {
+      if (isInputElement(type)) {
         foundFirstInput = true
         return React.cloneElement(child as ReactElement, {
           id: managedHtmlFor,
@@ -160,6 +156,23 @@ const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describe
 
   return addId(children)
 }
+
+/**
+ * - SearchInput は label を含むため対象外
+ * - InputWithTooltip は領域が狭く FormControl を置けない場所での私用を想定しているため対象外
+ *
+ * @param type
+ * @returns
+ */
+const isInputElement = (type: string | React.JSXElementConstructor<any>) =>
+  type === Input ||
+  type === CurrencyInput ||
+  type === Textarea ||
+  type === DatePicker ||
+  type === Select ||
+  type === SingleComboBox ||
+  type === MultiComboBox ||
+  type === InputFile
 
 const Wrapper = styled(Stack).attrs({
   // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は ChildrenWrapper で調整する
