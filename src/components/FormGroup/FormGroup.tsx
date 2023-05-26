@@ -12,6 +12,7 @@ import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { MultiComboBox, SingleComboBox } from '../ComboBox'
 import { DatePicker } from '../DatePicker'
+import { DropZone } from '../DropZone'
 import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 import { CurrencyInput, Input } from '../Input'
@@ -158,6 +159,7 @@ const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describe
 }
 
 /**
+ * - CheckBox / RadioButton は内部に label を含むため対象外
  * - SearchInput は label を含むため対象外
  * - InputWithTooltip は領域が狭く FormControl を置けない場所での私用を想定しているため対象外
  *
@@ -172,7 +174,8 @@ const isInputElement = (type: string | React.JSXElementConstructor<any>) =>
   type === Select ||
   type === SingleComboBox ||
   type === MultiComboBox ||
-  type === InputFile
+  type === InputFile ||
+  type === DropZone
 
 const Wrapper = styled(Stack).attrs({
   // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は ChildrenWrapper で調整する
