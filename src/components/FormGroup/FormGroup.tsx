@@ -1,13 +1,26 @@
-import React, { ComponentProps, HTMLAttributes, PropsWithChildren, ReactNode } from 'react'
+import React, {
+  ComponentProps,
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { MultiComboBox, SingleComboBox } from '../ComboBox'
+import { DatePicker } from '../DatePicker'
+import { DropZone } from '../DropZone'
 import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
+import { CurrencyInput, Input } from '../Input'
+import { InputFile } from '../InputFile'
 import { Cluster, Stack } from '../Layout'
+import { Select } from '../Select'
 import { StatusLabel } from '../StatusLabel'
+import { Textarea } from '../Textarea'
 
 import { useClassNames } from './useClassNames'
 
@@ -58,25 +71,28 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
   ...props
 }) => {
   const disabledClass = disabled ? 'disabled' : ''
+  const managedHtmlFor = useId(htmlFor)
   const managedLabelId = useId(labelId)
   const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
   const theme = useTheme()
   const classNames = useClassNames()
+  const describedbyIds = `${managedHtmlFor}_helpMessage ${managedHtmlFor}_errorMessage`
 
   return (
     <Wrapper
       {...props}
       disabled={disabled}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
+      aria-describedby={isRoleGroup ? describedbyIds : undefined}
       themes={theme}
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
       as={as}
     >
       <Cluster
         align="center"
-        htmlFor={htmlFor}
+        htmlFor={managedHtmlFor}
         id={managedLabelId}
         className={`${classNames.label}`}
         as={isRoleGroup ? 'legend' : 'label'}
@@ -91,10 +107,14 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         )}
       </Cluster>
 
-      {helpMessage && <p className={classNames.helpMessage}>{helpMessage}</p>}
+      {helpMessage && (
+        <p className={classNames.helpMessage} id={`${managedHtmlFor}_helpMessage`}>
+          {helpMessage}
+        </p>
+      )}
 
       {errorMessages && (
-        <Stack gap={0}>
+        <Stack gap={0} id={`${managedHtmlFor}_errorMessage`}>
           {(Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map(
             (message, index) => (
               <ErrorMessage themes={theme} key={index}>
@@ -106,11 +126,56 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       )}
 
       <ChildrenWrapper innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
-        {children}
+        {addIdToFirstInput(children, managedHtmlFor, describedbyIds)}
       </ChildrenWrapper>
     </Wrapper>
   )
 }
+
+const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describedbyIds: string) => {
+  let foundFirstInput = false
+
+  const addId = (targets: ReactNode): ReactNode[] | ReactNode => {
+    return React.Children.map(targets, (child) => {
+      if (foundFirstInput || !React.isValidElement(child)) {
+        return child
+      }
+
+      const { type } = child
+
+      if (isInputElement(type)) {
+        foundFirstInput = true
+        return React.cloneElement(child as ReactElement, {
+          id: managedHtmlFor,
+          'aria-describedby': describedbyIds,
+        })
+      }
+
+      return React.cloneElement(child, {}, addId(child.props.children))
+    })
+  }
+
+  return addId(children)
+}
+
+/**
+ * - CheckBox / RadioButton は内部に label を含むため対象外
+ * - SearchInput は label を含むため対象外
+ * - InputWithTooltip は領域が狭く FormControl を置けない場所での私用を想定しているため対象外
+ *
+ * @param type
+ * @returns
+ */
+const isInputElement = (type: string | React.JSXElementConstructor<any>) =>
+  type === Input ||
+  type === CurrencyInput ||
+  type === Textarea ||
+  type === DatePicker ||
+  type === Select ||
+  type === SingleComboBox ||
+  type === MultiComboBox ||
+  type === InputFile ||
+  type === DropZone
 
 const Wrapper = styled(Stack).attrs({
   // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は ChildrenWrapper で調整する
