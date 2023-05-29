@@ -20,8 +20,8 @@ export const All: StoryFn = () => {
           基本
         </Text>
         <dd>
-          <FormControl title="フォームコントロール名" htmlFor="form_1">
-            <Input name="defaultInput" id="form_1" />
+          <FormControl title="フォームコントロール名">
+            <Input name="defaultInput" />
           </FormControl>
         </dd>
       </Stack>
@@ -35,9 +35,8 @@ export const All: StoryFn = () => {
             statusLabelProps={{ type: 'grey', children: '任意' }}
             helpMessage="氏名を入力してください。"
             errorMessages={'氏名が入力されていません。'}
-            htmlFor="form_2"
           >
-            <Input name="fullname" id="form_2" />
+            <Input name="fullname" width="100%" />
           </FormControl>
         </dd>
       </Stack>
@@ -46,8 +45,8 @@ export const All: StoryFn = () => {
           読み取り専用
         </Text>
         <dd>
-          <FormControl title="氏名" htmlFor="form_5">
-            <Input name="fullname" value="草野栄一郎" readOnly id="form_5" />
+          <FormControl title="氏名">
+            <Input name="fullname" value="草野栄一郎" readOnly />
           </FormControl>
         </dd>
       </Stack>

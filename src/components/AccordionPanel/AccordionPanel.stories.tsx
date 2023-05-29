@@ -35,13 +35,13 @@ const content = () => {
     <Stack>
       <div>{lorem}</div>
       <div>
-        <FormGroup title="Name" htmlFor={`id-name-${id}`}>
-          <Input name={`name_${id}`} id={`id-name-${id}`} />
+        <FormGroup title="Name">
+          <Input name={`name_${id}`} />
         </FormGroup>
       </div>
       <div>
-        <FormGroup title="Email" htmlFor={`id-email-${id}`}>
-          <Input name={`email_${id}`} id={`id-email-${id}`} />
+        <FormGroup title="Email">
+          <Input name={`email_${id}`} />
         </FormGroup>
       </div>
     </Stack>

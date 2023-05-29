@@ -63,17 +63,15 @@ export const All: StoryFn = () => {
                   title="姓"
                   titleType="subBlockTitle"
                   errorMessages="姓が入力されていません。"
-                  htmlFor="form_3"
                 >
-                  <Input name="lastName" id="form_3" />
+                  <Input name="lastName" />
                 </FormControl>
                 <FormControl
                   title="名"
                   titleType="subBlockTitle"
                   errorMessages="名が入力されていません。"
-                  htmlFor="form_4"
                 >
-                  <Input name="firstName" id="form_4" />
+                  <Input name="firstName" />
                 </FormControl>
               </Cluster>
             </Stack>
@@ -109,17 +107,15 @@ export const All: StoryFn = () => {
                   title="姓"
                   titleType="subBlockTitle"
                   errorMessages="姓が入力されていません。"
-                  htmlFor="form_7"
                 >
-                  <Input name="lastName" id="form_7" />
+                  <Input name="lastName" />
                 </FormControl>
                 <FormControl
                   title="名"
                   titleType="subBlockTitle"
                   errorMessages="名が入力されていません。"
-                  htmlFor="form_8"
                 >
-                  <Input name="firstName" id="form_8" />
+                  <Input name="firstName" />
                 </FormControl>
               </Cluster>
             </Stack>
