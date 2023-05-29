@@ -36,7 +36,7 @@ export const All: StoryFn = () => {
             helpMessage="氏名を入力してください。"
             errorMessages={'氏名が入力されていません。'}
           >
-            <Input name="fullname" />
+            <Input name="fullname" width="100%" />
           </FormControl>
         </dd>
       </Stack>

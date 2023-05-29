@@ -97,8 +97,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
       as={as}
     >
-      <Cluster
-        align="center"
+      <FormLabel
         htmlFor={managedHtmlFor}
         id={managedLabelId}
         className={`${classNames.label}`}
@@ -112,7 +111,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
             ))}
           </Cluster>
         )}
-      </Cluster>
+      </FormLabel>
 
       {helpMessage && (
         <p className={classNames.helpMessage} id={`${managedHtmlFor}_helpMessage`}>
@@ -210,8 +209,6 @@ const isInputElement = (type: string | React.JSXElementConstructor<any>) =>
 const Wrapper = styled(Stack).attrs({
   // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は ChildrenWrapper で調整する
   gap: 0.5,
-  // flex-item が stretch してクリッカブル領域が広がりすぎないようにする
-  align: 'flex-start',
 })<{ themes: Theme }>`
   ${({ themes: { color } }) => css`
     &[disabled] {
@@ -249,6 +246,11 @@ const Wrapper = styled(Stack).attrs({
       }
     }
   `}
+`
+
+const FormLabel = styled(Cluster).attrs({ align: 'center' })`
+  // flex-item が stretch してクリッカブル領域が広がりすぎないようにする
+  align-self: start;
 `
 
 const GroupLabel = styled(Heading).attrs({ tag: 'span' })``
