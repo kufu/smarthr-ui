@@ -11,7 +11,9 @@ export function useClassNames() {
       wrapper: generate(),
       label: generate('label'),
       helpMessage: generate('helpMessage'),
+      exampleMessage: generate('exampleMessage'),
       errorMessage: generate('errorMessage'),
+      supplementaryMessage: generate('supplementaryMessage'),
     }),
     [generate],
   )
