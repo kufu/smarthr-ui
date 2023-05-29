@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [31.1.0](https://github.com/kufu/smarthr-ui/compare/v31.0.0...v31.1.0) (2023-05-29)
+
+
+### Features
+
+* FormGroup とフォームコントロールが内部的に id で紐づくように修正 ([#3357](https://github.com/kufu/smarthr-ui/issues/3357)) ([af50425](https://github.com/kufu/smarthr-ui/commit/af50425ce89c9eb96a0868bfafccff7caf277889))
+* FormGroup に入力例と補足文を追加 ([#3358](https://github.com/kufu/smarthr-ui/issues/3358)) ([e9070f4](https://github.com/kufu/smarthr-ui/commit/e9070f47686f33ab3dc428cbe2656c1033052835))
+
+
+### Bug Fixes
+
+* Dialog に width を指定した場合に max-width が効かなくなる欠陥を修正 ([#3391](https://github.com/kufu/smarthr-ui/issues/3391)) ([cf484bd](https://github.com/kufu/smarthr-ui/commit/cf484bd6a90782cdf5c2d3733e469154b3133f66))
+* FormControl の子要素に幅が指定できない欠陥を修正 ([#3390](https://github.com/kufu/smarthr-ui/issues/3390)) ([cec9ec8](https://github.com/kufu/smarthr-ui/commit/cec9ec83a84683b46d8115fc51c1f4e64c6a7550))
+
 ## [31.0.0](https://github.com/kufu/smarthr-ui/compare/v30.10.0...v31.0.0) (2023-05-23)
 
 
