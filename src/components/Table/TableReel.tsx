@@ -16,15 +16,15 @@ export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <Shadow showShadow={showShadow} className={`${className} ${classNames.tableReel.wrapper}`}>
-      <Wrapper {...props} ref={tableWrapperRef} className={classNames.tableReel.inner}>
+    <Wrapper showShadow={showShadow} className={`${className} ${classNames.tableReel.wrapper}`}>
+      <Inner {...props} ref={tableWrapperRef} className={classNames.tableReel.inner}>
         {children}
-      </Wrapper>
-    </Shadow>
+      </Inner>
+    </Wrapper>
   )
 }
 
-const Shadow = styled.div<{ showShadow: boolean }>`
+const Wrapper = styled.div<{ showShadow: boolean }>`
   ${({ showShadow }) => css`
     position: relative;
 
@@ -32,7 +32,7 @@ const Shadow = styled.div<{ showShadow: boolean }>`
   `}
 `
 
-const Wrapper = styled.div`
+const Inner = styled.div`
   position: relative;
   overflow: auto;
 `
