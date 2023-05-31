@@ -7,13 +7,21 @@ import { useReelShadow } from './useReelShadow'
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof PropsWithChildren>
 
-export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({ children, ...props }) => {
+export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({
+  children,
+  className,
+  ...props
+}) => {
   const { showShadow, tableWrapperRef } = useReelCells()
   const classNames = useClassNames()
 
   return (
-    <Shadow showShadow={showShadow} className={`${className}`}>
-      <Wrapper {...props} ref={tableWrapperRef} className={classNames.tableReel.wrapper}>
+    <Shadow showShadow={showShadow} className={`${classNames.tableReel.wrapper}`}>
+      <Wrapper
+        {...props}
+        ref={tableWrapperRef}
+        className={`${className} ${classNames.tableReel.inner}`}
+      >
         {children}
       </Wrapper>
     </Shadow>
