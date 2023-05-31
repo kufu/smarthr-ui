@@ -31,6 +31,7 @@ export function useClassNames() {
       },
       tableReel: {
         wrapper: generateForTableReel(),
+        inner: generateForTableReel('inner'),
       },
     }),
     [
