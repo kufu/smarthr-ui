@@ -105,8 +105,7 @@ const ActionList = styled(Stack).attrs({ as: 'ul', gap: 0 })<{ themes: Theme }>`
   ${({ themes: { space } }) => css`
     list-style: none;
     margin-block: 0;
-    padding-block: ${space(0.5)};
-    padding-inline-start: 0;
+    padding: ${space(0.5)} ${space(0.25)};
 
     .smarthr-ui-Button,
     .smarthr-ui-AnchorButton {
