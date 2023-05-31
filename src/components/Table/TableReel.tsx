@@ -1,6 +1,7 @@
 import React, { HTMLAttributes, PropsWithChildren } from 'react'
 import styled, { css } from 'styled-components'
 
+import { useClassNames } from './useClassNames'
 import { useReelCells } from './useReelCells'
 import { useReelShadow } from './useReelShadow'
 
@@ -8,9 +9,10 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof PropsWithChildren
 
 export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({ children, ...props }) => {
   const { showShadow, tableWrapperRef } = useReelCells()
+  const classNames = useClassNames()
 
   return (
-    <Shadow showShadow={showShadow}>
+    <Shadow showShadow={showShadow} className={classNames.tableReel.wrapper}>
       <Wrapper {...props} ref={tableWrapperRef}>
         {children}
       </Wrapper>
