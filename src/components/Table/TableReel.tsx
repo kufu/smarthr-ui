@@ -12,8 +12,8 @@ export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({ children
   const classNames = useClassNames()
 
   return (
-    <Shadow showShadow={showShadow} className={classNames.tableReel.wrapper}>
-      <Wrapper {...props} ref={tableWrapperRef}>
+    <Shadow showShadow={showShadow} className={`${className}`}>
+      <Wrapper {...props} ref={tableWrapperRef} className={classNames.tableReel.wrapper}>
         {children}
       </Wrapper>
     </Shadow>
