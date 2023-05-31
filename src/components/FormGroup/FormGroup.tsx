@@ -1,13 +1,27 @@
-import React, { ComponentProps, HTMLAttributes, PropsWithChildren, ReactNode } from 'react'
+import React, {
+  ComponentProps,
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { MultiComboBox, SingleComboBox } from '../ComboBox'
+import { DatePicker } from '../DatePicker'
+import { DropZone } from '../DropZone'
 import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
+import { CurrencyInput, Input } from '../Input'
+import { InputFile } from '../InputFile'
 import { Cluster, Stack } from '../Layout'
+import { Select } from '../Select'
 import { StatusLabel } from '../StatusLabel'
+import { Text } from '../Text'
+import { Textarea } from '../Textarea'
 
 import { useClassNames } from './useClassNames'
 
@@ -29,8 +43,12 @@ type Props = PropsWithChildren<{
   statusLabelProps?: StatusLabelProps | StatusLabelProps[]
   /** タイトルの下に表示するヘルプメッセージ */
   helpMessage?: ReactNode
+  /** タイトルの下に表示する入力例 */
+  exampleMessage?: ReactNode
   /** タイトルの下に表示するエラーメッセージ */
   errorMessages?: ReactNode | ReactNode[]
+  /** フォームコントロールの下に表示する補足メッセージ */
+  supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
   /** コンポーネントに適用するクラス名 */
@@ -50,7 +68,9 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
   innerMargin,
   statusLabelProps = [],
   helpMessage,
+  exampleMessage,
   errorMessages,
+  supplementaryMessage,
   disabled,
   as = 'div',
   className = '',
@@ -58,25 +78,27 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
   ...props
 }) => {
   const disabledClass = disabled ? 'disabled' : ''
+  const managedHtmlFor = useId(htmlFor)
   const managedLabelId = useId(labelId)
   const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
   const theme = useTheme()
   const classNames = useClassNames()
+  const describedbyIds = `${managedHtmlFor}_helpMessage ${managedHtmlFor}_exampleMessage ${managedHtmlFor}_supplementaryMessage ${managedHtmlFor}_errorMessage`
 
   return (
     <Wrapper
       {...props}
       disabled={disabled}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
+      aria-describedby={isRoleGroup ? describedbyIds : undefined}
       themes={theme}
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
       as={as}
     >
-      <Cluster
-        align="center"
-        htmlFor={htmlFor}
+      <FormLabel
+        htmlFor={managedHtmlFor}
         id={managedLabelId}
         className={`${classNames.label}`}
         as={isRoleGroup ? 'legend' : 'label'}
@@ -89,12 +111,27 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
             ))}
           </Cluster>
         )}
-      </Cluster>
+      </FormLabel>
 
-      {helpMessage && <p className={classNames.helpMessage}>{helpMessage}</p>}
+      {helpMessage && (
+        <p className={classNames.helpMessage} id={`${managedHtmlFor}_helpMessage`}>
+          {helpMessage}
+        </p>
+      )}
+      {exampleMessage && (
+        <Text
+          as="p"
+          color="TEXT_GREY"
+          italic
+          id={`${managedHtmlFor}_exampleMessage`}
+          className={classNames.exampleMessage}
+        >
+          {exampleMessage}
+        </Text>
+      )}
 
       {errorMessages && (
-        <Stack gap={0}>
+        <Stack gap={0} id={`${managedHtmlFor}_errorMessage`}>
           {(Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map(
             (message, index) => (
               <ErrorMessage themes={theme} key={index}>
@@ -106,17 +143,72 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       )}
 
       <ChildrenWrapper innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
-        {children}
+        {addIdToFirstInput(children, managedHtmlFor, describedbyIds)}
       </ChildrenWrapper>
+
+      {supplementaryMessage && (
+        <Text
+          as="p"
+          size="S"
+          color="TEXT_GREY"
+          id={`${managedHtmlFor}_supplementaryMessage`}
+          className={classNames.supplementaryMessage}
+        >
+          {supplementaryMessage}
+        </Text>
+      )}
     </Wrapper>
   )
 }
 
+const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describedbyIds: string) => {
+  let foundFirstInput = false
+
+  const addId = (targets: ReactNode): ReactNode[] | ReactNode => {
+    return React.Children.map(targets, (child) => {
+      if (foundFirstInput || !React.isValidElement(child)) {
+        return child
+      }
+
+      const { type } = child
+
+      if (isInputElement(type)) {
+        foundFirstInput = true
+        return React.cloneElement(child as ReactElement, {
+          id: managedHtmlFor,
+          'aria-describedby': describedbyIds,
+        })
+      }
+
+      return React.cloneElement(child, {}, addId(child.props.children))
+    })
+  }
+
+  return addId(children)
+}
+
+/**
+ * - CheckBox / RadioButton は内部に label を含むため対象外
+ * - SearchInput は label を含むため対象外
+ * - InputWithTooltip は領域が狭く FormControl を置けない場所での私用を想定しているため対象外
+ *
+ * @param type
+ * @returns
+ */
+const isInputElement = (type: string | React.JSXElementConstructor<any>) =>
+  type === Input ||
+  type === CurrencyInput ||
+  type === Textarea ||
+  type === DatePicker ||
+  type === Select ||
+  type === SingleComboBox ||
+  type === MultiComboBox ||
+  type === InputFile ||
+  type === DropZone
+
 const Wrapper = styled(Stack).attrs({
   // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は ChildrenWrapper で調整する
   gap: 0.5,
-  // flex-item が stretch してクリッカブル領域が広がりすぎないようにする
-  align: 'flex-start',
 })<{ themes: Theme }>`
   ${({ themes: { color } }) => css`
     &[disabled] {
@@ -124,7 +216,9 @@ const Wrapper = styled(Stack).attrs({
 
       /* 個別指定されている色を上書く */
       .smarthr-ui-Heading,
+      .smarthr-ui-FormGroup-exampleMessage,
       .smarthr-ui-FormGroup-errorMessage,
+      .smarthr-ui-FormGroup-supplementaryMessage,
       .smarthr-ui-RadioButton-label,
       .smarthr-ui-CheckBox-label {
         cursor: revert;
@@ -152,6 +246,11 @@ const Wrapper = styled(Stack).attrs({
       }
     }
   `}
+`
+
+const FormLabel = styled(Cluster).attrs({ align: 'center' })`
+  // flex-item が stretch してクリッカブル領域が広がりすぎないようにする
+  align-self: start;
 `
 
 const GroupLabel = styled(Heading).attrs({ tag: 'span' })``

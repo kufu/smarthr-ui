@@ -20,8 +20,8 @@ export const All: StoryFn = () => {
           基本
         </Text>
         <dd>
-          <FormGroup title="フォームコントロール名" htmlFor="form_1">
-            <Input name="defaultInput" id="form_1" />
+          <FormGroup title="フォームコントロール名">
+            <Input name="defaultInput" />
           </FormGroup>
         </dd>
       </Stack>
@@ -34,10 +34,11 @@ export const All: StoryFn = () => {
             title="氏名"
             statusLabelProps={{ type: 'grey', children: '任意' }}
             helpMessage="氏名を入力してください。"
+            exampleMessage="例：草野栄一郎"
             errorMessages={'氏名が入力されていません。'}
-            htmlFor="form_2"
+            supplementaryMessage="※ 補足文はフォームコントロールの下に表示します。"
           >
-            <Input name="fullname" id="form_2" />
+            <Input name="fullname" />
           </FormGroup>
         </dd>
       </Stack>
@@ -58,17 +59,15 @@ export const All: StoryFn = () => {
                 title="姓"
                 titleType="subSubBlockTitle"
                 errorMessages="姓が入力されていません。"
-                htmlFor="form_3"
               >
-                <Input name="lastName" id="form_3" />
+                <Input name="lastName" />
               </FormGroup>
               <FormGroup
                 title="名"
                 titleType="subSubBlockTitle"
                 errorMessages="名が入力されていません。"
-                htmlFor="form_4"
               >
-                <Input name="firstName" id="form_4" />
+                <Input name="firstName" />
               </FormGroup>
             </Cluster>
           </FormGroup>
@@ -81,11 +80,11 @@ export const All: StoryFn = () => {
         <dd>
           <FormGroup title="姓名" as="fieldset">
             <Cluster gap={1}>
-              <FormGroup title="姓" titleType="subSubBlockTitle" htmlFor="form_5">
-                <Input name="lastName" value="草野" readOnly id="form_5" />
+              <FormGroup title="姓" titleType="subSubBlockTitle">
+                <Input name="lastName" value="草野" readOnly />
               </FormGroup>
-              <FormGroup title="名" titleType="subSubBlockTitle" htmlFor="form_6">
-                <Input name="firstName" value="栄一郎" readOnly id="form_6" />
+              <FormGroup title="名" titleType="subSubBlockTitle">
+                <Input name="firstName" value="栄一郎" readOnly />
               </FormGroup>
             </Cluster>
           </FormGroup>
@@ -108,17 +107,15 @@ export const All: StoryFn = () => {
                 title="姓"
                 titleType="subSubBlockTitle"
                 errorMessages="姓が入力されていません。"
-                htmlFor="form_7"
               >
-                <Input name="lastName" id="form_7" />
+                <Input name="lastName" />
               </FormGroup>
               <FormGroup
                 title="名"
                 titleType="subSubBlockTitle"
                 errorMessages="名が入力されていません。"
-                htmlFor="form_8"
               >
-                <Input name="firstName" id="form_8" />
+                <Input name="firstName" />
               </FormGroup>
             </Cluster>
           </FormGroup>
