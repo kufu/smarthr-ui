@@ -2,7 +2,6 @@ import React, { FC, HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useSpacing } from '../../hooks/useSpacing'
-import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListItem'
 import { useClassNames } from './useClassNames'
@@ -23,19 +22,16 @@ export const DefinitionList: FC<Props & ElementProps> = ({
   layout = 'default',
   className = '',
 }) => {
-  const theme = useTheme()
   const classNames = useClassNames()
 
   return (
     <Wrapper layout={layout} className={`${className} ${classNames.definitionList.wrapper}`}>
       {items.map(({ term, description, className: itemClassName }, index) => (
-        <Item
+        <DefinitionListItem
           term={term}
           description={description}
           key={index}
-          layout={layout}
           className={itemClassName}
-          themes={theme}
         />
       ))}
     </Wrapper>
@@ -60,29 +56,3 @@ const Wrapper = styled.dl<{ layout: LayoutType }>(({ layout }) => {
     margin-block: initial;
   `
 })
-
-const Item = styled(DefinitionListItem)<{ themes: Theme; layout: LayoutType }>`
-  ${({ layout, themes: { space, size } }) => {
-    const $columns = column[layout]
-    const generateFlexBasis = (cols: number) =>
-      `calc((100% - (${space(1.5)} * ${cols - 1})) / ${cols})`
-
-    return css`
-      flex-basis: ${generateFlexBasis($columns)};
-      flex-shrink: 1;
-
-      ${$columns > 2 &&
-      css`
-        @media (max-width: ${size.mediaQuery.TABLET}px) {
-          flex-basis: ${generateFlexBasis(2)};
-        }
-      `}
-      ${$columns > 1 &&
-      css`
-        @media (max-width: ${size.mediaQuery.SP}px) {
-          flex-basis: ${generateFlexBasis(1)};
-        }
-      `}
-    `
-  }}
-`
