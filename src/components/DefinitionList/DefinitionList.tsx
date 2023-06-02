@@ -51,9 +51,11 @@ const column = {
 }
 
 const Wrapper = styled.dl<{ layout: LayoutType }>(({ layout }) => {
+  const repeat = column[layout] ? column[layout] : 'auto-fill'
+  const width = column[layout] ? '1fr' : 'minmax(15em, 1fr)'
   return css`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+    grid-template-columns: repeat(${repeat}, ${width});
     gap: ${useSpacing(2.5)};
     margin-block: initial;
   `
