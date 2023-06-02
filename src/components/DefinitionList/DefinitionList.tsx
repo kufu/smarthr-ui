@@ -7,7 +7,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListItem'
 import { useClassNames } from './useClassNames'
 
-type LayoutType = 'single' | 'double' | 'triple'
+type LayoutType = 'default' | 'single' | 'double' | 'triple'
 type Props = {
   /** 定義リストのアイテムの配列 */
   items: DefinitionListItemProps[]
@@ -20,7 +20,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLDListElement>, keyof Props>
 
 export const DefinitionList: FC<Props & ElementProps> = ({
   items,
-  layout = 'single',
+  layout = 'default',
   className = '',
 }) => {
   const theme = useTheme()
