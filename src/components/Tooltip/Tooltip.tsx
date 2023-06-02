@@ -29,6 +29,8 @@ type Props = {
   tabIndex?: number
   /** ツールチップを内包要素に紐付けるかどうか */
   ariaDescribedbyTarget?: 'wrapper' | 'inner'
+  /** ツールチップの要素を表示するルート要素 */
+  portalRootElement?: HTMLElement
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-describedby'>
 
@@ -42,6 +44,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   vertical = 'bottom',
   tabIndex = 0,
   ariaDescribedbyTarget = 'wrapper',
+  portalRootElement,
   className = '',
   onPointerEnter,
   onPointerLeave,
@@ -51,7 +54,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   onBlur,
   ...props
 }) => {
-  const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const ref = useRef<HTMLDivElement>(null)
@@ -93,13 +96,19 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const isIcon = triggerType === 'icon'
 
   useEnhancedEffect(() => {
-    const element = document.createElement('div')
+    let element: HTMLElement
+    if (portalRootElement) {
+      element = portalRootElement
+    } else {
+      element = document.createElement('div')
+      document.body.appendChild(element)
+    }
     setPortalRoot(element)
-    document.body.appendChild(element)
     return () => {
+      if (portalRootElement) return
       document.body.removeChild(element)
     }
-  }, [])
+  }, [portalRootElement])
 
   const theme = useTheme()
   const classNames = useClassNames()
