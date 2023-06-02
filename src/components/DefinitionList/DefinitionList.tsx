@@ -27,7 +27,7 @@ export const DefinitionList: FC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <Wrapper className={`${className} ${classNames.definitionList.wrapper}`}>
+    <Wrapper layout={layout} className={`${className} ${classNames.definitionList.wrapper}`}>
       {items.map(({ term, description, className: itemClassName }, index) => (
         <Item
           term={term}
@@ -50,7 +50,7 @@ const column = {
   triple: 3,
 }
 
-const Wrapper = styled.dl.attrs({ as: 'dl' })(() => {
+const Wrapper = styled.dl<{ layout: LayoutType }>(({ layout }) => {
   return css`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
