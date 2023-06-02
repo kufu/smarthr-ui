@@ -18,6 +18,19 @@ export default {
   },
 }
 
+const Item = () => {
+  const themes = useTheme()
+  return (
+    <Term>
+      <span>term 7</span>
+      <Alert>
+        <FaExclamationCircleIcon size={11} color={themes.color.DANGER} />
+        <AlertText>error occurred</AlertText>
+      </Alert>
+    </Term>
+  )
+}
+
 const DefinitionListItems = [
   {
     term: 'term 1',
@@ -36,30 +49,6 @@ const DefinitionListItems = [
     description: 'description 4',
   },
   {
-    term: 'term 5',
-  },
-]
-
-const Item = () => {
-  const themes = useTheme()
-  return (
-    <Term>
-      <span>term 7</span>
-      <Alert>
-        <FaExclamationCircleIcon size={11} color={themes.color.DANGER} />
-        <AlertText>error occurred</AlertText>
-      </Alert>
-    </Term>
-  )
-}
-
-const customizedItems = [
-  ...DefinitionListItems,
-  {
-    term: 'term 6',
-    description: 'description 6',
-  },
-  {
     term: <Item />,
     description: 'description 7',
   },
@@ -73,31 +62,30 @@ const customizedItems = [
   },
   {
     term: 'term 9',
-    description: 'description 9',
   },
 ]
 
 export const All: Story = () => {
   return (
     <Wrapper>
+      <Title type="sectionTitle">default</Title>
+      <Content>
+        <DefinitionList items={DefinitionListItems} />
+      </Content>
+
       <Title type="sectionTitle">single column</Title>
       <Content>
-        <DefinitionList items={DefinitionListItems} layout="single"></DefinitionList>
+        <DefinitionList items={DefinitionListItems} layout="single" />
       </Content>
 
       <Title type="sectionTitle">two column</Title>
       <Content>
-        <DefinitionList items={DefinitionListItems} layout="double"></DefinitionList>
+        <DefinitionList items={DefinitionListItems} layout="double" />
       </Content>
 
       <Title type="sectionTitle">three column</Title>
       <Content>
-        <DefinitionList items={DefinitionListItems} layout="triple"></DefinitionList>
-      </Content>
-
-      <Title type="sectionTitle">customized</Title>
-      <Content>
-        <DefinitionList items={customizedItems} layout="double" />
+        <DefinitionList items={DefinitionListItems} layout="triple" />
       </Content>
     </Wrapper>
   )
