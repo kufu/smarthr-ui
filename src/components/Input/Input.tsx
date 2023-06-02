@@ -12,6 +12,7 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { GreyScaleColors } from '../../themes/createColor'
 
 import { useClassNames } from './useClassNames'
 
@@ -28,6 +29,8 @@ type Props = {
   prefix?: ReactNode
   /** コンポーネント内の末尾に表示する内容 */
   suffix?: ReactNode
+  /** 背景色。readOnly を下地の上に載せる場合に使う */
+  bgColor?: GreyScaleColors | 'WHITE'
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
    */
@@ -36,7 +39,21 @@ type Props = {
 type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
 
 export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
-  ({ onFocus, onBlur, autoFocus, prefix, suffix, className = '', width, ...props }, ref) => {
+  (
+    {
+      onFocus,
+      onBlur,
+      autoFocus,
+      prefix,
+      suffix,
+      className = '',
+      width,
+      readOnly,
+      bgColor,
+      ...props
+    },
+    ref,
+  ) => {
     const theme = useTheme()
     const innerRef = useRef<HTMLInputElement>(null)
 
@@ -78,6 +95,8 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       <Wrapper
         themes={theme}
         $width={width}
+        $readOnly={readOnly} // Firefox に :has が来たら置き換えられそう
+        bgColor={bgColor}
         $disabled={props.disabled}
         error={props.error}
         onClick={() => innerRef.current?.focus()}
@@ -94,6 +113,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
           onFocus={handleFocus}
           onBlur={handleBlur}
           onWheel={handleWheel}
+          readOnly={readOnly}
           ref={innerRef}
           themes={theme}
           aria-invalid={props.error || undefined}
@@ -118,21 +138,34 @@ const Wrapper = styled.span<{
   themes: Theme
   $width?: string | number
   $disabled?: boolean
+  $readOnly: ElementProps['readOnly']
+  bgColor?: Props['bgColor']
   error?: boolean
-}>(({ themes, $width = 'auto', $disabled, error }) => {
-  const { border, color, radius, shadow, spacingByChar } = themes
-  return css`
+}>`
+  ${({
+    themes: { border, color, radius, shadow, space },
+    $width = 'auto',
+    $readOnly,
+    $disabled,
+    error,
+    bgColor,
+  }) => css`
     cursor: text;
     box-sizing: border-box;
     display: inline-flex;
-    gap: ${spacingByChar(0.5)};
+    gap: ${space(0.5)};
     align-items: center;
     border-radius: ${radius.m};
     border: ${border.shorthand};
-    background-color: ${color.WHITE};
-    padding-right: ${spacingByChar(0.5)};
-    padding-left: ${spacingByChar(0.5)};
+    background-color: ${bgColor ? color[bgColor] : color.WHITE};
+    padding-inline: ${space(0.5)};
     width: ${typeof $width === 'number' ? `${$width}px` : $width};
+
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
 
     &:focus-within {
       ${shadow.focusIndicatorStyles};
@@ -142,50 +175,54 @@ const Wrapper = styled.span<{
     css`
       border-color: ${color.DANGER};
     `}
+    ${$readOnly &&
+    css`
+      border-color: ${bgColor ? color[bgColor] : color.BACKGROUND};
+      background-color: ${bgColor ? color[bgColor] : color.BACKGROUND};
+    `}
     ${$disabled &&
     css`
       pointer-events: none;
       border-color: ${color.disableColor(color.BORDER)};
       background-color: ${color.hoverColor(color.WHITE)};
     `}
-  `
-})
-const StyledInput = styled.input<Props & { themes: Theme }>(
-  ({ themes: { fontSize, leading, color, radius, spacingByChar } }) =>
-    css`
-      flex-grow: 1;
+  `}
+`
 
-      display: inline-block;
-      outline: none;
-      border-radius: ${radius.m};
-      border: none;
-      background-color: transparent;
-      padding: ${spacingByChar(0.75)} 0;
-      font-size: ${fontSize.M};
-      line-height: ${leading.NONE};
-      color: ${color.TEXT_BLACK};
-      width: 100%;
+const StyledInput = styled.input<Props & { themes: Theme }>`
+  ${({ themes: { fontSize, leading, color, space } }) => css`
+    flex-grow: 1;
 
-      /* font-size * line-height で高さが思うように行かないので、相対値の font-size で高さを指定 */
-      height: ${fontSize.M};
+    display: inline-block;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    padding-block: ${space(0.75)};
+    font-size: ${fontSize.M};
+    line-height: ${leading.NONE};
+    color: ${color.TEXT_BLACK};
+    width: 100%;
 
-      &::placeholder {
-        color: ${color.TEXT_GREY};
-      }
+    /* font-size * line-height で高さが思うように行かないので、相対値の font-size で高さを指定 */
+    height: ${fontSize.M};
 
-      &[disabled] {
-        color: ${color.TEXT_DISABLED};
-        -webkit-text-fill-color: ${color.TEXT_DISABLED};
-        opacity: 1;
-      }
-    `,
-)
-const Affix = styled.span<{ themes: Theme }>(
-  ({ themes: { color } }) => css`
+    &::placeholder {
+      color: ${color.TEXT_GREY};
+    }
+
+    &[disabled] {
+      color: ${color.TEXT_DISABLED};
+      -webkit-text-fill-color: ${color.TEXT_DISABLED};
+      opacity: 1;
+    }
+  `}
+`
+const Affix = styled.span<{ themes: Theme }>`
+  ${({ themes: { color } }) => css`
     flex-shrink: 0;
 
     display: flex;
     align-items: center;
     color: ${color.TEXT_GREY};
-  `,
-)
+  `}
+`

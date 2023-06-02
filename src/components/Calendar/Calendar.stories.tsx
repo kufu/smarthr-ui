@@ -12,7 +12,7 @@ export default {
 
 export const All: Story = () => {
   const [value, setValue] = useState(new Date(2020, 0, 1))
-  const [value2, setValue2] = useState(new Date())
+  const [value2, setValue2] = useState(new Date(2023, 3, 1))
   return (
     <List>
       <dt>Default</dt>
@@ -50,7 +50,7 @@ export const All: Story = () => {
           value={value2}
         />
       </dd>
-      <dt>現在が from–to 内の場合、現在を表示する</dt>
+      <dt>現在（2023/04/01）が from–to 内の場合、現在を表示する</dt>
       <dd>
         <Calendar
           from={new Date(1900, 0, 10)}

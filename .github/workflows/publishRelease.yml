@@ -52,7 +52,7 @@ jobs:
           commitish: master
           prerelease: ${{ env.IS_PRERELEASE }}
       - name: close issue
-        uses: peter-evans/close-issue@v2
+        uses: peter-evans/close-issue@v3
       - name: delete branch
         run: git push origin :release-candidate
       - name: cherry-pick release commit
@@ -60,7 +60,7 @@ jobs:
           git checkout master
           git cherry-pick $NEW_TAG
       - name: craete pull request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           title: 'chore(release): ${{ env.NEW_TAG }}'
           branch: 'merge-release-${{ env.NEW_TAG }}'

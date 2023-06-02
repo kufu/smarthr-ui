@@ -152,7 +152,7 @@ const Layout = styled.div`
 `
 const Inner = styled.div<StyleProps & { themes: Theme }>`
   ${({ themes, $width, top, right, bottom, left }) => {
-    const { color, radius, shadow, spacingByChar } = themes
+    const { border, color, radius, shadow, space } = themes
     const positionRight = exist(right) ? `${right}px` : 'auto'
     const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
     const positionTop = exist(top) ? `${top}px` : 'auto'
@@ -160,33 +160,29 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
     const translateX = exist(right) || exist(left) ? '0' : 'calc((100vw - 100%) / 2)'
     const translateY = exist(top) || exist(bottom) ? '0' : 'calc((100vh - 100%) / 2)'
 
-    const widthStyles = exist($width)
-      ? // width が指定されているときは width 設定
-        css`
-          width: ${typeof $width === 'number' ? `${$width}px` : $width};
-        `
-      : exist(left) && exist(right)
-      ? // left, right が両方指定されているときは、それに任せる
-        null
-      : // 幅を確定できる指定がされていない場合は、viewport を超えないように上限設定
-        css`
-          max-width: min(
-            calc(
-              100vw - max(${left || 0}px, ${spacingByChar(0.5)}) -
-                max(${right || 0}px, ${spacingByChar(0.5)})
-            ),
-            800px
-          );
-        ` /* TODO: 幅の定数指定は、トークンが決まり theme に入ったら差し替える */
-
     return css`
       position: absolute;
       inset: ${positionTop} ${positionRight} ${positionBottom} ${positionLeft};
-      ${widthStyles};
+      ${exist($width) &&
+      css`
+        width: ${typeof $width === 'number' ? `${$width}px` : $width};
+      `}
+      /* viewport を超えないように上限設定 */
+      max-width: min(
+        calc(100vw - max(${left || 0}px, ${space(0.5)}) - max(${right || 0}px, ${space(0.5)})),
+        /* TODO: 幅の定数指定は、トークンが決まり theme に入ったら差し替える */
+        800px
+      );
       border-radius: ${radius.m};
       background-color: ${color.WHITE};
       box-shadow: ${shadow.LAYER3};
       transform: translate(${translateX}, ${translateY});
+
+      @media (prefers-contrast: more) {
+        & {
+          border: ${border.highContrast};
+        }
+      }
     `
   }}
 `

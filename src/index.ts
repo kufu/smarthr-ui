@@ -23,20 +23,27 @@ export { Textarea } from './components/Textarea'
 export { TextLink } from './components/TextLink'
 export { Loader } from './components/Loader'
 export {
-  Dialog,
-  MessageDialog,
   ActionDialog,
-  DialogWrapper,
-  DialogTrigger,
+  ActionDialogContent,
+  ActionDialogWithTrigger,
+  FormDialog,
+  FormDialogContent,
+  Dialog,
   DialogCloser,
   DialogContent,
+  DialogTrigger,
+  DialogWrapper,
+  MessageDialog,
   MessageDialogContent,
-  ActionDialogContent,
   ModelessDialog,
-  ActionDialogWithTrigger,
+  RemoteDialogTrigger,
+  RemoteTriggerActionDialog,
+  RemoteTriggerFormDialog,
+  RemoteTriggerMessageDialog,
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
+export { RadioButtonPanel } from './components/RadioButtonPanel'
 export {
   AnchorButton,
   Button,
@@ -57,6 +64,7 @@ export * from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
 export {
   Table,
+  TableReel,
   Head,
   Row,
   Cell,
@@ -96,6 +104,8 @@ export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'
 export { FormGroup } from './components/FormGroup'
+export { FormControl } from './components/FormControl'
+export { Fieldset } from './components/NewFieldset'
 export {
   BackgroundJobsPanel,
   BackgroundJobsList,
@@ -110,6 +120,7 @@ export { NotificationBar } from './components/NotificationBar'
 export { AppLauncher, Header, HeaderLink, HeaderDropdownMenuButton } from './components/Header'
 export { PageCounter } from './components/PageCounter'
 export { VisuallyHiddenText } from './components/VisuallyHiddenText'
+export * from './components/SpreadsheetTable'
 
 // layout components
 export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'

@@ -89,6 +89,12 @@ const baseStyles = css<StyleProps>(({ wide, $loading, themes }) => {
       ${shadow.focusIndicatorStyles}
     }
 
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
+
     /* baseline より下の leading などの余白を埋める */
     .smarthr-ui-Icon,
     svg {
@@ -168,6 +174,12 @@ function variantStyles(variant: Variant, theme: Theme) {
         focus: css`
           border-color: ${color.hoverColor(color.BORDER)};
           background-color: ${color.hoverColor(color.WHITE)};
+
+          @media (prefers-contrast: more) {
+            & {
+              border-color: ${color.TEXT_BLACK};
+            }
+          }
         `,
         disabled: css`
           border-color: ${color.disableColor(color.BORDER)};
@@ -220,6 +232,7 @@ function variantStyles(variant: Variant, theme: Theme) {
           background-color: ${color.hoverColor(color.WHITE)};
         `,
         disabled: css`
+          border-color: transparent;
           background-color: transparent;
           color: ${color.TEXT_DISABLED};
         `,

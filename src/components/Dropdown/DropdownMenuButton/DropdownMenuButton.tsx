@@ -9,21 +9,27 @@ import React, {
 import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
-import { Dropdown, DropdownContent, DropdownTrigger } from '..'
+import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '..'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
+import { RemoteDialogTrigger } from '../../Dialog'
 import { FaCaretDownIcon, FaEllipsisHIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 
 import { useClassNames } from './useClassNames'
 
 type Actions = ActionItem | ActionItem[]
+
 // これでコンポーネントを絞れるわけではないが Button[variant=text] を使ってほしいんだよ! という気持ち
-type ActionItem =
+type ActionItemTruthyType =
   | ReactElement<ComponentProps<typeof Button>>
   | ReactElement<ComponentProps<typeof AnchorButton>>
-  | null
-  | boolean
+  | ReactElement<ComponentProps<typeof RemoteDialogTrigger>>
+// HINT: このコンポーネントは以下のような記法で利用される場合が多いため、判定に利用されうる型を許容する
+// <DropdownMenuButton>{hoge && <Button {...props} />}</DropdownMenuButton>
+type ActionItemFalsyType = null | undefined | boolean | 0 | ''
+type ActionItem = ActionItemTruthyType | ActionItemFalsyType
+
 type Props = {
   /** 引き金となるボタンラベル */
   label: ReactNode
@@ -76,12 +82,15 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         </TriggerButton>
       </DropdownTrigger>
       <DropdownContent>
-        <ActionList themes={themes} className={classNames.panel}>
-          {React.Children.map(children, (item, i) =>
-            // MEMO: {flag && <Button/>}のような書き方に対応させるためbooleanの判定を入れています
-            item && typeof item !== 'boolean' ? <li key={i}>{actionItem(item)}</li> : null,
-          )}
-        </ActionList>
+        <DropdownScrollArea>
+          <ActionList themes={themes} className={classNames.panel}>
+            {React.Children.map(children, (item, i) =>
+              // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
+              // itemの存在チェックでfalsyな値は弾かれている想定
+              item ? <li key={i}>{actionItem(item as ActionItemTruthyType)}</li> : null,
+            )}
+          </ActionList>
+        </DropdownScrollArea>
       </DropdownContent>
     </Dropdown>
   )
@@ -96,11 +105,12 @@ const ActionList = styled(Stack).attrs({ as: 'ul', gap: 0 })<{ themes: Theme }>`
   ${({ themes: { space } }) => css`
     list-style: none;
     margin-block: 0;
-    padding-block: ${space(0.5)};
-    padding-inline-start: 0;
+    padding: ${space(0.5)} ${space(0.25)};
 
     .smarthr-ui-Button,
     .smarthr-ui-AnchorButton {
+      width: 100%;
+      border-style: none;
       justify-content: flex-start;
 
       padding-block: ${space(0.5)};
@@ -108,6 +118,7 @@ const ActionList = styled(Stack).attrs({ as: 'ul', gap: 0 })<{ themes: Theme }>`
     }
 
     .smarthr-ui-Button-disabledWrapper {
+      column-gap: ${space(0.5)};
       /* unset した Button の右 padding 分 */
       padding-inline-end: ${space(1)};
 

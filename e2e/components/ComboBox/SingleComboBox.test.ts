@@ -140,6 +140,7 @@ test('キーボードで操作できること', async (t) => {
     .eql('option 1')
     .pressKey('up')
     .pressKey('up')
+    .pressKey('up')
     .pressKey('enter')
     .expect(comboboxInput.value)
     .eql('option 5')

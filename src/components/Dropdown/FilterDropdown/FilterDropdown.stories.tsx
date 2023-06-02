@@ -1,16 +1,28 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
-import React, { useCallback, useState } from 'react'
+import { Meta, StoryObj } from '@storybook/react'
+import React, { ComponentProps, ReactNode, useCallback, useState } from 'react'
 import styled from 'styled-components'
 
+import { Button } from '../../Button'
 import { MultiComboBox, SingleComboBox } from '../../ComboBox'
 import { Input } from '../../Input'
-import { Stack } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
 import { RadioButton } from '../../RadioButton'
 
 import { FilterDropdown } from './FilterDropdown'
 
-export const Default: Story = () => {
+const meta = {
+  title: 'Buttons（ボタン）/Dropdown',
+  component: FilterDropdown,
+  parameters: {
+    withTheming: true,
+  },
+} satisfies Meta<typeof FilterDropdown>
+export default meta
+
+type Story = StoryObj<typeof meta>
+
+const Render: React.FC = () => {
   const [value, setValue] = React.useState('hoge')
   const [text, setText] = React.useState('')
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
@@ -19,6 +31,8 @@ export const Default: Story = () => {
   const [isFiltered2, setIsFiltered2] = React.useState(true)
   const [isFiltered3, setIsFiltered3] = React.useState(true)
   const [isFiltered4, setIsFiltered4] = React.useState(true)
+  const [responseMessage, setResponseMessage] =
+    useState<ComponentProps<typeof FilterDropdown>['responseMessage']>()
 
   return (
     <Wrapper>
@@ -92,6 +106,21 @@ export const Default: Story = () => {
             </p>
           </FilterDropdown>
         </dd>
+        <dt>disabled</dt>
+        <dd>
+          <FilterDropdown
+            onApply={() => setIsFiltered(true)}
+            onCancel={() => setIsFiltered(false)}
+            onReset={() => {
+              setValue('hoge')
+              setText('')
+            }}
+            isFiltered={isFiltered}
+            disabled
+          >
+            disabled
+          </FilterDropdown>
+        </dd>
         <dt>Custom text</dt>
         <dd>
           <FilterDropdown
@@ -112,12 +141,57 @@ export const Default: Story = () => {
             </p>
           </FilterDropdown>
         </dd>
+        <dt>Has response message</dt>
+        <dd>
+          <FilterDropdown
+            isFiltered={isFiltered4}
+            onApply={() => setIsFiltered4(true)}
+            onReset={() => setIsFiltered4(false)}
+            responseMessage={responseMessage}
+          >
+            <Stack gap={1}>
+              <p>
+                You can change border text and color of the trigger button by setting `isFiltered`.
+              </p>
+              <p>切り替えボタン：</p>
+              <Cluster gap={0.5}>
+                <Button
+                  onClick={() => {
+                    setResponseMessage({ status: 'success', text: '適用しました。' })
+                  }}
+                >
+                  保存
+                </Button>
+                <Button
+                  onClick={() => {
+                    setResponseMessage({ status: 'error', text: '何らかのエラーが発生しました。' })
+                  }}
+                >
+                  エラー
+                </Button>
+                <Button
+                  onClick={() => {
+                    setResponseMessage({ status: 'processing' })
+                  }}
+                >
+                  保存中
+                </Button>
+              </Cluster>
+            </Stack>
+          </FilterDropdown>
+        </dd>
       </List>
     </Wrapper>
   )
 }
-Default.storyName = 'FilterDropdown'
-Default.parameters = { withTheming: true }
+
+export const FilterDropdownStory: Story = {
+  name: 'FilterDropdown',
+  args: {
+    children: null,
+  },
+  render: () => <Render />,
+}
 
 const Wrapper = styled.div`
   padding: 24px;
@@ -143,7 +217,7 @@ const RadioButtonList = styled.ul`
   list-style: none;
 `
 
-type Item = { label: string; value: string }
+type Item = { label: ReactNode; value: string }
 const PartSingleComboBox: React.FC<{ name: string }> = ({ name }) => {
   const [items, _setItems] = useState([
     {

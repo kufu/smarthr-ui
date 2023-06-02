@@ -20,9 +20,14 @@ import {
   DialogContent,
   DialogTrigger,
   DialogWrapper,
+  FormDialog,
   MessageDialog,
   MessageDialogContent,
   ModelessDialog,
+  RemoteDialogTrigger,
+  RemoteTriggerActionDialog,
+  RemoteTriggerFormDialog,
+  RemoteTriggerMessageDialog,
 } from '.'
 
 export default {
@@ -43,6 +48,10 @@ export default {
     docs: {
       source: {
         type: 'code',
+      },
+      story: {
+        inline: false,
+        iframeHeight: '500px',
       },
     },
     withTheming: true,
@@ -200,7 +209,6 @@ Message_Dialog.parameters = {
 
 export const Action_Dialog: Story = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
-  const [value, setValue] = React.useState('Apple')
   const [responseMessage, setResponseMessage] =
     useState<ComponentProps<typeof ActionDialog>['responseMessage']>()
   const openedFocusRef = useRef<HTMLInputElement>(null)
@@ -208,7 +216,6 @@ export const Action_Dialog: Story = () => {
     setOpenedDialog(null)
     setResponseMessage(undefined)
   }
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
 
   return (
     <Cluster>
@@ -236,25 +243,8 @@ export const Action_Dialog: Story = () => {
         id="dialog-action"
         data-test="dialog-content"
       >
-        <RadioList>
-          <li>
-            <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
-              Apple
-            </RadioButton>
-          </li>
-          <li>
-            <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChange}>
-              Orange
-            </RadioButton>
-          </li>
-          <li>
-            <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChange}>
-              Grape
-            </RadioButton>
-          </li>
-        </RadioList>
         <Buttons>
-          <p>切り替えボタン：</p>
+          <p>保存前の確認テキストなど。</p>
           <Button
             onClick={() =>
               setResponseMessage({
@@ -307,11 +297,6 @@ export const Action_Dialog: Story = () => {
           <div style={{ padding: '2rem' }}>
             <Stack align="flex-start">
               <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
-              <Input
-                ref={openedFocusRef}
-                name="opened_dialog_focus_target"
-                data-test="opened-dialog-focus-target"
-              />
             </Stack>
           </div>
         </ActionDialog>
@@ -319,21 +304,152 @@ export const Action_Dialog: Story = () => {
     </Cluster>
   )
 }
-const Buttons = styled.div`
-  margin-top: -2rem;
-  padding: 1rem 1.5rem;
 
-  > button + button {
-    margin-left: 0.5rem;
-  }
-`
 Action_Dialog.parameters = {
+  docs: {
+    description: {
+      story: '`ActionDialog` includes an action button that used for confirm, etc.',
+    },
+  },
+}
+
+export const Form_Dialog: Story = () => {
+  const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
+  const [value, setValue] = React.useState('Apple')
+  const [responseMessage, setResponseMessage] =
+    useState<ComponentProps<typeof ActionDialog>['responseMessage']>()
+  const openedFocusRef = useRef<HTMLInputElement>(null)
+  const onClickClose = () => {
+    setOpenedDialog(null)
+    setResponseMessage(undefined)
+  }
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+
+  return (
+    <Cluster>
+      <Button
+        onClick={() => setOpenedDialog('normal')}
+        aria-haspopup="dialog"
+        aria-controls="dialog-action"
+        data-test="dialog-trigger"
+      >
+        FormDialog
+      </Button>
+      <FormDialog
+        isOpen={openedDialog === 'normal'}
+        title="FormDialog"
+        subtitle="副題"
+        actionText="保存"
+        decorators={{ closeButtonLabel: (txt) => `cancel.(${txt})` }}
+        onSubmit={(closeDialog) => {
+          action('executed')()
+          setResponseMessage(undefined)
+          closeDialog()
+        }}
+        onClickClose={onClickClose}
+        responseMessage={responseMessage}
+        id="form-dialog-action"
+        data-test="form-dialog-content"
+      >
+        <RadioList>
+          <li>
+            <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
+              Apple
+            </RadioButton>
+          </li>
+          <li>
+            <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChange}>
+              Orange
+            </RadioButton>
+          </li>
+          <li>
+            <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChange}>
+              Grape
+            </RadioButton>
+          </li>
+        </RadioList>
+        <Buttons>
+          <p>切り替えボタン：</p>
+          <Button
+            onClick={() =>
+              setResponseMessage({
+                status: 'success',
+                text: '保存しました。',
+              })
+            }
+          >
+            保存
+          </Button>
+          <Button
+            onClick={() =>
+              setResponseMessage({
+                status: 'error',
+                text: '何らかのエラーが発生しました。',
+              })
+            }
+          >
+            エラー
+          </Button>
+          <Button
+            onClick={() =>
+              setResponseMessage({
+                status: 'processing',
+              })
+            }
+          >
+            保存中
+          </Button>
+        </Buttons>
+      </FormDialog>
+      <Button onClick={() => setOpenedDialog('opened')} data-test="opened-form-dialog-trigger">
+        開いた状態で DOM に投入
+      </Button>
+      {openedDialog === 'opened' && (
+        <FormDialog
+          isOpen
+          title="開いた状態で投入されたダイアログ"
+          actionText="実行"
+          onSubmit={(closeDialog) => {
+            action('execute')()
+            closeDialog()
+          }}
+          onClickClose={onClickClose}
+          onClickOverlay={onClickClose}
+          decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
+          firstFocusTarget={openedFocusRef}
+          data-test="opened-form-dialog"
+        >
+          <div style={{ padding: '2rem' }}>
+            <Stack align="flex-start">
+              <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
+              <Input
+                ref={openedFocusRef}
+                name="opened_dialog_focus_target"
+                data-test="opened-form-dialog-focus-target"
+              />
+            </Stack>
+          </div>
+        </FormDialog>
+      )}
+    </Cluster>
+  )
+}
+
+Form_Dialog.parameters = {
   docs: {
     description: {
       story: '`ActionDialog` includes an action button that used for submitting, etc.',
     },
   },
 }
+
+const Buttons = styled.div`
+  padding: 1rem 1.5rem;
+
+  > button + button {
+    margin-left: 0.5rem;
+  }
+`
 
 export const Action_Dialog_With_Trigger: Story = () => {
   return (
@@ -359,6 +475,125 @@ export const Action_Dialog_With_Trigger: Story = () => {
       >
         <Description>ActionDialog with Trigger.</Description>
       </ActionDialogWithTrigger>
+    </>
+  )
+}
+
+export const Remote_Trigger_Action_Dialog: Story = () => {
+  return (
+    <>
+      <div>
+        <p>複数のトリガーに対応</p>
+        <RemoteDialogTrigger targetId="remote_trigger_action_dialog_1">
+          <Button>Trigger 1.</Button>
+        </RemoteDialogTrigger>
+        <RemoteDialogTrigger targetId="remote_trigger_action_dialog_1">
+          <Button>Trigger 2.</Button>
+        </RemoteDialogTrigger>
+        <RemoteTriggerActionDialog
+          id="remote_trigger_action_dialog_1"
+          title="Remote Trigger Action Dialog 1"
+          actionText="保存"
+          onClickAction={(close) => {
+            close()
+          }}
+        >
+          <Description>Remote Trigger Action Dialog.</Description>
+        </RemoteTriggerActionDialog>
+      </div>
+
+      <div>
+        <p>disabled</p>
+        <RemoteDialogTrigger targetId="remote_trigger_action_dialog_2">
+          <Button disabled={true}>disabled.</Button>
+        </RemoteDialogTrigger>
+        <RemoteTriggerActionDialog
+          id="remote_trigger_action_dialog_2"
+          title="Remote Trigger Action Dialog 2"
+          actionText="保存"
+          onClickAction={(close) => {
+            close()
+          }}
+        >
+          <Description>Remote Trigger Action Dialog.</Description>
+        </RemoteTriggerActionDialog>
+      </div>
+    </>
+  )
+}
+
+export const Remote_Trigger_Form_Dialog: Story = () => {
+  return (
+    <>
+      <div>
+        <p>複数のトリガーに対応</p>
+        <RemoteDialogTrigger targetId="remote_trigger_form_dialog_1">
+          <Button>Trigger 1.</Button>
+        </RemoteDialogTrigger>
+        <RemoteDialogTrigger targetId="remote_trigger_form_dialog_1">
+          <Button>Trigger 2.</Button>
+        </RemoteDialogTrigger>
+        <RemoteTriggerFormDialog
+          id="remote_trigger_form_dialog_1"
+          title="Remote Trigger Form Dialog 1"
+          actionText="保存"
+          onSubmit={(close) => {
+            close()
+          }}
+        >
+          <Description>Remote Trigger Form Dialog.</Description>
+        </RemoteTriggerFormDialog>
+      </div>
+
+      <div>
+        <p>disabled</p>
+        <RemoteDialogTrigger targetId="remote_trigger_form_dialog_2">
+          <Button disabled={true}>disabled.</Button>
+        </RemoteDialogTrigger>
+        <RemoteTriggerFormDialog
+          id="remote_trigger_form_dialog_2"
+          title="Remote Trigger Form Dialog 2"
+          actionText="保存"
+          onSubmit={(close) => {
+            close()
+          }}
+        >
+          <Description>Remote Trigger Form Dialog.</Description>
+        </RemoteTriggerFormDialog>
+      </div>
+    </>
+  )
+}
+
+export const Remote_Trigger_Message_Dialog: Story = () => {
+  return (
+    <>
+      <div>
+        <p>複数のトリガーに対応</p>
+        <RemoteDialogTrigger targetId="remote_trigger_message_dialog_1">
+          <Button>Trigger 1.</Button>
+        </RemoteDialogTrigger>
+        <RemoteDialogTrigger targetId="remote_trigger_message_dialog_1">
+          <Button>Trigger 2.</Button>
+        </RemoteDialogTrigger>
+        <RemoteTriggerMessageDialog
+          id="remote_trigger_message_dialog_1"
+          title="Remote Trigger Message Dialog 1"
+          description={<Description>Remote Trigger Message Dialog.</Description>}
+        />
+      </div>
+
+      <div>
+        <p>disabled</p>
+        <RemoteDialogTrigger targetId="remote_trigger_message_dialog_2">
+          <Button disabled={true}>disabled.</Button>
+        </RemoteDialogTrigger>
+        <RemoteTriggerMessageDialog
+          id="remote_trigger_message_dialog_2"
+          title="Remote Trigger Message Dialog 2"
+          description={<Description>Remote Trigger Message Dialog.</Description>}
+        />
+      </div>
     </>
   )
 }

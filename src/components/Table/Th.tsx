@@ -10,10 +10,10 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
-import { Stack } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { useThClassNames } from './useClassNames'
+import { useReelShadow } from './useReelShadow'
 
 type sortTypes = keyof typeof SORT_DIRECTION_LABEL
 export type Props = PropsWithChildren<{
@@ -25,6 +25,8 @@ export type Props = PropsWithChildren<{
   decorators?: {
     sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
   }
+  /** `true` のとき、TableReel内で固定表示になる */
+  fixed?: boolean
 }>
 type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props | 'onClick'>
 
@@ -39,6 +41,7 @@ export const Th: FC<Props & ElementProps> = ({
   sort,
   onSort,
   decorators,
+  fixed = false,
   className = '',
   ...props
 }) => {
@@ -67,7 +70,13 @@ export const Th: FC<Props & ElementProps> = ({
   }, [sort])
 
   return (
-    <Wrapper {...ariaSortProps} {...props} className={wrapperClass} themes={theme}>
+    <Wrapper
+      {...ariaSortProps}
+      {...props}
+      className={`${wrapperClass} ${fixed ? 'fixedElement' : ''}`}
+      themes={theme}
+      fixed={fixed}
+    >
       {sort ? (
         <SortButton themes={theme} onClick={onSort}>
           {children}
@@ -81,8 +90,8 @@ export const Th: FC<Props & ElementProps> = ({
   )
 }
 
-const Wrapper = styled.th<{ themes: Theme }>`
-  ${({ themes: { fontSize, leading, color, shadow, space } }) => css`
+const Wrapper = styled.th<{ themes: Theme; fixed: boolean }>`
+  ${({ themes: { fontSize, leading, color, shadow, space }, fixed }) => css`
     font-size: ${fontSize.S};
     font-weight: bold;
     padding: ${space(0.75)} ${space(1)};
@@ -103,6 +112,23 @@ const Wrapper = styled.th<{ themes: Theme }>`
         ${shadow.focusIndicatorStyles}
       }
     }
+
+    /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
+    &.fixedElement {
+      ${useReelShadow({ showShadow: false, direction: 'right' })}
+    }
+
+    ${fixed &&
+    css`
+      &.fixed {
+        position: sticky;
+        right: 0;
+
+        &::after {
+          opacity: 1;
+        }
+      }
+    `}
   `}
 `
 
@@ -140,4 +166,11 @@ const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => (
   </SortIconWraper>
 )
 
-const SortIconWraper = styled(Stack).attrs({ as: 'span', gap: -1, inline: true })``
+const SortIconWraper = styled.span`
+  display: inline-flex;
+  flex-direction: column;
+
+  .smarthr-ui-Icon + .smarthr-ui-Icon {
+    margin-top: -1em;
+  }
+`

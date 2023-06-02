@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, VFC } from 'react'
+import React, { FC, HTMLAttributes, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
@@ -29,9 +29,9 @@ type Props = Omit<React.ComponentProps<typeof Input>, 'error'> & {
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 /**
- * @deprecated The FieldSet component is deprecated, so use FormGroup component instead.
+ * @deprecated `Fieldset` コンポーネントは非推奨です。代わりに `FormControl` を使ってください。
  */
-export const FieldSet: VFC<Props & ElementProps> = ({
+export const FieldSet: FC<Props & ElementProps> = ({
   label,
   labelType = 'subBlockTitle',
   labelTagType = 'span',

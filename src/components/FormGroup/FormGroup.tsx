@@ -1,16 +1,34 @@
-import React, { ComponentProps, HTMLAttributes, ReactNode, VFC } from 'react'
+import React, {
+  ComponentProps,
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+} from 'react'
 import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
+import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { MultiComboBox, SingleComboBox } from '../ComboBox'
+import { DatePicker } from '../DatePicker'
+import { DropZone } from '../DropZone'
 import { Heading, HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
+import { CurrencyInput, Input } from '../Input'
+import { InputFile } from '../InputFile'
+import { Cluster, Stack } from '../Layout'
+import { Select } from '../Select'
 import { StatusLabel } from '../StatusLabel'
+import { Text } from '../Text'
+import { Textarea } from '../Textarea'
 
 import { useClassNames } from './useClassNames'
 
-type innerMarginType = 'XXS' | 'XS' | 'S'
-type Props = {
+import type { Gap } from '../Layout'
+type StatusLabelProps = ComponentProps<typeof StatusLabel>
+
+type Props = PropsWithChildren<{
   /** グループのタイトル名 */
   title: ReactNode
   /** タイトルの見出しのタイプ */
@@ -19,152 +37,242 @@ type Props = {
   htmlFor?: string
   /** label 要素に適用する `id` 値 */
   labelId?: string
-  /** タイトルと子要素の間のマージン */
-  innerMargin?: innerMarginType
+  /** タイトル群と子要素の間の間隔調整用（基本的には不要） */
+  innerMargin?: Gap
   /** タイトルの隣に表示する `StatusLabel` の Props の配列 */
-  statusLabelProps?: Array<ComponentProps<typeof StatusLabel>>
+  statusLabelProps?: StatusLabelProps | StatusLabelProps[]
   /** タイトルの下に表示するヘルプメッセージ */
   helpMessage?: ReactNode
+  /** タイトルの下に表示する入力例 */
+  exampleMessage?: ReactNode
   /** タイトルの下に表示するエラーメッセージ */
   errorMessages?: ReactNode | ReactNode[]
+  /** フォームコントロールの下に表示する補足メッセージ */
+  supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
   /** コンポーネントに適用するクラス名 */
   className?: string
-  children: ReactNode
-}
+  as?: string | React.ComponentType<any>
+}>
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-labelledby'>
 
-export const FormGroup: VFC<Props & ElementProps> = ({
+/**
+ * @deprecated `FormGroup` コンポーネントは非推奨です。代わりに `FormControl` や `Fieldset` を使ってください。
+ */
+export const FormGroup: React.FC<Props & ElementProps> = ({
   title,
-  titleType,
+  titleType = 'blockTitle',
   htmlFor,
   labelId,
-  innerMargin = 'XS',
+  innerMargin,
   statusLabelProps = [],
   helpMessage,
+  exampleMessage,
   errorMessages,
+  supplementaryMessage,
   disabled,
+  as = 'div',
   className = '',
   children,
   ...props
 }) => {
-  const theme = useTheme()
   const disabledClass = disabled ? 'disabled' : ''
+  const managedHtmlFor = useId(htmlFor)
   const managedLabelId = useId(labelId)
-  const isRoleGroup = props.role === 'group'
+  const isRoleGroup = as === 'fieldset'
+  const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
+
+  const theme = useTheme()
   const classNames = useClassNames()
+  const describedbyIds = `${managedHtmlFor}_helpMessage ${managedHtmlFor}_exampleMessage ${managedHtmlFor}_supplementaryMessage ${managedHtmlFor}_errorMessage`
 
   return (
     <Wrapper
       {...props}
-      className={`${className} ${disabledClass} ${classNames.wrapper}`}
-      themes={theme}
+      disabled={disabled}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
+      aria-describedby={isRoleGroup ? describedbyIds : undefined}
+      themes={theme}
+      className={`${className} ${disabledClass} ${classNames.wrapper}`}
+      as={as}
     >
-      <TitleWrapper className={classNames.title}>
-        <label htmlFor={htmlFor} id={managedLabelId} className={classNames.label}>
-          <Title tag="span" type={titleType} themes={theme} className={disabledClass}>
-            {title}
-          </Title>
-        </label>
-        {statusLabelProps.length > 0 && (
-          <StatusLabels themes={theme}>
-            {statusLabelProps.map((statusLabelProp, index) => (
-              <StyledStatusLabel {...statusLabelProp} key={index} themes={theme} />
+      <FormLabel
+        htmlFor={managedHtmlFor}
+        id={managedLabelId}
+        className={`${classNames.label}`}
+        as={isRoleGroup ? 'legend' : 'label'}
+      >
+        <GroupLabel type={titleType}>{title}</GroupLabel>
+        {statusLabelList.length > 0 && (
+          <Cluster gap={0.25} as="span">
+            {statusLabelList.map((statusLabelProp, index) => (
+              <StatusLabel {...statusLabelProp} key={index} />
             ))}
-          </StatusLabels>
+          </Cluster>
         )}
-      </TitleWrapper>
+      </FormLabel>
 
       {helpMessage && (
-        <HelpMessage themes={theme} className={classNames.helpMessage}>
+        <p className={classNames.helpMessage} id={`${managedHtmlFor}_helpMessage`}>
           {helpMessage}
-        </HelpMessage>
+        </p>
+      )}
+      {exampleMessage && (
+        <Text
+          as="p"
+          color="TEXT_GREY"
+          italic
+          id={`${managedHtmlFor}_exampleMessage`}
+          className={classNames.exampleMessage}
+        >
+          {exampleMessage}
+        </Text>
       )}
 
-      {errorMessages &&
-        (Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map((message, index) => (
-          <ErrorMessage themes={theme} key={index} className={classNames.errorMessage}>
-            <ErrorIcon
-              color={disabled ? theme.color.TEXT_DISABLED : theme.color.DANGER}
-              themes={theme}
-            />
-            <span>{message}</span>
-          </ErrorMessage>
-        ))}
-      <Body themes={theme} margin={innerMargin} className={classNames.body}>
-        {children}
-      </Body>
+      {errorMessages && (
+        <Stack gap={0} id={`${managedHtmlFor}_errorMessage`}>
+          {(Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map(
+            (message, index) => (
+              <ErrorMessage themes={theme} key={index}>
+                <FaExclamationCircleIcon text={message} className={classNames.errorMessage} />
+              </ErrorMessage>
+            ),
+          )}
+        </Stack>
+      )}
+
+      <ChildrenWrapper innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
+        {addIdToFirstInput(children, managedHtmlFor, describedbyIds)}
+      </ChildrenWrapper>
+
+      {supplementaryMessage && (
+        <Text
+          as="p"
+          size="S"
+          color="TEXT_GREY"
+          id={`${managedHtmlFor}_supplementaryMessage`}
+          className={classNames.supplementaryMessage}
+        >
+          {supplementaryMessage}
+        </Text>
+      )}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme }>`
-  &.disabled {
-    color: ${({ themes }) => themes.color.TEXT_DISABLED};
+const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describedbyIds: string) => {
+  let foundFirstInput = false
+
+  const addId = (targets: ReactNode): ReactNode[] | ReactNode => {
+    return React.Children.map(targets, (child) => {
+      if (foundFirstInput || !React.isValidElement(child)) {
+        return child
+      }
+
+      const { type } = child
+
+      if (isInputElement(type)) {
+        foundFirstInput = true
+        return React.cloneElement(child as ReactElement, {
+          id: managedHtmlFor,
+          'aria-describedby': describedbyIds,
+        })
+      }
+
+      return React.cloneElement(child, {}, addId(child.props.children))
+    })
   }
+
+  return addId(children)
+}
+
+/**
+ * - CheckBox / RadioButton は内部に label を含むため対象外
+ * - SearchInput は label を含むため対象外
+ * - InputWithTooltip は領域が狭く FormControl を置けない場所での私用を想定しているため対象外
+ *
+ * @param type
+ * @returns
+ */
+const isInputElement = (type: string | React.JSXElementConstructor<any>) =>
+  type === Input ||
+  type === CurrencyInput ||
+  type === Textarea ||
+  type === DatePicker ||
+  type === Select ||
+  type === SingleComboBox ||
+  type === MultiComboBox ||
+  type === InputFile ||
+  type === DropZone
+
+const Wrapper = styled(Stack).attrs({
+  // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は ChildrenWrapper で調整する
+  gap: 0.5,
+})<{ themes: Theme }>`
+  ${({ themes: { color } }) => css`
+    &[disabled] {
+      color: ${color.TEXT_DISABLED};
+
+      /* 個別指定されている色を上書く */
+      .smarthr-ui-Heading,
+      .smarthr-ui-FormGroup-exampleMessage,
+      .smarthr-ui-FormGroup-errorMessage,
+      .smarthr-ui-FormGroup-supplementaryMessage,
+      .smarthr-ui-RadioButton-label,
+      .smarthr-ui-CheckBox-label {
+        cursor: revert;
+        color: inherit;
+      }
+
+      .smarthr-ui-Input {
+        border-color: ${color.disableColor(color.BORDER)};
+        background-color: ${color.hoverColor(color.WHITE)};
+      }
+
+      .smarthr-ui-RadioButton-radioButton,
+      .smarthr-ui-CheckBox-checkBox {
+        cursor: revert;
+
+        &[checked] + span,
+        & + span {
+          border-color: ${color.disableColor(color.BORDER)};
+          background-color: ${color.disableColor(color.BORDER)};
+        }
+
+        &:hover + span {
+          box-shadow: none;
+        }
+      }
+    }
+  `}
 `
 
-const TitleWrapper = styled.span`
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
+const FormLabel = styled(Cluster).attrs({ align: 'center' })`
+  // flex-item が stretch してクリッカブル領域が広がりすぎないようにする
+  align-self: start;
 `
 
-const Title = styled(Heading)<{ themes: Theme }>`
-  &.disabled {
-    color: ${({ themes }) => themes.color.TEXT_DISABLED};
-  }
+const GroupLabel = styled(Heading).attrs({ tag: 'span' })``
+
+const ErrorMessage = styled.p<{ themes: Theme }>`
+  ${({ themes: { color } }) => css`
+    .smarthr-ui-FormGroup-errorMessage {
+      color: ${color.DANGER};
+    }
+  `}
 `
 
-const StatusLabels = styled.span<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) =>
+const ChildrenWrapper = styled.div<{
+  innerMargin: Props['innerMargin']
+  isRoleGroup: boolean
+}>`
+  ${({ innerMargin, isRoleGroup }) => css`
+    ${(innerMargin || isRoleGroup) &&
     css`
-      margin-left: ${spacingByChar(0.5)};
-      display: inline-block;
-      line-height: 1;
+      &&& {
+        margin-block-start: ${useSpacing(innerMargin || (isRoleGroup ? 1 : 0.5))};
+      }
     `}
-`
-
-const StyledStatusLabel = styled(StatusLabel)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) =>
-    css`
-      margin-right: ${spacingByChar(0.25)};
-    `}
-`
-
-const HelpMessage = styled.span<{ themes: Theme }>`
-  ${({ themes: { fontSize, spacingByChar } }) =>
-    css`
-      display: block;
-      margin-top: ${spacingByChar(0.5)};
-      font-size: ${fontSize.M};
-    `}
-`
-
-const ErrorMessage = styled.span<{ themes: Theme }>`
-  ${({ themes: { fontSize, spacingByChar } }) =>
-    css`
-      display: flex;
-      align-items: center;
-      margin-top: ${spacingByChar(0.5)};
-      font-size: ${fontSize.M};
-      line-height: 1;
-    `}
-`
-
-const ErrorIcon = styled(FaExclamationCircleIcon)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) =>
-    css`
-      margin-right: ${spacingByChar(0.25)};
-    `}
-`
-
-const Body = styled.span<{ themes: Theme; margin: innerMarginType }>`
-  ${({ themes: { spacing }, margin }) =>
-    css`
-      display: block;
-      margin-top: ${spacing[margin]};
-    `}
+  `}
 `

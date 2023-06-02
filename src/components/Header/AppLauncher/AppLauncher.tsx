@@ -1,7 +1,8 @@
-import React, { HTMLAttributes } from 'react'
+import React, { HTMLAttributes, ReactNode, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
+import { DecoratorsType } from '../../../types/props'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
@@ -13,9 +14,9 @@ import { useClassNames } from './useClassNames'
 
 type Category = {
   type?: string
-  heading: string
+  heading: ReactNode
   items: Array<{
-    label: string
+    label: ReactNode
     url: string
     target?: string
   }>
@@ -23,13 +24,26 @@ type Category = {
 type Props = {
   apps: Category[]
   urlToShowAll?: string | null
+  /** コンポーネント内の文言を変更するための関数を設定 */
+  decorators?: DecoratorsType<'triggerLabel'>
 }
-
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll, ...props }) => {
+const TRIGGER_LABEL = 'アプリ'
+
+export const AppLauncher: React.FC<Props & ElementProps> = ({
+  apps,
+  urlToShowAll,
+  decorators,
+  ...props
+}) => {
   const theme = useTheme()
   const classNames = useClassNames()
+
+  const triggerLabel = useMemo(
+    () => decorators?.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
+    [decorators],
+  )
 
   const baseApps = apps.find(({ type }) => type === 'base')
   const others = apps.filter((category) => category !== baseApps)
@@ -38,7 +52,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({ apps, urlToShowAll
     <Dropdown {...props}>
       <DropdownTrigger>
         <AppsButton themes={theme} prefix={<FaToolboxIcon />}>
-          アプリ
+          {triggerLabel}
         </AppsButton>
       </DropdownTrigger>
       <DropdownContent controllable>

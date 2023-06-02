@@ -61,21 +61,11 @@ export const WithoutTitle: Story = () => {
       <Base padding={1.5}>
         <Stack gap={1.5}>
           <Stack>
-            <FormGroup
-              title="メールアドレス"
-              titleType="subBlockTitle"
-              innerMargin="XXS"
-              htmlFor="id-email"
-            >
-              <Input name="email" id="id-email" width="22em" />
+            <FormGroup title="メールアドレス" titleType="subBlockTitle" innerMargin="XXS">
+              <Input name="email" width="22em" />
             </FormGroup>
-            <FormGroup
-              title="パスワード"
-              titleType="subBlockTitle"
-              innerMargin="XXS"
-              htmlFor="id-password"
-            >
-              <Input name="password" id="id-password" width="22em" />
+            <FormGroup title="パスワード" titleType="subBlockTitle" innerMargin="XXS">
+              <Input name="password" width="22em" />
             </FormGroup>
           </Stack>
           <Stack align="center">
@@ -104,21 +94,11 @@ export const WithoutLinks: Story = () => {
       <Base padding={1.5}>
         <Stack gap={1.5}>
           <Stack>
-            <FormGroup
-              title="社員番号またはメールアドレス"
-              titleType="subBlockTitle"
-              innerMargin="XXS"
-              htmlFor="id-email"
-            >
-              <Input name="email" id="id-email" width="22em" />
+            <FormGroup title="社員番号またはメールアドレス">
+              <Input name="email" width="22em" />
             </FormGroup>
-            <FormGroup
-              title="パスワード"
-              titleType="subBlockTitle"
-              innerMargin="XXS"
-              htmlFor="id-password"
-            >
-              <Input name="password" id="id-password" width="22em" />
+            <FormGroup title="パスワード">
+              <Input name="password" width="22em" />
             </FormGroup>
           </Stack>
           <Stack align="center">

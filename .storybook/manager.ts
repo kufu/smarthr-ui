@@ -1,4 +1,5 @@
-import addons from '@storybook/addons'
+import { addons } from '@storybook/manager-api';
+
 import { create } from '@storybook/theming'
 import logo from './logo.svg'
 

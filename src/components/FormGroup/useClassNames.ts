@@ -9,11 +9,11 @@ export function useClassNames() {
   return useMemo(
     () => ({
       wrapper: generate(),
-      title: generate('title'),
       label: generate('label'),
       helpMessage: generate('helpMessage'),
+      exampleMessage: generate('exampleMessage'),
       errorMessage: generate('errorMessage'),
-      body: generate('body'),
+      supplementaryMessage: generate('supplementaryMessage'),
     }),
     [generate],
   )

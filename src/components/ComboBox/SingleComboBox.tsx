@@ -9,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
 import { useClick } from '../../hooks/useClick'
@@ -19,16 +20,12 @@ import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { Input } from '../Input'
 
 import { ComboBoxContext } from './ComboBoxContext'
-import { ComboBoxItem } from './types'
+import { BaseProps, ComboBoxItem } from './types'
 import { useSingleComboBoxClassNames } from './useClassNames'
 import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
 
-type Props<T> = {
-  /**
-   * 選択可能なアイテムのリスト
-   */
-  items: Array<ComboBoxItem<T>>
+type Props<T> = BaseProps<T> & {
   /**
    * 選択されているアイテム
    */
@@ -38,66 +35,9 @@ type Props<T> = {
    */
   defaultItem?: ComboBoxItem<T>
   /**
-   * input 要素の `name` 属性の値
-   */
-  name?: string
-  /**
-   * input 要素の `disabled` 属性の値
-   */
-  disabled?: boolean
-  /**
    * コンポーネント内の先頭に表示する内容
    */
   prefix?: ReactNode
-  /**
-   * `true` のとき、コンポーネントの外枠が `DANGER` カラーになる
-   */
-  error?: boolean
-  /**
-   * `true` のとき、 `items` 内に存在しないアイテムを新しく追加できるようになる
-   */
-  creatable?: boolean
-  /**
-   * input 要素の `placeholder` 属性の値
-   */
-  placeholder?: string
-  /**
-   * ドロップダウンリスト内に表示するヘルプメッセージ
-   */
-  dropdownHelpMessage?: ReactNode
-  /**
-   * `true` のとき、ドロップダウンリスト内にローダーを表示する
-   */
-  isLoading?: boolean
-  /**
-   * input 要素の `width` スタイルに適用する値
-   */
-  width?: number | string
-  /**
-   * ドロップダウンリストの `width` スタイルに適用する値
-   */
-  dropdownWidth?: number | string
-  /**
-   * コンポーネント内の一番外側の要素に適用するクラス名
-   */
-  className?: string
-  /**
-   * input 要素の `value` が変わった時に発火するコールバック関数
-   * @deprecated `onChange` は非推奨なため、 代わりに `onChangeInput` を使用してください。
-   */
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
-  /**
-   * input 要素の `value` が変わった時に発火するコールバック関数
-   */
-  onChangeInput?: (e: ChangeEvent<HTMLInputElement>) => void
-  /**
-   * `items` 内に存在しないアイテムが追加されたときに発火するコールバック関数
-   */
-  onAdd?: (label: string) => void
-  /**
-   * アイテムが選択された時に発火するコールバック関数
-   */
-  onSelect?: (item: ComboBoxItem<T>) => void
   /**
    * 選択されているアイテムがクリアされた時に発火するコールバック関数
    */
@@ -117,6 +57,32 @@ type Props<T> = {
   decorators?: DecoratorsType<'noResultText'> & {
     destroyButtonIconAlt?: (text: string) => string
   }
+  /**
+   * input 要素の属性
+   */
+  inputAttributes?: Omit<
+    React.ComponentProps<typeof Input>,
+    | 'aria-activedescendant'
+    | 'aria-autocomplete'
+    | 'autoComplete'
+    | 'className'
+    | 'disabled'
+    | 'required'
+    | 'error'
+    | 'name'
+    | 'onChange'
+    | 'onClick'
+    | 'onCompositionEnd'
+    | 'onCompositionStart'
+    | 'onFocus'
+    | 'onKeyDown'
+    | 'placeholder'
+    | 'prefix'
+    | 'ref'
+    | 'suffix'
+    | 'type'
+    | 'value'
+  >
 }
 
 type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
@@ -129,6 +95,7 @@ export function SingleComboBox<T>({
   defaultItem,
   name,
   disabled = false,
+  required = false,
   prefix,
   error = false,
   creatable = false,
@@ -146,6 +113,7 @@ export function SingleComboBox<T>({
   onClearClick,
   onChangeSelected,
   decorators,
+  inputAttributes,
   ...props
 }: Props<T> & ElementProps<T>) {
   const theme = useTheme()
@@ -208,7 +176,7 @@ export function SingleComboBox<T>({
     setIsEditing(false)
 
     if (!selectedItem && defaultItem) {
-      setInputValue(defaultItem.label)
+      setInputValue(innerText(defaultItem.label))
       onSelect && onSelect(defaultItem)
     }
   }, [selectedItem, defaultItem, onSelect])
@@ -254,7 +222,7 @@ export function SingleComboBox<T>({
     [disabled, inputRef, isExpanded, setIsExpanded, focus],
   )
   const actualOnChangeInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       if (onChange) onChange(e)
       if (onChangeInput) onChangeInput(e)
       if (!isEditing) setIsEditing(true)
@@ -323,7 +291,7 @@ export function SingleComboBox<T>({
 
   useEffect(() => {
     if (selectedItem) {
-      setInputValue(selectedItem.label)
+      setInputValue(innerText(selectedItem.label))
     } else {
       setInputValue('')
     }
@@ -358,11 +326,13 @@ export function SingleComboBox<T>({
       >
         {/* eslint-disable smarthr/a11y-prohibit-input-placeholder */}
         <StyledInput
+          {...inputAttributes}
           placeholder={placeholder}
           type="text"
           name={name}
           value={inputValue}
           disabled={disabled}
+          required={required}
           prefix={prefix}
           error={error}
           suffix={

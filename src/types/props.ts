@@ -23,3 +23,12 @@ export type DecoratorsType<T extends string> = {
 }
 
 export type DecoratorType = (text: string) => ReactNode
+
+export type ResponseMessageType =
+  | {
+      status: 'success' | 'error'
+      text: ReactNode
+    }
+  | {
+      status: 'processing'
+    }

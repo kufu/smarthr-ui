@@ -79,6 +79,12 @@ const Wrapper = styled.span<{ themes: Theme }>`
         border-color: ${color.BORDER};
         color: ${color.TEXT_GREY};
 
+        @media (prefers-contrast: more) {
+          & {
+            border: ${border.highContrast};
+          }
+        }
+
         &.bold {
           border-color: ${color.TEXT_GREY};
           background-color: ${color.TEXT_GREY};

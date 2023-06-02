@@ -3,19 +3,19 @@ version: 2.1
 executors:
   node-maintenance:
     docker:
-      - image: cimg/node:16.19.1
+      - image: cimg/node:20.2.0
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
   node-active-lts:
     docker:
-      - image: cimg/node:18.15.0
+      - image: cimg/node:20.2.0
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
   node-active-lts-browsers:
     docker:
-      - image: cimg/node:18.15.0-browsers
+      - image: cimg/node:20.2.0-browsers
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
@@ -54,17 +54,22 @@ commands:
             - ~/.cache/yarn
           key: yarn-packages-reg-{{ checksum "yarn.lock" }}
       - run:
-          command: yarn storybook
+          command: yarn build-storybook
+      - run:
+          command: npx http-server storybook-static --port 6006 --silent
           background: true
       - run:
           command: yarn test-storybook:ci
       - store_test_results:
           path: junit.xml
-  # chromatic
   run-chromatic:
     steps:
       - checkout
       - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes
+  run-chromatic-master:
+    steps:
+      - checkout
+      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes
   install-noto-sans-cjk-jp:
     steps:
       - run:
@@ -103,6 +108,11 @@ jobs:
     steps:
       - setup-for-test
       - run-chromatic
+  chromatic-deployment-master:
+    executor: node-active-lts
+    steps:
+      - setup-for-test
+      - run-chromatic-master
 workflows:
   multiple_builds:
     jobs:
@@ -113,4 +123,14 @@ workflows:
       - a11y-test:
           context: smarthr-dockerhub
       - chromatic-deployment:
+          filters:
+            branches:
+              ignore:
+                - master
+          context: smarthr-dockerhub
+      - chromatic-deployment-master:
+          filters:
+            branches:
+              only:
+                - master
           context: smarthr-dockerhub

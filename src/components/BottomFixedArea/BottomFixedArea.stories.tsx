@@ -10,6 +10,15 @@ import { BottomFixedArea } from './BottomFixedArea'
 export default {
   title: 'Navigation（ナビゲーション）/BottomFixedArea',
   component: BottomFixedArea,
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      story: {
+        inline: false,
+        iframeHeight: '500px',
+      },
+    },
+  },
 }
 
 export const _BottomFixedArea: Story = () => {
