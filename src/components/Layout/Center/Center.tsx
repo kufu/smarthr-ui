@@ -1,7 +1,8 @@
 import styled, { css } from 'styled-components'
 
 import { useSpacing } from '../../../hooks/useSpacing'
-import { Gap } from '../type'
+
+import type { Gap } from '../../../types'
 
 export const Center = styled.div<{
   /** コンテンツの最小高さ */

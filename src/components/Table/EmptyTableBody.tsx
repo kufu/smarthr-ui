@@ -2,9 +2,11 @@ import React, { HTMLAttributes, PropsWithChildren } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useSpacing } from '../../hooks/useSpacing'
-import { Center, Gap } from '../Layout'
+import { Center } from '../Layout'
 
 import { Td } from './Td'
+
+import type { Gap } from '../../types'
 
 type Padding = Gap | { vertical?: Gap; horizontal?: Gap }
 

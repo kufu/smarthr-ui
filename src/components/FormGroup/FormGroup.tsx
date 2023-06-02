@@ -25,7 +25,7 @@ import { Textarea } from '../Textarea'
 
 import { useClassNames } from './useClassNames'
 
-import type { Gap } from '../Layout'
+import type { Gap } from '../../types'
 type StatusLabelProps = ComponentProps<typeof StatusLabel>
 
 type Props = PropsWithChildren<{
