@@ -1,0 +1,106 @@
+import React, { useMemo, } from 'react';
+import styled, { css } from 'styled-components';
+import { useTheme } from '../../hooks/useTheme';
+import { FaSortDownIcon, FaSortUpIcon } from '../Icon';
+import { VisuallyHiddenText } from '../VisuallyHiddenText';
+import { useThClassNames } from './useClassNames';
+import { useReelShadow } from './useReelShadow';
+const SORT_DIRECTION_LABEL = {
+    asc: '昇順',
+    desc: '降順',
+    none: '並び替えなし',
+};
+export const Th = ({ children, sort, onSort, decorators, fixed = false, className = '', ...props }) => {
+    const theme = useTheme();
+    const classNames = useThClassNames();
+    const wrapperClass = [className, classNames.wrapper].filter((c) => !!c).join(' ');
+    const sortLabel = useMemo(() => sort &&
+        (decorators?.sortDirectionIconAlt?.(SORT_DIRECTION_LABEL[sort], { sort }) ||
+            SORT_DIRECTION_LABEL[sort]), [decorators, sort]);
+    const ariaSortProps = useMemo(() => {
+        return (sort && {
+            'aria-sort': sort === 'none' ? 'none' : `${sort}ending`,
+        });
+    }, [sort]);
+    return (React.createElement(Wrapper, { ...ariaSortProps, ...props, className: `${wrapperClass} ${fixed ? 'fixedElement' : ''}`, themes: theme, fixed: fixed }, sort ? (React.createElement(SortButton, { themes: theme, onClick: onSort },
+        children,
+        React.createElement(SortIcon, { sort: sort }),
+        React.createElement(VisuallyHiddenText, null, sortLabel))) : (children)));
+};
+const Wrapper = styled.th `
+  ${({ themes: { fontSize, leading, color, shadow, space }, fixed }) => css `
+    font-size: ${fontSize.S};
+    font-weight: bold;
+    padding: ${space(0.75)} ${space(1)};
+    text-align: left;
+    color: ${color.TEXT_BLACK};
+    line-height: ${leading.TIGHT};
+    vertical-align: middle;
+
+    &[aria-sort] {
+      cursor: pointer;
+
+      &:hover {
+        background-color: ${color.hoverColor(color.HEAD)};
+      }
+
+      /* :focus-visible-within の代替 */
+      &:has(:focus-visible) {
+        ${shadow.focusIndicatorStyles}
+      }
+    }
+
+    /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
+    &.fixedElement {
+      ${useReelShadow({ showShadow: false, direction: 'right' })}
+    }
+
+    ${fixed &&
+    css `
+      &.fixed {
+        position: sticky;
+        right: 0;
+
+        &::after {
+          opacity: 1;
+        }
+      }
+    `}
+  `}
+`;
+const SortButton = styled.button `
+  ${({ themes: { fontSize, space } }) => css `
+    cursor: pointer;
+    box-sizing: content-box;
+    display: inline-flex;
+    align-items: center;
+    column-gap: ${space(0.5)};
+    justify-content: space-between;
+    margin: ${space(-0.75)} ${space(-1)};
+    border: unset;
+    outline: unset;
+    background-color: unset;
+    padding: ${space(0.75)} ${space(1)};
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+
+    .smarthr-ui-Icon {
+      font-size: ${fontSize.M};
+    }
+  `}
+`;
+const SortIcon = ({ sort }) => (React.createElement(SortIconWraper, null,
+    React.createElement(FaSortUpIcon, { color: sort === 'asc' ? 'TEXT_BLACK' : 'TEXT_DISABLED' }),
+    React.createElement(FaSortDownIcon, { color: sort === 'desc' ? 'TEXT_BLACK' : 'TEXT_DISABLED' })));
+const SortIconWraper = styled.span `
+  display: inline-flex;
+  flex-direction: column;
+
+  .smarthr-ui-Icon + .smarthr-ui-Icon {
+    margin-top: -1em;
+  }
+`;
+//# sourceMappingURL=Th.js.map

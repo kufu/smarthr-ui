@@ -1,0 +1,118 @@
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState, } from 'react';
+import styled, { css } from 'styled-components';
+import { useTheme } from '../../hooks/useTheme';
+import { defaultHtmlFontSize } from '../../themes/createFontSize';
+import { useClassNames } from './useClassNames';
+const getStringLength = (value) => {
+    const formattedValue = typeof value === 'number' || typeof value === 'string'
+        ? `${value}`
+        : Array.isArray(value)
+            ? value.join(',')
+            : '';
+    // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
+    const surrogatePairs = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+    return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length;
+};
+const TEXT_BEFORE_MAXlENGTH_COUNT = 'あと';
+const TEXT_AFTER_MAXlENGTH_COUNT = '文字';
+export const Textarea = forwardRef(({ autoFocus, maxLength, width, className = '', autoResize = false, maxRows = Infinity, rows = 2, onInput, decorators, ...props }, ref) => {
+    const theme = useTheme();
+    const textareaRef = useRef(null);
+    const currentValue = props.defaultValue || props.value;
+    const [interimRows, setInterimRows] = useState(rows);
+    const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0);
+    const textAreaWidth = typeof width === 'number' ? `${width}px` : width;
+    const beforeMaxLengthCount = useMemo(() => decorators?.beforeMaxLengthCount?.(TEXT_BEFORE_MAXlENGTH_COUNT) ||
+        TEXT_BEFORE_MAXlENGTH_COUNT, [decorators]);
+    const afterMaxLengthCount = useMemo(() => decorators?.afterMaxLengthCount?.(TEXT_AFTER_MAXlENGTH_COUNT) || TEXT_AFTER_MAXlENGTH_COUNT, [decorators]);
+    useImperativeHandle(ref, () => textareaRef.current);
+    useEffect(() => {
+        if (autoFocus && textareaRef && textareaRef.current) {
+            textareaRef.current.focus();
+        }
+    }, [autoFocus]);
+    const handleKeyup = useCallback((event) => {
+        setCount(getStringLength(event.currentTarget.value));
+    }, []);
+    const handleInput = useCallback((e) => {
+        if (!autoResize) {
+            return onInput && onInput(e);
+        }
+        const previousRows = e.target.rows;
+        // 消したことを検知できないので必ず初期化
+        e.target.rows = rows;
+        const currentRows = Math.floor(e.target.scrollHeight / (defaultHtmlFontSize * theme.leading.NORMAL));
+        if (previousRows === currentRows) {
+            e.target.rows = currentRows;
+        }
+        else if (maxRows < currentRows) {
+            // 最大まで達したとき高さが潰れないように代入
+            e.target.rows = maxRows;
+        }
+        setInterimRows(currentRows < maxRows ? currentRows : maxRows);
+        onInput && onInput(e);
+    }, [autoResize, maxRows, onInput, rows, theme.leading.NORMAL]);
+    const classNames = useClassNames();
+    return (React.createElement(React.Fragment, null,
+        React.createElement(StyledTextarea, { ...props, ...(maxLength ? { onKeyUp: handleKeyup } : {}), textAreaWidth: textAreaWidth, ref: textareaRef, themes: theme, "aria-invalid": props.error || undefined, className: `${className} ${classNames.textarea}`, rows: interimRows, onInput: handleInput }),
+        maxLength && (React.createElement(Counter, { themes: theme, className: classNames.counter },
+            beforeMaxLengthCount,
+            React.createElement("span", { className: maxLength && maxLength - count <= 0 ? 'error' : '' }, maxLength - count),
+            afterMaxLengthCount))));
+});
+const StyledTextarea = styled.textarea `
+  ${({ themes: { border, color, leading, fontSize, radius, shadow, spacingByChar }, textAreaWidth = 'auto', error, }) => css `
+    box-sizing: border-box;
+    opacity: 1;
+    border-radius: ${radius.m};
+    border: ${border.shorthand};
+    background-color: ${color.WHITE};
+    padding: ${spacingByChar(0.5)};
+    font-size: ${fontSize.M};
+    line-height: ${leading.NORMAL};
+    color: ${color.TEXT_BLACK};
+    width: ${textAreaWidth};
+
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
+
+    ${error &&
+    css `
+      border-color: ${color.DANGER};
+    `}
+    &::placeholder {
+      color: ${color.TEXT_GREY};
+    }
+    &:focus-visible {
+      ${shadow.focusIndicatorStyles}
+    }
+    &:disabled {
+      background-color: ${color.COLUMN};
+      pointer-events: none;
+
+      &,
+      &::placeholder {
+        color: ${color.TEXT_DISABLED};
+      }
+    }
+  `}
+`;
+const Counter = styled.div `
+  ${({ themes }) => {
+    const { fontSize, color } = themes;
+    return css `
+      font-size: ${fontSize.S};
+      > span {
+        font-weight: bold;
+        color: ${color.TEXT_GREY};
+        &.error {
+          color: ${color.DANGER};
+        }
+      }
+    `;
+}}
+`;
+//# sourceMappingURL=Textarea.js.map

@@ -1,0 +1,11 @@
+export declare const lineDuration = "4800ms";
+export declare const cogDuration = "1200ms";
+export declare const spinnerEasing = "cubic-bezier(0.4, 0, 0.2, 1)";
+export declare const containerRotate: import("styled-components").Keyframes;
+export declare const fillUnfillRotate: import("styled-components").Keyframes;
+export declare const line1FadeInOut: import("styled-components").Keyframes;
+export declare const line2FadeInOut: import("styled-components").Keyframes;
+export declare const line3FadeInOut: import("styled-components").Keyframes;
+export declare const line4FadeInOut: import("styled-components").Keyframes;
+export declare const leftSpin: import("styled-components").Keyframes;
+export declare const rightSpin: import("styled-components").Keyframes;

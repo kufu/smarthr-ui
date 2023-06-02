@@ -1,0 +1,1 @@
+export { CompactInformationPanel } from './CompactInformationPanel';
