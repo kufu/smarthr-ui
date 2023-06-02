@@ -15,7 +15,6 @@ import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useId } from '../../hooks/useId'
 import { usePortal } from '../../hooks/usePortal'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types/props'
 import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
@@ -24,6 +23,8 @@ import { ListBoxItem } from './ListBoxItem'
 import { ComboBoxItem, ComboBoxOption } from './types'
 import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
+
+import type { DecoratorsType } from '../../types'
 
 type Props<T> = {
   options: Array<ComboBoxOption<T>>

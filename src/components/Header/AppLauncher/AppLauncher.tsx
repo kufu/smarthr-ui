@@ -2,7 +2,6 @@ import React, { HTMLAttributes, ReactNode, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
-import { DecoratorsType } from '../../../types/props'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
@@ -11,6 +10,8 @@ import { Cluster, Stack } from '../../Layout'
 import { TextLink } from '../../TextLink'
 
 import { useClassNames } from './useClassNames'
+
+import type { DecoratorsType } from '../../../types'
 
 type Category = {
   type?: string

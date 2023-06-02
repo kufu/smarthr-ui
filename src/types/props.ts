@@ -18,12 +18,6 @@ export interface StyledProperties {
   spSize?: Size
 }
 
-export type DecoratorsType<T extends string> = {
-  [K in T]?: DecoratorType
-}
-
-export type DecoratorType = (text: string) => ReactNode
-
 export type ResponseMessageType =
   | {
       status: 'success' | 'error'
