@@ -1,8 +1,8 @@
 import React, { FC, HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
+import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { Cluster } from '../Layout'
 
 import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListItem'
 import { useClassNames } from './useClassNames'
@@ -48,9 +48,14 @@ const column = {
   triple: 3,
 }
 
-const Wrapper = styled(Cluster).attrs({ as: 'dl', gap: 1.5 })`
-  margin-block: initial;
-`
+const Wrapper = styled.dl.attrs({ as: 'dl' })(() => {
+  return css`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+    gap: ${useSpacing(2.5)};
+    margin-block: initial;
+  `
+})
 
 const Item = styled(DefinitionListItem)<{ themes: Theme; layout: LayoutType }>`
   ${({ layout, themes: { space, size } }) => {
