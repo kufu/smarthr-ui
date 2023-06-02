@@ -1,5 +1,6 @@
 export function getTooltipRect({
   parentRect,
+  scrollOffset,
   tooltipSize,
   vertical,
   horizontal,
@@ -7,6 +8,7 @@ export function getTooltipRect({
   outerMargin,
 }: {
   parentRect: DOMRect
+  scrollOffset: { top: number; left: number }
   tooltipSize: { width: number; height: number }
   vertical: 'top' | 'middle' | 'bottom'
   horizontal: 'left' | 'center' | 'right'
@@ -29,8 +31,8 @@ export function getTooltipRect({
   })
 
   return {
-    top: top + window.pageYOffset,
-    left: left + window.pageXOffset,
+    top: top + scrollOffset.top,
+    left: left + scrollOffset.left,
     $width: tooltipSize.width,
     $height: tooltipSize.height,
   }
