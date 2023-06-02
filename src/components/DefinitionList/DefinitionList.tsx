@@ -42,7 +42,9 @@ export const DefinitionList: FC<Props & ElementProps> = ({
   )
 }
 
+/** layput 別のカラム数 */
 const column = {
+  default: 0,
   single: 1,
   double: 2,
   triple: 3,
