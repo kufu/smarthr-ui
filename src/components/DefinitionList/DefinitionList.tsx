@@ -48,7 +48,7 @@ const column = {
 
 const Wrapper = styled.dl<{ layout: LayoutType }>(({ layout }) => {
   const repeat = column[layout] ? column[layout] : 'auto-fill'
-  const width = column[layout] ? '1fr' : 'minmax(15em, 1fr)'
+  const width = column[layout] ? '1fr' : 'minmax(16em, 1fr)'
   return css`
     display: grid;
     grid-template-columns: repeat(${repeat}, ${width});
