@@ -53,6 +53,5 @@ const Wrapper = styled.dl<{ layout: LayoutType }>(({ layout }) => {
     display: grid;
     grid-template-columns: repeat(${repeat}, ${width});
     gap: ${useSpacing(1.5)};
-    margin-block: initial;
   `
 })
