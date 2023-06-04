@@ -1,36 +1,33 @@
 import React, { FC, HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
-import { useSpacing } from '../../hooks/useSpacing'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListItem'
 import { useClassNames } from './useClassNames'
 
-type LayoutType = 'default' | 'single' | 'double' | 'triple'
 type Props = {
   /** 定義リストのアイテムの配列 */
   items: DefinitionListItemProps[]
-  /** 列のレイアウト */
-  layout?: LayoutType
+  /** 最大列数 */
+  maxColumns?: number
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDListElement>, keyof Props>
 
-export const DefinitionList: FC<Props & ElementProps> = ({
-  items,
-  layout = 'default',
-  className = '',
-}) => {
+export const DefinitionList: FC<Props & ElementProps> = ({ items, maxColumns, className = '' }) => {
   const classNames = useClassNames()
+  const theme = useTheme()
 
   return (
-    <Wrapper layout={layout} className={`${className} ${classNames.definitionList.wrapper}`}>
+    <Wrapper themes={theme} className={`${className} ${classNames.definitionList.wrapper}`}>
       {items.map(({ term, description, className: itemClassName }, index) => (
         <DefinitionListItem
           term={term}
           description={description}
           key={index}
+          maxColumns={maxColumns}
           className={itemClassName}
         />
       ))}
@@ -38,21 +35,14 @@ export const DefinitionList: FC<Props & ElementProps> = ({
   )
 }
 
-/** layput 別のカラム数 */
-const column = {
-  default: 0,
-  single: 1,
-  double: 2,
-  triple: 3,
-}
-
-const Wrapper = styled.dl<{ layout: LayoutType }>(({ layout }) => {
-  const repeat = column[layout] ? column[layout] : 'auto-fill'
-  const width = column[layout] ? '1fr' : 'minmax(16em, 1fr)'
-  return css`
-    display: grid;
-    grid-template-columns: repeat(${repeat}, ${width});
-    gap: ${useSpacing(1.5)};
-    margin-block: initial;
-  `
-})
+const Wrapper = styled.dl<{ themes: Theme }>`
+  ${({ themes: { space } }) => {
+    // const minWidth = `calc(12em * ${maxColumns} - (${space(1.5)} * ${maxColumns - 1}))`
+    // const maxWidth = `calc(30em * ${maxColumns} - (${space(1.5)} * ${maxColumns - 1}))`
+    return css`
+      display: flex;
+      flex-wrap: wrap;
+      gap: ${space(1.5)};
+    `
+  }}
+`

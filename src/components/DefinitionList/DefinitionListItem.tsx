@@ -10,6 +10,7 @@ import { useClassNames } from './useClassNames'
 export type DefinitionListItemProps = {
   term: ReactNode
   description?: ReactNode
+  maxColumns?: number
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DefinitionListItemProps>
@@ -17,13 +18,18 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DefinitionListIte
 export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
   term,
   description,
+  maxColumns,
   className = '',
 }) => {
   const theme = useTheme()
   const { definitionListItem } = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={`${className} ${definitionListItem.wrapper}`}>
+    <Wrapper
+      themes={theme}
+      className={`${className} ${definitionListItem.wrapper}`}
+      maxColumns={maxColumns}
+    >
       <Term className={definitionListItem.term}>{term}</Term>
       <Description themes={theme} className={definitionListItem.description}>
         {description}
@@ -32,10 +38,21 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
   )
 }
 
-const Wrapper = styled(Stack).attrs({ gap: 0.25 })<{ themes: Theme }>`
-  ${({ themes: { border } }) => css`
+const Wrapper = styled(Stack).attrs({ gap: 0.25 })<{ maxColumns?: number; themes: Theme }>`
+  ${({ maxColumns, themes: { border, space } }) => css`
+    flex-grow: 1;
+    ${maxColumns &&
+    css`
+      flex-basis: calc((100% - ${space(1.5)} * ${maxColumns - 1}) / ${maxColumns});
+    `}
+
     border-bottom: ${border.shorthand};
     border-bottom-style: dotted;
+    min-width: 12em;
+    ${!maxColumns &&
+    css`
+      max-width: 30em;
+    `}
 
     @media (prefers-contrast: more) {
       & {

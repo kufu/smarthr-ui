@@ -33,20 +33,20 @@ const Item = () => {
 
 const DefinitionListItems = [
   {
-    term: 'term 1',
-    description: 'description 1',
+    term: '社員番号',
+    description: '000',
   },
   {
-    term: 'term 2',
-    description: '-',
+    term: '氏名',
+    description: '草野 太郎',
   },
   {
-    term: 'term 3',
-    description: 'description 3',
+    term: '雇用形態',
+    description: '正社員',
   },
   {
-    term: 'term 4',
-    description: 'description 4',
+    term: '在籍状況',
+    description: '在職中',
   },
   {
     term: <Item />,
@@ -75,17 +75,17 @@ export const All: Story = () => {
 
       <Title type="sectionTitle">single column</Title>
       <Content>
-        <DefinitionList items={DefinitionListItems} layout="single" />
+        <DefinitionList items={DefinitionListItems} maxColumns={1} />
       </Content>
 
       <Title type="sectionTitle">two column</Title>
       <Content>
-        <DefinitionList items={DefinitionListItems} layout="double" />
+        <DefinitionList items={DefinitionListItems} maxColumns={2} />
       </Content>
 
       <Title type="sectionTitle">three column</Title>
       <Content>
-        <DefinitionList items={DefinitionListItems} layout="triple" />
+        <DefinitionList items={DefinitionListItems} maxColumns={3} />
       </Content>
     </Wrapper>
   )
@@ -98,7 +98,7 @@ const Wrapper = styled.div`
 const Title = styled(Heading)`
   margin: 0 0 16px;
 `
-const Content = styled(Base)`
+const Content = styled(Base).attrs({ overflow: 'auto' })`
   margin: 0 0 32px;
   padding: 24px;
 `
