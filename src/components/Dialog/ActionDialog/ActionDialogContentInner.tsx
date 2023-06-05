@@ -2,7 +2,6 @@ import React, { FC, ReactNode, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
-import { ResponseMessageType } from '../../../types'
 import { Button } from '../../Button'
 import { HeadingTagTypes } from '../../Heading'
 import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../../Icon'
@@ -11,7 +10,7 @@ import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
 import { useClassNames } from '../useClassNames'
 
-import type { DecoratorsType } from '../../../types'
+import type { DecoratorsType, ResponseMessageType } from '../../../types'
 
 export type BaseProps = {
   /**
