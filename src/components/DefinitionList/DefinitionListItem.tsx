@@ -7,7 +7,7 @@ import { Text } from '../Text'
 
 import { useClassNames } from './useClassNames'
 
-export type DefinitionListItemProps = {
+type DefinitionListItemProps = {
   term: ReactNode
   description?: ReactNode
   className?: string
