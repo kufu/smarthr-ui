@@ -28,6 +28,12 @@ const items = [
   },
   {
     term: '部署',
+    description: (
+      <p>
+        <code>fullWidth</code>{' '}
+        は項目の幅を最大化にし、できるだけ説明を折り返さずに表示できますグループ
+      </p>
+    ),
     fullWidth: true,
   },
   {
