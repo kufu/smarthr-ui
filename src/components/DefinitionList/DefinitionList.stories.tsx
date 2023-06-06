@@ -1,11 +1,10 @@
-import { Story } from '@storybook/react'
-import * as React from 'react'
-import styled from 'styled-components'
+import { StoryFn } from '@storybook/react'
+import React from 'react'
 
-import { useTheme } from '../../hooks/useTheme'
 import { Base } from '../Base'
 import { Heading } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
+import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
 
 import { DefinitionList } from './DefinitionList'
@@ -18,50 +17,49 @@ export default {
   },
 }
 
-const DefinitionListItems = [
+const items = [
   {
-    term: 'term 1',
-    description: 'description 1',
+    term: '社員番号',
+    description: '001',
   },
   {
-    term: 'term 2',
+    term: '氏名',
+    description: '草野 栄一郎',
+  },
+  {
+    term: '部署',
+    description: (
+      <p>
+        <code>fullWidth</code>{' '}
+        は項目の幅を最大化にし、できるだけ説明を折り返さずに表示できますグループ
+      </p>
+    ),
+    fullWidth: true,
+  },
+  {
+    term: '雇用形態',
+    description: '正社員',
+  },
+  {
+    term: '在籍状況',
+    description: '在職中',
+  },
+  {
+    term: '入社年月日',
+    description: '2023/06/05',
+  },
+  {
+    term: '退職年月日',
     description: '-',
   },
   {
-    term: 'term 3',
-    description: 'description 3',
-  },
-  {
-    term: 'term 4',
-    description: 'description 4',
-  },
-  {
-    term: 'term 5',
-  },
-]
-
-const Item = () => {
-  const themes = useTheme()
-  return (
-    <Term>
-      <span>term 7</span>
-      <Alert>
-        <FaExclamationCircleIcon size={11} color={themes.color.DANGER} />
-        <AlertText>error occurred</AlertText>
-      </Alert>
-    </Term>
-  )
-}
-
-const customizedItems = [
-  ...DefinitionListItems,
-  {
-    term: 'term 6',
-    description: 'description 6',
-  },
-  {
-    term: <Item />,
-    description: 'description 7',
+    term: (
+      <Cluster align="center">
+        <span>何らかの用語</span>
+        <FaExclamationCircleIcon color="DANGER" text="何らかのエラーメッセージ" />
+      </Cluster>
+    ),
+    description: 'エラーメッセージを持つ用語の説明',
   },
   {
     term: '折り返されたくない要素は nowrap',
@@ -71,60 +69,40 @@ const customizedItems = [
     term: '標準は折返し',
     description: 'so-much-longer-email-address@example.com',
   },
-  {
-    term: 'term 9',
-    description: 'description 9',
-  },
 ]
 
-export const All: Story = () => {
+export const All: StoryFn = () => {
   return (
-    <Wrapper>
-      <Title type="sectionTitle">single column</Title>
-      <Content>
-        <DefinitionList items={DefinitionListItems} layout="single"></DefinitionList>
-      </Content>
+    <Stack gap={1.5}>
+      <Stack gap={0.5}>
+        <Heading type="blockTitle">標準</Heading>
+        <p>
+          基本的にカラム数を指定する必要はありません。各アイテムは最低幅 12em
+          を保ちながら余った領域を埋めていきます。
+        </p>
+        <Base padding={1.5} overflow="auto">
+          <DefinitionList items={items} />
+        </Base>
+      </Stack>
 
-      <Title type="sectionTitle">two column</Title>
-      <Content>
-        <DefinitionList items={DefinitionListItems} layout="double"></DefinitionList>
-      </Content>
+      <p>
+        最大列数を制限することも出来ます。画面幅が狭い場合は標準と同じ動きをしますが、指定した最大列数以上には増えず幅が広がります。
+      </p>
 
-      <Title type="sectionTitle">three column</Title>
-      <Content>
-        <DefinitionList items={DefinitionListItems} layout="triple"></DefinitionList>
-      </Content>
+      <Stack gap={0.5}>
+        <Heading type="blockTitle">最大2列の場合</Heading>
+        <Base padding={1.5} overflow="auto">
+          <DefinitionList items={items} maxColumns={2} />
+        </Base>
+      </Stack>
 
-      <Title type="sectionTitle">customized</Title>
-      <Content>
-        <DefinitionList items={customizedItems} layout="double" />
-      </Content>
-    </Wrapper>
+      <Stack gap={0.5}>
+        <Heading type="blockTitle">最大3列の場合</Heading>
+        <Base padding={1.5} overflow="auto">
+          <DefinitionList items={items} maxColumns={3} />
+        </Base>
+      </Stack>
+    </Stack>
   )
 }
 All.storyName = 'all'
-
-const Wrapper = styled.div`
-  padding: 24px;
-`
-const Title = styled(Heading)`
-  margin: 0 0 16px;
-`
-const Content = styled(Base)`
-  margin: 0 0 32px;
-  padding: 24px;
-`
-const Term = styled.span`
-  display: flex;
-  align-items: center;
-`
-const Alert = styled.span`
-  display: flex;
-  align-items: center;
-  margin-left: 8px;
-`
-const AlertText = styled.span`
-  margin-left: 4px;
-  color: ${({ theme }) => theme.color.TEXT_BLACK};
-  font-size: ${({ theme }) => theme.fontSize.S};
-`

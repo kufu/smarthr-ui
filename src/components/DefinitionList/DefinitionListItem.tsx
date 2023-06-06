@@ -7,9 +7,10 @@ import { Text } from '../Text'
 
 import { useClassNames } from './useClassNames'
 
-export type DefinitionListItemProps = {
+type DefinitionListItemProps = {
   term: ReactNode
   description?: ReactNode
+  fullWidth?: boolean
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DefinitionListItemProps>
