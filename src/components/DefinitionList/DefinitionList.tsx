@@ -23,12 +23,13 @@ export const DefinitionList: FC<Props & ElementProps> = ({ items, maxColumns, cl
 
   return (
     <Wrapper className={`${className} ${classNames.definitionList.wrapper}`}>
-      {items.map(({ term, description, className: itemClassName }, index) => (
+      {items.map(({ term, description, fullWidth, className: itemClassName }, index) => (
         <Item
           term={term}
           description={description}
           key={index}
           maxColumns={maxColumns}
+          fullWidth={fullWidth}
           className={itemClassName}
           themes={theme}
         />
@@ -41,20 +42,23 @@ const Wrapper = styled(Cluster).attrs({ as: 'dl', gap: 1.5 })`
   margin-block: initial;
 `
 
-const Item = styled(DefinitionListItem)<{ themes: Theme; maxColumns: Props['maxColumns'] }>`
-  ${({ maxColumns, themes: { space } }) => css`
+const Item = styled(DefinitionListItem)<{
+  themes: Theme
+  maxColumns: Props['maxColumns']
+  fullWidth?: boolean
+}>`
+  ${({ maxColumns, fullWidth, themes: { space } }) => css`
     flex-grow: 1;
     ${maxColumns &&
     css`
       /* (全体幅 - (溝 * (最大列数 - 1)) / 最大列数 */
       flex-basis: calc((100% - ${space(1.5)} * ${maxColumns - 1}) / ${maxColumns});
     `}
+    ${fullWidth &&
+    css`
+      flex-basis: 100%;
+    `}
 
     min-width: 12em;
-    /* 最大列数を指定した場合は、理想的な max-width 以上に広がる可能性がある */
-    ${!maxColumns &&
-    css`
-      max-width: 30em;
-    `}
   `}
 `

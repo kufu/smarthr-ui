@@ -27,11 +27,12 @@ const items = [
     description: '草野 栄一郎',
   },
   {
-    term: '雇用形態',
-    description: '正社員',
+    term: '部署',
+    fullWidth: true,
   },
   {
-    term: '部署',
+    term: '雇用形態',
+    description: '正社員',
   },
   {
     term: '在籍状況',
@@ -70,8 +71,8 @@ export const All: StoryFn = () => {
       <Stack gap={0.5}>
         <Heading type="blockTitle">標準</Heading>
         <p>
-          基本的にカラム数を指定する必要はありません。各アイテムは幅 12–30em
-          の範囲で余った領域を埋めていきます。
+          基本的にカラム数を指定する必要はありません。各アイテムは最低幅 12em
+          を保ちながら余った領域を埋めていきます。
         </p>
         <Base padding={1.5} overflow="auto">
           <DefinitionList items={items} />

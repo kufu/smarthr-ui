@@ -10,6 +10,7 @@ import { useClassNames } from './useClassNames'
 type DefinitionListItemProps = {
   term: ReactNode
   description?: ReactNode
+  fullWidth?: boolean
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DefinitionListItemProps>
