@@ -3,7 +3,6 @@ import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
-import { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types/props'
 import { Button } from '../../Button'
 import { FaCheckCircleIcon, FaExclamationCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
@@ -12,6 +11,8 @@ import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownScrollArea } from '../DropdownScrollArea'
 import { DropdownTrigger } from '../DropdownTrigger'
+
+import type { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types'
 
 type Props = {
   isFiltered?: boolean

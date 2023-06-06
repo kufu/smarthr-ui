@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components'
 
 import { useSpacing } from '../../../hooks/useSpacing'
 
-import type { Gap } from '../type'
+import type { Gap } from '../../../types'
 
 export const Reel = styled.div<{
   /** 間隔の指定（基準フォントサイズの相対値または抽象値） */
