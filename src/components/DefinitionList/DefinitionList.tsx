@@ -1,39 +1,35 @@
-import React, { FC, HTMLAttributes } from 'react'
+import React, { ComponentProps, FC, HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Cluster } from '../Layout'
 
-import { DefinitionListItem, DefinitionListItemProps } from './DefinitionListItem'
+import { DefinitionListItem } from './DefinitionListItem'
 import { useClassNames } from './useClassNames'
 
-type LayoutType = 'single' | 'double' | 'triple'
 type Props = {
   /** 定義リストのアイテムの配列 */
-  items: DefinitionListItemProps[]
-  /** 列のレイアウト */
-  layout?: LayoutType
+  items: Array<ComponentProps<typeof DefinitionListItem>>
+  /** 最大列数 */
+  maxColumns?: number
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDListElement>, keyof Props>
 
-export const DefinitionList: FC<Props & ElementProps> = ({
-  items,
-  layout = 'single',
-  className = '',
-}) => {
+export const DefinitionList: FC<Props & ElementProps> = ({ items, maxColumns, className = '' }) => {
   const theme = useTheme()
   const classNames = useClassNames()
 
   return (
     <Wrapper className={`${className} ${classNames.definitionList.wrapper}`}>
-      {items.map(({ term, description, className: itemClassName }, index) => (
+      {items.map(({ term, description, fullWidth, className: itemClassName }, index) => (
         <Item
           term={term}
           description={description}
           key={index}
-          layout={layout}
+          maxColumns={maxColumns}
+          fullWidth={fullWidth}
           className={itemClassName}
           themes={theme}
         />
@@ -42,27 +38,27 @@ export const DefinitionList: FC<Props & ElementProps> = ({
   )
 }
 
-const column = (layout: LayoutType) => {
-  switch (layout) {
-    case 'single':
-      return 1
-    case 'double':
-      return 2
-    case 'triple':
-      return 3
-  }
-}
-
 const Wrapper = styled(Cluster).attrs({ as: 'dl', gap: 1.5 })`
   margin-block: initial;
 `
 
-const Item = styled(DefinitionListItem)<{ themes: Theme; layout: LayoutType }>`
-  ${({ layout, themes: { space } }) => {
-    const $columns = column(layout)
-    return css`
-      flex-basis: calc((100% - (${space(1.5)} * ${$columns - 1})) / ${$columns});
-      flex-shrink: 1;
-    `
-  }}
+const Item = styled(DefinitionListItem)<{
+  themes: Theme
+  maxColumns: Props['maxColumns']
+  fullWidth?: boolean
+}>`
+  ${({ maxColumns, fullWidth, themes: { space } }) => css`
+    flex-grow: 1;
+    ${maxColumns &&
+    css`
+      /* (全体幅 - (溝 * (最大列数 - 1)) / 最大列数 */
+      flex-basis: calc((100% - ${space(1.5)} * ${maxColumns - 1}) / ${maxColumns});
+    `}
+    ${fullWidth &&
+    css`
+      flex-basis: 100%;
+    `}
+
+    min-width: 12em;
+  `}
 `

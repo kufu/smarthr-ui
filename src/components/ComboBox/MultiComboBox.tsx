@@ -13,7 +13,6 @@ import styled, { css } from 'styled-components'
 import { useId } from '../../hooks/useId'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types/props'
 import { FaCaretDownIcon } from '../Icon'
 
 import { ComboBoxContext } from './ComboBoxContext'
@@ -24,6 +23,8 @@ import { useMultiComboBoxClassNames } from './useClassNames'
 import { useFocusControl } from './useFocusControl'
 import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
+
+import type { DecoratorsType } from '../../types'
 
 type Props<T> = BaseProps<T> & {
   /**

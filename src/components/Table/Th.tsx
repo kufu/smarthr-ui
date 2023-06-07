@@ -73,7 +73,7 @@ export const Th: FC<Props & ElementProps> = ({
     <Wrapper
       {...ariaSortProps}
       {...props}
-      className={`${wrapperClass} ${fixed && 'fixedElement'}`}
+      className={`${wrapperClass} ${fixed ? 'fixedElement' : ''}`}
       themes={theme}
       fixed={fixed}
     >

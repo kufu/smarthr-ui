@@ -14,7 +14,6 @@ import styled, { css } from 'styled-components'
 
 import { useClick } from '../../hooks/useClick'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types/props'
 import { UnstyledButton } from '../Button'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { Input } from '../Input'
@@ -24,6 +23,8 @@ import { BaseProps, ComboBoxItem } from './types'
 import { useSingleComboBoxClassNames } from './useClassNames'
 import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
+
+import type { DecoratorsType } from '../../types'
 
 type Props<T> = BaseProps<T> & {
   /**

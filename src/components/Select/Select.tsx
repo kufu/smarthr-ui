@@ -9,10 +9,11 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { isMobileSafari } from '../../libs/ua'
-import { DecoratorsType } from '../../types/props'
 import { FaSortIcon } from '../Icon'
 
 import { useClassNames } from './useClassNames'
+
+import type { DecoratorsType } from '../../types'
 
 type Option<T extends string> = {
   value: T

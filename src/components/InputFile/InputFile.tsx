@@ -11,11 +11,12 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
 
 import { useClassNames } from './useClassNames'
+
+import type { DecoratorsType } from '../../types'
 
 type Size = 'default' | 's'
 

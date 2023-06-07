@@ -12,9 +12,10 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
-import { DecoratorsType } from '../../types/props'
 
 import { useClassNames } from './useClassNames'
+
+import type { DecoratorsType } from '../../types'
 
 type Props = {
   /** 入力値にエラーがあるかどうか */

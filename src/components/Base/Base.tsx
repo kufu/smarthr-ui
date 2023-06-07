@@ -3,9 +3,10 @@ import styled, { css } from 'styled-components'
 
 import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { Gap } from '../Layout'
 
 import { useClassNames } from './useClassNames'
+
+import type { Gap } from '../../types'
 
 type Props = PropsWithChildren<{
   /** 境界とコンテンツの間の余白 */

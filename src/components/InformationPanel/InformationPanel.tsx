@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types/props'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, HeadingTagTypes } from '../Heading'
@@ -19,6 +18,8 @@ import {
 import { Cluster, Stack } from '../Layout'
 
 import { useClassNames } from './useClassNames'
+
+import type { DecoratorsType } from '../../types'
 
 type Props = {
   /** パネルのタイトル */

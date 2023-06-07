@@ -29,7 +29,7 @@ export const Td: FC<Props & ElementProps> = ({
   return (
     <StyledTd
       {...props}
-      className={`${wrapperClass} ${fixed && 'fixedElement'}`}
+      className={`${wrapperClass} ${fixed ? 'fixedElement' : ''}`}
       themes={theme}
       fixed={fixed}
     />

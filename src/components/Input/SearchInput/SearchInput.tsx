@@ -1,8 +1,9 @@
 import React, { ComponentProps, forwardRef, useMemo } from 'react'
 
-import { DecoratorsType } from '../../../types/props'
 import { FaSearchIcon } from '../../Icon'
 import { InputWithTooltip } from '../InputWithTooltip'
+
+import type { DecoratorsType } from '../../../types'
 
 type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'prefix'> & {
   /** 入力欄の説明を紐付けるツールチップに表示するメッセージ */
