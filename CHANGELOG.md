@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [32.0.0](https://github.com/kufu/smarthr-ui/compare/v31.1.0...v32.0.0) (2023-06-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* DefinitionList を画面サイズに応じて列数を変化させる (#3418)
+
+### Features
+
+* DefinitionList を画面サイズに応じて列数を変化させる ([#3418](https://github.com/kufu/smarthr-ui/issues/3418)) ([a65eae8](https://github.com/kufu/smarthr-ui/commit/a65eae8e4670e14f725f3cf5291658892c2d22c0))
+* SpreadsheetTable を追加 ([#3402](https://github.com/kufu/smarthr-ui/issues/3402)) ([9ae76ad](https://github.com/kufu/smarthr-ui/commit/9ae76adef6dabc6f0f7ba8ccaf8e79b252bc55b7))
+
+
+### Bug Fixes
+
+* DropdownMenuButton のフォーカスリングが見切れていたので修正 ([#3396](https://github.com/kufu/smarthr-ui/issues/3396)) ([bcaa4be](https://github.com/kufu/smarthr-ui/commit/bcaa4be271b849a5fb749fb129b29da9358138ef))
+* TableReelにclassNameを設定, Td,Thに不要な文字列が入っていたので修正 ([#3403](https://github.com/kufu/smarthr-ui/issues/3403)) ([142c4c8](https://github.com/kufu/smarthr-ui/commit/142c4c8805e0247e52940a760ead883c57581f38))
+* types 配下の整理と barrel import 対応 ([#3410](https://github.com/kufu/smarthr-ui/issues/3410)) ([1e660f5](https://github.com/kufu/smarthr-ui/commit/1e660f5c9739fba569df4fcc61a490089de0de76))
+
 ## [31.1.0](https://github.com/kufu/smarthr-ui/compare/v31.0.0...v31.1.0) (2023-05-29)
 
 
