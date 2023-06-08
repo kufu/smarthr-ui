@@ -5276,10 +5276,10 @@ chownr@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
 
-chromatic@^6.18.0:
-  version "6.18.0"
-  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-6.18.0.tgz#cf9c7f3bf7bcce1bd9f77a431b73f52a3404ed42"
-  integrity sha512-Sj7xMFGQ6jSTBrsdgMMjSQAP2OMNogg4GXV4djf4kAp6Dp+pY4FwByIagvbtQRjC33kQVi592FS52vMBOBMEzw==
+chromatic@^6.18.2:
+  version "6.18.2"
+  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-6.18.2.tgz#aba6ace6a0256348e0d6529a24a715cbdcc3dd23"
+  integrity sha512-Iqmyg78ujitLHKuuD/srybCszh5L5P5KQfJsnQutgt/hGdZPSXKb0xKBXUaYVYkSARuzVlkW/JvGdXSw2mf/XA==
   dependencies:
     "@discoveryjs/json-ext" "^0.5.7"
     "@storybook/csf-tools" "^7.0.12"
