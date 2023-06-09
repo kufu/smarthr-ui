@@ -63,7 +63,7 @@ export const All: Story = () => {
           label="labelSuffix"
           labelSuffix={
             <Suffix>
-              <FaExclamationCircleIcon size={12} color={themes.color.TEXT_GREY} />
+              <FaExclamationCircleIcon color={themes.color.TEXT_GREY} />
               <SuffixText>suffix text</SuffixText>
             </Suffix>
           }
@@ -90,7 +90,7 @@ export const All: Story = () => {
           }
           labelSuffix={
             <Suffix>
-              <FaExclamationCircleIcon size={12} color={themes.color.TEXT_GREY} />
+              <FaExclamationCircleIcon color={themes.color.TEXT_GREY} />
               <SuffixText>suffix text</SuffixText>
             </Suffix>
           }
