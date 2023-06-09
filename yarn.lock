@@ -13386,9 +13386,10 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript-plugin-styled-components@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/typescript-plugin-styled-components/-/typescript-plugin-styled-components-2.0.0.tgz#97e94187cca0f3058c6ad8fefffbca6766c56123"
+typescript-plugin-styled-components@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/typescript-plugin-styled-components/-/typescript-plugin-styled-components-3.0.0.tgz#f93aa97e40f549e23355e3b1fcd8f9f024565713"
+  integrity sha512-QWlhTl6NqsFxtJyxn7pJjm3RhgzXSByUftZ3AoQClrMMpa4yAaHuJKTN1gFpH3Ti+Rwm56fNUfG9pXSBU+WW3A==
 
 typescript@4.7.4:
   version "4.7.4"
