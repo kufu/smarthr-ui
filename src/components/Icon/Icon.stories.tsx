@@ -78,12 +78,13 @@ export const Color: Story = () => (
 
 export const Size: Story = () => (
   <Cluster>
-    <FaAddressBookIcon size={16} />
-    <FaAddressBookIcon size={24} />
-    <FaAddressBookIcon size={32} />
-    <FaAddressBookIcon size="1em" />
-    <FaAddressBookIcon size="1.5em" />
-    <FaAddressBookIcon size="2em" />
+    <FaAddressBookIcon size="XXS" />
+    <FaAddressBookIcon size="XS" />
+    <FaAddressBookIcon size="S" />
+    <FaAddressBookIcon size="M" />
+    <FaAddressBookIcon size="L" />
+    <FaAddressBookIcon size="XL" />
+    <FaAddressBookIcon size="XXL" />
   </Cluster>
 )
 

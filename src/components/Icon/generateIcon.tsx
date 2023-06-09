@@ -1,6 +1,8 @@
 import React from 'react'
-import { IconBaseProps, IconType } from 'react-icons'
+import { IconType } from 'react-icons'
 import styled, { css } from 'styled-components'
+
+import { FontSizes } from '@/themes/createFontSize'
 
 import { useSpacing } from '../../hooks/useSpacing'
 import { useTheme } from '../../hooks/useTheme'
@@ -41,9 +43,8 @@ interface IconProps {
   color?: LiteralUnion<DefinedColor>
   /**
    * アイコンの大きさ
-   * @deprecated 親要素やデフォルトフォントサイズが継承されるため固定値の指定は非推奨
    */
-  size?: IconBaseProps['size']
+  size?: FontSizes
 }
 
 type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
@@ -72,6 +73,7 @@ export const createIcon = (SvgIcon: IconType) => {
     text,
     iconGap = 0.25,
     right = false,
+    size,
     ...props
   }) => {
     const hasLabelByAria =
@@ -90,14 +92,16 @@ export const createIcon = (SvgIcon: IconType) => {
     const classNames = useClassNames()
 
     const existsText = !!text
+    const iconSize = size ? theme.fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
     const svgIcon = (
       <SvgIcon
         {...props}
         stroke="currentColor"
         fill="currentColor"
         strokeWidth="0"
-        width="1em"
-        height="1em"
+        size={iconSize}
+        width={iconSize}
+        height={iconSize}
         color={replacedColor}
         className={`${className} ${classNames.wrapper}`}
         role={role}
