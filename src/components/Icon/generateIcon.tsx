@@ -42,7 +42,7 @@ interface IconProps {
    */
   color?: LiteralUnion<DefinedColor>
   /**
-   * アイコンの大きさ
+   * アイコンの大きさ（フォントサイズの抽象値）
    */
   size?: FontSizes
 }
