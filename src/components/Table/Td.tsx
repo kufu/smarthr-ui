@@ -56,7 +56,6 @@ const StyledTd = styled.td<{ themes: Theme; fixed: boolean }>`
       font-size: ${fontSize.M};
       line-height: ${leading.NORMAL};
       vertical-align: middle;
-      position: relative;
 
       /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
       &.fixedElement {
