@@ -85,7 +85,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
           suffix={
             <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
               <FaFilterIcon />
-              {isFiltered ? <SmallFaCheckCircleIcon aria-label={filteredIconAriaLabel} /> : null}
+              {isFiltered ? <FilteredCheckIcon aria-label={filteredIconAriaLabel} /> : null}
             </IsFilteredIconWrapper>
           }
         >
@@ -152,7 +152,7 @@ const IsFilteredIconWrapper = styled.span<{ isFiltered: boolean; themes: Theme }
     bottom: 2px;
   }
 `
-const SmallFaCheckCircleIcon = styled(FaCheckCircleIcon)`
+const FilteredCheckIcon = styled(FaCheckCircleIcon)`
   width: 0.5em;
   height: 0.5em;
 `
