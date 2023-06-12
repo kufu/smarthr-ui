@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [32.0.1](https://github.com/kufu/smarthr-ui/compare/v32.0.0...v32.0.1) (2023-06-12)
+
+
+### Bug Fixes
+
+* Td の position: relative 指定を削除 ([#3428](https://github.com/kufu/smarthr-ui/issues/3428)) ([ffced50](https://github.com/kufu/smarthr-ui/commit/ffced50f8aab24f0bcfa4250fb0581e6faeb53ef))
+
 ## [32.0.0](https://github.com/kufu/smarthr-ui/compare/v31.1.0...v32.0.0) (2023-06-07)
 
 
