@@ -3917,11 +3917,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/webpack-env@^1.17.0":
-  version "1.18.0"
-  resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.18.0.tgz#ed6ecaa8e5ed5dfe8b2b3d00181702c9925f13fb"
-  integrity sha512-56/MAlX5WMsPVbOg7tAxnYvNYMMWr/QJiIp6BxVSW3JJXUVzzOn64qW8TzQyMSqSUFM2+PVI4aUHcHOzIz/1tg==
-
 "@types/yargs-parser@*":
   version "20.2.1"
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-20.2.1.tgz#3b9ce2489919d9e4fea439b76916abc34b2df129"
@@ -5303,14 +5298,13 @@ chownr@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
 
-chromatic@^6.18.2:
-  version "6.18.2"
-  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-6.18.2.tgz#aba6ace6a0256348e0d6529a24a715cbdcc3dd23"
-  integrity sha512-Iqmyg78ujitLHKuuD/srybCszh5L5P5KQfJsnQutgt/hGdZPSXKb0xKBXUaYVYkSARuzVlkW/JvGdXSw2mf/XA==
+chromatic@^6.19.1:
+  version "6.19.2"
+  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-6.19.2.tgz#15dd73068139b842806e8ca3edbeb9a3c0b24374"
+  integrity sha512-jDXdiqEZ1iQHm69C8SPVP7FCs87vO/9T33c9MRvkYsbnAUD1FhDLVpwD2FI0qn4z528/Oha4raBf6Uh9i2XQBg==
   dependencies:
     "@discoveryjs/json-ext" "^0.5.7"
     "@storybook/csf-tools" "^7.0.12"
-    "@types/webpack-env" "^1.17.0"
     snyk-nodejs-lockfile-parser "^1.49.0"
 
 chrome-remote-interface@^0.32.1:
