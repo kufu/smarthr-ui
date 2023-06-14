@@ -11,7 +11,6 @@ export const useClassNames = () => {
     () => ({
       wrapper: generate(),
       icon: generate('icon'),
-      text: generate('text'),
       button: generate('button'),
     }),
     [generate],
