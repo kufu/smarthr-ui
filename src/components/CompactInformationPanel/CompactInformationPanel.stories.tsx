@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -9,30 +9,29 @@ export default {
   component: CompactInformationPanel,
 }
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <CompactInformationPanel>
-    <Message>
-      CompactInformationPanel
-      は画面内の操作を進めるにあたってユーザーに伝えるべきメッセージを表示する領域です。
-      <br />
-      InformationPanel とは異なり、パネルを閉じることはできません。
-    </Message>
+    CompactInformationPanel
+    は画面内の操作を進めるにあたってユーザーに伝えるべきメッセージを表示する領域です。
+    <br />
+    InformationPanel とは異なり、パネルを閉じることはできません。
   </CompactInformationPanel>
 )
-export const Type: Story = () => (
+export const Type: StoryFn = () => (
   <Wrapper>
     <CompactInformationPanel type="info">
-      <Message>これは [type=info] の CompactInformationPanel です。</Message>
-      <Message>type を省略した場合も [type=info] になります。</Message>
+      これは [type=info] の CompactInformationPanel です。
+      <br />
+      type を省略した場合も [type=info] になります。
     </CompactInformationPanel>
     <CompactInformationPanel type="success">
-      <Message>これは [type=success] の CompactInformationPanel です。</Message>
+      これは [type=success] の CompactInformationPanel です。
     </CompactInformationPanel>
     <CompactInformationPanel type="warning">
-      <Message>これは [type=warning] の CompactInformationPanel です。</Message>
+      これは [type=warning] の CompactInformationPanel です。
     </CompactInformationPanel>
     <CompactInformationPanel type="error">
-      <Message>これは [type=error] の CompactInformationPanel です。</Message>
+      これは [type=error] の CompactInformationPanel です。
     </CompactInformationPanel>
   </Wrapper>
 )
@@ -41,8 +40,4 @@ const Wrapper = styled.div`
   > * + * {
     margin-top: 1rem;
   }
-`
-const Message = styled.p`
-  margin-top: 0;
-  margin-bottom: 0;
 `
