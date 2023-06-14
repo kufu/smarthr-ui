@@ -4,8 +4,9 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
-import { FaCheckCircleIcon, FaExclamationCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
+import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { ResponseMessage } from '../../ResponseMessage'
 import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
@@ -127,22 +128,11 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
               </DropdownCloser>
             </RightButtonLayout>
           </Cluster>
-          {responseMessage?.status === 'success' && (
+          {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
             <Message>
-              <FaCheckCircleIcon
-                color={themes.color.MAIN}
-                text={responseMessage.text}
-                role="alert"
-              />
-            </Message>
-          )}
-          {responseMessage?.status === 'error' && (
-            <Message>
-              <FaExclamationCircleIcon
-                color={themes.color.DANGER}
-                text={responseMessage.text}
-                role="alert"
-              />
+              <ResponseMessage type={responseMessage.status} role="alert">
+                {responseMessage.text}
+              </ResponseMessage>
             </Message>
           )}
         </ActionArea>
