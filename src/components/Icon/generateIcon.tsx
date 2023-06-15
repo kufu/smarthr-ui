@@ -43,6 +43,7 @@ interface IconProps {
   color?: LiteralUnion<DefinedColor>
   /**
    * アイコンの大きさ（フォントサイズの抽象値）
+   * @deprecated 親要素やデフォルトフォントサイズが継承されるため固定値の指定は非推奨
    */
   size?: FontSizes
 }
