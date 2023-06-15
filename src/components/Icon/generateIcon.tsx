@@ -100,6 +100,7 @@ export const createIcon = (SvgIcon: IconType) => {
         stroke="currentColor"
         fill="currentColor"
         strokeWidth="0"
+        // size は react-icons のアイコンの大きさ、width / height は自前で SVG からアイコンを作る場合の大きさ指定
         size={iconSize}
         width={iconSize}
         height={iconSize}
