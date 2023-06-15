@@ -10,7 +10,7 @@ import { FormDialogContentInner, FormDialogContentInnerProps } from './FormDialo
 type Props = Omit<FormDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const FormDialog: React.VFC<Props & ElementProps> = ({
+export const FormDialog: React.FC<Props & ElementProps> = ({
   children,
   title,
   subtitle,

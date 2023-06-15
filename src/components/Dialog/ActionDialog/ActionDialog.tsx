@@ -10,7 +10,7 @@ import { ActionDialogContentInner, ActionDialogContentInnerProps } from './Actio
 type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const ActionDialog: React.VFC<Props & ElementProps> = ({
+export const ActionDialog: React.FC<Props & ElementProps> = ({
   children,
   title,
   subtitle,
