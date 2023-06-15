@@ -10,7 +10,7 @@ import { Text } from '../Text'
 import * as Icons from './Icon'
 import { generateIcon } from './generateIcon'
 
-const { FaAddressBookIcon, FaBullhornIcon, FaInfoCircleIcon } = Icons
+const { FaAddressBookIcon, FaBullhornIcon, FaInfoCircleIcon, WarningIcon } = Icons
 
 export default {
   title: 'Media（メディア）/Icon',
