@@ -85,6 +85,7 @@ export const Size: Story = () => (
     <FaAddressBookIcon size="L" />
     <FaAddressBookIcon size="XL" />
     <FaAddressBookIcon size="XXL" />
+    <WarningIcon size="XXL" />
   </Cluster>
 )
 
