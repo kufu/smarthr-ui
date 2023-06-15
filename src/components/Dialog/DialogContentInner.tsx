@@ -171,7 +171,7 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
       max-width: min(
         calc(100vw - max(${left || 0}px, ${space(0.5)}) - max(${right || 0}px, ${space(0.5)})),
         /* TODO: 幅の定数指定は、トークンが決まり theme に入ったら差し替える */
-        800px
+        ${exist($width) ? (typeof $width === 'number' ? `${$width}px` : $width) : '800px'}
       );
       border-radius: ${radius.m};
       background-color: ${color.WHITE};
