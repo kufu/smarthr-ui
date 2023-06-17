@@ -49,7 +49,7 @@
     "babel-loader": "^9.1.2",
     "babel-plugin-polyfill-corejs2": "^0.4.3",
     "babel-plugin-polyfill-regenerator": "^0.5.0",
-    "chromatic": "^6.19.7",
+    "chromatic": "^6.19.8",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
     "eslint": "^8.42.0",
     "eslint-config-smarthr": "^6.8.5",
