@@ -5076,10 +5076,10 @@ chrome-trace-event@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/chrome-trace-event/-/chrome-trace-event-1.0.3.tgz#1015eced4741e15d06664a957dbbf50d041e26ac"
 
-chromium-bidi@0.4.11:
-  version "0.4.11"
-  resolved "https://registry.yarnpkg.com/chromium-bidi/-/chromium-bidi-0.4.11.tgz#d3eafb0a99f417406a734b889dacd777be5e227c"
-  integrity sha512-p03ajLhlQ5gebw3cmbDBFmBc2wnJM5dnXS8Phu6mblGn/KQd76yOVL5VwE0VAisa7oazNfKGTaXlIZ8Q5Bb9OA==
+chromium-bidi@0.4.12:
+  version "0.4.12"
+  resolved "https://registry.yarnpkg.com/chromium-bidi/-/chromium-bidi-0.4.12.tgz#54910b6b2c97d1d39c1162237b09e42fe6cdf803"
+  integrity sha512-yl0ngMHtYUGJa2G0lkcbPvbnUZ9WMQyMNSfYmlrGD1nHRNyI9KOGw3dOaofFugXHHToneUaSmF9iUdgCBamCjA==
   dependencies:
     mitt "3.0.0"
 
@@ -10922,13 +10922,13 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-puppeteer-core@20.7.1:
-  version "20.7.1"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-20.7.1.tgz#fdbb6d4fa6fda4a97e299d2f191fdcfab5832758"
-  integrity sha512-f45j9JxImFaYndQYsFA39CEDKwpn1nAF/Iw7urznatjhaslSB/RfHG7sC7iPpDbmP+CLpPEkHhqNxqpaUDdTLw==
+puppeteer-core@20.7.2:
+  version "20.7.2"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-20.7.2.tgz#e9d527701108693c37d3f9d5980c10b883e00378"
+  integrity sha512-4Sd+v2YLlYMYFP/9SI/spT1joGTePwhmKP89pchUqz7VcWwv/Yh0Atmsybz+7wWT0VPDnw0UhBM6iNEfXEoUvg==
   dependencies:
     "@puppeteer/browsers" "1.4.1"
-    chromium-bidi "0.4.11"
+    chromium-bidi "0.4.12"
     cross-fetch "3.1.6"
     debug "4.3.4"
     devtools-protocol "0.0.1135028"
@@ -10949,14 +10949,14 @@ puppeteer-core@^2.1.1:
     rimraf "^2.6.1"
     ws "^6.1.0"
 
-puppeteer@^20.7.1:
-  version "20.7.1"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-20.7.1.tgz#82819bf88bb1ae7b5ca665684b33b7656dbb3613"
-  integrity sha512-yIkba2PT6rkPw85gCAmbW6KO6VVFTdONnvQp8taeMZaOTUJ193nVajykD1jT3vFbjvwKz8te9nbBVb9ITQqbPA==
+puppeteer@^20.7.2:
+  version "20.7.2"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-20.7.2.tgz#f3c8db0eb34dc2ddb877bf34b9352e82d160bc38"
+  integrity sha512-SKg9TgUY3TJvnOy0VrkhduSvDQIjBsi+s/Ne6S+qD53MM6emau+oh+kNqySNrT7c4qkg27UrJ9aEnltKDAQTzQ==
   dependencies:
     "@puppeteer/browsers" "1.4.1"
     cosmiconfig "8.2.0"
-    puppeteer-core "20.7.1"
+    puppeteer-core "20.7.2"
 
 pure-rand@^6.0.0:
   version "6.0.1"
