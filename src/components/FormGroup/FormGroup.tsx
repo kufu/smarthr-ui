@@ -98,7 +98,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       as={as}
     >
       <FormLabel
-        htmlFor={managedHtmlFor}
+        htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
         id={managedLabelId}
         className={`${classNames.label}`}
         as={isRoleGroup ? 'legend' : 'label'}
