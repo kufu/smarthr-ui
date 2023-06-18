@@ -11,9 +11,10 @@ export const Dialog: React.VFC<Props & ElementProps> = ({
   children,
   className = '',
   portalParent,
+  id,
   ...props
 }) => {
-  const { createPortal } = useDialogPortal(portalParent)
+  const { createPortal } = useDialogPortal(portalParent, id)
 
   return createPortal(
     <DialogContentInner {...props} className={className}>
