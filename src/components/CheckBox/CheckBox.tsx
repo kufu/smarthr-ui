@@ -47,7 +47,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
 )
 
 // Use flex-start to support multi-line text.
-const Wrapper = styled.div`
+const Wrapper = styled.span`
   display: inline-flex;
   align-items: flex-start;
 `
