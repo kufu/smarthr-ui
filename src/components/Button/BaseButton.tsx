@@ -1,10 +1,7 @@
-import React, { VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { FC } from 'react'
+import styled from 'styled-components'
 
-import { hoverable } from '../../hocs/hoverable'
 import { Theme, useTheme } from '../../hooks/useTheme'
-
-type Tag = 'button' | 'a'
 
 export type ButtonProps = BaseProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
@@ -46,89 +43,31 @@ export type BaseProps = {
   wide?: boolean
 }
 
-export const buttonFactory = <Props extends BaseProps>(tag: Tag) => {
-  const BaseTag = hoverable()(tagStore[tag])
+const Button: FC<BaseProps> = ({
+  size = 'default',
+  className = '',
+  square = false,
+  children = '',
+  prefix = '',
+  suffix = '',
+  ...props
+}) => {
+  const theme = useTheme()
 
-  const Button: VFC<Props> = ({
-    size = 'default',
-    className = '',
-    square = false,
-    children = '',
-    prefix = '',
-    suffix = '',
-    ...props
-  }) => {
-    const theme = useTheme()
+  // prettier-ignore
+  const classNames = `${size} ${className} ${square ? 'square' : ''} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
 
-    // prettier-ignore
-    const classNames = `${size} ${className} ${square ? 'square' : ''} ${prefix ? 'prefix' : ''} ${suffix ? 'suffix' : ''}`
-
-    return (
-      <BaseTag {...props} className={classNames} themes={theme}>
-        {prefix}
-        <TextLabel>{children}</TextLabel>
-        {suffix}
-      </BaseTag>
-    )
-  }
-  return Button
+  return (
+    <StyledButton {...props} className={classNames} themes={theme}>
+      {prefix}
+      <TextLabel>{children}</TextLabel>
+      {suffix}
+    </StyledButton>
+  )
 }
 
-const Base: any = styled.div<{ themes: Theme; wide: boolean }>`
-  ${({ themes, wide }) => {
-    const { border, fontSize, leading, radius, shadow, spacingByChar } = themes
+const StyledButton = styled.button<{ themes: Theme }>``
 
-    return css`
-      box-sizing: border-box;
-      cursor: pointer;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: ${spacingByChar(0.5)};
-      text-align: center;
-      white-space: nowrap;
-      border-radius: ${radius.m};
-
-      /* ボタンの高さを合わせるために指定 */
-      border: ${border.lineWidth} ${border.lineStyle} transparent;
-      padding: ${spacingByChar(0.75)} ${spacingByChar(1)};
-      font-family: inherit;
-      font-size: ${fontSize.M};
-      font-weight: bold;
-      line-height: ${leading.NONE};
-      ${wide && 'width: 100%;'}
-
-      &.square {
-        padding: ${spacingByChar(0.75)};
-      }
-
-      &.s {
-        padding: ${spacingByChar(0.5)};
-        font-size: ${fontSize.S};
-
-        /* ボタンラベルの line-height を 0 にしたため、高さを担保する */
-        min-height: calc(${fontSize.S} + ${spacingByChar(1)} + (${border.lineWidth} * 2));
-      }
-
-      &[disabled] {
-        cursor: not-allowed;
-
-        /* alpha color を使用しているので、背景色と干渉させない */
-        background-clip: padding-box;
-      }
-
-      &:focus-visible {
-        ${shadow.focusIndicatorStyles}
-      }
-
-      /* baseline より下の leading などの余白を埋める */
-      .smarthr-ui-Icon,
-      svg {
-        display: block;
-      }
-    `
-  }}
-`
 const TextLabel = styled.span`
   /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
   min-width: 0;
@@ -139,15 +78,11 @@ const TextLabel = styled.span`
   }
 `
 
-const tagStore = {
-  button: Base.withComponent('button'),
-  a: Base.withComponent('a'),
-}
+/** @deprecated PrimaryButton など、旧コンポーネントで使ってるだけなので削除予定 */
+export const BaseButton: FC<ButtonProps> = Button
 
-export const BaseButton: VFC<ButtonProps> = buttonFactory<ButtonProps>('button')
-
-const ButtonAnchor: VFC<AnchorProps> = buttonFactory<AnchorProps>('a')
-export const BaseButtonAnchor = styled(ButtonAnchor)`
+const ButtonAnchor: FC<AnchorProps> = Button
+export const BaseButtonAnchor = styled(ButtonAnchor).attrs({ as: 'a' })`
   text-decoration: none;
 
   &:not([href]) {
