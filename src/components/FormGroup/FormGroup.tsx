@@ -4,6 +4,7 @@ import React, {
   PropsWithChildren,
   ReactElement,
   ReactNode,
+  useMemo,
 } from 'react'
 import styled, { css } from 'styled-components'
 
@@ -85,14 +86,21 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
 
   const theme = useTheme()
   const classNames = useClassNames()
-  const describedbyIds = `${managedHtmlFor}_helpMessage ${managedHtmlFor}_exampleMessage ${managedHtmlFor}_supplementaryMessage ${managedHtmlFor}_errorMessage`
+  const describedbyIds = useMemo(
+    () =>
+      Object.entries({ helpMessage, exampleMessage, supplementaryMessage, errorMessages })
+        .filter(({ 1: value }) => value)
+        .map(([key]) => `${managedHtmlFor}_${key}`)
+        .join(' '),
+    [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor],
+  )
 
   return (
     <Wrapper
       {...props}
       disabled={disabled}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
-      aria-describedby={isRoleGroup ? describedbyIds : undefined}
+      aria-describedby={isRoleGroup && describedbyIds ? describedbyIds : undefined}
       themes={theme}
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
       as={as}
@@ -131,7 +139,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       )}
 
       {errorMessages && (
-        <Stack gap={0} id={`${managedHtmlFor}_errorMessage`}>
+        <Stack gap={0} id={`${managedHtmlFor}_errorMessages`}>
           {(Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map(
             (message, index) => (
               <ErrorMessage themes={theme} key={index}>
@@ -176,7 +184,7 @@ const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describe
         foundFirstInput = true
         return React.cloneElement(child as ReactElement, {
           id: managedHtmlFor,
-          'aria-describedby': describedbyIds,
+          'aria-describedby': describedbyIds ? describedbyIds : undefined,
         })
       }
 
