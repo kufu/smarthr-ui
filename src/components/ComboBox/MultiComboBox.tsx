@@ -302,7 +302,7 @@ export function MultiComboBox<T>({
       <Container
         {...props}
         themes={theme}
-        width={width}
+        $width={width}
         ref={outerRef}
         className={wrapperClassNames}
         onClick={(e) => {
@@ -387,7 +387,7 @@ export function MultiComboBox<T>({
           )}
         </InputArea>
 
-        <Suffix themes={theme} disabled={disabled}>
+        <Suffix themes={theme} $disabled={disabled}>
           <FaCaretDownIcon color={caretIconColor} />
         </Suffix>
 
@@ -397,14 +397,14 @@ export function MultiComboBox<T>({
   )
 }
 
-const Container = styled.div<{ themes: Theme; width: number | string }>`
-  ${({ themes, width }) => {
+const Container = styled.div<{ themes: Theme; $width: number | string }>`
+  ${({ themes, $width }) => {
     const { border, radius, color, shadow, spacingByChar } = themes
 
     return css`
       display: inline-flex;
       min-width: calc(62px + 32px + ${spacingByChar(0.5)} * 2);
-      width: ${typeof width === 'number' ? `${width}px` : width};
+      width: ${typeof $width === 'number' ? `${$width}px` : $width};
       min-height: 40px;
       border-radius: ${radius.m};
       border: ${border.shorthand};
@@ -497,8 +497,8 @@ const Placeholder = styled.p<{ themes: Theme }>`
     `
   }}
 `
-const Suffix = styled.div<{ themes: Theme; disabled: boolean }>`
-  ${({ themes: { color, spacingByChar }, disabled }) => {
+const Suffix = styled.div<{ themes: Theme; $disabled: boolean }>`
+  ${({ themes: { color, spacingByChar }, $disabled }) => {
     const space = spacingByChar(0.5)
 
     return css`
@@ -509,7 +509,7 @@ const Suffix = styled.div<{ themes: Theme; disabled: boolean }>`
       padding: ${space};
       padding-left: calc(${space} + 1px);
       box-sizing: border-box;
-      cursor: ${disabled ? 'not-allowed' : 'pointer'};
+      cursor: ${$disabled ? 'not-allowed' : 'pointer'};
 
       &::before {
         content: '';
