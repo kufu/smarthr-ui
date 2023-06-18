@@ -5,6 +5,7 @@ import { useSpacing } from '../../hooks/useSpacing'
 import { Center } from '../Layout'
 
 import { Td } from './Td'
+import { useTableHeadCellCount } from './useTableHeadCellCount'
 
 import type { Gap } from '../../types'
 
@@ -21,10 +22,12 @@ export const EmptyTableBody: React.FC<Props & ElementProps> = ({
   padding = 4,
   ...props
 }) => {
+  const { ref, count } = useTableHeadCellCount<HTMLTableSectionElement>()
+
   return (
-    <tbody {...props}>
+    <tbody {...props} ref={ref}>
       <tr>
-        <StyledTd colSpan={1000} padding={padding}>
+        <StyledTd colSpan={count} padding={padding}>
           <Center>{children}</Center>
         </StyledTd>
       </tr>
