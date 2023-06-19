@@ -36,7 +36,9 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
     const theme = useTheme()
     const classNames = useClassNames().button
 
-    const loader = <Loader size="s" type="light" variant={variant} themes={theme} />
+    const loader = (
+      <Loader size="s" type="light" variant={variant} forwardedAs="span" themes={theme} />
+    )
     const actualPrefix = !loading && prefix
     const actualSuffix = loading && !square ? loader : suffix
     const disabledOnLoading = loading || disabled
