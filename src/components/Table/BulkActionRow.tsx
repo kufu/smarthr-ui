@@ -18,10 +18,10 @@ export const BulkActionRow: FC<Props & ElementProps> = ({ className = '', childr
   const themes = useTheme()
   const classNames = useBulkActionRowClassNames()
 
-  const { ref, count } = useTableHeadCellCount<HTMLTableRowElement>()
+  const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableRowElement>()
 
   return (
-    <tr {...props} ref={ref} className={`${className} ${classNames.wrapper}`}>
+    <tr {...props} ref={countHeadCellRef} className={`${className} ${classNames.wrapper}`}>
       <Cell colSpan={count} themes={themes}>
         {children}
       </Cell>

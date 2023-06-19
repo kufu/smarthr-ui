@@ -22,10 +22,10 @@ export const EmptyTableBody: React.FC<Props & ElementProps> = ({
   padding = 4,
   ...props
 }) => {
-  const { ref, count } = useTableHeadCellCount<HTMLTableSectionElement>()
+  const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
 
   return (
-    <tbody {...props} ref={ref}>
+    <tbody {...props} ref={countHeadCellRef}>
       <tr>
         <StyledTd colSpan={count} padding={padding}>
           <Center>{children}</Center>
