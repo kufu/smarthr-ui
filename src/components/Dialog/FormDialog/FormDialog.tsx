@@ -26,9 +26,10 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   className = '',
   portalParent,
   decorators,
+  id,
   ...props
 }) => {
-  const { createPortal } = useDialogPortal(portalParent)
+  const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
 
   const handleClickClose = useCallback(() => {
