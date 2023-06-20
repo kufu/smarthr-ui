@@ -160,19 +160,21 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
     const translateX = exist(right) || exist(left) ? '0' : 'calc((100vw - 100%) / 2)'
     const translateY = exist(top) || exist(bottom) ? '0' : 'calc((100vh - 100%) / 2)'
 
+    const actualWidth = typeof $width === 'number' ? `${$width}px` : $width
+    const minimumMaxWidth = `calc(100vw - max(${left || 0}px, ${space(0.5)}) - max(${
+      right || 0
+    }px, ${space(0.5)}))`
+
     return css`
       position: absolute;
       inset: ${positionTop} ${positionRight} ${positionBottom} ${positionLeft};
-      ${exist($width) &&
-      css`
-        width: ${typeof $width === 'number' ? `${$width}px` : $width};
-      `}
       /* viewport を超えないように上限設定 */
-      max-width: min(
-        calc(100vw - max(${left || 0}px, ${space(0.5)}) - max(${right || 0}px, ${space(0.5)})),
-        /* TODO: 幅の定数指定は、トークンが決まり theme に入ったら差し替える */
-        ${exist($width) ? (typeof $width === 'number' ? `${$width}px` : $width) : '800px'}
-      );
+      max-width: ${minimumMaxWidth};
+      ${exist(actualWidth) &&
+      css`
+        width: ${actualWidth};
+        max-width: min(${minimumMaxWidth}, ${actualWidth});
+      `}
       border-radius: ${radius.m};
       background-color: ${color.WHITE};
       box-shadow: ${shadow.LAYER3};
