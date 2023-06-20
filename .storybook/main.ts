@@ -39,14 +39,12 @@ const config: StorybookConfig = {
     autodocs: true,
   },
   webpackFinal: async (config) => {
-    config.resolve = {
-      ...config.resolve,
-    }
-    config.resolve.alias = {
-      ...config.resolve.alias,
+    const resolve = config.resolve || {}
+    resolve.alias = {
+      ...resolve.alias,
       '@': path.resolve(__dirname, '../src'),
     }
-    return config
+    return { ...config, resolve }
   },
 }
 
