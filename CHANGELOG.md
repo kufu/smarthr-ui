@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [33.0.0](https://github.com/kufu/smarthr-ui/compare/v32.0.1...v33.0.0) (2023-06-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* Icon の size をデザイントークンで指定するように変更 (#3431)
+* FloatArea の errorText / errorIcon を廃止し、responseMessage を追加 (#3452)
+
+### Features
+
+* "SparklesIcon"の追加 ([#3447](https://github.com/kufu/smarthr-ui/issues/3447)) ([b2c9784](https://github.com/kufu/smarthr-ui/commit/b2c97847566fdc5dbca1cb96b1f323d380c17e9a))
+* FloatArea の errorText / errorIcon を廃止し、responseMessage を追加 ([#3452](https://github.com/kufu/smarthr-ui/issues/3452)) ([5ec1e2b](https://github.com/kufu/smarthr-ui/commit/5ec1e2b000b7226e7357f39d2f13ffcb40714063))
+* Icon の size をデザイントークンで指定するように変更 ([#3431](https://github.com/kufu/smarthr-ui/issues/3431)) ([2c5305e](https://github.com/kufu/smarthr-ui/commit/2c5305e6469e866217d1af391b83bb8625e26942))
+* ResponseMessage を追加 ([#3449](https://github.com/kufu/smarthr-ui/issues/3449)) ([197ea72](https://github.com/kufu/smarthr-ui/commit/197ea72e856236133330012bdc2a1e027b046d42))
+
+
+### Bug Fixes
+
+* BulkActionRow や EmptyTableBody の colspan を算出するように変更 ([#3469](https://github.com/kufu/smarthr-ui/issues/3469)) ([35c082f](https://github.com/kufu/smarthr-ui/commit/35c082f82b42396a32f5c8946099f9b76f29991d))
+* Button[loading] の invalid な HTML を修正 ([#3463](https://github.com/kufu/smarthr-ui/issues/3463)) ([cae7b35](https://github.com/kufu/smarthr-ui/commit/cae7b35ff56307ac2d3276c6dfc4f91cf04a0c41))
+* Checkbox の indeterminate に aria-checked を使わないように修正 ([#3474](https://github.com/kufu/smarthr-ui/issues/3474)) ([3a6a011](https://github.com/kufu/smarthr-ui/commit/3a6a0119df3fdd6473aef32ba4ff7d1ef994ee5e))
+* CheckBox の wrapper を span に変える ([#3468](https://github.com/kufu/smarthr-ui/issues/3468)) ([d135df2](https://github.com/kufu/smarthr-ui/commit/d135df22102e630b58c02e0ec6a4aa6d9dcef7a0))
+* Dialog に width が指定されていない場合の max-width を vieport からの計算に変更 ([#3455](https://github.com/kufu/smarthr-ui/issues/3455)) ([730db72](https://github.com/kufu/smarthr-ui/commit/730db72564ddd16de1e9b701a64de574245c5cd7))
+* Dialog の max-width が固定値になっている欠陥を修正 ([#3453](https://github.com/kufu/smarthr-ui/issues/3453)) ([8f9b337](https://github.com/kufu/smarthr-ui/commit/8f9b3375fd865c0c9810f7d808fcf6061af7bf1f))
+* FormControl や Fieldset に不要な属性や値があたらないように修正 ([#3462](https://github.com/kufu/smarthr-ui/issues/3462)) ([34e4723](https://github.com/kufu/smarthr-ui/commit/34e4723d856e72d050c0b040f12024f9937a3d92))
+* MultiComboBox の width / disabled が DOM に渡らないように修正 ([#3464](https://github.com/kufu/smarthr-ui/issues/3464)) ([40da11b](https://github.com/kufu/smarthr-ui/commit/40da11b51c6ebcf9cd99e18e494f3a965c3a2252))
+* RadioButtonPanel の Story で HTML が valid になるよう修正 ([#3465](https://github.com/kufu/smarthr-ui/issues/3465)) ([584dd45](https://github.com/kufu/smarthr-ui/commit/584dd4530504b488df43b5e13307f02563336aa6))
+* Select は label 内に含まれる可能性があるため span として提供 ([#3466](https://github.com/kufu/smarthr-ui/issues/3466)) ([6b3631f](https://github.com/kufu/smarthr-ui/commit/6b3631fb071a115044f456aacce08403d4972492))
+* Storybook関連ファイルでも @/ エイリアスを利用可能にする ([#3473](https://github.com/kufu/smarthr-ui/issues/3473)) ([d1a38f9](https://github.com/kufu/smarthr-ui/commit/d1a38f9c8c2dabca5ceadd623448bed4bc28cc8e))
+* styled-components v6 で削除予定の withComponent を使わないようにする ([#3446](https://github.com/kufu/smarthr-ui/issues/3446)) ([2439ec7](https://github.com/kufu/smarthr-ui/commit/2439ec74a6ee8bc97a46758947ebdba04364a3f3))
+* Textarea は label 内に含まれる可能性があるため span として提供 ([#3467](https://github.com/kufu/smarthr-ui/issues/3467)) ([5f9ace8](https://github.com/kufu/smarthr-ui/commit/5f9ace8044c97a9e7410cf2c29c2b2f5b75827a0))
+* 各 Dialog の id を portal の親要素に設定されるように修正 ([#3461](https://github.com/kufu/smarthr-ui/issues/3461)) ([fb72915](https://github.com/kufu/smarthr-ui/commit/fb72915e3badb70ddb0b4c4808c3e8772102e86e))
+
 ### [32.0.1](https://github.com/kufu/smarthr-ui/compare/v32.0.0...v32.0.1) (2023-06-12)
 
 
