@@ -10,7 +10,7 @@ import { Text } from '../Text'
 import * as Icons from './Icon'
 import { generateIcon } from './generateIcon'
 
-const { FaAddressBookIcon, FaBullhornIcon, FaInfoCircleIcon } = Icons
+const { FaAddressBookIcon, FaBullhornIcon, FaInfoCircleIcon, WarningIcon } = Icons
 
 export default {
   title: 'Media（メディア）/Icon',
@@ -78,12 +78,14 @@ export const Color: Story = () => (
 
 export const Size: Story = () => (
   <Cluster>
-    <FaAddressBookIcon size={16} />
-    <FaAddressBookIcon size={24} />
-    <FaAddressBookIcon size={32} />
-    <FaAddressBookIcon size="1em" />
-    <FaAddressBookIcon size="1.5em" />
-    <FaAddressBookIcon size="2em" />
+    <FaAddressBookIcon size="XXS" />
+    <FaAddressBookIcon size="XS" />
+    <FaAddressBookIcon size="S" />
+    <FaAddressBookIcon size="M" />
+    <FaAddressBookIcon size="L" />
+    <FaAddressBookIcon size="XL" />
+    <FaAddressBookIcon size="XXL" />
+    <WarningIcon size="XXL" />
   </Cluster>
 )
 

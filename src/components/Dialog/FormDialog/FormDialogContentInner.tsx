@@ -4,13 +4,13 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
 import { HeadingTagTypes } from '../../Heading'
-import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { ResponseMessage } from '../../ResponseMessage'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
 import { useClassNames } from '../useClassNames'
 
-import type { DecoratorsType } from '../../../types'
+import type { DecoratorsType, ResponseMessageType } from '../../../types'
 
 export type BaseProps = {
   /**
@@ -58,18 +58,9 @@ export type BaseProps = {
   decorators?: DecoratorsType<'closeButtonLabel'>
 }
 
-type responseMessageType =
-  | {
-      status: 'success' | 'error'
-      text: ReactNode
-    }
-  | {
-      status: 'processing'
-    }
-
 export type FormDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
-  responseMessage?: responseMessageType
+  responseMessage?: ResponseMessageType
   titleId: string
 }
 
@@ -139,27 +130,12 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
             {actionText}
           </Button>
         </ButtonArea>
-        {responseMessage && (
-          <>
-            {responseMessage.status === 'success' && (
-              <Message>
-                <FaCheckCircleIcon
-                  color={theme.color.MAIN}
-                  text={responseMessage.text}
-                  role="alert"
-                />
-              </Message>
-            )}
-            {responseMessage.status === 'error' && (
-              <Message>
-                <FaExclamationCircleIcon
-                  color={theme.color.DANGER}
-                  text={responseMessage.text}
-                  role="alert"
-                />
-              </Message>
-            )}
-          </>
+        {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
+          <Message>
+            <ResponseMessage type={responseMessage.status} role="alert">
+              {responseMessage.text}
+            </ResponseMessage>
+          </Message>
         )}
       </ActionArea>
     </form>

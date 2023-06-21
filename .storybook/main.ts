@@ -38,6 +38,14 @@ const config: StorybookConfig = {
   docs: {
     autodocs: true,
   },
+  webpackFinal: async (config) => {
+    const resolve = config.resolve || {}
+    resolve.alias = {
+      ...resolve.alias,
+      '@': path.resolve(__dirname, '../src'),
+    }
+    return { ...config, resolve }
+  },
 }
 
 export default config

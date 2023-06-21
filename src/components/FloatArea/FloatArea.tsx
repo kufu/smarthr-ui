@@ -1,19 +1,13 @@
-import React, {
-  ComponentProps,
-  FC,
-  FunctionComponentElement,
-  HTMLAttributes,
-  ReactNode,
-} from 'react'
+import React, { FC, HTMLAttributes, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import { ResponseMessageType } from '../../types'
 import { Base as shrBase } from '../Base'
-import { FaExclamationCircleIcon } from '../Icon'
-import { Cluster, LineUp } from '../Layout'
-import { Text } from '../Text'
+import { Cluster } from '../Layout'
+import { ResponseMessage } from '../ResponseMessage'
 
 import { useClassNames } from './useClassNames'
 
@@ -32,12 +26,8 @@ type Props = StyleProps & {
   secondaryButton?: ReactNode
   /** tertiary 領域に表示するボタン */
   tertiaryButton?: ReactNode
-  /** エラーメッセージ */
-  errorText?: ReactNode
-  /**
-   * エラーメッセージのアイコン（`FaExclamationCircleIcon` を指定）
-   */
-  errorIcon?: FunctionComponentElement<ComponentProps<typeof FaExclamationCircleIcon>>
+  /** 操作に対するフィードバックメッセージ */
+  responseMessage?: ResponseMessageType
   /** 上下の位置を固定するかどうか */
   fixed?: boolean
   /** コンポーネントの幅 */
@@ -51,8 +41,7 @@ export const FloatArea: FC<Props & ElementProps> = ({
   primaryButton,
   secondaryButton,
   tertiaryButton,
-  errorText,
-  errorIcon,
+  responseMessage,
   fixed = false,
   className = '',
   width,
@@ -72,12 +61,11 @@ export const FloatArea: FC<Props & ElementProps> = ({
       <Cluster gap={1}>
         {tertiaryButton && tertiaryButton}
         <RightSide>
-          <Cluster gap={1}>
-            {errorText && (
-              <ErrorMessage gap={0.25} vAlign="center" as="p" className={classNames.errorText}>
-                {errorIcon && <ErrorIcon themes={theme}>{errorIcon}</ErrorIcon>}
-                <Text size="S">{errorText}</Text>
-              </ErrorMessage>
+          <Cluster gap={1} align="center">
+            {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
+              <ResponseMessage type={responseMessage.status}>
+                {responseMessage.text}
+              </ResponseMessage>
             )}
             <Cluster gap={1}>
               {secondaryButton && secondaryButton}
@@ -104,16 +92,5 @@ const Base = styled(shrBase).attrs({ layer: 3 })<
     `}
 `
 const RightSide = styled.div`
-  margin-left: auto;
-`
-const ErrorMessage = styled(LineUp)`
-  margin-top: 0;
-  margin-bottom: 0;
-`
-const ErrorIcon = styled.span<{ themes: Theme }>`
-  flex-shrink: 0;
-
-  > svg {
-    display: block; /* 隙間対策 */
-  }
+  margin-inline-start: auto;
 `

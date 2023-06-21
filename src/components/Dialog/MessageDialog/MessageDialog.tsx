@@ -13,7 +13,7 @@ import {
 type Props = Omit<MessageDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const MessageDialog: React.VFC<Props & ElementProps> = ({
+export const MessageDialog: React.FC<Props & ElementProps> = ({
   title,
   subtitle,
   titleTag,
@@ -23,9 +23,10 @@ export const MessageDialog: React.VFC<Props & ElementProps> = ({
   className = '',
   portalParent,
   decorators,
+  id,
   ...props
 }) => {
-  const { createPortal } = useDialogPortal(portalParent)
+  const { createPortal } = useDialogPortal(portalParent, id)
   const handleClickClose = useCallback(() => {
     if (!props.isOpen) {
       return

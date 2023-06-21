@@ -121,6 +121,7 @@ export { AppLauncher, Header, HeaderLink, HeaderDropdownMenuButton } from './com
 export { PageCounter } from './components/PageCounter'
 export { VisuallyHiddenText } from './components/VisuallyHiddenText'
 export * from './components/SpreadsheetTable'
+export * from './components/ResponseMessage'
 
 // layout components
 export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'
