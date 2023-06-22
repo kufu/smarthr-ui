@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [33.0.1](https://github.com/kufu/smarthr-ui/compare/v33.0.0...v33.0.1) (2023-06-22)
+
+
+### Bug Fixes
+
+* alias をやめる ([#3485](https://github.com/kufu/smarthr-ui/issues/3485)) ([5d87554](https://github.com/kufu/smarthr-ui/commit/5d87554fbbb45ee701962adc6f8908ae86fbde91))
+
 ## [33.0.0](https://github.com/kufu/smarthr-ui/compare/v32.0.1...v33.0.0) (2023-06-21)
 
 
