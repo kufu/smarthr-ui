@@ -6,5 +6,6 @@ module.exports = {
     'jsx-a11y/no-static-element-interactions': 'warn',
     'smarthr/a11y-anchor-has-href-attribute': 'error',
     'smarthr/a11y-prohibit-input-placeholder': 'error',
+    'smarthr/require-barrel-import': 0,
   },
 }
