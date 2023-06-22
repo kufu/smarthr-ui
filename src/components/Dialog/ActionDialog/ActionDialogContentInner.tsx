@@ -4,9 +4,10 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { DecoratorsType } from '../../../types/props'
 import { Button } from '../../Button'
-import { HeadingTagTypes } from '../../Heading'
+import { HeadingTagTypes, extractLevel } from '../../Heading'
 import { FaCheckCircleIcon, FaExclamationCircleIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { SectioningFragment } from '../../SectioningContent'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
 import { useClassNames } from '../useClassNames'
@@ -117,7 +118,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
         </Text>
       </TitleArea>
       <Body offsetHeight={offsetHeight} className={classNames.body}>
-        {children}
+        <SectioningFragment baseLevel={extractLevel(titleTag) + 1}>{children}</SectioningFragment>
       </Body>
       <ActionArea themes={theme} ref={bottomRef} className={classNames.actionArea}>
         <ButtonArea className={classNames.buttonArea}>

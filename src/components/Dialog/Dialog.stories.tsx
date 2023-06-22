@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { Button } from '../Button'
 import { CheckBox } from '../CheckBox'
 import { DatePicker } from '../DatePicker'
+import { Heading } from '../Heading'
 import { Input } from '../Input'
 import { Cluster, LineUp, Stack } from '../Layout'
 import { RadioButton } from '../RadioButton'
@@ -182,7 +183,12 @@ export const Message_Dialog: Story = () => {
         isOpen={isOpen}
         title="MessageDialog"
         subtitle="副題"
-        description={<p>{dummyText} </p>}
+        description={
+          <>
+            <Heading>MessageDialog</Heading>
+            <p>{dummyText} </p>
+          </>
+        }
         onClickClose={onClickClose}
         onClickOverlay={onClickClose}
         decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
@@ -238,6 +244,7 @@ export const Action_Dialog: Story = () => {
         id="dialog-action"
         data-test="dialog-content"
       >
+        <StyledHeading>ActionDialog</StyledHeading>
         <RadioList>
           <li>
             <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
@@ -255,8 +262,8 @@ export const Action_Dialog: Story = () => {
             </RadioButton>
           </li>
         </RadioList>
+
         <Buttons>
-          <p>切り替えボタン：</p>
           <Button
             onClick={() =>
               setResponseMessage({
@@ -904,6 +911,9 @@ const Description = styled.p`
 const Content = styled.div`
   margin: 16px 24px;
   line-height: 1.5;
+`
+const StyledHeading = styled(Heading)`
+  margin: 8px 24px;
 `
 const RadioList = styled.ul`
   margin: 16px 24px;

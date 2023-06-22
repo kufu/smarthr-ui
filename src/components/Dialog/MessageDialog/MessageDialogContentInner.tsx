@@ -4,8 +4,9 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { DecoratorsType } from '../../../types/props'
 import { Button } from '../../Button'
-import { HeadingTagTypes } from '../../Heading'
+import { HeadingTagTypes, extractLevel } from '../../Heading'
 import { Stack } from '../../Layout'
+import { SectioningFragment } from '../../SectioningContent'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
 import { useClassNames } from '../useClassNames'
@@ -70,7 +71,9 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
         </Text>
       </TitleArea>
       <Description themes={theme} offsetHeight={offsetHeight} className={classNames.description}>
-        {description}
+        <SectioningFragment baseLevel={extractLevel(titleTag) + 1}>
+          {description}
+        </SectioningFragment>
       </Description>
       <Bottom themes={theme} ref={bottomRef} className={classNames.buttonArea}>
         <Button onClick={onClickClose} className={classNames.closeButton}>

@@ -1,6 +1,7 @@
-import React, { HTMLAttributes, ReactNode, VFC, useMemo } from 'react'
+import React, { HTMLAttributes, ReactNode, VFC, useContext, useMemo } from 'react'
 import styled from 'styled-components'
 
+import { LevelContext } from '../SectioningContent'
 import { Text, TextProps } from '../Text'
 
 import { useClassNames } from './useClassNames'
@@ -27,13 +28,28 @@ export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' |
 
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props | keyof TextProps>
 
+function generateTagAttribute(level: number): HeadingTagTypes {
+  if (level <= 6) {
+    return `h${level}` as HeadingTagTypes
+  }
+
+  return 'span'
+}
+
+export function extractLevel(tag: HeadingTagTypes) {
+  const reg = tag.match(/^h([1-6])$/)
+
+  return reg ? parseInt(reg[1], 10) : 7 // HINT: 数値が取れない場合h6以下、つまりspanかlegendになる
+}
+
 export const Heading: VFC<Props & ElementProps> = ({
-  tag = 'h1',
+  tag,
   type = 'screenTitle',
   className = '',
   ...props
 }) => {
   const classNames = useClassNames()
+  const level = useContext(LevelContext)
   const textProps = useMemo<TextProps>(() => {
     switch (type) {
       case 'screenTitle':
@@ -70,7 +86,7 @@ export const Heading: VFC<Props & ElementProps> = ({
     <ResetText
       {...props}
       {...textProps}
-      forwardedAs={tag}
+      forwardedAs={tag || generateTagAttribute(level)}
       leading="TIGHT"
       className={`${type} ${className} ${classNames.wrapper}`}
     />
