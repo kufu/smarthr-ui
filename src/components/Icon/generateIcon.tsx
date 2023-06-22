@@ -2,10 +2,9 @@ import React from 'react'
 import { IconType } from 'react-icons'
 import styled, { css } from 'styled-components'
 
-import { FontSizes } from '@/themes/createFontSize'
-
 import { useSpacing } from '../../hooks/useSpacing'
 import { useTheme } from '../../hooks/useTheme'
+import { FontSizes } from '../../themes/createFontSize'
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
