@@ -54,4 +54,4 @@ export const SectioningContent: StoryFn = () => (
     </Aside>
   </>
 )
-SectioningContentStyle.storyName = 'SectioningContent style'
+SectioningContent.storyName = 'SectioningContent'
