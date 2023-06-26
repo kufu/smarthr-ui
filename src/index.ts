@@ -26,6 +26,8 @@ export {
   ActionDialog,
   ActionDialogContent,
   ActionDialogWithTrigger,
+  FormDialog,
+  FormDialogContent,
   Dialog,
   DialogCloser,
   DialogContent,
@@ -36,9 +38,12 @@ export {
   ModelessDialog,
   RemoteDialogTrigger,
   RemoteTriggerActionDialog,
+  RemoteTriggerFormDialog,
+  RemoteTriggerMessageDialog,
 } from './components/Dialog'
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
+export { RadioButtonPanel } from './components/RadioButtonPanel'
 export {
   AnchorButton,
   Button,
@@ -59,6 +64,7 @@ export * from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
 export {
   Table,
+  TableReel,
   Head,
   Row,
   Cell,
@@ -98,6 +104,8 @@ export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'
 export { FormGroup } from './components/FormGroup'
+export { FormControl } from './components/FormControl'
+export { Fieldset } from './components/NewFieldset'
 export {
   BackgroundJobsPanel,
   BackgroundJobsList,
@@ -113,6 +121,8 @@ export { AppLauncher, Header, HeaderLink, HeaderDropdownMenuButton } from './com
 export { PageCounter } from './components/PageCounter'
 export { SectioningFragment, Article, Aside, Nav, Section } from './components/SectioningContent'
 export { VisuallyHiddenText } from './components/VisuallyHiddenText'
+export * from './components/SpreadsheetTable'
+export * from './components/ResponseMessage'
 
 // layout components
 export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'

@@ -621,3 +621,4 @@ export const FaYenSignIcon = /*#__PURE__*/ createIcon(FaYenSign)
 export const FaRegClockIcon = /*#__PURE__*/ createIcon(FaRegClock)
 
 export { WarningIcon } from './WarningIcon'
+export { SparklesIcon } from './SparklesIcon'

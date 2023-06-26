@@ -1,10 +1,9 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import * as React from 'react'
 
 import { Base } from '../Base'
 import { Button } from '../Button'
 import { Heading } from '../Heading'
-import { FaExclamationCircleIcon } from '../Icon'
 import { Stack } from '../Layout'
 
 import { FloatArea } from './FloatArea'
@@ -12,17 +11,24 @@ import { FloatArea } from './FloatArea'
 export default {
   title: 'Navigation（ナビゲーション）/FloatArea',
   component: FloatArea,
+  parameters: {
+    docs: {
+      story: {
+        inline: false,
+        iframeHeight: '500px',
+      },
+    },
+  },
 }
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <>
     <Heading>書類に記載する扶養家族</Heading>
     <FloatArea
       primaryButton={<Button variant="primary">Submit</Button>}
       secondaryButton={<Button>Cancel</Button>}
       tertiaryButton={<Button>preview</Button>}
-      errorIcon={<FaExclamationCircleIcon color="DANGER" />}
-      errorText="これはfixedのFloatAreaです。"
+      responseMessage={{ status: 'error', text: 'これはfixedのFloatAreaです。' }}
       top={2}
       width="80%"
       fixed
@@ -34,8 +40,7 @@ export const All: Story = () => (
             primaryButton={<Button variant="primary">Submit</Button>}
             secondaryButton={<Button>Cancel</Button>}
             tertiaryButton={<Button>preview</Button>}
-            errorIcon={<FaExclamationCircleIcon color="DANGER" />}
-            errorText="これはstickyのFloatAreaです。"
+            responseMessage={{ status: 'success', text: 'これはstickyのFloatAreaです。' }}
             bottom={1.5}
             key={index}
           />
@@ -50,18 +55,17 @@ export const All: Story = () => (
 )
 All.storyName = 'all'
 
-export const WithoutTertiary: Story = () => (
+export const WithoutTertiary: StoryFn = () => (
   <FloatArea
     primaryButton={<Button variant="primary">Submit</Button>}
     secondaryButton={<Button>Cancel</Button>}
-    errorIcon={<FaExclamationCircleIcon color="DANGER" />}
-    errorText="This is the error text."
+    responseMessage={{ status: 'error', text: 'これはエラーテキストです。' }}
     bottom={1.5}
   />
 )
 WithoutTertiary.storyName = 'withoutTertiary'
 
-export const OnlyPrimary: Story = () => (
+export const OnlyPrimary: StoryFn = () => (
   <FloatArea primaryButton={<Button variant="primary">Submit</Button>} top={2} />
 )
 OnlyPrimary.storyName = 'onlyPrimary'

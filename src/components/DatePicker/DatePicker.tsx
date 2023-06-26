@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import React, {
+  ReactNode,
   forwardRef,
   useCallback,
   useEffect,
@@ -48,7 +49,7 @@ type Props = {
   /** 表示する日付を独自にフォーマットする場合に、フォーマット処理を記述する関数 */
   formatDate?: (date: Date | null) => string
   /** 入出力用文字列と併記する別フォーマット処理を記述する関数 */
-  showAlternative?: (date: Date | null) => string
+  showAlternative?: (date: Date | null) => ReactNode
   /** 選択された日付が変わった時に発火するコールバック関数 */
   onChangeDate?: (date: Date | null, value: string, other: { errors: string[] }) => void
 }
@@ -126,7 +127,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     const [inputRect, setInputRect] = useState<DOMRect | null>(null)
     const [isInputFocused, setIsInputFocused] = useState(false)
     const [isCalendarShown, setIsCalendarShown] = useState(false)
-    const [alternativeFormat, setAlternativeFormat] = useState<null | string>(null)
+    const [alternativeFormat, setAlternativeFormat] = useState<null | ReactNode>(null)
     const calenderId = useId()
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(

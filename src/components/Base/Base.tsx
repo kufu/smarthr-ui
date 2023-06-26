@@ -3,9 +3,10 @@ import styled, { css } from 'styled-components'
 
 import { useSpacing } from '../../hooks/useSpacing'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { Gap } from '../Layout'
 
 import { useClassNames } from './useClassNames'
+
+import type { Gap } from '../../types'
 
 type Props = PropsWithChildren<{
   /** 境界とコンテンツの間の余白 */
@@ -88,10 +89,16 @@ const Wrapper = styled.div<{
   $overflow: Props['overflow']
   $layer: (typeof layerMap)[LayerKeys]
 }>`
-  ${({ themes: { color, shadow }, $padding, $radius, $overflow, $layer }) => css`
+  ${({ themes: { border, color, shadow }, $padding, $radius, $overflow, $layer }) => css`
     box-shadow: ${shadow[$layer]};
     border-radius: ${$radius};
     background-color: ${color.WHITE};
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
+
     ${$padding.block && `padding-block: ${useSpacing($padding.block)};`}
     ${$padding.inline && `padding-inline: ${useSpacing($padding.inline)};`}
     ${$overflow &&

@@ -36,7 +36,9 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
     const theme = useTheme()
     const classNames = useClassNames().button
 
-    const loader = <Loader size="s" type="light" variant={variant} themes={theme} />
+    const loader = (
+      <Loader size="s" type="light" variant={variant} forwardedAs="span" themes={theme} />
+    )
     const actualPrefix = !loading && prefix
     const actualSuffix = loading && !square ? loader : suffix
     const disabledOnLoading = loading || disabled
@@ -107,6 +109,7 @@ const Loader = styled(shrLoader)<{ variant: Variant; themes: Theme }>`
 const DisabledDetailWrapper = styled(Cluster).attrs({
   inline: true,
   align: 'center',
+  gap: 0.25,
 })<{ themes: Theme }>`
   ${({ themes: { color, space } }) => css`
     > .smarthr-ui-Tooltip {
@@ -116,6 +119,9 @@ const DisabledDetailWrapper = styled(Cluster).attrs({
         /* Tooltip との距離を変えずに反応範囲を広げるために negative space を使う */
         margin: ${space(-0.25)};
         padding: ${space(0.25)};
+
+        /* global styleなどでborder-boxが適用されている場合表示崩れを起こす為、content-boxを指定する */
+        box-sizing: content-box;
         color: ${color.TEXT_GREY};
       }
     }

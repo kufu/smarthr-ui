@@ -1,20 +1,13 @@
-const path = require('path')
+import path from 'path'
+import { StorybookConfig } from '@storybook/react-webpack5'
 
-module.exports = {
-  typescript: {
-    reactDocgen: 'react-docgen-typescript-plugin',
-  },
-  core: {
-    builder: 'webpack5',
-  },
+const config: StorybookConfig = {
   stories: ['../src/**/*.stories.tsx'],
   addons: [
     {
       name: '@storybook/addon-essentials',
     },
     '@storybook/addon-a11y',
-    '@storybook/addon-controls',
-    'storycap',
     '@storybook/addon-interactions',
     {
       name: '@storybook/addon-storysource',
@@ -24,7 +17,10 @@ module.exports = {
           include: [path.resolve(__dirname, '../src')],
         },
         loaderOptions: {
-          prettierConfig: { printWidth: 80, singleQuote: false },
+          prettierConfig: {
+            printWidth: 80,
+            singleQuote: false,
+          },
         },
       },
     },
@@ -35,4 +31,21 @@ module.exports = {
       url: 'https://main--62f0ae48c21b0728fd1a5c85.chromatic.com',
     },
   },
+  framework: {
+    name: '@storybook/react-webpack5',
+    options: {},
+  },
+  docs: {
+    autodocs: true,
+  },
+  webpackFinal: async (config) => {
+    const resolve = config.resolve || {}
+    resolve.alias = {
+      ...resolve.alias,
+      '@': path.resolve(__dirname, '../src'),
+    }
+    return { ...config, resolve }
+  },
 }
+
+export default config

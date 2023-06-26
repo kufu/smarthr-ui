@@ -15,7 +15,6 @@ import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useId } from '../../hooks/useId'
 import { usePortal } from '../../hooks/usePortal'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types/props'
 import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
@@ -24,6 +23,8 @@ import { ListBoxItem } from './ListBoxItem'
 import { ComboBoxItem, ComboBoxOption } from './types'
 import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
+
+import type { DecoratorsType } from '../../types'
 
 type Props<T> = {
   options: Array<ComboBoxOption<T>>
@@ -40,7 +41,7 @@ type Props<T> = {
 type Rect = {
   top: number
   left: number
-  width: number
+  $width: number | string
   height?: number
 }
 
@@ -72,7 +73,7 @@ export function useListBox<T>({
   const [listBoxRect, setListBoxRect] = useState<Rect>({
     top: 0,
     left: 0,
-    width: 0,
+    $width: 0,
   })
 
   const calculateRect = useCallback(() => {
@@ -110,7 +111,7 @@ export function useListBox<T>({
     setListBoxRect({
       top,
       left: rect.left + window.pageXOffset,
-      width: rect.width,
+      $width: rect.width,
       height,
     })
   }, [listBoxRef, triggerRef])
@@ -163,7 +164,7 @@ export function useListBox<T>({
         }
         e.stopPropagation()
         if (activeOption.isNew) {
-          onAdd && onAdd(activeOption.item.label)
+          onAdd && onAdd(activeOption.item.value)
         } else {
           onSelect(activeOption.item)
         }
@@ -191,7 +192,7 @@ export function useListBox<T>({
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        onAdd && onAdd(option.item.label)
+        onAdd && onAdd(option.item.value)
       })
     },
     [onAdd],
@@ -217,7 +218,7 @@ export function useListBox<T>({
           <Container
             {...listBoxRect}
             themes={theme}
-            $width={dropdownWidth || listBoxRect.width}
+            $width={dropdownWidth || listBoxRect.$width}
             id={listBoxId}
             ref={listBoxRef}
             role="listbox"
@@ -296,7 +297,7 @@ export function useListBox<T>({
   }
 }
 
-const Wrapper = styled.div<Rect>(({ top, left, width }) => {
+const Wrapper = styled.div<Rect>(({ top, left, $width }) => {
   return css`
     /*
     ドロップダウンリストをInputの幅に対する相対値で指定できるように、Inputの幅のdivを親要素にする
@@ -304,16 +305,11 @@ const Wrapper = styled.div<Rect>(({ top, left, width }) => {
     position: absolute;
     top: ${top}px;
     left: ${left}px;
-    width: ${width}px;
+    width: ${$width}px;
   `
 })
 
-const Container = styled.div<
-  Rect & {
-    themes: Theme
-    $width: string | number
-  }
->(({ left, $width, height, themes }) => {
+const Container = styled.div<Rect & { themes: Theme }>(({ left, $width, height, themes }) => {
   const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
   return css`
     position: absolute;

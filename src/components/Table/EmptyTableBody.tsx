@@ -2,9 +2,12 @@ import React, { HTMLAttributes, PropsWithChildren } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useSpacing } from '../../hooks/useSpacing'
-import { Center, Gap } from '../Layout'
+import { Center } from '../Layout'
 
 import { Td } from './Td'
+import { useTableHeadCellCount } from './useTableHeadCellCount'
+
+import type { Gap } from '../../types'
 
 type Padding = Gap | { vertical?: Gap; horizontal?: Gap }
 
@@ -19,10 +22,12 @@ export const EmptyTableBody: React.FC<Props & ElementProps> = ({
   padding = 4,
   ...props
 }) => {
+  const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableSectionElement>()
+
   return (
-    <tbody {...props}>
+    <tbody {...props} ref={countHeadCellRef}>
       <tr>
-        <StyledTd colSpan={1000} padding={padding}>
+        <StyledTd colSpan={count} padding={padding}>
           <Center>{children}</Center>
         </StyledTd>
       </tr>

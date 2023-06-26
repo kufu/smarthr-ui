@@ -43,7 +43,7 @@ export const Balloon: VFC<Props & ElementProps> = ({
 // 1pxほど大きめに描画してbody部分と被るようにしています。
 const Base = styled.div<{ themes: Theme }>`
   ${({ themes }) => {
-    const { color, fontSize } = themes
+    const { border, color, fontSize } = themes
 
     return css`
       position: relative;
@@ -56,7 +56,7 @@ const Base = styled.div<{ themes: Theme }>`
       white-space: nowrap;
       transform: translateZ(0); /* safari で filter を正しく描画するために必要 */
 
-      &::before {
+      &::after {
         display: block;
         position: absolute;
         content: '';
@@ -66,59 +66,96 @@ const Base = styled.div<{ themes: Theme }>`
       background-color: ${color.WHITE};
       color: ${color.TEXT_BLACK};
 
-      &.top {
+      @media (prefers-contrast: more) {
+        & {
+          border: ${border.highContrast};
+        }
+
         &::before {
+          display: block;
+          position: absolute;
+          content: '';
+          background-color: ${color.TEXT_BLACK};
+        }
+      }
+
+      &.top {
+        &::before,
+        &::after {
           top: -4px;
           width: 10px;
           height: 5px;
           clip-path: polygon(50% 0, 100% 100%, 0 100%);
         }
+
+        &::before {
+          top: -5px;
+        }
       }
       &.bottom {
-        &::before {
+        &::before,
+        &::after {
           bottom: -4px;
           width: 10px;
           height: 5px;
           clip-path: polygon(0 0, 100% 0, 50% 100%);
         }
+
+        &::before {
+          bottom: -5px;
+        }
       }
 
       &.right {
-        &::before {
+        &::before,
+        &::after {
           right: 24px;
         }
       }
       &.center {
-        &::before {
+        &::before,
+        &::after {
           left: 50%;
           transform: translateX(-5px);
         }
       }
       &.left {
-        &::before {
+        &::before,
+        &::after {
           left: 24px;
         }
       }
 
       &.middle {
-        &::before {
+        &::before,
+        &::after {
           top: 50%;
           transform: translateY(-5px);
         }
         &.left {
-          &::before {
+          &::before,
+          &::after {
             left: -4px;
             width: 5px;
             height: 10px;
             clip-path: polygon(100% 0, 100% 100%, 0 50%);
           }
+
+          &::before {
+            left: -5px;
+          }
         }
         &.right {
-          &::before {
+          &::before,
+          &::after {
             right: -4px;
             width: 5px;
             height: 10px;
             clip-path: polygon(0 0, 100% 50%, 0 100%);
+          }
+
+          &::before {
+            right: -5px;
           }
         }
       }

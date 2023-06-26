@@ -9,10 +9,11 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { isMobileSafari } from '../../libs/ua'
-import { DecoratorsType } from '../../types/props'
 import { FaSortIcon } from '../Icon'
 
 import { useClassNames } from './useClassNames'
+
+import type { DecoratorsType } from '../../types'
 
 type Option<T extends string> = {
   value: T
@@ -134,12 +135,13 @@ export const Select = forwardRef(
 
 const generateSizeClassName = (size: Props<string>['size']) => (size === 's' ? '--small' : '')
 
-const Wrapper = styled.div<{
+const Wrapper = styled.span<{
   $width: string
 }>`
   ${({ $width }) => css`
-    position: relative;
     box-sizing: border-box;
+    position: relative;
+    display: block;
     width: ${$width};
   `}
 `
@@ -159,6 +161,11 @@ const StyledSelect = styled.select<{
     line-height: ${leading.NONE};
     color: ${color.TEXT_BLACK};
     width: 100%;
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
 
     /* padding に依る積み上げでは文字が見切れてしまうため */
     min-height: calc(${fontSize.M} + ${spacingByChar(0.75)} * 2 + ${border.lineWidth} * 2);

@@ -1,24 +1,18 @@
-import React, { VFC, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types/props'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, HeadingTagTypes } from '../Heading'
-import {
-  FaCaretDownIcon,
-  FaCaretUpIcon,
-  FaCheckCircleIcon,
-  FaExclamationCircleIcon,
-  FaInfoCircleIcon,
-  FaSyncAltIcon,
-  WarningIcon,
-} from '../Icon'
+import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
+import { ResponseMessage } from '../ResponseMessage'
 
 import { useClassNames } from './useClassNames'
+
+import type { DecoratorsType } from '../../types'
 
 type Props = {
   /** パネルのタイトル */
@@ -44,10 +38,10 @@ type Props = {
 const OPEN_BUTTON_LABEL = '開く'
 const CLOSE_BUTTON_LABEL = '閉じる'
 
-export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> = ({
+export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> = ({
   title,
   titleTag = 'h3',
-  type,
+  type = 'info',
   togglable = true,
   active: activeProps = true,
   className = '',
@@ -57,37 +51,6 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
   ...props
 }) => {
   const theme = useTheme()
-
-  const { Icon, iconColor } = useMemo(() => {
-    switch (type) {
-      case 'success':
-        return {
-          Icon: SuccessTitleIcon,
-          iconColor: theme.color.MAIN,
-        }
-      case 'info':
-      default:
-        return {
-          Icon: InfoTitleIcon,
-          iconColor: theme.color.TEXT_GREY,
-        }
-      case 'warning':
-        return {
-          Icon: WarningTitleIcon,
-          iconColor: theme.color.WARNING,
-        }
-      case 'error':
-        return {
-          Icon: ErrorTitleIcon,
-          iconColor: theme.color.DANGER,
-        }
-      case 'sync':
-        return {
-          Icon: SyncIcon,
-          iconColor: theme.color.MAIN,
-        }
-    }
-  }, [type, theme.color.DANGER, theme.color.MAIN, theme.color.TEXT_GREY, theme.color.WARNING])
 
   const [active, setActive] = useState(activeProps)
   const titleId = useId()
@@ -118,7 +81,9 @@ export const InformationPanel: VFC<Props & Omit<BaseElementProps, keyof Props>> 
       <Stack gap={1.25}>
         <Header themes={theme} togglable={togglable}>
           <Heading type="blockTitle" tag={titleTag} id={titleId} className={classNames.title}>
-            <Icon color={iconColor} text={title} iconGap={0.5} />
+            <ResponseMessage type={type} iconGap={0.5}>
+              {title}
+            </ResponseMessage>
           </Heading>
           {togglable && (
             <TogglableButton
@@ -175,15 +140,6 @@ const Header = styled(Cluster).attrs({
 const TogglableButton = styled(Button)`
   margin-inline-start: auto;
 `
-
-const createTitleIcon = (Icon: typeof FaCheckCircleIcon) => styled(Icon)`
-  flex-shrink: 0;
-`
-const SuccessTitleIcon = createTitleIcon(FaCheckCircleIcon)
-const InfoTitleIcon = createTitleIcon(FaInfoCircleIcon)
-const WarningTitleIcon = createTitleIcon(WarningIcon)
-const ErrorTitleIcon = createTitleIcon(FaExclamationCircleIcon)
-const SyncIcon = createTitleIcon(FaSyncAltIcon)
 
 const Content = styled.div<{ themes: Theme }>`
   ${({ themes: { fontSize } }) => css`

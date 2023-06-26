@@ -50,6 +50,14 @@ export const All: Story = () => {
           showAlternative={() => '平成6年9月28日'}
         />
       </dd>
+      <dt>Show Alternative Formatted Date(ReactNode)</dt>
+      <dd>
+        <DatePicker
+          name="show_alternative"
+          value="1994/09/28"
+          showAlternative={() => <span data-translate="true">平成6年9月28日</span>}
+        />
+      </dd>
       <dt>Disabled</dt>
       <dd>
         <DatePicker name="disabled" disabled />

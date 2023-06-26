@@ -1,17 +1,19 @@
-import React, { ReactNode, VFC, useMemo } from 'react'
+import React, { ButtonHTMLAttributes, FC, ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
-import { DecoratorType, DecoratorsType } from '../../../types/props'
 import { Button } from '../../Button'
 import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
-import { Cluster } from '../../Layout'
+import { Cluster, Stack } from '../../Layout'
+import { ResponseMessage } from '../../ResponseMessage'
 import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
 import { DropdownScrollArea } from '../DropdownScrollArea'
 import { DropdownTrigger } from '../DropdownTrigger'
+
+import type { DecoratorType, DecoratorsType, ResponseMessageType } from '../../../types'
 
 type Props = {
   isFiltered?: boolean
@@ -23,7 +25,9 @@ type Props = {
   decorators?: DecoratorsType<
     'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
   >
+  responseMessage?: ResponseMessageType
 }
+type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
 const STATUS_FILTERED_TEXT = '適用中'
 const TRIGGER_BUTTON_TEXT = '絞り込み'
@@ -34,7 +38,7 @@ const RESET_BUTTON_TEXT = '絞り込み条件を解除'
 const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
   decorator?.(defaultText) || defaultText
 
-export const FilterDropdown: VFC<Props> = ({
+export const FilterDropdown: FC<Props & ElementProps> = ({
   isFiltered = false,
   onApply,
   onCancel,
@@ -42,6 +46,8 @@ export const FilterDropdown: VFC<Props> = ({
   children,
   hasStatusText,
   decorators,
+  responseMessage,
+  ...props
 }: Props) => {
   const themes = useTheme()
   const status: ReactNode = useMemo(
@@ -68,17 +74,18 @@ export const FilterDropdown: VFC<Props> = ({
     () => (hasStatusText ? undefined : innerText(status)),
     [status, hasStatusText],
   )
+  const isRequestProcessing =
+    responseMessage !== undefined && responseMessage.status === 'processing'
 
   return (
     <Dropdown>
       <DropdownTrigger>
         <Button
+          {...props}
           suffix={
             <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
               <FaFilterIcon />
-              {isFiltered ? (
-                <FaCheckCircleIcon size={8} aria-label={filteredIconAriaLabel} />
-              ) : null}
+              {isFiltered ? <FilteredCheckIcon aria-label={filteredIconAriaLabel} /> : null}
             </IsFilteredIconWrapper>
           }
         >
@@ -90,25 +97,43 @@ export const FilterDropdown: VFC<Props> = ({
         <DropdownScrollArea>
           <ContentLayout themes={themes}>{children}</ContentLayout>
         </DropdownScrollArea>
-        <BottomLayout themes={themes}>
-          {onReset && (
-            <ResetButtonLayout themes={themes}>
-              <Button variant="text" size="s" prefix={<FaUndoAltIcon />} onClick={onReset}>
-                {resetButton}
-              </Button>
-            </ResetButtonLayout>
+        <ActionArea themes={themes}>
+          <Cluster gap={1} align="center" justify="space-between">
+            {onReset && (
+              <ResetButtonLayout themes={themes}>
+                <Button
+                  variant="text"
+                  size="s"
+                  prefix={<FaUndoAltIcon />}
+                  onClick={onReset}
+                  disabled={isRequestProcessing}
+                >
+                  {resetButton}
+                </Button>
+              </ResetButtonLayout>
+            )}
+
+            <RightButtonLayout>
+              <DropdownCloser>
+                <Button onClick={onCancel} disabled={isRequestProcessing}>
+                  {cancelButton}
+                </Button>
+              </DropdownCloser>
+              <DropdownCloser>
+                <Button variant="primary" onClick={onApply} loading={isRequestProcessing}>
+                  {applyButton}
+                </Button>
+              </DropdownCloser>
+            </RightButtonLayout>
+          </Cluster>
+          {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
+            <Message>
+              <ResponseMessage type={responseMessage.status} role="alert">
+                {responseMessage.text}
+              </ResponseMessage>
+            </Message>
           )}
-          <RightButtonLayout>
-            <DropdownCloser>
-              <Button onClick={onCancel}>{cancelButton}</Button>
-            </DropdownCloser>
-            <DropdownCloser>
-              <Button variant="primary" onClick={onApply}>
-                {applyButton}
-              </Button>
-            </DropdownCloser>
-          </RightButtonLayout>
-        </BottomLayout>
+        </ActionArea>
       </DropdownContent>
     </Dropdown>
   )
@@ -127,6 +152,10 @@ const IsFilteredIconWrapper = styled.span<{ isFiltered: boolean; themes: Theme }
     bottom: 2px;
   }
 `
+const FilteredCheckIcon = styled(FaCheckCircleIcon)`
+  width: 0.5em;
+  height: 0.5em;
+`
 const StatusText = styled.span<{ themes: Theme }>`
   margin-left: ${({ themes }) => themes.spacing.XXS};
   font-size: ${({ themes }) => themes.fontSize.S};
@@ -136,10 +165,8 @@ const ContentLayout = styled.div<{ themes: Theme }>`
     padding: ${space(1.5)};
   `}
 `
-const BottomLayout = styled(Cluster).attrs({ gap: 1, align: 'center', justify: 'space-between' })<{
-  themes: Theme
-}>`
-  ${({ themes: { border, space } }) => css`
+const ActionArea = styled(Stack).attrs({ gap: 0.5 })<{ themes: Theme }>`
+  ${({ themes: { space, border } }) => css`
     border-block-start: ${border.shorthand};
     padding: ${space(1)} ${space(1.5)};
   `}
@@ -154,4 +181,7 @@ const RightButtonLayout = styled(Cluster).attrs({
   justify: 'flex-end',
 })`
   margin-inline-start: auto;
+`
+const Message = styled.div`
+  text-align: right;
 `

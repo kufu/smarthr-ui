@@ -10,12 +10,15 @@ import { Text } from '../Text'
 import { TdCheckbox } from './TdCheckbox'
 import { ThCheckbox } from './ThCheckbox'
 
-import { BulkActionRow, EmptyTableBody, Table, Td, Th } from '.'
+import { BulkActionRow, EmptyTableBody, Table, TableReel, Td, Th } from '.'
 
 export default {
   title: 'Data Display（データ表示）/Table',
   component: Table,
   subcomponents: { Th, Td, BulkActionRow },
+  parameters: {
+    withTheming: true,
+  },
 }
 
 const data = [
@@ -77,85 +80,21 @@ const data = [
   },
 ]
 
-export const All: Story = () => (
-  <Ul>
-    <li>
-      table
-      <Table>
-        <thead>
-          <tr>
-            <ThCheckbox name="tableAllCheckbox" />
-            <Th sort="asc" onSort={action('降順に並び替え')}>
-              Name
-            </Th>
-            <Th sort="none" onSort={action('昇順に並び替え')}>
-              Calories
-            </Th>
-            <Th>Fat (g)</Th>
-            <Th>Carbs (g)</Th>
-            <Th>Protein (g)</Th>
-            <Th>Button</Th>
-          </tr>
-          <BulkActionRow>Bulk action area</BulkActionRow>
-        </thead>
-        <tbody>
-          {data.map(({ name, calories, fat, carbs, protein }, i) => (
-            <tr key={name}>
-              <TdCheckbox name={`tableCheckBox-${i}`} aria-labelledby={`name-${i}`} />
-              <Td id={`name-${i}`}>{name}</Td>
-              <Td>{calories}</Td>
-              <Td>{fat}</Td>
-              <Td>{carbs}</Td>
-              <Td>{protein}</Td>
-              <Td>
-                <Button size="s">Button</Button>
-              </Td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </li>
-    <li>
-      行頭で改行が発生する場合
-      <Table>
-        <thead>
-          <tr>
-            <ThCheckbox name="tableAllCheckbox" checked={true} mixed />
-            <Th sort="asc" onSort={action('降順に並び替え')}>
-              Name
-            </Th>
-            <Th sort="none" onSort={action('昇順に並び替え')}>
-              Calories
-              <br />
-              (kcal)
-            </Th>
-            <Th>
-              Fat
-              <br />
-              (g)
-            </Th>
-            <Th>Carbs (g)</Th>
-            <Th>Protein (g)</Th>
-            <Th>Button</Th>
-          </tr>
-        </thead>
-      </Table>
-    </li>
-    <li>
-      table fixed header
-      <div style={{ overflow: 'clip' }}>
-        <Table fixedHead>
+export const All: Story = () => {
+  return (
+    <Ul>
+      <li>
+        table
+        <Table>
           <thead>
             <tr>
               <ThCheckbox name="tableAllCheckbox" />
-              <Th
-                sort="desc"
-                onSort={action('昇順に並び替え')}
-                decorators={{ sortDirectionIconAlt: (text, { sort }) => `${sort} (${text})` }}
-              >
+              <Th sort="asc" onSort={action('降順に並び替え')}>
                 Name
               </Th>
-              <Th>Calories</Th>
+              <Th sort="none" onSort={action('昇順に並び替え')}>
+                Calories
+              </Th>
               <Th>Fat (g)</Th>
               <Th>Carbs (g)</Th>
               <Th>Protein (g)</Th>
@@ -166,8 +105,8 @@ export const All: Story = () => (
           <tbody>
             {data.map(({ name, calories, fat, carbs, protein }, i) => (
               <tr key={name}>
-                <TdCheckbox name={`tableCheckBox-${i}`} aria-labelledby={`name-fixed-${i}`} />
-                <Td id={`name-fixed-${i}`}>{name}</Td>
+                <TdCheckbox name={`tableCheckBox-${i}`} aria-labelledby={`name-${i}`} />
+                <Td id={`name-${i}`}>{name}</Td>
                 <Td>{calories}</Td>
                 <Td>{fat}</Td>
                 <Td>{carbs}</Td>
@@ -179,52 +118,79 @@ export const All: Story = () => (
             ))}
           </tbody>
         </Table>
-      </div>
-    </li>
-    <li>
-      colSpan / rowSpan
-      <Table>
-        <thead>
-          <tr>
-            <Th colSpan={3}>colSpan=3</Th>
-            <Th>cell</Th>
-            <Th>cell</Th>
-            <Th>cell</Th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <Td>cell</Td>
-            <Td>cell</Td>
-            <Td>cell</Td>
-            <Td>cell</Td>
-            <Td>cell</Td>
-            <Td>cell</Td>
-          </tr>
-          <tr>
-            <Td rowSpan={2}>rowSpan=2</Td>
-            <Td>cell</Td>
-            <Td>cell</Td>
-            <Td>cell</Td>
-            <Td>cell</Td>
-            <Td>cell</Td>
-          </tr>
-          <tr>
-            <Td>cell</Td>
-            <Td>cell</Td>
-            <Td>cell</Td>
-            <Td>cell</Td>
-            <Td>cell</Td>
-          </tr>
-        </tbody>
-      </Table>
-    </li>
-    <li>
-      Table on Base
-      <Base>
+      </li>
+      <li>
+        行頭で改行が発生する場合
         <Table>
           <thead>
             <tr>
+              <ThCheckbox name="tableAllCheckbox" checked={true} mixed />
+              <Th sort="asc" onSort={action('降順に並び替え')}>
+                Name
+              </Th>
+              <Th sort="none" onSort={action('昇順に並び替え')}>
+                Calories
+                <br />
+                (kcal)
+              </Th>
+              <Th>
+                Fat
+                <br />
+                (g)
+              </Th>
+              <Th>Carbs (g)</Th>
+              <Th>Protein (g)</Th>
+              <Th>Button</Th>
+            </tr>
+          </thead>
+        </Table>
+      </li>
+      <li>
+        table fixed header
+        <div style={{ overflow: 'clip' }}>
+          <Table fixedHead>
+            <thead>
+              <tr>
+                <ThCheckbox name="tableAllCheckbox" />
+                <Th
+                  sort="desc"
+                  onSort={action('昇順に並び替え')}
+                  decorators={{ sortDirectionIconAlt: (text, { sort }) => `${sort} (${text})` }}
+                >
+                  Name
+                </Th>
+                <Th>Calories</Th>
+                <Th>Fat (g)</Th>
+                <Th>Carbs (g)</Th>
+                <Th>Protein (g)</Th>
+                <Th>Button</Th>
+              </tr>
+              <BulkActionRow>Bulk action area</BulkActionRow>
+            </thead>
+            <tbody>
+              {data.map(({ name, calories, fat, carbs, protein }, i) => (
+                <tr key={name}>
+                  <TdCheckbox name={`tableCheckBox-${i}`} aria-labelledby={`name-fixed-${i}`} />
+                  <Td id={`name-fixed-${i}`}>{name}</Td>
+                  <Td>{calories}</Td>
+                  <Td>{fat}</Td>
+                  <Td>{carbs}</Td>
+                  <Td>{protein}</Td>
+                  <Td>
+                    <Button size="s">Button</Button>
+                  </Td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      </li>
+      <li>
+        colSpan / rowSpan
+        <Table>
+          <thead>
+            <tr>
+              <Th colSpan={3}>colSpan=3</Th>
               <Th>cell</Th>
               <Th>cell</Th>
               <Th>cell</Th>
@@ -235,52 +201,322 @@ export const All: Story = () => (
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
-            </tr>
-            <tr>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
             </tr>
             <tr>
+              <Td rowSpan={2}>rowSpan=2</Td>
               <Td>cell</Td>
               <Td>cell</Td>
-              <Td>
-                multi
-                <br />
-                line
-              </Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
             </tr>
             <tr>
-              <Td nullable={true}></Td>
-              <Td nullable={true}>not null</Td>
-              <Td nullable={false}></Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
             </tr>
           </tbody>
         </Table>
-      </Base>
-    </li>
-
-    <li>
-      Table with empty state
-      <Base>
-        <Table>
-          <thead>
-            <tr>
-              <Th>cell</Th>
-              <Th>cell</Th>
-              <Th>cell</Th>
-            </tr>
-          </thead>
-          <EmptyTableBody>
-            <Text>お探しの条件に該当する項目はありません。</Text>
-            <Text>別の条件をお試しください。</Text>
-          </EmptyTableBody>
-        </Table>
-      </Base>
-    </li>
-  </Ul>
-)
+      </li>
+      <li>
+        Table on Base
+        <Base>
+          <Table>
+            <thead>
+              <tr>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+              </tr>
+              <tr>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+              </tr>
+              <tr>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>
+                  multi
+                  <br />
+                  line
+                </Td>
+              </tr>
+              <tr>
+                <Td nullable={true}></Td>
+                <Td nullable={true}>not null</Td>
+                <Td nullable={false}></Td>
+              </tr>
+            </tbody>
+          </Table>
+        </Base>
+      </li>
+      <li>
+        Table with empty state
+        <Base>
+          <Table>
+            <thead>
+              <tr>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
+              </tr>
+            </thead>
+            <EmptyTableBody>
+              <Text>お探しの条件に該当する項目はありません。</Text>
+              <Text>別の条件をお試しください。</Text>
+            </EmptyTableBody>
+          </Table>
+        </Base>
+      </li>
+    </Ul>
+  )
+}
 All.storyName = 'all'
+
+export const WithReel: Story = () => {
+  return (
+    <Ul>
+      <li>
+        TableReel
+        <TableReel>
+          <Table>
+            <thead>
+              <tr>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>cell</Th>
+                <Th>
+                  multi
+                  <br />
+                  line
+                </Th>
+                <Th fixed>cell</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <Td>株式会社SmartHR</Td>
+                <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>
+                  multi
+                  <br />
+                  line
+                </Td>
+                <Td fixed>
+                  <Button size="s">Button</Button>
+                </Td>
+              </tr>
+              <tr>
+                <Td>株式会社SmartHR</Td>
+                <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>
+                  multi
+                  <br />
+                  line
+                </Td>
+                <Td fixed>
+                  <Button size="s">Button</Button>
+                </Td>
+              </tr>
+              <tr>
+                <Td>株式会社SmartHR</Td>
+                <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>
+                  multi
+                  <br />
+                  line
+                </Td>
+                <Td fixed>
+                  <Button size="s">Button</Button>
+                </Td>
+              </tr>
+              <tr>
+                <Td>株式会社SmartHR</Td>
+                <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>
+                  multi
+                  <br />
+                  line
+                </Td>
+                <Td fixed>
+                  <Button size="s">Button</Button>
+                </Td>
+              </tr>
+              <tr>
+                <Td>株式会社SmartHR</Td>
+                <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>cell</Td>
+                <Td>
+                  multi
+                  <br />
+                  line
+                </Td>
+                <Td fixed>
+                  <Button size="s">Button</Button>
+                </Td>
+              </tr>
+            </tbody>
+          </Table>
+        </TableReel>
+      </li>
+      <li>
+        BaseにTableReelを入れる
+        <Base>
+          <TableReel>
+            <Table>
+              <thead>
+                <tr>
+                  <Th>cell</Th>
+                  <Th>cell</Th>
+                  <Th>cell</Th>
+                  <Th>cell</Th>
+                  <Th>cell</Th>
+                  <Th>
+                    multi
+                    <br />
+                    line
+                  </Th>
+                  <Th fixed>cell</Th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <Td>株式会社SmartHR</Td>
+                  <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>
+                    multi
+                    <br />
+                    line
+                  </Td>
+                  <Td fixed>
+                    <Button size="s">Button</Button>
+                  </Td>
+                </tr>
+                <tr>
+                  <Td>株式会社SmartHR</Td>
+                  <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>
+                    multi
+                    <br />
+                    line
+                  </Td>
+                  <Td fixed>
+                    <Button size="s">Button</Button>
+                  </Td>
+                </tr>
+                <tr>
+                  <Td>株式会社SmartHR</Td>
+                  <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>
+                    multi
+                    <br />
+                    line
+                  </Td>
+                  <Td fixed>
+                    <Button size="s">Button</Button>
+                  </Td>
+                </tr>
+                <tr>
+                  <Td>株式会社SmartHR</Td>
+                  <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>
+                    multi
+                    <br />
+                    line
+                  </Td>
+                  <Td fixed>
+                    <Button size="s">Button</Button>
+                  </Td>
+                </tr>
+                <tr>
+                  <Td>株式会社SmartHR</Td>
+                  <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>cell</Td>
+                  <Td>
+                    multi
+                    <br />
+                    line
+                  </Td>
+                  <Td fixed>
+                    <Button size="s">Button</Button>
+                  </Td>
+                </tr>
+              </tbody>
+            </Table>
+          </TableReel>
+        </Base>
+      </li>
+    </Ul>
+  )
+}
+WithReel.storyName = 'with TableReel'
 
 const Ul = styled.ul`
   list-style: none;

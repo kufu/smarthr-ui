@@ -12,9 +12,10 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
-import { DecoratorsType } from '../../types/props'
 
 import { useClassNames } from './useClassNames'
+
+import type { DecoratorsType } from '../../types'
 
 type Props = {
   /** 入力値にエラーがあるかどうか */
@@ -176,6 +177,12 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
     color: ${color.TEXT_BLACK};
     width: ${textAreaWidth};
 
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
+
     ${error &&
     css`
       border-color: ${color.DANGER};
@@ -198,11 +205,12 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
   `}
 `
 
-const Counter = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, color } = themes
+const Counter = styled.span<{ themes: Theme }>`
+  ${({ themes: { fontSize, color } }) => {
     return css`
+      display: block;
       font-size: ${fontSize.S};
+
       > span {
         font-weight: bold;
         color: ${color.TEXT_GREY};

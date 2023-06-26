@@ -10,7 +10,7 @@ import { ActionDialogContentInner, ActionDialogContentInnerProps } from './Actio
 type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const ActionDialog: React.VFC<Props & ElementProps> = ({
+export const ActionDialog: React.FC<Props & ElementProps> = ({
   children,
   title,
   subtitle,
@@ -26,9 +26,10 @@ export const ActionDialog: React.VFC<Props & ElementProps> = ({
   className = '',
   portalParent,
   decorators,
+  id,
   ...props
 }) => {
-  const { createPortal } = useDialogPortal(portalParent)
+  const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
 
   const handleClickClose = useCallback(() => {

@@ -1,0 +1,1 @@
+export { ResponseMessage } from './ResponseMessage'

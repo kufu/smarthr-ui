@@ -110,8 +110,6 @@ export const Currency: Story = () => {
 }
 Currency.storyName = 'CurrencyInput'
 
-export { Default as SearchInput } from './SearchInput/SearchInput.stories'
-
 const List = styled(Stack).attrs({ as: 'ul' })``
 const ListItem = styled(Stack).attrs({ gap: 0.5, as: 'ListItem', align: 'flex-start' })``
 const StyledInput = styled(Input)`

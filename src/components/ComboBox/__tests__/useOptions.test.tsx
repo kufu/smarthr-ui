@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react-hooks'
+import React from 'react'
 
 import { useOptions } from '../useOptions'
 
@@ -79,6 +80,63 @@ describe('useOptions', () => {
       })
       const options3 = result.current.options
       expect(options3.length).toBe(0)
+    })
+
+    describe('ReactNode を含むオプションの場合', () => {
+      it('オプションが取得できること', () => {
+        const element = (
+          <span>
+            label<span>3</span>
+          </span>
+        )
+        const initialProps = {
+          items: [
+            { label: 'label1', value: 'value1' },
+            { label: 'label2', value: 'value2' },
+            { label: element, value: 'value3' },
+          ],
+          selected: [{ label: element, value: 'value3' }],
+          creatable: false,
+        }
+        const { result } = renderHook((props) => useOptions(props), { initialProps })
+        const options = result.current.options
+
+        expect(options.length).toBe(3)
+        expect(options[0].item).toEqual({ label: 'label1', value: 'value1' })
+        expect(options[0].selected).toBeFalsy()
+        expect(options[0].isNew).toBeFalsy()
+
+        expect(options[1].item).toEqual({ label: 'label2', value: 'value2' })
+        expect(options[1].selected).toBeFalsy()
+        expect(options[1].isNew).toBeFalsy()
+
+        expect(options[2].item).toEqual({ label: element, value: 'value3' })
+        expect(options[2].selected).toBeTruthy()
+        expect(options[2].isNew).toBeFalsy()
+      })
+
+      it('入力によって options がフィルタリングされること', () => {
+        const element = (
+          <span>
+            label<span>3</span>
+          </span>
+        )
+        const initialProps = {
+          items: [
+            { label: 'label1', value: 'value1' },
+            { label: 'label2', value: 'value2' },
+            { label: element, value: 'value3' },
+          ],
+          selected: [{ label: element, value: 'value3' }],
+          creatable: false,
+          inputValue: 'label3',
+        }
+        const { result } = renderHook((props) => useOptions(props), { initialProps })
+        const options = result.current.options
+
+        expect(options.length).toBe(1)
+        expect(options[0].item).toEqual({ label: element, value: 'value3' })
+      })
     })
   })
 })

@@ -10,7 +10,6 @@ export const useClassNames = () => {
   return useMemo(
     () => ({
       wrapper: generate(),
-      errorText: generate('errorText'),
     }),
     [generate],
   )

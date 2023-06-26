@@ -1,163 +1,127 @@
-import { Story } from '@storybook/react'
-import * as React from 'react'
-import styled, { css } from 'styled-components'
+import { StoryFn } from '@storybook/react'
+import React from 'react'
 
 import { Input } from '../Input'
+import { Cluster, Stack } from '../Layout'
+import { Text } from '../Text'
 
 import { FormGroup } from './FormGroup'
 
 export default {
-  title: 'Forms（フォーム）/FormGroup',
+  title: 'Forms（フォーム）/FormGroup（非推奨）',
   component: FormGroup,
-  parameters: {
-    withTheming: true,
-  },
 }
 
-type SampleChildrenProps = {
-  id1?: string
-  id2?: string
-  disabled?: boolean
-}
-
-const SampleChildren: React.VFC<SampleChildrenProps> = ({ id1, id2, disabled }) => {
+export const All: StoryFn = () => {
   return (
-    <SampleWrapper>
-      <SampleFormGroup
-        title="first name"
-        titleType="subSubBlockTitle"
-        innerMargin="XXS"
-        htmlFor={id1}
-        disabled={disabled}
-      >
-        <Input name="id1" id={id1} disabled={disabled} />
-      </SampleFormGroup>
-      <SampleFormGroup
-        title="last name"
-        titleType="subSubBlockTitle"
-        innerMargin="XXS"
-        htmlFor={id2}
-        disabled={disabled}
-      >
-        <Input name="id2" id={id2} disabled={disabled} />
-      </SampleFormGroup>
-    </SampleWrapper>
-  )
-}
-
-const SampleStatusLabelProps = [
-  {
-    type: 'red' as const,
-    children: 'label 1' as const,
-  },
-  {
-    type: 'blue' as const,
-    children: 'label 2' as const,
-  },
-]
-
-export const All: Story = () => {
-  return (
-    <Wrapper>
-      <Title>default</Title>
-      <Body>
-        <FormGroup title="Title" titleType="blockTitle" role="group">
-          <SampleChildren id1="id_1-1" id2="id_1-2" />
-        </FormGroup>
-      </Body>
-      <Title>with status label</Title>
-      <Body>
-        <FormGroup
-          title="Title"
-          titleType="blockTitle"
-          statusLabelProps={SampleStatusLabelProps}
-          role="group"
-        >
-          <SampleChildren id1="id_2-1" id2="id_2-2" />
-        </FormGroup>
-      </Body>
-      <Title>with help message</Title>
-      <Body>
-        <FormGroup
-          title="Title"
-          titleType="blockTitle"
-          helpMessage="help message text"
-          role="group"
-        >
-          <SampleChildren id1="id_3-1" id2="id_3-2" />
-        </FormGroup>
-      </Body>
-      <Title>with error messages</Title>
-      <Body>
-        <FormGroup
-          title="Title"
-          titleType="blockTitle"
-          statusLabelProps={SampleStatusLabelProps}
-          errorMessages={['error message 1', 'error message 2']}
-          role="group"
-        >
-          <SampleChildren id1="id_4-1" id2="id_4-2" />
-        </FormGroup>
-      </Body>
-      <Title>with all options</Title>
-      <Body>
-        <FormGroup
-          title="Title"
-          titleType="blockTitle"
-          statusLabelProps={SampleStatusLabelProps}
-          helpMessage="help message text"
-          errorMessages={['error message 1', 'error message 2']}
-          role="group"
-        >
-          <SampleChildren id1="id_5-1" id2="id_5-2" />
-        </FormGroup>
-      </Body>
-      <Title>disabled</Title>
-      <Body>
-        <FormGroup
-          title="Title"
-          titleType="blockTitle"
-          statusLabelProps={SampleStatusLabelProps}
-          helpMessage="help message text"
-          errorMessages="error message"
+    <Stack gap={2} as="dl">
+      <Stack>
+        <Text italic color="TEXT_GREY" as="dt">
+          基本
+        </Text>
+        <dd>
+          <FormGroup title="フォームコントロール名">
+            <Input name="defaultInput" />
+          </FormGroup>
+        </dd>
+      </Stack>
+      <Stack>
+        <Text italic color="TEXT_GREY" as="dt">
+          すべてのオプション
+        </Text>
+        <dd>
+          <FormGroup
+            title="氏名"
+            statusLabelProps={{ type: 'grey', children: '任意' }}
+            helpMessage="氏名を入力してください。"
+            exampleMessage="例：草野栄一郎"
+            errorMessages={'氏名が入力されていません。'}
+            supplementaryMessage="※ 補足文はフォームコントロールの下に表示します。"
+          >
+            <Input name="fullname" />
+          </FormGroup>
+        </dd>
+      </Stack>
+      <Stack>
+        <Text italic color="TEXT_GREY" as="dt">
+          入れ子
+        </Text>
+        <dd>
+          <FormGroup
+            as="fieldset"
+            title="姓名"
+            statusLabelProps={{ type: 'grey', children: '任意' }}
+            helpMessage="姓名を入力してください。"
+            errorMessages="姓名が入力されていません。"
+          >
+            <Cluster gap={1}>
+              <FormGroup
+                title="姓"
+                titleType="subSubBlockTitle"
+                errorMessages="姓が入力されていません。"
+              >
+                <Input name="lastName" />
+              </FormGroup>
+              <FormGroup
+                title="名"
+                titleType="subSubBlockTitle"
+                errorMessages="名が入力されていません。"
+              >
+                <Input name="firstName" />
+              </FormGroup>
+            </Cluster>
+          </FormGroup>
+        </dd>
+      </Stack>
+      <Stack>
+        <Text italic color="TEXT_GREY" as="dt">
+          読み取り専用
+        </Text>
+        <dd>
+          <FormGroup title="姓名" as="fieldset">
+            <Cluster gap={1}>
+              <FormGroup title="姓" titleType="subSubBlockTitle">
+                <Input name="lastName" value="草野" readOnly />
+              </FormGroup>
+              <FormGroup title="名" titleType="subSubBlockTitle">
+                <Input name="firstName" value="栄一郎" readOnly />
+              </FormGroup>
+            </Cluster>
+          </FormGroup>
+        </dd>
+      </Stack>
+      <Stack>
+        <Text italic color="TEXT_GREY" as="dt">
           disabled
-          role="group"
-        >
-          <SampleChildren id1="id_6-1" id2="id_6-2" disabled />
-        </FormGroup>
-      </Body>
-    </Wrapper>
+        </Text>
+        <dd>
+          <FormGroup
+            as="fieldset"
+            title="disabled なフォームグループ"
+            helpMessage="このフォームグループは disabled です。内包するフォームグループを個別に disabled する必要はありません。"
+            errorMessages="すべてのフォームコントロールが disabled です。"
+            disabled
+          >
+            <Cluster gap={1}>
+              <FormGroup
+                title="姓"
+                titleType="subSubBlockTitle"
+                errorMessages="姓が入力されていません。"
+              >
+                <Input name="lastName" />
+              </FormGroup>
+              <FormGroup
+                title="名"
+                titleType="subSubBlockTitle"
+                errorMessages="名が入力されていません。"
+              >
+                <Input name="firstName" />
+              </FormGroup>
+            </Cluster>
+          </FormGroup>
+        </dd>
+      </Stack>
+    </Stack>
   )
 }
 All.storyName = 'all'
-
-const Wrapper = styled.dl`
-  display: block;
-  padding: 24px;
-  margin: 0;
-`
-
-const Title = styled.dt(
-  ({ theme }) => css`
-    display: block;
-    padding: 0;
-    margin: 0 0 16px;
-    color: ${theme.color.TEXT_GREY};
-    font-style: italic;
-  `,
-)
-
-const Body = styled.dd`
-  display: block;
-  padding: 0;
-  margin: 0 0 32px;
-`
-
-const SampleWrapper = styled.div`
-  display: flex;
-  align-items: flex-start;
-`
-
-const SampleFormGroup = styled(FormGroup)`
-  margin-right: 16px;
-`

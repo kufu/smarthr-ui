@@ -2,7 +2,6 @@ import React, { VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
-import { DecoratorsType } from '../../../types/props'
 import { Button } from '../../Button'
 import { HeadingTagTypes, extractLevel } from '../../Heading'
 import { Stack } from '../../Layout'
@@ -10,6 +9,8 @@ import { SectioningFragment } from '../../SectioningContent'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
 import { useClassNames } from '../useClassNames'
+
+import type { DecoratorsType } from '../../../types'
 
 export type BaseProps = {
   /**

@@ -11,11 +11,12 @@ import React, {
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
 
 import { useClassNames } from './useClassNames'
+
+import type { DecoratorsType } from '../../types'
 
 type Size = 'default' | 's'
 
@@ -192,6 +193,12 @@ const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
     border-radius: ${radius.m};
     padding: ${spacingByChar(0.75)} ${spacingByChar(1)};
     font-size: ${fontSize.M};
+
+    @media (prefers-contrast: more) {
+      & {
+        border: ${border.highContrast};
+      }
+    }
 
     &.small {
       padding: ${spacingByChar(0.5)};

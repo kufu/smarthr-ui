@@ -4,13 +4,14 @@ import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { DecoratorsType } from '../../types/props'
 import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { Textarea } from '../Textarea'
 
 import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
 import { useClassNames } from './useClassNames'
+
+import type { DecoratorsType } from '../../types'
 
 type Props = {
   /** コンポーネントのタイトル */
