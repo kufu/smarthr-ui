@@ -11,7 +11,9 @@ export type Props = {
   children: ReactNode
   /** テキストのスタイル */
   type?: HeadingTypes
-  /** コンポーネントの HTML タグ */
+  /**
+   * @deprecated tag属性は非推奨です。SectioningContent(Article, Aside, Nav, Section, SectioningFragment)を使ってHeadingと関連する範囲を明確に指定してください
+   */
   tag?: HeadingTagTypes
   /** コンポーネントに適用するクラス名 */
   className?: string
@@ -26,20 +28,51 @@ export type HeadingTypes =
 
 export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'legend'
 
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props | keyof TextProps>
+type ElementProps = Omit<
+  HTMLAttributes<HTMLElement>,
+  keyof Props | keyof TextProps | 'role' | 'aria-level'
+>
 
-function generateTagAttribute(level: number): HeadingTagTypes {
-  if (level <= 6) {
-    return `h${level}` as HeadingTagTypes
+const generateTagProps = (tag: HeadingTagTypes | undefined, level: number) => {
+  const forwardedAs = tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes)
+  let role = undefined
+  let ariaLevel = undefined
+
+  if (level > 6) {
+    role = 'heading'
+    ariaLevel = level
   }
 
-  return 'span'
+  return {
+    forwardedAs,
+    role,
+    'aria-level': ariaLevel,
+  }
 }
 
-export function extractLevel(tag: HeadingTagTypes) {
-  const reg = tag.match(/^h([1-6])$/)
-
-  return reg ? parseInt(reg[1], 10) : 7 // HINT: 数値が取れない場合h6以下、つまりspanかlegendになる
+const MAPPER_SIZE_AND_WEIGHT: { [key in HeadingTypes]: TextProps } = {
+  screenTitle: {
+    size: 'XL',
+    weight: 'normal',
+  },
+  sectionTitle: {
+    size: 'L',
+    weight: 'normal',
+  },
+  blockTitle: {
+    size: 'M',
+    weight: 'bold',
+  },
+  subBlockTitle: {
+    size: 'M',
+    weight: 'bold',
+    color: 'TEXT_GREY',
+  },
+  subSubBlockTitle: {
+    size: 'S',
+    weight: 'bold',
+    color: 'TEXT_GREY',
+  },
 }
 
 export const Heading: VFC<Props & ElementProps> = ({
@@ -50,43 +83,14 @@ export const Heading: VFC<Props & ElementProps> = ({
 }) => {
   const classNames = useClassNames()
   const level = useContext(LevelContext)
-  const textProps = useMemo<TextProps>(() => {
-    switch (type) {
-      case 'screenTitle':
-        return {
-          size: 'XL',
-          weight: 'normal',
-        }
-      case 'sectionTitle':
-        return {
-          size: 'L',
-          weight: 'normal',
-        }
-      case 'blockTitle':
-        return {
-          size: 'M',
-          weight: 'bold',
-        }
-      case 'subBlockTitle':
-        return {
-          size: 'M',
-          weight: 'bold',
-          color: 'TEXT_GREY',
-        }
-      case 'subSubBlockTitle':
-        return {
-          size: 'S',
-          weight: 'bold',
-          color: 'TEXT_GREY',
-        }
-    }
-  }, [type])
+  const textProps = useMemo<TextProps>(() => MAPPER_SIZE_AND_WEIGHT[type], [type])
+  const tagProps = useMemo(() => generateTagProps(tag, level), [tag, level])
 
   return (
     <ResetText
       {...props}
       {...textProps}
-      forwardedAs={tag || generateTagAttribute(level)}
+      {...tagProps}
       leading="TIGHT"
       className={`${type} ${className} ${classNames.wrapper}`}
     />

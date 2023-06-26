@@ -3,10 +3,10 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
-import { HeadingTagTypes, extractLevel } from '../../Heading'
+import { Heading, HeadingTagTypes } from '../../Heading'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
-import { SectioningFragment } from '../../SectioningContent'
+import { Section } from '../../SectioningContent'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
 import { useClassNames } from '../useClassNames'
@@ -27,7 +27,7 @@ export type BaseProps = {
    */
   subtitle?: ReactNode
   /**
-   * ダイアログタイトルの HTML タグ
+   * @deprecated titleTag属性は非推奨です。SectioningContent(Article, Aside, Nav, Section, SectioningFragment)でDialog全体をラップして、ダイアログタイトルのHeadingレベルを設定してください
    */
   titleTag?: HeadingTagTypes
   /**
@@ -72,7 +72,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   title,
   titleId,
   subtitle,
-  titleTag = 'h2',
+  titleTag,
   actionText,
   actionTheme = 'primary',
   onClickAction,
@@ -92,25 +92,27 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
   return (
-    <>
-      <TitleArea
-        gap={0.25}
-        themes={theme}
-        ref={titleRef}
-        className={classNames.titleArea}
-        as={titleTag}
-      >
-        {subtitle && (
-          <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
-            {subtitle}
+    <Section>
+      <Heading tag={titleTag}>
+        <TitleArea
+          gap={0.25}
+          themes={theme}
+          ref={titleRef}
+          className={classNames.titleArea}
+          as="span"
+        >
+          {subtitle && (
+            <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
+              {subtitle}
+            </Text>
+          )}
+          <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
+            {title}
           </Text>
-        )}
-        <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
-          {title}
-        </Text>
-      </TitleArea>
+        </TitleArea>
+      </Heading>
       <Body offsetHeight={offsetHeight} className={classNames.body}>
-        <SectioningFragment baseLevel={extractLevel(titleTag) + 1}>{children}</SectioningFragment>
+        {children}
       </Body>
       <ActionArea themes={theme} ref={bottomRef} className={classNames.actionArea}>
         <ButtonArea className={classNames.buttonArea}>
@@ -139,11 +141,11 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
           </Message>
         )}
       </ActionArea>
-    </>
+    </Section>
   )
 }
 
-const TitleArea = styled(Stack)<{ themes: Theme; as: HeadingTagTypes }>`
+const TitleArea = styled(Stack)<{ themes: Theme }>`
   ${({ themes: { border, space } }) => css`
     margin-block: unset;
     border-bottom: ${border.shorthand};

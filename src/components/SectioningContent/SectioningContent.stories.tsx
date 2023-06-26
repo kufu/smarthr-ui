@@ -1,4 +1,4 @@
-import React, { Story } from '@storybook/react'
+import React, { StoryFn } from '@storybook/react'
 
 import { Heading } from '../Heading'
 

@@ -1,13 +1,14 @@
-import React, { FC, ReactNode, useContext } from 'react'
+import React, { FC, PropsWithChildren, useContext } from 'react'
 import styled from 'styled-components'
 
 import { LevelContext } from './levelContext'
 
-const SectioningContent: FC<{
-  children: ReactNode
-  className?: string
-  as?: 'article' | 'aside' | 'nav' | 'section'
-}> = ({ children, ...props }) => (
+const SectioningContent: FC<
+  PropsWithChildren<{
+    className?: string
+    as?: 'article' | 'aside' | 'nav' | 'section'
+  }>
+> = ({ children, ...props }) => (
   <Wrapper {...props}>
     <SectioningFragment>{children}</SectioningFragment>
   </Wrapper>

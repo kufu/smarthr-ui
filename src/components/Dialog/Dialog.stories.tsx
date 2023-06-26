@@ -10,6 +10,7 @@ import { Heading } from '../Heading'
 import { Input } from '../Input'
 import { Cluster, LineUp, Stack } from '../Layout'
 import { RadioButton } from '../RadioButton'
+import { Section, SectioningFragment } from '../SectioningContent'
 import { Body, Cell, Head, Row, Table } from '../Table'
 
 import {
@@ -186,22 +187,24 @@ export const Message_Dialog: Story = () => {
       >
         MessageDialog
       </Button>
-      <MessageDialog
-        isOpen={isOpen}
-        title="MessageDialog"
-        subtitle="副題"
-        description={
-          <>
-            <Heading>MessageDialog</Heading>
-            <p>{dummyText} </p>
-          </>
-        }
-        onClickClose={onClickClose}
-        onClickOverlay={onClickClose}
-        decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
-        id="dialog-message"
-        data-test="dialog-content"
-      />
+      <SectioningFragment>
+        <MessageDialog
+          isOpen={isOpen}
+          title="MessageDialog"
+          subtitle="副題"
+          description={
+            <Section>
+              <Heading>MessageDialog</Heading>
+              <p>{dummyText} </p>
+            </Section>
+          }
+          onClickClose={onClickClose}
+          onClickOverlay={onClickClose}
+          decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
+          id="dialog-message"
+          data-test="dialog-content"
+        />
+      </SectioningFragment>
     </>
   )
 }
@@ -249,38 +252,40 @@ export const Action_Dialog: Story = () => {
         id="dialog-action"
         data-test="dialog-content"
       >
-        <StyledHeading>ActionDialog</StyledHeading>
-        <Buttons>
-          <Button
-            onClick={() =>
-              setResponseMessage({
-                status: 'success',
-                text: '保存しました。',
-              })
-            }
-          >
-            保存
-          </Button>
-          <Button
-            onClick={() =>
-              setResponseMessage({
-                status: 'error',
-                text: '何らかのエラーが発生しました。',
-              })
-            }
-          >
-            エラー
-          </Button>
-          <Button
-            onClick={() =>
-              setResponseMessage({
-                status: 'processing',
-              })
-            }
-          >
-            保存中
-          </Button>
-        </Buttons>
+        <Section>
+          <StyledHeading>ActionDialog</StyledHeading>
+          <Buttons>
+            <Button
+              onClick={() =>
+                setResponseMessage({
+                  status: 'success',
+                  text: '保存しました。',
+                })
+              }
+            >
+              保存
+            </Button>
+            <Button
+              onClick={() =>
+                setResponseMessage({
+                  status: 'error',
+                  text: '何らかのエラーが発生しました。',
+                })
+              }
+            >
+              エラー
+            </Button>
+            <Button
+              onClick={() =>
+                setResponseMessage({
+                  status: 'processing',
+                })
+              }
+            >
+              保存中
+            </Button>
+          </Buttons>
+        </Section>
       </ActionDialog>
       <Button onClick={() => setOpenedDialog('opened')} data-test="opened-dialog-trigger">
         開いた状態で DOM に投入
