@@ -25,7 +25,7 @@ export const Aside: FC<Props> = (props) => <SectioningContent {...props} as="asi
 export const Nav: FC<Props> = (props) => <SectioningContent {...props} as="nav" />
 export const Section: FC<Props> = (props) => <SectioningContent {...props} as="section" />
 
-export const SectioningFragment: FC<{ children: ReactNode; baseLevel?: number | null }> = ({
+export const SectioningFragment: FC<PropsWithChildren<{ baseLevel?: number }>> = ({
   children,
   baseLevel,
 }) => {
