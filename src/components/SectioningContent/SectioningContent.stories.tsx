@@ -19,7 +19,7 @@ export default {
   },
 }
 
-export const SectioningContentStyle: Story = () => (
+export const SectioningContent: StoryFn = () => (
   <>
     <Heading>h1</Heading>
     <Nav>
