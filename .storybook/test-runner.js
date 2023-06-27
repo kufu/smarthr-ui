@@ -26,10 +26,18 @@ module.exports = {
 
         // 影響が軽微な指摘
         const minorViolations = violations.filter((v) => {
-          // コントラストは 'critical' だが、ヘッダなどで対応できていないのでコンポーネントが修正されるまで除外
-          if (v.id === 'color-contrast') return true
+          const targetIds = [
+            // critical
+            // コントラストは 'critical' だが、ヘッダなどで対応できていないのでコンポーネントが修正されるまで除外
+            'color-contrast',
+            // minor
+            'empty-table-header',
+            // moderate
+            'landmark-unique',
+            'landmark-no-duplicate-banner',
+          ]
 
-          return ['minor', 'moderate'].includes(v.impact)
+          if (targetIds.includes(v.id)) return true
         })
 
         if (minorViolations.length === violations.length) {
@@ -40,7 +48,7 @@ module.exports = {
           }
         } else {
           return {
-            message: () => `Critical accessibility violations detected.\n\n${violationsMessage}`,
+            message: () => `Accessibility violations detected.\n\n${violationsMessage}`,
             pass: false,
           }
         }
