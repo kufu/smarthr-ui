@@ -23,63 +23,73 @@ export const All: Story = () => {
   return (
     <List>
       <ListItem>
-        <p>text</p>
-        <Input name="text" type="text" defaultValue="string" />
+        <label htmlFor="text">text</label>
+        <Input id="text" name="text" type="text" defaultValue="string" />
       </ListItem>
       <ListItem>
-        <p>number</p>
-        <Input name="number" type="number" defaultValue="1" />
+        <label htmlFor="number">number</label>
+        <Input id="number" name="number" type="number" defaultValue="1" />
       </ListItem>
       <ListItem>
-        <p>password</p>
-        <Input name="password" type="password" defaultValue="password" />
+        <label htmlFor="password">password</label>
+        <Input id="password" name="password" type="password" defaultValue="password" />
       </ListItem>
       <ListItem>
-        <p>width (with %)</p>
-        <Input name="width_with_percent" defaultValue="width: 100%" width="100%" />
+        <label htmlFor="width_with_percent">width (with %)</label>
+        <Input
+          id="width_with_percent"
+          name="width_with_percent"
+          defaultValue="width: 100%"
+          width="100%"
+        />
       </ListItem>
       <ListItem>
-        <p>width (with px)</p>
-        <Input name="width_with_px" defaultValue="width: 100px" width="100px" />
+        <label htmlFor="width_with_px">width (with px)</label>
+        <Input id="width_with_px" name="width_with_px" defaultValue="width: 100px" width="100px" />
       </ListItem>
       <ListItem>
-        <p>onChange</p>
-        <Input name="onChange" onChange={action('onChange!!')} />
+        <label htmlFor="onChange">onChange</label>
+        <Input id="onChange" name="onChange" onChange={action('onChange!!')} />
       </ListItem>
       <ListItem>
-        <p>onBlur</p>
-        <Input name="onBlur" onBlur={action('onBlur!!')} />
+        <label htmlFor="onBlur">onBlur</label>
+        <Input id="onBlur" name="onBlur" onBlur={action('onBlur!!')} />
       </ListItem>
       <ListItem>
-        <p>readonly</p>
-        <Input name="redOnly" value="これは read-only な input テキスト" readOnly />
+        <label htmlFor="readOnly">readonly</label>
+        <Input id="readOnly" name="readOnly" value="これは read-only な input テキスト" readOnly />
       </ListItem>
       <ListItem>
-        <p>disabled</p>
-        <Input name="disabled" disabled={true} defaultValue="これは disabled なテキスト" />
+        <label htmlFor="disabled">disabled</label>
+        <Input
+          id="disabled"
+          name="disabled"
+          disabled={true}
+          defaultValue="これは disabled なテキスト"
+        />
       </ListItem>
       <ListItem>
-        <p>error</p>
-        <Input name="error" error={true} />
+        <label htmlFor="error">error</label>
+        <Input id="error" name="error" error={true} />
       </ListItem>
       <ListItem>
-        <p>disabled and error</p>
+        <label htmlFor="disabledAndError">disabled and error</label>
         <p>
           <code>disabled</code>は<code>error</code>よりも優先されます。
         </p>
-        <Input name="disabled" disabled={true} error={true} />
+        <Input id="disabledAndError" name="disabledAndError" disabled={true} error={true} />
       </ListItem>
       <ListItem>
-        <p>prefix</p>
-        <Input name="prefix" prefix={<FaSearchIcon />} />
+        <label htmlFor="prefix">prefix</label>
+        <Input id="prefix" name="prefix" prefix={<FaSearchIcon />} />
       </ListItem>
       <ListItem>
-        <p>suffix</p>
-        <Input name="suffix" suffix={<FaSearchIcon />} />
+        <label htmlFor="suffix">suffix</label>
+        <Input id="suffix" name="suffix" suffix={<FaSearchIcon />} />
       </ListItem>
       <ListItem>
-        <p>extending style (width 50%)</p>
-        <StyledInput name="extending_style" />
+        <label htmlFor="extending_style">extending style (width 50%)</label>
+        <StyledInput id="extending_style" name="extending_style" />
       </ListItem>
     </List>
   )
@@ -91,8 +101,9 @@ export const Currency: Story = () => {
   return (
     <List>
       <ListItem>
-        <p>currency (add comma to integer every 3 digits)</p>
+        <label htmlFor="currency">currency (add comma to integer every 3 digits)</label>
         <CurrencyInput
+          id="currency"
           name="currency"
           value={value}
           onChange={(e) => {
@@ -111,7 +122,7 @@ export const Currency: Story = () => {
 Currency.storyName = 'CurrencyInput'
 
 const List = styled(Stack).attrs({ as: 'ul' })``
-const ListItem = styled(Stack).attrs({ gap: 0.5, as: 'ListItem', align: 'flex-start' })``
+const ListItem = styled(Stack).attrs({ gap: 0.5, as: 'li', align: 'flex-start' })``
 const StyledInput = styled(Input)`
   width: 50%;
 `
