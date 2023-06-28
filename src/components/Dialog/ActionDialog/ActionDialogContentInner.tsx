@@ -94,13 +94,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   return (
     <Section>
       <Heading tag={titleTag}>
-        <TitleArea
-          gap={0.25}
-          themes={theme}
-          ref={titleRef}
-          className={classNames.titleArea}
-          as="span"
-        >
+        <TitleArea themes={theme} ref={titleRef} className={classNames.titleArea}>
           {subtitle && (
             <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
               {subtitle}
@@ -145,7 +139,10 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   )
 }
 
-const TitleArea = styled(Stack)<{ themes: Theme }>`
+const TitleArea = styled(Stack).attrs(() => ({
+  gap: 0.25,
+  as: 'span',
+}))<{ themes: Theme }>`
   ${({ themes: { border, space } }) => css`
     margin-block: unset;
     border-bottom: ${border.shorthand};

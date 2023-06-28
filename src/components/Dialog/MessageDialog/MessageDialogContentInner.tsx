@@ -56,13 +56,7 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   return (
     <Section>
       <Heading tag={titleTag}>
-        <TitleArea
-          gap={0.25}
-          themes={theme}
-          ref={titleRef}
-          className={classNames.titleArea}
-          as="span"
-        >
+        <TitleArea themes={theme} ref={titleRef} className={classNames.titleArea}>
           {subtitle && (
             <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
               {subtitle}
@@ -85,7 +79,10 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   )
 }
 
-const TitleArea = styled(Stack)<{ themes: Theme }>(
+const TitleArea = styled(Stack).attrs(() => ({
+  gap: 0.25,
+  as: 'span',
+}))<{ themes: Theme }>(
   ({ themes: { border, spacing } }) => css`
     margin-block: unset;
     border-bottom: ${border.shorthand};
