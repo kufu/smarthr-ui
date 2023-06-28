@@ -6,6 +6,7 @@ import { LevelContext } from './levelContext'
 const SectioningContent: FC<
   PropsWithChildren<{
     className?: string
+    // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
     as?: 'article' | 'aside' | 'nav' | 'section'
   }>
 > = ({ children, ...props }) => (
@@ -14,17 +15,14 @@ const SectioningContent: FC<
   </Wrapper>
 )
 
-const Wrapper = styled.div`
-  padding: 0;
-  margin: 0;
-`
+const Wrapper = styled.section``
 
 type Props = Omit<React.ComponentProps<typeof SectioningContent>, 'as'>
 
+export const Section: FC<Props> = SectioningContent
 export const Article: FC<Props> = (props) => <SectioningContent {...props} as="article" />
 export const Aside: FC<Props> = (props) => <SectioningContent {...props} as="aside" />
 export const Nav: FC<Props> = (props) => <SectioningContent {...props} as="nav" />
-export const Section: FC<Props> = (props) => <SectioningContent {...props} as="section" />
 
 export const SectioningFragment: FC<PropsWithChildren<{ baseLevel?: number }>> = ({
   children,
