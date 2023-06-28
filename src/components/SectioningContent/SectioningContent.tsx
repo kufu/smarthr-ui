@@ -6,6 +6,7 @@ import { LevelContext } from './levelContext'
 const SectioningContent: FC<
   PropsWithChildren<{
     className?: string
+    // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
     as?: 'article' | 'aside' | 'nav' | 'section'
   }>
 > = ({ children, ...props }) => (
