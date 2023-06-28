@@ -12,7 +12,7 @@ export type Props = {
   /** テキストのスタイル */
   type?: HeadingTypes
   /**
-   * @deprecated tag属性は非推奨です。SectioningContent(Article, Aside, Nav, Section, SectioningFragment)を使ってHeadingと関連する範囲を明確に指定してください
+   * @deprecated SectioningContent(Article, Aside, Nav, Section, SectioningFragment)を使ってHeadingと関連する範囲を明確に指定してください
    */
   tag?: HeadingTagTypes
   /** コンポーネントに適用するクラス名 */
