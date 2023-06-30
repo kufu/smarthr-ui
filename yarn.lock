@@ -11545,7 +11545,7 @@ semver@5.5.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
 
-semver@7.5.2, semver@^7.1.1, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.3.8:
+semver@7.5.2:
   version "7.5.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.2.tgz#5b851e66d1be07c1cdaf37dfc856f543325a2beb"
   integrity sha512-SoftuTROv/cRjCze/scjGyiDtcUyxw1rgYQSZY7XTmtR5hX+dm76iDbTH8TkLPHCQmlbQVSSbNZCPM2hb0knnQ==
@@ -11555,6 +11555,13 @@ semver@7.5.2, semver@^7.1.1, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver
 semver@^6.0.0, semver@^6.1.1, semver@^6.1.2, semver@^6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
+
+semver@^7.1.1, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.3.8, semver@^7.5.3:
+  version "7.5.3"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.3.tgz#161ce8c2c6b4b3bdca6caadc9fa3317a4c4fe88e"
+  integrity sha512-QBlUtyVk/5EeHbi7X0fw6liDZc7BBmEaSYn01fMU1OUYbf6GPsbTtd8WmnqbI20SeycoHSeiybkE/q1Q+qlThQ==
+  dependencies:
+    lru-cache "^6.0.0"
 
 semver@~7.0.0:
   version "7.0.0"
@@ -12353,10 +12360,10 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-testcafe-browser-tools@2.0.25:
-  version "2.0.25"
-  resolved "https://registry.yarnpkg.com/testcafe-browser-tools/-/testcafe-browser-tools-2.0.25.tgz#9721f9ba7024a1c95ca4675554cf9477d792edd2"
-  integrity sha512-LK/ZOJUwnpjdJl131qrBN0toCv2wZj2Elb8UPTU71n9Woq7kZtGine4P5XvvvO7mE8bjBfWJOBW9jRhHxyIWzQ==
+testcafe-browser-tools@2.0.26:
+  version "2.0.26"
+  resolved "https://registry.yarnpkg.com/testcafe-browser-tools/-/testcafe-browser-tools-2.0.26.tgz#38b5c0c2cd438895de12ee53cae11c64bd33aab9"
+  integrity sha512-nTKSJhBzn9BmnOs0xVzXMu8dN2Gu13Ca3x3SJr/zF6ZdKjXO82JlbHu55dt5MFoWjzAQmwlqBkSxPaYicsTgUw==
   dependencies:
     array-find "^1.0.0"
     debug "^4.3.1"
@@ -12376,10 +12383,10 @@ testcafe-browser-tools@2.0.25:
     read-file-relative "^1.2.0"
     which-promise "^1.0.0"
 
-testcafe-hammerhead@31.4.5, testcafe-hammerhead@>=19.4.0:
-  version "31.4.5"
-  resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-31.4.5.tgz#672ae1ee426f42fcedb8f15c3e8350f198af2670"
-  integrity sha512-L6flQbgQ4IoCqtjjOVPoJsaq6++9/mYKVCDxUjn5FhMyP/P3pfLcpW0h1wV8UiNkcf6WoYVYhwxN/15g5YMgIQ==
+testcafe-hammerhead@31.4.6, testcafe-hammerhead@>=19.4.0:
+  version "31.4.6"
+  resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-31.4.6.tgz#ca3aa0d48a768bd3f893738efdfca13ed21f7dd8"
+  integrity sha512-rooVb0bmKu94R9WrjY2E0iF+YFNrr7Jfz9F0a665xpZyfCresIl9pVaeMduEhbnw1grRfQJgT1PC+2LRQRWDRA==
   dependencies:
     "@electron/asar" "^3.2.3"
     acorn-hammerhead "0.6.2"
@@ -12405,6 +12412,7 @@ testcafe-hammerhead@31.4.5, testcafe-hammerhead@>=19.4.0:
     semver "5.5.0"
     tough-cookie "4.0.0"
     tunnel-agent "0.6.0"
+    ws "^7.4.6"
 
 testcafe-legacy-api@5.1.6:
   version "5.1.6"
@@ -12458,10 +12466,10 @@ testcafe-selector-generator@^0.1.0:
   resolved "https://registry.yarnpkg.com/testcafe-selector-generator/-/testcafe-selector-generator-0.1.0.tgz#852c86f71565e5d9320da625c2260d040cbed786"
   integrity sha512-MTw+RigHsEYmFgzUFNErDxui1nTYUk6nm2bmfacQiKPdhJ9AHW/wue4J/l44mhN8x3E8NgOUkHHOI+1TDFXiLQ==
 
-testcafe@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-3.0.0.tgz#c1be0fe770794cfc773651c40e23ed0096db633d"
-  integrity sha512-znaK7JQ2kGdEJq2kDmI5sP6QDDkaqwGCxBVYEBOWRr7lUj/bAyFj6x3n3n1WoA3JcwhkRrxJQXQSk/QDgKCCUw==
+testcafe@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-3.0.1.tgz#91fe5c254e475e5d3c327adf098676a12ee96e39"
+  integrity sha512-SI0RtmJ3wwnm/SRIondA4QGHdWDXFHlB4CpMNMs4z0nP4k5hc4Gj0iZd0m55Izhv9sO4ARqRSONDtq9l1HKuGA==
   dependencies:
     "@babel/core" "^7.12.1"
     "@babel/plugin-proposal-async-generator-functions" "^7.12.1"
@@ -12539,12 +12547,12 @@ testcafe@3.0.0:
     resolve-cwd "^1.0.0"
     resolve-from "^4.0.0"
     sanitize-filename "^1.6.0"
-    semver "^5.6.0"
+    semver "^7.5.3"
     set-cookie-parser "^2.5.1"
     source-map-support "^0.5.16"
     strip-bom "^2.0.0"
-    testcafe-browser-tools "2.0.25"
-    testcafe-hammerhead "31.4.5"
+    testcafe-browser-tools "2.0.26"
+    testcafe-hammerhead "31.4.6"
     testcafe-legacy-api "5.1.6"
     testcafe-reporter-json "^2.1.0"
     testcafe-reporter-list "^2.2.0"
@@ -13320,9 +13328,10 @@ ws@^6.1.0:
   dependencies:
     async-limiter "~1.0.0"
 
-ws@^7.2.0:
-  version "7.5.3"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.3.tgz#160835b63c7d97bfab418fc1b8a9fced2ac01a74"
+ws@^7.2.0, ws@^7.4.6:
+  version "7.5.9"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.9.tgz#54fa7db29f4c7cec68b1ddd3a89de099942bb591"
+  integrity sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==
 
 xml-name-validator@^4.0.0:
   version "4.0.0"
