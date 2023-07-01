@@ -5,7 +5,7 @@
   "author": "SmartHR-UI Team",
   "dependencies": {
     "@smarthr/wareki": "^1.2.0",
-    "dayjs": "^1.11.8",
+    "dayjs": "^1.11.9",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.2.2",
