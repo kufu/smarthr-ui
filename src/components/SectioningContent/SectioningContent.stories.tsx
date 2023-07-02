@@ -5,7 +5,7 @@ import { Heading } from '../Heading'
 import { Article, Aside, Nav, Section, SectioningFragment } from './SectioningContent'
 
 export default {
-  title: 'SectioningContent',
+  title: 'Navigation（ナビゲーション）/SectioningContent',
   component: Section,
   subcomponents: {
     Article,
