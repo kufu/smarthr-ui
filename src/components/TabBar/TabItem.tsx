@@ -41,6 +41,7 @@ export const TabItem: VFC<Props & ElementProps> = ({
   return (
     <ItemButton
       {...props}
+      id={id}
       role="tab"
       aria-selected={selected}
       className={wrapperClass}
