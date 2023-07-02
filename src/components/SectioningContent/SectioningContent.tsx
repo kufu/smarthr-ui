@@ -8,10 +8,11 @@ const SectioningContent: FC<
     className?: string
     // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
     as?: 'article' | 'aside' | 'nav' | 'section'
+    baseLevel?: number
   }>
-> = ({ children, ...props }) => (
+> = ({ children, baseLevel, ...props }) => (
   <Wrapper {...props}>
-    <SectioningFragment>{children}</SectioningFragment>
+    <SectioningFragment baseLevel={baseLevel}>{children}</SectioningFragment>
   </Wrapper>
 )
 
