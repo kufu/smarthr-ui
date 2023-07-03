@@ -64,8 +64,8 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-lab
 export const FormGroup: React.FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
-  htmlFor: htmlForProp,
-  labelId: labelIdProp,
+  htmlFor,
+  labelId,
   innerMargin,
   statusLabelProps = [],
   helpMessage,
@@ -79,10 +79,8 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
   ...props
 }) => {
   const disabledClass = disabled ? 'disabled' : ''
-  const managedHtmlFor = useId()
-  const managedLabelId = useId()
-  const htmlFor = useMemo(() => htmlForProp || managedHtmlFor, [htmlForProp, managedHtmlFor])
-  const labelId = useMemo(() => labelIdProp || managedLabelId, [labelIdProp, managedLabelId])
+  const managedHtmlFor = useId(htmlFor)
+  const managedLabelId = useId(labelId)
   const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
@@ -92,24 +90,24 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
     () =>
       Object.entries({ helpMessage, exampleMessage, supplementaryMessage, errorMessages })
         .filter(({ 1: value }) => value)
-        .map(([key]) => `${htmlFor}_${key}`)
+        .map(([key]) => `${managedHtmlFor}_${key}`)
         .join(' '),
-    [helpMessage, exampleMessage, supplementaryMessage, errorMessages, htmlFor],
+    [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor],
   )
 
   return (
     <Wrapper
       {...props}
       disabled={disabled}
-      aria-labelledby={isRoleGroup ? labelId : undefined}
+      aria-labelledby={isRoleGroup ? managedLabelId : undefined}
       aria-describedby={isRoleGroup && describedbyIds ? describedbyIds : undefined}
       themes={theme}
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
       as={as}
     >
       <FormLabel
-        htmlFor={!isRoleGroup ? htmlFor : undefined}
-        id={labelId}
+        htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
+        id={managedLabelId}
         className={`${classNames.label}`}
         as={isRoleGroup ? 'legend' : 'label'}
       >
@@ -124,7 +122,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       </FormLabel>
 
       {helpMessage && (
-        <p className={classNames.helpMessage} id={`${htmlFor}_helpMessage`}>
+        <p className={classNames.helpMessage} id={`${managedHtmlFor}_helpMessage`}>
           {helpMessage}
         </p>
       )}
@@ -133,7 +131,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
           as="p"
           color="TEXT_GREY"
           italic
-          id={`${htmlFor}_exampleMessage`}
+          id={`${managedHtmlFor}_exampleMessage`}
           className={classNames.exampleMessage}
         >
           {exampleMessage}
@@ -141,7 +139,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       )}
 
       {errorMessages && (
-        <Stack gap={0} id={`${htmlFor}_errorMessages`}>
+        <Stack gap={0} id={`${managedHtmlFor}_errorMessages`}>
           {(Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map(
             (message, index) => (
               <ErrorMessage themes={theme} key={index}>
@@ -153,7 +151,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       )}
 
       <ChildrenWrapper innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
-        {addIdToFirstInput(children, htmlFor, describedbyIds)}
+        {addIdToFirstInput(children, managedHtmlFor, describedbyIds)}
       </ChildrenWrapper>
 
       {supplementaryMessage && (
@@ -161,7 +159,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
           as="p"
           size="S"
           color="TEXT_GREY"
-          id={`${htmlFor}_supplementaryMessage`}
+          id={`${managedHtmlFor}_supplementaryMessage`}
           className={classNames.supplementaryMessage}
         >
           {supplementaryMessage}
@@ -171,7 +169,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
   )
 }
 
-const addIdToFirstInput = (children: ReactNode, htmlFor: string, describedbyIds: string) => {
+const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describedbyIds: string) => {
   let foundFirstInput = false
 
   const addId = (targets: ReactNode): ReactNode[] | ReactNode => {
@@ -185,7 +183,7 @@ const addIdToFirstInput = (children: ReactNode, htmlFor: string, describedbyIds:
       if (isInputElement(type)) {
         foundFirstInput = true
         return React.cloneElement(child as ReactElement, {
-          id: htmlFor,
+          id: managedHtmlFor,
           'aria-describedby': describedbyIds ? describedbyIds : undefined,
         })
       }
