@@ -20,9 +20,17 @@ function useId_OLD(defaultId?: string) {
   )
 }
 
-export const useId =
+export const useId = (defaultId?: string) => {
+  return generateUseId(defaultId)()
+}
+
+const generateUseId = (defaultId?: string) => {
+  if (defaultId) {
+    return () => defaultId
+  }
   // React v18 以降は React.useId を使う
-  'useId' in React ? React.useId : useId_OLD
+  return 'useId' in React ? React.useId : useId_OLD
+}
 
 export const SequencePrefixIdProvider: VFC<{ children: ReactNode }> = ({ children }) => {
   const context = useContext(IdContext)
