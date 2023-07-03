@@ -33,7 +33,7 @@ type ElementProps = Omit<
   keyof Props | keyof TextProps | 'role' | 'aria-level'
 >
 
-const generateTagProps = (tag: HeadingTagTypes | undefined, level: number) => {
+const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
   const forwardedAs = tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes)
   let role = undefined
   let ariaLevel = undefined
@@ -83,13 +83,12 @@ export const Heading: VFC<Props & ElementProps> = ({
 }) => {
   const classNames = useClassNames()
   const level = useContext(LevelContext)
-  const textProps = useMemo<TextProps>(() => MAPPER_SIZE_AND_WEIGHT[type], [type])
-  const tagProps = useMemo(() => generateTagProps(tag, level), [tag, level])
+  const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
 
   return (
     <ResetText
       {...props}
-      {...textProps}
+      {...MAPPER_SIZE_AND_WEIGHT[type]}
       {...tagProps}
       leading="TIGHT"
       className={`${type} ${className} ${classNames.wrapper}`}
