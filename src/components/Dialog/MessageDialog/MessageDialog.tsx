@@ -44,6 +44,7 @@ export const MessageDialog: React.FC<Props & ElementProps> = ({
     >
       <MessageDialogContentInner
         title={title}
+        titleTag={titleTag}
         titleId={titleId}
         subtitle={subtitle}
         description={description}
