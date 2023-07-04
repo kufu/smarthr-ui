@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [34.0.0](https://github.com/kufu/smarthr-ui/compare/v33.0.2...v34.0.0) (2023-07-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* ActionDialogWithTriggerとRemoteTriggerActionDialogのonPressEscapeの引数にclose()が渡っていないのを修正 (#3517)
+
+### Features
+
+* 自動的にHeadingのレベルを計算するArticle, Aside, Nav, Sectionコンポーネントを追加 ([#3489](https://github.com/kufu/smarthr-ui/issues/3489)) ([0d5de00](https://github.com/kufu/smarthr-ui/commit/0d5de008f3c90c55e0d2ca62d8c85dc3cbfd7e3a)), closes [#1475](https://github.com/kufu/smarthr-ui/issues/1475) [#1517](https://github.com/kufu/smarthr-ui/issues/1517) [#1519](https://github.com/kufu/smarthr-ui/issues/1519) [#1584](https://github.com/kufu/smarthr-ui/issues/1584)
+
+
+### Bug Fixes
+
+* ActionDialogWithTriggerとRemoteTriggerActionDialogのonPressEscapeの引数にclose()が渡っていないのを修正 ([#3517](https://github.com/kufu/smarthr-ui/issues/3517)) ([1dd8a69](https://github.com/kufu/smarthr-ui/commit/1dd8a69e16b4f1a39678e462c65c9428bb25480b))
+* FormControlのhtmlForとlabelIdが使えなくなっていたのを修正 ([#3504](https://github.com/kufu/smarthr-ui/issues/3504)) ([9a2bdb6](https://github.com/kufu/smarthr-ui/commit/9a2bdb65ac3ce781215e9d67b4a377c45e17e101))
+* TabItemに設定されたidがItemButtonに設定されるように修正 ([#3515](https://github.com/kufu/smarthr-ui/issues/3515)) ([60a2dda](https://github.com/kufu/smarthr-ui/commit/60a2ddad192d45d69e087a03688233d668dd05a7))
+
 ### [33.0.2](https://github.com/kufu/smarthr-ui/compare/v33.0.1...v33.0.2) (2023-06-27)
 
 ### [33.0.1](https://github.com/kufu/smarthr-ui/compare/v33.0.0...v33.0.1) (2023-06-22)
