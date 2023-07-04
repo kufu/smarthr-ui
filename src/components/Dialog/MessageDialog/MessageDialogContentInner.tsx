@@ -3,8 +3,9 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
-import { HeadingTagTypes } from '../../Heading'
+import { Heading, HeadingTagTypes } from '../../Heading'
 import { Stack } from '../../Layout'
+import { Section } from '../../SectioningContent'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
 import { useClassNames } from '../useClassNames'
@@ -21,7 +22,7 @@ export type BaseProps = {
    */
   subtitle?: React.ReactNode
   /**
-   * ダイアログタイトルの HTML タグ
+   * @deprecated SectioningContent(Article, Aside, Nav, Section, SectioningFragment)でDialog全体をラップして、ダイアログタイトルのHeadingレベルを設定してください
    */
   titleTag?: HeadingTagTypes
   /**
@@ -42,7 +43,7 @@ const CLOSE_BUTTON_LABEL = '閉じる'
 export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   title,
   subtitle,
-  titleTag = 'h2',
+  titleTag,
   titleId,
   description,
   onClickClose,
@@ -53,23 +54,19 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
   const { offsetHeight, titleRef, bottomRef } = useOffsetHeight()
 
   return (
-    <>
-      <TitleArea
-        gap={0.25}
-        themes={theme}
-        ref={titleRef}
-        className={classNames.titleArea}
-        as={titleTag}
-      >
-        {subtitle && (
-          <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
-            {subtitle}
+    <Section>
+      <Heading tag={titleTag}>
+        <TitleArea themes={theme} ref={titleRef} className={classNames.titleArea}>
+          {subtitle && (
+            <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
+              {subtitle}
+            </Text>
+          )}
+          <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
+            {title}
           </Text>
-        )}
-        <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
-          {title}
-        </Text>
-      </TitleArea>
+        </TitleArea>
+      </Heading>
       <Description themes={theme} offsetHeight={offsetHeight} className={classNames.description}>
         {description}
       </Description>
@@ -78,11 +75,14 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
           {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
         </Button>
       </Bottom>
-    </>
+    </Section>
   )
 }
 
-const TitleArea = styled(Stack)<{ themes: Theme; as: HeadingTagTypes }>(
+const TitleArea = styled(Stack).attrs(() => ({
+  gap: 0.25,
+  as: 'span',
+}))<{ themes: Theme }>(
   ({ themes: { border, spacing } }) => css`
     margin-block: unset;
     border-bottom: ${border.shorthand};
