@@ -18,13 +18,13 @@ const Template: Story = () => (
     <li>
       <p>Border</p>
       <TabBar>
-        <TabItem id="1" onClick={action('clicked')}>
+        <TabItem id="border-1" onClick={action('clicked')}>
           Tab
         </TabItem>
-        <TabItem id="2" onClick={action('clicked')} selected>
+        <TabItem id="border-2" onClick={action('clicked')} selected>
           Selected
         </TabItem>
-        <TabItem id="3" onClick={action('clicked')} disabled>
+        <TabItem id="border-3" onClick={action('clicked')} disabled>
           Disabled
         </TabItem>
       </TabBar>
@@ -32,13 +32,13 @@ const Template: Story = () => (
     <li>
       <p>No border</p>
       <TabBar bordered={false}>
-        <TabItem id="1" onClick={action('clicked')}>
+        <TabItem id="no-border-1" onClick={action('clicked')}>
           Tab
         </TabItem>
-        <TabItem id="2" onClick={action('clicked')} selected>
+        <TabItem id="no-border-2" onClick={action('clicked')} selected>
           Selected
         </TabItem>
-        <TabItem id="3" onClick={action('clicked')} disabled>
+        <TabItem id="no-border-3" onClick={action('clicked')} disabled>
           Disabled
         </TabItem>
       </TabBar>

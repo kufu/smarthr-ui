@@ -7,7 +7,19 @@ type Props = Omit<React.ComponentProps<typeof ActionDialog>, 'isOpen' | 'onClick
   Parameters<typeof useRemoteTrigger>[0]
 
 export const RemoteTriggerActionDialog: React.FC<Props> = ({ id, onClickClose, ...props }) => {
-  const { isOpen, onClickClose: actualOnClickClose } = useRemoteTrigger({ id, onClickClose })
+  const {
+    isOpen,
+    onClickClose: actualOnClickClose,
+    onPressEscape,
+  } = useRemoteTrigger({ id, onClickClose })
 
-  return <ActionDialog {...props} id={id} isOpen={isOpen} onClickClose={actualOnClickClose} />
+  return (
+    <ActionDialog
+      {...props}
+      id={id}
+      isOpen={isOpen}
+      onClickClose={actualOnClickClose}
+      onPressEscape={onPressEscape}
+    />
+  )
 }
