@@ -4,10 +4,12 @@ export const TRIGGER_EVENT = 'smarthr-ui:remote-dialog-trigger-dispatch'
 
 export function useRemoteTrigger({
   onClickClose: orgOnClickClose,
+  onPressEscape: orgOnPressEscape,
   id,
 }: {
   id: string
   onClickClose?: (close: () => void) => void
+  onPressEscape?: (close: () => void) => void
 }) {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -20,6 +22,16 @@ export function useRemoteTrigger({
 
     setIsOpen(false)
   }, [orgOnClickClose])
+
+  const onPressEscape = useCallback(() => {
+    if (orgOnPressEscape) {
+      return orgOnPressEscape(() => {
+        setIsOpen(false)
+      })
+    }
+
+    setIsOpen(false)
+  }, [orgOnPressEscape])
 
   useEffect(() => {
     const handler = ((e: Event & { detail: { id: string } }) => {
@@ -38,5 +50,6 @@ export function useRemoteTrigger({
   return {
     isOpen,
     onClickClose,
+    onPressEscape,
   }
 }
