@@ -135,12 +135,13 @@ export const Select = forwardRef(
 
 const generateSizeClassName = (size: Props<string>['size']) => (size === 's' ? '--small' : '')
 
-const Wrapper = styled.div<{
+const Wrapper = styled.span<{
   $width: string
 }>`
   ${({ $width }) => css`
-    position: relative;
     box-sizing: border-box;
+    position: relative;
+    display: block;
     width: ${$width};
   `}
 `

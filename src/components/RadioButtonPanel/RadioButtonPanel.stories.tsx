@@ -49,7 +49,7 @@ export const All: Story = () => {
         <Stack as="ul">
           <RadioButtonPanel as="li" name="5" checked={checkedName === '5'} onChange={handleChange}>
             <Stack gap={0.25} as="span">
-              <Cluster align="center">
+              <Cluster align="center" as="span">
                 <Heading tag="span" type="blockTitle">
                   エンゲージメントサーベイ
                 </Heading>

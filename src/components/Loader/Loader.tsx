@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, VFC } from 'react'
+import React, { FC, HTMLAttributes, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -31,7 +31,7 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const Loader: VFC<Props & ElementProps> = ({
+export const Loader: FC<Props & ElementProps> = ({
   size = 'm',
   alt = '処理中',
   text,
@@ -74,8 +74,9 @@ const Wrapper = styled.div`
   overflow: hidden;
 `
 
-const Spinner = styled.div`
+const Spinner = styled.span`
   position: relative;
+  display: block;
   animation: ${containerRotate} 1600ms linear infinite;
   margin: 0 auto;
 
@@ -97,12 +98,13 @@ const Spinner = styled.div`
   }
 `
 
-const Line = styled.div<{ themes: Theme }>`
+const Line = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { color } = themes
 
     return css`
       position: absolute;
+      display: block;
       width: 100%;
       height: 100%;
       opacity: 0;
@@ -142,7 +144,7 @@ const Line = styled.div<{ themes: Theme }>`
   }}
 `
 
-const Cog = styled.div`
+const Cog = styled.span`
   display: inline-block;
   position: relative;
   width: 50%;
@@ -151,10 +153,11 @@ const Cog = styled.div`
   border-color: inherit;
 `
 
-const CogInner = styled.div`
+const CogInner = styled.span`
   position: absolute;
   top: 0;
   left: 0;
+  display: block;
   width: 200%;
   box-sizing: border-box;
   height: 100%;
@@ -181,18 +184,19 @@ const CogInner = styled.div`
   }
 `
 
-const Ticker = styled.div`
+const Ticker = styled.span`
   position: absolute;
   box-sizing: border-box;
   top: 0;
   left: 45%;
+  display: block;
   width: 10%;
   height: 100%;
   overflow: hidden;
   border-color: inherit;
 `
 
-const Text = styled.p<{ themes: Theme }>`
+const Text = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
     const { fontSize, color, spacingByChar } = themes
 

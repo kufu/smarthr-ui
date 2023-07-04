@@ -1,15 +1,10 @@
-import React, { HTMLAttributes, ReactNode, VFC, useEffect } from 'react'
+import React, { FC, HTMLAttributes, ReactNode, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
-import {
-  FaCheckCircleIcon,
-  FaExclamationCircleIcon,
-  FaInfoCircleIcon,
-  FaTimesIcon,
-  WarningIcon,
-} from '../Icon'
+import { FaTimesIcon } from '../Icon'
+import { ResponseMessage } from '../ResponseMessage'
 
 import { useClassNames } from './useClassNames'
 
@@ -43,7 +38,7 @@ const REMOVE_DELAY = 8000
 /**
  * @deprecated `FlashMessage` は気づきにくいため、安易な使用はお勧めしません。`NotificationBar` や `Dialog` の使用を検討してください。
  */
-export const FlashMessage: VFC<Props & ElementProps> = ({
+export const FlashMessage: FC<Props & ElementProps> = ({
   visible,
   type,
   text,
@@ -70,28 +65,6 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
 
   if (!visible) return null
 
-  let Icon
-  let iconColor
-
-  switch (type) {
-    case 'success':
-      Icon = FaCheckCircleIcon
-      iconColor = theme.color.MAIN
-      break
-    case 'info':
-      Icon = FaInfoCircleIcon
-      iconColor = theme.color.TEXT_GREY
-      break
-    case 'warning':
-      Icon = WarningIcon
-      iconColor = theme.color.WARNING
-      break
-    case 'error':
-      Icon = FaExclamationCircleIcon
-      iconColor = theme.color.DANGER
-      break
-  }
-
   return (
     <Wrapper
       {...props}
@@ -100,12 +73,9 @@ export const FlashMessage: VFC<Props & ElementProps> = ({
       animation={animation}
       role={role}
     >
-      <IconWrapper>
-        <Icon color={iconColor} className={classNames.icon} />
-      </IconWrapper>
-      <Txt themes={theme} className={classNames.text}>
+      <ResponseMessage type={type} iconGap={0.5} className={classNames.icon}>
         {text}
-      </Txt>
+      </ResponseMessage>
       <CloseButton
         themes={theme}
         className={`close ${classNames.button}`}
@@ -154,7 +124,7 @@ const fadeAnimation = keyframes`
 
 const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
   ${({ themes, animation }) => {
-    const { border, fontSize, spacingByChar, radius, color, zIndex, shadow } = themes
+    const { border, fontSize, space, radius, color, zIndex, shadow } = themes
 
     let keyframe = bounceAnimation
     switch (animation) {
@@ -172,58 +142,42 @@ const Wrapper = styled.div<{ themes: Theme; animation: Props['animation'] }>`
     return css`
       z-index: ${zIndex.FLASH_MESSAGE};
       position: fixed;
-      bottom: ${spacingByChar(0.5)};
-      left: ${spacingByChar(0.5)};
+      bottom: ${space(0.5)};
+      left: ${space(0.5)};
 
       display: flex;
       align-items: center;
-      gap: ${spacingByChar(0.5)};
+      gap: ${space(0.5)};
 
       box-shadow: ${shadow.LAYER4};
       border: ${border.shorthand};
       border-radius: ${radius.m};
       background-color: ${color.WHITE};
-      padding: ${spacingByChar(1)};
+      padding: ${space(1)};
 
       /* Icon + margin + 8文字 + margin + Button(border + padding + fontSize) */
       min-width: calc(
-        1em + ${spacingByChar(0.5)} + 8em + ${spacingByChar(0.5)} + (${border.lineWidth} * 2) +
-          (${spacingByChar(0.5)} * 2) + ${fontSize.S}
+        1em + ${space(0.5)} + 8em + ${space(0.5)} + (${border.lineWidth} * 2) + (${space(0.5)} * 2) +
+          ${fontSize.S}
       );
       animation: ${keyframe} ${animation === 'none' ? '0.01s' : '1s'} 0s both;
 
       @media (prefers-reduced-motion) {
         animation-duration: 0.01s;
       }
+
+      .smarthr-ui-Icon-withText {
+        flex-grow: 1;
+
+        margin-block: ${space(-0.25)};
+      }
     `
   }}
 `
-const IconWrapper = styled.span`
-  flex-shrink: 0;
 
-  svg {
-    display: block;
-  }
-`
-const Txt = styled.p<{ themes: Theme }>`
-  ${({ themes: { fontSize, leading } }) => {
-    return css`
-      flex-grow: 1;
-      flex-shrink: 1;
-
-      /* line-height 分 padding が広がってしまうのを調整 */
-      margin-top: calc(((${fontSize.M} * ${leading.NORMAL}) - ${fontSize.M}) / -2);
-      margin-bottom: calc(((${fontSize.M} * ${leading.NORMAL}) - ${fontSize.M}) / -2);
-      padding: 0;
-      font-size: ${fontSize.M};
-      line-height: ${leading.NORMAL};
-    `
-  }}
-`
 const CloseButton = styled(Button)<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) => css`
-    margin-top: ${spacingByChar(-0.5)};
-    margin-right: ${spacingByChar(-0.5)};
-    margin-bottom: ${spacingByChar(-0.5)};
+  ({ themes: { space } }) => css`
+    margin-block: ${space(-0.5)};
+    margin-inline-end: ${space(-0.5)};
   `,
 )

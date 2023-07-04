@@ -77,7 +77,6 @@ export function MultiSelectedItem<T>({
             tabIndex={-1}
           >
             <FaTimesCircleIcon
-              size={11}
               color="inherit"
               alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
             />

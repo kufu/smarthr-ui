@@ -1,5 +1,5 @@
 import { transparentize } from 'polished'
-import React, { forwardRef, useCallback } from 'react'
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -27,17 +27,28 @@ export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
     )
     const classNames = useClassNames()
 
+    const inputRef = useRef<HTMLInputElement>(null)
+    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
+      ref,
+      () => inputRef.current,
+    )
+
+    useEffect(() => {
+      if (inputRef.current) {
+        inputRef.current.indeterminate = mixed
+      }
+    }, [mixed])
+
     return (
       <Wrapper themes={theme}>
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <Input
           {...props}
-          {...(mixed && { 'aria-checked': 'mixed' })}
           type="checkbox"
           onChange={handleChange}
           className={classNames.checkBox}
           themes={theme}
-          ref={ref}
+          ref={inputRef}
           aria-invalid={props.error || undefined}
         />
         <Box className={boxClassName} themes={theme} error={props.error} />
@@ -84,7 +95,8 @@ const Box = styled.span<{ themes: Theme; error?: boolean }>`
       }
 
       /* FIXME: なぜか static classname になってしまうため & を重ねている */
-      input:checked + && {
+      input:checked + &&,
+      input:indeterminate + && {
         border-color: ${color.MAIN};
         background-color: ${color.MAIN};
         @media (prefers-contrast: more) {
@@ -146,7 +158,7 @@ const IconWrap = styled.span<{ themes: Theme }>`
       transform: translate(-50%, -50%);
       pointer-events: none;
 
-      input:not(:checked) ~ & > svg {
+      input:not(:checked, :indeterminate) ~ & > svg {
         fill: transparent;
       }
 

@@ -41,7 +41,7 @@ type Props<T> = {
 type Rect = {
   top: number
   left: number
-  width: number
+  $width: number | string
   height?: number
 }
 
@@ -73,7 +73,7 @@ export function useListBox<T>({
   const [listBoxRect, setListBoxRect] = useState<Rect>({
     top: 0,
     left: 0,
-    width: 0,
+    $width: 0,
   })
 
   const calculateRect = useCallback(() => {
@@ -111,7 +111,7 @@ export function useListBox<T>({
     setListBoxRect({
       top,
       left: rect.left + window.pageXOffset,
-      width: rect.width,
+      $width: rect.width,
       height,
     })
   }, [listBoxRef, triggerRef])
@@ -218,7 +218,7 @@ export function useListBox<T>({
           <Container
             {...listBoxRect}
             themes={theme}
-            $width={dropdownWidth || listBoxRect.width}
+            $width={dropdownWidth || listBoxRect.$width}
             id={listBoxId}
             ref={listBoxRef}
             role="listbox"
@@ -297,7 +297,7 @@ export function useListBox<T>({
   }
 }
 
-const Wrapper = styled.div<Rect>(({ top, left, width }) => {
+const Wrapper = styled.div<Rect>(({ top, left, $width }) => {
   return css`
     /*
     ドロップダウンリストをInputの幅に対する相対値で指定できるように、Inputの幅のdivを親要素にする
@@ -305,16 +305,11 @@ const Wrapper = styled.div<Rect>(({ top, left, width }) => {
     position: absolute;
     top: ${top}px;
     left: ${left}px;
-    width: ${width}px;
+    width: ${$width}px;
   `
 })
 
-const Container = styled.div<
-  Rect & {
-    themes: Theme
-    $width: string | number
-  }
->(({ left, $width, height, themes }) => {
+const Container = styled.div<Rect & { themes: Theme }>(({ left, $width, height, themes }) => {
   const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
   return css`
     position: absolute;

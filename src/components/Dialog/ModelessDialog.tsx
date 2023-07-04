@@ -105,11 +105,12 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
   portalParent,
   className = '',
   decorators,
+  id,
   ...props
 }) => {
   const labelId = useId()
   const classNames = useClassNames().modelessDialog
-  const { createPortal } = useDialogPortal(portalParent)
+  const { createPortal } = useDialogPortal(portalParent, id)
   const theme = useTheme()
 
   const wrapperRef = useRef<HTMLDivElement>(null)

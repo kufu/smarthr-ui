@@ -4,8 +4,9 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
-import { FaCheckCircleIcon, FaExclamationCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
+import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { ResponseMessage } from '../../ResponseMessage'
 import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
 import { DropdownContent } from '../DropdownContent'
@@ -84,9 +85,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
           suffix={
             <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
               <FaFilterIcon />
-              {isFiltered ? (
-                <FaCheckCircleIcon size={8} aria-label={filteredIconAriaLabel} />
-              ) : null}
+              {isFiltered ? <FilteredCheckIcon aria-label={filteredIconAriaLabel} /> : null}
             </IsFilteredIconWrapper>
           }
         >
@@ -127,22 +126,11 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
               </DropdownCloser>
             </RightButtonLayout>
           </Cluster>
-          {responseMessage?.status === 'success' && (
+          {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
             <Message>
-              <FaCheckCircleIcon
-                color={themes.color.MAIN}
-                text={responseMessage.text}
-                role="alert"
-              />
-            </Message>
-          )}
-          {responseMessage?.status === 'error' && (
-            <Message>
-              <FaExclamationCircleIcon
-                color={themes.color.DANGER}
-                text={responseMessage.text}
-                role="alert"
-              />
+              <ResponseMessage type={responseMessage.status} role="alert">
+                {responseMessage.text}
+              </ResponseMessage>
             </Message>
           )}
         </ActionArea>
@@ -163,6 +151,10 @@ const IsFilteredIconWrapper = styled.span<{ isFiltered: boolean; themes: Theme }
     right: -4px;
     bottom: 2px;
   }
+`
+const FilteredCheckIcon = styled(FaCheckCircleIcon)`
+  width: 0.5em;
+  height: 0.5em;
 `
 const StatusText = styled.span<{ themes: Theme }>`
   margin-left: ${({ themes }) => themes.spacing.XXS};

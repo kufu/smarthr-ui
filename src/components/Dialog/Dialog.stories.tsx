@@ -330,7 +330,7 @@ export const Form_Dialog: Story = () => {
       <Button
         onClick={() => setOpenedDialog('normal')}
         aria-haspopup="dialog"
-        aria-controls="dialog-action"
+        aria-controls="dialog-form"
         data-test="dialog-trigger"
       >
         FormDialog
@@ -348,7 +348,7 @@ export const Form_Dialog: Story = () => {
         }}
         onClickClose={onClickClose}
         responseMessage={responseMessage}
-        id="form-dialog-action"
+        id="dialog-form"
         data-test="form-dialog-content"
       >
         <RadioList>
