@@ -12,17 +12,17 @@ const defaultContext: IdContextValue = {
 
 const IdContext = createContext<IdContextValue>(defaultContext)
 
-function useId_OLD(defaultId?: string) {
+function useId_OLD() {
   const context = useContext(IdContext)
-  return useMemo(
-    () => defaultId || `id-${context.prefix}-${++context.current}`,
-    [defaultId, context],
-  )
+  return useMemo(() => `id-${context.prefix}-${++context.current}`, [context])
 }
 
-export const useId =
+export const useId = (defaultId?: string): string => {
+  if (defaultId) return defaultId
+
   // React v18 以降は React.useId を使う
-  'useId' in React ? React.useId : useId_OLD
+  return ('useId' in React ? React.useId : useId_OLD)()
+}
 
 export const SequencePrefixIdProvider: VFC<{ children: ReactNode }> = ({ children }) => {
   const context = useContext(IdContext)
