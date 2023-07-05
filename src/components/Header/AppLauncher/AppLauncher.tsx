@@ -7,6 +7,7 @@ import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '
 import { Heading } from '../../Heading'
 import { FaToolboxIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
+import { Section } from '../../SectioningContent'
 import { TextLink } from '../../TextLink'
 
 import { useClassNames } from './useClassNames'
@@ -61,29 +62,11 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
           <DropdownScrollArea>
             <Stack gap={1.5}>
               {baseApps && (
-                <Stack gap={0.5} className={classNames.category}>
-                  <Heading type="subSubBlockTitle" tag="h3">
-                    {baseApps.heading}
-                  </Heading>
-                  <Cluster as="ul" gap={1}>
-                    {baseApps.items.map((item, index) => (
-                      <li key={index}>
-                        <TextLink href={item.url} target={item.target} className={classNames.link}>
-                          {item.label}
-                        </TextLink>
-                      </li>
-                    ))}
-                  </Cluster>
-                </Stack>
-              )}
-              <Cluster gap={1.5}>
-                {others.map(({ heading, items }, i) => (
-                  <Stack gap={0.5} className={classNames.category} key={i} recursive>
-                    <Heading type="subSubBlockTitle" tag="h3">
-                      {heading}
-                    </Heading>
-                    <ul>
-                      {items.map((item, index) => (
+                <Section>
+                  <Stack gap={0.5} className={classNames.category}>
+                    <Heading type="subSubBlockTitle">{baseApps.heading}</Heading>
+                    <Cluster as="ul" gap={1}>
+                      {baseApps.items.map((item, index) => (
                         <li key={index}>
                           <TextLink
                             href={item.url}
@@ -94,8 +77,30 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
                           </TextLink>
                         </li>
                       ))}
-                    </ul>
+                    </Cluster>
                   </Stack>
+                </Section>
+              )}
+              <Cluster gap={1.5}>
+                {others.map(({ heading, items }, i) => (
+                  <Section key={i}>
+                    <Stack gap={0.5} className={classNames.category} recursive>
+                      <Heading type="subSubBlockTitle">{heading}</Heading>
+                      <ul>
+                        {items.map((item, index) => (
+                          <li key={index}>
+                            <TextLink
+                              href={item.url}
+                              target={item.target}
+                              className={classNames.link}
+                            >
+                              {item.label}
+                            </TextLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </Stack>
+                  </Section>
                 ))}
               </Cluster>
             </Stack>
