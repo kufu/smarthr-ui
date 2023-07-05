@@ -15,8 +15,8 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.5",
-    "@babel/preset-env": "^7.22.5",
+    "@babel/core": "^7.22.6",
+    "@babel/preset-env": "^7.22.6",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
     "@commitlint/cli": "^17.6.6",
@@ -159,7 +159,7 @@
   "sideEffects": false,
   "typings": "lib/index.d.ts",
   "resolutions": {
-    "@babel/helper-compilation-targets": "^7.22.5",
+    "@babel/helper-compilation-targets": "^7.22.6",
     "@types/react": "^18.2.14",
     "minimist": "1.2.8",
     "react": "^18.2.0",
