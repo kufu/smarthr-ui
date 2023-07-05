@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { LevelContext } from '../SectioningContent'
 import { Text, TextProps } from '../Text'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { useClassNames } from './useClassNames'
 
@@ -17,6 +18,8 @@ export type Props = {
   tag?: HeadingTagTypes
   /** コンポーネントに適用するクラス名 */
   className?: string
+  /** 非表示のHeadingにするフラグ */
+  visuallyHidden?: boolean
 }
 
 export type HeadingTypes =
@@ -33,8 +36,7 @@ type ElementProps = Omit<
   keyof Props | keyof TextProps | 'role' | 'aria-level'
 >
 
-const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
-  const forwardedAs = tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes)
+const generateTagProps = (level: number, tag?: HeadingTagTypes, visuallyHidden?: boolean) => {
   let role = undefined
   let ariaLevel = undefined
 
@@ -44,7 +46,8 @@ const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
   }
 
   return {
-    forwardedAs,
+    [visuallyHidden ? 'as' : 'forwardedAs']:
+      tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes),
     role,
     'aria-level': ariaLevel,
   }
@@ -79,20 +82,26 @@ export const Heading: VFC<Props & ElementProps> = ({
   tag,
   type = 'screenTitle',
   className = '',
+  visuallyHidden,
   ...props
 }) => {
   const classNames = useClassNames()
   const level = useContext(LevelContext)
-  const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
+  const tagProps = useMemo(
+    () => generateTagProps(level, tag, visuallyHidden),
+    [level, tag, visuallyHidden],
+  )
+  const actualProps = {
+    ...props,
+    ...MAPPER_SIZE_AND_WEIGHT[type],
+    ...tagProps,
+    className: `${type} ${className} ${classNames.wrapper}`,
+  }
 
-  return (
-    <ResetText
-      {...props}
-      {...MAPPER_SIZE_AND_WEIGHT[type]}
-      {...tagProps}
-      leading="TIGHT"
-      className={`${type} ${className} ${classNames.wrapper}`}
-    />
+  return visuallyHidden ? (
+    <VisuallyHiddenText {...actualProps} />
+  ) : (
+    <ResetText {...actualProps} leading="TIGHT" />
   )
 }
 
