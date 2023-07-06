@@ -13,7 +13,7 @@ export default {
 
 export const All: Story = () => (
   <Section>
-    <Heading visuallyHidden={true}>Heading</Heading>
+    <Heading visuallyHidden>Heading</Heading>
     <List>
       <li>
         <Heading type="screenTitle">ScreenTitle</Heading>
