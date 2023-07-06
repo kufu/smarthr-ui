@@ -6,6 +6,7 @@ import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
 import { Heading } from '../Heading'
+import { Section } from '../SectioningContent'
 import { Textarea } from '../Textarea'
 
 import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
@@ -77,33 +78,35 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
       onSubmit={handleSubmit}
       className={`${className} ${classNames.wrapper}`}
     >
-      <Title type="sectionTitle" themes={theme} className={classNames.title}>
-        {title}
-      </Title>
+      <Section>
+        <SectionHeading themes={theme} className={classNames.title}>
+          {title}
+        </SectionHeading>
 
-      {items &&
-        items.map((item) => (
-          <RightFixedNoteItem {...item} key={item.id} onClickEdit={onClickEdit} />
-        ))}
+        {items &&
+          items.map((item) => (
+            <RightFixedNoteItem {...item} key={item.id} onClickEdit={onClickEdit} />
+          ))}
 
-      {textareaLabel && (
-        <label htmlFor={textareaId}>
-          <TextareaLabel tag="span" type="subBlockTitle" themes={theme}>
-            {textareaLabel}
-          </TextareaLabel>
-        </label>
-      )}
-      <StyledTextarea
-        id={textareaId}
-        name={TEXT_AREA_NAME}
-        themes={theme}
-        aria-label={innerText(textareaLabel || title)}
-        className={classNames.textarea}
-      />
+        {textareaLabel && (
+          <label htmlFor={textareaId}>
+            <TextareaLabel tag="span" type="subBlockTitle" themes={theme}>
+              {textareaLabel}
+            </TextareaLabel>
+          </label>
+        )}
+        <StyledTextarea
+          id={textareaId}
+          name={TEXT_AREA_NAME}
+          themes={theme}
+          aria-label={innerText(textareaLabel || title)}
+          className={classNames.textarea}
+        />
 
-      <SubmitButton type="submit" className={classNames.submitButton}>
-        {submitLabel}
-      </SubmitButton>
+        <SubmitButton type="submit" className={classNames.submitButton}>
+          {submitLabel}
+        </SubmitButton>
+      </Section>
     </Wrapper>
   )
 }
@@ -126,7 +129,9 @@ const Wrapper = styled.form<{ themes: Theme; $width: number }>`
   }}
 `
 
-const Title = styled(Heading)<{ themes: Theme }>`
+const SectionHeading = styled(Heading).attrs(() => ({
+  type: 'sectionTitle',
+}))<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => {
     return css`
       display: block;
