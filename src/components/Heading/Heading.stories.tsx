@@ -2,6 +2,8 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { Section } from '../SectioningContent'
+
 import { Heading } from './Heading'
 
 export default {
@@ -10,33 +12,28 @@ export default {
 }
 
 export const All: Story = () => (
-  <List>
-    <li>
-      <Heading type="screenTitle" tag="h1">
-        ScreenTitle
-      </Heading>
-    </li>
-    <li>
-      <Heading type="sectionTitle" tag="h2">
-        SectionTitle
-      </Heading>
-    </li>
-    <li>
-      <Heading type="blockTitle" tag="h3">
-        BlockTitle
-      </Heading>
-    </li>
-    <li>
-      <Heading type="subBlockTitle" tag="h4">
-        SubBlockTitle
-      </Heading>
-    </li>
-    <li>
-      <Heading type="subSubBlockTitle" tag="h5">
-        SubSubBlockTitle
-      </Heading>
-    </li>
-  </List>
+  <Section>
+    <Heading visuallyHidden>Heading</Heading>
+    <List>
+      <li>
+        <Heading type="screenTitle">ScreenTitle</Heading>
+      </li>
+      <li>
+        <Heading type="sectionTitle">SectionTitle</Heading>
+      </li>
+      <li>
+        <Heading type="blockTitle" tag="h3">
+          BlockTitle
+        </Heading>
+      </li>
+      <li>
+        <Heading type="subBlockTitle">SubBlockTitle</Heading>
+      </li>
+      <li>
+        <Heading type="subSubBlockTitle">SubSubBlockTitle</Heading>
+      </li>
+    </List>
+  </Section>
 )
 All.storyName = 'all'
 
