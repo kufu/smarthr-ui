@@ -72,7 +72,7 @@ export const AccordionPanelContent: VFC<Props & ElementProps> = ({
   )
 }
 
-const CollapseContainer = styled.section`
+const CollapseContainer = styled.div`
   height: 0;
   overflow: hidden;
   transition: height ${duration}ms ease;
