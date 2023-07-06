@@ -18,7 +18,7 @@ export type Props = {
   tag?: HeadingTagTypes
   /** コンポーネントに適用するクラス名 */
   className?: string
-  /** 非表示のHeadingにするフラグ */
+  /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
 }
 
