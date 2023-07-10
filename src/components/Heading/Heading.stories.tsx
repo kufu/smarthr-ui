@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { Section } from '../SectioningContent'
 
-import { Heading } from './Heading'
+import { Heading, PageHeading } from './Heading'
 
 export default {
   title: 'Text（テキスト）/Heading',
@@ -13,6 +13,7 @@ export default {
 
 export const All: Story = () => (
   <Section>
+    <PageHeading>Page Heading</PageHeading>
     <Heading visuallyHidden>Heading</Heading>
     <List>
       <li>
