@@ -17,7 +17,8 @@
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
     "noEmitOnError": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {}
   },
   "exclude": ["node_modules"],
   "include": ["src/**/*"]
