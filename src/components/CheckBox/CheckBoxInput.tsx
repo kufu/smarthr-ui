@@ -35,7 +35,7 @@ export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
 
     useEffect(() => {
       if (inputRef.current) {
-        inputRef.current.indeterminate = (checked && mixed) || undefined
+        inputRef.current.indeterminate = !!(checked && mixed)
       }
     }, [checked, mixed])
 
