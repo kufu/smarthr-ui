@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [34.1.0](https://github.com/kufu/smarthr-ui/compare/v34.0.0...v34.1.0) (2023-07-11)
+
+
+### Features
+
+* HeadingにvisuallyHiddenオプションを追加する ([#3530](https://github.com/kufu/smarthr-ui/issues/3530)) ([6e63c81](https://github.com/kufu/smarthr-ui/commit/6e63c81d8a12673f06c98427b7db83199acbce80))
+* SectioningContent系コンポーネントに対してdata-specなどの属性を設定可能にする ([#3545](https://github.com/kufu/smarthr-ui/issues/3545)) ([ffa8280](https://github.com/kufu/smarthr-ui/commit/ffa8280f742a85128f95d881fa0bbe71bdfc54be))
+
+
+### Bug Fixes
+
+* AccodionPanelのマークアップを修正し、Section内にHeadingが存在する状態にします ([#3522](https://github.com/kufu/smarthr-ui/issues/3522)) ([9e13844](https://github.com/kufu/smarthr-ui/commit/9e1384450e3cfe73d404d11edd476301f88df3f0))
+* AppLuncherのHeadingが自動計算されるようにマークアップを変更する ([#3526](https://github.com/kufu/smarthr-ui/issues/3526)) ([076af86](https://github.com/kufu/smarthr-ui/commit/076af86bbec6cf6499a6f9b7aeef481c020f7b10))
+* Checkboxのmixed属性が意図せず表示されてしまう問題を修正 ([#3548](https://github.com/kufu/smarthr-ui/issues/3548)) ([19b3ca9](https://github.com/kufu/smarthr-ui/commit/19b3ca99da0253761bf4751ab7b0ff5cf80493d3))
+* eslint-plugin-smarthr で compilerOptions.paths が必須になったため暫定処置 ([#3550](https://github.com/kufu/smarthr-ui/issues/3550)) ([7026a9d](https://github.com/kufu/smarthr-ui/commit/7026a9d1e310d835dd32ec8aaa8f6ad44897798a))
+* FormDialogのHeadingが自動計算されるようにマークアップを変更する ([#3523](https://github.com/kufu/smarthr-ui/issues/3523)) ([d0507d3](https://github.com/kufu/smarthr-ui/commit/d0507d379ae3f7d764c18117ca71924fb0206c07))
+* InformationPanelのHeadingが自動計算されるようにマークアップを変更する ([#3525](https://github.com/kufu/smarthr-ui/issues/3525)) ([13baaaa](https://github.com/kufu/smarthr-ui/commit/13baaaa7f2f7635e13f5300e43b23b46cf095b8d))
+* RightFixedNoteのHeadingが自動計算されるようにマークアップを変更する ([#3524](https://github.com/kufu/smarthr-ui/issues/3524)) ([e1dd140](https://github.com/kufu/smarthr-ui/commit/e1dd1408e54751922ef719abdda3de8122a7a5f2))
+
 ## [34.0.0](https://github.com/kufu/smarthr-ui/compare/v33.0.2...v34.0.0) (2023-07-04)
 
 
