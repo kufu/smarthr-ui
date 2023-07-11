@@ -35,9 +35,9 @@ export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
 
     useEffect(() => {
       if (inputRef.current) {
-        inputRef.current.indeterminate = mixed
+        inputRef.current.indeterminate = (checked && mixed) || undefined
       }
-    }, [mixed])
+    }, [checked, mixed])
 
     return (
       <Wrapper themes={theme}>
