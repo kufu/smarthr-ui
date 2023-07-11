@@ -12,6 +12,6 @@ module.exports = {
     ],
     'smarthr/a11y-anchor-has-href-attribute': 'error',
     'smarthr/a11y-prohibit-input-placeholder': 'error',
-    'smarthr/require-barrel-import': 0,
+    'smarthr/require-barrel-import': 'off',
   },
 }
