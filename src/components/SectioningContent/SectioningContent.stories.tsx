@@ -1,6 +1,6 @@
 import React, { StoryFn } from '@storybook/react'
 
-import { Heading } from '../Heading'
+import { Heading, PageHeading } from '../Heading'
 
 import { Article, Aside, Nav, Section, SectioningFragment } from './SectioningContent'
 
@@ -21,7 +21,11 @@ export default {
 
 export const SectioningContent: StoryFn = () => (
   <>
-    <Heading>h1</Heading>
+    <PageHeading>h1</PageHeading>
+    <Section>
+      <PageHeading>PageHeading within SectioningContent: h1</PageHeading>
+    </Section>
+    <Heading>Heading without SectioningContent: h1</Heading>
     <Nav>
       <Heading>Nav: h2</Heading>
     </Nav>
