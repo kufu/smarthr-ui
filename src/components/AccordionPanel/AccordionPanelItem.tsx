@@ -1,5 +1,7 @@
 import React, { HTMLAttributes, VFC, createContext } from 'react'
 
+import { Section } from '../SectioningContent'
+
 import { useClassNames } from './useClassNames'
 
 type Props = {
@@ -29,9 +31,9 @@ export const AccordionPanelItem: VFC<Props & ElementProps> = ({
         name,
       }}
     >
-      <div {...props} className={`${className} ${classNames.item}`}>
+      <Section {...props} className={`${className} ${classNames.item}`}>
         {children}
-      </div>
+      </Section>
     </AccordionPanelItemContext.Provider>
   )
 }

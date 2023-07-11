@@ -1,16 +1,17 @@
-import React, { FC, PropsWithChildren, useContext } from 'react'
+import React, { FC, HTMLAttributes, PropsWithChildren, useContext } from 'react'
 import styled from 'styled-components'
 
 import { LevelContext } from './levelContext'
 
-const SectioningContent: FC<
-  PropsWithChildren<{
-    className?: string
-    // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
-    as?: 'article' | 'aside' | 'nav' | 'section'
-    baseLevel?: number
-  }>
-> = ({ children, baseLevel, ...props }) => (
+type BaseProps = PropsWithChildren<{
+  className?: string
+  // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
+  as?: 'article' | 'aside' | 'nav' | 'section'
+  baseLevel?: number
+}>
+type SectioningContentProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps> & BaseProps
+
+const SectioningContent: FC<SectioningContentProps> = ({ children, baseLevel, ...props }) => (
   <Wrapper {...props}>
     <SectioningFragment baseLevel={baseLevel}>{children}</SectioningFragment>
   </Wrapper>

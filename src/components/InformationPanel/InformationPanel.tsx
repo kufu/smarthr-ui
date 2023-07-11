@@ -9,6 +9,7 @@ import { Heading, HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
+import { SectioningFragment } from '../SectioningContent'
 
 import { useClassNames } from './useClassNames'
 
@@ -17,7 +18,9 @@ import type { DecoratorsType } from '../../types'
 type Props = {
   /** パネルのタイトル */
   title: React.ReactNode
-  /** タイトル部分の HTML タグ */
+  /**
+   * @deprecated titleTagは非推奨です
+   */
   titleTag?: HeadingTagTypes
   /** 表示する情報のタイプ */
   type?: 'success' | 'info' | 'warning' | 'error' | 'sync'
@@ -40,7 +43,7 @@ const CLOSE_BUTTON_LABEL = '閉じる'
 
 export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> = ({
   title,
-  titleTag = 'h3',
+  titleTag,
   type = 'info',
   togglable = true,
   active: activeProps = true,
@@ -71,44 +74,48 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
   const classNames = useClassNames()
 
   return (
-    <Wrapper
-      {...props}
-      className={`${className} ${classNames.wrapper}`}
-      themes={theme}
-      role="region"
-      aria-labelledby={titleId}
-    >
-      <Stack gap={1.25}>
-        <Header themes={theme} togglable={togglable}>
-          <Heading type="blockTitle" tag={titleTag} id={titleId} className={classNames.title}>
-            <ResponseMessage type={type} iconGap={0.5}>
-              {title}
-            </ResponseMessage>
-          </Heading>
-          {togglable && (
-            <TogglableButton
-              suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
-              size="s"
-              onClick={handleClickTrigger}
-              aria-expanded={togglable ? active : undefined}
-              aria-controls={contentId}
-              className={classNames.closeButton}
-            >
-              {active
-                ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
-                : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
-            </TogglableButton>
-          )}
-        </Header>
-        <Content themes={theme} id={contentId} aria-hidden={!active} className={classNames.content}>
-          {children}
-        </Content>
-      </Stack>
+    <Wrapper {...props} className={`${className} ${classNames.wrapper}`} themes={theme}>
+      {/* HINT: Wrapperをsectionにしているため余計なタグを出力しないようSectioningFragmentを利用する */}
+      <SectioningFragment>
+        <Stack gap={1.25}>
+          <Header themes={theme} togglable={togglable}>
+            <Heading type="blockTitle" tag={titleTag} id={titleId} className={classNames.title}>
+              <ResponseMessage type={type} iconGap={0.5}>
+                {title}
+              </ResponseMessage>
+            </Heading>
+            {togglable && (
+              <TogglableButton
+                suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
+                size="s"
+                onClick={handleClickTrigger}
+                aria-expanded={togglable ? active : undefined}
+                aria-controls={contentId}
+                className={classNames.closeButton}
+              >
+                {active
+                  ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
+                  : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
+              </TogglableButton>
+            )}
+          </Header>
+          <Content
+            themes={theme}
+            id={contentId}
+            aria-hidden={!active}
+            className={classNames.content}
+          >
+            {children}
+          </Content>
+        </Stack>
+      </SectioningFragment>
     </Wrapper>
   )
 }
 
-const Wrapper = styled(Base)<{ themes: Theme }>`
+const Wrapper = styled(Base).attrs(() => ({
+  forwardedAs: 'section',
+}))<{ themes: Theme }>`
   ${({ themes: { spacingByChar, shadow } }) => css`
     padding: ${spacingByChar(1.5)};
     box-shadow: ${shadow.LAYER3};

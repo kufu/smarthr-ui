@@ -3,9 +3,10 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
-import { HeadingTagTypes } from '../../Heading'
+import { Heading, HeadingTagTypes } from '../../Heading'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
+import { Section } from '../../SectioningContent'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
 import { useClassNames } from '../useClassNames'
@@ -26,7 +27,7 @@ export type BaseProps = {
    */
   subtitle?: ReactNode
   /**
-   * ダイアログタイトルの HTML タグ
+   * @deprecated SectioningContent(Article, Aside, Nav, Section, SectioningFragment)でDialog全体をラップして、ダイアログタイトルのHeadingレベルを設定してください
    */
   titleTag?: HeadingTagTypes
   /**
@@ -71,7 +72,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   title,
   titleId,
   subtitle,
-  titleTag = 'h2',
+  titleTag,
   actionText,
   actionTheme = 'primary',
   onSubmit,
@@ -91,58 +92,59 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
   return (
-    <form onSubmit={handleSubmitAction}>
-      <TitleArea
-        gap={0.25}
-        themes={theme}
-        ref={titleRef}
-        className={classNames.titleArea}
-        as={titleTag}
-      >
-        {subtitle && (
-          <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
-            {subtitle}
-          </Text>
-        )}
-        <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
-          {title}
-        </Text>
-      </TitleArea>
-      <Body offsetHeight={offsetHeight} className={classNames.body}>
-        {children}
-      </Body>
-      <ActionArea themes={theme} ref={bottomRef} className={classNames.actionArea}>
-        <ButtonArea className={classNames.buttonArea}>
-          <Button
-            onClick={onClickClose}
-            disabled={closeDisabled || isRequestProcessing}
-            className={classNames.closeButton}
-          >
-            {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
-          </Button>
-          <Button
-            type="submit"
-            variant={actionTheme}
-            disabled={actionDisabled}
-            loading={isRequestProcessing}
-            className={classNames.actionButton}
-          >
-            {actionText}
-          </Button>
-        </ButtonArea>
-        {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
-          <Message>
-            <ResponseMessage type={responseMessage.status} role="alert">
-              {responseMessage.text}
-            </ResponseMessage>
-          </Message>
-        )}
-      </ActionArea>
-    </form>
+    <Section>
+      <form onSubmit={handleSubmitAction}>
+        <Heading tag={titleTag}>
+          <TitleArea themes={theme} ref={titleRef} className={classNames.titleArea}>
+            {subtitle && (
+              <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
+                {subtitle}
+              </Text>
+            )}
+            <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
+              {title}
+            </Text>
+          </TitleArea>
+        </Heading>
+        <Body offsetHeight={offsetHeight} className={classNames.body}>
+          {children}
+        </Body>
+        <ActionArea themes={theme} ref={bottomRef} className={classNames.actionArea}>
+          <ButtonArea className={classNames.buttonArea}>
+            <Button
+              onClick={onClickClose}
+              disabled={closeDisabled || isRequestProcessing}
+              className={classNames.closeButton}
+            >
+              {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
+            </Button>
+            <Button
+              type="submit"
+              variant={actionTheme}
+              disabled={actionDisabled}
+              loading={isRequestProcessing}
+              className={classNames.actionButton}
+            >
+              {actionText}
+            </Button>
+          </ButtonArea>
+          {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
+            <Message>
+              <ResponseMessage type={responseMessage.status} role="alert">
+                {responseMessage.text}
+              </ResponseMessage>
+            </Message>
+          )}
+        </ActionArea>
+      </form>
+    </Section>
   )
 }
 
-const TitleArea = styled(Stack)<{ themes: Theme; as: HeadingTagTypes }>`
+const TitleArea = styled(Stack).attrs(() => ({
+  gap: 0.25,
+  as: 'span',
+}))<{ themes: Theme }>`
   ${({ themes: { border, space } }) => css`
     margin-block: unset;
     border-bottom: ${border.shorthand};
