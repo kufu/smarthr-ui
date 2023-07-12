@@ -4,6 +4,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { Heading } from '../Heading'
+import { Section } from '../SectioningContent'
 import { StatusLabel } from '../StatusLabel'
 
 import { SideNav } from './SideNav'
@@ -98,14 +99,20 @@ const SideNavPrefixItems = [
 
 export const All: Story = () => (
   <Wrapper>
-    <StyledHeading type="sectionTitle">default</StyledHeading>
-    <SideNav items={SideNavItems} onClick={action('clicked')} />
+    <Section>
+      <StyledHeading type="sectionTitle">default</StyledHeading>
+      <SideNav items={SideNavItems} onClick={action('clicked')} />
+    </Section>
 
-    <StyledHeading type="sectionTitle">Small Size</StyledHeading>
-    <SideNav size="s" items={SideNavItems} onClick={action('clicked')} />
+    <Section>
+      <StyledHeading type="sectionTitle">Small Size</StyledHeading>
+      <SideNav size="s" items={SideNavItems} onClick={action('clicked')} />
+    </Section>
 
-    <StyledHeading type="sectionTitle">With Prefix</StyledHeading>
-    <SideNav items={SideNavPrefixItems} onClick={action('clicked')} />
+    <Section>
+      <StyledHeading type="sectionTitle">With Prefix</StyledHeading>
+      <SideNav items={SideNavPrefixItems} onClick={action('clicked')} />
+    </Section>
   </Wrapper>
 )
 All.storyName = 'all'

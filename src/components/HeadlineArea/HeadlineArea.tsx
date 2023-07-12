@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Heading, Props as HeadingProps } from '../Heading'
+import { Section } from '../SectioningContent'
 
 import { useClassNames } from './useClassNames'
 
@@ -35,7 +36,7 @@ export const HeadlineArea: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <Wrapper {...props} theme={theme} className={`${className} ${classNames.wrapper}`}>
+    <WrapperSection {...props} theme={theme} className={`${className} ${classNames.wrapper}`}>
       <Heading type="screenTitle" tag={heading.tag ? heading.tag : 'h1'}>
         {heading.children}
       </Heading>
@@ -44,11 +45,11 @@ export const HeadlineArea: VFC<Props & ElementProps> = ({
           {description}
         </Description>
       )}
-    </Wrapper>
+    </WrapperSection>
   )
 }
 
-const Wrapper = styled.div`
+const WrapperSection = styled(Section)`
   display: block;
   margin: 0;
   padding: 0;

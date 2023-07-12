@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { Base } from '../Base'
 import { Button } from '../Button'
-import { Heading } from '../Heading'
+import { PageHeading } from '../Heading'
 import { Stack } from '../Layout'
 
 import { FloatArea } from './FloatArea'
@@ -23,7 +23,7 @@ export default {
 
 export const All: StoryFn = () => (
   <>
-    <Heading>書類に記載する扶養家族</Heading>
+    <PageHeading>書類に記載する扶養家族</PageHeading>
     <FloatArea
       primaryButton={<Button variant="primary">Submit</Button>}
       secondaryButton={<Button>Cancel</Button>}

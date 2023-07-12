@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 
 import { Base as shrBase } from '../../Base'
 import { Heading } from '../../Heading'
+import { SectioningFragment } from '../../SectioningContent'
 import { LineUp } from '../LineUp'
 
 import { Stack } from '.'
@@ -29,12 +30,14 @@ export const All: Story = () => (
         <Base>
           <P>recursive を使うと子孫要素に対して再帰的に影響を与えます。</P>
 
-          <Stack gap={0.5}>
-            <Heading type="blockTitle">入れ子にすることができます</Heading>
-            <InnerBase>
-              <P>同じ要素である必要もありません。</P>
-            </InnerBase>
-          </Stack>
+          <SectioningFragment>
+            <Stack gap={0.5} as="section">
+              <Heading type="blockTitle">入れ子にすることができます</Heading>
+              <InnerBase>
+                <P>同じ要素である必要もありません。</P>
+              </InnerBase>
+            </Stack>
+          </SectioningFragment>
         </Base>
       </Stack>
     </Content>

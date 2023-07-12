@@ -37,7 +37,7 @@ const Actions = () => (
   </>
 )
 
-export const all: Story = () => {
+export const All: Story = () => {
   const onClose = () => console.log('close')
 
   return (

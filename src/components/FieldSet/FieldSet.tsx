@@ -53,9 +53,11 @@ export const FieldSet: FC<Props & ElementProps> = ({
       aria-describedby={helpMessage ? helpId : undefined}
     >
       <Title themes={theme} className={classNames.title}>
-        <TitleText type={labelType} tag={labelTagType} className={classNames.titleText}>
+        {/* TODO: レベル自動計算に任せるならtagのデフォルト値をspanにする必要はないかもしれない。検討する */}
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+        <LabelHeading type={labelType} tag={labelTagType} className={classNames.titleText}>
           {label}
-        </TitleText>
+        </LabelHeading>
 
         {props.required && (
           <StatusLabel type="red" className={classNames.label}>
@@ -107,7 +109,7 @@ const Title = styled.div<{ themes: Theme }>`
     }
   `}
 `
-const TitleText = styled(Heading)`
+const LabelHeading = styled(Heading)`
   display: inline-block;
 `
 const Help = styled.div<{ themes: Theme }>`

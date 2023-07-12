@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { range } from '../../libs/lodash'
 import { Reel } from '../Layout'
+import { Nav } from '../SectioningContent'
 
 import { PaginationControllerItem } from './PaginationControllerItem'
 import { PaginationItem } from './PaginationItem'
@@ -98,7 +99,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
   )
 
   return (
-    <Wrapper
+    <WrapperNav
       {...props}
       className={`${className} ${classNames.wrapper}`}
       aria-label="ページネーション"
@@ -110,11 +111,11 @@ export const Pagination: VFC<Props & ElementProps> = ({
           {nextPage}
         </List>
       </Reel>
-    </Wrapper>
+    </WrapperNav>
   )
 }
 
-const Wrapper = styled.nav`
+const WrapperNav = styled(Nav)`
   display: inline-block;
   max-width: 100%;
 `

@@ -103,6 +103,7 @@ export const Heading: VFC<Props & ElementProps> = ({
 }
 
 export const PageHeading: VFC<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>> = (props) => (
+  // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
   <Heading {...props} tag="h1" />
 )
 
