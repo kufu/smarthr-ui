@@ -8,10 +8,15 @@ const definedColors = ['MAIN', 'DANGER'] as const
 type DefinedColor = (typeof definedColors)[number]
 
 type BaseProps = PropsWithChildren<{
+  /** 件数 */
   count?: number
+  /** 最大表示件数。この数を超えた場合は{最大表示件数+}と表示される */
   overflowCount?: number
+  /** 0値を表示するかどうか */
   showZero?: boolean
+  /** 種類。dot： ドット表示 */
   type?: 'dot'
+  /** 色 */
   color?: DefinedColor
 }>
 type BadgeProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps> & BaseProps
@@ -35,6 +40,7 @@ export const Badge: React.FC<BadgeProps> = ({
     withChildren: !!children,
   }
 
+  // ドット表示でもなく、0値を表示するでもない場合は何も表示しない
   if (!displayDot && !children && actualCount === undefined) return null
 
   return (
