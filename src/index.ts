@@ -123,6 +123,7 @@ export { SectioningFragment, Article, Aside, Nav, Section } from './components/S
 export { VisuallyHiddenText } from './components/VisuallyHiddenText'
 export * from './components/SpreadsheetTable'
 export * from './components/ResponseMessage'
+export * from './components/Badge'
 
 // layout components
 export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'
