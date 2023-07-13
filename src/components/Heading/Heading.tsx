@@ -41,7 +41,7 @@ const generateTagProps = (level: number, tag?: HeadingTagTypes, visuallyHidden?:
   let ariaLevel = undefined
 
   // TODO: h1はPageHeadingで設定するため、自動計算では必ずh2以下になるようにする
-  if (level > 6) {
+  if (!tag && level > 6) {
     role = 'heading'
     ariaLevel = level
   }
@@ -81,7 +81,7 @@ const MAPPER_SIZE_AND_WEIGHT: { [key in HeadingTypes]: TextProps } = {
 
 export const Heading: VFC<Props & ElementProps> = ({
   tag,
-  type = 'screenTitle',
+  type = 'sectionTitle',
   className = '',
   visuallyHidden,
   ...props
@@ -102,9 +102,10 @@ export const Heading: VFC<Props & ElementProps> = ({
   return visuallyHidden ? <VisuallyHiddenText {...actualProps} /> : <ResetText {...actualProps} />
 }
 
-export const PageHeading: VFC<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>> = (props) => (
-  <Heading {...props} tag="h1" />
-)
+export const PageHeading: VFC<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>> = ({
+  type = 'screenTitle',
+  ...props
+}) => <Heading {...props} type={type} tag="h1" />
 
 const ResetText = styled(Text).attrs(() => ({
   leading: 'TIGHT' as React.ComponentProps<typeof Text>['leading'],

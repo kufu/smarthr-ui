@@ -13,9 +13,12 @@ export default {
 
 export const All: Story = () => (
   <Section>
-    <PageHeading>Page Heading</PageHeading>
+    <StyledPageHeading>Page Heading</StyledPageHeading>
     <Heading visuallyHidden>Heading</Heading>
     <List>
+      <li>
+        <Heading>Default(SectionTitle)</Heading>
+      </li>
       <li>
         <Heading type="screenTitle">ScreenTitle</Heading>
       </li>
@@ -37,6 +40,10 @@ export const All: Story = () => (
   </Section>
 )
 All.storyName = 'all'
+
+const StyledPageHeading = styled(PageHeading)`
+  padding: 0 2.4rem 2.4rem;
+`
 
 const List = styled.ul`
   padding: 0 2.4rem;
