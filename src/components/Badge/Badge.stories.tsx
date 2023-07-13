@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { FaBellIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { Badge } from './Badge'
 
@@ -31,8 +32,10 @@ export const All: StoryFn = () => {
               視覚情報しか持たないため、別途アクセシブルネームを与える必要があります。
             </p>
             <Cluster gap={0.75} align="center">
-              <Badge type="dot" aria-label="通知があります" />
-              <Badge type="dot" count={9} aria-label="通知があります。" />
+              <Badge type="dot" />
+              <VisuallyHiddenText>通知があります</VisuallyHiddenText>
+              <Badge type="dot" count={9} />
+              <VisuallyHiddenText>通知があります</VisuallyHiddenText>
             </Cluster>
             <p>
               最大値の標準は99です。必要に応じて <code>overflowCount</code> で変えられます。
