@@ -3,8 +3,9 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 
 import { Base } from '../../Base'
-import { Heading as shrHeading } from '../../Heading'
+import { Heading } from '../../Heading'
 import { RadioButton } from '../../RadioButton'
+import { SectioningFragment } from '../../SectioningContent'
 import { StatusLabel } from '../../StatusLabel'
 import { Stack } from '../Stack'
 
@@ -79,21 +80,23 @@ export const All: Story = () => {
           入れ子にして <code>align</code> や <code>justify</code>{' '}
           を組み合わせるとメディアクエリを使用せずに柔軟なレイアウトを作れます。
         </figcaption>
-        <Cluster align="center" justify="space-between">
-          <Heading>これは Cluster の構成例です</Heading>
+        <SectioningFragment>
+          <Cluster align="center" justify="space-between" as="section">
+            <StyledHeading>これは Cluster の構成例です</StyledHeading>
 
-          <Cluster>
-            <StatusLabel type="grey">アコーディオン</StatusLabel>
-            <StatusLabel type="blue">コンボボックス</StatusLabel>
-            <StatusLabel type="red">ディスクロージャ</StatusLabel>
+            <Cluster>
+              <StatusLabel type="grey">アコーディオン</StatusLabel>
+              <StatusLabel type="blue">コンボボックス</StatusLabel>
+              <StatusLabel type="red">ディスクロージャ</StatusLabel>
+            </Cluster>
           </Cluster>
-        </Cluster>
+        </SectioningFragment>
       </Stack>
     </StyledStack>
   )
 }
 
-const Heading = styled(shrHeading)`
+const StyledHeading = styled(Heading)`
   margin-top: 0;
   margin-bottom: 0;
 `

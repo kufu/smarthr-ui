@@ -24,7 +24,7 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
+export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
   ({ from = minDate, to, onSelectDate, value, ...props }, ref) => {
     const themes = useTheme()
     const classNames = useClassNames()
@@ -122,6 +122,7 @@ export const Calendar = forwardRef<HTMLElement, Props & ElementProps>(
   },
 )
 
+// eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
 const Container = styled.section<{ themes: Theme }>`
   ${({ themes: { color, shadow } }) => css`
     display: inline-block;

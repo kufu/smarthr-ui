@@ -2,6 +2,9 @@ import { Story } from '@storybook/react'
 import React from 'react'
 import styled, { css } from 'styled-components'
 
+import { Heading, PageHeading } from '../../Heading'
+import { Aside, Section } from '../../SectioningContent'
+
 import { Sidebar } from './Sidebar'
 
 export default {
@@ -15,28 +18,28 @@ export default {
 export const All: Story = () => {
   return (
     <div style={{ margin: '32px' }}>
-      <h1>Sidebar</h1>
+      <PageHeading>Sidebar</PageHeading>
       <p>
         メインコンテンツとサイドコンテンツの2つのコンテンツをレイアウトするコンポーネントです。メインコンテンツは親要素の幅に対して可変となり、メインコンテンツが設定した最小幅以上の場合は2カラム、最小幅未満になると段落ちします。
       </p>
       <Sidebar>
-        <Side>
-          <h2>サイドコンテンツ</h2>
-        </Side>
-        <Main>
-          <h2>メインコンテンツ</h2>
+        <StyledAside>
+          <Heading>サイドコンテンツ</Heading>
+        </StyledAside>
+        <StyledSection>
+          <Heading>メインコンテンツ</Heading>
           <p>
             メインコンテンツの幅が可変で、メインコンテンツが<Code>contentsMinWidth</Code>
             未満になると段落ちします。<Code>contentsMinWidth</Code>の幅はデフォルトで50%です。
           </p>
-        </Main>
+        </StyledSection>
       </Sidebar>
 
       <hr style={{ margin: '32px' }} />
 
       <Sidebar right contentsMinWidth="600px" gap={{ row: 1, column: 0 }}>
-        <Main>
-          <h2>メインコンテンツ</h2>
+        <StyledSection>
+          <Heading>メインコンテンツ</Heading>
           <p>
             メインコンテンツの<Code>contentsMinWidth</Code>
             を600pxにしています。600px未満になると段落ちします。
@@ -48,21 +51,21 @@ export const All: Story = () => {
             <Code>row</Code>と<Code>column</Code>
             で別々の値を設定できるので、横並びのときは余白なし、段落ちしたら余白をとる、ということが可能です。
           </p>
-        </Main>
-        <Side>
-          <h2>サイドコンテンツ</h2>
+        </StyledSection>
+        <StyledAside>
+          <Heading>サイドコンテンツ</Heading>
           <p>
             サイドコンテンツを右に配置するには<Code>right</Code>プロパティを
             <Code>true</Code>
             にします。
           </p>
-        </Side>
+        </StyledAside>
       </Sidebar>
     </div>
   )
 }
 
-const Main = styled.main(({ theme }) => {
+const StyledSection = styled(Section)(({ theme }) => {
   const { color, spacing } = theme
 
   return css`
@@ -72,7 +75,7 @@ const Main = styled.main(({ theme }) => {
   `
 })
 
-const Side = styled.aside(({ theme }) => {
+const StyledAside = styled(Aside)(({ theme }) => {
   const { color, spacing } = theme
 
   return css`

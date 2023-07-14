@@ -70,6 +70,7 @@ export const All: Story = () => (
       </figcaption>
       <LineUp vAlign="center">
         <StatusLabel type="blue">完了</StatusLabel>
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <Heading>レイアウトコンポーネントの調整</Heading>
       </LineUp>
     </figure>
