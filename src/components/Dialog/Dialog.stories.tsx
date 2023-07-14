@@ -510,6 +510,11 @@ export const Remote_Trigger_Action_Dialog: Story = () => {
           onClickAction={(close) => {
             close()
           }}
+          onToggle={(isOpen) => {
+            console.log(`isOpen: ${isOpen}`)
+          }}
+          onOpen={() => console.log(`open!`)}
+          onClose={() => console.log(`close!`)}
         >
           <Description>Remote Trigger Action Dialog.</Description>
         </RemoteTriggerActionDialog>
