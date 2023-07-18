@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [34.2.0](https://github.com/kufu/smarthr-ui/compare/v34.1.0...v34.2.0) (2023-07-18)
+
+
+### Features
+
+* PageHeadingコンポーネントを追加 ([#3546](https://github.com/kufu/smarthr-ui/issues/3546)) ([691df20](https://github.com/kufu/smarthr-ui/commit/691df20871f56ecfdf612c56f26a60dddb73f869))
+
+
+### Bug Fixes
+
+* DropdownMenuButton内にdisabledなButtonコンポーネントを設置するとstyle崩れが発生する問題を修正 ([#3559](https://github.com/kufu/smarthr-ui/issues/3559)) ([e88120c](https://github.com/kufu/smarthr-ui/commit/e88120c2876146ab3e364332166961b1a3990562))
+
 ## [34.1.0](https://github.com/kufu/smarthr-ui/compare/v34.0.0...v34.1.0) (2023-07-11)
 
 
