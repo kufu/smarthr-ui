@@ -12,12 +12,13 @@ type BaseProps = PropsWithChildren<{
 type SectioningContentProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps> & BaseProps
 
 const SectioningContent: FC<SectioningContentProps> = ({ children, baseLevel, ...props }) => (
-  <Wrapper {...props}>
+  <WrapperSection {...props}>
     <SectioningFragment baseLevel={baseLevel}>{children}</SectioningFragment>
-  </Wrapper>
+  </WrapperSection>
 )
 
-const Wrapper = styled.section``
+// eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+const WrapperSection = styled.section``
 
 type Props = Omit<React.ComponentProps<typeof SectioningContent>, 'as'>
 

@@ -18,7 +18,9 @@ type Props = {
   className?: string
   /** ヘッダ部分のテキストのスタイル */
   headingType?: HeadingTypes
-  /** ヘッダ部分のタグ指定 */
+  /**
+   * @deprecated headingTag属性は非推奨です
+   */
   headingTag?: HeadingTagTypes
 }
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
@@ -60,6 +62,7 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
   }, [onClickTrigger, name, isExpanded, onClickProps, expandedItems, expandableMultiply])
 
   return (
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading tag={headingTag} type={headingType}>
       <Button
         {...props}

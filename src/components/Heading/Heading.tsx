@@ -40,6 +40,7 @@ const generateTagProps = (level: number, tag?: HeadingTagTypes, visuallyHidden?:
   let role = undefined
   let ariaLevel = undefined
 
+  // TODO: h1はPageHeadingで設定するため、自動計算では必ずh2以下になるようにする
   if (level > 6) {
     role = 'heading'
     ariaLevel = level
@@ -98,13 +99,16 @@ export const Heading: VFC<Props & ElementProps> = ({
     className: `${type} ${className} ${classNames.wrapper}`,
   }
 
-  return visuallyHidden ? (
-    <VisuallyHiddenText {...actualProps} />
-  ) : (
-    <ResetText {...actualProps} leading="TIGHT" />
-  )
+  return visuallyHidden ? <VisuallyHiddenText {...actualProps} /> : <ResetText {...actualProps} />
 }
 
-const ResetText = styled(Text)`
+export const PageHeading: VFC<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>> = (props) => (
+  // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+  <Heading {...props} tag="h1" />
+)
+
+const ResetText = styled(Text).attrs(() => ({
+  leading: 'TIGHT' as React.ComponentProps<typeof Text>['leading'],
+}))`
   margin: unset;
 `

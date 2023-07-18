@@ -1,5 +1,7 @@
 import React, { ReactElement, cloneElement, useCallback, useMemo } from 'react'
 
+import { Button } from '../Button'
+
 import { TRIGGER_EVENT } from './useRemoteTrigger'
 
 const onClickRemoteDialogTrigger = (e: React.MouseEvent<HTMLElement>) => {
@@ -10,11 +12,13 @@ const onClickRemoteDialogTrigger = (e: React.MouseEvent<HTMLElement>) => {
   )
 }
 
-export const RemoteDialogTrigger: React.FC<{
-  targetId: string
-  onClick?: (open: () => void) => void
-  children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls'>
-}> = ({ targetId, children, onClick }) => {
+export const RemoteDialogTrigger: React.FC<
+  Pick<React.ComponentProps<typeof Button>, 'variant'> & {
+    targetId: string
+    onClick?: (open: () => void) => void
+    children: Omit<ReactElement, 'onClick' | 'aria-haspopup' | 'aria-controls' | 'variant'>
+  }
+> = ({ targetId, children, onClick, variant }) => {
   const actualOnClick = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       if (onClick) {
@@ -33,6 +37,7 @@ export const RemoteDialogTrigger: React.FC<{
         onClick: actualOnClick,
         'aria-haspopup': 'true',
         'aria-controls': targetId,
+        variant,
       }),
     [children, targetId, actualOnClick],
   )

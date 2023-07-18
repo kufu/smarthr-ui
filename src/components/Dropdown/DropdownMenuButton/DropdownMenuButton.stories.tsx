@@ -58,6 +58,9 @@ const Template: React.FC<Omit<ComponentProps<typeof DropdownMenuButton>, 'childr
     <RemoteDialogTrigger targetId="hoge">
       <Button>Triggerのテスト</Button>
     </RemoteDialogTrigger>
+    <RemoteDialogTrigger targetId="hoge">
+      <Button disabled={true}>Triggerのテスト</Button>
+    </RemoteDialogTrigger>
   </DropdownMenuButton>
 )
 

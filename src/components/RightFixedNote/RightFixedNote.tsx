@@ -90,9 +90,7 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
 
         {textareaLabel && (
           <label htmlFor={textareaId}>
-            <TextareaLabel tag="span" type="subBlockTitle" themes={theme}>
-              {textareaLabel}
-            </TextareaLabel>
+            <TextareaLabelText themes={theme}>{textareaLabel}</TextareaLabelText>
           </label>
         )}
         <StyledTextarea
@@ -140,7 +138,11 @@ const SectionHeading = styled(Heading).attrs(() => ({
   }}
 `
 
-const TextareaLabel = styled(Heading)<{ themes: Theme }>`
+// eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+const TextareaLabelText = styled(Heading).attrs(() => ({
+  tag: 'span',
+  type: 'subBlockTitle',
+}))<{ themes: Theme }>`
   display: inline-block;
   margin-bottom: ${({ themes }) => themes.spacingByChar(1)};
 `

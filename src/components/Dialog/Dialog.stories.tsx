@@ -87,36 +87,38 @@ export const Default: Story = () => {
           ariaLabel="Dialog"
           data-test="dialog-content"
         >
-          <Title>Dialog</Title>
-          <Description>
-            The value of isOpen must be managed by you, but you can customize content freely.
-          </Description>
-          <Content>
-            <DatePicker
-              name="dialog_datepicker"
-              value={date?.toDateString()}
-              formatDate={(_date) => (_date ? _date.toDateString() : '')}
-              onChangeDate={(_date) => setDate(_date)}
-              data-test="dialog-datepicker"
-            />
-          </Content>
-          <RadioList>
-            <li>
-              <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChangeValue}>
-                Apple
-              </RadioButton>
-            </li>
-            <li>
-              <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChangeValue}>
-                Orange
-              </RadioButton>
-            </li>
-            <li>
-              <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChangeValue}>
-                Grape
-              </RadioButton>
-            </li>
-          </RadioList>
+          <Section>
+            <Heading>Dialog</Heading>
+            <Description>
+              The value of isOpen must be managed by you, but you can customize content freely.
+            </Description>
+            <Content>
+              <DatePicker
+                name="dialog_datepicker"
+                value={date?.toDateString()}
+                formatDate={(_date) => (_date ? _date.toDateString() : '')}
+                onChangeDate={(_date) => setDate(_date)}
+                data-test="dialog-datepicker"
+              />
+            </Content>
+            <RadioList>
+              <li>
+                <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChangeValue}>
+                  Apple
+                </RadioButton>
+              </li>
+              <li>
+                <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChangeValue}>
+                  Orange
+                </RadioButton>
+              </li>
+              <li>
+                <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChangeValue}>
+                  Grape
+                </RadioButton>
+              </li>
+            </RadioList>
+          </Section>
           <Footer>
             <Button onClick={onClickClose} data-test="dialog-closer">
               close
@@ -141,10 +143,12 @@ export const Default: Story = () => {
           id="dialog-focus"
           ariaLabel="特定の要素をフォーカスするダイアログ"
         >
-          <Title>特定の要素をフォーカスするダイアログ</Title>
-          <Content>
-            <Input ref={inputRef} name="input_focus_target" data-test="input-focus-target" />
-          </Content>
+          <Section>
+            <Heading>特定の要素をフォーカスするダイアログ</Heading>
+            <Content>
+              <Input ref={inputRef} name="input_focus_target" data-test="input-focus-target" />
+            </Content>
+          </Section>
           <Footer>
             <Button onClick={onClickClose} data-test="dialog-closer">
               close
@@ -1037,10 +1041,12 @@ export const Body以外のPortalParent: Story = () => {
         data-test="dialog-content"
         portalParent={portalParentRef}
       >
-        <Title>Dialog</Title>
-        <Content>
-          <p>Dialog を近接要素に生成しています。</p>
-        </Content>
+        <Section>
+          <Heading>Dialog</Heading>
+          <Content>
+            <p>Dialog を近接要素に生成しています。</p>
+          </Content>
+        </Section>
         <Footer>
           <Button onClick={onClickClose} data-test="dialog-closer">
             閉じる
@@ -1088,14 +1094,6 @@ export const Body以外のPortalParent: Story = () => {
   )
 }
 
-const Title = styled.h2`
-  padding: 16px 24px;
-  margin: 0;
-  font-size: ${({ theme }) => theme.fontSize.L};
-  font-weight: normal;
-  line-height: 1;
-  border-bottom: ${({ theme }) => theme.border.shorthand};
-`
 const Description = styled.p`
   margin: 16px 24px;
   line-height: 1.5;
@@ -1131,7 +1129,7 @@ const TriggerList = styled.ul`
     margin: 8px;
   }
 `
-const ModelessHeading = styled.h2`
+const ModelessHeading = styled(Heading)`
   font-size: 1em;
   margin: 0;
   font-weight: normal;
