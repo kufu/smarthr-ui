@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "34.2.0",
+  "version": "34.2.1",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "@smarthr/wareki": "^1.2.0",
@@ -68,7 +68,7 @@
     "postcss-syntax": "^0.36.2",
     "prettier": "^2.8.8",
     "prettier-config-smarthr": "^1.0.0",
-    "puppeteer": "^20.8.2",
+    "puppeteer": "^20.8.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
@@ -76,7 +76,7 @@
     "standard-version": "^9.3.2",
     "storybook": "^7.0.27",
     "styled-components": "^5.3.11",
-    "styled-reset": "^4.4.7",
+    "styled-reset": "^4.5.1",
     "stylelint": "^15.10.1",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^1.1.0",

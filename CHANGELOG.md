@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [34.2.1](https://github.com/kufu/smarthr-ui/compare/v34.2.0...v34.2.1) (2023-07-18)
+
+
+### Bug Fixes
+
+* PageHeadingのexportミスを修正 ([#3570](https://github.com/kufu/smarthr-ui/issues/3570)) ([1a37885](https://github.com/kufu/smarthr-ui/commit/1a3788500527d19bfc8708b7540c46e8381455e0))
+
 ## [34.2.0](https://github.com/kufu/smarthr-ui/compare/v34.1.0...v34.2.0) (2023-07-18)
 
 
