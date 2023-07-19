@@ -19,14 +19,12 @@ import { TooltipPortal } from './TooltipPortal'
 import { useClassNames } from './useClassNames'
 
 const subscribeFullscreenChange = (callback: () => void) => {
-  if (typeof window !== 'undefined') window.addEventListener('fullscreenchange', callback)
+  window.addEventListener('fullscreenchange', callback)
   return () => {
-    if (typeof window !== 'undefined') window.removeEventListener('fullscreenchange', callback)
+    window.removeEventListener('fullscreenchange', callback)
   }
 }
-const getFullscreenElement = () => {
-  return typeof window !== 'undefined' ? document.fullscreenElement : null
-}
+const getFullscreenElement = () => document.fullscreenElement
 const getFullscreenElementOnSSR = () => null
 
 type Props = {
