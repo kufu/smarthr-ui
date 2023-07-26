@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactNode } from 'react'
+import React, { PropsWithChildren, ReactNode, TableHTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -8,11 +8,17 @@ import { SpreadsheetTableCorner } from './SpreadsheetTableCorner'
 type Props = PropsWithChildren<{
   data?: ReactNode[][]
 }>
+type ElementProps = Omit<TableHTMLAttributes<HTMLTableElement>, keyof Props>
 
-export const SpreadsheetTable: React.FC<Props> = ({ data, children }) => {
+export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
+  data,
+  className = '',
+  children,
+  ...props
+}) => {
   const theme = useTheme()
   return (
-    <Wrapper themes={theme}>
+    <Wrapper {...props} themes={theme} className={`smarthr-ui-SpreadsheetTable ${className}`}>
       {data && (
         <>
           <thead>

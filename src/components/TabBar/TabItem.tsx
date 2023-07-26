@@ -62,6 +62,10 @@ const resetButtonStyle = css`
   padding: 0;
   appearance: none;
 `
+
+const borderWidth = 3
+const ItemHeight = 40
+
 const ItemButton = styled.button<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
@@ -70,8 +74,7 @@ const ItemButton = styled.button<{ themes: Theme }>`
       font-weight: bold;
       font-size: ${fontSize.M};
       color: ${color.TEXT_GREY};
-      height: 40px;
-      border-bottom: solid 3px transparent;
+      height: ${ItemHeight + borderWidth}px;
       padding: 0 ${spacingByChar(1.5)};
       box-sizing: border-box;
       transition: ${isTouchDevice
@@ -81,7 +84,8 @@ const ItemButton = styled.button<{ themes: Theme }>`
       &.selected {
         position: relative;
         color: ${color.TEXT_BLACK};
-        border-color: ${color.MAIN};
+        height: ${ItemHeight}px;
+        border-bottom: solid ${borderWidth}px ${color.MAIN};
       }
 
       :hover {

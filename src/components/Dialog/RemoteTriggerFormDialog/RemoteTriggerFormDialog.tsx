@@ -6,8 +6,21 @@ import { useRemoteTrigger } from '../useRemoteTrigger'
 type Props = Omit<React.ComponentProps<typeof FormDialog>, 'isOpen' | 'onClickClose' | 'id'> &
   Parameters<typeof useRemoteTrigger>[0]
 
-export const RemoteTriggerFormDialog: React.FC<Props> = ({ id, onClickClose, ...props }) => {
-  const { isOpen, onClickClose: actualOnClickClose } = useRemoteTrigger({ id, onClickClose })
+export const RemoteTriggerFormDialog: React.FC<Props> = ({
+  id,
+  onClickClose,
+  onToggle,
+  onOpen,
+  onClose,
+  ...props
+}) => {
+  const { isOpen, onClickClose: actualOnClickClose } = useRemoteTrigger({
+    id,
+    onClickClose,
+    onToggle,
+    onOpen,
+    onClose,
+  })
 
   return <FormDialog {...props} id={id} isOpen={isOpen} onClickClose={actualOnClickClose} />
 }

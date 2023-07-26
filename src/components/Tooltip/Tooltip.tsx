@@ -1,4 +1,12 @@
-import React, { FC, HTMLAttributes, ReactElement, ReactNode, useRef, useState } from 'react'
+import React, {
+  FC,
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 import { createPortal } from 'react-dom'
 import styled, { css } from 'styled-components'
 
@@ -9,6 +17,15 @@ import { Props as BalloonProps } from '../Balloon'
 
 import { TooltipPortal } from './TooltipPortal'
 import { useClassNames } from './useClassNames'
+
+const subscribeFullscreenChange = (callback: () => void) => {
+  window.addEventListener('fullscreenchange', callback)
+  return () => {
+    window.removeEventListener('fullscreenchange', callback)
+  }
+}
+const getFullscreenElement = () => document.fullscreenElement
+const getFullscreenElementOnSSR = () => null
 
 type Props = {
   /** ツールチップ内に表示するメッセージ */
@@ -51,11 +68,20 @@ export const Tooltip: FC<Props & ElementProps> = ({
   onBlur,
   ...props
 }) => {
-  const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
+  const [portalRoot, setPortalRoot] = useState<Element | null>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const tooltipId = useId()
+  const fullscreenElement = useSyncExternalStore(
+    subscribeFullscreenChange,
+    getFullscreenElement,
+    getFullscreenElementOnSSR,
+  )
+
+  useEnhancedEffect(() => {
+    setPortalRoot(fullscreenElement ?? document.body)
+  }, [fullscreenElement])
 
   const getHandlerToShow = <T,>(handler?: (e: T) => void) => {
     return (e: T) => {
@@ -91,16 +117,6 @@ export const Tooltip: FC<Props & ElementProps> = ({
   }
 
   const isIcon = triggerType === 'icon'
-
-  useEnhancedEffect(() => {
-    const element = document.createElement('div')
-    setPortalRoot(element)
-    document.body.appendChild(element)
-    return () => {
-      document.body.removeChild(element)
-    }
-  }, [])
-
   const theme = useTheme()
   const classNames = useClassNames()
   const childrenWithProps =
@@ -135,6 +151,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
             isMultiLine={multiLine}
             horizontal={horizontal}
             vertical={vertical}
+            fullscreenElement={fullscreenElement}
           />,
           portalRoot,
         )}

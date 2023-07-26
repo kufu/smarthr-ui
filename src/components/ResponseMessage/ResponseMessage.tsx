@@ -13,11 +13,9 @@ type Props = PropsWithChildren<{
   type: 'info' | 'success' | 'warning' | 'error' | 'sync'
 }>
 
-export const ResponseMessage: React.FC<Props & ComponentProps<typeof FaCheckCircleIcon>> = ({
-  type,
-  children,
-  ...other
-}) => {
+export const ResponseMessage: React.FC<
+  Props & Omit<ComponentProps<typeof FaCheckCircleIcon>, 'text'>
+> = ({ type, children, ...other }) => {
   const theme = useTheme()
   const { color } = theme
 

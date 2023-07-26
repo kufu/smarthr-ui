@@ -16,6 +16,7 @@ type Props = {
   isMultiLine?: boolean
   horizontal: 'left' | 'center' | 'right' | 'auto'
   vertical: 'top' | 'middle' | 'bottom' | 'auto'
+  fullscreenElement: Element | null
 }
 
 export const TooltipPortal: FC<Props> = ({
@@ -27,6 +28,7 @@ export const TooltipPortal: FC<Props> = ({
   isMultiLine = false,
   horizontal,
   vertical,
+  fullscreenElement,
 }) => {
   const theme = useTheme()
   const portalRef = useRef<HTMLDivElement>(null)
@@ -88,10 +90,16 @@ export const TooltipPortal: FC<Props> = ({
     if (!isVisible || !portalRef.current || !actualHorizontal || !actualVertical || !parentRect) {
       return
     }
+    const scrollOffsetTop = fullscreenElement ? fullscreenElement.scrollTop : window.scrollY
+    const scrollOffsetLeft = fullscreenElement ? fullscreenElement.scrollLeft : window.scrollX
     const { offsetWidth, offsetHeight } = portalRef.current
     setRect(
       getTooltipRect({
         parentRect,
+        scrollOffset: {
+          top: scrollOffsetTop,
+          left: scrollOffsetLeft,
+        },
         tooltipSize: {
           width: offsetWidth,
           height: offsetHeight,
@@ -102,7 +110,7 @@ export const TooltipPortal: FC<Props> = ({
         outerMargin,
       }),
     )
-  }, [actualHorizontal, actualVertical, isIcon, isVisible, parentRect])
+  }, [actualHorizontal, actualVertical, fullscreenElement, isIcon, isVisible, parentRect])
 
   const classNames = useClassNames()
 
