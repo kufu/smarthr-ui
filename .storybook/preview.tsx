@@ -11,6 +11,8 @@ import { ThemeProvider as SCThemeProvider, createGlobalStyle } from 'styled-comp
 import CssBaseLine from 'smarthr-normalize-css'
 import { defaultLeading, defaultColor } from '../src/'
 
+import '../src/styles/index.css'
+
 const preview: Preview = {
   globalTypes: {
     reset: {
