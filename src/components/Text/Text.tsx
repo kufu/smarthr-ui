@@ -1,5 +1,6 @@
-import React, { CSSProperties, HTMLAttributes } from 'react'
+import React, { CSSProperties, HTMLAttributes, PropsWithChildren } from 'react'
 import styled, { css } from 'styled-components'
+import { VariantProps, tv } from 'tailwind-variants'
 
 import { useTheme } from '../../hooks/useTheme'
 import { TextColors } from '../../themes/createColor'
@@ -35,6 +36,68 @@ export type Props = TextProps &
  * @param [children]
  */
 export const Text: React.FC<Props> = ({ color, as = 'span', ...props }) => <Wrapper {...props} $color={color} as={props.emphasis ? 'em' : as} />
+
+const text = tv({
+  variants: {
+    size: {
+      '2xs': 'text-2xs',
+      xs: 'text-xs',
+      s: 'text-sm',
+      m: 'text-base',
+      l: 'text-lg',
+      xl: 'text-xl',
+      '2xl': 'text-2xl',
+    },
+    bold: {
+      true: 'font-bold',
+    },
+    italic: {
+      true: 'italic',
+    },
+    color: {
+      TEXT_BLACK: 'text-black',
+      TEXT_WHITE: 'text-white',
+      TEXT_GREY: 'text-grey',
+      TEXT_DISABLED: 'text-disabled',
+      TEXT_LINK: 'text-link',
+      inherit: 'text-inherit',
+    },
+    leading: {
+      none: 'leading-none',
+      normal: 'leading-normal',
+      tight: 'leading-tight',
+      loose: 'leading-loose',
+    },
+    whiteSpace: {
+      normal: 'whitespacing-normal',
+      nowrap: 'whitespacing-no-wrap',
+      pre: 'whitespacing-pre',
+      'pre-line': 'whitespacing-pre-line',
+      'pre-wrap': 'whitespacing-pre-wrap',
+    },
+  },
+  defaultVariants: {},
+})
+
+// VariantProps を使うとコメントが書けない〜🥹
+type NewTextVariants = VariantProps<typeof text>
+type NewTextProps = PropsWithChildren<
+  NewTextVariants & {
+    /** テキストコンポーネントの HTML タグ名。初期値は span */
+    as?: string | React.ComponentType<any> | undefined
+    /** 強調するかどうかの真偽値。指定すると em 要素になる */
+    emphasis?: boolean
+  }
+>
+
+export const NewText: React.FC<NewTextProps> = ({
+  bold,
+  emphasis,
+  as: Component = emphasis ? 'em' : 'span',
+  ...props
+}) => {
+  return <Component {...props} className={text({ ...props, bold: emphasis || bold })} />
+}
 
 const Wrapper = styled.span<
   Omit<TextProps, 'color'> & {
