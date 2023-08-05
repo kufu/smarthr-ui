@@ -86,7 +86,7 @@ const badgeBaseStyle = css<{ themes: Theme; colorName: ColorName; withChildren: 
     align-items: center;
     justify-content: center;
 
-    box-shadow: 0 0 0 1px ${color.WHITE};
+    box-shadow: 0 0 0 1px ${colorName === 'WARNING_YELLOW' ? color.TEXT_BLACK : color.WHITE};
     border-radius: ${radius.full};
     background-color: ${color[colorName]};
   `}

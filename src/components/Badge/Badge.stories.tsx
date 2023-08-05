@@ -57,7 +57,8 @@ export const All: StoryFn = () => {
               </Badge>
             </Cluster>
             <p>
-              標準では0値を表示しません。<code>showZero</code> を与えると表示します。
+              標準では<code>count=0</code>の場合は Badge を表示しません。<code>showZero</code>{' '}
+              を与えると表示します。
             </p>
             <Cluster gap={0.75} align="center">
               <Badge count={0} />
