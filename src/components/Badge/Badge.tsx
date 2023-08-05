@@ -4,8 +4,14 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Text } from '../Text'
 
-const definedColors = ['MAIN', 'DANGER'] as const
-type DefinedColor = (typeof definedColors)[number]
+const definedColors = {
+  grey: 'TEXT_GREY',
+  blue: 'MAIN',
+  yellow: 'WARNING_YELLOW',
+  red: 'DANGER',
+} as const
+type Color = keyof typeof definedColors
+type ColorName = (typeof definedColors)[Color]
 
 type BaseProps = PropsWithChildren<{
   /** 件数 */
@@ -14,39 +20,40 @@ type BaseProps = PropsWithChildren<{
   overflowCount?: number
   /** 0値を表示するかどうか */
   showZero?: boolean
-  /** 種類。dot： ドット表示 */
-  type?: 'dot'
-  /** 色 */
-  color?: DefinedColor
+  /** 色の種類 */
+  type?: Color
+  /** ドット表示するかどうか */
+  dot?: boolean
 }>
 type BadgeProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps> & BaseProps
+
+const getColorName = (type: Color): ColorName => definedColors[type]
 
 export const Badge: React.FC<BadgeProps> = ({
   count,
   overflowCount = 99,
   showZero = false,
-  type,
-  color = 'MAIN',
+  type = 'blue',
+  dot = false,
   children,
   ...props
 }) => {
   const theme = useTheme()
 
   const actualCount = count && count > 0 ? count : showZero ? 0 : undefined
-  const displayDot = type === 'dot'
   const badgeProps = {
     themes: theme,
-    colorName: color,
+    colorName: getColorName(type),
     withChildren: !!children,
   }
 
   // ドット表示でもなく、0値を表示するでもない場合は何も表示しない
-  if (!displayDot && !children && actualCount === undefined) return null
+  if (!dot && !children && actualCount === undefined) return null
 
   return (
     <BadgeWrapper {...props}>
       {children}
-      {displayDot ? (
+      {dot ? (
         <Dot {...badgeProps} />
       ) : (
         actualCount !== undefined && (
@@ -64,7 +71,7 @@ const BadgeWrapper = styled.span`
   display: inline-flex;
   display: flex;
 `
-const badgeBaseStyle = css<{ themes: Theme; colorName: DefinedColor; withChildren: boolean }>`
+const badgeBaseStyle = css<{ themes: Theme; colorName: ColorName; withChildren: boolean }>`
   ${({ themes: { color, radius }, colorName, withChildren }) => css`
     ${withChildren &&
     css`
@@ -86,18 +93,18 @@ const badgeBaseStyle = css<{ themes: Theme; colorName: DefinedColor; withChildre
 `
 const Pill = styled(Text).attrs({
   size: 'XS',
-})<{ themes: Theme; colorName: DefinedColor; withChildren: boolean }>`
-  ${({ themes: { color } }) => css`
+})<{ themes: Theme; colorName: ColorName; withChildren: boolean }>`
+  ${({ themes: { color }, colorName }) => css`
     ${badgeBaseStyle}
 
     padding-inline: 0.5em;
     font-variant-numeric: tabular-nums;
-    color: ${color.WHITE};
+    color: ${colorName === 'WARNING_YELLOW' ? color.TEXT_BLACK : color.WHITE};
     min-width: 1.75em;
     height: 1.75em;
   `}
 `
-const Dot = styled.span<{ themes: Theme; colorName: DefinedColor; withChildren: boolean }>`
+const Dot = styled.span<{ themes: Theme; colorName: ColorName; withChildren: boolean }>`
   ${badgeBaseStyle}
 
   width: 0.625em;

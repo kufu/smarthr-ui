@@ -26,15 +26,15 @@ export const All: StoryFn = () => {
               <Badge count={100} />
             </Cluster>
             <p>
-              <code>type=&quot;dot&quot;</code> を与えるとドットのみの表示になります。
+              <code>dot</code> を与えるとドットのみの表示になります。
               <code>count</code> を与えても無視します。
               <br />
               視覚情報しか持たないため、別途アクセシブルネームを与える必要があります。
             </p>
             <Cluster gap={0.75} align="center">
-              <Badge type="dot" />
+              <Badge dot />
               <VisuallyHiddenText>通知があります</VisuallyHiddenText>
-              <Badge type="dot" count={9} />
+              <Badge dot count={9} />
               <VisuallyHiddenText>通知があります</VisuallyHiddenText>
             </Cluster>
             <p>
@@ -52,7 +52,7 @@ export const All: StoryFn = () => {
               <Badge count={9}>
                 <FaBellIcon />
               </Badge>
-              <Badge type="dot">
+              <Badge dot>
                 <FaBellIcon />
               </Badge>
             </Cluster>
@@ -76,14 +76,14 @@ export const All: StoryFn = () => {
         <Dt>色</Dt>
         <dd>
           <Cluster gap={1.5}>
-            <Badge count={9}>
-              <FaBellIcon />
-            </Badge>
-            <Badge count={9} color="DANGER">
-              <FaBellIcon />
-            </Badge>
-            <Badge type="dot" />
-            <Badge type="dot" color="DANGER" />
+            <Badge count={9} />
+            <Badge count={9} type="grey" />
+            <Badge count={9} type="yellow" />
+            <Badge count={9} type="red" />
+            <Badge dot />
+            <Badge dot type="grey" />
+            <Badge dot type="yellow" />
+            <Badge dot type="red" />
           </Cluster>
         </dd>
       </Stack>
