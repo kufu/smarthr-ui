@@ -27,8 +27,6 @@ type BaseProps = PropsWithChildren<{
 }>
 type BadgeProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps> & BaseProps
 
-const getColorName = (type: Color): ColorName => definedColors[type]
-
 export const Badge: React.FC<BadgeProps> = ({
   count,
   overflowCount = 99,
@@ -43,7 +41,7 @@ export const Badge: React.FC<BadgeProps> = ({
   const actualCount = count && count > 0 ? count : showZero ? 0 : undefined
   const badgeProps = {
     themes: theme,
-    colorName: getColorName(type),
+    colorName: definedColors[type],
     withChildren: !!children,
   }
 
@@ -69,7 +67,6 @@ export const Badge: React.FC<BadgeProps> = ({
 const BadgeWrapper = styled.span`
   position: relative;
   display: inline-flex;
-  display: flex;
 `
 const badgeBaseStyle = css<{ themes: Theme; colorName: ColorName; withChildren: boolean }>`
   ${({ themes: { color, radius }, colorName, withChildren }) => css`
