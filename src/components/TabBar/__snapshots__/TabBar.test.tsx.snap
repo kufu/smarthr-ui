@@ -33,8 +33,7 @@ exports[`TabBar should be match snapshot 1`] = `
   font-weight: bold;
   font-size: 1rem;
   color: #706d65;
-  height: 40px;
-  border-bottom: solid 3px transparent;
+  height: 43px;
   padding: 0 24px;
   box-sizing: border-box;
   -webkit-transition: background-color .3s ease-out,color .3s ease-out;
@@ -44,7 +43,8 @@ exports[`TabBar should be match snapshot 1`] = `
 .c2.selected {
   position: relative;
   color: #23221e;
-  border-color: #0077c7;
+  height: 40px;
+  border-bottom: solid 3px #0077c7;
 }
 
 .c2:hover {

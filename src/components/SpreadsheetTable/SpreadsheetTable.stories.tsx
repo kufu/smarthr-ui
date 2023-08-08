@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react'
 import React from 'react'
+import styled, { css } from 'styled-components'
 
 import { Stack } from '../Layout'
 import { Text } from '../Text'
@@ -10,6 +11,9 @@ import { SpreadsheetTableCorner } from './SpreadsheetTableCorner'
 export default {
   title: 'Data Display（データ表示）/SpreadsheetTable',
   component: SpreadsheetTable,
+  parameters: {
+    withTheming: true,
+  },
 }
 
 export const All: StoryFn = () => {
@@ -41,6 +45,14 @@ export const All: StoryFn = () => {
         </Text>
         <dd>
           <SpreadsheetTable data={data} />
+        </dd>
+      </Stack>
+      <Stack>
+        <Text italic color="TEXT_GREY" as="dt">
+          スタイルの上書き
+        </Text>
+        <dd>
+          <StyledTable data={data} />
         </dd>
       </Stack>
       <Stack>
@@ -108,3 +120,12 @@ export const All: StoryFn = () => {
     </Stack>
   )
 }
+
+const StyledTable = styled(SpreadsheetTable)`
+  ${({ theme: { fontSize } }) => css`
+    th,
+    td {
+      font-size: ${fontSize.M};
+    }
+  `}
+`

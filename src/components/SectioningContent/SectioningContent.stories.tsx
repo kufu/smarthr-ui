@@ -23,8 +23,10 @@ export const SectioningContent: StoryFn = () => (
   <>
     <PageHeading>h1</PageHeading>
     <Section>
-      <PageHeading>PageHeading within SectioningContent: h1</PageHeading>
+      {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+      <PageHeading>PageHeading: Headingと違い、SectioningContent中でも常にh1を出力する</PageHeading>
     </Section>
+    {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
     <Heading>Heading without SectioningContent: h1</Heading>
     <Nav>
       <Heading>Nav: h2</Heading>

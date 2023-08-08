@@ -84,7 +84,7 @@ export {
   AppNaviCustomTagProps,
 } from './components/AppNavi'
 export { TabBar, TabItem } from './components/TabBar'
-export { Heading } from './components/Heading'
+export { Heading, PageHeading } from './components/Heading'
 export { HeadlineArea } from './components/HeadlineArea'
 export { Select } from './components/Select'
 export { DropZone } from './components/DropZone'
@@ -123,6 +123,7 @@ export { SectioningFragment, Article, Aside, Nav, Section } from './components/S
 export { VisuallyHiddenText } from './components/VisuallyHiddenText'
 export * from './components/SpreadsheetTable'
 export * from './components/ResponseMessage'
+export * from './components/Badge'
 
 // layout components
 export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'

@@ -2,7 +2,7 @@ import React, { FC, HTMLAttributes, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { Heading } from '../Heading'
+import { PageHeading } from '../Heading'
 import { Center, Stack } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { TextLink } from '../TextLink'
@@ -51,7 +51,7 @@ export const MessageScreen: FC<Props & ElementProps> = ({
         <Logo className={classNames.logo}>{logo}</Logo>
 
         <Stack align="center">
-          {title && <Heading className={classNames.title}>{title}</Heading>}
+          {title && <PageHeading className={classNames.title}>{title}</PageHeading>}
 
           {children && <Content className={classNames.content}>{children}</Content>}
 

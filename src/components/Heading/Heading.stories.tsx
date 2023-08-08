@@ -12,32 +12,41 @@ export default {
 }
 
 export const All: Story = () => (
-  <Section>
+  <>
     <StyledPageHeading>Page Heading</StyledPageHeading>
-    <Heading visuallyHidden>Heading</Heading>
-    <List>
-      <li>
-        <Heading>Default(SectionTitle)</Heading>
-      </li>
-      <li>
-        <Heading type="screenTitle">ScreenTitle</Heading>
-      </li>
-      <li>
-        <Heading type="sectionTitle">SectionTitle</Heading>
-      </li>
-      <li>
-        <Heading type="blockTitle" tag="h3">
-          BlockTitle
-        </Heading>
-      </li>
-      <li>
-        <Heading type="subBlockTitle">SubBlockTitle</Heading>
-      </li>
-      <li>
-        <Heading type="subSubBlockTitle">SubSubBlockTitle</Heading>
-      </li>
-    </List>
-  </Section>
+    <Section>
+      <Heading visuallyHidden>Heading</Heading>
+      <List>
+        <li>
+          <Section>
+            <Heading type="screenTitle">ScreenTitle</Heading>
+          </Section>
+        </li>
+        <li>
+          <Section>
+            <Heading type="sectionTitle">SectionTitle</Heading>
+          </Section>
+        </li>
+        <li>
+          <Section>
+            <Heading type="blockTitle">BlockTitle</Heading>
+          </Section>
+        </li>
+        <li>
+          <Section>
+            <Heading type="subBlockTitle">SubBlockTitle</Heading>
+          </Section>
+        </li>
+        <li>
+          <Section>
+            <Heading type="subSubBlockTitle" tag="h4">
+              SubSubBlockTitle
+            </Heading>
+          </Section>
+        </li>
+      </List>
+    </Section>
+  </>
 )
 All.storyName = 'all'
 

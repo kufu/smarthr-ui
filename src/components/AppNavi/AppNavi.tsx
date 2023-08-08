@@ -2,6 +2,7 @@ import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { Nav } from '../SectioningContent'
 import { StatusLabel as StatusLabelComponent } from '../StatusLabel'
 
 import { AppNaviAnchor, AppNaviAnchorProps } from './AppNaviAnchor'
@@ -42,7 +43,7 @@ export const AppNavi: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
+    <WrapperNav {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       {label && (
         <StatusLabel themes={theme} className={classNames.label}>
           {label}
@@ -118,11 +119,11 @@ export const AppNavi: VFC<Props & ElementProps> = ({
       )}
 
       {children}
-    </Wrapper>
+    </WrapperNav>
   )
 }
 
-const Wrapper = styled.nav<{ themes: Theme }>`
+const WrapperNav = styled(Nav)<{ themes: Theme }>`
   ${({ themes: { color, shadow, spacingByChar } }) => {
     return css`
       display: flex;

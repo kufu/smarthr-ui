@@ -72,10 +72,6 @@ const StyledAnchor = styled.a<{ themes: Theme }>`
       box-shadow: 0 1px 0 0;
       color: ${color.TEXT_LINK};
 
-      &:hover {
-        color: ${color.hoverColor(color.TEXT_LINK)};
-      }
-
       &:not([href]) {
         box-shadow: none;
       }
