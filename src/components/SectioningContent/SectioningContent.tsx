@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, PropsWithChildren, useContext } from 'react'
+import React, { FC, HTMLAttributes, PropsWithChildren, forwardRef, useContext } from 'react'
 import styled from 'styled-components'
 
 import { LevelContext } from './levelContext'
@@ -11,10 +11,12 @@ type BaseProps = PropsWithChildren<{
 }>
 type SectioningContentProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps> & BaseProps
 
-const SectioningContent: FC<SectioningContentProps> = ({ children, baseLevel, ...props }) => (
-  <WrapperSection {...props}>
-    <SectioningFragment baseLevel={baseLevel}>{children}</SectioningFragment>
-  </WrapperSection>
+const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
+  ({ children, baseLevel, ...props }, ref) => (
+    <WrapperSection {...props} ref={ref}>
+      <SectioningFragment baseLevel={baseLevel}>{children}</SectioningFragment>
+    </WrapperSection>
+  ),
 )
 
 // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
