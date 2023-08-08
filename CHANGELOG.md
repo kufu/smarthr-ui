@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [35.0.0](https://github.com/kufu/smarthr-ui/compare/v34.3.1...v35.0.0) (2023-08-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* Headingのtypeのデフォルト値をsectionTitleに、PageHeadingのtypeのデフォルト値をscreenTitleにする (#3561)
+
+### Features
+
+* Badge を追加 ([#3558](https://github.com/kufu/smarthr-ui/issues/3558)) ([c2cd481](https://github.com/kufu/smarthr-ui/commit/c2cd481119c85b0eedbe236871cd34188f40c3c9))
+* Headingのtypeのデフォルト値をsectionTitleに、PageHeadingのtypeのデフォルト値をscreenTitleにする ([#3561](https://github.com/kufu/smarthr-ui/issues/3561)) ([8cc5c6c](https://github.com/kufu/smarthr-ui/commit/8cc5c6cbde2b55a4aa9c4c2463c4ea448b32a6e8))
+* SectioningContent系コンポーネントに対してrefを設定可能にする ([#3607](https://github.com/kufu/smarthr-ui/issues/3607)) ([5127c08](https://github.com/kufu/smarthr-ui/commit/5127c087c3550b50a88206941e0b5cfde9c56731))
+
+
+### Bug Fixes
+
+* TextLink から不要な hover スタイルを削除 ([#3613](https://github.com/kufu/smarthr-ui/issues/3613)) ([ffc6e15](https://github.com/kufu/smarthr-ui/commit/ffc6e15ed7182da5824c04414b8093f3a1153fe5))
+
+### [34.3.1](https://github.com/kufu/smarthr-ui/compare/v34.3.0...v34.3.1) (2023-07-31)
+
 ## [34.3.0](https://github.com/kufu/smarthr-ui/compare/v34.2.1...v34.3.0) (2023-07-26)
 
 

@@ -2,7 +2,7 @@ const path = require('path')
 
 const fs = require('fs-extra')
 const React = require('react')
-const { renderToString } = require('react-dom/server')
+const ReactDOMServer = require('react-dom/server')
 const { ServerStyleSheet, StyleSheetManager } = require('styled-components')
 
 const AccordionPanel = require('../css/components/AccordionPanel/style')
@@ -18,7 +18,7 @@ const styleTags = (() => {
 
     let style
     try {
-      renderToString(
+      ReactDOMServer.renderToString(
         React.createElement(
           StyleSheetManager,
           { sheet: sheet.instance },
