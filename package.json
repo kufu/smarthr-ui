@@ -50,6 +50,7 @@
     "babel-plugin-polyfill-corejs2": "^0.4.5",
     "babel-plugin-polyfill-regenerator": "^0.5.2",
     "chromatic": "^6.20.0",
+    "dependency-cruiser": "^13.1.2",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
     "eslint": "^8.46.0",
     "eslint-config-smarthr": "^6.9.0",
@@ -154,7 +155,8 @@
     "prepare": "husky install",
     "chromatic": "chromatic",
     "write:ui-props": "ts-node scripts/exportUIProps.ts",
-    "export:ui-props": "run-s build:lib write:ui-props"
+    "export:ui-props": "run-s build:lib write:ui-props",
+    "dependency-cruise": "depcruise src/components --output-type dot | dot -T svg > dependency-graph.svg"
   },
   "sideEffects": false,
   "typings": "lib/index.d.ts",
