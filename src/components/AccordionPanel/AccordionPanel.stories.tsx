@@ -73,7 +73,7 @@ const AccordionPanelController: FC = () => {
         ))}
       </Buttons>
 
-      <Base>
+      <AccordionPanelBase>
         <AccordionPanel defaultExpanded={[expandedId]}>
           {arr.map((_, i) => (
             <AccordionPanelItem key={i} name={`accordion-panel-${i}`}>
@@ -84,7 +84,7 @@ const AccordionPanelController: FC = () => {
             </AccordionPanelItem>
           ))}
         </AccordionPanel>
-      </Base>
+      </AccordionPanelBase>
     </Wrapper>
   )
 }
@@ -92,7 +92,7 @@ const AccordionPanelController: FC = () => {
 export const AccordionStyle: Story = () => {
   return (
     <Wrapper>
-      <Base>
+      <AccordionPanelBase>
         <AccordionPanel>
           <BorderList>
             {arr.map((_, i) => (
@@ -107,8 +107,8 @@ export const AccordionStyle: Story = () => {
             ))}
           </BorderList>
         </AccordionPanel>
-      </Base>
-      <Base>
+      </AccordionPanelBase>
+      <AccordionPanelBase>
         <AccordionPanel iconPosition="right">
           <BorderList>
             {arr.map((_, i) => (
@@ -123,8 +123,8 @@ export const AccordionStyle: Story = () => {
             ))}
           </BorderList>
         </AccordionPanel>
-      </Base>
-      <Base>
+      </AccordionPanelBase>
+      <AccordionPanelBase>
         <AccordionPanel displayIcon={false}>
           <BorderList>
             {arr.map((_, i) => (
@@ -139,7 +139,7 @@ export const AccordionStyle: Story = () => {
             ))}
           </BorderList>
         </AccordionPanel>
-      </Base>
+      </AccordionPanelBase>
     </Wrapper>
   )
 }
@@ -148,7 +148,7 @@ AccordionStyle.storyName = 'Accordion style'
 export const ExpandedOptions: Story = () => {
   return (
     <Wrapper>
-      <Base>
+      <AccordionPanelBase>
         <AccordionPanel displayIcon={true} expandableMultiply={true}>
           {arr.map((_, i) => (
             <AccordionPanelItem key={i} name={`expandable-multiply-${i}`}>
@@ -159,8 +159,8 @@ export const ExpandedOptions: Story = () => {
             </AccordionPanelItem>
           ))}
         </AccordionPanel>
-      </Base>
-      <Base>
+      </AccordionPanelBase>
+      <AccordionPanelBase>
         <AccordionPanel displayIcon={true} defaultExpanded={['default-expanded-0']}>
           {arr.map((_, i) => (
             <AccordionPanelItem key={i} name={`default-expanded-${i}`}>
@@ -171,7 +171,7 @@ export const ExpandedOptions: Story = () => {
             </AccordionPanelItem>
           ))}
         </AccordionPanel>
-      </Base>
+      </AccordionPanelBase>
     </Wrapper>
   )
 }
@@ -180,7 +180,7 @@ ExpandedOptions.storyName = 'Expanded options'
 export const Callback: Story = () => {
   return (
     <Wrapper>
-      <Base>
+      <AccordionPanelBase>
         <AccordionPanel displayIcon={false} expandableMultiply={true} onClick={action('Clicked')}>
           {arr.map((_, i) => (
             <AccordionPanelItem key={i} name={`expandable-multiply-${i}`}>
@@ -191,7 +191,7 @@ export const Callback: Story = () => {
             </AccordionPanelItem>
           ))}
         </AccordionPanel>
-      </Base>
+      </AccordionPanelBase>
     </Wrapper>
   )
 }
@@ -208,6 +208,7 @@ const Wrapper = styled.div`
     margin-top: 24px;
   }
 `
+const AccordionPanelBase = styled(Base).attrs({ overflow: 'hidden' })``
 const BorderList = styled.ul(
   ({ theme: { color } }) => css`
     margin: 0;
