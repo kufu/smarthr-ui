@@ -77,7 +77,7 @@
     "storybook": "^7.2.3",
     "styled-components": "^5.3.11",
     "styled-reset": "^4.5.1",
-    "stylelint": "^15.10.2",
+    "stylelint": "^15.10.3",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^1.1.0",
     "stylelint-config-standard": "^34.0.0",
