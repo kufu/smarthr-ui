@@ -183,6 +183,8 @@ export function SingleComboBox<T>({
     }
   }, [onFocus, isFocused])
   const unfocus = useCallback(() => {
+    if (!isFocused) return
+
     onBlur && onBlur()
     setIsFocused(false)
     setIsExpanded(false)
@@ -192,7 +194,7 @@ export function SingleComboBox<T>({
       setInputValue(innerText(defaultItem.label))
       onSelect && onSelect(defaultItem)
     }
-  }, [onBlur, selectedItem, defaultItem, onSelect])
+  }, [isFocused, onBlur, selectedItem, defaultItem, onSelect])
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
