@@ -224,7 +224,6 @@ export function SingleComboBox<T>({
         e.stopPropagation()
         return
       }
-      focus()
       if (inputRef.current) {
         inputRef.current.focus()
       }
@@ -232,7 +231,7 @@ export function SingleComboBox<T>({
         setIsExpanded(true)
       }
     },
-    [disabled, inputRef, isExpanded, setIsExpanded, focus],
+    [disabled, inputRef, isExpanded, setIsExpanded],
   )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
