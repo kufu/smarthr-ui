@@ -52,7 +52,7 @@
     "chromatic": "^6.23.0",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
     "eslint": "^8.47.0",
-    "eslint-config-smarthr": "^6.9.0",
+    "eslint-config-smarthr": "^6.9.1",
     "eslint-plugin-storybook": "^0.6.13",
     "fs-extra": "^11.1.1",
     "glob": "^10.3.3",
