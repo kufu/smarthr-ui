@@ -209,7 +209,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={handleSelectItem}
           onClear={handleClear}
           decorators={{
