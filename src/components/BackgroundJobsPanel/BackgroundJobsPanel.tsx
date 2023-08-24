@@ -112,8 +112,8 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
               <JobIconWrapper>
                 <JobIcon status={job.status} />
               </JobIconWrapper>
-              <JobName themes={themes}>{job.name}</JobName>
-              <JobDesc themes={themes}>{job.description}</JobDesc>
+              <JobNameText themes={themes}>{job.name}</JobNameText>
+              <JobDescText themes={themes}>{job.description}</JobDescText>
               {job.isCancelable && (
                 <CancelButton type="button" onClick={handleClickCancelJob} themes={themes}>
                   キャンセル
@@ -190,7 +190,7 @@ const JobIconWrapper = styled.div`
   flex-shrink: 0;
   line-height: 0;
 `
-const JobName = styled(OmittableJobText)<{ themes: Theme }>(
+const JobNameText = styled(OmittableJobText)<{ themes: Theme }>(
   ({ themes: { fontSize, spacingByChar } }) => {
     return css`
       margin-left: ${spacingByChar(0.5)};
@@ -198,7 +198,7 @@ const JobName = styled(OmittableJobText)<{ themes: Theme }>(
     `
   },
 )
-const JobDesc = styled(OmittableJobText)<{ themes: Theme }>(
+const JobDescText = styled(OmittableJobText)<{ themes: Theme }>(
   ({ themes: { fontSize, spacingByChar } }) => {
     return css`
       margin-left: ${spacingByChar(0.5)};
