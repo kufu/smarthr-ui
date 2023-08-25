@@ -86,7 +86,7 @@
     "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",
     "ttypescript": "^1.5.15",
-    "typescript": "^5.1.6",
+    "typescript": "^5.2.2",
     "typescript-plugin-styled-components": "^3.0.0",
     "wait-on": "^7.0.1",
     "webpack": "^5.88.2"
