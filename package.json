@@ -75,7 +75,7 @@
     "smarthr-normalize-css": "^1.1.0",
     "standard-version": "^9.3.2",
     "storybook": "^7.3.2",
-    "styled-components": "^5.3.11",
+    "styled-components": "^6.0.7",
     "styled-reset": "^4.5.1",
     "stylelint": "^15.10.3",
     "stylelint-config-prettier": "^9.0.5",
@@ -94,7 +94,7 @@
   "peerDependencies": {
     "react": "16.13.0 || ^17.0.1 || ^18.0.0",
     "react-dom": "16.13.0 || ^17.0.1 || ^18.0.0",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.0.1 || ^6.0.0"
   },
   "bugs": {
     "url": "https://github.com/kufu/smarthr-ui/issues"
