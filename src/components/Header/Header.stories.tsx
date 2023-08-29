@@ -12,7 +12,7 @@ export default {
   component: Header,
 }
 
-export const all: Story = () => (
+export const All: Story = () => (
   <Stack gap={0.25}>
     <Header />
     <Header tenants={[{ id: 'test', name: '株式会社SmartHR' }]}>

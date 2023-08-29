@@ -53,6 +53,14 @@ type Props<T> = BaseProps<T> & {
    */
   onChangeSelected?: (selectedItem: ComboBoxItem<T> | null) => void
   /**
+   * コンポーネントがフォーカスされたときに発火するコールバック関数
+   */
+  onFocus?: () => void
+  /**
+   * コンポーネントからフォーカスが外れた時に発火するコールバック関数
+   */
+  onBlur?: () => void
+  /**
    * コンポーネント内のテキストを変更する関数/
    */
   decorators?: DecoratorsType<'noResultText'> & {
@@ -113,6 +121,8 @@ export function SingleComboBox<T>({
   onClear,
   onClearClick,
   onChangeSelected,
+  onFocus,
+  onBlur,
   decorators,
   inputAttributes,
   ...props
@@ -166,12 +176,16 @@ export function SingleComboBox<T>({
   })
 
   const focus = useCallback(() => {
+    onFocus && onFocus()
     setIsFocused(true)
     if (!isFocused) {
       setIsExpanded(true)
     }
-  }, [isFocused])
+  }, [onFocus, isFocused])
   const unfocus = useCallback(() => {
+    if (!isFocused) return
+
+    onBlur && onBlur()
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
@@ -180,7 +194,7 @@ export function SingleComboBox<T>({
       setInputValue(innerText(defaultItem.label))
       onSelect && onSelect(defaultItem)
     }
-  }, [selectedItem, defaultItem, onSelect])
+  }, [isFocused, onBlur, selectedItem, defaultItem, onSelect])
   const onClickClear = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation()
@@ -212,7 +226,6 @@ export function SingleComboBox<T>({
         e.stopPropagation()
         return
       }
-      focus()
       if (inputRef.current) {
         inputRef.current.focus()
       }
@@ -220,7 +233,7 @@ export function SingleComboBox<T>({
         setIsExpanded(true)
       }
     },
-    [disabled, inputRef, isExpanded, setIsExpanded, focus],
+    [disabled, inputRef, isExpanded, setIsExpanded],
   )
   const actualOnChangeInput = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -239,7 +252,7 @@ export function SingleComboBox<T>({
     },
     [isEditing, setIsEditing, setInputValue, onChange, onChangeInput, onClear, onChangeSelected],
   )
-  const onFocus = useCallback(() => {
+  const handleFocus = useCallback(() => {
     if (!isFocused) {
       focus()
     }
@@ -361,7 +374,7 @@ export function SingleComboBox<T>({
           }
           onClick={onClickInput}
           onChange={actualOnChangeInput}
-          onFocus={onFocus}
+          onFocus={handleFocus}
           onCompositionStart={onCompositionStart}
           onCompositionEnd={onCompositionEnd}
           onKeyDown={onKeyDownInput}

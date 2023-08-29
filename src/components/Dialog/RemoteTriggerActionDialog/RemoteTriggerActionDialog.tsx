@@ -12,13 +12,14 @@ export const RemoteTriggerActionDialog: React.FC<Props> = ({
   onToggle,
   onOpen,
   onClose,
+  onPressEscape,
   ...props
 }) => {
   const {
     isOpen,
     onClickClose: actualOnClickClose,
-    onPressEscape,
-  } = useRemoteTrigger({ id, onClickClose, onToggle, onOpen, onClose })
+    onPressEscape: actualOnPressEscape,
+  } = useRemoteTrigger({ id, onClickClose, onPressEscape, onToggle, onOpen, onClose })
 
   return (
     <ActionDialog
@@ -26,7 +27,7 @@ export const RemoteTriggerActionDialog: React.FC<Props> = ({
       id={id}
       isOpen={isOpen}
       onClickClose={actualOnClickClose}
-      onPressEscape={onPressEscape}
+      onPressEscape={actualOnPressEscape}
     />
   )
 }
