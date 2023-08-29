@@ -286,15 +286,6 @@ export function MultiComboBox<T>({
     [classNames.listBox],
   )
 
-  const wrapperClassNames = [
-    className,
-    isFocused && 'focused',
-    error && 'invalid',
-    disabled && 'disabled',
-    classNames.wrapper,
-  ]
-    .filter((text) => text !== false && text !== '')
-    .join(' ')
   const selectedListId = useId()
 
   return (
@@ -303,8 +294,11 @@ export function MultiComboBox<T>({
         {...props}
         themes={theme}
         $width={width}
+        isFocused={isFocused}
+        error={error}
+        $disabled={disabled}
         ref={outerRef}
-        className={wrapperClassNames}
+        className={`${className} ${classNames.wrapper}`}
         onClick={(e) => {
           if (
             !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
@@ -340,7 +334,7 @@ export function MultiComboBox<T>({
             ))}
           </SelectedList>
 
-          <InputWrapper className={isFocused ? undefined : 'hidden'}>
+          <InputWrapper $hidden={!isFocused}>
             <Input
               {...inputAttributes}
               type="text"
@@ -397,14 +391,41 @@ export function MultiComboBox<T>({
   )
 }
 
-const Container = styled.div<{ themes: Theme; $width: number | string }>`
-  ${({ themes, $width }) => {
-    const { border, radius, color, shadow, spacingByChar } = themes
+type ContainerType = {
+  isFocused: boolean
+  error: boolean
+  $disabled: boolean
+  themes: Theme
+  $width: number | string
+}
+const Container = styled.div.attrs(
+  ({ isFocused, error, $disabled, $width, themes }: ContainerType) => {
+    const style: React.CSSProperties = {
+      width: typeof $width === 'number' ? `${$width}px` : $width,
+    }
+
+    if (isFocused) {
+      style.boxShadow = themes.shadow.OUTLINE
+    }
+    if (error) {
+      style.borderColor = themes.color.DANGER
+    }
+    if ($disabled) {
+      style.cursor = 'not-allowed'
+      style.borderColor = themes.color.disableColor(themes.color.BORDER)
+      style.backgroundColor = themes.color.hoverColor(themes.color.WHITE)
+      style.color = themes.color.TEXT_DISABLED
+    }
+
+    return { style }
+  },
+)<ContainerType>`
+  ${({ themes }) => {
+    const { border, radius, color, spacingByChar } = themes
 
     return css`
       display: inline-flex;
       min-width: calc(62px + 32px + ${spacingByChar(0.5)} * 2);
-      width: ${typeof $width === 'number' ? `${$width}px` : $width};
       min-height: 40px;
       border-radius: ${radius.m};
       border: ${border.shorthand};
@@ -417,21 +438,6 @@ const Container = styled.div<{ themes: Theme; $width: number | string }>`
         & {
           border: ${border.highContrast};
         }
-      }
-
-      &.focused {
-        box-shadow: ${shadow.OUTLINE};
-      }
-
-      &.invalid {
-        border-color: ${color.DANGER};
-      }
-
-      &.disabled {
-        cursor: not-allowed;
-        border-color: ${color.disableColor(color.BORDER)};
-        background-color: ${color.hoverColor(color.WHITE)};
-        color: ${color.TEXT_DISABLED};
       }
     `
   }}
@@ -456,13 +462,17 @@ const SelectedList = styled.ul`
     min-width: 0;
   }
 `
-const InputWrapper = styled.div`
-  &.hidden {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
 
+type InputWrapperProps = { $hidden: boolean }
+const InputWrapper = styled.div.attrs(({ $hidden }: InputWrapperProps) => ({
+  style: $hidden
+    ? {
+        position: 'absolute',
+        opacity: '0',
+        'pointer-events': 'none',
+      }
+    : undefined,
+}))<InputWrapperProps>`
   flex: 1;
   display: flex;
   align-items: center;
