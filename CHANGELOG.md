@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [35.1.0](https://github.com/kufu/smarthr-ui/compare/v35.0.0...v35.1.0) (2023-08-29)
+
+
+### Features
+
+* add onFocus and onBlur to SingleComboBox ([#3653](https://github.com/kufu/smarthr-ui/issues/3653)) ([d1479b5](https://github.com/kufu/smarthr-ui/commit/d1479b5a33df4fe14e8c355916385793bc3e750b))
+
+
+### Bug Fixes
+
+* RemoteTriggerActionDialogに渡したonPressEscapeが正しく処理されるようにする ([#3605](https://github.com/kufu/smarthr-ui/issues/3605)) ([de3ff46](https://github.com/kufu/smarthr-ui/commit/de3ff46683dd6b97705b94880435fc12a058331a))
+
 ## [35.0.0](https://github.com/kufu/smarthr-ui/compare/v34.3.1...v35.0.0) (2023-08-08)
 
 
