@@ -27,7 +27,7 @@
     "@storybook/addon-storysource": "^7.3.2",
     "@storybook/addons": "^7.3.2",
     "@storybook/cli": "^7.3.2",
-    "@storybook/jest": "^0.2.1",
+    "@storybook/jest": "^0.2.2",
     "@storybook/react": "^7.3.2",
     "@storybook/react-webpack5": "^7.3.2",
     "@storybook/test-runner": "^0.13.0",
