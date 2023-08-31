@@ -257,7 +257,7 @@ const Wrapper = styled(Stack).attrs({
 `
 
 const FormLabel = styled(Cluster).attrs({ align: 'center' })`
-  // flex-item が stretch してクリッカブル領域が広がりすぎないようにする
+  /* flex-item が stretch してクリッカブル領域が広がりすぎないようにする */
   align-self: start;
 `
 

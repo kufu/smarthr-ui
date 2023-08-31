@@ -161,6 +161,7 @@ const StyledSelect = styled.select<{
     line-height: ${leading.NONE};
     color: ${color.TEXT_BLACK};
     width: 100%;
+
     @media (prefers-contrast: more) {
       & {
         border: ${border.highContrast};

@@ -99,6 +99,7 @@ const Box = styled.span<{ themes: Theme; error?: boolean }>`
       input:indeterminate + && {
         border-color: ${color.MAIN};
         background-color: ${color.MAIN};
+
         @media (prefers-contrast: more) {
           & {
             border: ${border.highContrast};
