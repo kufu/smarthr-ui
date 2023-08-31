@@ -55,7 +55,7 @@
     "eslint-config-smarthr": "^6.10.0",
     "eslint-plugin-storybook": "^0.6.13",
     "fs-extra": "^11.1.1",
-    "glob": "^10.3.3",
+    "glob": "^10.3.4",
     "http-server": "^14.1.1",
     "husky": "^8.0.3",
     "jest": "^29.6.4",
