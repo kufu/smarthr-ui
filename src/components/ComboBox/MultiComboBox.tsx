@@ -272,6 +272,37 @@ export function MultiComboBox<T>({
     ],
   )
 
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      if (
+        !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
+        !disabled &&
+        !isFocused
+      ) {
+        focus()
+      }
+    },
+    [isFocused, disabled, focus, classNames.deleteButton],
+  )
+  const handleChangeInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (onChange) onChange(e)
+      if (onChangeInput) onChangeInput(e)
+      if (!isInputControlled) {
+        setUncontrolledInputValue(e.currentTarget.value)
+      }
+    },
+    [isInputControlled, onChangeInput, onChange],
+  )
+  const handleFocusInput = useCallback(() => {
+    resetDeletionButtonFocus()
+
+    if (!isFocused) {
+      focus()
+    }
+  }, [isFocused, focus, resetDeletionButtonFocus])
+  const handleCompositionStartInput = useCallback(() => setIsComposing(true), [])
+  const handleCompositionEndInput = useCallback(() => setIsComposing(false), [])
   const handleInputKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Down' || e.key === 'ArrowDown' || e.key === 'Up' || e.key === 'ArrowUp') {
       // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
@@ -299,15 +330,7 @@ export function MultiComboBox<T>({
         $disabled={disabled}
         ref={outerRef}
         className={`${className} ${classNames.wrapper}`}
-        onClick={(e) => {
-          if (
-            !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
-            !disabled &&
-            !isFocused
-          ) {
-            focus()
-          }
-        }}
+        onClick={handleClick}
         onKeyDown={handleKeyDown}
         role="group"
       >
@@ -344,21 +367,10 @@ export function MultiComboBox<T>({
               required={required}
               ref={inputRef}
               themes={theme}
-              onChange={(e) => {
-                if (onChange) onChange(e)
-                if (onChangeInput) onChangeInput(e)
-                if (!isInputControlled) {
-                  setUncontrolledInputValue(e.currentTarget.value)
-                }
-              }}
-              onFocus={() => {
-                resetDeletionButtonFocus()
-                if (!isFocused) {
-                  focus()
-                }
-              }}
-              onCompositionStart={() => setIsComposing(true)}
-              onCompositionEnd={() => setIsComposing(false)}
+              onChange={handleChangeInput}
+              onFocus={handleFocusInput}
+              onCompositionStart={handleCompositionStartInput}
+              onCompositionEnd={handleCompositionEndInput}
               onKeyDown={handleInputKeyDown}
               autoComplete="off"
               tabIndex={0}

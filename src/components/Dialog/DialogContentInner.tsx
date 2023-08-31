@@ -168,6 +168,7 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
     return css`
       position: absolute;
       inset: ${positionTop} ${positionRight} ${positionBottom} ${positionLeft};
+
       /* viewport を超えないように上限設定 */
       max-width: ${minimumMaxWidth};
       ${exist(actualWidth) &&
