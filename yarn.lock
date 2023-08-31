@@ -12700,10 +12700,10 @@ testcafe-browser-tools@2.0.26:
     read-file-relative "^1.2.0"
     which-promise "^1.0.0"
 
-testcafe-hammerhead@31.4.15, testcafe-hammerhead@>=19.4.0:
-  version "31.4.15"
-  resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-31.4.15.tgz#30f3942fae1a7a2aa0b0a810cc35873b52dba845"
-  integrity sha512-ysS1yvRoDPBsxVDPIyIua1WBy8vMQo4DQrY8WlQiGeen/OwR1k0xW4J1gl3VNatBWZDTbfCTL9ZmoV9qddz07w==
+testcafe-hammerhead@31.6.1, testcafe-hammerhead@>=19.4.0:
+  version "31.6.1"
+  resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-31.6.1.tgz#181fe81cf10bd43115087d004dc6c2cad0d02f35"
+  integrity sha512-tMdF183bTL+hMNzIdUUNpg32T2hlwaI9CEXxOJpgg6VnzCpy1RDV5+wcIJB1ywhs6cdd5ltQZuaHrm1tWbyR1A==
   dependencies:
     "@adobe/css-tools" "^4.3.0-rc.1"
     "@electron/asar" "^3.2.3"
@@ -12783,10 +12783,10 @@ testcafe-selector-generator@^0.1.0:
   resolved "https://registry.yarnpkg.com/testcafe-selector-generator/-/testcafe-selector-generator-0.1.0.tgz#852c86f71565e5d9320da625c2260d040cbed786"
   integrity sha512-MTw+RigHsEYmFgzUFNErDxui1nTYUk6nm2bmfacQiKPdhJ9AHW/wue4J/l44mhN8x3E8NgOUkHHOI+1TDFXiLQ==
 
-testcafe@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-3.2.0.tgz#0ef6b4982fc6258391acdee7b259a3e30550ab0e"
-  integrity sha512-fYKuOMMXFccJ2Q7RpNu3ouift6AoZvcthc3codjuifsflRZtUdDFVzxJ8XEDHHL5NdNgYxskV4AoaHq8Aid+kg==
+testcafe@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-3.3.0.tgz#1446b1acca98b1e43c6843c49fce179c38754af4"
+  integrity sha512-fffFnuZwAlZ4y9mkjygHZUGXad/7pXuj/RHkuwvft0GjRDqRHIcfR5aWrVLGnGpFeO55l48Z2kq1SxT2I+879g==
   dependencies:
     "@babel/core" "^7.12.1"
     "@babel/plugin-proposal-async-generator-functions" "^7.12.1"
@@ -12869,7 +12869,7 @@ testcafe@3.2.0:
     source-map-support "^0.5.16"
     strip-bom "^2.0.0"
     testcafe-browser-tools "2.0.26"
-    testcafe-hammerhead "31.4.15"
+    testcafe-hammerhead "31.6.1"
     testcafe-legacy-api "5.1.6"
     testcafe-reporter-json "^2.1.0"
     testcafe-reporter-list "^2.2.0"
