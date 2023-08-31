@@ -119,6 +119,7 @@ const ActionList = styled(Stack).attrs({ as: 'ul', gap: 0 })<{ themes: Theme }>`
 
     .smarthr-ui-Button-disabledWrapper {
       column-gap: ${space(0.5)};
+
       /* unset した Button の右 padding 分 */
       padding-inline-end: ${space(1)};
 
