@@ -330,17 +330,18 @@ export function SingleComboBox<T>({
       <Container
         {...props}
         ref={outerRef}
-        className={`${disabled ? 'disabled' : ''} ${className} ${classNames.wrapper}`}
+        className={`${className} ${classNames.wrapper}`}
         $width={width}
+        $disabled={disabled}
         role="combobox"
         aria-haspopup="listbox"
         aria-controls={listBoxId}
         aria-expanded={isFocused}
         aria-invalid={error || undefined}
       >
-        {/* eslint-disable smarthr/a11y-prohibit-input-placeholder */}
         <StyledInput
           {...inputAttributes}
+          /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
           placeholder={placeholder}
           type="text"
           name={name}
@@ -356,7 +357,8 @@ export function SingleComboBox<T>({
                 onClick={onClickClear}
                 ref={clearButtonRef}
                 themes={theme}
-                className={`${needsClearButton ? '' : 'hidden'} ${classNames.clearButton}`}
+                $hidden={!needsClearButton}
+                className={classNames.clearButton}
               >
                 <FaTimesCircleIcon
                   color={theme.color.TEXT_BLACK}
@@ -384,19 +386,25 @@ export function SingleComboBox<T>({
           aria-autocomplete="list"
           className={classNames.input}
         />
-        {/* eslint-enable smarthr/a11y-prohibit-input-placeholder */}
         {renderListBox()}
       </Container>
     </ComboBoxContext.Provider>
   )
 }
 
-const Container = styled.div<{ $width: number | string }>`
-  display: inline-block;
-  width: ${({ $width = 'auto' }) => (typeof $width === 'number' ? `${$width}px` : $width)};
-  &.disabled {
-    cursor: not-allowed;
+type ContainerType = { $disabled: boolean; $width: number | string }
+const Container = styled.div.attrs(({ $disabled, $width = 'auto' }: ContainerType) => {
+  const style: React.CSSProperties = {
+    width: typeof $width === 'number' ? `${$width}px` : $width,
   }
+
+  if ($disabled) {
+    style.cursor = 'not-allowed'
+  }
+
+  return { style }
+})<ContainerType>`
+  display: inline-block;
 `
 const StyledInput = styled(Input)`
   width: 100%;
@@ -427,7 +435,13 @@ const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
   `
 })
 
-const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
+type ClearButtonProps = {
+  $hidden: boolean
+  themes: Theme
+}
+const ClearButton = styled(UnstyledButton).attrs(({ $hidden }: ClearButtonProps) => ({
+  style: $hidden ? { display: 'none' } : undefined,
+}))<ClearButtonProps>`
   ${({ themes }) => {
     const { shadow, spacingByChar } = themes
     return css`
@@ -437,9 +451,6 @@ const ClearButton = styled(UnstyledButton)<{ themes: Theme }>`
       height: 100%;
       padding: 0 ${spacingByChar(0.5)};
       cursor: pointer;
-      &.hidden {
-        display: none;
-      }
 
       &:focus-visible {
         box-shadow: unset;
