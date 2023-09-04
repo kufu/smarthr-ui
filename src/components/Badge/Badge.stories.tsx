@@ -14,8 +14,7 @@ export default {
   component: Badge,
 }
 
-export const All: StoryFn = () => {
-  return (
+export const All: StoryFn = () => (
     <Stack as="dl" gap={3}>
       <Stack>
         <Dt>種類</Dt>
@@ -90,6 +89,5 @@ export const All: StoryFn = () => {
       </Stack>
     </Stack>
   )
-}
 
 const Dt = styled(Text).attrs({ forwardedAs: 'dt', weight: 'bold', color: 'TEXT_GREY' })``

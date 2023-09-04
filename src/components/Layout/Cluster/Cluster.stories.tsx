@@ -19,8 +19,7 @@ export default {
   },
 }
 
-export const All: Story = () => {
-  return (
+export const All: Story = () => (
     <StyledStack gap="L">
       <Stack as="figure" gap="X3S">
         <figcaption>幅を狭めて収まり切らなくなると折返します。</figcaption>
@@ -94,7 +93,6 @@ export const All: Story = () => {
       </Stack>
     </StyledStack>
   )
-}
 
 const StyledHeading = styled(Heading)`
   margin-top: 0;

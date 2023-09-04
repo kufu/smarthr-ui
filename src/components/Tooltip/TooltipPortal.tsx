@@ -144,8 +144,7 @@ const Container = styled.div<{
   maxWidth?: number
   themes: Theme
 }>`
-  ${({ top, left, $width, $height, maxWidth, themes }) => {
-    return css`
+  ${({ top, left, $width, $height, maxWidth, themes }) => css`
       position: absolute;
       top: ${top}px;
       left: ${left}px;
@@ -165,8 +164,7 @@ const Container = styled.div<{
       &[aria-hidden='true'] {
         display: none;
       }
-    `
-  }}
+    `}
 `
 const StyledBalloon = styled(Balloon)<{ isMultiLine?: boolean }>(
   ({ isMultiLine }) =>
@@ -179,9 +177,7 @@ const StyledBalloon = styled(Balloon)<{ isMultiLine?: boolean }>(
 
 const StyledBalloonText = styled.p<{ themes: Theme }>`
   margin: 0;
-  ${({ themes: { spacingByChar } }) => {
-    return css`
+  ${({ themes: { spacingByChar } }) => css`
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-    `
-  }}
+    `}
 `

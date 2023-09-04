@@ -89,8 +89,7 @@ const AccordionPanelController: FC = () => {
   )
 }
 
-export const AccordionStyle: Story = () => {
-  return (
+export const AccordionStyle: Story = () => (
     <Wrapper>
       <AccordionPanelBase>
         <AccordionPanel>
@@ -142,11 +141,9 @@ export const AccordionStyle: Story = () => {
       </AccordionPanelBase>
     </Wrapper>
   )
-}
 AccordionStyle.storyName = 'Accordion style'
 
-export const ExpandedOptions: Story = () => {
-  return (
+export const ExpandedOptions: Story = () => (
     <Wrapper>
       <AccordionPanelBase>
         <AccordionPanel displayIcon={true} expandableMultiply={true}>
@@ -174,11 +171,9 @@ export const ExpandedOptions: Story = () => {
       </AccordionPanelBase>
     </Wrapper>
   )
-}
 ExpandedOptions.storyName = 'Expanded options'
 
-export const Callback: Story = () => {
-  return (
+export const Callback: Story = () => (
     <Wrapper>
       <AccordionPanelBase>
         <AccordionPanel displayIcon={false} expandableMultiply={true} onClick={action('Clicked')}>
@@ -194,11 +189,8 @@ export const Callback: Story = () => {
       </AccordionPanelBase>
     </Wrapper>
   )
-}
 
-export const ChangeDefaultExpanded: Story = () => {
-  return <AccordionPanelController />
-}
+export const ChangeDefaultExpanded: Story = () => <AccordionPanelController />
 ChangeDefaultExpanded.storyName = 'Change defaultExpanded'
 
 const Wrapper = styled.div`

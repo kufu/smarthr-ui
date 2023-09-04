@@ -130,12 +130,10 @@ const Wrapper = styled.form<{ themes: Theme; $width: number }>`
 const SectionHeading = styled(Heading).attrs(() => ({
   type: 'sectionTitle',
 }))<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
+  ${({ themes: { spacingByChar } }) => css`
       display: block;
       margin-bottom: ${spacingByChar(1)};
-    `
-  }}
+    `}
 `
 
 // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
@@ -148,16 +146,14 @@ const TextareaLabelText = styled(Heading).attrs(() => ({
 `
 
 const StyledTextarea = styled(Textarea)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
+  ${({ themes: { spacingByChar } }) => css`
       display: block;
       width: 100%;
       max-width: 100%;
       min-width: 100%;
       box-sizing: border-box;
       margin-bottom: ${spacingByChar(1)};
-    `
-  }}
+    `}
 `
 
 const SubmitButton = styled(Button)`

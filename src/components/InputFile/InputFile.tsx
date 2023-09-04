@@ -120,8 +120,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       <Wrapper className={`${className} ${classNames.wrapper}`}>
         {!disabled && hasFileList && files.length > 0 && (
           <FileList themes={theme} className={classNames.fileList}>
-            {files.map((file, index) => {
-              return (
+            {files.map((file, index) => (
                 <li key={`${file.name}-${index}`}>
                   <span className={classNames.fileName}>{file.name}</span>
                   <span>
@@ -135,8 +134,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
                     </Button>
                   </span>
                 </li>
-              )
-            })}
+              ))}
           </FileList>
         )}
         <InputWrapper className={inputWrapperClassName} themes={theme}>
@@ -245,10 +243,8 @@ const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
 })
 
 const Prefix = styled.span<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
+  ${({ themes: { spacingByChar } }) => css`
       display: inline-flex;
       margin-right: ${spacingByChar(0.5)};
-    `
-  }}
+    `}
 `

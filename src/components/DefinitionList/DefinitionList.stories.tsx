@@ -72,8 +72,7 @@ const items = [
   },
 ]
 
-export const All: StoryFn = () => {
-  return (
+export const All: StoryFn = () => (
     <Stack gap={1.5}>
       <SectioningFragment>
         <Stack gap={0.5} as="section">
@@ -111,5 +110,4 @@ export const All: StoryFn = () => {
       </SectioningFragment>
     </Stack>
   )
-}
 All.storyName = 'all'

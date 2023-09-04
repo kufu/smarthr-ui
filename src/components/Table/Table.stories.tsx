@@ -80,8 +80,7 @@ const data = [
   },
 ]
 
-export const All: Story = () => {
-  return (
+export const All: Story = () => (
     <Ul>
       <li>
         table
@@ -283,11 +282,9 @@ export const All: Story = () => {
       </li>
     </Ul>
   )
-}
 All.storyName = 'all'
 
-export const WithReel: Story = () => {
-  return (
+export const WithReel: Story = () => (
     <Ul>
       <li>
         TableReel
@@ -515,7 +512,6 @@ export const WithReel: Story = () => {
       </li>
     </Ul>
   )
-}
 WithReel.storyName = 'with TableReel'
 
 const Ul = styled.ul`

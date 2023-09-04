@@ -253,12 +253,10 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
         handle={`.${classNames.handle}`}
         onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
         onDrag={(_, data) => {
-          setPosition((prev) => {
-            return {
+          setPosition((prev) => ({
               x: prev.x + data.deltaX,
               y: prev.y + data.deltaY,
-            }
-          })
+            }))
         }}
         position={position}
         bounds={draggableBounds}

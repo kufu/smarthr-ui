@@ -21,8 +21,7 @@ the release of Letraset sheets containing Lorem Ipsum passages, and more recentl
 with desktop publishing software like Aldus PageMaker including versions of Lorem
 Ipsum.`
 
-export const All: Story = () => {
-  return (
+export const All: Story = () => (
     <Wrapper>
       <List>
         <dt>Default</dt>
@@ -67,7 +66,6 @@ export const All: Story = () => {
       </List>
     </Wrapper>
   )
-}
 All.storyName = 'all'
 
 const Wrapper = styled.div`

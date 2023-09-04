@@ -7,15 +7,13 @@ export type Props = {
   children?: React.ReactNode
 }
 
-export const ButtonInner: VFC<Props> = ({ prefix, suffix, children }) => {
-  return (
+export const ButtonInner: VFC<Props> = ({ prefix, suffix, children }) => (
     <>
       {prefix}
       <TextLabel>{children}</TextLabel>
       {suffix}
     </>
   )
-}
 
 const TextLabel = styled.span`
   /* LineClamp を併用する場合に、幅を計算してもらうために指定 */

@@ -272,6 +272,37 @@ export function MultiComboBox<T>({
     ],
   )
 
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      if (
+        !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
+        !disabled &&
+        !isFocused
+      ) {
+        focus()
+      }
+    },
+    [isFocused, disabled, focus, classNames.deleteButton],
+  )
+  const handleChangeInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (onChange) onChange(e)
+      if (onChangeInput) onChangeInput(e)
+      if (!isInputControlled) {
+        setUncontrolledInputValue(e.currentTarget.value)
+      }
+    },
+    [isInputControlled, onChangeInput, onChange],
+  )
+  const handleFocusInput = useCallback(() => {
+    resetDeletionButtonFocus()
+
+    if (!isFocused) {
+      focus()
+    }
+  }, [isFocused, focus, resetDeletionButtonFocus])
+  const handleCompositionStartInput = useCallback(() => setIsComposing(true), [])
+  const handleCompositionEndInput = useCallback(() => setIsComposing(false), [])
   const handleInputKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Down' || e.key === 'ArrowDown' || e.key === 'Up' || e.key === 'ArrowUp') {
       // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
@@ -286,15 +317,6 @@ export function MultiComboBox<T>({
     [classNames.listBox],
   )
 
-  const wrapperClassNames = [
-    className,
-    isFocused && 'focused',
-    error && 'invalid',
-    disabled && 'disabled',
-    classNames.wrapper,
-  ]
-    .filter((text) => text !== false && text !== '')
-    .join(' ')
   const selectedListId = useId()
 
   return (
@@ -303,17 +325,12 @@ export function MultiComboBox<T>({
         {...props}
         themes={theme}
         $width={width}
+        isFocused={isFocused}
+        error={error}
+        $disabled={disabled}
         ref={outerRef}
-        className={wrapperClassNames}
-        onClick={(e) => {
-          if (
-            !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
-            !disabled &&
-            !isFocused
-          ) {
-            focus()
-          }
-        }}
+        className={`${className} ${classNames.wrapper}`}
+        onClick={handleClick}
         onKeyDown={handleKeyDown}
         role="group"
       >
@@ -340,7 +357,7 @@ export function MultiComboBox<T>({
             ))}
           </SelectedList>
 
-          <InputWrapper className={isFocused ? undefined : 'hidden'}>
+          <InputWrapper $hidden={!isFocused}>
             <Input
               {...inputAttributes}
               type="text"
@@ -350,21 +367,10 @@ export function MultiComboBox<T>({
               required={required}
               ref={inputRef}
               themes={theme}
-              onChange={(e) => {
-                if (onChange) onChange(e)
-                if (onChangeInput) onChangeInput(e)
-                if (!isInputControlled) {
-                  setUncontrolledInputValue(e.currentTarget.value)
-                }
-              }}
-              onFocus={() => {
-                resetDeletionButtonFocus()
-                if (!isFocused) {
-                  focus()
-                }
-              }}
-              onCompositionStart={() => setIsComposing(true)}
-              onCompositionEnd={() => setIsComposing(false)}
+              onChange={handleChangeInput}
+              onFocus={handleFocusInput}
+              onCompositionStart={handleCompositionStartInput}
+              onCompositionEnd={handleCompositionEndInput}
               onKeyDown={handleInputKeyDown}
               autoComplete="off"
               tabIndex={0}
@@ -397,14 +403,41 @@ export function MultiComboBox<T>({
   )
 }
 
-const Container = styled.div<{ themes: Theme; $width: number | string }>`
-  ${({ themes, $width }) => {
-    const { border, radius, color, shadow, spacingByChar } = themes
+type ContainerType = {
+  isFocused: boolean
+  error: boolean
+  $disabled: boolean
+  themes: Theme
+  $width: number | string
+}
+const Container = styled.div.attrs(
+  ({ isFocused, error, $disabled, $width, themes }: ContainerType) => {
+    const style: React.CSSProperties = {
+      width: typeof $width === 'number' ? `${$width}px` : $width,
+    }
+
+    if (isFocused) {
+      style.boxShadow = themes.shadow.OUTLINE
+    }
+    if (error) {
+      style.borderColor = themes.color.DANGER
+    }
+    if ($disabled) {
+      style.cursor = 'not-allowed'
+      style.borderColor = themes.color.disableColor(themes.color.BORDER)
+      style.backgroundColor = themes.color.hoverColor(themes.color.WHITE)
+      style.color = themes.color.TEXT_DISABLED
+    }
+
+    return { style }
+  },
+)<ContainerType>`
+  ${({ themes }) => {
+    const { border, radius, color, spacingByChar } = themes
 
     return css`
       display: inline-flex;
       min-width: calc(62px + 32px + ${spacingByChar(0.5)} * 2);
-      width: ${typeof $width === 'number' ? `${$width}px` : $width};
       min-height: 40px;
       border-radius: ${radius.m};
       border: ${border.shorthand};
@@ -417,21 +450,6 @@ const Container = styled.div<{ themes: Theme; $width: number | string }>`
         & {
           border: ${border.highContrast};
         }
-      }
-
-      &.focused {
-        box-shadow: ${shadow.OUTLINE};
-      }
-
-      &.invalid {
-        border-color: ${color.DANGER};
-      }
-
-      &.disabled {
-        cursor: not-allowed;
-        border-color: ${color.disableColor(color.BORDER)};
-        background-color: ${color.hoverColor(color.WHITE)};
-        color: ${color.TEXT_DISABLED};
       }
     `
   }}
@@ -456,13 +474,17 @@ const SelectedList = styled.ul`
     min-width: 0;
   }
 `
-const InputWrapper = styled.div`
-  &.hidden {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
 
+type InputWrapperProps = { $hidden: boolean }
+const InputWrapper = styled.div.attrs(({ $hidden }: InputWrapperProps) => ({
+  style: $hidden
+    ? {
+        position: 'absolute',
+        opacity: '0',
+        'pointer-events': 'none',
+      }
+    : undefined,
+}))<InputWrapperProps>`
   flex: 1;
   display: flex;
   align-items: center;

@@ -15,8 +15,7 @@ export default {
 
 const onSelectFiles = action('onSelectFiles')
 
-export const All: Story = () => {
-  return (
+export const All: Story = () => (
     <Group>
       <li>
         <Text>Default</Text>
@@ -58,7 +57,6 @@ export const All: Story = () => {
       </li>
     </Group>
   )
-}
 All.storyName = 'all'
 
 const Group = styled.ul`

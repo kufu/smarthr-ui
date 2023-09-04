@@ -36,8 +36,7 @@ export default {
   },
 }
 
-const ListMenu = () => {
-  return (
+const ListMenu = () => (
     <ActionList as="ul">
       <li>
         <Button id="dropdown-list-item-1" onClick={action('clicked 編集')}>
@@ -55,7 +54,6 @@ const ListMenu = () => {
       </li>
     </ActionList>
   )
-}
 
 const ControllableDropdown = () => {
   const [value, setValue] = React.useState('hoge')
@@ -142,8 +140,7 @@ const ControllableDropdown = () => {
   )
 }
 
-const Template: Story = () => {
-  return (
+const Template: Story = () => (
     <Wrapper>
       <Legends>
         <li>
@@ -240,7 +237,6 @@ const Template: Story = () => {
       </Legends>
     </Wrapper>
   )
-}
 export const All = Template.bind({})
 
 export const RegOpenDropdown = Template.bind({})

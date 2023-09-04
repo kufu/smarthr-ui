@@ -21,8 +21,7 @@ export default {
   },
 }
 
-export const _BottomFixedArea: Story = () => {
-  return (
+export const _BottomFixedArea: Story = () => (
     <BottomFixedArea
       description="This is description."
       primaryButton={<Button variant="primary">Primary Button</Button>}
@@ -39,5 +38,4 @@ export const _BottomFixedArea: Story = () => {
       ]}
     />
   )
-}
 _BottomFixedArea.storyName = 'BottomFixedArea'

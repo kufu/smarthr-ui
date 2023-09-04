@@ -93,6 +93,7 @@ const Wrapper = styled.div<{
     box-shadow: ${shadow[$layer]};
     border-radius: ${$radius};
     background-color: ${color.WHITE};
+
     @media (prefers-contrast: more) {
       & {
         border: ${border.highContrast};

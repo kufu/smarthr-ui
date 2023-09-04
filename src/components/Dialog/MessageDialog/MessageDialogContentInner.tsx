@@ -90,15 +90,13 @@ const TitleArea = styled(Stack).attrs(() => ({
   `,
 )
 const Description = styled.div<{ themes: Theme; offsetHeight: number }>`
-  ${({ themes: { fontSize, spacingByChar }, offsetHeight }) => {
-    return css`
+  ${({ themes: { fontSize, spacingByChar }, offsetHeight }) => css`
       max-height: calc(100vh - ${offsetHeight}px);
       overflow: auto;
       padding: 0 ${spacingByChar(1.5)};
       font-size: ${fontSize.M};
       line-height: 1.5;
-    `
-  }}
+    `}
 `
 const Bottom = styled.div<{ themes: Theme }>`
   ${({ themes }) => {

@@ -14,8 +14,7 @@ export default {
   },
 }
 
-export const PanelView: Story = () => {
-  return (
+export const PanelView: Story = () => (
     <List>
       <dt>Normal</dt>
       <dd>
@@ -148,7 +147,6 @@ export const PanelView: Story = () => {
       </dd>
     </List>
   )
-}
 PanelView.storyName = 'panel'
 
 export const ListView: Story = () => {

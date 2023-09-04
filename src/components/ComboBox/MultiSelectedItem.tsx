@@ -103,8 +103,7 @@ const Wrapper = styled.div<{ themes: Theme; disabled?: boolean }>`
   }}
 `
 const ItemLabel = styled.div<{ enableEllipsis?: boolean; themes: Theme }>`
-  ${({ enableEllipsis, themes: { border, spacingByChar } }) => {
-    return css`
+  ${({ enableEllipsis, themes: { border, spacingByChar } }) => css`
       padding: ${spacingByChar(0.25)} calc(${spacingByChar(0.5)} - ${border.lineWidth});
 
       ${enableEllipsis &&
@@ -113,12 +112,10 @@ const ItemLabel = styled.div<{ enableEllipsis?: boolean; themes: Theme }>`
         overflow: hidden;
         text-overflow: ellipsis;
       `}
-    `
-  }}
+    `}
 `
 const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled?: boolean }>`
-  ${({ themes: { border, spacingByChar, shadow }, disabled }) => {
-    return css`
+  ${({ themes: { border, spacingByChar, shadow }, disabled }) => css`
       flex-shrink: 1;
       padding: calc(${spacingByChar(0.5)} - ${border.lineWidth});
       border-radius: 50%;
@@ -133,6 +130,5 @@ const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled?: boolean 
         border-radius: 50%;
         ${shadow.focusIndicatorStyles};
       }
-    `
-  }}
+    `}
 `

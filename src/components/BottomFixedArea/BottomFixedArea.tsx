@@ -100,8 +100,7 @@ export const BottomFixedArea: VFC<Props & ElementProps> = ({
 }
 
 const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
-  ${({ themes: { spacingByChar }, zIndex }) => {
-    return css`
+  ${({ themes: { spacingByChar }, zIndex }) => css`
       position: fixed;
       bottom: 0;
       width: 100%;
@@ -111,8 +110,7 @@ const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
       box-shadow: 0 -4px 8px 2px rgba(0, 0, 0, 0.24);
       border-radius: 0;
       box-sizing: border-box;
-    `
-  }}
+    `}
 `
 const Text = styled.div`
   margin: 0;
