@@ -20,8 +20,7 @@ export default {
   },
 }
 
-export const All: Story = () => {
-  return (
+export const All: Story = () => (
     <Cluster gap={0.75} as="dl">
       {Object.values(Icons).map((Icon) => (
         <ItemWrapper key={`${Icon.displayName}`}>
@@ -33,7 +32,6 @@ export const All: Story = () => {
       ))}
     </Cluster>
   )
-}
 
 export const AltText: Story = () => (
   <div>

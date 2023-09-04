@@ -112,9 +112,7 @@ const Button = styled(UnstyledButton)<{ themes: Theme }>`
   }}
 `
 const PrefixWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
+  ${({ themes: { spacingByChar } }) => css`
       margin-right: ${spacingByChar(0.5)};
-    `
-  }}
+    `}
 `

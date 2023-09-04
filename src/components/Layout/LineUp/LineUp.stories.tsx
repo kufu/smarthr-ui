@@ -80,7 +80,7 @@ export const All: Story = () => (
       </figcaption>
       <p>
         これはテキスト内リンクなので
-        <Link href="">
+        <Link href="#top">
           <LineUp vAlign="center" gap={0.25} inline>
             inline-flex
             <FaExternalLinkAltIcon />

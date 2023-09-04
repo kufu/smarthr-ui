@@ -10,8 +10,7 @@ export default {
   component: ResponseMessage,
 }
 
-export const All: StoryFn = () => {
-  return (
+export const All: StoryFn = () => (
     <Stack>
       <ResponseMessage type="info">情報を表すアイコンが付きます。デフォルトです。</ResponseMessage>
       <ResponseMessage type="success">成功を表すアイコンが付きます。</ResponseMessage>
@@ -22,4 +21,3 @@ export const All: StoryFn = () => {
       </ResponseMessage>
     </Stack>
   )
-}

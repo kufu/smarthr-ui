@@ -20,8 +20,7 @@ export default {
   },
 }
 
-export const Full: Story = () => {
-  return (
+export const Full: Story = () => (
     <MessageScreen
       title="SmartHR は現在メンテナンス中です"
       links={[
@@ -41,11 +40,9 @@ export const Full: Story = () => {
       </p>
     </MessageScreen>
   )
-}
 Full.storyName = 'full'
 
-export const WithoutTitle: Story = () => {
-  return (
+export const WithoutTitle: Story = () => (
     <MessageScreen
       links={[
         {
@@ -78,11 +75,9 @@ export const WithoutTitle: Story = () => {
       </Base>
     </MessageScreen>
   )
-}
 WithoutTitle.storyName = 'without title'
 
-export const WithoutLinks: Story = () => {
-  return (
+export const WithoutLinks: Story = () => (
     <MessageScreen
       title={
         <Stack as="span" align="center" gap={0.5}>
@@ -111,7 +106,6 @@ export const WithoutLinks: Story = () => {
       </Base>
     </MessageScreen>
   )
-}
 WithoutLinks.storyName = 'without links'
 
 export const WithoutChildren: Story = () => (

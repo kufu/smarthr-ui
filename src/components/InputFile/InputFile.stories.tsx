@@ -10,8 +10,7 @@ export default {
   component: InputFile,
 }
 
-export const All: Story = () => {
-  return (
+export const All: Story = () => (
     <List>
       <dt>Default</dt>
       <dd>
@@ -54,7 +53,6 @@ export const All: Story = () => {
       </dd>
     </List>
   )
-}
 All.storyName = 'all'
 
 const List = styled.dl`

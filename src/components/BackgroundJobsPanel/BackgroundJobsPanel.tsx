@@ -127,38 +127,31 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
   )
 }
 
-const Container = styled(Base)<{ themes: Theme }>(({ themes }) => {
-  return css`
+const Container = styled(Base)<{ themes: Theme }>(({ themes }) => css`
     display: inline-flex;
     flex-direction: column;
     min-width: 420px;
     max-width: 600px;
     color: ${themes.color.TEXT_BLACK};
-  `
-})
+  `)
 const Header = styled.div`
   display: flex;
   align-items: center;
 `
-const Title = styled.div<{ themes: Theme }>(({ themes: { fontSize, spacingByChar } }) => {
-  return css`
+const Title = styled.div<{ themes: Theme }>(({ themes: { fontSize, spacingByChar } }) => css`
     font-size: ${fontSize.M};
     padding: ${spacingByChar(1)};
-  `
-})
-const HeaderButtonLayout = styled.div<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
-  return css`
+  `)
+const HeaderButtonLayout = styled.div<{ themes: Theme }>(({ themes: { spacingByChar } }) => css`
     flex-shrink: 0;
     margin-left: auto;
     padding-right: ${spacingByChar(1)};
     button:not(:first-child) {
       margin-left: ${spacingByChar(0.5)};
     }
-  `
-})
+  `)
 const JobList = styled.ul<{ isExpanded: boolean; themes: Theme }>(
-  ({ isExpanded, themes: { border, spacingByChar } }) => {
-    return css`
+  ({ isExpanded, themes: { border, spacingByChar } }) => css`
       margin: 0;
       list-style: none;
       padding: ${spacingByChar(1)};
@@ -172,11 +165,9 @@ const JobList = styled.ul<{ isExpanded: boolean; themes: Theme }>(
         padding-bottom: 0;
         border: none;
       `}
-    `
-  },
+    `,
 )
-const Job = styled.li<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
-  return css`
+const Job = styled.li<{ themes: Theme }>(({ themes: { spacingByChar } }) => css`
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
@@ -184,31 +175,25 @@ const Job = styled.li<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
     :not(:first-child) {
       margin-top: ${spacingByChar(1)};
     }
-  `
-})
+  `)
 const JobIconWrapper = styled.div`
   flex-shrink: 0;
   line-height: 0;
 `
 const JobNameText = styled(OmittableJobText)<{ themes: Theme }>(
-  ({ themes: { fontSize, spacingByChar } }) => {
-    return css`
+  ({ themes: { fontSize, spacingByChar } }) => css`
       margin-left: ${spacingByChar(0.5)};
       font-size: ${fontSize.M};
-    `
-  },
+    `,
 )
 const JobDescText = styled(OmittableJobText)<{ themes: Theme }>(
-  ({ themes: { fontSize, spacingByChar } }) => {
-    return css`
+  ({ themes: { fontSize, spacingByChar } }) => css`
       margin-left: ${spacingByChar(0.5)};
       font-size: ${fontSize.S};
-    `
-  },
+    `,
 )
 const CancelButton = styled(UnstyledButton)<{ themes: Theme }>(
-  ({ themes: { color, fontSize, spacingByChar } }) => {
-    return css`
+  ({ themes: { color, fontSize, spacingByChar } }) => css`
       flex-shrink: 0;
       margin-left: ${spacingByChar(0.5)};
       font-size: ${fontSize.S};
@@ -217,6 +202,5 @@ const CancelButton = styled(UnstyledButton)<{ themes: Theme }>(
       :hover {
         text-decoration: underline;
       }
-    `
-  },
+    `,
 )

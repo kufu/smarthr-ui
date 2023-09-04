@@ -25,9 +25,7 @@ const subscribeFullscreenChange = (callback: () => void) => {
     window.removeEventListener('fullscreenchange', callback)
   }
 }
-const getFullscreenElement = () => {
-  return document.fullscreenElement
-}
+const getFullscreenElement = () => document.fullscreenElement
 
 const Template: Story = () => {
   const fullscreenElementRef = React.useRef<HTMLDivElement>(null)

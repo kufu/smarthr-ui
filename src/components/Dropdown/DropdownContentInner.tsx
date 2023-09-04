@@ -137,8 +137,7 @@ const ControllableWrapper = styled.div<{
   contentBox: ContentBoxStyle
   scrollable: boolean
 }>`
-  ${({ contentBox, scrollable }) => {
-    return css`
+  ${({ contentBox, scrollable }) => css`
       display: flex;
       flex-direction: column;
       ${contentBox.maxHeight && scrollable
@@ -146,6 +145,5 @@ const ControllableWrapper = styled.div<{
           max-height: ${contentBox.maxHeight};
           `
         : ''}
-    `
-  }}
+    `}
 `

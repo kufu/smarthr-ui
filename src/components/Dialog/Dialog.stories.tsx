@@ -464,8 +464,7 @@ const Buttons = styled.div`
   }
 `
 
-export const Action_Dialog_With_Trigger: Story = () => {
-  return (
+export const Action_Dialog_With_Trigger: Story = () => (
     <>
       <ActionDialogWithTrigger
         trigger={<Button>open.</Button>}
@@ -490,10 +489,8 @@ export const Action_Dialog_With_Trigger: Story = () => {
       </ActionDialogWithTrigger>
     </>
   )
-}
 
-export const Remote_Trigger_Action_Dialog: Story = () => {
-  return (
+export const Remote_Trigger_Action_Dialog: Story = () => (
     <>
       <div>
         <p>複数のトリガーに対応</p>
@@ -538,10 +535,8 @@ export const Remote_Trigger_Action_Dialog: Story = () => {
       </div>
     </>
   )
-}
 
-export const Remote_Trigger_Form_Dialog: Story = () => {
-  return (
+export const Remote_Trigger_Form_Dialog: Story = () => (
     <>
       <div>
         <p>複数のトリガーに対応</p>
@@ -581,10 +576,8 @@ export const Remote_Trigger_Form_Dialog: Story = () => {
       </div>
     </>
   )
-}
 
-export const Remote_Trigger_Message_Dialog: Story = () => {
-  return (
+export const Remote_Trigger_Message_Dialog: Story = () => (
     <>
       <div>
         <p>複数のトリガーに対応</p>
@@ -614,10 +607,8 @@ export const Remote_Trigger_Message_Dialog: Story = () => {
       </div>
     </>
   )
-}
 
-export const Uncontrolled: Story = () => {
-  return (
+export const Uncontrolled: Story = () => (
     <TriggerList>
       <li>
         <DialogWrapper>
@@ -694,7 +685,6 @@ export const Uncontrolled: Story = () => {
       </li>
     </TriggerList>
   )
-}
 Uncontrolled.parameters = {
   docs: {
     description: {
@@ -704,8 +694,7 @@ Uncontrolled.parameters = {
   },
 }
 
-export const WidthAndPosition: Story = () => {
-  return (
+export const WidthAndPosition: Story = () => (
     <TriggerList>
       <li>
         <DialogWrapper>
@@ -757,7 +746,6 @@ export const WidthAndPosition: Story = () => {
       </li>
     </TriggerList>
   )
-}
 WidthAndPosition.parameters = {
   docs: {
     description: {
@@ -766,8 +754,7 @@ WidthAndPosition.parameters = {
   },
 }
 
-export const WithScroll: Story = () => {
-  return (
+export const WithScroll: Story = () => (
     <ScrollWrapper>
       <BorderedWrapper>
         We can confirm that there is no change in the width of the wrapper for this text before and
@@ -792,7 +779,6 @@ export const WithScroll: Story = () => {
       </DialogWrapper>
     </ScrollWrapper>
   )
-}
 WithScroll.parameters = { docs: { disable: true } }
 const ScrollWrapper = styled.div`
   height: 200vh;
@@ -911,32 +897,25 @@ export const Modeless_Dialog: Story = () => {
   )
 }
 
-export const RegDialogOpenedDialog: Story = () => {
-  return (
+export const RegDialogOpenedDialog: Story = () => (
     <Dialog isOpen>
       <Description>{dummyText}</Description>
     </Dialog>
   )
-}
 
-export const RegDialogOpenedDialogWidth: Story = () => {
-  return (
+export const RegDialogOpenedDialogWidth: Story = () => (
     <Dialog isOpen width={500}>
       <Description>{dummyText}</Description>
     </Dialog>
   )
-}
 
-export const RegDialogOpenedDialogPosition: Story = () => {
-  return (
+export const RegDialogOpenedDialogPosition: Story = () => (
     <Dialog isOpen top={20} right={40} bottom={60} left={80}>
       <Description>{dummyText}</Description>
     </Dialog>
   )
-}
 
-export const RegOpendMessage: Story = () => {
-  return (
+export const RegOpendMessage: Story = () => (
     <MessageDialog
       isOpen={true}
       title="MessageDialog"
@@ -944,11 +923,9 @@ export const RegOpendMessage: Story = () => {
       onClickClose={action('clicked close')}
     />
   )
-}
 RegOpendMessage.parameters = { docs: { disable: true } }
 
-export const RegOpendAction: Story = () => {
-  return (
+export const RegOpendAction: Story = () => (
     <ActionDialog
       isOpen={true}
       title="ActionDialog"
@@ -974,11 +951,9 @@ export const RegOpendAction: Story = () => {
       </Content>
     </ActionDialog>
   )
-}
 RegOpendAction.parameters = { docs: { disable: true } }
 
-export const RegOpenedModeless: Story = () => {
-  return (
+export const RegOpenedModeless: Story = () => (
     <ModelessDialog
       isOpen
       header={<ModelessHeading>モードレスダイアログ</ModelessHeading>}
@@ -995,7 +970,6 @@ export const RegOpenedModeless: Story = () => {
       </div>
     </ModelessDialog>
   )
-}
 
 export const Body以外のPortalParent: Story = () => {
   const [isOpen, setIsOpen] = useState<'deault' | 'actiion' | 'message' | 'modeless'>()

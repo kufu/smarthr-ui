@@ -19,8 +19,7 @@ export default {
 type ButtonProps = React.ComponentProps<typeof Button>
 type AnchorButtonProps = React.ComponentProps<typeof AnchorButton>
 
-export const _Button: Story = () => {
-  return (
+export const _Button: Story = () => (
     <List>
       <dt>Default</dt>
       <dd>
@@ -179,27 +178,23 @@ export const _Button: Story = () => {
       </dd>
     </List>
   )
-}
 
 _Button.parameters = {
   controls: { hideNoControlsWarning: true },
 }
 
-export const _ButtonControl: Story = (args: ButtonProps) => {
-  return (
+export const _ButtonControl: Story = (args: ButtonProps) => (
     <Wrapper>
       <Button {...args} onClick={action('clicked')}>
         {args.children}
       </Button>
     </Wrapper>
   )
-}
 _ButtonControl.args = {
   children: 'ボタン',
 }
 
-export const _ButtonAnchor: Story = () => {
-  return (
+export const _ButtonAnchor: Story = () => (
     <List>
       <dt>Default</dt>
       <dd>
@@ -333,21 +328,18 @@ export const _ButtonAnchor: Story = () => {
       </dd>
     </List>
   )
-}
 
 _ButtonAnchor.parameters = {
   controls: { hideNoControlsWarning: true },
 }
 
-export const _ButtonAnchorControl: Story = (args: AnchorButtonProps) => {
-  return (
+export const _ButtonAnchorControl: Story = (args: AnchorButtonProps) => (
     <Wrapper>
       <AnchorButton {...args} href="#" onClick={action('clicked')}>
         {args.children}
       </AnchorButton>
     </Wrapper>
   )
-}
 _ButtonAnchorControl.args = {
   children: 'ボタン',
 }

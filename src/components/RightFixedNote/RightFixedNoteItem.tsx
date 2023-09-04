@@ -72,33 +72,27 @@ export const RightFixedNoteItem: VFC<Props> = ({
 }
 
 const Wrapper = styled.div<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
+  ${({ themes: { spacingByChar } }) => css`
       margin-bottom: ${spacingByChar(1.5)};
-    `
-  }}
+    `}
 `
 
 const TextBase = styled(Base)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
+  ${({ themes: { spacingByChar } }) => css`
       padding: ${spacingByChar(0.5)};
       margin-bottom: ${spacingByChar(0.5)};
       overflow: hidden;
-    `
-  }}
+    `}
 `
 
 const Text = styled.p<{ themes: Theme }>`
-  ${({ themes: { fontSize } }) => {
-    return css`
+  ${({ themes: { fontSize } }) => css`
       display: block;
       padding: 0;
       margin: 0;
       font-size: ${fontSize.M};
       line-height: 1.5;
-    `
-  }}
+    `}
 `
 
 const EditButton = styled(Button)`
@@ -106,11 +100,9 @@ const EditButton = styled(Button)`
 `
 
 const Info = styled.div<{ themes: Theme }>`
-  ${({ themes: { fontSize, color } }) => {
-    return css`
+  ${({ themes: { fontSize, color } }) => css`
       color: ${color.TEXT_GREY};
       font-size: ${fontSize.S};
       text-align: right;
-    `
-  }}
+    `}
 `

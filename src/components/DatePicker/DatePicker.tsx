@@ -346,13 +346,11 @@ const Container = styled.div<{ $width: Props['width'] }>`
     width: ${typeof $width === 'number' ? `${$width}px` : $width};
   `}
 `
-const InputSuffixLayout = styled.span<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
-  return css`
+const InputSuffixLayout = styled.span<{ themes: Theme }>(({ themes: { spacingByChar } }) => css`
     height: 100%;
     padding: ${spacingByChar(0.5)} 0;
     box-sizing: border-box;
-  `
-})
+  `)
 const InputSuffixWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
   const { fontSize, color, spacingByChar } = themes
   return css`

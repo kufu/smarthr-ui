@@ -31,7 +31,7 @@ const TextLink = styled(shrTextLink)`
 const Actions = () => (
   <>
     <Button size="s">編集</Button>
-    <TextLink href="#">
+    <TextLink href="#top">
       <Text size="S">ヘルプ</Text>
     </TextLink>
   </>

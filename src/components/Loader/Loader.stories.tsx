@@ -9,8 +9,7 @@ export default {
   component: Loader,
 }
 
-export const All: Story = () => {
-  return (
+export const All: Story = () => (
     <>
       <Wrapper>
         <Text>Primary</Text>
@@ -49,7 +48,6 @@ export const All: Story = () => {
       </GrayWrapper>
     </>
   )
-}
 All.storyName = 'all'
 All.parameters = { withTheming: true }
 
