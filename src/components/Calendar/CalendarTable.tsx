@@ -56,8 +56,7 @@ export const CalendarTable: VFC<Props & ElementProps> = ({
         </tr>
       </thead>
       <tbody>
-        {array.map((week, weekIndex) => {
-          return (
+        {array.map((week, weekIndex) => (
             <tr key={weekIndex}>
               {week.map((date, dateIndex) => {
                 const isOutRange =
@@ -90,8 +89,7 @@ export const CalendarTable: VFC<Props & ElementProps> = ({
                 )
               })}
             </tr>
-          )
-        })}
+          ))}
       </tbody>
     </Table>
   )

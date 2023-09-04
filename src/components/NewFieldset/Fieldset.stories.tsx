@@ -15,8 +15,7 @@ export default {
   component: Fieldset,
 }
 
-export const All: StoryFn = () => {
-  return (
+export const All: StoryFn = () => (
     <Stack gap={2} as="dl">
       <Stack>
         <Text italic color="TEXT_GREY" as="dt">
@@ -124,5 +123,4 @@ export const All: StoryFn = () => {
       </Stack>
     </Stack>
   )
-}
 All.storyName = 'all'

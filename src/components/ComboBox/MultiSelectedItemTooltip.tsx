@@ -8,8 +8,7 @@ type Props = PropsWithChildren<{
   children: ReactNode
 }>
 
-export const MultiSelectedItemTooltip: FC<Props> = ({ needsTooltip, text, children }) => {
-  return needsTooltip ? (
+export const MultiSelectedItemTooltip: FC<Props> = ({ needsTooltip, text, children }) => needsTooltip ? (
     <Tooltip message={text} multiLine>
       {children}
     </Tooltip>
@@ -17,4 +16,3 @@ export const MultiSelectedItemTooltip: FC<Props> = ({ needsTooltip, text, childr
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>{children}</>
   )
-}

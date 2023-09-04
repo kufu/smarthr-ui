@@ -172,8 +172,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
 const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describedbyIds: string) => {
   let foundFirstInput = false
 
-  const addId = (targets: ReactNode): ReactNode[] | ReactNode => {
-    return React.Children.map(targets, (child) => {
+  const addId = (targets: ReactNode): ReactNode[] | ReactNode => React.Children.map(targets, (child) => {
       if (foundFirstInput || !React.isValidElement(child)) {
         return child
       }
@@ -190,7 +189,6 @@ const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describe
 
       return React.cloneElement(child, {}, addId(child.props.children))
     })
-  }
 
   return addId(children)
 }

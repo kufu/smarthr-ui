@@ -23,8 +23,7 @@ const BackgroundJobsList: VFC<Props & ElementProps> = ({ children, className = '
 }
 
 const Item = styled.li``
-const List = styled.ul<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
-  return css`
+const List = styled.ul<{ themes: Theme }>(({ themes: { spacingByChar } }) => css`
     position: fixed;
     bottom: 0;
     right: 0;
@@ -39,8 +38,7 @@ const List = styled.ul<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
         margin-top: ${spacingByChar(1)};
       }
     }
-  `
-})
+  `)
 
 const ListAndItem: typeof BackgroundJobsList & { Item: typeof Item } = Object.assign(
   BackgroundJobsList,

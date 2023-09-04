@@ -28,8 +28,7 @@ export const DropdownCloser: React.VFC<Props> = ({ children, className = '' }) =
 }
 
 const Wrapper = styled.div<{ maxHeight: string; controllable: boolean; scrollable: boolean }>`
-  ${({ maxHeight, controllable, scrollable }) => {
-    return css`
+  ${({ maxHeight, controllable, scrollable }) => css`
       ${!controllable
         ? `
       display: flex;
@@ -37,6 +36,5 @@ const Wrapper = styled.div<{ maxHeight: string; controllable: boolean; scrollabl
       `
         : ''}
       ${!controllable && scrollable ? `max-height: ${maxHeight};` : ''}
-    `
-  }}
+    `}
 `

@@ -27,9 +27,7 @@ export function useOptions<T>({
   const newItemId = useId()
   const optionIdPrefix = useId()
   const getOptionId = useCallback(
-    (optionIndex: number) => {
-      return `${optionIdPrefix}-${optionIndex}`
-    },
+    (optionIndex: number) => `${optionIdPrefix}-${optionIndex}`,
     [optionIdPrefix],
   )
 

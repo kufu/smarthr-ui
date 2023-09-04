@@ -114,8 +114,7 @@ const Box = styled.span<{ themes: Theme }>`
   }}
 `
 const Input = styled.input<{ themes: Theme }>`
-  ${({ themes: { color, shadow } }) => {
-    return css`
+  ${({ themes: { color, shadow } }) => css`
       opacity: 0;
       position: absolute;
       top: 0;
@@ -134,6 +133,5 @@ const Input = styled.input<{ themes: Theme }>`
       &:focus-visible + span {
         box-shadow: ${shadow.focusIndicatorStyles};
       }
-    `
-  }}
+    `}
 `

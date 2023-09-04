@@ -142,9 +142,7 @@ function getFontSizeProperty(theme: ThemeProperty): FontSizeProperty {
     ...theme.fontSize,
   }
 }
-const getLeadingProperty = (theme: ThemeProperty): LeadingProperty => {
-  return { ...theme.leading }
-}
+const getLeadingProperty = (theme: ThemeProperty): LeadingProperty => ({ ...theme.leading })
 function getSpacingProperty(theme: ThemeProperty): SpacingProperty {
   return {
     baseSize: theme.spacing?.baseSize,

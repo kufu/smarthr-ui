@@ -124,8 +124,7 @@ export const AppNavi: VFC<Props & ElementProps> = ({
 }
 
 const WrapperNav = styled(Nav)<{ themes: Theme }>`
-  ${({ themes: { color, shadow, spacingByChar } }) => {
-    return css`
+  ${({ themes: { color, shadow, spacingByChar } }) => css`
       display: flex;
       align-items: center;
       min-width: max-content;
@@ -133,19 +132,15 @@ const WrapperNav = styled(Nav)<{ themes: Theme }>`
       background-color: ${color.WHITE};
       padding-right: ${spacingByChar(1.5)};
       padding-left: ${spacingByChar(1.5)};
-    `
-  }}
+    `}
 `
 const StatusLabel = styled(StatusLabelComponent)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
+  ${({ themes: { spacingByChar } }) => css`
       margin-right: ${spacingByChar(1)};
-    `
-  }}
+    `}
 `
 const Buttons = styled.ul<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
+  ${({ themes: { spacingByChar } }) => css`
       align-self: stretch;
       display: flex;
       align-items: stretch;
@@ -156,6 +151,5 @@ const Buttons = styled.ul<{ themes: Theme }>`
       > li {
         list-style: none;
       }
-    `
-  }}
+    `}
 `

@@ -21,8 +21,7 @@ export default {
   },
 }
 
-const Template: Story = (arg) => {
-  return (
+const Template: Story = (arg) => (
     <List>
       {messageTypes.map((messageType) => (
         <li key={messageType}>
@@ -60,7 +59,6 @@ const Template: Story = (arg) => {
       </li>
     </List>
   )
-}
 export const Bounce = Template.bind({})
 Bounce.args = { animation: 'bounce' }
 export const Fade = Template.bind({})
@@ -176,13 +174,11 @@ const ListInner = () => {
   }
   return <Button onClick={handleClick}>Add message</Button>
 }
-export const FlashMessageList: Story = () => {
-  return (
+export const FlashMessageList: Story = () => (
     <FlashMessageListProvider>
       <ListInner />
     </FlashMessageListProvider>
   )
-}
 
 const List = styled.ul`
   margin: 40px;

@@ -43,9 +43,7 @@ export function usePortal() {
   }, [...parentSeqs])
 
   const isChildPortal = useCallback(
-    (element: HTMLElement | null) => {
-      return _isChildPortal(element, currentSeq)
-    },
+    (element: HTMLElement | null) => _isChildPortal(element, currentSeq),
     [currentSeq],
   )
 

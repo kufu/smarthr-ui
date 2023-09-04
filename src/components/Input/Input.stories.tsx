@@ -20,8 +20,7 @@ export default {
   },
 }
 
-export const All: Story = () => {
-  return (
+export const All: Story = () => (
     <List>
       <li>
         <FormControl title="text">
@@ -102,7 +101,6 @@ export const All: Story = () => {
       </li>
     </List>
   )
-}
 All.storyName = 'all'
 
 export const Currency: Story = () => {

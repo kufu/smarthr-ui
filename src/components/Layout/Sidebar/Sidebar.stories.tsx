@@ -15,8 +15,7 @@ export default {
   },
 }
 
-export const All: Story = () => {
-  return (
+export const All: Story = () => (
     <div style={{ margin: '32px' }}>
       <PageHeading>Sidebar</PageHeading>
       <p>
@@ -63,7 +62,6 @@ export const All: Story = () => {
       </Sidebar>
     </div>
   )
-}
 
 const StyledSection = styled(Section)(({ theme }) => {
   const { color, spacing } = theme

@@ -12,8 +12,7 @@ export default {
   },
 }
 
-export const All: Story = () => {
-  return (
+export const All: Story = () => (
     <SectioningFragment>
       <Stack as="article">
         <header>
@@ -66,7 +65,6 @@ export const All: Story = () => {
       </Stack>
     </SectioningFragment>
   )
-}
 
 const DemoWrapper = styled.div`
   ${({ theme: { color } }) => css`

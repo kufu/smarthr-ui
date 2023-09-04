@@ -190,11 +190,9 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
   }}
 `
 const Background = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    return css`
+  ${({ themes }) => css`
       position: fixed;
       inset: 0;
       background-color: ${themes.color.SCRIM};
-    `
-  }}
+    `}
 `

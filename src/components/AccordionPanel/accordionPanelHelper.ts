@@ -27,9 +27,7 @@ export const keycodes = {
   LEFT: 37,
 }
 
-export const getSiblingButtons = (parent: HTMLDivElement): HTMLElement[] => {
-  return Array.from(parent.querySelectorAll('[data-component="AccordionHeaderButton"]'))
-}
+export const getSiblingButtons = (parent: HTMLDivElement): HTMLElement[] => Array.from(parent.querySelectorAll('[data-component="AccordionHeaderButton"]'))
 
 export const focusFirstSibling = (parent: HTMLDivElement): void => {
   const siblings = getSiblingButtons(parent)
