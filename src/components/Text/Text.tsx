@@ -35,7 +35,9 @@ export type Props = TextProps &
  * @param [as] テキストコンポーネントの HTML タグ名。初期値は span
  * @param [children]
  */
-export const Text: React.FC<Props> = ({ color, as = 'span', ...props }) => <Wrapper {...props} $color={color} as={props.emphasis ? 'em' : as} />
+export const Text: React.FC<Props> = ({ color, as = 'span', ...props }) => (
+  <Wrapper {...props} $color={color} as={props.emphasis ? 'em' : as} />
+)
 
 const text = tv({
   variants: {
@@ -95,9 +97,7 @@ export const NewText: React.FC<NewTextProps> = ({
   emphasis,
   as: Component = emphasis ? 'em' : 'span',
   ...props
-}) => {
-  return <Component {...props} className={text({ ...props, bold: emphasis || bold })} />
-}
+}) => <Component {...props} className={text({ ...props, bold: emphasis || bold })} />
 
 const Wrapper = styled.span<
   Omit<TextProps, 'color'> & {
