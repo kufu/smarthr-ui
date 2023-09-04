@@ -15,10 +15,10 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.11",
-    "@babel/preset-env": "^7.22.14",
-    "@babel/preset-react": "^7.22.5",
-    "@babel/preset-typescript": "^7.22.11",
+    "@babel/core": "^7.22.15",
+    "@babel/preset-env": "^7.22.15",
+    "@babel/preset-react": "^7.22.15",
+    "@babel/preset-typescript": "^7.22.15",
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
     "@storybook/addon-a11y": "^7.4.0",
@@ -159,7 +159,7 @@
   "sideEffects": false,
   "typings": "lib/index.d.ts",
   "resolutions": {
-    "@babel/helper-compilation-targets": "^7.22.10",
+    "@babel/helper-compilation-targets": "^7.22.15",
     "@types/react": "^18.2.21",
     "minimist": "1.2.8",
     "react": "^18.2.0",
