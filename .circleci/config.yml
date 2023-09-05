@@ -62,6 +62,10 @@ commands:
           command: yarn test-storybook:ci
       - store_test_results:
           path: junit.xml
+  run-chromatic-for-new-components:
+    steps:
+      - checkout
+      - run: npx ts-node ./scripts/replaceImportSpecifiers.ts && yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes
   run-chromatic:
     steps:
       - checkout
@@ -108,6 +112,11 @@ jobs:
     steps:
       - setup-for-test
       - run-chromatic
+  chromatic-deployment-for-new-components:
+    executor: node-active-lts
+    steps:
+      - setup-for-test
+      - run-chromatic-for-new-components
   chromatic-deployment-master:
     executor: node-active-lts
     steps:
@@ -123,6 +132,12 @@ workflows:
       - a11y-test:
           context: smarthr-dockerhub
       - chromatic-deployment:
+          filters:
+            branches:
+              ignore:
+                - master
+          context: smarthr-dockerhub
+      - chromatic-deployment-for-new-components:
           filters:
             branches:
               ignore:
