@@ -84,6 +84,7 @@
     "stylelint-config-styled-components": "^0.1.1",
     "testcafe": "3.3.0",
     "ts-loader": "^9.4.4",
+    "ts-morph": "^19.0.0",
     "ts-node": "^10.9.1",
     "ttypescript": "^1.5.15",
     "typescript": "^5.2.2",
