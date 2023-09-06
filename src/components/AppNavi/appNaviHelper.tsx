@@ -28,8 +28,8 @@ export const getIconComponent = (
 
 export type ItemStyleProps = {
   themes: Theme
-  isActive?: boolean
-  isUnclickable?: boolean
+  $isActive?: boolean
+  $isUnclickable?: boolean
 }
 export const getItemStyle = ({
   themes: {
@@ -38,8 +38,8 @@ export const getItemStyle = ({
     leading,
     spacingByChar,
   },
-  isActive,
-  isUnclickable,
+  $isActive,
+  $isUnclickable,
 }: ItemStyleProps) =>
   css`
     display: flex;
@@ -58,7 +58,7 @@ export const getItemStyle = ({
     color: ${TEXT_GREY};
     white-space: nowrap;
 
-    ${isActive &&
+    ${$isActive &&
     css`
       color: ${TEXT_BLACK};
       position: relative;
@@ -73,7 +73,7 @@ export const getItemStyle = ({
         height: ${spacingByChar(0.25)};
       }
     `}
-    ${!isUnclickable &&
+    ${!$isUnclickable &&
     css`
       cursor: pointer;
       &:hover {

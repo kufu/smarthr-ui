@@ -73,9 +73,9 @@ export const AppNaviCustomTag: VFC<InnerProps> = ({
 }
 
 const Active = styled.div<{ $themes: Theme }>(({ $themes }) =>
-  getItemStyle({ themes: $themes, isActive: true }),
+  getItemStyle({ themes: $themes, $isActive: true }),
 )
 const InActive = styled.div<{ $themes: Theme }>(({ $themes }) => getItemStyle({ themes: $themes }))
 const UnclickableActive = styled.div<{ $themes: Theme }>(({ $themes }) =>
-  getItemStyle({ themes: $themes, isActive: true, isUnclickable: true }),
+  getItemStyle({ themes: $themes, $isActive: true, $isUnclickable: true }),
 )
