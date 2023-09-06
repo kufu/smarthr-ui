@@ -109,7 +109,7 @@ const Base = styled.div<{ themes: Theme }>`
       &.right {
         &::before,
         &::after {
-          right: 24px;
+          right: 48px;
         }
       }
       &.center {
