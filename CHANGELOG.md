@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [35.1.1](https://github.com/kufu/smarthr-ui/compare/v35.1.0...v35.1.1) (2023-09-04)
+
+
+### Bug Fixes
+
+* Combobox系コンポーネント内で利用している"hidden", "disabled"などのclassを指定する方法から、style属性を変化させる方法に変更する ([#3667](https://github.com/kufu/smarthr-ui/issues/3667)) ([0b2c3e0](https://github.com/kufu/smarthr-ui/commit/0b2c3e06e61692109bb4b2c7254e448889a60fb0))
+
 ## [35.1.0](https://github.com/kufu/smarthr-ui/compare/v35.0.0...v35.1.0) (2023-08-29)
 
 
