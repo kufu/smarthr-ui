@@ -481,7 +481,7 @@ const InputWrapper = styled.div.attrs(({ $hidden }: InputWrapperProps) => ({
     ? {
         position: 'absolute',
         opacity: '0',
-        'pointer-events': 'none',
+        pointerEvents: 'none',
       }
     : undefined,
 }))<InputWrapperProps>`
