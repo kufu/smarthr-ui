@@ -48,7 +48,7 @@ const defaultOutlineMargin = '4px'
 const createLayerShadow = (depth: number) =>
   depth === 0
     ? 'none'
-    : `0 ${2 ** (depth - 1)}px ${2 ** depth}px ${depth - 1 >= 0 ? 2 ** (depth - 2) : 0}px ${
+    : `0 ${2 ** (depth - 1)}px ${2 ** depth}px ${depth - 1 > 0 ? `${2 ** (depth - 2)}px` : 0} ${
         defaultColor.TRANSPARENCY_30
       }`
 
