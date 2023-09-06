@@ -42,13 +42,13 @@ export const Text: React.FC<Props> = ({ color, as = 'span', ...props }) => (
 const text = tv({
   variants: {
     size: {
-      '2xs': 'text-2xs',
-      xs: 'text-xs',
-      s: 'text-sm',
-      m: 'text-base',
-      l: 'text-lg',
-      xl: 'text-xl',
-      '2xl': 'text-2xl',
+      XXS: 'text-2xs',
+      XS: 'text-xs',
+      S: 'text-sm',
+      M: 'text-base',
+      L: 'text-lg',
+      XL: 'text-xl',
+      XXL: 'text-2xl',
     },
     bold: {
       true: 'font-bold',
@@ -65,10 +65,10 @@ const text = tv({
       inherit: 'text-inherit',
     },
     leading: {
-      none: 'leading-none',
-      normal: 'leading-normal',
-      tight: 'leading-tight',
-      loose: 'leading-loose',
+      NONE: 'leading-none',
+      TIGHT: 'leading-tight',
+      NORMAL: 'leading-normal',
+      LOOSE: 'leading-loose',
     },
     whiteSpace: {
       normal: 'whitespace-normal',

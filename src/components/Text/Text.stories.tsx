@@ -10,7 +10,7 @@ export default {
 
 export const Default: StoryFn = () => (
   <>
-    <NewText as="h1" size="2xl" leading="tight">
+    <NewText as="h1" size="XXL" leading="TIGHT">
       &lt;Text&gt;
     </NewText>
     <NewText as="p">
