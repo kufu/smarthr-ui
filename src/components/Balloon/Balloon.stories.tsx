@@ -2,7 +2,7 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Balloon } from './Balloon'
+import { Balloon } from '.'
 
 export default {
   title: 'Data Display（データ表示）/Balloon',
