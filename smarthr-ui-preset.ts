@@ -10,7 +10,7 @@ const spacingByChar = createSpacingByChar(defaultHtmlFontSize / 2)
 
 // この preset を各プロダクトでも読み込んでもらう想定
 export default {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  content: [],
   theme: {
     backgroundColor: {
       black: defaultColor.GREY_100,
