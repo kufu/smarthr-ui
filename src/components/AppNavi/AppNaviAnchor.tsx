@@ -37,9 +37,9 @@ export const AppNaviAnchor: VFC<InnerProps> = ({
       themes={theme}
       aria-current={current ? 'page' : undefined}
       href={isUnclickable ? undefined : href}
-      isActive={current}
-      isUnclickable={isUnclickable}
       className={classNames.anchor}
+      $isActive={current}
+      $isUnclickable={isUnclickable}
     >
       {iconComponent}
       {children}

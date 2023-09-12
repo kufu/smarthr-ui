@@ -39,11 +39,11 @@ export const AppNaviButton: VFC<InnerProps> = ({
       themes={theme}
       aria-current={current ? 'page' : undefined}
       onClick={onClick}
-      isActive={current}
       disabled={isUnclickable}
-      isUnclickable={isUnclickable}
       type="button"
       className={classNames.button}
+      $isActive={current}
+      $isUnclickable={isUnclickable}
     >
       {iconComponent}
       {children}
