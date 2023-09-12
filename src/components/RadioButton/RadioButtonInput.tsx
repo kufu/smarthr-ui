@@ -65,6 +65,11 @@ const Box = styled.span<{ themes: Theme }>`
       background-color: ${color.WHITE};
       box-sizing: border-box;
 
+      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
+      @media (forced-colors: active) {
+          display: none;
+        }
+
       @media (prefers-contrast: more) {
         & {
           border: ${border.highContrast};
@@ -132,6 +137,12 @@ const Input = styled.input<{ themes: Theme }>`
       }
       &:focus-visible + span {
         box-shadow: ${shadow.focusIndicatorStyles};
+      }
+      
+      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
+      @media (forced-colors: active) {
+        position: initial;
+        opacity: 1;
       }
     `}
 `
