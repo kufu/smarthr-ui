@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [35.2.0](https://github.com/kufu/smarthr-ui/compare/v35.1.1...v35.2.0) (2023-09-12)
+
+
+### Features
+
+* add forced-colors: acitve mode ([#3702](https://github.com/kufu/smarthr-ui/issues/3702)) ([36385a5](https://github.com/kufu/smarthr-ui/commit/36385a5efd50e79269a741a2790cd9a4669c37f1))
+
+
+### Bug Fixes
+
+* style属性に渡すプロパティのため、camel caseに変更する ([#3698](https://github.com/kufu/smarthr-ui/issues/3698)) ([e65e098](https://github.com/kufu/smarthr-ui/commit/e65e098b159877602358ddaa4d651bccc5b5c454))
+
 ### [35.1.1](https://github.com/kufu/smarthr-ui/compare/v35.1.0...v35.1.1) (2023-09-04)
 
 
