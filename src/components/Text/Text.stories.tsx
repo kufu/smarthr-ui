@@ -20,7 +20,7 @@ export const Default: StoryFn = () => (
       styled-components と同じく <code>as</code> で要素を差し替えられます。
     </Text>
     <Text as="p">
-      <Text color="TEXT_GREY">色</Text>や<Text bold>ウェイト</Text>、
+      <Text color="TEXT_GREY">色</Text>や<Text weight="bold">ウェイト</Text>、
       <Text whiteSpace="nowrap">ホワイトスペース</Text>を変えられます。
     </Text>
     <Text as="p">
@@ -30,7 +30,7 @@ export const Default: StoryFn = () => (
     </Text>
     <Text as="p">
       <Text emphasis>入れ子</Text>もできますが、
-      <Text color="TEXT_LINK" bold>
+      <Text color="TEXT_LINK" weight="bold">
         Valid
       </Text>
       な HTML になるよう注意してください。

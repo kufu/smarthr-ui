@@ -12,8 +12,8 @@ const text = tv({
       XL: 'text-xl',
       XXL: 'text-2xl',
     },
-    bold: {
-      true: 'font-bold',
+    weight: {
+      bold: 'font-bold',
     },
     italic: {
       true: 'italic',
@@ -52,8 +52,8 @@ export type TextProps = VariantProps<typeof text> & {
 }
 
 export const Text: React.FC<PropsWithChildren<TextProps>> = ({
-  bold,
   emphasis,
+  weight = emphasis ? 'bold' : undefined,
   as: Component = emphasis ? 'em' : 'span',
   ...props
-}) => <Component {...props} className={text({ ...props, bold: emphasis || bold })} />
+}) => <Component {...props} className={text({ ...props, weight })} />
