@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
+import { ButtonProps } from '../../Button/BaseButton'
 import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -25,7 +26,9 @@ type Props = {
   decorators?: DecoratorsType<
     'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
   >
-  responseMessage?: ResponseMessageType
+  responseMessage?: ResponseMessageType,
+  /** 引き金となるボタンの大きさ */
+  triggerSize?: ButtonProps['size']
 }
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
@@ -47,6 +50,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   hasStatusText,
   decorators,
   responseMessage,
+  triggerSize,
   ...props
 }: Props) => {
   const themes = useTheme()
@@ -88,6 +92,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
               {isFiltered ? <FilteredCheckIcon aria-label={filteredIconAriaLabel} /> : null}
             </IsFilteredIconWrapper>
           }
+          size={triggerSize}
         >
           {triggerButton}
         </Button>

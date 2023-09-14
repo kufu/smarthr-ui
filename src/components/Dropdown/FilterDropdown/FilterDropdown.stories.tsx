@@ -180,6 +180,17 @@ const Render: React.FC = () => {
             </Stack>
           </FilterDropdown>
         </dd>
+        <dt>small button</dt>
+        <dd>
+          <FilterDropdown
+            isFiltered={isFiltered2}
+            onApply={() => setIsFiltered2(true)}
+            onReset={() => setIsFiltered2(false)}
+            triggerSize="s"
+          >
+            <p>You can change border color of the trigger button by setting `isFiltered`.</p>
+          </FilterDropdown>
+        </dd>
       </List>
     </Wrapper>
   )
