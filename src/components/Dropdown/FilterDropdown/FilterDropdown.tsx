@@ -144,7 +144,11 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   )
 }
 
-const IsFilteredIconWrapper = styled.span<{ isFiltered: boolean;  themes: Theme; size?: ButtonProps['size'] }>`
+const IsFilteredIconWrapper = styled.span<{
+  isFiltered: boolean
+  themes: Theme
+  size?: ButtonProps['size']
+}>`
   position: relative;
   color: ${({ isFiltered, themes }) => (isFiltered ? themes.color.MAIN : themes.color.TEXT_BLACK)};
   line-height: 1;
