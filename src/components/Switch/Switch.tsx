@@ -27,7 +27,8 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
     border-radius: 1.25rem;
     border: ${border.shorthand};
     background-color: ${color.WHITE};
-    /* 理想的には padding が2pxだが、box-shadow は outline で使用しているため、border と padding で2pxの疑似余白を作っている。 */
+
+    /* 理想的には padding: 2px; だが、box-shadow を outline で使用しているため、border と padding で2pxの疑似余白を作っている。 */
     padding: 1px;
 
     /* :focus-visible-within の代替 */
@@ -49,7 +50,6 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
       transition-property: transform, scale;
       transition-duration: 150ms;
       transition-timing-function: ease-out;
-      /* transition: transform 150ms ease-out; */
     }
 
     ::before {
