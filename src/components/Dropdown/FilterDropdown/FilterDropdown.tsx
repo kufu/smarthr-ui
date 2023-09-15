@@ -153,7 +153,10 @@ const IsFilteredIconWrapper = styled.span<{
   color: ${({ isFiltered, themes }) => (isFiltered ? themes.color.MAIN : themes.color.TEXT_BLACK)};
   line-height: 1;
   ${({ themes: { space }, size }) => css`
-    transform: translate(${size === 's' ? space(-0.25) : 0});
+    ${size === 's' &&
+    css`
+      transform: translateX(${space(-0.25)});
+    `}
   `}
 
   & > [role='img'] + [role='img'] {
