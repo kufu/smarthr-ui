@@ -26,7 +26,7 @@ type Props = {
   decorators?: DecoratorsType<
     'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
   >
-  responseMessage?: ResponseMessageType,
+  responseMessage?: ResponseMessageType
   /** 引き金となるボタンの大きさ */
   triggerSize?: ButtonProps['size']
 }
@@ -87,7 +87,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
         <Button
           {...props}
           suffix={
-            <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
+            <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes} size={triggerSize}>
               <FaFilterIcon />
               {isFiltered ? <FilteredCheckIcon aria-label={filteredIconAriaLabel} /> : null}
             </IsFilteredIconWrapper>
@@ -144,10 +144,13 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   )
 }
 
-const IsFilteredIconWrapper = styled.span<{ isFiltered: boolean; themes: Theme }>`
+const IsFilteredIconWrapper = styled.span<{ isFiltered: boolean;  themes: Theme; size?: ButtonProps['size'] }>`
   position: relative;
-  color: ${({ isFiltered, themes }) => isFiltered ? themes.color.MAIN : themes.color.TEXT_BLACK};
+  color: ${({ isFiltered, themes }) => (isFiltered ? themes.color.MAIN : themes.color.TEXT_BLACK)};
   line-height: 1;
+  ${({ themes: { space }, size }) => css`
+    transform: translate(${size === 's' ? space(-0.25) : 0});
+  `}
 
   & > [role='img'] + [role='img'] {
     position: absolute;
