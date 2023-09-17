@@ -3782,10 +3782,10 @@
   version "12.20.15"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.15.tgz#10ee6a6a3f971966fddfa3f6e89ef7a73ec622df"
 
-"@types/node@^14.18.59":
-  version "14.18.59"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.59.tgz#2b61a51d875e2a4deb0c6b498ff21a78e691edc6"
-  integrity sha512-NWJMpBL2Xs3MY93yrD6YrrTKep8eIA6iMnfG4oIc6LrTRlBZgiSCGiY3V/Owlp6umIBLyKb4F8Q7hxWatjYH5A==
+"@types/node@^14.18.61":
+  version "14.18.61"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.61.tgz#752097010d85f6279b3069811bf0e99eba996096"
+  integrity sha512-1mFT4DqS4/s9tlZbdkwEB/EnSykA9MDeDLIk3FHApGvIMGY//qgstB2gu9GKGESWyW/qiRUO+jhlLJ9bBJ8j+Q==
 
 "@types/node@^16.0.0":
   version "16.11.36"
