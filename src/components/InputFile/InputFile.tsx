@@ -3,6 +3,7 @@ import React, {
   ReactNode,
   forwardRef,
   useCallback,
+  useId,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -57,6 +58,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
   ) => {
     const theme = useTheme()
     const [files, setFiles] = useState<File[]>([])
+    const labelId = useId()
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesDirectly = useRef(false)
@@ -147,11 +149,12 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
             className={classNames.input}
             ref={inputRef}
             aria-invalid={error || undefined}
+            aria-labelledby={labelId}
           />
           <Prefix themes={theme}>
             <FaFolderOpenIcon />
           </Prefix>
-          {label}
+          <span id={labelId} aria-hidden="true">{label}</span>
         </InputWrapper>
       </Wrapper>
     )

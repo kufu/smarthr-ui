@@ -94,6 +94,11 @@ const Box = styled.span<{ themes: Theme; error?: boolean }>`
         }
       }
 
+      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
+      @media (forced-colors: active) {
+        display: none;
+      }
+
       /* FIXME: なぜか static classname になってしまうため & を重ねている */
       input:checked + &&,
       input:indeterminate + && {
@@ -140,6 +145,12 @@ const Input = styled.input<{ themes: Theme }>`
       }
       &:focus-visible + span {
         ${shadow.focusIndicatorStyles};
+      }
+
+      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
+      @media (forced-colors: active) {
+        opacity: 1;
+        position: static;
       }
     `
   }}
