@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [35.3.0](https://github.com/kufu/smarthr-ui/compare/v35.2.0...v35.3.0) (2023-09-19)
+
+
+### Features
+
+* FilterDropdown にサイズ小オプションを追加 ([#3717](https://github.com/kufu/smarthr-ui/issues/3717)) ([f4bab37](https://github.com/kufu/smarthr-ui/commit/f4bab372d5c6a75cdd6f5ab2b9a37a9c94c80aa4))
+* InputFileのラベルが2回スクリーンリーダーで読まれないように ([#3714](https://github.com/kufu/smarthr-ui/issues/3714)) ([b43c0eb](https://github.com/kufu/smarthr-ui/commit/b43c0eb3241cb7b42ffbcd4494b15d24c5dc00e6))
+
 ## [35.2.0](https://github.com/kufu/smarthr-ui/compare/v35.1.1...v35.2.0) (2023-09-12)
 
 
