@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react'
+import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 const text = tv({
@@ -40,7 +40,6 @@ const text = tv({
       'pre-wrap': 'whitespace-pre-wrap',
     },
   },
-  defaultVariants: {},
 })
 
 // VariantProps を使うとコメントが書けない〜🥹
@@ -51,9 +50,17 @@ export type TextProps = VariantProps<typeof text> & {
   emphasis?: boolean
 }
 
-export const Text: React.FC<PropsWithChildren<TextProps>> = ({
+export const Text: React.FC<PropsWithChildren<TextProps & ComponentProps<'span'>>> = ({
   emphasis,
   weight = emphasis ? 'bold' : undefined,
   as: Component = emphasis ? 'em' : 'span',
   ...props
-}) => <Component {...props} className={text({ ...props, weight })} />
+}) => {
+  const { size, italic, color, leading, whiteSpace, className } = props
+  const styles = useMemo(
+    () => text({ size, weight, italic, color, leading, whiteSpace, className }),
+    [size, weight, italic, color, leading, whiteSpace, className],
+  )
+
+  return <Component {...props} className={styles} />
+}
