@@ -1,0 +1,16 @@
+name: 'Chromatic'
+on: push
+jobs:
+  chromatic-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: パッケージのインストール
+        run: yarn install --frozen-lockfile
+      - name: Chromaticへ公開
+        uses: chromaui/action@v1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
