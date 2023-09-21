@@ -108,6 +108,7 @@ const Checkbox = styled.input`
   cursor: pointer;
   outline: none;
   opacity: 0;
+  appearance: none;
 
   :disabled {
     cursor: revert;
