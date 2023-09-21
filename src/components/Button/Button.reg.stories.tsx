@@ -21,10 +21,10 @@ export const _ButtonHover: StoryFn = () => (
     <dd>
       <Stack>
         <Cluster>
-          <Button variant="primary" onClick={action('clicked')}>
+          <Button data-testid="button-1" variant="primary" onClick={action('clicked')}>
             Primaryボタン
           </Button>
-          <Button variant="danger" onClick={action('clicked')}>
+          <Button data-testid="button-2" variant="danger" onClick={action('clicked')}>
             Dangerボタン
           </Button>
         </Cluster>
@@ -37,9 +37,9 @@ _ButtonHover.parameters = {
 }
 _ButtonHover.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement)
-  const primaryButton = canvas.getByText('Primaryボタン')
+  const primaryButton = canvas.getByTestId('button-1')
   await userEvent.hover(primaryButton)
-  // const dangerButton = canvas.getByText('Dangerボタン')
+  // const dangerButton = canvas.getByTestId('button-2')
   // await userEvent.hover(dangerButton)
 }
 
@@ -49,10 +49,10 @@ export const _ButtonFocused: StoryFn = () => (
     <dd>
       <Stack>
         <Cluster>
-          <Button variant="primary" onClick={action('clicked')}>
+          <Button data-testid="button-1" variant="primary" onClick={action('clicked')}>
             Primaryボタン
           </Button>
-          <Button variant="danger" onClick={action('clicked')}>
+          <Button data-testid="button-2" variant="danger" onClick={action('clicked')}>
             Dangerボタン
           </Button>
         </Cluster>
@@ -65,8 +65,8 @@ _ButtonFocused.parameters = {
 }
 _ButtonFocused.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement)
-  const primaryButton = canvas.getByText('Primaryボタン')
+  const primaryButton = canvas.getByTestId('button-1')
   await primaryButton.focus()
-  // const dangerButton = canvas.getByText('Dangerボタン')
-  // await dangerButton.focus()
+  const dangerButton = canvas.getByTestId('button-2')
+  await dangerButton.focus()
 }
