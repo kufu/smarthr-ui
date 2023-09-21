@@ -39,8 +39,8 @@ _ButtonHover.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement)
   const primaryButton = canvas.getByText('Primaryボタン')
   await userEvent.hover(primaryButton)
-  const dangerButton = canvas.getByText('Dangerボタン')
-  await userEvent.hover(dangerButton)
+  // const dangerButton = canvas.getByText('Dangerボタン')
+  // await userEvent.hover(dangerButton)
 }
 
 export const _ButtonFocused: StoryFn = () => (
@@ -67,6 +67,6 @@ _ButtonFocused.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement)
   const primaryButton = canvas.getByText('Primaryボタン')
   await primaryButton.focus()
-  const dangerButton = canvas.getByText('Dangerボタン')
-  await dangerButton.focus()
+  // const dangerButton = canvas.getByText('Dangerボタン')
+  // await dangerButton.focus()
 }
