@@ -122,7 +122,7 @@ const Checkbox = styled.input`
 `
 
 const CheckIcon = styled(FaCheckIcon).attrs({ color: 'WHITE', size: 'XXS' })<{ themes: Theme }>`
-  ${({ themes: { fontSize } }) => css`
+  ${({ themes: { color, fontSize } }) => css`
     position: absolute;
     display: none;
 
@@ -132,6 +132,11 @@ const CheckIcon = styled(FaCheckIcon).attrs({ color: 'WHITE', size: 'XXS' })<{ t
         transform: translateX(calc((1rem - ${fontSize.XXS}) / 2));
         pointer-events: none;
       }
+    }
+
+    /* ライトモードかつ強制カラーモードの時に on 状態を判別するため */
+    @media (prefers-color-scheme: light) and (forced-colors: active) {
+      fill: ${color.GREY_100};
     }
   `}
 `
