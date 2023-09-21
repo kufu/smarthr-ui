@@ -22,21 +22,25 @@ export const _ButtonHover: StoryFn = () => (
       <Stack>
         <Cluster>
           <Button variant="primary" onClick={action('clicked')}>
-            ボタン
+            Primaryボタン
+          </Button>
+          <Button variant="danger" onClick={action('clicked')}>
+            Dangerボタン
           </Button>
         </Cluster>
       </Stack>
     </dd>
   </div>
 )
-
 _ButtonHover.parameters = {
   controls: { hideNoControlsWarning: true },
 }
-
 _ButtonHover.play = async ({ canvasElement }) => {
-  const button = canvasElement.querySelector('.smarthr-ui-Button')
-  await userEvent.hover(button!)
+  const canvas = within(canvasElement)
+  const primaryButton = canvas.getByText('Primaryボタン')
+  await userEvent.hover(primaryButton)
+  const dangerButton = canvas.getByText('Dangerボタン')
+  await userEvent.hover(dangerButton)
 }
 
 export const _ButtonFocused: StoryFn = () => (
@@ -46,20 +50,23 @@ export const _ButtonFocused: StoryFn = () => (
       <Stack>
         <Cluster>
           <Button variant="primary" onClick={action('clicked')}>
-            ボタン
+            Primaryボタン
+          </Button>
+          <Button variant="danger" onClick={action('clicked')}>
+            Dangerボタン
           </Button>
         </Cluster>
       </Stack>
     </dd>
   </div>
 )
-
 _ButtonFocused.parameters = {
   controls: { hideNoControlsWarning: true },
 }
-
 _ButtonFocused.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement)
-  const button = canvas.getByRole('button')
-  await button.focus()
+  const primaryButton = canvas.getByText('Primaryボタン')
+  await primaryButton.focus()
+  const dangerButton = canvas.getByText('Dangerボタン')
+  await dangerButton.focus()
 }
