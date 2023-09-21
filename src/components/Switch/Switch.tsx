@@ -44,7 +44,7 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
       border-radius: ${radius.full};
       border: ${border.shorthand};
       border-color: ${color.GREY_30};
-      background-color: ${color.GREY_30};
+      background-color: ${color.GREY_65};
       block-size: 1rem;
       inline-size: 1rem;
       transition-property: transform, scale;
