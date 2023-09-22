@@ -82,6 +82,27 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
       }
     `}
 
+    @media (forced-colors: active) {
+      ${$disabled
+        ? css`
+            &&& {
+              border-color: GrayText;
+
+              &::before,
+              &::after {
+                border-color: GrayText;
+              }
+            }
+          `
+        : css`
+            /* ツマミを塗りつぶす https://developer.mozilla.org/en-US/docs/Web/CSS/system-color */
+            &&&::before,
+            &&&::after {
+              background-color: ButtonBorder;
+            }
+          `}
+    }
+
     @supports not selector(:has(+ *)) {
       border-style: revert;
       background-color: revert;
@@ -122,7 +143,7 @@ const Checkbox = styled.input`
 `
 
 const CheckIcon = styled(FaCheckIcon).attrs({ color: 'WHITE', size: 'XXS' })<{ themes: Theme }>`
-  ${({ themes: { color, fontSize } }) => css`
+  ${({ themes: { fontSize } }) => css`
     position: absolute;
     display: none;
 
@@ -134,9 +155,13 @@ const CheckIcon = styled(FaCheckIcon).attrs({ color: 'WHITE', size: 'XXS' })<{ t
       }
     }
 
-    /* ライトモードかつ強制カラーモードの時に on 状態を判別するため */
-    @media (prefers-color-scheme: light) and (forced-colors: active) {
-      fill: ${color.GREY_100};
+    /* 強制カラーモードの時に状態を判別するため */
+    @media (forced-colors: active) {
+      fill: ButtonText;
+
+      [type='checkbox']:disabled ~ & {
+        fill: GrayText;
+      }
     }
   `}
 `
