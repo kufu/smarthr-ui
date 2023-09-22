@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
-import { userEvent, within } from '@storybook/testing-library'
+import { within } from '@storybook/testing-library'
 import React from 'react'
 
 import { Cluster, Stack } from '../Layout'
@@ -21,10 +21,13 @@ export const _ButtonHover: StoryFn = () => (
     <dd>
       <Stack>
         <Cluster>
-          <Button data-testid="button-1" variant="primary" onClick={action('clicked')}>
+          <Button id="hover" variant="primary" onClick={action('clicked')}>
             Primaryボタン
           </Button>
-          <Button data-testid="button-2" variant="danger" onClick={action('clicked')}>
+          <Button id="active" variant="secondary" onClick={action('clicked')}>
+            Secondaryボタン
+          </Button>
+          <Button id="focus" variant="danger" onClick={action('clicked')}>
             Dangerボタン
           </Button>
         </Cluster>
@@ -34,13 +37,11 @@ export const _ButtonHover: StoryFn = () => (
 )
 _ButtonHover.parameters = {
   controls: { hideNoControlsWarning: true },
-}
-_ButtonHover.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  const primaryButton = canvas.getByTestId('button-1')
-  await userEvent.hover(primaryButton)
-  // const dangerButton = canvas.getByTestId('button-2')
-  // await userEvent.hover(dangerButton)
+  pseudo: {
+    hover: ['#hover'],
+    active: ['#active'],
+    focus: ['#active'],
+  },
 }
 
 export const _ButtonFocused: StoryFn = () => (
