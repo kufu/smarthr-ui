@@ -113,12 +113,12 @@ export const createIcon = (SvgIcon: IconType) => {
 
     if (existsText) {
       return (
-        <WithIcon gap={iconGap} right={right} className={classNames.withText}>
+        <IconAndTextWrapper gap={iconGap} right={right} className={classNames.withText}>
           {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
           {right && text}
           {svgIcon}
           {!right && text}
-        </WithIcon>
+        </IconAndTextWrapper>
       )
     }
 
@@ -135,7 +135,7 @@ export const createIcon = (SvgIcon: IconType) => {
   return Icon
 }
 
-const WithIcon = styled.span<{
+const IconAndTextWrapper = styled.span<{
   right: ComponentProps['right']
   gap: ComponentProps['iconGap']
 }>`
