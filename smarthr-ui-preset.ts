@@ -146,4 +146,5 @@ export default {
     textDecorationColor: false,
   },
   plugins: [],
+  prefix: 'shr-',
 } satisfies Config
