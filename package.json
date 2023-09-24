@@ -107,7 +107,8 @@
   },
   "files": [
     "esm",
-    "lib"
+    "lib",
+    "smarthr-ui.css"
   ],
   "homepage": "https://github.com/kufu/smarthr-ui#readme",
   "keywords": [
@@ -136,7 +137,7 @@
     "build": "run-p build:*",
     "build:lib": "tsc -p tsconfig.build.json",
     "build:esm": "tsc -p tsconfig.esm.build.json",
-    "build:css": "tailwindcss -i ./src/styles/index.css -o ./dist/index.css",
+    "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
     "build-storybook": "storybook build --quiet -s ./public",
     "build-stylesheet": "ttsc -p tsconfig.stylesheet.json; node scripts/build-stylesheet.ts",
     "clean": "rimraf ./lib",
@@ -163,7 +164,9 @@
     "write:ui-props": "ts-node scripts/exportUIProps.ts",
     "export:ui-props": "run-s build:lib write:ui-props"
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "*.css"
+  ],
   "typings": "lib/index.d.ts",
   "resolutions": {
     "@babel/helper-compilation-targets": "^7.22.15",
