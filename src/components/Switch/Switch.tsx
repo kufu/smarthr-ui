@@ -131,6 +131,12 @@ const Checkbox = styled.input`
   opacity: 0;
   appearance: none;
 
+  /* 古い iOS など inset が効かない環境で領域いっぱいに広げる */
+  @supports not (inset: 0) {
+    width: 100%;
+    height: 100%;
+  }
+
   :disabled {
     cursor: revert;
   }
@@ -139,6 +145,7 @@ const Checkbox = styled.input`
     position: revert;
     opacity: revert;
     outline: revert;
+    appearance: revert;
   }
 `
 
