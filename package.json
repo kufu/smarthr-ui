@@ -75,6 +75,7 @@
     "smarthr-normalize-css": "^1.1.0",
     "standard-version": "^9.3.2",
     "storybook": "^7.4.5",
+    "storybook-addon-pseudo-states": "^2.1.1",
     "styled-components": "^5.3.11",
     "styled-reset": "^4.5.1",
     "stylelint": "^15.10.3",

@@ -24,6 +24,7 @@ const config: StorybookConfig = {
         },
       },
     },
+    'storybook-addon-pseudo-states',
   ],
   refs: {
     'smarthr-patterns': {
