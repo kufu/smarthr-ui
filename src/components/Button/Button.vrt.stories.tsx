@@ -15,7 +15,7 @@ export default {
 }
 
 export const _ButtonState: StoryFn = () => (
-  <div>
+  <dl>
     <dt>hover</dt>
     <dd style={{ padding: '10px' }}>
       <Stack>
@@ -123,7 +123,7 @@ export const _ButtonState: StoryFn = () => (
         </div>
       </Stack>
     </dd>
-  </div>
+  </dl>
 )
 
 _ButtonState.parameters = {
@@ -161,7 +161,7 @@ _ButtonState.parameters = {
 }
 
 export const _ButtonAnchorState: StoryFn = () => (
-  <div>
+  <dl>
     <dt>hover</dt>
     <dd style={{ padding: '10px' }}>
       <Stack>
@@ -240,7 +240,12 @@ export const _ButtonAnchorState: StoryFn = () => (
     <dd style={{ padding: '10px' }}>
       <Stack>
         <Cluster gap={1}>
-          <AnchorButton href="#" id="focus-primary" variant="primary" onClick={action('clicked')}>
+          <AnchorButton
+            href="#"
+            id="focus-visible-primary"
+            variant="primary"
+            onClick={action('clicked')}
+          >
             ボタン
           </AnchorButton>
           <AnchorButton
@@ -314,7 +319,7 @@ export const _ButtonAnchorState: StoryFn = () => (
         </div>
       </Stack>
     </dd>
-  </div>
+  </dl>
 )
 
 _ButtonAnchorState.parameters = {
