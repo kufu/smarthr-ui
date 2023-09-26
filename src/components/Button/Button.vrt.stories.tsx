@@ -12,6 +12,9 @@ export default {
   subcomponents: {
     AnchorButton,
   },
+  parameters: {
+    chromatic: { disableSnapshot: false },
+  },
 }
 
 export const _ButtonState: StoryFn = () => (

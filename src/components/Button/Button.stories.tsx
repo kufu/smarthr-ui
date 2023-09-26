@@ -14,6 +14,9 @@ export default {
   subcomponents: {
     AnchorButton,
   },
+  parameters: {
+    chromatic: { disableSnapshot: false },
+  },
 }
 
 type ButtonProps = React.ComponentProps<typeof Button>

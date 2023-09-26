@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
-import { Title, Subtitle, Description, Primary, ArgsTable, Stories } from '@storybook/blocks';
+import { Title, Subtitle, Description, Primary, ArgsTable, Stories } from '@storybook/blocks'
 
 import { Reset } from 'styled-reset'
 import { Preview } from '@storybook/react'
@@ -26,6 +26,7 @@ const preview: Preview = {
     },
   },
   parameters: {
+    chromatic: { disableSnapshot: true },
     options: {
       isFullscreen: false,
       isToolshown: true,
@@ -42,7 +43,7 @@ const preview: Preview = {
           'Page Templates（ページテンプレート）',
           'States（状態）',
           'Text（テキスト）',
-          'Experimental（実験的）'
+          'Experimental（実験的）',
         ],
       },
     },
@@ -82,7 +83,7 @@ const preview: Preview = {
         </ThemeProvider>
       )
     },
-  ]
+  ],
 }
 
 export default preview
