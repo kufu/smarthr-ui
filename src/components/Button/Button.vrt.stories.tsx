@@ -131,9 +131,7 @@ export const _ButtonState: StoryFn = () => (
 
 _ButtonState.parameters = {
   controls: { hideNoControlsWarning: true },
-  parameters: {
-    chromatic: { forcedColors: 'active' },
-  },
+  chromatic: { forcedColors: 'active' },
   pseudo: {
     hover: [
       '#hover-primary',

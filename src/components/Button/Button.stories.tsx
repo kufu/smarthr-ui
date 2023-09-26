@@ -184,6 +184,7 @@ export const _Button: Story = () => (
 
 _Button.parameters = {
   controls: { hideNoControlsWarning: true },
+  chromatic: { forcedColors: 'active' },
 }
 
 export const _ButtonControl: Story = (args: ButtonProps) => (
