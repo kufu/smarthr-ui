@@ -15,10 +15,10 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.20",
+    "@babel/core": "^7.23.0",
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-react": "^7.22.15",
-    "@babel/preset-typescript": "^7.22.15",
+    "@babel/preset-typescript": "^7.23.0",
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
     "@storybook/addon-a11y": "^7.4.5",
