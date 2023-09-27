@@ -6,7 +6,7 @@ import styled, { css } from 'styled-components'
 import { FaPlusCircleIcon, FaPlusIcon, FaPlusSquareIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 
-import { AnchorButton, Button } from '.'
+import { AnchorButton, Button, UnstyledButton } from '.'
 
 export default {
   title: 'Buttons（ボタン）/Button',
@@ -175,6 +175,11 @@ export const _Button: Story = () => (
       <ExtendingButton variant="primary" onClick={action('clicked')}>
         width: 300px
       </ExtendingButton>
+    </dd>
+
+    <dt>Unstyled</dt>
+    <dd>
+      <UnstyledButton onClick={action('clicked')}>ボタン</UnstyledButton>
     </dd>
   </List>
 )

@@ -4,7 +4,7 @@ import React from 'react'
 
 import { Cluster, Stack } from '../Layout'
 
-import { AnchorButton, Button } from '.'
+import { AnchorButton, Button, UnstyledButton } from '.'
 
 export default {
   title: 'Buttons（ボタン）/Button',
@@ -32,6 +32,9 @@ export const _ButtonState: StoryFn = () => (
           <Button id="hover-text" variant="text" onClick={action('clicked')}>
             ボタン
           </Button>
+          <UnstyledButton id="hover-unstyled" onClick={action('clicked')}>
+            ボタン
+          </UnstyledButton>
         </Cluster>
         <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
           <Cluster>
@@ -59,6 +62,9 @@ export const _ButtonState: StoryFn = () => (
           <Button id="focus-text" variant="text" onClick={action('clicked')}>
             ボタン
           </Button>
+          <UnstyledButton id="focus-unstyled" onClick={action('clicked')}>
+            ボタン
+          </UnstyledButton>
         </Cluster>
         <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
           <Cluster>
@@ -86,6 +92,9 @@ export const _ButtonState: StoryFn = () => (
           <Button id="focus-visible-text" variant="text" onClick={action('clicked')}>
             ボタン
           </Button>
+          <UnstyledButton id="focus-visible-unstyled" onClick={action('clicked')}>
+            ボタン
+          </UnstyledButton>
         </Cluster>
         <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
           <Cluster>
@@ -113,6 +122,9 @@ export const _ButtonState: StoryFn = () => (
           <Button id="active-text" variant="text" onClick={action('clicked')}>
             ボタン
           </Button>
+          <UnstyledButton id="active-unstyled" onClick={action('clicked')}>
+            ボタン
+          </UnstyledButton>
         </Cluster>
         <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
           <Cluster>
@@ -135,6 +147,7 @@ _ButtonState.parameters = {
       '#hover-danger',
       '#hover-text',
       '#hover-skeleton',
+      '#hover-unstyled',
     ],
     focus: [
       '#focus-primary',
@@ -142,6 +155,7 @@ _ButtonState.parameters = {
       '#focus-danger',
       '#focus-text',
       '#focus-skeleton',
+      '#focus-unstyled',
     ],
     focusVisible: [
       '#focus-visible-primary',
@@ -149,6 +163,7 @@ _ButtonState.parameters = {
       '#focus-visible-danger',
       '#focus-visible-text',
       '#focus-visible-skeleton',
+      '#focus-visible-unstyled',
     ],
     active: [
       '#active-primary',
@@ -156,6 +171,7 @@ _ButtonState.parameters = {
       '#active-danger',
       '#active-text',
       '#active-skeleton',
+      '#active-unstyled',
     ],
   },
 }
