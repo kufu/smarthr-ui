@@ -4,6 +4,8 @@ import React from 'react'
 
 import { Cluster, Stack } from '../Layout'
 
+import { _Button, _ButtonAnchor } from './Button.stories'
+
 import { AnchorButton, Button, UnstyledButton } from '.'
 
 export default {
@@ -370,4 +372,13 @@ _ButtonAnchorState.parameters = {
       '#active-skeleton',
     ],
   },
+}
+
+export const _ButtonForceColor = _Button.bind({})
+_ButtonForceColor.parameters = {
+  chromatic: { forcedColors: 'active' },
+}
+export const _ButtonAnchorForceColor = _ButtonAnchor.bind({})
+_ButtonAnchorForceColor.parameters = {
+  chromatic: { forcedColors: 'active' },
 }
