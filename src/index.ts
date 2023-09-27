@@ -124,6 +124,7 @@ export { VisuallyHiddenText } from './components/VisuallyHiddenText'
 export * from './components/SpreadsheetTable'
 export * from './components/ResponseMessage'
 export * from './components/Badge'
+export * from './components/Switch'
 
 // layout components
 export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'

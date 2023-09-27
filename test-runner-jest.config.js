@@ -32,6 +32,7 @@ module.exports = {
     'CheckBox.stories.tsx',
     'ComboBox.stories.tsx',
     'FieldSet.stories.tsx',
+    'Switch.stories.tsx',
     /**
      * error: "Form elements must have labels"
      * error: "Elements must only use allowed ARIA attributes"
