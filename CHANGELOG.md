@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [35.4.0](https://github.com/kufu/smarthr-ui/compare/v35.3.0...v35.4.0) (2023-09-27)
+
+
+### Features
+
+* Switch を追加 ([#3719](https://github.com/kufu/smarthr-ui/issues/3719)) ([956311b](https://github.com/kufu/smarthr-ui/commit/956311b3effddcbdee6548ef29e785934505ec3b))
+
 ## [35.3.0](https://github.com/kufu/smarthr-ui/compare/v35.2.0...v35.3.0) (2023-09-19)
 
 
