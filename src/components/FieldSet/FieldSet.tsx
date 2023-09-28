@@ -68,13 +68,11 @@ export const FieldSet: FC<Props & ElementProps> = ({
         {labelSuffix && labelSuffix}
       </Title>
 
-      {children ? (
-        children
-      ) : (
-        // eslint-disable-next-line smarthr/a11y-input-has-name-attribute
-        <Input {...props} error={!!errorMessage} className={classNames.input} />
+      {helpMessage && (
+        <Help id={helpId} themes={theme} className={classNames.help}>
+          {helpMessage}
+        </Help>
       )}
-
       {errorMessage &&
         (Array.isArray(errorMessage) ? errorMessage : [errorMessage]).map((message, index) => (
           <Error themes={theme} key={index} className={classNames.error}>
@@ -83,10 +81,11 @@ export const FieldSet: FC<Props & ElementProps> = ({
           </Error>
         ))}
 
-      {helpMessage && (
-        <Help id={helpId} themes={theme} className={classNames.help}>
-          {helpMessage}
-        </Help>
+      {children ? (
+        children
+      ) : (
+        // eslint-disable-next-line smarthr/a11y-input-has-name-attribute
+        <Input {...props} error={!!errorMessage} className={classNames.input} />
       )}
     </Wrapper>
   )
@@ -122,7 +121,7 @@ const Help = styled.div<{ themes: Theme }>`
 `
 const Error = styled.div<{ themes: Theme }>`
   ${({ themes: { fontSize, spacingByChar } }) => css`
-    margin: ${spacingByChar(0.5)} 0 0 0;
+    margin: ${spacingByChar(0.5)} 0;
     font-size: ${fontSize.S};
     line-height: 1;
   `}
