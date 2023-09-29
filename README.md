@@ -46,6 +46,7 @@ yarn add react react-dom styled-components
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { createTheme, ThemeProvider, Button } from 'smarthr-ui'
+import 'smarthr-ui/smarthr-ui.css'
 
 const theme = createTheme()
 
