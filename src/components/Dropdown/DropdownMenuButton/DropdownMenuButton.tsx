@@ -182,7 +182,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
       <DropdownContent>
         <DropdownScrollArea>
           <ActionList ref={containerRef} themes={themes} className={classNames.panel}>
-            { React.Children.toArray(children).map((item, i) =>
+            {React.Children.map(children, (item, i) =>
               // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
               // itemの存在チェックでfalsyな値は弾かれている想定
               item ? <li key={i}>{actionItem(item as ActionItemTruthyType)}</li> : null,
