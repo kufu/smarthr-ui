@@ -73,8 +73,8 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!containerRef.current || !document.activeElement) {
-        return
-      }
+      return
+    }
 
     const allItems = Array.from(containerRef.current.querySelectorAll("li > *"))
     const {
@@ -182,10 +182,10 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
       <DropdownContent>
         <DropdownScrollArea>
           <ActionList ref={containerRef} themes={themes} className={classNames.panel}>
-            { // MEMO: falsy な値は除外する
-              React.Children.toArray(children).filter(child => Boolean(child)).map((item, i) =>
+            { React.Children.toArray(children).map((item, i) =>
               // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
-              <li key={i} >{actionItem(item as ActionItemTruthyType)}</li>
+              // itemの存在チェックでfalsyな値は弾かれている想定
+              item ? <li key={i}>{actionItem(item as ActionItemTruthyType)}</li> : null,
             )}
           </ActionList>
         </DropdownScrollArea>
