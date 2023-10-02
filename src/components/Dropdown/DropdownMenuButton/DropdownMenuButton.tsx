@@ -89,8 +89,6 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
     const focusedIndex = enabledItems.indexOf(document.activeElement)
 
     if (e.key === 'Up' || e.key === 'ArrowUp') {
-      e.stopPropagation()
-
       const calculateNextIndex = () => {
         // MEMO: itemにフォーカスがない && ホバー状態のアイテムがある場合は、その一つ前のアイテムをフォーカスする
         if (focusedIndex < 0 && hoveredItem) {
