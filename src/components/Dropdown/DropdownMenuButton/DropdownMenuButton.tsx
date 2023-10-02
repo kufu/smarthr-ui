@@ -77,16 +77,37 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
       }
 
     const allItems = Array.from(containerRef.current.querySelectorAll("li > *"))
-    const hoveredItem = allItems.find(item => item.matches(":hover"))
+    const {
+        hoveredItem,
+        enabledItems,
+        focusedIndex
+    } = allItems.reduce((acc: {
+        hoveredItem: Element | null;
+        enabledItems: Element[];
+        focusedIndex: number;
+    }, item) => {
+        if (item.matches(":hover") && acc.hoveredItem === null) {
+            acc.hoveredItem = item;
+        }
 
-    const enabledItems = allItems.filter((item) =>{
-        if (item.matches(":disabled")) return false
-        if (Array.from(item.children).some(child => child.matches(':disabled'))) return false;
+        // NOTE: disalbedの判定は、自身がdisabledか、または子要素にdisabledがあるかで判定する。
+        const isDisabled = item.matches(":disabled") || Array.from(item.children).some(child => child.matches(':disabled'));
 
-        return true
-      })
+        if (isDisabled) {
+          return acc
+        }
 
-    const focusedIndex = enabledItems.indexOf(document.activeElement)
+        acc.enabledItems.push(item);
+        if (document.activeElement === item) {
+          acc.focusedIndex = acc.enabledItems.length - 1;
+        }
+
+        return acc
+    }, {
+        hoveredItem: null,
+        enabledItems: [],
+        focusedIndex: -1
+    });
 
     if (e.key === 'Up' || e.key === 'ArrowUp') {
       const calculateNextIndex = () => {
