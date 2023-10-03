@@ -79,11 +79,11 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
     const allItems = Array.from(containerRef.current.querySelectorAll("li > *"))
     const {
         hoveredItem,
-        enabledItems,
+        tabbableItems: enabledItems,
         focusedIndex
     } = allItems.reduce((acc: {
         hoveredItem: Element | null;
-        enabledItems: Element[];
+        tabbableItems: Element[];
         focusedIndex: number;
     }, item) => {
         if (item.matches(":hover") && acc.hoveredItem === null) {
@@ -97,15 +97,15 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
           return acc
         }
 
-        acc.enabledItems.push(item);
+        acc.tabbableItems.push(item);
         if (document.activeElement === item) {
-          acc.focusedIndex = acc.enabledItems.length - 1;
+          acc.focusedIndex = acc.tabbableItems.length - 1;
         }
 
         return acc
     }, {
         hoveredItem: null,
-        enabledItems: [],
+        tabbableItems: [],
         focusedIndex: -1
     });
 
