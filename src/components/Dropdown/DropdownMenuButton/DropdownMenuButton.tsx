@@ -117,7 +117,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         }
 
         // MEMO: フォーカスされているアイテムが最前列の場合は、最後尾のアイテムをフォーカスする
-        if (focusedIndex === 0) {
+        if (focusedIndex <= 0) {
             return enabledItems.length - 1;
         }
         
