@@ -1,6 +1,6 @@
 import { merge } from '../libs/lodash'
 
-interface Leading {
+type Leading = {
   NONE: number
   TIGHT: number
   NORMAL: number
