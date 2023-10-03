@@ -133,8 +133,6 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
     }
 
     if (e.key === 'Down' || e.key === 'ArrowDown') {
-      e.stopPropagation()
-      
       const calculateNextIndex = () => {
           // MEMO: フォーカスされているアイテムが最後尾の場合は、最初のアイテムをフォーカスする
           if (focusedIndex > -1) {
