@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [36.0.0](https://github.com/kufu/smarthr-ui/compare/v35.4.0...v36.0.0) (2023-10-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* FieldSet非推奨コンポーネントのヒント、エラーメッセージの配置をFormControlと揃える (#3774)
+
+### Features
+
+* FieldSet非推奨コンポーネントのヒント、エラーメッセージの配置をFormControlと揃える ([#3774](https://github.com/kufu/smarthr-ui/issues/3774)) ([70efd6a](https://github.com/kufu/smarthr-ui/commit/70efd6a35ad0ccfae8d4717d0348484aaffac596))
+* 矢印キーでDropdownMenuButton内アイテムの移動を出来るように修正 ([#3780](https://github.com/kufu/smarthr-ui/issues/3780)) ([cc412e2](https://github.com/kufu/smarthr-ui/commit/cc412e211b43b2349976e6221c40a6d65b6f279f))
+
 ## [35.4.0](https://github.com/kufu/smarthr-ui/compare/v35.3.0...v35.4.0) (2023-09-27)
 
 
