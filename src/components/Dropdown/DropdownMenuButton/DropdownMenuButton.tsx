@@ -109,7 +109,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         focusedIndex: -1
     });
 
-    if (e.key === 'Up' || e.key === 'ArrowUp') {
+    if (e.key === 'Up' || e.key === 'ArrowUp' || e.key === 'Left' || e.key === 'ArrowLeft') {
       const calculateNextIndex = () => {
         // MEMO: itemにフォーカスがない && ホバー状態のアイテムがある場合は、その一つ前のアイテムをフォーカスする
         if (focusedIndex < 0 && hoveredItem) {
@@ -132,7 +132,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
       }
     }
 
-    if (e.key === 'Down' || e.key === 'ArrowDown') {
+    if (e.key === 'Down' || e.key === 'ArrowDown' || e.key === 'Right' || e.key === 'ArrowRight') {
       const calculateNextIndex = () => {
           // MEMO: フォーカスされているアイテムが最後尾の場合は、最初のアイテムをフォーカスする
           if (focusedIndex > -1) {
