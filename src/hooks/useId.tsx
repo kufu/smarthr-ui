@@ -1,6 +1,6 @@
 import React, { ReactNode, VFC, createContext, useContext, useMemo } from 'react'
 
-interface IdContextValue {
+type IdContextValue = {
   prefix: number
   current: number
 }

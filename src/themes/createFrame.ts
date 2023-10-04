@@ -6,7 +6,7 @@ const lineWidth = '1px'
 const lineStyle = 'solid'
 const lineColor = defaultPalette.BORDER
 
-export interface FrameProperty {
+export type FrameProperty = {
   border?: {
     lineWidth?: string
     lineStyle?: string
@@ -19,7 +19,7 @@ export interface FrameProperty {
   }
 }
 
-export interface CreatedFrameTheme {
+export type CreatedFrameTheme = {
   border: {
     lineWidth: string
     lineStyle: string
