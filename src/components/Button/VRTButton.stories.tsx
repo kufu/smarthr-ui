@@ -16,7 +16,7 @@ export default {
   },
 }
 
-export const _ButtonState: StoryFn = () => (
+export const _VRTButtonState: StoryFn = () => (
   <dl>
     <dt>hover</dt>
     <dd style={{ padding: '10px' }}>
@@ -140,7 +140,7 @@ export const _ButtonState: StoryFn = () => (
   </dl>
 )
 
-_ButtonState.parameters = {
+_VRTButtonState.parameters = {
   controls: { hideNoControlsWarning: true },
   pseudo: {
     hover: [
@@ -178,7 +178,7 @@ _ButtonState.parameters = {
   },
 }
 
-export const _ButtonAnchorState: StoryFn = () => (
+export const _VRTButtonAnchorState: StoryFn = () => (
   <dl>
     <dt>hover</dt>
     <dd style={{ padding: '10px' }}>
@@ -340,7 +340,7 @@ export const _ButtonAnchorState: StoryFn = () => (
   </dl>
 )
 
-_ButtonAnchorState.parameters = {
+_VRTButtonAnchorState.parameters = {
   controls: { hideNoControlsWarning: true },
   pseudo: {
     hover: [
@@ -374,11 +374,11 @@ _ButtonAnchorState.parameters = {
   },
 }
 
-export const _ButtonForceColor = _Button.bind({})
-_ButtonForceColor.parameters = {
+export const _VRTButtonForceColor = _Button.bind({})
+_VRTButtonForceColor.parameters = {
   chromatic: { forcedColors: 'active' },
 }
-export const _ButtonAnchorForceColor = _ButtonAnchor.bind({})
-_ButtonAnchorForceColor.parameters = {
+export const _VRTButtonAnchorForceColor = _ButtonAnchor.bind({})
+_VRTButtonAnchorForceColor.parameters = {
   chromatic: { forcedColors: 'active' },
 }
