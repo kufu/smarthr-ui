@@ -57,11 +57,9 @@ const generateTagProps = (level: number, tag?: HeadingTagTypes, visuallyHidden?:
 const MAPPER_SIZE_AND_WEIGHT: { [key in HeadingTypes]: TextProps } = {
   screenTitle: {
     size: 'XL',
-    weight: 'normal',
   },
   sectionTitle: {
     size: 'L',
-    weight: 'normal',
   },
   blockTitle: {
     size: 'M',

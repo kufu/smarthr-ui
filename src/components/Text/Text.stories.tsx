@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React from 'react'
 
 import { Text } from './Text'
@@ -8,14 +8,13 @@ export default {
   component: Text,
 }
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <>
     <Text as="h1" size="XXL" leading="TIGHT">
       &lt;Text&gt;
     </Text>
     <Text as="p">
-      デフォルトの出力要素は <code>span</code> で、文字サイズは <code>M</code>、行間は
-      <code>NORMAL</code>、色は <code>inherit</code> です。
+      デフォルトの出力要素は <code>span</code> です。
     </Text>
     <Text as="p">
       styled-components と同じく <code>as</code> で要素を差し替えられます。
@@ -25,7 +24,8 @@ export const Default: Story = () => (
       <Text whiteSpace="nowrap">ホワイトスペース</Text>を変えられます。
     </Text>
     <Text as="p">
-      <code>emphasis</code> を渡すとそのテキストは<Text emphasis>強調</Text>を示し、<code>em</code>
+      <code>emphasis</code> を渡すとそのテキストは<Text emphasis>強調</Text>を示し、
+      <code>em</code>
       要素の太字装飾で出力します。
     </Text>
     <Text as="p">
