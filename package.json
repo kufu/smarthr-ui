@@ -13,7 +13,7 @@
     "react-icons": "^4.11.0",
     "react-innertext": "^1.1.5",
     "react-transition-group": "^4.4.5",
-    "tailwind-variants": "^0.1.13"
+    "tailwind-variants": "^0.1.14"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
