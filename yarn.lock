@@ -3102,10 +3102,10 @@
     "@storybook/global" "^5.0.0"
     "@storybook/preview-api" "7.4.6"
 
-"@storybook/jest@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@storybook/jest/-/jest-0.2.2.tgz#e8db72606afc437311e577f36e760285ab14a6c9"
-  integrity sha512-PUfp9WoqUA8NdAmiz3UahUsyAMr+g1Dv3BB0fqJZsE2IuE5o1Mgsv4iLGzFm+ohcQLIDQvwvvbQIpxe8eY7TNw==
+"@storybook/jest@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@storybook/jest/-/jest-0.2.3.tgz#21512b92469978b37f69d6555949801ef34af153"
+  integrity sha512-ov5izrmbAFObzKeh9AOC5MlmFxAcf0o5i6YFGae9sDx6DGh6alXsRM+chIbucVkUwVHVlSzdfbLDEFGY/ShaYw==
   dependencies:
     "@storybook/expect" storybook-jest
     "@testing-library/jest-dom" "^6.1.2"
