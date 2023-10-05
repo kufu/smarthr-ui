@@ -5,7 +5,7 @@ import { CreatedTheme, createTheme } from '../themes/createTheme'
 export const ThemeContext = React.createContext<CreatedTheme>(createTheme())
 const { Provider } = ThemeContext
 
-interface Props {
+type Props = {
   theme: CreatedTheme
   children?: React.ReactNode
 }
