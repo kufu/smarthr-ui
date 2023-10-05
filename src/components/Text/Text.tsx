@@ -56,11 +56,11 @@ export const Text: React.FC<PropsWithChildren<TextProps & ComponentProps<'span'>
   as: Component = emphasis ? 'em' : 'span',
   ...props
 }) => {
-  const { size, italic, color, leading, whiteSpace, className } = props
+  const { size, italic, color, leading, whiteSpace, className, ...others } = props
   const styles = useMemo(
     () => text({ size, weight, italic, color, leading, whiteSpace, className }),
     [size, weight, italic, color, leading, whiteSpace, className],
   )
 
-  return <Component {...props} className={styles} />
+  return <Component {...others} className={styles} />
 }
