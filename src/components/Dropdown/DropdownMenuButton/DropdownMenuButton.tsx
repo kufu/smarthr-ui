@@ -4,6 +4,8 @@ import React, {
   FC,
   ReactElement,
   ReactNode,
+  useCallback,
+  useEffect,
   useMemo,
 } from 'react'
 import innerText from 'react-innertext'
@@ -52,6 +54,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
 }) => {
   const themes = useTheme()
   const classNames = useClassNames()
+  const containerRef = React.useRef<HTMLDivElement>(null)
 
   const triggerLabel = useMemo(
     () =>
@@ -68,6 +71,99 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
     [onlyIconTrigger],
   )
 
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (!containerRef.current || !document.activeElement) {
+      return
+    }
+
+    const allItems = Array.from(containerRef.current.querySelectorAll("li > *"))
+    const {
+        hoveredItem,
+        tabbableItems: enabledItems,
+        focusedIndex
+    } = allItems.reduce((acc: {
+        hoveredItem: Element | null;
+        tabbableItems: Element[];
+        focusedIndex: number;
+    }, item) => {
+        if (item.matches(":hover") && acc.hoveredItem === null) {
+            acc.hoveredItem = item;
+        }
+
+        // NOTE: disalbedの判定は、自身がdisabledか、または子要素にdisabledがあるかで判定する。
+        const isDisabled = item.matches(":disabled") || Array.from(item.children).some(child => child.matches(':disabled'));
+
+        if (isDisabled) {
+          return acc
+        }
+
+        acc.tabbableItems.push(item);
+        if (document.activeElement === item) {
+          acc.focusedIndex = acc.tabbableItems.length - 1;
+        }
+
+        return acc
+    }, {
+        hoveredItem: null,
+        tabbableItems: [],
+        focusedIndex: -1
+    });
+
+    if (e.key === 'Up' || e.key === 'ArrowUp' || e.key === 'Left' || e.key === 'ArrowLeft') {
+      const calculateNextIndex = () => {
+        // MEMO: itemにフォーカスがない && ホバー状態のアイテムがある場合は、その一つ前のアイテムをフォーカスする
+        if (focusedIndex < 0 && hoveredItem) {
+            return enabledItems.indexOf(hoveredItem) - 1;
+        }
+
+        // MEMO: フォーカスされているアイテムが最前列の場合は、最後尾のアイテムをフォーカスする
+        if (focusedIndex <= 0) {
+            return enabledItems.length - 1;
+        }
+        
+          return focusedIndex - 1
+      }
+
+      const nextIndex = calculateNextIndex()
+      const nextItem = enabledItems[nextIndex]
+
+      if(nextItem instanceof HTMLElement) {
+        nextItem.focus()
+      }
+    }
+
+    if (e.key === 'Down' || e.key === 'ArrowDown' || e.key === 'Right' || e.key === 'ArrowRight') {
+      const calculateNextIndex = () => {
+          // MEMO: フォーカスされているアイテムが最後尾の場合は、最初のアイテムをフォーカスする
+          if (focusedIndex > -1) {
+              return (focusedIndex + 1) % enabledItems.length;
+          }
+          
+          // MEMO: itemにフォーカスがない && ホバー状態のアイテムがある場合は、その一つ後のアイテムをフォーカスする
+          if (hoveredItem) {
+              return (enabledItems.indexOf(hoveredItem) + 1) % enabledItems.length;
+          }
+          
+          return 0;
+      }
+
+      const nextIndex = calculateNextIndex()
+      const nextItem = enabledItems[nextIndex]
+
+      if(nextItem instanceof HTMLElement) {
+        nextItem.focus()
+      }
+
+    }
+  },[])
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown )
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [handleKeyDown])
+
   return (
     <Dropdown>
       <DropdownTrigger className={`${classNames.wrapper}${className && ` ${className}`}`}>
@@ -83,7 +179,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
       </DropdownTrigger>
       <DropdownContent>
         <DropdownScrollArea>
-          <ActionList themes={themes} className={classNames.panel}>
+          <ActionList ref={containerRef} themes={themes} className={classNames.panel}>
             {React.Children.map(children, (item, i) =>
               // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
               // itemの存在チェックでfalsyな値は弾かれている想定

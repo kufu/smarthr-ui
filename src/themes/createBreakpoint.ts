@@ -1,11 +1,11 @@
 import { merge } from '../libs/lodash'
 
-export interface BreakpointProperty {
+export type BreakpointProperty = {
   SP?: number
   TABLET?: number
 }
 
-export interface CreatedBreakpointTheme {
+export type CreatedBreakpointTheme = {
   SP: number
   TABLET: number
 }

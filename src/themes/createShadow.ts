@@ -4,7 +4,7 @@ import { merge } from '../libs/lodash'
 
 import { ColorProperty, defaultColor } from './createColor'
 
-export interface ShadowProperty {
+export type ShadowProperty = {
   /**
    * @deprecated The BASE property will be deprecated, please use LAYER0~4 property instead
    */
@@ -22,7 +22,7 @@ export interface ShadowProperty {
   OUTLINE_MARGIN?: string
 }
 
-export interface CreatedShadowTheme {
+export type CreatedShadowTheme = {
   /**
    * @deprecated The BASE property will be deprecated, please use LAYER0~4 property instead
    */

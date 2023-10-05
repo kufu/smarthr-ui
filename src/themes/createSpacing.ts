@@ -1,11 +1,11 @@
 import { defaultHtmlFontSize } from './createFontSize'
 export const defaultBaseSize = defaultHtmlFontSize / 2
 
-export interface SpacingProperty {
+export type SpacingProperty = {
   baseSize?: number
 }
 
-export interface CreatedSpacingTheme {
+export type CreatedSpacingTheme = {
   X3S: string
   XXS: string
   XS: string
