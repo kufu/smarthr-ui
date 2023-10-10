@@ -3,6 +3,8 @@ import { userEvent, within } from '@storybook/testing-library'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { InformationPanel } from '../InformationPanel'
+
 import { Dropdown } from './Dropdown'
 import { All, ControllableDropdown } from './Dropdown.stories'
 import { DropdownCloser } from './DropdownCloser'
@@ -26,18 +28,27 @@ export default {
 
 export const VRTOpenDropdownNarrow: StoryFn = () => (
   <Wrapper>
+    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      画面幅が狭く、入れ子を開いた状態で表示されます
+    </VRTInformationPanel>
     <ControllableDropdown />
   </Wrapper>
 )
 
 export const VRTOpenNested: StoryFn = () => (
   <Wrapper>
+    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      入れ子を開いた状態で表示されます
+    </VRTInformationPanel>
     <All />
   </Wrapper>
 )
 
 export const VRTDropdownForcedColors: StoryFn = () => (
   <Wrapper>
+    <VRTInformationPanel title="VRT 用の Story です" togglable={false} >
+      Chromatic 上では強制カラーモードで表示されます
+    </VRTInformationPanel>
     <All />
   </Wrapper>
 )
@@ -79,9 +90,12 @@ VRTDropdownForcedColors.play = async ({ canvasElement }) => {
 }
 
 const Wrapper = styled.div`
-  width: 100vw;
   height: 100vh;
   box-sizing: border-box;
   padding: 24px;
   color: ${({ theme }) => theme.color.TEXT_BLACK};
+`
+
+const VRTInformationPanel = styled(InformationPanel)`
+  margin-bottom: 24px;
 `
