@@ -55,7 +55,7 @@ const ListMenu = () => (
     </ActionList>
   )
 
-const ControllableDropdown = () => {
+export const ControllableDropdown = () => {
   const [value, setValue] = React.useState('hoge')
   const [text, setText] = React.useState('')
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
