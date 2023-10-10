@@ -1,6 +1,6 @@
 import { merge } from '../libs/lodash'
 
-export interface ZIndexProperty {
+export type ZIndexProperty = {
   AUTO?: 'auto'
   DEFAULT?: number
   FIXED_MENU?: number
@@ -9,7 +9,7 @@ export interface ZIndexProperty {
   FLASH_MESSAGE?: number
 }
 
-export interface CreatedZindexTheme {
+export type CreatedZindexTheme = {
   AUTO: 'auto'
   DEFAULT: number
   FIXED_MENU: number

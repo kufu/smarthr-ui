@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
 
-interface Props {
+type Props = {
   page: number
   currentPage: number
   onClick: (pageNumber: number) => void

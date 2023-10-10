@@ -7,13 +7,13 @@ const defaultLineStyle = 'solid'
 const defaultLineColor = defaultColor.BORDER
 const highContrastBorderColor = defaultColor.GREY_100
 
-export interface BorderProperty {
+export type BorderProperty = {
   lineWidth?: string
   lineStyle?: string
   shorthand?: string
 }
 
-export interface CreatedBorderTheme {
+export type CreatedBorderTheme = {
   lineWidth: string
   lineStyle: string
   shorthand: string
