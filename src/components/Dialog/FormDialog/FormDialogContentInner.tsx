@@ -84,7 +84,8 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 }) => {
   const classNames = useClassNames().dialog
   const theme = useTheme()
-  const handleSubmitAction = useCallback(() => {
+  const handleSubmitAction = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     onSubmit(onClickClose)
   }, [onSubmit, onClickClose])
   const { offsetHeight, titleRef, bottomRef } = useOffsetHeight()
