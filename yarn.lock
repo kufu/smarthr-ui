@@ -3863,10 +3863,10 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
-"@types/react-dom@^18.2.10":
-  version "18.2.10"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.10.tgz#06247cb600e39b63a0a385f6a5014c44bab296f2"
-  integrity sha512-5VEC5RgXIk1HHdyN1pHlg0cOqnxHzvPGpMMyGAP5qSaDRmyZNDaQ0kkVAkK6NYlDhP6YBID3llaXlmAS/mdgCA==
+"@types/react-dom@^18.2.11":
+  version "18.2.11"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.11.tgz#4332c315544698a0875dfdb6e320dda59e1b3d58"
+  integrity sha512-zq6Dy0EiCuF9pWFW6I6k6W2LdpUixLE4P6XjXU1QHLfak3GPACQfLwEuHzY5pOYa4hzj1d0GxX/P141aFjZsyg==
   dependencies:
     "@types/react" "*"
 
@@ -5283,10 +5283,10 @@ chownr@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
 
-chromatic@^7.2.2:
-  version "7.2.2"
-  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-7.2.2.tgz#c46df3f9fbac87cca980733f0432c4d60190c44a"
-  integrity sha512-o9EIMV/EAe6bI7osYi4DfD1zuVovYR/vrY8CXNB5OdcT+alpHZmEZ4+ysTrvL9Bgk6zP/z/2YMVz5ZYdV/gagA==
+chromatic@^7.2.3:
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-7.2.3.tgz#35fb871953a5461faa474b1d99cd2cb2f3ee4f37"
+  integrity sha512-UEcHB1nkPoHWoRybPzv6BOVqPr7PqDNuz3u8NCRg7KJciouOb20HjiUQx4Dh9mgA7JUsb2WeGHE2SG/0fHH0PA==
 
 chrome-remote-interface@^0.32.2:
   version "0.32.2"
@@ -5300,10 +5300,10 @@ chrome-trace-event@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/chrome-trace-event/-/chrome-trace-event-1.0.3.tgz#1015eced4741e15d06664a957dbbf50d041e26ac"
 
-chromium-bidi@0.4.28:
-  version "0.4.28"
-  resolved "https://registry.yarnpkg.com/chromium-bidi/-/chromium-bidi-0.4.28.tgz#05befef4f3f19003198237245780d1c60e6f4dbc"
-  integrity sha512-2HZ74QlAApJrEwcGlU/sUu0s4VS+FI3CJ09Toc9aE9VemMyhHZXeaROQgJKNRaYMUTUx6qIv1cLBs3F+vfgjSw==
+chromium-bidi@0.4.31:
+  version "0.4.31"
+  resolved "https://registry.yarnpkg.com/chromium-bidi/-/chromium-bidi-0.4.31.tgz#a28c4329880706e61ff07ed49aed22e6d04e17d1"
+  integrity sha512-OtvEg2JMRQrHsmLx4FV3u1Hf9waYxB5PmL+yM0HkFpc9H2x3TMbUqS+GP2/fC4399hzOO+EQF8uVU43By9ILag==
   dependencies:
     mitt "3.0.1"
     urlpattern-polyfill "9.0.0"
@@ -6821,10 +6821,10 @@ eslint-plugin-smarthr@^0.3.11:
     inflected "^2.1.0"
     json5 "^2.2.0"
 
-eslint-plugin-storybook@^0.6.14:
-  version "0.6.14"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-storybook/-/eslint-plugin-storybook-0.6.14.tgz#dfc2b58700e45eb4a13c172dda2973c2e033cd71"
-  integrity sha512-IeYigPur/MvESNDo43Z+Z5UvlcEVnt0dDZmnw1odi9X2Th1R3bpGyOZsHXb9bp1pFecOpRUuoMG5xdID2TwwOg==
+eslint-plugin-storybook@^0.6.15:
+  version "0.6.15"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-storybook/-/eslint-plugin-storybook-0.6.15.tgz#8a091605b0a90974ec8e62d8112db6c4bd3a6faa"
+  integrity sha512-lAGqVAJGob47Griu29KXYowI4G7KwMoJDOkEip8ujikuDLxU+oWJ1l0WL6F2oDO4QiyUFXvtDkEkISMOPzo+7w==
   dependencies:
     "@storybook/csf" "^0.0.1"
     "@typescript-eslint/utils" "^5.45.0"
@@ -11321,13 +11321,13 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-puppeteer-core@21.3.7:
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-21.3.7.tgz#db3d27a7c1bf59796216b2962f6eb96fbc82689c"
-  integrity sha512-3IS/kl4TsaDLl171VdwtVAKCc2cwaFR5LrF/pEQQfUyIs6W1CuS8XwbIIJ6v6BCebv3x/NNtONTyOQdmTHPktg==
+puppeteer-core@21.3.8:
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-21.3.8.tgz#7ac4879c9f73e8426431d8ca4c58680e517a4b08"
+  integrity sha512-yv12E/+zZ7Lei5tJB4sUkSrsuqKibuYpYxLGbmtLUjjYIqGE5HKz9OUI2I/RFHEvF+pHi2bTbv5bWydeCGJ6Mw==
   dependencies:
     "@puppeteer/browsers" "1.7.1"
-    chromium-bidi "0.4.28"
+    chromium-bidi "0.4.31"
     cross-fetch "4.0.0"
     debug "4.3.4"
     devtools-protocol "0.0.1179426"
@@ -11348,14 +11348,14 @@ puppeteer-core@^2.1.1:
     rimraf "^2.6.1"
     ws "^6.1.0"
 
-puppeteer@^21.3.7:
-  version "21.3.7"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-21.3.7.tgz#728becd8751f82ccaf77044aacc551ddc2bd431c"
-  integrity sha512-C9rh0fxIZamrLqfX6VCJh8/MK4Io8jaELqSWKDT8rrWJLxzrv9Hy9aAlcZHySoOuJiZYxYJT71MRinyWiphylw==
+puppeteer@^21.3.8:
+  version "21.3.8"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-21.3.8.tgz#986f95fef0a0f74381053fade8cb7a3595144fbf"
+  integrity sha512-4OrInVIAtDgcznENUV4Du4gYSZhRmbCkckvOoPstXrUH4JsQ3atSegY+9f/tOKCDB2qh7sXaszDcFEn+RymY0g==
   dependencies:
     "@puppeteer/browsers" "1.7.1"
     cosmiconfig "8.3.6"
-    puppeteer-core "21.3.7"
+    puppeteer-core "21.3.8"
 
 pure-rand@^6.0.0:
   version "6.0.1"
