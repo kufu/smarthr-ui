@@ -3,7 +3,7 @@ import React from 'react'
 import { IconBase } from 'react-icons'
 import styled, { css } from 'styled-components'
 
-import { BaseColumn } from '../Base'
+import { BaseColumn } from '../BaseColumn'
 import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
 

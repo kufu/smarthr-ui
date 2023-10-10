@@ -59,7 +59,8 @@ export {
   TextButtonAnchor,
 } from './components/Button'
 export { StatusLabel } from './components/StatusLabel'
-export { Base, BaseColumn, DialogBase } from './components/Base'
+export { Base, DialogBase } from './components/Base'
+export * from './components/BaseColumn'
 export * from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
 export {
