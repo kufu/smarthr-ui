@@ -3,12 +3,10 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { useTheme } from '../../hooks/useTheme'
-import { Stack } from '../Layout'
 import { Table, Td, Th } from '../Table'
 import { Text } from '../Text'
 
 import { Base, LayerKeys, layerMap } from './Base'
-import { BaseColumn } from './BaseColumn'
 import { DialogBase } from './DialogBase'
 
 export default {
@@ -99,23 +97,6 @@ export const BaseStory: Story = () => {
   )
 }
 BaseStory.storyName = 'Base'
-
-export const BaseColumnStory: Story = () => (
-  <Stack as="ul">
-    <li>
-      <p>padding / bgColor で余白と背景色を変えることもできます</p>
-    </li>
-    <li>
-      <BaseColumn>初期状態。padding は1文字分。背景は COLUMN。</BaseColumn>
-    </li>
-    <li>
-      <BaseColumn padding={1.5} bgColor="ACTION_BACKGROUND">
-        padding を1.5文字分に、背景を ACTION_BACKGROUND に変更。
-      </BaseColumn>
-    </li>
-  </Stack>
-)
-BaseColumnStory.storyName = 'BaseColumn'
 
 export const DialogBaseStory: Story = () => (
   <List>
