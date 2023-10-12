@@ -20,11 +20,11 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
 )
 
 const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
-  ${({ $disabled, themes: { border, color, radius, shadow } }) => css`
+  ${({ $disabled, themes: { border, color, fontSize, radius, shadow } }) => css`
     position: relative;
     display: inline-flex;
     align-items: center;
-    border-radius: 1.25rem;
+    border-radius: calc(${fontSize.M} * 1.25);
     border: ${border.shorthand};
     background-color: ${color.WHITE};
 
@@ -45,8 +45,8 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
       border: ${border.shorthand};
       border-color: ${color.GREY_30};
       background-color: ${color.GREY_30};
-      block-size: 1rem;
-      inline-size: 1rem;
+      block-size: ${fontSize.M};
+      inline-size: ${fontSize.M};
       transition-property: transform, scale;
       transition-duration: 150ms;
       transition-timing-function: ease-out;
@@ -67,7 +67,7 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
 
       ::before {
         scale: unset;
-        transform: translateX(1rem);
+        transform: translateX(${fontSize.M});
         border-color: ${color.BORDER};
         background-color: ${color.WHITE};
       }
@@ -157,7 +157,7 @@ const CheckIcon = styled(FaCheckIcon).attrs({ color: 'WHITE', size: 'XXS' })<{ t
     @supports selector(:has(+ *)) {
       [type='checkbox']:checked ~ & {
         display: unset;
-        transform: translateX(calc((1rem - ${fontSize.XXS}) / 2));
+        transform: translateX(calc((${fontSize.M} - ${fontSize.XXS}) / 2));
         pointer-events: none;
       }
     }
