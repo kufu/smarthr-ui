@@ -32,7 +32,7 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
     padding: 1px;
 
     /* :focus-visible-within の代替 */
-    :has(:focus-visible) {
+    &:has(:focus-visible) {
       ${shadow.focusIndicatorStyles}
     }
 
@@ -61,7 +61,7 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
       visibility: hidden;
     }
 
-    :has(:checked) {
+    &:has(:checked) {
       border-color: ${color.MAIN};
       background-color: ${color.MAIN};
 
