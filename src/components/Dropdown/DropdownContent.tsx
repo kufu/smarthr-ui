@@ -31,7 +31,7 @@ type Props = {
 
 type ElementProps = Omit<InnerElementProps, keyof Props>
 
-export const DropdownContent: React.VFC<Props & ElementProps> = ({
+export const DropdownContent: React.FC<Props & ElementProps> = ({
   controllable = false,
   scrollable = true,
   className = '',

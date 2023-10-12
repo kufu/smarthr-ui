@@ -7,7 +7,7 @@ type Props = {
   children: ReactNode
 } & HTMLAttributes<HTMLDivElement>
 
-export const DropdownScrollArea: React.VFC<Props> = ({ children, className = '', ...props }) => {
+export const DropdownScrollArea: React.FC<Props> = ({ children, className = '', ...props }) => {
   const classNames = useClassNames()
 
   return (

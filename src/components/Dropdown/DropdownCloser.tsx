@@ -9,7 +9,7 @@ type Props = {
   children: React.ReactNode
 } & HTMLAttributes<HTMLDivElement>
 
-export const DropdownCloser: React.VFC<Props> = ({ children, className = '' }) => {
+export const DropdownCloser: React.FC<Props> = ({ children, className = '' }) => {
   const { onClickCloser, controllable, scrollable } = useContext(DropdownContentContext)
   const { maxHeight } = useContext(DropdownContentInnerContext)
   const classNames = useClassNames()
@@ -29,12 +29,12 @@ export const DropdownCloser: React.VFC<Props> = ({ children, className = '' }) =
 
 const Wrapper = styled.div<{ maxHeight: string; controllable: boolean; scrollable: boolean }>`
   ${({ maxHeight, controllable, scrollable }) => css`
-      ${!controllable
-        ? `
+    ${!controllable
+      ? `
       display: flex;
       flex-direction: column;
       `
-        : ''}
-      ${!controllable && scrollable ? `max-height: ${maxHeight};` : ''}
-    `}
+      : ''}
+    ${!controllable && scrollable ? `max-height: ${maxHeight};` : ''}
+  `}
 `

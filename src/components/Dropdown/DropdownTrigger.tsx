@@ -13,7 +13,7 @@ type Props = {
   className?: string
 }
 
-export const DropdownTrigger: React.VFC<Props> = ({ children, className = '' }) => {
+export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) => {
   const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
   const classNames = useClassNames()
 
