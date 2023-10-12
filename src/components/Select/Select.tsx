@@ -51,7 +51,7 @@ export const Select = forwardRef(
       onChange,
       onChangeValue,
       error = false,
-      width = 'auto',
+      width,
       hasBlank = false,
       decorators,
       size = 'default',
@@ -62,7 +62,7 @@ export const Select = forwardRef(
     ref: ForwardedRef<HTMLSelectElement>,
   ) => {
     const theme = useTheme()
-    const widthStyle = typeof width === 'number' ? `${width}px` : width
+    const $width = typeof width === 'number' ? `${width}px` : width
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLSelectElement>) => {
         if (onChange) onChange(e)
@@ -83,8 +83,8 @@ export const Select = forwardRef(
 
     return (
       <Wrapper
+        $width={$width}
         className={`${className} ${classNames.wrapper} ${generateSizeClassName(size)}`}
-        $width={widthStyle}
       >
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <StyledSelect
@@ -135,13 +135,10 @@ export const Select = forwardRef(
 
 const generateSizeClassName = (size: Props<string>['size']) => (size === 's' ? '--small' : '')
 
-const Wrapper = styled.span<{
-  $width: string
-}>`
-  ${({ $width }) => css`
-    box-sizing: border-box;
+const Wrapper = styled.span<{ $width?: string }>`
+  ${({ $width = 'auto' }) => css`
     position: relative;
-    display: block;
+    display: inline-block;
     width: ${$width};
   `}
 `
@@ -163,14 +160,14 @@ const StyledSelect = styled.select<{
     color: ${color.TEXT_BLACK};
     width: 100%;
 
+    /* padding に依る積み上げでは文字が見切れてしまうため */
+    min-height: calc(${fontSize.M} + ${spacingByChar(0.75)} * 2 + ${border.lineWidth} * 2);
+
     @media (prefers-contrast: more) {
       & {
         border: ${border.highContrast};
       }
     }
-
-    /* padding に依る積み上げでは文字が見切れてしまうため */
-    min-height: calc(${fontSize.M} + ${spacingByChar(0.75)} * 2 + ${border.lineWidth} * 2);
 
     ${error &&
     css`
