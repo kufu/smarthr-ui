@@ -156,6 +156,7 @@ const StyledSelect = styled.select<{
     border-radius: ${radius.m};
     border: ${border.shorthand};
     background-color: ${color.WHITE};
+    padding-block: ${spacingByChar(0.75)};
     padding-inline: ${spacingByChar(0.5)} ${spacingByChar(2)};
     font-size: ${fontSize.M};
     line-height: ${leading.NONE};
@@ -193,6 +194,7 @@ const StyledSelect = styled.select<{
     }
 
     .--small & {
+      padding-block: ${spacingByChar(0.5)};
       padding-inline: ${spacingByChar(0.5)};
       font-size: ${fontSize.S};
 
