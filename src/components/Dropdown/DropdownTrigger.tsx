@@ -1,21 +1,20 @@
-import React, { useContext, useEffect } from 'react'
-import styled from 'styled-components'
+import React, { ComponentProps, PropsWithChildren, useContext, useEffect, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { tabbable } from '../../libs/tabbable'
 import { includeDisabledTrigger } from '../../libs/util'
 
 import { DropdownContext } from './Dropdown'
-import { useClassNames } from './useClassNames'
 
-type Props = {
-  children: React.ReactNode
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-}
+type Props = PropsWithChildren<ComponentProps<'div'>>
 
-export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) => {
+const wrapper = tv({
+  base: 'smarthr-ui-Dropdown shr-inline-block',
+})
+
+export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
   const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
-  const classNames = useClassNames()
+  const styles = useMemo(() => wrapper({ className }), [className])
 
   useEffect(() => {
     if (!triggerElementRef.current) {
@@ -30,7 +29,7 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) =
   }, [triggerElementRef, active, contentId])
 
   return (
-    <Wrapper
+    <div
       ref={triggerElementRef}
       onClick={(e) => {
         // 引き金となる要素が disabled な場合は発火させない
@@ -46,7 +45,7 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) =
           left: rect.left,
         })
       }}
-      className={`${className} ${classNames.wrapper}`}
+      className={styles}
     >
       {React.Children.map(children, (child: any) => {
         const props = child.props ? child.props : {}
@@ -65,10 +64,6 @@ export const DropdownTrigger: React.FC<Props> = ({ children, className = '' }) =
             return null
         }
       })}
-    </Wrapper>
+    </div>
   )
 }
-
-const Wrapper = styled.div`
-  display: inline-block;
-`
