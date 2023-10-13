@@ -48,7 +48,27 @@ const preview: Preview = {
         ],
       },
     },
-    viewport: { viewports: INITIAL_VIEWPORTS },
+    viewport: {
+      viewports: {
+        ...INITIAL_VIEWPORTS,
+        vrtMobile: {
+          name: 'VRT Mobile',
+          styles: {
+            // iPhone15 Pro、 iPhone15、 iPhone14 Proのサイズを想定
+            width: '393px',
+            height: '852px',
+          },
+        },
+        vrtTablet: {
+          name: 'VRT Tablet',
+          styles: {
+            // iPad 第10世代、iPad Air 第4世代〜のサイズを想定
+            width: '820px',
+            height: '1180px',
+          },
+        }
+      }
+    },
     docs: {
       // ArgsTable は deprecated で、subcomponentsで複数コンポーネントの props を見せる機能は非推奨になった
       // ここでは、一旦v6.5->v7アップデート時に後方互換を保つために独自のpageを設定している
