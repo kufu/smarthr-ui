@@ -16,9 +16,9 @@ import '../src/styles/index.css'
 const preview: Preview = {
   globalTypes: {
     reset: {
-      name: 'Reset',
       defaultValue: 'smarthr-normalize',
       toolbar: {
+        title: 'CSS Reset',
         items: [
           { value: 'smarthr-normalize', title: 'smarthr-normalize' },
           { value: 'styled-reset', title: 'styled-reset' },
@@ -66,8 +66,8 @@ const preview: Preview = {
             width: '820px',
             height: '1180px',
           },
-        }
-      }
+        },
+      },
     },
     docs: {
       // ArgsTable は deprecated で、subcomponentsで複数コンポーネントの props を見せる機能は非推奨になった
