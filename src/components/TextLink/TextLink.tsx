@@ -1,7 +1,7 @@
 import React, { AnchorHTMLAttributes, ReactNode, forwardRef, useMemo } from 'react'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme'
 import { FaExternalLinkAltIcon } from '../Icon'
 
 type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Props>
@@ -14,9 +14,17 @@ type Props = {
   suffix?: ReactNode
 }
 
+const textLink = tv({
+  slots: {
+    anchor: 'shr-no-underline',
+    prefixWrapper: 'shr-align-middle',
+    suffixWrapper: 'shr-align-middle',
+  },
+})
 export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
   ({ href, target, onClick, children, prefix, suffix, ...props }, ref) => {
     const theme = useTheme()
+    const { anchor, prefixWrapper, suffixWrapper } = textLink()
     const actualSuffix = useMemo(() => {
       if (target === '_blank' && suffix === undefined) {
         return <FaExternalLinkAltIcon aria-label="別タブで開く" />
@@ -47,46 +55,46 @@ export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
       }
     }, [href, onClick])
 
+    const anchorStyleProps = useMemo(
+      () => ({
+        style: {
+          boxShadow: actualHref !== undefined ? '0 1px 0 0' : 'none',
+          color: theme.color.TEXT_LINK,
+        },
+        className: anchor(),
+      }),
+      [actualHref, theme.color.TEXT_LINK, anchor],
+    )
+
+    const prefixWrapperStyleProps = useMemo(
+      () => ({
+        style: { marginRight: theme.spacingByChar(0.25) },
+        className: prefixWrapper(),
+      }),
+      [theme, prefixWrapper],
+    )
+
+    const suffixWrapperStyleProps = useMemo(
+      () => ({
+        style: { marginLeft: theme.spacingByChar(0.25) },
+        className: suffixWrapper(),
+      }),
+      [theme, suffixWrapper],
+    )
+
     return (
-      <StyledAnchor
+      <a
         {...props}
+        {...anchorStyleProps}
         ref={ref}
         href={actualHref}
         target={target}
         onClick={actualOnClick}
-        themes={theme}
       >
-        {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
+        {prefix && <span {...prefixWrapperStyleProps}>{prefix}</span>}
         {children}
-        {actualSuffix && <SuffixWrapper themes={theme}>{actualSuffix}</SuffixWrapper>}
-      </StyledAnchor>
+        {actualSuffix && <span {...suffixWrapperStyleProps}>{actualSuffix}</span>}
+      </a>
     )
   },
-)
-
-const StyledAnchor = styled.a<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color } = themes
-    return css`
-      text-decoration: none;
-      box-shadow: 0 1px 0 0;
-      color: ${color.TEXT_LINK};
-
-      &:not([href]) {
-        box-shadow: none;
-      }
-    `
-  }}
-`
-const PrefixWrapper = styled.span<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) => css`
-    margin-right: ${spacingByChar(0.25)};
-    vertical-align: middle;
-  `,
-)
-const SuffixWrapper = styled.span<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) => css`
-    margin-left: ${spacingByChar(0.25)};
-    vertical-align: middle;
-  `,
 )
