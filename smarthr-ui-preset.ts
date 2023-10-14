@@ -7,6 +7,9 @@ import { defaultZIndex } from './src/themes/createZIndex'
 import type { Config } from 'tailwindcss'
 
 const spacingByChar = createSpacingByChar(defaultHtmlFontSize / 2)
+type Spacing = {
+  [key in (typeof spacingSizes)[number]]: string
+}
 
 // この preset を各プロダクトでも読み込んでもらう想定
 export default {
@@ -105,11 +108,11 @@ export default {
     },
     spacing: {
       px: '1px',
-      ...spacingSizes
+      ...(spacingSizes
         .map((size) => ({
           [size]: spacingByChar(size),
         }))
-        .reduce((a, c) => Object.assign(a, c), {}),
+        .reduce((a, c) => Object.assign(a, c), {}) as Spacing),
     },
     stroke: {
       black: defaultColor.GREY_100,

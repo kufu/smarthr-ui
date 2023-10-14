@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
+import { theme } from '../../themes'
 
 import { DropdownCloser } from './DropdownCloser'
 import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
@@ -58,7 +58,7 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   controllable,
   ...props
 }) => {
-  const { space } = useTheme()
+  const { spacing } = theme
   const [isActive, setIsActive] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
     top: 'auto',
@@ -70,9 +70,9 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   const { wrapper, controllableWrapper } = useMemo(() => contentInner(), [])
 
   const wrapperStyleProps = useMemo(() => {
-    const leftMargin = contentBox.left === undefined ? space(0.5) : `max(${contentBox.left}, 0px)`
+    const leftMargin = contentBox.left === undefined ? spacing[0.5] : `max(${contentBox.left}, 0px)`
     const rightMargin =
-      contentBox.right === undefined ? space(0.5) : `max(${contentBox.right}, 0px)`
+      contentBox.right === undefined ? spacing[0.5] : `max(${contentBox.right}, 0px)`
     const maxWidthStyle = `calc(100% - ${leftMargin} - ${rightMargin})`
 
     return {
@@ -84,7 +84,7 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
         maxWidth: maxWidthStyle,
       },
     }
-  }, [className, contentBox.left, contentBox.right, contentBox.top, isActive, space, wrapper])
+  }, [className, contentBox.left, contentBox.right, contentBox.top, isActive, spacing, wrapper])
   const controllableWrapperStyleProps = useMemo(
     () => ({
       className: controllableWrapper(),
