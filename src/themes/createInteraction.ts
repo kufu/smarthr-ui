@@ -3,7 +3,7 @@ import { merge } from '../libs/lodash'
 const hoverAnimationDuration = '.3s'
 const hoverAnimationTiming = 'ease-out'
 
-export interface InteractionProperty {
+export type InteractionProperty = {
   hover?: {
     feedbackOpacity?: string
     animationDuration?: string
@@ -12,7 +12,7 @@ export interface InteractionProperty {
   }
 }
 
-export interface CreatedInteractionTheme {
+export type CreatedInteractionTheme = {
   hover: {
     feedbackOpacity: string
     animationDuration: string

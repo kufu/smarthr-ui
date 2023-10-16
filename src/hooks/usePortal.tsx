@@ -11,7 +11,7 @@ import { createPortal } from 'react-dom'
 
 import { useEnhancedEffect } from './useEnhancedEffect'
 
-interface ParentContextValue {
+type ParentContextValue = {
   seqs: number[]
 }
 

@@ -34,7 +34,7 @@ type DefinedColor = (typeof definedColors)[number]
 const knownColorSet: Set<string> = new Set(definedColors)
 const isDefinedColor = (color: string): color is DefinedColor => knownColorSet.has(color)
 
-interface IconProps {
+type IconProps = {
   /**
    * アイコンの色
    * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
@@ -49,7 +49,7 @@ interface IconProps {
 
 type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
 
-export interface ComponentProps extends IconProps, ElementProps {
+type BaseComponentProps = {
   /**アイコンの説明テキスト*/
   alt?: React.ReactNode
   /** アイコンと並べるテキスト */
@@ -61,6 +61,7 @@ export interface ComponentProps extends IconProps, ElementProps {
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
+export type ComponentProps = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
 
 export const createIcon = (SvgIcon: IconType) => {
   const Icon: React.FC<ComponentProps> = ({

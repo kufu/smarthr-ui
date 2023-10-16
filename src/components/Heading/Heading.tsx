@@ -57,11 +57,9 @@ const generateTagProps = (level: number, tag?: HeadingTagTypes, visuallyHidden?:
 const MAPPER_SIZE_AND_WEIGHT: { [key in HeadingTypes]: TextProps } = {
   screenTitle: {
     size: 'XL',
-    weight: 'normal',
   },
   sectionTitle: {
     size: 'L',
-    weight: 'normal',
   },
   blockTitle: {
     size: 'M',
@@ -105,7 +103,7 @@ export const Heading: VFC<Props & ElementProps> = ({
 export const PageHeading: VFC<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>> = ({
   type = 'screenTitle',
   ...props
-}) => <Heading {...props} type={type} tag="h1" />
+}) => <Heading {...props} type={type} tag="h1" /> // eslint-disable-line smarthr/a11y-heading-in-sectioning-content
 
 const ResetText = styled(Text).attrs(() => ({
   leading: 'TIGHT' as React.ComponentProps<typeof Text>['leading'],

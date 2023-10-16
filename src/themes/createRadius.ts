@@ -1,13 +1,13 @@
 import { merge } from '../libs/lodash'
 
-export interface RadiusProperty {
+export type RadiusProperty = {
   s?: string
   m?: string
   l?: string
   full?: string
 }
 
-export interface CreatedRadiusTheme {
+export type CreatedRadiusTheme = {
   s: string
   m: string
   l: string

@@ -79,6 +79,7 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
       <SectioningFragment>
         <Stack gap={1.25}>
           <Header themes={theme} togglable={togglable}>
+            {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
             <Heading type="blockTitle" tag={titleTag} id={titleId} className={classNames.title}>
               <ResponseMessage type={type} iconGap={0.5}>
                 {title}

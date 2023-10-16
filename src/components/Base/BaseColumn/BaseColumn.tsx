@@ -1,10 +1,9 @@
 import React, { ComponentProps, HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { GreyScaleColors } from '../../themes/createColor'
-
-import { Base as shrBase } from './Base'
+import { Theme, useTheme } from '../../../hooks/useTheme'
+import { GreyScaleColors } from '../../../themes/createColor'
+import { Base as shrBase } from '../Base'
 
 type BaseProps = Omit<ComponentProps<typeof Base>, 'radius' | 'layer'>
 type Props = {

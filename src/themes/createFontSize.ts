@@ -3,7 +3,7 @@ import { merge } from '../libs/lodash'
 export const defaultHtmlFontSize = 16
 const defaultScaleFactor = 6
 
-export interface FontSizeProperty {
+export type FontSizeProperty = {
   /** @deprecated */
   htmlFontSize?: number
   // respect for Starbucks...
@@ -26,7 +26,7 @@ export interface FontSizeProperty {
   XXL?: string
 }
 
-export interface CreatedFontSizeTheme {
+export type CreatedFontSizeTheme = {
   /** @deprecated You shouldn't use rem except for font size. use calc. */
   pxToRem: (px: number) => string
   /** @deprecated */

@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [37.0.0](https://github.com/kufu/smarthr-ui/compare/v36.0.0...v37.0.0) (2023-10-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* Tailwind CSS を導入し Text の Story を置き換え (#3616)
+
+### Features
+
+* Tailwind CSS を導入し Text の Story を置き換え ([#3616](https://github.com/kufu/smarthr-ui/issues/3616)) ([7c628a4](https://github.com/kufu/smarthr-ui/commit/7c628a4095f3e70219be5d826d5e75d25000d99b)), closes [#3699](https://github.com/kufu/smarthr-ui/issues/3699)
+
+
+### Bug Fixes
+
+* Text の color や leading などの属性を DOM から隠す ([#3797](https://github.com/kufu/smarthr-ui/issues/3797)) ([07c4109](https://github.com/kufu/smarthr-ui/commit/07c4109a2dc9c39c77f711fb27b803ca3791d762))
+
+## [36.0.0](https://github.com/kufu/smarthr-ui/compare/v35.4.0...v36.0.0) (2023-10-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* FieldSet非推奨コンポーネントのヒント、エラーメッセージの配置をFormControlと揃える (#3774)
+
+### Features
+
+* FieldSet非推奨コンポーネントのヒント、エラーメッセージの配置をFormControlと揃える ([#3774](https://github.com/kufu/smarthr-ui/issues/3774)) ([70efd6a](https://github.com/kufu/smarthr-ui/commit/70efd6a35ad0ccfae8d4717d0348484aaffac596))
+* 矢印キーでDropdownMenuButton内アイテムの移動を出来るように修正 ([#3780](https://github.com/kufu/smarthr-ui/issues/3780)) ([cc412e2](https://github.com/kufu/smarthr-ui/commit/cc412e211b43b2349976e6221c40a6d65b6f279f))
+
 ## [35.4.0](https://github.com/kufu/smarthr-ui/compare/v35.3.0...v35.4.0) (2023-09-27)
 
 
