@@ -56,6 +56,7 @@ export default {
       'layer-3': defaultShadow.LAYER3,
       'layer-4': defaultShadow.LAYER4,
       outline: defaultShadow.OUTLINE,
+      underline: defaultShadow.UNDERLINE,
       none: 'none',
     },
     colors: {

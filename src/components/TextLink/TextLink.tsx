@@ -1,11 +1,11 @@
 import React, { AnchorHTMLAttributes, ReactNode, forwardRef, useMemo } from 'react'
-import styled, { css } from 'styled-components'
+import { VariantProps, tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTheme'
 import { FaExternalLinkAltIcon } from '../Icon'
 
 type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Props>
-type Props = {
+type Props = VariantProps<typeof textLink> & {
   /** リンクをクリックした時に発火するコールバック関数 */
   onClick?: (e: React.MouseEvent) => void
   /** テキストの前に表示するアイコン */
@@ -14,9 +14,48 @@ type Props = {
   suffix?: ReactNode
 }
 
+const textLink = tv({
+  slots: {
+    anchor: 'shr-no-underline',
+    prefixWrapper: 'shr-align-middle',
+    suffixWrapper: 'shr-align-middle',
+  },
+  defaultVariants: {
+    color: 'TEXT_LINK',
+  },
+  variants: {
+    underline: {
+      true: {
+        anchor: 'shr-shadow-underline',
+      },
+    },
+    color: {
+      TEXT_BLACK: {
+        anchor: 'shr-text-black',
+      },
+      TEXT_WHITE: {
+        anchor: 'shr-text-white',
+      },
+      TEXT_GREY: {
+        anchor: 'shr-text-grey',
+      },
+      TEXT_DISABLED: {
+        anchor: 'shr-text-disabled',
+      },
+      TEXT_LINK: {
+        anchor: 'shr-text-link',
+      },
+      inherit: {
+        anchor: 'shr-text-inherit',
+      },
+    },
+  },
+})
+
 export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
-  ({ href, target, onClick, children, prefix, suffix, ...props }, ref) => {
+  ({ href, target, onClick, children, prefix, suffix, color, className, ...others }, ref) => {
     const theme = useTheme()
+
     const actualSuffix = useMemo(() => {
       if (target === '_blank' && suffix === undefined) {
         return <FaExternalLinkAltIcon aria-label="別タブで開く" />
@@ -47,46 +86,51 @@ export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
       }
     }, [href, onClick])
 
+    const { anchor, prefixWrapper, suffixWrapper } = useMemo(
+      () =>
+        textLink({
+          color,
+          underline: actualHref !== undefined,
+        }),
+      [color, actualHref],
+    )
+
+    const anchorStyleProps = useMemo(
+      () => ({
+        className: anchor({ className }),
+      }),
+      [anchor, className],
+    )
+
+    const prefixWrapperStyleProps = useMemo(
+      () => ({
+        style: { marginRight: theme.spacingByChar(0.25) },
+        className: prefixWrapper(),
+      }),
+      [theme, prefixWrapper],
+    )
+
+    const suffixWrapperStyleProps = useMemo(
+      () => ({
+        style: { marginLeft: theme.spacingByChar(0.25) },
+        className: suffixWrapper(),
+      }),
+      [theme, suffixWrapper],
+    )
+
     return (
-      <StyledAnchor
-        {...props}
+      <a
+        {...others}
+        {...anchorStyleProps}
         ref={ref}
         href={actualHref}
         target={target}
         onClick={actualOnClick}
-        themes={theme}
       >
-        {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
+        {prefix && <span {...prefixWrapperStyleProps}>{prefix}</span>}
         {children}
-        {actualSuffix && <SuffixWrapper themes={theme}>{actualSuffix}</SuffixWrapper>}
-      </StyledAnchor>
+        {actualSuffix && <span {...suffixWrapperStyleProps}>{actualSuffix}</span>}
+      </a>
     )
   },
-)
-
-const StyledAnchor = styled.a<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color } = themes
-    return css`
-      text-decoration: none;
-      box-shadow: 0 1px 0 0;
-      color: ${color.TEXT_LINK};
-
-      &:not([href]) {
-        box-shadow: none;
-      }
-    `
-  }}
-`
-const PrefixWrapper = styled.span<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) => css`
-    margin-right: ${spacingByChar(0.25)};
-    vertical-align: middle;
-  `,
-)
-const SuffixWrapper = styled.span<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) => css`
-    margin-left: ${spacingByChar(0.25)};
-    vertical-align: middle;
-  `,
 )
