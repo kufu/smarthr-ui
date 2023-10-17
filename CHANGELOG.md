@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [37.0.1](https://github.com/kufu/smarthr-ui/compare/v37.0.0...v37.0.1) (2023-10-17)
+
+
+### Bug Fixes
+
+* FormDialogのonSubmit時に画面が更新されてしまう場合があるため、FormEventをpreventDefaultする ([#3817](https://github.com/kufu/smarthr-ui/issues/3817)) ([6778257](https://github.com/kufu/smarthr-ui/commit/6778257f2d3f821d649bdb182288ead7a60da7ee))
+* prettier v3 系に更新 ([#3827](https://github.com/kufu/smarthr-ui/issues/3827)) ([0c7c892](https://github.com/kufu/smarthr-ui/commit/0c7c8928247a34021108b4dc782effa1c1c4977e))
+* Select の文字位置が Firefox でズレていたので修正 ([#3830](https://github.com/kufu/smarthr-ui/issues/3830)) ([781185c](https://github.com/kufu/smarthr-ui/commit/781185c12e7a68279598fc01806083c8cf2eb4cd))
+* Switch の参照フォントサイズを theme に置き換え ([#3831](https://github.com/kufu/smarthr-ui/issues/3831)) ([338b70f](https://github.com/kufu/smarthr-ui/commit/338b70fc7d849551d571b02aab5a0793c540d034))
+
 ## [37.0.0](https://github.com/kufu/smarthr-ui/compare/v36.0.0...v37.0.0) (2023-10-10)
 
 
