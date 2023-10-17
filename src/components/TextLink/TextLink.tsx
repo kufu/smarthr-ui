@@ -15,7 +15,7 @@ type Props = VariantProps<typeof textLink> & {
 
 const textLink = tv({
   slots: {
-    anchor: 'shr-text-link shr-no-underline shr-shadow-link-underline [&:not([href])]:shr-shadow-none',
+    anchor: 'shr-text-link shr-no-underline shr-shadow-underline [&:not([href])]:shr-shadow-none',
     prefixWrapper: 'shr-me-0.25 shr-align-middle',
     suffixWrapper: 'shr-ms-0.25 shr-align-middle',
   },
