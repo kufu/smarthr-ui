@@ -1,4 +1,4 @@
-import React, { ComponentProps, PropsWithChildren, ReactElement, useContext, useMemo } from 'react'
+import React, { ComponentProps, PropsWithChildren, useContext, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { DropdownContentContext } from './DropdownContent'
@@ -29,29 +29,9 @@ export const DropdownCloser: React.FC<Props> = ({ children, className }) => {
     }
   }, [className, controllable, maxHeight, scrollable])
 
-  let foundFirstElement = false
-
   return (
-    <div {...styleProps}>
-      {controllable
-        ? // 先頭の内包要素に closer の役割を与える
-          React.Children.map(children, (child) => {
-            if (foundFirstElement || !React.isValidElement(child)) {
-              return child
-            }
-
-            foundFirstElement = true
-
-            return React.cloneElement(child as ReactElement, {
-              onClick: () => {
-                if (child.props.onClick) {
-                  child.props.onClick()
-                }
-                onClickCloser()
-              },
-            })
-          })
-        : children}
+    <div {...styleProps} onClick={onClickCloser}>
+      {children}
     </div>
   )
 }
