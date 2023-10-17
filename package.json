@@ -138,6 +138,7 @@
     "build": "run-p build:*",
     "build:lib": "tsc -p tsconfig.build.json",
     "build:esm": "tsc -p tsconfig.esm.build.json",
+    "build:preset": "tsc -p tsconfig.preset.build.json",
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
     "build-storybook": "storybook build --quiet -s ./public",
     "build-stylesheet": "ttsc -p tsconfig.stylesheet.json; node scripts/build-stylesheet.ts",
