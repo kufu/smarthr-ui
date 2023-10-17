@@ -93,6 +93,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 
   return (
     <Section>
+      {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <Heading tag={titleTag}>
         <TitleArea themes={theme} ref={titleRef} className={classNames.titleArea}>
           {subtitle && (

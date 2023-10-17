@@ -1,4 +1,5 @@
 {
   "extends": "./tsconfig.json",
+  "include": ["src/**/*", "smarthr-ui-preset.ts"],
   "exclude": ["node_modules", "src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.stories.tsx", "src/**/__tests__"],
 }

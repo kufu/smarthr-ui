@@ -39,6 +39,7 @@ export const All: Story = () => (
         </li>
         <li>
           <Section>
+            {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
             <Heading type="subSubBlockTitle" tag="h4">
               SubSubBlockTitle
             </Heading>

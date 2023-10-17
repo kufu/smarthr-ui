@@ -1,7 +1,7 @@
 import { StoryFn } from '@storybook/react'
 import React from 'react'
 
-import { Stack } from '../Layout'
+import { Stack } from '../../Layout'
 
 import { BaseColumn } from './BaseColumn'
 
