@@ -20,7 +20,7 @@ export const DropdownCloser: React.FC<Props> = ({ children, className }) => {
   const { maxHeight } = useContext(DropdownContentInnerContext)
 
   const styleProps = useMemo(() => {
-    const maxHeightStyle = !controllable && scrollable ? maxHeight : 'initilal'
+    const maxHeightStyle = !controllable && scrollable ? maxHeight : undefined
     return {
       className: closer({ controllable, className }),
       style: {
