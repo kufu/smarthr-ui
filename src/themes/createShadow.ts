@@ -20,7 +20,7 @@ export type ShadowProperty = {
   LAYER4?: string
   OUTLINE?: string
   OUTLINE_MARGIN?: string
-  LINK_UNDERLINE?: string
+  UNDERLINE?: string
 }
 
 export type CreatedShadowTheme = {
@@ -39,7 +39,7 @@ export type CreatedShadowTheme = {
   LAYER4?: string
   OUTLINE: string
   OUTLINE_MARGIN: string
-  LINK_UNDERLINE: string
+  UNDERLINE: string
   focusIndicatorStyles: FlattenSimpleInterpolation
 }
 
@@ -64,7 +64,7 @@ export const defaultShadow = {
   LAYER4: createLayerShadow(4),
   OUTLINE: defaultOutline,
   OUTLINE_MARGIN: defaultOutlineMargin,
-  LINK_UNDERLINE: '0 1px 0 0'
+  UNDERLINE: '0 1px 0 0'
 }
 
 const createFocusIndicatorStyles = (outline: string) => css`
