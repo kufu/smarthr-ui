@@ -1,1 +1,1 @@
-export { theme } from './tailwindTheme'
+export * from './tailwind'
