@@ -1,10 +1,10 @@
 import React, { AnchorHTMLAttributes, ReactNode, forwardRef, useMemo } from 'react'
-import { VariantProps, tv } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { FaExternalLinkAltIcon } from '../Icon'
 
 type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Props>
-type Props = VariantProps<typeof textLink> & {
+type Props = {
   /** リンクをクリックした時に発火するコールバック関数 */
   onClick?: (e: React.MouseEvent) => void
   /** テキストの前に表示するアイコン */
