@@ -1,21 +1,28 @@
-import React, { useContext, useEffect } from 'react'
-import styled from 'styled-components'
+import React, {
+  ComponentProps,
+  MouseEvent,
+  PropsWithChildren,
+  ReactElement,
+  useContext,
+  useEffect,
+  useMemo,
+} from 'react'
+import { tv } from 'tailwind-variants'
 
 import { tabbable } from '../../libs/tabbable'
 import { includeDisabledTrigger } from '../../libs/util'
 
 import { DropdownContext } from './Dropdown'
-import { useClassNames } from './useClassNames'
 
-type Props = {
-  children: React.ReactNode
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-}
+type Props = PropsWithChildren<ComponentProps<'div'>>
 
-export const DropdownTrigger: React.VFC<Props> = ({ children, className = '' }) => {
+const wrapper = tv({
+  base: 'smarthr-ui-Dropdown shr-inline-block',
+})
+
+export const DropdownTrigger: React.FC<Props> = ({ children, className }) => {
   const { active, onClickTrigger, contentId, triggerElementRef } = useContext(DropdownContext)
-  const classNames = useClassNames()
+  const styles = useMemo(() => wrapper({ className }), [className])
 
   useEffect(() => {
     if (!triggerElementRef.current) {
@@ -29,46 +36,33 @@ export const DropdownTrigger: React.VFC<Props> = ({ children, className = '' }) 
     })
   }, [triggerElementRef, active, contentId])
 
+  let foundFirstElement = false
+
   return (
-    <Wrapper
-      ref={triggerElementRef}
-      onClick={(e) => {
-        // 引き金となる要素が disabled な場合は発火させない
-        if (includeDisabledTrigger(children)) {
-          return
+    <div ref={triggerElementRef} className={styles}>
+      {React.Children.map(children, (child) => {
+        if (foundFirstElement || !React.isValidElement(child)) {
+          return child
         }
 
-        const rect = e.currentTarget.getBoundingClientRect()
-        onClickTrigger({
-          top: rect.top,
-          right: rect.right,
-          bottom: rect.bottom,
-          left: rect.left,
+        foundFirstElement = true
+
+        return React.cloneElement(child as ReactElement, {
+          onClick: (e: MouseEvent) => {
+            // 引き金となる要素が disabled な場合は発火させない
+            if (includeDisabledTrigger(children)) {
+              return
+            }
+
+            const { top, right, bottom, left } = e.currentTarget.getBoundingClientRect()
+            onClickTrigger({ top, right, bottom, left })
+
+            if (child.props.onClick) {
+              child.props.onClick(e)
+            }
+          },
         })
-      }}
-      className={`${className} ${classNames.wrapper}`}
-    >
-      {React.Children.map(children, (child: any) => {
-        const props = child.props ? child.props : {}
-        const { className: classNameProps = '' } = props
-
-        switch (typeof child) {
-          case 'string':
-            return child
-
-          case 'object':
-            return React.cloneElement(child, {
-              className: `${active ? 'active' : ''} ${classNameProps}`,
-            })
-
-          default:
-            return null
-        }
       })}
-    </Wrapper>
+    </div>
   )
 }
-
-const Wrapper = styled.div`
-  display: inline-block;
-`

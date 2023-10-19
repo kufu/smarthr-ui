@@ -1,40 +1,37 @@
-import React, { HTMLAttributes, useContext } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentProps, PropsWithChildren, useContext, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { DropdownContentContext } from './DropdownContent'
 import { DropdownContentInnerContext } from './DropdownContentInner'
-import { useClassNames } from './useClassNames'
 
-type Props = {
-  children: React.ReactNode
-} & HTMLAttributes<HTMLDivElement>
+const closer = tv({
+  base: 'smarthr-ui-Dropdown-closer',
+  variants: {
+    controllable: {
+      false: 'shr-flex shr-flex-col',
+    },
+  },
+})
 
-export const DropdownCloser: React.VFC<Props> = ({ children, className = '' }) => {
+type Props = PropsWithChildren<ComponentProps<'div'>>
+
+export const DropdownCloser: React.FC<Props> = ({ children, className }) => {
   const { onClickCloser, controllable, scrollable } = useContext(DropdownContentContext)
   const { maxHeight } = useContext(DropdownContentInnerContext)
-  const classNames = useClassNames()
+
+  const styleProps = useMemo(() => {
+    const maxHeightStyle = !controllable && scrollable ? maxHeight : undefined
+    return {
+      className: closer({ controllable, className }),
+      style: {
+        maxHeight: maxHeightStyle,
+      },
+    }
+  }, [className, controllable, maxHeight, scrollable])
 
   return (
-    <Wrapper
-      className={`${className} ${classNames.closer}`}
-      onClick={onClickCloser}
-      maxHeight={maxHeight}
-      controllable={controllable}
-      scrollable={scrollable}
-    >
+    <div {...styleProps} onClick={onClickCloser}>
       {children}
-    </Wrapper>
+    </div>
   )
 }
-
-const Wrapper = styled.div<{ maxHeight: string; controllable: boolean; scrollable: boolean }>`
-  ${({ maxHeight, controllable, scrollable }) => css`
-      ${!controllable
-        ? `
-      display: flex;
-      flex-direction: column;
-      `
-        : ''}
-      ${!controllable && scrollable ? `max-height: ${maxHeight};` : ''}
-    `}
-`
