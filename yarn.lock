@@ -3821,9 +3821,10 @@
   dependencies:
     "@types/lodash" "*"
 
-"@types/lodash.range@^3.2.7":
-  version "3.2.7"
-  resolved "https://registry.yarnpkg.com/@types/lodash.range/-/lodash.range-3.2.7.tgz#f4d9b41ee2d7250cfecf624ff5d627962fb7fa5e"
+"@types/lodash.range@^3.2.8":
+  version "3.2.8"
+  resolved "https://registry.yarnpkg.com/@types/lodash.range/-/lodash.range-3.2.8.tgz#dca0e9975c1b7d32684f396fca5fa3c106a1f773"
+  integrity sha512-nBIj7maueZTkuWF8AJj2VpMwmfOP5gNN+R1TVn5GjiypH+kqU9nZYo3F+ICOqnor0QccPugVWJshIxwPWpI9cA==
   dependencies:
     "@types/lodash" "*"
 
