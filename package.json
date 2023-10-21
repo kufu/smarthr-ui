@@ -46,7 +46,7 @@
     "@types/react-dom": "^18.2.14",
     "@types/react-test-renderer": "^17.0.7",
     "@types/react-transition-group": "^4.4.8",
-    "@types/styled-components": "^5.1.28",
+    "@types/styled-components": "^5.1.29",
     "autoprefixer": "^10.4.16",
     "axe-playwright": "^1.2.3",
     "babel-loader": "^9.1.3",
