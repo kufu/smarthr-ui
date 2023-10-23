@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [37.1.0](https://github.com/kufu/smarthr-ui/compare/v37.0.2...v37.1.0) (2023-10-23)
+
+
+### Features
+
+* Dropdown を Tailwind CSS 化 ([#3833](https://github.com/kufu/smarthr-ui/issues/3833)) ([9b2ce2f](https://github.com/kufu/smarthr-ui/commit/9b2ce2f57c6e8e88803a088482a8090b1b36b658))
+* tailwindcss 環境向けの ThemeProvider を追加 ([#3868](https://github.com/kufu/smarthr-ui/issues/3868)) ([5a6e70e](https://github.com/kufu/smarthr-ui/commit/5a6e70e7905226a375fc16b41158e60b59efd0e4))
+* TextLink を Tailwind CSS 化 ([#3844](https://github.com/kufu/smarthr-ui/issues/3844)) ([ed6b751](https://github.com/kufu/smarthr-ui/commit/ed6b751698e8676f742e79ac42036932a4fcc46c)), closes [#3848](https://github.com/kufu/smarthr-ui/issues/3848)
+
 ### [37.0.2](https://github.com/kufu/smarthr-ui/compare/v37.0.1...v37.0.2) (2023-10-18)
 
 ### [37.0.1](https://github.com/kufu/smarthr-ui/compare/v37.0.0...v37.0.1) (2023-10-17)
