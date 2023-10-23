@@ -131,8 +131,10 @@ export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layo
 
 // hooks
 export { useTheme } from './hooks/useTheme'
+export { useTheme as useTailwindTheme } from './hooks/useTailwindTheme'
 
 // themes
+export * from './themes'
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
 export { defaultPalette } from './themes/createPalette'
