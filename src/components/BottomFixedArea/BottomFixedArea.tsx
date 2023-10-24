@@ -101,22 +101,22 @@ export const BottomFixedArea: VFC<Props & ElementProps> = ({
 
 const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
   ${({ themes: { spacingByChar }, zIndex }) => css`
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      padding: ${spacingByChar(1.5)};
-      text-align: center;
-      z-index: ${zIndex};
-      box-shadow: 0 -4px 8px 2px rgba(0, 0, 0, 0.24);
-      border-radius: 0;
-      box-sizing: border-box;
-    `}
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: ${spacingByChar(1.5)};
+    text-align: center;
+    z-index: ${zIndex};
+    box-shadow: 0 -4px 8px 2px rgba(0, 0, 0, 0.24);
+    border-radius: 0;
+    box-sizing: border-box;
+  `}
 `
 const Text = styled.div`
   margin: 0;
 `
 const ListCluster = styled(Cluster).attrs({
-  as: 'ul',
+  forwardedAs: 'ul',
 })`
   list-style: none;
   margin: 0;

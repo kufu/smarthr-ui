@@ -84,7 +84,7 @@ export const Header: React.VFC<Props & ElementProps> = ({
 }
 
 const Wrapper = styled(Cluster).attrs({
-  as: 'header',
+  forwardedAs: 'header',
   justify: 'space-between',
   gap: { column: 0.25, row: 0 },
 })<{ themes: Theme }>`
