@@ -13,7 +13,8 @@
     "react-icons": "^4.11.0",
     "react-innertext": "^1.1.5",
     "react-transition-group": "^4.4.5",
-    "tailwind-variants": "^0.1.15"
+    "tailwind-variants": "^0.1.15",
+    "tailwindcss": "^3.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",
@@ -88,7 +89,6 @@
     "stylelint-config-smarthr": "^2.0.0",
     "stylelint-config-standard": "^34.0.0",
     "stylelint-config-styled-components": "^0.1.1",
-    "tailwindcss": "^3.3.3",
     "testcafe": "3.3.0",
     "ts-loader": "^9.5.0",
     "ts-node": "^10.9.1",
