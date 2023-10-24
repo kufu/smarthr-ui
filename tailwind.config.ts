@@ -1,4 +1,4 @@
-import preset from './smarthr-ui-preset'
+import preset from './src/smarthr-ui-preset'
 
 import type { Config } from 'tailwindcss'
 
