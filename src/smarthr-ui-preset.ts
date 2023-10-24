@@ -1,8 +1,8 @@
-import { defaultColor } from './src/themes/createColor'
-import { defaultFontSize, defaultHtmlFontSize } from './src/themes/createFontSize'
-import { defaultShadow } from './src/themes/createShadow'
-import { createSpacingByChar, primitiveTokens as spacingSizes } from './src/themes/createSpacing'
-import { defaultZIndex } from './src/themes/createZIndex'
+import { defaultColor } from './themes/createColor'
+import { defaultFontSize, defaultHtmlFontSize } from './themes/createFontSize'
+import { defaultShadow } from './themes/createShadow'
+import { createSpacingByChar, primitiveTokens as spacingSizes } from './themes/createSpacing'
+import { defaultZIndex } from './themes/createZIndex'
 
 import type { Config } from 'tailwindcss'
 

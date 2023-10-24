@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, createContext } from 'react'
 
-import presetConfig from '../../../smarthr-ui-preset'
+import presetConfig from '../../smarthr-ui-preset'
 
 type PresetConfig = typeof presetConfig
 
