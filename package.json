@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "37.0.2",
+  "version": "37.1.0",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "@smarthr/wareki": "^1.2.0",
@@ -13,7 +13,7 @@
     "react-icons": "^4.11.0",
     "react-innertext": "^1.1.5",
     "react-transition-group": "^4.4.5",
-    "tailwind-variants": "^0.1.14",
+    "tailwind-variants": "^0.1.15",
     "tailwindcss": "^3.3.3"
   },
   "devDependencies": {
@@ -21,8 +21,8 @@
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.23.2",
-    "@commitlint/cli": "^17.7.2",
-    "@commitlint/config-conventional": "^17.7.0",
+    "@commitlint/cli": "^18.0.0",
+    "@commitlint/config-conventional": "^18.0.0",
     "@storybook/addon-a11y": "^7.5.1",
     "@storybook/addon-essentials": "^7.5.1",
     "@storybook/addon-interactions": "^7.5.1",
@@ -43,7 +43,7 @@
     "@types/lodash.merge": "^4.6.8",
     "@types/lodash.range": "^3.2.8",
     "@types/node": "^14.18.63",
-    "@types/react": "^18.2.28",
+    "@types/react": "^18.2.31",
     "@types/react-dom": "^18.2.14",
     "@types/react-test-renderer": "^17.0.7",
     "@types/react-transition-group": "^4.4.8",
@@ -55,7 +55,7 @@
     "babel-plugin-polyfill-regenerator": "^0.5.3",
     "chromatic": "^7.4.0",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
-    "eslint": "^8.51.0",
+    "eslint": "^8.52.0",
     "eslint-config-smarthr": "^6.13.1",
     "eslint-plugin-storybook": "^0.6.15",
     "fs-extra": "^11.1.1",
@@ -171,7 +171,7 @@
   "typings": "lib/index.d.ts",
   "resolutions": {
     "@babel/helper-compilation-targets": "^7.22.15",
-    "@types/react": "^18.2.28",
+    "@types/react": "^18.2.31",
     "minimist": "1.2.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
