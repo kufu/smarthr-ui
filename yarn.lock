@@ -12872,17 +12872,17 @@ table@^6.8.1:
     string-width "^4.2.3"
     strip-ansi "^6.0.1"
 
-tailwind-merge@^1.13.2:
+tailwind-merge@^1.14.0:
   version "1.14.0"
   resolved "https://registry.yarnpkg.com/tailwind-merge/-/tailwind-merge-1.14.0.tgz#e677f55d864edc6794562c63f5001f45093cdb8b"
   integrity sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==
 
-tailwind-variants@^0.1.14:
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/tailwind-variants/-/tailwind-variants-0.1.14.tgz#1c9d59b92f5c902e8157ee14256eb4b90d287963"
-  integrity sha512-qfOkSGP+cSolTTkJboldGmiM+w5uE77pazCRkwixEBsuaml9CmhN0E8qgH7QnZNmOTVSsgRK1tn/MsKOvOKVWA==
+tailwind-variants@^0.1.15:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/tailwind-variants/-/tailwind-variants-0.1.15.tgz#1b735e36bebc639f195a448133b5ebf1a4f5c6cd"
+  integrity sha512-cqdxDwHx+21rI1B4RSmNUMLEBnDD9N5ByQaxdFOuuvscbR5hBLOWkKXOZZ+hAbttEG4slY/2mxMcZv0aEJtHvQ==
   dependencies:
-    tailwind-merge "^1.13.2"
+    tailwind-merge "^1.14.0"
 
 tailwindcss@^3.3.3:
   version "3.3.3"
