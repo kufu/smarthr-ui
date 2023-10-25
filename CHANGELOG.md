@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [37.1.2](https://github.com/kufu/smarthr-ui/compare/v37.1.1...v37.1.2) (2023-10-24)
+
+
+### Bug Fixes
+
+* smarthr-ui-preset.ts を src ディレクトリ内に移動 ([#3873](https://github.com/kufu/smarthr-ui/issues/3873)) ([c5cfe06](https://github.com/kufu/smarthr-ui/commit/c5cfe06e1f9c71ef5045db7691abf9f37e81e71a))
+
+### [37.1.1](https://github.com/kufu/smarthr-ui/compare/v37.1.0...v37.1.1) (2023-10-24)
+
 ## [37.1.0](https://github.com/kufu/smarthr-ui/compare/v37.0.2...v37.1.0) (2023-10-23)
 
 
