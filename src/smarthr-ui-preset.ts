@@ -1,3 +1,5 @@
+import plugin from 'tailwindcss/plugin'
+
 import { defaultColor } from './themes/createColor'
 import { defaultFontSize, defaultHtmlFontSize } from './themes/createFontSize'
 import { defaultShadow } from './themes/createShadow'
@@ -109,6 +111,7 @@ export default {
     },
     spacing: {
       px: '1px',
+      em: '1em',
       ...(spacingSizes
         .map((size) => ({
           [size]: spacingByChar(size),
@@ -149,6 +152,23 @@ export default {
     ringOffsetColor: false,
     textDecorationColor: false,
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        '.overflow-inherit': { overflow: 'inherit' },
+        '.overflow-initial': { overflow: 'initial' },
+        '.overflow-revert': { overflow: 'revert' },
+        '.overflow-unset': { overflow: 'unset' },
+        '.overflow-x-inherit': { 'overflow-x': 'inherit' },
+        '.overflow-y-inherit': { 'overflow-y': 'inherit' },
+        '.overflow-x-initial': { 'overflow-x': 'initial' },
+        '.overflow-y-initial': { 'overflow-y': 'initial' },
+        '.overflow-x-revert': { 'overflow-x': 'revert' },
+        '.overflow-y-revert': { 'overflow-y': 'revert' },
+        '.overflow-x-unset': { 'overflow-x': 'unset' },
+        '.overflow-y-unset': { 'overflow-y': 'unset' },
+      })
+    }),
+  ],
   prefix: 'shr-',
 } satisfies Config
