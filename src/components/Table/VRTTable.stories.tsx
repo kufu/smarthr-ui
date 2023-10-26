@@ -114,6 +114,16 @@ export const VRTWithReelForcedColors: StoryFn = () => (
 VRTWithReelForcedColors.parameters = {
   chromatic: { forcedColors: 'active' },
 }
+VRTWithReelForcedColors.parameters = {
+  viewport: {
+    defaultViewport: 'vrtTablet',
+  },
+  chromatic: {
+    modes: {
+      vrtMobile: { viewport: 'vrtTablet' },
+    },
+  },
+}
 
 const VRTInformationPanel = styled(InformationPanel)`
   margin-bottom: 24px;
