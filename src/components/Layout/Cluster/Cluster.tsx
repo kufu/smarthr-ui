@@ -23,8 +23,7 @@ export const Cluster = styled.div<{
     flex-wrap: wrap;
     ${align && `align-items: ${align};`}
     ${justify && `justify-content: ${justify};`}
-    row-gap: ${rowGap};
-    column-gap: ${columnGap};
+    gap: ${rowGap} ${columnGap};
 
     /* 
       Chromeで空の要素にflex-gapがあると印刷時にレイアウトが崩れるので gap の値を0にする
