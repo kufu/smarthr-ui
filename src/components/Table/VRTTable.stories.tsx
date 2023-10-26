@@ -65,15 +65,6 @@ VRTForcedColors.parameters = {
   chromatic: { forcedColors: 'active' },
 }
 
-export const VRTWithReelScrollHalfway: StoryFn = () => (
-  <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
-      途中までスクロールした状態で表示されます
-    </VRTInformationPanel>
-    <WithReel />
-  </>
-)
-
 export const VRTWithReelNarrowTablet: StoryFn = () => (
   <>
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
