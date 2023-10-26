@@ -105,8 +105,7 @@ const Wrapper = styled.div<{
     ${$overflow &&
     ($overflow instanceof Object
       ? css`
-          overflow-x: ${$overflow.x};
-          overflow-y: ${$overflow.y};
+          overflow: ${$overflow.x} ${$overflow.y};
         `
       : css`
           overflow: ${$overflow};
