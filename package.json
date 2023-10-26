@@ -141,7 +141,7 @@
     "build:css": "tailwindcss -i ./src/styles/index.css -o ./smarthr-ui.css",
     "build-storybook": "storybook build --quiet -s ./public",
     "build-stylesheet": "ttsc -p tsconfig.stylesheet.json; node scripts/build-stylesheet.ts",
-    "clean": "rimraf ./lib",
+    "clean": "rimraf ./lib ./esm ./smarthr-ui.css",
     "format": "eslint --fix './**/*.ts{,x}'",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint './**/*.ts{,x}'",
