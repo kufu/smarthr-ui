@@ -1,3 +1,4 @@
+import { darken } from 'polished'
 import plugin from 'tailwindcss/plugin'
 
 import { defaultColor } from './themes/createColor'
@@ -12,15 +13,16 @@ const spacingByChar = createSpacingByChar(defaultHtmlFontSize / 2)
 type Spacing = {
   [key in (typeof spacingSizes)[number]]: string
 }
+const darkenColor = (color: string, amount: number = 0.05) => darken(amount, color)
 
 // この preset を各プロダクトでも読み込んでもらう想定
 export default {
   content: [],
   theme: {
-    backgroundColor: {
+    backgroundColor: ({ theme }) => ({
       black: defaultColor.GREY_100,
       white: defaultColor.WHITE,
-      disabled: defaultColor.GREY_30,
+      'white-darken': theme('colors.white-darken'),
       link: defaultColor.TEXT_LINK,
       background: defaultColor.BACKGROUND,
       column: defaultColor.COLUMN,
@@ -29,24 +31,15 @@ export default {
       head: defaultColor.HEAD,
       'action-background': defaultColor.ACTION_BACKGROUND,
       main: defaultColor.MAIN,
+      'main-darken': theme('colors.main-darken'),
       danger: defaultColor.DANGER,
+      'danger-darken': theme('colors.danger-darken'),
       'warning-yellow': defaultColor.WARNING_YELLOW,
       overlay: defaultColor.OVERLAY,
       scrim: defaultColor.SCRIM,
       inherit: 'inherit',
       transparent: 'transparent',
-    },
-    borderColor: {
-      DEFAULT: defaultColor.BORDER,
-      black: defaultColor.GREY_100,
-      white: defaultColor.WHITE,
-      grey: defaultColor.GREY_65,
-      main: defaultColor.MAIN,
-      danger: defaultColor.DANGER,
-      disabled: defaultColor.GREY_30,
-      inherit: 'inherit',
-      transparent: 'transparent',
-    },
+    }),
     borderRadius: {
       none: '0',
       s: '0.25rem',
@@ -67,8 +60,13 @@ export default {
     colors: {
       black: defaultColor.GREY_100,
       white: defaultColor.WHITE,
+      'white-darken': darkenColor(defaultColor.WHITE),
       main: defaultColor.MAIN,
+      'main-darken': darkenColor(defaultColor.MAIN),
       brand: defaultColor.BRAND,
+      outline: defaultColor.OUTLINE,
+      danger: defaultColor.DANGER,
+      'danger-darken': darkenColor(defaultColor.DANGER),
       grey: {
         DEFAULT: defaultColor.GREY_65,
         5: defaultColor.GREY_5,
@@ -83,6 +81,9 @@ export default {
       inherit: 'inherit',
       transparent: 'transparent',
       current: 'currentColor',
+    },
+    fontFamily: {
+      inherit: 'inherit',
     },
     fontSize: {
       '2xs': defaultFontSize.XXS,
@@ -121,15 +122,16 @@ export default {
     stroke: {
       black: defaultColor.GREY_100,
     },
-    textColor: {
-      black: defaultColor.GREY_100,
-      white: defaultColor.WHITE,
-      disabled: defaultColor.GREY_30,
+    textColor: ({ theme }) => ({
+      black: theme('colors.black'),
+      white: theme('colors.white'),
+      'white-darken': theme('colors.white-darken'),
+      disabled: theme('colors.grey.30'),
       link: defaultColor.TEXT_LINK,
-      grey: defaultColor.GREY_65,
+      grey: theme('colors.grey.65'),
       inherit: 'inherit',
       transparent: 'transparent',
-    },
+    }),
     zIndex: {
       auto: 'auto',
       0: '0',
@@ -138,22 +140,27 @@ export default {
       overlap: `${defaultZIndex.OVERLAP}`,
       'flash-message': `${defaultZIndex.FLASH_MESSAGE}`,
     },
-    // 継承するのはこっち。なんかある?
-    extend: {},
+    extend: {
+      borderColor: ({ theme }) => ({
+        default: theme('colors.grey.20'),
+        disabled: theme('colors.grey.20/50'),
+        darken: darkenColor(theme('colors.grey.20')),
+        highContrast: theme('colors.grey.100'),
+      }),
+    },
   },
   corePlugins: {
     preflight: false,
     boxShadowColor: false,
     caretColor: false,
     divideColor: false,
-    fontFamily: false,
     placeholderColor: false,
     ringColor: false,
     ringOffsetColor: false,
     textDecorationColor: false,
   },
   plugins: [
-    plugin(({ addUtilities }) => {
+    plugin(({ addUtilities, addComponents, theme }) => {
       addUtilities({
         '.overflow-inherit': { overflow: 'inherit' },
         '.overflow-initial': { overflow: 'initial' },
@@ -167,6 +174,17 @@ export default {
         '.overflow-y-revert': { 'overflow-y': 'revert' },
         '.overflow-x-unset': { 'overflow-x': 'unset' },
         '.overflow-y-unset': { 'overflow-y': 'unset' },
+      })
+      addComponents({
+        /**
+         * box-shadow や ring を使った仕組みでは Firefoxx で欠陥があるため、独自定義している
+         * via https://github.com/tailwindlabs/tailwindcss/issues/10226
+         */
+        '.focusIndicator': {
+          outline: 'none',
+          isolation: 'isolate',
+          boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
+        },
       })
     }),
   ],
