@@ -14,7 +14,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { MultiComboBox, SingleComboBox } from '../ComboBox'
 import { DatePicker } from '../DatePicker'
 import { DropZone } from '../DropZone'
-import { Heading, HeadingTypes } from '../Heading'
+import { HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 import { CurrencyInput, Input } from '../Input'
 import { InputFile } from '../InputFile'
@@ -111,7 +111,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         className={`${classNames.label}`}
         as={isRoleGroup ? 'legend' : 'label'}
       >
-        <GroupLabel type={titleType}>{title}</GroupLabel>
+        <GroupLabel styleType={titleType}>{title}</GroupLabel>
         {statusLabelList.length > 0 && (
           <Cluster gap={0.25} as="span">
             {statusLabelList.map((statusLabelProp, index) => (
@@ -259,7 +259,7 @@ const FormLabel = styled(Cluster).attrs({ align: 'center' })`
   align-self: start;
 `
 
-const GroupLabel = styled(Heading).attrs({ tag: 'span' })``
+const GroupLabel = styled(Text).attrs({ as: 'span' })``
 
 const ErrorMessage = styled.p<{ themes: Theme }>`
   ${({ themes: { color } }) => css`
