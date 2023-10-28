@@ -8,11 +8,7 @@ import { SecondaryButton, SecondaryButtonAnchor } from './SecondaryButton'
 import { SkeletonButton, SkeletonButtonAnchor } from './SkeletonButton'
 import { TextButton, TextButtonAnchor } from './TextButton'
 
-import { AnchorButton, Button } from '.'
-
 export const useClassNames = () => {
-  const generateButotn = useClassNameGenerator(Button.displayName || 'Button')
-  const generateAnchorButotn = useClassNameGenerator(AnchorButton.displayName || 'AnchorButton')
   const generatePrimaryButton = useClassNameGenerator(PrimaryButton.displayName || 'PrimaryButton')
   const generatePrimaryButtonAnchor = useClassNameGenerator(
     PrimaryButtonAnchor.displayName || 'PrimaryButtonAnchor',
@@ -40,13 +36,6 @@ export const useClassNames = () => {
 
   return useMemo(
     () => ({
-      button: {
-        wrapper: generateButotn(),
-        disabledWrapper: generateButotn('disabledWrapper'),
-      },
-      anchorButton: {
-        wrapper: generateAnchorButotn(),
-      },
       primaryButton: {
         wrapper: generatePrimaryButton(),
       },
@@ -79,8 +68,6 @@ export const useClassNames = () => {
       },
     }),
     [
-      generateAnchorButotn,
-      generateButotn,
       generateDangerButton,
       generateDangerButtonAnchor,
       generatePrimaryButton,
