@@ -91,7 +91,7 @@ export const Heading: VFC<Props & ElementProps> = ({
 }) => {
   const classNames = useClassNames()
   const level = useContext(LevelContext)
-  const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag, visuallyHidden])
+  const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
   const actualProps = {
     ...props,
     ...MAPPER_SIZE_AND_WEIGHT[type],
