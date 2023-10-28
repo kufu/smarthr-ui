@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const VisuallyHiddenText = () => (
+export const VisuallyHiddenText: React.FC = () => (
   <span
     style={{
       clipPath: 'inset(100%)',
