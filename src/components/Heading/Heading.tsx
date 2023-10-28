@@ -1,11 +1,17 @@
 import React, { HTMLAttributes, ReactNode, VFC, useContext, useMemo } from 'react'
-import styled from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
 import { Text, TextProps } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { useClassNames } from './useClassNames'
+
+const heading = tv({
+  slots: {
+    resetText: 'shr-m-[unset] shr-leading-tight',
+  },
+})
 
 export type Props = {
   /** 表示するテキスト */
@@ -36,7 +42,7 @@ type ElementProps = Omit<
   keyof Props | keyof TextProps | 'role' | 'aria-level'
 >
 
-const generateTagProps = (level: number, tag?: HeadingTagTypes, visuallyHidden?: boolean) => {
+const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
   let role = undefined
   let ariaLevel = undefined
 
@@ -47,8 +53,7 @@ const generateTagProps = (level: number, tag?: HeadingTagTypes, visuallyHidden?:
   }
 
   return {
-    [visuallyHidden ? 'as' : 'forwardedAs']:
-      tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes),
+    as: tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes),
     role,
     'aria-level': ariaLevel,
   }
@@ -86,10 +91,7 @@ export const Heading: VFC<Props & ElementProps> = ({
 }) => {
   const classNames = useClassNames()
   const level = useContext(LevelContext)
-  const tagProps = useMemo(
-    () => generateTagProps(level, tag, visuallyHidden),
-    [level, tag, visuallyHidden],
-  )
+  const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag, visuallyHidden])
   const actualProps = {
     ...props,
     ...MAPPER_SIZE_AND_WEIGHT[type],
@@ -97,16 +99,16 @@ export const Heading: VFC<Props & ElementProps> = ({
     className: `${type} ${className} ${classNames.wrapper}`,
   }
 
-  return visuallyHidden ? <VisuallyHiddenText {...actualProps} /> : <ResetText {...actualProps} />
+  const { resetText } = heading()
+
+  return visuallyHidden ? (
+    <VisuallyHiddenText {...actualProps} />
+  ) : (
+    <Text {...actualProps} className={resetText({ className: actualProps.className })} />
+  )
 }
 
 export const PageHeading: VFC<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>> = ({
   type = 'screenTitle',
   ...props
 }) => <Heading {...props} type={type} tag="h1" /> // eslint-disable-line smarthr/a11y-heading-in-sectioning-content
-
-const ResetText = styled(Text).attrs(() => ({
-  leading: 'TIGHT' as React.ComponentProps<typeof Text>['leading'],
-}))`
-  margin: unset;
-`
