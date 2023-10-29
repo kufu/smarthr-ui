@@ -21,8 +21,7 @@ export const Sidebar = styled.div<Props>(
     const isGapSeparate = gap instanceof Object
     const gapValue = isGapSeparate
       ? css`
-          row-gap: ${useSpacing(gap.row)};
-          column-gap: ${useSpacing(gap.column)};
+          gap: ${useSpacing(gap.row)} ${useSpacing(gap.column)};
         `
       : css`
           gap: ${useSpacing(gap)};
