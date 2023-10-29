@@ -1,9 +1,9 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
+
+const wrapperClassName = 'shr-text-base'
 
 type Props = {
   start: number
@@ -11,26 +11,25 @@ type Props = {
   total?: number
 }
 
-export const PageCounter: React.FC<Props> = ({ start, end, total = 0 }) => {
-  const theme = useTheme()
-  return (
-    <Wrapper themes={theme}>
+export const PageCounter: React.FC<Props> = ({ start, end, total = 0 }) => (
+    <Cluster inline align="baseline" className={wrapperClassName}>
       {total > 0 && (
-        <Wrapper forwardedAs="span" gap={0.25} themes={theme}>
-          <Bold>{total.toLocaleString()}</Bold>
+        <Cluster as="span" gap={0.25} inline align="baseline" className={wrapperClassName}>
+          <Text weight="bold" as="b">
+            {total.toLocaleString()}
+          </Text>
           件中
-        </Wrapper>
+        </Cluster>
       )}
-      <Wrapper forwardedAs="span" gap={0.25} themes={theme}>
-        <Bold>{start.toLocaleString()}</Bold>–<Bold>{end.toLocaleString()}</Bold>件
-      </Wrapper>
-    </Wrapper>
+      <Cluster as="span" gap={0.25} inline align="baseline" className={wrapperClassName}>
+        <Text weight="bold" as="b">
+          {start.toLocaleString()}
+        </Text>
+        –
+        <Text weight="bold" as="b">
+          {end.toLocaleString()}
+        </Text>
+        件
+      </Cluster>
+    </Cluster>
   )
-}
-
-const Wrapper = styled(Cluster).attrs({ align: 'baseline', inline: true })<{ themes: Theme }>`
-  ${({ themes: { fontSize } }) => css`
-    font-size: ${fontSize.M};
-  `}
-`
-const Bold = styled(Text).attrs({ weight: 'bold', forwardedAs: 'b' })``
