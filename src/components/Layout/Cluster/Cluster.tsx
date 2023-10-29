@@ -94,7 +94,7 @@ const cluster = tv({
       stretch: 'shr-items-stretch',
     },
     justify: {
-      norma: 'shr-justify-normal',
+      normal: 'shr-justify-normal',
       start: 'shr-justify-start',
       'flex-start': 'shr-justify-start',
       end: 'shr-justify-end',
@@ -117,7 +117,7 @@ type Props = PropsWithChildren<
 > &
   ComponentProps<'div'>
 
-export const Cluster: React.FC<Props> = ({ as: Comopnent = 'div', gap = 0.5, ...props }) => {
+export const Cluster: React.FC<Props> = ({ as: Component = 'div', gap = 0.5, ...props }) => {
   const rowGap = gap instanceof Object ? gap.row : gap
   const columnGap = gap instanceof Object ? gap.column : gap
 
@@ -127,5 +127,5 @@ export const Cluster: React.FC<Props> = ({ as: Comopnent = 'div', gap = 0.5, ...
     [inline, rowGap, columnGap, align, justify, className],
   )
 
-  return <Comopnent {...others} className={styles} />
+  return <Component {...others} className={styles} />
 }
