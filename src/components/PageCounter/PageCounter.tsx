@@ -16,12 +16,12 @@ export const PageCounter: React.FC<Props> = ({ start, end, total = 0 }) => {
   return (
     <Wrapper themes={theme}>
       {total > 0 && (
-        <Wrapper as="span" gap={0.25} themes={theme}>
+        <Wrapper forwardedAs="span" gap={0.25} themes={theme}>
           <Bold>{total.toLocaleString()}</Bold>
           件中
         </Wrapper>
       )}
-      <Wrapper as="span" gap={0.25} themes={theme}>
+      <Wrapper forwardedAs="span" gap={0.25} themes={theme}>
         <Bold>{start.toLocaleString()}</Bold>–<Bold>{end.toLocaleString()}</Bold>件
       </Wrapper>
     </Wrapper>

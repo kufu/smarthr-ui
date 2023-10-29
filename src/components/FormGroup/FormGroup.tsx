@@ -109,7 +109,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
         id={managedLabelId}
         className={`${classNames.label}`}
-        as={isRoleGroup ? 'legend' : 'label'}
+        forwardedAs={isRoleGroup ? 'legend' : 'label'}
       >
         <GroupLabel type={titleType}>{title}</GroupLabel>
         {statusLabelList.length > 0 && (
@@ -172,7 +172,8 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
 const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describedbyIds: string) => {
   let foundFirstInput = false
 
-  const addId = (targets: ReactNode): ReactNode[] | ReactNode => React.Children.map(targets, (child) => {
+  const addId = (targets: ReactNode): ReactNode[] | ReactNode =>
+    React.Children.map(targets, (child) => {
       if (foundFirstInput || !React.isValidElement(child)) {
         return child
       }
