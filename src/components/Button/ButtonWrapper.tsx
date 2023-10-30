@@ -40,33 +40,28 @@ export function ButtonWrapper({
   className,
   ...props
 }: Props) {
-  const { default: defaultButton, anchor } = useMemo(
-    () =>
-      button({
-        variant,
-        loading: $loading,
-        wide,
-      }),
-    [$loading, variant, wide],
-  )
-  const buttonClassName = useMemo(
-    () => `${size} ${className} ${square ? 'square' : ''}`,
-    [className, size, square],
-  )
+  const { buttonStyle, anchorStyle } = useMemo(() => {
+    const { default: defaultButton, anchor } = button({
+      variant,
+      size,
+      type: square ? 'square' : 'default',
+      loading: $loading,
+      wide,
+    })
+
+    return {
+      buttonStyle: defaultButton({ className }),
+      anchorStyle: anchor({ className }),
+    }
+  }, [$loading, className, size, square, variant, wide])
 
   if (props.isAnchor) {
     const { anchorRef, ...others } = props
     // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute, jsx-a11y/anchor-has-content
-    return <a {...others} className={anchor({ className: buttonClassName })} ref={anchorRef} />
+    return <a {...others} className={anchorStyle} ref={anchorRef} />
   } else {
     const { buttonRef, ...others } = props
-    return (
-      <button
-        {...others}
-        className={defaultButton({ className: buttonClassName })}
-        ref={buttonRef}
-      />
-    )
+    return <button {...others} className={buttonStyle} ref={buttonRef} />
   }
 }
 
@@ -91,6 +86,15 @@ const button = tv({
       danger: {},
       skeleton: {},
       text: {},
+    },
+    size: {
+      default: {},
+      s: {},
+    },
+    // FIXME 本来は square の Boolean value を使いたいが、tailwind-variants にバグがありそうなので暫定的に string で対応
+    type: {
+      default: {},
+      square: {},
     },
     loading: {
       true: {
@@ -121,17 +125,9 @@ const button = tv({
         /* ボタンの高さを合わせるために指定 */
         'shr-border',
         'shr-border-solid',
-        'shr-px-1',
-        'shr-py-0.75',
         'shr-font-inherit',
-        'shr-text-base',
         'shr-font-bold',
         'shr-leading-none',
-        '[&.s]:shr-p-0.5',
-        '[&.s]:shr-text-sm',
-        /* ボタンラベルの line-height を 0 にしたため、高さを担保する */
-        '[&.s]:shr-min-h-[calc(theme(fontSize.sm)+theme(spacing.1)+theme(borderWidth.2))]',
-        '[&.square:not(&.s)]:shr-p-0.75',
         'focus-visible:shr-focusIndicator',
         'contrast-more:shr-border-highContrast',
         /* baseline より下の leading などの余白を埋める */
@@ -141,6 +137,33 @@ const button = tv({
          */
         '[&_svg]:shr-block',
       ],
+    },
+    {
+      slots: ['default', 'anchor'],
+      size: 's',
+      className: [
+        'shr-p-0.5',
+        'shr-text-sm',
+        /* ボタンラベルの line-height を 0 にしたため、高さを担保する */
+        'shr-min-h-[calc(theme(fontSize.sm)+theme(spacing.1)+theme(borderWidth.2))]',
+      ],
+    },
+    {
+      slots: ['default', 'anchor'],
+      size: 'default',
+      className: ['shr-text-base'],
+    },
+    {
+      slots: ['default', 'anchor'],
+      size: 'default',
+      type: 'default',
+      className: ['shr-px-1', 'shr-py-0.75'],
+    },
+    {
+      slots: ['default', 'anchor'],
+      size: 'default',
+      type: 'square',
+      className: 'shr-p-0.75',
     },
     {
       slots: ['default', 'anchor'],

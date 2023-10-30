@@ -51,7 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
       variant = 'secondary',
       disabled,
       disabledDetail,
-      className = '',
+      className,
       children,
       loading = false,
       ...props
