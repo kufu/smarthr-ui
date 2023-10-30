@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
 
@@ -19,7 +19,7 @@ export default {
 type ButtonProps = React.ComponentProps<typeof Button>
 type AnchorButtonProps = React.ComponentProps<typeof AnchorButton>
 
-export const _Button: Story = () => (
+export const _Button: StoryFn = () => (
   <List>
     <dt>Default</dt>
     <dd>
@@ -188,7 +188,7 @@ _Button.parameters = {
   controls: { hideNoControlsWarning: true },
 }
 
-export const _ButtonControl: Story = (args: ButtonProps) => (
+export const _ButtonControl: StoryFn = (args: ButtonProps) => (
   <Wrapper>
     <Button {...args} onClick={action('clicked')}>
       {args.children}
@@ -199,7 +199,7 @@ _ButtonControl.args = {
   children: 'ボタン',
 }
 
-export const _ButtonAnchor: Story = () => (
+export const _ButtonAnchor: StoryFn = () => (
   <List>
     <dt>Default</dt>
     <dd>
@@ -334,7 +334,7 @@ _ButtonAnchor.parameters = {
   controls: { hideNoControlsWarning: true },
 }
 
-export const _ButtonAnchorControl: Story = (args: AnchorButtonProps) => (
+export const _ButtonAnchorControl: StoryFn = (args: AnchorButtonProps) => (
   <Wrapper>
     <AnchorButton {...args} href="#" onClick={action('clicked')}>
       {args.children}
@@ -345,7 +345,7 @@ _ButtonAnchorControl.args = {
   children: 'ボタン',
 }
 
-export const WithLoading: Story = (args: ButtonProps) => {
+export const WithLoading: StoryFn = (args: ButtonProps) => {
   const [loading, setLoading] = useState(false)
   const handleClick = () => {
     setLoading(true)
