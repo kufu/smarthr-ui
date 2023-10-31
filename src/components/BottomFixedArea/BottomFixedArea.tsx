@@ -10,14 +10,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base as BaseComponent } from '../Base'
-import {
-  AnchorButton,
-  Button,
-  PrimaryButton,
-  PrimaryButtonAnchor,
-  SecondaryButton,
-  SecondaryButtonAnchor,
-} from '../Button'
+import { AnchorButton, Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
 
 import { TertiaryLink } from './TertiaryLink'
@@ -27,14 +20,10 @@ import { useClassNames } from './useClassNames'
 export type Primary =
   | FunctionComponentElement<ComponentProps<typeof Button>>
   | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
-  | FunctionComponentElement<ComponentProps<typeof PrimaryButton>>
-  | FunctionComponentElement<ComponentProps<typeof PrimaryButtonAnchor>>
 
 export type Secondary =
   | FunctionComponentElement<ComponentProps<typeof Button>>
   | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
-  | FunctionComponentElement<ComponentProps<typeof SecondaryButton>>
-  | FunctionComponentElement<ComponentProps<typeof SecondaryButtonAnchor>>
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 

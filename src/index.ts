@@ -44,20 +44,7 @@ export {
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
 export { RadioButtonPanel } from './components/RadioButtonPanel'
-export {
-  AnchorButton,
-  Button,
-  PrimaryButton,
-  PrimaryButtonAnchor,
-  SecondaryButton,
-  SecondaryButtonAnchor,
-  DangerButton,
-  DangerButtonAnchor,
-  SkeletonButton,
-  SkeletonButtonAnchor,
-  TextButton,
-  TextButtonAnchor,
-} from './components/Button'
+export { AnchorButton, Button } from './components/Button'
 export { StatusLabel } from './components/StatusLabel'
 export { Base, BaseColumn, DialogBase } from './components/Base'
 export * from './components/Icon'
