@@ -60,9 +60,9 @@ export const All: Story = () => {
             >
               <Stack gap={0.25} as="span">
                 <Cluster align="center" as="span">
-                  <Heading tag="span" type="blockTitle">
+                  <Text as="span" size="M" weight="bold">
                     エンゲージメントサーベイ
-                  </Heading>
+                  </Text>
                   <StatusLabel>組織改善</StatusLabel>
                 </Cluster>
                 <Text>
