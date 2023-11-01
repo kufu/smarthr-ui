@@ -2,6 +2,7 @@ import React, {
   ComponentProps,
   FC,
   MouseEvent,
+  PropsWithChildren,
   ReactNode,
   RefObject,
   useCallback,
@@ -26,15 +27,11 @@ import { useDialogPortal } from './useDialogPortal'
 
 import type { DecoratorsType } from '../../types'
 
-type Props = {
+type Props = PropsWithChildren<{
   /**
    * ダイアログのヘッダ部分の内容
    */
   header: ReactNode
-  /**
-   * ダイアログのコンテンツ部分の内容
-   */
-  children: ReactNode
   /**
    * ダイアログのフッタ部分の内容
    */
@@ -84,7 +81,7 @@ type Props = {
     dialogHandlerAriaLabel?: (txt: string) => string
     dialogHandlerAriaValuetext?: (txt: string, data: DOMRect | undefined) => string
   }
-}
+}>
 
 const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
 const CLOSE_BUTTON_ICON_ALT = '閉じる'
@@ -254,9 +251,9 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
         onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
         onDrag={(_, data) => {
           setPosition((prev) => ({
-              x: prev.x + data.deltaX,
-              y: prev.y + data.deltaY,
-            }))
+            x: prev.x + data.deltaX,
+            y: prev.y + data.deltaY,
+          }))
         }}
         position={position}
         bounds={draggableBounds}
@@ -347,8 +344,10 @@ const Box = styled(Base).attrs({ radius: 'm', layer: 3 })<{
         css`
           max-width: min(
             calc(
-              100vw - max(${leftMargin}, ${spacingByChar(0.5)}) -
-                max(${rightMargin}, ${spacingByChar(0.5)})
+              100vw - max(${leftMargin}, ${spacingByChar(0.5)}) - max(
+                  ${rightMargin},
+                  ${spacingByChar(0.5)}
+                )
             ),
             800px
           );
