@@ -1,4 +1,4 @@
-import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
+import React, { ComponentProps, PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 const unstyledButton = tv({
@@ -24,10 +24,10 @@ const unstyledButton = tv({
   ],
 })
 
-export const UnstyledButton: React.FC<PropsWithChildren<ComponentProps<'button'>>> = ({
-  className,
-  ...props
-}) => {
+export const UnstyledButton = forwardRef<
+  HTMLButtonElement,
+  PropsWithChildren<ComponentProps<'button'>>
+>(({ className, ...props }, ref) => {
   const styles = useMemo(() => unstyledButton({ className }), [className])
-  return <button {...props} className={styles} />
-}
+  return <button {...props} ref={ref} className={styles} />
+})
