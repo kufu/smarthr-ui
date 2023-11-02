@@ -120,6 +120,7 @@ const VRTInformationPanel = styled(InformationPanel)`
 const List = styled.dl`
   padding: 24px;
   margin: 0;
+  min-height: 400px;
 
   dd {
     margin: 10px 0 20px;
