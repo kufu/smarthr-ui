@@ -1,40 +1,11 @@
-import React, { VFC } from 'react'
+import React, { FC } from 'react'
 
-import {
-  AnchorButton,
-  Button,
-  DangerButton,
-  DangerButtonAnchor,
-  PrimaryButton,
-  PrimaryButtonAnchor,
-  SecondaryButton,
-  SecondaryButtonAnchor,
-  SkeletonButton,
-  SkeletonButtonAnchor,
-  TextButton,
-  TextButtonAnchor,
-  UnstyledButton,
-} from '.'
+import { AnchorButton, Button, UnstyledButton } from '.'
 
-export const Style: VFC = () => (
+export const Style: FC = () => (
   <>
     <Button />
     <AnchorButton />
-    <PrimaryButton />
-    {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
-    <PrimaryButtonAnchor />
-    <SecondaryButton />
-    {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
-    <SecondaryButtonAnchor />
-    <DangerButton />
-    {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
-    <DangerButtonAnchor />
-    <SkeletonButton />
-    {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
-    <SkeletonButtonAnchor />
-    <TextButton />
-    {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
-    <TextButtonAnchor />
     <UnstyledButton />
   </>
 )

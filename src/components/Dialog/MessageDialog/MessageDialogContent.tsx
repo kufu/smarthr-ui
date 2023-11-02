@@ -11,7 +11,7 @@ import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInne
 type Props = BaseProps & UncontrolledDialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
+export const MessageDialogContent: React.FC<Props & ElementProps> = ({
   title,
   description,
   portalParent,
@@ -33,7 +33,6 @@ export const MessageDialogContent: React.VFC<Props & ElementProps> = ({
   return createPortal(
     <DialogContentInner
       {...props}
-      onClickOverlay={onClickClose}
       onPressEscape={onClickClose}
       isOpen={active}
       className={className}

@@ -1,11 +1,15 @@
-import React, { AnchorHTMLAttributes, forwardRef } from 'react'
+import React, { AnchorHTMLAttributes, forwardRef, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { ButtonInner } from './ButtonInner'
 import { ButtonWrapper } from './ButtonWrapper'
 import { BaseProps } from './types'
-import { useClassNames } from './useClassNames'
 
 type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseProps>
+
+const anchorButton = tv({
+  base: 'smarthr-ui-AnchorButton',
+})
 
 export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementProps>(
   (
@@ -16,13 +20,13 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
       suffix,
       wide = false,
       variant = 'secondary',
-      className = '',
+      className,
       children,
       ...props
     },
     ref,
   ) => {
-    const classNames = useClassNames().anchorButton
+    const styles = useMemo(() => anchorButton({ className }), [className])
 
     return (
       <ButtonWrapper
@@ -31,7 +35,7 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
         square={square}
         wide={wide}
         variant={variant}
-        className={`${className} ${classNames.wrapper}`}
+        className={styles}
         isAnchor
         anchorRef={ref}
       >

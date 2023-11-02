@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback } from 'react'
+import React, { FC, PropsWithChildren, ReactNode, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
@@ -13,11 +13,7 @@ import { useClassNames } from '../useClassNames'
 
 import type { DecoratorsType, ResponseMessageType } from '../../../types'
 
-export type BaseProps = {
-  /**
-   * ダイアログの内容
-   */
-  children: ReactNode
+export type BaseProps = PropsWithChildren<{
   /**
    * ダイアログのタイトル
    */
@@ -57,7 +53,7 @@ export type BaseProps = {
   className?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'closeButtonLabel'>
-}
+}>
 
 export type ActionDialogContentInnerProps = BaseProps & {
   onClickClose: () => void

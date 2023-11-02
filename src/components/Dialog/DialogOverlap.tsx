@@ -1,17 +1,16 @@
-import React, { ReactNode, VFC, useEffect, useState } from 'react'
+import React, { FC, PropsWithChildren, ReactNode, useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import styled from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-type Props = {
+type Props = PropsWithChildren<{
   isOpen: boolean
-  children: ReactNode
-}
+}>
 
 const transitionClassName = 'shr-dialog-transition'
 
-export const DialogOverlap: VFC<Props> = ({ isOpen, children }) => {
+export const DialogOverlap: FC<Props> = ({ isOpen, children }) => {
   const theme = useTheme()
   const [childrenBuffer, setChildrenBuffer] = useState<ReactNode>(null)
 

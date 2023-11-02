@@ -14,7 +14,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { MultiComboBox, SingleComboBox } from '../ComboBox'
 import { DatePicker } from '../DatePicker'
 import { DropZone } from '../DropZone'
-import { Heading, HeadingTypes } from '../Heading'
+import { HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 import { CurrencyInput, Input } from '../Input'
 import { InputFile } from '../InputFile'
@@ -109,9 +109,9 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
         id={managedLabelId}
         className={`${classNames.label}`}
-        as={isRoleGroup ? 'legend' : 'label'}
+        forwardedAs={isRoleGroup ? 'legend' : 'label'}
       >
-        <GroupLabel type={titleType}>{title}</GroupLabel>
+        <GroupLabel styleType={titleType}>{title}</GroupLabel>
         {statusLabelList.length > 0 && (
           <Cluster gap={0.25} as="span">
             {statusLabelList.map((statusLabelProp, index) => (
@@ -172,7 +172,8 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
 const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describedbyIds: string) => {
   let foundFirstInput = false
 
-  const addId = (targets: ReactNode): ReactNode[] | ReactNode => React.Children.map(targets, (child) => {
+  const addId = (targets: ReactNode): ReactNode[] | ReactNode =>
+    React.Children.map(targets, (child) => {
       if (foundFirstInput || !React.isValidElement(child)) {
         return child
       }
@@ -259,7 +260,7 @@ const FormLabel = styled(Cluster).attrs({ align: 'center' })`
   align-self: start;
 `
 
-const GroupLabel = styled(Heading).attrs({ tag: 'span' })``
+const GroupLabel = styled(Text).attrs({ as: 'span' })``
 
 const ErrorMessage = styled.p<{ themes: Theme }>`
   ${({ themes: { color } }) => css`

@@ -38,7 +38,7 @@ export const DefinitionList: FC<Props & ElementProps> = ({ items, maxColumns, cl
   )
 }
 
-const Wrapper = styled(Cluster).attrs({ as: 'dl', gap: 1.5 })`
+const Wrapper = styled(Cluster).attrs({ forwardedAs: 'dl', gap: 1.5 })`
   margin-block: initial;
 `
 
