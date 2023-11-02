@@ -56,81 +56,80 @@ export const StatusLabel: FC<Props & ElementProps> = ({
 }
 
 const Wrapper = styled.span<{ themes: Theme }>`
-  ${({ themes: { border, color, fontSize, spacingByChar } }) =>
-    css`
-      box-sizing: content-box;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: ${spacingByChar(0.25)};
-      border: ${border.lineWidth} solid transparent;
-      background-color: ${color.WHITE};
-      padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
-      white-space: nowrap;
-      font-size: ${fontSize.S};
-      font-weight: bold;
+  ${({ themes: { border, color, fontSize, spacingByChar } }) => css`
+    box-sizing: content-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: ${spacingByChar(0.25)};
+    border: ${border.lineWidth} solid transparent;
+    background-color: ${color.WHITE};
+    padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
+    white-space: nowrap;
+    font-size: ${fontSize.S};
+    font-weight: bold;
 
-      /** ラベルが天地中央に揃わないため暫定対応 */
-      line-height: 0;
-      min-width: 3.5em;
-      min-height: 1em;
+    /** ラベルが天地中央に揃わないため暫定対応 */
+    line-height: 0;
+    min-width: 3.5em;
+    min-height: 1em;
 
-      &.grey {
-        border-color: ${color.BORDER};
-        color: ${color.TEXT_GREY};
+    &.grey {
+      border-color: ${color.BORDER};
+      color: ${color.TEXT_GREY};
 
-        @media (prefers-contrast: more) {
-          & {
-            border: ${border.highContrast};
-          }
-        }
-
-        &.bold {
-          border-color: ${color.TEXT_GREY};
-          background-color: ${color.TEXT_GREY};
-          color: ${color.TEXT_WHITE};
+      @media (prefers-contrast: more) {
+        & {
+          border: ${border.highContrast};
         }
       }
 
-      &.blue {
-        border-color: ${color.MAIN};
-        color: ${color.MAIN};
-
-        &.bold {
-          background-color: ${color.MAIN};
-          color: ${color.TEXT_WHITE};
-        }
-      }
-
-      &.green {
-        /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
-         * https://smarthr.design/basics/colors/#h4-1 */
-        border-color: #0f7f85;
-        color: #0f7f85;
-
-        &.bold {
-          background-color: #0f7f85;
-          color: ${color.TEXT_WHITE};
-        }
-      }
-
-      &.red {
-        border-color: ${color.DANGER};
-        color: ${color.DANGER};
-      }
-      &.red.bold,
-      &.error {
-        background-color: ${color.DANGER};
+      &.bold {
+        border-color: ${color.TEXT_GREY};
+        background-color: ${color.TEXT_GREY};
         color: ${color.TEXT_WHITE};
       }
+    }
 
-      &.warning {
-        background-color: ${color.WARNING_YELLOW};
-        color: ${color.TEXT_BLACK};
+    &.blue {
+      border-color: ${color.MAIN};
+      color: ${color.MAIN};
 
-        &.bold {
-          border-color: ${color.TEXT_BLACK};
-        }
+      &.bold {
+        background-color: ${color.MAIN};
+        color: ${color.TEXT_WHITE};
       }
-    `}
+    }
+
+    &.green {
+      /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
+         * https://smarthr.design/basics/colors/#h4-1 */
+      border-color: #0f7f85;
+      color: #0f7f85;
+
+      &.bold {
+        background-color: #0f7f85;
+        color: ${color.TEXT_WHITE};
+      }
+    }
+
+    &.red {
+      border-color: ${color.DANGER};
+      color: ${color.DANGER};
+    }
+    &.red.bold,
+    &.error {
+      background-color: ${color.DANGER};
+      color: ${color.TEXT_WHITE};
+    }
+
+    &.warning {
+      background-color: ${color.WARNING_YELLOW};
+      color: ${color.TEXT_BLACK};
+
+      &.bold {
+        border-color: ${color.TEXT_BLACK};
+      }
+    }
+  `}
 `

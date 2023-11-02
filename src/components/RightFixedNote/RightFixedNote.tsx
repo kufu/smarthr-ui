@@ -132,9 +132,9 @@ const SectionHeading = styled(Heading).attrs(() => ({
   type: 'sectionTitle',
 }))<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-      display: block;
-      margin-bottom: ${spacingByChar(1)};
-    `}
+    display: block;
+    margin-bottom: ${spacingByChar(1)};
+  `}
 `
 
 const TextareaLabelText = styled(Text).attrs(() => ({
@@ -147,13 +147,13 @@ const TextareaLabelText = styled(Text).attrs(() => ({
 
 const StyledTextarea = styled(Textarea)<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-      display: block;
-      width: 100%;
-      max-width: 100%;
-      min-width: 100%;
-      box-sizing: border-box;
-      margin-bottom: ${spacingByChar(1)};
-    `}
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: ${spacingByChar(1)};
+  `}
 `
 
 const SubmitButton = styled(Button)`

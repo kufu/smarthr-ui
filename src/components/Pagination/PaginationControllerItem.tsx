@@ -25,7 +25,8 @@ const getIconProps = (
 ): {
   Icon: React.ComponentType<IconProps>
   alt: '最初へ' | '前へ' | '次へ' | '最後へ'
-} => direction === 'prev'
+} =>
+  direction === 'prev'
     ? double
       ? { Icon: FaAngleDoubleLeftIcon, alt: '最初へ' }
       : { Icon: FaChevronLeftIcon, alt: '前へ' }

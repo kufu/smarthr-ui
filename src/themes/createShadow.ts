@@ -64,7 +64,7 @@ export const defaultShadow = {
   LAYER4: createLayerShadow(4),
   OUTLINE: defaultOutline,
   OUTLINE_MARGIN: defaultOutlineMargin,
-  UNDERLINE: '0 1px 0 0'
+  UNDERLINE: '0 1px 0 0',
 }
 
 const createFocusIndicatorStyles = (outline: string) => css`

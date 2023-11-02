@@ -53,14 +53,14 @@ const getFontSize = (scaleFactor: number, diff: number = 0) =>
   // calc(1rem * scaleFactor / (scaleFactor + diff))
   `${scaleFactor / (scaleFactor + diff)}rem`
 const getSizes = (scaleFactor: number) => ({
-    XXS: getFontSize(scaleFactor, 3),
-    XS: getFontSize(scaleFactor, 2),
-    S: getFontSize(scaleFactor, 1),
-    M: getFontSize(scaleFactor),
-    L: getFontSize(scaleFactor, -1),
-    XL: getFontSize(scaleFactor, -2),
-    XXL: getFontSize(scaleFactor, -3),
-  })
+  XXS: getFontSize(scaleFactor, 3),
+  XS: getFontSize(scaleFactor, 2),
+  S: getFontSize(scaleFactor, 1),
+  M: getFontSize(scaleFactor),
+  L: getFontSize(scaleFactor, -1),
+  XL: getFontSize(scaleFactor, -2),
+  XXL: getFontSize(scaleFactor, -3),
+})
 
 export const defaultFontSize: CreatedFontSizeTheme = {
   pxToRem: pxToRem(defaultHtmlFontSize),

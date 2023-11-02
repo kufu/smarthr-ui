@@ -25,7 +25,8 @@ export const LineUp = styled.div<{
   align?: alignMethod
   /** 縦位置の揃え方（align-items） */
   vAlign?: verticalAlignMethod
-}>(({ inline = false, gap = 0.5, reverse, align = 'flex-start', vAlign = 'normal' }) => css`
+}>(
+  ({ inline = false, gap = 0.5, reverse, align = 'flex-start', vAlign = 'normal' }) => css`
     display: ${inline ? 'inline-flex' : 'flex'};
     ${reverse && 'flex-direction: row-reverse;'}
     ${align && `justify-content: ${align};`}
@@ -39,4 +40,5 @@ export const LineUp = styled.div<{
     &:empty {
       gap: 0;
     }
-  `)
+  `,
+)

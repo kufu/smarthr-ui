@@ -21,17 +21,17 @@ export default {
 }
 
 export const All: Story = () => (
-    <Cluster gap={0.75} as="dl">
-      {Object.values(Icons).map((Icon) => (
-        <ItemWrapper key={`${Icon.displayName}`}>
-          <dt>{Icon.displayName?.replace(/Icon$/, '')}</dt>
-          <dd>
-            <Icon />
-          </dd>
-        </ItemWrapper>
-      ))}
-    </Cluster>
-  )
+  <Cluster gap={0.75} as="dl">
+    {Object.values(Icons).map((Icon) => (
+      <ItemWrapper key={`${Icon.displayName}`}>
+        <dt>{Icon.displayName?.replace(/Icon$/, '')}</dt>
+        <dd>
+          <Icon />
+        </dd>
+      </ItemWrapper>
+    ))}
+  </Cluster>
+)
 
 export const AltText: Story = () => (
   <div>

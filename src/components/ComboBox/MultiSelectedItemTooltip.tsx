@@ -8,7 +8,8 @@ type Props = PropsWithChildren<{
   children: ReactNode
 }>
 
-export const MultiSelectedItemTooltip: FC<Props> = ({ needsTooltip, text, children }) => needsTooltip ? (
+export const MultiSelectedItemTooltip: FC<Props> = ({ needsTooltip, text, children }) =>
+  needsTooltip ? (
     <Tooltip message={text} multiLine>
       {children}
     </Tooltip>

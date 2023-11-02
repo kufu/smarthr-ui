@@ -61,11 +61,13 @@ export const Th: FC<Props & ElementProps> = ({
         'aria-sort': AriaAttributes['aria-sort']
       }
     | undefined
-  >(() => (
+  >(
+    () =>
       sort && {
         'aria-sort': sort === 'none' ? 'none' : `${sort}ending`,
-      }
-    ), [sort])
+      },
+    [sort],
+  )
 
   return (
     <Wrapper

@@ -43,7 +43,7 @@ const generateTagProps = (level: number, tag?: HeadingTagTypes, visuallyHidden?:
 
   return {
     [visuallyHidden ? 'as' : 'forwardedAs']:
-      tag || ((level <= 6 ? `h${level}` : 'span') as (HeadingTagTypes | 'span')),
+      tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
     role,
     'aria-level': ariaLevel,
   }

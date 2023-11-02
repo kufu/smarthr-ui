@@ -46,7 +46,7 @@ export const VRTOpenNested: StoryFn = () => (
 
 export const VRTDropdownForcedColors: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false} >
+    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <All />
@@ -70,7 +70,7 @@ VRTOpenDropdownNarrow.parameters = {
   },
   chromatic: {
     modes: {
-      vrtMobile: { viewport: 'vrtMobile' }
+      vrtMobile: { viewport: 'vrtMobile' },
     },
   },
 }

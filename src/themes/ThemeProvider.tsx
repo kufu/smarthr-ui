@@ -10,4 +10,6 @@ type Props = {
   children?: React.ReactNode
 }
 
-export const ThemeProvider: React.VFC<Props> = ({ theme, children }) => <Provider value={theme}>{children}</Provider>
+export const ThemeProvider: React.VFC<Props> = ({ theme, children }) => (
+  <Provider value={theme}>{children}</Provider>
+)

@@ -125,31 +125,31 @@ export const AppNavi: VFC<Props & ElementProps> = ({
 
 const WrapperNav = styled(Nav)<{ themes: Theme }>`
   ${({ themes: { color, shadow, spacingByChar } }) => css`
-      display: flex;
-      align-items: center;
-      min-width: max-content;
-      box-shadow: ${shadow.LAYER1};
-      background-color: ${color.WHITE};
-      padding-right: ${spacingByChar(1.5)};
-      padding-left: ${spacingByChar(1.5)};
-    `}
+    display: flex;
+    align-items: center;
+    min-width: max-content;
+    box-shadow: ${shadow.LAYER1};
+    background-color: ${color.WHITE};
+    padding-right: ${spacingByChar(1.5)};
+    padding-left: ${spacingByChar(1.5)};
+  `}
 `
 const StatusLabel = styled(StatusLabelComponent)<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-      margin-right: ${spacingByChar(1)};
-    `}
+    margin-right: ${spacingByChar(1)};
+  `}
 `
 const Buttons = styled.ul<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-      align-self: stretch;
-      display: flex;
-      align-items: stretch;
-      gap: ${spacingByChar(1)};
-      margin: 0;
-      padding: 0;
+    align-self: stretch;
+    display: flex;
+    align-items: stretch;
+    gap: ${spacingByChar(1)};
+    margin: 0;
+    padding: 0;
 
-      > li {
-        list-style: none;
-      }
-    `}
+    > li {
+      list-style: none;
+    }
+  `}
 `
