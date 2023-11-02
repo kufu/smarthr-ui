@@ -61,7 +61,8 @@ type BaseComponentProps = {
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
-export type ComponentProps = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
+export type ComponentProps = Omit<IconProps & ElementProps, keyof BaseComponentProps> &
+  BaseComponentProps
 
 export const createIcon = (SvgIcon: IconType) => {
   const Icon: React.FC<ComponentProps> = ({

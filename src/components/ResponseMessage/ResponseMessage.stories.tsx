@@ -11,13 +11,13 @@ export default {
 }
 
 export const All: StoryFn = () => (
-    <Stack>
-      <ResponseMessage type="info">情報を表すアイコンが付きます。デフォルトです。</ResponseMessage>
-      <ResponseMessage type="success">成功を表すアイコンが付きます。</ResponseMessage>
-      <ResponseMessage type="warning">警告を表すアイコンが付きます。</ResponseMessage>
-      <ResponseMessage type="error">エラーをアイコンが付きます。</ResponseMessage>
-      <ResponseMessage type="sync">
-        同期を表すアイコンが付きます。InformationPanel のために存在し、基本的には使いません。
-      </ResponseMessage>
-    </Stack>
-  )
+  <Stack>
+    <ResponseMessage type="info">情報を表すアイコンが付きます。デフォルトです。</ResponseMessage>
+    <ResponseMessage type="success">成功を表すアイコンが付きます。</ResponseMessage>
+    <ResponseMessage type="warning">警告を表すアイコンが付きます。</ResponseMessage>
+    <ResponseMessage type="error">エラーをアイコンが付きます。</ResponseMessage>
+    <ResponseMessage type="sync">
+      同期を表すアイコンが付きます。InformationPanel のために存在し、基本的には使いません。
+    </ResponseMessage>
+  </Stack>
+)

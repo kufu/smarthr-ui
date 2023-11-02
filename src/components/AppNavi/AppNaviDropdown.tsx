@@ -60,9 +60,11 @@ export const AppNaviDropdown: VFC<InnerProps> = ({
 const StyledDropdownTrigger = styled(DropdownTrigger)`
   height: 100%;
 `
-const TriggerButton = styled.button<ItemStyleProps & {
-  $displayCaret?: boolean
-}>(
+const TriggerButton = styled.button<
+  ItemStyleProps & {
+    $displayCaret?: boolean
+  }
+>(
   ({ $displayCaret, ...props }) => css`
     ${getItemStyle(props)}
 

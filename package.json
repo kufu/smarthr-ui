@@ -121,7 +121,9 @@
   "license": "MIT",
   "lint-staged": {
     "*.{ts,tsx}": [
-      "eslint --fix"
+      "eslint --fix",
+      "prettier --write",
+      "stylelint --fix"
     ]
   },
   "main": "lib/index.js",
@@ -142,9 +144,13 @@
     "build-storybook": "storybook build --quiet -s ./public",
     "build-stylesheet": "ttsc -p tsconfig.stylesheet.json; node scripts/build-stylesheet.ts",
     "clean": "rimraf ./lib ./esm ./smarthr-ui.css",
-    "format": "eslint --fix './**/*.ts{,x}'",
+    "format": "run-s -c format:*",
+    "format:eslint": "eslint --fix './**/*.ts{,x}'",
+    "format:prettier": "prettier --write './src/**/*.ts{,x}'",
+    "format:stylelint": "stylelint --fix './src/**/*.ts{,x}'",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint './**/*.ts{,x}'",
+    "lint:prettier": "prettier --check './src/**/*.ts{,x}'",
     "lint:style": "stylelint './**/*.ts{,x}'",
     "lint:tsc": "tsc --noEmit",
     "commitmsg": "commitlint -e $GIT_PARAMS",

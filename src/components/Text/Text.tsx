@@ -92,12 +92,16 @@ export const Text: React.FC<PropsWithChildren<TextProps & ComponentProps<'span'>
   const styleTypeValues = styleType ? MAPPER_SIZE_AND_WEIGHT[styleType] : null
 
   const styles = useMemo(
-    () => text({
-      size: size || styleTypeValues?.size,
-      weight: weight || styleTypeValues?.weight,
-      color: color || styleTypeValues?.color ,
-      italic, leading, whiteSpace, className
-    }),
+    () =>
+      text({
+        size: size || styleTypeValues?.size,
+        weight: weight || styleTypeValues?.weight,
+        color: color || styleTypeValues?.color,
+        italic,
+        leading,
+        whiteSpace,
+        className,
+      }),
     [size, weight, italic, color, leading, whiteSpace, className, styleTypeValues],
   )
 

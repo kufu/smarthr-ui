@@ -64,20 +64,17 @@ const Wrapper = styled.figure<{
   $height?: number | string
   themes: Theme
 }>`
-  ${({ $width, $height, themes: { leading, space } }) =>
-    css`
-      display: inline-block;
-      margin: unset;
-      padding: ${space(0.75)};
-      line-height: ${leading.NONE};
+  ${({ $width, $height, themes: { leading, space } }) => css`
+    display: inline-block;
+    margin: unset;
+    padding: ${space(0.75)};
+    line-height: ${leading.NONE};
 
-      > svg {
-        display: inline-block;
-        vertical-align: bottom;
-        ${$width
-          ? `width: ${convertValue($width)};`
-          : $height && `height: ${convertValue($height)};`}
-      }
-    `}
+    > svg {
+      display: inline-block;
+      vertical-align: bottom;
+      ${$width ? `width: ${convertValue($width)};` : $height && `height: ${convertValue($height)};`}
+    }
+  `}
 `
 const convertValue = (value: number | string) => (typeof value === 'string' ? value : `${value}px`)

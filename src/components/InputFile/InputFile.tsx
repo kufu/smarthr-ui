@@ -123,20 +123,20 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
         {!disabled && hasFileList && files.length > 0 && (
           <FileList themes={theme} className={classNames.fileList}>
             {files.map((file, index) => (
-                <li key={`${file.name}-${index}`}>
-                  <span className={classNames.fileName}>{file.name}</span>
-                  <span>
-                    <Button
-                      variant="text"
-                      prefix={<FaTrashAltIcon />}
-                      onClick={() => handleDelete(index)}
-                      className={classNames.deleteButton}
-                    >
-                      {destroyButtonText}
-                    </Button>
-                  </span>
-                </li>
-              ))}
+              <li key={`${file.name}-${index}`}>
+                <span className={classNames.fileName}>{file.name}</span>
+                <span>
+                  <Button
+                    variant="text"
+                    prefix={<FaTrashAltIcon />}
+                    onClick={() => handleDelete(index)}
+                    className={classNames.deleteButton}
+                  >
+                    {destroyButtonText}
+                  </Button>
+                </span>
+              </li>
+            ))}
           </FileList>
         )}
         <InputWrapper className={inputWrapperClassName} themes={theme}>
@@ -154,7 +154,9 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
           <Prefix themes={theme}>
             <FaFolderOpenIcon />
           </Prefix>
-          <span id={labelId} aria-hidden="true">{label}</span>
+          <span id={labelId} aria-hidden="true">
+            {label}
+          </span>
         </InputWrapper>
       </Wrapper>
     )
@@ -247,7 +249,7 @@ const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
 
 const Prefix = styled.span<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-      display: inline-flex;
-      margin-right: ${spacingByChar(0.5)};
-    `}
+    display: inline-flex;
+    margin-right: ${spacingByChar(0.5)};
+  `}
 `

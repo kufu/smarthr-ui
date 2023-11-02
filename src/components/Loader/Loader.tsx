@@ -112,19 +112,23 @@ const Line = styled.span<{ themes: Theme }>`
 
       &.line1 {
         /* stylelint-disable */
-        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+        animation:
+          ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
           ${line1FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
       }
       &.line2 {
-        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+        animation:
+          ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
           ${line2FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
       }
       &.line3 {
-        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+        animation:
+          ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
           ${line3FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
       }
       &.line4 {
-        animation: ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
+        animation:
+          ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
           ${line4FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
       }
       /* stylelint-enable */

@@ -293,7 +293,12 @@ export const _VRTButtonAnchorState: StoryFn = () => (
             >
               ボタン
             </AnchorButton>
-            <AnchorButton href="#" id="focus-visible-text" variant="text" onClick={action('clicked')}>
+            <AnchorButton
+              href="#"
+              id="focus-visible-text"
+              variant="text"
+              onClick={action('clicked')}
+            >
               ボタン
             </AnchorButton>
           </Cluster>
@@ -316,7 +321,12 @@ export const _VRTButtonAnchorState: StoryFn = () => (
       <dd style={{ padding: '10px' }}>
         <Stack>
           <Cluster gap={1}>
-            <AnchorButton href="#" id="active-primary" variant="primary" onClick={action('clicked')}>
+            <AnchorButton
+              href="#"
+              id="active-primary"
+              variant="primary"
+              onClick={action('clicked')}
+            >
               ボタン
             </AnchorButton>
             <AnchorButton
