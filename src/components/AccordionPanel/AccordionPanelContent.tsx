@@ -1,33 +1,46 @@
-import React, { HTMLAttributes, VFC, useCallback, useContext, useRef } from 'react'
+import React, {
+  ComponentPropsWithRef,
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react'
 import { Transition } from 'react-transition-group'
-import styled from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { getIsInclude } from '../../libs/map'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
-import { useClassNames } from './useClassNames'
 
-type Props = {
-  /** パネル部分の内容 */
-  children: React.ReactNode
-  /** パネル部分のクラス名 */
-  className?: string
-}
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type Props = PropsWithChildren
+type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof Props>
 
-const duration = 200
+const duration = 100
 
-export const AccordionPanelContent: VFC<Props & ElementProps> = ({
-  children,
-  className = '',
-  ...props
-}) => {
+const accordionPanelContent = tv({
+  base: [
+    'smarthr-ui-AccordionPanel-content',
+    'shr-h-0',
+    'shr-overflow-hidden',
+    'shr-transition-[height]',
+    'shr-duration-100',
+    'shr-ease-in-out',
+    'shr-invisible',
+    '[&.entered]:shr-h-auto',
+    '[&.entered]:shr-overflow-visible',
+    '[&.entered]:shr-visible',
+  ],
+})
+
+export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...props }) => {
   const { name } = useContext(AccordionPanelItemContext)
   const { expandedItems } = useContext(AccordionPanelContext)
   const isInclude = getIsInclude(expandedItems, name)
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const classNames = useClassNames()
+  const styles = useMemo(() => accordionPanelContent({ className }), [className])
 
   const recalculateHeight = useCallback(
     (node: HTMLElement) => {
@@ -58,29 +71,15 @@ export const AccordionPanelContent: VFC<Props & ElementProps> = ({
       timeout={duration}
     >
       {(status) => (
-        <CollapseContainer
+        <div
           {...props}
           id={`${name}-content`}
-          className={`${status} ${className} ${classNames.content}`}
+          className={`${styles} ${status}`}
           aria-labelledby={`${name}-trigger`}
           aria-hidden={!isInclude}
-        >
-          <div ref={wrapperRef}>{children}</div>
-        </CollapseContainer>
+          ref={wrapperRef}
+        />
       )}
     </Transition>
   )
 }
-
-const CollapseContainer = styled.div`
-  height: 0;
-  overflow: hidden;
-  transition: height ${duration}ms ease;
-  visibility: hidden;
-
-  &.entered {
-    height: auto;
-    overflow: visible;
-    visibility: visible;
-  }
-`
