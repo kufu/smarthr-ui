@@ -1,38 +1,78 @@
-import React, { ButtonHTMLAttributes, VFC, useCallback, useContext } from 'react'
-import styled, { css } from 'styled-components'
+import React, {
+  ComponentPropsWithoutRef,
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useMemo,
+} from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { getIsInclude, mapToKeyArray } from '../../libs/map'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
 import { FaCaretRightIcon, FaCaretUpIcon } from '../Icon'
+import { Cluster } from '../Layout'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 import { getNewExpandedItems } from './accordionPanelHelper'
-import { useClassNames } from './useClassNames'
 
-type Props = {
-  /** ヘッダ部分の内容 */
-  children: React.ReactNode
-  /** ヘッダ部分のクラス名 */
-  className?: string
+type Props = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
   headingType?: HeadingTypes
   /**
    * @deprecated headingTag属性は非推奨です
    */
   headingTag?: HeadingTagTypes
-}
-type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
+}>
+type ElementProps = Omit<ComponentPropsWithoutRef<'button'>, keyof Props>
 
-export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
+const accordionPanelTrigger = tv({
+  slots: {
+    title: 'shr-grow',
+    button: [
+      'smarthr-ui-AccordionPanel-trigger',
+      'shr-group',
+      'shr-bg-transparent',
+      'shr-border-none',
+      'shr-appearance-none',
+      'shr-w-full',
+      'shr-px-1',
+      'shr-py-0.75',
+      'shr-cursor-pointer',
+      'shr-text-inherit',
+      'shr-text-left',
+      'hover:shr-bg-white-darken',
+      'hover:shr-shadow-none',
+      'focus-visible:shr-focusIndicator',
+    ],
+    leftIcon: 'group-aria-expanded:shr-rotate-90',
+    rightIcon: 'group-aria-expanded:-shr-rotate-180',
+  },
+  compoundSlots: [
+    {
+      slots: ['leftIcon', 'rightIcon'],
+      className: ['shr-transition-transform', 'shr-duration-100'],
+    },
+  ],
+})
+
+export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
   children,
-  className = '',
+  className,
   headingType = 'blockTitle',
   headingTag,
   ...props
 }) => {
-  const theme = useTheme()
+  const { titleStyle, buttonStyle, leftIconStyle, rightIconStyle } = useMemo(() => {
+    const { title, button, leftIcon, rightIcon } = accordionPanelTrigger()
+    return {
+      titleStyle: title(),
+      buttonStyle: button({ className }),
+      leftIconStyle: leftIcon(),
+      rightIconStyle: rightIcon(),
+    }
+  }, [className])
   const { name } = useContext(AccordionPanelItemContext)
   const {
     iconPosition,
@@ -42,10 +82,8 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
     onClickProps,
     expandableMultiply,
   } = useContext(AccordionPanelContext)
-  const classNames = useClassNames()
 
   const isExpanded = getIsInclude(expandedItems, name)
-  const buttonClassNames = `${className} ${classNames.trigger}`
 
   const handleClick = useCallback(() => {
     if (onClickTrigger) onClickTrigger(name, !isExpanded)
@@ -64,77 +102,21 @@ export const AccordionPanelTrigger: VFC<Props & ElementProps> = ({
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading tag={headingTag} type={headingType}>
-      <Button
+      <button
         {...props}
         id={`${name}-trigger`}
-        className={buttonClassNames}
         aria-expanded={isExpanded}
         aria-controls={`${name}-content`}
-        themes={theme}
         onClick={handleClick}
-        type="button"
+        className={buttonStyle}
         data-component="AccordionHeaderButton"
       >
-        {displayIcon && iconPosition === 'left' && <LeftIcon />}
-        <TriggerTitle>{children}</TriggerTitle>
-        {displayIcon && iconPosition === 'right' && <RightIcon />}
-      </Button>
+        <Cluster align="center" as="span">
+          {displayIcon && iconPosition === 'left' && <FaCaretRightIcon className={leftIconStyle} />}
+          <span className={titleStyle}>{children}</span>
+          {displayIcon && iconPosition === 'right' && <FaCaretUpIcon className={rightIconStyle} />}
+        </Cluster>
+      </button>
     </Heading>
   )
 }
-
-const TriggerTitle = styled.span`
-  flex-grow: 1;
-`
-
-const resetButtonStyle = css`
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  appearance: none;
-`
-const Button = styled.button<{ themes: Theme }>`
-  ${resetButtonStyle}
-  ${({ themes }) => {
-    const { color, spacingByChar, shadow } = themes
-
-    return css`
-      display: flex;
-      align-items: center;
-      width: 100%;
-      padding: ${spacingByChar(0.75)} ${spacingByChar(1)};
-      cursor: pointer;
-      font-size: inherit;
-      text-align: left;
-
-      &:hover {
-        background-color: ${color.hoverColor(color.WHITE)};
-        box-shadow: none;
-      }
-
-      &:focus-visible {
-        ${shadow.focusIndicatorStyles}
-      }
-
-      /* TODO replace if impremented Layout component */
-      & > * + * {
-        margin-left: ${spacingByChar(0.5)};
-      }
-    `
-  }}
-`
-const LeftIcon = styled(FaCaretRightIcon)`
-  transition: transform 0.3s;
-
-  [aria-expanded='true'] > & {
-    transform: rotate(90deg);
-  }
-`
-
-const RightIcon = styled(FaCaretUpIcon)`
-  transition: transform 0.3s;
-
-  [aria-expanded='true'] & {
-    transform: rotate(-180deg);
-  }
-`
