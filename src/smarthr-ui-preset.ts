@@ -78,6 +78,11 @@ export default {
         65: defaultColor.GREY_65,
         100: defaultColor.GREY_100,
       },
+      transparency: {
+        15: defaultColor.TRANSPARENCY_15,
+        30: defaultColor.TRANSPARENCY_30,
+        50: defaultColor.TRANSPARENCY_50,
+      },
       inherit: 'inherit',
       transparent: 'transparent',
       current: 'currentColor',
