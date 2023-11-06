@@ -95,7 +95,7 @@
     "ttypescript": "^1.5.15",
     "typescript": "^5.2.2",
     "typescript-plugin-styled-components": "^3.0.0",
-    "wait-on": "^7.0.1",
+    "wait-on": "^7.1.0",
     "webpack": "^5.89.0"
   },
   "peerDependencies": {
