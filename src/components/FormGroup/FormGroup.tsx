@@ -111,7 +111,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         className={`${classNames.label}`}
         forwardedAs={isRoleGroup ? 'legend' : 'label'}
       >
-        <GroupLabel styleType={titleType}>{title}</GroupLabel>
+        <GroupLabelText styleType={titleType}>{title}</GroupLabelText>
         {statusLabelList.length > 0 && (
           <Cluster gap={0.25} as="span">
             {statusLabelList.map((statusLabelProp, index) => (
@@ -260,7 +260,7 @@ const FormLabel = styled(Cluster).attrs({ align: 'center' })`
   align-self: start;
 `
 
-const GroupLabel = styled(Text).attrs({ as: 'span' })``
+const GroupLabelText = styled(Text).attrs({ as: 'span' })``
 
 const ErrorMessage = styled.p<{ themes: Theme }>`
   ${({ themes: { color } }) => css`

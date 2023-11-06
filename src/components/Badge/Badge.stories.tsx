@@ -17,7 +17,7 @@ export default {
 export const All: StoryFn = () => (
   <Stack as="dl" gap={3}>
     <Stack>
-      <Dt>種類</Dt>
+      <DtText>種類</DtText>
       <dd>
         <Stack align="flex-start">
           <Cluster gap={0.75} align="center">
@@ -73,7 +73,7 @@ export const All: StoryFn = () => (
       </dd>
     </Stack>
     <Stack>
-      <Dt>色</Dt>
+      <DtText>色</DtText>
       <dd>
         <Cluster gap={1.5}>
           <Badge count={9} />
@@ -90,4 +90,4 @@ export const All: StoryFn = () => (
   </Stack>
 )
 
-const Dt = styled(Text).attrs({ forwardedAs: 'dt', weight: 'bold', color: 'TEXT_GREY' })``
+const DtText = styled(Text).attrs({ forwardedAs: 'dt', weight: 'bold', color: 'TEXT_GREY' })``
