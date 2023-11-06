@@ -71,12 +71,15 @@ const button = tv({
       'disabled:shr-cursor-not-allowed',
       /* alpha color を使用しているので、背景色と干渉させない */
       'disabled:shr-bg-clip-padding',
+      '[&_.smarthr-ui-Icon]:forced-colors:disabled:shr-fill-[GrayText]',
     ],
     anchor: [
       'shr-no-underline',
       '[&:not([href])]:shr-cursor-not-allowed',
       /* alpha color を使用しているので、背景色と干渉させない */
       '[&:not([href])]:shr-bg-clip-padding',
+      '[&_.smarthr-ui-Icon]:forced-colors:shr-fill-[LinkText]',
+      '[&:not([href])_.smarthr-ui-Icon]:forced-colors:shr-fill-[CanvasText]',
     ],
   },
   variants: {
