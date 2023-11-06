@@ -39,7 +39,7 @@ export const RemoteDialogTrigger: React.FC<
         'aria-controls': targetId,
         variant,
       }),
-    [children, targetId, actualOnClick],
+    [children, variant, targetId, actualOnClick],
   )
 
   return actualTrigger

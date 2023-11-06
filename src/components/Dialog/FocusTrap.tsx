@@ -1,13 +1,12 @@
-import React, { ReactNode, RefObject, VFC, useCallback, useEffect, useRef } from 'react'
+import React, { FC, PropsWithChildren, RefObject, useCallback, useEffect, useRef } from 'react'
 
 import { tabbable } from '../../libs/tabbable'
 
-type Props = {
+type Props = PropsWithChildren<{
   firstFocusTarget?: RefObject<HTMLElement>
-  children: ReactNode
-}
+}>
 
-export const FocusTrap: VFC<Props> = ({ firstFocusTarget, children }) => {
+export const FocusTrap: FC<Props> = ({ firstFocusTarget, children }) => {
   const ref = useRef<HTMLDivElement | null>(null)
   const dummyFocusRef = useRef<HTMLDivElement>(null)
 

@@ -56,42 +56,40 @@ export const CalendarTable: VFC<Props & ElementProps> = ({
         </tr>
       </thead>
       <tbody>
-        {array.map((week, weekIndex) => {
-          return (
-            <tr key={weekIndex}>
-              {week.map((date, dateIndex) => {
-                const isOutRange =
-                  !date ||
-                  !isBetween(currentDay.date(date).toDate(), fromDay.toDate(), toDay.toDate())
-                const isSelectedDate =
-                  !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
-                return (
-                  <td key={dateIndex} className={classNames.calendarTable.dataCell}>
-                    {date && (
-                      <CellButton
+        {array.map((week, weekIndex) => (
+          <tr key={weekIndex}>
+            {week.map((date, dateIndex) => {
+              const isOutRange =
+                !date ||
+                !isBetween(currentDay.date(date).toDate(), fromDay.toDate(), toDay.toDate())
+              const isSelectedDate =
+                !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
+              return (
+                <td key={dateIndex} className={classNames.calendarTable.dataCell}>
+                  {date && (
+                    <CellButton
+                      themes={themes}
+                      disabled={isOutRange}
+                      onClick={(e) =>
+                        !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
+                      }
+                      aria-pressed={isSelectedDate}
+                      type="button"
+                    >
+                      <DateCell
                         themes={themes}
-                        disabled={isOutRange}
-                        onClick={(e) =>
-                          !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
-                        }
-                        aria-pressed={isSelectedDate}
-                        type="button"
+                        isToday={currentDay.date(date).isSame(now, 'date')}
+                        isSelected={isSelectedDate}
                       >
-                        <DateCell
-                          themes={themes}
-                          isToday={currentDay.date(date).isSame(now, 'date')}
-                          isSelected={isSelectedDate}
-                        >
-                          {date}
-                        </DateCell>
-                      </CellButton>
-                    )}
-                  </td>
-                )
-              })}
-            </tr>
-          )
-        })}
+                        {date}
+                      </DateCell>
+                    </CellButton>
+                  )}
+                </td>
+              )
+            })}
+          </tr>
+        ))}
       </tbody>
     </Table>
   )

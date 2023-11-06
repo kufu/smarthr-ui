@@ -112,8 +112,8 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
               <JobIconWrapper>
                 <JobIcon status={job.status} />
               </JobIconWrapper>
-              <JobName themes={themes}>{job.name}</JobName>
-              <JobDesc themes={themes}>{job.description}</JobDesc>
+              <JobNameText themes={themes}>{job.name}</JobNameText>
+              <JobDescText themes={themes}>{job.description}</JobDescText>
               {job.isCancelable && (
                 <CancelButton type="button" onClick={handleClickCancelJob} themes={themes}>
                   キャンセル
@@ -127,56 +127,54 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
   )
 }
 
-const Container = styled(Base)<{ themes: Theme }>(({ themes }) => {
-  return css`
+const Container = styled(Base)<{ themes: Theme }>(
+  ({ themes }) => css`
     display: inline-flex;
     flex-direction: column;
     min-width: 420px;
     max-width: 600px;
     color: ${themes.color.TEXT_BLACK};
-  `
-})
+  `,
+)
 const Header = styled.div`
   display: flex;
   align-items: center;
 `
-const Title = styled.div<{ themes: Theme }>(({ themes: { fontSize, spacingByChar } }) => {
-  return css`
+const Title = styled.div<{ themes: Theme }>(
+  ({ themes: { fontSize, spacingByChar } }) => css`
     font-size: ${fontSize.M};
     padding: ${spacingByChar(1)};
-  `
-})
-const HeaderButtonLayout = styled.div<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
-  return css`
+  `,
+)
+const HeaderButtonLayout = styled.div<{ themes: Theme }>(
+  ({ themes: { spacingByChar } }) => css`
     flex-shrink: 0;
     margin-left: auto;
     padding-right: ${spacingByChar(1)};
     button:not(:first-child) {
       margin-left: ${spacingByChar(0.5)};
     }
-  `
-})
-const JobList = styled.ul<{ isExpanded: boolean; themes: Theme }>(
-  ({ isExpanded, themes: { border, spacingByChar } }) => {
-    return css`
-      margin: 0;
-      list-style: none;
-      padding: ${spacingByChar(1)};
-      border-top: ${border.shorthand};
-      ${!isExpanded &&
-      css`
-        height: 0;
-        visibility: hidden;
-        overflow: hidden;
-        padding-top: 0;
-        padding-bottom: 0;
-        border: none;
-      `}
-    `
-  },
+  `,
 )
-const Job = styled.li<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
-  return css`
+const JobList = styled.ul<{ isExpanded: boolean; themes: Theme }>(
+  ({ isExpanded, themes: { border, spacingByChar } }) => css`
+    margin: 0;
+    list-style: none;
+    padding: ${spacingByChar(1)};
+    border-top: ${border.shorthand};
+    ${!isExpanded &&
+    css`
+      height: 0;
+      visibility: hidden;
+      overflow: hidden;
+      padding-top: 0;
+      padding-bottom: 0;
+      border: none;
+    `}
+  `,
+)
+const Job = styled.li<{ themes: Theme }>(
+  ({ themes: { spacingByChar } }) => css`
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
@@ -184,39 +182,33 @@ const Job = styled.li<{ themes: Theme }>(({ themes: { spacingByChar } }) => {
     :not(:first-child) {
       margin-top: ${spacingByChar(1)};
     }
-  `
-})
+  `,
+)
 const JobIconWrapper = styled.div`
   flex-shrink: 0;
   line-height: 0;
 `
-const JobName = styled(OmittableJobText)<{ themes: Theme }>(
-  ({ themes: { fontSize, spacingByChar } }) => {
-    return css`
-      margin-left: ${spacingByChar(0.5)};
-      font-size: ${fontSize.M};
-    `
-  },
+const JobNameText = styled(OmittableJobText)<{ themes: Theme }>(
+  ({ themes: { fontSize, spacingByChar } }) => css`
+    margin-left: ${spacingByChar(0.5)};
+    font-size: ${fontSize.M};
+  `,
 )
-const JobDesc = styled(OmittableJobText)<{ themes: Theme }>(
-  ({ themes: { fontSize, spacingByChar } }) => {
-    return css`
-      margin-left: ${spacingByChar(0.5)};
-      font-size: ${fontSize.S};
-    `
-  },
+const JobDescText = styled(OmittableJobText)<{ themes: Theme }>(
+  ({ themes: { fontSize, spacingByChar } }) => css`
+    margin-left: ${spacingByChar(0.5)};
+    font-size: ${fontSize.S};
+  `,
 )
 const CancelButton = styled(UnstyledButton)<{ themes: Theme }>(
-  ({ themes: { color, fontSize, spacingByChar } }) => {
-    return css`
-      flex-shrink: 0;
-      margin-left: ${spacingByChar(0.5)};
-      font-size: ${fontSize.S};
-      color: ${color.TEXT_LINK};
-      cursor: pointer;
-      :hover {
-        text-decoration: underline;
-      }
-    `
-  },
+  ({ themes: { color, fontSize, spacingByChar } }) => css`
+    flex-shrink: 0;
+    margin-left: ${spacingByChar(0.5)};
+    font-size: ${fontSize.S};
+    color: ${color.TEXT_LINK};
+    cursor: pointer;
+    :hover {
+      text-decoration: underline;
+    }
+  `,
 )

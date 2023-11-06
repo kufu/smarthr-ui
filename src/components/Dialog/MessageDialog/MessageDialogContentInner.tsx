@@ -1,4 +1,4 @@
-import React, { VFC } from 'react'
+import React, { FC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
@@ -40,7 +40,7 @@ export type MessageDialogContentInnerProps = BaseProps & {
 
 const CLOSE_BUTTON_LABEL = '閉じる'
 
-export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
+export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   title,
   subtitle,
   titleTag,
@@ -55,6 +55,7 @@ export const MessageDialogContentInner: VFC<MessageDialogContentInnerProps> = ({
 
   return (
     <Section>
+      {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <Heading tag={titleTag}>
         <TitleArea themes={theme} ref={titleRef} className={classNames.titleArea}>
           {subtitle && (
@@ -90,15 +91,13 @@ const TitleArea = styled(Stack).attrs(() => ({
   `,
 )
 const Description = styled.div<{ themes: Theme; offsetHeight: number }>`
-  ${({ themes: { fontSize, spacingByChar }, offsetHeight }) => {
-    return css`
-      max-height: calc(100vh - ${offsetHeight}px);
-      overflow: auto;
-      padding: 0 ${spacingByChar(1.5)};
-      font-size: ${fontSize.M};
-      line-height: 1.5;
-    `
-  }}
+  ${({ themes: { fontSize, spacingByChar }, offsetHeight }) => css`
+    max-height: calc(100vh - ${offsetHeight}px);
+    overflow: auto;
+    padding: 0 ${spacingByChar(1.5)};
+    font-size: ${fontSize.M};
+    line-height: 1.5;
+  `}
 `
 const Bottom = styled.div<{ themes: Theme }>`
   ${({ themes }) => {

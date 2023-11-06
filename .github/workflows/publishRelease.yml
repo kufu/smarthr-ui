@@ -13,13 +13,13 @@ jobs:
       CHANGELOG_PATH: /tmp/CHANGELOG.md
       IS_PRERELEASE: ${{ contains(github.event.issue.labels.*.name, 'prerelease') }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: release-candidate
           fetch-depth: 0
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: '.node-version'
           registry-url: 'https://registry.npmjs.org'
       - name: git config
         run: |

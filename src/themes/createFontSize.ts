@@ -3,7 +3,7 @@ import { merge } from '../libs/lodash'
 export const defaultHtmlFontSize = 16
 const defaultScaleFactor = 6
 
-export interface FontSizeProperty {
+export type FontSizeProperty = {
   /** @deprecated */
   htmlFontSize?: number
   // respect for Starbucks...
@@ -26,7 +26,7 @@ export interface FontSizeProperty {
   XXL?: string
 }
 
-export interface CreatedFontSizeTheme {
+export type CreatedFontSizeTheme = {
   /** @deprecated You shouldn't use rem except for font size. use calc. */
   pxToRem: (px: number) => string
   /** @deprecated */
@@ -48,23 +48,19 @@ export interface CreatedFontSizeTheme {
 
 export type FontSizes = 'XXS' | 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL'
 
-const pxToRem = (htmlFontSize: number) => (px: number) => {
-  return `${px / htmlFontSize}rem`
-}
+const pxToRem = (htmlFontSize: number) => (px: number) => `${px / htmlFontSize}rem`
 const getFontSize = (scaleFactor: number, diff: number = 0) =>
   // calc(1rem * scaleFactor / (scaleFactor + diff))
   `${scaleFactor / (scaleFactor + diff)}rem`
-const getSizes = (scaleFactor: number) => {
-  return {
-    XXS: getFontSize(scaleFactor, 3),
-    XS: getFontSize(scaleFactor, 2),
-    S: getFontSize(scaleFactor, 1),
-    M: getFontSize(scaleFactor),
-    L: getFontSize(scaleFactor, -1),
-    XL: getFontSize(scaleFactor, -2),
-    XXL: getFontSize(scaleFactor, -3),
-  }
-}
+const getSizes = (scaleFactor: number) => ({
+  XXS: getFontSize(scaleFactor, 3),
+  XS: getFontSize(scaleFactor, 2),
+  S: getFontSize(scaleFactor, 1),
+  M: getFontSize(scaleFactor),
+  L: getFontSize(scaleFactor, -1),
+  XL: getFontSize(scaleFactor, -2),
+  XXL: getFontSize(scaleFactor, -3),
+})
 
 export const defaultFontSize: CreatedFontSizeTheme = {
   pxToRem: pxToRem(defaultHtmlFontSize),

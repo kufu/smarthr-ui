@@ -37,11 +37,9 @@ export const CompactInformationPanel: FC<Props & BaseElementProps> = ({
 }
 
 const Wrapper = styled(Base)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar, shadow } }) => {
-    return css`
-      display: flex;
-      box-shadow: ${shadow.LAYER3};
-      padding: ${spacingByChar(1)};
-    `
-  }}
+  ${({ themes: { spacingByChar, shadow } }) => css`
+    display: flex;
+    box-shadow: ${shadow.LAYER3};
+    padding: ${spacingByChar(1)};
+  `}
 `

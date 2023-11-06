@@ -3,7 +3,7 @@ import { merge } from '../libs/lodash'
 const defaultHtmlFontSize = 16
 const defaultSpaceSize = 8
 
-export interface SizeProperty {
+export type SizeProperty = {
   htmlFontSize?: number
   space?: {
     defaultRem?: number
@@ -28,7 +28,7 @@ export interface SizeProperty {
   }
 }
 
-export interface CreatedSizeTheme {
+export type CreatedSizeTheme = {
   pxToRem: (value: number) => string
   space: {
     XXS: number
@@ -51,21 +51,17 @@ export interface CreatedSizeTheme {
   }
 }
 
-const pxToRem = (value: number) => (font: number) => {
-  return `${value / font}rem`
-}
+const pxToRem = (value: number) => (font: number) => `${value / font}rem`
 
-const getSpace = (size: number) => {
-  return {
-    XXS: size,
-    XS: size * 2,
-    S: size * 3,
-    M: size * 4,
-    L: size * 5,
-    XL: size * 6,
-    XXL: size * 7,
-  }
-}
+const getSpace = (size: number) => ({
+  XXS: size,
+  XS: size * 2,
+  S: size * 3,
+  M: size * 4,
+  L: size * 5,
+  XL: size * 6,
+  XXL: size * 7,
+})
 
 const defaultFontSize = { SHORT: 11, TALL: 14, GRANDE: 18, VENTI: 24 }
 

@@ -160,7 +160,7 @@ test('キーボードで選択済みアイテムリストが操作できるこ�
 
   const findOption = (label: string) =>
     listbox.find('.smarthr-ui-MultiComboBox-selectButton').withText(label)
-  const fidnDeleteButton = (label: string) =>
+  const findDeleteButton = (label: string) =>
     wrapper
       .find('.smarthr-ui-MultiComboBox-selectedItem')
       .withText(label)
@@ -185,24 +185,24 @@ test('キーボードで選択済みアイテムリストが操作できるこ�
     .ok()
     // テキストボックス内のキャレットが先頭にある状態で左矢印キーを押下すると、削除ボタンにフォーカスが移動すること
     .pressKey('left')
-    .expect(fidnDeleteButton('option 5').focused)
+    .expect(findDeleteButton('option 5').focused)
     .ok()
     .pressKey('left')
-    .expect(fidnDeleteButton('option 2').focused)
+    .expect(findDeleteButton('option 2').focused)
     .ok()
     .pressKey('left')
-    .expect(fidnDeleteButton('option 1').focused)
+    .expect(findDeleteButton('option 1').focused)
     .ok()
     // 最初の削除ボタンがフォーカスされている状態で左矢印キーを押下しても、フォーカスが移動しないこと
     .pressKey('left')
-    .expect(fidnDeleteButton('option 1').focused)
+    .expect(findDeleteButton('option 1').focused)
     .ok()
     // 削除ボタンがフォーカスされている状態で右矢印キーを押下すると、フォーカスが移動すること
     .pressKey('right')
-    .expect(fidnDeleteButton('option 2').focused)
+    .expect(findDeleteButton('option 2').focused)
     .ok()
     .pressKey('right')
-    .expect(fidnDeleteButton('option 5').focused)
+    .expect(findDeleteButton('option 5').focused)
     .ok()
     // 最後の削除ボタンがフォーカスされている状態で右矢印キーを押下すると、input にフォーカスが移動すること
     .pressKey('right')

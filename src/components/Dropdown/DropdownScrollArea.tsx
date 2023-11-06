@@ -1,23 +1,14 @@
-import React, { HTMLAttributes, ReactNode } from 'react'
-import styled from 'styled-components'
+import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { useClassNames } from './useClassNames'
+type Props = PropsWithChildren<ComponentProps<'div'>>
 
-type Props = {
-  children: ReactNode
-} & HTMLAttributes<HTMLDivElement>
+const scrollArea = tv({
+  base: 'smarthr-ui-Dropdown-scrollArea shr-flex-auto shr-overflow-y-auto',
+})
 
-export const DropdownScrollArea: React.VFC<Props> = ({ children, className = '', ...props }) => {
-  const classNames = useClassNames()
+export const DropdownScrollArea: React.FC<Props> = ({ className, ...props }) => {
+  const styles = useMemo(() => scrollArea({ className }), [className])
 
-  return (
-    <Wrapper {...props} className={`${className} ${classNames.scrollArea}`}>
-      {children}
-    </Wrapper>
-  )
+  return <div {...props} className={styles} />
 }
-
-const Wrapper = styled.div`
-  overflow-y: auto;
-  flex: 1 1 auto;
-`

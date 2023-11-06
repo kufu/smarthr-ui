@@ -103,36 +103,32 @@ const Wrapper = styled.div<{ themes: Theme; disabled?: boolean }>`
   }}
 `
 const ItemLabel = styled.div<{ enableEllipsis?: boolean; themes: Theme }>`
-  ${({ enableEllipsis, themes: { border, spacingByChar } }) => {
-    return css`
-      padding: ${spacingByChar(0.25)} calc(${spacingByChar(0.5)} - ${border.lineWidth});
+  ${({ enableEllipsis, themes: { border, spacingByChar } }) => css`
+    padding: ${spacingByChar(0.25)} calc(${spacingByChar(0.5)} - ${border.lineWidth});
 
-      ${enableEllipsis &&
-      css`
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      `}
-    `
-  }}
+    ${enableEllipsis &&
+    css`
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    `}
+  `}
 `
 const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled?: boolean }>`
-  ${({ themes: { border, spacingByChar, shadow }, disabled }) => {
-    return css`
-      flex-shrink: 1;
-      padding: calc(${spacingByChar(0.5)} - ${border.lineWidth});
+  ${({ themes: { border, spacingByChar, shadow }, disabled }) => css`
+    flex-shrink: 1;
+    padding: calc(${spacingByChar(0.5)} - ${border.lineWidth});
+    border-radius: 50%;
+    cursor: ${disabled ? 'not-allowed' : 'pointer'};
+    line-height: 0;
+
+    &:focus-visible {
+      box-shadow: unset;
+    }
+
+    &:focus-visible > svg {
       border-radius: 50%;
-      cursor: ${disabled ? 'not-allowed' : 'pointer'};
-      line-height: 0;
-
-      &:focus-visible {
-        box-shadow: unset;
-      }
-
-      &:focus-visible > svg {
-        border-radius: 50%;
-        ${shadow.focusIndicatorStyles};
-      }
-    `
-  }}
+      ${shadow.focusIndicatorStyles};
+    }
+  `}
 `

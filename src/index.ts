@@ -44,20 +44,7 @@ export {
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
 export { RadioButtonPanel } from './components/RadioButtonPanel'
-export {
-  AnchorButton,
-  Button,
-  PrimaryButton,
-  PrimaryButtonAnchor,
-  SecondaryButton,
-  SecondaryButtonAnchor,
-  DangerButton,
-  DangerButtonAnchor,
-  SkeletonButton,
-  SkeletonButtonAnchor,
-  TextButton,
-  TextButtonAnchor,
-} from './components/Button'
+export { AnchorButton, Button } from './components/Button'
 export { StatusLabel } from './components/StatusLabel'
 export { Base, BaseColumn, DialogBase } from './components/Base'
 export * from './components/Icon'
@@ -124,14 +111,17 @@ export { VisuallyHiddenText } from './components/VisuallyHiddenText'
 export * from './components/SpreadsheetTable'
 export * from './components/ResponseMessage'
 export * from './components/Badge'
+export * from './components/Switch'
 
 // layout components
 export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'
 
 // hooks
 export { useTheme } from './hooks/useTheme'
+export { useTheme as useTailwindTheme } from './hooks/useTailwindTheme'
 
 // themes
+export * from './themes'
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
 export { defaultPalette } from './themes/createPalette'

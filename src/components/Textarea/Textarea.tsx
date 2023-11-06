@@ -206,18 +206,16 @@ const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: 
 `
 
 const Counter = styled.span<{ themes: Theme }>`
-  ${({ themes: { fontSize, color } }) => {
-    return css`
-      display: block;
-      font-size: ${fontSize.S};
+  ${({ themes: { fontSize, color } }) => css`
+    display: block;
+    font-size: ${fontSize.S};
 
-      > span {
-        font-weight: bold;
-        color: ${color.TEXT_GREY};
-        &.error {
-          color: ${color.DANGER};
-        }
+    > span {
+      font-weight: bold;
+      color: ${color.TEXT_GREY};
+      &.error {
+        color: ${color.DANGER};
       }
-    `
-  }}
+    }
+  `}
 `

@@ -22,7 +22,7 @@ import {
 } from './createSpacing'
 import { CreatedZindexTheme, ZIndexProperty, createZIndex } from './createZIndex'
 
-interface ThemeProperty {
+type ThemeProperty = {
   /**
    * @deprecated The palette property will be deprecated, please use color property instead
    */
@@ -47,7 +47,7 @@ interface ThemeProperty {
   zIndex?: ZIndexProperty
 }
 
-export interface CreatedTheme {
+export type CreatedTheme = {
   /**
    * @deprecated The palette property will be deprecated, please use color property instead
    */
@@ -142,9 +142,7 @@ function getFontSizeProperty(theme: ThemeProperty): FontSizeProperty {
     ...theme.fontSize,
   }
 }
-const getLeadingProperty = (theme: ThemeProperty): LeadingProperty => {
-  return { ...theme.leading }
-}
+const getLeadingProperty = (theme: ThemeProperty): LeadingProperty => ({ ...theme.leading })
 function getSpacingProperty(theme: ThemeProperty): SpacingProperty {
   return {
     baseSize: theme.spacing?.baseSize,

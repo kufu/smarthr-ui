@@ -3,6 +3,7 @@ import React, {
   ReactNode,
   forwardRef,
   useCallback,
+  useId,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -57,6 +58,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
   ) => {
     const theme = useTheme()
     const [files, setFiles] = useState<File[]>([])
+    const labelId = useId()
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesDirectly = useRef(false)
@@ -120,23 +122,21 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       <Wrapper className={`${className} ${classNames.wrapper}`}>
         {!disabled && hasFileList && files.length > 0 && (
           <FileList themes={theme} className={classNames.fileList}>
-            {files.map((file, index) => {
-              return (
-                <li key={`${file.name}-${index}`}>
-                  <span className={classNames.fileName}>{file.name}</span>
-                  <span>
-                    <Button
-                      variant="text"
-                      prefix={<FaTrashAltIcon />}
-                      onClick={() => handleDelete(index)}
-                      className={classNames.deleteButton}
-                    >
-                      {destroyButtonText}
-                    </Button>
-                  </span>
-                </li>
-              )
-            })}
+            {files.map((file, index) => (
+              <li key={`${file.name}-${index}`}>
+                <span className={classNames.fileName}>{file.name}</span>
+                <span>
+                  <Button
+                    variant="text"
+                    prefix={<FaTrashAltIcon />}
+                    onClick={() => handleDelete(index)}
+                    className={classNames.deleteButton}
+                  >
+                    {destroyButtonText}
+                  </Button>
+                </span>
+              </li>
+            ))}
           </FileList>
         )}
         <InputWrapper className={inputWrapperClassName} themes={theme}>
@@ -149,11 +149,14 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
             className={classNames.input}
             ref={inputRef}
             aria-invalid={error || undefined}
+            aria-labelledby={labelId}
           />
           <Prefix themes={theme}>
             <FaFolderOpenIcon />
           </Prefix>
-          {label}
+          <span id={labelId} aria-hidden="true">
+            {label}
+          </span>
         </InputWrapper>
       </Wrapper>
     )
@@ -245,10 +248,8 @@ const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
 })
 
 const Prefix = styled.span<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
-      display: inline-flex;
-      margin-right: ${spacingByChar(0.5)};
-    `
-  }}
+  ${({ themes: { spacingByChar } }) => css`
+    display: inline-flex;
+    margin-right: ${spacingByChar(0.5)};
+  `}
 `

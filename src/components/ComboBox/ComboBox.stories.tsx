@@ -113,6 +113,8 @@ export const Single: Story = () => {
             action('onChangeSelected')(item)
             setSelectedItem(item)
           }}
+          onFocus={action('onFocus')}
+          onBlur={action('onBlur')}
           data-test="single-combobox-default"
         />
       </dd>
@@ -207,7 +209,7 @@ export const Single: Story = () => {
           items={items}
           selectedItem={selectedItem}
           width={400}
-          dropdownHelpMessage="入力でフィルタリングできます"
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={handleSelectItem}
           onClear={handleClear}
           decorators={{

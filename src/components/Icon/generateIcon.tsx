@@ -34,7 +34,7 @@ type DefinedColor = (typeof definedColors)[number]
 const knownColorSet: Set<string> = new Set(definedColors)
 const isDefinedColor = (color: string): color is DefinedColor => knownColorSet.has(color)
 
-interface IconProps {
+type IconProps = {
   /**
    * アイコンの色
    * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
@@ -49,7 +49,7 @@ interface IconProps {
 
 type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
 
-export interface ComponentProps extends IconProps, ElementProps {
+type BaseComponentProps = {
   /**アイコンの説明テキスト*/
   alt?: React.ReactNode
   /** アイコンと並べるテキスト */
@@ -61,6 +61,8 @@ export interface ComponentProps extends IconProps, ElementProps {
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
+export type ComponentProps = Omit<IconProps & ElementProps, keyof BaseComponentProps> &
+  BaseComponentProps
 
 export const createIcon = (SvgIcon: IconType) => {
   const Icon: React.FC<ComponentProps> = ({
@@ -94,8 +96,9 @@ export const createIcon = (SvgIcon: IconType) => {
     const existsText = !!text
     const iconSize = size ? theme.fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
     const svgIcon = (
-      <SvgIcon
+      <WrapIcon
         {...props}
+        as={SvgIcon}
         stroke="currentColor"
         fill="currentColor"
         strokeWidth="0"
@@ -113,12 +116,12 @@ export const createIcon = (SvgIcon: IconType) => {
 
     if (existsText) {
       return (
-        <WithIcon gap={iconGap} right={right} className={classNames.withText}>
+        <IconAndTextWrapper gap={iconGap} right={right} className={classNames.withText}>
           {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
           {right && text}
           {svgIcon}
           {!right && text}
-        </WithIcon>
+        </IconAndTextWrapper>
       )
     }
 
@@ -135,7 +138,13 @@ export const createIcon = (SvgIcon: IconType) => {
   return Icon
 }
 
-const WithIcon = styled.span<{
+const WrapIcon = styled.svg`
+  @media (forced-colors: active) {
+    fill: CanvasText;
+  }
+`
+
+const IconAndTextWrapper = styled.span<{
   right: ComponentProps['right']
   gap: ComponentProps['iconGap']
 }>`

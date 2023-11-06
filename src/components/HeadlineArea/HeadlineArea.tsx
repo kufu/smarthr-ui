@@ -37,6 +37,7 @@ export const HeadlineArea: VFC<Props & ElementProps> = ({
 
   return (
     <WrapperSection {...props} theme={theme} className={`${className} ${classNames.wrapper}`}>
+      {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <Heading type="screenTitle" tag={heading.tag ? heading.tag : 'h1'}>
         {heading.children}
       </Heading>

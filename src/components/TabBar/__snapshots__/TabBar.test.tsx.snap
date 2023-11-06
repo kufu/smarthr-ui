@@ -6,8 +6,7 @@ exports[`TabBar should be match snapshot 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: auto hidden;
   gap: 8px;
   padding: 0;
 }

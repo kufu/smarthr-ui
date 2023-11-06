@@ -81,7 +81,6 @@ export const Default: Story = () => {
         </Button>
         <Dialog
           isOpen={opened === 'default'}
-          onClickOverlay={onClickClose}
           onPressEscape={onClickClose}
           id="dialog-default"
           ariaLabel="Dialog"
@@ -137,7 +136,6 @@ export const Default: Story = () => {
         </Button>
         <Dialog
           isOpen={opened === 'focus'}
-          onClickOverlay={onClickClose}
           onPressEscape={onClickClose}
           firstFocusTarget={inputRef}
           id="dialog-focus"
@@ -202,7 +200,6 @@ export const Message_Dialog: Story = () => {
           </Section>
         }
         onClickClose={onClickClose}
-        onClickOverlay={onClickClose}
         decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
         id="dialog-message"
         data-test="dialog-content"
@@ -302,7 +299,6 @@ export const Action_Dialog: Story = () => {
             closeDialog()
           }}
           onClickClose={onClickClose}
-          onClickOverlay={onClickClose}
           decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
           firstFocusTarget={openedFocusRef}
           data-test="opened-dialog"
@@ -427,7 +423,6 @@ export const Form_Dialog: Story = () => {
             closeDialog()
           }}
           onClickClose={onClickClose}
-          onClickOverlay={onClickClose}
           decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
           firstFocusTarget={openedFocusRef}
           data-test="opened-form-dialog"
@@ -464,237 +459,227 @@ const Buttons = styled.div`
   }
 `
 
-export const Action_Dialog_With_Trigger: Story = () => {
-  return (
-    <>
-      <ActionDialogWithTrigger
-        trigger={<Button>open.</Button>}
-        title="ActionDialog With Trigger"
+export const Action_Dialog_With_Trigger: Story = () => (
+  <>
+    <ActionDialogWithTrigger
+      trigger={<Button>open.</Button>}
+      title="ActionDialog With Trigger"
+      actionText="保存"
+      onClickAction={(close) => {
+        close()
+      }}
+    >
+      <Description>ActionDialog with Trigger.</Description>
+    </ActionDialogWithTrigger>
+
+    <ActionDialogWithTrigger
+      trigger={<Button disabled={true}>open.</Button>}
+      title="Disabled ActionDialog With Trigger"
+      actionText="保存"
+      onClickAction={(close) => {
+        close()
+      }}
+    >
+      <Description>ActionDialog with Trigger.</Description>
+    </ActionDialogWithTrigger>
+  </>
+)
+
+export const Remote_Trigger_Action_Dialog: Story = () => (
+  <>
+    <div>
+      <p>複数のトリガーに対応</p>
+      <RemoteDialogTrigger targetId="remote_trigger_action_dialog_1">
+        <Button>Trigger 1.</Button>
+      </RemoteDialogTrigger>
+      <RemoteDialogTrigger targetId="remote_trigger_action_dialog_1">
+        <Button>Trigger 2.</Button>
+      </RemoteDialogTrigger>
+      <RemoteTriggerActionDialog
+        id="remote_trigger_action_dialog_1"
+        title="Remote Trigger Action Dialog 1"
+        actionText="保存"
+        onClickAction={(close) => {
+          close()
+        }}
+        onToggle={(isOpen) => {
+          console.log(`isOpen: ${isOpen}`)
+        }}
+        onOpen={() => console.log(`open!`)}
+        onClose={() => console.log(`close!`)}
+      >
+        <Description>Remote Trigger Action Dialog.</Description>
+      </RemoteTriggerActionDialog>
+    </div>
+
+    <div>
+      <p>disabled</p>
+      <RemoteDialogTrigger targetId="remote_trigger_action_dialog_2">
+        <Button disabled={true}>disabled.</Button>
+      </RemoteDialogTrigger>
+      <RemoteTriggerActionDialog
+        id="remote_trigger_action_dialog_2"
+        title="Remote Trigger Action Dialog 2"
         actionText="保存"
         onClickAction={(close) => {
           close()
         }}
       >
-        <Description>ActionDialog with Trigger.</Description>
-      </ActionDialogWithTrigger>
+        <Description>Remote Trigger Action Dialog.</Description>
+      </RemoteTriggerActionDialog>
+    </div>
+  </>
+)
 
-      <ActionDialogWithTrigger
-        trigger={<Button disabled={true}>open.</Button>}
-        title="Disabled ActionDialog With Trigger"
+export const Remote_Trigger_Form_Dialog: Story = () => (
+  <>
+    <div>
+      <p>複数のトリガーに対応</p>
+      <RemoteDialogTrigger targetId="remote_trigger_form_dialog_1">
+        <Button>Trigger 1.</Button>
+      </RemoteDialogTrigger>
+      <RemoteDialogTrigger targetId="remote_trigger_form_dialog_1">
+        <Button>Trigger 2.</Button>
+      </RemoteDialogTrigger>
+      <RemoteTriggerFormDialog
+        id="remote_trigger_form_dialog_1"
+        title="Remote Trigger Form Dialog 1"
         actionText="保存"
-        onClickAction={(close) => {
+        onSubmit={(close) => {
           close()
         }}
       >
-        <Description>ActionDialog with Trigger.</Description>
-      </ActionDialogWithTrigger>
-    </>
-  )
-}
+        <Description>Remote Trigger Form Dialog.</Description>
+      </RemoteTriggerFormDialog>
+    </div>
 
-export const Remote_Trigger_Action_Dialog: Story = () => {
-  return (
-    <>
-      <div>
-        <p>複数のトリガーに対応</p>
-        <RemoteDialogTrigger targetId="remote_trigger_action_dialog_1">
-          <Button>Trigger 1.</Button>
-        </RemoteDialogTrigger>
-        <RemoteDialogTrigger targetId="remote_trigger_action_dialog_1">
-          <Button>Trigger 2.</Button>
-        </RemoteDialogTrigger>
-        <RemoteTriggerActionDialog
-          id="remote_trigger_action_dialog_1"
-          title="Remote Trigger Action Dialog 1"
-          actionText="保存"
-          onClickAction={(close) => {
-            close()
-          }}
-          onToggle={(isOpen) => {
-            console.log(`isOpen: ${isOpen}`)
-          }}
-          onOpen={() => console.log(`open!`)}
-          onClose={() => console.log(`close!`)}
-        >
-          <Description>Remote Trigger Action Dialog.</Description>
-        </RemoteTriggerActionDialog>
-      </div>
+    <div>
+      <p>disabled</p>
+      <RemoteDialogTrigger targetId="remote_trigger_form_dialog_2">
+        <Button disabled={true}>disabled.</Button>
+      </RemoteDialogTrigger>
+      <RemoteTriggerFormDialog
+        id="remote_trigger_form_dialog_2"
+        title="Remote Trigger Form Dialog 2"
+        actionText="保存"
+        onSubmit={(close) => {
+          close()
+        }}
+      >
+        <Description>Remote Trigger Form Dialog.</Description>
+      </RemoteTriggerFormDialog>
+    </div>
+  </>
+)
 
-      <div>
-        <p>disabled</p>
-        <RemoteDialogTrigger targetId="remote_trigger_action_dialog_2">
-          <Button disabled={true}>disabled.</Button>
-        </RemoteDialogTrigger>
-        <RemoteTriggerActionDialog
-          id="remote_trigger_action_dialog_2"
-          title="Remote Trigger Action Dialog 2"
-          actionText="保存"
-          onClickAction={(close) => {
-            close()
-          }}
-        >
-          <Description>Remote Trigger Action Dialog.</Description>
-        </RemoteTriggerActionDialog>
-      </div>
-    </>
-  )
-}
+export const Remote_Trigger_Message_Dialog: Story = () => (
+  <>
+    <div>
+      <p>複数のトリガーに対応</p>
+      <RemoteDialogTrigger targetId="remote_trigger_message_dialog_1">
+        <Button>Trigger 1.</Button>
+      </RemoteDialogTrigger>
+      <RemoteDialogTrigger targetId="remote_trigger_message_dialog_1">
+        <Button>Trigger 2.</Button>
+      </RemoteDialogTrigger>
+      <RemoteTriggerMessageDialog
+        id="remote_trigger_message_dialog_1"
+        title="Remote Trigger Message Dialog 1"
+        description={<Description>Remote Trigger Message Dialog.</Description>}
+      />
+    </div>
 
-export const Remote_Trigger_Form_Dialog: Story = () => {
-  return (
-    <>
-      <div>
-        <p>複数のトリガーに対応</p>
-        <RemoteDialogTrigger targetId="remote_trigger_form_dialog_1">
-          <Button>Trigger 1.</Button>
-        </RemoteDialogTrigger>
-        <RemoteDialogTrigger targetId="remote_trigger_form_dialog_1">
-          <Button>Trigger 2.</Button>
-        </RemoteDialogTrigger>
-        <RemoteTriggerFormDialog
-          id="remote_trigger_form_dialog_1"
-          title="Remote Trigger Form Dialog 1"
-          actionText="保存"
-          onSubmit={(close) => {
-            close()
-          }}
-        >
-          <Description>Remote Trigger Form Dialog.</Description>
-        </RemoteTriggerFormDialog>
-      </div>
+    <div>
+      <p>disabled</p>
+      <RemoteDialogTrigger targetId="remote_trigger_message_dialog_2">
+        <Button disabled={true}>disabled.</Button>
+      </RemoteDialogTrigger>
+      <RemoteTriggerMessageDialog
+        id="remote_trigger_message_dialog_2"
+        title="Remote Trigger Message Dialog 2"
+        description={<Description>Remote Trigger Message Dialog.</Description>}
+      />
+    </div>
+  </>
+)
 
-      <div>
-        <p>disabled</p>
-        <RemoteDialogTrigger targetId="remote_trigger_form_dialog_2">
-          <Button disabled={true}>disabled.</Button>
-        </RemoteDialogTrigger>
-        <RemoteTriggerFormDialog
-          id="remote_trigger_form_dialog_2"
-          title="Remote Trigger Form Dialog 2"
-          actionText="保存"
-          onSubmit={(close) => {
-            close()
-          }}
-        >
-          <Description>Remote Trigger Form Dialog.</Description>
-        </RemoteTriggerFormDialog>
-      </div>
-    </>
-  )
-}
-
-export const Remote_Trigger_Message_Dialog: Story = () => {
-  return (
-    <>
-      <div>
-        <p>複数のトリガーに対応</p>
-        <RemoteDialogTrigger targetId="remote_trigger_message_dialog_1">
-          <Button>Trigger 1.</Button>
-        </RemoteDialogTrigger>
-        <RemoteDialogTrigger targetId="remote_trigger_message_dialog_1">
-          <Button>Trigger 2.</Button>
-        </RemoteDialogTrigger>
-        <RemoteTriggerMessageDialog
-          id="remote_trigger_message_dialog_1"
-          title="Remote Trigger Message Dialog 1"
-          description={<Description>Remote Trigger Message Dialog.</Description>}
-        />
-      </div>
-
-      <div>
-        <p>disabled</p>
-        <RemoteDialogTrigger targetId="remote_trigger_message_dialog_2">
-          <Button disabled={true}>disabled.</Button>
-        </RemoteDialogTrigger>
-        <RemoteTriggerMessageDialog
-          id="remote_trigger_message_dialog_2"
-          title="Remote Trigger Message Dialog 2"
-          description={<Description>Remote Trigger Message Dialog.</Description>}
-        />
-      </div>
-    </>
-  )
-}
-
-export const Uncontrolled: Story = () => {
-  return (
-    <TriggerList>
-      <li>
-        <DialogWrapper>
-          <DialogTrigger>
-            <Button
-              aria-haspopup="dialog"
-              aria-controls="dialog-uncontrolled"
-              data-test="dialog-trigger"
-            >
-              Dialog
-            </Button>
-          </DialogTrigger>
-          <DialogContent id="dialog-uncontrolled" data-test="dialog-content">
-            <Description>Uncontrolled Dialog.</Description>
-            <Content>
-              <DialogCloser>
-                <Button data-test="dialog-closer">Close</Button>
-              </DialogCloser>
-            </Content>
-          </DialogContent>
-        </DialogWrapper>
-      </li>
-      <li>
-        <DialogWrapper>
-          <DialogTrigger>
-            <Button
-              aria-haspopup="dialog"
-              aria-controls="dialog-uncontrolled-message"
-              data-test="message-dialog-trigger"
-            >
-              MessageDialog
-            </Button>
-          </DialogTrigger>
-          <MessageDialogContent
-            title="Uncontrolled Message Dialog"
-            description={<p>{dummyText} </p>}
-            id="dialog-uncontrolled-message"
-            data-test="message-dialog-content"
-          />
-        </DialogWrapper>
-      </li>
-      <li>
-        <DialogWrapper>
-          <DialogTrigger>
-            <Button
-              aria-haspopup="dialog"
-              aria-controls="dialog-uncontrolled-action"
-              data-test="action-dialog-trigger"
-            >
-              ActionDialog
-            </Button>
-          </DialogTrigger>
-          <ActionDialogContent
-            title="Uncontrolled Action Dialog"
-            actionText="実行"
-            actionDisabled={false}
-            onClickAction={(closeDialog) => {
-              action('executed')()
-              closeDialog()
-            }}
-            id="dialog-uncontrolled-action"
-            data-test="action-dialog-content"
+export const Uncontrolled: Story = () => (
+  <TriggerList>
+    <li>
+      <DialogWrapper>
+        <DialogTrigger>
+          <Button
+            aria-haspopup="dialog"
+            aria-controls="dialog-uncontrolled"
+            data-test="dialog-trigger"
           >
-            <Description>
-              The content of ActionDialogContent is freely implemented by the user as children.
-              <br />
-              So you need to prepare your own style.
-              <br />
-              When action is executed, you can specify when to close dialog. In this story, dialog
-              closes one second after clicking action
-            </Description>
-          </ActionDialogContent>
-        </DialogWrapper>
-      </li>
-    </TriggerList>
-  )
-}
+            Dialog
+          </Button>
+        </DialogTrigger>
+        <DialogContent id="dialog-uncontrolled" data-test="dialog-content">
+          <Description>Uncontrolled Dialog.</Description>
+          <Content>
+            <DialogCloser>
+              <Button data-test="dialog-closer">Close</Button>
+            </DialogCloser>
+          </Content>
+        </DialogContent>
+      </DialogWrapper>
+    </li>
+    <li>
+      <DialogWrapper>
+        <DialogTrigger>
+          <Button
+            aria-haspopup="dialog"
+            aria-controls="dialog-uncontrolled-message"
+            data-test="message-dialog-trigger"
+          >
+            MessageDialog
+          </Button>
+        </DialogTrigger>
+        <MessageDialogContent
+          title="Uncontrolled Message Dialog"
+          description={<p>{dummyText} </p>}
+          id="dialog-uncontrolled-message"
+          data-test="message-dialog-content"
+        />
+      </DialogWrapper>
+    </li>
+    <li>
+      <DialogWrapper>
+        <DialogTrigger>
+          <Button
+            aria-haspopup="dialog"
+            aria-controls="dialog-uncontrolled-action"
+            data-test="action-dialog-trigger"
+          >
+            ActionDialog
+          </Button>
+        </DialogTrigger>
+        <ActionDialogContent
+          title="Uncontrolled Action Dialog"
+          actionText="実行"
+          actionDisabled={false}
+          onClickAction={(closeDialog) => {
+            action('executed')()
+            closeDialog()
+          }}
+          id="dialog-uncontrolled-action"
+          data-test="action-dialog-content"
+        >
+          <Description>
+            The content of ActionDialogContent is freely implemented by the user as children.
+            <br />
+            So you need to prepare your own style.
+            <br />
+            When action is executed, you can specify when to close dialog. In this story, dialog
+            closes one second after clicking action
+          </Description>
+        </ActionDialogContent>
+      </DialogWrapper>
+    </li>
+  </TriggerList>
+)
 Uncontrolled.parameters = {
   docs: {
     description: {
@@ -704,60 +689,58 @@ Uncontrolled.parameters = {
   },
 }
 
-export const WidthAndPosition: Story = () => {
-  return (
-    <TriggerList>
-      <li>
-        <DialogWrapper>
-          <DialogTrigger>
-            <Button aria-haspopup="dialog" aria-controls="dialog-width-1">
-              幅 400px
-            </Button>
-          </DialogTrigger>
-          <DialogContent width={400} id="dialog-width-1">
-            <Description>幅 400px のダイアログ</Description>
-          </DialogContent>
-        </DialogWrapper>
-      </li>
-      <li>
-        <DialogWrapper>
-          <DialogTrigger>
-            <Button aria-haspopup="dialog" aria-controls="dialog-width-2">
-              幅 80%
-            </Button>
-          </DialogTrigger>
-          <DialogContent width="80%" id="dialog-width-2">
-            <Description>幅 80% のダイアログ</Description>
-          </DialogContent>
-        </DialogWrapper>
-      </li>
-      <li>
-        <DialogWrapper>
-          <DialogTrigger>
-            <Button aria-haspopup="dialog" aria-controls="dialog-position-1">
-              top-left
-            </Button>
-          </DialogTrigger>
-          <DialogContent top={50} left={200} id="dialog-position-1">
-            <Description>This Dialog is set to `top: 50px, left: 200px`.</Description>
-          </DialogContent>
-        </DialogWrapper>
-      </li>
-      <li>
-        <DialogWrapper>
-          <DialogTrigger>
-            <Button aria-haspopup="dialog" aria-controls="dialog-position-2">
-              bottom-right
-            </Button>
-          </DialogTrigger>
-          <DialogContent right={50} bottom={100} id="dialog-position-2">
-            <Description>This Dialog is set to `right: 50px, bottom: 100px`.</Description>
-          </DialogContent>
-        </DialogWrapper>
-      </li>
-    </TriggerList>
-  )
-}
+export const WidthAndPosition: Story = () => (
+  <TriggerList>
+    <li>
+      <DialogWrapper>
+        <DialogTrigger>
+          <Button aria-haspopup="dialog" aria-controls="dialog-width-1">
+            幅 400px
+          </Button>
+        </DialogTrigger>
+        <DialogContent width={400} id="dialog-width-1">
+          <Description>幅 400px のダイアログ</Description>
+        </DialogContent>
+      </DialogWrapper>
+    </li>
+    <li>
+      <DialogWrapper>
+        <DialogTrigger>
+          <Button aria-haspopup="dialog" aria-controls="dialog-width-2">
+            幅 80%
+          </Button>
+        </DialogTrigger>
+        <DialogContent width="80%" id="dialog-width-2">
+          <Description>幅 80% のダイアログ</Description>
+        </DialogContent>
+      </DialogWrapper>
+    </li>
+    <li>
+      <DialogWrapper>
+        <DialogTrigger>
+          <Button aria-haspopup="dialog" aria-controls="dialog-position-1">
+            top-left
+          </Button>
+        </DialogTrigger>
+        <DialogContent top={50} left={200} id="dialog-position-1">
+          <Description>This Dialog is set to `top: 50px, left: 200px`.</Description>
+        </DialogContent>
+      </DialogWrapper>
+    </li>
+    <li>
+      <DialogWrapper>
+        <DialogTrigger>
+          <Button aria-haspopup="dialog" aria-controls="dialog-position-2">
+            bottom-right
+          </Button>
+        </DialogTrigger>
+        <DialogContent right={50} bottom={100} id="dialog-position-2">
+          <Description>This Dialog is set to `right: 50px, bottom: 100px`.</Description>
+        </DialogContent>
+      </DialogWrapper>
+    </li>
+  </TriggerList>
+)
 WidthAndPosition.parameters = {
   docs: {
     description: {
@@ -766,33 +749,31 @@ WidthAndPosition.parameters = {
   },
 }
 
-export const WithScroll: Story = () => {
-  return (
-    <ScrollWrapper>
-      <BorderedWrapper>
-        We can confirm that there is no change in the width of the wrapper for this text before and
-        after opening a dialog.
-      </BorderedWrapper>
-      <DialogWrapper>
-        <DialogTrigger>
-          <Button aria-haspopup="dialog" aria-controls="dialog-with-scroll-1">
-            Open Dialog
-          </Button>
-        </DialogTrigger>
-        <DialogContent id="dialog-with-scroll-1">
-          <ContentWrapper>
-            <div>
-              The content behind the opened dialog is not scrollable.
-              <br />
-              Of course the content on the opened dialog is scrollable.
-            </div>
+export const WithScroll: Story = () => (
+  <ScrollWrapper>
+    <BorderedWrapper>
+      We can confirm that there is no change in the width of the wrapper for this text before and
+      after opening a dialog.
+    </BorderedWrapper>
+    <DialogWrapper>
+      <DialogTrigger>
+        <Button aria-haspopup="dialog" aria-controls="dialog-with-scroll-1">
+          Open Dialog
+        </Button>
+      </DialogTrigger>
+      <DialogContent id="dialog-with-scroll-1">
+        <ContentWrapper>
+          <div>
+            The content behind the opened dialog is not scrollable.
             <br />
-          </ContentWrapper>
-        </DialogContent>
-      </DialogWrapper>
-    </ScrollWrapper>
-  )
-}
+            Of course the content on the opened dialog is scrollable.
+          </div>
+          <br />
+        </ContentWrapper>
+      </DialogContent>
+    </DialogWrapper>
+  </ScrollWrapper>
+)
 WithScroll.parameters = { docs: { disable: true } }
 const ScrollWrapper = styled.div`
   height: 200vh;
@@ -911,91 +892,79 @@ export const Modeless_Dialog: Story = () => {
   )
 }
 
-export const RegDialogOpenedDialog: Story = () => {
-  return (
-    <Dialog isOpen>
-      <Description>{dummyText}</Description>
-    </Dialog>
-  )
-}
+export const RegDialogOpenedDialog: Story = () => (
+  <Dialog isOpen>
+    <Description>{dummyText}</Description>
+  </Dialog>
+)
 
-export const RegDialogOpenedDialogWidth: Story = () => {
-  return (
-    <Dialog isOpen width={500}>
-      <Description>{dummyText}</Description>
-    </Dialog>
-  )
-}
+export const RegDialogOpenedDialogWidth: Story = () => (
+  <Dialog isOpen width={500}>
+    <Description>{dummyText}</Description>
+  </Dialog>
+)
 
-export const RegDialogOpenedDialogPosition: Story = () => {
-  return (
-    <Dialog isOpen top={20} right={40} bottom={60} left={80}>
-      <Description>{dummyText}</Description>
-    </Dialog>
-  )
-}
+export const RegDialogOpenedDialogPosition: Story = () => (
+  <Dialog isOpen top={20} right={40} bottom={60} left={80}>
+    <Description>{dummyText}</Description>
+  </Dialog>
+)
 
-export const RegOpendMessage: Story = () => {
-  return (
-    <MessageDialog
-      isOpen={true}
-      title="MessageDialog"
-      description={<p>{dummyText}</p>}
-      onClickClose={action('clicked close')}
-    />
-  )
-}
+export const RegOpendMessage: Story = () => (
+  <MessageDialog
+    isOpen={true}
+    title="MessageDialog"
+    description={<p>{dummyText}</p>}
+    onClickClose={action('clicked close')}
+  />
+)
 RegOpendMessage.parameters = { docs: { disable: true } }
 
-export const RegOpendAction: Story = () => {
-  return (
-    <ActionDialog
-      isOpen={true}
-      title="ActionDialog"
-      actionText="保存"
-      onClickAction={action('clicked action')}
-      onClickClose={action('clicked close')}
-    >
-      <Description>
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-      </Description>
-      <Content>
-        <label>
-          <input name="reg_opend_action_checkbox" type="checkbox" />
-          Agree
-        </label>
-      </Content>
-    </ActionDialog>
-  )
-}
+export const RegOpendAction: Story = () => (
+  <ActionDialog
+    isOpen={true}
+    title="ActionDialog"
+    actionText="保存"
+    onClickAction={action('clicked action')}
+    onClickClose={action('clicked close')}
+  >
+    <Description>
+      {dummyText}
+      {dummyText}
+      {dummyText}
+      {dummyText}
+      {dummyText}
+      {dummyText}
+      {dummyText}
+      {dummyText}
+    </Description>
+    <Content>
+      <label>
+        <input name="reg_opend_action_checkbox" type="checkbox" />
+        Agree
+      </label>
+    </Content>
+  </ActionDialog>
+)
 RegOpendAction.parameters = { docs: { disable: true } }
 
-export const RegOpenedModeless: Story = () => {
-  return (
-    <ModelessDialog
-      isOpen
-      header={<ModelessHeading>モードレスダイアログ</ModelessHeading>}
-      footer={<ModelessFooter>フッタ</ModelessFooter>}
-      height={500}
-      width={600}
-    >
-      <div style={{ margin: '1rem' }}>
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-        {dummyText}
-      </div>
-    </ModelessDialog>
-  )
-}
+export const RegOpenedModeless: Story = () => (
+  <ModelessDialog
+    isOpen
+    header={<ModelessHeading>モードレスダイアログ</ModelessHeading>}
+    footer={<ModelessFooter>フッタ</ModelessFooter>}
+    height={500}
+    width={600}
+  >
+    <div style={{ margin: '1rem' }}>
+      {dummyText}
+      {dummyText}
+      {dummyText}
+      {dummyText}
+      {dummyText}
+    </div>
+  </ModelessDialog>
+)
 
 export const Body以外のPortalParent: Story = () => {
   const [isOpen, setIsOpen] = useState<'deault' | 'actiion' | 'message' | 'modeless'>()
@@ -1039,7 +1008,6 @@ export const Body以外のPortalParent: Story = () => {
 
       <Dialog
         isOpen={isOpen === 'deault'}
-        onClickOverlay={onClickClose}
         onPressEscape={onClickClose}
         id="portal-default"
         ariaLabel="Dialog"
@@ -1079,7 +1047,6 @@ export const Body以外のPortalParent: Story = () => {
         title="MessageDialog"
         description={<p>MessageDialog を近接要素に生成しています</p>}
         onClickClose={onClickClose}
-        onClickOverlay={onClickClose}
         id="portal-message"
         portalParent={portalParentRef}
       />

@@ -10,14 +10,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base as BaseComponent } from '../Base'
-import {
-  AnchorButton,
-  Button,
-  PrimaryButton,
-  PrimaryButtonAnchor,
-  SecondaryButton,
-  SecondaryButtonAnchor,
-} from '../Button'
+import { AnchorButton, Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
 
 import { TertiaryLink } from './TertiaryLink'
@@ -27,14 +20,10 @@ import { useClassNames } from './useClassNames'
 export type Primary =
   | FunctionComponentElement<ComponentProps<typeof Button>>
   | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
-  | FunctionComponentElement<ComponentProps<typeof PrimaryButton>>
-  | FunctionComponentElement<ComponentProps<typeof PrimaryButtonAnchor>>
 
 export type Secondary =
   | FunctionComponentElement<ComponentProps<typeof Button>>
   | FunctionComponentElement<ComponentProps<typeof AnchorButton>>
-  | FunctionComponentElement<ComponentProps<typeof SecondaryButton>>
-  | FunctionComponentElement<ComponentProps<typeof SecondaryButtonAnchor>>
 
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
@@ -100,25 +89,23 @@ export const BottomFixedArea: VFC<Props & ElementProps> = ({
 }
 
 const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
-  ${({ themes: { spacingByChar }, zIndex }) => {
-    return css`
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      padding: ${spacingByChar(1.5)};
-      text-align: center;
-      z-index: ${zIndex};
-      box-shadow: 0 -4px 8px 2px rgba(0, 0, 0, 0.24);
-      border-radius: 0;
-      box-sizing: border-box;
-    `
-  }}
+  ${({ themes: { spacingByChar }, zIndex }) => css`
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: ${spacingByChar(1.5)};
+    text-align: center;
+    z-index: ${zIndex};
+    box-shadow: 0 -4px 8px 2px rgba(0, 0, 0, 0.24);
+    border-radius: 0;
+    box-sizing: border-box;
+  `}
 `
 const Text = styled.div`
   margin: 0;
 `
 const ListCluster = styled(Cluster).attrs({
-  as: 'ul',
+  forwardedAs: 'ul',
 })`
   list-style: none;
   margin: 0;

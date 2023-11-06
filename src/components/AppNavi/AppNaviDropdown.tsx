@@ -40,11 +40,11 @@ export const AppNaviDropdown: VFC<InnerProps> = ({
         <TriggerButton
           themes={theme}
           aria-current={current ? 'page' : undefined}
-          isActive={current}
           disabled={isUnclickable}
-          isUnclickable={isUnclickable}
           type="button"
-          displayCaret={displayCaret}
+          $displayCaret={displayCaret}
+          $isActive={current}
+          $isUnclickable={isUnclickable}
         >
           {iconComponent}
           {children}
@@ -60,11 +60,15 @@ export const AppNaviDropdown: VFC<InnerProps> = ({
 const StyledDropdownTrigger = styled(DropdownTrigger)`
   height: 100%;
 `
-const TriggerButton = styled.button<ItemStyleProps & { displayCaret?: boolean }>(
-  ({ displayCaret, ...props }) => css`
+const TriggerButton = styled.button<
+  ItemStyleProps & {
+    $displayCaret?: boolean
+  }
+>(
+  ({ $displayCaret, ...props }) => css`
     ${getItemStyle(props)}
 
-    ${displayCaret &&
+    ${$displayCaret &&
     css`
       &[aria-expanded='true'] {
         .smarthr-ui-Icon:last-child {

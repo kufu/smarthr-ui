@@ -5,9 +5,7 @@ import React, {
   ReactNode,
   useMemo,
 } from 'react'
-import styled, { css } from 'styled-components'
-
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { tv } from 'tailwind-variants'
 
 import { Variant } from './types'
 
@@ -33,209 +31,301 @@ type Props =
   | (ButtonProps & Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonProps>)
   | (AnchorProps & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof AnchorProps>)
 
-type StyleProps = Pick<Props, 'wide' | 'variant' | '$loading'> & { themes: Theme }
+export function ButtonWrapper({
+  variant,
+  size,
+  square,
+  wide = false,
+  $loading,
+  className,
+  ...props
+}: Props) {
+  const { buttonStyle, anchorStyle } = useMemo(() => {
+    const { default: defaultButton, anchor } = button({
+      variant,
+      size,
+      square,
+      loading: $loading,
+      wide,
+    })
 
-export function ButtonWrapper({ size, square, className, ...props }: Props) {
-  const theme = useTheme()
-  const buttonClassName = useMemo(
-    () => `${size} ${className} ${square ? 'square' : ''}`,
-    [className, size, square],
-  )
-  return props.isAnchor ? (
-    // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute
-    <Anchor {...props} className={buttonClassName} ref={props.anchorRef} themes={theme} />
-  ) : (
-    <Button {...props} className={buttonClassName} ref={props.buttonRef} themes={theme} />
-  )
-}
-
-const baseStyles = css<StyleProps>(({ wide, $loading, themes }) => {
-  const { border, fontSize, leading, radius, shadow, spacingByChar } = themes
-
-  return css`
-    box-sizing: border-box;
-    cursor: pointer;
-    display: inline-flex;
-    ${$loading && `flex-direction: row-reverse;`}
-    justify-content: center;
-    align-items: center;
-    gap: ${spacingByChar(0.5)};
-    text-align: center;
-    white-space: nowrap;
-    border-radius: ${radius.m};
-
-    /* ボタンの高さを合わせるために指定 */
-    border: ${border.lineWidth} ${border.lineStyle} transparent;
-    padding: ${spacingByChar(0.75)} ${spacingByChar(1)};
-    font-family: inherit;
-    font-size: ${fontSize.M};
-    font-weight: bold;
-    line-height: ${leading.NONE};
-    ${wide && 'width: 100%;'}
-
-    &.square {
-      padding: ${spacingByChar(0.75)};
+    return {
+      buttonStyle: defaultButton({ className }),
+      anchorStyle: anchor({ className }),
     }
+  }, [$loading, className, size, square, variant, wide])
 
-    &.s {
-      padding: ${spacingByChar(0.5)};
-      font-size: ${fontSize.S};
-
-      /* ボタンラベルの line-height を 0 にしたため、高さを担保する */
-      min-height: calc(${fontSize.S} + ${spacingByChar(1)} + (${border.lineWidth} * 2));
-    }
-
-    &:focus-visible {
-      ${shadow.focusIndicatorStyles}
-    }
-
-    @media (prefers-contrast: more) {
-      & {
-        border: ${border.highContrast};
-      }
-    }
-
-    /* baseline より下の leading などの余白を埋める */
-    .smarthr-ui-Icon,
-    svg {
-      display: block;
-    }
-  `
-})
-
-const Button = styled.button<StyleProps>(({ variant, themes }) => {
-  const styles = variantStyles(variant, themes)
-  return css`
-    ${baseStyles}
-    ${styles.default}
-
-    &:focus-visible,
-    &:hover {
-      ${styles.focus}
-    }
-    &[disabled] {
-      cursor: not-allowed;
-      ${styles.disabled}
-
-      /* alpha color を使用しているので、背景色と干渉させない */
-      background-clip: padding-box;
-    }
-  `
-})
-
-const Anchor = styled.a<StyleProps>(({ variant, themes }) => {
-  const styles = variantStyles(variant, themes)
-  return css`
-    ${baseStyles}
-    ${styles.default}
-    text-decoration: none;
-
-    &:focus-visible,
-    &:hover {
-      ${styles.focus}
-    }
-    &:not([href]) {
-      cursor: not-allowed;
-      ${styles.disabled}
-
-      /* alpha color を使用しているので、背景色と干渉させない */
-      background-clip: padding-box;
-    }
-  `
-})
-
-function variantStyles(variant: Variant, theme: Theme) {
-  const { color } = theme
-  switch (variant) {
-    case 'primary':
-      return {
-        default: css`
-          border-color: ${color.MAIN};
-          background-color: ${color.MAIN};
-          color: ${color.TEXT_WHITE};
-        `,
-        focus: css`
-          border-color: ${color.hoverColor(color.MAIN)};
-          background-color: ${color.hoverColor(color.MAIN)};
-        `,
-        disabled: css`
-          border-color: ${color.disableColor(color.MAIN)};
-          background-color: ${color.disableColor(color.MAIN)};
-          color: ${color.disableColor(color.TEXT_WHITE)};
-        `,
-      }
-    case 'secondary':
-      return {
-        default: css`
-          border-color: ${color.BORDER};
-          background-color: ${color.WHITE};
-          color: ${color.TEXT_BLACK};
-        `,
-        focus: css`
-          border-color: ${color.hoverColor(color.BORDER)};
-          background-color: ${color.hoverColor(color.WHITE)};
-
-          @media (prefers-contrast: more) {
-            & {
-              border-color: ${color.TEXT_BLACK};
-            }
-          }
-        `,
-        disabled: css`
-          border-color: ${color.disableColor(color.BORDER)};
-          background-color: ${color.hoverColor(color.WHITE)};
-          color: ${color.TEXT_DISABLED};
-        `,
-      }
-    case 'danger':
-      return {
-        default: css`
-          border-color: ${color.DANGER};
-          background-color: ${color.DANGER};
-          color: ${color.TEXT_WHITE};
-        `,
-        focus: css`
-          border-color: ${color.hoverColor(color.DANGER)};
-          background-color: ${color.hoverColor(color.DANGER)};
-        `,
-        disabled: css`
-          border-color: ${color.disableColor(color.DANGER)};
-          background-color: ${color.disableColor(color.DANGER)};
-          color: ${color.disableColor(color.TEXT_WHITE)};
-        `,
-      }
-    case 'skeleton':
-      return {
-        default: css`
-          border-color: ${color.WHITE};
-          background-color: transparent;
-          color: ${color.TEXT_WHITE};
-        `,
-        focus: css`
-          border-color: ${color.hoverColor(color.WHITE)};
-          background-color: ${color.OVERLAY};
-          color: ${color.hoverColor(color.TEXT_WHITE)};
-        `,
-        disabled: css`
-          border-color: ${color.disableColor(color.WHITE)};
-          background-color: transparent;
-          color: ${color.disableColor(color.TEXT_WHITE)};
-        `,
-      }
-    case 'text':
-      return {
-        default: css`
-          background-color: transparent;
-          color: ${color.TEXT_BLACK};
-        `,
-        focus: css`
-          background-color: ${color.hoverColor(color.WHITE)};
-        `,
-        disabled: css`
-          border-color: transparent;
-          background-color: transparent;
-          color: ${color.TEXT_DISABLED};
-        `,
-      }
+  if (props.isAnchor) {
+    const { anchorRef, ...others } = props
+    // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute, jsx-a11y/anchor-has-content
+    return <a {...others} className={anchorStyle} ref={anchorRef} />
+  } else {
+    const { buttonRef, ...others } = props
+    return <button {...others} className={buttonStyle} ref={buttonRef} />
   }
 }
+
+const button = tv({
+  slots: {
+    default: [
+      'disabled:shr-cursor-not-allowed',
+      /* alpha color を使用しているので、背景色と干渉させない */
+      'disabled:shr-bg-clip-padding',
+      '[&_.smarthr-ui-Icon]:forced-colors:disabled:shr-fill-[GrayText]',
+    ],
+    anchor: [
+      'shr-no-underline',
+      '[&:not([href])]:shr-cursor-not-allowed',
+      /* alpha color を使用しているので、背景色と干渉させない */
+      '[&:not([href])]:shr-bg-clip-padding',
+      '[&_.smarthr-ui-Icon]:forced-colors:shr-fill-[LinkText]',
+      '[&:not([href])_.smarthr-ui-Icon]:forced-colors:shr-fill-[CanvasText]',
+    ],
+  },
+  variants: {
+    variant: {
+      primary: {},
+      secondary: {},
+      danger: {},
+      skeleton: {},
+      text: {},
+    },
+    size: {
+      default: {},
+      s: {},
+    },
+    square: {
+      true: {},
+    },
+    loading: {
+      true: {},
+    },
+    wide: {
+      true: {},
+    },
+  },
+  compoundSlots: [
+    {
+      slots: ['default', 'anchor'],
+      className: [
+        'shr-box-border',
+        'shr-cursor-pointer',
+        'shr-inline-flex',
+        'shr-justify-center',
+        'shr-items-center',
+        'shr-gap-0.5',
+        'shr-text-center',
+        'shr-whitespace-nowrap',
+        'shr-rounded-m',
+        /* ボタンの高さを合わせるために指定 */
+        'shr-border',
+        'shr-border-solid',
+        'shr-font-inherit',
+        'shr-font-bold',
+        'shr-leading-none',
+        'focus-visible:shr-focusIndicator',
+        'contrast-more:shr-border-highContrast',
+        /* baseline より下の leading などの余白を埋める */
+        '[&_.smarthr-ui-Icon]:shr-block',
+        /** selector list は使えない
+         * via https://github.com/tailwindlabs/tailwindcss/issues/10576#issuecomment-1440703413
+         */
+        '[&_svg]:shr-block',
+      ],
+    },
+    {
+      slots: ['default', 'anchor'],
+      size: 's',
+      className: [
+        'shr-p-0.5',
+        'shr-text-sm',
+        /* ボタンラベルの line-height を 0 にしたため、高さを担保する */
+        'shr-min-h-[calc(theme(fontSize.sm)+theme(spacing.1)+theme(borderWidth.2))]',
+      ],
+    },
+    {
+      slots: ['default', 'anchor'],
+      size: 'default',
+      className: ['shr-text-base'],
+    },
+    {
+      slots: ['default', 'anchor'],
+      size: 'default',
+      square: false,
+      className: 'shr-px-1 shr-py-0.75',
+    },
+    {
+      slots: ['default', 'anchor'],
+      size: 'default',
+      square: true,
+      className: 'shr-p-0.75',
+    },
+    {
+      slots: ['default', 'anchor'],
+      loading: true,
+      className: 'shr-flex-row-reverse',
+    },
+    {
+      slots: ['default', 'anchor'],
+      wide: true,
+      className: 'shr-w-full',
+    },
+    {
+      slots: ['default', 'anchor'],
+      variant: 'primary',
+      className: [
+        'shr-border-main',
+        'shr-bg-main',
+        'shr-text-white',
+        'focus-visible:shr-border-main-darken',
+        'focus-visible:shr-bg-main-darken',
+        'hover:shr-border-main-darken',
+        'hover:shr-bg-main-darken',
+      ],
+    },
+    {
+      slots: ['default'],
+      variant: 'primary',
+      className: [
+        'disabled:shr-border-main/50',
+        'disabled:shr-bg-main/50',
+        'disabled:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['anchor'],
+      variant: 'primary',
+      className: [
+        '[&:not([href])]:shr-border-main/50',
+        '[&:not([href])]:shr-bg-main/50',
+        '[&:not([href])]:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['default', 'anchor'],
+      variant: 'secondary',
+      className: [
+        'shr-border-default',
+        'shr-bg-white',
+        'shr-text-black',
+        'focus-visible:shr-border-darken',
+        'focus-visible:bg-white-darken',
+        'focus-visible:constrast-more:shr-border-highContrast',
+        'hover:shr-border-darken',
+        'hover:shr-bg-white-darken',
+        'hover:constrast-more:shr-border-highContrast',
+      ],
+    },
+    {
+      slots: ['default'],
+      variant: 'secondary',
+      className: [
+        'disabled:shr-border-disabled/50',
+        'disabled:shr-bg-white-darken',
+        'disabled:shr-text-disabled',
+      ],
+    },
+    {
+      slots: ['anchor'],
+      variant: 'secondary',
+      className: [
+        '[&:not([href])]:shr-border-disabled/50',
+        '[&:not([href])]:shr-bg-white-darken',
+        '[&:not([href])]:shr-text-disabled',
+      ],
+    },
+    {
+      slots: ['default', 'anchor'],
+      variant: 'danger',
+      className: [
+        'shr-border-danger',
+        'shr-bg-danger',
+        'shr-text-white',
+        'focus-visible:shr-border-danger-darken',
+        'focus-visible:shr-bg-danger-darken',
+        'hover:shr-border-danger-darken',
+        'hover:shr-bg-danger-darken',
+      ],
+    },
+    {
+      slots: ['default'],
+      variant: 'danger',
+      className: [
+        'disabled:shr-border-danger/50',
+        'disabled:shr-bg-danger/50',
+        'disabled:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['anchor'],
+      variant: 'danger',
+      className: [
+        '[&:not([href])]:shr-border-danger/50',
+        '[&:not([href])]:shr-bg-danger/50',
+        '[&:not([href])]:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['default', 'anchor'],
+      variant: 'skeleton',
+      className: [
+        'shr-border-white',
+        'shr-bg-transparent',
+        'shr-text-white',
+        'focus-visible:shr-border-white-darken',
+        'focus-visible:shr-bg-overlay',
+        'focus-visible:shr-text-white-darken',
+        'hover:shr-border-white-darken',
+        'hover:shr-bg-overlay',
+        'hover:shr-text-white-darken',
+      ],
+    },
+    {
+      slots: ['default'],
+      variant: 'skeleton',
+      className: [
+        'disabled:shr-border-white/50',
+        'disabled:shr-bg-transparent',
+        'disabled:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['anchor'],
+      variant: 'skeleton',
+      className: [
+        '[&:not([href])]:shr-border-white/50',
+        '[&:not([href])]:shr-bg-transparent',
+        '[&:not([href])]:shr-text-white/50',
+      ],
+    },
+    {
+      slots: ['default', 'anchor'],
+      variant: 'text',
+      className: [
+        'shr-border-transparent',
+        'shr-bg-transparent',
+        'shr-text-black',
+        'focus-visible:shr-bg-white-darken',
+        'hover:shr-bg-white-darken',
+      ],
+    },
+    {
+      slots: ['default'],
+      variant: 'text',
+      className: [
+        'disabled:shr-border-transparent',
+        'disabled:shr-bg-transparent',
+        'disabled:shr-text-disabled',
+      ],
+    },
+    {
+      slots: ['anchor'],
+      variant: 'text',
+      className: [
+        '[&:not([href])]:shr-border-transparent',
+        '[&:not([href])]:shr-bg-transparent',
+        '[&:not([href])]:shr-text-disabled',
+      ],
+    },
+  ],
+})

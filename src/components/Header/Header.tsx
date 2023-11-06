@@ -84,7 +84,7 @@ export const Header: React.VFC<Props & ElementProps> = ({
 }
 
 const Wrapper = styled(Cluster).attrs({
-  as: 'header',
+  forwardedAs: 'header',
   justify: 'space-between',
   gap: { column: 0.25, row: 0 },
 })<{ themes: Theme }>`
@@ -92,7 +92,7 @@ const Wrapper = styled(Cluster).attrs({
     background-color: ${color.BRAND};
     padding-inline: ${spacingByChar(1.25)};
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       padding-inline: ${spacingByChar(0.75)};
     }
   `}

@@ -297,8 +297,8 @@ export function useListBox<T>({
   }
 }
 
-const Wrapper = styled.div<Rect>(({ top, left, $width }) => {
-  return css`
+const Wrapper = styled.div<Rect>(
+  ({ top, left, $width }) => css`
     /*
     ドロップダウンリストをInputの幅に対する相対値で指定できるように、Inputの幅のdivを親要素にする
     */
@@ -306,8 +306,8 @@ const Wrapper = styled.div<Rect>(({ top, left, $width }) => {
     top: ${top}px;
     left: ${left}px;
     width: ${$width}px;
-  `
-})
+  `,
+)
 
 const Container = styled.div<Rect & { themes: Theme }>(({ left, $width, height, themes }) => {
   const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
@@ -373,12 +373,10 @@ const NoItems = styled.p<{ themes: Theme }>`
 `
 
 const LoaderWrapper = styled.div<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => {
-    return css`
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: ${spacingByChar(1)};
-    `
-  }}
+  ${({ themes: { spacingByChar } }) => css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: ${spacingByChar(1)};
+  `}
 `

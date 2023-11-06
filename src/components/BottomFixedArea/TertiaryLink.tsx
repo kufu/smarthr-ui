@@ -68,10 +68,8 @@ const Button = styled.button<{ themes: Theme }>`
   }}
 `
 const Text = styled.span<{ themes: Theme }>`
-  ${({ themes: { fontSize } }) => {
-    return css`
-      margin: 0;
-      font-size: ${fontSize.L};
-    `
-  }}
+  ${({ themes: { fontSize } }) => css`
+    margin: 0;
+    font-size: ${fontSize.L};
+  `}
 `

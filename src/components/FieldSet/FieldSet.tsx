@@ -3,10 +3,12 @@ import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
-import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
+import { HeadingTypes } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 import { Input } from '../Input'
+import { Stack } from '../Layout/Stack'
 import { StatusLabel } from '../StatusLabel'
+import { Text } from '../Text'
 
 import { useClassNames } from './useClassNames'
 
@@ -15,8 +17,6 @@ type Props = Omit<React.ComponentProps<typeof Input>, 'error'> & {
   label: ReactNode
   /** ラベルのタイプ */
   labelType?: HeadingTypes
-  /** ラベル名の HTML 要素のタイプ */
-  labelTagType?: HeadingTagTypes
   /** input 要素の下に表示するエラーメッセージ */
   errorMessage?: ReactNode | ReactNode[]
   /** input 要素の下に表示するヘルプメッセージ */
@@ -34,7 +34,6 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 export const FieldSet: FC<Props & ElementProps> = ({
   label,
   labelType = 'subBlockTitle',
-  labelTagType = 'span',
   errorMessage,
   helpMessage,
   className = '',
@@ -43,6 +42,7 @@ export const FieldSet: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const theme = useTheme()
+  const managedHtmlFor = useId()
   const helpId = useId()
   const classNames = useClassNames()
 
@@ -53,11 +53,9 @@ export const FieldSet: FC<Props & ElementProps> = ({
       aria-describedby={helpMessage ? helpId : undefined}
     >
       <Title themes={theme} className={classNames.title}>
-        {/* TODO: レベル自動計算に任せるならtagのデフォルト値をspanにする必要はないかもしれない。検討する */}
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <LabelHeading type={labelType} tag={labelTagType} className={classNames.titleText}>
+        <LabelText styleType={labelType} className={classNames.titleText}>
           {label}
-        </LabelHeading>
+        </LabelText>
 
         {props.required && (
           <StatusLabel type="red" className={classNames.label}>
@@ -68,25 +66,26 @@ export const FieldSet: FC<Props & ElementProps> = ({
         {labelSuffix && labelSuffix}
       </Title>
 
+      {helpMessage && (
+        <HelpMessage themes={theme} id={helpId} className={classNames.help}>
+          {helpMessage}
+        </HelpMessage>
+      )}
+      {errorMessage && (
+        <StyledStack themes={theme} gap={0} id={`${managedHtmlFor}_errorMessages`}>
+          {(Array.isArray(errorMessage) ? errorMessage : [errorMessage]).map((message, index) => (
+            <ErrorMessage themes={theme} key={index} className={classNames.error}>
+              <FaExclamationCircleIcon text={message} className={classNames.errorText} />
+            </ErrorMessage>
+          ))}
+        </StyledStack>
+      )}
+
       {children ? (
         children
       ) : (
         // eslint-disable-next-line smarthr/a11y-input-has-name-attribute
         <Input {...props} error={!!errorMessage} className={classNames.input} />
-      )}
-
-      {errorMessage &&
-        (Array.isArray(errorMessage) ? errorMessage : [errorMessage]).map((message, index) => (
-          <Error themes={theme} key={index} className={classNames.error}>
-            <ErrorIcon color={theme.color.DANGER} className={classNames.errorIcon} />
-            <ErrorText className={classNames.errorText}>{message}</ErrorText>
-          </Error>
-        ))}
-
-      {helpMessage && (
-        <Help id={helpId} themes={theme} className={classNames.help}>
-          {helpMessage}
-        </Help>
       )}
     </Wrapper>
   )
@@ -109,28 +108,25 @@ const Title = styled.div<{ themes: Theme }>`
     }
   `}
 `
-const LabelHeading = styled(Heading)`
+const LabelText = styled(Text)`
   display: inline-block;
 `
-const Help = styled.div<{ themes: Theme }>`
-  ${({ themes: { color, fontSize, spacingByChar } }) => css`
-    margin: ${spacingByChar(0.5)} 0 0 0;
-    font-size: ${fontSize.S};
-    line-height: 1;
-    color: ${color.TEXT_GREY};
+
+const HelpMessage = styled.p<{ themes: Theme }>`
+  ${({ themes: { spacingByChar } }) => css`
+    margin-bottom: ${spacingByChar(0.5)};
   `}
 `
-const Error = styled.div<{ themes: Theme }>`
-  ${({ themes: { fontSize, spacingByChar } }) => css`
-    margin: ${spacingByChar(0.5)} 0 0 0;
-    font-size: ${fontSize.S};
-    line-height: 1;
+const StyledStack = styled(Stack)<{ themes: Theme }>`
+  ${({ themes: { spacingByChar } }) => css`
+    margin-bottom: ${spacingByChar(0.5)};
   `}
 `
-const ErrorIcon = styled(FaExclamationCircleIcon)`
-  margin-right: 0.4rem;
-  vertical-align: middle;
-`
-const ErrorText = styled.span`
-  vertical-align: middle;
+
+const ErrorMessage = styled.p<{ themes: Theme }>`
+  ${({ themes: { color } }) => css`
+    .smarthr-ui-FieldSet-errorText {
+      color: ${color.DANGER};
+    }
+  `}
 `

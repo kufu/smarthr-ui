@@ -160,34 +160,33 @@ const Container = styled.div`
   display: inline-flex;
 `
 const StyledButton = styled(Button)<{ themes: Theme }>(
-  ({ themes: { border, color, radius, shadow } }) =>
-    css`
-      margin: 0;
-      border-radius: 0;
+  ({ themes: { border, color, radius, shadow } }) => css`
+    margin: 0;
+    border-radius: 0;
 
-      &[aria-checked='true'] {
-        border-color: ${color.MAIN};
-        background-color: ${color.MAIN};
-        color: ${color.TEXT_WHITE};
-        &.hover {
-          border-color: ${color.hoverColor(color.MAIN)};
-          background-color: ${color.hoverColor(color.MAIN)};
-        }
+    &[aria-checked='true'] {
+      border-color: ${color.MAIN};
+      background-color: ${color.MAIN};
+      color: ${color.TEXT_WHITE};
+      &.hover {
+        border-color: ${color.hoverColor(color.MAIN)};
+        background-color: ${color.hoverColor(color.MAIN)};
       }
+    }
 
-      &:focus-visible {
-        ${shadow.focusIndicatorStyles}
-      }
-      &:first-child {
-        border-top-left-radius: ${radius.m};
-        border-bottom-left-radius: ${radius.m};
-      }
-      &:last-child {
-        border-top-right-radius: ${radius.m};
-        border-bottom-right-radius: ${radius.m};
-      }
-      & + & {
-        margin-left: -${border.lineWidth};
-      }
-    `,
+    &:focus-visible {
+      ${shadow.focusIndicatorStyles}
+    }
+    &:first-child {
+      border-top-left-radius: ${radius.m};
+      border-bottom-left-radius: ${radius.m};
+    }
+    &:last-child {
+      border-top-right-radius: ${radius.m};
+      border-bottom-right-radius: ${radius.m};
+    }
+    & + & {
+      margin-left: -${border.lineWidth};
+    }
+  `,
 )

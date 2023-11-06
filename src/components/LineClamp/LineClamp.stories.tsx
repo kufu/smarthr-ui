@@ -21,53 +21,51 @@ the release of Letraset sheets containing Lorem Ipsum passages, and more recentl
 with desktop publishing software like Aldus PageMaker including versions of Lorem
 Ipsum.`
 
-export const All: Story = () => {
-  return (
-    <Wrapper>
-      <List>
-        <dt>Default</dt>
-        <dd>
-          <Text>
-            <LineClamp>{longText}</LineClamp>
-          </Text>
-        </dd>
-        <dt>Max Lines 1</dt>
-        <dd>
-          <Text>
-            <LineClamp maxLines={1} withTooltip>
-              {longText}
-            </LineClamp>
-          </Text>
-        </dd>
-        <dt>Max Lines 2</dt>
-        <dd>
-          <Text>
-            <LineClamp maxLines={2} withTooltip>
-              {longText}
-            </LineClamp>
-          </Text>
-        </dd>
-        <dt>Max Lines 4</dt>
-        <dd>
-          <Text>
-            <LineClamp maxLines={4} withTooltip>
-              {longText}
-            </LineClamp>
-          </Text>
-        </dd>
-        <dt>with button</dt>
-        <dd>
-          <StyledButton variant="primary">
-            <LineClamp maxLines={1} withTooltip>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-              has been the industry&apos;s standard dummy text ever since the 1500s.
-            </LineClamp>
-          </StyledButton>
-        </dd>
-      </List>
-    </Wrapper>
-  )
-}
+export const All: Story = () => (
+  <Wrapper>
+    <List>
+      <dt>Default</dt>
+      <dd>
+        <Text>
+          <LineClamp>{longText}</LineClamp>
+        </Text>
+      </dd>
+      <dt>Max Lines 1</dt>
+      <dd>
+        <Text>
+          <LineClamp maxLines={1} withTooltip>
+            {longText}
+          </LineClamp>
+        </Text>
+      </dd>
+      <dt>Max Lines 2</dt>
+      <dd>
+        <Text>
+          <LineClamp maxLines={2} withTooltip>
+            {longText}
+          </LineClamp>
+        </Text>
+      </dd>
+      <dt>Max Lines 4</dt>
+      <dd>
+        <Text>
+          <LineClamp maxLines={4} withTooltip>
+            {longText}
+          </LineClamp>
+        </Text>
+      </dd>
+      <dt>with button</dt>
+      <dd>
+        <StyledButton variant="primary">
+          <LineClamp maxLines={1} withTooltip>
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+            has been the industry&apos;s standard dummy text ever since the 1500s.
+          </LineClamp>
+        </StyledButton>
+      </dd>
+    </List>
+  </Wrapper>
+)
 All.storyName = 'all'
 
 const Wrapper = styled.div`

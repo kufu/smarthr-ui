@@ -43,6 +43,7 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
     if (!props.isOpen) {
       return
     }
+
     onSubmit(onClickClose)
   }, [onSubmit, onClickClose, props.isOpen])
 

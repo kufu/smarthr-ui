@@ -3,7 +3,7 @@ import innerText from 'react-innertext'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
-import { Button } from '../../Button'
+import { Button, BaseProps as ButtonProps } from '../../Button'
 import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
@@ -26,6 +26,8 @@ type Props = {
     'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
   >
   responseMessage?: ResponseMessageType
+  /** 引き金となるボタンの大きさ */
+  triggerSize?: ButtonProps['size']
 }
 type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
 
@@ -47,6 +49,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   hasStatusText,
   decorators,
   responseMessage,
+  triggerSize,
   ...props
 }: Props) => {
   const themes = useTheme()
@@ -83,11 +86,12 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
         <Button
           {...props}
           suffix={
-            <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes}>
+            <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes} size={triggerSize}>
               <FaFilterIcon />
               {isFiltered ? <FilteredCheckIcon aria-label={filteredIconAriaLabel} /> : null}
             </IsFilteredIconWrapper>
           }
+          size={triggerSize}
         >
           {triggerButton}
         </Button>
@@ -139,12 +143,20 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   )
 }
 
-const IsFilteredIconWrapper = styled.span<{ isFiltered: boolean; themes: Theme }>`
+const IsFilteredIconWrapper = styled.span<{
+  isFiltered: boolean
+  themes: Theme
+  size?: ButtonProps['size']
+}>`
   position: relative;
-  color: ${({ isFiltered, themes }) => {
-    return isFiltered ? themes.color.MAIN : themes.color.TEXT_BLACK
-  }};
+  color: ${({ isFiltered, themes }) => (isFiltered ? themes.color.MAIN : themes.color.TEXT_BLACK)};
   line-height: 1;
+  ${({ themes: { space }, size }) => css`
+    ${size === 's' &&
+    css`
+      transform: translateX(${space(-0.25)});
+    `}
+  `}
 
   & > [role='img'] + [role='img'] {
     position: absolute;

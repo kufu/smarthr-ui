@@ -1,41 +1,33 @@
-import styled, { css } from 'styled-components'
+import React, { ComponentProps, PropsWithChildren, forwardRef, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
+const unstyledButton = tv({
+  base: [
+    'shr-appearance-none',
+    'shr-inline',
+    'shr-items-stretch',
+    'shr-overflow-visible',
+    'shr-cursor-auto',
+    'shr-p-0',
+    'shr-border-none',
+    'shr-border-current',
+    'shr-box-content',
+    'shr-bg-transparent',
+    'shr-bg-none',
+    'shr-bg-origin-padding',
+    'shr-text-inherit',
+    'shr-font-inherit',
+    'shr-text-inherit',
+    'shr-text-left',
+    'shr-select-auto',
+    'focus-visible:shr-focusIndicator',
+  ],
+})
 
-export const UnstyledButton = styled.button`
-  ${() => {
-    const { shadow } = useTheme()
-    return css`
-      appearance: none;
-      display: inline;
-      align-items: stretch;
-      overflow: visible;
-      cursor: auto;
-      padding: 0;
-      border-style: none;
-      border-width: medium;
-      border-color: currentColor;
-      /* stylelint-disable declaration-block-no-redundant-longhand-properties */
-      border-image-source: none;
-      border-image-slice: 100%;
-      border-image-width: 1;
-      border-image-outset: 0;
-      border-image-repeat: stretch;
-      /* stylelint-enable declaration-block-no-redundant-longhand-properties */
-      box-sizing: content-box;
-      background-color: transparent;
-      background-image: none;
-      background-origin: padding-box;
-      color: inherit;
-      font-family: inherit;
-      font-size: inherit;
-      text-align: left;
-      user-select: auto;
-      zoom: auto;
-
-      &:focus-visible {
-        ${shadow.focusIndicatorStyles}
-      }
-    `
-  }}
-`
+export const UnstyledButton = forwardRef<
+  HTMLButtonElement,
+  PropsWithChildren<ComponentProps<'button'>>
+>(({ className, ...props }, ref) => {
+  const styles = useMemo(() => unstyledButton({ className }), [className])
+  return <button {...props} ref={ref} className={styles} />
+})

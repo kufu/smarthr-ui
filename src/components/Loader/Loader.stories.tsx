@@ -9,47 +9,45 @@ export default {
   component: Loader,
 }
 
-export const All: Story = () => {
-  return (
-    <>
-      <Wrapper>
-        <Text>Primary</Text>
-        <List>
-          <dt>Default</dt>
-          <dd>
-            <Loader />
-          </dd>
-          <dt>Small</dt>
-          <dd>
-            <Loader size="s" />
-          </dd>
-          <dt>With text</dt>
-          <dd>
-            <Loader text="loading message" />
-          </dd>
-        </List>
-      </Wrapper>
+export const All: Story = () => (
+  <>
+    <Wrapper>
+      <Text>Primary</Text>
+      <List>
+        <dt>Default</dt>
+        <dd>
+          <Loader />
+        </dd>
+        <dt>Small</dt>
+        <dd>
+          <Loader size="s" />
+        </dd>
+        <dt>With text</dt>
+        <dd>
+          <Loader text="loading message" />
+        </dd>
+      </List>
+    </Wrapper>
 
-      <GrayWrapper>
-        <Text>Light</Text>
-        <List>
-          <dt>Default</dt>
-          <dd>
-            <Loader type="light" />
-          </dd>
-          <dt>Small</dt>
-          <dd>
-            <Loader type="light" size="s" />
-          </dd>
-          <dt>With text</dt>
-          <dd>
-            <Loader type="light" text="loading message" />
-          </dd>
-        </List>
-      </GrayWrapper>
-    </>
-  )
-}
+    <GrayWrapper>
+      <Text>Light</Text>
+      <List>
+        <dt>Default</dt>
+        <dd>
+          <Loader type="light" />
+        </dd>
+        <dt>Small</dt>
+        <dd>
+          <Loader type="light" size="s" />
+        </dd>
+        <dt>With text</dt>
+        <dd>
+          <Loader type="light" text="loading message" />
+        </dd>
+      </List>
+    </GrayWrapper>
+  </>
+)
 All.storyName = 'all'
 All.parameters = { withTheming: true }
 

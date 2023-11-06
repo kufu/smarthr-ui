@@ -18,12 +18,12 @@ jobs:
       IS_PRERELEASE: ${{ github.event.inputs.prerelease == 'true' }}
       NO_BRANCH_PREPARATION: ${{ github.event.inputs.manual_preparation == 'true' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: '.node-version'
       - name: git config
         run: |
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

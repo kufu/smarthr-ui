@@ -5,11 +5,11 @@ import { CreatedTheme, createTheme } from '../themes/createTheme'
 export const ThemeContext = React.createContext<CreatedTheme>(createTheme())
 const { Provider } = ThemeContext
 
-interface Props {
+type Props = {
   theme: CreatedTheme
   children?: React.ReactNode
 }
 
-export const ThemeProvider: React.VFC<Props> = ({ theme, children }) => {
-  return <Provider value={theme}>{children}</Provider>
-}
+export const ThemeProvider: React.VFC<Props> = ({ theme, children }) => (
+  <Provider value={theme}>{children}</Provider>
+)

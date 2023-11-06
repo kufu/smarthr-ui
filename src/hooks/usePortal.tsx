@@ -1,6 +1,6 @@
 import React, {
+  FC,
   ReactNode,
-  VFC,
   createContext,
   useCallback,
   useContext,
@@ -11,7 +11,7 @@ import { createPortal } from 'react-dom'
 
 import { useEnhancedEffect } from './useEnhancedEffect'
 
-interface ParentContextValue {
+type ParentContextValue = {
   seqs: number[]
 }
 
@@ -43,13 +43,11 @@ export function usePortal() {
   }, [...parentSeqs])
 
   const isChildPortal = useCallback(
-    (element: HTMLElement | null) => {
-      return _isChildPortal(element, currentSeq)
-    },
+    (element: HTMLElement | null) => _isChildPortal(element, currentSeq),
     [currentSeq],
   )
 
-  const PortalParentProvider: VFC<{ children: ReactNode }> = useCallback(
+  const PortalParentProvider: FC<{ children: ReactNode }> = useCallback(
     ({ children }) => {
       const value: ParentContextValue = {
         seqs: parentSeqs,

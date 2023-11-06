@@ -65,6 +65,11 @@ const Box = styled.span<{ themes: Theme }>`
       background-color: ${color.WHITE};
       box-sizing: border-box;
 
+      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
+      @media (forced-colors: active) {
+        display: none;
+      }
+
       @media (prefers-contrast: more) {
         & {
           border: ${border.highContrast};
@@ -114,26 +119,30 @@ const Box = styled.span<{ themes: Theme }>`
   }}
 `
 const Input = styled.input<{ themes: Theme }>`
-  ${({ themes: { color, shadow } }) => {
-    return css`
-      opacity: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      cursor: pointer;
+  ${({ themes: { color, shadow } }) => css`
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
 
-      &[disabled] {
-        pointer-events: none;
-      }
-      &:hover:not([disabled]) + span {
-        box-shadow: 0 0 0 2px ${transparentize(0.78, color.MAIN)};
-      }
-      &:focus-visible + span {
-        box-shadow: ${shadow.focusIndicatorStyles};
-      }
-    `
-  }}
+    &[disabled] {
+      pointer-events: none;
+    }
+    &:hover:not([disabled]) + span {
+      box-shadow: 0 0 0 2px ${transparentize(0.78, color.MAIN)};
+    }
+    &:focus-visible + span {
+      box-shadow: ${shadow.focusIndicatorStyles};
+    }
+
+    /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
+    @media (forced-colors: active) {
+      position: initial;
+      opacity: 1;
+    }
+  `}
 `

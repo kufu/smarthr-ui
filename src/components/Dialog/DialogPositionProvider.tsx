@@ -7,17 +7,15 @@ type PositionContextType = {
 
 export const PositionContext = createContext<PositionContextType>({})
 
-export const DialogPositionProvider: React.VFC<
+export const DialogPositionProvider: React.FC<
   PositionContextType & { children?: React.ReactNode }
-> = ({ top, bottom, children }) => {
-  return (
-    <PositionContext.Provider
-      value={{
-        top,
-        bottom,
-      }}
-    >
-      {children}
-    </PositionContext.Provider>
-  )
-}
+> = ({ top, bottom, children }) => (
+  <PositionContext.Provider
+    value={{
+      top,
+      bottom,
+    }}
+  >
+    {children}
+  </PositionContext.Provider>
+)

@@ -20,89 +20,87 @@ export default {
   },
 }
 
-export const All: Story = () => {
-  return (
-    <List>
-      <li>
-        <FormControl title="text">
-          <Input name="text" type="text" defaultValue="string" />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl title="number">
-          <Input name="number" type="number" defaultValue="1" />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl title="password">
-          <Input name="password" type="password" defaultValue="password" />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl title="width (with %)">
-          <Input name="width_with_percent" defaultValue="width: 100%" width="100%" />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl title="width (with px)">
-          <Input name="width_with_px" defaultValue="width: 100px" width="100px" />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl title="onChange">
-          <Input name="onChange" onChange={action('onChange!!')} />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl title="onBlur">
-          <Input name="onBlur" onBlur={action('onBlur!!')} />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl title="readOnly">
-          <Input name="readOnly" value="これは read-only な input テキスト" readOnly />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl title="disabled">
-          <Input name="disabled" disabled={true} defaultValue="これは disabled なテキスト" />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl title="error">
-          <Input name="error" error={true} />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl
-          title="disabled and error"
-          helpMessage={
-            <>
-              <code>disabled</code>は<code>error</code>よりも優先されます。
-            </>
-          }
-        >
-          <Input name="disabledAndError" disabled={true} error={true} />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl title="prefix">
-          <Input name="prefix" prefix={<FaSearchIcon />} />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl title="suffix">
-          <Input name="suffix" suffix={<FaSearchIcon />} />
-        </FormControl>
-      </li>
-      <li>
-        <FormControl htmlFor="extending_style" title="extending style (width 50%)">
-          <StyledInput id="extending_style" name="extending_style" />
-        </FormControl>
-      </li>
-    </List>
-  )
-}
+export const All: Story = () => (
+  <List>
+    <li>
+      <FormControl title="text">
+        <Input name="text" type="text" defaultValue="string" />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="number">
+        <Input name="number" type="number" defaultValue="1" />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="password">
+        <Input name="password" type="password" defaultValue="password" />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="width (with %)">
+        <Input name="width_with_percent" defaultValue="width: 100%" width="100%" />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="width (with px)">
+        <Input name="width_with_px" defaultValue="width: 100px" width="100px" />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="onChange">
+        <Input name="onChange" onChange={action('onChange!!')} />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="onBlur">
+        <Input name="onBlur" onBlur={action('onBlur!!')} />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="readOnly">
+        <Input name="readOnly" value="これは read-only な input テキスト" readOnly />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="disabled">
+        <Input name="disabled" disabled={true} defaultValue="これは disabled なテキスト" />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="error">
+        <Input name="error" error={true} />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl
+        title="disabled and error"
+        helpMessage={
+          <>
+            <code>disabled</code>は<code>error</code>よりも優先されます。
+          </>
+        }
+      >
+        <Input name="disabledAndError" disabled={true} error={true} />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="prefix">
+        <Input name="prefix" prefix={<FaSearchIcon />} />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="suffix">
+        <Input name="suffix" suffix={<FaSearchIcon />} />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl htmlFor="extending_style" title="extending style (width 50%)">
+        <StyledInput id="extending_style" name="extending_style" />
+      </FormControl>
+    </li>
+  </List>
+)
 All.storyName = 'all'
 
 export const Currency: Story = () => {

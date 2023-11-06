@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback } from 'react'
+import React, { FC, PropsWithChildren, ReactNode, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../../hooks/useTheme'
@@ -13,11 +13,7 @@ import { useClassNames } from '../useClassNames'
 
 import type { DecoratorsType, ResponseMessageType } from '../../../types'
 
-export type BaseProps = {
-  /**
-   * ダイアログの内容
-   */
-  children: ReactNode
+export type BaseProps = PropsWithChildren<{
   /**
    * ダイアログのタイトル
    */
@@ -57,7 +53,7 @@ export type BaseProps = {
   className?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'closeButtonLabel'>
-}
+}>
 
 export type FormDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
@@ -84,9 +80,13 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 }) => {
   const classNames = useClassNames().dialog
   const theme = useTheme()
-  const handleSubmitAction = useCallback(() => {
-    onSubmit(onClickClose)
-  }, [onSubmit, onClickClose])
+  const handleSubmitAction = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+      onSubmit(onClickClose)
+    },
+    [onSubmit, onClickClose],
+  )
   const { offsetHeight, titleRef, bottomRef } = useOffsetHeight()
 
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
@@ -94,6 +94,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   return (
     <Section>
       <form onSubmit={handleSubmitAction}>
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <Heading tag={titleTag}>
           <TitleArea themes={theme} ref={titleRef} className={classNames.titleArea}>
             {subtitle && (

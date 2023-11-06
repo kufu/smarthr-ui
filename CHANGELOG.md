@@ -2,6 +2,130 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [38.0.0](https://github.com/kufu/smarthr-ui/compare/v37.1.2...v38.0.0) (2023-10-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* 旧 Button コンポーネントを削除 (#3911)
+
+### Features
+
+* Button を Tailwind CSS 化 ([#3899](https://github.com/kufu/smarthr-ui/issues/3899)) ([3e28784](https://github.com/kufu/smarthr-ui/commit/3e287847624f0f2d121e256ae966a1e62639ee8d))
+* Cluster を Tailwind CSS 化 ([#3892](https://github.com/kufu/smarthr-ui/issues/3892)) ([0b9757f](https://github.com/kufu/smarthr-ui/commit/0b9757f74fa9f6d567bfe8eef7da063e2d6a5415))
+* ComboBoxにrefを渡せるようにする ([#3903](https://github.com/kufu/smarthr-ui/issues/3903)) ([49fb344](https://github.com/kufu/smarthr-ui/commit/49fb344f1d34049fd873cbde06f7b0e1cda2b298))
+* PageCounterをTailwindCSS化 ([#3910](https://github.com/kufu/smarthr-ui/issues/3910)) ([f3c6440](https://github.com/kufu/smarthr-ui/commit/f3c6440ccaf9c3ab1d9eddb986526df0eadaa872))
+
+
+### Bug Fixes
+
+* Headingコンポーネントのtag属性にspan, legendを指定不可能にする ([#3908](https://github.com/kufu/smarthr-ui/issues/3908)) ([9885058](https://github.com/kufu/smarthr-ui/commit/98850581413848c497d828fa6d4b3e1c3634fb54))
+* 旧 Button コンポーネントを削除 ([#3911](https://github.com/kufu/smarthr-ui/issues/3911)) ([bde7e9e](https://github.com/kufu/smarthr-ui/commit/bde7e9ece6cce2086c2087d380fc09652424b805))
+
+### [37.1.2](https://github.com/kufu/smarthr-ui/compare/v37.1.1...v37.1.2) (2023-10-24)
+
+
+### Bug Fixes
+
+* smarthr-ui-preset.ts を src ディレクトリ内に移動 ([#3873](https://github.com/kufu/smarthr-ui/issues/3873)) ([c5cfe06](https://github.com/kufu/smarthr-ui/commit/c5cfe06e1f9c71ef5045db7691abf9f37e81e71a))
+
+### [37.1.1](https://github.com/kufu/smarthr-ui/compare/v37.1.0...v37.1.1) (2023-10-24)
+
+## [37.1.0](https://github.com/kufu/smarthr-ui/compare/v37.0.2...v37.1.0) (2023-10-23)
+
+
+### Features
+
+* Dropdown を Tailwind CSS 化 ([#3833](https://github.com/kufu/smarthr-ui/issues/3833)) ([9b2ce2f](https://github.com/kufu/smarthr-ui/commit/9b2ce2f57c6e8e88803a088482a8090b1b36b658))
+* tailwindcss 環境向けの ThemeProvider を追加 ([#3868](https://github.com/kufu/smarthr-ui/issues/3868)) ([5a6e70e](https://github.com/kufu/smarthr-ui/commit/5a6e70e7905226a375fc16b41158e60b59efd0e4))
+* TextLink を Tailwind CSS 化 ([#3844](https://github.com/kufu/smarthr-ui/issues/3844)) ([ed6b751](https://github.com/kufu/smarthr-ui/commit/ed6b751698e8676f742e79ac42036932a4fcc46c)), closes [#3848](https://github.com/kufu/smarthr-ui/issues/3848)
+
+### [37.0.2](https://github.com/kufu/smarthr-ui/compare/v37.0.1...v37.0.2) (2023-10-18)
+
+### [37.0.1](https://github.com/kufu/smarthr-ui/compare/v37.0.0...v37.0.1) (2023-10-17)
+
+
+### Bug Fixes
+
+* FormDialogのonSubmit時に画面が更新されてしまう場合があるため、FormEventをpreventDefaultする ([#3817](https://github.com/kufu/smarthr-ui/issues/3817)) ([6778257](https://github.com/kufu/smarthr-ui/commit/6778257f2d3f821d649bdb182288ead7a60da7ee))
+* prettier v3 系に更新 ([#3827](https://github.com/kufu/smarthr-ui/issues/3827)) ([0c7c892](https://github.com/kufu/smarthr-ui/commit/0c7c8928247a34021108b4dc782effa1c1c4977e))
+* Select の文字位置が Firefox でズレていたので修正 ([#3830](https://github.com/kufu/smarthr-ui/issues/3830)) ([781185c](https://github.com/kufu/smarthr-ui/commit/781185c12e7a68279598fc01806083c8cf2eb4cd))
+* Switch の参照フォントサイズを theme に置き換え ([#3831](https://github.com/kufu/smarthr-ui/issues/3831)) ([338b70f](https://github.com/kufu/smarthr-ui/commit/338b70fc7d849551d571b02aab5a0793c540d034))
+
+## [37.0.0](https://github.com/kufu/smarthr-ui/compare/v36.0.0...v37.0.0) (2023-10-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* Tailwind CSS を導入し Text の Story を置き換え (#3616)
+
+### Features
+
+* Tailwind CSS を導入し Text の Story を置き換え ([#3616](https://github.com/kufu/smarthr-ui/issues/3616)) ([7c628a4](https://github.com/kufu/smarthr-ui/commit/7c628a4095f3e70219be5d826d5e75d25000d99b)), closes [#3699](https://github.com/kufu/smarthr-ui/issues/3699)
+
+
+### Bug Fixes
+
+* Text の color や leading などの属性を DOM から隠す ([#3797](https://github.com/kufu/smarthr-ui/issues/3797)) ([07c4109](https://github.com/kufu/smarthr-ui/commit/07c4109a2dc9c39c77f711fb27b803ca3791d762))
+
+## [36.0.0](https://github.com/kufu/smarthr-ui/compare/v35.4.0...v36.0.0) (2023-10-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* FieldSet非推奨コンポーネントのヒント、エラーメッセージの配置をFormControlと揃える (#3774)
+
+### Features
+
+* FieldSet非推奨コンポーネントのヒント、エラーメッセージの配置をFormControlと揃える ([#3774](https://github.com/kufu/smarthr-ui/issues/3774)) ([70efd6a](https://github.com/kufu/smarthr-ui/commit/70efd6a35ad0ccfae8d4717d0348484aaffac596))
+* 矢印キーでDropdownMenuButton内アイテムの移動を出来るように修正 ([#3780](https://github.com/kufu/smarthr-ui/issues/3780)) ([cc412e2](https://github.com/kufu/smarthr-ui/commit/cc412e211b43b2349976e6221c40a6d65b6f279f))
+
+## [35.4.0](https://github.com/kufu/smarthr-ui/compare/v35.3.0...v35.4.0) (2023-09-27)
+
+
+### Features
+
+* Switch を追加 ([#3719](https://github.com/kufu/smarthr-ui/issues/3719)) ([956311b](https://github.com/kufu/smarthr-ui/commit/956311b3effddcbdee6548ef29e785934505ec3b))
+
+## [35.3.0](https://github.com/kufu/smarthr-ui/compare/v35.2.0...v35.3.0) (2023-09-19)
+
+
+### Features
+
+* FilterDropdown にサイズ小オプションを追加 ([#3717](https://github.com/kufu/smarthr-ui/issues/3717)) ([f4bab37](https://github.com/kufu/smarthr-ui/commit/f4bab372d5c6a75cdd6f5ab2b9a37a9c94c80aa4))
+* InputFileのラベルが2回スクリーンリーダーで読まれないように ([#3714](https://github.com/kufu/smarthr-ui/issues/3714)) ([b43c0eb](https://github.com/kufu/smarthr-ui/commit/b43c0eb3241cb7b42ffbcd4494b15d24c5dc00e6))
+
+## [35.2.0](https://github.com/kufu/smarthr-ui/compare/v35.1.1...v35.2.0) (2023-09-12)
+
+
+### Features
+
+* add forced-colors: acitve mode ([#3702](https://github.com/kufu/smarthr-ui/issues/3702)) ([36385a5](https://github.com/kufu/smarthr-ui/commit/36385a5efd50e79269a741a2790cd9a4669c37f1))
+
+
+### Bug Fixes
+
+* style属性に渡すプロパティのため、camel caseに変更する ([#3698](https://github.com/kufu/smarthr-ui/issues/3698)) ([e65e098](https://github.com/kufu/smarthr-ui/commit/e65e098b159877602358ddaa4d651bccc5b5c454))
+
+### [35.1.1](https://github.com/kufu/smarthr-ui/compare/v35.1.0...v35.1.1) (2023-09-04)
+
+
+### Bug Fixes
+
+* Combobox系コンポーネント内で利用している"hidden", "disabled"などのclassを指定する方法から、style属性を変化させる方法に変更する ([#3667](https://github.com/kufu/smarthr-ui/issues/3667)) ([0b2c3e0](https://github.com/kufu/smarthr-ui/commit/0b2c3e06e61692109bb4b2c7254e448889a60fb0))
+
+## [35.1.0](https://github.com/kufu/smarthr-ui/compare/v35.0.0...v35.1.0) (2023-08-29)
+
+
+### Features
+
+* add onFocus and onBlur to SingleComboBox ([#3653](https://github.com/kufu/smarthr-ui/issues/3653)) ([d1479b5](https://github.com/kufu/smarthr-ui/commit/d1479b5a33df4fe14e8c355916385793bc3e750b))
+
+
+### Bug Fixes
+
+* RemoteTriggerActionDialogに渡したonPressEscapeが正しく処理されるようにする ([#3605](https://github.com/kufu/smarthr-ui/issues/3605)) ([de3ff46](https://github.com/kufu/smarthr-ui/commit/de3ff46683dd6b97705b94880435fc12a058331a))
+
 ## [35.0.0](https://github.com/kufu/smarthr-ui/compare/v34.3.1...v35.0.0) (2023-08-08)
 
 
