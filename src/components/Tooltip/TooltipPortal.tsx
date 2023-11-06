@@ -1,11 +1,9 @@
-import React, { FC, ReactNode, useEffect, useRef, useState } from 'react'
-import styled, { css } from 'styled-components'
+import React, { FC, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Balloon } from '../Balloon'
 
 import { getTooltipRect } from './tooltipHelper'
-import { useClassNames } from './useClassNames'
 
 type Props = {
   message: ReactNode
@@ -19,6 +17,21 @@ type Props = {
   fullscreenElement: Element | null
 }
 
+const tooltipPortal = tv({
+  slots: {
+    container: 'smarthr-ui-Tooltip-popup shr-absolute shr-z-overlap aria-hidden:shr-hidden',
+    balloon: '',
+    balloonText: 'shr-m-0 shr-px-1 shr-py-0.5',
+  },
+  variants: {
+    isMultiLine: {
+      true: {
+        balloon: 'shr-max-w-full [&&&]:shr-whitespace-normal',
+      },
+    },
+  },
+})
+
 export const TooltipPortal: FC<Props> = ({
   message,
   id,
@@ -30,7 +43,6 @@ export const TooltipPortal: FC<Props> = ({
   vertical,
   fullscreenElement,
 }) => {
-  const theme = useTheme()
   const portalRef = useRef<HTMLDivElement>(null)
   const [rect, setRect] = useState({
     top: 0,
@@ -112,72 +124,33 @@ export const TooltipPortal: FC<Props> = ({
     )
   }, [actualHorizontal, actualVertical, fullscreenElement, isIcon, isVisible, parentRect])
 
-  const classNames = useClassNames()
+  const { containerStyleProps, balloonStyle, balloonTextStyle } = useMemo(() => {
+    const { container, balloon, balloonText } = tooltipPortal()
+    return {
+      containerStyleProps: {
+        className: container(),
+        style: {
+          top: rect.top,
+          left: rect.left,
+          width: rect.$width > 0 ? `${rect.$width}px` : undefined,
+          height: rect.$height > 0 ? `${rect.$height}px` : undefined,
+          maxWidth: isMultiLine && parentRect ? `${parentRect.width}px` : undefined,
+        },
+      },
+      balloonStyle: balloon({ isMultiLine }),
+      balloonTextStyle: balloonText(),
+    }
+  }, [isMultiLine, parentRect, rect.$height, rect.$width, rect.left, rect.top])
 
   return (
-    <Container
-      {...rect}
-      id={id}
-      ref={portalRef}
-      themes={theme}
-      role="tooltip"
-      className={classNames.popup}
-      aria-hidden={!isVisible}
-      maxWidth={isMultiLine ? parentRect?.width : undefined}
-    >
-      <StyledBalloon
+    <div {...containerStyleProps} id={id} ref={portalRef} role="tooltip" aria-hidden={!isVisible}>
+      <Balloon
         horizontal={actualHorizontal || 'left'}
         vertical={actualVertical || 'bottom'}
-        isMultiLine={isMultiLine}
+        className={balloonStyle}
       >
-        <StyledBalloonText themes={theme}>{message}</StyledBalloonText>
-      </StyledBalloon>
-    </Container>
+        <p className={balloonTextStyle}>{message}</p>
+      </Balloon>
+    </div>
   )
 }
-
-const Container = styled.div<{
-  top: number
-  left: number
-  $width: number
-  $height: number
-  maxWidth?: number
-  themes: Theme
-}>`
-  ${({ top, left, $width, $height, maxWidth, themes }) => css`
-    position: absolute;
-    top: ${top}px;
-    left: ${left}px;
-    ${$width > 0 &&
-    css`
-      width: ${$width}px;
-    `}
-    ${$height > 0 &&
-    css`
-      height: ${$height}px;
-    `}
-      ${maxWidth !== undefined &&
-    css`
-      max-width: ${maxWidth}px;
-    `}
-      z-index: ${themes.zIndex.OVERLAP};
-    &[aria-hidden='true'] {
-      display: none;
-    }
-  `}
-`
-const StyledBalloon = styled(Balloon)<{ isMultiLine?: boolean }>(
-  ({ isMultiLine }) =>
-    isMultiLine &&
-    css`
-      max-width: 100%;
-      white-space: normal;
-    `,
-)
-
-const StyledBalloonText = styled.p<{ themes: Theme }>`
-  margin: 0;
-  ${({ themes: { spacingByChar } }) => css`
-    padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-  `}
-`
