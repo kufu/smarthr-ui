@@ -129,6 +129,32 @@ const Wrapper = styled.th<{ themes: Theme; fixed: boolean }>`
         }
       }
     `}
+
+    @media (forced-colors: active) {
+      &[aria-sort='none'] {
+        .smarthr-ui-Icon {
+          fill: GrayText;
+        }
+      }
+
+      &[aria-sort='ascending'] {
+        .smarthr-ui-Icon:first-child {
+          fill: CanvasText;
+        }
+        .smarthr-ui-Icon:last-child {
+          fill: GrayText;
+        }
+      }
+
+      &[aria-sort='descending'] {
+        .smarthr-ui-Icon:first-child {
+          fill: GrayText;
+        }
+        .smarthr-ui-Icon:last-child {
+          fill: CanvasText;
+        }
+      }
+    }
   `}
 `
 
