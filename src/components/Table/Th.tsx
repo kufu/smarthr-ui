@@ -138,20 +138,24 @@ const Wrapper = styled.th<{ themes: Theme; fixed: boolean }>`
       }
 
       &[aria-sort='ascending'] {
-        .smarthr-ui-Icon:first-child {
-          fill: CanvasText;
-        }
-        .smarthr-ui-Icon:last-child {
-          fill: GrayText;
+        .smarthr-ui-Icon {
+          &:first-child {
+            fill: CanvasText;
+          }
+          &:last-child {
+            fill: GrayText;
+          }
         }
       }
 
       &[aria-sort='descending'] {
-        .smarthr-ui-Icon:first-child {
-          fill: GrayText;
-        }
-        .smarthr-ui-Icon:last-child {
-          fill: CanvasText;
+        .smarthr-ui-Icon {
+          &:first-child {
+            fill: GrayText;
+          }
+          &:last-child {
+            fill: CanvasText;
+          }
         }
       }
     }
