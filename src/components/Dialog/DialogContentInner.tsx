@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, RefObject, VFC, useCallback, useRef } from 'react'
+import React, { ComponentProps, FC, PropsWithChildren, RefObject, useCallback, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
@@ -10,7 +10,7 @@ import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
 import { useClassNames } from './useClassNames'
 
-export type DialogContentInnerProps = {
+export type DialogContentInnerProps = PropsWithChildren<{
   /**
    * オーバーレイをクリックした時に発火するコールバック関数
    */
@@ -63,12 +63,8 @@ export type DialogContentInnerProps = {
    * コンポーネントに適用するクラス名
    */
   className?: string
-  /**
-   * ダイアログの内容
-   */
-  children: ReactNode
-}
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DialogContentInnerProps>
+}>
+type ElementProps = Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
 
 type StyleProps = {
   $width?: string | number
@@ -82,7 +78,7 @@ function exist(value: any) {
   return value !== undefined && value !== null
 }
 
-export const DialogContentInner: VFC<DialogContentInnerProps & ElementProps> = ({
+export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   onClickOverlay,
   onPressEscape = () => {
     /* noop */
@@ -191,8 +187,8 @@ const Inner = styled.div<StyleProps & { themes: Theme }>`
 `
 const Background = styled.div<{ themes: Theme }>`
   ${({ themes }) => css`
-      position: fixed;
-      inset: 0;
-      background-color: ${themes.color.SCRIM};
-    `}
+    position: fixed;
+    inset: 0;
+    background-color: ${themes.color.SCRIM};
+  `}
 `

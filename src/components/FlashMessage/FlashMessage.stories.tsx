@@ -22,43 +22,43 @@ export default {
 }
 
 const Template: Story = (arg) => (
-    <List>
-      {messageTypes.map((messageType) => (
-        <li key={messageType}>
-          <FlashMessage
-            type={messageType}
-            visible={true}
-            text={
-              messageType === 'success'
-                ? '成功しました'
-                : messageType === 'info'
-                ? '開始しました'
-                : messageType === 'warning'
-                ? '保存されていない可能性があります'
-                : messageType === 'error'
-                ? '9 件のエラーがあります'
-                : ''
-            }
-            animation={arg.animation}
-            onClose={() => {
-              console.log('close')
-            }}
-          />
-        </li>
-      ))}
-      <li>
+  <List>
+    {messageTypes.map((messageType) => (
+      <li key={messageType}>
         <FlashMessage
-          type="success"
+          type={messageType}
           visible={true}
+          text={
+            messageType === 'success'
+              ? '成功しました'
+              : messageType === 'info'
+              ? '開始しました'
+              : messageType === 'warning'
+              ? '保存されていない可能性があります'
+              : messageType === 'error'
+              ? '9 件のエラーがあります'
+              : ''
+          }
           animation={arg.animation}
-          text="長いテキスト:編集内容を自動保存したので何卒ご確認のほどよろしくお願いいたします。編集内容を自動保存したので何卒ご確認のほどよろしくお願いいたします。編集内容を自動保存したので何卒ご確認のほどよろしくお願いいたします。"
           onClose={() => {
             console.log('close')
           }}
         />
       </li>
-    </List>
-  )
+    ))}
+    <li>
+      <FlashMessage
+        type="success"
+        visible={true}
+        animation={arg.animation}
+        text="長いテキスト:編集内容を自動保存したので何卒ご確認のほどよろしくお願いいたします。編集内容を自動保存したので何卒ご確認のほどよろしくお願いいたします。編集内容を自動保存したので何卒ご確認のほどよろしくお願いいたします。"
+        onClose={() => {
+          console.log('close')
+        }}
+      />
+    </li>
+  </List>
+)
 export const Bounce = Template.bind({})
 Bounce.args = { animation: 'bounce' }
 export const Fade = Template.bind({})
@@ -175,10 +175,10 @@ const ListInner = () => {
   return <Button onClick={handleClick}>Add message</Button>
 }
 export const FlashMessageList: Story = () => (
-    <FlashMessageListProvider>
-      <ListInner />
-    </FlashMessageListProvider>
-  )
+  <FlashMessageListProvider>
+    <ListInner />
+  </FlashMessageListProvider>
+)
 
 const List = styled.ul`
   margin: 40px;

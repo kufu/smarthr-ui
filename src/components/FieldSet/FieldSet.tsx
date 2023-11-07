@@ -79,8 +79,7 @@ export const FieldSet: FC<Props & ElementProps> = ({
             </ErrorMessage>
           ))}
         </StyledStack>
-      )
-      }
+      )}
 
       {children ? (
         children
@@ -116,13 +115,11 @@ const LabelText = styled(Text)`
 const HelpMessage = styled.p<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
     margin-bottom: ${spacingByChar(0.5)};
-
   `}
 `
 const StyledStack = styled(Stack)<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
     margin-bottom: ${spacingByChar(0.5)};
-
   `}
 `
 

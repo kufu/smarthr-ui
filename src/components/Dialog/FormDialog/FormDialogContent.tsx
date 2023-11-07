@@ -11,7 +11,7 @@ import { BaseProps, FormDialogContentInner } from './FormDialogContentInner'
 type Props = BaseProps & UncontrolledDialogProps
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const FormDialogContent: React.VFC<Props & ElementProps> = ({
+export const FormDialogContent: React.FC<Props & ElementProps> = ({
   children,
   title,
   actionText,
@@ -45,7 +45,6 @@ export const FormDialogContent: React.VFC<Props & ElementProps> = ({
   return createPortal(
     <DialogContentInner
       {...props}
-      onClickOverlay={onClickClose}
       onPressEscape={onClickClose}
       isOpen={active}
       ariaLabelledby={titleId}

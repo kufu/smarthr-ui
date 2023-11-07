@@ -83,7 +83,9 @@ export const Tooltip: FC<Props & ElementProps> = ({
     setPortalRoot(fullscreenElement ?? document.body)
   }, [fullscreenElement])
 
-  const getHandlerToShow = <T,>(handler?: (e: T) => void) => (e: T) => {
+  const getHandlerToShow =
+    <T,>(handler?: (e: T) => void) =>
+    (e: T) => {
       handler && handler(e)
       if (!ref.current) {
         return
@@ -107,7 +109,9 @@ export const Tooltip: FC<Props & ElementProps> = ({
       setIsVisible(true)
     }
 
-  const getHandlerToHide = <T,>(handler?: (e: T) => void) => (e: T) => {
+  const getHandlerToHide =
+    <T,>(handler?: (e: T) => void) =>
+    (e: T) => {
       handler && handler(e)
       setIsVisible(false)
     }

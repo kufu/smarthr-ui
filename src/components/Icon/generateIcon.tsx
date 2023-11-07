@@ -61,7 +61,8 @@ type BaseComponentProps = {
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
-export type ComponentProps = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
+export type ComponentProps = Omit<IconProps & ElementProps, keyof BaseComponentProps> &
+  BaseComponentProps
 
 export const createIcon = (SvgIcon: IconType) => {
   const Icon: React.FC<ComponentProps> = ({
@@ -95,8 +96,9 @@ export const createIcon = (SvgIcon: IconType) => {
     const existsText = !!text
     const iconSize = size ? theme.fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
     const svgIcon = (
-      <SvgIcon
+      <WrapIcon
         {...props}
+        as={SvgIcon}
         stroke="currentColor"
         fill="currentColor"
         strokeWidth="0"
@@ -135,6 +137,12 @@ export const createIcon = (SvgIcon: IconType) => {
 
   return Icon
 }
+
+const WrapIcon = styled.svg`
+  @media (forced-colors: active) {
+    fill: CanvasText;
+  }
+`
 
 const IconAndTextWrapper = styled.span<{
   right: ComponentProps['right']

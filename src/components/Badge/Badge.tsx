@@ -55,9 +55,9 @@ export const Badge: React.FC<BadgeProps> = ({
         <Dot {...badgeProps} />
       ) : (
         actualCount !== undefined && (
-          <Pill {...badgeProps}>
+          <PillText {...badgeProps}>
             {actualCount > overflowCount ? `${overflowCount}+` : actualCount}
-          </Pill>
+          </PillText>
         )
       )}
     </BadgeWrapper>
@@ -88,7 +88,7 @@ const badgeBaseStyle = css<{ themes: Theme; colorName: ColorName; withChildren: 
     background-color: ${color[colorName]};
   `}
 `
-const Pill = styled(Text).attrs({
+const PillText = styled(Text).attrs({
   size: 'XS',
 })<{ themes: Theme; colorName: ColorName; withChildren: boolean }>`
   ${({ themes: { color }, colorName }) => css`

@@ -160,7 +160,7 @@ export default {
     textDecorationColor: false,
   },
   plugins: [
-    plugin(({ addUtilities, addComponents, theme }) => {
+    plugin(({ addUtilities, addComponents, addVariant, theme }) => {
       addUtilities({
         '.overflow-inherit': { overflow: 'inherit' },
         '.overflow-initial': { overflow: 'initial' },
@@ -186,6 +186,7 @@ export default {
           boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
         },
       })
+      addVariant('forced-colors', '@media (forced-colors: active)')
     }),
   ],
   prefix: 'shr-',

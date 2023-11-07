@@ -29,21 +29,21 @@ const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?
 )
 
 const List: FC = () => (
-    <ListWrapper>
-      <li>
-        <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
-      </li>
-      <li>
-        <button onClick={action('clicked item 2')}>ドロップダウンアイテム2</button>
-      </li>
-      <li>
-        <button onClick={action('clicked item 3')}>ドロップダウンアイテム3</button>
-      </li>
-      <li>
-        <button onClick={action('clicked item 4')}>ドロップダウンアイテム4</button>
-      </li>
-    </ListWrapper>
-  )
+  <ListWrapper>
+    <li>
+      <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
+    </li>
+    <li>
+      <button onClick={action('clicked item 2')}>ドロップダウンアイテム2</button>
+    </li>
+    <li>
+      <button onClick={action('clicked item 3')}>ドロップダウンアイテム3</button>
+    </li>
+    <li>
+      <button onClick={action('clicked item 4')}>ドロップダウンアイテム4</button>
+    </li>
+  </ListWrapper>
+)
 
 const buttons = [
   {
@@ -77,19 +77,19 @@ const buttons = [
 const withoutIconButtons = buttons.map(({ icon, ...button }) => button)
 
 export const WithChildren: Story = () => (
-    <Wrapper>
-      <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
-        <Child>Some child components</Child>
-      </AppNavi>
-    </Wrapper>
-  )
+  <Wrapper>
+    <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
+      <Child>Some child components</Child>
+    </AppNavi>
+  </Wrapper>
+)
 WithChildren.storyName = 'with children'
 
 export const WithoutChildren: Story = () => (
-    <Wrapper>
-      <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret />
-    </Wrapper>
-  )
+  <Wrapper>
+    <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret />
+  </Wrapper>
+)
 WithoutChildren.storyName = 'without children'
 
 export const UnclickableCurrent: Story = () => {
@@ -118,19 +118,19 @@ export const UnclickableCurrent: Story = () => {
 UnclickableCurrent.storyName = 'unclickable current'
 
 export const NoIconAndCaret: Story = () => (
-    <Wrapper>
-      <AppNavi label="機能名" buttons={buttons} />
-    </Wrapper>
-  )
+  <Wrapper>
+    <AppNavi label="機能名" buttons={buttons} />
+  </Wrapper>
+)
 NoIconAndCaret.storyName = 'アイコンありドロップダウン示唆なし'
 
 export const ContainerScrollX: Story = () => (
-    <OverflowWrapper>
-      <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
-        <Child>Some child components</Child>
-      </AppNavi>
-    </OverflowWrapper>
-  )
+  <OverflowWrapper>
+    <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
+      <Child>Some child components</Child>
+    </AppNavi>
+  </OverflowWrapper>
+)
 ContainerScrollX.storyName = '横スクロールさせる場合'
 
 const Wrapper = styled.div`

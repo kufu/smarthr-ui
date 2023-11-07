@@ -44,7 +44,7 @@ export function ButtonWrapper({
     const { default: defaultButton, anchor } = button({
       variant,
       size,
-      type: square ? 'square' : 'default',
+      square,
       loading: $loading,
       wide,
     })
@@ -71,12 +71,15 @@ const button = tv({
       'disabled:shr-cursor-not-allowed',
       /* alpha color を使用しているので、背景色と干渉させない */
       'disabled:shr-bg-clip-padding',
+      '[&_.smarthr-ui-Icon]:forced-colors:disabled:shr-fill-[GrayText]',
     ],
     anchor: [
       'shr-no-underline',
       '[&:not([href])]:shr-cursor-not-allowed',
       /* alpha color を使用しているので、背景色と干渉させない */
       '[&:not([href])]:shr-bg-clip-padding',
+      '[&_.smarthr-ui-Icon]:forced-colors:shr-fill-[LinkText]',
+      '[&:not([href])_.smarthr-ui-Icon]:forced-colors:shr-fill-[CanvasText]',
     ],
   },
   variants: {
@@ -91,22 +94,14 @@ const button = tv({
       default: {},
       s: {},
     },
-    // FIXME 本来は square の Boolean value を使いたいが、tailwind-variants にバグがありそうなので暫定的に string で対応
-    type: {
-      default: {},
-      square: {},
+    square: {
+      true: {},
     },
     loading: {
-      true: {
-        default: 'shr-flex-row-reverse',
-        anchor: 'shr-flex-row-reverse',
-      },
+      true: {},
     },
     wide: {
-      true: {
-        default: 'shr-w-full',
-        anchor: 'shr-w-full',
-      },
+      true: {},
     },
   },
   compoundSlots: [
@@ -156,14 +151,24 @@ const button = tv({
     {
       slots: ['default', 'anchor'],
       size: 'default',
-      type: 'default',
-      className: ['shr-px-1', 'shr-py-0.75'],
+      square: false,
+      className: 'shr-px-1 shr-py-0.75',
     },
     {
       slots: ['default', 'anchor'],
       size: 'default',
-      type: 'square',
+      square: true,
       className: 'shr-p-0.75',
+    },
+    {
+      slots: ['default', 'anchor'],
+      loading: true,
+      className: 'shr-flex-row-reverse',
+    },
+    {
+      slots: ['default', 'anchor'],
+      wide: true,
+      className: 'shr-w-full',
     },
     {
       slots: ['default', 'anchor'],

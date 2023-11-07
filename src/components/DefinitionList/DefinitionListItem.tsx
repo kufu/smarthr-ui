@@ -25,10 +25,10 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
 
   return (
     <Wrapper themes={theme} className={`${className} ${definitionListItem.wrapper}`}>
-      <Term className={definitionListItem.term}>{term}</Term>
-      <Description themes={theme} className={definitionListItem.description}>
+      <TermText className={definitionListItem.term}>{term}</TermText>
+      <DescriptionText themes={theme} className={definitionListItem.description}>
         {description}
-      </Description>
+      </DescriptionText>
     </Wrapper>
   )
 }
@@ -46,7 +46,7 @@ const Wrapper = styled(Stack).attrs({ gap: 0.25 })<{ themes: Theme }>`
   `}
 `
 
-const Term = styled(Text).attrs({
+const TermText = styled(Text).attrs({
   forwardedAs: 'dt',
   size: 'S',
   weight: 'bold',
@@ -54,7 +54,7 @@ const Term = styled(Text).attrs({
   leading: 'TIGHT',
 })``
 
-const Description = styled(Text).attrs({
+const DescriptionText = styled(Text).attrs({
   forwardedAs: 'dd',
   size: 'M',
   color: 'TEXT_BLACK',

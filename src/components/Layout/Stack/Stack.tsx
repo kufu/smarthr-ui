@@ -23,30 +23,29 @@ export const Stack = styled.div<{
   /** 分割する位置の指定（nth-child に渡す値） */
   splitAfter?: number | string
 }>(
-  ({ inline = false, gap = 1, align, recursive = false, splitAfter }) =>
-    css`
-      display: ${inline ? 'inline-flex' : 'flex'};
-      flex-direction: column;
-      ${align && `align-items: ${align};`}
-      justify-content: flex-start;
+  ({ inline = false, gap = 1, align, recursive = false, splitAfter }) => css`
+    display: ${inline ? 'inline-flex' : 'flex'};
+    flex-direction: column;
+    ${align && `align-items: ${align};`}
+    justify-content: flex-start;
 
-      /* For greater specificity than element type selectors */
-      &&& {
-        ${!recursive && '>'} * {
-          margin-top: 0;
-          margin-bottom: 0;
-        }
-
-        ${!recursive && '>'} * + * {
-          margin-top: ${useSpacing(gap)};
-        }
-
-        ${splitAfter &&
-        css`
-          ${!recursive ? '> ' : '*'}:nth-child(${splitAfter}) {
-            margin-bottom: auto;
-          }
-        `}
+    /* For greater specificity than element type selectors */
+    &&& {
+      ${!recursive && '>'} * {
+        margin-top: 0;
+        margin-bottom: 0;
       }
-    `,
+
+      ${!recursive && '>'} * + * {
+        margin-top: ${useSpacing(gap)};
+      }
+
+      ${splitAfter &&
+      css`
+        ${!recursive ? '> ' : '*'}:nth-child(${splitAfter}) {
+          margin-bottom: auto;
+        }
+      `}
+    }
+  `,
 )

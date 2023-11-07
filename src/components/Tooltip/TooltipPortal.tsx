@@ -145,26 +145,26 @@ const Container = styled.div<{
   themes: Theme
 }>`
   ${({ top, left, $width, $height, maxWidth, themes }) => css`
-      position: absolute;
-      top: ${top}px;
-      left: ${left}px;
-      ${$width > 0 &&
-      css`
-        width: ${$width}px;
-      `}
-      ${$height > 0 &&
-      css`
-        height: ${$height}px;
-      `}
-      ${maxWidth !== undefined &&
-      css`
-        max-width: ${maxWidth}px;
-      `}
-      z-index: ${themes.zIndex.OVERLAP};
-      &[aria-hidden='true'] {
-        display: none;
-      }
+    position: absolute;
+    top: ${top}px;
+    left: ${left}px;
+    ${$width > 0 &&
+    css`
+      width: ${$width}px;
     `}
+    ${$height > 0 &&
+    css`
+      height: ${$height}px;
+    `}
+      ${maxWidth !== undefined &&
+    css`
+      max-width: ${maxWidth}px;
+    `}
+      z-index: ${themes.zIndex.OVERLAP};
+    &[aria-hidden='true'] {
+      display: none;
+    }
+  `}
 `
 const StyledBalloon = styled(Balloon)<{ isMultiLine?: boolean }>(
   ({ isMultiLine }) =>
@@ -178,6 +178,6 @@ const StyledBalloon = styled(Balloon)<{ isMultiLine?: boolean }>(
 const StyledBalloonText = styled.p<{ themes: Theme }>`
   margin: 0;
   ${({ themes: { spacingByChar } }) => css`
-      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-    `}
+    padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
+  `}
 `
