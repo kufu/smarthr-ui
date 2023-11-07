@@ -1,18 +1,16 @@
 import React, {
-  HTMLAttributes,
+  ComponentProps,
+  FC,
   ReactNode,
-  VFC,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
-
-import { useClassNames } from './useClassNames'
 
 export type Option = {
   /** 選択時に返される値 */
@@ -39,9 +37,31 @@ type Props = {
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
-export const SegmentedControl: VFC<Props & ElementProps> = ({
+const segmentedControl = tv({
+  slots: {
+    container: 'smarthr-ui-SegmentedControl shr-inline-flex',
+    buttonGroup: '-shr-space-x-px',
+    button: [
+      'smarthr-ui-SegmentedControl-button',
+      'shr-m-0',
+      'shr-rounded-none',
+      'aria-checked:shr-border-main',
+      'aria-checked:shr-bg-main',
+      'aria-checked:shr-text-white',
+      'aria-checked:hover:shr-border-main/50',
+      'aria-checked:hover:shr-bg-main/50',
+      'focus-visible:shr-focusIndicator',
+      'first:shr-rounded-tl-m',
+      'first:shr-rounded-bl-m',
+      'last:shr-rounded-tr-m',
+      'last:shr-rounded-br-m',
+    ],
+  },
+})
+
+export const SegmentedControl: FC<Props & ElementProps> = ({
   options,
   value,
   onClickOption,
@@ -50,9 +70,16 @@ export const SegmentedControl: VFC<Props & ElementProps> = ({
   className = '',
   ...props
 }) => {
-  const themes = useTheme()
   const [isFocused, setIsFocused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const { containerStyle, buttonGroupStyle, buttonStyle } = useMemo(() => {
+    const { container, buttonGroup, button } = segmentedControl()
+    return {
+      containerStyle: container({ className }),
+      buttonGroupStyle: buttonGroup(),
+      buttonStyle: button(),
+    }
+  }, [className])
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -118,75 +145,37 @@ export const SegmentedControl: VFC<Props & ElementProps> = ({
     [includesSelected, isFocused, value],
   )
 
-  const classNames = useClassNames()
-
   return (
-    <Container
+    <div
       {...props}
-      className={`${className} ${classNames.wrapper}`}
+      className={containerStyle}
       onFocus={() => setIsFocused(true)}
       onBlur={() => setIsFocused(false)}
       ref={containerRef}
       role="toolbar"
     >
-      <div role="radiogroup">
+      <div role="radiogroup" className={buttonGroupStyle}>
         {options.map((option, i) => {
           const isSelected = !!value && value === option.value
           const onClick = onClickOption ? () => onClickOption(option.value) : undefined
           return (
-            <StyledButton
+            <Button
               aria-label={option.ariaLabel}
               key={option.value}
               disabled={option.disabled}
               onClick={onClick}
               size={size}
               square={isSquare}
-              themes={themes}
               tabIndex={getRovingTabIndex(option, i)}
               role="radio"
               aria-checked={isSelected}
-              className={classNames.button}
+              className={buttonStyle}
             >
               {option.content}
-            </StyledButton>
+            </Button>
           )
         })}
       </div>
-    </Container>
+    </div>
   )
 }
-
-const Container = styled.div`
-  display: inline-flex;
-`
-const StyledButton = styled(Button)<{ themes: Theme }>(
-  ({ themes: { border, color, radius, shadow } }) => css`
-    margin: 0;
-    border-radius: 0;
-
-    &[aria-checked='true'] {
-      border-color: ${color.MAIN};
-      background-color: ${color.MAIN};
-      color: ${color.TEXT_WHITE};
-      &.hover {
-        border-color: ${color.hoverColor(color.MAIN)};
-        background-color: ${color.hoverColor(color.MAIN)};
-      }
-    }
-
-    &:focus-visible {
-      ${shadow.focusIndicatorStyles}
-    }
-    &:first-child {
-      border-top-left-radius: ${radius.m};
-      border-bottom-left-radius: ${radius.m};
-    }
-    &:last-child {
-      border-top-right-radius: ${radius.m};
-      border-bottom-right-radius: ${radius.m};
-    }
-    & + & {
-      margin-left: -${border.lineWidth};
-    }
-  `,
-)
