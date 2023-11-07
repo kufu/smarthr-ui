@@ -43,6 +43,19 @@ const playHover = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
 }
 VRTHoverSearchInput.play = playHover
 
+export const VRTFocusSearchInput: StoryFn = () => (
+  <>
+    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      focusしてツールチップを表示した状態で表示されます
+    </VRTInformationPanel>
+    <SearchInputStory />
+  </>
+)
+VRTFocusSearchInput.play = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+  const canvas = within(canvasElement)
+  await canvas.getAllByRole('textbox')[0].focus()
+}
+
 export const VRTHoverSearchInputForcedColors: StoryFn = () => (
   <>
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>

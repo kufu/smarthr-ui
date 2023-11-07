@@ -15,6 +15,21 @@ export default {
   },
 }
 
+export const VRTFocus: StoryFn = () => (
+  <>
+    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      focus した状態で表示されます
+    </VRTInformationPanel>
+    <All />
+  </>
+)
+VRTFocus.parameters = {
+  controls: { hideNoControlsWarning: true },
+  pseudo: {
+    focusWithin: ['span:has(> input)'],
+  },
+}
+
 export const VRTForcedColors: StoryFn = () => (
   <>
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
