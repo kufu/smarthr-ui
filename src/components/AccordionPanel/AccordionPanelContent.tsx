@@ -1,5 +1,5 @@
 import React, {
-  ComponentPropsWithRef,
+  ComponentPropsWithoutRef,
   FC,
   PropsWithChildren,
   useCallback,
@@ -16,7 +16,7 @@ import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
 
 type Props = PropsWithChildren
-type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
 const duration = 100
 
