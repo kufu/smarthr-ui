@@ -40,7 +40,16 @@ export const VRTState: StoryFn = () => {
             <CheckBox name="2" checked={checkedName.includes('2')} onChange={handleChange} />
           </li>
           <li>
+            <CheckBox name="2" checked={true} onChange={handleChange} />
+          </li>
+          <li>
             <CheckBox name="error" error onChange={handleChange} />
+          </li>
+          <li>
+            <CheckBox name="error" checked={true} error onChange={handleChange} />
+          </li>
+          <li>
+            <CheckBox name="2" checked={true} mixed onChange={handleChange} />
           </li>
           <li>
             <CheckBox name="disabled" disabled onChange={handleChange} />
@@ -58,7 +67,16 @@ export const VRTState: StoryFn = () => {
             <CheckBox name="2" checked={checkedName.includes('2')} onChange={handleChange} />
           </li>
           <li>
+            <CheckBox name="2" checked={true} onChange={handleChange} />
+          </li>
+          <li>
             <CheckBox name="error" error onChange={handleChange} />
+          </li>
+          <li>
+            <CheckBox name="error" checked={true} error onChange={handleChange} />
+          </li>
+          <li>
+            <CheckBox name="2" checked={true} mixed onChange={handleChange} />
           </li>
           <li>
             <CheckBox name="disabled" disabled onChange={handleChange} />
@@ -76,7 +94,16 @@ export const VRTState: StoryFn = () => {
             <CheckBox name="2" checked={checkedName.includes('2')} onChange={handleChange} />
           </li>
           <li>
+            <CheckBox name="2" checked={true} onChange={handleChange} />
+          </li>
+          <li>
             <CheckBox name="error" error onChange={handleChange} />
+          </li>
+          <li>
+            <CheckBox name="error" checked={true} error onChange={handleChange} />
+          </li>
+          <li>
+            <CheckBox name="2" checked={true} mixed onChange={handleChange} />
           </li>
           <li>
             <CheckBox name="disabled" disabled onChange={handleChange} />
@@ -94,7 +121,16 @@ export const VRTState: StoryFn = () => {
             <CheckBox name="2" checked={checkedName.includes('2')} onChange={handleChange} />
           </li>
           <li>
+            <CheckBox name="2" checked={true} onChange={handleChange} />
+          </li>
+          <li>
             <CheckBox name="error" error onChange={handleChange} />
+          </li>
+          <li>
+            <CheckBox name="error" checked={true} error onChange={handleChange} />
+          </li>
+          <li>
+            <CheckBox name="2" checked={true} mixed onChange={handleChange} />
           </li>
           <li>
             <CheckBox name="disabled" disabled onChange={handleChange} />
