@@ -1,6 +1,7 @@
+import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
 import { userEvent, within } from '@storybook/testing-library'
-import * as React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { InformationPanel } from '../InformationPanel'
@@ -13,6 +14,30 @@ export default {
   component: Calendar,
   parameters: {
     withTheming: true,
+  },
+}
+
+export const VRTFocus: StoryFn = () => {
+  const [value, setValue] = useState(new Date(2020, 0, 1))
+  return (
+    <>
+      <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+        各ボタンにフォーカスを当てた状態で表示されます
+      </VRTInformationPanel>
+      <Calendar
+        onSelectDate={(e, date) => {
+          action('selected')(e, date)
+          setValue(date)
+        }}
+        value={value}
+      />
+    </>
+  )
+}
+VRTFocus.parameters = {
+  controls: { hideNoControlsWarning: true },
+  pseudo: {
+    focusVisible: ['header button', 'tr:first-child td:nth-child(4) button'],
   },
 }
 
@@ -32,6 +57,32 @@ VRTSelectionYear.play = async ({ canvasElement }) => {
   })
 }
 
+export const VRTFocusSelectionYear: StoryFn = () => {
+  const [value, setValue] = useState(new Date(2020, 0, 1))
+  return (
+    <>
+      <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+        年選択で特定の年にフォーカスを当てた状態で表示されます
+      </VRTInformationPanel>
+      <Calendar
+        onSelectDate={(e, date) => {
+          action('selected')(e, date)
+          setValue(date)
+        }}
+        value={value}
+      />
+    </>
+  )
+}
+VRTFocusSelectionYear.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement)
+  const button = await canvas.findByText('年を選択する')
+  await userEvent.click(button)
+  const body = canvasElement.ownerDocument.body
+  const yearButton = await within(body).findByRole('button', { name: '2020' })
+  await yearButton.focus()
+}
+
 export const VRTForcedColors: StoryFn = () => (
   <>
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
@@ -46,4 +97,11 @@ VRTForcedColors.parameters = {
 
 const VRTInformationPanel = styled(InformationPanel)`
   margin-bottom: 24px;
+`
+
+const List = styled.dl`
+  margin: 1rem;
+  & > dd {
+    margin: 10px 0 40px;
+  }
 `
