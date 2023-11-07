@@ -9,9 +9,7 @@ type Props = {
   start: number
   end: number
   total?: number
-  decorators?: DecoratorsType<
-    'unitForTotal' | 'unit'
-  >
+  decorators?: DecoratorsType<'unitForTotal' | 'unit'>
 }
 
 const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
@@ -21,7 +19,10 @@ const UNIT_TOTAL_TEXT = '件中'
 const UNIT_TEXT = '件'
 
 export const PageCounter: React.FC<Props> = ({ start, end, total = 0, decorators }) => {
-  const unitTotalText = useMemo(() => executeDecorator(UNIT_TOTAL_TEXT, decorators?.unitForTotal), [decorators?.unitForTotal])
+  const unitTotalText = useMemo(
+    () => executeDecorator(UNIT_TOTAL_TEXT, decorators?.unitForTotal),
+    [decorators?.unitForTotal],
+  )
   const unitText = useMemo(() => executeDecorator(UNIT_TEXT, decorators?.unit), [decorators?.unit])
 
   return (
