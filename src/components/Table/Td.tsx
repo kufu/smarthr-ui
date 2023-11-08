@@ -1,10 +1,7 @@
-import React, { FC, PropsWithChildren, TdHTMLAttributes } from 'react'
-import styled, { css } from 'styled-components'
+import React, { FC, PropsWithChildren, TdHTMLAttributes, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-
-import { useTdClassNames } from './useClassNames'
-import { useReelShadow } from './useReelShadow'
+import { reelShadowStyle } from './useReelShadow'
 
 export type Props = PropsWithChildren<{
   /** `true` のとき、セル内が空であれば "----" を表示する */
@@ -20,60 +17,40 @@ export const Td: FC<Props & ElementProps> = ({
   className = '',
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useTdClassNames()
-  const wrapperClass = [className, nullable && 'nullable', classNames.wrapper]
-    .filter((c) => !!c)
-    .join(' ')
+  const styles = useMemo(() => {
+    const tdStyles = td({ nullable, fixed, className })
+    const reelShadowStyles = fixed ? reelShadowStyle({ direction: 'right' }) : ''
+    return `${tdStyles} ${reelShadowStyles}`.trim()
+  }, [className, fixed, nullable])
 
-  return (
-    <StyledTd
-      {...props}
-      className={`${wrapperClass} ${fixed ? 'fixedElement' : ''}`}
-      themes={theme}
-      fixed={fixed}
-    />
-  )
+  return <td {...props} className={`${fixed ? 'fixedElement' : ''} ${styles}`} />
 }
 
-const StyledTd = styled.td<{ themes: Theme; fixed: boolean }>`
-  &.nullable {
-    &:empty {
-      &::after {
-        content: '-----';
-      }
-    }
-  }
-
-  ${({ themes, fixed }) => {
-    const { fontSize, leading, spacingByChar, color, border } = themes
-
-    return css`
-      color: ${color.TEXT_BLACK};
-      height: calc(1em * ${leading.NORMAL});
-      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-      border-top: ${border.shorthand};
-      font-size: ${fontSize.M};
-      line-height: ${leading.NORMAL};
-      vertical-align: middle;
-
-      /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
-      &.fixedElement {
-        ${useReelShadow({ showShadow: false, direction: 'right' })}
-      }
-
-      ${fixed &&
-      css`
-        &.fixed {
-          position: sticky;
-          right: 0;
-          background-color: ${color.WHITE};
-
-          &::after {
-            opacity: 1;
-          }
-        }
-      `}
-    `
-  }};
-`
+const td = tv({
+  base: [
+    'smarthr-ui-Td',
+    'shr-text-black',
+    'shr-h-[calc(1em_*_theme(lineHeight.normal))]',
+    'shr-px-1',
+    'shr-py-0.5',
+    'shr-border-t',
+    'shr-border-solid',
+    'shr-border-default',
+    'shr-text-base',
+    'shr-leading-normal',
+    'shr-align-middle',
+  ],
+  variants: {
+    nullable: {
+      true: "empty:after:shr-content-['-----']",
+    },
+    fixed: {
+      true: [
+        '[&.fixed]:shr-sticky',
+        '[&.fixed]:shr-right-0',
+        '[&.fixed]:shr-bg-white',
+        '[&.fixed]:after:shr-opacity-100',
+      ],
+    },
+  },
+})
