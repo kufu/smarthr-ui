@@ -1,7 +1,8 @@
-import React, { HTMLAttributes, useMemo } from 'react'
+import React, { ComponentProps, ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { Base as shrBase } from '../Base'
 import { Button } from '../Button'
 import {
   FaCheckCircleIcon,
@@ -18,7 +19,7 @@ import { useClassNames } from './useClassNames'
 
 export const messageTypes = ['info', 'success', 'error', 'warning'] as const
 
-type Props = {
+type Props = PropsWithChildren<{
   /** メッセージの種類 */
   type: (typeof messageTypes)[number]
   /** 強調するかどうか */
@@ -29,20 +30,24 @@ type Props = {
   message: React.ReactNode
   /** 閉じるボタン押下時に発火させる関数 */
   onClose?: () => void
-  /** アクション群 */
-  children?: React.ReactNode
   /** role 属性 */
   role?: 'alert' | 'status'
-}
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+  /** 下地 */
+  base?: 'none' | 'base'
+}>
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
+type BaseProps = Pick<ComponentProps<typeof shrBase>, 'radius' | 'layer'>
 
-export const NotificationBar: React.FC<Props & ElementProps> = ({
+export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   type,
   bold = false,
   message,
   onClose,
   children,
   role = type === 'info' ? 'status' : 'alert',
+  base = 'none',
+  radius,
+  layer,
   className = '',
   ...props
 }) => {
@@ -102,47 +107,68 @@ export const NotificationBar: React.FC<Props & ElementProps> = ({
     }
   }, [color, type, bold])
 
+  const { baseComponent: WrapBase, baseProps } = useMemo(
+    () =>
+      base === 'base'
+        ? {
+            baseComponent: Base,
+            baseProps: {
+              radius,
+              layer,
+            },
+          }
+        : {
+            baseComponent: React.Fragment,
+            baseProps: {},
+          },
+    [base, layer, radius],
+  )
+
   return (
-    <Wrapper
-      {...props}
-      className={`${type} ${classNames.wrapper}${className && ` ${className}`}`}
-      role={role}
-      themes={theme}
-      colorSet={colorSet}
-    >
-      <MessageArea themes={theme} className={classNames.messageArea}>
-        <IconLayout>
-          <Icon color={iconColor} />
-        </IconLayout>
-        <StyledText leading="TIGHT">{message}</StyledText>
-      </MessageArea>
-      <ActionArea themes={theme} className={classNames.actionArea}>
-        {children && (
-          <ActionWrapper
-            themes={theme}
-            className={classNames.actions}
-            align="center"
-            justify="flex-end"
-          >
-            {children}
-          </ActionWrapper>
-        )}
-        {onClose && (
-          <CloseButton
-            variant="text"
-            colorSet={colorSet}
-            themes={theme}
-            onClick={onClose}
-            className={classNames.closeButton}
-            size="s"
-          >
-            <FaTimesIcon alt="閉じる" />
-          </CloseButton>
-        )}
-      </ActionArea>
-    </Wrapper>
+    <WrapBase {...baseProps}>
+      <Wrapper
+        {...props}
+        className={`${type} ${classNames.wrapper}${className && ` ${className}`}`}
+        role={role}
+        themes={theme}
+        colorSet={colorSet}
+      >
+        <MessageArea themes={theme} className={classNames.messageArea}>
+          <IconLayout>
+            <Icon color={iconColor} />
+          </IconLayout>
+          <StyledText leading="TIGHT">{message}</StyledText>
+        </MessageArea>
+        <ActionArea themes={theme} className={classNames.actionArea}>
+          {children && (
+            <ActionWrapper
+              themes={theme}
+              className={classNames.actions}
+              align="center"
+              justify="flex-end"
+            >
+              {children}
+            </ActionWrapper>
+          )}
+          {onClose && (
+            <CloseButton
+              variant="text"
+              colorSet={colorSet}
+              themes={theme}
+              onClick={onClose}
+              className={classNames.closeButton}
+              size="s"
+            >
+              <FaTimesIcon alt="閉じる" />
+            </CloseButton>
+          )}
+        </ActionArea>
+      </Wrapper>
+    </WrapBase>
   )
 }
+
+const Base = styled(shrBase).attrs({ overflow: 'hidden' })``
 
 const Wrapper = styled.div<{
   themes: Theme
