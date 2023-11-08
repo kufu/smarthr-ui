@@ -3820,10 +3820,10 @@
   dependencies:
     "@types/lodash" "*"
 
-"@types/lodash.range@^3.2.8":
-  version "3.2.8"
-  resolved "https://registry.yarnpkg.com/@types/lodash.range/-/lodash.range-3.2.8.tgz#dca0e9975c1b7d32684f396fca5fa3c106a1f773"
-  integrity sha512-nBIj7maueZTkuWF8AJj2VpMwmfOP5gNN+R1TVn5GjiypH+kqU9nZYo3F+ICOqnor0QccPugVWJshIxwPWpI9cA==
+"@types/lodash.range@^3.2.9":
+  version "3.2.9"
+  resolved "https://registry.yarnpkg.com/@types/lodash.range/-/lodash.range-3.2.9.tgz#7fd5e0c4d8cf5e97160396ef2fe0b528ddcd2c30"
+  integrity sha512-JNStPShiaR3ROKIAgtzChBhouPBCJxMI/Fj7Xa1cG51A2EMRyosvtL4fiGXOFiQddaxjZmNVYkZGsDRt8fFKPg==
   dependencies:
     "@types/lodash" "*"
 
