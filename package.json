@@ -40,7 +40,7 @@
     "@swc/jest": "^0.2.29",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.5.7",
-    "@types/lodash.merge": "^4.6.8",
+    "@types/lodash.merge": "^4.6.9",
     "@types/lodash.range": "^3.2.9",
     "@types/node": "^14.18.63",
     "@types/react": "^18.2.36",
