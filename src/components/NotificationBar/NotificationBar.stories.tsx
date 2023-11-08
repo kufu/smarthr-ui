@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { ComponentProps, useState } from 'react'
 import styled, { css } from 'styled-components'
 
@@ -37,7 +37,7 @@ const Actions = () => (
   </>
 )
 
-export const All: Story = () => {
+export const All: StoryFn = () => {
   const onClose = () => console.log('close')
 
   return (
@@ -83,6 +83,26 @@ export const All: Story = () => {
         </Stack>
       </Stack>
       <Stack gap={0.5}>
+        <dt>下地の種類</dt>
+        <Stack gap={0.25} as="dd">
+          <NotificationBar type="info" message="なし（none）が標準です。" onClose={onClose} />
+          <NotificationBar
+            type="info"
+            message="base を選択すると Base の上に表示されます。"
+            base="base"
+            onClose={onClose}
+          />
+          <NotificationBar
+            type="info"
+            message="radius と layer の指定も可能です。"
+            base="base"
+            radius="s"
+            layer={4}
+            onClose={onClose}
+          />
+        </Stack>
+      </Stack>
+      <Stack gap={0.5}>
         <dt>その他</dt>
         <Stack gap={0.25} as="dd">
           <NotificationBar
@@ -121,7 +141,7 @@ const Wrapper = styled(Stack).attrs({ as: 'dl', gap: 1.5 })`
   `}
 `
 
-export const Demo: Story = () => {
+export const Demo: StoryFn = () => {
   const [visible, setVisible] = useState(false)
   const [animate, setAnimate] = useState(true)
   const [messageType, setMessageType] = useState<(typeof messageTypes)[number]>('success')
