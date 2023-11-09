@@ -130,6 +130,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
         role={role}
         themes={theme}
         colorSet={colorSet}
+        onBase={base === 'base'}
       >
         <MessageArea themes={theme} className={classNames.messageArea}>
           <IconLayout>
@@ -171,11 +172,13 @@ const Base = styled(shrBase).attrs({ overflow: 'hidden' })``
 const Wrapper = styled.div<{
   themes: Theme
   colorSet: { fgColor?: string; bgColor?: string }
+  onBase: boolean
   animate?: boolean
 }>(
   ({
     themes: { color, fontSize, leading, space },
     colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
+    onBase,
     animate,
   }) => css`
     display: flex;
@@ -183,6 +186,11 @@ const Wrapper = styled.div<{
     align-items: center;
     background-color: ${bgColor};
     padding: ${space(0.75)};
+    ${onBase &&
+    css`
+      padding-block: ${space(1)};
+      padding-inline: ${space(1.5)} ${space(1)};
+    `}
     color: ${fgColor};
     ${animate &&
     css`
