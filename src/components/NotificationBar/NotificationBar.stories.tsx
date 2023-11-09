@@ -94,11 +94,10 @@ export const All: StoryFn = () => {
           />
           <NotificationBar
             type="info"
-            message="radius と layer の指定も可能です。"
+            message="layer の指定も可能です。"
             base="base"
-            radius="s"
-            layer={4}
             onClose={onClose}
+            layer={4}
           />
         </Stack>
       </Stack>

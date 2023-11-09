@@ -36,7 +36,7 @@ type Props = PropsWithChildren<{
   base?: 'none' | 'base'
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
-type BaseProps = Pick<ComponentProps<typeof shrBase>, 'radius' | 'layer'>
+type BaseProps = Pick<ComponentProps<typeof shrBase>, 'layer'>
 
 export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   type,
@@ -46,7 +46,6 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   children,
   role = type === 'info' ? 'status' : 'alert',
   base = 'none',
-  radius,
   layer,
   className = '',
   ...props
@@ -113,7 +112,6 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
         ? {
             baseComponent: Base,
             baseProps: {
-              radius,
               layer,
             },
           }
@@ -121,7 +119,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
             baseComponent: React.Fragment,
             baseProps: {},
           },
-    [base, layer, radius],
+    [base, layer],
   )
 
   return (
