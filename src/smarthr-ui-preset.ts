@@ -25,6 +25,7 @@ export default {
       'white-darken': theme('colors.white-darken'),
       link: defaultColor.TEXT_LINK,
       background: defaultColor.BACKGROUND,
+      border: theme('colors.grey.20'),
       column: defaultColor.COLUMN,
       'base-grey': defaultColor.BASE_GREY,
       'over-background': defaultColor.OVER_BACKGROUND,
@@ -55,6 +56,7 @@ export default {
       'layer-4': defaultShadow.LAYER4,
       outline: defaultShadow.OUTLINE,
       underline: defaultShadow.UNDERLINE,
+      'input-hover': defaultShadow.INPUT_HOVER,
       none: 'none',
     },
     colors: {
