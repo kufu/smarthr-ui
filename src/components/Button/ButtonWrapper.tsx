@@ -220,7 +220,7 @@ const button = tv({
       slots: ['default'],
       variant: 'secondary',
       className: [
-        'disabled:shr-border-disabled/50',
+        'disabled:shr-border-disabled',
         'disabled:shr-bg-white-darken',
         'disabled:shr-text-disabled',
       ],
@@ -229,7 +229,7 @@ const button = tv({
       slots: ['anchor'],
       variant: 'secondary',
       className: [
-        '[&:not([href])]:shr-border-disabled/50',
+        '[&:not([href])]:shr-border-disabled',
         '[&:not([href])]:shr-bg-white-darken',
         '[&:not([href])]:shr-text-disabled',
       ],
