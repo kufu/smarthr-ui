@@ -1,81 +1,56 @@
-import React, { ReactNode, forwardRef } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentProps, PropsWithChildren, forwardRef, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
-import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { CheckBoxInput, Props as CheckBoxInputProps } from './CheckBoxInput'
-import { useClassNames } from './useClassNames'
+import { CheckBoxInput } from './CheckBoxInput'
 
-export type Props = {
+export type Props = PropsWithChildren<{
+  // TODO lineHeight 使ってる? 消したい
   /** ラベル部分の `line-height` */
   lineHeight?: number
-  /** ラベルの内容 */
-  children?: ReactNode
-} & CheckBoxInputProps
+}> &
+  ComponentProps<typeof CheckBoxInput>
+
+const checkbox = tv({
+  slots: {
+    wrapper: 'smarthr-ui-CheckBox shr-inline-flex shr-items-baseline',
+    label: [
+      'smarthr-ui-CheckBox-label shr-ms-0.5 shr-cursor-pointer shr-text-base shr-leading-tight shr-text-black',
+    ],
+  },
+  variants: {
+    disabled: {
+      true: {
+        label: 'shr-pointer-events-none shr-cursor-not-allowed shr-text-disabled',
+      },
+    },
+  },
+})
 
 export const CheckBox = forwardRef<HTMLInputElement, Props>(
-  ({ lineHeight = 1.5, className = '', children, ...props }, ref) => {
-    const theme = useTheme()
-    const classNames = useClassNames()
+  ({ lineHeight = 1.5, className, children, ...props }, ref) => {
+    const { wrapperStyle, labelStyle } = useMemo(() => {
+      const { wrapper, label } = checkbox()
+      return {
+        wrapperStyle: wrapper({ className }),
+        labelStyle: label({ disabled: props.disabled }),
+      }
+    }, [className, props.disabled])
+
     const checkBoxId = useId(props.id)
 
-    if (!children)
-      return (
-        <Wrapper className={`${className} ${classNames.wrapper}`}>
-          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
-          <CheckBoxInput {...props} ref={ref} />
-        </Wrapper>
-      )
-
     return (
-      <Wrapper className={`${className} ${classNames.wrapper}`}>
+      <span className={wrapperStyle}>
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <CheckBoxInput {...props} ref={ref} id={checkBoxId} />
 
-        <Label
-          className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
-          htmlFor={checkBoxId}
-          $lineHeight={lineHeight}
-          themes={theme}
-        >
-          {children}
-        </Label>
-      </Wrapper>
+        {children && (
+          <label className={labelStyle} htmlFor={checkBoxId}>
+            {children}
+          </label>
+        )}
+      </span>
     )
   },
 )
-
-// Use flex-start to support multi-line text.
-const Wrapper = styled.span`
-  display: inline-flex;
-  align-items: flex-start;
-`
-const Label = styled.label<{ themes: Theme; $lineHeight: number }>`
-  ${({ themes, $lineHeight }) => {
-    const { spacingByChar, color, fontSize } = themes
-
-    return css`
-      margin-left: ${spacingByChar(0.5)};
-      color: ${color.TEXT_BLACK};
-      font-size: ${fontSize.M};
-      line-height: ${$lineHeight};
-      cursor: pointer;
-
-      &.disabled {
-        color: ${color.TEXT_DISABLED};
-        cursor: not-allowed;
-        pointer-events: none;
-      }
-
-      /* Since the positions of checkbox and text are misaligned, create a pseudo element that adjusts the line-height. */
-      &::before {
-        display: block;
-        width: 0;
-        height: 0;
-        margin-top: calc((1 - ${$lineHeight}) * 0.4em);
-        content: '';
-      }
-    `
-  }}
-`
