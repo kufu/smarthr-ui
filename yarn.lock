@@ -10940,10 +10940,10 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-puppeteer-core@21.5.0:
-  version "21.5.0"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-21.5.0.tgz#2e455ad870d67dc8bb51347ea07a0d94673d855b"
-  integrity sha512-qG0RJ6qKgFz09UUZxDB9IcyTJGypQXMuE8WmEoHk7kgjutmRiOVv5RgsyUkY67AxDdBWx21bn1PHHRJnO/6b4A==
+puppeteer-core@21.5.1:
+  version "21.5.1"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-21.5.1.tgz#36b0a4b3838f9109423b6e4cb56e1f21f8fbca4f"
+  integrity sha512-u6c3SZKAOaOQogaTkQvllxT/o2PP16wkbrUWINtMhfvrB4ko+xwqC1pb+vyCPMmNUh3N/CX5YGqb3DWx2fUPSQ==
   dependencies:
     "@puppeteer/browsers" "1.8.0"
     chromium-bidi "0.4.33"
@@ -10967,14 +10967,14 @@ puppeteer-core@^2.1.1:
     rimraf "^2.6.1"
     ws "^6.1.0"
 
-puppeteer@^21.5.0:
-  version "21.5.0"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-21.5.0.tgz#651bd959af4b77b4e2d71bde46744243ef50fa35"
-  integrity sha512-prvy9rdauyIaaEgefQRcw9zhQnYQbl8O1Gj5VJazKJ7kwNx703+Paw/1bwA+b96jj/S+r55hrmF5SfiEG5PUcg==
+puppeteer@^21.5.1:
+  version "21.5.1"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-21.5.1.tgz#7607748b8c5e487edded2105551968a944e9436c"
+  integrity sha512-NkI06BXckVZeZUkODK+BbgGelQSu7uYEp9PaJDozxpwNRFDYoVfHQvd2G4dERoLdP6+qx4EBPwEhk4dEkQc2Kg==
   dependencies:
     "@puppeteer/browsers" "1.8.0"
     cosmiconfig "8.3.6"
-    puppeteer-core "21.5.0"
+    puppeteer-core "21.5.1"
 
 pure-rand@^6.0.0:
   version "6.0.1"
