@@ -1,164 +1,134 @@
-import React, { HTMLAttributes, ReactNode, VFC } from 'react'
-import styled, { css } from 'styled-components'
-
-import { Theme, useTheme } from '../../hooks/useTheme'
-
-import { useClassNames } from './useClassNames'
-
-export type BalloonTheme = 'light' | 'dark'
-
-export type Props = {
-  /** 吹き出しの垂直位置 */
-  horizontal: 'right' | 'center' | 'left'
-  /** 吹き出しの水平位置 */
-  vertical: 'top' | 'middle' | 'bottom'
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-  /** バルーン内のコンテンツ */
-  children?: ReactNode
-  /** レンダリングするタグ */
-  as?: 'div' | 'span'
-}
-
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
-
-export const Balloon: VFC<Props & ElementProps> = ({
-  horizontal,
-  vertical,
-  className = '',
-  ...props
-}) => {
-  if (horizontal === 'center' && vertical === 'middle') {
-    throw new Error('"vertical" can not be specified as "middle" when "horizontal" is "center".')
-  }
-
-  const themes = useTheme()
-  const { wrapper } = useClassNames()
-  const classNames = `${horizontal} ${vertical} ${className} ${wrapper}`
-
-  return <Base {...props} className={classNames} themes={themes} />
-}
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
+import { VariantProps, tv } from 'tailwind-variants'
 
 // HINT: trianble部分はRetinaディスプレイなどで途切れてしまう場合があるので
 // 1pxほど大きめに描画してbody部分と被るようにしています。
-const Base = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { border, color, fontSize } = themes
+const balloon = tv({
+  base: [
+    'smarthr-ui-Balloon',
+    'shr-relative',
+    'shr-inline-block',
+    'shr-text-sm',
+    'shr-rounded-s',
+    /* drop-shadow は spread-radius を受け付けないので shadow.LAYER2 に近い値をハードコーディングしている */
+    'shr-drop-shadow-[0_2px_2.5px_theme(colors.transparency.30)]',
+    'shr-whitespace-nowrap',
+    'shr-bg-white',
+    'shr-text-black',
+    'after:shr-block',
+    'after:shr-absolute',
+    'after:shr-content-[""]',
+    'after:shr-bg-white',
+    'contrast-more:shr-border',
+    'contrast-more:shr-border-solid',
+    'contrast-more:shr-border-highContrast',
+    'contrast-more:before:shr-block',
+    'contrast-more:before:shr-absolute',
+    'contrast-more:before:shr-content-[""]',
+    'contrast-more:before:shr-bg-black',
+  ],
+  variants: {
+    horizontal: {
+      center: [
+        'before:shr-left-1/2',
+        'before:-shr-translate-x-[5px]',
+        'after:shr-left-1/2',
+        'after:-shr-translate-x-[5px]',
+      ],
+      right: '',
+      left: '',
+    },
+    vertical: {
+      top: [
+        'before:-shr-top-[5px]',
+        'before:shr-w-[10px]',
+        'before:shr-h-[5px]',
+        'before:[clip-path:polygon(50%_0,100%_100%,0_100%)]',
+        'after:-shr-top-0.25',
+        'after:shr-w-[10px]',
+        'after:shr-h-[5px]',
+        'after:[clip-path:polygon(50%_0,100%_100%,0_100%)]',
+      ],
+      bottom: [
+        'before:-shr-bottom-[5px]',
+        'before:shr-w-[10px]',
+        'before:shr-h-[5px]',
+        'before:[clip-path:polygon(0_0,100%_0,50%_100%)]',
+        'after:-shr-bottom-0.25',
+        'after:shr-w-[10px]',
+        'after:shr-h-[5px]',
+        'after:[clip-path:polygon(0_0,100%_0,50%_100%)]',
+      ],
+      middle: [
+        'before:shr-top-1/2',
+        'before:-shr-translate-y-[5px]',
+        'after:shr-top-1/2',
+        'after:-shr-translate-y-[5px]',
+      ],
+    },
+  },
+  compoundVariants: [
+    {
+      vertical: ['top', 'bottom'],
+      horizontal: 'left',
+      className: ['before:shr-left-1.5', 'after:shr-left-1.5'],
+    },
+    {
+      vertical: ['top', 'bottom'],
+      horizontal: 'right',
+      className: ['before:shr-right-1.5', 'after:shr-right-1.5'],
+    },
+    {
+      vertical: 'middle',
+      horizontal: 'left',
+      className: [
+        'before:-shr-left-[5px]',
+        'before:shr-w-[5px]',
+        'before:shr-h-[10px]',
+        'before:[clip-path:polygon(100%_0,100%_100%,0_50%)]',
+        'after:-shr-left-0.25',
+        'after:shr-w-[5px]',
+        'after:shr-h-[10px]',
+        'after:[clip-path:polygon(100%_0,100%_100%,0_50%)]',
+      ],
+    },
+    {
+      vertical: 'middle',
+      horizontal: 'right',
+      className: [
+        'before:-shr-right-[5px]',
+        'before:shr-w-[5px]',
+        'before:shr-h-[10px]',
+        'before:[clip-path:polygon(0_0,100%_50%,0_100%)]',
+        'after:-shr-right-0.25',
+        'after:shr-w-[5px]',
+        'after:shr-h-[10px]',
+        'after:[clip-path:polygon(0_0,100%_50%,0_100%)]',
+      ],
+    },
+  ],
+})
 
-    return css`
-      position: relative;
-      display: inline-block;
-      font-size: ${fontSize.S};
-      border-radius: 4px;
-      filter: drop-shadow(
-        0 2px 2.5px rgba(0, 0, 0, 0.33)
-      ); /* drop-shadow は spread-radius を受け付けないので shadow.LAYER2 に近い値をハードコーディングしている */
-      white-space: nowrap;
-      transform: translateZ(0); /* safari で filter を正しく描画するために必要 */
+export type Props = PropsWithChildren<
+  VariantProps<typeof balloon> & {
+    /** レンダリングするタグ */
+    as?: 'div' | 'span'
+  }
+>
 
-      &::after {
-        display: block;
-        position: absolute;
-        content: '';
-        background-color: ${color.WHITE};
-      }
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
-      background-color: ${color.WHITE};
-      color: ${color.TEXT_BLACK};
+export const Balloon: FC<Props & ElementProps> = ({
+  horizontal,
+  vertical,
+  className,
+  as: Component = 'div',
+  ...props
+}) => {
+  const styles = useMemo(
+    () => balloon({ horizontal, vertical, className }),
+    [className, horizontal, vertical],
+  )
 
-      @media (prefers-contrast: more) {
-        & {
-          border: ${border.highContrast};
-        }
-
-        &::before {
-          display: block;
-          position: absolute;
-          content: '';
-          background-color: ${color.TEXT_BLACK};
-        }
-      }
-
-      &.top {
-        &::before,
-        &::after {
-          top: -4px;
-          width: 10px;
-          height: 5px;
-          clip-path: polygon(50% 0, 100% 100%, 0 100%);
-        }
-
-        &::before {
-          top: -5px;
-        }
-      }
-      &.bottom {
-        &::before,
-        &::after {
-          bottom: -4px;
-          width: 10px;
-          height: 5px;
-          clip-path: polygon(0 0, 100% 0, 50% 100%);
-        }
-
-        &::before {
-          bottom: -5px;
-        }
-      }
-
-      &.right {
-        &::before,
-        &::after {
-          right: 24px;
-        }
-      }
-      &.center {
-        &::before,
-        &::after {
-          left: 50%;
-          transform: translateX(-5px);
-        }
-      }
-      &.left {
-        &::before,
-        &::after {
-          left: 24px;
-        }
-      }
-
-      &.middle {
-        &::before,
-        &::after {
-          top: 50%;
-          transform: translateY(-5px);
-        }
-        &.left {
-          &::before,
-          &::after {
-            left: -4px;
-            width: 5px;
-            height: 10px;
-            clip-path: polygon(100% 0, 100% 100%, 0 50%);
-          }
-
-          &::before {
-            left: -5px;
-          }
-        }
-        &.right {
-          &::before,
-          &::after {
-            right: -4px;
-            width: 5px;
-            height: 10px;
-            clip-path: polygon(0 0, 100% 50%, 0 100%);
-          }
-
-          &::before {
-            right: -5px;
-          }
-        }
-      }
-    `
-  }}
-`
+  return <Component {...props} className={styles} />
+}
