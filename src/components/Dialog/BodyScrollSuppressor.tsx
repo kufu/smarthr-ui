@@ -1,7 +1,7 @@
-import React, { VFC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { createGlobalStyle, css } from 'styled-components'
 
-export const BodyScrollSuppressor: VFC = () => {
+export const BodyScrollSuppressor: FC = () => {
   const [scrollBarWidth, setScrollBarWidth] = useState<number | null>(null)
   const [paddingRight, setPaddingRight] = useState<number | null>(null)
 

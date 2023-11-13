@@ -7,6 +7,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
+import { Text } from '../Text'
 import { Textarea } from '../Textarea'
 
 import { ItemProps, OnClickEdit, RightFixedNoteItem } from './RightFixedNoteItem'
@@ -131,15 +132,14 @@ const SectionHeading = styled(Heading).attrs(() => ({
   type: 'sectionTitle',
 }))<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-      display: block;
-      margin-bottom: ${spacingByChar(1)};
-    `}
+    display: block;
+    margin-bottom: ${spacingByChar(1)};
+  `}
 `
 
-// eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-const TextareaLabelText = styled(Heading).attrs(() => ({
+const TextareaLabelText = styled(Text).attrs(() => ({
   tag: 'span',
-  type: 'subBlockTitle',
+  styleType: 'subBlockTitle',
 }))<{ themes: Theme }>`
   display: inline-block;
   margin-bottom: ${({ themes }) => themes.spacingByChar(1)};
@@ -147,13 +147,13 @@ const TextareaLabelText = styled(Heading).attrs(() => ({
 
 const StyledTextarea = styled(Textarea)<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-      display: block;
-      width: 100%;
-      max-width: 100%;
-      min-width: 100%;
-      box-sizing: border-box;
-      margin-bottom: ${spacingByChar(1)};
-    `}
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: ${spacingByChar(1)};
+  `}
 `
 
 const SubmitButton = styled(Button)`

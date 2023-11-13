@@ -27,12 +27,8 @@ test('DialogContent が開閉できること', async (t) => {
     .expect(trigger.focused)
     .ok()
 
-  // 背景クリックでダイアログが閉じることを確認
-  await t
-    .click(trigger)
-    .click(background, { offsetX: 0, offsetY: 0 })
-    .expect(content.exists)
-    .notOk()
+  // 背景クリックでダイアログが閉じないことを確認
+  await t.click(trigger).click(background, { offsetX: 0, offsetY: 0 }).expect(content.exists).ok()
 })
 
 test('MessageDialogContent が開閉できること', async (t) => {
@@ -54,12 +50,8 @@ test('MessageDialogContent が開閉できること', async (t) => {
     .expect(trigger.focused)
     .ok()
 
-  // 背景クリックでダイアログが閉じることを確認
-  await t
-    .click(trigger)
-    .click(background, { offsetX: 0, offsetY: 0 })
-    .expect(content.exists)
-    .notOk()
+  // 背景クリックでダイアログが閉じないことを確認
+  await t.click(trigger).click(background, { offsetX: 0, offsetY: 0 }).expect(content.exists).ok()
 })
 
 test('ActionDialogContent が開閉できること', async (t) => {
@@ -81,10 +73,6 @@ test('ActionDialogContent が開閉できること', async (t) => {
     .expect(trigger.focused)
     .ok()
 
-  // 背景クリックでダイアログが閉じることを確認
-  await t
-    .click(trigger)
-    .click(background, { offsetX: 0, offsetY: 0 })
-    .expect(content.exists)
-    .notOk()
+  // 背景クリックでダイアログが閉じないことを確認
+  await t.click(trigger).click(background, { offsetX: 0, offsetY: 0 }).expect(content.exists).ok()
 })

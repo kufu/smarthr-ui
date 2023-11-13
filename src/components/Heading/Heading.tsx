@@ -2,7 +2,7 @@ import React, { HTMLAttributes, ReactNode, VFC, useContext, useMemo } from 'reac
 import styled from 'styled-components'
 
 import { LevelContext } from '../SectioningContent'
-import { Text, TextProps } from '../Text'
+import { MAPPER_SIZE_AND_WEIGHT, Text, TextProps } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { useClassNames } from './useClassNames'
@@ -22,14 +22,9 @@ export type Props = {
   visuallyHidden?: boolean
 }
 
-export type HeadingTypes =
-  | 'screenTitle'
-  | 'sectionTitle'
-  | 'blockTitle'
-  | 'subBlockTitle'
-  | 'subSubBlockTitle'
+export type HeadingTypes = TextProps['styleType']
 
-export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'legend'
+export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 
 type ElementProps = Omit<
   HTMLAttributes<HTMLElement>,
@@ -48,33 +43,10 @@ const generateTagProps = (level: number, tag?: HeadingTagTypes, visuallyHidden?:
 
   return {
     [visuallyHidden ? 'as' : 'forwardedAs']:
-      tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes),
+      tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
     role,
     'aria-level': ariaLevel,
   }
-}
-
-const MAPPER_SIZE_AND_WEIGHT: { [key in HeadingTypes]: TextProps } = {
-  screenTitle: {
-    size: 'XL',
-  },
-  sectionTitle: {
-    size: 'L',
-  },
-  blockTitle: {
-    size: 'M',
-    weight: 'bold',
-  },
-  subBlockTitle: {
-    size: 'M',
-    weight: 'bold',
-    color: 'TEXT_GREY',
-  },
-  subSubBlockTitle: {
-    size: 'S',
-    weight: 'bold',
-    color: 'TEXT_GREY',
-  },
 }
 
 export const Heading: VFC<Props & ElementProps> = ({

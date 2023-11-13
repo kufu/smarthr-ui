@@ -11,8 +11,7 @@ export const Reel = styled.div<{
 }>(
   ({ gap = 0.5, padding = 0 }) => css`
     display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: auto hidden;
     gap: ${useSpacing(gap)};
     padding: ${useSpacing(padding)};
 

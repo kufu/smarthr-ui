@@ -1,11 +1,11 @@
-import { VFC, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
 
 import { MultiComboBox, SingleComboBox } from '.'
 
 export function useSingleComboBoxClassNames() {
-  const generate = useClassNameGenerator((SingleComboBox as VFC).displayName || 'SingleComboBox')
+  const generate = useClassNameGenerator(SingleComboBox.displayName || 'SingleComboBox')
   return useMemo(
     () => ({
       wrapper: generate(),
@@ -23,7 +23,7 @@ export function useSingleComboBoxClassNames() {
 }
 
 export function useMultiComboBoxClassNames() {
-  const generate = useClassNameGenerator((MultiComboBox as VFC).displayName || 'MultiComboBox')
+  const generate = useClassNameGenerator(MultiComboBox.displayName || 'MultiComboBox')
   return useMemo(
     () => ({
       wrapper: generate(),

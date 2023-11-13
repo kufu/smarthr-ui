@@ -27,12 +27,8 @@ test('ダイアログが開閉できること', async (t) => {
     .expect(trigger.focused)
     .ok()
 
-  // 背景クリックでダイアログが閉じることを確認
-  await t
-    .click(trigger)
-    .click(background, { offsetX: 0, offsetY: 0 })
-    .expect(content.exists)
-    .notOk()
+  // 背景クリックでダイアログが閉じないことを確認
+  await t.click(trigger).click(background, { offsetX: 0, offsetY: 0 }).expect(content.exists).ok()
 })
 
 test('フォーカストラップが動作すること', async (t) => {

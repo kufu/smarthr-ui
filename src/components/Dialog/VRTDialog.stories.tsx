@@ -49,7 +49,7 @@ export const VRTOpenDialogNarrow: StoryFn = () => (
 
 export const VRTDialogForcedColors: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false} >
+    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <Default />
@@ -62,7 +62,7 @@ VRTOpenDialogNarrow.parameters = {
   },
   chromatic: {
     modes: {
-      vrtMobile: { viewport: 'vrtMobile' }
+      vrtMobile: { viewport: 'vrtMobile' },
     },
   },
 }

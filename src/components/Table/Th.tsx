@@ -61,11 +61,13 @@ export const Th: FC<Props & ElementProps> = ({
         'aria-sort': AriaAttributes['aria-sort']
       }
     | undefined
-  >(() => (
+  >(
+    () =>
       sort && {
         'aria-sort': sort === 'none' ? 'none' : `${sort}ending`,
-      }
-    ), [sort])
+      },
+    [sort],
+  )
 
   return (
     <Wrapper
@@ -127,6 +129,36 @@ const Wrapper = styled.th<{ themes: Theme; fixed: boolean }>`
         }
       }
     `}
+
+    @media (forced-colors: active) {
+      &[aria-sort='none'] {
+        .smarthr-ui-Icon {
+          fill: GrayText;
+        }
+      }
+
+      &[aria-sort='ascending'] {
+        .smarthr-ui-Icon {
+          &:first-child {
+            fill: CanvasText;
+          }
+          &:last-child {
+            fill: GrayText;
+          }
+        }
+      }
+
+      &[aria-sort='descending'] {
+        .smarthr-ui-Icon {
+          &:first-child {
+            fill: GrayText;
+          }
+          &:last-child {
+            fill: CanvasText;
+          }
+        }
+      }
+    }
   `}
 `
 

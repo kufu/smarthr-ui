@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [38.1.0](https://github.com/kufu/smarthr-ui/compare/v38.0.0...v38.1.0) (2023-11-07)
+
+
+### Features
+
+* PageCounterにdecoratorsを追加する ([#3923](https://github.com/kufu/smarthr-ui/issues/3923)) ([e4bd874](https://github.com/kufu/smarthr-ui/commit/e4bd874a07929dc3d5044cfaac3a352d4e10e43c))
+* UnstyledButton を Tailwind CSS 化 ([#3919](https://github.com/kufu/smarthr-ui/issues/3919)) ([e417975](https://github.com/kufu/smarthr-ui/commit/e41797532a508050fb094fb196c9cf4b15fb3932))
+
+
+### Bug Fixes
+
+* Dialog の背景を押した時の挙動をデフォルトで閉じないように揃える ([#3921](https://github.com/kufu/smarthr-ui/issues/3921)) ([a294c97](https://github.com/kufu/smarthr-ui/commit/a294c97421a34dc91904ecab0235b2ec11259cfa))
+* tailwind-variants の修正を取り込み Button に反映 ([#3918](https://github.com/kufu/smarthr-ui/issues/3918)) ([c238c49](https://github.com/kufu/smarthr-ui/commit/c238c4917f01730ba797f52c2317c7cf419b5f12))
+* 強制カラーモード時に Icon の色が強制されない欠陥を修正 ([#3940](https://github.com/kufu/smarthr-ui/issues/3940)) ([8c78b63](https://github.com/kufu/smarthr-ui/commit/8c78b63fa9909d30e86e357ad7814820b868d029))
+
+## [38.0.0](https://github.com/kufu/smarthr-ui/compare/v37.1.2...v38.0.0) (2023-10-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* 旧 Button コンポーネントを削除 (#3911)
+
+### Features
+
+* Button を Tailwind CSS 化 ([#3899](https://github.com/kufu/smarthr-ui/issues/3899)) ([3e28784](https://github.com/kufu/smarthr-ui/commit/3e287847624f0f2d121e256ae966a1e62639ee8d))
+* Cluster を Tailwind CSS 化 ([#3892](https://github.com/kufu/smarthr-ui/issues/3892)) ([0b9757f](https://github.com/kufu/smarthr-ui/commit/0b9757f74fa9f6d567bfe8eef7da063e2d6a5415))
+* ComboBoxにrefを渡せるようにする ([#3903](https://github.com/kufu/smarthr-ui/issues/3903)) ([49fb344](https://github.com/kufu/smarthr-ui/commit/49fb344f1d34049fd873cbde06f7b0e1cda2b298))
+* PageCounterをTailwindCSS化 ([#3910](https://github.com/kufu/smarthr-ui/issues/3910)) ([f3c6440](https://github.com/kufu/smarthr-ui/commit/f3c6440ccaf9c3ab1d9eddb986526df0eadaa872))
+
+
+### Bug Fixes
+
+* Headingコンポーネントのtag属性にspan, legendを指定不可能にする ([#3908](https://github.com/kufu/smarthr-ui/issues/3908)) ([9885058](https://github.com/kufu/smarthr-ui/commit/98850581413848c497d828fa6d4b3e1c3634fb54))
+* 旧 Button コンポーネントを削除 ([#3911](https://github.com/kufu/smarthr-ui/issues/3911)) ([bde7e9e](https://github.com/kufu/smarthr-ui/commit/bde7e9ece6cce2086c2087d380fc09652424b805))
+
 ### [37.1.2](https://github.com/kufu/smarthr-ui/compare/v37.1.1...v37.1.2) (2023-10-24)
 
 

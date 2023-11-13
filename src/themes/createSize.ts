@@ -54,14 +54,14 @@ export type CreatedSizeTheme = {
 const pxToRem = (value: number) => (font: number) => `${value / font}rem`
 
 const getSpace = (size: number) => ({
-    XXS: size,
-    XS: size * 2,
-    S: size * 3,
-    M: size * 4,
-    L: size * 5,
-    XL: size * 6,
-    XXL: size * 7,
-  })
+  XXS: size,
+  XS: size * 2,
+  S: size * 3,
+  M: size * 4,
+  L: size * 5,
+  XL: size * 6,
+  XXL: size * 7,
+})
 
 const defaultFontSize = { SHORT: 11, TALL: 14, GRANDE: 18, VENTI: 24 }
 
