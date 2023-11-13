@@ -2,7 +2,6 @@ import React, {
   ComponentPropsWithoutRef,
   FC,
   PropsWithChildren,
-  useCallback,
   useContext,
   useMemo,
   useRef,
@@ -18,19 +17,15 @@ import { AccordionPanelItemContext } from './AccordionPanelItem'
 type Props = PropsWithChildren
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
-const duration = 100
-
 const accordionPanelContent = tv({
   base: [
     'smarthr-ui-AccordionPanel-content',
-    'shr-h-0',
-    'shr-overflow-hidden',
-    'shr-transition-[height]',
+    'shr-max-h-0',
+    'shr-transition-[max-height,_visible]',
     'shr-duration-100',
     'shr-ease-in-out',
     'shr-invisible',
-    '[&.entered]:shr-h-auto',
-    '[&.entered]:shr-overflow-visible',
+    '[&.entered]:shr-max-h-screen',
     '[&.entered]:shr-visible',
   ],
 })
@@ -42,34 +37,8 @@ export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...
   const wrapperRef = useRef<HTMLDivElement>(null)
   const styles = useMemo(() => accordionPanelContent({ className }), [className])
 
-  const recalculateHeight = useCallback(
-    (node: HTMLElement) => {
-      const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
-      node.style.height = `${wrapperHeight}px`
-    },
-    [wrapperRef],
-  )
-
-  const handleEntered = (node: HTMLElement) => {
-    node.style.height = 'auto'
-    node.style.visibility = 'visible'
-  }
-
-  const handleExited = (node: HTMLElement) => {
-    node.style.height = '0px'
-    node.style.visibility = 'hidden'
-  }
-
   return (
-    <Transition
-      in={isInclude}
-      onEntering={recalculateHeight}
-      onEntered={handleEntered}
-      onExit={recalculateHeight}
-      onExiting={recalculateHeight}
-      onExited={handleExited}
-      timeout={duration}
-    >
+    <Transition in={isInclude} timeout={100}>
       {(status) => (
         <div
           {...props}
