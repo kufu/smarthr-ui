@@ -25,106 +25,108 @@ const options = [
 ]
 
 export const VRTState: StoryFn = () => (
-  <WrapperList>
+  <>
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
       hover, activeなどの状態で表示されます
     </VRTInformationPanel>
-    <li>
-      <Title>hover</Title>
-      <InnerList id="list-hover">
-        <li>
-          <Text>
-            <span>標準</span>
-            <Select name="default" options={options} />
-          </Text>
-        </li>
-        <li>
-          <Text>
-            <span>エラー状態</span>
-            <Select name="error" error options={options} />
-          </Text>
-        </li>
-        <li>
-          <Text>
-            <span>disabled 状態</span>
-            <Select name="disabled" disabled options={options} />
-          </Text>
-        </li>
-      </InnerList>
-    </li>
+    <WrapperList>
+      <li>
+        <Title>hover</Title>
+        <InnerList id="list-hover">
+          <li>
+            <Text>
+              <span>標準</span>
+              <Select name="default" options={options} />
+            </Text>
+          </li>
+          <li>
+            <Text>
+              <span>エラー状態</span>
+              <Select name="error" error options={options} />
+            </Text>
+          </li>
+          <li>
+            <Text>
+              <span>disabled 状態</span>
+              <Select name="disabled" disabled options={options} />
+            </Text>
+          </li>
+        </InnerList>
+      </li>
 
-    <li>
-      <Title>focus</Title>
-      <InnerList id="list-focus">
-        <li>
-          <Text>
-            <span>標準</span>
-            <Select name="default" options={options} />
-          </Text>
-        </li>
-        <li>
-          <Text>
-            <span>エラー状態</span>
-            <Select name="error" error options={options} />
-          </Text>
-        </li>
-        <li>
-          <Text>
-            <span>disabled 状態</span>
-            <Select name="disabled" disabled options={options} />
-          </Text>
-        </li>
-      </InnerList>
-    </li>
+      <li>
+        <Title>focus</Title>
+        <InnerList id="list-focus">
+          <li>
+            <Text>
+              <span>標準</span>
+              <Select name="default" options={options} />
+            </Text>
+          </li>
+          <li>
+            <Text>
+              <span>エラー状態</span>
+              <Select name="error" error options={options} />
+            </Text>
+          </li>
+          <li>
+            <Text>
+              <span>disabled 状態</span>
+              <Select name="disabled" disabled options={options} />
+            </Text>
+          </li>
+        </InnerList>
+      </li>
 
-    <li>
-      <Title>focus-visible</Title>
-      <InnerList id="list-focus-visible">
-        <li>
-          <Text>
-            <span>標準</span>
-            <Select name="default" options={options} />
-          </Text>
-        </li>
-        <li>
-          <Text>
-            <span>エラー状態</span>
-            <Select name="error" error options={options} />
-          </Text>
-        </li>
-        <li>
-          <Text>
-            <span>disabled 状態</span>
-            <Select name="disabled" disabled options={options} />
-          </Text>
-        </li>
-      </InnerList>
-    </li>
+      <li>
+        <Title>focus-visible</Title>
+        <InnerList id="list-focus-visible">
+          <li>
+            <Text>
+              <span>標準</span>
+              <Select name="default" options={options} />
+            </Text>
+          </li>
+          <li>
+            <Text>
+              <span>エラー状態</span>
+              <Select name="error" error options={options} />
+            </Text>
+          </li>
+          <li>
+            <Text>
+              <span>disabled 状態</span>
+              <Select name="disabled" disabled options={options} />
+            </Text>
+          </li>
+        </InnerList>
+      </li>
 
-    <li>
-      <Title>active</Title>
-      <InnerList id="list-active">
-        <li>
-          <Text>
-            <span>標準</span>
-            <Select name="default" options={options} />
-          </Text>
-        </li>
-        <li>
-          <Text>
-            <span>エラー状態</span>
-            <Select name="error" error options={options} />
-          </Text>
-        </li>
-        <li>
-          <Text>
-            <span>disabled 状態</span>
-            <Select name="disabled" disabled options={options} />
-          </Text>
-        </li>
-      </InnerList>
-    </li>
-  </WrapperList>
+      <li>
+        <Title>active</Title>
+        <InnerList id="list-active">
+          <li>
+            <Text>
+              <span>標準</span>
+              <Select name="default" options={options} />
+            </Text>
+          </li>
+          <li>
+            <Text>
+              <span>エラー状態</span>
+              <Select name="error" error options={options} />
+            </Text>
+          </li>
+          <li>
+            <Text>
+              <span>disabled 状態</span>
+              <Select name="disabled" disabled options={options} />
+            </Text>
+          </li>
+        </InnerList>
+      </li>
+    </WrapperList>
+  </>
 )
 
 export const VRTForcedColors: StoryFn = () => (
