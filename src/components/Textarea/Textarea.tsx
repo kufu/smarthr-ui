@@ -44,8 +44,8 @@ const getStringLength = (value: string | number | readonly string[]) => {
     typeof value === 'number' || typeof value === 'string'
       ? `${value}`
       : Array.isArray(value)
-      ? value.join(',')
-      : ''
+        ? value.join(',')
+        : ''
 
   // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
   const surrogatePairs = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
