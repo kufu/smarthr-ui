@@ -98,10 +98,3 @@ VRTForcedColors.parameters = {
 const VRTInformationPanel = styled(InformationPanel)`
   margin-bottom: 24px;
 `
-
-const List = styled.dl`
-  margin: 1rem;
-  & > dd {
-    margin: 10px 0 40px;
-  }
-`
