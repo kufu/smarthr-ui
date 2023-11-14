@@ -114,8 +114,15 @@ const Box = styled.span<{ themes: Theme; error?: boolean }>`
 
       /* FIXME: なぜか static classname になってしまうため & を重ねている */
       input[disabled] + && {
-        background-color: ${color.BORDER};
-        border-color: ${color.BORDER};
+        &.active {
+          background-color: ${color.BORDER};
+          border-color: ${color.BORDER};
+        }
+
+        &:not(.active) {
+          background-color: ${color.hoverColor(color.WHITE)};
+          border-color: ${color.disableColor(color.BORDER)};
+        }
       }
 
       ${error &&
@@ -157,7 +164,7 @@ const Input = styled.input<{ themes: Theme }>`
 `
 const IconWrap = styled.span<{ themes: Theme }>`
   ${({ themes }) => {
-    const { fontSize } = themes
+    const { color, fontSize } = themes
 
     return css`
       position: absolute;
@@ -172,6 +179,10 @@ const IconWrap = styled.span<{ themes: Theme }>`
 
       input:not(:checked, :indeterminate) ~ & > svg {
         fill: transparent;
+      }
+
+      input:disabled ~ & > svg {
+        fill: ${color.hoverColor(color.WHITE)};
       }
 
       & > svg {
