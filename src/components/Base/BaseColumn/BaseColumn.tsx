@@ -8,7 +8,7 @@ type Props = VariantProps<typeof baseColumn>
 type ElementProps = Omit<ComponentProps<'div'>, keyof BaseProps | keyof Props>
 
 const baseColumn = tv({
-  base: 'shr-rounded-[unset]',
+  base: '[&&&]:shr-rounded-[unset]',
   variants: {
     bgColor: {
       BACKGROUND: '[&&&]:shr-bg-background',
