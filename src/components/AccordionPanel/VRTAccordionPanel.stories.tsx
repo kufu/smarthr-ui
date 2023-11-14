@@ -33,6 +33,15 @@ export const VRTOpenAccordion: StoryFn = () => (
   </Wrapper>
 )
 
+export const VRTAccordionFocus: StoryFn = () => (
+  <Wrapper>
+    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      それぞれ1番目、2番目、3番目のアイテムにフォーカスが当たった状態で表示されます
+    </VRTInformationPanel>
+    <AccordionStyle />
+  </Wrapper>
+)
+
 export const VRTOpenAccordionNarrow: StoryFn = () => (
   <Wrapper>
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
@@ -55,6 +64,12 @@ VRTOpenAccordion.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement)
   const buttons = await canvas.findAllByRole('button')
   userEvent.click(buttons[0])
+}
+
+VRTAccordionFocus.parameters = {
+  pseudo: {
+    focusVisible: ['#left-icon-0-trigger', '#right-icon-1-trigger', '#no-icon-2-trigger'],
+  },
 }
 
 VRTOpenAccordionNarrow.parameters = {
