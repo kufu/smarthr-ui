@@ -114,8 +114,8 @@ const Box = styled.span<{ themes: Theme; error?: boolean }>`
 
       /* FIXME: なぜか static classname になってしまうため & を重ねている */
       input[disabled] + && {
-        background-color: ${color.BORDER};
-        border-color: ${color.BORDER};
+        border-color: ${color.disableColor(color.BORDER)};
+        background-color: ${color.hoverColor(color.WHITE)};
       }
 
       ${error &&
