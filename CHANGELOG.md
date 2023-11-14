@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [38.2.0](https://github.com/kufu/smarthr-ui/compare/v38.1.0...v38.2.0) (2023-11-14)
+
+
+### Features
+
+* NotificationBar に下地の概念を追加 ([#3959](https://github.com/kufu/smarthr-ui/issues/3959)) ([2b50ae6](https://github.com/kufu/smarthr-ui/commit/2b50ae6cd01ab88985e27cd456f68b466c9e267a))
+
 ## [38.1.0](https://github.com/kufu/smarthr-ui/compare/v38.0.0...v38.1.0) (2023-11-07)
 
 
