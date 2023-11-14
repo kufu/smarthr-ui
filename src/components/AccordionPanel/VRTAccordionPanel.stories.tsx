@@ -60,11 +60,13 @@ export const VRTAccordionForcedColors: StoryFn = () => (
   </Wrapper>
 )
 
-VRTOpenAccordion.play = async ({ canvasElement }) => {
+const playPanelOpen = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   const canvas = within(canvasElement)
   const buttons = await canvas.findAllByRole('button')
   userEvent.click(buttons[0])
 }
+
+VRTOpenAccordion.play = playPanelOpen
 
 VRTAccordionFocus.parameters = {
   pseudo: {
@@ -82,20 +84,12 @@ VRTOpenAccordionNarrow.parameters = {
     },
   },
 }
-VRTOpenAccordionNarrow.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  const buttons = await canvas.findAllByRole('button')
-  userEvent.click(buttons[0])
-}
+VRTOpenAccordionNarrow.play = playPanelOpen
 
 VRTAccordionForcedColors.parameters = {
   chromatic: { forcedColors: 'active' },
 }
-VRTAccordionForcedColors.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  const buttons = await canvas.findAllByRole('button')
-  userEvent.click(buttons[0])
-}
+VRTAccordionForcedColors.play = playPanelOpen
 
 const Wrapper = styled.div`
   height: 100vh;
