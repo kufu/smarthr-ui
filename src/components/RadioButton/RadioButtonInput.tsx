@@ -103,16 +103,20 @@ const Box = styled.span<{ themes: Theme }>`
 
       /* FIXME: なぜか static classname になってしまうため & を重ねている */
       input[disabled] + && {
-        background-color: ${color.BORDER};
-        border-color: ${color.BORDER};
         cursor: not-allowed;
 
         &.active {
+          background-color: ${color.BORDER};
           border-color: ${color.BORDER};
 
           &::before {
-            background-color: ${color.WHITE};
+            background-color: ${color.hoverColor(color.WHITE)};
           }
+        }
+
+        &:not(.active) {
+          background-color: ${color.hoverColor(color.WHITE)};
+          border-color: ${color.disableColor(color.BORDER)};
         }
       }
     `
