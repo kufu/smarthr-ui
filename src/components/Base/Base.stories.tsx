@@ -1,5 +1,5 @@
-import { Story } from '@storybook/react'
-import * as React from 'react'
+import { StoryFn } from '@storybook/react'
+import React from 'react'
 import styled from 'styled-components'
 
 import { useTheme } from '../../hooks/useTheme'
@@ -14,7 +14,7 @@ export default {
   component: Base,
 }
 
-export const BaseStory: Story = () => {
+export const BaseStory: StoryFn = () => {
   const themes = useTheme()
 
   return (
@@ -98,7 +98,7 @@ export const BaseStory: Story = () => {
 }
 BaseStory.storyName = 'Base'
 
-export const DialogBaseStory: Story = () => (
+export const DialogBaseStory: StoryFn = () => (
   <List>
     <li>
       <DialogBase radius="s">
