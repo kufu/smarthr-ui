@@ -42,17 +42,6 @@ const loaderStyle = tv({
       'shr-border-b-transparent',
       'shr-rounded-[50%]',
     ],
-    ticker: [
-      'shr-absolute',
-      'shr-top-0',
-      'shr-left-[45%]',
-      'shr-block',
-      'shr-border-box',
-      'shr-w-[10%]',
-      'shr-h-full',
-      'shr-overflow-hidden',
-      'shr-border-inherit',
-    ],
     textSlot: ['shr-block', 'shr-mt-1', 'shr-text-base', 'shr-text-center'],
   },
   variants: {
@@ -106,9 +95,6 @@ const loaderStyle = tv({
           'shr-left-[-100%]',
         ],
       },
-      center: {
-        cogInner: ['shr-w-[1000%]', 'shr-left-[-450%]'], // TODO 1000% と -450% のパースがうまくいかない。そもそも center の要素いる？
-      },
     },
   },
 })
@@ -120,7 +106,7 @@ export const Loader: FC<Props & ElementProps> = ({
   className = '',
   ...props
 }) => {
-  const { wrapper, spinner, line, cog, cogInner, ticker, textSlot } = loaderStyle({
+  const { wrapper, spinner, line, cog, cogInner, textSlot } = loaderStyle({
     type,
     size,
     className,
@@ -128,7 +114,6 @@ export const Loader: FC<Props & ElementProps> = ({
   const wrapperStyle = useMemo(() => wrapper({ className }), [wrapper, className])
   const spinnerStyle = useMemo(() => spinner(), [spinner])
   const cogStyle = useMemo(() => cog(), [cog])
-  const tickerStyle = useMemo(() => ticker(), [ticker])
   const textStyle = useMemo(() => textSlot(), [textSlot])
 
   return (
@@ -138,9 +123,6 @@ export const Loader: FC<Props & ElementProps> = ({
           <span className={line({ lineNum: (index + 1) as 1 | 2 | 3 | 4 })} key={index}>
             <span className={cogStyle}>
               <span className={cogInner({ position: 'left' })} />
-            </span>
-            <span className={tickerStyle}>
-              <span className={cogInner({ position: 'center' })} />
             </span>
             <span className={cogStyle}>
               <span className={cogInner({ position: 'right' })} />
