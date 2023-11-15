@@ -67,6 +67,17 @@ const Template: Story = () => {
       </li>
       <li>
         <Label>
+          最大文字数 (value)
+          <Textarea
+            name="max_length_with_value_over"
+            maxLength={4}
+            value={value}
+            onChange={onChangeValue}
+          />
+        </Label>
+      </li>
+      <li>
+        <Label>
           最大文字数 (decorators)
           <Textarea
             name="max_length_with_value_and_decorators"
