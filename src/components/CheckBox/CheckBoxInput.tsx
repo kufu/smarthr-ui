@@ -177,6 +177,11 @@ const IconWrap = styled.span<{ themes: Theme }>`
       & > svg {
         vertical-align: top;
       }
+
+      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
+      @media (forced-colors: active) {
+        display: none;
+      }
     `
   }}
 `
