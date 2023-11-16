@@ -3181,10 +3181,10 @@
     fs-extra "^11.1.0"
     read-pkg-up "^7.0.1"
 
-"@storybook/test-runner@^0.14.1":
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/@storybook/test-runner/-/test-runner-0.14.1.tgz#028135602173f34be24f3bec7d54a2ff8b3a3830"
-  integrity sha512-8W4K/dttKnecXVb1zdqebnEBWk2LmMvQPBRoFtljUkARE1+wr6HlWOBoy55QClIbssVSxrx1LvOraVy7VmS/zw==
+"@storybook/test-runner@^0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@storybook/test-runner/-/test-runner-0.15.1.tgz#50473081cc855f837a2c1cbb3ee16ca72fcc692d"
+  integrity sha512-VHm9E6DM4ibs132EVJnavhX8Y15WARRHaZcLMkdb1R9Wmh1X6pdojl77AERQzIOCzhfBg291G3MZzCcE9enh8A==
   dependencies:
     "@babel/core" "^7.22.5"
     "@babel/generator" "^7.22.5"
