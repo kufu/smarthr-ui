@@ -20,7 +20,12 @@ const NormalDatePicker = ({ name }: { name: string }) => (
   <List>
     <dt>DatePicker</dt>
     <dd>
-      <DatePicker name={name} onChangeDate={action('change')} data-test="datepicker-1" />
+      <DatePicker
+        name={name}
+        value="2020/01/01"
+        onChangeDate={action('change')}
+        data-test="datepicker-1"
+      />
     </dd>
   </List>
 )
@@ -91,7 +96,11 @@ export const VRTBottomExpanded: StoryFn = () => (
     <List>
       <dt className="bottom">Place on the page bottom</dt>
       <dd>
-        <DatePicker name="place_on_the_page_bottom" onChangeDate={action('change')} />
+        <DatePicker
+          name="place_on_the_page_bottom"
+          value="2020/01/01"
+          onChangeDate={action('change')}
+        />
       </dd>
     </List>
   </WrapperList>

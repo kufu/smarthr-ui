@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
@@ -10,7 +10,7 @@ export default {
   component: Calendar,
 }
 
-export const All: Story = () => {
+export const All: StoryFn = () => {
   const [value, setValue] = useState(new Date(2020, 0, 1))
   const [value2, setValue2] = useState(new Date(2023, 3, 1))
   return (

@@ -1,20 +1,27 @@
-import React, { ReactNode, forwardRef, useImperativeHandle, useRef, useState } from 'react'
-import styled, { css } from 'styled-components'
+import React, {
+  PropsWithChildren,
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
-import { Theme, useTheme } from '../../hooks/useTheme'
 
 import { getPortalPosition } from './datePickerHelper'
-import { useClassNames } from './useClassNames'
 
-type Props = {
+type Props = PropsWithChildren<{
   inputRect: DOMRect
-  children: ReactNode
-}
+}>
 
-export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, children }, ref) => {
-  const themes = useTheme()
+const portal = tv({
+  base: 'smarthr-ui-DatePicker-calendarContainer shr-absolute shr-z-overlap shr-leading-none',
+})
+
+export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }, ref) => {
   const { createPortal } = usePortal()
 
   const [position, setPosition] = useState({
@@ -31,26 +38,16 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, children }
     setPosition(getPortalPosition(inputRect, containerRef.current.offsetHeight))
   }, [inputRect])
 
-  const classNames = useClassNames()
+  const containerStyleProps = useMemo(() => {
+    const container = portal()
+    return {
+      className: container,
+      style: {
+        top: `${position.top}px`,
+        left: `${position.left}px`,
+      },
+    }
+  }, [position.left, position.top])
 
-  return createPortal(
-    <Container
-      {...position}
-      themes={themes}
-      className={classNames.calendarContainer}
-      ref={containerRef}
-    >
-      {children}
-    </Container>,
-  )
+  return createPortal(<div {...props} {...containerStyleProps} ref={containerRef} />)
 })
-
-const Container = styled.div<{ top: number; left: number; themes: Theme }>(
-  ({ top, left, themes }) => css`
-    position: absolute;
-    top: ${top}px;
-    left: ${left}px;
-    z-index: ${themes.zIndex.OVERLAP};
-    line-height: 1;
-  `,
-)
