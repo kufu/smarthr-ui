@@ -18,10 +18,10 @@ export default {
   },
 }
 
-export const VRTHover: StoryFn = () => (
+export const VRTState: StoryFn = () => (
   <>
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
-      hoverされた状態で表示されます
+      hover, activeなどの状態で表示されます{' '}
     </VRTInformationPanel>
     <Ul>
       <li>
@@ -38,13 +38,58 @@ export const VRTHover: StoryFn = () => (
           </TabItem>
         </TabBar>
       </li>
+      <li>
+        <p>focus</p>
+        <TabBar id="focus">
+          <TabItem id="border-4" onClick={action('clicked')}>
+            Tab
+          </TabItem>
+          <TabItem id="border-5" onClick={action('clicked')} selected>
+            Selected
+          </TabItem>
+          <TabItem id="border-6" onClick={action('clicked')} disabled>
+            Disabled
+          </TabItem>
+        </TabBar>
+      </li>
+      <li>
+        <p>focusVisible</p>
+        <TabBar id="focus-visible">
+          <TabItem id="border-7" onClick={action('clicked')}>
+            Tab
+          </TabItem>
+          <TabItem id="border-8" onClick={action('clicked')} selected>
+            Selected
+          </TabItem>
+          <TabItem id="border-9" onClick={action('clicked')} disabled>
+            Disabled
+          </TabItem>
+        </TabBar>
+      </li>
+      <li>
+        <p>active</p>
+        <TabBar id="active">
+          <TabItem id="border-1" onClick={action('clicked')}>
+            Tab
+          </TabItem>
+          <TabItem id="border-2" onClick={action('clicked')} selected>
+            Selected
+          </TabItem>
+          <TabItem id="border-3" onClick={action('clicked')} disabled>
+            Disabled
+          </TabItem>
+        </TabBar>
+      </li>
     </Ul>
   </>
 )
-VRTHover.parameters = {
+VRTState.parameters = {
   controls: { hideNoControlsWarning: true },
   pseudo: {
     hover: ['#hover button'],
+    focus: ['#focus button'],
+    focusVisible: ['#focus-visible button'],
+    active: ['#active button'],
   },
 }
 
