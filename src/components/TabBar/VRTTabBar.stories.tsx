@@ -69,13 +69,13 @@ export const VRTState: StoryFn = () => (
       <li>
         <p>active</p>
         <TabBar id="active">
-          <TabItem id="border-1" onClick={action('clicked')}>
+          <TabItem id="border-10" onClick={action('clicked')}>
             Tab
           </TabItem>
-          <TabItem id="border-2" onClick={action('clicked')} selected>
+          <TabItem id="border-11" onClick={action('clicked')} selected>
             Selected
           </TabItem>
-          <TabItem id="border-3" onClick={action('clicked')} disabled>
+          <TabItem id="border-12" onClick={action('clicked')} disabled>
             Disabled
           </TabItem>
         </TabBar>
