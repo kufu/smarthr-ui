@@ -3,7 +3,7 @@ import { Story } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
 
-import { Base as BaseComponent } from '../Base'
+import { Base } from '../Base'
 import { Button } from '../Button'
 import { Text } from '../Text'
 
@@ -224,7 +224,7 @@ export const All: Story = () => (
     </li>
     <li>
       Table on Base
-      <Base>
+      <Base overflow="auto">
         <Table>
           <thead>
             <tr>
@@ -264,7 +264,7 @@ export const All: Story = () => (
     </li>
     <li>
       Table with empty state
-      <Base>
+      <Base overflow="auto">
         <Table>
           <thead>
             <tr>
@@ -411,7 +411,7 @@ export const WithReel: Story = () => (
     </li>
     <li>
       BaseにTableReelを入れる
-      <Base>
+      <Base overflow="auto">
         <TableReel>
           <Table>
             <thead>
@@ -522,8 +522,4 @@ const Ul = styled.ul`
     margin-top: 2rem;
     padding: 0 2rem;
   }
-`
-
-const Base = styled(BaseComponent)`
-  overflow-x: auto;
 `
