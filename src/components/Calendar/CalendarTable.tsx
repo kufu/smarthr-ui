@@ -1,12 +1,10 @@
 import dayjs from 'dayjs'
-import React, { HTMLAttributes, MouseEvent, VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentPropsWithoutRef, FC, MouseEvent, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { UnstyledButton } from '../Button'
 
 import { daysInWeek, getMonthArray, isBetween } from './calendarHelper'
-import { useClassNames } from './useClassNames'
 
 type Props = {
   /** 現在の日付 */
@@ -20,18 +18,53 @@ type Props = {
   /** 選択された日付 */
   selected?: Date | null
 }
-type ElementProps = Omit<HTMLAttributes<HTMLTableElement>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
 
-export const CalendarTable: VFC<Props & ElementProps> = ({
+const calendarTable = tv({
+  slots: {
+    table:
+      'smarthr-ui-CalendarTable shr-border-spacing-0 shr-px-0.75 shr-pb-1 shr-pt-0.25 shr-text-base shr-text-black',
+    th: 'smarthr-ui-CalendarTable-headCell shr-px-0 shr-py-0.5 shr-text-center shr-align-middle shr-font-normal shr-text-grey',
+    td: 'smarthr-ui-CalendarTable-dataCell shr-p-0 shr-align-middle',
+    cellButton:
+      'shr-group shr-flex shr-items-center shr-justify-center shr-px-0.5 shr-py-0.25 disabled:shr-cursor-not-allowed disabled:shr-text-disabled [&&&]:shr-cursor-pointer',
+    dateCell:
+      'shr-box-border shr-flex shr-h-[1.75rem] shr-w-[1.75rem] shr-items-center shr-justify-center shr-rounded-[50%] shr-leading-[0] group-[:not(:disabled)]:group-hover:shr-bg-base-grey group-[:not(:disabled)]:group-hover:shr-text-black',
+  },
+  variants: {
+    isToday: {
+      true: {
+        dateCell:
+          'shr-border shr-border-solid shr-border-default contrast-more:shr-border-highContrast',
+      },
+    },
+    isSelected: {
+      true: {
+        dateCell: '[&&&&]:shr-bg-main [&&&&]:shr-text-white',
+      },
+    },
+  },
+})
+
+export const CalendarTable: FC<Props & ElementProps> = ({
   current,
   from,
   to,
   onSelectDate,
   selected,
+  className,
   ...props
 }) => {
-  const themes = useTheme()
-  const classNames = useClassNames()
+  const { table, th, td, cellButton, dateCell } = calendarTable()
+  const { tableStyle, thStyle, tdStyle, cellButtonStyle } = useMemo(
+    () => ({
+      tableStyle: table({ className }),
+      thStyle: th(),
+      tdStyle: td(),
+      cellButtonStyle: cellButton(),
+    }),
+    [cellButton, className, table, td, th],
+  )
   const currentDay = dayjs(current)
   const selectedDay = selected ? dayjs(selected) : null
 
@@ -41,15 +74,11 @@ export const CalendarTable: VFC<Props & ElementProps> = ({
 
   const array = getMonthArray(currentDay.toDate())
   return (
-    <Table
-      {...props}
-      themes={themes}
-      className={`${props.className} ${classNames.calendarTable.wrapper}`}
-    >
+    <table {...props} className={tableStyle}>
       <thead>
         <tr>
           {daysInWeek.map((day, i) => (
-            <th key={i} className={classNames.calendarTable.headCell}>
+            <th key={i} className={thStyle}>
               {day}
             </th>
           ))}
@@ -65,25 +94,26 @@ export const CalendarTable: VFC<Props & ElementProps> = ({
               const isSelectedDate =
                 !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
               return (
-                <td key={dateIndex} className={classNames.calendarTable.dataCell}>
+                <td key={dateIndex} className={tdStyle}>
                   {date && (
-                    <CellButton
-                      themes={themes}
+                    <UnstyledButton
                       disabled={isOutRange}
                       onClick={(e) =>
                         !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
                       }
                       aria-pressed={isSelectedDate}
                       type="button"
+                      className={cellButtonStyle}
                     >
-                      <DateCell
-                        themes={themes}
-                        isToday={currentDay.date(date).isSame(now, 'date')}
-                        isSelected={isSelectedDate}
+                      <span
+                        className={dateCell({
+                          isToday: currentDay.date(date).isSame(now, 'date'),
+                          isSelected: isSelectedDate,
+                        })}
                       >
                         {date}
-                      </DateCell>
-                    </CellButton>
+                      </span>
+                    </UnstyledButton>
                   )}
                 </td>
               )
@@ -91,78 +121,6 @@ export const CalendarTable: VFC<Props & ElementProps> = ({
           </tr>
         ))}
       </tbody>
-    </Table>
+    </table>
   )
 }
-
-const Table = styled.table<{ themes: Theme }>(({ themes }) => {
-  const { color, fontSize, spacingByChar } = themes
-  return css`
-    color: ${color.TEXT_BLACK};
-    font-size: ${fontSize.M};
-    border-spacing: 0;
-    padding: ${spacingByChar(0.25)} ${spacingByChar(0.75)} ${spacingByChar(1)};
-
-    th {
-      padding: ${spacingByChar(0.5)} 0;
-      vertical-align: middle;
-      text-align: center;
-      font-weight: normal;
-      color: ${color.TEXT_GREY};
-    }
-    td {
-      padding: 0;
-      vertical-align: middle;
-    }
-  `
-})
-const DateCell = styled.span<{ themes: Theme; isToday?: boolean; isSelected?: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  box-sizing: border-box;
-  border-radius: 50%;
-  line-height: 0;
-  ${({ themes: { border, color }, isToday, isSelected }) => css`
-    ${isToday &&
-    css`
-      border: ${border.shorthand};
-
-      @media (prefers-contrast: more) {
-        & {
-          border: ${border.highContrast};
-        }
-      }
-    `}
-
-    ${isSelected &&
-    css`
-      background-color: ${color.MAIN} !important;
-      color: ${color.TEXT_WHITE} !important;
-    `}
-  `}
-`
-const CellButton = styled(UnstyledButton)<{ themes: Theme }>(
-  ({ themes: { color, spacingByChar } }) => css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
-    cursor: pointer;
-
-    :disabled {
-      color: ${color.TEXT_DISABLED};
-      cursor: not-allowed;
-    }
-    :not(:disabled) {
-      &:hover {
-        ${DateCell} {
-          background-color: ${color.BASE_GREY};
-          color: ${color.TEXT_BLACK};
-        }
-      }
-    }
-  `,
-)

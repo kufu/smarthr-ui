@@ -1,10 +1,7 @@
-import React, { FC, HTMLAttributes, useEffect, useRef } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentProps, FC, useEffect, useMemo, useRef } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { UnstyledButton } from '../Button'
-
-import { useClassNames } from './useClassNames'
 
 type Props = {
   /** 選択された年 */
@@ -20,7 +17,36 @@ type Props = {
   /** HTMLのid属性 */
   id: string
 }
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+
+const yearPicker = tv({
+  slots: {
+    overlay: 'smarthr-ui-YearPicker shr-absolute shr-inset-0 shr-bg-white',
+    container:
+      'shr-box-border shr-flex shr-h-full shr-w-full shr-flex-wrap shr-items-start shr-overflow-y-auto shr-px-0.25 shr-py-0.5',
+    yearButton:
+      'smarthr-ui-YearPicker-selectYear shr-group shr-flex shr-w-1/4 shr-cursor-pointer shr-items-center shr-justify-center shr-px-0 shr-py-0.5 shr-leading-none',
+    yearWrapper:
+      'shr-box-border shr-inline-block shr-rounded-full shr-px-0.75 shr-py-0.5 shr-text-base shr-leading-none group-hover:shr-bg-base-grey group-hover:shr-text-black',
+  },
+  variants: {
+    isDisplayed: {
+      false: {
+        overlay: 'shr-hidden',
+      },
+    },
+    isThisYear: {
+      true: {
+        yearWrapper: 'shr-border shr-border-solid shr-border-default',
+      },
+    },
+    isSelected: {
+      true: {
+        yearWrapper: 'shr-bg-main shr-text-white',
+      },
+    },
+  },
+})
 
 export const YearPicker: FC<Props & ElementProps> = ({
   selectedYear,
@@ -31,8 +57,15 @@ export const YearPicker: FC<Props & ElementProps> = ({
   id,
   ...props
 }) => {
-  const themes = useTheme()
-  const classNames = useClassNames()
+  const { overlay, container, yearButton, yearWrapper } = yearPicker()
+  const { overlayStyle, containerStyle, yearButtonStyle } = useMemo(
+    () => ({
+      overlayStyle: overlay({ isDisplayed }),
+      containerStyle: container(),
+      yearButtonStyle: yearButton(),
+    }),
+    [container, isDisplayed, overlay, yearButton],
+  )
   const focusingRef = useRef<HTMLButtonElement>(null)
 
   const thisYear = new Date().getFullYear()
@@ -49,96 +82,26 @@ export const YearPicker: FC<Props & ElementProps> = ({
   }, [isDisplayed])
 
   return (
-    <Overlay
-      {...props}
-      themes={themes}
-      isDisplayed={isDisplayed}
-      id={id}
-      className={`${props.className} ${classNames.yearPicker.wrapper}`}
-    >
-      <Container themes={themes}>
+    <div {...props} id={id} className={overlayStyle}>
+      <div className={containerStyle}>
         {yearArray.map((year) => {
           const isThisYear = thisYear === year
           const isSelectedYear = selectedYear === year
           return (
-            <YearButton
+            <UnstyledButton
               key={year}
-              themes={themes}
               onClick={() => onSelectYear(year)}
               aria-pressed={isSelectedYear}
               ref={isThisYear ? focusingRef : null}
-              className={classNames.yearPicker.selectYear}
+              className={yearButtonStyle}
             >
-              <YearWrapper themes={themes} isThisYear={isThisYear} isSelected={isSelectedYear}>
+              <span className={yearWrapper({ isThisYear, isSelected: isSelectedYear })}>
                 {year}
-              </YearWrapper>
-            </YearButton>
+              </span>
+            </UnstyledButton>
           )
         })}
-      </Container>
-    </Overlay>
+      </div>
+    </div>
   )
 }
-
-const Overlay = styled.div<{ themes: Theme; isDisplayed: boolean }>`
-  ${({ isDisplayed }) =>
-    !isDisplayed &&
-    css`
-      display: none;
-    `}
-  position: absolute;
-  inset: 0;
-  background-color: ${({ themes }) => themes.color.WHITE};
-`
-
-const Container = styled.div<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    width: 100%;
-    height: 100%;
-    padding: ${spacingByChar(0.5)} ${spacingByChar(0.25)};
-    box-sizing: border-box;
-    overflow-y: auto;
-  `}
-`
-const YearWrapper = styled.span<{ themes: Theme; isThisYear?: boolean; isSelected?: boolean }>(
-  ({ themes, isThisYear, isSelected }) => {
-    const { border, color, fontSize, leading, spacingByChar } = themes
-    return css`
-      display: inline-block;
-      padding: ${spacingByChar(0.5)} ${spacingByChar(0.75)};
-      border-radius: 2rem;
-      font-size: ${fontSize.M};
-      box-sizing: border-box;
-      line-height: ${leading.NONE};
-      ${isThisYear &&
-      css`
-        border: ${border.shorthand};
-      `};
-      ${isSelected &&
-      css`
-        color: ${color.TEXT_WHITE} !important;
-        background-color: ${color.MAIN} !important;
-      `}
-    `
-  },
-)
-const YearButton = styled(UnstyledButton)<{ themes: Theme }>`
-  ${({ themes: { color, leading, spacingByChar } }) => css`
-    width: 25%;
-    padding: ${spacingByChar(0.5)} 0;
-    line-height: ${leading.NONE};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    &:hover {
-      ${YearWrapper} {
-        color: ${color.TEXT_BLACK};
-        background-color: ${color.BASE_GREY};
-      }
-    }
-  `}
-`
