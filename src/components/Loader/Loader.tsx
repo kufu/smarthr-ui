@@ -37,7 +37,6 @@ const loaderStyle = tv({
     cogInner: [
       'shr-absolute',
       'shr-top-0',
-      'shr-left-0',
       'shr-block',
       'shr-w-[200%]',
       'shr-h-full',
@@ -98,6 +97,7 @@ const loaderStyle = tv({
           'shr-border-r-transparent',
           'shr-rotate-[129deg]',
           'shr-animate-[loader-left-spin_1.2s_ease-in-out_infinite_both]',
+          'shr-left-0',
         ],
       },
       right: {
