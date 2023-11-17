@@ -19,7 +19,12 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 const loaderStyle = tv({
   slots: {
     wrapper: ['smarthr-ui-Loader', 'shr-inline-block', 'shr-overflow-hidden'],
-    spinner: ['shr-relative', 'shr-block', 'shr-animate-loader-spinner-spin', 'shr-mx-auto'],
+    spinner: [
+      'shr-relative',
+      'shr-block',
+      'shr-mx-auto',
+      'shr-animate-[spin_1.6s_linear_infinite]',
+    ],
     line: ['shr-absolute', 'shr-block', 'shr-w-full', 'shr-h-full', 'shr-opacity-0'],
     cog: [
       'shr-inline-block',
@@ -67,16 +72,24 @@ const loaderStyle = tv({
     },
     lineNum: {
       1: {
-        line: ['shr-animate-loader-line1-rotate'],
+        line: [
+          'shr-animate-[loader-line-full-unfill-rotate_4.8s_ease-in-out_infinite_both,_loader-line1-fade-in-out_4.8s_ease-in-out_infinite_both]',
+        ],
       },
       2: {
-        line: ['shr-animate-loader-line2-rotate'],
+        line: [
+          'shr-animate-[loader-line-full-unfill-rotate_4.8s_ease-in-out_infinite_both,_loader-line2-fade-in-out_4.8s_ease-in-out_infinite_both]',
+        ],
       },
       3: {
-        line: ['shr-animate-loader-line3-rotate'],
+        line: [
+          'shr-animate-[loader-line-full-unfill-rotate_4.8s_ease-in-out_infinite_both,_loader-line3-fade-in-out_4.8s_ease-in-out_infinite_both]',
+        ],
       },
       4: {
-        line: ['shr-animate-loader-line4-rotate'],
+        line: [
+          'shr-animate-[loader-line-full-unfill-rotate_4.8s_ease-in-out_infinite_both,_loader-line4-fade-in-out_4.8s_ease-in-out_infinite_both]',
+        ],
       },
     },
     position: {
@@ -84,14 +97,14 @@ const loaderStyle = tv({
         cogInner: [
           'shr-border-r-transparent',
           'shr-rotate-[129deg]',
-          'shr-animate-loader-left-spin',
+          'shr-animate-[loader-left-spin_1.2s_ease-in-out_infinite_both]',
         ],
       },
       right: {
         cogInner: [
           'shr-border-l-transparent',
           'shr-rotate-[-129deg]',
-          'shr-animate-loader-right-spin',
+          'shr-animate-[loader-right-spin_1.2s_ease-in-out_infinite_both]',
           '-shr-left-full',
         ],
       },

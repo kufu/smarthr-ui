@@ -254,19 +254,6 @@ export default {
           '50%': { transform: 'rotate(5deg)' },
         },
       },
-      animation: {
-        'loader-spinner-spin': 'spin 1.6s linear infinite',
-        'loader-line1-rotate':
-          'loader-line-full-unfill-rotate 4.8s ease-in-out infinite both, loader-line1-fade-in-out 4.8s ease-in-out infinite both',
-        'loader-line2-rotate':
-          'loader-line-full-unfill-rotate 4.8s ease-in-out infinite both, loader-line2-fade-in-out 4.8s ease-in-out infinite both',
-        'loader-line3-rotate':
-          'loader-line-full-unfill-rotate 4.8s ease-in-out infinite both, loader-line3-fade-in-out 4.8s ease-in-out infinite both',
-        'loader-line4-rotate':
-          'loader-line-full-unfill-rotate 4.8s ease-in-out infinite both, loader-line4-fade-in-out 4.8s ease-in-out infinite both',
-        'loader-left-spin': 'loader-left-spin 1.2s ease-in-out infinite both',
-        'loader-right-spin': 'loader-right-spin 1.2s ease-in-out infinite both',
-      },
     },
   },
   corePlugins: {
