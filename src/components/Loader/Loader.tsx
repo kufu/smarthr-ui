@@ -47,11 +47,11 @@ const loaderStyle = tv({
   variants: {
     size: {
       s: {
-        spinner: ['shr-w-[24px]', 'shr-h-[24px]'],
+        spinner: ['shr-w-1.5', 'shr-h-1.5'],
         cogInner: ['shr-border-2'],
       },
       m: {
-        spinner: ['shr-w-[48px]', 'shr-h-[48px]'],
+        spinner: ['shr-w-3', 'shr-h-3'],
         cogInner: ['shr-border-4'],
       },
     },
@@ -92,7 +92,7 @@ const loaderStyle = tv({
           'shr-border-l-transparent',
           'shr-rotate-[-129deg]',
           'shr-animate-loader-right-spin',
-          'shr-left-[-100%]',
+          '-shr-left-full',
         ],
       },
     },
