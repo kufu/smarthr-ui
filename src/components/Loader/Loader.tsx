@@ -103,13 +103,12 @@ export const Loader: FC<Props & ElementProps> = ({
   alt = '処理中',
   text,
   type = 'primary',
-  className = '',
+  className,
   ...props
 }) => {
   const { wrapper, spinner, line, cog, cogInner, textSlot } = loaderStyle({
     type,
     size,
-    className,
   })
   const wrapperStyle = useMemo(() => wrapper({ className }), [wrapper, className])
   const spinnerStyle = useMemo(() => spinner(), [spinner])
