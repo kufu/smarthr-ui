@@ -6,7 +6,7 @@ import React, {
   ReactNode,
   useMemo,
 } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css, isStyledComponent } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { useSpacing } from '../../hooks/useSpacing'
@@ -202,16 +202,20 @@ const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describe
  * @param type
  * @returns
  */
-const isInputElement = (type: string | React.JSXElementConstructor<any>) =>
-  type === Input ||
-  type === CurrencyInput ||
-  type === Textarea ||
-  type === DatePicker ||
-  type === Select ||
-  type === SingleComboBox ||
-  type === MultiComboBox ||
-  type === InputFile ||
-  type === DropZone
+const isInputElement = (type: string | React.JSXElementConstructor<any>) => {
+  const _type = isStyledComponent(type) ? type.target : type
+  return (
+    _type === Input ||
+    _type === CurrencyInput ||
+    _type === Textarea ||
+    _type === DatePicker ||
+    _type === Select ||
+    _type === SingleComboBox ||
+    _type === MultiComboBox ||
+    _type === InputFile ||
+    _type === DropZone
+  )
+}
 
 const Wrapper = styled(Stack).attrs({
   // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は ChildrenWrapper で調整する

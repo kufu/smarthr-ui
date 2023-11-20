@@ -1159,14 +1159,14 @@
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
 
-"@commitlint/cli@^18.4.1":
-  version "18.4.1"
-  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-18.4.1.tgz#b008ff325f112da260ed92605ca9d9290e53ba81"
-  integrity sha512-4+jljfd29Udw9RDDyigavLO9LvdbmB8O9xjDzVZ0R3lJuG7nCeyHgnKWIVpFaN590isZMV/cMeQK0gH7hRF40A==
+"@commitlint/cli@^18.4.2":
+  version "18.4.2"
+  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-18.4.2.tgz#b00e711c371f010447f0a37d464d27e2d1e6cf49"
+  integrity sha512-dDfb2+wzeQe6ogdHNHOy0J0nraok+La0BoxamNMhBOng9/5GoESPDmKUJ1Lt1oivh5MfIgZh0Vm6f0rxkB8CoA==
   dependencies:
     "@commitlint/format" "^18.4.0"
-    "@commitlint/lint" "^18.4.0"
-    "@commitlint/load" "^18.4.1"
+    "@commitlint/lint" "^18.4.2"
+    "@commitlint/load" "^18.4.2"
     "@commitlint/read" "^18.4.0"
     "@commitlint/types" "^18.4.0"
     execa "^5.0.0"
@@ -1175,10 +1175,10 @@
     resolve-global "1.0.0"
     yargs "^17.0.0"
 
-"@commitlint/config-conventional@^18.4.0":
-  version "18.4.0"
-  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-18.4.0.tgz#8d2cab9e6ea62c90cade345c4c5a4db73fe9b694"
-  integrity sha512-vArwCZopsZs0FnGsh9AR7uUTPZ5oVGk8+qnEZWq2KTsMjrE0k80b+oZ32GSQmXQT2iMKVrDC8pKX5uKNkCe9Sw==
+"@commitlint/config-conventional@^18.4.2":
+  version "18.4.2"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-18.4.2.tgz#df041190ddc7604a855633f4c36e80a81c65f9d3"
+  integrity sha512-qFjIqgKGV89lzUGHxanq2WJDXk5wZIxoZmZvf0I4i4CirL06Xj8qRh1shPsXNyI15d8Rj2HExww6cGJSFU9DdA==
   dependencies:
     conventional-changelog-conventionalcommits "^7.0.2"
 
@@ -1215,28 +1215,28 @@
     "@commitlint/types" "^18.4.0"
     chalk "^4.1.0"
 
-"@commitlint/is-ignored@^18.4.0":
-  version "18.4.0"
-  resolved "https://registry.yarnpkg.com/@commitlint/is-ignored/-/is-ignored-18.4.0.tgz#a8cb3cbc49dc9460ada9ba0694f54ef12dafe712"
-  integrity sha512-vyBKBj3Q4N3Xe4ZQcJXW9ef6gVrDL9Fl2HXnnC3F0Qt/F6E4runhJkEuUh5DB3WCXTJUHIJkByKPqrnz4RNrZw==
+"@commitlint/is-ignored@^18.4.2":
+  version "18.4.2"
+  resolved "https://registry.yarnpkg.com/@commitlint/is-ignored/-/is-ignored-18.4.2.tgz#c0929ee7e88a95af7109563fb2e5c691eb934fd1"
+  integrity sha512-uujjyJlrXsMsQrv0r8HDGigAwJELPAMtA1Vxi2WUB54HbyAWa0Ue6ujMRZNKov2YeA96r6o72gLDnugb6yu8IA==
   dependencies:
     "@commitlint/types" "^18.4.0"
     semver "7.5.4"
 
-"@commitlint/lint@^18.4.0":
-  version "18.4.0"
-  resolved "https://registry.yarnpkg.com/@commitlint/lint/-/lint-18.4.0.tgz#bd865bbb25d3d44b4bacccc946d60b157693efdd"
-  integrity sha512-Wkkf1DPVeLdHYGqtzMBfWoMbUtCojvlzDR89OKVic1rid41iZbb0FzTcwgMYs/1TNWNxoIq9PVVwY7ovLX1aJQ==
+"@commitlint/lint@^18.4.2":
+  version "18.4.2"
+  resolved "https://registry.yarnpkg.com/@commitlint/lint/-/lint-18.4.2.tgz#5a2f24ead427b9c9503ad12d135a295eb08f528b"
+  integrity sha512-ljGOIH7w9SnjvZFoKjf30iWFxDnezfRtOc50+rNLdDP0TpLspaYYLPhDO/TeVdmii1/AJiDgBIuBboQlaIy7Bw==
   dependencies:
-    "@commitlint/is-ignored" "^18.4.0"
+    "@commitlint/is-ignored" "^18.4.2"
     "@commitlint/parse" "^18.4.0"
     "@commitlint/rules" "^18.4.0"
     "@commitlint/types" "^18.4.0"
 
-"@commitlint/load@^18.4.1":
-  version "18.4.1"
-  resolved "https://registry.yarnpkg.com/@commitlint/load/-/load-18.4.1.tgz#41097fe3b0eed33e61fab6ab6015e9c4bd17de1a"
-  integrity sha512-o/plBiPJQgbSq/4ipDpsq4HCmURjBAEjr1EO/p2falr3VhwV0WGXTvb8NlihgI8xtSyO6lHvtycrE535GMLQbA==
+"@commitlint/load@^18.4.2":
+  version "18.4.2"
+  resolved "https://registry.yarnpkg.com/@commitlint/load/-/load-18.4.2.tgz#f3f213f8c0fd36ded1f8950880905add8ae5920b"
+  integrity sha512-CKmzXdF9XwZJoVijAqpUlV9qzZOkyiYni4KuSCtTZVAAVudi9H84cJ4FqZxSwEP9G21vmoJiNrW8G042AsduVg==
   dependencies:
     "@commitlint/config-validator" "^18.4.0"
     "@commitlint/execute-rule" "^18.4.0"
@@ -3181,10 +3181,10 @@
     fs-extra "^11.1.0"
     read-pkg-up "^7.0.1"
 
-"@storybook/test-runner@^0.14.1":
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/@storybook/test-runner/-/test-runner-0.14.1.tgz#028135602173f34be24f3bec7d54a2ff8b3a3830"
-  integrity sha512-8W4K/dttKnecXVb1zdqebnEBWk2LmMvQPBRoFtljUkARE1+wr6HlWOBoy55QClIbssVSxrx1LvOraVy7VmS/zw==
+"@storybook/test-runner@^0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@storybook/test-runner/-/test-runner-0.15.1.tgz#50473081cc855f837a2c1cbb3ee16ca72fcc692d"
+  integrity sha512-VHm9E6DM4ibs132EVJnavhX8Y15WARRHaZcLMkdb1R9Wmh1X6pdojl77AERQzIOCzhfBg291G3MZzCcE9enh8A==
   dependencies:
     "@babel/core" "^7.22.5"
     "@babel/generator" "^7.22.5"
@@ -3378,12 +3378,14 @@
     lodash "^4.17.15"
     redent "^3.0.0"
 
-"@testing-library/react-hooks@^8.0.1":
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/@testing-library/react-hooks/-/react-hooks-8.0.1.tgz#0924bbd5b55e0c0c0502d1754657ada66947ca12"
+"@testing-library/react@^14.1.2":
+  version "14.1.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-14.1.2.tgz#a2b9e9ee87721ec9ed2d7cfc51cc04e474537c32"
+  integrity sha512-z4p7DVBTPjKM5qDZ0t5ZjzkpSNb+fZy1u6bzO7kk8oeGagpPCAtgh4cx1syrfp7a+QWkM021jGqjJaxJJnXAZg==
   dependencies:
     "@babel/runtime" "^7.12.5"
-    react-error-boundary "^3.1.0"
+    "@testing-library/dom" "^9.0.0"
+    "@types/react-dom" "^18.0.0"
 
 "@testing-library/user-event@^14.4.0":
   version "14.5.1"
@@ -3729,7 +3731,7 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
-"@types/react-dom@^18.2.15":
+"@types/react-dom@^18.0.0", "@types/react-dom@^18.2.15":
   version "18.2.15"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.15.tgz#921af67f9ee023ac37ea84b1bc0cc40b898ea522"
   integrity sha512-HWMdW+7r7MR5+PZqJF6YFNSCtjz1T0dsvo/f1BV6HkV+6erD/nA7wd9NM00KVG83zf2nJ7uATPO9ttdIPvi3gg==
@@ -4606,13 +4608,14 @@ axios@^0.21.1:
   dependencies:
     follow-redirects "^1.14.0"
 
-axios@^0.27.2:
-  version "0.27.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
-  integrity sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==
+axios@^1.6.1:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.2.tgz#de67d42c755b571d3e698df1b6504cde9b0ee9f2"
+  integrity sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==
   dependencies:
-    follow-redirects "^1.14.9"
+    follow-redirects "^1.15.0"
     form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
 
 axobject-query@^3.2.1:
   version "3.2.1"
@@ -7181,9 +7184,10 @@ flow-parser@0.*:
   version "0.154.0"
   resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.154.0.tgz#ea195e3c9f9a6488466e5e29e80b50cea8035485"
 
-follow-redirects@^1.0.0, follow-redirects@^1.14.0, follow-redirects@^1.14.9:
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
+follow-redirects@^1.0.0, follow-redirects@^1.14.0, follow-redirects@^1.15.0:
+  version "1.15.3"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.3.tgz#fe2f3ef2690afce7e82ed0b44db08165b207123a"
+  integrity sha512-1VzOtuEM8pC9SFU1E+8KfTjZyMztRsgEfwQl44z8A25uy13jSzTj6dyK2Df52iV0vgHCfBwLhDWevLn95w5v6Q==
 
 for-each@^0.3.3:
   version "0.3.3"
@@ -10912,10 +10916,10 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-puppeteer-core@21.5.1:
-  version "21.5.1"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-21.5.1.tgz#36b0a4b3838f9109423b6e4cb56e1f21f8fbca4f"
-  integrity sha512-u6c3SZKAOaOQogaTkQvllxT/o2PP16wkbrUWINtMhfvrB4ko+xwqC1pb+vyCPMmNUh3N/CX5YGqb3DWx2fUPSQ==
+puppeteer-core@21.5.2:
+  version "21.5.2"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-21.5.2.tgz#6d3de4efb2ae65f1ee072043787b75594e88035f"
+  integrity sha512-v4T0cWnujSKs+iEfmb8ccd7u4/x8oblEyKqplqKnJ582Kw8PewYAWvkH4qUWhitN3O2q9RF7dzkvjyK5HbzjLA==
   dependencies:
     "@puppeteer/browsers" "1.8.0"
     chromium-bidi "0.4.33"
@@ -10939,14 +10943,14 @@ puppeteer-core@^2.1.1:
     rimraf "^2.6.1"
     ws "^6.1.0"
 
-puppeteer@^21.5.1:
-  version "21.5.1"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-21.5.1.tgz#7607748b8c5e487edded2105551968a944e9436c"
-  integrity sha512-NkI06BXckVZeZUkODK+BbgGelQSu7uYEp9PaJDozxpwNRFDYoVfHQvd2G4dERoLdP6+qx4EBPwEhk4dEkQc2Kg==
+puppeteer@^21.5.2:
+  version "21.5.2"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-21.5.2.tgz#0a4a72175c0fd0944d6486f4734807e1671d527b"
+  integrity sha512-BaAGJOq8Fl6/cck6obmwaNLksuY0Bg/lIahCLhJPGXBFUD2mCffypa4A592MaWnDcye7eaHmSK9yot0pxctY8A==
   dependencies:
     "@puppeteer/browsers" "1.8.0"
     cosmiconfig "8.3.6"
-    puppeteer-core "21.5.1"
+    puppeteer-core "21.5.2"
 
 pure-rand@^6.0.0:
   version "6.0.1"
@@ -11077,16 +11081,10 @@ react-element-to-jsx-string@^15.0.0:
     is-plain-object "5.0.0"
     react-is "18.1.0"
 
-react-error-boundary@^3.1.0:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/react-error-boundary/-/react-error-boundary-3.1.4.tgz#255db92b23197108757a888b01e5b729919abde0"
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-
-react-icons@^4.11.0:
-  version "4.11.0"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.11.0.tgz#4b0e31c9bfc919608095cc429c4f1846f4d66c65"
-  integrity sha512-V+4khzYcE5EBk/BvcuYRq6V/osf11ODUM2J8hg2FDSswRrGvqiYUYPRy4OdrWaQOBj4NcpJfmHZLNaD+VH0TyA==
+react-icons@^4.12.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.12.0.tgz#54806159a966961bfd5cdb26e492f4dafd6a8d78"
+  integrity sha512-IBaDuHiShdZqmfc/TwHu6+d6k2ltNCf3AszxNmjJc1KUfXdEeRJOKyNvLmAHaarhzGmTSVygNdyu8/opXv2gaw==
 
 react-innertext@^1.1.5:
   version "1.1.5"
@@ -12876,10 +12874,10 @@ ts-interface-checker@^0.1.9:
   resolved "https://registry.yarnpkg.com/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz#784fd3d679722bc103b1b4b8030bcddb5db2a699"
   integrity sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==
 
-ts-loader@^9.5.0:
-  version "9.5.0"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.5.0.tgz#f0a51dda37cc4d8e43e6cb14edebbc599b0c3aa2"
-  integrity sha512-LLlB/pkB4q9mW2yLdFMnK3dEHbrBjeZTYguaaIfusyojBgAGf5kF+O6KcWqiGzWqHk0LBsoolrp4VftEURhybg==
+ts-loader@^9.5.1:
+  version "9.5.1"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.5.1.tgz#63d5912a86312f1fbe32cef0859fb8b2193d9b89"
+  integrity sha512-rNH3sK9kGZcH9dYzC7CewQm4NtxJTjSEVRJ2DyBZR7f8/wcta+iV44UPCXc5+nzDzivKtlzV6c9P4e+oFhDLYg==
   dependencies:
     chalk "^4.1.0"
     enhanced-resolve "^5.0.0"
@@ -13330,12 +13328,12 @@ wait-on@^5.3.0:
     minimist "^1.2.5"
     rxjs "^6.6.3"
 
-wait-on@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/wait-on/-/wait-on-7.1.0.tgz#3184ccfff7eb8a4d62ef3dfa6a4ff3675617ff60"
-  integrity sha512-U7TF/OYYzAg+OoiT/B8opvN48UHt0QYMi4aD3PjRFpybQ+o6czQF8Ig3SKCCMJdxpBrCalIJ4O00FBof27Fu9Q==
+wait-on@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/wait-on/-/wait-on-7.2.0.tgz#d76b20ed3fc1e2bebc051fae5c1ff93be7892928"
+  integrity sha512-wCQcHkRazgjG5XoAq9jbTMLpNIjoSlZslrJ2+N9MxDsGEv1HnFoVjOCexL0ESva7Y9cu350j+DWADdk54s4AFQ==
   dependencies:
-    axios "^0.27.2"
+    axios "^1.6.1"
     joi "^17.11.0"
     lodash "^4.17.21"
     minimist "^1.2.8"

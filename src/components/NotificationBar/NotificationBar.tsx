@@ -13,7 +13,6 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
-import { Text } from '../Text'
 
 import { useClassNames } from './useClassNames'
 
@@ -132,36 +131,35 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
         colorSet={colorSet}
         onBase={base === 'base'}
       >
-        <MessageArea themes={theme} className={classNames.messageArea}>
-          <IconLayout>
-            <Icon color={iconColor} />
-          </IconLayout>
-          <StyledText leading="TIGHT">{message}</StyledText>
-        </MessageArea>
-        <ActionArea themes={theme} className={classNames.actionArea}>
+        <Inner>
+          <MessageArea themes={theme} className={classNames.messageArea}>
+            <Icon text={message} color={iconColor} iconGap={0.5} />
+          </MessageArea>
           {children && (
-            <ActionWrapper
-              themes={theme}
-              className={classNames.actions}
-              align="center"
-              justify="flex-end"
-            >
-              {children}
-            </ActionWrapper>
+            <ActionArea themes={theme} className={classNames.actionArea}>
+              <ActionWrapper
+                themes={theme}
+                className={classNames.actions}
+                align="center"
+                justify="flex-end"
+              >
+                {children}
+              </ActionWrapper>
+            </ActionArea>
           )}
-          {onClose && (
-            <CloseButton
-              variant="text"
-              colorSet={colorSet}
-              themes={theme}
-              onClick={onClose}
-              className={classNames.closeButton}
-              size="s"
-            >
-              <FaTimesIcon alt="閉じる" />
-            </CloseButton>
-          )}
-        </ActionArea>
+        </Inner>
+        {onClose && (
+          <CloseButton
+            variant="text"
+            colorSet={colorSet}
+            themes={theme}
+            onClick={onClose}
+            className={classNames.closeButton}
+            size="s"
+          >
+            <FaTimesIcon alt="閉じる" />
+          </CloseButton>
+        )}
       </Wrapper>
     </WrapBase>
   )
@@ -182,8 +180,9 @@ const Wrapper = styled.div<{
     animate,
   }) => css`
     display: flex;
-    gap: ${space(1)};
-    align-items: center;
+    gap: ${space(0.5)};
+    align-items: baseline;
+    justify-content: space-between;
     background-color: ${bgColor};
     padding: ${space(0.75)};
     ${onBase &&
@@ -200,6 +199,13 @@ const Wrapper = styled.div<{
     `}
   `,
 )
+const Inner = styled(Cluster).attrs({
+  gap: 1,
+  align: 'center',
+  justify: 'flex-end',
+})`
+  flex-grow: 1;
+`
 const slideIn = (translateLength: string) => keyframes`
   from {
     opacity: 0;
@@ -213,24 +219,17 @@ const slideIn = (translateLength: string) => keyframes`
 const MessageArea = styled.div<{
   themes: Theme
 }>(
-  ({ themes: { spacingByChar } }) => css`
+  ({ themes: { leading, spacingByChar } }) => css`
     display: flex;
     gap: ${spacingByChar(0.5)};
     align-items: center;
     flex-grow: 1;
 
-    /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
-    min-width: 0;
+    .smarthr-ui-Icon-withText {
+      line-height: ${leading.TIGHT};
+    }
   `,
 )
-const IconLayout = styled.div`
-  /* 子のアイコンの line-height を打ち消すために指定 */
-  display: flex;
-`
-const StyledText = styled(Text)`
-  /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
-  min-width: 0;
-`
 const ActionArea = styled.div<{
   themes: Theme
 }>(
@@ -245,8 +244,7 @@ const ActionWrapper = styled(Cluster)<{
   themes: Theme
 }>(
   ({ themes: { spacingByChar } }) => css`
-    margin-top: ${spacingByChar(-0.5)};
-    margin-bottom: ${spacingByChar(-0.5)};
+    margin-block: ${spacingByChar(-0.5)};
   `,
 )
 const CloseButton = styled(Button)<{

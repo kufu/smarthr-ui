@@ -1,31 +1,84 @@
-import { transparentize } from 'polished'
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
-import styled, { css } from 'styled-components'
+import React, {
+  ComponentPropsWithRef,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
-import { useClassNames } from './useClassNames'
-
-export type Props = React.InputHTMLAttributes<HTMLInputElement> & {
+type Props = ComponentPropsWithRef<'input'> & {
   /** `true` のとき、チェック状態を `mixed` にする */
   mixed?: boolean
   /** チェックボックスにエラーがあるかどうか */
   error?: boolean
 }
 
+const checkboxInput = tv({
+  slots: {
+    box: [
+      'shr-pointer-events-none shr-absolute shr-box-border shr-h-full shr-w-full shr-rounded-s shr-border shr-border-solid shr-bg-white',
+      'contrast-more:shr-border-highContrast',
+      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
+      'forced-colors:shr-hidden',
+      'peer-checked:shr-border-main peer-checked:shr-bg-main contrast-more:peer-checked:shr-border-highContrast',
+      'peer-indeterminate:shr-border-main peer-indeterminate:shr-bg-main contrast-more:peer-indeterminate:shr-border-highContrast',
+      'peer-disabled:shr-border-default peer-disabled:shr-bg-border',
+      'peer-focus-visible:shr-focusIndicator',
+      'peer-hover:shr-shadow-input-hover',
+    ],
+    input: [
+      'smarthr-ui-CheckBox-checkBox shr-peer shr-absolute shr-left-0 shr-top-0 shr-m-0 shr-h-full shr-w-full shr-cursor-pointer shr-opacity-0 disabled:shr-pointer-events-none',
+      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
+      'forced-colors:shr-static forced-colors:shr-opacity-100',
+    ],
+    icon: 'shr-fill-current',
+    iconWrap: [
+      'shr-pointer-events-none shr-absolute shr-left-1/2 shr-top-1/2 shr-inline-block shr-h-[theme(fontSize.2xs)] shr-w-[theme(fontSize.2xs)] -shr-translate-x-1/2 -shr-translate-y-1/2 shr-text-2xs',
+      'shr-text-transparent peer-checked:shr-text-white peer-indeterminate:shr-text-white',
+      'forced-colors:shr-hidden',
+    ],
+    wrapper:
+      'shr-relative shr-box-border shr-inline-block shr-h-[theme(fontSize.base)] shr-w-[theme(fontSize.base)] shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
+  },
+  variants: {
+    error: {
+      true: {
+        box: 'shr-border-danger',
+      },
+      false: {
+        box: 'shr-border-default',
+      },
+    },
+  },
+  defaultVariants: {
+    error: false,
+  },
+})
+
 export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
-  ({ mixed = false, onChange, ...props }, ref) => {
-    const theme = useTheme()
-    const { checked, disabled } = props
-    const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
+  ({ checked, mixed = false, error, onChange, ...props }, ref) => {
+    const { wrapperStyle, boxStyle, inputStyle, iconWrapStyle, iconStyle } = useMemo(() => {
+      const { wrapper, box, input, iconWrap, icon } = checkboxInput()
+      return {
+        wrapperStyle: wrapper(),
+        boxStyle: box({ error }),
+        inputStyle: input(),
+        iconWrapStyle: iconWrap(),
+        iconStyle: icon(),
+      }
+    }, [error])
+
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         if (onChange) onChange(e)
       },
       [onChange],
     )
-    const classNames = useClassNames()
 
     const inputRef = useRef<HTMLInputElement>(null)
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
@@ -40,143 +93,22 @@ export const CheckBoxInput = forwardRef<HTMLInputElement, Props>(
     }, [checked, mixed])
 
     return (
-      <Wrapper themes={theme}>
+      <span className={wrapperStyle}>
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
-        <Input
+        <input
           {...props}
           type="checkbox"
+          checked={checked}
           onChange={handleChange}
-          className={classNames.checkBox}
-          themes={theme}
+          className={inputStyle}
           ref={inputRef}
-          aria-invalid={props.error || undefined}
+          aria-invalid={error || undefined}
         />
-        <Box className={boxClassName} themes={theme} error={props.error} />
-        <IconWrap themes={theme}>
-          {mixed ? <FaMinusIcon color="TEXT_WHITE" /> : <FaCheckIcon color="TEXT_WHITE" />}
-        </IconWrap>
-      </Wrapper>
+        <span className={boxStyle} />
+        <span className={iconWrapStyle}>
+          {mixed ? <FaMinusIcon className={iconStyle} /> : <FaCheckIcon className={iconStyle} />}
+        </span>
+      </span>
     )
   },
 )
-
-const Wrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize } = themes
-
-    return css`
-      position: relative;
-      display: inline-block;
-      width: ${fontSize.M};
-      height: ${fontSize.M};
-      flex-shrink: 0;
-      line-height: 1;
-      box-sizing: border-box;
-    `
-  }}
-`
-const Box = styled.span<{ themes: Theme; error?: boolean }>`
-  ${({ themes, error }) => {
-    const { border, color } = themes
-    return css`
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 4px;
-      border: ${border.shorthand};
-      background-color: ${color.WHITE};
-      box-sizing: border-box;
-      pointer-events: none;
-
-      @media (prefers-contrast: more) {
-        & {
-          border: ${border.highContrast};
-        }
-      }
-
-      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
-      @media (forced-colors: active) {
-        display: none;
-      }
-
-      /* FIXME: なぜか static classname になってしまうため & を重ねている */
-      input:checked + &&,
-      input:indeterminate + && {
-        border-color: ${color.MAIN};
-        background-color: ${color.MAIN};
-
-        @media (prefers-contrast: more) {
-          & {
-            border: ${border.highContrast};
-          }
-        }
-      }
-
-      /* FIXME: なぜか static classname になってしまうため & を重ねている */
-      input[disabled] + && {
-        background-color: ${color.BORDER};
-        border-color: ${color.BORDER};
-      }
-
-      ${error &&
-      css`
-        border-color: ${color.DANGER};
-      `}
-    `
-  }}
-`
-const Input = styled.input<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { shadow, color } = themes
-    return css`
-      opacity: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      cursor: pointer;
-      &[disabled] {
-        pointer-events: none;
-      }
-      &:hover:not([disabled]) + span {
-        box-shadow: 0 0 0 2px ${transparentize(0.78, color.MAIN)};
-      }
-      &:focus-visible + span {
-        ${shadow.focusIndicatorStyles};
-      }
-
-      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
-      @media (forced-colors: active) {
-        opacity: 1;
-        position: static;
-      }
-    `
-  }}
-`
-const IconWrap = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize } = themes
-
-    return css`
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      display: inline-block;
-      width: ${fontSize.XXS};
-      height: ${fontSize.XXS};
-      font-size: ${fontSize.XXS};
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-
-      input:not(:checked, :indeterminate) ~ & > svg {
-        fill: transparent;
-      }
-
-      & > svg {
-        vertical-align: top;
-      }
-    `
-  }}
-`
