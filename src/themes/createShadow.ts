@@ -1,3 +1,4 @@
+import { transparentize } from 'polished'
 import { FlattenSimpleInterpolation, css } from 'styled-components'
 
 import { merge } from '../libs/lodash'
@@ -65,6 +66,7 @@ export const defaultShadow = {
   OUTLINE: defaultOutline,
   OUTLINE_MARGIN: defaultOutlineMargin,
   UNDERLINE: '0 1px 0 0',
+  INPUT_HOVER: `0 0 0 2px ${transparentize(0.78, defaultColor.MAIN)}`,
 }
 
 const createFocusIndicatorStyles = (outline: string) => css`
