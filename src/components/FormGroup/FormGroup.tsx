@@ -264,7 +264,7 @@ const FormLabel = styled(Cluster).attrs({ align: 'center' })`
   align-self: start;
 `
 
-const GroupLabelText = styled(Text).attrs({ as: 'span' })``
+const GroupLabelText = styled(Text).attrs({ forwardedAs: 'span' })``
 
 const ErrorMessage = styled.p<{ themes: Theme }>`
   ${({ themes: { color } }) => css`
