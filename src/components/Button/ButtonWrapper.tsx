@@ -56,7 +56,7 @@ export function ButtonWrapper({
   }, [$loading, className, size, square, variant, wide])
 
   if (props.isAnchor) {
-    const { anchorRef, ...others } = props
+    const { anchorRef, isAnchor: _, ...others } = props
     // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute, jsx-a11y/anchor-has-content
     return <a {...others} className={anchorStyle} ref={anchorRef} />
   } else {
