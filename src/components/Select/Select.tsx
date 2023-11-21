@@ -1,6 +1,6 @@
 import React, {
   ChangeEvent,
-  ComponentPropsWithRef,
+  ComponentPropsWithoutRef,
   ForwardedRef,
   forwardRef,
   useCallback,
@@ -38,7 +38,7 @@ type Props<T extends string> = {
   decorators?: DecoratorsType<'blankLabel'>
 }
 
-type ElementProps = Omit<ComponentPropsWithRef<'select'>, keyof Props<string> | 'children'>
+type ElementProps = Omit<ComponentPropsWithoutRef<'select'>, keyof Props<string> | 'children'>
 
 const BLANK_LABEL = '選択してください'
 
@@ -86,99 +86,105 @@ const select = tv({
   },
 })
 
-export const Select = forwardRef(
-  <T extends string>(
-    {
-      options,
-      onChange,
-      onChangeValue,
-      error = false,
-      width = 'auto',
-      hasBlank = false,
-      decorators,
-      size = 'default',
-      className,
-      disabled,
-      ...props
-    }: Props<T> & ElementProps,
-    ref: ForwardedRef<HTMLSelectElement>,
-  ) => {
-    const handleChange = useCallback(
-      (e: ChangeEvent<HTMLSelectElement>) => {
-        if (onChange) onChange(e)
-        if (onChangeValue) {
-          const flattenOptions = options.reduce(
-            (pre, cur) => pre.concat('value' in cur ? cur : cur.options),
-            [] as Array<Option<T>>,
-          )
-          const selectedOption = flattenOptions.find((option) => option.value === e.target.value)
-          if (selectedOption) {
-            onChangeValue(selectedOption.value)
-          }
+function SelectComponent<T extends string>(
+  {
+    options,
+    onChange,
+    onChangeValue,
+    error = false,
+    width = 'auto',
+    hasBlank = false,
+    decorators,
+    size = 'default',
+    className,
+    disabled,
+    ...props
+  }: Props<T> & ElementProps,
+  ref: ForwardedRef<HTMLSelectElement>,
+) {
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      if (onChange) onChange(e)
+      if (onChangeValue) {
+        const flattenOptions = options.reduce(
+          (pre, cur) => pre.concat('value' in cur ? cur : cur.options),
+          [] as Array<Option<T>>,
+        )
+        const selectedOption = flattenOptions.find((option) => option.value === e.target.value)
+        if (selectedOption) {
+          onChangeValue(selectedOption.value)
         }
-      },
-      [onChange, onChangeValue, options],
-    )
-
-    const { wrapperStyleProps, selectStyle, iconWrapStyle, blankOptGroupStyle } = useMemo(() => {
-      const { wrapper, selectEl, iconWrap, blankOptgroup } = select()
-      return {
-        wrapperStyleProps: {
-          className: wrapper({ className }),
-          style: {
-            width: typeof width === 'number' ? `${width}px` : width,
-          },
-        },
-        selectStyle: selectEl({ error, size }),
-        iconWrapStyle: iconWrap({ size }),
-        blankOptGroupStyle: blankOptgroup(),
       }
-    }, [className, error, size, width])
+    },
+    [onChange, onChangeValue, options],
+  )
 
-    return (
-      <span {...wrapperStyleProps}>
-        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
-        <select
-          {...props}
-          onChange={handleChange}
-          aria-invalid={error || undefined}
-          disabled={disabled}
-          ref={ref}
-          className={selectStyle}
-        >
-          {hasBlank && (
-            <option value="">{decorators?.blankLabel?.(BLANK_LABEL) || BLANK_LABEL}</option>
-          )}
-          {options.map((option) => {
-            if ('value' in option) {
-              return (
-                <option {...option} key={option.value}>
-                  {option.label}
-                </option>
-              )
-            }
+  const { wrapperStyleProps, selectStyle, iconWrapStyle, blankOptGroupStyle } = useMemo(() => {
+    const { wrapper, selectEl, iconWrap, blankOptgroup } = select()
+    return {
+      wrapperStyleProps: {
+        className: wrapper({ className }),
+        style: {
+          width: typeof width === 'number' ? `${width}px` : width,
+        },
+      },
+      selectStyle: selectEl({ error, size }),
+      iconWrapStyle: iconWrap({ size }),
+      blankOptGroupStyle: blankOptgroup(),
+    }
+  }, [className, error, size, width])
 
-            const { options: groupedOptions, ...optgroup } = option
-
+  return (
+    <span {...wrapperStyleProps}>
+      {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+      <select
+        {...props}
+        onChange={handleChange}
+        aria-invalid={error || undefined}
+        disabled={disabled}
+        ref={ref}
+        className={selectStyle}
+      >
+        {hasBlank && (
+          <option value="">{decorators?.blankLabel?.(BLANK_LABEL) || BLANK_LABEL}</option>
+        )}
+        {options.map((option) => {
+          if ('value' in option) {
             return (
-              <optgroup {...optgroup} key={optgroup.label}>
-                {groupedOptions.map((groupedOption) => (
-                  <option {...groupedOption} key={groupedOption.value}>
-                    {groupedOption.label}
-                  </option>
-                ))}
-              </optgroup>
+              <option {...option} key={option.value}>
+                {option.label}
+              </option>
             )
-          })}
-          {
-            // Support for not omitting labels in Mobile Safari
-            isMobileSafari && <optgroup className={blankOptGroupStyle} />
           }
-        </select>
-        <span className={iconWrapStyle}>
-          <FaSortIcon />
-        </span>
+
+          const { options: groupedOptions, ...optgroup } = option
+
+          return (
+            <optgroup {...optgroup} key={optgroup.label}>
+              {groupedOptions.map((groupedOption) => (
+                <option {...groupedOption} key={groupedOption.value}>
+                  {groupedOption.label}
+                </option>
+              ))}
+            </optgroup>
+          )
+        })}
+        {
+          // Support for not omitting labels in Mobile Safari
+          isMobileSafari && <optgroup className={blankOptGroupStyle} />
+        }
+      </select>
+      <span className={iconWrapStyle}>
+        <FaSortIcon />
       </span>
-    )
+    </span>
+  )
+}
+
+// forwardRef したコンポーネントでジェネリクスを使うときのワークアラウンド
+// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref/58473012
+export const Select = forwardRef(SelectComponent) as (<T extends string>(
+  props: ComponentPropsWithoutRef<typeof SelectComponent<T>> & {
+    ref?: ForwardedRef<HTMLSelectElement>
   },
-)
+) => ReturnType<typeof SelectComponent<T>>) & { displayName?: string }

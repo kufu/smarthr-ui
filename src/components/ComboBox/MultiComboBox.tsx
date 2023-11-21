@@ -1,5 +1,5 @@
 import React, {
-  HTMLAttributes,
+  ComponentPropsWithoutRef,
   InputHTMLAttributes,
   KeyboardEvent,
   Ref,
@@ -96,325 +96,330 @@ type Props<T> = BaseProps<T> & {
   >
 }
 
-type ElementProps<T> = Omit<HTMLAttributes<HTMLDivElement>, keyof Props<T>>
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props<unknown>>
 
 const SELECTED_LIST_ARIA_LABEL = '選択済みアイテム'
 
-export const MultiComboBox = forwardRef(
-  <T,>(
-    {
-      items,
-      selectedItems,
-      name,
-      disabled = false,
-      required = false,
-      error = false,
-      creatable = false,
-      placeholder = '',
-      dropdownHelpMessage,
-      isLoading,
-      selectedItemEllipsis,
-      width = 'auto',
-      dropdownWidth = 'auto',
-      inputValue: controlledInputValue,
-      className = '',
-      onChange,
-      onChangeInput,
-      onAdd,
-      onDelete,
-      onSelect,
-      onChangeSelected,
-      onFocus,
-      onBlur,
-      decorators,
-      inputAttributes,
-      ...props
-    }: Props<T> & ElementProps<T>,
-    ref: Ref<HTMLInputElement>,
-  ) => {
-    const theme = useTheme()
-    const classNames = useMultiComboBoxClassNames()
-    const outerRef = useRef<HTMLDivElement>(null)
-    const [isFocused, setIsFocused] = useState(false)
-    const isInputControlled = useMemo(
-      () => controlledInputValue !== undefined,
-      [controlledInputValue],
-    )
-    const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
-    const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
-    const [isComposing, setIsComposing] = useState(false)
-    const { options } = useOptions({
-      items,
-      selected: selectedItems,
-      creatable,
-      inputValue,
-    })
-    const handleDelete = useCallback(
-      (item: ComboBoxItem<T>) => {
-        // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        requestAnimationFrame(() => {
-          onDelete && onDelete(item)
-          onChangeSelected &&
-            onChangeSelected(
-              selectedItems.filter(
-                (selected) => selected.label !== item.label || selected.value !== item.value,
-              ),
-            )
-        })
-      },
-      [onChangeSelected, onDelete, selectedItems],
-    )
-    const handleSelect = useCallback(
-      (selected: ComboBoxItem<T>) => {
-        // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
-        // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
-        requestAnimationFrame(() => {
-          const matchedSelectedItem = selectedItems.find(
-            (item) => item.label === selected.label && item.value === selected.value,
+function MultiComboBoxComponent<T>(
+  {
+    items,
+    selectedItems,
+    name,
+    disabled = false,
+    required = false,
+    error = false,
+    creatable = false,
+    placeholder = '',
+    dropdownHelpMessage,
+    isLoading,
+    selectedItemEllipsis,
+    width = 'auto',
+    dropdownWidth = 'auto',
+    inputValue: controlledInputValue,
+    className = '',
+    onChange,
+    onChangeInput,
+    onAdd,
+    onDelete,
+    onSelect,
+    onChangeSelected,
+    onFocus,
+    onBlur,
+    decorators,
+    inputAttributes,
+    ...props
+  }: Props<T> & ElementProps,
+  ref: Ref<HTMLInputElement>,
+) {
+  const theme = useTheme()
+  const classNames = useMultiComboBoxClassNames()
+  const outerRef = useRef<HTMLDivElement>(null)
+  const [isFocused, setIsFocused] = useState(false)
+  const isInputControlled = useMemo(
+    () => controlledInputValue !== undefined,
+    [controlledInputValue],
+  )
+  const [uncontrolledInputValue, setUncontrolledInputValue] = useState('')
+  const inputValue = isInputControlled ? controlledInputValue : uncontrolledInputValue
+  const [isComposing, setIsComposing] = useState(false)
+  const { options } = useOptions({
+    items,
+    selected: selectedItems,
+    creatable,
+    inputValue,
+  })
+  const handleDelete = useCallback(
+    (item: ComboBoxItem<T>) => {
+      // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+      requestAnimationFrame(() => {
+        onDelete && onDelete(item)
+        onChangeSelected &&
+          onChangeSelected(
+            selectedItems.filter(
+              (selected) => selected.label !== item.label || selected.value !== item.value,
+            ),
           )
-          if (matchedSelectedItem !== undefined) {
-            if (matchedSelectedItem.deletable !== false) {
-              handleDelete(selected)
-            }
-          } else {
-            onSelect && onSelect(selected)
-            onChangeSelected && onChangeSelected(selectedItems.concat(selected))
+      })
+    },
+    [onChangeSelected, onDelete, selectedItems],
+  )
+  const handleSelect = useCallback(
+    (selected: ComboBoxItem<T>) => {
+      // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
+      // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
+      requestAnimationFrame(() => {
+        const matchedSelectedItem = selectedItems.find(
+          (item) => item.label === selected.label && item.value === selected.value,
+        )
+        if (matchedSelectedItem !== undefined) {
+          if (matchedSelectedItem.deletable !== false) {
+            handleDelete(selected)
           }
-        })
-      },
-      [handleDelete, onChangeSelected, onSelect, selectedItems],
-    )
-
-    const {
-      renderListBox,
-      activeOption,
-      handleKeyDown: handleListBoxKeyDown,
-      listBoxId,
-      listBoxRef,
-    } = useListBox({
-      options,
-      dropdownHelpMessage,
-      dropdownWidth,
-      onAdd,
-      onSelect: handleSelect,
-      isExpanded: isFocused,
-      isLoading,
-      triggerRef: outerRef,
-      decorators,
-    })
-
-    const {
-      deletionButtonRefs,
-      inputRef,
-      focusPrevDeletionButton,
-      focusNextDeletionButton,
-      resetDeletionButtonFocus,
-    } = useFocusControl(selectedItems.length)
-
-    useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
-      ref,
-      () => inputRef.current,
-    )
-
-    const focus = useCallback(() => {
-      onFocus && onFocus()
-      setIsFocused(true)
-    }, [onFocus])
-    const blur = useCallback(() => {
-      if (!isFocused) return
-      onBlur && onBlur()
-      setIsFocused(false)
-      resetDeletionButtonFocus()
-    }, [isFocused, onBlur, resetDeletionButtonFocus])
-
-    const caretIconColor = useMemo(() => {
-      if (isFocused) return theme.color.TEXT_BLACK
-      if (disabled) return theme.color.TEXT_DISABLED
-      return theme.color.TEXT_GREY
-    }, [disabled, isFocused, theme])
-
-    useOuterClick([outerRef, listBoxRef], blur)
-
-    useEffect(() => {
-      if (!isInputControlled) {
-        setUncontrolledInputValue('')
-      }
-
-      if (isFocused && inputRef.current) {
-        inputRef.current.focus()
-      }
-    }, [inputRef, isFocused, isInputControlled, selectedItems])
-
-    const handleKeyDown = useCallback(
-      (e: KeyboardEvent<HTMLDivElement>) => {
-        if (isComposing) {
-          return
-        } else if (e.key === 'Escape' || e.key === 'Esc') {
-          e.stopPropagation()
-          blur()
-        } else if (e.key === 'Tab') {
-          if (isFocused) {
-            // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
-            inputRef.current?.focus()
-          }
-          blur()
-        } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
-          e.stopPropagation()
-          focusPrevDeletionButton()
-        } else if (e.key === 'Right' || e.key === 'ArrowRight') {
-          e.stopPropagation()
-          focusNextDeletionButton()
         } else {
-          e.stopPropagation()
+          onSelect && onSelect(selected)
+          onChangeSelected && onChangeSelected(selectedItems.concat(selected))
+        }
+      })
+    },
+    [handleDelete, onChangeSelected, onSelect, selectedItems],
+  )
+
+  const {
+    renderListBox,
+    activeOption,
+    handleKeyDown: handleListBoxKeyDown,
+    listBoxId,
+    listBoxRef,
+  } = useListBox({
+    options,
+    dropdownHelpMessage,
+    dropdownWidth,
+    onAdd,
+    onSelect: handleSelect,
+    isExpanded: isFocused,
+    isLoading,
+    triggerRef: outerRef,
+    decorators,
+  })
+
+  const {
+    deletionButtonRefs,
+    inputRef,
+    focusPrevDeletionButton,
+    focusNextDeletionButton,
+    resetDeletionButtonFocus,
+  } = useFocusControl(selectedItems.length)
+
+  useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
+
+  const focus = useCallback(() => {
+    onFocus && onFocus()
+    setIsFocused(true)
+  }, [onFocus])
+  const blur = useCallback(() => {
+    if (!isFocused) return
+    onBlur && onBlur()
+    setIsFocused(false)
+    resetDeletionButtonFocus()
+  }, [isFocused, onBlur, resetDeletionButtonFocus])
+
+  const caretIconColor = useMemo(() => {
+    if (isFocused) return theme.color.TEXT_BLACK
+    if (disabled) return theme.color.TEXT_DISABLED
+    return theme.color.TEXT_GREY
+  }, [disabled, isFocused, theme])
+
+  useOuterClick([outerRef, listBoxRef], blur)
+
+  useEffect(() => {
+    if (!isInputControlled) {
+      setUncontrolledInputValue('')
+    }
+
+    if (isFocused && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [inputRef, isFocused, isInputControlled, selectedItems])
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      if (isComposing) {
+        return
+      } else if (e.key === 'Escape' || e.key === 'Esc') {
+        e.stopPropagation()
+        blur()
+      } else if (e.key === 'Tab') {
+        if (isFocused) {
+          // フォーカスがコンポーネントを抜けるように先に input をフォーカスしておく
           inputRef.current?.focus()
-          resetDeletionButtonFocus()
         }
-        handleListBoxKeyDown(e)
-      },
-      [
-        blur,
-        focusNextDeletionButton,
-        focusPrevDeletionButton,
-        handleListBoxKeyDown,
-        inputRef,
-        isComposing,
-        isFocused,
-        resetDeletionButtonFocus,
-      ],
-    )
+        blur()
+      } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+        e.stopPropagation()
+        focusPrevDeletionButton()
+      } else if (e.key === 'Right' || e.key === 'ArrowRight') {
+        e.stopPropagation()
+        focusNextDeletionButton()
+      } else {
+        e.stopPropagation()
+        inputRef.current?.focus()
+        resetDeletionButtonFocus()
+      }
+      handleListBoxKeyDown(e)
+    },
+    [
+      blur,
+      focusNextDeletionButton,
+      focusPrevDeletionButton,
+      handleListBoxKeyDown,
+      inputRef,
+      isComposing,
+      isFocused,
+      resetDeletionButtonFocus,
+    ],
+  )
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent<HTMLElement>) => {
-        if (
-          !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
-          !disabled &&
-          !isFocused
-        ) {
-          focus()
-        }
-      },
-      [isFocused, disabled, focus, classNames.deleteButton],
-    )
-    const handleChangeInput = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (onChange) onChange(e)
-        if (onChangeInput) onChangeInput(e)
-        if (!isInputControlled) {
-          setUncontrolledInputValue(e.currentTarget.value)
-        }
-      },
-      [isInputControlled, onChangeInput, onChange],
-    )
-    const handleFocusInput = useCallback(() => {
-      resetDeletionButtonFocus()
-
-      if (!isFocused) {
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      if (
+        !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
+        !disabled &&
+        !isFocused
+      ) {
         focus()
       }
-    }, [isFocused, focus, resetDeletionButtonFocus])
-    const handleCompositionStartInput = useCallback(() => setIsComposing(true), [])
-    const handleCompositionEndInput = useCallback(() => setIsComposing(false), [])
-    const handleInputKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Down' || e.key === 'ArrowDown' || e.key === 'Up' || e.key === 'ArrowUp') {
-        // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
-        e.preventDefault()
+    },
+    [isFocused, disabled, focus, classNames.deleteButton],
+  )
+  const handleChangeInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (onChange) onChange(e)
+      if (onChangeInput) onChangeInput(e)
+      if (!isInputControlled) {
+        setUncontrolledInputValue(e.currentTarget.value)
       }
-    }, [])
+    },
+    [isInputControlled, onChangeInput, onChange],
+  )
+  const handleFocusInput = useCallback(() => {
+    resetDeletionButtonFocus()
 
-    const contextValue = useMemo(
-      () => ({
-        listBoxClassNames: classNames.listBox,
-      }),
-      [classNames.listBox],
-    )
+    if (!isFocused) {
+      focus()
+    }
+  }, [isFocused, focus, resetDeletionButtonFocus])
+  const handleCompositionStartInput = useCallback(() => setIsComposing(true), [])
+  const handleCompositionEndInput = useCallback(() => setIsComposing(false), [])
+  const handleInputKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Down' || e.key === 'ArrowDown' || e.key === 'Up' || e.key === 'ArrowUp') {
+      // 上下キー入力はリストボックスの activeDescendant の移動に用いるため、input 内では作用させない
+      e.preventDefault()
+    }
+  }, [])
 
-    const selectedListId = useId()
+  const contextValue = useMemo(
+    () => ({
+      listBoxClassNames: classNames.listBox,
+    }),
+    [classNames.listBox],
+  )
 
-    return (
-      <ComboBoxContext.Provider value={contextValue}>
-        <Container
-          {...props}
-          themes={theme}
-          $width={width}
-          isFocused={isFocused}
-          error={error}
-          $disabled={disabled}
-          ref={outerRef}
-          className={`${className} ${classNames.wrapper}`}
-          onClick={handleClick}
-          onKeyDown={handleKeyDown}
-          role="group"
-        >
-          <InputArea themes={theme}>
-            <SelectedList
-              id={selectedListId}
-              aria-label={
-                decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) ||
-                SELECTED_LIST_ARIA_LABEL
-              }
-              className={classNames.selectedList}
-            >
-              {selectedItems.map((selectedItem, i) => (
-                <li key={`${selectedItem.label}-${selectedItem.value}`}>
-                  <MultiSelectedItem
-                    item={selectedItem}
-                    disabled={disabled}
-                    onDelete={handleDelete}
-                    enableEllipsis={selectedItemEllipsis}
-                    buttonRef={deletionButtonRefs[i]}
-                    decorators={decorators}
-                  />
-                </li>
-              ))}
-            </SelectedList>
+  const selectedListId = useId()
 
-            <InputWrapper $hidden={!isFocused}>
-              <Input
-                {...inputAttributes}
-                type="text"
-                name={name}
-                value={inputValue}
-                disabled={disabled}
-                required={required}
-                ref={inputRef}
-                themes={theme}
-                onChange={handleChangeInput}
-                onFocus={handleFocusInput}
-                onCompositionStart={handleCompositionStartInput}
-                onCompositionEnd={handleCompositionEndInput}
-                onKeyDown={handleInputKeyDown}
-                autoComplete="off"
-                tabIndex={0}
-                role="combobox"
-                aria-activedescendant={activeOption?.id}
-                aria-controls={`${listBoxId} ${selectedListId}`}
-                aria-haspopup="listbox"
-                aria-expanded={isFocused}
-                aria-invalid={error || undefined}
-                aria-disabled={disabled}
-                aria-autocomplete="list"
-                className={classNames.input}
-              />
-            </InputWrapper>
+  return (
+    <ComboBoxContext.Provider value={contextValue}>
+      <Container
+        {...props}
+        themes={theme}
+        $width={width}
+        isFocused={isFocused}
+        error={error}
+        $disabled={disabled}
+        ref={outerRef}
+        className={`${className} ${classNames.wrapper}`}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        role="group"
+      >
+        <InputArea themes={theme}>
+          <SelectedList
+            id={selectedListId}
+            aria-label={
+              decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) ||
+              SELECTED_LIST_ARIA_LABEL
+            }
+            className={classNames.selectedList}
+          >
+            {selectedItems.map((selectedItem, i) => (
+              <li key={`${selectedItem.label}-${selectedItem.value}`}>
+                <MultiSelectedItem
+                  item={selectedItem}
+                  disabled={disabled}
+                  onDelete={handleDelete}
+                  enableEllipsis={selectedItemEllipsis}
+                  buttonRef={deletionButtonRefs[i]}
+                  decorators={decorators}
+                />
+              </li>
+            ))}
+          </SelectedList>
 
-            {selectedItems.length === 0 && placeholder && !isFocused && (
-              <Placeholder themes={theme} className={classNames.placeholder}>
-                {placeholder}
-              </Placeholder>
-            )}
-          </InputArea>
+          <InputWrapper $hidden={!isFocused}>
+            <Input
+              {...inputAttributes}
+              type="text"
+              name={name}
+              value={inputValue}
+              disabled={disabled}
+              required={required}
+              ref={inputRef}
+              themes={theme}
+              onChange={handleChangeInput}
+              onFocus={handleFocusInput}
+              onCompositionStart={handleCompositionStartInput}
+              onCompositionEnd={handleCompositionEndInput}
+              onKeyDown={handleInputKeyDown}
+              autoComplete="off"
+              tabIndex={0}
+              role="combobox"
+              aria-activedescendant={activeOption?.id}
+              aria-controls={`${listBoxId} ${selectedListId}`}
+              aria-haspopup="listbox"
+              aria-expanded={isFocused}
+              aria-invalid={error || undefined}
+              aria-disabled={disabled}
+              aria-autocomplete="list"
+              className={classNames.input}
+            />
+          </InputWrapper>
 
-          <Suffix themes={theme} $disabled={disabled}>
-            <FaCaretDownIcon color={caretIconColor} />
-          </Suffix>
+          {selectedItems.length === 0 && placeholder && !isFocused && (
+            <Placeholder themes={theme} className={classNames.placeholder}>
+              {placeholder}
+            </Placeholder>
+          )}
+        </InputArea>
 
-          {renderListBox()}
-        </Container>
-      </ComboBoxContext.Provider>
-    )
+        <Suffix themes={theme} $disabled={disabled}>
+          <FaCaretDownIcon color={caretIconColor} />
+        </Suffix>
+
+        {renderListBox()}
+      </Container>
+    </ComboBoxContext.Provider>
+  )
+}
+
+// forwardRef したコンポーネントでジェネリクスを使うときのワークアラウンド
+// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref/58473012
+export const MultiComboBox = forwardRef(MultiComboBoxComponent) as (<T>(
+  props: ComponentPropsWithoutRef<typeof MultiComboBoxComponent<T>> & {
+    ref?: Ref<HTMLInputElement>
   },
-)
+) => ReturnType<typeof MultiComboBoxComponent<T>>) & {
+  displayName: string
+}
 
 type ContainerType = {
   isFocused: boolean
