@@ -27,7 +27,9 @@ const checkboxInput = tv({
       'forced-colors:shr-hidden',
       'peer-checked:shr-border-main peer-checked:shr-bg-main contrast-more:peer-checked:shr-border-highContrast',
       'peer-indeterminate:shr-border-main peer-indeterminate:shr-bg-main contrast-more:peer-indeterminate:shr-border-highContrast',
-      'peer-disabled:shr-border-default peer-disabled:shr-bg-border',
+      'peer-disabled:shr-border-disabled peer-disabled:shr-bg-white-darken',
+      'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border',
+      'peer-disabled:peer-indeterminate:shr-border-default peer-disabled:peer-indeterminate:shr-bg-border',
       'peer-focus-visible:shr-focusIndicator',
       'peer-hover:shr-shadow-input-hover',
     ],
@@ -40,6 +42,7 @@ const checkboxInput = tv({
     iconWrap: [
       'shr-pointer-events-none shr-absolute shr-left-1/2 shr-top-1/2 shr-inline-block shr-h-[theme(fontSize.2xs)] shr-w-[theme(fontSize.2xs)] -shr-translate-x-1/2 -shr-translate-y-1/2 shr-text-2xs',
       'shr-text-transparent peer-checked:shr-text-white peer-indeterminate:shr-text-white',
+      'peer-disabled:peer-indeteminate:shr-text-white-darken peer-disabled:peer-checked:shr-text-white-darken',
       'forced-colors:shr-hidden',
     ],
     wrapper:
