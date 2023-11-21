@@ -57,9 +57,9 @@ const textarea = tv({
   slots: {
     textareaEl: [
       'smarthr-ui-Textarea-textarea shr-box-border shr-rounded-m shr-border shr-border-solid shr-bg-white shr-p-0.5 shr-text-base shr-leading-normal shr-text-black shr-opacity-100',
-      'contrast-more:shr-border-highContrast',
+      'contrast-more:shr-border-high-contrast',
       'placeholder:shr-text-grey',
-      'focus-visible:shr-focusIndicator',
+      'focus-visible:shr-focus-indicator',
       'disabled:shr-pointer-events-none disabled:shr-bg-column disabled:shr-text-disabled disabled:placeholder:shr-text-disabled',
     ],
     counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm',
