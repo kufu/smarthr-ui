@@ -128,7 +128,7 @@ export const TooltipPortal: FC<Props> = ({
       <StyledBalloon
         horizontal={actualHorizontal || 'left'}
         vertical={actualVertical || 'bottom'}
-        isMultiLine={isMultiLine}
+        $isMultiLine={isMultiLine}
       >
         <StyledBalloonText themes={theme}>{message}</StyledBalloonText>
       </StyledBalloon>
@@ -166,9 +166,9 @@ const Container = styled.div<{
     }
   `}
 `
-const StyledBalloon = styled(Balloon)<{ isMultiLine?: boolean }>(
-  ({ isMultiLine }) =>
-    isMultiLine &&
+const StyledBalloon = styled(Balloon)<{ $isMultiLine?: boolean }>(
+  ({ $isMultiLine }) =>
+    $isMultiLine &&
     css`
       max-width: 100%;
       white-space: normal;
