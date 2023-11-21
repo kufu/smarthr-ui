@@ -136,6 +136,7 @@ export default {
       disabled: theme('colors.grey.30'),
       link: defaultColor.TEXT_LINK,
       grey: theme('colors.grey.65'),
+      danger: theme('colors.danger'),
       inherit: 'inherit',
       transparent: 'transparent',
     }),

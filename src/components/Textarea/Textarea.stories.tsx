@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import { userEvent, within } from '@storybook/testing-library'
 import React, { useState } from 'react'
 import styled from 'styled-components'
@@ -12,7 +12,7 @@ export default {
   component: Textarea,
 }
 
-const Template: Story = () => {
+const Template: StoryFn = () => {
   const [value, setValue] = useState('message👌')
   const onChangeValue = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setValue(e.currentTarget.value)
