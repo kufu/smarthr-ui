@@ -123,7 +123,7 @@ const button = tv({
         'shr-font-inherit',
         'shr-font-bold',
         'shr-leading-none',
-        'focus-visible:shr-focusIndicator',
+        'focus-visible:shr-focus-indicator',
         'contrast-more:shr-border-high-contrast',
         /* baseline より下の leading などの余白を埋める */
         '[&_.smarthr-ui-Icon]:shr-block',

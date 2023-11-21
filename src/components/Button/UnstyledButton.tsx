@@ -20,7 +20,7 @@ const unstyledButton = tv({
     'shr-text-inherit',
     'shr-text-left',
     'shr-select-auto',
-    'focus-visible:shr-focusIndicator',
+    'focus-visible:shr-focus-indicator',
   ],
 })
 

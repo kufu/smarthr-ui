@@ -48,7 +48,7 @@ const select = tv({
     selectEl: [
       'shr-peer shr-w-full shr-cursor-pointer shr-appearance-none shr-rounded-m shr-border shr-border-solid shr-bg-white shr-text-base shr-leading-none shr-text-black shr-outline-none',
       'hover:shr-bg-white-darken',
-      'focus-visible:shr-focusIndicator',
+      'focus-visible:shr-focus-indicator',
       'disabled:shr-pointer-events-none disabled:shr-bg-white-darken disabled:shr-text-disabled disabled:shr-opacity-100',
       'contrast-more:shr-border-r-highContrast',
       /* padding に依る積み上げでは文字が見切れてしまうため */

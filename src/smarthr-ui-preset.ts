@@ -187,7 +187,7 @@ export default {
          * box-shadow や ring を使った仕組みでは Firefoxx で欠陥があるため、独自定義している
          * via https://github.com/tailwindlabs/tailwindcss/issues/10226
          */
-        '.focusIndicator': {
+        '.focus-indicator': {
           outline: 'none',
           isolation: 'isolate',
           boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,

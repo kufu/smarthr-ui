@@ -30,7 +30,7 @@ const checkboxInput = tv({
       'peer-disabled:shr-border-disabled peer-disabled:shr-bg-white-darken',
       'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border',
       'peer-disabled:peer-indeterminate:shr-border-default peer-disabled:peer-indeterminate:shr-bg-border',
-      'peer-focus-visible:shr-focusIndicator',
+      'peer-focus-visible:shr-focus-indicator',
       'peer-hover:shr-shadow-input-hover',
     ],
     input: [

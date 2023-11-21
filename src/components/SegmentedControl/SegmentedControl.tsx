@@ -52,7 +52,7 @@ const segmentedControl = tv({
       'aria-checked:shr-text-white',
       'aria-checked:hover:shr-border-main/50',
       'aria-checked:hover:shr-bg-main/50',
-      'focus-visible:shr-focusIndicator',
+      'focus-visible:shr-focus-indicator',
       'first:shr-rounded-tl-m',
       'first:shr-rounded-bl-m',
       'last:shr-rounded-tr-m',
