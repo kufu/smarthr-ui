@@ -42,7 +42,7 @@ export const Badge: React.FC<BadgeProps> = ({
   const badgeProps = {
     themes: theme,
     $colorName: definedColors[type],
-    withChildren: !!children,
+    $withChildren: !!children,
   }
 
   // ドット表示でもなく、0値を表示するでもない場合は何も表示しない
@@ -68,9 +68,9 @@ const BadgeWrapper = styled.span`
   position: relative;
   display: inline-flex;
 `
-const badgeBaseStyle = css<{ themes: Theme; $colorName: ColorName; withChildren: boolean }>`
-  ${({ themes: { color, radius }, $colorName, withChildren }) => css`
-    ${withChildren &&
+const badgeBaseStyle = css<{ themes: Theme; $colorName: ColorName; $withChildren: boolean }>`
+  ${({ themes: { color, radius }, $colorName, $withChildren }) => css`
+    ${$withChildren &&
     css`
       position: absolute;
       inset-block-start: 0;
@@ -90,7 +90,7 @@ const badgeBaseStyle = css<{ themes: Theme; $colorName: ColorName; withChildren:
 `
 const PillText = styled(Text).attrs({
   size: 'XS',
-})<{ themes: Theme; $colorName: ColorName; withChildren: boolean }>`
+})<{ themes: Theme; $colorName: ColorName; $withChildren: boolean }>`
   ${({ themes: { color }, $colorName }) => css`
     ${badgeBaseStyle}
 
@@ -101,7 +101,7 @@ const PillText = styled(Text).attrs({
     height: 1.75em;
   `}
 `
-const Dot = styled.span<{ themes: Theme; $colorName: ColorName; withChildren: boolean }>`
+const Dot = styled.span<{ themes: Theme; $colorName: ColorName; $withChildren: boolean }>`
   ${badgeBaseStyle}
 
   width: 0.625em;
