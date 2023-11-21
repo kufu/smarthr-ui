@@ -128,7 +128,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
         className={`${type} ${classNames.wrapper}${className && ` ${className}`}`}
         role={role}
         themes={theme}
-        colorSet={colorSet}
+        $colorSet={colorSet}
         onBase={base === 'base'}
       >
         <Inner>
@@ -151,7 +151,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
         {onClose && (
           <CloseButton
             variant="text"
-            colorSet={colorSet}
+            $colorSet={colorSet}
             themes={theme}
             onClick={onClose}
             className={classNames.closeButton}
@@ -169,13 +169,13 @@ const Base = styled(shrBase).attrs({ overflow: 'hidden' })``
 
 const Wrapper = styled.div<{
   themes: Theme
-  colorSet: { fgColor?: string; bgColor?: string }
+  $colorSet: { fgColor?: string; bgColor?: string }
   onBase: boolean
   animate?: boolean
 }>(
   ({
     themes: { color, fontSize, leading, space },
-    colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
+    $colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
     onBase,
     animate,
   }) => css`
@@ -248,12 +248,12 @@ const ActionWrapper = styled(Cluster)<{
   `,
 )
 const CloseButton = styled(Button)<{
-  colorSet: { fgColor?: string; bgColor?: string }
+  $colorSet: { fgColor?: string; bgColor?: string }
   themes: Theme
 }>(
   ({
     themes: { color, spacingByChar },
-    colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
+    $colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
   }) => css`
     flex-shrink: 0;
 
