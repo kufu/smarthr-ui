@@ -55,17 +55,18 @@ export const Center: React.FC<Props & ElementProps> = ({
   padding,
   verticalCentering,
   as: Component = 'div',
+  className,
   ...props
 }) => {
   const styleProps = useMemo(
     () => ({
-      className: center({ padding, verticalCentering }),
+      className: center({ padding, verticalCentering, className }),
       style: {
         minHeight: minHeight ?? undefined,
         maxWidth: maxWidth ?? undefined,
       },
     }),
-    [minHeight, maxWidth, padding, verticalCentering],
+    [padding, verticalCentering, className, minHeight, maxWidth],
   )
 
   return <Component {...props} {...styleProps} />
