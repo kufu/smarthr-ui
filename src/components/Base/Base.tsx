@@ -4,7 +4,7 @@ import { VariantProps, tv } from 'tailwind-variants'
 import type { Gap } from '../../types'
 
 const base = tv({
-  base: 'smarthr-ui-Base shr-bg-white contrast-more:shr-border-highContrast',
+  base: 'smarthr-ui-Base shr-bg-white contrast-more:shr-border-high-contrast',
   variants: {
     paddingBlock: {
       0: 'shr-py-0',

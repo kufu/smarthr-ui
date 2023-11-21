@@ -124,7 +124,7 @@ const button = tv({
         'shr-font-bold',
         'shr-leading-none',
         'focus-visible:shr-focusIndicator',
-        'contrast-more:shr-border-highContrast',
+        'contrast-more:shr-border-high-contrast',
         /* baseline より下の leading などの余白を埋める */
         '[&_.smarthr-ui-Icon]:shr-block',
         /** selector list は使えない
@@ -210,10 +210,10 @@ const button = tv({
         'shr-text-black',
         'focus-visible:shr-border-darken',
         'focus-visible:bg-white-darken',
-        'focus-visible:constrast-more:shr-border-highContrast',
+        'focus-visible:constrast-more:shr-border-high-contrast',
         'hover:shr-border-darken',
         'hover:shr-bg-white-darken',
-        'hover:constrast-more:shr-border-highContrast',
+        'hover:constrast-more:shr-border-high-contrast',
       ],
     },
     {

@@ -22,11 +22,11 @@ const checkboxInput = tv({
   slots: {
     box: [
       'shr-pointer-events-none shr-absolute shr-box-border shr-h-full shr-w-full shr-rounded-s shr-border shr-border-solid shr-bg-white',
-      'contrast-more:shr-border-highContrast',
+      'contrast-more:shr-border-high-contrast',
       /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
       'forced-colors:shr-hidden',
-      'peer-checked:shr-border-main peer-checked:shr-bg-main contrast-more:peer-checked:shr-border-highContrast',
-      'peer-indeterminate:shr-border-main peer-indeterminate:shr-bg-main contrast-more:peer-indeterminate:shr-border-highContrast',
+      'peer-checked:shr-border-main peer-checked:shr-bg-main contrast-more:peer-checked:shr-border-high-contrast',
+      'peer-indeterminate:shr-border-main peer-indeterminate:shr-bg-main contrast-more:peer-indeterminate:shr-border-high-contrast',
       'peer-disabled:shr-border-disabled peer-disabled:shr-bg-white-darken',
       'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border',
       'peer-disabled:peer-indeterminate:shr-border-default peer-disabled:peer-indeterminate:shr-bg-border',

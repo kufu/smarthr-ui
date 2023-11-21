@@ -152,7 +152,7 @@ export default {
         default: theme('colors.grey.20'),
         disabled: theme('colors.grey.20 / 50%'),
         darken: darkenColor(theme('colors.grey.20')),
-        highContrast: theme('colors.grey.100'),
+        'high-contrast': theme('colors.grey.100'),
       }),
     },
   },
