@@ -11,8 +11,6 @@ export type Props = InputHTMLAttributes<HTMLInputElement>
 export const RadioButtonInput = forwardRef<HTMLInputElement, Props>(
   ({ onChange, ...props }, ref) => {
     const theme = useTheme()
-    const { checked, disabled } = props
-    const boxClassName = `${checked ? 'active' : ''} ${disabled ? 'disabled' : ''}`
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
         if (onChange) onChange(e)
@@ -32,7 +30,7 @@ export const RadioButtonInput = forwardRef<HTMLInputElement, Props>(
           themes={theme}
           ref={ref}
         />
-        <Box className={boxClassName} themes={theme} />
+        <Box themes={theme} />
       </Wrapper>
     )
   },
