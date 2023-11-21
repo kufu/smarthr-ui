@@ -102,17 +102,18 @@ const Box = styled.span<{ themes: Theme }>`
       }
 
       /* FIXME: なぜか static classname になってしまうため & を重ねている */
-      input[disabled] + && {
-        background-color: ${color.BORDER};
-        border-color: ${color.BORDER};
+      input:disabled + && {
+        border-color: ${color.disableColor(color.BORDER)};
+        background-color: ${color.hoverColor(color.WHITE)};
         cursor: not-allowed;
+      }
 
-        &.active {
-          border-color: ${color.BORDER};
+      input:disabled:checked + && {
+        border-color: ${color.BORDER};
+        background-color: ${color.BORDER};
 
-          &::before {
-            background-color: ${color.WHITE};
-          }
+        &::before {
+          background-color: ${color.hoverColor(color.WHITE)};
         }
       }
     `
