@@ -63,7 +63,7 @@ const textarea = tv({
       'disabled:shr-pointer-events-none disabled:shr-bg-column disabled:shr-text-disabled disabled:placeholder:shr-text-disabled',
     ],
     counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm',
-    counterText: 'shr-font-bold shr-text-grey',
+    counterText: 'shr-font-bold',
   },
   variants: {
     error: {
@@ -73,6 +73,7 @@ const textarea = tv({
       },
       false: {
         textareaEl: 'shr-border-default',
+        counterText: 'shr-text-grey',
       },
     },
   },
