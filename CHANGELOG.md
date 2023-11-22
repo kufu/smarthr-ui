@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [39.0.0](https://github.com/kufu/smarthr-ui/compare/v38.2.0...v39.0.0) (2023-11-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* Checkbox から lineHeight を削除し、Tailwind CSS 化 (#3981)
+
+### Features
+
+* add new icons ([#4020](https://github.com/kufu/smarthr-ui/issues/4020)) ([f0407e8](https://github.com/kufu/smarthr-ui/commit/f0407e8098abe0f9d6936d90f8ff51baf855efaf))
+* CheckBox と RadioButton の disabled 色を見直す ([#4023](https://github.com/kufu/smarthr-ui/issues/4023)) ([5687507](https://github.com/kufu/smarthr-ui/commit/56875070bd5d61b19393a3046d909833cf2db611))
+
+
+### Bug Fixes
+
+* Center に className が渡っていなかったため styled-components が使えていなかった欠陥を修正 ([#4031](https://github.com/kufu/smarthr-ui/issues/4031)) ([f0a5d79](https://github.com/kufu/smarthr-ui/commit/f0a5d79292f6646f5193f1bc206a3b8b84b1f0b9))
+* DatePicker の VRT 用 story の日付を固定 ([#3986](https://github.com/kufu/smarthr-ui/issues/3986)) ([c1ec321](https://github.com/kufu/smarthr-ui/commit/c1ec3212a59e595500b860ca3158e8f38a0eaa48))
+* FormGroupのGroupLabelTextでforwardedAsを使うように修正 ([#4029](https://github.com/kufu/smarthr-ui/issues/4029)) ([5852986](https://github.com/kufu/smarthr-ui/commit/585298687620a55c737b1b3fdfc96b499aec3bfa))
+* props が DOM element に渡ってしまって warning になっている箇所を修正 ([#4030](https://github.com/kufu/smarthr-ui/issues/4030)) ([a0e9d41](https://github.com/kufu/smarthr-ui/commit/a0e9d4151ccab2d88d2cfebaf45cf71c8c879206))
+* SmartHR UIのinput関連のコンポーネントがStyled-Componentでラップされている際にFormControlを使用してもラベルのid等が紐づかない問題を修正 ([#4001](https://github.com/kufu/smarthr-ui/issues/4001)) ([5641acb](https://github.com/kufu/smarthr-ui/commit/5641acbc872315ca97888edcff225d879a22f65b))
+* 強制カラーモードの時、チェックマークが二重で表示されていたのでブラウザ標準UIのみを表示するようにした ([#3996](https://github.com/kufu/smarthr-ui/issues/3996)) ([f76954b](https://github.com/kufu/smarthr-ui/commit/f76954b994acfaa5c65acc591667a65e4ab49197))
+* 画面幅が狭い時の NotificationBar の見た目を調整 ([#3967](https://github.com/kufu/smarthr-ui/issues/3967)) ([c99507c](https://github.com/kufu/smarthr-ui/commit/c99507cf85ea8056b577e813833b22b67ed30a24))
+
+
+* Checkbox から lineHeight を削除し、Tailwind CSS 化 ([#3981](https://github.com/kufu/smarthr-ui/issues/3981)) ([e382f35](https://github.com/kufu/smarthr-ui/commit/e382f358f0d7e0eaa89d8251044c2aeb67c1e905))
+
 ## [38.2.0](https://github.com/kufu/smarthr-ui/compare/v38.1.0...v38.2.0) (2023-11-14)
 
 
