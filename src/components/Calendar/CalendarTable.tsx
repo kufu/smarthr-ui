@@ -35,7 +35,7 @@ const calendarTable = tv({
     isToday: {
       true: {
         dateCell:
-          'shr-border shr-border-solid shr-border-default contrast-more:shr-border-highContrast',
+          'shr-border shr-border-solid shr-border-default contrast-more:shr-border-high-contrast',
       },
     },
     isSelected: {
