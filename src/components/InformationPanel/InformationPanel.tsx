@@ -78,7 +78,7 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
       {/* HINT: Wrapperをsectionにしているため余計なタグを出力しないようSectioningFragmentを利用する */}
       <SectioningFragment>
         <Stack gap={1.25}>
-          <Header themes={theme} togglable={togglable}>
+          <Header themes={theme} $togglable={togglable}>
             {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
             <Heading type="blockTitle" tag={titleTag} id={titleId} className={classNames.title}>
               <ResponseMessage type={type} iconGap={0.5}>
@@ -126,8 +126,8 @@ const Wrapper = styled(Base).attrs(() => ({
 const Header = styled(Cluster).attrs({
   align: 'center',
   justify: 'space-between',
-})<{ themes: Theme; togglable: boolean }>`
-  ${({ themes: { border, fontSize, leading, space }, togglable }) => {
+})<{ themes: Theme; $togglable: boolean }>`
+  ${({ themes: { border, fontSize, leading, space }, $togglable }) => {
     // (Button(1rem + padding-block + border) - Heading(1rem * 1.25) / 2)
     const adjust = `calc((
         (${fontSize.S} + ${space(1)} + ${border.lineWidth} * 2)
@@ -135,7 +135,7 @@ const Header = styled(Cluster).attrs({
       ) / -2)
     `
     return css`
-      ${togglable &&
+      ${$togglable &&
       css`
         &&& {
           margin-block: ${adjust};

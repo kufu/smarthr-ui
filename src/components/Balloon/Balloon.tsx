@@ -21,7 +21,7 @@ const balloon = tv({
     'after:shr-bg-white',
     'contrast-more:shr-border',
     'contrast-more:shr-border-solid',
-    'contrast-more:shr-border-highContrast',
+    'contrast-more:shr-border-high-contrast',
     'contrast-more:before:shr-block',
     'contrast-more:before:shr-absolute',
     'contrast-more:before:shr-content-[""]',

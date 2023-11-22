@@ -5,7 +5,6 @@ import styled, { css } from 'styled-components'
 import { Button } from '../Button'
 import { CheckBox } from '../CheckBox'
 import { Cluster, Stack } from '../Layout'
-import { LineClamp } from '../LineClamp'
 import { RadioButton } from '../RadioButton'
 import { Text } from '../Text'
 import { TextLink as shrTextLink } from '../TextLink'
@@ -112,16 +111,6 @@ export const All: StoryFn = () => {
             <Actions />
           </NotificationBar>
           <NotificationBar type="warning" message="onClose を省略すると、閉じるボタンが消えます" />
-          <NotificationBar
-            type="success"
-            message={
-              <LineClamp maxLines={1} withTooltip>
-                非推奨ですが、LineClamp
-                を使用して省略もできます。そのでっかい領域によるヘッダー（のナビゲーション）へのアクセス性の低下をフォローするために多くのウェブサイトはヘッダーを固定しちゃうわけなんだけど、それでは同時にコンテンツの閲覧性に影響を与えてしまう。
-              </LineClamp>
-            }
-            onClose={onClose}
-          />
         </Stack>
       </Stack>
     </Wrapper>

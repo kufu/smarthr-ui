@@ -1,5 +1,5 @@
 import React, {
-  TextareaHTMLAttributes,
+  ComponentPropsWithRef,
   forwardRef,
   useCallback,
   useEffect,
@@ -8,12 +8,10 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTailwindTheme'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
-
-import { useClassNames } from './useClassNames'
 
 import type { DecoratorsType } from '../../types'
 
@@ -37,7 +35,7 @@ type Props = {
    */
   placeholder?: string
 }
-type ElementProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithRef<'textarea'>, keyof Props>
 
 const getStringLength = (value: string | number | readonly string[]) => {
   const formattedValue =
@@ -55,28 +53,57 @@ const getStringLength = (value: string | number | readonly string[]) => {
 const TEXT_BEFORE_MAXlENGTH_COUNT = 'あと'
 const TEXT_AFTER_MAXlENGTH_COUNT = '文字'
 
+const textarea = tv({
+  slots: {
+    textareaEl: [
+      'smarthr-ui-Textarea-textarea shr-box-border shr-rounded-m shr-border shr-border-solid shr-bg-white shr-p-0.5 shr-text-base shr-leading-normal shr-text-black shr-opacity-100',
+      'contrast-more:shr-border-high-contrast',
+      'placeholder:shr-text-grey',
+      'focus-visible:shr-focus-indicator',
+      'disabled:shr-pointer-events-none disabled:shr-bg-column disabled:shr-text-disabled disabled:placeholder:shr-text-disabled',
+    ],
+    counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm',
+    counterText: 'shr-font-bold',
+  },
+  variants: {
+    error: {
+      true: {
+        textareaEl: 'shr-border-danger',
+        counterText: 'shr-text-danger',
+      },
+      false: {
+        textareaEl: 'shr-border-default',
+        counterText: 'shr-text-grey',
+      },
+    },
+  },
+  defaultVariants: {
+    error: false,
+  },
+})
+
 export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
   (
     {
       autoFocus,
       maxLength,
-      width,
-      className = '',
+      width = 'auto',
+      className,
       autoResize = false,
       maxRows = Infinity,
       rows = 2,
       onInput,
       decorators,
+      error,
       ...props
     },
     ref,
   ) => {
-    const theme = useTheme()
+    const { lineHeight } = useTheme()
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const currentValue = props.defaultValue || props.value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
-    const textAreaWidth = typeof width === 'number' ? `${width}px` : width
     const beforeMaxLengthCount = useMemo(
       () =>
         decorators?.beforeMaxLengthCount?.(TEXT_BEFORE_MAXlENGTH_COUNT) ||
@@ -114,7 +141,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         e.target.rows = rows
 
         const currentRows = Math.floor(
-          e.target.scrollHeight / (defaultHtmlFontSize * theme.leading.NORMAL),
+          e.target.scrollHeight / (defaultHtmlFontSize * Number(lineHeight.normal)),
         )
 
         if (previousRows === currentRows) {
@@ -127,95 +154,40 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         setInterimRows(currentRows < maxRows ? currentRows : maxRows)
         onInput && onInput(e)
       },
-      [autoResize, maxRows, onInput, rows, theme.leading.NORMAL],
+      [autoResize, lineHeight.normal, maxRows, onInput, rows],
     )
-
-    const classNames = useClassNames()
+    const { textareaStyleProps, counterStyle, counterTextStyle } = useMemo(() => {
+      const { textareaEl, counter, counterText } = textarea()
+      return {
+        textareaStyleProps: {
+          className: textareaEl({ error, className }),
+          style: { width: typeof width === 'number' ? `${width}px` : width },
+        },
+        counterStyle: counter(),
+        counterTextStyle: counterText({ error: !!(maxLength && maxLength - count <= 0) }),
+      }
+    }, [className, count, error, maxLength, width])
 
     return (
       <>
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
-        <StyledTextarea
+        <textarea
           {...props}
+          {...textareaStyleProps}
           {...(maxLength ? { onKeyUp: handleKeyup } : {})}
-          textAreaWidth={textAreaWidth}
           ref={textareaRef}
-          themes={theme}
-          aria-invalid={props.error || undefined}
-          className={`${className} ${classNames.textarea}`}
+          aria-invalid={error || undefined}
           rows={interimRows}
           onInput={handleInput}
         />
         {maxLength && (
-          <Counter themes={theme} className={classNames.counter}>
+          <span className={counterStyle}>
             {beforeMaxLengthCount}
-            <span className={maxLength && maxLength - count <= 0 ? 'error' : ''}>
-              {maxLength - count}
-            </span>
+            <span className={counterTextStyle}>{maxLength - count}</span>
             {afterMaxLengthCount}
-          </Counter>
+          </span>
         )}
       </>
     )
   },
 )
-
-const StyledTextarea = styled.textarea<Props & { themes: Theme; textAreaWidth?: string | number }>`
-  ${({
-    themes: { border, color, leading, fontSize, radius, shadow, spacingByChar },
-    textAreaWidth = 'auto',
-    error,
-  }) => css`
-    box-sizing: border-box;
-    opacity: 1;
-    border-radius: ${radius.m};
-    border: ${border.shorthand};
-    background-color: ${color.WHITE};
-    padding: ${spacingByChar(0.5)};
-    font-size: ${fontSize.M};
-    line-height: ${leading.NORMAL};
-    color: ${color.TEXT_BLACK};
-    width: ${textAreaWidth};
-
-    @media (prefers-contrast: more) {
-      & {
-        border: ${border.highContrast};
-      }
-    }
-
-    ${error &&
-    css`
-      border-color: ${color.DANGER};
-    `}
-    &::placeholder {
-      color: ${color.TEXT_GREY};
-    }
-    &:focus-visible {
-      ${shadow.focusIndicatorStyles}
-    }
-    &:disabled {
-      background-color: ${color.COLUMN};
-      pointer-events: none;
-
-      &,
-      &::placeholder {
-        color: ${color.TEXT_DISABLED};
-      }
-    }
-  `}
-`
-
-const Counter = styled.span<{ themes: Theme }>`
-  ${({ themes: { fontSize, color } }) => css`
-    display: block;
-    font-size: ${fontSize.S};
-
-    > span {
-      font-weight: bold;
-      color: ${color.TEXT_GREY};
-      &.error {
-        color: ${color.DANGER};
-      }
-    }
-  `}
-`

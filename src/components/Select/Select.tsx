@@ -1,17 +1,15 @@
 import React, {
   ChangeEvent,
+  ComponentPropsWithRef,
   ForwardedRef,
-  SelectHTMLAttributes,
   forwardRef,
   useCallback,
+  useMemo,
 } from 'react'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { isMobileSafari } from '../../libs/ua'
 import { FaSortIcon } from '../Icon'
-
-import { useClassNames } from './useClassNames'
 
 import type { DecoratorsType } from '../../types'
 
@@ -40,9 +38,53 @@ type Props<T extends string> = {
   decorators?: DecoratorsType<'blankLabel'>
 }
 
-type ElementProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, keyof Props<string> | 'children'>
+type ElementProps = Omit<ComponentPropsWithRef<'select'>, keyof Props<string> | 'children'>
 
 const BLANK_LABEL = '選択してください'
+
+const select = tv({
+  slots: {
+    wrapper: 'smarthr-ui-Select shr-relative shr-inline-block',
+    selectEl: [
+      'shr-peer shr-w-full shr-cursor-pointer shr-appearance-none shr-rounded-m shr-border shr-border-solid shr-bg-white shr-text-base shr-leading-none shr-text-black shr-outline-none',
+      'hover:shr-bg-white-darken',
+      'focus-visible:shr-focus-indicator',
+      'disabled:shr-pointer-events-none disabled:shr-bg-white-darken disabled:shr-text-disabled disabled:shr-opacity-100',
+      'contrast-more:shr-border-r-highContrast',
+      /* padding に依る積み上げでは文字が見切れてしまうため */
+      'shr-min-h-[calc(theme(fontSize.base)_+_theme(spacing[0.75])_*_2_+_theme(spacing.px)_*_2)]',
+    ],
+    iconWrap: [
+      'shr-pointer-events-none shr-absolute shr-inset-y-0 shr-inline-flex shr-items-center shr-text-grey',
+      'peer-focus-visible:shr-text-black peer-disabled:shr-text-disabled',
+    ],
+    blankOptgroup: 'shr-hidden',
+  },
+  variants: {
+    size: {
+      default: {
+        selectEl: 'shr-py-0.75 shr-pe-2 shr-ps-0.5',
+        iconWrap: 'shr-end-0.75',
+      },
+      s: {
+        selectEl: [
+          'shr-px-0.5 shr-py-0.5 shr-text-sm',
+          /* padding に依る積み上げでは文字が見切れてしまうため */
+          'shr-min-h-[calc(theme(fontSize.sm)_+_theme(spacing[0.5])_*_2_+_theme(spacing.px)_*_2)]',
+        ],
+        iconWrap: 'shr-end-0.5 shr-text-sm',
+      },
+    },
+    error: {
+      true: {
+        selectEl: 'shr-border-danger',
+      },
+      false: {
+        selectEl: 'shr-border-default disabled:shr-border-disabled',
+      },
+    },
+  },
+})
 
 export const Select = forwardRef(
   <T extends string>(
@@ -51,18 +93,16 @@ export const Select = forwardRef(
       onChange,
       onChangeValue,
       error = false,
-      width,
+      width = 'auto',
       hasBlank = false,
       decorators,
       size = 'default',
-      className = '',
+      className,
       disabled,
       ...props
     }: Props<T> & ElementProps,
     ref: ForwardedRef<HTMLSelectElement>,
   ) => {
-    const theme = useTheme()
-    const $width = typeof width === 'number' ? `${width}px` : width
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLSelectElement>) => {
         if (onChange) onChange(e)
@@ -79,22 +119,32 @@ export const Select = forwardRef(
       },
       [onChange, onChangeValue, options],
     )
-    const classNames = useClassNames()
+
+    const { wrapperStyleProps, selectStyle, iconWrapStyle, blankOptGroupStyle } = useMemo(() => {
+      const { wrapper, selectEl, iconWrap, blankOptgroup } = select()
+      return {
+        wrapperStyleProps: {
+          className: wrapper({ className }),
+          style: {
+            width: typeof width === 'number' ? `${width}px` : width,
+          },
+        },
+        selectStyle: selectEl({ error, size }),
+        iconWrapStyle: iconWrap({ size }),
+        blankOptGroupStyle: blankOptgroup(),
+      }
+    }, [className, error, size, width])
 
     return (
-      <Wrapper
-        $width={$width}
-        className={`${className} ${classNames.wrapper} ${generateSizeClassName(size)}`}
-      >
+      <span {...wrapperStyleProps}>
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
-        <StyledSelect
+        <select
           {...props}
           onChange={handleChange}
           aria-invalid={error || undefined}
-          themes={theme}
-          error={error}
           disabled={disabled}
           ref={ref}
+          className={selectStyle}
         >
           {hasBlank && (
             <option value="">{decorators?.blankLabel?.(BLANK_LABEL) || BLANK_LABEL}</option>
@@ -122,108 +172,13 @@ export const Select = forwardRef(
           })}
           {
             // Support for not omitting labels in Mobile Safari
-            isMobileSafari && <BlankOptgroup />
+            isMobileSafari && <optgroup className={blankOptGroupStyle} />
           }
-        </StyledSelect>
-        <IconWrap themes={theme}>
+        </select>
+        <span className={iconWrapStyle}>
           <FaSortIcon />
-        </IconWrap>
-      </Wrapper>
+        </span>
+      </span>
     )
   },
 )
-
-const generateSizeClassName = (size: Props<string>['size']) => (size === 's' ? '--small' : '')
-
-const Wrapper = styled.span<{ $width?: string }>`
-  ${({ $width = 'auto' }) => css`
-    position: relative;
-    display: inline-block;
-    width: ${$width};
-  `}
-`
-const StyledSelect = styled.select<{
-  error?: boolean
-  themes: Theme
-}>`
-  ${({ error, themes: { border, color, fontSize, leading, radius, shadow, spacingByChar } }) => css`
-    appearance: none;
-    cursor: pointer;
-    outline: none;
-    border-radius: ${radius.m};
-    border: ${border.shorthand};
-    background-color: ${color.WHITE};
-    padding-block: ${spacingByChar(0.75)};
-    padding-inline: ${spacingByChar(0.5)} ${spacingByChar(2)};
-    font-size: ${fontSize.M};
-    line-height: ${leading.NONE};
-    color: ${color.TEXT_BLACK};
-    width: 100%;
-
-    /* padding に依る積み上げでは文字が見切れてしまうため */
-    min-height: calc(${fontSize.M} + ${spacingByChar(0.75)} * 2 + ${border.lineWidth} * 2);
-
-    @media (prefers-contrast: more) {
-      & {
-        border: ${border.highContrast};
-      }
-    }
-
-    ${error &&
-    css`
-      border-color: ${color.DANGER};
-    `}
-
-    &:hover {
-      background-color: ${color.hoverColor(color.WHITE)};
-    }
-
-    &:focus-visible {
-      ${shadow.focusIndicatorStyles}
-    }
-
-    &:disabled {
-      pointer-events: none;
-      opacity: 1;
-      border-color: ${color.disableColor(color.BORDER)};
-      background-color: ${color.hoverColor(color.WHITE)};
-      color: ${color.TEXT_DISABLED};
-    }
-
-    .--small & {
-      padding-block: ${spacingByChar(0.5)};
-      padding-inline: ${spacingByChar(0.5)};
-      font-size: ${fontSize.S};
-
-      /* padding に依る積み上げでは文字が見切れてしまうため */
-      min-height: calc(${fontSize.S} + ${spacingByChar(0.5)} * 2 + ${border.lineWidth} * 2);
-    }
-  `}
-`
-const IconWrap = styled.span<{ themes: Theme }>`
-  ${({ themes: { color, fontSize, spacingByChar } }) => css`
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    right: ${spacingByChar(0.75)};
-    bottom: 0;
-    display: inline-flex;
-    align-items: center;
-    color: ${color.TEXT_GREY};
-
-    ${StyledSelect}:disabled + & {
-      color: ${color.TEXT_DISABLED};
-    }
-    ${StyledSelect}:focus-visible + & {
-      color: ${color.TEXT_BLACK};
-    }
-
-    .--small & {
-      right: ${spacingByChar(0.5)};
-      font-size: ${fontSize.S};
-    }
-  `}
-`
-const BlankOptgroup = styled.optgroup`
-  display: none;
-`
