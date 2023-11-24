@@ -11,6 +11,7 @@ export default {
   title: 'Data Display（データ表示）/LineClamp',
   component: LineClamp,
   parameters: {
+    layout: 'fullscreen',
     withTheming: true,
   },
 }
