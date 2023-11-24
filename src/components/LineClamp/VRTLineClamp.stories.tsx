@@ -11,7 +11,6 @@ export default {
   title: 'Data Display（データ表示）/LineClamp',
   component: LineClamp,
   parameters: {
-    layout: 'fullscreen',
     withTheming: true,
   },
 }
@@ -166,6 +165,7 @@ const VRTInformationPanel = styled(InformationPanel)`
 
 const Wrapper = styled.div`
   padding: 24px;
+  min-height: 400px;
 `
 const Text = styled.p`
   width: 400px;
