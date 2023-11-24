@@ -98,7 +98,7 @@ export const VRTUserHover: StoryFn = () => (
   </>
 )
 VRTUserHover.play = async ({ canvasElement }) => {
-  await new Promise((resolve) => setTimeout(resolve, 500))
+  await new Promise((resolve) => setTimeout(resolve, 500)) // スナップショット時にツールチップを確実に表示させるため
   const canvas = await within(canvasElement)
   const target = await canvas.getByTestId('user-hover')
   await userEvent.hover(target)
@@ -124,7 +124,7 @@ export const VRTUserFocus: StoryFn = () => (
   </>
 )
 VRTUserFocus.play = async ({ canvasElement }) => {
-  await new Promise((resolve) => setTimeout(resolve, 500))
+  await new Promise((resolve) => setTimeout(resolve, 500)) // スナップショット時にツールチップを確実に表示させるため
   const canvas = await within(canvasElement)
   const target = await canvas.getByTestId('user-focus').parentElement! // tabIndexがあるのは親要素
   await target.focus()
@@ -150,7 +150,7 @@ export const VRTForcedColors: StoryFn = () => (
   </>
 )
 VRTForcedColors.play = async ({ canvasElement }) => {
-  await new Promise((resolve) => setTimeout(resolve, 500))
+  await new Promise((resolve) => setTimeout(resolve, 500)) // スナップショット時にツールチップを確実に表示させるため
   const canvas = await within(canvasElement)
   const target = await canvas.getByTestId('user-focus').parentElement! // tabIndexがあるのは親要素
   await target.focus()
@@ -163,6 +163,7 @@ const VRTInformationPanel = styled(InformationPanel)`
   margin-bottom: 24px;
 `
 
+// min-heightで高さを確保しているのは、スナップショット時にツールチップが表示されるようにするため
 const Wrapper = styled.div`
   padding: 24px;
   min-height: 400px;
