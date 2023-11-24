@@ -98,6 +98,7 @@ export const VRTUserHover: StoryFn = () => (
   </>
 )
 VRTUserHover.play = async ({ canvasElement }) => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
   const canvas = await within(canvasElement)
   const target = await canvas.getByTestId('user-hover')
   await userEvent.hover(target)
@@ -123,6 +124,7 @@ export const VRTUserFocus: StoryFn = () => (
   </>
 )
 VRTUserFocus.play = async ({ canvasElement }) => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
   const canvas = await within(canvasElement)
   const target = await canvas.getByTestId('user-focus').parentElement! // tabIndexがあるのは親要素
   await target.focus()
@@ -148,6 +150,7 @@ export const VRTForcedColors: StoryFn = () => (
   </>
 )
 VRTForcedColors.play = async ({ canvasElement }) => {
+  await new Promise((resolve) => setTimeout(resolve, 500))
   const canvas = await within(canvasElement)
   const target = await canvas.getByTestId('user-focus').parentElement! // tabIndexがあるのは親要素
   await target.focus()
