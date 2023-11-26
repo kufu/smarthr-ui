@@ -185,7 +185,7 @@ export default {
       })
       addComponents({
         /**
-         * box-shadow や ring を使った仕組みでは Firefoxx で欠陥があるため、独自定義している
+         * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
          * via https://github.com/tailwindlabs/tailwindcss/issues/10226
          */
         '.focus-indicator': {
