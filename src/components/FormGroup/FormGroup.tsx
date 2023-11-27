@@ -6,7 +6,7 @@ import React, {
   ReactNode,
   useMemo,
 } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css, isStyledComponent } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
 import { useSpacing } from '../../hooks/useSpacing'
@@ -111,7 +111,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         className={`${classNames.label}`}
         forwardedAs={isRoleGroup ? 'legend' : 'label'}
       >
-        <GroupLabel styleType={titleType}>{title}</GroupLabel>
+        <GroupLabelText styleType={titleType}>{title}</GroupLabelText>
         {statusLabelList.length > 0 && (
           <Cluster gap={0.25} as="span">
             {statusLabelList.map((statusLabelProp, index) => (
@@ -202,16 +202,20 @@ const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describe
  * @param type
  * @returns
  */
-const isInputElement = (type: string | React.JSXElementConstructor<any>) =>
-  type === Input ||
-  type === CurrencyInput ||
-  type === Textarea ||
-  type === DatePicker ||
-  type === Select ||
-  type === SingleComboBox ||
-  type === MultiComboBox ||
-  type === InputFile ||
-  type === DropZone
+const isInputElement = (type: string | React.JSXElementConstructor<any>) => {
+  const _type = isStyledComponent(type) ? type.target : type
+  return (
+    _type === Input ||
+    _type === CurrencyInput ||
+    _type === Textarea ||
+    _type === DatePicker ||
+    _type === Select ||
+    _type === SingleComboBox ||
+    _type === MultiComboBox ||
+    _type === InputFile ||
+    _type === DropZone
+  )
+}
 
 const Wrapper = styled(Stack).attrs({
   // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は ChildrenWrapper で調整する
@@ -260,7 +264,7 @@ const FormLabel = styled(Cluster).attrs({ align: 'center' })`
   align-self: start;
 `
 
-const GroupLabel = styled(Text).attrs({ as: 'span' })``
+const GroupLabelText = styled(Text).attrs({ forwardedAs: 'span' })``
 
 const ErrorMessage = styled.p<{ themes: Theme }>`
   ${({ themes: { color } }) => css`

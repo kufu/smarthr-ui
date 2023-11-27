@@ -39,7 +39,7 @@ const Td = styled(shrTd)<{ themes: Theme }>`
     width: ${fontSize.M};
   `}
 `
-const Label = styled(Center).attrs({ as: 'label', verticalCentering: true })`
+const Label = styled(Center).attrs({ forwardedAs: 'label', verticalCentering: true })`
   position: absolute;
   inset: 0;
 

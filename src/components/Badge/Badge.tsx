@@ -41,8 +41,8 @@ export const Badge: React.FC<BadgeProps> = ({
   const actualCount = count && count > 0 ? count : showZero ? 0 : undefined
   const badgeProps = {
     themes: theme,
-    colorName: definedColors[type],
-    withChildren: !!children,
+    $colorName: definedColors[type],
+    $withChildren: !!children,
   }
 
   // ドット表示でもなく、0値を表示するでもない場合は何も表示しない
@@ -55,9 +55,9 @@ export const Badge: React.FC<BadgeProps> = ({
         <Dot {...badgeProps} />
       ) : (
         actualCount !== undefined && (
-          <Pill {...badgeProps}>
+          <PillText {...badgeProps}>
             {actualCount > overflowCount ? `${overflowCount}+` : actualCount}
-          </Pill>
+          </PillText>
         )
       )}
     </BadgeWrapper>
@@ -68,9 +68,9 @@ const BadgeWrapper = styled.span`
   position: relative;
   display: inline-flex;
 `
-const badgeBaseStyle = css<{ themes: Theme; colorName: ColorName; withChildren: boolean }>`
-  ${({ themes: { color, radius }, colorName, withChildren }) => css`
-    ${withChildren &&
+const badgeBaseStyle = css<{ themes: Theme; $colorName: ColorName; $withChildren: boolean }>`
+  ${({ themes: { color, radius }, $colorName, $withChildren }) => css`
+    ${$withChildren &&
     css`
       position: absolute;
       inset-block-start: 0;
@@ -83,25 +83,25 @@ const badgeBaseStyle = css<{ themes: Theme; colorName: ColorName; withChildren: 
     align-items: center;
     justify-content: center;
 
-    box-shadow: 0 0 0 1px ${colorName === 'WARNING_YELLOW' ? color.TEXT_BLACK : color.WHITE};
+    box-shadow: 0 0 0 1px ${$colorName === 'WARNING_YELLOW' ? color.TEXT_BLACK : color.WHITE};
     border-radius: ${radius.full};
-    background-color: ${color[colorName]};
+    background-color: ${color[$colorName]};
   `}
 `
-const Pill = styled(Text).attrs({
+const PillText = styled(Text).attrs({
   size: 'XS',
-})<{ themes: Theme; colorName: ColorName; withChildren: boolean }>`
-  ${({ themes: { color }, colorName }) => css`
+})<{ themes: Theme; $colorName: ColorName; $withChildren: boolean }>`
+  ${({ themes: { color }, $colorName }) => css`
     ${badgeBaseStyle}
 
     padding-inline: 0.5em;
     font-variant-numeric: tabular-nums;
-    color: ${colorName === 'WARNING_YELLOW' ? color.TEXT_BLACK : color.WHITE};
+    color: ${$colorName === 'WARNING_YELLOW' ? color.TEXT_BLACK : color.WHITE};
     min-width: 1.75em;
     height: 1.75em;
   `}
 `
-const Dot = styled.span<{ themes: Theme; colorName: ColorName; withChildren: boolean }>`
+const Dot = styled.span<{ themes: Theme; $colorName: ColorName; $withChildren: boolean }>`
   ${badgeBaseStyle}
 
   width: 0.625em;

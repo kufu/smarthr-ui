@@ -31,8 +31,8 @@ const getIconProps = (
       ? { Icon: FaAngleDoubleLeftIcon, alt: '最初へ' }
       : { Icon: FaChevronLeftIcon, alt: '前へ' }
     : double
-    ? { Icon: FaAngleDoubleRightIcon, alt: '最後へ' }
-    : { Icon: FaChevronRightIcon, alt: '次へ' }
+      ? { Icon: FaAngleDoubleRightIcon, alt: '最後へ' }
+      : { Icon: FaChevronRightIcon, alt: '次へ' }
 
 export const PaginationControllerItem: VFC<Props> = ({
   direction,

@@ -1,11 +1,10 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { ComponentProps, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Button } from '../Button'
 import { CheckBox } from '../CheckBox'
 import { Cluster, Stack } from '../Layout'
-import { LineClamp } from '../LineClamp'
 import { RadioButton } from '../RadioButton'
 import { Text } from '../Text'
 import { TextLink as shrTextLink } from '../TextLink'
@@ -37,7 +36,7 @@ const Actions = () => (
   </>
 )
 
-export const All: Story = () => {
+export const All: StoryFn = () => {
   const onClose = () => console.log('close')
 
   return (
@@ -83,6 +82,25 @@ export const All: Story = () => {
         </Stack>
       </Stack>
       <Stack gap={0.5}>
+        <dt>下地の種類</dt>
+        <Stack gap={0.25} as="dd">
+          <NotificationBar type="info" message="なし（none）が標準です。" onClose={onClose} />
+          <NotificationBar
+            type="info"
+            message="base を選択すると Base の上に表示されます。"
+            base="base"
+            onClose={onClose}
+          />
+          <NotificationBar
+            type="info"
+            message="layer の指定も可能です。"
+            base="base"
+            onClose={onClose}
+            layer={4}
+          />
+        </Stack>
+      </Stack>
+      <Stack gap={0.5}>
         <dt>その他</dt>
         <Stack gap={0.25} as="dd">
           <NotificationBar
@@ -93,16 +111,6 @@ export const All: Story = () => {
             <Actions />
           </NotificationBar>
           <NotificationBar type="warning" message="onClose を省略すると、閉じるボタンが消えます" />
-          <NotificationBar
-            type="success"
-            message={
-              <LineClamp maxLines={1} withTooltip>
-                非推奨ですが、LineClamp
-                を使用して省略もできます。そのでっかい領域によるヘッダー（のナビゲーション）へのアクセス性の低下をフォローするために多くのウェブサイトはヘッダーを固定しちゃうわけなんだけど、それでは同時にコンテンツの閲覧性に影響を与えてしまう。
-              </LineClamp>
-            }
-            onClose={onClose}
-          />
         </Stack>
       </Stack>
     </Wrapper>
@@ -121,7 +129,7 @@ const Wrapper = styled(Stack).attrs({ as: 'dl', gap: 1.5 })`
   `}
 `
 
-export const Demo: Story = () => {
+export const Demo: StoryFn = () => {
   const [visible, setVisible] = useState(false)
   const [animate, setAnimate] = useState(true)
   const [messageType, setMessageType] = useState<(typeof messageTypes)[number]>('success')

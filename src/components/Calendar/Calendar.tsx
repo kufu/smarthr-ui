@@ -1,16 +1,16 @@
 import dayjs from 'dayjs'
-import React, { HTMLAttributes, MouseEvent, forwardRef, useEffect, useState } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentProps, MouseEvent, forwardRef, useEffect, useMemo, useState } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
 import { FaCaretDownIcon, FaCaretUpIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
+import { Cluster } from '../Layout'
+import { Section } from '../SectioningContent'
 
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
 import { getFromDate, getToDate, isBetween, minDate } from './calendarHelper'
-import { useClassNames } from './useClassNames'
 
 type Props = {
   /** 選択可能な開始日 */
@@ -22,12 +22,33 @@ type Props = {
   /** 選択された日付 */
   value?: Date
 }
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+type ElementProps = Omit<ComponentProps<'section'>, keyof Props>
+
+const calendar = tv({
+  slots: {
+    container:
+      'smarthr-ui-Calendar shr-inline-block shr-overflow-hidden shr-rounded-m shr-bg-white shr-text-black shr-shadow-layer-3',
+    header:
+      'smarthr-ui-Calendar-header shr-flex shr-items-center shr-border-b shr-border-solid shr-border-default shr-p-1',
+    yearMonth: 'smarthr-ui-Calendar-yearMonth shr-me-0.5 shr-text-base shr-font-bold',
+    monthButtons: 'smarthr-ui-Calendar-monthButtons shr-ms-auto shr-flex',
+    tableLayout: 'shr-relative',
+  },
+})
 
 export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
-  ({ from = minDate, to, onSelectDate, value, ...props }, ref) => {
-    const themes = useTheme()
-    const classNames = useClassNames()
+  ({ from = minDate, to, onSelectDate, value, className, ...props }, ref) => {
+    const { containerStyle, yearMonthStyle, headerStyle, monthButtonsStyle, tableLayoutStyle } =
+      useMemo(() => {
+        const { container, yearMonth, header, monthButtons, tableLayout } = calendar()
+        return {
+          containerStyle: container({ className }),
+          headerStyle: header(),
+          yearMonthStyle: yearMonth(),
+          monthButtonsStyle: monthButtons(),
+          tableLayoutStyle: tableLayout(),
+        }
+      }, [className])
     const fromDate = dayjs(getFromDate(from))
     const toDate = dayjs(getToDate(to))
     const today = dayjs()
@@ -49,16 +70,11 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     const nextMonth = currentMonth.add(1, 'month')
 
     return (
-      <Container
-        {...props}
-        themes={themes}
-        ref={ref}
-        className={`${props.className} ${classNames.calendar.wrapper}`}
-      >
-        <Header themes={themes} className={classNames.calendar.header}>
-          <YearMonth className={classNames.calendar.yearMonth}>
+      <Section {...props} ref={ref} className={containerStyle}>
+        <header className={headerStyle}>
+          <div className={yearMonthStyle}>
             {currentMonth.year()}年{currentMonth.month() + 1}月
-          </YearMonth>
+          </div>
           <Button
             onClick={(e) => {
               e.stopPropagation()
@@ -68,7 +84,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             square
             aria-expanded={isSelectingYear}
             aria-controls={yearPickerId}
-            className={classNames.calendar.selectingYear}
+            className="smarthr-ui-Calendar-selectingYear"
           >
             {isSelectingYear ? (
               <FaCaretUpIcon alt="年を選択する" />
@@ -76,13 +92,13 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
               <FaCaretDownIcon alt="年を選択する" />
             )}
           </Button>
-          <MonthButtons className={classNames.calendar.monthButtons}>
+          <Cluster gap={0.5} className={monthButtonsStyle}>
             <Button
               disabled={isSelectingYear || prevMonth.isBefore(fromDate, 'month')}
               onClick={() => setCurrentMonth(prevMonth)}
               size="s"
               square
-              className={classNames.calendar.monthButtonPrev}
+              className="smarthr-ui-Calendar-monthButtonPrev"
             >
               <FaChevronLeftIcon alt="前の月へ" />
             </Button>
@@ -91,13 +107,13 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
               onClick={() => setCurrentMonth(nextMonth)}
               size="s"
               square
-              className={classNames.calendar.monthButtonNext}
+              className="smarthr-ui-Calendar-monthButtonNext"
             >
               <FaChevronRightIcon alt="次の月へ" />
             </Button>
-          </MonthButtons>
-        </Header>
-        <TableLayout>
+          </Cluster>
+        </header>
+        <div className={tableLayoutStyle}>
           <YearPicker
             fromYear={fromDate.year()}
             toYear={toDate.year()}
@@ -116,46 +132,8 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             onSelectDate={onSelectDate}
             selected={isValidValue ? value : null}
           />
-        </TableLayout>
-      </Container>
+        </div>
+      </Section>
     )
   },
 )
-
-// eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-const Container = styled.section<{ themes: Theme }>`
-  ${({ themes: { color, shadow } }) => css`
-    display: inline-block;
-    border-radius: 6px;
-    background-color: ${color.WHITE};
-    box-shadow: ${shadow.LAYER3};
-    color: ${color.TEXT_BLACK};
-    overflow: hidden;
-  `}
-`
-const YearMonth = styled.div`
-  margin-right: 8px;
-  font-weight: bold;
-`
-const Header = styled.header<{ themes: Theme }>(({ themes }) => {
-  const { color, fontSize } = themes
-  return css`
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    border-bottom: solid 1px ${color.BORDER};
-    ${YearMonth} {
-      font-size: ${fontSize.M};
-    }
-  `
-})
-const MonthButtons = styled.div`
-  display: flex;
-  margin-left: auto;
-  & > *:not(:first-child) {
-    margin-left: 8px;
-  }
-`
-const TableLayout = styled.div`
-  position: relative;
-`

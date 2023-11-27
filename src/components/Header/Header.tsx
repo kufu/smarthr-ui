@@ -63,7 +63,7 @@ export const Header: React.VFC<Props & ElementProps> = ({
           ))}
         </HeaderDropdownMenuButton>
       ) : (
-        <TenantName themes={theme}>{currentTenantName}</TenantName>
+        <TenantNameText themes={theme}>{currentTenantName}</TenantNameText>
       ),
     [currentTenantName, onTenantSelect, tenants, theme],
   )
@@ -110,7 +110,7 @@ const LogoLink = styled.a<{ themes: Theme }>`
 const TenantInfo = styled.div`
   margin-inline-start: auto;
 `
-const TenantName = styled(Text).attrs({ color: 'TEXT_WHITE' })<{ themes: Theme }>`
+const TenantNameText = styled(Text).attrs({ color: 'TEXT_WHITE' })<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
     padding-inline: ${spacingByChar(0.25)};
   `}

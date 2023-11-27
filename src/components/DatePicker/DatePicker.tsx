@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import React, {
+  ComponentPropsWithRef,
   ReactNode,
   forwardRef,
   useCallback,
@@ -9,18 +10,17 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTailwindTheme'
 import { Calendar } from '../Calendar'
 import { FaCalendarAltIcon } from '../Icon'
 import { Input } from '../Input'
 
 import { Portal } from './Portal'
 import { parseJpnDateString } from './datePickerHelper'
-import { useClassNames } from './useClassNames'
 import { useGlobalKeyDown } from './useGlobalKeyDown'
 
 type Props = {
@@ -42,8 +42,6 @@ type Props = {
   error?: boolean
   /** コンポーネントの幅 */
   width?: number | string
-  /** コンポーネントに適用するクラス名 */
-  className?: string
   /** 入力を独自にパースする場合に、パース処理を記述する関数 */
   parseInput?: (input: string) => Date | null
   /** 表示する日付を独自にフォーマットする場合に、フォーマット処理を記述する関数 */
@@ -63,9 +61,19 @@ type OmitInputAttributes =
   | 'aria-expanded'
   | 'aria-controls'
   | 'aria-haspopup'
-type InputAttributes = Omit<React.InputHTMLAttributes<HTMLInputElement>, OmitInputAttributes>
+type InputAttributes = Omit<ComponentPropsWithRef<'input'>, OmitInputAttributes>
 
 export const DEFAULT_FROM = new Date(1900, 0, 1)
+
+const datePicker = tv({
+  slots: {
+    container: 'smarthr-ui-DatePicker shr-inline-block',
+    inputSuffixLayout: 'shr-box-border shr-h-full shr-py-0.5',
+    inputSuffixWrapper:
+      'shr-box-border shr-flex shr-h-full shr-items-center shr-justify-center shr-border-l shr-border-solid shr-border-l-default shr-ps-0.5 shr-text-base',
+    inputSuffixText: 'shr-text-gray shr-me-0.5 shr-text-sm',
+  },
+})
 
 export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
   (
@@ -77,7 +85,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       disabled,
       width,
       error,
-      className = '',
+      className,
       parseInput,
       formatDate,
       showAlternative,
@@ -86,6 +94,26 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     },
     ref,
   ) => {
+    const {
+      containerStyleProps,
+      inputSuffixLayoutStyle,
+      inputSuffixWrapperStyle,
+      inputSuffixTextStyle,
+    } = useMemo(() => {
+      const { container, inputSuffixLayout, inputSuffixWrapper, inputSuffixText } = datePicker()
+      return {
+        containerStyleProps: {
+          className: container({ className }),
+          style: {
+            width: typeof width === 'number' ? `${width}px` : width,
+          },
+        },
+        inputSuffixLayoutStyle: inputSuffixLayout(),
+        inputSuffixWrapperStyle: inputSuffixWrapper(),
+        inputSuffixTextStyle: inputSuffixText(),
+      }
+    }, [className, width])
+
     const stringToDate = useCallback(
       (str?: string | null) => {
         if (!str) {
@@ -119,7 +147,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       [showAlternative],
     )
 
-    const themes = useTheme()
+    const { textColor } = useTheme()
     const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
     const inputRef = useRef<HTMLInputElement>(null)
     const inputWrapperRef = useRef<HTMLDivElement>(null)
@@ -241,17 +269,21 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
     useGlobalKeyDown(handleKeyDown)
 
     const caretIconColor = useMemo(() => {
-      if (isInputFocused || isCalendarShown) return themes.color.TEXT_BLACK
-      if (disabled) return themes.color.TEXT_DISABLED
-      return themes.color.TEXT_GREY
-    }, [isCalendarShown, isInputFocused, disabled, themes])
-
-    const classNames = useClassNames()
+      if (isInputFocused || isCalendarShown) return textColor.black
+      if (disabled) return textColor.disabled
+      return textColor.grey
+    }, [
+      isInputFocused,
+      isCalendarShown,
+      textColor.black,
+      textColor.disabled,
+      textColor.grey,
+      disabled,
+    ])
 
     return (
-      <Container
-        $width={width}
-        className={`${className} ${classNames.wrapper}`}
+      <div
+        {...containerStyleProps}
         onClick={() => {
           if (!disabled && !isCalendarShown) {
             switchCalendarVisibility(true)
@@ -299,19 +331,19 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
               updateDate(newDate)
             }}
             suffix={
-              <InputSuffixLayout themes={themes}>
-                <InputSuffixWrapper themes={themes}>
+              <span className={inputSuffixLayoutStyle}>
+                <span className={inputSuffixWrapperStyle}>
                   {showAlternative && (
-                    <InputSuffixText themes={themes}>{alternativeFormat}</InputSuffixText>
+                    <span className={inputSuffixTextStyle}>{alternativeFormat}</span>
                   )}
                   <FaCalendarAltIcon color={caretIconColor} />
-                </InputSuffixWrapper>
-              </InputSuffixLayout>
+                </span>
+              </span>
             }
             disabled={disabled}
             error={error}
             ref={inputRef}
-            className={classNames.inputContainer}
+            className="smarthr-ui-DatePicker-inputContainer"
             aria-expanded={isCalendarShown}
             aria-controls={calenderId}
             aria-haspopup={true}
@@ -335,43 +367,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
             />
           </Portal>
         )}
-      </Container>
+      </div>
     )
   },
 )
-
-const Container = styled.div<{ $width: Props['width'] }>`
-  ${({ $width = 'auto' }) => css`
-    display: inline-block;
-    width: ${typeof $width === 'number' ? `${$width}px` : $width};
-  `}
-`
-const InputSuffixLayout = styled.span<{ themes: Theme }>(
-  ({ themes: { spacingByChar } }) => css`
-    height: 100%;
-    padding: ${spacingByChar(0.5)} 0;
-    box-sizing: border-box;
-  `,
-)
-const InputSuffixWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, color, spacingByChar } = themes
-  return css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    height: 100%;
-    padding-left: ${spacingByChar(0.5)};
-    border-left: 1px solid ${color.BORDER};
-    font-size: ${fontSize.M};
-  `
-})
-
-const InputSuffixText = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, color, spacingByChar } = themes
-  return css`
-    margin-right: ${spacingByChar(0.5)};
-    color: ${color.TEXT_GREY};
-    font-size: ${fontSize.S};
-  `
-})

@@ -22,6 +22,7 @@ import {
   FaArrowsAltH,
   FaArrowsAltV,
   FaAsterisk,
+  FaBabyCarriage,
   FaBan,
   FaBars,
   FaBell,
@@ -276,6 +277,8 @@ import {
   FaTrashAlt,
   FaTrashRestore,
   FaTrashRestoreAlt,
+  FaTruck,
+  FaTruckLoading,
   FaUndo,
   FaUndoAlt,
   FaUnlink,
@@ -334,6 +337,7 @@ export const FaArrowsAltIcon = /*#__PURE__*/ createIcon(FaArrowsAlt)
 export const FaArrowsAltHIcon = /*#__PURE__*/ createIcon(FaArrowsAltH)
 export const FaArrowsAltVIcon = /*#__PURE__*/ createIcon(FaArrowsAltV)
 export const FaAsteriskIcon = /*#__PURE__*/ createIcon(FaAsterisk)
+export const FaBabyCarriageIcon = /*#__PURE__*/ createIcon(FaBabyCarriage)
 export const FaBanIcon = /*#__PURE__*/ createIcon(FaBan)
 export const FaBarsIcon = /*#__PURE__*/ createIcon(FaBars)
 export const FaBellIcon = /*#__PURE__*/ createIcon(FaBell)
@@ -587,6 +591,8 @@ export const FaTrashIcon = /*#__PURE__*/ createIcon(FaTrash)
 export const FaTrashAltIcon = /*#__PURE__*/ createIcon(FaTrashAlt)
 export const FaTrashRestoreIcon = /*#__PURE__*/ createIcon(FaTrashRestore)
 export const FaTrashRestoreAltIcon = /*#__PURE__*/ createIcon(FaTrashRestoreAlt)
+export const FaTruckIcon = /*#__PURE__*/ createIcon(FaTruck)
+export const FaTruckLoadingIcon = /*#__PURE__*/ createIcon(FaTruckLoading)
 export const FaUndoIcon = /*#__PURE__*/ createIcon(FaUndo)
 export const FaUndoAltIcon = /*#__PURE__*/ createIcon(FaUndoAlt)
 export const FaUnlinkIcon = /*#__PURE__*/ createIcon(FaUnlink)

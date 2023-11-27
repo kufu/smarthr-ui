@@ -1,7 +1,8 @@
-import React, { HTMLAttributes, useMemo } from 'react'
+import React, { ComponentProps, ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { Base as shrBase } from '../Base'
 import { Button } from '../Button'
 import {
   FaCheckCircleIcon,
@@ -12,13 +13,12 @@ import {
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
-import { Text } from '../Text'
 
 import { useClassNames } from './useClassNames'
 
 export const messageTypes = ['info', 'success', 'error', 'warning'] as const
 
-type Props = {
+type Props = PropsWithChildren<{
   /** メッセージの種類 */
   type: (typeof messageTypes)[number]
   /** 強調するかどうか */
@@ -29,20 +29,23 @@ type Props = {
   message: React.ReactNode
   /** 閉じるボタン押下時に発火させる関数 */
   onClose?: () => void
-  /** アクション群 */
-  children?: React.ReactNode
   /** role 属性 */
   role?: 'alert' | 'status'
-}
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+  /** 下地 */
+  base?: 'none' | 'base'
+}>
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
+type BaseProps = Pick<ComponentProps<typeof shrBase>, 'layer'>
 
-export const NotificationBar: React.FC<Props & ElementProps> = ({
+export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   type,
   bold = false,
   message,
   onClose,
   children,
   role = type === 'info' ? 'status' : 'alert',
+  base = 'none',
+  layer,
   className = '',
   ...props
 }) => {
@@ -102,35 +105,53 @@ export const NotificationBar: React.FC<Props & ElementProps> = ({
     }
   }, [color, type, bold])
 
+  const { baseComponent: WrapBase, baseProps } = useMemo(
+    () =>
+      base === 'base'
+        ? {
+            baseComponent: Base,
+            baseProps: {
+              layer,
+            },
+          }
+        : {
+            baseComponent: React.Fragment,
+            baseProps: {},
+          },
+    [base, layer],
+  )
+
   return (
-    <Wrapper
-      {...props}
-      className={`${type} ${classNames.wrapper}${className && ` ${className}`}`}
-      role={role}
-      themes={theme}
-      colorSet={colorSet}
-    >
-      <MessageArea themes={theme} className={classNames.messageArea}>
-        <IconLayout>
-          <Icon color={iconColor} />
-        </IconLayout>
-        <StyledText leading="TIGHT">{message}</StyledText>
-      </MessageArea>
-      <ActionArea themes={theme} className={classNames.actionArea}>
-        {children && (
-          <ActionWrapper
-            themes={theme}
-            className={classNames.actions}
-            align="center"
-            justify="flex-end"
-          >
-            {children}
-          </ActionWrapper>
-        )}
+    <WrapBase {...baseProps}>
+      <Wrapper
+        {...props}
+        className={`${type} ${classNames.wrapper}${className && ` ${className}`}`}
+        role={role}
+        themes={theme}
+        $colorSet={colorSet}
+        onBase={base === 'base'}
+      >
+        <Inner>
+          <MessageArea themes={theme} className={classNames.messageArea}>
+            <Icon text={message} color={iconColor} iconGap={0.5} />
+          </MessageArea>
+          {children && (
+            <ActionArea themes={theme} className={classNames.actionArea}>
+              <ActionWrapper
+                themes={theme}
+                className={classNames.actions}
+                align="center"
+                justify="flex-end"
+              >
+                {children}
+              </ActionWrapper>
+            </ActionArea>
+          )}
+        </Inner>
         {onClose && (
           <CloseButton
             variant="text"
-            colorSet={colorSet}
+            $colorSet={colorSet}
             themes={theme}
             onClick={onClose}
             className={classNames.closeButton}
@@ -139,26 +160,36 @@ export const NotificationBar: React.FC<Props & ElementProps> = ({
             <FaTimesIcon alt="閉じる" />
           </CloseButton>
         )}
-      </ActionArea>
-    </Wrapper>
+      </Wrapper>
+    </WrapBase>
   )
 }
 
+const Base = styled(shrBase).attrs({ overflow: 'hidden' })``
+
 const Wrapper = styled.div<{
   themes: Theme
-  colorSet: { fgColor?: string; bgColor?: string }
+  $colorSet: { fgColor?: string; bgColor?: string }
+  onBase: boolean
   animate?: boolean
 }>(
   ({
     themes: { color, fontSize, leading, space },
-    colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
+    $colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
+    onBase,
     animate,
   }) => css`
     display: flex;
-    gap: ${space(1)};
-    align-items: center;
+    gap: ${space(0.5)};
+    align-items: baseline;
+    justify-content: space-between;
     background-color: ${bgColor};
     padding: ${space(0.75)};
+    ${onBase &&
+    css`
+      padding-block: ${space(1)};
+      padding-inline: ${space(1.5)} ${space(1)};
+    `}
     color: ${fgColor};
     ${animate &&
     css`
@@ -168,6 +199,13 @@ const Wrapper = styled.div<{
     `}
   `,
 )
+const Inner = styled(Cluster).attrs({
+  gap: 1,
+  align: 'center',
+  justify: 'flex-end',
+})`
+  flex-grow: 1;
+`
 const slideIn = (translateLength: string) => keyframes`
   from {
     opacity: 0;
@@ -181,24 +219,17 @@ const slideIn = (translateLength: string) => keyframes`
 const MessageArea = styled.div<{
   themes: Theme
 }>(
-  ({ themes: { spacingByChar } }) => css`
+  ({ themes: { leading, spacingByChar } }) => css`
     display: flex;
     gap: ${spacingByChar(0.5)};
     align-items: center;
     flex-grow: 1;
 
-    /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
-    min-width: 0;
+    .smarthr-ui-Icon-withText {
+      line-height: ${leading.TIGHT};
+    }
   `,
 )
-const IconLayout = styled.div`
-  /* 子のアイコンの line-height を打ち消すために指定 */
-  display: flex;
-`
-const StyledText = styled(Text)`
-  /* flexbox で ellipsis するために min-width をつけて幅の計算を発生させている */
-  min-width: 0;
-`
 const ActionArea = styled.div<{
   themes: Theme
 }>(
@@ -213,17 +244,16 @@ const ActionWrapper = styled(Cluster)<{
   themes: Theme
 }>(
   ({ themes: { spacingByChar } }) => css`
-    margin-top: ${spacingByChar(-0.5)};
-    margin-bottom: ${spacingByChar(-0.5)};
+    margin-block: ${spacingByChar(-0.5)};
   `,
 )
 const CloseButton = styled(Button)<{
-  colorSet: { fgColor?: string; bgColor?: string }
+  $colorSet: { fgColor?: string; bgColor?: string }
   themes: Theme
 }>(
   ({
     themes: { color, spacingByChar },
-    colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
+    $colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
   }) => css`
     flex-shrink: 0;
 

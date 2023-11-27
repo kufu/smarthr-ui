@@ -27,9 +27,9 @@ export const SideMenuGroup: React.FC<Props & ElementProps> = ({
 
   return (
     <Group {...props} themes={theme} className={`${className || ''} ${classNames.group}`}>
-      <GroupName forwardedAs={nameTag} themes={theme}>
+      <GroupNameText forwardedAs={nameTag} themes={theme}>
         {name}
-      </GroupName>
+      </GroupNameText>
       <SideMenuList>{children}</SideMenuList>
     </Group>
   )
@@ -43,5 +43,5 @@ const Group = styled(Stack).attrs({ as: 'li', gap: 0.5 })<{ themes: Theme }>`
     }
   `}
 `
-const GroupName = styled(Text).attrs({ color: 'TEXT_GREY', leading: 'TIGHT', size: 'S' })``
+const GroupNameText = styled(Text).attrs({ color: 'TEXT_GREY', leading: 'TIGHT', size: 'S' })``
 const SideMenuList = styled(Stack).attrs({ as: 'ul', gap: 0 })``
