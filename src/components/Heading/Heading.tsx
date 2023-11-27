@@ -1,37 +1,31 @@
-import React, { HTMLAttributes, ReactNode, VFC, useContext, useMemo } from 'react'
-import styled from 'styled-components'
+import React, { ComponentProps, FC, PropsWithChildren, useContext, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
 import { MAPPER_SIZE_AND_WEIGHT, Text, TextProps } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { useClassNames } from './useClassNames'
-
-export type Props = {
-  /** 表示するテキスト */
-  children: ReactNode
+export type Props = PropsWithChildren<{
   /** テキストのスタイル */
   type?: HeadingTypes
   /**
    * @deprecated SectioningContent(Article, Aside, Nav, Section, SectioningFragment)を使ってHeadingと関連する範囲を明確に指定してください
    */
   tag?: HeadingTagTypes
-  /** コンポーネントに適用するクラス名 */
-  className?: string
   /** 視覚的に非表示にするフラグ */
   visuallyHidden?: boolean
-}
+}>
 
 export type HeadingTypes = TextProps['styleType']
 
 export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 
 type ElementProps = Omit<
-  HTMLAttributes<HTMLElement>,
+  ComponentProps<'h1'>,
   keyof Props | keyof TextProps | 'role' | 'aria-level'
 >
 
-const generateTagProps = (level: number, tag?: HeadingTagTypes, visuallyHidden?: boolean) => {
+const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
   let role = undefined
   let ariaLevel = undefined
 
@@ -42,43 +36,49 @@ const generateTagProps = (level: number, tag?: HeadingTagTypes, visuallyHidden?:
   }
 
   return {
-    [visuallyHidden ? 'as' : 'forwardedAs']:
-      tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
+    as: tag || ((level <= 6 ? `h${level}` : 'span') as HeadingTagTypes | 'span'),
     role,
     'aria-level': ariaLevel,
   }
 }
 
-export const Heading: VFC<Props & ElementProps> = ({
+const heading = tv({
+  base: 'smarthr-ui-Heading',
+  variants: {
+    visuallyHidden: {
+      false: 'shr-m-[unset]',
+    },
+  },
+  defaultVariants: {
+    visuallyHidden: false,
+  },
+})
+
+export const Heading: FC<Props & ElementProps> = ({
   tag,
   type = 'sectionTitle',
-  className = '',
+  className,
   visuallyHidden,
   ...props
 }) => {
-  const classNames = useClassNames()
   const level = useContext(LevelContext)
-  const tagProps = useMemo(
-    () => generateTagProps(level, tag, visuallyHidden),
-    [level, tag, visuallyHidden],
-  )
+  const tagProps = useMemo(() => generateTagProps(level, tag), [level, tag])
+  const styles = useMemo(() => heading({ visuallyHidden, className }), [className, visuallyHidden])
   const actualProps = {
     ...props,
     ...MAPPER_SIZE_AND_WEIGHT[type],
     ...tagProps,
-    className: `${type} ${className} ${classNames.wrapper}`,
+    className: styles,
   }
 
-  return visuallyHidden ? <VisuallyHiddenText {...actualProps} /> : <ResetText {...actualProps} />
+  return visuallyHidden ? (
+    <VisuallyHiddenText {...actualProps} />
+  ) : (
+    <Text {...actualProps} leading="TIGHT" />
+  )
 }
 
-export const PageHeading: VFC<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>> = ({
+export const PageHeading: FC<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>> = ({
   type = 'screenTitle',
   ...props
 }) => <Heading {...props} type={type} tag="h1" /> // eslint-disable-line smarthr/a11y-heading-in-sectioning-content
-
-const ResetText = styled(Text).attrs(() => ({
-  leading: 'TIGHT' as React.ComponentProps<typeof Text>['leading'],
-}))`
-  margin: unset;
-`
