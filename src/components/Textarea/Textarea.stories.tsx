@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import { userEvent, within } from '@storybook/testing-library'
 import React, { useState } from 'react'
 import styled from 'styled-components'
@@ -12,7 +12,7 @@ export default {
   component: Textarea,
 }
 
-const Template: Story = () => {
+const Template: StoryFn = () => {
   const [value, setValue] = useState('message👌')
   const onChangeValue = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setValue(e.currentTarget.value)
@@ -60,6 +60,17 @@ const Template: Story = () => {
           <Textarea
             name="max_length_with_value"
             maxLength={140}
+            value={value}
+            onChange={onChangeValue}
+          />
+        </Label>
+      </li>
+      <li>
+        <Label>
+          最大文字数 (value)
+          <Textarea
+            name="max_length_with_value_over"
+            maxLength={4}
             value={value}
             onChange={onChangeValue}
           />

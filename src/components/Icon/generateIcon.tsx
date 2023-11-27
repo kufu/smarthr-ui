@@ -116,7 +116,7 @@ export const createIcon = (SvgIcon: IconType) => {
 
     if (existsText) {
       return (
-        <IconAndTextWrapper gap={iconGap} right={right} className={classNames.withText}>
+        <IconAndTextWrapper gap={iconGap} className={classNames.withText}>
           {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
           {right && text}
           {svgIcon}
@@ -145,21 +145,16 @@ const WrapIcon = styled.svg`
 `
 
 const IconAndTextWrapper = styled.span<{
-  right: ComponentProps['right']
   gap: ComponentProps['iconGap']
 }>`
-  ${({ right, gap }) => css`
-    ${!right &&
-    css`
-      display: inline-flex;
-      align-items: baseline;
-      ${gap && `column-gap: ${useSpacing(gap)};`}
-    `}
+  ${({ gap }) => css`
+    display: inline-flex;
+    align-items: baseline;
+    ${gap && `column-gap: ${useSpacing(gap)};`}
 
     .smarthr-ui-Icon {
       flex-shrink: 0;
       transform: translateY(0.125em);
-      ${right && gap && `margin-inline-start: ${useSpacing(gap)};`}
     }
   `}
 `

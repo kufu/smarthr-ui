@@ -56,7 +56,7 @@ export function ButtonWrapper({
   }, [$loading, className, size, square, variant, wide])
 
   if (props.isAnchor) {
-    const { anchorRef, ...others } = props
+    const { anchorRef, isAnchor: _, ...others } = props
     // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute, jsx-a11y/anchor-has-content
     return <a {...others} className={anchorStyle} ref={anchorRef} />
   } else {
@@ -123,8 +123,8 @@ const button = tv({
         'shr-font-inherit',
         'shr-font-bold',
         'shr-leading-none',
-        'focus-visible:shr-focusIndicator',
-        'contrast-more:shr-border-highContrast',
+        'focus-visible:shr-focus-indicator',
+        'contrast-more:shr-border-high-contrast',
         /* baseline より下の leading などの余白を埋める */
         '[&_.smarthr-ui-Icon]:shr-block',
         /** selector list は使えない
@@ -210,17 +210,17 @@ const button = tv({
         'shr-text-black',
         'focus-visible:shr-border-darken',
         'focus-visible:bg-white-darken',
-        'focus-visible:constrast-more:shr-border-highContrast',
+        'focus-visible:constrast-more:shr-border-high-contrast',
         'hover:shr-border-darken',
         'hover:shr-bg-white-darken',
-        'hover:constrast-more:shr-border-highContrast',
+        'hover:constrast-more:shr-border-high-contrast',
       ],
     },
     {
       slots: ['default'],
       variant: 'secondary',
       className: [
-        'disabled:shr-border-disabled/50',
+        'disabled:shr-border-disabled',
         'disabled:shr-bg-white-darken',
         'disabled:shr-text-disabled',
       ],
@@ -229,7 +229,7 @@ const button = tv({
       slots: ['anchor'],
       variant: 'secondary',
       className: [
-        '[&:not([href])]:shr-border-disabled/50',
+        '[&:not([href])]:shr-border-disabled',
         '[&:not([href])]:shr-bg-white-darken',
         '[&:not([href])]:shr-text-disabled',
       ],

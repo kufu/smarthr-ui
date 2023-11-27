@@ -1,15 +1,18 @@
-import styled from 'styled-components'
+import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-export const VisuallyHiddenText = styled.span`
-  position: absolute;
-  top: -1px;
-  left: 0;
-  width: 1px;
-  height: 1px;
-  border: 0;
-  padding: 0;
-  white-space: nowrap;
-  clip-path: inset(100%);
-  clip: rect(0 0 0 0);
-  overflow: hidden;
-`
+const visuallyHiddenText = tv({
+  base: 'shr-absolute -shr-top-px shr-left-0 shr-h-px shr-w-px shr-overflow-hidden shr-whitespace-nowrap shr-border-0 shr-p-0 [clip-path:inset(100%)] [clip:rect(0_0_0_0)]',
+})
+
+export const VisuallyHiddenText: React.FC<
+  PropsWithChildren<
+    {
+      as?: string | React.ComponentType<any>
+    } & ComponentProps<'span'>
+  >
+> = ({ as: Component = 'span', className, ...props }) => {
+  const styles = useMemo(() => visuallyHiddenText({ className }), [className])
+
+  return <Component {...props} className={styles} />
+}

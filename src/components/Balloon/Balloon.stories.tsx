@@ -1,5 +1,5 @@
-import { Story } from '@storybook/react'
-import * as React from 'react'
+import { StoryFn } from '@storybook/react'
+import React from 'react'
 import styled from 'styled-components'
 
 import { Balloon } from './Balloon'
@@ -9,7 +9,7 @@ export default {
   component: Balloon,
 }
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <List>
     <li>
       <Balloon horizontal="left" vertical="top">
