@@ -15,7 +15,7 @@ type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProp
 const buttonStyle = tv({
   slots: {
     wrapper: 'smarthr-ui-Button',
-    loader: 'shr-align-bottom [&&&_.s]:shr-h-em [&&&_.s]:shr-w-em',
+    loader: 'shr-align-bottom',
     disabledWrapper: 'smarthr-ui-Button-disabledWrapper',
     disabledTooltip: [
       '[&&&]:shr-overflow-y-unset',
@@ -30,10 +30,10 @@ const buttonStyle = tv({
   variants: {
     isSecondary: {
       true: {
-        loader: '[&&&_.light]:shr-border-disabled',
+        loader: '[&&&_.smarthr-ui-Loader-line]:shr-border-disabled',
       },
       false: {
-        loader: '[&&&_.light]:shr-border-white/50',
+        loader: '[&&&_.smarthr-ui-Loader-line]:shr-border-white/50',
       },
     },
   },
@@ -65,7 +65,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
       [loaderSlot, variant],
     )
 
-    const loader = <Loader size="s" type="light" className={loaderStyle} />
+    const loader = <Loader size="xs" className={loaderStyle} />
     const actualPrefix = !loading && prefix
     const actualSuffix = loading && !square ? loader : suffix
     const disabledOnLoading = loading || disabled

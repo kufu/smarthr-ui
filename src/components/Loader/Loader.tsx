@@ -5,7 +5,7 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 type Props = {
   /** ローダーの大きさ */
-  size?: 's' | 'm'
+  size?: 'xs' | 's' | 'm'
   /** 代替テキスト */
   alt?: ReactNode
   /** 表示するメッセージ */
@@ -25,7 +25,14 @@ const loaderStyle = tv({
       'shr-mx-auto',
       'shr-animate-[spin_1.6s_linear_infinite]',
     ],
-    line: ['shr-absolute', 'shr-block', 'shr-w-full', 'shr-h-full', 'shr-opacity-0'],
+    line: [
+      'smarthr-ui-Loader-line', // Button コンポーネントで使用
+      'shr-absolute',
+      'shr-block',
+      'shr-w-full',
+      'shr-h-full',
+      'shr-opacity-0',
+    ],
     cog: [
       'shr-inline-block',
       'shr-relative',
@@ -50,6 +57,10 @@ const loaderStyle = tv({
   },
   variants: {
     size: {
+      xs: {
+        spinner: ['shr-w-1', 'shr-h-1'],
+        cogInner: ['shr-border-2'],
+      },
       s: {
         spinner: ['shr-w-1.5', 'shr-h-1.5'],
         cogInner: ['shr-border-2'],
