@@ -21,12 +21,14 @@ const accordionPanelContent = tv({
   base: [
     'smarthr-ui-AccordionPanel-content',
     'shr-max-h-0',
-    'shr-transition-[max-height,_visible]',
-    'shr-duration-100',
+    'shr-transition-[max-height,_visible,_opacity]',
+    'shr-duration-150',
     'shr-ease-in-out',
     'shr-invisible',
+    'shr-opacity-0',
     '[&.entered]:shr-max-h-screen',
     '[&.entered]:shr-visible',
+    '[&.entered]:shr-opacity-100',
   ],
 })
 
@@ -38,7 +40,7 @@ export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...
   const styles = useMemo(() => accordionPanelContent({ className }), [className])
 
   return (
-    <Transition in={isInclude} timeout={100}>
+    <Transition in={isInclude} timeout={150}>
       {(status) => (
         <div
           {...props}

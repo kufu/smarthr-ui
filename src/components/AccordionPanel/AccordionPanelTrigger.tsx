@@ -52,7 +52,7 @@ const accordionPanelTrigger = tv({
   compoundSlots: [
     {
       slots: ['leftIcon', 'rightIcon'],
-      className: ['shr-transition-transform', 'shr-duration-100'],
+      className: ['shr-transition-transform', 'shr-duration-150'],
     },
   ],
 })
