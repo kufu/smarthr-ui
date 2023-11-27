@@ -1,17 +1,7 @@
-import React, { HTMLAttributes, PropsWithChildren } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
+import { VariantProps, tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Text } from '../Text'
-
-const definedColors = {
-  grey: 'TEXT_GREY',
-  blue: 'MAIN',
-  yellow: 'WARNING_YELLOW',
-  red: 'DANGER',
-} as const
-type Color = keyof typeof definedColors
-type ColorName = (typeof definedColors)[Color]
 
 type BaseProps = PropsWithChildren<{
   /** 件数 */
@@ -21,11 +11,86 @@ type BaseProps = PropsWithChildren<{
   /** 0値を表示するかどうか */
   showZero?: boolean
   /** 色の種類 */
-  type?: Color
+  type?: VariantProps<typeof badge>['color']
   /** ドット表示するかどうか */
   dot?: boolean
 }>
-type BadgeProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps> & BaseProps
+type BadgeProps = Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps> & BaseProps
+
+const badge = tv({
+  slots: {
+    wrapper: 'smarthr-ui-Badge shr-relative shr-inline-flex',
+    pill: ['shr-h-[1.75em] shr-min-w-[1.75em] shr-px-[0.5em] shr-tabular-nums'],
+    dotElement: ['shr-h-[0.625em] shr-w-[0.625em]'],
+  },
+  variants: {
+    color: {
+      grey: {},
+      blue: {},
+      yellow: {},
+      red: {},
+    },
+    withChildren: {
+      true: {},
+    },
+  },
+  compoundSlots: [
+    {
+      slots: ['pill', 'dotElement'],
+      className: [
+        'shr-box-border shr-flex shr-items-center shr-justify-center',
+        'shr-rounded-full',
+      ],
+    },
+    {
+      slots: ['pill', 'dotElement'],
+      withChildren: true,
+      className: [
+        'shr-absolute -shr-translate-y-1/2 shr-translate-x-1/2 [inset-block-start:0] [inset-inline-end:0]',
+      ],
+    },
+    {
+      slots: ['pill', 'dotElement'],
+      color: 'blue',
+      className: 'shr-bg-main',
+    },
+    {
+      slots: ['pill', 'dotElement'],
+      color: 'yellow',
+      className: 'shr-bg-warning-yellow',
+    },
+    {
+      slots: ['pill', 'dotElement'],
+      color: 'red',
+      className: 'shr-bg-danger',
+    },
+    {
+      slots: ['pill', 'dotElement'],
+      color: 'grey',
+      className: 'shr-bg-[theme(colors.grey.65)]',
+    },
+    {
+      slots: ['pill', 'dotElement'],
+      color: ['grey', 'blue', 'red'],
+      className: 'shr-shadow-[0_0_0_1px_theme(colors.white)]',
+    },
+    {
+      slots: ['pill', 'dotElement'],
+      color: 'yellow',
+      className: 'shr-shadow-[0_0_0_1px_theme(colors.black)]',
+    },
+    {
+      slots: ['pill'],
+      color: ['grey', 'blue', 'red'],
+      className: 'shr-text-white',
+    },
+    {
+      slots: ['pill'],
+      color: ['yellow'],
+      className: 'shr-text-black',
+    },
+  ],
+})
 
 export const Badge: React.FC<BadgeProps> = ({
   count,
@@ -34,76 +99,35 @@ export const Badge: React.FC<BadgeProps> = ({
   type = 'blue',
   dot = false,
   children,
+  className,
   ...props
 }) => {
-  const theme = useTheme()
-
   const actualCount = count && count > 0 ? count : showZero ? 0 : undefined
-  const badgeProps = {
-    themes: theme,
-    $colorName: definedColors[type],
-    $withChildren: !!children,
-  }
+
+  const { wrapperStyle, pillStyle, dotStyle } = useMemo(() => {
+    const { wrapper, pill, dotElement } = badge({ color: type, withChildren: !!children })
+    return {
+      wrapperStyle: wrapper({ className }),
+      pillStyle: pill(),
+      dotStyle: dotElement(),
+    }
+  }, [children, className, type])
 
   // ドット表示でもなく、0値を表示するでもない場合は何も表示しない
   if (!dot && !children && actualCount === undefined) return null
 
   return (
-    <BadgeWrapper {...props}>
+    <span {...props} className={wrapperStyle}>
       {children}
       {dot ? (
-        <Dot {...badgeProps} />
+        <span className={dotStyle} />
       ) : (
         actualCount !== undefined && (
-          <PillText {...badgeProps}>
+          <Text size="XS" className={pillStyle}>
             {actualCount > overflowCount ? `${overflowCount}+` : actualCount}
-          </PillText>
+          </Text>
         )
       )}
-    </BadgeWrapper>
+    </span>
   )
 }
-
-const BadgeWrapper = styled.span`
-  position: relative;
-  display: inline-flex;
-`
-const badgeBaseStyle = css<{ themes: Theme; $colorName: ColorName; $withChildren: boolean }>`
-  ${({ themes: { color, radius }, $colorName, $withChildren }) => css`
-    ${$withChildren &&
-    css`
-      position: absolute;
-      inset-block-start: 0;
-      inset-inline-end: 0;
-      translate: 50% -50%;
-    `}
-
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    box-shadow: 0 0 0 1px ${$colorName === 'WARNING_YELLOW' ? color.TEXT_BLACK : color.WHITE};
-    border-radius: ${radius.full};
-    background-color: ${color[$colorName]};
-  `}
-`
-const PillText = styled(Text).attrs({
-  size: 'XS',
-})<{ themes: Theme; $colorName: ColorName; $withChildren: boolean }>`
-  ${({ themes: { color }, $colorName }) => css`
-    ${badgeBaseStyle}
-
-    padding-inline: 0.5em;
-    font-variant-numeric: tabular-nums;
-    color: ${$colorName === 'WARNING_YELLOW' ? color.TEXT_BLACK : color.WHITE};
-    min-width: 1.75em;
-    height: 1.75em;
-  `}
-`
-const Dot = styled.span<{ themes: Theme; $colorName: ColorName; $withChildren: boolean }>`
-  ${badgeBaseStyle}
-
-  width: 0.625em;
-  height: 0.625em;
-`
