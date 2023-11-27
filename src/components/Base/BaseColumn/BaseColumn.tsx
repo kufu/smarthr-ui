@@ -18,6 +18,7 @@ const baseColumn = tv({
       HEAD: '[&&&]:shr-bg-head',
       BORDER: '[&&&]:shr-bg-[theme(colors.grey.20)]',
       ACTION_BACKGROUND: '[&&&]:shr-bg-action-background',
+      WHITE: '[&&&]:shr-bg-white',
       GREY_5: '[&&&]:shr-bg-[theme(colors.grey.5)]',
       GREY_6: '[&&&]:shr-bg-[theme(colors.grey.6)]',
       GREY_7: '[&&&]:shr-bg-[theme(colors.grey.7)]',
