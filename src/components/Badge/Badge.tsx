@@ -20,7 +20,7 @@ type BadgeProps = Omit<ComponentPropsWithoutRef<'span'>, keyof BaseProps> & Base
 const badge = tv({
   slots: {
     wrapper: 'smarthr-ui-Badge shr-relative shr-inline-flex',
-    pill: ['shr-h-[1.75em] shr-min-w-[1.75em] shr-px-[0.5em] [font-variant-numeric:tabular-nums]'],
+    pill: ['shr-h-[1.75em] shr-min-w-[1.75em] shr-px-[0.5em] shr-tabular-nums'],
     dotElement: ['shr-h-[0.625em] shr-w-[0.625em]'],
   },
   variants: {
