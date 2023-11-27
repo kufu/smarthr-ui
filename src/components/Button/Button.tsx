@@ -65,7 +65,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
       [loaderSlot, variant],
     )
 
-    const loader = <Loader size="s" type="light" as="span" className={loaderStyle} />
+    const loader = <Loader size="s" type="light" className={loaderStyle} />
     const actualPrefix = !loading && prefix
     const actualSuffix = loading && !square ? loader : suffix
     const disabledOnLoading = loading || disabled
