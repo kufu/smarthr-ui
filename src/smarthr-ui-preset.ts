@@ -100,6 +100,7 @@ export default {
       lg: defaultFontSize.L,
       xl: defaultFontSize.XL,
       '2xl': defaultFontSize.XXL,
+      inherit: 'inherit',
     },
     lineHeight: {
       none: '1',
