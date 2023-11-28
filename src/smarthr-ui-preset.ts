@@ -100,6 +100,7 @@ export default {
       lg: defaultFontSize.L,
       xl: defaultFontSize.XL,
       '2xl': defaultFontSize.XXL,
+      inherit: 'inherit',
     },
     lineHeight: {
       none: '1',
@@ -155,6 +156,113 @@ export default {
         darken: darkenColor(theme('colors.grey.20')),
         'high-contrast': theme('colors.grey.100'),
       }),
+      keyframes: {
+        'loader-line-full-unfill-rotate': {
+          '12.5%': {
+            transform: 'rotate(135deg)',
+          },
+          '25%': {
+            transform: 'rotate(270deg)',
+          },
+          '37.5%': {
+            transform: 'rotate(405deg)',
+          },
+          '50%': {
+            transform: 'rotate(540deg)',
+          },
+          '62.5%': {
+            transform: 'rotate(675deg)',
+          },
+          '75%': {
+            transform: 'rotate(810deg)',
+          },
+          '87.5%': {
+            transform: 'rotate(945deg)',
+          },
+          to: {
+            transform: 'rotate(1080deg)',
+          },
+        },
+        'loader-line1-fade-in-out': {
+          '0%': {
+            opacity: '1',
+          },
+          '25%': {
+            opacity: '1',
+          },
+          '26%': {
+            opacity: '0',
+          },
+          '89%': {
+            opacity: '0',
+          },
+          '90%': {
+            opacity: '1',
+          },
+          to: {
+            opacity: '1',
+          },
+        },
+        'loader-line2-fade-in-out': {
+          '0%': {
+            opacity: '0',
+          },
+          '15%': {
+            opacity: '0',
+          },
+          '25%': {
+            opacity: '1',
+          },
+          '50%': {
+            opacity: '1',
+          },
+          '51%': {
+            opacity: '0',
+          },
+        },
+        'loader-line3-fade-in-out': {
+          '0%': {
+            opacity: '0',
+          },
+          '40%': {
+            opacity: '0',
+          },
+          '50%': {
+            opacity: '1',
+          },
+          '75%': {
+            opacity: '1',
+          },
+          '76%': {
+            opacity: '0',
+          },
+        },
+        'loader-line4-fade-in-out': {
+          '0%': {
+            opacity: '0',
+          },
+          '65%': {
+            opacity: '0',
+          },
+          '75%': {
+            opacity: '1',
+          },
+          '90%': {
+            opacity: '1',
+          },
+          to: {
+            opacity: '0',
+          },
+        },
+        'loader-left-spin': {
+          '0% 100%': { transform: 'rotate(130deg)' },
+          '50%': { transform: 'rotate(-5deg)' },
+        },
+        'loader-right-spin': {
+          '0% 100%': { transform: 'rotate(-130deg)' },
+          '50%': { transform: 'rotate(5deg)' },
+        },
+      },
     },
   },
   corePlugins: {
@@ -185,7 +293,7 @@ export default {
       })
       addComponents({
         /**
-         * box-shadow や ring を使った仕組みでは Firefoxx で欠陥があるため、独自定義している
+         * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
          * via https://github.com/tailwindlabs/tailwindcss/issues/10226
          */
         '.focus-indicator': {

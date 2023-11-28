@@ -1,4 +1,13 @@
-import React, { HTMLAttributes, useCallback, useEffect, useRef, useState } from 'react'
+import React, {
+  ComponentProps,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { tv } from 'tailwind-variants'
 
 import { flatArrayToMap } from '../../libs/map'
 
@@ -10,11 +19,8 @@ import {
   getNewExpandedItems,
   keycodes,
 } from './accordionPanelHelper'
-import { useClassNames } from './useClassNames'
 
-type Props = {
-  /** アコーディオンの内容 */
-  children: React.ReactNode
+type Props = PropsWithChildren<{
   /** アイコンの左右位置 */
   iconPosition?: 'left' | 'right'
   /** アイコンを表示するかどうか */
@@ -23,12 +29,10 @@ type Props = {
   expandableMultiply?: boolean
   /** デフォルトで開いた状態にするアイテムの `name` の配列 */
   defaultExpanded?: string[]
-  /** コンポーネントのクラス名 */
-  className?: string
   /** トリガのクリックイベントを処理するハンドラ */
   onClick?: (expandedItems: string[]) => void
-}
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+}>
+type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 export const AccordionPanelContext = React.createContext<{
   iconPosition: 'left' | 'right'
@@ -46,19 +50,22 @@ export const AccordionPanelContext = React.createContext<{
   parentRef: null,
 })
 
-export const AccordionPanel: React.VFC<Props & ElementProps> = ({
-  children,
+const accordionWrapper = tv({
+  base: 'smarthr-ui-AccordionPanel',
+})
+
+export const AccordionPanel: React.FC<Props & ElementProps> = ({
   iconPosition = 'left',
   displayIcon = true,
   expandableMultiply = false,
   defaultExpanded = [],
-  className = '',
+  className,
   onClick: onClickProps,
   ...props
 }) => {
   const [expandedItems, setExpanded] = useState(flatArrayToMap(defaultExpanded))
   const parentRef = useRef<HTMLDivElement>(null)
-  const classNames = useClassNames()
+  const styles = useMemo(() => accordionWrapper({ className }), [className])
 
   const onClickTrigger = useCallback(
     (itemName: string, isExpanded: boolean) => {
@@ -118,14 +125,7 @@ export const AccordionPanel: React.VFC<Props & ElementProps> = ({
       }}
     >
       {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-      <div
-        {...props}
-        className={`${className} ${classNames.wrapper}`}
-        ref={parentRef}
-        onKeyDown={handleKeyPress}
-      >
-        {children}
-      </div>
+      <div {...props} className={styles} ref={parentRef} onKeyDown={handleKeyPress} />
     </AccordionPanelContext.Provider>
   )
 }

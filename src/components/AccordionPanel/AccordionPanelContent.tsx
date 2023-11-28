@@ -1,86 +1,56 @@
-import React, { HTMLAttributes, VFC, useCallback, useContext, useRef } from 'react'
+import React, {
+  ComponentPropsWithoutRef,
+  FC,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react'
 import { Transition } from 'react-transition-group'
-import styled from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { getIsInclude } from '../../libs/map'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
-import { useClassNames } from './useClassNames'
 
-type Props = {
-  /** パネル部分の内容 */
-  children: React.ReactNode
-  /** パネル部分のクラス名 */
-  className?: string
-}
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type Props = PropsWithChildren
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
-const duration = 200
+const accordionPanelContent = tv({
+  base: [
+    'smarthr-ui-AccordionPanel-content',
+    'shr-max-h-0',
+    'shr-transition-[max-height,_visible,_opacity]',
+    'shr-duration-150',
+    'shr-ease-in-out',
+    'shr-invisible',
+    'shr-opacity-0',
+    '[&.entered]:shr-max-h-screen',
+    '[&.entered]:shr-visible',
+    '[&.entered]:shr-opacity-100',
+  ],
+})
 
-export const AccordionPanelContent: VFC<Props & ElementProps> = ({
-  children,
-  className = '',
-  ...props
-}) => {
+export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...props }) => {
   const { name } = useContext(AccordionPanelItemContext)
   const { expandedItems } = useContext(AccordionPanelContext)
   const isInclude = getIsInclude(expandedItems, name)
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const classNames = useClassNames()
-
-  const recalculateHeight = useCallback(
-    (node: HTMLElement) => {
-      const wrapperHeight = wrapperRef.current ? wrapperRef.current.clientHeight : 0
-      node.style.height = `${wrapperHeight}px`
-    },
-    [wrapperRef],
-  )
-
-  const handleEntered = (node: HTMLElement) => {
-    node.style.height = 'auto'
-    node.style.visibility = 'visible'
-  }
-
-  const handleExited = (node: HTMLElement) => {
-    node.style.height = '0px'
-    node.style.visibility = 'hidden'
-  }
+  const styles = useMemo(() => accordionPanelContent({ className }), [className])
 
   return (
-    <Transition
-      in={isInclude}
-      onEntering={recalculateHeight}
-      onEntered={handleEntered}
-      onExit={recalculateHeight}
-      onExiting={recalculateHeight}
-      onExited={handleExited}
-      timeout={duration}
-    >
+    <Transition in={isInclude} timeout={150}>
       {(status) => (
-        <CollapseContainer
+        <div
           {...props}
           id={`${name}-content`}
-          className={`${status} ${className} ${classNames.content}`}
+          className={`${styles} ${status}`}
           aria-labelledby={`${name}-trigger`}
           aria-hidden={!isInclude}
-        >
-          <div ref={wrapperRef}>{children}</div>
-        </CollapseContainer>
+          ref={wrapperRef}
+        />
       )}
     </Transition>
   )
 }
-
-const CollapseContainer = styled.div`
-  height: 0;
-  overflow: hidden;
-  transition: height ${duration}ms ease;
-  visibility: hidden;
-
-  &.entered {
-    height: auto;
-    overflow: visible;
-    visibility: visible;
-  }
-`

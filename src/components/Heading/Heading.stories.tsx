@@ -1,5 +1,5 @@
-import { Story } from '@storybook/react'
-import * as React from 'react'
+import { StoryFn } from '@storybook/react'
+import React from 'react'
 import styled from 'styled-components'
 
 import { Section } from '../SectioningContent'
@@ -11,7 +11,7 @@ export default {
   component: Heading,
 }
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <>
     <StyledPageHeading>Page Heading</StyledPageHeading>
     <Section>

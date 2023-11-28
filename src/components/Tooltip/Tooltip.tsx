@@ -1,6 +1,7 @@
 import React, {
+  ComponentProps,
   FC,
-  HTMLAttributes,
+  PropsWithChildren,
   ReactElement,
   ReactNode,
   useRef,
@@ -8,15 +9,13 @@ import React, {
   useSyncExternalStore,
 } from 'react'
 import { createPortal } from 'react-dom'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useId } from '../../hooks/useId'
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Props as BalloonProps } from '../Balloon'
 
 import { TooltipPortal } from './TooltipPortal'
-import { useClassNames } from './useClassNames'
 
 const subscribeFullscreenChange = (callback: () => void) => {
   window.addEventListener('fullscreenchange', callback)
@@ -27,11 +26,9 @@ const subscribeFullscreenChange = (callback: () => void) => {
 const getFullscreenElement = () => document.fullscreenElement
 const getFullscreenElementOnSSR = () => null
 
-type Props = {
+type Props = PropsWithChildren<{
   /** ツールチップ内に表示するメッセージ */
   message: ReactNode
-  /** ツールチップを表示する対象の要素 */
-  children: ReactNode
   /** ツールチップを表示する対象のタイプ。アイコンの場合は `icon` を指定する */
   triggerType?: 'icon' | 'text'
   /** ツールチップ内を複数行で表示する場合に `true` を指定する */
@@ -46,8 +43,26 @@ type Props = {
   tabIndex?: number
   /** ツールチップを内包要素に紐付けるかどうか */
   ariaDescribedbyTarget?: 'wrapper' | 'inner'
-}
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-describedby'>
+}>
+type ElementProps = Omit<ComponentProps<'span'>, keyof Props | 'aria-describedby'>
+
+const tooltip = tv({
+  base: [
+    'smarthr-ui-Tooltip',
+    'shr-inline-block',
+    'shr-max-w-full',
+    'shr-overflow-y-hidden',
+    /* inline-block に overflow: visible 以外を指定すると、vertical-align が bottom margin edge に揃ってしまう
+     * https://ja.stackoverflow.com/questions/2603/ */
+    'shr-align-bottom',
+    'focus-visible:shr-focusIndicator',
+  ],
+  variants: {
+    isIcon: {
+      true: 'shr-leading-[0]',
+    },
+  },
+})
 
 export const Tooltip: FC<Props & ElementProps> = ({
   message,
@@ -59,7 +74,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   vertical = 'bottom',
   tabIndex = 0,
   ariaDescribedbyTarget = 'wrapper',
-  className = '',
+  className,
   onPointerEnter,
   onPointerLeave,
   onTouchStart,
@@ -117,15 +132,15 @@ export const Tooltip: FC<Props & ElementProps> = ({
     }
 
   const isIcon = triggerType === 'icon'
-  const theme = useTheme()
-  const classNames = useClassNames()
+  const styles = tooltip({ isIcon, className })
   const childrenWithProps =
     ariaDescribedbyTarget === 'inner'
       ? React.cloneElement(children as ReactElement, { 'aria-describedby': tooltipId })
       : children
 
   return (
-    <Wrapper
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    <span
       {...props}
       aria-describedby={ariaDescribedbyTarget === 'wrapper' ? tooltipId : undefined}
       ref={ref}
@@ -135,10 +150,8 @@ export const Tooltip: FC<Props & ElementProps> = ({
       onPointerLeave={getHandlerToHide(onPointerLeave)}
       onTouchEnd={getHandlerToHide(onTouchEnd)}
       onBlur={getHandlerToHide(onBlur)}
-      isIcon={isIcon}
       tabIndex={tabIndex}
-      className={`${className} ${classNames.wrapper}`}
-      themes={theme}
+      className={styles}
     >
       {portalRoot &&
         createPortal(
@@ -156,27 +169,6 @@ export const Tooltip: FC<Props & ElementProps> = ({
           portalRoot,
         )}
       {childrenWithProps}
-    </Wrapper>
+    </span>
   )
 }
-
-const Wrapper = styled.span<{ isIcon?: boolean; themes: Theme }>`
-  ${({ isIcon, themes: { shadow } }) => css`
-    display: inline-block;
-    max-width: 100%;
-    overflow-y: hidden;
-
-    /* inline-block に overflow: visible 以外を指定すると、vertical-align が bottom margin edge に揃ってしまう
-     * https://ja.stackoverflow.com/questions/2603/ */
-    vertical-align: bottom;
-
-    ${isIcon &&
-    css`
-      line-height: 0;
-    `}
-
-    &:focus-visible {
-      ${shadow.focusIndicatorStyles}
-    }
-  `}
-`
