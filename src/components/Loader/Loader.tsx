@@ -1,23 +1,7 @@
-import React, { FC, HTMLAttributes, ReactNode } from 'react'
-import styled, { css } from 'styled-components'
+import React, { FC, HTMLAttributes, ReactNode, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
-
-import {
-  cogDuration,
-  containerRotate,
-  fillUnfillRotate,
-  leftSpin,
-  line1FadeInOut,
-  line2FadeInOut,
-  line3FadeInOut,
-  line4FadeInOut,
-  lineDuration,
-  rightSpin,
-  spinnerEasing,
-} from './loaderAnimation'
-import { useClassNames } from './useClassNames'
 
 type Props = {
   /** ローダーの大きさ */
@@ -32,190 +16,142 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
+const loaderStyle = tv({
+  slots: {
+    wrapper: ['smarthr-ui-Loader', 'shr-inline-block', 'shr-overflow-hidden'],
+    spinner: [
+      'smarthr-ui-Loader-spinner', // Button コンポーネントで使用
+      'shr-relative',
+      'shr-block',
+      'shr-mx-auto',
+      'shr-animate-[spin_1.6s_linear_infinite]',
+    ],
+    line: [
+      'smarthr-ui-Loader-line', // Button コンポーネントで使用
+      'shr-absolute',
+      'shr-block',
+      'shr-w-full',
+      'shr-h-full',
+      'shr-opacity-0',
+    ],
+    cog: [
+      'shr-inline-block',
+      'shr-relative',
+      'shr-w-1/2',
+      'shr-h-full',
+      'shr-overflow-hidden',
+      'shr-border-inherit',
+    ],
+    cogInner: [
+      'shr-absolute',
+      'shr-top-0',
+      'shr-block',
+      'shr-w-[200%]',
+      'shr-h-full',
+      'shr-box-border',
+      'shr-border-solid',
+      'shr-border-inherit',
+      'shr-border-b-transparent',
+      'shr-rounded-[50%]',
+    ],
+    textSlot: ['shr-block', 'shr-mt-1', 'shr-text-base', 'shr-text-center'],
+  },
+  variants: {
+    size: {
+      s: {
+        spinner: ['shr-w-1.5', 'shr-h-1.5'],
+        cogInner: ['shr-border-2'],
+      },
+      m: {
+        spinner: ['shr-w-3', 'shr-h-3'],
+        cogInner: ['shr-border-4'],
+      },
+    },
+    type: {
+      primary: {
+        textSlot: ['shr-text-black'],
+        line: ['shr-border-brand', 'contrast-more:shr-border-main'],
+      },
+      light: {
+        textSlot: ['shr-text-white'],
+        line: ['shr-border-white'],
+      },
+    },
+    lineNum: {
+      1: {
+        line: [
+          'shr-animate-[loader-line-full-unfill-rotate_4.8s_ease-in-out_infinite_both,_loader-line1-fade-in-out_4.8s_ease-in-out_infinite_both]',
+        ],
+      },
+      2: {
+        line: [
+          'shr-animate-[loader-line-full-unfill-rotate_4.8s_ease-in-out_infinite_both,_loader-line2-fade-in-out_4.8s_ease-in-out_infinite_both]',
+        ],
+      },
+      3: {
+        line: [
+          'shr-animate-[loader-line-full-unfill-rotate_4.8s_ease-in-out_infinite_both,_loader-line3-fade-in-out_4.8s_ease-in-out_infinite_both]',
+        ],
+      },
+      4: {
+        line: [
+          'shr-animate-[loader-line-full-unfill-rotate_4.8s_ease-in-out_infinite_both,_loader-line4-fade-in-out_4.8s_ease-in-out_infinite_both]',
+        ],
+      },
+    },
+    position: {
+      left: {
+        cogInner: [
+          'shr-border-r-transparent',
+          'shr-rotate-[129deg]',
+          'shr-animate-[loader-left-spin_1.2s_ease-in-out_infinite_both]',
+          'shr-left-0',
+        ],
+      },
+      right: {
+        cogInner: [
+          'shr-border-l-transparent',
+          'shr-rotate-[-129deg]',
+          'shr-animate-[loader-right-spin_1.2s_ease-in-out_infinite_both]',
+          '-shr-left-full',
+        ],
+      },
+    },
+  },
+})
 export const Loader: FC<Props & ElementProps> = ({
   size = 'm',
   alt = '処理中',
   text,
   type = 'primary',
-  className = '',
+  className,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
+  const { wrapper, spinner, line, cog, cogInner, textSlot } = loaderStyle({
+    type,
+    size,
+  })
+  const wrapperStyle = useMemo(() => wrapper({ className }), [wrapper, className])
+  const spinnerStyle = useMemo(() => spinner(), [spinner])
+  const cogStyle = useMemo(() => cog(), [cog])
+  const textStyle = useMemo(() => textSlot(), [textSlot])
 
   return (
-    <Wrapper {...props} className={`${className} ${classNames.wrapper}`} role="status">
-      <Spinner className={size}>
+    <span {...props} className={wrapperStyle} role="status">
+      <span className={spinnerStyle}>
         {[...Array(4)].map((_, index) => (
-          <Line className={`line${index + 1} ${type}`} key={index} themes={theme}>
-            <Cog>
-              <CogInner className="cogInner left"></CogInner>
-            </Cog>
-            <Ticker>
-              <CogInner className="cogInner center"></CogInner>
-            </Ticker>
-            <Cog>
-              <CogInner className="cogInner right"></CogInner>
-            </Cog>
-          </Line>
+          <span className={line({ lineNum: (index + 1) as 1 | 2 | 3 | 4 })} key={index}>
+            <span className={cogStyle}>
+              <span className={cogInner({ position: 'left' })} />
+            </span>
+            <span className={cogStyle}>
+              <span className={cogInner({ position: 'right' })} />
+            </span>
+          </span>
         ))}
         <VisuallyHiddenText>{alt}</VisuallyHiddenText>
-      </Spinner>
-      {text && (
-        <Text className={type} themes={theme}>
-          {text}
-        </Text>
-      )}
-    </Wrapper>
+      </span>
+      {text && <span className={textStyle}>{text}</span>}
+    </span>
   )
 }
-
-const Wrapper = styled.div`
-  display: inline-block;
-  overflow: hidden;
-`
-
-const Spinner = styled.span`
-  position: relative;
-  display: block;
-  animation: ${containerRotate} 1600ms linear infinite;
-  margin: 0 auto;
-
-  &.m {
-    width: 48px;
-    height: 48px;
-
-    .cogInner {
-      border-width: 4px;
-    }
-  }
-  &.s {
-    width: 24px;
-    height: 24px;
-
-    .cogInner {
-      border-width: 2px;
-    }
-  }
-`
-
-const Line = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color } = themes
-
-    return css`
-      position: absolute;
-      display: block;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-
-      &.line1 {
-        /* stylelint-disable */
-        animation:
-          ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
-          ${line1FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
-      }
-      &.line2 {
-        animation:
-          ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
-          ${line2FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
-      }
-      &.line3 {
-        animation:
-          ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
-          ${line3FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
-      }
-      &.line4 {
-        animation:
-          ${fillUnfillRotate} ${lineDuration} ${spinnerEasing} infinite both,
-          ${line4FadeInOut} ${lineDuration} ${spinnerEasing} infinite both;
-      }
-      /* stylelint-enable */
-
-      &.primary {
-        border-color: ${color.BRAND};
-
-        @media (prefers-contrast: more) {
-          & {
-            border-color: ${color.MAIN};
-          }
-        }
-      }
-      &.light {
-        border-color: ${color.WHITE};
-      }
-    `
-  }}
-`
-
-const Cog = styled.span`
-  display: inline-block;
-  position: relative;
-  width: 50%;
-  height: 100%;
-  overflow: hidden;
-  border-color: inherit;
-`
-
-const CogInner = styled.span`
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 200%;
-  box-sizing: border-box;
-  height: 100%;
-  border-style: solid;
-  border-color: inherit;
-  border-bottom-color: transparent;
-  border-radius: 50%;
-  animation: none;
-
-  &.left {
-    border-right-color: transparent;
-    transform: rotate(129deg);
-    animation: ${leftSpin} ${cogDuration} ${spinnerEasing} infinite both;
-  }
-  &.center {
-    width: 1000%;
-    left: -450%;
-  }
-  &.right {
-    left: -100%;
-    border-left-color: transparent;
-    transform: rotate(-129deg);
-    animation: ${rightSpin} ${cogDuration} ${spinnerEasing} infinite both;
-  }
-`
-
-const Ticker = styled.span`
-  position: absolute;
-  box-sizing: border-box;
-  top: 0;
-  left: 45%;
-  display: block;
-  width: 10%;
-  height: 100%;
-  overflow: hidden;
-  border-color: inherit;
-`
-
-const Text = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, color, spacingByChar } = themes
-
-    return css`
-      margin-top: ${spacingByChar(1)};
-      font-size: ${fontSize.M};
-      text-align: center;
-
-      &.primary {
-        color: ${color.TEXT_BLACK};
-      }
-      &.light {
-        color: ${color.TEXT_WHITE};
-      }
-    `
-  }}
-`
