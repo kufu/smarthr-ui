@@ -25,59 +25,6 @@ the release of Letraset sheets containing Lorem Ipsum passages, and more recentl
 with desktop publishing software like Aldus PageMaker including versions of Lorem
 Ipsum.`
 
-export const VRTState: StoryFn = () => (
-  <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
-      hover, activeなどの状態で表示されます
-    </VRTInformationPanel>
-    <Wrapper>
-      <List>
-        <dt>hover</dt>
-        <dd id="hover">
-          <Text>
-            <LineClamp maxLines={1} withTooltip>
-              {longText}
-            </LineClamp>
-          </Text>
-        </dd>
-        <dt>focus</dt>
-        <dd id="focus">
-          <Text>
-            <LineClamp maxLines={1} withTooltip>
-              {longText}
-            </LineClamp>
-          </Text>
-        </dd>
-        <dt>focusVisible</dt>
-        <dd id="focus-visible">
-          <Text>
-            <LineClamp maxLines={1} withTooltip>
-              {longText}
-            </LineClamp>
-          </Text>
-        </dd>
-        <dt>active</dt>
-        <dd id="active">
-          <Text>
-            <LineClamp maxLines={1} withTooltip>
-              {longText}
-            </LineClamp>
-          </Text>
-        </dd>
-      </List>
-    </Wrapper>
-  </>
-)
-VRTState.parameters = {
-  controls: { hideNoControlsWarning: true },
-  pseudo: {
-    hover: ['#hover p'],
-    focus: ['#focus p'],
-    focusVisible: ['#focus-visible p'],
-    active: ['#active p'],
-  },
-}
-
 export const VRTUserHover: StoryFn = () => (
   <>
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
