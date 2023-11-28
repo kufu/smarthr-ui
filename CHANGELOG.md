@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [39.1.0](https://github.com/kufu/smarthr-ui/compare/v39.0.0...v39.1.0) (2023-11-28)
+
+
+### Features
+
+* BaseColumn の背景色に WHITE を追加 ([#4034](https://github.com/kufu/smarthr-ui/issues/4034)) ([0089888](https://github.com/kufu/smarthr-ui/commit/0089888502845b8f9173e61fff0d070e7639a100))
+
+
+### Bug Fixes
+
+* forwardRef によって壊れていた型情報を直した ([#4038](https://github.com/kufu/smarthr-ui/issues/4038)) ([6c4f144](https://github.com/kufu/smarthr-ui/commit/6c4f144d5287655f2166105dec7f639250c5e653))
+* テキスト付き Icon における左右位置の実装を揃える ([#4009](https://github.com/kufu/smarthr-ui/issues/4009)) ([ba86b21](https://github.com/kufu/smarthr-ui/commit/ba86b217aea9948f42f2881b714fef9b3cb29c0e))
+
 ## [39.0.0](https://github.com/kufu/smarthr-ui/compare/v38.2.0...v39.0.0) (2023-11-22)
 
 
