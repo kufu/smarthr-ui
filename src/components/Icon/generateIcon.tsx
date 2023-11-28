@@ -1,14 +1,12 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { IconType } from 'react-icons'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
-import { useSpacing } from '../../hooks/useSpacing'
 import { useTheme } from '../../hooks/useTheme'
 import { FontSizes } from '../../themes/createFontSize'
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
+import { Gap } from '../../types'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
-
-import { useClassNames } from './useClassNames'
 
 /**
  * literal union type に補完を効かせるためのハック
@@ -64,6 +62,52 @@ type BaseComponentProps = {
 export type ComponentProps = Omit<IconProps & ElementProps, keyof BaseComponentProps> &
   BaseComponentProps
 
+const icon = tv({
+  base: 'smarthr-ui-Icon group-[]:shr-shrink-0 group-[]:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
+})
+
+const wrapper = tv({
+  base: ['smarthr-ui-Icon-withText shr-group shr-inline-flex shr-items-baseline'],
+  variants: {
+    gap: {
+      0: 'shr-gap-x-0',
+      0.25: 'shr-gap-x-0.25',
+      0.5: 'shr-gap-x-0.5',
+      0.75: 'shr-gap-x-0.75',
+      1: 'shr-gap-x-1',
+      1.25: 'shr-gap-x-1.25',
+      1.5: 'shr-gap-x-1.5',
+      2: 'shr-gap-x-2',
+      2.5: 'shr-gap-x-2.5',
+      3: 'shr-gap-x-3',
+      3.5: 'shr-gap-x-3.5',
+      4: 'shr-gap-x-4',
+      8: 'shr-gap-x-8',
+      '-0.25': '-shr-gap-x-0.25',
+      '-0.5': '-shr-gap-x-0.5',
+      '-0.75': '-shr-gap-x-0.75',
+      '-1': '-shr-gap-x-1',
+      '-1.25': '-shr-gap-x-1.25',
+      '-1.5': '-shr-gap-x-1.5',
+      '-2': '-shr-gap-x-2',
+      '-2.5': '-shr-gap-x-2.5',
+      '-3': '-shr-gap-x-3',
+      '-3.5': '-shr-gap-x-3.5',
+      '-4': '-shr-gap-x-4',
+      '-8': '-shr-gap-x-8',
+      X3S: 'shr-gap-x-0.25',
+      XXS: 'shr-gap-x-0.5',
+      XS: 'shr-gap-x-1',
+      S: 'shr-gap-x-1.5',
+      M: 'shr-gap-x-2',
+      L: 'shr-gap-x-2.5',
+      XL: 'shr-gap-x-3',
+      XXL: 'shr-gap-x-3.5',
+      X3L: 'shr-gap-x-4',
+    } as { [key in Gap]: string },
+  },
+})
+
 export const createIcon = (SvgIcon: IconType) => {
   const Icon: React.FC<ComponentProps> = ({
     color,
@@ -82,6 +126,9 @@ export const createIcon = (SvgIcon: IconType) => {
       props['aria-label'] !== undefined || props['aria-labelledby'] !== undefined
     const isAriaHidden = ariaHidden !== undefined ? ariaHidden : !hasLabelByAria
 
+    const iconStyle = useMemo(() => icon({ className }), [className])
+    const wrapperStyle = useMemo(() => wrapper({ gap: iconGap }), [iconGap])
+
     const theme = useTheme()
     const replacedColor = React.useMemo(() => {
       const asserted = color as string | undefined
@@ -91,14 +138,11 @@ export const createIcon = (SvgIcon: IconType) => {
       return color
     }, [color, theme.color])
 
-    const classNames = useClassNames()
-
     const existsText = !!text
     const iconSize = size ? theme.fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
     const svgIcon = (
-      <WrapIcon
+      <SvgIcon
         {...props}
-        as={SvgIcon}
         stroke="currentColor"
         fill="currentColor"
         strokeWidth="0"
@@ -107,7 +151,7 @@ export const createIcon = (SvgIcon: IconType) => {
         width={iconSize}
         height={iconSize}
         color={replacedColor}
-        className={`${className} ${classNames.wrapper}`}
+        className={iconStyle}
         role={role}
         aria-hidden={isAriaHidden || alt !== undefined || undefined}
         focusable={focusable}
@@ -116,12 +160,12 @@ export const createIcon = (SvgIcon: IconType) => {
 
     if (existsText) {
       return (
-        <IconAndTextWrapper gap={iconGap} className={classNames.withText}>
+        <span className={wrapperStyle}>
           {alt && <VisuallyHiddenText>{alt}</VisuallyHiddenText>}
           {right && text}
           {svgIcon}
           {!right && text}
-        </IconAndTextWrapper>
+        </span>
       )
     }
 
@@ -137,24 +181,3 @@ export const createIcon = (SvgIcon: IconType) => {
 
   return Icon
 }
-
-const WrapIcon = styled.svg`
-  @media (forced-colors: active) {
-    fill: CanvasText;
-  }
-`
-
-const IconAndTextWrapper = styled.span<{
-  gap: ComponentProps['iconGap']
-}>`
-  ${({ gap }) => css`
-    display: inline-flex;
-    align-items: baseline;
-    ${gap && `column-gap: ${useSpacing(gap)};`}
-
-    .smarthr-ui-Icon {
-      flex-shrink: 0;
-      transform: translateY(0.125em);
-    }
-  `}
-`
