@@ -18,14 +18,13 @@ export default {
   },
 }
 
-export const VRTState: StoryFn = () => (
+export const VRTHover: StoryFn = () => (
   <>
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
-      hover, activeなどの状態で表示されます{' '}
+      hoverの状態で表示されます
     </VRTInformationPanel>
     <Ul>
       <li>
-        <p>hover</p>
         <TabBar id="hover">
           <TabItem id="border-1" onClick={action('clicked')}>
             Tab
@@ -38,44 +37,31 @@ export const VRTState: StoryFn = () => (
           </TabItem>
         </TabBar>
       </li>
+    </Ul>
+  </>
+)
+VRTHover.parameters = {
+  controls: { hideNoControlsWarning: true },
+  pseudo: {
+    hover: ['#hover button'],
+  },
+}
+
+export const VRTUserFocus: StoryFn = () => (
+  <>
+    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      ユーザー操作のfocusをシミュレートした状態で表示されます
+    </VRTInformationPanel>
+    <Ul>
       <li>
-        <p>focus</p>
-        <TabBar id="focus">
-          <TabItem id="border-4" onClick={action('clicked')}>
+        <TabBar>
+          <TabItem id="border-1" onClick={action('clicked')}>
             Tab
           </TabItem>
-          <TabItem id="border-5" onClick={action('clicked')} selected>
+          <TabItem id="border-2" onClick={action('clicked')} selected>
             Selected
           </TabItem>
-          <TabItem id="border-6" onClick={action('clicked')} disabled>
-            Disabled
-          </TabItem>
-        </TabBar>
-      </li>
-      <li>
-        <p>focusVisible</p>
-        <TabBar id="focus-visible">
-          <TabItem id="border-7" onClick={action('clicked')}>
-            Tab
-          </TabItem>
-          <TabItem id="border-8" onClick={action('clicked')} selected>
-            Selected
-          </TabItem>
-          <TabItem id="border-9" onClick={action('clicked')} disabled>
-            Disabled
-          </TabItem>
-        </TabBar>
-      </li>
-      <li>
-        <p>active</p>
-        <TabBar id="active">
-          <TabItem id="border-10" onClick={action('clicked')}>
-            Tab
-          </TabItem>
-          <TabItem id="border-11" onClick={action('clicked')} selected>
-            Selected
-          </TabItem>
-          <TabItem id="border-12" onClick={action('clicked')} disabled>
+          <TabItem id="border-3" onClick={action('clicked')} disabled>
             Disabled
           </TabItem>
         </TabBar>
@@ -83,14 +69,11 @@ export const VRTState: StoryFn = () => (
     </Ul>
   </>
 )
-VRTState.parameters = {
-  controls: { hideNoControlsWarning: true },
-  pseudo: {
-    hover: ['#hover button'],
-    focus: ['#focus button'],
-    focusVisible: ['#focus-visible button'],
-    active: ['#active button'],
-  },
+VRTUserFocus.play = async ({ canvasElement }) => {
+  const canvas = await within(canvasElement)
+  const tabs = await canvas.getAllByRole('tab')
+  // fireEvent.focusでは内部的にdispatchEventメソッドを使用し、バインドされたハンドラのみのトリガーとなり、イベントを受け取った要素のUI（ブラウザ）の動作はトリガーされない
+  tabs[0].focus()
 }
 
 export const VRTScroll: StoryFn = () => (
