@@ -9,7 +9,7 @@ exports[`Icon should be match snapshot 1`] = `
   </span>,
   <svg
     aria-hidden={true}
-    className="smarthr-ui-Icon group-[]:shr-shrink-0 group-[]:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]"
+    className="smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]"
     fill="currentColor"
     focusable={false}
     height="1em"
@@ -36,7 +36,7 @@ exports[`Icon should be match snapshot 1`] = `
   </span>,
   <svg
     aria-hidden={true}
-    className="smarthr-ui-Icon group-[]:shr-shrink-0 group-[]:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]"
+    className="smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]"
     fill="currentColor"
     focusable={false}
     height="1em"
@@ -58,7 +58,7 @@ exports[`Icon should be match snapshot 1`] = `
   </svg>,
   <svg
     aria-label="連絡帳"
-    className="smarthr-ui-Icon group-[]:shr-shrink-0 group-[]:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]"
+    className="smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]"
     fill="currentColor"
     focusable={false}
     height="1em"
@@ -80,7 +80,7 @@ exports[`Icon should be match snapshot 1`] = `
   </svg>,
   <svg
     aria-labelledby="text"
-    className="smarthr-ui-Icon group-[]:shr-shrink-0 group-[]:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]"
+    className="smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]"
     fill="currentColor"
     focusable={false}
     height="1em"
