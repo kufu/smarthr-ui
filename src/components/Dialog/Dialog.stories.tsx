@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { ComponentProps, useRef, useState } from 'react'
 import styled from 'styled-components'
 
@@ -60,7 +60,7 @@ export default {
   },
 }
 
-export const Default: Story = () => {
+export const Default: StoryFn = () => {
   const [opened, setOpended] = useState<'default' | 'focus' | null>(null)
   const [value, setValue] = useState('Apple')
   const [date, setDate] = useState<Date | null>(null)
@@ -174,7 +174,7 @@ const dummyText = (
   </>
 )
 
-export const Message_Dialog: Story = () => {
+export const Message_Dialog: StoryFn = () => {
   const [isOpen, setIsOpen] = useState(false)
   const onClickOpen = () => setIsOpen(true)
   const onClickClose = () => setIsOpen(false)
@@ -215,7 +215,7 @@ Message_Dialog.parameters = {
   },
 }
 
-export const Action_Dialog: Story = () => {
+export const Action_Dialog: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
   const [responseMessage, setResponseMessage] =
     useState<ComponentProps<typeof ActionDialog>['responseMessage']>()
@@ -322,7 +322,7 @@ Action_Dialog.parameters = {
   },
 }
 
-export const Form_Dialog: Story = () => {
+export const Form_Dialog: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
   const [value, setValue] = React.useState('Apple')
   const [responseMessage, setResponseMessage] =
@@ -459,7 +459,7 @@ const Buttons = styled.div`
   }
 `
 
-export const Action_Dialog_With_Trigger: Story = () => (
+export const Action_Dialog_With_Trigger: StoryFn = () => (
   <>
     <ActionDialogWithTrigger
       trigger={<Button>open.</Button>}
@@ -485,7 +485,7 @@ export const Action_Dialog_With_Trigger: Story = () => (
   </>
 )
 
-export const Remote_Trigger_Action_Dialog: Story = () => (
+export const Remote_Trigger_Action_Dialog: StoryFn = () => (
   <>
     <div>
       <p>複数のトリガーに対応</p>
@@ -531,7 +531,7 @@ export const Remote_Trigger_Action_Dialog: Story = () => (
   </>
 )
 
-export const Remote_Trigger_Form_Dialog: Story = () => (
+export const Remote_Trigger_Form_Dialog: StoryFn = () => (
   <>
     <div>
       <p>複数のトリガーに対応</p>
@@ -572,7 +572,7 @@ export const Remote_Trigger_Form_Dialog: Story = () => (
   </>
 )
 
-export const Remote_Trigger_Message_Dialog: Story = () => (
+export const Remote_Trigger_Message_Dialog: StoryFn = () => (
   <>
     <div>
       <p>複数のトリガーに対応</p>
@@ -603,7 +603,7 @@ export const Remote_Trigger_Message_Dialog: Story = () => (
   </>
 )
 
-export const Uncontrolled: Story = () => (
+export const Uncontrolled: StoryFn = () => (
   <TriggerList>
     <li>
       <DialogWrapper>
@@ -689,7 +689,7 @@ Uncontrolled.parameters = {
   },
 }
 
-export const WidthAndPosition: Story = () => (
+export const WidthAndPosition: StoryFn = () => (
   <TriggerList>
     <li>
       <DialogWrapper>
@@ -749,7 +749,7 @@ WidthAndPosition.parameters = {
   },
 }
 
-export const WithScroll: Story = () => (
+export const WithScroll: StoryFn = () => (
   <ScrollWrapper>
     <BorderedWrapper>
       We can confirm that there is no change in the width of the wrapper for this text before and
@@ -795,7 +795,7 @@ const ContentWrapper = styled.div`
   }
 `
 
-export const Modeless_Dialog: Story = () => {
+export const Modeless_Dialog: StoryFn = () => {
   const [isOpen1, setIsOpen1] = useState(true)
   const [isOpen2, setIsOpen2] = useState(false)
   return (
@@ -892,25 +892,25 @@ export const Modeless_Dialog: Story = () => {
   )
 }
 
-export const RegDialogOpenedDialog: Story = () => (
+export const RegDialogOpenedDialog: StoryFn = () => (
   <Dialog isOpen>
     <Description>{dummyText}</Description>
   </Dialog>
 )
 
-export const RegDialogOpenedDialogWidth: Story = () => (
+export const RegDialogOpenedDialogWidth: StoryFn = () => (
   <Dialog isOpen width={500}>
     <Description>{dummyText}</Description>
   </Dialog>
 )
 
-export const RegDialogOpenedDialogPosition: Story = () => (
+export const RegDialogOpenedDialogPosition: StoryFn = () => (
   <Dialog isOpen top={20} right={40} bottom={60} left={80}>
     <Description>{dummyText}</Description>
   </Dialog>
 )
 
-export const RegOpendMessage: Story = () => (
+export const RegOpendMessage: StoryFn = () => (
   <MessageDialog
     isOpen={true}
     title="MessageDialog"
@@ -920,7 +920,7 @@ export const RegOpendMessage: Story = () => (
 )
 RegOpendMessage.parameters = { docs: { disable: true } }
 
-export const RegOpendAction: Story = () => (
+export const RegOpendAction: StoryFn = () => (
   <ActionDialog
     isOpen={true}
     title="ActionDialog"
@@ -948,7 +948,7 @@ export const RegOpendAction: Story = () => (
 )
 RegOpendAction.parameters = { docs: { disable: true } }
 
-export const RegOpenedModeless: Story = () => (
+export const RegOpenedModeless: StoryFn = () => (
   <ModelessDialog
     isOpen
     header={<ModelessHeading>モードレスダイアログ</ModelessHeading>}
@@ -966,7 +966,7 @@ export const RegOpenedModeless: Story = () => (
   </ModelessDialog>
 )
 
-export const Body以外のPortalParent: Story = () => {
+export const Body以外のPortalParent: StoryFn = () => {
   const [isOpen, setIsOpen] = useState<'deault' | 'actiion' | 'message' | 'modeless'>()
   const onClickOpen = (type: 'deault' | 'actiion' | 'message' | 'modeless') => setIsOpen(type)
   const onClickClose = () => setIsOpen(undefined)
