@@ -17,12 +17,13 @@ const meta = {
   parameters: {
     withTheming: true,
   },
+  excludeStories: ['Render'],
 } satisfies Meta<typeof FilterDropdown>
 export default meta
 
 type Story = StoryObj<typeof meta>
 
-const Render: React.FC = () => {
+export const Render: React.FC = () => {
   const [value, setValue] = React.useState('hoge')
   const [text, setText] = React.useState('')
   const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
