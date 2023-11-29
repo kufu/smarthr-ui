@@ -77,7 +77,7 @@ const dialogContentInner = tv({
   slots: {
     layout: 'smarthr-ui-Dialog-wrapper shr-fixed shr-inset-0',
     inner:
-      'smarthr-ui-Dialog shr-absolute shr-rounded-m shr-bg-white shr-shadow-layer-3 contrast-more:shr-border contrast-more:shr-border-solid contrast-more:shr-border-highContrast',
+      'smarthr-ui-Dialog contrast-more:shr-border-highContrast shr-absolute shr-rounded-m shr-bg-white shr-shadow-layer-3 contrast-more:shr-border contrast-more:shr-border-solid',
     background: 'smarthr-ui-Dialog-background shr-fixed shr-inset-0 shr-bg-scrim',
   },
 })
