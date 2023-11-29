@@ -90,11 +90,13 @@ const Wrapper = styled(Center).attrs({ minHeight: '100vh', verticalCentering: tr
   }}
 `
 const Box = styled(Stack).attrs({ gap: 1.5, align: 'center' })`
-  margin-block: auto;
+  &&& {
+    margin-block: auto;
+  }
 `
 const Logo = styled.div``
 const Content = styled.div``
-const Links = styled(Stack).attrs({ as: 'ul', gap: 0.5, align: 'center' })``
+const Links = styled(Stack).attrs({ forwardedAs: 'ul', gap: 0.5, align: 'center' })``
 const FooterArea = styled.div`
   align-self: stretch;
 `
