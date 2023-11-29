@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { ComponentProps, useMemo } from 'react'
 import { IconType } from 'react-icons'
 import { tv } from 'tailwind-variants'
 
@@ -53,7 +53,7 @@ type IconProps = {
   size?: FontSizes
 }
 
-type ElementProps = Omit<React.SVGAttributes<SVGAElement>, keyof IconProps>
+type ElementProps = Omit<ComponentProps<'svg'>, keyof IconProps>
 
 type BaseComponentProps = {
   /**アイコンの説明テキスト*/
@@ -67,8 +67,7 @@ type BaseComponentProps = {
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
-export type ComponentProps = Omit<IconProps & ElementProps, keyof BaseComponentProps> &
-  BaseComponentProps
+export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
 
 const icon = tv({
   base: 'smarthr-ui-Icon group-[]:shr-shrink-0 group-[]:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
@@ -117,9 +116,9 @@ const wrapper = tv({
 })
 
 export const createIcon = (SvgIcon: IconType) => {
-  const Icon: React.FC<ComponentProps> = ({
+  const Icon: React.FC<Props> = ({
     color,
-    className = '',
+    className,
     role = 'img',
     alt,
     'aria-hidden': ariaHidden,
