@@ -69,6 +69,7 @@ export default {
       outline: defaultColor.OUTLINE,
       danger: defaultColor.DANGER,
       'danger-darken': darkenColor(defaultColor.DANGER),
+      'warning-yellow': defaultColor.WARNING_YELLOW,
       grey: {
         DEFAULT: defaultColor.GREY_65,
         5: defaultColor.GREY_5,
