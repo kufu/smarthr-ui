@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { IconType } from 'react-icons'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTailwindTheme'
 import { FontSizes } from '../../themes/createFontSize'
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import { Gap } from '../../types'
@@ -16,28 +16,36 @@ type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
 export const generateIcon = (svg: IconType) => createIcon(svg)
 
-const definedColors = [
-  'TEXT_BLACK',
-  'TEXT_WHITE',
-  'TEXT_GREY',
-  'TEXT_DISABLED',
-  'TEXT_LINK',
-  'MAIN',
-  'DANGER',
-  'WARNING',
-  'BRAND',
-] as const
-type DefinedColor = (typeof definedColors)[number]
+const colorSet = {
+  TEXT_BLACK: 'black',
+  TEXT_WHITE: 'white',
+  TEXT_GREY: 'grey',
+  TEXT_DISABLED: 'disabled',
+  TEXT_LINK: 'link',
+  MAIN: 'main',
+  DANGER: 'danger',
+  WARNING: 'warning-yellow',
+  BRAND: 'brand',
+} as const
 
-const knownColorSet: Set<string> = new Set(definedColors)
-const isDefinedColor = (color: string): color is DefinedColor => knownColorSet.has(color)
+const existsColor = (color: string): color is keyof typeof colorSet => color in colorSet
+
+const fontSizeMap = {
+  XXS: '2xs',
+  XS: 'xs',
+  S: 'sm',
+  M: 'base',
+  L: 'lg',
+  XL: 'xl',
+  XXL: '2xl',
+} as const
 
 type IconProps = {
   /**
    * アイコンの色
    * @type string | 'TEXT_BLACK' | 'TEXT_GREY' | 'TEXT_DISABLED' | 'TEXT_LINK' | 'MAIN' | 'DANGER' | 'WARNING' | 'BRAND'
    */
-  color?: LiteralUnion<DefinedColor>
+  color?: LiteralUnion<keyof typeof colorSet>
   /**
    * アイコンの大きさ（フォントサイズの抽象値）
    * @deprecated 親要素やデフォルトフォントサイズが継承されるため固定値の指定は非推奨
@@ -129,17 +137,24 @@ export const createIcon = (SvgIcon: IconType) => {
     const iconStyle = useMemo(() => icon({ className }), [className])
     const wrapperStyle = useMemo(() => wrapper({ gap: iconGap }), [iconGap])
 
-    const theme = useTheme()
-    const replacedColor = React.useMemo(() => {
-      const asserted = color as string | undefined
-      if (asserted && isDefinedColor(asserted)) {
-        return theme.color[asserted]
+    const { colors, textColor, fontSize } = useTheme()
+
+    const replacedColor = useMemo(() => {
+      if (color && existsColor(color)) {
+        const colorName = colorSet[color]
+
+        if (colorName in textColor) {
+          return textColor[colorName as keyof typeof textColor]
+        }
+
+        return colors[colorName as keyof typeof colors]
       }
+
       return color
-    }, [color, theme.color])
+    }, [color, colors, textColor])
 
     const existsText = !!text
-    const iconSize = size ? theme.fontSize[size] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
+    const iconSize = size ? fontSize[fontSizeMap[size]] : '1em' // 指定がない場合は親要素のフォントサイズを継承する
     const svgIcon = (
       <SvgIcon
         {...props}
