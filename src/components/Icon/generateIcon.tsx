@@ -70,11 +70,11 @@ type BaseComponentProps = {
 export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
 
 const icon = tv({
-  base: 'smarthr-ui-Icon group-[]:shr-shrink-0 group-[]:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
+  base: 'smarthr-ui-Icon group-[]/iconWrapper:shr-shrink-0 group-[]/iconWrapper:shr-translate-y-[0.125em] forced-colors:shr-fill-[CanvasText]',
 })
 
 const wrapper = tv({
-  base: ['smarthr-ui-Icon-withText shr-group shr-inline-flex shr-items-baseline'],
+  base: ['smarthr-ui-Icon-withText shr-group/iconWrapper shr-inline-flex shr-items-baseline'],
   variants: {
     gap: {
       0: 'shr-gap-x-0',
