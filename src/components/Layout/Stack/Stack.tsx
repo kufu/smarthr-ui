@@ -1,4 +1,4 @@
-import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
+import React, { ComponentPropsWithRef, PropsWithChildren, forwardRef, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { Gap } from '../../../types'
@@ -62,19 +62,14 @@ type Props = VariantProps<typeof stack> &
   PropsWithChildren<{
     as?: string | React.ComponentType<any>
   }> &
-  ComponentProps<'div'>
+  ComponentPropsWithRef<'div'>
 
-export const Stack: React.FC<Props> = ({
-  as: Component = 'div',
-  inline = false,
-  gap = 1,
-  align,
-  className,
-  ...props
-}) => {
-  const styles = useMemo(
-    () => stack({ inline, align, gap, className }),
-    [align, className, gap, inline],
-  )
-  return <Component {...props} className={styles} />
-}
+export const Stack = forwardRef<HTMLDivElement, Props>(
+  ({ as: Component = 'div', inline = false, gap = 1, align, className, ...props }, ref) => {
+    const styles = useMemo(
+      () => stack({ inline, align, gap, className }),
+      [align, className, gap, inline],
+    )
+    return <Component {...props} ref={ref} className={styles} />
+  },
+)
