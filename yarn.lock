@@ -12239,10 +12239,10 @@ stylelint-config-recommended@^13.0.0:
   resolved "https://registry.yarnpkg.com/stylelint-config-recommended/-/stylelint-config-recommended-13.0.0.tgz#c48a358cc46b629ea01f22db60b351f703e00597"
   integrity sha512-EH+yRj6h3GAe/fRiyaoO2F9l9Tgg50AOFhaszyfov9v6ayXJ1IkSHwTxd7lB48FmOeSGDPLjatjO11fJpmarkQ==
 
-stylelint-config-smarthr@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/stylelint-config-smarthr/-/stylelint-config-smarthr-2.0.0.tgz#59eed260fa480bcbcbde9b6a25bb9d93e5b3ff70"
-  integrity sha512-QkXnwGN2QARLMxABUqn36CGT+B6hTfPQ49BM6leKNHQRqViW+CzfDKOd2S4LC/WcmZbwk5RWJ6t6UsnC8PyieQ==
+stylelint-config-smarthr@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/stylelint-config-smarthr/-/stylelint-config-smarthr-2.0.1.tgz#013db5d8504813ed8845cb67a00947ff6578d30c"
+  integrity sha512-7yCvUsug8CJYDjRVSa67Q9cPC9MU43wEVW70/9FzX6neRjY0VJJViyt1ciusCg640vbj/BGvN1Z6rOgxw/wf3Q==
 
 stylelint-config-standard@^34.0.0:
   version "34.0.0"
