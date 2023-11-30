@@ -224,6 +224,7 @@ import {
   FaRegLightbulb,
   FaReply,
   FaReplyAll,
+  FaRobot,
   FaRocket,
   FaSave,
   FaSearch,
@@ -625,6 +626,7 @@ export const FaWindowRestoreIcon = /*#__PURE__*/ createIcon(FaWindowRestore)
 export const FaWrenchIcon = /*#__PURE__*/ createIcon(FaWrench)
 export const FaYenSignIcon = /*#__PURE__*/ createIcon(FaYenSign)
 export const FaRegClockIcon = /*#__PURE__*/ createIcon(FaRegClock)
+export const FaRobotIcon = /*#__PURE__*/ createIcon(FaRobot)
 
 export { WarningIcon } from './WarningIcon'
 export { SparklesIcon } from './SparklesIcon'
