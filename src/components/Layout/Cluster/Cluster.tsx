@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
+import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+
 import type { Gap, SeparateGap } from '../../../types'
 import type { ComponentProps, PropsWithChildren } from 'react'
 
@@ -127,5 +129,11 @@ export const Cluster: React.FC<Props> = ({ as: Component = 'div', gap = 0.5, ...
     [inline, rowGap, columnGap, align, justify, className],
   )
 
-  return <Component {...others} className={styles} />
+  const Wrapper = useSectionWrapper(Component)
+
+  return (
+    <Wrapper>
+      <Component {...others} className={styles} />
+    </Wrapper>
+  )
 }
