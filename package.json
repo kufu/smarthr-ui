@@ -55,7 +55,7 @@
     "babel-plugin-polyfill-regenerator": "^0.5.3",
     "chromatic": "^9.1.0",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
-    "eslint": "^8.54.0",
+    "eslint": "^8.55.0",
     "eslint-config-smarthr": "^6.14.0",
     "eslint-plugin-storybook": "^0.6.15",
     "fs-extra": "^11.2.0",
