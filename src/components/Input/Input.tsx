@@ -1,6 +1,6 @@
 import React, {
+  ComponentPropsWithRef,
   FocusEvent,
-  InputHTMLAttributes,
   ReactNode,
   WheelEvent,
   forwardRef,
@@ -9,12 +9,9 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { GreyScaleColors } from '../../themes/createColor'
-
-import { useClassNames } from './useClassNames'
+import { useTheme } from '../../hooks/useTailwindTheme'
 
 type Props = {
   /** input 要素の `type` 値 */
@@ -30,13 +27,55 @@ type Props = {
   /** コンポーネント内の末尾に表示する内容 */
   suffix?: ReactNode
   /** 背景色。readOnly を下地の上に載せる場合に使う */
-  bgColor?: GreyScaleColors | 'WHITE'
+  bgColor?: keyof typeof bgColors
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素を設置するか、それらの領域を確保出来ない場合はTooltipコンポーネントの利用を検討してください。
    */
   placeholder?: string
 }
-type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
+
+const bgColors = {
+  BACKGRUOND: 'background',
+  COLUMN: 'column',
+  BASE_GREY: 'base-grey',
+  OVER_BACKGROUND: 'over-background',
+  HEAD: 'head',
+  BORDER: 'border',
+  ACTION_BACKGROUND: 'action-background',
+} as const
+
+const wrapper = tv({
+  base: [
+    'smarthr-ui-Input',
+    'shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-border shr-border-solid shr-border-default shr-px-0.5',
+    'contrast-more:shr-border-high-contrast',
+    'focus-within:shr-focus-indicator',
+  ],
+  variants: {
+    disabled: {
+      true: 'shr-pointer-events-none shr-bg-white-darken [&&&]:shr-border-default/50',
+    },
+    error: {
+      true: '[&]:shr-border-danger',
+    },
+    readOnly: {
+      true: 'shr-border-[theme(backgroundColor.background)] shr-bg-background',
+    },
+  },
+})
+const inner = tv({
+  slots: {
+    input: [
+      'smarthr-ui-Input-input',
+      'shr-inline-block shr-w-full shr-grow shr-border-none shr-bg-transparent shr-py-0.75 shr-text-base shr-leading-none shr-text-black shr-outline-none',
+      'placeholder:shr-text-grey',
+      'disabled:shr-text-disabled disabled:shr-opacity-100',
+      'shr-h-[theme(fontSize.base)]',
+    ],
+    affix: 'shr-flex shr-shrink-0 shr-items-center shr-text-grey',
+  },
+})
 
 export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
   (
@@ -46,15 +85,16 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       autoFocus,
       prefix,
       suffix,
-      className = '',
+      className,
       width,
+      disabled,
+      error,
       readOnly,
       bgColor,
       ...props
     },
     ref,
   ) => {
-    const theme = useTheme()
     const innerRef = useRef<HTMLInputElement>(null)
 
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
@@ -89,42 +129,45 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       }
     }, [autoFocus])
 
-    const classNames = useClassNames()
+    const { backgroundColor } = useTheme()
+
+    const wrapperStyleProps = useMemo(() => {
+      const wrapperStyle = wrapper({ disabled, error, readOnly, className })
+      const color = bgColor
+        ? backgroundColor[bgColors[bgColor] as keyof typeof backgroundColor]
+        : undefined
+      return {
+        className: wrapperStyle,
+        style: {
+          borderColor: color,
+          backgroundColor: color,
+          width: typeof width === 'number' ? `${width}px` : width,
+        },
+      }
+    }, [backgroundColor, bgColor, className, disabled, error, readOnly, width])
+    const { input, affix } = inner()
 
     return (
-      <Wrapper
-        themes={theme}
-        $width={width}
-        $readOnly={readOnly} // Firefox に :has が来たら置き換えられそう
-        bgColor={bgColor}
-        $disabled={props.disabled}
-        error={props.error}
-        onClick={() => innerRef.current?.focus()}
-        className={`${className} ${classNames.wrapper}`}
-      >
+      <span {...wrapperStyleProps} onClick={() => innerRef.current?.focus()}>
         {prefix && (
-          <Affix themes={theme} className={classNames.prefix}>
-            {prefix}
-          </Affix>
+          <span className={affix({ className: 'smarthr-ui-Input-prefix' })}>{prefix}</span>
         )}
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
-        <StyledInput
+        <input
           {...props}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onWheel={handleWheel}
+          disabled={disabled}
           readOnly={readOnly}
           ref={innerRef}
-          themes={theme}
-          aria-invalid={props.error || undefined}
-          className={classNames.input}
+          aria-invalid={error || undefined}
+          className={input()}
         />
         {suffix && (
-          <Affix themes={theme} className={classNames.suffix}>
-            {suffix}
-          </Affix>
+          <span className={affix({ className: 'smarthr-ui-Input-suffix' })}>{suffix}</span>
         )}
-      </Wrapper>
+      </span>
     )
   },
 )
@@ -133,96 +176,3 @@ const disableWheel = (e: WheelEvent) => {
   // wheel イベントに preventDefault はないため
   e.target && (e.target as HTMLInputElement).blur()
 }
-
-const Wrapper = styled.span<{
-  themes: Theme
-  $width?: string | number
-  $disabled?: boolean
-  $readOnly: ElementProps['readOnly']
-  bgColor?: Props['bgColor']
-  error?: boolean
-}>`
-  ${({
-    themes: { border, color, radius, shadow, space },
-    $width = 'auto',
-    $readOnly,
-    $disabled,
-    error,
-    bgColor,
-  }) => css`
-    cursor: text;
-    box-sizing: border-box;
-    display: inline-flex;
-    gap: ${space(0.5)};
-    align-items: center;
-    border-radius: ${radius.m};
-    border: ${border.shorthand};
-    background-color: ${bgColor ? color[bgColor] : color.WHITE};
-    padding-inline: ${space(0.5)};
-    width: ${typeof $width === 'number' ? `${$width}px` : $width};
-
-    @media (prefers-contrast: more) {
-      & {
-        border: ${border.highContrast};
-      }
-    }
-
-    &:focus-within {
-      ${shadow.focusIndicatorStyles};
-    }
-
-    ${error &&
-    css`
-      border-color: ${color.DANGER};
-    `}
-    ${$readOnly &&
-    css`
-      border-color: ${bgColor ? color[bgColor] : color.BACKGROUND};
-      background-color: ${bgColor ? color[bgColor] : color.BACKGROUND};
-    `}
-    ${$disabled &&
-    css`
-      pointer-events: none;
-      border-color: ${color.disableColor(color.BORDER)};
-      background-color: ${color.hoverColor(color.WHITE)};
-    `}
-  `}
-`
-
-const StyledInput = styled.input<Props & { themes: Theme }>`
-  ${({ themes: { fontSize, leading, color, space } }) => css`
-    flex-grow: 1;
-
-    display: inline-block;
-    outline: none;
-    border: none;
-    background-color: transparent;
-    padding-block: ${space(0.75)};
-    font-size: ${fontSize.M};
-    line-height: ${leading.NONE};
-    color: ${color.TEXT_BLACK};
-    width: 100%;
-
-    /* font-size * line-height で高さが思うように行かないので、相対値の font-size で高さを指定 */
-    height: ${fontSize.M};
-
-    &::placeholder {
-      color: ${color.TEXT_GREY};
-    }
-
-    &[disabled] {
-      color: ${color.TEXT_DISABLED};
-      -webkit-text-fill-color: ${color.TEXT_DISABLED};
-      opacity: 1;
-    }
-  `}
-`
-const Affix = styled.span<{ themes: Theme }>`
-  ${({ themes: { color } }) => css`
-    flex-shrink: 0;
-
-    display: flex;
-    align-items: center;
-    color: ${color.TEXT_GREY};
-  `}
-`
