@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react'
+import React, { HTMLAttributes, PropsWithChildren } from 'react'
 import { tv } from 'tailwind-variants'
 
 import type { Gap } from '../../../types'
@@ -92,7 +92,16 @@ type Props = PropsWithChildren<{
   gap?: Gap
   padding?: Gap
 }>
+type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
-export const Reel: React.FC<Props> = ({ gap = 0.5, padding = 0, children }) => (
-  <div className={reel({ gap, padding })}>{children}</div>
+export const Reel: React.FC<Props & ElementProps> = ({
+  gap = 0.5,
+  padding = 0,
+  children,
+  className,
+  ...rest
+}) => (
+  <div {...rest} className={reel({ gap, padding, className })}>
+    {children}
+  </div>
 )
