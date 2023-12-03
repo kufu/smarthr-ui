@@ -1,6 +1,8 @@
 import React, { ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+
 import type { Gap } from '../../../types'
 
 type Props = PropsWithChildren<{
@@ -69,5 +71,11 @@ export const Center: React.FC<Props & ElementProps> = ({
     [padding, verticalCentering, className, minHeight, maxWidth],
   )
 
-  return <Component {...props} {...styleProps} />
+  const Wrapper = useSectionWrapper(Component)
+
+  return (
+    <Wrapper>
+      <Component {...props} {...styleProps} />
+    </Wrapper>
+  )
 }
