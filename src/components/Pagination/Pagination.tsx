@@ -1,14 +1,36 @@
-import React, { HTMLAttributes, VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { HTMLAttributes } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { range } from '../../libs/lodash'
 import { Reel } from '../Layout'
 import { Nav } from '../SectioningContent'
 
 import { PaginationControllerItemButton } from './PaginationControllerItemButton'
 import { PaginationItemButton } from './PaginationItemButton'
-import { useClassNames } from './useClassNames'
+
+const pagination = tv({
+  slots: {
+    wrapper: ['shr-inline-block', 'shr-max-w-full'],
+    list: ['shr-flex', 'shr-items-center', 'shr-shadow-outline-margin', 'shr-gap-x-0.5', 'shr-p-0'],
+    listItem: ['shr-list-none'],
+  },
+  variants: {
+    withoutNumbers: {
+      true: {
+        list: [
+          '[&>li.smarthr-ui-Pagination-prev]:shr-ml-0.5',
+          '[&>li.smarthr-ui-Pagination-last]:shr-ml-0.5',
+        ],
+      },
+      false: {
+        list: [
+          '[&>li.smarthr-ui-Pagination-prev]:shr-mr-0.5',
+          '[&>li.smarthr-ui-Pagination-next]:shr-ml-0.5',
+        ],
+      },
+    },
+  },
+})
 
 type Props = {
   /** 全ページ数 */
@@ -26,7 +48,7 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const Pagination: VFC<Props & ElementProps> = ({
+export const Pagination: React.FC<Props & ElementProps> = ({
   total,
   current,
   onClick,
@@ -35,14 +57,13 @@ export const Pagination: VFC<Props & ElementProps> = ({
   withoutNumbers = false,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
+  const { wrapper, list, listItem } = pagination({ withoutNumbers })
 
   if (total <= 1) return null
 
   const prevPage = (
     <>
-      <li className={classNames.first}>
+      <li className={listItem({ className: 'smarthr-ui-Pagination-first' })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -51,7 +72,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
           double
         />
       </li>
-      <li className={classNames.prev}>
+      <li className={listItem({ className: 'smarthr-ui-Pagination-prev' })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -69,7 +90,10 @@ export const Pagination: VFC<Props & ElementProps> = ({
       ].map((page) => (
         <li
           key={`pagination-${page}`}
-          className={page === current ? classNames.current : classNames.page}
+          className={listItem({
+            className:
+              page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page',
+          })}
         >
           <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
         </li>
@@ -78,7 +102,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
 
   const nextPage = (
     <>
-      <li className={classNames.next}>
+      <li className={listItem({ className: 'smarthr-ui-Pagination-next' })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
@@ -86,7 +110,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
           disabled={current === total}
         />
       </li>
-      <li className={classNames.last}>
+      <li className={listItem({ className: 'smarthr-ui-Pagination-last' })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
@@ -99,61 +123,18 @@ export const Pagination: VFC<Props & ElementProps> = ({
   )
 
   return (
-    <WrapperNav
+    <Nav
       {...props}
-      className={`${className} ${classNames.wrapper}`}
+      className={wrapper({ className: `${className} smarthr-ui-pagination` })}
       aria-label="ページネーション"
     >
       <Reel>
-        <List className={withoutNumbers ? 'withoutNumbers' : ''} themes={theme}>
+        <ul className={list()}>
           {prevPage}
           {pages}
           {nextPage}
-        </List>
+        </ul>
       </Reel>
-    </WrapperNav>
+    </Nav>
   )
 }
-
-const WrapperNav = styled(Nav)`
-  display: inline-block;
-  max-width: 100%;
-`
-const List = styled.ul<{ themes: Theme }>`
-  ${({ themes: { spacingByChar, shadow } }) => {
-    const classNames = useClassNames()
-
-    return css`
-      display: flex;
-      align-items: center;
-      margin: ${shadow.OUTLINE_MARGIN};
-      padding: 0;
-      > li {
-        list-style: none;
-        :not(:first-child) {
-          margin-left: ${spacingByChar(0.5)};
-        }
-      }
-      &:not(.withoutNumbers) {
-        > li {
-          &.${classNames.prev} + li {
-            margin-left: ${spacingByChar(1)};
-          }
-          &.${classNames.next} {
-            margin-left: ${spacingByChar(1)};
-          }
-        }
-      }
-      &.withoutNumbers {
-        > li {
-          &.${classNames.prev} {
-            margin-left: ${spacingByChar(1)};
-          }
-          &.${classNames.last} {
-            margin-left: ${spacingByChar(1)};
-          }
-        }
-      }
-    `
-  }}
-`
