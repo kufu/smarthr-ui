@@ -139,11 +139,18 @@ export const Sidebar: React.FC<Props> = ({
   // tailwindcss で :first-child / :last-child に対して動的な min-height を当てられないため、React で疑似的に処理している
   const styledChildren = React.Children.map(children, (child, i) => {
     if (React.isValidElement(child)) {
+      const childClassName = child.props.className ?? ''
       if (i === 0) {
-        return React.cloneElement(child as ReactElement, { ...firstItemStyleProps, ...child.props })
+        return React.cloneElement(child as ReactElement, {
+          className: `${firstItemStyleProps.className} ${childClassName}`,
+          style: { ...firstItemStyleProps.style, ...child.props.style },
+        })
       }
       if (i === React.Children.count(children) - 1) {
-        return React.cloneElement(child as ReactElement, { ...lastItemStyleProps, ...child.props })
+        return React.cloneElement(child as ReactElement, {
+          className: `${lastItemStyleProps.className} ${childClassName}`,
+          style: { ...lastItemStyleProps.style, ...child.props.style },
+        })
       }
     }
 
