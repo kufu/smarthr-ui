@@ -140,10 +140,10 @@ export const Sidebar: React.FC<Props> = ({
   const styledChildren = React.Children.map(children, (child, i) => {
     if (React.isValidElement(child)) {
       if (i === 0) {
-        return React.cloneElement(child as ReactElement, { ...firstItemStyleProps })
+        return React.cloneElement(child as ReactElement, { ...firstItemStyleProps, ...child.props })
       }
       if (i === React.Children.count(children) - 1) {
-        return React.cloneElement(child as ReactElement, { ...lastItemStyleProps })
+        return React.cloneElement(child as ReactElement, { ...lastItemStyleProps, ...child.props })
       }
     }
 
