@@ -57,7 +57,6 @@ export default {
       'layer-4': defaultShadow.LAYER4,
       outline: defaultShadow.OUTLINE,
       underline: defaultShadow.UNDERLINE,
-      'outline-margin': defaultShadow.OUTLINE_MARGIN,
       'input-hover': defaultShadow.INPUT_HOVER,
       none: 'none',
     },

@@ -11,8 +11,14 @@ import { PaginationItemButton } from './PaginationItemButton'
 const pagination = tv({
   slots: {
     wrapper: ['shr-inline-block', 'shr-max-w-full'],
-    list: ['shr-flex', 'shr-items-center', 'shr-shadow-outline-margin', 'shr-gap-x-0.5', 'shr-p-0'],
-    listItem: ['shr-list-none'],
+    list: [
+      'shr-flex',
+      'shr-items-center',
+      'shr-m-0.25',
+      'shr-gap-x-0.5',
+      'shr-p-0',
+      '[&>li]:shr-list-none',
+    ],
   },
   variants: {
     withoutNumbers: {
@@ -58,6 +64,16 @@ export const Pagination: React.FC<Props & ElementProps> = ({
   ...props
 }) => {
   const { wrapper, list, listItem } = pagination({ withoutNumbers })
+
+  const wrapperStyle = useMemo(
+    () => wrapper({ className: `${className} smarthr-ui-pagination` }),
+    [className],
+  )
+
+  const listStyle = useMemo(
+    () => list({ className: withoutNumbers ? 'withoutNumbers' : '' }),
+    [withoutNumbers],
+  )
 
   if (total <= 1) return null
 
