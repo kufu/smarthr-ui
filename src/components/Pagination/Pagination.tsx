@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react'
+import React, { HTMLAttributes, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
@@ -138,13 +138,9 @@ export const Pagination: React.FC<Props & ElementProps> = ({
   )
 
   return (
-    <Nav
-      {...props}
-      className={wrapper({ className: `${className} smarthr-ui-pagination` })}
-      aria-label="ページネーション"
-    >
+    <Nav {...props} className={wrapperStyle} aria-label="ページネーション">
       <Reel>
-        <ul className={list()}>
+        <ul className={listStyle}>
           {prevPage}
           {pages}
           {nextPage}
