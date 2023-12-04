@@ -63,7 +63,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
   withoutNumbers = false,
   ...props
 }) => {
-  const { wrapper, list, listItem } = pagination({ withoutNumbers })
+  const { wrapper, list } = pagination({ withoutNumbers })
 
   const wrapperStyle = useMemo(
     () => wrapper({ className: `${className} smarthr-ui-pagination` }),
@@ -79,7 +79,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
 
   const prevPage = (
     <>
-      <li className={listItem({ className: 'smarthr-ui-Pagination-first' })}>
+      <li className="smarthr-ui-Pagination-first">
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -88,7 +88,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
           double
         />
       </li>
-      <li className={listItem({ className: 'smarthr-ui-Pagination-prev' })}>
+      <li className="smarthr-ui-Pagination-prev">
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -106,10 +106,9 @@ export const Pagination: React.FC<Props & ElementProps> = ({
       ].map((page) => (
         <li
           key={`pagination-${page}`}
-          className={listItem({
-            className:
-              page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page',
-          })}
+          className={
+            page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page'
+          }
         >
           <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
         </li>
@@ -118,7 +117,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
 
   const nextPage = (
     <>
-      <li className={listItem({ className: 'smarthr-ui-Pagination-next' })}>
+      <li className="smarthr-ui-Pagination-next">
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
@@ -126,7 +125,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
           disabled={current === total}
         />
       </li>
-      <li className={listItem({ className: 'smarthr-ui-Pagination-last' })}>
+      <li className="smarthr-ui-Pagination-last">
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
