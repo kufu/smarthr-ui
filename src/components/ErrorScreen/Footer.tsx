@@ -1,18 +1,15 @@
-import React, { HTMLAttributes, ReactNode, VFC } from 'react'
+import React, { FC, HTMLAttributes, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { useClassNames } from './useClassNames'
-
 type ElementProps = HTMLAttributes<HTMLElement>
 
-export const Footer: VFC<ElementProps> = ({ className = '', ...props }) => {
+export const Footer: FC<ElementProps> = ({ className = '', ...props }) => {
   const theme = useTheme()
-  const { footer } = useClassNames()
 
   return (
-    <Wrapper {...props} themes={theme} className={`${footer} ${className}`}>
+    <Wrapper {...props} themes={theme} className={`smarthr-ui-ErrorScreen-footer ${className}`}>
       <List themes={theme}>
         <Item href="https://support.smarthr.jp/">ヘルプ</Item>
         <Item href="https://smarthr.jp/update/">お知らせ</Item>
@@ -60,7 +57,7 @@ type ItemProp = {
   className?: string
 }
 
-const Item: VFC<ItemProp> = ({ children, href, className = '' }) => {
+const Item: FC<ItemProp> = ({ children, href, className = '' }) => {
   const theme = useTheme()
   return (
     <li className={className}>
