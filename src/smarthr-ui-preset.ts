@@ -30,6 +30,7 @@ export default {
       'base-grey': defaultColor.BASE_GREY,
       'over-background': defaultColor.OVER_BACKGROUND,
       head: defaultColor.HEAD,
+      'head-darken': darkenColor(defaultColor.HEAD),
       'action-background': defaultColor.ACTION_BACKGROUND,
       main: defaultColor.MAIN,
       'main-darken': theme('colors.main-darken'),
@@ -291,6 +292,9 @@ export default {
         '.overflow-y-revert': { 'overflow-y': 'revert' },
         '.overflow-x-unset': { 'overflow-x': 'unset' },
         '.overflow-y-unset': { 'overflow-y': 'unset' },
+        '.border-unset': { border: 'unset' },
+        '.outline-unset': { outline: 'unset' },
+        '.bg-unset': { 'background-color': 'unset' },
       })
       addComponents({
         /**
