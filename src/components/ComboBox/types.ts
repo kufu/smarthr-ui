@@ -1,10 +1,10 @@
 import React, { ChangeEvent, ReactNode } from 'react'
 
-export type ComboBoxItem<T> = {
+export type ComboBoxItem<T = void> = {
   value: string
   label: React.ReactNode
   disabled?: boolean
-  data?: T
+  data: T
 }
 
 export type ComboBoxOption<T> = {

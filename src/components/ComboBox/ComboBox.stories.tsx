@@ -291,6 +291,34 @@ export const Single: Story = () => {
       <dd>
         <SingleWithDefaultItem />
       </dd>
+      <dt>itemsのdataの型を指定</dt>
+      <dd>
+        <SingleComboBox<{ extraText: string }>
+          name="onClearClick"
+          items={[
+            {
+              label: 'option 1',
+              value: 'value-1',
+              data: {
+                extraText: 'extra.',
+              },
+            },
+          ]}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="入力でフィルタリングできます。"
+          onSelect={handleSelectItem}
+          onClearClick={(e) => {
+            e.preventDefault()
+            handleClear()
+          }}
+          onChangeSelected={(item) => {
+            action('onChangeSelected.item.data')(item.data)
+            setSelectedItem(item)
+          }}
+          data-test="single-combobox-default"
+        />
+      </dd>
     </List>
   )
 }
