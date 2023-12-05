@@ -98,12 +98,13 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
   return (
     <Wrapper
       {...props}
+      innerMargin={innerMargin}
       disabled={disabled}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
       aria-describedby={isRoleGroup && describedbyIds ? describedbyIds : undefined}
       themes={theme}
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
-      as={as}
+      forwardedAs={as}
     >
       <FormLabel
         htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
@@ -217,10 +218,14 @@ const isInputElement = (type: string | React.JSXElementConstructor<any>) => {
   )
 }
 
-const Wrapper = styled(Stack).attrs({
-  // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は ChildrenWrapper で調整する
-  gap: 0.5,
-})<{ themes: Theme }>`
+const Wrapper = styled(Stack).attrs<{
+  innerMargin: Props['innerMargin']
+}>(({ innerMargin }) => ({
+  // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は 1
+  gap: innerMargin ?? 0.5,
+}))<{
+  themes: Theme
+}>`
   ${({ themes: { color } }) => css`
     &[disabled] {
       color: ${color.TEXT_DISABLED};
@@ -281,7 +286,7 @@ const ChildrenWrapper = styled.div<{
   ${({ innerMargin, isRoleGroup }) => css`
     ${(innerMargin || isRoleGroup) &&
     css`
-      &&& {
+      &&&&&&& {
         margin-block-start: ${useSpacing(innerMargin || (isRoleGroup ? 1 : 0.5))};
       }
     `}

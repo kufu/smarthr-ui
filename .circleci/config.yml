@@ -65,11 +65,11 @@ commands:
   run-chromatic:
     steps:
       - checkout
-      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes
+      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes --only-changed
   run-chromatic-master:
     steps:
       - checkout
-      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes
+      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes --only-changed
   install-noto-sans-cjk-jp:
     steps:
       - run:

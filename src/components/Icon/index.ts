@@ -1,2 +1,2 @@
 export * from './Icon'
-export { generateIcon, ComponentProps } from './generateIcon'
+export { generateIcon, Props as ComponentProps } from './generateIcon'
