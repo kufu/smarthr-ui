@@ -47,7 +47,7 @@ export const ErrorScreen: FC<Props & ElementProps> = ({
 
   return (
     <Center {...props} minHeight="100vh" verticalCentering className={styles}>
-      <Stack gap={1.5} align="center" className="shr-my-auto">
+      <Stack gap={1.5} align="center" className="[&&&]:shr-my-auto">
         <div className="smarthr-ui-ErrorScreen-logo">{logo}</div>
 
         <Stack align="center">
