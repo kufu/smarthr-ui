@@ -127,5 +127,5 @@ const WrapperForDropdown = styled.div`
   margin-bottom: 80px;
 `
 const WrapperForLauncher = styled.div`
-  margin-bottom: 400px;
+  padding-bottom: 400px;
 `
