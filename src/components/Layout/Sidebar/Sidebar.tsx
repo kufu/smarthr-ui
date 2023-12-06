@@ -1,14 +1,8 @@
-import {
-  type CSSProperties,
-  type ComponentProps,
-  type PropsWithChildren,
-  ReactElement,
-  useMemo,
-} from 'react'
-import React from 'react'
+import React, { ReactElement, forwardRef, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import type { Gap, SeparateGap } from '../../../types'
+import type { CSSProperties, ComponentPropsWithRef, PropsWithChildren } from 'react'
 
 const sidebar = tv({
   base: ['shr-flex shr-flex-wrap', 'empty:shr-gap-0'],
@@ -100,66 +94,71 @@ type Props = Omit<VariantProps<typeof sidebar>, 'rowGap' | 'columnGap'> &
     /** 各領域の間隔の指定（gap） */
     gap?: Gap | SeparateGap
   }> &
-  ComponentProps<'div'>
+  ComponentPropsWithRef<'div'>
 
-export const Sidebar: React.FC<Props> = ({
-  as: Component = 'div',
-  align = 'stretch',
-  contentsMinWidth = '50%',
-  gap = 1,
-  right = false,
-  className,
-  children,
-  ...props
-}) => {
-  const rowGap = gap instanceof Object ? gap.row : gap
-  const columnGap = gap instanceof Object ? gap.column : gap
+export const Sidebar = forwardRef<HTMLDivElement, Props>(
+  (
+    {
+      as: Component = 'div',
+      align = 'stretch',
+      contentsMinWidth = '50%',
+      gap = 1,
+      right = false,
+      className,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const rowGap = gap instanceof Object ? gap.row : gap
+    const columnGap = gap instanceof Object ? gap.column : gap
 
-  const wrapperStyle = useMemo(
-    () => sidebar({ align, rowGap, columnGap, className }),
-    [align, rowGap, columnGap, className],
-  )
-  const { firstItemStyleProps, lastItemStyleProps } = useMemo(() => {
-    const { firstItem, lastItem } = sidebarItem({ right })
-    const styleProps = {
-      minWidth: contentsMinWidth,
-    }
-    return {
-      firstItemStyleProps: {
-        className: firstItem(),
-        style: right ? styleProps : undefined,
-      },
-      lastItemStyleProps: {
-        className: lastItem(),
-        style: right ? undefined : styleProps,
-      },
-    }
-  }, [contentsMinWidth, right])
-
-  // tailwindcss で :first-child / :last-child に対して動的な min-height を当てられないため、React で疑似的に処理している
-  const styledChildren = React.Children.map(children, (child, i) => {
-    if (React.isValidElement(child)) {
-      const childClassName = child.props.className ?? ''
-      if (i === 0) {
-        return React.cloneElement(child as ReactElement, {
-          className: `${firstItemStyleProps.className} ${childClassName}`,
-          style: { ...firstItemStyleProps.style, ...child.props.style },
-        })
+    const wrapperStyle = useMemo(
+      () => sidebar({ align, rowGap, columnGap, className }),
+      [align, rowGap, columnGap, className],
+    )
+    const { firstItemStyleProps, lastItemStyleProps } = useMemo(() => {
+      const { firstItem, lastItem } = sidebarItem({ right })
+      const styleProps = {
+        minWidth: contentsMinWidth,
       }
-      if (i === React.Children.count(children) - 1) {
-        return React.cloneElement(child as ReactElement, {
-          className: `${lastItemStyleProps.className} ${childClassName}`,
-          style: { ...lastItemStyleProps.style, ...child.props.style },
-        })
+      return {
+        firstItemStyleProps: {
+          className: firstItem(),
+          style: right ? styleProps : undefined,
+        },
+        lastItemStyleProps: {
+          className: lastItem(),
+          style: right ? undefined : styleProps,
+        },
       }
-    }
+    }, [contentsMinWidth, right])
 
-    return child
-  })
+    // tailwindcss で :first-child / :last-child に対して動的な min-height を当てられないため、React で疑似的に処理している
+    const styledChildren = React.Children.map(children, (child, i) => {
+      if (React.isValidElement(child)) {
+        const childClassName = child.props.className ?? ''
+        if (i === 0) {
+          return React.cloneElement(child as ReactElement, {
+            className: `${firstItemStyleProps.className} ${childClassName}`,
+            style: { ...firstItemStyleProps.style, ...child.props.style },
+          })
+        }
+        if (i === React.Children.count(children) - 1) {
+          return React.cloneElement(child as ReactElement, {
+            className: `${lastItemStyleProps.className} ${childClassName}`,
+            style: { ...lastItemStyleProps.style, ...child.props.style },
+          })
+        }
+      }
 
-  return (
-    <Component {...props} className={wrapperStyle}>
-      {styledChildren}
-    </Component>
-  )
-}
+      return child
+    })
+
+    return (
+      <Component {...props} ref={ref} className={wrapperStyle}>
+        {styledChildren}
+      </Component>
+    )
+  },
+)
