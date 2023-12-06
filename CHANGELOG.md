@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [40.0.0](https://github.com/kufu/smarthr-ui/compare/v39.1.0...v40.0.0) (2023-12-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* Stack の props を見直し、Tailwind CSS 化 (#4054)
+
+### Features
+
+* robotアイコンを追加 ([#4058](https://github.com/kufu/smarthr-ui/issues/4058)) ([2b34306](https://github.com/kufu/smarthr-ui/commit/2b34306e38d17e4dcf7de47daaa50dd0bf621907))
+
+
+### Bug Fixes
+
+* FormDialogのsubmit時、portal等で擬似的にネストしている親formをsubmitしてしまうためstopPropagationを追加する ([#4053](https://github.com/kufu/smarthr-ui/issues/4053)) ([ee51eaa](https://github.com/kufu/smarthr-ui/commit/ee51eaaf3166432795cf0340691d91c9c4fb9dd9))
+
+
+* Stack の props を見直し、Tailwind CSS 化 ([#4054](https://github.com/kufu/smarthr-ui/issues/4054)) ([d6b1866](https://github.com/kufu/smarthr-ui/commit/d6b186623c639e6d5228cf8bfb53e656df178b69))
+
 ## [39.1.0](https://github.com/kufu/smarthr-ui/compare/v39.0.0...v39.1.0) (2023-11-28)
 
 
