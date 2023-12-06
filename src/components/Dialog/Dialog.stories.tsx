@@ -1110,7 +1110,7 @@ const ModelessContent = styled.div`
   margin: 1rem 0;
 `
 const ModelessContentPart = styled.div`
-  margin: 0 1rem;
+  margin-inline: 1rem;
 `
 const ModelessFooter = styled.div`
   padding: 1rem;

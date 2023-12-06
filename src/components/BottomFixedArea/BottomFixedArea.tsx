@@ -12,6 +12,7 @@ import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base as BaseComponent } from '../Base'
 import { AnchorButton, Button } from '../Button'
 import { Cluster, Stack } from '../Layout'
+import { Text } from '../Text'
 
 import { TertiaryLink } from './TertiaryLink'
 import { validateElement } from './bottomFixedAreaHelper'
@@ -66,22 +67,26 @@ export const BottomFixedArea: VFC<Props & ElementProps> = ({
       className={`${className} ${classNames.wrapper}`}
     >
       <Stack>
-        {description && <Text className={classNames.description}>{description}</Text>}
+        {description && (
+          <Text as="p" className={classNames.description}>
+            {description}
+          </Text>
+        )}
         {(secondaryButton || primaryButton) && (
-          <ListCluster justify="center" gap={{ row: 0.5, column: 1 }}>
+          <Cluster as="ul" justify="center" gap={{ row: 0.5, column: 1 }}>
             {secondaryButton && <li className={classNames.secondaryButton}>{secondaryButton}</li>}
             {primaryButton && <li className={classNames.primaryButton}>{primaryButton}</li>}
-          </ListCluster>
+          </Cluster>
         )}
         {tertiaryLinks && tertiaryLinks.length > 0 && (
-          <ListCluster justify="center" gap={{ row: 0.5, column: 1 }}>
+          <Cluster as="ul" justify="center" gap={{ row: 0.5, column: 1 }}>
             {tertiaryLinks.map((tertiaryLink, index) => (
               <li key={index} className={classNames.tertiaryListItem}>
                 {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
                 <TertiaryLink {...tertiaryLink} />
               </li>
             ))}
-          </ListCluster>
+          </Cluster>
         )}
       </Stack>
     </Base>
@@ -100,14 +105,4 @@ const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
     border-radius: 0;
     box-sizing: border-box;
   `}
-`
-const Text = styled.div`
-  margin: 0;
-`
-const ListCluster = styled(Cluster).attrs({
-  forwardedAs: 'ul',
-})`
-  list-style: none;
-  margin: 0;
-  padding: 0;
 `
