@@ -1,13 +1,14 @@
-import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
+import React, { forwardRef, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import type { Gap } from '../../../types'
+import type { ComponentPropsWithRef, PropsWithChildren } from 'react'
 
 type Props = VariantProps<typeof reel> &
   PropsWithChildren<{
     as?: string | React.ComponentType<any>
   }> &
-  ComponentProps<'div'>
+  ComponentPropsWithRef<'div'>
 
 const reel = tv({
   base: [
@@ -83,13 +84,9 @@ const reel = tv({
   },
 })
 
-export const Reel: React.FC<Props> = ({
-  as: Component = 'div',
-  gap = 0.5,
-  padding = 0,
-  className,
-  ...props
-}) => {
-  const styles = useMemo(() => reel({ gap, padding, className }), [className, gap, padding])
-  return <Component {...props} className={styles} />
-}
+export const Reel = forwardRef<HTMLDivElement, Props>(
+  ({ as: Component = 'div', gap = 0.5, padding = 0, className, ...props }, ref) => {
+    const styles = useMemo(() => reel({ gap, padding, className }), [className, gap, padding])
+    return <Component {...props} ref={ref} className={styles} />
+  },
+)
