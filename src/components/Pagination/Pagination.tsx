@@ -16,7 +16,9 @@ const pagination = tv({
   },
   variants: {
     withoutNumbers: {
-      true: {},
+      true: {
+        listItem: ['first:shr-mr-0.5', 'last:shr-ml-0.5'],
+      },
     },
     current: {
       true: {
@@ -28,7 +30,7 @@ const pagination = tv({
     },
     first: {
       true: {
-        listItem: ['shr-mr-0.5', 'smarthr-ui-Pagination-first'],
+        listItem: ['smarthr-ui-Pagination-first'],
       },
     },
     prev: {
@@ -43,7 +45,7 @@ const pagination = tv({
     },
     last: {
       true: {
-        listItem: ['shr-ml-0.5', 'smarthr-ui-Pagination-last'],
+        listItem: ['smarthr-ui-Pagination-last'],
       },
     },
   },
