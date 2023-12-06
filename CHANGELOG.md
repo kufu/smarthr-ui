@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [40.0.2](https://github.com/kufu/smarthr-ui/compare/v40.0.1...v40.0.2) (2023-12-06)
+
+
+### Bug Fixes
+
+* Stack の詳細度が高すぎる欠陥を修正 ([#4093](https://github.com/kufu/smarthr-ui/issues/4093)) ([17e1b75](https://github.com/kufu/smarthr-ui/commit/17e1b759dc010df4c81be0054fd54d1e65afcf1d))
+
 ### [40.0.1](https://github.com/kufu/smarthr-ui/compare/v40.0.0...v40.0.1) (2023-12-06)
 
 
