@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [40.0.1](https://github.com/kufu/smarthr-ui/compare/v40.0.0...v40.0.1) (2023-12-06)
+
+
+### Bug Fixes
+
+* Layout コンポーネントに ref を渡せない不具合を修正 ([#4090](https://github.com/kufu/smarthr-ui/issues/4090)) ([8c54720](https://github.com/kufu/smarthr-ui/commit/8c547207706a8d0e98d807646af1d31759081bbe))
+
 ## [40.0.0](https://github.com/kufu/smarthr-ui/compare/v39.1.0...v40.0.0) (2023-12-05)
 
 
