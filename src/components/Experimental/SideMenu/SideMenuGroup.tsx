@@ -35,7 +35,7 @@ export const SideMenuGroup: React.FC<Props & ElementProps> = ({
   )
 }
 
-const Group = styled(Stack).attrs({ as: 'li', gap: 0.5 })<{ themes: Theme }>`
+const Group = styled(Stack).attrs({ forwardedAs: 'li', gap: 0.5 })<{ themes: Theme }>`
   ${({ themes: { border, space } }) => css`
     & + & {
       border-top: ${border.shorthand};
@@ -44,4 +44,4 @@ const Group = styled(Stack).attrs({ as: 'li', gap: 0.5 })<{ themes: Theme }>`
   `}
 `
 const GroupNameText = styled(Text).attrs({ color: 'TEXT_GREY', leading: 'TIGHT', size: 'S' })``
-const SideMenuList = styled(Stack).attrs({ as: 'ul', gap: 0 })``
+const SideMenuList = styled(Stack).attrs({ forwardedAs: 'ul', gap: 0 })``

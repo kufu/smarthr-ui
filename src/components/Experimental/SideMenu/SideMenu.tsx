@@ -33,4 +33,4 @@ export const SideMenu: FC<Props & ElementProps> & SubComponents = ({
 SideMenu.Group = SideMenuGroup
 SideMenu.Item = SideMenuItem
 
-const Wrapper = styled(Stack).attrs({ as: 'ul', inline: true, gap: 0.75 })``
+const Wrapper = styled(Stack).attrs({ forwardedAs: 'ul', inline: true, gap: 0.75 })``

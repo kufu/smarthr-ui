@@ -1,51 +1,75 @@
-import { CSSProperties } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentPropsWithRef, PropsWithChildren, forwardRef, useMemo } from 'react'
+import { VariantProps, tv } from 'tailwind-variants'
 
-import { useSpacing } from '../../../hooks/useSpacing'
-import { AbstractSize, CharRelativeSize } from '../../../themes/createSpacing'
+import { Gap } from '../../../types'
 
-/**
- * @param inline true の場合は inline-flex
- * @param gap 間隔の指定（基準フォントサイズの相対値または抽象値）
- * @param align 並べ方の指定（align-items）
- * @param recursive 直下の要素だけでなく再帰的に適用するかどうかの指定
- * @param splitAfter 分割する位置の指定（nth-child に渡す値）
- */
-export const Stack = styled.div<{
-  /** true の場合は inline-flex */
-  inline?: boolean
-  /** 間隔の指定（基準フォントサイズの相対値または抽象値） */
-  gap?: CharRelativeSize | AbstractSize
-  /** 並べ方の指定（align-items） */
-  align?: CSSProperties['alignItems']
-  /** 直下の要素だけでなく再帰的に適用するかどうかの指定 */
-  recursive?: boolean
-  /** 分割する位置の指定（nth-child に渡す値） */
-  splitAfter?: number | string
-}>(
-  ({ inline = false, gap = 1, align, recursive = false, splitAfter }) => css`
-    display: ${inline ? 'inline-flex' : 'flex'};
-    flex-direction: column;
-    ${align && `align-items: ${align};`}
-    justify-content: flex-start;
+const stack = tv({
+  base: 'shr-flex-col shr-justify-start [&&&]:shr-my-0',
+  variants: {
+    inline: {
+      true: 'shr-inline-flex',
+      false: 'shr-flex',
+    },
+    gap: {
+      0: '[&&&]:shr-space-y-0',
+      0.25: '[&&&]:shr-space-y-0.25',
+      0.5: '[&&&]:shr-space-y-0.5',
+      0.75: '[&&&]:shr-space-y-0.75',
+      1: '[&&&]:shr-space-y-1',
+      1.25: '[&&&]:shr-space-y-1.25',
+      1.5: '[&&&]:shr-space-y-1.5',
+      2: '[&&&]:shr-space-y-2',
+      2.5: '[&&&]:shr-space-y-2.5',
+      3: '[&&&]:shr-space-y-3',
+      3.5: '[&&&]:shr-space-y-3.5',
+      4: '[&&&]:shr-space-y-4',
+      8: '[&&&]:shr-space-y-8',
+      '-0.25': '[&&&]:-shr-space-y-0.25',
+      '-0.5': '[&&&]:-shr-space-y-0.5',
+      '-0.75': '[&&&]:-shr-space-y-0.75',
+      '-1': '[&&&]:-shr-space-y-1',
+      '-1.25': '[&&&]:-shr-space-y-1.25',
+      '-1.5': '[&&&]:-shr-space-y-1.5',
+      '-2': '[&&&]:-shr-space-y-2',
+      '-2.5': '[&&&]:-shr-space-y-2.5',
+      '-3': '[&&&]:-shr-space-y-3',
+      '-3.5': '[&&&]:-shr-space-y-3.5',
+      '-4': '[&&&]:-shr-space-y-4',
+      '-8': '[&&&]:-shr-space-y-8',
+      X3S: '[&&&]:shr-space-y-0.25',
+      XXS: '[&&&]:shr-space-y-0.5',
+      XS: '[&&&]:shr-space-y-1',
+      S: '[&&&]:shr-space-y-1.5',
+      M: '[&&&]:shr-space-y-2',
+      L: '[&&&]:shr-space-y-2.5',
+      XL: '[&&&]:shr-space-y-3',
+      XXL: '[&&&]:shr-space-y-3.5',
+      X3L: '[&&&]:shr-space-y-4',
+    } as { [key in Gap]: string },
+    align: {
+      start: 'shr-items-start',
+      'flex-start': 'shr-items-start',
+      end: 'shr-items-end',
+      'flex-end': 'shr-items-end',
+      center: 'shr-items-center',
+      baseline: 'shr-items-baseline',
+      stretch: 'shr-items-stretch',
+    },
+  },
+})
 
-    /* For greater specificity than element type selectors */
-    &&& {
-      ${!recursive && '>'} * {
-        margin-top: 0;
-        margin-bottom: 0;
-      }
+type Props = VariantProps<typeof stack> &
+  PropsWithChildren<{
+    as?: string | React.ComponentType<any>
+  }> &
+  ComponentPropsWithRef<'div'>
 
-      ${!recursive && '>'} * + * {
-        margin-top: ${useSpacing(gap)};
-      }
-
-      ${splitAfter &&
-      css`
-        ${!recursive ? '> ' : '*'}:nth-child(${splitAfter}) {
-          margin-bottom: auto;
-        }
-      `}
-    }
-  `,
+export const Stack = forwardRef<HTMLDivElement, Props>(
+  ({ as: Component = 'div', inline = false, gap = 1, align, className, ...props }, ref) => {
+    const styles = useMemo(
+      () => stack({ inline, align, gap, className }),
+      [align, className, gap, inline],
+    )
+    return <Component {...props} ref={ref} className={styles} />
+  },
 )

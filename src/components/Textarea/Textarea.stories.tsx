@@ -111,8 +111,8 @@ RegInput.play = async ({ canvasElement }) => {
   await userEvent.type(resizableTextarea, 'hoge\n'.repeat(11), { delay: 0.1 })
 }
 
-const List = styled(Stack).attrs({ as: 'ul', gap: 1.5 })`
+const List = styled(Stack).attrs({ forwardedAs: 'ul', gap: 1.5 })`
   padding: 0 24px;
   list-style: none;
 `
-const Label = styled(Stack).attrs({ as: 'label', gap: 0.25, align: 'flex-start' })``
+const Label = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.25, align: 'flex-start' })``
