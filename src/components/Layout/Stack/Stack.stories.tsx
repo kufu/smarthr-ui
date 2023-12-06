@@ -51,7 +51,10 @@ export const All: StoryFn = () => (
         <p>抽象トークンも渡せます。</p>
       </Base>
       <Base padding={1.5}>
-        <p>splitAfter を使うと分割することができます。</p>
+        <p>
+          要素を離して表示したい場合は、<code>[&_&gt;_*:nth-child(2)]:shr-mb-auto</code>
+          と書きます。
+        </p>
       </Base>
       <Base padding={1.5}>
         <p>この場合、Stack の高さは対峙する要素より高さが必要です。</p>
