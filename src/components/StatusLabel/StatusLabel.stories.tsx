@@ -62,7 +62,7 @@ export const All: Story = () => (
 )
 All.storyName = 'all'
 
-const Wrapper = styled(Stack).attrs({ as: 'dl', gap: 1.5 })`
+const Wrapper = styled(Stack).attrs({ forwardedAs: 'dl', gap: 1.5 })`
   ${({ theme: { spacingByChar } }) => css`
     margin-block: unset;
     padding: ${spacingByChar(1.5)};

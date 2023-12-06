@@ -147,7 +147,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 
 const TitleArea = styled(Stack).attrs(() => ({
   gap: 0.25,
-  as: 'span',
+  forwardedAs: 'span',
 }))<{ themes: Theme }>`
   ${({ themes: { border, space } }) => css`
     margin-block: unset;

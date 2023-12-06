@@ -132,8 +132,8 @@ export const All: StoryFn = () => (
 )
 All.storyName = 'all'
 
-const List = styled(Stack).attrs({ as: 'ul', align: 'flex-start' })`
+const List = styled(Stack).attrs({ forwardedAs: 'ul', align: 'flex-start' })`
   list-style: none;
   padding: 0 24px;
 `
-const Text = styled(Stack).attrs({ as: 'label', gap: 0.5 })``
+const Text = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.5 })``

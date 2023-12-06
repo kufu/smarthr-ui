@@ -128,7 +128,7 @@ export const Currency: Story = () => {
 }
 Currency.storyName = 'CurrencyInput'
 
-const List = styled(Stack).attrs({ as: 'ul' })``
+const List = styled(Stack).attrs({ forwardedAs: 'ul' })``
 const StyledInput = styled(Input)`
   width: 50%;
 `

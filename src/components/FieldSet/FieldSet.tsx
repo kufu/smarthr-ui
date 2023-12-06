@@ -119,7 +119,9 @@ const HelpMessage = styled.p<{ themes: Theme }>`
 `
 const StyledStack = styled(Stack)<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
-    margin-bottom: ${spacingByChar(0.5)};
+    &&& {
+      margin-bottom: ${spacingByChar(0.5)};
+    }
   `}
 `
 

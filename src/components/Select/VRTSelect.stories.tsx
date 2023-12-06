@@ -177,4 +177,4 @@ const Title = styled.p`
 const VRTInformationPanel = styled(InformationPanel)`
   margin-bottom: 24px;
 `
-const Text = styled(Stack).attrs({ as: 'label', gap: 0.5 })``
+const Text = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.5 })``
