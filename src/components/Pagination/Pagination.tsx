@@ -2,7 +2,7 @@ import React, { HTMLAttributes, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { range } from '../../libs/lodash'
-import { Reel } from '../Layout'
+import { Cluster, Reel } from '../Layout'
 import { Nav } from '../SectioningContent'
 
 import { PaginationControllerItemButton } from './PaginationControllerItemButton'
@@ -10,32 +10,57 @@ import { PaginationItemButton } from './PaginationItemButton'
 
 const pagination = tv({
   slots: {
-    wrapper: ['shr-inline-block', 'shr-max-w-full'],
-    list: [
-      'shr-flex',
-      'shr-items-center',
-      'shr-m-0.25',
-      'shr-gap-x-0.5',
-      'shr-p-0',
-      '[&>li]:shr-list-none',
-    ],
+    wrapper: ['shr-inline-block', 'shr-max-w-full', 'smarthr-ui-Pagination'],
+    list: ['shr-m-0.25'],
+    listItem: ['shr-list-none'],
   },
   variants: {
     withoutNumbers: {
       true: {
-        list: [
-          '[&>li.smarthr-ui-Pagination-prev]:shr-ml-0.5',
-          '[&>li.smarthr-ui-Pagination-last]:shr-ml-0.5',
-        ],
+        listItem: ['first:shr-mr-0.5', 'last:shr-ml-0.5'],
       },
-      false: {
-        list: [
-          '[&>li.smarthr-ui-Pagination-prev]:shr-mr-0.5',
-          '[&>li.smarthr-ui-Pagination-next]:shr-ml-0.5',
-        ],
+    },
+    prev: {
+      true: {
+        listItem: 'smarthr-ui-Pagination-prev',
+      },
+    },
+    next: {
+      true: {
+        listItem: 'smarthr-ui-Pagination-next',
       },
     },
   },
+  compoundVariants: [
+    {
+      prev: true,
+      withoutNumbers: false,
+      class: {
+        listItem: 'shr-mr-0.5',
+      },
+    },
+    {
+      prev: true,
+      withoutNumbers: true,
+      class: {
+        listItem: 'shr-mr-0',
+      },
+    },
+    {
+      next: true,
+      withoutNumbers: false,
+      class: {
+        listItem: 'shr-ml-0.5',
+      },
+    },
+    {
+      next: true,
+      withoutNumbers: true,
+      class: {
+        listItem: 'shr-ml-0',
+      },
+    },
+  ],
 })
 
 type Props = {
@@ -63,12 +88,9 @@ export const Pagination: React.FC<Props & ElementProps> = ({
   withoutNumbers = false,
   ...props
 }) => {
-  const { wrapper, list } = pagination({ withoutNumbers })
+  const { wrapper, list, listItem } = pagination({ withoutNumbers })
 
-  const wrapperStyle = useMemo(
-    () => wrapper({ className: `${className} smarthr-ui-pagination` }),
-    [className],
-  )
+  const wrapperStyle = useMemo(() => wrapper({ className }), [className])
 
   const listStyle = useMemo(
     () => list({ className: withoutNumbers ? 'withoutNumbers' : '' }),
@@ -79,7 +101,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
 
   const prevPage = (
     <>
-      <li className="smarthr-ui-Pagination-first">
+      <li className={listItem({ className: 'smarthr-ui-Pagination-first' })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -88,7 +110,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
           double
         />
       </li>
-      <li className="smarthr-ui-Pagination-prev">
+      <li className={listItem({ prev: true })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -106,9 +128,10 @@ export const Pagination: React.FC<Props & ElementProps> = ({
       ].map((page) => (
         <li
           key={`pagination-${page}`}
-          className={
-            page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page'
-          }
+          className={listItem({
+            className:
+              page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page',
+          })}
         >
           <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
         </li>
@@ -117,7 +140,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
 
   const nextPage = (
     <>
-      <li className="smarthr-ui-Pagination-next">
+      <li className={listItem({ next: true })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
@@ -125,7 +148,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
           disabled={current === total}
         />
       </li>
-      <li className="smarthr-ui-Pagination-last">
+      <li className={listItem({ className: 'smarthr-ui-Pagination-last' })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
@@ -140,11 +163,11 @@ export const Pagination: React.FC<Props & ElementProps> = ({
   return (
     <Nav {...props} className={wrapperStyle} aria-label="ページネーション">
       <Reel>
-        <ul className={listStyle}>
+        <Cluster as="ul" className={listStyle}>
           {prevPage}
           {pages}
           {nextPage}
-        </ul>
+        </Cluster>
       </Reel>
     </Nav>
   )
