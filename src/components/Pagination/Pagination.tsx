@@ -16,8 +16,19 @@ const pagination = tv({
   },
   variants: {
     withoutNumbers: {
+      true: {},
+    },
+    current: {
       true: {
-        listItem: ['first:shr-mr-0.5', 'last:shr-ml-0.5'],
+        listItem: ['smarthr-ui-Pagination-current'],
+      },
+      false: {
+        listItem: ['smarthr-ui-Pagination-page'],
+      },
+    },
+    first: {
+      true: {
+        listItem: ['shr-mr-0.5', 'smarthr-ui-Pagination-first'],
       },
     },
     prev: {
@@ -28,6 +39,11 @@ const pagination = tv({
     next: {
       true: {
         listItem: 'smarthr-ui-Pagination-next',
+      },
+    },
+    last: {
+      true: {
+        listItem: ['shr-ml-0.5', 'smarthr-ui-Pagination-last'],
       },
     },
   },
@@ -101,7 +117,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
 
   const prevPage = (
     <>
-      <li className={listItem({ className: 'smarthr-ui-Pagination-first' })}>
+      <li className={listItem({ first: true })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -126,13 +142,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
         ...range(current - padding, current).filter((page) => page >= 1),
         ...range(current, current + padding + 1).filter((page) => page <= total),
       ].map((page) => (
-        <li
-          key={`pagination-${page}`}
-          className={listItem({
-            className:
-              page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page',
-          })}
-        >
+        <li key={`pagination-${page}`} className={listItem({ current: !!current })}>
           <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
         </li>
       ))
@@ -148,7 +158,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
           disabled={current === total}
         />
       </li>
-      <li className={listItem({ className: 'smarthr-ui-Pagination-last' })}>
+      <li className={listItem({ last: true })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
