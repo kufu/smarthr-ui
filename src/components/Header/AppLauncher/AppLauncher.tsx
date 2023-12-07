@@ -84,9 +84,9 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
               <Cluster gap={1.5}>
                 {others.map(({ heading, items }, i) => (
                   <Section key={i}>
-                    <Stack gap={0.5} className={classNames.category} recursive>
+                    <Stack gap={0.5} className={classNames.category}>
                       <Heading type="subSubBlockTitle">{heading}</Heading>
-                      <ul>
+                      <Stack gap={0.5} as="ul">
                         {items.map((item, index) => (
                           <li key={index}>
                             <TextLink
@@ -98,7 +98,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
                             </TextLink>
                           </li>
                         ))}
-                      </ul>
+                      </Stack>
                     </Stack>
                   </Section>
                 ))}
@@ -134,7 +134,7 @@ const AppsButton = styled(Button)<{ themes: Theme }>`
     }
   `}
 `
-const Wrapper = styled(Stack).attrs({ as: 'nav', gap: 1.5 })<{ themes: Theme }>`
+const Wrapper = styled(Stack).attrs({ forwardedAs: 'nav', gap: 1.5 })<{ themes: Theme }>`
   ${({ themes: { space, leading } }) => css`
     padding: ${space(1.5)};
     line-height: ${leading.NORMAL};

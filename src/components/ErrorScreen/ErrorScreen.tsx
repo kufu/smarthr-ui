@@ -1,10 +1,12 @@
-import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { PageHeading } from '../Heading'
 import { Center, Stack } from '../Layout'
 import { SmartHRLogo } from '../SmartHRLogo'
 import { TextLink } from '../TextLink'
+
+import type { ComponentPropsWithoutRef, FC, ReactNode } from 'react'
 
 type Props = {
   /** ロゴ */
@@ -28,7 +30,7 @@ type Props = {
   className?: string
 }
 
-type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
 const errorScreen = tv({
   base: 'smarthr-ui-ErrorScreen shr-bg-background',
@@ -47,7 +49,7 @@ export const ErrorScreen: FC<Props & ElementProps> = ({
 
   return (
     <Center {...props} minHeight="100vh" verticalCentering className={styles}>
-      <Stack gap={1.5} align="center" className="shr-my-auto">
+      <Stack gap={1.5} align="center" className="[&&&]:shr-my-auto">
         <div className="smarthr-ui-ErrorScreen-logo">{logo}</div>
 
         <Stack align="center">

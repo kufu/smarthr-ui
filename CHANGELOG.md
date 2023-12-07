@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [40.0.2](https://github.com/kufu/smarthr-ui/compare/v40.0.1...v40.0.2) (2023-12-06)
+
+
+### Bug Fixes
+
+* Stack の詳細度が高すぎる欠陥を修正 ([#4093](https://github.com/kufu/smarthr-ui/issues/4093)) ([17e1b75](https://github.com/kufu/smarthr-ui/commit/17e1b759dc010df4c81be0054fd54d1e65afcf1d))
+
+### [40.0.1](https://github.com/kufu/smarthr-ui/compare/v40.0.0...v40.0.1) (2023-12-06)
+
+
+### Bug Fixes
+
+* Layout コンポーネントに ref を渡せない不具合を修正 ([#4090](https://github.com/kufu/smarthr-ui/issues/4090)) ([8c54720](https://github.com/kufu/smarthr-ui/commit/8c547207706a8d0e98d807646af1d31759081bbe))
+
+## [40.0.0](https://github.com/kufu/smarthr-ui/compare/v39.1.0...v40.0.0) (2023-12-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* Stack の props を見直し、Tailwind CSS 化 (#4054)
+
+### Features
+
+* robotアイコンを追加 ([#4058](https://github.com/kufu/smarthr-ui/issues/4058)) ([2b34306](https://github.com/kufu/smarthr-ui/commit/2b34306e38d17e4dcf7de47daaa50dd0bf621907))
+
+
+### Bug Fixes
+
+* FormDialogのsubmit時、portal等で擬似的にネストしている親formをsubmitしてしまうためstopPropagationを追加する ([#4053](https://github.com/kufu/smarthr-ui/issues/4053)) ([ee51eaa](https://github.com/kufu/smarthr-ui/commit/ee51eaaf3166432795cf0340691d91c9c4fb9dd9))
+
+
+* Stack の props を見直し、Tailwind CSS 化 ([#4054](https://github.com/kufu/smarthr-ui/issues/4054)) ([d6b1866](https://github.com/kufu/smarthr-ui/commit/d6b186623c639e6d5228cf8bfb53e656df178b69))
+
 ## [39.1.0](https://github.com/kufu/smarthr-ui/compare/v39.0.0...v39.1.0) (2023-11-28)
 
 
