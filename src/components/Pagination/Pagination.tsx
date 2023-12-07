@@ -17,6 +17,7 @@ const pagination = tv({
   variants: {
     withoutNumbers: {
       true: {
+        list: 'withoutNumbers',
         listItem: ['first:shr-mr-0.5', 'last:shr-ml-0.5'],
       },
     },
@@ -110,10 +111,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
 
   const wrapperStyle = useMemo(() => wrapper({ className }), [className])
 
-  const listStyle = useMemo(
-    () => list({ className: withoutNumbers ? 'withoutNumbers' : '' }),
-    [withoutNumbers],
-  )
+  const listStyle = useMemo(() => list(), [withoutNumbers])
 
   if (total <= 1) return null
 
