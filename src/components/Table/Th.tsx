@@ -122,13 +122,13 @@ const sortButton = tv({
     'shr-box-content',
     'shr-inline-flex',
     'shr-items-center',
-    'shr-gap-0.5',
+    'shr-gap-x-0.5',
     'shr-justify-between',
     '-shr-mx-1',
     '-shr-my-0.75',
-    'shr-border-unset',
-    'shr-outline-unset',
-    'shr-bg-unset',
+    'shr-border-[unset]',
+    'shr-outline-[unset]',
+    'shr-bg-[unset]',
     'shr-py-0.75',
     'shr-px-1',
     'shr-w-full',
@@ -136,7 +136,6 @@ const sortButton = tv({
     'shr-text-inherit',
     'shr-leading-inherit',
     '[font-weight:inherit]',
-    '[&_.smarthr-ui-Icon]:shr-text-base',
   ],
 })
 
@@ -148,8 +147,8 @@ const SortButton: FC<ComponentPropsWithoutRef<'button'>> = ({ className, ...prop
 const sortIcon = tv({
   slots: {
     wrapper: ['shr-inline-flex', 'shr-flex-col'],
-    upIcon: [],
-    downIcon: ['shr-mt-[-1em]'],
+    upIcon: ['shr-text-base'],
+    downIcon: ['shr-text-base', '-shr-mt-em'],
   },
   variants: {
     sort: {

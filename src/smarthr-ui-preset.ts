@@ -292,9 +292,6 @@ export default {
         '.overflow-y-revert': { 'overflow-y': 'revert' },
         '.overflow-x-unset': { 'overflow-x': 'unset' },
         '.overflow-y-unset': { 'overflow-y': 'unset' },
-        '.border-unset': { border: 'unset' },
-        '.outline-unset': { outline: 'unset' },
-        '.bg-unset': { 'background-color': 'unset' },
       })
       addComponents({
         /**
