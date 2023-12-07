@@ -39,6 +39,10 @@ type Props<T> = BaseProps<T> & {
    */
   selectedItemEllipsis?: boolean
   /**
+   * 選択可能なアイテムがselectedItemsに含まれているかどうかを判定する関数
+   */
+  selectedItemMatcher?: (selectItem: ComboBoxItem<T>, selectedItem: ComboBoxItem<T>) => boolean
+  /**
    * テキストボックスの `value` 属性の値。
    * `onChangeInput` と併せて設定することで、テキストボックスの挙動が制御可能になる。
    */
@@ -113,6 +117,8 @@ function MultiComboBoxComponent<T>(
     dropdownHelpMessage,
     isLoading,
     selectedItemEllipsis,
+    selectedItemMatcher = (selectItem, selectedItem) =>
+      selectedItem.label === selectItem.label && selectedItem.value === selectItem.value,
     width = 'auto',
     dropdownWidth = 'auto',
     inputValue: controlledInputValue,
@@ -165,24 +171,24 @@ function MultiComboBoxComponent<T>(
     [onChangeSelected, onDelete, selectedItems],
   )
   const handleSelect = useCallback(
-    (selected: ComboBoxItem<T>) => {
+    (selectItem: ComboBoxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        const matchedSelectedItem = selectedItems.find(
-          (item) => item.label === selected.label && item.value === selected.value,
+        const matchedSelectedItem = selectedItems.find((item) =>
+          selectedItemMatcher(selectItem, item),
         )
         if (matchedSelectedItem !== undefined) {
           if (matchedSelectedItem.deletable !== false) {
-            handleDelete(selected)
+            handleDelete(selectItem)
           }
         } else {
-          onSelect && onSelect(selected)
-          onChangeSelected && onChangeSelected(selectedItems.concat(selected))
+          onSelect && onSelect(selectItem)
+          onChangeSelected && onChangeSelected(selectedItems.concat(selectItem))
         }
       })
     },
-    [handleDelete, onChangeSelected, onSelect, selectedItems],
+    [handleDelete, onChangeSelected, onSelect, selectedItemMatcher, selectedItems],
   )
 
   const {
