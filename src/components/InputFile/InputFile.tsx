@@ -1,5 +1,5 @@
 import React, {
-  InputHTMLAttributes,
+  ComponentPropsWithRef,
   ReactNode,
   forwardRef,
   useCallback,
@@ -9,42 +9,76 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import styled, { css } from 'styled-components'
+import { VariantProps, tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
-
-import { useClassNames } from './useClassNames'
+import { Stack } from '../Layout'
 
 import type { DecoratorsType } from '../../types'
 
-type Size = 'default' | 's'
+const inputFile = tv({
+  slots: {
+    wrapper: 'smarthr-ui-InputFile shr-block',
+    fileList: ['smarthr-ui-InputFile-fileList', 'shr-list-none shr-self-stretch shr-text-base'],
+    fileItem: 'shr-flex shr-items-center',
+    inputWrapper: [
+      'shr-relative shr-inline-flex shr-rounded-m shr-border shr-border-solid shr-border-default shr-bg-white shr-font-bold shr-leading-none',
+      'contrast-more:shr-border-high-contrast',
+      'focus-within:shr-focus-indicator',
+    ],
+    input: [
+      'smarthr-ui-InputFile-input',
+      'shr-absolute shr-left-0 shr-top-0 shr-h-full shr-w-full shr-opacity-0',
+      'file:shr-h-full file:shr-w-full file:shr-cursor-pointer',
+      'file:disabled:shr-cursor-not-allowed',
+    ],
+    prefix: 'shr-me-0.5 shr-inline-flex',
+  },
+  variants: {
+    size: {
+      default: {
+        inputWrapper: 'shr-px-1 shr-py-0.75 shr-text-base',
+      },
+      s: {
+        inputWrapper: 'shr-p-0.5 shr-text-sm',
+      },
+    },
+    disabled: {
+      true: {
+        inputWrapper: 'shr-border-default/50 shr-bg-white/50 shr-text-disabled',
+      },
+      false: {
+        inputWrapper: 'hover:shr-border-darken hover:shr-bg-white-darken hover:shr-text-black',
+      },
+    },
+    error: {
+      true: {
+        inputWrapper: '[&&&]:shr-border-danger',
+      },
+    },
+  },
+})
 
-export type Props = {
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-  /** コンポーネントの大きさ */
-  size?: Size
+export type Props = VariantProps<typeof inputFile> & {
   /** フォームのラベル */
   label: ReactNode
   /** ファイルの選択に変更があったときに発火するコールバック関数 */
   onChange?: (files: File[]) => void
-  /** `true` の時、フォームの枠の色が `DANGER` になる */
-  error?: boolean
   /** ファイルリストを表示するかどうか */
   hasFileList?: boolean
   /** コンポーネント内のテキストを変更する関数 */
   decorators?: DecoratorsType<'destroy'>
 }
-type ElementProps = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
 
 const DESTROY_BUTTON_TEXT = '削除'
 
 export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
   (
     {
-      className = '',
+      className,
       size = 'default',
       label,
       hasFileList = true,
@@ -56,9 +90,15 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     },
     ref,
   ) => {
-    const theme = useTheme()
     const [files, setFiles] = useState<File[]>([])
     const labelId = useId()
+
+    const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = inputFile()
+    const wrapperStyle = useMemo(() => wrapper({ className }), [className, wrapper])
+    const inputWrapperStyle = useMemo(
+      () => inputWrapper({ size, disabled, error }),
+      [disabled, error, inputWrapper, size],
+    )
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ
     const isUpdatingFilesDirectly = useRef(false)
@@ -73,12 +113,6 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
       () => decorators?.destroy?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT,
       [decorators],
     )
-    const inputWrapperClassName = useMemo(
-      () => `${size === 's' ? 'small' : ''} ${disabled ? 'disabled' : ''} ${error ? 'error' : ''}`,
-      [disabled, error, size],
-    )
-
-    const classNames = useClassNames()
 
     const updateFiles = useCallback(
       (newFiles: File[]) => {
@@ -119,137 +153,44 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     )
 
     return (
-      <Wrapper className={`${className} ${classNames.wrapper}`}>
+      <Stack align="flex-start" className={wrapperStyle}>
         {!disabled && hasFileList && files.length > 0 && (
-          <FileList themes={theme} className={classNames.fileList}>
+          <BaseColumn as="ul" padding={{ block: 0.5, inline: 1 }} className={fileList()}>
             {files.map((file, index) => (
-              <li key={`${file.name}-${index}`}>
-                <span className={classNames.fileName}>{file.name}</span>
-                <span>
-                  <Button
-                    variant="text"
-                    prefix={<FaTrashAltIcon />}
-                    onClick={() => handleDelete(index)}
-                    className={classNames.deleteButton}
-                  >
-                    {destroyButtonText}
-                  </Button>
-                </span>
+              <li key={`${file.name}-${index}`} className={fileItem()}>
+                <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
+                <Button
+                  variant="text"
+                  prefix={<FaTrashAltIcon />}
+                  onClick={() => handleDelete(index)}
+                  className="smarthr-ui-InputFile-deleteButton"
+                >
+                  {destroyButtonText}
+                </Button>
               </li>
             ))}
-          </FileList>
+          </BaseColumn>
         )}
-        <InputWrapper className={inputWrapperClassName} themes={theme}>
+        <span className={inputWrapperStyle}>
           {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
           <input
             {...props}
             type="file"
             onChange={handleChange}
             disabled={disabled}
-            className={classNames.input}
+            className={input()}
             ref={inputRef}
             aria-invalid={error || undefined}
             aria-labelledby={labelId}
           />
-          <Prefix themes={theme}>
+          <span className={prefix()}>
             <FaFolderOpenIcon />
-          </Prefix>
+          </span>
           <span id={labelId} aria-hidden="true">
             {label}
           </span>
-        </InputWrapper>
-      </Wrapper>
+        </span>
+      </Stack>
     )
   },
 )
-
-const Wrapper = styled.div`
-  display: block;
-`
-
-const FileList = styled.ul<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, color, spacingByChar } = themes
-  return css`
-    font-size: ${fontSize.M};
-    padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-    margin-top: 0;
-    margin-bottom: ${spacingByChar(1)};
-    background-color: ${color.COLUMN};
-    list-style: none;
-
-    > li {
-      display: flex;
-      align-items: center;
-    }
-  `
-})
-
-const InputWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { border, color, fontSize, leading, radius, shadow, spacingByChar } = themes
-  return css`
-    background-color: ${color.WHITE};
-    position: relative;
-    display: inline-flex;
-    font-weight: bold;
-    line-height: ${leading.NONE};
-    border: ${border.shorthand};
-    border-radius: ${radius.m};
-    padding: ${spacingByChar(0.75)} ${spacingByChar(1)};
-    font-size: ${fontSize.M};
-
-    @media (prefers-contrast: more) {
-      & {
-        border: ${border.highContrast};
-      }
-    }
-
-    &.small {
-      padding: ${spacingByChar(0.5)};
-      font-size: ${fontSize.S};
-    }
-    &:focus-within {
-      ${shadow.focusIndicatorStyles}
-    }
-    &.disabled {
-      border-color: ${color.disableColor(color.BORDER)};
-      background-color: ${color.disableColor(color.WHITE)};
-      color: ${color.TEXT_DISABLED};
-    }
-    &:not(.disabled) {
-      &:hover {
-        border-color: ${color.hoverColor(color.BORDER)};
-        background-color: ${color.hoverColor(color.WHITE)};
-        color: ${color.TEXT_BLACK};
-      }
-    }
-    &&.error {
-      border-color: ${color.DANGER};
-    }
-
-    > input[type='file'] {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      ::file-selector-button {
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
-      }
-      &[disabled] {
-        ::file-selector-button {
-          cursor: not-allowed;
-        }
-      }
-    }
-  `
-})
-
-const Prefix = styled.span<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
-    display: inline-flex;
-    margin-right: ${spacingByChar(0.5)};
-  `}
-`
