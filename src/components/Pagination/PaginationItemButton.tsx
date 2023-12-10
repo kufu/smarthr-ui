@@ -1,8 +1,27 @@
-import React, { VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
+
+const paginationItem = tv({
+  base: ['shr-rounded-s'],
+  variants: {
+    active: {
+      true: [
+        'active',
+        'shr-bg-main',
+        'focus-visible:shr-bg-main',
+        'focus-visible:shr-border-main',
+        'disabled:shr-cursor-default',
+        'disabled:shr-outline-none',
+        'disabled:shr-border-solid',
+        'disabled:shr-border-main',
+        'disabled:shr-bg-main',
+        'disabled:shr-text-white',
+      ],
+    },
+  },
+})
 
 type Props = {
   page: number
@@ -10,42 +29,36 @@ type Props = {
   onClick: (pageNumber: number) => void
 }
 
-export const PaginationItemButton: VFC<Props> = ({ page, currentPage, onClick }) => {
-  const theme = useTheme()
+export const PaginationItemButton: React.FC<Props> = ({ page, currentPage, onClick }) => {
+  const itemStyle = useMemo(
+    () => paginationItem({ active: page === currentPage }),
+    [page, currentPage],
+  )
 
   if (page === currentPage) {
     return (
-      <ItemButton
-        className="active"
-        themes={theme}
+      <Button
+        square
+        size="s"
+        className={itemStyle}
         aria-current="page"
         aria-label={`${page}ページ目`}
         disabled
       >
         {page}
-      </ItemButton>
+      </Button>
     )
   }
 
   return (
-    <ItemButton onClick={() => onClick(page)} themes={theme} aria-label={`${page}ページ目`}>
+    <Button
+      square
+      size="s"
+      className={itemStyle}
+      onClick={() => onClick(page)}
+      aria-label={`${page}ページ目`}
+    >
       {page}
-    </ItemButton>
+    </Button>
   )
 }
-
-export const ItemButton = styled(Button).attrs({
-  square: true,
-  size: 's',
-})<{ themes: Theme }>`
-  ${({ themes: { color, radius } }) => css`
-    border-radius: ${radius.s};
-    &.active {
-      cursor: default;
-      outline: none;
-      border: 1px solid ${color.MAIN};
-      background-color: ${color.MAIN};
-      color: ${color.TEXT_WHITE};
-    }
-  `}
-`
