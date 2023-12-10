@@ -1,6 +1,7 @@
-import React, { VFC } from 'react'
+import React, { useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
+import { Button } from '../Button'
 import {
   FaAngleDoubleLeftIcon,
   FaAngleDoubleRightIcon,
@@ -9,7 +10,9 @@ import {
   ComponentProps as IconProps,
 } from '../Icon'
 
-import { ItemButton } from './PaginationItemButton'
+const paginationControllerItem = tv({
+  base: ['shr-rounded-s'],
+})
 
 type Props = {
   targetPage: number
@@ -34,27 +37,26 @@ const getIconProps = (
       ? { Icon: FaAngleDoubleRightIcon, alt: '最後へ' }
       : { Icon: FaChevronRightIcon, alt: '次へ' }
 
-export const PaginationControllerItemButton: VFC<Props> = ({
+export const PaginationControllerItemButton: React.FC<Props> = ({
   direction,
   disabled,
   double = false,
   targetPage,
   onClick,
 }) => {
-  const theme = useTheme()
   const { Icon, ...iconProps } = getIconProps(direction, double)
+  const itemStyle = useMemo(() => paginationControllerItem(), [])
 
   return (
-    <ItemButton
+    <Button
+      square
+      size="s"
+      className={itemStyle}
       onClick={() => onClick(targetPage)}
       disabled={disabled}
-      themes={theme}
       aria-label={iconProps.alt}
     >
-      <Icon
-        color={disabled ? theme.color.TEXT_DISABLED : theme.color.TEXT_BLACK}
-        alt={iconProps.alt}
-      />
-    </ItemButton>
+      <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={iconProps.alt} />
+    </Button>
   )
 }
