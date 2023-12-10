@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
 import {
@@ -9,10 +8,6 @@ import {
   FaChevronRightIcon,
   ComponentProps as IconProps,
 } from '../Icon'
-
-const paginationControllerItem = tv({
-  base: ['shr-rounded-s'],
-})
 
 type Props = {
   targetPage: number
@@ -45,13 +40,12 @@ export const PaginationControllerItemButton: React.FC<Props> = ({
   onClick,
 }) => {
   const { Icon, ...iconProps } = getIconProps(direction, double)
-  const itemStyle = useMemo(() => paginationControllerItem(), [])
 
   return (
     <Button
       square
       size="s"
-      className={itemStyle}
+      className="shr-rounded-s"
       onClick={() => onClick(targetPage)}
       disabled={disabled}
       aria-label={iconProps.alt}
