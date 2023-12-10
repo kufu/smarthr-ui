@@ -72,7 +72,7 @@
     "postcss": "^8.4.32",
     "postcss-styled-syntax": "^0.5.0",
     "postcss-syntax": "^0.36.2",
-    "prettier": "^3.1.0",
+    "prettier": "^3.1.1",
     "prettier-config-smarthr": "^1.0.0",
     "prettier-plugin-tailwindcss": "^0.5.9",
     "puppeteer": "^21.5.2",
