@@ -19,7 +19,7 @@ export const chip = tv({
   ],
   variants: {
     size: {
-      S: ['shr-text-sm', 'shr-px-0.75', 'shr-py-0.5'],
+      S: ['shr-text-sm', 'shr-px-0.5', 'shr-py-0.25'],
     },
   },
 })
