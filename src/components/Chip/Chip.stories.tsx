@@ -11,12 +11,7 @@ export default {
 }
 
 export const All: StoryFn = () => (
-  <Stack as="dl" gap={3}>
-    <Stack align="flex-start">
-      <Chip label="ラベル" />
-      <Chip label="Label" />
-      <Chip label="label" />
-      <Chip label="Label ラベル" aria-label="ラベル" />
-    </Stack>
+  <Stack align="flex-start">
+    <Chip>ラベル</Chip>
   </Stack>
 )
