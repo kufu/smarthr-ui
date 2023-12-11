@@ -58,6 +58,7 @@ const thWrapper = tv({
     fixed: {
       true: [
         /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
+        'fixedElement',
         '[&.fixed]:shr-sticky',
         '[&.fixed]:shr-right-0',
         '[&.fixed]:after:shr-opacity-100',
@@ -102,7 +103,7 @@ export const Th: FC<Props & ElementProps> = ({
   )
 
   return (
-    <th {...ariaSortProps} {...props} className={`${styles} ${fixed ? 'fixedElement' : ''}`}>
+    <th {...ariaSortProps} {...props} className={styles}>
       {sort ? (
         <SortButton onClick={onSort}>
           {children}
