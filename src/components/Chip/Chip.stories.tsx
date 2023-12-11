@@ -16,7 +16,7 @@ export const All: StoryFn = () => (
       <Chip label="ラベル" />
       <Chip label="Label" />
       <Chip label="label" />
-      <Chip label="Label ラベル" />
+      <Chip label="Label ラベル" aria-label="ラベル" />
     </Stack>
   </Stack>
 )
