@@ -20,18 +20,12 @@ export const chip = tv({
   ],
   variants: {
     size: {
-      XXS: ['shr-text-2xs', 'shr-px-0.5', 'shr-py-0.25'],
-      XS: ['shr-text-xs', 'shr-px-0.5', 'shr-py-0.25'],
       S: ['shr-text-sm', 'shr-px-0.75', 'shr-py-0.5'],
-      M: ['shr-text-base', 'shr-px-0.75', 'shr-py-0.5'],
-      L: ['shr-text-lg', 'shr-px-1', 'shr-py-0.5'],
-      XL: ['shr-text-xl', 'shr-px-1', 'shr-py-0.5'],
-      XXL: ['shr-text-2xl', 'shr-px-1.5', 'shr-py-0.75'],
     },
   },
 })
 
-export const Chip: FC<Props> = ({ className, label, size = 'M', ...props }) => {
+export const Chip: FC<Props> = ({ className, label, size = 'S', ...props }) => {
   const styles = useMemo(() => chip({ size, className }), [size, className])
   return (
     <span {...props} className={styles}>
