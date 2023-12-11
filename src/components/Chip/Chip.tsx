@@ -1,11 +1,7 @@
-import React, { FC, ReactNode, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-type Props = {
-  label: ReactNode
-  size?: VariantProps<typeof chip>['size']
-  className?: string
-}
+type Props = PropsWithChildren<VariantProps<typeof chip> & ComponentPropsWithoutRef<'span'>>
 
 const chip = tv({
   base: [
