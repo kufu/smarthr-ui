@@ -19,12 +19,12 @@ const chip = tv({
   ],
   variants: {
     size: {
-      S: ['shr-text-sm', 'shr-px-0.5', 'shr-py-0.25'],
+      s: ['shr-text-sm', 'shr-px-0.5', 'shr-py-0.25'],
     },
   },
 })
 
-export const Chip: FC<Props> = ({ className, label, size = 'S', ...props }) => {
+export const Chip: FC<Props> = ({ className, label, size = 's', ...props }) => {
   const styles = useMemo(() => chip({ size, className }), [size, className])
   return (
     <span {...props} className={styles}>
