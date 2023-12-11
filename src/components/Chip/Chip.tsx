@@ -4,6 +4,7 @@ import { VariantProps, tv } from 'tailwind-variants'
 export type Props = {
   label: ReactNode
   size?: VariantProps<typeof chip>['size']
+  className?: string
 }
 
 export const chip = tv({
