@@ -1,1 +1,1 @@
-export * from './Chip'
+export { Chip } from './Chip'
