@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-export type Props = {
+type Props = {
   label: ReactNode
   size?: VariantProps<typeof chip>['size']
   className?: string
