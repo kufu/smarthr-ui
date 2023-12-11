@@ -10,7 +10,6 @@ export type Props = {
 export const chip = tv({
   base: [
     'smarthr-ui-Chip',
-    'shr-box-border',
     'shr-rounded-full',
     'shr-border',
     'shr-border-solid',
