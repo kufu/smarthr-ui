@@ -7,7 +7,7 @@ type Props = {
   className?: string
 }
 
-export const chip = tv({
+const chip = tv({
   base: [
     'smarthr-ui-Chip',
     'shr-rounded-full',
