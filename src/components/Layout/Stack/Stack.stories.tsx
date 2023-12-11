@@ -29,7 +29,7 @@ export const All: StoryFn = () => (
         </Base>
         <Base padding={1.5}>
           <Stack>
-            <p>Stack で囲んだ直下の子孫要素に対してのい、影響を与えます。</p>
+            <p>Stack で囲んだ直下の子孫要素に対してのみ、影響を与えます。</p>
 
             <SectioningFragment>
               <Stack gap={0.5} as="section">

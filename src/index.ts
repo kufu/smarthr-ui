@@ -1,6 +1,7 @@
 // components
 export { Balloon } from './components/Balloon'
 export { CheckBox } from './components/CheckBox'
+export * from './components/Chip'
 export {
   Dropdown,
   DropdownTrigger,
