@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, ReactNode, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 export type Props = {
@@ -31,7 +31,7 @@ export const chip = tv({
   },
 })
 
-export const Chip: FC<Props> = ({ label, size = 'M' }) => {
-  const className = chip({ size })
-  return <span className={className}>{label}</span>
+export const Chip: FC<Props> = ({ className, label, size = 'M' }) => {
+  const styles = useMemo(() => chip({ size, className }), [size, className])
+  return <span className={styles}>{label}</span>
 }
