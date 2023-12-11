@@ -31,7 +31,11 @@ export const chip = tv({
   },
 })
 
-export const Chip: FC<Props> = ({ className, label, size = 'M' }) => {
+export const Chip: FC<Props> = ({ className, label, size = 'M', ...props }) => {
   const styles = useMemo(() => chip({ size, className }), [size, className])
-  return <span className={styles}>{label}</span>
+  return (
+    <span {...props} className={styles}>
+      {label}
+    </span>
+  )
 }
