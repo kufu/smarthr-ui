@@ -1,7 +1,7 @@
 import { StoryFn } from '@storybook/react'
 import React from 'react'
 
-import { Stack } from '../Layout'
+import { Cluster } from '../Layout'
 
 import { Chip } from '.'
 
@@ -11,7 +11,7 @@ export default {
 }
 
 export const All: StoryFn = () => (
-  <Stack align="flex-start">
+  <Cluster>
     <Chip>ラベル</Chip>
-  </Stack>
+  </Cluster>
 )
