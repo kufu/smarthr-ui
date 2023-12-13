@@ -2,7 +2,7 @@ import React, { ComponentProps, FC, PropsWithChildren, useContext, useMemo } fro
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
-import { MAPPER_SIZE_AND_WEIGHT, Text, TextProps } from '../Text'
+import { Text, TextProps } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 export type Props = PropsWithChildren<{
@@ -16,7 +16,12 @@ export type Props = PropsWithChildren<{
   visuallyHidden?: boolean
 }>
 
-export type HeadingTypes = TextProps['styleType']
+export type HeadingTypes =
+  | 'screenTitle'
+  | 'sectionTitle'
+  | 'blockTitle'
+  | 'subBlockTitle'
+  | 'subSubBlockTitle'
 
 export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 
@@ -24,6 +29,31 @@ type ElementProps = Omit<
   ComponentProps<'h1'>,
   keyof Props | keyof TextProps | 'role' | 'aria-level'
 >
+
+export const MAPPER_SIZE_AND_WEIGHT: { [key in HeadingTypes]: TextProps } = {
+  screenTitle: {
+    size: 'XL',
+    weight: 'normal',
+  },
+  sectionTitle: {
+    size: 'L',
+    weight: 'normal',
+  },
+  blockTitle: {
+    size: 'M',
+    weight: 'bold',
+  },
+  subBlockTitle: {
+    size: 'M',
+    weight: 'bold',
+    color: 'TEXT_GREY',
+  },
+  subSubBlockTitle: {
+    size: 'S',
+    weight: 'bold',
+    color: 'TEXT_GREY',
+  },
+}
 
 const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
   let role = undefined

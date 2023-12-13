@@ -1,2 +1,2 @@
-export { Text, MAPPER_SIZE_AND_WEIGHT } from './Text'
+export { Text } from './Text'
 export type { TextProps } from './Text'
