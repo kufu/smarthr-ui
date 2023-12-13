@@ -23,7 +23,7 @@ const statusLabel = tv({
   ],
   variants: {
     type: {
-      grey: ['shr-border-grey-20', 'shr-text-grey', 'contrast-more:shr-border-high-contrast'],
+      grey: ['contrast-more:shr-border-high-contrast'],
       blue: ['shr-border-main', 'shr-text-link'],
       /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
        * https://smarthr.design/basics/colors/#h4-1 */
@@ -38,24 +38,39 @@ const statusLabel = tv({
   },
   compoundVariants: [
     {
+      type: ['grey', 'blue', 'green', 'red', 'error'],
+      bold: true,
+      class: ['shr-text-white'],
+    },
+    {
+      type: ['warning'],
+      bold: true,
+      class: ['shr-text-black'],
+    },
+    {
+      type: 'grey',
+      bold: false,
+      class: ['shr-bg-white', 'shr-border-grey-20', 'shr-text-grey'],
+    },
+    {
       type: 'grey',
       bold: true,
-      class: ['shr-bg-[theme(colors.grey.65)]', 'shr-border-grey-65', 'shr-text-white'],
+      class: ['shr-bg-[theme(colors.grey.65)]', 'shr-border-grey-65'],
     },
     {
       type: 'blue',
       bold: true,
-      class: ['shr-bg-main', 'shr-border-main', 'shr-text-white'],
+      class: ['shr-bg-main', 'shr-border-main'],
     },
     {
       type: 'green',
       bold: true,
-      class: ['shr-bg-[#0f7f85]', 'shr-border-[#0f7f85]', 'shr-text-white'],
+      class: ['shr-bg-[#0f7f85]'],
     },
     {
       type: 'red',
       bold: true,
-      class: ['shr-bg-danger', 'shr-border-danger', 'shr-text-white'],
+      class: ['shr-bg-danger', 'shr-border-danger'],
     },
     { type: 'warning', bold: false, class: ['shr-border-warning-yellow'] },
   ],
