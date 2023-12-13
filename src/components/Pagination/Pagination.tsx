@@ -17,7 +17,7 @@ const pagination = tv({
   variants: {
     withoutNumbers: {
       true: {
-        list: 'withoutNumbers',
+        list: ['withoutNumbers'],
         listItem: ['first:shr-mr-0.5', 'last:shr-ml-0.5'],
       },
     },
@@ -36,12 +36,12 @@ const pagination = tv({
     },
     prev: {
       true: {
-        listItem: 'smarthr-ui-Pagination-prev',
+        listItem: ['smarthr-ui-Pagination-prev'],
       },
     },
     next: {
       true: {
-        listItem: 'smarthr-ui-Pagination-next',
+        listItem: ['smarthr-ui-Pagination-next'],
       },
     },
     last: {
@@ -55,28 +55,28 @@ const pagination = tv({
       prev: true,
       withoutNumbers: false,
       class: {
-        listItem: 'shr-mr-0.5',
+        listItem: ['shr-mr-0.5'],
       },
     },
     {
       prev: true,
       withoutNumbers: true,
       class: {
-        listItem: 'shr-mr-0',
+        listItem: ['shr-mr-0'],
       },
     },
     {
       next: true,
       withoutNumbers: false,
       class: {
-        listItem: 'shr-ml-0.5',
+        listItem: ['shr-ml-0.5'],
       },
     },
     {
       next: true,
       withoutNumbers: true,
       class: {
-        listItem: 'shr-ml-0',
+        listItem: ['shr-ml-0'],
       },
     },
   ],
