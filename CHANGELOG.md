@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [40.1.0](https://github.com/kufu/smarthr-ui/compare/v40.0.2...v40.1.0) (2023-12-13)
+
+
+### Features
+
+* Chip コンポーネントを追加する ([#4101](https://github.com/kufu/smarthr-ui/issues/4101)) ([31d4a51](https://github.com/kufu/smarthr-ui/commit/31d4a5177f30c7dd1353332138e6af9ee717528b))
+
+
+### Bug Fixes
+
+* ButtonWrapper の prefix 付与漏れを修正 ([#4109](https://github.com/kufu/smarthr-ui/issues/4109)) ([08c5429](https://github.com/kufu/smarthr-ui/commit/08c5429e11b74b4709576a8a1a624afde02403e6))
+* top 以外の三辺に border が当たらないように修正 ([#4108](https://github.com/kufu/smarthr-ui/issues/4108)) ([6d62867](https://github.com/kufu/smarthr-ui/commit/6d628674a9d6ebc1d7e5d04827e47949bb84a48c))
+* typo Stack.stories.tsx ([#4102](https://github.com/kufu/smarthr-ui/issues/4102)) ([e5d622b](https://github.com/kufu/smarthr-ui/commit/e5d622b571ccfc32a7bc6ecb6abf4a49d0eea330))
+
 ### [40.0.2](https://github.com/kufu/smarthr-ui/compare/v40.0.1...v40.0.2) (2023-12-06)
 
 
