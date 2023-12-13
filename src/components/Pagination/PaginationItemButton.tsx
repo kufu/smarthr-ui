@@ -9,15 +9,13 @@ const paginationItem = tv({
     active: {
       true: [
         'active',
-        'shr-bg-main',
-        'focus-visible:shr-bg-main',
-        'focus-visible:shr-border-main',
-        'disabled:shr-cursor-default',
         'disabled:shr-outline-none',
         'disabled:shr-border-solid',
         'disabled:shr-border-main',
-        'disabled:shr-bg-main',
         'disabled:shr-text-white',
+        // NOTE: 以下についてはclassNameが優先されなかったため `[&&&]` で詳細度を上げている。
+        '[&&&]:disabled:shr-bg-main',
+        '[&&&]:disabled:shr-cursor-default',
       ],
     },
   },
