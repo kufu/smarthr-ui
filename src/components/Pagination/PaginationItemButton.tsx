@@ -9,7 +9,6 @@ const paginationItem = tv({
     active: {
       true: [
         'active',
-        'disabled:shr-outline-none',
         'disabled:shr-border-solid',
         'disabled:shr-border-main',
         'disabled:shr-text-white',
