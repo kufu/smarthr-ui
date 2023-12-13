@@ -44,7 +44,7 @@
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.range": "^3.2.9",
     "@types/node": "^20.10.4",
-    "@types/react": "^18.2.42",
+    "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.17",
     "@types/react-test-renderer": "^17.0.9",
     "@types/react-transition-group": "^4.4.10",
@@ -178,7 +178,7 @@
   "typings": "lib/index.d.ts",
   "resolutions": {
     "@babel/helper-compilation-targets": "^7.22.15",
-    "@types/react": "^18.2.42",
+    "@types/react": "^18.2.45",
     "minimist": "1.2.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
