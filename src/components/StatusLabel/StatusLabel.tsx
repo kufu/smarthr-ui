@@ -23,22 +23,17 @@ const statusLabel = tv({
   ],
   variants: {
     type: {
-      grey: [
-        'shr-border-grey-20',
-        'shr-text-grey',
-        'contrast-more:shr-border-high-contrast',
-        'grey',
-      ],
-      blue: ['shr-border-main', 'shr-text-link', 'main'],
+      grey: ['shr-border-grey-20', 'shr-text-grey', 'contrast-more:shr-border-high-contrast'],
+      blue: ['shr-border-main', 'shr-text-link'],
       /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
        * https://smarthr.design/basics/colors/#h4-1 */
-      green: ['shr-border-[#0f7f85]', 'shr-text-[#0f7f85]', 'green'],
-      red: ['shr-border-danger', 'shr-text-danger', 'red'],
-      warning: ['shr-bg-warning-yellow', 'warning'],
-      error: ['shr-bg-danger', 'shr-border-danger', 'shr-text-white', 'error'],
+      green: ['shr-border-[#0f7f85]', 'shr-text-[#0f7f85]'],
+      red: ['shr-border-danger', 'shr-text-danger'],
+      warning: ['shr-bg-warning-yellow', 'shr-text-black'],
+      error: ['shr-bg-danger', 'shr-border-danger', 'shr-text-white'],
     },
     bold: {
-      true: ['bold'],
+      true: [],
     },
   },
   compoundVariants: [
