@@ -52,7 +52,7 @@
     "autoprefixer": "^10.4.16",
     "axe-playwright": "^1.2.3",
     "babel-loader": "^9.1.3",
-    "babel-plugin-polyfill-corejs2": "^0.4.6",
+    "babel-plugin-polyfill-corejs2": "^0.4.7",
     "babel-plugin-polyfill-regenerator": "^0.5.4",
     "chromatic": "^10.0.0",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
