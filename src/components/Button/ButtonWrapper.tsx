@@ -209,7 +209,7 @@ const button = tv({
         'shr-bg-white',
         'shr-text-black',
         'focus-visible:shr-border-darken',
-        'focus-visible:bg-white-darken',
+        'focus-visible:shr-bg-white-darken',
         'focus-visible:constrast-more:shr-border-high-contrast',
         'hover:shr-border-darken',
         'hover:shr-bg-white-darken',

@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
-import * as React from 'react'
+import { StoryFn } from '@storybook/react'
+import React from 'react'
 import styled from 'styled-components'
 
 import { InputFile } from './InputFile'
@@ -10,7 +10,7 @@ export default {
   component: InputFile,
 }
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <List>
     <dt>Default</dt>
     <dd>
