@@ -1,147 +1,64 @@
-import { transparentize } from 'polished'
-import React, { ChangeEvent, InputHTMLAttributes, forwardRef, useCallback } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ChangeEvent, ComponentPropsWithRef, forwardRef, useCallback, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+type Props = ComponentPropsWithRef<'input'>
 
-import { useClassNames } from './useClassNames'
-
-export type Props = InputHTMLAttributes<HTMLInputElement>
+const radioButtonInput = tv({
+  slots: {
+    wrapper:
+      'shr-relative shr-inline-block shr-h-em shr-w-em shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
+    box: [
+      'shr-pointer-events-none',
+      'shr-box-border shr-block shr-h-full shr-w-full shr-rounded-full shr-border shr-border-solid shr-border-default shr-bg-white',
+      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
+      'forced-colors:shr-hidden',
+      'contrast-more:shr-border-high-contrast',
+      'peer-checked:shr-border-main peer-checked:shr-bg-main contrast-more:peer-checked:shr-border-high-contrast',
+      'peer-checked:before:shr-pointer-events-none peer-checked:before:shr-absolute peer-checked:before:shr-left-1/2 peer-checked:before:shr-top-1/2 peer-checked:before:shr-h-[0.375em] peer-checked:before:shr-w-[0.375em] peer-checked:before:-shr-translate-x-1/2 peer-checked:before:-shr-translate-y-1/2 peer-checked:before:shr-rounded-full peer-checked:before:shr-bg-white peer-checked:before:shr-content-[""]',
+      'peer-disabled:shr-cursor-not-allowed peer-disabled:shr-border-default/50 peer-disabled:shr-bg-white-darken',
+      'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border peer-disabled:peer-checked:before:shr-bg-white-darken',
+      'peer-focus-visible:shr-focus-indicator',
+    ],
+    input: [
+      'smarthr-ui-RadioButton-radioButton shr-peer shr-absolute shr-left-0 shr-top-0 shr-m-0 shr-h-full shr-w-full shr-cursor-pointer shr-opacity-0',
+      'disabled:shr-pointer-events-none',
+      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
+      'forced-colors:shr-static forced-colors:shr-opacity-100',
+    ],
+  },
+  variants: {
+    disabled: {
+      false: {
+        box: 'peer-hover:shr-shadow-input-hover',
+      },
+    },
+  },
+})
 
 export const RadioButtonInput = forwardRef<HTMLInputElement, Props>(
   ({ onChange, ...props }, ref) => {
-    const theme = useTheme()
+    const { wrapperStyle, boxStyle, inputStyle } = useMemo(() => {
+      const { wrapper, box, input } = radioButtonInput()
+      return {
+        wrapperStyle: wrapper(),
+        boxStyle: box({ disabled: !!props.disabled }),
+        inputStyle: input(),
+      }
+    }, [props.disabled])
+
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
         if (onChange) onChange(e)
       },
       [onChange],
     )
-    const classNames = useClassNames()
 
     return (
-      <Wrapper themes={theme}>
+      <span className={wrapperStyle}>
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
-        <Input
-          {...props}
-          type="radio"
-          onChange={handleChange}
-          className={classNames.radioButton}
-          themes={theme}
-          ref={ref}
-        />
-        <Box themes={theme} />
-      </Wrapper>
+        <input {...props} type="radio" onChange={handleChange} className={inputStyle} ref={ref} />
+        <span className={boxStyle} />
+      </span>
     )
   },
 )
-
-const Wrapper = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { leading } = themes
-
-    return css`
-      position: relative;
-      display: inline-block;
-      flex-shrink: 0;
-      width: 1em;
-      height: 1em;
-      line-height: ${leading.NONE};
-    `
-  }}
-`
-const Box = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { border, color } = themes
-
-    return css`
-      display: block;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: ${border.shorthand};
-      background-color: ${color.WHITE};
-      box-sizing: border-box;
-
-      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
-      @media (forced-colors: active) {
-        display: none;
-      }
-
-      @media (prefers-contrast: more) {
-        & {
-          border: ${border.highContrast};
-        }
-      }
-
-      /* FIXME: なぜか static classname になってしまうため & を重ねている */
-      input:checked + && {
-        border-color: ${color.MAIN};
-        background-color: ${color.MAIN};
-
-        @media (prefers-contrast: more) {
-          & {
-            border: ${border.highContrast};
-          }
-        }
-
-        &::before {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 0.375em;
-          height: 0.375em;
-          border-radius: 50%;
-          background-color: ${color.WHITE};
-          transform: translate(-50%, -50%);
-          content: '';
-          pointer-events: none;
-        }
-      }
-
-      /* FIXME: なぜか static classname になってしまうため & を重ねている */
-      input:disabled + && {
-        border-color: ${color.disableColor(color.BORDER)};
-        background-color: ${color.hoverColor(color.WHITE)};
-        cursor: not-allowed;
-      }
-
-      input:disabled:checked + && {
-        border-color: ${color.BORDER};
-        background-color: ${color.BORDER};
-
-        &::before {
-          background-color: ${color.hoverColor(color.WHITE)};
-        }
-      }
-    `
-  }}
-`
-const Input = styled.input<{ themes: Theme }>`
-  ${({ themes: { color, shadow } }) => css`
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    cursor: pointer;
-
-    &[disabled] {
-      pointer-events: none;
-    }
-    &:hover:not([disabled]) + span {
-      box-shadow: 0 0 0 2px ${transparentize(0.78, color.MAIN)};
-    }
-    &:focus-visible + span {
-      box-shadow: ${shadow.focusIndicatorStyles};
-    }
-
-    /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
-    @media (forced-colors: active) {
-      position: initial;
-      opacity: 1;
-    }
-  `}
-`
