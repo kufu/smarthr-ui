@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, ReactNode, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
@@ -15,9 +15,10 @@ const statusLabel = tv({
     'shr-py-0.25',
     'shr-whitespace-nowrap',
     'shr-text-sm',
+    // ラベルが天地中央に揃わないため暫定対応
     'shr-leading-[0]',
     'shr-min-w-[3.5em]',
-    'shr-min-h-[1em]',
+    'shr-min-h-em',
     'shr-border',
     'shr-border-solid',
   ],
@@ -65,6 +66,8 @@ const statusLabel = tv({
     {
       type: 'green',
       bold: true,
+      /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
+       * https://smarthr.design/basics/colors/#h4-1 */
       class: ['shr-bg-[#0f7f85]'],
     },
     {
@@ -83,17 +86,13 @@ type Props = {
   type?: Color | State
   /** 強調するかどうか */
   bold?: boolean
-  /** ラベル */
-  children: ReactNode
-  /** コンポーネントに適用するクラス名 */
-  className?: string
 }
-type ElementProps = Omit<HTMLAttributes<HTMLSpanElement>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithoutRef<'span'>, keyof Props>
 
-export const StatusLabel: FC<Props & ElementProps> = ({
+export const StatusLabel: FC<PropsWithChildren<Props & ElementProps>> = ({
   type = 'grey',
   bold = false,
-  className = '',
+  className,
   children,
   ...props
 }) => {
@@ -118,7 +117,7 @@ export const StatusLabel: FC<Props & ElementProps> = ({
         type,
         bold,
       }),
-    [],
+    [className, type, bold],
   )
 
   return (
