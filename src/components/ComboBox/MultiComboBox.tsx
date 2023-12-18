@@ -372,7 +372,7 @@ function MultiComboBoxComponent<T>(
               name={name}
               value={inputValue}
               disabled={disabled}
-              required={required}
+              required={required && selectedItems.length === 0}
               ref={inputRef}
               themes={theme}
               onChange={handleChangeInput}

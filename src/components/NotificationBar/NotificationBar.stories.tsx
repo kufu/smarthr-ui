@@ -117,7 +117,7 @@ export const All: StoryFn = () => {
   )
 }
 
-const Wrapper = styled(Stack).attrs({ as: 'dl', gap: 1.5 })`
+const Wrapper = styled(Stack).attrs({ forwardedAs: 'dl', gap: 1.5 })`
   ${({ theme: { color, spacingByChar } }) => css`
     margin-block: unset;
     background-color: ${color.BACKGROUND};

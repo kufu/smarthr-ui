@@ -1,14 +1,21 @@
-import React, { ComponentProps, FC, PropsWithChildren, RefObject, useCallback, useRef } from 'react'
-import styled, { css } from 'styled-components'
+import React, {
+  ComponentProps,
+  FC,
+  PropsWithChildren,
+  RefObject,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react'
+import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTailwindTheme'
 
 import { BodyScrollSuppressor } from './BodyScrollSuppressor'
 import { DialogOverlap } from './DialogOverlap'
 import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
-import { useClassNames } from './useClassNames'
 
 export type DialogContentInnerProps = PropsWithChildren<{
   /**
@@ -59,24 +66,21 @@ export type DialogContentInnerProps = PropsWithChildren<{
    * ダイアログの `aria-labelledby`
    */
   ariaLabelledby?: string
-  /**
-   * コンポーネントに適用するクラス名
-   */
-  className?: string
 }>
 type ElementProps = Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
-
-type StyleProps = {
-  $width?: string | number
-  top?: number
-  right?: number
-  bottom?: number
-  left?: number
-}
 
 function exist(value: any) {
   return value !== undefined && value !== null
 }
+
+const dialogContentInner = tv({
+  slots: {
+    layout: 'smarthr-ui-Dialog-wrapper shr-fixed shr-inset-0',
+    inner:
+      'smarthr-ui-Dialog contrast-more:shr-border-highContrast shr-absolute shr-rounded-m shr-bg-white shr-shadow-layer-3 contrast-more:shr-border contrast-more:shr-border-solid',
+    background: 'smarthr-ui-Dialog-background shr-fixed shr-inset-0 shr-bg-scrim',
+  },
+})
 
 export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   onClickOverlay,
@@ -86,15 +90,47 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   isOpen,
   id,
   width,
+  top,
+  right,
+  bottom,
+  left,
   firstFocusTarget,
   ariaLabel,
   ariaLabelledby,
   children,
-  className = '',
+  className,
   ...props
 }) => {
-  const classNames = useClassNames().dialog
-  const theme = useTheme()
+  const { spacing } = useTheme()
+  const { layoutStyle, innerStyleProps, backgroundStyle } = useMemo(() => {
+    const { layout, inner, background } = dialogContentInner()
+    const positionTop = exist(top) ? `${top}px` : 'auto'
+    const positionRight = exist(right) ? `${right}px` : 'auto'
+    const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
+    const positionLeft = exist(left) ? `${left}px` : 'auto'
+    const actualWidth = typeof width === 'number' ? `${width}px` : width
+    const minimumMaxWidth = `calc(100vw - max(${left || 0}px, ${spacing[0.5]}) - max(${
+      right || 0
+    }px, ${spacing[0.5]}))`
+    const translateX = exist(right) || exist(left) ? '0' : 'calc((100vw - 100%) / 2)'
+    const translateY = exist(top) || exist(bottom) ? '0' : 'calc((100vh - 100%) / 2)'
+    return {
+      layoutStyle: layout(),
+      innerStyleProps: {
+        className: inner({ className }),
+        style: {
+          inset: `${positionTop} ${positionRight} ${positionBottom} ${positionLeft}`,
+          width: exist(actualWidth) ? actualWidth : undefined,
+          maxWidth: exist(actualWidth)
+            ? `min(${minimumMaxWidth}, ${actualWidth})`
+            : minimumMaxWidth,
+          transform: `translate(${translateX}, ${translateY})`,
+        },
+      },
+      backgroundStyle: background(),
+    }
+  }, [bottom, className, left, right, spacing, top, width])
+
   const innerRef = useRef<HTMLDivElement>(null)
   useHandleEscape(
     useCallback(() => {
@@ -113,82 +149,25 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   }, [isOpen, onClickOverlay])
 
   return (
-    <DialogPositionProvider top={props.top} bottom={props.bottom}>
+    <DialogPositionProvider top={top} bottom={bottom}>
       <DialogOverlap isOpen={isOpen}>
-        <Layout className={classNames.wrapper} id={id}>
-          <Background
-            onClick={handleClickOverlay}
-            themes={theme}
-            className={classNames.background}
-          />
-          <Inner
+        <div className={layoutStyle} id={id}>
+          <div onClick={handleClickOverlay} className={backgroundStyle} />
+          <div
             {...props}
-            $width={width}
+            {...innerStyleProps}
             ref={innerRef}
-            themes={theme}
             role="dialog"
             aria-label={ariaLabel}
             aria-labelledby={ariaLabelledby}
             aria-modal="true"
-            className={`${className} ${classNames.dialog}`}
           >
             <FocusTrap firstFocusTarget={firstFocusTarget}>{children}</FocusTrap>
-          </Inner>
+          </div>
           {/* Suppresses scrolling of body while modal is displayed */}
           <BodyScrollSuppressor />
-        </Layout>
+        </div>
       </DialogOverlap>
     </DialogPositionProvider>
   )
 }
-
-const Layout = styled.div`
-  position: fixed;
-  inset: 0;
-`
-const Inner = styled.div<StyleProps & { themes: Theme }>`
-  ${({ themes, $width, top, right, bottom, left }) => {
-    const { border, color, radius, shadow, space } = themes
-    const positionRight = exist(right) ? `${right}px` : 'auto'
-    const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
-    const positionTop = exist(top) ? `${top}px` : 'auto'
-    const positionLeft = exist(left) ? `${left}px` : 'auto'
-    const translateX = exist(right) || exist(left) ? '0' : 'calc((100vw - 100%) / 2)'
-    const translateY = exist(top) || exist(bottom) ? '0' : 'calc((100vh - 100%) / 2)'
-
-    const actualWidth = typeof $width === 'number' ? `${$width}px` : $width
-    const minimumMaxWidth = `calc(100vw - max(${left || 0}px, ${space(0.5)}) - max(${
-      right || 0
-    }px, ${space(0.5)}))`
-
-    return css`
-      position: absolute;
-      inset: ${positionTop} ${positionRight} ${positionBottom} ${positionLeft};
-
-      /* viewport を超えないように上限設定 */
-      max-width: ${minimumMaxWidth};
-      ${exist(actualWidth) &&
-      css`
-        width: ${actualWidth};
-        max-width: min(${minimumMaxWidth}, ${actualWidth});
-      `}
-      border-radius: ${radius.m};
-      background-color: ${color.WHITE};
-      box-shadow: ${shadow.LAYER3};
-      transform: translate(${translateX}, ${translateY});
-
-      @media (prefers-contrast: more) {
-        & {
-          border: ${border.highContrast};
-        }
-      }
-    `
-  }}
-`
-const Background = styled.div<{ themes: Theme }>`
-  ${({ themes }) => css`
-    position: fixed;
-    inset: 0;
-    background-color: ${themes.color.SCRIM};
-  `}
-`

@@ -10,9 +10,6 @@ export function useClassNames() {
   return useMemo(
     () => ({
       dialog: {
-        wrapper: generateForDialog('wrapper'),
-        dialog: generateForDialog(),
-        background: generateForDialog('background'),
         titleArea: generateForDialog('titleArea'),
         title: generateForDialog('title'),
         subtitle: generateForDialog('subtitle'),

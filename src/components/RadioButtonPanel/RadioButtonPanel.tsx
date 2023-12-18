@@ -35,7 +35,10 @@ export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...p
 }
 
 const Wrapper = styled(Base).attrs({ padding: 1 })<{ themes: Theme }>`
-  ${({ themes: { shadow, space } }) => css`
+  ${({ themes: { border, shadow, space } }) => css`
+    box-shadow: none;
+    border: ${border.shorthand};
+
     :not(:has([disabled])) {
       cursor: pointer;
     }

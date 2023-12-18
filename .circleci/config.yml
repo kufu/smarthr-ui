@@ -3,19 +3,19 @@ version: 2.1
 executors:
   node-maintenance:
     docker:
-      - image: cimg/node:21.2.0
+      - image: cimg/node:21.4.0
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
   node-active-lts:
     docker:
-      - image: cimg/node:21.2.0
+      - image: cimg/node:21.4.0
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
   node-active-lts-browsers:
     docker:
-      - image: cimg/node:21.2.0-browsers
+      - image: cimg/node:21.4.0-browsers
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
@@ -65,11 +65,11 @@ commands:
   run-chromatic:
     steps:
       - checkout
-      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes
+      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes --only-changed
   run-chromatic-master:
     steps:
       - checkout
-      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes
+      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes --only-changed
   install-noto-sans-cjk-jp:
     steps:
       - run:

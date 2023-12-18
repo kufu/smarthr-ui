@@ -1,7 +1,8 @@
-import React, { ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
+import React, { forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import type { Gap } from '../../../types'
+import type { ComponentPropsWithRef, PropsWithChildren } from 'react'
 
 type Props = PropsWithChildren<{
   /** コンテンツの最小高さ */
@@ -14,7 +15,7 @@ type Props = PropsWithChildren<{
   verticalCentering?: boolean
   as?: string | React.ComponentType<any>
 }>
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof Props>
 
 const center = tv({
   base: 'shr-mx-auto shr-box-content shr-flex shr-flex-col shr-items-center',
@@ -49,25 +50,22 @@ const center = tv({
   },
 })
 
-export const Center: React.FC<Props & ElementProps> = ({
-  minHeight,
-  maxWidth,
-  padding,
-  verticalCentering,
-  as: Component = 'div',
-  className,
-  ...props
-}) => {
-  const styleProps = useMemo(
-    () => ({
-      className: center({ padding, verticalCentering, className }),
-      style: {
-        minHeight: minHeight ?? undefined,
-        maxWidth: maxWidth ?? undefined,
-      },
-    }),
-    [padding, verticalCentering, className, minHeight, maxWidth],
-  )
+export const Center = forwardRef<HTMLDivElement, Props & ElementProps>(
+  (
+    { minHeight, maxWidth, padding, verticalCentering, as: Component = 'div', className, ...props },
+    ref,
+  ) => {
+    const styleProps = useMemo(
+      () => ({
+        className: center({ padding, verticalCentering, className }),
+        style: {
+          minHeight: minHeight ?? undefined,
+          maxWidth: maxWidth ?? undefined,
+        },
+      }),
+      [padding, verticalCentering, className, minHeight, maxWidth],
+    )
 
-  return <Component {...props} {...styleProps} />
-}
+    return <Component {...styleProps} {...props} ref={ref} />
+  },
+)

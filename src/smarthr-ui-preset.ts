@@ -30,6 +30,7 @@ export default {
       'base-grey': defaultColor.BASE_GREY,
       'over-background': defaultColor.OVER_BACKGROUND,
       head: defaultColor.HEAD,
+      'head-darken': darkenColor(defaultColor.HEAD),
       'action-background': defaultColor.ACTION_BACKGROUND,
       main: defaultColor.MAIN,
       'main-darken': theme('colors.main-darken'),
@@ -69,6 +70,7 @@ export default {
       outline: defaultColor.OUTLINE,
       danger: defaultColor.DANGER,
       'danger-darken': darkenColor(defaultColor.DANGER),
+      'warning-yellow': defaultColor.WARNING_YELLOW,
       grey: {
         DEFAULT: defaultColor.GREY_65,
         5: defaultColor.GREY_5,

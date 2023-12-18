@@ -1,6 +1,7 @@
 // components
 export { Balloon } from './components/Balloon'
 export { CheckBox } from './components/CheckBox'
+export * from './components/Chip'
 export {
   Dropdown,
   DropdownTrigger,
@@ -86,7 +87,7 @@ export { InformationPanel } from './components/InformationPanel'
 export { RightFixedNote } from './components/RightFixedNote'
 export { Tooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
-export { MessageScreen } from './components/MessageScreen'
+export { ErrorScreen, MessageScreen } from './components/ErrorScreen'
 export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'

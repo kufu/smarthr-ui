@@ -204,7 +204,7 @@ const TriggerButton = styled(Button)`
     transform: rotate(0.5turn);
   }
 `
-const ActionList = styled(Stack).attrs({ as: 'ul', gap: 0 })<{ themes: Theme }>`
+const ActionList = styled(Stack).attrs({ forwardedAs: 'ul', gap: 0 })<{ themes: Theme }>`
   ${({ themes: { space } }) => css`
     list-style: none;
     margin-block: 0;
