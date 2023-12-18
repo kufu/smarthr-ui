@@ -152,6 +152,9 @@ export default {
       'flash-message': `${defaultZIndex.FLASH_MESSAGE}`,
     },
     extend: {
+      minHeight: ({ theme }) => ({
+        ...theme('spacing'),
+      }),
       borderColor: ({ theme }) => ({
         default: theme('colors.grey.20'),
         disabled: theme('colors.grey.20 / 50%'),
