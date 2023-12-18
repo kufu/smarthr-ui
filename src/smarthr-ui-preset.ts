@@ -133,6 +133,7 @@ export default {
       black: defaultColor.GREY_100,
     },
     textColor: ({ theme }) => ({
+      main: theme('colors.main'),
       black: theme('colors.black'),
       white: theme('colors.white'),
       'white-darken': theme('colors.white-darken'),

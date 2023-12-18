@@ -1,10 +1,11 @@
 import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
 
 const statusLabel = tv({
   base: [
+    'smarthr-ui-StatusLabel',
     'shr-box-content',
     'shr-font-bold',
     'shr-inline-flex',
@@ -25,7 +26,7 @@ const statusLabel = tv({
   variants: {
     type: {
       grey: ['contrast-more:shr-border-high-contrast'],
-      blue: ['shr-border-main', 'shr-text-link'],
+      blue: ['shr-border-main', 'shr-text-main'],
       /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
        * https://smarthr.design/basics/colors/#h4-1 */
       green: ['shr-border-[#0f7f85]', 'shr-text-[#0f7f85]'],
@@ -75,18 +76,15 @@ const statusLabel = tv({
       bold: true,
       class: ['shr-bg-danger', 'shr-border-danger'],
     },
-    { type: 'warning', bold: false, class: ['shr-border-warning-yellow'] },
+    {
+      type: 'warning',
+      bold: false,
+      class: ['shr-border-warning-yellow'],
+    },
   ],
 })
 
-type Color = 'grey' | 'blue' | 'green' | 'red'
-type State = 'warning' | 'error'
-type Props = {
-  /** ラベルが表す状態の種類 */
-  type?: Color | State
-  /** 強調するかどうか */
-  bold?: boolean
-}
+type Props = VariantProps<typeof statusLabel>
 type ElementProps = Omit<ComponentPropsWithoutRef<'span'>, keyof Props>
 
 export const StatusLabel: FC<PropsWithChildren<Props & ElementProps>> = ({
