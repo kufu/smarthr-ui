@@ -26,11 +26,9 @@ const statusLabel = tv({
   variants: {
     type: {
       grey: ['contrast-more:shr-border-high-contrast'],
-      blue: ['shr-border-main', 'shr-text-main'],
-      /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
-       * https://smarthr.design/basics/colors/#h4-1 */
-      green: ['shr-border-[#0f7f85]', 'shr-text-[#0f7f85]'],
-      red: ['shr-border-danger', 'shr-text-danger'],
+      blue: [],
+      green: [],
+      red: [],
       warning: ['shr-bg-warning-yellow', 'shr-text-black'],
       error: ['shr-bg-danger', 'shr-border-danger', 'shr-text-white'],
     },
@@ -45,19 +43,25 @@ const statusLabel = tv({
       class: ['shr-text-white'],
     },
     {
-      type: ['warning'],
-      bold: true,
-      class: ['shr-text-black'],
+      type: ['blue', 'green', 'red', 'warning'],
+      bold: false,
+      className: ['shr-border-current'],
     },
     {
       type: 'grey',
       bold: false,
       class: ['shr-bg-white', 'shr-border-grey-20', 'shr-text-grey'],
     },
+
     {
       type: 'grey',
       bold: true,
       class: ['shr-bg-[theme(colors.grey.65)]', 'shr-border-grey-65'],
+    },
+    {
+      type: 'blue',
+      bold: false,
+      class: ['shr-text-main'],
     },
     {
       type: 'blue',
@@ -66,10 +70,22 @@ const statusLabel = tv({
     },
     {
       type: 'green',
+      bold: false,
+      /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
+       * https://smarthr.design/basics/colors/#h4-1 */
+      class: ['shr-text-[#0f7f85]'],
+    },
+    {
+      type: 'green',
       bold: true,
       /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
        * https://smarthr.design/basics/colors/#h4-1 */
-      class: ['shr-bg-[#0f7f85]'],
+      class: ['shr-border-[#0f7f85]', 'shr-bg-[#0f7f85]'],
+    },
+    {
+      type: 'red',
+      bold: false,
+      class: ['shr-text-danger'],
     },
     {
       type: 'red',
@@ -80,6 +96,11 @@ const statusLabel = tv({
       type: 'warning',
       bold: false,
       class: ['shr-border-warning-yellow'],
+    },
+    {
+      type: ['warning'],
+      bold: true,
+      class: ['shr-border-current', 'shr-text-black'],
     },
   ],
 })
