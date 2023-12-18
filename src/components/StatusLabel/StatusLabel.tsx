@@ -25,7 +25,7 @@ const statusLabel = tv({
   ],
   variants: {
     type: {
-      grey: ['contrast-more:shr-border-high-contrast'],
+      grey: [],
       blue: [],
       green: [],
       red: [],
@@ -50,7 +50,12 @@ const statusLabel = tv({
     {
       type: 'grey',
       bold: false,
-      class: ['shr-bg-white', 'shr-border-grey-20', 'shr-text-grey'],
+      class: [
+        'shr-bg-white',
+        'shr-border-grey-20',
+        'shr-text-grey',
+        'contrast-more:shr-border-high-contrast',
+      ],
     },
 
     {
