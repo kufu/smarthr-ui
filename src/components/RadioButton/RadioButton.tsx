@@ -16,7 +16,7 @@ const radioButton = tv({
   slots: {
     wrapper: 'smarthr-ui-RadioButton shr-inline-flex shr-items-baseline',
     label:
-      'smarthr-ui-RadioButton-label shr-ms-0.5 shr-cursor-pointer shr-text-base shr-leading-tight shr-text-black',
+      'smarthr-ui-RadioButton-label shr-ms-0.5 shr-cursor-pointer shr-text-base shr-leading-tight',
     innerWrapper:
       'shr-relative shr-inline-block shr-h-em shr-w-em shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
     box: [
@@ -45,6 +45,7 @@ const radioButton = tv({
         label: 'shr-cursor-not-allowed shr-text-disabled',
       },
       false: {
+        label: 'shr-text-black',
         box: 'peer-hover:shr-shadow-input-hover',
       },
     },

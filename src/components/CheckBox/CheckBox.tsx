@@ -54,13 +54,16 @@ const checkbox = tv({
     innerWrapper:
       'shr-relative shr-box-border shr-inline-block shr-h-[theme(fontSize.base)] shr-w-[theme(fontSize.base)] shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
     label: [
-      'smarthr-ui-CheckBox-label shr-ms-0.5 shr-cursor-pointer shr-text-base shr-leading-tight shr-text-black',
+      'smarthr-ui-CheckBox-label shr-ms-0.5 shr-cursor-pointer shr-text-base shr-leading-tight',
     ],
   },
   variants: {
     disabled: {
       true: {
         label: 'shr-pointer-events-none shr-cursor-not-allowed shr-text-disabled',
+      },
+      false: {
+        label: 'shr-text-black',
       },
     },
     error: {
