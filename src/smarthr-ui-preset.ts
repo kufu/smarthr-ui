@@ -133,6 +133,7 @@ export default {
       black: defaultColor.GREY_100,
     },
     textColor: ({ theme }) => ({
+      main: theme('colors.main'),
       black: theme('colors.black'),
       white: theme('colors.white'),
       'white-darken': theme('colors.white-darken'),
@@ -152,6 +153,9 @@ export default {
       'flash-message': `${defaultZIndex.FLASH_MESSAGE}`,
     },
     extend: {
+      minHeight: ({ theme }) => ({
+        ...theme('spacing'),
+      }),
       borderColor: ({ theme }) => ({
         default: theme('colors.grey.20'),
         disabled: theme('colors.grey.20 / 50%'),
