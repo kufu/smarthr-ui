@@ -291,6 +291,27 @@ export const Single: Story = () => {
       <dd>
         <SingleWithDefaultItem />
       </dd>
+      <dt>form要素でラップした場合、選択肢をキーボードで選択してもformをsubmitしない</dt>
+      <form
+        onSubmit={() => {
+          throw new Error('このsubmitは発火しません')
+        }}
+      >
+        <SingleComboBox
+          name="inForm"
+          items={items}
+          selectedItem={selectedItem}
+          width={400}
+          dropdownHelpMessage="キーボードで選択肢を選んでもformはsubmitされません"
+          onSelect={handleSelectItem}
+          onChangeSelected={(item) => {
+            action('onChangeSelected')(item)
+            setSelectedItem(item)
+          }}
+          data-test="single-combobox-no-form-submit"
+        />
+      </form>
+      <dd></dd>
     </List>
   )
 }
