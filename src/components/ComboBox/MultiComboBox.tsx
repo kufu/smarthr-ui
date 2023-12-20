@@ -125,6 +125,7 @@ function MultiComboBoxComponent<T>(
     onChangeSelected,
     onFocus,
     onBlur,
+    onKeyPress,
     decorators,
     inputAttributes,
     ...props
@@ -318,6 +319,17 @@ function MultiComboBoxComponent<T>(
     }
   }, [])
 
+  // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
+  // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
+  // submitイベントが発生し、formが送信される場合がある
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      e.key === 'Enter' && e.preventDefault()
+      onKeyPress && onKeyPress(e)
+    },
+    [onKeyPress],
+  )
+
   const contextValue = useMemo(
     () => ({
       listBoxClassNames: classNames.listBox,
@@ -340,6 +352,7 @@ function MultiComboBoxComponent<T>(
         className={`${className} ${classNames.wrapper}`}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
+        onKeyPress={handleKeyPress}
         role="group"
       >
         <InputArea themes={theme}>
@@ -372,7 +385,7 @@ function MultiComboBoxComponent<T>(
               name={name}
               value={inputValue}
               disabled={disabled}
-              required={required}
+              required={required && selectedItems.length === 0}
               ref={inputRef}
               themes={theme}
               onChange={handleChangeInput}

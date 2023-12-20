@@ -1,19 +1,17 @@
 import React, {
   AriaAttributes,
+  ComponentPropsWithoutRef,
   FC,
   PropsWithChildren,
   ReactNode,
-  ThHTMLAttributes,
   useMemo,
 } from 'react'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { useThClassNames } from './useClassNames'
-import { useReelShadow } from './useReelShadow'
+import { reelShadowStyle } from './useReelShadow'
 
 type sortTypes = keyof typeof SORT_DIRECTION_LABEL
 export type Props = PropsWithChildren<{
@@ -28,7 +26,7 @@ export type Props = PropsWithChildren<{
   /** `true` のとき、TableReel内で固定表示になる */
   fixed?: boolean
 }>
-type ElementProps = Omit<ThHTMLAttributes<HTMLTableCellElement>, keyof Props | 'onClick'>
+type ElementProps = Omit<ComponentPropsWithoutRef<'th'>, keyof Props | 'onClick'>
 
 const SORT_DIRECTION_LABEL = {
   asc: '昇順',
@@ -36,18 +34,53 @@ const SORT_DIRECTION_LABEL = {
   none: '並び替えなし',
 }
 
+const thWrapper = tv({
+  base: [
+    'smarthr-ui-Th',
+    'shr-text-sm',
+    'shr-font-bold',
+    'shr-py-0.75',
+    'shr-px-1',
+    'shr-text-left',
+    'shr-text-black',
+    'shr-leading-tight',
+    'shr-align-middle',
+    'aria-[sort]:shr-cursor-pointer',
+    'hover:aria-[sort]:shr-bg-head-darken',
+    '[&:has(:focus-visible)]:aria-[sort]:shr-focus-indicator',
+    '[&[aria-sort=none]_.smarthr-ui-Icon]:forced-colors:shr-fill-[GrayText]',
+    '[&[aria-sort=ascending]_.smarthr-ui-Icon:first-of-type]:forced-colors:shr-fill-[CanvasText]',
+    '[&[aria-sort=ascending]_.smarthr-ui-Icon:last-of-type]:forced-colors:shr-fill-[GrayText]',
+    '[&[aria-sort=descending]_.smarthr-ui-Icon:first-of-type]:forced-colors:shr-fill-[GrayText]',
+    '[&[aria-sort=descending]_.smarthr-ui-Icon:last-of-type]:forced-colors:shr-fill-[CanvasText]',
+  ],
+  variants: {
+    fixed: {
+      true: [
+        /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
+        'fixedElement',
+        '[&.fixed]:shr-sticky',
+        '[&.fixed]:shr-right-0',
+        '[&.fixed]:after:shr-opacity-100',
+      ],
+    },
+  },
+})
+
 export const Th: FC<Props & ElementProps> = ({
   children,
   sort,
   onSort,
   decorators,
   fixed = false,
-  className = '',
+  className,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useThClassNames()
-  const wrapperClass = [className, classNames.wrapper].filter((c) => !!c).join(' ')
+  const styles = useMemo(() => {
+    const thWrapperStyle = thWrapper({ className, fixed })
+    const reelShadowStyles = fixed ? reelShadowStyle({ showShadow: false, direction: 'right' }) : ''
+    return `${thWrapperStyle} ${reelShadowStyles}`.trim()
+  }, [className, fixed])
 
   const sortLabel = useMemo(
     () =>
@@ -70,15 +103,9 @@ export const Th: FC<Props & ElementProps> = ({
   )
 
   return (
-    <Wrapper
-      {...ariaSortProps}
-      {...props}
-      className={`${wrapperClass} ${fixed ? 'fixedElement' : ''}`}
-      themes={theme}
-      fixed={fixed}
-    >
+    <th {...ariaSortProps} {...props} className={styles}>
       {sort ? (
-        <SortButton themes={theme} onClick={onSort}>
+        <SortButton onClick={onSort}>
           {children}
           <SortIcon sort={sort} />
           <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
@@ -86,121 +113,76 @@ export const Th: FC<Props & ElementProps> = ({
       ) : (
         children
       )}
-    </Wrapper>
+    </th>
   )
 }
 
-const Wrapper = styled.th<{ themes: Theme; fixed: boolean }>`
-  ${({ themes: { fontSize, leading, color, shadow, space }, fixed }) => css`
-    font-size: ${fontSize.S};
-    font-weight: bold;
-    padding: ${space(0.75)} ${space(1)};
-    text-align: left;
-    color: ${color.TEXT_BLACK};
-    line-height: ${leading.TIGHT};
-    vertical-align: middle;
+const sortButton = tv({
+  base: [
+    'shr-cursor-pointer',
+    'shr-box-content',
+    'shr-inline-flex',
+    'shr-items-center',
+    'shr-gap-x-0.5',
+    'shr-justify-between',
+    '-shr-mx-1',
+    '-shr-my-0.75',
+    'shr-border-[unset]',
+    'shr-outline-[unset]',
+    'shr-bg-[unset]',
+    'shr-py-0.75',
+    'shr-px-1',
+    'shr-w-full',
+    'shr-font-inherit',
+    'shr-text-inherit',
+    'shr-leading-inherit',
+    '[font-weight:inherit]',
+  ],
+})
 
-    &[aria-sort] {
-      cursor: pointer;
+const SortButton: FC<ComponentPropsWithoutRef<'button'>> = ({ className, ...props }) => {
+  const sortButtonStyle = useMemo(() => sortButton({ className }), [className])
+  return <button {...props} className={sortButtonStyle} />
+}
 
-      &:hover {
-        background-color: ${color.hoverColor(color.HEAD)};
-      }
+const sortIcon = tv({
+  slots: {
+    wrapper: ['shr-inline-flex', 'shr-flex-col'],
+    upIcon: ['shr-text-base'],
+    downIcon: ['shr-text-base', '-shr-mt-em'],
+  },
+  variants: {
+    sort: {
+      asc: {
+        upIcon: ['shr-text-black'],
+        downIcon: ['shr-text-disabled'],
+      },
+      desc: {
+        upIcon: ['shr-text-disabled'],
+        downIcon: ['shr-text-black'],
+      },
+      none: {
+        upIcon: ['shr-text-disabled'],
+        downIcon: ['shr-text-disabled'],
+      },
+    },
+  },
+})
 
-      /* :focus-visible-within の代替 */
-      &:has(:focus-visible) {
-        ${shadow.focusIndicatorStyles}
-      }
+const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => {
+  const { wrapperStyle, upIconStyle, downIconStyle } = useMemo(() => {
+    const sortIconStyle = sortIcon()
+    return {
+      wrapperStyle: sortIconStyle.wrapper(),
+      upIconStyle: sortIconStyle.upIcon({ sort }),
+      downIconStyle: sortIconStyle.downIcon({ sort }),
     }
+  }, [sort])
 
-    /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
-    &.fixedElement {
-      ${useReelShadow({ showShadow: false, direction: 'right' })}
-    }
-
-    ${fixed &&
-    css`
-      &.fixed {
-        position: sticky;
-        right: 0;
-
-        &::after {
-          opacity: 1;
-        }
-      }
-    `}
-
-    @media (forced-colors: active) {
-      &[aria-sort='none'] {
-        .smarthr-ui-Icon {
-          fill: GrayText;
-        }
-      }
-
-      &[aria-sort='ascending'] {
-        .smarthr-ui-Icon {
-          &:first-child {
-            fill: CanvasText;
-          }
-          &:last-child {
-            fill: GrayText;
-          }
-        }
-      }
-
-      &[aria-sort='descending'] {
-        .smarthr-ui-Icon {
-          &:first-child {
-            fill: GrayText;
-          }
-          &:last-child {
-            fill: CanvasText;
-          }
-        }
-      }
-    }
-  `}
-`
-
-const SortButton = styled.button<{
-  themes: Theme
-}>`
-  ${({ themes: { fontSize, space } }) => css`
-    cursor: pointer;
-    box-sizing: content-box;
-    display: inline-flex;
-    align-items: center;
-    column-gap: ${space(0.5)};
-    justify-content: space-between;
-    margin: ${space(-0.75)} ${space(-1)};
-    border: unset;
-    outline: unset;
-    background-color: unset;
-    padding: ${space(0.75)} ${space(1)};
-    width: 100%;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    line-height: inherit;
-
-    .smarthr-ui-Icon {
-      font-size: ${fontSize.M};
-    }
-  `}
-`
-
-const SortIcon: FC<Pick<Props, 'sort'>> = ({ sort }) => (
-  <SortIconWraper>
-    <FaSortUpIcon color={sort === 'asc' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
-    <FaSortDownIcon color={sort === 'desc' ? 'TEXT_BLACK' : 'TEXT_DISABLED'} />
-  </SortIconWraper>
-)
-
-const SortIconWraper = styled.span`
-  display: inline-flex;
-  flex-direction: column;
-
-  .smarthr-ui-Icon + .smarthr-ui-Icon {
-    margin-top: -1em;
-  }
-`
+  return (
+    <span className={wrapperStyle}>
+      <FaSortUpIcon className={upIconStyle} />
+      <FaSortDownIcon className={downIconStyle} />
+    </span>
+  )
+}

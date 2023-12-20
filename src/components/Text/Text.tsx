@@ -1,35 +1,7 @@
 import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
-export const MAPPER_SIZE_AND_WEIGHT: { [key in StyleTypes]: TextProps } = {
-  screenTitle: {
-    size: 'XL',
-  },
-  sectionTitle: {
-    size: 'L',
-  },
-  blockTitle: {
-    size: 'M',
-    weight: 'bold',
-  },
-  subBlockTitle: {
-    size: 'M',
-    weight: 'bold',
-    color: 'TEXT_GREY',
-  },
-  subSubBlockTitle: {
-    size: 'S',
-    weight: 'bold',
-    color: 'TEXT_GREY',
-  },
-}
-
-type StyleTypes =
-  | 'screenTitle'
-  | 'sectionTitle'
-  | 'blockTitle'
-  | 'subBlockTitle'
-  | 'subSubBlockTitle'
+import { HeadingTypes, MAPPER_SIZE_AND_WEIGHT } from '../Heading/Heading'
 
 const text = tv({
   variants: {
@@ -43,6 +15,7 @@ const text = tv({
       XXL: 'shr-text-2xl',
     },
     weight: {
+      normal: 'shr-font-normal',
       bold: 'shr-font-bold',
     },
     italic: {
@@ -78,7 +51,8 @@ export type TextProps = VariantProps<typeof text> & {
   as?: string | React.ComponentType<any> | undefined
   /** 強調するかどうかの真偽値。指定すると em 要素になる */
   emphasis?: boolean
-  styleType?: StyleTypes
+  /** 見た目の種類。Heading の種類と同じ */
+  styleType?: HeadingTypes
 }
 
 export const Text: React.FC<PropsWithChildren<TextProps & ComponentProps<'span'>>> = ({

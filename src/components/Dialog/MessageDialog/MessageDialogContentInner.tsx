@@ -82,7 +82,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
 
 const TitleArea = styled(Stack).attrs(() => ({
   gap: 0.25,
-  as: 'span',
+  forwardedAs: 'span',
 }))<{ themes: Theme }>(
   ({ themes: { border, spacing } }) => css`
     margin-block: unset;

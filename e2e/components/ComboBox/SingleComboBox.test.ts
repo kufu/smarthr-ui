@@ -145,3 +145,15 @@ test('キーボードで操作できること', async (t) => {
     .expect(comboboxInput.value)
     .eql('option 5')
 })
+
+test('キーボードで操作しても親要素のformがsubmitされないこと', async (t) => {
+  const combobox = Selector('[data-test=single-combobox-no-form-submit]')
+  const comboboxInput = combobox.find('.smarthr-ui-Input-input')
+
+  await t
+    .pressKey('tab')
+    .pressKey('down')
+    .pressKey('enter')
+    .expect(comboboxInput.value)
+    .eql('option 1')
+})

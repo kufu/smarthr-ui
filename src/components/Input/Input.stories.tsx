@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -20,7 +20,7 @@ export default {
   },
 }
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <List>
     <li>
       <FormControl title="text">
@@ -103,7 +103,7 @@ export const All: Story = () => (
 )
 All.storyName = 'all'
 
-export const Currency: Story = () => {
+export const Currency: StoryFn = () => {
   const [value, setValue] = React.useState('1234567890')
   return (
     <List>
@@ -128,7 +128,7 @@ export const Currency: Story = () => {
 }
 Currency.storyName = 'CurrencyInput'
 
-const List = styled(Stack).attrs({ as: 'ul' })``
+const List = styled(Stack).attrs({ forwardedAs: 'ul' })``
 const StyledInput = styled(Input)`
   width: 50%;
 `

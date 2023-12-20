@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react'
+import React, { forwardRef, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 import type { Gap, SeparateGap } from '../../../types'
-import type { ComponentProps, PropsWithChildren } from 'react'
+import type { ComponentPropsWithRef, PropsWithChildren } from 'react'
 
 const cluster = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',
@@ -117,23 +117,25 @@ type Props = PropsWithChildren<
     gap?: Gap | SeparateGap
   }
 > &
-  ComponentProps<'div'>
+  ComponentPropsWithRef<'div'>
 
-export const Cluster: React.FC<Props> = ({ as: Component = 'div', gap = 0.5, ...props }) => {
-  const rowGap = gap instanceof Object ? gap.row : gap
-  const columnGap = gap instanceof Object ? gap.column : gap
+export const Cluster = forwardRef<HTMLDivElement, Props>(
+  ({ as: Component = 'div', gap = 0.5, ...props }, ref) => {
+    const rowGap = gap instanceof Object ? gap.row : gap
+    const columnGap = gap instanceof Object ? gap.column : gap
 
-  const { inline = false, align, justify, className, ...others } = props
-  const styles = useMemo(
-    () => cluster({ inline, rowGap, columnGap, align, justify, className }),
-    [inline, rowGap, columnGap, align, justify, className],
-  )
+    const { inline = false, align, justify, className, ...others } = props
+    const styles = useMemo(
+      () => cluster({ inline, rowGap, columnGap, align, justify, className }),
+      [inline, rowGap, columnGap, align, justify, className],
+    )
 
-  const Wrapper = useSectionWrapper(Component)
+    const Wrapper = useSectionWrapper(Component)
 
-  return (
-    <Wrapper>
-      <Component {...others} className={styles} />
-    </Wrapper>
-  )
-}
+    return (
+      <Wrapper>
+        <Component {...others} ref={ref} className={styles} />
+      </Wrapper>
+    )
+  },
+)
