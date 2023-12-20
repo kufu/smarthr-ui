@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [40.1.1](https://github.com/kufu/smarthr-ui/compare/v40.1.0...v40.1.1) (2023-12-20)
+
+
+### Bug Fixes
+
+* form内にcomboboxが存在する場合、アイテムの選択をEnterキーで行うとformがsubmitされてしまう問題に対応する ([#4127](https://github.com/kufu/smarthr-ui/issues/4127)) ([64ba364](https://github.com/kufu/smarthr-ui/commit/64ba3647928ab6439cbcf6bc323b9d70cb940bf4))
+* Heading のスタイリングが reset css に依存していたので修正 ([#4118](https://github.com/kufu/smarthr-ui/issues/4118)) ([c6487c0](https://github.com/kufu/smarthr-ui/commit/c6487c0a8e13574d9535ea300c33bd40a32e9a00))
+* MultiComboBoxでアイテムを選択済みであるにも関わらず、requiredがhtml validationに引っかかってしまう問題を修正する ([#4115](https://github.com/kufu/smarthr-ui/issues/4115)) ([b4c2603](https://github.com/kufu/smarthr-ui/commit/b4c26035761f944d9c1b702fab000b1c0efe8ba5))
+* RadioButtonPanel の装飾を見直し ([#4121](https://github.com/kufu/smarthr-ui/issues/4121)) ([d73b281](https://github.com/kufu/smarthr-ui/commit/d73b2813455c549a8c375eca6281ce7395a0be26))
+
 ## [40.1.0](https://github.com/kufu/smarthr-ui/compare/v40.0.2...v40.1.0) (2023-12-13)
 
 
