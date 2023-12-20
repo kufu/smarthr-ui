@@ -1,6 +1,8 @@
 import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
+import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+
 import type { Gap } from '../../../types'
 
 type Props = VariantProps<typeof reel> &
@@ -91,5 +93,12 @@ export const Reel: React.FC<Props> = ({
   ...props
 }) => {
   const styles = useMemo(() => reel({ gap, padding, className }), [className, gap, padding])
-  return <Component {...props} className={styles} />
+
+  const Wrapper = useSectionWrapper(Component)
+
+  return (
+    <Wrapper>
+      <Component {...props} className={styles} />
+    </Wrapper>
+  )
 }
