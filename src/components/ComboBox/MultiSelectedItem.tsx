@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useRef, useState } from 'react'
+import React, { RefObject, useCallback, useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
@@ -35,6 +35,10 @@ export function MultiSelectedItem<T>({
   const [needsTooltip, setNeedsTooltip] = useState(false)
   const { deletable = true } = item
 
+  const actualOnDelete = useCallback(() => {
+    onDelete && onDelete(item)
+  }, [item, onDelete])
+
   useEffect(() => {
     const elem = labelRef.current
     if (!elem || !enableEllipsis) {
@@ -65,12 +69,14 @@ export function MultiSelectedItem<T>({
             themes={theme}
             className={classNames.deleteButton}
             disabled={disabled}
-            onClick={() => {
-              onDelete && onDelete(item)
-            }}
+            onClick={actualOnDelete}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.stopPropagation()
+
+                // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
+                // このタイミングで明示的に削除処理を実行する
+                actualOnDelete()
               }
             }}
             ref={buttonRef}

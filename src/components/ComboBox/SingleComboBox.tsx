@@ -127,6 +127,7 @@ function SingleComboBoxComponent<T>(
     onChangeSelected,
     onFocus,
     onBlur,
+    onKeyPress,
     decorators,
     inputAttributes,
     ...props
@@ -293,6 +294,17 @@ function SingleComboBoxComponent<T>(
     [isComposing, isExpanded, setIsExpanded, unfocus, handleListBoxKeyDown],
   )
 
+  // HINT: form内にcomboboxを設置 & 検索inputにfocusした状態で
+  // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
+  // submitイベントが発生し、formが送信される場合がある
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      e.key === 'Enter' && e.preventDefault()
+      onKeyPress && onKeyPress(e)
+    },
+    [onKeyPress],
+  )
+
   const caretIconColor = useMemo(() => {
     if (isFocused) return theme.color.TEXT_BLACK
     if (disabled) return theme.color.TEXT_DISABLED
@@ -346,6 +358,7 @@ function SingleComboBoxComponent<T>(
         aria-controls={listBoxId}
         aria-expanded={isFocused}
         aria-invalid={error || undefined}
+        onKeyPress={handleKeyPress}
       >
         <StyledInput
           {...inputAttributes}

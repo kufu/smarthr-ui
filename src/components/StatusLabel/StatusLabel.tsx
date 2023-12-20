@@ -1,34 +1,125 @@
-import React, { FC, HTMLAttributes, ReactNode, useMemo } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
+import { type VariantProps, tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaExclamationCircleIcon, FaExclamationTriangleIcon } from '../Icon'
 
-import { useClassNames } from './useClassNames'
+const statusLabel = tv({
+  base: [
+    'smarthr-ui-StatusLabel',
+    'shr-box-content',
+    'shr-font-bold',
+    'shr-inline-flex',
+    'shr-items-center',
+    'shr-justify-center',
+    'shr-gap-0.25',
+    'shr-px-0.5',
+    'shr-py-0.25',
+    'shr-whitespace-nowrap',
+    'shr-text-sm',
+    // ラベルが天地中央に揃わないため暫定対応
+    'shr-leading-[0]',
+    'shr-min-w-[3.5em]',
+    'shr-min-h-em',
+    'shr-border',
+    'shr-border-solid',
+  ],
+  variants: {
+    type: {
+      grey: [],
+      blue: [],
+      green: [],
+      red: [],
+      warning: ['shr-bg-warning-yellow', 'shr-text-black'],
+      error: ['shr-bg-danger', 'shr-border-danger', 'shr-text-white'],
+    },
+    bold: {
+      true: [],
+    },
+  },
+  compoundVariants: [
+    {
+      type: ['blue', 'green', 'red', 'warning'],
+      bold: false,
+      className: ['shr-border-current'],
+    },
+    {
+      type: 'grey',
+      bold: false,
+      class: [
+        'shr-bg-white',
+        'shr-border-grey-20',
+        'shr-text-grey',
+        'contrast-more:shr-border-high-contrast',
+      ],
+    },
+    {
+      type: 'blue',
+      bold: false,
+      class: ['shr-text-main'],
+    },
+    {
+      type: 'green',
+      bold: false,
+      /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
+       * https://smarthr.design/basics/colors/#h4-1 */
+      class: ['shr-text-[#0f7f85]'],
+    },
+    {
+      type: 'red',
+      bold: false,
+      class: ['shr-text-danger'],
+    },
+    {
+      type: 'warning',
+      bold: false,
+      class: ['shr-border-warning-yellow'],
+    },
+    {
+      type: ['grey', 'blue', 'green', 'red', 'error'],
+      bold: true,
+      class: ['shr-text-white'],
+    },
+    {
+      type: 'grey',
+      bold: true,
+      class: ['shr-bg-[theme(colors.grey.65)]', 'shr-border-grey-65'],
+    },
 
-type Color = 'grey' | 'blue' | 'green' | 'red'
-type State = 'warning' | 'error'
-type Props = {
-  /** ラベルが表す状態の種類 */
-  type?: Color | State
-  /** 強調するかどうか */
-  bold?: boolean
-  /** ラベル */
-  children: ReactNode
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-}
-type ElementProps = Omit<HTMLAttributes<HTMLSpanElement>, keyof Props>
+    {
+      type: 'blue',
+      bold: true,
+      class: ['shr-bg-main', 'shr-border-main'],
+    },
+    {
+      type: 'green',
+      bold: true,
+      /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
+       * https://smarthr.design/basics/colors/#h4-1 */
+      class: ['shr-border-[#0f7f85]', 'shr-bg-[#0f7f85]'],
+    },
+    {
+      type: 'red',
+      bold: true,
+      class: ['shr-bg-danger', 'shr-border-danger'],
+    },
+    {
+      type: 'warning',
+      bold: true,
+      class: ['shr-border-current', 'shr-text-black'],
+    },
+  ],
+})
 
-export const StatusLabel: FC<Props & ElementProps> = ({
+type Props = VariantProps<typeof statusLabel>
+type ElementProps = Omit<ComponentPropsWithoutRef<'span'>, keyof Props>
+
+export const StatusLabel: FC<PropsWithChildren<Props & ElementProps>> = ({
   type = 'grey',
   bold = false,
-  className = '',
+  className,
   children,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
   const Icon = useMemo(() => {
     switch (true) {
       case type === 'warning' && bold: {
@@ -43,93 +134,20 @@ export const StatusLabel: FC<Props & ElementProps> = ({
     }
   }, [type, bold])
 
+  const wrapperStyle = useMemo(
+    () =>
+      statusLabel({
+        className,
+        type,
+        bold,
+      }),
+    [className, type, bold],
+  )
+
   return (
-    <Wrapper
-      {...props}
-      themes={theme}
-      className={`${type}${bold ? ' bold' : ''} ${className} ${classNames.wrapper}`}
-    >
+    <span {...props} className={wrapperStyle}>
       <Icon />
       {children}
-    </Wrapper>
+    </span>
   )
 }
-
-const Wrapper = styled.span<{ themes: Theme }>`
-  ${({ themes: { border, color, fontSize, spacingByChar } }) => css`
-    box-sizing: content-box;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: ${spacingByChar(0.25)};
-    border: ${border.lineWidth} solid transparent;
-    background-color: ${color.WHITE};
-    padding: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
-    white-space: nowrap;
-    font-size: ${fontSize.S};
-    font-weight: bold;
-
-    /** ラベルが天地中央に揃わないため暫定対応 */
-    line-height: 0;
-    min-width: 3.5em;
-    min-height: 1em;
-
-    &.grey {
-      border-color: ${color.BORDER};
-      color: ${color.TEXT_GREY};
-
-      @media (prefers-contrast: more) {
-        & {
-          border: ${border.highContrast};
-        }
-      }
-
-      &.bold {
-        border-color: ${color.TEXT_GREY};
-        background-color: ${color.TEXT_GREY};
-        color: ${color.TEXT_WHITE};
-      }
-    }
-
-    &.blue {
-      border-color: ${color.MAIN};
-      color: ${color.MAIN};
-
-      &.bold {
-        background-color: ${color.MAIN};
-        color: ${color.TEXT_WHITE};
-      }
-    }
-
-    &.green {
-      /* SmartHR 基本色の Aqua04。StatusLabel 以外では使いません。
-         * https://smarthr.design/basics/colors/#h4-1 */
-      border-color: #0f7f85;
-      color: #0f7f85;
-
-      &.bold {
-        background-color: #0f7f85;
-        color: ${color.TEXT_WHITE};
-      }
-    }
-
-    &.red {
-      border-color: ${color.DANGER};
-      color: ${color.DANGER};
-    }
-    &.red.bold,
-    &.error {
-      background-color: ${color.DANGER};
-      color: ${color.TEXT_WHITE};
-    }
-
-    &.warning {
-      background-color: ${color.WARNING_YELLOW};
-      color: ${color.TEXT_BLACK};
-
-      &.bold {
-        border-color: ${color.TEXT_BLACK};
-      }
-    }
-  `}
-`
