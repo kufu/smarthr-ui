@@ -1,100 +1,82 @@
-import React, {
-  ChangeEventHandler,
-  ComponentPropsWithRef,
-  PropsWithChildren,
-  forwardRef,
-  useCallback,
-  useMemo,
-} from 'react'
-import { tv } from 'tailwind-variants'
+import React, { ReactNode, forwardRef } from 'react'
+import styled, { css } from 'styled-components'
 
 import { useId } from '../../hooks/useId'
+import { Theme, useTheme } from '../../hooks/useTheme'
 
-type Props = PropsWithChildren<ComponentPropsWithRef<'input'>>
+import { RadioButtonInput, Props as RadioButtonInputProps } from './RadioButtonInput'
+import { useClassNames } from './useClassNames'
 
-const radioButton = tv({
-  slots: {
-    wrapper: 'smarthr-ui-RadioButton shr-inline-flex shr-items-baseline',
-    label:
-      'smarthr-ui-RadioButton-label shr-ms-0.5 shr-cursor-pointer shr-text-base shr-leading-tight',
-    innerWrapper:
-      'shr-relative shr-inline-block shr-h-em shr-w-em shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
-    box: [
-      'shr-pointer-events-none',
-      'shr-box-border shr-block shr-h-full shr-w-full shr-rounded-full shr-border shr-border-solid shr-border-default shr-bg-white',
-      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
-      'forced-colors:shr-hidden',
-      'contrast-more:shr-border-high-contrast',
-      'peer-checked:shr-border-main peer-checked:shr-bg-main contrast-more:peer-checked:shr-border-high-contrast',
-      'peer-checked:before:shr-pointer-events-none peer-checked:before:shr-absolute peer-checked:before:shr-left-1/2 peer-checked:before:shr-top-1/2 peer-checked:before:shr-h-[0.375em] peer-checked:before:shr-w-[0.375em] peer-checked:before:-shr-translate-x-1/2 peer-checked:before:-shr-translate-y-1/2 peer-checked:before:shr-rounded-full peer-checked:before:shr-bg-white peer-checked:before:shr-content-[""]',
-      'peer-disabled:shr-cursor-not-allowed peer-disabled:shr-border-default/50 peer-disabled:shr-bg-white-darken',
-      'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border peer-disabled:peer-checked:before:shr-bg-white-darken',
-      'peer-focus-visible:shr-focus-indicator',
-    ],
-    input: [
-      'smarthr-ui-RadioButton-radioButton shr-peer',
-      'shr-absolute shr-left-0 shr-top-0 shr-m-0 shr-h-full shr-w-full shr-cursor-pointer shr-opacity-0',
-      'disabled:shr-pointer-events-none',
-      /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
-      'forced-colors:shr-static forced-colors:shr-opacity-100',
-    ],
-  },
-  variants: {
-    disabled: {
-      true: {
-        label: 'shr-cursor-not-allowed shr-text-disabled',
-      },
-      false: {
-        label: 'shr-text-black',
-        box: 'peer-hover:shr-shadow-input-hover',
-      },
-    },
-  },
-})
+type Props = {
+  /** ラベルの行高 */
+  lineHeight?: number
+  /** ラジオボタンのラベル */
+  children?: ReactNode
+} & RadioButtonInputProps
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ onChange, children, className, ...props }, ref) => {
-    const { wrapperStyle, innerWrapperStyle, boxStyle, inputStyle, labelStyle } = useMemo(() => {
-      const { wrapper, innerWrapper, box, input, label } = radioButton()
-      return {
-        wrapperStyle: wrapper({ className }),
-        innerWrapperStyle: innerWrapper(),
-        boxStyle: box({ disabled: !!props.disabled }),
-        inputStyle: input(),
-        labelStyle: label({ disabled: props.disabled }),
-      }
-    }, [className, props.disabled])
-
-    const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
-      (e) => {
-        if (onChange) onChange(e)
-      },
-      [onChange],
-    )
-
+  ({ lineHeight = 1.5, children, className = '', ...props }, ref) => {
+    const theme = useTheme()
+    const classNames = useClassNames()
     const radioButtonId = useId(props.id)
 
-    return (
-      <span className={wrapperStyle}>
-        <span className={innerWrapperStyle}>
+    if (!children) {
+      return (
+        <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
           {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
-          <input
-            {...props}
-            type="radio"
-            id={radioButtonId}
-            onChange={handleChange}
-            className={inputStyle}
-            ref={ref}
-          />
-          <span className={boxStyle} />
-        </span>
+          <RadioButtonInput {...props} ref={ref} className={classNames.radioButton} />
+        </Wrapper>
+      )
+    }
 
-        {children && (
-          <label htmlFor={radioButtonId} className={labelStyle}>
-            {children}
-          </label>
-        )}
-      </span>
+    return (
+      <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
+        <ButtonLayout $height={`${lineHeight}em`}>
+          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+          <RadioButtonInput {...props} ref={ref} id={radioButtonId} />
+        </ButtonLayout>
+
+        <Label
+          htmlFor={radioButtonId}
+          className={`${props.disabled ? 'disabled' : ''} ${classNames.label}`}
+          $lineHeight={lineHeight}
+          themes={theme}
+        >
+          {children}
+        </Label>
+      </Wrapper>
     )
   },
 )
+
+const Wrapper = styled.div<{ themes: Theme }>`
+  ${({ themes: { fontSize } }) => css`
+    display: inline-flex;
+    align-items: start;
+    font-size: ${fontSize.M};
+  `}
+`
+const ButtonLayout = styled.div<{ $height: string }>`
+  ${({ $height }) => css`
+    display: flex;
+    align-items: center;
+    height: ${$height};
+  `}
+`
+const Label = styled.label<{ themes: Theme; $lineHeight: number }>`
+  ${({ themes, $lineHeight }) => {
+    const { spacingByChar, color } = themes
+
+    return css`
+      margin-left: ${spacingByChar(0.5)};
+      color: ${color.TEXT_BLACK};
+      line-height: ${$lineHeight};
+      cursor: pointer;
+
+      &.disabled {
+        color: ${color.TEXT_DISABLED};
+        cursor: not-allowed;
+      }
+    `
+  }}
+`
