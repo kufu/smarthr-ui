@@ -48,7 +48,7 @@ const bgColors = {
 const wrapper = tv({
   base: [
     'smarthr-ui-Input',
-    'shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-border shr-border-solid shr-border-default shr-px-0.5',
+    'shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-border shr-border-solid shr-border-default shr-bg-white shr-px-0.5',
     'contrast-more:shr-border-high-contrast',
     'focus-within:shr-focus-indicator',
   ],
