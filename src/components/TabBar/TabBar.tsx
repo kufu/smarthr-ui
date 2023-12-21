@@ -1,10 +1,33 @@
-import React, { HTMLAttributes, ReactNode, VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { HTMLAttributes, ReactNode, VFC, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Reel } from '../Layout'
 
-import { useClassNames } from './useClassNames'
+const tabBar = tv({
+  slots: {
+    wrapper: ['smarthr-ui-TabBar'],
+    inner: ['shr-grow', 'shr-m-0.25'],
+  },
+  variants: {
+    bordered: {
+      true: {
+        inner: [
+          'shr-relative',
+          'before:shr-absolute',
+          'before:shr-inset-x-0',
+          'before:shr-bottom-0',
+          'before:shr-border-b',
+          'before:shr-border-t-0',
+          'before:shr-border-l-0',
+          'before:shr-border-r-0',
+          'before:shr-border-solid',
+          'before:shr-border-default',
+          'before:shr-content-[""]',
+        ],
+      },
+    },
+  },
+})
 
 type Props = {
   /** タブバーの内容。通常は TabItem を並べる。 */
@@ -17,44 +40,22 @@ type Props = {
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'role'>
 
 export const TabBar: VFC<Props & ElementProps> = ({
-  className = '',
+  className,
   bordered = true,
   children,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames().tabBar
-  const wrapperClass = `${className} ${classNames.wrapper}`
+  const { wrapperStyle, innerStyle } = useMemo(() => {
+    const { wrapper, inner } = tabBar()
+    return {
+      wrapperStyle: wrapper({ className }),
+      innerStyle: inner({ bordered }),
+    }
+  }, [bordered, className])
 
   return (
-    <Reel {...props} role="tablist" className={wrapperClass}>
-      <Inner className={bordered ? 'bordered' : undefined} themes={theme}>
-        {children}
-      </Inner>
+    <Reel {...props} role="tablist" className={wrapperStyle}>
+      <div className={innerStyle}>{children}</div>
     </Reel>
   )
 }
-
-const Inner = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { border, shadow } = themes
-
-    return css`
-      flex-grow: 1;
-      margin: ${shadow.OUTLINE_MARGIN};
-
-      &.bordered {
-        position: relative;
-
-        ::before {
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          border-bottom: ${border.shorthand};
-          content: '';
-        }
-      }
-    `
-  }}
-`
