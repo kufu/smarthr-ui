@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, VFC, useMemo } from 'react'
+import React, { FC, HTMLAttributes, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Reel } from '../Layout'
@@ -39,7 +39,7 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'role'>
 
-export const TabBar: VFC<Props & ElementProps> = ({
+export const TabBar: FC<Props & ElementProps> = ({
   className,
   bordered = true,
   children,

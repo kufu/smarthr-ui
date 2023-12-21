@@ -59,7 +59,7 @@ type ElementProps = Omit<
   keyof Props | 'role' | 'aria-selected' | 'type'
 >
 
-export const TabItem: VFC<Props & ElementProps> = ({
+export const TabItem: FC<Props & ElementProps> = ({
   id,
   children,
   onClick,
