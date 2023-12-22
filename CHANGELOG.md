@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [40.1.2](https://github.com/kufu/smarthr-ui/compare/v40.1.1...v40.1.2) (2023-12-22)
+
+
+### Bug Fixes
+
+* InputとStatusLabelコンポーネントに白背景を追加 ([#4138](https://github.com/kufu/smarthr-ui/issues/4138)) ([adc78fe](https://github.com/kufu/smarthr-ui/commit/adc78feb5e35c363c94ab14776c5c310944f28d4))
+
 ### [40.1.1](https://github.com/kufu/smarthr-ui/compare/v40.1.0...v40.1.1) (2023-12-20)
 
 
