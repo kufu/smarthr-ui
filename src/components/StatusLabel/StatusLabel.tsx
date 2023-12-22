@@ -43,14 +43,14 @@ const statusLabel = tv({
       className: ['shr-border-current'],
     },
     {
+      type: ['grey', 'blue', 'green', 'red'],
+      bold: false,
+      className: ['shr-bg-white'],
+    },
+    {
       type: 'grey',
       bold: false,
-      class: [
-        'shr-bg-white',
-        'shr-border-grey-20',
-        'shr-text-grey',
-        'contrast-more:shr-border-high-contrast',
-      ],
+      class: ['shr-border-grey-20', 'shr-text-grey', 'contrast-more:shr-border-high-contrast'],
     },
     {
       type: 'blue',
