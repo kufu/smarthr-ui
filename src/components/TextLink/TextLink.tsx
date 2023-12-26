@@ -15,7 +15,8 @@ type Props = {
 
 const textLink = tv({
   slots: {
-    anchor: 'shr-text-link shr-no-underline shr-shadow-underline [&:not([href])]:shr-shadow-none',
+    anchor:
+      'shr-text-link shr-no-underline shr-shadow-underline forced-colors:shr-underline [&:not([href])]:shr-shadow-none [&:not([href])]:forced-colors:shr-no-underline',
     prefixWrapper: 'shr-me-0.25 shr-align-middle',
     suffixWrapper: 'shr-ms-0.25 shr-align-middle',
   },
