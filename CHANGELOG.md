@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [40.1.3](https://github.com/kufu/smarthr-ui/compare/v40.1.2...v40.1.3) (2023-12-26)
+
+
+### Bug Fixes
+
+* DatePicker の inputSuffixWrapper の border が reset css に依存していたので修正 ([#4143](https://github.com/kufu/smarthr-ui/issues/4143)) ([36b36b5](https://github.com/kufu/smarthr-ui/commit/36b36b502f3f9940715cd57f00d2205a858a4ea9))
+* 強制カラーモード時、TextLinkにunderlineを表示する ([#4144](https://github.com/kufu/smarthr-ui/issues/4144)) ([fcf2190](https://github.com/kufu/smarthr-ui/commit/fcf219036c97a7e014f0600a7d8cc5559cb4c59e))
+
 ### [40.1.2](https://github.com/kufu/smarthr-ui/compare/v40.1.1...v40.1.2) (2023-12-22)
 
 
