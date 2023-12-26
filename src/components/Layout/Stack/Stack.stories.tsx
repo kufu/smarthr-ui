@@ -4,8 +4,7 @@ import styled from 'styled-components'
 
 import { Base, BaseColumn } from '../../Base'
 import { Heading } from '../../Heading'
-import { SectioningFragment } from '../../SectioningContent'
-import { LineUp } from '../LineUp'
+import { Cluster } from '../Cluster'
 
 import { Stack } from '.'
 
@@ -18,7 +17,7 @@ export default {
 }
 
 export const All: StoryFn = () => (
-  <LineUp gap={2}>
+  <Cluster gap={2}>
     <Content>
       <Stack>
         <Base padding={1.5}>
@@ -31,14 +30,14 @@ export const All: StoryFn = () => (
           <Stack>
             <p>Stack で囲んだ直下の子孫要素に対してのみ、影響を与えます。</p>
 
-            <SectioningFragment>
-              <Stack gap={0.5} as="section">
-                <Heading type="blockTitle">入れ子にして別の値を指定できます。</Heading>
-                <BaseColumn>
-                  <p>同じ要素である必要もありません。</p>
-                </BaseColumn>
-              </Stack>
-            </SectioningFragment>
+            <Stack gap={0.5} as="section">
+              {/* TODO: eslint を修正したら外す */}
+              {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+              <Heading type="blockTitle">入れ子にして別の値を指定できます。</Heading>
+              <BaseColumn>
+                <p>同じ要素である必要もありません。</p>
+              </BaseColumn>
+            </Stack>
           </Stack>
         </Base>
       </Stack>
@@ -60,7 +59,7 @@ export const All: StoryFn = () => (
         <p>この場合、Stack の高さは対峙する要素より高さが必要です。</p>
       </Base>
     </SideAreaStack>
-  </LineUp>
+  </Cluster>
 )
 
 const SideAreaStack = styled(Stack)`
