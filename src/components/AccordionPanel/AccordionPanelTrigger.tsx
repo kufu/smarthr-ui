@@ -29,7 +29,7 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'button'>, keyof Props>
 
 const accordionPanelTrigger = tv({
   slots: {
-    title: 'shr-grow',
+    title: 'shr-flex-1',
     button: [
       'smarthr-ui-AccordionPanel-trigger',
       'shr-group',
