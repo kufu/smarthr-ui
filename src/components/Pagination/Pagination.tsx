@@ -108,7 +108,10 @@ export const Pagination: React.FC<Props & ElementProps> = ({
   withoutNumbers = false,
   ...props
 }) => {
-  const { wrapper, list, listItem } = pagination({ withoutNumbers })
+  const { wrapper, list, listItem } = useMemo(
+    () => pagination({ withoutNumbers }),
+    [withoutNumbers],
+  )
 
   const wrapperStyle = useMemo(() => wrapper({ className }), [className])
 
