@@ -11,19 +11,24 @@ import { Th as shrTh } from './Th'
 import type { DecoratorsType } from '../../types'
 
 type Props = {
-  decorators?: DecoratorsType<'checkAllInvisibleLabel'>
+  decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {
+    checkColumnName?: (text: string) => string
+  }
 }
 
 const CHECK_ALL_INVISIBLE_LABEL = 'すべての行を選択'
+const CHECK_COLUMN_NAME = '選択'
 
 export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
   ({ decorators, className, ...others }, ref) => {
     const theme = useTheme()
     const checkAllInvisibleLabel =
       decorators?.checkAllInvisibleLabel?.(CHECK_ALL_INVISIBLE_LABEL) || CHECK_ALL_INVISIBLE_LABEL
+    const checkColumnName = decorators?.checkColumnName?.(CHECK_COLUMN_NAME) || CHECK_COLUMN_NAME
+
     return (
       // Th に必要な属性やイベントは不要
-      <Th themes={theme} className={className}>
+      <Th themes={theme} className={className} aria-label={checkColumnName}>
         <Label>
           <Balloon horizontal="left" vertical="middle">
             <p className="shr-p-0.5">{checkAllInvisibleLabel}</p>
