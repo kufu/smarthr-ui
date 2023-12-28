@@ -16,10 +16,8 @@ const pagination = tv({
   },
   variants: {
     withoutNumbers: {
-      true: {
-        list: ['withoutNumbers'],
-        listItem: ['first:shr-mr-0.5', 'last:shr-ml-0.5'],
-      },
+      true: {},
+      false: {},
     },
     current: {
       true: {
@@ -29,56 +27,59 @@ const pagination = tv({
         listItem: ['smarthr-ui-Pagination-page'],
       },
     },
-    first: {
-      true: {
+    type: {
+      first: {
         listItem: ['smarthr-ui-Pagination-first'],
       },
-    },
-    prev: {
-      true: {
+      prev: {
         listItem: ['smarthr-ui-Pagination-prev'],
       },
-    },
-    next: {
-      true: {
+      next: {
         listItem: ['smarthr-ui-Pagination-next'],
       },
-    },
-    last: {
-      true: {
+      last: {
         listItem: ['smarthr-ui-Pagination-last'],
       },
     },
   },
   compoundVariants: [
     {
-      prev: true,
+      type: 'prev',
       withoutNumbers: false,
       class: {
         listItem: ['shr-mr-0.5'],
       },
     },
     {
-      prev: true,
-      withoutNumbers: true,
-      class: {
-        listItem: ['shr-mr-0'],
-      },
-    },
-    {
-      next: true,
+      type: 'next',
       withoutNumbers: false,
       class: {
         listItem: ['shr-ml-0.5'],
       },
     },
     {
-      next: true,
+      type: 'first',
+      withoutNumbers: true,
+      class: {
+        listItem: ['shr-mr-0.5'],
+      },
+    },
+    {
+      type: 'prev',
+      withoutNumbers: true,
+      class: {
+        listItem: ['shr-mr-0'],
+      },
+    },
+    {
+      type: 'next',
       withoutNumbers: true,
       class: {
         listItem: ['shr-ml-0'],
       },
     },
+
+    { type: 'last', withoutNumbers: true, class: { listItem: ['shr-ml-0.5'] } },
   ],
 })
 
@@ -117,7 +118,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
 
   const prevPage = (
     <>
-      <li className={listItem({ first: true })}>
+      <li className={listItem({ type: 'first' })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -126,7 +127,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
           double
         />
       </li>
-      <li className={listItem({ prev: true })}>
+      <li className={listItem({ type: 'prev' })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -150,7 +151,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
 
   const nextPage = (
     <>
-      <li className={listItem({ next: true })}>
+      <li className={listItem({ type: 'next' })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
@@ -158,7 +159,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
           disabled={current === total}
         />
       </li>
-      <li className={listItem({ last: true })}>
+      <li className={listItem({ type: 'last' })}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
