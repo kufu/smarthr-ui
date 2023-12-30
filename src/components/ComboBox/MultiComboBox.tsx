@@ -341,7 +341,6 @@ function MultiComboBoxComponent<T>(
 
   return (
     <ComboBoxContext.Provider value={contextValue}>
-      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <Container
         {...props}
         themes={theme}

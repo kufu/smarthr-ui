@@ -11,6 +11,8 @@ type Props = ComponentProps<typeof RadioButton> & {
   as?: string | React.ComponentType<any>
 }
 
+const MEANLESS_TAG_NAMES = ['div', 'span']
+
 export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...props }) => {
   const theme = useTheme()
   const classNames = useClassNames(className)
@@ -22,8 +24,9 @@ export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...p
   }
 
   return (
-    <Wrapper
-      role="presentation"
+    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
+    <WrapperBase
+      role={MEANLESS_TAG_NAMES.includes(`${as || ''}`) ? 'presentation' : undefined}
       onClick={handleOuterClick}
       forwardedAs={as}
       themes={theme}
@@ -31,11 +34,11 @@ export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...p
     >
       {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
       <RadioButton {...props} ref={innerRef} />
-    </Wrapper>
+    </WrapperBase>
   )
 }
 
-const Wrapper = styled(Base).attrs({ padding: 1 })<{ themes: Theme }>`
+const WrapperBase = styled(Base).attrs({ padding: 1 })<{ themes: Theme }>`
   ${({ themes: { border, shadow, space } }) => css`
     box-shadow: none;
     border: ${border.shorthand};

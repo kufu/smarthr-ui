@@ -124,7 +124,7 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
         parentRef,
       }}
     >
-      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, smarthr/a11y-delegate-element-has-role-presentation */}
+      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <div
         {...props}
         className={styles}

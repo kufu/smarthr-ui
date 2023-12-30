@@ -146,7 +146,6 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
   )
 
   return (
-    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
     <div
       {...props}
       className={containerStyle}
@@ -157,8 +156,8 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
     >
       <div role="radiogroup" className={buttonGroupStyle}>
         {options.map((option, i) => {
-          const isSelected = !!value && value === option.value
           const onClick = onClickOption ? () => onClickOption(option.value) : undefined
+
           return (
             <Button
               aria-label={option.ariaLabel}
@@ -169,7 +168,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
               square={isSquare}
               tabIndex={getRovingTabIndex(option, i)}
               role="radio"
-              aria-checked={isSelected}
+              aria-checked={!!value && value === option.value}
               className={buttonStyle}
             >
               {option.content}
