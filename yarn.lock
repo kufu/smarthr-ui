@@ -864,7 +864,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.22.5"
 
-"@babel/plugin-transform-runtime@^7.23.2":
+"@babel/plugin-transform-runtime@7.23.3":
   version "7.23.3"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-runtime/-/plugin-transform-runtime-7.23.3.tgz#0aa7485862b0b5cb0559c1a5ec08b4923743ee3b"
   integrity sha512-XcQ3X58CKBdBnnZpPaQjgVMePsXtSZzHoku70q9tUAQp02ggPQNM04BF3RvlW1GSM/McbSOQAzEK4MXbS7/JFg==
@@ -6592,10 +6592,10 @@ eslint@^8.56.0:
     strip-ansi "^6.0.1"
     text-table "^0.2.0"
 
-esotope-hammerhead@0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/esotope-hammerhead/-/esotope-hammerhead-0.6.5.tgz#1de536b22ab08044ee055f504053eca9335c3843"
-  integrity sha512-vjncN4nG+RvsUNFC0idHNw1Xzse8GUWn15tr8In0Q4EBscnELTdpQVfsF/cRsMlvSbJdd0gUrW6gK5U+LTmVCg==
+esotope-hammerhead@0.6.7:
+  version "0.6.7"
+  resolved "https://registry.yarnpkg.com/esotope-hammerhead/-/esotope-hammerhead-0.6.7.tgz#0ef43e8bb3e14b7ddc51ac0f46f213fda88807a3"
+  integrity sha512-nejJRHWvdoymlWnAXJGm8qfaK1hQ7NiMnTQzMSHPUzBrY7Nogu8O0Q6/HcY8AvY58pkkq2loto7oDDZ0zXYQcg==
   dependencies:
     "@types/estree" "0.0.46"
 
@@ -12265,10 +12265,10 @@ testcafe-browser-tools@2.0.26:
     read-file-relative "^1.2.0"
     which-promise "^1.0.0"
 
-testcafe-hammerhead@31.6.3, testcafe-hammerhead@>=19.4.0:
-  version "31.6.3"
-  resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-31.6.3.tgz#a03a68b301ab63b941fd1a65bce1757537357157"
-  integrity sha512-tmImtrD+G82Rcfi9zdq1E5XirOewPoFcLhRBNnUseGEtJZ1hVXjrkfyhlVqhfdWFAszhcRoDnvTp21IwfQywsw==
+testcafe-hammerhead@31.7.0, testcafe-hammerhead@>=19.4.0:
+  version "31.7.0"
+  resolved "https://registry.yarnpkg.com/testcafe-hammerhead/-/testcafe-hammerhead-31.7.0.tgz#59b6172d3446233b4be7ef10e19e3bebddce52b7"
+  integrity sha512-80pF5RweoJKbsTgzroXXJAFbR2kkxa5SYVIOZyMICXdgI/JQz7GBcF7mEb4Uwq1+M9Pa9k8QDaO1v5xyDse9BQ==
   dependencies:
     "@adobe/css-tools" "^4.3.0-rc.1"
     "@electron/asar" "^3.2.3"
@@ -12276,11 +12276,11 @@ testcafe-hammerhead@31.6.3, testcafe-hammerhead@>=19.4.0:
     bowser "1.6.0"
     crypto-md5 "^1.0.0"
     debug "4.3.1"
-    esotope-hammerhead "0.6.5"
+    esotope-hammerhead "0.6.7"
     http-cache-semantics "^4.1.0"
     httpntlm "^1.8.10"
     iconv-lite "0.5.1"
-    lodash "^4.17.20"
+    lodash "^4.17.21"
     lru-cache "2.6.3"
     match-url-wildcard "0.0.4"
     merge-stream "^1.0.1"
@@ -12348,10 +12348,10 @@ testcafe-selector-generator@^0.1.0:
   resolved "https://registry.yarnpkg.com/testcafe-selector-generator/-/testcafe-selector-generator-0.1.0.tgz#852c86f71565e5d9320da625c2260d040cbed786"
   integrity sha512-MTw+RigHsEYmFgzUFNErDxui1nTYUk6nm2bmfacQiKPdhJ9AHW/wue4J/l44mhN8x3E8NgOUkHHOI+1TDFXiLQ==
 
-testcafe@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-3.4.0.tgz#f4e8669c8e64b0f9f5193f2fc921b4dc4c609cc6"
-  integrity sha512-HOGTt4FPm7oqRiE6lmGWcJghze7HoEIUFi0uyYSiNHG+wn7DGDfchXWfKenmzwVijfWNUR1hZhG+pPd30ayXGw==
+testcafe@3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/testcafe/-/testcafe-3.5.0.tgz#0dd656215e917871f2e7f3b9548a9a297b0f46eb"
+  integrity sha512-EFy3mMMPpmWzkY35X3JDnQw/GNkw2sW90957t3eMj5zmspwu5FBlkEHRNm2SkmcQWHQTcpp0VZ5HXzVSEHvr6w==
   dependencies:
     "@babel/core" "^7.23.2"
     "@babel/plugin-proposal-async-generator-functions" "^7.20.7"
@@ -12364,7 +12364,7 @@ testcafe@3.4.0:
     "@babel/plugin-transform-async-to-generator" "^7.22.5"
     "@babel/plugin-transform-exponentiation-operator" "^7.22.5"
     "@babel/plugin-transform-for-of" "^7.22.15"
-    "@babel/plugin-transform-runtime" "^7.23.2"
+    "@babel/plugin-transform-runtime" "7.23.3"
     "@babel/preset-env" "^7.23.2"
     "@babel/preset-flow" "^7.22.15"
     "@babel/preset-react" "^7.22.15"
@@ -12434,7 +12434,7 @@ testcafe@3.4.0:
     source-map-support "^0.5.16"
     strip-bom "^2.0.0"
     testcafe-browser-tools "2.0.26"
-    testcafe-hammerhead "31.6.3"
+    testcafe-hammerhead "31.7.0"
     testcafe-legacy-api "5.1.6"
     testcafe-reporter-json "^2.1.0"
     testcafe-reporter-list "^2.2.0"
