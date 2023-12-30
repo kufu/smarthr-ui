@@ -25,7 +25,7 @@ type Props = {
   onClick?: OnClick
 }
 
-export const SideNavItem: VFC<Props> = ({
+export const SideNavItemButton: VFC<Props> = ({
   id,
   title,
   prefix,

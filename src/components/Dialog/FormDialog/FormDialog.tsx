@@ -54,6 +54,7 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
       className={className}
       onPressEscape={onPressEscape}
     >
+      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <FormDialogContentInner
         title={title}
         titleId={titleId}

@@ -124,8 +124,14 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
         parentRef,
       }}
     >
-      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-      <div {...props} className={styles} ref={parentRef} onKeyDown={handleKeyPress} />
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, smarthr/a11y-delegate-element-has-role-presentation */}
+      <div
+        {...props}
+        className={styles}
+        ref={parentRef}
+        onKeyDown={handleKeyPress}
+        role="presentation"
+      />
     </AccordionPanelContext.Provider>
   )
 }

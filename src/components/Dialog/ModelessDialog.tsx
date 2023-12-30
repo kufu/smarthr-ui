@@ -284,6 +284,7 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
               {/* dummy element for focus management. */}
             </div>
             <Header className={classNames.header} themes={theme}>
+              {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
               <DialogHandler
                 className={classNames.handle}
                 themes={theme}

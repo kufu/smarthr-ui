@@ -19,7 +19,7 @@ import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
 import { ComboBoxContext } from './ComboBoxContext'
-import { ListBoxItem } from './ListBoxItem'
+import { ListBoxItemButton } from './ListBoxItemButton'
 import { ComboBoxItem, ComboBoxOption } from './types'
 import { useActiveOption } from './useActiveOption'
 import { usePartialRendering } from './usePartialRendering'
@@ -251,7 +251,7 @@ export function useListBox<T>({
               </NoItems>
             ) : (
               partialOptions.map((option) => (
-                <ListBoxItem
+                <ListBoxItemButton
                   key={option.id}
                   option={option}
                   isActive={option.id === activeOption?.id}

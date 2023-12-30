@@ -148,7 +148,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
     const { input, affix } = inner()
 
     return (
-      <span {...wrapperStyleProps} onClick={() => innerRef.current?.focus()}>
+      <span {...wrapperStyleProps} onClick={() => innerRef.current?.focus()} role="presentation">
         {prefix && (
           <span className={affix({ className: 'smarthr-ui-Input-prefix' })}>{prefix}</span>
         )}

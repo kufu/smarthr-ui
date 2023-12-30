@@ -347,6 +347,7 @@ function SingleComboBoxComponent<T>(
 
   return (
     <ComboBoxContext.Provider value={contextValue}>
+      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <Container
         {...props}
         ref={outerRef}
@@ -388,11 +389,11 @@ function SingleComboBoxComponent<T>(
                   }
                 />
               </ClearButton>
-              <CaretDownLayout themes={theme} onClick={onClickInput}>
+              <CaretDownButton themes={theme} onClick={onClickInput} type="button">
                 <CaretDownWrapper themes={theme}>
                   <FaCaretDownIcon color={caretIconColor} />
                 </CaretDownWrapper>
-              </CaretDownLayout>
+              </CaretDownButton>
             </>
           }
           onClick={onClickInput}
@@ -440,7 +441,7 @@ const Container = styled.div.attrs(({ $disabled, $width = 'auto' }: ContainerTyp
 const StyledInput = styled(Input)`
   width: 100%;
 `
-const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
+const CaretDownButton = styled.button<{ themes: Theme }>(({ themes }) => {
   const { spacingByChar } = themes
   const space = spacingByChar(0.5)
 
@@ -451,6 +452,9 @@ const CaretDownLayout = styled.span<{ themes: Theme }>(({ themes }) => {
     padding-left: 0;
     margin-right: -${space};
     cursor: pointer;
+    background-color: transparent;
+    border: none;
+    appearance: none;
   `
 })
 const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {

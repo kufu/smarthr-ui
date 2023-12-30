@@ -146,6 +146,7 @@ export const SegmentedControl: FC<Props & ElementProps> = ({
   )
 
   return (
+    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
     <div
       {...props}
       className={containerStyle}

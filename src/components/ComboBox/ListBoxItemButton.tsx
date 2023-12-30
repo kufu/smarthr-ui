@@ -16,7 +16,14 @@ type Props<T> = {
   activeRef: RefObject<HTMLButtonElement>
 }
 
-function ListBoxItem<T>({ option, isActive, onAdd, onSelect, onMouseOver, activeRef }: Props<T>) {
+function ListBoxItemButton<T>({
+  option,
+  isActive,
+  onAdd,
+  onSelect,
+  onMouseOver,
+  activeRef,
+}: Props<T>) {
   const className = isActive ? 'active' : ''
   const { item, selected, isNew } = option
   const { label, disabled } = item
@@ -69,8 +76,8 @@ function ListBoxItem<T>({ option, isActive, onAdd, onSelect, onMouseOver, active
   )
 }
 const typedMemo: <T>(c: T) => T = React.memo
-const Memoized = typedMemo(ListBoxItem)
-export { Memoized as ListBoxItem }
+const Memoized = typedMemo(ListBoxItemButton)
+export { Memoized as ListBoxItemButton }
 
 const SelectButton = styled.button<{ themes: Theme }>`
   ${({ themes }) => {

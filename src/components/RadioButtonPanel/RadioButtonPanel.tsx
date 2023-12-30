@@ -23,6 +23,7 @@ export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...p
 
   return (
     <Wrapper
+      role="presentation"
       onClick={handleOuterClick}
       forwardedAs={as}
       themes={theme}

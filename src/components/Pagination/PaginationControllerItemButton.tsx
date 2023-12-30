@@ -9,7 +9,7 @@ import {
   ComponentProps as IconProps,
 } from '../Icon'
 
-import { ItemButton } from './PaginationItem'
+import { ItemButton } from './PaginationItemButton'
 
 type Props = {
   targetPage: number
@@ -34,7 +34,7 @@ const getIconProps = (
       ? { Icon: FaAngleDoubleRightIcon, alt: '最後へ' }
       : { Icon: FaChevronRightIcon, alt: '次へ' }
 
-export const PaginationControllerItem: VFC<Props> = ({
+export const PaginationControllerItemButton: VFC<Props> = ({
   direction,
   disabled,
   double = false,
