@@ -359,10 +359,12 @@ const Box = styled(Base).attrs({ radius: 'm', layer: 3 })<{
   }}
 `
 const Header = styled.div<{ themes: Theme }>`
-  ${({ themes: { color, border, spacingByChar } }) => css`
+  ${({ themes: { color, border, radius, spacingByChar } }) => css`
     position: relative;
     display: flex;
     align-items: center;
+    border-top-right-radius: ${radius.l};
+    border-top-left-radius: ${radius.l};
     padding-left: ${spacingByChar(1.5)};
     padding-right: ${spacingByChar(1)};
     border-bottom: ${border.shorthand};
