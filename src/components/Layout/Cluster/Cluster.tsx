@@ -1,6 +1,8 @@
 import React, { forwardRef, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
+import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+
 import type { Gap, SeparateGap } from '../../../types'
 import type { ComponentPropsWithRef, PropsWithChildren } from 'react'
 
@@ -128,6 +130,12 @@ export const Cluster = forwardRef<HTMLDivElement, Props>(
       [inline, rowGap, columnGap, align, justify, className],
     )
 
-    return <Component {...others} ref={ref} className={styles} />
+    const Wrapper = useSectionWrapper(Component)
+
+    return (
+      <Wrapper>
+        <Component {...others} ref={ref} className={styles} />
+      </Wrapper>
+    )
   },
 )

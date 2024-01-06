@@ -5,7 +5,6 @@ import styled, { css } from 'styled-components'
 import { Base } from '../../Base'
 import { Heading } from '../../Heading'
 import { RadioButton } from '../../RadioButton'
-import { SectioningFragment } from '../../SectioningContent'
 import { StatusLabel } from '../../StatusLabel'
 import { Stack } from '../Stack'
 
@@ -79,17 +78,16 @@ export const All: StoryFn = () => (
         入れ子にして <code>align</code> や <code>justify</code>{' '}
         を組み合わせるとメディアクエリを使用せずに柔軟なレイアウトを作れます。
       </figcaption>
-      <SectioningFragment>
-        <Cluster align="center" justify="space-between" as="section">
-          <StyledHeading>これは Cluster の構成例です</StyledHeading>
-
-          <Cluster>
-            <StatusLabel type="grey">アコーディオン</StatusLabel>
-            <StatusLabel type="blue">コンボボックス</StatusLabel>
-            <StatusLabel type="red">ディスクロージャ</StatusLabel>
-          </Cluster>
+      <Cluster align="center" justify="space-between" as="section">
+        {/* TODO: eslint を修正したら外す */}
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+        <StyledHeading>これは Cluster の構成例です</StyledHeading>
+        <Cluster>
+          <StatusLabel type="grey">アコーディオン</StatusLabel>
+          <StatusLabel type="blue">コンボボックス</StatusLabel>
+          <StatusLabel type="red">ディスクロージャ</StatusLabel>
         </Cluster>
-      </SectioningFragment>
+      </Cluster>
     </Stack>
   </StyledStack>
 )
