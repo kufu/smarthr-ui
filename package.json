@@ -84,7 +84,7 @@
     "storybook": "^7.6.6",
     "storybook-addon-pseudo-states": "^2.1.2",
     "styled-components": "^5.3.11",
-    "styled-reset": "^4.5.1",
+    "styled-reset": "^4.5.2",
     "stylelint": "^16.1.0",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^3.0.0",
