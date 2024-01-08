@@ -10500,10 +10500,10 @@ postcss-selector-parser@^6.0.11, postcss-selector-parser@^6.0.13, postcss-select
     cssesc "^3.0.0"
     util-deprecate "^1.0.2"
 
-postcss-styled-syntax@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/postcss-styled-syntax/-/postcss-styled-syntax-0.6.2.tgz#bf04aaef27da7a9c86531068ac12de628f77e501"
-  integrity sha512-uJ9IuvbkuKGKkbWw3IoBaZA73eIIjSx8+X0Z9+hY4dez4TzeXOxa4my5cKmkUKWcCg8aOE/n2iuMnpKbZVDmsw==
+postcss-styled-syntax@^0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/postcss-styled-syntax/-/postcss-styled-syntax-0.6.4.tgz#16c07d2c55261a435031b6a9c7f1d5c2daa2246c"
+  integrity sha512-uWiLn+9rKgIghUYmTHvXMR6MnyPULMe9Gv3bV537Fg4FH6CA6cn21WMjKss2Qb98LUhT847tKfnRGG3FhSOgUQ==
   dependencies:
     typescript "^5.3.3"
 
