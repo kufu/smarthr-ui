@@ -46,8 +46,8 @@ const accordionPanelTrigger = tv({
       'hover:shr-shadow-none',
       'focus-visible:shr-focusIndicator',
     ],
-    leftIcon: 'group-aria-expanded:shr-rotate-90 group-aria-expanded:shrink-0',
-    rightIcon: 'group-aria-expanded:-shr-rotate-180 group-aria-expanded:shrink-0',
+    leftIcon: 'group-aria-expanded:shrink-0 group-aria-expanded:shr-rotate-90',
+    rightIcon: 'group-aria-expanded:shrink-0 group-aria-expanded:-shr-rotate-180',
   },
   compoundSlots: [
     {
