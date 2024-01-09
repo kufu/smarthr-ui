@@ -29,7 +29,7 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'button'>, keyof Props>
 
 const accordionPanelTrigger = tv({
   slots: {
-    title: 'shr-flex-1',
+    title: 'shr-grow',
     button: [
       'smarthr-ui-AccordionPanel-trigger',
       'shr-group',
@@ -46,8 +46,8 @@ const accordionPanelTrigger = tv({
       'hover:shr-shadow-none',
       'focus-visible:shr-focusIndicator',
     ],
-    leftIcon: 'group-aria-expanded:shr-rotate-90',
-    rightIcon: 'group-aria-expanded:-shr-rotate-180',
+    leftIcon: 'group-aria-expanded:shr-rotate-90:shrink-0',
+    rightIcon: 'group-aria-expanded:-shr-rotate-180:shrink-0',
   },
   compoundSlots: [
     {
@@ -111,7 +111,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
         className={buttonStyle}
         data-component="AccordionHeaderButton"
       >
-        <Cluster align="center" as="span">
+        <Cluster className="shr-flex-nowrap" align="center" as="span">
           {displayIcon && iconPosition === 'left' && <FaCaretRightIcon className={leftIconStyle} />}
           <span className={titleStyle}>{children}</span>
           {displayIcon && iconPosition === 'right' && <FaCaretUpIcon className={rightIconStyle} />}
