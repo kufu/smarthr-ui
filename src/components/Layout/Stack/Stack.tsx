@@ -2,6 +2,7 @@ import React, { ComponentPropsWithRef, PropsWithChildren, forwardRef, useMemo } 
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { Gap } from '../../../types'
+import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 const stack = tv({
   base: 'shr-flex-col shr-justify-start [&_>_*]:shr-my-0',
@@ -58,6 +59,13 @@ export const Stack = forwardRef<HTMLDivElement, Props>(
       () => stack({ inline, align, gap, className }),
       [align, className, gap, inline],
     )
-    return <Component {...props} ref={ref} className={styles} />
+
+    const Wrapper = useSectionWrapper(Component)
+
+    return (
+      <Wrapper>
+        <Component {...props} ref={ref} className={styles} />
+      </Wrapper>
+    )
   },
 )

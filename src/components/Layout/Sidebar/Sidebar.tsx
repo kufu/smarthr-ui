@@ -1,6 +1,8 @@
 import React, { ReactElement, forwardRef, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
+import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+
 import type { Gap, SeparateGap } from '../../../types'
 import type { CSSProperties, ComponentPropsWithRef, PropsWithChildren } from 'react'
 
@@ -155,10 +157,14 @@ export const Sidebar = forwardRef<HTMLDivElement, Props>(
       return child
     })
 
+    const Wrapper = useSectionWrapper(Component)
+
     return (
-      <Component {...props} ref={ref} className={wrapperStyle}>
-        {styledChildren}
-      </Component>
+      <Wrapper>
+        <Component {...props} ref={ref} className={wrapperStyle}>
+          {styledChildren}
+        </Component>
+      </Wrapper>
     )
   },
 )
