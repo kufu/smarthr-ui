@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { ChangeEvent, useState } from 'react'
 import styled from 'styled-components'
 
@@ -9,7 +9,7 @@ export default {
   component: RadioButton,
 }
 
-export const All: Story = () => {
+export const All: StoryFn = () => {
   const [checkedName, setCheckedName] = useState<string | null>(null)
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => setCheckedName(e.currentTarget.name)
 
