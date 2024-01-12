@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import * as React from 'react'
 
 import { RightFixedNote } from './RightFixedNote'
@@ -40,7 +40,7 @@ const sampleItems: ItemProps[] = [
   },
 ]
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <RightFixedNote
     title="RightFixedNote"
     items={sampleItems}
@@ -51,7 +51,7 @@ export const All: Story = () => (
 )
 All.storyName = 'all'
 
-export const WithoutTextareaLabel: Story = () => (
+export const WithoutTextareaLabel: StoryFn = () => (
   <RightFixedNote
     title="RightFixedNote"
     items={sampleItems}
@@ -61,7 +61,7 @@ export const WithoutTextareaLabel: Story = () => (
 )
 WithoutTextareaLabel.storyName = 'without textarea label'
 
-export const WithoutItems: Story = () => (
+export const WithoutItems: StoryFn = () => (
   <RightFixedNote
     title="RightFixedNote"
     onSubmit={action('submit!')}
@@ -71,7 +71,7 @@ export const WithoutItems: Story = () => (
 )
 WithoutItems.storyName = 'without items'
 
-export const WithoutItemsAndTextareaLabel: Story = () => (
+export const WithoutItemsAndTextareaLabel: StoryFn = () => (
   <RightFixedNote
     title="RightFixedNote"
     onSubmit={action('submit!')}
