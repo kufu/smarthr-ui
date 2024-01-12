@@ -36,7 +36,7 @@ const sampleItems: ItemProps[] = [
     text: '編集できないコメントテキストテキストテキストテキストテキストテキスト',
     date: '2020/4/15 16:20:00',
     author: 'test@smarthr.co.jp',
-    isEditable: false,
+    editable: false,
   },
 ]
 
