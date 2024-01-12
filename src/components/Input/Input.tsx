@@ -60,7 +60,7 @@ const wrapper = tv({
       true: '[&]:shr-border-danger',
     },
     readOnly: {
-      true: 'shr-bg-background [&&&]:shr-border-[theme(backgroundColor.background)]',
+      true: '[&&&]:shr-border-[theme(backgroundColor.background)] [&&&]:shr-bg-background',
     },
   },
 })
