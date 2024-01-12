@@ -10,6 +10,8 @@ const buttonInner = tv({
   base: [
     /* LineClamp を併用する場合に、幅を計算してもらうために指定 */
     'shr-min-w-0',
+    /* SVG とテキストコンテンツの縦位置を揃えるために指定 */
+    'shr-leading-[0]',
   ],
 })
 
