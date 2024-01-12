@@ -3,6 +3,7 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 
 import { RightFixedNote } from './RightFixedNote'
+import { ItemProps } from './RightFixedNoteItem'
 
 export default {
   title: 'Data Display（データ表示）/RightFixedNote',
@@ -17,7 +18,7 @@ export default {
   },
 }
 
-const sampleItems = [
+const sampleItems: ItemProps[] = [
   {
     id: 'id-1',
     text: 'コメントテキストテキストテキストテキストテキストテキスト',
@@ -32,9 +33,10 @@ const sampleItems = [
   },
   {
     id: 'id-3',
-    text: 'コメントテキストテキストテキストテキストテキストテキスト',
+    text: '編集できないコメントテキストテキストテキストテキストテキストテキスト',
     date: '2020/4/15 16:20:00',
     author: 'test@smarthr.co.jp',
+    isEditable: false,
   },
 ]
 

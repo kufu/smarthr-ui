@@ -17,6 +17,8 @@ export type ItemProps = {
   date?: ReactNode
   /** このアイテムの著者 */
   author?: ReactNode
+  /** edit ボタンを表示するかどうか */
+  isEditable?: boolean
   /** edit ボタンの aria-label */
   editLabel?: string
   /** このコンポーネントに適用するクラス名 */
@@ -35,6 +37,7 @@ export const RightFixedNoteItem: VFC<Props> = ({
   date,
   author,
   onClickEdit,
+  isEditable = true,
   editLabel = '編集',
   className = '',
 }) => {
@@ -44,15 +47,17 @@ export const RightFixedNoteItem: VFC<Props> = ({
   return (
     <Wrapper themes={theme} className={`${className} ${classNames.item}`}>
       <TextBase themes={theme}>
-        <EditButton
-          size="s"
-          onClick={(e) => onClickEdit(e, id)}
-          square
-          aria-label={editLabel}
-          className={classNames.itemEditButton}
-        >
-          <FaPenIcon />
-        </EditButton>
+        {isEditable && (
+          <EditButton
+            size="s"
+            onClick={(e) => onClickEdit(e, id)}
+            square
+            aria-label={editLabel}
+            className={classNames.itemEditButton}
+          >
+            <FaPenIcon />
+          </EditButton>
+        )}
         <Text themes={theme} className={classNames.itemText}>
           {text}
         </Text>
