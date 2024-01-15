@@ -20,7 +20,7 @@ jobs:
           cache: 'pnpm'
       - name: run
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install
           pnpm e2e
         env:
           TESTCAFE_BROWSER: ${{ matrix.browser }}

@@ -25,7 +25,7 @@ jobs:
         run: |
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install
       - run: pnpm release
         if: ${{ env.IS_PRERELEASE == 'false' }}
       - run: pnpm release --prerelease

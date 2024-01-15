@@ -29,7 +29,7 @@ commands:
             - dependencies-test-{{ checksum "package.json" }}-{{ checksum "pnpm-lock.yaml" }}
             # fallback to using the latest cache if no exact match is found
             - modules-cache-
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install
       - save_cache:
           paths:
             - node_modules
@@ -48,7 +48,7 @@ commands:
       - restore_cache:
           keys:
             - pnpm-packages-reg-{{ checksum "pnpm-lock.yaml" }}
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install
       - save_cache:
           paths:
             - ~/.cache/pnpm
