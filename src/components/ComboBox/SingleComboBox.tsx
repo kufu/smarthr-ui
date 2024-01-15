@@ -389,10 +389,8 @@ function SingleComboBoxComponent<T>(
                   }
                 />
               </ClearButton>
-              <CaretDownButton themes={theme} onClick={onClickInput} type="button">
-                <CaretDownWrapper themes={theme}>
-                  <FaCaretDownIcon color={caretIconColor} />
-                </CaretDownWrapper>
+              <CaretDownButton themes={theme} onClick={onClickInput}>
+                <FaCaretDownIcon color={caretIconColor} />
               </CaretDownButton>
             </>
           }
@@ -425,10 +423,8 @@ export const SingleComboBox = forwardRef(SingleComboBoxComponent) as (<T>(
 }
 
 type ContainerType = { $disabled: boolean; $width: number | string }
-const Container = styled.div.attrs(({ $disabled, $width = 'auto' }: ContainerType) => {
-  const style: React.CSSProperties = {
-    width: typeof $width === 'number' ? `${$width}px` : $width,
-  }
+const Container = styled.div.attrs<ContainerType>(({ style = {}, $disabled, $width }) => {
+  style.width = typeof $width === 'number' ? `${$width}px` : $width
 
   if ($disabled) {
     style.cursor = 'not-allowed'
@@ -442,31 +438,27 @@ const StyledInput = styled(Input)`
   width: 100%;
 `
 const CaretDownButton = styled.button<{ themes: Theme }>(({ themes }) => {
-  const { spacingByChar } = themes
-  const space = spacingByChar(0.5)
-
+  const { border, space } = themes
   return css`
-    height: 100%;
-    box-sizing: border-box;
-    padding: ${space};
-    padding-left: 0;
-    margin-right: -${space};
+    position: relative;
     cursor: pointer;
     background-color: transparent;
     border: none;
     appearance: none;
-  `
-})
-const CaretDownWrapper = styled.span<{ themes: Theme }>(({ themes }) => {
-  const { border, spacingByChar } = themes
-  return css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    box-sizing: border-box;
-    padding-left: ${spacingByChar(0.5)};
-    border-left: ${border.shorthand};
+    margin-right: ${space(-0.5)};
+    padding: ${space(0.5)};
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: ${space(0.25)} 0;
+      width: 0;
+      border-left: ${border.shorthand};
+    }
+
+    .smarthr-ui-Icon {
+      display: block;
+    }
   `
 })
 
@@ -478,21 +470,21 @@ const ClearButton = styled(UnstyledButton).attrs(({ $hidden }: ClearButtonProps)
   style: $hidden ? { display: 'none' } : undefined,
 }))<ClearButtonProps>`
   ${({ themes }) => {
-    const { shadow, spacingByChar } = themes
+    const { radius, shadow, space } = themes
     return css`
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      padding: 0 ${spacingByChar(0.5)};
       cursor: pointer;
+      margin-inline-end: ${space(0.5)};
+
+      .smarthr-ui-Icon {
+        display: block;
+      }
 
       &:focus-visible {
         box-shadow: unset;
       }
 
       &:focus-visible > svg {
-        border-radius: 50%;
+        border-radius: ${radius.full};
         ${shadow.focusIndicatorStyles};
       }
     `
