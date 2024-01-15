@@ -1,6 +1,6 @@
 {
   "extends": ["github>kufu/renovate-config"],
   "npm": {
-    "postUpdateOptions": ["yarnDedupeHighest"]
+    "postUpdateOptions": ["pnpmDedupe"]
   }
 }

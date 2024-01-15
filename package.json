@@ -163,7 +163,7 @@
     "test": "jest",
     "test:update-snapshot": "jest --updateSnapshot",
     "test:build-assets": "node scripts/build-test.ts",
-    "test-storybook:ci": "wait-on tcp:6006 && yarn test-storybook --maxWorkers=2 --junit",
+    "test-storybook:ci": "wait-on tcp:6006 && pnpm test-storybook --maxWorkers=2 --junit",
     "testcafe": "testcafe",
     "e2e": "ts-node scripts/e2e.ts",
     "e2e:dev": "testcafe chrome --host localhost --skip-js-errors",
@@ -176,12 +176,14 @@
     "*.css"
   ],
   "typings": "lib/index.d.ts",
-  "resolutions": {
-    "@babel/helper-compilation-targets": "^7.23.6",
-    "@types/react": "^18.2.55",
-    "minimist": "1.2.8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+  "pnpm": {
+    "overrides": {
+      "@babel/helper-compilation-targets": "^7.23.6",
+      "@types/react": "^18.2.55",
+      "minimist": "1.2.8",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0"
+    }
   },
   "standard-version": {
     "scripts": {

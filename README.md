@@ -26,6 +26,9 @@ npm install smarthr-ui
 
 // with yarn
 yarn add smarthr-ui
+
+// with pnpm
+pnpm add smarthr-ui
 ```
 
 peerDependencies として React, React-DOM, styled-components が必要です。
@@ -36,6 +39,9 @@ npm install react react-dom styled-components
 
 // with yarn
 yarn add react react-dom styled-components
+
+// with pnpm
+pnpm add react react-dom styled-components
 ```
 
 ## 使いかた
