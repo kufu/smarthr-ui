@@ -39,7 +39,7 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
         isAnchor
         anchorRef={ref}
       >
-        <ButtonInner prefix={prefix} suffix={suffix}>
+        <ButtonInner prefix={prefix} suffix={suffix} size={size}>
           {children}
         </ButtonInner>
       </ButtonWrapper>
