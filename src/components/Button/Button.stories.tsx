@@ -134,18 +134,71 @@ export const _Button: StoryFn = () => (
           <Button variant="primary" size="s" onClick={action('clicked')}>
             ボタン
           </Button>
-        </Cluster>
-        <Cluster>
-          <Button variant="primary" disabled size="s" onClick={action('clicked')}>
+          <Button variant="primary" size="s" prefix={<FaPlusIcon />} onClick={action('clicked')}>
             ボタン
+          </Button>
+          <Button
+            variant="primary"
+            size="s"
+            suffix={<FaPlusSquareIcon />}
+            onClick={action('clicked')}
+          >
+            ボタン
+          </Button>
+          <Button variant="primary" size="s" square onClick={action('clicked')}>
+            <FaPlusCircleIcon alt="プラスボタン" />
           </Button>
         </Cluster>
         <Cluster>
-          <Button variant="primary" disabled size="s" onClick={action('clicked')} loading>
+          <Button variant="primary" size="s" disabled onClick={action('clicked')}>
             ボタン
           </Button>
-          <Button variant="primary" square disabled size="s" onClick={action('clicked')} loading>
+          <Button
+            variant="primary"
+            size="s"
+            disabled
+            prefix={<FaPlusIcon />}
+            onClick={action('clicked')}
+          >
             ボタン
+          </Button>
+          <Button
+            variant="primary"
+            size="s"
+            disabled
+            suffix={<FaPlusSquareIcon />}
+            onClick={action('clicked')}
+          >
+            ボタン
+          </Button>
+          <Button variant="primary" size="s" disabled square onClick={action('clicked')}>
+            <FaPlusCircleIcon alt="プラスボタン" />
+          </Button>
+        </Cluster>
+        <Cluster>
+          <Button variant="primary" size="s" loading onClick={action('clicked')}>
+            ボタン
+          </Button>
+          <Button
+            variant="primary"
+            size="s"
+            loading
+            prefix={<FaPlusIcon />}
+            onClick={action('clicked')}
+          >
+            ボタン
+          </Button>
+          <Button
+            variant="primary"
+            size="s"
+            loading
+            suffix={<FaPlusSquareIcon />}
+            onClick={action('clicked')}
+          >
+            ボタン
+          </Button>
+          <Button variant="primary" size="s" loading square onClick={action('clicked')}>
+            <FaPlusCircleIcon alt="プラスボタン" />
           </Button>
         </Cluster>
       </Stack>
