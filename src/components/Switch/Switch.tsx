@@ -12,7 +12,7 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
     return (
       <Wrapper $disabled={disabled} themes={theme} className={className}>
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
-        <Checkbox {...props} disabled={disabled} type="checkbox" role="switch" ref={ref} />
+        <CheckboxInput {...props} disabled={disabled} type="checkbox" role="switch" ref={ref} />
         <CheckIcon themes={theme} />
       </Wrapper>
     )
@@ -122,8 +122,7 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
   `}
 `
 
-// eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder, smarthr/a11y-input-has-name-attribute
-const Checkbox = styled.input`
+const CheckboxInput = styled.input`
   position: absolute;
   inset: 0;
   cursor: pointer;

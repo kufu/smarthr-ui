@@ -6,8 +6,8 @@ import { range } from '../../libs/lodash'
 import { Reel } from '../Layout'
 import { Nav } from '../SectioningContent'
 
-import { PaginationControllerItem } from './PaginationControllerItem'
-import { PaginationItem } from './PaginationItem'
+import { PaginationControllerItemButton } from './PaginationControllerItemButton'
+import { PaginationItemButton } from './PaginationItemButton'
 import { useClassNames } from './useClassNames'
 
 type Props = {
@@ -43,7 +43,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
   const prevPage = (
     <>
       <li className={classNames.first}>
-        <PaginationControllerItem
+        <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
           targetPage={1}
@@ -52,7 +52,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
         />
       </li>
       <li className={classNames.prev}>
-        <PaginationControllerItem
+        <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
           targetPage={current - 1}
@@ -71,7 +71,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
           key={`pagination-${page}`}
           className={page === current ? classNames.current : classNames.page}
         >
-          <PaginationItem page={page} currentPage={current} onClick={onClick} />
+          <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
         </li>
       ))
     : null
@@ -79,7 +79,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
   const nextPage = (
     <>
       <li className={classNames.next}>
-        <PaginationControllerItem
+        <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
           targetPage={current + 1}
@@ -87,7 +87,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
         />
       </li>
       <li className={classNames.last}>
-        <PaginationControllerItem
+        <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
           targetPage={total}

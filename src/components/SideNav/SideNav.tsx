@@ -3,14 +3,14 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 
-import { OnClick, SideNavItem, SideNavSizeType } from './SideNavItem'
+import { OnClick, SideNavItemButton, SideNavSizeType } from './SideNavItemButton'
 import { useClassNames } from './useClassNames'
 
-type SideNavItemProps = Omit<ComponentProps<typeof SideNavItem>, 'size' | 'onClick'>
+type SideNavItemButtonProps = Omit<ComponentProps<typeof SideNavItemButton>, 'size' | 'onClick'>
 
 type Props = {
   /** 各アイテムのデータの配列 */
-  items: SideNavItemProps[]
+  items: SideNavItemButtonProps[]
   /** 各アイテムの大きさ */
   size?: SideNavSizeType
   /** アイテムを押下したときに発火するコールバック関数 */
@@ -33,7 +33,7 @@ export const SideNav: VFC<Props & ElementProps> = ({
   return (
     <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       {items.map((item) => (
-        <SideNavItem
+        <SideNavItemButton
           id={item.id}
           title={item.title}
           prefix={item.prefix}

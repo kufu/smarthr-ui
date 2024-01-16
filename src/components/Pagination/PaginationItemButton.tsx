@@ -10,7 +10,7 @@ type Props = {
   onClick: (pageNumber: number) => void
 }
 
-export const PaginationItem: VFC<Props> = ({ page, currentPage, onClick }) => {
+export const PaginationItemButton: VFC<Props> = ({ page, currentPage, onClick }) => {
   const theme = useTheme()
 
   if (page === currentPage) {

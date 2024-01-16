@@ -72,7 +72,7 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <Wrapper
+    <WrapperForm
       {...props}
       themes={theme}
       $width={width}
@@ -106,11 +106,11 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
           {submitLabel}
         </SubmitButton>
       </Section>
-    </Wrapper>
+    </WrapperForm>
   )
 }
 
-const Wrapper = styled.form<{ themes: Theme; $width: number }>`
+const WrapperForm = styled.form<{ themes: Theme; $width: number }>`
   ${({ themes, $width }) => {
     const { spacingByChar, color, shadow } = themes
 

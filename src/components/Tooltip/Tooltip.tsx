@@ -139,7 +139,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
       : children
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions,smarthr/a11y-delegate-element-has-role-presentation
     <span
       {...props}
       aria-describedby={ariaDescribedbyTarget === 'wrapper' ? tooltipId : undefined}
