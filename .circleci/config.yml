@@ -40,7 +40,7 @@ commands:
       - run: pnpm lint
   run-npm-test:
     steps:
-      - run: pnpm test -w 1
+      - run: pnpm test -- -w 1
       - run: pnpm test:build-assets
   run-a11y-test:
     steps:
