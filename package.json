@@ -10,7 +10,7 @@
     "lodash.range": "^3.2.0",
     "polished": "^4.2.2",
     "react-draggable": "^4.4.6",
-    "react-icons": "^4.12.0",
+    "react-icons": "^5.0.1",
     "react-innertext": "^1.1.5",
     "react-transition-group": "^4.4.5",
     "tailwind-variants": "^0.1.20",
