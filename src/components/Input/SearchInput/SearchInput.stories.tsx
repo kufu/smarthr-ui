@@ -23,7 +23,7 @@ export const Default: Story = {
     tooltipMessage: '',
   },
   render: () => (
-    <Container>
+    <StyledStack>
       <div>
         <p>主に入力欄に対する説明をレイアウト上配置できない場合の利用を想定しています。</p>
         <SearchInput
@@ -39,11 +39,11 @@ export const Default: Story = {
           decorators={{ iconAlt: (txt) => `search.(${txt})` }}
         />
       </div>
-    </Container>
+    </StyledStack>
   ),
 }
 
-const Container = styled(Stack)`
+const StyledStack = styled(Stack)`
   ${({ theme: { space } }) => css`
     padding: ${space(2)};
   `}

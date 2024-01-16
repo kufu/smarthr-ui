@@ -91,7 +91,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
     <Section>
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <Heading tag={titleTag}>
-        <TitleArea themes={theme} ref={titleRef} className={classNames.titleArea}>
+        <TitleAreaStack themes={theme} ref={titleRef} className={classNames.titleArea}>
           {subtitle && (
             <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
               {subtitle}
@@ -100,12 +100,12 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
           <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
             {title}
           </Text>
-        </TitleArea>
+        </TitleAreaStack>
       </Heading>
       <Body offsetHeight={offsetHeight} className={classNames.body}>
         {children}
       </Body>
-      <ActionArea themes={theme} ref={bottomRef} className={classNames.actionArea}>
+      <ActionAreaStack themes={theme} ref={bottomRef} className={classNames.actionArea}>
         <ButtonArea className={classNames.buttonArea}>
           <Button
             onClick={onClickClose}
@@ -131,12 +131,12 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
             </ResponseMessage>
           </Message>
         )}
-      </ActionArea>
+      </ActionAreaStack>
     </Section>
   )
 }
 
-const TitleArea = styled(Stack).attrs(() => ({
+const TitleAreaStack = styled(Stack).attrs(() => ({
   gap: 0.25,
   forwardedAs: 'span',
 }))<{ themes: Theme }>`
@@ -152,7 +152,7 @@ const Body = styled.div<{ offsetHeight: number }>`
     overflow: auto;
   `}
 `
-const ActionArea = styled(Stack).attrs({ gap: 0.5 })<{ themes: Theme }>`
+const ActionAreaStack = styled(Stack).attrs({ gap: 0.5 })<{ themes: Theme }>`
   ${({ themes: { space, border } }) => css`
     border-top: ${border.shorthand};
     padding: ${space(1)} ${space(1.5)};

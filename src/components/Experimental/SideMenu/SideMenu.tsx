@@ -25,12 +25,12 @@ export const SideMenu: FC<Props & ElementProps> & SubComponents = ({
   const classNames = useClassNames()
 
   return (
-    <Wrapper {...props} className={`${className || ''} ${classNames.wrapper}`}>
+    <StyledStack {...props} className={`${className || ''} ${classNames.wrapper}`}>
       {children}
-    </Wrapper>
+    </StyledStack>
   )
 }
 SideMenu.Group = SideMenuGroup
 SideMenu.Item = SideMenuItem
 
-const Wrapper = styled(Stack).attrs({ forwardedAs: 'ul', inline: true, gap: 0.75 })``
+const StyledStack = styled(Stack).attrs({ forwardedAs: 'ul', inline: true, gap: 0.75 })``

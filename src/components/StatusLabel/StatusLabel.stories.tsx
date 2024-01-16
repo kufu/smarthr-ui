@@ -15,7 +15,7 @@ export default {
 }
 
 export const All: Story = () => (
-  <Wrapper>
+  <WrapperStack>
     <Stack gap={0.5}>
       <dt>色の種類</dt>
       <Cluster as="dd">
@@ -58,11 +58,11 @@ export const All: Story = () => (
         </StatusLabel>
       </Cluster>
     </Stack>
-  </Wrapper>
+  </WrapperStack>
 )
 All.storyName = 'all'
 
-const Wrapper = styled(Stack).attrs({ forwardedAs: 'dl', gap: 1.5 })`
+const WrapperStack = styled(Stack).attrs({ forwardedAs: 'dl', gap: 1.5 })`
   ${({ theme: { spacingByChar } }) => css`
     margin-block: unset;
     padding: ${spacingByChar(1.5)};

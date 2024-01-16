@@ -22,7 +22,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
     return (
       // Th に必要な属性やイベントは不要
       <Th themes={theme} className={className}>
-        <Label>
+        <LabelCenter>
           {/* 使う側で lint をかけるため無効化 */}
           {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute  */}
           <CheckBox {...others} ref={ref} />
@@ -30,7 +30,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
             {decorators?.checkAllInvisibleLabel?.(CHECK_ALL_INVISIBLE_LABEL) ||
               CHECK_ALL_INVISIBLE_LABEL}
           </VisuallyHiddenText>
-        </Label>
+        </LabelCenter>
       </Th>
     )
   },
@@ -43,7 +43,7 @@ const Th = styled(shrTh)<{ themes: Theme }>`
     width: ${fontSize.M};
   `}
 `
-const Label = styled(Center).attrs({ forwardedAs: 'label', verticalCentering: true })`
+const LabelCenter = styled(Center).attrs({ forwardedAs: 'label', verticalCentering: true })`
   position: absolute;
   inset: 0;
 
