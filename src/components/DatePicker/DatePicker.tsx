@@ -299,6 +299,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
             inputRef.current && inputRef.current.focus()
           }
         }}
+        role="presentation"
       >
         <div ref={inputWrapperRef}>
           <Input

@@ -46,8 +46,8 @@ const accordionPanelTrigger = tv({
       'hover:shr-shadow-none',
       'focus-visible:shr-focusIndicator',
     ],
-    leftIcon: 'group-aria-expanded:shr-rotate-90',
-    rightIcon: 'group-aria-expanded:-shr-rotate-180',
+    leftIcon: 'group-aria-expanded:shrink-0 group-aria-expanded:shr-rotate-90',
+    rightIcon: 'group-aria-expanded:shrink-0 group-aria-expanded:-shr-rotate-180',
   },
   compoundSlots: [
     {
@@ -111,7 +111,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
         className={buttonStyle}
         data-component="AccordionHeaderButton"
       >
-        <Cluster align="center" as="span">
+        <Cluster className="shr-flex-nowrap" align="center" as="span">
           {displayIcon && iconPosition === 'left' && <FaCaretRightIcon className={leftIconStyle} />}
           <span className={titleStyle}>{children}</span>
           {displayIcon && iconPosition === 'right' && <FaCaretUpIcon className={rightIconStyle} />}

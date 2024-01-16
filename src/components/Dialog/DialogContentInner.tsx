@@ -152,7 +152,8 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
     <DialogPositionProvider top={top} bottom={bottom}>
       <DialogOverlap isOpen={isOpen}>
         <div className={layoutStyle} id={id}>
-          <div onClick={handleClickOverlay} className={backgroundStyle} />
+          {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
+          <div onClick={handleClickOverlay} className={backgroundStyle} role="presentation" />
           <div
             {...props}
             {...innerStyleProps}

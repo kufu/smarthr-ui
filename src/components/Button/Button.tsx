@@ -85,7 +85,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
         disabled={disabledOnLoading}
         $loading={loading}
       >
-        <ButtonInner prefix={actualPrefix} suffix={actualSuffix}>
+        <ButtonInner prefix={actualPrefix} suffix={actualSuffix} size={size}>
           {actualChildren}
         </ButtonInner>
       </ButtonWrapper>

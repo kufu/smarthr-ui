@@ -1,6 +1,8 @@
 import React, { forwardRef, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
+import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
+
 import type { Gap } from '../../../types'
 import type { ComponentPropsWithRef, PropsWithChildren } from 'react'
 
@@ -87,6 +89,13 @@ const reel = tv({
 export const Reel = forwardRef<HTMLDivElement, Props>(
   ({ as: Component = 'div', gap = 0.5, padding = 0, className, ...props }, ref) => {
     const styles = useMemo(() => reel({ gap, padding, className }), [className, gap, padding])
-    return <Component {...props} ref={ref} className={styles} />
+
+    const Wrapper = useSectionWrapper(Component)
+
+    return (
+      <Wrapper>
+        <Component {...props} ref={ref} className={styles} />
+      </Wrapper>
+    )
   },
 )

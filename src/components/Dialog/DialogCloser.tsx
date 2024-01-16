@@ -4,5 +4,7 @@ import { DialogContentContext } from './DialogContent'
 
 export const DialogCloser: React.FC<PropsWithChildren> = (props) => {
   const { onClickClose } = useContext(DialogContentContext)
-  return <div {...props} onClick={onClickClose} className="shr-inline-block" />
+
+  // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
+  return <div {...props} onClick={onClickClose} role="presentation" className="shr-inline-block" />
 }

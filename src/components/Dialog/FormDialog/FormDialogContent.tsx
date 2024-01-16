@@ -50,6 +50,7 @@ export const FormDialogContent: React.FC<Props & ElementProps> = ({
       ariaLabelledby={titleId}
       className={className}
     >
+      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <FormDialogContentInner
         title={title}
         titleId={titleId}

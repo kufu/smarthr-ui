@@ -60,7 +60,7 @@ const wrapper = tv({
       true: '[&]:shr-border-danger',
     },
     readOnly: {
-      true: 'shr-bg-background [&&&]:shr-border-[theme(backgroundColor.background)]',
+      true: '[&&&]:shr-border-[theme(backgroundColor.background)] [&&&]:shr-bg-background',
     },
   },
 })
@@ -148,7 +148,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
     const { input, affix } = inner()
 
     return (
-      <span {...wrapperStyleProps} onClick={() => innerRef.current?.focus()}>
+      <span {...wrapperStyleProps} onClick={() => innerRef.current?.focus()} role="presentation">
         {prefix && (
           <span className={affix({ className: 'smarthr-ui-Input-prefix' })}>{prefix}</span>
         )}
