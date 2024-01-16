@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [41.0.0](https://github.com/kufu/smarthr-ui/compare/v40.1.3...v41.0.0) (2024-01-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* Revert "Revert"RadioButtonをTailwindCSS化"" (#4136)
+
+### Features
+
+* Layout コンポーネントに SectioningFragment の自動挿入機構を作る ([#4070](https://github.com/kufu/smarthr-ui/issues/4070)) ([6d5b0d3](https://github.com/kufu/smarthr-ui/commit/6d5b0d336e12cdeaa01f2b4b803aa685fef707b1))
+* RightFixedNoteのeditボタンの表示/非表示を切り替えられるようにする ([#4180](https://github.com/kufu/smarthr-ui/issues/4180)) ([64899e5](https://github.com/kufu/smarthr-ui/commit/64899e5ed5cbc54f4209a68440a53e153ca55c3c))
+
+
+### Bug Fixes
+
+* AccordionPanelTrigger 内の見出しテキストで折り返しが発生する際に、アイコンとの間に改行が発生しないようにする ([#4151](https://github.com/kufu/smarthr-ui/issues/4151)) ([383e2b7](https://github.com/kufu/smarthr-ui/commit/383e2b7c409ec24aace7503980084ec8cbc94dc4))
+* Input[readOnly] の背景を正しい装飾に修正 ([#4181](https://github.com/kufu/smarthr-ui/issues/4181)) ([5435eaa](https://github.com/kufu/smarthr-ui/commit/5435eaa465eeadd998dbdb3f40557ea3b57dbef7))
+* ModelessDialog ヘッダを hover した時の装飾を修正 ([#4168](https://github.com/kufu/smarthr-ui/issues/4168)) ([d7301bf](https://github.com/kufu/smarthr-ui/commit/d7301bf261846a658609d3a9d11cf11c7e65aa08))
+* Revert "Revert"RadioButtonをTailwindCSS化"" ([#4136](https://github.com/kufu/smarthr-ui/issues/4136)) ([f0cc6cb](https://github.com/kufu/smarthr-ui/commit/f0cc6cb456cde5045934bceee24e2e20da35fe29)), closes [#4122](https://github.com/kufu/smarthr-ui/issues/4122) [#4122](https://github.com/kufu/smarthr-ui/issues/4122) [#4135](https://github.com/kufu/smarthr-ui/issues/4135) [#4122](https://github.com/kufu/smarthr-ui/issues/4122) [#4135](https://github.com/kufu/smarthr-ui/issues/4135)
+* size="s" の Button でも、アイコンとテキストコンテントの縦位置が揃うようにする ([#4182](https://github.com/kufu/smarthr-ui/issues/4182)) ([22dbcb5](https://github.com/kufu/smarthr-ui/commit/22dbcb501c9042b66a30fc072c57f63a51f6b501))
+
 ### [40.1.3](https://github.com/kufu/smarthr-ui/compare/v40.1.2...v40.1.3) (2023-12-26)
 
 
