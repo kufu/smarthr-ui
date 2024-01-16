@@ -32,7 +32,7 @@ const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do e
 const content = () => {
   const id = Math.random()
   return (
-    <Stack>
+    <StackDiv>
       <div>{lorem}</div>
       <div>
         <FormGroup title="Name">
@@ -44,7 +44,7 @@ const content = () => {
           <Input name={`email_${id}`} />
         </FormGroup>
       </div>
-    </Stack>
+    </StackDiv>
   )
 }
 
@@ -218,7 +218,7 @@ const Content = styled.div(
     padding: 16px;
   `,
 )
-const Stack = styled.div`
+const StackDiv = styled.div`
   > * + * {
     margin-top: 12px;
   }

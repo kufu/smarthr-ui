@@ -21,7 +21,7 @@ export default {
 }
 
 export const All: StoryFn = () => (
-  <List>
+  <ListStack>
     <li>
       <FormControl title="text">
         <Input name="text" type="text" defaultValue="string" />
@@ -99,14 +99,14 @@ export const All: StoryFn = () => (
         <StyledInput id="extending_style" name="extending_style" />
       </FormControl>
     </li>
-  </List>
+  </ListStack>
 )
 All.storyName = 'all'
 
 export const Currency: StoryFn = () => {
   const [value, setValue] = React.useState('1234567890')
   return (
-    <List>
+    <ListStack>
       <li>
         <FormControl title="currency (add comma to integer every 3 digits)">
           <CurrencyInput
@@ -123,12 +123,12 @@ export const Currency: StoryFn = () => {
           />
         </FormControl>
       </li>
-    </List>
+    </ListStack>
   )
 }
 Currency.storyName = 'CurrencyInput'
 
-const List = styled(Stack).attrs({ forwardedAs: 'ul' })``
+const ListStack = styled(Stack).attrs({ forwardedAs: 'ul' })``
 const StyledInput = styled(Input)`
   width: 50%;
 `

@@ -70,7 +70,7 @@ export const ControllableDropdown = () => {
         </DropdownTrigger>
         <DropdownContent controllable>
           <DropdownScrollArea>
-            <ControllableBoxMain>
+            <ControllableBoxMainStack>
               <Text as="p">`DropdownControllableContent` を使うとドロップダウン制御できます。</Text>
               <Text as="p">
                 制御されたドロップダウン内のコンテンツをクリックしても、ドロップダウンは閉じません。
@@ -107,7 +107,7 @@ export const ControllableDropdown = () => {
                   </Button>
                 </DropdownCloser>
               </Stack>
-            </ControllableBoxMain>
+            </ControllableBoxMainStack>
             <ControllableBoxBottom>
               <Cluster justify="flex-end">
                 <DropdownCloser>
@@ -167,14 +167,14 @@ const Template: Story = () => (
           </DropdownTrigger>
           <DropdownContent controllable>
             <DropdownScrollArea>
-              <ControllableBoxMain>
+              <ControllableBoxMainStack>
                 <Dropdown>
                   <DropdownTrigger>
                     <Button>さらに入れ子にできる Dropdown</Button>
                   </DropdownTrigger>
                   <DropdownContent controllable>
                     <DropdownScrollArea>
-                      <ControllableBoxMain>
+                      <ControllableBoxMainStack>
                         <Dropdown>
                           <DropdownTrigger>
                             <TriggerButton>いくらでも入れ子にできる Dropdown</TriggerButton>
@@ -183,11 +183,11 @@ const Template: Story = () => (
                             <ListMenu />
                           </DropdownContent>
                         </Dropdown>
-                      </ControllableBoxMain>
+                      </ControllableBoxMainStack>
                     </DropdownScrollArea>
                   </DropdownContent>
                 </Dropdown>
-              </ControllableBoxMain>
+              </ControllableBoxMainStack>
             </DropdownScrollArea>
           </DropdownContent>
         </Dropdown>
@@ -279,7 +279,7 @@ const Legends = styled.ul`
 const Box = styled.div`
   display: inline-block;
 `
-const ControllableBoxMain = styled(Stack)`
+const ControllableBoxMainStack = styled(Stack)`
   padding: 24px;
 `
 const ControllableBoxBottom = styled.div`

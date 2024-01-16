@@ -186,13 +186,13 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
       </DropdownTrigger>
       <DropdownContent>
         <DropdownScrollArea>
-          <ActionList ref={containerRef} themes={themes} className={classNames.panel}>
+          <ActionListStack ref={containerRef} themes={themes} className={classNames.panel}>
             {React.Children.map(children, (item, i) =>
               // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
               // itemの存在チェックでfalsyな値は弾かれている想定
               item ? <li key={i}>{actionItem(item as ActionItemTruthyType)}</li> : null,
             )}
-          </ActionList>
+          </ActionListStack>
         </DropdownScrollArea>
       </DropdownContent>
     </Dropdown>
@@ -204,7 +204,7 @@ const TriggerButton = styled(Button)`
     transform: rotate(0.5turn);
   }
 `
-const ActionList = styled(Stack).attrs({ forwardedAs: 'ul', gap: 0 })<{ themes: Theme }>`
+const ActionListStack = styled(Stack).attrs({ forwardedAs: 'ul', gap: 0 })<{ themes: Theme }>`
   ${({ themes: { space } }) => css`
     list-style: none;
     margin-block: 0;

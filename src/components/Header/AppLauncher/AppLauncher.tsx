@@ -58,7 +58,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
         </AppsButton>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <Wrapper themes={theme} className={classNames.wrapper}>
+        <WrapperStack themes={theme} className={classNames.wrapper}>
           <DropdownScrollArea>
             <Stack gap={1.5}>
               {baseApps && (
@@ -107,13 +107,13 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
           </DropdownScrollArea>
 
           {urlToShowAll && (
-            <Footer themes={theme} className={classNames.footer}>
+            <FooterStack themes={theme} className={classNames.footer}>
               <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
                 すべて見る
               </TextLink>
-            </Footer>
+            </FooterStack>
           )}
-        </Wrapper>
+        </WrapperStack>
       </DropdownContent>
     </Dropdown>
   )
@@ -134,13 +134,13 @@ const AppsButton = styled(Button)<{ themes: Theme }>`
     }
   `}
 `
-const Wrapper = styled(Stack).attrs({ forwardedAs: 'nav', gap: 1.5 })<{ themes: Theme }>`
+const WrapperStack = styled(Stack).attrs({ forwardedAs: 'nav', gap: 1.5 })<{ themes: Theme }>`
   ${({ themes: { space, leading } }) => css`
     padding: ${space(1.5)};
     line-height: ${leading.NORMAL};
   `}
 `
-const Footer = styled(Stack)<{ themes: Theme }>`
+const FooterStack = styled(Stack)<{ themes: Theme }>`
   ${({ themes: { border, space } }) => css`
     &&& {
       margin-block-end: ${space(-0.25)};

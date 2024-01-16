@@ -34,22 +34,22 @@ export const VRTState: StoryFn = () => (
         <Title>hover</Title>
         <InnerList id="list-hover">
           <li>
-            <Text>
+            <TextStack>
               <span>標準</span>
               <Select name="default" options={options} />
-            </Text>
+            </TextStack>
           </li>
           <li>
-            <Text>
+            <TextStack>
               <span>エラー状態</span>
               <Select name="error" error options={options} />
-            </Text>
+            </TextStack>
           </li>
           <li>
-            <Text>
+            <TextStack>
               <span>disabled 状態</span>
               <Select name="disabled" disabled options={options} />
-            </Text>
+            </TextStack>
           </li>
         </InnerList>
       </li>
@@ -58,22 +58,22 @@ export const VRTState: StoryFn = () => (
         <Title>focus</Title>
         <InnerList id="list-focus">
           <li>
-            <Text>
+            <TextStack>
               <span>標準</span>
               <Select name="default" options={options} />
-            </Text>
+            </TextStack>
           </li>
           <li>
-            <Text>
+            <TextStack>
               <span>エラー状態</span>
               <Select name="error" error options={options} />
-            </Text>
+            </TextStack>
           </li>
           <li>
-            <Text>
+            <TextStack>
               <span>disabled 状態</span>
               <Select name="disabled" disabled options={options} />
-            </Text>
+            </TextStack>
           </li>
         </InnerList>
       </li>
@@ -82,22 +82,22 @@ export const VRTState: StoryFn = () => (
         <Title>focus-visible</Title>
         <InnerList id="list-focus-visible">
           <li>
-            <Text>
+            <TextStack>
               <span>標準</span>
               <Select name="default" options={options} />
-            </Text>
+            </TextStack>
           </li>
           <li>
-            <Text>
+            <TextStack>
               <span>エラー状態</span>
               <Select name="error" error options={options} />
-            </Text>
+            </TextStack>
           </li>
           <li>
-            <Text>
+            <TextStack>
               <span>disabled 状態</span>
               <Select name="disabled" disabled options={options} />
-            </Text>
+            </TextStack>
           </li>
         </InnerList>
       </li>
@@ -106,22 +106,22 @@ export const VRTState: StoryFn = () => (
         <Title>active</Title>
         <InnerList id="list-active">
           <li>
-            <Text>
+            <TextStack>
               <span>標準</span>
               <Select name="default" options={options} />
-            </Text>
+            </TextStack>
           </li>
           <li>
-            <Text>
+            <TextStack>
               <span>エラー状態</span>
               <Select name="error" error options={options} />
-            </Text>
+            </TextStack>
           </li>
           <li>
-            <Text>
+            <TextStack>
               <span>disabled 状態</span>
               <Select name="disabled" disabled options={options} />
-            </Text>
+            </TextStack>
           </li>
         </InnerList>
       </li>
@@ -177,4 +177,4 @@ const Title = styled.p`
 const VRTInformationPanel = styled(InformationPanel)`
   margin-bottom: 24px;
 `
-const Text = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.5 })``
+const TextStack = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.5 })``
