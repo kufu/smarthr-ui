@@ -1,22 +1,6 @@
 import React, { useMemo } from 'react'
-import { tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
-
-const paginationItem = tv({
-  base: ['shr-rounded-s'],
-  variants: {
-    disabled: {
-      true: [
-        'disabled:shr-border-solid',
-        'disabled:shr-border-main',
-        'disabled:shr-text-white',
-        '[&&&]:disabled:shr-bg-main',
-        '[&&&]:disabled:shr-cursor-default',
-      ],
-    },
-  },
-})
 
 type Props = {
   page: number
@@ -26,13 +10,12 @@ type Props = {
 
 export const PaginationItemButton: React.FC<Props> = ({ page, currentPage, onClick }) => {
   const isCurrent = useMemo(() => page === currentPage, [page, currentPage])
-  const itemStyle = useMemo(() => paginationItem({ disabled: isCurrent }), [page, currentPage])
 
   return (
     <Button
       square
       size="s"
-      className={itemStyle}
+      className="shr-rounded-s aria-current-page:shr-cursor-default aria-current-page:shr-border-solid aria-current-page:shr-border-main aria-current-page:shr-bg-main aria-current-page:shr-text-white"
       aria-current={isCurrent ? 'page' : undefined}
       aria-label={`${page}ページ目`}
       onClick={isCurrent ? undefined : () => onClick(page)}

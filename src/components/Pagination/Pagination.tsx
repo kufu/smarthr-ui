@@ -12,74 +12,30 @@ const pagination = tv({
   slots: {
     wrapper: ['shr-inline-block', 'shr-max-w-full', 'smarthr-ui-Pagination'],
     list: ['shr-m-0.25'],
-    listItem: ['shr-list-none'],
+    firstListItem: ['smarthr-ui-Pagination-first'],
+    prevListItem: ['smarthr-ui-Pagination-prev'],
+    nextListItem: ['smarthr-ui-Pagination-next'],
+    lastListItem: ['smarthr-ui-Pagination-last'],
   },
   variants: {
     withoutNumbers: {
-      true: {},
-      false: {},
-    },
-    current: {
       true: {
-        listItem: ['smarthr-ui-Pagination-current'],
+        firstListItem: ['shr-mr-0.5'],
+        prevListItem: ['shr-mr-0'],
+        nextListItem: ['shr-ml-0'],
+        lastListItem: ['shr-ml-0.5'],
       },
       false: {
-        listItem: ['smarthr-ui-Pagination-page'],
-      },
-    },
-    type: {
-      first: {
-        listItem: ['smarthr-ui-Pagination-first'],
-      },
-      prev: {
-        listItem: ['smarthr-ui-Pagination-prev'],
-      },
-      next: {
-        listItem: ['smarthr-ui-Pagination-next'],
-      },
-      last: {
-        listItem: ['smarthr-ui-Pagination-last'],
+        prevListItem: ['shr-mr-0.5'],
+        nextListItem: ['shr-ml-0.5'],
       },
     },
   },
-  compoundVariants: [
+  compoundSlots: [
     {
-      type: 'prev',
-      withoutNumbers: false,
-      class: {
-        listItem: ['shr-mr-0.5'],
-      },
+      slots: ['firstListItem', 'prevListItem', 'nextListItem', 'lastListItem'],
+      class: ['shr-list-none'],
     },
-    {
-      type: 'next',
-      withoutNumbers: false,
-      class: {
-        listItem: ['shr-ml-0.5'],
-      },
-    },
-    {
-      type: 'first',
-      withoutNumbers: true,
-      class: {
-        listItem: ['shr-mr-0.5'],
-      },
-    },
-    {
-      type: 'prev',
-      withoutNumbers: true,
-      class: {
-        listItem: ['shr-mr-0'],
-      },
-    },
-    {
-      type: 'next',
-      withoutNumbers: true,
-      class: {
-        listItem: ['shr-ml-0'],
-      },
-    },
-
-    { type: 'last', withoutNumbers: true, class: { listItem: ['shr-ml-0.5'] } },
   ],
 })
 
@@ -108,20 +64,41 @@ export const Pagination: React.FC<Props & ElementProps> = ({
   withoutNumbers = false,
   ...props
 }) => {
-  const { wrapper, list, listItem } = useMemo(
-    () => pagination({ withoutNumbers }),
-    [withoutNumbers],
+  const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } = pagination()
+
+  const {
+    wrapperStyle,
+    listStyle,
+    firstListItemStyle,
+    prevListItemStyle,
+    nextListItemStyle,
+    lastListItemStyle,
+  } = useMemo(
+    () => ({
+      wrapperStyle: wrapper({ className }),
+      listStyle: list(),
+      firstListItemStyle: firstListItem({ withoutNumbers }),
+      prevListItemStyle: prevListItem({ withoutNumbers }),
+      nextListItemStyle: nextListItem({ withoutNumbers }),
+      lastListItemStyle: lastListItem({ withoutNumbers }),
+    }),
+    [
+      className,
+      withoutNumbers,
+      wrapper,
+      list,
+      firstListItem,
+      prevListItem,
+      nextListItem,
+      lastListItem,
+    ],
   )
-
-  const wrapperStyle = useMemo(() => wrapper({ className }), [className])
-
-  const listStyle = useMemo(() => list(), [withoutNumbers])
 
   if (total <= 1) return null
 
   const prevPage = (
     <>
-      <li className={listItem({ type: 'first' })}>
+      <li className={firstListItemStyle}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -130,7 +107,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
           double
         />
       </li>
-      <li className={listItem({ type: 'prev' })}>
+      <li className={prevListItemStyle}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -146,7 +123,12 @@ export const Pagination: React.FC<Props & ElementProps> = ({
         ...range(current - padding, current).filter((page) => page >= 1),
         ...range(current, current + padding + 1).filter((page) => page <= total),
       ].map((page) => (
-        <li key={`pagination-${page}`} className={listItem({ current: !!current })}>
+        <li
+          key={`pagination-${page}`}
+          className={
+            page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page'
+          }
+        >
           <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
         </li>
       ))
@@ -154,7 +136,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
 
   const nextPage = (
     <>
-      <li className={listItem({ type: 'next' })}>
+      <li className={nextListItemStyle}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
@@ -162,7 +144,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
           disabled={current === total}
         />
       </li>
-      <li className={listItem({ type: 'last' })}>
+      <li className={lastListItemStyle}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
