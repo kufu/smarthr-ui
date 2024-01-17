@@ -98,7 +98,7 @@ export const Single: StoryFn = () => {
   )
 
   return (
-    <List>
+    <ListStack>
       <Stack>
         <dt>デフォルト</dt>
         <dd>
@@ -316,7 +316,7 @@ export const Single: StoryFn = () => {
           </form>
         </dd>
       </Stack>
-    </List>
+    </ListStack>
   )
 }
 
@@ -380,7 +380,7 @@ export const Multi: StoryFn = () => {
   )
 
   return (
-    <List gap={2}>
+    <ListStack>
       <Stack>
         <dt>デフォルト</dt>
         <dd>
@@ -599,10 +599,10 @@ export const Multi: StoryFn = () => {
           />
         </dd>
       </Stack>
-    </List>
+    </ListStack>
   )
 }
 
-const List = styled(Stack).attrs({ forwardedAs: 'dl', gap: 2 })`
+const ListStack = styled(Stack).attrs({ forwardedAs: 'dl', gap: 2 })`
   margin: 1rem 1.5rem;
 `
