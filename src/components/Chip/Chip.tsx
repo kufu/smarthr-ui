@@ -17,10 +17,14 @@ const chip = tv({
     size: {
       s: ['shr-text-sm', 'shr-px-0.5', 'shr-py-0.25'],
     },
+    disabled: {
+      true: 'shr-bg-white/50 shr-text-disabled',
+      false: 'shr-bg-white shr-text-black',
+    },
   },
 })
 
-export const Chip: FC<Props> = ({ className, size = 's', ...props }) => {
-  const styles = useMemo(() => chip({ size, className }), [size, className])
+export const Chip: FC<Props> = ({ className, size = 's', disabled, ...props }) => {
+  const styles = useMemo(() => chip({ size, disabled, className }), [size, disabled, className])
   return <span {...props} className={styles} />
 }
