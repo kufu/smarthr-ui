@@ -333,7 +333,7 @@ const Container = styled.div<Rect & { themes: Theme }>(({ left, $width, height, 
     max-width: calc(100vw - ${left}px - ${spacingByChar(0.5)});
     min-width: 100%;
 
-    padding: ${spacingByChar(0.5)} 0;
+    padding-block: ${spacingByChar(0.5)};
     border-radius: ${radius.m};
     box-shadow: ${shadow.LAYER3};
     background-color: ${color.WHITE};
@@ -364,7 +364,7 @@ const NoItems = styled.p<{ themes: Theme }>`
     const { color, fontSize, spacingByChar } = themes
 
     return css`
-      margin: 0;
+      margin-block: 0;
       padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
       background-color: ${color.WHITE};
       font-size: ${fontSize.M};

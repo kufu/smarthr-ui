@@ -472,7 +472,6 @@ const Container = styled.div.attrs(
       border: ${border.shorthand};
       background-color: ${color.WHITE};
       padding: ${space(0.25)} ${space(0.5)};
-      color: ${color.TEXT_GREY};
       cursor: text;
       min-width: 20em;
 

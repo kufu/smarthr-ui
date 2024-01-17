@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { UnstyledButton } from '../Button'
+import { Chip } from '../Chip'
 import { FaTimesCircleIcon } from '../Icon'
 
 import { MultiSelectedItemTooltip } from './MultiSelectedItemTooltip'
@@ -53,9 +54,11 @@ export function MultiSelectedItem<T>({
 
   return (
     <MultiSelectedItemTooltip needsTooltip={needsTooltip} text={item.label}>
-      <Wrapper themes={theme} disabled={disabled} className={classNames.selectedItem}>
+      <Chip
+        disabled={disabled}
+        className={`${classNames.selectedItem} shr-flex shr-items-center shr-gap-0.75 shr-leading-normal [&]:shr-rounded-em`}
+      >
         <ItemLabel
-          themes={theme}
           enableEllipsis={enableEllipsis}
           className={classNames.selectedItemLabel}
           ref={labelRef}
@@ -83,35 +86,18 @@ export function MultiSelectedItem<T>({
             tabIndex={-1}
           >
             <FaTimesCircleIcon
-              color="inherit"
+              color={disabled ? 'TEXT_DISABLED' : 'inherit'}
               alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
             />
           </DeleteButton>
         )}
-      </Wrapper>
+      </Chip>
     </MultiSelectedItemTooltip>
   )
 }
 
-const Wrapper = styled.div<{ themes: Theme; disabled?: boolean }>`
-  ${({ themes, disabled }) => {
-    const { border, color, fontSize } = themes
-
-    return css`
-      position: relative;
-      display: flex;
-      border-radius: 1em;
-      border: ${border.shorthand};
-      background-color: ${disabled ? color.disableColor(color.WHITE) : color.WHITE};
-      color: ${disabled ? color.TEXT_DISABLED : color.TEXT_BLACK};
-      font-size: ${fontSize.S};
-    `
-  }}
-`
-const ItemLabel = styled.div<{ enableEllipsis?: boolean; themes: Theme }>`
-  ${({ enableEllipsis, themes: { border, spacingByChar } }) => css`
-    padding: ${spacingByChar(0.25)} calc(${spacingByChar(0.5)} - ${border.lineWidth});
-
+const ItemLabel = styled.span<{ enableEllipsis?: boolean }>`
+  ${({ enableEllipsis }) => css`
     ${enableEllipsis &&
     css`
       white-space: nowrap;
@@ -121,19 +107,20 @@ const ItemLabel = styled.div<{ enableEllipsis?: boolean; themes: Theme }>`
   `}
 `
 const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled?: boolean }>`
-  ${({ themes: { border, spacingByChar, shadow }, disabled }) => css`
+  ${({ themes: { color, radius, shadow }, disabled }) => css`
     flex-shrink: 1;
-    padding: calc(${spacingByChar(0.5)} - ${border.lineWidth});
-    border-radius: 50%;
+
+    border-radius: ${radius.full};
     cursor: ${disabled ? 'not-allowed' : 'pointer'};
     line-height: 0;
+    color: ${color.TEXT_BLACK};
 
     &:focus-visible {
       box-shadow: unset;
     }
 
     &:focus-visible > svg {
-      border-radius: 50%;
+      border-radius: ${radius.full};
       ${shadow.focusIndicatorStyles};
     }
   `}

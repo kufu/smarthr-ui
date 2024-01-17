@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaPlusCircleIcon } from '../Icon'
+import { Text } from '../Text'
 
 import { ComboBoxContext } from './ComboBoxContext'
 import { ComboBoxOption } from './types'
@@ -54,8 +55,10 @@ function ListBoxItemButton<T>({
       className={`${className} ${classNames.addButton}`}
       ref={isActive ? activeRef : undefined}
     >
-      <AddIcon color={theme.color.TEXT_LINK} themes={theme} />
-      <AddText themes={theme}>「{label}」を追加</AddText>
+      <FaPlusCircleIcon
+        color={theme.color.TEXT_LINK}
+        text={<Text color="TEXT_LINK">「{label}」を追加</Text>}
+      />
     </AddButton>
   ) : (
     <SelectButton
@@ -117,25 +120,4 @@ const SelectButton = styled.button<{ themes: Theme }>`
 const AddButton = styled(SelectButton)`
   display: flex;
   align-items: center;
-  min-width: 100%;
-`
-const AddIcon = styled(FaPlusCircleIcon)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { spacingByChar } = themes
-
-    return css`
-      position: relative;
-      top: -1px;
-      margin-right: ${spacingByChar(0.25)};
-    `
-  }}
-`
-const AddText = styled.span<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color } = themes
-
-    return css`
-      color: ${color.TEXT_LINK};
-    `
-  }}
 `
