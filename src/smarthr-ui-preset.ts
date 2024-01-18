@@ -153,6 +153,9 @@ export default {
       'flash-message': `${defaultZIndex.FLASH_MESSAGE}`,
     },
     extend: {
+      aria: {
+        'current-page': 'current="page"',
+      },
       minHeight: ({ theme }) => ({
         ...theme('spacing'),
       }),

@@ -1,6 +1,6 @@
-import React, { VFC } from 'react'
+import React from 'react'
 
-import { useTheme } from '../../hooks/useTheme'
+import { Button } from '../Button'
 import {
   FaAngleDoubleLeftIcon,
   FaAngleDoubleRightIcon,
@@ -8,8 +8,6 @@ import {
   FaChevronRightIcon,
   ComponentProps as IconProps,
 } from '../Icon'
-
-import { ItemButton } from './PaginationItemButton'
 
 type Props = {
   targetPage: number
@@ -34,27 +32,25 @@ const getIconProps = (
       ? { Icon: FaAngleDoubleRightIcon, alt: '最後へ' }
       : { Icon: FaChevronRightIcon, alt: '次へ' }
 
-export const PaginationControllerItemButton: VFC<Props> = ({
+export const PaginationControllerItemButton: React.FC<Props> = ({
   direction,
   disabled,
   double = false,
   targetPage,
   onClick,
 }) => {
-  const theme = useTheme()
   const { Icon, ...iconProps } = getIconProps(direction, double)
 
   return (
-    <ItemButton
+    <Button
+      square
+      size="s"
+      className="shr-rounded-s"
       onClick={() => onClick(targetPage)}
       disabled={disabled}
-      themes={theme}
       aria-label={iconProps.alt}
     >
-      <Icon
-        color={disabled ? theme.color.TEXT_DISABLED : theme.color.TEXT_BLACK}
-        alt={iconProps.alt}
-      />
-    </ItemButton>
+      <Icon color={disabled ? 'TEXT_DISABLED' : 'TEXT_BLACK'} alt={iconProps.alt} />
+    </Button>
   )
 }
