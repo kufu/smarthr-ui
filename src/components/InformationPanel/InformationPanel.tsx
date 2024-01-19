@@ -1,8 +1,7 @@
-import React, { FC, useCallback, useEffect, useState } from 'react'
-import styled, { css } from 'styled-components'
+import React, { FC, PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { Heading, HeadingTagTypes } from '../Heading'
@@ -11,11 +10,9 @@ import { Cluster, Stack } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 import { SectioningFragment } from '../SectioningContent'
 
-import { useClassNames } from './useClassNames'
-
 import type { DecoratorsType } from '../../types'
 
-type Props = {
+type Props = PropsWithChildren<{
   /** パネルのタイトル */
   title: React.ReactNode
   /**
@@ -28,18 +25,23 @@ type Props = {
   togglable?: boolean
   /** パネルの開閉の状態 */
   active?: boolean
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-  /** パネル内に表示する内容 */
-  children: React.ReactNode
   /** 開閉ボタン押下時に発火するコールバック関数 */
   onClickTrigger?: (active: boolean) => void
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'openButtonLabel' | 'closeButtonLabel'>
-}
+}>
 
 const OPEN_BUTTON_LABEL = '開く'
 const CLOSE_BUTTON_LABEL = '閉じる'
+
+const informationPanel = tv({
+  slots: {
+    wrapper: 'smarthr-ui-InformationPanel shr-p-1.5 shr-shadow-layer-3',
+    header: 'smarthr-ui-InformationPanel-title',
+    togglableButton: 'smarthr-ui-InformationPanel-closeButton -shr-my-0.5 shr-ms-auto',
+    content: 'smarthr-ui-InformationPanel-content shr-text-base aria-hidden:shr-hidden',
+  },
+})
 
 export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> = ({
   title,
@@ -47,14 +49,12 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
   type = 'info',
   togglable = true,
   active: activeProps = true,
-  className = '',
+  className,
   children,
   onClickTrigger,
   decorators,
   ...props
 }) => {
-  const theme = useTheme()
-
   const [active, setActive] = useState(activeProps)
   const titleId = useId()
   const contentId = useId()
@@ -71,90 +71,48 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
     setActive(activeProps)
   }, [activeProps])
 
-  const classNames = useClassNames()
+  const { wrapperStyle, headerStyle, togglableButtonStyle, contentStyle } = useMemo(() => {
+    const { wrapper, header, togglableButton, content } = informationPanel()
+    return {
+      wrapperStyle: wrapper({ className }),
+      headerStyle: header(),
+      togglableButtonStyle: togglableButton(),
+      contentStyle: content(),
+    }
+  }, [className])
 
   return (
-    <Wrapper {...props} className={`${className} ${classNames.wrapper}`} themes={theme}>
-      {/* HINT: Wrapperをsectionにしているため余計なタグを出力しないようSectioningFragmentを利用する */}
+    <Base {...props} as="section" className={wrapperStyle}>
+      {/* TODO: Base が自動セクショニング対応したら SectioningFragment を消す */}
       <SectioningFragment>
         <Stack gap={1.25}>
-          <Header themes={theme} $togglable={togglable}>
+          <Cluster align="center" justify="space-between">
             {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-            <Heading type="blockTitle" tag={titleTag} id={titleId} className={classNames.title}>
+            <Heading type="blockTitle" tag={titleTag} id={titleId} className={headerStyle}>
               <ResponseMessage type={type} iconGap={0.5}>
                 {title}
               </ResponseMessage>
             </Heading>
             {togglable && (
-              <TogglableButton
+              <Button
                 suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
                 size="s"
                 onClick={handleClickTrigger}
                 aria-expanded={togglable ? active : undefined}
                 aria-controls={contentId}
-                className={classNames.closeButton}
+                className={togglableButtonStyle}
               >
                 {active
                   ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
                   : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
-              </TogglableButton>
+              </Button>
             )}
-          </Header>
-          <Content
-            themes={theme}
-            id={contentId}
-            aria-hidden={!active}
-            className={classNames.content}
-          >
+          </Cluster>
+          <div id={contentId} aria-hidden={!active} className={contentStyle}>
             {children}
-          </Content>
+          </div>
         </Stack>
       </SectioningFragment>
-    </Wrapper>
+    </Base>
   )
 }
-
-const Wrapper = styled(Base).attrs(() => ({
-  forwardedAs: 'section',
-}))<{ themes: Theme }>`
-  ${({ themes: { spacingByChar, shadow } }) => css`
-    padding: ${spacingByChar(1.5)};
-    box-shadow: ${shadow.LAYER3};
-  `}
-`
-
-const Header = styled(Cluster).attrs({
-  align: 'center',
-  justify: 'space-between',
-})<{ themes: Theme; $togglable: boolean }>`
-  ${({ themes: { border, fontSize, leading, space }, $togglable }) => {
-    // (Button(1rem + padding-block + border) - Heading(1rem * 1.25) / 2)
-    const adjust = `calc((
-        (${fontSize.S} + ${space(1)} + ${border.lineWidth} * 2)
-        - (${fontSize.M} * ${leading.TIGHT})
-      ) / -2)
-    `
-    return css`
-      ${$togglable &&
-      css`
-        &&& {
-          margin-block: ${adjust};
-        }
-      `}
-    `
-  }}
-`
-
-const TogglableButton = styled(Button)`
-  margin-inline-start: auto;
-`
-
-const Content = styled.div<{ themes: Theme }>`
-  ${({ themes: { fontSize } }) => css`
-    font-size: ${fontSize.M};
-
-    &[aria-hidden='true'] {
-      display: none;
-    }
-  `}
-`
