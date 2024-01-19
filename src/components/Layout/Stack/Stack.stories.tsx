@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { Base, BaseColumn } from '../../Base'
-import { Heading } from '../../Heading'
+import { Heading, PageHeading } from '../../Heading'
 import { Cluster } from '../Cluster'
 
 import { Stack } from '.'
@@ -61,6 +61,30 @@ export const All: StoryFn = () => (
     </SideAreaStack>
   </Cluster>
 )
+
+export const AutoLeveling: StoryFn = () => (
+  <>
+    <PageHeading>h1 見出し</PageHeading>
+    <Stack as="section">
+      <Heading>h2 見出し</Heading>
+      <Stack as="section">
+        <Heading>h3 見出し</Heading>
+        <StyledStack>
+          {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+          <Heading>h4 見出し</Heading>
+          <WrongStack>
+            {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+            <Heading>h5 見出し</Heading>
+            <p>本文</p>
+          </WrongStack>
+        </StyledStack>
+      </Stack>
+    </Stack>
+  </>
+)
+
+const StyledStack = styled(Stack).attrs({ forwardedAs: 'section' })``
+const WrongStack = styled(Stack).attrs({ as: 'section' })``
 
 const SideAreaStack = styled(Stack)`
   flex: 1;
