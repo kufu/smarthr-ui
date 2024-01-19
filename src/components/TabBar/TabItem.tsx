@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, FC, ReactNode, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isTouchDevice } from '../../libs/ua'
@@ -40,31 +40,26 @@ const tabItem = tv({
   },
 })
 
-type Props = {
+type Props = PropsWithChildren<{
   /** タブの ID */
   id: string
-  /** タブの内容 */
-  children: ReactNode
   /** `true` のとき、タブが選択状態のスタイルになる */
   selected?: boolean
   /** `true` のとき、タブを無効状態にしてクリック不能にする */
   disabled?: boolean
-  /** コンポーネントに適用するクラス名 */
-  className?: string
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (tabId: string) => void
-}
+}>
 type ElementProps = Omit<
-  ButtonHTMLAttributes<HTMLButtonElement>,
+  ComponentPropsWithoutRef<'button'>,
   keyof Props | 'role' | 'aria-selected' | 'type'
 >
 
 export const TabItem: FC<Props & ElementProps> = ({
   id,
-  children,
   onClick,
   selected = false,
-  className = '',
+  className,
   disabled = false,
   ...props
 }) => {
@@ -83,8 +78,6 @@ export const TabItem: FC<Props & ElementProps> = ({
       onClick={() => onClick(id)}
       disabled={disabled}
       type="button"
-    >
-      {children}
-    </button>
+    />
   )
 }
