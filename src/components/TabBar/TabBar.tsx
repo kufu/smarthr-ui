@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, ReactNode, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Reel } from '../Layout'
@@ -29,15 +29,11 @@ const tabBar = tv({
   },
 })
 
-type Props = {
-  /** タブバーの内容。通常は TabItem を並べる。 */
-  children: ReactNode
+type Props = PropsWithChildren<{
   /** `true` のとき、TabBar に下線を表示する */
   bordered?: boolean
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-}
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'role'>
+}>
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'role'>
 
 export const TabBar: FC<Props & ElementProps> = ({
   className,
