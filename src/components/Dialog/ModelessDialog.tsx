@@ -12,17 +12,16 @@ import React, {
   useState,
 } from 'react'
 import Draggable from 'react-draggable'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { useId } from '../../hooks/useId'
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTailwindTheme'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
 
 import { DialogOverlap } from './DialogOverlap'
-import { useClassNames } from './useClassNames'
 import { useDialogPortal } from './useDialogPortal'
 
 import type { DecoratorsType } from '../../types'
@@ -86,6 +85,30 @@ type Props = PropsWithChildren<{
 const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
 const CLOSE_BUTTON_ICON_ALT = '閉じる'
 
+const modelessDialog = tv({
+  slots: {
+    layout: 'smarthr-ui-ModelessDialog shr-fixed',
+    box: 'smarthr-ui-ModelessDialog-box shr-flex shr-h-full shr-max-h-full shr-flex-col',
+    headerEl:
+      'smarthr-ui-ModelessDialog-header shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-border-b shr-border-solid shr-border-default shr-pe-1 shr-ps-1.5 hover:shr-bg-white-darken',
+    dialogHandler: [
+      'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
+      'focus-visible:shr-bg-white-darken focus-visible:shr-shadow-outline focus-visible:shr-outline-none',
+    ],
+    title: [
+      'shr-relative' /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */,
+      'shr-my-1 shr-me-1',
+    ],
+    closeButtonLayout: [
+      'shr-relative' /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */,
+      'shr-ml-auto shr-shrink-0',
+    ],
+    content:
+      'smarthr-ui-ModelessDialog-content shr-flex-1 shr-overflow-auto shr-overscroll-contain',
+    footerEl: 'smarthr-ui-ModelessDialog-footer shr-border-t shr-border-solid shr-border-default',
+  },
+})
+
 export const ModelessDialog: FC<Props & BaseElementProps> = ({
   header,
   children,
@@ -100,15 +123,55 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
   right,
   bottom,
   portalParent,
-  className = '',
+  className,
   decorators,
   id,
   ...props
 }) => {
   const labelId = useId()
-  const classNames = useClassNames().modelessDialog
   const { createPortal } = useDialogPortal(portalParent, id)
-  const theme = useTheme()
+  const { spacing } = useTheme()
+
+  const {
+    layoutStyle,
+    boxStyle,
+    headerStyle,
+    titleStyle,
+    dialogHandlerStyle,
+    closeButtonLayoutStyle,
+    contentStyle,
+    footerStyle,
+  } = useMemo(() => {
+    const { layout, box, headerEl, title, dialogHandler, closeButtonLayout, content, footerEl } =
+      modelessDialog()
+    return {
+      layoutStyle: layout({ className }),
+      boxStyle: box(),
+      headerStyle: headerEl(),
+      titleStyle: title(),
+      dialogHandlerStyle: dialogHandler(),
+      closeButtonLayoutStyle: closeButtonLayout(),
+      contentStyle: content(),
+      footerStyle: footerEl(),
+    }
+  }, [className])
+  const boxStyleProps = useMemo(() => {
+    const leftMargin = typeof left === 'number' ? `${left}px` : left
+    const rightMargin = typeof right === 'number' ? `${right}px` : right
+    /* TODO: 幅の定数指定は、トークンが決まり theme に入ったら差し替える */
+    const style =
+      width === undefined
+        ? {
+            maxWidth: `min(calc(100vw - max(${leftMargin || 0}, ${spacing[0.5]}) - max(${
+              rightMargin || 0
+            }, ${spacing[0.5]})), 800px)`,
+          }
+        : undefined
+    return {
+      className: boxStyle,
+      style,
+    }
+  }, [boxStyle, left, right, spacing, width])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
@@ -247,7 +310,7 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
   return createPortal(
     <DialogOverlap isOpen={isOpen}>
       <Draggable
-        handle={`.${classNames.handle}`}
+        handle=".smarthr-ui-ModelessDialog-handle"
         onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
         onDrag={(_, data) => {
           setPosition((prev) => ({
@@ -258,9 +321,9 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
         position={position}
         bounds={draggableBounds}
       >
-        <Layout
+        <div
           {...props}
-          className={`${className} ${classNames.wrapper}`}
+          className={layoutStyle}
           style={{
             top: topStyle,
             left: leftStyle,
@@ -273,20 +336,13 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
           role="dialog"
           aria-labelledby={labelId}
         >
-          <Box
-            isWidthAuto={width === undefined}
-            left={left}
-            right={right}
-            themes={theme}
-            className={classNames.box}
-          >
+          <Base {...boxStyleProps} radius="m" layer={3}>
             <div tabIndex={-1} ref={focusTargetRef}>
               {/* dummy element for focus management. */}
             </div>
-            <Header className={classNames.header} themes={theme}>
-              <DialogHandler
-                className={classNames.handle}
-                themes={theme}
+            <div className={headerStyle}>
+              <div
+                className={dialogHandlerStyle}
                 tabIndex={0}
                 role="slider"
                 aria-label={dialogHandlerAriaLabel}
@@ -294,128 +350,27 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
                 onKeyDown={handleArrowKey}
               >
                 <FaGripHorizontalIcon />
-              </DialogHandler>
-              <Title id={labelId} themes={theme}>
+              </div>
+              <div id={labelId} className={titleStyle}>
                 {header}
-              </Title>
-              <CloseButtonLayout>
+              </div>
+              <div className={closeButtonLayoutStyle}>
                 <Button
                   type="button"
                   size="s"
                   square
                   onClick={onClickClose}
-                  className={classNames.closeButton}
+                  className="smarthr-ui-ModelessDialog-closeButton"
                 >
                   <FaTimesIcon alt={closeButtonIconAlt} />
                 </Button>
-              </CloseButtonLayout>
-            </Header>
-            <Content className={classNames.content}>{children}</Content>
-            {footer && (
-              <Footer className={classNames.footer} themes={theme}>
-                {footer}
-              </Footer>
-            )}
-          </Box>
-        </Layout>
+              </div>
+            </div>
+            <div className={contentStyle}>{children}</div>
+            {footer && <div className={footerStyle}>{footer}</div>}
+          </Base>
+        </div>
       </Draggable>
     </DialogOverlap>,
   )
 }
-
-const Layout = styled.div`
-  position: fixed;
-`
-const Box = styled(Base).attrs({ radius: 'm', layer: 3 })<{
-  isWidthAuto: boolean
-  left?: string | number
-  right?: string | number
-  themes: Theme
-}>`
-  ${({ isWidthAuto, left = 0, right = 0, themes: { spacingByChar } }) => {
-    const leftMargin = typeof left === 'number' ? `${left}px` : left
-    const rightMargin = typeof right === 'number' ? `${right}px` : right
-
-    return css`
-      display: flex;
-      flex-direction: column;
-      ${
-        isWidthAuto &&
-        css`
-          max-width: min(
-            calc(
-              100vw - max(${leftMargin}, ${spacingByChar(0.5)}) - max(
-                  ${rightMargin},
-                  ${spacingByChar(0.5)}
-                )
-            ),
-            800px
-          );
-        ` /* TODO: 幅の定数指定は、トークンが決まり theme に入ったら差し替える */
-      }
-      height: 100%;
-      max-height: 100vh;
-    `
-  }}
-`
-const Header = styled.div<{ themes: Theme }>`
-  ${({ themes: { color, border, radius, spacingByChar } }) => css`
-    position: relative;
-    display: flex;
-    align-items: center;
-    border-top-right-radius: ${radius.l};
-    border-top-left-radius: ${radius.l};
-    padding-left: ${spacingByChar(1.5)};
-    padding-right: ${spacingByChar(1)};
-    border-bottom: ${border.shorthand};
-    cursor: move;
-
-    &:hover {
-      background-color: ${color.hoverColor(color.WHITE)};
-    }
-  `}
-`
-const Title = styled.div<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
-    /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */
-    position: relative;
-    margin: ${spacingByChar(1)} ${spacingByChar(1)} ${spacingByChar(1)} 0;
-  `}
-`
-
-const DialogHandler = styled.div<{ themes: Theme }>`
-  ${({ themes: { color, shadow, radius } }) => css`
-    position: absolute;
-    inset: 2px 0 0;
-    margin: auto;
-    border-top-right-radius: ${radius.s};
-    border-top-left-radius: ${radius.s};
-    color: ${color.TEXT_GREY};
-    display: flex;
-    justify-content: center;
-    transition: color 0.1s ease;
-
-    &:focus-visible {
-      outline: none;
-      box-shadow: ${shadow.OUTLINE};
-      background-color: ${color.hoverColor(color.WHITE)};
-    }
-  `}
-`
-
-const CloseButtonLayout = styled.div`
-  /* DialogHandlerの上に出すためにスタッキングコンテキストを生成 */
-  position: relative;
-  flex-shrink: 0;
-  margin-left: auto;
-`
-const Content = styled.div`
-  flex: 1;
-  overflow: auto;
-  overscroll-behavior: contain;
-`
-const Footer = styled.div<{ themes: Theme }>`
-  ${({ themes: { border } }) => css`
-    border-top: ${border.shorthand};
-  `}
-`
