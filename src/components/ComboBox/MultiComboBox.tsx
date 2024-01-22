@@ -464,23 +464,19 @@ const Container = styled.div.attrs(
   },
 )<ContainerType>`
   ${({ themes }) => {
-    const { border, radius, color, spacingByChar } = themes
+    const { border, color, radius, space } = themes
 
     return css`
       display: inline-flex;
-      min-width: calc(62px + 32px + ${spacingByChar(0.5)} * 2);
-      min-height: 40px;
       border-radius: ${radius.m};
       border: ${border.shorthand};
-      box-sizing: border-box;
       background-color: ${color.WHITE};
-      color: ${color.TEXT_GREY};
+      padding: ${space(0.25)} ${space(0.5)};
       cursor: text;
+      min-width: 20em;
 
       @media (prefers-contrast: more) {
-        & {
-          border: ${border.highContrast};
-        }
+        border: ${border.highContrast};
       }
     `
   }}
@@ -491,9 +487,6 @@ const InputArea = styled.div<{ themes: Theme }>`
     display: flex;
     flex-wrap: wrap;
     gap: ${spacingByChar(0.5)};
-    min-height: calc(1em + ${spacingByChar(0.5)} * 2);
-    max-height: 300px;
-    margin: ${spacingByChar(0.25)} ${spacingByChar(0.5)};
     overflow-y: auto;
   `}
 `
@@ -522,58 +515,43 @@ const InputWrapper = styled.div.attrs(({ $hidden }: InputWrapperProps) => ({
 `
 const Input = styled.input<{ themes: Theme }>`
   ${({ themes }) => {
-    const { color, fontSize, spacingByChar } = themes
+    const { color, fontSize } = themes
 
     return css`
-      min-width: 80px;
+      min-width: 5em;
       width: 100%;
-      min-height: calc(1em + ${spacingByChar(0.5)} * 2);
       border: none;
       font-size: ${fontSize.M};
       color: ${color.TEXT_BLACK};
-      box-sizing: border-box;
       outline: none;
-      &[disabled] {
+
+      :disabled {
         display: none;
       }
     `
   }}
 `
 const Placeholder = styled.p<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize } = themes
-
-    return css`
-      margin: 0;
-      align-self: center;
-      font-size: ${fontSize.M};
-    `
-  }}
+  margin-block: 0;
+  align-self: center;
 `
 const Suffix = styled.div<{ themes: Theme; $disabled: boolean }>`
-  ${({ themes: { color, spacingByChar }, $disabled }) => {
-    const space = spacingByChar(0.5)
+  ${({ themes: { border, space }, $disabled }) => css`
+    position: relative;
+    margin-inline: ${space(0.5)} ${space(-0.5)};
+    padding: ${space(0.5)};
+    cursor: ${$disabled ? 'not-allowed' : 'pointer'};
 
-    return css`
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: ${space};
-      padding-left: calc(${space} + 1px);
-      box-sizing: border-box;
-      cursor: ${$disabled ? 'not-allowed' : 'pointer'};
+    &::before {
+      content: '';
+      position: absolute;
+      inset: ${space(0.25)} 0;
+      width: 0;
+      border-left: ${border.shorthand};
+    }
 
-      &::before {
-        content: '';
-        position: absolute;
-        top: ${space};
-        left: 0;
-        display: block;
-        width: 1px;
-        background-color: ${color.BORDER};
-        height: calc(100% - ${space} * 2);
-      }
-    `
-  }}
+    .smarthr-ui-Icon {
+      display: block;
+    }
+  `}
 `

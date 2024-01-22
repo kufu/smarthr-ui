@@ -13,5 +13,6 @@ export default {
 export const All: StoryFn = () => (
   <Cluster>
     <Chip>ラベル</Chip>
+    <Chip disabled>ラベル[disabled]</Chip>
   </Cluster>
 )
