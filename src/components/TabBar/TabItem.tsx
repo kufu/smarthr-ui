@@ -1,103 +1,83 @@
-import React, { ButtonHTMLAttributes, ReactNode, VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { isTouchDevice } from '../../libs/ua'
 
-import { useClassNames } from './useClassNames'
+const tabItem = tv({
+  base: [
+    'smarthr-ui-TabItem',
+    'shr-bg-transparent',
+    'shr-cursor-pointer',
+    'shr-appearance-none',
+    'shr-font-bold',
+    'shr-py-0',
+    'shr-px-1.5',
+    'shr-box-border',
+    'hover:shr-bg-column',
+    'hover:shr-text-black',
+    'disabled:shr-bg-transparent',
+    'disabled:shr-text-grey/50',
+    'disabled:shr-cursor-not-allowed',
+  ],
+  variants: {
+    selected: {
+      true: [
+        'shr-relative',
+        'shr-text-black',
+        'shr-border-b-[3px]',
+        'shr-border-t-0',
+        'shr-border-l-0',
+        'shr-border-r-0',
+        'shr-border-solid',
+        'shr-border-main',
+        'shr-h-[40px]', // TODO 高さを指定しないようにする
+      ],
+      false: ['shr-text-grey', 'shr-border-none', 'shr-h-[43px]'], // TODO 高さを指定しないようにする
+    },
+    isTouchDevice: {
+      false: ['shr-transition-colors'],
+    },
+  },
+})
 
-type Props = {
+type Props = PropsWithChildren<{
   /** タブの ID */
   id: string
-  /** タブの内容 */
-  children: ReactNode
   /** `true` のとき、タブが選択状態のスタイルになる */
   selected?: boolean
   /** `true` のとき、タブを無効状態にしてクリック不能にする */
   disabled?: boolean
-  /** コンポーネントに適用するクラス名 */
-  className?: string
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (tabId: string) => void
-}
+}>
 type ElementProps = Omit<
-  ButtonHTMLAttributes<HTMLButtonElement>,
+  ComponentPropsWithoutRef<'button'>,
   keyof Props | 'role' | 'aria-selected' | 'type'
 >
 
-export const TabItem: VFC<Props & ElementProps> = ({
+export const TabItem: FC<Props & ElementProps> = ({
   id,
-  children,
   onClick,
   selected = false,
-  className = '',
+  className,
   disabled = false,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames().tabItem
-  const wrapperClass = `${className} ${selected ? 'selected' : ''} ${classNames.wrapper}`
+  const tabItemStyle = useMemo(
+    () => tabItem({ className, selected, isTouchDevice }),
+    [className, selected],
+  )
 
   return (
-    <ItemButton
+    <button
       {...props}
       id={id}
       role="tab"
       aria-selected={selected}
-      className={wrapperClass}
+      className={tabItemStyle}
       onClick={() => onClick(id)}
       disabled={disabled}
-      themes={theme}
       type="button"
-    >
-      {children}
-    </ItemButton>
+    />
   )
 }
-
-const resetButtonStyle = css`
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  appearance: none;
-`
-
-const borderWidth = 3
-const ItemHeight = 40
-
-const ItemButton = styled.button<{ themes: Theme }>`
-  ${resetButtonStyle}
-  ${({ themes }) => {
-    const { fontSize, spacingByChar, color, interaction } = themes
-    return css`
-      font-weight: bold;
-      font-size: ${fontSize.M};
-      color: ${color.TEXT_GREY};
-      height: ${ItemHeight + borderWidth}px;
-      padding: 0 ${spacingByChar(1.5)};
-      box-sizing: border-box;
-      transition: ${isTouchDevice
-        ? 'none'
-        : `background-color ${interaction.hover.animation}, color ${interaction.hover.animation}`};
-
-      &.selected {
-        position: relative;
-        color: ${color.TEXT_BLACK};
-        height: ${ItemHeight}px;
-        border-bottom: solid ${borderWidth}px ${color.MAIN};
-      }
-
-      :hover {
-        background-color: ${color.COLUMN};
-        color: ${color.TEXT_BLACK};
-      }
-
-      :disabled {
-        background-color: transparent;
-        color: ${color.disableColor(color.TEXT_GREY)};
-        cursor: not-allowed;
-      }
-    `
-  }}
-`
