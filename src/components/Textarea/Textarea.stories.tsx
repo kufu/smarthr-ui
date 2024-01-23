@@ -17,45 +17,45 @@ const Template: StoryFn = () => {
   const onChangeValue = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setValue(e.currentTarget.value)
   return (
-    <List>
+    <ListStack>
       <li>
-        <Label>
+        <LabelStack>
           標準
           <Textarea name="default" />
-        </Label>
+        </LabelStack>
       </li>
       <li>
-        <Label>
+        <LabelStack>
           入力欄を自動で広げる（初期： 3行、最大： 10行）
           <Textarea name="auto_resize" cols={35} rows={3} maxRows={10} autoResize />
-        </Label>
+        </LabelStack>
       </li>
       <li>
-        <Label>
+        <LabelStack>
           幅指定
           <Textarea name="width" width="100%" />
-        </Label>
+        </LabelStack>
       </li>
       <li>
-        <Label>
+        <LabelStack>
           disabled
           <Textarea name="disabled" disabled={true} />
-        </Label>
+        </LabelStack>
       </li>
       <li>
-        <Label>
+        <LabelStack>
           エラー時
           <Textarea name="error" error={true} />
-        </Label>
+        </LabelStack>
       </li>
       <li>
-        <Label>
+        <LabelStack>
           最大文字数 (defaultValue)
           <Textarea name="max_length_with_default_value" maxLength={140} defaultValue="message👌" />
-        </Label>
+        </LabelStack>
       </li>
       <li>
-        <Label>
+        <LabelStack>
           最大文字数 (value)
           <Textarea
             name="max_length_with_value"
@@ -63,10 +63,10 @@ const Template: StoryFn = () => {
             value={value}
             onChange={onChangeValue}
           />
-        </Label>
+        </LabelStack>
       </li>
       <li>
-        <Label>
+        <LabelStack>
           最大文字数 (value)
           <Textarea
             name="max_length_with_value_over"
@@ -74,10 +74,10 @@ const Template: StoryFn = () => {
             value={value}
             onChange={onChangeValue}
           />
-        </Label>
+        </LabelStack>
       </li>
       <li>
-        <Label>
+        <LabelStack>
           最大文字数 (decorators)
           <Textarea
             name="max_length_with_value_and_decorators"
@@ -89,9 +89,9 @@ const Template: StoryFn = () => {
               afterMaxLengthCount: (txt) => ` characters(${txt})`,
             }}
           />
-        </Label>
+        </LabelStack>
       </li>
-    </List>
+    </ListStack>
   )
 }
 
@@ -111,8 +111,8 @@ RegInput.play = async ({ canvasElement }) => {
   await userEvent.type(resizableTextarea, 'hoge\n'.repeat(11), { delay: 0.1 })
 }
 
-const List = styled(Stack).attrs({ forwardedAs: 'ul', gap: 1.5 })`
+const ListStack = styled(Stack).attrs({ forwardedAs: 'ul', gap: 1.5 })`
   padding: 0 24px;
   list-style: none;
 `
-const Label = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.25, align: 'flex-start' })``
+const LabelStack = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.25, align: 'flex-start' })``

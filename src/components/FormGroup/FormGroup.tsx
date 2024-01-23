@@ -96,7 +96,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
   )
 
   return (
-    <Wrapper
+    <WrapperStack
       {...props}
       innerMargin={innerMargin}
       disabled={disabled}
@@ -166,7 +166,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
           {supplementaryMessage}
         </Text>
       )}
-    </Wrapper>
+    </WrapperStack>
   )
 }
 
@@ -218,7 +218,7 @@ const isInputElement = (type: string | React.JSXElementConstructor<any>) => {
   )
 }
 
-const Wrapper = styled(Stack).attrs<{
+const WrapperStack = styled(Stack).attrs<{
   innerMargin: Props['innerMargin']
 }>(({ innerMargin }) => ({
   // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は 1

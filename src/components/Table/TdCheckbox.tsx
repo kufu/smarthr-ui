@@ -21,12 +21,12 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof
     return (
       // Td に必要な属性やイベントは不要
       <Td className={className} themes={theme}>
-        <Label>
+        <LabelCenter>
           {/* 使う側で lint をかけるため無効化 */}
           {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute  */}
           <CheckBox {...others} ref={ref} aria-labelledby={ariaLabelledby} />
           {children && <VisuallyHiddenText>{children}</VisuallyHiddenText>}
-        </Label>
+        </LabelCenter>
       </Td>
     )
   },
@@ -39,7 +39,7 @@ const Td = styled(shrTd)<{ themes: Theme }>`
     width: ${fontSize.M};
   `}
 `
-const Label = styled(Center).attrs({ forwardedAs: 'label', verticalCentering: true })`
+const LabelCenter = styled(Center).attrs({ forwardedAs: 'label', verticalCentering: true })`
   position: absolute;
   inset: 0;
 

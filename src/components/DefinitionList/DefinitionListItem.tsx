@@ -24,16 +24,16 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
   const { definitionListItem } = useClassNames()
 
   return (
-    <Wrapper themes={theme} className={`${className} ${definitionListItem.wrapper}`}>
+    <StyledStack themes={theme} className={`${className} ${definitionListItem.wrapper}`}>
       <TermText className={definitionListItem.term}>{term}</TermText>
       <DescriptionText themes={theme} className={definitionListItem.description}>
         {description}
       </DescriptionText>
-    </Wrapper>
+    </StyledStack>
   )
 }
 
-const Wrapper = styled(Stack).attrs({ gap: 0.25 })<{ themes: Theme }>`
+const StyledStack = styled(Stack).attrs({ gap: 0.25 })<{ themes: Theme }>`
   ${({ themes: { border } }) => css`
     border-bottom: ${border.shorthand};
     border-bottom-style: dotted;

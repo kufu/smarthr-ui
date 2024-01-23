@@ -17,7 +17,7 @@ export default {
 }
 
 const SearchInputStory: StoryFn = () => (
-  <Container>
+  <StyledStack>
     <div>
       <p>主に入力欄に対する説明をレイアウト上配置できない場合の利用を想定しています。</p>
       <SearchInput
@@ -25,7 +25,7 @@ const SearchInputStory: StoryFn = () => (
         tooltipMessage="氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。"
       />
     </div>
-  </Container>
+  </StyledStack>
 )
 
 export const VRTHoverSearchInput: StoryFn = () => (
@@ -69,7 +69,7 @@ VRTHoverSearchInputForcedColors.parameters = {
   chromatic: { forcedColors: 'active' },
 }
 
-const Container = styled(Stack)`
+const StyledStack = styled(Stack)`
   ${({ theme: { space } }) => css`
     padding: ${space(2)};
   `}

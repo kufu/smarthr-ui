@@ -47,6 +47,7 @@ export default {
       s: '0.25rem',
       m: '0.375rem',
       l: '0.5rem',
+      em: '1em',
       full: '9999px',
     },
     boxShadow: {
@@ -153,6 +154,9 @@ export default {
       'flash-message': `${defaultZIndex.FLASH_MESSAGE}`,
     },
     extend: {
+      aria: {
+        'current-page': 'current="page"',
+      },
       minHeight: ({ theme }) => ({
         ...theme('spacing'),
       }),

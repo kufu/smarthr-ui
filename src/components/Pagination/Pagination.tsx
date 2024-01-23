@@ -1,14 +1,43 @@
-import React, { HTMLAttributes, VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { HTMLAttributes, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { range } from '../../libs/lodash'
-import { Reel } from '../Layout'
+import { Cluster, Reel } from '../Layout'
 import { Nav } from '../SectioningContent'
 
 import { PaginationControllerItemButton } from './PaginationControllerItemButton'
 import { PaginationItemButton } from './PaginationItemButton'
-import { useClassNames } from './useClassNames'
+
+const pagination = tv({
+  slots: {
+    wrapper: ['shr-inline-block', 'shr-max-w-full', 'smarthr-ui-Pagination'],
+    list: ['shr-m-0.25'],
+    firstListItem: ['smarthr-ui-Pagination-first'],
+    prevListItem: ['smarthr-ui-Pagination-prev'],
+    nextListItem: ['smarthr-ui-Pagination-next'],
+    lastListItem: ['smarthr-ui-Pagination-last'],
+  },
+  variants: {
+    withoutNumbers: {
+      true: {
+        firstListItem: ['shr-mr-0.5'],
+        prevListItem: ['shr-mr-0'],
+        nextListItem: ['shr-ml-0'],
+        lastListItem: ['shr-ml-0.5'],
+      },
+      false: {
+        prevListItem: ['shr-mr-0.5'],
+        nextListItem: ['shr-ml-0.5'],
+      },
+    },
+  },
+  compoundSlots: [
+    {
+      slots: ['firstListItem', 'prevListItem', 'nextListItem', 'lastListItem'],
+      class: ['shr-list-none'],
+    },
+  ],
+})
 
 type Props = {
   /** 全ページ数 */
@@ -26,7 +55,7 @@ type Props = {
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
-export const Pagination: VFC<Props & ElementProps> = ({
+export const Pagination: React.FC<Props & ElementProps> = ({
   total,
   current,
   onClick,
@@ -35,14 +64,41 @@ export const Pagination: VFC<Props & ElementProps> = ({
   withoutNumbers = false,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
+  const { wrapper, list, firstListItem, prevListItem, nextListItem, lastListItem } = pagination()
+
+  const {
+    wrapperStyle,
+    listStyle,
+    firstListItemStyle,
+    prevListItemStyle,
+    nextListItemStyle,
+    lastListItemStyle,
+  } = useMemo(
+    () => ({
+      wrapperStyle: wrapper({ className }),
+      listStyle: list(),
+      firstListItemStyle: firstListItem({ withoutNumbers }),
+      prevListItemStyle: prevListItem({ withoutNumbers }),
+      nextListItemStyle: nextListItem({ withoutNumbers }),
+      lastListItemStyle: lastListItem({ withoutNumbers }),
+    }),
+    [
+      className,
+      withoutNumbers,
+      wrapper,
+      list,
+      firstListItem,
+      prevListItem,
+      nextListItem,
+      lastListItem,
+    ],
+  )
 
   if (total <= 1) return null
 
   const prevPage = (
     <>
-      <li className={classNames.first}>
+      <li className={firstListItemStyle}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -51,7 +107,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
           double
         />
       </li>
-      <li className={classNames.prev}>
+      <li className={prevListItemStyle}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="prev"
@@ -69,7 +125,9 @@ export const Pagination: VFC<Props & ElementProps> = ({
       ].map((page) => (
         <li
           key={`pagination-${page}`}
-          className={page === current ? classNames.current : classNames.page}
+          className={
+            page === current ? 'smarthr-ui-Pagination-current' : 'smarthr-ui-Pagination-page'
+          }
         >
           <PaginationItemButton page={page} currentPage={current} onClick={onClick} />
         </li>
@@ -78,7 +136,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
 
   const nextPage = (
     <>
-      <li className={classNames.next}>
+      <li className={nextListItemStyle}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
@@ -86,7 +144,7 @@ export const Pagination: VFC<Props & ElementProps> = ({
           disabled={current === total}
         />
       </li>
-      <li className={classNames.last}>
+      <li className={lastListItemStyle}>
         <PaginationControllerItemButton
           onClick={onClick}
           direction="next"
@@ -99,61 +157,14 @@ export const Pagination: VFC<Props & ElementProps> = ({
   )
 
   return (
-    <WrapperNav
-      {...props}
-      className={`${className} ${classNames.wrapper}`}
-      aria-label="ページネーション"
-    >
+    <Nav {...props} className={wrapperStyle} aria-label="ページネーション">
       <Reel>
-        <List className={withoutNumbers ? 'withoutNumbers' : ''} themes={theme}>
+        <Cluster as="ul" className={listStyle}>
           {prevPage}
           {pages}
           {nextPage}
-        </List>
+        </Cluster>
       </Reel>
-    </WrapperNav>
+    </Nav>
   )
 }
-
-const WrapperNav = styled(Nav)`
-  display: inline-block;
-  max-width: 100%;
-`
-const List = styled.ul<{ themes: Theme }>`
-  ${({ themes: { spacingByChar, shadow } }) => {
-    const classNames = useClassNames()
-
-    return css`
-      display: flex;
-      align-items: center;
-      margin: ${shadow.OUTLINE_MARGIN};
-      padding: 0;
-      > li {
-        list-style: none;
-        :not(:first-child) {
-          margin-left: ${spacingByChar(0.5)};
-        }
-      }
-      &:not(.withoutNumbers) {
-        > li {
-          &.${classNames.prev} + li {
-            margin-left: ${spacingByChar(1)};
-          }
-          &.${classNames.next} {
-            margin-left: ${spacingByChar(1)};
-          }
-        }
-      }
-      &.withoutNumbers {
-        > li {
-          &.${classNames.prev} {
-            margin-left: ${spacingByChar(1)};
-          }
-          &.${classNames.last} {
-            margin-left: ${spacingByChar(1)};
-          }
-        }
-      }
-    `
-  }}
-`

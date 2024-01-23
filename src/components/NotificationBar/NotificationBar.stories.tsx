@@ -40,7 +40,7 @@ export const All: StoryFn = () => {
   const onClose = () => console.log('close')
 
   return (
-    <Wrapper>
+    <RootStack>
       <Stack gap={0.5}>
         <dt>メッセージの種類</dt>
         <Stack gap={0.25} as="dd">
@@ -113,11 +113,11 @@ export const All: StoryFn = () => {
           <NotificationBar type="warning" message="onClose を省略すると、閉じるボタンが消えます" />
         </Stack>
       </Stack>
-    </Wrapper>
+    </RootStack>
   )
 }
 
-const Wrapper = styled(Stack).attrs({ forwardedAs: 'dl', gap: 1.5 })`
+const RootStack = styled(Stack).attrs({ forwardedAs: 'dl', gap: 1.5 })`
   ${({ theme: { color, spacingByChar } }) => css`
     margin-block: unset;
     background-color: ${color.BACKGROUND};
@@ -145,7 +145,7 @@ export const Demo: StoryFn = () => {
           animate={animate}
         />
       )}
-      <Center>
+      <StyledWrapper>
         <Stack>
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label>
@@ -182,7 +182,7 @@ export const Demo: StoryFn = () => {
             NotificationBar を{visible ? '隠す' : '表示'}
           </Button>
         </Stack>
-      </Center>
+      </StyledWrapper>
     </DemoWrapper>
   )
 }
@@ -198,7 +198,7 @@ const DemoWrapper = styled.div`
     background-color: ${color.BACKGROUND};
   `}
 `
-const Center = styled.div`
+const StyledWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

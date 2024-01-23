@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import { userEvent } from '@storybook/testing-library'
 import React, { useState } from 'react'
 import styled from 'styled-components'
@@ -11,7 +11,7 @@ export default {
   component: Pagination,
 }
 
-const Template: Story = () => {
+const Template: StoryFn = () => {
   const [current, setCurrent] = useState(7)
 
   return (

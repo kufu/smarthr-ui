@@ -1,73 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TabBar should be match snapshot 1`] = `
-.c1 {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  font-weight: bold;
-  font-size: 1rem;
-  color: #706d65;
-  height: 43px;
-  padding: 0 24px;
-  box-sizing: border-box;
-  -webkit-transition: background-color .3s ease-out,color .3s ease-out;
-  transition: background-color .3s ease-out,color .3s ease-out;
-}
-
-.c1.selected {
-  position: relative;
-  color: #23221e;
-  height: 40px;
-  border-bottom: solid 3px #0077c7;
-}
-
-.c1:hover {
-  background-color: #f8f7f6;
-  color: #23221e;
-}
-
-.c1:disabled {
-  background-color: transparent;
-  color: rgba(112,109,101,0.5);
-  cursor: not-allowed;
-}
-
-.c0 {
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  margin: 4px;
-}
-
-.c0.bordered {
-  position: relative;
-}
-
-.c0.bordered::before {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-bottom: 1px solid #d6d3d0;
-  content: '';
-}
-
 <div
   className="shr-flex shr-overflow-x-auto shr-overflow-y-hidden [&_>_*]:shr-flex- [&_>_*]:shr-flex-shrink-0 [&_>_*]:shr-basis-auto empty:shr-gap-0 shr-gap-0.5 shr-p-0 smarthr-ui-TabBar"
   role="tablist"
 >
   <div
-    className="c0 bordered"
+    className="shr-grow shr-m-0.25 shr-relative before:shr-absolute before:shr-inset-x-0 before:shr-bottom-0 before:shr-border-b before:shr-border-t-0 before:shr-border-l-0 before:shr-border-r-0 before:shr-border-solid before:shr-border-default before:shr-content-[""]"
   >
     <button
       aria-selected={false}
-      className="c1   smarthr-ui-TabItem"
+      className="smarthr-ui-TabItem shr-bg-transparent shr-cursor-pointer shr-appearance-none shr-font-bold shr-py-0 shr-px-1.5 shr-box-border hover:shr-bg-column hover:shr-text-black disabled:shr-bg-transparent disabled:shr-text-grey/50 disabled:shr-cursor-not-allowed shr-text-grey shr-border-none shr-h-[43px] shr-transition-colors"
       disabled={false}
       id="1"
       onClick={[Function]}
@@ -78,7 +21,7 @@ exports[`TabBar should be match snapshot 1`] = `
     </button>
     <button
       aria-selected={true}
-      className="c1  selected smarthr-ui-TabItem"
+      className="smarthr-ui-TabItem shr-bg-transparent shr-cursor-pointer shr-appearance-none shr-font-bold shr-py-0 shr-px-1.5 shr-box-border hover:shr-bg-column hover:shr-text-black disabled:shr-bg-transparent disabled:shr-text-grey/50 disabled:shr-cursor-not-allowed shr-relative shr-text-black shr-border-b-[3px] shr-border-t-0 shr-border-l-0 shr-border-r-0 shr-border-solid shr-border-main shr-h-[40px] shr-transition-colors"
       disabled={false}
       id="2"
       onClick={[Function]}
@@ -89,7 +32,7 @@ exports[`TabBar should be match snapshot 1`] = `
     </button>
     <button
       aria-selected={false}
-      className="c1   smarthr-ui-TabItem"
+      className="smarthr-ui-TabItem shr-bg-transparent shr-cursor-pointer shr-appearance-none shr-font-bold shr-py-0 shr-px-1.5 shr-box-border hover:shr-bg-column hover:shr-text-black disabled:shr-bg-transparent disabled:shr-text-grey/50 disabled:shr-cursor-not-allowed shr-text-grey shr-border-none shr-h-[43px] shr-transition-colors"
       disabled={true}
       id="3"
       onClick={[Function]}

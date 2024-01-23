@@ -1,7 +1,5 @@
-import React, { VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { useMemo } from 'react'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
 
 type Props = {
@@ -10,42 +8,20 @@ type Props = {
   onClick: (pageNumber: number) => void
 }
 
-export const PaginationItemButton: VFC<Props> = ({ page, currentPage, onClick }) => {
-  const theme = useTheme()
-
-  if (page === currentPage) {
-    return (
-      <ItemButton
-        className="active"
-        themes={theme}
-        aria-current="page"
-        aria-label={`${page}ページ目`}
-        disabled
-      >
-        {page}
-      </ItemButton>
-    )
-  }
+export const PaginationItemButton: React.FC<Props> = ({ page, currentPage, onClick }) => {
+  const isCurrent = useMemo(() => page === currentPage, [page, currentPage])
 
   return (
-    <ItemButton onClick={() => onClick(page)} themes={theme} aria-label={`${page}ページ目`}>
+    <Button
+      square
+      size="s"
+      className="shr-rounded-s aria-current-page:shr-cursor-default aria-current-page:shr-border-solid aria-current-page:shr-border-main aria-current-page:shr-bg-main aria-current-page:shr-text-white"
+      aria-current={isCurrent ? 'page' : undefined}
+      aria-label={`${page}ページ目`}
+      onClick={isCurrent ? undefined : () => onClick(page)}
+      disabled={isCurrent}
+    >
       {page}
-    </ItemButton>
+    </Button>
   )
 }
-
-export const ItemButton = styled(Button).attrs({
-  square: true,
-  size: 's',
-})<{ themes: Theme }>`
-  ${({ themes: { color, radius } }) => css`
-    border-radius: ${radius.s};
-    &.active {
-      cursor: default;
-      outline: none;
-      border: 1px solid ${color.MAIN};
-      background-color: ${color.MAIN};
-      color: ${color.TEXT_WHITE};
-    }
-  `}
-`

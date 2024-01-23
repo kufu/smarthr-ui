@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React from 'react'
 
 import { Stack } from '../Layout'
@@ -11,7 +11,7 @@ export default {
   component: InformationPanel,
 }
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <Stack>
     <InformationPanel title="書類に記載する扶養家族" togglable={false}>
       借り換え直前の残高3,000万円、借り換え後の借入額2,900万円の場合→借り換え後の借入額が少ないので「借り換え後の借入額の方が少ない・同じ」を選択

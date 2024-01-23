@@ -20,39 +20,39 @@ const options = [
 ]
 
 export const All: StoryFn = () => (
-  <List>
+  <ListStack>
     <li>
-      <Text>
+      <TextStack>
         <span>標準</span>
         <Select name="default" options={options} />
-      </Text>
+      </TextStack>
     </li>
     <li>
-      <Text>
+      <TextStack>
         <span>サイズ小</span>
         <Select name="s" options={options} size="s" />
-      </Text>
+      </TextStack>
     </li>
     <li>
-      <Text>
+      <TextStack>
         <span>value 指定</span>
         <Select name="value" value="orange" options={options} />
-      </Text>
+      </TextStack>
     </li>
     <li>
-      <Text>
+      <TextStack>
         <span>エラー状態</span>
         <Select name="error" error options={options} />
-      </Text>
+      </TextStack>
     </li>
     <li>
-      <Text>
+      <TextStack>
         <span>disabled 状態</span>
         <Select name="disabled" disabled options={options} />
-      </Text>
+      </TextStack>
     </li>
     <li>
-      <Text>
+      <TextStack>
         <span>選択肢グループ要素の使用</span>
         <Select
           name="group"
@@ -80,22 +80,22 @@ export const All: StoryFn = () => (
             },
           ]}
         />
-      </Text>
+      </TextStack>
     </li>
     <li style={{ alignSelf: 'stretch' }}>
-      <Text>
+      <TextStack>
         <span>幅指定</span>
         <Select name="width" width="100%" options={options} />
-      </Text>
+      </TextStack>
     </li>
     <li>
-      <Text>
+      <TextStack>
         <span>空の選択肢を表示</span>
         <Select name="hasBlank" hasBlank options={options} />
-      </Text>
+      </TextStack>
     </li>
     <li>
-      <Text>
+      <TextStack>
         <span>空の選択肢を表示(文言も変更)</span>
         <Select
           name="hasBlank"
@@ -103,10 +103,10 @@ export const All: StoryFn = () => (
           decorators={{ blankLabel: (txt) => `select.(${txt})` }}
           options={options}
         />
-      </Text>
+      </TextStack>
     </li>
     <li>
-      <Text>
+      <TextStack>
         <span>onChange</span>
         <Select
           name="onChange"
@@ -126,14 +126,14 @@ export const All: StoryFn = () => (
             },
           ]}
         />
-      </Text>
+      </TextStack>
     </li>
-  </List>
+  </ListStack>
 )
 All.storyName = 'all'
 
-const List = styled(Stack).attrs({ forwardedAs: 'ul', align: 'flex-start' })`
+const ListStack = styled(Stack).attrs({ forwardedAs: 'ul', align: 'flex-start' })`
   list-style: none;
   padding: 0 24px;
 `
-const Text = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.5 })``
+const TextStack = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.5 })``
