@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [41.1.0](https://github.com/kufu/smarthr-ui/compare/v41.0.0...v41.1.0) (2024-01-23)
+
+
+### Features
+
+* Combobox のスタイリングを見直し ([#4196](https://github.com/kufu/smarthr-ui/issues/4196)) ([d3a9a92](https://github.com/kufu/smarthr-ui/commit/d3a9a92f026d97263e2f0ef25e85c90dbfc33d5a))
+
+
+### Bug Fixes
+
+* typo in error type description ([#4193](https://github.com/kufu/smarthr-ui/issues/4193)) ([71520a4](https://github.com/kufu/smarthr-ui/commit/71520a44fed06c91d139401a596279b2d1bc9dc6))
+
 ## [41.0.0](https://github.com/kufu/smarthr-ui/compare/v40.1.3...v41.0.0) (2024-01-16)
 
 
