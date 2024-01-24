@@ -101,7 +101,7 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props<unknown>>
 
 const DESTROY_BUTTON_TEXT = '削除'
 
-function SingleComboBoxComponent<T>(
+const PartSingleComboBox = <T,>(
   {
     items,
     selectedItem,
@@ -133,7 +133,7 @@ function SingleComboBoxComponent<T>(
     ...props
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
-) {
+) => {
   const theme = useTheme()
   const classNames = useSingleComboBoxClassNames()
   const outerRef = useRef<HTMLDivElement>(null)
@@ -414,11 +414,11 @@ function SingleComboBoxComponent<T>(
 
 // forwardRef したコンポーネントでジェネリクスを使うときのワークアラウンド
 // https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref/58473012
-export const SingleComboBox = forwardRef(SingleComboBoxComponent) as (<T>(
-  props: ComponentPropsWithoutRef<typeof SingleComboBoxComponent<T>> & {
+export const SingleComboBox = forwardRef(PartSingleComboBox) as (<T>(
+  props: ComponentPropsWithoutRef<typeof PartSingleComboBox<T>> & {
     ref?: Ref<HTMLInputElement>
   },
-) => ReturnType<typeof SingleComboBoxComponent<T>>) & {
+) => ReturnType<typeof PartSingleComboBox<T>>) & {
   displayName: string
 }
 
