@@ -3,6 +3,7 @@ import React, { ChangeEvent, useState } from 'react'
 import styled from 'styled-components'
 
 import { InformationPanel } from '../InformationPanel'
+import { Fieldset } from '../NewFieldset'
 
 import { All } from './RadioButton.stories'
 
@@ -26,85 +27,99 @@ export const VRTState: StoryFn = () => {
         hover, activeなどの状態で表示されます
       </VRTInformationPanel>
       <li>
-        <Title>hover</Title>
-        <InnerList id="list-hover">
-          <li>
-            <RadioButton name="1" checked={checkedName === '1'} onChange={handleChange} />
-          </li>
-          <li>
-            <RadioButton name="2" checked={true} onChange={handleChange} />
-          </li>
-          <li>
-            <RadioButton name="3" checked={checkedName === '3'} disabled onChange={handleChange} />
-          </li>
-          <li>
-            <RadioButton name="4" checked={true} disabled onChange={handleChange} />
-          </li>
-        </InnerList>
+        <Fieldset title="hover">
+          <InnerList id="list-hover">
+            <li>
+              <RadioButton name="1" checked={checkedName === '1'} onChange={handleChange} />
+            </li>
+            <li>
+              <RadioButton name="2" checked={true} onChange={handleChange} />
+            </li>
+            <li>
+              <RadioButton
+                name="3"
+                checked={checkedName === '3'}
+                disabled
+                onChange={handleChange}
+              />
+            </li>
+            <li>
+              <RadioButton name="4" checked={true} disabled onChange={handleChange} />
+            </li>
+          </InnerList>
+        </Fieldset>
       </li>
 
       <li>
-        <Title>focus</Title>
-        <InnerList id="list-focus">
-          <li>
-            <RadioButton name="5" checked={checkedName === '5'} onChange={handleChange} />
-          </li>
-          <li>
-            <RadioButton name="6" checked={true} onChange={handleChange} />
-          </li>
-          <li>
-            <RadioButton name="7" checked={checkedName === '7'} disabled onChange={handleChange} />
-          </li>
-          <li>
-            <RadioButton name="8" checked={true} disabled onChange={handleChange} />
-          </li>
-        </InnerList>
+        <Fieldset title="focus">
+          <InnerList id="list-focus">
+            <li>
+              <RadioButton name="5" checked={checkedName === '5'} onChange={handleChange} />
+            </li>
+            <li>
+              <RadioButton name="6" checked={true} onChange={handleChange} />
+            </li>
+            <li>
+              <RadioButton
+                name="7"
+                checked={checkedName === '7'}
+                disabled
+                onChange={handleChange}
+              />
+            </li>
+            <li>
+              <RadioButton name="8" checked={true} disabled onChange={handleChange} />
+            </li>
+          </InnerList>
+        </Fieldset>
       </li>
 
       <li>
-        <Title>focus-visible</Title>
-        <InnerList id="list-focus-visible">
-          <li>
-            <RadioButton name="9" checked={checkedName === '9'} onChange={handleChange} />
-          </li>
-          <li>
-            <RadioButton name="10" checked={true} onChange={handleChange} />
-          </li>
-          <li>
-            <RadioButton
-              name="11"
-              checked={checkedName === '11'}
-              disabled
-              onChange={handleChange}
-            />
-          </li>
-          <li>
-            <RadioButton name="12" checked={true} disabled onChange={handleChange} />
-          </li>
-        </InnerList>
+        <Fieldset title="focus-visible">
+          <InnerList id="list-focus-visible">
+            <li>
+              <RadioButton name="9" checked={checkedName === '9'} onChange={handleChange} />
+            </li>
+            <li>
+              <RadioButton name="10" checked={true} onChange={handleChange} />
+            </li>
+            <li>
+              <RadioButton
+                name="11"
+                checked={checkedName === '11'}
+                disabled
+                onChange={handleChange}
+              />
+            </li>
+            <li>
+              <RadioButton name="12" checked={true} disabled onChange={handleChange} />
+            </li>
+          </InnerList>
+        </Fieldset>
       </li>
 
       <li>
-        <Title>active</Title>
-        <InnerList id="list-active">
-          <li>
-            <RadioButton name="13" checked={checkedName === '13'} onChange={handleChange} />
-          </li>
-          <li>
-            <RadioButton name="14" checked={true} onChange={handleChange} />
-          </li>
-          <li>
-            <RadioButton
-              name="15"
-              checked={checkedName === '15'}
-              disabled
-              onChange={handleChange}
-            />
-          </li>
-          <li>
-            <RadioButton name="16" checked={true} disabled onChange={handleChange} />
-          </li>
-        </InnerList>
+        <Fieldset title="active">
+          <InnerList id="list-active">
+            <li>
+              <RadioButton name="13" checked={checkedName === '13'} onChange={handleChange} />
+            </li>
+            <li>
+              <RadioButton name="14" checked={true} onChange={handleChange} />
+            </li>
+            <li>
+              <RadioButton
+                name="15"
+                checked={checkedName === '15'}
+                disabled
+                onChange={handleChange}
+              />
+            </li>
+            <li>
+              <RadioButton name="16" checked={true} disabled onChange={handleChange} />
+            </li>
+          </InnerList>
+        </Fieldset>
       </li>
     </WrapperList>
   )
@@ -151,9 +166,6 @@ const InnerList = styled.ul`
       margin-left: 16px;
     }
   }
-`
-const Title = styled.p`
-  margin: 0 0 16px;
 `
 
 const VRTInformationPanel = styled(InformationPanel)`

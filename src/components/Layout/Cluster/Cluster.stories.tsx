@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 
 import { Base } from '../../Base'
 import { Heading } from '../../Heading'
+import { Fieldset } from '../../NewFieldset'
 import { RadioButton } from '../../RadioButton'
 import { StatusLabel } from '../../StatusLabel'
 import { Stack } from '../Stack'
@@ -20,8 +21,7 @@ export default {
 
 export const All: StoryFn = () => (
   <StyledStack gap="L">
-    <Stack as="figure" gap="X3S">
-      <figcaption>幅を狭めて収まり切らなくなると折返します。</figcaption>
+    <Fieldset title="幅を狭めて収まり切らなくなると折返します。">
       <Cluster>
         <StatusLabel type="grey">アコーディオン</StatusLabel>
         <StatusLabel type="blue">コンボボックス</StatusLabel>
@@ -40,19 +40,21 @@ export const All: StoryFn = () => (
           ランドマーク・リージョン
         </StatusLabel>
       </Cluster>
-    </Stack>
-    <Stack as="figure" gap="X3S">
-      <figcaption>
-        間隔を <code>gap</code> で変えられます。
-      </figcaption>
+    </Fieldset>
+    <Fieldset
+      title={
+        <>
+          間隔を <code>gap</code> で変えられます。
+        </>
+      }
+    >
       <Cluster gap="XS">
         {[...Array(10)].map((_, i) => (
           <ColorBox key={i} />
         ))}
       </Cluster>
-    </Stack>
-    <Stack as="figure" gap="X3S">
-      <figcaption>垂直方向と水平方向で異なった余白を設定できます。</figcaption>
+    </Fieldset>
+    <Fieldset title="垂直方向と水平方向で異なった余白を設定できます。">
       <StyledBase>
         <Cluster gap={{ row: 'X3S', column: 'XS' }}>
           <RadioButton name="department" defaultChecked={true}>
@@ -72,12 +74,15 @@ export const All: StoryFn = () => (
           </RadioButton>
         </Cluster>
       </StyledBase>
-    </Stack>
-    <Stack as="figure" gap="X3S">
-      <figcaption>
-        入れ子にして <code>align</code> や <code>justify</code>{' '}
-        を組み合わせるとメディアクエリを使用せずに柔軟なレイアウトを作れます。
-      </figcaption>
+    </Fieldset>
+    <Fieldset
+      title={
+        <>
+          入れ子にして <code>align</code> や <code>justify</code>{' '}
+          を組み合わせるとメディアクエリを使用せずに柔軟なレイアウトを作れます。
+        </>
+      }
+    >
       <Cluster align="center" justify="space-between" as="section">
         {/* TODO: eslint を修正したら外す */}
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
@@ -88,7 +93,7 @@ export const All: StoryFn = () => (
           <StatusLabel type="red">ディスクロージャ</StatusLabel>
         </Cluster>
       </Cluster>
-    </Stack>
+    </Fieldset>
   </StyledStack>
 )
 

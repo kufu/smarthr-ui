@@ -97,6 +97,7 @@ export const Demo: Story = () => {
       <p>
         <label>
           text
+          {/* eslint-disable-next-line  smarthr/a11y-input-in-form-control */}
           <input
             name="text"
             type="text"

@@ -86,7 +86,7 @@ const select = tv({
   },
 })
 
-function SelectComponent<T extends string>(
+const PartSelect = <T extends string>(
   {
     options,
     onChange,
@@ -101,7 +101,7 @@ function SelectComponent<T extends string>(
     ...props
   }: Props<T> & ElementProps,
   ref: ForwardedRef<HTMLSelectElement>,
-) {
+) => {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       if (onChange) onChange(e)
@@ -183,8 +183,8 @@ function SelectComponent<T extends string>(
 
 // forwardRef したコンポーネントでジェネリクスを使うときのワークアラウンド
 // https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref/58473012
-export const Select = forwardRef(SelectComponent) as (<T extends string>(
-  props: ComponentPropsWithoutRef<typeof SelectComponent<T>> & {
+export const Select = forwardRef(PartSelect) as (<T extends string>(
+  props: ComponentPropsWithoutRef<typeof PartSelect<T>> & {
     ref?: ForwardedRef<HTMLSelectElement>
   },
-) => ReturnType<typeof SelectComponent<T>>) & { displayName?: string }
+) => ReturnType<typeof PartSelect<T>>) & { displayName?: string }

@@ -19,7 +19,7 @@ export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
         tabIndex={-1}
         ariaDescribedbyTarget="inner"
       >
-        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control */}
         <Input {...props} width={widthStyle} ref={ref} />
       </Tooltip>
     )

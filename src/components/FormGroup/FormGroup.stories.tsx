@@ -6,6 +6,7 @@ import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
 
 import { FormGroup } from './FormGroup'
+import { Fieldset } from './NewFieldset'
 
 export default {
   title: 'Forms（フォーム）/FormGroup（非推奨）',
@@ -46,8 +47,7 @@ export const All: StoryFn = () => (
         入れ子
       </Text>
       <dd>
-        <FormGroup
-          as="fieldset"
+        <Fieldset
           title="姓名"
           statusLabelProps={{ type: 'grey', children: '任意' }}
           helpMessage="姓名を入力してください。"
@@ -69,7 +69,7 @@ export const All: StoryFn = () => (
               <Input name="firstName" />
             </FormGroup>
           </Cluster>
-        </FormGroup>
+        </Fieldset>
       </dd>
     </Stack>
     <Stack>
@@ -77,7 +77,7 @@ export const All: StoryFn = () => (
         読み取り専用
       </Text>
       <dd>
-        <FormGroup title="姓名" as="fieldset">
+        <Fieldset title="姓名">
           <Cluster gap={1}>
             <FormGroup title="姓" titleType="subSubBlockTitle">
               <Input name="lastName" value="草野" readOnly />
@@ -86,7 +86,7 @@ export const All: StoryFn = () => (
               <Input name="firstName" value="栄一郎" readOnly />
             </FormGroup>
           </Cluster>
-        </FormGroup>
+        </Fieldset>
       </dd>
     </Stack>
     <Stack>
@@ -94,8 +94,7 @@ export const All: StoryFn = () => (
         disabled
       </Text>
       <dd>
-        <FormGroup
-          as="fieldset"
+        <Fieldset
           title="disabled なフォームグループ"
           helpMessage="このフォームグループは disabled です。内包するフォームグループを個別に disabled する必要はありません。"
           errorMessages="すべてのフォームコントロールが disabled です。"
@@ -117,7 +116,7 @@ export const All: StoryFn = () => (
               <Input name="firstName" />
             </FormGroup>
           </Cluster>
-        </FormGroup>
+        </Fieldset>
       </dd>
     </Stack>
   </Stack>

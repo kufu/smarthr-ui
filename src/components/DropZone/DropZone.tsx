@@ -111,6 +111,7 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
         <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
           {selectButtonLabel}
         </Button>
+        {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           ref={fileRef}
           name={name}
