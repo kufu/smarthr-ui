@@ -84,8 +84,8 @@ export const Render: React.FC = () => {
                 ↓<br />↓
               </Description>
               <FormControl title="Children content is scrollable." role="group">
-                <PartSingleComboBox name="single" />
-                <PartMultiComboBox name="multi" />
+                <ActualSingleComboBox name="single" />
+                <ActualMultiComboBox name="multi" />
               </FormControl>
             </Fieldset>
           </FilterDropdown>
@@ -236,7 +236,7 @@ const RadioButtonList = styled.ul`
 `
 
 type Item = { label: ReactNode; value: string }
-const PartSingleComboBox: React.FC<{ name: string }> = ({ name }) => {
+const ActualSingleComboBox: React.FC<{ name: string }> = ({ name }) => {
   const [items, _setItems] = useState([
     {
       label: 'option 1',
@@ -295,7 +295,7 @@ const PartSingleComboBox: React.FC<{ name: string }> = ({ name }) => {
     />
   )
 }
-const PartMultiComboBox: React.FC<{ name: string }> = ({ name }) => {
+const ActualMultiComboBox: React.FC<{ name: string }> = ({ name }) => {
   const [items, _setItems] = useState([
     {
       label: 'option 1',
