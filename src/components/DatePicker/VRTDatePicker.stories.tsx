@@ -17,10 +17,11 @@ export default {
   },
 }
 
-const NormalDatePicker = ({ name }: { name: string }) => (
+const NormalDatePicker = ({ name, title }: { name: string; title: string }) => (
   <FormControl title="DatePicker">
     <DatePicker
       name={name}
+      title={title}
       value="2020/01/01"
       onChangeDate={action('change')}
       data-test="datepicker-1"

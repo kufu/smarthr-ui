@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { FormControl } from '../FormControl'
 import { InformationPanel } from '../InformationPanel'
-import { Stack } from '../Layout'
+import { Cluster, Stack } from '../Layout'
 
 import { InputFile } from './InputFile'
 import { All } from './InputFile.stories'
@@ -25,29 +25,39 @@ export const VRTState: StoryFn = () => (
     </VRTInformationPanel>
     <Stack>
       <FormControl title="hover" id="hover" role="group">
-        <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-        <InputFile name="disabled" label="ファイルを選択" disabled />
-        <InputFile name="error" label="ファイルを選択" error />
+        <Cluster>
+          <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
+          <InputFile name="disabled" label="ファイルを選択" disabled />
+          <InputFile name="error" label="ファイルを選択" error />
+        </Cluster>
       </FormControl>
       <FormControl title="focus" id="focus" role="group">
-        <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-        <InputFile name="disabled" label="ファイルを選択" disabled />
-        <InputFile name="error" label="ファイルを選択" error />
+        <Cluster>
+          <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
+          <InputFile name="disabled" label="ファイルを選択" disabled />
+          <InputFile name="error" label="ファイルを選択" error />
+        </Cluster>
       </FormControl>
       <FormControl title="focus-visible" id="focus-visible" role="group">
-        <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-        <InputFile name="disabled" label="ファイルを選択" disabled />
-        <InputFile name="error" label="ファイルを選択" error />
+        <Cluster>
+          <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
+          <InputFile name="disabled" label="ファイルを選択" disabled />
+          <InputFile name="error" label="ファイルを選択" error />
+        </Cluster>
       </FormControl>
       <FormControl title="focus-within" id="focus-within" role="group">
-        <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-        <InputFile name="disabled" label="ファイルを選択" disabled />
-        <InputFile name="error" label="ファイルを選択" error />
+        <Cluster>
+          <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
+          <InputFile name="disabled" label="ファイルを選択" disabled />
+          <InputFile name="error" label="ファイルを選択" error />
+        </Cluster>
       </FormControl>
       <FormControl title="active" id="active" role="group">
-        <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-        <InputFile name="disabled" label="ファイルを選択" disabled />
-        <InputFile name="error" label="ファイルを選択" error />
+        <Cluster>
+          <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
+          <InputFile name="disabled" label="ファイルを選択" disabled />
+          <InputFile name="error" label="ファイルを選択" error />
+        </Cluster>
       </FormControl>
     </Stack>
   </>

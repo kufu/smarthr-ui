@@ -1,7 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
 import React from 'react'
-import styled from 'styled-components'
 
 import { FormControl } from '../FormControl'
 import { Stack } from '../Layout'

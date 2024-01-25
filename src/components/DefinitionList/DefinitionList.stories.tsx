@@ -5,7 +5,6 @@ import { Base } from '../Base'
 import { Heading } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
-import { SectioningFragment } from '../SectioningContent'
 import { Text } from '../Text'
 
 import { DefinitionList } from './DefinitionList'
