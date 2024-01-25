@@ -1,7 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
 import React, { ReactNode, useCallback, useState } from 'react'
-import styled from 'styled-components'
 
 import { FormControl } from '../FormControl'
 import { Stack } from '../Layout'
@@ -99,7 +98,7 @@ export const Single: StoryFn = () => {
   )
 
   return (
-    <StyledStack>
+    <Stack>
       <FormControl title="デフォルト">
         <SingleComboBox
           name="default"
@@ -275,7 +274,7 @@ export const Single: StoryFn = () => {
           />
         </FormControl>
       </form>
-    </StyledStack>
+    </Stack>
   )
 }
 
@@ -339,7 +338,7 @@ export const Multi: StoryFn = () => {
   )
 
   return (
-    <StyledStack>
+    <Stack>
       <FormControl title="デフォルト">
         <MultiComboBox
           name="default"
@@ -516,10 +515,6 @@ export const Multi: StoryFn = () => {
           data-test="multi-combobox-many"
         />
       </FormControl>
-    </StyledStack>
+    </Stack>
   )
 }
-
-const StyledStack = styled(Stack).attrs({ gap: 2 })`
-  margin: 1rem 1.5rem;
-`
