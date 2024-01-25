@@ -5,8 +5,10 @@ import styled from 'styled-components'
 
 import { Button } from '../../Button'
 import { MultiComboBox, SingleComboBox } from '../../ComboBox'
+import { FormControl } from '../../FormControl'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
+import { Fieldset } from '../../NewFieldset'
 import { RadioButton } from '../../RadioButton'
 
 import { FilterDropdown } from './FilterDropdown'
@@ -49,39 +51,43 @@ export const Render: React.FC = () => {
             }}
             isFiltered={isFiltered}
           >
-            <p>
-              `FilterDropdown` provide specific interface to be able to filter data.
-              <br />
-              You can control inputs for filtering conditions as children components.
-            </p>
-            <RadioButtonList>
-              <li>
-                <RadioButton name="hoge" checked={value === 'hoge'} onChange={onChangeValue}>
-                  hoge
-                </RadioButton>
-              </li>
-              <li>
-                <RadioButton name="fuga" checked={value === 'fuga'} onChange={onChangeValue}>
-                  fuga
-                </RadioButton>
-              </li>
-              <li>
-                <RadioButton name="piyo" checked={value === 'piyo'} onChange={onChangeValue}>
-                  piyo
-                </RadioButton>
-              </li>
-              <li>
-                <Input name="test" value={text} onChange={onChangeText} />
-              </li>
-            </RadioButtonList>
-            <Description>
-              ↓<br />↓
-            </Description>
-            <Stack gap={0.5}>
-              <p>Children content is scrollable.</p>
-              <PartSingleComboBox name="single" />
-              <PartMultiComboBox name="multi" />
-            </Stack>
+            <Fieldset
+              title={
+                <>
+                  `FilterDropdown` provide specific interface to be able to filter data.
+                  <br />
+                  You can control inputs for filtering conditions as children components.
+                </>
+              }
+            >
+              <RadioButtonList>
+                <li>
+                  <RadioButton name="hoge" checked={value === 'hoge'} onChange={onChangeValue}>
+                    hoge
+                  </RadioButton>
+                </li>
+                <li>
+                  <RadioButton name="fuga" checked={value === 'fuga'} onChange={onChangeValue}>
+                    fuga
+                  </RadioButton>
+                </li>
+                <li>
+                  <RadioButton name="piyo" checked={value === 'piyo'} onChange={onChangeValue}>
+                    piyo
+                  </RadioButton>
+                </li>
+                <li>
+                  <Input name="test" value={text} onChange={onChangeText} title="test" />
+                </li>
+              </RadioButtonList>
+              <Description>
+                ↓<br />↓
+              </Description>
+              <FormControl title="Children content is scrollable." role="group">
+                <ActualSingleComboBox name="single" />
+                <ActualMultiComboBox name="multi" />
+              </FormControl>
+            </Fieldset>
           </FilterDropdown>
         </dd>
         <dt>Filtered</dt>
@@ -230,7 +236,7 @@ const RadioButtonList = styled.ul`
 `
 
 type Item = { label: ReactNode; value: string }
-const PartSingleComboBox: React.FC<{ name: string }> = ({ name }) => {
+const ActualSingleComboBox: React.FC<{ name: string }> = ({ name }) => {
   const [items, _setItems] = useState([
     {
       label: 'option 1',
@@ -289,7 +295,7 @@ const PartSingleComboBox: React.FC<{ name: string }> = ({ name }) => {
     />
   )
 }
-const PartMultiComboBox: React.FC<{ name: string }> = ({ name }) => {
+const ActualMultiComboBox: React.FC<{ name: string }> = ({ name }) => {
   const [items, _setItems] = useState([
     {
       label: 'option 1',

@@ -3,6 +3,9 @@ import { Story } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { FormControl } from '../FormControl'
+import { Stack } from '../Layout'
+
 import { DatePicker } from './DatePicker'
 
 export default {
@@ -12,23 +15,21 @@ export default {
 
 export const All: Story = () => {
   const [value, setValue] = React.useState<string>(new Date(2020, 0, 1).toDateString())
+
   return (
-    <List>
-      <dt>DatePicker</dt>
-      <dd>
+    <Stack>
+      <FormControl title="DatePicker">
         <DatePicker name="default" onChangeDate={action('change')} data-test="datepicker-1" />
-      </dd>
-      <dt>Pass `from`, `to`</dt>
-      <dd>
+      </FormControl>
+      <FormControl title="Pass `from`, `to`">
         <DatePicker
           name="from_to"
           from={new Date(1901, 0, 1)}
           to={new Date(2100, 11, 30)}
           onChangeDate={action('change')}
         />
-      </dd>
-      <dt>Custom format (ex. Date.toDateString)</dt>
-      <dd>
+      </FormControl>
+      <FormControl title="Custom format (ex. Date.toDateString)">
         <DatePicker
           name="custom_format"
           value={value}
@@ -41,48 +42,35 @@ export const All: Story = () => {
             setValue(_value)
           }}
         />
-      </dd>
-      <dt>Show Alternative Formatted Date</dt>
-      <dd>
+      </FormControl>
+      <FormControl title="Show Alternative Formatted Date">
         <DatePicker
           name="show_alternative"
           value="1994/09/28"
           showAlternative={() => '平成6年9月28日'}
         />
-      </dd>
-      <dt>Show Alternative Formatted Date(ReactNode)</dt>
-      <dd>
+      </FormControl>
+      <FormControl title="Show Alternative Formatted Date(ReactNode)">
         <DatePicker
           name="show_alternative"
           value="1994/09/28"
           showAlternative={() => <span data-translate="true">平成6年9月28日</span>}
         />
-      </dd>
-      <dt>Disabled</dt>
-      <dd>
+      </FormControl>
+      <FormControl title="Disabled">
         <DatePicker name="disabled" disabled />
-      </dd>
-      <dt>Extending style (width: 50%)</dt>
-      <dd>
+      </FormControl>
+      <FormControl title="Extending style (width: 50%)">
         <DatePicker name="extending_style" width="50%" onChangeDate={action('change')} />
-      </dd>
-      <dt className="bottom">Place on the page bottom</dt>
-      <dd>
+      </FormControl>
+      <BottomFormControl title="Place on the page bottom">
         <DatePicker name="place_on_the_page_bottom" onChangeDate={action('change')} />
-      </dd>
-    </List>
+      </BottomFormControl>
+    </Stack>
   )
 }
 All.storyName = 'all'
 
-const List = styled.dl`
-  padding: 24px;
-  margin: 0;
-
-  dd {
-    margin: 10px 0 20px;
-  }
-  dt.bottom {
-    margin-top: 1000px;
-  }
+const BottomFormControl = styled(FormControl)`
+  margin-top: 1000px;
 `

@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components'
 import { Button } from '../Button'
 import { CheckBox } from '../CheckBox'
 import { Cluster, Stack } from '../Layout'
+import { Fieldset } from '../NewFieldset'
 import { RadioButton } from '../RadioButton'
 import { Text } from '../Text'
 import { TextLink as shrTextLink } from '../TextLink'
@@ -159,25 +160,23 @@ export const Demo: StoryFn = () => {
               animate
             </CheckBox>
           </label>
-          <Stack as="fieldset">
-            <Text as="legend">メッセージの種類</Text>
+          <Fieldset title="メッセージの種類">
             <Cluster gap={0.75}>
               {messageTypes.map((type) => (
-                <label key={type}>
-                  <RadioButton
-                    name="message_type"
-                    value={type}
-                    checked={messageType === type}
-                    onChange={({ currentTarget: { value } }) =>
-                      setMessageType(value as ComponentProps<typeof NotificationBar>['type'])
-                    }
-                  >
-                    {type}
-                  </RadioButton>
-                </label>
+                <RadioButton
+                  key={type}
+                  name="message_type"
+                  value={type}
+                  checked={messageType === type}
+                  onChange={({ currentTarget: { value } }) =>
+                    setMessageType(value as ComponentProps<typeof NotificationBar>['type'])
+                  }
+                >
+                  {type}
+                </RadioButton>
               ))}
             </Cluster>
-          </Stack>
+          </Fieldset>
           <Button onClick={() => setVisible(!visible)}>
             NotificationBar を{visible ? '隠す' : '表示'}
           </Button>

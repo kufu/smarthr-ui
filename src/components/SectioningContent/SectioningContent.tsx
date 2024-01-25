@@ -19,7 +19,7 @@ const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
   ),
 )
 
-// eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+// eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content, smarthr/a11y-prohibit-useless-sectioning-fragment
 const WrapperSection = styled.section``
 
 type Props = Omit<React.ComponentProps<typeof SectioningContent>, 'as'>

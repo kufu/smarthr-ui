@@ -100,7 +100,7 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props<unknown>>
 
 const SELECTED_LIST_ARIA_LABEL = '選択済みアイテム'
 
-function MultiComboBoxComponent<T>(
+const ActualMultiComboBox = <T,>(
   {
     items,
     selectedItems,
@@ -131,7 +131,7 @@ function MultiComboBoxComponent<T>(
     ...props
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
-) {
+) => {
   const theme = useTheme()
   const classNames = useMultiComboBoxClassNames()
   const outerRef = useRef<HTMLDivElement>(null)
@@ -426,11 +426,11 @@ function MultiComboBoxComponent<T>(
 
 // forwardRef したコンポーネントでジェネリクスを使うときのワークアラウンド
 // https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref/58473012
-export const MultiComboBox = forwardRef(MultiComboBoxComponent) as (<T>(
-  props: ComponentPropsWithoutRef<typeof MultiComboBoxComponent<T>> & {
+export const MultiComboBox = forwardRef(ActualMultiComboBox) as (<T>(
+  props: ComponentPropsWithoutRef<typeof ActualMultiComboBox<T>> & {
     ref?: Ref<HTMLInputElement>
   },
-) => ReturnType<typeof MultiComboBoxComponent<T>>) & {
+) => ReturnType<typeof ActualMultiComboBox<T>>) & {
   displayName: string
 }
 

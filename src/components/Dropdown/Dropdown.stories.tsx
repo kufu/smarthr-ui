@@ -9,6 +9,7 @@ import { Dialog } from '../Dialog'
 import { FaCaretDownIcon } from '../Icon'
 import { Input } from '../Input'
 import { Cluster, Stack } from '../Layout'
+import { Fieldset } from '../NewFieldset'
 import { RadioButton } from '../RadioButton'
 import { Text } from '../Text'
 
@@ -71,42 +72,46 @@ export const ControllableDropdown = () => {
         <DropdownContent controllable>
           <DropdownScrollArea>
             <ControllableBoxMainStack>
-              <Text as="p">`DropdownControllableContent` を使うとドロップダウン制御できます。</Text>
-              <Text as="p">
-                制御されたドロップダウン内のコンテンツをクリックしても、ドロップダウンは閉じません。
-                <br />
-                ドロップダウンを閉じたいときは、`DropdownCloser` を使います。
-              </Text>
-              <Stack align="flex-start">
-                <RadioButtonList>
-                  <li>
-                    <RadioButton name="hoge" checked={value === 'hoge'} onChange={onChangeValue}>
-                      hoge
-                    </RadioButton>
-                  </li>
-                  <li>
-                    <RadioButton name="fuga" checked={value === 'fuga'} onChange={onChangeValue}>
-                      fuga
-                    </RadioButton>
-                  </li>
-                  <li>
-                    <RadioButton name="piyo" checked={value === 'piyo'} onChange={onChangeValue}>
-                      piyo
-                    </RadioButton>
-                  </li>
-                </RadioButtonList>
-                <Input name="test" value={text} onChange={onChangeText} />
-                <DropdownCloser>
-                  <Button
-                    onClick={() => setIsDialogOpen(true)}
-                    aria-controls="dropdown-dialog"
-                    aria-haspopup="dialog"
-                    data-test="dropdown-dialog-trigger"
-                  >
-                    ダイアログを開く
-                  </Button>
-                </DropdownCloser>
-              </Stack>
+              <Fieldset title="Dropdown内部">
+                <Text as="p">
+                  `DropdownControllableContent` を使うとドロップダウン制御できます。
+                </Text>
+                <Text as="p">
+                  制御されたドロップダウン内のコンテンツをクリックしても、ドロップダウンは閉じません。
+                  <br />
+                  ドロップダウンを閉じたいときは、`DropdownCloser` を使います。
+                </Text>
+                <Stack align="flex-start">
+                  <RadioButtonList>
+                    <li>
+                      <RadioButton name="hoge" checked={value === 'hoge'} onChange={onChangeValue}>
+                        hoge
+                      </RadioButton>
+                    </li>
+                    <li>
+                      <RadioButton name="fuga" checked={value === 'fuga'} onChange={onChangeValue}>
+                        fuga
+                      </RadioButton>
+                    </li>
+                    <li>
+                      <RadioButton name="piyo" checked={value === 'piyo'} onChange={onChangeValue}>
+                        piyo
+                      </RadioButton>
+                    </li>
+                  </RadioButtonList>
+                  <Input name="test" value={text} onChange={onChangeText} title="test" />
+                  <DropdownCloser>
+                    <Button
+                      onClick={() => setIsDialogOpen(true)}
+                      aria-controls="dropdown-dialog"
+                      aria-haspopup="dialog"
+                      data-test="dropdown-dialog-trigger"
+                    >
+                      ダイアログを開く
+                    </Button>
+                  </DropdownCloser>
+                </Stack>
+              </Fieldset>
             </ControllableBoxMainStack>
             <ControllableBoxBottom>
               <Cluster justify="flex-end">

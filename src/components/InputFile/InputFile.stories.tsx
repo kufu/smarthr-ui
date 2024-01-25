@@ -1,7 +1,9 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
 import React from 'react'
-import styled from 'styled-components'
+
+import { FormControl } from '../FormControl'
+import { Stack } from '../Layout'
 
 import { InputFile } from './InputFile'
 
@@ -11,13 +13,11 @@ export default {
 }
 
 export const All: StoryFn = () => (
-  <List>
-    <dt>Default</dt>
-    <dd>
+  <Stack>
+    <FormControl title="Default">
       <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-    </dd>
-    <dt>Size S</dt>
-    <dd>
+    </FormControl>
+    <FormControl title="Size S">
       <InputFile
         name="size"
         label="ファイルを選択"
@@ -25,44 +25,28 @@ export const All: StoryFn = () => (
         size="s"
         multiple
       />
-    </dd>
-    <dt>Disabled file list</dt>
-    <dd>
+    </FormControl>
+    <FormControl title="Disabled file list">
       <InputFile
         name="hasFileList"
         label="ファイルを選択"
         onChange={action('onChange')}
         hasFileList={false}
       />
-    </dd>
-    <dt>Disabled input</dt>
-    <dd>
+    </FormControl>
+    <FormControl title="Disabled input">
       <InputFile name="disabled" label="ファイルを選択" disabled />
-    </dd>
-    <dt>エラー</dt>
-    <dd>
+    </FormControl>
+    <FormControl title="エラー">
       <InputFile name="error" label="ファイルを選択" error />
-    </dd>
-    <dt>decoratorで文言変更</dt>
-    <dd>
+    </FormControl>
+    <FormControl title="decoratorで文言変更">
       <InputFile
         name="decorator"
         label="select file."
         decorators={{ destroy: (text) => `delete(${text})` }}
       />
-    </dd>
-  </List>
+    </FormControl>
+  </Stack>
 )
 All.storyName = 'all'
-
-const List = styled.dl`
-  margin: 1rem;
-
-  & > dt {
-    margin-bottom: 0.5rem;
-  }
-
-  & > dd {
-    margin: 0 0 1rem;
-  }
-`

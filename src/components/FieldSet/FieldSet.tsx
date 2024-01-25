@@ -84,7 +84,7 @@ export const FieldSet: FC<Props & ElementProps> = ({
       {children ? (
         children
       ) : (
-        // eslint-disable-next-line smarthr/a11y-input-has-name-attribute
+        // eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control
         <Input {...props} error={!!errorMessage} className={classNames.input} />
       )}
     </Wrapper>

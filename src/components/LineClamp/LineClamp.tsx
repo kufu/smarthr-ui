@@ -39,7 +39,7 @@ export const LineClamp: VFC<Props & ElementProps> = ({
     throw new Error('"maxLines" cannot be less than 0.')
   }
 
-  const LineClampPart = () => (
+  const ActualLineClamp = () => (
     <Wrapper
       {...props}
       ref={ref}
@@ -52,10 +52,10 @@ export const LineClamp: VFC<Props & ElementProps> = ({
 
   return isTooltipVisible ? (
     <Tooltip message={children} multiLine vertical="auto">
-      <LineClampPart />
+      <ActualLineClamp />
     </Tooltip>
   ) : (
-    <LineClampPart />
+    <ActualLineClamp />
   )
 }
 

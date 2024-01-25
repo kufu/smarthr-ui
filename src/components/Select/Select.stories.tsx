@@ -3,6 +3,7 @@ import { StoryFn } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
 
+import { FormControl } from '../FormControl'
 import { Stack } from '../Layout'
 
 import { Select } from './Select'
@@ -22,38 +23,32 @@ const options = [
 export const All: StoryFn = () => (
   <ListStack>
     <li>
-      <TextStack>
-        <span>標準</span>
+      <FormControl title="標準">
         <Select name="default" options={options} />
-      </TextStack>
+      </FormControl>
     </li>
     <li>
-      <TextStack>
-        <span>サイズ小</span>
+      <FormControl title="サイズ小">
         <Select name="s" options={options} size="s" />
-      </TextStack>
+      </FormControl>
     </li>
     <li>
-      <TextStack>
-        <span>value 指定</span>
+      <FormControl title="value 指定">
         <Select name="value" value="orange" options={options} />
-      </TextStack>
+      </FormControl>
     </li>
     <li>
-      <TextStack>
-        <span>エラー状態</span>
+      <FormControl title="エラー状態">
         <Select name="error" error options={options} />
-      </TextStack>
+      </FormControl>
     </li>
     <li>
-      <TextStack>
-        <span>disabled 状態</span>
+      <FormControl title="disabled 状態">
         <Select name="disabled" disabled options={options} />
-      </TextStack>
+      </FormControl>
     </li>
     <li>
-      <TextStack>
-        <span>選択肢グループ要素の使用</span>
+      <FormControl title="選択肢グループ要素の使用">
         <Select
           name="group"
           value="orange"
@@ -80,34 +75,30 @@ export const All: StoryFn = () => (
             },
           ]}
         />
-      </TextStack>
+      </FormControl>
     </li>
     <li style={{ alignSelf: 'stretch' }}>
-      <TextStack>
-        <span>幅指定</span>
+      <FormControl title="幅指定">
         <Select name="width" width="100%" options={options} />
-      </TextStack>
+      </FormControl>
     </li>
     <li>
-      <TextStack>
-        <span>空の選択肢を表示</span>
+      <FormControl title="空の選択肢を表示">
         <Select name="hasBlank" hasBlank options={options} />
-      </TextStack>
+      </FormControl>
     </li>
     <li>
-      <TextStack>
-        <span>空の選択肢を表示(文言も変更)</span>
+      <FormControl title="空の選択肢を表示(文言も変更)">
         <Select
           name="hasBlank"
           hasBlank
           decorators={{ blankLabel: (txt) => `select.(${txt})` }}
           options={options}
         />
-      </TextStack>
+      </FormControl>
     </li>
     <li>
-      <TextStack>
-        <span>onChange</span>
+      <FormControl title="onChange">
         <Select
           name="onChange"
           onChange={action('onChange!!')}
@@ -126,7 +117,7 @@ export const All: StoryFn = () => (
             },
           ]}
         />
-      </TextStack>
+      </FormControl>
     </li>
   </ListStack>
 )
@@ -136,4 +127,3 @@ const ListStack = styled(Stack).attrs({ forwardedAs: 'ul', align: 'flex-start' }
   list-style: none;
   padding: 0 24px;
 `
-const TextStack = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.5 })``
