@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { FormControl } from '../FormControl'
 import { InformationPanel } from '../InformationPanel'
+import { Stack } from '../Layout'
 
 import { InputFile } from './InputFile'
 import { All } from './InputFile.stories'
@@ -22,31 +23,33 @@ export const VRTState: StoryFn = () => (
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
       hover, activeなどの状態で表示されます
     </VRTInformationPanel>
-    <StyledFormControl title="hover" id="hover" role="group">
-      <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-      <InputFile name="disabled" label="ファイルを選択" disabled />
-      <InputFile name="error" label="ファイルを選択" error />
-    </StyledFormControl>
-    <StyledFormControl title="focus" id="focus" role="group">
-      <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-      <InputFile name="disabled" label="ファイルを選択" disabled />
-      <InputFile name="error" label="ファイルを選択" error />
-    </StyledFormControl>
-    <StyledFormControl title="focus-visible" id="focus-visible" role="group">
-      <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-      <InputFile name="disabled" label="ファイルを選択" disabled />
-      <InputFile name="error" label="ファイルを選択" error />
-    </StyledFormControl>
-    <StyledFormControl title="focus-within" id="focus-within" role="group">
-      <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-      <InputFile name="disabled" label="ファイルを選択" disabled />
-      <InputFile name="error" label="ファイルを選択" error />
-    </StyledFormControl>
-    <StyledFormControl title="active" id="active" role="group">
-      <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-      <InputFile name="disabled" label="ファイルを選択" disabled />
-      <InputFile name="error" label="ファイルを選択" error />
-    </StyledFormControl>
+    <Stack>
+      <FormControl title="hover" id="hover" role="group">
+        <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
+        <InputFile name="disabled" label="ファイルを選択" disabled />
+        <InputFile name="error" label="ファイルを選択" error />
+      </FormControl>
+      <FormControl title="focus" id="focus" role="group">
+        <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
+        <InputFile name="disabled" label="ファイルを選択" disabled />
+        <InputFile name="error" label="ファイルを選択" error />
+      </FormControl>
+      <FormControl title="focus-visible" id="focus-visible" role="group">
+        <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
+        <InputFile name="disabled" label="ファイルを選択" disabled />
+        <InputFile name="error" label="ファイルを選択" error />
+      </FormControl>
+      <FormControl title="focus-within" id="focus-within" role="group">
+        <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
+        <InputFile name="disabled" label="ファイルを選択" disabled />
+        <InputFile name="error" label="ファイルを選択" error />
+      </FormControl>
+      <FormControl title="active" id="active" role="group">
+        <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
+        <InputFile name="disabled" label="ファイルを選択" disabled />
+        <InputFile name="error" label="ファイルを選択" error />
+      </FormControl>
+    </Stack>
   </>
 )
 VRTState.parameters = {
@@ -72,9 +75,6 @@ VRTForcedColors.parameters = {
   chromatic: { forcedColors: 'active' },
 }
 
-const StyledFormControl = styled(FormControl)`
-  margin: 0 0 1rem;
-`
 const VRTInformationPanel = styled(InformationPanel)`
   margin-bottom: 24px;
 `

@@ -4,6 +4,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { FormControl } from '../FormControl'
+import { Stack } from '../Layout'
 
 import { InputFile } from './InputFile'
 
@@ -13,11 +14,11 @@ export default {
 }
 
 export const All: StoryFn = () => (
-  <>
-    <StyledFormControl title="Default">
+  <Stack>
+    <FormControl title="Default">
       <InputFile name="default" label="ファイルを選択" onChange={action('onChange')} multiple />
-    </StyledFormControl>
-    <StyledFormControl title="Size S">
+    </FormControl>
+    <FormControl title="Size S">
       <InputFile
         name="size"
         label="ファイルを選択"
@@ -25,32 +26,28 @@ export const All: StoryFn = () => (
         size="s"
         multiple
       />
-    </StyledFormControl>
-    <StyledFormControl title="Disabled file list">
+    </FormControl>
+    <FormControl title="Disabled file list">
       <InputFile
         name="hasFileList"
         label="ファイルを選択"
         onChange={action('onChange')}
         hasFileList={false}
       />
-    </StyledFormControl>
-    <StyledFormControl title="Disabled input">
+    </FormControl>
+    <FormControl title="Disabled input">
       <InputFile name="disabled" label="ファイルを選択" disabled />
-    </StyledFormControl>
-    <StyledFormControl title="エラー">
+    </FormControl>
+    <FormControl title="エラー">
       <InputFile name="error" label="ファイルを選択" error />
-    </StyledFormControl>
-    <StyledFormControl title="decoratorで文言変更">
+    </FormControl>
+    <FormControl title="decoratorで文言変更">
       <InputFile
         name="decorator"
         label="select file."
         decorators={{ destroy: (text) => `delete(${text})` }}
       />
-    </StyledFormControl>
-  </>
+    </FormControl>
+  </Stack>
 )
 All.storyName = 'all'
-
-const StyledFormControl = styled(FormControl)`
-  margin: 0 0 1rem;
-`

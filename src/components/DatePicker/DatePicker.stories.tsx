@@ -4,6 +4,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { FormControl } from '../FormControl'
+import { Stack } from '../Layout'
 
 import { DatePicker } from './DatePicker'
 
@@ -14,8 +15,9 @@ export default {
 
 export const All: Story = () => {
   const [value, setValue] = React.useState<string>(new Date(2020, 0, 1).toDateString())
+
   return (
-    <>
+    <Stack>
       <FormControl title="DatePicker">
         <DatePicker name="default" onChangeDate={action('change')} data-test="datepicker-1" />
       </FormControl>
@@ -64,7 +66,7 @@ export const All: Story = () => {
       <BottomFormControl title="Place on the page bottom">
         <DatePicker name="place_on_the_page_bottom" onChangeDate={action('change')} />
       </BottomFormControl>
-    </>
+    </Stack>
   )
 }
 All.storyName = 'all'

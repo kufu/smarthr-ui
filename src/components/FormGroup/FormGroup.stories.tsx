@@ -3,6 +3,8 @@ import React from 'react'
 
 import { CompactInformationPanel } from '../CompactInformationPanel'
 
+import { FormGroup } from './FormGroup'
+
 export default {
   title: 'Forms（フォーム）/FormGroup（非推奨）',
   component: FormGroup,
