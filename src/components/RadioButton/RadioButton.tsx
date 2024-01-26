@@ -60,7 +60,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
         innerWrapperStyle: innerWrapper(),
         boxStyle: box({ disabled: !!props.disabled }),
         inputStyle: input(),
-        labelStyle: label({ disabled: props.disabled }),
+        labelStyle: label({ disabled: !!props.disabled }),
       }
     }, [className, props.disabled])
 
