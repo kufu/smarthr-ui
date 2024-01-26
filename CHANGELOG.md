@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [41.1.1](https://github.com/kufu/smarthr-ui/compare/v41.1.0...v41.1.1) (2024-01-26)
+
+
+### Bug Fixes
+
+* border-box削除によるデグレの修正 ([#4232](https://github.com/kufu/smarthr-ui/issues/4232)) ([711c5b0](https://github.com/kufu/smarthr-ui/commit/711c5b026ba07d601f5c6d3646e512dafba99e4e))
+
 ## [41.1.0](https://github.com/kufu/smarthr-ui/compare/v41.0.0...v41.1.0) (2024-01-23)
 
 
