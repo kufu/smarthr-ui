@@ -15,8 +15,7 @@ type Props = PropsWithChildren<ComponentPropsWithRef<'input'>>
 const radioButton = tv({
   slots: {
     wrapper: 'smarthr-ui-RadioButton shr-inline-flex shr-items-baseline',
-    label:
-      'smarthr-ui-RadioButton-label shr-ms-0.5 shr-cursor-pointer shr-text-base shr-leading-tight',
+    label: 'smarthr-ui-RadioButton-label shr-ms-0.5 shr-text-base shr-leading-tight',
     innerWrapper:
       'shr-relative shr-inline-block shr-h-em shr-w-em shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
     box: [
@@ -27,7 +26,7 @@ const radioButton = tv({
       'contrast-more:shr-border-high-contrast',
       'peer-checked:shr-border-main peer-checked:shr-bg-main contrast-more:peer-checked:shr-border-high-contrast',
       'peer-checked:before:shr-pointer-events-none peer-checked:before:shr-absolute peer-checked:before:shr-left-1/2 peer-checked:before:shr-top-1/2 peer-checked:before:shr-h-[0.375em] peer-checked:before:shr-w-[0.375em] peer-checked:before:-shr-translate-x-1/2 peer-checked:before:-shr-translate-y-1/2 peer-checked:before:shr-rounded-full peer-checked:before:shr-bg-white peer-checked:before:shr-content-[""]',
-      'peer-disabled:shr-cursor-not-allowed peer-disabled:shr-border-default/50 peer-disabled:shr-bg-white-darken',
+      'peer-disabled:shr-border-default/50 peer-disabled:shr-bg-white-darken',
       'peer-disabled:peer-checked:shr-border-default peer-disabled:peer-checked:shr-bg-border peer-disabled:peer-checked:before:shr-bg-white-darken',
       'peer-focus-visible:shr-focus-indicator',
     ],
@@ -42,10 +41,10 @@ const radioButton = tv({
   variants: {
     disabled: {
       true: {
-        label: 'shr-cursor-not-allowed shr-text-disabled',
+        label: 'shr-cursor-[revert] shr-text-disabled',
       },
       false: {
-        label: 'shr-text-black',
+        label: 'shr-cursor-pointer shr-text-black',
         box: 'peer-hover:shr-shadow-input-hover',
       },
     },
@@ -61,7 +60,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
         innerWrapperStyle: innerWrapper(),
         boxStyle: box({ disabled: !!props.disabled }),
         inputStyle: input(),
-        labelStyle: label({ disabled: props.disabled }),
+        labelStyle: label({ disabled: !!props.disabled }),
       }
     }, [className, props.disabled])
 
