@@ -3,6 +3,7 @@ import { userEvent, within } from '@storybook/testing-library'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
+import { FormControl } from '../FormControl'
 import { Stack } from '../Layout'
 
 import { Textarea } from './Textarea'
@@ -19,66 +20,57 @@ const Template: StoryFn = () => {
   return (
     <ListStack>
       <li>
-        <LabelStack>
-          標準
+        <FormControl title="標準">
           <Textarea name="default" />
-        </LabelStack>
+        </FormControl>
       </li>
       <li>
-        <LabelStack>
-          入力欄を自動で広げる（初期： 3行、最大： 10行）
+        <FormControl title="入力欄を自動で広げる（初期： 3行、最大： 10行）">
           <Textarea name="auto_resize" cols={35} rows={3} maxRows={10} autoResize />
-        </LabelStack>
+        </FormControl>
       </li>
       <li>
-        <LabelStack>
-          幅指定
+        <FormControl title="幅指定">
           <Textarea name="width" width="100%" />
-        </LabelStack>
+        </FormControl>
       </li>
       <li>
-        <LabelStack>
-          disabled
+        <FormControl title="disabled">
           <Textarea name="disabled" disabled={true} />
-        </LabelStack>
+        </FormControl>
       </li>
       <li>
-        <LabelStack>
-          エラー時
+        <FormControl title="エラー時">
           <Textarea name="error" error={true} />
-        </LabelStack>
+        </FormControl>
       </li>
       <li>
-        <LabelStack>
-          最大文字数 (defaultValue)
+        <FormControl title="最大文字数 (defaultValue)">
           <Textarea name="max_length_with_default_value" maxLength={140} defaultValue="message👌" />
-        </LabelStack>
+        </FormControl>
       </li>
       <li>
-        <LabelStack>
-          最大文字数 (value)
+        <FormControl title="最大文字数 (value)">
           <Textarea
             name="max_length_with_value"
             maxLength={140}
             value={value}
             onChange={onChangeValue}
           />
-        </LabelStack>
+        </FormControl>
       </li>
       <li>
-        <LabelStack>
-          最大文字数 (value)
+        <FormControl title="最大文字数 (value)">
           <Textarea
             name="max_length_with_value_over"
             maxLength={4}
             value={value}
             onChange={onChangeValue}
           />
-        </LabelStack>
+        </FormControl>
       </li>
       <li>
-        <LabelStack>
-          最大文字数 (decorators)
+        <FormControl title="最大文字数 (decorators)">
           <Textarea
             name="max_length_with_value_and_decorators"
             maxLength={140}
@@ -89,7 +81,7 @@ const Template: StoryFn = () => {
               afterMaxLengthCount: (txt) => ` characters(${txt})`,
             }}
           />
-        </LabelStack>
+        </FormControl>
       </li>
     </ListStack>
   )
@@ -115,4 +107,3 @@ const ListStack = styled(Stack).attrs({ forwardedAs: 'ul', gap: 1.5 })`
   padding: 0 24px;
   list-style: none;
 `
-const LabelStack = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.25, align: 'flex-start' })``

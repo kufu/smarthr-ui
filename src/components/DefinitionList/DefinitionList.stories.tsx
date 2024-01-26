@@ -5,7 +5,6 @@ import { Base } from '../Base'
 import { Heading } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
-import { SectioningFragment } from '../SectioningContent'
 import { Text } from '../Text'
 
 import { DefinitionList } from './DefinitionList'
@@ -74,40 +73,34 @@ const items = [
 
 export const All: StoryFn = () => (
   <Stack gap={1.5}>
-    <SectioningFragment>
-      <Stack gap={0.5} as="section">
-        <Heading type="blockTitle">標準</Heading>
-        <p>
-          基本的にカラム数を指定する必要はありません。各アイテムは最低幅 12em
-          を保ちながら余った領域を埋めていきます。
-        </p>
-        <Base padding={1.5} overflow="auto">
-          <DefinitionList items={items} />
-        </Base>
-      </Stack>
-    </SectioningFragment>
+    <Stack gap={0.5} as="section">
+      <Heading type="blockTitle">標準</Heading>
+      <p>
+        基本的にカラム数を指定する必要はありません。各アイテムは最低幅 12em
+        を保ちながら余った領域を埋めていきます。
+      </p>
+      <Base padding={1.5} overflow="auto">
+        <DefinitionList items={items} />
+      </Base>
+    </Stack>
 
     <p>
       最大列数を制限することも出来ます。画面幅が狭い場合は標準と同じ動きをしますが、指定した最大列数以上には増えず幅が広がります。
     </p>
 
-    <SectioningFragment>
-      <Stack gap={0.5} as="section">
-        <Heading type="blockTitle">最大2列の場合</Heading>
-        <Base padding={1.5} overflow="auto">
-          <DefinitionList items={items} maxColumns={2} />
-        </Base>
-      </Stack>
-    </SectioningFragment>
+    <Stack gap={0.5} as="section">
+      <Heading type="blockTitle">最大2列の場合</Heading>
+      <Base padding={1.5} overflow="auto">
+        <DefinitionList items={items} maxColumns={2} />
+      </Base>
+    </Stack>
 
-    <SectioningFragment>
-      <Stack gap={0.5} as="section">
-        <Heading type="blockTitle">最大3列の場合</Heading>
-        <Base padding={1.5} overflow="auto">
-          <DefinitionList items={items} maxColumns={3} />
-        </Base>
-      </Stack>
-    </SectioningFragment>
+    <Stack gap={0.5} as="section">
+      <Heading type="blockTitle">最大3列の場合</Heading>
+      <Base padding={1.5} overflow="auto">
+        <DefinitionList items={items} maxColumns={3} />
+      </Base>
+    </Stack>
   </Stack>
 )
 All.storyName = 'all'

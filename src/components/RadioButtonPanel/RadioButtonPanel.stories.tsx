@@ -1,9 +1,8 @@
 import { Story } from '@storybook/react'
 import React, { ChangeEvent, useState } from 'react'
 
-import { Heading } from '../Heading'
 import { Cluster, Stack } from '../Layout'
-import { Section } from '../SectioningContent'
+import { Fieldset } from '../NewFieldset'
 import { StatusLabel } from '../StatusLabel'
 import { Text } from '../Text'
 
@@ -21,9 +20,7 @@ export const All: Story = () => {
   return (
     <Stack as="ul" gap={2}>
       <Stack as="li">
-        <Section>
-          <Heading type="blockTitle">標準的な使い方</Heading>
-
+        <Fieldset title="標準的な使い方" titleType="blockTitle">
           <Stack as="ul" gap={0.5}>
             <RadioButtonPanel
               as="li"
@@ -44,13 +41,11 @@ export const All: Story = () => {
               disabled な選択肢
             </RadioButtonPanel>
           </Stack>
-        </Section>
+        </Fieldset>
       </Stack>
 
       <Stack as="li">
-        <Section>
-          <Heading type="blockTitle">複数のテキストを含む場合</Heading>
-
+        <Fieldset title="複数のテキストを含む場合" titleType="blockTitle">
           <Stack as="ul">
             <RadioButtonPanel
               as="li"
@@ -71,7 +66,7 @@ export const All: Story = () => {
               </Stack>
             </RadioButtonPanel>
           </Stack>
-        </Section>
+        </Fieldset>
       </Stack>
     </Stack>
   )

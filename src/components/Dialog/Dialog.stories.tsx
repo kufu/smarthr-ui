@@ -6,9 +6,11 @@ import styled from 'styled-components'
 import { Button } from '../Button'
 import { CheckBox } from '../CheckBox'
 import { DatePicker } from '../DatePicker'
+import { FormControl } from '../FormControl'
 import { Heading } from '../Heading'
 import { Input } from '../Input'
 import { Cluster, LineUp, Stack } from '../Layout'
+import { Fieldset } from '../NewFieldset'
 import { RadioButton } from '../RadioButton'
 import { Section } from '../SectioningContent'
 import { Body, Cell, Head, Row, Table } from '../Table'
@@ -97,26 +99,29 @@ export const Default: StoryFn = () => {
                 value={date?.toDateString()}
                 formatDate={(_date) => (_date ? _date.toDateString() : '')}
                 onChangeDate={(_date) => setDate(_date)}
+                title="test"
                 data-test="dialog-datepicker"
               />
             </Content>
-            <RadioList>
-              <li>
-                <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChangeValue}>
-                  Apple
-                </RadioButton>
-              </li>
-              <li>
-                <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChangeValue}>
-                  Orange
-                </RadioButton>
-              </li>
-              <li>
-                <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChangeValue}>
-                  Grape
-                </RadioButton>
-              </li>
-            </RadioList>
+            <Fieldset title="Fruits">
+              <RadioList>
+                <li>
+                  <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChangeValue}>
+                    Apple
+                  </RadioButton>
+                </li>
+                <li>
+                  <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChangeValue}>
+                    Orange
+                  </RadioButton>
+                </li>
+                <li>
+                  <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChangeValue}>
+                    Grape
+                  </RadioButton>
+                </li>
+              </RadioList>
+            </Fieldset>
           </Section>
           <Footer>
             <Button onClick={onClickClose} data-test="dialog-closer">
@@ -141,12 +146,9 @@ export const Default: StoryFn = () => {
           id="dialog-focus"
           ariaLabel="特定の要素をフォーカスするダイアログ"
         >
-          <Section>
-            <Heading>特定の要素をフォーカスするダイアログ</Heading>
-            <Content>
-              <Input ref={inputRef} name="input_focus_target" data-test="input-focus-target" />
-            </Content>
-          </Section>
+          <FormControl title="特定の要素をフォーカスするダイアログ">
+            <Input ref={inputRef} name="input_focus_target" data-test="input-focus-target" />
+          </FormControl>
           <Footer>
             <Button onClick={onClickClose} data-test="dialog-closer">
               close
@@ -360,23 +362,25 @@ export const Form_Dialog: StoryFn = () => {
         id="dialog-form"
         data-test="form-dialog-content"
       >
-        <RadioList>
-          <li>
-            <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
-              Apple
-            </RadioButton>
-          </li>
-          <li>
-            <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChange}>
-              Orange
-            </RadioButton>
-          </li>
-          <li>
-            <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChange}>
-              Grape
-            </RadioButton>
-          </li>
-        </RadioList>
+        <Fieldset title="fruits">
+          <RadioList>
+            <li>
+              <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
+                Apple
+              </RadioButton>
+            </li>
+            <li>
+              <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChange}>
+                Orange
+              </RadioButton>
+            </li>
+            <li>
+              <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChange}>
+                Grape
+              </RadioButton>
+            </li>
+          </RadioList>
+        </Fieldset>
         <Buttons>
           <p>切り替えボタン：</p>
           <Button
@@ -428,14 +432,19 @@ export const Form_Dialog: StoryFn = () => {
           data-test="opened-form-dialog"
         >
           <div style={{ padding: '2rem' }}>
-            <Stack align="flex-start">
-              <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
+            <FormControl
+              title={
+                <>
+                  <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
+                </>
+              }
+            >
               <Input
                 ref={openedFocusRef}
                 name="opened_dialog_focus_target"
                 data-test="opened-form-dialog-focus-target"
               />
-            </Stack>
+            </FormControl>
           </div>
         </FormDialog>
       )}
@@ -827,13 +836,15 @@ export const Modeless_Dialog: StoryFn = () => {
           <ModelessContent>
             <Stack gap="S">
               <ModelessContentPart>
-                <LineUp gap="S">
-                  <RadioButton name="modeless_dialog_center_radio_1">ラジオボタン1</RadioButton>
-                  <RadioButton name="modeless_dialog_center_radio_2">ラジオボタン2</RadioButton>
-                </LineUp>
+                <Fieldset title="ラジオボタン">
+                  <LineUp gap="S">
+                    <RadioButton name="modeless_dialog_center_radio_1">ラジオボタン1</RadioButton>
+                    <RadioButton name="modeless_dialog_center_radio_2">ラジオボタン2</RadioButton>
+                  </LineUp>
+                </Fieldset>
               </ModelessContentPart>
               <ModelessContentPart>
-                <DatePicker name="modeless_dialog_center_datepicker" />
+                <DatePicker name="modeless_dialog_center_datepicker" title="test" />
               </ModelessContentPart>
               <Table>
                 <Head>

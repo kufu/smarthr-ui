@@ -2,8 +2,8 @@ import { StoryFn } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
 
+import { FormControl } from '../FormControl'
 import { InformationPanel } from '../InformationPanel'
-import { Stack } from '../Layout'
 
 import { All } from './Select.stories'
 
@@ -34,22 +34,19 @@ export const VRTState: StoryFn = () => (
         <Title>hover</Title>
         <InnerList id="list-hover">
           <li>
-            <TextStack>
-              <span>標準</span>
+            <FormControl title="標準">
               <Select name="default" options={options} />
-            </TextStack>
+            </FormControl>
           </li>
           <li>
-            <TextStack>
-              <span>エラー状態</span>
+            <FormControl title="エラー状態">
               <Select name="error" error options={options} />
-            </TextStack>
+            </FormControl>
           </li>
           <li>
-            <TextStack>
-              <span>disabled 状態</span>
+            <FormControl title="disabled 状態">
               <Select name="disabled" disabled options={options} />
-            </TextStack>
+            </FormControl>
           </li>
         </InnerList>
       </li>
@@ -58,22 +55,19 @@ export const VRTState: StoryFn = () => (
         <Title>focus</Title>
         <InnerList id="list-focus">
           <li>
-            <TextStack>
-              <span>標準</span>
+            <FormControl title="標準">
               <Select name="default" options={options} />
-            </TextStack>
+            </FormControl>
           </li>
           <li>
-            <TextStack>
-              <span>エラー状態</span>
+            <FormControl title="エラー状態">
               <Select name="error" error options={options} />
-            </TextStack>
+            </FormControl>
           </li>
           <li>
-            <TextStack>
-              <span>disabled 状態</span>
+            <FormControl title="disabled 状態">
               <Select name="disabled" disabled options={options} />
-            </TextStack>
+            </FormControl>
           </li>
         </InnerList>
       </li>
@@ -82,22 +76,19 @@ export const VRTState: StoryFn = () => (
         <Title>focus-visible</Title>
         <InnerList id="list-focus-visible">
           <li>
-            <TextStack>
-              <span>標準</span>
+            <FormControl title="標準">
               <Select name="default" options={options} />
-            </TextStack>
+            </FormControl>
           </li>
           <li>
-            <TextStack>
-              <span>エラー状態</span>
+            <FormControl title="エラー状態">
               <Select name="error" error options={options} />
-            </TextStack>
+            </FormControl>
           </li>
           <li>
-            <TextStack>
-              <span>disabled 状態</span>
+            <FormControl title="disabled 状態">
               <Select name="disabled" disabled options={options} />
-            </TextStack>
+            </FormControl>
           </li>
         </InnerList>
       </li>
@@ -106,22 +97,19 @@ export const VRTState: StoryFn = () => (
         <Title>active</Title>
         <InnerList id="list-active">
           <li>
-            <TextStack>
-              <span>標準</span>
+            <FormControl title="標準">
               <Select name="default" options={options} />
-            </TextStack>
+            </FormControl>
           </li>
           <li>
-            <TextStack>
-              <span>エラー状態</span>
+            <FormControl title="エラー状態">
               <Select name="error" error options={options} />
-            </TextStack>
+            </FormControl>
           </li>
           <li>
-            <TextStack>
-              <span>disabled 状態</span>
+            <FormControl title="disabled 状態">
               <Select name="disabled" disabled options={options} />
-            </TextStack>
+            </FormControl>
           </li>
         </InnerList>
       </li>
@@ -177,4 +165,3 @@ const Title = styled.p`
 const VRTInformationPanel = styled(InformationPanel)`
   margin-bottom: 24px;
 `
-const TextStack = styled(Stack).attrs({ forwardedAs: 'label', gap: 0.5 })``
