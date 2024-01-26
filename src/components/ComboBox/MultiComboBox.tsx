@@ -474,6 +474,7 @@ const Container = styled.div.attrs(
       padding: ${space(0.25)} ${space(0.5)};
       cursor: text;
       min-width: 20em;
+      box-sizing: border-box;
 
       @media (prefers-contrast: more) {
         border: ${border.highContrast};
