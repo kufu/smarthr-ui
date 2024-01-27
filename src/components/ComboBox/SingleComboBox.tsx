@@ -21,9 +21,7 @@ import { UnstyledButton } from '../Button'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { Input } from '../Input'
 
-import { ComboBoxContext } from './ComboBoxContext'
 import { BaseProps, ComboBoxItem } from './types'
-import { useSingleComboBoxClassNames } from './useClassNames'
 import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
 
@@ -171,7 +169,6 @@ const ActualSingleComboBox = <T,>(
   ref: Ref<HTMLInputElement>,
 ) => {
   const { textColor } = useTheme()
-  const classNames = useSingleComboBoxClassNames()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -374,12 +371,6 @@ const ActualSingleComboBox = <T,>(
   }, [isFocused, selectedItem, defaultItem, onSelect])
 
   const needsClearButton = selectedItem !== null && !disabled
-  const contextValue = useMemo(
-    () => ({
-      listBoxClassNames: classNames.listBox,
-    }),
-    [classNames.listBox],
-  )
 
   const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
     singleCombobox()
@@ -421,66 +412,61 @@ const ActualSingleComboBox = <T,>(
   ])
 
   return (
-    <ComboBoxContext.Provider value={contextValue}>
-      {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-      <div
-        {...props}
-        {...wrapperStyleProps}
-        ref={outerRef}
-        role="combobox"
-        aria-haspopup="listbox"
-        aria-controls={listBoxId}
-        aria-expanded={isFocused}
-        aria-invalid={error || undefined}
-        onKeyPress={handleKeyPress}
-      >
-        <Input
-          {...inputAttributes}
-          /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
-          placeholder={placeholder}
-          type="text"
-          name={name}
-          value={inputValue}
-          disabled={disabled}
-          required={required}
-          prefix={prefix}
-          error={error}
-          suffix={
-            <>
-              <UnstyledButton
-                onClick={onClickClear}
-                ref={clearButtonRef}
-                className={clearButtonStyle}
-              >
-                <FaTimesCircleIcon
-                  color="TEXT_BLACK"
-                  alt={
-                    decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT
-                  }
-                  className={clearButtonIconStyle}
-                />
-              </UnstyledButton>
-              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, smarthr/a11y-delegate-element-has-role-presentation */}
-              <span onClick={onClickInput} className={caretDownLayoutStyle}>
-                <FaCaretDownIcon color={caretIconColor} className={caretDownIconStyle} />
-              </span>
-            </>
-          }
-          onClick={onClickInput}
-          onChange={actualOnChangeInput}
-          onFocus={handleFocus}
-          onCompositionStart={onCompositionStart}
-          onCompositionEnd={onCompositionEnd}
-          onKeyDown={onKeyDownInput}
-          ref={inputRef}
-          autoComplete="off"
-          aria-activedescendant={activeOption?.id}
-          aria-autocomplete="list"
-          className={inputStyle}
-        />
-        {renderListBox()}
-      </div>
-    </ComboBoxContext.Provider>
+    <div
+      {...props}
+      {...wrapperStyleProps}
+      ref={outerRef}
+      role="combobox"
+      aria-haspopup="listbox"
+      aria-controls={listBoxId}
+      aria-expanded={isFocused}
+      aria-invalid={error || undefined}
+      onKeyPress={handleKeyPress}
+    >
+      <Input
+        {...inputAttributes}
+        /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
+        placeholder={placeholder}
+        type="text"
+        name={name}
+        value={inputValue}
+        disabled={disabled}
+        required={required}
+        prefix={prefix}
+        error={error}
+        suffix={
+          <>
+            <UnstyledButton
+              onClick={onClickClear}
+              ref={clearButtonRef}
+              className={clearButtonStyle}
+            >
+              <FaTimesCircleIcon
+                color="TEXT_BLACK"
+                alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
+                className={clearButtonIconStyle}
+              />
+            </UnstyledButton>
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, smarthr/a11y-delegate-element-has-role-presentation */}
+            <span onClick={onClickInput} className={caretDownLayoutStyle}>
+              <FaCaretDownIcon color={caretIconColor} className={caretDownIconStyle} />
+            </span>
+          </>
+        }
+        onClick={onClickInput}
+        onChange={actualOnChangeInput}
+        onFocus={handleFocus}
+        onCompositionStart={onCompositionStart}
+        onCompositionEnd={onCompositionEnd}
+        onKeyDown={onKeyDownInput}
+        ref={inputRef}
+        autoComplete="off"
+        aria-activedescendant={activeOption?.id}
+        aria-autocomplete="list"
+        className={inputStyle}
+      />
+      {renderListBox()}
+    </div>
   )
 }
 

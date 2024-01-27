@@ -18,7 +18,6 @@ import { useOuterClick } from '../../hooks/useOuterClick'
 import { useTheme } from '../../hooks/useTailwindTheme'
 import { FaCaretDownIcon } from '../Icon'
 
-import { ComboBoxContext } from './ComboBoxContext'
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 import { BaseProps, ComboBoxItem } from './types'
@@ -393,13 +392,6 @@ const ActualMultiComboBox = <T,>(
     [onKeyPress],
   )
 
-  const contextValue = useMemo(
-    () => ({
-      listBoxClassNames: classNames.listBox,
-    }),
-    [classNames.listBox],
-  )
-
   const selectedListId = useId()
 
   const {
@@ -457,79 +449,77 @@ const ActualMultiComboBox = <T,>(
   ])
 
   return (
-    <ComboBoxContext.Provider value={contextValue}>
-      <div
-        {...props}
-        {...wrapperStyleProps}
-        ref={outerRef}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
-        onKeyPress={handleKeyPress}
-        role="group"
-      >
-        <div className={inputAreaStyle}>
-          <ul
-            id={selectedListId}
-            aria-label={
-              decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) ||
-              SELECTED_LIST_ARIA_LABEL
-            }
-            className={selectedListStyle}
-          >
-            {selectedItems.map((selectedItem, i) => (
-              <li key={`${selectedItem.label}-${selectedItem.value}`}>
-                <MultiSelectedItem
-                  item={selectedItem}
-                  disabled={disabled}
-                  onDelete={handleDelete}
-                  enableEllipsis={selectedItemEllipsis}
-                  buttonRef={deletionButtonRefs[i]}
-                  decorators={decorators}
-                />
-              </li>
-            ))}
-          </ul>
+    <div
+      {...props}
+      {...wrapperStyleProps}
+      ref={outerRef}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      onKeyPress={handleKeyPress}
+      role="group"
+    >
+      <div className={inputAreaStyle}>
+        <ul
+          id={selectedListId}
+          aria-label={
+            decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) ||
+            SELECTED_LIST_ARIA_LABEL
+          }
+          className={selectedListStyle}
+        >
+          {selectedItems.map((selectedItem, i) => (
+            <li key={`${selectedItem.label}-${selectedItem.value}`}>
+              <MultiSelectedItem
+                item={selectedItem}
+                disabled={disabled}
+                onDelete={handleDelete}
+                enableEllipsis={selectedItemEllipsis}
+                buttonRef={deletionButtonRefs[i]}
+                decorators={decorators}
+              />
+            </li>
+          ))}
+        </ul>
 
-          <div className={inputWrapperStlye}>
-            <input
-              {...inputAttributes}
-              type="text"
-              name={name}
-              value={inputValue}
-              disabled={disabled}
-              required={required && selectedItems.length === 0}
-              ref={inputRef}
-              onChange={handleChangeInput}
-              onFocus={handleFocusInput}
-              onCompositionStart={handleCompositionStartInput}
-              onCompositionEnd={handleCompositionEndInput}
-              onKeyDown={handleInputKeyDown}
-              autoComplete="off"
-              tabIndex={0}
-              role="combobox"
-              aria-activedescendant={activeOption?.id}
-              aria-controls={`${listBoxId} ${selectedListId}`}
-              aria-haspopup="listbox"
-              aria-expanded={isFocused}
-              aria-invalid={error || undefined}
-              aria-disabled={disabled}
-              aria-autocomplete="list"
-              className={inputStyle}
-            />
-          </div>
-
-          {selectedItems.length === 0 && placeholder && !isFocused && (
-            <p className={placeholderStyle}>{placeholder}</p>
-          )}
+        <div className={inputWrapperStlye}>
+          <input
+            {...inputAttributes}
+            type="text"
+            name={name}
+            value={inputValue}
+            disabled={disabled}
+            required={required && selectedItems.length === 0}
+            ref={inputRef}
+            onChange={handleChangeInput}
+            onFocus={handleFocusInput}
+            onCompositionStart={handleCompositionStartInput}
+            onCompositionEnd={handleCompositionEndInput}
+            onKeyDown={handleInputKeyDown}
+            autoComplete="off"
+            tabIndex={0}
+            role="combobox"
+            aria-activedescendant={activeOption?.id}
+            aria-controls={`${listBoxId} ${selectedListId}`}
+            aria-haspopup="listbox"
+            aria-expanded={isFocused}
+            aria-invalid={error || undefined}
+            aria-disabled={disabled}
+            aria-autocomplete="list"
+            className={inputStyle}
+          />
         </div>
 
-        <div className={suffixWrapperStyle}>
-          <FaCaretDownIcon color={caretIconColor} className={suffixIconStyle} />
-        </div>
-
-        {renderListBox()}
+        {selectedItems.length === 0 && placeholder && !isFocused && (
+          <p className={placeholderStyle}>{placeholder}</p>
+        )}
       </div>
-    </ComboBoxContext.Provider>
+
+      <div className={suffixWrapperStyle}>
+        <FaCaretDownIcon color={caretIconColor} className={suffixIconStyle} />
+      </div>
+
+      {renderListBox()}
+    </div>
   )
 }
 
