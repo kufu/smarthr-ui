@@ -25,7 +25,7 @@ test('アイテムの選択と選択解除ができること', async (t) => {
     .expect(textbox.focused)
     .ok()
     // アイテムを選択できること
-    .click(listbox.find('.smarthr-ui-SingleComboBox-selectButton').withText('option 1'))
+    .click(listbox.find('.smarthr-ui-ComboBox-selectButton').withText('option 1'))
     .expect(textbox.value)
     .eql('option 1')
     // リストボックスが非表示になること
@@ -72,7 +72,7 @@ test('コンボボックスがフォーカスされていない時に選択解�
   await t
     // アイテムを選択
     .click(combobox)
-    .click(listbox.find('.smarthr-ui-SingleComboBox-selectButton').withText('option 1'))
+    .click(listbox.find('.smarthr-ui-ComboBox-selectButton').withText('option 1'))
     // 外側をクリックしてフォーカスを外す
     .click('body', { offsetX: 0, offsetY: 0 })
     // 選択したアイテムを選択解除できること
@@ -101,9 +101,7 @@ test('新しいアイテムを追加できること', async (t) => {
     .eql('')
     // 新しく追加したアイテムがリストボックス内に存在すること
     .click(combobox)
-    .expect(
-      listbox.find('.smarthr-ui-SingleComboBox-selectButton').withText('test new item').exists,
-    )
+    .expect(listbox.find('.smarthr-ui-ComboBox-selectButton').withText('test new item').exists)
     .ok()
 })
 
@@ -120,7 +118,7 @@ test('disabled なコンボボックスではアイテムの選択と選択解�
     .notOk()
     // 有効なコンボボックスでアイテム選択
     .click(normal)
-    .click(normalListbox.find('.smarthr-ui-SingleComboBox-selectButton').withText('option 1'))
+    .click(normalListbox.find('.smarthr-ui-ComboBox-selectButton').withText('option 1'))
     // disabled なコンボボックスにクリアボタンが表示されないこと
     .expect(disabled.find('.smarthr-ui-SingleComboBox-clearButton').visible)
     .notOk()

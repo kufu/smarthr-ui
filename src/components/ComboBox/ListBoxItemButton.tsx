@@ -1,11 +1,9 @@
-import React, { RefObject, useCallback, useContext } from 'react'
-import styled, { css } from 'styled-components'
+import React, { RefObject, useCallback, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaPlusCircleIcon } from '../Icon'
 import { Text } from '../Text'
 
-import { ComboBoxContext } from './ComboBoxContext'
 import { ComboBoxOption } from './types'
 
 type Props<T> = {
@@ -17,15 +15,32 @@ type Props<T> = {
   activeRef: RefObject<HTMLButtonElement>
 }
 
-function ListBoxItemButton<T>({
+const button = tv({
+  base: [
+    'shr-block shr-min-w-full shr-cursor-pointer shr-border-none shr-px-1 shr-py-0.5 shr-text-left shr-text-base shr-leading-tight',
+    'aria-selected:shr-bg-main aria-selected:shr-text-white',
+    'shr-cursor-not-allowedc disabled:shr-text-disabled',
+  ],
+  variants: {
+    active: {
+      true: ['shr-bg-white-darken shr-text-inherit', 'aria-selected:shr-bg-main-darken'],
+      false: 'shr-bg-white',
+    },
+    new: {
+      true: 'smarthr-ui-ComboBox-addButton shr-flex shr-items-center',
+      false: 'smarthr-ui-ComboBox-selectButton',
+    },
+  },
+})
+
+const ListBoxItemButton = <T,>({
   option,
   isActive,
   onAdd,
   onSelect,
   onMouseOver,
   activeRef,
-}: Props<T>) {
-  const className = isActive ? 'active' : ''
+}: Props<T>) => {
   const { item, selected, isNew } = option
   const { label, disabled } = item
 
@@ -41,83 +56,44 @@ function ListBoxItemButton<T>({
     onMouseOver(option)
   }, [onMouseOver, option])
 
-  const theme = useTheme()
-  const { listBoxClassNames: classNames } = useContext(ComboBoxContext)
+  const buttonStyle = useMemo(
+    () =>
+      button({
+        active: !!isActive,
+        new: isNew,
+      }),
+    [isActive, isNew],
+  )
 
   return isNew ? (
-    <AddButton
+    // eslint-disable-next-line smarthr/a11y-clickable-element-has-text
+    <button
       key={option.id}
-      themes={theme}
       onClick={handleAdd}
       onMouseOver={handleMouseOver}
       id={option.id}
       role="option"
-      className={`${className} ${classNames.addButton}`}
+      className={buttonStyle}
       ref={isActive ? activeRef : undefined}
     >
-      <FaPlusCircleIcon
-        color={theme.color.TEXT_LINK}
-        text={<Text color="TEXT_LINK">「{label}」を追加</Text>}
-      />
-    </AddButton>
+      <FaPlusCircleIcon color="TEXT_LINK" text={<Text color="TEXT_LINK">「{label}」を追加</Text>} />
+    </button>
   ) : (
-    <SelectButton
+    <button
       key={option.id}
-      type="button"
-      themes={theme}
       disabled={disabled}
       onClick={handleSelect}
       onMouseOver={handleMouseOver}
       id={option.id}
       role="option"
-      className={`${className} ${classNames.selectButton}`}
+      className={buttonStyle}
       aria-selected={selected}
       ref={isActive ? activeRef : undefined}
     >
       {label}
-    </SelectButton>
+    </button>
   )
 }
 const typedMemo: <T>(c: T) => T = React.memo
 const Memoized = typedMemo(ListBoxItemButton)
 export { Memoized as ListBoxItemButton }
-
-const SelectButton = styled.button<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, leading, spacingByChar, color } = themes
-
-    return css`
-      display: block;
-      min-width: 100%;
-      border: none;
-      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-      background-color: ${color.WHITE};
-      font-size: ${fontSize.M};
-      line-height: ${leading.TIGHT};
-      text-align: left;
-      cursor: pointer;
-
-      &.active {
-        background-color: ${color.hoverColor(color.WHITE)};
-        color: inherit;
-      }
-
-      &[aria-selected='true'] {
-        background-color: ${color.MAIN};
-        color: ${color.TEXT_WHITE};
-        &.active {
-          background-color: ${color.hoverColor(color.MAIN)};
-        }
-      }
-
-      &[disabled] {
-        color: ${color.TEXT_DISABLED};
-        cursor: not-allowed;
-      }
-    `
-  }}
-`
-const AddButton = styled(SelectButton)`
-  display: flex;
-  align-items: center;
-`
