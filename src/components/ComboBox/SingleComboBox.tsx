@@ -13,10 +13,10 @@ import React, {
   useState,
 } from 'react'
 import innerText from 'react-innertext'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../hooks/useClick'
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTailwindTheme'
 import { UnstyledButton } from '../Button'
 import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
 import { Input } from '../Input'
@@ -101,6 +101,41 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props<unknown>>
 
 const DESTROY_BUTTON_TEXT = '削除'
 
+const singleCombobox = tv({
+  slots: {
+    wrapper: 'smarthr-ui-SingleComboBox shr-inline-block',
+    input: 'smarthr-ui-SingleComboBox-input shr-w-full',
+    caretDownLayout: [
+      'shr-relative -shr-me-0.5 shr-cursor-pointer shr-p-0.5',
+      'before:shr-border-0',
+      'before:shr-absolute before:shr-inset-x-0 before:shr-inset-y-0.25 before:shr-w-0 before:shr-border-l before:shr-border-solid before:shr-border-default before:shr-content-[""]',
+    ],
+    caretDownIcon: 'shr-block',
+    clearButton: [
+      'smarthr-ui-SingleComboBox-clearButton',
+      'shr-group/clearButton',
+      'shr-me-0.5 shr-cursor-pointer',
+      'focus-visible:shr-shadow-[unset]',
+    ],
+    clearButtonIcon: [
+      'shr-block',
+      'group-focus-visible/clearButton:shr-focus-indicator group-focus-visible/clearButton:shr-rounded-full',
+    ],
+  },
+  variants: {
+    disabled: {
+      true: {
+        wrapper: 'shr-cursor-not-allowed',
+      },
+    },
+    hidden: {
+      true: {
+        clearButton: 'shr-hidden',
+      },
+    },
+  },
+})
+
 const ActualSingleComboBox = <T,>(
   {
     items,
@@ -117,7 +152,7 @@ const ActualSingleComboBox = <T,>(
     isLoading,
     width = 'auto',
     dropdownWidth = 'auto',
-    className = '',
+    className,
     onChange,
     onChangeInput,
     onAdd,
@@ -130,11 +165,12 @@ const ActualSingleComboBox = <T,>(
     onKeyPress,
     decorators,
     inputAttributes,
+    style,
     ...props
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
 ) => {
-  const theme = useTheme()
+  const { textColor } = useTheme()
   const classNames = useSingleComboBoxClassNames()
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -306,10 +342,10 @@ const ActualSingleComboBox = <T,>(
   )
 
   const caretIconColor = useMemo(() => {
-    if (isFocused) return theme.color.TEXT_BLACK
-    if (disabled) return theme.color.TEXT_DISABLED
-    return theme.color.TEXT_GREY
-  }, [disabled, isFocused, theme])
+    if (isFocused) return textColor.black
+    if (disabled) return textColor.disabled
+    return textColor.grey
+  }, [disabled, isFocused, textColor.black, textColor.disabled, textColor.grey])
 
   useClick(
     [outerRef, listBoxRef, clearButtonRef],
@@ -345,15 +381,52 @@ const ActualSingleComboBox = <T,>(
     [classNames.listBox],
   )
 
+  const { wrapper, input, caretDownLayout, caretDownIcon, clearButton, clearButtonIcon } =
+    singleCombobox()
+  const {
+    wrapperStyleProps,
+    inputStyle,
+    caretDownLayoutStyle,
+    caretDownIconStyle,
+    clearButtonStyle,
+    clearButtonIconStyle,
+  } = useMemo(() => {
+    const wrapperWidth = typeof width === 'number' ? `${width}px` : width
+    return {
+      wrapperStyleProps: {
+        style: {
+          ...style,
+          width: wrapperWidth,
+        },
+        className: wrapper({ disabled, className }),
+      },
+      inputStyle: input(),
+      caretDownLayoutStyle: caretDownLayout(),
+      caretDownIconStyle: caretDownIcon(),
+      clearButtonStyle: clearButton({ hidden: !needsClearButton }),
+      clearButtonIconStyle: clearButtonIcon(),
+    }
+  }, [
+    width,
+    style,
+    wrapper,
+    disabled,
+    className,
+    input,
+    caretDownLayout,
+    caretDownIcon,
+    clearButton,
+    needsClearButton,
+    clearButtonIcon,
+  ])
+
   return (
     <ComboBoxContext.Provider value={contextValue}>
       {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-      <Container
+      <div
         {...props}
+        {...wrapperStyleProps}
         ref={outerRef}
-        className={`${className} ${classNames.wrapper}`}
-        $width={width}
-        $disabled={disabled}
         role="combobox"
         aria-haspopup="listbox"
         aria-controls={listBoxId}
@@ -361,7 +434,7 @@ const ActualSingleComboBox = <T,>(
         aria-invalid={error || undefined}
         onKeyPress={handleKeyPress}
       >
-        <StyledInput
+        <Input
           {...inputAttributes}
           /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
           placeholder={placeholder}
@@ -374,24 +447,23 @@ const ActualSingleComboBox = <T,>(
           error={error}
           suffix={
             <>
-              <ClearButton
-                type="button"
+              <UnstyledButton
                 onClick={onClickClear}
                 ref={clearButtonRef}
-                themes={theme}
-                $hidden={!needsClearButton}
-                className={classNames.clearButton}
+                className={clearButtonStyle}
               >
                 <FaTimesCircleIcon
-                  color={theme.color.TEXT_BLACK}
+                  color="TEXT_BLACK"
                   alt={
                     decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT
                   }
+                  className={clearButtonIconStyle}
                 />
-              </ClearButton>
-              <CaretDownButton themes={theme} onClick={onClickInput}>
-                <FaCaretDownIcon color={caretIconColor} />
-              </CaretDownButton>
+              </UnstyledButton>
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, smarthr/a11y-delegate-element-has-role-presentation */}
+              <span onClick={onClickInput} className={caretDownLayoutStyle}>
+                <FaCaretDownIcon color={caretIconColor} className={caretDownIconStyle} />
+              </span>
             </>
           }
           onClick={onClickInput}
@@ -404,10 +476,10 @@ const ActualSingleComboBox = <T,>(
           autoComplete="off"
           aria-activedescendant={activeOption?.id}
           aria-autocomplete="list"
-          className={classNames.input}
+          className={inputStyle}
         />
         {renderListBox()}
-      </Container>
+      </div>
     </ComboBoxContext.Provider>
   )
 }
@@ -421,72 +493,3 @@ export const SingleComboBox = forwardRef(ActualSingleComboBox) as (<T>(
 ) => ReturnType<typeof ActualSingleComboBox<T>>) & {
   displayName: string
 }
-
-type ContainerType = { $disabled: boolean; $width: number | string }
-const Container = styled.div.attrs<ContainerType>(({ style = {}, $disabled, $width }) => {
-  style.width = typeof $width === 'number' ? `${$width}px` : $width
-
-  if ($disabled) {
-    style.cursor = 'not-allowed'
-  }
-
-  return { style }
-})<ContainerType>`
-  display: inline-block;
-`
-const StyledInput = styled(Input)`
-  width: 100%;
-`
-const CaretDownButton = styled.button<{ themes: Theme }>(({ themes }) => {
-  const { border, space } = themes
-  return css`
-    position: relative;
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    appearance: none;
-    margin-right: ${space(-0.5)};
-    padding: ${space(0.5)};
-
-    &::before {
-      content: '';
-      position: absolute;
-      inset: ${space(0.25)} 0;
-      width: 0;
-      border-left: ${border.shorthand};
-    }
-
-    .smarthr-ui-Icon {
-      display: block;
-    }
-  `
-})
-
-type ClearButtonProps = {
-  $hidden: boolean
-  themes: Theme
-}
-const ClearButton = styled(UnstyledButton).attrs(({ $hidden }: ClearButtonProps) => ({
-  style: $hidden ? { display: 'none' } : undefined,
-}))<ClearButtonProps>`
-  ${({ themes }) => {
-    const { radius, shadow, space } = themes
-    return css`
-      cursor: pointer;
-      margin-inline-end: ${space(0.5)};
-
-      .smarthr-ui-Icon {
-        display: block;
-      }
-
-      &:focus-visible {
-        box-shadow: unset;
-      }
-
-      &:focus-visible > svg {
-        border-radius: ${radius.full};
-        ${shadow.focusIndicatorStyles};
-      }
-    `
-  }}
-`
