@@ -21,7 +21,6 @@ import { FaCaretDownIcon } from '../Icon'
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 import { BaseProps, ComboBoxItem } from './types'
-import { useMultiComboBoxClassNames } from './useClassNames'
 import { useFocusControl } from './useFocusControl'
 import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
@@ -195,7 +194,6 @@ const ActualMultiComboBox = <T,>(
   ref: Ref<HTMLInputElement>,
 ) => {
   const { textColor } = useTheme()
-  const classNames = useMultiComboBoxClassNames()
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const isInputControlled = useMemo(
