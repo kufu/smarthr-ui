@@ -3598,10 +3598,10 @@
     "@types/node" "*"
     form-data "^3.0.0"
 
-"@types/node@*", "@types/node@^20.11.6":
-  version "20.11.6"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.6.tgz#6adf4241460e28be53836529c033a41985f85b6e"
-  integrity sha512-+EOokTnksGVgip2PbYbr3xnR7kZigh4LbybAfBAw5BpnQ+FqBYUsvCEjYd70IXKlbohQ64mzEYmMtlWUY8q//Q==
+"@types/node@*", "@types/node@^20.11.7":
+  version "20.11.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.7.tgz#cb49aedd758c978c30806d0c38b520ed2a3df6e0"
+  integrity sha512-GPmeN1C3XAyV5uybAf4cMLWT9fDWcmQhZVtMFu7OR32WjrqGG+Wnk2V1d0bmtUyE/Zy1QJ9BxyiTih9z8Oks8A==
   dependencies:
     undici-types "~5.26.4"
 
@@ -4984,10 +4984,10 @@ chownr@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
 
-chromatic@^10.5.2:
-  version "10.5.2"
-  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-10.5.2.tgz#c3c846afcb73c70b4988929d94261a16d7a195af"
-  integrity sha512-peZofXS+831ucagF6305tauezWkZ8DC3kzzjIOzTE/4JvEgRhKucZ+8H8EsKT+SSfOGC1OSEUIVM8C8daRGn+Q==
+chromatic@^10.6.1:
+  version "10.6.1"
+  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-10.6.1.tgz#26dcc49420c676f227bfced8c0e5d49ed7abf06c"
+  integrity sha512-bd4C5sEEtN83uUmbc4Fu+x7+lJIPdMUdu4D6HRDQEIDl/Tatc8+By4bZluH1pzg/MbP9vllkL6Ua9vF4EEA7VA==
 
 chrome-remote-interface@^0.32.2:
   version "0.32.2"
@@ -6435,10 +6435,10 @@ eslint-config-prettier@^9.1.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-9.1.0.tgz#31af3d94578645966c082fcb71a5846d3c94867f"
   integrity sha512-NSWl5BFQWEPi1j4TjVNItzYV7dZXZ+wP6I6ZhrBGpChQhZRUaElihE9uRRkcbRnNb76UMKDF3r+WTmNcGPKsqw==
 
-eslint-config-smarthr@^6.16.1:
-  version "6.16.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-smarthr/-/eslint-config-smarthr-6.16.1.tgz#a4b5ff169dd8a6a0453d8a4a204679a350ab9710"
-  integrity sha512-/j2E2q+d/oZiGLRq413nADEtq7Q3ANqiRcASiYJ4Yebe/yVyzMkgoDkXmZ5JrD8FJhgchO6Rk9PV22Ka8jFeQA==
+eslint-config-smarthr@^6.17.0:
+  version "6.17.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-smarthr/-/eslint-config-smarthr-6.17.0.tgz#8d3697fe84eb7df3bf19c733ae2f62951cd5735f"
+  integrity sha512-i7B4/T/kK90MsgzZVl5F0F+rGLIlanN+YGY7BvDj+Yc4D+ZuCpQyP7HrervMPAOs8gjttGVqbNlcXrI3YcZ5EQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^6.19.1"
     "@typescript-eslint/parser" "^6.19.1"
@@ -6447,7 +6447,7 @@ eslint-config-smarthr@^6.16.1:
     eslint-plugin-jsx-a11y "^6.8.0"
     eslint-plugin-react "^7.33.2"
     eslint-plugin-react-hooks "^4.6.0"
-    eslint-plugin-smarthr "^0.3.26"
+    eslint-plugin-smarthr "^0.3.27"
 
 eslint-import-resolver-node@^0.3.9:
   version "0.3.9"
@@ -6536,10 +6536,10 @@ eslint-plugin-react@^7.33.2:
     semver "^6.3.1"
     string.prototype.matchall "^4.0.8"
 
-eslint-plugin-smarthr@^0.3.26:
-  version "0.3.26"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-smarthr/-/eslint-plugin-smarthr-0.3.26.tgz#84c21e6cc31079cdf2af6ce0a8a645df2044b14d"
-  integrity sha512-EIiSgrZwLdX+pw20g4QuBMqmE1lt7UmakoaHlYHRz5w+znYE/H2/JiQhETx1hre/hiC6+YH09OEMZr9vum0TVg==
+eslint-plugin-smarthr@^0.3.27:
+  version "0.3.27"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-smarthr/-/eslint-plugin-smarthr-0.3.27.tgz#8d826ca4bc36931e41e4bb14aaadc289b2392185"
+  integrity sha512-mXkUTL9/no3WXDNyLV46V7As+oxhKyWSTyLg2HZ/jvDDgRtul8lNTBEFyP56arN5R+BdRbDQrn0nvTVPq/eERQ==
   dependencies:
     inflected "^2.1.0"
     json5 "^2.2.0"
