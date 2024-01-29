@@ -85,7 +85,7 @@ test('新しいアイテムを追加できること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-creatable]')
   const textbox = combobox.find('input[type=text]')
   const listbox = elementWithId(await combobox.getAttribute('aria-controls'))
-  const addButton = listbox.find('.smarthr-ui-SingleComboBox-addButton')
+  const addButton = listbox.find('.smarthr-ui-ComboBox-addButton')
   const clearButton = combobox.find('.smarthr-ui-SingleComboBox-clearButton')
 
   await t

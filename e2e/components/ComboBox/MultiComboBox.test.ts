@@ -98,7 +98,7 @@ test('新しいアイテムを追加できること', async (t) => {
   const combobox = wrapper.find('input[role=combobox]')
   const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
   const listbox = elementWithId(comboboxControls[0])
-  const addButton = listbox.find('.smarthr-ui-MultiComboBox-addButton')
+  const addButton = listbox.find('.smarthr-ui-ComboBox-addButton')
   const selectedItems = elementWithId(comboboxControls[1])
 
   await t
