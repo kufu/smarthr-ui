@@ -1,14 +1,12 @@
-import React, { RefObject, useCallback, useEffect, useRef, useState } from 'react'
-import styled, { css } from 'styled-components'
+import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { UnstyledButton } from '../Button'
 import { Chip } from '../Chip'
 import { FaTimesCircleIcon } from '../Icon'
 
 import { MultiSelectedItemTooltip } from './MultiSelectedItemTooltip'
 import { ComboBoxItem } from './types'
-import { useMultiComboBoxClassNames } from './useClassNames'
 
 export type Props<T> = {
   item: ComboBoxItem<T> & { deletable?: boolean }
@@ -23,6 +21,37 @@ export type Props<T> = {
 
 const DESTROY_BUTTON_TEXT = '削除'
 
+const multiSelectedItem = tv({
+  slots: {
+    wrapper:
+      'smarthr-ui-MultiComboBox-selectedItem shr-flex shr-items-center shr-gap-0.75 shr-leading-normal [&]:shr-rounded-em',
+    itemLabel: 'smarthr-ui-MultiComboBox-selectedItemLabel',
+    deleteButton: [
+      'smarthr-ui-MultiComboBox-deleteButton',
+      'shr-group/deleteButton',
+      'shr-shrink shr-rounded-full shr-leading-[0] shr-text-black',
+      'focus-visible:shr-shadow-[unset]',
+    ],
+    deleteButtonIcon:
+      'group-focus-visible/deleteButton:shr-focus-indicator group-focus-visible/deleteButton:shr-rounded-full',
+  },
+  variants: {
+    enableEllipsis: {
+      true: {
+        itemLabel: 'shr-overflow-hidden shr-overflow-ellipsis shr-whitespace-nowrap',
+      },
+    },
+    disabled: {
+      true: {
+        deleteButton: 'shr-cursor-not-allowed',
+      },
+      false: {
+        deleteButton: 'shr-cursor-pointer',
+      },
+    },
+  },
+})
+
 export function MultiSelectedItem<T>({
   item,
   disabled,
@@ -31,7 +60,6 @@ export function MultiSelectedItem<T>({
   buttonRef,
   decorators,
 }: Props<T>) {
-  const theme = useTheme()
   const labelRef = useRef<HTMLDivElement>(null)
   const [needsTooltip, setNeedsTooltip] = useState(false)
   const { deletable = true } = item
@@ -50,27 +78,28 @@ export function MultiSelectedItem<T>({
     }
   }, [enableEllipsis])
 
-  const classNames = useMultiComboBoxClassNames()
+  const { wrapper, itemLabel, deleteButton, deleteButtonIcon } = multiSelectedItem()
+  const { wrapperStyle, itemLabelStyle, deleteButtonStyle, deleteButtonIconStyle } = useMemo(
+    () => ({
+      wrapperStyle: wrapper(),
+      itemLabelStyle: itemLabel({ enableEllipsis }),
+      deleteButtonStyle: deleteButton({ disabled }),
+      deleteButtonIconStyle: deleteButtonIcon(),
+    }),
+    [deleteButton, deleteButtonIcon, disabled, enableEllipsis, itemLabel, wrapper],
+  )
 
   return (
     <MultiSelectedItemTooltip needsTooltip={needsTooltip} text={item.label}>
-      <Chip
-        disabled={disabled}
-        className={`${classNames.selectedItem} shr-flex shr-items-center shr-gap-0.75 shr-leading-normal [&]:shr-rounded-em`}
-      >
-        <ItemLabel
-          enableEllipsis={enableEllipsis}
-          className={classNames.selectedItemLabel}
-          ref={labelRef}
-        >
+      <Chip disabled={disabled} className={wrapperStyle}>
+        <span className={itemLabelStyle} ref={labelRef}>
           {item.label}
-        </ItemLabel>
+        </span>
 
         {deletable && (
-          <DeleteButton
+          <UnstyledButton
             type="button"
-            themes={theme}
-            className={classNames.deleteButton}
+            className={deleteButtonStyle}
             disabled={disabled}
             onClick={actualOnDelete}
             onKeyDown={(e) => {
@@ -88,40 +117,11 @@ export function MultiSelectedItem<T>({
             <FaTimesCircleIcon
               color={disabled ? 'TEXT_DISABLED' : 'inherit'}
               alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
+              className={deleteButtonIconStyle}
             />
-          </DeleteButton>
+          </UnstyledButton>
         )}
       </Chip>
     </MultiSelectedItemTooltip>
   )
 }
-
-const ItemLabel = styled.span<{ enableEllipsis?: boolean }>`
-  ${({ enableEllipsis }) => css`
-    ${enableEllipsis &&
-    css`
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    `}
-  `}
-`
-const DeleteButton = styled(UnstyledButton)<{ themes: Theme; disabled?: boolean }>`
-  ${({ themes: { color, radius, shadow }, disabled }) => css`
-    flex-shrink: 1;
-
-    border-radius: ${radius.full};
-    cursor: ${disabled ? 'not-allowed' : 'pointer'};
-    line-height: 0;
-    color: ${color.TEXT_BLACK};
-
-    &:focus-visible {
-      box-shadow: unset;
-    }
-
-    &:focus-visible > svg {
-      border-radius: ${radius.full};
-      ${shadow.focusIndicatorStyles};
-    }
-  `}
-`

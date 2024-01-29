@@ -346,14 +346,17 @@ const ActualMultiComboBox = <T,>(
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       if (
-        !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
+        !hasParentElementByClassName(
+          e.target as HTMLElement,
+          'smarthr-ui-MultiComboBox-deleteButton',
+        ) &&
         !disabled &&
         !isFocused
       ) {
         focus()
       }
     },
-    [isFocused, disabled, focus, classNames.deleteButton],
+    [isFocused, disabled, focus],
   )
   const handleChangeInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
