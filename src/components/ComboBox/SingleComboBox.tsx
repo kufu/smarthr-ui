@@ -104,7 +104,7 @@ const singleCombobox = tv({
     wrapper: 'smarthr-ui-SingleComboBox shr-inline-block',
     input: 'smarthr-ui-SingleComboBox-input shr-w-full',
     caretDownLayout: [
-      'shr-relative -shr-me-0.5 shr-cursor-pointer shr-p-0.5',
+      'shr-relative -shr-me-0.5 shr-p-0.5',
       'before:shr-border-0',
       'before:shr-absolute before:shr-inset-x-0 before:shr-inset-y-0.25 before:shr-w-0 before:shr-border-l before:shr-border-solid before:shr-border-default before:shr-content-[""]',
     ],

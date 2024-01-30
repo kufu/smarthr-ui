@@ -136,11 +136,9 @@ const multiCombobox = tv({
       true: {
         wrapper:
           'shr-cursor-not-allowed shr-border-default/50 shr-bg-white-darken shr-text-disabled',
-        suffixWrapper: 'shr-cursor-not-allowed',
       },
       false: {
         wrapper: 'shr-cursor-text',
-        suffixWrapper: 'shr-cursor-pointer',
       },
     },
     hidden: {
