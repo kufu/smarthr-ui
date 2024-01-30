@@ -5,7 +5,6 @@
     "target": "es2020",
     "module": "commonjs",
     "moduleResolution": "node",
-    "declaration": true,
     "sourceMap": true,
     "types": ["node", "react", "jest"], // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/33311#issuecomment-466731156
     "jsx": "react",
