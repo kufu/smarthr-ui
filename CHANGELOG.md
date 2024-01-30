@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [41.1.2](https://github.com/kufu/smarthr-ui/compare/v41.1.1...v41.1.2) (2024-01-29)
+
+
+### Bug Fixes
+
+* RadioButtonPanel を Tailwind CSS 化 ([#4213](https://github.com/kufu/smarthr-ui/issues/4213)) ([2d5c985](https://github.com/kufu/smarthr-ui/commit/2d5c98559bffc17ee14f0e26136a6a4fc1485a9d))
+
 ### [41.1.1](https://github.com/kufu/smarthr-ui/compare/v41.1.0...v41.1.1) (2024-01-26)
 
 
