@@ -70,7 +70,7 @@ const loaderStyle = tv({
     type: {
       primary: {
         textSlot: ['shr-text-black'],
-        line: ['shr-border-brand', 'contrast-more:shr-border-main'],
+        line: ['shr-border-main'],
       },
       light: {
         textSlot: ['shr-text-white'],
