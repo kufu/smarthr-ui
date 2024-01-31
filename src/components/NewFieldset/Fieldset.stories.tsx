@@ -3,6 +3,7 @@ import React from 'react'
 
 import { CheckBox } from '../CheckBox'
 import { FormControl } from '../FormControl'
+import { WarningIcon } from '../Icon'
 import { Input } from '../Input'
 import { Cluster, Stack } from '../Layout'
 import { RadioButton } from '../RadioButton'
@@ -120,6 +121,35 @@ export const All: StoryFn = () => (
           </Stack>
         </Fieldset>
       </dd>
+    </Stack>
+    <Stack>
+      <Text italic color="TEXT_GREY" as="dt">
+        ラベルが視覚的に明らかであり明示しない場合（非推奨）
+      </Text>
+      <Stack as="dd">
+        <Fieldset
+          title="選択"
+          helpMessage={
+            <WarningIcon
+              text={
+                <>
+                  ラベルが視覚的に自明な場合にのみ<code>dangerouslyTitleHidden</code>
+                  を検討してください。
+                </>
+              }
+            />
+          }
+          innerMargin={0.5}
+          dangerouslyTitleHidden
+        >
+          <Cluster gap={1.25}>
+            <RadioButton name="options">あり</RadioButton>
+            <RadioButton name="options" defaultChecked={true}>
+              なし
+            </RadioButton>
+          </Cluster>
+        </Fieldset>
+      </Stack>
     </Stack>
   </Stack>
 )
