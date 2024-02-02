@@ -46,7 +46,7 @@ const select = tv({
   slots: {
     wrapper: 'smarthr-ui-Select shr-relative shr-inline-block',
     selectEl: [
-      'shr-peer shr-w-full shr-cursor-pointer shr-appearance-none shr-rounded-m shr-border shr-border-solid shr-bg-white shr-text-base shr-leading-none shr-text-black shr-outline-none',
+      'shr-peer shr-w-full shr-cursor-pointer shr-appearance-none shr-rounded-m shr-border shr-border-solid shr-bg-white shr-text-base shr-leading-tight shr-text-black shr-outline-none',
       'hover:shr-bg-white-darken',
       'focus-visible:shr-focus-indicator',
       'disabled:shr-pointer-events-none disabled:shr-bg-white-darken disabled:shr-text-disabled disabled:shr-opacity-100',
@@ -63,12 +63,12 @@ const select = tv({
   variants: {
     size: {
       default: {
-        selectEl: 'shr-py-0.75 shr-pe-2 shr-ps-0.5',
+        selectEl: 'shr-py-0.5 shr-pe-2 shr-ps-0.5',
         iconWrap: 'shr-end-0.75',
       },
       s: {
         selectEl: [
-          'shr-px-0.5 shr-py-0.5 shr-text-sm',
+          'shr-px-0.5 shr-py-0.25 shr-text-sm',
           /* padding に依る積み上げでは文字が見切れてしまうため */
           'shr-min-h-[calc(theme(fontSize.sm)_+_theme(spacing[0.5])_*_2_+_theme(spacing.px)_*_2)]',
         ],
