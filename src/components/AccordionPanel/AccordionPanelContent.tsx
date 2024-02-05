@@ -26,7 +26,7 @@ const accordionPanelContent = tv({
     'shr-ease-in-out',
     'shr-invisible',
     'shr-opacity-0',
-    '[&.entered]:shr-max-h-screen',
+    '[&.entered]:shr-max-h-[revert]',
     '[&.entered]:shr-visible',
     '[&.entered]:shr-opacity-100',
   ],

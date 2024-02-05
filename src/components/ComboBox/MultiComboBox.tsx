@@ -102,7 +102,7 @@ const multiCombobox = tv({
   slots: {
     wrapper: [
       'smarthr-ui-MultiComboBox',
-      'shr-box-border shr-inline-flex shr-min-w-[20em] shr-rounded-m shr-border shr-border-solid shr-bg-white shr-px-0.5 shr-py-0.25',
+      'shr-box-border shr-inline-flex shr-min-w-[15em] shr-rounded-m shr-border shr-border-solid shr-bg-white shr-px-0.5 shr-py-0.25',
       'contrast-more:shr-border-high-contrast',
     ],
     inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5 shr-overflow-y-auto',
