@@ -110,7 +110,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
       forwardedAs={as}
     >
-      <FormLabel
+      <TitleCluster
         htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
         id={managedLabelId}
         className={`${classNames.label}`}
@@ -129,7 +129,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
             ))}
           </Cluster>
         )}
-      </FormLabel>
+      </TitleCluster>
 
       {helpMessage && (
         <p className={classNames.helpMessage} id={`${managedHtmlFor}_helpMessage`}>
@@ -274,7 +274,7 @@ const WrapperStack = styled(Stack).attrs<{
 `
 
 type FormLabelProps = Pick<Props, 'className' | 'dangerouslyTitleHidden'>
-const FormLabel = styled(Cluster).attrs(
+const TitleCluster = styled(Cluster).attrs(
   ({ className, dangerouslyTitleHidden }: FormLabelProps) => ({
     align: 'center',
     className: dangerouslyTitleHidden ? visuallyHiddenText({ className }) : className,
