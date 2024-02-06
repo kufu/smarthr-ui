@@ -23,6 +23,7 @@ import { Select } from '../Select'
 import { StatusLabel } from '../StatusLabel'
 import { Text } from '../Text'
 import { Textarea } from '../Textarea'
+import { visuallyHiddenText } from '../VisuallyHiddenText/VisuallyHiddenText'
 
 import { useClassNames } from './useClassNames'
 
@@ -34,6 +35,8 @@ type Props = PropsWithChildren<{
   title: ReactNode
   /** タイトルの見出しのタイプ */
   titleType?: HeadingTypes
+  /** タイトルの見出しを視覚的に隠すかどうか */
+  dangerouslyTitleHidden?: boolean
   /** label 要素に適用する `htmlFor` 値 */
   htmlFor?: string
   /** label 要素に適用する `id` 値 */
@@ -64,6 +67,7 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-lab
 export const FormGroup: React.FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
+  dangerouslyTitleHidden = false,
   htmlFor,
   labelId,
   innerMargin,
@@ -106,13 +110,18 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
       forwardedAs={as}
     >
-      <FormLabel
+      <TitleCluster
         htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
         id={managedLabelId}
         className={`${classNames.label}`}
         forwardedAs={isRoleGroup ? 'legend' : 'label'}
+        dangerouslyTitleHidden={dangerouslyTitleHidden}
+        // Stack 対象にしないための hidden
+        hidden={dangerouslyTitleHidden || undefined}
       >
-        <GroupLabelText styleType={titleType}>{title}</GroupLabelText>
+        <Text as="span" styleType={titleType}>
+          {title}
+        </Text>
         {statusLabelList.length > 0 && (
           <Cluster gap={0.25} as="span">
             {statusLabelList.map((statusLabelProp, index) => (
@@ -120,7 +129,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
             ))}
           </Cluster>
         )}
-      </FormLabel>
+      </TitleCluster>
 
       {helpMessage && (
         <p className={classNames.helpMessage} id={`${managedHtmlFor}_helpMessage`}>
@@ -264,12 +273,16 @@ const WrapperStack = styled(Stack).attrs<{
   `}
 `
 
-const FormLabel = styled(Cluster).attrs({ align: 'center' })`
+type FormLabelProps = Pick<Props, 'className' | 'dangerouslyTitleHidden'>
+const TitleCluster = styled(Cluster).attrs(
+  ({ className, dangerouslyTitleHidden }: FormLabelProps) => ({
+    align: 'center',
+    className: dangerouslyTitleHidden ? visuallyHiddenText({ className }) : className,
+  }),
+)<FormLabelProps>`
   /* flex-item が stretch してクリッカブル領域が広がりすぎないようにする */
   align-self: start;
 `
-
-const GroupLabelText = styled(Text).attrs({ forwardedAs: 'span' })``
 
 const ErrorMessage = styled.p<{ themes: Theme }>`
   ${({ themes: { color } }) => css`
@@ -279,14 +292,11 @@ const ErrorMessage = styled.p<{ themes: Theme }>`
   `}
 `
 
-const ChildrenWrapper = styled.div<{
-  innerMargin: Props['innerMargin']
-  isRoleGroup: boolean
-}>`
+const ChildrenWrapper = styled.div<{ isRoleGroup: boolean } & Pick<Props, 'innerMargin'>>`
   ${({ innerMargin, isRoleGroup }) => css`
     ${(innerMargin || isRoleGroup) &&
     css`
-      &&&&&&& {
+      &&& {
         margin-block-start: ${useSpacing(innerMargin || (isRoleGroup ? 1 : 0.5))};
       }
     `}

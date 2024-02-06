@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Nav } from '../SectioningContent'
-import { StatusLabel as StatusLabelComponent } from '../StatusLabel'
+import { StatusLabel } from '../StatusLabel'
 
 import { AppNaviAnchor, AppNaviAnchorProps } from './AppNaviAnchor'
 import { AppNaviButton, AppNaviButtonProps } from './AppNaviButton'
@@ -45,9 +45,9 @@ export const AppNavi: VFC<Props & ElementProps> = ({
   return (
     <WrapperNav {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       {label && (
-        <StatusLabel themes={theme} className={classNames.label}>
+        <StyledStatusLabel themes={theme} className={classNames.label}>
           {label}
-        </StatusLabel>
+        </StyledStatusLabel>
       )}
 
       {buttons && (
@@ -134,7 +134,7 @@ const WrapperNav = styled(Nav)<{ themes: Theme }>`
     padding-left: ${spacingByChar(1.5)};
   `}
 `
-const StatusLabel = styled(StatusLabelComponent)<{ themes: Theme }>`
+const StyledStatusLabel = styled(StatusLabel)<{ themes: Theme }>`
   ${({ themes: { spacingByChar } }) => css`
     margin-right: ${spacingByChar(1)};
   `}

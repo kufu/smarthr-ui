@@ -473,7 +473,7 @@ const Container = styled.div.attrs(
       background-color: ${color.WHITE};
       padding: ${space(0.25)} ${space(0.5)};
       cursor: text;
-      min-width: 20em;
+      min-width: 15em;
       box-sizing: border-box;
 
       @media (prefers-contrast: more) {

@@ -60,7 +60,7 @@ jobs:
           git checkout master
           git cherry-pick $NEW_TAG
       - name: craete pull request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           title: 'chore(release): ${{ env.NEW_TAG }}'
           branch: 'merge-release-${{ env.NEW_TAG }}'

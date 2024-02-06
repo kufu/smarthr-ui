@@ -58,13 +58,13 @@ export function MultiSelectedItem<T>({
         disabled={disabled}
         className={`${classNames.selectedItem} shr-flex shr-items-center shr-gap-0.75 shr-leading-normal [&]:shr-rounded-em`}
       >
-        <ItemLabel
+        <Item
           enableEllipsis={enableEllipsis}
           className={classNames.selectedItemLabel}
           ref={labelRef}
         >
           {item.label}
-        </ItemLabel>
+        </Item>
 
         {deletable && (
           <DeleteButton
@@ -96,7 +96,7 @@ export function MultiSelectedItem<T>({
   )
 }
 
-const ItemLabel = styled.span<{ enableEllipsis?: boolean }>`
+const Item = styled.span<{ enableEllipsis?: boolean }>`
   ${({ enableEllipsis }) => css`
     ${enableEllipsis &&
     css`

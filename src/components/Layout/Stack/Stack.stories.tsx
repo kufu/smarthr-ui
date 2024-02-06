@@ -42,7 +42,7 @@ export const All: StoryFn = () => (
         </Base>
       </Stack>
     </Content>
-    <SideAreaStack gap="XXS" className="[&_>_*:nth-child(2)]:shr-mb-auto">
+    <SideAreaStack gap="XXS" className="[&_>_:not([hidden]):nth-child(2)]:shr-mb-auto">
       <Base padding={1.5}>
         <p>各要素の間隔は 1rem が標準です。</p>
       </Base>
@@ -51,7 +51,8 @@ export const All: StoryFn = () => (
       </Base>
       <Base padding={1.5}>
         <p>
-          要素を離して表示したい場合は、<code>[&_&gt;_*:nth-child(2)]:shr-mb-auto</code>
+          要素を離して表示したい場合は、
+          <code>[&_&gt;_:not([hidden]):nth-child(2)]:shr-mb-auto</code>
           と書きます。
         </p>
       </Base>
