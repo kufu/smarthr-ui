@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [41.2.0](https://github.com/kufu/smarthr-ui/compare/v41.1.2...v41.2.0) (2024-02-06)
+
+
+### Features
+
+* Fieldset のタイトルを視覚的に隠す dangerouslyTitleHidden を追加 ([#4253](https://github.com/kufu/smarthr-ui/issues/4253)) ([98dc367](https://github.com/kufu/smarthr-ui/commit/98dc367812fc2a136525dd4c708b936679f4790d))
+* loaderの色をmainに変更。差異がなくなるのでprefres-contrast: moreでの指定は削除。 ([#4251](https://github.com/kufu/smarthr-ui/issues/4251)) ([77a6a6d](https://github.com/kufu/smarthr-ui/commit/77a6a6d97766c4f60cce85d0258408940f82e042))
+* SelectのValueに英字などが来た場合、ディセンダー部分が見切れるのを修正 ([#4261](https://github.com/kufu/smarthr-ui/issues/4261)) ([dccb116](https://github.com/kufu/smarthr-ui/commit/dccb1165ccfe3bc462a486bfe7cca70f12ea0618))
+
+
+### Bug Fixes
+
+* AccordionPanel の max-height に余計なスタイルがあたっていたため削除 ([#4250](https://github.com/kufu/smarthr-ui/issues/4250)) ([de478c9](https://github.com/kufu/smarthr-ui/commit/de478c96df474721879d84a2a24b787863d6d496))
+
 ### [41.1.2](https://github.com/kufu/smarthr-ui/compare/v41.1.1...v41.1.2) (2024-01-29)
 
 
