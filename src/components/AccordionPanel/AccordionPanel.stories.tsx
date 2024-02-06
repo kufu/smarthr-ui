@@ -203,10 +203,6 @@ const Wrapper = styled.div`
 const AccordionPanelBase = styled(Base).attrs({ overflow: 'hidden' })``
 const BorderList = styled.ul(
   ({ theme: { color } }) => css`
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
     > li + li {
       border-top: 1px solid ${color.BORDER};
     }
