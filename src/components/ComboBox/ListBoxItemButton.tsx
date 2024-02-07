@@ -18,13 +18,13 @@ type Props<T> = {
 const button = tv({
   base: [
     'shr-block shr-min-w-full shr-cursor-pointer shr-border-none shr-px-1 shr-py-0.5 shr-text-left shr-text-base shr-leading-tight',
-    'aria-selected:shr-bg-main aria-selected:shr-text-white',
+    'aria-selected:shr-text-white',
     'disabled:shr-cursor-not-allowed disabled:shr-text-disabled',
   ],
   variants: {
     active: {
       true: ['shr-bg-white-darken shr-text-inherit', 'aria-selected:shr-bg-main-darken'],
-      false: 'shr-bg-white',
+      false: ['shr-bg-white', 'aria-selected:shr-bg-main'],
     },
     new: {
       true: 'smarthr-ui-ComboBox-addButton shr-flex shr-items-center',
