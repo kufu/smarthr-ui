@@ -19,7 +19,7 @@ const button = tv({
   base: [
     'shr-block shr-min-w-full shr-cursor-pointer shr-border-none shr-px-1 shr-py-0.5 shr-text-left shr-text-base shr-leading-tight',
     'aria-selected:shr-bg-main aria-selected:shr-text-white',
-    'shr-cursor-not-allowedc disabled:shr-text-disabled',
+    'disabled:shr-cursor-not-allowed disabled:shr-text-disabled',
   ],
   variants: {
     active: {
