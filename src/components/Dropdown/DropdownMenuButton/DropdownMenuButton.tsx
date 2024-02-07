@@ -1,6 +1,6 @@
 import React, {
-  ButtonHTMLAttributes,
   ComponentProps,
+  ComponentPropsWithRef,
   FC,
   ReactElement,
   ReactNode,
@@ -9,16 +9,13 @@ import React, {
   useMemo,
 } from 'react'
 import innerText from 'react-innertext'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '..'
-import { Theme, useTheme } from '../../../hooks/useTheme'
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
 import { RemoteDialogTrigger } from '../../Dialog'
 import { FaCaretDownIcon, FaEllipsisHIcon } from '../../Icon'
 import { Stack } from '../../Layout'
-
-import { useClassNames } from './useClassNames'
 
 type Actions = ActionItem | ActionItem[]
 
@@ -42,18 +39,38 @@ type Props = {
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIconTrigger?: boolean
 }
-type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
+
+const dropdownMenuButton = tv({
+  slots: {
+    triggerWrapper: 'smarthr-ui-DropdownMenuButton',
+    triggerButton:
+      'smarthr-ui-DropdownMenuButton-trigger [&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
+    actionList: [
+      'smarthr-ui-DropdownMenuButton-panel',
+      'shr-my-0 shr-list-none shr-px-0.25 shr-py-0.5',
+      '[&_.smarthr-ui-Button]:shr-w-full [&_.smarthr-ui-Button]:shr-justify-start [&_.smarthr-ui-Button]:shr-border-none [&_.smarthr-ui-Button]:shr-py-0.5 [&_.smarthr-ui-Button]:shr-font-normal',
+      '[&_.smarthr-ui-AnchorButton]:shr-w-full [&_.smarthr-ui-AnchorButton]:shr-justify-start [&_.smarthr-ui-AnchorButton]:shr-border-none [&_.smarthr-ui-AnchorButton]:shr-py-0.5 [&_.smarthr-ui-AnchorButton]:shr-font-normal',
+      [
+        /* unset した Button の右 padding 分 */
+        '[&_.smarthr-ui-Button-disabledWrapper]:shr-pe-1',
+        '[&_.smarthr-ui-Button-disabledWrapper]:shr-gap-x-0.5',
+        '[&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-w-[unset] [&_.smarthr-ui-Button-disabledWrapper_>_.smarthr-ui-Button]:shr-pe-[unset]',
+      ],
+      // hover 時に背景の白が出るので隠している
+      '[&_li:hover]:-shr-mx-0.25 [&_li:hover]:shr-bg-white-darken [&_li:hover]:shr-px-0.25',
+    ],
+  },
+})
 
 export const DropdownMenuButton: FC<Props & ElementProps> = ({
   label,
   children,
   triggerSize,
   onlyIconTrigger = false,
-  className = '',
+  className,
   ...props
 }) => {
-  const themes = useTheme()
-  const classNames = useClassNames()
   const containerRef = React.useRef<HTMLDivElement>(null)
 
   const triggerLabel = useMemo(
@@ -171,66 +188,41 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
     }
   }, [handleKeyDown])
 
+  const { triggerWrapperStyle, triggerButtonStyle, actionListStyle } = useMemo(() => {
+    const { triggerWrapper, triggerButton, actionList } = dropdownMenuButton()
+    return {
+      triggerWrapperStyle: triggerWrapper({ className }),
+      triggerButtonStyle: triggerButton(),
+      actionListStyle: actionList(),
+    }
+  }, [className])
+
   return (
     <Dropdown>
-      <DropdownTrigger className={`${classNames.wrapper}${className && ` ${className}`}`}>
-        <TriggerButton
+      <DropdownTrigger className={triggerWrapperStyle}>
+        <Button
           {...props}
           suffix={triggerSuffix}
           size={triggerSize}
           square={onlyIconTrigger}
-          className={classNames.trigger}
+          className={triggerButtonStyle}
         >
           {triggerLabel}
-        </TriggerButton>
+        </Button>
       </DropdownTrigger>
       <DropdownContent>
         <DropdownScrollArea>
-          <ActionListStack ref={containerRef} themes={themes} className={classNames.panel}>
+          <Stack as="ul" gap={0} ref={containerRef} className={actionListStyle}>
             {React.Children.map(children, (item, i) =>
               // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
               // itemの存在チェックでfalsyな値は弾かれている想定
               item ? <li key={i}>{actionItem(item as ActionItemTruthyType)}</li> : null,
             )}
-          </ActionListStack>
+          </Stack>
         </DropdownScrollArea>
       </DropdownContent>
     </Dropdown>
   )
 }
 
-const TriggerButton = styled(Button)`
-  &[aria-expanded='true'] .smarthr-ui-Icon:last-child {
-    transform: rotate(0.5turn);
-  }
-`
-const ActionListStack = styled(Stack).attrs({ forwardedAs: 'ul', gap: 0 })<{ themes: Theme }>`
-  ${({ themes: { space } }) => css`
-    list-style: none;
-    margin-block: 0;
-    padding: ${space(0.5)} ${space(0.25)};
-
-    .smarthr-ui-Button,
-    .smarthr-ui-AnchorButton {
-      width: 100%;
-      border-style: none;
-      justify-content: flex-start;
-
-      padding-block: ${space(0.5)};
-      font-weight: normal;
-    }
-
-    .smarthr-ui-Button-disabledWrapper {
-      column-gap: ${space(0.5)};
-
-      /* unset した Button の右 padding 分 */
-      padding-inline-end: ${space(1)};
-
-      > [disabled] {
-        padding-inline-end: unset;
-        width: unset;
-      }
-    }
-  `}
-`
 const actionItem = (item: ReactElement) => React.cloneElement(item, { variant: 'text', wide: true })
