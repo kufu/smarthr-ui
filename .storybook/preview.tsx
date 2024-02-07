@@ -124,7 +124,6 @@ const callThemeProvider =
   }
 
 const SmartHRGlobalStyle = createGlobalStyle`
-
   body {
     line-height: ${defaultLeading.NORMAL};
     color: ${defaultColor.TEXT_BLACK};
