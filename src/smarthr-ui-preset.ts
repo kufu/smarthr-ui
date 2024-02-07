@@ -37,6 +37,7 @@ export default {
       danger: defaultColor.DANGER,
       'danger-darken': theme('colors.danger-darken'),
       'warning-yellow': defaultColor.WARNING_YELLOW,
+      'warning-yellow-darken': theme('colors.warning-yellow-darken'),
       overlay: defaultColor.OVERLAY,
       scrim: defaultColor.SCRIM,
       inherit: 'inherit',
@@ -72,6 +73,7 @@ export default {
       danger: defaultColor.DANGER,
       'danger-darken': darkenColor(defaultColor.DANGER),
       'warning-yellow': defaultColor.WARNING_YELLOW,
+      'warning-yellow-darken': darkenColor(defaultColor.WARNING_YELLOW),
       grey: {
         DEFAULT: defaultColor.GREY_65,
         5: defaultColor.GREY_5,
@@ -166,7 +168,7 @@ export default {
         darken: darkenColor(theme('colors.grey.20')),
         'high-contrast': theme('colors.grey.100'),
       }),
-      keyframes: {
+      keyframes: ({ theme }) => ({
         'loader-line-full-unfill-rotate': {
           '12.5%': {
             transform: 'rotate(135deg)',
@@ -272,7 +274,18 @@ export default {
           '0% 100%': { transform: 'rotate(-130deg)' },
           '50%': { transform: 'rotate(5deg)' },
         },
-      },
+        'notifiction-bar-slide-in': {
+          from: {
+            opacity: '0',
+            /* 1行の場合の高さ分だけスライドさせる */
+            transform: `translateY(calc(-1 * calc(${theme('fontSize.base')} * ${theme('lineHeight.tight')} + ${theme('spacing')[1.5]})))`,
+          },
+          to: {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+      }),
     },
   },
   corePlugins: {
