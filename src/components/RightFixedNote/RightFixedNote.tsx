@@ -80,7 +80,7 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
       className={`${className} ${classNames.wrapper}`}
     >
       <Section>
-        <SectionHeading themes={theme} className={classNames.title}>
+        <SectionHeading $themes={theme} className={classNames.title}>
           {title}
         </SectionHeading>
 
@@ -97,7 +97,7 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
         <StyledTextarea
           id={textareaId}
           name={TEXT_AREA_NAME}
-          themes={theme}
+          $themes={theme}
           aria-label={innerText(textareaLabel || title)}
           className={classNames.textarea}
         />
@@ -130,8 +130,8 @@ const WrapperForm = styled.form<{ themes: Theme; $width: number }>`
 
 const SectionHeading = styled(Heading).attrs(() => ({
   type: 'sectionTitle',
-}))<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
+}))<{ $themes: Theme }>`
+  ${({ $themes: { spacingByChar } }) => css`
     display: block;
     margin-bottom: ${spacingByChar(1)};
   `}
@@ -145,8 +145,8 @@ const TextareaLabelText = styled(Text).attrs(() => ({
   margin-bottom: ${({ themes }) => themes.spacingByChar(1)};
 `
 
-const StyledTextarea = styled(Textarea)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
+const StyledTextarea = styled(Textarea)<{ $themes: Theme }>`
+  ${({ $themes: { spacingByChar } }) => css`
     display: block;
     width: 100%;
     max-width: 100%;

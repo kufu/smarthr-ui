@@ -106,7 +106,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       disabled={disabled}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
       aria-describedby={isRoleGroup && describedbyIds ? describedbyIds : undefined}
-      themes={theme}
+      $themes={theme}
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
       forwardedAs={as}
     >
@@ -233,9 +233,9 @@ const WrapperStack = styled(Stack).attrs<{
   // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は 1
   gap: innerMargin ?? 0.5,
 }))<{
-  themes: Theme
+  $themes: Theme
 }>`
-  ${({ themes: { color } }) => css`
+  ${({ $themes: { color } }) => css`
     &[disabled] {
       color: ${color.TEXT_DISABLED};
 

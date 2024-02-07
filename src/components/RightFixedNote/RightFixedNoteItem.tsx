@@ -46,7 +46,7 @@ export const RightFixedNoteItem: VFC<Props> = ({
 
   return (
     <Wrapper themes={theme} className={`${className} ${classNames.item}`}>
-      <TextBase themes={theme}>
+      <TextBase $themes={theme}>
         {editable && (
           <EditButton
             size="s"
@@ -82,8 +82,8 @@ const Wrapper = styled.div<{ themes: Theme }>`
   `}
 `
 
-const TextBase = styled(Base)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
+const TextBase = styled(Base)<{ $themes: Theme }>`
+  ${({ $themes: { spacingByChar } }) => css`
     padding: ${spacingByChar(0.5)};
     margin-bottom: ${spacingByChar(0.5)};
     overflow: hidden;

@@ -20,7 +20,7 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof
     const theme = useTheme()
     return (
       // Td に必要な属性やイベントは不要
-      <Td className={className} themes={theme}>
+      <Td className={className} $themes={theme}>
         <LabelCenter>
           {/* 使う側で lint をかけるため無効化 */}
           {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute  */}
@@ -32,8 +32,8 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof
   },
 )
 
-const Td = styled(shrTd)<{ themes: Theme }>`
-  ${({ themes: { fontSize, space } }) => css`
+const Td = styled(shrTd)<{ $themes: Theme }>`
+  ${({ $themes: { fontSize, space } }) => css`
     position: relative;
     padding: ${space(0.75)};
     width: ${fontSize.M};

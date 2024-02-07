@@ -101,7 +101,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
         <DropdownScrollArea>
           <ContentLayout themes={themes}>{children}</ContentLayout>
         </DropdownScrollArea>
-        <ActionAreaStack themes={themes}>
+        <ActionAreaStack $themes={themes}>
           <Cluster gap={1} align="center" justify="space-between">
             {onReset && (
               <ResetButtonLayout themes={themes}>
@@ -177,8 +177,8 @@ const ContentLayout = styled.div<{ themes: Theme }>`
     padding: ${space(1.5)};
   `}
 `
-const ActionAreaStack = styled(Stack).attrs({ gap: 0.5 })<{ themes: Theme }>`
-  ${({ themes: { space, border } }) => css`
+const ActionAreaStack = styled(Stack).attrs({ gap: 0.5 })<{ $themes: Theme }>`
+  ${({ $themes: { space, border } }) => css`
     border-block-start: ${border.shorthand};
     padding: ${space(1)} ${space(1.5)};
   `}
