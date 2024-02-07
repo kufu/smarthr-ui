@@ -111,7 +111,7 @@ const multiCombobox = tv({
     inputWrapper: 'shr-flex shr-flex-1 shr-items-center',
     input: [
       'smarthr-ui-MultiComboBox-input',
-      'shr-w-full shr-min-w-[5em] shr-border-none shr-text-base shr-text-black shr-outline-0',
+      'shr-w-full shr-min-w-[5em] shr-border-none shr-text-base shr-text-black shr-outline-none shr-outline-0',
       'disabled:shr-hidden',
     ],
     placeholderEl: 'smarthr-ui-MultiComboBox-placeholder shr-my-0 shr-self-center',
