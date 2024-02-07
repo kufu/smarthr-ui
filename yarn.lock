@@ -11597,13 +11597,6 @@ smart-buffer@^4.2.0:
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.2.0.tgz#6e1d71fa4f18c05f7d0ff216dd16a481d0e8d9ae"
   integrity sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==
 
-smarthr-normalize-css@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/smarthr-normalize-css/-/smarthr-normalize-css-1.1.0.tgz#7e626bf197445e8e89524331a6096aee509afe59"
-  integrity sha512-RNi5bkp8dYvZs/yqOihZ+an5Wf3oXiBMRRvSYhCKNhV+Qkg1otqIxmP3ELUWVwMZx9v+zZG1LLAJ0sxPkHXOcg==
-  dependencies:
-    styled-reset "^4.4.2"
-
 socks-proxy-agent@^8.0.2:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/socks-proxy-agent/-/socks-proxy-agent-8.0.2.tgz#5acbd7be7baf18c46a3f293a840109a430a640ad"
@@ -11972,7 +11965,7 @@ styled-components@^5.3.11:
     shallowequal "^1.1.0"
     supports-color "^5.5.0"
 
-styled-reset@^4.4.2, styled-reset@^4.5.2:
+styled-reset@^4.5.2:
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/styled-reset/-/styled-reset-4.5.2.tgz#2eba489fce52e34368693adb8d5fb4bf775edc3c"
   integrity sha512-dbAaaVEhweBs2FGfqGBdW6oMcMK8238C2X5KCxBhUQJX92m/QyUfzRADOXhdXiXNkIPELtMCd72YY9eCdORfIw==

@@ -9,7 +9,6 @@ import { createTheme, CreatedTheme } from '../src/themes/createTheme'
 import { ThemeProvider as ShrThemeProvider } from '../src/themes/ThemeProvider'
 import { ThemeProvider as SCThemeProvider, createGlobalStyle } from 'styled-components'
 import { ThemeProvider as TailwindProvider } from '../src/themes/tailwind/TailwindThemeProvider'
-import CssBaseLine from 'smarthr-normalize-css'
 import { defaultLeading, defaultColor } from '../src/'
 
 import tailwindConfig from '../tailwind.config'
@@ -125,7 +124,6 @@ const callThemeProvider =
   }
 
 const SmartHRGlobalStyle = createGlobalStyle`
-  ${CssBaseLine}
 
   body {
     line-height: ${defaultLeading.NORMAL};
