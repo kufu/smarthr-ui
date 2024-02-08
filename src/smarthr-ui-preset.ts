@@ -310,6 +310,31 @@ export default {
           isolation: 'isolate',
           boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
         },
+        '.border-shorthand': {
+          borderWidth: theme('borderWidth.DEFAULT'),
+          borderStyle: 'solid',
+          borderColor: theme('borderColor.default'),
+        },
+        '.border-t-shorthand': {
+          borderTopWidth: theme('borderWidth.DEFAULT'),
+          borderTopStyle: 'solid',
+          borderTopColor: theme('borderColor.default'),
+        },
+        '.border-r-shorthand': {
+          borderRightWidth: theme('borderWidth.DEFAULT'),
+          borderRightStyle: 'solid',
+          borderRightColor: theme('borderColor.default'),
+        },
+        '.border-b-shorthand': {
+          borderBottomWidth: theme('borderWidth.DEFAULT'),
+          borderBottomStyle: 'solid',
+          borderBottomColor: theme('borderColor.default'),
+        },
+        '.border-l-shorthand': {
+          borderLeftWidth: theme('borderWidth.DEFAULT'),
+          borderLeftStyle: 'solid',
+          borderLeftColor: theme('borderColor.default'),
+        },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
     }),

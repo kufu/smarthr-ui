@@ -90,7 +90,7 @@ const modelessDialog = tv({
     layout: 'smarthr-ui-ModelessDialog shr-fixed',
     box: 'smarthr-ui-ModelessDialog-box shr-flex shr-h-full shr-max-h-full shr-flex-col',
     headerEl:
-      'smarthr-ui-ModelessDialog-header shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-border-b shr-border-solid shr-border-default shr-pe-1 shr-ps-1.5 hover:shr-bg-white-darken',
+      'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5 hover:shr-bg-white-darken',
     dialogHandler: [
       'smarthr-ui-ModelessDialog-handle shr-absolute shr-inset-x-0 shr-bottom-0 shr-top-[2px] shr-m-auto shr-flex shr-justify-center shr-rounded-tl-s shr-rounded-tr-s shr-text-grey shr-transition-colors shr-duration-100 shr-ease-in-out',
       'focus-visible:shr-bg-white-darken focus-visible:shr-shadow-outline focus-visible:shr-outline-none',
@@ -105,7 +105,7 @@ const modelessDialog = tv({
     ],
     content:
       'smarthr-ui-ModelessDialog-content shr-flex-1 shr-overflow-auto shr-overscroll-contain',
-    footerEl: 'smarthr-ui-ModelessDialog-footer shr-border-t shr-border-solid shr-border-default',
+    footerEl: 'smarthr-ui-ModelessDialog-footer shr-border-t-shorthand',
   },
 })
 
