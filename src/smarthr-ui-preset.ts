@@ -299,21 +299,7 @@ export default {
     textDecorationColor: false,
   },
   plugins: [
-    plugin(({ addUtilities, addComponents, addVariant, theme }) => {
-      addUtilities({
-        '.overflow-inherit': { overflow: 'inherit' },
-        '.overflow-initial': { overflow: 'initial' },
-        '.overflow-revert': { overflow: 'revert' },
-        '.overflow-unset': { overflow: 'unset' },
-        '.overflow-x-inherit': { 'overflow-x': 'inherit' },
-        '.overflow-y-inherit': { 'overflow-y': 'inherit' },
-        '.overflow-x-initial': { 'overflow-x': 'initial' },
-        '.overflow-y-initial': { 'overflow-y': 'initial' },
-        '.overflow-x-revert': { 'overflow-x': 'revert' },
-        '.overflow-y-revert': { 'overflow-y': 'revert' },
-        '.overflow-x-unset': { 'overflow-x': 'unset' },
-        '.overflow-y-unset': { 'overflow-y': 'unset' },
-      })
+    plugin(({ addComponents, addVariant, theme }) => {
       addComponents({
         /**
          * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
