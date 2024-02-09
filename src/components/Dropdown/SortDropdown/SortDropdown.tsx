@@ -94,7 +94,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
                 />
               </FormControl>
               <Fieldset title={sortOrderLabel} innerMargin={0.5}>
-                <Cluster gap={0.75}>
+                <Cluster gap={1.25}>
                   <RadioButton
                     name="sortOrder"
                     value="asc"
