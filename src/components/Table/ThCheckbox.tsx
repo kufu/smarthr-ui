@@ -1,13 +1,11 @@
-import React, { forwardRef } from 'react'
-import styled, { css } from 'styled-components'
+import React, { forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 import { Center } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { Th as shrTh } from './Th'
+import { Th  } from './Th'
 
 import type { DecoratorsType } from '../../types'
 
@@ -50,19 +48,3 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
     )
   },
 )
-
-const Th = styled(shrTh)<{ themes: Theme }>`
-  ${({ themes: { fontSize, space } }) => css`
-    position: relative;
-    padding: ${space(0.75)};
-    width: ${fontSize.M};
-  `}
-`
-const LabelCenter = styled(Center).attrs({ forwardedAs: 'label', verticalCentering: true })`
-  position: absolute;
-  inset: 0;
-
-  &:not(:has([disabled])) {
-    cursor: pointer;
-  }
-`
