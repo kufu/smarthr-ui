@@ -26,7 +26,14 @@ const thCheckbox = tv({
 
 export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
   ({ decorators, className, ...others }, ref) => {
-    const theme = useTheme()
+    const { wrapperStyle, innerStyle } = useMemo(() => {
+      const { wrapper, inner } = thCheckbox()
+      return {
+        wrapperStyle: wrapper({className}),
+        innerStyle: inner()
+      }
+    }, [className])
+
     return (
       // Th に必要な属性やイベントは不要
       <Th themes={theme} className={className}>
