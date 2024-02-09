@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react'
 import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
@@ -15,6 +16,13 @@ type Props = {
 }
 
 const CHECK_ALL_INVISIBLE_LABEL = 'すべての行を選択'
+
+const thCheckbox = tv({
+  slots: {
+    inner: 'shr-absolute shr-inset-0 [&:not(:has([disabled]))]:shr-cursor-pointer',
+    wrapper: 'shr-relative shr-p-0.75 shr-w-[theme(fontSize.base)]',
+  },
+})
 
 export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
   ({ decorators, className, ...others }, ref) => {
