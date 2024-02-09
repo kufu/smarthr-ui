@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
@@ -9,14 +9,29 @@ type Props = {
   start: number
   end: number
   total?: number
-  decorators?: DecoratorsType<'unitForTotal' | 'unit'>
+  decorators?: DecoratorsType<'unitForTotal' | 'unit'> & {
+    rangeSeparator?: string
+  }
 }
 
-const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
-  decorator?.(defaultText) || defaultText
+type ExecuteDecoratorReturn<T extends DecoratorType | string | undefined> = T extends DecoratorType
+  ? ReactNode
+  : string
+
+const executeDecorator = <T extends DecoratorType | string | undefined>(
+  defaultText: string,
+  decorator: T,
+): ExecuteDecoratorReturn<T> => {
+  if (decorator === undefined) return defaultText
+
+  if (typeof decorator === 'string') return decorator
+
+  return decorator(defaultText) as ExecuteDecoratorReturn<T>
+}
 
 const UNIT_TOTAL_TEXT = '件中'
 const UNIT_TEXT = '件'
+const RANGE_SEPARATOR = 'から'
 
 export const PageCounter: React.FC<Props> = ({ start, end, total = 0, decorators }) => {
   const unitTotalText = useMemo(
@@ -24,6 +39,10 @@ export const PageCounter: React.FC<Props> = ({ start, end, total = 0, decorators
     [decorators?.unitForTotal],
   )
   const unitText = useMemo(() => executeDecorator(UNIT_TEXT, decorators?.unit), [decorators?.unit])
+  const rangeSeparator = useMemo(
+    () => executeDecorator(RANGE_SEPARATOR, decorators?.rangeSeparator),
+    [decorators?.rangeSeparator],
+  )
 
   return (
     <Cluster inline align="baseline" className="shr-text-base">
@@ -39,7 +58,7 @@ export const PageCounter: React.FC<Props> = ({ start, end, total = 0, decorators
         <Text weight="bold" as="b">
           {start.toLocaleString()}
         </Text>
-        <span role="img" aria-label="から">
+        <span role="img" aria-label={rangeSeparator}>
           –
         </span>
         <Text weight="bold" as="b">
