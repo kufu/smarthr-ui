@@ -5,7 +5,7 @@ import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 import { Center } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { Th  } from './Th'
+import { Th } from './Th'
 
 import type { DecoratorsType } from '../../types'
 
@@ -18,7 +18,7 @@ const CHECK_ALL_INVISIBLE_LABEL = 'すべての行を選択'
 const thCheckbox = tv({
   slots: {
     inner: 'shr-absolute shr-inset-0 [&:not(:has([disabled]))]:shr-cursor-pointer',
-    wrapper: 'shr-relative shr-p-0.75 shr-w-[theme(fontSize.base)]',
+    wrapper: 'shr-relative shr-w-[theme(fontSize.base)] shr-p-0.75',
   },
 })
 
@@ -27,8 +27,8 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
     const { wrapperStyle, innerStyle } = useMemo(() => {
       const { wrapper, inner } = thCheckbox()
       return {
-        wrapperStyle: wrapper({className}),
-        innerStyle: inner()
+        wrapperStyle: wrapper({ className }),
+        innerStyle: inner(),
       }
     }, [className])
 
