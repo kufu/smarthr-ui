@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    dd {
+        margin-inline-start: 0px;
+    }
+};
