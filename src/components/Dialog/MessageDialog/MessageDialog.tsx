@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useCallback } from 'react'
+import React, { ComponentProps, useCallback } from 'react'
 
 import { useId } from '../../../hooks/useId'
 import { DialogContentInner } from '../DialogContentInner'
@@ -11,7 +11,7 @@ import {
 } from './MessageDialogContentInner'
 
 type Props = Omit<MessageDialogContentInnerProps, 'titleId'> & DialogProps
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 export const MessageDialog: React.FC<Props & ElementProps> = ({
   title,
@@ -20,7 +20,7 @@ export const MessageDialog: React.FC<Props & ElementProps> = ({
   description,
   onClickClose,
   onPressEscape = onClickClose,
-  className = '',
+  className,
   portalParent,
   decorators,
   id,
