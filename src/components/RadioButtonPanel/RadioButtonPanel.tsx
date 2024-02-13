@@ -13,7 +13,7 @@ const MEANLESS_TAG_NAMES = ['div', 'span']
 const radioButtonPanel = tv({
   base: [
     'smarthr-ui-RadioButtonPanel',
-    'shr-border shr-border-solid shr-border-default shr-shadow-none',
+    'shr-border-shorthand shr-shadow-none',
     // なぜか :has が動作しないので重ねて書いている
     'has-[:focus-visible]:shr-focus-indicator [&:has(:focus-visible)]:shr-focus-indicator',
     '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-shadow-none',

@@ -56,7 +56,7 @@ const TEXT_AFTER_MAXlENGTH_COUNT = '文字'
 const textarea = tv({
   slots: {
     textareaEl: [
-      'smarthr-ui-Textarea-textarea shr-box-border shr-rounded-m shr-border shr-border-solid shr-bg-white shr-p-0.5 shr-text-base shr-leading-normal shr-text-black shr-opacity-100',
+      'smarthr-ui-Textarea-textarea shr-border-shorthand shr-box-border shr-rounded-m shr-bg-white shr-p-0.5 shr-text-base shr-leading-normal shr-text-black shr-opacity-100',
       'contrast-more:shr-border-high-contrast',
       'placeholder:shr-text-grey',
       'focus-visible:shr-focus-indicator',
