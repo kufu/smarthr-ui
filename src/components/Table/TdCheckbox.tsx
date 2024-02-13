@@ -18,8 +18,8 @@ type Props = {
 
 const tdCheckbox = tv({
   slots: {
-    inner: '',
     wrappter: '',
+    inner: 'shr-absolute shr-inset-0 [&:not(:has([disabled]))]:shr-cursor-pointer',
   }
 });
 
