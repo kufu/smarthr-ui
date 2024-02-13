@@ -113,7 +113,7 @@ const singleCombobox = tv({
       'smarthr-ui-SingleComboBox-clearButton',
       'shr-group/clearButton',
       'shr-me-0.5 shr-cursor-pointer',
-      'focus-visible:shr-shadow-[unset]',
+      'focus-visible:shr-shadow-none',
     ],
     clearButtonIcon: [
       'shr-block',
