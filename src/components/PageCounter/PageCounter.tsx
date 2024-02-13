@@ -2,6 +2,7 @@ import React, { ReactNode, useMemo } from 'react'
 
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import type { DecoratorType, DecoratorsType } from '../../types'
 
@@ -58,9 +59,8 @@ export const PageCounter: React.FC<Props> = ({ start, end, total = 0, decorators
         <Text weight="bold" as="b">
           {start.toLocaleString()}
         </Text>
-        <span title={rangeSeparator}>
-          –
-        </span>
+        <VisuallyHiddenText>{rangeSeparator}</VisuallyHiddenText>
+        <span aria-hidden="true">–</span>
         <Text weight="bold" as="b">
           {end.toLocaleString()}
         </Text>
