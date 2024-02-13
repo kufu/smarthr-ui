@@ -122,9 +122,11 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
               disabled={submitting}
             />
 
-            <SubmitButton type="submit" className={classNames.submitButton} loading={submitting}>
-              {submitLabel}
-            </SubmitButton>
+            <SubmitButtonWrapper>
+              <Button type="submit" className={classNames.submitButton} loading={submitting}>
+                {submitLabel}
+              </Button>
+            </SubmitButtonWrapper>
           </>
         )}
       </Section>
@@ -178,7 +180,6 @@ const StyledTextarea = styled(Textarea)<{ themes: Theme }>`
   `}
 `
 
-const SubmitButton = styled(Button)`
-  display: block;
+const SubmitButtonWrapper = styled.div`
   float: right;
 `
