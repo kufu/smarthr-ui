@@ -18,8 +18,8 @@ const tdCheckbox = tv({
   slots: {
     inner: 'shr-absolute shr-inset-0 [&:not(:has([disabled]))]:shr-cursor-pointer',
     wrapper: 'shr-relative shr-w-[theme(fontSize.base)] [&]:shr-p-0.75',
-  }
-});
+  },
+})
 
 export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof Props> & Props>(
   ({ 'aria-labelledby': ariaLabelledby, children, className, ...others }, ref) => {
