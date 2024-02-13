@@ -4985,10 +4985,10 @@ chownr@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
 
-chromatic@^10.8.0:
-  version "10.8.0"
-  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-10.8.0.tgz#741b0af9ba0e9605408f8a452fca2066a4b28ad4"
-  integrity sha512-DdgUSJJ5u+Czf+KZI+1NRz4RP/PbpcytWSUtpgqEBolGDw65VYwjI489yis+jfwKMev1VWEhj1xMYGITbD6XIA==
+chromatic@^10.9.4:
+  version "10.9.4"
+  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-10.9.4.tgz#8c9474733dc21c4b38ff04b5714f59089d494507"
+  integrity sha512-etDUGE0vN2T/q5oNqXnsve9LtDCVl+7zHXKIuVtK+BT3k4XbAo8qaD/tnIozZHfrKGtepd8f9AjBq02CjfCYFQ==
 
 chrome-remote-interface@^0.32.2:
   version "0.32.2"
