@@ -6,6 +6,8 @@ import { useId } from '../../hooks/useId'
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
 import { Heading } from '../Heading'
+import { Center } from '../Layout'
+import { Loader } from '../Loader'
 import { Section } from '../SectioningContent'
 import { Text } from '../Text'
 import { Textarea } from '../Textarea'
@@ -32,6 +34,10 @@ type Props = {
   className?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'submitLabel'>
+  /** 読み込み中かどうか */
+  loading?: boolean
+  /** 送信中かどうか */
+  submitting?: boolean
 }
 type ElementProps = Omit<FormHTMLAttributes<HTMLFormElement>, keyof Props>
 
@@ -47,6 +53,8 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
   onSubmit,
   className = '',
   decorators,
+  loading = false,
+  submitting = false,
   ...props
 }) => {
   const theme = useTheme()
@@ -84,27 +92,43 @@ export const RightFixedNote: VFC<Props & ElementProps> = ({
           {title}
         </SectionHeading>
 
-        {items &&
-          items.map((item) => (
-            <RightFixedNoteItem {...item} key={item.id} onClickEdit={onClickEdit} />
-          ))}
+        {loading ? (
+          <Center padding={8}>
+            <Loader />
+          </Center>
+        ) : (
+          <>
+            {items &&
+              items.map((item) => (
+                <RightFixedNoteItem
+                  {...item}
+                  key={item.id}
+                  onClickEdit={onClickEdit}
+                  submitting={submitting}
+                />
+              ))}
 
-        {textareaLabel && (
-          <label htmlFor={textareaId}>
-            <TextareaLabelText themes={theme}>{textareaLabel}</TextareaLabelText>
-          </label>
+            {textareaLabel && (
+              <label htmlFor={textareaId}>
+                <TextareaLabelText themes={theme}>{textareaLabel}</TextareaLabelText>
+              </label>
+            )}
+            <StyledTextarea
+              id={textareaId}
+              name={TEXT_AREA_NAME}
+              themes={theme}
+              aria-label={innerText(textareaLabel || title)}
+              className={classNames.textarea}
+              disabled={submitting}
+            />
+
+            <SubmitButtonWrapper>
+              <Button type="submit" className={classNames.submitButton} loading={submitting}>
+                {submitLabel}
+              </Button>
+            </SubmitButtonWrapper>
+          </>
         )}
-        <StyledTextarea
-          id={textareaId}
-          name={TEXT_AREA_NAME}
-          themes={theme}
-          aria-label={innerText(textareaLabel || title)}
-          className={classNames.textarea}
-        />
-
-        <SubmitButton type="submit" className={classNames.submitButton}>
-          {submitLabel}
-        </SubmitButton>
       </Section>
     </WrapperForm>
   )
@@ -156,7 +180,6 @@ const StyledTextarea = styled(Textarea)<{ themes: Theme }>`
   `}
 `
 
-const SubmitButton = styled(Button)`
-  display: block;
+const SubmitButtonWrapper = styled.div`
   float: right;
 `

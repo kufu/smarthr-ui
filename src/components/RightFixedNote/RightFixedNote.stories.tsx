@@ -51,6 +51,30 @@ export const All: StoryFn = () => (
 )
 All.storyName = 'all'
 
+export const Loading: StoryFn = () => (
+  <RightFixedNote
+    title="RightFixedNote"
+    items={sampleItems}
+    onSubmit={action('submit!')}
+    onClickEdit={action('click edit!!')}
+    textareaLabel="コメント"
+    loading
+  />
+)
+Loading.storyName = 'loading'
+
+export const Submitting: StoryFn = () => (
+  <RightFixedNote
+    title="RightFixedNote"
+    items={sampleItems}
+    onSubmit={action('submit!')}
+    onClickEdit={action('click edit!!')}
+    textareaLabel="コメント"
+    submitting
+  />
+)
+Submitting.storyName = 'submitting'
+
 export const WithoutTextareaLabel: StoryFn = () => (
   <RightFixedNote
     title="RightFixedNote"
