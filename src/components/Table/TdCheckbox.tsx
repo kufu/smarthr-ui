@@ -16,14 +16,26 @@ type Props = {
   children?: ReactNode
 }
 
-const tdCheckbox = tv({});
+const tdCheckbox = tv({
+  slots: {
+    inner: '',
+    wrappter: '',
+  }
+});
 
 export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof Props> & Props>(
   ({ 'aria-labelledby': ariaLabelledby, children, className, ...others }, ref) => {
-    const theme = useTheme()
+    const { wrapperStyle, innerStyle } = useMemo(() => {
+      const { wrapper, inner } = tdCheckbox()
+      return {
+        wrapperStyle: wrapper({ className }),
+        innerStyle: inner(),
+      }
+    }, [className])
+
     return (
       // Td に必要な属性やイベントは不要
-      <Td className={className} themes={theme}>
+      <Td className={wrapperStyle}>
         <LabelCenter>
           {/* 使う側で lint をかけるため無効化 */}
           {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute  */}
