@@ -46,19 +46,3 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof
     )
   },
 )
-
-const Td = styled(shrTd)<{ themes: Theme }>`
-  ${({ themes: { fontSize, space } }) => css`
-    position: relative;
-    padding: ${space(0.75)};
-    width: ${fontSize.M};
-  `}
-`
-const LabelCenter = styled(Center).attrs({ forwardedAs: 'label', verticalCentering: true })`
-  position: absolute;
-  inset: 0;
-
-  &:not(:has([disabled])) {
-    cursor: pointer;
-  }
-`
