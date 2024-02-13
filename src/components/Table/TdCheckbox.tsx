@@ -1,13 +1,11 @@
-import React, { ReactNode, forwardRef } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ReactNode, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
 import { Center } from '../Layout'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { Td as shrTd } from './Td'
+import { Td } from './Td'
 
 type Props = {
   /** 値を特定するための行 id */
