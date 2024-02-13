@@ -1,5 +1,6 @@
 import React, { ReactNode, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { CheckBox, Props as CheckBoxProps } from '../CheckBox'
@@ -14,6 +15,8 @@ type Props = {
   /** aria-labelledby では特定できない場合に補足するための不可視ラベル */
   children?: ReactNode
 }
+
+const tdCheckbox = tv({});
 
 export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof Props> & Props>(
   ({ 'aria-labelledby': ariaLabelledby, children, className, ...others }, ref) => {
