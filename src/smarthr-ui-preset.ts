@@ -299,21 +299,7 @@ export default {
     textDecorationColor: false,
   },
   plugins: [
-    plugin(({ addUtilities, addComponents, addVariant, theme }) => {
-      addUtilities({
-        '.overflow-inherit': { overflow: 'inherit' },
-        '.overflow-initial': { overflow: 'initial' },
-        '.overflow-revert': { overflow: 'revert' },
-        '.overflow-unset': { overflow: 'unset' },
-        '.overflow-x-inherit': { 'overflow-x': 'inherit' },
-        '.overflow-y-inherit': { 'overflow-y': 'inherit' },
-        '.overflow-x-initial': { 'overflow-x': 'initial' },
-        '.overflow-y-initial': { 'overflow-y': 'initial' },
-        '.overflow-x-revert': { 'overflow-x': 'revert' },
-        '.overflow-y-revert': { 'overflow-y': 'revert' },
-        '.overflow-x-unset': { 'overflow-x': 'unset' },
-        '.overflow-y-unset': { 'overflow-y': 'unset' },
-      })
+    plugin(({ addComponents, addVariant, theme }) => {
       addComponents({
         /**
          * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
@@ -323,6 +309,31 @@ export default {
           outline: 'none',
           isolation: 'isolate',
           boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
+        },
+        '.border-shorthand': {
+          borderWidth: theme('borderWidth.DEFAULT'),
+          borderStyle: 'solid',
+          borderColor: theme('borderColor.default'),
+        },
+        '.border-t-shorthand': {
+          borderTopWidth: theme('borderWidth.DEFAULT'),
+          borderTopStyle: 'solid',
+          borderTopColor: theme('borderColor.default'),
+        },
+        '.border-r-shorthand': {
+          borderRightWidth: theme('borderWidth.DEFAULT'),
+          borderRightStyle: 'solid',
+          borderRightColor: theme('borderColor.default'),
+        },
+        '.border-b-shorthand': {
+          borderBottomWidth: theme('borderWidth.DEFAULT'),
+          borderBottomStyle: 'solid',
+          borderBottomColor: theme('borderColor.default'),
+        },
+        '.border-l-shorthand': {
+          borderLeftWidth: theme('borderWidth.DEFAULT'),
+          borderLeftStyle: 'solid',
+          borderLeftColor: theme('borderColor.default'),
         },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
