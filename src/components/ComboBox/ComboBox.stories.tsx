@@ -213,7 +213,7 @@ export const Single: StoryFn = () => {
           onClear={handleClear}
         />
       </FormControl>
-      <FormControl title="�ロップダウンリストの幅を指定(38文字)">
+      <FormControl title="ドロップダウンリストの幅を指定(38文字)">
         <SingleComboBox
           name="dropdownWidth38em"
           items={items}
