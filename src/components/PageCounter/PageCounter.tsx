@@ -58,7 +58,7 @@ export const PageCounter: React.FC<Props> = ({ start, end, total = 0, decorators
         <Text weight="bold" as="b">
           {start.toLocaleString()}
         </Text>
-        <span role="img" aria-label={rangeSeparator}>
+        <span title={rangeSeparator}>
           –
         </span>
         <Text weight="bold" as="b">
