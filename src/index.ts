@@ -84,7 +84,6 @@ export {
   AccordionPanelTrigger,
 } from './components/AccordionPanel'
 export { InformationPanel } from './components/InformationPanel'
-export { RightFixedNote } from './components/RightFixedNote'
 export { Tooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
 export { ErrorScreen, MessageScreen } from './components/ErrorScreen'
