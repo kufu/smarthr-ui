@@ -306,12 +306,14 @@ export const WithReel: Story = () => (
                 <br />
                 line
               </Th>
-              <Th fixed>cell</Th>
+              <Th fixed data-test="fixed-cell">
+                cell
+              </Th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <Td>株式会社SmartHR</Td>
+              <Td data-test="dynamic-change-text">株式会社SmartHR</Td>
               <Td>プロダクトエンジニアグループ/XXXXXXユニット</Td>
               <Td>cell</Td>
               <Td>cell</Td>
