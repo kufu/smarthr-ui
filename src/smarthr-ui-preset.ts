@@ -93,7 +93,7 @@ export default {
       current: 'currentColor',
     },
     fontFamily: {
-      inherit: 'inherit',
+      inherit: 'system-ui, sans-serif',
     },
     fontSize: {
       '2xs': defaultFontSize.XXS,
