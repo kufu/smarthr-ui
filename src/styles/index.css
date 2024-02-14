@@ -6,4 +6,7 @@
     dd {
         margin-inline-start: 0px;
     }
+    body {
+        font-family: system-ui, sans-serif;
+    }
 };
