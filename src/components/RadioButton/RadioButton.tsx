@@ -20,7 +20,7 @@ const radioButton = tv({
       'shr-relative shr-inline-block shr-h-em shr-w-em shr-shrink-0 shr-translate-y-[0.125em] shr-leading-none',
     box: [
       'shr-pointer-events-none',
-      'shr-box-border shr-block shr-h-full shr-w-full shr-rounded-full shr-border shr-border-solid shr-border-default shr-bg-white',
+      'shr-border-shorthand shr-box-border shr-block shr-h-full shr-w-full shr-rounded-full shr-bg-white',
       /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
       'forced-colors:shr-hidden',
       'contrast-more:shr-border-high-contrast',

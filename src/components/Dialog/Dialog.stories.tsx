@@ -195,12 +195,7 @@ export const Message_Dialog: StoryFn = () => {
         isOpen={isOpen}
         title="MessageDialog"
         subtitle="副題"
-        description={
-          <Section>
-            <Heading>MessageDialog</Heading>
-            <p>{dummyText} </p>
-          </Section>
-        }
+        description={<p>{dummyText} </p>}
         onClickClose={onClickClose}
         decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
         id="dialog-message"

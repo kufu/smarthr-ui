@@ -149,7 +149,7 @@ const IsFilteredIconWrapper = styled.span<{
   size?: ButtonProps['size']
 }>`
   position: relative;
-  color: ${({ isFiltered, themes }) => (isFiltered ? themes.color.MAIN : themes.color.TEXT_BLACK)};
+  color: ${({ isFiltered, themes }) => (isFiltered ? themes.color.MAIN : undefined)};
   line-height: 1;
   ${({ themes: { space }, size }) => css`
     ${size === 's' &&
