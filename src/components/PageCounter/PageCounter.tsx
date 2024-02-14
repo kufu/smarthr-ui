@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from 'react'
+import React, { useMemo } from 'react'
 
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
@@ -15,20 +15,8 @@ type Props = {
   }
 }
 
-type ExecuteDecoratorReturn<T extends DecoratorType | string | undefined> = T extends DecoratorType
-  ? ReactNode
-  : string
-
-const executeDecorator = <T extends DecoratorType | string | undefined>(
-  defaultText: string,
-  decorator: T,
-): ExecuteDecoratorReturn<T> => {
-  if (decorator === undefined) return defaultText
-
-  if (typeof decorator === 'string') return decorator
-
-  return decorator(defaultText) as ExecuteDecoratorReturn<T>
-}
+const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
+  decorator?.(defaultText) || defaultText
 
 const UNIT_TOTAL_TEXT = '件中'
 const UNIT_TEXT = '件'
@@ -40,10 +28,7 @@ export const PageCounter: React.FC<Props> = ({ start, end, total = 0, decorators
     [decorators?.unitForTotal],
   )
   const unitText = useMemo(() => executeDecorator(UNIT_TEXT, decorators?.unit), [decorators?.unit])
-  const rangeSeparator = useMemo(
-    () => executeDecorator(RANGE_SEPARATOR, decorators?.rangeSeparator),
-    [decorators?.rangeSeparator],
-  )
+  const rangeSeparator = decorators?.rangeSeparator ?? RANGE_SEPARATOR
 
   return (
     <Cluster inline align="baseline" className="shr-text-base">
