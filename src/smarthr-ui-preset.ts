@@ -93,7 +93,7 @@ export default {
       current: 'currentColor',
     },
     fontFamily: {
-      inherit: 'system-ui, sans-serif',
+      inherit: 'inherit',
     },
     fontSize: {
       '2xs': defaultFontSize.XXS,
@@ -286,7 +286,7 @@ export default {
     textDecorationColor: false,
   },
   plugins: [
-    plugin(({ addUtilities, addComponents, addVariant, theme }) => {
+    plugin(({ addUtilities, addComponents, addBase, addVariant, theme }) => {
       addUtilities({
         '.overflow-inherit': { overflow: 'inherit' },
         '.overflow-initial': { overflow: 'initial' },
@@ -310,6 +310,50 @@ export default {
           outline: 'none',
           isolation: 'isolate',
           boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
+        },
+      })
+      addBase({
+        body: {
+          overflowWrap: 'break-word',
+          fontFamily: 'system-ui, sans-serif',
+          lineHeight: theme('lineHeight.normal'),
+        },
+        a: {
+          color: 'inherit',
+        },
+        img: {
+          verticalAlign: 'middle',
+        },
+        input: {
+          margin: '0',
+          padding: '0',
+          border: '0',
+          backgroundColor: 'inherit',
+          fontFamily: 'inherit',
+          fontSize: '100%',
+          color: 'inherit',
+        },
+        button: {
+          margin: '0',
+          padding: '0',
+          border: '0',
+          backgroundColor: 'inherit',
+          fontFamily: 'inherit',
+          fontSize: '100%',
+          color: 'inherit',
+        },
+        textarea: {
+          margin: '0',
+          padding: '0',
+          border: '0',
+          backgroundColor: 'inherit',
+          fontFamily: 'inherit',
+          fontSize: '100%',
+          color: 'inherit',
+        },
+        select: {
+          fontFamily: 'inherit',
+          fontSize: '100%',
         },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
