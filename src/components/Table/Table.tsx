@@ -22,9 +22,9 @@ const table = tv({
     'shr-border-spacing-0',
     'shr-bg-column',
     '[&_tbody]:shr-bg-white',
-    '[&_th]:shr-bg-head [&_th]:contrast-more:shr-border [&_th]:contrast-more:shr-border-solid [&_th]:contrast-more:shr-border-high-contrast',
-    '[&_td]:contrast-more:shr-border [&_td]:contrast-more:shr-border-solid [&_td]:contrast-more:shr-border-high-contrast',
-    'contrast-more:shr-border contrast-more:shr-border-solid contrast-more:shr-border-high-contrast',
+    '[&_th]:contrast-more:shr-border-shorthand [&_th]:shr-bg-head [&_th]:contrast-more:shr-border-high-contrast',
+    '[&_td]:contrast-more:shr-border-shorthand [&_td]:contrast-more:shr-border-high-contrast',
+    'contrast-more:shr-border-shorthand contrast-more:shr-border-high-contrast',
   ],
   variants: {
     fixedHead: {

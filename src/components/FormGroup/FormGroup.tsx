@@ -98,6 +98,13 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         .join(' '),
     [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor],
   )
+  const actualErrorMessages = useMemo(() => {
+    if (!errorMessages) {
+      return []
+    }
+
+    return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
+  }, [errorMessages])
 
   return (
     <WrapperStack
@@ -148,15 +155,13 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         </Text>
       )}
 
-      {errorMessages && (
+      {actualErrorMessages.length > 0 && (
         <Stack gap={0} id={`${managedHtmlFor}_errorMessages`}>
-          {(Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map(
-            (message, index) => (
-              <ErrorMessage themes={theme} key={index}>
-                <FaExclamationCircleIcon text={message} className={classNames.errorMessage} />
-              </ErrorMessage>
-            ),
-          )}
+          {actualErrorMessages.map((message, index) => (
+            <ErrorMessage themes={theme} key={index}>
+              <FaExclamationCircleIcon text={message} className={classNames.errorMessage} />
+            </ErrorMessage>
+          ))}
         </Stack>
       )}
 

@@ -118,8 +118,7 @@ const button = tv({
         'shr-whitespace-nowrap',
         'shr-rounded-m',
         /* ボタンの高さを合わせるために指定 */
-        'shr-border',
-        'shr-border-solid',
+        'shr-border-shorthand',
         'shr-font-inherit',
         'shr-font-bold',
         'shr-leading-none',

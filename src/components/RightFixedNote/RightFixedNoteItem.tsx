@@ -23,6 +23,8 @@ export type ItemProps = {
   editLabel?: string
   /** このコンポーネントに適用するクラス名 */
   className?: string
+  /** 送信中かどうか */
+  submitting?: boolean
 }
 
 export type OnClickEdit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
@@ -40,6 +42,7 @@ export const RightFixedNoteItem: VFC<Props> = ({
   editable = true,
   editLabel = '編集',
   className = '',
+  submitting = false,
 }) => {
   const theme = useTheme()
   const classNames = useClassNames()
@@ -54,6 +57,7 @@ export const RightFixedNoteItem: VFC<Props> = ({
             square
             aria-label={editLabel}
             className={classNames.itemEditButton}
+            disabled={submitting}
           >
             <FaPenIcon />
           </EditButton>

@@ -27,7 +27,7 @@ const checkbox = tv({
   slots: {
     wrapper: 'smarthr-ui-CheckBox shr-inline-flex shr-items-baseline',
     box: [
-      'shr-pointer-events-none shr-absolute shr-box-border shr-h-full shr-w-full shr-rounded-s shr-border shr-border-solid shr-bg-white',
+      'shr-border-shorthand shr-pointer-events-none shr-absolute shr-box-border shr-h-full shr-w-full shr-rounded-s shr-bg-white',
       'contrast-more:shr-border-high-contrast',
       /* 強制カラーモードのときは、ブラウザ標準のUIを表示する */
       'forced-colors:shr-hidden',

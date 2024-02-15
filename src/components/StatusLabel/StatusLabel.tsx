@@ -20,8 +20,7 @@ const statusLabel = tv({
     'shr-leading-[0]',
     'shr-min-w-[3.5em]',
     'shr-min-h-em',
-    'shr-border',
-    'shr-border-solid',
+    'shr-border-shorthand',
   ],
   variants: {
     type: {

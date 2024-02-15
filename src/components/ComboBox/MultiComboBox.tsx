@@ -11,18 +11,16 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTailwindTheme'
 import { FaCaretDownIcon } from '../Icon'
 
-import { ComboBoxContext } from './ComboBoxContext'
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
 import { BaseProps, ComboBoxItem } from './types'
-import { useMultiComboBoxClassNames } from './useClassNames'
 import { useFocusControl } from './useFocusControl'
 import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
@@ -100,6 +98,66 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props<unknown>>
 
 const SELECTED_LIST_ARIA_LABEL = '選択済みアイテム'
 
+const multiCombobox = tv({
+  slots: {
+    wrapper: [
+      'smarthr-ui-MultiComboBox',
+      'shr-box-border shr-inline-flex shr-min-w-[15em] shr-rounded-m shr-border shr-border-solid shr-px-0.5 shr-py-0.25',
+      'contrast-more:shr-border-high-contrast',
+    ],
+    inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5 shr-overflow-y-auto',
+    selectedList:
+      'smarthr-ui-MultiComboBox-selectedList shr-contents shr-list-none [&_li]:shr-min-w-0',
+    inputWrapper: 'shr-flex shr-flex-1 shr-items-center',
+    input: [
+      'smarthr-ui-MultiComboBox-input',
+      'shr-w-full shr-min-w-[5em] shr-border-none shr-text-base shr-text-black shr-outline-none shr-outline-0',
+      'disabled:shr-hidden',
+    ],
+    placeholderEl: 'smarthr-ui-MultiComboBox-placeholder shr-my-0 shr-self-center',
+    suffixWrapper: [
+      'shr-relative -shr-me-0.5 shr-ms-0.5 shr-p-0.5',
+      'before:shr-absolute before:shr-inset-x-0 before:shr-inset-y-0.25 before:shr-w-0 before:shr-border-0 before:shr-border-l before:shr-border-solid before:shr-border-default before:shr-content-[""]',
+    ],
+    suffixIcon: 'shr-block',
+  },
+  variants: {
+    focused: {
+      true: {
+        wrapper: 'shr-focus-indicator',
+      },
+    },
+    error: {
+      true: {
+        wrapper: 'shr-border-danger',
+      },
+    },
+    disabled: {
+      true: {
+        wrapper:
+          'shr-cursor-not-allowed shr-border-default/50 shr-bg-white-darken shr-text-disabled',
+      },
+      false: {
+        wrapper: 'shr-cursor-text shr-bg-white',
+      },
+    },
+    hidden: {
+      true: {
+        inputWrapper: 'shr-pointer-events-none shr-absolute shr-opacity-0',
+      },
+    },
+  },
+  compoundVariants: [
+    {
+      error: false,
+      disabled: false,
+      className: {
+        wrapper: 'shr-border-default',
+      },
+    },
+  ],
+})
+
 const ActualMultiComboBox = <T,>(
   {
     items,
@@ -116,7 +174,7 @@ const ActualMultiComboBox = <T,>(
     width = 'auto',
     dropdownWidth = 'auto',
     inputValue: controlledInputValue,
-    className = '',
+    className,
     onChange,
     onChangeInput,
     onAdd,
@@ -128,12 +186,12 @@ const ActualMultiComboBox = <T,>(
     onKeyPress,
     decorators,
     inputAttributes,
+    style,
     ...props
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
 ) => {
-  const theme = useTheme()
-  const classNames = useMultiComboBoxClassNames()
+  const { textColor } = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const isInputControlled = useMemo(
@@ -226,10 +284,10 @@ const ActualMultiComboBox = <T,>(
   }, [isFocused, onBlur, resetDeletionButtonFocus])
 
   const caretIconColor = useMemo(() => {
-    if (isFocused) return theme.color.TEXT_BLACK
-    if (disabled) return theme.color.TEXT_DISABLED
-    return theme.color.TEXT_GREY
-  }, [disabled, isFocused, theme])
+    if (isFocused) return textColor.black
+    if (disabled) return textColor.disabled
+    return textColor.grey
+  }, [disabled, isFocused, textColor.black, textColor.disabled, textColor.grey])
 
   useOuterClick([outerRef, listBoxRef], blur)
 
@@ -284,14 +342,17 @@ const ActualMultiComboBox = <T,>(
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       if (
-        !hasParentElementByClassName(e.target as HTMLElement, classNames.deleteButton) &&
+        !hasParentElementByClassName(
+          e.target as HTMLElement,
+          'smarthr-ui-MultiComboBox-deleteButton',
+        ) &&
         !disabled &&
         !isFocused
       ) {
         focus()
       }
     },
-    [isFocused, disabled, focus, classNames.deleteButton],
+    [isFocused, disabled, focus],
   )
   const handleChangeInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -330,97 +391,134 @@ const ActualMultiComboBox = <T,>(
     [onKeyPress],
   )
 
-  const contextValue = useMemo(
-    () => ({
-      listBoxClassNames: classNames.listBox,
-    }),
-    [classNames.listBox],
-  )
-
   const selectedListId = useId()
 
+  const {
+    wrapper,
+    inputArea,
+    selectedList,
+    inputWrapper,
+    input,
+    placeholderEl,
+    suffixWrapper,
+    suffixIcon,
+  } = multiCombobox()
+  const {
+    wrapperStyleProps,
+    inputAreaStyle,
+    selectedListStyle,
+    inputWrapperStlye,
+    inputStyle,
+    placeholderStyle,
+    suffixWrapperStyle,
+    suffixIconStyle,
+  } = useMemo(() => {
+    const widthStyle = typeof width === 'number' ? `${width}px` : width
+    return {
+      wrapperStyleProps: {
+        style: {
+          ...style,
+          width: widthStyle,
+        },
+        className: wrapper({ focused: isFocused, error, disabled, className }),
+      },
+      inputAreaStyle: inputArea(),
+      selectedListStyle: selectedList(),
+      inputWrapperStlye: inputWrapper({ hidden: !isFocused }),
+      inputStyle: input(),
+      placeholderStyle: placeholderEl(),
+      suffixWrapperStyle: suffixWrapper({ disabled }),
+      suffixIconStyle: suffixIcon(),
+    }
+  }, [
+    className,
+    disabled,
+    error,
+    input,
+    inputArea,
+    inputWrapper,
+    isFocused,
+    placeholderEl,
+    selectedList,
+    style,
+    suffixIcon,
+    suffixWrapper,
+    width,
+    wrapper,
+  ])
+
   return (
-    <ComboBoxContext.Provider value={contextValue}>
-      <Container
-        {...props}
-        themes={theme}
-        $width={width}
-        isFocused={isFocused}
-        error={error}
-        $disabled={disabled}
-        ref={outerRef}
-        className={`${className} ${classNames.wrapper}`}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
-        onKeyPress={handleKeyPress}
-        role="group"
-      >
-        <InputArea themes={theme}>
-          <SelectedList
-            id={selectedListId}
-            aria-label={
-              decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) ||
-              SELECTED_LIST_ARIA_LABEL
-            }
-            className={classNames.selectedList}
-          >
-            {selectedItems.map((selectedItem, i) => (
-              <li key={`${selectedItem.label}-${selectedItem.value}`}>
-                <MultiSelectedItem
-                  item={selectedItem}
-                  disabled={disabled}
-                  onDelete={handleDelete}
-                  enableEllipsis={selectedItemEllipsis}
-                  buttonRef={deletionButtonRefs[i]}
-                  decorators={decorators}
-                />
-              </li>
-            ))}
-          </SelectedList>
+    <div
+      {...props}
+      {...wrapperStyleProps}
+      ref={outerRef}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      onKeyPress={handleKeyPress}
+      role="group"
+    >
+      <div className={inputAreaStyle}>
+        <ul
+          id={selectedListId}
+          aria-label={
+            decorators?.selectedListAriaLabel?.(SELECTED_LIST_ARIA_LABEL) ||
+            SELECTED_LIST_ARIA_LABEL
+          }
+          className={selectedListStyle}
+        >
+          {selectedItems.map((selectedItem, i) => (
+            <li key={`${selectedItem.label}-${selectedItem.value}`}>
+              <MultiSelectedItem
+                item={selectedItem}
+                disabled={disabled}
+                onDelete={handleDelete}
+                enableEllipsis={selectedItemEllipsis}
+                buttonRef={deletionButtonRefs[i]}
+                decorators={decorators}
+              />
+            </li>
+          ))}
+        </ul>
 
-          <InputWrapper $hidden={!isFocused}>
-            <Input
-              {...inputAttributes}
-              type="text"
-              name={name}
-              value={inputValue}
-              disabled={disabled}
-              required={required && selectedItems.length === 0}
-              ref={inputRef}
-              themes={theme}
-              onChange={handleChangeInput}
-              onFocus={handleFocusInput}
-              onCompositionStart={handleCompositionStartInput}
-              onCompositionEnd={handleCompositionEndInput}
-              onKeyDown={handleInputKeyDown}
-              autoComplete="off"
-              tabIndex={0}
-              role="combobox"
-              aria-activedescendant={activeOption?.id}
-              aria-controls={`${listBoxId} ${selectedListId}`}
-              aria-haspopup="listbox"
-              aria-expanded={isFocused}
-              aria-invalid={error || undefined}
-              aria-disabled={disabled}
-              aria-autocomplete="list"
-              className={classNames.input}
-            />
-          </InputWrapper>
+        <div className={inputWrapperStlye}>
+          <input
+            {...inputAttributes}
+            type="text"
+            name={name}
+            value={inputValue}
+            disabled={disabled}
+            required={required && selectedItems.length === 0}
+            ref={inputRef}
+            onChange={handleChangeInput}
+            onFocus={handleFocusInput}
+            onCompositionStart={handleCompositionStartInput}
+            onCompositionEnd={handleCompositionEndInput}
+            onKeyDown={handleInputKeyDown}
+            autoComplete="off"
+            tabIndex={0}
+            role="combobox"
+            aria-activedescendant={activeOption?.id}
+            aria-controls={`${listBoxId} ${selectedListId}`}
+            aria-haspopup="listbox"
+            aria-expanded={isFocused}
+            aria-invalid={error || undefined}
+            aria-disabled={disabled}
+            aria-autocomplete="list"
+            className={inputStyle}
+          />
+        </div>
 
-          {selectedItems.length === 0 && placeholder && !isFocused && (
-            <Placeholder themes={theme} className={classNames.placeholder}>
-              {placeholder}
-            </Placeholder>
-          )}
-        </InputArea>
+        {selectedItems.length === 0 && placeholder && !isFocused && (
+          <p className={placeholderStyle}>{placeholder}</p>
+        )}
+      </div>
 
-        <Suffix themes={theme} $disabled={disabled}>
-          <FaCaretDownIcon color={caretIconColor} />
-        </Suffix>
+      <div className={suffixWrapperStyle}>
+        <FaCaretDownIcon color={caretIconColor} className={suffixIconStyle} />
+      </div>
 
-        {renderListBox()}
-      </Container>
-    </ComboBoxContext.Provider>
+      {renderListBox()}
+    </div>
   )
 }
 
@@ -433,126 +531,3 @@ export const MultiComboBox = forwardRef(ActualMultiComboBox) as (<T>(
 ) => ReturnType<typeof ActualMultiComboBox<T>>) & {
   displayName: string
 }
-
-type ContainerType = {
-  isFocused: boolean
-  error: boolean
-  $disabled: boolean
-  themes: Theme
-  $width: number | string
-}
-const Container = styled.div.attrs(
-  ({ isFocused, error, $disabled, $width, themes }: ContainerType) => {
-    const style: React.CSSProperties = {
-      width: typeof $width === 'number' ? `${$width}px` : $width,
-    }
-
-    if (isFocused) {
-      style.boxShadow = themes.shadow.OUTLINE
-    }
-    if (error) {
-      style.borderColor = themes.color.DANGER
-    }
-    if ($disabled) {
-      style.cursor = 'not-allowed'
-      style.borderColor = themes.color.disableColor(themes.color.BORDER)
-      style.backgroundColor = themes.color.hoverColor(themes.color.WHITE)
-      style.color = themes.color.TEXT_DISABLED
-    }
-
-    return { style }
-  },
-)<ContainerType>`
-  ${({ themes }) => {
-    const { border, color, radius, space } = themes
-
-    return css`
-      display: inline-flex;
-      border-radius: ${radius.m};
-      border: ${border.shorthand};
-      background-color: ${color.WHITE};
-      padding: ${space(0.25)} ${space(0.5)};
-      cursor: text;
-      min-width: 15em;
-      box-sizing: border-box;
-
-      @media (prefers-contrast: more) {
-        border: ${border.highContrast};
-      }
-    `
-  }}
-`
-const InputArea = styled.div<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    gap: ${spacingByChar(0.5)};
-    overflow-y: auto;
-  `}
-`
-const SelectedList = styled.ul`
-  display: contents;
-  list-style: none;
-  li {
-    /** 選択済みアイテムのラベルの省略表示のために幅を計算させる */
-    min-width: 0;
-  }
-`
-
-type InputWrapperProps = { $hidden: boolean }
-const InputWrapper = styled.div.attrs(({ $hidden }: InputWrapperProps) => ({
-  style: $hidden
-    ? {
-        position: 'absolute',
-        opacity: '0',
-        pointerEvents: 'none',
-      }
-    : undefined,
-}))<InputWrapperProps>`
-  flex: 1;
-  display: flex;
-  align-items: center;
-`
-const Input = styled.input<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color, fontSize } = themes
-
-    return css`
-      min-width: 5em;
-      width: 100%;
-      border: none;
-      font-size: ${fontSize.M};
-      color: ${color.TEXT_BLACK};
-      outline: none;
-
-      :disabled {
-        display: none;
-      }
-    `
-  }}
-`
-const Placeholder = styled.p<{ themes: Theme }>`
-  margin-block: 0;
-  align-self: center;
-`
-const Suffix = styled.div<{ themes: Theme; $disabled: boolean }>`
-  ${({ themes: { border, space }, $disabled }) => css`
-    position: relative;
-    margin-inline: ${space(0.5)} ${space(-0.5)};
-    padding: ${space(0.5)};
-    cursor: ${$disabled ? 'not-allowed' : 'pointer'};
-
-    &::before {
-      content: '';
-      position: absolute;
-      inset: ${space(0.25)} 0;
-      width: 0;
-      border-left: ${border.shorthand};
-    }
-
-    .smarthr-ui-Icon {
-      display: block;
-    }
-  `}
-`
