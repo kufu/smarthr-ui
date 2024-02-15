@@ -95,7 +95,7 @@ export default {
       current: 'currentColor',
     },
     fontFamily: {
-      inherit: 'system-ui, sans-serif',
+      inherit: 'inherit',
     },
     fontSize: {
       '2xs': defaultFontSize.XXS,
@@ -299,7 +299,21 @@ export default {
     textDecorationColor: false,
   },
   plugins: [
-    plugin(({ addComponents, addVariant, theme }) => {
+    plugin(({ addUtilities, addComponents, addBase, addVariant, theme }) => {
+      addUtilities({
+        '.overflow-inherit': { overflow: 'inherit' },
+        '.overflow-initial': { overflow: 'initial' },
+        '.overflow-revert': { overflow: 'revert' },
+        '.overflow-unset': { overflow: 'unset' },
+        '.overflow-x-inherit': { 'overflow-x': 'inherit' },
+        '.overflow-y-inherit': { 'overflow-y': 'inherit' },
+        '.overflow-x-initial': { 'overflow-x': 'initial' },
+        '.overflow-y-initial': { 'overflow-y': 'initial' },
+        '.overflow-x-revert': { 'overflow-x': 'revert' },
+        '.overflow-y-revert': { 'overflow-y': 'revert' },
+        '.overflow-x-unset': { 'overflow-x': 'unset' },
+        '.overflow-y-unset': { 'overflow-y': 'unset' },
+      })
       addComponents({
         /**
          * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
@@ -334,6 +348,50 @@ export default {
           borderLeftWidth: theme('borderWidth.DEFAULT'),
           borderLeftStyle: 'solid',
           borderLeftColor: theme('borderColor.default'),
+        },
+      })
+      addBase({
+        body: {
+          overflowWrap: 'break-word',
+          fontFamily: 'system-ui, sans-serif',
+          lineHeight: theme('lineHeight.normal'),
+        },
+        a: {
+          color: 'inherit',
+        },
+        img: {
+          verticalAlign: 'middle',
+        },
+        input: {
+          margin: '0',
+          padding: '0',
+          border: '0',
+          backgroundColor: 'inherit',
+          fontFamily: 'inherit',
+          fontSize: '100%',
+          color: 'inherit',
+        },
+        button: {
+          margin: '0',
+          padding: '0',
+          border: '0',
+          backgroundColor: 'inherit',
+          fontFamily: 'inherit',
+          fontSize: '100%',
+          color: 'inherit',
+        },
+        textarea: {
+          margin: '0',
+          padding: '0',
+          border: '0',
+          backgroundColor: 'inherit',
+          fontFamily: 'inherit',
+          fontSize: '100%',
+          color: 'inherit',
+        },
+        select: {
+          fontFamily: 'inherit',
+          fontSize: '100%',
         },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
