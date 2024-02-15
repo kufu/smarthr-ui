@@ -53,7 +53,7 @@ export const FloatArea: FC<Props & ElementProps> = ({
   return (
     <Base
       {...props}
-      themes={theme}
+      $themes={theme}
       className={`${className} ${classNames.wrapper}`}
       $width={width}
       fixed={fixed}
@@ -79,9 +79,9 @@ export const FloatArea: FC<Props & ElementProps> = ({
 }
 
 const Base = styled(shrBase).attrs({ layer: 3 })<
-  StyleProps & { themes: Theme; $width: Props['width']; fixed: Props['fixed'] }
+  StyleProps & { $themes: Theme; $width: Props['width']; fixed: Props['fixed'] }
 >`
-  ${({ themes: { space }, top, bottom, $width, fixed, zIndex = 500 }) => css`
+  ${({ $themes: { space }, top, bottom, $width, fixed, zIndex = 500 }) => css`
     position: ${fixed ? 'fixed' : 'sticky'};
     ${(top || top === 0) && `top: ${useSpacing(top)};`}
     ${(bottom || bottom === 0) && `bottom: ${useSpacing(bottom)};`}

@@ -26,7 +26,7 @@ export const SideMenuGroup: React.FC<Props & ElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <GroupStack {...props} themes={theme} className={`${className || ''} ${classNames.group}`}>
+    <GroupStack {...props} $themes={theme} className={`${className || ''} ${classNames.group}`}>
       <GroupNameText forwardedAs={nameTag} themes={theme}>
         {name}
       </GroupNameText>
@@ -35,8 +35,8 @@ export const SideMenuGroup: React.FC<Props & ElementProps> = ({
   )
 }
 
-const GroupStack = styled(Stack).attrs({ forwardedAs: 'li', gap: 0.5 })<{ themes: Theme }>`
-  ${({ themes: { border, space } }) => css`
+const GroupStack = styled(Stack).attrs({ forwardedAs: 'li', gap: 0.5 })<{ $themes: Theme }>`
+  ${({ $themes: { border, space } }) => css`
     & + & {
       border-top: ${border.shorthand};
       padding-block-start: ${space(1.25)};

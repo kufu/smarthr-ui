@@ -13,7 +13,7 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
       <Wrapper $disabled={disabled} themes={theme} className={className}>
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <CheckboxInput {...props} disabled={disabled} type="checkbox" role="switch" ref={ref} />
-        <CheckIcon themes={theme} />
+        <CheckIcon $themes={theme} />
       </Wrapper>
     )
   },
@@ -148,8 +148,8 @@ const CheckboxInput = styled.input`
   }
 `
 
-const CheckIcon = styled(FaCheckIcon).attrs({ color: 'WHITE', size: 'XXS' })<{ themes: Theme }>`
-  ${({ themes: { fontSize } }) => css`
+const CheckIcon = styled(FaCheckIcon).attrs({ color: 'WHITE', size: 'XXS' })<{ $themes: Theme }>`
+  ${({ $themes: { fontSize } }) => css`
     position: absolute;
     display: none;
 
