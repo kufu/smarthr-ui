@@ -47,7 +47,7 @@ export { RadioButton } from './components/RadioButton'
 export { RadioButtonPanel } from './components/RadioButtonPanel'
 export { AnchorButton, Button } from './components/Button'
 export { StatusLabel } from './components/StatusLabel'
-export { Base, BaseColumn, DialogBase } from './components/Base'
+export { Base, BaseColumn } from './components/Base'
 export * from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
 export {
