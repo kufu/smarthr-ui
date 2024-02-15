@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useCallback, useContext } from 'react'
+import React, { ComponentProps, useCallback, useContext } from 'react'
 
 import { useId } from '../../../hooks/useId'
 import { DialogContentInner } from '../DialogContentInner'
@@ -9,13 +9,13 @@ import { useDialogPortal } from '../useDialogPortal'
 import { BaseProps, MessageDialogContentInner } from './MessageDialogContentInner'
 
 type Props = BaseProps & UncontrolledDialogProps
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 export const MessageDialogContent: React.FC<Props & ElementProps> = ({
   title,
   description,
   portalParent,
-  className = '',
+  className,
   decorators,
   ...props
 }) => {
