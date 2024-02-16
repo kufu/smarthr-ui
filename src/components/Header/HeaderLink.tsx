@@ -1,23 +1,15 @@
-import styled, { css } from 'styled-components'
+import React, { ComponentProps, PropsWithChildren } from 'react'
 
-import { useTheme } from '../../hooks/useTheme'
 import { TextLink } from '../TextLink'
 
-export const HeaderLink = styled(TextLink).attrs({ target: '_blank', suffix: null })`
-  ${() => {
-    const { color, shadow, spacingByChar } = useTheme()
-    return css`
-      padding-inline: ${spacingByChar(0.25)};
-      color: ${color.TEXT_WHITE};
-      box-shadow: unset;
+type Props = PropsWithChildren<ComponentProps<typeof TextLink>>
 
-      &:hover {
-        color: ${color.TEXT_WHITE};
-      }
-
-      &:focus-visible {
-        ${shadow.focusIndicatorStyles}
-      }
-    `
-  }}
-`
+export const HeaderLink: React.FC<Props> = (props) => (
+  <TextLink
+    {...props}
+    href={props.href}
+    target="_blank"
+    suffix={null}
+    className="focus-visible:shr-focusIndicator shr-pe-0.25 shr-ps-0.25 shr-text-white hover:shr-text-white [&&&]:shr-shadow-none"
+  />
+)
