@@ -27,12 +27,12 @@ export const getIconComponent = (
 }
 
 export type ItemStyleProps = {
-  themes: Theme
+  $themes: Theme
   $isActive?: boolean
   $isUnclickable?: boolean
 }
 export const getItemStyle = ({
-  themes: {
+  $themes: {
     color: { hoverColor, MAIN, TEXT_BLACK, TEXT_GREY, WHITE },
     fontSize,
     leading,

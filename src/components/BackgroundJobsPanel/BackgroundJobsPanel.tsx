@@ -67,7 +67,7 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
   const jobListId = useId()
 
   return (
-    <Container themes={themes} className={`${className} ${classNames.wrapper}`}>
+    <Container $themes={themes} className={`${className} ${classNames.wrapper}`}>
       <Header>
         <Title themes={themes} className={classNames.title}>
           {title}
@@ -115,7 +115,7 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
               <JobNameText themes={themes}>{job.name}</JobNameText>
               <JobDescText themes={themes}>{job.description}</JobDescText>
               {job.isCancelable && (
-                <CancelButton type="button" onClick={handleClickCancelJob} themes={themes}>
+                <CancelButton type="button" onClick={handleClickCancelJob} $themes={themes}>
                   キャンセル
                 </CancelButton>
               )}
@@ -127,13 +127,13 @@ export const BackgroundJobsPanel: VFC<Props & ElementProps> = ({
   )
 }
 
-const Container = styled(Base)<{ themes: Theme }>(
-  ({ themes }) => css`
+const Container = styled(Base)<{ $themes: Theme }>(
+  ({ $themes: { color } }) => css`
     display: inline-flex;
     flex-direction: column;
     min-width: 420px;
     max-width: 600px;
-    color: ${themes.color.TEXT_BLACK};
+    color: ${color.TEXT_BLACK};
   `,
 )
 const Header = styled.div`
@@ -200,8 +200,8 @@ const JobDescText = styled(OmittableJobText)<{ themes: Theme }>(
     font-size: ${fontSize.S};
   `,
 )
-const CancelButton = styled(UnstyledButton)<{ themes: Theme }>(
-  ({ themes: { color, fontSize, spacingByChar } }) => css`
+const CancelButton = styled(UnstyledButton)<{ $themes: Theme }>(
+  ({ $themes: { color, fontSize, spacingByChar } }) => css`
     flex-shrink: 0;
     margin-left: ${spacingByChar(0.5)};
     font-size: ${fontSize.S};

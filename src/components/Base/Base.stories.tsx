@@ -7,7 +7,6 @@ import { Table, Td, Th } from '../Table'
 import { Text } from '../Text'
 
 import { Base, LayerKeys, layerMap } from './Base'
-import { DialogBase } from './DialogBase'
 
 export default {
   title: 'Data Display（データ表示）/Base',
@@ -97,26 +96,6 @@ export const BaseStory: StoryFn = () => {
   )
 }
 BaseStory.storyName = 'Base'
-
-export const DialogBaseStory: StoryFn = () => (
-  <List>
-    <li>
-      <DialogBase radius="s">
-        <Text>
-          If radius props is specified as <Bold>s</Bold>, border-radius becomes <Bold>6px</Bold>.
-        </Text>
-      </DialogBase>
-    </li>
-    <li>
-      <DialogBase radius="m">
-        <Text>
-          If radius props is specified as <Bold>m</Bold>, border-radius becomes <Bold>8px</Bold>.
-        </Text>
-      </DialogBase>
-    </li>
-  </List>
-)
-DialogBaseStory.storyName = 'DialogBase（非推奨）'
 
 const DescriptionList = styled.dl`
   padding: 24px;

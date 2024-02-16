@@ -36,7 +36,7 @@ export const AppNaviButton: VFC<InnerProps> = ({
 
   return (
     <Button
-      themes={theme}
+      $themes={theme}
       aria-current={current ? 'page' : undefined}
       onClick={onClick}
       disabled={isUnclickable}
