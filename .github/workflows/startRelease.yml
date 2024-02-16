@@ -21,6 +21,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.node-version'
@@ -34,13 +37,13 @@ jobs:
           BASE_TAG=v$(npx -c 'echo "$npm_package_version"')
           git checkout $BASE_TAG
           git merge --no-edit ${{ github.ref }}
-      - run: yarn install --frozen-lockfile
+      - run: pnpm install
       - name: release dry run
         if: ${{ env.IS_PRERELEASE == 'false' }}
-        run: yarn release:dryrun > ${{ env.RESULT_PATH }}
+        run: pnpm release:dryrun > ${{ env.RESULT_PATH }}
       - name: prerelease dry run
         if: ${{ env.IS_PRERELEASE == 'true' }}
-        run: yarn release:dryrun --prerelease > ${{ env.RESULT_PATH }}
+        run: pnpm release:dryrun --prerelease > ${{ env.RESULT_PATH }}
       - name: wrap dry run log
         run: |
           echo "Dry Run Log:
