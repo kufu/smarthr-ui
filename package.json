@@ -168,7 +168,7 @@
     "testcafe": "testcafe",
     "e2e": "ts-node scripts/e2e.ts",
     "e2e:dev": "testcafe chrome --host localhost --skip-js-errors",
-    "prepare": "husky install",
+    "prepare": "husky",
     "chromatic": "chromatic",
     "write:ui-props": "ts-node scripts/exportUIProps.ts",
     "export:ui-props": "run-s build:lib write:ui-props"
