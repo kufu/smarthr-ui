@@ -105,11 +105,13 @@ jobs:
       - run-a11y-test
   chromatic-deployment:
     executor: node-active-lts
+    resource_class: medium+
     steps:
       - setup-for-test
       - run-chromatic
   chromatic-deployment-master:
     executor: node-active-lts
+    resource_class: medium+
     steps:
       - setup-for-test
       - run-chromatic-master
