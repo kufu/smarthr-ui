@@ -225,8 +225,8 @@ devDependencies:
     specifier: ^0.5.11
     version: 0.5.11(prettier@3.2.5)
   puppeteer:
-    specifier: ^22.0.0
-    version: 22.0.0(typescript@5.3.3)
+    specifier: ^22.1.0
+    version: 22.1.0(typescript@5.3.3)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -2735,16 +2735,16 @@ packages:
       webpack: 5.90.2(@swc/core@1.4.1)(esbuild@0.18.16)
     dev: true
 
-  /@puppeteer/browsers@2.0.0:
-    resolution: {integrity: sha512-3PS82/5+tnpEaUWonjAFFvlf35QHF15xqyGd34GBa5oP5EPVfFXRsbSxIGYf1M+vZlqBZ3oxT1kRg9OYhtt8ng==}
+  /@puppeteer/browsers@2.0.1:
+    resolution: {integrity: sha512-IQj/rJY1MNfZ6Z2ERu+6S0LkIPBSXRGddgmvODqjm1afHy04aJIiWmoohuFtL78SPSlbjpIMuFVfhyqsR5Ng4A==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
       debug: 4.3.4(supports-color@5.5.0)
       extract-zip: 2.0.1
       progress: 2.0.3
-      proxy-agent: 6.3.1
-      tar-fs: 3.0.4
+      proxy-agent: 6.4.0
+      tar-fs: 3.0.5
       unbzip2-stream: 1.4.3
       yargs: 17.7.2
     transitivePeerDependencies:
@@ -6071,6 +6071,37 @@ packages:
     resolution: {integrity: sha512-1ugUSr8BHXRnK23KfuYS+gVMC3LB8QGH9W1iGtDPsNWoQbgtXSExkBu2aDR4epiGWZOjZsj6lDl/N/AqqTC3UA==}
     dev: true
 
+  /bare-events@2.2.0:
+    resolution: {integrity: sha512-Yyyqff4PIFfSuthCZqLlPISTWHmnQxoPuAvkmgzsJEmG3CesdIv6Xweayl0JkCZJSB2yYIdJyEz97tpxNhgjbg==}
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /bare-fs@2.1.5:
+    resolution: {integrity: sha512-5t0nlecX+N2uJqdxe9d18A98cp2u9BETelbjKpiVgQqzzmVNFYWEAjQHqS+2Khgto1vcwhik9cXucaj5ve2WWA==}
+    requiresBuild: true
+    dependencies:
+      bare-events: 2.2.0
+      bare-os: 2.2.0
+      bare-path: 2.1.0
+      streamx: 2.15.0
+    dev: true
+    optional: true
+
+  /bare-os@2.2.0:
+    resolution: {integrity: sha512-hD0rOPfYWOMpVirTACt4/nK8mC55La12K5fY1ij8HAdfQakD62M+H4o4tpfKzVGLgRDTuk3vjA4GqGXXCeFbag==}
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /bare-path@2.1.0:
+    resolution: {integrity: sha512-DIIg7ts8bdRKwJRJrUMy/PICEaQZaPGZ26lsSx9MJSwIhSrcdHn7/C8W+XmnG/rKi6BaRcz+JO00CjZteybDtw==}
+    requiresBuild: true
+    dependencies:
+      bare-os: 2.2.0
+    dev: true
+    optional: true
+
   /base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
     dev: true
@@ -6412,8 +6443,8 @@ packages:
     engines: {node: '>=6.0'}
     dev: true
 
-  /chromium-bidi@0.5.8(devtools-protocol@0.0.1232444):
-    resolution: {integrity: sha512-blqh+1cEQbHBKmok3rVJkBlBxt9beKBgOsxbFgs7UJcoVbbeZ+K7+6liAsjgpc8l1Xd55cQUy14fXZdGSb4zIw==}
+  /chromium-bidi@0.5.9(devtools-protocol@0.0.1232444):
+    resolution: {integrity: sha512-wOTX3m2zuHX0zRX4h7Ol1DAGz0cqHzo2IrAPvOqBxdd4ZR32vxg4FKNjmBihi1oP9b1QGSBBG5VNUUXUCsxDfg==}
     peerDependencies:
       devtools-protocol: '*'
     dependencies:
@@ -9454,8 +9485,8 @@ packages:
       - supports-color
     dev: true
 
-  /http-proxy-agent@7.0.0:
-    resolution: {integrity: sha512-+ZT+iBxVUQ1asugqnD6oWoRiS25AkjNfG085dKJGtGxkdwLQrMKU5wJr2bOOFAXzKcTuqq+7fZlTMgG3SRfIYQ==}
+  /http-proxy-agent@7.0.2:
+    resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.1.0
@@ -9537,8 +9568,8 @@ packages:
       - supports-color
     dev: true
 
-  /https-proxy-agent@7.0.2:
-    resolution: {integrity: sha512-NmLNjm6ucYwtcUmL7JQC1ZQ57LmHP4lT15FQ8D61nak1rO6DH+fz5qNK2Ap5UN4ZapYICE3/0KodcLYSPsPbaA==}
+  /https-proxy-agent@7.0.4:
+    resolution: {integrity: sha512-wlwpilI7YdjSkWaQ/7omYBMTliDcmCN8OLihO6I9B86g06lMyAoqgoDpV0XqoaPOKj+0DIdAvnsWfyAAhmimcg==}
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.1.0
@@ -12147,8 +12178,8 @@ packages:
       agent-base: 7.1.0
       debug: 4.3.4(supports-color@5.5.0)
       get-uri: 6.0.1
-      http-proxy-agent: 7.0.0
-      https-proxy-agent: 7.0.2
+      http-proxy-agent: 7.0.2
+      https-proxy-agent: 7.0.4
       pac-resolver: 7.0.0
       socks-proxy-agent: 8.0.2
     transitivePeerDependencies:
@@ -12803,14 +12834,14 @@ packages:
       ipaddr.js: 1.9.1
     dev: true
 
-  /proxy-agent@6.3.1:
-    resolution: {integrity: sha512-Rb5RVBy1iyqOtNl15Cw/llpeLH8bsb37gM1FUfKQ+Wck6xHlbAhWGUFiTRHtkjqGTA5pSHz6+0hrPW/oECihPQ==}
+  /proxy-agent@6.4.0:
+    resolution: {integrity: sha512-u0piLU+nCOHMgGjRbimiXmA9kM/L9EHh3zL81xCdp7m+Y2pHIsnmbdDoEDoAz5geaonNR6q6+yOPQs6n4T6sBQ==}
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.1.0
       debug: 4.3.4(supports-color@5.5.0)
-      http-proxy-agent: 7.0.0
-      https-proxy-agent: 7.0.2
+      http-proxy-agent: 7.0.2
+      https-proxy-agent: 7.0.4
       lru-cache: 7.18.3
       pac-proxy-agent: 7.0.1
       proxy-from-env: 1.1.0
@@ -12882,12 +12913,12 @@ packages:
       - utf-8-validate
     dev: true
 
-  /puppeteer-core@22.0.0:
-    resolution: {integrity: sha512-S3s91rLde0A86PWVeNY82h+P0fdS7CTiNWAicCVH/bIspRP4nS2PnO5j+VTFqCah0ZJizGzpVPAmxVYbLxTc9w==}
+  /puppeteer-core@22.1.0:
+    resolution: {integrity: sha512-LdsQxslPf0Rpk6gLvkyyrraad2S4PUjGCT2CAKS2EnrRPpzIb6fsrFnoPNZxLlMkU7apU1g4Nf5wYePdSjxLkQ==}
     engines: {node: '>=18'}
     dependencies:
-      '@puppeteer/browsers': 2.0.0
-      chromium-bidi: 0.5.8(devtools-protocol@0.0.1232444)
+      '@puppeteer/browsers': 2.0.1
+      chromium-bidi: 0.5.9(devtools-protocol@0.0.1232444)
       cross-fetch: 4.0.0
       debug: 4.3.4(supports-color@5.5.0)
       devtools-protocol: 0.0.1232444
@@ -12899,15 +12930,15 @@ packages:
       - utf-8-validate
     dev: true
 
-  /puppeteer@22.0.0(typescript@5.3.3):
-    resolution: {integrity: sha512-zYVnjwJngnSB4dbkWp7DHFSIc3nqHvZzrdHyo9+ugV1nq1Lm8obOMcmCFaGfR3PJs0EmYNz+/skBeO45yvASCQ==}
+  /puppeteer@22.1.0(typescript@5.3.3):
+    resolution: {integrity: sha512-suatHy6A48YkoykjrJNkJaixWVrvnPtzIgngK17V/P0MvgSyJzuu21PyR+0lWIK0cfZqKqmR8CHZvHzOCd4MIg==}
     engines: {node: '>=18'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@puppeteer/browsers': 2.0.0
+      '@puppeteer/browsers': 2.0.1
       cosmiconfig: 9.0.0(typescript@5.3.3)
-      puppeteer-core: 22.0.0
+      puppeteer-core: 22.1.0
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -12959,6 +12990,7 @@ packages:
 
   /queue-tick@1.0.1:
     resolution: {integrity: sha512-kJt5qhMxoszgU/62PLP1CJytzd2NKetjSRnyuj31fDd3Rlcz3fzlFdFLD1SItunPwyqEOkca6GbV612BWfaBag==}
+    requiresBuild: true
     dev: true
 
   /quick-lru@4.0.1:
@@ -14534,12 +14566,14 @@ packages:
       tar-stream: 2.2.0
     dev: true
 
-  /tar-fs@3.0.4:
-    resolution: {integrity: sha512-5AFQU8b9qLfZCX9zp2duONhPmZv0hGYiBPJsyUdqMjzq/mqVpy/rEUSeHk1+YitmxugaptgBh5oDGU3VsAJq4w==}
+  /tar-fs@3.0.5:
+    resolution: {integrity: sha512-JOgGAmZyMgbqpLwct7ZV8VzkEB6pxXFBVErLtb+XCOqzc6w1xiWKI9GVd6bwk68EX7eJ4DWmfXVmq8K2ziZTGg==}
     dependencies:
-      mkdirp-classic: 0.5.3
       pump: 3.0.0
       tar-stream: 3.1.6
+    optionalDependencies:
+      bare-fs: 2.1.5
+      bare-path: 2.1.0
     dev: true
 
   /tar-stream@2.2.0:
