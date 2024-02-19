@@ -406,6 +406,20 @@ export default {
         li: {
           listStyle: 'none',
         },
+        table: {
+          margin: '0',
+          padding: '0',
+          border: '0',
+          font: 'inherit',
+          borderSpacing: '0',
+        },
+        tbody: {
+          margin: '0',
+          padding: '0',
+          border: '0',
+          font: 'inherit',
+          verticalAlign: 'baseline',
+        },
         fieldset: {
           marginInlineStart: '0',
           marginInlineEnd: '0',
