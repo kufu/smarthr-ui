@@ -440,6 +440,12 @@ export default {
           border: '0',
           font: 'inherit',
         },
+        figure: {
+          marginInlineStart: '0',
+          marginInlineEnd: '0',
+          marginBlockStart: '0',
+          marginBlockEnd: '0',
+        },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
     }),
