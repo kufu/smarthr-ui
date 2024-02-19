@@ -42,7 +42,7 @@ export const SideNavItemButton: VFC<Props> = ({
   const itemClassName = `${isSelected ? 'selected' : ''} ${classNames.item}`
   return (
     <Wrapper className={itemClassName} themes={theme}>
-      <Button className={size} themes={theme} onClick={handleClick}>
+      <Button className={size} $themes={theme} onClick={handleClick}>
         {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
         <span className={classNames.itemTitle}>{title}</span>
       </Button>
@@ -84,9 +84,9 @@ const Wrapper = styled.li<{ themes: Theme }>`
   }}
 `
 
-const Button = styled(UnstyledButton)<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { fontSize, shadow, spacingByChar } = themes
+const Button = styled(UnstyledButton)<{ $themes: Theme }>`
+  ${({ $themes }) => {
+    const { fontSize, shadow, spacingByChar } = $themes
 
     return css`
       outline: none;

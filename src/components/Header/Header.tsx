@@ -63,13 +63,13 @@ export const Header: React.VFC<Props & ElementProps> = ({
           ))}
         </HeaderDropdownMenuButton>
       ) : (
-        <TenantNameText themes={theme}>{currentTenantName}</TenantNameText>
+        <TenantNameText $themes={theme}>{currentTenantName}</TenantNameText>
       ),
     [currentTenantName, onTenantSelect, tenants, theme],
   )
 
   return (
-    <Wrapper className={`${className} ${classNames.wrapper}`} themes={theme}>
+    <Wrapper className={`${className} ${classNames.wrapper}`} $themes={theme}>
       <Cluster align="center" gap={{ column: 0.25, row: 0 }}>
         <LogoLink href={logoHref} className={classNames.logo} themes={theme}>
           {logo}
@@ -87,8 +87,8 @@ const Wrapper = styled(Cluster).attrs({
   forwardedAs: 'header',
   justify: 'space-between',
   gap: { column: 0.25, row: 0 },
-})<{ themes: Theme }>`
-  ${({ themes: { color, spacingByChar } }) => css`
+})<{ $themes: Theme }>`
+  ${({ $themes: { color, spacingByChar } }) => css`
     background-color: ${color.BRAND};
     padding-inline: ${spacingByChar(1.25)};
 
@@ -110,8 +110,8 @@ const LogoLink = styled.a<{ themes: Theme }>`
 const TenantInfo = styled.div`
   margin-inline-start: auto;
 `
-const TenantNameText = styled(Text).attrs({ color: 'TEXT_WHITE' })<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
+const TenantNameText = styled(Text).attrs({ color: 'TEXT_WHITE' })<{ $themes: Theme }>`
+  ${({ $themes: { spacingByChar } }) => css`
     padding-inline: ${spacingByChar(0.25)};
   `}
 `
