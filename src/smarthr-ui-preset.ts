@@ -356,6 +356,12 @@ export default {
           fontFamily: 'system-ui, sans-serif',
           lineHeight: theme('lineHeight.normal'),
         },
+        h1: {
+          margin: '0',
+          padding: '0',
+          border: '0',
+          font: 'inherit',
+        },
         a: {
           color: 'inherit',
         },
