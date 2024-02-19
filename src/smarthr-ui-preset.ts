@@ -419,6 +419,12 @@ export default {
           paddingInlineEnd: '0',
           paddingBlockEnd: '0',
         },
+        dl: {
+          marginInlineStart: '0',
+          marginInlineEnd: '0',
+          marginBlockStart: '0',
+          marginBlockEnd: '0',
+        },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
     }),
