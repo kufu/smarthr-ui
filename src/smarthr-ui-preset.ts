@@ -393,6 +393,13 @@ export default {
           fontFamily: 'inherit',
           fontSize: '100%',
         },
+        ul: {
+          margin: '0',
+          padding: '0',
+        },
+        fieldset: {
+          border: 'none',
+        },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
     }),
