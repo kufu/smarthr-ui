@@ -398,6 +398,12 @@ export default {
           padding: '0',
         },
         fieldset: {
+          marginInlineStart: '0',
+          marginInlineEnd: '0',
+          paddingBlockStart: '0',
+          paddingInlineStart: '0',
+          paddingInlineEnd: '0',
+          paddingBlockEnd: '0',
           border: 'none',
         },
       })
