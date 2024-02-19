@@ -411,7 +411,9 @@ export default {
           padding: '0',
           border: '0',
           font: 'inherit',
+          verticalAlign: 'baseline',
           borderSpacing: '0',
+          borderCollapse: 'collapse',
         },
         tbody: {
           margin: '0',
