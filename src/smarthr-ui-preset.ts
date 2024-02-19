@@ -397,6 +397,9 @@ export default {
           margin: '0',
           padding: '0',
         },
+        li: {
+          listStyle: 'none',
+        },
         fieldset: {
           marginInlineStart: '0',
           marginInlineEnd: '0',
