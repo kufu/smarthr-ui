@@ -434,6 +434,12 @@ export default {
           marginBlockStart: '0',
           marginBlockEnd: '0',
         },
+        code: {
+          margin: '0',
+          padding: '0',
+          border: '0',
+          font: 'inherit',
+        },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
     }),
