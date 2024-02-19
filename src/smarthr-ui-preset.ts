@@ -426,6 +426,9 @@ export default {
           paddingBlockEnd: '0',
         },
         dl: {
+          margin: '0',
+          padding: '0',
+          border: '0',
           marginInlineStart: '0',
           marginInlineEnd: '0',
           marginBlockStart: '0',
