@@ -28,12 +28,16 @@ export const useReelCells = () => {
     }
     handleScroll()
 
-    window.addEventListener('resize', handleScroll)
     currentRef?.addEventListener('scroll', handleScroll)
 
+    const observer = new window.ResizeObserver(() => {
+      handleScroll()
+    })
+    currentRef && observer.observe(currentRef)
+
     return () => {
-      window.removeEventListener('resize', handleScroll)
       currentRef?.removeEventListener('scroll', handleScroll)
+      currentRef && observer.unobserve(currentRef)
     }
   }, [tableWrapperRef, setShowShadow])
 

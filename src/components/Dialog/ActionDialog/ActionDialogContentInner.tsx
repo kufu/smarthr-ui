@@ -91,7 +91,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
     <Section>
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <Heading tag={titleTag}>
-        <TitleAreaStack themes={theme} ref={titleRef} className={classNames.titleArea}>
+        <TitleAreaStack $themes={theme} ref={titleRef} className={classNames.titleArea}>
           {subtitle && (
             <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
               {subtitle}
@@ -105,7 +105,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
       <Body offsetHeight={offsetHeight} className={classNames.body}>
         {children}
       </Body>
-      <ActionAreaStack themes={theme} ref={bottomRef} className={classNames.actionArea}>
+      <ActionAreaStack $themes={theme} ref={bottomRef} className={classNames.actionArea}>
         <ButtonArea className={classNames.buttonArea}>
           <Button
             onClick={onClickClose}
@@ -139,8 +139,8 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 const TitleAreaStack = styled(Stack).attrs(() => ({
   gap: 0.25,
   forwardedAs: 'span',
-}))<{ themes: Theme }>`
-  ${({ themes: { border, space } }) => css`
+}))<{ $themes: Theme }>`
+  ${({ $themes: { border, space } }) => css`
     margin-block: unset;
     border-bottom: ${border.shorthand};
     padding: ${space(1)} ${space(1.5)};
@@ -152,8 +152,8 @@ const Body = styled.div<{ offsetHeight: number }>`
     overflow: auto;
   `}
 `
-const ActionAreaStack = styled(Stack).attrs({ gap: 0.5 })<{ themes: Theme }>`
-  ${({ themes: { space, border } }) => css`
+const ActionAreaStack = styled(Stack).attrs({ gap: 0.5 })<{ $themes: Theme }>`
+  ${({ $themes: { space, border } }) => css`
     border-top: ${border.shorthand};
     padding: ${space(1)} ${space(1.5)};
   `}
