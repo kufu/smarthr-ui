@@ -171,11 +171,11 @@ devDependencies:
     specifier: ^8.56.0
     version: 8.56.0
   eslint-config-smarthr:
-    specifier: ^6.18.0
-    version: 6.18.0(eslint-plugin-smarthr@0.4.0)(eslint@8.56.0)(react@18.2.0)(typescript@5.3.3)
+    specifier: ^6.19.0
+    version: 6.19.0(eslint-plugin-smarthr@0.4.0)(eslint@8.56.0)(react@18.2.0)(typescript@5.3.3)
   eslint-plugin-storybook:
-    specifier: ^0.6.15
-    version: 0.6.15(eslint@8.56.0)(typescript@5.3.3)
+    specifier: ^0.8.0
+    version: 0.8.0(eslint@8.56.0)(typescript@5.3.3)
   fs-extra:
     specifier: ^11.2.0
     version: 11.2.0
@@ -8019,8 +8019,8 @@ packages:
       eslint: 8.56.0
     dev: true
 
-  /eslint-config-smarthr@6.18.0(eslint-plugin-smarthr@0.4.0)(eslint@8.56.0)(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-0p2MlSOGLhpvjEMteGtOFmfmjy2BulV5XEv5DwwUfuax8iJTC2jXcSEbfkW/3C1sg9tnZkkrTD7MNnBigqg7DQ==}
+  /eslint-config-smarthr@6.19.0(eslint-plugin-smarthr@0.4.0)(eslint@8.56.0)(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-XbCQEiTDuaNNP7T821FbfKzb3igXMJsoZsG2CkrpW3Yu39VV0uUljoOXNxLnhdO5OtbFz0qkxcgs0+2BDYXkAw==}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0
       eslint-plugin-smarthr: ^0.4.0
@@ -8186,9 +8186,9 @@ packages:
       json5: 2.2.3
     dev: true
 
-  /eslint-plugin-storybook@0.6.15(eslint@8.56.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-lAGqVAJGob47Griu29KXYowI4G7KwMoJDOkEip8ujikuDLxU+oWJ1l0WL6F2oDO4QiyUFXvtDkEkISMOPzo+7w==}
-    engines: {node: 12.x || 14.x || >= 16}
+  /eslint-plugin-storybook@0.8.0(eslint@8.56.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-CZeVO5EzmPY7qghO2t64oaFM+8FTaD4uzOEjHKp516exyTKo+skKAL9GI3QALS2BXhyALJjNtwbmr1XinGE8bA==}
+    engines: {node: '>= 18'}
     peerDependencies:
       eslint: '>=6'
     dependencies:
