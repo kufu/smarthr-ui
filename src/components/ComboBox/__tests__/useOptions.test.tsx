@@ -138,5 +138,87 @@ describe('useOptions', () => {
         expect(options[0].item).toEqual({ label: element, value: 'value3' })
       })
     })
+
+    describe('すべてのオプションがReactNodeの場合', () => {
+      const labelElement1 = (
+        <div>
+          label<span>1</span>
+        </div>
+      )
+      const labelElement2 = (
+        <div>
+          label<span>2</span>
+        </div>
+      )
+      const labelElement3 = (
+        <div>
+          label<span>3</span>
+        </div>
+      )
+      it('オプションが取得できること', () => {
+        const initialProps = {
+          items: [
+            { label: labelElement1, value: 'value1' },
+            { label: labelElement2, value: 'value2' },
+            { label: labelElement3, value: 'value3' },
+          ],
+          selected: [{ label: labelElement3, value: 'value3' }],
+          creatable: false,
+        }
+        const { result } = renderHook((props) => useOptions(props), { initialProps })
+        const options = result.current.options
+
+        expect(options.length).toBe(3)
+        expect(options[0].item).toEqual({ label: labelElement1, value: 'value1' })
+        expect(options[0].selected).toBeFalsy()
+        expect(options[0].isNew).toBeFalsy()
+
+        expect(options[1].item).toEqual({ label: labelElement2, value: 'value2' })
+        expect(options[1].selected).toBeFalsy()
+        expect(options[1].isNew).toBeFalsy()
+
+        expect(options[2].item).toEqual({ label: labelElement3, value: 'value3' })
+        expect(options[2].selected).toBeTruthy()
+        expect(options[2].isNew).toBeFalsy()
+      })
+
+      it('入力によって options がフィルタリングされること', () => {
+        const initialProps = {
+          items: [
+            { label: labelElement1, value: 'value1' },
+            { label: labelElement2, value: 'value2' },
+            { label: labelElement3, value: 'value3' },
+          ],
+          selected: [{ label: labelElement3, value: 'value3' }],
+          creatable: false,
+          inputValue: 'label3',
+        }
+        const { result } = renderHook((props) => useOptions(props), { initialProps })
+        const options = result.current.options
+
+        expect(options.length).toBe(1)
+        expect(options[0].item).toEqual({ label: labelElement3, value: 'value3' })
+      })
+
+      it('optionのインスタンスが違うとき、selectedにならないこと', () => {
+        const newLabelElement1 = (
+          <div>
+            label<span>1</span>
+          </div>
+        )
+        const initialProps = {
+          items: [{ label: labelElement1, value: 'value1' }],
+          selected: [{ label: newLabelElement1, value: 'value1' }],
+          creatable: false,
+        }
+        const { result } = renderHook((props) => useOptions(props), { initialProps })
+        const options = result.current.options
+
+        expect(options.length).toBe(1)
+        expect(options[0].item).toEqual({ label: labelElement1, value: 'value1' })
+        expect(options[0].selected).toBeFalsy()
+        expect(options[0].isNew).toBeFalsy()
+      })
+    })
   })
 })
