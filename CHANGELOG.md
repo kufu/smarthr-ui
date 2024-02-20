@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [42.0.0](https://github.com/kufu/smarthr-ui/compare/v41.3.0...v42.0.0) (2024-02-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* RightFixedNote と DialogBase を削除 (#4318)
+
+### Bug Fixes
+
+* DOM に themes="[object Object]" がつかないように修正 ([#4293](https://github.com/kufu/smarthr-ui/issues/4293)) ([76df903](https://github.com/kufu/smarthr-ui/commit/76df90367b25bfe74486203537a6b442231f9cc8))
+* PageCounterの-がスクリーンリーダーで読み上げられない問題を修正 ([#4297](https://github.com/kufu/smarthr-ui/issues/4297)) ([a4e4ed6](https://github.com/kufu/smarthr-ui/commit/a4e4ed631b434c55d161120361e6ecf25f7c8dee))
+* TableReel内の要素のサイズが動的に変化したときにもfixedの計算をするようにした ([#4316](https://github.com/kufu/smarthr-ui/issues/4316)) ([0b0b6de](https://github.com/kufu/smarthr-ui/commit/0b0b6ded515fa76c10e0c194f6b83b382807fbec))
+
+
+* RightFixedNote と DialogBase を削除 ([#4318](https://github.com/kufu/smarthr-ui/issues/4318)) ([d3e4ab3](https://github.com/kufu/smarthr-ui/commit/d3e4ab395935af5317c8a41b776812a74a5c391d))
+
 ## [41.3.0](https://github.com/kufu/smarthr-ui/compare/v41.2.0...v41.3.0) (2024-02-14)
 
 
