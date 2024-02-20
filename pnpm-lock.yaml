@@ -230,6 +230,9 @@ devDependencies:
   react:
     specifier: ^18.2.0
     version: 18.2.0
+  react-docgen-typescript:
+    specifier: ^2.2.2
+    version: 2.2.2(typescript@5.3.3)
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
