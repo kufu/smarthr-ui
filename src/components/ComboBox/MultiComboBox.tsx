@@ -320,6 +320,15 @@ const ActualMultiComboBox = <T,>(
       } else if (e.key === 'Right' || e.key === 'ArrowRight') {
         e.stopPropagation()
         focusNextDeletionButton()
+      } else if (
+        e.key === 'Backspace' &&
+        !inputValue &&
+        selectedItems.length > 0 &&
+        !activeOption &&
+        selectedItems[selectedItems.length - 1].deletable !== false
+      ) {
+        handleDelete(selectedItems[selectedItems.length - 1])
+        e.stopPropagation()
       } else {
         e.stopPropagation()
         inputRef.current?.focus()

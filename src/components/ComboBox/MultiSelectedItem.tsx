@@ -103,7 +103,7 @@ export function MultiSelectedItem<T>({
             disabled={disabled}
             onClick={actualOnDelete}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
+              if (e.key === 'Enter' || e.key === 'Backspace' || e.key === ' ') {
                 e.stopPropagation()
 
                 // HINT: イベントの伝播が止まる関係でonClickに設定したonDeleteは実行されない
