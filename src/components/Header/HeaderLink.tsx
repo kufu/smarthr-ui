@@ -10,6 +10,6 @@ export const HeaderLink: React.FC<Props> = (props) => (
     {...props}
     target="_blank"
     suffix={null}
-    className="shr-px-0.25 shr-text-white focus-visible:shr-focus-indicator hover:shr-text-white [&:not(focus-visible)]:shr-shadow-none"
+    className="shr-px-0.25 shr-text-white focus-visible:shr-focus-indicator hover:shr-text-white [&]:shr-shadow-none"
   />
 )
