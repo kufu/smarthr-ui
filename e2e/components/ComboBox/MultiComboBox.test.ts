@@ -152,7 +152,7 @@ test('disabled なコンボボックスではアイテムの選択と選択解�
     .ok()
 })
 
-test('キーボードで選択済みアイテムリストが操作できること', async (t) => {
+test.only('キーボードで選択済みアイテムリストが操作できること', async (t) => {
   const wrapper = Selector('[data-test=multi-combobox-default]')
   const combobox = wrapper.find('input[role=combobox]')
   const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
@@ -212,6 +212,14 @@ test('キーボードで選択済みアイテムリストが操作できるこ�
     .pressKey('left')
     .pressKey('enter')
     .expect(wrapper.find('.smarthr-ui-MultiComboBox-selectedItem').withText('option 5').exists)
+    .notOk()
+    .pressKey('left')
+    .pressKey('backspace')
+    .expect(wrapper.find('.smarthr-ui-MultiComboBox-selectedItem').withText('option 2').exists)
+    .notOk()
+    // テキストボックスにフォーカスがあたってる場合は Backspace で末尾のアイテムを削除できること
+    .pressKey('backspace')
+    .expect(wrapper.find('.smarthr-ui-MultiComboBox-selectedItem').withText('option 1').exists)
     .notOk()
 })
 
