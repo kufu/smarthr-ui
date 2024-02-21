@@ -241,7 +241,7 @@ import {
   FaShare,
   FaShareFromSquare,
   FaShareNodes,
-  FaShield,
+  FaShieldHalved,
   FaShuffle,
   FaSliders,
   FaSort,
@@ -546,7 +546,7 @@ export const FaSearchPlusIcon = /*#__PURE__*/ createIcon(FaMagnifyingGlassPlus)
 export const FaShareIcon = /*#__PURE__*/ createIcon(FaShare)
 export const FaShareAltIcon = /*#__PURE__*/ createIcon(FaShareNodes)
 export const FaShareSquareIcon = /*#__PURE__*/ createIcon(FaShareFromSquare)
-export const FaShieldAltIcon = /*#__PURE__*/ createIcon(FaShield)
+export const FaShieldAltIcon = /*#__PURE__*/ createIcon(FaShieldHalved)
 export const FaShoppingBagIcon = /*#__PURE__*/ createIcon(FaBagShopping)
 export const FaShoppingBasketIcon = /*#__PURE__*/ createIcon(FaBasketShopping)
 export const FaShoppingCartIcon = /*#__PURE__*/ createIcon(FaCartShopping)
