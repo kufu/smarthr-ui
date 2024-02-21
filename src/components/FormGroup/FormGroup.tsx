@@ -122,7 +122,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         id={managedLabelId}
         className={`${classNames.label}`}
         forwardedAs={isRoleGroup ? 'legend' : 'label'}
-        dangerouslyTitleHidden={dangerouslyTitleHidden}
+        $dangerouslyTitleHidden={dangerouslyTitleHidden}
         // Stack 対象にしないための hidden
         hidden={dangerouslyTitleHidden || undefined}
       >
@@ -278,11 +278,14 @@ const WrapperStack = styled(Stack).attrs<{
   `}
 `
 
-type FormLabelProps = Pick<Props, 'className' | 'dangerouslyTitleHidden'>
+type FormLabelProps = {
+  className: Props['className']
+  $dangerouslyTitleHidden: Props['dangerouslyTitleHidden']
+}
 const TitleCluster = styled(Cluster).attrs(
-  ({ className, dangerouslyTitleHidden }: FormLabelProps) => ({
+  ({ className, $dangerouslyTitleHidden }: FormLabelProps) => ({
     align: 'center',
-    className: dangerouslyTitleHidden ? visuallyHiddenText({ className }) : className,
+    className: $dangerouslyTitleHidden ? visuallyHiddenText({ className }) : className,
   }),
 )<FormLabelProps>`
   /* flex-item が stretch してクリッカブル領域が広がりすぎないようにする */
