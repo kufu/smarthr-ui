@@ -44,7 +44,6 @@ const accordionPanelTrigger = tv({
       'shr-text-left',
       'hover:shr-bg-white-darken',
       'hover:shr-shadow-none',
-      'focus-visible:shr-focus-indicator',
     ],
     leftIcon: 'group-aria-expanded:shrink-0 group-aria-expanded:shr-rotate-90',
     rightIcon: 'group-aria-expanded:shrink-0 group-aria-expanded:-shr-rotate-180',
