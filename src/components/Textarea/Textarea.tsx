@@ -87,7 +87,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     {
       autoFocus,
       maxLength,
-      width = 'auto',
+      width,
       className,
       autoResize = false,
       maxRows = Infinity,
