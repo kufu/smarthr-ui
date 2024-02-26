@@ -10,32 +10,27 @@ import { PaginationItemButton } from './PaginationItemButton'
 
 const pagination = tv({
   slots: {
-    wrapper: ['shr-inline-block', 'shr-max-w-full', 'smarthr-ui-Pagination'],
-    list: ['shr-m-0.25', 'shr-list-none'],
-    firstListItem: ['smarthr-ui-Pagination-first'],
-    prevListItem: ['smarthr-ui-Pagination-prev'],
-    nextListItem: ['smarthr-ui-Pagination-next'],
-    lastListItem: ['smarthr-ui-Pagination-last'],
+    wrapper: 'smarthr-ui-Pagination shr-inline-block shr-max-w-full',
+    list: 'shr-m-0.25 shr-list-none',
+    firstListItem: 'smarthr-ui-Pagination-first',
+    prevListItem: 'smarthr-ui-Pagination-prev',
+    nextListItem: 'smarthr-ui-Pagination-next',
+    lastListItem: 'smarthr-ui-Pagination-last',
   },
   variants: {
     withoutNumbers: {
       true: {
-        firstListItem: ['shr-mr-0.5'],
-        prevListItem: ['shr-mr-0'],
-        nextListItem: ['shr-ml-0'],
-        lastListItem: ['shr-ml-0.5'],
+        firstListItem: 'shr-mr-0.5',
+        prevListItem: 'shr-mr-0',
+        nextListItem: 'shr-ml-0',
+        lastListItem: 'shr-ml-0.5',
       },
       false: {
-        prevListItem: ['shr-mr-0.5'],
-        nextListItem: ['shr-ml-0.5'],
+        prevListItem: 'shr-mr-0.5',
+        nextListItem: 'shr-ml-0.5',
       },
     },
   },
-  compoundSlots: [
-    {
-      slots: ['firstListItem', 'prevListItem', 'nextListItem', 'lastListItem'],
-    },
-  ],
 })
 
 type Props = {
