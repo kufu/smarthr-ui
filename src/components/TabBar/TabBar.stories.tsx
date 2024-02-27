@@ -18,24 +18,24 @@ export const All: StoryFn = () => (
   <Stack as="ul" className="shr-list-none">
     <li>
       <p>標準</p>
-      <Template />
+      <Template subid={1} />
     </li>
     <li>
       <p>下線なし</p>
-      <Template bordered={false} />
+      <Template subid={2} bordered={false} />
     </li>
   </Stack>
 )
 
-const Template: StoryFn = (props) => (
+const Template: StoryFn = ({ subid, ...props }) => (
   <TabBar {...props}>
-    <TabItem id="border-1" onClick={action('clicked')} selected>
+    <TabItem id={`border-${subid}-1`} onClick={action('clicked')} selected>
       基本情報
     </TabItem>
-    <TabItem id="border-2" onClick={action('clicked')}>
+    <TabItem id={`border-${subid}-2`} onClick={action('clicked')}>
       コメント
     </TabItem>
-    <TabItem id="border-3" onClick={action('clicked')} disabled>
+    <TabItem id={`border-${subid}-3`} onClick={action('clicked')} disabled>
       分析対象
     </TabItem>
   </TabBar>
