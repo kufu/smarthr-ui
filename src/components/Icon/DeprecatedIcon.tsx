@@ -79,6 +79,7 @@ import {
   FaMoneyBill1Wave,
   FaMoneyCheckDollar,
   FaNoteSticky,
+  FaPaintbrush,
   FaPenToSquare,
   FaPencil,
   FaRectangleList,
@@ -240,6 +241,7 @@ export const FaSortNumericUpIcon = /*#__PURE__*/ createIcon(FaArrowUp19)
 export const FaStepBackwardIcon = /*#__PURE__*/ createIcon(FaBackwardStep)
 export const FaStepForwardIcon = /*#__PURE__*/ createIcon(FaForwardStep)
 export const FaStickyNoteIcon = /*#__PURE__*/ createIcon(FaNoteSticky)
+export const FaPaintBrushIcon = /*#__PURE__*/ createIcon(FaPaintbrush)
 export const FaStopCircleIcon = /*#__PURE__*/ createIcon(FaCircleStop)
 export const FaStreamIcon = /*#__PURE__*/ createIcon(FaBarsStaggered)
 export const FaSubwayIcon = /*#__PURE__*/ createIcon(FaTrainSubway)
