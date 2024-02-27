@@ -205,7 +205,6 @@ import {
   FaMoneyCheck,
   FaMoneyCheckDollar,
   FaNoteSticky,
-  FaMoneyCheckAlt,
   FaPaintbrush,
   FaPaperPlane,
   FaPaperclip,
