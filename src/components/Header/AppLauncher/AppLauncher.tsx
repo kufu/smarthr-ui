@@ -53,12 +53,12 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   return (
     <Dropdown {...props}>
       <DropdownTrigger>
-        <AppsButton themes={theme} prefix={<FaToolboxIcon />}>
+        <AppsButton $themes={theme} prefix={<FaToolboxIcon />}>
           {triggerLabel}
         </AppsButton>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <WrapperStack themes={theme} className={classNames.wrapper}>
+        <WrapperStack $themes={theme} className={classNames.wrapper}>
           <DropdownScrollArea>
             <Stack gap={1.5}>
               {baseApps && (
@@ -107,7 +107,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
           </DropdownScrollArea>
 
           {urlToShowAll && (
-            <FooterStack themes={theme} className={classNames.footer}>
+            <FooterStack $themes={theme} className={classNames.footer}>
               <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
                 すべて見る
               </TextLink>
@@ -119,8 +119,8 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   )
 }
 
-const AppsButton = styled(Button)<{ themes: Theme }>`
-  ${({ themes: { color, space } }) => css`
+const AppsButton = styled(Button)<{ $themes: Theme }>`
+  ${({ $themes: { color, space } }) => css`
     border-color: transparent;
     background-color: transparent;
     padding-inline: ${space(0.25)};
@@ -134,14 +134,14 @@ const AppsButton = styled(Button)<{ themes: Theme }>`
     }
   `}
 `
-const WrapperStack = styled(Stack).attrs({ forwardedAs: 'nav', gap: 1.5 })<{ themes: Theme }>`
-  ${({ themes: { space, leading } }) => css`
+const WrapperStack = styled(Stack).attrs({ forwardedAs: 'nav', gap: 1.5 })<{ $themes: Theme }>`
+  ${({ $themes: { space, leading } }) => css`
     padding: ${space(1.5)};
     line-height: ${leading.NORMAL};
   `}
 `
-const FooterStack = styled(Stack)<{ themes: Theme }>`
-  ${({ themes: { border, space } }) => css`
+const FooterStack = styled(Stack)<{ $themes: Theme }>`
+  ${({ $themes: { border, space } }) => css`
     &&& {
       margin-block-end: ${space(-0.25)};
     }

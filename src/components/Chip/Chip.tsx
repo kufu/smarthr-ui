@@ -5,12 +5,7 @@ type Props = PropsWithChildren<VariantProps<typeof chip> & ComponentPropsWithout
 
 const chip = tv({
   base: [
-    'smarthr-ui-Chip',
-    'shr-rounded-full',
-    'shr-border',
-    'shr-border-solid',
-    'shr-border-default',
-    'shr-leading-none',
+    'smarthr-ui-Chip shr-border-shorthand shr-rounded-full shr-leading-none',
     'contrast-more:shr-border-high-contrast',
   ],
   variants: {

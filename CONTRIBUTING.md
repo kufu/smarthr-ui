@@ -6,16 +6,16 @@ Thank you for reading this!
 
 ## Setup
 
-We use `yarn` for the package manager.
+We use `pnpm` for the package manager.
 
 ```sh
-$ yarn
+$ pnpm
 ```
 
 ## Test
 
 ```sh
-$ yarn test
+$ pnpm test
 ```
 
 `smarthr-ui` uses Jest's snapshot testing.
@@ -23,7 +23,7 @@ $ yarn test
 If the test results are what you expect, you can update the snapshot with the following command.
 
 ```sh
-$ yarn test:update-snapshot
+$ pnpm test:update-snapshot
 ```
 
 ## Commit
@@ -94,7 +94,7 @@ import { ComponentName } from 'smarthr-ui'
 ## Release
 
 ```sh
-$ yarn release
+$ pnpm release
 ```
 
 We use `standard-version` to release npm packages.

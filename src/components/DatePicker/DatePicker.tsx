@@ -70,7 +70,7 @@ const datePicker = tv({
     container: 'smarthr-ui-DatePicker shr-inline-block',
     inputSuffixLayout: 'shr-box-border shr-h-full shr-py-0.5',
     inputSuffixWrapper:
-      'shr-box-border shr-flex shr-h-full shr-items-center shr-justify-center shr-border-y-0 shr-border-l shr-border-r-0 shr-border-solid shr-border-l-default shr-ps-0.5 shr-text-base',
+      'shr-border-l-shorthand shr-box-border shr-flex shr-h-full shr-items-center shr-justify-center shr-ps-0.5 shr-text-base',
     inputSuffixText: 'shr-text-gray shr-me-0.5 shr-text-sm',
   },
 })

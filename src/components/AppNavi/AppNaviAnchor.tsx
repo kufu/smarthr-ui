@@ -1,5 +1,5 @@
 import React, { ReactNode, VFC } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { useTheme } from '../../hooks/useTheme'
 import { ComponentProps as IconProps } from '../Icon'
@@ -34,7 +34,7 @@ export const AppNaviAnchor: VFC<InnerProps> = ({
 
   return (
     <Anchor
-      themes={theme}
+      $themes={theme}
       aria-current={current ? 'page' : undefined}
       href={isUnclickable ? undefined : href}
       className={classNames.anchor}
@@ -47,4 +47,12 @@ export const AppNaviAnchor: VFC<InnerProps> = ({
   )
 }
 
-const Anchor = styled.a<ItemStyleProps>((props) => getItemStyle(props))
+const Anchor = styled.a<ItemStyleProps>(
+  (props) => css`
+    ${getItemStyle(props)}
+
+    @media (forced-colors: active) {
+      text-decoration: underline;
+    }
+  `,
+)

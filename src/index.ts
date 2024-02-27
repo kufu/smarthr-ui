@@ -47,7 +47,7 @@ export { RadioButton } from './components/RadioButton'
 export { RadioButtonPanel } from './components/RadioButtonPanel'
 export { AnchorButton, Button } from './components/Button'
 export { StatusLabel } from './components/StatusLabel'
-export { Base, BaseColumn, DialogBase } from './components/Base'
+export { Base, BaseColumn } from './components/Base'
 export * from './components/Icon'
 export { SmartHRLogo } from './components/SmartHRLogo'
 export {
@@ -84,7 +84,6 @@ export {
   AccordionPanelTrigger,
 } from './components/AccordionPanel'
 export { InformationPanel } from './components/InformationPanel'
-export { RightFixedNote } from './components/RightFixedNote'
 export { Tooltip } from './components/Tooltip'
 export { BottomFixedArea } from './components/BottomFixedArea'
 export { ErrorScreen, MessageScreen } from './components/ErrorScreen'
@@ -94,11 +93,6 @@ export { SegmentedControl, SegmentedControlOption } from './components/Segmented
 export { FormGroup } from './components/FormGroup'
 export { FormControl } from './components/FormControl'
 export { Fieldset } from './components/NewFieldset'
-export {
-  BackgroundJobsPanel,
-  BackgroundJobsList,
-  BackgroundJobProps,
-} from './components/BackgroundJobsPanel'
 export { MultiComboBox, SingleComboBox } from './components/ComboBox'
 export { SideNav } from './components/SideNav'
 export { CompactInformationPanel } from './components/CompactInformationPanel'

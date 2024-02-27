@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [42.0.0](https://github.com/kufu/smarthr-ui/compare/v41.3.0...v42.0.0) (2024-02-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* RightFixedNote と DialogBase を削除 (#4318)
+
+### Bug Fixes
+
+* DOM に themes="[object Object]" がつかないように修正 ([#4293](https://github.com/kufu/smarthr-ui/issues/4293)) ([76df903](https://github.com/kufu/smarthr-ui/commit/76df90367b25bfe74486203537a6b442231f9cc8))
+* PageCounterの-がスクリーンリーダーで読み上げられない問題を修正 ([#4297](https://github.com/kufu/smarthr-ui/issues/4297)) ([a4e4ed6](https://github.com/kufu/smarthr-ui/commit/a4e4ed631b434c55d161120361e6ecf25f7c8dee))
+* TableReel内の要素のサイズが動的に変化したときにもfixedの計算をするようにした ([#4316](https://github.com/kufu/smarthr-ui/issues/4316)) ([0b0b6de](https://github.com/kufu/smarthr-ui/commit/0b0b6ded515fa76c10e0c194f6b83b382807fbec))
+
+
+* RightFixedNote と DialogBase を削除 ([#4318](https://github.com/kufu/smarthr-ui/issues/4318)) ([d3e4ab3](https://github.com/kufu/smarthr-ui/commit/d3e4ab395935af5317c8a41b776812a74a5c391d))
+
+## [41.3.0](https://github.com/kufu/smarthr-ui/compare/v41.2.0...v41.3.0) (2024-02-14)
+
+
+### Features
+
+* preset に border の簡略表記を追加し、overflow の初期化を削除 ([#4298](https://github.com/kufu/smarthr-ui/issues/4298)) ([3b59865](https://github.com/kufu/smarthr-ui/commit/3b598657ee91b9ab8edce7660b1777f041b125d5))
+* RightFixedNoteにloadingとsubmittingの状態を追加 ([#4306](https://github.com/kufu/smarthr-ui/issues/4306)) ([4fff8eb](https://github.com/kufu/smarthr-ui/commit/4fff8ebfbfa23137529e0a61db60549301932d19))
+
+
+### Bug Fixes
+
+* broken character in ComboBox story ([#4309](https://github.com/kufu/smarthr-ui/issues/4309)) ([72e8516](https://github.com/kufu/smarthr-ui/commit/72e8516dfbac116d5cc5ddef1f23fd16e9409a38))
+* FilterDropdown[disabled] 時のアイコン色を修正 ([#4299](https://github.com/kufu/smarthr-ui/issues/4299)) ([758c1db](https://github.com/kufu/smarthr-ui/commit/758c1db81d8fa29bfc43a064c5dacba410287d8a))
+* FormControl, Fieldset の errorMessages に空配列が渡された場合、不必要な要素をレンダリングしないように修正 ([#4288](https://github.com/kufu/smarthr-ui/issues/4288)) ([79ff6ab](https://github.com/kufu/smarthr-ui/commit/79ff6abbc974bf952ef77581e0d5e8c9b327263d))
+* ハイコントラストモード時、AppNaviのAnchorに下線を表示する ([#4292](https://github.com/kufu/smarthr-ui/issues/4292)) ([25c984c](https://github.com/kufu/smarthr-ui/commit/25c984c1ec25e00cd4cad704fa6c6432313143ad))
+
 ## [41.2.0](https://github.com/kufu/smarthr-ui/compare/v41.1.2...v41.2.0) (2024-02-06)
 
 

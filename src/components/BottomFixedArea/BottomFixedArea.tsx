@@ -62,8 +62,8 @@ export const BottomFixedArea: VFC<Props & ElementProps> = ({
   return (
     <Base
       {...props}
-      themes={theme}
-      zIndex={zIndex}
+      $themes={theme}
+      $zIndex={zIndex}
       className={`${className} ${classNames.wrapper}`}
     >
       <Stack>
@@ -93,14 +93,14 @@ export const BottomFixedArea: VFC<Props & ElementProps> = ({
   )
 }
 
-const Base = styled(BaseComponent)<{ themes: Theme; zIndex: number }>`
-  ${({ themes: { spacingByChar }, zIndex }) => css`
+const Base = styled(BaseComponent)<{ $themes: Theme; $zIndex: number }>`
+  ${({ $themes: { spacingByChar }, $zIndex }) => css`
     position: fixed;
     bottom: 0;
     width: 100%;
     padding: ${spacingByChar(1.5)};
     text-align: center;
-    z-index: ${zIndex};
+    z-index: ${$zIndex};
     box-shadow: 0 -4px 8px 2px rgba(0, 0, 0, 0.24);
     border-radius: 0;
     box-sizing: border-box;

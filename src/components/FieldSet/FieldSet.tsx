@@ -72,7 +72,7 @@ export const FieldSet: FC<Props & ElementProps> = ({
         </HelpMessage>
       )}
       {errorMessage && (
-        <StyledStack themes={theme} gap={0} id={`${managedHtmlFor}_errorMessages`}>
+        <StyledStack $themes={theme} gap={0} id={`${managedHtmlFor}_errorMessages`}>
           {(Array.isArray(errorMessage) ? errorMessage : [errorMessage]).map((message, index) => (
             <ErrorMessage themes={theme} key={index} className={classNames.error}>
               <FaExclamationCircleIcon text={message} className={classNames.errorText} />
@@ -117,8 +117,8 @@ const HelpMessage = styled.p<{ themes: Theme }>`
     margin-bottom: ${spacingByChar(0.5)};
   `}
 `
-const StyledStack = styled(Stack)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
+const StyledStack = styled(Stack)<{ $themes: Theme }>`
+  ${({ $themes: { spacingByChar } }) => css`
     &&& {
       margin-bottom: ${spacingByChar(0.5)};
     }

@@ -1,14 +1,12 @@
-import React, { FC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { FC, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
 import { Heading, HeadingTagTypes } from '../../Heading'
 import { Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
-import { useClassNames } from '../useClassNames'
 
 import type { DecoratorsType } from '../../../types'
 
@@ -40,6 +38,16 @@ export type MessageDialogContentInnerProps = BaseProps & {
 
 const CLOSE_BUTTON_LABEL = '閉じる'
 
+const messegeDialogContentInner = tv({
+  slots: {
+    titleArea:
+      'smarthr-ui-Dialog-titleArea shr-border-b-shorthand shr-my-[unset] shr-px-1.5 shr-py-1',
+    body: 'smarthr-ui-Dialog-description shr-overflow-auto shr-p-1.5 shr-text-base',
+    footer:
+      'smarthr-ui-Dialog-buttonArea shr-border-t-shorthand shr-flex shr-justify-end shr-px-1.5 shr-py-1',
+  },
+})
+
 export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   title,
   subtitle,
@@ -49,64 +57,43 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
   onClickClose,
   decorators,
 }) => {
-  const classNames = useClassNames().dialog
-  const theme = useTheme()
   const { offsetHeight, titleRef, bottomRef } = useOffsetHeight()
+
+  const { titleAreaStyle, bodyStyleProps, footerStyle } = useMemo(() => {
+    const { titleArea, body, footer } = messegeDialogContentInner()
+    return {
+      titleAreaStyle: titleArea(),
+      bodyStyleProps: {
+        style: {
+          maxHeight: `calc(100vh - ${offsetHeight}px)`,
+        },
+        className: body(),
+      },
+      footerStyle: footer(),
+    }
+  }, [offsetHeight])
 
   return (
     <Section>
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <Heading tag={titleTag}>
-        <TitleArea themes={theme} ref={titleRef} className={classNames.titleArea}>
+        <Stack gap={0.25} as="span" ref={titleRef} className={titleAreaStyle}>
           {subtitle && (
-            <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
+            <Text size="S" color="TEXT_GREY" className="smarthr-ui-Dialog-subtitle">
               {subtitle}
             </Text>
           )}
-          <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
+          <Text id={titleId} size="L" className="smarthr-ui-Dialog-title">
             {title}
           </Text>
-        </TitleArea>
+        </Stack>
       </Heading>
-      <Description themes={theme} offsetHeight={offsetHeight} className={classNames.description}>
-        {description}
-      </Description>
-      <Bottom themes={theme} ref={bottomRef} className={classNames.buttonArea}>
-        <Button onClick={onClickClose} className={classNames.closeButton}>
+      <div {...bodyStyleProps}>{description}</div>
+      <footer ref={bottomRef} className={footerStyle}>
+        <Button onClick={onClickClose} className="smarthr-ui-Dialog-closeButton">
           {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
         </Button>
-      </Bottom>
+      </footer>
     </Section>
   )
 }
-
-const TitleArea = styled(Stack).attrs(() => ({
-  gap: 0.25,
-  forwardedAs: 'span',
-}))<{ themes: Theme }>(
-  ({ themes: { border, spacing } }) => css`
-    margin-block: unset;
-    border-bottom: ${border.shorthand};
-    padding: ${spacing.XS} ${spacing.S};
-  `,
-)
-const Description = styled.div<{ themes: Theme; offsetHeight: number }>`
-  ${({ themes: { fontSize, spacingByChar }, offsetHeight }) => css`
-    max-height: calc(100vh - ${offsetHeight}px);
-    overflow: auto;
-    padding: 0 ${spacingByChar(1.5)};
-    font-size: ${fontSize.M};
-    line-height: 1.5;
-  `}
-`
-const Bottom = styled.div<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { spacingByChar, border } = themes
-    return css`
-      display: flex;
-      justify-content: flex-end;
-      padding: ${spacingByChar(1)} ${spacingByChar(1.5)};
-      border-top: ${border.shorthand};
-    `
-  }}
-`

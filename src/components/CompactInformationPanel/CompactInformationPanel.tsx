@@ -28,7 +28,7 @@ export const CompactInformationPanel: FC<Props & BaseElementProps> = ({
   const classNames = useClassNames()
 
   return (
-    <Wrapper {...props} className={`${className} ${classNames.wrapper}`} themes={theme}>
+    <Wrapper {...props} className={`${className} ${classNames.wrapper}`} $themes={theme}>
       <ResponseMessage type={type} iconGap={0.5}>
         {children}
       </ResponseMessage>
@@ -36,8 +36,8 @@ export const CompactInformationPanel: FC<Props & BaseElementProps> = ({
   )
 }
 
-const Wrapper = styled(Base)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar, shadow } }) => css`
+const Wrapper = styled(Base)<{ $themes: Theme }>`
+  ${({ $themes: { spacingByChar, shadow } }) => css`
     display: flex;
     box-shadow: ${shadow.LAYER3};
     padding: ${spacingByChar(1)};

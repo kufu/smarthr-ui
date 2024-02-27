@@ -17,6 +17,9 @@ jobs:
         with:
           ref: release-candidate
           fetch-depth: 0
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.node-version'
@@ -25,10 +28,10 @@ jobs:
         run: |
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-      - run: yarn install --frozen-lockfile
-      - run: yarn release
+      - run: pnpm install
+      - run: pnpm release
         if: ${{ env.IS_PRERELEASE == 'false' }}
-      - run: yarn release --prerelease
+      - run: pnpm release --prerelease
         if: ${{ env.IS_PRERELEASE == 'true' }}
       - run: npm publish
         if: ${{ env.IS_PRERELEASE == 'false' }}

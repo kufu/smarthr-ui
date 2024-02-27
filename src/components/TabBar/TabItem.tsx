@@ -11,7 +11,7 @@ const tabItem = tv({
     'shr-appearance-none',
     'shr-font-bold',
     'shr-py-0',
-    'shr-px-1.5',
+    'shr-px-1',
     'shr-box-border',
     'hover:shr-bg-column',
     'hover:shr-text-black',

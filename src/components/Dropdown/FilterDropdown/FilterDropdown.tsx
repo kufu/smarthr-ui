@@ -1,8 +1,7 @@
-import React, { ButtonHTMLAttributes, FC, ReactNode, useMemo } from 'react'
+import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
 import innerText from 'react-innertext'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button, BaseProps as ButtonProps } from '../../Button'
 import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
@@ -29,7 +28,7 @@ type Props = {
   /** 引き金となるボタンの大きさ */
   triggerSize?: ButtonProps['size']
 }
-type ElementProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof Props>
+type ElementProps = Omit<ComponentProps<'button'>, keyof Props>
 
 const STATUS_FILTERED_TEXT = '適用中'
 const TRIGGER_BUTTON_TEXT = '絞り込み'
@@ -39,6 +38,35 @@ const RESET_BUTTON_TEXT = '絞り込み条件を解除'
 
 const executeDecorator = (defaultText: string, decorator: DecoratorType | undefined) =>
   decorator?.(defaultText) || defaultText
+
+const filterDropdown = tv({
+  slots: {
+    iconWrapper: [
+      'shr-relative shr-leading-none',
+      '[&_>_[role="img"]_+_[role="img"]]:shr-absolute [&_>_[role="img"]_+_[role="img"]]:shr-bottom-[2px] [&_>_[role="img"]_+_[role="img"]]:shr-right-[-4px]',
+    ],
+    fileteredIcon: 'shr-h-[0.5em] shr-w-[0.5em]',
+    statusText: 'shr-ms-0.5 shr-text-sm',
+    inner: 'shr-p-1.5',
+    actionArea: 'shr-border-t-shorthand shr-px-1.5 shr-py-1',
+    resetButtonArea: '-shr-ms-0.5',
+    rightButtonArea: 'shr-ms-auto',
+    message: 'shr-text-right',
+  },
+  variants: {
+    filtered: {
+      true: {
+        iconWrapper: 'shr-text-main',
+      },
+    },
+    triggerSize: {
+      default: {},
+      s: {
+        iconWrapper: '-shr-translate-x-0.25',
+      },
+    },
+  },
+})
 
 export const FilterDropdown: FC<Props & ElementProps> = ({
   isFiltered = false,
@@ -52,7 +80,6 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   triggerSize,
   ...props
 }: Props) => {
-  const themes = useTheme()
   const status: ReactNode = useMemo(
     () => executeDecorator(STATUS_FILTERED_TEXT, decorators?.status),
     [decorators],
@@ -80,31 +107,68 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   const isRequestProcessing =
     responseMessage !== undefined && responseMessage.status === 'processing'
 
+  const {
+    iconWrapperStyle,
+    filteredIconStyle,
+    statusTextStyle,
+    innerStyle,
+    actionAreaStyle,
+    resetButtonAreaStyle,
+    rightButtonAreaStyle,
+    messageStyle,
+  } = useMemo(() => {
+    const {
+      iconWrapper,
+      fileteredIcon,
+      statusText,
+      inner,
+      actionArea,
+      resetButtonArea,
+      rightButtonArea,
+      message,
+    } = filterDropdown()
+    return {
+      iconWrapperStyle: iconWrapper({ filtered: isFiltered, triggerSize }),
+      filteredIconStyle: fileteredIcon(),
+      statusTextStyle: statusText(),
+      innerStyle: inner(),
+      actionAreaStyle: actionArea(),
+      resetButtonAreaStyle: resetButtonArea(),
+      rightButtonAreaStyle: rightButtonArea(),
+      messageStyle: message(),
+    }
+  }, [isFiltered, triggerSize])
+
   return (
     <Dropdown>
       <DropdownTrigger>
         <Button
           {...props}
           suffix={
-            <IsFilteredIconWrapper isFiltered={isFiltered} themes={themes} size={triggerSize}>
+            <span className={iconWrapperStyle}>
               <FaFilterIcon />
-              {isFiltered ? <FilteredCheckIcon aria-label={filteredIconAriaLabel} /> : null}
-            </IsFilteredIconWrapper>
+              {isFiltered ? (
+                <FaCheckCircleIcon
+                  aria-label={filteredIconAriaLabel}
+                  className={filteredIconStyle}
+                />
+              ) : null}
+            </span>
           }
           size={triggerSize}
         >
           {triggerButton}
         </Button>
       </DropdownTrigger>
-      {hasStatusText && isFiltered ? <StatusText themes={themes}>{status}</StatusText> : null}
+      {hasStatusText && isFiltered ? <span className={statusTextStyle}>{status}</span> : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
-          <ContentLayout themes={themes}>{children}</ContentLayout>
+          <div className={innerStyle}>{children}</div>
         </DropdownScrollArea>
-        <ActionAreaStack themes={themes}>
+        <Stack gap={0.5} className={actionAreaStyle}>
           <Cluster gap={1} align="center" justify="space-between">
             {onReset && (
-              <ResetButtonLayout themes={themes}>
+              <div className={resetButtonAreaStyle}>
                 <Button
                   variant="text"
                   size="s"
@@ -114,10 +178,14 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                 >
                   {resetButton}
                 </Button>
-              </ResetButtonLayout>
+              </div>
             )}
 
-            <RightButtonLayout>
+            <Cluster
+              gap={{ column: 1, row: 0.5 }}
+              justify="flex-end"
+              className={rightButtonAreaStyle}
+            >
               <DropdownCloser>
                 <Button onClick={onCancel} disabled={isRequestProcessing}>
                   {cancelButton}
@@ -128,72 +196,17 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                   {applyButton}
                 </Button>
               </DropdownCloser>
-            </RightButtonLayout>
+            </Cluster>
           </Cluster>
           {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
-            <Message>
+            <div className={messageStyle}>
               <ResponseMessage type={responseMessage.status} role="alert">
                 {responseMessage.text}
               </ResponseMessage>
-            </Message>
+            </div>
           )}
-        </ActionAreaStack>
+        </Stack>
       </DropdownContent>
     </Dropdown>
   )
 }
-
-const IsFilteredIconWrapper = styled.span<{
-  isFiltered: boolean
-  themes: Theme
-  size?: ButtonProps['size']
-}>`
-  position: relative;
-  color: ${({ isFiltered, themes }) => (isFiltered ? themes.color.MAIN : themes.color.TEXT_BLACK)};
-  line-height: 1;
-  ${({ themes: { space }, size }) => css`
-    ${size === 's' &&
-    css`
-      transform: translateX(${space(-0.25)});
-    `}
-  `}
-
-  & > [role='img'] + [role='img'] {
-    position: absolute;
-    right: -4px;
-    bottom: 2px;
-  }
-`
-const FilteredCheckIcon = styled(FaCheckCircleIcon)`
-  width: 0.5em;
-  height: 0.5em;
-`
-const StatusText = styled.span<{ themes: Theme }>`
-  margin-left: ${({ themes }) => themes.spacing.XXS};
-  font-size: ${({ themes }) => themes.fontSize.S};
-`
-const ContentLayout = styled.div<{ themes: Theme }>`
-  ${({ themes: { space } }) => css`
-    padding: ${space(1.5)};
-  `}
-`
-const ActionAreaStack = styled(Stack).attrs({ gap: 0.5 })<{ themes: Theme }>`
-  ${({ themes: { space, border } }) => css`
-    border-block-start: ${border.shorthand};
-    padding: ${space(1)} ${space(1.5)};
-  `}
-`
-const ResetButtonLayout = styled.div<{ themes: Theme }>`
-  ${({ themes: { space } }) => css`
-    margin-inline-start: ${space(-0.5)};
-  `}
-`
-const RightButtonLayout = styled(Cluster).attrs({
-  gap: { column: 1, row: 0.5 },
-  justify: 'flex-end',
-})`
-  margin-inline-start: auto;
-`
-const Message = styled.div`
-  text-align: right;
-`

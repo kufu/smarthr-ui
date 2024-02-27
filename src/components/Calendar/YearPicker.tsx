@@ -37,7 +37,7 @@ const yearPicker = tv({
     },
     isThisYear: {
       true: {
-        yearWrapper: 'shr-border shr-border-solid shr-border-default',
+        yearWrapper: 'shr-border-shorthand',
       },
     },
     isSelected: {

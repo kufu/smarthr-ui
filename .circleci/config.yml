@@ -26,50 +26,50 @@ commands:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - dependencies-test-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+            - dependencies-test-{{ checksum "package.json" }}-{{ checksum "pnpm-lock.yaml" }}
             # fallback to using the latest cache if no exact match is found
             - modules-cache-
-      - run: yarn install --frozen-lockfile
+      - run: pnpm install
       - save_cache:
           paths:
             - node_modules
-          key: dependencies-test-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+          key: dependencies-test-{{ checksum "package.json" }}-{{ checksum "pnpm-lock.yaml" }}
   check-source:
     steps:
-      - run: yarn audit --groups dependencies
-      - run: yarn lint
+      - run: pnpm audit --prod
+      - run: pnpm lint
   run-npm-test:
     steps:
-      - run: yarn test -w 1
-      - run: yarn test:build-assets
+      - run: pnpm test -- -w 1
+      - run: pnpm test:build-assets
   run-a11y-test:
     steps:
       - checkout
       - restore_cache:
           keys:
-            - yarn-packages-reg-{{ checksum "yarn.lock" }}
-      - run: yarn install --frozen-lockfile
+            - pnpm-packages-reg-{{ checksum "pnpm-lock.yaml" }}
+      - run: pnpm install
       - save_cache:
           paths:
-            - ~/.cache/yarn
-          key: yarn-packages-reg-{{ checksum "yarn.lock" }}
+            - ~/.cache/pnpm
+          key: pnpm-packages-reg-{{ checksum "pnpm-lock.yaml" }}
       - run:
-          command: yarn build-storybook
+          command: pnpm build-storybook
       - run:
           command: npx http-server storybook-static --port 6006 --silent
           background: true
       - run:
-          command: yarn test-storybook:ci
+          command: pnpm test-storybook:ci
       - store_test_results:
           path: junit.xml
   run-chromatic:
     steps:
       - checkout
-      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes --only-changed
+      - run: pnpm run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes --only-changed
   run-chromatic-master:
     steps:
       - checkout
-      - run: yarn run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes --only-changed
+      - run: pnpm run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes --only-changed
   install-noto-sans-cjk-jp:
     steps:
       - run:
@@ -105,11 +105,13 @@ jobs:
       - run-a11y-test
   chromatic-deployment:
     executor: node-active-lts
+    resource_class: medium+
     steps:
       - setup-for-test
       - run-chromatic
   chromatic-deployment-master:
     executor: node-active-lts
+    resource_class: medium+
     steps:
       - setup-for-test
       - run-chromatic-master

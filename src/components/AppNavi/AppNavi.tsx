@@ -45,7 +45,7 @@ export const AppNavi: VFC<Props & ElementProps> = ({
   return (
     <WrapperNav {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
       {label && (
-        <StyledStatusLabel themes={theme} className={classNames.label}>
+        <StyledStatusLabel $themes={theme} className={classNames.label}>
           {label}
         </StyledStatusLabel>
       )}
@@ -134,8 +134,8 @@ const WrapperNav = styled(Nav)<{ themes: Theme }>`
     padding-left: ${spacingByChar(1.5)};
   `}
 `
-const StyledStatusLabel = styled(StatusLabel)<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
+const StyledStatusLabel = styled(StatusLabel)<{ $themes: Theme }>`
+  ${({ $themes: { spacingByChar } }) => css`
     margin-right: ${spacingByChar(1)};
   `}
 `
