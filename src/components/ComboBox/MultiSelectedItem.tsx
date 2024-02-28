@@ -98,7 +98,6 @@ export function MultiSelectedItem<T>({
 
         {deletable && (
           <UnstyledButton
-            type="button"
             className={deleteButtonStyle}
             disabled={disabled}
             onClick={actualOnDelete}

@@ -27,7 +27,7 @@ const unstyledButton = tv({
 export const UnstyledButton = forwardRef<
   HTMLButtonElement,
   PropsWithChildren<ComponentProps<'button'>>
->(({ className, ...props }, ref) => {
+>(({ className, type = 'button', ...props }, ref) => {
   const styles = useMemo(() => unstyledButton({ className }), [className])
-  return <button {...props} ref={ref} className={styles} />
+  return <button {...props} type={type} ref={ref} className={styles} />
 })
