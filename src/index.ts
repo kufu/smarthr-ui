@@ -93,11 +93,6 @@ export { SegmentedControl, SegmentedControlOption } from './components/Segmented
 export { FormGroup } from './components/FormGroup'
 export { FormControl } from './components/FormControl'
 export { Fieldset } from './components/NewFieldset'
-export {
-  BackgroundJobsPanel,
-  BackgroundJobsList,
-  BackgroundJobProps,
-} from './components/BackgroundJobsPanel'
 export { MultiComboBox, SingleComboBox } from './components/ComboBox'
 export { SideNav } from './components/SideNav'
 export { CompactInformationPanel } from './components/CompactInformationPanel'

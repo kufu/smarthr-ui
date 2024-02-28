@@ -10,33 +10,27 @@ import { PaginationItemButton } from './PaginationItemButton'
 
 const pagination = tv({
   slots: {
-    wrapper: ['shr-inline-block', 'shr-max-w-full', 'smarthr-ui-Pagination'],
-    list: ['shr-m-0.25'],
-    firstListItem: ['smarthr-ui-Pagination-first'],
-    prevListItem: ['smarthr-ui-Pagination-prev'],
-    nextListItem: ['smarthr-ui-Pagination-next'],
-    lastListItem: ['smarthr-ui-Pagination-last'],
+    wrapper: 'smarthr-ui-Pagination shr-inline-block shr-max-w-full',
+    list: 'shr-m-0.25 shr-list-none',
+    firstListItem: 'smarthr-ui-Pagination-first',
+    prevListItem: 'smarthr-ui-Pagination-prev',
+    nextListItem: 'smarthr-ui-Pagination-next',
+    lastListItem: 'smarthr-ui-Pagination-last',
   },
   variants: {
     withoutNumbers: {
       true: {
-        firstListItem: ['shr-mr-0.5'],
-        prevListItem: ['shr-mr-0'],
-        nextListItem: ['shr-ml-0'],
-        lastListItem: ['shr-ml-0.5'],
+        firstListItem: 'shr-mr-0.5',
+        prevListItem: 'shr-mr-0',
+        nextListItem: 'shr-ml-0',
+        lastListItem: 'shr-ml-0.5',
       },
       false: {
-        prevListItem: ['shr-mr-0.5'],
-        nextListItem: ['shr-ml-0.5'],
+        prevListItem: 'shr-mr-0.5',
+        nextListItem: 'shr-ml-0.5',
       },
     },
   },
-  compoundSlots: [
-    {
-      slots: ['firstListItem', 'prevListItem', 'nextListItem', 'lastListItem'],
-      class: ['shr-list-none'],
-    },
-  ],
 })
 
 type Props = {
@@ -73,50 +67,29 @@ export const Pagination: React.FC<Props & ElementProps> = ({
     prevListItemStyle,
     nextListItemStyle,
     lastListItemStyle,
-  } = useMemo(
-    () => ({
+  } = useMemo(() => {
+    const itemArg = { withoutNumbers }
+
+    return {
       wrapperStyle: wrapper({ className }),
       listStyle: list(),
-      firstListItemStyle: firstListItem({ withoutNumbers }),
-      prevListItemStyle: prevListItem({ withoutNumbers }),
-      nextListItemStyle: nextListItem({ withoutNumbers }),
-      lastListItemStyle: lastListItem({ withoutNumbers }),
-    }),
-    [
-      className,
-      withoutNumbers,
-      wrapper,
-      list,
-      firstListItem,
-      prevListItem,
-      nextListItem,
-      lastListItem,
-    ],
-  )
+      firstListItemStyle: firstListItem(itemArg),
+      prevListItemStyle: prevListItem(itemArg),
+      nextListItemStyle: nextListItem(itemArg),
+      lastListItemStyle: lastListItem(itemArg),
+    }
+  }, [
+    className,
+    withoutNumbers,
+    wrapper,
+    list,
+    firstListItem,
+    prevListItem,
+    nextListItem,
+    lastListItem,
+  ])
 
   if (total <= 1) return null
-
-  const prevPage = (
-    <>
-      <li className={firstListItemStyle}>
-        <PaginationControllerItemButton
-          onClick={onClick}
-          direction="prev"
-          targetPage={1}
-          disabled={current === 1}
-          double
-        />
-      </li>
-      <li className={prevListItemStyle}>
-        <PaginationControllerItemButton
-          onClick={onClick}
-          direction="prev"
-          targetPage={current - 1}
-          disabled={current === 1}
-        />
-      </li>
-    </>
-  )
 
   const pages = !withoutNumbers
     ? [
@@ -134,35 +107,48 @@ export const Pagination: React.FC<Props & ElementProps> = ({
       ))
     : null
 
-  const nextPage = (
-    <>
-      <li className={nextListItemStyle}>
-        <PaginationControllerItemButton
-          onClick={onClick}
-          direction="next"
-          targetPage={current + 1}
-          disabled={current === total}
-        />
-      </li>
-      <li className={lastListItemStyle}>
-        <PaginationControllerItemButton
-          onClick={onClick}
-          direction="next"
-          targetPage={total}
-          disabled={current === total}
-          double
-        />
-      </li>
-    </>
-  )
+  const disabledPrev = current === 1
+  const disabledNext = current === total
 
   return (
     <Nav {...props} className={wrapperStyle} aria-label="ページネーション">
       <Reel>
         <Cluster as="ul" className={listStyle}>
-          {prevPage}
+          <li className={firstListItemStyle}>
+            <PaginationControllerItemButton
+              onClick={onClick}
+              direction="prev"
+              targetPage={1}
+              disabled={disabledPrev}
+              double
+            />
+          </li>
+          <li className={prevListItemStyle}>
+            <PaginationControllerItemButton
+              onClick={onClick}
+              direction="prev"
+              targetPage={current - 1}
+              disabled={disabledPrev}
+            />
+          </li>
           {pages}
-          {nextPage}
+          <li className={nextListItemStyle}>
+            <PaginationControllerItemButton
+              onClick={onClick}
+              direction="next"
+              targetPage={current + 1}
+              disabled={disabledNext}
+            />
+          </li>
+          <li className={lastListItemStyle}>
+            <PaginationControllerItemButton
+              onClick={onClick}
+              direction="next"
+              targetPage={total}
+              disabled={disabledNext}
+              double
+            />
+          </li>
         </Cluster>
       </Reel>
     </Nav>

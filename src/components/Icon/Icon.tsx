@@ -193,6 +193,7 @@ import {
   FaMoneyBillWaveAlt,
   FaMoneyCheck,
   FaMoneyCheckAlt,
+  FaPaintBrush,
   FaPaperPlane,
   FaPaperclip,
   FaPaste,
@@ -509,6 +510,7 @@ export const FaMoneyBillWaveIcon = /*#__PURE__*/ createIcon(FaMoneyBillWave)
 export const FaMoneyBillWaveAltIcon = /*#__PURE__*/ createIcon(FaMoneyBillWaveAlt)
 export const FaMoneyCheckIcon = /*#__PURE__*/ createIcon(FaMoneyCheck)
 export const FaMoneyCheckAltIcon = /*#__PURE__*/ createIcon(FaMoneyCheckAlt)
+export const FaPaintBrushIcon = /*#__PURE__*/ createIcon(FaPaintBrush)
 export const FaPaperPlaneIcon = /*#__PURE__*/ createIcon(FaPaperPlane)
 export const FaPaperclipIcon = /*#__PURE__*/ createIcon(FaPaperclip)
 export const FaPasteIcon = /*#__PURE__*/ createIcon(FaPaste)
