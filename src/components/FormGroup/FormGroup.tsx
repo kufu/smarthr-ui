@@ -165,9 +165,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         </Stack>
       )}
 
-      <ChildrenWrapper $innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
-        {addIdToFirstInput(children, managedHtmlFor, describedbyIds)}
-      </ChildrenWrapper>
+      <div>{addIdToFirstInput(children, managedHtmlFor, describedbyIds)}</div>
 
       {supplementaryMessage && (
         <Text
@@ -297,16 +295,5 @@ const ErrorMessage = styled.p<{ themes: Theme }>`
     .smarthr-ui-FormGroup-errorMessage {
       color: ${color.DANGER};
     }
-  `}
-`
-
-const ChildrenWrapper = styled.div<{ isRoleGroup: boolean; $innerMargin: Props['innerMargin'] }>`
-  ${({ $innerMargin, isRoleGroup }) => css`
-    ${($innerMargin || isRoleGroup) &&
-    css`
-      &&& {
-        margin-block-start: ${useSpacing($innerMargin || (isRoleGroup ? 1 : 0.5))};
-      }
-    `}
   `}
 `
