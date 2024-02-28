@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [43.0.0](https://github.com/kufu/smarthr-ui/compare/v42.0.0...v43.0.0) (2024-02-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* BackgroundJobsPanel を削除 (#4359)
+
+### Features
+
+* Icon に FaPaintBrush を追加 ([#4345](https://github.com/kufu/smarthr-ui/issues/4345)) ([744a012](https://github.com/kufu/smarthr-ui/commit/744a012ba102dd85d71d0780f972bd29f351ca31))
+
+
+### Bug Fixes
+
+* FormControl コンポーネントの props が DOM に表出しないようにする ([#4344](https://github.com/kufu/smarthr-ui/issues/4344)) ([0626715](https://github.com/kufu/smarthr-ui/commit/062671517fa467cac12bb330fa5c3dda57eb0b0c))
+* HeaderLink に className を渡せるように修正 ([715c315](https://github.com/kufu/smarthr-ui/commit/715c315c34667d74fceb4bbe13e219125429bee2))
+* HeaderLink に className を渡せるように修正 ([#4358](https://github.com/kufu/smarthr-ui/issues/4358)) ([a016836](https://github.com/kufu/smarthr-ui/commit/a016836043d25e805b9361f3c7f1fd7c76331bde))
+* Paginationコンポーネントの番号ボタンに不必要なlist-styleが表示されてしまう問題を修正 ([#4349](https://github.com/kufu/smarthr-ui/issues/4349)) ([f82ba44](https://github.com/kufu/smarthr-ui/commit/f82ba44005ef8e58d9db2dfc514903f476cdc093))
+* TabItem の余白を調整 ([#4364](https://github.com/kufu/smarthr-ui/issues/4364)) ([08a7651](https://github.com/kufu/smarthr-ui/commit/08a7651d1ee6e5574d2f2a8b04ca76cf5c8a780f))
+* Textareaでwidthを指定しない場合、style属性で"width=auto;"が指定されないようにする ([#4350](https://github.com/kufu/smarthr-ui/issues/4350)) ([6039bf3](https://github.com/kufu/smarthr-ui/commit/6039bf3713e3ce0ca85cc6b72ad3719fc59aac58))
+* 強制カラーモードの時、borderのスタイルが適用されるようにした ([#4365](https://github.com/kufu/smarthr-ui/issues/4365)) ([5c74edc](https://github.com/kufu/smarthr-ui/commit/5c74edc0b60cc812e108d25038f12fd1859a559c))
+
+
+* BackgroundJobsPanel を削除 ([#4359](https://github.com/kufu/smarthr-ui/issues/4359)) ([b9a0b64](https://github.com/kufu/smarthr-ui/commit/b9a0b64ddbd3289bbbeae1d414622506326fa28e))
+
 ## [42.0.0](https://github.com/kufu/smarthr-ui/compare/v41.3.0...v42.0.0) (2024-02-20)
 
 
