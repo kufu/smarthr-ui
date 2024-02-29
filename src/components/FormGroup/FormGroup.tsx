@@ -305,7 +305,7 @@ const ChildrenWrapper = styled.div<{ isRoleGroup: boolean; $innerMargin: Props['
     ${($innerMargin || isRoleGroup) &&
     css`
       &&& {
-        margin-block-start: ${useSpacing($innerMargin || (isRoleGroup ? 1 : 0.5))};
+        margin-block-start: ${useSpacing($innerMargin ?? (isRoleGroup ? 1 : 0.5))};
       }
     `}
   `}
