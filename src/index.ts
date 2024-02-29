@@ -45,7 +45,7 @@ export {
 export { Pagination } from './components/Pagination'
 export { RadioButton } from './components/RadioButton'
 export { RadioButtonPanel } from './components/RadioButtonPanel'
-export { AnchorButton, Button } from './components/Button'
+export { AnchorButton, Button, UnstyledButton } from './components/Button'
 export { StatusLabel } from './components/StatusLabel'
 export { Base, BaseColumn } from './components/Base'
 export * from './components/Icon'
