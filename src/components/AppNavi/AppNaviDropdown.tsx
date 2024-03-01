@@ -38,7 +38,7 @@ export const AppNaviDropdown: VFC<InnerProps> = ({
     <Dropdown>
       <StyledDropdownTrigger>
         <TriggerButton
-          themes={theme}
+          $themes={theme}
           aria-current={current ? 'page' : undefined}
           disabled={isUnclickable}
           type="button"

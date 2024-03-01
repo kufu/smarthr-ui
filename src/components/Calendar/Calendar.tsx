@@ -28,8 +28,7 @@ const calendar = tv({
   slots: {
     container:
       'smarthr-ui-Calendar shr-inline-block shr-overflow-hidden shr-rounded-m shr-bg-white shr-text-black shr-shadow-layer-3',
-    header:
-      'smarthr-ui-Calendar-header shr-flex shr-items-center shr-border-b shr-border-solid shr-border-default shr-p-1',
+    header: 'smarthr-ui-Calendar-header shr-border-b-shorthand shr-flex shr-items-center shr-p-1',
     yearMonth: 'smarthr-ui-Calendar-yearMonth shr-me-0.5 shr-text-base shr-font-bold',
     monthButtons: 'smarthr-ui-Calendar-monthButtons shr-ms-auto shr-flex',
     tableLayout: 'shr-relative',

@@ -19,7 +19,7 @@ const buttonStyle = tv({
       'shr-align-bottom [&&&_.smarthr-ui-Loader-spinner]:shr-h-em [&&&_.smarthr-ui-Loader-spinner]:shr-w-em',
     disabledWrapper: 'smarthr-ui-Button-disabledWrapper',
     disabledTooltip: [
-      '[&&&]:shr-overflow-y-unset',
+      '[&&&]:shr-overflow-y-visible',
       /* Tooltip との距離を変えずに反応範囲を広げるために negative space を使う */
       '[&_.smarthr-ui-Icon]:-shr-m-0.25',
       /* global styleなどでborder-boxが適用されている場合表示崩れを起こす為、content-boxを指定する */

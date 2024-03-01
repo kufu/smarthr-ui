@@ -98,15 +98,22 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         .join(' '),
     [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor],
   )
+  const actualErrorMessages = useMemo(() => {
+    if (!errorMessages) {
+      return []
+    }
+
+    return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
+  }, [errorMessages])
 
   return (
     <WrapperStack
       {...props}
-      innerMargin={innerMargin}
+      $innerMargin={innerMargin}
       disabled={disabled}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
       aria-describedby={isRoleGroup && describedbyIds ? describedbyIds : undefined}
-      themes={theme}
+      $themes={theme}
       className={`${className} ${disabledClass} ${classNames.wrapper}`}
       forwardedAs={as}
     >
@@ -115,7 +122,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         id={managedLabelId}
         className={`${classNames.label}`}
         forwardedAs={isRoleGroup ? 'legend' : 'label'}
-        dangerouslyTitleHidden={dangerouslyTitleHidden}
+        $dangerouslyTitleHidden={dangerouslyTitleHidden}
         // Stack 対象にしないための hidden
         hidden={dangerouslyTitleHidden || undefined}
       >
@@ -148,19 +155,17 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         </Text>
       )}
 
-      {errorMessages && (
+      {actualErrorMessages.length > 0 && (
         <Stack gap={0} id={`${managedHtmlFor}_errorMessages`}>
-          {(Array.isArray(errorMessages) ? errorMessages : [errorMessages]).map(
-            (message, index) => (
-              <ErrorMessage themes={theme} key={index}>
-                <FaExclamationCircleIcon text={message} className={classNames.errorMessage} />
-              </ErrorMessage>
-            ),
-          )}
+          {actualErrorMessages.map((message, index) => (
+            <ErrorMessage themes={theme} key={index}>
+              <FaExclamationCircleIcon text={message} className={classNames.errorMessage} />
+            </ErrorMessage>
+          ))}
         </Stack>
       )}
 
-      <ChildrenWrapper innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
+      <ChildrenWrapper $innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
         {addIdToFirstInput(children, managedHtmlFor, describedbyIds)}
       </ChildrenWrapper>
 
@@ -228,14 +233,14 @@ const isInputElement = (type: string | React.JSXElementConstructor<any>) => {
 }
 
 const WrapperStack = styled(Stack).attrs<{
-  innerMargin: Props['innerMargin']
-}>(({ innerMargin }) => ({
+  $innerMargin: Props['innerMargin']
+}>(({ $innerMargin }) => ({
   // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は 1
-  gap: innerMargin ?? 0.5,
+  gap: $innerMargin ?? 0.5,
 }))<{
-  themes: Theme
+  $themes: Theme
 }>`
-  ${({ themes: { color } }) => css`
+  ${({ $themes: { color } }) => css`
     &[disabled] {
       color: ${color.TEXT_DISABLED};
 
@@ -273,11 +278,14 @@ const WrapperStack = styled(Stack).attrs<{
   `}
 `
 
-type FormLabelProps = Pick<Props, 'className' | 'dangerouslyTitleHidden'>
+type FormLabelProps = {
+  className: Props['className']
+  $dangerouslyTitleHidden: Props['dangerouslyTitleHidden']
+}
 const TitleCluster = styled(Cluster).attrs(
-  ({ className, dangerouslyTitleHidden }: FormLabelProps) => ({
+  ({ className, $dangerouslyTitleHidden }: FormLabelProps) => ({
     align: 'center',
-    className: dangerouslyTitleHidden ? visuallyHiddenText({ className }) : className,
+    className: $dangerouslyTitleHidden ? visuallyHiddenText({ className }) : className,
   }),
 )<FormLabelProps>`
   /* flex-item が stretch してクリッカブル領域が広がりすぎないようにする */
@@ -292,12 +300,12 @@ const ErrorMessage = styled.p<{ themes: Theme }>`
   `}
 `
 
-const ChildrenWrapper = styled.div<{ isRoleGroup: boolean } & Pick<Props, 'innerMargin'>>`
-  ${({ innerMargin, isRoleGroup }) => css`
-    ${(innerMargin || isRoleGroup) &&
+const ChildrenWrapper = styled.div<{ isRoleGroup: boolean; $innerMargin: Props['innerMargin'] }>`
+  ${({ $innerMargin, isRoleGroup }) => css`
+    ${($innerMargin || isRoleGroup) &&
     css`
       &&& {
-        margin-block-start: ${useSpacing(innerMargin || (isRoleGroup ? 1 : 0.5))};
+        margin-block-start: ${useSpacing($innerMargin || (isRoleGroup ? 1 : 0.5))};
       }
     `}
   `}

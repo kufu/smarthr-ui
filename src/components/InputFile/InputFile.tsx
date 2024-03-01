@@ -24,7 +24,7 @@ const inputFile = tv({
     fileList: ['smarthr-ui-InputFile-fileList', 'shr-list-none shr-self-stretch shr-text-base'],
     fileItem: 'shr-flex shr-items-center',
     inputWrapper: [
-      'shr-relative shr-inline-flex shr-rounded-m shr-border shr-border-solid shr-border-default shr-bg-white shr-font-bold shr-leading-none',
+      'shr-border-shorthand shr-relative shr-inline-flex shr-rounded-m shr-bg-white shr-font-bold shr-leading-none',
       'contrast-more:shr-border-high-contrast',
       'focus-within:shr-focus-indicator',
     ],

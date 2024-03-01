@@ -10,7 +10,7 @@ import { RadioButton } from '../RadioButton'
 import { Text } from '../Text'
 import { TextLink as shrTextLink } from '../TextLink'
 
-import { NotificationBar, messageTypes } from './NotificationBar'
+import { NotificationBar, notificationBar } from './NotificationBar'
 
 export default {
   title: 'States（状態）/NotificationBar',
@@ -133,7 +133,8 @@ const RootStack = styled(Stack).attrs({ forwardedAs: 'dl', gap: 1.5 })`
 export const Demo: StoryFn = () => {
   const [visible, setVisible] = useState(false)
   const [animate, setAnimate] = useState(true)
-  const [messageType, setMessageType] = useState<(typeof messageTypes)[number]>('success')
+  const [messageType, setMessageType] =
+    useState<ComponentProps<typeof NotificationBar>['type']>('success')
   const [bold, setBold] = useState(true)
 
   return (
@@ -162,7 +163,7 @@ export const Demo: StoryFn = () => {
           </label>
           <Fieldset title="メッセージの種類">
             <Cluster gap={0.75}>
-              {messageTypes.map((type) => (
+              {Object.keys(notificationBar.variants.type).map((type) => (
                 <RadioButton
                   key={type}
                   name="message_type"

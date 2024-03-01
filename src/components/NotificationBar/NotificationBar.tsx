@@ -1,8 +1,7 @@
 import React, { ComponentProps, ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
-import styled, { css, keyframes } from 'styled-components'
+import { VariantProps, tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { Base as shrBase } from '../Base'
+import { Base } from '../Base'
 import { Button } from '../Button'
 import {
   FaCheckCircleIcon,
@@ -14,258 +13,215 @@ import {
 } from '../Icon'
 import { Cluster } from '../Layout'
 
-import { useClassNames } from './useClassNames'
+export const notificationBar = tv({
+  slots: {
+    wrapper:
+      'smarthr-ui-NotificationBar shr-flex shr-items-baseline shr-justify-between shr-gap-0.5 shr-p-0.75',
+    inner: 'shr-flex-grow',
+    messageArea: [
+      'smarthr-ui-NotificationBar-messageArea',
+      'shr-flex shr-grow',
+      '[&_.smarthr-ui-Icon-withText]:shr-leading-tight',
+    ],
+    icon: '',
+    actionArea: 'smarthr-ui-NotificationBar-actionArea shr-shrink-0',
+    actionWrapper: 'smarthr-ui-NotificationBar-actions -shr-my-0.5',
+    closeButton:
+      'smarthr-ui-NotificationBar-closeButton -shr-mb-0.5 -shr-mr-0.5 -shr-mt-0.5 shr-flex-shrink-0 shr-text-black',
+  },
+  variants: {
+    /** 下地 */
+    base: {
+      none: {},
+      base: {
+        wrapper: 'shr-py-1 shr-pe-1 shr-ps-1.5',
+      },
+    },
+    /** メッセージの種類 */
+    type: {
+      info: {
+        icon: 'shr-text-grey',
+      },
+      success: {},
+      warning: {
+        icon: 'shr-text-black',
+      },
+      error: {},
+    },
+    /** 強調するかどうか */
+    bold: {
+      true: '',
+      false: '',
+    },
+    /** スライドインするかどうか */
+    animate: {
+      true: {
+        wrapper: 'shr-animate-[notification-bar-slide-in_0.2s_ease-out]',
+      },
+    },
+  },
+  compoundVariants: [
+    {
+      type: ['info', 'success', 'warning', 'error'],
+      bold: false,
+      className: {
+        wrapper: 'shr-bg-white shr-text-black',
+      },
+    },
+    {
+      type: 'success',
+      bold: false,
+      className: {
+        icon: 'shr-text-main',
+      },
+    },
+    {
+      type: 'error',
+      bold: false,
+      className: {
+        icon: 'shr-text-danger',
+      },
+    },
+    {
+      type: 'info',
+      bold: true,
+      className: {
+        wrapper: 'shr-bg-white',
+      },
+    },
+    {
+      type: 'success',
+      bold: true,
+      className: {
+        wrapper: 'shr-bg-main shr-text-white',
+        icon: 'shr-text-white',
+        closeButton:
+          'shr-text-white [&]:hover:shr-bg-main-darken [&]:focus-visible:shr-bg-main-darken',
+      },
+    },
+    {
+      type: 'warning',
+      bold: true,
+      className: {
+        wrapper: 'shr-bg-warning-yellow shr-text-black',
+        closeButton:
+          'shr-text-black [&]:hover:shr-bg-warning-yellow-darken [&]:focus-visible:shr-bg-warning-yellow-darken',
+      },
+    },
+    {
+      type: 'error',
+      bold: true,
+      className: {
+        wrapper: 'shr-bg-danger shr-text-white',
+        icon: 'shr-text-white',
+        closeButton:
+          'shr-text-white [&]:hover:shr-bg-danger-darken [&]:focus-visible:shr-bg-danger-darken',
+      },
+    },
+  ],
+})
 
-export const messageTypes = ['info', 'success', 'error', 'warning'] as const
-
-type Props = PropsWithChildren<{
-  /** メッセージの種類 */
-  type: (typeof messageTypes)[number]
-  /** 強調するかどうか */
-  bold?: boolean
-  /** スライドインするかどうか */
-  animate?: boolean
-  /** メッセージ */
-  message: React.ReactNode
-  /** 閉じるボタン押下時に発火させる関数 */
-  onClose?: () => void
-  /** role 属性 */
-  role?: 'alert' | 'status'
-  /** 下地 */
-  base?: 'none' | 'base'
-}>
+type StyleVariants = VariantProps<typeof notificationBar>
+type Props = PropsWithChildren<
+  Omit<StyleVariants, 'type'> &
+    Required<Pick<StyleVariants, 'type'>> & {
+      /** メッセージ */
+      message: React.ReactNode
+      /** 閉じるボタン押下時に発火させる関数 */
+      onClose?: () => void
+      /** role 属性 */
+      role?: 'alert' | 'status'
+    }
+>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
-type BaseProps = Pick<ComponentProps<typeof shrBase>, 'layer'>
+type BaseProps = Pick<ComponentProps<typeof Base>, 'layer'>
 
 export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   type,
   bold = false,
+  animate,
   message,
   onClose,
   children,
   role = type === 'info' ? 'status' : 'alert',
   base = 'none',
   layer,
-  className = '',
+  className,
   ...props
 }) => {
-  const theme = useTheme()
-  const { color } = theme
-  const classNames = useClassNames()
-
-  const { Icon, iconColor, ...colorSet } = useMemo(() => {
+  const Icon = useMemo(() => {
     switch (type) {
       case 'info':
-        return {
-          Icon: FaInfoCircleIcon,
-          iconColor: color.TEXT_GREY,
-        }
+        return FaInfoCircleIcon
       case 'success': {
-        const colors = bold
-          ? {
-              iconColor: color.TEXT_WHITE,
-              fgColor: color.TEXT_WHITE,
-              bgColor: color.MAIN,
-            }
-          : {}
-        return {
-          Icon: FaCheckCircleIcon,
-          iconColor: color.MAIN,
-          ...colors,
-        }
+        return FaCheckCircleIcon
       }
       case 'warning': {
-        const colors = bold
-          ? {
-              Icon: FaExclamationTriangleIcon,
-              fgColor: color.TEXT_BLACK,
-              bgColor: color.WARNING_YELLOW,
-            }
-          : {}
-        return {
-          Icon: WarningIcon,
-          iconColor: color.TEXT_BLACK,
-          ...colors,
-        }
+        return bold ? FaExclamationTriangleIcon : WarningIcon
       }
       case 'error': {
-        const colors = bold
-          ? {
-              iconColor: color.TEXT_WHITE,
-              fgColor: color.TEXT_WHITE,
-              bgColor: color.DANGER,
-            }
-          : {}
-        return {
-          Icon: FaExclamationCircleIcon,
-          iconColor: color.DANGER,
-          ...colors,
-        }
+        return FaExclamationCircleIcon
       }
     }
-  }, [color, type, bold])
+  }, [type, bold])
 
-  const { baseComponent: WrapBase, baseProps } = useMemo(
+  const { baseComponent: WrapBase = React.Fragment, baseProps = {} } = useMemo(
     () =>
       base === 'base'
         ? {
             baseComponent: Base,
             baseProps: {
               layer,
+              overflow: 'hidden' as ComponentProps<typeof Base>['overflow'],
             },
           }
-        : {
-            baseComponent: React.Fragment,
-            baseProps: {},
-          },
+        : {},
     [base, layer],
   )
 
+  const {
+    wrapperStyle,
+    innerStyle,
+    messageAreaStyle,
+    iconStyle,
+    actionAreaStyle,
+    actionWrapperStyle,
+    closeButtonStyle,
+  } = useMemo(() => {
+    const { wrapper, inner, messageArea, icon, actionArea, actionWrapper, closeButton } =
+      notificationBar({ type, bold, base })
+    return {
+      wrapperStyle: wrapper({ animate, className }),
+      innerStyle: inner(),
+      messageAreaStyle: messageArea(),
+      iconStyle: icon(),
+      actionAreaStyle: actionArea(),
+      actionWrapperStyle: actionWrapper(),
+      closeButtonStyle: closeButton(),
+    }
+  }, [animate, base, bold, className, type])
+
   return (
     <WrapBase {...baseProps}>
-      <Wrapper
-        {...props}
-        className={`${type} ${classNames.wrapper}${className && ` ${className}`}`}
-        role={role}
-        themes={theme}
-        $colorSet={colorSet}
-        onBase={base === 'base'}
-      >
-        <Inner>
-          <MessageArea themes={theme} className={classNames.messageArea}>
-            <Icon text={message} color={iconColor} iconGap={0.5} />
-          </MessageArea>
+      <div {...props} className={wrapperStyle} role={role}>
+        <Cluster gap={1} align="center" justify="flex-end" className={innerStyle}>
+          <div className={messageAreaStyle}>
+            <Icon text={message} iconGap={0.5} className={iconStyle} />
+          </div>
           {children && (
-            <ActionArea themes={theme} className={classNames.actionArea}>
-              <ActionWrapper
-                themes={theme}
-                className={classNames.actions}
-                align="center"
-                justify="flex-end"
-              >
+            <Cluster gap={0.5} align="center" className={actionAreaStyle}>
+              <Cluster align="center" justify="flex-end" className={actionWrapperStyle}>
                 {children}
-              </ActionWrapper>
-            </ActionArea>
+              </Cluster>
+            </Cluster>
           )}
-        </Inner>
+        </Cluster>
         {onClose && (
-          <CloseButton
-            variant="text"
-            $colorSet={colorSet}
-            themes={theme}
-            onClick={onClose}
-            className={classNames.closeButton}
-            size="s"
-          >
+          <Button variant="text" size="s" onClick={onClose} className={closeButtonStyle}>
             <FaTimesIcon alt="閉じる" />
-          </CloseButton>
+          </Button>
         )}
-      </Wrapper>
+      </div>
     </WrapBase>
   )
 }
-
-const Base = styled(shrBase).attrs({ overflow: 'hidden' })``
-
-const Wrapper = styled.div<{
-  themes: Theme
-  $colorSet: { fgColor?: string; bgColor?: string }
-  onBase: boolean
-  animate?: boolean
-}>(
-  ({
-    themes: { color, fontSize, leading, space },
-    $colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
-    onBase,
-    animate,
-  }) => css`
-    display: flex;
-    gap: ${space(0.5)};
-    align-items: baseline;
-    justify-content: space-between;
-    background-color: ${bgColor};
-    padding: ${space(0.75)};
-    ${onBase &&
-    css`
-      padding-block: ${space(1)};
-      padding-inline: ${space(1.5)} ${space(1)};
-    `}
-    color: ${fgColor};
-    ${animate &&
-    css`
-      /* 1行の場合の高さ分だけスライドさせる */
-      /* stylelint-disable-next-line */
-      animation: ${slideIn(`calc(${fontSize.M} * ${leading.TIGHT} + ${space(1.5)})`)} 0.2s ease-out;
-    `}
-  `,
-)
-const Inner = styled(Cluster).attrs({
-  gap: 1,
-  align: 'center',
-  justify: 'flex-end',
-})`
-  flex-grow: 1;
-`
-const slideIn = (translateLength: string) => keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(calc(-1 * ${translateLength}));
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`
-const MessageArea = styled.div<{
-  themes: Theme
-}>(
-  ({ themes: { leading, spacingByChar } }) => css`
-    display: flex;
-    gap: ${spacingByChar(0.5)};
-    align-items: center;
-    flex-grow: 1;
-
-    .smarthr-ui-Icon-withText {
-      line-height: ${leading.TIGHT};
-    }
-  `,
-)
-const ActionArea = styled.div<{
-  themes: Theme
-}>(
-  ({ themes: { spacingByChar } }) => css`
-    display: flex;
-    gap: ${spacingByChar(0.5)};
-    align-items: center;
-    flex-shrink: 0;
-  `,
-)
-const ActionWrapper = styled(Cluster)<{
-  themes: Theme
-}>(
-  ({ themes: { spacingByChar } }) => css`
-    margin-block: ${spacingByChar(-0.5)};
-  `,
-)
-const CloseButton = styled(Button)<{
-  $colorSet: { fgColor?: string; bgColor?: string }
-  themes: Theme
-}>(
-  ({
-    themes: { color, spacingByChar },
-    $colorSet: { fgColor = color.TEXT_BLACK, bgColor = color.WHITE },
-  }) => css`
-    flex-shrink: 0;
-
-    margin-top: ${spacingByChar(-0.5)};
-    margin-right: ${spacingByChar(-0.5)};
-    margin-bottom: ${spacingByChar(-0.5)};
-    color: ${fgColor};
-
-    &:hover,
-    &:focus-visible {
-      background-color: ${color.hoverColor(bgColor)};
-      color: ${fgColor};
-    }
-  `,
-)

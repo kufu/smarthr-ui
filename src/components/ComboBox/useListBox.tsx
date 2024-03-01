@@ -3,22 +3,20 @@ import React, {
   ReactNode,
   RefObject,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useId } from '../../hooks/useId'
 import { usePortal } from '../../hooks/usePortal'
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTailwindTheme'
 import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 
-import { ComboBoxContext } from './ComboBoxContext'
 import { ListBoxItemButton } from './ListBoxItemButton'
 import { ComboBoxItem, ComboBoxOption } from './types'
 import { useActiveOption } from './useActiveOption'
@@ -47,7 +45,25 @@ type Rect = {
 
 const NO_RESULT_TEXT = '一致する選択肢がありません'
 
-export function useListBox<T>({
+const listbox = tv({
+  slots: {
+    wrapper: 'shr-absolute',
+    dropdownList: [
+      'smarthr-ui-ComboBox-dropdownList',
+      'shr-absolute shr-z-overlap shr-box-border shr-min-w-full shr-overflow-y-auto shr-rounded-m shr-bg-white shr-py-0.5 shr-shadow-layer-3',
+      /* 縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
+      = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding */
+      'shr-max-h-[calc((theme(fontSize.base)_+_theme(spacing[0.5])_*_2)_*_7.5_+_theme(spacing[0.5]))]',
+      'aria-hidden:shr-hidden',
+    ],
+    helpMessage:
+      'shr-whitespace-[initial] shr-mx-0.5 shr-mb-0.5 shr-mt-0 shr-border-b shr-border-solid shr-border-default shr-px-0.5 shr-pb-0.5 shr-pt-0 shr-text-sm',
+    loaderWrapper: 'shr-flex shr-items-center shr-justify-center shr-p-1',
+    noItems: 'smarthr-ui-ComboBox-noItems shr-my-0 shr-bg-white shr-px-1 shr-py-0.5 shr-text-base',
+  },
+})
+
+export const useListBox = <T,>({
   options,
   dropdownHelpMessage,
   dropdownWidth,
@@ -57,7 +73,7 @@ export function useListBox<T>({
   isLoading,
   triggerRef,
   decorators,
-}: Props<T>) {
+}: Props<T>) => {
   const [navigationType, setNavigationType] = useState<'pointer' | 'key'>('pointer')
   const { activeOption, setActiveOption, moveActivePositionDown, moveActivePositionUp } =
     useActiveOption({ options })
@@ -175,7 +191,7 @@ export function useListBox<T>({
     [activeOption, moveActivePositionDown, moveActivePositionUp, onAdd, onSelect, setActiveOption],
   )
 
-  const theme = useTheme()
+  const { spacing } = useTheme()
   const { createPortal } = usePortal()
   const listBoxId = useId()
   const { items: partialOptions, renderIntersection } = usePartialRendering({
@@ -185,7 +201,6 @@ export function useListBox<T>({
       [activeOption, options],
     ),
   })
-  const { listBoxClassNames: classNames } = useContext(ComboBoxContext)
 
   const handleAdd = useCallback(
     (option: ComboBoxOption<T>) => {
@@ -211,44 +226,75 @@ export function useListBox<T>({
     [setActiveOption],
   )
 
+  const { wrapper, dropdownList, helpMessage, loaderWrapper, noItems } = listbox()
+  const {
+    wrapperStyleProps,
+    dropdownListStyleProps,
+    helpMessageStyle,
+    loaderWrapperStyle,
+    noItemsStyle,
+  } = useMemo(() => {
+    const { top, left, $width, height } = listBoxRect
+    const dropdownListWidth = dropdownWidth || $width
+    return {
+      wrapperStyleProps: {
+        className: wrapper(),
+        style: {
+          top: `${top}px`,
+          left: `${left}px`,
+          width: `${$width}px`,
+        },
+      },
+      dropdownListStyleProps: {
+        className: dropdownList(),
+        style: {
+          width:
+            typeof dropdownListWidth === 'string' ? dropdownListWidth : `${dropdownListWidth}px`,
+          maxWidth: `calc(100vw - ${left}px - ${spacing[0.5]})`,
+          height: height ? `${height}px` : undefined,
+        },
+      },
+      helpMessageStyle: helpMessage(),
+      loaderWrapperStyle: loaderWrapper(),
+      noItemsStyle: noItems(),
+    }
+  }, [
+    dropdownList,
+    dropdownWidth,
+    helpMessage,
+    listBoxRect,
+    loaderWrapper,
+    noItems,
+    spacing,
+    wrapper,
+  ])
+
   const renderListBox = useCallback(
     () =>
       createPortal(
-        <Wrapper {...listBoxRect}>
-          <Container
-            {...listBoxRect}
-            themes={theme}
-            $width={dropdownWidth || listBoxRect.$width}
+        <div {...wrapperStyleProps}>
+          <div
+            {...dropdownListStyleProps}
             id={listBoxId}
             ref={listBoxRef}
             role="listbox"
             aria-hidden={!isExpanded}
-            className={classNames.dropdownList}
           >
             {dropdownHelpMessage && (
-              <HelpMessage themes={theme}>
-                <FaInfoCircleIcon
-                  color={theme.color.TEXT_GREY}
-                  text={dropdownHelpMessage}
-                  iconGap={0.25}
-                />
-              </HelpMessage>
+              <p className={helpMessageStyle}>
+                <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
+              </p>
             )}
             {!isExpanded ? null : isLoading ? (
-              <LoaderWrapper themes={theme}>
+              <div className={loaderWrapperStyle}>
                 <Loader />
-              </LoaderWrapper>
+              </div>
             ) : options.length === 0 ? (
-              <NoItems
-                themes={theme}
-                role="alert"
-                aria-live="polite"
-                className={classNames.noItems}
-              >
+              <p role="alert" aria-live="polite" className={noItemsStyle}>
                 {decorators?.noResultText
                   ? decorators.noResultText(NO_RESULT_TEXT)
                   : NO_RESULT_TEXT}
-              </NoItems>
+              </p>
             ) : (
               partialOptions.map((option) => (
                 <ListBoxItemButton
@@ -263,28 +309,28 @@ export function useListBox<T>({
               ))
             )}
             {renderIntersection()}
-          </Container>
-        </Wrapper>,
+          </div>
+        </div>,
       ),
     [
-      activeOption?.id,
-      classNames.dropdownList,
-      classNames.noItems,
       createPortal,
-      handleAdd,
-      handleHoverOption,
-      handleSelect,
-      isExpanded,
-      isLoading,
+      wrapperStyleProps,
+      dropdownListStyleProps,
       listBoxId,
-      listBoxRect,
+      isExpanded,
+      dropdownHelpMessage,
+      helpMessageStyle,
+      isLoading,
+      loaderWrapperStyle,
       options.length,
+      noItemsStyle,
+      decorators,
       partialOptions,
       renderIntersection,
-      dropdownHelpMessage,
-      dropdownWidth,
-      theme,
-      decorators,
+      activeOption?.id,
+      handleAdd,
+      handleSelect,
+      handleHoverOption,
     ],
   )
 
@@ -296,87 +342,3 @@ export function useListBox<T>({
     listBoxRef,
   }
 }
-
-const Wrapper = styled.div<Rect>(
-  ({ top, left, $width }) => css`
-    /*
-    ドロップダウンリストをInputの幅に対する相対値で指定できるように、Inputの幅のdivを親要素にする
-    */
-    position: absolute;
-    top: ${top}px;
-    left: ${left}px;
-    width: ${$width}px;
-  `,
-)
-
-const Container = styled.div<Rect & { themes: Theme }>(({ left, $width, height, themes }) => {
-  const { color, fontSize, spacingByChar, radius, shadow, zIndex } = themes
-  return css`
-    position: absolute;
-    overflow-y: auto;
-
-    /*
-     縦スクロールに気づきやすくするために8個目のアイテムが半分見切れるように max-height を算出
-     = (アイテムのフォントサイズ + アイテムの上下padding) * 7.5 + コンテナの上padding
-    */
-    max-height: calc((${fontSize.M} + ${spacingByChar(0.5)} * 2) * 7.5 + ${spacingByChar(0.5)});
-    ${height !== undefined &&
-    css`
-      height: ${height}px;
-    `}
-
-    /*
-    dropdownWidthの指定があれば、ドロップダウンリストの幅として設定する。
-    ドロップダウンリストは、viewportの幅を超えないように、かつInputの幅より小さくならないようにする。
-    */
-    width: ${typeof $width === 'string' ? $width : `${$width}px`};
-    max-width: calc(100vw - ${left}px - ${spacingByChar(0.5)});
-    min-width: 100%;
-
-    padding-block: ${spacingByChar(0.5)};
-    border-radius: ${radius.m};
-    box-shadow: ${shadow.LAYER3};
-    background-color: ${color.WHITE};
-    box-sizing: border-box;
-    &[aria-hidden='true'] {
-      display: none;
-    }
-    z-index: ${zIndex.OVERLAP};
-  `
-})
-
-const HelpMessage = styled.p<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { border, fontSize, spacingByChar } = themes
-
-    return css`
-      margin: 0 ${spacingByChar(0.5)} ${spacingByChar(0.5)};
-      padding: 0 ${spacingByChar(0.5)} ${spacingByChar(0.5)};
-      border-bottom: ${border.shorthand};
-      font-size: ${fontSize.S};
-      white-space: initial;
-    `
-  }}
-`
-
-const NoItems = styled.p<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color, fontSize, spacingByChar } = themes
-
-    return css`
-      margin-block: 0;
-      padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-      background-color: ${color.WHITE};
-      font-size: ${fontSize.M};
-    `
-  }}
-`
-
-const LoaderWrapper = styled.div<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: ${spacingByChar(1)};
-  `}
-`
