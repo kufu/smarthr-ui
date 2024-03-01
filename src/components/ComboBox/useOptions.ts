@@ -6,18 +6,29 @@ import { useId } from '../../hooks/useId'
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem, ComboBoxOption } from './types'
 
+const defaultIsItemSelected = <T>(
+  targetItem: ComboBoxItem<T>,
+  selectedItems: Array<ComboBoxItem<T>>,
+) =>
+  selectedItems.find(
+    (selectedItem) =>
+      selectedItem.label === targetItem.label && selectedItem.value === targetItem.value,
+  ) !== undefined
+
 export function useOptions<T>({
   items,
   selected,
   creatable,
   inputValue = '',
   isFilteringDisabled = false,
+  isItemSelected = defaultIsItemSelected,
 }: {
   items: Array<ComboBoxItem<T>>
   selected: (ComboBoxItem<T> | null) | Array<ComboBoxItem<T>>
   creatable: boolean
   inputValue?: string
   isFilteringDisabled?: boolean
+  isItemSelected?: (targetItem: ComboBoxItem<T>, selectedItems: Array<ComboBoxItem<T>>) => boolean
 }) {
   const isInputValueAddable = useMemo(
     () => creatable && inputValue !== '' && !items.some((item) => item.label === inputValue),
@@ -34,16 +45,12 @@ export function useOptions<T>({
   const isSelected = useCallback(
     (item: ComboBoxItem<T>) => {
       if (Array.isArray(selected)) {
-        return (
-          selected.find(
-            (_selected) => _selected.label === item.label && _selected.value === item.value,
-          ) !== undefined
-        )
+        return isItemSelected(item, selected)
       } else {
         return selected !== null && selected.label === item.label
       }
     },
-    [selected],
+    [isItemSelected, selected],
   )
 
   const allOptions: Array<ComboBoxOption<T>> = useMemo(() => {
