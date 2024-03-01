@@ -1,68 +1,71 @@
-import React, { FC, HTMLAttributes, ReactNode } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
+import { useTheme } from '../../hooks/useTailwindTheme'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
-
-import { useClassNames } from './useClassNames'
 
 type DefinitionListItemProps = {
   term: ReactNode
   description?: ReactNode
   fullWidth?: boolean
-  className?: string
+  maxColumns?: number
 }
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DefinitionListItemProps>
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof DefinitionListItemProps>
+
+const definitionListItem = tv({
+  slots: {
+    wrapper: [
+      'smarthr-ui-DefinitionListItem shr-border-b-shorthand shr-min-w-[12em] shr-grow shr-border-dotted',
+      'contrast-more:shr-border-b-high-contrast',
+    ],
+    termEl: 'smarthr-ui-DefinitionListItem-term',
+    descriptionEl:
+      'smarthr-ui-DefinitionListItem-description min-h-[theme(lineHeight.normal)] shr-ms-[initial] shr-pb-0.25',
+  },
+  variants: {
+    fullWidth: {
+      true: {
+        wrapper: 'shr-basis-full',
+      },
+    },
+  },
+})
 
 export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
+  maxColumns,
+  fullWidth,
   term,
   description,
-  className = '',
+  className,
 }) => {
-  const theme = useTheme()
-  const { definitionListItem } = useClassNames()
+  const { spacing } = useTheme()
+  const { wrapperStyleProps, termStyle, descriptionStyle } = useMemo(() => {
+    const { wrapper, termEl, descriptionEl } = definitionListItem()
+    return {
+      wrapperStyleProps: {
+        className: wrapper({ fullWidth, className }),
+        style: {
+          flexBasis:
+            // fullWidth の方が強い
+            !fullWidth && maxColumns
+              ? `calc((100% - ${spacing[1.5]} * ${maxColumns - 1}) / ${maxColumns})`
+              : undefined,
+        },
+      },
+      termStyle: termEl(),
+      descriptionStyle: descriptionEl(),
+    }
+  }, [className, fullWidth, maxColumns, spacing])
 
   return (
-    <StyledStack $themes={theme} className={`${className} ${definitionListItem.wrapper}`}>
-      <TermText className={definitionListItem.term}>{term}</TermText>
-      <DescriptionText themes={theme} className={definitionListItem.description}>
+    <Stack {...wrapperStyleProps} gap={0.25}>
+      <Text as="dt" size="S" leading="TIGHT" styleType="subBlockTitle" className={termStyle}>
+        {term}
+      </Text>
+      <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={descriptionStyle}>
         {description}
-      </DescriptionText>
-    </StyledStack>
+      </Text>
+    </Stack>
   )
 }
-
-const StyledStack = styled(Stack).attrs({ gap: 0.25 })<{ $themes: Theme }>`
-  ${({ $themes: { border } }) => css`
-    border-bottom: ${border.shorthand};
-    border-bottom-style: dotted;
-
-    @media (prefers-contrast: more) {
-      & {
-        border-bottom: ${border.highContrast};
-      }
-    }
-  `}
-`
-
-const TermText = styled(Text).attrs({
-  forwardedAs: 'dt',
-  size: 'S',
-  weight: 'bold',
-  color: 'TEXT_GREY',
-  leading: 'TIGHT',
-})``
-
-const DescriptionText = styled(Text).attrs({
-  forwardedAs: 'dd',
-  size: 'M',
-  color: 'TEXT_BLACK',
-  leading: 'NORMAL',
-})<{ themes: Theme }>`
-  ${({ themes: { leading, space } }) => css`
-    margin-inline-start: initial;
-    padding-bottom: ${space(0.25)};
-    min-height: ${leading.NORMAL}em;
-  `}
-`
