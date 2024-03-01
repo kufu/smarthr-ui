@@ -1,7 +1,8 @@
 import React, {
   ChangeEvent,
+  ComponentPropsWithRef,
   DragEvent,
-  HTMLAttributes,
+  PropsWithChildren,
   forwardRef,
   useCallback,
   useImperativeHandle,
@@ -9,19 +10,36 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Button } from '../Button'
 import { FaFolderOpenIcon } from '../Icon'
 
-import { useClassNames } from './useClassNames'
-
 import type { DecoratorsType } from '../../types'
 
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof DropZoneProps>
+const dropZone = tv({
+  slots: {
+    wrapper: [
+      'smarthr-ui-DropZone',
+      'shr-border-shorthand shr-flex shr-flex-col shr-items-center shr-justify-center shr-bg-column shr-p-2.5',
+    ],
+    input: 'shr-hidden',
+  },
+  variants: {
+    filesDraggedOver: {
+      true: {
+        wrapper: 'shr-border-main',
+      },
+      false: {
+        wrapper: 'shr-border-dashed',
+      },
+    },
+  },
+})
 
-type DropZoneProps = {
+type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof DropZoneProps>
+
+type DropZoneProps = PropsWithChildren<{
   /**
    * ボタンまたはドラッグ&ドロップでファイルが追加された時に発火するコールバック関数
    */
@@ -36,11 +54,10 @@ type DropZoneProps = {
   accept?: string
   /** 複数ファイルを選択できるかどうか */
   multiple?: boolean
-  children?: React.ReactNode
   name?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'selectButtonLabel'>
-}
+}>
 
 const SELECT_BUTTON_LABEL = 'ファイルを選択'
 
@@ -51,11 +68,9 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 
 export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProps>(
   ({ children, onSelectFiles, accept, multiple = true, name, decorators }, ref) => {
-    const theme = useTheme()
-    const classNames = useClassNames()
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
-
+    const { wrapper, input } = useMemo(() => dropZone({ filesDraggedOver }), [filesDraggedOver])
     useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(
       ref,
       () => fileRef.current,
@@ -99,14 +114,7 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
     }
 
     return (
-      <Wrapper
-        theme={theme}
-        filesDraggedOver={filesDraggedOver}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        className={classNames.wrapper}
-      >
+      <div onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave} className={wrapper()}>
         {children}
         <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
           {selectButtonLabel}
@@ -119,29 +127,9 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
           multiple={multiple}
           accept={accept}
           onChange={onChange}
+          className={input()}
         />
-      </Wrapper>
+      </div>
     )
   },
 )
-
-const Wrapper = styled.div<{ theme: Theme; filesDraggedOver: boolean }>`
-  ${({ theme, filesDraggedOver }) => {
-    const { palette, frame, spacingByChar } = theme
-    const border = filesDraggedOver
-      ? `solid ${frame.border.lineWidth} ${palette.MAIN}`
-      : `dashed ${frame.border.lineWidth} ${palette.BORDER}`
-    return css`
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: ${spacingByChar(2.5)};
-      border: ${border};
-      background-color: ${palette.COLUMN};
-      > input {
-        display: none;
-      }
-    `
-  }}
-`
