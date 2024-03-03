@@ -65,6 +65,11 @@ type Props<T> = BaseProps<T> & {
     selectedListAriaLabel?: (text: string) => string
   }
   /**
+   * アイテムが選択されたときに選択済みかどうかを判定するコールバック関数/
+   */
+  isItemSelected?: (targetItem: ComboBoxItem<T>, selectedItems: Array<ComboBoxItem<T>>) => boolean
+
+  /**
    * input 要素の属性
    */
   inputAttributes?: Omit<
@@ -185,6 +190,7 @@ const ActualMultiComboBox = <T,>(
     onBlur,
     onKeyPress,
     decorators,
+    isItemSelected,
     inputAttributes,
     style,
     ...props
@@ -206,6 +212,7 @@ const ActualMultiComboBox = <T,>(
     selected: selectedItems,
     creatable,
     inputValue,
+    isItemSelected,
   })
   const handleDelete = useCallback(
     (item: ComboBoxItem<T>) => {

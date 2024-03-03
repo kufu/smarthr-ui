@@ -56,7 +56,7 @@ export const notificationBar = tv({
     /** スライドインするかどうか */
     animate: {
       true: {
-        wrapper: 'shr-animate-[notifiction-bar-slide-in_0.2s_ease-out]',
+        wrapper: 'shr-animate-[notification-bar-slide-in_0.2s_ease-out]',
       },
     },
   },
