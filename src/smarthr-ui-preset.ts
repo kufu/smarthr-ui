@@ -267,11 +267,11 @@ export default {
           },
         },
         'loader-left-spin': {
-          '0% 100%': { transform: 'rotate(130deg)' },
+          '0%, 100%': { transform: 'rotate(130deg)' },
           '50%': { transform: 'rotate(-5deg)' },
         },
         'loader-right-spin': {
-          '0% 100%': { transform: 'rotate(-130deg)' },
+          '0%, 100%': { transform: 'rotate(-130deg)' },
           '50%': { transform: 'rotate(5deg)' },
         },
         'notification-bar-slide-in': {
