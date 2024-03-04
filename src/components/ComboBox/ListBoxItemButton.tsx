@@ -68,6 +68,7 @@ const ListBoxItemButton = <T,>({
   return isNew ? (
     // eslint-disable-next-line smarthr/a11y-clickable-element-has-text
     <button
+      type="button"
       key={option.id}
       onClick={handleAdd}
       onMouseOver={handleMouseOver}
@@ -80,6 +81,7 @@ const ListBoxItemButton = <T,>({
     </button>
   ) : (
     <button
+      type="button"
       key={option.id}
       disabled={disabled}
       onClick={handleSelect}
