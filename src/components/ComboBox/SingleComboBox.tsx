@@ -148,7 +148,7 @@ const ActualSingleComboBox = <T,>(
     placeholder = '',
     dropdownHelpMessage,
     isLoading,
-    width = 'auto',
+    width,
     dropdownWidth = 'auto',
     className,
     onChange,
