@@ -15,7 +15,6 @@ const unstyledButton = tv({
     'shr-bg-transparent',
     'shr-bg-none',
     'shr-bg-origin-padding',
-    'shr-text-inherit',
     'shr-font-inherit',
     'shr-text-inherit',
     'shr-text-left',

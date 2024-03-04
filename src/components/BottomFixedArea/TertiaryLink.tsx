@@ -2,6 +2,7 @@ import React, { HTMLAttributes, ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
+import { UnstyledButton } from '../Button'
 import { ComponentProps as IconProps } from '../Icon'
 
 import { useClassNames } from './useClassNames'
@@ -46,7 +47,7 @@ const resetButtonStyle = css`
   appearance: none;
 `
 
-const Button = styled.button<{ themes: Theme }>`
+const Button = styled(UnstyledButton)<{ themes: Theme }>`
   ${resetButtonStyle}
   ${({ themes }) => {
     const { spacingByChar } = themes

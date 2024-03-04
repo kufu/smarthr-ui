@@ -9,6 +9,7 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { getIsInclude, mapToKeyArray } from '../../libs/map'
+import { UnstyledButton } from '../Button'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
 import { FaCaretRightIcon, FaCaretUpIcon } from '../Icon'
 import { Cluster } from '../Layout'
@@ -102,7 +103,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
   return (
     // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Heading tag={headingTag} type={headingType}>
-      <button
+      <UnstyledButton
         {...props}
         id={`${name}-trigger`}
         aria-expanded={isExpanded}
@@ -116,7 +117,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
           <span className={titleStyle}>{children}</span>
           {displayIcon && iconPosition === 'right' && <FaCaretUpIcon className={rightIconStyle} />}
         </Cluster>
-      </button>
+      </UnstyledButton>
     </Heading>
   )
 }

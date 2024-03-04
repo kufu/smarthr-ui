@@ -8,6 +8,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { UnstyledButton } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
@@ -122,7 +123,6 @@ const sortButton = tv({
     'shr-cursor-pointer',
     'shr-box-content',
     'shr-inline-flex',
-    'shr-items-center',
     'shr-gap-x-0.5',
     'shr-justify-between',
     '-shr-mx-1',
@@ -137,12 +137,13 @@ const sortButton = tv({
     'shr-text-inherit',
     'shr-leading-inherit',
     '[font-weight:inherit]',
+    '[align-items:center]',
   ],
 })
 
 const SortButton: FC<ComponentPropsWithoutRef<'button'>> = ({ className, ...props }) => {
   const sortButtonStyle = useMemo(() => sortButton({ className }), [className])
-  return <button {...props} className={sortButtonStyle} />
+  return <UnstyledButton {...props} className={sortButtonStyle} />
 }
 
 const sortIcon = tv({
