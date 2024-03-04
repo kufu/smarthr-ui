@@ -176,7 +176,7 @@ const ActualMultiComboBox = <T,>(
     dropdownHelpMessage,
     isLoading,
     selectedItemEllipsis,
-    width = 'auto',
+    width,
     dropdownWidth = 'auto',
     inputValue: controlledInputValue,
     className,
