@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [43.1.0](https://github.com/kufu/smarthr-ui/compare/v43.0.0...v43.1.0) (2024-03-05)
+
+
+### Features
+
+* MultiComboBox のアイテムが選択されたときに選択済みかどうかを判定するコールバック関数をオプションで渡せるようにする ([#4346](https://github.com/kufu/smarthr-ui/issues/4346)) ([f734a79](https://github.com/kufu/smarthr-ui/commit/f734a790bc03101749b6d808a07b1ceccf1b3974))
+* アイコンを Font Awesome 6 へ更新 ([#4291](https://github.com/kufu/smarthr-ui/issues/4291)) ([a50f322](https://github.com/kufu/smarthr-ui/commit/a50f322c2c87cadcc43413d97fcb5c7a89818d1f))
+
+
+### Bug Fixes
+
+* Combobox関係のbuttonのtype属性がsubmitになっているものがあるため対応する ([#4372](https://github.com/kufu/smarthr-ui/issues/4372)) ([420cbae](https://github.com/kufu/smarthr-ui/commit/420cbae3857b78ea200c804aac84aeacf560caf8))
+* Fieldset で innerMargin が作用しない不具合を修正 ([#4374](https://github.com/kufu/smarthr-ui/issues/4374)) ([3e7a776](https://github.com/kufu/smarthr-ui/commit/3e7a7760c5d28b66cab6650b8e4810119876e886))
+* fix typo in NotificationBar component ([#4377](https://github.com/kufu/smarthr-ui/issues/4377)) ([ca1fba2](https://github.com/kufu/smarthr-ui/commit/ca1fba256bf6c3f6a28a3ddb3fb3a86f41a28f07))
+* Loader の CSS アニメーションを修正 ([#4381](https://github.com/kufu/smarthr-ui/issues/4381)) ([533b151](https://github.com/kufu/smarthr-ui/commit/533b151f15fe4c3854a9cf16885591b7e8002779))
+* style属性を無意味に指定されるため、widthのデフォルト値である"auto"を削除する ([#4385](https://github.com/kufu/smarthr-ui/issues/4385)) ([04819d0](https://github.com/kufu/smarthr-ui/commit/04819d05c7f6a39608bcc62c5f9bdb9a0fec1507))
+
 ## [43.0.0](https://github.com/kufu/smarthr-ui/compare/v42.0.0...v43.0.0) (2024-02-28)
 
 
