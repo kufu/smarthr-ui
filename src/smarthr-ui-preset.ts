@@ -267,14 +267,14 @@ export default {
           },
         },
         'loader-left-spin': {
-          '0% 100%': { transform: 'rotate(130deg)' },
+          '0%, 100%': { transform: 'rotate(130deg)' },
           '50%': { transform: 'rotate(-5deg)' },
         },
         'loader-right-spin': {
-          '0% 100%': { transform: 'rotate(-130deg)' },
+          '0%, 100%': { transform: 'rotate(-130deg)' },
           '50%': { transform: 'rotate(5deg)' },
         },
-        'notifiction-bar-slide-in': {
+        'notification-bar-slide-in': {
           from: {
             opacity: '0',
             /* 1行の場合の高さ分だけスライドさせる */

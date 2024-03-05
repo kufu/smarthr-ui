@@ -1,64 +1,30 @@
-import React, { ComponentProps, FC, HTMLAttributes } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentProps, FC, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Cluster } from '../Layout'
 
 import { DefinitionListItem } from './DefinitionListItem'
-import { useClassNames } from './useClassNames'
 
 type Props = {
   /** 定義リストのアイテムの配列 */
   items: Array<ComponentProps<typeof DefinitionListItem>>
   /** 最大列数 */
   maxColumns?: number
-  /** コンポーネントに適用するクラス名 */
-  className?: string
 }
-type ElementProps = Omit<HTMLAttributes<HTMLDListElement>, keyof Props>
+type ElementProps = Omit<ComponentProps<'dl'>, keyof Props>
 
-export const DefinitionList: FC<Props & ElementProps> = ({ items, maxColumns, className = '' }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
+const definitionList = tv({
+  base: 'smarthr-ui-DefinitionList shr-my-[initial]',
+})
+
+export const DefinitionList: FC<Props & ElementProps> = ({ items, maxColumns, className }) => {
+  const styles = useMemo(() => definitionList({ className }), [className])
 
   return (
-    <Wrapper className={`${className} ${classNames.definitionList.wrapper}`}>
-      {items.map(({ term, description, fullWidth, className: itemClassName }, index) => (
-        <Item
-          term={term}
-          description={description}
-          key={index}
-          maxColumns={maxColumns}
-          fullWidth={fullWidth}
-          className={itemClassName}
-          themes={theme}
-        />
+    <Cluster as="dl" gap={1.5} className={styles}>
+      {items.map((item, index) => (
+        <DefinitionListItem {...item} key={index} maxColumns={maxColumns} />
       ))}
-    </Wrapper>
+    </Cluster>
   )
 }
-
-const Wrapper = styled(Cluster).attrs({ forwardedAs: 'dl', gap: 1.5 })`
-  margin-block: initial;
-`
-
-const Item = styled(DefinitionListItem)<{
-  themes: Theme
-  maxColumns: Props['maxColumns']
-  fullWidth?: boolean
-}>`
-  ${({ maxColumns, fullWidth, themes: { space } }) => css`
-    flex-grow: 1;
-    ${maxColumns &&
-    css`
-      /* (全体幅 - (溝 * (最大列数 - 1)) / 最大列数 */
-      flex-basis: calc((100% - ${space(1.5)} * ${maxColumns - 1}) / ${maxColumns});
-    `}
-    ${fullWidth &&
-    css`
-      flex-basis: 100%;
-    `}
-
-    min-width: 12em;
-  `}
-`
