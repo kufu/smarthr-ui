@@ -316,21 +316,25 @@ export default {
           borderColor: theme('borderColor.default'),
         },
         '.border-t-shorthand': {
+          borderWidth: '0',
           borderTopWidth: theme('borderWidth.DEFAULT'),
           borderTopStyle: 'solid',
           borderTopColor: theme('borderColor.default'),
         },
         '.border-r-shorthand': {
+          borderWidth: '0',
           borderRightWidth: theme('borderWidth.DEFAULT'),
           borderRightStyle: 'solid',
           borderRightColor: theme('borderColor.default'),
         },
         '.border-b-shorthand': {
+          borderWidth: '0',
           borderBottomWidth: theme('borderWidth.DEFAULT'),
           borderBottomStyle: 'solid',
           borderBottomColor: theme('borderColor.default'),
         },
         '.border-l-shorthand': {
+          borderWidth: '0',
           borderLeftWidth: theme('borderWidth.DEFAULT'),
           borderLeftStyle: 'solid',
           borderLeftColor: theme('borderColor.default'),
