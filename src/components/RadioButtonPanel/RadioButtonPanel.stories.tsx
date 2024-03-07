@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { ChangeEvent, useState } from 'react'
 
 import { Cluster, Stack } from '../Layout'
@@ -13,15 +13,15 @@ export default {
   component: RadioButtonPanel,
 }
 
-export const All: Story = () => {
+export const All: StoryFn = () => {
   const [checkedName, setCheckedName] = useState<string | null>(null)
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => setCheckedName(e.currentTarget.name)
 
   return (
-    <Stack as="ul" gap={2}>
+    <Stack as="ul" gap={2} className="shr-my-[unset] shr-ps-[unset]">
       <Stack as="li">
         <Fieldset title="標準的な使い方" titleType="blockTitle">
-          <Stack as="ul" gap={0.5}>
+          <Stack as="ul" gap={0.5} className="shr-ps-[unset]">
             <RadioButtonPanel
               as="li"
               name="1"
@@ -46,7 +46,7 @@ export const All: Story = () => {
 
       <Stack as="li">
         <Fieldset title="複数のテキストを含む場合" titleType="blockTitle">
-          <Stack as="ul">
+          <Stack as="ul" className="shr-ps-[unset]">
             <RadioButtonPanel
               as="li"
               name="5"
