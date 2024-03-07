@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [43.1.1](https://github.com/kufu/smarthr-ui/compare/v43.1.0...v43.1.1) (2024-03-06)
+
+
+### Bug Fixes
+
+* DefinitionListのstyleがsmarthr-normalize-cssを利用していないプロダクトで崩れてしまう問題に対応する ([#4392](https://github.com/kufu/smarthr-ui/issues/4392)) ([1fd55bc](https://github.com/kufu/smarthr-ui/commit/1fd55bc3770d0f78772f3ff69821aefccab85968))
+
 ## [43.1.0](https://github.com/kufu/smarthr-ui/compare/v43.0.0...v43.1.0) (2024-03-05)
 
 
