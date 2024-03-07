@@ -11,7 +11,7 @@ import { PaginationItemButton } from './PaginationItemButton'
 const pagination = tv({
   slots: {
     wrapper: 'smarthr-ui-Pagination shr-inline-block shr-max-w-full',
-    list: 'shr-m-0.25 shr-list-none',
+    list: 'shr-m-0.25 shr-list-none shr-ps-[unset]',
     firstListItem: 'smarthr-ui-Pagination-first',
     prevListItem: 'smarthr-ui-Pagination-prev',
     nextListItem: 'smarthr-ui-Pagination-next',
