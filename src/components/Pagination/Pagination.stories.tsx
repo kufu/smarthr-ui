@@ -68,11 +68,11 @@ export const RegFocus = Template.bind({})
 RegFocus.play = () => userEvent.tab()
 
 const List = styled.ul`
+  list-style-type: none;
+  margin-block: unset;
   padding: 0 20px;
 
   & > li {
-    list-style: none;
-
     &:not(:first-child) {
       margin-top: 20px;
     }
