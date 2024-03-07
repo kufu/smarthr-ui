@@ -98,8 +98,13 @@ export const BaseStory: StoryFn = () => {
 BaseStory.storyName = 'Base'
 
 const DescriptionList = styled.dl`
+  margin-block-start: unset;
   padding: 24px;
   background-color: #eee;
+
+  dd {
+    margin-inline-start: unset;
+  }
 `
 
 const List = styled.ul`

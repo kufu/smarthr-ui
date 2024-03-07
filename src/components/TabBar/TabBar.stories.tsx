@@ -15,7 +15,7 @@ export default {
 }
 
 export const All: StoryFn = () => (
-  <Stack as="ul" className="shr-list-none">
+  <Stack as="ul" className="shr-my-[unset] shr-list-none shr-ps-[unset]">
     <li>
       <p>標準</p>
       <Template subid={1} />

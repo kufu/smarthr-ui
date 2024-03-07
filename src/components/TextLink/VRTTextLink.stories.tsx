@@ -100,6 +100,7 @@ const Wrapper = styled.ul(
   ({ theme: { spacingByChar } }) => css`
     list-style: none;
     margin: ${spacingByChar(1.5)};
+    padding-inline-start: unset;
 
     li + li {
       margin-top: ${spacingByChar(1)};

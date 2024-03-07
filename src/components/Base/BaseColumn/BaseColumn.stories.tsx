@@ -11,7 +11,7 @@ export default {
 }
 
 export const All: StoryFn = () => (
-  <Stack as="ul">
+  <Stack as="ul" className="shr-my-[unset] shr-list-none shr-ps-[unset]">
     <li>
       <p>padding / bgColor で余白と背景色を変えることもできます</p>
     </li>

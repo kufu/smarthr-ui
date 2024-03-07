@@ -38,7 +38,7 @@ export const All: StoryFn = () => {
   ]
 
   return (
-    <Stack gap={2} as="dl">
+    <Stack gap={2} as="dl" className="shr-my-[unset] [&_dd]:shr-ms-[unset]">
       <Stack>
         <Text italic color="TEXT_GREY" as="dt">
           基本

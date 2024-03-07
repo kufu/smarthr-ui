@@ -55,7 +55,7 @@ export const AltText: StoryFn = () => (
     <p>
       <span id="text">連絡帳</span>
     </p>
-    <dl>
+    <dl className="shr-my-[unset] [&_dd]:shr-ms-[unset]">
       <dt>visually hidden text</dt>
       <dd>
         <FaAddressBookIcon alt="連絡帳" />
@@ -167,5 +167,9 @@ const ItemWrapper = styled(BaseColumn)`
     flex-direction: column;
     align-items: center;
     gap: ${space(0.5)};
+
+    dd {
+      margin-inline-start: unset;
+    }
   `}
 `
