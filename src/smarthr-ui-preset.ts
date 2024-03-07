@@ -347,6 +347,9 @@ export default {
           lineHeight: theme('lineHeight.normal'),
           color: theme('colors.black'),
         },
+        p: {
+          marginBlock: 'unset',
+        },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
     }),
