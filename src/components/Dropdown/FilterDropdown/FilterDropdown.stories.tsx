@@ -232,6 +232,8 @@ const Description = styled.p`
   padding: 100px 0;
 `
 const RadioButtonList = styled.ul`
+  margin-block: unset;
+  padding-inline-start: unset;
   list-style: none;
 `
 
