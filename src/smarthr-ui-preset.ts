@@ -350,6 +350,9 @@ export default {
         p: {
           marginBlock: 'unset',
         },
+        'button, input, textarea, select': {
+          fontFamily: 'inherit',
+        },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
     }),
