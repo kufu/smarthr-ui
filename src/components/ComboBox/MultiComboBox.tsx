@@ -330,10 +330,13 @@ const ActualMultiComboBox = <T,>(
         e.key === 'Backspace' &&
         !inputValue &&
         selectedItems.length > 0 &&
-        !activeOption &&
         selectedItems[selectedItems.length - 1].deletable !== false
       ) {
-        handleDelete(selectedItems[selectedItems.length - 1])
+        const lastItem = selectedItems[selectedItems.length - 1]
+        handleDelete(lastItem)
+        // TODO: selectedItems の変更によって useEffect 内で input の値が破棄されてしまうため、取り急ぎ遅延させているが、
+        //       より良い解決策があるはずなので検討する。
+        setTimeout(() => setInputValueIfUncontrolled(`${lastItem.label}`), 100)
         e.stopPropagation()
       } else {
         e.stopPropagation()

@@ -221,6 +221,8 @@ test('キーボードで選択済みアイテムリストが操作できるこ�
     .pressKey('backspace')
     .expect(wrapper.find('.smarthr-ui-MultiComboBox-selectedItem').withText('option 1').exists)
     .notOk()
+    .expect(wrapper.find('.smarthr-ui-MultiComboBox-input').value)
+    .eql('option 1')
 })
 
 test('キーボードでリストボックスが操作できること', async (t) => {
