@@ -1,6 +1,7 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { Title, Subtitle, Description, Primary, ArgsTable, Stories } from '@storybook/blocks'
+import ReactGA from 'react-ga4'
 
 import { Reset } from 'styled-reset'
 import { Preview } from '@storybook/react'
@@ -15,6 +16,8 @@ import { defaultLeading, defaultColor } from '../src/'
 import tailwindConfig from '../tailwind.config'
 
 import '../src/styles/index.css'
+
+ReactGA.initialize('G-65N1S3NF5R')
 
 const preview: Preview = {
   globalTypes: {
@@ -98,6 +101,11 @@ const preview: Preview = {
         ) : undefined
       const theme = createTheme()
       const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
+
+      useEffect(() => {
+        ReactGA.send({ hitType: 'pageview', title: context.title })
+      }, [])
+
       return (
         <ThemeProvider>
           <ShrThemeProvider theme={theme}>
