@@ -45,9 +45,9 @@ export default {
     }),
     borderRadius: {
       none: '0',
-      s: '0.25rem',
-      m: '0.375rem',
-      l: '0.5rem',
+      s: '4px',
+      m: '6px',
+      l: '8px',
       em: '1em',
       full: '9999px',
     },
