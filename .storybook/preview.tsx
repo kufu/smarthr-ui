@@ -19,7 +19,7 @@ import '../src/styles/index.css'
 const preview: Preview = {
   globalTypes: {
     reset: {
-      defaultValue: 'smarthr-normalize',
+      defaultValue: null,
       toolbar: {
         title: 'CSS Reset',
         items: [
