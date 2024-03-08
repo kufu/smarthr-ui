@@ -10,7 +10,7 @@ exports[`TabBar should be match snapshot 1`] = `
   >
     <button
       aria-selected={false}
-      className="smarthr-ui-TabItem shr-bg-transparent shr-cursor-pointer shr-appearance-none shr-font-bold shr-py-0 shr-px-1 shr-box-border hover:shr-bg-column hover:shr-text-black disabled:shr-bg-transparent disabled:shr-text-grey/50 disabled:shr-cursor-not-allowed shr-text-grey shr-border-none shr-h-[43px] shr-transition-colors"
+      className="shr-appearance-none shr-inline shr-items-stretch shr-overflow-visible shr-cursor-auto shr-p-0 shr-border-none shr-border-current shr-box-content shr-bg-transparent shr-bg-none shr-bg-origin-padding shr-text-inherit shr-font-inherit shr-text-inherit shr-text-left shr-select-auto focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-cursor-pointer shr-appearance-none shr-border-none shr-bg-transparent shr-px-1 shr-py-0 shr-font-bold hover:shr-bg-column hover:shr-text-black [&]:shr-box-border [&]:shr-text-grey shr-h-[43px] disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50 aria-selected:shr-border-b-shorthand aria-selected:shr-relative aria-selected:shr-border-b-[3px] aria-selected:shr-border-main aria-selected:shr-text-black aria-selected:shr-h-[40px] shr-transition-colors"
       disabled={false}
       id="1"
       onClick={[Function]}
@@ -21,7 +21,7 @@ exports[`TabBar should be match snapshot 1`] = `
     </button>
     <button
       aria-selected={true}
-      className="smarthr-ui-TabItem shr-bg-transparent shr-cursor-pointer shr-appearance-none shr-font-bold shr-py-0 shr-px-1 shr-box-border hover:shr-bg-column hover:shr-text-black disabled:shr-bg-transparent disabled:shr-text-grey/50 disabled:shr-cursor-not-allowed shr-relative shr-text-black shr-border-b-[3px] shr-border-t-0 shr-border-l-0 shr-border-r-0 shr-border-solid shr-border-main shr-h-[40px] shr-transition-colors"
+      className="shr-appearance-none shr-inline shr-items-stretch shr-overflow-visible shr-cursor-auto shr-p-0 shr-border-none shr-border-current shr-box-content shr-bg-transparent shr-bg-none shr-bg-origin-padding shr-text-inherit shr-font-inherit shr-text-inherit shr-text-left shr-select-auto focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-cursor-pointer shr-appearance-none shr-border-none shr-bg-transparent shr-px-1 shr-py-0 shr-font-bold hover:shr-bg-column hover:shr-text-black [&]:shr-box-border [&]:shr-text-grey shr-h-[43px] disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50 aria-selected:shr-border-b-shorthand aria-selected:shr-relative aria-selected:shr-border-b-[3px] aria-selected:shr-border-main aria-selected:shr-text-black aria-selected:shr-h-[40px] shr-transition-colors"
       disabled={false}
       id="2"
       onClick={[Function]}
@@ -32,7 +32,7 @@ exports[`TabBar should be match snapshot 1`] = `
     </button>
     <button
       aria-selected={false}
-      className="smarthr-ui-TabItem shr-bg-transparent shr-cursor-pointer shr-appearance-none shr-font-bold shr-py-0 shr-px-1 shr-box-border hover:shr-bg-column hover:shr-text-black disabled:shr-bg-transparent disabled:shr-text-grey/50 disabled:shr-cursor-not-allowed shr-text-grey shr-border-none shr-h-[43px] shr-transition-colors"
+      className="shr-appearance-none shr-inline shr-items-stretch shr-overflow-visible shr-cursor-auto shr-p-0 shr-border-none shr-border-current shr-box-content shr-bg-transparent shr-bg-none shr-bg-origin-padding shr-text-inherit shr-font-inherit shr-text-inherit shr-text-left shr-select-auto focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-cursor-pointer shr-appearance-none shr-border-none shr-bg-transparent shr-px-1 shr-py-0 shr-font-bold hover:shr-bg-column hover:shr-text-black [&]:shr-box-border [&]:shr-text-grey shr-h-[43px] disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50 aria-selected:shr-border-b-shorthand aria-selected:shr-relative aria-selected:shr-border-b-[3px] aria-selected:shr-border-main aria-selected:shr-text-black aria-selected:shr-h-[40px] shr-transition-colors"
       disabled={true}
       id="3"
       onClick={[Function]}
