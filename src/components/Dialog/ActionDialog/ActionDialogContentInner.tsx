@@ -47,6 +47,8 @@ export type BaseProps = PropsWithChildren<{
    * 閉じるボタンを無効にするかどうか
    */
   closeDisabled?: boolean
+  /** ダイアログフッターの左端操作領域 */
+  subActionArea?: ReactNode
   /**
    * コンポーネントに適用するクラス名
    */
@@ -76,6 +78,7 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   responseMessage,
   actionDisabled = false,
   closeDisabled,
+  subActionArea,
   decorators,
 }) => {
   const classNames = useClassNames().dialog
@@ -106,24 +109,27 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
         {children}
       </Body>
       <ActionAreaStack $themes={theme} ref={bottomRef} className={classNames.actionArea}>
-        <ButtonArea className={classNames.buttonArea}>
-          <Button
-            onClick={onClickClose}
-            disabled={closeDisabled || isRequestProcessing}
-            className={classNames.closeButton}
-          >
-            {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
-          </Button>
-          <Button
-            variant={actionTheme}
-            onClick={handleClickAction}
-            disabled={actionDisabled}
-            loading={isRequestProcessing}
-            className={classNames.actionButton}
-          >
-            {actionText}
-          </Button>
-        </ButtonArea>
+        <Cluster justify="space-between">
+          <div>{subActionArea}</div>
+          <ButtonArea className={classNames.buttonArea}>
+            <Button
+              onClick={onClickClose}
+              disabled={closeDisabled || isRequestProcessing}
+              className={classNames.closeButton}
+            >
+              {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
+            </Button>
+            <Button
+              variant={actionTheme}
+              onClick={handleClickAction}
+              disabled={actionDisabled}
+              loading={isRequestProcessing}
+              className={classNames.actionButton}
+            >
+              {actionText}
+            </Button>
+          </ButtonArea>
+        </Cluster>
         {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
           <Message>
             <ResponseMessage type={responseMessage.status} role="alert">
