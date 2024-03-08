@@ -207,6 +207,14 @@ const ActualMultiComboBox = <T,>(
     creatable,
     inputValue,
   })
+  const setInputValueIfUncontrolled = useCallback(
+    (value: string) => {
+      if (!isInputControlled) {
+        setUncontrolledInputValue(value)
+      }
+    },
+    [isInputControlled],
+  )
   const handleDelete = useCallback(
     (item: ComboBoxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
@@ -292,14 +300,12 @@ const ActualMultiComboBox = <T,>(
   useOuterClick([outerRef, listBoxRef], blur)
 
   useEffect(() => {
-    if (!isInputControlled) {
-      setUncontrolledInputValue('')
-    }
+    setInputValueIfUncontrolled('')
 
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     }
-  }, [inputRef, isFocused, isInputControlled, selectedItems])
+  }, [inputRef, isFocused, isInputControlled, selectedItems, setInputValueIfUncontrolled])
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
@@ -367,11 +373,9 @@ const ActualMultiComboBox = <T,>(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (onChange) onChange(e)
       if (onChangeInput) onChangeInput(e)
-      if (!isInputControlled) {
-        setUncontrolledInputValue(e.currentTarget.value)
-      }
+      setInputValueIfUncontrolled(e.currentTarget.value)
     },
-    [isInputControlled, onChangeInput, onChange],
+    [onChange, onChangeInput, setInputValueIfUncontrolled],
   )
   const handleFocusInput = useCallback(() => {
     resetDeletionButtonFocus()
