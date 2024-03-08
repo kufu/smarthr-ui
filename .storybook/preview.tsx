@@ -22,7 +22,7 @@ ReactGA.initialize('G-65N1S3NF5R')
 const preview: Preview = {
   globalTypes: {
     reset: {
-      defaultValue: null,
+      defaultValue: 'smarthr-normalize',
       toolbar: {
         title: 'CSS Reset',
         items: [
