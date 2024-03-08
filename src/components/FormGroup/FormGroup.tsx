@@ -241,6 +241,10 @@ const WrapperStack = styled(Stack).attrs<{
   $themes: Theme
 }>`
   ${({ $themes: { color } }) => css`
+    margin-inline: unset;
+    border: unset;
+    padding: unset;
+
     &[disabled] {
       color: ${color.TEXT_DISABLED};
 
@@ -290,6 +294,8 @@ const TitleCluster = styled(Cluster).attrs(
 )<FormLabelProps>`
   /* flex-item が stretch してクリッカブル領域が広がりすぎないようにする */
   align-self: start;
+
+  padding-inline: unset;
 `
 
 const ErrorMessage = styled.p<{ themes: Theme }>`

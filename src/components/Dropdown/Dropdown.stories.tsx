@@ -300,5 +300,6 @@ const Bottom = styled.div`
   height: 500px;
 `
 const RadioButtonList = styled.ul`
+  padding-inline-start: unset;
   list-style: none;
 `
