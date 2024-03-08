@@ -1,5 +1,6 @@
 import React, {
   AriaAttributes,
+  ComponentProps,
   ComponentPropsWithoutRef,
   FC,
   PropsWithChildren,
@@ -8,6 +9,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { UnstyledButton } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
@@ -37,31 +39,20 @@ const SORT_DIRECTION_LABEL = {
 const thWrapper = tv({
   base: [
     'smarthr-ui-Th',
-    'shr-text-sm',
-    'shr-font-bold',
-    'shr-py-0.75',
-    'shr-px-1',
-    'shr-text-left',
-    'shr-text-black',
-    'shr-leading-tight',
-    'shr-align-middle',
+    'shr-px-1 shr-py-0.75 shr-text-left shr-align-middle shr-text-sm shr-font-bold shr-leading-tight shr-text-black',
     'aria-[sort]:shr-cursor-pointer',
     'hover:aria-[sort]:shr-bg-head-darken',
     '[&:has(:focus-visible)]:aria-[sort]:shr-focus-indicator',
     '[&[aria-sort=none]_.smarthr-ui-Icon]:forced-colors:shr-fill-[GrayText]',
-    '[&[aria-sort=ascending]_.smarthr-ui-Icon:first-of-type]:forced-colors:shr-fill-[CanvasText]',
-    '[&[aria-sort=ascending]_.smarthr-ui-Icon:last-of-type]:forced-colors:shr-fill-[GrayText]',
-    '[&[aria-sort=descending]_.smarthr-ui-Icon:first-of-type]:forced-colors:shr-fill-[GrayText]',
-    '[&[aria-sort=descending]_.smarthr-ui-Icon:last-of-type]:forced-colors:shr-fill-[CanvasText]',
+    '[&[aria-sort=ascending]_.smarthr-ui-Icon:first-of-type]:forced-colors:shr-fill-[CanvasText] [&[aria-sort=ascending]_.smarthr-ui-Icon:last-of-type]:forced-colors:shr-fill-[GrayText]',
+    '[&[aria-sort=descending]_.smarthr-ui-Icon:first-of-type]:forced-colors:shr-fill-[GrayText] [&[aria-sort=descending]_.smarthr-ui-Icon:last-of-type]:forced-colors:shr-fill-[CanvasText]',
   ],
   variants: {
     fixed: {
       true: [
         /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
         'fixedElement',
-        '[&.fixed]:shr-sticky',
-        '[&.fixed]:shr-right-0',
-        '[&.fixed]:after:shr-opacity-100',
+        '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:after:shr-opacity-100',
       ],
     },
   },
@@ -119,51 +110,36 @@ export const Th: FC<Props & ElementProps> = ({
 
 const sortButton = tv({
   base: [
-    'shr-cursor-pointer',
-    'shr-box-content',
-    'shr-inline-flex',
-    'shr-items-center',
-    'shr-gap-x-0.5',
-    'shr-justify-between',
-    '-shr-mx-1',
-    '-shr-my-0.75',
-    'shr-border-[unset]',
-    'shr-outline-[unset]',
-    'shr-bg-[unset]',
-    'shr-py-0.75',
-    'shr-px-1',
-    'shr-w-full',
-    'shr-font-inherit',
-    'shr-text-inherit',
-    'shr-leading-inherit',
-    '[font-weight:inherit]',
+    '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-justify-between shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold',
+    // UnstyledButton に stretch がなぜか指定されてて負けてしまうため（UnstyledButton を見直した方がよさそう）
+    '[&]:shr-items-center',
   ],
 })
 
-const SortButton: FC<ComponentPropsWithoutRef<'button'>> = ({ className, ...props }) => {
+const SortButton: FC<ComponentProps<typeof UnstyledButton>> = ({ className, ...props }) => {
   const sortButtonStyle = useMemo(() => sortButton({ className }), [className])
-  return <button {...props} className={sortButtonStyle} />
+  return <UnstyledButton {...props} className={sortButtonStyle} />
 }
 
 const sortIcon = tv({
   slots: {
-    wrapper: ['shr-inline-flex', 'shr-flex-col'],
-    upIcon: ['shr-text-base'],
-    downIcon: ['shr-text-base', '-shr-mt-em'],
+    wrapper: 'shr-inline-flex shr-flex-col',
+    upIcon: 'shr-text-base',
+    downIcon: '-shr-mt-em shr-text-base',
   },
   variants: {
     sort: {
       asc: {
-        upIcon: ['shr-text-black'],
-        downIcon: ['shr-text-disabled'],
+        upIcon: 'shr-text-black',
+        downIcon: 'shr-text-disabled',
       },
       desc: {
-        upIcon: ['shr-text-disabled'],
-        downIcon: ['shr-text-black'],
+        upIcon: 'shr-text-disabled',
+        downIcon: 'shr-text-black',
       },
       none: {
-        upIcon: ['shr-text-disabled'],
-        downIcon: ['shr-text-disabled'],
+        upIcon: 'shr-text-disabled',
+        downIcon: 'shr-text-disabled',
       },
     },
   },
