@@ -2,6 +2,7 @@ import React, { ReactNode, VFC } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useTheme } from '../../hooks/useTheme'
+import { UnstyledButton } from '../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import { FaCaretDownIcon, ComponentProps as IconProps } from '../Icon'
 
@@ -36,12 +37,11 @@ export const AppNaviDropdown: VFC<InnerProps> = ({
 
   return (
     <Dropdown>
-      <StyledDropdownTrigger>
+      <DropdownTrigger>
         <TriggerButton
           $themes={theme}
           aria-current={current ? 'page' : undefined}
           disabled={isUnclickable}
-          type="button"
           $displayCaret={displayCaret}
           $isActive={current}
           $isUnclickable={isUnclickable}
@@ -50,17 +50,14 @@ export const AppNaviDropdown: VFC<InnerProps> = ({
           {children}
           {displayCaret && <FaCaretDownIcon />}
         </TriggerButton>
-      </StyledDropdownTrigger>
+      </DropdownTrigger>
 
       <DropdownContent>{dropdownContent}</DropdownContent>
     </Dropdown>
   )
 }
 
-const StyledDropdownTrigger = styled(DropdownTrigger)`
-  height: 100%;
-`
-const TriggerButton = styled.button<
+const TriggerButton = styled(UnstyledButton)<
   ItemStyleProps & {
     $displayCaret?: boolean
   }
