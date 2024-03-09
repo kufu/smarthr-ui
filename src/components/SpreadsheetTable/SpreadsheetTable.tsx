@@ -1,24 +1,39 @@
-import React, { PropsWithChildren, ReactNode, TableHTMLAttributes } from 'react'
-import styled, { css } from 'styled-components'
-
-import { Theme, useTheme } from '../../hooks/useTheme'
+import React, { ComponentPropsWithoutRef, PropsWithChildren, ReactNode, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { SpreadsheetTableCorner } from './SpreadsheetTableCorner'
 
 type Props = PropsWithChildren<{
   data?: ReactNode[][]
 }>
-type ElementProps = Omit<TableHTMLAttributes<HTMLTableElement>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
+
+const spreadsheetTable = tv({
+  base: [
+    'smarthr-ui-SpreadsheetTable shr-border-shorthand shr-border-collapse shr-bg-head',
+    // th
+    '[&_th]:shr-p-0.25 [&_th]:shr-text-sm [&_th]:shr-font-normal [&_th]:shr-text-grey',
+    // th + th
+    '[&_th_+_th]:shr-border-l-shorthand [&_th_+_th]:shr-border-[theme(backgroundColor[head-darken])]',
+    // 左上の角： tr:first-child th:first-child
+    '[&_tr:first-child_th:first-child]:shr-w-[calc(1em_*_theme(lineHeight.normal))]',
+    // tr + tr th
+    '[&_tr_+_tr_th]:shr-border-t-shorthand [&_tr_+_tr_th]:shr-border-[theme(backgroundColor[head-darken])]',
+    // td
+    '[&_td]:shr-border-shorthand [&_td]:shr-bg-white [&_td]:shr-p-0.25 [&_td]:shr-text-sm',
+  ],
+})
 
 export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
   data,
-  className = '',
+  className,
   children,
   ...props
 }) => {
-  const theme = useTheme()
+  const style = useMemo(() => spreadsheetTable({ className }), [className])
+
   return (
-    <Wrapper {...props} themes={theme} className={`smarthr-ui-SpreadsheetTable ${className}`}>
+    <table {...props} className={style}>
       {data && (
         <>
           <thead>
@@ -45,39 +60,6 @@ export const SpreadsheetTable: React.FC<Props & ElementProps> = ({
         </>
       )}
       {children}
-    </Wrapper>
+    </table>
   )
 }
-
-const Wrapper = styled.table<{ themes: Theme }>`
-  ${({ themes: { border, color, fontSize, leading, space } }) => css`
-    border-collapse: collapse;
-    border: ${border.shorthand};
-    background-color: ${color.HEAD};
-
-    th,
-    td {
-      padding: ${space(0.25)};
-      font-size: ${fontSize.S};
-    }
-
-    th {
-      font-weight: normal;
-      color: ${color.TEXT_GREY};
-    }
-
-    th + th {
-      border-inline-start: 1px solid ${color.hoverColor(color.HEAD)};
-    }
-
-    tr + tr th {
-      border-block-start: 1px solid ${color.hoverColor(color.HEAD)};
-      width: calc(1em * ${leading.NORMAL});
-    }
-
-    td {
-      border: ${border.shorthand};
-      background-color: ${color.WHITE};
-    }
-  `}
-`
