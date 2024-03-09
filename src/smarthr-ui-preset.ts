@@ -347,8 +347,15 @@ export default {
           lineHeight: theme('lineHeight.normal'),
           color: theme('colors.black'),
         },
-        p: {
+        'p, dl': {
           marginBlock: 'unset',
+        },
+        ul: {
+          marginBlock: 'unset',
+          paddingInlineStart: 'unset',
+        },
+        dd: {
+          marginInlineStart: 'unset',
         },
         'button, input, textarea, select': {
           fontFamily: 'inherit',

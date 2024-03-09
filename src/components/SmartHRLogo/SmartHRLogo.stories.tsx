@@ -39,7 +39,6 @@ export const All: Story = () => (
 All.storyName = 'all'
 
 const List = styled.ul`
-  margin: 0;
   padding: 0;
 
   li {

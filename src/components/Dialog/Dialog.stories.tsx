@@ -103,7 +103,7 @@ export const Default: StoryFn = () => {
                 data-test="dialog-datepicker"
               />
             </Content>
-            <Fieldset title="Fruits">
+            <Fieldset title="Fruits" innerMargin={0.5}>
               <RadioList>
                 <li>
                   <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChangeValue}>
@@ -357,7 +357,7 @@ export const Form_Dialog: StoryFn = () => {
         id="dialog-form"
         data-test="form-dialog-content"
       >
-        <Fieldset title="fruits">
+        <Fieldset title="fruits" innerMargin={0.5}>
           <RadioList>
             <li>
               <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
@@ -1083,9 +1083,7 @@ const Content = styled.div`
 const StyledHeading = styled(Heading)`
   margin: 8px 24px;
 `
-const RadioList = styled.ul`
-  margin: 16px 24px;
-  padding: 0;
+const RadioList = styled(Cluster).attrs({ forwardedAs: 'ul', gap: 1.25 })`
   list-style: none;
 `
 const Footer = styled.div`

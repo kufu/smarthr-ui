@@ -83,7 +83,6 @@ VRTMultiForcedColors.parameters = {
 }
 
 const WrapperList = styled.ul`
-  margin-block: unset;
   padding: 0 24px;
   list-style: none;
   & > li {
