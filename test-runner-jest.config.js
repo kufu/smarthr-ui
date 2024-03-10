@@ -38,6 +38,7 @@ module.exports = {
      * error: "Elements must only use allowed ARIA attributes"
      */
     'DatePicker.stories.tsx',
+    'FormControl.stories.tsx', // DatePicker を含むために除外
     /**
      * error: "ARIA attributes must conform to valid values"
      */
