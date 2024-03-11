@@ -56,7 +56,6 @@ const StyledPageHeading = styled(PageHeading)`
 `
 
 const List = styled.ul`
-  margin-block: unset;
   padding: 0 2.4rem;
   list-style: none;
 

@@ -285,7 +285,6 @@ const List = styled.dl`
     }
     dd {
       margin-top: 5px;
-      margin-inline-start: unset;
 
       &.limit {
         width: 200px;

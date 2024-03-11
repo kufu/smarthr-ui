@@ -18,7 +18,7 @@ export const All: StoryFn = () => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => setCheckedName(e.currentTarget.name)
 
   return (
-    <Stack as="ul" gap={2} className="shr-my-[unset] shr-ps-[unset]">
+    <Stack as="ul" gap={2}>
       <Stack as="li">
         <Fieldset title="標準的な使い方" titleType="blockTitle">
           <Stack as="ul" gap={0.5} className="shr-ps-[unset]">

@@ -15,7 +15,7 @@ export default {
 }
 
 export const All: StoryFn = () => (
-  <Stack as="dl" gap={3} className="shr-my-[unset] [&_dd]:shr-ms-[unset]">
+  <Stack as="dl" gap={3}>
     <Stack>
       <DtText>種類</DtText>
       <dd>

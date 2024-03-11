@@ -104,7 +104,6 @@ RegInput.play = async ({ canvasElement }) => {
 }
 
 const ListStack = styled(Stack).attrs({ forwardedAs: 'ul', gap: 1.5 })`
-  margin-block: unset;
   padding: 0 24px;
   list-style: none;
 `
