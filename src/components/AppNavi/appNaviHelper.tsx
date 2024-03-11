@@ -44,11 +44,7 @@ export const getItemStyle = ({
   display: flex;
   align-items: center;
   gap: ${spacingByChar(0.5)};
-  height: 100%;
   box-sizing: border-box;
-  margin: 0;
-  border: none;
-  background-color: transparent;
   padding: ${spacingByChar(0.75)} ${spacingByChar(0.5)};
   text-decoration: none;
   font-size: ${fontSize.M};
