@@ -73,7 +73,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "npm publish が完了しました。Release Pull Request を手動でマージしたらリリース完了です。"
+              "text": "<!subteam^S01RJL6PHJ8> npm publish が完了しました。Release Pull Request を手動でマージしたらリリース完了です。"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
