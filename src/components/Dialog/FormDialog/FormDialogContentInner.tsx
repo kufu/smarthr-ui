@@ -118,7 +118,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
         </Body>
         <ActionAreaStack themes={theme} ref={bottomRef} className={classNames.actionArea}>
           <Cluster justify="space-between">
-            <div>{subActionArea}</div>
+            {subActionArea}
             <ButtonArea className={classNames.buttonArea}>
               <Button
                 onClick={onClickClose}
@@ -173,7 +173,9 @@ const ActionAreaStack = styled(Stack).attrs({ gap: 0.5 })<{ themes: Theme }>`
     padding: ${space(1)} ${space(1.5)};
   `}
 `
-const ButtonArea = styled(Cluster).attrs({ gap: { row: 0.5, column: 1 }, justify: 'flex-end' })``
+const ButtonArea = styled(Cluster).attrs({ gap: { row: 0.5, column: 1 }, justify: 'flex-end' })`
+  margin-inline-start: auto;
+`
 const Message = styled.div`
   text-align: right;
 `
