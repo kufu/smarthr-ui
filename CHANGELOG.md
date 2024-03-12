@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [43.2.0](https://github.com/kufu/smarthr-ui/compare/v43.1.1...v43.2.0) (2024-03-12)
+
+
+### Features
+
+* AppNavi の normazlize 依存を修正 ([#4422](https://github.com/kufu/smarthr-ui/issues/4422)) ([66006ca](https://github.com/kufu/smarthr-ui/commit/66006cab3b94fb63011bf869419aaa9756648ca4))
+* DefiinitionList の用語の見た目を変える termStyleType を追加 ([#4357](https://github.com/kufu/smarthr-ui/issues/4357)) ([e783716](https://github.com/kufu/smarthr-ui/commit/e7837161651bc6807d24af860c901c2bcce5b3f6))
+
+
+### Bug Fixes
+
+* button と input, textarea, select の font-family を normalize ([#4408](https://github.com/kufu/smarthr-ui/issues/4408)) ([9095dbb](https://github.com/kufu/smarthr-ui/commit/9095dbb121b15b34176c9ac43afef38af2d6c8f6))
+* Input と Fieldset の normazlize 依存を修正 ([#4406](https://github.com/kufu/smarthr-ui/issues/4406)) ([bf29538](https://github.com/kufu/smarthr-ui/commit/bf295387c91287114e3b0f8e78bff8d0e9c4d779))
+* Pagination の reset css 依存を修正 ([#4405](https://github.com/kufu/smarthr-ui/issues/4405)) ([227c5c1](https://github.com/kufu/smarthr-ui/commit/227c5c1a5d435c40fa55f13a95c84a53e95e8729))
+* RadioButtonPanel の normazlize 依存を修正 ([#4407](https://github.com/kufu/smarthr-ui/issues/4407)) ([d92ea43](https://github.com/kufu/smarthr-ui/commit/d92ea4352f896e000b86d7565bd46bdbe3bc56b7))
+* smarthr-normalize-css への依存を剥がすための下準備 ([#4398](https://github.com/kufu/smarthr-ui/issues/4398)) ([0cddab8](https://github.com/kufu/smarthr-ui/commit/0cddab82ec50d73518b2735a4dd60d8de766563d))
+* Table の normazlize 依存を修正 ([#4410](https://github.com/kufu/smarthr-ui/issues/4410)) ([96eccb0](https://github.com/kufu/smarthr-ui/commit/96eccb07d106a4b56105288eb1ad0a3df43401c5))
+* Textarea の normalize 依存を修正する ([#4412](https://github.com/kufu/smarthr-ui/issues/4412)) ([55122a6](https://github.com/kufu/smarthr-ui/commit/55122a6909e022902d93275e392bb8980041a00d))
+* 角丸のデザイントークンが rem ベースになっていたので修正 ([#4411](https://github.com/kufu/smarthr-ui/issues/4411)) ([2400cb6](https://github.com/kufu/smarthr-ui/commit/2400cb6430ed7688689341e9cc492abfc3235f88))
+* 順序なしリストと定義リストの余白を reset ([#4419](https://github.com/kufu/smarthr-ui/issues/4419)) ([830b026](https://github.com/kufu/smarthr-ui/commit/830b026add7d13ff86eb891659f8cb5dc62120a7))
+
 ### [43.1.1](https://github.com/kufu/smarthr-ui/compare/v43.1.0...v43.1.1) (2024-03-06)
 
 
