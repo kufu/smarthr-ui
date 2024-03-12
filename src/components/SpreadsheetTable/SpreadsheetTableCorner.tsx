@@ -1,23 +1,5 @@
-import styled, { css } from 'styled-components'
+import React from 'react'
 
-import { useTheme } from '../../hooks/useTheme'
-
-export const SpreadsheetTableCorner = styled.th(() => {
-  const { color, leading, space } = useTheme()
-  return css`
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      right: calc(${space(0.25)} / 2);
-      bottom: calc(${space(0.25)} / 2);
-      display: block;
-      background-color: ${color.ACTION_BACKGROUND};
-      padding: calc(${space(0.25)} / 2);
-      clip-path: polygon(0 100%, 100% 0, 100% 100%);
-      width: calc(1em * ${leading.NORMAL});
-      height: calc(1em * ${leading.NORMAL});
-    }
-  `
-})
+export const SpreadsheetTableCorner = () => (
+  <th className="shr-relative before:shr-absolute before:shr-bottom-[calc(theme(spacing[0.25])_/_2)] before:shr-right-[calc(theme(spacing[0.25])_/_2)] before:shr-block before:shr-h-[calc(1em_*_theme(lineHeight.normal))] before:shr-w-[calc(1em_*_theme(lineHeight.normal))] before:shr-bg-action-background before:shr-p-[calc(theme(spacing[0.25])_/_2)] before:shr-content-[''] before:[clip-path:polygon(0_100%,_100%_0,_100%_100%)]" />
+)

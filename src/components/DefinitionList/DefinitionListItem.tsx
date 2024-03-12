@@ -7,6 +7,7 @@ import { Text } from '../Text'
 
 type DefinitionListItemProps = {
   term: ReactNode
+  termStyleType: 'blockTitle' | 'subBlockTitle'
   description?: ReactNode
   fullWidth?: boolean
   maxColumns?: number
@@ -36,6 +37,7 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
   maxColumns,
   fullWidth,
   term,
+  termStyleType,
   description,
   className,
 }) => {
@@ -60,7 +62,7 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
 
   return (
     <Stack {...wrapperStyleProps} gap={0.25}>
-      <Text as="dt" size="S" leading="TIGHT" styleType="subBlockTitle" className={termStyle}>
+      <Text as="dt" size="S" leading="TIGHT" styleType={termStyleType} className={termStyle}>
         {term}
       </Text>
       <Text as="dd" size="M" color="TEXT_BLACK" leading="NORMAL" className={descriptionStyle}>

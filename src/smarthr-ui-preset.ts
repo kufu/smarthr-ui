@@ -45,9 +45,9 @@ export default {
     }),
     borderRadius: {
       none: '0',
-      s: '0.25rem',
-      m: '0.375rem',
-      l: '0.5rem',
+      s: '4px',
+      m: '6px',
+      l: '8px',
       em: '1em',
       full: '9999px',
     },
@@ -299,7 +299,7 @@ export default {
     textDecorationColor: false,
   },
   plugins: [
-    plugin(({ addComponents, addVariant, theme }) => {
+    plugin(({ addComponents, addBase, addVariant, theme }) => {
       addComponents({
         /**
          * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
@@ -338,6 +338,27 @@ export default {
           borderLeftWidth: theme('borderWidth.DEFAULT'),
           borderLeftStyle: 'solid',
           borderLeftColor: theme('borderColor.default'),
+        },
+      })
+      addBase({
+        body: {
+          overflowWrap: 'break-word',
+          fontFamily: 'system-ui, sans-serif',
+          lineHeight: theme('lineHeight.normal'),
+          color: theme('colors.black'),
+        },
+        'p, dl': {
+          marginBlock: 'unset',
+        },
+        ul: {
+          marginBlock: 'unset',
+          paddingInlineStart: 'unset',
+        },
+        dd: {
+          marginInlineStart: 'unset',
+        },
+        'button, input, textarea, select': {
+          fontFamily: 'inherit',
         },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')

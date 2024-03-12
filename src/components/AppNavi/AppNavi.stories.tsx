@@ -3,6 +3,7 @@ import { Story } from '@storybook/react'
 import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
+import { UnstyledButton } from '../Button'
 import { FaBirthdayCakeIcon, FaChartPieIcon, FaCogIcon, FaFileIcon, FaUserAltIcon } from '../Icon'
 
 import { AppNavi } from './AppNavi'
@@ -31,16 +32,16 @@ const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?
 const List: FC = () => (
   <ListWrapper>
     <li>
-      <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
+      <UnstyledButton onClick={action('clicked item 1')}>ドロップダウンアイテム1</UnstyledButton>
     </li>
     <li>
-      <button onClick={action('clicked item 2')}>ドロップダウンアイテム2</button>
+      <UnstyledButton onClick={action('clicked item 2')}>ドロップダウンアイテム2</UnstyledButton>
     </li>
     <li>
-      <button onClick={action('clicked item 3')}>ドロップダウンアイテム3</button>
+      <UnstyledButton onClick={action('clicked item 3')}>ドロップダウンアイテム3</UnstyledButton>
     </li>
     <li>
-      <button onClick={action('clicked item 4')}>ドロップダウンアイテム4</button>
+      <UnstyledButton onClick={action('clicked item 4')}>ドロップダウンアイテム4</UnstyledButton>
     </li>
   </ListWrapper>
 )
@@ -161,11 +162,8 @@ const ListWrapper = styled.ul(
 
     & > li > button {
       line-height: 40px;
-      width: 100%;
-      padding: 0 20px;
-      border: none;
+      padding-inline: 20px;
       background-color: ${color.WHITE};
-      color: ${color.TEXT_BLACK};
 
       &:hover {
         background-color: ${color.hoverColor(color.WHITE)};

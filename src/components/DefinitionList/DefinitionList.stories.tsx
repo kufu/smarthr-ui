@@ -1,5 +1,5 @@
 import { StoryFn } from '@storybook/react'
-import React from 'react'
+import React, { ComponentProps } from 'react'
 
 import { Base } from '../Base'
 import { Heading } from '../Heading'
@@ -69,7 +69,7 @@ const items = [
     term: '標準は折返し',
     description: 'so-much-longer-email-address@example.com',
   },
-]
+] as ComponentProps<typeof DefinitionList>['items']
 
 export const All: StoryFn = () => (
   <Stack gap={1.5}>
@@ -99,6 +99,26 @@ export const All: StoryFn = () => (
       <Heading type="blockTitle">最大3列の場合</Heading>
       <Base padding={1.5} overflow="auto">
         <DefinitionList items={items} maxColumns={3} />
+      </Base>
+    </Stack>
+
+    <Stack gap={0.5} as="section">
+      <Heading type="blockTitle">その他</Heading>
+      <p></p>
+      <Base padding={1.5} overflow="auto">
+        <DefinitionList
+          items={[
+            {
+              term: (
+                <>
+                  <code>term</code> に <code>styleType</code> が使えます
+                </>
+              ),
+              description: '標準は subBlockTitle です。blockTitle と subBlockTitle があります。',
+            },
+          ]}
+          termStyleType="blockTitle"
+        />
       </Base>
     </Stack>
   </Stack>
