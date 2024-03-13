@@ -23,6 +23,7 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   responseMessage,
   actionDisabled = false,
   closeDisabled,
+  subActionArea,
   className = '',
   portalParent,
   decorators,
@@ -64,6 +65,7 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
         actionTheme={actionTheme}
         actionDisabled={actionDisabled}
         closeDisabled={closeDisabled}
+        subActionArea={subActionArea}
         onClickClose={handleClickClose}
         onSubmit={handleSubmitAction}
         responseMessage={responseMessage}
