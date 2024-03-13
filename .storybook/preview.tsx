@@ -17,7 +17,12 @@ import tailwindConfig from '../tailwind.config'
 
 import '../src/styles/index.css'
 
-ReactGA.initialize('G-YE0FPV8FM9')
+ReactGA.initialize([
+  {
+    trackingId: 'YE0FPV8FM9',
+    gtagOptions: { ignore_referrer: 'true' },
+  },
+])
 
 const preview: Preview = {
   globalTypes: {
