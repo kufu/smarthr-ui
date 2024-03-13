@@ -20,7 +20,7 @@ import '../src/styles/index.css'
 ReactGA.initialize([
   {
     trackingId: 'YE0FPV8FM9',
-    gtagOptions: { ignore_referrer: 'true' },
+    // gtagOptions: { ignore_referrer: 'true' },
   },
 ])
 
