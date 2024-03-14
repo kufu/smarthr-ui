@@ -363,6 +363,9 @@ export default {
         input: {
           paddingInline: 'unset',
         },
+        a: {
+          color: 'inherit',
+        },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
     }),
