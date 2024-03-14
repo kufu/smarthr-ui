@@ -47,6 +47,8 @@ export type BaseProps = PropsWithChildren<{
    * 閉じるボタンを無効にするかどうか
    */
   closeDisabled?: boolean
+  /** ダイアログフッターの左端操作領域 */
+  subActionArea?: ReactNode
   /**
    * コンポーネントに適用するクラス名
    */
@@ -76,6 +78,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   responseMessage,
   actionDisabled = false,
   closeDisabled,
+  subActionArea,
   decorators,
 }) => {
   const classNames = useClassNames().dialog
@@ -114,24 +117,27 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
           {children}
         </Body>
         <ActionAreaStack themes={theme} ref={bottomRef} className={classNames.actionArea}>
-          <ButtonArea className={classNames.buttonArea}>
-            <Button
-              onClick={onClickClose}
-              disabled={closeDisabled || isRequestProcessing}
-              className={classNames.closeButton}
-            >
-              {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
-            </Button>
-            <Button
-              type="submit"
-              variant={actionTheme}
-              disabled={actionDisabled}
-              loading={isRequestProcessing}
-              className={classNames.actionButton}
-            >
-              {actionText}
-            </Button>
-          </ButtonArea>
+          <Cluster justify="space-between">
+            {subActionArea}
+            <ButtonArea className={classNames.buttonArea}>
+              <Button
+                onClick={onClickClose}
+                disabled={closeDisabled || isRequestProcessing}
+                className={classNames.closeButton}
+              >
+                {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
+              </Button>
+              <Button
+                type="submit"
+                variant={actionTheme}
+                disabled={actionDisabled}
+                loading={isRequestProcessing}
+                className={classNames.actionButton}
+              >
+                {actionText}
+              </Button>
+            </ButtonArea>
+          </Cluster>
           {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
             <Message>
               <ResponseMessage type={responseMessage.status} role="alert">
@@ -167,7 +173,9 @@ const ActionAreaStack = styled(Stack).attrs({ gap: 0.5 })<{ themes: Theme }>`
     padding: ${space(1)} ${space(1.5)};
   `}
 `
-const ButtonArea = styled(Cluster).attrs({ gap: { row: 0.5, column: 1 }, justify: 'flex-end' })``
+const ButtonArea = styled(Cluster).attrs({ gap: { row: 0.5, column: 1 }, justify: 'flex-end' })`
+  margin-inline-start: auto;
+`
 const Message = styled.div`
   text-align: right;
 `

@@ -360,6 +360,9 @@ export default {
         'button, input, textarea, select': {
           fontFamily: 'inherit',
         },
+        input: {
+          paddingInline: 'unset',
+        },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')
     }),
