@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [43.3.0](https://github.com/kufu/smarthr-ui/compare/v43.2.1...v43.3.0) (2024-03-14)
+
+
+### Features
+
+* Action / FormDialog のフッター左端に操作領域を追加 ([#4414](https://github.com/kufu/smarthr-ui/issues/4414)) ([95e14af](https://github.com/kufu/smarthr-ui/commit/95e14afde209ac1ec0e916eed2d59cf2d7422323))
+
+
+### Bug Fixes
+
+* コンボボックスの normalize 依存を修正 ([#4420](https://github.com/kufu/smarthr-ui/issues/4420)) ([46d62fb](https://github.com/kufu/smarthr-ui/commit/46d62fb2411a056bd7e7be82821eb82727ca4500))
+
 ### [43.2.1](https://github.com/kufu/smarthr-ui/compare/v43.2.0...v43.2.1) (2024-03-12)
 
 ## [43.2.0](https://github.com/kufu/smarthr-ui/compare/v43.1.1...v43.2.0) (2024-03-12)
