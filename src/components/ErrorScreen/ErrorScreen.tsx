@@ -58,7 +58,12 @@ export const ErrorScreen: FC<Props & ElementProps> = ({
           {children && <div className="smarthr-ui-ErrorScreen-content">{children}</div>}
 
           {links?.length && (
-            <Stack as="ul" gap={0.5} align="center" className="smarthr-ui-ErrorScreen-linkList">
+            <Stack
+              as="ul"
+              gap={0.5}
+              align="center"
+              className="smarthr-ui-ErrorScreen-linkList shr-list-none"
+            >
               {links.map((link, index) => (
                 <li key={index}>
                   <TextLink
