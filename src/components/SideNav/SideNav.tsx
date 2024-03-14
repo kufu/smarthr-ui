@@ -1,10 +1,7 @@
-import React, { ComponentProps, HTMLAttributes, VFC } from 'react'
-import styled, { css } from 'styled-components'
-
-import { Theme, useTheme } from '../../hooks/useTheme'
+import React, { ComponentProps, ComponentPropsWithoutRef, FC, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 import { OnClick, SideNavItemButton, SideNavSizeType } from './SideNavItemButton'
-import { useClassNames } from './useClassNames'
 
 type SideNavItemButtonProps = Omit<ComponentProps<typeof SideNavItemButton>, 'size' | 'onClick'>
 
@@ -18,20 +15,23 @@ type Props = {
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
-type ElementProps = Omit<HTMLAttributes<HTMLUListElement>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithoutRef<'ul'>, keyof Props>
 
-export const SideNav: VFC<Props & ElementProps> = ({
+const sideNav = tv({
+  base: ['smarthr-ui-SideNav', 'shr-list-none shr-bg-column'],
+})
+
+export const SideNav: FC<Props & ElementProps> = ({
   items,
   size = 'default',
   onClick,
-  className = '',
+  className,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
+  const styles = useMemo(() => sideNav({ className }), [className])
 
   return (
-    <Wrapper {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
+    <ul {...props} className={styles}>
       {items.map((item) => (
         <SideNavItemButton
           id={item.id}
@@ -43,18 +43,6 @@ export const SideNav: VFC<Props & ElementProps> = ({
           onClick={onClick}
         />
       ))}
-    </Wrapper>
+    </ul>
   )
 }
-
-const Wrapper = styled.ul<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color } = themes
-
-    return css`
-      background-color: ${color.COLUMN};
-      list-style: none;
-      padding: 0;
-    `
-  }}
-`

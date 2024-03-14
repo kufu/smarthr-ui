@@ -27,6 +27,7 @@ export default {
       background: defaultColor.BACKGROUND,
       border: theme('colors.grey.20'),
       column: defaultColor.COLUMN,
+      'column-darken': darkenColor(defaultColor.COLUMN),
       'base-grey': defaultColor.BASE_GREY,
       'over-background': defaultColor.OVER_BACKGROUND,
       head: defaultColor.HEAD,
