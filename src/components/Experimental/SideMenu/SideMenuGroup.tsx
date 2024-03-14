@@ -43,5 +43,12 @@ const GroupStack = styled(Stack).attrs({ forwardedAs: 'li', gap: 0.5 })<{ $theme
     }
   `}
 `
-const GroupNameText = styled(Text).attrs({ color: 'TEXT_GREY', leading: 'TIGHT', size: 'S' })``
-const SideMenuListStack = styled(Stack).attrs({ forwardedAs: 'ul', gap: 0 })``
+const GroupNameText = styled(Text).attrs({
+  color: 'TEXT_GREY',
+  leading: 'TIGHT',
+  size: 'S',
+  weight: 'normal',
+})``
+const SideMenuListStack = styled(Stack).attrs({ forwardedAs: 'ul', gap: 0 })`
+  list-style: none;
+`
