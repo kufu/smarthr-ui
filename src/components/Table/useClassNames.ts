@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
 
-import { Body, BulkActionRow, Cell, Head, Row, TableReel, Td, Th } from '.'
+import { Body, Cell, Head, Row, TableReel, Td, Th } from '.'
 
 export function useClassNames() {
   const generateForBody = useClassNameGenerator(Body.displayName || 'Body')
