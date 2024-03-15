@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -80,7 +80,7 @@ const data = [
   },
 ]
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <Ul>
     <li>
       table
@@ -284,7 +284,7 @@ export const All: Story = () => (
 )
 All.storyName = 'all'
 
-export const WithReel: Story = () => (
+export const WithReel: StoryFn = () => (
   <Ul>
     <li>
       TableReel
