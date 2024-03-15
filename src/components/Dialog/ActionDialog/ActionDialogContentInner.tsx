@@ -1,5 +1,4 @@
-import React, { FC, PropsWithChildren, ReactNode, useCallback, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
+import React, { FC, PropsWithChildren, ReactNode, useCallback } from 'react'
 
 import { Button } from '../../Button'
 import { Heading, HeadingTagTypes } from '../../Heading'
@@ -8,6 +7,7 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
+import { useDialoginnerStyle } from '../useDialogInnerStyle'
 
 import type { DecoratorsType, ResponseMessageType } from '../../../types'
 
@@ -58,17 +58,6 @@ export type ActionDialogContentInnerProps = BaseProps & {
 }
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
-
-const actionDialogContentInner = tv({
-  slots: {
-    headingArea: ['smarthr-ui-Dialog-titleArea', 'shr-border-b-shorthand shr-px-1.5 shr-py-1'],
-    body: ['smarthr-ui-Dialog-body', 'shr-overflow-auto'],
-    actionArea: ['smarthr-ui-Dialog-actionArea', 'shr-border-t-shorthand shr-px-1.5 shr-py-1'],
-    buttonArea: ['smarthr-ui-Dialog-buttonArea', 'shr-ms-auto'],
-    message: 'shr-text-right',
-  },
-})
-
 export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   children,
   title,
@@ -92,28 +81,14 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
-  const { headingStyle, bodyStyleProps, actionAreaStyle, buttonAreaStyle, messageStyle } =
-    useMemo(() => {
-      const { headingArea, body, actionArea, buttonArea, message } = actionDialogContentInner()
-      return {
-        headingStyle: headingArea(),
-        bodyStyleProps: {
-          className: body(),
-          style: {
-            maxHeight: `calc(100vh - ${offsetHeight}px)`,
-          },
-        },
-        actionAreaStyle: actionArea(),
-        buttonAreaStyle: buttonArea(),
-        messageStyle: message(),
-      }
-    }, [offsetHeight])
+  const { titleAreaStyle, bodyStyleProps, actionAreaStyle, buttonAreaStyle, messageStyle } =
+    useDialoginnerStyle(offsetHeight)
 
   return (
     <Section>
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <Heading tag={titleTag}>
-        <Stack gap={0.25} as="span" ref={titleRef} className={headingStyle}>
+        <Stack gap={0.25} as="span" ref={titleRef} className={titleAreaStyle}>
           {subtitle && (
             <Text size="S" leading="TIGHT" color="TEXT_GREY" className="smarthr-ui-Dialog-subtitle">
               {subtitle}
@@ -126,13 +101,9 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
       </Heading>
       <div {...bodyStyleProps}>{children}</div>
       <Stack gap={0.5} ref={bottomRef} className={actionAreaStyle}>
-        <Cluster justify="space-between" className={buttonAreaStyle}>
+        <Cluster justify="space-between">
           {subActionArea}
-          <Cluster
-            gap={{ row: 0.5, column: 1 }}
-            justify="flex-end"
-            className="smarthr-ui-Dialog-buttonArea"
-          >
+          <Cluster gap={{ row: 0.5, column: 1 }} className={buttonAreaStyle}>
             <Button
               onClick={onClickClose}
               disabled={closeDisabled || isRequestProcessing}
