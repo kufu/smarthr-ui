@@ -37,7 +37,7 @@ const errorScreen = tv({
 })
 
 export const ErrorScreen: FC<Props & ElementProps> = ({
-  logo = <SmartHRLogo fill="brand" />,
+  logo = <SmartHRLogo fill="brand" className="shr-p-0.75" />,
   title,
   links,
   children,
