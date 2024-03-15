@@ -53,13 +53,3 @@ export function useTdClassNames() {
     [generate],
   )
 }
-
-export function useBulkActionRowClassNames() {
-  const generate = useClassNameGenerator(BulkActionRow.displayName || 'BulkActionRow')
-  return useMemo(
-    () => ({
-      wrapper: generate(),
-    }),
-    [generate],
-  )
-}
