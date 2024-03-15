@@ -2,14 +2,13 @@ import { useMemo } from 'react'
 
 import { useClassNameGenerator } from '../../hooks/useClassNameGenerator'
 
-import { Body, BulkActionRow, Cell, Head, Row, TableReel, Td, Th } from '.'
+import { Body, BulkActionRow, Cell, Head, Row, Td, Th } from '.'
 
 export function useClassNames() {
   const generateForBody = useClassNameGenerator(Body.displayName || 'Body')
   const generateForHead = useClassNameGenerator(Head.displayName || 'Head')
   const generateForRow = useClassNameGenerator(Row.displayName || 'Row')
   const generateForCell = useClassNameGenerator(Cell.displayName || 'Cell')
-  const generateForTableReel = useClassNameGenerator(TableReel.displayName || 'TableReel')
   return useMemo(
     () => ({
       head: {
@@ -25,12 +24,8 @@ export function useClassNames() {
       cell: {
         wrapper: generateForCell(),
       },
-      tableReel: {
-        wrapper: generateForTableReel(),
-        inner: generateForTableReel('inner'),
-      },
     }),
-    [generateForBody, generateForCell, generateForHead, generateForRow, generateForTableReel],
+    [generateForBody, generateForCell, generateForHead, generateForRow],
   )
 }
 
