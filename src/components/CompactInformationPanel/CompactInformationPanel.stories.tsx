@@ -1,6 +1,7 @@
 import { StoryFn } from '@storybook/react'
 import React from 'react'
-import styled from 'styled-components'
+
+import { Stack } from '../Layout'
 
 import { CompactInformationPanel } from '.'
 
@@ -18,7 +19,7 @@ export const Default: StoryFn = () => (
   </CompactInformationPanel>
 )
 export const Type: StoryFn = () => (
-  <Wrapper>
+  <Stack>
     <CompactInformationPanel type="info">
       これは [type=info] の CompactInformationPanel です。
       <br />
@@ -33,11 +34,5 @@ export const Type: StoryFn = () => (
     <CompactInformationPanel type="error">
       これは [type=error] の CompactInformationPanel です。
     </CompactInformationPanel>
-  </Wrapper>
+  </Stack>
 )
-
-const Wrapper = styled.div`
-  > * + * {
-    margin-top: 1rem;
-  }
-`
