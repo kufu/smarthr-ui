@@ -52,7 +52,6 @@ const bottomFixedArea = tv({
   slots: {
     wrapper: [
       'smarthr-ui-BottomFixedArea',
-      '',
       'shr-fixed shr-bottom-0 shr-z-fixed-menu shr-box-border shr-w-full shr-rounded-none shr-p-1.5 shr-text-center',
       // Layer 3 だが、上方向への指定のためベタ書き： https://smarthr.design/products/design-tokens/shadow/
       '[box-shadow:_0_-4px_8px_2px_rgba(0,_0,_0,_0.24)]',
