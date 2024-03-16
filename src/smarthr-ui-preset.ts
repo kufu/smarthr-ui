@@ -26,6 +26,7 @@ export default {
       link: defaultColor.TEXT_LINK,
       background: defaultColor.BACKGROUND,
       border: theme('colors.grey.20'),
+      brand: defaultColor.BRAND,
       column: defaultColor.COLUMN,
       'base-grey': defaultColor.BASE_GREY,
       'over-background': defaultColor.OVER_BACKGROUND,
