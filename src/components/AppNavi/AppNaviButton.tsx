@@ -1,54 +1,48 @@
-import React, { ReactNode, VFC } from 'react'
-import styled from 'styled-components'
+import React, { FC, PropsWithChildren, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
 import { UnstyledButton } from '../Button'
 import { ComponentProps as IconProps } from '../Icon'
 
-import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
-import { useClassNames } from './useClassNames'
+import { appNaviItemStyle } from './appNaviHelper'
 
-export type AppNaviButtonProps = {
-  /** ボタンのテキスト */
-  children: ReactNode
+export type AppNaviButtonProps = PropsWithChildren<{
   /** 表示するアイコンタイプ */
   icon?: React.ComponentType<IconProps>
   /** アクティブ状態であるかどうか */
   current?: boolean
   /** クリックイベントのハンドラ */
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-}
+}>
 
-type InnerProps = AppNaviButtonProps & {
-  isUnclickable?: boolean
-}
+const appNaviButton = tv({
+  extend: appNaviItemStyle,
+  base: 'smarthr-ui-AppNavi-button',
+})
 
-export const AppNaviButton: VFC<InnerProps> = ({
+export const AppNaviButton: FC<AppNaviButtonProps> = ({
   children,
-  icon,
+  icon: Icon,
   current = false,
-  isUnclickable = false,
   onClick,
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
-  const iconComponent = getIconComponent(theme, { icon, current })
+  const { wrapperStyle, iconStyle } = useMemo(() => {
+    const { wrapper, icon } = appNaviButton({ active: current })
+    return {
+      wrapperStyle: wrapper(),
+      iconStyle: icon(),
+    }
+  }, [current])
 
   return (
-    <Button
-      $themes={theme}
+    <UnstyledButton
       aria-current={current ? 'page' : undefined}
       onClick={onClick}
-      disabled={isUnclickable}
-      type="button"
-      className={classNames.button}
-      $isActive={current}
-      $isUnclickable={isUnclickable}
+      disabled={current}
+      className={wrapperStyle}
     >
-      {iconComponent}
+      {Icon && <Icon className={iconStyle} />}
       {children}
-    </Button>
+    </UnstyledButton>
   )
 }
-
-const Button = styled(UnstyledButton)<ItemStyleProps>((props) => getItemStyle(props))

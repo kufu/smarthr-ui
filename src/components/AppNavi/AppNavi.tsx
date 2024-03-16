@@ -107,12 +107,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
 
             return (
               <li key={i} className={listItemStyle}>
-                <AppNaviButton
-                  icon={button.icon}
-                  current={button.current}
-                  onClick={button.onClick}
-                  isUnclickable={button.current}
-                >
+                <AppNaviButton icon={button.icon} current={button.current} onClick={button.onClick}>
                   {button.children}
                 </AppNaviButton>
               </li>
