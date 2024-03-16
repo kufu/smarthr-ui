@@ -113,10 +113,10 @@ export const FloatArea: FC<Props & ElementProps> = ({
           top: top || top === 0 ? top : undefined,
           bottom: bottom || bottom === 0 ? bottom : undefined,
         }),
-        style: { width: width ? width : undefined },
+        style: width ? { width } : undefined,
       },
     }),
-    [className],
+    [className, bottom, fixed, top, width, zIndex],
   )
 
   return (
