@@ -63,18 +63,9 @@ export const AppNavi: FC<Props & ElementProps> = ({
         <ul className={buttonsStyle}>
           {buttons.map((button, i) => {
             if ('tag' in button) {
-              const { tag, icon, current, children: buttonChildren, ...buttonProps } = button
               return (
                 <li key={i} className={listItemStyle}>
-                  <AppNaviCustomTag
-                    {...buttonProps}
-                    tag={tag}
-                    icon={icon}
-                    current={current}
-                    isUnclickable={button.current}
-                  >
-                    {buttonChildren}
-                  </AppNaviCustomTag>
+                  <AppNaviCustomTag {...button} />
                 </li>
               )
             }

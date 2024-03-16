@@ -11,7 +11,6 @@ export function useClassNames() {
       label: generate('label'),
       buttons: generate('buttons'),
       listItem: generate('listItem'),
-      customTag: generate('customTag'),
     }),
     [generate],
   )
