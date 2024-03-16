@@ -94,7 +94,6 @@ export const VRTHover: StoryFn = () => {
             }
             return item
           })}
-          isCurrentUnclickable
           displayDropdownCaret
         />
       </InnerWrapper>
@@ -126,7 +125,6 @@ export const VRTFocusButton: StoryFn = () => {
         <AppNavi
           label="focus"
           buttons={buttons.map(({ ...button }) => button)}
-          isCurrentUnclickable
           displayDropdownCaret
         />
       </InnerWrapper>
@@ -157,7 +155,6 @@ export const VRTFocusAnchor: StoryFn = () => {
         <AppNavi
           label="focus"
           buttons={buttons.map(({ ...button }) => button)}
-          isCurrentUnclickable
           displayDropdownCaret
         />
       </InnerWrapper>
@@ -188,7 +185,6 @@ export const VRTDropDown: StoryFn = () => {
         <AppNavi
           label="dropdown"
           buttons={buttons.map(({ ...button }) => button)}
-          isCurrentUnclickable
           displayDropdownCaret
         />
       </InnerWrapperDropdown>
