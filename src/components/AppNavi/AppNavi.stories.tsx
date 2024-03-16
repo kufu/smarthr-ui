@@ -108,7 +108,6 @@ export const UnclickableCurrent: Story = () => {
               }
               return item
             })}
-            isCurrentUnclickable
             displayDropdownCaret
           />
         </InnerWrapper>

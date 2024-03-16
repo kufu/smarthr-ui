@@ -1,58 +1,47 @@
-import React, { ReactNode, VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { FC, PropsWithChildren, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
 import { ComponentProps as IconProps } from '../Icon'
 
-import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
-import { useClassNames } from './useClassNames'
+import { appNaviItemStyle } from './appNaviHelper'
 
-export type AppNaviAnchorProps = {
-  /** アンカーのテキスト */
-  children: ReactNode
+export type AppNaviAnchorProps = PropsWithChildren<{
   /** アンカーの href */
   href: string
   /** 表示するアイコンタイプ */
   icon?: React.ComponentType<IconProps>
   /** アクティブ状態であるかどうか */
   current?: boolean
-}
-type InnerProps = AppNaviAnchorProps & {
-  isUnclickable?: boolean
-}
+}>
 
-export const AppNaviAnchor: VFC<InnerProps> = ({
+const appNaviAnchor = tv({
+  extend: appNaviItemStyle,
+  base: ['smarthr-ui-AppNavi-anchor', 'forced-colors:shr-underline'],
+})
+
+export const AppNaviAnchor: FC<AppNaviAnchorProps> = ({
   children,
   href,
-  icon,
+  icon: Icon,
   current = false,
-  isUnclickable = false,
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
-  const iconComponent = getIconComponent(theme, { icon, current })
+  const clickable = !current
+  const { wrapperStyle, iconStyle } = useMemo(() => {
+    const { wrapper, icon } = appNaviAnchor({ active: current })
+    return {
+      wrapperStyle: wrapper(),
+      iconStyle: icon(),
+    }
+  }, [current])
 
   return (
-    <Anchor
-      $themes={theme}
+    <a
       aria-current={current ? 'page' : undefined}
-      href={isUnclickable ? undefined : href}
-      className={classNames.anchor}
-      $isActive={current}
-      $isUnclickable={isUnclickable}
+      href={clickable ? href : undefined}
+      className={wrapperStyle}
     >
-      {iconComponent}
+      {Icon && <Icon className={iconStyle} />}
       {children}
-    </Anchor>
+    </a>
   )
 }
-
-const Anchor = styled.a<ItemStyleProps>(
-  (props) => css`
-    ${getItemStyle(props)}
-
-    @media (forced-colors: active) {
-      text-decoration: underline;
-    }
-  `,
-)

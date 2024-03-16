@@ -18,8 +18,6 @@ type Props = PropsWithChildren<{
   buttons?: Array<
     AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
   >
-  /** アクティブ状態のボタンがクリック可能かどうか */
-  isCurrentUnclickable?: boolean
   /** ドロップダウンにキャレットを表示するかどうか */
   displayDropdownCaret?: boolean
 }>
@@ -42,7 +40,6 @@ const appNavi = tv({
 export const AppNavi: FC<Props & ElementProps> = ({
   label,
   buttons,
-  isCurrentUnclickable,
   className,
   children,
   displayDropdownCaret = false,
@@ -65,7 +62,6 @@ export const AppNavi: FC<Props & ElementProps> = ({
       {buttons && (
         <ul className={buttonsStyle}>
           {buttons.map((button, i) => {
-            const isUnclickable = button.current && isCurrentUnclickable
             if ('tag' in button) {
               const { tag, icon, current, children: buttonChildren, ...buttonProps } = button
               return (
@@ -75,7 +71,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
                     tag={tag}
                     icon={icon}
                     current={current}
-                    isUnclickable={isUnclickable}
+                    isUnclickable={button.current}
                   >
                     {buttonChildren}
                   </AppNaviCustomTag>
@@ -86,12 +82,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
             if ('href' in button) {
               return (
                 <li key={i} className={listItemStyle}>
-                  <AppNaviAnchor
-                    href={button.href}
-                    icon={button.icon}
-                    current={button.current}
-                    isUnclickable={isUnclickable}
-                  >
+                  <AppNaviAnchor href={button.href} icon={button.icon} current={button.current}>
                     {button.children}
                   </AppNaviAnchor>
                 </li>
@@ -105,7 +96,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
                     dropdownContent={button.dropdownContent}
                     icon={button.icon}
                     current={button.current}
-                    isUnclickable={isUnclickable}
+                    isUnclickable={button.current}
                     displayCaret={displayDropdownCaret}
                   >
                     {button.children}
@@ -120,7 +111,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
                   icon={button.icon}
                   current={button.current}
                   onClick={button.onClick}
-                  isUnclickable={isUnclickable}
+                  isUnclickable={button.current}
                 >
                   {button.children}
                 </AppNaviButton>
