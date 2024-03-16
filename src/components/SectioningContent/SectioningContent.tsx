@@ -1,14 +1,13 @@
-import React, { FC, HTMLAttributes, PropsWithChildren, forwardRef, useContext } from 'react'
+import React, { ComponentPropsWithRef, FC, PropsWithChildren, forwardRef, useContext } from 'react'
 
 import { LevelContext } from './levelContext'
 
 type BaseProps = PropsWithChildren<{
-  className?: string
   // via https://html.spec.whatwg.org/multipage/dom.html#sectioning-content
   as?: 'article' | 'aside' | 'nav' | 'section'
   baseLevel?: number
 }>
-type SectioningContentProps = Omit<HTMLAttributes<HTMLElement>, keyof BaseProps> & BaseProps
+type SectioningContentProps = Omit<ComponentPropsWithRef<'section'>, keyof BaseProps> & BaseProps
 
 const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
   ({ children, baseLevel, as: Wrapper = 'section', ...props }, ref) => (
