@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 import { UnstyledButton } from '../Button'
 import { ComponentProps as IconProps } from '../Icon'
 
-import { appNaviItemStyle } from './appNaviHelper'
+import { appNaviItemStyle } from './style'
 
 export type AppNaviButtonProps = PropsWithChildren<{
   /** 表示するアイコンタイプ */
@@ -17,7 +17,9 @@ export type AppNaviButtonProps = PropsWithChildren<{
 
 const appNaviButton = tv({
   extend: appNaviItemStyle,
-  base: 'smarthr-ui-AppNavi-button',
+  slots: {
+    wrapper: 'smarthr-ui-AppNavi-button',
+  },
 })
 
 export const AppNaviButton: FC<AppNaviButtonProps> = ({

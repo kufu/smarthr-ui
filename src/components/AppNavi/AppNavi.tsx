@@ -73,9 +73,8 @@ export const AppNavi: FC<Props & ElementProps> = ({
             if ('href' in button) {
               return (
                 <li key={i} className={listItemStyle}>
-                  <AppNaviAnchor href={button.href} icon={button.icon} current={button.current}>
-                    {button.children}
-                  </AppNaviAnchor>
+                  {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
+                  <AppNaviAnchor {...button} />
                 </li>
               )
             }
@@ -83,24 +82,14 @@ export const AppNavi: FC<Props & ElementProps> = ({
             if ('dropdownContent' in button) {
               return (
                 <li key={i} className={listItemStyle}>
-                  <AppNaviDropdown
-                    dropdownContent={button.dropdownContent}
-                    icon={button.icon}
-                    current={button.current}
-                    isUnclickable={button.current}
-                    displayCaret={displayDropdownCaret}
-                  >
-                    {button.children}
-                  </AppNaviDropdown>
+                  <AppNaviDropdown {...button} displayCaret={displayDropdownCaret} />
                 </li>
               )
             }
 
             return (
               <li key={i} className={listItemStyle}>
-                <AppNaviButton icon={button.icon} current={button.current} onClick={button.onClick}>
-                  {button.children}
-                </AppNaviButton>
+                <AppNaviButton {...button} />
               </li>
             )
           })}

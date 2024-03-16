@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { ComponentProps as IconProps } from '../Icon'
 
-import { appNaviItemStyle } from './appNaviHelper'
+import { appNaviItemStyle } from './style'
 
 export type AppNaviAnchorProps = PropsWithChildren<{
   /** アンカーの href */
@@ -16,7 +16,9 @@ export type AppNaviAnchorProps = PropsWithChildren<{
 
 const appNaviAnchor = tv({
   extend: appNaviItemStyle,
-  base: ['smarthr-ui-AppNavi-anchor', 'forced-colors:shr-underline'],
+  slots: {
+    wrapper: ['smarthr-ui-AppNavi-anchor', 'forced-colors:shr-underline'],
+  },
 })
 
 export const AppNaviAnchor: FC<AppNaviAnchorProps> = ({
