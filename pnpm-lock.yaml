@@ -245,9 +245,6 @@ devDependencies:
   rimraf:
     specifier: ^5.0.5
     version: 5.0.5
-  smarthr-normalize-css:
-    specifier: ^1.1.0
-    version: 1.1.0(styled-components@5.3.11)
   standard-version:
     specifier: ^9.3.2
     version: 9.3.2
@@ -260,9 +257,6 @@ devDependencies:
   styled-components:
     specifier: ^5.3.11
     version: 5.3.11(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
-  styled-reset:
-    specifier: ^4.5.2
-    version: 4.5.2(styled-components@5.3.11)
   stylelint:
     specifier: ^16.2.1
     version: 16.2.1(typescript@5.4.2)
@@ -13967,14 +13961,6 @@ packages:
     engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
     dev: true
 
-  /smarthr-normalize-css@1.1.0(styled-components@5.3.11):
-    resolution: {integrity: sha512-RNi5bkp8dYvZs/yqOihZ+an5Wf3oXiBMRRvSYhCKNhV+Qkg1otqIxmP3ELUWVwMZx9v+zZG1LLAJ0sxPkHXOcg==}
-    dependencies:
-      styled-reset: 4.5.2(styled-components@5.3.11)
-    transitivePeerDependencies:
-      - styled-components
-    dev: true
-
   /socks-proxy-agent@8.0.2:
     resolution: {integrity: sha512-8zuqoLv1aP/66PHF5TqwJ7Czm3Yv32urJQHrVyhD7mmA6d61Zv8cIXQYPTWwmg6qlupnPvs/QKDmfa4P/qct2g==}
     engines: {node: '>= 14'}
@@ -14392,15 +14378,6 @@ packages:
       react-is: 18.2.0
       shallowequal: 1.1.0
       supports-color: 5.5.0
-    dev: true
-
-  /styled-reset@4.5.2(styled-components@5.3.11):
-    resolution: {integrity: sha512-dbAaaVEhweBs2FGfqGBdW6oMcMK8238C2X5KCxBhUQJX92m/QyUfzRADOXhdXiXNkIPELtMCd72YY9eCdORfIw==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      styled-components: '>=4.0.0 || >=5.0.0 || >=6.0.0'
-    dependencies:
-      styled-components: 5.3.11(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
     dev: true
 
   /stylelint-config-prettier@9.0.5(stylelint@16.2.1):
