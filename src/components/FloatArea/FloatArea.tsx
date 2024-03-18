@@ -8,10 +8,7 @@ import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 const floatArea = tv({
-  slots: {
-    base: 'smarthr-ui-FloatArea',
-    rightSide: 'shr-ms-auto',
-  },
+  base: 'smarthr-ui-FloatArea',
   variants: {
     fixed: {
       true: 'shr-fixed',
@@ -107,11 +104,10 @@ export const FloatArea: FC<Props & ElementProps> = ({
   zIndex,
   ...props
 }) => {
-  const { wrapperProps, rightSideStyle } = useMemo(() => {
-    const { base, rightSide } = floatArea()
-    return {
+  const { wrapperProps } = useMemo(
+    () => ({
       wrapperProps: {
-        className: base({
+        className: floatArea({
           fixed,
           className: `${className} ${zIndex ? `shr-z-[${zIndex}]` : 'shr-z-[500]'}`,
           top,
@@ -119,15 +115,15 @@ export const FloatArea: FC<Props & ElementProps> = ({
         }),
         style: width ? { width } : undefined,
       },
-      rightSideStyle: rightSide(),
-    }
-  }, [className, bottom, fixed, top, width, zIndex])
+    }),
+    [className, bottom, fixed, top, width, zIndex],
+  )
 
   return (
     <Base {...wrapperProps} {...props} layer={3} padding={1}>
       <Cluster gap={1}>
         {tertiaryButton && tertiaryButton}
-        <div className={rightSideStyle}>
+        <div className="shr-ms-auto">
           <Cluster gap={1} align="center">
             {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
               <ResponseMessage type={responseMessage.status}>
@@ -135,7 +131,7 @@ export const FloatArea: FC<Props & ElementProps> = ({
               </ResponseMessage>
             )}
             <Cluster gap={1}>
-              {secondaryButton && secondaryButton}
+              {secondaryButton}
               {primaryButton}
             </Cluster>
           </Cluster>
