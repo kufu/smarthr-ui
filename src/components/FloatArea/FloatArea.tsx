@@ -100,7 +100,7 @@ export const FloatArea: FC<Props & ElementProps> = ({
   tertiaryButton,
   responseMessage,
   fixed = false,
-  className = '',
+  className,
   top,
   bottom,
   width,
