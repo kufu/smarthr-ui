@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithRef, useMemo } from 'react'
+import React, { ComponentProps, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { DropdownMenuButton } from '../Dropdown'
@@ -11,14 +11,14 @@ const headerDropdownMenuButton = tv({
   ],
 })
 
-export const HeaderDropdownMenuButton = ({
+export const HeaderDropdownMenuButton: React.FC<ComponentProps<typeof DropdownMenuButton>> = ({
   className,
-  ...rest
-}: ComponentPropsWithRef<typeof DropdownMenuButton>) => {
+  ...props
+}) => {
   const headerDropdownMenuButtonStyle = useMemo(
     () => headerDropdownMenuButton({ className }),
     [className],
   )
 
-  return <DropdownMenuButton {...rest} className={headerDropdownMenuButtonStyle} />
+  return <DropdownMenuButton {...props} className={headerDropdownMenuButtonStyle} />
 }
