@@ -114,8 +114,8 @@ export const FloatArea: FC<Props & ElementProps> = ({
         className: base({
           fixed,
           className: `${className} ${zIndex ? `shr-z-[${zIndex}]` : 'shr-z-[500]'}`,
-          top: top || top === 0 ? top : undefined,
-          bottom: bottom || bottom === 0 ? bottom : undefined,
+          top,
+          bottom,
         }),
         style: width ? { width } : undefined,
       },
