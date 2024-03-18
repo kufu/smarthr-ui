@@ -159,8 +159,8 @@ devDependencies:
     specifier: ^0.4.10
     version: 0.4.10(@babel/core@7.24.0)
   babel-plugin-polyfill-regenerator:
-    specifier: ^0.6.0
-    version: 0.6.0(@babel/core@7.24.0)
+    specifier: ^0.6.1
+    version: 0.6.1(@babel/core@7.24.0)
   chromatic:
     specifier: ^11.0.8
     version: 11.0.8
@@ -6042,8 +6042,8 @@ packages:
       - supports-color
     dev: true
 
-  /babel-plugin-polyfill-regenerator@0.6.0(@babel/core@7.24.0):
-    resolution: {integrity: sha512-XU8jJEaL1pePADgARjMZDaI9nF/hdU/Vuf155O8yXAxmk2qV2O5GLhli1l8wNeUYA/mFJhTC+Iy1J1V2XWopPA==}
+  /babel-plugin-polyfill-regenerator@0.6.1(@babel/core@7.24.0):
+    resolution: {integrity: sha512-JfTApdE++cgcTWjsiCQlLyFBMbTUft9ja17saCc93lgV33h4tuCVj7tlvu//qpLwaG+3yEz7/KhahGrUMkVq9g==}
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
     dependencies:
