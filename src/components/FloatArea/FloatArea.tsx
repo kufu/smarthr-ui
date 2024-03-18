@@ -136,7 +136,7 @@ export const FloatArea: FC<Props & ElementProps> = ({
             )}
             <Cluster gap={1}>
               {secondaryButton && secondaryButton}
-              {primaryButton && primaryButton}
+              {primaryButton}
             </Cluster>
           </Cluster>
         </div>
