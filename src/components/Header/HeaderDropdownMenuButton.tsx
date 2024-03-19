@@ -13,12 +13,12 @@ const headerDropdownMenuButton = tv({
 
 export const HeaderDropdownMenuButton: React.FC<ComponentProps<typeof DropdownMenuButton>> = ({
   className,
-  ...props
+  ...rest
 }) => {
   const headerDropdownMenuButtonStyle = useMemo(
     () => headerDropdownMenuButton({ className }),
     [className],
   )
 
-  return <DropdownMenuButton {...props} className={headerDropdownMenuButtonStyle} />
+  return <DropdownMenuButton {...rest} className={headerDropdownMenuButtonStyle} />
 }
