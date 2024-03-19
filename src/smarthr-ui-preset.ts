@@ -363,6 +363,10 @@ export default {
         input: {
           paddingInline: 'unset',
         },
+        button: {
+          // Safari の UA スタイルで margin が設定されているため
+          margin: 'unset',
+        },
         a: {
           color: 'inherit',
         },
