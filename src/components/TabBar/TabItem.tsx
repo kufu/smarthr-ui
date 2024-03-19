@@ -1,41 +1,21 @@
-import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
+import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isTouchDevice } from '../../libs/ua'
+import { UnstyledButton } from '../Button'
 
 const tabItem = tv({
   base: [
     'smarthr-ui-TabItem',
-    'shr-bg-transparent',
-    'shr-cursor-pointer',
-    'shr-appearance-none',
-    'shr-font-bold',
-    'shr-py-0',
-    'shr-px-1',
-    'shr-box-border',
-    'hover:shr-bg-column',
-    'hover:shr-text-black',
-    'disabled:shr-bg-transparent',
-    'disabled:shr-text-grey/50',
-    'disabled:shr-cursor-not-allowed',
+    'shr-cursor-pointer shr-appearance-none shr-border-none shr-bg-transparent shr-px-1 shr-py-0 shr-font-bold hover:shr-bg-column hover:shr-text-black [&]:shr-box-border [&]:shr-text-grey',
+    'shr-h-[43px]', // TODO 高さを指定しないようにする
+    'disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50',
+    'aria-selected:shr-border-b-shorthand aria-selected:shr-relative aria-selected:shr-border-b-[3px] aria-selected:shr-border-main aria-selected:shr-text-black',
+    'aria-selected:shr-h-[40px]', // TODO 高さを指定しないようにする
   ],
   variants: {
-    selected: {
-      true: [
-        'shr-relative',
-        'shr-text-black',
-        'shr-border-b-[3px]',
-        'shr-border-t-0',
-        'shr-border-l-0',
-        'shr-border-r-0',
-        'shr-border-solid',
-        'shr-border-main',
-        'shr-h-[40px]', // TODO 高さを指定しないようにする
-      ],
-      false: ['shr-text-grey', 'shr-border-none', 'shr-h-[43px]'], // TODO 高さを指定しないようにする
-    },
     isTouchDevice: {
-      false: ['shr-transition-colors'],
+      false: 'shr-transition-colors',
     },
   },
 })
@@ -51,7 +31,7 @@ type Props = PropsWithChildren<{
   onClick: (tabId: string) => void
 }>
 type ElementProps = Omit<
-  ComponentPropsWithoutRef<'button'>,
+  ComponentProps<typeof UnstyledButton>,
   keyof Props | 'role' | 'aria-selected' | 'type'
 >
 
@@ -63,13 +43,10 @@ export const TabItem: FC<Props & ElementProps> = ({
   disabled = false,
   ...props
 }) => {
-  const tabItemStyle = useMemo(
-    () => tabItem({ className, selected, isTouchDevice }),
-    [className, selected],
-  )
+  const tabItemStyle = useMemo(() => tabItem({ className, isTouchDevice }), [className])
 
   return (
-    <button
+    <UnstyledButton
       {...props}
       id={id}
       role="tab"

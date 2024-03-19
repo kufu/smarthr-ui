@@ -1,5 +1,5 @@
-import { Story } from '@storybook/react'
-import * as React from 'react'
+import { StoryFn } from '@storybook/react'
+import React from 'react'
 import styled from 'styled-components'
 
 import { Button } from '../Button'
@@ -21,7 +21,7 @@ the release of Letraset sheets containing Lorem Ipsum passages, and more recentl
 with desktop publishing software like Aldus PageMaker including versions of Lorem
 Ipsum.`
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <Wrapper>
     <List>
       <dt>Default</dt>
@@ -33,31 +33,25 @@ export const All: Story = () => (
       <dt>Max Lines 1</dt>
       <dd>
         <Text>
-          <LineClamp maxLines={1} withTooltip>
-            {longText}
-          </LineClamp>
+          <LineClamp maxLines={1}>{longText}</LineClamp>
         </Text>
       </dd>
       <dt>Max Lines 2</dt>
       <dd>
         <Text>
-          <LineClamp maxLines={2} withTooltip>
-            {longText}
-          </LineClamp>
+          <LineClamp maxLines={2}>{longText}</LineClamp>
         </Text>
       </dd>
       <dt>Max Lines 4</dt>
       <dd>
         <Text>
-          <LineClamp maxLines={4} withTooltip>
-            {longText}
-          </LineClamp>
+          <LineClamp maxLines={4}>{longText}</LineClamp>
         </Text>
       </dd>
       <dt>with button</dt>
       <dd>
         <StyledButton variant="primary">
-          <LineClamp maxLines={1} withTooltip>
+          <LineClamp maxLines={1}>
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
             has been the industry&apos;s standard dummy text ever since the 1500s.
           </LineClamp>

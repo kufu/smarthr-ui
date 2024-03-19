@@ -1,28 +1,43 @@
-import React, { HTMLAttributes, ReactNode, VFC, useEffect, useRef, useState } from 'react'
-import styled, { css } from 'styled-components'
+import React, {
+  ComponentPropsWithRef,
+  FC,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { VariantProps, tv } from 'tailwind-variants'
 
 import { Tooltip } from '../Tooltip'
 
-import { useClassNames } from './useClassNames'
+type Props = PropsWithChildren<VariantProps<typeof lineClamp>>
+type ElementProps = Omit<ComponentPropsWithRef<'span'>, keyof Props>
 
-type Props = {
-  /** 表示する最大行数 */
-  maxLines?: number
-  /** 省略が発生した時にツールチップを表示するかどうか */
-  withTooltip?: boolean
-  /** 表示行数を制限する対象となるコンテンツ */
-  children: ReactNode
-}
-type ElementProps = Omit<HTMLAttributes<HTMLSpanElement>, keyof Props>
+const lineClamp = tv({
+  base: 'smarthr-ui-LineClamp',
+  variants: {
+    maxLines: {
+      1: 'shr-inline-block shr-w-full shr-overflow-hidden shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
+      2: 'shr-line-clamp-[2]',
+      3: 'shr-line-clamp-[3]',
+      4: 'shr-line-clamp-[4]',
+      5: 'shr-line-clamp-[5]',
+      6: 'shr-line-clamp-[6]',
+    },
+  },
+})
 
-export const LineClamp: VFC<Props & ElementProps> = ({
+export const LineClamp: FC<Props & ElementProps> = ({
   maxLines = 3,
-  withTooltip = false,
   children,
-  className = '',
+  className,
   ...props
 }) => {
-  const classNames = useClassNames()
+  if (maxLines < 1) {
+    throw new Error('"maxLines" cannot be less than 0.')
+  }
+
   const [isTooltipVisible, setTooltipVisible] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
 
@@ -32,23 +47,16 @@ export const LineClamp: VFC<Props & ElementProps> = ({
   }
 
   useEffect(() => {
-    setTooltipVisible(withTooltip && isMultiLineOverflow())
-  }, [maxLines, withTooltip, children])
-
-  if (maxLines < 1) {
-    throw new Error('"maxLines" cannot be less than 0.')
-  }
+    setTooltipVisible(isMultiLineOverflow())
+  }, [maxLines, children])
 
   const ActualLineClamp = () => (
-    <Wrapper
-      {...props}
-      ref={ref}
-      maxLines={maxLines}
-      className={`${className} ${classNames.wrapper}`}
-    >
+    <span {...props} className={styles} ref={ref}>
       {children}
-    </Wrapper>
+    </span>
   )
+
+  const styles = useMemo(() => lineClamp({ maxLines, className }), [className, maxLines])
 
   return isTooltipVisible ? (
     <Tooltip message={children} multiLine vertical="auto">
@@ -58,34 +66,3 @@ export const LineClamp: VFC<Props & ElementProps> = ({
     <ActualLineClamp />
   )
 }
-
-const Wrapper = styled.span<{ maxLines: number }>`
-  word-break: break-word;
-  ${({ maxLines }) =>
-    maxLines === 1
-      ? css`
-          display: inline-block;
-          width: 100%;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          vertical-align: middle;
-        `
-      : css`
-          /* stylelint-disable */
-          display: box;
-          display: -webkit-box;
-          display: -moz-box;
-          box-orient: vertical;
-          -webkit-box-orient: vertical;
-          -moz-box-orient: vertical;
-          line-clamp: ${maxLines};
-          -webkit-line-clamp: ${maxLines};
-          /* stylelint-enable */
-          overflow-y: hidden;
-
-          /* inline-block に overflow: visible 以外を指定すると、vertical-align が bottom margin edge に揃ってしまう
-           * https://ja.stackoverflow.com/questions/2603/ */
-          vertical-align: bottom;
-        `}
-`
