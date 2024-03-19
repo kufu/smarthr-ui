@@ -67,7 +67,7 @@ const overrideEventDefault = (e: DragEvent<HTMLElement>) => {
 }
 
 export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProps>(
-  ({ children, onSelectFiles, accept, multiple = true, name, decorators }, ref) => {
+  ({ children, onSelectFiles, multiple = true, decorators, ...props }, ref) => {
     const fileRef = useRef<HTMLInputElement>(null)
     const [filesDraggedOver, setFilesDraggedOver] = useState(false)
     const { wrapper, input } = useMemo(() => dropZone({ filesDraggedOver }), [filesDraggedOver])
@@ -119,13 +119,12 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
         <Button prefix={<FaFolderOpenIcon />} onClick={onClickButton}>
           {selectButtonLabel}
         </Button>
-        {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
+        {/* eslint-disable-next-line smarthr/a11y-input-in-form-control, smarthr/a11y-input-has-name-attribute */}
         <input
+          {...props}
           ref={fileRef}
-          name={name}
           type="file"
           multiple={multiple}
-          accept={accept}
           onChange={onChange}
           className={input()}
         />
