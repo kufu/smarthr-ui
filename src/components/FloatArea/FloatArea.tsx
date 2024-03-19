@@ -122,7 +122,7 @@ export const FloatArea: FC<Props & ElementProps> = ({
   return (
     <Base {...wrapperProps} {...props} layer={3} padding={1}>
       <Cluster gap={1}>
-        {tertiaryButton && tertiaryButton}
+        {tertiaryButton}
         <div className="shr-ms-auto">
           <Cluster gap={1} align="center">
             {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
