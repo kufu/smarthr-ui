@@ -13,7 +13,6 @@ module.exports = {
      * 上位の Layout.stories.tsx でテストが実行されるので除外している
      */
     'Cluster.stories.tsx',
-    'LineUp.stories.tsx',
     'Reel.stories.tsx',
     'Sidebar.stories.tsx',
     'Stack.stories.tsx',
