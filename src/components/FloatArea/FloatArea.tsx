@@ -8,7 +8,7 @@ import { Cluster } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
 
 const floatArea = tv({
-  base: 'smarthr-ui-FloatArea',
+  base: 'smarthr-ui-FloatArea shr-z-[500]',
   variants: {
     fixed: {
       true: 'shr-fixed',
@@ -109,11 +109,11 @@ export const FloatArea: FC<Props & ElementProps> = ({
       wrapperProps: {
         className: floatArea({
           fixed,
-          className: `${className} ${zIndex ? `shr-z-[${zIndex}]` : 'shr-z-[500]'}`,
+          className,
           top,
           bottom,
         }),
-        style: width ? { width } : undefined,
+        style: { width, zIndex },
       },
     }),
     [className, bottom, fixed, top, width, zIndex],
