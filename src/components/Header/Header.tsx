@@ -42,8 +42,6 @@ type Props = {
   currentTenantId?: string
   /** テナントが選択された時に発火するコールバック関数 */
   onTenantSelect?: (id: string) => void
-  /** コンポーネントに適用するクラス名 */
-  className?: string
 }
 type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
