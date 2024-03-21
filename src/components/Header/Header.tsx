@@ -43,7 +43,7 @@ type Props = {
   /** テナントが選択された時に発火するコールバック関数 */
   onTenantSelect?: (id: string) => void
 }
-type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
+type ElementProps = Omit<ComponentProps<'h1'>, keyof Props>
 
 export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   logo = <SmartHRLogo className="shr-p-0.75" />,
