@@ -169,6 +169,9 @@ export default {
         darken: darkenColor(theme('colors.grey.20')),
         'high-contrast': theme('colors.grey.100'),
       }),
+      strokeWidth: {
+        '0.5': '0.5',
+      },
       keyframes: ({ theme }) => ({
         'loader-line-full-unfill-rotate': {
           '12.5%': {
