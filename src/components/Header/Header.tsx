@@ -86,7 +86,7 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
           {currentTenantName}
         </Text>
       ),
-    [currentTenantName, onTenantSelect, tenants],
+    [currentTenantName, onTenantSelect, tenants, tenantNameTextStyle],
   )
 
   return (
