@@ -12,7 +12,7 @@ const header = tv({
   slots: {
     wrapper: [
       'smarthr-ui-Header',
-      'shr-bg-brand shr-pe-1.25 shr-ps-1.25',
+      'shr-bg-brand shr-px-1.25',
       'max-md:shr-pe-0.75 max-md:shr-ps-0.75',
     ],
     logoLink: [
