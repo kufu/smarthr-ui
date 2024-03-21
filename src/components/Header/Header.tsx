@@ -13,7 +13,7 @@ const header = tv({
     wrapper: [
       'smarthr-ui-Header',
       'shr-bg-brand shr-px-1.25',
-      'max-md:shr-pe-0.75 max-md:shr-ps-0.75',
+      'max-md:shr-px-0.75',
     ],
     logoLink: [
       'smarthr-ui-Header-logoLink',
