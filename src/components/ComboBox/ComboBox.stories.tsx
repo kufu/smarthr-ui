@@ -97,6 +97,18 @@ export const Single: StoryFn = () => {
     [items, seq],
   )
 
+  const [itemsForDefault] = useState(defaultItems)
+  const [selectedItemForDefault, setSelectedItemForDefault] = useState<Item | null>(null)
+
+  const handleSelectItemForDefault = useCallback((item: Item) => {
+    action('onSelect')(item)
+    setSelectedItemForDefault(item)
+  }, [])
+  const handleClearForDefault = useCallback(() => {
+    action('onClear')()
+    setSelectedItemForDefault(null)
+  }, [])
+
   return (
     <Stack>
       <FormControl title="デフォルト">
@@ -252,7 +264,14 @@ export const Single: StoryFn = () => {
         />
       </FormControl>
       <FormControl title="デフォルトの選択肢あり">
-        <DefaultItemSingleCombobox name="defaultItemSingleCombobox" />
+        <SingleComboBox
+          name="defaultItemSingleCombobox"
+          items={itemsForDefault}
+          selectedItem={selectedItemForDefault}
+          defaultItem={itemsForDefault[0]}
+          onSelect={handleSelectItemForDefault}
+          onClear={handleClearForDefault}
+        />
       </FormControl>
       <form
         onSubmit={() => {
@@ -275,31 +294,6 @@ export const Single: StoryFn = () => {
         </FormControl>
       </form>
     </Stack>
-  )
-}
-
-const DefaultItemSingleCombobox: React.FC<{ name: string }> = ({ name }) => {
-  const [items, _setItems] = useState(defaultItems)
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null)
-
-  const handleSelectItem = useCallback((item: Item) => {
-    action('onSelect')(item)
-    setSelectedItem(item)
-  }, [])
-  const handleClear = useCallback(() => {
-    action('onClear')()
-    setSelectedItem(null)
-  }, [])
-
-  return (
-    <SingleComboBox
-      name={name}
-      items={items}
-      selectedItem={selectedItem}
-      defaultItem={items[0]}
-      onSelect={handleSelectItem}
-      onClear={handleClear}
-    />
   )
 }
 

@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [44.0.0](https://github.com/kufu/smarthr-ui/compare/v43.3.0...v44.0.0) (2024-03-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* HeadlineArea と LineUp を削除 (#4465)
+* LineClamp を Tailwind CSS 化し、withTooltip を必須とする (#4447)
+
+### Features
+
+* HeadlineArea と LineUp を削除 ([#4465](https://github.com/kufu/smarthr-ui/issues/4465)) ([11c3a05](https://github.com/kufu/smarthr-ui/commit/11c3a057dc3226069c24106aaba0d65d8e79b39d))
+
+
+### Bug Fixes
+
+* AppLauncher を Tailwind CSS 化しつつ、normalize 依存を修正 ([#4437](https://github.com/kufu/smarthr-ui/issues/4437)) ([a165a6f](https://github.com/kufu/smarthr-ui/commit/a165a6ff5d05a078b79059ea05b81dbb5ef1226b))
+* BottomFiexArea を Tailwind CSS 化し、normalize 依存を修正 ([#4436](https://github.com/kufu/smarthr-ui/issues/4436)) ([09d6f8d](https://github.com/kufu/smarthr-ui/commit/09d6f8dd2e369aa53bb5e313722a07c23e1bb6da))
+* Calendar の日付選択領域のスタイリングを修正 ([#4421](https://github.com/kufu/smarthr-ui/issues/4421)) ([73b7631](https://github.com/kufu/smarthr-ui/commit/73b7631d8639741e70f2fb85b0af6ac09052cacf))
+* ErrorScreen の normalize 依存を修正 ([#4438](https://github.com/kufu/smarthr-ui/issues/4438)) ([bcd33a2](https://github.com/kufu/smarthr-ui/commit/bcd33a2af371002a3c91542febbe34e27d098426))
+* LineClamp を Tailwind CSS 化し、withTooltip を必須とする ([#4447](https://github.com/kufu/smarthr-ui/issues/4447)) ([937588f](https://github.com/kufu/smarthr-ui/commit/937588fb1012330b7b24b4297eceb64d3264f407))
+* SideMenu の normalize 依存を修正 ([#4440](https://github.com/kufu/smarthr-ui/issues/4440)) ([c11f6b0](https://github.com/kufu/smarthr-ui/commit/c11f6b06f2c777ce6078ef33b9d7a24370c86d71))
+* TabBar の normalize 依存を修正 ([#4413](https://github.com/kufu/smarthr-ui/issues/4413)) ([a3faf3f](https://github.com/kufu/smarthr-ui/commit/a3faf3f21b6ce8126ad20c7ddf5b02af50f6a5ce))
+
 ## [43.3.0](https://github.com/kufu/smarthr-ui/compare/v43.2.1...v43.3.0) (2024-03-14)
 
 

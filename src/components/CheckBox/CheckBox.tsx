@@ -138,7 +138,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
             ref={inputRef}
             aria-invalid={error || undefined}
           />
-          <span className={boxStyle} />
+          <span className={boxStyle} aria-hidden="true" />
           <span className={iconWrapStyle}>
             {mixed ? <FaMinusIcon className={iconStyle} /> : <FaCheckIcon className={iconStyle} />}
           </span>

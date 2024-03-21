@@ -73,7 +73,6 @@ export {
 } from './components/AppNavi'
 export { TabBar, TabItem } from './components/TabBar'
 export { Heading, PageHeading } from './components/Heading'
-export { HeadlineArea } from './components/HeadlineArea'
 export { Select } from './components/Select'
 export { DropZone } from './components/DropZone'
 export { DefinitionList } from './components/DefinitionList'
@@ -109,7 +108,7 @@ export * from './components/Badge'
 export * from './components/Switch'
 
 // layout components
-export { Center, Cluster, LineUp, Reel, Stack, Sidebar } from './components/Layout'
+export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'
 
 // hooks
 export { useTheme } from './hooks/useTheme'

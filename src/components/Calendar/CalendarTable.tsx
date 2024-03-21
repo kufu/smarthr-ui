@@ -22,8 +22,8 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'table'>, keyof Props>
 
 const calendarTable = tv({
   slots: {
-    table:
-      'smarthr-ui-CalendarTable shr-border-spacing-0 shr-px-0.75 shr-pb-1 shr-pt-0.25 shr-text-base shr-text-black',
+    wrapper: 'shr-px-0.75 shr-pb-1 shr-pt-0.25',
+    table: 'smarthr-ui-CalendarTable shr-border-spacing-0 shr-text-base shr-text-black',
     th: 'smarthr-ui-CalendarTable-headCell shr-px-0 shr-py-0.5 shr-text-center shr-align-middle shr-font-normal shr-text-grey',
     td: 'smarthr-ui-CalendarTable-dataCell shr-p-0 shr-align-middle',
     cellButton:
@@ -54,15 +54,16 @@ export const CalendarTable: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  const { table, th, td, cellButton, dateCell } = calendarTable()
-  const { tableStyle, thStyle, tdStyle, cellButtonStyle } = useMemo(
+  const { wrapper, table, th, td, cellButton, dateCell } = calendarTable()
+  const { wrapperStyle, tableStyle, thStyle, tdStyle, cellButtonStyle } = useMemo(
     () => ({
-      tableStyle: table({ className }),
+      wrapperStyle: wrapper({ className }),
+      tableStyle: table(),
       thStyle: th(),
       tdStyle: td(),
       cellButtonStyle: cellButton(),
     }),
-    [cellButton, className, table, td, th],
+    [cellButton, className, table, td, th, wrapper],
   )
   const currentDay = dayjs(current)
   const selectedDay = selected ? dayjs(selected) : null
@@ -73,53 +74,55 @@ export const CalendarTable: FC<Props & ElementProps> = ({
 
   const array = getMonthArray(currentDay.toDate())
   return (
-    <table {...props} className={tableStyle}>
-      <thead>
-        <tr>
-          {daysInWeek.map((day, i) => (
-            <th key={i} className={thStyle}>
-              {day}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {array.map((week, weekIndex) => (
-          <tr key={weekIndex}>
-            {week.map((date, dateIndex) => {
-              const isOutRange =
-                !date ||
-                !isBetween(currentDay.date(date).toDate(), fromDay.toDate(), toDay.toDate())
-              const isSelectedDate =
-                !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
-              return (
-                <td key={dateIndex} className={tdStyle}>
-                  {date && (
-                    <UnstyledButton
-                      disabled={isOutRange}
-                      onClick={(e) =>
-                        !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
-                      }
-                      aria-pressed={isSelectedDate}
-                      type="button"
-                      className={cellButtonStyle}
-                    >
-                      <span
-                        className={dateCell({
-                          isToday: currentDay.date(date).isSame(now, 'date'),
-                          isSelected: isSelectedDate,
-                        })}
-                      >
-                        {date}
-                      </span>
-                    </UnstyledButton>
-                  )}
-                </td>
-              )
-            })}
+    <div className={wrapperStyle}>
+      <table {...props} className={tableStyle}>
+        <thead>
+          <tr>
+            {daysInWeek.map((day, i) => (
+              <th key={i} className={thStyle}>
+                {day}
+              </th>
+            ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {array.map((week, weekIndex) => (
+            <tr key={weekIndex}>
+              {week.map((date, dateIndex) => {
+                const isOutRange =
+                  !date ||
+                  !isBetween(currentDay.date(date).toDate(), fromDay.toDate(), toDay.toDate())
+                const isSelectedDate =
+                  !!date && !!selectedDay && currentDay.date(date).isSame(selectedDay, 'date')
+                return (
+                  <td key={dateIndex} className={tdStyle}>
+                    {date && (
+                      <UnstyledButton
+                        disabled={isOutRange}
+                        onClick={(e) =>
+                          !isOutRange && onSelectDate(e, currentDay.date(date).toDate())
+                        }
+                        aria-pressed={isSelectedDate}
+                        type="button"
+                        className={cellButtonStyle}
+                      >
+                        <span
+                          className={dateCell({
+                            isToday: currentDay.date(date).isSame(now, 'date'),
+                            isSelected: isSelectedDate,
+                          })}
+                        >
+                          {date}
+                        </span>
+                      </UnstyledButton>
+                    )}
+                  </td>
+                )
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }

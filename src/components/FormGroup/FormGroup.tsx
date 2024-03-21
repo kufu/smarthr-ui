@@ -15,7 +15,7 @@ import { MultiComboBox, SingleComboBox } from '../ComboBox'
 import { DatePicker } from '../DatePicker'
 import { DropZone } from '../DropZone'
 import { HeadingTypes } from '../Heading'
-import { FaExclamationCircleIcon } from '../Icon'
+import { FaCircleExclamationIcon } from '../Icon'
 import { CurrencyInput, Input } from '../Input'
 import { InputFile } from '../InputFile'
 import { Cluster, Stack } from '../Layout'
@@ -159,7 +159,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
         <Stack gap={0} id={`${managedHtmlFor}_errorMessages`}>
           {actualErrorMessages.map((message, index) => (
             <ErrorMessage themes={theme} key={index}>
-              <FaExclamationCircleIcon text={message} className={classNames.errorMessage} />
+              <FaCircleExclamationIcon text={message} className={classNames.errorMessage} />
             </ErrorMessage>
           ))}
         </Stack>
@@ -197,9 +197,14 @@ const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describe
 
       if (isInputElement(type)) {
         foundFirstInput = true
-        return React.cloneElement(child as ReactElement, {
+
+        const inputAttributes = {
           id: managedHtmlFor,
-          'aria-describedby': describedbyIds ? describedbyIds : undefined,
+          ...(describedbyIds ? { 'aria-describedby': describedbyIds } : {}),
+        }
+
+        return React.cloneElement(child as ReactElement, {
+          ...(isComboBoxElement(type) ? { inputAttributes } : inputAttributes),
         })
       }
 
@@ -230,6 +235,11 @@ const isInputElement = (type: string | React.JSXElementConstructor<any>) => {
     _type === InputFile ||
     _type === DropZone
   )
+}
+
+const isComboBoxElement = (type: string | React.JSXElementConstructor<any>) => {
+  const _type = isStyledComponent(type) ? type.target : type
+  return _type === SingleComboBox || _type === MultiComboBox
 }
 
 const WrapperStack = styled(Stack).attrs<{

@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
@@ -77,7 +77,7 @@ const buttons = [
 ]
 const withoutIconButtons = buttons.map(({ icon, ...button }) => button)
 
-export const WithChildren: Story = () => (
+export const WithChildren: StoryFn = () => (
   <Wrapper>
     <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
       <Child>Some child components</Child>
@@ -86,14 +86,14 @@ export const WithChildren: Story = () => (
 )
 WithChildren.storyName = 'with children'
 
-export const WithoutChildren: Story = () => (
+export const WithoutChildren: StoryFn = () => (
   <Wrapper>
     <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret />
   </Wrapper>
 )
 WithoutChildren.storyName = 'without children'
 
-export const UnclickableCurrent: Story = () => {
+export const UnclickableCurrent: StoryFn = () => {
   const items = buttons.map(({ current, ...button }) => button)
 
   return (
@@ -108,7 +108,6 @@ export const UnclickableCurrent: Story = () => {
               }
               return item
             })}
-            isCurrentUnclickable
             displayDropdownCaret
           />
         </InnerWrapper>
@@ -118,14 +117,14 @@ export const UnclickableCurrent: Story = () => {
 }
 UnclickableCurrent.storyName = 'unclickable current'
 
-export const NoIconAndCaret: Story = () => (
+export const NoIconAndCaret: StoryFn = () => (
   <Wrapper>
     <AppNavi label="機能名" buttons={buttons} />
   </Wrapper>
 )
 NoIconAndCaret.storyName = 'アイコンありドロップダウン示唆なし'
 
-export const ContainerScrollX: Story = () => (
+export const ContainerScrollX: StoryFn = () => (
   <OverflowWrapper>
     <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
       <Child>Some child components</Child>
