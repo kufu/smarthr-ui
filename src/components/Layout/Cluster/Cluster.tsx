@@ -4,7 +4,14 @@ import { VariantProps, tv } from 'tailwind-variants'
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 import type { Gap, SeparateGap } from '../../../types'
-import type { ComponentPropsWithRef, PropsWithChildren } from 'react'
+import type {
+  ComponentPropsWithoutRef,
+  ForwardedRef,
+  PropsWithChildren,
+  ReactNode,
+  Ref,
+  RefAttributes,
+} from 'react'
 
 const cluster = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',
@@ -110,32 +117,40 @@ const cluster = tv({
   },
 })
 
-type Props = PropsWithChildren<
-  Omit<VariantProps<typeof cluster>, 'gap' | 'rowGap' | 'columnGap'> & {
-    as?: string | React.ComponentType<any>
-    /** 間隔の指定（基準フォントサイズの相対値または抽象値） */
+type Props<T extends React.ElementType> = PropsWithChildren<
+  Omit<VariantProps<typeof cluster>, 'rowGap' | 'columnGap'> & {
+    as?: T
     gap?: Gap | SeparateGap
   }
 > &
-  ComponentPropsWithRef<'div'>
+  ComponentPropsWithoutRef<T>
 
-export const Cluster = forwardRef<HTMLDivElement, Props>(
-  ({ as: Component = 'div', gap = 0.5, ...props }, ref) => {
-    const rowGap = gap instanceof Object ? gap.row : gap
-    const columnGap = gap instanceof Object ? gap.column : gap
+const _Cluster = <T extends React.ElementType = 'div'>(
+  { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
+  ref: ForwardedRef<HTMLDivElement>,
+): JSX.Element => {
+  const rowGap = gap instanceof Object ? gap.row : gap
+  const columnGap = gap instanceof Object ? gap.column : gap
 
-    const { inline = false, align, justify, className, ...others } = props
-    const styles = useMemo(
-      () => cluster({ inline, rowGap, columnGap, align, justify, className }),
-      [inline, rowGap, columnGap, align, justify, className],
-    )
+  const styles = useMemo(
+    () => cluster({ inline, rowGap, columnGap, align, justify, className }),
+    [inline, rowGap, columnGap, align, justify, className],
+  )
 
-    const Wrapper = useSectionWrapper(Component)
+  const Component = as || 'div'
+  const Wrapper = useSectionWrapper(Component)
 
-    return (
-      <Wrapper>
-        <Component {...others} ref={ref} className={styles} />
-      </Wrapper>
-    )
-  },
-)
+  return (
+    <Wrapper>
+      <Component {...rest} ref={ref} className={styles} />
+    </Wrapper>
+  )
+}
+
+/* forwardRef でジェネリクスを使うためのラッパー
+ * via https://www.totaltypescript.com/forwardref-with-generic-components */
+const genericsForwardRef = <T, P = object>(
+  render: (props: P, ref: Ref<T>) => ReactNode,
+): ((props: P & RefAttributes<T>) => ReactNode) => forwardRef(render) as any
+
+export const Cluster = genericsForwardRef(_Cluster)
