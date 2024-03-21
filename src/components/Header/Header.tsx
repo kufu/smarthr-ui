@@ -27,7 +27,7 @@ const header = tv({
   },
 })
 
-type Tenant = {
+type Tenant = PropsWithChildren<{
   id: string
   name: ReactNode
 }
