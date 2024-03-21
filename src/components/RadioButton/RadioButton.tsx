@@ -44,7 +44,7 @@ const radioButton = tv({
         label: 'shr-cursor-[revert] shr-text-disabled',
       },
       false: {
-        label: 'shr-cursor-pointer shr-text-black',
+        label: 'shr-cursor-pointer',
         box: 'peer-hover:shr-shadow-input-hover',
       },
     },

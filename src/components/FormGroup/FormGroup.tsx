@@ -1,16 +1,15 @@
 import React, {
   ComponentProps,
-  HTMLAttributes,
+  ComponentPropsWithoutRef,
   PropsWithChildren,
   ReactElement,
   ReactNode,
   useMemo,
 } from 'react'
-import styled, { css, isStyledComponent } from 'styled-components'
+import { isStyledComponent } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
-import { useSpacing } from '../../hooks/useSpacing'
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { MultiComboBox, SingleComboBox } from '../ComboBox'
 import { DatePicker } from '../DatePicker'
 import { DropZone } from '../DropZone'
@@ -24,8 +23,6 @@ import { StatusLabel } from '../StatusLabel'
 import { Text } from '../Text'
 import { Textarea } from '../Textarea'
 import { visuallyHiddenText } from '../VisuallyHiddenText/VisuallyHiddenText'
-
-import { useClassNames } from './useClassNames'
 
 import type { Gap } from '../../types'
 type StatusLabelProps = ComponentProps<typeof StatusLabel>
@@ -55,11 +52,75 @@ type Props = PropsWithChildren<{
   supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
   disabled?: boolean
-  /** コンポーネントに適用するクラス名 */
-  className?: string
   as?: string | React.ComponentType<any>
 }>
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props | 'aria-labelledby'>
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'aria-labelledby'>
+
+const formGroup = tv({
+  slots: {
+    wrapper: [
+      'smarthr-ui-FormGroup',
+      'shr-mx-[unset] shr-border-none shr-p-[unset]',
+      'disabled:shr-text-disabled',
+      '[&:disabled_.smarthr-ui-FormGroup-label_>_span]:shr-text-disabled',
+      '[&:disabled_.smarthr-ui-FormGroup-errorMessage]:shr-text-inherit',
+      '[&:disabled_.smarthr-ui-FormGroup-supplementaryMessage]:shr-text-inherit',
+      '[&:disabled_.smarthr-ui-Input]:shr-border-default/50 [&:disabled_.smarthr-ui-Input]:shr-bg-white-darken',
+    ],
+    label: [
+      'smarthr-ui-FormGroup-label',
+      // flex-item が stretch してクリッカブル領域が広がりすぎないようにする
+      'shr-self-start',
+      'shr-px-[unset]',
+    ],
+    errorIcon: ['smarthr-ui-FormGroup-errorMessage', 'shr-text-danger'],
+  },
+})
+
+const childrenWrapper = tv({
+  variants: {
+    innerMargin: {
+      0: '[&&&]:shr-mt-0',
+      0.25: '[&&&]:shr-mt-0.25',
+      0.5: '[&&&]:shr-mt-0.5',
+      0.75: '[&&&]:shr-mt-0.75',
+      1: '[&&&]:shr-mt-1',
+      1.25: '[&&&]:shr-mt-1.25',
+      1.5: '[&&&]:shr-mt-1.5',
+      2: '[&&&]:shr-mt-2',
+      2.5: '[&&&]:shr-mt-2.5',
+      3: '[&&&]:shr-mt-3',
+      3.5: '[&&&]:shr-mt-3.5',
+      4: '[&&&]:shr-mt-4',
+      8: '[&&&]:shr-mt-8',
+      X3S: '[&&&]:shr-mt-0.25',
+      XXS: '[&&&]:shr-mt-0.5',
+      XS: '[&&&]:shr-mt-1',
+      S: '[&&&]:shr-mt-1.5',
+      M: '[&&&]:shr-mt-2',
+      L: '[&&&]:shr-mt-2.5',
+      XL: '[&&&]:shr-mt-3',
+      XXL: '[&&&]:shr-mt-3.5',
+      X3L: '[&&&]:shr-mt-4',
+    } as { [key in Gap]: string },
+    isRoleGroup: {
+      true: '',
+      false: '',
+    },
+  },
+  compoundVariants: [
+    {
+      innerMargin: undefined,
+      isRoleGroup: true,
+      className: '[&&&]:shr-mt-1',
+    },
+    {
+      innerMargin: undefined,
+      isRoleGroup: false,
+      className: '[&&&]:shr-mt-0.5',
+    },
+  ],
+})
 
 /**
  * @deprecated `FormGroup` コンポーネントは非推奨です。代わりに `FormControl` や `Fieldset` を使ってください。
@@ -76,20 +137,16 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
   exampleMessage,
   errorMessages,
   supplementaryMessage,
-  disabled,
   as = 'div',
-  className = '',
+  className,
   children,
   ...props
 }) => {
-  const disabledClass = disabled ? 'disabled' : ''
   const managedHtmlFor = useId(htmlFor)
   const managedLabelId = useId(labelId)
   const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
-  const theme = useTheme()
-  const classNames = useClassNames()
   const describedbyIds = useMemo(
     () =>
       Object.entries({ helpMessage, exampleMessage, supplementaryMessage, errorMessages })
@@ -106,23 +163,31 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
+  const { wrapperStyle, labelStyle, errorIconStyle, childrenWrapperStyle } = useMemo(() => {
+    const { wrapper, label, errorIcon } = formGroup()
+    return {
+      wrapperStyle: wrapper({ className }),
+      labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
+      errorIconStyle: errorIcon(),
+      childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
+    }
+  }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
+
   return (
-    <WrapperStack
+    <Stack
       {...props}
-      $innerMargin={innerMargin}
-      disabled={disabled}
+      as={as}
+      gap={innerMargin ?? 0.5}
       aria-labelledby={isRoleGroup ? managedLabelId : undefined}
       aria-describedby={isRoleGroup && describedbyIds ? describedbyIds : undefined}
-      $themes={theme}
-      className={`${className} ${disabledClass} ${classNames.wrapper}`}
-      forwardedAs={as}
+      className={wrapperStyle}
     >
-      <TitleCluster
+      <Cluster
+        align="center"
         htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
         id={managedLabelId}
-        className={`${classNames.label}`}
-        forwardedAs={isRoleGroup ? 'legend' : 'label'}
-        $dangerouslyTitleHidden={dangerouslyTitleHidden}
+        className={labelStyle}
+        as={isRoleGroup ? 'legend' : 'label'}
         // Stack 対象にしないための hidden
         hidden={dangerouslyTitleHidden || undefined}
       >
@@ -136,10 +201,10 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
             ))}
           </Cluster>
         )}
-      </TitleCluster>
+      </Cluster>
 
       {helpMessage && (
-        <p className={classNames.helpMessage} id={`${managedHtmlFor}_helpMessage`}>
+        <p className="smarthr-ui-FormGroup-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
           {helpMessage}
         </p>
       )}
@@ -149,7 +214,7 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
           color="TEXT_GREY"
           italic
           id={`${managedHtmlFor}_exampleMessage`}
-          className={classNames.exampleMessage}
+          className="smarthr-ui-FormGroup-exampleMessage"
         >
           {exampleMessage}
         </Text>
@@ -158,16 +223,16 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
       {actualErrorMessages.length > 0 && (
         <Stack gap={0} id={`${managedHtmlFor}_errorMessages`}>
           {actualErrorMessages.map((message, index) => (
-            <ErrorMessage themes={theme} key={index}>
-              <FaCircleExclamationIcon text={message} className={classNames.errorMessage} />
-            </ErrorMessage>
+            <p key={index}>
+              <FaCircleExclamationIcon text={message} className={errorIconStyle} />
+            </p>
           ))}
         </Stack>
       )}
 
-      <ChildrenWrapper $innerMargin={innerMargin} isRoleGroup={isRoleGroup}>
+      <div className={childrenWrapperStyle}>
         {addIdToFirstInput(children, managedHtmlFor, describedbyIds)}
-      </ChildrenWrapper>
+      </div>
 
       {supplementaryMessage && (
         <Text
@@ -175,12 +240,12 @@ export const FormGroup: React.FC<Props & ElementProps> = ({
           size="S"
           color="TEXT_GREY"
           id={`${managedHtmlFor}_supplementaryMessage`}
-          className={classNames.supplementaryMessage}
+          className="smarthr-ui-FormGroup-supplementaryMessage"
         >
           {supplementaryMessage}
         </Text>
       )}
-    </WrapperStack>
+    </Stack>
   )
 }
 
@@ -241,88 +306,3 @@ const isComboBoxElement = (type: string | React.JSXElementConstructor<any>) => {
   const _type = isStyledComponent(type) ? type.target : type
   return _type === SingleComboBox || _type === MultiComboBox
 }
-
-const WrapperStack = styled(Stack).attrs<{
-  $innerMargin: Props['innerMargin']
-}>(({ $innerMargin }) => ({
-  // 基本的にはすべて 0.5 幅、グルーピングしたフォームコントロール群との余白は 1
-  gap: $innerMargin ?? 0.5,
-}))<{
-  $themes: Theme
-}>`
-  ${({ $themes: { color } }) => css`
-    margin-inline: unset;
-    border: unset;
-    padding: unset;
-
-    &[disabled] {
-      color: ${color.TEXT_DISABLED};
-
-      /* 個別指定されている色を上書く */
-      .smarthr-ui-Heading,
-      .smarthr-ui-FormGroup-exampleMessage,
-      .smarthr-ui-FormGroup-errorMessage,
-      .smarthr-ui-FormGroup-supplementaryMessage,
-      .smarthr-ui-RadioButton-label,
-      .smarthr-ui-CheckBox-label {
-        cursor: revert;
-        color: inherit;
-      }
-
-      .smarthr-ui-Input {
-        border-color: ${color.disableColor(color.BORDER)};
-        background-color: ${color.hoverColor(color.WHITE)};
-      }
-
-      .smarthr-ui-RadioButton-radioButton,
-      .smarthr-ui-CheckBox-checkBox {
-        cursor: revert;
-
-        &[checked] + span,
-        & + span {
-          border-color: ${color.disableColor(color.BORDER)};
-          background-color: ${color.disableColor(color.BORDER)};
-        }
-
-        &:hover + span {
-          box-shadow: none;
-        }
-      }
-    }
-  `}
-`
-
-type FormLabelProps = {
-  className: Props['className']
-  $dangerouslyTitleHidden: Props['dangerouslyTitleHidden']
-}
-const TitleCluster = styled(Cluster).attrs(
-  ({ className, $dangerouslyTitleHidden }: FormLabelProps) => ({
-    align: 'center',
-    className: $dangerouslyTitleHidden ? visuallyHiddenText({ className }) : className,
-  }),
-)<FormLabelProps>`
-  /* flex-item が stretch してクリッカブル領域が広がりすぎないようにする */
-  align-self: start;
-
-  padding-inline: unset;
-`
-
-const ErrorMessage = styled.p<{ themes: Theme }>`
-  ${({ themes: { color } }) => css`
-    .smarthr-ui-FormGroup-errorMessage {
-      color: ${color.DANGER};
-    }
-  `}
-`
-
-const ChildrenWrapper = styled.div<{ isRoleGroup: boolean; $innerMargin: Props['innerMargin'] }>`
-  ${({ $innerMargin, isRoleGroup }) => css`
-    ${($innerMargin || isRoleGroup) &&
-    css`
-      &&& {
-        margin-block-start: ${useSpacing($innerMargin ?? (isRoleGroup ? 1 : 0.5))};
-      }
-    `}
-  `}
-`
