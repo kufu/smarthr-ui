@@ -54,7 +54,7 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   children,
   className,
 }) => {
-  const { wrapperStyleProps, logoLinkStyle, tenantInfoStyle, tenantNameTextStyle, actionsStyle } =
+  const { wrapperStyle, logoLinkStyle, tenantInfoStyle, tenantNameTextStyle, actionsStyle } =
     useMemo(() => {
       const { wrapper, logoLink, tenantInfo, tenantNameText, actions } = header()
       return {
