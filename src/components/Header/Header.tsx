@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, PropsWithChildren, ReactElement, ReactNode, useMemo } from 'react'
+import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Button } from '../Button'
@@ -10,11 +10,7 @@ import { HeaderDropdownMenuButton } from '.'
 
 const header = tv({
   slots: {
-    wrapper: [
-      'smarthr-ui-Header',
-      'shr-bg-brand shr-px-1.25',
-      'max-md:shr-px-0.75',
-    ],
+    wrapper: ['smarthr-ui-Header', 'shr-bg-brand shr-px-1.25', 'max-md:shr-px-0.75'],
     logoLink: [
       'smarthr-ui-Header-logoLink',
       /* ロゴが持つ padding 分だけ調整 */
@@ -30,7 +26,8 @@ const header = tv({
 type Tenant = PropsWithChildren<{
   id: string
   name: ReactNode
-}
+}>
+
 type Props = {
   /** ロゴ */
   logo?: ReactElement
@@ -43,6 +40,7 @@ type Props = {
   /** テナントが選択された時に発火するコールバック関数 */
   onTenantSelect?: (id: string) => void
 }
+
 type ElementProps = Omit<ComponentProps<'h1'>, keyof Props>
 
 export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
@@ -58,7 +56,7 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
     useMemo(() => {
       const { wrapper, logoLink, tenantInfo, tenantNameText, actions } = header()
       return {
-        wrapperStyleProps: wrapper(className),
+        wrapperStyle: wrapper({ className }),
         logoLinkStyle: logoLink(),
         tenantInfoStyle: tenantInfo(),
         tenantNameTextStyle: tenantNameText(),
@@ -96,7 +94,7 @@ export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
       as="header"
       justify="space-between"
       gap={{ column: 0.25, row: 0 }}
-      className={wrapperStyleProps}
+      className={wrapperStyle}
     >
       <Cluster align="center" gap={{ column: 0.25, row: 0 }}>
         <a href={logoHref} className={logoLinkStyle}>
