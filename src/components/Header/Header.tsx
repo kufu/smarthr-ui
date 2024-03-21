@@ -22,7 +22,7 @@ const header = tv({
       'focus-visible:shr-focus-indicator',
     ],
     tenantInfo: ['smarthr-ui-Header-tenantInfo', 'shr-ms-auto'],
-    tenantNameText: 'shr-pe-0.25 shr-ps-0.25',
+    tenantNameText: 'shr-px-0.25',
     actions: ['smarthr-ui-Header-actions', 'shr-ms-auto'],
   },
 })
