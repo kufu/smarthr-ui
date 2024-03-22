@@ -10,7 +10,7 @@ import { tv } from 'tailwind-variants'
 
 import { getIsInclude, mapToKeyArray } from '../../libs/map'
 import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
-import { FaCaretRightIcon, FaCaretUpIcon } from '../Icon'
+import { FaCaretDownIcon, FaCaretRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
 
 import { AccordionPanelContext } from './AccordionPanel'
@@ -46,13 +46,13 @@ const accordionPanelTrigger = tv({
       'hover:shr-shadow-none',
       'focus-visible:shr-focusIndicator',
     ],
-    leftIcon: 'group-aria-expanded:shrink-0 group-aria-expanded:shr-rotate-90',
-    rightIcon: 'group-aria-expanded:shrink-0 group-aria-expanded:-shr-rotate-180',
+    leftIcon: 'shr-transition-transform shr-duration-100 group-aria-expanded:shr-rotate-90',
+    rightIcon: 'group-aria-expanded:-shr-rotate-180',
   },
   compoundSlots: [
     {
       slots: ['leftIcon', 'rightIcon'],
-      className: ['shr-transition-transform', 'shr-duration-150'],
+      className: 'group-aria-expanded:shrink-0',
     },
   ],
 })
@@ -114,7 +114,9 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
         <Cluster className="shr-flex-nowrap" align="center" as="span">
           {displayIcon && iconPosition === 'left' && <FaCaretRightIcon className={leftIconStyle} />}
           <span className={titleStyle}>{children}</span>
-          {displayIcon && iconPosition === 'right' && <FaCaretUpIcon className={rightIconStyle} />}
+          {displayIcon && iconPosition === 'right' && (
+            <FaCaretDownIcon className={rightIconStyle} />
+          )}
         </Cluster>
       </button>
     </Heading>

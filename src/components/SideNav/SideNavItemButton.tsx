@@ -1,11 +1,8 @@
-import React, { ReactNode, VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { FC, ReactNode, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-import { isTouchDevice } from '../../libs/ua'
 import { UnstyledButton } from '../Button'
-
-import { useClassNames } from './useClassNames'
+import { Cluster } from '../Layout'
 
 export type SideNavSizeType = 'default' | 's'
 export type OnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => void
@@ -25,7 +22,39 @@ type Props = {
   onClick?: OnClick
 }
 
-export const SideNavItemButton: VFC<Props> = ({
+const sideNavItem = tv({
+  slots: {
+    wrapper: ['smarthr-ui-SideNav-item'],
+    button: [
+      'shr-w-full shr-cursor-pointer shr-leading-none [&]:shr-box-border',
+      'focus-visible:shr-focus-indicator',
+    ],
+    buttonInner: 'smarthr-ui-SideNav-itemTitle',
+  },
+  variants: {
+    selected: {
+      true: {
+        wrapper: [
+          'shr-relative shr-bg-main shr-text-white',
+          'after:shr-absolute after:-shr-right-0.25 after:shr-top-1/2 after:-shr-translate-y-1/2 after:shr-translate-x-0 after:shr-border-b-4 after:shr-border-l-4 after:shr-border-r-0 after:shr-border-t-4 after:shr-border-solid after:shr-border-b-transparent after:shr-border-l-main after:shr-border-r-transparent after:shr-border-t-transparent after:shr-content-[""]',
+        ],
+      },
+      false: {
+        wrapper: 'hover:shr-bg-column-darken',
+      },
+    },
+    size: {
+      default: {
+        button: 'shr-p-1 shr-text-base',
+      },
+      s: {
+        button: 'shr-px-1 shr-py-0.5 shr-text-sm',
+      },
+    },
+  },
+})
+
+export const SideNavItemButton: FC<Props> = ({
   id,
   title,
   prefix,
@@ -33,86 +62,27 @@ export const SideNavItemButton: VFC<Props> = ({
   size,
   onClick,
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
   const handleClick = onClick
     ? (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => onClick(e, id)
     : undefined
 
-  const itemClassName = `${isSelected ? 'selected' : ''} ${classNames.item}`
+  const { wrapperStyle, buttonStyle, buttonInnerStyle } = useMemo(() => {
+    const { wrapper, button, buttonInner } = sideNavItem()
+    return {
+      wrapperStyle: wrapper({ selected: isSelected }),
+      buttonStyle: button({ size }),
+      buttonInnerStyle: buttonInner(),
+    }
+  }, [isSelected, size])
+
   return (
-    <Wrapper className={itemClassName} themes={theme}>
-      <Button className={size} $themes={theme} onClick={handleClick}>
-        {prefix && <PrefixWrapper themes={theme}>{prefix}</PrefixWrapper>}
-        <span className={classNames.itemTitle}>{title}</span>
-      </Button>
-    </Wrapper>
+    <li className={wrapperStyle}>
+      <UnstyledButton onClick={handleClick} className={buttonStyle}>
+        <Cluster inline align="center" as="span">
+          {prefix}
+          <span className={buttonInnerStyle}>{title}</span>
+        </Cluster>
+      </UnstyledButton>
+    </li>
   )
 }
-
-const Wrapper = styled.li<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color, interaction } = themes
-
-    return css`
-      color: ${color.TEXT_BLACK};
-      transition: ${isTouchDevice
-        ? 'none'
-        : `background-color ${interaction.hover.animation}, color ${interaction.hover.animation}`};
-
-      &:hover {
-        background-color: ${color.hoverColor(color.COLUMN)};
-      }
-
-      &.selected {
-        background-color: ${color.MAIN};
-        color: ${color.TEXT_WHITE};
-        position: relative;
-
-        &::after {
-          position: absolute;
-          top: 50%;
-          right: -4px;
-          transform: translate(0, -50%);
-          border-style: solid;
-          border-width: 4px 0 4px 4px;
-          border-color: transparent transparent transparent ${color.MAIN};
-          content: '';
-        }
-      }
-    `
-  }}
-`
-
-const Button = styled(UnstyledButton)<{ $themes: Theme }>`
-  ${({ $themes }) => {
-    const { fontSize, shadow, spacingByChar } = $themes
-
-    return css`
-      outline: none;
-      width: 100%;
-      line-height: 1;
-      box-sizing: border-box;
-      cursor: pointer;
-
-      &.default {
-        padding: ${spacingByChar(1)};
-        font-size: ${fontSize.M};
-      }
-
-      &.s {
-        padding: ${spacingByChar(0.5)} ${spacingByChar(1)};
-        font-size: ${fontSize.S};
-      }
-
-      &:focus-visible {
-        ${shadow.focusIndicatorStyles}
-      }
-    `
-  }}
-`
-const PrefixWrapper = styled.span<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
-    margin-right: ${spacingByChar(0.5)};
-  `}
-`

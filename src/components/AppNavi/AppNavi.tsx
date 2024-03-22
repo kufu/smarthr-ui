@@ -1,7 +1,6 @@
-import React, { HTMLAttributes, ReactNode, VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, ReactNode, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Nav } from '../SectioningContent'
 import { StatusLabel } from '../StatusLabel'
 
@@ -9,147 +8,95 @@ import { AppNaviAnchor, AppNaviAnchorProps } from './AppNaviAnchor'
 import { AppNaviButton, AppNaviButtonProps } from './AppNaviButton'
 import { AppNaviCustomTag, AppNaviCustomTagProps } from './AppNaviCustomTag'
 import { AppNaviDropdown, AppNaviDropdownProps } from './AppNaviDropdown'
-import { useClassNames } from './useClassNames'
 
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
-type Props = {
+type Props = PropsWithChildren<{
   /** ラベルのテキスト */
   label?: ReactNode
   /** 表示するボタンの Props の配列 */
   buttons?: Array<
     AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
   >
-  /** アクティブ状態のボタンがクリック可能かどうか */
-  isCurrentUnclickable?: boolean
-  /** 追加で表示する内容 */
-  children?: ReactNode
-  /** コンポーネントに適用するクラス名 */
-  className?: string
   /** ドロップダウンにキャレットを表示するかどうか */
   displayDropdownCaret?: boolean
-}
+}>
 
-export const AppNavi: VFC<Props & ElementProps> = ({
+const appNavi = tv({
+  slots: {
+    wrapper: [
+      'smarthr-ui-AppNavi',
+      'shr-flex shr-min-w-max shr-items-center shr-bg-white shr-px-1.5 shr-shadow-layer-1',
+    ],
+    statusLabel: ['smarthr-ui-AppNavi-label', 'shr-me-1'],
+    buttonsEl: [
+      'smarthr-ui-AppNavi-buttons',
+      'shr-flex shr-items-stretch shr-gap-1 shr-self-stretch',
+    ],
+    listItem: ['smarthr-ui-AppNavi-listItem', 'shr-list-none'],
+  },
+})
+
+export const AppNavi: FC<Props & ElementProps> = ({
   label,
   buttons,
-  isCurrentUnclickable,
-  className = '',
-  children = null,
+  className,
+  children,
   displayDropdownCaret = false,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
+  const { wrapperStyle, statusLabelStyle, buttonsStyle, listItemStyle } = useMemo(() => {
+    const { wrapper, statusLabel, buttonsEl, listItem } = appNavi()
+    return {
+      wrapperStyle: wrapper({ className }),
+      statusLabelStyle: statusLabel(),
+      buttonsStyle: buttonsEl(),
+      listItemStyle: listItem(),
+    }
+  }, [className])
 
   return (
-    <WrapperNav {...props} themes={theme} className={`${className} ${classNames.wrapper}`}>
-      {label && (
-        <StyledStatusLabel $themes={theme} className={classNames.label}>
-          {label}
-        </StyledStatusLabel>
-      )}
+    <Nav {...props} className={wrapperStyle}>
+      {label && <StatusLabel className={statusLabelStyle}>{label}</StatusLabel>}
 
       {buttons && (
-        <Buttons themes={theme} className={classNames.buttons}>
+        <ul className={buttonsStyle}>
           {buttons.map((button, i) => {
-            const isUnclickable = button.current && isCurrentUnclickable
             if ('tag' in button) {
-              const { tag, icon, current, children: buttonChildren, ...buttonProps } = button
               return (
-                <li key={i} className={classNames.listItem}>
-                  <AppNaviCustomTag
-                    {...buttonProps}
-                    tag={tag}
-                    icon={icon}
-                    current={current}
-                    isUnclickable={isUnclickable}
-                  >
-                    {buttonChildren}
-                  </AppNaviCustomTag>
+                <li key={i} className={listItemStyle}>
+                  <AppNaviCustomTag {...button} />
                 </li>
               )
             }
 
             if ('href' in button) {
               return (
-                <li key={i} className={classNames.listItem}>
-                  <AppNaviAnchor
-                    href={button.href}
-                    icon={button.icon}
-                    current={button.current}
-                    isUnclickable={isUnclickable}
-                  >
-                    {button.children}
-                  </AppNaviAnchor>
+                <li key={i} className={listItemStyle}>
+                  {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
+                  <AppNaviAnchor {...button} />
                 </li>
               )
             }
 
             if ('dropdownContent' in button) {
               return (
-                <li key={i} className={classNames.listItem}>
-                  <AppNaviDropdown
-                    dropdownContent={button.dropdownContent}
-                    icon={button.icon}
-                    current={button.current}
-                    isUnclickable={isUnclickable}
-                    displayCaret={displayDropdownCaret}
-                  >
-                    {button.children}
-                  </AppNaviDropdown>
+                <li key={i} className={listItemStyle}>
+                  <AppNaviDropdown {...button} displayCaret={displayDropdownCaret} />
                 </li>
               )
             }
 
             return (
-              <li key={i} className={classNames.listItem}>
-                <AppNaviButton
-                  icon={button.icon}
-                  current={button.current}
-                  onClick={button.onClick}
-                  isUnclickable={isUnclickable}
-                >
-                  {button.children}
-                </AppNaviButton>
+              <li key={i} className={listItemStyle}>
+                <AppNaviButton {...button} />
               </li>
             )
           })}
-        </Buttons>
+        </ul>
       )}
 
       {children}
-    </WrapperNav>
+    </Nav>
   )
 }
-
-const WrapperNav = styled(Nav)<{ themes: Theme }>`
-  ${({ themes: { color, shadow, spacingByChar } }) => css`
-    display: flex;
-    align-items: center;
-    min-width: max-content;
-    box-shadow: ${shadow.LAYER1};
-    background-color: ${color.WHITE};
-    padding-right: ${spacingByChar(1.5)};
-    padding-left: ${spacingByChar(1.5)};
-  `}
-`
-const StyledStatusLabel = styled(StatusLabel)<{ $themes: Theme }>`
-  ${({ $themes: { spacingByChar } }) => css`
-    margin-right: ${spacingByChar(1)};
-  `}
-`
-const Buttons = styled.ul<{ themes: Theme }>`
-  ${({ themes: { spacingByChar } }) => css`
-    align-self: stretch;
-    display: flex;
-    align-items: stretch;
-    gap: ${spacingByChar(1)};
-    margin: 0;
-    padding: 0;
-
-    > li {
-      list-style: none;
-    }
-  `}
-`

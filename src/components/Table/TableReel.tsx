@@ -1,38 +1,32 @@
-import React, { HTMLAttributes, PropsWithChildren } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentPropsWithRef, PropsWithChildren, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { useClassNames } from './useClassNames'
 import { useReelCells } from './useReelCells'
-import { useReelShadow } from './useReelShadow'
+import { reelShadowStyle } from './useReelShadow'
 
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof PropsWithChildren>
+type ElementProps = Omit<ComponentPropsWithRef<'div'>, keyof PropsWithChildren>
 
-export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({
-  children,
-  className = '',
-  ...props
-}) => {
+const tableReel = tv({
+  slots: {
+    wrapper: ['smarthr-ui-TableReel', 'shr-relative'],
+    inner: ['smarthr-ui-TableReel-inner', 'shr-relative shr-overflow-auto'],
+  },
+})
+
+export const TableReel: React.FC<PropsWithChildren & ElementProps> = ({ className, ...props }) => {
   const { showShadow, tableWrapperRef } = useReelCells()
-  const classNames = useClassNames()
+
+  const { wrapperStyle, innerStyle } = useMemo(() => {
+    const { wrapper, inner } = tableReel()
+    return {
+      wrapperStyle: reelShadowStyle({ showShadow, className: wrapper({ className }) }),
+      innerStyle: inner(),
+    }
+  }, [className, showShadow])
 
   return (
-    <Wrapper showShadow={showShadow} className={`${className} ${classNames.tableReel.wrapper}`}>
-      <Inner {...props} ref={tableWrapperRef} className={classNames.tableReel.inner}>
-        {children}
-      </Inner>
-    </Wrapper>
+    <div className={wrapperStyle}>
+      <div {...props} ref={tableWrapperRef} className={innerStyle} />
+    </div>
   )
 }
-
-const Wrapper = styled.div<{ showShadow: boolean }>`
-  ${({ showShadow }) => css`
-    position: relative;
-
-    ${useReelShadow({ showShadow })}
-  `}
-`
-
-const Inner = styled.div`
-  position: relative;
-  overflow: auto;
-`
