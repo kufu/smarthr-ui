@@ -118,7 +118,7 @@ test('新しいアイテムを追加できること', async (t) => {
     .ok()
 })
 
-test.only('deletable でないコンボボックスアイテムは削除できないこと', async (t) => {
+test('deletable でないコンボボックスアイテムは削除できないこと', async (t) => {
   const wrapper = Selector('[data-test=multi-combobox-undeletable]')
   const combobox = wrapper.find('input[role=combobox]')
   const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
