@@ -168,7 +168,7 @@
     "test-storybook:ci": "wait-on tcp:6006 && pnpm test-storybook --maxWorkers=2 --junit",
     "testcafe": "testcafe",
     "e2e": "ts-node scripts/e2e.ts",
-    "e2e:dev": "testcafe chrome --host localhost --skip-js-errors",
+    "e2e:dev": "testcafe chrome --hostname localhost --skip-js-errors --live",
     "prepare": "husky",
     "chromatic": "chromatic",
     "write:ui-props": "ts-node scripts/exportUIProps.ts",
