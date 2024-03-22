@@ -349,8 +349,10 @@ const ActualMultiComboBox = <T,>(
         e.stopPropagation()
         const lastItem = selectedItems[selectedItems.length - 1]
         handleDelete(lastItem)
-        setHighlighted(true)
-        setInputValueIfUncontrolled(`${lastItem.label}`)
+        if (typeof lastItem.label === 'string') {
+          setHighlighted(true)
+          setInputValueIfUncontrolled(`${lastItem.label}`)
+        }
       } else {
         e.stopPropagation()
         inputRef.current?.focus()
