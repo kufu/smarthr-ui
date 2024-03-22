@@ -194,6 +194,7 @@ const ActualMultiComboBox = <T,>(
   const { textColor } = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
+  const [highlighted, setHighlighted] = useState('')
   const isInputControlled = useMemo(
     () => controlledInputValue !== undefined,
     [controlledInputValue],
@@ -300,12 +301,20 @@ const ActualMultiComboBox = <T,>(
   useOuterClick([outerRef, listBoxRef], blur)
 
   useEffect(() => {
-    setInputValueIfUncontrolled('')
+    if (highlighted) {
+      setHighlighted('')
+      inputRef.current?.select()
+    } else {
+      setInputValueIfUncontrolled('')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedItems, setInputValueIfUncontrolled])
 
+  useEffect(() => {
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     }
-  }, [inputRef, isFocused, isInputControlled, selectedItems, setInputValueIfUncontrolled])
+  }, [inputRef, isFocused])
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
@@ -332,12 +341,12 @@ const ActualMultiComboBox = <T,>(
         selectedItems.length > 0 &&
         selectedItems[selectedItems.length - 1].deletable !== false
       ) {
+        e.preventDefault()
+        e.stopPropagation()
         const lastItem = selectedItems[selectedItems.length - 1]
         handleDelete(lastItem)
-        // TODO: selectedItems の変更によって useEffect 内で input の値が破棄されてしまうため、取り急ぎ遅延させているが、
-        //       より良い解決策があるはずなので検討する。
-        setTimeout(() => setInputValueIfUncontrolled(`${lastItem.label}`), 100)
-        e.stopPropagation()
+        setHighlighted(`${lastItem.label}`)
+        setInputValueIfUncontrolled(`${lastItem.label}`)
       } else {
         e.stopPropagation()
         inputRef.current?.focus()
