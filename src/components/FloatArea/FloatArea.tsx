@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, ReactNode, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
@@ -86,10 +86,8 @@ type Props = StyleProps & {
   fixed?: boolean
   /** コンポーネントの幅 */
   width?: string
-  /** コンポーネントに適用するクラス名 */
-  className?: string
 }
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
 export const FloatArea: FC<Props & ElementProps> = ({
   primaryButton,
@@ -102,25 +100,23 @@ export const FloatArea: FC<Props & ElementProps> = ({
   bottom,
   width,
   zIndex,
-  ...props
+  ...rest
 }) => {
-  const { wrapperProps } = useMemo(
+  const styleProps = useMemo(
     () => ({
-      wrapperProps: {
-        className: floatArea({
-          fixed,
-          className,
-          top,
-          bottom,
-        }),
-        style: { width, zIndex },
-      },
+      className: floatArea({
+        fixed,
+        top,
+        bottom,
+        className,
+      }),
+      style: { width, zIndex },
     }),
     [className, bottom, fixed, top, width, zIndex],
   )
 
   return (
-    <Base {...wrapperProps} {...props} layer={3} padding={1}>
+    <Base {...styleProps} {...rest} layer={3} padding={1}>
       <Cluster gap={1}>
         {tertiaryButton}
         <div className="shr-ms-auto">
