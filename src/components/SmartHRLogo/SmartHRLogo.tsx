@@ -32,11 +32,9 @@ export const SmartHRLogo: FC<Props & ElementProps> = ({
 }) => {
   const styleProps = useMemo(
     () => ({
-      svgStyleProps: {
-        className: smarthrLogo({ className, fill }),
-        style: {
-          ...(width ? { width: convertValue(width) } : height && { height: convertValue(height) }),
-        },
+      className: smarthrLogo({ className, fill }),
+      style: {
+        ...(width ? { width: convertValue(width) } : height && { height: convertValue(height) }),
       },
     }),
     [className, fill, height, width],
