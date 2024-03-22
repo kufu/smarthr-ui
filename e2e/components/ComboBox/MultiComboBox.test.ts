@@ -118,6 +118,30 @@ test('新しいアイテムを追加できること', async (t) => {
     .ok()
 })
 
+test.only('deletable でないコンボボックスアイテムは削除できないこと', async (t) => {
+  const wrapper = Selector('[data-test=multi-combobox-undeletable]')
+  const combobox = wrapper.find('input[role=combobox]')
+  const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
+  const listbox = elementWithId(comboboxControls[0])
+
+  await t
+    // アイテムを選択
+    .click(wrapper)
+    .click(listbox.find('.smarthr-ui-ComboBox-selectButton').withText('option 1'))
+    // 削除ボタンが表示されていない
+    .expect(
+      wrapper
+        .find('.smarthr-ui-MultiComboBox-selectedItem')
+        .withText('option 1')
+        .find('.smarthr-ui-MultiComboBox-deleteButton').exists,
+    )
+    .notOk()
+    // Backspace キーで削除できないこと
+    .pressKey('backspace')
+    .expect(wrapper.find('.smarthr-ui-MultiComboBox-selectedItem').withText('option 1').exists)
+    .ok()
+})
+
 test('disabled なコンボボックスではアイテムの選択と選択解除ができないこと', async (t) => {
   const normal = Selector('[data-test=multi-combobox-default]')
   const normalCombobox = normal.find('input[role=combobox]')
