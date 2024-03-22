@@ -1,7 +1,5 @@
 import React, { FC, PropsWithChildren, ReactNode, useCallback } from 'react'
-import styled, { css } from 'styled-components'
 
-import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
 import { Heading, HeadingTagTypes } from '../../Heading'
 import { Cluster, Stack } from '../../Layout'
@@ -9,7 +7,7 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
-import { useClassNames } from '../useClassNames'
+import { useDialoginnerStyle } from '../useDialogInnerStyle'
 
 import type { DecoratorsType, ResponseMessageType } from '../../../types'
 
@@ -49,10 +47,6 @@ export type BaseProps = PropsWithChildren<{
   closeDisabled?: boolean
   /** ダイアログフッターの左端操作領域 */
   subActionArea?: ReactNode
-  /**
-   * コンポーネントに適用するクラス名
-   */
-  className?: string
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'closeButtonLabel'>
 }>
@@ -81,8 +75,6 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   subActionArea,
   decorators,
 }) => {
-  const classNames = useClassNames().dialog
-  const theme = useTheme()
   const handleSubmitAction = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
@@ -97,33 +89,39 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
 
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
+  const { titleAreaStyle, bodyStyleProps, actionAreaStyle, buttonAreaStyle, messageStyle } =
+    useDialoginnerStyle(offsetHeight)
+
   return (
     <Section>
       <form onSubmit={handleSubmitAction}>
         {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <Heading tag={titleTag}>
-          <TitleAreaStack themes={theme} ref={titleRef} className={classNames.titleArea}>
+          <Stack gap={0.25} as="span" ref={titleRef} className={titleAreaStyle}>
             {subtitle && (
-              <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
+              <Text
+                size="S"
+                leading="TIGHT"
+                color="TEXT_GREY"
+                className="smarthr-ui-Dialog-subtitle"
+              >
                 {subtitle}
               </Text>
             )}
-            <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
+            <Text id={titleId} size="L" leading="TIGHT" className="smarthr-ui-Dialog-title">
               {title}
             </Text>
-          </TitleAreaStack>
+          </Stack>
         </Heading>
-        <Body offsetHeight={offsetHeight} className={classNames.body}>
-          {children}
-        </Body>
-        <ActionAreaStack themes={theme} ref={bottomRef} className={classNames.actionArea}>
+        <div {...bodyStyleProps}>{children}</div>
+        <Stack gap={0.5} ref={bottomRef} className={actionAreaStyle}>
           <Cluster justify="space-between">
             {subActionArea}
-            <ButtonArea className={classNames.buttonArea}>
+            <Cluster gap={{ row: 0.5, column: 1 }} className={buttonAreaStyle}>
               <Button
                 onClick={onClickClose}
                 disabled={closeDisabled || isRequestProcessing}
-                className={classNames.closeButton}
+                className="smarthr-ui-Dialog-closeButton"
               >
                 {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
               </Button>
@@ -132,50 +130,21 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
                 variant={actionTheme}
                 disabled={actionDisabled}
                 loading={isRequestProcessing}
-                className={classNames.actionButton}
+                className="smarthr-ui-Dialog-actionButton"
               >
                 {actionText}
               </Button>
-            </ButtonArea>
+            </Cluster>
           </Cluster>
           {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
-            <Message>
+            <div className={messageStyle}>
               <ResponseMessage type={responseMessage.status} role="alert">
                 {responseMessage.text}
               </ResponseMessage>
-            </Message>
+            </div>
           )}
-        </ActionAreaStack>
+        </Stack>
       </form>
     </Section>
   )
 }
-
-const TitleAreaStack = styled(Stack).attrs(() => ({
-  gap: 0.25,
-  forwardedAs: 'span',
-}))<{ themes: Theme }>`
-  ${({ themes: { border, space } }) => css`
-    margin-block: unset;
-    border-bottom: ${border.shorthand};
-    padding: ${space(1)} ${space(1.5)};
-  `}
-`
-const Body = styled.div<{ offsetHeight: number }>`
-  ${({ offsetHeight }) => css`
-    max-height: calc(100vh - ${offsetHeight}px);
-    overflow: auto;
-  `}
-`
-const ActionAreaStack = styled(Stack).attrs({ gap: 0.5 })<{ themes: Theme }>`
-  ${({ themes: { space, border } }) => css`
-    border-top: ${border.shorthand};
-    padding: ${space(1)} ${space(1.5)};
-  `}
-`
-const ButtonArea = styled(Cluster).attrs({ gap: { row: 0.5, column: 1 }, justify: 'flex-end' })`
-  margin-inline-start: auto;
-`
-const Message = styled.div`
-  text-align: right;
-`

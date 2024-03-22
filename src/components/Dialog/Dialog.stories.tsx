@@ -247,6 +247,8 @@ export const Action_Dialog: StoryFn = () => {
         responseMessage={responseMessage}
         id="dialog-action"
         data-test="dialog-content"
+        width="40em"
+        subActionArea={<Button>サブアクション</Button>}
       >
         <Section>
           <StyledHeading>ActionDialog</StyledHeading>
@@ -356,6 +358,8 @@ export const Form_Dialog: StoryFn = () => {
         responseMessage={responseMessage}
         id="dialog-form"
         data-test="form-dialog-content"
+        width="40em"
+        subActionArea={<Button>サブアクション</Button>}
       >
         <Fieldset title="fruits" innerMargin={0.5}>
           <RadioList>
