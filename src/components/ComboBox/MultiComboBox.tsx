@@ -200,7 +200,7 @@ const ActualMultiComboBox = <T,>(
   const { textColor } = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
-  const [highlighted, setHighlighted] = useState('')
+  const [highlighted, setHighlighted] = useState(false)
   const isInputControlled = useMemo(
     () => controlledInputValue !== undefined,
     [controlledInputValue],
@@ -309,7 +309,7 @@ const ActualMultiComboBox = <T,>(
 
   useEffect(() => {
     if (highlighted) {
-      setHighlighted('')
+      setHighlighted(false)
       inputRef.current?.select()
     } else {
       setInputValueIfUncontrolled('')
@@ -349,7 +349,7 @@ const ActualMultiComboBox = <T,>(
         e.stopPropagation()
         const lastItem = selectedItems[selectedItems.length - 1]
         handleDelete(lastItem)
-        setHighlighted(`${lastItem.label}`)
+        setHighlighted(true)
         setInputValueIfUncontrolled(`${lastItem.label}`)
       } else {
         e.stopPropagation()
