@@ -23,7 +23,7 @@ export const _VRTButtonState: StoryFn = () => (
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
       hover, activeなどの状態で表示されます
     </VRTInformationPanel>
-    <dl>
+    <dl className="*:shr-ms-0">
       <dt>hover</dt>
       <dd style={{ padding: '10px' }}>
         <Stack>
@@ -190,7 +190,7 @@ export const _VRTButtonAnchorState: StoryFn = () => (
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
       hover, activeなどの状態で表示されます
     </VRTInformationPanel>
-    <dl>
+    <dl className="*:shr-ms-0">
       <dt>hover</dt>
       <dd style={{ padding: '10px' }}>
         <Stack>

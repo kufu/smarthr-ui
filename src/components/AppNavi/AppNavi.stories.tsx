@@ -1,8 +1,9 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
+import { UnstyledButton } from '../Button'
 import { FaBirthdayCakeIcon, FaChartPieIcon, FaCogIcon, FaFileIcon, FaUserAltIcon } from '../Icon'
 
 import { AppNavi } from './AppNavi'
@@ -31,16 +32,16 @@ const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?
 const List: FC = () => (
   <ListWrapper>
     <li>
-      <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
+      <UnstyledButton onClick={action('clicked item 1')}>ドロップダウンアイテム1</UnstyledButton>
     </li>
     <li>
-      <button onClick={action('clicked item 2')}>ドロップダウンアイテム2</button>
+      <UnstyledButton onClick={action('clicked item 2')}>ドロップダウンアイテム2</UnstyledButton>
     </li>
     <li>
-      <button onClick={action('clicked item 3')}>ドロップダウンアイテム3</button>
+      <UnstyledButton onClick={action('clicked item 3')}>ドロップダウンアイテム3</UnstyledButton>
     </li>
     <li>
-      <button onClick={action('clicked item 4')}>ドロップダウンアイテム4</button>
+      <UnstyledButton onClick={action('clicked item 4')}>ドロップダウンアイテム4</UnstyledButton>
     </li>
   </ListWrapper>
 )
@@ -76,7 +77,7 @@ const buttons = [
 ]
 const withoutIconButtons = buttons.map(({ icon, ...button }) => button)
 
-export const WithChildren: Story = () => (
+export const WithChildren: StoryFn = () => (
   <Wrapper>
     <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
       <Child>Some child components</Child>
@@ -85,14 +86,14 @@ export const WithChildren: Story = () => (
 )
 WithChildren.storyName = 'with children'
 
-export const WithoutChildren: Story = () => (
+export const WithoutChildren: StoryFn = () => (
   <Wrapper>
     <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret />
   </Wrapper>
 )
 WithoutChildren.storyName = 'without children'
 
-export const UnclickableCurrent: Story = () => {
+export const UnclickableCurrent: StoryFn = () => {
   const items = buttons.map(({ current, ...button }) => button)
 
   return (
@@ -107,7 +108,6 @@ export const UnclickableCurrent: Story = () => {
               }
               return item
             })}
-            isCurrentUnclickable
             displayDropdownCaret
           />
         </InnerWrapper>
@@ -117,14 +117,14 @@ export const UnclickableCurrent: Story = () => {
 }
 UnclickableCurrent.storyName = 'unclickable current'
 
-export const NoIconAndCaret: Story = () => (
+export const NoIconAndCaret: StoryFn = () => (
   <Wrapper>
     <AppNavi label="機能名" buttons={buttons} />
   </Wrapper>
 )
 NoIconAndCaret.storyName = 'アイコンありドロップダウン示唆なし'
 
-export const ContainerScrollX: Story = () => (
+export const ContainerScrollX: StoryFn = () => (
   <OverflowWrapper>
     <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
       <Child>Some child components</Child>
@@ -161,11 +161,8 @@ const ListWrapper = styled.ul(
 
     & > li > button {
       line-height: 40px;
-      width: 100%;
-      padding: 0 20px;
-      border: none;
+      padding-inline: 20px;
       background-color: ${color.WHITE};
-      color: ${color.TEXT_BLACK};
 
       &:hover {
         background-color: ${color.hoverColor(color.WHITE)};

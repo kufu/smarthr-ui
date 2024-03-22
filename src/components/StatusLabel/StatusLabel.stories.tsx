@@ -64,11 +64,6 @@ All.storyName = 'all'
 
 const WrapperStack = styled(Stack).attrs({ forwardedAs: 'dl', gap: 1.5 })`
   ${({ theme: { spacingByChar } }) => css`
-    margin-block: unset;
     padding: ${spacingByChar(1.5)};
-
-    dd {
-      margin-inline-start: unset;
-    }
   `}
 `

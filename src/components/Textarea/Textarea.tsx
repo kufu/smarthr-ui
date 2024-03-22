@@ -56,7 +56,8 @@ const TEXT_AFTER_MAXlENGTH_COUNT = '文字'
 const textarea = tv({
   slots: {
     textareaEl: [
-      'smarthr-ui-Textarea-textarea shr-border-shorthand shr-box-border shr-rounded-m shr-bg-white shr-p-0.5 shr-text-base shr-leading-normal shr-text-black shr-opacity-100',
+      'smarthr-ui-Textarea-textarea',
+      'shr-border-shorthand shr-my-[unset] shr-box-border shr-rounded-m shr-bg-white shr-p-0.5 shr-text-base shr-leading-normal shr-text-black shr-opacity-100',
       'contrast-more:shr-border-high-contrast',
       'placeholder:shr-text-grey',
       'focus-visible:shr-focus-indicator',
@@ -87,7 +88,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     {
       autoFocus,
       maxLength,
-      width = 'auto',
+      width,
       className,
       autoResize = false,
       maxRows = Infinity,

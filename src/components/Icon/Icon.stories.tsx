@@ -7,10 +7,12 @@ import { BaseColumn } from '../Base'
 import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
 
+import * as DeprecatedIcons from './DeprecatedIcon'
 import * as Icons from './Icon'
 import { generateIcon } from './generateIcon'
 
-const { FaAddressBookIcon, FaBullhornIcon, FaInfoCircleIcon, WarningIcon } = Icons
+const { FaAddressBookIcon, FaBullhornIcon, WarningIcon } = Icons
+const { FaInfoCircleIcon } = DeprecatedIcons
 
 export default {
   title: 'Media（メディア）/Icon',
@@ -21,16 +23,31 @@ export default {
 }
 
 export const All: StoryFn = () => (
-  <Cluster gap={0.75} as="dl">
-    {Object.values(Icons).map((Icon) => (
-      <ItemWrapper key={`${Icon.displayName}`}>
-        <dt>{Icon.displayName?.replace(/Icon$/, '')}</dt>
-        <dd>
-          <Icon />
-        </dd>
-      </ItemWrapper>
-    ))}
-  </Cluster>
+  <Stack gap={2}>
+    <Cluster gap={0.75} as="dl">
+      {Object.values(Icons).map((Icon) => (
+        <ItemWrapper key={`${Icon.displayName}`}>
+          <dt>{Icon.displayName?.replace(/Icon$/, '')}</dt>
+          <dd>
+            <Icon />
+          </dd>
+        </ItemWrapper>
+      ))}
+    </Cluster>
+    <div>
+      旧名称（非推奨）
+      <Cluster gap={0.75} as="dl">
+        {Object.values(DeprecatedIcons).map((Icon) => (
+          <ItemWrapper key={`${Icon.displayName}`}>
+            <dt>{Icon.displayName?.replace(/Icon$/, '')}</dt>
+            <dd>
+              <Icon />
+            </dd>
+          </ItemWrapper>
+        ))}
+      </Cluster>
+    </div>
+  </Stack>
 )
 
 export const AltText: StoryFn = () => (

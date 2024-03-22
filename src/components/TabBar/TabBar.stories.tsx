@@ -1,8 +1,9 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import { userEvent } from '@storybook/testing-library'
 import * as React from 'react'
-import styled from 'styled-components'
+
+import { Stack } from '../Layout'
 
 import { TabBar } from './TabBar'
 import { TabItem } from './TabItem'
@@ -13,52 +14,35 @@ export default {
   subcomponents: { TabItem },
 }
 
-const Template: Story = () => (
-  <Ul>
+export const All: StoryFn = () => (
+  <Stack as="ul" className="shr-list-none">
     <li>
-      <p>Border</p>
-      <TabBar>
-        <TabItem id="border-1" onClick={action('clicked')}>
-          Tab
-        </TabItem>
-        <TabItem id="border-2" onClick={action('clicked')} selected>
-          Selected
-        </TabItem>
-        <TabItem id="border-3" onClick={action('clicked')} disabled>
-          Disabled
-        </TabItem>
-      </TabBar>
+      <p>標準</p>
+      <Template subid={1} />
     </li>
     <li>
-      <p>No border</p>
-      <TabBar bordered={false}>
-        <TabItem id="no-border-1" onClick={action('clicked')}>
-          Tab
-        </TabItem>
-        <TabItem id="no-border-2" onClick={action('clicked')} selected>
-          Selected
-        </TabItem>
-        <TabItem id="no-border-3" onClick={action('clicked')} disabled>
-          Disabled
-        </TabItem>
-      </TabBar>
+      <p>下線なし</p>
+      <Template subid={2} bordered={false} />
     </li>
-  </Ul>
+  </Stack>
 )
 
-export const All = Template.bind({})
+const Template: StoryFn = ({ subid, ...props }) => (
+  <TabBar {...props}>
+    <TabItem id={`border-${subid}-1`} onClick={action('clicked')} selected>
+      基本情報
+    </TabItem>
+    <TabItem id={`border-${subid}-2`} onClick={action('clicked')}>
+      コメント
+    </TabItem>
+    <TabItem id={`border-${subid}-3`} onClick={action('clicked')} disabled>
+      分析対象
+    </TabItem>
+  </TabBar>
+)
 
-export const RegFocusBorder = Template.bind({})
+export const RegFocusBorder = All.bind({})
 RegFocusBorder.play = () => userEvent.tab()
 
-export const RegFocusNoBorder = Template.bind({})
+export const RegFocusNoBorder = All.bind({})
 RegFocusNoBorder.play = () => [...Array(3)].forEach((_) => userEvent.tab())
-
-const Ul = styled.ul`
-  padding: 0 1rem;
-
-  li {
-    margin-bottom: 1rem;
-    list-style: none;
-  }
-`

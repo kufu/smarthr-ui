@@ -2,6 +2,129 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [44.0.0](https://github.com/kufu/smarthr-ui/compare/v43.3.0...v44.0.0) (2024-03-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* HeadlineArea と LineUp を削除 (#4465)
+* LineClamp を Tailwind CSS 化し、withTooltip を必須とする (#4447)
+
+### Features
+
+* HeadlineArea と LineUp を削除 ([#4465](https://github.com/kufu/smarthr-ui/issues/4465)) ([11c3a05](https://github.com/kufu/smarthr-ui/commit/11c3a057dc3226069c24106aaba0d65d8e79b39d))
+
+
+### Bug Fixes
+
+* AppLauncher を Tailwind CSS 化しつつ、normalize 依存を修正 ([#4437](https://github.com/kufu/smarthr-ui/issues/4437)) ([a165a6f](https://github.com/kufu/smarthr-ui/commit/a165a6ff5d05a078b79059ea05b81dbb5ef1226b))
+* BottomFiexArea を Tailwind CSS 化し、normalize 依存を修正 ([#4436](https://github.com/kufu/smarthr-ui/issues/4436)) ([09d6f8d](https://github.com/kufu/smarthr-ui/commit/09d6f8dd2e369aa53bb5e313722a07c23e1bb6da))
+* Calendar の日付選択領域のスタイリングを修正 ([#4421](https://github.com/kufu/smarthr-ui/issues/4421)) ([73b7631](https://github.com/kufu/smarthr-ui/commit/73b7631d8639741e70f2fb85b0af6ac09052cacf))
+* ErrorScreen の normalize 依存を修正 ([#4438](https://github.com/kufu/smarthr-ui/issues/4438)) ([bcd33a2](https://github.com/kufu/smarthr-ui/commit/bcd33a2af371002a3c91542febbe34e27d098426))
+* LineClamp を Tailwind CSS 化し、withTooltip を必須とする ([#4447](https://github.com/kufu/smarthr-ui/issues/4447)) ([937588f](https://github.com/kufu/smarthr-ui/commit/937588fb1012330b7b24b4297eceb64d3264f407))
+* SideMenu の normalize 依存を修正 ([#4440](https://github.com/kufu/smarthr-ui/issues/4440)) ([c11f6b0](https://github.com/kufu/smarthr-ui/commit/c11f6b06f2c777ce6078ef33b9d7a24370c86d71))
+* TabBar の normalize 依存を修正 ([#4413](https://github.com/kufu/smarthr-ui/issues/4413)) ([a3faf3f](https://github.com/kufu/smarthr-ui/commit/a3faf3f21b6ce8126ad20c7ddf5b02af50f6a5ce))
+
+## [43.3.0](https://github.com/kufu/smarthr-ui/compare/v43.2.1...v43.3.0) (2024-03-14)
+
+
+### Features
+
+* Action / FormDialog のフッター左端に操作領域を追加 ([#4414](https://github.com/kufu/smarthr-ui/issues/4414)) ([95e14af](https://github.com/kufu/smarthr-ui/commit/95e14afde209ac1ec0e916eed2d59cf2d7422323))
+
+
+### Bug Fixes
+
+* コンボボックスの normalize 依存を修正 ([#4420](https://github.com/kufu/smarthr-ui/issues/4420)) ([46d62fb](https://github.com/kufu/smarthr-ui/commit/46d62fb2411a056bd7e7be82821eb82727ca4500))
+
+### [43.2.1](https://github.com/kufu/smarthr-ui/compare/v43.2.0...v43.2.1) (2024-03-12)
+
+## [43.2.0](https://github.com/kufu/smarthr-ui/compare/v43.1.1...v43.2.0) (2024-03-12)
+
+
+### Features
+
+* AppNavi の normazlize 依存を修正 ([#4422](https://github.com/kufu/smarthr-ui/issues/4422)) ([66006ca](https://github.com/kufu/smarthr-ui/commit/66006cab3b94fb63011bf869419aaa9756648ca4))
+* DefiinitionList の用語の見た目を変える termStyleType を追加 ([#4357](https://github.com/kufu/smarthr-ui/issues/4357)) ([e783716](https://github.com/kufu/smarthr-ui/commit/e7837161651bc6807d24af860c901c2bcce5b3f6))
+
+
+### Bug Fixes
+
+* button と input, textarea, select の font-family を normalize ([#4408](https://github.com/kufu/smarthr-ui/issues/4408)) ([9095dbb](https://github.com/kufu/smarthr-ui/commit/9095dbb121b15b34176c9ac43afef38af2d6c8f6))
+* Input と Fieldset の normazlize 依存を修正 ([#4406](https://github.com/kufu/smarthr-ui/issues/4406)) ([bf29538](https://github.com/kufu/smarthr-ui/commit/bf295387c91287114e3b0f8e78bff8d0e9c4d779))
+* Pagination の reset css 依存を修正 ([#4405](https://github.com/kufu/smarthr-ui/issues/4405)) ([227c5c1](https://github.com/kufu/smarthr-ui/commit/227c5c1a5d435c40fa55f13a95c84a53e95e8729))
+* RadioButtonPanel の normazlize 依存を修正 ([#4407](https://github.com/kufu/smarthr-ui/issues/4407)) ([d92ea43](https://github.com/kufu/smarthr-ui/commit/d92ea4352f896e000b86d7565bd46bdbe3bc56b7))
+* smarthr-normalize-css への依存を剥がすための下準備 ([#4398](https://github.com/kufu/smarthr-ui/issues/4398)) ([0cddab8](https://github.com/kufu/smarthr-ui/commit/0cddab82ec50d73518b2735a4dd60d8de766563d))
+* Table の normazlize 依存を修正 ([#4410](https://github.com/kufu/smarthr-ui/issues/4410)) ([96eccb0](https://github.com/kufu/smarthr-ui/commit/96eccb07d106a4b56105288eb1ad0a3df43401c5))
+* Textarea の normalize 依存を修正する ([#4412](https://github.com/kufu/smarthr-ui/issues/4412)) ([55122a6](https://github.com/kufu/smarthr-ui/commit/55122a6909e022902d93275e392bb8980041a00d))
+* 角丸のデザイントークンが rem ベースになっていたので修正 ([#4411](https://github.com/kufu/smarthr-ui/issues/4411)) ([2400cb6](https://github.com/kufu/smarthr-ui/commit/2400cb6430ed7688689341e9cc492abfc3235f88))
+* 順序なしリストと定義リストの余白を reset ([#4419](https://github.com/kufu/smarthr-ui/issues/4419)) ([830b026](https://github.com/kufu/smarthr-ui/commit/830b026add7d13ff86eb891659f8cb5dc62120a7))
+
+### [43.1.1](https://github.com/kufu/smarthr-ui/compare/v43.1.0...v43.1.1) (2024-03-06)
+
+
+### Bug Fixes
+
+* DefinitionListのstyleがsmarthr-normalize-cssを利用していないプロダクトで崩れてしまう問題に対応する ([#4392](https://github.com/kufu/smarthr-ui/issues/4392)) ([1fd55bc](https://github.com/kufu/smarthr-ui/commit/1fd55bc3770d0f78772f3ff69821aefccab85968))
+
+## [43.1.0](https://github.com/kufu/smarthr-ui/compare/v43.0.0...v43.1.0) (2024-03-05)
+
+
+### Features
+
+* MultiComboBox のアイテムが選択されたときに選択済みかどうかを判定するコールバック関数をオプションで渡せるようにする ([#4346](https://github.com/kufu/smarthr-ui/issues/4346)) ([f734a79](https://github.com/kufu/smarthr-ui/commit/f734a790bc03101749b6d808a07b1ceccf1b3974))
+* アイコンを Font Awesome 6 へ更新 ([#4291](https://github.com/kufu/smarthr-ui/issues/4291)) ([a50f322](https://github.com/kufu/smarthr-ui/commit/a50f322c2c87cadcc43413d97fcb5c7a89818d1f))
+
+
+### Bug Fixes
+
+* Combobox関係のbuttonのtype属性がsubmitになっているものがあるため対応する ([#4372](https://github.com/kufu/smarthr-ui/issues/4372)) ([420cbae](https://github.com/kufu/smarthr-ui/commit/420cbae3857b78ea200c804aac84aeacf560caf8))
+* Fieldset で innerMargin が作用しない不具合を修正 ([#4374](https://github.com/kufu/smarthr-ui/issues/4374)) ([3e7a776](https://github.com/kufu/smarthr-ui/commit/3e7a7760c5d28b66cab6650b8e4810119876e886))
+* fix typo in NotificationBar component ([#4377](https://github.com/kufu/smarthr-ui/issues/4377)) ([ca1fba2](https://github.com/kufu/smarthr-ui/commit/ca1fba256bf6c3f6a28a3ddb3fb3a86f41a28f07))
+* Loader の CSS アニメーションを修正 ([#4381](https://github.com/kufu/smarthr-ui/issues/4381)) ([533b151](https://github.com/kufu/smarthr-ui/commit/533b151f15fe4c3854a9cf16885591b7e8002779))
+* style属性を無意味に指定されるため、widthのデフォルト値である"auto"を削除する ([#4385](https://github.com/kufu/smarthr-ui/issues/4385)) ([04819d0](https://github.com/kufu/smarthr-ui/commit/04819d05c7f6a39608bcc62c5f9bdb9a0fec1507))
+
+## [43.0.0](https://github.com/kufu/smarthr-ui/compare/v42.0.0...v43.0.0) (2024-02-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* BackgroundJobsPanel を削除 (#4359)
+
+### Features
+
+* Icon に FaPaintBrush を追加 ([#4345](https://github.com/kufu/smarthr-ui/issues/4345)) ([744a012](https://github.com/kufu/smarthr-ui/commit/744a012ba102dd85d71d0780f972bd29f351ca31))
+
+
+### Bug Fixes
+
+* FormControl コンポーネントの props が DOM に表出しないようにする ([#4344](https://github.com/kufu/smarthr-ui/issues/4344)) ([0626715](https://github.com/kufu/smarthr-ui/commit/062671517fa467cac12bb330fa5c3dda57eb0b0c))
+* HeaderLink に className を渡せるように修正 ([715c315](https://github.com/kufu/smarthr-ui/commit/715c315c34667d74fceb4bbe13e219125429bee2))
+* HeaderLink に className を渡せるように修正 ([#4358](https://github.com/kufu/smarthr-ui/issues/4358)) ([a016836](https://github.com/kufu/smarthr-ui/commit/a016836043d25e805b9361f3c7f1fd7c76331bde))
+* Paginationコンポーネントの番号ボタンに不必要なlist-styleが表示されてしまう問題を修正 ([#4349](https://github.com/kufu/smarthr-ui/issues/4349)) ([f82ba44](https://github.com/kufu/smarthr-ui/commit/f82ba44005ef8e58d9db2dfc514903f476cdc093))
+* TabItem の余白を調整 ([#4364](https://github.com/kufu/smarthr-ui/issues/4364)) ([08a7651](https://github.com/kufu/smarthr-ui/commit/08a7651d1ee6e5574d2f2a8b04ca76cf5c8a780f))
+* Textareaでwidthを指定しない場合、style属性で"width=auto;"が指定されないようにする ([#4350](https://github.com/kufu/smarthr-ui/issues/4350)) ([6039bf3](https://github.com/kufu/smarthr-ui/commit/6039bf3713e3ce0ca85cc6b72ad3719fc59aac58))
+* 強制カラーモードの時、borderのスタイルが適用されるようにした ([#4365](https://github.com/kufu/smarthr-ui/issues/4365)) ([5c74edc](https://github.com/kufu/smarthr-ui/commit/5c74edc0b60cc812e108d25038f12fd1859a559c))
+
+
+* BackgroundJobsPanel を削除 ([#4359](https://github.com/kufu/smarthr-ui/issues/4359)) ([b9a0b64](https://github.com/kufu/smarthr-ui/commit/b9a0b64ddbd3289bbbeae1d414622506326fa28e))
+
+## [42.0.0](https://github.com/kufu/smarthr-ui/compare/v41.3.0...v42.0.0) (2024-02-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* RightFixedNote と DialogBase を削除 (#4318)
+
+### Bug Fixes
+
+* DOM に themes="[object Object]" がつかないように修正 ([#4293](https://github.com/kufu/smarthr-ui/issues/4293)) ([76df903](https://github.com/kufu/smarthr-ui/commit/76df90367b25bfe74486203537a6b442231f9cc8))
+* PageCounterの-がスクリーンリーダーで読み上げられない問題を修正 ([#4297](https://github.com/kufu/smarthr-ui/issues/4297)) ([a4e4ed6](https://github.com/kufu/smarthr-ui/commit/a4e4ed631b434c55d161120361e6ecf25f7c8dee))
+* TableReel内の要素のサイズが動的に変化したときにもfixedの計算をするようにした ([#4316](https://github.com/kufu/smarthr-ui/issues/4316)) ([0b0b6de](https://github.com/kufu/smarthr-ui/commit/0b0b6ded515fa76c10e0c194f6b83b382807fbec))
+
+
+* RightFixedNote と DialogBase を削除 ([#4318](https://github.com/kufu/smarthr-ui/issues/4318)) ([d3e4ab3](https://github.com/kufu/smarthr-ui/commit/d3e4ab395935af5317c8a41b776812a74a5c391d))
+
 ## [41.3.0](https://github.com/kufu/smarthr-ui/compare/v41.2.0...v41.3.0) (2024-02-14)
 
 

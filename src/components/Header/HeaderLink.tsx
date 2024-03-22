@@ -1,23 +1,22 @@
-import styled, { css } from 'styled-components'
+import React, { ComponentProps } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
 import { TextLink } from '../TextLink'
 
-export const HeaderLink = styled(TextLink).attrs({ target: '_blank', suffix: null })`
-  ${() => {
-    const { color, shadow, spacingByChar } = useTheme()
-    return css`
-      padding-inline: ${spacingByChar(0.25)};
-      color: ${color.TEXT_WHITE};
-      box-shadow: unset;
+type Props = ComponentProps<typeof TextLink>
 
-      &:hover {
-        color: ${color.TEXT_WHITE};
-      }
+const headerLink = tv({
+  base: [
+    'shr-px-0.25 shr-text-white [&]:shr-shadow-none',
+    'hover:shr-text-white',
+    'focus-visible:shr-focus-indicator',
+  ],
+})
 
-      &:focus-visible {
-        ${shadow.focusIndicatorStyles}
-      }
-    `
-  }}
-`
+export const HeaderLink: React.FC<Props> = ({ className, ...props }) => {
+  const style = headerLink({ className })
+  return (
+    // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute
+    <TextLink {...props} target="_blank" suffix={null} className={style} />
+  )
+}

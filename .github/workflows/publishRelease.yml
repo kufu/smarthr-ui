@@ -17,7 +17,7 @@ jobs:
         with:
           ref: release-candidate
           fetch-depth: 0
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
       - uses: actions/setup-node@v4
@@ -62,8 +62,18 @@ jobs:
         run: |
           git checkout master
           git cherry-pick $NEW_TAG
-      - name: craete pull request
+      - name: create pull request
         uses: peter-evans/create-pull-request@v6
         with:
           title: 'chore(release): ${{ env.NEW_TAG }}'
           branch: 'merge-release-${{ env.NEW_TAG }}'
+          labels: release candidate
+      - name: Send message to Slack
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "<!subteam^S01RJL6PHJ8> npm publish が完了しました。Release Pull Request を手動でマージしたらリリース完了です。"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

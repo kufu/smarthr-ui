@@ -85,7 +85,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
             className={inputStyle}
             ref={ref}
           />
-          <span className={boxStyle} />
+          <span className={boxStyle} aria-hidden="true" />
         </span>
 
         {children && (

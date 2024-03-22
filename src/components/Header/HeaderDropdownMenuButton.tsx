@@ -1,22 +1,24 @@
-import styled, { css } from 'styled-components'
+import React, { ComponentProps, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
 import { DropdownMenuButton } from '../Dropdown'
 
-export const HeaderDropdownMenuButton = styled(DropdownMenuButton)(() => {
-  const { color, space } = useTheme()
-  return css`
-    > .smarthr-ui-DropdownMenuButton-trigger {
-      border-color: transparent;
-      background-color: transparent;
-      padding-inline: ${space(0.25)};
-      color: ${color.TEXT_WHITE};
-      font-weight: normal;
-
-      &:last-of-type {
-        /* ボタンの余白分だけ微調整 */
-        margin-inline-end: ${space(-0.25)};
-      }
-    }
-  `
+const headerDropdownMenuButton = tv({
+  base: [
+    '[&>.smarthr-ui-DropdownMenuButton-trigger]:shr-border-transparent [&>.smarthr-ui-DropdownMenuButton-trigger]:shr-bg-transparent [&>.smarthr-ui-DropdownMenuButton-trigger]:shr-px-0.25 [&>.smarthr-ui-DropdownMenuButton-trigger]:shr-font-normal [&>.smarthr-ui-DropdownMenuButton-trigger]:shr-text-white',
+    // ボタンの余白分だけ微調整
+    '[&>.smarthr-ui-DropdownMenuButton-trigger]:last-of-type:-shr-me-0.25',
+  ],
 })
+
+export const HeaderDropdownMenuButton: React.FC<ComponentProps<typeof DropdownMenuButton>> = ({
+  className,
+  ...rest
+}) => {
+  const headerDropdownMenuButtonStyle = useMemo(
+    () => headerDropdownMenuButton({ className }),
+    [className],
+  )
+
+  return <DropdownMenuButton {...rest} className={headerDropdownMenuButtonStyle} />
+}

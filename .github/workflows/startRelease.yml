@@ -9,6 +9,8 @@ on:
       manual_preparation:
         type: boolean
         description: '前リリースタグとの合流を手動で行う'
+  repository_dispatch:
+    types: [remote_dispatch]
 
 jobs:
   start_release:
@@ -21,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: 8
       - uses: actions/setup-node@v4
@@ -66,3 +68,11 @@ jobs:
           title: Release candidate
           content-filepath: ${{ env.RESULT_PATH }}
           labels: ${{ env.ISSUE_LABELS }}
+      - name: Send GitHub Action trigger data to Slack
+        if: ${{ github.event.client_payload.channel_id != null }}
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          channel-id: ${{ github.event.client_payload.channel_id }}
+          payload: ${{ github.event.client_payload.say }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

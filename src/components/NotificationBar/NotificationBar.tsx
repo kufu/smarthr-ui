@@ -56,7 +56,7 @@ export const notificationBar = tv({
     /** スライドインするかどうか */
     animate: {
       true: {
-        wrapper: 'shr-animate-[notifiction-bar-slide-in_0.2s_ease-out]',
+        wrapper: 'shr-animate-[notification-bar-slide-in_0.2s_ease-out]',
       },
     },
   },
@@ -96,7 +96,7 @@ export const notificationBar = tv({
         wrapper: 'shr-bg-main shr-text-white',
         icon: 'shr-text-white',
         closeButton:
-          'shr-text-white [&]:hover:shr-bg-main-darken [&]:focus-visible:shr-bg-main-darken',
+          'shr-text-white hover:[&]:shr-bg-main-darken focus-visible:[&]:shr-bg-main-darken',
       },
     },
     {
@@ -105,7 +105,7 @@ export const notificationBar = tv({
       className: {
         wrapper: 'shr-bg-warning-yellow shr-text-black',
         closeButton:
-          'shr-text-black [&]:hover:shr-bg-warning-yellow-darken [&]:focus-visible:shr-bg-warning-yellow-darken',
+          'shr-text-black hover:[&]:shr-bg-warning-yellow-darken focus-visible:[&]:shr-bg-warning-yellow-darken',
       },
     },
     {
@@ -115,7 +115,7 @@ export const notificationBar = tv({
         wrapper: 'shr-bg-danger shr-text-white',
         icon: 'shr-text-white',
         closeButton:
-          'shr-text-white [&]:hover:shr-bg-danger-darken [&]:focus-visible:shr-bg-danger-darken',
+          'shr-text-white hover:[&]:shr-bg-danger-darken focus-visible:[&]:shr-bg-danger-darken',
       },
     },
   ],

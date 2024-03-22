@@ -63,7 +63,7 @@ export const VRTFocusVisibleAnchor: StoryFn = () => (
 )
 VRTFocusVisibleAnchor.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement)
-  const button = await canvas.findByRole('button', { name: 'Tertiary_1' })
+  const button = await canvas.findByRole('button', { name: '削除' })
   await button.focus()
 }
 

@@ -1,40 +1,35 @@
-import React, { FC, HTMLAttributes, ReactNode } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentPropsWithRef, FC, PropsWithChildren, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
-
-import { useBulkActionRowClassNames } from './useClassNames'
 import { useTableHeadCellCount } from './useTableHeadCellCount'
 
-export type Props = {
-  /** 一括操作エリアの内容 */
-  children?: ReactNode
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-}
-type ElementProps = Omit<HTMLAttributes<HTMLTableRowElement>, keyof Props>
+const bulkActionRow = tv({
+  slots: {
+    wrapper: 'smarthr-ui-BulkActionRow',
+    cell: 'shr-border-t-shorthand shr-bg-action-background shr-p-1 shr-text-base',
+  },
+})
 
-export const BulkActionRow: FC<Props & ElementProps> = ({ className = '', children, ...props }) => {
-  const themes = useTheme()
-  const classNames = useBulkActionRowClassNames()
-
+export const BulkActionRow: FC<PropsWithChildren<ComponentPropsWithRef<'tr'>>> = ({
+  children,
+  className,
+  ...props
+}) => {
   const { countHeadCellRef, count } = useTableHeadCellCount<HTMLTableRowElement>()
 
+  const { wrapperStyle, cellStyle } = useMemo(() => {
+    const { wrapper, cell } = bulkActionRow()
+    return {
+      wrapperStyle: wrapper({ className }),
+      cellStyle: cell(),
+    }
+  }, [className])
+
   return (
-    <tr {...props} ref={countHeadCellRef} className={`${className} ${classNames.wrapper}`}>
-      <Cell colSpan={count} themes={themes}>
+    <tr {...props} ref={countHeadCellRef} className={wrapperStyle}>
+      <td colSpan={count} className={cellStyle}>
         {children}
-      </Cell>
+      </td>
     </tr>
   )
 }
-
-const Cell = styled.td<{ themes: Theme }>(({ themes }) => {
-  const { fontSize, border, color, space } = themes
-  return css`
-    border-top: ${border.shorthand};
-    background-color: ${color.ACTION_BACKGROUND};
-    padding: ${space(1)};
-    font-size: ${fontSize.M};
-  `
-})

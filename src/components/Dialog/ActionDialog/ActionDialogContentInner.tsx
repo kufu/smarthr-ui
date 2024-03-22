@@ -1,7 +1,6 @@
-import React, { FC, PropsWithChildren, ReactNode, useCallback } from 'react'
-import styled, { css } from 'styled-components'
+import React, { FC, PropsWithChildren, ReactNode, useCallback, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
 import { Heading, HeadingTagTypes } from '../../Heading'
 import { Cluster, Stack } from '../../Layout'
@@ -9,7 +8,6 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
-import { useClassNames } from '../useClassNames'
 
 import type { DecoratorsType, ResponseMessageType } from '../../../types'
 
@@ -47,10 +45,8 @@ export type BaseProps = PropsWithChildren<{
    * 閉じるボタンを無効にするかどうか
    */
   closeDisabled?: boolean
-  /**
-   * コンポーネントに適用するクラス名
-   */
-  className?: string
+  /** ダイアログフッターの左端操作領域 */
+  subActionArea?: ReactNode
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'closeButtonLabel'>
 }>
@@ -62,6 +58,16 @@ export type ActionDialogContentInnerProps = BaseProps & {
 }
 
 const CLOSE_BUTTON_LABEL = 'キャンセル'
+
+const actionDialogContentInner = tv({
+  slots: {
+    headingArea: ['smarthr-ui-Dialog-titleArea', 'shr-border-b-shorthand shr-px-1.5 shr-py-1'],
+    body: ['smarthr-ui-Dialog-body', 'shr-overflow-auto'],
+    actionArea: ['smarthr-ui-Dialog-actionArea', 'shr-border-t-shorthand shr-px-1.5 shr-py-1'],
+    buttonArea: ['smarthr-ui-Dialog-buttonArea', 'shr-ms-auto'],
+    message: 'shr-text-right',
+  },
+})
 
 export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   children,
@@ -76,10 +82,9 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
   responseMessage,
   actionDisabled = false,
   closeDisabled,
+  subActionArea,
   decorators,
 }) => {
-  const classNames = useClassNames().dialog
-  const theme = useTheme()
   const handleClickAction = useCallback(() => {
     onClickAction(onClickClose)
   }, [onClickAction, onClickClose])
@@ -87,78 +92,73 @@ export const ActionDialogContentInner: FC<ActionDialogContentInnerProps> = ({
 
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
+  const { headingStyle, bodyStyleProps, actionAreaStyle, buttonAreaStyle, messageStyle } =
+    useMemo(() => {
+      const { headingArea, body, actionArea, buttonArea, message } = actionDialogContentInner()
+      return {
+        headingStyle: headingArea(),
+        bodyStyleProps: {
+          className: body(),
+          style: {
+            maxHeight: `calc(100vh - ${offsetHeight}px)`,
+          },
+        },
+        actionAreaStyle: actionArea(),
+        buttonAreaStyle: buttonArea(),
+        messageStyle: message(),
+      }
+    }, [offsetHeight])
+
   return (
     <Section>
       {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <Heading tag={titleTag}>
-        <TitleAreaStack $themes={theme} ref={titleRef} className={classNames.titleArea}>
+        <Stack gap={0.25} as="span" ref={titleRef} className={headingStyle}>
           {subtitle && (
-            <Text size="S" leading="TIGHT" color="TEXT_GREY" className={classNames.subtitle}>
+            <Text size="S" leading="TIGHT" color="TEXT_GREY" className="smarthr-ui-Dialog-subtitle">
               {subtitle}
             </Text>
           )}
-          <Text id={titleId} size="L" leading="TIGHT" className={classNames.title}>
+          <Text id={titleId} size="L" leading="TIGHT" className="smarthr-ui-Dialog-title">
             {title}
           </Text>
-        </TitleAreaStack>
+        </Stack>
       </Heading>
-      <Body offsetHeight={offsetHeight} className={classNames.body}>
-        {children}
-      </Body>
-      <ActionAreaStack $themes={theme} ref={bottomRef} className={classNames.actionArea}>
-        <ButtonArea className={classNames.buttonArea}>
-          <Button
-            onClick={onClickClose}
-            disabled={closeDisabled || isRequestProcessing}
-            className={classNames.closeButton}
+      <div {...bodyStyleProps}>{children}</div>
+      <Stack gap={0.5} ref={bottomRef} className={actionAreaStyle}>
+        <Cluster justify="space-between" className={buttonAreaStyle}>
+          {subActionArea}
+          <Cluster
+            gap={{ row: 0.5, column: 1 }}
+            justify="flex-end"
+            className="smarthr-ui-Dialog-buttonArea"
           >
-            {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
-          </Button>
-          <Button
-            variant={actionTheme}
-            onClick={handleClickAction}
-            disabled={actionDisabled}
-            loading={isRequestProcessing}
-            className={classNames.actionButton}
-          >
-            {actionText}
-          </Button>
-        </ButtonArea>
+            <Button
+              onClick={onClickClose}
+              disabled={closeDisabled || isRequestProcessing}
+              className="smarthr-ui-Dialog-closeButton"
+            >
+              {decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL}
+            </Button>
+            <Button
+              variant={actionTheme}
+              onClick={handleClickAction}
+              disabled={actionDisabled}
+              loading={isRequestProcessing}
+              className="smarthr-ui-Dialog-actionButton"
+            >
+              {actionText}
+            </Button>
+          </Cluster>
+        </Cluster>
         {(responseMessage?.status === 'success' || responseMessage?.status === 'error') && (
-          <Message>
+          <div className={messageStyle}>
             <ResponseMessage type={responseMessage.status} role="alert">
               {responseMessage.text}
             </ResponseMessage>
-          </Message>
+          </div>
         )}
-      </ActionAreaStack>
+      </Stack>
     </Section>
   )
 }
-
-const TitleAreaStack = styled(Stack).attrs(() => ({
-  gap: 0.25,
-  forwardedAs: 'span',
-}))<{ $themes: Theme }>`
-  ${({ $themes: { border, space } }) => css`
-    margin-block: unset;
-    border-bottom: ${border.shorthand};
-    padding: ${space(1)} ${space(1.5)};
-  `}
-`
-const Body = styled.div<{ offsetHeight: number }>`
-  ${({ offsetHeight }) => css`
-    max-height: calc(100vh - ${offsetHeight}px);
-    overflow: auto;
-  `}
-`
-const ActionAreaStack = styled(Stack).attrs({ gap: 0.5 })<{ $themes: Theme }>`
-  ${({ $themes: { space, border } }) => css`
-    border-top: ${border.shorthand};
-    padding: ${space(1)} ${space(1.5)};
-  `}
-`
-const ButtonArea = styled(Cluster).attrs({ gap: { row: 0.5, column: 1 }, justify: 'flex-end' })``
-const Message = styled.div`
-  text-align: right;
-`

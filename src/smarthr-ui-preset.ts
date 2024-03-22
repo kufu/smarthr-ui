@@ -27,6 +27,7 @@ export default {
       background: defaultColor.BACKGROUND,
       border: theme('colors.grey.20'),
       column: defaultColor.COLUMN,
+      'column-darken': darkenColor(defaultColor.COLUMN),
       'base-grey': defaultColor.BASE_GREY,
       'over-background': defaultColor.OVER_BACKGROUND,
       head: defaultColor.HEAD,
@@ -45,9 +46,9 @@ export default {
     }),
     borderRadius: {
       none: '0',
-      s: '0.25rem',
-      m: '0.375rem',
-      l: '0.5rem',
+      s: '4px',
+      m: '6px',
+      l: '8px',
       em: '1em',
       full: '9999px',
     },
@@ -168,6 +169,9 @@ export default {
         darken: darkenColor(theme('colors.grey.20')),
         'high-contrast': theme('colors.grey.100'),
       }),
+      strokeWidth: {
+        '0.5': '0.5',
+      },
       keyframes: ({ theme }) => ({
         'loader-line-full-unfill-rotate': {
           '12.5%': {
@@ -267,14 +271,14 @@ export default {
           },
         },
         'loader-left-spin': {
-          '0% 100%': { transform: 'rotate(130deg)' },
+          '0%, 100%': { transform: 'rotate(130deg)' },
           '50%': { transform: 'rotate(-5deg)' },
         },
         'loader-right-spin': {
-          '0% 100%': { transform: 'rotate(-130deg)' },
+          '0%, 100%': { transform: 'rotate(-130deg)' },
           '50%': { transform: 'rotate(5deg)' },
         },
-        'notifiction-bar-slide-in': {
+        'notification-bar-slide-in': {
           from: {
             opacity: '0',
             /* 1行の場合の高さ分だけスライドさせる */
@@ -299,7 +303,7 @@ export default {
     textDecorationColor: false,
   },
   plugins: [
-    plugin(({ addComponents, addVariant, theme }) => {
+    plugin(({ addComponents, addBase, addVariant, theme }) => {
       addComponents({
         /**
          * box-shadow や ring を使った仕組みでは Firefox で欠陥があるため、独自定義している
@@ -316,24 +320,62 @@ export default {
           borderColor: theme('borderColor.default'),
         },
         '.border-t-shorthand': {
+          borderWidth: '0',
           borderTopWidth: theme('borderWidth.DEFAULT'),
           borderTopStyle: 'solid',
           borderTopColor: theme('borderColor.default'),
         },
         '.border-r-shorthand': {
+          borderWidth: '0',
           borderRightWidth: theme('borderWidth.DEFAULT'),
           borderRightStyle: 'solid',
           borderRightColor: theme('borderColor.default'),
         },
         '.border-b-shorthand': {
+          borderWidth: '0',
           borderBottomWidth: theme('borderWidth.DEFAULT'),
           borderBottomStyle: 'solid',
           borderBottomColor: theme('borderColor.default'),
         },
         '.border-l-shorthand': {
+          borderWidth: '0',
           borderLeftWidth: theme('borderWidth.DEFAULT'),
           borderLeftStyle: 'solid',
           borderLeftColor: theme('borderColor.default'),
+        },
+      })
+      addBase({
+        body: {
+          overflowWrap: 'break-word',
+          fontFamily: 'system-ui, sans-serif',
+          lineHeight: theme('lineHeight.normal'),
+          color: theme('colors.black'),
+        },
+        'p, dl': {
+          marginBlock: 'unset',
+        },
+        ul: {
+          marginBlock: 'unset',
+          paddingInlineStart: 'unset',
+        },
+        dd: {
+          marginInlineStart: 'unset',
+        },
+        'button, input, textarea, select': {
+          fontFamily: 'inherit',
+        },
+        input: {
+          paddingInline: 'unset',
+        },
+        textarea: {
+          marginInline: 'unset',
+        },
+        button: {
+          // Safari の UA スタイルで margin が設定されているため
+          margin: 'unset',
+        },
+        a: {
+          color: 'inherit',
         },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')

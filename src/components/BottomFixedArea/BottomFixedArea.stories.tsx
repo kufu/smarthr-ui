@@ -1,9 +1,9 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
-import * as React from 'react'
+import { StoryFn } from '@storybook/react'
+import React from 'react'
 
 import { Button } from '../Button'
-import { FaTrashIcon } from '../Icon'
+import { FaBoxArchiveIcon, FaTrashIcon } from '../Icon'
 
 import { BottomFixedArea } from './BottomFixedArea'
 
@@ -21,19 +21,17 @@ export default {
   },
 }
 
-export const _BottomFixedArea: Story = () => (
+export const _BottomFixedArea: StoryFn = () => (
   <BottomFixedArea
-    description="This is description."
-    primaryButton={<Button variant="primary">Primary Button</Button>}
-    secondaryButton={<Button>Secondary Button</Button>}
+    description="申請内容を入力し、送信してください。"
+    primaryButton={<Button variant="primary">送信</Button>}
+    secondaryButton={<Button>キャンセル</Button>}
     tertiaryLinks={[
-      { text: 'Tertiary_1', icon: FaTrashIcon, onClick: action('click_1') },
-      { text: 'Tertiary_2', icon: FaTrashIcon, onClick: action('click_2') },
-      { text: 'Tertiary_3', icon: FaTrashIcon, onClick: action('click_3') },
+      { text: '削除', icon: FaTrashIcon, onClick: action('click_1') },
       {
-        text: <span>Tertiary_4</span>,
-        icon: FaTrashIcon,
-        onClick: action('click_4'),
+        text: <span>アーカイブ</span>,
+        icon: FaBoxArchiveIcon,
+        onClick: action('click_2'),
       },
     ]}
   />
