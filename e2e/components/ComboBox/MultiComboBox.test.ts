@@ -152,7 +152,7 @@ test('disabled なコンボボックスではアイテムの選択と選択解�
     .ok()
 })
 
-test.only('キーボードで選択済みアイテムリストが操作できること', async (t) => {
+test('キーボードで選択済みアイテムリストが操作できること', async (t) => {
   const wrapper = Selector('[data-test=multi-combobox-default]')
   const combobox = wrapper.find('input[role=combobox]')
   const comboboxControls = ((await combobox.getAttribute('aria-controls')) || '').split(' ')
