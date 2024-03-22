@@ -1,20 +1,15 @@
-import React, { FC, PropsWithChildren, TdHTMLAttributes, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
+import { VariantProps, tv } from 'tailwind-variants'
 
 import { reelShadowStyle } from './useReelShadow'
 
-export type Props = PropsWithChildren<{
-  /** `true` のとき、セル内が空であれば "----" を表示する */
-  nullable?: boolean
-  /** `true` のとき、TableReel内で固定表示になる */
-  fixed?: boolean
-}>
-type ElementProps = Omit<TdHTMLAttributes<HTMLTableCellElement>, keyof Props>
+export type Props = PropsWithChildren<VariantProps<typeof td>>
+type ElementProps = Omit<ComponentPropsWithoutRef<'td'>, keyof Props>
 
 export const Td: FC<Props & ElementProps> = ({
   nullable = false,
   fixed = false,
-  className = '',
+  className,
   ...props
 }) => {
   const styles = useMemo(() => {
@@ -23,20 +18,13 @@ export const Td: FC<Props & ElementProps> = ({
     return `${tdStyles} ${reelShadowStyles}`.trim()
   }, [className, fixed, nullable])
 
-  return <td {...props} className={`${fixed ? 'fixedElement' : ''} ${styles}`} />
+  return <td {...props} className={styles} />
 }
 
 const td = tv({
   base: [
     'smarthr-ui-Td',
-    'shr-text-black',
-    'shr-h-[calc(1em_*_theme(lineHeight.normal))]',
-    'shr-px-1',
-    'shr-py-0.5',
-    'shr-border-t-shorthand',
-    'shr-text-base',
-    'shr-leading-normal',
-    'shr-align-middle',
+    'shr-border-t-shorthand shr-h-[calc(1em_*_theme(lineHeight.normal))] shr-px-1 shr-py-0.5 shr-align-middle shr-text-base shr-leading-normal shr-text-black',
   ],
   variants: {
     nullable: {
@@ -44,10 +32,8 @@ const td = tv({
     },
     fixed: {
       true: [
-        '[&.fixed]:shr-sticky',
-        '[&.fixed]:shr-right-0',
-        '[&.fixed]:shr-bg-white',
-        '[&.fixed]:after:shr-opacity-100',
+        'fixedElement',
+        '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:shr-bg-white [&.fixed]:after:shr-opacity-100',
       ],
     },
   },
