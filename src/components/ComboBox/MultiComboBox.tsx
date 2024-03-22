@@ -314,14 +314,11 @@ const ActualMultiComboBox = <T,>(
     } else {
       setInputValueIfUncontrolled('')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedItems, setInputValueIfUncontrolled])
-
-  useEffect(() => {
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     }
-  }, [inputRef, isFocused])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputRef, isFocused, setInputValueIfUncontrolled, selectedItems]) // highlighted 変更時には発火してほしくないため
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
