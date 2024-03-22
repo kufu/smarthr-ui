@@ -11,6 +11,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
@@ -349,10 +350,8 @@ const ActualMultiComboBox = <T,>(
         e.stopPropagation()
         const lastItem = selectedItems[selectedItems.length - 1]
         handleDelete(lastItem)
-        if (typeof lastItem.label === 'string') {
-          setHighlighted(true)
-          setInputValueIfUncontrolled(`${lastItem.label}`)
-        }
+        setHighlighted(true)
+        setInputValueIfUncontrolled(innerText(lastItem.label))
       } else {
         e.stopPropagation()
         inputRef.current?.focus()
