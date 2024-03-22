@@ -66,7 +66,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
     setCheckedInnerOrder,
     innerValues: { innerFields, innerCheckedOrder },
     handler: { handleApply, handleChange },
-    styles: { triggerStyle, bodyStyle, selectStyle, footerStyle },
+    styles: { bodyStyle, selectStyle, footerStyle },
   } = useSortDropdown({
     sortFields,
     defaultOrder,
@@ -77,7 +77,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button {...props} suffix={<SortIcon />} className={triggerStyle}>
+        <Button {...props} suffix={<SortIcon />}>
           {triggerLabel}
         </Button>
       </DropdownTrigger>

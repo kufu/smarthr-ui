@@ -91,9 +91,8 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   }, [innerCheckedOrder, innerFields, innerSelectedField, onApply])
 
   const styles = useMemo(() => {
-    const { trigger, body, select, footer } = sortDropdownStyle()
+    const { body, select, footer } = sortDropdownStyle()
     return {
-      triggerStyle: trigger(),
       bodyStyle: body(),
       selectStyle: select(),
       footerStyle: footer(),
