@@ -41,7 +41,7 @@ type Props = {
   onTenantSelect?: (id: string) => void
 }
 
-type ElementProps = Omit<ComponentProps<'h1'>, keyof Props>
+type ElementProps = Omit<ComponentProps<'header'>, keyof Props>
 
 export const Header: React.FC<PropsWithChildren<Props> & ElementProps> = ({
   logo = <SmartHRLogo className="shr-p-0.75" />,
