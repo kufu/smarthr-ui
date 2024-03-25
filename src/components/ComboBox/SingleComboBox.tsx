@@ -416,11 +416,7 @@ const ActualSingleComboBox = <T,>(
       {...props}
       {...wrapperStyleProps}
       ref={outerRef}
-      role="combobox"
-      aria-haspopup="listbox"
-      aria-controls={listBoxId}
-      aria-expanded={isFocused}
-      aria-invalid={error || undefined}
+      role="presentation"
       onKeyPress={handleKeyPress}
     >
       <Input
@@ -461,6 +457,11 @@ const ActualSingleComboBox = <T,>(
         onKeyDown={onKeyDownInput}
         ref={inputRef}
         autoComplete="off"
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-controls={listBoxId}
+        aria-expanded={isFocused}
+        aria-invalid={error || undefined}
         aria-activedescendant={activeOption?.id}
         aria-autocomplete="list"
         className={inputStyle}
