@@ -28,7 +28,7 @@ export const VRTSingle: StoryFn = () => (
 )
 const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   const canvas = within(canvasElement)
-  const textboxes = await canvas.findAllByRole('textbox')
+  const textboxes = await canvas.findAllByRole('combobox')
   await textboxes[0].focus()
   const body = canvasElement.ownerDocument.body
   const option = await within(body).findByText('option 1')
