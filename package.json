@@ -96,7 +96,7 @@
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "ttypescript": "^1.5.15",
-    "typescript": "^5.4.2",
+    "typescript": "^5.4.3",
     "typescript-plugin-styled-components": "^3.0.0",
     "wait-on": "^7.2.0",
     "webpack": "^5.90.3"
