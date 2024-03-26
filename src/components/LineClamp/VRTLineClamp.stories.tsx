@@ -35,7 +35,7 @@ export const VRTUserHover: StoryFn = () => (
         <dt>hover</dt>
         <dd>
           <Text>
-            <LineClamp data-testid="user-hover" maxLines={1} withTooltip>
+            <LineClamp data-testid="user-hover" maxLines={1}>
               {longText}
             </LineClamp>
           </Text>
@@ -61,7 +61,7 @@ export const VRTUserFocus: StoryFn = () => (
         <dt>focus</dt>
         <dd>
           <Text>
-            <LineClamp data-testid="user-focus" maxLines={1} withTooltip>
+            <LineClamp data-testid="user-focus" maxLines={1}>
               {longText}
             </LineClamp>
           </Text>
@@ -87,7 +87,7 @@ export const VRTForcedColors: StoryFn = () => (
         <dt>focus</dt>
         <dd>
           <Text>
-            <LineClamp data-testid="user-focus" maxLines={1} withTooltip>
+            <LineClamp data-testid="user-focus" maxLines={1}>
               {longText}
             </LineClamp>
           </Text>

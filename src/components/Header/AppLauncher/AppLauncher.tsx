@@ -1,7 +1,6 @@
 import React, { HTMLAttributes, ReactNode, useMemo } from 'react'
-import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Button } from '../../Button'
 import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '../../Dropdown'
 import { Heading } from '../../Heading'
@@ -10,18 +9,17 @@ import { Cluster, Stack } from '../../Layout'
 import { Section } from '../../SectioningContent'
 import { TextLink } from '../../TextLink'
 
-import { useClassNames } from './useClassNames'
-
 import type { DecoratorsType } from '../../../types'
 
 type Category = {
   type?: string
   heading: ReactNode
-  items: Array<{
-    label: ReactNode
-    url: string
-    target?: string
-  }>
+  items: AppItem[]
+}
+type AppItem = {
+  label: ReactNode
+  url: string
+  target?: string
 }
 type Props = {
   apps: Category[]
@@ -33,15 +31,30 @@ type ElementProps = Omit<HTMLAttributes<HTMLElement>, keyof Props>
 
 const TRIGGER_LABEL = 'アプリ'
 
+const appLauncher = tv({
+  slots: {
+    appsButton: [
+      'shr-border-transparent shr-font-normal shr-text-white [&]:shr-bg-transparent [&]:shr-px-0.25',
+      'hover:shr-border-transparent hover:[&]:shr-bg-transparent',
+      'focus-visible:shr-border-transparent focus-visible:shr-bg-transparent',
+    ],
+    contentWrapper: ['smarthr-ui-AppLauncher', 'shr-p-1.5 shr-leading-normal'],
+    category: 'smarthr-ui-AppLauncher-category',
+    appList: 'shr-list-none',
+    link: 'smarthr-ui-AppLauncher-link',
+    footer: [
+      'smarthr-ui-AppLauncher-footer',
+      'shr-border-t-shorthand -shr-mx-0.75 shr-px-0.75 shr-pt-1 [&&&]:-shr-mb-0.25',
+    ],
+  },
+})
+
 export const AppLauncher: React.FC<Props & ElementProps> = ({
   apps,
   urlToShowAll,
   decorators,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
-
   const triggerLabel = useMemo(
     () => decorators?.triggerLabel?.(TRIGGER_LABEL) || TRIGGER_LABEL,
     [decorators],
@@ -50,33 +63,25 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
   const baseApps = apps.find(({ type }) => type === 'base')
   const others = apps.filter((category) => category !== baseApps)
 
+  const { appsButton, contentWrapper, category, appList, link, footer } = appLauncher()
+
   return (
     <Dropdown {...props}>
       <DropdownTrigger>
-        <AppsButton $themes={theme} prefix={<FaToolboxIcon />}>
+        <Button prefix={<FaToolboxIcon />} className={appsButton()}>
           {triggerLabel}
-        </AppsButton>
+        </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
-        <WrapperStack $themes={theme} className={classNames.wrapper}>
+        <Stack as="nav" gap={1.5} className={contentWrapper()}>
           <DropdownScrollArea>
             <Stack gap={1.5}>
               {baseApps && (
                 <Section>
-                  <Stack gap={0.5} className={classNames.category}>
+                  <Stack gap={0.5} className={category()}>
                     <Heading type="subSubBlockTitle">{baseApps.heading}</Heading>
-                    <Cluster as="ul" gap={1}>
-                      {baseApps.items.map((item, index) => (
-                        <li key={index}>
-                          <TextLink
-                            href={item.url}
-                            target={item.target}
-                            className={classNames.link}
-                          >
-                            {item.label}
-                          </TextLink>
-                        </li>
-                      ))}
+                    <Cluster as="ul" gap={1} className={appList()}>
+                      {appItems(baseApps.items, link())}
                     </Cluster>
                   </Stack>
                 </Section>
@@ -84,20 +89,10 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
               <Cluster gap={1.5}>
                 {others.map(({ heading, items }, i) => (
                   <Section key={i}>
-                    <Stack gap={0.5} className={classNames.category}>
+                    <Stack gap={0.5} className={category()}>
                       <Heading type="subSubBlockTitle">{heading}</Heading>
-                      <Stack gap={0.5} as="ul">
-                        {items.map((item, index) => (
-                          <li key={index}>
-                            <TextLink
-                              href={item.url}
-                              target={item.target}
-                              className={classNames.link}
-                            >
-                              {item.label}
-                            </TextLink>
-                          </li>
-                        ))}
+                      <Stack gap={0.5} as="ul" className={appList()}>
+                        {appItems(items, link())}
                       </Stack>
                     </Stack>
                   </Section>
@@ -107,47 +102,23 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
           </DropdownScrollArea>
 
           {urlToShowAll && (
-            <FooterStack $themes={theme} className={classNames.footer}>
+            <Stack className={footer()}>
               <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
                 すべて見る
               </TextLink>
-            </FooterStack>
+            </Stack>
           )}
-        </WrapperStack>
+        </Stack>
       </DropdownContent>
     </Dropdown>
   )
 }
 
-const AppsButton = styled(Button)<{ $themes: Theme }>`
-  ${({ $themes: { color, space } }) => css`
-    border-color: transparent;
-    background-color: transparent;
-    padding-inline: ${space(0.25)};
-    color: ${color.TEXT_WHITE};
-    font-weight: normal;
-
-    &:hover,
-    &:focus-visible {
-      border-color: transparent;
-      background-color: transparent;
-    }
-  `}
-`
-const WrapperStack = styled(Stack).attrs({ forwardedAs: 'nav', gap: 1.5 })<{ $themes: Theme }>`
-  ${({ $themes: { space, leading } }) => css`
-    padding: ${space(1.5)};
-    line-height: ${leading.NORMAL};
-  `}
-`
-const FooterStack = styled(Stack)<{ $themes: Theme }>`
-  ${({ $themes: { border, space } }) => css`
-    &&& {
-      margin-block-end: ${space(-0.25)};
-    }
-    margin-inline: ${space(-0.75)};
-    border-top: ${border.shorthand};
-    padding-block-start: ${space(1)};
-    padding-inline: ${space(0.75)};
-  `}
-`
+const appItems = (items: AppItem[], linkStyle: string) =>
+  items.map((item, index) => (
+    <li key={index}>
+      <TextLink href={item.url} target={item.target} className={linkStyle}>
+        {item.label}
+      </TextLink>
+    </li>
+  ))

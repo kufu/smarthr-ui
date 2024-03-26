@@ -9,7 +9,7 @@ import { DatePicker } from '../DatePicker'
 import { FormControl } from '../FormControl'
 import { Heading } from '../Heading'
 import { Input } from '../Input'
-import { Cluster, LineUp, Stack } from '../Layout'
+import { Cluster, Stack } from '../Layout'
 import { Fieldset } from '../NewFieldset'
 import { RadioButton } from '../RadioButton'
 import { Section } from '../SectioningContent'
@@ -247,6 +247,8 @@ export const Action_Dialog: StoryFn = () => {
         responseMessage={responseMessage}
         id="dialog-action"
         data-test="dialog-content"
+        width="40em"
+        subActionArea={<Button>サブアクション</Button>}
       >
         <Section>
           <StyledHeading>ActionDialog</StyledHeading>
@@ -356,6 +358,8 @@ export const Form_Dialog: StoryFn = () => {
         responseMessage={responseMessage}
         id="dialog-form"
         data-test="form-dialog-content"
+        width="40em"
+        subActionArea={<Button>サブアクション</Button>}
       >
         <Fieldset title="fruits" innerMargin={0.5}>
           <RadioList>
@@ -832,10 +836,10 @@ export const Modeless_Dialog: StoryFn = () => {
             <Stack gap="S">
               <ModelessContentPart>
                 <Fieldset title="ラジオボタン">
-                  <LineUp gap="S">
+                  <Cluster gap="S">
                     <RadioButton name="modeless_dialog_center_radio_1">ラジオボタン1</RadioButton>
                     <RadioButton name="modeless_dialog_center_radio_2">ラジオボタン2</RadioButton>
-                  </LineUp>
+                  </Cluster>
                 </Fieldset>
               </ModelessContentPart>
               <ModelessContentPart>

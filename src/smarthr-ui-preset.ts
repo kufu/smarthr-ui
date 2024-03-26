@@ -26,7 +26,9 @@ export default {
       link: defaultColor.TEXT_LINK,
       background: defaultColor.BACKGROUND,
       border: theme('colors.grey.20'),
+      brand: theme('colors.brand'),
       column: defaultColor.COLUMN,
+      'column-darken': darkenColor(defaultColor.COLUMN),
       'base-grey': defaultColor.BASE_GREY,
       'over-background': defaultColor.OVER_BACKGROUND,
       head: defaultColor.HEAD,
@@ -168,6 +170,9 @@ export default {
         darken: darkenColor(theme('colors.grey.20')),
         'high-contrast': theme('colors.grey.100'),
       }),
+      strokeWidth: {
+        '0.5': '0.5',
+      },
       keyframes: ({ theme }) => ({
         'loader-line-full-unfill-rotate': {
           '12.5%': {
@@ -359,6 +364,19 @@ export default {
         },
         'button, input, textarea, select': {
           fontFamily: 'inherit',
+        },
+        input: {
+          paddingInline: 'unset',
+        },
+        textarea: {
+          marginInline: 'unset',
+        },
+        button: {
+          // Safari の UA スタイルで margin が設定されているため
+          margin: 'unset',
+        },
+        a: {
+          color: 'inherit',
         },
       })
       addVariant('forced-colors', '@media (forced-colors: active)')

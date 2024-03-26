@@ -1,77 +1,66 @@
-import React, { ReactNode, VFC } from 'react'
-import styled, { css } from 'styled-components'
+import React, { FC, PropsWithChildren, ReactNode, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
 import { UnstyledButton } from '../Button'
 import { Dropdown, DropdownContent, DropdownTrigger } from '../Dropdown'
 import { FaCaretDownIcon, ComponentProps as IconProps } from '../Icon'
 
-import { ItemStyleProps, getIconComponent, getItemStyle } from './appNaviHelper'
+import { appNaviItemStyle } from './style'
 
-export type AppNaviDropdownProps = {
-  /** ボタンのテキスト */
-  children: ReactNode
+export type AppNaviDropdownProps = PropsWithChildren<{
   /** ドロップダウンのコンテンツ */
   dropdownContent: ReactNode
   /** 表示するアイコンタイプ */
   icon?: React.ComponentType<IconProps>
   /** アクティブ状態であるかどうか */
   current?: boolean
-}
-
-type InnerProps = AppNaviDropdownProps & {
-  isUnclickable?: boolean
   displayCaret?: boolean
-}
+}>
 
-export const AppNaviDropdown: VFC<InnerProps> = ({
+const appNaviDropdown = tv({
+  extend: appNaviItemStyle,
+  variants: {
+    displayCaret: {
+      true: {
+        wrapper: [
+          'smarthr-ui-AppNavi-dropdown',
+          '[&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
+        ],
+      },
+    },
+  },
+})
+
+export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   children,
   dropdownContent,
-  icon,
+  icon: Icon,
   current = false,
-  isUnclickable = false,
   displayCaret,
 }) => {
-  const theme = useTheme()
-  const iconComponent = getIconComponent(theme, { icon, current })
+  const { wrapperStyle, iconStyle } = useMemo(() => {
+    const { wrapper, icon } = appNaviDropdown({ active: current, displayCaret })
+    return {
+      wrapperStyle: wrapper(),
+      iconStyle: icon(),
+    }
+  }, [current, displayCaret])
 
   return (
     <Dropdown>
       <DropdownTrigger>
-        <TriggerButton
-          $themes={theme}
+        <UnstyledButton
           aria-current={current ? 'page' : undefined}
-          disabled={isUnclickable}
-          $displayCaret={displayCaret}
-          $isActive={current}
-          $isUnclickable={isUnclickable}
+          disabled={current}
+          className={wrapperStyle}
         >
-          {iconComponent}
+          {Icon && <Icon className={iconStyle} />}
           {children}
           {displayCaret && <FaCaretDownIcon />}
-        </TriggerButton>
+        </UnstyledButton>
       </DropdownTrigger>
 
       <DropdownContent>{dropdownContent}</DropdownContent>
     </Dropdown>
   )
 }
-
-const TriggerButton = styled(UnstyledButton)<
-  ItemStyleProps & {
-    $displayCaret?: boolean
-  }
->(
-  ({ $displayCaret, ...props }) => css`
-    ${getItemStyle(props)}
-
-    ${$displayCaret &&
-    css`
-      &[aria-expanded='true'] {
-        .smarthr-ui-Icon:last-child {
-          transform: rotate(0.5turn);
-        }
-      }
-    `}
-  `,
-)

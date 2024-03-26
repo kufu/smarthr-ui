@@ -68,7 +68,7 @@ const inner = tv({
   slots: {
     input: [
       'smarthr-ui-Input-input',
-      'shr-inline-block shr-w-full shr-grow shr-border-none shr-bg-transparent shr-px-[unset] shr-py-0.75 shr-text-base shr-leading-none shr-text-black shr-outline-none shr-outline-0',
+      'shr-inline-block shr-w-full shr-grow shr-border-none shr-bg-transparent shr-py-0.75 shr-text-base shr-leading-none shr-text-black shr-outline-none shr-outline-0',
       'placeholder:shr-text-grey',
       'disabled:shr-text-disabled disabled:shr-opacity-100',
       'shr-h-[theme(fontSize.base)]',

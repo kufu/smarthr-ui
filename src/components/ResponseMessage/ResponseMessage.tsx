@@ -1,52 +1,46 @@
-import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
+import React, { PropsWithChildren, useMemo } from 'react'
+import { VariantProps, tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTheme'
 import {
-  FaCheckCircleIcon,
-  FaExclamationCircleIcon,
-  FaInfoCircleIcon,
-  FaSyncAltIcon,
+  FaCircleCheckIcon,
+  FaCircleExclamationIcon,
+  FaCircleInfoIcon,
+  FaRotateIcon,
+  type ComponentProps as IconProps,
   WarningIcon,
 } from '../Icon'
 
-type Props = PropsWithChildren<{
-  type: 'info' | 'success' | 'warning' | 'error' | 'sync'
-}>
+type Props = PropsWithChildren<VariantProps<typeof responseMessage>> & Omit<IconProps, 'text'>
 
-export const ResponseMessage: React.FC<
-  Props & Omit<ComponentProps<typeof FaCheckCircleIcon>, 'text'>
-> = ({ type, children, ...other }) => {
-  const theme = useTheme()
-  const { color } = theme
+const responseMessage = tv({
+  base: '',
+  variants: {
+    type: {
+      info: 'shr-fill-grey',
+      success: 'shr-fill-main',
+      warning: '',
+      error: 'shr-fill-danger',
+      sync: 'shr-fill-main',
+    },
+  },
+})
 
-  const { Icon, iconColor } = useMemo(() => {
+export const ResponseMessage: React.FC<Props> = ({ type = 'info', children, ...other }) => {
+  const styles = useMemo(() => responseMessage({ type }), [type])
+  const Icon = useMemo(() => {
     switch (type) {
       case 'info':
-        return {
-          Icon: FaInfoCircleIcon,
-          iconColor: color.TEXT_GREY,
-        }
+        return FaCircleInfoIcon
       case 'success':
-        return {
-          Icon: FaCheckCircleIcon,
-          iconColor: color.MAIN,
-        }
+        return FaCircleCheckIcon
       case 'warning':
-        return {
-          Icon: WarningIcon,
-        }
+        return WarningIcon
       case 'error':
-        return {
-          Icon: FaExclamationCircleIcon,
-          iconColor: color.DANGER,
-        }
+        return FaCircleExclamationIcon
       case 'sync':
-        return {
-          Icon: FaSyncAltIcon,
-          iconColor: color.MAIN,
-        }
+        return FaRotateIcon
     }
-  }, [type, color])
+  }, [type])
 
-  return <Icon {...other} text={children} color={iconColor} />
+  return <Icon {...other} text={children} className={styles} />
 }

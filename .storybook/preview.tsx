@@ -3,15 +3,12 @@ import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import { Title, Subtitle, Description, Primary, ArgsTable, Stories } from '@storybook/blocks'
 import ReactGA from 'react-ga4'
 
-import { Reset } from 'styled-reset'
 import { Preview } from '@storybook/react'
 
 import { createTheme, CreatedTheme } from '../src/themes/createTheme'
 import { ThemeProvider as ShrThemeProvider } from '../src/themes/ThemeProvider'
-import { ThemeProvider as SCThemeProvider, createGlobalStyle } from 'styled-components'
+import { ThemeProvider as SCThemeProvider } from 'styled-components'
 import { ThemeProvider as TailwindProvider } from '../src/themes/tailwind/TailwindThemeProvider'
-import CssBaseLine from 'smarthr-normalize-css'
-import { defaultLeading, defaultColor } from '../src/'
 
 import tailwindConfig from '../tailwind.config'
 
@@ -22,19 +19,6 @@ if (`${process.env.STORYBOOK_NODE_ENV}` === 'production') {
 }
 
 const preview: Preview = {
-  globalTypes: {
-    reset: {
-      defaultValue: 'smarthr-normalize',
-      toolbar: {
-        title: 'CSS Reset',
-        items: [
-          { value: 'smarthr-normalize', title: 'smarthr-normalize' },
-          { value: 'styled-reset', title: 'styled-reset' },
-          { value: null, title: 'off' },
-        ],
-      },
-    },
-  },
   parameters: {
     options: {
       isFullscreen: false,
@@ -95,12 +79,6 @@ const preview: Preview = {
   },
   decorators: [
     (Story, context) => {
-      const resetStyle =
-        context.globals.reset === 'smarthr-normalize' ? (
-          <SmartHRGlobalStyle />
-        ) : context.globals.reset === 'styled-reset' ? (
-          <Reset />
-        ) : undefined
       const theme = createTheme()
       const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
 
@@ -114,7 +92,6 @@ const preview: Preview = {
         <ThemeProvider>
           <ShrThemeProvider theme={theme}>
             <TailwindProvider config={tailwindConfig}>
-              {resetStyle}
               <Story />
             </TailwindProvider>
           </ShrThemeProvider>
@@ -135,12 +112,3 @@ const callThemeProvider =
 
     return <>{children}</>
   }
-
-const SmartHRGlobalStyle = createGlobalStyle`
-  ${CssBaseLine}
-
-  body {
-    line-height: ${defaultLeading.NORMAL};
-    color: ${defaultColor.TEXT_BLACK};
-  }
-`

@@ -12,7 +12,7 @@ export default {
 
 export const All: StoryFn = () => (
   <Stack>
-    <ResponseMessage type="info">情報を表すアイコンが付きます。デフォルトです。</ResponseMessage>
+    <ResponseMessage>情報を表すアイコンが付きます。デフォルトです。</ResponseMessage>
     <ResponseMessage type="success">成功を表すアイコンが付きます。</ResponseMessage>
     <ResponseMessage type="warning">警告を表すアイコンが付きます。</ResponseMessage>
     <ResponseMessage type="error">エラーを表すアイコンが付きます。</ResponseMessage>

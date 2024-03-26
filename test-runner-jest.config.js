@@ -13,7 +13,6 @@ module.exports = {
      * 上位の Layout.stories.tsx でテストが実行されるので除外している
      */
     'Cluster.stories.tsx',
-    'LineUp.stories.tsx',
     'Reel.stories.tsx',
     'Sidebar.stories.tsx',
     'Stack.stories.tsx',
@@ -38,6 +37,7 @@ module.exports = {
      * error: "Elements must only use allowed ARIA attributes"
      */
     'DatePicker.stories.tsx',
+    'FormControl.stories.tsx', // DatePicker を含むために除外
     /**
      * error: "ARIA attributes must conform to valid values"
      */

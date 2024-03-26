@@ -1,45 +1,31 @@
-import React, { FC, ReactNode } from 'react'
-import styled, { css } from 'styled-components'
+import React, { FC, PropsWithChildren, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { Base, BaseElementProps } from '../Base'
 import { ResponseMessage } from '../ResponseMessage'
 
-import { useClassNames } from './useClassNames'
-
-type IconType = 'info' | 'success' | 'warning' | 'error'
-
-type Props = {
+type Props = PropsWithChildren<{
   /** 表示する情報の種類 */
-  type?: IconType
-  /** コンポーネントに適用するクラス名 */
-  className?: string
-  /** 表示する情報の内容 */
-  children: ReactNode
-}
+  type?: 'info' | 'success' | 'warning' | 'error'
+}>
+
+const compactInformationPanel = tv({
+  base: ['smarthr-ui-CompactInformationPanel', 'shr-flex shr-p-1 shr-shadow-layer-3'],
+})
 
 export const CompactInformationPanel: FC<Props & BaseElementProps> = ({
   type = 'info',
-  className = '',
+  className,
   children,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
+  const styles = useMemo(() => compactInformationPanel({ className }), [className])
 
   return (
-    <Wrapper {...props} className={`${className} ${classNames.wrapper}`} $themes={theme}>
+    <Base {...props} className={styles}>
       <ResponseMessage type={type} iconGap={0.5}>
         {children}
       </ResponseMessage>
-    </Wrapper>
+    </Base>
   )
 }
-
-const Wrapper = styled(Base)<{ $themes: Theme }>`
-  ${({ $themes: { spacingByChar, shadow } }) => css`
-    display: flex;
-    box-shadow: ${shadow.LAYER3};
-    padding: ${spacingByChar(1)};
-  `}
-`
