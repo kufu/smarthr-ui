@@ -17,9 +17,9 @@ import tailwindConfig from '../tailwind.config'
 
 import '../src/styles/index.css'
 
-const gaKey = `${process.env.STORYBOOK_NODE_ENV}` === 'production' ? '' : 'G-YE0FPV8FM9'
-
-ReactGA.initialize(`${gaKey}`)
+if (`${process.env.STORYBOOK_NODE_ENV}` === 'production') {
+  ReactGA.initialize('G-YE0FPV8FM9')
+}
 
 const preview: Preview = {
   globalTypes: {
@@ -105,7 +105,9 @@ const preview: Preview = {
       const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
 
       useEffect(() => {
-        ReactGA.send({ hitType: 'pageview', title: context.title })
+        if (`${process.env.STORYBOOK_NODE_ENV}` === 'production') {
+          ReactGA.send({ hitType: 'pageview', title: context.title })
+        }
       }, [])
 
       return (
