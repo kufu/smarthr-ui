@@ -65,7 +65,7 @@ commands:
   run-chromatic:
     steps:
       - checkout
-      - run: STORYBOOK_NODE_ENV="test" pnpm run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes --only-changed
+      - run: STORYBOOK_NODE_ENV="production" pnpm run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes --only-changed
   run-chromatic-master:
     steps:
       - checkout
