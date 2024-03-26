@@ -65,7 +65,7 @@ export const MessageDialogContentInner: FC<MessageDialogContentInnerProps> = ({
       titleAreaStyle: titleArea(),
       bodyStyleProps: {
         style: {
-          maxHeight: `calc(100vh - ${offsetHeight}px)`,
+          maxHeight: `calc(100svh - ${offsetHeight}px)`,
         },
         className: body(),
       },
