@@ -1,81 +1,45 @@
-import React, { ComponentType, ReactNode, VFC } from 'react'
-import styled from 'styled-components'
+import React, { ComponentType, FC, PropsWithChildren, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../hooks/useTheme'
 import { ComponentProps as IconProps } from '../Icon'
 
-import { getIconComponent, getItemStyle } from './appNaviHelper'
-import { useClassNames } from './useClassNames'
+import { appNaviItemStyle } from './style'
 
-export type AppNaviCustomTagProps = {
-  /** ボタンのテキスト */
-  children: ReactNode
+export type AppNaviCustomTagProps = PropsWithChildren<{
   /** このボタンのカスタムタグ */
   tag: ComponentType<any>
   /** 表示するアイコンタイプ */
   icon?: React.ComponentType<IconProps>
   /** アクティブ状態であるかどうか */
   current?: boolean
-} & { [key: string]: any }
-type InnerProps = AppNaviCustomTagProps & {
-  isUnclickable?: boolean
-}
+}> & { [key: string]: any }
 
-export const AppNaviCustomTag: VFC<InnerProps> = ({
+const appNaviCustomTag = tv({
+  extend: appNaviItemStyle,
+  slots: {
+    wrapper: 'smarthr-ui-AppNavi-customTag',
+  },
+})
+
+export const AppNaviCustomTag: FC<AppNaviCustomTagProps> = ({
   children,
-  tag,
-  icon,
+  tag: Tag,
+  icon: Icon,
   current = false,
-  isUnclickable = false,
   ...props
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
-  const iconComponent = getIconComponent(theme, { icon, current })
-
-  if (current) {
-    if (isUnclickable) {
-      const unclickableProps = { href: undefined, disabled: true }
-      return (
-        <UnclickableActive
-          {...props}
-          {...unclickableProps}
-          as={tag}
-          $themes={theme}
-          aria-current="page"
-          className={classNames.customTag}
-        >
-          {iconComponent}
-          {children}
-        </UnclickableActive>
-      )
+  const { wrapperStyle, iconStyle } = useMemo(() => {
+    const { wrapper, icon } = appNaviCustomTag({ active: current })
+    return {
+      wrapperStyle: wrapper(),
+      iconStyle: icon(),
     }
-    return (
-      <Active
-        {...props}
-        as={tag}
-        $themes={theme}
-        aria-current="page"
-        className={classNames.customTag}
-      >
-        {iconComponent}
-        {children}
-      </Active>
-    )
-  }
+  }, [current])
 
   return (
-    <InActive {...props} as={tag} $themes={theme} className={classNames.customTag}>
-      {iconComponent}
+    <Tag {...props} aria-current={current ? 'page' : undefined} className={wrapperStyle}>
+      {Icon && <Icon className={iconStyle} />}
       {children}
-    </InActive>
+    </Tag>
   )
 }
-
-const Active = styled.div<{ $themes: Theme }>(({ $themes }) =>
-  getItemStyle({ $themes, $isActive: true }),
-)
-const InActive = styled.div<{ $themes: Theme }>(({ $themes }) => getItemStyle({ $themes }))
-const UnclickableActive = styled.div<{ $themes: Theme }>(({ $themes }) =>
-  getItemStyle({ $themes, $isActive: true, $isUnclickable: true }),
-)

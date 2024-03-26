@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useCallback } from 'react'
+import React, { ComponentProps, useCallback } from 'react'
 
 import { useId } from '../../../hooks/useId'
 import { DialogContentInner } from '../DialogContentInner'
@@ -8,7 +8,7 @@ import { useDialogPortal } from '../useDialogPortal'
 import { FormDialogContentInner, FormDialogContentInnerProps } from './FormDialogContentInner'
 
 type Props = Omit<FormDialogContentInnerProps, 'titleId'> & DialogProps
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 export const FormDialog: React.FC<Props & ElementProps> = ({
   children,
@@ -24,7 +24,7 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   actionDisabled = false,
   closeDisabled,
   subActionArea,
-  className = '',
+  className,
   portalParent,
   decorators,
   id,
