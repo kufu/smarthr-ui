@@ -113,7 +113,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
       right || 0
     }px, ${spacing[0.5]}))`
     const translateX = exist(right) || exist(left) ? '0' : 'calc((100vw - 100%) / 2)'
-    const translateY = exist(top) || exist(bottom) ? '0' : 'calc((100vh - 100%) / 2)'
+    const translateY = exist(top) || exist(bottom) ? '0' : 'calc((100svh - 100%) / 2)'
     return {
       layoutStyle: layout(),
       innerStyleProps: {
