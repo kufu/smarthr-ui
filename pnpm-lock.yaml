@@ -162,8 +162,8 @@ devDependencies:
     specifier: ^0.6.1
     version: 0.6.1(@babel/core@7.24.3)
   chromatic:
-    specifier: ^11.0.8
-    version: 11.0.8
+    specifier: ^11.2.0
+    version: 11.2.0
   ecma-version-validator-webpack-plugin:
     specifier: ^1.2.1
     version: 1.2.1(webpack@5.90.3)
@@ -6448,8 +6448,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /chromatic@11.0.8:
-    resolution: {integrity: sha512-+zJ5h0/Eu5z26KCNLIw2tknbK69gUO8q3Jsew4oU0Q/i/NPhIwcXhvPP7u75aLJgX1EI61+ndiGJA/yeQZQcgw==}
+  /chromatic@11.2.0:
+    resolution: {integrity: sha512-b7vzlMuy/68WnH0N6nXpo8FiFK5pEF0ClIyVVK9YfYYSbGLo5/6Lh/VEbjWMoRaShCUk59YSXA43Npa2NrXIsg==}
     hasBin: true
     peerDependencies:
       '@chromatic-com/cypress': ^0.*.* || ^1.0.0
