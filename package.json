@@ -85,7 +85,7 @@
     "rimraf": "^5.0.5",
     "standard-version": "^9.3.2",
     "storybook": "^7.6.17",
-    "storybook-addon-pseudo-states": "^2.2.1",
+    "storybook-addon-pseudo-states": "^3.0.0",
     "styled-components": "^5.3.11",
     "stylelint": "^16.2.1",
     "stylelint-config-prettier": "^9.0.5",
