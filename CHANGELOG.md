@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [45.0.1](https://github.com/kufu/smarthr-ui/compare/v45.0.0...v45.0.1) (2024-03-27)
+
+
+### Bug Fixes
+
+* Dialog の maxHeight に svh を使用する ([#4504](https://github.com/kufu/smarthr-ui/issues/4504)) ([086060b](https://github.com/kufu/smarthr-ui/commit/086060b8787ba1caf5809e8775bf8b2e4ea7431e))
+
 ## [45.0.0](https://github.com/kufu/smarthr-ui/compare/v44.0.0...v45.0.0) (2024-03-26)
 
 
