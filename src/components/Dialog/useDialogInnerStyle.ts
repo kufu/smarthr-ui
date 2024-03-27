@@ -19,7 +19,7 @@ export const useDialoginnerStyle = (offsetHeight: number) =>
       bodyStyleProps: {
         className: body(),
         style: {
-          maxHeight: `calc(100vh - ${offsetHeight}px)`,
+          maxHeight: `calc(100svh - ${offsetHeight}px)`,
         },
       },
       actionAreaStyle: actionArea(),
