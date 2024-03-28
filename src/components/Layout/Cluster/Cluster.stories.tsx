@@ -1,5 +1,5 @@
 import { StoryFn } from '@storybook/react'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Base } from '../../Base'
@@ -19,83 +19,91 @@ export default {
   },
 }
 
-export const All: StoryFn = () => (
-  <StyledStack gap="L">
-    <Fieldset title="幅を狭めて収まり切らなくなると折返します。">
-      <Cluster>
-        <StatusLabel type="grey">アコーディオン</StatusLabel>
-        <StatusLabel type="blue">コンボボックス</StatusLabel>
-        <StatusLabel type="red">ディスクロージャ</StatusLabel>
-        <StatusLabel type="grey" bold>
-          タブ・コントロール
-        </StatusLabel>
-        <StatusLabel type="red" bold>
-          ツリー・ビュー
-        </StatusLabel>
-        <StatusLabel type="blue" bold>
-          ツリー・グリッド
-        </StatusLabel>
-        <StatusLabel type="warning">ウィンドウ・スプリッター</StatusLabel>
-        <StatusLabel type="error" bold>
-          ランドマーク・リージョン
-        </StatusLabel>
-      </Cluster>
-    </Fieldset>
-    <Fieldset
-      title={
-        <>
-          間隔を <code>gap</code> で変えられます。
-        </>
-      }
-    >
-      <Cluster gap="XS">
-        {[...Array(10)].map((_, i) => (
-          <ColorBox key={i} />
-        ))}
-      </Cluster>
-    </Fieldset>
-    <Fieldset title="垂直方向と水平方向で異なった余白を設定できます。">
-      <StyledBase>
-        <Cluster gap={{ row: 'X3S', column: 'XS' }}>
-          <RadioButton name="department" defaultChecked={true}>
-            申請者に戻す
-          </RadioButton>
-          <RadioButton name="department" defaultChecked={false}>
-            ステップ1に戻す
-          </RadioButton>
-          <RadioButton name="department" defaultChecked={false}>
-            ステップ2に戻す
-          </RadioButton>
-          <RadioButton name="department" defaultChecked={false}>
-            ステップ3に戻す
-          </RadioButton>
-          <RadioButton name="department" defaultChecked={false}>
-            ステップ4に戻す
-          </RadioButton>
-        </Cluster>
-      </StyledBase>
-    </Fieldset>
-    <Fieldset
-      title={
-        <>
-          入れ子にして <code>align</code> や <code>justify</code>{' '}
-          を組み合わせるとメディアクエリを使用せずに柔軟なレイアウトを作れます。
-        </>
-      }
-    >
-      <Cluster align="center" justify="space-between" as="section">
-        {/* TODO: eslint を修正したら外す */}
-        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-        <StyledHeading>これは Cluster の構成例です</StyledHeading>
+export const All: StoryFn = () => {
+  const testRef = useRef(null)
+
+  useEffect(() => {
+    console.log(testRef.current)
+  }, [testRef])
+
+  return (
+    <StyledStack gap="L">
+      <Fieldset title="幅を狭めて収まり切らなくなると折返します。">
         <Cluster>
           <StatusLabel type="grey">アコーディオン</StatusLabel>
           <StatusLabel type="blue">コンボボックス</StatusLabel>
           <StatusLabel type="red">ディスクロージャ</StatusLabel>
+          <StatusLabel type="grey" bold>
+            タブ・コントロール
+          </StatusLabel>
+          <StatusLabel type="red" bold>
+            ツリー・ビュー
+          </StatusLabel>
+          <StatusLabel type="blue" bold>
+            ツリー・グリッド
+          </StatusLabel>
+          <StatusLabel type="warning">ウィンドウ・スプリッター</StatusLabel>
+          <StatusLabel type="error" bold>
+            ランドマーク・リージョン
+          </StatusLabel>
         </Cluster>
-      </Cluster>
-    </Fieldset>
-  </StyledStack>
-)
+      </Fieldset>
+      <Fieldset
+        title={
+          <>
+            間隔を <code>gap</code> で変えられます。
+          </>
+        }
+      >
+        <Cluster as="label" gap="XS" htmlFor="hoge">
+          {[...Array(10)].map((_, i) => (
+            <ColorBox key={i} />
+          ))}
+        </Cluster>
+      </Fieldset>
+      <Fieldset title="垂直方向と水平方向で異なった余白を設定できます。">
+        <StyledBase>
+          <Cluster gap={{ row: 'X3S', column: 'XS' }}>
+            <RadioButton name="department" defaultChecked={true}>
+              申請者に戻す
+            </RadioButton>
+            <RadioButton name="department" defaultChecked={false}>
+              ステップ1に戻す
+            </RadioButton>
+            <RadioButton name="department" defaultChecked={false}>
+              ステップ2に戻す
+            </RadioButton>
+            <RadioButton name="department" defaultChecked={false}>
+              ステップ3に戻す
+            </RadioButton>
+            <RadioButton name="department" defaultChecked={false}>
+              ステップ4に戻す
+            </RadioButton>
+          </Cluster>
+        </StyledBase>
+      </Fieldset>
+      <Fieldset
+        title={
+          <>
+            入れ子にして <code>align</code> や <code>justify</code>{' '}
+            を組み合わせるとメディアクエリを使用せずに柔軟なレイアウトを作れます。
+          </>
+        }
+      >
+        <Cluster align="center" justify="space-between" as="section">
+          {/* TODO: eslint を修正したら外す */}
+          {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+          <StyledHeading>これは Cluster の構成例です</StyledHeading>
+          <Cluster>
+            <StatusLabel type="grey">アコーディオン</StatusLabel>
+            <StatusLabel type="blue">コンボボックス</StatusLabel>
+            <StatusLabel type="red">ディスクロージャ</StatusLabel>
+          </Cluster>
+        </Cluster>
+      </Fieldset>
+    </StyledStack>
+  )
+}
 
 const StyledHeading = styled(Heading)`
   margin-top: 0;
