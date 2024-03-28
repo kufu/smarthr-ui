@@ -32,6 +32,7 @@
     "@storybook/addon-viewport": "^8.0.5",
     "@storybook/addon-webpack5-compiler-babel": "^3.0.3",
     "@storybook/addons": "^7.6.17",
+    "@storybook/blocks": "^8.0.5",
     "@storybook/cli": "^8.0.5",
     "@storybook/react": "^8.0.5",
     "@storybook/react-webpack5": "^8.0.5",
