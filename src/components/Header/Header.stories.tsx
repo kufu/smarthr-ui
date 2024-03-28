@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { ComponentProps } from 'react'
 
 import { Button } from '../Button'
@@ -12,7 +12,7 @@ export default {
   component: Header,
 }
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <Stack gap={0.25}>
     <Header />
     <Header tenants={[{ id: 'test', name: '株式会社SmartHR' }]}>
