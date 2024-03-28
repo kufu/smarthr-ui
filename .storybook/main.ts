@@ -47,6 +47,7 @@ const config: StorybookConfig = {
     name: '@storybook/react-webpack5',
     options: {},
   },
+  staticDirs: ['../public'],
   docs: {
     autodocs: true,
   },
