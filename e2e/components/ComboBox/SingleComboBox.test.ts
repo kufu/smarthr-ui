@@ -16,7 +16,7 @@ function elementWithId(id: string | null | undefined) {
 test('アイテムの選択と選択解除ができること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-default]')
   const textbox = combobox.find('input[type=text]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-controls'))
+  const listbox = elementWithId(await textbox.getAttribute('aria-controls'))
   const clearButton = combobox.find('.smarthr-ui-SingleComboBox-clearButton')
 
   await t
@@ -39,7 +39,8 @@ test('アイテムの選択と選択解除ができること', async (t) => {
 
 test('リストボックスが開閉できること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-default]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-controls'))
+  const textbox = combobox.find('input[type=text]')
+  const listbox = elementWithId(await textbox.getAttribute('aria-controls'))
 
   await t
     // コンボボックスをクリックするとリストボックスが表示されること
@@ -66,7 +67,8 @@ test('リストボックスが開閉できること', async (t) => {
 
 test('コンボボックスがフォーカスされていない時に選択解除ボタンを押下してもリストボックスが表示されること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-default]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-controls'))
+  const textbox = combobox.find('input[type=text]')
+  const listbox = elementWithId(await textbox.getAttribute('aria-controls'))
   const clearButton = combobox.find('.smarthr-ui-SingleComboBox-clearButton')
 
   await t
@@ -84,7 +86,7 @@ test('コンボボックスがフォーカスされていない時に選択解�
 test('新しいアイテムを追加できること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-creatable]')
   const textbox = combobox.find('input[type=text]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-controls'))
+  const listbox = elementWithId(await textbox.getAttribute('aria-controls'))
   const addButton = listbox.find('.smarthr-ui-ComboBox-addButton')
   const clearButton = combobox.find('.smarthr-ui-SingleComboBox-clearButton')
 
@@ -107,9 +109,11 @@ test('新しいアイテムを追加できること', async (t) => {
 
 test('disabled なコンボボックスではアイテムの選択と選択解除ができないこと', async (t) => {
   const normal = Selector('[data-test=single-combobox-default]')
-  const normalListbox = elementWithId(await normal.getAttribute('aria-controls'))
+  const normalTextbox = normal.find('input[type=text]')
+  const normalListbox = elementWithId(await normalTextbox.getAttribute('aria-controls'))
   const disabled = Selector('[data-test=single-combobox-disabled]')
-  const disabledListbox = elementWithId(await disabled.getAttribute('aria-controls'))
+  const disabledTextBox = disabled.find('input[type=text]')
+  const disabledListbox = elementWithId(await disabledTextBox.getAttribute('aria-controls'))
 
   await t
     // disabled なコンボボックスをクリックしてもリストボックスは表示されないこと
