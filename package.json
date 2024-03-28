@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "44.0.0",
+  "version": "45.0.1",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "@smarthr/wareki": "^1.2.0",
@@ -38,14 +38,14 @@
     "@storybook/test-runner": "^0.16.0",
     "@storybook/testing-library": "^0.2.2",
     "@storybook/theming": "^7.6.17",
-    "@swc/core": "^1.4.8",
+    "@swc/core": "^1.4.11",
     "@swc/jest": "^0.2.36",
     "@testing-library/react": "^14.2.2",
     "@types/jest": "^29.5.12",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.range": "^3.2.9",
     "@types/node": "^20.11.30",
-    "@types/react": "^18.2.70",
+    "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.22",
     "@types/react-test-renderer": "^17.0.9",
     "@types/react-transition-group": "^4.4.10",
@@ -75,7 +75,7 @@
     "postcss-syntax": "^0.36.2",
     "prettier": "^3.2.5",
     "prettier-config-smarthr": "^1.0.0",
-    "prettier-plugin-tailwindcss": "^0.5.12",
+    "prettier-plugin-tailwindcss": "^0.5.13",
     "puppeteer": "^22.6.1",
     "react": "^18.2.0",
     "react-docgen-typescript": "^2.2.2",
@@ -85,7 +85,7 @@
     "rimraf": "^5.0.5",
     "standard-version": "^9.3.2",
     "storybook": "^7.6.17",
-    "storybook-addon-pseudo-states": "^2.2.1",
+    "storybook-addon-pseudo-states": "^3.0.0",
     "styled-components": "^5.3.11",
     "stylelint": "^16.2.1",
     "stylelint-config-prettier": "^9.0.5",
@@ -99,7 +99,7 @@
     "typescript": "^5.4.3",
     "typescript-plugin-styled-components": "^3.0.0",
     "wait-on": "^7.2.0",
-    "webpack": "^5.90.3"
+    "webpack": "^5.91.0"
   },
   "peerDependencies": {
     "react": "16.13.0 || ^17.0.1 || ^18.0.0",

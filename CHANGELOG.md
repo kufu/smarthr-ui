@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [45.0.1](https://github.com/kufu/smarthr-ui/compare/v45.0.0...v45.0.1) (2024-03-27)
+
+
+### Bug Fixes
+
+* Dialog の maxHeight に svh を使用する ([#4504](https://github.com/kufu/smarthr-ui/issues/4504)) ([086060b](https://github.com/kufu/smarthr-ui/commit/086060b8787ba1caf5809e8775bf8b2e4ea7431e))
+
+## [45.0.0](https://github.com/kufu/smarthr-ui/compare/v44.0.0...v45.0.0) (2024-03-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* AppNavi を Tailwind CSS 化 (#4459)
+
+### Features
+
+* smarthr-normalize-css と styled-reset を削除 ([#4466](https://github.com/kufu/smarthr-ui/issues/4466)) ([f649da1](https://github.com/kufu/smarthr-ui/commit/f649da12e403ec03801e742a6016535e752aec25))
+
+
+### Bug Fixes
+
+* AccodionPanel[iconPosition="right"] の開閉アイコン向きを調整 ([#4483](https://github.com/kufu/smarthr-ui/issues/4483)) ([dfd407f](https://github.com/kufu/smarthr-ui/commit/dfd407ff001816cc800fd29f8c34890080b46989))
+* AppLauncherのホバー時の表示を修正 ([#4478](https://github.com/kufu/smarthr-ui/issues/4478)) ([6fe1850](https://github.com/kufu/smarthr-ui/commit/6fe18508d06cbd7bde8a0b7f2eb02138b38533de))
+* change Header `ElementProps` type ([#4490](https://github.com/kufu/smarthr-ui/issues/4490)) ([da60a95](https://github.com/kufu/smarthr-ui/commit/da60a9587d9c37753a06305a3a5cbd60aa16aa15))
+* focus-indicator の置換漏れを修正 ([#4327](https://github.com/kufu/smarthr-ui/issues/4327)) ([e4bd8af](https://github.com/kufu/smarthr-ui/commit/e4bd8af630f693ee15feb6be0724ebf35489cabd))
+* MultiComboBox の story で差分が出てしまう問題の解消 ([#4487](https://github.com/kufu/smarthr-ui/issues/4487)) ([5bff61f](https://github.com/kufu/smarthr-ui/commit/5bff61f90f8db28a54e3127d0e2c61b454e97bfe))
+* NotificationBarのhover時とfocus時のデザインを修正 ([#4479](https://github.com/kufu/smarthr-ui/issues/4479)) ([21d4fad](https://github.com/kufu/smarthr-ui/commit/21d4fad6922cf93346efdbafd197116e6f9e6441))
+* RadioButton, CheckBoxの装飾用spanがスクリーンリーダーで読み上げられてしまう場合がある問題を修正 ([#4471](https://github.com/kufu/smarthr-ui/issues/4471)) ([81e153b](https://github.com/kufu/smarthr-ui/commit/81e153b9743fdbd790f05b225dfc75969f44b0bd))
+* WarningIcon を Fontawesome v6 に追従 ([#4482](https://github.com/kufu/smarthr-ui/issues/4482)) ([933e759](https://github.com/kufu/smarthr-ui/commit/933e759f6922712f3a535ce8c12d22aade603b2b))
+* 一部のコンポーネントと FormControl が紐づかない不具合を修正 ([#4423](https://github.com/kufu/smarthr-ui/issues/4423)) ([18c5635](https://github.com/kufu/smarthr-ui/commit/18c563547f20ff3bcc34f3f232b4e3caa18866ed))
+* 開発用E2Eテストコマンドが動かない問題を修正する ([#4486](https://github.com/kufu/smarthr-ui/issues/4486)) ([9406d73](https://github.com/kufu/smarthr-ui/commit/9406d737f03e80f48a3e1891bb02d4058f148958))
+
+
+* AppNavi を Tailwind CSS 化 ([#4459](https://github.com/kufu/smarthr-ui/issues/4459)) ([8f5840e](https://github.com/kufu/smarthr-ui/commit/8f5840eb2013a6152c4785feb1ce410b3d34fe09))
+
 ## [44.0.0](https://github.com/kufu/smarthr-ui/compare/v43.3.0...v44.0.0) (2024-03-19)
 
 
