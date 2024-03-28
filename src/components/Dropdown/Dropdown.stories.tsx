@@ -20,6 +20,7 @@ import { DropdownMenuButton } from './DropdownMenuButton'
 import { DropdownScrollArea } from './DropdownScrollArea'
 import { DropdownTrigger } from './DropdownTrigger'
 import { FilterDropdown } from './FilterDropdown'
+import { SortDropdown } from './SortDropdown'
 
 export default {
   title: 'Buttons（ボタン）/Dropdown',
@@ -27,6 +28,7 @@ export default {
   subcomponents: {
     DropdownMenuButton,
     FilterDropdown,
+    SortDropdown,
     DropdownTrigger,
     DropdownContent,
     DropdownCloser,

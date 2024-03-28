@@ -10,6 +10,7 @@ export {
   DropdownScrollArea,
   FilterDropdown,
   DropdownMenuButton,
+  SortDropdown,
 } from './components/Dropdown'
 export { FieldSet } from './components/FieldSet'
 export {
