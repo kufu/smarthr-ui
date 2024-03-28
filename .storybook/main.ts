@@ -35,6 +35,7 @@ const config: StorybookConfig = {
       },
     },
     'storybook-addon-pseudo-states',
+    '@storybook/addon-webpack5-compiler-babel',
   ],
   refs: {
     'smarthr-patterns': {
