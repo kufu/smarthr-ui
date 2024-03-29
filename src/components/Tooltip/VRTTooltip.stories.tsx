@@ -1,5 +1,5 @@
 import { StoryFn } from '@storybook/react'
-import { userEvent } from '@storybook/testing-library'
+import { userEvent } from '@storybook/test'
 import * as React from 'react'
 import styled from 'styled-components'
 
