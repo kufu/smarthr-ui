@@ -32,6 +32,7 @@
     "@storybook/addons": "^7.6.17",
     "@storybook/cli": "^7.6.17",
     "@storybook/jest": "^0.2.3",
+    "@storybook/manager-api": "7.6.17",
     "@storybook/react": "^7.6.17",
     "@storybook/react-webpack5": "^7.6.17",
     "@storybook/source-loader": "^7.6.17",
