@@ -28,6 +28,11 @@ const appNaviDropdown = tv({
         ],
       },
     },
+    active: {
+      true: {
+        wrapper: 'shr-cursor-pointer',
+      },
+    },
   },
 })
 
@@ -49,11 +54,7 @@ export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
   return (
     <Dropdown>
       <DropdownTrigger>
-        <UnstyledButton
-          aria-current={current ? 'page' : undefined}
-          disabled={current}
-          className={wrapperStyle}
-        >
+        <UnstyledButton aria-current={current ? 'page' : undefined} className={wrapperStyle}>
           {Icon && <Icon className={iconStyle} />}
           {children}
           {displayCaret && <FaCaretDownIcon />}

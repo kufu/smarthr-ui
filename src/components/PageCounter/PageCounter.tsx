@@ -2,8 +2,7 @@ import React, { ComponentPropsWithoutRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Cluster } from '../Layout'
-import { Text } from '../Text'
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { RangeSeparator, Text } from '../Text'
 
 import type { DecoratorType, DecoratorsType } from '../../types'
 
@@ -11,9 +10,9 @@ type Props = {
   start: number
   end: number
   total?: number
-  decorators?: DecoratorsType<'unitForTotal' | 'unit'> & {
-    rangeSeparator?: string
-  }
+  decorators?: DecoratorsType<
+    'unitForTotal' | 'unit' | 'rangeSeparator' | 'rangeSeparatorVisuallyHiddenText'
+  >
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 
@@ -22,7 +21,8 @@ const executeDecorator = (defaultText: string, decorator: DecoratorType | undefi
 
 const UNIT_TOTAL_TEXT = '件中'
 const UNIT_TEXT = '件'
-const RANGE_SEPARATOR = 'から'
+const RANGE_SEPARATOR = '–'
+const RANGE_SEPARATOR_VISUALLY_HIDDEN_TEXT = 'から'
 
 const pageCounter = tv({ base: 'shr-text-base' })
 
@@ -39,8 +39,17 @@ export const PageCounter: React.FC<Props & ElementProps> = ({
     [decorators?.unitForTotal],
   )
   const unitText = useMemo(() => executeDecorator(UNIT_TEXT, decorators?.unit), [decorators?.unit])
-  const rangeSeparator = decorators?.rangeSeparator ?? RANGE_SEPARATOR
-
+  const rangeSeparatorDecorators = useMemo(
+    () => ({
+      text: () => executeDecorator(RANGE_SEPARATOR, decorators?.rangeSeparator),
+      visuallyHiddenText: () =>
+        executeDecorator(
+          RANGE_SEPARATOR_VISUALLY_HIDDEN_TEXT,
+          decorators?.rangeSeparatorVisuallyHiddenText,
+        ),
+    }),
+    [decorators?.rangeSeparator, decorators?.rangeSeparatorVisuallyHiddenText],
+  )
   const style = useMemo(() => pageCounter({ className }), [className])
 
   return (
@@ -57,8 +66,7 @@ export const PageCounter: React.FC<Props & ElementProps> = ({
         <Text weight="bold" as="b">
           {start.toLocaleString()}
         </Text>
-        <VisuallyHiddenText>{rangeSeparator}</VisuallyHiddenText>
-        <span aria-hidden="true">–</span>
+        <RangeSeparator decorators={rangeSeparatorDecorators} />
         <Text weight="bold" as="b">
           {end.toLocaleString()}
         </Text>

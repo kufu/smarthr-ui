@@ -15,6 +15,11 @@ const Template: Story<ComponentProps<typeof PageCounter>> = (props) => <PageCoun
 export const All = () => (
   <Stack>
     <Template start={1} end={50} />
-    <Template start={1} end={50} total={5000} />
+    <Template
+      start={1}
+      end={50}
+      total={5000}
+      decorators={{ rangeSeparatorVisuallyHiddenText: () => '件から' }}
+    />
   </Stack>
 )
