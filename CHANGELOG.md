@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [45.1.0](https://github.com/kufu/smarthr-ui/compare/v45.0.1...v45.1.0) (2024-03-29)
+
+
+### Features
+
+* ~ というテキストがスクリーンリーダーで正しく読み上げられる対応をしたコンポーネント、RangeSeparatorを追加 ([#4502](https://github.com/kufu/smarthr-ui/issues/4502)) ([4a03605](https://github.com/kufu/smarthr-ui/commit/4a036056117c0ca16bfd78ae328fcd17fd2e6b14))
+
+
+### Bug Fixes
+
+* AppNaviDropdown が current の時に押せなくなる不具合を修正 ([#4517](https://github.com/kufu/smarthr-ui/issues/4517)) ([650859c](https://github.com/kufu/smarthr-ui/commit/650859c2887df8cbb5b92ce2e8dc240b503de7d0))
+
 ### [45.0.1](https://github.com/kufu/smarthr-ui/compare/v45.0.0...v45.0.1) (2024-03-27)
 
 
