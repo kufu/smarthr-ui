@@ -35,6 +35,7 @@ const config: StorybookConfig = {
       },
     },
     'storybook-addon-pseudo-states',
+    '@storybook/addon-styling-webpack',
   ],
   refs: {
     'smarthr-patterns': {
