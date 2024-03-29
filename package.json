@@ -35,6 +35,7 @@
     "@storybook/react": "^7.6.17",
     "@storybook/react-webpack5": "^7.6.17",
     "@storybook/source-loader": "^7.6.17",
+    "@storybook/test": "^7.6.17",
     "@storybook/test-runner": "^0.17.0",
     "@storybook/testing-library": "^0.2.2",
     "@storybook/theming": "^7.6.17",
