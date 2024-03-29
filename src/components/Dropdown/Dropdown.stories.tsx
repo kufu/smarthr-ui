@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import { userEvent, within } from '@storybook/testing-library'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
@@ -145,7 +145,7 @@ export const ControllableDropdown = () => {
   )
 }
 
-const Template: Story = () => (
+const Template: StoryFn = () => (
   <Wrapper>
     <Legends>
       <li>
