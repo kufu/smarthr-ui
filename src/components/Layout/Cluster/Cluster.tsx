@@ -1,17 +1,11 @@
-import React, { forwardRef, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
 
+import { genericsForwardRef } from '../../../libs/util'
 import { useSectionWrapper } from '../../SectioningContent/useSectioningWrapper'
 
 import type { Gap, SeparateGap } from '../../../types'
-import type {
-  ComponentPropsWithoutRef,
-  ForwardedRef,
-  PropsWithChildren,
-  ReactNode,
-  Ref,
-  RefAttributes,
-} from 'react'
+import type { ComponentPropsWithoutRef, ForwardedRef, PropsWithChildren } from 'react'
 
 const cluster = tv({
   base: 'shr-flex-wrap [&:empty]:shr-gap-0',
@@ -128,7 +122,7 @@ type Props<T extends React.ElementType> = PropsWithChildren<
 const _Cluster = <T extends React.ElementType = 'div'>(
   { as, gap = 0.5, inline = false, align, justify, className, ...rest }: Props<T>,
   ref: ForwardedRef<HTMLDivElement>,
-): JSX.Element => {
+) => {
   const rowGap = gap instanceof Object ? gap.row : gap
   const columnGap = gap instanceof Object ? gap.column : gap
 
@@ -146,11 +140,5 @@ const _Cluster = <T extends React.ElementType = 'div'>(
     </Wrapper>
   )
 }
-
-/* forwardRef でジェネリクスを使うためのラッパー
- * via https://www.totaltypescript.com/forwardref-with-generic-components */
-const genericsForwardRef = <T, P = object>(
-  render: (props: P, ref: Ref<T>) => ReactNode,
-): ((props: P & RefAttributes<T>) => ReactNode) => forwardRef(render) as any
 
 export const Cluster = genericsForwardRef(_Cluster)
