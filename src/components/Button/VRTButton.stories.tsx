@@ -45,11 +45,9 @@ export const _VRTButtonState: StoryFn = () => (
             </UnstyledButton>
           </Cluster>
           <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
-            <Cluster>
-              <Button id="hover-skeleton" variant="skeleton" onClick={action('clicked')}>
-                ボタン
-              </Button>
-            </Cluster>
+            <Button id="hover-skeleton" variant="skeleton" onClick={action('clicked')}>
+              ボタン
+            </Button>
           </div>
         </Stack>
       </dd>
@@ -75,11 +73,9 @@ export const _VRTButtonState: StoryFn = () => (
             </UnstyledButton>
           </Cluster>
           <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
-            <Cluster>
-              <Button id="focus-skeleton" variant="skeleton" onClick={action('clicked')}>
-                ボタン
-              </Button>
-            </Cluster>
+            <Button id="focus-skeleton" variant="skeleton" onClick={action('clicked')}>
+              ボタン
+            </Button>
           </div>
         </Stack>
       </dd>
@@ -105,11 +101,9 @@ export const _VRTButtonState: StoryFn = () => (
             </UnstyledButton>
           </Cluster>
           <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
-            <Cluster>
-              <Button id="focus-visible-skeleton" variant="skeleton" onClick={action('clicked')}>
-                ボタン
-              </Button>
-            </Cluster>
+            <Button id="focus-visible-skeleton" variant="skeleton" onClick={action('clicked')}>
+              ボタン
+            </Button>
           </div>
         </Stack>
       </dd>
@@ -135,11 +129,9 @@ export const _VRTButtonState: StoryFn = () => (
             </UnstyledButton>
           </Cluster>
           <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
-            <Cluster>
-              <Button id="active-skeleton" variant="skeleton" onClick={action('clicked')}>
-                ボタン
-              </Button>
-            </Cluster>
+            <Button id="active-skeleton" variant="skeleton" onclick={action('clicked')}>
+              ボタン
+            </Button>
           </div>
         </Stack>
       </dd>
@@ -214,16 +206,14 @@ export const _VRTButtonAnchorState: StoryFn = () => (
             </AnchorButton>
           </Cluster>
           <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
-            <Cluster>
-              <AnchorButton
-                href="#"
-                id="hover-skeleton"
-                variant="skeleton"
-                onClick={action('clicked')}
-              >
-                ボタン
-              </AnchorButton>
-            </Cluster>
+            <AnchorButton
+              href="#"
+              id="hover-skeleton"
+              variant="skeleton"
+              onClick={action('clicked')}
+            >
+              ボタン
+            </AnchorButton>
           </div>
         </Stack>
       </dd>
@@ -251,16 +241,14 @@ export const _VRTButtonAnchorState: StoryFn = () => (
             </AnchorButton>
           </Cluster>
           <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
-            <Cluster>
-              <AnchorButton
-                href="#"
-                id="focus-skeleton"
-                variant="skeleton"
-                onClick={action('clicked')}
-              >
-                ボタン
-              </AnchorButton>
-            </Cluster>
+            <AnchorButton
+              href="#"
+              id="focus-skeleton"
+              variant="skeleton"
+              onClick={action('clicked')}
+            >
+              ボタン
+            </AnchorButton>
           </div>
         </Stack>
       </dd>
@@ -303,16 +291,14 @@ export const _VRTButtonAnchorState: StoryFn = () => (
             </AnchorButton>
           </Cluster>
           <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
-            <Cluster>
-              <AnchorButton
-                href="#"
-                id="focus-visible-skeleton"
-                variant="skeleton"
-                onClick={action('clicked')}
-              >
-                ボタン
-              </AnchorButton>
-            </Cluster>
+            <AnchorButton
+              href="#"
+              id="focus-visible-skeleton"
+              variant="skeleton"
+              onClick={action('clicked')}
+            >
+              ボタン
+            </AnchorButton>
           </div>
         </Stack>
       </dd>
@@ -345,16 +331,14 @@ export const _VRTButtonAnchorState: StoryFn = () => (
             </AnchorButton>
           </Cluster>
           <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
-            <Cluster>
-              <AnchorButton
-                href="#"
-                id="active-skeleton"
-                variant="skeleton"
-                onClick={action('clicked')}
-              >
-                ボタン
-              </AnchorButton>
-            </Cluster>
+            <AnchorButton
+              href="#"
+              id="active-skeleton"
+              variant="skeleton"
+              onClick={action('clicked')}
+            >
+              ボタン
+            </AnchorButton>
           </div>
         </Stack>
       </dd>

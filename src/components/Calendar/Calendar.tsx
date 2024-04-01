@@ -6,7 +6,6 @@ import { useId } from '../../hooks/useId'
 import { Button } from '../Button'
 import { FaCaretDownIcon, FaCaretUpIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
-import { Section } from '../SectioningContent'
 
 import { CalendarTable } from './CalendarTable'
 import { YearPicker } from './YearPicker'
@@ -22,7 +21,7 @@ type Props = {
   /** 選択された日付 */
   value?: Date
 }
-type ElementProps = Omit<ComponentProps<'section'>, keyof Props>
+type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 const calendar = tv({
   slots: {
@@ -69,7 +68,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     const nextMonth = currentMonth.add(1, 'month')
 
     return (
-      <Section {...props} ref={ref} className={containerStyle}>
+      <div {...props} ref={ref} className={containerStyle}>
         <header className={headerStyle}>
           <div className={yearMonthStyle}>
             {currentMonth.year()}年{currentMonth.month() + 1}月
@@ -132,7 +131,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
             selected={isValidValue ? value : null}
           />
         </div>
-      </Section>
+      </div>
     )
   },
 )

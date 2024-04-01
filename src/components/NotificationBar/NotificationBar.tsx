@@ -209,11 +209,11 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
             <Icon text={message} iconGap={0.5} className={iconStyle} />
           </div>
           {children && (
-            <Cluster gap={0.5} align="center" className={actionAreaStyle}>
+            <div className={actionAreaStyle}>
               <Cluster align="center" justify="flex-end" className={actionWrapperStyle}>
                 {children}
               </Cluster>
-            </Cluster>
+            </div>
           )}
         </Cluster>
         {onClose && (
