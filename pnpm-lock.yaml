@@ -252,8 +252,8 @@ devDependencies:
     specifier: ^7.6.17
     version: 7.6.17
   storybook-addon-pseudo-states:
-    specifier: ^3.0.0
-    version: 3.0.0
+    specifier: ^3.0.1
+    version: 3.0.1
   styled-components:
     specifier: ^5.3.11
     version: 5.3.11(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
@@ -14208,8 +14208,8 @@ packages:
     resolution: {integrity: sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==}
     dev: true
 
-  /storybook-addon-pseudo-states@3.0.0:
-    resolution: {integrity: sha512-o3IATnJAQzHweYgOBY5RZ9drEngR/LWwm7jGmsRenGHdwey55j5Kbtv6cm/GDEUcJ9dVC/V+NeghKSERmdQz1A==}
+  /storybook-addon-pseudo-states@3.0.1:
+    resolution: {integrity: sha512-ciHKl08CXU1Xf9ABbxvZB5KimHO/OpC9PtHpBLIC7R8TWHsdpFHku1zuK9opx1+hXw61woUrbh4cJ5Bn2lTXRw==}
     dev: true
 
   /storybook@7.6.17:
