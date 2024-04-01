@@ -66,6 +66,7 @@ import {
   FaCartShopping,
   FaChartArea,
   FaChartBar,
+  FaChartColumn,
   FaChartLine,
   FaChartPie,
   FaCheck,
@@ -382,6 +383,7 @@ export const FaCaretUpIcon = /*#__PURE__*/ createIcon(FaCaretUp)
 export const FaCartShoppingIcon = /*#__PURE__*/ createIcon(FaCartShopping)
 export const FaChartAreaIcon = /*#__PURE__*/ createIcon(FaChartArea)
 export const FaChartBarIcon = /*#__PURE__*/ createIcon(FaChartBar)
+export const FaChartColumnIcon = /*#__PURE__*/ createIcon(FaChartColumn)
 export const FaChartLineIcon = /*#__PURE__*/ createIcon(FaChartLine)
 export const FaChartPieIcon = /*#__PURE__*/ createIcon(FaChartPie)
 export const FaCheckIcon = /*#__PURE__*/ createIcon(FaCheck)
