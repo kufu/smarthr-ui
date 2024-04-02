@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -31,7 +31,7 @@ const graphOptions: Option[] = [
   { value: 'chartPie', ariaLabel: 'パイチャート', content: <FaChartPieIcon /> },
 ]
 
-export const All: Story = () => {
+export const All: StoryFn = () => {
   const [value1, setValue1] = React.useState<string | null>('departments')
   const [value2, setValue2] = React.useState<string | null>('both')
   const [value3, setValue3] = React.useState<string | null>('chartArea')

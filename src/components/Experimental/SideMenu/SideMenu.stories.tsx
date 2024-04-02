@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React from 'react'
 import styled, { css } from 'styled-components'
 
@@ -13,7 +13,7 @@ export default {
   },
 }
 
-export const Default: Story = () => (
+export const Default: StoryFn = () => (
   <Wrapper>
     <SideMenu>
       <SideMenu.Group name="基本設定">
