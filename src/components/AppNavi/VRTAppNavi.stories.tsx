@@ -34,16 +34,24 @@ const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?
 const List = () => (
   <ListWrapper>
     <li>
-      <button onClick={action('clicked item 1')}>ドロップダウンアイテム1</button>
+      <button type="button" onClick={action('clicked item 1')}>
+        ドロップダウンアイテム1
+      </button>
     </li>
     <li>
-      <button onClick={action('clicked item 2')}>ドロップダウンアイテム2</button>
+      <button type="button" onClick={action('clicked item 2')}>
+        ドロップダウンアイテム2
+      </button>
     </li>
     <li>
-      <button onClick={action('clicked item 3')}>ドロップダウンアイテム3</button>
+      <button type="button" onClick={action('clicked item 3')}>
+        ドロップダウンアイテム3
+      </button>
     </li>
     <li>
-      <button onClick={action('clicked item 4')}>ドロップダウンアイテム4</button>
+      <button type="button" onClick={action('clicked item 4')}>
+        ドロップダウンアイテム4
+      </button>
     </li>
   </ListWrapper>
 )

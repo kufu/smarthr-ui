@@ -2,13 +2,13 @@ import React, {
   ChangeEvent,
   ComponentPropsWithoutRef,
   ForwardedRef,
-  forwardRef,
   useCallback,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { isMobileSafari } from '../../libs/ua'
+import { genericsForwardRef } from '../../libs/util'
 import { FaSortIcon } from '../Icon'
 
 import type { DecoratorsType } from '../../types'
@@ -181,10 +181,4 @@ const ActualSelect = <T extends string>(
   )
 }
 
-// forwardRef したコンポーネントでジェネリクスを使うときのワークアラウンド
-// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref/58473012
-export const Select = forwardRef(ActualSelect) as (<T extends string>(
-  props: ComponentPropsWithoutRef<typeof ActualSelect<T>> & {
-    ref?: ForwardedRef<HTMLSelectElement>
-  },
-) => ReturnType<typeof ActualSelect<T>>) & { displayName?: string }
+export const Select = genericsForwardRef(ActualSelect)

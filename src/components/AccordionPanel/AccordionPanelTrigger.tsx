@@ -110,6 +110,7 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
         onClick={handleClick}
         className={buttonStyle}
         data-component="AccordionHeaderButton"
+        type="button"
       >
         <Cluster className="shr-flex-nowrap" align="center" as="span">
           {displayIcon && iconPosition === 'left' && <FaCaretRightIcon className={leftIconStyle} />}
