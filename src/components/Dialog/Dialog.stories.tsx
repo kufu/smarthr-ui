@@ -104,7 +104,7 @@ export const Default: StoryFn = () => {
               />
             </Content>
             <Fieldset title="Fruits" innerMargin={0.5}>
-              <RadioList>
+              <RadioListCluster forwardedAs="ul">
                 <li>
                   <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChangeValue}>
                     Apple
@@ -120,7 +120,7 @@ export const Default: StoryFn = () => {
                     Grape
                   </RadioButton>
                 </li>
-              </RadioList>
+              </RadioListCluster>
             </Fieldset>
           </Section>
           <Footer>
@@ -362,7 +362,7 @@ export const Form_Dialog: StoryFn = () => {
         subActionArea={<Button>サブアクション</Button>}
       >
         <Fieldset title="fruits" innerMargin={0.5}>
-          <RadioList>
+          <RadioListCluster forwardedAs="ul">
             <li>
               <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
                 Apple
@@ -378,7 +378,7 @@ export const Form_Dialog: StoryFn = () => {
                 Grape
               </RadioButton>
             </li>
-          </RadioList>
+          </RadioListCluster>
         </Fieldset>
         <Buttons>
           <p>切り替えボタン：</p>
@@ -1087,7 +1087,7 @@ const Content = styled.div`
 const StyledHeading = styled(Heading)`
   margin: 8px 24px;
 `
-const RadioList = styled(Cluster).attrs({ forwardedAs: 'ul', gap: 1.25 })`
+const RadioListCluster = styled(Cluster).attrs({ gap: 1.25 })`
   list-style: none;
 `
 const Footer = styled.div`

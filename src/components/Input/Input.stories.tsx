@@ -106,6 +106,7 @@ All.storyName = 'all'
 export const Currency: StoryFn = () => {
   const [value, setValue] = React.useState('1234567890')
   return (
+    // eslint-disable-next-line smarthr/best-practice-for-layouts
     <ListStack>
       <li>
         <FormControl title="currency (add comma to integer every 3 digits)">
