@@ -126,7 +126,7 @@ export const All: StoryFn = () => (
       <Text italic color="TEXT_GREY" as="dt">
         ラベルが視覚的に明らかであり明示しない場合（非推奨）
       </Text>
-      <Stack as="dd">
+      <dd>
         <Fieldset
           title="選択"
           helpMessage={
@@ -149,7 +149,7 @@ export const All: StoryFn = () => (
             </RadioButton>
           </Cluster>
         </Fieldset>
-      </Stack>
+      </dd>
     </Stack>
   </Stack>
 )

@@ -56,6 +56,7 @@ export const AppNavi: FC<Props & ElementProps> = ({
   }, [className])
 
   return (
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Nav {...props} className={wrapperStyle}>
       {label && <StatusLabel className={statusLabelStyle}>{label}</StatusLabel>}
 

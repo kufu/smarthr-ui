@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
-import { userEvent, within } from '@storybook/testing-library'
+import { userEvent, within } from '@storybook/test'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
@@ -71,7 +71,7 @@ export const ControllableDropdown = () => {
         </DropdownTrigger>
         <DropdownContent controllable>
           <DropdownScrollArea>
-            <ControllableBoxMainStack>
+            <ControllableBoxDiv>
               <Fieldset title="Dropdown内部">
                 <Text as="p">
                   `DropdownControllableContent` を使うとドロップダウン制御できます。
@@ -112,7 +112,7 @@ export const ControllableDropdown = () => {
                   </DropdownCloser>
                 </Stack>
               </Fieldset>
-            </ControllableBoxMainStack>
+            </ControllableBoxDiv>
             <ControllableBoxBottom>
               <Cluster justify="flex-end">
                 <DropdownCloser>
@@ -172,14 +172,14 @@ const Template: StoryFn = () => (
           </DropdownTrigger>
           <DropdownContent controllable>
             <DropdownScrollArea>
-              <ControllableBoxMainStack>
+              <ControllableBoxDiv>
                 <Dropdown>
                   <DropdownTrigger>
                     <Button>さらに入れ子にできる Dropdown</Button>
                   </DropdownTrigger>
                   <DropdownContent controllable>
                     <DropdownScrollArea>
-                      <ControllableBoxMainStack>
+                      <ControllableBoxDiv>
                         <Dropdown>
                           <DropdownTrigger>
                             <TriggerButton>いくらでも入れ子にできる Dropdown</TriggerButton>
@@ -188,11 +188,11 @@ const Template: StoryFn = () => (
                             <ListMenu />
                           </DropdownContent>
                         </Dropdown>
-                      </ControllableBoxMainStack>
+                      </ControllableBoxDiv>
                     </DropdownScrollArea>
                   </DropdownContent>
                 </Dropdown>
-              </ControllableBoxMainStack>
+              </ControllableBoxDiv>
             </DropdownScrollArea>
           </DropdownContent>
         </Dropdown>
@@ -284,7 +284,7 @@ const Legends = styled.ul`
 const Box = styled.div`
   display: inline-block;
 `
-const ControllableBoxMainStack = styled(Stack)`
+const ControllableBoxDiv = styled.div`
   padding: 24px;
 `
 const ControllableBoxBottom = styled.div`
