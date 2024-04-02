@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { Story } from '@storybook/react'
-import { userEvent, within } from '@storybook/testing-library'
+import { userEvent, within } from '@storybook/test'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
