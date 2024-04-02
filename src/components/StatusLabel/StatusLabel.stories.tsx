@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
@@ -14,7 +14,7 @@ export default {
   },
 }
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <WrapperStack>
     <Stack gap={0.5}>
       <dt>色の種類</dt>
