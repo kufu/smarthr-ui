@@ -209,6 +209,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
             <Icon text={message} iconGap={0.5} className={iconStyle} />
           </div>
           {children && (
+            // FIXME: actionAreaStyle と actionWrapperStyle を混ぜて Cluster だけでマークアップできるようにする
             <div className={actionAreaStyle}>
               <Cluster align="center" justify="flex-end" className={actionWrapperStyle}>
                 {children}
