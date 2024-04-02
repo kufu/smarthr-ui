@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React from 'react'
 import styled, { css } from 'styled-components'
 
@@ -14,7 +14,7 @@ export default {
   },
 }
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <Wrapper>
     <li>
       <TextLink href="/" prefix={<FaFlagIcon />}>

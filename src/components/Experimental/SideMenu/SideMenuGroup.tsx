@@ -30,6 +30,7 @@ export const SideMenuGroup: React.FC<Props & ElementProps> = ({
       <GroupNameText forwardedAs={nameTag} themes={theme}>
         {name}
       </GroupNameText>
+      {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
       <SideMenuListStack>{children}</SideMenuListStack>
     </GroupStack>
   )

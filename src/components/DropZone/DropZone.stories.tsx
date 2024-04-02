@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
@@ -15,7 +15,7 @@ export default {
 
 const onSelectFiles = action('onSelectFiles')
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <Group>
     <li>
       <Text>Default</Text>

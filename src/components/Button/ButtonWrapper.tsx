@@ -61,6 +61,7 @@ export function ButtonWrapper({
     return <a {...others} className={anchorStyle} ref={anchorRef} />
   } else {
     const { buttonRef, ...others } = props
+    // eslint-disable-next-line smarthr/best-practice-for-button-element
     return <button {...others} className={buttonStyle} ref={buttonRef} />
   }
 }

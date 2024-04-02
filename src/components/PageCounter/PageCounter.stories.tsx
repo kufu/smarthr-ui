@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { ComponentProps } from 'react'
 
 import { Stack } from '../Layout'
@@ -10,7 +10,7 @@ export default {
   component: PageCounter,
 }
 
-const Template: Story<ComponentProps<typeof PageCounter>> = (props) => <PageCounter {...props} />
+const Template: StoryFn<ComponentProps<typeof PageCounter>> = (props) => <PageCounter {...props} />
 
 export const All = () => (
   <Stack>

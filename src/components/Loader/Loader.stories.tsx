@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
@@ -9,7 +9,7 @@ export default {
   component: Loader,
 }
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <>
     <Wrapper>
       <Text>Primary</Text>

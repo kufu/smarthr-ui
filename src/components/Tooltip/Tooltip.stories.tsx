@@ -1,5 +1,5 @@
-import { Story } from '@storybook/react'
-import { userEvent } from '@storybook/testing-library'
+import { StoryFn } from '@storybook/react'
+import { userEvent } from '@storybook/test'
 import * as React from 'react'
 import { useSyncExternalStore } from 'react'
 import styled from 'styled-components'
@@ -27,7 +27,7 @@ const subscribeFullscreenChange = (callback: () => void) => {
 }
 const getFullscreenElement = () => document.fullscreenElement
 
-const Template: Story = () => {
+const Template: StoryFn = () => {
   const fullscreenElementRef = React.useRef<HTMLDivElement>(null)
   const enterFullscreen = () => {
     if (fullscreenElementRef.current) {
