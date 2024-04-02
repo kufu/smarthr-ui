@@ -86,7 +86,7 @@ const preview: Preview = {
         if (process.env.STORYBOOK_NODE_ENV === 'production') {
           ReactGA.send({ hitType: 'pageview', title: context.title })
         }
-      }, [])
+      }, [context.title])
 
       return (
         <ThemeProvider>
