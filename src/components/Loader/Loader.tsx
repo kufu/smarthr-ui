@@ -1,13 +1,13 @@
-import React, { FC, HTMLAttributes, ReactNode, useMemo } from 'react'
+import React, { FC, HTMLAttributes, ReactNode, useEffect, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { VisuallyHiddenText } from '../VisuallyHiddenText'
+import { useLoadingAnnouncer } from './LoadingStatusAnnouncer'
 
 type Props = {
   /** ローダーの大きさ */
   size?: 's' | 'm'
   /** 代替テキスト */
-  alt?: ReactNode
+  alt?: string
   /** 表示するメッセージ */
   text?: ReactNode
   /** コンポーネントの色調 */
@@ -135,9 +135,17 @@ export const Loader: FC<Props & ElementProps> = ({
   const spinnerStyle = useMemo(() => spinner(), [spinner])
   const cogStyle = useMemo(() => cog(), [cog])
   const textStyle = useMemo(() => textSlot(), [textSlot])
+  const announcer = useLoadingAnnouncer()
+
+  useEffect(() => {
+    announcer.kickoff({ message: alt })
+    return () => {
+      announcer.cancel()
+    }
+  })
 
   return (
-    <span {...props} className={wrapperStyle} role="status">
+    <span {...props} className={wrapperStyle}>
       <span className={spinnerStyle}>
         {[...Array(4)].map((_, index) => (
           <span className={line({ lineNum: (index + 1) as 1 | 2 | 3 | 4 })} key={index}>
@@ -149,7 +157,6 @@ export const Loader: FC<Props & ElementProps> = ({
             </span>
           </span>
         ))}
-        <VisuallyHiddenText>{alt}</VisuallyHiddenText>
       </span>
       {text && <span className={textStyle}>{text}</span>}
     </span>

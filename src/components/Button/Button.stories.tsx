@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components'
 
 import { FaPlusCircleIcon, FaPlusIcon, FaPlusSquareIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
+import { LoadingAnnouncerProvider } from '../Loader'
 
 import { AnchorButton, Button, UnstyledButton } from '.'
 
@@ -406,9 +407,11 @@ export const WithLoading: StoryFn = (args: ButtonProps) => {
   }
 
   return (
-    <Button {...args} prefix={<FaPlusCircleIcon />} loading={loading} onClick={handleClick}>
-      読み込み
-    </Button>
+    <LoadingAnnouncerProvider>
+      <Button {...args} prefix={<FaPlusCircleIcon />} loading={loading} onClick={handleClick}>
+        読み込み
+      </Button>
+    </LoadingAnnouncerProvider>
   )
 }
 

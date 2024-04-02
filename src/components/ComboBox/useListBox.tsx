@@ -15,7 +15,7 @@ import { useId } from '../../hooks/useId'
 import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTailwindTheme'
 import { FaInfoCircleIcon } from '../Icon'
-import { Loader } from '../Loader'
+import { Loader, LoadingAnnouncerProvider } from '../Loader'
 
 import { ListBoxItemButton } from './ListBoxItemButton'
 import { ComboBoxItem, ComboBoxOption } from './types'
@@ -272,45 +272,47 @@ export const useListBox = <T,>({
   const renderListBox = useCallback(
     () =>
       createPortal(
-        <div {...wrapperStyleProps}>
-          <div
-            {...dropdownListStyleProps}
-            id={listBoxId}
-            ref={listBoxRef}
-            role="listbox"
-            aria-hidden={!isExpanded}
-          >
-            {dropdownHelpMessage && (
-              <p className={helpMessageStyle}>
-                <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
-              </p>
-            )}
-            {!isExpanded ? null : isLoading ? (
-              <div className={loaderWrapperStyle}>
-                <Loader />
-              </div>
-            ) : options.length === 0 ? (
-              <p role="alert" aria-live="polite" className={noItemsStyle}>
-                {decorators?.noResultText
-                  ? decorators.noResultText(NO_RESULT_TEXT)
-                  : NO_RESULT_TEXT}
-              </p>
-            ) : (
-              partialOptions.map((option) => (
-                <ListBoxItemButton
-                  key={option.id}
-                  option={option}
-                  isActive={option.id === activeOption?.id}
-                  onAdd={handleAdd}
-                  onSelect={handleSelect}
-                  onMouseOver={handleHoverOption}
-                  activeRef={activeRef}
-                />
-              ))
-            )}
-            {renderIntersection()}
+        <LoadingAnnouncerProvider>
+          <div {...wrapperStyleProps}>
+            <div
+              {...dropdownListStyleProps}
+              id={listBoxId}
+              ref={listBoxRef}
+              role="listbox"
+              aria-hidden={!isExpanded}
+            >
+              {dropdownHelpMessage && (
+                <p className={helpMessageStyle}>
+                  <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
+                </p>
+              )}
+              {!isExpanded ? null : isLoading ? (
+                <div className={loaderWrapperStyle}>
+                  <Loader />
+                </div>
+              ) : options.length === 0 ? (
+                <p role="alert" aria-live="polite" className={noItemsStyle}>
+                  {decorators?.noResultText
+                    ? decorators.noResultText(NO_RESULT_TEXT)
+                    : NO_RESULT_TEXT}
+                </p>
+              ) : (
+                partialOptions.map((option) => (
+                  <ListBoxItemButton
+                    key={option.id}
+                    option={option}
+                    isActive={option.id === activeOption?.id}
+                    onAdd={handleAdd}
+                    onSelect={handleSelect}
+                    onMouseOver={handleHoverOption}
+                    activeRef={activeRef}
+                  />
+                ))
+              )}
+              {renderIntersection()}
+            </div>
           </div>
-        </div>,
+        </LoadingAnnouncerProvider>,
       ),
     [
       createPortal,
