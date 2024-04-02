@@ -19,7 +19,7 @@ export const All: StoryFn = () => {
 
   return (
     <Stack as="ul" gap={2}>
-      <Stack as="li">
+      <li>
         <Fieldset title="標準的な使い方" titleType="blockTitle">
           <Stack as="ul" gap={0.5} className="shr-ps-[unset]">
             <RadioButtonPanel
@@ -42,11 +42,10 @@ export const All: StoryFn = () => {
             </RadioButtonPanel>
           </Stack>
         </Fieldset>
-      </Stack>
-
-      <Stack as="li">
+      </li>
+      <li>
         <Fieldset title="複数のテキストを含む場合" titleType="blockTitle">
-          <Stack as="ul" className="shr-ps-[unset]">
+          <ul className="shr-ps-[unset]">
             <RadioButtonPanel
               as="li"
               name="5"
@@ -65,9 +64,9 @@ export const All: StoryFn = () => {
                 </Text>
               </Stack>
             </RadioButtonPanel>
-          </Stack>
+          </ul>
         </Fieldset>
-      </Stack>
+      </li>
     </Stack>
   )
 }

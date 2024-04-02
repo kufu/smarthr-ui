@@ -1,6 +1,7 @@
 import React, {
   ComponentProps,
   ComponentPropsWithRef,
+  ComponentType,
   FC,
   ReactElement,
   ReactNode,
@@ -14,7 +15,7 @@ import { tv } from 'tailwind-variants'
 import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '..'
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
 import { RemoteDialogTrigger } from '../../Dialog'
-import { FaCaretDownIcon, FaEllipsisHIcon } from '../../Icon'
+import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
 import { Stack } from '../../Layout'
 
 type Actions = ActionItem | ActionItem[]
@@ -38,6 +39,8 @@ type Props = {
   triggerSize?: ButtonProps['size']
   /** 引き金となるボタンをアイコンのみとするかどうか */
   onlyIconTrigger?: boolean
+  /** 引き金となるアイコンを差し替えたい場合（onlyIconTrigger=true の場合のみ有効） */
+  triggerIcon?: ComponentType<ComponentProps<typeof FaCaretDownIcon>>
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
 
@@ -68,20 +71,20 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
   children,
   triggerSize,
   onlyIconTrigger = false,
+  triggerIcon: TriggerIcon,
   className,
   ...props
 }) => {
   const containerRef = React.useRef<HTMLDivElement>(null)
 
-  const triggerLabel = useMemo(
-    () =>
-      onlyIconTrigger ? (
-        <FaEllipsisHIcon alt={typeof label === 'string' ? label : innerText(label)} />
-      ) : (
-        label
-      ),
-    [onlyIconTrigger, label],
-  )
+  const triggerLabel = useMemo(() => {
+    const Icon = TriggerIcon || FaEllipsisIcon
+    return onlyIconTrigger ? (
+      <Icon alt={typeof label === 'string' ? label : innerText(label)} />
+    ) : (
+      label
+    )
+  }, [label, TriggerIcon, onlyIconTrigger])
   const triggerSuffix = useMemo(
     // eslint-disable-next-line react/jsx-no-useless-fragment
     () => (onlyIconTrigger ? <></> : <FaCaretDownIcon alt="候補を開く" />),

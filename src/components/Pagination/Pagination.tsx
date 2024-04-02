@@ -111,6 +111,7 @@ export const Pagination: React.FC<Props & ElementProps> = ({
   const disabledNext = current === total
 
   return (
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
     <Nav {...props} className={wrapperStyle} aria-label="ページネーション">
       <Reel>
         <Cluster as="ul" className={listStyle}>

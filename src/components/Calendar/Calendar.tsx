@@ -69,6 +69,7 @@ export const Calendar = forwardRef<HTMLDivElement, Props & ElementProps>(
     const nextMonth = currentMonth.add(1, 'month')
 
     return (
+      // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
       <Section {...props} ref={ref} className={containerStyle}>
         <header className={headerStyle}>
           <div className={yearMonthStyle}>
