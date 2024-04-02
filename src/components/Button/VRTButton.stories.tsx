@@ -129,7 +129,7 @@ export const _VRTButtonState: StoryFn = () => (
             </UnstyledButton>
           </Cluster>
           <div style={{ padding: '1rem', backgroundColor: '#5c5c5c', color: '#fff' }}>
-            <Button id="active-skeleton" variant="skeleton" onclick={action('clicked')}>
+            <Button id="active-skeleton" variant="skeleton" onClick={action('clicked')}>
               ボタン
             </Button>
           </div>

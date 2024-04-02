@@ -4,7 +4,6 @@ import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { InformationPanel } from '../../InformationPanel'
-import { Stack } from '../../Layout'
 
 import { SearchInput } from './SearchInput'
 

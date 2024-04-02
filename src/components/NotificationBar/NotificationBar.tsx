@@ -186,8 +186,11 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
     actionAreaStyle,
     closeButtonStyle,
   } = useMemo(() => {
-    const { wrapper, inner, messageArea, icon, actionArea, actionWrapper, closeButton } =
-      notificationBar({ type, bold, base })
+    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = notificationBar({
+      type,
+      bold,
+      base,
+    })
     return {
       wrapperStyle: wrapper({ animate, className }),
       innerStyle: inner(),

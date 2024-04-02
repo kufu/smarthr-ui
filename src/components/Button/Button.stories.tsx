@@ -348,7 +348,7 @@ export const _ButtonAnchor: StoryFn = () => (
 
     <dt>Small</dt>
     <dd>
-      <Stack>
+      <Stack align="start">
         <AnchorButton href="#" variant="primary" size="s" onClick={action('clicked')}>
           ボタン
         </AnchorButton>
