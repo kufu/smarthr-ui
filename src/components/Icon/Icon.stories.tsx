@@ -22,38 +22,33 @@ export default {
   },
 }
 
-export const All: StoryFn = () => {
-  const iconNames = Object.keys(Icons)
-  const deplicatedIconNames = Object.keys(DeprecatedIcons)
-
-  return (
-    <Stack gap={2}>
+export const All: StoryFn = () => (
+  <Stack gap={2}>
+    <Cluster gap={0.75} as="dl">
+      {Object.entries(Icons).map(([name, Icon]) => (
+        <ItemWrapper key={`${Icon.displayName}`}>
+          <dt>{name?.replace(/Icon$/, '')}</dt>
+          <dd>
+            <Icon />
+          </dd>
+        </ItemWrapper>
+      ))}
+    </Cluster>
+    <div>
+      旧名称（非推奨）
       <Cluster gap={0.75} as="dl">
-        {Object.values(Icons).map((Icon, index) => (
+        {Object.entries(DeprecatedIcons).map(([name, Icon]) => (
           <ItemWrapper key={`${Icon.displayName}`}>
-            <dt>{iconNames[index]?.replace(/Icon$/, '')}</dt>
+            <dt>{name?.replace(/Icon$/, '')}</dt>
             <dd>
               <Icon />
             </dd>
           </ItemWrapper>
         ))}
       </Cluster>
-      <div>
-        旧名称（非推奨）
-        <Cluster gap={0.75} as="dl">
-          {Object.values(DeprecatedIcons).map((Icon, index) => (
-            <ItemWrapper key={`${Icon.displayName}`}>
-              <dt>{deplicatedIconNames[index]?.replace(/Icon$/, '')}</dt>
-              <dd>
-                <Icon />
-              </dd>
-            </ItemWrapper>
-          ))}
-        </Cluster>
-      </div>
-    </Stack>
-  )
-}
+    </div>
+  </Stack>
+)
 export const AltText: StoryFn = () => (
   <div>
     <p>
