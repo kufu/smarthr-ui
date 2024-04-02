@@ -14,7 +14,7 @@ import tailwindConfig from '../tailwind.config'
 
 import '../src/styles/index.css'
 
-if (`${process.env.STORYBOOK_NODE_ENV}` === 'production') {
+if (process.env.STORYBOOK_NODE_ENV === 'production') {
   ReactGA.initialize('G-65N1S3NF5R')
 }
 
@@ -83,7 +83,7 @@ const preview: Preview = {
       const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
 
       useEffect(() => {
-        if (`${process.env.STORYBOOK_NODE_ENV}` === 'production') {
+        if (process.env.STORYBOOK_NODE_ENV === 'production') {
           ReactGA.send({ hitType: 'pageview', title: context.title })
         }
       }, [])
