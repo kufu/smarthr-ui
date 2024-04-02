@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [45.2.0](https://github.com/kufu/smarthr-ui/compare/v45.1.0...v45.2.0) (2024-04-02)
+
+
+### Features
+
+* DropdownMenuButton[onlyIconTrigger] は任意のアイコンに差し替えられるようにする ([#4520](https://github.com/kufu/smarthr-ui/issues/4520)) ([6799448](https://github.com/kufu/smarthr-ui/commit/679944810ad68d99a28fcdd2ead52c93f0e5ee0f))
+* FaChartColumnIcon を追加 ([#4521](https://github.com/kufu/smarthr-ui/issues/4521)) ([feef103](https://github.com/kufu/smarthr-ui/commit/feef10390b9eed1f8798022f8b6a0b608f040d63))
+
 ## [45.1.0](https://github.com/kufu/smarthr-ui/compare/v45.0.1...v45.1.0) (2024-03-29)
 
 
