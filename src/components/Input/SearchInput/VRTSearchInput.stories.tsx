@@ -1,10 +1,9 @@
 import { StoryFn } from '@storybook/react'
-import { userEvent, within } from '@storybook/testing-library'
+import { userEvent, within } from '@storybook/test'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
 import { InformationPanel } from '../../InformationPanel'
-import { Stack } from '../../Layout'
 
 import { SearchInput } from './SearchInput'
 
@@ -17,15 +16,13 @@ export default {
 }
 
 const SearchInputStory: StoryFn = () => (
-  <StyledStack>
-    <div>
-      <p>主に入力欄に対する説明をレイアウト上配置できない場合の利用を想定しています。</p>
-      <SearchInput
-        name="default"
-        tooltipMessage="氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。"
-      />
-    </div>
-  </StyledStack>
+  <Wrapper>
+    <p>主に入力欄に対する説明をレイアウト上配置できない場合の利用を想定しています。</p>
+    <SearchInput
+      name="default"
+      tooltipMessage="氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。"
+    />
+  </Wrapper>
 )
 
 export const VRTHoverSearchInput: StoryFn = () => (
@@ -69,7 +66,7 @@ VRTHoverSearchInputForcedColors.parameters = {
   chromatic: { forcedColors: 'active' },
 }
 
-const StyledStack = styled(Stack)`
+const Wrapper = styled.div`
   ${({ theme: { space } }) => css`
     padding: ${space(2)};
   `}
