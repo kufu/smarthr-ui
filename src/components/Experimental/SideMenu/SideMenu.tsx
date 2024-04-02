@@ -25,6 +25,7 @@ export const SideMenu: FC<Props & ElementProps> & SubComponents = ({
   const classNames = useClassNames()
 
   return (
+    // eslint-disable-next-line smarthr/best-practice-for-layouts
     <StyledStack {...props} className={`${className || ''} ${classNames.wrapper}`}>
       {children}
     </StyledStack>

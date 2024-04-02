@@ -62,9 +62,6 @@ const checkbox = tv({
       true: {
         label: 'shr-pointer-events-none shr-cursor-not-allowed shr-text-disabled',
       },
-      false: {
-        label: 'shr-text-black',
-      },
     },
     error: {
       true: {
