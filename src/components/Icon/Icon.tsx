@@ -101,6 +101,7 @@ import {
   FaMagnifyingGlassMinus,
   FaMagnifyingGlassPlus,
   FaMinus,
+  FaPaintbrush,
   FaPaperPlane,
   FaPaperclip,
   FaPen,
@@ -115,6 +116,7 @@ import {
   FaRightLeft,
   FaRightLong,
   FaRightToBracket,
+  FaRobot,
   FaRocket,
   FaRotate,
   FaShareNodes,
@@ -248,6 +250,7 @@ export const FaMagnifyingGlassIcon = /*#__PURE__*/ createIcon(FaMagnifyingGlass)
 export const FaMagnifyingGlassMinusIcon = /*#__PURE__*/ createIcon(FaMagnifyingGlassMinus)
 export const FaMagnifyingGlassPlusIcon = /*#__PURE__*/ createIcon(FaMagnifyingGlassPlus)
 export const FaMinusIcon = /*#__PURE__*/ createIcon(FaMinus)
+export const FaPaintbrushIcon = /*#__PURE__*/ createIcon(FaPaintbrush)
 export const FaPaperPlaneIcon = /*#__PURE__*/ createIcon(FaPaperPlane)
 export const FaPaperclipIcon = /*#__PURE__*/ createIcon(FaPaperclip)
 export const FaPenIcon = /*#__PURE__*/ createIcon(FaPen)
@@ -262,6 +265,7 @@ export const FaRightFromBracketIcon = /*#__PURE__*/ createIcon(FaRightFromBracke
 export const FaRightLeftIcon = /*#__PURE__*/ createIcon(FaRightLeft)
 export const FaRightLongIcon = /*#__PURE__*/ createIcon(FaRightLong)
 export const FaRightToBracketIcon = /*#__PURE__*/ createIcon(FaRightToBracket)
+export const FaRobotIcon = /*#__PURE__*/ createIcon(FaRobot)
 export const FaRocketIcon = /*#__PURE__*/ createIcon(FaRocket)
 export const FaRotateIcon = /*#__PURE__*/ createIcon(FaRotate)
 export const FaShareNodesIcon = /*#__PURE__*/ createIcon(FaShareNodes)

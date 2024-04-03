@@ -37,6 +37,7 @@ import {
   FaMagnifyingGlass,
   FaMagnifyingGlassMinus,
   FaMagnifyingGlassPlus,
+  FaPaintbrush,
   FaPenToSquare,
   FaPencil,
   FaRightFromBracket,
@@ -246,6 +247,10 @@ export const FaSignOutAltIcon = /*#__PURE__*/ createIcon(FaRightFromBracket)
  * @deprecated FaSortNumericUpIconは旧名称のため非推奨です。FaArrowUp19Iconを利用してください。
  */
 export const FaSortNumericUpIcon = /*#__PURE__*/ createIcon(FaArrowUp19)
+/**
+ * @deprecated FaPaintBrushIconは旧名称のため非推奨です。FaPaintbrushIconを利用してください。
+ */
+export const FaPaintBrushIcon = /*#__PURE__*/ createIcon(FaPaintbrush)
 /**
  * @deprecated FaStreamIconは旧名称のため非推奨です。FaBarsStaggeredIconを利用してください。
  */
