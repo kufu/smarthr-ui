@@ -9,6 +9,7 @@ import {
   FaArrowDown,
   FaArrowLeft,
   FaArrowRight,
+  FaArrowRotateLeft,
   FaArrowRotateRight,
   FaArrowUp,
   FaArrowUp19,
@@ -46,11 +47,15 @@ import {
   FaCircleExclamation,
   FaCircleInfo,
   FaCircleMinus,
+  FaCirclePlus,
   FaCircleQuestion,
+  FaCircleUser,
+  FaCircleXmark,
   FaClipboard,
   FaClipboardList,
   FaClock,
   FaClockRotateLeft,
+  FaCloudArrowDown,
   FaCloudArrowUp,
   FaCode,
   FaComment,
@@ -119,6 +124,7 @@ import {
   FaRobot,
   FaRocket,
   FaRotate,
+  FaRotateLeft,
   FaShareNodes,
   FaSort,
   FaSortDown,
@@ -131,16 +137,20 @@ import {
   FaTag,
   FaToolbox,
   FaTrash,
+  FaTrashCan,
   FaTriangleExclamation,
   FaTruck,
+  FaTruckRampBox,
   FaUpDown,
   FaUpRightAndDownLeftFromCenter,
   FaUpRightFromSquare,
   FaUser,
   FaUserCheck,
   FaUserClock,
+  FaUserLarge,
   FaUserPlus,
   FaUsers,
+  FaXmark,
   FaYenSign,
 } from 'react-icons/fa6'
 
@@ -156,6 +166,7 @@ export const FaAnglesRightIcon = /*#__PURE__*/ createIcon(FaAnglesRight)
 export const FaArrowDownIcon = /*#__PURE__*/ createIcon(FaArrowDown)
 export const FaArrowLeftIcon = /*#__PURE__*/ createIcon(FaArrowLeft)
 export const FaArrowRightIcon = /*#__PURE__*/ createIcon(FaArrowRight)
+export const FaArrowRotateLeftIcon = /*#__PURE__*/ createIcon(FaArrowRotateLeft)
 export const FaArrowRotateRightIcon = /*#__PURE__*/ createIcon(FaArrowRotateRight)
 export const FaArrowUp19Icon = /*#__PURE__*/ createIcon(FaArrowUp19)
 export const FaArrowUpIcon = /*#__PURE__*/ createIcon(FaArrowUp)
@@ -193,11 +204,15 @@ export const FaCircleExclamationIcon = /*#__PURE__*/ createIcon(FaCircleExclamat
 export const FaCircleIcon = /*#__PURE__*/ createIcon(FaCircle)
 export const FaCircleInfoIcon = /*#__PURE__*/ createIcon(FaCircleInfo)
 export const FaCircleMinusIcon = /*#__PURE__*/ createIcon(FaCircleMinus)
+export const FaCirclePlusIcon = /*#__PURE__*/ createIcon(FaCirclePlus)
 export const FaCircleQuestionIcon = /*#__PURE__*/ createIcon(FaCircleQuestion)
+export const FaCircleUserIcon = /*#__PURE__*/ createIcon(FaCircleUser)
+export const FaCircleXmarkIcon = /*#__PURE__*/ createIcon(FaCircleXmark)
 export const FaClipboardIcon = /*#__PURE__*/ createIcon(FaClipboard)
 export const FaClipboardListIcon = /*#__PURE__*/ createIcon(FaClipboardList)
 export const FaClockIcon = /*#__PURE__*/ createIcon(FaClock)
 export const FaClockRotateLeftIcon = /*#__PURE__*/ createIcon(FaClockRotateLeft)
+export const FaCloudArrowDownIcon = /*#__PURE__*/ createIcon(FaCloudArrowDown)
 export const FaCloudArrowUpIcon = /*#__PURE__*/ createIcon(FaCloudArrowUp)
 export const FaCodeIcon = /*#__PURE__*/ createIcon(FaCode)
 export const FaCommentDotsIcon = /*#__PURE__*/ createIcon(FaCommentDots)
@@ -268,6 +283,7 @@ export const FaRightToBracketIcon = /*#__PURE__*/ createIcon(FaRightToBracket)
 export const FaRobotIcon = /*#__PURE__*/ createIcon(FaRobot)
 export const FaRocketIcon = /*#__PURE__*/ createIcon(FaRocket)
 export const FaRotateIcon = /*#__PURE__*/ createIcon(FaRotate)
+export const FaRotateLeftIcon = /*#__PURE__*/ createIcon(FaRotateLeft)
 export const FaShareNodesIcon = /*#__PURE__*/ createIcon(FaShareNodes)
 export const FaSortDownIcon = /*#__PURE__*/ createIcon(FaSortDown)
 export const FaSortIcon = /*#__PURE__*/ createIcon(FaSort)
@@ -279,9 +295,11 @@ export const FaTableIcon = /*#__PURE__*/ createIcon(FaTable)
 export const FaTableListIcon = /*#__PURE__*/ createIcon(FaTableList)
 export const FaTagIcon = /*#__PURE__*/ createIcon(FaTag)
 export const FaToolboxIcon = /*#__PURE__*/ createIcon(FaToolbox)
+export const FaTrashCanIcon = /*#__PURE__*/ createIcon(FaTrashCan)
 export const FaTrashIcon = /*#__PURE__*/ createIcon(FaTrash)
 export const FaTriangleExclamationIcon = /*#__PURE__*/ createIcon(FaTriangleExclamation)
 export const FaTruckIcon = /*#__PURE__*/ createIcon(FaTruck)
+export const FaTruckRampBoxIcon = /*#__PURE__*/ createIcon(FaTruckRampBox)
 export const FaUpDownIcon = /*#__PURE__*/ createIcon(FaUpDown)
 export const FaUpRightAndDownLeftFromCenterIcon = /*#__PURE__*/ createIcon(
   FaUpRightAndDownLeftFromCenter,
@@ -290,8 +308,10 @@ export const FaUpRightFromSquareIcon = /*#__PURE__*/ createIcon(FaUpRightFromSqu
 export const FaUserCheckIcon = /*#__PURE__*/ createIcon(FaUserCheck)
 export const FaUserClockIcon = /*#__PURE__*/ createIcon(FaUserClock)
 export const FaUserIcon = /*#__PURE__*/ createIcon(FaUser)
+export const FaUserLargeIcon = /*#__PURE__*/ createIcon(FaUserLarge)
 export const FaUserPlusIcon = /*#__PURE__*/ createIcon(FaUserPlus)
 export const FaUsersIcon = /*#__PURE__*/ createIcon(FaUsers)
+export const FaXmarkIcon = /*#__PURE__*/ createIcon(FaXmark)
 export const FaYenSignIcon = /*#__PURE__*/ createIcon(FaYenSign)
 
 export { WarningIcon } from './WarningIcon'
