@@ -5,12 +5,7 @@ import { useSyncExternalStore } from 'react'
 import styled from 'styled-components'
 
 import { Button } from '../Button'
-import {
-  FaArrowAltCircleDownIcon,
-  FaArrowAltCircleLeftIcon,
-  FaArrowAltCircleRightIcon,
-  FaArrowAltCircleUpIcon,
-} from '../Icon'
+import { FaArrowDownIcon, FaArrowLeftIcon, FaArrowRightIcon, FaArrowUpIcon } from '../Icon'
 
 import { Tooltip } from './Tooltip'
 
@@ -155,7 +150,7 @@ const Template: Story = () => {
             vertical="bottom"
             triggerType="icon"
           >
-            <FaArrowAltCircleUpIcon alt="フォーカスすると情報が表示されます" />
+            <FaArrowUpIcon alt="フォーカスすると情報が表示されます" />
           </Tooltip>
           <Tooltip
             message="horizontal=center & vertical=bottom"
@@ -163,7 +158,7 @@ const Template: Story = () => {
             vertical="bottom"
             triggerType="icon"
           >
-            <FaArrowAltCircleUpIcon alt="フォーカスすると情報が表示されます" />
+            <FaArrowUpIcon alt="フォーカスすると情報が表示されます" />
           </Tooltip>
           <Tooltip
             message="horizontal=right & vertical=bottom"
@@ -171,7 +166,7 @@ const Template: Story = () => {
             vertical="bottom"
             triggerType="icon"
           >
-            <FaArrowAltCircleUpIcon alt="フォーカスすると情報が表示されます" />
+            <FaArrowUpIcon alt="フォーカスすると情報が表示されます" />
           </Tooltip>
           <Tooltip
             message="horizontal=left & vertical=middle"
@@ -179,7 +174,7 @@ const Template: Story = () => {
             vertical="middle"
             triggerType="icon"
           >
-            <FaArrowAltCircleRightIcon alt="フォーカスすると情報が表示されます" />
+            <FaArrowRightIcon alt="フォーカスすると情報が表示されます" />
           </Tooltip>
           <Tooltip
             message="horizontal=right & vertical=middle"
@@ -187,7 +182,7 @@ const Template: Story = () => {
             vertical="middle"
             triggerType="icon"
           >
-            <FaArrowAltCircleLeftIcon alt="フォーカスすると情報が表示されます" />
+            <FaArrowLeftIcon alt="フォーカスすると情報が表示されます" />
           </Tooltip>
           <Tooltip
             message="horizontal=left & vertical=top"
@@ -195,7 +190,7 @@ const Template: Story = () => {
             vertical="top"
             triggerType="icon"
           >
-            <FaArrowAltCircleDownIcon alt="フォーカスすると情報が表示されます" />
+            <FaArrowDownIcon alt="フォーカスすると情報が表示されます" />
           </Tooltip>
           <Tooltip
             message="horizontal=center & vertical=top"
@@ -203,7 +198,7 @@ const Template: Story = () => {
             vertical="top"
             triggerType="icon"
           >
-            <FaArrowAltCircleDownIcon alt="フォーカスすると情報が表示されます" />
+            <FaArrowDownIcon alt="フォーカスすると情報が表示されます" />
           </Tooltip>
           <Tooltip
             message="horizontal=right & vertical=top"
@@ -211,7 +206,7 @@ const Template: Story = () => {
             vertical="top"
             triggerType="icon"
           >
-            <FaArrowAltCircleDownIcon alt="フォーカスすると情報が表示されます" />
+            <FaArrowDownIcon alt="フォーカスすると情報が表示されます" />
           </Tooltip>
         </dd>
         <dt>disabled ボタン</dt>
