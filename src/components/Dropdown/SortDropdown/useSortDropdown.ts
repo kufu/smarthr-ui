@@ -36,13 +36,13 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
     () => decorators?.applyButtonLabel?.(APPLY_BUTTON_TEXT) || APPLY_BUTTON_TEXT,
     [decorators],
   )
-  const canselButtonLabel = useMemo(
-    () => decorators?.canselButtonLabel?.(CANCEL_BUTTON_TEXT) || CANCEL_BUTTON_TEXT,
+  const cancelButtonLabel = useMemo(
+    () => decorators?.cancelButtonLabel?.(CANCEL_BUTTON_TEXT) || CANCEL_BUTTON_TEXT,
     [decorators],
   )
 
   // 外向きの値
-  const [selectedField, setSelectedField] = useState<string>()
+  const [selectedLabel, setSelectedLabel] = useState<string>()
   const [checkedOrder, setCheckedOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
   // 内部的な値
@@ -51,20 +51,20 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   const [innerCheckedOrder, setCheckedInnerOrder] = useState<Props['defaultOrder']>(defaultOrder)
 
   useMemo(() => {
-    if (selectedField) return
+    if (selectedLabel) return
 
     // 初期値は option に紛れているので、選択されている項目を取得
     const defaultField =
       sortFields.find((field) => 'selected' in field && field.selected) || sortFields[0]
-    setSelectedField(defaultField.label)
+    setSelectedLabel(defaultField.label)
     setInnerSelectedField(defaultField.label)
-  }, [selectedField, sortFields])
+  }, [selectedLabel, sortFields])
 
   // 外向きな値で構成
   const triggerLabel = useMemo(() => {
     const sortLabel = checkedOrder === 'asc' ? ascLabel : descLabel
-    return `${selectedField}（${sortLabel}）`
-  }, [ascLabel, descLabel, selectedField, checkedOrder])
+    return `${selectedLabel}（${sortLabel}）`
+  }, [ascLabel, descLabel, selectedLabel, checkedOrder])
 
   const SortIcon = useMemo(
     () => (checkedOrder === 'asc' ? FaSortAmountDownIcon : FaSortAmountUpIcon),
@@ -74,18 +74,18 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   const handleChange = useCallback<ChangeEventHandler<HTMLSelectElement>>(
     (e) => {
       const select = e.currentTarget
-      const selectedLabel = select.options[select.selectedIndex].label
+      const newLabel = select.options[select.selectedIndex].label
       const newFields = innerFields.map((field) => ({
         ...field,
-        selected: field.label === selectedLabel,
+        selected: field.label === newLabel,
       }))
       setInnerFields(newFields)
-      setInnerSelectedField(selectedLabel)
+      setInnerSelectedField(newLabel)
     },
     [innerFields],
   )
   const handleApply = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
-    setSelectedField(innerSelectedField)
+    setSelectedLabel(innerSelectedField)
     setCheckedOrder(innerCheckedOrder)
     onApply({ field: innerSelectedField || '', order: innerCheckedOrder, newfields: innerFields })
   }, [innerCheckedOrder, innerFields, innerSelectedField, onApply])
@@ -108,7 +108,7 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
       ascLabel,
       descLabel,
       applyButtonLabel,
-      canselButtonLabel,
+      cancelButtonLabel,
     },
     handler: { handleApply, handleChange },
     innerValues: { innerFields, innerSelectedField, innerCheckedOrder },

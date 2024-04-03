@@ -39,7 +39,7 @@ type Props = {
     | 'ascLabel'
     | 'descLabel'
     | 'applyButtonLabel'
-    | 'canselButtonLabel'
+    | 'cancelButtonLabel'
   >
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
@@ -60,7 +60,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
       ascLabel,
       descLabel,
       applyButtonLabel,
-      canselButtonLabel,
+      cancelButtonLabel,
     },
     SortIcon,
     setCheckedInnerOrder,
@@ -116,7 +116,7 @@ export const SortDropdown: FC<Props & ElementProps> = ({
             </Stack>
             <Cluster gap={1} align="center" justify="flex-end" as="footer" className={footerStyle}>
               <DropdownCloser>
-                <Button onClick={onCancel}>{canselButtonLabel}</Button>
+                <Button onClick={onCancel}>{cancelButtonLabel}</Button>
               </DropdownCloser>
               <DropdownCloser>
                 <Button variant="primary" onClick={handleApply}>
