@@ -86,6 +86,15 @@ export const WithChildren: StoryFn = () => (
 )
 WithChildren.storyName = 'with children'
 
+export const WithOverHeightChildren: StoryFn = () => (
+  <Wrapper>
+    <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
+      <OverHeightChild>子コンポーネントの高さがnavの高さを上回る場合</OverHeightChild>
+    </AppNavi>
+  </Wrapper>
+)
+WithChildren.storyName = 'with children'
+
 export const WithoutChildren: StoryFn = () => (
   <Wrapper>
     <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret />
@@ -148,6 +157,12 @@ const OverflowWrapper = styled(Wrapper)`
 `
 const Child = styled.p`
   margin: 0 0 0 auto;
+`
+const OverHeightChild = styled.p`
+  display: flex;
+  align-items: center;
+  margin: 0 0 0 auto;
+  height: 50px;
 `
 const InnerWrapper = styled.div`
   margin-bottom: 40px;
