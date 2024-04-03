@@ -93,7 +93,7 @@ export const WithOverHeightChildren: StoryFn = () => (
     </AppNavi>
   </Wrapper>
 )
-WithChildren.storyName = 'with children'
+WithChildren.storyName = 'with over height children'
 
 export const WithoutChildren: StoryFn = () => (
   <Wrapper>
