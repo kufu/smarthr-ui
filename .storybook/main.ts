@@ -48,6 +48,7 @@ const config: StorybookConfig = {
       },
     },
     'storybook-addon-pseudo-states',
+    '@storybook/addon-webpack5-compiler-babel',
   ],
   refs: {
     'smarthr-patterns': {
@@ -59,6 +60,7 @@ const config: StorybookConfig = {
     name: '@storybook/react-webpack5',
     options: {},
   },
+  staticDirs: ['../public'],
   docs: {
     autodocs: true,
   },

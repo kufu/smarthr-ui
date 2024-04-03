@@ -25,9 +25,9 @@ export default {
 export const All: StoryFn = () => (
   <Stack gap={2}>
     <Cluster gap={0.75} as="dl">
-      {Object.values(Icons).map((Icon) => (
+      {Object.entries(Icons).map(([name, Icon]) => (
         <ItemWrapper key={`${Icon.displayName}`}>
-          <dt>{Icon.displayName?.replace(/Icon$/, '')}</dt>
+          <dt>{name?.replace(/Icon$/, '')}</dt>
           <dd>
             <Icon />
           </dd>
@@ -37,9 +37,9 @@ export const All: StoryFn = () => (
     <div>
       旧名称（非推奨）
       <Cluster gap={0.75} as="dl">
-        {Object.values(DeprecatedIcons).map((Icon) => (
+        {Object.entries(DeprecatedIcons).map(([name, Icon]) => (
           <ItemWrapper key={`${Icon.displayName}`}>
-            <dt>{Icon.displayName?.replace(/Icon$/, '')}</dt>
+            <dt>{name?.replace(/Icon$/, '')}</dt>
             <dd>
               <Icon />
             </dd>
@@ -49,7 +49,6 @@ export const All: StoryFn = () => (
     </div>
   </Stack>
 )
-
 export const AltText: StoryFn = () => (
   <div>
     <p>

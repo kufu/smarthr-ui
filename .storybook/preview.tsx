@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from 'react'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
-import { Title, Subtitle, Description, Primary, ArgsTable, Stories } from '@storybook/blocks'
+import { Title, Subtitle, Description, Primary, Stories } from '@storybook/blocks'
 import ReactGA from 'react-ga4'
 
 import { Preview } from '@storybook/react'
@@ -64,16 +64,12 @@ const preview: Preview = {
       },
     },
     docs: {
-      // ArgsTable は deprecated で、subcomponentsで複数コンポーネントの props を見せる機能は非推奨になった
-      // ここでは、一旦v6.5->v7アップデート時に後方互換を保つために独自のpageを設定している
-      // 参考: https://github.com/storybookjs/storybook/issues/20782#issuecomment-1482771013
       page: () => (
         <>
           <Title />
           <Subtitle />
           <Description />
           <Primary />
-          <ArgsTable />
           <Stories includePrimary={false} />
         </>
       ),
