@@ -17,7 +17,7 @@ export type AppNaviCustomTagProps = PropsWithChildren<{
 const appNaviCustomTag = tv({
   extend: appNaviItemStyle,
   slots: {
-    wrapper: 'smarthr-ui-AppNavi-customTag',
+    wrapper: ['smarthr-ui-AppNavi-customTag', 'shr-box-border shr-h-full shr-items-center'],
   },
 })
 

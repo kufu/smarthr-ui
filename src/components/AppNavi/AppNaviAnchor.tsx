@@ -17,7 +17,11 @@ export type AppNaviAnchorProps = PropsWithChildren<{
 const appNaviAnchor = tv({
   extend: appNaviItemStyle,
   slots: {
-    wrapper: ['smarthr-ui-AppNavi-anchor', 'forced-colors:shr-underline'],
+    wrapper: [
+      'smarthr-ui-AppNavi-anchor',
+      'forced-colors:shr-underline',
+      'shr-box-border shr-h-full shr-items-center',
+    ],
   },
 })
 

@@ -25,6 +25,7 @@ const appNaviDropdown = tv({
         wrapper: [
           'smarthr-ui-AppNavi-dropdown',
           '[&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
+          '[&&&]:shr-box-border [&&&]:shr-h-full [&&&]:shr-items-center',
         ],
       },
     },
@@ -53,7 +54,7 @@ export const AppNaviDropdown: FC<AppNaviDropdownProps> = ({
 
   return (
     <Dropdown>
-      <DropdownTrigger>
+      <DropdownTrigger className="shr-h-full">
         <UnstyledButton aria-current={current ? 'page' : undefined} className={wrapperStyle}>
           {Icon && <Icon className={iconStyle} />}
           {children}

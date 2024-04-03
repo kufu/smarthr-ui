@@ -18,7 +18,10 @@ export type AppNaviButtonProps = PropsWithChildren<{
 const appNaviButton = tv({
   extend: appNaviItemStyle,
   slots: {
-    wrapper: 'smarthr-ui-AppNavi-button',
+    wrapper: [
+      'smarthr-ui-AppNavi-button',
+      'shr-h-full [&&&]:shr-box-border [&&&]:shr-items-center',
+    ],
   },
 })
 
