@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
-import { userEvent } from '@storybook/testing-library'
+import { userEvent } from '@storybook/test'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 

@@ -24,8 +24,7 @@ export const notificationBar = tv({
       '[&_.smarthr-ui-Icon-withText]:shr-leading-tight',
     ],
     icon: '',
-    actionArea: 'smarthr-ui-NotificationBar-actionArea shr-shrink-0',
-    actionWrapper: 'smarthr-ui-NotificationBar-actions -shr-my-0.5',
+    actionArea: 'smarthr-ui-NotificationBar-actionArea -shr-my-0.5 shr-shrink-0',
     closeButton:
       'smarthr-ui-NotificationBar-closeButton -shr-mb-0.5 -shr-mr-0.5 -shr-mt-0.5 shr-flex-shrink-0 shr-text-black',
   },
@@ -185,18 +184,19 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
     messageAreaStyle,
     iconStyle,
     actionAreaStyle,
-    actionWrapperStyle,
     closeButtonStyle,
   } = useMemo(() => {
-    const { wrapper, inner, messageArea, icon, actionArea, actionWrapper, closeButton } =
-      notificationBar({ type, bold, base })
+    const { wrapper, inner, messageArea, icon, actionArea, closeButton } = notificationBar({
+      type,
+      bold,
+      base,
+    })
     return {
       wrapperStyle: wrapper({ animate, className }),
       innerStyle: inner(),
       messageAreaStyle: messageArea(),
       iconStyle: icon(),
       actionAreaStyle: actionArea(),
-      actionWrapperStyle: actionWrapper(),
       closeButtonStyle: closeButton(),
     }
   }, [animate, base, bold, className, type])
@@ -209,10 +209,8 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
             <Icon text={message} iconGap={0.5} className={iconStyle} />
           </div>
           {children && (
-            <Cluster gap={0.5} align="center" className={actionAreaStyle}>
-              <Cluster align="center" justify="flex-end" className={actionWrapperStyle}>
-                {children}
-              </Cluster>
+            <Cluster align="center" justify="flex-end" className={actionAreaStyle}>
+              {children}
             </Cluster>
           )}
         </Cluster>

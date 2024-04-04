@@ -73,6 +73,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
         </Button>
       </DropdownTrigger>
       <DropdownContent controllable>
+        {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
         <Stack as="nav" gap={1.5} className={contentWrapper()}>
           <DropdownScrollArea>
             <Stack gap={1.5}>
@@ -80,6 +81,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
                 <Section>
                   <Stack gap={0.5} className={category()}>
                     <Heading type="subSubBlockTitle">{baseApps.heading}</Heading>
+                    {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
                     <Cluster as="ul" gap={1} className={appList()}>
                       {appItems(baseApps.items, link())}
                     </Cluster>
@@ -91,6 +93,7 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
                   <Section key={i}>
                     <Stack gap={0.5} className={category()}>
                       <Heading type="subSubBlockTitle">{heading}</Heading>
+                      {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
                       <Stack gap={0.5} as="ul" className={appList()}>
                         {appItems(items, link())}
                       </Stack>
@@ -102,11 +105,11 @@ export const AppLauncher: React.FC<Props & ElementProps> = ({
           </DropdownScrollArea>
 
           {urlToShowAll && (
-            <Stack className={footer()}>
+            <div className={footer()}>
               <TextLink href={urlToShowAll} style={{ width: 'fit-content' }}>
                 すべて見る
               </TextLink>
-            </Stack>
+            </div>
           )}
         </Stack>
       </DropdownContent>

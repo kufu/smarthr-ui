@@ -348,17 +348,13 @@ export const _ButtonAnchor: StoryFn = () => (
 
     <dt>Small</dt>
     <dd>
-      <Stack>
-        <Cluster>
-          <AnchorButton href="#" variant="primary" size="s" onClick={action('clicked')}>
-            ボタン
-          </AnchorButton>
-        </Cluster>
-        <Cluster>
-          <AnchorButton variant="primary" size="s" onClick={action('clicked')}>
-            ボタン
-          </AnchorButton>
-        </Cluster>
+      <Stack align="start">
+        <AnchorButton href="#" variant="primary" size="s" onClick={action('clicked')}>
+          ボタン
+        </AnchorButton>
+        <AnchorButton variant="primary" size="s" onClick={action('clicked')}>
+          ボタン
+        </AnchorButton>
       </Stack>
     </dd>
 

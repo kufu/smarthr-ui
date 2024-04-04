@@ -3,7 +3,6 @@ import React, {
   InputHTMLAttributes,
   KeyboardEvent,
   Ref,
-  forwardRef,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -16,6 +15,7 @@ import { tv } from 'tailwind-variants'
 import { useId } from '../../hooks/useId'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { useTheme } from '../../hooks/useTailwindTheme'
+import { genericsForwardRef } from '../../libs/util'
 import { FaCaretDownIcon } from '../Icon'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
@@ -529,12 +529,4 @@ const ActualMultiComboBox = <T,>(
   )
 }
 
-// forwardRef したコンポーネントでジェネリクスを使うときのワークアラウンド
-// https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref/58473012
-export const MultiComboBox = forwardRef(ActualMultiComboBox) as (<T>(
-  props: ComponentPropsWithoutRef<typeof ActualMultiComboBox<T>> & {
-    ref?: Ref<HTMLInputElement>
-  },
-) => ReturnType<typeof ActualMultiComboBox<T>>) & {
-  displayName: string
-}
+export const MultiComboBox = genericsForwardRef(ActualMultiComboBox)

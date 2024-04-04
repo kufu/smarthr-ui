@@ -207,6 +207,7 @@ export const FilterDropdownStory: Story = {
   name: 'FilterDropdown',
   args: {
     children: null,
+    onApply: () => {},
   },
   render: () => <Render />,
 }

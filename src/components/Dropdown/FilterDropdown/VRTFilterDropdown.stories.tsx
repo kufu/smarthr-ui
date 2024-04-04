@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { userEvent, within } from '@storybook/testing-library'
+import { userEvent, within } from '@storybook/test'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -23,6 +23,7 @@ export const VRTOpenFilterDropdownNarrow: Story = {
   name: 'VRT Open FilterDropdown Narrow',
   args: {
     children: null,
+    onApply: () => {},
   },
   parameters: {
     viewport: {
@@ -53,6 +54,7 @@ export const VRTFilterDropdownForcedColors: Story = {
   name: 'VRT FilterDropdown Forced Colors',
   args: {
     children: null,
+    onApply: () => {},
   },
   parameters: {
     chromatic: { forcedColors: 'active' },

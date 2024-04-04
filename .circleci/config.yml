@@ -69,7 +69,7 @@ commands:
   run-chromatic-master:
     steps:
       - checkout
-      - run: pnpm run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes --only-changed
+      - run: STORYBOOK_NODE_ENV="production" pnpm run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes --only-changed
   install-noto-sans-cjk-jp:
     steps:
       - run:

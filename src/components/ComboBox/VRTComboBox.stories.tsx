@@ -1,5 +1,5 @@
 import { StoryFn } from '@storybook/react'
-import { userEvent, within } from '@storybook/testing-library'
+import { userEvent, within } from '@storybook/test'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -44,6 +44,13 @@ export const VRTMulti: StoryFn = () => (
     <Multi />
   </WrapperList>
 )
+
+const waitForRAF = () =>
+  new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      resolve()
+    })
+  })
 const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   const canvas = within(canvasElement)
   const comboboxes = await canvas.findAllByRole('combobox')
@@ -51,8 +58,10 @@ const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   const body = canvasElement.ownerDocument.body
   const option1 = await within(body).findByText('option 1')
   await userEvent.click(option1)
+  await waitForRAF()
   const option2 = await within(body).findByText('option 2')
   await userEvent.click(option2)
+  await waitForRAF()
 }
 VRTMulti.play = playMulti
 

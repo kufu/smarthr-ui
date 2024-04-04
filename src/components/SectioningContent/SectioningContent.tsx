@@ -12,6 +12,7 @@ type SectioningContentProps = Omit<ComponentPropsWithRef<'section'>, keyof BaseP
 const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
   ({ children, baseLevel, as: Wrapper = 'section', ...props }, ref) => (
     <Wrapper {...props} ref={ref}>
+      {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
       <SectioningFragment baseLevel={baseLevel}>{children}</SectioningFragment>
     </Wrapper>
   ),

@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from 'react'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
-import { Title, Subtitle, Description, Primary, ArgsTable, Stories } from '@storybook/blocks'
+import { Title, Subtitle, Description, Primary, Stories } from '@storybook/blocks'
 import ReactGA from 'react-ga4'
 
 import { Preview } from '@storybook/react'
@@ -14,7 +14,11 @@ import tailwindConfig from '../tailwind.config'
 
 import '../src/styles/index.css'
 
-ReactGA.initialize('G-65N1S3NF5R')
+const isProduction = process.env.STORYBOOK_NODE_ENV === 'production'
+
+if (isProduction) {
+  ReactGA.initialize('G-65N1S3NF5R')
+}
 
 const preview: Preview = {
   parameters: {
@@ -60,16 +64,12 @@ const preview: Preview = {
       },
     },
     docs: {
-      // ArgsTable は deprecated で、subcomponentsで複数コンポーネントの props を見せる機能は非推奨になった
-      // ここでは、一旦v6.5->v7アップデート時に後方互換を保つために独自のpageを設定している
-      // 参考: https://github.com/storybookjs/storybook/issues/20782#issuecomment-1482771013
       page: () => (
         <>
           <Title />
           <Subtitle />
           <Description />
           <Primary />
-          <ArgsTable />
           <Stories includePrimary={false} />
         </>
       ),
@@ -81,8 +81,10 @@ const preview: Preview = {
       const ThemeProvider = callThemeProvider(context.parameters.withTheming, theme)
 
       useEffect(() => {
-        ReactGA.send({ hitType: 'pageview', title: context.title })
-      }, [])
+        if (isProduction) {
+          ReactGA.send({ hitType: 'pageview', title: context.title })
+        }
+      }, [context.title])
 
       return (
         <ThemeProvider>
