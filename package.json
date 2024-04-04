@@ -20,8 +20,8 @@
     "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.3",
-    "@babel/preset-env": "^7.24.3",
+    "@babel/core": "^7.24.4",
+    "@babel/preset-env": "^7.24.4",
     "@babel/preset-react": "^7.24.1",
     "@babel/preset-typescript": "^7.24.1",
     "@storybook/addon-a11y": "^8.0.5",
