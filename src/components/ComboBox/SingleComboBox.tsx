@@ -412,7 +412,7 @@ const ActualSingleComboBox = <T,>(
   ])
 
   return (
-    <div {...props} {...wrapperStyleProps} ref={outerRef} role="presentation">
+    <div {...props} {...wrapperStyleProps} ref={outerRef}>
       <Input
         {...inputAttributes}
         /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
