@@ -11,12 +11,12 @@ import * as DeprecatedIcons from './DeprecatedIcon'
 import * as Icons from './Icon'
 import { generateIcon } from './generateIcon'
 
-const { FaAddressBookIcon, FaBullhornIcon, WarningIcon } = Icons
+const { FaAddressCardIcon, FaBullhornIcon, WarningIcon } = Icons
 const { FaInfoCircleIcon } = DeprecatedIcons
 
 export default {
   title: 'Media（メディア）/Icon',
-  component: FaAddressBookIcon,
+  component: FaAddressCardIcon,
   parameters: {
     withTheming: true,
   },
@@ -57,25 +57,25 @@ export const AltText: StoryFn = () => (
     <dl>
       <dt>visually hidden text</dt>
       <dd>
-        <FaAddressBookIcon alt="連絡帳" />
+        <FaAddressCardIcon alt="連絡帳" />
       </dd>
       <dt>
         <code>aria-labelledby</code>
       </dt>
       <dd>
-        <FaAddressBookIcon aria-labelledby="text" />
+        <FaAddressCardIcon aria-labelledby="text" />
       </dd>
       <dt>
         <code>aria-label</code>
       </dt>
       <dd>
-        <FaAddressBookIcon aria-label="連絡帳" />
+        <FaAddressCardIcon aria-label="連絡帳" />
       </dd>
       <dt>
         none ( <code>aria-hidden</code> )
       </dt>
       <dd>
-        <FaAddressBookIcon />
+        <FaAddressCardIcon />
       </dd>
     </dl>
   </div>
@@ -83,30 +83,30 @@ export const AltText: StoryFn = () => (
 
 export const Color: StoryFn = () => (
   <Cluster>
-    <FaAddressBookIcon color="MAIN" />
-    <FaAddressBookIcon color="DANGER" />
-    <FaAddressBookIcon color="TEXT_GREY" />
-    <FaAddressBookIcon color="TEXT_DISABLED" />
+    <FaAddressCardIcon color="MAIN" />
+    <FaAddressCardIcon color="DANGER" />
+    <FaAddressCardIcon color="TEXT_GREY" />
+    <FaAddressCardIcon color="TEXT_DISABLED" />
   </Cluster>
 )
 
 export const Size: StoryFn = () => (
   <Cluster>
-    <FaAddressBookIcon size="XXS" />
-    <FaAddressBookIcon size="XS" />
-    <FaAddressBookIcon size="S" />
-    <FaAddressBookIcon size="M" />
-    <FaAddressBookIcon size="L" />
-    <FaAddressBookIcon size="XL" />
-    <FaAddressBookIcon size="XXL" />
+    <FaAddressCardIcon size="XXS" />
+    <FaAddressCardIcon size="XS" />
+    <FaAddressCardIcon size="S" />
+    <FaAddressCardIcon size="M" />
+    <FaAddressCardIcon size="L" />
+    <FaAddressCardIcon size="XL" />
+    <FaAddressCardIcon size="XXL" />
     <WarningIcon size="XXL" />
   </Cluster>
 )
 
 export const WithText: StoryFn = () => (
   <Stack align="flex-start">
-    <FaAddressBookIcon text="連絡帳" />
-    <FaAddressBookIcon text="連絡帳（逆位置）" right />
+    <FaAddressCardIcon text="連絡帳" />
+    <FaAddressCardIcon text="連絡帳（逆位置）" right />
     <Text as="p">
       文中にも
       <FaBullhornIcon text="アイコン付きテキスト" />
