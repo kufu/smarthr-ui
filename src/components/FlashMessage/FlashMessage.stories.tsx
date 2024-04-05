@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { Button } from '../Button'
 
-import { FlashMessage, Props, animationTypes, messageTypes } from './FlashMessage'
+import { FlashMessage, Props, messageTypes } from './FlashMessage'
 
 import { FlashMessageListProvider, useFlashMessageList } from '.'
 
@@ -61,8 +61,6 @@ const Template: StoryFn = (arg) => (
 )
 export const Bounce = Template.bind({})
 Bounce.args = { animation: 'bounce' }
-export const Fade = Template.bind({})
-Fade.args = { animation: 'fade' }
 export const None = Template.bind({})
 None.args = { animation: 'none' }
 
@@ -135,7 +133,7 @@ export const Demo: StoryFn = () => {
       <hr />
       <fieldset>
         <legend>animation</legend>
-        {animationTypes.map((animationType) => (
+        {['bounde', 'none'].map((animationType) => (
           <label key={animationType}>
             <input
               name="animationType"
