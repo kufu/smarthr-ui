@@ -1,15 +1,15 @@
 import React from 'react'
 import { create } from 'react-test-renderer'
 
-import { FaAddressBookIcon } from './Icon'
+import { FaAddressCardIcon } from './Icon'
 
 const Icon = () => (
   <>
     <span id="text">連絡帳</span>
-    <FaAddressBookIcon />
-    <FaAddressBookIcon alt="連絡帳" />
-    <FaAddressBookIcon aria-label="連絡帳" />
-    <FaAddressBookIcon aria-labelledby="text" />
+    <FaAddressCardIcon />
+    <FaAddressCardIcon alt="連絡帳" />
+    <FaAddressCardIcon aria-label="連絡帳" />
+    <FaAddressCardIcon aria-labelledby="text" />
   </>
 )
 

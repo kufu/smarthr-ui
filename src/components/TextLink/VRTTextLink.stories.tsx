@@ -3,7 +3,7 @@ import { within } from '@storybook/test'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-import { FaFlagIcon } from '../Icon'
+import { FaAddressCardIcon } from '../Icon'
 import { InformationPanel } from '../InformationPanel'
 
 import { TextLink } from './TextLink'
@@ -25,25 +25,25 @@ export const VRTState: StoryFn = () => (
     <Wrapper>
       <li id="hover">
         <p>hover</p>
-        <TextLink href="/?path=/story/textlink--all" prefix={<FaFlagIcon />} target="_blank">
+        <TextLink href="/?path=/story/textlink--all" prefix={<FaAddressCardIcon />} target="_blank">
           健康保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者資格記録訂正届船員保険厚生年金保険被保険者資格記録取消届船員保険被保険者離職事由訂正届基礎年金番号氏名生年月日性別変更（訂正）届
         </TextLink>
       </li>
       <li id="focus">
         <p>focus</p>
-        <TextLink href="/?path=/story/textlink--all" prefix={<FaFlagIcon />} target="_blank">
+        <TextLink href="/?path=/story/textlink--all" prefix={<FaAddressCardIcon />} target="_blank">
           健康保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者資格記録訂正届船員保険厚生年金保険被保険者資格記録取消届船員保険被保険者離職事由訂正届基礎年金番号氏名生年月日性別変更（訂正）届
         </TextLink>
       </li>
       <li id="focus-visible">
         <p>focusVisible</p>
-        <TextLink href="/?path=/story/textlink--all" prefix={<FaFlagIcon />} target="_blank">
+        <TextLink href="/?path=/story/textlink--all" prefix={<FaAddressCardIcon />} target="_blank">
           健康保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者資格記録訂正届船員保険厚生年金保険被保険者資格記録取消届船員保険被保険者離職事由訂正届基礎年金番号氏名生年月日性別変更（訂正）届
         </TextLink>
       </li>
       <li id="active">
         <p>active</p>
-        <TextLink href="/?path=/story/textlink--all" prefix={<FaFlagIcon />} target="_blank">
+        <TextLink href="/?path=/story/textlink--all" prefix={<FaAddressCardIcon />} target="_blank">
           健康保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者資格記録訂正届船員保険厚生年金保険被保険者資格記録取消届船員保険被保険者離職事由訂正届基礎年金番号氏名生年月日性別変更（訂正）届
         </TextLink>
       </li>
@@ -68,7 +68,7 @@ export const VRTUserFocus: StoryFn = () => (
     <Wrapper>
       <li id="hover">
         <p>hover</p>
-        <TextLink href="/?path=/story/textlink--all" prefix={<FaFlagIcon />} target="_blank">
+        <TextLink href="/?path=/story/textlink--all" prefix={<FaAddressCardIcon />} target="_blank">
           健康保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者資格記録訂正届船員保険厚生年金保険被保険者資格記録取消届船員保険被保険者離職事由訂正届基礎年金番号氏名生年月日性別変更（訂正）届
         </TextLink>
       </li>
