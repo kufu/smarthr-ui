@@ -5,7 +5,7 @@
   "author": "SmartHR-UI Team",
   "dependencies": {
     "@smarthr/wareki": "^1.2.0",
-    "css-loader": "^6.10.0",
+    "css-loader": "^6.11.0",
     "dayjs": "^1.11.10",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
@@ -44,7 +44,7 @@
     "@storybook/addon-styling-webpack": "^1.0.0",
     "@storybook/test-runner": "^0.17.0",
     "@storybook/theming": "^8.0.5",
-    "@swc/core": "^1.4.11",
+    "@swc/core": "^1.4.12",
     "@swc/jest": "^0.2.36",
     "@testing-library/react": "^14.2.2",
     "@types/jest": "^29.5.12",
