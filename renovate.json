@@ -9,7 +9,8 @@
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor", "patch"], 
       "matchCurrentVersion": "!/^0/",
-      "schedule": ["after 8am and before 5pm on Monday"]
+      "schedule": ["after 8am and before 5pm on Monday"],
+      "autoMerge": false
     }
   ]
 }
