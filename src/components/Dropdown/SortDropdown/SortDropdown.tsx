@@ -6,7 +6,6 @@ import { FormControl } from '../../FormControl'
 import { Cluster, Stack } from '../../Layout'
 import { Fieldset } from '../../NewFieldset'
 import { RadioButton } from '../../RadioButton'
-import { Section } from '../../SectioningContent'
 import { Select } from '../../Select'
 import { Dropdown } from '../Dropdown'
 import { DropdownCloser } from '../DropdownCloser'
@@ -83,48 +82,46 @@ export const SortDropdown: FC<Props & ElementProps> = ({
       </DropdownTrigger>
       <DropdownContent controllable>
         <DropdownScrollArea>
-          <Section>
-            <Stack className={bodyStyle}>
-              <FormControl title={sortFieldLabel}>
-                <Select
-                  name="sortFields"
-                  options={innerFields}
-                  onChange={handleChange}
-                  className={selectStyle}
-                />
-              </FormControl>
-              <Fieldset title={sortOrderLabel} innerMargin={0.5}>
-                <Cluster gap={1.25}>
-                  <RadioButton
-                    name="sortOrder"
-                    value="asc"
-                    defaultChecked={innerCheckedOrder === 'asc'}
-                    onChange={() => setCheckedInnerOrder('asc')}
-                  >
-                    {ascLabel}
-                  </RadioButton>
-                  <RadioButton
-                    name="sortOrder"
-                    value="desc"
-                    defaultChecked={innerCheckedOrder === 'desc'}
-                    onChange={() => setCheckedInnerOrder('desc')}
-                  >
-                    {descLabel}
-                  </RadioButton>
-                </Cluster>
-              </Fieldset>
-            </Stack>
-            <Cluster gap={1} align="center" justify="flex-end" as="footer" className={footerStyle}>
-              <DropdownCloser>
-                <Button onClick={onCancel}>{cancelButtonLabel}</Button>
-              </DropdownCloser>
-              <DropdownCloser>
-                <Button variant="primary" onClick={handleApply}>
-                  {applyButtonLabel}
-                </Button>
-              </DropdownCloser>
-            </Cluster>
-          </Section>
+          <Stack className={bodyStyle}>
+            <FormControl title={sortFieldLabel}>
+              <Select
+                name="sortFields"
+                options={innerFields}
+                onChange={handleChange}
+                className={selectStyle}
+              />
+            </FormControl>
+            <Fieldset title={sortOrderLabel} innerMargin={0.5}>
+              <Cluster gap={1.25}>
+                <RadioButton
+                  name="sortOrder"
+                  value="asc"
+                  defaultChecked={innerCheckedOrder === 'asc'}
+                  onChange={() => setCheckedInnerOrder('asc')}
+                >
+                  {ascLabel}
+                </RadioButton>
+                <RadioButton
+                  name="sortOrder"
+                  value="desc"
+                  defaultChecked={innerCheckedOrder === 'desc'}
+                  onChange={() => setCheckedInnerOrder('desc')}
+                >
+                  {descLabel}
+                </RadioButton>
+              </Cluster>
+            </Fieldset>
+          </Stack>
+          <Cluster gap={1} align="center" justify="flex-end" as="footer" className={footerStyle}>
+            <DropdownCloser>
+              <Button onClick={onCancel}>{cancelButtonLabel}</Button>
+            </DropdownCloser>
+            <DropdownCloser>
+              <Button variant="primary" onClick={handleApply}>
+                {applyButtonLabel}
+              </Button>
+            </DropdownCloser>
+          </Cluster>
         </DropdownScrollArea>
       </DropdownContent>
     </Dropdown>

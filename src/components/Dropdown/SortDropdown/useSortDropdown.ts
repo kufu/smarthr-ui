@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 
-import { FaSortAmountDownIcon, FaSortAmountUpIcon } from '../../Icon'
+import { FaArrowDownWideShortIcon, FaArrowUpWideShortIcon } from '../../Icon'
 
 import { SortDropdown } from './SortDropdown'
 import { sortDropdownStyle } from './style'
@@ -67,7 +67,7 @@ export const useSortDropdown = ({ sortFields, defaultOrder, onApply, decorators 
   }, [ascLabel, descLabel, selectedLabel, checkedOrder])
 
   const SortIcon = useMemo(
-    () => (checkedOrder === 'asc' ? FaSortAmountDownIcon : FaSortAmountUpIcon),
+    () => (checkedOrder === 'asc' ? FaArrowUpWideShortIcon : FaArrowDownWideShortIcon),
     [checkedOrder],
   )
 
