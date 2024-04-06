@@ -1,6 +1,5 @@
 import { StoryFn } from '@storybook/react'
 import React from 'react'
-import styled, { css } from 'styled-components'
 
 import { SideMenu } from './SideMenu'
 
@@ -14,7 +13,7 @@ export default {
 }
 
 export const Default: StoryFn = () => (
-  <Wrapper>
+  <div className="shr-bg-background shr-p-2">
     <SideMenu>
       <SideMenu.Group name="基本設定">
         <SideMenu.Item href="#">評価シート</SideMenu.Item>
@@ -29,12 +28,5 @@ export const Default: StoryFn = () => (
         <SideMenu.Item href="#">評価対象者の表示項目設定</SideMenu.Item>
       </SideMenu.Group>
     </SideMenu>
-  </Wrapper>
+  </div>
 )
-
-const Wrapper = styled.div`
-  ${({ theme: { color, space } }) => css`
-    background-color: ${color.BACKGROUND};
-    padding: ${space(2)};
-  `}
-`

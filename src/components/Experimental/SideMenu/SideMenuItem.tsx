@@ -1,84 +1,56 @@
-import React, { AnchorHTMLAttributes, HTMLAttributes, PropsWithChildren } from 'react'
-import styled, { css } from 'styled-components'
-
-import { Theme, useTheme } from '../../../hooks/useTheme'
-
-import { useClassNames } from './useClassNames'
+import React, { ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
 type Props = PropsWithChildren<{
   /** 現在地かどうか */
   current?: boolean
 }>
-type ElementProps = Omit<HTMLAttributes<HTMLLIElement>, keyof Props>
-type InnerLinkProps = Omit<
-  AnchorHTMLAttributes<HTMLAnchorElement>,
-  keyof Props & keyof ElementProps
->
+type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof Props>
+type InnerLinkProps = Omit<ComponentPropsWithoutRef<'a'>, keyof Props & keyof ElementProps>
+
+const sideMenuItem = tv({
+  slots: {
+    wrapper: ['smarthr-ui-SideMenu-item', 'shr-relative shr-ps-0.75'],
+    innerLink: [
+      // 親要素ではなくリンクにスタイリングするため block でいっぱいに広げている
+      'shr-block',
+      'shr-rounded-m shr-px-1 shr-py-0.75 shr-no-underline',
+      'aria-current-page:shr-bg-grey-9 aria-current-page:shr-font-bold',
+      'hover:shr-bg-grey-9-darken',
+      // フォーカスリングを前に出したいので、スタッキングコンテキストを発生させている
+      'focus-visible:shr-focus-indicator focus-visible:shr-relative focus-visible:shr-z-1',
+    ],
+  },
+  variants: {
+    current: {
+      true: {
+        wrapper:
+          'before:shr-absolute before:shr-inset-y-0 before:shr-left-0 before:shr-block before:shr-w-[3px] before:shr-bg-main before:shr-content-[""]',
+      },
+    },
+  },
+})
 
 export const SideMenuItem: React.FC<Props & ElementProps & InnerLinkProps> = ({
   href,
   children,
   current,
   className,
-  ...props
+  ...rest
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
+  const { wrapperStyle, innerLinkStyle } = useMemo(() => {
+    const { wrapper, innerLink } = sideMenuItem()
+    return {
+      wrapperStyle: wrapper({ current, className }),
+      innerLinkStyle: innerLink(),
+    }
+  }, [className, current])
 
   return (
-    <Item
-      {...props}
-      current={current}
-      className={`${className || ''} ${classNames.item}`}
-      themes={theme}
-    >
-      <a href={href} aria-current={current && 'page'}>
+    <li {...rest} className={wrapperStyle}>
+      <a href={href} aria-current={current && 'page'} className={innerLinkStyle}>
         {children}
       </a>
-    </Item>
+    </li>
   )
 }
-
-const Item = styled.li<{ current: Props['current']; themes: Theme }>`
-  ${({ current, themes: { color, radius, shadow, space } }) => css`
-    position: relative;
-    padding-inline-start: ${space(0.75)};
-
-    ${current &&
-    css`
-      &::before {
-        content: '';
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: 0;
-        display: block;
-        width: 3px;
-        background-color: ${color.MAIN};
-      }
-    `}
-
-    a {
-      /* 親要素ではなくリンクにスタイリングするため block でいっぱいに広げている */
-      display: block;
-      border-radius: ${radius.m};
-      padding: ${space(0.75)} ${space(1)};
-      text-decoration: unset;
-
-      &[aria-current='page'] {
-        background-color: ${color.GREY_9};
-        font-weight: bold;
-      }
-
-      &:hover {
-        background-color: ${color.hoverColor(color.GREY_9)};
-      }
-
-      &:focus-visible {
-        /* フォーカスリングを前に出したいので、スタッキングコンテキストを発生させている */
-        position: relative;
-        z-index: 1;
-        ${shadow.focusIndicatorStyles}
-      }
-    }
-  `}
-`

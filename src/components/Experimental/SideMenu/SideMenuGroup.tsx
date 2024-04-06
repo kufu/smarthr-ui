@@ -1,11 +1,8 @@
-import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentProps, PropsWithChildren, ReactNode, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Theme, useTheme } from '../../../hooks/useTheme'
 import { Stack } from '../../Layout'
 import { Text } from '../../Text'
-
-import { useClassNames } from './useClassNames'
 
 type Props = PropsWithChildren<{
   /** 分類ラベル */
@@ -15,41 +12,37 @@ type Props = PropsWithChildren<{
 }>
 type ElementProps = ComponentProps<typeof Stack>
 
+const sideMenuGroup = tv({
+  slots: {
+    wrapper: ['smarthr-ui-SideMenu-group', '[&_+_&]:shr-border-t-shorthand [&_+_&]:shr-pt-1.25'],
+    list: 'shr-list-none',
+  },
+})
+
 export const SideMenuGroup: React.FC<Props & ElementProps> = ({
   name,
   nameTag = 'h3',
   children,
   className,
-  ...props
+  ...rest
 }) => {
-  const theme = useTheme()
-  const classNames = useClassNames()
+  const { wrapperStyle, listStyle } = useMemo(() => {
+    const { wrapper, list } = sideMenuGroup()
+    return {
+      wrapperStyle: wrapper({ className }),
+      listStyle: list(),
+    }
+  }, [className])
 
   return (
-    <GroupStack {...props} $themes={theme} className={`${className || ''} ${classNames.group}`}>
-      <GroupNameText forwardedAs={nameTag} themes={theme}>
+    <Stack {...rest} as="li" gap={0.5} className={wrapperStyle}>
+      <Text color="TEXT_GREY" leading="TIGHT" size="S" weight="normal" as={nameTag}>
         {name}
-      </GroupNameText>
+      </Text>
       {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-      <SideMenuListStack>{children}</SideMenuListStack>
-    </GroupStack>
+      <Stack as="ul" gap={0} className={listStyle}>
+        {children}
+      </Stack>
+    </Stack>
   )
 }
-
-const GroupStack = styled(Stack).attrs({ forwardedAs: 'li', gap: 0.5 })<{ $themes: Theme }>`
-  ${({ $themes: { border, space } }) => css`
-    & + & {
-      border-top: ${border.shorthand};
-      padding-block-start: ${space(1.25)};
-    }
-  `}
-`
-const GroupNameText = styled(Text).attrs({
-  color: 'TEXT_GREY',
-  leading: 'TIGHT',
-  size: 'S',
-  weight: 'normal',
-})``
-const SideMenuListStack = styled(Stack).attrs({ forwardedAs: 'ul', gap: 0 })`
-  list-style: none;
-`
