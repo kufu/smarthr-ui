@@ -115,7 +115,7 @@ const wrapper = tv({
   },
 })
 
-export const createIcon = (SvgIcon: IconType) => {
+export const createIcon = (SvgIcon: IconType | any) => {
   const Icon: React.FC<Props> = ({
     color,
     className,

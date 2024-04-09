@@ -1,9 +1,11 @@
 import {
   FaAnglesLeftIcon,
   FaAnglesRightIcon,
+  FaArrowDownWideShortIcon,
   FaArrowRotateLeftIcon,
   FaArrowRotateRightIcon,
   FaArrowUp19Icon,
+  FaArrowUpWideShortIcon,
   FaArrowsRotateIcon,
   FaBarsStaggeredIcon,
   FaBoxArchiveIcon,
@@ -60,6 +62,11 @@ import {
   FaUserLargeIcon,
   FaXmarkIcon,
 } from './Icon'
+import { createIcon } from './generateIcon'
+
+export const FaSortAmountUpIcon = /*#__PURE__*/ createIcon(FaArrowUpWideShortIcon)
+
+export const FaSortAmountDownIcon = /*#__PURE__*/ createIcon(FaArrowDownWideShortIcon)
 
 /**
  * @deprecated FaAngleDoubleLeftIconは旧名称のため非推奨です。FaAnglesLeftIconを利用してください。
