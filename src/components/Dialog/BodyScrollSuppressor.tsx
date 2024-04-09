@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
+import { createGlobalStyle, css } from 'styled-components'
 
-export const useBodyScrollLock = () => {
+export const BodyScrollSuppressor: FC = () => {
   const [scrollBarWidth, setScrollBarWidth] = useState<number | null>(null)
   const [paddingRight, setPaddingRight] = useState<number | null>(null)
 
@@ -16,15 +17,21 @@ export const useBodyScrollLock = () => {
     setPaddingRight(scrollBarWidth + parseInt(originalPaddingRight, 10))
   }, [scrollBarWidth])
 
-  useEffect(() => {
-    if (paddingRight !== null) {
-      document.body.style.paddingInlineEnd = `${paddingRight}px`
-    }
-    document.body.style.overflow = 'hidden'
-
-    return () => {
-      document.body.style.paddingInlineEnd = ''
-      document.body.style.overflow = ''
-    }
-  }, [paddingRight])
+  if (scrollBarWidth === null) {
+    return null
+  }
+  return <ScrollSuppressing paddingRight={paddingRight} />
 }
+
+const ScrollSuppressing = createGlobalStyle<{
+  paddingRight: number | null
+}>`
+  body {
+    overflow: hidden;
+    ${({ paddingRight }) =>
+      paddingRight &&
+      css`
+        padding-right: ${paddingRight}px !important;
+      `}
+  }
+`

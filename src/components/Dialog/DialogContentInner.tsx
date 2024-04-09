@@ -12,10 +12,10 @@ import { tv } from 'tailwind-variants'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { useTheme } from '../../hooks/useTailwindTheme'
 
+import { BodyScrollSuppressor } from './BodyScrollSuppressor'
 import { DialogOverlap } from './DialogOverlap'
 import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
-import { useBodyScrollLock } from './useBodyScrollLock'
 
 export type DialogContentInnerProps = PropsWithChildren<{
   /**
@@ -148,8 +148,6 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
     onClickOverlay && onClickOverlay()
   }, [isOpen, onClickOverlay])
 
-  useBodyScrollLock()
-
   return (
     <DialogPositionProvider top={top} bottom={bottom}>
       <DialogOverlap isOpen={isOpen}>
@@ -167,6 +165,8 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
           >
             <FocusTrap firstFocusTarget={firstFocusTarget}>{children}</FocusTrap>
           </div>
+          {/* Suppresses scrolling of body while modal is displayed */}
+          <BodyScrollSuppressor />
         </div>
       </DialogOverlap>
     </DialogPositionProvider>
