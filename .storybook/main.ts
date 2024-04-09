@@ -25,16 +25,30 @@ const config: StorybookConfig = {
       },
     },
     {
-      name: '@storybook/addon-styling',
+      name: '@storybook/addon-styling-webpack',
       options: {
-        // Check out https://github.com/storybookjs/addon-styling/blob/main/docs/api.md
-        // For more details on this addon's options.
-        postCss: {
-          implementation: require.resolve('postcss'),
-        },
+        rules: [
+          // Replaces existing CSS rules to support PostCSS
+          {
+            test: /\.css$/,
+            use: [
+              'style-loader',
+              {
+                loader: 'css-loader',
+                options: { importLoaders: 1 },
+              },
+              {
+                // Gets options from `postcss.config.js` in your project root
+                loader: 'postcss-loader',
+                options: { implementation: require.resolve('postcss') },
+              },
+            ],
+          },
+        ],
       },
     },
     'storybook-addon-pseudo-states',
+    '@storybook/addon-webpack5-compiler-babel',
   ],
   refs: {
     'smarthr-patterns': {
@@ -46,6 +60,7 @@ const config: StorybookConfig = {
     name: '@storybook/react-webpack5',
     options: {},
   },
+  staticDirs: ['../public'],
   docs: {
     autodocs: true,
   },

@@ -412,17 +412,7 @@ const ActualSingleComboBox = <T,>(
   ])
 
   return (
-    <div
-      {...props}
-      {...wrapperStyleProps}
-      ref={outerRef}
-      role="combobox"
-      aria-haspopup="listbox"
-      aria-controls={listBoxId}
-      aria-expanded={isFocused}
-      aria-invalid={error || undefined}
-      onKeyPress={handleKeyPress}
-    >
+    <div {...props} {...wrapperStyleProps} ref={outerRef}>
       <Input
         {...inputAttributes}
         /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
@@ -459,8 +449,14 @@ const ActualSingleComboBox = <T,>(
         onCompositionStart={onCompositionStart}
         onCompositionEnd={onCompositionEnd}
         onKeyDown={onKeyDownInput}
+        onKeyPress={handleKeyPress}
         ref={inputRef}
         autoComplete="off"
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-controls={listBoxId}
+        aria-expanded={isFocused}
+        aria-invalid={error || undefined}
         aria-activedescendant={activeOption?.id}
         aria-autocomplete="list"
         className={inputStyle}

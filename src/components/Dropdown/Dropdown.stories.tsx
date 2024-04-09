@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import { userEvent, within } from '@storybook/test'
 import * as React from 'react'
 import styled, { css } from 'styled-components'
@@ -20,6 +20,7 @@ import { DropdownMenuButton } from './DropdownMenuButton'
 import { DropdownScrollArea } from './DropdownScrollArea'
 import { DropdownTrigger } from './DropdownTrigger'
 import { FilterDropdown } from './FilterDropdown'
+import { SortDropdown } from './SortDropdown'
 
 export default {
   title: 'Buttons（ボタン）/Dropdown',
@@ -27,6 +28,7 @@ export default {
   subcomponents: {
     DropdownMenuButton,
     FilterDropdown,
+    SortDropdown,
     DropdownTrigger,
     DropdownContent,
     DropdownCloser,
@@ -145,7 +147,7 @@ export const ControllableDropdown = () => {
   )
 }
 
-const Template: Story = () => (
+const Template: StoryFn = () => (
   <Wrapper>
     <Legends>
       <li>

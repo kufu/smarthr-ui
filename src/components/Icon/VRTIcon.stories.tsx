@@ -7,11 +7,11 @@ import { InformationPanel } from '../InformationPanel'
 import * as Icons from './Icon'
 import { All, Color } from './Icon.stories'
 
-const { FaAddressBookIcon } = Icons
+const { FaAddressCardIcon } = Icons
 
 export default {
   title: 'Media（メディア）/Icon',
-  component: FaAddressBookIcon,
+  component: FaAddressCardIcon,
   parameters: {
     withTheming: true,
   },

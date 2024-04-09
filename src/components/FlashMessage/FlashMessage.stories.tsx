@@ -1,4 +1,4 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -21,7 +21,7 @@ export default {
   },
 }
 
-const Template: Story = (arg) => (
+const Template: StoryFn = (arg) => (
   <List>
     {messageTypes.map((messageType) => (
       <li key={messageType}>
@@ -66,7 +66,7 @@ Fade.args = { animation: 'fade' }
 export const None = Template.bind({})
 None.args = { animation: 'none' }
 
-export const Demo: Story = () => {
+export const Demo: StoryFn = () => {
   const [visible, setVisible] = React.useState<boolean>(true)
   const [autoClose, setAutoClose] = React.useState<boolean>(true)
   const [type, setType] = React.useState<Props['type']>('success')
@@ -175,7 +175,7 @@ const ListInner = () => {
   }
   return <Button onClick={handleClick}>Add message</Button>
 }
-export const FlashMessageList: Story = () => (
+export const FlashMessageList: StoryFn = () => (
   <FlashMessageListProvider>
     <ListInner />
   </FlashMessageListProvider>

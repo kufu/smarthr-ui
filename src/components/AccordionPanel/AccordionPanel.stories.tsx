@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions'
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React, { FC, useState } from 'react'
 import styled, { css } from 'styled-components'
 
@@ -89,7 +89,7 @@ const AccordionPanelController: FC = () => {
   )
 }
 
-export const AccordionStyle: Story = () => (
+export const AccordionStyle: StoryFn = () => (
   <Wrapper>
     <AccordionPanelBase>
       <AccordionPanel>
@@ -143,7 +143,7 @@ export const AccordionStyle: Story = () => (
 )
 AccordionStyle.storyName = 'Accordion style'
 
-export const ExpandedOptions: Story = () => (
+export const ExpandedOptions: StoryFn = () => (
   <Wrapper>
     <AccordionPanelBase>
       <AccordionPanel displayIcon={true} expandableMultiply={true}>
@@ -173,7 +173,7 @@ export const ExpandedOptions: Story = () => (
 )
 ExpandedOptions.storyName = 'Expanded options'
 
-export const Callback: Story = () => (
+export const Callback: StoryFn = () => (
   <Wrapper>
     <AccordionPanelBase>
       <AccordionPanel displayIcon={false} expandableMultiply={true} onClick={action('Clicked')}>
@@ -190,7 +190,7 @@ export const Callback: Story = () => (
   </Wrapper>
 )
 
-export const ChangeDefaultExpanded: Story = () => <AccordionPanelController />
+export const ChangeDefaultExpanded: StoryFn = () => <AccordionPanelController />
 ChangeDefaultExpanded.storyName = 'Change defaultExpanded'
 
 const Wrapper = styled.div`

@@ -1,8 +1,8 @@
-import { Story } from '@storybook/react'
+import { StoryFn } from '@storybook/react'
 import React from 'react'
 import styled, { css } from 'styled-components'
 
-import { FaFlagIcon } from '../Icon'
+import { FaAddressCardIcon } from '../Icon'
 
 import { TextLink } from './TextLink'
 
@@ -14,10 +14,10 @@ export default {
   },
 }
 
-export const All: Story = () => (
+export const All: StoryFn = () => (
   <Wrapper>
     <li>
-      <TextLink href="/" prefix={<FaFlagIcon />}>
+      <TextLink href="/" prefix={<FaAddressCardIcon />}>
         ルートへのリンク
       </TextLink>
     </li>
@@ -44,7 +44,7 @@ export const All: Story = () => (
       <TextLink href={undefined}>hrefがundefinedの場合もフォーカスできません</TextLink>
     </li>
     <li>
-      <TextLink href="/?path=/story/textlink--all" prefix={<FaFlagIcon />} target="_blank">
+      <TextLink href="/?path=/story/textlink--all" prefix={<FaAddressCardIcon />} target="_blank">
         健康保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者資格記録訂正届船員保険厚生年金保険被保険者資格記録取消届船員保険被保険者離職事由訂正届基礎年金番号氏名生年月日性別変更（訂正）届
       </TextLink>
     </li>
