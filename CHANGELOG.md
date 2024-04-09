@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [46.0.0](https://github.com/kufu/smarthr-ui/compare/v45.2.0...v46.0.0) (2024-04-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* 使用していないアイコンを消す (#4481)
+
+### Features
+
+* SortDropdown を追加 ([#4301](https://github.com/kufu/smarthr-ui/issues/4301)) ([bbd7f9c](https://github.com/kufu/smarthr-ui/commit/bbd7f9c51ba86e855af22f8b6f73a75bb06ee184))
+* Storybook v8 ([#4516](https://github.com/kufu/smarthr-ui/issues/4516)) ([12f6e5d](https://github.com/kufu/smarthr-ui/commit/12f6e5d8f34fef404424ee4e92fadf0be175f3f0))
+
+
+### Bug Fixes
+
+* BodyScrollSuppressor を styled-components に依存しない形で実装 ([#4492](https://github.com/kufu/smarthr-ui/issues/4492)) ([11fc83e](https://github.com/kufu/smarthr-ui/commit/11fc83edb2ed491e3e52be10f13964f509cb1f77))
+* lint エラーを修正 ([#4549](https://github.com/kufu/smarthr-ui/issues/4549)) ([c251602](https://github.com/kufu/smarthr-ui/commit/c251602b6ebe292967b9dd846ba248843f312f06))
+* RemoteTriggerFormDialogのonPressEscapeにclose引数が渡されずとじることができないバグを修正する ([#4533](https://github.com/kufu/smarthr-ui/issues/4533)) ([0e8d0d9](https://github.com/kufu/smarthr-ui/commit/0e8d0d993a67e4df22de77b190359495f64a1fec))
+* SingleComboBox の input 要素に対して combobox ロールを付与する ([#4494](https://github.com/kufu/smarthr-ui/issues/4494)) ([001ed08](https://github.com/kufu/smarthr-ui/commit/001ed086f8b25ad5100e66d55463005e8a10d9d9))
+* specificity to overwrite background-color style ([#4548](https://github.com/kufu/smarthr-ui/issues/4548)) ([61ffedf](https://github.com/kufu/smarthr-ui/commit/61ffedf209c0c17402d2028a42c400c83d617287))
+* typo ([fa389a1](https://github.com/kufu/smarthr-ui/commit/fa389a15bce04785232449057921d4710016e041))
+* 検証環境のStorybookのページからGAの流入を除外する ([#4434](https://github.com/kufu/smarthr-ui/issues/4434)) ([a24c84a](https://github.com/kufu/smarthr-ui/commit/a24c84a83c4d2d3371d0af24e31fe4ae0dab0960))
+
+
+* 使用していないアイコンを消す ([#4481](https://github.com/kufu/smarthr-ui/issues/4481)) ([bc2951c](https://github.com/kufu/smarthr-ui/commit/bc2951c626e35f2bff3ebd0a99dad99d3e31ad68))
+
 ## [45.2.0](https://github.com/kufu/smarthr-ui/compare/v45.1.0...v45.2.0) (2024-04-02)
 
 
