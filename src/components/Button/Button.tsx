@@ -1,10 +1,13 @@
 import React, { ButtonHTMLAttributes, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { usePortal } from '../../hooks/usePortal'
+import { DecoratorsType } from '../../types'
 import { FaInfoCircleIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { Loader } from '../Loader'
 import { Tooltip } from '../Tooltip'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ButtonInner } from './ButtonInner'
 import { ButtonWrapper } from './ButtonWrapper'
@@ -40,7 +43,13 @@ const buttonStyle = tv({
   },
 })
 
-export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
+export type Props = {
+  decorators?: DecoratorsType<'loading'>
+}
+
+const LOADING_TEXT = '処理中'
+
+export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & Props>(
   (
     {
       type = 'button',
@@ -55,6 +64,7 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
       className,
       children,
       loading = false,
+      decorators,
       ...props
     },
     ref,
@@ -65,12 +75,18 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
       () => loaderSlot({ isSecondary: variant === 'secondary' }),
       [loaderSlot, variant],
     )
+    const { createPortal } = usePortal()
 
-    const loader = <Loader size="s" className={loaderStyle} />
+    const loader = <Loader size="s" className={loaderStyle} role="presentation" />
     const actualPrefix = !loading && prefix
     const actualSuffix = loading && !square ? loader : suffix
     const disabledOnLoading = loading || disabled
     const actualChildren = loading && square ? loader : children
+
+    const statusText = useMemo(() => {
+      const loadingText = decorators?.loading?.(LOADING_TEXT) ?? LOADING_TEXT
+      return loading ? loadingText : ''
+    }, [decorators, loading])
 
     const button = (
       <ButtonWrapper
@@ -85,6 +101,10 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps>(
         disabled={disabledOnLoading}
         $loading={loading}
       >
+        {
+          // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
+          createPortal(<VisuallyHiddenText role="status">{statusText}</VisuallyHiddenText>)
+        }
         <ButtonInner prefix={actualPrefix} suffix={actualSuffix} size={size}>
           {actualChildren}
         </ButtonInner>
