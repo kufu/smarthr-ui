@@ -16,6 +16,7 @@ import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTailwindTheme'
 import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { ListBoxItemButton } from './ListBoxItemButton'
 import { ComboBoxItem, ComboBoxOption } from './types'
@@ -33,7 +34,7 @@ type Props<T> = {
   isExpanded: boolean
   isLoading?: boolean
   triggerRef: RefObject<HTMLElement>
-  decorators?: DecoratorsType<'noResultText'>
+  decorators?: DecoratorsType<'noResultText' | 'loadingText'>
 }
 
 type Rect = {
@@ -44,6 +45,7 @@ type Rect = {
 }
 
 const NO_RESULT_TEXT = '一致する選択肢がありません'
+const LOADING_TEXT = '処理中'
 
 const listbox = tv({
   slots: {
@@ -269,48 +271,57 @@ export const useListBox = <T,>({
     wrapper,
   ])
 
+  const statusText = useMemo(() => {
+    const loadingText = decorators?.loadingText?.(LOADING_TEXT) ?? LOADING_TEXT
+    return isExpanded && isLoading ? loadingText : ''
+  }, [decorators, isExpanded, isLoading])
+
   const renderListBox = useCallback(
     () =>
       createPortal(
-        <div {...wrapperStyleProps}>
-          <div
-            {...dropdownListStyleProps}
-            id={listBoxId}
-            ref={listBoxRef}
-            role="listbox"
-            aria-hidden={!isExpanded}
-          >
-            {dropdownHelpMessage && (
-              <p className={helpMessageStyle}>
-                <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
-              </p>
-            )}
-            {!isExpanded ? null : isLoading ? (
-              <div className={loaderWrapperStyle}>
-                <Loader />
-              </div>
-            ) : options.length === 0 ? (
-              <p role="alert" aria-live="polite" className={noItemsStyle}>
-                {decorators?.noResultText
-                  ? decorators.noResultText(NO_RESULT_TEXT)
-                  : NO_RESULT_TEXT}
-              </p>
-            ) : (
-              partialOptions.map((option) => (
-                <ListBoxItemButton
-                  key={option.id}
-                  option={option}
-                  isActive={option.id === activeOption?.id}
-                  onAdd={handleAdd}
-                  onSelect={handleSelect}
-                  onMouseOver={handleHoverOption}
-                  activeRef={activeRef}
-                />
-              ))
-            )}
-            {renderIntersection()}
+        <>
+          <VisuallyHiddenText role="status">{statusText}</VisuallyHiddenText>
+
+          <div {...wrapperStyleProps}>
+            <div
+              {...dropdownListStyleProps}
+              id={listBoxId}
+              ref={listBoxRef}
+              role="listbox"
+              aria-hidden={!isExpanded}
+            >
+              {dropdownHelpMessage && (
+                <p className={helpMessageStyle}>
+                  <FaInfoCircleIcon color="TEXT_GREY" text={dropdownHelpMessage} iconGap={0.25} />
+                </p>
+              )}
+              {!isExpanded ? null : isLoading ? (
+                <div className={loaderWrapperStyle}>
+                  <Loader aria-hidden />
+                </div>
+              ) : options.length === 0 ? (
+                <p role="alert" aria-live="polite" className={noItemsStyle}>
+                  {decorators?.noResultText
+                    ? decorators.noResultText(NO_RESULT_TEXT)
+                    : NO_RESULT_TEXT}
+                </p>
+              ) : (
+                partialOptions.map((option) => (
+                  <ListBoxItemButton
+                    key={option.id}
+                    option={option}
+                    isActive={option.id === activeOption?.id}
+                    onAdd={handleAdd}
+                    onSelect={handleSelect}
+                    onMouseOver={handleHoverOption}
+                    activeRef={activeRef}
+                  />
+                ))
+              )}
+              {renderIntersection()}
+            </div>
           </div>
-        </div>,
+        </>,
       ),
     [
       createPortal,
@@ -328,6 +339,7 @@ export const useListBox = <T,>({
       partialOptions,
       renderIntersection,
       activeOption?.id,
+      statusText,
       handleAdd,
       handleSelect,
       handleHoverOption,
