@@ -93,30 +93,6 @@ export const WithoutChildren: StoryFn = () => (
 )
 WithoutChildren.storyName = 'without children'
 
-export const UnclickableCurrent: StoryFn = () => {
-  const items = buttons.map(({ current, ...button }) => button)
-
-  return (
-    <Wrapper>
-      {items.map((_, currentIndex) => (
-        <InnerWrapper key={currentIndex}>
-          <AppNavi
-            label="機能名"
-            buttons={items.map((item, index) => {
-              if (index === currentIndex) {
-                return { ...item, current: true }
-              }
-              return item
-            })}
-            displayDropdownCaret
-          />
-        </InnerWrapper>
-      ))}
-    </Wrapper>
-  )
-}
-UnclickableCurrent.storyName = 'unclickable current'
-
 export const NoIconAndCaret: StoryFn = () => (
   <Wrapper>
     <AppNavi label="機能名" buttons={buttons} />
@@ -148,9 +124,6 @@ const OverflowWrapper = styled(Wrapper)`
 `
 const Child = styled.p`
   margin: 0 0 0 auto;
-`
-const InnerWrapper = styled.div`
-  margin-bottom: 40px;
 `
 
 const ListWrapper = styled.ul(

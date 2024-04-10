@@ -27,7 +27,6 @@ export const AppNaviAnchor: FC<AppNaviAnchorProps> = ({
   icon: Icon,
   current = false,
 }) => {
-  const clickable = !current
   const { wrapperStyle, iconStyle } = useMemo(() => {
     const { wrapper, icon } = appNaviAnchor({ active: current })
     return {
@@ -37,11 +36,7 @@ export const AppNaviAnchor: FC<AppNaviAnchorProps> = ({
   }, [current])
 
   return (
-    <a
-      aria-current={current ? 'page' : undefined}
-      href={clickable ? href : undefined}
-      className={wrapperStyle}
-    >
+    <a aria-current={current ? 'page' : undefined} href={href} className={wrapperStyle}>
       {Icon && <Icon className={iconStyle} />}
       {children}
     </a>
