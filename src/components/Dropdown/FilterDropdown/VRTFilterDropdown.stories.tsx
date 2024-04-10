@@ -75,7 +75,7 @@ export const VRTFilterDropdownForcedColors: Story = {
 }
 
 const Wrapper = styled.div`
-  width: 100vw;
+  height: 100vh;
   box-sizing: border-box;
   padding: 24px;
   color: ${({ theme }) => theme.color.TEXT_BLACK};
