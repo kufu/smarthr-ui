@@ -108,6 +108,7 @@ VRTBottomExpanded.play = async ({ canvasElement }: { canvasElement: HTMLElement 
 }
 
 const WrapperList = styled.ul`
+  height: 100vh;
   padding: 0 24px;
   list-style: none;
   & > li {
