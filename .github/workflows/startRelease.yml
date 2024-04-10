@@ -42,10 +42,10 @@ jobs:
       - run: pnpm install
       - name: release dry run
         if: ${{ env.IS_PRERELEASE == 'false' }}
-        run: pnpm release:dryrun > ${{ env.RESULT_PATH }}
+        run: pnpm ui release:dryrun > ${{ env.RESULT_PATH }}
       - name: prerelease dry run
         if: ${{ env.IS_PRERELEASE == 'true' }}
-        run: pnpm release:dryrun --prerelease > ${{ env.RESULT_PATH }}
+        run: pnpm ui release:dryrun --prerelease > ${{ env.RESULT_PATH }}
       - name: wrap dry run log
         run: |
           echo "Dry Run Log:
