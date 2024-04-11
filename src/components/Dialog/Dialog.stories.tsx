@@ -13,7 +13,7 @@ import { Cluster, Stack } from '../Layout'
 import { Fieldset } from '../NewFieldset'
 import { RadioButton } from '../RadioButton'
 import { Section } from '../SectioningContent'
-import { Body, Cell, Head, Row, Table } from '../Table'
+import { Table, Td, Th } from '../Table'
 
 import {
   ActionDialog,
@@ -846,28 +846,28 @@ export const Modeless_Dialog: StoryFn = () => {
                 <DatePicker name="modeless_dialog_center_datepicker" title="test" />
               </ModelessContentPart>
               <Table>
-                <Head>
-                  <Row>
-                    <Cell>
+                <thead>
+                  <tr>
+                    <Th>
                       <CheckBox name="modeless_dialog_center_checkbox" />
-                    </Cell>
-                    <Cell>テーブル見出し1</Cell>
-                    <Cell>テーブル見出し2</Cell>
-                    <Cell>テーブル見出し3</Cell>
-                  </Row>
-                </Head>
-                <Body>
+                    </Th>
+                    <Th>テーブル見出し1</Th>
+                    <Th>テーブル見出し2</Th>
+                    <Th>テーブル見出し3</Th>
+                  </tr>
+                </thead>
+                <tbody>
                   {Array.from(Array(20).keys()).map((i) => (
-                    <Row key={i}>
-                      <Cell>
+                    <tr key={i}>
+                      <Td>
                         <CheckBox name={`modeless_dialog_center_checkbox_${i}`} />
-                      </Cell>
-                      <Cell>データ1-{i}</Cell>
-                      <Cell>データ2-{i}</Cell>
-                      <Cell>データ3-{i}</Cell>
-                    </Row>
+                      </Td>
+                      <Td>データ1-{i}</Td>
+                      <Td>データ2-{i}</Td>
+                      <Td>データ3-{i}</Td>
+                    </tr>
                   ))}
-                </Body>
+                </tbody>
               </Table>
             </Stack>
           </ModelessContent>
