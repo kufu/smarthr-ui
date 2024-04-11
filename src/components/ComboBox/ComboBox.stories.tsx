@@ -456,6 +456,7 @@ export const Multi: StoryFn = () => {
           dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
+          data-test="multi-combobox-undeletable"
         />
       </FormControl>
       <FormControl title="テキストボックスの挙動を制御">
