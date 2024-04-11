@@ -4,7 +4,6 @@ import React, { ComponentProps, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Button } from '../Button'
-import { CheckBox } from '../CheckBox'
 import { DatePicker } from '../DatePicker'
 import { FormControl } from '../FormControl'
 import { Heading } from '../Heading'
@@ -13,7 +12,7 @@ import { Cluster, Stack } from '../Layout'
 import { Fieldset } from '../NewFieldset'
 import { RadioButton } from '../RadioButton'
 import { Section } from '../SectioningContent'
-import { Table, Td, Th } from '../Table'
+import { Table, Td, TdCheckbox, Th, ThCheckbox } from '../Table'
 
 import {
   ActionDialog,
@@ -848,9 +847,7 @@ export const Modeless_Dialog: StoryFn = () => {
               <Table>
                 <thead>
                   <tr>
-                    <Th>
-                      <CheckBox name="modeless_dialog_center_checkbox" />
-                    </Th>
+                    <ThCheckbox name="modeless_dialog_center_checkbox" />
                     <Th>テーブル見出し1</Th>
                     <Th>テーブル見出し2</Th>
                     <Th>テーブル見出し3</Th>
@@ -859,10 +856,11 @@ export const Modeless_Dialog: StoryFn = () => {
                 <tbody>
                   {Array.from(Array(20).keys()).map((i) => (
                     <tr key={i}>
-                      <Td>
-                        <CheckBox name={`modeless_dialog_center_checkbox_${i}`} />
-                      </Td>
-                      <Td>データ1-{i}</Td>
+                      <TdCheckbox
+                        name={`modeless_dialog_center_checkbox_${i}`}
+                        aria-labelledby={`name-${i}`}
+                      />
+                      <Td id={`name=${i}`}>データ1-{i}</Td>
                       <Td>データ2-{i}</Td>
                       <Td>データ3-{i}</Td>
                     </tr>
