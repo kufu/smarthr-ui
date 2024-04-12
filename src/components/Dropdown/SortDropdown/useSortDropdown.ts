@@ -14,7 +14,7 @@ import { sortDropdownStyle } from './style'
 
 type Props = Omit<ComponentProps<typeof SortDropdown>, 'onCancel'>
 
-const SORT_FIELD_LABEL = '並び替え項目'
+const SORT_FIELD_LABEL = '並べ替え項目'
 const SORT_ORDER_LABEL = '並び順'
 const ASC_LABEL = '昇順'
 const DESC_LABEL = '降順'
