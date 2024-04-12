@@ -4,7 +4,6 @@ import React, { ComponentProps, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Button } from '../Button'
-import { CheckBox } from '../CheckBox'
 import { DatePicker } from '../DatePicker'
 import { FormControl } from '../FormControl'
 import { Heading } from '../Heading'
@@ -13,7 +12,7 @@ import { Cluster, Stack } from '../Layout'
 import { Fieldset } from '../NewFieldset'
 import { RadioButton } from '../RadioButton'
 import { Section } from '../SectioningContent'
-import { Body, Cell, Head, Row, Table } from '../Table'
+import { Table, Td, TdCheckbox, Th, ThCheckbox } from '../Table'
 
 import {
   ActionDialog,
@@ -846,28 +845,27 @@ export const Modeless_Dialog: StoryFn = () => {
                 <DatePicker name="modeless_dialog_center_datepicker" title="test" />
               </ModelessContentPart>
               <Table>
-                <Head>
-                  <Row>
-                    <Cell>
-                      <CheckBox name="modeless_dialog_center_checkbox" />
-                    </Cell>
-                    <Cell>テーブル見出し1</Cell>
-                    <Cell>テーブル見出し2</Cell>
-                    <Cell>テーブル見出し3</Cell>
-                  </Row>
-                </Head>
-                <Body>
+                <thead>
+                  <tr>
+                    <ThCheckbox name="modeless_dialog_center_checkbox" />
+                    <Th>テーブル見出し1</Th>
+                    <Th>テーブル見出し2</Th>
+                    <Th>テーブル見出し3</Th>
+                  </tr>
+                </thead>
+                <tbody>
                   {Array.from(Array(20).keys()).map((i) => (
-                    <Row key={i}>
-                      <Cell>
-                        <CheckBox name={`modeless_dialog_center_checkbox_${i}`} />
-                      </Cell>
-                      <Cell>データ1-{i}</Cell>
-                      <Cell>データ2-{i}</Cell>
-                      <Cell>データ3-{i}</Cell>
-                    </Row>
+                    <tr key={i}>
+                      <TdCheckbox
+                        name={`modeless_dialog_center_checkbox_${i}`}
+                        aria-labelledby={`name-${i}`}
+                      />
+                      <Td id={`name=${i}`}>データ1-{i}</Td>
+                      <Td>データ2-{i}</Td>
+                      <Td>データ3-{i}</Td>
+                    </tr>
                   ))}
-                </Body>
+                </tbody>
               </Table>
             </Stack>
           </ModelessContent>
