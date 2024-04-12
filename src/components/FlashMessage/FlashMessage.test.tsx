@@ -37,7 +37,7 @@ describe('FlashMessage', () => {
         <FlashMessage type="success" text="flash!!" onClose={spy} visible={true} />,
       )
     })
-    document.querySelector<HTMLButtonElement>('button.close')!.click()
+    document.querySelector<HTMLButtonElement>('button.smarthr-ui-FlashMessage-button')!.click()
 
     expect(spy).toHaveBeenCalled()
   })
