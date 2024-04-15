@@ -124,6 +124,7 @@ export const Loader: FC<Props & ElementProps> = ({
   alt = '処理中',
   text,
   type = 'primary',
+  role = 'status',
   className,
   ...props
 }) => {
@@ -137,7 +138,7 @@ export const Loader: FC<Props & ElementProps> = ({
   const textStyle = useMemo(() => textSlot(), [textSlot])
 
   return (
-    <span {...props} className={wrapperStyle} role="status">
+    <span {...props} className={wrapperStyle} role={role}>
       <span className={spinnerStyle}>
         {[...Array(4)].map((_, index) => (
           <span className={line({ lineNum: (index + 1) as 1 | 2 | 3 | 4 })} key={index}>
