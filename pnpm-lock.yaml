@@ -16,8 +16,8 @@ dependencies:
     specifier: ^1.2.0
     version: 1.2.0
   css-loader:
-    specifier: ^7.1.0
-    version: 7.1.0(webpack@5.91.0)
+    specifier: ^7.1.1
+    version: 7.1.1(webpack@5.91.0)
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
@@ -7158,8 +7158,8 @@ packages:
       webpack: 5.91.0(@swc/core@1.4.13)(esbuild@0.18.16)
     dev: true
 
-  /css-loader@7.1.0(webpack@5.91.0):
-    resolution: {integrity: sha512-VFNj47MAG84MqYDdh9puJG0h98Xs7gEYaX0aeGkfjYqBLB0seOE325sVbqWwaNu3hMZwEP4bB+F4gvF+A63qMA==}
+  /css-loader@7.1.1(webpack@5.91.0):
+    resolution: {integrity: sha512-OxIR5P2mjO1PSXk44bWuQ8XtMK4dpEqpIyERCx3ewOo3I8EmbcxMPUc5ScLtQfgXtOojoMv57So4V/C02HQLsw==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       '@rspack/core': 0.x || 1.x
