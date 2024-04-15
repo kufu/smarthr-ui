@@ -10,6 +10,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
@@ -200,6 +201,7 @@ const ActualMultiComboBox = <T,>(
   const { textColor } = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
+  const [highlighted, setHighlighted] = useState(false)
   const isInputControlled = useMemo(
     () => controlledInputValue !== undefined,
     [controlledInputValue],
@@ -214,6 +216,14 @@ const ActualMultiComboBox = <T,>(
     inputValue,
     isItemSelected,
   })
+  const setInputValueIfUncontrolled = useCallback(
+    (value: string) => {
+      if (!isInputControlled) {
+        setUncontrolledInputValue(value)
+      }
+    },
+    [isInputControlled],
+  )
   const handleDelete = useCallback(
     (item: ComboBoxItem<T>) => {
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
@@ -299,14 +309,20 @@ const ActualMultiComboBox = <T,>(
   useOuterClick([outerRef, listBoxRef], blur)
 
   useEffect(() => {
-    if (!isInputControlled) {
-      setUncontrolledInputValue('')
+    if (highlighted) {
+      setHighlighted(false)
+      inputRef.current?.select()
+    } else {
+      setInputValueIfUncontrolled('')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedItems, inputRef, setInputValueIfUncontrolled]) // highlighted 変更時には発火してほしくないため
 
+  useEffect(() => {
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     }
-  }, [inputRef, isFocused, isInputControlled, selectedItems])
+  }, [inputRef, isFocused, setInputValueIfUncontrolled, selectedItems])
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
@@ -327,6 +343,18 @@ const ActualMultiComboBox = <T,>(
       } else if (e.key === 'Right' || e.key === 'ArrowRight') {
         e.stopPropagation()
         focusNextDeletionButton()
+      } else if (
+        e.key === 'Backspace' &&
+        !inputValue &&
+        selectedItems.length > 0 &&
+        selectedItems[selectedItems.length - 1].deletable !== false
+      ) {
+        e.preventDefault()
+        e.stopPropagation()
+        const lastItem = selectedItems[selectedItems.length - 1]
+        handleDelete(lastItem)
+        setHighlighted(true)
+        setInputValueIfUncontrolled(innerText(lastItem.label))
       } else {
         e.stopPropagation()
         inputRef.current?.focus()
@@ -365,11 +393,9 @@ const ActualMultiComboBox = <T,>(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (onChange) onChange(e)
       if (onChangeInput) onChangeInput(e)
-      if (!isInputControlled) {
-        setUncontrolledInputValue(e.currentTarget.value)
-      }
+      setInputValueIfUncontrolled(e.currentTarget.value)
     },
-    [isInputControlled, onChangeInput, onChange],
+    [onChange, onChangeInput, setInputValueIfUncontrolled],
   )
   const handleFocusInput = useCallback(() => {
     resetDeletionButtonFocus()

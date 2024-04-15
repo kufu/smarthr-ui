@@ -54,10 +54,6 @@ export { SmartHRLogo } from './components/SmartHRLogo'
 export {
   Table,
   TableReel,
-  Head,
-  Row,
-  Cell,
-  Body,
   Th,
   Td,
   ThCheckbox,
