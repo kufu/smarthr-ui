@@ -134,6 +134,7 @@ import {
   FaSortUp,
   FaSquarePlus,
   FaSquarePollVertical,
+  FaStar,
   FaSuitcaseMedical,
   FaTable,
   FaTableList,
@@ -296,6 +297,7 @@ export const FaSortIcon = /*#__PURE__*/ createIcon(FaSort)
 export const FaSortUpIcon = /*#__PURE__*/ createIcon(FaSortUp)
 export const FaSquarePlusIcon = /*#__PURE__*/ createIcon(FaSquarePlus)
 export const FaSquarePollVerticalIcon = /*#__PURE__*/ createIcon(FaSquarePollVertical)
+export const FaStarIcon = /*#__PURE__*/ createIcon(FaStar)
 export const FaSuitcaseMedicalIcon = /*#__PURE__*/ createIcon(FaSuitcaseMedical)
 export const FaTableIcon = /*#__PURE__*/ createIcon(FaTable)
 export const FaTableListIcon = /*#__PURE__*/ createIcon(FaTableList)
