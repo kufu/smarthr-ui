@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [47.0.0](https://github.com/kufu/smarthr-ui/compare/v46.0.1...v47.0.0) (2024-04-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* 非推奨のテーブル関係のコンポーネントを削除 (#4569)
+
+### Features
+
+* MultiComboBox で Backspace によるアイテムの削除をできるようにする ([#4347](https://github.com/kufu/smarthr-ui/issues/4347)) ([2b96de3](https://github.com/kufu/smarthr-ui/commit/2b96de3f82f0026bb7c511e03bda87cdb8ef70dd))
+* 非推奨のテーブル関係のコンポーネントを削除 ([#4569](https://github.com/kufu/smarthr-ui/issues/4569)) ([a250ed1](https://github.com/kufu/smarthr-ui/commit/a250ed19d6cf5843cba13dc445d29af8f2fa50f4))
+
+
+### Bug Fixes
+
+* Add forced-colors support for Calendar ([#4563](https://github.com/kufu/smarthr-ui/issues/4563)) ([3af4b49](https://github.com/kufu/smarthr-ui/commit/3af4b49fbb3db0a3a42f5147b3748e0c27928d0e))
+* Buttonのロード時のlive regionを読み上げるよう修正 ([#4558](https://github.com/kufu/smarthr-ui/issues/4558)) ([0573dc4](https://github.com/kufu/smarthr-ui/commit/0573dc42dcc3a46e7d577f60bbc87510182b5da4))
+* Combobox内のlistboxのlive regionが読み上げるよう修正 ([#4562](https://github.com/kufu/smarthr-ui/issues/4562)) ([5831686](https://github.com/kufu/smarthr-ui/commit/58316860ba8061f72562dd7b6ff53e9ec01318bc))
+* current が true でもクリックできるように戻した ([#4564](https://github.com/kufu/smarthr-ui/issues/4564)) ([ea19edc](https://github.com/kufu/smarthr-ui/commit/ea19edcb7df552e210cd71586d9eccdfe27b47d4))
+* SortDropdown のラベルを修正 ([#4571](https://github.com/kufu/smarthr-ui/issues/4571)) ([cfef17a](https://github.com/kufu/smarthr-ui/commit/cfef17a5bade00552429ad5413df13d21971b88e))
+* VRT にてスクリーンショットに要素が収まりきっていないストーリーを修正 ([#4565](https://github.com/kufu/smarthr-ui/issues/4565)) ([87edafd](https://github.com/kufu/smarthr-ui/commit/87edafd245c0c2af8569ae7673c863a5dcecbd2f))
+
 ### [46.0.1](https://github.com/kufu/smarthr-ui/compare/v46.0.0...v46.0.1) (2024-04-09)
 
 ## [46.0.0](https://github.com/kufu/smarthr-ui/compare/v45.2.0...v46.0.0) (2024-04-09)
