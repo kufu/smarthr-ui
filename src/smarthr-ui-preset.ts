@@ -42,6 +42,10 @@ export default {
       'warning-yellow-darken': theme('colors.warning-yellow-darken'),
       overlay: defaultColor.OVERLAY,
       scrim: defaultColor.SCRIM,
+      grey: {
+        9: theme('colors.grey.9'),
+        '9-darken': darkenColor(theme('colors.grey.9')),
+      },
       inherit: 'inherit',
       transparent: 'transparent',
     }),
@@ -152,6 +156,7 @@ export default {
     zIndex: {
       auto: 'auto',
       0: '0',
+      1: '1',
       'fixed-menu': `${defaultZIndex.FIXED_MENU}`,
       'overlap-base': `${defaultZIndex.OVERLAP_BASE}`,
       overlap: `${defaultZIndex.OVERLAP}`,

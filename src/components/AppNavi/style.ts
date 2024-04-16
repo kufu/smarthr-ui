@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 export const appNaviItemStyle = tv({
   slots: {
     wrapper: [
-      'shr-box-border shr-flex shr-items-center shr-gap-0.5 shr-whitespace-nowrap shr-px-0.5 shr-py-0.75 shr-text-base shr-font-bold shr-leading-none shr-no-underline',
+      'shr-box-border shr-flex shr-cursor-pointer shr-items-center shr-gap-0.5 shr-whitespace-nowrap shr-px-0.5 shr-py-0.75 shr-text-base shr-font-bold shr-leading-none shr-no-underline',
     ],
     icon: '',
   },
@@ -18,7 +18,7 @@ export const appNaviItemStyle = tv({
         icon: 'shr-fill-black',
       },
       false: {
-        wrapper: ['shr-cursor-pointer [&]:shr-text-grey', 'hover:shr-bg-white-darken'],
+        wrapper: ['[&]:shr-text-grey', 'hover:shr-bg-white-darken'],
         icon: 'shr-fill-grey',
       },
     },
