@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [47.1.0](https://github.com/kufu/smarthr-ui/compare/v47.0.0...v47.1.0) (2024-04-16)
+
+
+### Features
+
+* Icon に FaStar を 追加 ([#4580](https://github.com/kufu/smarthr-ui/issues/4580)) ([376e2b0](https://github.com/kufu/smarthr-ui/commit/376e2b0003ce14d2363852c2f103bf3356af7248))
+
 ## [47.0.0](https://github.com/kufu/smarthr-ui/compare/v46.0.1...v47.0.0) (2024-04-16)
 
 
