@@ -133,7 +133,7 @@ export const Demo: StoryFn = () => {
       <hr />
       <fieldset>
         <legend>animation</legend>
-        {['bounde', 'none'].map((animationType) => (
+        {['bounce', 'none'].map((animationType) => (
           <label key={animationType}>
             <input
               name="animationType"
