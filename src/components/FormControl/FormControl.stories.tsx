@@ -57,6 +57,16 @@ export const All: StoryFn = () => (
     </Stack>
     <Stack>
       <Text italic color="TEXT_GREY" as="dt">
+        項目名非表示
+      </Text>
+      <dd>
+        <FormControl title="氏名" dangerouslyTitleHidden>
+          <Input name="fullname" value="草野栄一郎" readOnly />
+        </FormControl>
+      </dd>
+    </Stack>
+    <Stack>
+      <Text italic color="TEXT_GREY" as="dt">
         各種コントロールが紐づくこと
       </Text>
       <dd>
