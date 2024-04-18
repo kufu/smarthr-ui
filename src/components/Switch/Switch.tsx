@@ -1,20 +1,54 @@
-import React, { InputHTMLAttributes, forwardRef } from 'react'
+import React, { InputHTMLAttributes, forwardRef, useMemo } from 'react'
 import styled, { css } from 'styled-components'
+import { tv } from 'tailwind-variants'
 
 import { Theme, useTheme } from '../../hooks/useTheme'
 import { FaCheckIcon } from '../Icon'
+
+const switchStyles = tv({
+  slots: {
+    wrapper: [
+      'shr-border-shorthand shr-relative shr-inline-flex shr-items-center shr-bg-white',
+      /* 理想的には padding: 2px; だが、box-shadow を outline で使用しているため、border と padding で2pxの疑似余白を作っている。 */
+      'shr-p-px',
+      'has-[:focus-visible]-shr-shadow-focusIndicatorStyles',
+      'before:shr-bg-[theme(colors.grey.30) before:shr-border-[theme(colors.grey.30) shr-transition-[transform,scale] shr-duration-150 shr-ease-out before:shr-border-shorthand before:shr-box-border before:shr-inline-block before:shr-size-[theme(fontSize.base)] before:shr-scale-[2/3] before:shr-rounded-full before:shr-content-[""]',
+      'after:shr-bg-[theme(colors.grey.30) after:shr-border-[theme(colors.grey.30) shr-transition-[transform,scale] shr-duration-150 shr-ease-out after:shr-border-shorthand after:shr-box-border after:shr-inline-block after:shr-size-[theme(fontSize.base)] after:shr-rounded-full after:shr-content-[""]',
+      /* ツマミが移動する余白のために存在している */
+      'after:shr-hidden',
+      'has-[:checked]-shr-bg-main has-[:checked]-shr-border-main',
+      'before:has-[:checked]-scale-unset before:has-[:checked]-shr-transform-[translateX(theme(fontSize.base))] before:has-[:checked]-shr-bg-white before:has-[:checked]-shr-border-[theme(colors.border)]',
+    ],
+    checkboxInput: [],
+    checkIcon: [],
+  },
+  variants: {
+    disabled: {
+      wrapper: [],
+    },
+  },
+})
 
 type Props = InputHTMLAttributes<HTMLInputElement>
 
 export const Switch = forwardRef<HTMLInputElement, Props>(
   ({ disabled, className, ...props }, ref) => {
     const theme = useTheme()
+    const { wrapperStyle, checkboxInputStyle, checkIconStyle } = useMemo(() => {
+      const { wrapper, checkboxInput, checkIcon } = switchStyles()
+      return {
+        wrapperStyle: wrapper({ className }),
+        checkboxInputStyle: checkboxInput,
+        checkIconStyle: checkIcon,
+      }
+    }, [className])
+
     return (
-      <Wrapper $disabled={disabled} themes={theme} className={className}>
+      <span className={wrapperStyle}>
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <CheckboxInput {...props} disabled={disabled} type="checkbox" role="switch" ref={ref} />
         <CheckIcon $themes={theme} />
-      </Wrapper>
+      </span>
     )
   },
 )
@@ -24,11 +58,11 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
     position: relative;
     display: inline-flex;
     align-items: center;
+    /* TODO: どうかく？ */
     border-radius: calc(${fontSize.M} * 1.25);
     border: ${border.shorthand};
     background-color: ${color.WHITE};
 
-    /* 理想的には padding: 2px; だが、box-shadow を outline で使用しているため、border と padding で2pxの疑似余白を作っている。 */
     padding: 1px;
 
     /* :focus-visible-within の代替 */
@@ -38,26 +72,26 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
 
     ::before,
     ::after {
-      content: '';
-      box-sizing: border-box;
-      display: inline-block;
-      border-radius: ${radius.full};
-      border: ${border.shorthand};
-      border-color: ${color.GREY_30};
-      background-color: ${color.GREY_30};
-      block-size: ${fontSize.M};
-      inline-size: ${fontSize.M};
-      transition-property: transform, scale;
-      transition-duration: 150ms;
-      transition-timing-function: ease-out;
+      /* content: ''; */
+      /* box-sizing: border-box; */
+      /* display: inline-block; */
+      /* border-radius: ${radius.full}; */
+      /* border: ${border.shorthand}; */
+      /* border-color: ${color.GREY_30}; */
+      /* background-color: ${color.GREY_30}; */
+      /* block-size: ${fontSize.M}; */
+      /* inline-size: ${fontSize.M}; */
+      /* transition-property: transform, scale; */
+      /* transition-duration: 150ms; */
+      /* transition-timing-function: ease-out; */
     }
 
-    ::before {
+    /* ::before {
       scale: ${2 / 3};
-    }
+    } */
 
     /* ツマミが移動する余白のために存在している */
-    ::after {
+    /* ::after {
       visibility: hidden;
     }
 
@@ -71,7 +105,7 @@ const Wrapper = styled.span<{ $disabled: Props['disabled']; themes: Theme }>`
         border-color: ${color.BORDER};
         background-color: ${color.WHITE};
       }
-    }
+    } */
 
     ${$disabled &&
     css`
