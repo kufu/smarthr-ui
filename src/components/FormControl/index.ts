@@ -1,1 +1,1 @@
-export { ActualFormControl, FormControl } from './FormControl'
+export { FormControl } from './FormControl'
