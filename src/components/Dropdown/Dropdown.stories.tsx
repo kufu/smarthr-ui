@@ -6,10 +6,10 @@ import styled, { css } from 'styled-components'
 
 import { Button } from '../Button'
 import { Dialog } from '../Dialog'
+import { Fieldset } from '../Fieldset'
 import { FaCaretDownIcon } from '../Icon'
 import { Input } from '../Input'
 import { Cluster, Stack } from '../Layout'
-import { Fieldset } from '../NewFieldset'
 import { RadioButton } from '../RadioButton'
 import { Text } from '../Text'
 

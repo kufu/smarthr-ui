@@ -12,7 +12,6 @@ export {
   DropdownMenuButton,
   SortDropdown,
 } from './components/Dropdown'
-export { FieldSet } from './components/FieldSet'
 export {
   FlashMessage,
   FlashMessageListProvider,
@@ -86,9 +85,8 @@ export { ErrorScreen, MessageScreen } from './components/ErrorScreen'
 export { Calendar } from './components/Calendar'
 export { DatePicker } from './components/DatePicker'
 export { SegmentedControl, SegmentedControlOption } from './components/SegmentedControl'
-export { FormGroup } from './components/FormGroup'
 export { FormControl } from './components/FormControl'
-export { Fieldset } from './components/NewFieldset'
+export { Fieldset } from './components/Fieldset'
 export { MultiComboBox, SingleComboBox } from './components/ComboBox'
 export { SideNav } from './components/SideNav'
 export { CompactInformationPanel } from './components/CompactInformationPanel'
