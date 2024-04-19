@@ -1,8 +1,8 @@
 import { StoryFn } from '@storybook/react'
 import React, { ChangeEvent, useState } from 'react'
 
+import { Fieldset } from '../Fieldset'
 import { Cluster, Stack } from '../Layout'
-import { Fieldset } from '../NewFieldset'
 import { StatusLabel } from '../StatusLabel'
 import { Text } from '../Text'
 

@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components'
 
 import { Base } from '../Base'
 import { Button } from '../Button'
-import { FormGroup } from '../FormGroup'
+import { FormControl } from '../FormControl'
 import { Input } from '../Input'
 
 import { AccordionPanel } from './AccordionPanel'
@@ -35,14 +35,14 @@ const content = () => {
     <StackDiv>
       <div>{lorem}</div>
       <div>
-        <FormGroup title="Name">
+        <FormControl title="Name">
           <Input name={`name_${id}`} />
-        </FormGroup>
+        </FormControl>
       </div>
       <div>
-        <FormGroup title="Email">
+        <FormControl title="Email">
           <Input name={`email_${id}`} />
-        </FormGroup>
+        </FormControl>
       </div>
     </StackDiv>
   )

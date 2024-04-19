@@ -1,133 +1,156 @@
-import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
-import * as React from 'react'
-import styled, { css } from 'styled-components'
+import React from 'react'
 
-import { useTheme } from '../../hooks/useTheme'
-import { FaExclamationCircleIcon } from '../Icon'
+import { CheckBox } from '../CheckBox'
+import { FormControl } from '../FormControl'
+import { WarningIcon } from '../Icon'
+import { Input } from '../Input'
+import { Cluster, Stack } from '../Layout'
+import { RadioButton } from '../RadioButton'
+import { Text } from '../Text'
 
-import { FieldSet } from './FieldSet'
+import { Fieldset } from './Fieldset'
 
 export default {
-  title: 'Forms（フォーム）/FieldSet（非推奨）',
-  component: FieldSet,
-  parameters: {
-    withTheming: true,
-  },
+  title: 'Forms（フォーム）/Fieldset',
+  component: Fieldset,
 }
 
-export const All: StoryFn = () => {
-  const themes = useTheme()
-
-  return (
-    <List>
-      <li>
-        <FieldSet label="string" defaultValue="string" />
-      </li>
-      <li>
-        <FieldSet type="number" label={<b>number</b>} defaultValue={1} />
-      </li>
-      <li>
-        <FieldSet type="password" label="password" defaultValue="password" />
-      </li>
-      <li>
-        <FieldSet
-          name="sample"
-          label="long title.........................................."
-          defaultValue="string"
-        />
-      </li>
-      <li>
-        <FieldSet label="required" defaultValue="string" required />
-      </li>
-      <li>
-        <FieldSet label="disabled" disabled />
-      </li>
-      <li>
-        <FieldSet label="width" defaultValue="width: 100%" width="100%" />
-      </li>
-      <li>
-        <FieldSet label="onChange" onChange={action('onChange!!')} />
-      </li>
-      <li>
-        <FieldSet label="onBlur" onBlur={action('onBlur!!')} />
-      </li>
-      <li>
-        <FieldSet label="help message" helpMessage="This is help message." width={400} />
-      </li>
-      <li>
-        <FieldSet label="error message" errorMessage="An error occurred" />
-      </li>
-      <li>
-        <FieldSet
-          label="labelSuffix"
-          labelSuffix={
-            <Suffix>
-              <FaExclamationCircleIcon color={themes.color.TEXT_GREY} />
-              <SuffixText>suffix text</SuffixText>
-            </Suffix>
-          }
-        />
-      </li>
-      <li>
-        <FieldSet label="custom field">
-          <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
-        </FieldSet>
-      </li>
-      <li>
-        <FieldSet
-          label="many parts"
-          errorMessage={[
-            'First error message.',
-            <b key="Second error message.">Second error message.</b>,
-          ]}
-          helpMessage={
-            <>
-              This is help message.
-              <br />
-              This is help message.
-            </>
-          }
-          labelSuffix={
-            <Suffix>
-              <FaExclamationCircleIcon color={themes.color.TEXT_GREY} />
-              <SuffixText>suffix text</SuffixText>
-            </Suffix>
-          }
-          required
+export const All: StoryFn = () => (
+  <Stack gap={2} as="dl">
+    <Stack>
+      <Text italic color="TEXT_GREY" as="dt">
+        基本
+      </Text>
+      <Stack as="dd">
+        <Fieldset title="就業形態" innerMargin={0.5}>
+          <Cluster gap={1.25}>
+            <RadioButton name="employment" defaultChecked={true}>
+              正社員
+            </RadioButton>
+            <RadioButton name="employment">契約社員</RadioButton>
+            <RadioButton name="employment">派遣社員</RadioButton>
+            <RadioButton name="employment">アルバイト</RadioButton>
+            <RadioButton name="employment">その他</RadioButton>
+          </Cluster>
+        </Fieldset>
+        <Fieldset title="その他の設定" innerMargin={0.5}>
+          <CheckBox name="includeBoardMembers">役員を含める</CheckBox>
+        </Fieldset>
+      </Stack>
+    </Stack>
+    <Stack>
+      <Text italic color="TEXT_GREY" as="dt">
+        入れ子
+      </Text>
+      <dd>
+        <Fieldset
+          title="アカウントの設定"
+          statusLabelProps={{ type: 'grey', children: '任意' }}
+          errorMessages="入力されていない項目があります。"
         >
-          <CustomTag>It is a field where tags can be freely inserted.</CustomTag>
-        </FieldSet>
-      </li>
-    </List>
-  )
-}
-All.storyName = 'all'
-
-const List = styled.ul`
-  padding: 0 24px;
-  list-style: none;
-
-  & > li:not(:first-child) {
-    margin-top: 16px;
-  }
-`
-const Suffix = styled.div`
-  display: flex;
-  align-items: center;
-
-  > *:first-child {
-    margin-right: 4px;
-  }
-`
-const SuffixText = styled.p`
-  margin: 0;
-  font-size: ${({ theme }) => theme.fontSize.S};
-`
-const CustomTag = styled.div(
-  ({ theme }) => css`
-    padding: 10px;
-    border: 1px solid ${theme.color.BORDER};
-    border-radius: 5px;
-  `,
+          <Stack>
+            <Fieldset title="設定の有無" titleType="subBlockTitle" innerMargin={0.5}>
+              <Cluster gap={1.25}>
+                <RadioButton name="existsConfig" defaultChecked={true}>
+                  あり
+                </RadioButton>
+                <RadioButton name="existsConfig">なし</RadioButton>
+              </Cluster>
+            </Fieldset>
+            <Cluster gap={1}>
+              <FormControl
+                title="姓"
+                titleType="subBlockTitle"
+                errorMessages="姓が入力されていません。"
+              >
+                <Input name="lastName" />
+              </FormControl>
+              <FormControl
+                title="名"
+                titleType="subBlockTitle"
+                errorMessages="名が入力されていません。"
+              >
+                <Input name="firstName" />
+              </FormControl>
+            </Cluster>
+          </Stack>
+        </Fieldset>
+      </dd>
+    </Stack>
+    <Stack>
+      <Text italic color="TEXT_GREY" as="dt">
+        disabled
+      </Text>
+      <dd>
+        <Fieldset
+          title="disabled なフォームグループ"
+          helpMessage="このフォームグループは disabled です。内包するフォームグループを個別に disabled する必要はありません。"
+          errorMessages="すべてのフォームコントロールが disabled です。"
+          disabled
+        >
+          <Stack>
+            <Fieldset title="就業形態" innerMargin={0.5}>
+              <Cluster gap={1.25}>
+                <RadioButton name="employment2">正社員</RadioButton>
+                <RadioButton name="employment2">契約社員</RadioButton>
+                <RadioButton name="employment2">派遣社員</RadioButton>
+                <RadioButton name="employment2">アルバイト</RadioButton>
+                <RadioButton name="employment2">その他</RadioButton>
+              </Cluster>
+            </Fieldset>
+            <Fieldset title="その他の設定" innerMargin={0.5}>
+              <CheckBox name="includeBoardMembers">役員を含める</CheckBox>
+            </Fieldset>
+            <Cluster gap={1}>
+              <FormControl
+                title="姓"
+                titleType="subBlockTitle"
+                errorMessages="姓が入力されていません。"
+              >
+                <Input name="lastName" />
+              </FormControl>
+              <FormControl
+                title="名"
+                titleType="subBlockTitle"
+                errorMessages="名が入力されていません。"
+              >
+                <Input name="firstName" />
+              </FormControl>
+            </Cluster>
+          </Stack>
+        </Fieldset>
+      </dd>
+    </Stack>
+    <Stack>
+      <Text italic color="TEXT_GREY" as="dt">
+        ラベルが視覚的に明らかであり明示しない場合（非推奨）
+      </Text>
+      <dd>
+        <Fieldset
+          title="選択"
+          helpMessage={
+            <WarningIcon
+              text={
+                <>
+                  ラベルが視覚的に自明な場合にのみ<code>dangerouslyTitleHidden</code>
+                  を検討してください。
+                </>
+              }
+            />
+          }
+          innerMargin={0.5}
+          dangerouslyTitleHidden
+        >
+          <Cluster gap={1.25}>
+            <RadioButton name="options">あり</RadioButton>
+            <RadioButton name="options" defaultChecked={true}>
+              なし
+            </RadioButton>
+          </Cluster>
+        </Fieldset>
+      </dd>
+    </Stack>
+  </Stack>
 )
+All.storyName = 'all'
