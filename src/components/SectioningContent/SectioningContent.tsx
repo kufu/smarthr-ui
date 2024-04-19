@@ -25,6 +25,8 @@ export const Article: FC<Props> = (props) => <SectioningContent {...props} as="a
 export const Aside: FC<Props> = (props) => <SectioningContent {...props} as="aside" />
 export const Nav: FC<Props> = (props) => <SectioningContent {...props} as="nav" />
 
+/* HINT: smarthr-ui内では引き続き使うが、exportは削除する */
+/** @deprecated SectioningFragment は削除予定です */
 export const SectioningFragment: FC<PropsWithChildren<{ baseLevel?: number }>> = ({
   children,
   baseLevel,
