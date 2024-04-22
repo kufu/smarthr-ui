@@ -11,7 +11,7 @@ type Props = ComponentProps<typeof Input> & {
 
 const inputWithTooltip = tv({
   slots: {
-    tooltip: 'smarthr-ui-InputWithTooltip !shr-overflow-visible',
+    tooltip: 'smarthr-ui-InputWithTooltip [&]:shr-overflow-y-visible',
   },
 })
 
