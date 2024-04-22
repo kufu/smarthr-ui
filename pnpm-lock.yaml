@@ -174,8 +174,8 @@ devDependencies:
     specifier: ^9.1.3
     version: 9.1.3(@babel/core@7.24.4)(webpack@5.91.0)
   babel-plugin-polyfill-corejs2:
-    specifier: ^0.4.10
-    version: 0.4.10(@babel/core@7.24.4)
+    specifier: ^0.4.11
+    version: 0.4.11(@babel/core@7.24.4)
   babel-plugin-polyfill-regenerator:
     specifier: ^0.6.1
     version: 0.6.1(@babel/core@7.24.4)
@@ -476,8 +476,8 @@ packages:
       - supports-color
     dev: true
 
-  /@babel/helper-define-polyfill-provider@0.6.1(@babel/core@7.24.4):
-    resolution: {integrity: sha512-o7SDgTJuvx5vLKD6SFvkydkSMBvahDKGiNJzG22IZYXhiqoe9efY7zocICBgzHV4IRg5wdgl2nEL/tulKIEIbA==}
+  /@babel/helper-define-polyfill-provider@0.6.2(@babel/core@7.24.4):
+    resolution: {integrity: sha512-LV76g+C502biUK6AyZ3LK10vDpDyCzZnhZFXkH1L75zHPj68+qc8Zfpx2th+gzwA2MzyK+1g/3EPl62yFnVttQ==}
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
     dependencies:
@@ -1487,7 +1487,7 @@ packages:
       '@babel/core': 7.24.4
       '@babel/helper-module-imports': 7.24.3
       '@babel/helper-plugin-utils': 7.24.0
-      babel-plugin-polyfill-corejs2: 0.4.10(@babel/core@7.24.4)
+      babel-plugin-polyfill-corejs2: 0.4.11(@babel/core@7.24.4)
       babel-plugin-polyfill-corejs3: 0.8.7(@babel/core@7.24.4)
       babel-plugin-polyfill-regenerator: 0.5.5(@babel/core@7.24.4)
       semver: 6.3.1
@@ -1685,7 +1685,7 @@ packages:
       '@babel/plugin-transform-unicode-regex': 7.24.1(@babel/core@7.24.4)
       '@babel/plugin-transform-unicode-sets-regex': 7.24.1(@babel/core@7.24.4)
       '@babel/preset-modules': 0.1.6-no-external-plugins(@babel/core@7.24.4)
-      babel-plugin-polyfill-corejs2: 0.4.10(@babel/core@7.24.4)
+      babel-plugin-polyfill-corejs2: 0.4.11(@babel/core@7.24.4)
       babel-plugin-polyfill-corejs3: 0.10.4(@babel/core@7.24.4)
       babel-plugin-polyfill-regenerator: 0.6.1(@babel/core@7.24.4)
       core-js-compat: 3.36.1
@@ -6014,14 +6014,14 @@ packages:
       resolve: 1.22.8
     dev: true
 
-  /babel-plugin-polyfill-corejs2@0.4.10(@babel/core@7.24.4):
-    resolution: {integrity: sha512-rpIuu//y5OX6jVU+a5BCn1R5RSZYWAl2Nar76iwaOdycqb6JPxediskWFMMl7stfwNJR4b7eiQvh5fB5TEQJTQ==}
+  /babel-plugin-polyfill-corejs2@0.4.11(@babel/core@7.24.4):
+    resolution: {integrity: sha512-sMEJ27L0gRHShOh5G54uAAPaiCOygY/5ratXuiyb2G46FmlSpc9eFCzYVyDiPxfNbwzA7mYahmjQc5q+CZQ09Q==}
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
     dependencies:
       '@babel/compat-data': 7.24.4
       '@babel/core': 7.24.4
-      '@babel/helper-define-polyfill-provider': 0.6.1(@babel/core@7.24.4)
+      '@babel/helper-define-polyfill-provider': 0.6.2(@babel/core@7.24.4)
       semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
@@ -6033,7 +6033,7 @@ packages:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
     dependencies:
       '@babel/core': 7.24.4
-      '@babel/helper-define-polyfill-provider': 0.6.1(@babel/core@7.24.4)
+      '@babel/helper-define-polyfill-provider': 0.6.2(@babel/core@7.24.4)
       core-js-compat: 3.36.1
     transitivePeerDependencies:
       - supports-color
@@ -6068,7 +6068,7 @@ packages:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
     dependencies:
       '@babel/core': 7.24.4
-      '@babel/helper-define-polyfill-provider': 0.6.1(@babel/core@7.24.4)
+      '@babel/helper-define-polyfill-provider': 0.6.2(@babel/core@7.24.4)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -14815,6 +14815,7 @@ packages:
 
   /testcafe-safe-storage@1.1.2:
     resolution: {integrity: sha512-6km7D26+KCQGeFlSQ9fVEU7tD8qdioSpqzxU8CCZkd2KzBS0jTFkqaJ54rPaLdd5+wdhgO3+as3LMm4F0EDeYA==}
+    deprecated: The testcafe-safe-storage package has reached end-of-life and will not receive further updates.
     dev: true
 
   /testcafe-selector-generator@0.1.0:
