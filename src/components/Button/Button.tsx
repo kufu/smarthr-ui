@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, forwardRef, useMemo } from 'react'
+import React, { ButtonHTMLAttributes, forwardRef, useEffect, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { usePortal } from '../../hooks/usePortal'
@@ -88,6 +88,11 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
       return loading ? loadingText : ''
     }, [decorators, loading])
 
+    useEffect(() => {
+      // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
+      createPortal(<VisuallyHiddenText role="status">{statusText}</VisuallyHiddenText>)
+    }, [])
+
     const button = (
       <ButtonWrapper
         {...props}
@@ -101,10 +106,6 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
         disabled={disabledOnLoading}
         $loading={loading}
       >
-        {
-          // `button` 要素内で live region を使うことはできないので、`role="status"` を持つ要素を外側に配置している。 https://github.com/kufu/smarthr-ui/pull/4558
-          createPortal(<VisuallyHiddenText role="status">{statusText}</VisuallyHiddenText>)
-        }
         <ButtonInner prefix={actualPrefix} suffix={actualSuffix} size={size}>
           {actualChildren}
         </ButtonInner>
