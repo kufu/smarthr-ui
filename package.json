@@ -1,7 +1,7 @@
 {
   "name": "smarthr-ui",
   "description": "SmartHR ui components built with React.",
-  "version": "47.1.0",
+  "version": "48.0.0",
   "author": "SmartHR-UI Team",
   "dependencies": {
     "@smarthr/wareki": "^1.2.0",

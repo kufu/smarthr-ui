@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [48.0.0](https://github.com/kufu/smarthr-ui/compare/v47.1.0...v48.0.0) (2024-04-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* FormGroup と FieldSet を消す (#4587)
+
+### Features
+
+* Base と BaseColumn に見出しのレベル自動計算機構を追加 ([#4588](https://github.com/kufu/smarthr-ui/issues/4588)) ([833656c](https://github.com/kufu/smarthr-ui/commit/833656cacd76e33426001c916f5c72a52c5914a8))
+* Base,BaseColumnのas属性にsection,aside,article,navを設定した場合、SectioningContent同様に見出しレベル自動計算を行うように修正 ([#4590](https://github.com/kufu/smarthr-ui/issues/4590)) ([0b62c92](https://github.com/kufu/smarthr-ui/commit/0b62c926c8519d2b544e9d3053d308a814da090b))
+* FormControl でも dangerouslyTitleHidden オプションを許容する ([#4583](https://github.com/kufu/smarthr-ui/issues/4583)) ([2dedb62](https://github.com/kufu/smarthr-ui/commit/2dedb621b8f06b6c59dea4e0d1b44a64e908ba2d))
+* FormGroup と FieldSet を消す ([#4587](https://github.com/kufu/smarthr-ui/issues/4587)) ([50239ef](https://github.com/kufu/smarthr-ui/commit/50239ef83a52ab2c82995a6338ef8ee4a1d2782c))
+
+
+### Bug Fixes
+
+* BodyScrollSuppressor を styled-components に依存しない形で実装 ([#4595](https://github.com/kufu/smarthr-ui/issues/4595)) ([fd1b231](https://github.com/kufu/smarthr-ui/commit/fd1b231f7c2ca3ba5b12af7340d6d5470744e5cf))
+* FormControl から内部コンポーネントが export されないように修正 ([#4592](https://github.com/kufu/smarthr-ui/issues/4592)) ([ce39fc9](https://github.com/kufu/smarthr-ui/commit/ce39fc92a0471c4b7c5709b3c9a3f10fb88717f6))
+* FormControl, Fieldset で dangerouslyTitleHidden が指定されているときの余白を修正 ([#4585](https://github.com/kufu/smarthr-ui/issues/4585)) ([1d67660](https://github.com/kufu/smarthr-ui/commit/1d6766027569baa1a0f80f4dba3af0db214edfd6))
+* **Icon:** Figmaにのみ存在するアイコンを復活 ([#4589](https://github.com/kufu/smarthr-ui/issues/4589)) ([56642ad](https://github.com/kufu/smarthr-ui/commit/56642ad0ec7321e8016a0a3e35483850722bfa6f))
+* Tableの一括操作領域のborderがスクロール時にちらついてしまう場合があるためstyleを調整する ([#4596](https://github.com/kufu/smarthr-ui/issues/4596)) ([d0d045c](https://github.com/kufu/smarthr-ui/commit/d0d045ce7a5d20afa8df7b60f10eed4990b9b4d5))
+* 強制カラーモードの時はテーブルの一括操作領域に枠線を付ける ([#4600](https://github.com/kufu/smarthr-ui/issues/4600)) ([3b00fca](https://github.com/kufu/smarthr-ui/commit/3b00fcad9c38171ef7a06f438a6a25ede3650659))
+
 ## [47.1.0](https://github.com/kufu/smarthr-ui/compare/v47.0.0...v47.1.0) (2024-04-16)
 
 
