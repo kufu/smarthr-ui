@@ -6,7 +6,10 @@ import { useTableHeadCellCount } from './useTableHeadCellCount'
 const bulkActionRow = tv({
   slots: {
     wrapper: 'smarthr-ui-BulkActionRow',
-    cell: 'shr-bg-action-background shr-p-1 shr-text-base',
+    cell: [
+      'shr-bg-action-background shr-p-1 shr-text-base',
+      'forced-colors:shr-border-t-shorthand',
+    ],
   },
 })
 
