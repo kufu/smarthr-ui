@@ -3,6 +3,8 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { useTheme } from '../../hooks/useTheme'
+import { Heading } from '../Heading'
+import { Section } from '../SectioningContent'
 import { Table, Td, Th } from '../Table'
 import { Text } from '../Text'
 
@@ -90,6 +92,21 @@ export const BaseStory: StoryFn = () => {
               </Base>
             </li>
           ))}
+        </List>
+      </dd>
+      <dt>SectioningContentをasに指定した場合の見出しレベル自動計算</dt>
+      <dd>
+        <List>
+          <li>
+            <Section>
+              <Heading>親見出し</Heading>
+              <Base as="section">
+                {/* FIXME: Baseに対するチェックは eslint-plugin-smarthr@v0.5.9以降で修正されるため下記コメントは削除する */}
+                {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+                <Heading>子見出し</Heading>
+              </Base>
+            </Section>
+          </li>
         </List>
       </dd>
     </DescriptionList>

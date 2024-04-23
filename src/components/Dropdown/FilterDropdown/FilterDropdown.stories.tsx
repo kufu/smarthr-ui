@@ -5,10 +5,10 @@ import styled from 'styled-components'
 
 import { Button } from '../../Button'
 import { MultiComboBox, SingleComboBox } from '../../ComboBox'
+import { Fieldset } from '../../Fieldset'
 import { FormControl } from '../../FormControl'
 import { Input } from '../../Input'
 import { Cluster, Stack } from '../../Layout'
-import { Fieldset } from '../../NewFieldset'
 import { RadioButton } from '../../RadioButton'
 
 import { FilterDropdown } from './FilterDropdown'
