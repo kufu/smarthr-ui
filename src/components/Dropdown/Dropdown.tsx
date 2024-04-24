@@ -54,8 +54,8 @@ export const Dropdown: FC<PropsWithChildren> = ({ children }) => {
   const triggerElementRef = useRef<HTMLDivElement>(null)
   const contentId = useId()
 
-  if (portalRoot) {
-    portalRoot.setAttribute('id', contentId)
+  if (portalRoot.current) {
+    portalRoot.current.setAttribute('id', contentId)
   }
 
   useEffect(() => {

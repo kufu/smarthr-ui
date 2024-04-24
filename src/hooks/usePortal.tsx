@@ -4,8 +4,10 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -22,25 +24,30 @@ const ParentContext = createContext<ParentContextValue>({
 let portalSeq = 0
 
 export function usePortal() {
-  const portalRoot = useRef<HTMLDivElement | null>(
-    typeof document === 'undefined' ? null : (document.createElement('div') as HTMLDivElement),
-  ).current
+  const [isMounted, setMounted] = useState(false)
+  const portalRoot = useRef<HTMLDivElement | null>(null)
   const currentSeq = useMemo(() => ++portalSeq, [])
   const parent = useContext(ParentContext)
   const parentSeqs = parent.seqs.concat(currentSeq)
 
+  useEffect(() => {
+    portalRoot.current = document.createElement('div')
+    setMounted(true)
+  }, [])
+
   useEnhancedEffect(() => {
-    if (!portalRoot) {
+    const currentPortalRoot = portalRoot.current
+    if (!currentPortalRoot) {
       return
     }
-    portalRoot.dataset.portalChildOf = parentSeqs.join(',')
-    document.body.appendChild(portalRoot)
+    currentPortalRoot.dataset.portalChildOf = parentSeqs.join(',')
+    document.body.appendChild(currentPortalRoot)
     return () => {
-      document.body.removeChild(portalRoot)
+      document.body.removeChild(currentPortalRoot)
     }
     // spread parentSeqs array for deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...parentSeqs])
+  }, [isMounted, ...parentSeqs])
 
   const isChildPortal = useCallback(
     (element: HTMLElement | null) => _isChildPortal(element, currentSeq),
@@ -61,10 +68,10 @@ export function usePortal() {
 
   const wrappedCreatePortal = useCallback(
     (children: ReactNode) => {
-      if (portalRoot === null) {
+      if (portalRoot.current === null) {
         return null
       }
-      return createPortal(children, portalRoot)
+      return createPortal(children, portalRoot.current)
     },
     [portalRoot],
   )
