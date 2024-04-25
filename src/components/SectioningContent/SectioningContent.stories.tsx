@@ -3,7 +3,7 @@ import React from 'react'
 
 import { Heading, PageHeading } from '../Heading'
 
-import { Article, Aside, Nav, Section, SectioningFragment } from './SectioningContent'
+import { Article, Aside, Nav, Section } from './SectioningContent'
 
 export default {
   title: 'Navigation（ナビゲーション）/SectioningContent',
@@ -13,7 +13,6 @@ export default {
     Aside,
     Nav,
     Section,
-    SectioningFragment,
   },
   parameters: {
     withTheming: true,
@@ -52,9 +51,6 @@ export const SectioningContent: StoryFn = () => (
           </Article>
         </Section>
       </Section>
-      <SectioningFragment>
-        <Heading>h3</Heading>
-      </SectioningFragment>
     </Section>
     <Aside>
       <Heading>Aside: h2</Heading>
