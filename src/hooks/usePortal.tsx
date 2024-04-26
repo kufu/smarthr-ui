@@ -23,8 +23,14 @@ const ParentContext = createContext<ParentContextValue>({
 
 let portalSeq = 0
 
+export const useMounted = () => {
+  const [isMounted, setIsMounted] = useState(false)
+  useEffect(() => setIsMounted(true), [])
+  return { isMounted }
+}
+
 export function usePortal() {
-  const [isMounted, setMounted] = useState(false)
+  const { isMounted } = useMounted()
   const portalRoot = useRef<HTMLDivElement | null>(null)
   const currentSeq = useMemo(() => ++portalSeq, [])
   const parent = useContext(ParentContext)
@@ -32,7 +38,6 @@ export function usePortal() {
 
   useEffect(() => {
     portalRoot.current = document.createElement('div')
-    setMounted(true)
   }, [])
 
   useEnhancedEffect(() => {
@@ -68,10 +73,11 @@ export function usePortal() {
 
   const wrappedCreatePortal = useCallback(
     (children: ReactNode) => {
-      if (portalRoot.current === null) {
+      const currentPortalRoot = portalRoot.current
+      if (currentPortalRoot === null) {
         return null
       }
-      return createPortal(children, portalRoot.current)
+      return createPortal(children, currentPortalRoot)
     },
     [portalRoot],
   )
