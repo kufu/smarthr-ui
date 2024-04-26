@@ -189,8 +189,8 @@
       "@babel/helper-compilation-targets": "^7.23.6",
       "@types/react": "^18.3.0",
       "minimist": "1.2.8",
-      "react": "^18.2.0",
-      "react-dom": "^18.2.0"
+      "react": "^18.3.0",
+      "react-dom": "^18.3.0"
     }
   },
   "standard-version": {
