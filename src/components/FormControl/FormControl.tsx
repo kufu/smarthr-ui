@@ -279,7 +279,7 @@ const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describe
 /**
  * - CheckBox / RadioButton は内部に label を含むため対象外
  * - SearchInput は label を含むため対象外
- * - InputWithTooltip は領域が狭く FormControl を置けない場所での私用を想定しているため対象外
+ * - InputWithTooltip は領域が狭く FormControl を置けない場所での使用を想定しているため対象外
  *
  * @param type
  * @returns
