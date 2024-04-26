@@ -4,9 +4,7 @@ import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import { createPortal } from 'react-dom'
@@ -23,36 +21,26 @@ const ParentContext = createContext<ParentContextValue>({
 
 let portalSeq = 0
 
-export const useMounted = () => {
-  const [isMounted, setIsMounted] = useState(false)
-  useEffect(() => setIsMounted(true), [])
-  return { isMounted }
-}
-
 export function usePortal() {
-  const { isMounted } = useMounted()
-  const portalRoot = useRef<HTMLDivElement | null>(null)
+  const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
   const currentSeq = useMemo(() => ++portalSeq, [])
   const parent = useContext(ParentContext)
   const parentSeqs = parent.seqs.concat(currentSeq)
 
-  useEffect(() => {
-    portalRoot.current = document.createElement('div')
-  }, [])
-
   useEnhancedEffect(() => {
-    const currentPortalRoot = portalRoot.current
-    if (!currentPortalRoot) {
+    if (!portalRoot) {
+      // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
+      setPortalRoot(document.createElement('div'))
       return
     }
-    currentPortalRoot.dataset.portalChildOf = parentSeqs.join(',')
-    document.body.appendChild(currentPortalRoot)
+    portalRoot.dataset.portalChildOf = parentSeqs.join(',')
+    document.body.appendChild(portalRoot)
     return () => {
-      document.body.removeChild(currentPortalRoot)
+      document.body.removeChild(portalRoot)
     }
     // spread parentSeqs array for deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMounted, ...parentSeqs])
+  }, [portalRoot, ...parentSeqs])
 
   const isChildPortal = useCallback(
     (element: HTMLElement | null) => _isChildPortal(element, currentSeq),
@@ -73,11 +61,10 @@ export function usePortal() {
 
   const wrappedCreatePortal = useCallback(
     (children: ReactNode) => {
-      const currentPortalRoot = portalRoot.current
-      if (currentPortalRoot === null) {
+      if (portalRoot === null) {
         return null
       }
-      return createPortal(children, currentPortalRoot)
+      return createPortal(children, portalRoot)
     },
     [portalRoot],
   )
