@@ -1,4 +1,4 @@
-import React, { ComponentProps, useCallback } from 'react'
+import React, { ComponentProps, FormEvent, useCallback } from 'react'
 
 import { useId } from '../../../hooks/useId'
 import { DialogContentInner } from '../DialogContentInner'
@@ -40,13 +40,16 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
     onClickClose()
   }, [onClickClose, props.isOpen])
 
-  const handleSubmitAction = useCallback(() => {
-    if (!props.isOpen) {
-      return
-    }
+  const handleSubmitAction = useCallback(
+    (close: () => void, e: FormEvent<HTMLFormElement>) => {
+      if (!props.isOpen) {
+        return
+      }
 
-    onSubmit(onClickClose)
-  }, [onSubmit, onClickClose, props.isOpen])
+      onSubmit(close, e)
+    },
+    [onSubmit, props.isOpen],
+  )
 
   return createPortal(
     <DialogContentInner
