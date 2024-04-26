@@ -28,9 +28,12 @@ export function usePortal() {
   const parentSeqs = parent.seqs.concat(currentSeq)
 
   useEnhancedEffect(() => {
+    // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
+    setPortalRoot(document.createElement('div'))
+  }, [])
+
+  useEnhancedEffect(() => {
     if (!portalRoot) {
-      // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
-      setPortalRoot(document.createElement('div'))
       return
     }
     portalRoot.dataset.portalChildOf = parentSeqs.join(',')
