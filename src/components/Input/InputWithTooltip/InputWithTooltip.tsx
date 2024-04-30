@@ -1,7 +1,7 @@
-import React, { ComponentProps, forwardRef } from 'react'
-import styled, { css } from 'styled-components'
+import React, { ComponentProps, forwardRef, useMemo } from 'react'
+import { tv } from 'tailwind-variants'
 
-import { Tooltip as shrTooltip } from '../../Tooltip'
+import { Tooltip } from '../../Tooltip'
 import { Input } from '../Input'
 
 type Props = ComponentProps<typeof Input> & {
@@ -9,12 +9,26 @@ type Props = ComponentProps<typeof Input> & {
   tooltipMessage: React.ReactNode
 }
 
+const inputWithTooltip = tv({
+  base: 'smarthr-ui-InputWithTooltip [&]:shr-overflow-y-visible',
+})
+
 export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
   ({ tooltipMessage, width, ...props }, ref) => {
     const widthStyle = typeof width === 'number' ? `${width}px` : width
+    const tooltipStyleProps = useMemo(() => {
+      const tooltip = inputWithTooltip()
+      return {
+        className: tooltip,
+        style: {
+          width: widthStyle,
+        },
+      }
+    }, [widthStyle])
+
     return (
       <Tooltip
-        width={widthStyle}
+        {...tooltipStyleProps}
         message={tooltipMessage}
         tabIndex={-1}
         ariaDescribedbyTarget="inner"
@@ -24,12 +38,4 @@ export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
       </Tooltip>
     )
   },
-)
-
-const Tooltip = styled(shrTooltip)<{ width?: string }>(
-  ({ width }) => css`
-    /* Input のフォーカスリングを表示するため */
-    overflow: revert;
-    ${width && `width: ${width};`}
-  `,
 )
