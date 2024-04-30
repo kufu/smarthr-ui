@@ -79,7 +79,7 @@ export const Dropdown: FC<PropsWithChildren> = ({ children }) => {
       if (!active) return null
       return createPortal(props.children)
     },
-    [active, createPortal],
+    [active, createPortal, portalRoot],
   )
   // set the displayName explicit for DevTools
   DropdownContentRoot.displayName = 'DropdownContentRoot'

@@ -5,11 +5,11 @@ import styled from 'styled-components'
 
 import { Button } from '../Button'
 import { DatePicker } from '../DatePicker'
+import { Fieldset } from '../Fieldset'
 import { FormControl } from '../FormControl'
 import { Heading } from '../Heading'
 import { Input } from '../Input'
 import { Cluster, Stack } from '../Layout'
-import { Fieldset } from '../NewFieldset'
 import { RadioButton } from '../RadioButton'
 import { Section } from '../SectioningContent'
 import { Table, Td, TdCheckbox, Th, ThCheckbox } from '../Table'
@@ -348,8 +348,9 @@ export const Form_Dialog: StoryFn = () => {
         subtitle="副題"
         actionText="保存"
         decorators={{ closeButtonLabel: (txt) => `cancel.(${txt})` }}
-        onSubmit={(closeDialog) => {
+        onSubmit={(closeDialog, e) => {
           action('executed')()
+          console.log('event', e)
           setResponseMessage(undefined)
           closeDialog()
         }}

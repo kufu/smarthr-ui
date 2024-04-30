@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { isStyledComponent } from 'styled-components'
 
-import { SectioningFragment } from '.'
+import { SectioningFragment } from './SectioningContent'
 
 type ComponentType = string | React.ComponentType<any>
 

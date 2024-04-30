@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, ReactNode, useCallback } from 'react'
+import React, { FC, FormEvent, PropsWithChildren, ReactNode, useCallback } from 'react'
 
 import { Button } from '../../Button'
 import { Heading, HeadingTagTypes } from '../../Heading'
@@ -21,7 +21,7 @@ export type BaseProps = PropsWithChildren<{
    */
   subtitle?: ReactNode
   /**
-   * @deprecated SectioningContent(Article, Aside, Nav, Section, SectioningFragment)でDialog全体をラップして、ダイアログタイトルのHeadingレベルを設定してください
+   * @deprecated SectioningContent(Article, Aside, Nav, Section)でDialog全体をラップして、ダイアログタイトルのHeadingレベルを設定してください
    */
   titleTag?: HeadingTagTypes
   /**
@@ -36,7 +36,7 @@ export type BaseProps = PropsWithChildren<{
    * アクションボタンをクリックした時に発火するコールバック関数
    * @param closeDialog - ダイアログを閉じる関数
    */
-  onSubmit: (closeDialog: () => void) => void
+  onSubmit: (closeDialog: () => void, e: FormEvent<HTMLFormElement>) => void
   /**
    * アクションボタンを無効にするかどうか
    */
@@ -76,12 +76,12 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   decorators,
 }) => {
   const handleSubmitAction = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       // HINT: React Potals などで擬似的にformがネストしている場合など、stopPropagationを実行しないと
       // 親formが意図せずsubmitされてしまう場合がある
       e.stopPropagation()
-      onSubmit(onClickClose)
+      onSubmit(onClickClose, e)
     },
     [onSubmit, onClickClose],
   )

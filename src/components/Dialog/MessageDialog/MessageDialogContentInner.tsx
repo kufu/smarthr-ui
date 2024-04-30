@@ -20,7 +20,7 @@ export type BaseProps = {
    */
   subtitle?: React.ReactNode
   /**
-   * @deprecated SectioningContent(Article, Aside, Nav, Section, SectioningFragment)でDialog全体をラップして、ダイアログタイトルのHeadingレベルを設定してください
+   * @deprecated SectioningContent(Article, Aside, Nav, Section)でDialog全体をラップして、ダイアログタイトルのHeadingレベルを設定してください
    */
   titleTag?: HeadingTagTypes
   /**

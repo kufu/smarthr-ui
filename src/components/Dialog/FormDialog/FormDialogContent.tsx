@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useCallback, useContext } from 'react'
+import React, { FormEvent, HTMLAttributes, useCallback, useContext } from 'react'
 
 import { useId } from '../../../hooks/useId'
 import { DialogContentInner } from '../DialogContentInner'
@@ -33,12 +33,16 @@ export const FormDialogContent: React.FC<Props & ElementProps> = ({
     onClickClose()
   }, [active, onClickClose])
 
-  const handleSubmitAction = useCallback(() => {
-    if (!active) {
-      return
-    }
-    onSubmit(onClickClose)
-  }, [active, onSubmit, onClickClose])
+  const handleSubmitAction = useCallback(
+    (close: () => void, e: FormEvent<HTMLFormElement>) => {
+      if (!active) {
+        return
+      }
+
+      onSubmit(close, e)
+    },
+    [active, onSubmit],
+  )
 
   const titleId = useId()
 
