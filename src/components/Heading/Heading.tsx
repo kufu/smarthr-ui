@@ -9,7 +9,7 @@ export type Props = PropsWithChildren<{
   /** テキストのスタイル */
   type?: HeadingTypes
   /**
-   * @deprecated SectioningContent(Article, Aside, Nav, Section, SectioningFragment)を使ってHeadingと関連する範囲を明確に指定してください
+   * @deprecated SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定してください
    */
   tag?: HeadingTagTypes
   /** 視覚的に非表示にするフラグ */

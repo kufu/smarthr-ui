@@ -2,7 +2,7 @@ import { StoryFn } from '@storybook/react'
 import React, { ChangeEvent, useState } from 'react'
 import styled from 'styled-components'
 
-import { Fieldset } from '../NewFieldset'
+import { Fieldset } from '../Fieldset'
 
 import { RadioButton } from './RadioButton'
 
