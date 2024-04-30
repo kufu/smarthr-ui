@@ -23,7 +23,7 @@ export const All: StoryFn = () => (
         基本
       </Text>
       <Stack as="dd">
-        <Fieldset title="就業形態" innerMargin={0.5}>
+        <Fieldset title="就業形態">
           <Cluster gap={1.25}>
             <RadioButton name="employment" defaultChecked={true}>
               正社員
@@ -34,7 +34,7 @@ export const All: StoryFn = () => (
             <RadioButton name="employment">その他</RadioButton>
           </Cluster>
         </Fieldset>
-        <Fieldset title="その他の設定" innerMargin={0.5}>
+        <Fieldset title="その他の設定">
           <CheckBox name="includeBoardMembers">役員を含める</CheckBox>
         </Fieldset>
       </Stack>
@@ -50,7 +50,7 @@ export const All: StoryFn = () => (
           errorMessages="入力されていない項目があります。"
         >
           <Stack>
-            <Fieldset title="設定の有無" titleType="subBlockTitle" innerMargin={0.5}>
+            <Fieldset title="設定の有無" titleType="subBlockTitle">
               <Cluster gap={1.25}>
                 <RadioButton name="existsConfig" defaultChecked={true}>
                   あり
@@ -90,7 +90,7 @@ export const All: StoryFn = () => (
           disabled
         >
           <Stack>
-            <Fieldset title="就業形態" innerMargin={0.5}>
+            <Fieldset title="就業形態">
               <Cluster gap={1.25}>
                 <RadioButton name="employment2">正社員</RadioButton>
                 <RadioButton name="employment2">契約社員</RadioButton>
@@ -99,7 +99,7 @@ export const All: StoryFn = () => (
                 <RadioButton name="employment2">その他</RadioButton>
               </Cluster>
             </Fieldset>
-            <Fieldset title="その他の設定" innerMargin={0.5}>
+            <Fieldset title="その他の設定">
               <CheckBox name="includeBoardMembers">役員を含める</CheckBox>
             </Fieldset>
             <Cluster gap={1}>
@@ -139,7 +139,6 @@ export const All: StoryFn = () => (
               }
             />
           }
-          innerMargin={0.5}
           dangerouslyTitleHidden
         >
           <Cluster gap={1.25}>

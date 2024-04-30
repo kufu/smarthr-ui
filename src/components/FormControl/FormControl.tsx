@@ -112,7 +112,7 @@ const childrenWrapper = tv({
     {
       innerMargin: undefined,
       isRoleGroup: true,
-      className: '[:not([hidden])_~_&&&]:shr-mt-1',
+      className: '[:not([hidden])_~_&&&]:shr-mt-0.5',
     },
     {
       innerMargin: undefined,
