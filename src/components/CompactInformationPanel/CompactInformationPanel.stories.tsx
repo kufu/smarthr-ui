@@ -6,7 +6,7 @@ import { Stack } from '../Layout'
 import { CompactInformationPanel } from '.'
 
 export default {
-  title: 'Data Display（データ表示）/CompactInformationPanel',
+  title: 'Data Display（データ表示）/CompactInformationPanel（非推奨）',
   component: CompactInformationPanel,
 }
 
