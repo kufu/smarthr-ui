@@ -10,18 +10,16 @@ type Props = ComponentProps<typeof Input> & {
 }
 
 const inputWithTooltip = tv({
-  slots: {
-    tooltip: 'smarthr-ui-InputWithTooltip [&]:shr-overflow-y-visible',
-  },
+  base: 'smarthr-ui-InputWithTooltip [&]:shr-overflow-y-visible',
 })
 
 export const InputWithTooltip = forwardRef<HTMLInputElement, Props>(
   ({ tooltipMessage, width, ...props }, ref) => {
     const widthStyle = typeof width === 'number' ? `${width}px` : width
     const tooltipStyleProps = useMemo(() => {
-      const { tooltip } = inputWithTooltip()
+      const tooltip = inputWithTooltip()
       return {
-        className: tooltip(),
+        className: tooltip,
         style: {
           width: widthStyle,
         },
