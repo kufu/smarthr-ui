@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [49.0.0](https://github.com/kufu/smarthr-ui/compare/v48.0.0...v49.0.0) (2024-04-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* SectioningFragmentを削除する (#4605)
+
+### Features
+
+* FormDialogのonSubmitの第二引数にFormEventを渡すように修正 ([#4610](https://github.com/kufu/smarthr-ui/issues/4610)) ([05598f2](https://github.com/kufu/smarthr-ui/commit/05598f2df26f5676ccfb9d8242527f250059ca2a))
+* SectioningFragmentを削除する ([#4605](https://github.com/kufu/smarthr-ui/issues/4605)) ([a3df056](https://github.com/kufu/smarthr-ui/commit/a3df056bbb5858a787869e527ee2081bc72e7305))
+
+
+### Bug Fixes
+
+* Next.js 環境で hydration error が発生する問題を修正 ([#4594](https://github.com/kufu/smarthr-ui/issues/4594)) ([9cf5329](https://github.com/kufu/smarthr-ui/commit/9cf532947527d27510117c04182362eadce6f148))
+
 ## [48.0.0](https://github.com/kufu/smarthr-ui/compare/v47.1.0...v48.0.0) (2024-04-23)
 
 
