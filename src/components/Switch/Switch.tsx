@@ -44,7 +44,7 @@ const switchStyle = tv({
 
 type Props = InputHTMLAttributes<HTMLInputElement>
 
-export const NewSwitch = forwardRef<HTMLInputElement, Props>(({ className, ...props }, ref) => {
+export const Switch = forwardRef<HTMLInputElement, Props>(({ className, ...props }, ref) => {
   const { wrapper, input, icon, iconWrapper } = useMemo(() => switchStyle(), [])
   return (
     <span className={wrapper({ className })}>
