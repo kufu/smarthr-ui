@@ -348,8 +348,9 @@ export const Form_Dialog: StoryFn = () => {
         subtitle="副題"
         actionText="保存"
         decorators={{ closeButtonLabel: (txt) => `cancel.(${txt})` }}
-        onSubmit={(closeDialog) => {
+        onSubmit={(closeDialog, e) => {
           action('executed')()
+          console.log('event', e)
           setResponseMessage(undefined)
           closeDialog()
         }}

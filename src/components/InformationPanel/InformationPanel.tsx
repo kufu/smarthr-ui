@@ -8,7 +8,6 @@ import { Heading, HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretUpIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { ResponseMessage } from '../ResponseMessage'
-import { SectioningFragment } from '../SectioningContent'
 
 import type { DecoratorsType } from '../../types'
 
@@ -83,36 +82,33 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
 
   return (
     <Base {...props} as="section" className={wrapperStyle}>
-      {/* TODO: Base が自動セクショニング対応したら SectioningFragment を消す */}
-      <SectioningFragment>
-        <Stack gap={1.25}>
-          <Cluster align="center" justify="space-between">
-            {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
-            <Heading type="blockTitle" tag={titleTag} id={titleId} className={headerStyle}>
-              <ResponseMessage type={type} iconGap={0.5}>
-                {title}
-              </ResponseMessage>
-            </Heading>
-            {togglable && (
-              <Button
-                suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
-                size="s"
-                onClick={handleClickTrigger}
-                aria-expanded={togglable ? active : undefined}
-                aria-controls={contentId}
-                className={togglableButtonStyle}
-              >
-                {active
-                  ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
-                  : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
-              </Button>
-            )}
-          </Cluster>
-          <div id={contentId} aria-hidden={!active} className={contentStyle}>
-            {children}
-          </div>
-        </Stack>
-      </SectioningFragment>
+      <Stack gap={1.25}>
+        <Cluster align="center" justify="space-between">
+          {/* eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content */}
+          <Heading type="blockTitle" tag={titleTag} id={titleId} className={headerStyle}>
+            <ResponseMessage type={type} iconGap={0.5}>
+              {title}
+            </ResponseMessage>
+          </Heading>
+          {togglable && (
+            <Button
+              suffix={active ? <FaCaretUpIcon /> : <FaCaretDownIcon />}
+              size="s"
+              onClick={handleClickTrigger}
+              aria-expanded={togglable ? active : undefined}
+              aria-controls={contentId}
+              className={togglableButtonStyle}
+            >
+              {active
+                ? decorators?.closeButtonLabel?.(CLOSE_BUTTON_LABEL) || CLOSE_BUTTON_LABEL
+                : decorators?.openButtonLabel?.(OPEN_BUTTON_LABEL) || OPEN_BUTTON_LABEL}
+            </Button>
+          )}
+        </Cluster>
+        <div id={contentId} aria-hidden={!active} className={contentStyle}>
+          {children}
+        </div>
+      </Stack>
     </Base>
   )
 }

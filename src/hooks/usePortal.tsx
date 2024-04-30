@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useContext,
   useMemo,
-  useRef,
+  useState,
 } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -22,12 +22,15 @@ const ParentContext = createContext<ParentContextValue>({
 let portalSeq = 0
 
 export function usePortal() {
-  const portalRoot = useRef<HTMLDivElement | null>(
-    typeof document === 'undefined' ? null : (document.createElement('div') as HTMLDivElement),
-  ).current
+  const [portalRoot, setPortalRoot] = useState<HTMLDivElement | null>(null)
   const currentSeq = useMemo(() => ++portalSeq, [])
   const parent = useContext(ParentContext)
   const parentSeqs = parent.seqs.concat(currentSeq)
+
+  useEnhancedEffect(() => {
+    // Next.jsのhydration error回避のため、初回レンダリング時にdivを作成する
+    setPortalRoot(document.createElement('div'))
+  }, [])
 
   useEnhancedEffect(() => {
     if (!portalRoot) {
@@ -40,7 +43,7 @@ export function usePortal() {
     }
     // spread parentSeqs array for deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...parentSeqs])
+  }, [portalRoot, ...parentSeqs])
 
   const isChildPortal = useCallback(
     (element: HTMLElement | null) => _isChildPortal(element, currentSeq),
