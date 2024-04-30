@@ -44,7 +44,7 @@ type Props = PropsWithChildren<{
   /** ツールチップを内包要素に紐付けるかどうか */
   ariaDescribedbyTarget?: 'wrapper' | 'inner'
 }>
-type ElementProps = Omit<ComponentProps<'span'>, keyof Props | 'aria-describedby'>
+type ElementProps = Omit<ComponentProps<'p'>, keyof Props | 'aria-describedby'>
 
 const tooltip = tv({
   base: [
@@ -137,8 +137,8 @@ export const Tooltip: FC<Props & ElementProps> = ({
       : children
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions,smarthr/a11y-delegate-element-has-role-presentation
-    <span
+    // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, jsx-a11y/no-noninteractive-element-interactions
+    <p
       {...props}
       aria-describedby={ariaDescribedbyTarget === 'wrapper' ? tooltipId : undefined}
       ref={ref}
@@ -167,6 +167,6 @@ export const Tooltip: FC<Props & ElementProps> = ({
           portalRoot,
         )}
       {childrenWithProps}
-    </span>
+    </p>
   )
 }
