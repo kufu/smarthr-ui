@@ -13,6 +13,9 @@ const compactInformationPanel = tv({
   base: ['smarthr-ui-CompactInformationPanel', 'shr-flex shr-p-1 shr-shadow-layer-3'],
 })
 
+/**
+ * @deprecated `CompactInformationPanel` は非推奨です。`NotificationBar[base="base"]` を使用してください。
+ */
 export const CompactInformationPanel: FC<Props & BaseElementProps> = ({
   type = 'info',
   className,
