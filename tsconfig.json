@@ -1,24 +1,7 @@
 {
   "compilerOptions": {
-    "outDir": "./lib",
-    "lib": ["es2020", "dom"],
-    "target": "es2020",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "types": ["node", "react", "jest"], // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/33311#issuecomment-466731156
-    "jsx": "react",
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "allowSyntheticDefaultImports": true,
-    "noEmitOnError": true,
-    "esModuleInterop": true,
-    "paths": {}
+    "paths": {
+      "@/*": ["/*"]
+    }
   },
-  "exclude": ["node_modules"],
-  "include": ["src/**/*"]
 }

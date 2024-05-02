@@ -29,15 +29,15 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
       - run: pnpm install
-      - run: pnpm release
+      - run: pnpm ui release
         if: ${{ env.IS_PRERELEASE == 'false' }}
-      - run: pnpm release --prerelease
+      - run: pnpm ui release --prerelease
         if: ${{ env.IS_PRERELEASE == 'true' }}
       - run: npm publish
         if: ${{ env.IS_PRERELEASE == 'false' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npm publish --tag prerelease
+      - run: pnpm publish --filter smarthr-ui --tag prerelease
         if: ${{ env.IS_PRERELEASE == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

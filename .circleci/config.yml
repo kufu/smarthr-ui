@@ -37,39 +37,39 @@ commands:
   check-source:
     steps:
       - run: pnpm audit --prod
-      - run: pnpm lint
+      - run: pnpm ui lint
   run-npm-test:
     steps:
-      - run: pnpm test -- -w 1
-      - run: pnpm test:build-assets
+      - run: pnpm ui test -- -w 1
+      - run: pnpm ui test:build-assets
   run-a11y-test:
     steps:
       - checkout
       - restore_cache:
           keys:
             - pnpm-packages-reg-{{ checksum "pnpm-lock.yaml" }}
-      - run: pnpm install
+      - run: pnpm ui install
       - save_cache:
           paths:
             - ~/.cache/pnpm
           key: pnpm-packages-reg-{{ checksum "pnpm-lock.yaml" }}
       - run:
-          command: pnpm build-storybook
+          command: pnpm ui build-storybook
       - run:
-          command: npx http-server storybook-static --port 6006 --silent
+          command: pnpm dlx http-server ./packages/smarthr-ui/storybook-static --port 6006 --silent
           background: true
       - run:
-          command: pnpm test-storybook:ci
+          command: pnpm ui test-storybook:ci
       - store_test_results:
           path: junit.xml
   run-chromatic:
     steps:
       - checkout
-      - run: pnpm run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes --only-changed
+      - run: pnpm ui run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes --only-changed
   run-chromatic-master:
     steps:
       - checkout
-      - run: STORYBOOK_NODE_ENV="production" pnpm run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes --only-changed
+      - run: STORYBOOK_NODE_ENV="production" pnpm ui run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes --only-changed
   install-noto-sans-cjk-jp:
     steps:
       - run:
