@@ -36,7 +36,7 @@ jobs:
       - name: prepare release
         if: ${{ env.NO_BRANCH_PREPARATION == 'false' }}
         run: |
-          BASE_TAG=v$(npx -c 'echo "$npm_package_version"')
+          BASE_TAG=v$(cat ./packages/smarthr-ui/package.json | grep "\"version\"" | cut -d "\"" -f 4)
           git checkout $BASE_TAG
           git merge --no-edit ${{ github.ref }}
       - run: pnpm install
