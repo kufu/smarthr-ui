@@ -24,6 +24,6 @@ jobs:
       - name: run
         run: |
           pnpm install
-          pnpm e2e
+          pnpm ui e2e
         env:
           TESTCAFE_BROWSER: ${{ matrix.browser }}
