@@ -39,6 +39,14 @@ export const Default: Story = {
           decorators={{ iconAlt: (txt) => `search.(${txt})` }}
         />
       </div>
+      <div>
+        <p>検索解除ボタンを表示</p>
+        <SearchInput
+          name="default"
+          tooltipMessage="氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。"
+          onClickClear={() => alert('clear')}
+        />
+      </div>
     </StyledStack>
   ),
 }
