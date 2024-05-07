@@ -199,7 +199,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     return maxLetters ? (
       <span>
         {body}
-        <span className={counterStyle} id={actuaMaxLettersId}>
+        <span className={counterStyle} id={actualMaxLettersId}>
           {beforeMaxLettersCount}
           <span className={counterTextStyle}>
             {maxLetters - count}/{maxLetters}
