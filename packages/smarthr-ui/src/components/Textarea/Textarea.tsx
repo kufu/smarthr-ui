@@ -187,7 +187,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       <textarea
         {...props}
         {...textareaStyleProps}
-        aria-labelledby={actuaMaxLettersId}
+        aria-describedby={actualMaxLettersId}
         onKeyUp={onKeyUp}
         ref={textareaRef}
         aria-invalid={error || undefined}
