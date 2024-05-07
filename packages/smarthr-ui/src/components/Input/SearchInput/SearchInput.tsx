@@ -1,4 +1,4 @@
-import React, { ComponentProps, forwardRef, useCallback, useMemo } from 'react'
+import React, { ComponentProps, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../../Button'
