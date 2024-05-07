@@ -39,7 +39,7 @@ export const All: StoryFn = () => (
           title="氏名"
           statusLabelProps={{ type: 'grey', children: '任意' }}
           helpMessage="氏名を入力してください。"
-          errorMessages={'氏名が入力されていません。'}
+          errorMessages="氏名が入力されていません。"
         >
           <Input name="fullname" width="100%" />
         </FormControl>

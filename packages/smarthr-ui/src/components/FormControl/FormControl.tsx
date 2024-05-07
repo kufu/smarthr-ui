@@ -6,7 +6,7 @@ import React, {
   ReactNode,
   useMemo,
 } from 'react'
-import { isStyledComponent } from 'styled-components'
+import styled, { isStyledComponent } from 'styled-components'
 import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
@@ -218,13 +218,13 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       )}
 
       {actualErrorMessages.length > 0 && (
-        <Stack gap={0} id={`${managedHtmlFor}_errorMessages`}>
+        <ErrorList id={`${managedHtmlFor}_errorMessages`}>
           {actualErrorMessages.map((message, index) => (
-            <p key={index}>
+            <ErrorListItem key={index}>
               <FaCircleExclamationIcon text={message} className={errorIconStyle} />
-            </p>
+            </ErrorListItem>
           ))}
-        </Stack>
+        </ErrorList>
       )}
 
       <div className={childrenWrapperStyle}>
@@ -305,3 +305,13 @@ const isComboBoxElement = (type: string | React.JSXElementConstructor<any>) => {
 }
 
 export const FormControl: React.FC<Omit<Props & ElementProps, 'as'>> = ActualFormControl
+
+const ErrorList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`
+const ErrorListItem = styled.li`
+  padding: 0;
+  margin: 0;
+`
