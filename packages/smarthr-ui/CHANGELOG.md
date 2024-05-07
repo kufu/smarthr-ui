@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [49.0.1](https://github.com/kufu/smarthr-ui/compare/v49.0.0...v49.0.1) (2024-05-07)
+
+
+### Bug Fixes
+
+* CompactInformationPanel を deprecated にする ([#4622](https://github.com/kufu/smarthr-ui/issues/4622)) ([51daee5](https://github.com/kufu/smarthr-ui/commit/51daee55f4072a26a1b1fc6c369f0d7c37e25b66))
+
 ## [49.0.0](https://github.com/kufu/smarthr-ui/compare/v48.0.0...v49.0.0) (2024-04-30)
 
 
