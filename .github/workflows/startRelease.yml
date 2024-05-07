@@ -36,16 +36,16 @@ jobs:
       - name: prepare release
         if: ${{ env.NO_BRANCH_PREPARATION == 'false' }}
         run: |
-          BASE_TAG=v$(npx -c 'echo "$npm_package_version"')
+          BASE_TAG=v$(cat ./packages/smarthr-ui/package.json | grep "\"version\"" | cut -d "\"" -f 4)
           git checkout $BASE_TAG
           git merge --no-edit ${{ github.ref }}
       - run: pnpm install
       - name: release dry run
         if: ${{ env.IS_PRERELEASE == 'false' }}
-        run: pnpm release:dryrun > ${{ env.RESULT_PATH }}
+        run: pnpm ui release:dryrun > ${{ env.RESULT_PATH }}
       - name: prerelease dry run
         if: ${{ env.IS_PRERELEASE == 'true' }}
-        run: pnpm release:dryrun --prerelease > ${{ env.RESULT_PATH }}
+        run: pnpm ui release:dryrun --prerelease > ${{ env.RESULT_PATH }}
       - name: wrap dry run log
         run: |
           echo "Dry Run Log:
@@ -70,7 +70,7 @@ jobs:
           labels: ${{ env.ISSUE_LABELS }}
       - name: Send GitHub Action trigger data to Slack
         if: ${{ github.event.client_payload.channel_id != null }}
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@v1.26.0
         with:
           channel-id: ${{ github.event.client_payload.channel_id }}
           payload: ${{ github.event.client_payload.say }}

@@ -29,21 +29,21 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
       - run: pnpm install
-      - run: pnpm release
+      - run: pnpm ui release
         if: ${{ env.IS_PRERELEASE == 'false' }}
-      - run: pnpm release --prerelease
+      - run: pnpm ui release --prerelease
         if: ${{ env.IS_PRERELEASE == 'true' }}
-      - run: npm publish
+      - run: pnpm publish --filter smarthr-ui
         if: ${{ env.IS_PRERELEASE == 'false' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npm publish --tag prerelease
+      - run: pnpm publish --filter smarthr-ui --tag prerelease
         if: ${{ env.IS_PRERELEASE == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: echo NEW_TAG=$(git describe) >> $GITHUB_ENV
       - run: git push origin $NEW_TAG
-      - run: npx ts-node ./scripts/getLatestChangelog.ts > ${{ env.CHANGELOG_PATH }}
+      - run: npx ts-node ./packages/smarthr-ui/scripts/getLatestChangelog.ts > ${{ env.CHANGELOG_PATH }}
       - name: create release on GitHub
         uses: actions/create-release@v1
         env:
@@ -69,7 +69,7 @@ jobs:
           branch: 'merge-release-${{ env.NEW_TAG }}'
           labels: release candidate
       - name: Send message to Slack
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@v1.26.0
         with:
           payload: |
             {
