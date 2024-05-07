@@ -45,7 +45,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
 
     const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
     const clearButtonAlt = useMemo(
-      () => decorators?.iconAlt?.(CLEAR_BUTTON_ALT) || CLEAR_BUTTON_ALT,
+      () => decorators?.clearButtonAlt?.(CLEAR_BUTTON_ALT) || CLEAR_BUTTON_ALT,
       [decorators],
     )
 
