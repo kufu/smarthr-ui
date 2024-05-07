@@ -32,45 +32,42 @@ const searchInput = tv({
   },
 })
 
-export const SearchInput = forwardRef<HTMLInputElement, Props>(({ decorators, ...props }, ref) => {
-  const { clearButton, clearButtonIcon } = searchInput()
-  const { clearButtonStyle, clearButtonIconStyle } = useMemo(
-    () => ({
-      clearButtonStyle: clearButton(),
-      clearButtonIconStyle: clearButtonIcon(),
-    }),
-    [clearButton, clearButtonIcon],
-  )
+export const SearchInput = forwardRef<HTMLInputElement, Props>(
+  ({ decorators, onClickClear, ...props }, ref) => {
+    const { clearButton, clearButtonIcon } = searchInput()
+    const { clearButtonStyle, clearButtonIconStyle } = useMemo(
+      () => ({
+        clearButtonStyle: clearButton(),
+        clearButtonIconStyle: clearButtonIcon(),
+      }),
+      [clearButton, clearButtonIcon],
+    )
 
-  const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
-  const clearButtonAlt = useMemo(
-    () => decorators?.iconAlt?.(CLEAR_BUTTON_ALT) || CLEAR_BUTTON_ALT,
-    [decorators],
-  )
+    const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
+    const clearButtonAlt = useMemo(
+      () => decorators?.iconAlt?.(CLEAR_BUTTON_ALT) || CLEAR_BUTTON_ALT,
+      [decorators],
+    )
 
-  const onClickClear = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => props.onClickClear?.(e),
-    [props],
-  )
-
-  return (
-    <label>
-      <InputWithTooltip
-        {...props}
-        ref={ref}
-        prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
-        suffix={
-          props.onClickClear && (
-            <UnstyledButton onClick={(e) => onClickClear(e)} className={clearButtonStyle}>
-              <FaCircleXmarkIcon
-                color="TEXT_BLACK"
-                alt={clearButtonAlt}
-                className={clearButtonIconStyle}
-              />
-            </UnstyledButton>
-          )
-        }
-      />
-    </label>
-  )
-})
+    return (
+      <label>
+        <InputWithTooltip
+          {...props}
+          ref={ref}
+          prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
+          suffix={
+            onClickClear && (
+              <UnstyledButton onClick={(e) => onClickClear(e)} className={clearButtonStyle}>
+                <FaCircleXmarkIcon
+                  color="TEXT_BLACK"
+                  alt={clearButtonAlt}
+                  className={clearButtonIconStyle}
+                />
+              </UnstyledButton>
+            )
+          }
+        />
+      </label>
+    )
+  },
+)
