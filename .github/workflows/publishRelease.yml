@@ -29,6 +29,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
       - run: pnpm install
+      - run: cp README.md packages/smarthr-ui
       - run: pnpm ui release
         if: ${{ env.IS_PRERELEASE == 'false' }}
       - run: pnpm ui release --prerelease
@@ -41,6 +42,7 @@ jobs:
         if: ${{ env.IS_PRERELEASE == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: rm packages/smarthr-ui/README.md
       - run: echo NEW_TAG=$(git describe) >> $GITHUB_ENV
       - run: git push origin $NEW_TAG
       - run: npx ts-node ./packages/smarthr-ui/scripts/getLatestChangelog.ts > ${{ env.CHANGELOG_PATH }}
