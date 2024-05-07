@@ -259,6 +259,9 @@ importers:
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
+      playwright:
+        specifier: ^1.44.0
+        version: 1.44.0
       postcss:
         specifier: ^8.4.38
         version: 8.4.38
@@ -11799,7 +11802,7 @@ packages:
       tslib: 2.6.2
     optionalDependencies:
       errno: 0.1.8
-      graceful-fs: 4.1.5
+      graceful-fs: 4.2.11
       image-size: 0.5.5
       make-dir: 2.1.0
       mime: 1.6.0

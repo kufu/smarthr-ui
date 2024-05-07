@@ -6,7 +6,7 @@ import React, {
   ReactNode,
   useMemo,
 } from 'react'
-import styled, { isStyledComponent } from 'styled-components'
+import { isStyledComponent } from 'styled-components'
 import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
@@ -73,6 +73,7 @@ const formGroup = tv({
       'shr-self-start',
       'shr-px-[unset]',
     ],
+    errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
   },
 })
@@ -160,15 +161,17 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const { wrapperStyle, labelStyle, errorIconStyle, childrenWrapperStyle } = useMemo(() => {
-    const { wrapper, label, errorIcon } = formGroup()
-    return {
-      wrapperStyle: wrapper({ className }),
-      labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
-      errorIconStyle: errorIcon(),
-      childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
-    }
-  }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
+  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, childrenWrapperStyle } =
+    useMemo(() => {
+      const { wrapper, label, errorList, errorIcon } = formGroup()
+      return {
+        wrapperStyle: wrapper({ className }),
+        labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
+        errorListStyle: errorList(),
+        errorIconStyle: errorIcon(),
+        childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
+      }
+    }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
 
   return (
     <Stack
@@ -218,13 +221,13 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       )}
 
       {actualErrorMessages.length > 0 && (
-        <ErrorList id={`${managedHtmlFor}_errorMessages`}>
+        <ul id={`${managedHtmlFor}_errorMessages`} className={errorListStyle}>
           {actualErrorMessages.map((message, index) => (
-            <ErrorListItem key={index}>
+            <li key={index}>
               <FaCircleExclamationIcon text={message} className={errorIconStyle} />
-            </ErrorListItem>
+            </li>
           ))}
-        </ErrorList>
+        </ul>
       )}
 
       <div className={childrenWrapperStyle}>
@@ -305,13 +308,3 @@ const isComboBoxElement = (type: string | React.JSXElementConstructor<any>) => {
 }
 
 export const FormControl: React.FC<Omit<Props & ElementProps, 'as'>> = ActualFormControl
-
-const ErrorList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`
-const ErrorListItem = styled.li`
-  padding: 0;
-  margin: 0;
-`

@@ -49,6 +49,7 @@ commands:
           keys:
             - pnpm-packages-reg-{{ checksum "pnpm-lock.yaml" }}
       - run: pnpm ui install
+      - run: pnpm ui exec playwright install
       - save_cache:
           paths:
             - ~/.cache/pnpm
