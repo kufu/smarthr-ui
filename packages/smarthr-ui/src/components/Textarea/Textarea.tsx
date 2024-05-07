@@ -104,7 +104,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     ref,
   ) => {
     const maxLettersId = useId()
-    const actuaMaxLettersId = maxLetters ? maxLettersId : undefined
+    const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
     const { lineHeight } = useTheme()
     const textareaRef = useRef<HTMLTextAreaElement>(null)
