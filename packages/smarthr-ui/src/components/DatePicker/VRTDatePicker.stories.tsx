@@ -41,6 +41,7 @@ const playExpanded = async ({ canvasElement }: { canvasElement: HTMLElement }) =
   const canvas = within(canvasElement)
   const textbox = await canvas.findByRole('textbox')
   await textbox.focus()
+  await textbox.blur() // カレンダーを開くためにフォーカスするが、カーソル点滅によるフレーキーを避けるためにすぐにフォーカスを外す
 }
 VRTExpanded.play = playExpanded
 
@@ -105,6 +106,7 @@ VRTBottomExpanded.play = async ({ canvasElement }: { canvasElement: HTMLElement 
   const canvas = within(canvasElement)
   const textbox = await canvas.findByRole('textbox')
   await textbox.focus()
+  await textbox.blur() // カレンダーを開くためにフォーカスするが、カーソル点滅によるフレーキーを避けるためにすぐにフォーカスを外す
 }
 
 const WrapperList = styled.ul`
