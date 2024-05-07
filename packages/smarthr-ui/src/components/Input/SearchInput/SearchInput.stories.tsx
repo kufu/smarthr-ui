@@ -23,7 +23,7 @@ export const Default: Story = {
     tooltipMessage: '',
   },
   render: () => {
-    const [value, setValue] = React.useState('')
+    const [value, setValue] = React.useState('value')
     return (
       <StyledStack>
         <div>

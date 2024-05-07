@@ -56,7 +56,8 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
           ref={ref}
           prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
           suffix={
-            onClickClear && (
+            onClickClear &&
+            props.value && (
               <UnstyledButton onClick={(e) => onClickClear(e)} className={clearButtonStyle}>
                 <FaCircleXmarkIcon
                   color="TEXT_BLACK"
