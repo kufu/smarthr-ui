@@ -4,11 +4,12 @@ import { VariantProps, tv } from 'tailwind-variants'
 import { Base } from '../Base'
 import { Button } from '../Button'
 import {
-  FaCheckCircleIcon,
-  FaExclamationCircleIcon,
-  FaExclamationTriangleIcon,
-  FaInfoCircleIcon,
-  FaTimesIcon,
+  FaCircleCheckIcon,
+  FaCircleExclamationIcon,
+  FaCircleInfoIcon,
+  FaRotateIcon,
+  FaTriangleExclamationIcon,
+  FaXmarkIcon,
   WarningIcon,
 } from '../Icon'
 import { Cluster } from '../Layout'
@@ -46,6 +47,9 @@ export const notificationBar = tv({
         icon: 'shr-text-black',
       },
       error: {},
+      sync: {
+        icon: 'shr-text-main',
+      },
     },
     /** 強調するかどうか */
     bold: {
@@ -61,7 +65,7 @@ export const notificationBar = tv({
   },
   compoundVariants: [
     {
-      type: ['info', 'success', 'warning', 'error'],
+      type: ['info', 'success', 'warning', 'error', 'sync'],
       bold: false,
       className: {
         wrapper: 'shr-bg-white shr-text-black',
@@ -82,7 +86,7 @@ export const notificationBar = tv({
       },
     },
     {
-      type: 'info',
+      type: ['info', 'sync'],
       bold: true,
       className: {
         wrapper: 'shr-bg-white',
@@ -142,7 +146,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   message,
   onClose,
   children,
-  role = type === 'info' ? 'status' : 'alert',
+  role = type.match(/info|sync/) ? 'status' : 'alert',
   base = 'none',
   layer,
   className,
@@ -151,15 +155,18 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   const Icon = useMemo(() => {
     switch (type) {
       case 'info':
-        return FaInfoCircleIcon
+        return FaCircleInfoIcon
       case 'success': {
-        return FaCheckCircleIcon
+        return FaCircleCheckIcon
       }
       case 'warning': {
-        return bold ? FaExclamationTriangleIcon : WarningIcon
+        return bold ? FaTriangleExclamationIcon : WarningIcon
       }
       case 'error': {
-        return FaExclamationCircleIcon
+        return FaCircleExclamationIcon
+      }
+      case 'sync': {
+        return FaRotateIcon
       }
     }
   }, [type, bold])
@@ -216,7 +223,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
         </Cluster>
         {onClose && (
           <Button variant="text" size="s" onClick={onClose} className={closeButtonStyle}>
-            <FaTimesIcon alt="閉じる" />
+            <FaXmarkIcon alt="閉じる" />
           </Button>
         )}
       </div>
