@@ -16,7 +16,6 @@ import { Dropdown, DropdownContent, DropdownScrollArea, DropdownTrigger } from '
 import { AnchorButton, Button, BaseProps as ButtonProps } from '../../Button'
 import { RemoteDialogTrigger } from '../../Dialog'
 import { FaCaretDownIcon, FaEllipsisIcon } from '../../Icon'
-import { Stack } from '../../Layout'
 
 type Actions = ActionItem | ActionItem[]
 
@@ -214,14 +213,12 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
         </Button>
       </DropdownTrigger>
       <DropdownContent>
-        <DropdownScrollArea>
-          <Stack as="ul" gap={0} ref={containerRef} className={actionListStyle}>
-            {React.Children.map(children, (item, i) =>
-              // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
-              // itemの存在チェックでfalsyな値は弾かれている想定
-              item ? <li key={i}>{actionItem(item as ActionItemTruthyType)}</li> : null,
-            )}
-          </Stack>
+        <DropdownScrollArea as="ul" ref={containerRef} className={actionListStyle}>
+          {React.Children.map(children, (item, i) =>
+            // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
+            // itemの存在チェックでfalsyな値は弾かれている想定
+            item ? <li key={i}>{actionItem(item as ActionItemTruthyType)}</li> : null,
+          )}
         </DropdownScrollArea>
       </DropdownContent>
     </Dropdown>

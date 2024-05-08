@@ -73,6 +73,7 @@ const formGroup = tv({
       'shr-self-start',
       'shr-px-[unset]',
     ],
+    errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
   },
 })
@@ -160,15 +161,17 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const { wrapperStyle, labelStyle, errorIconStyle, childrenWrapperStyle } = useMemo(() => {
-    const { wrapper, label, errorIcon } = formGroup()
-    return {
-      wrapperStyle: wrapper({ className }),
-      labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
-      errorIconStyle: errorIcon(),
-      childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
-    }
-  }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
+  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, childrenWrapperStyle } =
+    useMemo(() => {
+      const { wrapper, label, errorList, errorIcon } = formGroup()
+      return {
+        wrapperStyle: wrapper({ className }),
+        labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
+        errorListStyle: errorList(),
+        errorIconStyle: errorIcon(),
+        childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
+      }
+    }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
 
   return (
     <Stack
@@ -218,13 +221,13 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       )}
 
       {actualErrorMessages.length > 0 && (
-        <Stack gap={0} id={`${managedHtmlFor}_errorMessages`}>
+        <ul id={`${managedHtmlFor}_errorMessages`} className={errorListStyle}>
           {actualErrorMessages.map((message, index) => (
-            <p key={index}>
+            <li key={index}>
               <FaCircleExclamationIcon text={message} className={errorIconStyle} />
-            </p>
+            </li>
           ))}
-        </Stack>
+        </ul>
       )}
 
       <div className={childrenWrapperStyle}>
