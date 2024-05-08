@@ -22,7 +22,7 @@ const searchInput = tv({
     clearButton: [
       'smarthr-ui-SearchInput-clearButton',
       'shr-group/clearButton',
-      'shr-me-0.5 shr-cursor-pointer',
+      'shr-cursor-pointer',
       'focus-visible:shr-shadow-none',
     ],
     clearButtonIcon: [
