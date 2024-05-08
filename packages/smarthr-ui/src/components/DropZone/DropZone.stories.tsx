@@ -26,7 +26,7 @@ export const All: StoryFn = () => (
       <Text>With children</Text>
       <DropZone name="with_children" onSelectFiles={onSelectFiles}>
         <DropZoneText>
-          <span>ここにドラッグ&ドロップ</span>
+          <span>ここにドラッグアンドドロップ</span>
           <span>または</span>
         </DropZoneText>
       </DropZone>
@@ -36,7 +36,7 @@ export const All: StoryFn = () => (
       <Text>Button accepting only image files</Text>
       <DropZone name="accept" onSelectFiles={onSelectFiles} accept="image/*">
         <DropZoneText>
-          <span>ここにドラッグ&ドロップ</span>
+          <span>ここにドラッグアンドドロップ</span>
           <span>または</span>
         </DropZoneText>
       </DropZone>
