@@ -10,10 +10,13 @@ import { Th } from './Th'
 import type { DecoratorsType } from '../../types'
 
 type Props = {
-  decorators?: DecoratorsType<'checkAllInvisibleLabel'>
+  decorators?: DecoratorsType<'checkAllInvisibleLabel'> & {
+    checkColumnName?: (text: string) => string
+  }
 }
 
 const CHECK_ALL_INVISIBLE_LABEL = 'すべての項目を選択/解除'
+const CHECK_COLUMN_NAME = '選択'
 
 const thCheckbox = tv({
   slots: {
@@ -26,7 +29,6 @@ const thCheckbox = tv({
 
 export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
   ({ decorators, className, ...others }, ref) => {
-
     const { wrapperStyle, innerStyle, balloonStyle } = useMemo(() => {
       const { wrapper, inner, balloon } = thCheckbox()
       return {
@@ -38,9 +40,11 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
 
     const checkAllInvisibleLabel =
       decorators?.checkAllInvisibleLabel?.(CHECK_ALL_INVISIBLE_LABEL) || CHECK_ALL_INVISIBLE_LABEL
+    const checkColumnName = decorators?.checkColumnName?.(CHECK_COLUMN_NAME) || CHECK_COLUMN_NAME
+
     return (
       // Th に必要な属性やイベントは不要
-      <Th className={wrapperStyle}>
+      <Th className={wrapperStyle} aria-label={checkColumnName}>
         <Center as="label" verticalCentering className={innerStyle}>
           <Balloon horizontal="left" vertical="middle" className={balloonStyle}>
             <p className="shr-p-0.5">{checkAllInvisibleLabel}</p>
