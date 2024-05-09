@@ -1,8 +1,9 @@
-import React, { ComponentProps, forwardRef, useMemo } from 'react'
+import React, { ComponentProps, forwardRef, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../../Button'
 import { FaCircleXmarkIcon, FaMagnifyingGlassIcon } from '../../Icon'
+import { VisuallyHiddenText } from '../../VisuallyHiddenText'
 import { InputWithTooltip } from '../InputWithTooltip'
 
 import type { DecoratorsType } from '../../../types'
@@ -49,10 +50,17 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
       [decorators],
     )
 
+    const defaultInptuId = useId()
+    const inputId = props.id || defaultInptuId
+
     return (
-      <label>
+      <div>
+        <label htmlFor={inputId}>
+          <VisuallyHiddenText>{iconAlt}</VisuallyHiddenText>
+        </label>
         <InputWithTooltip
           {...props}
+          id={inputId}
           ref={ref}
           prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
           suffix={
@@ -68,7 +76,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
             )
           }
         />
-      </label>
+      </div>
     )
   },
 )
