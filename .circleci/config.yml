@@ -3,19 +3,19 @@ version: 2.1
 executors:
   node-maintenance:
     docker:
-      - image: cimg/node:21.7.3
+      - image: cimg/node:22.1.0
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
   node-active-lts:
     docker:
-      - image: cimg/node:21.7.3
+      - image: cimg/node:22.1.0
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
   node-active-lts-browsers:
     docker:
-      - image: cimg/node:21.7.3-browsers
+      - image: cimg/node:22.1.0-browsers
         auth:
           username: smarthrinc
           password: $DOCKER_HUB_ACCESS_TOKEN
@@ -49,6 +49,7 @@ commands:
           keys:
             - pnpm-packages-reg-{{ checksum "pnpm-lock.yaml" }}
       - run: pnpm ui install
+      - run: pnpm ui exec playwright install
       - save_cache:
           paths:
             - ~/.cache/pnpm
@@ -65,11 +66,11 @@ commands:
   run-chromatic:
     steps:
       - checkout
-      - run: pnpm ui run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes --only-changed
+      - run: pnpm ui run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --exit-zero-on-changes --only-changed --storybook-base-dir=packages/smarthr-ui
   run-chromatic-master:
     steps:
       - checkout
-      - run: STORYBOOK_NODE_ENV="production" pnpm ui run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes --only-changed
+      - run: STORYBOOK_NODE_ENV="production" pnpm ui run chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --auto-accept-changes --only-changed --storybook-base-dir=packages/smarthr-ui
   install-noto-sans-cjk-jp:
     steps:
       - run:
