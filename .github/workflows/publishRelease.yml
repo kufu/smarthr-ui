@@ -33,11 +33,11 @@ jobs:
         if: ${{ env.IS_PRERELEASE == 'false' }}
       - run: pnpm ui release --prerelease
         if: ${{ env.IS_PRERELEASE == 'true' }}
-      - run: pnpm publish --filter smarthr-ui
+      - run: pnpm publish --filter smarthr-ui --no-git-checks
         if: ${{ env.IS_PRERELEASE == 'false' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: pnpm publish --filter smarthr-ui --tag prerelease
+      - run: pnpm publish --filter smarthr-ui --tag prerelease --no-git-checks
         if: ${{ env.IS_PRERELEASE == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
