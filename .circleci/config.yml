@@ -32,7 +32,7 @@ commands:
       - run: |
           sudo corepack enable
           sudo corepack prepare
-          pnpm install
+          pnpm ui install
       - save_cache:
           paths:
             - node_modules
