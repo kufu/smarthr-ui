@@ -30,8 +30,8 @@ commands:
             # fallback to using the latest cache if no exact match is found
             - modules-cache-
       - run: |
-          corepack enable
-          corepack prepare
+          sudo corepack enable
+          sudo corepack prepare
           pnpm install
       - save_cache:
           paths:
