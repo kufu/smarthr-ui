@@ -22,7 +22,7 @@ const definitionListItem = tv({
     ],
     termEl: 'smarthr-ui-DefinitionListItem-term',
     descriptionEl:
-      'smarthr-ui-DefinitionListItem-description shr-ms-[initial] shr-pb-0.25 min-h-[theme(lineHeight.normal)]',
+      'smarthr-ui-DefinitionListItem-description shr-ms-[initial] shr-pb-0.25 shr-min-h-[calc(1em*theme(lineHeight.normal))]',
   },
   variants: {
     fullWidth: {
