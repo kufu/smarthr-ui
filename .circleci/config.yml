@@ -47,6 +47,7 @@ commands:
       - run: pnpm ui test:build-assets
   run-a11y-test:
     steps:
+      - run: pnpm ui exec playwright install
       - run:
           command: pnpm ui build-storybook
       - run:
