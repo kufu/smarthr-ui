@@ -62,7 +62,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
           {...props}
           id={inputId}
           ref={ref}
-          prefix={<FaMagnifyingGlassIcon alt={iconAlt} color="TEXT_GREY" />}
+          prefix={<FaMagnifyingGlassIcon color="TEXT_GREY" />}
           suffix={
             onClickClear &&
             props.value && (
