@@ -47,16 +47,6 @@ commands:
       - run: pnpm ui test:build-assets
   run-a11y-test:
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - pnpm-packages-reg-{{ checksum "pnpm-lock.yaml" }}
-      - run: pnpm ui install
-      - run: pnpm ui exec playwright install
-      - save_cache:
-          paths:
-            - ~/.cache/pnpm
-          key: pnpm-packages-reg-{{ checksum "pnpm-lock.yaml" }}
       - run:
           command: pnpm ui build-storybook
       - run:
@@ -106,6 +96,7 @@ jobs:
     working_directory: ~/repo
     resource_class: medium+
     steps:
+      - setup-for-test
       - install-noto-sans-cjk-jp
       - run-a11y-test
   chromatic-deployment:
