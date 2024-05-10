@@ -39,7 +39,7 @@ jobs:
           BASE_TAG=v$(cat ./packages/smarthr-ui/package.json | grep "\"version\"" | cut -d "\"" -f 4)
           git checkout $BASE_TAG
           git merge --no-edit ${{ github.ref }}
-      - run: pnpm install
+      - run: pnpm ui install
       - name: release dry run
         if: ${{ env.IS_PRERELEASE == 'false' }}
         run: pnpm ui release:dryrun > ${{ env.RESULT_PATH }}

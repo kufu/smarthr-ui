@@ -29,7 +29,7 @@ jobs:
         run: |
           corepack enable
           corepack prepare
-          pnpm install
+          pnpm ui install
       - run: pnpm ui release
         if: ${{ env.IS_PRERELEASE == 'false' }}
       - run: pnpm ui release --prerelease

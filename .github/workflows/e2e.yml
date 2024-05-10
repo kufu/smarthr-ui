@@ -21,7 +21,7 @@ jobs:
         run: |
           corepack enable
           corepack prepare
-          pnpm install
+          pnpm ui install
           pnpm ui e2e
         env:
           TESTCAFE_BROWSER: ${{ matrix.browser }}
