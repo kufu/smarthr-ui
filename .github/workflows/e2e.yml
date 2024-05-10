@@ -14,15 +14,14 @@ jobs:
         browser: [chrome]
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
       - name: run
         run: |
+          corepack enable
+          corepack prepare
           pnpm install
           pnpm ui e2e
         env:
