@@ -146,7 +146,7 @@ export const NotificationBar: React.FC<Props & ElementProps & BaseProps> = ({
   message,
   onClose,
   children,
-  role = type.match(/info|sync/) ? 'status' : 'alert',
+  role = type.match(/^(info|sync)$/) ? 'status' : 'alert',
   base = 'none',
   layer,
   className,
