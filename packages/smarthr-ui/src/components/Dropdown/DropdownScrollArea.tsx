@@ -1,14 +1,18 @@
-import React, { ComponentProps, PropsWithChildren, useMemo } from 'react'
+import React, { ComponentProps, ElementType, PropsWithChildren, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-type Props = PropsWithChildren<ComponentProps<'div'>>
+type Props = PropsWithChildren<ComponentProps<'div'>> & {
+  as?: ElementType
+}
 
 const scrollArea = tv({
   base: 'smarthr-ui-Dropdown-scrollArea shr-flex-auto shr-overflow-y-auto',
 })
 
-export const DropdownScrollArea: React.FC<Props> = ({ className, ...props }) => {
-  const styles = useMemo(() => scrollArea({ className }), [className])
+export const DropdownScrollArea = forwardRef<HTMLDivElement, Props>(
+  ({ as: Component = 'div', className, ...props }, ref) => {
+    const styles = useMemo(() => scrollArea({ className }), [className])
 
-  return <div {...props} className={styles} />
-}
+    return <Component {...props} ref={ref} className={styles} />
+  },
+)
