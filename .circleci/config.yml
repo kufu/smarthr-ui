@@ -29,7 +29,10 @@ commands:
             - dependencies-test-{{ checksum "package.json" }}-{{ checksum "pnpm-lock.yaml" }}
             # fallback to using the latest cache if no exact match is found
             - modules-cache-
-      - run: pnpm install
+      - run: |
+          sudo corepack enable
+          sudo corepack prepare
+          pnpm ui install
       - save_cache:
           paths:
             - node_modules
@@ -44,16 +47,7 @@ commands:
       - run: pnpm ui test:build-assets
   run-a11y-test:
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - pnpm-packages-reg-{{ checksum "pnpm-lock.yaml" }}
-      - run: pnpm ui install
       - run: pnpm ui exec playwright install
-      - save_cache:
-          paths:
-            - ~/.cache/pnpm
-          key: pnpm-packages-reg-{{ checksum "pnpm-lock.yaml" }}
       - run:
           command: pnpm ui build-storybook
       - run:
@@ -103,6 +97,7 @@ jobs:
     working_directory: ~/repo
     resource_class: medium+
     steps:
+      - setup-for-test
       - install-noto-sans-cjk-jp
       - run-a11y-test
   chromatic-deployment:
