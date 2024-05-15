@@ -4,7 +4,7 @@ import { tv } from 'tailwind-variants'
 const dialogContentInner = tv({
   slots: {
     titleArea: ['smarthr-ui-Dialog-titleArea', 'shr-border-b-shorthand shr-px-1.5 shr-py-1'],
-    body: ['smarthr-ui-Dialog-body', 'shr-overflow-auto'],
+    body: ['smarthr-ui-Dialog-body', 'shr-overflow-auto shr-p-1.5'],
     actionArea: ['smarthr-ui-Dialog-actionArea', 'shr-border-t-shorthand shr-px-1.5 shr-py-1'],
     buttonArea: ['smarthr-ui-Dialog-buttonArea', 'shr-ms-auto'],
     message: 'shr-text-right',

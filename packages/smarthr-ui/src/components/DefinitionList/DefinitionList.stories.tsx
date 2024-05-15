@@ -115,6 +115,14 @@ export const All: StoryFn = () => (
                 </>
               ),
               description: '標準は subBlockTitle です。blockTitle と subBlockTitle があります。',
+              fullWidth: true,
+            },
+            {
+              term: '空文字の場合も line-height 込みの高さを保ちます。',
+              description: '',
+            },
+            {
+              term: 'undefined の場合',
             },
           ]}
           termStyleType="blockTitle"

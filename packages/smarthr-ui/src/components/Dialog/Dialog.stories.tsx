@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
 import React, { ComponentProps, useRef, useState } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { Button } from '../Button'
 import { DatePicker } from '../DatePicker'
@@ -89,19 +89,15 @@ export const Default: StoryFn = () => {
         >
           <Section>
             <Heading>Dialog</Heading>
-            <Description>
-              The value of isOpen must be managed by you, but you can customize content freely.
-            </Description>
-            <Content>
-              <DatePicker
-                name="dialog_datepicker"
-                value={date?.toDateString()}
-                formatDate={(_date) => (_date ? _date.toDateString() : '')}
-                onChangeDate={(_date) => setDate(_date)}
-                title="test"
-                data-test="dialog-datepicker"
-              />
-            </Content>
+            <p>The value of isOpen must be managed by you, but you can customize content freely.</p>
+            <DatePicker
+              name="dialog_datepicker"
+              value={date?.toDateString()}
+              formatDate={(_date) => (_date ? _date.toDateString() : '')}
+              onChangeDate={(_date) => setDate(_date)}
+              title="test"
+              data-test="dialog-datepicker"
+            />
             <Fieldset title="Fruits" innerMargin={0.5}>
               <RadioListCluster forwardedAs="ul">
                 <li>
@@ -122,11 +118,12 @@ export const Default: StoryFn = () => {
               </RadioListCluster>
             </Fieldset>
           </Section>
-          <Footer>
+          {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+          <FooterCluster>
             <Button onClick={onClickClose} data-test="dialog-closer">
               close
             </Button>
-          </Footer>
+          </FooterCluster>
         </Dialog>
       </li>
       <li>
@@ -148,11 +145,12 @@ export const Default: StoryFn = () => {
           <FormControl title="特定の要素をフォーカスするダイアログ">
             <Input ref={inputRef} name="input_focus_target" data-test="input-focus-target" />
           </FormControl>
-          <Footer>
+          {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+          <FooterCluster>
             <Button onClick={onClickClose} data-test="dialog-closer">
               close
             </Button>
-          </Footer>
+          </FooterCluster>
         </Dialog>
       </li>
     </TriggerList>
@@ -249,9 +247,9 @@ export const Action_Dialog: StoryFn = () => {
         width="40em"
         subActionArea={<Button>サブアクション</Button>}
       >
-        <Section>
-          <StyledHeading>ActionDialog</StyledHeading>
-          <Buttons>
+        <Stack>
+          <p>ActionDialog の本文です。</p>
+          <Cluster>
             <Button
               onClick={() =>
                 setResponseMessage({
@@ -281,8 +279,8 @@ export const Action_Dialog: StoryFn = () => {
             >
               保存中
             </Button>
-          </Buttons>
-        </Section>
+          </Cluster>
+        </Stack>
       </ActionDialog>
       <Button onClick={() => setOpenedDialog('opened')} data-test="opened-dialog-trigger">
         開いた状態で DOM に投入
@@ -301,11 +299,9 @@ export const Action_Dialog: StoryFn = () => {
           firstFocusTarget={openedFocusRef}
           data-test="opened-dialog"
         >
-          <div style={{ padding: '2rem' }}>
-            <Stack align="flex-start">
-              <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
-            </Stack>
-          </div>
+          <Stack align="flex-start">
+            <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
+          </Stack>
         </ActionDialog>
       )}
     </Cluster>
@@ -361,57 +357,59 @@ export const Form_Dialog: StoryFn = () => {
         width="40em"
         subActionArea={<Button>サブアクション</Button>}
       >
-        <Fieldset title="fruits" innerMargin={0.5}>
-          <RadioListCluster forwardedAs="ul">
-            <li>
-              <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
-                Apple
-              </RadioButton>
-            </li>
-            <li>
-              <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChange}>
-                Orange
-              </RadioButton>
-            </li>
-            <li>
-              <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChange}>
-                Grape
-              </RadioButton>
-            </li>
-          </RadioListCluster>
-        </Fieldset>
-        <Buttons>
-          <p>切り替えボタン：</p>
-          <Button
-            onClick={() =>
-              setResponseMessage({
-                status: 'success',
-                text: '保存しました。',
-              })
-            }
-          >
-            保存
-          </Button>
-          <Button
-            onClick={() =>
-              setResponseMessage({
-                status: 'error',
-                text: '何らかのエラーが発生しました。',
-              })
-            }
-          >
-            エラー
-          </Button>
-          <Button
-            onClick={() =>
-              setResponseMessage({
-                status: 'processing',
-              })
-            }
-          >
-            保存中
-          </Button>
-        </Buttons>
+        <Stack>
+          <Fieldset title="fruits" innerMargin={0.5}>
+            <RadioListCluster forwardedAs="ul">
+              <li>
+                <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
+                  Apple
+                </RadioButton>
+              </li>
+              <li>
+                <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChange}>
+                  Orange
+                </RadioButton>
+              </li>
+              <li>
+                <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChange}>
+                  Grape
+                </RadioButton>
+              </li>
+            </RadioListCluster>
+          </Fieldset>
+          <Cluster align="center">
+            <p>切り替えボタン：</p>
+            <Button
+              onClick={() =>
+                setResponseMessage({
+                  status: 'success',
+                  text: '保存しました。',
+                })
+              }
+            >
+              保存
+            </Button>
+            <Button
+              onClick={() =>
+                setResponseMessage({
+                  status: 'error',
+                  text: '何らかのエラーが発生しました。',
+                })
+              }
+            >
+              エラー
+            </Button>
+            <Button
+              onClick={() =>
+                setResponseMessage({
+                  status: 'processing',
+                })
+              }
+            >
+              保存中
+            </Button>
+          </Cluster>
+        </Stack>
       </FormDialog>
       <Button onClick={() => setOpenedDialog('opened')} data-test="opened-form-dialog-trigger">
         開いた状態で DOM に投入
@@ -430,21 +428,19 @@ export const Form_Dialog: StoryFn = () => {
           firstFocusTarget={openedFocusRef}
           data-test="opened-form-dialog"
         >
-          <div style={{ padding: '2rem' }}>
-            <FormControl
-              title={
-                <>
-                  <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
-                </>
-              }
-            >
-              <Input
-                ref={openedFocusRef}
-                name="opened_dialog_focus_target"
-                data-test="opened-form-dialog-focus-target"
-              />
-            </FormControl>
-          </div>
+          <FormControl
+            title={
+              <>
+                <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
+              </>
+            }
+          >
+            <Input
+              ref={openedFocusRef}
+              name="opened_dialog_focus_target"
+              data-test="opened-form-dialog-focus-target"
+            />
+          </FormControl>
         </FormDialog>
       )}
     </Cluster>
@@ -459,14 +455,6 @@ Form_Dialog.parameters = {
   },
 }
 
-const Buttons = styled.div`
-  padding: 1rem 1.5rem;
-
-  > button + button {
-    margin-left: 0.5rem;
-  }
-`
-
 export const Action_Dialog_With_Trigger: StoryFn = () => (
   <>
     <ActionDialogWithTrigger
@@ -477,7 +465,7 @@ export const Action_Dialog_With_Trigger: StoryFn = () => (
         close()
       }}
     >
-      <Description>ActionDialog with Trigger.</Description>
+      <p>ActionDialog with Trigger.</p>
     </ActionDialogWithTrigger>
 
     <ActionDialogWithTrigger
@@ -488,7 +476,7 @@ export const Action_Dialog_With_Trigger: StoryFn = () => (
         close()
       }}
     >
-      <Description>ActionDialog with Trigger.</Description>
+      <p>ActionDialog with Trigger.</p>
     </ActionDialogWithTrigger>
   </>
 )
@@ -516,7 +504,7 @@ export const Remote_Trigger_Action_Dialog: StoryFn = () => (
         onOpen={() => console.log(`open!`)}
         onClose={() => console.log(`close!`)}
       >
-        <Description>Remote Trigger Action Dialog.</Description>
+        <p>Remote Trigger Action Dialog.</p>
       </RemoteTriggerActionDialog>
     </div>
 
@@ -533,7 +521,7 @@ export const Remote_Trigger_Action_Dialog: StoryFn = () => (
           close()
         }}
       >
-        <Description>Remote Trigger Action Dialog.</Description>
+        <p>Remote Trigger Action Dialog.</p>
       </RemoteTriggerActionDialog>
     </div>
   </>
@@ -557,7 +545,7 @@ export const Remote_Trigger_Form_Dialog: StoryFn = () => (
           close()
         }}
       >
-        <Description>Remote Trigger Form Dialog.</Description>
+        <p>Remote Trigger Form Dialog.</p>
       </RemoteTriggerFormDialog>
     </div>
 
@@ -574,7 +562,7 @@ export const Remote_Trigger_Form_Dialog: StoryFn = () => (
           close()
         }}
       >
-        <Description>Remote Trigger Form Dialog.</Description>
+        <p>Remote Trigger Form Dialog.</p>
       </RemoteTriggerFormDialog>
     </div>
   </>
@@ -593,7 +581,7 @@ export const Remote_Trigger_Message_Dialog: StoryFn = () => (
       <RemoteTriggerMessageDialog
         id="remote_trigger_message_dialog_1"
         title="Remote Trigger Message Dialog 1"
-        description={<Description>Remote Trigger Message Dialog.</Description>}
+        description={<p>Remote Trigger Message Dialog.</p>}
       />
     </div>
 
@@ -605,7 +593,7 @@ export const Remote_Trigger_Message_Dialog: StoryFn = () => (
       <RemoteTriggerMessageDialog
         id="remote_trigger_message_dialog_2"
         title="Remote Trigger Message Dialog 2"
-        description={<Description>Remote Trigger Message Dialog.</Description>}
+        description={<p>Remote Trigger Message Dialog.</p>}
       />
     </div>
   </>
@@ -625,12 +613,10 @@ export const Uncontrolled: StoryFn = () => (
           </Button>
         </DialogTrigger>
         <DialogContent id="dialog-uncontrolled" data-test="dialog-content">
-          <Description>Uncontrolled Dialog.</Description>
-          <Content>
-            <DialogCloser>
-              <Button data-test="dialog-closer">Close</Button>
-            </DialogCloser>
-          </Content>
+          <p>Uncontrolled Dialog.</p>
+          <DialogCloser>
+            <Button data-test="dialog-closer">Close</Button>
+          </DialogCloser>
         </DialogContent>
       </DialogWrapper>
     </li>
@@ -675,14 +661,14 @@ export const Uncontrolled: StoryFn = () => (
           id="dialog-uncontrolled-action"
           data-test="action-dialog-content"
         >
-          <Description>
+          <p>
             The content of ActionDialogContent is freely implemented by the user as children.
             <br />
             So you need to prepare your own style.
             <br />
             When action is executed, you can specify when to close dialog. In this story, dialog
             closes one second after clicking action
-          </Description>
+          </p>
         </ActionDialogContent>
       </DialogWrapper>
     </li>
@@ -707,7 +693,7 @@ export const WidthAndPosition: StoryFn = () => (
           </Button>
         </DialogTrigger>
         <DialogContent width={400} id="dialog-width-1">
-          <Description>幅 400px のダイアログ</Description>
+          <p>幅 400px のダイアログ</p>
         </DialogContent>
       </DialogWrapper>
     </li>
@@ -719,7 +705,7 @@ export const WidthAndPosition: StoryFn = () => (
           </Button>
         </DialogTrigger>
         <DialogContent width="80%" id="dialog-width-2">
-          <Description>幅 80% のダイアログ</Description>
+          <p>幅 80% のダイアログ</p>
         </DialogContent>
       </DialogWrapper>
     </li>
@@ -731,7 +717,7 @@ export const WidthAndPosition: StoryFn = () => (
           </Button>
         </DialogTrigger>
         <DialogContent top={50} left={200} id="dialog-position-1">
-          <Description>This Dialog is set to `top: 50px, left: 200px`.</Description>
+          <p>This Dialog is set to `top: 50px, left: 200px`.</p>
         </DialogContent>
       </DialogWrapper>
     </li>
@@ -743,7 +729,7 @@ export const WidthAndPosition: StoryFn = () => (
           </Button>
         </DialogTrigger>
         <DialogContent right={50} bottom={100} id="dialog-position-2">
-          <Description>This Dialog is set to `right: 50px, bottom: 100px`.</Description>
+          <p>This Dialog is set to `right: 50px, bottom: 100px`.</p>
         </DialogContent>
       </DialogWrapper>
     </li>
@@ -818,7 +804,8 @@ export const Modeless_Dialog: StoryFn = () => {
         </Button>
         <ModelessDialog
           isOpen={isOpen1}
-          header={<ModelessHeading>モードレスダイアログ（中央表示）</ModelessHeading>}
+          // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+          header={<Heading tag="h2">モードレスダイアログ（中央表示）</Heading>}
           footer={<ModelessFooter>フッタ</ModelessFooter>}
           onClickClose={() => setIsOpen1(false)}
           onPressEscape={() => setIsOpen1(false)}
@@ -832,19 +819,15 @@ export const Modeless_Dialog: StoryFn = () => {
               `valuetext.(${txt}: ${data?.left}, ${data?.top})`,
           }}
         >
-          <ModelessContent>
-            <Stack gap="S">
-              <ModelessContentPart>
-                <Fieldset title="ラジオボタン">
-                  <Cluster gap="S">
-                    <RadioButton name="modeless_dialog_center_radio_1">ラジオボタン1</RadioButton>
-                    <RadioButton name="modeless_dialog_center_radio_2">ラジオボタン2</RadioButton>
-                  </Cluster>
-                </Fieldset>
-              </ModelessContentPart>
-              <ModelessContentPart>
-                <DatePicker name="modeless_dialog_center_datepicker" title="test" />
-              </ModelessContentPart>
+          <Stack gap="S">
+            <Fieldset title="ラジオボタン" innerMargin={0.5}>
+              <Cluster gap={1.25}>
+                <RadioButton name="modeless_dialog_center_radio_1">ラジオボタン1</RadioButton>
+                <RadioButton name="modeless_dialog_center_radio_2">ラジオボタン2</RadioButton>
+              </Cluster>
+            </Fieldset>
+            <DatePicker name="modeless_dialog_center_datepicker" title="test" />
+            <SpreadTableArea>
               <Table>
                 <thead>
                   <tr>
@@ -868,8 +851,8 @@ export const Modeless_Dialog: StoryFn = () => {
                   ))}
                 </tbody>
               </Table>
-            </Stack>
-          </ModelessContent>
+            </SpreadTableArea>
+          </Stack>
         </ModelessDialog>
       </li>
       <li>
@@ -883,7 +866,8 @@ export const Modeless_Dialog: StoryFn = () => {
         </Button>
         <ModelessDialog
           isOpen={isOpen2}
-          header={<ModelessHeading>座標指定表示</ModelessHeading>}
+          // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+          header={<Heading tag="h2">座標指定表示</Heading>}
           onClickClose={() => setIsOpen2(false)}
           onPressEscape={() => setIsOpen2(false)}
           bottom={100}
@@ -891,10 +875,10 @@ export const Modeless_Dialog: StoryFn = () => {
           id="modeless-dialog-2"
           data-test="dialog"
         >
-          <div style={{ margin: '1rem' }}>
+          <p>
             bottom: 100px
             <br /> right: 10%
-          </div>
+          </p>
         </ModelessDialog>
       </li>
     </TriggerList>
@@ -903,19 +887,19 @@ export const Modeless_Dialog: StoryFn = () => {
 
 export const RegDialogOpenedDialog: StoryFn = () => (
   <Dialog isOpen>
-    <Description>{dummyText}</Description>
+    <p>{dummyText}</p>
   </Dialog>
 )
 
 export const RegDialogOpenedDialogWidth: StoryFn = () => (
   <Dialog isOpen width={500}>
-    <Description>{dummyText}</Description>
+    <p>{dummyText}</p>
   </Dialog>
 )
 
 export const RegDialogOpenedDialogPosition: StoryFn = () => (
   <Dialog isOpen top={20} right={40} bottom={60} left={80}>
-    <Description>{dummyText}</Description>
+    <p>{dummyText}</p>
   </Dialog>
 )
 
@@ -937,7 +921,7 @@ export const RegOpendAction: StoryFn = () => (
     onClickAction={action('clicked action')}
     onClickClose={action('clicked close')}
   >
-    <Description>
+    <p>
       {dummyText}
       {dummyText}
       {dummyText}
@@ -946,13 +930,11 @@ export const RegOpendAction: StoryFn = () => (
       {dummyText}
       {dummyText}
       {dummyText}
-    </Description>
-    <Content>
-      <label>
-        <input name="reg_opend_action_checkbox" type="checkbox" />
-        Agree
-      </label>
-    </Content>
+    </p>
+    <label>
+      <input name="reg_opend_action_checkbox" type="checkbox" />
+      Agree
+    </label>
   </ActionDialog>
 )
 RegOpendAction.parameters = { docs: { disable: true } }
@@ -960,18 +942,19 @@ RegOpendAction.parameters = { docs: { disable: true } }
 export const RegOpenedModeless: StoryFn = () => (
   <ModelessDialog
     isOpen
-    header={<ModelessHeading>モードレスダイアログ</ModelessHeading>}
+    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+    header={<Heading tag="h2">モードレスダイアログ</Heading>}
     footer={<ModelessFooter>フッタ</ModelessFooter>}
     height={500}
     width={600}
   >
-    <div style={{ margin: '1rem' }}>
+    <p>
       {dummyText}
       {dummyText}
       {dummyText}
       {dummyText}
       {dummyText}
-    </div>
+    </p>
   </ModelessDialog>
 )
 
@@ -1025,15 +1008,14 @@ export const Body以外のPortalParent: StoryFn = () => {
       >
         <Section>
           <Heading>Dialog</Heading>
-          <Content>
-            <p>Dialog を近接要素に生成しています。</p>
-          </Content>
+          <p>Dialog を近接要素に生成しています。</p>
         </Section>
-        <Footer>
+        {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
+        <FooterCluster>
           <Button onClick={onClickClose} data-test="dialog-closer">
             閉じる
           </Button>
-        </Footer>
+        </FooterCluster>
       </Dialog>
       <ActionDialog
         isOpen={isOpen === 'actiion'}
@@ -1047,9 +1029,7 @@ export const Body以外のPortalParent: StoryFn = () => {
         id="portal-action"
         portalParent={portalParentRef}
       >
-        <Content>
-          <p>ActionDialog を近接要素に生成しています</p>
-        </Content>
+        <p>ActionDialog を近接要素に生成しています</p>
       </ActionDialog>
       <MessageDialog
         isOpen={isOpen === 'message'}
@@ -1061,43 +1041,27 @@ export const Body以外のPortalParent: StoryFn = () => {
       />
       <ModelessDialog
         isOpen={isOpen === 'modeless'}
-        header={<ModelessHeading>ModelessDialog</ModelessHeading>}
+        // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
+        header={<Heading tag="h2">ModelessDialog</Heading>}
         onClickClose={onClickClose}
         onPressEscape={onClickClose}
         id="portal-modeless"
         portalParent={portalParentRef}
       >
-        <Content>
-          <p>ModelessDialog を近接要素に生成しています。</p>
-        </Content>
+        <p>ModelessDialog を近接要素に生成しています。</p>
       </ModelessDialog>
     </div>
   )
 }
 
-const Description = styled.p`
-  margin: 16px 24px;
-  line-height: 1.5;
-`
-const Content = styled.div`
-  margin: 16px 24px;
-  line-height: 1.5;
-`
-const StyledHeading = styled(Heading)`
-  margin: 8px 24px;
-`
 const RadioListCluster = styled(Cluster).attrs({ gap: 1.25 })`
   list-style: none;
 `
-const Footer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding: 16px 24px;
-  border-top: ${({ theme }) => theme.border.shorthand};
-
-  & > *:not(:first-child) {
-    margin-left: 16px;
-  }
+const FooterCluster = styled(Cluster).attrs({ justify: 'flex-end' })`
+  ${({ theme: { border, space } }) => css`
+    padding: ${space(1)} ${space(1.5)};
+    border-top: ${border.shorthand};
+  `}
 `
 const TriggerList = styled.ul`
   margin: 0;
@@ -1108,17 +1072,17 @@ const TriggerList = styled.ul`
     margin: 8px;
   }
 `
-const ModelessHeading = styled(Heading)`
-  font-size: 1em;
-  margin: 0;
-  font-weight: normal;
-`
-const ModelessContent = styled.div`
-  margin: 1rem 0;
-`
-const ModelessContentPart = styled.div`
-  margin-inline: 1rem;
+const SpreadTableArea = styled.div`
+  ${({ theme: { space } }) => css`
+    margin-inline: ${space(-1.5)};
+
+    &&& {
+      margin-block-end: ${space(-1.5)};
+    }
+  `}
 `
 const ModelessFooter = styled.div`
-  padding: 1rem;
+  ${({ theme: { space } }) => css`
+    padding: ${space(1)} ${space(1.5)};
+  `}
 `
