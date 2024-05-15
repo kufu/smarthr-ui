@@ -93,7 +93,13 @@ export { CompactInformationPanel } from './components/CompactInformationPanel'
 export { Text, RangeSeparator } from './components/Text'
 export { LineClamp } from './components/LineClamp'
 export { NotificationBar } from './components/NotificationBar'
-export { AppLauncher, Header, HeaderLink, HeaderDropdownMenuButton } from './components/Header'
+export {
+  AppLauncher,
+  Header,
+  HeaderLink,
+  HeaderDropdownMenuButton,
+  LanguageSwitcher,
+} from './components/Header'
 export { PageCounter } from './components/PageCounter'
 export { Article, Aside, Nav, Section } from './components/SectioningContent'
 export { VisuallyHiddenText } from './components/VisuallyHiddenText'
