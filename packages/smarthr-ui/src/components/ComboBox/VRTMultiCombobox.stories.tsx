@@ -5,38 +5,20 @@ import styled from 'styled-components'
 
 import { InformationPanel } from '../InformationPanel'
 
-import { Multi, Single } from './ComboBox.stories'
+// eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control
+import { MultiCombobox as Multi } from './MultiCombobox.stories'
 
-import { MultiComboBox, SingleComboBox } from '.'
+import { MultiComboBox } from '.'
 
 export default {
-  title: 'Forms（フォーム）/ComboBox',
-  component: SingleComboBox,
-  subcomponents: { MultiComboBox },
+  title: 'Forms（フォーム）/MultiComboBox',
+  component: MultiComboBox,
   parameters: {
     withTheming: true,
   },
 }
 
-export const VRTSingle: StoryFn = () => (
-  <WrapperList>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
-      Singleコンボボックスのリストを展開して1つ目の項目をホバーした状態で表示されます
-    </VRTInformationPanel>
-    <Single />
-  </WrapperList>
-)
-const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-  const canvas = within(canvasElement)
-  const textboxes = await canvas.findAllByRole('combobox')
-  await textboxes[0].focus()
-  const body = canvasElement.ownerDocument.body
-  const option = await within(body).findByText('option 1')
-  await userEvent.hover(option)
-}
-VRTSingle.play = playSingle
-
-export const VRTMulti: StoryFn = () => (
+export const VRTMultiCombobox: StoryFn = () => (
   <WrapperList>
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
       Multiコンボボックスのリストを展開して1つ目と2つ目の項目を選択した状態で表示されます
@@ -63,22 +45,9 @@ const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   await userEvent.click(option2)
   await waitForRAF()
 }
-VRTMulti.play = playMulti
+VRTMultiCombobox.play = playMulti
 
-export const VRTSingleForcedColors: StoryFn = () => (
-  <WrapperList>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
-      Chromatic 上では強制カラーモードで表示されます{' '}
-    </VRTInformationPanel>
-    <Single />
-  </WrapperList>
-)
-VRTSingleForcedColors.play = playSingle
-VRTSingleForcedColors.parameters = {
-  chromatic: { forcedColors: 'active' },
-}
-
-export const VRTMultiForcedColors: StoryFn = () => (
+export const VRTMultiComboboxForcedColors: StoryFn = () => (
   <WrapperList>
     <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
       Chromatic 上では強制カラーモードで表示されます{' '}
@@ -86,8 +55,8 @@ export const VRTMultiForcedColors: StoryFn = () => (
     <Multi />
   </WrapperList>
 )
-VRTMultiForcedColors.play = playMulti
-VRTMultiForcedColors.parameters = {
+VRTMultiComboboxForcedColors.play = playMulti
+VRTMultiComboboxForcedColors.parameters = {
   chromatic: { forcedColors: 'active' },
 }
 
