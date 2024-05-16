@@ -1,9 +1,9 @@
 import { StoryFn } from '@storybook/react'
 import { userEvent, within } from '@storybook/test'
 import React from 'react'
-import styled from 'styled-components'
 
 import { InformationPanel } from '../InformationPanel'
+import { Stack } from '../Layout'
 
 // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control
 import { MultiCombobox as Multi } from './MultiCombobox.stories'
@@ -19,12 +19,12 @@ export default {
 }
 
 export const VRTMultiCombobox: StoryFn = () => (
-  <WrapperList>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+  <Stack>
+    <InformationPanel title="VRT 用の Story です" togglable={false}>
       Multiコンボボックスのリストを展開して1つ目と2つ目の項目を選択した状態で表示されます
-    </VRTInformationPanel>
+    </InformationPanel>
     <Multi />
-  </WrapperList>
+  </Stack>
 )
 
 const waitForRAF = () =>
@@ -48,29 +48,14 @@ const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
 VRTMultiCombobox.play = playMulti
 
 export const VRTMultiComboboxForcedColors: StoryFn = () => (
-  <WrapperList>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+  <Stack>
+    <InformationPanel title="VRT 用の Story です" togglable={false}>
       Chromatic 上では強制カラーモードで表示されます{' '}
-    </VRTInformationPanel>
+    </InformationPanel>
     <Multi />
-  </WrapperList>
+  </Stack>
 )
 VRTMultiComboboxForcedColors.play = playMulti
 VRTMultiComboboxForcedColors.parameters = {
   chromatic: { forcedColors: 'active' },
 }
-
-const WrapperList = styled.ul`
-  padding: 0 24px;
-  list-style: none;
-  & > li {
-    padding: 16px;
-    &:not(:first-child) {
-      margin-top: 8px;
-    }
-  }
-`
-
-const VRTInformationPanel = styled(InformationPanel)`
-  margin-bottom: 24px;
-`
