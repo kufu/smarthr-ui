@@ -86,7 +86,13 @@ export const All: StoryFn = () => {
           </li>
 
           <li>
-            <CheckBox name="mixed_error" mixed error onChange={handleChange}>
+            <CheckBox
+              name="mixed_error"
+              checked={checkedName.includes('mixed_error')}
+              mixed
+              error
+              onChange={handleChange}
+            >
               CheckBox / mixed / error
             </CheckBox>
           </li>
