@@ -33,23 +33,28 @@ type ElementProps = Omit<
 export const MAPPER_SIZE_AND_WEIGHT: { [key in HeadingTypes]: TextProps } = {
   screenTitle: {
     size: 'XL',
+    leading: 'TIGHT',
     weight: 'normal',
   },
   sectionTitle: {
     size: 'L',
+    leading: 'TIGHT',
     weight: 'normal',
   },
   blockTitle: {
     size: 'M',
+    leading: 'TIGHT',
     weight: 'bold',
   },
   subBlockTitle: {
     size: 'M',
+    leading: 'TIGHT',
     weight: 'bold',
     color: 'TEXT_GREY',
   },
   subSubBlockTitle: {
     size: 'S',
+    leading: 'TIGHT',
     weight: 'bold',
     color: 'TEXT_GREY',
   },
@@ -101,11 +106,7 @@ export const Heading: FC<Props & ElementProps> = ({
     className: styles,
   }
 
-  return visuallyHidden ? (
-    <VisuallyHiddenText {...actualProps} />
-  ) : (
-    <Text {...actualProps} leading="TIGHT" />
-  )
+  return visuallyHidden ? <VisuallyHiddenText {...actualProps} /> : <Text {...actualProps} />
 }
 
 export const PageHeading: FC<Omit<Props & ElementProps, 'visuallyHidden' | 'tag'>> = ({
