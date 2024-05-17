@@ -133,7 +133,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
             onChange={handleChange}
             className={inputStyle}
             ref={inputRef}
-            // aria-invalid={error || undefined}
+            aria-invalid={error || undefined}
           />
           <span className={boxStyle} aria-hidden="true" />
           <span className={iconWrapStyle}>
