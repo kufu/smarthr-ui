@@ -9,6 +9,7 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
+import { isIOS } from '../../libs/ua'
 
 type Props = PropsWithChildren<ComponentPropsWithRef<'input'>>
 
@@ -52,7 +53,7 @@ const radioButton = tv({
 })
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ onChange, children, className, ...props }, ref) => {
+  ({ onChange, children, className, required, ...props }, ref) => {
     const { wrapperStyle, innerWrapperStyle, boxStyle, inputStyle, labelStyle } = useMemo(() => {
       const { wrapper, innerWrapper, box, input, label } = radioButton()
       return {
@@ -83,6 +84,11 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
             id={radioButtonId}
             onChange={handleChange}
             className={inputStyle}
+            // HINT: requiredを設定すると、iOS端末で操作すると以下の問題が起きる
+            //  - submit時にvalidateは正しく行われるがフィードバックがない(対象入力要素までスクロールせず、popupも表示されない)
+            // 基本的にhtml validateだけで実装される可能性はない(歴史的にrequiredなどが無視される端末が存在する)ため
+            // iOS系端末の場合、required属性を設定しないことで、ユーザーがsubmit出来なかった理由がエラーなどで正しく理解できるようにする
+            required={isIOS ? undefined : required}
             ref={ref}
           />
           <span className={boxStyle} aria-hidden="true" />

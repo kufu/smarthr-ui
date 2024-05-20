@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { isMobileSafari } from '../../libs/ua'
+import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaSortIcon } from '../Icon'
 
@@ -98,6 +98,7 @@ const ActualSelect = <T extends string>(
     size = 'default',
     className,
     disabled,
+    required,
     ...props
   }: Props<T> & ElementProps,
   ref: ForwardedRef<HTMLSelectElement>,
@@ -142,6 +143,11 @@ const ActualSelect = <T extends string>(
         onChange={handleChange}
         aria-invalid={error || undefined}
         disabled={disabled}
+        // HINT: requiredを設定すると、iOS端末で操作すると以下の問題が起きる
+        //  - submit時にvalidateは正しく行われるがフィードバックがない(対象入力要素までスクロールせず、popupも表示されない)
+        // 基本的にhtml validateだけで実装される可能性はない(歴史的にrequiredなどが無視される端末が存在する)ため
+        // iOS系端末の場合、required属性を設定しないことで、ユーザーがsubmit出来なかった理由がエラーなどで正しく理解できるようにする
+        required={isIOS ? undefined : required}
         ref={ref}
         className={selectStyle}
       >
