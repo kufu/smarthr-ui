@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [50.1.0](https://github.com/kufu/smarthr-ui/compare/v50.0.0...v50.1.0) (2024-05-21)
+
+
+### Features
+
+* 言語切替UIを実装 ([#4613](https://github.com/kufu/smarthr-ui/issues/4613)) ([3b6e5f8](https://github.com/kufu/smarthr-ui/commit/3b6e5f8b5e2272fd4a405dbc6f2c8f2780eecb30))
+
+
+### Bug Fixes
+
+* **Switch:** フォーカスリングが表示されるように修正 ([#4650](https://github.com/kufu/smarthr-ui/issues/4650)) ([9ac3738](https://github.com/kufu/smarthr-ui/commit/9ac37380cb5ecbd5ae5a0928456b357ee48e9738))
+* Text[styleType] の時 Heading と同等とみなし leading="TIGHT" があたるように修正 ([#4655](https://github.com/kufu/smarthr-ui/issues/4655)) ([fc93b11](https://github.com/kufu/smarthr-ui/commit/fc93b11b8ebf798a3e82e0f0b46d73847dd186ae))
+* すべてのダイアログコンテンツの padding を統一 ([#4644](https://github.com/kufu/smarthr-ui/issues/4644)) ([79211b4](https://github.com/kufu/smarthr-ui/commit/79211b4d5b654d2fae0e7ee3af56eec627bbac73))
+
 ## [50.0.0](https://github.com/kufu/smarthr-ui/compare/v49.0.1...v50.0.0) (2024-05-14)
 
 
