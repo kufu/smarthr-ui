@@ -7,7 +7,7 @@
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "eslint": "^8.57.0",
-    "eslint-config-smarthr": "^6.30.0",
+    "eslint-config-smarthr": "^6.30.1",
     "eslint-plugin-storybook": "^0.8.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
@@ -27,6 +27,7 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
+  "packageManager": "pnpm@9.1.2",
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.23.6",

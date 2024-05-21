@@ -1,9 +1,13 @@
+import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
-import React, { ComponentProps } from 'react'
+import React, { ComponentProps, useState } from 'react'
 
+import { LocaleMap } from '../../types'
 import { Button } from '../Button'
 import { FaQuestionCircleIcon } from '../Icon'
 import { Stack } from '../Layout'
+
+import { LanguageSwitcher } from './LanguageSwitcher'
 
 import { AppLauncher, Header, HeaderDropdownMenuButton, HeaderLink } from '.'
 
@@ -12,35 +16,59 @@ export default {
   component: Header,
 }
 
-export const All: StoryFn = () => (
-  <Stack gap={0.25}>
-    <Header />
-    <Header tenants={[{ id: 'test', name: '株式会社SmartHR' }]}>
-      <HeaderLink href="https://support.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
-        ヘルプ
-      </HeaderLink>
-      <HeaderDropdownMenuButton label="info@example.com">
-        <Button>ログアウト</Button>
-      </HeaderDropdownMenuButton>
-    </Header>
-    <Header
-      tenants={[
-        { id: 'smart-hr', name: <span>株式会社スマートHR</span> },
-        { id: 'smarthr', name: <span>株式会社SmartHR</span> },
-      ]}
-      currentTenantId="smarthr"
-      onTenantSelect={(id) => console.log(id)}
-    >
-      <HeaderLink href="https://support.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
-        ヘルプ
-      </HeaderLink>
-      <AppLauncher apps={launcher.apps} urlToShowAll={launcher.urlToShowAll} />
-      <HeaderDropdownMenuButton label="info@example.com">
-        <Button>ログアウト</Button>
-      </HeaderDropdownMenuButton>
-    </Header>
-  </Stack>
-)
+const localeMap: LocaleMap = {
+  ja: '日本語',
+  'en-us': 'English',
+  pt: 'Português',
+  vi: 'Tiếng Việt',
+  ko: '한국어',
+  'zh-cn': '简体中文',
+  'zh-tw': '繁體中文',
+}
+
+export const All: StoryFn = () => {
+  const [currentLang, setLang] = useState<string>('ja')
+
+  const handleLanguageSelect = (code: string) => {
+    setLang(code)
+    action('onLanguageSelect')
+  }
+
+  return (
+    <Stack gap={0.25}>
+      <Header />
+      <Header tenants={[{ id: 'test', name: '株式会社SmartHR' }]}>
+        <HeaderLink href="https://support.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
+          ヘルプ
+        </HeaderLink>
+        <LanguageSwitcher
+          locale={currentLang}
+          localeMap={localeMap}
+          onLanguageSelect={handleLanguageSelect}
+        />
+        <HeaderDropdownMenuButton label="info@example.com">
+          <Button>ログアウト</Button>
+        </HeaderDropdownMenuButton>
+      </Header>
+      <Header
+        tenants={[
+          { id: 'smart-hr', name: <span>株式会社スマートHR</span> },
+          { id: 'smarthr', name: <span>株式会社SmartHR</span> },
+        ]}
+        currentTenantId="smarthr"
+        onTenantSelect={(id) => console.log(id)}
+      >
+        <HeaderLink href="https://support.smarthr.jp/" prefix={<FaQuestionCircleIcon />}>
+          ヘルプ
+        </HeaderLink>
+        <AppLauncher apps={launcher.apps} urlToShowAll={launcher.urlToShowAll} />
+        <HeaderDropdownMenuButton label="info@example.com">
+          <Button>ログアウト</Button>
+        </HeaderDropdownMenuButton>
+      </Header>
+    </Stack>
+  )
+}
 
 const launcher: ComponentProps<typeof AppLauncher> = {
   apps: [

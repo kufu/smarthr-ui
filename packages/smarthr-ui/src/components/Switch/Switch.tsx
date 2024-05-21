@@ -7,11 +7,11 @@ const switchStyle = tv({
   slots: {
     wrapper: [
       // Switch 本体
-      'shr-border-shorthand shr-relative shr-inline-flex shr-w-[calc(theme(fontSize.base)*2)] shr-items-center shr-rounded-full shr-bg-white',
+      'shr-border-shorthand shr-relative shr-inline-flex shr-w-[calc(theme(fontSize.base)*2)] shr-items-center shr-rounded-full shr-bg-white shr-h-fit',
       // 理想的には padding: 2px; だが、box-shadow を outline で使用しているため、border と padding で2pxの疑似余白を作っている。
       'shr-p-px',
-      // :focus-visible-within の代替
-      'has-[:focus-visible]:shr-focus-indicator',
+      // :focus-visible-within の代替, なぜかhasが機能しないので以下の書き方で代用している
+      'has-[:focus-visible]:shr-focus-indicator [&:has(:focus-visible)]:shr-focus-indicator',
       'has-[:checked]:shr-border-[theme(colors.main)] has-[:checked]:shr-bg-main',
       'has-[:disabled]:shr-border-[theme(borderColor.default)] has-[:disabled]:shr-bg-border',
       'forced-colors:has-[:disabled]:shr-border-[GrayText]',

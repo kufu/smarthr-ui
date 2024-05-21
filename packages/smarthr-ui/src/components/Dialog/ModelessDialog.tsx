@@ -104,7 +104,7 @@ const modelessDialog = tv({
       'shr-ml-auto shr-shrink-0',
     ],
     content:
-      'smarthr-ui-ModelessDialog-content shr-flex-1 shr-overflow-auto shr-overscroll-contain',
+      'smarthr-ui-ModelessDialog-content shr-flex-1 shr-overflow-auto shr-overscroll-contain shr-p-1.5',
     footerEl: 'smarthr-ui-ModelessDialog-footer shr-border-t-shorthand',
   },
 })

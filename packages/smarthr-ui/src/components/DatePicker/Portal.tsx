@@ -22,7 +22,7 @@ const portal = tv({
 })
 
 export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }, ref) => {
-  const { portalRoot, createPortal } = usePortal()
+  const { isPortalRootMounted, createPortal } = usePortal()
 
   const [position, setPosition] = useState({
     top: 0,
@@ -36,7 +36,7 @@ export const Portal = forwardRef<HTMLDivElement, Props>(({ inputRect, ...props }
       return
     }
     setPosition(getPortalPosition(inputRect, containerRef.current.offsetHeight))
-  }, [inputRect, portalRoot])
+  }, [inputRect, isPortalRootMounted])
 
   const containerStyleProps = useMemo(() => {
     const container = portal()
