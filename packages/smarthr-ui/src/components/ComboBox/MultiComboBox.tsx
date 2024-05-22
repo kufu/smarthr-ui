@@ -86,7 +86,6 @@ type Props<T> = BaseProps<T> & {
     | 'aria-expanded'
     | 'aria-haspopup'
     | 'aria-invalid'
-    | 'autoComplete'
     | 'className'
     | 'onChange'
     | 'onCompositionEnd'
@@ -527,7 +526,7 @@ const ActualMultiComboBox = <T,>(
             onCompositionStart={handleCompositionStartInput}
             onCompositionEnd={handleCompositionEndInput}
             onKeyDown={handleInputKeyDown}
-            autoComplete="off"
+            autoComplete={inputAttributes?.autoComplete || 'off'}
             tabIndex={0}
             role="combobox"
             aria-activedescendant={activeOption?.id}
