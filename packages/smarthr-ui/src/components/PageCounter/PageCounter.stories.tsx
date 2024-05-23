@@ -15,11 +15,27 @@ const Template: StoryFn<ComponentProps<typeof PageCounter>> = (props) => <PageCo
 export const All = () => (
   <Stack>
     <Template start={1} end={50} />
+    <Template start={1} end={50} total={5000} />
     <Template
       start={1}
       end={50}
       total={5000}
-      decorators={{ rangeSeparatorVisuallyHiddenText: () => '件から' }}
+      visibleOrder={{
+        range: 1,
+        total: 2,
+      }}
+      decorators={{
+        before: () => '(before)',
+        beforeRange: () => '(beforeRange)',
+        rangeSeparator: (org) => `(rangeSeparator: "${org}")`,
+        rangeSeparatorVisuallyHiddenText: (org) => `(rangeSeparatorVisuallyHiddenText: "${org}")`,
+        unit: (org) => `(unit: "${org}")`,
+        afterRange: () => '(afterRange)',
+        betweenTotalAndRange: () => '(betweenTotalAndRange)',
+        beforeTotal: () => '(beforeTotal)',
+        afterTotal: (org) => `(afterTotal: "${org}")`,
+        after: () => '(after)',
+      }}
     />
   </Stack>
 )
