@@ -123,22 +123,6 @@ export const AccordionStyle: StoryFn = () => (
         </BorderList>
       </AccordionPanel>
     </AccordionPanelBase>
-    <AccordionPanelBase>
-      <AccordionPanel displayIcon={false}>
-        <BorderList>
-          {arr.map((_, i) => (
-            <li key={i}>
-              <AccordionPanelItem name={`no-icon-${i}`}>
-                <AccordionPanelTrigger>No Icon {i}</AccordionPanelTrigger>
-                <AccordionPanelContent>
-                  <Content>{content()}</Content>
-                </AccordionPanelContent>
-              </AccordionPanelItem>
-            </li>
-          ))}
-        </BorderList>
-      </AccordionPanel>
-    </AccordionPanelBase>
   </Wrapper>
 )
 AccordionStyle.storyName = 'Accordion style'
@@ -146,7 +130,7 @@ AccordionStyle.storyName = 'Accordion style'
 export const ExpandedOptions: StoryFn = () => (
   <Wrapper>
     <AccordionPanelBase>
-      <AccordionPanel displayIcon={true} expandableMultiply={true}>
+      <AccordionPanel expandableMultiply={true}>
         {arr.map((_, i) => (
           <AccordionPanelItem key={i} name={`expandable-multiply-${i}`}>
             <AccordionPanelTrigger>Expandable Multiply {i}</AccordionPanelTrigger>
@@ -158,7 +142,7 @@ export const ExpandedOptions: StoryFn = () => (
       </AccordionPanel>
     </AccordionPanelBase>
     <AccordionPanelBase>
-      <AccordionPanel displayIcon={true} defaultExpanded={['default-expanded-0']}>
+      <AccordionPanel defaultExpanded={['default-expanded-0']}>
         {arr.map((_, i) => (
           <AccordionPanelItem key={i} name={`default-expanded-${i}`}>
             <AccordionPanelTrigger>Default Expanded {i}</AccordionPanelTrigger>
@@ -176,7 +160,7 @@ ExpandedOptions.storyName = 'Expanded options'
 export const Callback: StoryFn = () => (
   <Wrapper>
     <AccordionPanelBase>
-      <AccordionPanel displayIcon={false} expandableMultiply={true} onClick={action('Clicked')}>
+      <AccordionPanel expandableMultiply={true} onClick={action('Clicked')}>
         {arr.map((_, i) => (
           <AccordionPanelItem key={i} name={`expandable-multiply-${i}`}>
             <AccordionPanelTrigger>Expandable Multiply {i}</AccordionPanelTrigger>
