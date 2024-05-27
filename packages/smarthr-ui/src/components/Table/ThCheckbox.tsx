@@ -19,16 +19,18 @@ const thCheckbox = tv({
   slots: {
     inner: 'shr-absolute shr-inset-0 [&:not(:has([disabled]))]:shr-cursor-pointer',
     wrapper: 'shr-relative shr-w-[theme(fontSize.base)] [&]:shr-px-0.75',
+    checkbox: '[&]:shr-block',
   },
 })
 
 export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
   ({ decorators, className, ...others }, ref) => {
-    const { wrapperStyle, innerStyle } = useMemo(() => {
-      const { wrapper, inner } = thCheckbox()
+    const { wrapperStyle, innerStyle, checkboxStyle } = useMemo(() => {
+      const { wrapper, inner, checkbox } = thCheckbox()
       return {
         wrapperStyle: wrapper({ className }),
         innerStyle: inner(),
+        checkboxStyle: checkbox(),
       }
     }, [className])
 
@@ -38,7 +40,7 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
         <Center as="label" verticalCentering className={innerStyle}>
           {/* 使う側で lint をかけるため無効化 */}
           {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute  */}
-          <CheckBox {...others} ref={ref} />
+          <CheckBox {...others} ref={ref} className={checkboxStyle} />
           <VisuallyHiddenText>
             {decorators?.checkAllInvisibleLabel?.(CHECK_ALL_INVISIBLE_LABEL) ||
               CHECK_ALL_INVISIBLE_LABEL}

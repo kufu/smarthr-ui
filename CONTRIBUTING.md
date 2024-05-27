@@ -9,13 +9,15 @@ Thank you for reading this!
 We use `pnpm` for the package manager.
 
 ```sh
-$ pnpm
+$ corepack enable
+$ corepack prepare
+$ pnpm install
 ```
 
 ## Test
 
 ```sh
-$ pnpm test
+$ pnpm ui test
 ```
 
 `smarthr-ui` uses Jest's snapshot testing.
@@ -23,7 +25,7 @@ $ pnpm test
 If the test results are what you expect, you can update the snapshot with the following command.
 
 ```sh
-$ pnpm test:update-snapshot
+$ pnpm ui test:update-snapshot
 ```
 
 ## Commit

@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [50.1.0](https://github.com/kufu/smarthr-ui/compare/v50.0.0...v50.1.0) (2024-05-21)
+
+
+### Features
+
+* 言語切替UIを実装 ([#4613](https://github.com/kufu/smarthr-ui/issues/4613)) ([3b6e5f8](https://github.com/kufu/smarthr-ui/commit/3b6e5f8b5e2272fd4a405dbc6f2c8f2780eecb30))
+
+
+### Bug Fixes
+
+* **Switch:** フォーカスリングが表示されるように修正 ([#4650](https://github.com/kufu/smarthr-ui/issues/4650)) ([9ac3738](https://github.com/kufu/smarthr-ui/commit/9ac37380cb5ecbd5ae5a0928456b357ee48e9738))
+* Text[styleType] の時 Heading と同等とみなし leading="TIGHT" があたるように修正 ([#4655](https://github.com/kufu/smarthr-ui/issues/4655)) ([fc93b11](https://github.com/kufu/smarthr-ui/commit/fc93b11b8ebf798a3e82e0f0b46d73847dd186ae))
+* すべてのダイアログコンテンツの padding を統一 ([#4644](https://github.com/kufu/smarthr-ui/issues/4644)) ([79211b4](https://github.com/kufu/smarthr-ui/commit/79211b4d5b654d2fae0e7ee3af56eec627bbac73))
+
+## [50.0.0](https://github.com/kufu/smarthr-ui/compare/v49.0.1...v50.0.0) (2024-05-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* TextareaコンポーネントのmaxLength属性をmaxLetters属性に変更 (#4607)
+
+### Features
+
+* NotificationBar に読込中状態を追加 ([#4584](https://github.com/kufu/smarthr-ui/issues/4584)) ([c20e784](https://github.com/kufu/smarthr-ui/commit/c20e784724e86ec2688f607742ca15f05c926f57))
+
+
+### Bug Fixes
+
+* DefinitionListItem が空の場合に高さが潰れる欠陥を修正 ([#4639](https://github.com/kufu/smarthr-ui/issues/4639)) ([fa267f1](https://github.com/kufu/smarthr-ui/commit/fa267f1ba7e02aa651e690d554593d9fb73bd38c))
+* FormControlのエラーメッセージをlive regionに変更 ([#4603](https://github.com/kufu/smarthr-ui/issues/4603)) ([2e31af8](https://github.com/kufu/smarthr-ui/commit/2e31af8e9fdfd6a59e105ccf9d731e6ce95287d5))
+* TextareaコンポーネントのmaxLength属性をmaxLetters属性に変更 ([#4607](https://github.com/kufu/smarthr-ui/issues/4607)) ([c0f91cc](https://github.com/kufu/smarthr-ui/commit/c0f91ccb26981f4aa6aab1761bfeba9884d9c783))
+* セル内のチェックボックスの位置を調整 ([#4640](https://github.com/kufu/smarthr-ui/issues/4640)) ([18e1f77](https://github.com/kufu/smarthr-ui/commit/18e1f7776bd68c6601c5881fded4e2a388a498e4))
+* デザインシステムに準拠した文言に変更 ([#4638](https://github.com/kufu/smarthr-ui/issues/4638)) ([84c4932](https://github.com/kufu/smarthr-ui/commit/84c4932634feb8c5f540d1f0f4e5a7d08187c699))
+
 ### [49.0.1](https://github.com/kufu/smarthr-ui/compare/v49.0.0...v49.0.1) (2024-05-07)
 
 

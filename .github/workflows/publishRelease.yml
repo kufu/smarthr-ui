@@ -17,9 +17,6 @@ jobs:
         with:
           ref: release-candidate
           fetch-depth: 0
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 8
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.node-version'
@@ -28,16 +25,20 @@ jobs:
         run: |
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-      - run: pnpm install
+      - name: pnpm install
+        run: |
+          corepack enable
+          corepack prepare
+          pnpm ui install
       - run: pnpm ui release
         if: ${{ env.IS_PRERELEASE == 'false' }}
       - run: pnpm ui release --prerelease
         if: ${{ env.IS_PRERELEASE == 'true' }}
-      - run: pnpm publish --filter smarthr-ui
+      - run: pnpm publish --filter smarthr-ui --no-git-checks
         if: ${{ env.IS_PRERELEASE == 'false' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: pnpm publish --filter smarthr-ui --tag prerelease
+      - run: pnpm publish --filter smarthr-ui --tag prerelease --no-git-checks
         if: ${{ env.IS_PRERELEASE == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

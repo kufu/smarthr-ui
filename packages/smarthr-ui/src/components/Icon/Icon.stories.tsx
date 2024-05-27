@@ -26,24 +26,24 @@ export const All: StoryFn = () => (
   <Stack gap={2}>
     <Cluster gap={0.75} as="dl">
       {Object.entries(Icons).map(([name, Icon]) => (
-        <ItemWrapper key={`${Icon.displayName}`}>
+        <StyledBaseColumn key={`${Icon.displayName}`}>
           <dt>{name?.replace(/Icon$/, '')}</dt>
           <dd>
             <Icon />
           </dd>
-        </ItemWrapper>
+        </StyledBaseColumn>
       ))}
     </Cluster>
     <div>
       旧名称（非推奨）
       <Cluster gap={0.75} as="dl">
         {Object.entries(DeprecatedIcons).map(([name, Icon]) => (
-          <ItemWrapper key={`${Icon.displayName}`}>
+          <StyledBaseColumn key={`${Icon.displayName}`}>
             <dt>{name?.replace(/Icon$/, '')}</dt>
             <dd>
               <Icon />
             </dd>
-          </ItemWrapper>
+          </StyledBaseColumn>
         ))}
       </Cluster>
     </div>
@@ -158,7 +158,7 @@ export const GenerateIcon: StoryFn = () => {
   )
 }
 
-const ItemWrapper = styled(BaseColumn)`
+const StyledBaseColumn = styled(BaseColumn)`
   ${({ theme: { space } }) => css`
     flex-basis: 10em;
 

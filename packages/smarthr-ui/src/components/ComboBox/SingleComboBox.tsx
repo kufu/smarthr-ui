@@ -74,7 +74,6 @@ type Props<T> = BaseProps<T> & {
     React.ComponentProps<typeof Input>,
     | 'aria-activedescendant'
     | 'aria-autocomplete'
-    | 'autoComplete'
     | 'className'
     | 'disabled'
     | 'required'
@@ -451,7 +450,7 @@ const ActualSingleComboBox = <T,>(
         onKeyDown={onKeyDownInput}
         onKeyPress={handleKeyPress}
         ref={inputRef}
-        autoComplete="off"
+        autoComplete={inputAttributes?.autoComplete ?? 'off'}
         role="combobox"
         aria-haspopup="listbox"
         aria-controls={listBoxId}

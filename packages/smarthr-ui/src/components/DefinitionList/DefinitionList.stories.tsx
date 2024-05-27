@@ -6,6 +6,7 @@ import { Heading } from '../Heading'
 import { FaExclamationCircleIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { Text } from '../Text'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { DefinitionList } from './DefinitionList'
 
@@ -50,7 +51,14 @@ const items = [
   },
   {
     term: '退職年月日',
-    description: '-',
+    description: (
+      <>
+        <Text color="TEXT_DISABLED" aria-hidden>
+          -
+        </Text>
+        <VisuallyHiddenText>未設定</VisuallyHiddenText>
+      </>
+    ),
   },
   {
     term: (
@@ -115,6 +123,14 @@ export const All: StoryFn = () => (
                 </>
               ),
               description: '標準は subBlockTitle です。blockTitle と subBlockTitle があります。',
+              fullWidth: true,
+            },
+            {
+              term: '空文字の場合も line-height 込みの高さを保ちます。',
+              description: '',
+            },
+            {
+              term: 'undefined の場合',
             },
           ]}
           termStyleType="blockTitle"

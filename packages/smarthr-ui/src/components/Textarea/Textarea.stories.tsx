@@ -46,14 +46,18 @@ const Template: StoryFn = () => {
       </li>
       <li>
         <FormControl title="最大文字数 (defaultValue)">
-          <Textarea name="max_length_with_default_value" maxLength={140} defaultValue="message👌" />
+          <Textarea
+            name="max_length_with_default_value"
+            maxLetters={140}
+            defaultValue="message👌"
+          />
         </FormControl>
       </li>
       <li>
         <FormControl title="最大文字数 (value)">
           <Textarea
             name="max_length_with_value"
-            maxLength={140}
+            maxLetters={140}
             value={value}
             onChange={onChangeValue}
           />
@@ -63,7 +67,7 @@ const Template: StoryFn = () => {
         <FormControl title="最大文字数 (value)">
           <Textarea
             name="max_length_with_value_over"
-            maxLength={4}
+            maxLetters={4}
             value={value}
             onChange={onChangeValue}
           />
@@ -73,12 +77,12 @@ const Template: StoryFn = () => {
         <FormControl title="最大文字数 (decorators)">
           <Textarea
             name="max_length_with_value_and_decorators"
-            maxLength={140}
+            maxLetters={140}
             value={value}
             onChange={onChangeValue}
             decorators={{
-              beforeMaxLengthCount: (txt) => `entry limit(${txt})`,
-              afterMaxLengthCount: (txt) => ` characters(${txt})`,
+              beforeMaxLettersCount: (txt) => `entry limit(${txt})`,
+              afterMaxLettersCount: (txt) => ` characters(${txt})`,
             }}
           />
         </FormControl>

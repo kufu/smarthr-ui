@@ -10,6 +10,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useId } from '../../hooks/useId'
 import { useTheme } from '../../hooks/useTailwindTheme'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 
@@ -28,8 +29,10 @@ type Props = {
   maxRows?: number
   /** 行数の初期値。省略した場合は2 */
   rows?: number
+  /** 入力可能な最大文字数。あと何文字入力できるかの表示が追加される。html的なvalidateは発生しない */
+  maxLetters?: number
   /** コンポーネント内の文言を変更するための関数を設定 */
-  decorators?: DecoratorsType<'beforeMaxLengthCount' | 'afterMaxLengthCount'>
+  decorators?: DecoratorsType<'beforeMaxLettersCount' | 'afterMaxLettersCount'>
   /**
    * @deprecated placeholder属性は非推奨です。別途ヒント用要素の設置を検討してください。
    */
@@ -50,8 +53,8 @@ const getStringLength = (value: string | number | readonly string[]) => {
   return formattedValue.length - (formattedValue.match(surrogatePairs) || []).length
 }
 
-const TEXT_BEFORE_MAXlENGTH_COUNT = 'あと'
-const TEXT_AFTER_MAXlENGTH_COUNT = '文字'
+const TEXT_BEFORE_MAXLETTERS_COUNT = 'あと'
+const TEXT_AFTER_MAXLETTERS_COUNT = '文字'
 
 const textarea = tv({
   slots: {
@@ -87,7 +90,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
   (
     {
       autoFocus,
-      maxLength,
+      maxLetters,
       width,
       className,
       autoResize = false,
@@ -100,20 +103,24 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     },
     ref,
   ) => {
+    const maxLettersId = useId()
+    const actualMaxLettersId = maxLetters ? maxLettersId : undefined
+
     const { lineHeight } = useTheme()
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const currentValue = props.defaultValue || props.value
     const [interimRows, setInterimRows] = useState(rows)
     const [count, setCount] = useState(currentValue ? getStringLength(currentValue) : 0)
-    const beforeMaxLengthCount = useMemo(
+    const beforeMaxLettersCount = useMemo(
       () =>
-        decorators?.beforeMaxLengthCount?.(TEXT_BEFORE_MAXlENGTH_COUNT) ||
-        TEXT_BEFORE_MAXlENGTH_COUNT,
+        decorators?.beforeMaxLettersCount?.(TEXT_BEFORE_MAXLETTERS_COUNT) ||
+        TEXT_BEFORE_MAXLETTERS_COUNT,
       [decorators],
     )
-    const afterMaxLengthCount = useMemo(
+    const afterMaxLettersCount = useMemo(
       () =>
-        decorators?.afterMaxLengthCount?.(TEXT_AFTER_MAXlENGTH_COUNT) || TEXT_AFTER_MAXlENGTH_COUNT,
+        decorators?.afterMaxLettersCount?.(TEXT_AFTER_MAXLETTERS_COUNT) ||
+        TEXT_AFTER_MAXLETTERS_COUNT,
       [decorators],
     )
 
@@ -128,9 +135,15 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       }
     }, [autoFocus])
 
-    const handleKeyup = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      setCount(getStringLength(event.currentTarget.value))
-    }, [])
+    const onKeyUp = useMemo(
+      () =>
+        maxLetters
+          ? (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+              setCount(getStringLength(event.currentTarget.value))
+            }
+          : undefined,
+      [maxLetters],
+    )
     const handleInput = useCallback(
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (!autoResize) {
@@ -165,30 +178,37 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
           style: { width: typeof width === 'number' ? `${width}px` : width },
         },
         counterStyle: counter(),
-        counterTextStyle: counterText({ error: !!(maxLength && maxLength - count <= 0) }),
+        counterTextStyle: counterText({ error: !!(maxLetters && maxLetters - count <= 0) }),
       }
-    }, [className, count, error, maxLength, width])
+    }, [className, count, error, maxLetters, width])
 
-    return (
-      <>
-        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
-        <textarea
-          {...props}
-          {...textareaStyleProps}
-          {...(maxLength ? { onKeyUp: handleKeyup } : {})}
-          ref={textareaRef}
-          aria-invalid={error || undefined}
-          rows={interimRows}
-          onInput={handleInput}
-        />
-        {maxLength && (
-          <span className={counterStyle}>
-            {beforeMaxLengthCount}
-            <span className={counterTextStyle}>{maxLength - count}</span>
-            {afterMaxLengthCount}
+    const body = (
+      // eslint-disable-next-line smarthr/a11y-input-has-name-attribute
+      <textarea
+        {...props}
+        {...textareaStyleProps}
+        aria-describedby={actualMaxLettersId}
+        onKeyUp={onKeyUp}
+        ref={textareaRef}
+        aria-invalid={error || undefined}
+        rows={interimRows}
+        onInput={handleInput}
+      />
+    )
+
+    return maxLetters ? (
+      <span>
+        {body}
+        <span className={counterStyle} id={actualMaxLettersId}>
+          {beforeMaxLettersCount}
+          <span className={counterTextStyle}>
+            {maxLetters - count}/{maxLetters}
           </span>
-        )}
-      </>
+          {afterMaxLettersCount}
+        </span>
+      </span>
+    ) : (
+      body
     )
   },
 )

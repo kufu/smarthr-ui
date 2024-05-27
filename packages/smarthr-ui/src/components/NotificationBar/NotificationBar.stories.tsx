@@ -57,6 +57,7 @@ export const All: StoryFn = () => {
             onClose={onClose}
           />
           <NotificationBar type="error" message="タスクの削除に失敗しました。" onClose={onClose} />
+          <NotificationBar type="sync" message="データ連携を実行中です。" onClose={onClose} />
         </Stack>
       </Stack>
       <Stack gap={0.5}>

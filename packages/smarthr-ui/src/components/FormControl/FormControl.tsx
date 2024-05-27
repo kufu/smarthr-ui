@@ -73,6 +73,7 @@ const formGroup = tv({
       'shr-self-start',
       'shr-px-[unset]',
     ],
+    errorList: ['shr-list-none'],
     errorIcon: ['smarthr-ui-FormControl-errorMessage', 'shr-text-danger'],
   },
 })
@@ -160,15 +161,17 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const { wrapperStyle, labelStyle, errorIconStyle, childrenWrapperStyle } = useMemo(() => {
-    const { wrapper, label, errorIcon } = formGroup()
-    return {
-      wrapperStyle: wrapper({ className }),
-      labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
-      errorIconStyle: errorIcon(),
-      childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
-    }
-  }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
+  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, childrenWrapperStyle } =
+    useMemo(() => {
+      const { wrapper, label, errorList, errorIcon } = formGroup()
+      return {
+        wrapperStyle: wrapper({ className }),
+        labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
+        errorListStyle: errorList(),
+        errorIconStyle: errorIcon(),
+        childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
+      }
+    }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
 
   return (
     <Stack
@@ -218,17 +221,21 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       )}
 
       {actualErrorMessages.length > 0 && (
-        <Stack gap={0} id={`${managedHtmlFor}_errorMessages`}>
+        <div id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
           {actualErrorMessages.map((message, index) => (
             <p key={index}>
               <FaCircleExclamationIcon text={message} className={errorIconStyle} />
             </p>
           ))}
-        </Stack>
+        </div>
       )}
 
       <div className={childrenWrapperStyle}>
-        {addIdToFirstInput(children, managedHtmlFor, describedbyIds)}
+        {decorateFirstInputElement(children, {
+          managedHtmlFor,
+          describedbyIds,
+          error: actualErrorMessages.length > 0,
+        })}
       </div>
 
       {supplementaryMessage && (
@@ -246,62 +253,93 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   )
 }
 
-const addIdToFirstInput = (children: ReactNode, managedHtmlFor: string, describedbyIds: string) => {
+type DecorateFirstInputElementParams = {
+  managedHtmlFor: string
+  describedbyIds: string
+  error: boolean
+}
+
+const decorateFirstInputElement = (
+  children: ReactNode,
+  params: DecorateFirstInputElementParams,
+) => {
+  const { managedHtmlFor, describedbyIds, error } = params
   let foundFirstInput = false
 
-  const addId = (targets: ReactNode): ReactNode[] | ReactNode =>
+  const decorate = (targets: ReactNode): ReactNode[] | ReactNode =>
     React.Children.map(targets, (child) => {
       if (foundFirstInput || !React.isValidElement(child)) {
         return child
       }
-
-      const { type } = child
-
-      if (isInputElement(type)) {
-        foundFirstInput = true
-
-        const inputAttributes = {
-          id: managedHtmlFor,
-          ...(describedbyIds ? { 'aria-describedby': describedbyIds } : {}),
-        }
-
-        return React.cloneElement(child as ReactElement, {
-          ...(isComboBoxElement(type) ? { inputAttributes } : inputAttributes),
-        })
+      if (!isInputElement(child)) {
+        return React.cloneElement(child, {}, decorate(child.props.children))
       }
 
-      return React.cloneElement(child, {}, addId(child.props.children))
+      foundFirstInput = true
+
+      const inputAttributes: ComponentProps<typeof Input> = {
+        id: managedHtmlFor,
+      }
+      if (error) {
+        inputAttributes.error = true
+      }
+      if (describedbyIds !== '') {
+        inputAttributes['aria-describedby'] = describedbyIds
+      }
+
+      if (isComboBoxElement(child)) {
+        return React.cloneElement(child, { inputAttributes })
+      } else {
+        return React.cloneElement(child, inputAttributes)
+      }
     })
 
-  return addId(children)
+  return decorate(children)
 }
+
+type InputComponent =
+  | typeof Input
+  | typeof CurrencyInput
+  | typeof Textarea
+  | typeof DatePicker
+  | typeof Select
+  | typeof SingleComboBox
+  | typeof MultiComboBox
+  | typeof InputFile
+  | typeof DropZone
 
 /**
  * - CheckBox / RadioButton は内部に label を含むため対象外
  * - SearchInput は label を含むため対象外
  * - InputWithTooltip は領域が狭く FormControl を置けない場所での使用を想定しているため対象外
  *
- * @param type
+ * @param node
  * @returns
  */
-const isInputElement = (type: string | React.JSXElementConstructor<any>) => {
-  const _type = isStyledComponent(type) ? type.target : type
+const isInputElement = (
+  element: ReactElement,
+): element is React.ReactComponentElement<InputComponent> => {
+  const type = isStyledComponent(element.type) ? element.type.target : element.type
   return (
-    _type === Input ||
-    _type === CurrencyInput ||
-    _type === Textarea ||
-    _type === DatePicker ||
-    _type === Select ||
-    _type === SingleComboBox ||
-    _type === MultiComboBox ||
-    _type === InputFile ||
-    _type === DropZone
+    type === Input ||
+    type === CurrencyInput ||
+    type === Textarea ||
+    type === DatePicker ||
+    type === Select ||
+    type === SingleComboBox ||
+    type === MultiComboBox ||
+    type === InputFile ||
+    type === DropZone
   )
 }
 
-const isComboBoxElement = (type: string | React.JSXElementConstructor<any>) => {
-  const _type = isStyledComponent(type) ? type.target : type
-  return _type === SingleComboBox || _type === MultiComboBox
+type ComboboxComponent = typeof SingleComboBox | typeof MultiComboBox
+
+const isComboBoxElement = (
+  element: ReactElement,
+): element is React.ReactComponentElement<ComboboxComponent> => {
+  const type = isStyledComponent(element.type) ? element.type.target : element.type
+  return type === SingleComboBox || type === MultiComboBox
 }
 
 export const FormControl: React.FC<Omit<Props & ElementProps, 'as'>> = ActualFormControl

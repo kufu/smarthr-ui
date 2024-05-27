@@ -72,7 +72,7 @@ export const Text: React.FC<PropsWithChildren<TextProps & ComponentProps<'span'>
         weight: weight || styleTypeValues?.weight,
         color: color || styleTypeValues?.color,
         italic,
-        leading,
+        leading: leading || styleTypeValues?.leading,
         whiteSpace,
         className,
       }),

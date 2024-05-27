@@ -37,7 +37,10 @@ const buttonStyle = tv({
         loader: '[&&&_.smarthr-ui-Loader-line]:shr-border-disabled',
       },
       false: {
-        loader: '[&&&_.smarthr-ui-Loader-line]:shr-border-white/50',
+        loader: [
+          '[&&&_.smarthr-ui-Loader-line]:shr-border-white/50',
+          '[&&&_.smarthr-ui-Loader-line]:forced-colors:shr-border-[ButtonBorder]',
+        ],
       },
     },
   },

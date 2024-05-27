@@ -194,7 +194,7 @@ export const useListBox = <T,>({
   )
 
   const { spacing } = useTheme()
-  const { portalRoot, createPortal } = usePortal()
+  const { createPortal } = usePortal()
   const listBoxId = useId()
   const { items: partialOptions, renderIntersection } = usePartialRendering({
     items: options,
@@ -343,7 +343,6 @@ export const useListBox = <T,>({
       handleAdd,
       handleSelect,
       handleHoverOption,
-      portalRoot,
     ],
   )
 
