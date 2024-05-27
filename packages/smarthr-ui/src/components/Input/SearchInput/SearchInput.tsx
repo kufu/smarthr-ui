@@ -54,7 +54,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
     const inputId = props.id || defaultInptuId
 
     return (
-      <div>
+      <span>
         <label htmlFor={inputId}>
           <VisuallyHiddenText>{iconAlt}</VisuallyHiddenText>
         </label>
@@ -76,7 +76,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
             )
           }
         />
-      </div>
+      </span>
     )
   },
 )
