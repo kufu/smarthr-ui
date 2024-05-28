@@ -22,10 +22,10 @@ import { Button } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
 
 import { DialogOverlap } from './DialogOverlap'
+import { type ContentBodyProps } from './useDialogInnerStyle'
 import { useDialogPortal } from './useDialogPortal'
 
 import type { DecoratorsType, Gap } from '../../types'
-import { type ContentBodyProps } from './useDialogInnerStyle'
 
 type Props = PropsWithChildren<{
   /**
