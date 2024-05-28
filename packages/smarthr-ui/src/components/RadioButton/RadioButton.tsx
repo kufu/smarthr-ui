@@ -84,10 +84,12 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
             id={radioButtonId}
             onChange={handleChange}
             className={inputStyle}
-            // HINT: requiredを設定すると、iOS端末で操作すると以下の問題が起きる
-            //  - submit時にvalidateは正しく行われるがフィードバックがない(対象入力要素までスクロールせず、popupも表示されない)
-            // 基本的にhtml validateだけで実装される可能性はない(歴史的にrequiredなどが無視される端末が存在する)ため
-            // iOS系端末の場合、required属性を設定しないことで、ユーザーがsubmit出来なかった理由がエラーなどで正しく理解できるようにする
+            // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
+            //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
+            //    - エラーメッセージが表示されない
+            //    - 問題のある入力フィールドまでスクロールしない
+            // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
+            // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
             required={isIOS ? undefined : required}
             ref={ref}
           />
