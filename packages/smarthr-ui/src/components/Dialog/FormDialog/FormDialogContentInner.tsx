@@ -7,7 +7,7 @@ import { ResponseMessage } from '../../ResponseMessage'
 import { Section } from '../../SectioningContent'
 import { Text } from '../../Text'
 import { useOffsetHeight } from '../dialogHelper'
-import { useDialoginnerStyle } from '../useDialogInnerStyle'
+import { type ContentBodyProps, useDialoginnerStyle } from '../useDialogInnerStyle'
 
 import type { DecoratorsType, ResponseMessageType } from '../../../types'
 
@@ -49,7 +49,8 @@ export type BaseProps = PropsWithChildren<{
   subActionArea?: ReactNode
   /** コンポーネント内の文言を変更するための関数を設定 */
   decorators?: DecoratorsType<'closeButtonLabel'>
-}>
+}> &
+  ContentBodyProps
 
 export type FormDialogContentInnerProps = BaseProps & {
   onClickClose: () => void
@@ -65,6 +66,8 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   titleId,
   subtitle,
   titleTag,
+  contentBgColor,
+  contentPadding,
   actionText,
   actionTheme = 'primary',
   onSubmit,
@@ -90,7 +93,7 @@ export const FormDialogContentInner: FC<FormDialogContentInnerProps> = ({
   const isRequestProcessing = responseMessage && responseMessage.status === 'processing'
 
   const { titleAreaStyle, bodyStyleProps, actionAreaStyle, buttonAreaStyle, messageStyle } =
-    useDialoginnerStyle(offsetHeight)
+    useDialoginnerStyle(offsetHeight, contentBgColor, contentPadding)
 
   return (
     <Section>
