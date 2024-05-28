@@ -14,6 +14,8 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 export const FormDialogContent: React.FC<Props & ElementProps> = ({
   children,
   title,
+  contentBgColor,
+  contentPadding,
   actionText,
   actionTheme,
   onSubmit,
@@ -58,6 +60,8 @@ export const FormDialogContent: React.FC<Props & ElementProps> = ({
       <FormDialogContentInner
         title={title}
         titleId={titleId}
+        contentBgColor={contentBgColor}
+        contentPadding={contentPadding}
         actionText={actionText}
         actionTheme={actionTheme}
         onSubmit={handleSubmitAction}
