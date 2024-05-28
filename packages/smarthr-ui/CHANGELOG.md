@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [51.1.0](https://github.com/kufu/smarthr-ui/compare/v51.0.0...v51.1.0) (2024-05-28)
+
+
+### Features
+
+* SearchInput コンポーネントに onClickClear オプションを追加 ([#4635](https://github.com/kufu/smarthr-ui/issues/4635)) ([48be8b4](https://github.com/kufu/smarthr-ui/commit/48be8b414a97dfd0d917ac6ace05a6f58d46af36))
+* ダイアログコンテンツに背景色とパディングを設定できるようにする ([#4677](https://github.com/kufu/smarthr-ui/issues/4677)) ([ee8dbf3](https://github.com/kufu/smarthr-ui/commit/ee8dbf3dfa297af322e41dfde4e6439b3d2fbac9))
+
 ## [51.0.0](https://github.com/kufu/smarthr-ui/compare/v50.1.0...v51.0.0) (2024-05-28)
 
 
