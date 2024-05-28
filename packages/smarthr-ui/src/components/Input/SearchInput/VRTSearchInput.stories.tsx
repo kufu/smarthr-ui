@@ -21,6 +21,7 @@ const SearchInputStory: StoryFn = () => (
     <SearchInput
       name="default"
       tooltipMessage="氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。"
+      onClickClear={() => alert('clear')}
     />
   </Wrapper>
 )
