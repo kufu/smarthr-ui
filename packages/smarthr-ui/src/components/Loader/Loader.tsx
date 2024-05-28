@@ -53,6 +53,7 @@ const loaderStyle = tv({
       'shr-border-inherit',
       'shr-border-b-transparent',
       'shr-rounded-[50%]',
+      'shr-forced-color-adjust-none',
     ],
     textSlot: ['shr-block', 'shr-mt-1', 'shr-text-base', 'shr-text-center'],
   },
@@ -70,11 +71,11 @@ const loaderStyle = tv({
     type: {
       primary: {
         textSlot: ['shr-text-black'],
-        line: ['shr-border-main'],
+        line: ['shr-border-main', 'forced-colors:shr-border-[ButtonBorder]'],
       },
       light: {
         textSlot: ['shr-text-white'],
-        line: ['shr-border-white'],
+        line: ['shr-border-white', 'forced-colors:shr-border-[ButtonBorder]'],
       },
     },
     lineNum: {

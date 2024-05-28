@@ -74,14 +74,8 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
     }
   }, [className])
   const { name } = useContext(AccordionPanelItemContext)
-  const {
-    iconPosition,
-    displayIcon,
-    expandedItems,
-    onClickTrigger,
-    onClickProps,
-    expandableMultiply,
-  } = useContext(AccordionPanelContext)
+  const { iconPosition, expandedItems, onClickTrigger, onClickProps, expandableMultiply } =
+    useContext(AccordionPanelContext)
 
   const isExpanded = getIsInclude(expandedItems, name)
 
@@ -113,11 +107,9 @@ export const AccordionPanelTrigger: FC<Props & ElementProps> = ({
         type="button"
       >
         <Cluster className="shr-flex-nowrap" align="center" as="span">
-          {displayIcon && iconPosition === 'left' && <FaCaretRightIcon className={leftIconStyle} />}
+          {iconPosition === 'left' && <FaCaretRightIcon className={leftIconStyle} />}
           <span className={titleStyle}>{children}</span>
-          {displayIcon && iconPosition === 'right' && (
-            <FaCaretDownIcon className={rightIconStyle} />
-          )}
+          {iconPosition === 'right' && <FaCaretDownIcon className={rightIconStyle} />}
         </Cluster>
       </button>
     </Heading>
