@@ -9,6 +9,7 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
+import { isIOS } from '../../libs/ua'
 
 type Props = PropsWithChildren<ComponentPropsWithRef<'input'>>
 
@@ -52,7 +53,7 @@ const radioButton = tv({
 })
 
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
-  ({ onChange, children, className, ...props }, ref) => {
+  ({ onChange, children, className, required, ...props }, ref) => {
     const { wrapperStyle, innerWrapperStyle, boxStyle, inputStyle, labelStyle } = useMemo(() => {
       const { wrapper, innerWrapper, box, input, label } = radioButton()
       return {
@@ -83,6 +84,13 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
             id={radioButtonId}
             onChange={handleChange}
             className={inputStyle}
+            // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
+            //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
+            //    - エラーメッセージが表示されない
+            //    - 問題のある入力フィールドまでスクロールしない
+            // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
+            // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
+            required={isIOS ? undefined : required}
             ref={ref}
           />
           <span className={boxStyle} aria-hidden="true" />
