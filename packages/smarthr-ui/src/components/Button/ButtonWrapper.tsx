@@ -60,9 +60,17 @@ export function ButtonWrapper({
     // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute, jsx-a11y/anchor-has-content
     return <a {...others} className={anchorStyle} ref={anchorRef} />
   } else {
-    const { buttonRef, disabled, ...others } = props
+    const { buttonRef, disabled, onClick, ...others } = props
     // eslint-disable-next-line smarthr/best-practice-for-button-element
-    return <button {...others} aria-disabled={disabled} className={buttonStyle} ref={buttonRef} />
+    return (
+      <button
+        {...others}
+        aria-disabled={disabled}
+        className={buttonStyle}
+        ref={buttonRef}
+        onClick={disabled ? undefined : onClick}
+      />
+    )
   }
 }
 
