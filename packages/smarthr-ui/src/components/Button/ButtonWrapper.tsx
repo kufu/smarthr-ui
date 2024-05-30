@@ -204,9 +204,9 @@ const button = tv({
       slots: ['anchor'],
       variant: 'primary',
       className: [
-        '[&not([href])]:shr-border-main/50',
-        '[&not([href])]:shr-bg-main/50',
-        '[&not([href])]:shr-text-white/50',
+        '[&:not([href])]:shr-border-main/50',
+        '[&:not([href])]:shr-bg-main/50',
+        '[&:not([href])]:shr-text-white/50',
       ],
     },
     {
