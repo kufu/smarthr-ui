@@ -61,8 +61,8 @@ export function ButtonWrapper({
     return <a {...others} className={anchorStyle} ref={anchorRef} />
   } else {
     const { buttonRef, disabled, onClick, ...others } = props
-    // eslint-disable-next-line smarthr/best-practice-for-button-element
     return (
+      // eslint-disable-next-line smarthr/best-practice-for-button-element
       <button
         {...others}
         aria-disabled={disabled}
