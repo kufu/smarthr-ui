@@ -6,7 +6,11 @@ import { Reel } from '../Layout'
 const tabBar = tv({
   slots: {
     wrapper: ['smarthr-ui-TabBar'],
-    inner: ['shr-grow', 'shr-m-0.25'],
+    inner: [
+      'shr-grow',
+      // フォーカスリングの表示領域を確保するためのmargin
+      'shr-m-0.25',
+    ],
   },
   variants: {
     bordered: {
