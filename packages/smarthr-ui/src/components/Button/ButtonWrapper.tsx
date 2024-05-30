@@ -60,18 +60,18 @@ export function ButtonWrapper({
     // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute, jsx-a11y/anchor-has-content
     return <a {...others} className={anchorStyle} ref={anchorRef} />
   } else {
-    const { buttonRef, ...others } = props
+    const { buttonRef, disabled, ...others } = props
     // eslint-disable-next-line smarthr/best-practice-for-button-element
-    return <button {...others} className={buttonStyle} ref={buttonRef} />
+    return <button {...others} aria-disabled={disabled} className={buttonStyle} ref={buttonRef} />
   }
 }
 
 const button = tv({
   slots: {
     default: [
-      'disabled:shr-cursor-not-allowed',
+      'aria-disabled:shr-cursor-not-allowed',
       /* alpha color を使用しているので、背景色と干渉させない */
-      'disabled:shr-bg-clip-padding',
+      'aria-disabled:shr-bg-clip-padding',
       '[&_.smarthr-ui-Icon]:forced-colors:disabled:shr-fill-[GrayText]',
     ],
     anchor: [
@@ -187,18 +187,18 @@ const button = tv({
       slots: ['default'],
       variant: 'primary',
       className: [
-        'disabled:shr-border-main/50',
-        'disabled:shr-bg-main/50',
-        'disabled:shr-text-white/50',
+        'aria-disabled:shr-border-main/50',
+        'aria-disabled:shr-bg-main/50',
+        'aria-disabled:shr-text-white/50',
       ],
     },
     {
       slots: ['anchor'],
       variant: 'primary',
       className: [
-        '[&:not([href])]:shr-border-main/50',
-        '[&:not([href])]:shr-bg-main/50',
-        '[&:not([href])]:shr-text-white/50',
+        '[&not([href])]:shr-border-main/50',
+        '[&not([href])]:shr-bg-main/50',
+        '[&not([href])]:shr-text-white/50',
       ],
     },
     {
@@ -220,9 +220,9 @@ const button = tv({
       slots: ['default'],
       variant: 'secondary',
       className: [
-        'disabled:shr-border-disabled',
-        'disabled:shr-bg-white-darken',
-        'disabled:shr-text-disabled',
+        'aria-disabled:shr-border-disabled',
+        'aria-disabled:shr-bg-white-darken',
+        'aria-disabled:shr-text-disabled',
       ],
     },
     {
@@ -251,9 +251,9 @@ const button = tv({
       slots: ['default'],
       variant: 'danger',
       className: [
-        'disabled:shr-border-danger/50',
-        'disabled:shr-bg-danger/50',
-        'disabled:shr-text-white/50',
+        'aria-disabled:shr-border-danger/50',
+        'aria-disabled:shr-bg-danger/50',
+        'aria-disabled:shr-text-white/50',
       ],
     },
     {
@@ -284,9 +284,9 @@ const button = tv({
       slots: ['default'],
       variant: 'skeleton',
       className: [
-        'disabled:shr-border-white/50',
-        'disabled:shr-bg-transparent',
-        'disabled:shr-text-white/50',
+        'aria-disabled:shr-border-white/50',
+        'aria-disabled:shr-bg-transparent',
+        'aria-disabled:shr-text-white/50',
       ],
     },
     {
@@ -313,9 +313,9 @@ const button = tv({
       slots: ['default'],
       variant: 'text',
       className: [
-        'disabled:shr-border-transparent',
-        'disabled:shr-bg-transparent',
-        'disabled:shr-text-disabled',
+        'aria-disabled:shr-border-transparent',
+        'aria-disabled:shr-bg-transparent',
+        'aria-disabled:shr-text-disabled',
       ],
     },
     {
