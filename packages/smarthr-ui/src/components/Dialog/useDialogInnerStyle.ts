@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 import { type Gap } from '../../types'
-import { defaultHtmlFontSize } from '../../themes/createFontSize'
+import { useTheme } from '../../hooks/useTailwindTheme'
 
 const dialogContentInner = tv({
   slots: {
@@ -97,7 +97,8 @@ export const useDialoginnerStyle = (
     const { titleArea, actionArea, buttonArea, message } = dialogContentInner()
     const paddingBlock = padding instanceof Object ? padding.block : padding
     const paddingInline = padding instanceof Object ? padding.inline : padding
-    const paddingOffset = (Number(paddingBlock) || 0) * defaultHtmlFontSize * 2
+    const { spacing } = useTheme()
+    const offsetPadding = spacing(paddingBlock) * 2
 
     return {
       titleAreaStyle: titleArea(),
@@ -108,7 +109,7 @@ export const useDialoginnerStyle = (
           contentPaddingInline: paddingInline,
         }),
         style: {
-          maxHeight: `calc(100svh - ${offsetHeight + paddingOffset }px)`,
+          maxHeight: `calc(100svh - ${offsetHeight + offsetPadding }px)`,
         },
       },
       actionAreaStyle: actionArea(),
