@@ -335,7 +335,7 @@ export default {
         '.focus-indicator': {
           outline: 'none',
           isolation: 'isolate',
-          boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
+          boxShadow: theme('boxShadow.outline'),
         },
         '.border-shorthand': {
           borderWidth: theme('borderWidth.DEFAULT'),
