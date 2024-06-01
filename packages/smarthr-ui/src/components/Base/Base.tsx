@@ -75,7 +75,7 @@ const base = tv({
       auto: 'shr-overflow-x-auto',
     },
     layer: {
-      0: 'shr-shadow-layer-0',
+      0: '',
       1: 'shr-shadow-layer-1',
       2: 'shr-shadow-layer-2',
       3: 'shr-shadow-layer-3',

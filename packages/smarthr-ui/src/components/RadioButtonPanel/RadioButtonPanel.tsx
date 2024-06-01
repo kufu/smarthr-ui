@@ -13,7 +13,7 @@ const MEANLESS_TAG_NAMES = ['div', 'span']
 const radioButtonPanel = tv({
   base: [
     'smarthr-ui-RadioButtonPanel',
-    'shr-border-shorthand shr-list-none shr-shadow-none',
+    'shr-border-shorthand shr-list-none',
     // なぜか :has が動作しないので重ねて書いている
     'has-[:focus-visible]:shr-focus-indicator [&:has(:focus-visible)]:shr-focus-indicator',
     '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-shadow-none',
@@ -43,6 +43,7 @@ export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...p
     // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
     <Base
       padding={1}
+      layer={0}
       role={MEANLESS_TAG_NAMES.includes(`${as || ''}`) ? 'presentation' : undefined}
       onClick={handleOuterClick}
       as={as}
