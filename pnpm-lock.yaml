@@ -62,7 +62,7 @@ importers:
         version: 0.1.1
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.5.24)(@types/node@20.14.0)(typescript@5.4.5)
+        version: 10.9.2(@swc/core@1.5.24(@swc/helpers@0.5.5))(@types/node@20.14.0)(typescript@5.4.5)
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -230,8 +230,8 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2(@babel/core@7.24.6)
       chromatic:
-        specifier: ^11.4.1
-        version: 11.5.0
+        specifier: ^11.5.1
+        version: 11.5.1
       ecma-version-validator-webpack-plugin:
         specifier: ^1.2.1
         version: 1.2.1(webpack@5.91.0(@swc/core@1.5.24(@swc/helpers@0.5.5))(esbuild@0.20.2))
@@ -3691,8 +3691,8 @@ packages:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
 
-  chromatic@11.5.0:
-    resolution: {integrity: sha512-mugneDXjkLIrAR+884EXz3lF443nG70XqzCj+6D95h9zFSq5pAEAUOeMeh5V2hUAh8qVar4+US2lsacEYugPnw==}
+  chromatic@11.5.1:
+    resolution: {integrity: sha512-JMLih17sOwdD8h1w7XRTrs0g1DUicJxWkHzq0/nGB0CMIgfoylHq7uXpPEByu7l78lZLqcgneCPUuVEEfEWJDg==}
     hasBin: true
     peerDependencies:
       '@chromatic-com/cypress': ^0.*.* || ^1.0.0
@@ -13152,7 +13152,7 @@ snapshots:
 
   chownr@2.0.0: {}
 
-  chromatic@11.5.0: {}
+  chromatic@11.5.1: {}
 
   chrome-remote-interface@0.32.2:
     dependencies:
@@ -15707,7 +15707,7 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 20.14.0
-      ts-node: 10.9.2(@swc/core@1.5.24)(@types/node@20.14.0)(typescript@5.4.5)
+      ts-node: 10.9.2(@swc/core@1.5.24(@swc/helpers@0.5.5))(@types/node@20.14.0)(typescript@5.4.5)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -17054,7 +17054,7 @@ snapshots:
       yaml: 2.4.2
     optionalDependencies:
       postcss: 8.4.38
-      ts-node: 10.9.2(@swc/core@1.5.24)(@types/node@20.14.0)(typescript@5.4.5)
+      ts-node: 10.9.2(@swc/core@1.5.24(@swc/helpers@0.5.5))(@types/node@20.14.0)(typescript@5.4.5)
 
   postcss-loader@7.3.4(postcss@8.4.38)(typescript@5.4.5)(webpack@5.91.0(@swc/core@1.5.24(@swc/helpers@0.5.5))(esbuild@0.20.2)):
     dependencies:
@@ -18616,7 +18616,7 @@ snapshots:
       typescript: 5.4.5
       webpack: 5.91.0(@swc/core@1.5.24(@swc/helpers@0.5.5))(esbuild@0.20.2)
 
-  ts-node@10.9.2(@swc/core@1.5.24)(@types/node@20.14.0)(typescript@5.4.5):
+  ts-node@10.9.2(@swc/core@1.5.24(@swc/helpers@0.5.5))(@types/node@20.14.0)(typescript@5.4.5):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
@@ -18661,7 +18661,7 @@ snapshots:
   ttypescript@1.5.15(ts-node@10.9.2(@swc/core@1.5.24(@swc/helpers@0.5.5))(@types/node@20.14.0)(typescript@5.4.5))(typescript@5.4.5):
     dependencies:
       resolve: 1.22.8
-      ts-node: 10.9.2(@swc/core@1.5.24)(@types/node@20.14.0)(typescript@5.4.5)
+      ts-node: 10.9.2(@swc/core@1.5.24(@swc/helpers@0.5.5))(@types/node@20.14.0)(typescript@5.4.5)
       typescript: 5.4.5
 
   tunnel-agent@0.6.0:
