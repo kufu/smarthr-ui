@@ -50,6 +50,7 @@ const tooltip = tv({
   base: [
     'smarthr-ui-Tooltip',
     'shr-inline-block shr-max-w-full',
+    'shr-align-bottom',
     'focus-visible:shr-focus-indicator',
   ],
   variants: {
