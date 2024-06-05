@@ -3,6 +3,8 @@ import { VariantProps, tv } from 'tailwind-variants'
 
 import { HeadingTypes, MAPPER_SIZE_AND_WEIGHT } from '../Heading/Heading'
 
+// テスト
+
 const text = tv({
   variants: {
     size: {
