@@ -12,6 +12,8 @@ const balloon = tv({
     'shr-rounded-s',
     /* drop-shadow は spread-radius を受け付けないので shadow.LAYER2 に近い値をハードコーディングしている */
     'shr-drop-shadow-[0_2px_2.5px_theme(colors.transparency.30)]',
+    // Safariでdrop-shadowが残り続けてしまうバグの対応
+    'shr-will-change-[filter]',
     'shr-whitespace-nowrap',
     'shr-bg-white',
     'shr-text-black',
