@@ -134,8 +134,8 @@ export const All: StoryFn = () => {
 
         <InnerList>
           <li>
-            <CheckBox name="4" checked={checkedName.includes('4')} onChange={handleChange}>
-              {'a'.repeat(100)}
+            <CheckBox name="5" checked={checkedName.includes('5')} onChange={handleChange}>
+              {'a'.repeat(300)}
             </CheckBox>
           </li>
         </InnerList>
