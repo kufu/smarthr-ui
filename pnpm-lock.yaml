@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@babel/helper-compilation-targets': ^7.24.6
+  '@babel/helper-compilation-targets': ^7.24.7
   '@types/react': ^18.3.3
   minimist: 1.2.8
   react: ^18.3.1
@@ -381,8 +381,8 @@ packages:
     resolution: {integrity: sha512-ZJhac6FkEd1yhG2AHOmfcXG4ceoLltoCVJjN5XsWN9BifBQr+cHJbWi0h68HZuSORq+3WtJ2z0hwF2NG1b5kcA==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/compat-data@7.24.6':
-    resolution: {integrity: sha512-aC2DGhBq5eEdyXWqrDInSqQjO0k8xtPRf5YylULqx8MCd6jBtzqfta/3ETMRpuKIc5hyswfO80ObyA1MvkCcUQ==}
+  '@babel/compat-data@7.24.7':
+    resolution: {integrity: sha512-qJzAIcv03PyaWqxRgO4mSU3lihncDT296vnyuE2O8uA4w3UHWI4S3hgeZd1L8W1Bft40w9JxJ2b412iDUFFRhw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/core@7.24.6':
@@ -401,8 +401,8 @@ packages:
     resolution: {integrity: sha512-+wnfqc5uHiMYtvRX7qu80Toef8BXeh4HHR1SPeonGb1SKPniNEd4a/nlaJJMv/OIEYvIVavvo0yR7u10Gqz0Iw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/helper-compilation-targets@7.24.6':
-    resolution: {integrity: sha512-VZQ57UsDGlX/5fFA7GkVPplZhHsVc+vuErWgdOiysI9Ksnw0Pbbd6pnPiR/mmJyKHgyIW0c7KT32gmhiF+cirg==}
+  '@babel/helper-compilation-targets@7.24.7':
+    resolution: {integrity: sha512-ctSdRHBi20qWOfy27RUb4Fhp07KSJ3sXcuSvTrXrc4aG8NSYDo1ici3Vhg9bg69y5bj0Mr1lh0aeEgTvc12rMg==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-create-class-features-plugin@7.24.6':
@@ -498,8 +498,8 @@ packages:
     resolution: {integrity: sha512-4yA7s865JHaqUdRbnaxarZREuPTHrjpDT+pXoAZ1yhyo6uFnIEpS8VMu16siFOHDpZNKYv5BObhsB//ycbICyw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/helper-validator-option@7.24.6':
-    resolution: {integrity: sha512-Jktc8KkF3zIkePb48QO+IapbXlSapOW9S+ogZZkcO6bABgYAxtZcjZ/O005111YLf+j4M84uEgwYoidDkXbCkQ==}
+  '@babel/helper-validator-option@7.24.7':
+    resolution: {integrity: sha512-yy1/KvjhV/ZCL+SM7hBrvnZJ3ZuT9OuZgIJAGpPEToANvc3iM6iDvBnRjtElWibHU6n8/LPR/EjX9EtIEYO3pw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-wrap-function@7.24.6':
@@ -8871,14 +8871,14 @@ snapshots:
       '@babel/highlight': 7.24.6
       picocolors: 1.0.1
 
-  '@babel/compat-data@7.24.6': {}
+  '@babel/compat-data@7.24.7': {}
 
   '@babel/core@7.24.6':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@babel/code-frame': 7.24.6
       '@babel/generator': 7.24.6
-      '@babel/helper-compilation-targets': 7.24.6
+      '@babel/helper-compilation-targets': 7.24.7
       '@babel/helper-module-transforms': 7.24.6(@babel/core@7.24.6)
       '@babel/helpers': 7.24.6
       '@babel/parser': 7.24.6
@@ -8908,10 +8908,10 @@ snapshots:
     dependencies:
       '@babel/types': 7.24.6
 
-  '@babel/helper-compilation-targets@7.24.6':
+  '@babel/helper-compilation-targets@7.24.7':
     dependencies:
-      '@babel/compat-data': 7.24.6
-      '@babel/helper-validator-option': 7.24.6
+      '@babel/compat-data': 7.24.7
+      '@babel/helper-validator-option': 7.24.7
       browserslist: 4.23.0
       lru-cache: 5.1.1
       semver: 6.3.1
@@ -8939,7 +8939,7 @@ snapshots:
   '@babel/helper-define-polyfill-provider@0.4.4(@babel/core@7.24.6)':
     dependencies:
       '@babel/core': 7.24.6
-      '@babel/helper-compilation-targets': 7.24.6
+      '@babel/helper-compilation-targets': 7.24.7
       '@babel/helper-plugin-utils': 7.24.6
       debug: 4.3.4(supports-color@5.5.0)
       lodash.debounce: 4.0.8
@@ -8950,7 +8950,7 @@ snapshots:
   '@babel/helper-define-polyfill-provider@0.5.0(@babel/core@7.24.6)':
     dependencies:
       '@babel/core': 7.24.6
-      '@babel/helper-compilation-targets': 7.24.6
+      '@babel/helper-compilation-targets': 7.24.7
       '@babel/helper-plugin-utils': 7.24.6
       debug: 4.3.4(supports-color@5.5.0)
       lodash.debounce: 4.0.8
@@ -8961,7 +8961,7 @@ snapshots:
   '@babel/helper-define-polyfill-provider@0.6.2(@babel/core@7.24.6)':
     dependencies:
       '@babel/core': 7.24.6
-      '@babel/helper-compilation-targets': 7.24.6
+      '@babel/helper-compilation-targets': 7.24.7
       '@babel/helper-plugin-utils': 7.24.6
       debug: 4.3.4(supports-color@5.5.0)
       lodash.debounce: 4.0.8
@@ -9033,7 +9033,7 @@ snapshots:
 
   '@babel/helper-validator-identifier@7.24.6': {}
 
-  '@babel/helper-validator-option@7.24.6': {}
+  '@babel/helper-validator-option@7.24.7': {}
 
   '@babel/helper-wrap-function@7.24.6':
     dependencies:
@@ -9104,9 +9104,9 @@ snapshots:
 
   '@babel/plugin-proposal-object-rest-spread@7.20.7(@babel/core@7.24.6)':
     dependencies:
-      '@babel/compat-data': 7.24.6
+      '@babel/compat-data': 7.24.7
       '@babel/core': 7.24.6
-      '@babel/helper-compilation-targets': 7.24.6
+      '@babel/helper-compilation-targets': 7.24.7
       '@babel/helper-plugin-utils': 7.24.6
       '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@7.24.6)
       '@babel/plugin-transform-parameters': 7.24.6(@babel/core@7.24.6)
@@ -9284,7 +9284,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.24.6
       '@babel/helper-annotate-as-pure': 7.24.6
-      '@babel/helper-compilation-targets': 7.24.6
+      '@babel/helper-compilation-targets': 7.24.7
       '@babel/helper-environment-visitor': 7.24.6
       '@babel/helper-function-name': 7.24.6
       '@babel/helper-plugin-utils': 7.24.6
@@ -9347,7 +9347,7 @@ snapshots:
   '@babel/plugin-transform-function-name@7.24.6(@babel/core@7.24.6)':
     dependencies:
       '@babel/core': 7.24.6
-      '@babel/helper-compilation-targets': 7.24.6
+      '@babel/helper-compilation-targets': 7.24.7
       '@babel/helper-function-name': 7.24.6
       '@babel/helper-plugin-utils': 7.24.6
 
@@ -9426,7 +9426,7 @@ snapshots:
   '@babel/plugin-transform-object-rest-spread@7.24.6(@babel/core@7.24.6)':
     dependencies:
       '@babel/core': 7.24.6
-      '@babel/helper-compilation-targets': 7.24.6
+      '@babel/helper-compilation-targets': 7.24.7
       '@babel/helper-plugin-utils': 7.24.6
       '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@7.24.6)
       '@babel/plugin-transform-parameters': 7.24.6(@babel/core@7.24.6)
@@ -9581,11 +9581,11 @@ snapshots:
 
   '@babel/preset-env@7.24.6(@babel/core@7.24.6)':
     dependencies:
-      '@babel/compat-data': 7.24.6
+      '@babel/compat-data': 7.24.7
       '@babel/core': 7.24.6
-      '@babel/helper-compilation-targets': 7.24.6
+      '@babel/helper-compilation-targets': 7.24.7
       '@babel/helper-plugin-utils': 7.24.6
-      '@babel/helper-validator-option': 7.24.6
+      '@babel/helper-validator-option': 7.24.7
       '@babel/plugin-bugfix-firefox-class-in-computed-class-key': 7.24.6(@babel/core@7.24.6)
       '@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression': 7.24.6(@babel/core@7.24.6)
       '@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining': 7.24.6(@babel/core@7.24.6)
@@ -9670,7 +9670,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.24.6
       '@babel/helper-plugin-utils': 7.24.6
-      '@babel/helper-validator-option': 7.24.6
+      '@babel/helper-validator-option': 7.24.7
       '@babel/plugin-transform-flow-strip-types': 7.24.1(@babel/core@7.24.6)
 
   '@babel/preset-modules@0.1.6-no-external-plugins(@babel/core@7.24.6)':
@@ -9684,7 +9684,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.24.6
       '@babel/helper-plugin-utils': 7.24.6
-      '@babel/helper-validator-option': 7.24.6
+      '@babel/helper-validator-option': 7.24.7
       '@babel/plugin-transform-react-display-name': 7.24.6(@babel/core@7.24.6)
       '@babel/plugin-transform-react-jsx': 7.24.6(@babel/core@7.24.6)
       '@babel/plugin-transform-react-jsx-development': 7.24.6(@babel/core@7.24.6)
@@ -9694,7 +9694,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.24.6
       '@babel/helper-plugin-utils': 7.24.6
-      '@babel/helper-validator-option': 7.24.6
+      '@babel/helper-validator-option': 7.24.7
       '@babel/plugin-syntax-jsx': 7.24.6(@babel/core@7.24.6)
       '@babel/plugin-transform-modules-commonjs': 7.24.6(@babel/core@7.24.6)
       '@babel/plugin-transform-typescript': 7.24.6(@babel/core@7.24.6)
@@ -12850,7 +12850,7 @@ snapshots:
 
   babel-plugin-polyfill-corejs2@0.4.11(@babel/core@7.24.6):
     dependencies:
-      '@babel/compat-data': 7.24.6
+      '@babel/compat-data': 7.24.7
       '@babel/core': 7.24.6
       '@babel/helper-define-polyfill-provider': 0.6.2(@babel/core@7.24.6)
       semver: 6.3.1
