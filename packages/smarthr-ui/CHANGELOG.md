@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [51.1.1](https://github.com/kufu/smarthr-ui/compare/v51.1.0...v51.1.1) (2024-06-05)
+
+
+### Bug Fixes
+
+* iOS系端末の場合、Select, Radio系入力要素にrequired属性を設定しないように変更 ([#4660](https://github.com/kufu/smarthr-ui/issues/4660)) ([9096449](https://github.com/kufu/smarthr-ui/commit/9096449e5d23178ad60df2ccd40dd19d0678feb0))
+* 背景色として使う可能性のない色を bgColor 関連 props から消す ([#4688](https://github.com/kufu/smarthr-ui/issues/4688)) ([3c9954d](https://github.com/kufu/smarthr-ui/commit/3c9954d2b81669be3e6be48a02f350e4857001e4))
+
+## [51.1.0](https://github.com/kufu/smarthr-ui/compare/v51.0.0...v51.1.0) (2024-05-28)
+
+
+### Features
+
+* SearchInput コンポーネントに onClickClear オプションを追加 ([#4635](https://github.com/kufu/smarthr-ui/issues/4635)) ([48be8b4](https://github.com/kufu/smarthr-ui/commit/48be8b414a97dfd0d917ac6ace05a6f58d46af36))
+* ダイアログコンテンツに背景色とパディングを設定できるようにする ([#4677](https://github.com/kufu/smarthr-ui/issues/4677)) ([ee8dbf3](https://github.com/kufu/smarthr-ui/commit/ee8dbf3dfa297af322e41dfde4e6439b3d2fbac9))
+
+## [51.0.0](https://github.com/kufu/smarthr-ui/compare/v50.1.0...v51.0.0) (2024-05-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* AccordionPanelのアイコン無し(NoIcon)の削除を行う (#4669)
+
+### Features
+
+* AccordionPanelのアイコン無し(NoIcon)の削除を行う ([#4669](https://github.com/kufu/smarthr-ui/issues/4669)) ([c12824c](https://github.com/kufu/smarthr-ui/commit/c12824c65775264ad3e830f445ffbc885241df92))
+* Loaderを強制カラーモードに対応 ([#4645](https://github.com/kufu/smarthr-ui/issues/4645)) ([3a00da3](https://github.com/kufu/smarthr-ui/commit/3a00da3ed83463089497fac53cbff74203cd9c3c))
+
+
+### Bug Fixes
+
+* Combobox に autocomplete が渡せない不具合を修正 ([#4664](https://github.com/kufu/smarthr-ui/issues/4664)) ([4dd2838](https://github.com/kufu/smarthr-ui/commit/4dd28388ff9d5645026d7d1868a34e418bd91dd0))
+* **MultiCombobox:** 高さのガタツキを修正 ([#4665](https://github.com/kufu/smarthr-ui/issues/4665)) ([9639371](https://github.com/kufu/smarthr-ui/commit/96393715a1f9872382265d60252ad02ca7c248c1))
+* RadioButtonPanel.storiesのlist-styleを修正 ([#4666](https://github.com/kufu/smarthr-ui/issues/4666)) ([c990d2a](https://github.com/kufu/smarthr-ui/commit/c990d2ad787b326d78ffc8e8d7656ea76dbb13ab))
+
 ## [50.1.0](https://github.com/kufu/smarthr-ui/compare/v50.0.0...v50.1.0) (2024-05-21)
 
 

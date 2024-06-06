@@ -907,8 +907,15 @@ export const RegOpendMessage: StoryFn = () => (
   <MessageDialog
     isOpen={true}
     title="MessageDialog"
-    description={<p>{dummyText}</p>}
+    description={
+      <p>
+        <code>contentBgColor</code> と <code>contentPadding</code>{' '}
+        でコンテンツ領域の背景色とパディングを設定できます。
+      </p>
+    }
     onClickClose={action('clicked close')}
+    contentBgColor="BACKGROUND"
+    contentPadding={1.5}
   />
 )
 RegOpendMessage.parameters = { docs: { disable: true } }
@@ -920,22 +927,40 @@ export const RegOpendAction: StoryFn = () => (
     actionText="保存"
     onClickAction={action('clicked action')}
     onClickClose={action('clicked close')}
+    contentBgColor="BACKGROUND"
+    contentPadding={1.5}
   >
     <p>
-      {dummyText}
-      {dummyText}
-      {dummyText}
-      {dummyText}
-      {dummyText}
-      {dummyText}
-      {dummyText}
-      {dummyText}
+      <code>contentBgColor</code> と <code>contentPadding</code>{' '}
+      でコンテンツ領域の背景色とパディングを設定できます。
     </p>
     <label>
       <input name="reg_opend_action_checkbox" type="checkbox" />
       Agree
     </label>
   </ActionDialog>
+)
+RegOpendAction.parameters = { docs: { disable: true } }
+
+export const RegOpendForm: StoryFn = () => (
+  <FormDialog
+    isOpen={true}
+    title="FormDialog"
+    actionText="保存"
+    onSubmit={action('clicked submit')}
+    onClickClose={action('clicked close')}
+    contentBgColor="BACKGROUND"
+    contentPadding={1.5}
+  >
+    <p>
+      <code>contentBgColor</code> と <code>contentPadding</code>{' '}
+      でコンテンツ領域の背景色とパディングを設定できます。
+    </p>
+    <label>
+      <input name="reg_opend_action_checkbox" type="checkbox" />
+      Agree
+    </label>
+  </FormDialog>
 )
 RegOpendAction.parameters = { docs: { disable: true } }
 
@@ -947,13 +972,12 @@ export const RegOpenedModeless: StoryFn = () => (
     footer={<ModelessFooter>フッタ</ModelessFooter>}
     height={500}
     width={600}
+    contentBgColor="BACKGROUND"
+    contentPadding={1.5}
   >
     <p>
-      {dummyText}
-      {dummyText}
-      {dummyText}
-      {dummyText}
-      {dummyText}
+      <code>contentBgColor</code> と <code>contentPadding</code>{' '}
+      でコンテンツ領域の背景色とパディングを設定できます。
     </p>
   </ModelessDialog>
 )

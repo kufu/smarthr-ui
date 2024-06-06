@@ -15,6 +15,8 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   title,
   subtitle,
   titleTag,
+  contentBgColor,
+  contentPadding,
   actionText,
   actionTheme,
   onSubmit,
@@ -64,6 +66,8 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
         titleId={titleId}
         subtitle={subtitle}
         titleTag={titleTag}
+        contentBgColor={contentBgColor}
+        contentPadding={contentPadding}
         actionText={actionText}
         actionTheme={actionTheme}
         actionDisabled={actionDisabled}

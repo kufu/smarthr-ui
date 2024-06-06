@@ -23,8 +23,6 @@ import {
 type Props = PropsWithChildren<{
   /** アイコンの左右位置 */
   iconPosition?: 'left' | 'right'
-  /** アイコンを表示するかどうか */
-  displayIcon?: boolean
   /** 複数のパネルを同時に開くことを許容するかどうか */
   expandableMultiply?: boolean
   /** デフォルトで開いた状態にするアイテムの `name` の配列 */
@@ -36,7 +34,6 @@ type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 export const AccordionPanelContext = React.createContext<{
   iconPosition: 'left' | 'right'
-  displayIcon: boolean
   expandedItems: Map<string, string>
   expandableMultiply: boolean
   parentRef: React.RefObject<HTMLDivElement> | null
@@ -44,7 +41,6 @@ export const AccordionPanelContext = React.createContext<{
   onClickProps?: (expandedItems: string[]) => void
 }>({
   iconPosition: 'left',
-  displayIcon: true,
   expandedItems: new Map(),
   expandableMultiply: false,
   parentRef: null,
@@ -56,7 +52,6 @@ const accordionWrapper = tv({
 
 export const AccordionPanel: React.FC<Props & ElementProps> = ({
   iconPosition = 'left',
-  displayIcon = true,
   expandableMultiply = false,
   defaultExpanded = [],
   className,
@@ -119,7 +114,6 @@ export const AccordionPanel: React.FC<Props & ElementProps> = ({
         onClickProps,
         expandedItems,
         iconPosition,
-        displayIcon,
         expandableMultiply,
         parentRef,
       }}
