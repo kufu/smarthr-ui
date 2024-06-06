@@ -128,6 +128,18 @@ export const All: StoryFn = () => {
           </li>
         </InnerList>
       </li>
+
+      <li>
+        <Title>With long text</Title>
+
+        <InnerList>
+          <li>
+            <CheckBox name="4" checked={checkedName.includes('4')} onChange={handleChange}>
+              {'a'.repeat(100)}
+            </CheckBox>
+          </li>
+        </InnerList>
+      </li>
     </WrapperList>
   )
 }
