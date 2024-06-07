@@ -46,7 +46,7 @@ export const All: StoryFn = () => (
         <Txt>{'long text '.repeat(30)} </Txt>
       </Balloon>
       <Balloon horizontal="right" vertical="middle">
-        <Txt>{'longext'.repeat(30)} </Txt>
+        <Txt>{'あ'.repeat(50)} </Txt>
       </Balloon>
     </li>
   </List>
