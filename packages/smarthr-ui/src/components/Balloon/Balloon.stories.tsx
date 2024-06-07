@@ -41,6 +41,14 @@ export const All: StoryFn = () => (
         <Txt>middle right</Txt>
       </Balloon>
     </li>
+    <li>
+      <Balloon horizontal="left" vertical="middle">
+        <Txt>{'long text '.repeat(30)} </Txt>
+      </Balloon>
+      <Balloon horizontal="right" vertical="middle">
+        <Txt>{'longext'.repeat(30)} </Txt>
+      </Balloon>
+    </li>
   </List>
 )
 All.storyName = 'all'
