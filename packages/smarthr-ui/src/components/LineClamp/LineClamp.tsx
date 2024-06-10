@@ -61,10 +61,8 @@ export const LineClamp: FC<Props & ElementProps> = ({
   const rootStyles = useMemo(() => root({ className }), [className])
 
   const ActualLineClamp = () => (
-    <span className={rootStyles}>
-      <span {...props} className={lineClampStyles} ref={ref}>
-        {children}
-      </span>
+    <span {...props} className={rootStyles} ref={ref}>
+      <span className={lineClampStyles}>{children}</span>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
       <span
         aria-hidden
