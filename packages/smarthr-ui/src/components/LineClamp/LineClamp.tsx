@@ -14,8 +14,11 @@ import { Tooltip } from '../Tooltip'
 type Props = PropsWithChildren<VariantProps<typeof lineClamp>>
 type ElementProps = Omit<ComponentPropsWithRef<'span'>, keyof Props>
 
+const root = tv({
+  base: 'smarthr-ui-LineClamp shr-relative',
+})
+
 const lineClamp = tv({
-  base: 'smarthr-ui-LineClamp',
   variants: {
     maxLines: {
       1: 'shr-inline-block shr-w-full shr-overflow-hidden shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
@@ -34,29 +37,44 @@ export const LineClamp: FC<Props & ElementProps> = ({
   className,
   ...props
 }) => {
-  if (maxLines < 1) {
-    throw new Error('"maxLines" cannot be less than 0.')
-  }
-
   const [isTooltipVisible, setTooltipVisible] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
+  const shadowRef = useRef<HTMLSpanElement>(null)
 
   const isMultiLineOverflow = () => {
     const el = ref.current
-    return el ? el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight : false
+    const shadowEl = shadowRef.current
+    return el && shadowEl
+      ? el.scrollWidth > el.clientWidth || shadowEl.clientHeight > el.clientHeight
+      : false
   }
 
   useEffect(() => {
     setTooltipVisible(isMultiLineOverflow())
   }, [maxLines, children])
 
+  if (maxLines < 1) {
+    throw new Error('"maxLines" cannot be less than 0.')
+  }
+
+  const lineClampStyles = useMemo(() => lineClamp({ maxLines }), [maxLines])
+  const rootStyles = useMemo(() => root({ className }), [className])
+
   const ActualLineClamp = () => (
-    <span {...props} className={styles} ref={ref}>
-      {children}
+    <span className={rootStyles}>
+      <span {...props} className={lineClampStyles} ref={ref}>
+        {children}
+      </span>
+      {/* 切り取られていないテキストの高さを取得するための要素 */}
+      <span
+        aria-hidden
+        className="shr-invisible shr-absolute shr-w-full shr-opacity-0"
+        ref={shadowRef}
+      >
+        {children}
+      </span>
     </span>
   )
-
-  const styles = useMemo(() => lineClamp({ maxLines, className }), [className, maxLines])
 
   return isTooltipVisible ? (
     <Tooltip message={children} multiLine vertical="auto">
