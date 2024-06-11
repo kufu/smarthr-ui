@@ -15,21 +15,26 @@ export default {
 
 export const All: StoryFn = () => (
   <ErrorScreen
-    title="SmartHR は現在メンテナンス中です"
+    className="shr-w-full"
+    title="タイトル"
     links={[
       {
-        label: 'お知らせ',
-        url: 'https://support.smarthr.jp/ja/info/status/page/1/',
+        label: 'リンク1',
+        url: '/',
+      },
+      {
+        label: 'リンク2',
+        url: '/',
+      },
+      {
+        label: 'リンク3',
+        url: '/',
         target: '_blank',
       },
     ]}
   >
     <Text as="p" className="shr-text-center">
-      いつも SmartHR をご利用いただきありがとうございます。
-      <br />
-      ただいまメンテナンスのため、一時サービスを停止しております。
-      <br />
-      ご迷惑をおかけいたしますが、ご理解のほどよろしくお願いいたします。
+      メッセージ
     </Text>
   </ErrorScreen>
 )
