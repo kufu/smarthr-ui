@@ -24,7 +24,7 @@ type Props = {
   }>
   /** 表示するコンテンツ */
   children?: ReactNode
-  /** フッター */
+  /** @deprecated フッター指定は非推奨です。リンクの表示が必要な場合は links を使用してください。 */
   footer?: ReactNode
   /** コンポーネントに適用するクラス名 */
   className?: string
