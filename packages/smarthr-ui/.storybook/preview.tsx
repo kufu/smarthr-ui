@@ -74,6 +74,9 @@ const preview: Preview = {
         </>
       ),
     },
+    chromatic: {
+      forcedColors: 'none',
+    },
   },
   decorators: [
     (Story, context) => {
