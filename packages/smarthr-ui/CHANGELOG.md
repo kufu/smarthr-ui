@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [51.2.0](https://github.com/kufu/smarthr-ui/compare/v51.1.1...v51.2.0) (2024-06-11)
+
+
+### Features
+
+* PageCounterのレイアウトを変更 ([#4685](https://github.com/kufu/smarthr-ui/issues/4685)) ([e864580](https://github.com/kufu/smarthr-ui/commit/e864580b69047316dda14574886fd0dacd8e013d))
+
+
+### Bug Fixes
+
+* **Balloon:** Safariで影の表示が崩れるバグを修正 ([#4697](https://github.com/kufu/smarthr-ui/issues/4697)) ([ffd29a8](https://github.com/kufu/smarthr-ui/commit/ffd29a8aafdbcc5a13ce0abd668ac605ad7dc17b))
+
 ### [51.1.1](https://github.com/kufu/smarthr-ui/compare/v51.1.0...v51.1.1) (2024-06-05)
 
 
