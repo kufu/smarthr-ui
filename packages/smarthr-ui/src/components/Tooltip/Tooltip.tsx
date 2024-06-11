@@ -49,9 +49,7 @@ type ElementProps = Omit<ComponentProps<'span'>, keyof Props | 'aria-describedby
 const tooltip = tv({
   base: [
     'smarthr-ui-Tooltip',
-    'shr-inline-block shr-max-w-full shr-overflow-y-hidden',
-    /* inline-block に overflow: visible 以外を指定すると、vertical-align が bottom margin edge に揃ってしまう
-     * https://ja.stackoverflow.com/questions/2603/ */
+    'shr-inline-block shr-max-w-full',
     'shr-align-bottom',
     'focus-visible:shr-focus-indicator',
   ],
