@@ -33,17 +33,4 @@ export const All: StoryFn = () => (
     </Text>
   </ErrorScreen>
 )
-
-export const WithoutChildren: StoryFn = () => (
-  <ErrorScreen
-    title="サンプルタイトル"
-    links={[
-      {
-        label: 'ホームへ',
-        url: 'http://example.com',
-      },
-    ]}
-  />
-)
-WithoutChildren.storyName = 'without children'
 All.storyName = 'all'
