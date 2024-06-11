@@ -3,8 +3,6 @@ import React from 'react'
 
 import { Text } from '../Text'
 
-import { Footer } from './Footer'
-
 import { ErrorScreen } from '.'
 
 export default {
@@ -48,9 +46,4 @@ export const WithoutChildren: StoryFn = () => (
   />
 )
 WithoutChildren.storyName = 'without children'
-
-export const WithFooter: StoryFn = () => (
-  <ErrorScreen links={[{ label: 'ホームへ', url: 'http://example.com' }]} footer={<Footer />} />
-)
-WithFooter.storyName = 'with footer'
 All.storyName = 'all'
