@@ -46,7 +46,9 @@ export const All: StoryFn = () => (
         <Txt>{'long text '.repeat(30)} </Txt>
       </Balloon>
       <Balloon horizontal="right" vertical="middle">
-        <Txt>{'あ'.repeat(50)} </Txt>
+        <Txt>
+          吾輩わがはいは猫である。名前はまだ無い。どこで生れたかとんと見当けんとうがつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。
+        </Txt>
       </Balloon>
     </li>
   </List>
