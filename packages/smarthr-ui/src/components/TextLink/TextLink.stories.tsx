@@ -27,6 +27,11 @@ export const All: StoryFn = () => (
       </TextLink>
     </li>
     <li>
+      <TextLink href="/" target="_blank" rel={null}>
+        別タブで開くルートへのリンク（rel属性 なし）
+      </TextLink>
+    </li>
+    <li>
       <TextLink href="/" target="_blank" suffix={null}>
         別タブで開くルートへのリンク（suffix なし）
       </TextLink>
