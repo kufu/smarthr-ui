@@ -1,5 +1,3 @@
-import { on } from 'events'
-
 import React, {
   FC,
   MutableRefObject,
