@@ -1,3 +1,5 @@
+import { on } from 'events'
+
 import React, {
   FC,
   MutableRefObject,
@@ -17,7 +19,7 @@ import { usePortal } from '../../hooks/usePortal'
 import { Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 
 type Props = {
-  onOpen?: () => void
+  onToggle?: (active: boolean) => void
 }
 
 type DropdownContextType = {
@@ -48,7 +50,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   contentId: '',
 })
 
-export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, children }) => {
+export const Dropdown: FC<PropsWithChildren<Props>> = ({ onToggle, children }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
@@ -81,12 +83,13 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, children }) => 
   // This is the root container of a dropdown content located in outside the DOM tree
   const DropdownContentRoot = useMemo<FC<{ children: ReactNode }>>(
     () => (props) => {
+      if (onToggle) onToggle(active)
       if (!active) return null
-      onOpen?.()
       return createPortal(props.children)
     },
-    [active, createPortal, isPortalRootMounted],
+    [active, createPortal, isPortalRootMounted, onToggle],
   )
+
   // set the displayName explicit for DevTools
   DropdownContentRoot.displayName = 'DropdownContentRoot'
 
