@@ -20,6 +20,8 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
       suffix,
       wide = false,
       variant = 'secondary',
+      target,
+      rel,
       className,
       children,
       ...props
@@ -27,6 +29,10 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
     ref,
   ) => {
     const styles = useMemo(() => anchorButton({ className }), [className])
+    const actualRel = useMemo(
+      () => (rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel),
+      [rel, target],
+    )
 
     return (
       <ButtonWrapper
@@ -36,6 +42,8 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
         wide={wide}
         variant={variant}
         className={styles}
+        target={target}
+        rel={actualRel}
         isAnchor
         anchorRef={ref}
       >
