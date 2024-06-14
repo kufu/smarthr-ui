@@ -19,6 +19,7 @@ type Props = {
   onApply: React.MouseEventHandler<HTMLButtonElement>
   onCancel?: React.MouseEventHandler<HTMLButtonElement>
   onReset?: React.MouseEventHandler<HTMLButtonElement>
+  onOpen?: () => void
   children: ReactNode
   hasStatusText?: boolean
   decorators?: DecoratorsType<
@@ -73,6 +74,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   onApply,
   onCancel,
   onReset,
+  onOpen,
   children,
   hasStatusText,
   decorators,
@@ -140,7 +142,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   }, [isFiltered, triggerSize])
 
   return (
-    <Dropdown>
+    <Dropdown onOpen={onOpen}>
       <DropdownTrigger>
         <Button
           {...props}
