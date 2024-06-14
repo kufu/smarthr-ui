@@ -64,6 +64,9 @@ const config: StorybookConfig = {
   docs: {
     autodocs: true,
   },
+  typescript: {
+    reactDocgen: 'react-docgen-typescript',
+  },
   webpackFinal: async (config) => {
     const resolve = config.resolve || {}
     resolve.alias = {
