@@ -91,6 +91,7 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onToggle, children }) =
     if (isPortalRootMounted() && onToggle) {
       onToggle(active)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 
   // set the displayName explicit for DevTools
