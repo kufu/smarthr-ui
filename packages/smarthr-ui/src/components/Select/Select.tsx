@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { isMobileSafari } from '../../libs/ua'
+import { isIOS, isMobileSafari } from '../../libs/ua'
 import { genericsForwardRef } from '../../libs/util'
 import { FaSortIcon } from '../Icon'
 
@@ -98,6 +98,7 @@ const ActualSelect = <T extends string>(
     size = 'default',
     className,
     disabled,
+    required,
     ...props
   }: Props<T> & ElementProps,
   ref: ForwardedRef<HTMLSelectElement>,
@@ -142,6 +143,13 @@ const ActualSelect = <T extends string>(
         onChange={handleChange}
         aria-invalid={error || undefined}
         disabled={disabled}
+        // HINT: required属性を設定すると、iOS端末で以下の問題が発生します
+        //  - フォームのsubmit時にバリデーションは行われるが、ユーザーにフィードバックがない
+        //    - エラーメッセージが表示されない
+        //    - 問題のある入力フィールドまでスクロールしない
+        // 歴史的に一部の端末ではrequired属性が無視されることがあるため、HTMLのバリデーションのみとすることは少ないです
+        // そのため、iOS端末ではrequired属性を設定しない方がユーザーがsubmitできない理由をエラーメッセージなどで正しく理解できるようになります
+        required={isIOS ? undefined : required}
         ref={ref}
         className={selectStyle}
       >

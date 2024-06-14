@@ -49,7 +49,8 @@ export const Dropdown: FC<PropsWithChildren> = ({ children }) => {
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
   const { rootTriggerRef } = useContext(DropdownContext)
-  const { createPortal, portalRoot, isChildPortal, PortalParentProvider } = usePortal()
+  const { createPortal, portalRoot, isPortalRootMounted, isChildPortal, PortalParentProvider } =
+    usePortal()
 
   const triggerElementRef = useRef<HTMLDivElement>(null)
   const contentId = useId()
@@ -79,7 +80,7 @@ export const Dropdown: FC<PropsWithChildren> = ({ children }) => {
       if (!active) return null
       return createPortal(props.children)
     },
-    [active, createPortal, portalRoot],
+    [active, createPortal, isPortalRootMounted],
   )
   // set the displayName explicit for DevTools
   DropdownContentRoot.displayName = 'DropdownContentRoot'

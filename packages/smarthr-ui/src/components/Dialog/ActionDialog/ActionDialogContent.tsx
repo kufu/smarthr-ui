@@ -14,6 +14,8 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 export const ActionDialogContent: React.FC<Props & ElementProps> = ({
   children,
   title,
+  contentBgColor,
+  contentPadding,
   actionText,
   actionTheme,
   onClickAction,
@@ -53,6 +55,8 @@ export const ActionDialogContent: React.FC<Props & ElementProps> = ({
       <ActionDialogContentInner
         title={title}
         titleId={titleId}
+        contentBgColor={contentBgColor}
+        contentPadding={contentPadding}
         actionText={actionText}
         actionTheme={actionTheme}
         onClickAction={handleClickAction}

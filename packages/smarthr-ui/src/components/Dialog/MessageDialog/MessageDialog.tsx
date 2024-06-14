@@ -20,6 +20,8 @@ export const MessageDialog: React.FC<Props & ElementProps> = ({
   description,
   onClickClose,
   onPressEscape = onClickClose,
+  contentBgColor,
+  contentPadding,
   className,
   portalParent,
   decorators,
@@ -48,6 +50,8 @@ export const MessageDialog: React.FC<Props & ElementProps> = ({
         titleId={titleId}
         subtitle={subtitle}
         description={description}
+        contentBgColor={contentBgColor}
+        contentPadding={contentPadding}
         onClickClose={handleClickClose}
         decorators={decorators}
       />

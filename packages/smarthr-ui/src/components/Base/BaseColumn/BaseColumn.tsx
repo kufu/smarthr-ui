@@ -24,9 +24,6 @@ const baseColumn = tv({
       GREY_7: '[&&&]:shr-bg-[theme(colors.grey.7)]',
       GREY_9: '[&&&]:shr-bg-[theme(colors.grey.9)]',
       GREY_20: '[&&&]:shr-bg-[theme(colors.grey.20)]',
-      GREY_30: '[&&&]:shr-bg-[theme(colors.grey.30)]',
-      GREY_65: '[&&&]:shr-bg-[theme(colors.grey.65)]',
-      GREY_100: '[&&&]:shr-bg-[theme(colors.grey.100)]',
     },
   },
   defaultVariants: {
