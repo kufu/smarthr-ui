@@ -1,5 +1,6 @@
 import { StoryFn } from '@storybook/react'
 import * as React from 'react'
+import { ComponentProps } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Loader } from './Loader'
@@ -9,6 +10,11 @@ export default {
   component: Loader,
 }
 
+// NOTE: 本来はアニメーションの表示を遅延させているが、Chromaticでのスナップショットテストが失敗するため、その影響を受けないように設定。
+const CustomLoader = (props: ComponentProps<typeof Loader>) => (
+  <Loader {...props} className="shr-opacity-100 shr-animate-none" />
+)
+
 export const All: StoryFn = () => (
   <>
     <Wrapper>
@@ -16,15 +22,15 @@ export const All: StoryFn = () => (
       <List>
         <dt>Default</dt>
         <dd>
-          <Loader />
+          <CustomLoader />
         </dd>
         <dt>Small</dt>
         <dd>
-          <Loader size="s" />
+          <CustomLoader size="s" />
         </dd>
         <dt>With text</dt>
         <dd>
-          <Loader text="loading message" />
+          <CustomLoader text="loading message" />
         </dd>
       </List>
     </Wrapper>
@@ -34,15 +40,15 @@ export const All: StoryFn = () => (
       <List>
         <dt>Default</dt>
         <dd>
-          <Loader type="light" />
+          <CustomLoader type="light" />
         </dd>
         <dt>Small</dt>
         <dd>
-          <Loader type="light" size="s" />
+          <CustomLoader type="light" size="s" />
         </dd>
         <dt>With text</dt>
         <dd>
-          <Loader type="light" text="loading message" />
+          <CustomLoader type="light" text="loading message" />
         </dd>
       </List>
     </GrayWrapper>

@@ -18,7 +18,12 @@ type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 const loaderStyle = tv({
   slots: {
-    wrapper: ['smarthr-ui-Loader', 'shr-inline-block', 'shr-overflow-hidden'],
+    wrapper: [
+      'smarthr-ui-Loader',
+      'shr-inline-block shr-overflow-hidden',
+      // NOTE: Loaderの表示時間が短い場合のUIのちらつきを抑えるため、opacityの変化でアニメーションの表示を遅延させる
+      'shr-transition-opacity shr-ease-[unset] shr-opacity-0 shr-animate-[loader-fade-in_auto_ease_200ms_forwards]',
+    ],
     spinner: [
       'smarthr-ui-Loader-spinner', // Button コンポーネントで使用
       'shr-relative',
