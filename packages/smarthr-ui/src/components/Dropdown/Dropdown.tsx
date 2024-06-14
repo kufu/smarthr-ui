@@ -88,7 +88,9 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onToggle, children }) =
   )
 
   useEffect(() => {
-    onToggle?.(active)
+    if (isPortalRootMounted() && onToggle) {
+      onToggle(active)
+    }
   }, [active, onToggle])
 
   // set the displayName explicit for DevTools
