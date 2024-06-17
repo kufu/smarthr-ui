@@ -17,7 +17,8 @@ import { usePortal } from '../../hooks/usePortal'
 import { Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'
 
 type Props = {
-  onToggle?: (active: boolean) => void
+  onOpen?: () => void
+  onClose?: () => void
 }
 
 type DropdownContextType = {
@@ -48,7 +49,7 @@ export const DropdownContext = createContext<DropdownContextType>({
   contentId: '',
 })
 
-export const Dropdown: FC<PropsWithChildren<Props>> = ({ onToggle, children }) => {
+export const Dropdown: FC<PropsWithChildren<Props>> = ({ onOpen, onClose, children }) => {
   const [active, setActive] = useState(false)
   const [triggerRect, setTriggerRect] = useState<Rect>(initialRect)
 
@@ -88,8 +89,9 @@ export const Dropdown: FC<PropsWithChildren<Props>> = ({ onToggle, children }) =
   )
 
   useEffect(() => {
-    if (isPortalRootMounted() && onToggle) {
-      onToggle(active)
+    if (isPortalRootMounted()) {
+      if (active) onOpen?.()
+      else onClose?.()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
