@@ -42,7 +42,7 @@
     "@storybook/test": "^8.1.6",
     "@storybook/test-runner": "^0.18.2",
     "@storybook/theming": "^8.1.6",
-    "@swc/core": "^1.5.25",
+    "@swc/core": "^1.6.1",
     "@swc/jest": "^0.2.36",
     "@testing-library/react": "^16.0.0",
     "@types/jest": "^29.5.12",
@@ -73,7 +73,7 @@
     "postcss": "^8.4.38",
     "postcss-styled-syntax": "^0.6.4",
     "postcss-syntax": "^0.36.2",
-    "puppeteer": "^22.10.0",
+    "puppeteer": "^22.11.0",
     "react": "^18.3.1",
     "react-docgen-typescript": "^2.2.2",
     "react-dom": "^18.3.1",
@@ -89,7 +89,7 @@
     "ttypescript": "^1.5.15",
     "typescript-plugin-styled-components": "^3.0.0",
     "wait-on": "^7.2.0",
-    "webpack": "^5.91.0"
+    "webpack": "^5.92.0"
   },
   "peerDependencies": {
     "react": "16.13.0 || ^17.0.1 || ^18.0.0",
