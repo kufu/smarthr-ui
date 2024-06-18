@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [52.0.0](https://github.com/kufu/smarthr-ui/compare/v51.2.0...v52.0.0) (2024-06-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* ErrorScreen の `footer` props を omit する (#4714)
+
+### Features
+
+* anchor系コンポーネントがtarget属性を持つ場合、rel属性を自動設定する ([#4720](https://github.com/kufu/smarthr-ui/issues/4720)) ([46e4200](https://github.com/kufu/smarthr-ui/commit/46e42002d13a90888994dbee2413ade8ce133498))
+* ErrorScreen の `footer` props を omit する ([#4714](https://github.com/kufu/smarthr-ui/issues/4714)) ([953d689](https://github.com/kufu/smarthr-ui/commit/953d689cf5115523e41812139ae9df0d1eb54b70))
+
+
+### Bug Fixes
+
+* PageCounter コンポーネントの decorators の型を修正 ([#4717](https://github.com/kufu/smarthr-ui/issues/4717)) ([4fce9f4](https://github.com/kufu/smarthr-ui/commit/4fce9f4c847df521dcf147d0dcbdb5f82c1af3eb))
+* Storybook 上で props のドキュメントが表示されない問題を修正 ([#4719](https://github.com/kufu/smarthr-ui/issues/4719)) ([7a634ae](https://github.com/kufu/smarthr-ui/commit/7a634ae9ed2ae6aa3c559f1bc2cc6a14902bda78))
+* Tooltip に入れ子にした要素のフォーカスリングが隠れてしまう問題を解消する ([#4694](https://github.com/kufu/smarthr-ui/issues/4694)) ([428cab6](https://github.com/kufu/smarthr-ui/commit/428cab6420397063ae5d074b804a61beaab58615))
+
 ## [51.2.0](https://github.com/kufu/smarthr-ui/compare/v51.1.1...v51.2.0) (2024-06-11)
 
 
