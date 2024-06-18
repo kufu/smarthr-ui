@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from 'react'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
-import { Title, Subtitle, Description, Primary, Stories } from '@storybook/blocks'
+import { Title, Subtitle, Description, Primary, Stories, Controls } from '@storybook/blocks'
 import ReactGA from 'react-ga4'
 
 import { Preview } from '@storybook/react'
@@ -70,6 +70,7 @@ const preview: Preview = {
           <Subtitle />
           <Description />
           <Primary />
+          <Controls />
           <Stories includePrimary={false} />
         </>
       ),

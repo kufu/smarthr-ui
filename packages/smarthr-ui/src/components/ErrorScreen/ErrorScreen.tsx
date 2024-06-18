@@ -24,8 +24,6 @@ type Props = {
   }>
   /** 表示するコンテンツ */
   children?: ReactNode
-  /** フッター */
-  footer?: ReactNode
   /** コンポーネントに適用するクラス名 */
   className?: string
 }
@@ -41,7 +39,6 @@ export const ErrorScreen: FC<Props & ElementProps> = ({
   title,
   links,
   children,
-  footer,
   className,
   ...props
 }) => {
@@ -79,8 +76,6 @@ export const ErrorScreen: FC<Props & ElementProps> = ({
           )}
         </Stack>
       </Stack>
-
-      {footer && <div className="shr-self-stretch">{footer}</div>}
     </Center>
   )
 }
