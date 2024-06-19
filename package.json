@@ -13,7 +13,7 @@
     "lint-staged": "^15.2.5",
     "prettier": "^3.3.1",
     "prettier-config-smarthr": "^1.0.0",
-    "prettier-plugin-tailwindcss": "^0.6.4",
+    "prettier-plugin-tailwindcss": "^0.6.5",
     "stylelint": "^16.6.1",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^3.0.1",
@@ -27,7 +27,7 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@9.3.0",
+  "packageManager": "pnpm@9.4.0",
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.24.7",
