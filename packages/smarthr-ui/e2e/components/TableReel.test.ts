@@ -19,7 +19,7 @@ test('テーブルに横スクロールが発生したときだけ、`fixed`を�
     .resizeWindow(500, 500)
     .expect(targetCell.hasClass('fixed'))
     .ok()
-    .maximizeWindow()
+    .resizeWindow(1280, 720)
     .expect(targetCell.hasClass('fixed'))
     .notOk()
 
