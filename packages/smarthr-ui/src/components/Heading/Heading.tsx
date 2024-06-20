@@ -2,12 +2,12 @@ import React, { ComponentProps, FC, PropsWithChildren, useContext, useMemo } fro
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
-import { Text, TextProps } from '../Text'
+import { Text, TextProps, STYLE_TYPE_MAP } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 export type Props = PropsWithChildren<{
   /** テキストのスタイル */
-  type?: HeadingTypes
+  type?: TextProps['styleType']
   /**
    * @deprecated SectioningContent(Article, Aside, Nav, Section)を使ってHeadingと関連する範囲を明確に指定してください
    */
@@ -16,49 +16,12 @@ export type Props = PropsWithChildren<{
   visuallyHidden?: boolean
 }>
 
-export type HeadingTypes =
-  | 'screenTitle'
-  | 'sectionTitle'
-  | 'blockTitle'
-  | 'subBlockTitle'
-  | 'subSubBlockTitle'
-
 export type HeadingTagTypes = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 
 type ElementProps = Omit<
   ComponentProps<'h1'>,
   keyof Props | keyof TextProps | 'role' | 'aria-level'
 >
-
-export const MAPPER_SIZE_AND_WEIGHT: { [key in HeadingTypes]: TextProps } = {
-  screenTitle: {
-    size: 'XL',
-    leading: 'TIGHT',
-    weight: 'normal',
-  },
-  sectionTitle: {
-    size: 'L',
-    leading: 'TIGHT',
-    weight: 'normal',
-  },
-  blockTitle: {
-    size: 'M',
-    leading: 'TIGHT',
-    weight: 'bold',
-  },
-  subBlockTitle: {
-    size: 'M',
-    leading: 'TIGHT',
-    weight: 'bold',
-    color: 'TEXT_GREY',
-  },
-  subSubBlockTitle: {
-    size: 'S',
-    leading: 'TIGHT',
-    weight: 'bold',
-    color: 'TEXT_GREY',
-  },
-}
 
 const generateTagProps = (level: number, tag?: HeadingTagTypes) => {
   let role = undefined
@@ -101,7 +64,7 @@ export const Heading: FC<Props & ElementProps> = ({
   const styles = useMemo(() => heading({ visuallyHidden, className }), [className, visuallyHidden])
   const actualProps = {
     ...props,
-    ...MAPPER_SIZE_AND_WEIGHT[type],
+    ...STYLE_TYPE_MAP[type],
     ...tagProps,
     className: styles,
   }
