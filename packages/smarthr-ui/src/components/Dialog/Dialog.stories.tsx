@@ -173,149 +173,6 @@ const dummyText = (
   </>
 )
 
-export const Message_Dialog: StoryFn = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const onClickOpen = () => setIsOpen(true)
-  const onClickClose = () => setIsOpen(false)
-
-  return (
-    <>
-      <Button
-        onClick={onClickOpen}
-        aria-haspopup="dialog"
-        aria-controls="dialog-message"
-        data-test="dialog-trigger"
-      >
-        MessageDialog
-      </Button>
-      <MessageDialog
-        isOpen={isOpen}
-        title="MessageDialog"
-        subtitle="副題"
-        description={<p>{dummyText} </p>}
-        onClickClose={onClickClose}
-        decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
-        id="dialog-message"
-        data-test="dialog-content"
-      />
-    </>
-  )
-}
-Message_Dialog.parameters = {
-  docs: {
-    description: {
-      story: '`MessageDialog` can show messages.',
-    },
-  },
-}
-
-export const Action_Dialog: StoryFn = () => {
-  const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
-  const [responseMessage, setResponseMessage] =
-    useState<ComponentProps<typeof ActionDialog>['responseMessage']>()
-  const openedFocusRef = useRef<HTMLInputElement>(null)
-  const onClickClose = () => {
-    setOpenedDialog(null)
-    setResponseMessage(undefined)
-  }
-
-  return (
-    <Cluster>
-      <Button
-        onClick={() => setOpenedDialog('normal')}
-        aria-haspopup="dialog"
-        aria-controls="dialog-action"
-        data-test="dialog-trigger"
-      >
-        ActionDialog
-      </Button>
-      <ActionDialog
-        isOpen={openedDialog === 'normal'}
-        title="ActionDialog"
-        subtitle="副題"
-        actionText="保存"
-        decorators={{ closeButtonLabel: (txt) => `cancel.(${txt})` }}
-        onClickAction={(closeDialog) => {
-          action('executed')()
-          setResponseMessage(undefined)
-          closeDialog()
-        }}
-        onClickClose={onClickClose}
-        responseMessage={responseMessage}
-        id="dialog-action"
-        data-test="dialog-content"
-        width="40em"
-        subActionArea={<Button>サブアクション</Button>}
-      >
-        <Stack>
-          <p>ActionDialog の本文です。</p>
-          <Cluster>
-            <Button
-              onClick={() =>
-                setResponseMessage({
-                  status: 'success',
-                  text: '保存しました。',
-                })
-              }
-            >
-              保存
-            </Button>
-            <Button
-              onClick={() =>
-                setResponseMessage({
-                  status: 'error',
-                  text: '何らかのエラーが発生しました。',
-                })
-              }
-            >
-              エラー
-            </Button>
-            <Button
-              onClick={() =>
-                setResponseMessage({
-                  status: 'processing',
-                })
-              }
-            >
-              保存中
-            </Button>
-          </Cluster>
-        </Stack>
-      </ActionDialog>
-      <Button onClick={() => setOpenedDialog('opened')} data-test="opened-dialog-trigger">
-        開いた状態で DOM に投入
-      </Button>
-      {openedDialog === 'opened' && (
-        <ActionDialog
-          isOpen
-          title="開いた状態で投入されたダイアログ"
-          actionText="実行"
-          onClickAction={(closeDialog) => {
-            action('execute')()
-            closeDialog()
-          }}
-          onClickClose={onClickClose}
-          decorators={{ closeButtonLabel: (txt) => `close.(${txt})` }}
-          firstFocusTarget={openedFocusRef}
-          data-test="opened-dialog"
-        >
-          <Stack align="flex-start">
-            <code>isOpen=true</code> の状態で DOM に投入した場合のダイアログ
-          </Stack>
-        </ActionDialog>
-      )}
-    </Cluster>
-  )
-}
-
-Action_Dialog.parameters = {
-  docs: {
-    description: {
-      story: '`ActionDialog` includes an action button that used for confirm, etc.',
-    },
-  },
-}
-
 export const Form_Dialog: StoryFn = () => {
   const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
   const [value, setValue] = React.useState('Apple')
@@ -455,78 +312,6 @@ Form_Dialog.parameters = {
   },
 }
 
-export const Action_Dialog_With_Trigger: StoryFn = () => (
-  <>
-    <ActionDialogWithTrigger
-      trigger={<Button>open.</Button>}
-      title="ActionDialog With Trigger"
-      actionText="保存"
-      onClickAction={(close) => {
-        close()
-      }}
-    >
-      <p>ActionDialog with Trigger.</p>
-    </ActionDialogWithTrigger>
-
-    <ActionDialogWithTrigger
-      trigger={<Button disabled={true}>open.</Button>}
-      title="Disabled ActionDialog With Trigger"
-      actionText="保存"
-      onClickAction={(close) => {
-        close()
-      }}
-    >
-      <p>ActionDialog with Trigger.</p>
-    </ActionDialogWithTrigger>
-  </>
-)
-
-export const Remote_Trigger_Action_Dialog: StoryFn = () => (
-  <>
-    <div>
-      <p>複数のトリガーに対応</p>
-      <RemoteDialogTrigger targetId="remote_trigger_action_dialog_1">
-        <Button>Trigger 1.</Button>
-      </RemoteDialogTrigger>
-      <RemoteDialogTrigger targetId="remote_trigger_action_dialog_1">
-        <Button>Trigger 2.</Button>
-      </RemoteDialogTrigger>
-      <RemoteTriggerActionDialog
-        id="remote_trigger_action_dialog_1"
-        title="Remote Trigger Action Dialog 1"
-        actionText="保存"
-        onClickAction={(close) => {
-          close()
-        }}
-        onToggle={(isOpen) => {
-          console.log(`isOpen: ${isOpen}`)
-        }}
-        onOpen={() => console.log(`open!`)}
-        onClose={() => console.log(`close!`)}
-      >
-        <p>Remote Trigger Action Dialog.</p>
-      </RemoteTriggerActionDialog>
-    </div>
-
-    <div>
-      <p>disabled</p>
-      <RemoteDialogTrigger targetId="remote_trigger_action_dialog_2">
-        <Button disabled={true}>disabled.</Button>
-      </RemoteDialogTrigger>
-      <RemoteTriggerActionDialog
-        id="remote_trigger_action_dialog_2"
-        title="Remote Trigger Action Dialog 2"
-        actionText="保存"
-        onClickAction={(close) => {
-          close()
-        }}
-      >
-        <p>Remote Trigger Action Dialog.</p>
-      </RemoteTriggerActionDialog>
-    </div>
-  </>
-)
-
 export const Remote_Trigger_Form_Dialog: StoryFn = () => (
   <>
     <div>
@@ -564,37 +349,6 @@ export const Remote_Trigger_Form_Dialog: StoryFn = () => (
       >
         <p>Remote Trigger Form Dialog.</p>
       </RemoteTriggerFormDialog>
-    </div>
-  </>
-)
-
-export const Remote_Trigger_Message_Dialog: StoryFn = () => (
-  <>
-    <div>
-      <p>複数のトリガーに対応</p>
-      <RemoteDialogTrigger targetId="remote_trigger_message_dialog_1">
-        <Button>Trigger 1.</Button>
-      </RemoteDialogTrigger>
-      <RemoteDialogTrigger targetId="remote_trigger_message_dialog_1">
-        <Button>Trigger 2.</Button>
-      </RemoteDialogTrigger>
-      <RemoteTriggerMessageDialog
-        id="remote_trigger_message_dialog_1"
-        title="Remote Trigger Message Dialog 1"
-        description={<p>Remote Trigger Message Dialog.</p>}
-      />
-    </div>
-
-    <div>
-      <p>disabled</p>
-      <RemoteDialogTrigger targetId="remote_trigger_message_dialog_2">
-        <Button disabled={true}>disabled.</Button>
-      </RemoteDialogTrigger>
-      <RemoteTriggerMessageDialog
-        id="remote_trigger_message_dialog_2"
-        title="Remote Trigger Message Dialog 2"
-        description={<p>Remote Trigger Message Dialog.</p>}
-      />
     </div>
   </>
 )
@@ -789,102 +543,6 @@ const ContentWrapper = styled.div`
   }
 `
 
-export const Modeless_Dialog: StoryFn = () => {
-  const [isOpen1, setIsOpen1] = useState(true)
-  const [isOpen2, setIsOpen2] = useState(false)
-  return (
-    <TriggerList style={{ height: '200vh' }}>
-      <li>
-        <Button
-          onClick={() => setIsOpen1(!isOpen1)}
-          aria-haspopup="dialog"
-          aria-controls="modeless-dialog-1"
-        >
-          中央表示
-        </Button>
-        <ModelessDialog
-          isOpen={isOpen1}
-          // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-          header={<Heading tag="h2">モードレスダイアログ（中央表示）</Heading>}
-          footer={<ModelessFooter>フッタ</ModelessFooter>}
-          onClickClose={() => setIsOpen1(false)}
-          onPressEscape={() => setIsOpen1(false)}
-          width="50%"
-          height="50%"
-          id="modeless-dialog-1"
-          decorators={{
-            closeButtonIconAlt: (txt) => `close.(${txt})`,
-            dialogHandlerAriaLabel: (txt) => `label.(${txt})`,
-            dialogHandlerAriaValuetext: (txt, data) =>
-              `valuetext.(${txt}: ${data?.left}, ${data?.top})`,
-          }}
-        >
-          <Stack gap="S">
-            <Fieldset title="ラジオボタン" innerMargin={0.5}>
-              <Cluster gap={1.25}>
-                <RadioButton name="modeless_dialog_center_radio_1">ラジオボタン1</RadioButton>
-                <RadioButton name="modeless_dialog_center_radio_2">ラジオボタン2</RadioButton>
-              </Cluster>
-            </Fieldset>
-            <DatePicker name="modeless_dialog_center_datepicker" title="test" />
-            <SpreadTableArea>
-              <Table>
-                <thead>
-                  <tr>
-                    <ThCheckbox name="modeless_dialog_center_checkbox" />
-                    <Th>テーブル見出し1</Th>
-                    <Th>テーブル見出し2</Th>
-                    <Th>テーブル見出し3</Th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.from(Array(20).keys()).map((i) => (
-                    <tr key={i}>
-                      <TdCheckbox
-                        name={`modeless_dialog_center_checkbox_${i}`}
-                        aria-labelledby={`name-${i}`}
-                      />
-                      <Td id={`name=${i}`}>データ1-{i}</Td>
-                      <Td>データ2-{i}</Td>
-                      <Td>データ3-{i}</Td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </SpreadTableArea>
-          </Stack>
-        </ModelessDialog>
-      </li>
-      <li>
-        <Button
-          onClick={() => setIsOpen2(!isOpen2)}
-          data-test="dialog-trigger"
-          aria-haspopup="dialog"
-          aria-controls="modeless-dialog-2"
-        >
-          座標指定
-        </Button>
-        <ModelessDialog
-          isOpen={isOpen2}
-          // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-          header={<Heading tag="h2">座標指定表示</Heading>}
-          onClickClose={() => setIsOpen2(false)}
-          onPressEscape={() => setIsOpen2(false)}
-          bottom={100}
-          right="10%"
-          id="modeless-dialog-2"
-          data-test="dialog"
-        >
-          <p>
-            bottom: 100px
-            <br /> right: 10%
-          </p>
-        </ModelessDialog>
-      </li>
-    </TriggerList>
-  )
-}
-
 export const RegDialogOpenedDialog: StoryFn = () => (
   <Dialog isOpen>
     <p>{dummyText}</p>
@@ -902,23 +560,6 @@ export const RegDialogOpenedDialogPosition: StoryFn = () => (
     <p>{dummyText}</p>
   </Dialog>
 )
-
-export const RegOpendMessage: StoryFn = () => (
-  <MessageDialog
-    isOpen={true}
-    title="MessageDialog"
-    description={
-      <p>
-        <code>contentBgColor</code> と <code>contentPadding</code>{' '}
-        でコンテンツ領域の背景色とパディングを設定できます。
-      </p>
-    }
-    onClickClose={action('clicked close')}
-    contentBgColor="BACKGROUND"
-    contentPadding={1.5}
-  />
-)
-RegOpendMessage.parameters = { docs: { disable: true } }
 
 export const RegOpendAction: StoryFn = () => (
   <ActionDialog
@@ -963,24 +604,6 @@ export const RegOpendForm: StoryFn = () => (
   </FormDialog>
 )
 RegOpendAction.parameters = { docs: { disable: true } }
-
-export const RegOpenedModeless: StoryFn = () => (
-  <ModelessDialog
-    isOpen
-    // eslint-disable-next-line smarthr/a11y-heading-in-sectioning-content
-    header={<Heading tag="h2">モードレスダイアログ</Heading>}
-    footer={<ModelessFooter>フッタ</ModelessFooter>}
-    height={500}
-    width={600}
-    contentBgColor="BACKGROUND"
-    contentPadding={1.5}
-  >
-    <p>
-      <code>contentBgColor</code> と <code>contentPadding</code>{' '}
-      でコンテンツ領域の背景色とパディングを設定できます。
-    </p>
-  </ModelessDialog>
-)
 
 export const Body以外のPortalParent: StoryFn = () => {
   const [isOpen, setIsOpen] = useState<'deault' | 'actiion' | 'message' | 'modeless'>()
