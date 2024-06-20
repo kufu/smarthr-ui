@@ -12,12 +12,10 @@ import { Input } from '../Input'
 import { Cluster, Stack } from '../Layout'
 import { RadioButton } from '../RadioButton'
 import { Section } from '../SectioningContent'
-import { Table, Td, TdCheckbox, Th, ThCheckbox } from '../Table'
 
 import {
   ActionDialog,
   ActionDialogContent,
-  ActionDialogWithTrigger,
   Dialog,
   DialogCloser,
   DialogContent,
@@ -28,9 +26,7 @@ import {
   MessageDialogContent,
   ModelessDialog,
   RemoteDialogTrigger,
-  RemoteTriggerActionDialog,
   RemoteTriggerFormDialog,
-  RemoteTriggerMessageDialog,
 } from '.'
 
 export default {
@@ -718,18 +714,4 @@ const TriggerList = styled.ul`
     display: inline-block;
     margin: 8px;
   }
-`
-const SpreadTableArea = styled.div`
-  ${({ theme: { space } }) => css`
-    margin-inline: ${space(-1.5)};
-
-    &&& {
-      margin-block-end: ${space(-1.5)};
-    }
-  `}
-`
-const ModelessFooter = styled.div`
-  ${({ theme: { space } }) => css`
-    padding: ${space(1)} ${space(1.5)};
-  `}
 `
