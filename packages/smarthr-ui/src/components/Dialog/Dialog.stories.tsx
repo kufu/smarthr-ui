@@ -1110,3 +1110,58 @@ const ModelessFooter = styled.div`
     padding: ${space(1)} ${space(1.5)};
   `}
 `
+
+const TestComponent = () => {
+  const [inProcess, setInProcess] = useState(false)
+  const [open1, setOpen1] = useState(false)
+  const [open2, setOpen2] = useState(false)
+
+  const start = () => {
+    setInProcess(true)
+    setOpen1(true)
+    setOpen2(false)
+  }
+
+  const next = () => {
+    setInProcess(true)
+    setOpen1(false)
+    setOpen2(true)
+  }
+
+  const end = () => {
+    setInProcess(false)
+    setOpen1(false)
+    setOpen2(false)
+  }
+
+  return (
+    <>
+      <Button onClick={start}>開く</Button>
+      <Button>ダミー</Button>
+      <ActionDialog
+        title="ダイアログ（1/2）"
+        isOpen={inProcess && open1}
+        actionText="次へ"
+        onClickAction={next}
+        onClickClose={end}
+      >
+        <FormControl title="Input 1">
+          <Input name="input1" />
+        </FormControl>
+      </ActionDialog>
+      <ActionDialog
+        title="ダイアログ（2/2）"
+        isOpen={inProcess && open2}
+        actionText="次へ"
+        onClickAction={end}
+        onClickClose={end}
+      >
+        <FormControl title="Input 2">
+          <Input name="input2" />
+        </FormControl>
+      </ActionDialog>
+    </>
+  )
+}
+
+export const Test = () => <TestComponent />
