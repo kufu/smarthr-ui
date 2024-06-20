@@ -116,7 +116,7 @@ export const Remote_Trigger_Message_Dialog: StoryFn = () => (
   </>
 )
 
-export const RegOpendMessage: StoryFn = () => (
+export const RegOpenedMessage: StoryFn = () => (
   <MessageDialog
     isOpen={true}
     title="MessageDialog"
@@ -131,4 +131,4 @@ export const RegOpendMessage: StoryFn = () => (
     contentPadding={1.5}
   />
 )
-RegOpendMessage.parameters = { docs: { disable: true } }
+RegOpenedMessage.parameters = { docs: { disable: true } }

@@ -557,29 +557,7 @@ export const RegDialogOpenedDialogPosition: StoryFn = () => (
   </Dialog>
 )
 
-export const RegOpendAction: StoryFn = () => (
-  <ActionDialog
-    isOpen={true}
-    title="ActionDialog"
-    actionText="保存"
-    onClickAction={action('clicked action')}
-    onClickClose={action('clicked close')}
-    contentBgColor="BACKGROUND"
-    contentPadding={1.5}
-  >
-    <p>
-      <code>contentBgColor</code> と <code>contentPadding</code>{' '}
-      でコンテンツ領域の背景色とパディングを設定できます。
-    </p>
-    <label>
-      <input name="reg_opend_action_checkbox" type="checkbox" />
-      Agree
-    </label>
-  </ActionDialog>
-)
-RegOpendAction.parameters = { docs: { disable: true } }
-
-export const RegOpendForm: StoryFn = () => (
+export const RegOpenedForm: StoryFn = () => (
   <FormDialog
     isOpen={true}
     title="FormDialog"
@@ -599,7 +577,7 @@ export const RegOpendForm: StoryFn = () => (
     </label>
   </FormDialog>
 )
-RegOpendAction.parameters = { docs: { disable: true } }
+RegOpenedForm.parameters = { docs: { disable: true } }
 
 export const Body以外のPortalParent: StoryFn = () => {
   const [isOpen, setIsOpen] = useState<'deault' | 'actiion' | 'message' | 'modeless'>()
@@ -709,7 +687,6 @@ const FooterCluster = styled(Cluster).attrs({ justify: 'flex-end' })`
 const TriggerList = styled.ul`
   margin: 0;
   padding: 0;
-
   & > li {
     display: inline-block;
     margin: 8px;

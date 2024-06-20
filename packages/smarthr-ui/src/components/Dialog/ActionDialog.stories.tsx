@@ -214,7 +214,7 @@ export const Remote_Trigger_Action_Dialog: StoryFn = () => (
   </>
 )
 
-export const RegOpendAction: StoryFn = () => (
+export const RegOpenedAction: StoryFn = () => (
   <ActionDialog
     isOpen={true}
     title="ActionDialog"
@@ -234,4 +234,4 @@ export const RegOpendAction: StoryFn = () => (
     </label>
   </ActionDialog>
 )
-RegOpendAction.parameters = { docs: { disable: true } }
+RegOpenedAction.parameters = { docs: { disable: true } }
