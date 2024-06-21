@@ -2,7 +2,7 @@ import React, { ComponentProps, FC, PropsWithChildren, useContext, useMemo } fro
 import { tv } from 'tailwind-variants'
 
 import { LevelContext } from '../SectioningContent'
-import { Text, TextProps, STYLE_TYPE_MAP } from '../Text'
+import { STYLE_TYPE_MAP, Text, TextProps } from '../Text'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 export type Props = PropsWithChildren<{
