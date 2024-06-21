@@ -2,7 +2,7 @@ import { Selector } from 'testcafe'
 
 fixture('ActionDialog')
   .page(
-    'http://localhost:6006/iframe.html?args=&id=dialog（ダイアログ）-dialog--action-dialog&viewMode=story',
+    'http://localhost:6006/iframe.html?args=&id=dialog（ダイアログ）-actiondialog--action-dialog&viewMode=story',
   )
   .beforeEach(async (t) => {
     await t.maximizeWindow()

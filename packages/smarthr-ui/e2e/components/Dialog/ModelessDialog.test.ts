@@ -2,7 +2,7 @@ import { Selector } from 'testcafe'
 
 fixture('ModelessDialog')
   .page(
-    'http://localhost:6006/iframe.html?args=&id=dialog（ダイアログ）-dialog--modeless-dialog&viewMode=story',
+    'http://localhost:6006/iframe.html?args=&id=dialog（ダイアログ）-modelessdialog--modeless-dialog&viewMode=story',
   )
   .beforeEach(async (t) => {
     await t.maximizeWindow()
