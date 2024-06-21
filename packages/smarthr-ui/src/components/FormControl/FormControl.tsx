@@ -13,14 +13,13 @@ import { useId } from '../../hooks/useId'
 import { MultiComboBox, SingleComboBox } from '../ComboBox'
 import { DatePicker } from '../DatePicker'
 import { DropZone } from '../DropZone'
-import { HeadingTypes } from '../Heading'
 import { FaCircleExclamationIcon } from '../Icon'
 import { CurrencyInput, Input } from '../Input'
 import { InputFile } from '../InputFile'
 import { Cluster, Stack } from '../Layout'
 import { Select } from '../Select'
 import { StatusLabel } from '../StatusLabel'
-import { Text } from '../Text'
+import { Text, TextProps } from '../Text'
 import { Textarea } from '../Textarea'
 import { visuallyHiddenText } from '../VisuallyHiddenText/VisuallyHiddenText'
 
@@ -31,7 +30,7 @@ type Props = PropsWithChildren<{
   /** グループのタイトル名 */
   title: ReactNode
   /** タイトルの見出しのタイプ */
-  titleType?: HeadingTypes
+  titleType?: TextProps['styleType']
   /** タイトルの見出しを視覚的に隠すかどうか */
   dangerouslyTitleHidden?: boolean
   /** label 要素に適用する `htmlFor` 値 */
