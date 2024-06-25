@@ -80,6 +80,8 @@ const button = tv({
       'aria-disabled:shr-cursor-not-allowed',
       /* alpha color を使用しているので、背景色と干渉させない */
       'aria-disabled:shr-bg-clip-padding',
+      /* disabled ではなく aria-disabled で文字色が変わらないため、強制カラーモード時の色を指定 */
+      'aria-disabled:forced-colors:shr-border-[GrayText] aria-disabled:forced-colors:shr-text-[GrayText]',
       '[&_.smarthr-ui-Icon]:forced-colors:aria-disabled:shr-fill-[GrayText]',
     ],
     anchor: [
@@ -198,8 +200,6 @@ const button = tv({
         'aria-disabled:shr-border-main/50',
         'aria-disabled:shr-bg-main/50',
         'aria-disabled:shr-text-white/50',
-        'aria-disabled:forced-colors:shr-border-[GrayText]',
-        'aria-disabled:forced-colors:shr-text-[GrayText]',
       ],
     },
     {
@@ -233,8 +233,6 @@ const button = tv({
         'aria-disabled:shr-border-disabled',
         'aria-disabled:shr-bg-white-darken',
         'aria-disabled:shr-text-disabled',
-        'aria-disabled:forced-colors:shr-border-[GrayText]',
-        'aria-disabled:forced-colors:shr-text-[GrayText]',
       ],
     },
     {
@@ -266,8 +264,6 @@ const button = tv({
         'aria-disabled:shr-border-danger/50',
         'aria-disabled:shr-bg-danger/50',
         'aria-disabled:shr-text-white/50',
-        'aria-disabled:forced-colors:shr-border-[GrayText]',
-        'aria-disabled:forced-colors:shr-text-[GrayText]',
       ],
     },
     {
@@ -301,8 +297,6 @@ const button = tv({
         'aria-disabled:shr-border-white/50',
         'aria-disabled:shr-bg-transparent',
         'aria-disabled:shr-text-white/50',
-        'aria-disabled:forced-colors:shr-border-[GrayText]',
-        'aria-disabled:forced-colors:shr-text-[GrayText]',
       ],
     },
     {
@@ -332,8 +326,6 @@ const button = tv({
         'aria-disabled:shr-border-transparent',
         'aria-disabled:shr-bg-transparent',
         'aria-disabled:shr-text-disabled',
-        'aria-disabled:forced-colors:shr-border-[GrayText]',
-        'aria-disabled:forced-colors:shr-text-[GrayText]',
       ],
     },
     {
