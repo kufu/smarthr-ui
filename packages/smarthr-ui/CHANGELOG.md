@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [52.1.0](https://github.com/kufu/smarthr-ui/compare/v52.0.1...v52.1.0) (2024-06-25)
+
+
+### Features
+
+* Dropdown 及び FilterDropdown に onOpen/onClose オプションを追加する ([#4722](https://github.com/kufu/smarthr-ui/issues/4722)) ([acf3642](https://github.com/kufu/smarthr-ui/commit/acf364259b1bbb34bef7275b8377c310d49c2e95))
+* Thumbtack アイコンを追加 ([#4737](https://github.com/kufu/smarthr-ui/issues/4737)) ([5d8b9cc](https://github.com/kufu/smarthr-ui/commit/5d8b9cc09981dce992a93ab37a096dc08a836e40))
+
+
+### Bug Fixes
+
+* Heading と Text の相互参照をなくして Text が Heading に依存しないようにする ([#4732](https://github.com/kufu/smarthr-ui/issues/4732)) ([d21c888](https://github.com/kufu/smarthr-ui/commit/d21c8881b933cd3674fc931af36bfafbb8498a6b))
+
 ### [52.0.1](https://github.com/kufu/smarthr-ui/compare/v52.0.0...v52.0.1) (2024-06-21)
 
 ## [52.0.0](https://github.com/kufu/smarthr-ui/compare/v51.2.0...v52.0.0) (2024-06-18)
