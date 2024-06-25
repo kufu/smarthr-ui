@@ -160,6 +160,7 @@ import {
   FaTableList,
   FaTag,
   FaTags,
+  FaThumbtack,
   FaToolbox,
   FaTrash,
   FaTrashCan,
@@ -348,6 +349,7 @@ export const FaTableIcon = /*#__PURE__*/ createIcon(FaTable)
 export const FaTableListIcon = /*#__PURE__*/ createIcon(FaTableList)
 export const FaTagIcon = /*#__PURE__*/ createIcon(FaTag)
 export const FaTagsIcon = /*#__PURE__*/ createIcon(FaTags)
+export const FaThumbtackIcon = /*#__PURE__*/ createIcon(FaThumbtack)
 export const FaToolboxIcon = /*#__PURE__*/ createIcon(FaToolbox)
 export const FaTrashCanIcon = /*#__PURE__*/ createIcon(FaTrashCan)
 export const FaTrashIcon = /*#__PURE__*/ createIcon(FaTrash)
