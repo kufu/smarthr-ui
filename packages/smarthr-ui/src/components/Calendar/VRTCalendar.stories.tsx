@@ -21,7 +21,7 @@ export const VRTFocus: StoryFn = () => {
   const [value, setValue] = useState(new Date(2020, 0, 1))
   return (
     <>
-      <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      <VRTInformationPanel title="VRT 用の Story です">
         各ボタンにフォーカスを当てた状態で表示されます
       </VRTInformationPanel>
       <Calendar
@@ -43,7 +43,7 @@ VRTFocus.parameters = {
 
 export const VRTSelectionYear: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       年を選択する状態で表示されます
     </VRTInformationPanel>
     <All />
@@ -61,7 +61,7 @@ export const VRTFocusSelectionYear: StoryFn = () => {
   const [value, setValue] = useState(new Date(2020, 0, 1))
   return (
     <>
-      <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      <VRTInformationPanel title="VRT 用の Story です">
         年選択で特定の年にフォーカスを当てた状態で表示されます
       </VRTInformationPanel>
       <Calendar
@@ -85,7 +85,7 @@ VRTFocusSelectionYear.play = async ({ canvasElement }) => {
 
 export const VRTForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <All />

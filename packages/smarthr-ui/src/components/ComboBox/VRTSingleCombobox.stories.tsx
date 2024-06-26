@@ -20,7 +20,7 @@ export default {
 
 export const VRTSingleCombobox: StoryFn = () => (
   <Stack>
-    <InformationPanel title="VRT 用の Story です" togglable={false}>
+    <InformationPanel title="VRT 用の Story です">
       Singleコンボボックスのリストを展開して1つ目の項目をホバーした状態で表示されます
     </InformationPanel>
     <Single />
@@ -38,7 +38,7 @@ VRTSingleCombobox.play = playSingle
 
 export const VRTSingleComboboxForcedColors: StoryFn = () => (
   <Stack>
-    <InformationPanel title="VRT 用の Story です" togglable={false}>
+    <InformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます{' '}
     </InformationPanel>
     <Single />

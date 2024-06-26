@@ -17,7 +17,7 @@ export default {
 
 export const VRTNarrowTablet: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       画面幅がタブレットを想定した幅の状態で表示されます
     </VRTInformationPanel>
     <All />
@@ -36,7 +36,7 @@ VRTNarrowTablet.parameters = {
 
 export const VRTNarrowMobile: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       画面幅がモバイルを想定した幅の状態で表示されます
     </VRTInformationPanel>
     <All />
@@ -55,7 +55,7 @@ VRTNarrowMobile.parameters = {
 
 export const VRTForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <All />
@@ -67,7 +67,7 @@ VRTForcedColors.parameters = {
 
 export const VRTWithReelNarrowTablet: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       画面幅がタブレットを想定した幅の状態で表示されます
     </VRTInformationPanel>
     <WithReel />
@@ -86,7 +86,7 @@ VRTWithReelNarrowTablet.parameters = {
 
 export const VRTWithReelNarrowMobile: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       画面幅がモバイルを想定した幅の状態で表示されます
     </VRTInformationPanel>
     <WithReel />
@@ -105,7 +105,7 @@ VRTWithReelNarrowMobile.parameters = {
 
 export const VRTWithReelForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <WithReel />

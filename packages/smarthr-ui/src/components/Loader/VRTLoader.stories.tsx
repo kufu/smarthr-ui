@@ -17,7 +17,7 @@ export default {
 
 export const VRTLoaderForcedColors: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <All />

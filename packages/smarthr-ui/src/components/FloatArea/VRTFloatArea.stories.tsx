@@ -17,7 +17,7 @@ export default {
 
 export const VRTHover: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       通常のボタン、アンカー風のボタンすべてがhoverされた状態で表示されます
     </VRTInformationPanel>
     <All />
@@ -32,7 +32,7 @@ VRTHover.parameters = {
 
 export const VRTFocusVisibleButton: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       通常のボタンがfocusされた状態で表示されます
     </VRTInformationPanel>
     <All />
@@ -47,7 +47,7 @@ VRTFocusVisibleButton.parameters = {
 
 export const VRTNarrow: StoryFn = () => (
   <>
-    <VRTNarrowInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTNarrowInformationPanel title="VRT 用の Story です">
       画面幅が狭い状態で表示されます
     </VRTNarrowInformationPanel>
     <All />
@@ -66,7 +66,7 @@ VRTNarrow.parameters = {
 
 export const VRTForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <All />

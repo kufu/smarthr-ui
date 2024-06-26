@@ -16,7 +16,7 @@ export default {
 
 export const VRTDropDown: StoryFn = () => (
   <Stack>
-    <InformationPanel title="VRT 用の Story です" togglable={false}>
+    <InformationPanel title="VRT 用の Story です">
       defaultのlocaleが変更されたDropDownを表示して、defaultが切り替わっているかを見ています
     </InformationPanel>
     <All />

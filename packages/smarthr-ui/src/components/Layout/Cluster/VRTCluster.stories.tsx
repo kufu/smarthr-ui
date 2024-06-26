@@ -17,7 +17,7 @@ export default {
 
 export const VRTClusterNarrow: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       画面幅が狭い状態で表示されます
     </VRTInformationPanel>
     <All />
@@ -26,7 +26,7 @@ export const VRTClusterNarrow: StoryFn = () => (
 
 export const VRTClusterForcedColors: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <All />

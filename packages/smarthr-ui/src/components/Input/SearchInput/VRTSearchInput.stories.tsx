@@ -28,7 +28,7 @@ const SearchInputStory: StoryFn = () => (
 
 export const VRTHoverSearchInput: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       hoverしてツールチップを表示した状態で表示されます
     </VRTInformationPanel>
     <SearchInputStory />
@@ -43,7 +43,7 @@ VRTHoverSearchInput.play = playHover
 
 export const VRTFocusSearchInput: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       focusしてツールチップを表示した状態で表示されます
     </VRTInformationPanel>
     <SearchInputStory />
@@ -56,7 +56,7 @@ VRTFocusSearchInput.play = async ({ canvasElement }: { canvasElement: HTMLElemen
 
 export const VRTHoverSearchInputForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <SearchInputStory />
