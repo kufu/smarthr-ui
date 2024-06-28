@@ -104,7 +104,7 @@ export const Render: React.FC = () => {
             <p>You can change border color of the trigger button by setting `isFiltered`.</p>
           </FilterDropdown>
         </dd>
-        <dt>Filtered has status text</dt>
+        <dt>Filtered has status text(deprecated)</dt>
         <dd>
           <FilterDropdown
             isFiltered={isFiltered3}
