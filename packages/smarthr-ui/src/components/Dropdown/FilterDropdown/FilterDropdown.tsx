@@ -23,7 +23,7 @@ type Props = {
   onClose?: () => void
   children: ReactNode
   /**
-   * @deprecated hasStatusTextは非推奨です。isFilteredだけでボタンのアクセシブルネームが「絞り込み 適用中」になるため不要です・
+   * @deprecated hasStatusTextは非推奨です。isFilteredだけでボタンのアクセシブルネームが「絞り込み 適用中」になるため不要です。
    */
   hasStatusText?: boolean
   decorators?: DecoratorsType<
