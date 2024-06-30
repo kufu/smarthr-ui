@@ -1,6 +1,6 @@
+import { act } from '@testing-library/react'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { act } from 'react-dom/test-utils'
 
 import { Base } from '../Base'
 
