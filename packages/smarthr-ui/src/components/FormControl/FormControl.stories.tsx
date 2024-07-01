@@ -17,7 +17,6 @@ export default {
   title: 'Forms（フォーム）/FormControl',
   component: FormControl,
 }
-
 export const All: StoryFn = () => (
   <Stack gap={2} as="dl">
     <Stack>
@@ -123,6 +122,20 @@ export const All: StoryFn = () => (
       <dd>
         <FormControl title="DropZone" helpMessage="DropZone に紐づく説明です。">
           <DropZone name="drop_zone" onSelectFiles={() => null} />
+        </FormControl>
+      </dd>
+    </Stack>
+    <Stack>
+      <Text italic color="TEXT_GREY" as="dt">
+        入力要素への error 自動紐づけ（VRT 用の自動紐づけを切った場合）
+      </Text>
+      <dd>
+        <FormControl
+          title="氏名"
+          autoBindErrorInput={false}
+          errorMessages="氏名が入力されていません。"
+        >
+          <Input name="fullname" value="草野栄一郎" />
         </FormControl>
       </dd>
     </Stack>

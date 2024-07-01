@@ -47,6 +47,8 @@ type Props = PropsWithChildren<{
   exampleMessage?: ReactNode
   /** タイトルの下に表示するエラーメッセージ */
   errorMessages?: ReactNode | ReactNode[]
+  /** エラーがある場合に自動的に入力要素を error にするかどうか */
+  autoBindErrorInput?: boolean
   /** フォームコントロールの下に表示する補足メッセージ */
   supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
@@ -133,6 +135,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   helpMessage,
   exampleMessage,
   errorMessages,
+  autoBindErrorInput = true,
   supplementaryMessage,
   as = 'div',
   className,
@@ -233,7 +236,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         {decorateFirstInputElement(children, {
           managedHtmlFor,
           describedbyIds,
-          error: actualErrorMessages.length > 0,
+          error: autoBindErrorInput && actualErrorMessages.length > 0,
         })}
       </div>
 
