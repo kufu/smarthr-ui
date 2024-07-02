@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 import { FaExternalLinkAltIcon } from '../Icon'
 
-type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Props>
+type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Props | 'color'>
 type Props = {
   /** リンクをクリックした時に発火するコールバック関数 */
   onClick?: (e: React.MouseEvent) => void
