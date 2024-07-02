@@ -26,7 +26,7 @@ export default {
 
 export const VRTOpenAccordion: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       パネルを開いた状態で表示されます
     </VRTInformationPanel>
     <AccordionStyle />
@@ -35,7 +35,7 @@ export const VRTOpenAccordion: StoryFn = () => (
 
 export const VRTAccordionFocus: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       それぞれ1番目、2番目、3番目のアイテムにフォーカスが当たった状態で表示されます
     </VRTInformationPanel>
     <AccordionStyle />
@@ -44,7 +44,7 @@ export const VRTAccordionFocus: StoryFn = () => (
 
 export const VRTOpenAccordionNarrow: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       画面幅が狭く、パネルを開いた状態で表示されます
     </VRTInformationPanel>
     <AccordionStyle />
@@ -53,7 +53,7 @@ export const VRTOpenAccordionNarrow: StoryFn = () => (
 
 export const VRTAccordionForcedColors: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <AccordionStyle />

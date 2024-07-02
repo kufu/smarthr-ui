@@ -18,7 +18,7 @@ export default {
 
 export const VRTFocusVisible: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       通常のボタンがfocusされた状態で表示されます
     </VRTInformationPanel>
     <All />
@@ -33,7 +33,7 @@ VRTFocusVisible.parameters = {
 
 export const VRTDropDown: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       ドロップダウンを表示した状態で表示されます
     </VRTInformationPanel>
     <WrapperForDropdown>
@@ -49,7 +49,7 @@ VRTDropDown.play = async ({ canvasElement }) => {
 
 export const VRTLauncher: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       ランチャーを表示した状態で表示されます
     </VRTInformationPanel>
     <WrapperForLauncher>
@@ -65,7 +65,7 @@ VRTLauncher.play = async ({ canvasElement }) => {
 
 export const VRTNarrowTablet: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       タブレットの画面幅で表示されます
     </VRTInformationPanel>
     <All />
@@ -84,7 +84,7 @@ VRTNarrowTablet.parameters = {
 
 export const VRTNarrowMobile: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       モバイルの画面幅で表示されます
     </VRTInformationPanel>
     <All />
@@ -103,7 +103,7 @@ VRTNarrowMobile.parameters = {
 
 export const VRTForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <WrapperForLauncher>

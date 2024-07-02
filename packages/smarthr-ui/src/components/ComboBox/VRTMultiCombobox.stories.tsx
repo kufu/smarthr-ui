@@ -20,7 +20,7 @@ export default {
 
 export const VRTMultiCombobox: StoryFn = () => (
   <Stack>
-    <InformationPanel title="VRT 用の Story です" togglable={false}>
+    <InformationPanel title="VRT 用の Story です">
       Multiコンボボックスのリストを展開して1つ目と2つ目の項目を選択した状態で表示されます
     </InformationPanel>
     <Multi />
@@ -51,7 +51,7 @@ VRTMultiCombobox.play = playMulti
 
 export const VRTMultiComboboxForcedColors: StoryFn = () => (
   <Stack>
-    <InformationPanel title="VRT 用の Story です" togglable={false}>
+    <InformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます{' '}
     </InformationPanel>
     <Multi />

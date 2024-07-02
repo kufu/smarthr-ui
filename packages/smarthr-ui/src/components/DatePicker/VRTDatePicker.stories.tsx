@@ -31,7 +31,7 @@ const NormalDatePicker = ({ name, title }: { name: string; title: string }) => (
 
 export const VRTExpanded: StoryFn = () => (
   <WrapperList>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       カレンダーを展開した状態で表示されます
     </VRTInformationPanel>
     <NormalDatePicker name="default" title="default" />
@@ -47,7 +47,7 @@ VRTExpanded.play = playExpanded
 
 export const VRTExpandedForcedColors: StoryFn = () => (
   <WrapperList>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <NormalDatePicker name="default" title="default" />
@@ -60,7 +60,7 @@ VRTExpandedForcedColors.parameters = {
 
 export const VRTExpandedYears: StoryFn = () => (
   <WrapperList>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       カレンダーを展開し、年を選択する状態で表示されます
     </VRTInformationPanel>
     <NormalDatePicker name="default" title="default" />
@@ -77,7 +77,7 @@ const playExpandedYears = async ({ canvasElement }: { canvasElement: HTMLElement
 VRTExpandedYears.play = playExpandedYears
 export const VRTExpandedYearsForcedColors: StoryFn = () => (
   <WrapperList>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <NormalDatePicker name="default" title="default" />
@@ -90,7 +90,7 @@ VRTExpandedYearsForcedColors.parameters = {
 
 export const VRTBottomExpanded: StoryFn = () => (
   <WrapperList>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       ページ下部でカレンダーを展開し、上方向に表示されることを確認します
     </VRTInformationPanel>
     <BottomFormControl title="Place on the page bottom">

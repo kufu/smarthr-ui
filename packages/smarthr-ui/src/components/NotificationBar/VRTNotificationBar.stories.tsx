@@ -18,7 +18,7 @@ export default {
 
 export const VRTNotificationBarNarrow: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       画面幅が狭い状態で表示されます
     </VRTInformationPanel>
     <All />
@@ -27,7 +27,7 @@ export const VRTNotificationBarNarrow: StoryFn = () => (
 
 export const VRTNotificationBarShow: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       NotificationBarを表示した状態で表示されます
     </VRTInformationPanel>
     <Demo />
@@ -36,7 +36,7 @@ export const VRTNotificationBarShow: StoryFn = () => (
 
 export const VRTNotificationBarFocus: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       それぞれ1番目のNotificationBarの閉じるボタンにフォーカスした状態で表示されます
     </VRTInformationPanel>
     <All />
@@ -45,7 +45,7 @@ export const VRTNotificationBarFocus: StoryFn = () => (
 
 export const VRTNotificationBarForcedColors: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <All />

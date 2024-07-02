@@ -42,7 +42,7 @@ export const VRTOpenFilterDropdownNarrow: Story = {
   },
   render: () => (
     <Wrapper>
-      <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      <VRTInformationPanel title="VRT 用の Story です">
         画面幅が狭く、ドロップダウンメニューを開いた状態で表示されます
       </VRTInformationPanel>
       <Render />
@@ -66,7 +66,7 @@ export const VRTFilterDropdownForcedColors: Story = {
   },
   render: () => (
     <Wrapper>
-      <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      <VRTInformationPanel title="VRT 用の Story です">
         Chromatic 上では強制カラーモードで表示されます
       </VRTInformationPanel>
       <Render />
