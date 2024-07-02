@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [52.2.0](https://github.com/kufu/smarthr-ui/compare/v52.1.0...v52.2.0) (2024-07-02)
+
+
+### Features
+
+* FormControl / Fieldset 内における入力要素の error 状態紐づけ制御用 props を足す ([#4748](https://github.com/kufu/smarthr-ui/issues/4748)) ([8737a75](https://github.com/kufu/smarthr-ui/commit/8737a757eb2b8223aa35adda4fed9a3349cdce51))
+
+
+### Bug Fixes
+
+* AccordionPanel がデフォルトで複数パネル開く設定に変更 ([#4745](https://github.com/kufu/smarthr-ui/issues/4745)) ([9beb511](https://github.com/kufu/smarthr-ui/commit/9beb511b2e307eb372a77e39670b4dece6ed20bc))
+* Button を loading 状態に切り替えるとフォーカスが外れてしまう問題の修正 ([#4684](https://github.com/kufu/smarthr-ui/issues/4684)) ([945ca95](https://github.com/kufu/smarthr-ui/commit/945ca957fe3f0ab6f8f83f378b8627b4035b66e3)), closes [#4744](https://github.com/kufu/smarthr-ui/issues/4744)
+* InformationPanel の開閉ボタンはデフォルトなしにする ([#4746](https://github.com/kufu/smarthr-ui/issues/4746)) ([0cca297](https://github.com/kufu/smarthr-ui/commit/0cca297133d2d429620d46e12992e9fab052f667))
+* TextLink に color を指定できないように閉じる ([#4752](https://github.com/kufu/smarthr-ui/issues/4752)) ([4363383](https://github.com/kufu/smarthr-ui/commit/43633830d06dc0e9162ecdc7769119afa7d6bea7))
+
 ## [52.1.0](https://github.com/kufu/smarthr-ui/compare/v52.0.1...v52.1.0) (2024-06-25)
 
 
