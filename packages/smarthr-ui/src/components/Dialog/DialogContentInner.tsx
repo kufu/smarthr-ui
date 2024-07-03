@@ -59,6 +59,11 @@ export type DialogContentInnerProps = PropsWithChildren<{
    */
   firstFocusTarget?: RefObject<HTMLElement>
   /**
+   * ダイアログを閉じたときにトリガーとなった要素にフォーカスを返すかどうか
+   * defaultで true だが、ステップを持つDialogで次のDialogを起動するなどの場合、falseにする
+   */
+  returnFocusToTriggerElement?: boolean
+  /**
    * ダイアログの `aria-label`
    */
   ariaLabel?: string
@@ -95,6 +100,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   bottom,
   left,
   firstFocusTarget,
+  returnFocusToTriggerElement = true,
   ariaLabel,
   ariaLabelledby,
   children,
@@ -165,7 +171,12 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
             aria-labelledby={ariaLabelledby}
             aria-modal="true"
           >
-            <FocusTrap firstFocusTarget={firstFocusTarget}>{children}</FocusTrap>
+            <FocusTrap
+              firstFocusTarget={firstFocusTarget}
+              returnFocusToTriggerElement={returnFocusToTriggerElement}
+            >
+              {children}
+            </FocusTrap>
           </div>
         </div>
       </DialogOverlap>
