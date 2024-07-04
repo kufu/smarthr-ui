@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { Base } from '../Base'
 import { Button } from '../Button'
+import { Cluster } from '../Layout'
 import { Text } from '../Text'
 
 import { TdCheckbox } from './TdCheckbox'
@@ -20,6 +21,111 @@ export default {
     withTheming: true,
   },
 }
+
+const employeeData = [
+  {
+    employeeNo: 'SMP001',
+    name: '須磨英知',
+    divisionName:
+      'table の幅計算は UA に依って仕様が異なるため、幅の指定は最小限にすることをおすすめします。',
+    date: '2024-06-29',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SMP002',
+    name: '須磨叡智郎',
+    divisionName:
+      'Th や Td の contentWidth に number か string を与えると width に反映されます。number は文字数 string は任意の値を指定できます。',
+    date: '2024-06-29',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SMP003',
+    name: '須磨端央',
+    divisionName:
+      'Td の contentWidth には { base: number | string, min: number | string, max: number | string } という object を与えられます。base は width に、min / max はそれぞれ min-width / max-width に対応します。',
+    date: '2024-06-29',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SMP004',
+    name: '須磨英千尋',
+    divisionName:
+      '社員番号や日付、操作列など、絶対に改行させたくない場合は Text[whitespace="nowrap"] を使ってください。合わせて contentWidth に 1px など小さい値を与えると、内包要素の最大幅で列幅が固定されます。',
+    date: '2024-06-29',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SHR001',
+    name: '田中 太郎',
+    divisionName: '経営企画部/マーケティング部/デジタルマーケティング課/ソーシャルメディアチーム',
+    date: '2021-04-01',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SHR002',
+    name: '鈴木 花子',
+    divisionName: '営業部/国内営業部/西日本営業課/大阪支店/法人営業チーム',
+    date: '2021-04-01',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SHR003',
+    name: '佐藤 健一',
+    divisionName: '研究開発部/製品開発部/新製品開発課/プロジェクト管理チーム',
+    date: '2021-04-01',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SHR004',
+    name: '伊藤 美咲',
+    divisionName: '人事部/人事管理部/採用課/新卒採用チーム/東京オフィス',
+    date: '2021-04-01',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SHR005',
+    name: '渡辺 次郎',
+    divisionName: 'IT部/システム開発部/インフラ部/ネットワーク課/セキュリティチーム',
+    date: '2021-04-01',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SHR006',
+    name: 'ジョナサン・アレハンドロ・マルティネス・サンチェス',
+    divisionName: '総務部/総務課/オフィスマネジメントチーム',
+    date: '2021-04-01',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SHR007',
+    name: 'アレクサンドラ・マリー・アンジェリーナ・ド・ソウザ',
+    divisionName: '財務部/経理部/財務管理課/支払チーム',
+    date: '2021-04-01',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SHR008',
+    name: 'マイケル・フランシス・ジョンソン・ウィリアムズ',
+    divisionName: '法務部/契約管理部/コンプライアンス課',
+    date: '2021-04-01',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SHR009',
+    name: 'カタリーナ・エリザベス・ロドリゲス・ガルシア',
+    divisionName: '営業部/国際営業部/アジア営業課/中国支店',
+    date: '2021-04-01',
+    amount: '999,999円',
+  },
+  {
+    employeeNo: 'SHR010',
+    name: 'クリスティーナ・マリー・アンジェラ・マクドナルド',
+    divisionName: '研究開発部/技術開発部/AI技術課/データサイエンステーム',
+    date: '2021-04-01',
+    amount: '999,999円',
+  },
+]
 
 const data = [
   {
@@ -83,35 +189,42 @@ const data = [
 export const All: StoryFn = () => (
   <Ul>
     <li>
-      table
       <Table>
         <thead>
           <tr>
             <ThCheckbox name="tableAllCheckbox" />
-            <Th sort="asc" onSort={action('降順に並び替え')}>
-              Name
+            <Th sort="desc" onSort={action('昇順に並び替え')}>
+              <Text whiteSpace="nowrap">社員番号</Text>
             </Th>
+            <Th>氏名</Th>
+            <Th>部署</Th>
             <Th sort="none" onSort={action('昇順に並び替え')}>
-              Calories
+              申請日
             </Th>
-            <Th>Fat (g)</Th>
-            <Th>Carbs (g)</Th>
-            <Th>Protein (g)</Th>
-            <Th>Button</Th>
+            <Th align="right">総額</Th>
+            <Th>操作</Th>
           </tr>
-          <BulkActionRow>Bulk action area</BulkActionRow>
         </thead>
         <tbody>
-          {data.map(({ name, calories, fat, carbs, protein }, i) => (
-            <tr key={name}>
-              <TdCheckbox name={`tableCheckBox-${i}`} aria-labelledby={`name-${i}`} />
-              <Td id={`name-${i}`}>{name}</Td>
-              <Td>{calories}</Td>
-              <Td>{fat}</Td>
-              <Td>{carbs}</Td>
-              <Td>{protein}</Td>
-              <Td>
-                <Button size="s">Button</Button>
+          {employeeData.map(({ employeeNo, name, divisionName, date, amount }, i) => (
+            <tr key={employeeNo}>
+              <TdCheckbox name={`tableCheckbox-${i}`} aria-labelledby={`name-${employeeNo}`} />
+              <Td contentWidth="1px">
+                <Text whiteSpace="nowrap">{employeeNo}</Text>
+              </Td>
+              <Td contentWidth={{ min: 10, max: 20 }} id={`name-${employeeNo}`}>
+                {name}
+              </Td>
+              <Td contentWidth={{ min: 15, max: 30 }}>{divisionName}</Td>
+              <Td contentWidth="1px">
+                <Text whiteSpace="nowrap">{date}</Text>
+              </Td>
+              <Td align="right">{amount}</Td>
+              <Td contentWidth="1px">
+                <Cluster style={{ flexWrap: 'nowrap' }}>
+                  <Button size="s">編集</Button>
+                  <Button size="s">削除</Button>
+                </Cluster>
               </Td>
             </tr>
           ))}
@@ -266,13 +379,6 @@ export const All: StoryFn = () => (
       Table with empty state
       <Base overflow="auto">
         <Table>
-          <thead>
-            <tr>
-              <Th>cell</Th>
-              <Th>cell</Th>
-              <Th>cell</Th>
-            </tr>
-          </thead>
           <EmptyTableBody>
             <Text>お探しの条件に該当する項目はありません。</Text>
             <Text>別の条件をお試しください。</Text>
