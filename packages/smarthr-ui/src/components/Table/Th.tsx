@@ -15,6 +15,8 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { reelShadowStyle } from './useReelShadow'
 
+import type { CellContentWidth } from './type'
+
 type sortTypes = keyof typeof SORT_DIRECTION_LABEL
 export type Props = PropsWithChildren<{
   /** 並び替え状態 */
@@ -27,6 +29,7 @@ export type Props = PropsWithChildren<{
   }
   /** `true` のとき、TableReel内で固定表示になる */
   fixed?: boolean
+  contentWidth?: CellContentWidth
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'th'>, keyof Props | 'onClick'>
 
@@ -58,20 +61,37 @@ const thWrapper = tv({
   },
 })
 
+const convertContentWidth = (contentWidth?: CellContentWidth) => {
+  if (typeof contentWidth === 'number') {
+    // Th は fontSize.S のため、rem で指定する
+    return `${contentWidth}rem`
+  }
+
+  return contentWidth
+}
+
 export const Th: FC<Props & ElementProps> = ({
   children,
   sort,
   onSort,
   decorators,
   fixed = false,
+  contentWidth,
   className,
+  style,
   ...props
 }) => {
-  const styles = useMemo(() => {
+  const styleProps = useMemo(() => {
     const thWrapperStyle = thWrapper({ className, fixed })
     const reelShadowStyles = fixed ? reelShadowStyle({ showShadow: false, direction: 'right' }) : ''
-    return `${thWrapperStyle} ${reelShadowStyles}`.trim()
-  }, [className, fixed])
+    return {
+      className: `${thWrapperStyle} ${reelShadowStyles}`.trim(),
+      style: {
+        ...style,
+        width: convertContentWidth(contentWidth),
+      },
+    }
+  }, [className, contentWidth, fixed, style])
 
   const sortLabel = useMemo(
     () =>
@@ -94,7 +114,7 @@ export const Th: FC<Props & ElementProps> = ({
   )
 
   return (
-    <th {...ariaSortProps} {...props} className={styles}>
+    <th {...ariaSortProps} {...props} {...styleProps}>
       {sort ? (
         <SortButton onClick={onSort}>
           {children}
