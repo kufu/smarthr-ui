@@ -1,10 +1,12 @@
 import { StoryFn } from '@storybook/react'
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode } from 'react'
 
 import { Button } from '../Button'
 import { FormControl } from '../FormControl'
 import { Input } from '../Input'
 import { Stack } from '../Layout'
+
+import { useDialogSteps } from './useDialogSteps'
 
 import { ActionDialog } from '.'
 
@@ -21,19 +23,17 @@ type DialogContents = {
 }
 
 export const Default: StoryFn = () => {
-  const [step, setStep] = useState<number>(0)
-  const [prevStep, setPrevStep] = useState<number>(step)
-
-  if (step !== prevStep && step > 0) {
-    setPrevStep(step)
-  }
-
-  const onClickClose = () => setStep((prev) => prev - 1)
+  const [currentStep, { setStep, nextStep, prevStep }, renderFocusTarget] = useDialogSteps()
 
   const dialogContents: DialogContents = {
+    0: {
+      actionText: '',
+      onClickAction: nextStep,
+      children: null,
+    },
     1: {
       actionText: '次へ',
-      onClickAction: () => setStep((prev) => prev + 1),
+      onClickAction: nextStep,
       children: (
         <FormControl title="Label 1">
           <Input name="input" />
@@ -51,13 +51,13 @@ export const Default: StoryFn = () => {
     },
   }
 
-  const dialogContent = dialogContents[step]
+  const dialogContent = dialogContents[currentStep]
 
   return (
     <>
       <Stack>
         <div>
-          <Button onClick={() => setStep(1)} aria-haspopup="dialog">
+          <Button onClick={nextStep} aria-haspopup="dialog">
             Dialog
           </Button>
         </div>
@@ -68,11 +68,13 @@ export const Default: StoryFn = () => {
 
       <ActionDialog
         {...dialogContent}
-        title={`Stepper Dialog ${step} / 2`}
-        isOpen={step > 0}
-        actionDisabled={step === 2}
-        onClickClose={onClickClose}
-      />
+        title={`Stepper Dialog ${currentStep} / 2`}
+        isOpen={currentStep > 0}
+        onClickClose={currentStep === 2 ? () => setStep(0) : prevStep}
+      >
+        {renderFocusTarget()}
+        {dialogContent.children}
+      </ActionDialog>
     </>
   )
 }
