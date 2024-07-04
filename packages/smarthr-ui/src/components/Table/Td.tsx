@@ -15,6 +15,7 @@ export type Props = PropsWithChildren<
 type ElementProps = Omit<ComponentPropsWithoutRef<'td'>, keyof Props>
 
 export const Td: FC<Props & ElementProps> = ({
+  align = 'left',
   nullable = false,
   fixed = false,
   contentWidth,
@@ -23,7 +24,7 @@ export const Td: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const styleProps = useMemo(() => {
-    const tdStyles = td({ nullable, fixed, className })
+    const tdStyles = td({ align, nullable, fixed, className })
     const reelShadowStyles = fixed ? reelShadowStyle({ direction: 'right' }) : ''
     return {
       className: `${tdStyles} ${reelShadowStyles}`.trim(),
@@ -32,7 +33,7 @@ export const Td: FC<Props & ElementProps> = ({
         ...getWidthStyle(contentWidth),
       },
     }
-  }, [className, contentWidth, fixed, nullable, style])
+  }, [align, className, contentWidth, fixed, nullable, style])
 
   return <td {...props} {...styleProps} />
 }
@@ -43,6 +44,10 @@ const td = tv({
     'shr-border-t-shorthand shr-h-[calc(1em_*_theme(lineHeight.normal))] shr-px-1 shr-py-0.5 shr-align-middle shr-text-base shr-leading-normal shr-text-black',
   ],
   variants: {
+    align: {
+      left: '',
+      right: 'shr-text-right',
+    },
     nullable: {
       true: "empty:after:shr-content-['-----']",
     },
