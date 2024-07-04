@@ -1,12 +1,13 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
 import React, { FC, useState } from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
-import { Base } from '../Base'
+import { Base, BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FormControl } from '../FormControl'
 import { Input } from '../Input'
+import { Stack } from '../Layout'
 
 import { AccordionPanel } from './AccordionPanel'
 import { AccordionPanelContent } from './AccordionPanelContent'
@@ -32,19 +33,15 @@ const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do e
 const content = () => {
   const id = Math.random()
   return (
-    <StackDiv>
+    <Stack gap={0.75}>
       <div>{lorem}</div>
-      <div>
-        <FormControl title="Name">
-          <Input name={`name_${id}`} />
-        </FormControl>
-      </div>
-      <div>
-        <FormControl title="Email">
-          <Input name={`email_${id}`} />
-        </FormControl>
-      </div>
-    </StackDiv>
+      <FormControl title="Name">
+        <Input name={`name_${id}`} />
+      </FormControl>
+      <FormControl title="Email">
+        <Input name={`email_${id}`} />
+      </FormControl>
+    </Stack>
   )
 }
 
@@ -60,7 +57,7 @@ const AccordionPanelController: FC = () => {
   `
 
   return (
-    <Wrapper>
+    <WrapperStack>
       <Buttons>
         {arr.map((_, i) => (
           <Button
@@ -73,137 +70,100 @@ const AccordionPanelController: FC = () => {
         ))}
       </Buttons>
 
-      <AccordionPanelBase>
+      <Base>
         <AccordionPanel defaultExpanded={[expandedId]}>
           {arr.map((_, i) => (
             <AccordionPanelItem key={i} name={`accordion-panel-${i}`}>
               <AccordionPanelTrigger>AccordionPanelItem {i}</AccordionPanelTrigger>
               <AccordionPanelContent>
-                <Content>{content()}</Content>
+                <BaseColumn>{content()}</BaseColumn>
               </AccordionPanelContent>
             </AccordionPanelItem>
           ))}
         </AccordionPanel>
-      </AccordionPanelBase>
-    </Wrapper>
+      </Base>
+    </WrapperStack>
   )
 }
 
 export const AccordionStyle: StoryFn = () => (
-  <Wrapper>
-    <AccordionPanelBase>
+  <WrapperStack>
+    <Base>
       <AccordionPanel>
-        <BorderList>
-          {arr.map((_, i) => (
-            <li key={i}>
-              <AccordionPanelItem name={`left-icon-${i}`}>
-                <AccordionPanelTrigger>Left Icon (default) {i}</AccordionPanelTrigger>
-                <AccordionPanelContent>
-                  <Content>{content()}</Content>
-                </AccordionPanelContent>
-              </AccordionPanelItem>
-            </li>
-          ))}
-        </BorderList>
+        {arr.map((_, i) => (
+          <AccordionPanelItem name={`left-icon-${i}`} key={i}>
+            <AccordionPanelTrigger>Left Icon (default) {i}</AccordionPanelTrigger>
+            <AccordionPanelContent>
+              <BaseColumn>{content()}</BaseColumn>
+            </AccordionPanelContent>
+          </AccordionPanelItem>
+        ))}
       </AccordionPanel>
-    </AccordionPanelBase>
-    <AccordionPanelBase>
+    </Base>
+    <Base>
       <AccordionPanel iconPosition="right">
-        <BorderList>
-          {arr.map((_, i) => (
-            <li key={i}>
-              <AccordionPanelItem name={`right-icon-${i}`}>
-                <AccordionPanelTrigger>Right Icon {i}</AccordionPanelTrigger>
-                <AccordionPanelContent>
-                  <Content>{content()}</Content>
-                </AccordionPanelContent>
-              </AccordionPanelItem>
-            </li>
-          ))}
-        </BorderList>
+        {arr.map((_, i) => (
+          <AccordionPanelItem name={`right-icon-${i}`} key={i}>
+            <AccordionPanelTrigger>Right Icon {i}</AccordionPanelTrigger>
+            <AccordionPanelContent>
+              <BaseColumn>{content()}</BaseColumn>
+            </AccordionPanelContent>
+          </AccordionPanelItem>
+        ))}
       </AccordionPanel>
-    </AccordionPanelBase>
-  </Wrapper>
+    </Base>
+  </WrapperStack>
 )
 AccordionStyle.storyName = 'Accordion style'
 
 export const ExpandedOptions: StoryFn = () => (
-  <Wrapper>
-    <AccordionPanelBase>
-      <AccordionPanel expandableMultiply={true}>
+  <WrapperStack>
+    <Base>
+      <AccordionPanel>
         {arr.map((_, i) => (
           <AccordionPanelItem key={i} name={`expandable-multiply-${i}`}>
             <AccordionPanelTrigger>Expandable Multiply {i}</AccordionPanelTrigger>
             <AccordionPanelContent>
-              <Content>{content()}</Content>
+              <BaseColumn>{content()}</BaseColumn>
             </AccordionPanelContent>
           </AccordionPanelItem>
         ))}
       </AccordionPanel>
-    </AccordionPanelBase>
-    <AccordionPanelBase>
-      <AccordionPanel defaultExpanded={['default-expanded-0']}>
+    </Base>
+    <Base>
+      <AccordionPanel defaultExpanded={['default-expanded-0']} expandableMultiply={false}>
         {arr.map((_, i) => (
           <AccordionPanelItem key={i} name={`default-expanded-${i}`}>
-            <AccordionPanelTrigger>Default Expanded {i}</AccordionPanelTrigger>
+            <AccordionPanelTrigger>Expandable Multiply Off {i}</AccordionPanelTrigger>
             <AccordionPanelContent>
-              <Content>{content()}</Content>
+              <BaseColumn>{content()}</BaseColumn>
             </AccordionPanelContent>
           </AccordionPanelItem>
         ))}
       </AccordionPanel>
-    </AccordionPanelBase>
-  </Wrapper>
+    </Base>
+  </WrapperStack>
 )
 ExpandedOptions.storyName = 'Expanded options'
 
 export const Callback: StoryFn = () => (
-  <Wrapper>
-    <AccordionPanelBase>
-      <AccordionPanel expandableMultiply={true} onClick={action('Clicked')}>
-        {arr.map((_, i) => (
-          <AccordionPanelItem key={i} name={`expandable-multiply-${i}`}>
-            <AccordionPanelTrigger>Expandable Multiply {i}</AccordionPanelTrigger>
-            <AccordionPanelContent>
-              <Content>{content()}</Content>
-            </AccordionPanelContent>
-          </AccordionPanelItem>
-        ))}
-      </AccordionPanel>
-    </AccordionPanelBase>
-  </Wrapper>
+  <Base>
+    <AccordionPanel onClick={action('Clicked')}>
+      {arr.map((_, i) => (
+        <AccordionPanelItem key={i} name={`expandable-multiply-${i}`}>
+          <AccordionPanelTrigger>Expandable Multiply {i}</AccordionPanelTrigger>
+          <AccordionPanelContent>
+            <BaseColumn>{content()}</BaseColumn>
+          </AccordionPanelContent>
+        </AccordionPanelItem>
+      ))}
+    </AccordionPanel>
+  </Base>
 )
 
 export const ChangeDefaultExpanded: StoryFn = () => <AccordionPanelController />
 ChangeDefaultExpanded.storyName = 'Change defaultExpanded'
 
-const Wrapper = styled.div`
+const WrapperStack = styled(Stack).attrs({ gap: 1.5 })`
   padding: 24px;
-
-  > * + * {
-    margin-top: 24px;
-  }
-`
-const AccordionPanelBase = styled(Base).attrs({ overflow: 'hidden' })``
-const BorderList = styled.ul(
-  ({ theme: { color } }) => css`
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
-    > li + li {
-      border-top: 1px solid ${color.BORDER};
-    }
-  `,
-)
-const Content = styled.div(
-  ({ theme: { color } }) => css`
-    background-color: ${color.BACKGROUND};
-    padding: 16px;
-  `,
-)
-const StackDiv = styled.div`
-  > * + * {
-    margin-top: 12px;
-  }
 `
