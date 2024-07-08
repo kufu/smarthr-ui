@@ -7,7 +7,7 @@ import { Base, BaseColumn } from '../Base'
 import { Button } from '../Button'
 import { FormControl } from '../FormControl'
 import { Input } from '../Input'
-import { Stack } from '../Layout'
+import { Cluster, Stack } from '../Layout'
 
 import { AccordionPanel } from './AccordionPanel'
 import { AccordionPanelContent } from './AccordionPanelContent'
@@ -48,17 +48,9 @@ const content = () => {
 const AccordionPanelController: FC = () => {
   const [expandedId, setExpandedId] = useState('')
 
-  const Buttons = styled.div`
-    margin-bottom: 16px;
-
-    > *:not(:first-child) {
-      margin-left: 16px;
-    }
-  `
-
   return (
     <WrapperStack>
-      <Buttons>
+      <Cluster gap={1}>
         {arr.map((_, i) => (
           <Button
             key={`button-${i}`}
@@ -68,7 +60,7 @@ const AccordionPanelController: FC = () => {
             open {i}
           </Button>
         ))}
-      </Buttons>
+      </Cluster>
 
       <Base>
         <AccordionPanel defaultExpanded={[expandedId]}>
