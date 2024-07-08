@@ -103,10 +103,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     () => executeDecorator(RESET_BUTTON_TEXT, decorators?.resetButton),
     [decorators],
   )
-  const filteredIconAriaLabel = useMemo(
-    () => (hasStatusText ? undefined : innerText(status)),
-    [status, hasStatusText],
-  )
+  const filteredIconAriaLabel = useMemo(() => innerText(status), [status])
   const isRequestProcessing =
     responseMessage !== undefined && responseMessage.status === 'processing'
 
