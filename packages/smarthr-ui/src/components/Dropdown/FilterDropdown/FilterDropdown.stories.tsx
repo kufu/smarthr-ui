@@ -32,7 +32,6 @@ export const Render: React.FC = () => {
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.currentTarget.value)
   const [isFiltered, setIsFiltered] = React.useState(false)
   const [isFiltered2, setIsFiltered2] = React.useState(true)
-  const [isFiltered3, setIsFiltered3] = React.useState(true)
   const [isFiltered4, setIsFiltered4] = React.useState(true)
   const [responseMessage, setResponseMessage] =
     useState<ComponentProps<typeof FilterDropdown>['responseMessage']>()
@@ -104,21 +103,6 @@ export const Render: React.FC = () => {
             <p>You can change border color of the trigger button by setting `isFiltered`.</p>
           </FilterDropdown>
         </dd>
-        <dt>Filtered has status text(deprecated)</dt>
-        <dd>
-          <FilterDropdown
-            isFiltered={isFiltered3}
-            onApply={() => setIsFiltered3(true)}
-            onReset={() => setIsFiltered3(false)}
-            onOpen={action('onOpen')}
-            onClose={action('onClose')}
-            hasStatusText
-          >
-            <p>
-              You can change border text and color of the trigger button by setting `isFiltered`.
-            </p>
-          </FilterDropdown>
-        </dd>
         <dt>disabled</dt>
         <dd>
           <FilterDropdown
@@ -144,7 +128,6 @@ export const Render: React.FC = () => {
             onReset={() => setIsFiltered4(false)}
             onOpen={action('onOpen')}
             onClose={action('onClose')}
-            hasStatusText
             decorators={{
               status: (txt) => <span data-wovn-enable="true">{`filtered.(${txt})`}</span>,
               triggerButton: (txt) => <span data-wovn-enable="true">{`filter.(${txt})`}</span>,
