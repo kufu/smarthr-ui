@@ -77,7 +77,6 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   onOpen,
   onClose,
   children,
-  hasStatusText,
   decorators,
   responseMessage,
   triggerSize,
