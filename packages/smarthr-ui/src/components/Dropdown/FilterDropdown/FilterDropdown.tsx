@@ -47,7 +47,6 @@ const filterDropdown = tv({
       '[&_>_[role="img"]_+_[role="img"]]:shr-absolute [&_>_[role="img"]_+_[role="img"]]:shr-bottom-[2px] [&_>_[role="img"]_+_[role="img"]]:shr-right-[-4px]',
     ],
     fileteredIcon: 'shr-h-[0.5em] shr-w-[0.5em]',
-    statusText: 'shr-ms-0.5 shr-text-sm',
     inner: 'shr-p-1.5',
     actionArea: 'shr-border-t-shorthand shr-px-1.5 shr-py-1',
     resetButtonArea: '-shr-ms-0.5',
@@ -109,7 +108,6 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   const {
     iconWrapperStyle,
     filteredIconStyle,
-    statusTextStyle,
     innerStyle,
     actionAreaStyle,
     resetButtonAreaStyle,
@@ -119,7 +117,6 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     const {
       iconWrapper,
       fileteredIcon,
-      statusText,
       inner,
       actionArea,
       resetButtonArea,
@@ -129,7 +126,6 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     return {
       iconWrapperStyle: iconWrapper({ filtered: isFiltered, triggerSize }),
       filteredIconStyle: fileteredIcon(),
-      statusTextStyle: statusText(),
       innerStyle: inner(),
       actionAreaStyle: actionArea(),
       resetButtonAreaStyle: resetButtonArea(),
