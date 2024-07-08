@@ -160,7 +160,6 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
           {triggerButton}
         </Button>
       </DropdownTrigger>
-      {hasStatusText && isFiltered ? <span className={statusTextStyle}>{status}</span> : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
           <div className={innerStyle}>{children}</div>
