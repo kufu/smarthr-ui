@@ -21,7 +21,7 @@ export const AccordionPanelItemContext = createContext<{ name: string }>({
 })
 
 const accordionPanelItem = tv({
-  base: 'smarthr-ui-AccordionPanel-item',
+  base: ['smarthr-ui-AccordionPanel-item', '[&_+_&]:shr-border-t-shorthand'],
 })
 
 export const AccordionPanelItem: FC<Props & ElementProps> = ({ name, className, ...props }) => {
