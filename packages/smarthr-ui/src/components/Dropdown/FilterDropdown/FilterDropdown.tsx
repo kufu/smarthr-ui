@@ -3,7 +3,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { Button, BaseProps as ButtonProps } from '../../Button'
-import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
+import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
 import { Dropdown } from '../Dropdown'
@@ -147,7 +147,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
             <span className={iconWrapperStyle}>
               <FaFilterIcon />
               {isFiltered ? (
-                <FaCheckCircleIcon
+                <FaCircleCheckIcon
                   aria-label={filteredIconAriaLabel}
                   className={filteredIconStyle}
                 />
@@ -170,7 +170,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                 <Button
                   variant="text"
                   size="s"
-                  prefix={<FaUndoAltIcon />}
+                  prefix={<FaRotateLeftIcon />}
                   onClick={onReset}
                   disabled={isRequestProcessing}
                 >
