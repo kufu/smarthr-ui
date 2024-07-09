@@ -3,7 +3,7 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { Button, BaseProps as ButtonProps } from '../../Button'
-import { FaCheckCircleIcon, FaFilterIcon, FaUndoAltIcon } from '../../Icon'
+import { FaCircleCheckIcon, FaFilterIcon, FaRotateLeftIcon } from '../../Icon'
 import { Cluster, Stack } from '../../Layout'
 import { ResponseMessage } from '../../ResponseMessage'
 import { Dropdown } from '../Dropdown'
@@ -22,7 +22,6 @@ type Props = {
   onOpen?: () => void
   onClose?: () => void
   children: ReactNode
-  hasStatusText?: boolean
   decorators?: DecoratorsType<
     'status' | 'triggerButton' | 'applyButton' | 'cancelButton' | 'resetButton'
   >
@@ -48,7 +47,6 @@ const filterDropdown = tv({
       '[&_>_[role="img"]_+_[role="img"]]:shr-absolute [&_>_[role="img"]_+_[role="img"]]:shr-bottom-[2px] [&_>_[role="img"]_+_[role="img"]]:shr-right-[-4px]',
     ],
     fileteredIcon: 'shr-h-[0.5em] shr-w-[0.5em]',
-    statusText: 'shr-ms-0.5 shr-text-sm',
     inner: 'shr-p-1.5',
     actionArea: 'shr-border-t-shorthand shr-px-1.5 shr-py-1',
     resetButtonArea: '-shr-ms-0.5',
@@ -78,7 +76,6 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
   onOpen,
   onClose,
   children,
-  hasStatusText,
   decorators,
   responseMessage,
   triggerSize,
@@ -104,17 +101,13 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     () => executeDecorator(RESET_BUTTON_TEXT, decorators?.resetButton),
     [decorators],
   )
-  const filteredIconAriaLabel = useMemo(
-    () => (hasStatusText ? undefined : innerText(status)),
-    [status, hasStatusText],
-  )
+  const filteredIconAriaLabel = useMemo(() => innerText(status), [status])
   const isRequestProcessing =
     responseMessage !== undefined && responseMessage.status === 'processing'
 
   const {
     iconWrapperStyle,
     filteredIconStyle,
-    statusTextStyle,
     innerStyle,
     actionAreaStyle,
     resetButtonAreaStyle,
@@ -124,7 +117,6 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     const {
       iconWrapper,
       fileteredIcon,
-      statusText,
       inner,
       actionArea,
       resetButtonArea,
@@ -134,7 +126,6 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
     return {
       iconWrapperStyle: iconWrapper({ filtered: isFiltered, triggerSize }),
       filteredIconStyle: fileteredIcon(),
-      statusTextStyle: statusText(),
       innerStyle: inner(),
       actionAreaStyle: actionArea(),
       resetButtonAreaStyle: resetButtonArea(),
@@ -152,7 +143,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
             <span className={iconWrapperStyle}>
               <FaFilterIcon />
               {isFiltered ? (
-                <FaCheckCircleIcon
+                <FaCircleCheckIcon
                   aria-label={filteredIconAriaLabel}
                   className={filteredIconStyle}
                 />
@@ -164,7 +155,6 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
           {triggerButton}
         </Button>
       </DropdownTrigger>
-      {hasStatusText && isFiltered ? <span className={statusTextStyle}>{status}</span> : null}
       <DropdownContent controllable>
         <DropdownScrollArea>
           <div className={innerStyle}>{children}</div>
@@ -176,7 +166,7 @@ export const FilterDropdown: FC<Props & ElementProps> = ({
                 <Button
                   variant="text"
                   size="s"
-                  prefix={<FaUndoAltIcon />}
+                  prefix={<FaRotateLeftIcon />}
                   onClick={onReset}
                   disabled={isRequestProcessing}
                 >
