@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [53.0.0](https://github.com/kufu/smarthr-ui/compare/v52.2.0...v53.0.0) (2024-07-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* FilterDropdownのhasStatusText propsをOmitする (#4747)
+
+### Features
+
+* FilterDropdownのhasStatusText propsをOmitする ([#4747](https://github.com/kufu/smarthr-ui/issues/4747)) ([cb11898](https://github.com/kufu/smarthr-ui/commit/cb11898642acefd82e7e018583f3569425a2afb1))
+* Table に table-layout 相当の props を追加 ほか ([#4757](https://github.com/kufu/smarthr-ui/issues/4757)) ([35db275](https://github.com/kufu/smarthr-ui/commit/35db2757fb6c77b3a9113f6f237711ab5f1fba49))
+
+
+### Bug Fixes
+
+* Base 上に置いた AccordionPanel のフォーカスリングが出ない不具合を修正 ほか ([#4758](https://github.com/kufu/smarthr-ui/issues/4758)) ([e60cb7d](https://github.com/kufu/smarthr-ui/commit/e60cb7de5be4347d5590cd5ee087adcbf1fe917d))
+
 ## [52.2.0](https://github.com/kufu/smarthr-ui/compare/v52.1.0...v52.2.0) (2024-07-02)
 
 
