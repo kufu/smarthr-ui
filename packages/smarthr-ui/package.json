@@ -79,7 +79,7 @@
     "react-dom": "^18.3.1",
     "react-ga4": "^2.1.0",
     "react-test-renderer": "^18.3.1",
-    "rimraf": "^5.0.8",
+    "rimraf": "^6.0.0",
     "standard-version": "^9.3.2",
     "storybook": "^8.1.11",
     "storybook-addon-pseudo-states": "^3.1.1",
