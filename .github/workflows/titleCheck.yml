@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: check title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
           regex="^(feat|fix|docs|chore|style|refactor|perf|test)!?(\([^\)]+\))?:[[:space:]].+"
-          if [[ "${{ github.event.pull_request.title }}" =~ $regex ]]; then
+          if [[ "$PR_TITLE" =~ $regex ]]; then
               echo OK
           else
               echo "::error::Pull Request のタイトルが Conventional Commits 形式にマッチしません"
