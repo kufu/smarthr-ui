@@ -45,7 +45,7 @@ export const LineClamp: FC<Props & ElementProps> = ({
     const el = ref.current
     const shadowEl = shadowRef.current
     return el && shadowEl
-      ? el.scrollWidth > el.clientWidth || shadowEl.clientHeight > el.clientHeight
+      ? shadowEl.clientWidth > el.clientWidth || shadowEl.clientHeight > el.clientHeight
       : false
   }
 
@@ -61,15 +61,18 @@ export const LineClamp: FC<Props & ElementProps> = ({
   const rootStyles = useMemo(() => root({ className }), [className])
 
   const ActualLineClamp = () => (
-    <span {...props} className={rootStyles} ref={ref}>
-      <span className={lineClampStyles}>{children}</span>
+    <span {...props} className={rootStyles}>
+      <span className={lineClampStyles} ref={ref}>
+        {children}
+      </span>
       {/* 切り取られていないテキストの高さを取得するための要素 */}
       <span
         aria-hidden
-        className="shr-invisible shr-absolute shr-w-full shr-opacity-0"
-        ref={shadowRef}
+        className="shr-absolute shr-overflow-hidden shr-w-full shr-h-full shr-opacity-0 shr-invisible shr-left-0 shr-top-0 shr-whitespace-normal"
       >
-        {children}
+        <span className="shr-absolute shr-w-full shr-top-0 shr-left-0" ref={shadowRef}>
+          {children}
+        </span>
       </span>
     </span>
   )
