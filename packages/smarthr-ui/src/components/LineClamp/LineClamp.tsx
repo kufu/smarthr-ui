@@ -60,6 +60,10 @@ export const LineClamp: FC<Props & ElementProps> = ({
   const isMultiLineOverflow = () => {
     const el = ref.current
     const shadowEl = shadowRef.current
+
+    // -webkit-line-clamp を使った要素ではel.scrollHeightとel.clientHeightの比較だと
+    // フォントの高さの計算が期待と異なり適切な高さが取得できないためshadowElと比較している
+    // 参考: https://github.com/kufu/smarthr-ui/pull/4710
     return el && shadowEl
       ? shadowEl.clientWidth > el.clientWidth || shadowEl.clientHeight > el.clientHeight
       : false
@@ -89,13 +93,7 @@ export const LineClamp: FC<Props & ElementProps> = ({
       <span className={clampedLineStyle} ref={ref}>
         {children}
       </span>
-      {/*
-        切り取られていないテキストの高さを取得するための要素
-        -webkit-line-clamp を使った要素ではjsのscrollHeightとclientHeightがフォントによっては
-        予期しない余白分が発生してしまい適切な高さが取得できないため
-        この要素で取得した高さを元にTooltipの表示を切り替えている
-        参考: https://github.com/kufu/smarthr-ui/pull/4710
-      */}
+      {/* 切り取られていないテキストの高さを取得するための要素 */}
       <span aria-hidden className={shadowElementWrapperStyle}>
         <span className={shadowElementStyle} ref={shadowRef}>
           {children}
