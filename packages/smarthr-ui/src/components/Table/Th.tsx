@@ -149,10 +149,9 @@ const sortButton = tv({
 
 const SortButton: FC<ComponentProps<typeof UnstyledButton> & Pick<Props, 'align'>> = ({
   align,
-  className,
   ...props
 }) => {
-  const sortButtonStyle = useMemo(() => sortButton({ align, className }), [align, className])
+  const sortButtonStyle = useMemo(() => sortButton({ align }), [align])
   return <UnstyledButton {...props} className={sortButtonStyle} />
 }
 
