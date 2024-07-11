@@ -28,7 +28,7 @@ export default {
 
 export const VRTOpenDropdownNarrow: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       画面幅が狭く、入れ子を開いた状態で表示されます
     </VRTInformationPanel>
     <ControllableDropdown />
@@ -37,7 +37,7 @@ export const VRTOpenDropdownNarrow: StoryFn = () => (
 
 export const VRTOpenNested: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       入れ子を開いた状態で表示されます
     </VRTInformationPanel>
     <All />
@@ -46,7 +46,7 @@ export const VRTOpenNested: StoryFn = () => (
 
 export const VRTDropdownForcedColors: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <All />

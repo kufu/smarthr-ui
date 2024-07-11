@@ -42,7 +42,7 @@ export const AccordionPanelContext = React.createContext<{
 }>({
   iconPosition: 'left',
   expandedItems: new Map(),
-  expandableMultiply: false,
+  expandableMultiply: true,
   parentRef: null,
 })
 
@@ -52,7 +52,7 @@ const accordionWrapper = tv({
 
 export const AccordionPanel: React.FC<Props & ElementProps> = ({
   iconPosition = 'left',
-  expandableMultiply = false,
+  expandableMultiply = true,
   defaultExpanded = [],
   className,
   onClick: onClickProps,

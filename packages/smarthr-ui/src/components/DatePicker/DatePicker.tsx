@@ -57,7 +57,6 @@ type OmitInputAttributes =
   | 'onChange'
   | 'onKeyPress'
   | 'onFocus'
-  | 'onBlur'
   | 'aria-expanded'
   | 'aria-controls'
   | 'aria-haspopup'
@@ -90,6 +89,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       formatDate,
       showAlternative,
       onChangeDate,
+      onBlur,
       ...inputAttrs
     },
     ref,
@@ -266,6 +266,22 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       },
       [isInputFocused, switchCalendarVisibility],
     )
+    const handleBlur = useCallback<React.FocusEventHandler<HTMLInputElement>>(
+      (e) => {
+        const {
+          target: { value: inputString },
+        } = e
+        setIsInputFocused(false)
+        if (inputString === '') {
+          updateDate(null)
+        } else {
+          const newDate = stringToDate(inputString)
+          updateDate(newDate)
+        }
+        onBlur && onBlur(e)
+      },
+      [onBlur, stringToDate, updateDate],
+    )
     useGlobalKeyDown(handleKeyDown)
 
     const caretIconColor = useMemo(() => {
@@ -322,15 +338,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
               setIsInputFocused(true)
               switchCalendarVisibility(true)
             }}
-            onBlur={({ target: { value: inputString } }) => {
-              setIsInputFocused(false)
-              if (inputString === '') {
-                updateDate(null)
-                return
-              }
-              const newDate = stringToDate(inputString)
-              updateDate(newDate)
-            }}
+            onBlur={handleBlur}
             suffix={
               <span className={inputSuffixLayoutStyle}>
                 <span className={inputSuffixWrapperStyle}>

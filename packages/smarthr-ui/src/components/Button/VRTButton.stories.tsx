@@ -20,7 +20,7 @@ export default {
 
 export const _VRTButtonState: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       hover, activeなどの状態で表示されます
     </VRTInformationPanel>
     <dl className="*:shr-ms-0">
@@ -179,7 +179,7 @@ _VRTButtonState.parameters = {
 
 export const _VRTButtonAnchorState: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       hover, activeなどの状態で表示されます
     </VRTInformationPanel>
     <dl className="*:shr-ms-0">
@@ -383,7 +383,7 @@ _VRTButtonAnchorState.parameters = {
 const ButtonTemplate = _Button.bind({})
 export const _VRTButtonForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <ButtonTemplate />
@@ -396,7 +396,7 @@ _VRTButtonForcedColors.parameters = {
 const ButtonAnchorTemplate = _ButtonAnchor.bind({})
 export const _VRTButtonAnchorForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <ButtonAnchorTemplate />

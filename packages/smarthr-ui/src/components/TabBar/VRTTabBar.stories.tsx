@@ -20,9 +20,7 @@ export default {
 
 export const VRTHover: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
-      hoverの状態で表示されます
-    </VRTInformationPanel>
+    <VRTInformationPanel title="VRT 用の Story です">hoverの状態で表示されます</VRTInformationPanel>
     <Ul>
       <li>
         <TabBar id="hover">
@@ -49,7 +47,7 @@ VRTHover.parameters = {
 
 export const VRTUserFocus: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       ユーザー操作のfocusをシミュレートした状態で表示されます
     </VRTInformationPanel>
     <Ul>
@@ -78,7 +76,7 @@ VRTUserFocus.play = async ({ canvasElement }) => {
 
 export const VRTScroll: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       画面幅が狭い状態でスクロールされるか確認します
     </VRTInformationPanel>
     <Ul>
@@ -126,7 +124,7 @@ VRTScroll.play = async ({ canvasElement }) => {
 
 export const VRTForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <All />

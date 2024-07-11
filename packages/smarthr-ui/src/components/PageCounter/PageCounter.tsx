@@ -10,9 +10,7 @@ type Props = {
   start: number
   end: number
   total?: number
-  decorators?: DecoratorsType<
-    'unitForTotal' | 'unit' | 'rangeSeparator' | 'rangeSeparatorVisuallyHiddenText'
-  >
+  decorators?: DecoratorsType<'rangeSeparator' | 'rangeSeparatorVisuallyHiddenText'>
 }
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 

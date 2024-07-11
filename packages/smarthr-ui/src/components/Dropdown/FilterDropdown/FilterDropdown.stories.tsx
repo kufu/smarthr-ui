@@ -32,7 +32,6 @@ export const Render: React.FC = () => {
   const onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => setText(e.currentTarget.value)
   const [isFiltered, setIsFiltered] = React.useState(false)
   const [isFiltered2, setIsFiltered2] = React.useState(true)
-  const [isFiltered3, setIsFiltered3] = React.useState(true)
   const [isFiltered4, setIsFiltered4] = React.useState(true)
   const [responseMessage, setResponseMessage] =
     useState<ComponentProps<typeof FilterDropdown>['responseMessage']>()
@@ -49,6 +48,8 @@ export const Render: React.FC = () => {
               setValue('hoge')
               setText('')
             }}
+            onOpen={action('onOpen')}
+            onClose={action('onClose')}
             isFiltered={isFiltered}
           >
             <Fieldset
@@ -96,21 +97,10 @@ export const Render: React.FC = () => {
             isFiltered={isFiltered2}
             onApply={() => setIsFiltered2(true)}
             onReset={() => setIsFiltered2(false)}
+            onOpen={action('onOpen')}
+            onClose={action('onClose')}
           >
             <p>You can change border color of the trigger button by setting `isFiltered`.</p>
-          </FilterDropdown>
-        </dd>
-        <dt>Filtered has status text</dt>
-        <dd>
-          <FilterDropdown
-            isFiltered={isFiltered3}
-            onApply={() => setIsFiltered3(true)}
-            onReset={() => setIsFiltered3(false)}
-            hasStatusText
-          >
-            <p>
-              You can change border text and color of the trigger button by setting `isFiltered`.
-            </p>
           </FilterDropdown>
         </dd>
         <dt>disabled</dt>
@@ -122,6 +112,8 @@ export const Render: React.FC = () => {
               setValue('hoge')
               setText('')
             }}
+            onOpen={action('onOpen')}
+            onClose={action('onClose')}
             isFiltered={isFiltered}
             disabled
           >
@@ -134,7 +126,8 @@ export const Render: React.FC = () => {
             isFiltered={isFiltered4}
             onApply={() => setIsFiltered4(true)}
             onReset={() => setIsFiltered4(false)}
-            hasStatusText
+            onOpen={action('onOpen')}
+            onClose={action('onClose')}
             decorators={{
               status: (txt) => <span data-wovn-enable="true">{`filtered.(${txt})`}</span>,
               triggerButton: (txt) => <span data-wovn-enable="true">{`filter.(${txt})`}</span>,
@@ -154,6 +147,8 @@ export const Render: React.FC = () => {
             isFiltered={isFiltered4}
             onApply={() => setIsFiltered4(true)}
             onReset={() => setIsFiltered4(false)}
+            onOpen={action('onOpen')}
+            onClose={action('onClose')}
             responseMessage={responseMessage}
           >
             <Stack gap={1}>
@@ -193,6 +188,8 @@ export const Render: React.FC = () => {
             isFiltered={isFiltered2}
             onApply={() => setIsFiltered2(true)}
             onReset={() => setIsFiltered2(false)}
+            onOpen={action('onOpen')}
+            onClose={action('onClose')}
             triggerSize="s"
           >
             <p>You can change border color of the trigger button by setting `isFiltered`.</p>

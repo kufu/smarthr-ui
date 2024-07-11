@@ -1,4 +1,4 @@
-import React, { ComponentProps, ComponentPropsWithRef } from 'react'
+import React, { ComponentPropsWithRef } from 'react'
 import { type FC, type MouseEventHandler } from 'react'
 
 import { Button } from '../../Button'
@@ -17,15 +17,19 @@ import { useSortDropdown } from './useSortDropdown'
 
 import type { DecoratorsType } from '../../../types'
 
+type SortFieldType = {
+  value: string
+} & Omit<React.OptionHTMLAttributes<HTMLOptionElement>, 'value'>
+
 type ArgsOnApply = {
   field: string
   order: 'asc' | 'desc'
-  newfields: ComponentProps<typeof Select>['options']
+  newfields: SortFieldType[]
 }
 
 type Props = {
   /** 並び替え項目 */
-  sortFields: ComponentProps<typeof Select>['options']
+  sortFields: SortFieldType[]
   /** 並び順の初期値 */
   defaultOrder: 'asc' | 'desc'
   /** 適用時に発火するイベント */

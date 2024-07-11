@@ -13,14 +13,13 @@ import { useId } from '../../hooks/useId'
 import { MultiComboBox, SingleComboBox } from '../ComboBox'
 import { DatePicker } from '../DatePicker'
 import { DropZone } from '../DropZone'
-import { HeadingTypes } from '../Heading'
 import { FaCircleExclamationIcon } from '../Icon'
 import { CurrencyInput, Input } from '../Input'
 import { InputFile } from '../InputFile'
 import { Cluster, Stack } from '../Layout'
 import { Select } from '../Select'
 import { StatusLabel } from '../StatusLabel'
-import { Text } from '../Text'
+import { Text, TextProps } from '../Text'
 import { Textarea } from '../Textarea'
 import { visuallyHiddenText } from '../VisuallyHiddenText/VisuallyHiddenText'
 
@@ -31,7 +30,7 @@ type Props = PropsWithChildren<{
   /** グループのタイトル名 */
   title: ReactNode
   /** タイトルの見出しのタイプ */
-  titleType?: HeadingTypes
+  titleType?: TextProps['styleType']
   /** タイトルの見出しを視覚的に隠すかどうか */
   dangerouslyTitleHidden?: boolean
   /** label 要素に適用する `htmlFor` 値 */
@@ -48,6 +47,8 @@ type Props = PropsWithChildren<{
   exampleMessage?: ReactNode
   /** タイトルの下に表示するエラーメッセージ */
   errorMessages?: ReactNode | ReactNode[]
+  /** エラーがある場合に自動的に入力要素を error にするかどうか */
+  autoBindErrorInput?: boolean
   /** フォームコントロールの下に表示する補足メッセージ */
   supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
@@ -134,6 +135,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   helpMessage,
   exampleMessage,
   errorMessages,
+  autoBindErrorInput = true,
   supplementaryMessage,
   as = 'div',
   className,
@@ -234,7 +236,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         {decorateFirstInputElement(children, {
           managedHtmlFor,
           describedbyIds,
-          error: actualErrorMessages.length > 0,
+          error: autoBindErrorInput && actualErrorMessages.length > 0,
         })}
       </div>
 

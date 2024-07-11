@@ -40,7 +40,7 @@ export default {
 }
 export const VRTOpenDialogNarrow: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       画面幅が狭く、ダイアログを開いた状態で表示されます
     </VRTInformationPanel>
     <Default />
@@ -49,7 +49,7 @@ export const VRTOpenDialogNarrow: StoryFn = () => (
 
 export const VRTDialogForcedColors: StoryFn = () => (
   <Wrapper>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <Default />

@@ -7,7 +7,7 @@ import React, {
   ReactNode,
   useMemo,
 } from 'react'
-import { tv } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { UnstyledButton } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
@@ -15,19 +15,22 @@ import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { reelShadowStyle } from './useReelShadow'
 
+import type { CellContentWidth } from './type'
+
 type sortTypes = keyof typeof SORT_DIRECTION_LABEL
-export type Props = PropsWithChildren<{
-  /** 並び替え状態 */
-  sort?: sortTypes
-  /** 並び替えをクリックした時に発火するコールバック関数 */
-  onSort?: () => void
-  /** 文言を変更するための関数 */
-  decorators?: {
-    sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
-  }
-  /** `true` のとき、TableReel内で固定表示になる */
-  fixed?: boolean
-}>
+export type Props = PropsWithChildren<
+  {
+    /** 並び替え状態 */
+    sort?: sortTypes
+    /** 並び替えをクリックした時に発火するコールバック関数 */
+    onSort?: () => void
+    /** 文言を変更するための関数 */
+    decorators?: {
+      sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
+    }
+    contentWidth?: CellContentWidth
+  } & VariantProps<typeof thWrapper>
+>
 type ElementProps = Omit<ComponentPropsWithoutRef<'th'>, keyof Props | 'onClick'>
 
 const SORT_DIRECTION_LABEL = {
@@ -48,6 +51,10 @@ const thWrapper = tv({
     '[&[aria-sort=descending]_.smarthr-ui-Icon:first-of-type]:forced-colors:shr-fill-[GrayText] [&[aria-sort=descending]_.smarthr-ui-Icon:last-of-type]:forced-colors:shr-fill-[CanvasText]',
   ],
   variants: {
+    align: {
+      left: '',
+      right: 'shr-text-right',
+    },
     fixed: {
       true: [
         /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
@@ -58,20 +65,38 @@ const thWrapper = tv({
   },
 })
 
+const convertContentWidth = (contentWidth?: CellContentWidth) => {
+  if (typeof contentWidth === 'number') {
+    // Th は fontSize.S のため、rem で指定する
+    return `${contentWidth}rem`
+  }
+
+  return contentWidth
+}
+
 export const Th: FC<Props & ElementProps> = ({
   children,
   sort,
   onSort,
   decorators,
+  align = 'left',
   fixed = false,
+  contentWidth,
   className,
+  style,
   ...props
 }) => {
-  const styles = useMemo(() => {
-    const thWrapperStyle = thWrapper({ className, fixed })
+  const styleProps = useMemo(() => {
+    const thWrapperStyle = thWrapper({ className, align, fixed })
     const reelShadowStyles = fixed ? reelShadowStyle({ showShadow: false, direction: 'right' }) : ''
-    return `${thWrapperStyle} ${reelShadowStyles}`.trim()
-  }, [className, fixed])
+    return {
+      className: `${thWrapperStyle} ${reelShadowStyles}`.trim(),
+      style: {
+        ...style,
+        width: convertContentWidth(contentWidth),
+      },
+    }
+  }, [align, className, contentWidth, fixed, style])
 
   const sortLabel = useMemo(
     () =>
@@ -94,9 +119,9 @@ export const Th: FC<Props & ElementProps> = ({
   )
 
   return (
-    <th {...ariaSortProps} {...props} className={styles}>
+    <th {...ariaSortProps} {...props} {...styleProps}>
       {sort ? (
-        <SortButton onClick={onSort}>
+        <SortButton align={align} onClick={onSort}>
           {children}
           <SortIcon sort={sort} />
           <VisuallyHiddenText>{sortLabel}</VisuallyHiddenText>
@@ -110,14 +135,24 @@ export const Th: FC<Props & ElementProps> = ({
 
 const sortButton = tv({
   base: [
-    '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-justify-between shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold',
+    '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold',
     // UnstyledButton に stretch がなぜか指定されてて負けてしまうため（UnstyledButton を見直した方がよさそう）
     '[&]:shr-items-center',
   ],
+  variants: {
+    align: {
+      left: 'shr-justify-between',
+      right: 'shr-justify-end',
+    },
+  },
 })
 
-const SortButton: FC<ComponentProps<typeof UnstyledButton>> = ({ className, ...props }) => {
-  const sortButtonStyle = useMemo(() => sortButton({ className }), [className])
+const SortButton: FC<ComponentProps<typeof UnstyledButton> & Pick<Props, 'align'>> = ({
+  align,
+  className,
+  ...props
+}) => {
+  const sortButtonStyle = useMemo(() => sortButton({ align, className }), [align, className])
   return <UnstyledButton {...props} className={sortButtonStyle} />
 }
 

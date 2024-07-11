@@ -46,7 +46,7 @@ export const InformationPanel: FC<Props & Omit<BaseElementProps, keyof Props>> =
   title,
   titleTag,
   type = 'info',
-  togglable = true,
+  togglable = false,
   active: activeProps = true,
   className,
   children,

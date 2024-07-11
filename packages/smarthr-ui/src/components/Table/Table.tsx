@@ -1,5 +1,5 @@
 import React, { ComponentProps, FC, PropsWithChildren, createContext, useMemo } from 'react'
-import { tv } from 'tailwind-variants'
+import { VariantProps, tv } from 'tailwind-variants'
 
 export const TableGroupContext = createContext<{
   group: 'head' | 'body'
@@ -7,10 +7,7 @@ export const TableGroupContext = createContext<{
   group: 'body',
 })
 
-type Props = PropsWithChildren<{
-  /** `true` のとき、スクロール時にヘッダーを固定表示する */
-  fixedHead?: boolean
-}>
+type Props = PropsWithChildren<VariantProps<typeof table>>
 type ElementProps = Omit<ComponentProps<'table'>, keyof Props>
 
 const table = tv({
@@ -27,11 +24,13 @@ const table = tv({
     'contrast-more:shr-border-shorthand contrast-more:shr-border-high-contrast',
   ],
   variants: {
+    layout: {
+      auto: '',
+      fixed: 'shr-table-fixed',
+    },
     fixedHead: {
       true: [
-        '[&_thead]:shr-sticky',
-        '[&_thead]:shr-start-0',
-        '[&_thead]:shr-top-0',
+        '[&_thead]:shr-sticky [&_thead]:shr-start-0 [&_thead]:shr-top-0',
         /* zIndexの値はセマンティックトークンとして管理しているため、明示的に値を指定しないと重なり順が崩れるため設定しています */
         '[&_thead]:shr-z-fixed-menu',
       ],
@@ -39,7 +38,15 @@ const table = tv({
   },
 })
 
-export const Table: FC<Props & ElementProps> = ({ fixedHead = false, className, ...props }) => {
-  const styles = useMemo(() => table({ fixedHead, className }), [className, fixedHead])
+export const Table: FC<Props & ElementProps> = ({
+  fixedHead = false,
+  layout = 'auto',
+  className,
+  ...props
+}) => {
+  const styles = useMemo(
+    () => table({ fixedHead, layout, className }),
+    [className, fixedHead, layout],
+  )
   return <table {...props} className={styles} />
 }

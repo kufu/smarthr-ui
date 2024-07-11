@@ -28,7 +28,7 @@ export const VRTState: StoryFn = () => {
 
   return (
     <Wrapper>
-      <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      <VRTInformationPanel title="VRT 用の Story です">
         hover, activeなどの状態で表示されます
       </VRTInformationPanel>
       <List>
@@ -90,7 +90,7 @@ export const VRTState: StoryFn = () => {
 
 export const VRTForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <All />

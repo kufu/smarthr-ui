@@ -19,7 +19,7 @@ export default {
 
 export const VRTState: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       hover, activeなどの状態で表示されます
     </VRTInformationPanel>
     <List>
@@ -54,7 +54,7 @@ VRTState.parameters = {
 
 export const VRTScroll: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       画面幅が狭い状態でスクロールされるか確認します
     </VRTInformationPanel>
     <Pagination current={7} total={13} onClick={action('click!!')} />
@@ -79,7 +79,7 @@ VRTScroll.play = async ({ canvasElement }) => {
 
 export const VRTForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <All />

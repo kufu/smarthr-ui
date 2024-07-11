@@ -90,7 +90,7 @@ export const VRTHover: StoryFn = () => {
 
   return (
     <Wrapper>
-      <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      <VRTInformationPanel title="VRT 用の Story です">
         hoverした状態で表示されます
       </VRTInformationPanel>
       <InnerWrapper>
@@ -126,7 +126,7 @@ export const VRTFocusButton: StoryFn = () => {
 
   return (
     <Wrapper>
-      <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      <VRTInformationPanel title="VRT 用の Story です">
         ボタンをフォーカスした状態で表示されます
       </VRTInformationPanel>
       <InnerWrapper>
@@ -156,7 +156,7 @@ export const VRTFocusAnchor: StoryFn = () => {
 
   return (
     <Wrapper>
-      <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      <VRTInformationPanel title="VRT 用の Story です">
         アンカーをフォーカスした状態で表示されます
       </VRTInformationPanel>
       <InnerWrapper>
@@ -186,7 +186,7 @@ export const VRTDropDown: StoryFn = () => {
 
   return (
     <Wrapper>
-      <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+      <VRTInformationPanel title="VRT 用の Story です">
         ドロップダウンを表示した状態で表示されます
       </VRTInformationPanel>
       <InnerWrapperDropdown>
@@ -207,7 +207,7 @@ VRTDropDown.play = async ({ canvasElement }) => {
 
 export const VRTForcedColors: StoryFn = () => (
   <>
-    <VRTInformationPanel title="VRT 用の Story です" togglable={false}>
+    <VRTInformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます
     </VRTInformationPanel>
     <Wrapper>

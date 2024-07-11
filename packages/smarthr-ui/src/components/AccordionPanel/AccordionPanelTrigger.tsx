@@ -9,9 +9,10 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { getIsInclude, mapToKeyArray } from '../../libs/map'
-import { Heading, HeadingTagTypes, HeadingTypes } from '../Heading'
+import { Heading, HeadingTagTypes } from '../Heading'
 import { FaCaretDownIcon, FaCaretRightIcon } from '../Icon'
 import { Cluster } from '../Layout'
+import { TextProps } from '../Text'
 
 import { AccordionPanelContext } from './AccordionPanel'
 import { AccordionPanelItemContext } from './AccordionPanelItem'
@@ -19,7 +20,7 @@ import { getNewExpandedItems } from './accordionPanelHelper'
 
 type Props = PropsWithChildren<{
   /** ヘッダ部分のテキストのスタイル */
-  headingType?: HeadingTypes
+  headingType?: TextProps['styleType']
   /**
    * @deprecated headingTag属性は非推奨です
    */
@@ -32,19 +33,11 @@ const accordionPanelTrigger = tv({
     title: 'shr-grow',
     button: [
       'smarthr-ui-AccordionPanel-trigger',
-      'shr-group',
-      'shr-bg-transparent',
-      'shr-border-none',
-      'shr-appearance-none',
-      'shr-w-full',
-      'shr-px-1',
-      'shr-py-0.75',
-      'shr-cursor-pointer',
-      'shr-text-inherit',
-      'shr-text-left',
+      'shr-group shr-bg-transparent shr-border-none shr-appearance-none shr-w-full shr-px-1 shr-py-0.75 shr-cursor-pointer shr-text-inherit shr-text-left',
       'hover:shr-bg-white-darken',
-      'hover:shr-shadow-none',
       'focus-visible:shr-focus-indicator',
+      // Base 直下に AccordionPanel がある場合、背景が付き抜けないように角丸を指定（Base に overflw: hidden を与えるとフォーカスリングが表示されなくなる）
+      '[.smarthr-ui-Base_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:first-child_&]:shr-rounded-t-l [.smarthr-ui-Base_>_.smarthr-ui-AccordionPanel_.smarthr-ui-AccordionPanel-item:last-child_&]:shr-rounded-b-l',
     ],
     leftIcon: 'shr-transition-transform shr-duration-100 group-aria-expanded:shr-rotate-90',
     rightIcon: 'group-aria-expanded:-shr-rotate-180',

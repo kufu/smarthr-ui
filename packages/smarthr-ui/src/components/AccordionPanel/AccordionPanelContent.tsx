@@ -20,15 +20,8 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 const accordionPanelContent = tv({
   base: [
     'smarthr-ui-AccordionPanel-content',
-    'shr-max-h-0',
-    'shr-transition-[max-height,_visible,_opacity]',
-    'shr-duration-150',
-    'shr-ease-in-out',
-    'shr-invisible',
-    'shr-opacity-0',
-    '[&.entered]:shr-max-h-[revert]',
-    '[&.entered]:shr-visible',
-    '[&.entered]:shr-opacity-100',
+    'shr-max-h-0 shr-transition-[max-height,_visible,_opacity] shr-duration-150 shr-ease-in-out shr-invisible shr-opacity-0',
+    '[&.entered]:shr-max-h-[revert] [&.entered]:shr-visible [&.entered]:shr-opacity-100',
   ],
 })
 

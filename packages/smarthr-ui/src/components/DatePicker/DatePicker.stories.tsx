@@ -27,6 +27,7 @@ export const All: StoryFn = () => {
           from={new Date(1901, 0, 1)}
           to={new Date(2100, 11, 30)}
           onChangeDate={action('change')}
+          onBlur={action('blur')}
         />
       </FormControl>
       <FormControl title="Custom format (ex. Date.toDateString)">

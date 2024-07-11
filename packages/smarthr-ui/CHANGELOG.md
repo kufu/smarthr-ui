@@ -2,6 +2,72 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [53.0.0](https://github.com/kufu/smarthr-ui/compare/v52.2.0...v53.0.0) (2024-07-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* FilterDropdownのhasStatusText propsをOmitする (#4747)
+
+### Features
+
+* FilterDropdownのhasStatusText propsをOmitする ([#4747](https://github.com/kufu/smarthr-ui/issues/4747)) ([cb11898](https://github.com/kufu/smarthr-ui/commit/cb11898642acefd82e7e018583f3569425a2afb1))
+* Table に table-layout 相当の props を追加 ほか ([#4757](https://github.com/kufu/smarthr-ui/issues/4757)) ([35db275](https://github.com/kufu/smarthr-ui/commit/35db2757fb6c77b3a9113f6f237711ab5f1fba49))
+
+
+### Bug Fixes
+
+* Base 上に置いた AccordionPanel のフォーカスリングが出ない不具合を修正 ほか ([#4758](https://github.com/kufu/smarthr-ui/issues/4758)) ([e60cb7d](https://github.com/kufu/smarthr-ui/commit/e60cb7de5be4347d5590cd5ee087adcbf1fe917d))
+
+## [52.2.0](https://github.com/kufu/smarthr-ui/compare/v52.1.0...v52.2.0) (2024-07-02)
+
+
+### Features
+
+* FormControl / Fieldset 内における入力要素の error 状態紐づけ制御用 props を足す ([#4748](https://github.com/kufu/smarthr-ui/issues/4748)) ([8737a75](https://github.com/kufu/smarthr-ui/commit/8737a757eb2b8223aa35adda4fed9a3349cdce51))
+
+
+### Bug Fixes
+
+* AccordionPanel がデフォルトで複数パネル開く設定に変更 ([#4745](https://github.com/kufu/smarthr-ui/issues/4745)) ([9beb511](https://github.com/kufu/smarthr-ui/commit/9beb511b2e307eb372a77e39670b4dece6ed20bc))
+* Button を loading 状態に切り替えるとフォーカスが外れてしまう問題の修正 ([#4684](https://github.com/kufu/smarthr-ui/issues/4684)) ([945ca95](https://github.com/kufu/smarthr-ui/commit/945ca957fe3f0ab6f8f83f378b8627b4035b66e3)), closes [#4744](https://github.com/kufu/smarthr-ui/issues/4744)
+* InformationPanel の開閉ボタンはデフォルトなしにする ([#4746](https://github.com/kufu/smarthr-ui/issues/4746)) ([0cca297](https://github.com/kufu/smarthr-ui/commit/0cca297133d2d429620d46e12992e9fab052f667))
+* TextLink に color を指定できないように閉じる ([#4752](https://github.com/kufu/smarthr-ui/issues/4752)) ([4363383](https://github.com/kufu/smarthr-ui/commit/43633830d06dc0e9162ecdc7769119afa7d6bea7))
+
+## [52.1.0](https://github.com/kufu/smarthr-ui/compare/v52.0.1...v52.1.0) (2024-06-25)
+
+
+### Features
+
+* Dropdown 及び FilterDropdown に onOpen/onClose オプションを追加する ([#4722](https://github.com/kufu/smarthr-ui/issues/4722)) ([acf3642](https://github.com/kufu/smarthr-ui/commit/acf364259b1bbb34bef7275b8377c310d49c2e95))
+* Thumbtack アイコンを追加 ([#4737](https://github.com/kufu/smarthr-ui/issues/4737)) ([5d8b9cc](https://github.com/kufu/smarthr-ui/commit/5d8b9cc09981dce992a93ab37a096dc08a836e40))
+
+
+### Bug Fixes
+
+* Heading と Text の相互参照をなくして Text が Heading に依存しないようにする ([#4732](https://github.com/kufu/smarthr-ui/issues/4732)) ([d21c888](https://github.com/kufu/smarthr-ui/commit/d21c8881b933cd3674fc931af36bfafbb8498a6b))
+
+### [52.0.1](https://github.com/kufu/smarthr-ui/compare/v52.0.0...v52.0.1) (2024-06-21)
+
+## [52.0.0](https://github.com/kufu/smarthr-ui/compare/v51.2.0...v52.0.0) (2024-06-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* ErrorScreen の `footer` props を omit する (#4714)
+
+### Features
+
+* anchor系コンポーネントがtarget属性を持つ場合、rel属性を自動設定する ([#4720](https://github.com/kufu/smarthr-ui/issues/4720)) ([46e4200](https://github.com/kufu/smarthr-ui/commit/46e42002d13a90888994dbee2413ade8ce133498))
+* ErrorScreen の `footer` props を omit する ([#4714](https://github.com/kufu/smarthr-ui/issues/4714)) ([953d689](https://github.com/kufu/smarthr-ui/commit/953d689cf5115523e41812139ae9df0d1eb54b70))
+
+
+### Bug Fixes
+
+* PageCounter コンポーネントの decorators の型を修正 ([#4717](https://github.com/kufu/smarthr-ui/issues/4717)) ([4fce9f4](https://github.com/kufu/smarthr-ui/commit/4fce9f4c847df521dcf147d0dcbdb5f82c1af3eb))
+* Storybook 上で props のドキュメントが表示されない問題を修正 ([#4719](https://github.com/kufu/smarthr-ui/issues/4719)) ([7a634ae](https://github.com/kufu/smarthr-ui/commit/7a634ae9ed2ae6aa3c559f1bc2cc6a14902bda78))
+* Tooltip に入れ子にした要素のフォーカスリングが隠れてしまう問題を解消する ([#4694](https://github.com/kufu/smarthr-ui/issues/4694)) ([428cab6](https://github.com/kufu/smarthr-ui/commit/428cab6420397063ae5d074b804a61beaab58615))
+
 ## [51.2.0](https://github.com/kufu/smarthr-ui/compare/v51.1.1...v51.2.0) (2024-06-11)
 
 

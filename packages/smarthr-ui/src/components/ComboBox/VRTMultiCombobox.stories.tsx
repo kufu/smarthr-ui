@@ -20,7 +20,7 @@ export default {
 
 export const VRTMultiCombobox: StoryFn = () => (
   <Stack>
-    <InformationPanel title="VRT 用の Story です" togglable={false}>
+    <InformationPanel title="VRT 用の Story です">
       Multiコンボボックスのリストを展開して1つ目と2つ目の項目を選択した状態で表示されます
     </InformationPanel>
     <Multi />
@@ -44,12 +44,14 @@ const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   const option2 = await within(body).findByText('option 2')
   await userEvent.click(option2)
   await waitForRAF()
+  const helpMessage = await within(body).findAllByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage[0]) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
 }
 VRTMultiCombobox.play = playMulti
 
 export const VRTMultiComboboxForcedColors: StoryFn = () => (
   <Stack>
-    <InformationPanel title="VRT 用の Story です" togglable={false}>
+    <InformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます{' '}
     </InformationPanel>
     <Multi />
