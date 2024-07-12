@@ -31,9 +31,10 @@ export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...
   const isInclude = getIsInclude(expandedItems, name)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const styles = useMemo(() => accordionPanelContent({ className }), [className])
+  const nodeRef = useRef<HTMLDivElement>(null)
 
   return (
-    <Transition in={isInclude} timeout={150}>
+    <Transition in={isInclude} timeout={150} nodeRef={nodeRef}>
       {(status) => (
         <div
           {...props}
