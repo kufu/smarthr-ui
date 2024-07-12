@@ -52,7 +52,9 @@ export const DialogOverlap: FC<Props> = ({ isOpen, children }) => {
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <div className={styles}>{isOpen ? children : childrenBuffer}</div>
+      <div ref={nodeRef} className={styles}>
+        {isOpen ? children : childrenBuffer}
+      </div>
     </CSSTransition>
   )
 }
