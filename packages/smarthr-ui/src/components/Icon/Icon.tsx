@@ -157,6 +157,7 @@ import {
   FaStar,
   FaSuitcaseMedical,
   FaTable,
+  FaTableColumns,
   FaTableList,
   FaTag,
   FaTags,
@@ -347,6 +348,7 @@ export const FaStarIcon = /*#__PURE__*/ createIcon(FaStar)
 export const FaSuitcaseMedicalIcon = /*#__PURE__*/ createIcon(FaSuitcaseMedical)
 export const FaTableIcon = /*#__PURE__*/ createIcon(FaTable)
 export const FaTableListIcon = /*#__PURE__*/ createIcon(FaTableList)
+export const FaTableColumnsIcon = /*#__PURE__*/ createIcon(FaTableColumns)
 export const FaTagIcon = /*#__PURE__*/ createIcon(FaTag)
 export const FaTagsIcon = /*#__PURE__*/ createIcon(FaTags)
 export const FaThumbtackIcon = /*#__PURE__*/ createIcon(FaThumbtack)
