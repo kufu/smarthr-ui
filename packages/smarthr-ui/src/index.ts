@@ -114,6 +114,7 @@ export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'
 // hooks
 export { useTheme } from './hooks/useTheme'
 export { useTheme as useTailwindTheme } from './hooks/useTailwindTheme'
+export { useDevice } from './hooks/useDevice'
 
 // themes
 export * from './themes'
