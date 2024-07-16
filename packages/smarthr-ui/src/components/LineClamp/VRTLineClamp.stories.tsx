@@ -3,6 +3,7 @@ import { userEvent, within } from '@storybook/test'
 import React from 'react'
 import styled from 'styled-components'
 
+import { Button } from '../Button'
 import { InformationPanel } from '../InformationPanel'
 
 import { LineClamp } from './LineClamp'
@@ -104,6 +105,32 @@ VRTForcedColors.play = async ({ canvasElement }) => {
 }
 VRTForcedColors.parameters = {
   chromatic: { forcedColors: 'active' },
+}
+
+export const VRTLineClampInButton: StoryFn = () => (
+  <>
+    <VRTInformationPanel title="VRT 用の Story です">
+      タイプサイズがline-heightより大きいフォントを設定した時にツールチップが表示されないことを確認します
+    </VRTInformationPanel>
+    <Wrapper>
+      <List>
+        <dt>focus</dt>
+        <dd style={{ fontFamily: 'Zapfino' }}>
+          <Button>
+            <LineClamp data-testid="user-focus" maxLines={1}>
+              LineClampされないボタン
+            </LineClamp>
+          </Button>
+        </dd>
+      </List>
+    </Wrapper>
+  </>
+)
+VRTLineClampInButton.play = async ({ canvasElement }) => {
+  await new Promise((resolve) => setTimeout(resolve, 500)) // スナップショット時にツールチップを確実に表示させるため
+  const canvas = await within(canvasElement)
+  const target = await canvas.getByTestId('user-focus1').parentElement! // tabIndexがあるのは親要素
+  await target.focus()
 }
 
 const VRTInformationPanel = styled(InformationPanel)`
