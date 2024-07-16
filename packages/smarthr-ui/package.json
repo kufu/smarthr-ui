@@ -40,7 +40,7 @@
     "@storybook/react-webpack5": "^8.2.2",
     "@storybook/source-loader": "^8.2.2",
     "@storybook/test": "^8.2.2",
-    "@storybook/test-runner": "^0.19.0",
+    "@storybook/test-runner": "^0.19.1",
     "@storybook/theming": "^8.2.2",
     "@swc/core": "^1.6.13",
     "@swc/jest": "^0.2.36",
