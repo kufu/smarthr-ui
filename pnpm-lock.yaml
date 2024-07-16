@@ -173,8 +173,8 @@ importers:
         specifier: ^8.2.2
         version: 8.2.2(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.5))(@types/node@20.14.10)(typescript@5.5.3)))(storybook@8.2.2(@babel/preset-env@7.24.8(@babel/core@7.24.8)))
       '@storybook/test-runner':
-        specifier: ^0.19.0
-        version: 0.19.0(@swc/helpers@0.5.5)(@types/node@20.14.10)(prettier@3.3.3)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.5))(@types/node@20.14.10)(typescript@5.5.3))
+        specifier: ^0.19.1
+        version: 0.19.1(@swc/helpers@0.5.5)(@types/node@20.14.10)(prettier@3.3.3)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.5))(@types/node@20.14.10)(typescript@5.5.3))
       '@storybook/theming':
         specifier: ^8.2.2
         version: 8.2.2(storybook@8.2.2(@babel/preset-env@7.24.8(@babel/core@7.24.8)))
@@ -2370,8 +2370,8 @@ packages:
     peerDependencies:
       storybook: ^8.2.2
 
-  '@storybook/test-runner@0.19.0':
-    resolution: {integrity: sha512-7bA+hUcIYM1j8IcWE43FaUoTRXeYsISQycQFSztZwbcx9mSAEWDbiVfuwl6G7R71nK2hfNgKO5VjEBeVDsnWcw==}
+  '@storybook/test-runner@0.19.1':
+    resolution: {integrity: sha512-Nc4djXw3Lv3AAXg6TJ7yVTeuMryjMsTDd8GCbE/PStU602rpe8syEqElz78GPoJqB1VYWQ3T9pcu93MKyHT+xQ==}
     engines: {node: ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
 
@@ -11159,7 +11159,7 @@ snapshots:
       prettier: 3.3.3
       storybook: 8.2.2(@babel/preset-env@7.24.8(@babel/core@7.24.8))
 
-  '@storybook/test-runner@0.19.0(@swc/helpers@0.5.5)(@types/node@20.14.10)(prettier@3.3.3)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.5))(@types/node@20.14.10)(typescript@5.5.3))':
+  '@storybook/test-runner@0.19.1(@swc/helpers@0.5.5)(@types/node@20.14.10)(prettier@3.3.3)(ts-node@10.9.2(@swc/core@1.6.13(@swc/helpers@0.5.5))(@types/node@20.14.10)(typescript@5.5.3))':
     dependencies:
       '@babel/core': 7.24.8
       '@babel/generator': 7.24.8
