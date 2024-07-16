@@ -1,4 +1,12 @@
-import React, { FC, PropsWithChildren, ReactNode, useEffect, useMemo, useState } from 'react'
+import React, {
+  FC,
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
@@ -28,6 +36,7 @@ const dialogOverlap = tv({
 export const DialogOverlap: FC<Props> = ({ isOpen, children }) => {
   const styles = useMemo(() => dialogOverlap(), [])
   const [childrenBuffer, setChildrenBuffer] = useState<ReactNode>(null)
+  const nodeRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (isOpen) {
@@ -36,8 +45,16 @@ export const DialogOverlap: FC<Props> = ({ isOpen, children }) => {
   }, [isOpen, children])
 
   return (
-    <CSSTransition classNames="shr-dialog-transition" in={isOpen} timeout={300} unmountOnExit>
-      <div className={styles}>{isOpen ? children : childrenBuffer}</div>
+    <CSSTransition
+      classNames="shr-dialog-transition"
+      in={isOpen}
+      timeout={300}
+      unmountOnExit
+      nodeRef={nodeRef}
+    >
+      <div ref={nodeRef} className={styles}>
+        {isOpen ? children : childrenBuffer}
+      </div>
     </CSSTransition>
   )
 }
