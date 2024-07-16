@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { defaultBreakpoint } from '../../themes/createBreakpoint'
 
 const mediaQuery = {
-  narrow: `(max-width: ${defaultBreakpoint.NARROW})`,
+  narrow: `(max-width: ${defaultBreakpoint.SP}px)`,
 }
 
 export const useDevice = () => {

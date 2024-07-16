@@ -13,3 +13,9 @@ export const Default: StoryFn = () => {
 
   return <p>isNarrowView: {isNarrowView.toString()}</p>
 }
+
+Default.parameters = {
+  chromatic: {
+    viewports: [599, 600],
+  },
+}
