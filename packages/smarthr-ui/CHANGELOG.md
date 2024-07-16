@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [53.1.0](https://github.com/kufu/smarthr-ui/compare/v53.0.0...v53.1.0) (2024-07-16)
+
+
+### Features
+
+* DatePicker に onBlur を渡せるように修正 ([#4770](https://github.com/kufu/smarthr-ui/issues/4770)) ([0422440](https://github.com/kufu/smarthr-ui/commit/04224408824ee6afd8459a17b086be2bf01ee398))
+* Icon に FaTableColumns を 追加 ([#4776](https://github.com/kufu/smarthr-ui/issues/4776)) ([a9d43c8](https://github.com/kufu/smarthr-ui/commit/a9d43c8ddc55d0bb3fd339e605bf549c3bc64441))
+
+
+### Bug Fixes
+
+* AccordionPanel 開閉時にコンソールエラーが発生する問題を修正 ([#4777](https://github.com/kufu/smarthr-ui/issues/4777)) ([25f8f83](https://github.com/kufu/smarthr-ui/commit/25f8f83686768f63aba6d4a63ed346827a5bf8af))
+* Dialog 開閉時にコンソールエラーが発生する問題を修正 ([#4778](https://github.com/kufu/smarthr-ui/issues/4778)) ([8b5f3ae](https://github.com/kufu/smarthr-ui/commit/8b5f3ae5153a967c05ef9bdcd3e8d7402d91f232))
+* titleCheck action の script injection 対策 ([#4771](https://github.com/kufu/smarthr-ui/issues/4771)) ([51bdca1](https://github.com/kufu/smarthr-ui/commit/51bdca1610e12466b28b345ce6d3e6f725d0b92c))
+
 ## [53.0.0](https://github.com/kufu/smarthr-ui/compare/v52.2.0...v53.0.0) (2024-07-09)
 
 
