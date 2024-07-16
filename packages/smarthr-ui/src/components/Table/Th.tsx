@@ -151,10 +151,7 @@ const SortButton: FC<ComponentProps<typeof UnstyledButton> & Pick<Props, 'align'
   align,
   ...props
 }) => {
-  const sortButtonStyle = useMemo(
-    () => sortButton({ align, className: 'shr-cursor-pointer' }),
-    [align],
-  )
+  const sortButtonStyle = useMemo(() => sortButton({ align }), [align])
   return <UnstyledButton {...props} className={sortButtonStyle} />
 }
 
