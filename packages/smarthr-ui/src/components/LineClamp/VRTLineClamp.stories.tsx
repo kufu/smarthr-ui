@@ -114,10 +114,34 @@ export const VRTLineClampInButton: StoryFn = () => (
     </VRTInformationPanel>
     <Wrapper>
       <List>
-        <dt>focus</dt>
+        <dt>LineClampされるボタン</dt>
+        <dd style={{ fontFamily: 'Zapfino' }}>
+          <Button style={{ width: 100 }}>
+            <LineClamp data-testid="user-focus" maxLines={1}>
+              LineClampされないボタン
+            </LineClamp>
+          </Button>
+        </dd>
+        <dt>LineClampされないボタン</dt>
         <dd style={{ fontFamily: 'Zapfino' }}>
           <Button>
             <LineClamp data-testid="user-focus" maxLines={1}>
+              LineClampされないボタン
+            </LineClamp>
+          </Button>
+        </dd>
+        <dt>LineClampされるボタン</dt>
+        <dd style={{ fontFamily: 'Zapfino' }}>
+          <Button style={{ width: 100 }}>
+            <LineClamp data-testid="user-focus" maxLines={2}>
+              LineClampされないボタン
+            </LineClamp>
+          </Button>
+        </dd>
+        <dt>LineClampされないボタン</dt>
+        <dd style={{ fontFamily: 'Zapfino' }}>
+          <Button>
+            <LineClamp data-testid="user-focus" maxLines={2}>
               LineClampされないボタン
             </LineClamp>
           </Button>
@@ -128,9 +152,8 @@ export const VRTLineClampInButton: StoryFn = () => (
 )
 VRTLineClampInButton.play = async ({ canvasElement }) => {
   await new Promise((resolve) => setTimeout(resolve, 500)) // スナップショット時にツールチップを確実に表示させるため
-  const canvas = await within(canvasElement)
-  const target = await canvas.getByTestId('user-focus1').parentElement! // tabIndexがあるのは親要素
-  await target.focus()
+  const tooltips = canvasElement.querySelectorAll('.smarthr-ui-Tooltip')
+  tooltips.forEach((tooltip) => userEvent.hover(tooltip))
 }
 
 const VRTInformationPanel = styled(InformationPanel)`
