@@ -10,50 +10,66 @@ export default {
   component: Loader,
 }
 
-// NOTE: 本来はアニメーションの表示を遅延させているが、Chromaticでのスナップショットテストが失敗するため、その影響を受けないように設定。
-const CustomLoader = (props: ComponentProps<typeof Loader>) => (
-  <Loader {...props} className="shr-opacity-100 shr-animate-none" />
+const DelayControlLoader: React.FC<
+  ComponentProps<typeof Loader> & {
+    animate?: boolean
+  }
+> = ({ animate, ...props }) => (
+  // NOTE: 本来はアニメーションの表示を遅延させているが、Chromaticでのスナップショットテストが失敗するため、その影響を受けないように設定。
+  <Loader {...props} className={animate ? '' : '!shr-animate-none shr-opacity-100'} />
 )
 
-export const All: StoryFn = () => (
-  <>
-    <Wrapper>
-      <Text>Primary</Text>
-      <List>
-        <dt>Default</dt>
-        <dd>
-          <CustomLoader />
-        </dd>
-        <dt>Small</dt>
-        <dd>
-          <CustomLoader size="s" />
-        </dd>
-        <dt>With text</dt>
-        <dd>
-          <CustomLoader text="loading message" />
-        </dd>
-      </List>
-    </Wrapper>
+export const All: StoryFn = () => {
+  const [animate, setAnimate] = React.useState(false)
+  return (
+    <>
+      <label>
+        animate
+        <input
+          type="checkbox"
+          name="animate"
+          checked={animate}
+          onChange={() => setAnimate(!animate)}
+        />
+      </label>
+      <Wrapper>
+        <Text>Primary</Text>
+        <List>
+          <dt>Default</dt>
+          <dd>
+            <DelayControlLoader animate={animate} />
+          </dd>
+          <dt>Small</dt>
+          <dd>
+            <DelayControlLoader animate={animate} size="s" />
+          </dd>
+          <dt>With text</dt>
+          <dd>
+            <DelayControlLoader animate={animate} text="loading message" />
+          </dd>
+        </List>
+      </Wrapper>
 
-    <GrayWrapper>
-      <Text>Light</Text>
-      <List>
-        <dt>Default</dt>
-        <dd>
-          <CustomLoader type="light" />
-        </dd>
-        <dt>Small</dt>
-        <dd>
-          <CustomLoader type="light" size="s" />
-        </dd>
-        <dt>With text</dt>
-        <dd>
-          <CustomLoader type="light" text="loading message" />
-        </dd>
-      </List>
-    </GrayWrapper>
-  </>
-)
+      <GrayWrapper>
+        <Text>Light</Text>
+        <List>
+          <dt>Default</dt>
+          <dd>
+            <DelayControlLoader animate={animate} type="light" />
+          </dd>
+          <dt>Small</dt>
+          <dd>
+            <DelayControlLoader animate={animate} type="light" size="s" />
+          </dd>
+          <dt>With text</dt>
+          <dd>
+            <DelayControlLoader animate={animate} type="light" text="loading message" />
+          </dd>
+        </List>
+      </GrayWrapper>
+    </>
+  )
+}
 All.storyName = 'all'
 All.parameters = { withTheming: true }
 
