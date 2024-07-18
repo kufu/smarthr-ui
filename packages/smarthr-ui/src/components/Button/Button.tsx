@@ -80,7 +80,9 @@ export const Button = forwardRef<HTMLButtonElement, BaseProps & ElementProps & P
     )
     const { createPortal } = usePortal()
 
-    const loader = <Loader size="s" className={loaderStyle} role="presentation" />
+    const loader = (
+      <Loader size="s" deferDisplay={false} className={loaderStyle} role="presentation" />
+    )
     const actualPrefix = !loading && prefix
     const actualSuffix = loading && !square ? loader : suffix
     const disabledOnLoading = loading || disabled
