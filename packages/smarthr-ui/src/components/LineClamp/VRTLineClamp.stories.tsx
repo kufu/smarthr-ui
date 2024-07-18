@@ -118,7 +118,7 @@ export const VRTLineClampInButton: StoryFn = () => (
         <dd style={{ fontFamily: 'Zapfino' }}>
           <Button style={{ width: 100 }}>
             <LineClamp data-testid="user-focus" maxLines={1}>
-              LineClampされないボタン
+              LineClampされるボタン
             </LineClamp>
           </Button>
         </dd>
@@ -130,15 +130,15 @@ export const VRTLineClampInButton: StoryFn = () => (
             </LineClamp>
           </Button>
         </dd>
-        <dt>LineClampされるボタン</dt>
+        <dt>LineClampされる2行まで入るボタン</dt>
         <dd style={{ fontFamily: 'Zapfino' }}>
-          <Button style={{ width: 100 }}>
+          <Button style={{ textWrap: 'wrap', width: 100 }}>
             <LineClamp data-testid="user-focus" maxLines={2}>
-              LineClampされないボタン
+              LineClampされるボタン
             </LineClamp>
           </Button>
         </dd>
-        <dt>LineClampされないボタン</dt>
+        <dt>LineClampされない2行まで入るボタン</dt>
         <dd style={{ fontFamily: 'Zapfino' }}>
           <Button>
             <LineClamp data-testid="user-focus" maxLines={2}>
