@@ -135,7 +135,7 @@ export const Th: FC<Props & ElementProps> = ({
 
 const sortButton = tv({
   base: [
-    '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold',
+    '-shr-mx-1 -shr-my-0.75 shr-inline-flex shr-w-full shr-gap-x-0.5 shr-px-1 shr-py-0.75 shr-font-bold shr-cursor-pointer',
     // UnstyledButton に stretch がなぜか指定されてて負けてしまうため（UnstyledButton を見直した方がよさそう）
     '[&]:shr-items-center',
   ],
@@ -149,10 +149,9 @@ const sortButton = tv({
 
 const SortButton: FC<ComponentProps<typeof UnstyledButton> & Pick<Props, 'align'>> = ({
   align,
-  className,
   ...props
 }) => {
-  const sortButtonStyle = useMemo(() => sortButton({ align, className }), [align, className])
+  const sortButtonStyle = useMemo(() => sortButton({ align }), [align])
   return <UnstyledButton {...props} className={sortButtonStyle} />
 }
 

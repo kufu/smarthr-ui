@@ -33,7 +33,7 @@ export const AccordionPanelContent: FC<Props & ElementProps> = ({ className, ...
   const styles = useMemo(() => accordionPanelContent({ className }), [className])
 
   return (
-    <Transition in={isInclude} timeout={150}>
+    <Transition in={isInclude} timeout={150} nodeRef={wrapperRef}>
       {(status) => (
         <div
           {...props}

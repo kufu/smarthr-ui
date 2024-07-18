@@ -38,6 +38,7 @@ const preview: Preview = {
           'Page Templates（ページテンプレート）',
           'States（状態）',
           'Text（テキスト）',
+          'Hooks',
           'Experimental（実験的）',
         ],
       },
