@@ -29,18 +29,23 @@ const lineClamp = tv({
           'shr-inline-block shr-w-full shr-overflow-hidden shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
       },
       2: {
+        base: '[display:-webkit-box]',
         clampedLine: 'shr-line-clamp-[2]',
       },
       3: {
+        base: '[display:-webkit-box]',
         clampedLine: 'shr-line-clamp-[3]',
       },
       4: {
+        base: '[display:-webkit-box]',
         clampedLine: 'shr-line-clamp-[4]',
       },
       5: {
+        base: '[display:-webkit-box]',
         clampedLine: 'shr-line-clamp-[5]',
       },
       6: {
+        base: '[display:-webkit-box]',
         clampedLine: 'shr-line-clamp-[6]',
       },
     },
