@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, ReactNode, useMemo } from 'react'
+import React, { ComponentProps, FC, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -12,18 +12,15 @@ type Props = {
   text?: ReactNode
   /** コンポーネントの色調 */
   type?: 'primary' | 'light'
+  /** 表示を遅延させるかどうか */
+  deferDisplay?: boolean
   as?: string | React.ComponentType<any>
 }
-type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
+type ElementProps = Omit<ComponentProps<'span'>, keyof Props>
 
 const loaderStyle = tv({
   slots: {
-    wrapper: [
-      'smarthr-ui-Loader',
-      'shr-inline-block shr-overflow-hidden',
-      // NOTE: Loaderの表示時間が短い場合のUIのちらつきを抑えるため、opacityの変化でアニメーションの表示を遅延させる
-      'shr-transition-opacity shr-ease-[unset] shr-opacity-0 shr-animate-[loader-fade-in_auto_ease_200ms_forwards]',
-    ],
+    wrapper: ['smarthr-ui-Loader', 'shr-inline-block shr-overflow-hidden'],
     spinner: [
       'smarthr-ui-Loader-spinner', // Button コンポーネントで使用
       'shr-relative',
@@ -123,6 +120,13 @@ const loaderStyle = tv({
         ],
       },
     },
+    deferDisplay: {
+      true: {
+        // NOTE: Loaderの表示時間が短い場合のUIのちらつきを抑えるため、opacityの変化でアニメーションの表示を遅延させる
+        wrapper: 'shr-opacity-0 shr-animate-[loader-fade-in_0s_ease_200ms_forwards]',
+      },
+      false: {},
+    },
   },
 })
 export const Loader: FC<Props & ElementProps> = ({
@@ -131,12 +135,14 @@ export const Loader: FC<Props & ElementProps> = ({
   text,
   type = 'primary',
   role = 'status',
+  deferDisplay = true,
   className,
   ...props
 }) => {
   const { wrapper, spinner, line, cog, cogInner, textSlot } = loaderStyle({
     type,
     size,
+    deferDisplay,
   })
   const wrapperStyle = useMemo(() => wrapper({ className }), [wrapper, className])
   const spinnerStyle = useMemo(() => spinner(), [spinner])

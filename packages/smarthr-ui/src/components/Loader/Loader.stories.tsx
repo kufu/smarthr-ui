@@ -1,6 +1,5 @@
 import { StoryFn } from '@storybook/react'
-import * as React from 'react'
-import { ComponentProps } from 'react'
+import React from 'react'
 import styled, { css } from 'styled-components'
 
 import { Loader } from './Loader'
@@ -10,50 +9,58 @@ export default {
   component: Loader,
 }
 
-// NOTE: 本来はアニメーションの表示を遅延させているが、Chromaticでのスナップショットテストが失敗するため、その影響を受けないように設定。
-const CustomLoader = (props: ComponentProps<typeof Loader>) => (
-  <Loader {...props} className="shr-opacity-100 shr-animate-none" />
-)
+export const All: StoryFn = () => {
+  // NOTE: 本来は表示を遅延させているが、VRT 向けにデフォルトでは表示を遅延させない。
+  const [deferDisplay, setDeferDisplay] = React.useState(false)
+  return (
+    <>
+      <label>
+        <input
+          type="checkbox"
+          name="defer_display"
+          checked={deferDisplay}
+          onChange={() => setDeferDisplay(!deferDisplay)}
+        />
+        defer display
+      </label>
+      <Wrapper>
+        <Text>Primary</Text>
+        <List>
+          <dt>Default</dt>
+          <dd>
+            <Loader deferDisplay={deferDisplay} />
+          </dd>
+          <dt>Small</dt>
+          <dd>
+            <Loader deferDisplay={deferDisplay} size="s" />
+          </dd>
+          <dt>With text</dt>
+          <dd>
+            <Loader deferDisplay={deferDisplay} text="loading message" />
+          </dd>
+        </List>
+      </Wrapper>
 
-export const All: StoryFn = () => (
-  <>
-    <Wrapper>
-      <Text>Primary</Text>
-      <List>
-        <dt>Default</dt>
-        <dd>
-          <CustomLoader />
-        </dd>
-        <dt>Small</dt>
-        <dd>
-          <CustomLoader size="s" />
-        </dd>
-        <dt>With text</dt>
-        <dd>
-          <CustomLoader text="loading message" />
-        </dd>
-      </List>
-    </Wrapper>
-
-    <GrayWrapper>
-      <Text>Light</Text>
-      <List>
-        <dt>Default</dt>
-        <dd>
-          <CustomLoader type="light" />
-        </dd>
-        <dt>Small</dt>
-        <dd>
-          <CustomLoader type="light" size="s" />
-        </dd>
-        <dt>With text</dt>
-        <dd>
-          <CustomLoader type="light" text="loading message" />
-        </dd>
-      </List>
-    </GrayWrapper>
-  </>
-)
+      <GrayWrapper>
+        <Text>Light</Text>
+        <List>
+          <dt>Default</dt>
+          <dd>
+            <Loader deferDisplay={deferDisplay} type="light" />
+          </dd>
+          <dt>Small</dt>
+          <dd>
+            <Loader deferDisplay={deferDisplay} type="light" size="s" />
+          </dd>
+          <dt>With text</dt>
+          <dd>
+            <Loader deferDisplay={deferDisplay} type="light" text="loading message" />
+          </dd>
+        </List>
+      </GrayWrapper>
+    </>
+  )
+}
 All.storyName = 'all'
 All.parameters = { withTheming: true }
 
