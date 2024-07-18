@@ -1,6 +1,5 @@
 import { StoryFn } from '@storybook/react'
-import * as React from 'react'
-import { ComponentProps } from 'react'
+import React from 'react'
 import styled, { css } from 'styled-components'
 
 import { Loader } from './Loader'
@@ -10,42 +9,34 @@ export default {
   component: Loader,
 }
 
-const DelayControlLoader: React.FC<
-  ComponentProps<typeof Loader> & {
-    animate?: boolean
-  }
-> = ({ animate, ...props }) => (
-  // NOTE: 本来はアニメーションの表示を遅延させているが、Chromaticでのスナップショットテストが失敗するため、その影響を受けないように設定。
-  <Loader {...props} className={animate ? '' : '!shr-animate-none shr-opacity-100'} />
-)
-
 export const All: StoryFn = () => {
-  const [animate, setAnimate] = React.useState(false)
+  // NOTE: 本来は表示を遅延させているが、VRT 向けにデフォルトでは表示を遅延させない。
+  const [deferDisplay, setDeferDisplay] = React.useState(false)
   return (
     <>
       <label>
-        animate
         <input
           type="checkbox"
-          name="animate"
-          checked={animate}
-          onChange={() => setAnimate(!animate)}
+          name="defer_display"
+          checked={deferDisplay}
+          onChange={() => setDeferDisplay(!deferDisplay)}
         />
+        defer display
       </label>
       <Wrapper>
         <Text>Primary</Text>
         <List>
           <dt>Default</dt>
           <dd>
-            <DelayControlLoader animate={animate} />
+            <Loader deferDisplay={deferDisplay} />
           </dd>
           <dt>Small</dt>
           <dd>
-            <DelayControlLoader animate={animate} size="s" />
+            <Loader deferDisplay={deferDisplay} size="s" />
           </dd>
           <dt>With text</dt>
           <dd>
-            <DelayControlLoader animate={animate} text="loading message" />
+            <Loader deferDisplay={deferDisplay} text="loading message" />
           </dd>
         </List>
       </Wrapper>
@@ -55,15 +46,15 @@ export const All: StoryFn = () => {
         <List>
           <dt>Default</dt>
           <dd>
-            <DelayControlLoader animate={animate} type="light" />
+            <Loader deferDisplay={deferDisplay} type="light" />
           </dd>
           <dt>Small</dt>
           <dd>
-            <DelayControlLoader animate={animate} type="light" size="s" />
+            <Loader deferDisplay={deferDisplay} type="light" size="s" />
           </dd>
           <dt>With text</dt>
           <dd>
-            <DelayControlLoader animate={animate} type="light" text="loading message" />
+            <Loader deferDisplay={deferDisplay} type="light" text="loading message" />
           </dd>
         </List>
       </GrayWrapper>
