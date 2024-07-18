@@ -17,7 +17,7 @@ type ElementProps = Omit<ComponentPropsWithRef<'span'>, keyof Props>
 const lineClamp = tv({
   slots: {
     base: 'smarthr-ui-LineClamp shr-relative',
-    clampedLine: '',
+    clampedLine: 'shr-w-full',
     shadowElementWrapper:
       'shr-absolute shr-overflow-hidden shr-w-full shr-h-full shr-opacity-0 shr-invisible shr-left-0 shr-top-0 shr-whitespace-normal',
     shadowElement: 'shr-absolute shr-w-full shr-top-0 shr-left-0',
