@@ -400,6 +400,7 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
         }}
         position={position}
         bounds={draggableBounds}
+        nodeRef={wrapperRef}
       >
         <div
           {...props}
