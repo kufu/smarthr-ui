@@ -3,6 +3,9 @@ import { tv } from 'tailwind-variants'
 
 import { isTouchDevice } from '../../libs/ua'
 import { UnstyledButton } from '../Button'
+import { FaCircleInfoIcon } from '../Icon'
+import { Cluster } from '../Layout'
+import { Tooltip } from '../Tooltip'
 
 const tabItem = tv({
   base: [
@@ -19,6 +22,9 @@ const tabItem = tv({
     },
   },
 })
+const disabledTooltip = tv({
+  base: ['[&_.smarthr-ui-Icon]:shr-text-grey'],
+})
 
 type Props = PropsWithChildren<{
   /** タブの ID */
@@ -27,6 +33,11 @@ type Props = PropsWithChildren<{
   selected?: boolean
   /** `true` のとき、タブを無効状態にしてクリック不能にする */
   disabled?: boolean
+  /** disabledが `true` のときにTooltipに表示する無効な理由 **/
+  disabledDetail?: {
+    icon?: React.FunctionComponent
+    message: React.ReactNode
+  }
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (tabId: string) => void
 }>
@@ -41,9 +52,40 @@ export const TabItem: FC<Props & ElementProps> = ({
   selected = false,
   className,
   disabled = false,
+  disabledDetail,
   ...props
 }) => {
   const tabItemStyle = useMemo(() => tabItem({ className, isTouchDevice }), [className])
+
+  if (disabled && disabledDetail) {
+    const DisabledDetailIcon = disabledDetail.icon || FaCircleInfoIcon
+
+    return (
+      <UnstyledButton
+        {...props}
+        id={id}
+        role="tab"
+        aria-selected={selected}
+        className={tabItemStyle}
+        onClick={() => onClick(id)}
+        disabled={disabled}
+        type="button"
+      >
+        <Cluster inline align="center" gap={0.25}>
+          {props.children}
+          <Tooltip
+            message={disabledDetail?.message}
+            triggerType="icon"
+            horizontal="auto"
+            vertical="auto"
+            className={disabledTooltip()}
+          >
+            <DisabledDetailIcon />
+          </Tooltip>
+        </Cluster>
+      </UnstyledButton>
+    )
+  }
 
   return (
     <UnstyledButton

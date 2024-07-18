@@ -3,6 +3,7 @@ import { StoryFn } from '@storybook/react'
 import { userEvent } from '@storybook/test'
 import * as React from 'react'
 
+import { FaTriangleExclamationIcon } from '../Icon'
 import { Stack } from '../Layout'
 
 import { TabBar } from './TabBar'
@@ -37,6 +38,25 @@ const Template: StoryFn = ({ subid, ...props }) => (
     </TabItem>
     <TabItem id={`border-${subid}-3`} onClick={action('clicked')} disabled>
       分析対象
+    </TabItem>
+    <TabItem
+      id={`border-${subid}-4`}
+      onClick={action('clicked')}
+      disabled
+      disabledDetail={{ message: 'disabledDetailを指定しています' }}
+    >
+      アイテム4
+    </TabItem>
+    <TabItem
+      id={`border-${subid}-5`}
+      onClick={action('clicked')}
+      disabled
+      disabledDetail={{
+        message: 'disabledDetailのiconを指定できます',
+        icon: () => <FaTriangleExclamationIcon />,
+      }}
+    >
+      アイテム5
     </TabItem>
   </TabBar>
 )
