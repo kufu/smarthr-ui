@@ -37,7 +37,12 @@ const Template: StoryFn = ({ subid, ...props }) => (
     <TabItem id={`border-${subid}-2`} onClick={action('clicked')}>
       コメント
     </TabItem>
-    <Tooltip message="権限がないため利用できません" ariaDescribedbyTarget="inner">
+    <Tooltip
+      message="権限がないため利用できません"
+      ariaDescribedbyTarget="inner"
+      role="tab"
+      aria-disabled
+    >
       <TabItem id={`border-${subid}-3`} onClick={action('clicked')} disabled>
         <Cluster align="center">
           分析対象
