@@ -3,7 +3,9 @@ import { StoryFn } from '@storybook/react'
 import { userEvent } from '@storybook/test'
 import * as React from 'react'
 
-import { Stack } from '../Layout'
+import { FaCircleInfoIcon } from '../Icon'
+import { Cluster, Stack } from '../Layout'
+import { Tooltip } from '../Tooltip'
 
 import { TabBar } from './TabBar'
 import { TabItem } from './TabItem'
@@ -35,9 +37,14 @@ const Template: StoryFn = ({ subid, ...props }) => (
     <TabItem id={`border-${subid}-2`} onClick={action('clicked')}>
       コメント
     </TabItem>
-    <TabItem id={`border-${subid}-3`} onClick={action('clicked')} disabled>
-      分析対象
-    </TabItem>
+    <Tooltip message="権限がないため利用できません" ariaDescribedbyTarget="inner">
+      <TabItem id={`border-${subid}-3`} onClick={action('clicked')} disabled>
+        <Cluster align="center">
+          分析対象
+          <FaCircleInfoIcon color="TEXT_GREY" />
+        </Cluster>
+      </TabItem>
+    </Tooltip>
   </TabBar>
 )
 
