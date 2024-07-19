@@ -76,8 +76,8 @@ importers:
         specifier: ^7.1.2
         version: 7.1.2(webpack@5.93.0(@swc/core@1.6.13(@swc/helpers@0.5.5))(esbuild@0.20.2))
       dayjs:
-        specifier: ^1.11.11
-        version: 1.11.11
+        specifier: ^1.11.12
+        version: 1.11.12
       lodash.merge:
         specifier: ^4.6.2
         version: 4.6.2
@@ -3952,8 +3952,8 @@ packages:
   dateformat@3.0.3:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
 
-  dayjs@1.11.11:
-    resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
+  dayjs@1.11.12:
+    resolution: {integrity: sha512-Rt2g+nTbLlDWZTwwrIXjy9MeiZmSDI375FvZs72ngxx8PDC6YXOeR3q5LAuPzjZQxhiWdRKac7RKV+YyQYfYIg==}
 
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -12995,7 +12995,7 @@ snapshots:
 
   dateformat@3.0.3: {}
 
-  dayjs@1.11.11: {}
+  dayjs@1.11.12: {}
 
   debug@2.6.9:
     dependencies:
