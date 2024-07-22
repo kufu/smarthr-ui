@@ -29,27 +29,31 @@ const lineClamp = tv({
           'shr-inline-block shr-w-full shr-overflow-hidden shr-overflow-ellipsis shr-whitespace-nowrap shr-align-middle',
       },
       2: {
-        base: '[display:-webkit-box]',
         clampedLine: 'shr-line-clamp-[2]',
       },
       3: {
-        base: '[display:-webkit-box]',
         clampedLine: 'shr-line-clamp-[3]',
       },
       4: {
-        base: '[display:-webkit-box]',
         clampedLine: 'shr-line-clamp-[4]',
       },
       5: {
-        base: '[display:-webkit-box]',
         clampedLine: 'shr-line-clamp-[5]',
       },
       6: {
-        base: '[display:-webkit-box]',
         clampedLine: 'shr-line-clamp-[6]',
       },
     },
   },
+  compoundVariants: [
+    {
+      maxLines: [2, 3, 4, 5, 6],
+      className: {
+        // baseがdisplay:-webkit-boxでないと高さ取得用の要素が表示部分と同じ大きさで表示されないバグを回避するため
+        base: '[display:-webkit-box]',
+      },
+    },
+  ],
 })
 
 export const LineClamp: FC<Props & ElementProps> = ({
