@@ -110,38 +110,30 @@ VRTForcedColors.parameters = {
 export const VRTLineClampInButton: StoryFn = () => (
   <>
     <VRTInformationPanel title="VRT 用の Story です">
-      タイプサイズがline-heightより大きいフォントを設定した時にツールチップが表示されないことを確認します
+      フォントのタイプサイズがline-heightより大きいときにツールチップが表示されないことを確認します
     </VRTInformationPanel>
     <Wrapper>
       <List>
-        <dt>LineClampされるボタン</dt>
-        <dd style={{ fontFamily: 'Zapfino' }}>
+        <dt>LineClampが1行でされるボタン</dt>
+        <dd>
           <Button style={{ width: 100 }}>
             <LineClamp data-testid="user-focus" maxLines={1}>
               LineClampされるボタン
             </LineClamp>
           </Button>
         </dd>
-        <dt>LineClampされないボタン</dt>
-        <dd style={{ fontFamily: 'Zapfino' }}>
-          <Button>
-            <LineClamp data-testid="user-focus" maxLines={1}>
-              LineClampされないボタン
-            </LineClamp>
-          </Button>
-        </dd>
-        <dt>LineClampされる2行まで入るボタン</dt>
-        <dd style={{ fontFamily: 'Zapfino' }}>
+        <dt>LineClampが2行でされるボタン</dt>
+        <dd>
           <Button style={{ textWrap: 'wrap', width: 100 }}>
             <LineClamp data-testid="user-focus" maxLines={2}>
               LineClampされるボタン
             </LineClamp>
           </Button>
         </dd>
-        <dt>LineClampされない2行まで入るボタン</dt>
-        <dd style={{ fontFamily: 'Zapfino' }}>
+        <dt>LineClampされないボタン</dt>
+        <dd>
           <Button>
-            <LineClamp data-testid="user-focus" maxLines={2}>
+            <LineClamp data-testid="user-focus" maxLines={1}>
               LineClampされないボタン
             </LineClamp>
           </Button>
