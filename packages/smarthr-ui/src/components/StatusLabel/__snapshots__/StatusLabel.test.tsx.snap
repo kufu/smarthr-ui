@@ -2,7 +2,7 @@
 
 exports[`StatusLabel should be match snapshot 1`] = `
 <span
-  className="smarthr-ui-StatusLabel shr-box-content shr-font-bold shr-inline-flex shr-items-center shr-justify-center shr-gap-0.25 shr-px-0.5 shr-py-0.25 shr-whitespace-nowrap shr-text-sm shr-leading-[0] shr-min-w-[3.5em] shr-min-h-em shr-bg-white shr-border-grey-20 shr-text-grey contrast-more:shr-border-high-contrast"
+  className="smarthr-ui-StatusLabel shr-box-content shr-font-bold shr-inline-flex shr-items-center shr-justify-center shr-gap-0.25 shr-px-0.5 shr-py-0.25 shr-whitespace-nowrap shr-text-sm shr-leading-[0] shr-min-w-[3.5em] shr-min-h-em shr-border-shorthand shr-bg-white shr-border-grey-20 shr-text-grey contrast-more:shr-border-high-contrast"
 >
   hello
 </span>
