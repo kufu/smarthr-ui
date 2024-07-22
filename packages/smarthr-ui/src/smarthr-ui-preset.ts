@@ -12,6 +12,20 @@ import type { Config } from 'tailwindcss'
 
 defaultConfig.twMergeConfig = {
   prefix: 'shr-',
+  classGroups: {
+    'border-shorthand': [
+      'border-shorthand',
+      'border-t-shorthand',
+      'border-r-shorthand',
+      'border-b-shorthand',
+      'border-l-shorthand',
+    ],
+    lineHeight: [
+      {
+        leading: ['none', 'tight', 'normal', 'loose'],
+      },
+    ],
+  },
 }
 
 const spacingByChar = createSpacingByChar(defaultHtmlFontSize / 2)
