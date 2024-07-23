@@ -7,7 +7,6 @@ import { getTooltipRect } from './tooltipHelper'
 
 type Props = {
   message: ReactNode
-  id: string
   isVisible: boolean
   parentRect: DOMRect | null
   isIcon?: boolean
@@ -34,7 +33,6 @@ const tooltipPortal = tv({
 
 export const TooltipPortal: FC<Props> = ({
   message,
-  id,
   isVisible,
   parentRect,
   isIcon = false,
@@ -143,7 +141,7 @@ export const TooltipPortal: FC<Props> = ({
   }, [isMultiLine, parentRect, rect.$height, rect.$width, rect.left, rect.top])
 
   return (
-    <div {...containerStyleProps} id={id} ref={portalRef} role="tooltip" aria-hidden={!isVisible}>
+    <div {...containerStyleProps} ref={portalRef} role="tooltip" aria-hidden={!isVisible}>
       <Balloon
         horizontal={actualHorizontal || 'left'}
         vertical={actualVertical || 'bottom'}

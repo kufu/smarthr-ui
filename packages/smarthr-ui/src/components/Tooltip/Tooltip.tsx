@@ -4,16 +4,20 @@ import React, {
   PropsWithChildren,
   ReactElement,
   ReactNode,
+  useCallback,
+  useMemo,
   useRef,
   useState,
   useSyncExternalStore,
 } from 'react'
 import { createPortal } from 'react-dom'
+import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { useId } from '../../hooks/useId'
 import { Props as BalloonProps } from '../Balloon'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 import { TooltipPortal } from './TooltipPortal'
 
@@ -83,7 +87,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
   const [isVisible, setIsVisible] = useState(false)
   const [rect, setRect] = useState<DOMRect | null>(null)
   const ref = useRef<HTMLDivElement>(null)
-  const tooltipId = useId()
+  const messageId = useId()
   const fullscreenElement = useSyncExternalStore(
     subscribeFullscreenChange,
     getFullscreenElement,
@@ -94,51 +98,60 @@ export const Tooltip: FC<Props & ElementProps> = ({
     setPortalRoot(fullscreenElement ?? document.body)
   }, [fullscreenElement])
 
-  const getHandlerToShow =
+  const getHandlerToShow = useCallback(
     <T,>(handler?: (e: T) => void) =>
-    (e: T) => {
-      handler && handler(e)
-      if (!ref.current) {
-        return
-      }
-
-      if (ellipsisOnly) {
-        const outerWidth = parseInt(
-          window
-            .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
-            .width.match(/\d+/)![0],
-          10,
-        )
-        const wrapperWidth = ref.current.clientWidth
-        const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
-        if (!existsEllipsis) {
+      (e: T) => {
+        handler && handler(e)
+        if (!ref.current) {
           return
         }
-      }
 
-      setRect(ref.current.getBoundingClientRect())
-      setIsVisible(true)
-    }
+        if (ellipsisOnly) {
+          const outerWidth = parseInt(
+            window
+              .getComputedStyle(ref.current.parentNode! as HTMLElement, null)
+              .width.match(/\d+/)![0],
+            10,
+          )
+          const wrapperWidth = ref.current.clientWidth
+          const existsEllipsis = outerWidth >= 0 && outerWidth <= wrapperWidth
+          if (!existsEllipsis) {
+            return
+          }
+        }
 
-  const getHandlerToHide =
+        setRect(ref.current.getBoundingClientRect())
+        setIsVisible(true)
+      },
+    [ref.current, ellipsisOnly],
+  )
+
+  const getHandlerToHide = useCallback(
     <T,>(handler?: (e: T) => void) =>
-    (e: T) => {
-      handler && handler(e)
-      setIsVisible(false)
-    }
+      (e: T) => {
+        handler && handler(e)
+        setIsVisible(false)
+      },
+    [setIsVisible],
+  )
 
+  const hiddenText = useMemo(() => innerText(message), [message])
   const isIcon = triggerType === 'icon'
   const styles = tooltip({ isIcon, className })
-  const childrenWithProps =
-    ariaDescribedbyTarget === 'inner'
-      ? React.cloneElement(children as ReactElement, { 'aria-describedby': tooltipId })
-      : children
+  const isInnerTarget = ariaDescribedbyTarget === 'inner'
+  const childrenWithProps = useMemo(
+    () =>
+      isInnerTarget
+        ? React.cloneElement(children as ReactElement, { 'aria-describedby': messageId })
+        : children,
+    [children, isInnerTarget, messageId],
+  )
 
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions,smarthr/a11y-delegate-element-has-role-presentation
     <span
       {...props}
-      aria-describedby={ariaDescribedbyTarget === 'wrapper' ? tooltipId : undefined}
+      aria-describedby={isInnerTarget ? undefined : messageId}
       ref={ref}
       onPointerEnter={getHandlerToShow(onPointerEnter)}
       onTouchStart={getHandlerToShow(onTouchStart)}
@@ -153,7 +166,6 @@ export const Tooltip: FC<Props & ElementProps> = ({
         createPortal(
           <TooltipPortal
             message={message}
-            id={tooltipId}
             isVisible={isVisible}
             parentRect={rect}
             isIcon={isIcon}
@@ -165,6 +177,7 @@ export const Tooltip: FC<Props & ElementProps> = ({
           portalRoot,
         )}
       {childrenWithProps}
+      <VisuallyHiddenText id={messageId}>{hiddenText}</VisuallyHiddenText>
     </span>
   )
 }

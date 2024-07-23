@@ -179,6 +179,14 @@ export default {
         '0.5': '0.5',
       },
       keyframes: ({ theme }) => ({
+        'loader-fade-in': {
+          '0%': {
+            opacity: '0',
+          },
+          to: {
+            opacity: '1',
+          },
+        },
         'loader-line-full-unfill-rotate': {
           '12.5%': {
             transform: 'rotate(135deg)',
