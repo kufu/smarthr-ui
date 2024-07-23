@@ -62,7 +62,7 @@ const text = tv({
       TEXT_GREY: 'shr-text-grey',
       TEXT_DISABLED: 'shr-text-disabled',
       TEXT_LINK: 'shr-text-link',
-      inherit: 'shr-text-inherit',
+      inherit: 'shr-text-color-inherit',
     },
     leading: {
       NONE: 'shr-leading-none',
