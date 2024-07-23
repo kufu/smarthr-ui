@@ -3,6 +3,7 @@ import { userEvent, within } from '@storybook/test'
 import React from 'react'
 import styled from 'styled-components'
 
+import { Button } from '../Button'
 import { InformationPanel } from '../InformationPanel'
 
 import { LineClamp } from './LineClamp'
@@ -104,6 +105,47 @@ VRTForcedColors.play = async ({ canvasElement }) => {
 }
 VRTForcedColors.parameters = {
   chromatic: { forcedColors: 'active' },
+}
+
+export const VRTLineClampInButton: StoryFn = () => (
+  <>
+    <VRTInformationPanel title="VRT 用の Story です">
+      フォントのタイプサイズがline-heightより大きいときにツールチップが表示されないことを確認します
+    </VRTInformationPanel>
+    <Wrapper>
+      <List>
+        <dt>LineClampが1行でされるボタン</dt>
+        <dd>
+          <Button style={{ width: 100 }}>
+            <LineClamp data-testid="user-focus" maxLines={1}>
+              LineClampされるボタン
+            </LineClamp>
+          </Button>
+        </dd>
+        <dt>LineClampが2行でされるボタン</dt>
+        <dd>
+          <Button style={{ textWrap: 'wrap', width: 100 }}>
+            <LineClamp data-testid="user-focus" maxLines={2}>
+              LineClampされるボタン
+            </LineClamp>
+          </Button>
+        </dd>
+        <dt>LineClampされないボタン</dt>
+        <dd>
+          <Button>
+            <LineClamp data-testid="user-focus" maxLines={1}>
+              LineClampされないボタン
+            </LineClamp>
+          </Button>
+        </dd>
+      </List>
+    </Wrapper>
+  </>
+)
+VRTLineClampInButton.play = async ({ canvasElement }) => {
+  await new Promise((resolve) => setTimeout(resolve, 500)) // スナップショット時にツールチップを確実に表示させるため
+  const tooltips = canvasElement.querySelectorAll('.smarthr-ui-Tooltip')
+  tooltips.forEach((tooltip) => userEvent.hover(tooltip))
 }
 
 const VRTInformationPanel = styled(InformationPanel)`
