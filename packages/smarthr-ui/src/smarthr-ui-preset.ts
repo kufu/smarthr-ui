@@ -1,4 +1,5 @@
 import { darken } from 'polished'
+import { defaultConfig } from 'tailwind-variants'
 import plugin from 'tailwindcss/plugin'
 
 import { defaultColor } from './themes/createColor'
@@ -8,6 +9,29 @@ import { createSpacingByChar, primitiveTokens as spacingSizes } from './themes/c
 import { defaultZIndex } from './themes/createZIndex'
 
 import type { Config } from 'tailwindcss'
+
+defaultConfig.twMergeConfig = {
+  prefix: 'shr-',
+  classGroups: {
+    'border-shorthand': [
+      'border-shorthand',
+      'border-t-shorthand',
+      'border-r-shorthand',
+      'border-b-shorthand',
+      'border-l-shorthand',
+    ],
+    'font-size': [
+      {
+        text: ['2xs', 'xs', 'sm', 'base', 'lg', 'xl', '2xl', 'inherit'],
+      },
+    ],
+    lineHeight: [
+      {
+        leading: ['none', 'tight', 'normal', 'loose'],
+      },
+    ],
+  },
+}
 
 const spacingByChar = createSpacingByChar(defaultHtmlFontSize / 2)
 type Spacing = {
@@ -150,7 +174,7 @@ export default {
       link: defaultColor.TEXT_LINK,
       grey: theme('colors.grey.65'),
       danger: theme('colors.danger'),
-      inherit: 'inherit',
+      'color-inherit': 'inherit',
       transparent: 'transparent',
     }),
     zIndex: {

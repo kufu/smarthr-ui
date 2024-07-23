@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 
 const unstyledButton = tv({
   base: [
-    'shr-box-content shr-inline shr-cursor-auto shr-select-auto shr-appearance-none shr-items-stretch shr-overflow-visible shr-border-none shr-border-current shr-bg-transparent shr-bg-none shr-bg-origin-padding shr-p-0 shr-text-left shr-font-inherit shr-text-inherit focus-visible:shr-focus-indicator',
+    'shr-box-content shr-inline shr-cursor-auto shr-select-auto shr-appearance-none shr-items-stretch shr-overflow-visible shr-border-none shr-border-current shr-bg-transparent shr-bg-none shr-bg-origin-padding shr-p-0 shr-text-left shr-font-inherit shr-text-inherit shr-text-color-inherit focus-visible:shr-focus-indicator',
   ],
 })
 
