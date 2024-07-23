@@ -174,7 +174,7 @@ export default {
       link: defaultColor.TEXT_LINK,
       grey: theme('colors.grey.65'),
       danger: theme('colors.danger'),
-      inherit: 'inherit',
+      'color-inherit': 'inherit',
       transparent: 'transparent',
     }),
     zIndex: {
