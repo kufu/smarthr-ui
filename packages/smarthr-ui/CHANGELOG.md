@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [54.0.0](https://github.com/kufu/smarthr-ui/compare/v53.1.0...v54.0.0) (2024-07-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* Tooltipのmessageを常にhtml上に存在するように修正する (#4788)
+
+### Features
+
+* Loaderを200ms経過後に表示する ([#4723](https://github.com/kufu/smarthr-ui/issues/4723)) ([bb5d1a1](https://github.com/kufu/smarthr-ui/commit/bb5d1a1167a760bdd75298fe843f4a0070dd7de9)), closes [#4787](https://github.com/kufu/smarthr-ui/issues/4787)
+* useDevice を追加 ([#4781](https://github.com/kufu/smarthr-ui/issues/4781)) ([8a4269e](https://github.com/kufu/smarthr-ui/commit/8a4269e77a3c461c2202f177aed41b077309a542))
+
+
+### Bug Fixes
+
+* **LineClamp:** 表示されている行数が最大行数以下のときにTooltipを表示しないように修正 ([#4710](https://github.com/kufu/smarthr-ui/issues/4710)) ([544465d](https://github.com/kufu/smarthr-ui/commit/544465d59dbb6f67363cf9154f9ec990e6c8cf02))
+* ModelessDialogマウント時の警告を消したい ([#4790](https://github.com/kufu/smarthr-ui/issues/4790)) ([e660533](https://github.com/kufu/smarthr-ui/commit/e66053303c479b6b641060d0ee664c8009044cbe))
+* Tooltipのmessageを常にhtml上に存在するように修正する ([#4788](https://github.com/kufu/smarthr-ui/issues/4788)) ([5142205](https://github.com/kufu/smarthr-ui/commit/5142205da5ecaba7c7681744f9f2b362ebd7dcd6))
+* ソートできる Th に `cursor: pointer` を当てた ([#4773](https://github.com/kufu/smarthr-ui/issues/4773)) ([a55c48e](https://github.com/kufu/smarthr-ui/commit/a55c48e4c2eb9fa50c6dc2c40c7cbd25826c90fb))
+
 ## [53.1.0](https://github.com/kufu/smarthr-ui/compare/v53.0.0...v53.1.0) (2024-07-16)
 
 
