@@ -3,6 +3,8 @@ import { tv } from 'tailwind-variants'
 
 import { isTouchDevice } from '../../libs/ua'
 import { UnstyledButton } from '../Button'
+import { FaCircleInfoIcon } from '../Icon'
+import { Tooltip } from '../Tooltip'
 
 const tabItem = tv({
   slots: {
@@ -39,23 +41,48 @@ type Props = PropsWithChildren<{
   selected?: boolean
   /** `true` のとき、タブを無効状態にしてクリック不能にする */
   disabled?: boolean
+  /**
+   * 無効な理由
+   */
+  disabledDetail?: {
+    icon?: React.ReactNode
+    message: React.ReactNode
+  }
   /** タブをクリックした時に発火するコールバック関数 */
   onClick: (tabId: string) => void
 }>
 type ElementProps = Omit<
   ComponentProps<typeof UnstyledButton>,
-  keyof Props | 'role' | 'aria-selected' | 'type'
+  keyof Props | 'aria-selected' | 'type'
 >
 
-export const TabItem: FC<Props & ElementProps> = ({
+export const TabItem: FC<Props & ElementProps> = ({ disabledDetail, ...rest }) => {
+  if (rest.disabled && disabledDetail) {
+    const Icon = disabledDetail.icon || <FaCircleInfoIcon color="TEXT_GREY" />
+    return (
+      <Tooltip
+        message={disabledDetail.message}
+        horizontal="center"
+        role="tab"
+        ariaDescribedbyTarget="inner"
+        aria-disabled={rest.disabled}
+      >
+        <TabButton {...rest} suffix={Icon} />
+      </Tooltip>
+    )
+  }
+
+  return <TabButton {...rest} role="tab" />
+}
+
+const TabButton: FC<Props & ElementProps> = ({
   id,
   children,
   suffix,
   onClick,
   selected = false,
   className,
-  disabled = false,
-  ...props
+  ...rest
 }) => {
   const { wrapperStyle, suffixStyle } = useMemo(() => {
     const { wrapper, suffixWrapper } = tabItem({ isTouchDevice })
@@ -67,14 +94,12 @@ export const TabItem: FC<Props & ElementProps> = ({
 
   return (
     <UnstyledButton
-      {...props}
+      {...rest}
+      type="button"
       id={id}
-      role="tab"
       aria-selected={selected}
       className={wrapperStyle}
       onClick={() => onClick(id)}
-      disabled={disabled}
-      type="button"
     >
       {children}
       {suffix && <span className={suffixStyle}>{suffix}</span>}
