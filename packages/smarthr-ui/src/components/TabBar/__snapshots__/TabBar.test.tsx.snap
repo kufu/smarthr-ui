@@ -2,7 +2,7 @@
 
 exports[`TabBar should be match snapshot 1`] = `
 <div
-  className="shr-flex shr-overflow-x-auto shr-overflow-y-hidden [&_>_*]:shr-flex- [&_>_*]:shr-flex-shrink-0 [&_>_*]:shr-basis-auto empty:shr-gap-0 shr-gap-0.5 shr-p-0 smarthr-ui-TabBar -shr-m-0.25"
+  className="shr-flex shr-overflow-x-auto shr-overflow-y-hidden [&_>_*]:shr-flex- [&_>_*]:shr-flex-shrink-0 [&_>_*]:shr-basis-auto empty:shr-gap-0 shr-gap-0.5 shr-p-0 smarthr-ui-TabBar"
   role="tablist"
 >
   <div
