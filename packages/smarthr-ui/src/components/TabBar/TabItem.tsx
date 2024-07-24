@@ -56,14 +56,23 @@ type ElementProps = Omit<
   keyof Props | 'aria-selected' | 'type'
 >
 
-export const TabItem: FC<Props & ElementProps> = ({ disabledDetail, ...rest }) => {
+export const TabItem: FC<Props & ElementProps> = ({
+  selected = false,
+  disabledDetail,
+  ...rest
+}) => {
+  const tabAttrs = {
+    role: 'tab',
+    'aria-selected': selected,
+  }
+
   if (rest.disabled && disabledDetail) {
     const Icon = disabledDetail.icon || <FaCircleInfoIcon color="TEXT_GREY" />
     return (
       <Tooltip
+        {...tabAttrs}
         message={disabledDetail.message}
         horizontal="center"
-        role="tab"
         ariaDescribedbyTarget="inner"
         aria-disabled={rest.disabled}
       >
@@ -72,7 +81,7 @@ export const TabItem: FC<Props & ElementProps> = ({ disabledDetail, ...rest }) =
     )
   }
 
-  return <TabButton {...rest} role="tab" />
+  return <TabButton {...rest} {...tabAttrs} />
 }
 
 const TabButton: FC<Props & ElementProps> = ({
@@ -80,7 +89,6 @@ const TabButton: FC<Props & ElementProps> = ({
   children,
   suffix,
   onClick,
-  selected = false,
   className,
   ...rest
 }) => {
@@ -97,7 +105,6 @@ const TabButton: FC<Props & ElementProps> = ({
       {...rest}
       type="button"
       id={id}
-      aria-selected={selected}
       className={wrapperStyle}
       onClick={() => onClick(id)}
     >
