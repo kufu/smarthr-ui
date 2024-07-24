@@ -36,7 +36,12 @@ const Template: StoryFn = ({ subid, ...props }) => (
     <TabItem id={`border-${subid}-2`} onClick={action('clicked')} suffix={<Badge count={7} />}>
       コメント
     </TabItem>
-    <TabItem id={`border-${subid}-3`} onClick={action('clicked')} disabled>
+    <TabItem
+      id={`border-${subid}-3`}
+      onClick={action('clicked')}
+      disabled
+      disabledDetail={{ message: 'この機能は使用できません。' }}
+    >
       分析対象
     </TabItem>
   </TabBar>
