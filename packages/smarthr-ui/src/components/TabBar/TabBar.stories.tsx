@@ -51,4 +51,4 @@ export const RegFocusBorder = All.bind({})
 RegFocusBorder.play = () => userEvent.tab()
 
 export const RegFocusNoBorder = All.bind({})
-RegFocusNoBorder.play = () => [...Array(3)].forEach((_) => userEvent.tab())
+RegFocusNoBorder.play = () => [...Array(4)].forEach((_) => userEvent.tab())
