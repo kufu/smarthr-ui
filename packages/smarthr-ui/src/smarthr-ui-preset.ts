@@ -368,7 +368,6 @@ export default {
           outline: 'none',
           isolation: 'isolate',
           boxShadow: `0 0 0 2px ${theme('colors.white')}, 0 0 0 4px ${theme('colors.outline')}`,
-          zIndex: '1',
         },
         '.border-shorthand': {
           borderWidth: theme('borderWidth.DEFAULT'),

@@ -12,6 +12,7 @@ const tabItem = tv({
       'smarthr-ui-TabItem',
       'shr-relative shr-cursor-pointer shr-px-1 shr-py-0.75 shr-font-bold shr-text-grey shr-inline-flex shr-items-center shr-gap-0.5 shr-leading-none',
       'hover:shr-bg-white-darken hover:shr-text-black',
+      'focus-visible:shr-z-1',
       'disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50',
       'aria-selected:shr-text-black',
       'aria-selected:before:shr-absolute aria-selected:before:shr-inset-x-0 aria-selected:before:shr-bottom-0 aria-selected:before:shr-content-[""] aria-selected:before:shr-block aria-selected:before:shr-h-0.25 aria-selected:before:shr-bg-main aria-selected:before:shr-z-1',
