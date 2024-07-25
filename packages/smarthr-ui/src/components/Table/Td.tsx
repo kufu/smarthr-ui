@@ -54,7 +54,11 @@ const td = tv({
     fixed: {
       true: [
         'fixedElement',
-        '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:shr-bg-white [&.fixed]:after:shr-opacity-100',
+        'shr-sticky shr-bg-white [&.fixed]:after:shr-opacity-100',
+        '[&:first-child]:shr-left-0',
+        '[&.fixed:first-child]:after:shr-left-full [&.fixed:first-child]:after:shr-bg-gradient-to-r',
+        '[&:last-child]:shr-right-0',
+        'after:shr-right-full after:shr-bg-gradient-to-l',
       ],
     },
   },
