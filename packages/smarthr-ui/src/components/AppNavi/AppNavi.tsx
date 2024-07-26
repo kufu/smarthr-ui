@@ -28,7 +28,7 @@ const appNavi = tv({
       'smarthr-ui-AppNavi',
       'shr-flex shr-min-w-max shr-items-center shr-bg-white shr-px-1.5 shr-shadow-layer-1',
     ],
-    statusLabel: ['smarthr-ui-AppNavi-label', 'shr-me-1'],
+    statusLabel: ['smarthr-ui-AppNavi-label', 'shr-me-1 shr-shrink-0'],
     buttonsEl: [
       'smarthr-ui-AppNavi-buttons',
       'shr-flex shr-items-stretch shr-gap-1 shr-self-stretch',
