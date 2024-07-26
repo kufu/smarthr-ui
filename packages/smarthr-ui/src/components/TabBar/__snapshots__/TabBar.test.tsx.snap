@@ -6,12 +6,11 @@ exports[`TabBar should be match snapshot 1`] = `
   role="tablist"
 >
   <div
-    className="shr-grow shr-m-0.25 shr-relative before:shr-absolute before:shr-inset-x-0 before:shr-bottom-0 before:shr-border-b-shorthand before:shr-content-[""]"
+    className="shr-grow shr-m-0.25 shr-relative before:shr-absolute before:shr-inset-x-0 before:shr-bottom-0 before:shr-border-b-shorthand before:shr-content-[""] before:shr-z-1"
   >
     <button
       aria-selected={false}
-      className="shr-box-content shr-inline shr-select-auto shr-items-stretch shr-overflow-visible shr-border-current shr-bg-none shr-bg-origin-padding shr-p-0 shr-text-left shr-font-inherit shr-text-inherit shr-text-color-inherit focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-cursor-pointer shr-appearance-none shr-border-none shr-bg-transparent shr-px-1 shr-py-0 shr-font-bold hover:shr-bg-column hover:shr-text-black [&]:shr-box-border [&]:shr-text-grey shr-h-[43px] disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50 aria-selected:shr-border-b-shorthand aria-selected:shr-relative aria-selected:shr-border-b-[3px] aria-selected:shr-border-main aria-selected:shr-text-black aria-selected:shr-h-[40px] shr-transition-colors"
-      disabled={false}
+      className="shr-box-content shr-select-auto shr-appearance-none shr-overflow-visible shr-border-none shr-border-current shr-bg-transparent shr-bg-none shr-bg-origin-padding shr-p-0 shr-text-left shr-font-inherit shr-text-inherit focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-relative shr-cursor-pointer shr-px-1 shr-py-0.75 shr-font-bold shr-text-grey shr-inline-flex shr-items-center shr-gap-0.5 shr-leading-none hover:shr-bg-white-darken hover:shr-text-black focus-visible:shr-z-1 disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50 aria-selected:shr-text-black aria-selected:before:shr-absolute aria-selected:before:shr-inset-x-0 aria-selected:before:shr-bottom-0 aria-selected:before:shr-content-[""] aria-selected:before:shr-block aria-selected:before:shr-h-0.25 aria-selected:before:shr-bg-main aria-selected:before:shr-z-1 forced-colors:aria-selected:before:shr-bg-[Highlight] shr-transition-colors"
       id="1"
       onClick={[Function]}
       role="tab"
@@ -21,8 +20,7 @@ exports[`TabBar should be match snapshot 1`] = `
     </button>
     <button
       aria-selected={true}
-      className="shr-box-content shr-inline shr-select-auto shr-items-stretch shr-overflow-visible shr-border-current shr-bg-none shr-bg-origin-padding shr-p-0 shr-text-left shr-font-inherit shr-text-inherit shr-text-color-inherit focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-cursor-pointer shr-appearance-none shr-border-none shr-bg-transparent shr-px-1 shr-py-0 shr-font-bold hover:shr-bg-column hover:shr-text-black [&]:shr-box-border [&]:shr-text-grey shr-h-[43px] disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50 aria-selected:shr-border-b-shorthand aria-selected:shr-relative aria-selected:shr-border-b-[3px] aria-selected:shr-border-main aria-selected:shr-text-black aria-selected:shr-h-[40px] shr-transition-colors"
-      disabled={false}
+      className="shr-box-content shr-select-auto shr-appearance-none shr-overflow-visible shr-border-none shr-border-current shr-bg-transparent shr-bg-none shr-bg-origin-padding shr-p-0 shr-text-left shr-font-inherit shr-text-inherit focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-relative shr-cursor-pointer shr-px-1 shr-py-0.75 shr-font-bold shr-text-grey shr-inline-flex shr-items-center shr-gap-0.5 shr-leading-none hover:shr-bg-white-darken hover:shr-text-black focus-visible:shr-z-1 disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50 aria-selected:shr-text-black aria-selected:before:shr-absolute aria-selected:before:shr-inset-x-0 aria-selected:before:shr-bottom-0 aria-selected:before:shr-content-[""] aria-selected:before:shr-block aria-selected:before:shr-h-0.25 aria-selected:before:shr-bg-main aria-selected:before:shr-z-1 forced-colors:aria-selected:before:shr-bg-[Highlight] shr-transition-colors"
       id="2"
       onClick={[Function]}
       role="tab"
@@ -32,7 +30,7 @@ exports[`TabBar should be match snapshot 1`] = `
     </button>
     <button
       aria-selected={false}
-      className="shr-box-content shr-inline shr-select-auto shr-items-stretch shr-overflow-visible shr-border-current shr-bg-none shr-bg-origin-padding shr-p-0 shr-text-left shr-font-inherit shr-text-inherit shr-text-color-inherit focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-cursor-pointer shr-appearance-none shr-border-none shr-bg-transparent shr-px-1 shr-py-0 shr-font-bold hover:shr-bg-column hover:shr-text-black [&]:shr-box-border [&]:shr-text-grey shr-h-[43px] disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50 aria-selected:shr-border-b-shorthand aria-selected:shr-relative aria-selected:shr-border-b-[3px] aria-selected:shr-border-main aria-selected:shr-text-black aria-selected:shr-h-[40px] shr-transition-colors"
+      className="shr-box-content shr-select-auto shr-appearance-none shr-overflow-visible shr-border-none shr-border-current shr-bg-transparent shr-bg-none shr-bg-origin-padding shr-p-0 shr-text-left shr-font-inherit shr-text-inherit focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-relative shr-cursor-pointer shr-px-1 shr-py-0.75 shr-font-bold shr-text-grey shr-inline-flex shr-items-center shr-gap-0.5 shr-leading-none hover:shr-bg-white-darken hover:shr-text-black focus-visible:shr-z-1 disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50 aria-selected:shr-text-black aria-selected:before:shr-absolute aria-selected:before:shr-inset-x-0 aria-selected:before:shr-bottom-0 aria-selected:before:shr-content-[""] aria-selected:before:shr-block aria-selected:before:shr-h-0.25 aria-selected:before:shr-bg-main aria-selected:before:shr-z-1 forced-colors:aria-selected:before:shr-bg-[Highlight] shr-transition-colors"
       disabled={true}
       id="3"
       onClick={[Function]}

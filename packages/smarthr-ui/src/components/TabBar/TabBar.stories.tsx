@@ -1,8 +1,9 @@
 import { action } from '@storybook/addon-actions'
 import { StoryFn } from '@storybook/react'
 import { userEvent } from '@storybook/test'
-import * as React from 'react'
+import React from 'react'
 
+import { Badge } from '../Badge'
 import { Stack } from '../Layout'
 
 import { TabBar } from './TabBar'
@@ -32,10 +33,15 @@ const Template: StoryFn = ({ subid, ...props }) => (
     <TabItem id={`border-${subid}-1`} onClick={action('clicked')} selected>
       基本情報
     </TabItem>
-    <TabItem id={`border-${subid}-2`} onClick={action('clicked')}>
+    <TabItem id={`border-${subid}-2`} onClick={action('clicked')} suffix={<Badge count={7} />}>
       コメント
     </TabItem>
-    <TabItem id={`border-${subid}-3`} onClick={action('clicked')} disabled>
+    <TabItem
+      id={`border-${subid}-3`}
+      onClick={action('clicked')}
+      disabled
+      disabledDetail={{ message: 'この機能は使用できません。' }}
+    >
       分析対象
     </TabItem>
   </TabBar>
@@ -45,4 +51,4 @@ export const RegFocusBorder = All.bind({})
 RegFocusBorder.play = () => userEvent.tab()
 
 export const RegFocusNoBorder = All.bind({})
-RegFocusNoBorder.play = () => [...Array(3)].forEach((_) => userEvent.tab())
+RegFocusNoBorder.play = () => [...Array(4)].forEach((_) => userEvent.tab())
