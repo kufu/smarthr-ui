@@ -107,10 +107,10 @@ importers:
         version: 4.0.0(webpack@5.93.0(@swc/core@1.7.0(@swc/helpers@0.5.5))(esbuild@0.20.2))
       tailwind-variants:
         specifier: ^0.2.1
-        version: 0.2.1(tailwindcss@3.4.6(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.5))(@types/node@20.14.11)(typescript@5.5.3)))
+        version: 0.2.1(tailwindcss@3.4.7(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.5))(@types/node@20.14.11)(typescript@5.5.3)))
       tailwindcss:
-        specifier: ^3.4.6
-        version: 3.4.6(ts-node@10.9.2(@swc/core@1.7.0)(@types/node@20.14.11)(typescript@5.5.3))
+        specifier: ^3.4.7
+        version: 3.4.7(ts-node@10.9.2(@swc/core@1.7.0)(@types/node@20.14.11)(typescript@5.5.3))
     devDependencies:
       '@babel/core':
         specifier: ^7.24.9
@@ -355,7 +355,7 @@ importers:
         version: 8.4.39
       tailwindcss:
         specifier: ^3.4.6
-        version: 3.4.6(ts-node@10.9.2(@swc/core@1.7.0)(@types/node@20.14.11)(typescript@5.5.3))
+        version: 3.4.7(ts-node@10.9.2(@swc/core@1.7.0)(@types/node@20.14.11)(typescript@5.5.3))
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
@@ -7810,8 +7810,8 @@ packages:
     peerDependencies:
       tailwindcss: '*'
 
-  tailwindcss@3.4.6:
-    resolution: {integrity: sha512-1uRHzPB+Vzu57ocybfZ4jh5Q3SdlH7XW23J5sQoM9LhE9eIOlzxer/3XPSsycvih3rboRsvt0QCmzSrqyOYUIA==}
+  tailwindcss@3.4.7:
+    resolution: {integrity: sha512-rxWZbe87YJb4OcSopb7up2Ba4U82BoiSGUdoDr3Ydrg9ckxFS/YWsvhN323GMcddgU65QRy7JndC7ahhInhvlQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -17498,12 +17498,12 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.24.5
 
-  tailwind-variants@0.2.1(tailwindcss@3.4.6(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.5))(@types/node@20.14.11)(typescript@5.5.3))):
+  tailwind-variants@0.2.1(tailwindcss@3.4.7(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.5))(@types/node@20.14.11)(typescript@5.5.3))):
     dependencies:
       tailwind-merge: 2.3.0
-      tailwindcss: 3.4.6(ts-node@10.9.2(@swc/core@1.7.0)(@types/node@20.14.11)(typescript@5.5.3))
+      tailwindcss: 3.4.7(ts-node@10.9.2(@swc/core@1.7.0)(@types/node@20.14.11)(typescript@5.5.3))
 
-  tailwindcss@3.4.6(ts-node@10.9.2(@swc/core@1.7.0)(@types/node@20.14.11)(typescript@5.5.3)):
+  tailwindcss@3.4.7(ts-node@10.9.2(@swc/core@1.7.0)(@types/node@20.14.11)(typescript@5.5.3)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
