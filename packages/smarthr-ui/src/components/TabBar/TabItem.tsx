@@ -75,6 +75,7 @@ export const TabItem: FC<Props & ElementProps> = ({
         {...tabAttrs}
         message={disabledDetail.message}
         horizontal="center"
+        vertical="auto"
         ariaDescribedbyTarget="inner"
         aria-disabled={rest.disabled}
       >
