@@ -24,7 +24,7 @@ export type PaletteProperty = {
 }
 
 export type CreatedPaletteTheme = {
-  hoverColor: (value: string, darkenAmount?: 0.05 | 0.15) => string
+  hoverColor: (value: string) => string
   disableColor: (value: string) => string
   TEXT_BLACK: string
   TEXT_GREY: string
@@ -72,8 +72,7 @@ export const defaultPalette = {
 export const createPalette = (userPalette: PaletteProperty = {}) => {
   const created: CreatedPaletteTheme = merge(
     {
-      hoverColor: (value: string, darkenAmount: 0.05 | 0.15 = 0.05): string =>
-        darken(darkenAmount, value),
+      hoverColor: (value: string): string => darken(0.05, value),
       disableColor: (value: string): string => rgba(value, 0.5),
       OUTLINE: defaultPalette.MAIN,
       ...defaultPalette,

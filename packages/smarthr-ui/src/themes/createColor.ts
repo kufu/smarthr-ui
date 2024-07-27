@@ -68,15 +68,14 @@ export const defaultColor = { ...semanticTokens, ...greyScale, ...transparencySc
 type Palette = typeof defaultColor
 export type ColorProperty = Partial<Palette>
 export type CreatedColorTheme = Palette & {
-  hoverColor: (value: string, darkenAmount?: 0.05 | 0.15) => string
+  hoverColor: (value: string) => string
   disableColor: (value: string) => string
 }
 
 export const createColor = (userColor: ColorProperty = {}) => {
   const created: CreatedColorTheme = merge(
     {
-      hoverColor: (value: string, darkenAmount: 0.05 | 0.15 = 0.05): string =>
-        darken(darkenAmount, value),
+      hoverColor: (value: string): string => darken(0.05, value),
       disableColor: (value: string): string => rgba(value, 0.5),
       ...defaultColor,
     },
