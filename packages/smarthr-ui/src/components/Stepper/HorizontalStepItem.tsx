@@ -10,7 +10,11 @@ import type { HorizontalStep } from './types'
 
 const horizontallStepItem = tv({
   slots: {
-    wrapper: 'shr-group/stepItem',
+    wrapper: [
+      'shr-group/stepItem',
+      // 長いステップ名が来ても等幅にする
+      'shr-flex-1',
+    ],
     headingWrapper: 'shr-flex shr-flex-col shr-items-center shr-gap-0.5',
     stepCounterWrapper: 'shr-self-stretch shr-flex shr-items-center',
     beforeLine: [
@@ -24,7 +28,7 @@ const horizontallStepItem = tv({
       'shr-grow shr-h-[theme(borderWidth.2)] shr-bg-border',
       'forced-colors:shr-bg-[ButtonBorder]',
     ],
-    heading: 'shr-px-0.75 shr-text-sm',
+    heading: 'shr-px-0.25 shr-text-sm shr-text-center',
   },
   variants: {
     status: {

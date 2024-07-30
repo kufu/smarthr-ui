@@ -42,6 +42,9 @@ const hSteps: HorizontalStep[] = [
     label: '最終面接',
   },
   {
+    label: 'リファレンスチェック',
+  },
+  {
     label: 'オファー面談',
   },
 ]
