@@ -13,7 +13,7 @@ import { UnstyledButton } from '../Button'
 import { FaSortDownIcon, FaSortUpIcon } from '../Icon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
-import { reelShadowStyle } from './useReelShadow'
+import { fixedCellStyle } from './fixedCellStyle'
 
 import type { CellContentWidth } from './type'
 
@@ -29,6 +29,7 @@ export type Props = PropsWithChildren<
       sortDirectionIconAlt: (text: string, { sort }: { sort: sortTypes }) => ReactNode
     }
     contentWidth?: CellContentWidth
+    fixed?: boolean
   } & VariantProps<typeof thWrapper>
 >
 type ElementProps = Omit<ComponentPropsWithoutRef<'th'>, keyof Props | 'onClick'>
@@ -55,13 +56,6 @@ const thWrapper = tv({
       left: '',
       right: 'shr-text-right',
     },
-    fixed: {
-      true: [
-        /* これ以降の記述はTableReel内で'fixed'を利用した際に追従させるために必要 */
-        'fixedElement',
-        '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:after:shr-opacity-100',
-      ],
-    },
   },
 })
 
@@ -87,8 +81,8 @@ export const Th: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const styleProps = useMemo(() => {
-    const thWrapperStyle = thWrapper({ className, align, fixed })
-    const reelShadowStyles = fixed ? reelShadowStyle({ showShadow: false, direction: 'right' }) : ''
+    const thWrapperStyle = thWrapper({ className, align })
+    const reelShadowStyles = fixed ? fixedCellStyle() : ''
     return {
       className: `${thWrapperStyle} ${reelShadowStyles}`.trim(),
       style: {
