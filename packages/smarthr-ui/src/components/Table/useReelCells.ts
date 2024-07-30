@@ -8,23 +8,28 @@ export const useReelCells = () => {
     const currentRef = tableWrapperRef.current
 
     const handleScroll = () => {
-      if (currentRef) {
-        const stickyCells = currentRef.querySelectorAll('.fixedElement') || []
-        const scrollLeft = currentRef.scrollLeft
-        const maxScrollLeft = currentRef.scrollWidth - currentRef.clientWidth || 0
-
-        stickyCells.forEach((cell) => {
-          const shouldFix = maxScrollLeft > 0 && scrollLeft < maxScrollLeft
-
-          if (shouldFix) {
-            cell.classList.add('fixed')
-            setShowShadow(scrollLeft > 0)
-          } else {
-            cell.classList.remove('fixed')
-            setShowShadow(maxScrollLeft === 0 && scrollLeft === 0 ? false : true)
-          }
-        })
+      if (!currentRef) {
+        return
       }
+      const stickyCells =
+        (currentRef.querySelectorAll(
+          '.smarthr-ui-TableCell-fixed',
+        ) as unknown as HTMLCollectionOf<HTMLElement>) || []
+      for (const stickyCell of stickyCells) {
+        const prevWidth = stickyCell.previousElementSibling?.clientWidth ?? 0
+        const nextWidth = stickyCell.nextElementSibling?.clientWidth ?? 0
+        stickyCell.style.setProperty('--prev-width', `${prevWidth}px`)
+        stickyCell.style.setProperty('--next-width', `${nextWidth}px`)
+      }
+
+      const scrollLeft = currentRef.scrollLeft
+      const maxScrollLeft = currentRef.scrollWidth - currentRef.clientWidth || 0
+
+      const scrollReachedStart = scrollLeft <= 0
+      const scrollReachedEnd = maxScrollLeft > 0 && scrollLeft >= maxScrollLeft
+
+      currentRef.classList.toggle('smarthr-ui-TableReel-scroll-reached-start', scrollReachedStart)
+      currentRef.classList.toggle('smarthr-ui-TableReel-scroll-reached-end', scrollReachedEnd)
     }
     handleScroll()
 
