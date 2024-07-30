@@ -29,7 +29,7 @@ const horizontallStepItem = tv({
   variants: {
     status: {
       completed: {
-        beforeLine: ['shr-bg-main', 'forced-colors:shr-bg-[Highlight]'],
+        afterLine: ['shr-bg-main', 'forced-colors:shr-bg-[Highlight]'],
       },
       closed: {},
     },
@@ -39,9 +39,9 @@ const horizontallStepItem = tv({
       },
       false: {},
     },
-    isNextStepCompleted: {
+    isPrevStepCompleted: {
       true: {
-        afterLine: ['shr-bg-main', 'forced-colors:shr-bg-[Highlight]'],
+        beforeLine: ['shr-bg-main', 'forced-colors:shr-bg-[Highlight]'],
       },
       false: {},
     },
@@ -62,14 +62,14 @@ export const HorizontalStepItem: FC<HorizontalStep> = ({
   label,
   status,
   current,
-  isNextStepCompleted,
+  isPrevStepCompleted,
 }) => {
   const statusType = typeof status === 'object' ? status.type : status
   const { wrapper, headingWrapper, stepCounterWrapper, beforeLine, afterLine, heading } =
     horizontallStepItem({
       status: statusType,
       current,
-      isNextStepCompleted,
+      isPrevStepCompleted,
     })
 
   return (

@@ -51,8 +51,8 @@ export const Stepper: FC<Props> = ({ type, steps, activeIndex, className, ...res
           stepNumber: id + 1,
           current: id === activeIndex,
           ...(type === 'horizontal'
-            ? // 装飾上、次のステップが完了しているかどうかが必要
-              { isNextStepCompleted: isStepCompleted(steps[id + 1]) }
+            ? // 装飾上、前のステップが完了しているかどうかが必要
+              { isPrevStepCompleted: isStepCompleted(steps[id - 1]) }
             : {}),
         }
         return <ActualStepItem {...stepItemProps} key={id} />

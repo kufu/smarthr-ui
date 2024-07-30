@@ -25,8 +25,8 @@ export type Step = {
 export type VerticalStep = PropsWithChildren<Step>
 
 export type HorizontalStep = Step & {
-  /** 次のステップが完了しているかどうか */
-  isNextStepCompleted?: boolean
+  /** 前のステップが完了しているかどうか */
+  isPrevStepCompleted?: boolean
 }
 
 export type VerticalStepper = PropsWithBase<{
