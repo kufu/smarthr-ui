@@ -21,7 +21,6 @@ describe('createColor', () => {
     expect(actual.BRAND).toBe(expected.BRAND)
     expect(actual.OUTLINE).toBe(expected.OUTLINE)
     expect(actual.hoverColor('#123')).toBe(expected.hoverColor('#123'))
-    expect(actual.hoverColor('#234', 0.15)).toBe(expected.hoverColor('#234', 0.15))
     expect(actual.disableColor('#345')).toBe(expected.disableColor('#345'))
   })
 

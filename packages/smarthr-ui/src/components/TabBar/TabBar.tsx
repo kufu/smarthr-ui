@@ -5,19 +5,15 @@ import { Reel } from '../Layout'
 
 const tabBar = tv({
   slots: {
-    wrapper: ['smarthr-ui-TabBar'],
-    inner: ['shr-grow', 'shr-m-0.25'],
+    wrapper: 'smarthr-ui-TabBar',
+    inner: 'shr-grow shr-m-0.25',
   },
   variants: {
     bordered: {
       true: {
         inner: [
           'shr-relative',
-          'before:shr-absolute',
-          'before:shr-inset-x-0',
-          'before:shr-bottom-0',
-          'before:shr-border-b-shorthand',
-          'before:shr-content-[""]',
+          'before:shr-absolute before:shr-inset-x-0 before:shr-bottom-0 before:shr-border-b-shorthand before:shr-content-[""] before:shr-z-1',
         ],
       },
     },

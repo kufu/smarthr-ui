@@ -23,7 +23,7 @@ const button = tv({
   ],
   variants: {
     active: {
-      true: ['shr-bg-white-darken shr-text-inherit', 'aria-selected:shr-bg-main-darken'],
+      true: ['shr-bg-white-darken shr-text-color-inherit', 'aria-selected:shr-bg-main-darken'],
       false: ['shr-bg-white', 'aria-selected:shr-bg-main'],
     },
     new: {
