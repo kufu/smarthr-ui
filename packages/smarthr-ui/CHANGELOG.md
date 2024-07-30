@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [54.1.0](https://github.com/kufu/smarthr-ui/compare/v54.0.0...v54.1.0) (2024-07-30)
+
+
+### Features
+
+* TabItem に suffix と disabled な理由を渡せるように修正 ([#4804](https://github.com/kufu/smarthr-ui/issues/4804)) ([af520c4](https://github.com/kufu/smarthr-ui/commit/af520c49ad0c8577b230de7c98750dc6f9d1931a))
+
+
+### Bug Fixes
+
+* AppNavi 内の StatusLabel が潰れないように修正 ([#4808](https://github.com/kufu/smarthr-ui/issues/4808)) ([bbbe499](https://github.com/kufu/smarthr-ui/commit/bbbe499b38b94491e0b12114d3ac1cbe6a09703b))
+* TabBar 内の Tooltip 縦位置を自動調整に変更 ([#4809](https://github.com/kufu/smarthr-ui/issues/4809)) ([6650bcb](https://github.com/kufu/smarthr-ui/commit/6650bcb71e297f6d82f327b274452bcb35d619c6))
+* tailwind-merge に prefix を追加 ([#4798](https://github.com/kufu/smarthr-ui/issues/4798)) ([75d34ca](https://github.com/kufu/smarthr-ui/commit/75d34ca563f1e59deee82d3b3636a63b9e34d68d))
+
 ## [54.0.0](https://github.com/kufu/smarthr-ui/compare/v53.1.0...v54.0.0) (2024-07-23)
 
 
