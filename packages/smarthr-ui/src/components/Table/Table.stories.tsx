@@ -630,8 +630,7 @@ export const FixedColumns = () => (
           <thead>
             <tr>
               <Th fixed>fixed</Th>
-              <Th>cell</Th>
-              <Th>cell</Th>
+              <Th fixed>fixed</Th>
               <Th>cell</Th>
               <Th>cell</Th>
               <Th>cell</Th>
@@ -651,11 +650,13 @@ export const FixedColumns = () => (
               <Th>cell</Th>
               <Th>cell</Th>
               <Th fixed>fixed</Th>
+              <Th fixed>fixed</Th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <Td fixed>fixed</Td>
+              <Td fixed>fixed</Td>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
@@ -674,12 +675,12 @@ export const FixedColumns = () => (
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
+              <Td fixed>fixed</Td>
               <Td fixed>fixed</Td>
             </tr>
             <tr>
               <Td fixed>fixed</Td>
+              <Td fixed>fixed</Td>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
@@ -698,8 +699,7 @@ export const FixedColumns = () => (
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
-              <Td>cell</Td>
-              <Td>cell</Td>
+              <Td fixed>fixed</Td>
               <Td fixed>fixed</Td>
             </tr>
           </tbody>
