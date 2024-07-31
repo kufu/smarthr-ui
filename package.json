@@ -30,7 +30,7 @@
   "packageManager": "pnpm@9.6.0",
   "pnpm": {
     "overrides": {
-      "@babel/helper-compilation-targets": "^7.24.8",
+      "@babel/helper-compilation-targets": "^7.25.2",
       "@types/react": "^18.3.3",
       "minimist": "1.2.8",
       "react": "^18.3.1",
