@@ -49,13 +49,12 @@ const verticalStepItem = tv({
   ],
 })
 
-export const VerticalStepItem: FC<VerticalStep> = ({
-  stepNumber,
-  label,
-  status,
-  children,
-  current,
-}) => {
+type Props = VerticalStep & {
+  /** 現在地かどうか */
+  current: boolean
+}
+
+export const VerticalStepItem: FC<Props> = ({ stepNumber, label, status, children, current }) => {
   const statusType = typeof status === 'object' ? status.type : status
   const { wrapper, headingWrapper, heading, body, inner } = verticalStepItem({
     status: statusType,

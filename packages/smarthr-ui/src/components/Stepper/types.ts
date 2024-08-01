@@ -16,18 +16,13 @@ export type Step = {
         type: 'completed' | 'closed'
         text: string
       }
-  /** 現在地かどうか */
-  current?: boolean
   /** ステップ数 */
   stepNumber?: number
 }
 
 export type VerticalStep = PropsWithChildren<Step>
 
-export type HorizontalStep = Step & {
-  /** 前のステップが完了しているかどうか */
-  isPrevStepCompleted?: boolean
-}
+export type HorizontalStep = Step
 
 export type VerticalStepper = PropsWithBase<{
   type: 'vertical'

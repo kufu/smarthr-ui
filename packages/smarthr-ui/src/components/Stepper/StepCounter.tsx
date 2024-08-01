@@ -30,11 +30,11 @@ const style = tv({
   },
 })
 
-export const StepCounter: FC<Pick<Step, 'status' | 'current' | 'stepNumber'>> = ({
-  status,
-  current,
-  stepNumber,
-}) => {
+type Props = Pick<Step, 'status' | 'stepNumber'> & {
+  current: boolean
+}
+
+export const StepCounter: FC<Props> = ({ status, current, stepNumber }) => {
   const statusType = typeof status === 'object' ? status.type : status
   const { wrapper, counter, statusIcon } = style({ status: statusType, current })
   return (

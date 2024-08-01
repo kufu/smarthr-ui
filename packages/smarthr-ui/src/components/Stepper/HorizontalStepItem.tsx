@@ -61,7 +61,14 @@ const horizontallStepItem = tv({
   ],
 })
 
-export const HorizontalStepItem: FC<HorizontalStep> = ({
+type Props = HorizontalStep & {
+  /** 現在地かどうか */
+  current: boolean
+  /** 前のステップが完了しているかどうか */
+  isPrevStepCompleted?: boolean
+}
+
+export const HorizontalStepItem: FC<Props> = ({
   stepNumber,
   label,
   status,
