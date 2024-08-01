@@ -14,7 +14,7 @@ import { HorizontalStep, VerticalStep } from './types'
 import { Stepper } from '.'
 
 export default {
-  title: 'Forms（フォーム）/Stepper',
+  title: 'Data Display（データ表示）/Stepper',
   component: Stepper,
 }
 

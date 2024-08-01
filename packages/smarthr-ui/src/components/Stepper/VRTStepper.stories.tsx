@@ -9,7 +9,7 @@ import { _Default } from './Stepper.stories'
 import { Stepper } from '.'
 
 export default {
-  title: 'Forms（フォーム）/Stepper',
+  title: 'Data Display（データ表示）/Stepper',
   component: Stepper,
 }
 
