@@ -50,6 +50,8 @@ const verticalStepItem = tv({
 })
 
 type Props = VerticalStep & {
+  /** ステップ数 */
+  stepNumber?: number
   /** 現在地かどうか */
   current: boolean
 }

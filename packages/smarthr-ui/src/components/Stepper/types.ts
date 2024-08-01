@@ -16,8 +16,6 @@ export type Step = {
         type: 'completed' | 'closed'
         text: string
       }
-  /** ステップ数 */
-  stepNumber?: number
 }
 
 export type VerticalStep = PropsWithChildren<Step>

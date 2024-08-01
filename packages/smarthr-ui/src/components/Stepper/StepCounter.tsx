@@ -30,7 +30,8 @@ const style = tv({
   },
 })
 
-type Props = Pick<Step, 'status' | 'stepNumber'> & {
+type Props = Pick<Step, 'status'> & {
+  stepNumber?: number
   current: boolean
 }
 

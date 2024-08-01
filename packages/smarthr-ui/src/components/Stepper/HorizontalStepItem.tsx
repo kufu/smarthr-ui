@@ -62,6 +62,8 @@ const horizontallStepItem = tv({
 })
 
 type Props = HorizontalStep & {
+  /** ステップ数 */
+  stepNumber?: number
   /** 現在地かどうか */
   current: boolean
   /** 前のステップが完了しているかどうか */

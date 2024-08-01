@@ -28,7 +28,6 @@ export const StepStatusIcon: FC<
 > = ({ status, className, ...rest }) => {
   const [statusType, statusText] =
     typeof status === 'object' ? [status.type, status.text] : [status]
-  // TODO: 翻訳を実装
   const icon = useMemo(() => {
     switch (statusType) {
       case 'completed':
