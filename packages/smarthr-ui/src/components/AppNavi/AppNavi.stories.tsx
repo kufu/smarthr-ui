@@ -1,19 +1,19 @@
 import { action } from '@storybook/addon-actions'
-import { StoryFn } from '@storybook/react'
-import React, { FC, ReactNode } from 'react'
-import styled, { css } from 'styled-components'
+import React, { type FC, type ReactNode } from 'react'
 
-import { UnstyledButton } from '../Button'
-import { FaBirthdayCakeIcon, FaChartPieIcon, FaCogIcon, FaFileIcon, FaUserAltIcon } from '../Icon'
+import { AnchorButton, Button } from '../Button'
 
 import { AppNavi } from './AppNavi'
+import { AppNaviAnchor } from './AppNaviAnchor'
+import { AppNaviButton } from './AppNaviButton'
+import { AppNaviCustomTag } from './AppNaviCustomTag'
+import { AppNaviDropdownMenuButton } from './AppNaviDropdownMenuButton'
+
+import type { StoryFn } from '@storybook/react'
 
 export default {
   title: 'Navigation（ナビゲーション）/AppNavi',
   component: AppNavi,
-  parameters: {
-    withTheming: true,
-  },
 }
 
 const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?: string }> = ({
@@ -29,117 +29,44 @@ const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?
   </a>
 )
 
-const List: FC = () => (
-  <ListWrapper>
-    <li>
-      <UnstyledButton onClick={action('clicked item 1')}>ドロップダウンアイテム1</UnstyledButton>
-    </li>
-    <li>
-      <UnstyledButton onClick={action('clicked item 2')}>ドロップダウンアイテム2</UnstyledButton>
-    </li>
-    <li>
-      <UnstyledButton onClick={action('clicked item 3')}>ドロップダウンアイテム3</UnstyledButton>
-    </li>
-    <li>
-      <UnstyledButton onClick={action('clicked item 4')}>ドロップダウンアイテム4</UnstyledButton>
-    </li>
-  </ListWrapper>
+const _Template: StoryFn = () => (
+  <AppNavi label="機能名">
+    <AppNaviButton onClick={action('click')} current>
+      カレントボタン
+    </AppNaviButton>
+    <AppNaviAnchor href="/">アンカーボタン</AppNaviAnchor>
+    <AppNaviDropdownMenuButton label="設定">
+      <Button>権限</Button>
+      <AnchorButton href="#">その他</AnchorButton>
+    </AppNaviDropdownMenuButton>
+    <AppNaviCustomTag tag={Link} href="/">
+      カスタムタグ
+    </AppNaviCustomTag>
+    <div className="shr-ms-auto">
+      <p>Some child components</p>
+    </div>
+  </AppNavi>
 )
 
-const buttons = [
-  {
-    children: 'カレントボタン',
-    icon: FaFileIcon,
-    current: true,
-    onClick: action('click!!'),
-  },
-  {
-    children: 'ボタン',
-    icon: FaUserAltIcon,
-    onClick: action('click!!'),
-  },
-  {
-    children: 'アンカー',
-    icon: FaCogIcon,
-    href: '/',
-  },
-  {
-    children: 'ドロップダウン',
-    icon: FaChartPieIcon,
-    dropdownContent: <List />,
-  },
-  {
-    children: 'カスタムタグ',
-    icon: FaBirthdayCakeIcon,
-    tag: Link,
-    href: '/',
-  },
-]
-const withoutIconButtons = buttons.map(({ icon, ...button }) => button)
+export const Default = _Template.bind({})
 
-export const WithChildren: StoryFn = () => (
-  <Wrapper>
-    <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
-      <Child>Some child components</Child>
-    </AppNavi>
-  </Wrapper>
+export const CurrentInMenu: StoryFn = () => (
+  <AppNavi label="機能名">
+    <AppNaviButton onClick={action('click')}>カレントボタン</AppNaviButton>
+    <AppNaviAnchor href="/">アンカーボタン</AppNaviAnchor>
+    <AppNaviDropdownMenuButton label="設定">
+      <Button onClick={action('click')} aria-current="page">
+        権限
+      </Button>
+      <AnchorButton href="#">その他</AnchorButton>
+    </AppNaviDropdownMenuButton>
+  </AppNavi>
 )
-WithChildren.storyName = 'with children'
-
-export const WithoutChildren: StoryFn = () => (
-  <Wrapper>
-    <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret />
-  </Wrapper>
-)
-WithoutChildren.storyName = 'without children'
-
-export const NoIconAndCaret: StoryFn = () => (
-  <Wrapper>
-    <AppNavi label="機能名" buttons={buttons} />
-  </Wrapper>
-)
-NoIconAndCaret.storyName = 'アイコンありドロップダウン示唆なし'
+CurrentInMenu.storyName = '現在地がDropdownMenu内にある場合'
 
 export const ContainerScrollX: StoryFn = () => (
-  <OverflowWrapper>
-    <AppNavi label="機能名" buttons={withoutIconButtons} displayDropdownCaret>
-      <Child>Some child components</Child>
-    </AppNavi>
-  </OverflowWrapper>
+  <div className="shr-pb-0.25 shr-overflow-x-auto">
+    <_Template />
+  </div>
 )
 ContainerScrollX.storyName = '横スクロールさせる場合'
-
-const Wrapper = styled.div`
-  ${({ theme }) => {
-    const { color } = theme
-
-    return css`
-      padding: 32px 0;
-      background-color: ${color.BACKGROUND};
-    `
-  }}
-`
-const OverflowWrapper = styled(Wrapper)`
-  overflow-x: auto;
-`
-const Child = styled.p`
-  margin: 0 0 0 auto;
-`
-
-const ListWrapper = styled.ul(
-  ({ theme: { color } }) => css`
-    margin: 0;
-    padding: 8px 0;
-    list-style: none;
-
-    & > li > button {
-      line-height: 40px;
-      padding-inline: 20px;
-      background-color: ${color.WHITE};
-
-      &:hover {
-        background-color: ${color.hoverColor(color.WHITE)};
-      }
-    }
-  `,
-)
