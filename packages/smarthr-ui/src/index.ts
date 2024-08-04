@@ -107,6 +107,7 @@ export * from './components/SpreadsheetTable'
 export * from './components/ResponseMessage'
 export * from './components/Badge'
 export * from './components/Switch'
+export * from './components/TimePicker'
 
 // layout components
 export { Center, Cluster, Reel, Stack, Sidebar } from './components/Layout'
