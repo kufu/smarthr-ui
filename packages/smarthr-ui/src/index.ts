@@ -12,11 +12,7 @@ export {
   DropdownMenuButton,
   SortDropdown,
 } from './components/Dropdown'
-export {
-  FlashMessage,
-  FlashMessageListProvider,
-  useFlashMessageList,
-} from './components/FlashMessage'
+export * from './components/FlashMessage'
 export { FloatArea } from './components/FloatArea'
 export { Input, CurrencyInput, SearchInput } from './components/Input'
 export { InputFile } from './components/InputFile'
