@@ -25,7 +25,7 @@ const yearPicker = tv({
     container:
       'shr-box-border shr-flex shr-h-full shr-w-full shr-flex-wrap shr-items-start shr-overflow-y-auto shr-px-0.25 shr-py-0.5',
     yearButton:
-      'smarthr-ui-YearPicker-selectYear shr-group shr-flex shr-w-1/4 shr-cursor-pointer shr-items-center shr-justify-center shr-px-0 shr-py-0.5 shr-leading-none',
+      'smarthr-ui-YearPicker-selectYear shr-group shr-flex shr-w-1/4 shr-items-center shr-justify-center shr-px-0 shr-py-0.5 shr-leading-none',
     yearWrapper:
       'shr-box-border shr-inline-block shr-rounded-full shr-px-0.75 shr-py-0.5 shr-text-base shr-leading-none group-hover:shr-bg-base-grey group-hover:shr-text-black',
   },
