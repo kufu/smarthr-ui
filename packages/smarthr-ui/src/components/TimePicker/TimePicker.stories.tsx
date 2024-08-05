@@ -1,6 +1,8 @@
 import { StoryFn } from '@storybook/react/*'
 import React from 'react'
 
+import { FormControl } from '../FormControl'
+
 import { TimePicker } from './TimePicker'
 
 export default {
@@ -8,7 +10,11 @@ export default {
   component: TimePicker,
 }
 
-const _Template: StoryFn = (args) => <TimePicker {...args} />
+const _Template: StoryFn = (args) => (
+  <FormControl title="時刻">
+    <TimePicker {...args} />
+  </FormControl>
+)
 
 export const Default = _Template.bind({})
 
