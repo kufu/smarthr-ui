@@ -25,10 +25,7 @@ type Props = {
 const sideNavItem = tv({
   slots: {
     wrapper: ['smarthr-ui-SideNav-item'],
-    button: [
-      'shr-w-full shr-cursor-pointer shr-leading-none [&]:shr-box-border',
-      'focus-visible:shr-focus-indicator',
-    ],
+    button: ['shr-w-full shr-leading-none [&]:shr-box-border', 'focus-visible:shr-focus-indicator'],
     buttonInner: 'smarthr-ui-SideNav-itemTitle',
   },
   variants: {
