@@ -29,7 +29,7 @@ const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?
   </a>
 )
 
-const _Template: StoryFn = () => (
+export const Default: StoryFn = () => (
   <AppNavi label="機能名">
     <AppNaviButton onClick={action('click')} current>
       カレントボタン
@@ -48,8 +48,6 @@ const _Template: StoryFn = () => (
   </AppNavi>
 )
 
-export const Default = _Template.bind({})
-
 export const CurrentInMenu: StoryFn = () => (
   <AppNavi label="機能名">
     <AppNaviButton onClick={action('click')}>カレントボタン</AppNaviButton>
@@ -66,7 +64,7 @@ CurrentInMenu.storyName = '現在地がDropdownMenu内にある場合'
 
 export const ContainerScrollX: StoryFn = () => (
   <div className="shr-pb-0.25 shr-overflow-x-auto">
-    <_Template />
+    <Default />
   </div>
 )
 ContainerScrollX.storyName = '横スクロールさせる場合'
