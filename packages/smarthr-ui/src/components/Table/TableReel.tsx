@@ -9,7 +9,7 @@ const tableReel = tv({
   slots: {
     wrapper: ['smarthr-ui-TableReel', 'shr-relative'],
     inner: [
-      'smarthr-ui-TableReel-inner smarthr-ui-TableReel-scroll-reached-start',
+      'smarthr-ui-TableReel-inner smarthr-ui-TableReel-scroll-reached-start smarthr-ui-TableReel-scroll-reached-end',
       'shr-relative shr-overflow-auto',
     ],
   },

@@ -681,7 +681,7 @@ export const FixedColumns = () => (
             <tr>
               <Td fixed>fixed</Td>
               <Td fixed>fixed</Td>
-              <Td>cell</Td>
+              <Td fixed>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
               <Td>cell</Td>
@@ -700,7 +700,9 @@ export const FixedColumns = () => (
               <Td>cell</Td>
               <Td>cell</Td>
               <Td fixed>fixed</Td>
-              <Td fixed>fixed</Td>
+              <Td fixed>
+                <FFButton />
+              </Td>
             </tr>
           </tbody>
         </Table>
@@ -708,6 +710,15 @@ export const FixedColumns = () => (
     </li>
   </Ul>
 )
+
+const FFButton = () => {
+  const [state, setState] = React.useState(false)
+  return (
+    <Button size="s" variant="secondary" onClick={() => setState((s) => !s)}>
+      {state ? 'Onnnnnnnnnnnnnnnnnnnn' : 'Off'}
+    </Button>
+  )
+}
 
 const Ul = styled.ul`
   list-style: none;

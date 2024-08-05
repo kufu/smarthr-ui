@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants'
 export const fixedCellStyle = tv({
   base: [
     'smarthr-ui-TableCell-fixed',
-    'shr-sticky shr-bg-white [&.smarthr-ui-TableCell-fixed]:after:shr-opacity-100',
+    'shr-sticky shr-bg-white',
 
     'after:shr-absolute after:shr-top-0 after:shr-z-0 after:shr-h-full after:shr-w-0.75 after:shr-from-[rgba(0,0,0,0.2)] after:shr-to-transparent after:shr-transition-all after:shr-duration-200 after:shr-content-[""] after:shr-visible',
     /* 影の領域が広すぎるとクリッカブルエリアを侵食するので無効化 */

@@ -16,8 +16,8 @@ export const useReelCells = () => {
           '.smarthr-ui-TableCell-fixed',
         ) as unknown as HTMLCollectionOf<HTMLElement>) || []
       for (const stickyCell of stickyCells) {
-        const prevWidth = stickyCell.previousElementSibling?.clientWidth ?? 0
-        const nextWidth = stickyCell.nextElementSibling?.clientWidth ?? 0
+        const prevWidth = stickyCell.previousElementSibling?.getBoundingClientRect().width ?? 0
+        const nextWidth = stickyCell.nextElementSibling?.getBoundingClientRect().width ?? 0
         stickyCell.style.setProperty('--prev-width', `${prevWidth}px`)
         stickyCell.style.setProperty('--next-width', `${nextWidth}px`)
       }
@@ -26,7 +26,7 @@ export const useReelCells = () => {
       const maxScrollLeft = currentRef.scrollWidth - currentRef.clientWidth || 0
 
       const scrollReachedStart = scrollLeft <= 0
-      const scrollReachedEnd = maxScrollLeft > 0 && scrollLeft >= maxScrollLeft
+      const scrollReachedEnd = maxScrollLeft <= 0 || scrollLeft >= maxScrollLeft
 
       currentRef.classList.toggle('smarthr-ui-TableReel-scroll-reached-start', scrollReachedStart)
       currentRef.classList.toggle('smarthr-ui-TableReel-scroll-reached-end', scrollReachedEnd)
