@@ -1,12 +1,8 @@
 import { StoryFn } from '@storybook/react'
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
-import { Button } from '../Button'
-
 import { FlashMessage, Props, messageTypes } from './FlashMessage'
-
-import { FlashMessageListProvider, useFlashMessageList } from '.'
 
 export default {
   title: 'States（状態）/FlashMessage（非推奨）',
@@ -160,24 +156,6 @@ export const Demo: StoryFn = () => {
     </div>
   )
 }
-
-let messageCount = 1
-const ListInner = () => {
-  const { enqueueMessage } = useFlashMessageList()
-
-  const handleClick = () => {
-    enqueueMessage({
-      type: 'success',
-      text: `success ${messageCount++}`,
-    })
-  }
-  return <Button onClick={handleClick}>Add message</Button>
-}
-export const FlashMessageList: StoryFn = () => (
-  <FlashMessageListProvider>
-    <ListInner />
-  </FlashMessageListProvider>
-)
 
 const List = styled.ul`
   margin: 40px;

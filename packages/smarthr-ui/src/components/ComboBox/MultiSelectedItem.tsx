@@ -45,9 +45,7 @@ const multiSelectedItem = tv({
       true: {
         deleteButton: 'shr-cursor-not-allowed',
       },
-      false: {
-        deleteButton: 'shr-cursor-pointer',
-      },
+      false: {},
     },
   },
 })
