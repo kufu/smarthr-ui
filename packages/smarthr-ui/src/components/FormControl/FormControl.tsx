@@ -21,6 +21,7 @@ import { Select } from '../Select'
 import { StatusLabel } from '../StatusLabel'
 import { Text, TextProps } from '../Text'
 import { Textarea } from '../Textarea'
+import { TimePicker } from '../TimePicker'
 import { visuallyHiddenText } from '../VisuallyHiddenText/VisuallyHiddenText'
 
 import type { Gap } from '../../types'
@@ -304,6 +305,7 @@ type InputComponent =
   | typeof CurrencyInput
   | typeof Textarea
   | typeof DatePicker
+  | typeof TimePicker
   | typeof Select
   | typeof SingleComboBox
   | typeof MultiComboBox
@@ -327,6 +329,7 @@ const isInputElement = (
     type === CurrencyInput ||
     type === Textarea ||
     type === DatePicker ||
+    type === TimePicker ||
     type === Select ||
     type === SingleComboBox ||
     type === MultiComboBox ||
