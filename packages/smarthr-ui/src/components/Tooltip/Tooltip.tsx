@@ -177,7 +177,9 @@ export const Tooltip: FC<Props & ElementProps> = ({
           portalRoot,
         )}
       {childrenWithProps}
-      <VisuallyHiddenText id={messageId}>{hiddenText}</VisuallyHiddenText>
+      <VisuallyHiddenText id={messageId} aria-hidden={!isVisible}>
+        {hiddenText}
+      </VisuallyHiddenText>
     </span>
   )
 }
