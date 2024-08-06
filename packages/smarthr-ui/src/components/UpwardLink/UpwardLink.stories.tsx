@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 
 import { Fieldset } from '../Fieldset'
-import { Heading } from '../Heading'
+import { PageHeading } from '../Heading'
 import { Cluster, Stack } from '../Layout'
 import { RadioButton } from '../RadioButton'
 
@@ -14,11 +14,7 @@ export default {
   component: UpwardLink,
 }
 
-const Template: StoryFn = (args) => (
-  <UpwardLink {...args} href="/">
-    権限一覧に戻る
-  </UpwardLink>
-)
+const Template: StoryFn = (args) => <UpwardLink {...args} href="/" />
 
 export const Default = () => {
   const [indent, setIndent] = React.useState(true)
@@ -35,11 +31,9 @@ export const Default = () => {
           </RadioButton>
         </Cluster>
       </Fieldset>
-      <Stack className="shr-bg-background shr-p-2" as="section">
-        <div>
-          <Template indent={indent} />
-        </div>
-        <Heading>権限詳細</Heading>
+      <Stack className="shr-bg-background shr-p-2">
+        <Template indent={indent}>権限一覧に戻る</Template>
+        <PageHeading>権限詳細</PageHeading>
       </Stack>
     </Stack>
   )

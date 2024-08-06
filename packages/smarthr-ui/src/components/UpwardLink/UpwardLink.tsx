@@ -5,11 +5,16 @@ import { FaArrowLeftIcon } from '../Icon'
 import { TextLink } from '../TextLink'
 
 const upwardLink = tv({
-  base: '',
+  slots: {
+    wrapper: 'shr-leading-none',
+    link: '',
+  },
   variants: {
     indent: {
-      true: '-shr-ms-1.25',
-      false: '',
+      true: {
+        wrapper: '-shr-translate-x-1.25',
+      },
+      false: {},
     },
   },
 })
@@ -18,9 +23,11 @@ type Props = Omit<ComponentProps<typeof TextLink>, 'prefix' | 'suffix'> &
   VariantProps<typeof upwardLink>
 
 export const UpwardLink: React.FC<Props> = ({ indent = true, className, ...rest }) => {
-  const style = upwardLink({ indent, className })
+  const { wrapper, link } = upwardLink({ indent })
   return (
-    // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute
-    <TextLink {...rest} prefix={<FaArrowLeftIcon />} className={style} />
+    <div className={wrapper({ className })}>
+      {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
+      <TextLink {...rest} prefix={<FaArrowLeftIcon />} className={link()} />
+    </div>
   )
 }
