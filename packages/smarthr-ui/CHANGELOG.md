@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [55.0.0](https://github.com/kufu/smarthr-ui/compare/v54.1.0...v55.0.0) (2024-08-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* FlashMessageList を削除 (#4822)
+* SearchInput コンポーネントから onClickClear オプションを削除 (#4818)
+
+### Features
+
+* FlashMessageList を削除 ([#4822](https://github.com/kufu/smarthr-ui/issues/4822)) ([b1bcd98](https://github.com/kufu/smarthr-ui/commit/b1bcd983ddbd6613c2a22f9ac6e1827038d79bcd))
+* SearchInput コンポーネントから onClickClear オプションを削除 ([#4818](https://github.com/kufu/smarthr-ui/issues/4818)) ([1712740](https://github.com/kufu/smarthr-ui/commit/1712740e8a6f66b4438e45537bd3996269f4f0d9))
+* Stepper を追加 ([#4817](https://github.com/kufu/smarthr-ui/issues/4817)) ([f66b70d](https://github.com/kufu/smarthr-ui/commit/f66b70dfe883df11205a1a79e91b0bbaac1e3aea))
+* TimePicker を追加 ([#4821](https://github.com/kufu/smarthr-ui/issues/4821)) ([3f32ec5](https://github.com/kufu/smarthr-ui/commit/3f32ec54882d0cfdd8a9a23341afc7bf44b0f2c1))
+
+
+### Bug Fixes
+
+* UnstyledButton のデフォルト cursor を pointer に変更 ([#4824](https://github.com/kufu/smarthr-ui/issues/4824)) ([fab5f5b](https://github.com/kufu/smarthr-ui/commit/fab5f5bf490764f6514d7caf49fadfd390909da4))
+
 ## [54.1.0](https://github.com/kufu/smarthr-ui/compare/v54.0.0...v54.1.0) (2024-07-30)
 
 
