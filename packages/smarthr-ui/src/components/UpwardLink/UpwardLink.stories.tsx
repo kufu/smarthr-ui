@@ -10,7 +10,7 @@ import { UpwardLink } from './UpwardLink'
 import type { StoryFn } from '@storybook/react/*'
 
 export default {
-  title: 'Text（テキスト）/UpwardLink',
+  title: 'Navigation（ナビゲーション）/UpwardLink',
   component: UpwardLink,
 }
 
