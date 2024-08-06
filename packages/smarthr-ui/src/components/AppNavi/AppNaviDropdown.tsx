@@ -28,11 +28,6 @@ const appNaviDropdown = tv({
         ],
       },
     },
-    active: {
-      true: {
-        wrapper: 'shr-cursor-pointer',
-      },
-    },
   },
 })
 

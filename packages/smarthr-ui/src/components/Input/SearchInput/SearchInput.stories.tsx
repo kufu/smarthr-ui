@@ -22,46 +22,25 @@ export const Default: Story = {
   args: {
     tooltipMessage: '',
   },
-  render: () => {
-    const [value, setValue] = React.useState('value')
-    return (
-      <StyledStack>
-        <div>
-          <p>主に入力欄に対する説明をレイアウト上配置できない場合の利用を想定しています。</p>
-          <SearchInput
-            name="default"
-            onChange={(e) => setValue(e.target.value)}
-            value={value}
-            tooltipMessage="氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。"
-          />
-        </div>
-        <div>
-          <p>検索解除ボタンを表示</p>
-          <SearchInput
-            name="default"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            tooltipMessage="氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。"
-            onClickClear={() => setValue('')}
-          />
-        </div>
-        <div>
-          <p>アイコンの代替テキストを設定</p>
-          <SearchInput
-            name="default"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            tooltipMessage="氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。"
-            decorators={{
-              iconAlt: (txt) => `search.(${txt})`,
-              clearButtonAlt: (txt) => `clear.(${txt})`,
-            }}
-            onClickClear={() => setValue('')}
-          />
-        </div>
-      </StyledStack>
-    )
-  },
+  render: () => (
+    <StyledStack>
+      <div>
+        <p>主に入力欄に対する説明をレイアウト上配置できない場合の利用を想定しています。</p>
+        <SearchInput
+          name="default"
+          tooltipMessage="氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。"
+        />
+      </div>
+      <div>
+        <p>アイコンの代替テキストを設定</p>
+        <SearchInput
+          name="default"
+          tooltipMessage="氏名、ヨミガナ、社員番号で検索できます。スペース区切りでAND検索ができます。"
+          decorators={{ iconAlt: (txt) => `search.(${txt})` }}
+        />
+      </div>
+    </StyledStack>
+  ),
 }
 
 const StyledStack = styled(Stack)`
