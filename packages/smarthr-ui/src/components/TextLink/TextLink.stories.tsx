@@ -7,7 +7,7 @@ import { FaAddressCardIcon } from '../Icon'
 import { TextLink } from './TextLink'
 
 export default {
-  title: 'Text（テキスト）/TextLink',
+  title: 'Navigation（ナビゲーション）/TextLink',
   component: TextLink,
   parameters: {
     withTheming: true,
