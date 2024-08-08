@@ -4,9 +4,14 @@ import { tabbable } from '../../libs/tabbable'
 
 type Props = PropsWithChildren<{
   firstFocusTarget?: RefObject<HTMLElement>
+  returnFocusToTriggerElement?: boolean
 }>
 
-export const FocusTrap: FC<Props> = ({ firstFocusTarget, children }) => {
+export const FocusTrap: FC<Props> = ({
+  firstFocusTarget,
+  children,
+  returnFocusToTriggerElement = true,
+}) => {
   const ref = useRef<HTMLDivElement | null>(null)
   const dummyFocusRef = useRef<HTMLDivElement>(null)
 
@@ -50,11 +55,12 @@ export const FocusTrap: FC<Props> = ({ firstFocusTarget, children }) => {
 
     return () => {
       // フォーカストラップ終了時にトリガにフォーカスを戻す
-      if (triggerElement instanceof HTMLElement) {
+      if (triggerElement instanceof HTMLElement && returnFocusToTriggerElement) {
+        console.log('FocusTrap return focus')
         triggerElement.focus()
       }
     }
-  }, [firstFocusTarget])
+  }, [firstFocusTarget, returnFocusToTriggerElement])
 
   return (
     <div ref={ref}>

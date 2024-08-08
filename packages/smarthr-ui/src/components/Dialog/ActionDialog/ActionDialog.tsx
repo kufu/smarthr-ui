@@ -7,7 +7,10 @@ import { useDialogPortal } from '../useDialogPortal'
 
 import { ActionDialogContentInner, ActionDialogContentInnerProps } from './ActionDialogContentInner'
 
-type Props = Omit<ActionDialogContentInnerProps, 'titleId'> & DialogProps
+type Props = Omit<ActionDialogContentInnerProps, 'titleId'> &
+  DialogProps & {
+    hasNextStep?: boolean
+  }
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 export const ActionDialog: React.FC<Props & ElementProps> = ({
@@ -30,6 +33,7 @@ export const ActionDialog: React.FC<Props & ElementProps> = ({
   portalParent,
   decorators,
   id,
+  hasNextStep = false,
   ...props
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
@@ -52,6 +56,7 @@ export const ActionDialog: React.FC<Props & ElementProps> = ({
   return createPortal(
     <DialogContentInner
       {...props}
+      returnFocusToTriggerElement={!hasNextStep}
       ariaLabelledby={titleId}
       className={className}
       onPressEscape={onPressEscape}

@@ -8,7 +8,15 @@ import { useDialogPortal } from '../useDialogPortal'
 
 import { ActionDialogContentInner, BaseProps } from './ActionDialogContentInner'
 
-type Props = BaseProps & UncontrolledDialogProps
+type Props = BaseProps &
+  UncontrolledDialogProps & {
+    /**
+     * ダイアログを閉じたときにトリガーとなった要素にフォーカスを返すかどうか
+     * defaultで true だが、ステップを持つDialogで次のDialogを起動するなどの場合、falseにする
+     */
+    returnFocusToTriggerElement?: boolean
+  }
+
 type ElementProps = Omit<HTMLAttributes<HTMLDivElement>, keyof Props>
 
 export const ActionDialogContent: React.FC<Props & ElementProps> = ({
@@ -23,6 +31,7 @@ export const ActionDialogContent: React.FC<Props & ElementProps> = ({
   portalParent,
   className = '',
   decorators,
+  returnFocusToTriggerElement = true,
   ...props
 }) => {
   const { onClickClose, active } = useContext(DialogContext)
@@ -49,6 +58,7 @@ export const ActionDialogContent: React.FC<Props & ElementProps> = ({
       {...props}
       onPressEscape={onClickClose}
       isOpen={active}
+      returnFocusToTriggerElement={returnFocusToTriggerElement}
       ariaLabelledby={titleId}
       className={className}
     >
