@@ -14,7 +14,9 @@ type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props>
 type Props = PropsWithChildren<{
   /** ラベルのテキスト */
   label?: ReactNode
-  /** 表示するボタンの Props の配列 */
+  /** 表示するボタンの Props の配列
+   * @deprecated AppNaviButton などのコンポーネントを Composite させて構成させてください
+   */
   buttons?: Array<
     AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
   >

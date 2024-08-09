@@ -43,7 +43,7 @@ type Props = {
 }
 type ElementProps = Omit<ComponentPropsWithRef<'button'>, keyof Props>
 
-const dropdownMenuButton = tv({
+export const dropdownMenuButton = tv({
   slots: {
     triggerWrapper: 'smarthr-ui-DropdownMenuButton',
     triggerButton:
