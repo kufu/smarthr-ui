@@ -1,8 +1,7 @@
 import React, {
-  ComponentPropsWithoutRef,
-  InputHTMLAttributes,
-  KeyboardEvent,
-  Ref,
+  type ComponentPropsWithoutRef,
+  type KeyboardEvent,
+  type Ref,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -21,11 +20,11 @@ import { FaCaretDownIcon } from '../Icon'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
 import { hasParentElementByClassName } from './multiComboBoxHelper'
-import { BaseProps, ComboBoxItem } from './types'
 import { useFocusControl } from './useFocusControl'
 import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
 
+import type { BaseProps, ComboBoxItem } from './types'
 import type { DecoratorsType } from '../../types'
 
 type Props<T> = BaseProps<T> & {
@@ -69,37 +68,9 @@ type Props<T> = BaseProps<T> & {
    * アイテムが選択されたときに選択済みかどうかを判定するコールバック関数/
    */
   isItemSelected?: (targetItem: ComboBoxItem<T>, selectedItems: Array<ComboBoxItem<T>>) => boolean
-
-  /**
-   * input 要素の属性
-   */
-  inputAttributes?: Omit<
-    InputHTMLAttributes<HTMLInputElement>,
-    | 'name'
-    | 'disabled'
-    | 'required'
-    | 'type'
-    | 'aria-activedescendant'
-    | 'aria-autocomplete'
-    | 'aria-controls'
-    | 'aria-disabled'
-    | 'aria-expanded'
-    | 'aria-haspopup'
-    | 'aria-invalid'
-    | 'className'
-    | 'onChange'
-    | 'onCompositionEnd'
-    | 'onCompositionStart'
-    | 'onFocus'
-    | 'onKeyDown'
-    | 'ref'
-    | 'role'
-    | 'tabIndex'
-    | 'value'
-  >
 }
 
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props<unknown>>
+type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
 
 const SELECTED_LIST_ARIA_LABEL = '選択済みアイテム'
 
@@ -173,6 +144,7 @@ const ActualMultiComboBox = <T,>(
     error = false,
     creatable = false,
     placeholder = '',
+    autoComplete,
     dropdownHelpMessage,
     isLoading,
     selectedItemEllipsis,
@@ -191,9 +163,8 @@ const ActualMultiComboBox = <T,>(
     onKeyPress,
     decorators,
     isItemSelected,
-    inputAttributes,
     style,
-    ...props
+    ...rest
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
 ) => {
@@ -416,7 +387,7 @@ const ActualMultiComboBox = <T,>(
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
   const handleKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
       e.key === 'Enter' && e.preventDefault()
       onKeyPress && onKeyPress(e)
     },
@@ -481,7 +452,6 @@ const ActualMultiComboBox = <T,>(
 
   return (
     <div
-      {...props}
       {...wrapperStyleProps}
       ref={outerRef}
       onClick={handleClick}
@@ -514,7 +484,7 @@ const ActualMultiComboBox = <T,>(
 
         <div className={inputWrapperStlye}>
           <input
-            {...inputAttributes}
+            {...rest}
             type="text"
             name={name}
             value={inputValue}
@@ -526,7 +496,7 @@ const ActualMultiComboBox = <T,>(
             onCompositionStart={handleCompositionStartInput}
             onCompositionEnd={handleCompositionEndInput}
             onKeyDown={handleInputKeyDown}
-            autoComplete={inputAttributes?.autoComplete ?? 'off'}
+            autoComplete={autoComplete ?? 'off'}
             tabIndex={0}
             role="combobox"
             aria-activedescendant={activeOption?.id}
