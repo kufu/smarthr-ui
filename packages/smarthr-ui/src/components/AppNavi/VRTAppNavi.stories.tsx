@@ -91,7 +91,7 @@ VRTForcedColors.play = async ({ canvasElement }) => {
 
 const WrapperStack = styled(Stack)`
   ${({ theme: { color, space } }) => css`
-    padding-block: ${space(2)};
+    padding-block-end: ${space(8)};
     background-color: ${color.BACKGROUND};
   `}
 `
