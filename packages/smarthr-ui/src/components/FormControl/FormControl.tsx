@@ -347,4 +347,5 @@ const isComboBoxElement = (
   return type === SingleComboBox || type === MultiComboBox
 }
 
-export const FormControl: React.FC<Omit<Props & ElementProps, 'as'>> = ActualFormControl
+export const FormControl: React.FC<Omit<Props & ElementProps, 'as' | 'disabled'>> =
+  ActualFormControl
