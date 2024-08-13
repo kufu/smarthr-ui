@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [55.1.0](https://github.com/kufu/smarthr-ui/compare/v55.0.0...v55.1.0) (2024-08-13)
+
+
+### Features
+
+* UpwardLink を追加 ([#4828](https://github.com/kufu/smarthr-ui/issues/4828)) ([7790bd2](https://github.com/kufu/smarthr-ui/commit/7790bd2e84e54559f57da12a245893de5a17232d))
+
+
+### Bug Fixes
+
+* body の base スタイルに約物を詰めないよう指定 ([#4833](https://github.com/kufu/smarthr-ui/issues/4833)) ([5767718](https://github.com/kufu/smarthr-ui/commit/57677181af9ecd20b99d6f6d708cb88549d36076))
+* Button コンポーネントが disabled/loading の場合も onClick イベントがバブリングしてしまう問題を修正 ([#4832](https://github.com/kufu/smarthr-ui/issues/4832)) ([ddadb1b](https://github.com/kufu/smarthr-ui/commit/ddadb1b6d94d94ea1bc9e72c87ae30f0e98eb3a1))
+* Tooltip メッセージが機械側に過足提供していたので修正 ([#4827](https://github.com/kufu/smarthr-ui/issues/4827)) ([53b01e0](https://github.com/kufu/smarthr-ui/commit/53b01e08407f5680296413ae09b680d69cc36e5f))
+
 ## [55.0.0](https://github.com/kufu/smarthr-ui/compare/v54.1.0...v55.0.0) (2024-08-06)
 
 
