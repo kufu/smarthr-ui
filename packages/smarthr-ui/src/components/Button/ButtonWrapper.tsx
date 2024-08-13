@@ -68,7 +68,14 @@ export function ButtonWrapper({
         aria-disabled={disabled}
         className={buttonStyle}
         ref={buttonRef}
-        onClick={disabled ? undefined : onClick}
+        onClick={
+          disabled
+            ? (e) => {
+                e.preventDefault()
+                e.stopPropagation()
+              }
+            : onClick
+        }
       />
     )
   }

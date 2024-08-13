@@ -4,7 +4,7 @@
   "description": "SmartHR ui components built with React.",
   "author": "SmartHR-UI Team",
   "devDependencies": {
-    "@commitlint/cli": "^19.3.0",
+    "@commitlint/cli": "^19.4.0",
     "@commitlint/config-conventional": "^19.2.2",
     "eslint": "^8.57.0",
     "eslint-config-smarthr": "^6.33.0",
@@ -13,7 +13,7 @@
     "lint-staged": "^15.2.8",
     "prettier": "^3.3.3",
     "prettier-config-smarthr": "^1.0.0",
-    "prettier-plugin-tailwindcss": "^0.6.5",
+    "prettier-plugin-tailwindcss": "^0.6.6",
     "stylelint": "^16.8.1",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^3.0.1",
@@ -27,7 +27,7 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@9.6.0",
+  "packageManager": "pnpm@9.7.0",
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.25.2",

@@ -1,0 +1,1 @@
+export { UpwardLink } from './UpwardLink'

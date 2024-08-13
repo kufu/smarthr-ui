@@ -10,7 +10,7 @@ import { TextLink } from './TextLink'
 import { All } from './TextLink.stories'
 
 export default {
-  title: 'Text（テキスト）/TextLink',
+  title: 'Navigation（ナビゲーション）/TextLink',
   component: TextLink,
   parameters: {
     withTheming: true,

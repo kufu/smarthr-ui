@@ -18,6 +18,7 @@ export { Input, CurrencyInput, SearchInput } from './components/Input'
 export { InputFile } from './components/InputFile'
 export { Textarea } from './components/Textarea'
 export { TextLink } from './components/TextLink'
+export * from './components/UpwardLink'
 export { Loader } from './components/Loader'
 export {
   ActionDialog,
