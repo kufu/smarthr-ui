@@ -19,13 +19,13 @@ import { useId } from '../../hooks/useId'
 import { useTheme } from '../../hooks/useTailwindTheme'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
-import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
+import { FaGripIcon, FaXmarkIcon } from '../Icon'
 
+import { DialogBody, type Props as DialogBodyProps } from './DialogBody'
 import { DialogOverlap } from './DialogOverlap'
-import { type ContentBodyProps } from './dialogInnerStyle'
 import { useDialogPortal } from './useDialogPortal'
 
-import type { DecoratorsType, Gap } from '../../types'
+import type { DecoratorsType } from '../../types'
 
 type Props = PropsWithChildren<{
   /**
@@ -82,7 +82,7 @@ type Props = PropsWithChildren<{
     dialogHandlerAriaValuetext?: (txt: string, data: DOMRect | undefined) => string
   }
 }> &
-  ContentBodyProps
+  DialogBodyProps
 
 const DIALOG_HANDLER_ARIA_LABEL = 'ダイアログの位置'
 const CLOSE_BUTTON_ICON_ALT = '閉じる'
@@ -108,84 +108,12 @@ const modelessDialog = tv({
     footerEl: 'smarthr-ui-ModelessDialog-footer shr-border-t-shorthand',
   },
 })
-// FIXME: 他のダイアログと共通化したかったが別でやる
-const dialogBody = tv({
-  base: [
-    'smarthr-ui-ModelessDialog-content',
-    'shr-flex-1 shr-overflow-auto shr-overscroll-contain',
-  ],
-  variants: {
-    contentPaddingBlock: {
-      0: 'shr-py-0',
-      0.25: 'shr-py-0.25',
-      0.5: 'shr-py-0.5',
-      0.75: 'shr-py-0.75',
-      1: 'shr-py-1',
-      1.25: 'shr-py-1.25',
-      1.5: 'shr-py-1.5',
-      2: 'shr-py-2',
-      2.5: 'shr-py-2.5',
-      3: 'shr-py-3',
-      3.5: 'shr-py-3.5',
-      4: 'shr-py-4',
-      8: 'shr-py-8',
-      X3S: 'shr-py-0.25',
-      XXS: 'shr-py-0.5',
-      XS: 'shr-py-1',
-      S: 'shr-py-1.5',
-      M: 'shr-py-2',
-      L: 'shr-py-2.5',
-      XL: 'shr-py-3',
-      XXL: 'shr-py-3.5',
-      X3L: 'shr-py-4',
-    } as { [key in Gap]: string },
-    contentPaddingInline: {
-      0: 'shr-px-0',
-      0.25: 'shr-px-0.25',
-      0.5: 'shr-px-0.5',
-      0.75: 'shr-px-0.75',
-      1: 'shr-px-1',
-      1.25: 'shr-px-1.25',
-      1.5: 'shr-px-1.5',
-      2: 'shr-px-2',
-      2.5: 'shr-px-2.5',
-      3: 'shr-px-3',
-      3.5: 'shr-px-3.5',
-      4: 'shr-px-4',
-      8: 'shr-px-8',
-      X3S: 'shr-px-0.25',
-      XXS: 'shr-px-0.5',
-      XS: 'shr-px-1',
-      S: 'shr-px-1.5',
-      M: 'shr-px-2',
-      L: 'shr-px-2.5',
-      XL: 'shr-px-3',
-      XXL: 'shr-px-3.5',
-      X3L: 'shr-px-4',
-    } as { [key in Gap]: string },
-    contentBgColor: {
-      BACKGROUND: 'shr-bg-background',
-      COLUMN: 'shr-bg-column',
-      BASE_GREY: 'shr-bg-base-grey',
-      OVER_BACKGROUND: 'shr-bg-over-background',
-      HEAD: 'shr-bg-head',
-      BORDER: 'shr-bg-[theme(colors.grey.20)]',
-      ACTION_BACKGROUND: 'shr-bg-action-background',
-      WHITE: 'shr-bg-white',
-      GREY_5: 'shr-bg-[theme(colors.grey.5)]',
-      GREY_6: 'shr-bg-[theme(colors.grey.6)]',
-      GREY_7: 'shr-bg-[theme(colors.grey.7)]',
-      GREY_9: 'shr-bg-[theme(colors.grey.9)]',
-      GREY_20: 'shr-bg-[theme(colors.grey.20)]',
-    },
-  },
-})
 
 export const ModelessDialog: FC<Props & BaseElementProps> = ({
   header,
   children,
   contentBgColor,
-  contentPadding = 1.5,
+  contentPadding,
   footer,
   isOpen,
   onClickClose,
@@ -213,13 +141,10 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
     titleStyle,
     dialogHandlerStyle,
     closeButtonLayoutStyle,
-    contentStyle,
     footerStyle,
   } = useMemo(() => {
     const { layout, box, headerEl, title, dialogHandler, closeButtonLayout, footerEl } =
       modelessDialog()
-    const paddingBlock = contentPadding instanceof Object ? contentPadding.block : contentPadding
-    const paddingInline = contentPadding instanceof Object ? contentPadding.inline : contentPadding
     return {
       layoutStyle: layout({ className }),
       boxStyle: box(),
@@ -227,14 +152,9 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
       titleStyle: title(),
       dialogHandlerStyle: dialogHandler(),
       closeButtonLayoutStyle: closeButtonLayout(),
-      contentStyle: dialogBody({
-        contentBgColor,
-        contentPaddingBlock: paddingBlock,
-        contentPaddingInline: paddingInline,
-      }),
       footerStyle: footerEl(),
     }
-  }, [className, contentBgColor, contentPadding])
+  }, [className])
   const boxStyleProps = useMemo(() => {
     const leftMargin = typeof left === 'number' ? `${left}px` : left
     const rightMargin = typeof right === 'number' ? `${right}px` : right
@@ -430,7 +350,7 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
                 aria-valuetext={dialogHandlerAriaValuetext}
                 onKeyDown={handleArrowKey}
               >
-                <FaGripHorizontalIcon />
+                <FaGripIcon />
               </div>
               <div id={labelId} className={titleStyle}>
                 {header}
@@ -443,11 +363,17 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
                   onClick={onClickClose}
                   className="smarthr-ui-ModelessDialog-closeButton"
                 >
-                  <FaTimesIcon alt={closeButtonIconAlt} />
+                  <FaXmarkIcon alt={closeButtonIconAlt} />
                 </Button>
               </div>
             </div>
-            <div className={contentStyle}>{children}</div>
+            <DialogBody
+              contentBgColor={contentBgColor}
+              contentPadding={contentPadding}
+              className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"
+            >
+              {children}
+            </DialogBody>
             {footer && <div className={footerStyle}>{footer}</div>}
           </Base>
         </div>

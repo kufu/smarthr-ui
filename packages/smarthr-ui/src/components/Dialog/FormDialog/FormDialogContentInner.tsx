@@ -25,7 +25,7 @@ export type BaseProps = PropsWithChildren<
       actionTheme?: 'primary' | 'secondary' | 'danger'
       /**
        * アクションボタンをクリックした時に発火するコールバック関数
-       * @param closeDialog - ダイアログを閉じる関数
+       * @param closeDialog ダイアログを閉じる関数
        */
       onSubmit: (closeDialog: () => void, e: FormEvent<HTMLFormElement>) => void
       /** アクションボタンを無効にするかどうか */

@@ -6,6 +6,7 @@ import type { Gap } from '../../types'
 export type Props = PropsWithChildren<
   Pick<VariantProps<typeof dialogBody>, 'contentBgColor'> & {
     contentPadding?: Gap | { block?: Gap; inline?: Gap }
+    className?: string | undefined
   }
 >
 
@@ -78,10 +79,15 @@ const dialogBody = tv({
   },
 })
 
-export const DialogBody: React.FC<Props> = ({ contentBgColor, contentPadding = 1.5, ...rest }) => {
+export const DialogBody: React.FC<Props> = ({
+  contentBgColor,
+  contentPadding = 1.5,
+  className,
+  ...rest
+}) => {
   const paddingBlock = contentPadding instanceof Object ? contentPadding.block : contentPadding
   const paddingInline = contentPadding instanceof Object ? contentPadding.inline : contentPadding
 
-  const style = dialogBody({ contentBgColor, paddingBlock, paddingInline })
+  const style = dialogBody({ contentBgColor, paddingBlock, paddingInline, className })
   return <div {...rest} className={style} />
 }
