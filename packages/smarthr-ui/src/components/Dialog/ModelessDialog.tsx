@@ -22,7 +22,7 @@ import { Button } from '../Button'
 import { FaGripHorizontalIcon, FaTimesIcon } from '../Icon'
 
 import { DialogOverlap } from './DialogOverlap'
-import { type ContentBodyProps } from './useDialogInnerStyle'
+import { type ContentBodyProps } from './dialogInnerStyle'
 import { useDialogPortal } from './useDialogPortal'
 
 import type { DecoratorsType, Gap } from '../../types'
@@ -388,7 +388,7 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
   )
 
   return createPortal(
-    <DialogOverlap isOpen={isOpen}>
+    <DialogOverlap isOpen={isOpen} className="shr-inset-[unset]">
       <Draggable
         handle=".smarthr-ui-ModelessDialog-handle"
         onStart={(_, data) => setPosition({ x: data.x, y: data.y })}

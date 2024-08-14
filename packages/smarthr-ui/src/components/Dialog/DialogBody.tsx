@@ -1,20 +1,18 @@
-import { useMemo } from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import React, { type PropsWithChildren } from 'react'
+import { VariantProps, tv } from 'tailwind-variants'
 
-import { type Gap } from '../../types'
+import type { Gap } from '../../types'
 
-const dialogContentInner = tv({
-  slots: {
-    titleArea: ['smarthr-ui-Dialog-titleArea', 'shr-border-b-shorthand shr-px-1.5 shr-py-1'],
-    actionArea: ['smarthr-ui-Dialog-actionArea', 'shr-border-t-shorthand shr-px-1.5 shr-py-1'],
-    buttonArea: ['smarthr-ui-Dialog-buttonArea', 'shr-ms-auto'],
-    message: 'shr-text-right',
-  },
-})
+export type Props = PropsWithChildren<
+  Pick<VariantProps<typeof dialogBody>, 'contentBgColor'> & {
+    contentPadding?: Gap | { block?: Gap; inline?: Gap }
+  }
+>
+
 const dialogBody = tv({
-  base: ['smarthr-ui-Dialog-body', 'shr-overflow-auto'],
+  base: ['smarthr-ui-Dialog-body', 'shr-overflow-auto shr-flex-auto'],
   variants: {
-    contentPaddingBlock: {
+    paddingBlock: {
       0: 'shr-py-0',
       0.25: 'shr-py-0.25',
       0.5: 'shr-py-0.5',
@@ -38,7 +36,7 @@ const dialogBody = tv({
       XXL: 'shr-py-3.5',
       X3L: 'shr-py-4',
     } as { [key in Gap]: string },
-    contentPaddingInline: {
+    paddingInline: {
       0: 'shr-px-0',
       0.25: 'shr-px-0.25',
       0.5: 'shr-px-0.5',
@@ -80,34 +78,10 @@ const dialogBody = tv({
   },
 })
 
-export type ContentBodyProps = Pick<VariantProps<typeof dialogBody>, 'contentBgColor'> & {
-  contentPadding?: Gap | { block?: Gap; inline?: Gap }
+export const DialogBody: React.FC<Props> = ({ contentBgColor, contentPadding = 1.5, ...rest }) => {
+  const paddingBlock = contentPadding instanceof Object ? contentPadding.block : contentPadding
+  const paddingInline = contentPadding instanceof Object ? contentPadding.inline : contentPadding
+
+  const style = dialogBody({ contentBgColor, paddingBlock, paddingInline })
+  return <div {...rest} className={style} />
 }
-
-export const useDialoginnerStyle = (
-  offsetHeight: number,
-  bgColor: ContentBodyProps['contentBgColor'],
-  padding: ContentBodyProps['contentPadding'] = 1.5,
-) =>
-  useMemo(() => {
-    const { titleArea, actionArea, buttonArea, message } = dialogContentInner()
-    const paddingBlock = padding instanceof Object ? padding.block : padding
-    const paddingInline = padding instanceof Object ? padding.inline : padding
-
-    return {
-      titleAreaStyle: titleArea(),
-      bodyStyleProps: {
-        className: dialogBody({
-          contentBgColor: bgColor,
-          contentPaddingBlock: paddingBlock,
-          contentPaddingInline: paddingInline,
-        }),
-        style: {
-          maxHeight: `calc(100svh - ${offsetHeight}px)`,
-        },
-      },
-      actionAreaStyle: actionArea(),
-      buttonAreaStyle: buttonArea(),
-      messageStyle: message(),
-    }
-  }, [bgColor, offsetHeight, padding])
