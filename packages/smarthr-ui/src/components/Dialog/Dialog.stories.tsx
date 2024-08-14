@@ -459,30 +459,6 @@ export const WidthAndPosition: StoryFn = () => (
         </DialogContent>
       </DialogWrapper>
     </li>
-    <li>
-      <DialogWrapper>
-        <DialogTrigger>
-          <Button aria-haspopup="dialog" aria-controls="dialog-position-1">
-            top-left
-          </Button>
-        </DialogTrigger>
-        <DialogContent top={50} left={200} id="dialog-position-1">
-          <p>This Dialog is set to `top: 50px, left: 200px`.</p>
-        </DialogContent>
-      </DialogWrapper>
-    </li>
-    <li>
-      <DialogWrapper>
-        <DialogTrigger>
-          <Button aria-haspopup="dialog" aria-controls="dialog-position-2">
-            bottom-right
-          </Button>
-        </DialogTrigger>
-        <DialogContent right={50} bottom={100} id="dialog-position-2">
-          <p>This Dialog is set to `right: 50px, bottom: 100px`.</p>
-        </DialogContent>
-      </DialogWrapper>
-    </li>
   </TriggerList>
 )
 WidthAndPosition.parameters = {
@@ -547,12 +523,6 @@ export const RegDialogOpenedDialog: StoryFn = () => (
 
 export const RegDialogOpenedDialogWidth: StoryFn = () => (
   <Dialog isOpen width={500}>
-    <p>{dummyText}</p>
-  </Dialog>
-)
-
-export const RegDialogOpenedDialogPosition: StoryFn = () => (
-  <Dialog isOpen top={20} right={40} bottom={60} left={80}>
     <p>{dummyText}</p>
   </Dialog>
 )
