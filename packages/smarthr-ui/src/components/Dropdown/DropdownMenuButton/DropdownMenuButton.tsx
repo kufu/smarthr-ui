@@ -47,7 +47,7 @@ const dropdownMenuButton = tv({
   slots: {
     triggerWrapper: 'smarthr-ui-DropdownMenuButton',
     triggerButton:
-      'smarthr-ui-DropdownMenuButton-trigger [&[aria-expanded="true"]_.smarthr-ui-Icon:last-child]:shr-rotate-180',
+      'smarthr-ui-DropdownMenuButton-trigger [&[aria-expanded="true"]>.smarthr-ui-Icon:last-child]:shr-rotate-180',
     actionList: [
       'smarthr-ui-DropdownMenuButton-panel',
       'shr-my-0 shr-list-none shr-px-0.25 shr-py-0.5',
