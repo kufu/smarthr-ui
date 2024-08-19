@@ -405,6 +405,8 @@ export default {
           fontFamily: 'system-ui, sans-serif',
           lineHeight: theme('lineHeight.normal'),
           color: theme('colors.black'),
+          // Windows 環境で Yu Gothic が不用意に記号を詰めてしまうのを避ける
+          textSpacingTrim: 'space-all',
         },
         'p, dl': {
           marginBlock: 'unset',
