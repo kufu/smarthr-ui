@@ -3,7 +3,7 @@ import React, { ComponentProps } from 'react'
 
 import { AnchorButton, Button } from '../../Button'
 import { RemoteDialogTrigger, RemoteTriggerActionDialog } from '../../Dialog'
-import { FaGearIcon } from '../../Icon'
+import { FaGearIcon, FaLightbulbIcon } from '../../Icon'
 import { Cluster } from '../../Layout'
 
 import { DropdownMenuButton } from './DropdownMenuButton'
@@ -71,6 +71,7 @@ export const Render: React.FC = () => (
     <Template label="その他の操作" />
     <Template disabled label="その他の操作" />
     <Template onlyIconTrigger label="その他の操作" />
+    <Template triggerSize="s" label={<FaLightbulbIcon text="ヒント" />} />
     <Template triggerSize="s" label="操作" />
     <Template triggerSize="s" label={<span>操作</span>} disabled />
     <Template triggerSize="s" onlyIconTrigger triggerIcon={FaGearIcon} label="操作" />
