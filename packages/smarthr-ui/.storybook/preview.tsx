@@ -106,8 +106,6 @@ const preview: Preview = {
 
 export default preview
 
-// Chromatic 用差分5
-
 const callThemeProvider =
   (withThemeProvider: boolean, theme: CreatedTheme) =>
   ({ children }: { children: ReactNode }) => {
