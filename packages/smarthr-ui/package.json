@@ -6,7 +6,7 @@
   "dependencies": {
     "@smarthr/wareki": "^1.2.0",
     "css-loader": "^7.1.2",
-    "dayjs": "^1.11.12",
+    "dayjs": "^1.11.13",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.3.0",
