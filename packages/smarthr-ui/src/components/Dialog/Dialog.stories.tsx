@@ -577,7 +577,7 @@ export const RegOpenedForm: StoryFn = () => (
     </label>
   </FormDialog>
 )
-RegOpenedForm.parameters = { docs: { disable: true } }
+RegOpenedForm.parameters = { docs: { disable: true }, chromatic: { delay: 500 } } // delay for [ここにPRをリンク]
 
 export const Body以外のPortalParent: StoryFn = () => {
   const [isOpen, setIsOpen] = useState<'deault' | 'actiion' | 'message' | 'modeless'>()

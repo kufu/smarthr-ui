@@ -142,6 +142,7 @@ export const RegOpenedModeless: StoryFn = () => (
     </p>
   </ModelessDialog>
 )
+RegOpenedModeless.parameters = { chromatic: { delay: 500 } } // delay for [ここにPRをリンク]}
 
 const TriggerList = styled.ul`
   margin: 0;

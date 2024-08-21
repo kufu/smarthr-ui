@@ -234,4 +234,4 @@ export const RegOpenedAction: StoryFn = () => (
     </label>
   </ActionDialog>
 )
-RegOpenedAction.parameters = { docs: { disable: true } }
+RegOpenedAction.parameters = { docs: { disable: true }, chromatic: { delay: 500 } } // delay for [ここにPRをリンク]

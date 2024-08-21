@@ -20,6 +20,7 @@ export default {
     viewport: {
       defaultViewport: 'iphone6',
     },
+    chromatic: { delay: 500 }, // delay for [ここにPRをリンク]
   },
 }
 

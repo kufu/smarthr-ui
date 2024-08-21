@@ -16,6 +16,7 @@ export default {
   component: Cluster,
   parameters: {
     withTheming: true,
+    chromatic: { delay: 500 }, // delay for [ここにPRをリンク]
   },
 }
 

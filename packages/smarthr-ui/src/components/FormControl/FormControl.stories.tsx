@@ -24,7 +24,7 @@ export const All: StoryFn = () => (
         基本
       </Text>
       <dd>
-        <FormControl title="フォームコントロール名">
+        <FormControl disabled title="フォームコントロール名">
           <Input name="defaultInput" />
         </FormControl>
       </dd>
@@ -49,7 +49,7 @@ export const All: StoryFn = () => (
         読み取り専用
       </Text>
       <dd>
-        <FormControl title="氏名">
+        <FormControl disabled title="氏名">
           <Input name="fullname" value="草野栄一郎" readOnly />
         </FormControl>
       </dd>
@@ -59,7 +59,7 @@ export const All: StoryFn = () => (
         項目名非表示
       </Text>
       <dd>
-        <FormControl title="氏名" dangerouslyTitleHidden>
+        <FormControl disabled title="氏名" dangerouslyTitleHidden>
           <Input name="fullname" value="草野栄一郎" readOnly />
         </FormControl>
       </dd>
@@ -69,27 +69,27 @@ export const All: StoryFn = () => (
         各種コントロールが紐づくこと
       </Text>
       <dd>
-        <FormControl title="Input" helpMessage="Input に紐づく説明です。">
+        <FormControl disabled title="Input" helpMessage="Input に紐づく説明です。">
           <Input name="input" value="Input コンポーネント" />
         </FormControl>
       </dd>
       <dd>
-        <FormControl title="CurrencyInput" helpMessage="CurrencyInput に紐づく説明です。">
+        <FormControl disabled title="CurrencyInput" helpMessage="CurrencyInput に紐づく説明です。">
           <CurrencyInput name="currency_input" value="CurrencyInput コンポーネント" />
         </FormControl>
       </dd>
       <dd>
-        <FormControl title="Textarea" helpMessage="Textaea に紐づく説明です。">
+        <FormControl disabled title="Textarea" helpMessage="Textaea に紐づく説明です。">
           <Textarea name="textarea" value="Textarea コンポーネント" />
         </FormControl>
       </dd>
       <dd>
-        <FormControl title="DatePicker" helpMessage="DatePicker に紐づく説明です。">
+        <FormControl disabled title="DatePicker" helpMessage="DatePicker に紐づく説明です。">
           <DatePicker name="date_picker" value="DatePicker コンポーネント" />
         </FormControl>
       </dd>
       <dd>
-        <FormControl title="Select" helpMessage="Select に紐づく説明です。">
+        <FormControl disabled title="Select" helpMessage="Select に紐づく説明です。">
           <Select
             name="select"
             options={[{ label: 'Select コンポーネント', value: 'select_component' }]}
@@ -97,7 +97,11 @@ export const All: StoryFn = () => (
         </FormControl>
       </dd>
       <dd>
-        <FormControl title="SingleComboBox" helpMessage="SingleComboBox に紐づく説明です。">
+        <FormControl
+          disabled
+          title="SingleComboBox"
+          helpMessage="SingleComboBox に紐づく説明です。"
+        >
           <SingleComboBox
             name="single_combobox"
             items={[{ label: 'SingleComboBox コンポーネント', value: 'single_combobox' }]}
@@ -106,7 +110,7 @@ export const All: StoryFn = () => (
         </FormControl>
       </dd>
       <dd>
-        <FormControl title="MultiComboBox" helpMessage="MultiComboBox に紐づく説明です。">
+        <FormControl disabled title="MultiComboBox" helpMessage="MultiComboBox に紐づく説明です。">
           <MultiComboBox
             name="multi_combobox"
             items={[{ label: 'MultiComboBox コンポーネント', value: 'single_combobox' }]}
@@ -115,12 +119,12 @@ export const All: StoryFn = () => (
         </FormControl>
       </dd>
       <dd>
-        <FormControl title="InputFile" helpMessage="InputFile に紐づく説明です。">
+        <FormControl disabled title="InputFile" helpMessage="InputFile に紐づく説明です。">
           <InputFile name="input_fil" label="InputFile コンポーネント" />
         </FormControl>
       </dd>
       <dd>
-        <FormControl title="DropZone" helpMessage="DropZone に紐づく説明です。">
+        <FormControl disabled title="DropZone" helpMessage="DropZone に紐づく説明です。">
           <DropZone name="drop_zone" onSelectFiles={() => null} />
         </FormControl>
       </dd>
