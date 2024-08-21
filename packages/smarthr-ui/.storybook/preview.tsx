@@ -106,7 +106,7 @@ const preview: Preview = {
 
 export default preview
 
-// Chromatic 用差分4
+// Chromatic 用差分5
 
 const callThemeProvider =
   (withThemeProvider: boolean, theme: CreatedTheme) =>
