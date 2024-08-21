@@ -87,7 +87,7 @@
     "ts-loader": "^9.5.1",
     "ttypescript": "^1.5.15",
     "typescript-plugin-styled-components": "^3.0.0",
-    "wait-on": "^7.2.0",
+    "wait-on": "^8.0.0",
     "webpack": "^5.93.0"
   },
   "peerDependencies": {
