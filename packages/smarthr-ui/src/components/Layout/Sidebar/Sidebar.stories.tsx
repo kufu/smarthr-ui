@@ -12,7 +12,6 @@ export default {
   component: Sidebar,
   parameters: {
     withTheming: true,
-    chromatic: { delay: 500 }, // delay for [ここにPRをリンク]
   },
 }
 

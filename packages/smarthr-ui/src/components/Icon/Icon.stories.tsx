@@ -157,7 +157,6 @@ export const GenerateIcon: StoryFn = () => {
     </Stack>
   )
 }
-GenerateIcon.parameters = { chromatic: { delay: 500 } } // delay for [ここにPRをリンク]
 
 const StyledBaseColumn = styled(BaseColumn)`
   ${({ theme: { space } }) => css`

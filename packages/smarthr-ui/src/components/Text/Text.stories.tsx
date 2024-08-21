@@ -6,9 +6,6 @@ import { Text } from './Text'
 export default {
   title: 'Text（テキスト）/Text',
   component: Text,
-  parameters: {
-    chromatic: { delay: 500 }, // delay for [ここにPRをリンク]
-  },
 }
 
 export const Default: StoryFn = () => (

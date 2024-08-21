@@ -13,7 +13,6 @@ export default {
   component: Stack,
   parameters: {
     withTheming: true,
-    chromatic: { delay: 500 }, // delay for [ここにPRをリンク]
   },
 }
 
