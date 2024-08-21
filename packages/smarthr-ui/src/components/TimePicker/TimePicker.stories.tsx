@@ -11,9 +11,28 @@ export default {
 }
 
 const _Template: StoryFn = (args) => (
-  <FormControl title="時刻">
-    <TimePicker {...args} />
-  </FormControl>
+  <ul className="shr-list-none shr-space-y-1">
+    <li>
+      <FormControl title="時刻">
+        <TimePicker {...args} />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="非活性">
+        <TimePicker {...args} disabled={true} />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="エラーあり">
+        <TimePicker {...args} error={true} />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="読み取り専用">
+        <TimePicker {...args} readOnly={true} />
+      </FormControl>
+    </li>
+  </ul>
 )
 
 export const Default = _Template.bind({})
