@@ -19,7 +19,6 @@ const isProduction = process.env.STORYBOOK_NODE_ENV === 'production'
 if (isProduction) {
   ReactGA.initialize('G-65N1S3NF5R')
 }
-// Chromatic 確認用差分
 
 const preview: Preview = {
   parameters: {
