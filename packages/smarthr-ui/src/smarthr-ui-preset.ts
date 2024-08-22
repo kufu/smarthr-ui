@@ -1,3 +1,4 @@
+import isChromatic from 'chromatic/isChromatic'
 import { darken } from 'polished'
 import { defaultConfig } from 'tailwind-variants'
 import plugin from 'tailwindcss/plugin'
@@ -350,7 +351,7 @@ export default {
   corePlugins: {
     preflight: false,
     boxShadowColor: false,
-    caretColor: false,
+    caretColor: isChromatic(),
     divideColor: false,
     placeholderColor: false,
     ringColor: false,

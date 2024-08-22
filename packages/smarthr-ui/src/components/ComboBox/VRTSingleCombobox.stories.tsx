@@ -23,7 +23,7 @@ export const VRTSingleCombobox: StoryFn = () => (
     <InformationPanel title="VRT 用の Story です">
       Singleコンボボックスのリストを展開して1つ目の項目をホバーした状態で表示されます
     </InformationPanel>
-    <Single />
+    <Single vrtClass="shr-caret-transparent" />
   </Stack>
 )
 const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
@@ -41,7 +41,7 @@ export const VRTSingleComboboxForcedColors: StoryFn = () => (
     <InformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます{' '}
     </InformationPanel>
-    <Single />
+    <Single vrtClass="shr-caret-transparent" />
   </Stack>
 )
 VRTSingleComboboxForcedColors.play = playSingle
