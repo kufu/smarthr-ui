@@ -2,6 +2,7 @@ import { StoryFn } from '@storybook/react'
 import React from 'react'
 import styled, { css } from 'styled-components'
 
+import { BaseColumn } from '../Base'
 import { FaAddressCardIcon } from '../Icon'
 
 import { TextLink } from './TextLink'
@@ -51,6 +52,22 @@ export const All: StoryFn = () => (
     <li>
       <TextLink href="/?path=/story/textlink--all" prefix={<FaAddressCardIcon />} target="_blank">
         健康保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者生年月日訂正届船員保険厚生年金保険被保険者資格記録訂正届船員保険厚生年金保険被保険者資格記録取消届船員保険被保険者離職事由訂正届基礎年金番号氏名生年月日性別変更（訂正）届
+      </TextLink>
+    </li>
+    <li>
+      <TextLink
+        href="/"
+        prefix={<FaAddressCardIcon />}
+        suffix={<FaAddressCardIcon />}
+        renderLink={(props) => (
+          <BaseColumn>
+            <a href={props.href} className={props.className}>
+              {props.children}
+            </a>
+          </BaseColumn>
+        )}
+      >
+        カスタムリンク要素
       </TextLink>
     </li>
   </Wrapper>

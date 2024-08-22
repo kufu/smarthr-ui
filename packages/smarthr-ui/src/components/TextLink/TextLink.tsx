@@ -11,6 +11,8 @@ type Props = {
   prefix?: ReactNode
   /** テキストの後ろに表示するアイコン */
   suffix?: ReactNode
+  /** react-router/Link や next/link などのカスタムリンク要素を差し込むためのレンダー関数 */
+  renderLink?: (props: { className: string; href: string; children: ReactNode }) => ReactNode
 }
 
 const textLink = tv({
@@ -26,7 +28,10 @@ const prefixWrapperClassName = prefixWrapper()
 const suffixWrapperClassName = suffixWrapper()
 
 export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
-  ({ href, target, rel, onClick, children, prefix, suffix, className, ...others }, ref) => {
+  (
+    { href, target, rel, onClick, children, prefix, suffix, className, renderLink, ...others },
+    ref,
+  ) => {
     const actualSuffix = useMemo(() => {
       if (target === '_blank' && suffix === undefined) {
         return <FaExternalLinkAltIcon aria-label="別タブで開く" />
@@ -63,6 +68,22 @@ export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
       }
     }, [href, onClick])
 
+    const actualChildren = (
+      <>
+        {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}
+        {children}
+        {actualSuffix && <span className={suffixWrapperClassName}>{actualSuffix}</span>}
+      </>
+    )
+
+    if (renderLink && actualHref) {
+      return renderLink({
+        href: actualHref,
+        className: anchorClassName,
+        children: actualChildren,
+      })
+    }
+
     return (
       <a
         {...others}
@@ -73,9 +94,7 @@ export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
         onClick={actualOnClick}
         className={anchorClassName}
       >
-        {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}
-        {children}
-        {actualSuffix && <span className={suffixWrapperClassName}>{actualSuffix}</span>}
+        {actualChildren}
       </a>
     )
   },
