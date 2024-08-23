@@ -1,17 +1,39 @@
-import React, { AnchorHTMLAttributes, ReactNode, forwardRef, useMemo } from 'react'
+import React, {
+  ComponentPropsWithRef,
+  ComponentPropsWithoutRef,
+  ElementType,
+  FC,
+  ReactNode,
+  forwardRef,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { FaExternalLinkAltIcon } from '../Icon'
 
-type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof Props | 'color'>
-type Props = {
+type ElementRef<T extends ElementType> = ComponentPropsWithRef<T>['ref']
+
+type ElementRefProps<T extends ElementType> = { ref?: ElementRef<T> }
+
+type ElementProps<T extends ElementType> = Omit<
+  ComponentPropsWithoutRef<T>,
+  (keyof Props<T> & ElementRefProps<T>) | 'color'
+>
+
+type Props<T extends ElementType> = {
   /** リンクをクリックした時に発火するコールバック関数 */
   onClick?: (e: React.MouseEvent) => void
   /** テキストの前に表示するアイコン */
   prefix?: ReactNode
   /** テキストの後ろに表示するアイコン */
   suffix?: ReactNode
+  /** TextLinkを利用しつつnext/linkなどと併用する場合に指定する */
+  elementAs?: T
 }
+
+type TextLinkComponent = <T extends ElementType = 'a'>(
+  props: Props<T> & ElementProps<T> & ElementRefProps<T>,
+) => ReturnType<FC>
 
 const textLink = tv({
   slots: {
@@ -25,8 +47,23 @@ const { anchor, prefixWrapper, suffixWrapper } = textLink()
 const prefixWrapperClassName = prefixWrapper()
 const suffixWrapperClassName = suffixWrapper()
 
-export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
-  ({ href, target, rel, onClick, children, prefix, suffix, className, ...others }, ref) => {
+export const TextLink: TextLinkComponent = forwardRef(
+  <T extends ElementType = 'a'>(
+    {
+      elementAs,
+      href,
+      target,
+      rel,
+      onClick,
+      children,
+      prefix,
+      suffix,
+      className,
+      ...others
+    }: Props<T> & ElementProps<T>,
+    ref: ElementRef<T>,
+  ) => {
+    const Component = elementAs || 'a'
     const actualSuffix = useMemo(() => {
       if (target === '_blank' && suffix === undefined) {
         return <FaExternalLinkAltIcon aria-label="別タブで開く" />
@@ -64,7 +101,8 @@ export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
     }, [href, onClick])
 
     return (
-      <a
+      // eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation
+      <Component
         {...others}
         ref={ref}
         href={actualHref}
@@ -76,7 +114,7 @@ export const TextLink = forwardRef<HTMLAnchorElement, Props & ElementProps>(
         {prefix && <span className={prefixWrapperClassName}>{prefix}</span>}
         {children}
         {actualSuffix && <span className={suffixWrapperClassName}>{actualSuffix}</span>}
-      </a>
+      </Component>
     )
   },
 )
