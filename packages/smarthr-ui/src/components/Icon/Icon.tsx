@@ -79,6 +79,7 @@ import {
   FaEllipsis,
   FaEllipsisVertical,
   FaEnvelope,
+  FaEnvelopeOpen,
   FaExpand,
   FaEye,
   FaEyeSlash,
@@ -269,6 +270,7 @@ export const FaDownLeftAndUpRightToCenterIcon = /*#__PURE__*/ createIcon(
 export const FaEllipsisIcon = /*#__PURE__*/ createIcon(FaEllipsis)
 export const FaEllipsisVerticalIcon = /*#__PURE__*/ createIcon(FaEllipsisVertical)
 export const FaEnvelopeIcon = /*#__PURE__*/ createIcon(FaEnvelope)
+export const FaEnvelopeOpenIcon = /*#__PURE__*/ createIcon(FaEnvelopeOpen)
 export const FaExpandIcon = /*#__PURE__*/ createIcon(FaExpand)
 export const FaEyeIcon = /*#__PURE__*/ createIcon(FaEye)
 export const FaEyeSlashIcon = /*#__PURE__*/ createIcon(FaEyeSlash)

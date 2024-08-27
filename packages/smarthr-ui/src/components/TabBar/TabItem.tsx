@@ -10,13 +10,19 @@ const tabItem = tv({
   slots: {
     wrapper: [
       'smarthr-ui-TabItem',
-      'shr-relative shr-px-1 shr-py-0.75 shr-font-bold shr-text-grey shr-inline-flex shr-items-center shr-gap-0.5 shr-leading-none',
-      'hover:shr-bg-white-darken hover:shr-text-black',
+      'shr-group/tabitem',
+      'shr-relative shr-px-1 shr-py-0.75 shr-inline-flex shr-items-center shr-gap-0.5',
+      'hover:shr-bg-white-darken',
       'focus-visible:shr-z-1',
-      'disabled:shr-cursor-not-allowed disabled:shr-bg-transparent disabled:shr-text-grey/50',
-      'aria-selected:shr-text-black',
+      'disabled:shr-cursor-not-allowed disabled:shr-bg-transparent',
       'aria-selected:before:shr-absolute aria-selected:before:shr-inset-x-0 aria-selected:before:shr-bottom-0 aria-selected:before:shr-content-[""] aria-selected:before:shr-block aria-selected:before:shr-h-0.25 aria-selected:before:shr-bg-main aria-selected:before:shr-z-1',
       'forced-colors:aria-selected:before:shr-bg-[Highlight]',
+    ],
+    label: [
+      'shr-font-bold shr-text-grey shr-leading-none',
+      'group-hover/tabitem:shr-text-black',
+      'group-disabled/tabitem:shr-text-grey/50',
+      'group-aria-selected/tabitem:shr-text-black',
     ],
     suffixWrapper: [
       // Badge など内包要素に依って高さが変わらないようにするため、ネガティブマージンを指定
@@ -95,10 +101,11 @@ const TabButton: FC<Props & ElementProps> = ({
   className,
   ...rest
 }) => {
-  const { wrapperStyle, suffixStyle } = useMemo(() => {
-    const { wrapper, suffixWrapper } = tabItem({ isTouchDevice })
+  const { wrapperStyle, labelStyle, suffixStyle } = useMemo(() => {
+    const { wrapper, label, suffixWrapper } = tabItem({ isTouchDevice })
     return {
       wrapperStyle: wrapper({ className }),
+      labelStyle: label(),
       suffixStyle: suffixWrapper(),
     }
   }, [className])
@@ -111,7 +118,7 @@ const TabButton: FC<Props & ElementProps> = ({
       className={wrapperStyle}
       onClick={() => onClick(id)}
     >
-      {children}
+      <span className={labelStyle}>{children}</span>
       {suffix && <span className={suffixStyle}>{suffix}</span>}
     </UnstyledButton>
   )
