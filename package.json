@@ -27,14 +27,15 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@9.7.1",
+  "packageManager": "pnpm@9.9.0",
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.25.2",
       "@types/react": "^18.3.4",
       "minimist": "1.2.8",
       "react": "^18.3.1",
-      "react-dom": "^18.3.1"
+      "react-dom": "^18.3.1",
+      "micromatch@<4.0.8": ">=4.0.8"
     }
   }
 }
