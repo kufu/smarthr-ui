@@ -69,7 +69,7 @@ const manyItems = Array.from({ length: 2000 }).map((_, i) => ({
 
 type Item = { label: ReactNode; value: string; disabled?: boolean; data?: any }
 
-export const SingleCombobox: StoryFn = ({ vrtClass }: { vrtClass: string }) => {
+export const SingleCombobox: StoryFn = () => {
   const [items, setItems] = useState<Item[]>(defaultItems)
   const [selectedItem, setSelectedItem] = useState<Item | null>(null)
   const [seq, setSeq] = useState(0)
@@ -109,7 +109,7 @@ export const SingleCombobox: StoryFn = ({ vrtClass }: { vrtClass: string }) => {
   }, [])
 
   return (
-    <Stack className={vrtClass}>
+    <Stack>
       <FormControl title="デフォルト">
         <SingleComboBox
           name="default"

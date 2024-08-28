@@ -23,7 +23,7 @@ export const VRTSingleCombobox: StoryFn = () => (
     <InformationPanel title="VRT 用の Story です">
       Singleコンボボックスのリストを展開して1つ目の項目をホバーした状態で表示されます
     </InformationPanel>
-    <Single vrtClass="shr-caret-transparent" />
+    <Single />
   </Stack>
 )
 const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
@@ -33,6 +33,8 @@ const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => 
   const body = canvasElement.ownerDocument.body
   const option = await within(body).findByText('option 1')
   await userEvent.hover(option)
+  const helpMessage = await within(body).findAllByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage[0]) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
 }
 VRTSingleCombobox.play = playSingle
 
@@ -41,7 +43,7 @@ export const VRTSingleComboboxForcedColors: StoryFn = () => (
     <InformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます{' '}
     </InformationPanel>
-    <Single vrtClass="shr-caret-transparent" />
+    <Single />
   </Stack>
 )
 VRTSingleComboboxForcedColors.play = playSingle
