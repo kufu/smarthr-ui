@@ -13,7 +13,7 @@ import { VariantProps, tv } from 'tailwind-variants'
 
 import { BaseColumn } from '../Base'
 import { Button } from '../Button'
-import { FaFolderOpenIcon, FaTrashAltIcon } from '../Icon'
+import { FaFolderOpenIcon, FaTrashCanIcon } from '../Icon'
 import { Stack } from '../Layout'
 
 import type { DecoratorsType } from '../../types'
@@ -161,7 +161,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
                 <span className="smarthr-ui-InputFile-fileName">{file.name}</span>
                 <Button
                   variant="text"
-                  prefix={<FaTrashAltIcon />}
+                  prefix={<FaTrashCanIcon />}
                   onClick={() => handleDelete(index)}
                   className="smarthr-ui-InputFile-deleteButton"
                 >
