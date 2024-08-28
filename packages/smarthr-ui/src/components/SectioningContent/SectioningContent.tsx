@@ -21,9 +21,15 @@ const SectioningContent = forwardRef<HTMLElement, SectioningContentProps>(
 type Props = Omit<React.ComponentProps<typeof SectioningContent>, 'as'>
 
 export const Section: FC<Props> = SectioningContent
-export const Article: FC<Props> = (props) => <SectioningContent {...props} as="article" />
-export const Aside: FC<Props> = (props) => <SectioningContent {...props} as="aside" />
-export const Nav: FC<Props> = (props) => <SectioningContent {...props} as="nav" />
+export const Article: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (
+  <SectioningContent {...props} ref={ref} as="article" />
+))
+export const Aside: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (
+  <SectioningContent {...props} ref={ref} as="aside" />
+))
+export const Nav: FC<Props> = forwardRef<HTMLElement, Props>((props, ref) => (
+  <SectioningContent {...props} ref={ref} as="nav" />
+))
 
 export const SectioningFragment: FC<PropsWithChildren<{ baseLevel?: number }>> = ({
   children,
