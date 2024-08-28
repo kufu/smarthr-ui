@@ -15,14 +15,17 @@ const upwardLink = tv({
 })
 
 type Props = Omit<ComponentProps<typeof TextLink>, 'prefix' | 'suffix'> &
-  VariantProps<typeof upwardLink>
+  VariantProps<typeof upwardLink> & {
+    /** `TextLink`に渡す `elementAs` をオプションで指定 */
+    elementAs?: ComponentProps<typeof TextLink>['elementAs']
+  }
 
-export const UpwardLink: React.FC<Props> = ({ indent = true, className, ...rest }) => {
+export const UpwardLink: React.FC<Props> = ({ indent = true, className, elementAs, ...rest }) => {
   const style = upwardLink({ indent, className })
   return (
     <div className={style}>
       {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
-      <TextLink {...rest} prefix={<FaArrowLeftIcon />} />
+      <TextLink {...rest} elementAs={elementAs} prefix={<FaArrowLeftIcon />} />
     </div>
   )
 }
