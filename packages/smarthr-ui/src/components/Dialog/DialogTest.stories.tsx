@@ -23,7 +23,7 @@ type DialogContents = {
 }
 
 export const Default: StoryFn = () => {
-  const [currentStep, { setStep, nextStep, prevStep }, renderFocusTarget] = useDialogSteps()
+  const [currentStep, { setStep, nextStep, prevStep }] = useDialogSteps()
 
   const dialogContents: DialogContents = {
     0: {
@@ -72,7 +72,6 @@ export const Default: StoryFn = () => {
         isOpen={currentStep > 0}
         onClickClose={currentStep === 2 ? () => setStep(0) : prevStep}
       >
-        {renderFocusTarget()}
         {dialogContent.children}
       </ActionDialog>
     </>

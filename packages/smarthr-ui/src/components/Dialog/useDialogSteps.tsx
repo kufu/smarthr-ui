@@ -7,27 +7,22 @@ type UseDialogStepsResult = [
     nextStep: () => void
     prevStep: () => void
   },
-  () => React.JSX.Element,
 ]
 
 export function useDialogSteps(startStep?: number): UseDialogStepsResult {
   const [step, setStep] = useState<number>(startStep || 0)
-  const dialogContentStartElementRef = useRef<HTMLDivElement | null>(null)
   const prevStep = useRef<number>(step)
 
   useEffect(() => {
-    if (
-      step !== prevStep.current &&
-      step > 0 &&
-      dialogContentStartElementRef.current instanceof HTMLElement
-    ) {
-      dialogContentStartElementRef.current.focus()
+    if (step !== prevStep.current && step > 0) {
+      const focusTarget = document.querySelector('[role=dialog] > div > div[tabindex]')
+      if (focusTarget instanceof HTMLDivElement) {
+        focusTarget.focus()
+      }
     }
 
     prevStep.current = step
   }, [step])
-
-  const renderFocusTarget = () => <div tabIndex={-1} ref={dialogContentStartElementRef} />
 
   const dialogSteps: UseDialogStepsResult = [
     step,
@@ -40,7 +35,6 @@ export function useDialogSteps(startStep?: number): UseDialogStepsResult {
         setStep((prev) => prev - 1)
       }, []),
     },
-    renderFocusTarget,
   ]
 
   return dialogSteps
