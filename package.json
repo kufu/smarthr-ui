@@ -5,7 +5,7 @@
   "author": "SmartHR-UI Team",
   "devDependencies": {
     "@commitlint/cli": "^19.4.1",
-    "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/config-conventional": "^19.4.1",
     "eslint": "^8.57.0",
     "eslint-config-smarthr": "^6.33.0",
     "eslint-plugin-storybook": "^0.8.0",
@@ -14,7 +14,7 @@
     "prettier": "^3.3.3",
     "prettier-config-smarthr": "^1.0.0",
     "prettier-plugin-tailwindcss": "^0.6.6",
-    "stylelint": "^16.8.2",
+    "stylelint": "^16.9.0",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^3.0.1",
     "stylelint-config-standard": "^36.0.1",
