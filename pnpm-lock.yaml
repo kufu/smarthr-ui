@@ -294,8 +294,8 @@ importers:
         specifier: ^8.2.9
         version: 8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2))
       storybook-addon-pseudo-states:
-        specifier: ^3.1.1
-        version: 3.1.1
+        specifier: ^4.0.0
+        version: 4.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2)))
       style-loader:
         specifier: ^4.0.0
         version: 4.0.0(webpack@5.93.0(@swc/core@1.7.22(@swc/helpers@0.5.5))(esbuild@0.20.2))
@@ -2273,8 +2273,8 @@ packages:
   '@storybook/global@5.0.0':
     resolution: {integrity: sha512-FcOqPAXACP0I3oJ/ws6/rrPT9WGhu915Cg8D02a9YxLo0DE9zI+a9A5gRGvmQ09fiWPukqI8ZAEoQEdWUKMQdQ==}
 
-  '@storybook/icons@1.2.9':
-    resolution: {integrity: sha512-cOmylsz25SYXaJL/gvTk/dl3pyk7yBFRfeXTsHvTA3dfhoU/LWSq0NKL9nM7WBasJyn6XPSGnLS4RtKXLw5EUg==}
+  '@storybook/icons@1.2.10':
+    resolution: {integrity: sha512-310apKdDcjbbX2VSLWPwhEwAgjxTzVagrwucVZIdGPErwiAppX8KvBuWZgPo+rQLVrtH8S+pw1dbUwjcE6d7og==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: ^18.3.1
@@ -7456,8 +7456,10 @@ packages:
   store2@2.14.3:
     resolution: {integrity: sha512-4QcZ+yx7nzEFiV4BMLnr/pRa5HYzNITX2ri0Zh6sT9EyQHbBHacC6YigllUPU9X3D0f/22QCgfokpKs52YRrUg==}
 
-  storybook-addon-pseudo-states@3.1.1:
-    resolution: {integrity: sha512-08JNTfsiSfj0GgNV4q6+v6iU+Acp7ib/MdySPDb8p+C8N/e+kf6lnM7kIiE/GnTPXlg3dfV6FMaWgGYVfdTcLw==}
+  storybook-addon-pseudo-states@4.0.0:
+    resolution: {integrity: sha512-ido6/KhuAu/uUbb1zlumgwBpfuAsj2xuTWyhuN5xPG9Nq4Zdqoj192Fcsb5AukBd6pTzSkjdCBYcjFd+4WFJBg==}
+    peerDependencies:
+      storybook: ^8.2.0
 
   storybook@8.2.9:
     resolution: {integrity: sha512-S7Q/Yt4A+nu1O23rg39lQvBqL2Vg+PKXbserDWUR4LFJtfmoZ2xGO8oFIhJmvvhjUBvolw1q7QDeswPq2i0sGw==}
@@ -10516,7 +10518,7 @@ snapshots:
     dependencies:
       '@storybook/csf': 0.1.11
       '@storybook/global': 5.0.0
-      '@storybook/icons': 1.2.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@storybook/icons': 1.2.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/lodash': 4.17.1
       color-convert: 2.0.1
       dequal: 2.0.3
@@ -10792,7 +10794,7 @@ snapshots:
 
   '@storybook/global@5.0.0': {}
 
-  '@storybook/icons@1.2.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@storybook/icons@1.2.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -16851,7 +16853,13 @@ snapshots:
 
   store2@2.14.3: {}
 
-  storybook-addon-pseudo-states@3.1.1: {}
+  storybook-addon-pseudo-states@4.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2))):
+    dependencies:
+      '@storybook/icons': 1.2.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      storybook: 8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2))
+    transitivePeerDependencies:
+      - react
+      - react-dom
 
   storybook@8.2.9(@babel/preset-env@7.25.4(@babel/core@7.25.2)):
     dependencies:
