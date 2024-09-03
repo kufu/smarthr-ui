@@ -15,7 +15,7 @@ type Props = PropsWithChildren<{
   /** ラベルのテキスト */
   label?: ReactNode
   /** 表示するボタンの Props の配列
-   * @deprecated AppNaviButton などのコンポーネントを Composite させて構成させてください
+   * @deprecated AppNaviButton などのコンポーネントを組み合わせて組み上げてください
    */
   buttons?: Array<
     AppNaviButtonProps | AppNaviAnchorProps | AppNaviDropdownProps | AppNaviCustomTagProps
