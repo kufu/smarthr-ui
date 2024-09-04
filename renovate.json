@@ -11,6 +11,10 @@
       "matchCurrentVersion": "!/^0/",
       "schedule": ["after 8am and before 5pm on Monday"],
       "automerge": false
+    },
+    {
+      "packagePatterns": ["cimg/node"],
+      "enabled": false
     }
   ]
 }
