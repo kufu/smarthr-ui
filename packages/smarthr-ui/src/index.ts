@@ -57,13 +57,7 @@ export {
   BulkActionRow,
   EmptyTableBody,
 } from './components/Table'
-export {
-  AppNavi,
-  AppNaviAnchorProps,
-  AppNaviButtonProps,
-  AppNaviDropdownProps,
-  AppNaviCustomTagProps,
-} from './components/AppNavi'
+export * from './components/AppNavi'
 export { TabBar, TabItem } from './components/TabBar'
 export { Heading, PageHeading } from './components/Heading'
 export { Select } from './components/Select'

@@ -4,17 +4,17 @@
   "description": "SmartHR ui components built with React.",
   "author": "SmartHR-UI Team",
   "devDependencies": {
-    "@commitlint/cli": "^19.4.0",
-    "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/cli": "^19.4.1",
+    "@commitlint/config-conventional": "^19.4.1",
     "eslint": "^8.57.0",
     "eslint-config-smarthr": "^6.33.0",
     "eslint-plugin-storybook": "^0.8.0",
-    "husky": "^9.1.4",
-    "lint-staged": "^15.2.9",
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "prettier-config-smarthr": "^1.0.0",
     "prettier-plugin-tailwindcss": "^0.6.6",
-    "stylelint": "^16.8.2",
+    "stylelint": "^16.9.0",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-smarthr": "^3.0.1",
     "stylelint-config-standard": "^36.0.1",
@@ -27,14 +27,15 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@9.7.1",
+  "packageManager": "pnpm@9.9.0",
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.25.2",
       "@types/react": "^18.3.4",
       "minimist": "1.2.8",
       "react": "^18.3.1",
-      "react-dom": "^18.3.1"
+      "react-dom": "^18.3.1",
+      "micromatch@<4.0.8": ">=4.0.8"
     }
   }
 }

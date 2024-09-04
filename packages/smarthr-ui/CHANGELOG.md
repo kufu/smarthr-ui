@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [56.0.1](https://github.com/kufu/smarthr-ui/compare/v56.0.0...v56.0.1) (2024-09-03)
+
+
+### Bug Fixes
+
+* **SectioningContent:** refが要素に渡るように修正 ([#4882](https://github.com/kufu/smarthr-ui/issues/4882)) ([126a0db](https://github.com/kufu/smarthr-ui/commit/126a0db2599afb6c32adb838ba800336be792efd))
+* TimePicker[disabled] のテキストカラーを修正した ([#4880](https://github.com/kufu/smarthr-ui/issues/4880)) ([7e27441](https://github.com/kufu/smarthr-ui/commit/7e27441c9ad91d6503a92e2902be1208c240995b))
+
+## [56.0.0](https://github.com/kufu/smarthr-ui/compare/v55.1.0...v56.0.0) (2024-08-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* FormControl から disabled を消す (#4845)
+
+### Features
+
+* **Icon:** `FaEnvelopeIcon` を追加 ([#4849](https://github.com/kufu/smarthr-ui/issues/4849)) ([eb70b74](https://github.com/kufu/smarthr-ui/commit/eb70b74ab434c96a0e6a30d53627e3e7e4200afa))
+* TextLinkをnext/linkなどのラップされたコンポーネントに対応 ([#4867](https://github.com/kufu/smarthr-ui/issues/4867)) ([68cf805](https://github.com/kufu/smarthr-ui/commit/68cf805826f131ab68b7c15451455bb708b50e51))
+* TimePickerに様々な状態に応じたスタイルをあてたい ([#4858](https://github.com/kufu/smarthr-ui/issues/4858)) ([c897dc6](https://github.com/kufu/smarthr-ui/commit/c897dc6edf0dc2d5c4442135ad4471720c2cf51f))
+
+
+### Bug Fixes
+
+* DropdownMenuButtonのlabelに指定したアイコンが上下反転しないようにしたい ([#4851](https://github.com/kufu/smarthr-ui/issues/4851)) ([1798960](https://github.com/kufu/smarthr-ui/commit/1798960069e384625e03687a80198961c2aa5a46))
+* FormControl から disabled を消す ([#4845](https://github.com/kufu/smarthr-ui/issues/4845)) ([0ae399f](https://github.com/kufu/smarthr-ui/commit/0ae399fb5ad0b6a598d0f5f2eb97ed1320c35d4c))
+* **TabBar:** suffixにテキストのスタイルが継承されないように修正 ([#4857](https://github.com/kufu/smarthr-ui/issues/4857)) ([9a2859f](https://github.com/kufu/smarthr-ui/commit/9a2859f86cbc9aae09c64bf804440535892c9104))
+
 ## [55.1.0](https://github.com/kufu/smarthr-ui/compare/v55.0.0...v55.1.0) (2024-08-13)
 
 
