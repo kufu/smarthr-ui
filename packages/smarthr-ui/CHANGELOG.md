@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [56.0.1](https://github.com/kufu/smarthr-ui/compare/v56.0.0...v56.0.1) (2024-09-03)
+
+
+### Bug Fixes
+
+* **SectioningContent:** refが要素に渡るように修正 ([#4882](https://github.com/kufu/smarthr-ui/issues/4882)) ([126a0db](https://github.com/kufu/smarthr-ui/commit/126a0db2599afb6c32adb838ba800336be792efd))
+* TimePicker[disabled] のテキストカラーを修正した ([#4880](https://github.com/kufu/smarthr-ui/issues/4880)) ([7e27441](https://github.com/kufu/smarthr-ui/commit/7e27441c9ad91d6503a92e2902be1208c240995b))
+
 ## [56.0.0](https://github.com/kufu/smarthr-ui/compare/v55.1.0...v56.0.0) (2024-08-27)
 
 
