@@ -515,6 +515,7 @@ const ActualMultiComboBox = <T,>(
         <div className={inputWrapperStlye}>
           <input
             {...inputAttributes}
+            data-smarthr-ui-input="true"
             type="text"
             name={name}
             value={inputValue}

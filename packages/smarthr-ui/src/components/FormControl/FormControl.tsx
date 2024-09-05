@@ -4,7 +4,9 @@ import React, {
   PropsWithChildren,
   ReactElement,
   ReactNode,
+  useEffect,
   useMemo,
+  useRef,
 } from 'react'
 import { isStyledComponent } from 'styled-components'
 import { tv } from 'tailwind-variants'
@@ -145,6 +147,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 }) => {
   const managedHtmlFor = useId(htmlFor)
   const managedLabelId = useId(labelId)
+  const inputWrapperRef = useRef<HTMLDivElement>(null)
   const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
@@ -175,6 +178,18 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
       }
     }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
+
+  useEffect(() => {
+    const inputWrapper = inputWrapperRef?.current
+
+    if (inputWrapper) {
+      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]:not([id])')
+
+      if (input) {
+        input.setAttribute('id', managedHtmlFor)
+      }
+    }
+  }, [inputWrapperRef?.current])
 
   return (
     <Stack
@@ -233,9 +248,8 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         </div>
       )}
 
-      <div className={childrenWrapperStyle}>
+      <div className={childrenWrapperStyle} ref={inputWrapperRef}>
         {decorateFirstInputElement(children, {
-          managedHtmlFor,
           describedbyIds,
           error: autoBindErrorInput && actualErrorMessages.length > 0,
         })}
@@ -257,7 +271,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 }
 
 type DecorateFirstInputElementParams = {
-  managedHtmlFor: string
   describedbyIds: string
   error: boolean
 }
@@ -266,7 +279,7 @@ const decorateFirstInputElement = (
   children: ReactNode,
   params: DecorateFirstInputElementParams,
 ) => {
-  const { managedHtmlFor, describedbyIds, error } = params
+  const { describedbyIds, error } = params
   let foundFirstInput = false
 
   const decorate = (targets: ReactNode): ReactNode[] | ReactNode =>
@@ -280,9 +293,7 @@ const decorateFirstInputElement = (
 
       foundFirstInput = true
 
-      const inputAttributes: ComponentProps<typeof Input> = {
-        id: managedHtmlFor,
-      }
+      const inputAttributes: ComponentProps<typeof Input> = {}
       if (error) {
         inputAttributes.error = true
       }
