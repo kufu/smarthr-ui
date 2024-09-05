@@ -1,7 +1,11 @@
-import React, { InputHTMLAttributes, forwardRef, useMemo } from 'react'
+import React, { InputHTMLAttributes, ReactNode, forwardRef, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { useId } from '../../hooks/useId'
 import { FaCheckIcon } from '../Icon'
+import { Cluster } from '../Layout'
+import { Text } from '../Text'
+import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
 const switchStyle = tv({
   slots: {
@@ -42,17 +46,38 @@ const switchStyle = tv({
   },
 })
 
-type Props = InputHTMLAttributes<HTMLInputElement>
+type Props = InputHTMLAttributes<HTMLInputElement> & {
+  children: ReactNode
+  /** ラベルを視覚的に隠すかどうか */
+  dangerouslyLabelHidden?: boolean
+}
 
-export const Switch = forwardRef<HTMLInputElement, Props>(({ className, ...props }, ref) => {
-  const { wrapper, input, icon, iconWrapper } = useMemo(() => switchStyle(), [])
-  return (
-    <span className={wrapper({ className })}>
-      {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
-      <input {...props} type="checkbox" role="switch" className={input()} ref={ref} />
-      <span className={iconWrapper()}>
-        <FaCheckIcon className={icon()} size="XXS" />
-      </span>
-    </span>
-  )
-})
+export const Switch = forwardRef<HTMLInputElement, Props>(
+  ({ children, dangerouslyLabelHidden, className, id, ...props }, ref) => {
+    const { wrapper, input, icon, iconWrapper } = useMemo(() => switchStyle(), [])
+    const ActualLabelComponent = dangerouslyLabelHidden ? VisuallyHiddenText : Text
+    const inputId = useId(id)
+
+    return (
+      <Cluster align="center">
+        <ActualLabelComponent as="label" htmlFor={inputId}>
+          {children}
+        </ActualLabelComponent>
+        <span className={wrapper({ className })}>
+          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+          <input
+            {...props}
+            type="checkbox"
+            role="switch"
+            id={inputId}
+            className={input()}
+            ref={ref}
+          />
+          <span className={iconWrapper()}>
+            <FaCheckIcon className={icon()} size="XXS" />
+          </span>
+        </span>
+      </Cluster>
+    )
+  },
+)
