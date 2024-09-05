@@ -55,19 +55,14 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
 export const Switch = forwardRef<HTMLInputElement, Props>(
   ({ children, dangerouslyLabelHidden, className, id, ...props }, ref) => {
     const { wrapper, input, icon, iconWrapper } = useMemo(() => switchStyle(), [])
+    const ActualLabelComponent = dangerouslyLabelHidden ? VisuallyHiddenText : Text
     const inputId = useId(id)
 
     return (
       <Cluster align="center">
-        {dangerouslyLabelHidden ? (
-          <VisuallyHiddenText as="label" htmlFor={inputId}>
-            {children}
-          </VisuallyHiddenText>
-        ) : (
-          <label htmlFor={inputId}>
-            <Text>{children}</Text>
-          </label>
-        )}
+        <ActualLabelComponent as="label" htmlFor={inputId}>
+          {children}
+        </ActualLabelComponent>
         <span className={wrapper({ className })}>
           {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
           <input
