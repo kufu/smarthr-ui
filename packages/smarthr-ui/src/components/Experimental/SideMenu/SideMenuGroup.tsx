@@ -1,48 +1,55 @@
-import React, { ComponentProps, PropsWithChildren, ReactNode, useMemo } from 'react'
+import React, { ElementType, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Stack } from '../../Layout'
 import { Text } from '../../Text'
 
-type Props = PropsWithChildren<{
-  /** 分類ラベル */
-  name: ReactNode
-  /** 分類ラベルの HTML タグ */
-  nameTag?: ComponentProps<typeof Text>['as']
-}>
-type ElementProps = ComponentProps<typeof Stack>
+type Props<TitleElement extends ElementType = 'p'> = {
+  title: ReactNode
+  titleElementAs?: TitleElement
+
+  /**
+   * @default ul
+   */
+  listElementAs?: 'ul' | 'ol'
+  children?: ReactNode
+  className?: string
+}
 
 const sideMenuGroup = tv({
   slots: {
-    wrapper: ['smarthr-ui-SideMenu-group', '[&_+_&]:shr-border-t-shorthand [&_+_&]:shr-pt-1.25'],
+    wrapper: ['smarthr-ui-SideMenu-group', '[&:not(:first-of-type)]:shr-pt-1'],
     list: 'shr-list-none',
+    groupTitle: 'shr-block shr-px-1 shr-py-0.5',
   },
 })
 
-export const SideMenuGroup: React.FC<Props & ElementProps> = ({
-  name,
-  nameTag = 'h3',
+export const SideMenuGroup = <TitleElement extends ElementType = 'p'>({
+  title,
+  titleElementAs,
+  listElementAs,
   children,
   className,
-  ...rest
-}) => {
-  const { wrapperStyle, listStyle } = useMemo(() => {
-    const { wrapper, list } = sideMenuGroup()
+}: Props<TitleElement>) => {
+  const { wrapperStyle, listStyle, groupTitleStyle } = useMemo(() => {
+    const { wrapper, list, groupTitle } = sideMenuGroup()
     return {
       wrapperStyle: wrapper({ className }),
       listStyle: list(),
+      groupTitleStyle: groupTitle(),
     }
   }, [className])
 
+  const TitleComponent = titleElementAs ?? 'p'
+  const ListComponent = listElementAs ?? 'ul'
+
   return (
-    <Stack {...rest} as="li" gap={0.5} className={wrapperStyle}>
-      <Text color="TEXT_GREY" leading="TIGHT" size="S" weight="normal" as={nameTag}>
-        {name}
-      </Text>
-      {/* eslint-disable-next-line smarthr/best-practice-for-layouts */}
-      <Stack as="ul" gap={0} className={listStyle}>
-        {children}
-      </Stack>
-    </Stack>
+    <li className={wrapperStyle}>
+      <TitleComponent>
+        <Text color="TEXT_BLACK" leading="TIGHT" size="S" weight="bold" className={groupTitleStyle}>
+          {title}
+        </Text>
+      </TitleComponent>
+      <ListComponent className={listStyle}>{children}</ListComponent>
+    </li>
   )
 }

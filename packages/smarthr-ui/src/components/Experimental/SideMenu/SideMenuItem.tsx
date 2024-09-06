@@ -1,56 +1,74 @@
-import React, { ComponentPropsWithoutRef, PropsWithChildren, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, ElementType, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-type Props = PropsWithChildren<{
-  /** 現在地かどうか */
+import { Text } from '../../Text'
+
+type BaseProps<AsElement extends ElementType> = {
+  elementAs?: AsElement
   current?: boolean
-}>
-type ElementProps = Omit<ComponentPropsWithoutRef<'li'>, keyof Props>
-type InnerLinkProps = Omit<ComponentPropsWithoutRef<'a'>, keyof Props & keyof ElementProps>
+  children?: ReactNode
+  prefix?: ReactNode
+  className?: string
+}
+
+type Props<AsElement extends ElementType = 'a'> = BaseProps<AsElement> &
+  Omit<ComponentPropsWithoutRef<AsElement>, keyof BaseProps<AsElement>>
 
 const sideMenuItem = tv({
   slots: {
-    wrapper: ['smarthr-ui-SideMenu-item', 'shr-relative shr-ps-0.75'],
-    innerLink: [
-      // 親要素ではなくリンクにスタイリングするため block でいっぱいに広げている
-      'shr-block',
-      'shr-rounded-m shr-px-1 shr-py-0.75 shr-no-underline',
-      'aria-current-page:shr-bg-grey-9 aria-current-page:shr-font-bold',
-      'hover:shr-bg-grey-9-darken',
-      // フォーカスリングを前に出したいので、スタッキングコンテキストを発生させている
-      'focus-visible:shr-focus-indicator focus-visible:shr-relative focus-visible:shr-z-1',
+    wrapper: [
+      'smarthr-ui-SideMenu-item',
+      '[&>a]:shr-no-underline [&>a]:shr-block',
+      '[&>*:focus-visible]:shr-focus-indicator',
     ],
+    content: [
+      'shr-flex shr-gap-0.5 shr-p-0.75 shr-flex shr-items-center',
+      'aria-current-page:shr-bg-grey-9 aria-current-page:shr-font-bold',
+      'hover:shr-bg-over-background',
+    ],
+    iconWrapper: ['shr-flex shr-text-grey'],
   },
   variants: {
     current: {
       true: {
-        wrapper:
-          'before:shr-absolute before:shr-inset-y-0 before:shr-left-0 before:shr-block before:shr-w-[3px] before:shr-bg-main before:shr-content-[""]',
+        content:
+          'shr-ps-1.25 shr-border-[theme(colors.main)] shr-border-0 shr-border-s-4 shr-border-solid shr-bg-over-background',
+      },
+      false: {
+        content: 'shr-ps-1.5',
       },
     },
   },
 })
 
-export const SideMenuItem: React.FC<Props & ElementProps & InnerLinkProps> = ({
-  href,
-  children,
+export const SideMenuItem = <AsElement extends ElementType = 'a'>({
+  elementAs,
   current,
+  prefix,
+  children,
   className,
   ...rest
-}) => {
-  const { wrapperStyle, innerLinkStyle } = useMemo(() => {
-    const { wrapper, innerLink } = sideMenuItem()
+}: Props<AsElement>) => {
+  const Component = elementAs ?? 'a'
+  const { wrapperStyle, contentStyle, iconWrapperStyle } = useMemo(() => {
+    const { wrapper, content, iconWrapper } = sideMenuItem()
     return {
       wrapperStyle: wrapper({ current, className }),
-      innerLinkStyle: innerLink(),
+      contentStyle: content({ current }),
+      iconWrapperStyle: iconWrapper(),
     }
   }, [className, current])
 
   return (
-    <li {...rest} className={wrapperStyle}>
-      <a href={href} aria-current={current && 'page'} className={innerLinkStyle}>
-        {children}
-      </a>
+    <li className={wrapperStyle}>
+      <Component {...rest}>
+        <span className={contentStyle}>
+          {prefix && <span className={iconWrapperStyle}>{prefix}</span>}
+          <Text weight={current ? 'bold' : undefined} size="M" leading="TIGHT">
+            {children}
+          </Text>
+        </span>
+      </Component>
     </li>
   )
 }
