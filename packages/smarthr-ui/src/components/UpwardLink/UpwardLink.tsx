@@ -25,7 +25,7 @@ export const UpwardLink: React.FC<Props> = ({ indent = true, className, elementA
   return (
     <div className={style}>
       {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
-      <TextLink {...rest} elementAs={elementAs} suffix={<FaArrowLeftIcon />} />
+      <TextLink {...rest} elementAs={elementAs} prefix={<FaArrowLeftIcon />} />
     </div>
   )
 }
