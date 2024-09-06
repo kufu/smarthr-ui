@@ -1,11 +1,11 @@
-name: preRelease
+name: Preview Release
 
 on:
   pull_request:
     types: [opened, reopened, synchronize]
 
 jobs:
-  build:
+  previewRelease:
     runs-on: ubuntu-latest
 
     steps:
