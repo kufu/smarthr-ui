@@ -85,8 +85,14 @@ import {
   FaEyeSlash,
   FaFile,
   FaFileArrowDown,
+  FaFileCode,
+  FaFileCsv,
+  FaFileExcel,
   FaFileExport,
   FaFileLines,
+  FaFilePdf,
+  FaFilePowerpoint,
+  FaFileWord,
   FaFilter,
   FaFloppyDisk,
   FaFolder,
@@ -275,9 +281,15 @@ export const FaExpandIcon = /*#__PURE__*/ createIcon(FaExpand)
 export const FaEyeIcon = /*#__PURE__*/ createIcon(FaEye)
 export const FaEyeSlashIcon = /*#__PURE__*/ createIcon(FaEyeSlash)
 export const FaFileArrowDownIcon = /*#__PURE__*/ createIcon(FaFileArrowDown)
+export const FaFileCodeIcon = /*#__PURE__*/ createIcon(FaFileCode)
+export const FaFileCsvIcon = /*#__PURE__*/ createIcon(FaFileCsv)
+export const FaFileExcelIcon = /*#__PURE__*/ createIcon(FaFileExcel)
 export const FaFileExportIcon = /*#__PURE__*/ createIcon(FaFileExport)
 export const FaFileIcon = /*#__PURE__*/ createIcon(FaFile)
 export const FaFileLinesIcon = /*#__PURE__*/ createIcon(FaFileLines)
+export const FaFilePdfIcon = /*#__PURE__*/ createIcon(FaFilePdf)
+export const FaFilePowerpointIcon = /*#__PURE__*/ createIcon(FaFilePowerpoint)
+export const FaFileWordIcon = /*#__PURE__*/ createIcon(FaFileWord)
 export const FaFilterIcon = /*#__PURE__*/ createIcon(FaFilter)
 export const FaFloppyDiskIcon = /*#__PURE__*/ createIcon(FaFloppyDisk)
 export const FaFolderIcon = /*#__PURE__*/ createIcon(FaFolder)
