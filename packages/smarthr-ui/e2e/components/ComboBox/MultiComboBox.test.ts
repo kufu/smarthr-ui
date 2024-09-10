@@ -126,7 +126,7 @@ test('deletable でないコンボボックスアイテムは削除できない�
     // 削除ボタンが表示されていない
     .expect(
       combobox
-        .parent()
+        .parent(0)
         .sibling()
         .find('.smarthr-ui-MultiComboBox-selectedItem')
         .withText('option 1')
@@ -137,7 +137,7 @@ test('deletable でないコンボボックスアイテムは削除できない�
     .pressKey('backspace')
     .expect(
       combobox
-        .parent()
+        .parent(0)
         .sibling()
         .find('.smarthr-ui-MultiComboBox-selectedItem')
         .withText('option 1').exists,
@@ -146,28 +146,24 @@ test('deletable でないコンボボックスアイテムは削除できない�
 })
 
 test('disabled なコンボボックスではアイテムの選択と選択解除ができないこと', async (t) => {
-  const normal = Selector('[data-test=multi-combobox-default]')
-  const normalCombobox = normal.find('input[role=combobox]')
+  const normalCombobox = Selector('[data-test=multi-combobox-default]')
   const normalComboboxControls = ((await normalCombobox.getAttribute('aria-controls')) || '').split(
     ' ',
   )
   const normalListbox = elementWithId(normalComboboxControls[0])
 
-  const disabled = Selector('[data-test=multi-combobox-disabled]')
-  const disabledCombobox = disabled.find('input[role=combobox]')
+  const disabledCombobox = Selector('[data-test=multi-combobox-disabled]')
   const disabledComboboxControls = (
     (await disabledCombobox.getAttribute('aria-controls')) || ''
   ).split(' ')
-  const disabledListbox = elementWithId(disabledComboboxControls[0])
   const disabledSelectedItems = elementWithId(disabledComboboxControls[1])
 
   await t
-    // disabled なコンボボックスをクリックしてもリストボックスは表示されないこと
-    .click(disabled)
-    .expect(disabledListbox.visible)
+    // disabled なコンボボックスが不可視であること
+    .expect(disabledCombobox.visible)
     .notOk()
     // 有効なコンボボックスでアイテム選択
-    .click(normal)
+    .click(normalCombobox)
     .click(normalListbox.find('.smarthr-ui-ComboBox-selectButton').withText('option 1'))
     // disabled なコンボボックスの選択済みアイテムの削除ボタンが disabled であること
     .expect(
@@ -188,6 +184,8 @@ test('キーボードで選択済みアイテムリストが操作できるこ�
     listbox.find('.smarthr-ui-ComboBox-selectButton').withText(label)
   const findDeleteButton = (label: string) =>
     combobox
+      .parent(0)
+      .sibling()
       .find('.smarthr-ui-MultiComboBox-selectedItem')
       .withText(label)
       .find('.smarthr-ui-MultiComboBox-deleteButton')
@@ -239,7 +237,7 @@ test('キーボードで選択済みアイテムリストが操作できるこ�
     .pressKey('enter')
     .expect(
       combobox
-        .parent()
+        .parent(0)
         .sibling()
         .find('.smarthr-ui-MultiComboBox-selectedItem')
         .withText('option 6').exists,
@@ -249,7 +247,7 @@ test('キーボードで選択済みアイテムリストが操作できるこ�
     .pressKey('backspace')
     .expect(
       combobox
-        .parent()
+        .parent(0)
         .sibling()
         .find('.smarthr-ui-MultiComboBox-selectedItem')
         .withText('option 3').exists,
@@ -259,31 +257,31 @@ test('キーボードで選択済みアイテムリストが操作できるこ�
     .pressKey('backspace')
     .expect(
       combobox
-        .parent()
+        .parent(0)
         .sibling()
         .find('.smarthr-ui-MultiComboBoxyy-selectedItem')
         .withText('option 2').exists,
     )
     .notOk()
     // Backspace によって削除した末尾アイテムはテキスト化されるが、選択状態になっているので再度 Backspace でテキストも削除できること
-    .expect(combobox.parent().sibling().find('.smarthr-ui-MultiComboBox-input').value)
+    .expect(combobox.value)
     .eql('option 1')
     .pressKey('backspace')
-    .expect(combobox.parent().sibling().find('.smarthr-ui-MultiComboBox-input').value)
+    .expect(combobox.value)
     .eql('')
 })
 
 test('キーボードでリストボックスが操作できること', async (t) => {
   const combobox = Selector('[data-test=multi-combobox-default]')
   const comboBoxSelected = combobox
-    .parent()
+    .parent(0)
     .sibling()
     .find('.smarthr-ui-MultiComboBox-selectedItem')
 
   await t
     // タブキーでフォーカスされたとき、テキストボックスがフォーカスされること
     .pressKey('tab')
-    .expect(combobox.parent().sibling().find('.smarthr-ui-MultiComboBox-input').focused)
+    .expect(combobox.focused)
     .ok()
     // アイテムが選択できること
     .pressKey('down')
