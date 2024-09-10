@@ -5,10 +5,7 @@ const matchesDisabledState = (element: Element): boolean =>
 
 const isElementDisabled = (element: Element): boolean => {
   if (matchesDisabledState(element)) return true
-  if (Array.from(element.querySelectorAll('*')).some((child) => matchesDisabledState(child)))
-    return true
-
-  return false
+  return Array.from(element.querySelectorAll('*')).some((child) => matchesDisabledState(child)
 }
 
 const moveFocus = (
