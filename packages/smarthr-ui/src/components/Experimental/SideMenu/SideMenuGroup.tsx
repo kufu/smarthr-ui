@@ -1,9 +1,15 @@
-import React, { ElementType, ReactNode, useMemo } from 'react'
+import React, {
+  ComponentPropsWithoutRef,
+  ElementType,
+  PropsWithChildren,
+  ReactNode,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../Text'
 
-type Props<TitleElement extends ElementType = 'p'> = {
+type Props<TitleElement extends ElementType = 'p'> = PropsWithChildren<{
   title: ReactNode
   titleElementAs?: TitleElement
 
@@ -11,13 +17,12 @@ type Props<TitleElement extends ElementType = 'p'> = {
    * @default ul
    */
   listElementAs?: 'ul' | 'ol'
-  children?: ReactNode
-  className?: string
-}
+}> &
+  ComponentPropsWithoutRef<TitleElement>
 
 const sideMenuGroup = tv({
   slots: {
-    wrapper: ['smarthr-ui-SideMenu-group', '[&:not(:first-of-type)]:shr-pt-1'],
+    wrapper: ['smarthr-ui-SideMenu-group', '[&:not(:first-of-type)]:shr-mt-1'],
     list: 'shr-list-none',
     groupTitle: 'shr-block shr-px-1 shr-py-0.5',
   },

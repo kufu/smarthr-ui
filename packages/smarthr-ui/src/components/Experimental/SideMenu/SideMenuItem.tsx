@@ -1,15 +1,19 @@
-import React, { ComponentPropsWithoutRef, ElementType, ReactNode, useMemo } from 'react'
+import React, {
+  ComponentPropsWithoutRef,
+  ElementType,
+  PropsWithChildren,
+  ReactNode,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Text } from '../../Text'
 
-type BaseProps<AsElement extends ElementType> = {
+type BaseProps<AsElement extends ElementType> = PropsWithChildren<{
   elementAs?: AsElement
   current?: boolean
-  children?: ReactNode
   prefix?: ReactNode
-  className?: string
-}
+}>
 
 type Props<AsElement extends ElementType = 'a'> = BaseProps<AsElement> &
   Omit<ComponentPropsWithoutRef<AsElement>, keyof BaseProps<AsElement>>
