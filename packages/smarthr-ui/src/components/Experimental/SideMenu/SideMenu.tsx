@@ -1,32 +1,20 @@
-import React, { ComponentProps, FC, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { Stack } from '../../Layout'
-
-import { SideMenuGroup } from './SideMenuGroup'
-import { SideMenuItem } from './SideMenuItem'
-
-type SubComponents = {
-  /** @deprecated SideMenu は削除予定です */
-  Group: typeof SideMenuGroup
-  /** @deprecated SideMenu は削除予定です */
-  Item: typeof SideMenuItem
-}
+import { Base } from '../../Base'
 
 const sideMenu = tv({
-  base: 'smarthr-ui-SideMenu shr-list-none',
+  base: 'smarthr-ui-SideMenu shr-list-none shr-py-0.5',
 })
 
-/** @deprecated SideMenu コンポーネントは 2024/01 に削除予定です。別コンポーネントで代替するか、UI を見直してください。 */
-export const SideMenu: FC<ComponentProps<typeof Stack>> & SubComponents = ({
-  className,
-  ...rest
-}) => {
-  const styles = useMemo(() => sideMenu({ className }), [className])
-  return (
-    // eslint-disable-next-line smarthr/best-practice-for-layouts
-    <Stack {...rest} as="ul" inline gap={0.75} className={styles} />
-  )
+type Props = Pick<ComponentPropsWithoutRef<typeof Base>, 'radius' | 'layer' | 'className'> & {
+  /**
+   * @default ul
+   */
+  elementAs?: 'ul' | 'ol'
 }
-SideMenu.Group = SideMenuGroup
-SideMenu.Item = SideMenuItem
+
+export const SideMenu: FC<Props> = ({ elementAs = 'ul', className, ...rest }) => {
+  const styles = useMemo(() => sideMenu({ className }), [className])
+  return <Base {...rest} as={elementAs} className={styles} />
+}
