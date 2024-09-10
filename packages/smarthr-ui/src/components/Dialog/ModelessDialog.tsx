@@ -12,7 +12,7 @@ import React, {
   useState,
 } from 'react'
 import Draggable from 'react-draggable'
-import { tv } from 'tailwind-variants'
+import { VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 import { useId } from '../../hooks/useId'
@@ -107,9 +107,17 @@ const modelessDialog = tv({
     ],
     footerEl: 'smarthr-ui-ModelessDialog-footer shr-border-t-shorthand',
   },
+  variants: {
+    resizable: {
+      true: {
+        box: 'shr-resize shr-overflow-auto',
+      },
+      false: {},
+    },
+  },
 })
 
-export const ModelessDialog: FC<Props & BaseElementProps> = ({
+export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof modelessDialog>> = ({
   header,
   children,
   contentBgColor,
@@ -118,6 +126,7 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
   isOpen,
   onClickClose,
   onPressEscape,
+  resizable = false,
   width,
   height,
   top,
@@ -147,14 +156,14 @@ export const ModelessDialog: FC<Props & BaseElementProps> = ({
       modelessDialog()
     return {
       layoutStyle: layout({ className }),
-      boxStyle: box(),
+      boxStyle: box({ resizable }),
       headerStyle: headerEl(),
       titleStyle: title(),
       dialogHandlerStyle: dialogHandler(),
       closeButtonLayoutStyle: closeButtonLayout(),
       footerStyle: footerEl(),
     }
-  }, [className])
+  }, [className, resizable])
   const boxStyleProps = useMemo(() => {
     const leftMargin = typeof left === 'number' ? `${left}px` : left
     const rightMargin = typeof right === 'number' ? `${right}px` : right
