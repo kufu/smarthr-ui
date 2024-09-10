@@ -190,7 +190,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         input.setAttribute('id', managedHtmlFor)
       }
     }
-  }, [inputWrapperRef?.current])
+  }, [inputWrapperRef?.current, managedHtmlFor])
 
   return (
     <Stack
