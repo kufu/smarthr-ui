@@ -22,7 +22,7 @@ const sideMenuItem = tv({
       '[&>*:focus-visible]:shr-focus-indicator',
     ],
     content: [
-      'shr-flex shr-gap-0.5 shr-p-0.75 shr-flex shr-items-center',
+      'shr-flex shr-gap-0.5 shr-p-0.75 shr-items-center',
       'aria-current-page:shr-bg-grey-9 aria-current-page:shr-font-bold',
       'hover:shr-bg-over-background',
     ],
