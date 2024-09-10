@@ -10,10 +10,8 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { useTheme } from '../../hooks/useTailwindTheme'
 
 import { DialogOverlap } from './DialogOverlap'
-import { DialogPositionProvider } from './DialogPositionProvider'
 import { FocusTrap } from './FocusTrap'
 import { useBodyScrollLock } from './useBodyScrollLock'
 
@@ -35,23 +33,8 @@ export type DialogContentInnerProps = PropsWithChildren<{
    */
   width?: string | number
   /**
-   * ダイアログを開いたときの初期 top 位置
-   */
-  top?: number
-  /**
-   * ダイアログを開いたときの初期 right 位置
-   */
-  right?: number
-  /**
-   * ダイアログを開いたときの初期 bottom 位置
-   */
-  bottom?: number
-  /**
-   * ダイアログを開いたときの初期 left 位置
-   */
-  left?: number
-  /**
    * ダイアログの `id`
+   * TODO 使われてなさそうなので確認
    */
   id?: string
   /**
@@ -69,16 +52,15 @@ export type DialogContentInnerProps = PropsWithChildren<{
 }>
 type ElementProps = Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
 
-function exist(value: any) {
-  return value !== undefined && value !== null
-}
-
 const dialogContentInner = tv({
   slots: {
-    layout: 'smarthr-ui-Dialog-wrapper shr-fixed shr-inset-0',
-    inner:
-      'smarthr-ui-Dialog contrast-more:shr-border-highContrast shr-absolute shr-rounded-m shr-bg-white shr-shadow-layer-3 contrast-more:shr-border-shorthand',
-    background: 'smarthr-ui-Dialog-background shr-fixed shr-inset-0 shr-bg-scrim',
+    layout: ['smarthr-ui-Dialog-wrapper', 'shr-max-w-[calc(100dvw-theme(spacing.1))]'],
+    inner: [
+      'smarthr-ui-Dialog',
+      'shr-relative shr-z-1 shr-rounded-m shr-bg-white shr-shadow-layer-3',
+      'contrast-more:shr-border-highContrast contrast-more:shr-border-shorthand',
+    ],
+    background: ['smarthr-ui-Dialog-background', 'shr-absolute shr-inset-0 shr-bg-scrim'],
   },
 })
 
@@ -90,46 +72,27 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   isOpen,
   id,
   width,
-  top,
-  right,
-  bottom,
-  left,
   firstFocusTarget,
   ariaLabel,
   ariaLabelledby,
   children,
   className,
-  ...props
+  ...rest
 }) => {
-  const { spacing } = useTheme()
-  const { layoutStyle, innerStyleProps, backgroundStyle } = useMemo(() => {
+  const { layoutStyleProps, innerStyle, backgroundStyle } = useMemo(() => {
     const { layout, inner, background } = dialogContentInner()
-    const positionTop = exist(top) ? `${top}px` : 'auto'
-    const positionRight = exist(right) ? `${right}px` : 'auto'
-    const positionBottom = exist(bottom) ? `${bottom}px` : 'auto'
-    const positionLeft = exist(left) ? `${left}px` : 'auto'
     const actualWidth = typeof width === 'number' ? `${width}px` : width
-    const minimumMaxWidth = `calc(100vw - max(${left || 0}px, ${spacing[0.5]}) - max(${
-      right || 0
-    }px, ${spacing[0.5]}))`
-    const translateX = exist(right) || exist(left) ? '0' : 'calc((100vw - 100%) / 2)'
-    const translateY = exist(top) || exist(bottom) ? '0' : 'calc((100svh - 100%) / 2)'
     return {
-      layoutStyle: layout(),
-      innerStyleProps: {
-        className: inner({ className }),
+      layoutStyleProps: {
+        className: layout(),
         style: {
-          inset: `${positionTop} ${positionRight} ${positionBottom} ${positionLeft}`,
-          width: exist(actualWidth) ? actualWidth : undefined,
-          maxWidth: exist(actualWidth)
-            ? `min(${minimumMaxWidth}, ${actualWidth})`
-            : minimumMaxWidth,
-          transform: `translate(${translateX}, ${translateY})`,
+          width: actualWidth ?? undefined,
         },
       },
+      innerStyle: inner({ className }),
       backgroundStyle: background(),
     }
-  }, [bottom, className, left, right, spacing, top, width])
+  }, [className, width])
 
   const innerRef = useRef<HTMLDivElement>(null)
   useHandleEscape(
@@ -151,24 +114,22 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   useBodyScrollLock(isOpen)
 
   return (
-    <DialogPositionProvider top={top} bottom={bottom}>
-      <DialogOverlap isOpen={isOpen}>
-        <div className={layoutStyle} id={id}>
-          {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
-          <div onClick={handleClickOverlay} className={backgroundStyle} role="presentation" />
-          <div
-            {...props}
-            {...innerStyleProps}
-            ref={innerRef}
-            role="dialog"
-            aria-label={ariaLabel}
-            aria-labelledby={ariaLabelledby}
-            aria-modal="true"
-          >
-            <FocusTrap firstFocusTarget={firstFocusTarget}>{children}</FocusTrap>
-          </div>
+    <DialogOverlap isOpen={isOpen}>
+      <div {...layoutStyleProps} id={id}>
+        {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
+        <div onClick={handleClickOverlay} className={backgroundStyle} role="presentation" />
+        <div
+          {...rest}
+          ref={innerRef}
+          role="dialog"
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledby}
+          aria-modal="true"
+          className={innerStyle}
+        >
+          <FocusTrap firstFocusTarget={firstFocusTarget}>{children}</FocusTrap>
         </div>
-      </DialogOverlap>
-    </DialogPositionProvider>
+      </div>
+    </DialogOverlap>
   )
 }

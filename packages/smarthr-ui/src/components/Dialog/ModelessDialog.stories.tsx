@@ -49,6 +49,7 @@ export const Modeless_Dialog: StoryFn = () => {
           footer={<ModelessFooter>フッタ</ModelessFooter>}
           onClickClose={() => setIsOpen1(false)}
           onPressEscape={() => setIsOpen1(false)}
+          resizable
           width="50%"
           height="50%"
           id="modeless-dialog-1"
