@@ -1,35 +1,36 @@
-## Related URL
-
 <!--
-the relevant ticket or issue link.
-
-e.g.
-- GitHub Issues URL
-- JIRA ticket URL (For SmartHR internal developers)
+PRのタイトルは、PRによる変更内容が利用者にも伝わるようにお願いします。
+通常、PRをスカッシュマージした場合のコミットメッセージがそのままリリースノートやCHANGELOGに反映されるためです。
 -->
 
-## Overview
+## 関連URL
 
 <!--
-Summary of this change.
+PRに関連するURLなどを記載してください。
 
 e.g.
-- Why are you making this change
-- What is the problem
-- How this solves
+- JIRA チケットURL (社内向け)
+- Slack URL (社内向け)
+- GitHub Issues URL (社外向け)
 -->
 
-## What I did
+## 概要
 
 <!--
-What kind of changes were made specifically.
-
-e.g.
-- Description of changes from a technical point of view
+PRを作成した目的や解決したい課題を簡潔に記載してください。
 -->
 
-## Capture
+## 変更内容
 
 <!--
-Please attach a capture if it looks different.
+PRではどのような変更を加えたのか、マージ後にどう変わるかなどを具体的に記載してください。
+コンポーネントの新規追加やスタイル変更などがある場合、キャプチャを添付してください。
+コンポーネントのインタフェースが変更(特に破壊的変更)がある場合、変更前後での使用例を記載してください。
+-->
+
+## 確認方法
+
+<!--
+PRの変更内容を確認する方法について記載してください。
+Storybook や Chromatic での確認で十分な場合、そのURLを記載してください。
 -->

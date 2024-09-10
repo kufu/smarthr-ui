@@ -1,23 +1,26 @@
 import React, {
-  FC,
-  PropsWithChildren,
-  ReactNode,
+  type ComponentProps,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { tv } from 'tailwind-variants'
 
-type Props = PropsWithChildren<{
-  isOpen: boolean
-}>
+import { Center } from '../Layout'
+
+type Props = PropsWithChildren<
+  {
+    isOpen: boolean
+  } & ComponentProps<'div'>
+>
 
 const dialogOverlap = tv({
   base: [
-    'shr-absolute',
-    'shr-z-overlap-base',
+    'shr-absolute shr-inset-0',
     '[&.shr-dialog-transition-enter]:shr-opacity-0',
     '[&.shr-dialog-transition-enter-active]:shr-transition-opacity',
     '[&.shr-dialog-transition-enter-active]:shr-duration-300',
@@ -33,8 +36,8 @@ const dialogOverlap = tv({
   ],
 })
 
-export const DialogOverlap: FC<Props> = ({ isOpen, children }) => {
-  const styles = useMemo(() => dialogOverlap(), [])
+export const DialogOverlap: FC<Props> = ({ isOpen, className, children }) => {
+  const styles = dialogOverlap({ className })
   const [childrenBuffer, setChildrenBuffer] = useState<ReactNode>(null)
   const nodeRef = useRef<HTMLDivElement>(null)
 
@@ -52,9 +55,9 @@ export const DialogOverlap: FC<Props> = ({ isOpen, children }) => {
       unmountOnExit
       nodeRef={nodeRef}
     >
-      <div ref={nodeRef} className={styles}>
+      <Center verticalCentering ref={nodeRef} className={styles}>
         {isOpen ? children : childrenBuffer}
-      </div>
+      </Center>
     </CSSTransition>
   )
 }

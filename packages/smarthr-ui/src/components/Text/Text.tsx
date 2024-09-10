@@ -81,24 +81,24 @@ const text = tv({
 })
 
 // VariantProps を使うとコメントが書けない〜🥹
-export type TextProps = VariantProps<typeof text> & {
+export type TextProps<T extends React.ElementType = 'span'> = VariantProps<typeof text> & {
   /** テキストコンポーネントの HTML タグ名。初期値は span */
-  as?: string | React.ComponentType<any> | undefined
+  as?: T
   /** 強調するかどうかの真偽値。指定すると em 要素になる */
   emphasis?: boolean
   /** 見た目の種類 */
   styleType?: StyleType
 }
 
-export const Text: React.FC<PropsWithChildren<TextProps & ComponentProps<'span'>>> = ({
+export const Text = <T extends React.ElementType = 'span'>({
   emphasis,
   styleType,
   weight = emphasis ? 'bold' : undefined,
   as: Component = emphasis ? 'em' : 'span',
   ...props
-}) => {
+}: PropsWithChildren<TextProps<T> & ComponentProps<T>>) => {
   const { size, italic, color, leading, whiteSpace, className, ...others } = props
-  const styleTypeValues = styleType ? STYLE_TYPE_MAP[styleType] : null
+  const styleTypeValues = styleType ? STYLE_TYPE_MAP[styleType as StyleType] : null
 
   const styles = useMemo(
     () =>

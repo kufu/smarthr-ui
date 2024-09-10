@@ -33,6 +33,8 @@ const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => 
   const body = canvasElement.ownerDocument.body
   const option = await within(body).findByText('option 1')
   await userEvent.hover(option)
+  const helpMessage = await within(body).findAllByText('入力でフィルタリングできます。')
+  await userEvent.click(helpMessage[0]) // カーソルの点滅によるVRTのフレーキーを避けるためにフォーカスを移動する
 }
 VRTSingleCombobox.play = playSingle
 

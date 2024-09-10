@@ -4,15 +4,7 @@ import { DialogContentInnerProps } from './DialogContentInner'
 
 type CommonProps = Pick<
   DialogContentInnerProps,
-  | 'width'
-  | 'top'
-  | 'right'
-  | 'bottom'
-  | 'left'
-  | 'id'
-  | 'firstFocusTarget'
-  | 'ariaLabel'
-  | 'ariaLabelledby'
+  'width' | 'id' | 'firstFocusTarget' | 'ariaLabel' | 'ariaLabelledby'
 >
 
 type ControlledProps = Pick<DialogContentInnerProps, 'isOpen' | 'onClickOverlay' | 'onPressEscape'>

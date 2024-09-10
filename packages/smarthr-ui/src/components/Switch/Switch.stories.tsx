@@ -18,24 +18,37 @@ export const Default: StoryFn = () => (
     <Section>
       <Stack gap={0.5} align="flex-start">
         <Heading type="blockTitle">標準</Heading>
-        <Switch onChange={action('clicked')} />
+        <Switch onChange={action('clicked')}>ラベル</Switch>
+      </Stack>
+    </Section>
+    <Section>
+      <Stack gap={0.5} align="flex-start">
+        <Heading type="blockTitle">ラベルをVisuallyHidden</Heading>
+        <Switch dangerouslyLabelHidden={true} onChange={action('clicked')}>
+          非表示ラベル
+        </Switch>
       </Stack>
     </Section>
     <Section>
       <Stack gap={0.5} align="flex-start">
         <Heading type="blockTitle">デフォルト値変更</Heading>
-        <Switch defaultChecked={true} onChange={action('clicked')} />
+        <Switch defaultChecked={true} onChange={action('clicked')}>
+          ラベル
+        </Switch>
       </Stack>
     </Section>
     <Section>
       <Stack gap={0.5} align="flex-start">
         <Heading type="blockTitle">disabled</Heading>
         <Cluster>
-          <Switch disabled onChange={action('clicked')} />
-          <Switch disabled defaultChecked={true} onChange={action('clicked')} />
+          <Switch disabled onChange={action('clicked')}>
+            ラベル1
+          </Switch>
+          <Switch disabled defaultChecked={true} onChange={action('clicked')}>
+            ラベル2
+          </Switch>
         </Cluster>
       </Stack>
     </Section>
-    <p>※ 実際に使う場合には必ずラベルを指定してください。</p>
   </Stack>
 )
