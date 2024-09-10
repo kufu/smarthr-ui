@@ -26,11 +26,12 @@ const sideMenuItem = tv({
       '[&>*:focus-visible]:shr-focus-indicator',
     ],
     content: [
-      'shr-flex shr-gap-0.5 shr-p-0.75 shr-items-center',
+      'shr-flex shr-gap-0.5 shr-p-0.75 shr-items-baseline',
       'aria-current-page:shr-bg-grey-9 aria-current-page:shr-font-bold',
-      'hover:shr-bg-over-background',
+      'hover:shr-bg-head-darken',
     ],
-    iconWrapper: ['shr-flex shr-text-grey'],
+    // 視覚調整のためのtranslate 参考: https://github.com/kufu/smarthr-ui/blob/01d127a4888f5698b2bf17be855ce1e985b575ea/packages/smarthr-ui/src/components/Icon/generateIcon.tsx#L73C81-L73C106
+    iconWrapper: ['shr-text-grey shr-translate-y-[0.125em]'],
   },
   variants: {
     current: {
@@ -66,12 +67,10 @@ export const SideMenuItem = <AsElement extends ElementType = 'a'>({
   return (
     <li className={wrapperStyle}>
       <Component {...rest}>
-        <span className={contentStyle}>
+        <Text size="M" leading="TIGHT" className={contentStyle}>
           {prefix && <span className={iconWrapperStyle}>{prefix}</span>}
-          <Text weight={current ? 'bold' : undefined} size="M" leading="TIGHT">
-            {children}
-          </Text>
-        </span>
+          <Text weight={current ? 'bold' : undefined}>{children}</Text>
+        </Text>
       </Component>
     </li>
   )
