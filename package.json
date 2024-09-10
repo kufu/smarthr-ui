@@ -27,7 +27,7 @@
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@9.9.0",
+  "packageManager": "pnpm@9.10.0",
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.25.2",
