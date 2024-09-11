@@ -164,7 +164,9 @@ export const MultiCombobox: StoryFn = () => {
           name="inputAttributes"
           items={items}
           selectedItems={selectedItems}
-          aria-label="inputAttributes"
+          inputAttributes={{
+            'aria-label': 'inputAttributes',
+          }}
           onDelete={handleDelete}
           onSelect={handleSelectItem}
           data-test="multi-combobox-disabled"
