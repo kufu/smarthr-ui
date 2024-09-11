@@ -61,6 +61,8 @@ export const Message_Dialog: StoryFn = () => {
         aria-haspopup="dialog"
         aria-controls="dialog-message"
         data-test="dialog-trigger"
+        // 別のスタッキングコンテキストがダイアログ背景よりも上に来ないことを確認するための記述
+        style={{ position: 'relative', zIndex: 21 }}
       >
         MessageDialog
       </Button>
