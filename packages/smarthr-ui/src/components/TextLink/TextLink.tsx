@@ -2,7 +2,9 @@ import React, {
   ComponentPropsWithoutRef,
   ElementType,
   FC,
+  PropsWithoutRef,
   ReactNode,
+  Ref,
   forwardRef,
   useMemo,
 } from 'react'
@@ -56,8 +58,8 @@ export const TextLink: TextLinkComponent = forwardRef(
       suffix,
       className,
       ...others
-    }: Props<T> & ElementProps<T>,
-    ref: ElementRef<T>,
+    }: PropsWithoutRef<Props<T>> & ElementProps<T>,
+    ref: Ref<ElementRef<T>>,
   ) => {
     const Component = elementAs || 'a'
     const actualSuffix = useMemo(() => {

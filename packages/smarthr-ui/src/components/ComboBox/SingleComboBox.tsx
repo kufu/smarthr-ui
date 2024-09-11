@@ -1,9 +1,9 @@
 import React, {
-  ChangeEvent,
-  ComponentPropsWithoutRef,
-  MouseEvent,
-  ReactNode,
-  Ref,
+  type ChangeEvent,
+  type ComponentPropsWithoutRef,
+  type MouseEvent,
+  type ReactNode,
+  type Ref,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -18,13 +18,13 @@ import { useClick } from '../../hooks/useClick'
 import { useTheme } from '../../hooks/useTailwindTheme'
 import { genericsForwardRef } from '../../libs/util'
 import { UnstyledButton } from '../Button'
-import { FaCaretDownIcon, FaTimesCircleIcon } from '../Icon'
+import { FaCaretDownIcon, FaCircleXmarkIcon } from '../Icon'
 import { Input } from '../Input'
 
-import { BaseProps, ComboBoxItem } from './types'
 import { useListBox } from './useListBox'
 import { useOptions } from './useOptions'
 
+import type { BaseProps, ComboBoxItem } from './types'
 import type { DecoratorsType } from '../../types'
 
 type Props<T> = BaseProps<T> & {
@@ -67,34 +67,9 @@ type Props<T> = BaseProps<T> & {
   decorators?: DecoratorsType<'noResultText'> & {
     destroyButtonIconAlt?: (text: string) => string
   }
-  /**
-   * input 要素の属性
-   */
-  inputAttributes?: Omit<
-    React.ComponentProps<typeof Input>,
-    | 'aria-activedescendant'
-    | 'aria-autocomplete'
-    | 'className'
-    | 'disabled'
-    | 'required'
-    | 'error'
-    | 'name'
-    | 'onChange'
-    | 'onClick'
-    | 'onCompositionEnd'
-    | 'onCompositionStart'
-    | 'onFocus'
-    | 'onKeyDown'
-    | 'placeholder'
-    | 'prefix'
-    | 'ref'
-    | 'suffix'
-    | 'type'
-    | 'value'
-  >
 }
 
-type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props<unknown>>
+type ElementProps = Omit<ComponentPropsWithoutRef<'input'>, keyof Props<unknown>>
 
 const DESTROY_BUTTON_TEXT = '削除'
 
@@ -145,6 +120,7 @@ const ActualSingleComboBox = <T,>(
     error = false,
     creatable = false,
     placeholder = '',
+    autoComplete,
     dropdownHelpMessage,
     isLoading,
     width,
@@ -161,9 +137,8 @@ const ActualSingleComboBox = <T,>(
     onBlur,
     onKeyPress,
     decorators,
-    inputAttributes,
     style,
-    ...props
+    ...rest
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
 ) => {
@@ -330,7 +305,7 @@ const ActualSingleComboBox = <T,>(
   // アイテムをキーボードで選択し、Enterを押すとinput上でEnterを押したことになるため、
   // submitイベントが発生し、formが送信される場合がある
   const handleKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
       e.key === 'Enter' && e.preventDefault()
       onKeyPress && onKeyPress(e)
     },
@@ -411,9 +386,9 @@ const ActualSingleComboBox = <T,>(
   ])
 
   return (
-    <div {...props} {...wrapperStyleProps} ref={outerRef}>
+    <div {...wrapperStyleProps} ref={outerRef}>
       <Input
-        {...inputAttributes}
+        {...rest}
         /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
         placeholder={placeholder}
         type="text"
@@ -430,7 +405,7 @@ const ActualSingleComboBox = <T,>(
               ref={clearButtonRef}
               className={clearButtonStyle}
             >
-              <FaTimesCircleIcon
+              <FaCircleXmarkIcon
                 color="TEXT_BLACK"
                 alt={decorators?.destroyButtonIconAlt?.(DESTROY_BUTTON_TEXT) || DESTROY_BUTTON_TEXT}
                 className={clearButtonIconStyle}
@@ -450,7 +425,7 @@ const ActualSingleComboBox = <T,>(
         onKeyDown={onKeyDownInput}
         onKeyPress={handleKeyPress}
         ref={inputRef}
-        autoComplete={inputAttributes?.autoComplete ?? 'off'}
+        autoComplete={autoComplete ?? 'off'}
         role="combobox"
         aria-haspopup="listbox"
         aria-controls={listBoxId}

@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [57.0.0](https://github.com/kufu/smarthr-ui/compare/v56.0.1...v57.0.0) (2024-09-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* SideMenuを実装 (#4895)
+* Dialog の位置指定を消し、スタイリングを見直し (#4848)
+
+### Features
+
+* AppNavi を再設計 ([#4823](https://github.com/kufu/smarthr-ui/issues/4823)) ([f64fbe5](https://github.com/kufu/smarthr-ui/commit/f64fbe590f787eca34b93ceb676c79258c8b4b40))
+* Dialog の位置指定を消し、スタイリングを見直し ([#4848](https://github.com/kufu/smarthr-ui/issues/4848)) ([25d83ec](https://github.com/kufu/smarthr-ui/commit/25d83ec6b0633aba4dc800b3e769d7de66bb5d42))
+* ModelessDialog をリサイズ可能にするオプションを追加 ([#4904](https://github.com/kufu/smarthr-ui/issues/4904)) ([01d127a](https://github.com/kufu/smarthr-ui/commit/01d127a4888f5698b2bf17be855ce1e985b575ea))
+* SideMenuを実装 ([#4895](https://github.com/kufu/smarthr-ui/issues/4895)) ([b02531a](https://github.com/kufu/smarthr-ui/commit/b02531a3d00e415bce37b26c4950fe37028a21cd))
+* Switchのchildrenを必須にし、label要素として紐づけることでa11yを改善する ([#4874](https://github.com/kufu/smarthr-ui/issues/4874)) ([eb3b2c0](https://github.com/kufu/smarthr-ui/commit/eb3b2c08ce30716758b97556326fce8c26eb4218))
+
+
+### Bug Fixes
+
+* AccordionPanelのタイトルのline-heightをTIGHTに修正 ([#4897](https://github.com/kufu/smarthr-ui/issues/4897)) ([5aaf6f5](https://github.com/kufu/smarthr-ui/commit/5aaf6f5e69d3547a14047500fec769fe24b09dc4))
+* DropdownMenuButtonで矢印キーを押してフォーカスを移動できる ([#4902](https://github.com/kufu/smarthr-ui/issues/4902)) ([c2657b0](https://github.com/kufu/smarthr-ui/commit/c2657b050fefd9a7575b65f0cccaa070de4f4cd8))
+
 ### [56.0.1](https://github.com/kufu/smarthr-ui/compare/v56.0.0...v56.0.1) (2024-09-03)
 
 

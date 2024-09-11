@@ -169,12 +169,10 @@ export const SingleCombobox: StoryFn = () => {
           name="inputAttributes"
           items={items}
           selectedItem={selectedItem}
-          inputAttributes={{
-            'aria-label': 'inputAttributes',
-          }}
           onSelect={handleSelectItem}
           onClear={handleClear}
           data-test="single-combobox-disabled"
+          aria-label="inputAttributes"
         />
       </FormControl>
       <FormControl title="エラー表示">
