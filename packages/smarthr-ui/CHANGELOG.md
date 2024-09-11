@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [57.1.0](https://github.com/kufu/smarthr-ui/compare/v57.0.0...v57.1.0) (2024-09-11)
+
+
+### Features
+
+* ファイル系アイコンを追加 ([#4905](https://github.com/kufu/smarthr-ui/issues/4905)) ([c8f3d09](https://github.com/kufu/smarthr-ui/commit/c8f3d09665972c0f2de795f0ebc18782c5ce2e57))
+
+
+### Bug Fixes
+
+* Dialog 背景に z-index を追加 ([#4910](https://github.com/kufu/smarthr-ui/issues/4910)) ([1039225](https://github.com/kufu/smarthr-ui/commit/103922566a7a6465b8f849e7beda25244fc44e1e))
+
 ## [57.0.0](https://github.com/kufu/smarthr-ui/compare/v56.0.1...v57.0.0) (2024-09-10)
 
 
