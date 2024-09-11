@@ -184,13 +184,13 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     const inputWrapper = inputWrapperRef?.current
 
     if (inputWrapper) {
-      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]:not([id])')
+      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
 
-      if (input) {
+      if (input && !input.getAttribute('id')) {
         input.setAttribute('id', managedHtmlFor)
       }
     }
-  }, [inputWrapperRef?.current, managedHtmlFor])
+  }, [managedHtmlFor])
 
   return (
     <Stack
