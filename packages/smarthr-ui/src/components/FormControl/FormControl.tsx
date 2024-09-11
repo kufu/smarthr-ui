@@ -1,9 +1,9 @@
 import React, {
-  type ComponentProps,
-  type ComponentPropsWithoutRef,
-  type PropsWithChildren,
-  type ReactElement,
-  type ReactNode,
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
   useMemo,
 } from 'react'
 import { isStyledComponent } from 'styled-components'
@@ -25,7 +25,6 @@ import { TimePicker } from '../TimePicker'
 import { visuallyHiddenText } from '../VisuallyHiddenText/VisuallyHiddenText'
 
 import type { Gap } from '../../types'
-
 type StatusLabelProps = ComponentProps<typeof StatusLabel>
 
 type Props = PropsWithChildren<{
@@ -291,7 +290,11 @@ const decorateFirstInputElement = (
         inputAttributes['aria-describedby'] = describedbyIds
       }
 
-      return React.cloneElement(child, inputAttributes)
+      if (isComboBoxElement(child)) {
+        return React.cloneElement(child, { inputAttributes })
+      } else {
+        return React.cloneElement(child, inputAttributes)
+      }
     })
 
   return decorate(children)
@@ -333,6 +336,15 @@ const isInputElement = (
     type === InputFile ||
     type === DropZone
   )
+}
+
+type ComboboxComponent = typeof SingleComboBox | typeof MultiComboBox
+
+const isComboBoxElement = (
+  element: ReactElement,
+): element is React.ReactComponentElement<ComboboxComponent> => {
+  const type = isStyledComponent(element.type) ? element.type.target : element.type
+  return type === SingleComboBox || type === MultiComboBox
 }
 
 export const FormControl: React.FC<Omit<Props & ElementProps, 'as' | 'disabled'>> =

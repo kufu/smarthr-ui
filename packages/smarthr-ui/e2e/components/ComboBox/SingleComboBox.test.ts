@@ -15,30 +15,32 @@ function elementWithId(id: string | null | undefined) {
 
 test('アイテムの選択と選択解除ができること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-default]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-controls'))
-  const clearButton = combobox.sibling().find('.smarthr-ui-SingleComboBox-clearButton')
+  const textbox = combobox.find('input[type=text]')
+  const listbox = elementWithId(await textbox.getAttribute('aria-controls'))
+  const clearButton = combobox.find('.smarthr-ui-SingleComboBox-clearButton')
 
   await t
     // コンボボックスをクリックするとテキストボックスがフォーカスされること
     .click(combobox)
-    .expect(combobox.focused)
+    .expect(textbox.focused)
     .ok()
     // アイテムを選択できること
     .click(listbox.find('.smarthr-ui-ComboBox-selectButton').withText('option 1'))
-    .expect(combobox.value)
+    .expect(textbox.value)
     .eql('option 1')
     // リストボックスが非表示になること
     .expect(listbox.visible)
     .notOk()
     // 選択したアイテムを選択解除できること
     .click(clearButton)
-    .expect(combobox.value)
+    .expect(textbox.value)
     .eql('')
 })
 
 test('リストボックスが開閉できること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-default]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-controls'))
+  const textbox = combobox.find('input[type=text]')
+  const listbox = elementWithId(await textbox.getAttribute('aria-controls'))
 
   await t
     // コンボボックスをクリックするとリストボックスが表示されること
@@ -65,8 +67,9 @@ test('リストボックスが開閉できること', async (t) => {
 
 test('コンボボックスがフォーカスされていない時に選択解除ボタンを押下してもリストボックスが表示されること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-default]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-controls'))
-  const clearButton = combobox.sibling().find('.smarthr-ui-SingleComboBox-clearButton')
+  const textbox = combobox.find('input[type=text]')
+  const listbox = elementWithId(await textbox.getAttribute('aria-controls'))
+  const clearButton = combobox.find('.smarthr-ui-SingleComboBox-clearButton')
 
   await t
     // アイテムを選択
@@ -82,20 +85,21 @@ test('コンボボックスがフォーカスされていない時に選択解�
 
 test('新しいアイテムを追加できること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-creatable]')
-  const listbox = elementWithId(await combobox.getAttribute('aria-controls'))
+  const textbox = combobox.find('input[type=text]')
+  const listbox = elementWithId(await textbox.getAttribute('aria-controls'))
   const addButton = listbox.find('.smarthr-ui-ComboBox-addButton')
-  const clearButton = combobox.sibling().find('.smarthr-ui-SingleComboBox-clearButton')
+  const clearButton = combobox.find('.smarthr-ui-SingleComboBox-clearButton')
 
   await t
     // 新しいアイテムを追加できること
     .click(combobox)
-    .typeText(combobox, 'test new item')
+    .typeText(textbox, 'test new item')
     .click(addButton)
-    .expect(combobox.value)
+    .expect(textbox.value)
     .eql('test new item')
     // 選択したアイテムを選択解除できること
     .click(clearButton)
-    .expect(combobox.value)
+    .expect(textbox.value)
     .eql('')
     // 新しく追加したアイテムがリストボックス内に存在すること
     .click(combobox)
@@ -104,45 +108,54 @@ test('新しいアイテムを追加できること', async (t) => {
 })
 
 test('disabled なコンボボックスではアイテムの選択と選択解除ができないこと', async (t) => {
-  const normalCombobox = Selector('[data-test=single-combobox-default]')
-  const normalListbox = elementWithId(await normalCombobox.getAttribute('aria-controls'))
-  const disabledCombobox = Selector('[data-test=single-combobox-disabled]')
-  const disabledListbox = elementWithId(await disabledCombobox.getAttribute('aria-controls'))
+  const normal = Selector('[data-test=single-combobox-default]')
+  const normalTextbox = normal.find('input[type=text]')
+  const normalListbox = elementWithId(await normalTextbox.getAttribute('aria-controls'))
+  const disabled = Selector('[data-test=single-combobox-disabled]')
+  const disabledTextBox = disabled.find('input[type=text]')
+  const disabledListbox = elementWithId(await disabledTextBox.getAttribute('aria-controls'))
 
   await t
     // disabled なコンボボックスをクリックしてもリストボックスは表示されないこと
-    .click(disabledCombobox)
+    .click(disabled)
     .expect(disabledListbox.visible)
     .notOk()
     // 有効なコンボボックスでアイテム選択
-    .click(normalCombobox)
+    .click(normal)
     .click(normalListbox.find('.smarthr-ui-ComboBox-selectButton').withText('option 1'))
     // disabled なコンボボックスにクリアボタンが表示されないこと
-    .expect(disabledCombobox.sibling().find('.smarthr-ui-SingleComboBox-clearButton').visible)
+    .expect(disabled.find('.smarthr-ui-SingleComboBox-clearButton').visible)
     .notOk()
 })
 
 test('キーボードで操作できること', async (t) => {
   const combobox = Selector('[data-test=single-combobox-default]')
+  const comboboxInput = combobox.find('.smarthr-ui-Input-input')
 
   await t
     .pressKey('tab')
-    .expect(combobox.focused)
+    .expect(comboboxInput.focused)
     .ok()
     .pressKey('down')
     .pressKey('enter')
-    .expect(combobox.value)
+    .expect(comboboxInput.value)
     .eql('option 1')
     .pressKey('up')
     .pressKey('up')
     .pressKey('up')
     .pressKey('enter')
-    .expect(combobox.value)
+    .expect(comboboxInput.value)
     .eql('option 5')
 })
 
 test('キーボードで操作しても親要素のformがsubmitされないこと', async (t) => {
   const combobox = Selector('[data-test=single-combobox-no-form-submit]')
+  const comboboxInput = combobox.find('.smarthr-ui-Input-input')
 
-  await t.pressKey('tab').pressKey('down').pressKey('enter').expect(combobox.value).eql('option 1')
+  await t
+    .pressKey('tab')
+    .pressKey('down')
+    .pressKey('enter')
+    .expect(comboboxInput.value)
+    .eql('option 1')
 })
