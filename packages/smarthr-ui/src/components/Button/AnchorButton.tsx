@@ -85,6 +85,7 @@ const ForwardedAnchorButton = AnchorButton as unknown as AnchorButtonType & {
   displayName: string
 }
 
+// BottomFixedArea での判定に用いるために displayName を明示的に設定する
 ForwardedAnchorButton.displayName = 'AnchorButton'
 
 export { ForwardedAnchorButton as AnchorButton }
