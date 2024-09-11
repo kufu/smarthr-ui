@@ -2,7 +2,9 @@ import React, {
   ComponentPropsWithoutRef,
   ElementType,
   FC,
+  PropsWithoutRef,
   ReactElement,
+  Ref,
   forwardRef,
   useMemo,
 } from 'react'
@@ -43,8 +45,8 @@ const AnchorButton = forwardRef(
       className,
       children,
       ...props
-    }: Props<T> & ElementProps<T>,
-    ref: ElementRef<T>,
+    }: PropsWithoutRef<Props<T>> & ElementProps<T>,
+    ref: Ref<ElementRef<T>>,
   ): ReactElement => {
     const styles = useMemo(() => anchorButton({ className }), [className])
     const actualRel = useMemo(
