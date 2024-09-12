@@ -13,7 +13,7 @@ export const debounce = <T extends (...args: any[]) => void>(
   func: T,
   wait: number,
 ): ((...args: Parameters<T>) => void) => {
-  let timeoutId: NodeJS.Timeout | null = null
+  let timeoutId: NodeJS.Timeout | string | number | null = null
 
   return function (...args: Parameters<T>) {
     if (timeoutId !== null) {
