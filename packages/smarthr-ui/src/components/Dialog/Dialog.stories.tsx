@@ -73,6 +73,8 @@ export const Default: StoryFn = () => {
           aria-haspopup="dialog"
           aria-controls="dialog-default"
           data-test="dialog-trigger"
+          // 別のスタッキングコンテキストがダイアログ背景よりも上に来ないことを確認するための記述
+          style={{ zIndex: 21, position: 'relative' }}
         >
           Dialog
         </Button>
@@ -188,6 +190,8 @@ export const Form_Dialog: StoryFn = () => {
         aria-haspopup="dialog"
         aria-controls="dialog-form"
         data-test="dialog-trigger"
+        // 別のスタッキングコンテキストがダイアログ背景よりも上に来ないことを確認するための記述
+        style={{ position: 'relative', zIndex: 21 }}
       >
         FormDialog
       </Button>
