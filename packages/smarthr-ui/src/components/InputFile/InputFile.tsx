@@ -175,6 +175,7 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
           {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
           <input
             {...props}
+            data-smarthr-ui-input="true"
             type="file"
             onChange={handleChange}
             disabled={disabled}

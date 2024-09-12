@@ -389,6 +389,7 @@ const ActualSingleComboBox = <T,>(
     <div {...wrapperStyleProps} ref={outerRef}>
       <Input
         {...rest}
+        data-smarthr-ui-input="true"
         /* eslint-disable-next-line smarthr/a11y-prohibit-input-placeholder */
         placeholder={placeholder}
         type="text"

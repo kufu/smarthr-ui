@@ -187,6 +187,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       <textarea
         {...props}
         {...textareaStyleProps}
+        data-smarthr-ui-input="true"
         aria-describedby={actualMaxLettersId}
         onKeyUp={onKeyUp}
         ref={textareaRef}

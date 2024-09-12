@@ -53,6 +53,7 @@ export const TimePicker = forwardRef<HTMLInputElement, Props & ElementProps>(
         {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control */}
         <input
           {...rest}
+          data-smarthr-ui-input="true"
           ref={ref}
           type="time"
           disabled={disabled}

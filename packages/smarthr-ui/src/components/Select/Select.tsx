@@ -140,6 +140,7 @@ const ActualSelect = <T extends string>(
       {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
       <select
         {...props}
+        data-smarthr-ui-input="true"
         onChange={handleChange}
         aria-invalid={error || undefined}
         disabled={disabled}
