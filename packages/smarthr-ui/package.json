@@ -6,6 +6,7 @@
   "dependencies": {
     "@smarthr/wareki": "^1.2.0",
     "dayjs": "^1.11.13",
+    "lodash.debounce": "^4.0.8",
     "lodash.merge": "^4.6.2",
     "lodash.range": "^3.2.0",
     "polished": "^4.3.0",
@@ -43,6 +44,7 @@
     "@swc/jest": "^0.2.36",
     "@testing-library/react": "^16.0.1",
     "@types/jest": "^29.5.12",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.range": "^3.2.9",
     "@types/node": "^20.16.5",

@@ -1,3 +1,4 @@
+import debounce from 'lodash.debounce'
 import React, {
   ComponentPropsWithRef,
   forwardRef,
@@ -99,6 +100,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       onInput,
       decorators,
       error,
+      onChange,
       ...props
     },
     ref,
@@ -135,15 +137,22 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       }
     }, [autoFocus])
 
-    const onKeyUp = useMemo(
-      () =>
-        maxLetters
-          ? (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-              setCount(getStringLength(event.currentTarget.value))
-            }
-          : undefined,
-      [maxLetters],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedUpdateCount = useCallback(
+      debounce((value) => {
+        setCount(getStringLength(value))
+      }, 200),
+      [],
     )
+
+    const handleOnChange = useCallback(
+      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        onChange && onChange(event)
+        maxLetters && debouncedUpdateCount(event.currentTarget.value)
+      },
+      [debouncedUpdateCount, maxLetters, onChange],
+    )
+
     const handleInput = useCallback(
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (!autoResize) {
@@ -188,7 +197,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         {...props}
         {...textareaStyleProps}
         aria-describedby={actualMaxLettersId}
-        onKeyUp={onKeyUp}
+        onChange={handleOnChange}
         ref={textareaRef}
         aria-invalid={error || undefined}
         rows={interimRows}
