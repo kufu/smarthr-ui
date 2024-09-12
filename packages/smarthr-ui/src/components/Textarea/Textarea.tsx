@@ -1,4 +1,3 @@
-import debounce from 'lodash.debounce'
 import React, {
   ComponentPropsWithRef,
   forwardRef,
@@ -13,6 +12,7 @@ import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
 import { useTheme } from '../../hooks/useTailwindTheme'
+import { debounce } from '../../libs/debounce'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 
 import type { DecoratorsType } from '../../types'

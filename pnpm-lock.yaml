@@ -76,9 +76,6 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
-      lodash.debounce:
-        specifier: ^4.0.8
-        version: 4.0.8
       lodash.merge:
         specifier: ^4.6.2
         version: 4.6.2
@@ -185,9 +182,6 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
-      '@types/lodash.debounce':
-        specifier: ^4.0.9
-        version: 4.0.9
       '@types/lodash.merge':
         specifier: ^4.6.9
         version: 4.6.9
@@ -2653,9 +2647,6 @@ packages:
 
   '@types/junit-report-builder@3.0.2':
     resolution: {integrity: sha512-R5M+SYhMbwBeQcNXYWNCZkl09vkVfAtcPIaCGdzIkkbeaTrVbGQ7HVgi4s+EmM/M1K4ZuWQH0jGcvMvNePfxYA==}
-
-  '@types/lodash.debounce@4.0.9':
-    resolution: {integrity: sha512-Ma5JcgTREwpLRwMM+XwBR7DaWe96nC38uCBDFKZWbNKD+osjVzdpnUSwBcqCptrp16sSOLBAUb50Car5I0TCsQ==}
 
   '@types/lodash.merge@4.6.9':
     resolution: {integrity: sha512-23sHDPmzd59kUgWyKGiOMO2Qb9YtqRO/x4IhkgNUiPQ1+5MUVqi6bCZeq9nBJ17msjIMbEIO5u+XW4Kz6aGUhQ==}
@@ -11346,10 +11337,6 @@ snapshots:
   '@types/json5@0.0.29': {}
 
   '@types/junit-report-builder@3.0.2': {}
-
-  '@types/lodash.debounce@4.0.9':
-    dependencies:
-      '@types/lodash': 4.17.1
 
   '@types/lodash.merge@4.6.9':
     dependencies:
