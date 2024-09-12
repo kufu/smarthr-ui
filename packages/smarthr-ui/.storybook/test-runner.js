@@ -1,4 +1,5 @@
 const { injectAxe, getViolations } = require('axe-playwright')
+import { waitForPageReady } from '@storybook/test-runner';
 
 module.exports = {
   setup() {
@@ -55,10 +56,12 @@ module.exports = {
       },
     })
   },
-  async preRender(page) {
+  async preVisit(page) {
     await injectAxe(page)
   },
-  async postRender(page) {
+  async postVisit(page) {
+    await waitForPageReady(page)
+
     const violations = await getViolations(page, '#storybook-root', {
       detailedReport: true,
       detailedReportOptions: {
