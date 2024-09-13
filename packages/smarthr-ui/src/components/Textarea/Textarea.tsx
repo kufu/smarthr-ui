@@ -1,6 +1,7 @@
 import React, {
   ComponentPropsWithRef,
   forwardRef,
+  startTransition,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -140,12 +141,14 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedUpdateCount = useCallback(
       debounce((value) => {
-        setCount(getStringLength(value))
+        startTransition(() => {
+          setCount(getStringLength(value))
+        })
       }, 200),
       [],
     )
 
-    const handleOnChange = useCallback(
+    const handleChange = useCallback(
       (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         onChange && onChange(event)
         maxLetters && debouncedUpdateCount(event.currentTarget.value)
@@ -197,7 +200,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         {...props}
         {...textareaStyleProps}
         aria-describedby={actualMaxLettersId}
-        onChange={handleOnChange}
+        onChange={handleChange}
         ref={textareaRef}
         aria-invalid={error || undefined}
         rows={interimRows}
