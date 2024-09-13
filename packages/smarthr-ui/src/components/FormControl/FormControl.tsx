@@ -342,13 +342,13 @@ const ErrorMessageList = React.memo<{
   }
 
   return (
-    <ul id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
+    <div id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
       {errorMessages.map((message, index) => (
-        <li key={index}>
+        <p key={index}>
           <FaCircleExclamationIcon text={message} className={errorIconStyle} />
-        </li>
+        </p>
       ))}
-    </ul>
+    </div>
   )
 })
 
@@ -377,6 +377,11 @@ const decorateFirstInputElement = (
   params: DecorateFirstInputElementParams,
 ) => {
   const { error } = params
+
+  if (!error) {
+    return children
+  }
+
   let foundFirstInput = false
 
   const decorate = (targets: ReactNode): ReactNode[] | ReactNode =>
@@ -390,13 +395,7 @@ const decorateFirstInputElement = (
 
       foundFirstInput = true
 
-      const inputAttributes: ComponentProps<typeof Input> = {}
-
-      if (error) {
-        inputAttributes.error = true
-      }
-
-      return React.cloneElement(child, inputAttributes)
+      return React.cloneElement(child, { error: true } as ComponentProps<typeof Input>)
     })
 
   return decorate(children)
