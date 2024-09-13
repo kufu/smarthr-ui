@@ -184,6 +184,11 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     const inputWrapper = inputWrapperRef?.current
 
     if (inputWrapper) {
+      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+      if (inputWrapper.getElementById(managedHtmlFor)) {
+        return
+      }
+
       const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
 
       if (input && !input.getAttribute('id')) {
@@ -295,6 +300,7 @@ const decorateFirstInputElement = (
       foundFirstInput = true
 
       const inputAttributes: ComponentProps<typeof Input> = {}
+
       if (error) {
         inputAttributes.error = true
       }
