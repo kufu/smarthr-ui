@@ -185,7 +185,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 
     if (inputWrapper) {
       // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      if (inputWrapper.getElementById(managedHtmlFor)) {
+      if (document.getElementById(managedHtmlFor)) {
         return
       }
 
@@ -196,6 +196,23 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       }
     }
   }, [managedHtmlFor])
+
+  useEffect(() => {
+    const inputWrapper = inputWrapperRef?.current
+
+    if (inputWrapper) {
+      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+      if (!describedbyIds || inputWrapper.querySelector(`[aria-describedby="${describedbyIds}"]`)) {
+        return
+      }
+
+      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
+
+      if (input && !input.getAttribute('aria-describedby')) {
+        input.setAttribute('aria-describedby', describedbyIds)
+      }
+    }
+  }, [describedbyIds])
 
   return (
     <Stack
@@ -256,7 +273,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 
       <div className={childrenWrapperStyle} ref={inputWrapperRef}>
         {decorateFirstInputElement(children, {
-          describedbyIds,
           error: autoBindErrorInput && actualErrorMessages.length > 0,
         })}
       </div>
@@ -277,7 +293,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 }
 
 type DecorateFirstInputElementParams = {
-  describedbyIds: string
   error: boolean
 }
 
@@ -285,7 +300,7 @@ const decorateFirstInputElement = (
   children: ReactNode,
   params: DecorateFirstInputElementParams,
 ) => {
-  const { describedbyIds, error } = params
+  const { error } = params
   let foundFirstInput = false
 
   const decorate = (targets: ReactNode): ReactNode[] | ReactNode =>
@@ -303,9 +318,6 @@ const decorateFirstInputElement = (
 
       if (error) {
         inputAttributes.error = true
-      }
-      if (describedbyIds !== '') {
-        inputAttributes['aria-describedby'] = describedbyIds
       }
 
       return React.cloneElement(child, inputAttributes)
