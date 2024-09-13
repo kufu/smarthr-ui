@@ -7,7 +7,10 @@ const sideMenu = tv({
   base: 'smarthr-ui-SideMenu shr-list-none shr-py-0.5',
 })
 
-type Props = Pick<ComponentPropsWithoutRef<typeof Base>, 'radius' | 'layer' | 'className'> & {
+type Props = Pick<
+  ComponentPropsWithoutRef<typeof Base>,
+  'radius' | 'layer' | 'className' | 'children'
+> & {
   /**
    * @default ul
    */
