@@ -152,14 +152,24 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
-  const describedbyIds = useMemo(
-    () =>
-      Object.entries({ helpMessage, exampleMessage, supplementaryMessage, errorMessages })
-        .filter(({ 1: value }) => value)
-        .map(([key]) => `${managedHtmlFor}_${key}`)
-        .join(' '),
-    [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor],
-  )
+  const describedbyIds = useMemo(() => {
+    const temp = []
+
+    if (helpMessage) {
+      temp.push(`${managedHtmlFor}_helpMessage`)
+    }
+    if (exampleMessage) {
+      temp.push(`${managedHtmlFor}_exampleMessage`)
+    }
+    if (supplementaryMessage) {
+      temp.push(`${managedHtmlFor}_supplementaryMessage`)
+    }
+    if (errorMessages) {
+      temp.push(`${managedHtmlFor}_errorMessages`)
+    }
+
+    return temp.join(' ')
+  }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []
