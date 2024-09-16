@@ -14,9 +14,9 @@ export default {
 }
 
 const Template: StoryFn = () => {
-  const [value, setValue] = useState('message👌')
-  const onChangeValue = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
-    setValue(e.currentTarget.value)
+  const [value1, setValue1] = useState('message👌')
+  const [value2, setValue2] = useState('message👌')
+  const [value3, setValue3] = useState('message👌')
   return (
     <ListStack>
       <li>
@@ -58,8 +58,8 @@ const Template: StoryFn = () => {
           <Textarea
             name="max_length_with_value"
             maxLetters={140}
-            value={value}
-            onChange={onChangeValue}
+            value={value1}
+            onChange={(e) => setValue1(e.target.value)}
           />
         </FormControl>
       </li>
@@ -68,8 +68,8 @@ const Template: StoryFn = () => {
           <Textarea
             name="max_length_with_value_over"
             maxLetters={4}
-            value={value}
-            onChange={onChangeValue}
+            value={value2}
+            onChange={(e) => setValue2(e.target.value)}
           />
         </FormControl>
       </li>
@@ -78,8 +78,8 @@ const Template: StoryFn = () => {
           <Textarea
             name="max_length_with_value_and_decorators"
             maxLetters={140}
-            value={value}
-            onChange={onChangeValue}
+            value={value3}
+            onChange={(e) => setValue3(e.target.value)}
             decorators={{
               beforeMaxLettersCount: (txt) => `entry limit(${txt})`,
               afterMaxLettersCount: (txt) => ` characters(${txt})`,
