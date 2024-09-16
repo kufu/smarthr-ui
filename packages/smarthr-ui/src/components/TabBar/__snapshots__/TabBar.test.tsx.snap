@@ -1,4 +1,59 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TabBar > should be match snapshot 1`] = `
+<div
+  className="shr-flex shr-overflow-x-auto shr-overflow-y-hidden [&_>_*]:shr-flex- [&_>_*]:shr-flex-shrink-0 [&_>_*]:shr-basis-auto empty:shr-gap-0 shr-gap-0.5 shr-p-0 smarthr-ui-TabBar"
+  role="tablist"
+>
+  <div
+    className="shr-grow shr-m-0.25 shr-relative before:shr-absolute before:shr-inset-x-0 before:shr-bottom-0 before:shr-border-b-shorthand before:shr-content-[""] before:shr-z-1"
+  >
+    <button
+      aria-selected={false}
+      className="shr-box-content shr-cursor-pointer shr-select-auto shr-appearance-none shr-overflow-visible shr-border-none shr-border-current shr-bg-transparent shr-bg-none shr-bg-origin-padding shr-p-0 shr-text-left shr-font-inherit shr-text-inherit shr-text-color-inherit focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-group/tabitem shr-relative shr-px-1 shr-py-0.75 shr-inline-flex shr-items-center shr-gap-0.5 hover:shr-bg-white-darken focus-visible:shr-z-1 disabled:shr-cursor-not-allowed disabled:shr-bg-transparent aria-selected:before:shr-absolute aria-selected:before:shr-inset-x-0 aria-selected:before:shr-bottom-0 aria-selected:before:shr-content-[""] aria-selected:before:shr-block aria-selected:before:shr-h-0.25 aria-selected:before:shr-bg-main aria-selected:before:shr-z-1 forced-colors:aria-selected:before:shr-bg-[Highlight] shr-transition-colors"
+      id="1"
+      onClick={[Function]}
+      role="tab"
+      type="button"
+    >
+      <span
+        className="shr-font-bold shr-text-grey shr-leading-none group-hover/tabitem:shr-text-black group-disabled/tabitem:shr-text-grey/50 group-aria-selected/tabitem:shr-text-black"
+      >
+        Tab
+      </span>
+    </button>
+    <button
+      aria-selected={true}
+      className="shr-box-content shr-cursor-pointer shr-select-auto shr-appearance-none shr-overflow-visible shr-border-none shr-border-current shr-bg-transparent shr-bg-none shr-bg-origin-padding shr-p-0 shr-text-left shr-font-inherit shr-text-inherit shr-text-color-inherit focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-group/tabitem shr-relative shr-px-1 shr-py-0.75 shr-inline-flex shr-items-center shr-gap-0.5 hover:shr-bg-white-darken focus-visible:shr-z-1 disabled:shr-cursor-not-allowed disabled:shr-bg-transparent aria-selected:before:shr-absolute aria-selected:before:shr-inset-x-0 aria-selected:before:shr-bottom-0 aria-selected:before:shr-content-[""] aria-selected:before:shr-block aria-selected:before:shr-h-0.25 aria-selected:before:shr-bg-main aria-selected:before:shr-z-1 forced-colors:aria-selected:before:shr-bg-[Highlight] shr-transition-colors"
+      id="2"
+      onClick={[Function]}
+      role="tab"
+      type="button"
+    >
+      <span
+        className="shr-font-bold shr-text-grey shr-leading-none group-hover/tabitem:shr-text-black group-disabled/tabitem:shr-text-grey/50 group-aria-selected/tabitem:shr-text-black"
+      >
+        Selected
+      </span>
+    </button>
+    <button
+      aria-selected={false}
+      className="shr-box-content shr-cursor-pointer shr-select-auto shr-appearance-none shr-overflow-visible shr-border-none shr-border-current shr-bg-transparent shr-bg-none shr-bg-origin-padding shr-p-0 shr-text-left shr-font-inherit shr-text-inherit shr-text-color-inherit focus-visible:shr-focus-indicator smarthr-ui-TabItem shr-group/tabitem shr-relative shr-px-1 shr-py-0.75 shr-inline-flex shr-items-center shr-gap-0.5 hover:shr-bg-white-darken focus-visible:shr-z-1 disabled:shr-cursor-not-allowed disabled:shr-bg-transparent aria-selected:before:shr-absolute aria-selected:before:shr-inset-x-0 aria-selected:before:shr-bottom-0 aria-selected:before:shr-content-[""] aria-selected:before:shr-block aria-selected:before:shr-h-0.25 aria-selected:before:shr-bg-main aria-selected:before:shr-z-1 forced-colors:aria-selected:before:shr-bg-[Highlight] shr-transition-colors"
+      disabled={true}
+      id="3"
+      onClick={[Function]}
+      role="tab"
+      type="button"
+    >
+      <span
+        className="shr-font-bold shr-text-grey shr-leading-none group-hover/tabitem:shr-text-black group-disabled/tabitem:shr-text-grey/50 group-aria-selected/tabitem:shr-text-black"
+      >
+        Disabled
+      </span>
+    </button>
+  </div>
+</div>
+`;
 
 exports[`TabBar should be match snapshot 1`] = `
 <div

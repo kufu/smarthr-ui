@@ -2,12 +2,20 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./lib",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "target": "es2020",
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
-    "types": ["node", "react", "jest"], // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/33311#issuecomment-466731156
+    "types": [
+      "node",
+      "react",
+      "vitest/globals",
+      "jsdom"
+    ],
     "jsx": "react",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -20,6 +28,11 @@
     "esModuleInterop": true,
     "paths": {},
   },
-  "exclude": ["node_modules"],
-  "include": ["src/**/*", ".storybook/**/*"]
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "src/**/*",
+    ".storybook/**/*"
+  ]
 }
