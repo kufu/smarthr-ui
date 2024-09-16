@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react'
 
 import { useActiveOption } from '../useActiveOption'
 
-describe.only('useActiveOption', () => {
+describe('useActiveOption', () => {
   const initialProps = {
     options: [
       { id: 'id1', selected: false, isNew: false, item: { label: 'label1', value: 'value1' } },
