@@ -13,8 +13,7 @@
     "types": [
       "node",
       "react",
-      "vitest/globals",
-      "jsdom"
+      "vitest/globals"
     ],
     "jsx": "react",
     "strict": true,
