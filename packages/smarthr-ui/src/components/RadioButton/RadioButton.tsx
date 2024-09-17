@@ -4,11 +4,11 @@ import React, {
   PropsWithChildren,
   forwardRef,
   useCallback,
+  useId,
   useMemo,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useId } from '../../hooks/useId'
 import { isIOS } from '../../libs/ua'
 
 type Props = PropsWithChildren<ComponentPropsWithRef<'input'>>
@@ -72,7 +72,8 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
       [onChange],
     )
 
-    const radioButtonId = useId(props.id)
+    const defaultId = useId()
+    const radioButtonId = defaultId || props.id
 
     return (
       <span className={wrapperStyle}>

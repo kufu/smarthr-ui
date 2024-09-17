@@ -5,6 +5,7 @@ import React, {
   forwardRef,
   useCallback,
   useEffect,
+  useId,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -12,7 +13,6 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useId } from '../../hooks/useId'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { useTheme } from '../../hooks/useTailwindTheme'
 import { Calendar } from '../Calendar'
