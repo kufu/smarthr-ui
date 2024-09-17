@@ -153,6 +153,10 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
   const describedbyIds = useMemo(() => {
+    if (!isRoleGroup) {
+      return ''
+    }
+
     const temp = []
 
     if (helpMessage) {
@@ -169,7 +173,14 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     }
 
     return temp.join(' ')
-  }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
+  }, [
+    isRoleGroup,
+    helpMessage,
+    exampleMessage,
+    supplementaryMessage,
+    errorMessages,
+    managedHtmlFor,
+  ])
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []
@@ -191,6 +202,10 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
 
   useEffect(() => {
+    if (isRoleGroup) {
+      return
+    }
+
     const inputWrapper = inputWrapperRef?.current
 
     if (inputWrapper) {
@@ -205,9 +220,13 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         input.setAttribute('id', managedHtmlFor)
       }
     }
-  }, [managedHtmlFor])
+  }, [managedHtmlFor, isRoleGroup])
 
   useEffect(() => {
+    if (!isRoleGroup) {
+      return
+    }
+
     const inputWrapper = inputWrapperRef?.current
 
     if (inputWrapper) {
@@ -222,7 +241,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         input.setAttribute('aria-describedby', describedbyIds)
       }
     }
-  }, [describedbyIds])
+  }, [describedbyIds, isRoleGroup])
 
   return (
     <Stack
