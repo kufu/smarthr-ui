@@ -1,5 +1,4 @@
 import React, {
-  ComponentPropsWithRef,
   ComponentPropsWithoutRef,
   ElementType,
   FC,
@@ -11,11 +10,8 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
+import { ElementRef, ElementRefProps } from '../../types'
 import { FaExternalLinkAltIcon } from '../Icon'
-
-type ElementRef<T extends ElementType> = ComponentPropsWithRef<T>['ref']
-
-type ElementRefProps<T extends ElementType> = { ref?: ElementRef<T> }
 
 type ElementProps<T extends ElementType> = Omit<
   ComponentPropsWithoutRef<T>,

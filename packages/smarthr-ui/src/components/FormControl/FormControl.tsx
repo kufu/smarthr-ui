@@ -1,10 +1,12 @@
 import React, {
-  ComponentProps,
-  ComponentPropsWithoutRef,
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
+  type ComponentProps,
+  type ComponentPropsWithoutRef,
+  type PropsWithChildren,
+  type ReactElement,
+  type ReactNode,
+  useEffect,
   useMemo,
+  useRef,
 } from 'react'
 import { isStyledComponent } from 'styled-components'
 import { tv } from 'tailwind-variants'
@@ -25,6 +27,7 @@ import { TimePicker } from '../TimePicker'
 import { visuallyHiddenText } from '../VisuallyHiddenText/VisuallyHiddenText'
 
 import type { Gap } from '../../types'
+
 type StatusLabelProps = ComponentProps<typeof StatusLabel>
 
 type Props = PropsWithChildren<{
@@ -145,6 +148,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 }) => {
   const managedHtmlFor = useId(htmlFor)
   const managedLabelId = useId(labelId)
+  const inputWrapperRef = useRef<HTMLDivElement>(null)
   const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
@@ -175,6 +179,18 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
       }
     }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
+
+  useEffect(() => {
+    const inputWrapper = inputWrapperRef?.current
+
+    if (inputWrapper) {
+      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
+
+      if (input && !input.getAttribute('id')) {
+        input.setAttribute('id', managedHtmlFor)
+      }
+    }
+  }, [managedHtmlFor])
 
   return (
     <Stack
@@ -233,9 +249,8 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         </div>
       )}
 
-      <div className={childrenWrapperStyle}>
+      <div className={childrenWrapperStyle} ref={inputWrapperRef}>
         {decorateFirstInputElement(children, {
-          managedHtmlFor,
           describedbyIds,
           error: autoBindErrorInput && actualErrorMessages.length > 0,
         })}
@@ -257,7 +272,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
 }
 
 type DecorateFirstInputElementParams = {
-  managedHtmlFor: string
   describedbyIds: string
   error: boolean
 }
@@ -266,7 +280,7 @@ const decorateFirstInputElement = (
   children: ReactNode,
   params: DecorateFirstInputElementParams,
 ) => {
-  const { managedHtmlFor, describedbyIds, error } = params
+  const { describedbyIds, error } = params
   let foundFirstInput = false
 
   const decorate = (targets: ReactNode): ReactNode[] | ReactNode =>
@@ -280,9 +294,7 @@ const decorateFirstInputElement = (
 
       foundFirstInput = true
 
-      const inputAttributes: ComponentProps<typeof Input> = {
-        id: managedHtmlFor,
-      }
+      const inputAttributes: ComponentProps<typeof Input> = {}
       if (error) {
         inputAttributes.error = true
       }
@@ -290,11 +302,7 @@ const decorateFirstInputElement = (
         inputAttributes['aria-describedby'] = describedbyIds
       }
 
-      if (isComboBoxElement(child)) {
-        return React.cloneElement(child, { inputAttributes })
-      } else {
-        return React.cloneElement(child, inputAttributes)
-      }
+      return React.cloneElement(child, inputAttributes)
     })
 
   return decorate(children)
@@ -336,15 +344,6 @@ const isInputElement = (
     type === InputFile ||
     type === DropZone
   )
-}
-
-type ComboboxComponent = typeof SingleComboBox | typeof MultiComboBox
-
-const isComboBoxElement = (
-  element: ReactElement,
-): element is React.ReactComponentElement<ComboboxComponent> => {
-  const type = isStyledComponent(element.type) ? element.type.target : element.type
-  return type === SingleComboBox || type === MultiComboBox
 }
 
 export const FormControl: React.FC<Omit<Props & ElementProps, 'as' | 'disabled'>> =

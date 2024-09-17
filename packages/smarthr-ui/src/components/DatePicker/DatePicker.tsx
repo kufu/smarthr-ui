@@ -320,6 +320,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
         <div ref={inputWrapperRef}>
           <Input
             {...inputAttrs}
+            data-smarthr-ui-input="true"
             width="100%"
             name={name}
             onChange={() => {

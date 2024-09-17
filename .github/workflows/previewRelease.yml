@@ -1,0 +1,23 @@
+name: Preview Release
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  previewRelease:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: install dependencies
+        run: |
+          corepack enable
+          corepack prepare
+          pnpm ui install
+      - name: Build
+        run: pnpm ui build
+      - run: pnpx pkg-pr-new publish packages/smarthr-ui

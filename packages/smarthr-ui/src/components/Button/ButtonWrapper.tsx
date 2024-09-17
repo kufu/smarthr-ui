@@ -1,6 +1,7 @@
 import React, {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
+  ElementType,
   ForwardedRef,
   ReactNode,
   useMemo,
@@ -17,6 +18,7 @@ type BaseProps = {
   $loading?: boolean
   className: string
   children: ReactNode
+  elementAs?: ElementType
 }
 
 type ButtonProps = BaseProps & {
@@ -56,9 +58,10 @@ export function ButtonWrapper({
   }, [$loading, className, size, square, variant, wide])
 
   if (props.isAnchor) {
-    const { anchorRef, isAnchor: _, ...others } = props
+    const { anchorRef, elementAs, isAnchor: _, ...others } = props
+    const Component = elementAs || 'a'
     // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute, jsx-a11y/anchor-has-content
-    return <a {...others} className={anchorStyle} ref={anchorRef} />
+    return <Component {...others} className={anchorStyle} ref={anchorRef} />
   } else {
     const { buttonRef, disabled, onClick, ...others } = props
     return (

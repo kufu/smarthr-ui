@@ -1,6 +1,7 @@
 import React, {
   ComponentPropsWithRef,
   forwardRef,
+  startTransition,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -12,6 +13,7 @@ import { tv } from 'tailwind-variants'
 
 import { useId } from '../../hooks/useId'
 import { useTheme } from '../../hooks/useTailwindTheme'
+import { debounce } from '../../libs/debounce'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 
 import type { DecoratorsType } from '../../types'
@@ -99,6 +101,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       onInput,
       decorators,
       error,
+      onChange,
       ...props
     },
     ref,
@@ -135,15 +138,24 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       }
     }, [autoFocus])
 
-    const onKeyUp = useMemo(
-      () =>
-        maxLetters
-          ? (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-              setCount(getStringLength(event.currentTarget.value))
-            }
-          : undefined,
-      [maxLetters],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedUpdateCount = useCallback(
+      debounce((value) => {
+        startTransition(() => {
+          setCount(getStringLength(value))
+        })
+      }, 200),
+      [],
     )
+
+    const handleChange = useCallback(
+      (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        onChange && onChange(event)
+        maxLetters && debouncedUpdateCount(event.currentTarget.value)
+      },
+      [debouncedUpdateCount, maxLetters, onChange],
+    )
+
     const handleInput = useCallback(
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (!autoResize) {
@@ -187,8 +199,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       <textarea
         {...props}
         {...textareaStyleProps}
+        data-smarthr-ui-input="true"
         aria-describedby={actualMaxLettersId}
-        onKeyUp={onKeyUp}
+        onChange={handleChange}
         ref={textareaRef}
         aria-invalid={error || undefined}
         rows={interimRows}

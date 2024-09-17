@@ -127,6 +127,7 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
           {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
           <input
             {...props}
+            data-smarthr-ui-input="true"
             type="checkbox"
             id={checkBoxId}
             checked={checked}

@@ -1,18 +1,37 @@
-import React, { AnchorHTMLAttributes, forwardRef, useMemo } from 'react'
+import React, {
+  ComponentPropsWithoutRef,
+  ElementType,
+  FC,
+  PropsWithoutRef,
+  ReactElement,
+  Ref,
+  forwardRef,
+  useMemo,
+} from 'react'
 import { tv } from 'tailwind-variants'
+
+import { ElementRef, ElementRefProps } from '../../types'
 
 import { ButtonInner } from './ButtonInner'
 import { ButtonWrapper } from './ButtonWrapper'
 import { BaseProps } from './types'
 
-type ElementProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof BaseProps>
+type ElementProps<T extends ElementType> = Omit<
+  ComponentPropsWithoutRef<T>,
+  keyof Props<T> & ElementRefProps<T>
+>
+
+type Props<T extends ElementType> = BaseProps & {
+  /** next/linkなどのカスタムコンポーネントを指定します。指定がない場合はデフォルトで `a` タグが使用されます。 */
+  elementAs?: T
+}
 
 const anchorButton = tv({
   base: 'smarthr-ui-AnchorButton',
 })
 
-export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementProps>(
-  (
+const AnchorButton = forwardRef(
+  <T extends ElementType = 'a'>(
     {
       size = 'default',
       square = false,
@@ -22,12 +41,13 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
       variant = 'secondary',
       target,
       rel,
+      elementAs,
       className,
       children,
       ...props
-    },
-    ref,
-  ) => {
+    }: PropsWithoutRef<Props<T>> & ElementProps<T>,
+    ref: Ref<ElementRef<T>>,
+  ): ReactElement => {
     const styles = useMemo(() => anchorButton({ className }), [className])
     const actualRel = useMemo(
       () => (rel === undefined && target === '_blank' ? 'noopener noreferrer' : rel),
@@ -46,6 +66,7 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
         rel={actualRel}
         isAnchor
         anchorRef={ref}
+        elementAs={elementAs}
       >
         <ButtonInner prefix={prefix} suffix={suffix} size={size}>
           {children}
@@ -54,5 +75,17 @@ export const AnchorButton = forwardRef<HTMLAnchorElement, BaseProps & ElementPro
     )
   },
 )
+
+// 型キャストなしで ForwardRefExoticComponent に合わせた型をエクスポートするための処理
+type AnchorButtonType = <T extends ElementType = 'a'>(
+  props: Props<T> & ElementProps<T> & ElementRefProps<T>,
+) => ReturnType<FC>
+
+const ForwardedAnchorButton = AnchorButton as unknown as AnchorButtonType & {
+  displayName: string
+}
+
 // BottomFixedArea での判定に用いるために displayName を明示的に設定する
-AnchorButton.displayName = 'AnchorButton'
+ForwardedAnchorButton.displayName = 'AnchorButton'
+
+export { ForwardedAnchorButton as AnchorButton }

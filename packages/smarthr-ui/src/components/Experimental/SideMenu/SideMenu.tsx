@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, FC, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
 import { Base } from '../../Base'
@@ -7,7 +7,9 @@ const sideMenu = tv({
   base: 'smarthr-ui-SideMenu shr-list-none shr-py-0.5',
 })
 
-type Props = Pick<ComponentPropsWithoutRef<typeof Base>, 'radius' | 'layer' | 'className'> & {
+type Props = PropsWithChildren<
+  Pick<ComponentPropsWithoutRef<typeof Base>, 'radius' | 'layer' | 'className'>
+> & {
   /**
    * @default ul
    */
