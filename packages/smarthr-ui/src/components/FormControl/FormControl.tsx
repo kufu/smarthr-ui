@@ -206,7 +206,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       }
     }
   }, [managedHtmlFor])
-
   useEffect(() => {
     const inputWrapper = inputWrapperRef?.current
 
@@ -223,6 +222,27 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       }
     }
   }, [describedbyIds])
+  useEffect(() => {
+    if (!autoBindErrorInput) {
+      return
+    }
+
+    const inputWrapper = inputWrapperRef?.current
+
+    if (inputWrapper) {
+      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
+
+      if (!input) {
+        return
+      }
+
+      if (actualErrorMessages.length > 0) {
+        input.setAttribute('aria-invalid', 'true')
+      } else {
+        input.removeAttribute('aria-invalid')
+      }
+    }
+  }, [actualErrorMessages.length, autoBindErrorInput])
 
   return (
     <Stack
@@ -252,9 +272,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         errorIconStyle={errorIconStyle}
       />
       <div className={childrenWrapperStyle} ref={inputWrapperRef}>
-        {decorateFirstInputElement(children, {
-          error: autoBindErrorInput && actualErrorMessages.length > 0,
-        })}
+        {children}
       </div>
       <SupplementaryMessageText
         supplementaryMessage={supplementaryMessage}
@@ -367,77 +385,6 @@ const SupplementaryMessageText = React.memo<
     </Text>
   ) : null,
 )
-
-type DecorateFirstInputElementParams = {
-  error: boolean
-}
-
-const decorateFirstInputElement = (
-  children: ReactNode,
-  params: DecorateFirstInputElementParams,
-) => {
-  const { error } = params
-
-  if (!error) {
-    return children
-  }
-
-  let foundFirstInput = false
-
-  const decorate = (targets: ReactNode): ReactNode[] | ReactNode =>
-    React.Children.map(targets, (child) => {
-      if (foundFirstInput || !React.isValidElement(child)) {
-        return child
-      }
-      if (!isInputElement(child)) {
-        return React.cloneElement(child, {}, decorate(child.props.children))
-      }
-
-      foundFirstInput = true
-
-      return React.cloneElement(child, { error: true } as ComponentProps<typeof Input>)
-    })
-
-  return decorate(children)
-}
-
-type InputComponent =
-  | typeof Input
-  | typeof CurrencyInput
-  | typeof Textarea
-  | typeof DatePicker
-  | typeof TimePicker
-  | typeof Select
-  | typeof SingleComboBox
-  | typeof MultiComboBox
-  | typeof InputFile
-  | typeof DropZone
-
-/**
- * - CheckBox / RadioButton は内部に label を含むため対象外
- * - SearchInput は label を含むため対象外
- * - InputWithTooltip は領域が狭く FormControl を置けない場所での使用を想定しているため対象外
- *
- * @param node
- * @returns
- */
-const isInputElement = (
-  element: ReactElement,
-): element is React.ReactComponentElement<InputComponent> => {
-  const type = isStyledComponent(element.type) ? element.type.target : element.type
-  return (
-    type === Input ||
-    type === CurrencyInput ||
-    type === Textarea ||
-    type === DatePicker ||
-    type === TimePicker ||
-    type === Select ||
-    type === SingleComboBox ||
-    type === MultiComboBox ||
-    type === InputFile ||
-    type === DropZone
-  )
-}
 
 export const FormControl: React.FC<Omit<Props & ElementProps, 'as' | 'disabled'>> =
   ActualFormControl

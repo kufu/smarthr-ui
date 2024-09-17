@@ -80,6 +80,7 @@ const multiCombobox = tv({
       'smarthr-ui-MultiComboBox',
       'shr-box-border shr-inline-flex shr-min-w-[15em] shr-rounded-m shr-border shr-border-solid shr-px-0.5 shr-py-0.25 shr-align-bottom',
       'contrast-more:shr-border-high-contrast',
+      'has-[[aria-invalid]]:shr-border-danger',
     ],
     inputArea: 'shr-flex shr-flex-1 shr-flex-wrap shr-gap-0.5 shr-overflow-y-auto',
     selectedList:
@@ -103,11 +104,6 @@ const multiCombobox = tv({
         wrapper: 'shr-focus-indicator',
       },
     },
-    error: {
-      true: {
-        wrapper: 'shr-border-danger',
-      },
-    },
     disabled: {
       true: {
         wrapper:
@@ -125,7 +121,6 @@ const multiCombobox = tv({
   },
   compoundVariants: [
     {
-      error: false,
       disabled: false,
       className: {
         wrapper: 'shr-border-default',
@@ -423,7 +418,7 @@ const ActualMultiComboBox = <T,>(
           ...style,
           width: widthStyle,
         },
-        className: wrapper({ focused: isFocused, error, disabled, className }),
+        className: wrapper({ focused: isFocused, disabled, className }),
       },
       inputAreaStyle: inputArea(),
       selectedListStyle: selectedList(),
@@ -436,7 +431,6 @@ const ActualMultiComboBox = <T,>(
   }, [
     className,
     disabled,
-    error,
     input,
     inputArea,
     inputWrapper,

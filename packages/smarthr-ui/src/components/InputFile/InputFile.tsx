@@ -27,6 +27,7 @@ const inputFile = tv({
       'shr-border-shorthand shr-relative shr-inline-flex shr-rounded-m shr-bg-white shr-font-bold shr-leading-none',
       'contrast-more:shr-border-high-contrast',
       'focus-within:shr-focus-indicator',
+      'has-[[aria-invalid]]:shr-border-danger',
     ],
     input: [
       'smarthr-ui-InputFile-input',
@@ -53,11 +54,6 @@ const inputFile = tv({
         inputWrapper: 'hover:shr-border-darken hover:shr-bg-white-darken hover:shr-text-black',
       },
     },
-    error: {
-      true: {
-        inputWrapper: '[&&&]:shr-border-danger',
-      },
-    },
   },
 })
 
@@ -70,6 +66,7 @@ export type Props = VariantProps<typeof inputFile> & {
   hasFileList?: boolean
   /** コンポーネント内のテキストを変更する関数 */
   decorators?: DecoratorsType<'destroy'>
+  error?: boolean
 }
 type ElementProps = Omit<ComponentPropsWithRef<'input'>, keyof Props>
 
@@ -96,8 +93,8 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
     const { wrapper, fileList, fileItem, inputWrapper, input, prefix } = inputFile()
     const wrapperStyle = useMemo(() => wrapper({ className }), [className, wrapper])
     const inputWrapperStyle = useMemo(
-      () => inputWrapper({ size, disabled, error }),
-      [disabled, error, inputWrapper, size],
+      () => inputWrapper({ size, disabled }),
+      [disabled, inputWrapper, size],
     )
 
     // Safari において、input.files への直接代入時に onChange が発火することを防ぐためのフラグ

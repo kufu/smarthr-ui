@@ -23,8 +23,13 @@ const _Template: StoryFn = (args) => (
       </FormControl>
     </li>
     <li>
-      <FormControl title="エラーあり">
+      <FormControl title="エラーあり" autoBindErrorInput={false}>
         <TimePicker {...args} error={true} />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="エラーあり with FormControl" errorMessages={['エラーメッセージ']}>
+        <TimePicker {...args} />
       </FormControl>
     </li>
     <li>

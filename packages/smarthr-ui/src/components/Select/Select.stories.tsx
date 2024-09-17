@@ -38,8 +38,13 @@ export const All: StoryFn = () => (
       </FormControl>
     </li>
     <li>
-      <FormControl title="エラー状態">
+      <FormControl title="エラー状態" autoBindErrorInput={false}>
         <Select name="error" error options={options} />
+      </FormControl>
+    </li>
+    <li>
+      <FormControl title="エラー状態 with FormControl" errorMessages={['エラーメッセージ']}>
+        <Select name="error" options={options} />
       </FormControl>
     </li>
     <li>

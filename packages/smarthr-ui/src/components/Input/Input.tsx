@@ -51,13 +51,11 @@ const wrapper = tv({
     'shr-border-shorthand shr-box-border shr-inline-flex shr-cursor-text shr-items-center shr-gap-0.5 shr-rounded-m shr-bg-white shr-px-0.5',
     'contrast-more:shr-border-high-contrast',
     'focus-within:shr-focus-indicator',
+    'has-[[aria-invalid]]:shr-border-danger',
   ],
   variants: {
     disabled: {
       true: 'shr-pointer-events-none shr-bg-white-darken [&&&]:shr-border-default/50',
-    },
-    error: {
-      true: '[&]:shr-border-danger',
     },
     readOnly: {
       true: '[&&&]:shr-border-[theme(backgroundColor.background)] [&&&]:shr-bg-background',
@@ -132,7 +130,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
     const { backgroundColor } = useTheme()
 
     const wrapperStyleProps = useMemo(() => {
-      const wrapperStyle = wrapper({ disabled, error, readOnly, className })
+      const wrapperStyle = wrapper({ disabled, readOnly, className })
       const color = bgColor
         ? backgroundColor[bgColors[bgColor] as keyof typeof backgroundColor]
         : undefined
@@ -144,7 +142,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
           width: typeof width === 'number' ? `${width}px` : width,
         },
       }
-    }, [backgroundColor, bgColor, className, disabled, error, readOnly, width])
+    }, [backgroundColor, bgColor, className, disabled, readOnly, width])
     const { input, affix } = inner()
 
     return (
