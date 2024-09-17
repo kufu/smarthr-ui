@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [58.0.0](https://github.com/kufu/smarthr-ui/compare/v57.1.0...v58.0.0) (2024-09-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* useId の独自実装を削除し、React 18 未満のサポートを終了する (#4920)
+* Combobox の inputAttributes を消し、input に直接渡すように修正 (#4911)
+
+### Features
+
+* AnchorButtonをnext/linkなどのラップされたコンポーネントに対応 ([#4901](https://github.com/kufu/smarthr-ui/issues/4901)) ([a07d257](https://github.com/kufu/smarthr-ui/commit/a07d2573bff0326cdc959070316de118aec11150))
+* Combobox の inputAttributes を消し、input に直接渡すように修正 ([#4911](https://github.com/kufu/smarthr-ui/issues/4911)) ([8b9f611](https://github.com/kufu/smarthr-ui/commit/8b9f6118bbb4a0357f7dfda512afabfc63796c16))
+* FormControlのlabelとchildren内のinputの紐づけ方を変更する ([#4894](https://github.com/kufu/smarthr-ui/issues/4894)) ([593ba25](https://github.com/kufu/smarthr-ui/commit/593ba2537bcf6490f797a859af4c6cf4e81b56c8))
+* useId の独自実装を削除し、React 18 未満のサポートを終了する ([#4920](https://github.com/kufu/smarthr-ui/issues/4920)) ([28e590e](https://github.com/kufu/smarthr-ui/commit/28e590ed702660a74e136d982b7d3ca9bcae8314))
+
+
+### Bug Fixes
+
+* SideMenuのPropsにchildrenを追加 ([#4919](https://github.com/kufu/smarthr-ui/issues/4919)) ([51dbdb8](https://github.com/kufu/smarthr-ui/commit/51dbdb86fdb69b6decdbeb4347232c9fd7a89cc7))
+* Table コンポーネントの使われていない記述を削除 ([#4921](https://github.com/kufu/smarthr-ui/issues/4921)) ([fe3e56f](https://github.com/kufu/smarthr-ui/commit/fe3e56fd95d1b802ce15114bf1e1962a847ff715))
+* Textareaの文字数カウンタをonChangeで処理するように修正 ([#4916](https://github.com/kufu/smarthr-ui/issues/4916)) ([a054e07](https://github.com/kufu/smarthr-ui/commit/a054e07c7a66f496b670e8ca855c5d0f8fe891ea))
+
 ## [57.1.0](https://github.com/kufu/smarthr-ui/compare/v57.0.0...v57.1.0) (2024-09-11)
 
 
