@@ -101,7 +101,7 @@ importers:
         specifier: ^0.2.1
         version: 0.2.1(tailwindcss@3.4.12(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.5)(typescript@5.6.2)))
       tailwindcss:
-        specifier: ^3.4.11
+        specifier: ^3.4.12
         version: 3.4.12(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.5)(typescript@5.6.2))
     devDependencies:
       '@babel/core':
