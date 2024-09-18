@@ -72,6 +72,19 @@ const textarea = tv({
     counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm',
     counterText: 'shr-font-bold',
   },
+  variants: {
+    error: {
+      true: {
+        counterText: 'shr-text-danger',
+      },
+      false: {
+        counterText: 'shr-text-grey',
+      },
+    },
+  },
+  defaultVariants: {
+    error: false,
+  },
 })
 
 export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
