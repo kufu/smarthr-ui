@@ -20,7 +20,7 @@ type Props = PropsWithChildren<
 
 const dialogOverlap = tv({
   base: [
-    'shr-absolute shr-inset-0 shr-z-overlap-base',
+    'shr-fixed shr-inset-0 shr-z-overlap-base',
     '[&.shr-dialog-transition-enter]:shr-opacity-0',
     '[&.shr-dialog-transition-enter-active]:shr-transition-opacity',
     '[&.shr-dialog-transition-enter-active]:shr-duration-300',
