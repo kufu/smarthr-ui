@@ -14,22 +14,22 @@ const _Template: StoryFn = (args) => (
   <ul className="shr-list-none shr-space-y-1">
     <li>
       <FormControl title="時刻">
-        <TimePicker {...args} />
+        <TimePicker {...args} name="time" />
       </FormControl>
     </li>
     <li>
       <FormControl title="非活性">
-        <TimePicker {...args} disabled={true} />
+        <TimePicker {...args} disabled={true} name="time" />
       </FormControl>
     </li>
     <li>
       <FormControl title="エラーあり">
-        <TimePicker {...args} error={true} />
+        <TimePicker {...args} error={true} name="time" />
       </FormControl>
     </li>
     <li>
       <FormControl title="読み取り専用">
-        <TimePicker {...args} readOnly={true} />
+        <TimePicker {...args} readOnly={true} name="time" />
       </FormControl>
     </li>
   </ul>
