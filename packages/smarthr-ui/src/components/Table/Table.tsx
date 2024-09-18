@@ -1,11 +1,5 @@
-import React, { ComponentProps, FC, PropsWithChildren, createContext, useMemo } from 'react'
+import React, { ComponentProps, FC, PropsWithChildren, useMemo } from 'react'
 import { VariantProps, tv } from 'tailwind-variants'
-
-export const TableGroupContext = createContext<{
-  group: 'head' | 'body'
-}>({
-  group: 'body',
-})
 
 type Props = PropsWithChildren<VariantProps<typeof table>>
 type ElementProps = Omit<ComponentProps<'table'>, keyof Props>

@@ -127,6 +127,3 @@ export { defaultBreakpoint } from './themes/createBreakpoint'
 
 // constants
 export { FONT_FAMILY, CHART_COLORS, OTHER_CHART_COLOR } from './constants'
-
-// utils
-export { SequencePrefixIdProvider } from './hooks/useId'
