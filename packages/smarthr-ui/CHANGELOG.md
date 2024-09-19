@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [58.0.1](https://github.com/kufu/smarthr-ui/compare/v58.0.0...v58.0.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* ダイアログの背景がスクロールに依ってズレる不具合を修正 ([#4933](https://github.com/kufu/smarthr-ui/issues/4933)) ([cf5ea5f](https://github.com/kufu/smarthr-ui/commit/cf5ea5fd55b7d5c522fd59c418789f19e2686212))
+
 ## [58.0.0](https://github.com/kufu/smarthr-ui/compare/v57.1.0...v58.0.0) (2024-09-17)
 
 
