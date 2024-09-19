@@ -52,18 +52,20 @@ const radioButton = tv({
   },
 })
 
+const { wrapper, innerWrapper, box, input, label } = radioButton()
+const innerWrapperStyle = innerWrapper()
+const inputStyle = input()
+
 export const RadioButton = forwardRef<HTMLInputElement, Props>(
   ({ onChange, children, className, required, ...props }, ref) => {
-    const { wrapperStyle, innerWrapperStyle, boxStyle, inputStyle, labelStyle } = useMemo(() => {
-      const { wrapper, innerWrapper, box, input, label } = radioButton()
-      return {
+    const { wrapperStyle, boxStyle, labelStyle } = useMemo(
+      () => ({
         wrapperStyle: wrapper({ className }),
-        innerWrapperStyle: innerWrapper(),
         boxStyle: box({ disabled: !!props.disabled }),
-        inputStyle: input(),
         labelStyle: label({ disabled: !!props.disabled }),
-      }
-    }, [className, props.disabled])
+      }),
+      [className, props.disabled],
+    )
 
     const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
       (e) => {
