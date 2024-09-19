@@ -256,13 +256,14 @@ export const FormControl: React.FC<Props & ElementProps> = ({
   )
 }
 
-const TitleCluster = React.memo<
+export const TitleCluster = React.memo<
   Pick<Props, 'dangerouslyTitleHidden' | 'title'> & {
     titleType: TextProps['styleType']
     statusLabelList: StatusLabelProps[]
     managedHtmlFor: string
     managedLabelId: string
     labelStyle: string
+    as?: 'label' | 'legend'
   }
 >(
   ({
@@ -273,12 +274,13 @@ const TitleCluster = React.memo<
     titleType,
     title,
     statusLabelList,
+    as = 'label',
   }) => (
     <Cluster
       align="center"
       id={managedLabelId}
       className={labelStyle}
-      as="label"
+      as={as}
       // Stack 対象にしないための hidden
       hidden={dangerouslyTitleHidden || undefined}
     >
@@ -296,31 +298,33 @@ const TitleCluster = React.memo<
   ),
 )
 
-const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
-  ({ helpMessage, managedHtmlFor }) =>
-    helpMessage ? (
-      <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
-        {helpMessage}
-      </p>
-    ) : null,
+export const HelpMessageParagraph = React.memo<
+  Pick<Props, 'helpMessage'> & { managedHtmlFor: string }
+>(({ helpMessage, managedHtmlFor }) =>
+  helpMessage ? (
+    <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
+      {helpMessage}
+    </p>
+  ) : null,
 )
 
-const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
-  ({ exampleMessage, managedHtmlFor }) =>
-    exampleMessage ? (
-      <Text
-        as="p"
-        color="TEXT_GREY"
-        italic
-        id={`${managedHtmlFor}_exampleMessage`}
-        className="smarthr-ui-FormControl-exampleMessage"
-      >
-        {exampleMessage}
-      </Text>
-    ) : null,
+export const ExampleMessageText = React.memo<
+  Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }
+>(({ exampleMessage, managedHtmlFor }) =>
+  exampleMessage ? (
+    <Text
+      as="p"
+      color="TEXT_GREY"
+      italic
+      id={`${managedHtmlFor}_exampleMessage`}
+      className="smarthr-ui-FormControl-exampleMessage"
+    >
+      {exampleMessage}
+    </Text>
+  ) : null,
 )
 
-const ErrorMessageList = React.memo<{
+export const ErrorMessageList = React.memo<{
   errorMessages: ReactNode[]
   managedHtmlFor: string
   errorListStyle: string
@@ -341,7 +345,7 @@ const ErrorMessageList = React.memo<{
   )
 })
 
-const SupplementaryMessageText = React.memo<
+export const SupplementaryMessageText = React.memo<
   Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
 >(({ supplementaryMessage, managedHtmlFor }) =>
   supplementaryMessage ? (

@@ -10,6 +10,13 @@ import React, {
 import { useId } from 'react'
 import { tv } from 'tailwind-variants'
 
+import {
+  ErrorMessageList,
+  ExampleMessageText,
+  HelpMessageParagraph,
+  SupplementaryMessageText,
+  TitleCluster,
+} from '../FormControl'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
@@ -174,22 +181,6 @@ export const Fieldset: React.FC<Props & ElementProps> = ({
     }, [className, dangerouslyTitleHidden, innerMargin])
 
   useEffect(() => {
-    const inputWrapper = inputWrapperRef?.current
-
-    if (inputWrapper) {
-      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
-      if (!describedbyIds || inputWrapper.querySelector(`[aria-describedby="${describedbyIds}"]`)) {
-        return
-      }
-
-      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
-
-      if (input && !input.getAttribute('aria-describedby')) {
-        input.setAttribute('aria-describedby', describedbyIds)
-      }
-    }
-  }, [describedbyIds])
-  useEffect(() => {
     if (!autoBindErrorInput) {
       return
     }
@@ -221,6 +212,7 @@ export const Fieldset: React.FC<Props & ElementProps> = ({
       className={wrapperStyle}
     >
       <TitleCluster
+        as="legend"
         managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
         labelStyle={labelStyle}
@@ -247,104 +239,3 @@ export const Fieldset: React.FC<Props & ElementProps> = ({
     </Stack>
   )
 }
-
-const TitleCluster = React.memo<
-  Pick<Props, 'dangerouslyTitleHidden' | 'title'> & {
-    titleType: TextProps['styleType']
-    statusLabelList: StatusLabelProps[]
-    managedHtmlFor: string
-    managedLabelId: string
-    labelStyle: string
-  }
->(
-  ({
-    managedHtmlFor,
-    managedLabelId,
-    labelStyle,
-    dangerouslyTitleHidden,
-    titleType,
-    title,
-    statusLabelList,
-  }) => (
-    <Cluster
-      align="center"
-      id={managedLabelId}
-      className={labelStyle}
-      as="legend"
-      // Stack 対象にしないための hidden
-      hidden={dangerouslyTitleHidden || undefined}
-    >
-      <Text as="span" styleType={titleType}>
-        {title}
-      </Text>
-      {statusLabelList.length > 0 && (
-        <Cluster gap={0.25} as="span">
-          {statusLabelList.map((prop, index) => (
-            <StatusLabel {...prop} key={index} />
-          ))}
-        </Cluster>
-      )}
-    </Cluster>
-  ),
-)
-
-const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
-  ({ helpMessage, managedHtmlFor }) =>
-    helpMessage ? (
-      <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
-        {helpMessage}
-      </p>
-    ) : null,
-)
-
-const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
-  ({ exampleMessage, managedHtmlFor }) =>
-    exampleMessage ? (
-      <Text
-        as="p"
-        color="TEXT_GREY"
-        italic
-        id={`${managedHtmlFor}_exampleMessage`}
-        className="smarthr-ui-FormControl-exampleMessage"
-      >
-        {exampleMessage}
-      </Text>
-    ) : null,
-)
-
-const ErrorMessageList = React.memo<{
-  errorMessages: ReactNode[]
-  managedHtmlFor: string
-  errorListStyle: string
-  errorIconStyle: string
-}>(({ errorMessages, managedHtmlFor, errorListStyle, errorIconStyle }) => {
-  if (errorMessages.length === 0) {
-    return null
-  }
-
-  return (
-    <div id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
-      {errorMessages.map((message, index) => (
-        <p key={index}>
-          <FaCircleExclamationIcon text={message} className={errorIconStyle} />
-        </p>
-      ))}
-    </div>
-  )
-})
-
-const SupplementaryMessageText = React.memo<
-  Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
->(({ supplementaryMessage, managedHtmlFor }) =>
-  supplementaryMessage ? (
-    <Text
-      as="p"
-      size="S"
-      color="TEXT_GREY"
-      id={`${managedHtmlFor}_supplementaryMessage`}
-      className="smarthr-ui-FormControl-supplementaryMessage"
-    >
-      {supplementaryMessage}
-    </Text>
-  ) : null,
-)
