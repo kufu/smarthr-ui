@@ -1,7 +1,6 @@
-import React, { InputHTMLAttributes, ReactNode, forwardRef, useMemo } from 'react'
+import React, { InputHTMLAttributes, ReactNode, forwardRef, useId, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useId } from '../../hooks/useId'
 import { FaCheckIcon } from '../Icon'
 import { Cluster } from '../Layout'
 import { Text } from '../Text'
@@ -56,7 +55,8 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
   ({ children, dangerouslyLabelHidden, className, id, ...props }, ref) => {
     const { wrapper, input, icon, iconWrapper } = useMemo(() => switchStyle(), [])
     const ActualLabelComponent = dangerouslyLabelHidden ? VisuallyHiddenText : Text
-    const inputId = useId(id)
+    const defaultId = useId()
+    const inputId = id || defaultId
 
     return (
       <Cluster align="center">

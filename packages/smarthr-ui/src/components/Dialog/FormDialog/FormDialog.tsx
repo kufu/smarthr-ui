@@ -1,6 +1,5 @@
-import React, { ComponentProps, FormEvent, useCallback } from 'react'
+import React, { ComponentProps, FormEvent, useCallback, useId } from 'react'
 
-import { useId } from '../../../hooks/useId'
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'

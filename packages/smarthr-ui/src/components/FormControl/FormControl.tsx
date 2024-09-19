@@ -8,10 +8,10 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
+import { useId } from 'react'
 import { isStyledComponent } from 'styled-components'
 import { tv } from 'tailwind-variants'
 
-import { useId } from '../../hooks/useId'
 import { MultiComboBox, SingleComboBox } from '../ComboBox'
 import { DatePicker } from '../DatePicker'
 import { DropZone } from '../DropZone'
@@ -146,8 +146,10 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   children,
   ...props
 }) => {
-  const managedHtmlFor = useId(htmlFor)
-  const managedLabelId = useId(labelId)
+  const defaultHtmlFor = useId()
+  const defaultLabelId = useId()
+  const managedHtmlFor = htmlFor || defaultHtmlFor
+  const managedLabelId = labelId || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
