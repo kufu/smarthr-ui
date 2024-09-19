@@ -20,7 +20,7 @@ import type { Gap } from '../../types'
 
 type StatusLabelProps = ComponentProps<typeof StatusLabel>
 
-type Props = PropsWithChildren<{
+export type Props = PropsWithChildren<{
   /** グループのタイトル名 */
   title: ReactNode
   /** タイトルの見出しのタイプ */
@@ -45,11 +45,10 @@ type Props = PropsWithChildren<{
   autoBindErrorInput?: boolean
   /** フォームコントロールの下に表示する補足メッセージ */
   supplementaryMessage?: ReactNode
-  /** `true` のとき、文字色を `TEXT_DISABLED` にする */
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'aria-labelledby'>
 
-const formGroup = tv({
+export const formGroup = tv({
   slots: {
     wrapper: [
       'smarthr-ui-FormControl',
@@ -71,7 +70,7 @@ const formGroup = tv({
   },
 })
 
-const childrenWrapper = tv({
+export const childrenWrapper = tv({
   variants: {
     innerMargin: {
       0: '[&&&]:shr-mt-0',
@@ -110,23 +109,31 @@ const childrenWrapper = tv({
   ],
 })
 
-export const FormControl: React.FC<Props & ElementProps> = ({
-  title,
-  titleType = 'blockTitle',
-  dangerouslyTitleHidden = false,
+export const useFormControl = ({
   htmlFor,
   labelId,
-  innerMargin,
-  statusLabelProps = [],
+  statusLabelProps,
   helpMessage,
   exampleMessage,
-  errorMessages,
-  autoBindErrorInput = true,
   supplementaryMessage,
+  errorMessages,
+  autoBindErrorInput,
   className,
-  children,
-  ...props
-}) => {
+  innerMargin,
+  dangerouslyTitleHidden,
+}: Pick<
+  Props,
+  'htmlFor' | 'labelId',
+  | 'statusLabelProps'
+  | 'helpMessage'
+  | 'exampleMessage'
+  | 'supplementaryMessage'
+  | 'errorMessages'
+  | 'autoBindErrorInput'
+  | 'className'
+  | 'innerMargin'
+  | 'dangerouslyTitleHidden'
+>) => {
   const defaultHtmlFor = useId()
   const defaultLabelId = useId()
   const managedHtmlFor = htmlFor || defaultHtmlFor
@@ -152,6 +159,7 @@ export const FormControl: React.FC<Props & ElementProps> = ({
 
     return temp.join(' ')
   }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
+
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []
@@ -160,17 +168,88 @@ export const FormControl: React.FC<Props & ElementProps> = ({
     return Array.isArray(errorMessages) ? errorMessages : [errorMessages]
   }, [errorMessages])
 
-  const { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, childrenWrapperStyle } =
-    useMemo(() => {
-      const { wrapper, label, errorList, errorIcon } = formGroup()
-      return {
-        wrapperStyle: wrapper({ className }),
-        labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
-        errorListStyle: errorList(),
-        errorIconStyle: errorIcon(),
-        childrenWrapperStyle: childrenWrapper({ innerMargin }),
+  const styles = useMemo(() => {
+    const { wrapper, label, errorList, errorIcon } = formGroup()
+    return {
+      wrapperStyle: wrapper({ className }),
+      labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
+      errorListStyle: errorList(),
+      errorIconStyle: errorIcon(),
+      childrenWrapperStyle: childrenWrapper({ innerMargin }),
+    }
+  }, [className, dangerouslyTitleHidden, innerMargin])
+
+  useEffect(() => {
+    if (!autoBindErrorInput) {
+      return
+    }
+
+    const inputWrapper = inputWrapperRef?.current
+
+    if (inputWrapper) {
+      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
+
+      if (!input) {
+        return
       }
-    }, [className, dangerouslyTitleHidden, innerMargin])
+
+      if (actualErrorMessages.length > 0) {
+        input.setAttribute('aria-invalid', 'true')
+      } else {
+        input.removeAttribute('aria-invalid')
+      }
+    }
+  }, [actualErrorMessages.length, autoBindErrorInput])
+
+  return {
+    managedHtmlFor,
+    managedLabelId,
+    inputWrapperRef,
+    statusLabelList,
+    describedbyIds,
+    actualErrorMessages,
+    styles,
+  }
+}
+
+export const FormControl: React.FC<Props & ElementProps> = ({
+  title,
+  titleType = 'blockTitle',
+  dangerouslyTitleHidden = false,
+  htmlFor,
+  labelId,
+  innerMargin,
+  statusLabelProps = [],
+  helpMessage,
+  exampleMessage,
+  errorMessages,
+  autoBindErrorInput = true,
+  supplementaryMessage,
+  className,
+  children,
+  ...props
+}) => {
+  const {
+    managedHtmlFor,
+    managedLabelId,
+    inputWrapperRef,
+    statusLabelList,
+    describedbyIds,
+    actualErrorMessages,
+    styles: { wrapperStyle, labelStyle, errorListStyle, errorIconStyle, childrenWrapperStyle },
+  } = useFormControl({
+    htmlFor,
+    labelId,
+    statusLabelProps,
+    helpMessage,
+    exampleMessage,
+    supplementaryMessage,
+    errorMessages,
+    autoBindErrorInput,
+    className,
+    innerMargin,
+    dangerouslyTitleHidden,
+  })
 
   useEffect(() => {
     const inputWrapper = inputWrapperRef?.current
@@ -204,32 +283,10 @@ export const FormControl: React.FC<Props & ElementProps> = ({
       }
     }
   }, [describedbyIds])
-  useEffect(() => {
-    if (!autoBindErrorInput) {
-      return
-    }
-
-    const inputWrapper = inputWrapperRef?.current
-
-    if (inputWrapper) {
-      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
-
-      if (!input) {
-        return
-      }
-
-      if (actualErrorMessages.length > 0) {
-        input.setAttribute('aria-invalid', 'true')
-      } else {
-        input.removeAttribute('aria-invalid')
-      }
-    }
-  }, [actualErrorMessages.length, autoBindErrorInput])
 
   return (
     <Stack {...props} as="div" gap={innerMargin ?? 0.5} className={wrapperStyle}>
       <TitleCluster
-        managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
         labelStyle={labelStyle}
         dangerouslyTitleHidden={dangerouslyTitleHidden}
@@ -260,14 +317,12 @@ export const TitleCluster = React.memo<
   Pick<Props, 'dangerouslyTitleHidden' | 'title'> & {
     titleType: TextProps['styleType']
     statusLabelList: StatusLabelProps[]
-    managedHtmlFor: string
     managedLabelId: string
     labelStyle: string
     as?: 'label' | 'legend'
   }
 >(
   ({
-    managedHtmlFor,
     managedLabelId,
     labelStyle,
     dangerouslyTitleHidden,
