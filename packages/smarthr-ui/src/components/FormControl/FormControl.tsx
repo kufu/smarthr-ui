@@ -46,8 +46,6 @@ type Props = PropsWithChildren<{
   /** フォームコントロールの下に表示する補足メッセージ */
   supplementaryMessage?: ReactNode
   /** `true` のとき、文字色を `TEXT_DISABLED` にする */
-  disabled?: boolean
-  as?: string | React.ComponentType<any>
 }>
 type ElementProps = Omit<ComponentPropsWithoutRef<'div'>, keyof Props | 'aria-labelledby'>
 
@@ -99,26 +97,20 @@ const childrenWrapper = tv({
       XXL: '[&&&]:shr-mt-3.5',
       X3L: '[&&&]:shr-mt-4',
     } as { [key in Gap]: string },
-    isRoleGroup: {
-      true: '',
-      false: '',
-    },
   },
   compoundVariants: [
     {
       innerMargin: undefined,
-      isRoleGroup: true,
       className: '[:not([hidden])_~_&&&]:shr-mt-1',
     },
     {
       innerMargin: undefined,
-      isRoleGroup: false,
       className: '[:not([hidden])_~_&&&]:shr-mt-0.5',
     },
   ],
 })
 
-export const ActualFormControl: React.FC<Props & ElementProps> = ({
+export const FormControl: React.FC<Props & ElementProps> = ({
   title,
   titleType = 'blockTitle',
   dangerouslyTitleHidden = false,
@@ -131,7 +123,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   errorMessages,
   autoBindErrorInput = true,
   supplementaryMessage,
-  as = 'div',
   className,
   children,
   ...props
@@ -141,7 +132,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   const managedHtmlFor = htmlFor || defaultHtmlFor
   const managedLabelId = labelId || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
-  const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
   const describedbyIds = useMemo(() => {
@@ -161,14 +151,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     }
 
     return temp.join(' ')
-  }, [
-    isRoleGroup,
-    helpMessage,
-    exampleMessage,
-    supplementaryMessage,
-    errorMessages,
-    managedHtmlFor,
-  ])
+  }, [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor])
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []
@@ -185,15 +168,11 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         labelStyle: label({ className: dangerouslyTitleHidden ? visuallyHiddenText() : '' }),
         errorListStyle: errorList(),
         errorIconStyle: errorIcon(),
-        childrenWrapperStyle: childrenWrapper({ innerMargin, isRoleGroup }),
+        childrenWrapperStyle: childrenWrapper({ innerMargin }),
       }
-    }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
+    }, [className, dangerouslyTitleHidden, innerMargin])
 
   useEffect(() => {
-    if (isRoleGroup) {
-      return
-    }
-
     const inputWrapper = inputWrapperRef?.current
 
     if (inputWrapper) {
@@ -208,7 +187,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         input.setAttribute('id', managedHtmlFor)
       }
     }
-  }, [managedHtmlFor, isRoleGroup])
+  }, [managedHtmlFor])
   useEffect(() => {
     const inputWrapper = inputWrapperRef?.current
 
@@ -224,7 +203,7 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
         input.setAttribute('aria-describedby', describedbyIds)
       }
     }
-  }, [describedbyIds, isRoleGroup])
+  }, [describedbyIds])
   useEffect(() => {
     if (!autoBindErrorInput) {
       return
@@ -248,16 +227,8 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   }, [actualErrorMessages.length, autoBindErrorInput])
 
   return (
-    <Stack
-      {...props}
-      as={as}
-      gap={innerMargin ?? 0.5}
-      aria-labelledby={isRoleGroup ? managedLabelId : undefined}
-      aria-describedby={isRoleGroup && describedbyIds ? describedbyIds : undefined}
-      className={wrapperStyle}
-    >
+    <Stack {...props} as="div" gap={innerMargin ?? 0.5} className={wrapperStyle}>
       <TitleCluster
-        isRoleGroup={isRoleGroup}
         managedHtmlFor={managedHtmlFor}
         managedLabelId={managedLabelId}
         labelStyle={labelStyle}
@@ -289,14 +260,12 @@ const TitleCluster = React.memo<
   Pick<Props, 'dangerouslyTitleHidden' | 'title'> & {
     titleType: TextProps['styleType']
     statusLabelList: StatusLabelProps[]
-    isRoleGroup: boolean
     managedHtmlFor: string
     managedLabelId: string
     labelStyle: string
   }
 >(
   ({
-    isRoleGroup,
     managedHtmlFor,
     managedLabelId,
     labelStyle,
@@ -307,10 +276,9 @@ const TitleCluster = React.memo<
   }) => (
     <Cluster
       align="center"
-      htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
       id={managedLabelId}
       className={labelStyle}
-      as={isRoleGroup ? 'legend' : 'label'}
+      as="label"
       // Stack 対象にしないための hidden
       hidden={dangerouslyTitleHidden || undefined}
     >
@@ -388,6 +356,3 @@ const SupplementaryMessageText = React.memo<
     </Text>
   ) : null,
 )
-
-export const FormControl: React.FC<Omit<Props & ElementProps, 'as' | 'disabled'>> =
-  ActualFormControl
