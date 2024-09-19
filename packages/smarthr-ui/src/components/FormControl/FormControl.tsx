@@ -154,14 +154,31 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
-  const describedbyIds = useMemo(
-    () =>
-      Object.entries({ helpMessage, exampleMessage, supplementaryMessage, errorMessages })
-        .filter(({ 1: value }) => value)
-        .map(([key]) => `${managedHtmlFor}_${key}`)
-        .join(' '),
-    [helpMessage, exampleMessage, supplementaryMessage, errorMessages, managedHtmlFor],
-  )
+  const describedbyIds = useMemo(() => {
+    const temp = []
+
+    if (helpMessage) {
+      temp.push(`${managedHtmlFor}_helpMessage`)
+    }
+    if (exampleMessage) {
+      temp.push(`${managedHtmlFor}_exampleMessage`)
+    }
+    if (supplementaryMessage) {
+      temp.push(`${managedHtmlFor}_supplementaryMessage`)
+    }
+    if (errorMessages) {
+      temp.push(`${managedHtmlFor}_errorMessages`)
+    }
+
+    return temp.join(' ')
+  }, [
+    isRoleGroup,
+    helpMessage,
+    exampleMessage,
+    supplementaryMessage,
+    errorMessages,
+    managedHtmlFor,
+  ])
   const actualErrorMessages = useMemo(() => {
     if (!errorMessages) {
       return []
@@ -183,16 +200,42 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     }, [className, dangerouslyTitleHidden, innerMargin, isRoleGroup])
 
   useEffect(() => {
+    if (isRoleGroup) {
+      return
+    }
+
     const inputWrapper = inputWrapperRef?.current
 
     if (inputWrapper) {
+      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+      if (document.getElementById(managedHtmlFor)) {
+        return
+      }
+
       const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
 
       if (input && !input.getAttribute('id')) {
         input.setAttribute('id', managedHtmlFor)
       }
     }
-  }, [managedHtmlFor])
+  }, [managedHtmlFor, isRoleGroup])
+
+  useEffect(() => {
+    const inputWrapper = inputWrapperRef?.current
+
+    if (inputWrapper) {
+      // HINT: 対象idを持つ要素が既に存在する場合、何もしない
+      if (!describedbyIds || inputWrapper.querySelector(`[aria-describedby="${describedbyIds}"]`)) {
+        return
+      }
+
+      const input = inputWrapper.querySelector('[data-smarthr-ui-input="true"]')
+
+      if (input && !input.getAttribute('aria-describedby')) {
+        input.setAttribute('aria-describedby', describedbyIds)
+      }
+    }
+  }, [describedbyIds, isRoleGroup])
 
   return (
     <Stack
@@ -203,78 +246,142 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
       aria-describedby={isRoleGroup && describedbyIds ? describedbyIds : undefined}
       className={wrapperStyle}
     >
-      <Cluster
-        align="center"
-        htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
-        id={managedLabelId}
-        className={labelStyle}
-        as={isRoleGroup ? 'legend' : 'label'}
-        // Stack 対象にしないための hidden
-        hidden={dangerouslyTitleHidden || undefined}
-      >
-        <Text as="span" styleType={titleType}>
-          {title}
-        </Text>
-        {statusLabelList.length > 0 && (
-          <Cluster gap={0.25} as="span">
-            {statusLabelList.map((statusLabelProp, index) => (
-              <StatusLabel {...statusLabelProp} key={index} />
-            ))}
-          </Cluster>
-        )}
-      </Cluster>
-
-      {helpMessage && (
-        <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
-          {helpMessage}
-        </p>
-      )}
-      {exampleMessage && (
-        <Text
-          as="p"
-          color="TEXT_GREY"
-          italic
-          id={`${managedHtmlFor}_exampleMessage`}
-          className="smarthr-ui-FormControl-exampleMessage"
-        >
-          {exampleMessage}
-        </Text>
-      )}
-
-      {actualErrorMessages.length > 0 && (
-        <div id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
-          {actualErrorMessages.map((message, index) => (
-            <p key={index}>
-              <FaCircleExclamationIcon text={message} className={errorIconStyle} />
-            </p>
-          ))}
-        </div>
-      )}
-
+      <TitleCluster
+        isRoleGroup={isRoleGroup}
+        managedHtmlFor={managedHtmlFor}
+        managedLabelId={managedLabelId}
+        labelStyle={labelStyle}
+        dangerouslyTitleHidden={dangerouslyTitleHidden}
+        titleType={titleType}
+        title={title}
+        statusLabelList={statusLabelList}
+      />
+      <HelpMessageParagraph helpMessage={helpMessage} managedHtmlFor={managedHtmlFor} />
+      <ExampleMessageText exampleMessage={exampleMessage} managedHtmlFor={managedHtmlFor} />
+      <ErrorMessageList
+        errorMessages={actualErrorMessages}
+        managedHtmlFor={managedHtmlFor}
+        errorListStyle={errorListStyle}
+        errorIconStyle={errorIconStyle}
+      />
       <div className={childrenWrapperStyle} ref={inputWrapperRef}>
         {decorateFirstInputElement(children, {
-          describedbyIds,
           error: autoBindErrorInput && actualErrorMessages.length > 0,
         })}
       </div>
-
-      {supplementaryMessage && (
-        <Text
-          as="p"
-          size="S"
-          color="TEXT_GREY"
-          id={`${managedHtmlFor}_supplementaryMessage`}
-          className="smarthr-ui-FormControl-supplementaryMessage"
-        >
-          {supplementaryMessage}
-        </Text>
-      )}
+      <SupplementaryMessageText
+        supplementaryMessage={supplementaryMessage}
+        managedHtmlFor={managedHtmlFor}
+      />
     </Stack>
   )
 }
 
+const TitleCluster = React.memo<
+  Pick<Props, 'dangerouslyTitleHidden' | 'title'> & {
+    titleType: TextProps['styleType']
+    statusLabelList: StatusLabelProps[]
+    isRoleGroup: boolean
+    managedHtmlFor: string
+    managedLabelId: string
+    labelStyle: string
+  }
+>(
+  ({
+    isRoleGroup,
+    managedHtmlFor,
+    managedLabelId,
+    labelStyle,
+    dangerouslyTitleHidden,
+    titleType,
+    title,
+    statusLabelList,
+  }) => (
+    <Cluster
+      align="center"
+      htmlFor={!isRoleGroup ? managedHtmlFor : undefined}
+      id={managedLabelId}
+      className={labelStyle}
+      as={isRoleGroup ? 'legend' : 'label'}
+      // Stack 対象にしないための hidden
+      hidden={dangerouslyTitleHidden || undefined}
+    >
+      <Text as="span" styleType={titleType}>
+        {title}
+      </Text>
+      {statusLabelList.length > 0 && (
+        <Cluster gap={0.25} as="span">
+          {statusLabelList.map((prop, index) => (
+            <StatusLabel {...prop} key={index} />
+          ))}
+        </Cluster>
+      )}
+    </Cluster>
+  ),
+)
+
+const HelpMessageParagraph = React.memo<Pick<Props, 'helpMessage'> & { managedHtmlFor: string }>(
+  ({ helpMessage, managedHtmlFor }) =>
+    helpMessage ? (
+      <p className="smarthr-ui-FormControl-helpMessage" id={`${managedHtmlFor}_helpMessage`}>
+        {helpMessage}
+      </p>
+    ) : null,
+)
+
+const ExampleMessageText = React.memo<Pick<Props, 'exampleMessage'> & { managedHtmlFor: string }>(
+  ({ exampleMessage, managedHtmlFor }) =>
+    exampleMessage ? (
+      <Text
+        as="p"
+        color="TEXT_GREY"
+        italic
+        id={`${managedHtmlFor}_exampleMessage`}
+        className="smarthr-ui-FormControl-exampleMessage"
+      >
+        {exampleMessage}
+      </Text>
+    ) : null,
+)
+
+const ErrorMessageList = React.memo<{
+  errorMessages: ReactNode[]
+  managedHtmlFor: string
+  errorListStyle: string
+  errorIconStyle: string
+}>(({ errorMessages, managedHtmlFor, errorListStyle, errorIconStyle }) => {
+  if (errorMessages.length === 0) {
+    return null
+  }
+
+  return (
+    <div id={`${managedHtmlFor}_errorMessages`} className={errorListStyle} role="alert">
+      {errorMessages.map((message, index) => (
+        <p key={index}>
+          <FaCircleExclamationIcon text={message} className={errorIconStyle} />
+        </p>
+      ))}
+    </div>
+  )
+})
+
+const SupplementaryMessageText = React.memo<
+  Pick<Props, 'supplementaryMessage'> & { managedHtmlFor: string }
+>(({ supplementaryMessage, managedHtmlFor }) =>
+  supplementaryMessage ? (
+    <Text
+      as="p"
+      size="S"
+      color="TEXT_GREY"
+      id={`${managedHtmlFor}_supplementaryMessage`}
+      className="smarthr-ui-FormControl-supplementaryMessage"
+    >
+      {supplementaryMessage}
+    </Text>
+  ) : null,
+)
+
 type DecorateFirstInputElementParams = {
-  describedbyIds: string
   error: boolean
 }
 
@@ -282,7 +389,12 @@ const decorateFirstInputElement = (
   children: ReactNode,
   params: DecorateFirstInputElementParams,
 ) => {
-  const { describedbyIds, error } = params
+  const { error } = params
+
+  if (!error) {
+    return children
+  }
+
   let foundFirstInput = false
 
   const decorate = (targets: ReactNode): ReactNode[] | ReactNode =>
@@ -296,15 +408,7 @@ const decorateFirstInputElement = (
 
       foundFirstInput = true
 
-      const inputAttributes: ComponentProps<typeof Input> = {}
-      if (error) {
-        inputAttributes.error = true
-      }
-      if (describedbyIds !== '') {
-        inputAttributes['aria-describedby'] = describedbyIds
-      }
-
-      return React.cloneElement(child, inputAttributes)
+      return React.cloneElement(child, { error: true } as ComponentProps<typeof Input>)
     })
 
   return decorate(children)
