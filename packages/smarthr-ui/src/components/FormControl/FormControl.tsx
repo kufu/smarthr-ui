@@ -155,10 +155,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
   const describedbyIds = useMemo(() => {
-    if (!isRoleGroup) {
-      return ''
-    }
-
     const temp = []
 
     if (helpMessage) {
@@ -225,10 +221,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   }, [managedHtmlFor, isRoleGroup])
 
   useEffect(() => {
-    if (!isRoleGroup) {
-      return
-    }
-
     const inputWrapper = inputWrapperRef?.current
 
     if (inputWrapper) {
