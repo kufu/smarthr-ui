@@ -1,7 +1,7 @@
 import React, { ComponentPropsWithoutRef, FC, PropsWithChildren, useMemo } from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
-import { reelShadowStyle } from './useReelShadow'
+import { fixedCellStyle } from './fixedCellStyle'
 
 import type { CellContentWidth } from './type'
 
@@ -10,6 +10,7 @@ export type Props = PropsWithChildren<
     contentWidth?:
       | CellContentWidth
       | { base?: CellContentWidth; min?: CellContentWidth; max?: CellContentWidth }
+    fixed?: boolean
   }
 >
 type ElementProps = Omit<ComponentPropsWithoutRef<'td'>, keyof Props>
@@ -24,8 +25,8 @@ export const Td: FC<Props & ElementProps> = ({
   ...props
 }) => {
   const styleProps = useMemo(() => {
-    const tdStyles = td({ align, nullable, fixed, className })
-    const reelShadowStyles = fixed ? reelShadowStyle({ direction: 'right' }) : ''
+    const tdStyles = td({ align, nullable, className })
+    const reelShadowStyles = fixed ? fixedCellStyle() : ''
     return {
       className: `${tdStyles} ${reelShadowStyles}`.trim(),
       style: {
@@ -50,12 +51,6 @@ const td = tv({
     },
     nullable: {
       true: "empty:after:shr-content-['-----']",
-    },
-    fixed: {
-      true: [
-        'fixedElement',
-        '[&.fixed]:shr-sticky [&.fixed]:shr-right-0 [&.fixed]:shr-bg-white [&.fixed]:after:shr-opacity-100',
-      ],
     },
   },
 })

@@ -622,6 +622,104 @@ export const WithReel: StoryFn = () => (
 )
 WithReel.storyName = 'with TableReel'
 
+export const FixedColumns = () => (
+  <Ul>
+    <li>
+      <TableReel>
+        <Table>
+          <thead>
+            <tr>
+              <Th fixed>fixed</Th>
+              <Th fixed>fixed</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th>cell</Th>
+              <Th fixed>fixed</Th>
+              <Th fixed>fixed</Th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <Td fixed>fixed</Td>
+              <Td fixed>fixed</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td fixed>fixed</Td>
+              <Td fixed>fixed</Td>
+            </tr>
+            <tr>
+              <Td fixed>fixed</Td>
+              <Td fixed>fixed</Td>
+              <Td fixed>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td>cell</Td>
+              <Td fixed>fixed</Td>
+              <Td fixed>
+                <FFButton />
+              </Td>
+            </tr>
+          </tbody>
+        </Table>
+      </TableReel>
+    </li>
+  </Ul>
+)
+
+const FFButton = () => {
+  const [state, setState] = React.useState(false)
+  return (
+    <Button size="s" variant="secondary" onClick={() => setState((s) => !s)}>
+      {state ? 'Onnnnnnnnnnnnnnnnnnnn' : 'Off'}
+    </Button>
+  )
+}
+
 const Ul = styled.ul`
   list-style: none;
   padding: 0;
