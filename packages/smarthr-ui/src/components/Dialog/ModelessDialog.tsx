@@ -7,6 +7,7 @@ import React, {
   RefObject,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -15,7 +16,6 @@ import Draggable from 'react-draggable'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { useId } from '../../hooks/useId'
 import { useTheme } from '../../hooks/useTailwindTheme'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'

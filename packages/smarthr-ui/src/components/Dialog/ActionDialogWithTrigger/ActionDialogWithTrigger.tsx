@@ -1,6 +1,5 @@
-import React, { ReactElement, cloneElement, useCallback, useMemo, useState } from 'react'
+import React, { ReactElement, cloneElement, useCallback, useId, useMemo, useState } from 'react'
 
-import { useId } from '../../../hooks/useId'
 import { ActionDialog } from '../ActionDialog'
 
 type ToggleModalActionType = () => void
