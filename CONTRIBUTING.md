@@ -20,6 +20,8 @@ $ pnpm install
 $ pnpm ui test
 ```
 
+## Commit
+
 We use [conventional commit messages](https://www.conventionalcommits.org/en/v1.0.0-beta.4/) for `standard-version`.
 
 ## CI
@@ -63,14 +65,16 @@ Review the PR and if there are no security issues we will run reg-suit.
 
 ```tsx
 import { ComponentName } from 'smarthr-ui'
-;<ComponentName />
+
+<ComponentName />
 ```
 
 ## props
 
-| Name | Required | Type | DefaultValue      | Description |
-| ---- | -------- | ---- | ----------------- | ----------- |
-|      | ✔ or -  |      | DefaultValue or - |             |
+| Name      | Required | Type      | DefaultValue       | Description  |
+| --------- | -------- | --------- | ------------------ | ------------ |
+|           | ✔ or -   |           | DefaultValue or -  |              |
+
 ````
 
 ### Rule
