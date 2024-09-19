@@ -5,13 +5,13 @@ import React, {
   forwardRef,
   useCallback,
   useEffect,
+  useId,
   useImperativeHandle,
   useMemo,
   useRef,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useId } from '../../hooks/useId'
 import { FaCheckIcon, FaMinusIcon } from '../Icon'
 
 export type Props = PropsWithChildren<
@@ -119,7 +119,8 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
       }
     }, [checked, mixed])
 
-    const checkBoxId = useId(props.id)
+    const defaultId = useId()
+    const checkBoxId = props.id || defaultId
 
     return (
       <span className={wrapperStyle}>

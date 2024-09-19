@@ -5,6 +5,7 @@ import React, {
   ReactElement,
   ReactNode,
   useCallback,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -15,7 +16,6 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
-import { useId } from '../../hooks/useId'
 import { Props as BalloonProps } from '../Balloon'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
 
