@@ -4,6 +4,7 @@ import React, {
   startTransition,
   useCallback,
   useEffect,
+  useId,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -11,7 +12,6 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useId } from '../../hooks/useId'
 import { useTheme } from '../../hooks/useTailwindTheme'
 import { debounce } from '../../libs/debounce'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'

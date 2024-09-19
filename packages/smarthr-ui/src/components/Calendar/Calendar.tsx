@@ -1,8 +1,15 @@
 import dayjs from 'dayjs'
-import React, { ComponentProps, MouseEvent, forwardRef, useEffect, useMemo, useState } from 'react'
+import React, {
+  ComponentProps,
+  MouseEvent,
+  forwardRef,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useId } from '../../hooks/useId'
 import { Button } from '../Button'
 import { FaCaretDownIcon, FaCaretUpIcon, FaChevronLeftIcon, FaChevronRightIcon } from '../Icon'
 import { Cluster } from '../Layout'

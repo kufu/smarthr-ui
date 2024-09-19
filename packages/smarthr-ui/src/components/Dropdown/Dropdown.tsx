@@ -6,12 +6,12 @@ import React, {
   createContext,
   useContext,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
 } from 'react'
 
-import { useId } from '../../hooks/useId'
 import { usePortal } from '../../hooks/usePortal'
 
 import { Rect, getFirstTabbable, isEventFromChild } from './dropdownHelper'

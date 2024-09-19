@@ -7,9 +7,9 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
+import { useId } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useId } from '../../hooks/useId'
 import { FaCircleExclamationIcon } from '../Icon'
 import { Cluster, Stack } from '../Layout'
 import { StatusLabel } from '../StatusLabel'
@@ -136,17 +136,15 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
   children,
   ...props
 }) => {
-  const managedHtmlFor = useId(htmlFor)
-  const managedLabelId = useId(labelId)
+  const defaultHtmlFor = useId()
+  const defaultLabelId = useId()
+  const managedHtmlFor = htmlFor || defaultHtmlFor
+  const managedLabelId = labelId || defaultLabelId
   const inputWrapperRef = useRef<HTMLDivElement>(null)
   const isRoleGroup = as === 'fieldset'
   const statusLabelList = Array.isArray(statusLabelProps) ? statusLabelProps : [statusLabelProps]
 
   const describedbyIds = useMemo(() => {
-    if (!isRoleGroup) {
-      return ''
-    }
-
     const temp = []
 
     if (helpMessage) {
@@ -212,10 +210,6 @@ export const ActualFormControl: React.FC<Props & ElementProps> = ({
     }
   }, [managedHtmlFor, isRoleGroup])
   useEffect(() => {
-    if (!isRoleGroup) {
-      return
-    }
-
     const inputWrapper = inputWrapperRef?.current
 
     if (inputWrapper) {

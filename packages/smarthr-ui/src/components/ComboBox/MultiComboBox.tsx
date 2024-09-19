@@ -9,10 +9,10 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import { useId } from 'react'
 import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
-import { useId } from '../../hooks/useId'
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { useTheme } from '../../hooks/useTailwindTheme'
 import { genericsForwardRef } from '../../libs/util'
