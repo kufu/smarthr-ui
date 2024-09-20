@@ -89,8 +89,7 @@ const CLOSE_BUTTON_ICON_ALT = '閉じる'
 
 const modelessDialog = tv({
   slots: {
-    layout: 'smarthr-ui-ModelessDialog shr-fixed',
-    box: 'smarthr-ui-ModelessDialog-box shr-flex shr-h-full shr-max-h-full shr-flex-col',
+    wrapper: 'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-flex-col',
     headerEl:
       'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5 hover:shr-bg-white-darken',
     dialogHandler: [
@@ -110,7 +109,7 @@ const modelessDialog = tv({
   variants: {
     resizable: {
       true: {
-        box: 'shr-resize shr-overflow-auto',
+        wrapper: 'shr-resize shr-overflow-auto',
       },
       false: {},
     },
@@ -144,19 +143,17 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   const { spacing } = useTheme()
 
   const {
-    layoutStyle,
-    boxStyle,
+    wrapperStyle,
     headerStyle,
     titleStyle,
     dialogHandlerStyle,
     closeButtonLayoutStyle,
     footerStyle,
   } = useMemo(() => {
-    const { layout, box, headerEl, title, dialogHandler, closeButtonLayout, footerEl } =
+    const { wrapper, headerEl, title, dialogHandler, closeButtonLayout, footerEl } =
       modelessDialog()
     return {
-      layoutStyle: layout({ className }),
-      boxStyle: box({ resizable }),
+      wrapperStyle: wrapper({ resizable, className }),
       headerStyle: headerEl(),
       titleStyle: title(),
       dialogHandlerStyle: dialogHandler(),
@@ -164,7 +161,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
       footerStyle: footerEl(),
     }
   }, [className, resizable])
-  const boxStyleProps = useMemo(() => {
+  const wrapperStyleProps = useMemo(() => {
     const leftMargin = typeof left === 'number' ? `${left}px` : left
     const rightMargin = typeof right === 'number' ? `${right}px` : right
     /* TODO: 幅の定数指定は、トークンが決まり theme に入ったら差し替える */
@@ -177,10 +174,10 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
           }
         : undefined
     return {
-      className: boxStyle,
+      className: wrapperStyle,
       style,
     }
-  }, [boxStyle, left, right, spacing, width])
+  }, [wrapperStyle, left, right, spacing, width])
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const focusTargetRef = useRef<HTMLDivElement>(null)
@@ -310,8 +307,8 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
 
   useHandleEscape(
     useCallback(() => {
-      if (isOpen) {
-        onPressEscape && onPressEscape()
+      if (isOpen && onPressEscape) {
+        onPressEscape()
       }
     }, [isOpen, onPressEscape]),
   )
@@ -331,9 +328,11 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
         bounds={draggableBounds}
         nodeRef={wrapperRef}
       >
-        <div
+        <Base
           {...props}
-          className={layoutStyle}
+          {...wrapperStyleProps}
+          radius="m"
+          layer={3}
           style={{
             top: topStyle,
             left: leftStyle,
@@ -346,46 +345,44 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
           role="dialog"
           aria-labelledby={labelId}
         >
-          <Base {...boxStyleProps} radius="m" layer={3}>
-            <div tabIndex={-1} ref={focusTargetRef}>
-              {/* dummy element for focus management. */}
-            </div>
-            <div className={headerStyle}>
-              <div
-                className={dialogHandlerStyle}
-                tabIndex={0}
-                role="slider"
-                aria-label={dialogHandlerAriaLabel}
-                aria-valuetext={dialogHandlerAriaValuetext}
-                onKeyDown={handleArrowKey}
-              >
-                <FaGripIcon />
-              </div>
-              <div id={labelId} className={titleStyle}>
-                {header}
-              </div>
-              <div className={closeButtonLayoutStyle}>
-                <Button
-                  type="button"
-                  size="s"
-                  square
-                  onClick={onClickClose}
-                  className="smarthr-ui-ModelessDialog-closeButton"
-                >
-                  <FaXmarkIcon alt={closeButtonIconAlt} />
-                </Button>
-              </div>
-            </div>
-            <DialogBody
-              contentBgColor={contentBgColor}
-              contentPadding={contentPadding}
-              className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"
+          <div tabIndex={-1} ref={focusTargetRef}>
+            {/* dummy element for focus management. */}
+          </div>
+          <div className={headerStyle}>
+            <div
+              className={dialogHandlerStyle}
+              tabIndex={0}
+              role="slider"
+              aria-label={dialogHandlerAriaLabel}
+              aria-valuetext={dialogHandlerAriaValuetext}
+              onKeyDown={handleArrowKey}
             >
-              {children}
-            </DialogBody>
-            {footer && <div className={footerStyle}>{footer}</div>}
-          </Base>
-        </div>
+              <FaGripIcon />
+            </div>
+            <div id={labelId} className={titleStyle}>
+              {header}
+            </div>
+            <div className={closeButtonLayoutStyle}>
+              <Button
+                type="button"
+                size="s"
+                square
+                onClick={onClickClose}
+                className="smarthr-ui-ModelessDialog-closeButton"
+              >
+                <FaXmarkIcon alt={closeButtonIconAlt} />
+              </Button>
+            </div>
+          </div>
+          <DialogBody
+            contentBgColor={contentBgColor}
+            contentPadding={contentPadding}
+            className="smarthr-ui-ModelessDialog-content shr-overscroll-contain"
+          >
+            {children}
+          </DialogBody>
+          {footer && <div className={footerStyle}>{footer}</div>}
+        </Base>
       </Draggable>
     </DialogOverlap>,
   )
