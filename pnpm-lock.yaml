@@ -213,8 +213,8 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2(playwright@1.47.1)
       babel-loader:
-        specifier: ^9.1.3
-        version: 9.1.3(@babel/core@7.25.2)(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.5))(esbuild@0.20.2))
+        specifier: ^9.2.1
+        version: 9.2.1(@babel/core@7.25.2)(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.5))(esbuild@0.20.2))
       babel-plugin-polyfill-corejs2:
         specifier: ^0.4.11
         version: 0.4.11(@babel/core@7.25.2)
@@ -3262,8 +3262,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.8.0
 
-  babel-loader@9.1.3:
-    resolution: {integrity: sha512-xG3ST4DglodGf8qSwv0MdeWLhrDsw/32QMdTO5T1ZIp9gQur0HkCyFs7Awskr10JKXFXwpAhiCuYX5oGXnRGbw==}
+  babel-loader@9.2.1:
+    resolution: {integrity: sha512-fqe8naHt46e0yIdkjUZYqddSXfej3AHajX+CSO5X7oy0EmPc6o5Xh+RClNoHjnieWz9AW4kZxW9yyFMhVB1QLA==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       '@babel/core': ^7.12.0
@@ -10546,7 +10546,7 @@ snapshots:
   '@storybook/addon-webpack5-compiler-babel@3.0.3(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.5))(esbuild@0.20.2))':
     dependencies:
       '@babel/core': 7.25.2
-      babel-loader: 9.1.3(@babel/core@7.25.2)(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.5))(esbuild@0.20.2))
+      babel-loader: 9.2.1(@babel/core@7.25.2)(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.5))(esbuild@0.20.2))
     transitivePeerDependencies:
       - supports-color
       - webpack
@@ -12123,7 +12123,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  babel-loader@9.1.3(@babel/core@7.25.2)(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.5))(esbuild@0.20.2)):
+  babel-loader@9.2.1(@babel/core@7.25.2)(webpack@5.94.0(@swc/core@1.7.26(@swc/helpers@0.5.5))(esbuild@0.20.2)):
     dependencies:
       '@babel/core': 7.25.2
       find-cache-dir: 4.0.0
