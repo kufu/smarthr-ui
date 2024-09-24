@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [58.0.2](https://github.com/kufu/smarthr-ui/compare/v58.0.1...v58.0.2) (2024-09-24)
+
+
+### Bug Fixes
+
+* FormControlのlabel自動紐づけが不要な場合の対応を追加 ([#4918](https://github.com/kufu/smarthr-ui/issues/4918)) ([2c17a17](https://github.com/kufu/smarthr-ui/commit/2c17a17648547687d1450a22ecd43bd48e27542e))
+* ModelessDialog に指定した幅や高さを超えて resize できるように修正 ([#4937](https://github.com/kufu/smarthr-ui/issues/4937)) ([e707dbe](https://github.com/kufu/smarthr-ui/commit/e707dbea6220b089ea72cd49e65b3ef99aa24219))
+
 ### [58.0.1](https://github.com/kufu/smarthr-ui/compare/v58.0.0...v58.0.1) (2024-09-18)
 
 
