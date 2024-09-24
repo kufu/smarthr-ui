@@ -1,6 +1,5 @@
-import React, { HTMLAttributes, useCallback, useContext } from 'react'
+import React, { HTMLAttributes, useCallback, useContext, useId } from 'react'
 
-import { useId } from '../../../hooks/useId'
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogContext } from '../DialogWrapper'
 import { UncontrolledDialogProps } from '../types'

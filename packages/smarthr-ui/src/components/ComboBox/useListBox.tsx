@@ -4,6 +4,7 @@ import React, {
   RefObject,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -11,7 +12,6 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
-import { useId } from '../../hooks/useId'
 import { usePortal } from '../../hooks/usePortal'
 import { useTheme } from '../../hooks/useTailwindTheme'
 import { FaInfoCircleIcon } from '../Icon'

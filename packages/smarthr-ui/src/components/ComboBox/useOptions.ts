@@ -1,7 +1,5 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useId, useMemo } from 'react'
 import innerText from 'react-innertext'
-
-import { useId } from '../../hooks/useId'
 
 import { convertMatchableString } from './comboBoxHelper'
 import { ComboBoxItem, ComboBoxOption } from './types'

@@ -1,44 +1,21 @@
-import { act } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import React from 'react'
-import { createRoot } from 'react-dom/client'
 
 import { FlashMessage } from './FlashMessage'
 
 describe('FlashMessage', () => {
-  let container: HTMLDivElement
-  beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
+  it('visible=true の場合、フラッシュメッセージが描画される', () => {
+    render(<FlashMessage type="success" text="flash!!" onClose={vi.fn()} visible={true} />)
+    expect(screen.queryByText('flash!!')).toBeTruthy()
   })
-  afterEach(() => {
-    document.body.removeChild(container)
+  it('visible=false の場合、フラッシュメッセージが描画されない', () => {
+    render(<FlashMessage type="success" text="flash!!" onClose={vi.fn()} visible={false} />)
+    expect(screen.queryByText('flash!!')).toBeFalsy()
   })
-  it('should render if prop visible is true', () => {
-    act(() => {
-      createRoot(container).render(
-        <FlashMessage type="success" text="flash!!" onClose={jest.fn()} visible={true} />,
-      )
-    })
-    expect(container.textContent).toEqual(expect.stringContaining('flash!!'))
-  })
-  it('should not render if prop visible is false', () => {
-    act(() => {
-      createRoot(container).render(
-        <FlashMessage type="success" text="flash!!" onClose={jest.fn()} visible={false} />,
-      )
-    })
-    expect(container.textContent).toEqual(expect.not.stringContaining('flash!!'))
-  })
-
-  it('should call onClose on click close button', () => {
-    const spy = jest.fn()
-    act(() => {
-      createRoot(container).render(
-        <FlashMessage type="success" text="flash!!" onClose={spy} visible={true} />,
-      )
-    })
-    document.querySelector<HTMLButtonElement>('button.smarthr-ui-FlashMessage-button')!.click()
-
+  it('閉じるボタンを押下すると onClose が発火する', () => {
+    const spy = vi.fn()
+    render(<FlashMessage type="success" text="flash!!" onClose={spy} visible={true} />)
+    screen.getByText('閉じる').click()
     expect(spy).toHaveBeenCalled()
   })
 })
