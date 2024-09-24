@@ -20,14 +20,6 @@ $ pnpm install
 $ pnpm ui test
 ```
 
-`smarthr-ui` uses Jest's snapshot testing.
-
-If the test results are what you expect, you can update the snapshot with the following command.
-
-```sh
-$ pnpm ui test:update-snapshot
-```
-
 ## Commit
 
 We use [conventional commit messages](https://www.conventionalcommits.org/en/v1.0.0-beta.4/) for `standard-version`.
@@ -41,9 +33,9 @@ The SmartHR UI uses [CircleCI](https://circleci.com/).
   - Style description check by stylelint
   - TypeScript grammar check with `tsc --noEmit`
 - Unit test
-  - Unit and component testing with [Jest](https://jestjs.io/ja/), [jest-styled-components](https://github.com/styled-components/jest-styled-components)
+  - Unit and component testing with [Vitest](https://vitest.dev/)
 - visual regression test
-  - [reg-suit](https://github.com/reg-viz/reg-suit)
+  - [Chromatic](https://www.chromatic.com/)
 - Host on Netlify
   - Launch the environment on Netlify for each PR so that you can check the operation without launching locally
 

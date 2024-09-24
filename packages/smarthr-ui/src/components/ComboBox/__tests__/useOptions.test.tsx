@@ -83,7 +83,7 @@ describe('useOptions', () => {
     })
 
     describe('isItemSelectedが渡されたとき', () => {
-      const isItemSelected = jest.fn((_targetItem, _selectedItems) => true)
+      const isItemSelected = vi.fn((_targetItem, _selectedItems) => true)
       it('selectedかどうかの判定の際にitemの数だけisItemSelectedが呼ばれること', () => {
         const selected = [{ label: 'label2', value: 'value2' }]
         const initialProps = {

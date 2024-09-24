@@ -1,10 +1,22 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.stories.tsx", "src/**/__tests__"],
+  "exclude": [
+    "node_modules",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.stories.tsx",
+    "src/**/__tests__"
+  ],
   "compilerOptions": {
     // stories.tsx で発生する下記のエラーを避けるため、tsconfig.json ではなくこちらで `"declaration": true` を指定
     // https://github.com/microsoft/TypeScript/issues/47663#issuecomment-1519138189
     "declaration": true,
+    "types": [
+      "node",
+      "react"
+    ]
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ]
 }
