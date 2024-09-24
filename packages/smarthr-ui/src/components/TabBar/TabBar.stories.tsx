@@ -1,54 +1,65 @@
 import { action } from '@storybook/addon-actions'
-import { StoryFn } from '@storybook/react'
-import { userEvent } from '@storybook/test'
-import React from 'react'
+import React, { type ComponentProps } from 'react'
 
-import { Badge } from '../Badge'
+import { Heading } from '../Heading'
 import { Stack } from '../Layout'
 
 import { TabBar } from './TabBar'
 import { TabItem } from './TabItem'
 
-export default {
-  title: 'Navigation（ナビゲーション）/TabBar',
-  component: TabBar,
-  subcomponents: { TabItem },
-}
+import type { Meta, StoryFn } from '@storybook/react'
 
-export const All: StoryFn = () => (
-  <Stack as="ul" className="shr-list-none">
-    <li>
-      <p>標準</p>
-      <Template subid={1} />
-    </li>
-    <li>
-      <p>下線なし</p>
-      <Template subid={2} bordered={false} />
-    </li>
-  </Stack>
-)
-
-const Template: StoryFn = ({ subid, ...props }) => (
-  <TabBar {...props}>
-    <TabItem id={`border-${subid}-1`} onClick={action('clicked')} selected>
-      基本情報
+const Template: StoryFn<ComponentProps<typeof TabBar>> = (args) => (
+  <TabBar {...args}>
+    <TabItem id="tab1" onClick={action('tab1')} selected>
+      タブ1
     </TabItem>
-    <TabItem id={`border-${subid}-2`} onClick={action('clicked')} suffix={<Badge count={7} />}>
-      コメント
-    </TabItem>
-    <TabItem
-      id={`border-${subid}-3`}
-      onClick={action('clicked')}
-      disabled
-      disabledDetail={{ message: 'この機能は使用できません。' }}
-    >
-      分析対象
+    <TabItem id="tab2" onClick={action('tab2')}>
+      タブ2
     </TabItem>
   </TabBar>
 )
 
-export const RegFocusBorder = All.bind({})
-RegFocusBorder.play = () => userEvent.tab()
+export default {
+  title: 'Navigation（ナビゲーション）/TabBar',
+  component: TabBar,
+  subcomponents: { TabItem },
+  render: Template,
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+} as Meta<typeof TabBar>
 
-export const RegFocusNoBorder = All.bind({})
-RegFocusNoBorder.play = () => [...Array(4)].forEach((_) => userEvent.tab())
+export const Default = () => (
+  <TabBar>
+    <TabItem id="tab1" onClick={action('tab1')} selected>
+      タブ1
+    </TabItem>
+    <TabItem id="tab2" onClick={action('tab2')}>
+      タブ2
+    </TabItem>
+  </TabBar>
+)
+
+export const Playground = {
+  args: {
+    bordered: true,
+  },
+}
+
+export const Boardered = {
+  name: 'bordered',
+  render: () => (
+    <Stack gap={2} as="section">
+      <Heading>bordered</Heading>
+      <Stack as="section" gap={0.5}>
+        <Heading type="blockTitle">線あり（デフォルト）</Heading>
+        <Template bordered />
+      </Stack>
+      <Stack as="section" gap={0.5}>
+        <Heading type="blockTitle">線なし</Heading>
+        <Template bordered={false} />
+      </Stack>
+    </Stack>
+  ),
+}
