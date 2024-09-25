@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [58.0.3](https://github.com/kufu/smarthr-ui/compare/v58.0.2...v58.0.3) (2024-09-25)
+
+
+### Bug Fixes
+
+* **RadioButton:** 外部からのidをdefaultIdより優先するように修正 ([#4948](https://github.com/kufu/smarthr-ui/issues/4948)) ([26f689a](https://github.com/kufu/smarthr-ui/commit/26f689a3aeeec2c9a55af37b60ae9542716c7839))
+
 ### [58.0.2](https://github.com/kufu/smarthr-ui/compare/v58.0.1...v58.0.2) (2024-09-24)
 
 
