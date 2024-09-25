@@ -73,7 +73,7 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     )
 
     const defaultId = useId()
-    const radioButtonId = defaultId || props.id
+    const radioButtonId = props.id || defaultId
 
     return (
       <span className={wrapperStyle}>
