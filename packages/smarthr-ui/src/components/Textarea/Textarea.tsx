@@ -67,6 +67,7 @@ const textarea = tv({
       'placeholder:shr-text-grey',
       'focus-visible:shr-focus-indicator',
       'disabled:shr-pointer-events-none disabled:shr-bg-column disabled:shr-text-disabled disabled:placeholder:shr-text-disabled',
+      'aria-[invalid]:shr-border-danger',
     ],
     counter: 'smarthr-ui-Textarea-counter shr-block shr-text-sm',
     counterText: 'shr-font-bold',
@@ -74,11 +75,9 @@ const textarea = tv({
   variants: {
     error: {
       true: {
-        textareaEl: 'shr-border-danger',
         counterText: 'shr-text-danger',
       },
       false: {
-        textareaEl: 'shr-border-default',
         counterText: 'shr-text-grey',
       },
     },
@@ -186,13 +185,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
       const { textareaEl, counter, counterText } = textarea()
       return {
         textareaStyleProps: {
-          className: textareaEl({ error, className }),
+          className: textareaEl({ className }),
           style: { width: typeof width === 'number' ? `${width}px` : width },
         },
         counterStyle: counter(),
         counterTextStyle: counterText({ error: !!(maxLetters && maxLetters - count <= 0) }),
       }
-    }, [className, count, error, maxLetters, width])
+    }, [className, count, maxLetters, width])
 
     const body = (
       // eslint-disable-next-line smarthr/a11y-input-has-name-attribute

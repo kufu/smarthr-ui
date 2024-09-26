@@ -53,6 +53,8 @@ const select = tv({
       'contrast-more:shr-border-r-highContrast',
       /* padding に依る積み上げでは文字が見切れてしまうため */
       'shr-min-h-[calc(theme(fontSize.base)_+_theme(spacing[0.75])_*_2_+_theme(spacing.px)_*_2)]',
+      'shr-border-default disabled:shr-border-disabled',
+      'aria-[invalid]:shr-border-danger',
     ],
     iconWrap: [
       'shr-pointer-events-none shr-absolute shr-inset-y-0 shr-inline-flex shr-items-center shr-text-grey',
@@ -73,14 +75,6 @@ const select = tv({
           'shr-min-h-[calc(theme(fontSize.sm)_+_theme(spacing[0.5])_*_2_+_theme(spacing.px)_*_2)]',
         ],
         iconWrap: 'shr-end-0.5 shr-text-sm',
-      },
-    },
-    error: {
-      true: {
-        selectEl: 'shr-border-danger',
-      },
-      false: {
-        selectEl: 'shr-border-default disabled:shr-border-disabled',
       },
     },
   },
@@ -129,11 +123,11 @@ const ActualSelect = <T extends string>(
           width: typeof width === 'number' ? `${width}px` : width,
         },
       },
-      selectStyle: selectEl({ error, size }),
+      selectStyle: selectEl({ size }),
       iconWrapStyle: iconWrap({ size }),
       blankOptGroupStyle: blankOptgroup(),
     }
-  }, [className, error, size, width])
+  }, [className, size, width])
 
   return (
     <span {...wrapperStyleProps}>

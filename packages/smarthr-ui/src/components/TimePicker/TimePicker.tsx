@@ -14,6 +14,7 @@ const timePicker = tv({
       'shr-inline-block shr-border-shorthand shr-rounded-m shr-bg-white shr-px-0.5 shr-leading-none',
       'contrast-more:shr-border-high-contrast',
       'focus-within:shr-focus-indicator',
+      'has-[[aria-invalid]]:shr-border-danger',
     ],
     inner: [
       'shr-border-none shr-text-base disabled:shr-text-disabled shr-bg-transparent shr-text-black shr-outline-none shr-outline-0 shr-p-[unset] shr-py-0.75 shr-h-[theme(fontSize.base)] shr-tabular-nums',
@@ -23,11 +24,6 @@ const timePicker = tv({
     disabled: {
       true: {
         wrapper: 'shr-pointer-events-none shr-bg-white-darken [&&&]:shr-border-default/50',
-      },
-    },
-    error: {
-      true: {
-        wrapper: '[&]:shr-border-danger',
       },
     },
     readOnly: {
@@ -43,10 +39,10 @@ export const TimePicker = forwardRef<HTMLInputElement, Props & ElementProps>(
     const { wrapperStyle, innerStyle } = useMemo(() => {
       const { wrapper, inner } = timePicker()
       return {
-        wrapperStyle: wrapper({ className, disabled, error, readOnly }),
+        wrapperStyle: wrapper({ className, disabled, readOnly }),
         innerStyle: inner(),
       }
-    }, [disabled, error, readOnly, className])
+    }, [disabled, readOnly, className])
 
     return (
       <span className={wrapperStyle}>

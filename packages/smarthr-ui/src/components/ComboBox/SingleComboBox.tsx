@@ -431,7 +431,6 @@ const ActualSingleComboBox = <T,>(
         aria-haspopup="listbox"
         aria-controls={listBoxId}
         aria-expanded={isFocused}
-        aria-invalid={error || undefined}
         aria-activedescendant={activeOption?.id}
         aria-autocomplete="list"
         className={inputStyle}
