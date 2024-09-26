@@ -75,6 +75,9 @@ const preview: Preview = {
           <Stories includePrimary={false} />
         </>
       ),
+      canvas: {
+        sourceState: 'shown',
+      },
     },
     chromatic: {
       forcedColors: 'none',
