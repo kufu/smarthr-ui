@@ -42,5 +42,10 @@ module.exports = {
      * error: "ARIA attributes must conform to valid values"
      */
     'Dialog.stories.tsx',
+    /**
+     * TabItem を TabBar と組み合わせていないためにエラーが出ている。無視で良い。
+     * critical: "Required ARIA parent role not present: tablist"
+     */
+    'TabItem.stories.tsx',
   ],
 }
