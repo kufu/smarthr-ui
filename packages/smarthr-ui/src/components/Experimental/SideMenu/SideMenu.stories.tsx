@@ -13,6 +13,19 @@ export default {
 export const Default: StoryFn = () => (
   <div className="shr-bg-background shr-p-2 shr-max-w-[15rem]">
     <SideMenu>
+      <SideMenuItem href="#">アカウント</SideMenuItem>
+      <SideMenuItem href="#" current>
+        認証設定
+      </SideMenuItem>
+      <SideMenuItem href="#">評価項目の表示設定</SideMenuItem>
+      <SideMenuItem href="#">評価対象者の入力必須項目設定</SideMenuItem>
+    </SideMenu>
+  </div>
+)
+
+export const Grouped: StoryFn = () => (
+  <div className="shr-bg-background shr-p-2 shr-max-w-[15rem]">
+    <SideMenu>
       <SideMenuGroup title="個人設定">
         <SideMenuItem href="#">アカウント</SideMenuItem>
         <SideMenuItem href="#" current>
