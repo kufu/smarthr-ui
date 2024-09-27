@@ -6,12 +6,10 @@ on:
       - master
   pull_request_review:
     types: [submitted]
-    branches:
-      - 'merge-release-**'
-  
 
 jobs:
   e2e-win-matrix:
+    if: "startsWith(github.event.pull_request.head.ref, 'merge-release-')"
     runs-on: windows-latest
     timeout-minutes: 30
     strategy:
