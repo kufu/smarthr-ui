@@ -87,6 +87,8 @@ export const VRTHover = {
     pseudo: {
       hover: ['#hover .smarthr-ui-TabItem'],
     },
+    // MEMO: VRT として機能していないので、解決するまでスナップショットを無効化
+    chromatic: { disableSnapshot: true },
   },
 }
 
