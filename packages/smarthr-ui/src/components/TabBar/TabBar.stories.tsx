@@ -4,7 +4,7 @@ import React from 'react'
 import { TabBar } from './TabBar'
 import { TabItem } from './TabItem'
 
-import type { Meta } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   title: 'Navigation（ナビゲーション）/TabBar',
@@ -25,13 +25,13 @@ export default {
   },
 } as Meta<typeof TabBar>
 
-export const Default = {
+export const Default: StoryObj<typeof TabBar> = {
   args: {
     bordered: true,
   },
 }
 
-export const Playground = {
+export const Playground: StoryObj<typeof TabBar> = {
   args: {
     bordered: true,
   },
