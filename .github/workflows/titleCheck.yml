@@ -3,6 +3,10 @@ name: PR Title Check
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
+  pull_request_review:
+    types: [submitted]
+    branches:
+      - 'merge-release-**'
 
 jobs:
   conventional_commits:
