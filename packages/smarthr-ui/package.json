@@ -54,8 +54,8 @@
     "babel-loader": "^9.2.1",
     "babel-plugin-polyfill-corejs2": "^0.4.11",
     "babel-plugin-polyfill-regenerator": "^0.6.2",
-    "css-loader": "^7.1.2",
     "chromatic": "^11.10.2",
+    "css-loader": "^7.1.2",
     "ecma-version-validator-webpack-plugin": "^1.2.1",
     "fs-extra": "^11.2.0",
     "glob": "11.0.0",
@@ -64,6 +64,7 @@
     "memory-fs": "^0.5.0",
     "npm-run-all": "^4.1.5",
     "playwright": "^1.47.2",
+    "plop": "^4.0.1",
     "postcss": "^8.4.47",
     "postcss-loader": "^8.1.1",
     "postcss-styled-syntax": "^0.6.4",
@@ -155,7 +156,8 @@
     "e2e:dev": "testcafe chrome --hostname localhost --skip-js-errors --live",
     "chromatic": "chromatic",
     "write:ui-props": "ts-node scripts/exportUIProps.ts",
-    "export:ui-props": "run-s build:lib write:ui-props"
+    "export:ui-props": "run-s build:lib write:ui-props",
+    "scaffold": "plop"
   },
   "sideEffects": [
     "*.css"
