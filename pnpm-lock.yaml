@@ -29,8 +29,8 @@ importers:
         specifier: ^6.33.2
         version: 6.33.2(eslint@8.57.0)(react@18.3.1)(typescript@5.6.2)
       eslint-plugin-storybook:
-        specifier: ^0.8.0
-        version: 0.8.0(eslint@8.57.0)(typescript@5.6.2)
+        specifier: ^0.9.0
+        version: 0.9.0(eslint@8.57.0)(typescript@5.6.2)
       husky:
         specifier: ^9.1.6
         version: 9.1.6
@@ -4640,8 +4640,8 @@ packages:
     peerDependencies:
       eslint: ^7 || ^8
 
-  eslint-plugin-storybook@0.8.0:
-    resolution: {integrity: sha512-CZeVO5EzmPY7qghO2t64oaFM+8FTaD4uzOEjHKp516exyTKo+skKAL9GI3QALS2BXhyALJjNtwbmr1XinGE8bA==}
+  eslint-plugin-storybook@0.9.0:
+    resolution: {integrity: sha512-qOT/2vQBo0VqrG/BhZv8IdSsKQiyzJw+2Wqq+WFCiblI/PfxLSrGkF/buiXF+HumwfsCyBdaC94UhqhmYFmAvA==}
     engines: {node: '>= 18'}
     peerDependencies:
       eslint: '>=6'
@@ -14017,7 +14017,7 @@ snapshots:
       eslint: 8.57.0
       json5: 2.2.3
 
-  eslint-plugin-storybook@0.8.0(eslint@8.57.0)(typescript@5.6.2):
+  eslint-plugin-storybook@0.9.0(eslint@8.57.0)(typescript@5.6.2):
     dependencies:
       '@storybook/csf': 0.0.1
       '@typescript-eslint/utils': 5.62.0(eslint@8.57.0)(typescript@5.6.2)
