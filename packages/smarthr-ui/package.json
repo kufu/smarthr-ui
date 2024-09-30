@@ -85,7 +85,7 @@
     "typescript-plugin-styled-components": "^3.0.0",
     "vitest": "^2.1.1",
     "wait-on": "^8.0.1",
-    "webpack": "^5.94.0"
+    "webpack": "^5.95.0"
   },
   "peerDependencies": {
     "react": "^18.0.0",
