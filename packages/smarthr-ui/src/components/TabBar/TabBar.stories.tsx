@@ -1,54 +1,38 @@
 import { action } from '@storybook/addon-actions'
-import { StoryFn } from '@storybook/react'
-import { userEvent } from '@storybook/test'
 import React from 'react'
-
-import { Badge } from '../Badge'
-import { Stack } from '../Layout'
 
 import { TabBar } from './TabBar'
 import { TabItem } from './TabItem'
+
+import type { Meta, StoryObj } from '@storybook/react'
 
 export default {
   title: 'Navigation（ナビゲーション）/TabBar',
   component: TabBar,
   subcomponents: { TabItem },
+  render: (args) => (
+    <TabBar {...args}>
+      <TabItem id="tab1" onClick={action('tab1')} selected>
+        タブ1
+      </TabItem>
+      <TabItem id="tab2" onClick={action('tab2')}>
+        タブ2
+      </TabItem>
+    </TabBar>
+  ),
+  parameters: {
+    chromatic: { disableSnapshot: true },
+  },
+} as Meta<typeof TabBar>
+
+export const Default: StoryObj<typeof TabBar> = {
+  args: {
+    bordered: true,
+  },
 }
 
-export const All: StoryFn = () => (
-  <Stack as="ul" className="shr-list-none">
-    <li>
-      <p>標準</p>
-      <Template subid={1} />
-    </li>
-    <li>
-      <p>下線なし</p>
-      <Template subid={2} bordered={false} />
-    </li>
-  </Stack>
-)
-
-const Template: StoryFn = ({ subid, ...props }) => (
-  <TabBar {...props}>
-    <TabItem id={`border-${subid}-1`} onClick={action('clicked')} selected>
-      基本情報
-    </TabItem>
-    <TabItem id={`border-${subid}-2`} onClick={action('clicked')} suffix={<Badge count={7} />}>
-      コメント
-    </TabItem>
-    <TabItem
-      id={`border-${subid}-3`}
-      onClick={action('clicked')}
-      disabled
-      disabledDetail={{ message: 'この機能は使用できません。' }}
-    >
-      分析対象
-    </TabItem>
-  </TabBar>
-)
-
-export const RegFocusBorder = All.bind({})
-RegFocusBorder.play = () => userEvent.tab()
-
-export const RegFocusNoBorder = All.bind({})
-RegFocusNoBorder.play = () => [...Array(4)].forEach((_) => userEvent.tab())
+export const Playground: StoryObj<typeof TabBar> = {
+  args: {
+    bordered: true,
+  },
+}

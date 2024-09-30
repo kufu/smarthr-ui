@@ -8,7 +8,7 @@
     "@commitlint/config-conventional": "^19.5.0",
     "eslint": "^8.57.0",
     "eslint-config-smarthr": "^6.33.2",
-    "eslint-plugin-storybook": "^0.8.0",
+    "eslint-plugin-storybook": "^0.9.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
@@ -31,7 +31,7 @@
   "pnpm": {
     "overrides": {
       "@babel/helper-compilation-targets": "^7.25.2",
-      "@types/react": "^18.3.8",
+      "@types/react": "^18.3.9",
       "minimist": "1.2.8",
       "react": "^18.3.1",
       "react-dom": "^18.3.1",

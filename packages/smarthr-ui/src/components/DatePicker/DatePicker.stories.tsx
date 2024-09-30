@@ -67,6 +67,12 @@ export const All: StoryFn = () => {
       <BottomFormControl title="Place on the page bottom">
         <DatePicker name="place_on_the_page_bottom" onChangeDate={action('change')} />
       </BottomFormControl>
+      <FormControl title="error" autoBindErrorInput={false}>
+        <DatePicker name="error" error={true} />
+      </FormControl>
+      <FormControl title="error with FormControl" errorMessages={['エラーメッセージ']}>
+        <DatePicker name="error" />
+      </FormControl>
     </Stack>
   )
 }

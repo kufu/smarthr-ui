@@ -37,8 +37,11 @@ export const All: StoryFn = () => (
     <FormControl title="Disabled input">
       <InputFile name="disabled" label="ファイルを選択" disabled />
     </FormControl>
-    <FormControl title="エラー">
+    <FormControl title="エラー" autoBindErrorInput={false}>
       <InputFile name="error" label="ファイルを選択" error />
+    </FormControl>
+    <FormControl title="エラー with FormControl" errorMessages={['エラーメッセージ']}>
+      <InputFile name="error" label="ファイルを選択" />
     </FormControl>
     <FormControl title="decoratorで文言変更">
       <InputFile
