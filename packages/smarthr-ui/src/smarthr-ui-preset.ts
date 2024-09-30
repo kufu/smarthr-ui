@@ -2,6 +2,7 @@ import { darken } from 'polished'
 import { defaultConfig } from 'tailwind-variants'
 import plugin from 'tailwindcss/plugin'
 
+import { defaultBreakpoint } from './themes/createBreakpoint'
 import { defaultColor } from './themes/createColor'
 import { defaultFontSize, defaultHtmlFontSize } from './themes/createFontSize'
 import { defaultShadow } from './themes/createShadow'
@@ -153,6 +154,9 @@ export default {
     outlineColor: {
       DEFAULT: defaultColor.OUTLINE,
     },
+    screens: Object.fromEntries(
+      Object.entries(defaultBreakpoint).map(([key, value]) => [key, { max: `${value}px` }]),
+    ),
     spacing: {
       px: '1px',
       em: '1em',
