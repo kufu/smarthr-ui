@@ -16,7 +16,6 @@ const radioButtonPanel = tv({
     'shr-border-shorthand shr-list-none shr-shadow-none',
     // なぜか :has が動作しないので重ねて書いている
     'has-[:focus-visible]:shr-focus-indicator [&:has(:focus-visible)]:shr-focus-indicator',
-    '[&_.smarthr-ui-RadioButton-radioButton:focus-visible_+_span]:shr-shadow-none',
     '[&_.smarthr-ui-RadioButton-label]:shr-ms-0.75',
     'has-[:disabled]:shr-cursor-default has-[:disabled]:[&_.smarthr-ui-RadioButton-label]:shr-cursor-default',
   ],
