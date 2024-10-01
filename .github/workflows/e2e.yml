@@ -4,9 +4,12 @@ on:
   pull_request:
     branches:
       - master
+  pull_request_review:
+    types: [submitted]
 
 jobs:
   e2e-win-matrix:
+    if: ${{ (((github.event_name != 'pull_request_review') && !(startsWith(github.event.pull_request.head.ref, 'merge-release-'))) || (github.event_name == 'pull_request_review') && (startsWith(github.event.pull_request.head.ref, 'merge-release-'))) }}
     runs-on: windows-latest
     timeout-minutes: 30
     strategy:

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [58.1.0](https://github.com/kufu/smarthr-ui/compare/v58.0.3...v58.1.0) (2024-10-01)
+
+
+### Features
+
+* AppNaviAnchorにelementAsのpropsを追加 ([#4955](https://github.com/kufu/smarthr-ui/issues/4955)) ([ad680c3](https://github.com/kufu/smarthr-ui/commit/ad680c3dd6dfac5d232a95edb250d34e0ad8e047))
+* FormControlのエラー表示設定方法を変更し、より確実に設定されるように修正する ([#4925](https://github.com/kufu/smarthr-ui/issues/4925)) ([e16aa25](https://github.com/kufu/smarthr-ui/commit/e16aa2526cb6bb4a3f88e969ddf320d9ddefd6f0))
+
+
+### Bug Fixes
+
+* **DropZone:** ドラッグ＆ドロップ時に選択したファイルがFormDataに格納されるようにした ([#4964](https://github.com/kufu/smarthr-ui/issues/4964)) ([53775fb](https://github.com/kufu/smarthr-ui/commit/53775fb8b9f01910b760f8711067345730f2649e))
+
 ### [58.0.3](https://github.com/kufu/smarthr-ui/compare/v58.0.2...v58.0.3) (2024-09-25)
 
 
