@@ -28,14 +28,15 @@ describe('Dropdown', () => {
   it('トリガーボタンがクリックされるとドロップダウンが開くこと', () => {
     render(template)
 
-    act(() => screen.getByText('Trigger').click())
+    act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
+    expect(screen.getByRole('button', { name: 'Trigger', expanded: true })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Button1' })).toBeVisible()
   })
 
   it('トリガーボタンとドロップダウンの間でフォーカスの行き来ができること', async () => {
     render(template)
 
-    act(() => screen.getByText('Trigger').click())
+    act(() => screen.getByRole('button', { name: 'Trigger' }).click())
 
     expect(screen.getByRole('button', { name: 'Button1' })).not.toHaveFocus()
     await userEvent.tab()
@@ -51,7 +52,7 @@ describe('Dropdown', () => {
   it('ドロップダウン展開後にドロップダウンの外側をクリックするとドロップダウンが閉じること', () => {
     render(template)
 
-    act(() => screen.getByText('Trigger').click())
+    act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
     expect(screen.getByRole('button', { name: 'Button1' })).toBeVisible()
 
     act(() => document.body.click())
@@ -70,7 +71,7 @@ describe('Dropdown', () => {
       </Dropdown>,
     )
 
-    act(() => screen.getByText('Trigger').click())
+    act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
     act(() => screen.getByRole('button', { name: 'Open Dialog' }).click())
   })
 })
