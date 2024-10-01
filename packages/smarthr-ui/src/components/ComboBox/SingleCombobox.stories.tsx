@@ -175,13 +175,23 @@ export const SingleCombobox: StoryFn = () => {
           aria-label="inputAttributes"
         />
       </FormControl>
-      <FormControl title="エラー表示">
+      <FormControl title="エラー表示" autoBindErrorInput={false}>
         <SingleComboBox
           name="error"
           items={items}
           selectedItem={selectedItem}
           dropdownHelpMessage="入力でフィルタリングできます。"
           error
+          onSelect={handleSelectItem}
+          onClear={handleClear}
+        />
+      </FormControl>
+      <FormControl title="エラー表示 with FormControl" errorMessages={['エラーメッセージ']}>
+        <SingleComboBox
+          name="error"
+          items={items}
+          selectedItem={selectedItem}
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onSelect={handleSelectItem}
           onClear={handleClear}
         />

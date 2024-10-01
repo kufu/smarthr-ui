@@ -38,6 +38,8 @@ const checkbox = tv({
       'peer-disabled:peer-indeterminate:shr-border-default peer-disabled:peer-indeterminate:shr-bg-border',
       'peer-focus-visible:shr-focus-indicator',
       'peer-hover:shr-shadow-input-hover',
+      'shr-border-default',
+      'peer-[[aria-invalid]]:shr-border-danger',
     ],
     input: [
       'smarthr-ui-CheckBox-checkBox shr-peer shr-absolute shr-left-0 shr-top-0 shr-m-0 shr-h-full shr-w-full shr-cursor-pointer shr-opacity-0 disabled:shr-pointer-events-none',
@@ -63,17 +65,6 @@ const checkbox = tv({
         label: 'shr-pointer-events-none shr-cursor-not-allowed shr-text-disabled',
       },
     },
-    error: {
-      true: {
-        box: 'shr-border-danger',
-      },
-      false: {
-        box: 'shr-border-default',
-      },
-    },
-  },
-  defaultVariants: {
-    error: false,
   },
 })
 
@@ -92,13 +83,13 @@ export const CheckBox = forwardRef<HTMLInputElement, Props>(
       return {
         wrapperStyle: wrapper({ className }),
         innerWrapperStyle: innerWrapper(),
-        boxStyle: box({ error }),
+        boxStyle: box(),
         inputStyle: input(),
         iconWrapStyle: iconWrap(),
         iconStyle: icon(),
         labelStyle: label({ disabled: props.disabled }),
       }
-    }, [className, error, props.disabled])
+    }, [className, props.disabled])
 
     const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
       (e) => {

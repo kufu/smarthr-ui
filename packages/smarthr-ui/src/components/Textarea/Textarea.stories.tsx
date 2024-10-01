@@ -40,8 +40,13 @@ const Template: StoryFn = () => {
         </FormControl>
       </li>
       <li>
-        <FormControl title="エラー時">
+        <FormControl title="エラー時" autoBindErrorInput={false}>
           <Textarea name="error" error={true} />
+        </FormControl>
+      </li>
+      <li>
+        <FormControl title="エラー時 with FormControl" errorMessages={['エラーメッセージ']}>
+          <Textarea name="error" />
         </FormControl>
       </li>
       <li>

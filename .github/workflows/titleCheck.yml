@@ -3,9 +3,12 @@ name: PR Title Check
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
+  pull_request_review:
+    types: [submitted]
 
 jobs:
   conventional_commits:
+    if: ${{ (((github.event_name != 'pull_request_review') && !(startsWith(github.event.pull_request.head.ref, 'merge-release-'))) || (github.event_name == 'pull_request_review') && (startsWith(github.event.pull_request.head.ref, 'merge-release-'))) }}
     runs-on: ubuntu-latest
     steps:
       - name: check title

@@ -75,6 +75,9 @@ const preview: Preview = {
           <Stories includePrimary={false} />
         </>
       ),
+      canvas: {
+        sourceState: 'shown',
+      },
     },
     chromatic: {
       forcedColors: 'none',
@@ -102,6 +105,7 @@ const preview: Preview = {
       )
     },
   ],
+  tags: ['autodocs'],
 }
 
 export default preview

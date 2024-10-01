@@ -170,13 +170,23 @@ export const MultiCombobox: StoryFn = () => {
           data-test="multi-combobox-disabled"
         />
       </FormControl>
-      <FormControl title="エラー表示">
+      <FormControl title="エラー表示" autoBindErrorInput={false}>
         <MultiComboBox
           name="error"
           items={items}
           selectedItems={selectedItems}
           dropdownHelpMessage="入力でフィルタリングできます。"
           error
+          onDelete={handleDelete}
+          onSelect={handleSelectItem}
+        />
+      </FormControl>
+      <FormControl title="エラー表示 with FormControl" errorMessages={['エラーメッセージ']}>
+        <MultiComboBox
+          name="error"
+          items={items}
+          selectedItems={selectedItems}
+          dropdownHelpMessage="入力でフィルタリングできます。"
           onDelete={handleDelete}
           onSelect={handleSelectItem}
         />
