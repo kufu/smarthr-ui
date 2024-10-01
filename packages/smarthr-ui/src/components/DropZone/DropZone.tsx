@@ -86,6 +86,9 @@ export const DropZone = forwardRef<HTMLInputElement, DropZoneProps & ElementProp
         overrideEventDefault(e)
         setFilesDraggedOver(false)
         onSelectFiles(e, e.dataTransfer.files)
+        if (fileRef.current) {
+          fileRef.current.files = e.dataTransfer.files
+        }
       },
       [setFilesDraggedOver, onSelectFiles],
     )
