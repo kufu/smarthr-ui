@@ -64,6 +64,7 @@
     "memory-fs": "^0.5.0",
     "npm-run-all": "^4.1.5",
     "playwright": "^1.47.2",
+    "plop": "^4.0.1",
     "postcss": "^8.4.47",
     "postcss-loader": "^8.1.1",
     "postcss-styled-syntax": "^0.6.4",
@@ -155,7 +156,8 @@
     "e2e:dev": "testcafe chrome --hostname localhost --skip-js-errors --live",
     "chromatic": "chromatic",
     "write:ui-props": "ts-node scripts/exportUIProps.ts",
-    "export:ui-props": "run-s build:lib write:ui-props"
+    "export:ui-props": "run-s build:lib write:ui-props",
+    "scaffold:storybook": "plop"
   },
   "sideEffects": [
     "*.css"
