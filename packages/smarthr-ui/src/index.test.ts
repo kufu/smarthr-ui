@@ -7,7 +7,7 @@ import ts from 'typescript'
 const readFile = util.promisify(fs.readFile)
 const readdir = util.promisify(fs.readdir)
 
-const IGNORE_COMPONENTS = ['Downloader', 'ProgressBar', 'Experimental']
+const IGNORE_COMPONENTS = ['Experimental']
 const IGNORE_INNER_DIRS = ['FlashMessage/FlashMessageList', 'Input/InputWithTooltip', 'stories']
 
 describe('index', () => {
