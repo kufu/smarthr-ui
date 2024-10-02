@@ -26,13 +26,8 @@ export type BaseProps = PropsWithChildren<
       /**
        * アクションボタンをクリックした時に発火するコールバック関数
        * @param closeDialog ダイアログを閉じる関数
-       * @param activeStep steppable:true の場合のみ、次のページ数
        */
-      onSubmit: (
-        closeDialog: () => void,
-        e: FormEvent<HTMLFormElement>,
-        activeStep?: number,
-      ) => void
+      onSubmit: (closeDialog: () => void, e: FormEvent<HTMLFormElement>) => void
       /** アクションボタンを無効にするかどうか */
       actionDisabled?: boolean
       /** 閉じるボタンを無効にするかどうか */
@@ -41,8 +36,6 @@ export type BaseProps = PropsWithChildren<
       subActionArea?: ReactNode
       /** コンポーネント内の文言を変更するための関数を設定 */
       decorators?: DecoratorsType<'closeButtonLabel'>
-      /** Stepつきダイアログか否か */
-      steppable?: boolean
     }
 >
 

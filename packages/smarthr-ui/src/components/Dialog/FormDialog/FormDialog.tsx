@@ -7,7 +7,17 @@ import { useStepDialog } from '../useStepDialog'
 
 import { FormDialogContentInner, FormDialogContentInnerProps } from './FormDialogContentInner'
 
-type Props = Omit<FormDialogContentInnerProps, 'titleId'> & DialogProps
+type Props = Omit<FormDialogContentInnerProps, 'titleId' | 'onSubmit'> &
+  DialogProps & {
+    /**
+     * アクションボタンをクリックした時に発火するコールバック関数
+     * @param closeDialog ダイアログを閉じる関数
+     * @param activeStep steppable:true の場合のみ、次のページ数
+     */
+    onSubmit: (closeDialog: () => void, e: FormEvent<HTMLFormElement>, activeStep?: number) => void
+    /** Stepつきダイアログか否か */
+    steppable?: boolean
+  }
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
 export const FormDialog: React.FC<Props & ElementProps> = ({
@@ -92,7 +102,6 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
         onSubmit={handleSubmitAction}
         responseMessage={responseMessage}
         decorators={decorators}
-        steppable={steppable}
       >
         {steppable ? childrenSteps[activeStep] : children}
       </FormDialogContentInner>
