@@ -12,7 +12,7 @@ import { tv } from 'tailwind-variants'
 import { useHandleEscape } from '../../hooks/useHandleEscape'
 
 import { DialogOverlap } from './DialogOverlap'
-import { FocusTrap } from './FocusTrap'
+import { FocusTrap, FocusTrapRef } from './FocusTrap'
 import { useBodyScrollLock } from './useBodyScrollLock'
 
 export type DialogContentInnerProps = PropsWithChildren<{
@@ -49,6 +49,10 @@ export type DialogContentInnerProps = PropsWithChildren<{
    * ダイアログの `aria-labelledby`
    */
   ariaLabelledby?: string
+  /**
+   * ダイアログトップのフォーカストラップへの ref
+   */
+  focusTrapRef?: RefObject<FocusTrapRef>
 }>
 type ElementProps = Omit<ComponentProps<'div'>, keyof DialogContentInnerProps>
 
@@ -77,6 +81,7 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   ariaLabelledby,
   children,
   className,
+  focusTrapRef,
   ...rest
 }) => {
   const { layoutStyleProps, innerStyle, backgroundStyle } = useMemo(() => {
@@ -127,7 +132,9 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
           aria-modal="true"
           className={innerStyle}
         >
-          <FocusTrap firstFocusTarget={firstFocusTarget}>{children}</FocusTrap>
+          <FocusTrap ref={focusTrapRef} firstFocusTarget={firstFocusTarget}>
+            {children}
+          </FocusTrap>
         </div>
       </div>
     </DialogOverlap>

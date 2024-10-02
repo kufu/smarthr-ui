@@ -3,6 +3,7 @@ import React, { ComponentProps, FormEvent, useCallback, useId } from 'react'
 import { DialogContentInner } from '../DialogContentInner'
 import { DialogProps } from '../types'
 import { useDialogPortal } from '../useDialogPortal'
+import { useStepDialog } from '../useStepDialog'
 
 import { FormDialogContentInner, FormDialogContentInnerProps } from './FormDialogContentInner'
 
@@ -29,10 +30,20 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   portalParent,
   decorators,
   id,
+  steppable,
   ...props
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
   const titleId = useId()
+  const {
+    titleSuffix,
+    focusTrapRef,
+    childrenSteps,
+    activeStep,
+    getActionText,
+    handleNextSteps,
+    renderSubActionButton,
+  } = useStepDialog(children)
 
   const handleClickClose = useCallback(() => {
     if (!props.isOpen) {
@@ -47,9 +58,13 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
         return
       }
 
-      onSubmit(close, e)
+      if (steppable) {
+        handleNextSteps()
+      }
+
+      onSubmit(close, e, activeStep)
     },
-    [onSubmit, props.isOpen],
+    [onSubmit, props.isOpen, steppable, handleNextSteps, activeStep],
   )
 
   return createPortal(
@@ -58,26 +73,28 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
       ariaLabelledby={titleId}
       className={className}
       onPressEscape={onPressEscape}
+      focusTrapRef={focusTrapRef}
     >
       {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <FormDialogContentInner
-        title={title}
+        title={steppable ? `${title}${titleSuffix}` : title}
         titleId={titleId}
         subtitle={subtitle}
         titleTag={titleTag}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
-        actionText={actionText}
+        actionText={steppable ? getActionText(actionText) : actionText}
         actionTheme={actionTheme}
         actionDisabled={actionDisabled}
         closeDisabled={closeDisabled}
-        subActionArea={subActionArea}
+        subActionArea={steppable ? renderSubActionButton() : subActionArea}
         onClickClose={handleClickClose}
         onSubmit={handleSubmitAction}
         responseMessage={responseMessage}
         decorators={decorators}
+        steppable={steppable}
       >
-        {children}
+        {steppable ? childrenSteps[activeStep] : children}
       </FormDialogContentInner>
     </DialogContentInner>,
   )
