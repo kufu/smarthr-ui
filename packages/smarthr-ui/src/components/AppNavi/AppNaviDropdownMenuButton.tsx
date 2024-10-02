@@ -5,7 +5,6 @@ import React, {
   type ReactElement,
   type ReactNode,
   useMemo,
-  useState,
 } from 'react'
 import { tv } from 'tailwind-variants'
 
@@ -33,7 +32,12 @@ const {
 const appNaviDropdownMenuButton = tv({
   extend: appNaviItemStyle,
   slots: {
-    wrapper: ['smarthr-ui-AppNavi-dropdownMenuButton', triggerButton],
+    wrapper: [
+      'smarthr-ui-AppNavi-dropdownMenuButton',
+      'has-[[aria-current="page"]]:shr-relative has-[[aria-current="page"]]:shr-text-black',
+      'has-[[aria-current="page"]]:after:shr-bottom-0 has-[[aria-current="page"]]:after:shr-inset-x-0 has-[[aria-current="page"]]:after:shr-block has-[[aria-current="page"]]:after:shr-h-0.25 has-[[aria-current="page"]]:after:shr-bg-main has-[[aria-current="page"]]:after:shr-content-[""] has-[[aria-current="page"]]:after:shr-absolute',
+      triggerButton,
+    ],
     actionList,
   },
 })
@@ -42,30 +46,25 @@ export const AppNaviDropdownMenuButton: FC<AppNaviDropdownMenuButtonProps> = ({
   children,
   label,
 }) => {
-  const [hasCurrentPage, setHasCurrentPage] = useState(false)
   const actualChildren = useMemo(
     () =>
-      React.Children.map(children, (item, i) => {
-        if (React.isValidElement(item) && item.props['aria-current'] === 'page') {
-          setHasCurrentPage(true)
-        }
-
+      React.Children.map(children, (item, i) =>
         // MEMO: {flag && <Button/>}のような書き方に対応させる為、型を変換する
         // itemの存在チェックでfalsyな値は弾かれている想定
-        return item ? <li key={i}>{item as ActionItemTruthyType}</li> : null
-      }),
+        item ? <li key={i}>{item as ActionItemTruthyType}</li> : null,
+      ),
     [children],
   )
 
-  const { wrapper: wrapperStyle, actionList: actionListStyle } = appNaviDropdownMenuButton({
-    active: hasCurrentPage,
-  })
+  const { wrapper: wrapperStyle, actionList: actionListStyle } = appNaviDropdownMenuButton()
 
   return (
     <Dropdown>
       <DropdownTrigger>
         <UnstyledButton className={wrapperStyle()}>
           {label}
+          {/* has([aria-current="page"]) を書くために複製 */}
+          <span hidden>{actualChildren}</span>
           <FaCaretDownIcon />
         </UnstyledButton>
       </DropdownTrigger>
