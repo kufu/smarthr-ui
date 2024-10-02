@@ -4,6 +4,7 @@ import React, { ComponentProps, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Button } from '../Button'
+import { CheckBox } from '../CheckBox'
 import { DatePicker } from '../DatePicker'
 import { Fieldset } from '../Fieldset'
 import { FormControl } from '../FormControl'
@@ -308,6 +309,101 @@ Form_Dialog.parameters = {
   docs: {
     description: {
       story: '`ActionDialog` includes an action button that used for submitting, etc.',
+    },
+  },
+}
+
+export const Form_Dialog_With_Step: StoryFn = () => {
+  const [openedDialog, setOpenedDialog] = useState<'normal' | 'opened' | null>(null)
+  const [value, setValue] = React.useState('Apple')
+  const [responseMessage, setResponseMessage] =
+    useState<ComponentProps<typeof ActionDialog>['responseMessage']>()
+  const onClickClose = () => {
+    setOpenedDialog(null)
+    setResponseMessage(undefined)
+  }
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.name)
+
+  return (
+    <Cluster>
+      <Button
+        onClick={() => setOpenedDialog('normal')}
+        aria-haspopup="dialog"
+        aria-controls="dialog-form"
+        data-test="dialog-trigger"
+      >
+        FormDialog with Step
+      </Button>
+      <FormDialog
+        isOpen={openedDialog === 'normal'}
+        title="FormDialog"
+        subtitle="副題"
+        actionText="保存"
+        decorators={{ closeButtonLabel: (txt) => `cancel.(${txt})` }}
+        onSubmit={(closeDialog, e, step) => {
+          action('executed')()
+          setResponseMessage(undefined)
+          if (step && step === 2) {
+            closeDialog()
+          }
+        }}
+        onClickClose={onClickClose}
+        responseMessage={responseMessage}
+        id="dialog-form"
+        data-test="form-dialog-content"
+        width="40em"
+        steppable={true}
+      >
+        <Fieldset title="fruits" innerMargin={0.5}>
+          <RadioListCluster forwardedAs="ul">
+            <li>
+              <RadioButton name="Apple" checked={value === 'Apple'} onChange={onChange}>
+                Apple
+              </RadioButton>
+            </li>
+            <li>
+              <RadioButton name="Orange" checked={value === 'Orange'} onChange={onChange}>
+                Orange
+              </RadioButton>
+            </li>
+            <li>
+              <RadioButton name="Grape" checked={value === 'Grape'} onChange={onChange}>
+                Grape
+              </RadioButton>
+            </li>
+          </RadioListCluster>
+        </Fieldset>
+        <FormControl title="Sample">
+          <Input type="text" name="text" />
+        </FormControl>
+        <Fieldset title="fruits" innerMargin={0.5}>
+          <ul>
+            <li>
+              <CheckBox name="1">CheckBox</CheckBox>
+            </li>
+
+            <li>
+              <CheckBox name="error" error>
+                CheckBox / error
+              </CheckBox>
+            </li>
+
+            <li>
+              <CheckBox name="disabled" disabled>
+                CheckBox / disabled
+              </CheckBox>
+            </li>
+          </ul>
+        </Fieldset>
+      </FormDialog>
+    </Cluster>
+  )
+}
+
+Form_Dialog_With_Step.parameters = {
+  docs: {
+    description: {
+      story: '`FormDialog with step` is a form dialog that can be divided into multiple steps.',
     },
   },
 }
