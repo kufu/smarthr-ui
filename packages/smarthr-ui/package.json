@@ -157,7 +157,7 @@
     "chromatic": "chromatic",
     "write:ui-props": "ts-node scripts/exportUIProps.ts",
     "export:ui-props": "run-s build:lib write:ui-props",
-    "scaffold": "plop"
+    "scaffold:storybook": "plop"
   },
   "sideEffects": [
     "*.css"
