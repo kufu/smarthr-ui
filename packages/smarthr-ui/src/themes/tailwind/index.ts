@@ -1,1 +1,2 @@
-export { ThemeProvider, tailwindConfig } from './TailwindThemeProvider'
+export { ThemeProvider } from './TailwindThemeProvider'
+export { tailwindConfig } from './TailwindConfig'
