@@ -4,7 +4,7 @@ import plugin from 'tailwindcss/plugin'
 
 import { defaultColor } from './themes/createColor'
 import { defaultFontSize, defaultHtmlFontSize } from './themes/createFontSize'
-import { defaultShadow } from './themes/createShadowForTailwind'
+import { defaultShadow } from './themes/createShadow/defaultShadow'
 import { createSpacingByChar, primitiveTokens as spacingSizes } from './themes/createSpacing'
 import { defaultZIndex } from './themes/createZIndex'
 

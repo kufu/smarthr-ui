@@ -1,9 +1,9 @@
 import { FlattenSimpleInterpolation, css } from 'styled-components'
 
-import { merge } from '../libs/lodash'
+import { merge } from '../../libs/lodash'
+import { ColorProperty, defaultColor } from '../createColor'
 
-import { ColorProperty, defaultColor } from './createColor'
-import { defaultShadow } from './createShadowForTailwind'
+import { defaultShadow } from './defaultShadow'
 
 export type ShadowProperty = {
   /**
