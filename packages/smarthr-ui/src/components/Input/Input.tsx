@@ -11,7 +11,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTailwindTheme'
+import { tailwindConfig } from '../../themes'
 
 type Props = {
   /** input 要素の `type` 値 */
@@ -127,7 +127,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
       }
     }, [autoFocus])
 
-    const { backgroundColor } = useTheme()
+    const { backgroundColor } = tailwindConfig.theme
 
     const wrapperStyleProps = useMemo(() => {
       const wrapperStyle = wrapper({ disabled, readOnly, className })
@@ -173,5 +173,5 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
 
 const disableWheel = (e: WheelEvent) => {
   // wheel イベントに preventDefault はないため
-  e.target && (e.target as HTMLInputElement).blur()
+  if (e.target) (e.target as HTMLInputElement).blur()
 }

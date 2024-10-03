@@ -15,8 +15,8 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../hooks/useClick'
-import { useTheme } from '../../hooks/useTailwindTheme'
 import { genericsForwardRef } from '../../libs/util'
+import { tailwindConfig } from '../../themes'
 import { UnstyledButton } from '../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../Icon'
 import { Input } from '../Input'
@@ -142,7 +142,7 @@ const ActualSingleComboBox = <T,>(
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
 ) => {
-  const { textColor } = useTheme()
+  const { textColor } = tailwindConfig.theme
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)
@@ -174,8 +174,8 @@ const ActualSingleComboBox = <T,>(
     onAdd,
     onSelect: useCallback(
       (selected: ComboBoxItem<T>) => {
-        onSelect && onSelect(selected)
-        onChangeSelected && onChangeSelected(selected)
+        if (onSelect) onSelect(selected)
+        if (onChangeSelected) onChangeSelected(selected)
         // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
         // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
         requestAnimationFrame(() => {
@@ -192,7 +192,7 @@ const ActualSingleComboBox = <T,>(
   })
 
   const focus = useCallback(() => {
-    onFocus && onFocus()
+    if (onFocus) onFocus()
     setIsFocused(true)
     if (!isFocused) {
       setIsExpanded(true)
@@ -201,14 +201,14 @@ const ActualSingleComboBox = <T,>(
   const unfocus = useCallback(() => {
     if (!isFocused) return
 
-    onBlur && onBlur()
+    if (onBlur) onBlur()
     setIsFocused(false)
     setIsExpanded(false)
     setIsEditing(false)
 
     if (!selectedItem && defaultItem) {
       setInputValue(innerText(defaultItem.label))
-      onSelect && onSelect(defaultItem)
+      if (onSelect) onSelect(defaultItem)
     }
   }, [isFocused, onBlur, selectedItem, defaultItem, onSelect])
   const onClickClear = useCallback(
@@ -217,7 +217,7 @@ const ActualSingleComboBox = <T,>(
 
       let isExecutedPreventDefault = false
 
-      onClearClick &&
+      if (onClearClick) {
         onClearClick({
           ...e,
           preventDefault: () => {
@@ -225,10 +225,11 @@ const ActualSingleComboBox = <T,>(
             isExecutedPreventDefault = true
           },
         })
+      }
 
       if (!isExecutedPreventDefault) {
-        onClear && onClear()
-        onChangeSelected && onChangeSelected(null)
+        if (onClear) onClear()
+        if (onChangeSelected) onChangeSelected(null)
         inputRef.current?.focus()
         setIsFocused(true)
         setIsExpanded(true)
@@ -262,8 +263,8 @@ const ActualSingleComboBox = <T,>(
       setInputValue(value)
 
       if (value === '') {
-        onClear && onClear()
-        onChangeSelected && onChangeSelected(null)
+        if (onClear) onClear()
+        if (onChangeSelected) onChangeSelected(null)
       }
     },
     [isEditing, setIsEditing, setInputValue, onChange, onChangeInput, onClear, onChangeSelected],
@@ -306,8 +307,8 @@ const ActualSingleComboBox = <T,>(
   // submitイベントが発生し、formが送信される場合がある
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      e.key === 'Enter' && e.preventDefault()
-      onKeyPress && onKeyPress(e)
+      if (e.key === 'Enter') e.preventDefault()
+      if (onKeyPress) onKeyPress(e)
     },
     [onKeyPress],
   )
@@ -340,7 +341,7 @@ const ActualSingleComboBox = <T,>(
     if (isFocused && inputRef.current) {
       inputRef.current.focus()
     } else if (!selectedItem && defaultItem) {
-      onSelect && onSelect(defaultItem)
+      if (onSelect) onSelect(defaultItem)
     }
   }, [isFocused, selectedItem, defaultItem, onSelect])
 

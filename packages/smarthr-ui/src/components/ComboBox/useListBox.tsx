@@ -13,7 +13,7 @@ import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
-import { useTheme } from '../../hooks/useTailwindTheme'
+import { tailwindConfig } from '../../themes'
 import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -182,7 +182,7 @@ export const useListBox = <T,>({
         }
         e.stopPropagation()
         if (activeOption.isNew) {
-          onAdd && onAdd(activeOption.item.value)
+          if (onAdd) onAdd(activeOption.item.value)
         } else {
           onSelect(activeOption.item)
         }
@@ -193,7 +193,7 @@ export const useListBox = <T,>({
     [activeOption, moveActivePositionDown, moveActivePositionUp, onAdd, onSelect, setActiveOption],
   )
 
-  const { spacing } = useTheme()
+  const { spacing } = tailwindConfig.theme
   const { createPortal } = usePortal()
   const listBoxId = useId()
   const { items: partialOptions, renderIntersection } = usePartialRendering({
@@ -209,7 +209,7 @@ export const useListBox = <T,>({
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        onAdd && onAdd(option.item.value)
+        if (onAdd) onAdd(option.item.value)
       })
     },
     [onAdd],

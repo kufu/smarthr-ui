@@ -12,8 +12,8 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTailwindTheme'
 import { debounce } from '../../libs/debounce'
+import { tailwindConfig } from '../../themes'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 
 import type { DecoratorsType } from '../../types'
@@ -108,7 +108,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const maxLettersId = useId()
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
-    const { lineHeight } = useTheme()
+    const { lineHeight } = tailwindConfig.theme
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const currentValue = props.defaultValue || props.value
     const [interimRows, setInterimRows] = useState(rows)
@@ -149,8 +149,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
     const handleChange = useCallback(
       (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        onChange && onChange(event)
-        maxLetters && debouncedUpdateCount(event.currentTarget.value)
+        if (onChange) onChange(event)
+        if (maxLetters) debouncedUpdateCount(event.currentTarget.value)
       },
       [debouncedUpdateCount, maxLetters, onChange],
     )
@@ -177,7 +177,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         }
 
         setInterimRows(currentRows < maxRows ? currentRows : maxRows)
-        onInput && onInput(e)
+        if (onInput) onInput(e)
       },
       [autoResize, lineHeight.normal, maxRows, onInput, rows],
     )

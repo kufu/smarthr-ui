@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, createContext } from 'react'
+import resolveConfig from 'tailwindcss/resolveConfig'
 
 import presetConfig from '../../smarthr-ui-preset'
 
@@ -12,3 +13,5 @@ export const ThemeContext = createContext<{ config: PresetConfig }>({ config: pr
 export const ThemeProvider: React.FC<Props> = ({ config = presetConfig, children }) => (
   <ThemeContext.Provider value={{ config }}>{children}</ThemeContext.Provider>
 )
+
+export const tailwindConfig = resolveConfig(presetConfig)

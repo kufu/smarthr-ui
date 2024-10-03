@@ -102,11 +102,11 @@ type Props = PropsWithChildren<
 export type LayerKeys = keyof typeof layerMap
 
 export const layerMap = {
-  0: 'LAYER0',
-  1: 'LAYER1',
-  2: 'LAYER2',
-  3: 'LAYER3',
-  4: 'LAYER4',
+  0: 'layer-0',
+  1: 'layer-1',
+  2: 'layer-2',
+  3: 'layer-3',
+  4: 'layer-4',
 } as const
 
 type SeparatePadding = {

@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTailwindTheme'
+import { tailwindConfig } from '../../themes'
 
 import { DropdownCloser } from './DropdownCloser'
 import { ContentBoxStyle, Rect, getContentBoxStyle } from './dropdownHelper'
@@ -58,7 +58,7 @@ export const DropdownContentInner: FC<Props & ElementProps> = ({
   controllable,
   ...props
 }) => {
-  const { spacing } = useTheme()
+  const { spacing } = tailwindConfig.theme
   const [isActive, setIsActive] = useState(false)
   const [contentBox, setContentBox] = useState<ContentBoxStyle>({
     top: 'auto',

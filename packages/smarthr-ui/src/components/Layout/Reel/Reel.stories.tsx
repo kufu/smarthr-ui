@@ -2,7 +2,7 @@ import { StoryFn } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
 
-import { useTheme } from '../../../hooks/useTheme'
+import { tailwindConfig } from '../../../themes'
 import { Button } from '../../Button'
 import { Heading } from '../../Heading'
 import { FaPenIcon } from '../../Icon'
@@ -25,7 +25,7 @@ export default {
 
 export const All: StoryFn = () => {
   const [currentTab, setCurrentTab] = React.useState(0)
-  const theme = useTheme()
+  const theme = tailwindConfig.theme
 
   return (
     <Stack as="article" gap="M" style={{ padding: '20px' }}>
@@ -38,9 +38,9 @@ export const All: StoryFn = () => {
         <Heading type="sectionTitle">
           with <code>gap</code>, <code>padding</code>
         </Heading>
-        <Reel padding="S" gap="S" style={{ backgroundColor: theme.color.BACKGROUND }}>
+        <Reel padding="S" gap="S" style={{ backgroundColor: theme.backgroundColor.black }}>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, i) => (
-            <Box key={i} style={{ backgroundColor: theme.color.MAIN }}>
+            <Box key={i} style={{ backgroundColor: theme.backgroundColor.main }}>
               Item
             </Box>
           ))}

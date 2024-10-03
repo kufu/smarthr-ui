@@ -2,7 +2,7 @@ import React, { ComponentProps, useMemo } from 'react'
 import { IconType } from 'react-icons'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTailwindTheme'
+import { tailwindConfig } from '../../themes'
 import { FontSizes } from '../../themes/createFontSize'
 import { AbstractSize, CharRelativeSize } from '../../themes/createSpacing'
 import { Gap } from '../../types'
@@ -136,7 +136,7 @@ export const createIcon = (SvgIcon: IconType) => {
     const iconStyle = useMemo(() => icon({ className }), [className])
     const wrapperStyle = useMemo(() => wrapper({ gap: iconGap }), [iconGap])
 
-    const { colors, textColor, fontSize } = useTheme()
+    const { colors, textColor, fontSize } = tailwindConfig.theme
 
     const replacedColor = useMemo(() => {
       if (color && existsColor(color)) {

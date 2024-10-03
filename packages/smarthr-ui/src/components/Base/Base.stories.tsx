@@ -2,7 +2,7 @@ import { StoryFn } from '@storybook/react'
 import React from 'react'
 import styled from 'styled-components'
 
-import { useTheme } from '../../hooks/useTheme'
+import { tailwindConfig } from '../../themes'
 import { Heading } from '../Heading'
 import { Section } from '../SectioningContent'
 import { Table, Td, Th } from '../Table'
@@ -16,7 +16,7 @@ export default {
 }
 
 export const BaseStory: StoryFn = () => {
-  const themes = useTheme()
+  const themes = tailwindConfig.theme
 
   return (
     <DescriptionList>
@@ -87,7 +87,7 @@ export const BaseStory: StoryFn = () => {
               <Base layer={Number(layer) as LayerKeys}>
                 <Text>
                   If layer props is specified as <Bold>{layer}</Bold>, box-shadow becomes
-                  <Bold> {themes.shadow[layerMap[Number(layer) as LayerKeys]]}</Bold>.
+                  <Bold> {themes.boxShadow[layerMap[Number(layer) as LayerKeys]]}</Bold>.
                 </Text>
               </Base>
             </li>
