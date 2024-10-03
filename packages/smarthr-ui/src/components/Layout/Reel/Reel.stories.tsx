@@ -38,7 +38,7 @@ export const All: StoryFn = () => {
         <Heading type="sectionTitle">
           with <code>gap</code>, <code>padding</code>
         </Heading>
-        <Reel padding="S" gap="S" style={{ backgroundColor: theme.backgroundColor.black }}>
+        <Reel padding="S" gap="S" style={{ backgroundColor: theme.backgroundColor.background }}>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, i) => (
             <Box key={i} style={{ backgroundColor: theme.backgroundColor.main }}>
               Item
