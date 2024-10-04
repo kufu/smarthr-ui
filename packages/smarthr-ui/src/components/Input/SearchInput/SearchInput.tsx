@@ -35,11 +35,11 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(
     }, [width])
 
     return (
-      <label style={styles.label}>
+      <label style={widths.label}>
         <InputWithTooltip
           {...props}
           ref={ref}
-          width={styles.input}
+          width={widths.input}
           prefix={<FaSearchIcon alt={iconAlt} color="TEXT_GREY" />}
         />
       </label>
