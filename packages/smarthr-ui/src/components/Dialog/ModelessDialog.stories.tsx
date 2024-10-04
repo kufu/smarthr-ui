@@ -115,6 +115,7 @@ export const Modeless_Dialog: StoryFn = () => {
           right="10%"
           id="modeless-dialog-2"
           data-test="dialog"
+          className="shr-z-1"
         >
           <p>
             bottom: 100px
