@@ -16,7 +16,7 @@ const ICON_ALT = '検索'
 export const SearchInput = forwardRef<HTMLInputElement, Props>(
   ({ decorators, width, ...props }, ref) => {
     const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
-    const styles = useMemo(() => {
+    const widths = useMemo(() => {
       const widthStyle = typeof width === 'number' ? `${width}px` : width
 
       if (!widthStyle) {
