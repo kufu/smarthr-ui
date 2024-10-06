@@ -13,16 +13,36 @@ type Props = Omit<ComponentProps<typeof InputWithTooltip>, 'tooltipMessage' | 'p
 
 const ICON_ALT = '検索'
 
-export const SearchInput = forwardRef<HTMLInputElement, Props>(({ decorators, ...props }, ref) => {
-  const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
+export const SearchInput = forwardRef<HTMLInputElement, Props>(
+  ({ decorators, width, ...props }, ref) => {
+    const iconAlt = useMemo(() => decorators?.iconAlt?.(ICON_ALT) || ICON_ALT, [decorators])
+    const widths = useMemo(() => {
+      const widthStyle = typeof width === 'number' ? `${width}px` : width
 
-  return (
-    <label>
-      <InputWithTooltip
-        {...props}
-        ref={ref}
-        prefix={<FaSearchIcon alt={iconAlt} color="TEXT_GREY" />}
-      />
-    </label>
-  )
-})
+      if (!widthStyle) {
+        return {
+          label: undefined,
+          input: undefined,
+        }
+      }
+
+      return {
+        label: {
+          width: widthStyle,
+        },
+        input: '100%',
+      }
+    }, [width])
+
+    return (
+      <label style={widths.label}>
+        <InputWithTooltip
+          {...props}
+          ref={ref}
+          width={widths.input}
+          prefix={<FaSearchIcon alt={iconAlt} color="TEXT_GREY" />}
+        />
+      </label>
+    )
+  },
+)
