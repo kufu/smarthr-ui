@@ -8,7 +8,17 @@ import { Section } from '../SectioningContent'
 import { Table, Td, Th } from '../Table'
 import { Text } from '../Text'
 
-import { Base, LayerKeys, layerMap } from './Base'
+import { Base } from './Base'
+
+export type LayerKeys = keyof typeof LayerMap
+
+export const LayerMap = {
+  0: 'layer-0',
+  1: 'layer-1',
+  2: 'layer-2',
+  3: 'layer-3',
+  4: 'layer-4',
+} as const
 
 export default {
   title: 'Data Display（データ表示）/Base',
@@ -82,12 +92,12 @@ export const BaseStory: StoryFn = () => {
       <dt>box-shadow</dt>
       <dd>
         <List>
-          {Object.keys(layerMap).map((layer, index) => (
+          {Object.keys(LayerMap).map((layer, index) => (
             <li key={`${layer}-${index}`}>
               <Base layer={Number(layer) as LayerKeys}>
                 <Text>
                   If layer props is specified as <Bold>{layer}</Bold>, box-shadow becomes
-                  <Bold> {themes.boxShadow[layerMap[Number(layer) as LayerKeys]]}</Bold>.
+                  <Bold> {themes.boxShadow[LayerMap[Number(layer) as LayerKeys]]}</Bold>.
                 </Text>
               </Base>
             </li>
