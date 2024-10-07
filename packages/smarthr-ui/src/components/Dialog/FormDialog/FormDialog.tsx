@@ -12,11 +12,11 @@ type Props = Omit<FormDialogContentInnerProps, 'titleId' | 'onSubmit'> &
     /**
      * アクションボタンをクリックした時に発火するコールバック関数
      * @param closeDialog ダイアログを閉じる関数
-     * @param activeStep steppable:true の場合のみ、次のページ数
+     * @param activeStep hasStep:true の場合のみ、次のページ数
      */
     onSubmit: (closeDialog: () => void, e: FormEvent<HTMLFormElement>, activeStep?: number) => void
     /** Stepつきダイアログか否か */
-    steppable?: boolean
+    hasStep?: boolean
   }
 type ElementProps = Omit<ComponentProps<'div'>, keyof Props>
 
@@ -40,7 +40,7 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
   portalParent,
   decorators,
   id,
-  steppable,
+  hasStep,
   ...props
 }) => {
   const { createPortal } = useDialogPortal(portalParent, id)
@@ -68,13 +68,13 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
         return
       }
 
-      if (steppable) {
+      if (hasStep) {
         handleNextSteps()
       }
 
       onSubmit(close, e, activeStep)
     },
-    [onSubmit, props.isOpen, steppable, handleNextSteps, activeStep],
+    [onSubmit, props.isOpen, hasStep, handleNextSteps, activeStep],
   )
 
   return createPortal(
@@ -87,23 +87,23 @@ export const FormDialog: React.FC<Props & ElementProps> = ({
     >
       {/* eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation */}
       <FormDialogContentInner
-        title={steppable ? `${title}${titleSuffix}` : title}
+        title={hasStep ? `${title}${titleSuffix}` : title}
         titleId={titleId}
         subtitle={subtitle}
         titleTag={titleTag}
         contentBgColor={contentBgColor}
         contentPadding={contentPadding}
-        actionText={steppable ? getActionText(actionText) : actionText}
+        actionText={hasStep ? getActionText(actionText) : actionText}
         actionTheme={actionTheme}
         actionDisabled={actionDisabled}
         closeDisabled={closeDisabled}
-        subActionArea={steppable ? renderSubActionButton() : subActionArea}
+        subActionArea={hasStep ? renderSubActionButton() : subActionArea}
         onClickClose={handleClickClose}
         onSubmit={handleSubmitAction}
         responseMessage={responseMessage}
         decorators={decorators}
       >
-        {steppable ? childrenSteps[activeStep] : children}
+        {hasStep ? childrenSteps[activeStep] : children}
       </FormDialogContentInner>
     </DialogContentInner>,
   )

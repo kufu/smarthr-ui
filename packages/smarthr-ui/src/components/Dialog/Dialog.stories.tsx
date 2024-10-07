@@ -352,7 +352,7 @@ export const Form_Dialog_With_Step: StoryFn = () => {
         id="dialog-form"
         data-test="form-dialog-content"
         width="40em"
-        steppable={true}
+        hasStep={true}
       >
         <Fieldset title="fruits" innerMargin={0.5}>
           <RadioListCluster forwardedAs="ul">
