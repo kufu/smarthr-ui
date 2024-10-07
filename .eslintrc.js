@@ -14,7 +14,6 @@ module.exports = {
       'error',
       'type',
     ],
-    'smarthr/a11y-delegate-element-has-role-presentation': 'error',
     'smarthr/require-barrel-import': 'off',
   },
 }
