@@ -35,7 +35,7 @@ export type BaseProps = PropsWithChildren<
       /** ダイアログフッターの左端操作領域 */
       subActionArea?: ReactNode
       /** コンポーネント内の文言を変更するための関数を設定 */
-      decorators?: DecoratorsType<'closeButtonLabel'>
+      decorators?: DecoratorsType<'closeButtonLabel' | 'nextButtonLabel'>
     }
 >
 

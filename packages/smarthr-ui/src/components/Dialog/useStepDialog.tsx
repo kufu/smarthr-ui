@@ -18,8 +18,16 @@ export const useStepDialog = (children: ReactNode) => {
     return steps
   }, [children])
 
-  const getActionText = (submitActionText: ReactNode) =>
-    activeStep < childrenSteps.length - 1 ? NEXT_BUTTON_LABEL : submitActionText
+  /** nextButtonLabel の型は DecoratorType に合わせている */
+  const getActionText = (
+    submitActionText: ReactNode,
+    nextButtonLabel?: (text: string) => ReactNode,
+  ) =>
+    activeStep < childrenSteps.length - 1
+      ? nextButtonLabel
+        ? nextButtonLabel(NEXT_BUTTON_LABEL)
+        : NEXT_BUTTON_LABEL
+      : submitActionText
 
   const handleNextSteps = useCallback(() => {
     if (activeStep + 1 === childrenSteps.length) {

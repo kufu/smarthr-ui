@@ -339,7 +339,7 @@ export const Form_Dialog_With_Step: StoryFn = () => {
         title="FormDialog"
         subtitle="副題"
         actionText="保存"
-        decorators={{ closeButtonLabel: (txt) => `cancel.(${txt})` }}
+        decorators={{ closeButtonLabel: () => '閉じる', nextButtonLabel: () => 'Next' }}
         onSubmit={(closeDialog, e, step) => {
           action('executed')()
           setResponseMessage(undefined)
