@@ -16,7 +16,7 @@ import { tv } from 'tailwind-variants'
 
 import { useClick } from '../../hooks/useClick'
 import { genericsForwardRef } from '../../libs/util'
-import { tailwindConfig } from '../../themes'
+import { textColor } from '../../themes'
 import { UnstyledButton } from '../Button'
 import { FaCaretDownIcon, FaCircleXmarkIcon } from '../Icon'
 import { Input } from '../Input'
@@ -142,7 +142,6 @@ const ActualSingleComboBox = <T,>(
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
 ) => {
-  const { textColor } = tailwindConfig.theme
   const outerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const clearButtonRef = useRef<HTMLButtonElement>(null)

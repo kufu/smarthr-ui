@@ -16,7 +16,7 @@ import Draggable from 'react-draggable'
 import { VariantProps, tv } from 'tailwind-variants'
 
 import { useHandleEscape } from '../../hooks/useHandleEscape'
-import { tailwindConfig } from '../../themes'
+import { spacing } from '../../themes'
 import { Base, BaseElementProps } from '../Base'
 import { Button } from '../Button'
 import { FaGripIcon, FaXmarkIcon } from '../Icon'
@@ -140,7 +140,6 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
 }) => {
   const labelId = useId()
   const { createPortal } = useDialogPortal(portalParent, id)
-  const { spacing } = tailwindConfig.theme
 
   const {
     wrapperStyle,

@@ -14,7 +14,7 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { tailwindConfig } from '../../themes'
+import { textColor } from '../../themes'
 import { Calendar } from '../Calendar'
 import { FaCalendarAltIcon } from '../Icon'
 import { Input } from '../Input'
@@ -147,7 +147,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       [showAlternative],
     )
 
-    const { textColor } = tailwindConfig.theme
     const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
     const inputRef = useRef<HTMLInputElement>(null)
     const inputWrapperRef = useRef<HTMLDivElement>(null)

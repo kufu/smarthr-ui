@@ -1,7 +1,7 @@
 import React, { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { tailwindConfig } from '../../themes'
+import { spacing } from '../../themes'
 import { Stack } from '../Layout'
 import { Text } from '../Text'
 
@@ -41,7 +41,6 @@ export const DefinitionListItem: FC<DefinitionListItemProps & ElementProps> = ({
   description,
   className,
 }) => {
-  const { spacing } = tailwindConfig.theme
   const { wrapperStyleProps, termStyle, descriptionStyle } = useMemo(() => {
     const { wrapper, termEl, descriptionEl } = definitionListItem()
     return {

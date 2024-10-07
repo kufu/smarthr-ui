@@ -13,7 +13,7 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { debounce } from '../../libs/debounce'
-import { tailwindConfig } from '../../themes'
+import { lineHeight } from '../../themes'
 import { defaultHtmlFontSize } from '../../themes/createFontSize'
 
 import type { DecoratorsType } from '../../types'
@@ -108,7 +108,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     const maxLettersId = useId()
     const actualMaxLettersId = maxLetters ? maxLettersId : undefined
 
-    const { lineHeight } = tailwindConfig.theme
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const currentValue = props.defaultValue || props.value
     const [interimRows, setInterimRows] = useState(rows)

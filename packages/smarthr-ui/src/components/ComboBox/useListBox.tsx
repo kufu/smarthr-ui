@@ -13,7 +13,7 @@ import { tv } from 'tailwind-variants'
 
 import { useEnhancedEffect } from '../../hooks/useEnhancedEffect'
 import { usePortal } from '../../hooks/usePortal'
-import { tailwindConfig } from '../../themes'
+import { spacing } from '../../themes'
 import { FaInfoCircleIcon } from '../Icon'
 import { Loader } from '../Loader'
 import { VisuallyHiddenText } from '../VisuallyHiddenText'
@@ -193,7 +193,6 @@ export const useListBox = <T,>({
     [activeOption, moveActivePositionDown, moveActivePositionUp, onAdd, onSelect, setActiveOption],
   )
 
-  const { spacing } = tailwindConfig.theme
   const { createPortal } = usePortal()
   const listBoxId = useId()
   const { items: partialOptions, renderIntersection } = usePartialRendering({

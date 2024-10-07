@@ -15,7 +15,7 @@ import { tv } from 'tailwind-variants'
 
 import { useOuterClick } from '../../hooks/useOuterClick'
 import { genericsForwardRef } from '../../libs/util'
-import { tailwindConfig } from '../../themes'
+import { textColor } from '../../themes'
 import { FaCaretDownIcon } from '../Icon'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
@@ -163,7 +163,6 @@ const ActualMultiComboBox = <T,>(
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
 ) => {
-  const { textColor } = tailwindConfig.theme
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
