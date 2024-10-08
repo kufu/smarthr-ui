@@ -32,7 +32,7 @@ commands:
       - run: |
           sudo corepack enable
           sudo corepack prepare
-          pnpm ui install
+          pnpm install
       - save_cache:
           paths:
             - node_modules
@@ -57,6 +57,25 @@ commands:
           command: pnpm ui test-storybook:ci
       - store_test_results:
           path: junit.xml
+  run-e2e-test:
+    steps:
+      - run:
+          name: build and store smarthr-ui package
+          command: |
+            cd packages/smarthr-ui
+            npx yalc publish
+      - run:
+          name: Start Next.js sandbox
+          command: |
+            cd sandbox/next
+            npx yalc add smarthr-ui
+            pnpm dev
+          background: true
+      - run:
+          name: Run E2E Test
+          command: |
+            cd sandbox/next
+            pnpm playwright test
   run-chromatic:
     steps:
       - checkout
@@ -100,6 +119,13 @@ jobs:
       - setup-for-test
       - install-noto-sans-cjk-jp
       - run-a11y-test
+  e2e-test:
+    executor: node-active-lts-browsers
+    working_directory: ~/repo
+    resource_class: medium+
+    steps:
+      - setup-for-test
+      - run-e2e-test
   chromatic-deployment:
     executor: node-active-lts
     resource_class: medium+
@@ -120,6 +146,8 @@ workflows:
       - node-active-lts:
           context: smarthr-dockerhub
       - a11y-test:
+          context: smarthr-dockerhub
+      - e2e-test:
           context: smarthr-dockerhub
       - chromatic-deployment:
           filters:
