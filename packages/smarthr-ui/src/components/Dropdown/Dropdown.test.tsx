@@ -58,20 +58,4 @@ describe('Dropdown', () => {
     act(() => document.body.click())
     expect(screen.queryByRole('button', { name: 'Button1' })).toBeNull()
   })
-
-  it('ドロップダウンからダイアログを開いたときフォーカスが移動すること', async () => {
-    render(
-      <Dropdown>
-        <DropdownTrigger>
-          <Button>Trigger</Button>
-        </DropdownTrigger>
-        <DropdownContent controllable>
-          <Button>Open Dialog</Button>
-        </DropdownContent>
-      </Dropdown>,
-    )
-
-    act(() => screen.getByRole('button', { name: 'Trigger', expanded: false }).click())
-    act(() => screen.getByRole('button', { name: 'Open Dialog' }).click())
-  })
 })
