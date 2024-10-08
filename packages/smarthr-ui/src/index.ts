@@ -110,7 +110,7 @@ export { useTheme as useTailwindTheme } from './hooks/useTailwindTheme'
 export { useDevice } from './hooks/useDevice'
 
 // themes
-export * from './themes'
+export { ThemeProvider as TailwindThemeProvider } from './themes'
 export { createTheme } from './themes/createTheme'
 export { ThemeProvider } from './themes/ThemeProvider'
 export { defaultPalette } from './themes/createPalette'
