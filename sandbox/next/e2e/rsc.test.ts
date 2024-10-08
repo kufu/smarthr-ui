@@ -98,7 +98,6 @@ const CLIENT_COMPONENTS = [
   'Nav',
   'Article',
   'RemoteTriggerMessageDialog',
-  'SequencePrefixIdProvider',
   'Aside',
   'AppLauncher',
 ]

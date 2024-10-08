@@ -3,8 +3,9 @@ import { defineConfig } from '@playwright/test'
 export default defineConfig({
   testDir: './e2e',
   maxFailures: 10,
+  retries: 2,
   fullyParallel: true,
-  workers: 4,
+  workers: 2,
   reporter: [['list'], ['html']],
   use: {
     browserName: 'chromium',
