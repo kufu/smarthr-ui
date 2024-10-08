@@ -12,7 +12,7 @@ export default {
   render: (args: any) => {
     const types = ['grey', 'blue', 'red', 'yellow'] as const
     return (
-      <Stack {...args}>
+      <Stack {...args} style={{ padding: '1rem' }}>
         {types.map((type, i) => (
           <Cluster key={i}>
             <>
