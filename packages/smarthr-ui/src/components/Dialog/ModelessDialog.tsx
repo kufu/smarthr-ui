@@ -89,6 +89,7 @@ const CLOSE_BUTTON_ICON_ALT = '閉じる'
 
 const modelessDialog = tv({
   slots: {
+    overlap: 'shr-inset-[unset]',
     wrapper: 'smarthr-ui-ModelessDialog shr-fixed shr-flex shr-flex-col',
     headerEl:
       'smarthr-ui-ModelessDialog-header shr-border-b-shorthand shr-relative shr-flex shr-cursor-move shr-items-center shr-rounded-tl-l shr-rounded-tr-l shr-pe-1 shr-ps-1.5 hover:shr-bg-white-darken',
@@ -143,6 +144,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   const { spacing } = useTheme()
 
   const {
+    overlapStyle,
     wrapperStyle,
     headerStyle,
     titleStyle,
@@ -150,10 +152,11 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
     closeButtonLayoutStyle,
     footerStyle,
   } = useMemo(() => {
-    const { wrapper, headerEl, title, dialogHandler, closeButtonLayout, footerEl } =
+    const { overlap, wrapper, headerEl, title, dialogHandler, closeButtonLayout, footerEl } =
       modelessDialog()
     return {
-      wrapperStyle: wrapper({ resizable, className }),
+      overlapStyle: overlap({ className }),
+      wrapperStyle: wrapper({ resizable }),
       headerStyle: headerEl(),
       titleStyle: title(),
       dialogHandlerStyle: dialogHandler(),
@@ -314,7 +317,7 @@ export const ModelessDialog: FC<Props & BaseElementProps & VariantProps<typeof m
   )
 
   return createPortal(
-    <DialogOverlap isOpen={isOpen} className="shr-inset-[unset]">
+    <DialogOverlap isOpen={isOpen} className={overlapStyle}>
       <Draggable
         handle=".smarthr-ui-ModelessDialog-handle"
         onStart={(_, data) => setPosition({ x: data.x, y: data.y })}
