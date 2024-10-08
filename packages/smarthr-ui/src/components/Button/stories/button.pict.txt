@@ -1,0 +1,23 @@
+size: default, s
+disabled: true, false (10)
+disabledDetail: あり, なし
+loading: true, false
+prefix: あり, なし
+suffix: あり, なし
+square: true, false
+wide: true, false (10)
+
+# prefix と suffix は共存しない
+IF [prefix] = "あり" THEN [suffix] = "なし";
+
+# square のとき prefix や suffix、wide は共存しない
+IF [square] = "true" THEN [prefix] = "なし" AND [suffix] = "なし" AND [wide] = "false";
+
+# disabled のとき loading ではない
+IF [disabled] = "true" THEN [loading] = "false";
+
+# disabled ではないとき、disabledDetail ではない
+IF [disabled] = "false" THEN [disabledDetail] = "なし";
+
+# wide のとき disabledDetail ではない
+IF [wide] = "true" THEN [disabledDetail] = "なし";

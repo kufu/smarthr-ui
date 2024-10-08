@@ -1,16 +1,10 @@
-export type BaseProps = {
+import { PropsWithChildren } from 'react'
+
+export type BaseProps = PropsWithChildren<{
   /**
    * ボタンの大きさ
    */
   size?: 'default' | 's'
-  /**
-   * ボタン内に表示する内容
-   */
-  children?: React.ReactNode
-  /**
-   * コンポーネントに適用するクラス名
-   */
-  className?: string
   /**
    * 無効な理由
    */
@@ -44,6 +38,6 @@ export type BaseProps = {
    * 処理が走ってるかどうか
    */
   loading?: boolean
-}
+}>
 
 export type Variant = 'primary' | 'secondary' | 'danger' | 'skeleton' | 'text'
