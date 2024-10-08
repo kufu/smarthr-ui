@@ -5,7 +5,7 @@ export default defineConfig({
   maxFailures: 10,
   retries: 2,
   fullyParallel: true,
-  workers: 2,
+  workers: 1,
   reporter: [['list'], ['html']],
   use: {
     browserName: 'chromium',
