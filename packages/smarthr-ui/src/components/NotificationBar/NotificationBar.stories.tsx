@@ -145,18 +145,12 @@ export const Demo: StoryFn = () => {
       )}
       <StyledWrapper>
         <Stack>
-          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label>
-            <CheckBox name="bold" onChange={() => setBold(!bold)} checked={bold}>
-              bold
-            </CheckBox>
-          </label>
-          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label>
-            <CheckBox name="animate" onChange={() => setAnimate(!animate)} checked={animate}>
-              animate
-            </CheckBox>
-          </label>
+          <CheckBox name="bold" onChange={() => setBold(!bold)} checked={bold}>
+            bold
+          </CheckBox>
+          <CheckBox name="animate" onChange={() => setAnimate(!animate)} checked={animate}>
+            animate
+          </CheckBox>
           <Fieldset title="メッセージの種類">
             <Cluster gap={0.75}>
               {Object.keys(notificationBar.variants.type).map((type) => (

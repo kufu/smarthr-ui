@@ -37,8 +37,6 @@ export const TdCheckbox = forwardRef<HTMLInputElement, Omit<CheckBoxProps, keyof
       // Td に必要な属性やイベントは不要
       <Td className={wrapperStyle}>
         <Center as="label" verticalCentering className={innerStyle}>
-          {/* 使う側で lint をかけるため無効化 */}
-          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute  */}
           <CheckBox
             {...others}
             ref={ref}

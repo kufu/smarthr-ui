@@ -15,8 +15,5 @@ const headerLink = tv({
 
 export const HeaderLink: React.FC<Props> = ({ className, ...props }) => {
   const style = headerLink({ className })
-  return (
-    // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute
-    <TextLink {...props} target="_blank" suffix={null} className={style} />
-  )
+  return <TextLink {...props} target="_blank" suffix={null} className={style} />
 }

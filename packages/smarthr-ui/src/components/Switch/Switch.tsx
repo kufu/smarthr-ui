@@ -64,7 +64,6 @@ export const Switch = forwardRef<HTMLInputElement, Props>(
           {children}
         </ActualLabelComponent>
         <span className={wrapper({ className })}>
-          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
           <input
             {...props}
             type="checkbox"

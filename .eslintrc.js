@@ -15,5 +15,17 @@ module.exports = {
       'type',
     ],
     'smarthr/require-barrel-import': 'off',
+    'smarthr/a11y-anchor-has-href-attribute': [
+      'error',
+      {
+        checkType: 'allow-spread-attributes',
+      }
+    ],
+    'smarthr/a11y-input-has-name-attribute': [
+      'error',
+      {
+        checkType: 'allow-spread-attributes',
+      }
+    ],
   },
 }

@@ -5,8 +5,7 @@ import React from 'react'
 import { InformationPanel } from '../InformationPanel'
 import { Stack } from '../Layout'
 
-// eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control
-import { MultiCombobox as Multi } from './MultiCombobox.stories'
+import { MultiCombobox as StoriesMultiComboBox } from './MultiCombobox.stories'
 
 import { MultiComboBox } from '.'
 
@@ -23,7 +22,8 @@ export const VRTMultiCombobox: StoryFn = () => (
     <InformationPanel title="VRT 用の Story です">
       Multiコンボボックスのリストを展開して1つ目と2つ目の項目を選択した状態で表示されます
     </InformationPanel>
-    <Multi />
+    {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+    <StoriesMultiComboBox />
   </Stack>
 )
 
@@ -49,15 +49,16 @@ const playMulti = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
 }
 VRTMultiCombobox.play = playMulti
 
-export const VRTMultiComboboxForcedColors: StoryFn = () => (
+export const VRTForcedColorsMultiCombobox: StoryFn = () => (
   <Stack>
     <InformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます{' '}
     </InformationPanel>
-    <Multi />
+    {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+    <StoriesMultiComboBox />
   </Stack>
 )
-VRTMultiComboboxForcedColors.play = playMulti
-VRTMultiComboboxForcedColors.parameters = {
+VRTForcedColorsMultiCombobox.play = playMulti
+VRTForcedColorsMultiCombobox.parameters = {
   chromatic: { forcedColors: 'active' },
 }
