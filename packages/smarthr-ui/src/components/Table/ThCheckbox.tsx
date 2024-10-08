@@ -44,9 +44,21 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
       }
     }, [className])
 
-    const checkAllInvisibleLabel =
-      decorators?.checkAllInvisibleLabel?.(CHECK_ALL_INVISIBLE_LABEL) || CHECK_ALL_INVISIBLE_LABEL
-    const checkColumnName = decorators?.checkColumnName?.(CHECK_COLUMN_NAME) || CHECK_COLUMN_NAME
+    const checkAllInvisibleLabel = useMemo(() => {
+      if (decorators && decorators.checkAllInvisibleLabel) {
+        return decorators.checkAllInvisibleLabel(CHECK_ALL_INVISIBLE_LABEL)
+      }
+
+      return CHECK_ALL_INVISIBLE_LABEL
+    }, [decorators])
+
+    const checkColumnName = useMemo(() => {
+      if (decorators && decorators.checkColumnName) {
+        return decorators.checkColumnName(CHECK_COLUMN_NAME)
+      }
+
+      return CHECK_COLUMN_NAME
+    }, [decorators])
 
     return (
       // Th に必要な属性やイベントは不要
