@@ -61,24 +61,21 @@ commands:
     steps:
       - run:
           name: build and store smarthr-ui package
-          command: |
-            cd packages/smarthr-ui
-            npx yalc publish
+          working_directory: packages/smarthr-ui
+          command: npx yalc publish
       - run:
           name: Setup Next.js sandbox
-          command: |
-            cd sandbox/next
-            npx yalc add smarthr-ui
+          working_directory: sandbox/next
+          command: npx yalc add smarthr-ui
       - run:
           name: Start Next.js sandbox
-          command: |
-            cd sandbox/next
-            pnpm dev
+          working_directory: sandbox/next
+          command: pnpm dev
           background: true
       - run:
           name: Run E2E Test
+          working_directory: sandbox/next
           command: |
-            cd sandbox/next
             pnpm playwright install chromium
             pnpm playwright test
   run-chromatic:
