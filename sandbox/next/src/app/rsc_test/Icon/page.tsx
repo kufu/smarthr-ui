@@ -1,6 +1,6 @@
-import { Icon } from 'smarthr-ui'
+import { FaAddressBookIcon } from 'smarthr-ui'
 
 export default function IconPage() {
-  console.log(Icon)
+  console.log(FaAddressBookIcon)
   return <div>Success: Icon</div>
 }
