@@ -21,5 +21,11 @@ module.exports = {
         checkType: 'allow-spread-attributes',
       }
     ],
+    'smarthr/a11y-input-has-name-attribute': [
+      'error',
+      {
+        checkType: 'allow-spread-attributes',
+      }
+    ],
   },
 }
