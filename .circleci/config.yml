@@ -124,7 +124,7 @@ jobs:
   e2e-test:
     executor: node-active-lts-browsers
     working_directory: ~/repo
-    resource_class: medium+
+    resource_class: large
     steps:
       - setup-for-test
       - run-e2e-test
