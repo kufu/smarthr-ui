@@ -4,6 +4,8 @@ import { Button } from '../Button'
 
 import { FocusTrapRef } from './FocusTrap'
 
+import type { DecoratorType } from '../../types'
+
 const NEXT_BUTTON_LABEL = '次へ'
 
 export const useStepDialog = (children: ReactNode) => {
@@ -18,11 +20,7 @@ export const useStepDialog = (children: ReactNode) => {
     return steps
   }, [children])
 
-  /** nextButtonLabel の型は DecoratorType に合わせている */
-  const getActionText = (
-    submitActionText: ReactNode,
-    nextButtonLabel?: (text: string) => ReactNode,
-  ) =>
+  const getActionText = (submitActionText: ReactNode, nextButtonLabel?: DecoratorType) =>
     activeStep < childrenSteps.length - 1
       ? nextButtonLabel
         ? nextButtonLabel(NEXT_BUTTON_LABEL)
