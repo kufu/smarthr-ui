@@ -99,7 +99,7 @@ export const Square: StoryObj<typeof AnchorButton> = {
   name: 'square',
   args: {
     square: true,
-    children: <FaCirclePlusIcon />,
+    children: <FaCirclePlusIcon alt="ボタン" />,
   },
 }
 

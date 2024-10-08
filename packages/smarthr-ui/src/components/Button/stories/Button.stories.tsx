@@ -110,7 +110,7 @@ export const Square: StoryObj<typeof Button> = {
   name: 'square',
   args: {
     square: true,
-    children: <FaCirclePlusIcon />,
+    children: <FaCirclePlusIcon alt="ボタン" />,
   },
 }
 
