@@ -69,7 +69,6 @@ commands:
           command: |
             cd sandbox/next
             npx yalc add smarthr-ui
-            pnpm install
       - run:
           name: Start Next.js sandbox
           command: |
