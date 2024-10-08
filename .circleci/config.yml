@@ -65,10 +65,15 @@ commands:
             cd packages/smarthr-ui
             npx yalc publish
       - run:
-          name: Start Next.js sandbox
+          name: Setup Next.js sandbox
           command: |
             cd sandbox/next
             npx yalc add smarthr-ui
+            pnpm install
+      - run:
+          name: Start Next.js sandbox
+          command: |
+            cd sandbox/next
             pnpm dev
           background: true
       - run:
