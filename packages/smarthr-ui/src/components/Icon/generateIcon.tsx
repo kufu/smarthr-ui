@@ -64,8 +64,6 @@ type BaseComponentProps = {
   iconGap?: CharRelativeSize | AbstractSize
   /** `true` のとき、アイコンを右側に表示する */
   right?: boolean
-  /** コンポーネントに適用するクラス名 */
-  className?: string
 }
 export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
 
