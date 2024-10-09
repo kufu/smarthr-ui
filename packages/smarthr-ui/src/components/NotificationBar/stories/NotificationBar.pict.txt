@@ -1,0 +1,9 @@
+base: base, none
+bold: true, false
+type: error, warning, info, success, sync
+message: String, ReactNode
+layer: 0, 1, 2, 3, 4, undefined
+onClose: あり, なし
+
+# base が none の場合は layer は不要
+IF [base] = "none" THEN [layer] = "undefined";
