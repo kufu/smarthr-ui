@@ -16,7 +16,7 @@ type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
 export const generateIcon = (svg: IconType) => createIcon(svg)
 
-const colorSet = {
+export const colorSet = {
   TEXT_BLACK: 'black',
   TEXT_WHITE: 'white',
   TEXT_GREY: 'grey',
