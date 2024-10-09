@@ -23,7 +23,6 @@ const Link: FC<{ to: string; children: ReactNode; disabled?: boolean; className?
   className = '',
   ...props
 }) => (
-  // eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute
   <a {...props} {...(disabled ? {} : { href: to })} className={className}>
     {children}
   </a>

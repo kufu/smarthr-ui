@@ -38,8 +38,6 @@ export const ThCheckbox = forwardRef<HTMLInputElement, CheckBoxProps & Props>(
       // Th に必要な属性やイベントは不要
       <Th className={wrapperStyle}>
         <Center as="label" verticalCentering className={innerStyle}>
-          {/* 使う側で lint をかけるため無効化 */}
-          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute  */}
           <CheckBox {...others} ref={ref} className={checkboxStyle} />
           <VisuallyHiddenText>
             {decorators?.checkAllInvisibleLabel?.(CHECK_ALL_INVISIBLE_LABEL) ||

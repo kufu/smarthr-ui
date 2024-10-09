@@ -68,7 +68,7 @@ export const All: StoryFn = () => (
       </FormControl>
     </li>
     <li>
-      <FormControl title="error">
+      <FormControl title="error" autoBindErrorInput={false}>
         <Input name="error" error={true} />
       </FormControl>
     </li>
@@ -80,6 +80,7 @@ export const All: StoryFn = () => (
             <code>disabled</code>は<code>error</code>よりも優先されます。
           </>
         }
+        autoBindErrorInput={false}
       >
         <Input name="disabledAndError" disabled={true} error={true} />
       </FormControl>

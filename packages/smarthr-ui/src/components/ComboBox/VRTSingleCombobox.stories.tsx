@@ -5,8 +5,7 @@ import React from 'react'
 import { InformationPanel } from '../InformationPanel'
 import { Stack } from '../Layout'
 
-// eslint-disable-next-line smarthr/a11y-delegate-element-has-role-presentation, smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control
-import { SingleCombobox as Single } from './SingleCombobox.stories'
+import { SingleCombobox as StoriesSingleComboBox } from './SingleCombobox.stories'
 
 import { SingleComboBox } from '.'
 
@@ -23,7 +22,8 @@ export const VRTSingleCombobox: StoryFn = () => (
     <InformationPanel title="VRT 用の Story です">
       Singleコンボボックスのリストを展開して1つ目の項目をホバーした状態で表示されます
     </InformationPanel>
-    <Single />
+    {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+    <StoriesSingleComboBox />
   </Stack>
 )
 const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
@@ -38,15 +38,16 @@ const playSingle = async ({ canvasElement }: { canvasElement: HTMLElement }) => 
 }
 VRTSingleCombobox.play = playSingle
 
-export const VRTSingleComboboxForcedColors: StoryFn = () => (
+export const VRTForcedColorsSingleCombobox: StoryFn = () => (
   <Stack>
     <InformationPanel title="VRT 用の Story です">
       Chromatic 上では強制カラーモードで表示されます{' '}
     </InformationPanel>
-    <Single />
+    {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
+    <StoriesSingleComboBox />
   </Stack>
 )
-VRTSingleComboboxForcedColors.play = playSingle
-VRTSingleComboboxForcedColors.parameters = {
+VRTForcedColorsSingleCombobox.play = playSingle
+VRTForcedColorsSingleCombobox.parameters = {
   chromatic: { forcedColors: 'active' },
 }

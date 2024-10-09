@@ -1,8 +1,8 @@
 import { action } from '@storybook/addon-actions'
 import React from 'react'
 
-import { TabBar } from './TabBar'
-import { TabItem } from './TabItem'
+import { TabBar } from '../TabBar'
+import { TabItem } from '../TabItem'
 
 import type { Meta, StoryObj } from '@storybook/react'
 

@@ -78,7 +78,6 @@ export const RadioButton = forwardRef<HTMLInputElement, Props>(
     return (
       <span className={wrapperStyle}>
         <span className={innerWrapperStyle}>
-          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
           <input
             {...props}
             data-smarthr-ui-input="true"

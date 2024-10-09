@@ -45,7 +45,10 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
           return
         }
         innerRef.current.value = formatted
-        onFormatValue && onFormatValue(formatted)
+
+        if (onFormatValue) {
+          onFormatValue(formatted)
+        }
       },
       [onFormatValue],
     )
@@ -76,18 +79,23 @@ export const CurrencyInput = forwardRef<HTMLInputElement, Props>(
         const commaExcluded = innerRef.current.value.replace(/,/g, '')
         formatValue(commaExcluded)
       }
-      onFocus && onFocus(e)
+
+      if (onFocus) {
+        onFocus(e)
+      }
     }
 
     const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
       setIsFocused(false)
-      onBlur && onBlur(e)
+
+      if (onBlur) {
+        onBlur(e)
+      }
     }
 
     const classNames = useClassNames()
 
     return (
-      // eslint-disable-next-line smarthr/a11y-input-has-name-attribute
       <Input
         {...props}
         type="text"
