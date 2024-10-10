@@ -14,8 +14,8 @@ import innerText from 'react-innertext'
 import { tv } from 'tailwind-variants'
 
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { useTheme } from '../../hooks/useTailwindTheme'
 import { genericsForwardRef } from '../../libs/util'
+import { textColor } from '../../themes'
 import { FaCaretDownIcon } from '../Icon'
 
 import { MultiSelectedItem } from './MultiSelectedItem'
@@ -163,7 +163,6 @@ const ActualMultiComboBox = <T,>(
   }: Props<T> & ElementProps,
   ref: Ref<HTMLInputElement>,
 ) => {
-  const { textColor } = useTheme()
   const outerRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
@@ -194,8 +193,8 @@ const ActualMultiComboBox = <T,>(
       // HINT: Dropdown系コンポーネント内でComboBoxを使うと、選択肢がportalで表現されている関係上Dropdownが閉じてしまう
       // requestAnimationFrameを追加、処理を遅延させることで正常に閉じる/閉じないの判定を行えるようにする
       requestAnimationFrame(() => {
-        onDelete && onDelete(item)
-        onChangeSelected &&
+        if (onDelete) onDelete(item)
+        if (onChangeSelected)
           onChangeSelected(
             selectedItems.filter(
               (selected) => selected.label !== item.label || selected.value !== item.value,
@@ -218,8 +217,8 @@ const ActualMultiComboBox = <T,>(
             handleDelete(selected)
           }
         } else {
-          onSelect && onSelect(selected)
-          onChangeSelected && onChangeSelected(selectedItems.concat(selected))
+          if (onSelect) onSelect(selected)
+          if (onChangeSelected) onChangeSelected(selectedItems.concat(selected))
         }
       })
     },
@@ -255,12 +254,12 @@ const ActualMultiComboBox = <T,>(
   useImperativeHandle<HTMLInputElement | null, HTMLInputElement | null>(ref, () => inputRef.current)
 
   const focus = useCallback(() => {
-    onFocus && onFocus()
+    if (onFocus) onFocus()
     setIsFocused(true)
   }, [onFocus])
   const blur = useCallback(() => {
     if (!isFocused) return
-    onBlur && onBlur()
+    if (onBlur) onBlur()
     setIsFocused(false)
     resetDeletionButtonFocus()
   }, [isFocused, onBlur, resetDeletionButtonFocus])
@@ -383,8 +382,8 @@ const ActualMultiComboBox = <T,>(
   // submitイベントが発生し、formが送信される場合がある
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      e.key === 'Enter' && e.preventDefault()
-      onKeyPress && onKeyPress(e)
+      if (e.key === 'Enter') e.preventDefault()
+      if (onKeyPress) onKeyPress(e)
     },
     [onKeyPress],
   )

@@ -11,7 +11,7 @@ import React, {
 } from 'react'
 import { tv } from 'tailwind-variants'
 
-import { useTheme } from '../../hooks/useTailwindTheme'
+import { backgroundColor } from '../../themes'
 
 type Props = {
   /** input 要素の `type` 値 */
@@ -126,8 +126,6 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
         innerRef.current.focus()
       }
     }, [autoFocus])
-
-    const { backgroundColor } = useTheme()
 
     const wrapperStyleProps = useMemo(() => {
       const wrapperStyle = wrapper({ disabled, readOnly, className })
