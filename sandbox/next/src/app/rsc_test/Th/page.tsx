@@ -4,7 +4,7 @@ export default function ThPage() {
   return (
     <>
       <div>Success: Th</div>
-      <Th />
+      <Th>Th</Th>
     </>
   )
 }

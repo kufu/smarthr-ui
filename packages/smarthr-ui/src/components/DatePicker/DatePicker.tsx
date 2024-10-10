@@ -14,7 +14,7 @@ import React, {
 import { tv } from 'tailwind-variants'
 
 import { useOuterClick } from '../../hooks/useOuterClick'
-import { useTheme } from '../../hooks/useTailwindTheme'
+import { textColor } from '../../themes'
 import { Calendar } from '../Calendar'
 import { FaCalendarAltIcon } from '../Icon'
 import { Input } from '../Input'
@@ -147,7 +147,6 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
       [showAlternative],
     )
 
-    const { textColor } = useTheme()
     const [selectedDate, setSelectedDate] = useState<Date | null>(stringToDate(value))
     const inputRef = useRef<HTMLInputElement>(null)
     const inputWrapperRef = useRef<HTMLDivElement>(null)
@@ -185,7 +184,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
         inputRef.current.value = dateToString(nextDate)
         setAlternativeFormat(dateToAlternativeFormat(nextDate))
         setSelectedDate(nextDate)
-        onChangeDate && onChangeDate(nextDate, inputRef.current.value, { errors })
+        if (onChangeDate) onChangeDate(nextDate, inputRef.current.value, { errors })
       },
       [selectedDate, dateToString, dateToAlternativeFormat, onChangeDate],
     )
@@ -278,7 +277,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
           const newDate = stringToDate(inputString)
           updateDate(newDate)
         }
-        onBlur && onBlur(e)
+        if (onBlur) onBlur(e)
       },
       [onBlur, stringToDate, updateDate],
     )
@@ -312,7 +311,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
               // delay hiding calendar because calendar will be displayed when input is focused
               switchCalendarVisibility(false)
             })
-            inputRef.current && inputRef.current.focus()
+            if (inputRef.current) inputRef.current.focus()
           }
         }}
         role="presentation"
@@ -372,7 +371,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props & InputAttributes>(
                   // delay hiding calendar because calendar will be displayed when input is focused
                   switchCalendarVisibility(false)
                 })
-                inputRef.current && inputRef.current.focus()
+                if (inputRef.current) inputRef.current.focus()
               }}
             />
           </Portal>

@@ -4,7 +4,7 @@ export default function TextLinkPage() {
   return (
     <>
       <div>Success: TextLink</div>
-      <TextLink />
+      <TextLink href="/">TextLink</TextLink>
     </>
   )
 }

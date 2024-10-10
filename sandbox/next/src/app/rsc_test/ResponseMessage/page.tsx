@@ -4,7 +4,7 @@ export default function ResponseMessagePage() {
   return (
     <>
       <div>Success: ResponseMessage</div>
-      <ResponseMessage />
+      <ResponseMessage>ResponseMessage</ResponseMessage>
     </>
   )
 }

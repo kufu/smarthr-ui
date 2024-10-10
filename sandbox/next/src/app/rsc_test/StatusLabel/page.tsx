@@ -4,7 +4,7 @@ export default function StatusLabelPage() {
   return (
     <>
       <div>Success: StatusLabel</div>
-      <StatusLabel />
+      <StatusLabel>StatusLabel</StatusLabel>
     </>
   )
 }

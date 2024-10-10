@@ -4,7 +4,7 @@ export default function CurrencyInputPage() {
   return (
     <>
       <div>Success: CurrencyInput</div>
-      <CurrencyInput />
+      <CurrencyInput name="name" />
     </>
   )
 }
