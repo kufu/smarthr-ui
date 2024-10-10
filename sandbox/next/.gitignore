@@ -34,3 +34,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# yalc
+.yalc
+yalc.lock
+
+# playwright
+playwright-report/
+test-results/

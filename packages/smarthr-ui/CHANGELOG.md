@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [58.1.1](https://github.com/kufu/smarthr-ui/compare/v58.1.0...v58.1.1) (2024-10-09)
+
+
+### Bug Fixes
+
+* ModelessDialog に渡した className が当たる場所を変更 ([#4978](https://github.com/kufu/smarthr-ui/issues/4978)) ([cdc7e4e](https://github.com/kufu/smarthr-ui/commit/cdc7e4e5fa133320161f4a54e7729d672710ec94))
+* SearchInputのwrapperであるlabel要素に対してwidthを指定する ([#4961](https://github.com/kufu/smarthr-ui/issues/4961)) ([7d6aea3](https://github.com/kufu/smarthr-ui/commit/7d6aea3d8e95a4e3fd8e488c68caf91ed21045fb))
+
 ## [58.1.0](https://github.com/kufu/smarthr-ui/compare/v58.0.3...v58.1.0) (2024-10-01)
 
 

@@ -113,7 +113,10 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
 
     const updateFiles = useCallback(
       (newFiles: File[]) => {
-        onChange && onChange(newFiles)
+        if (onChange) {
+          onChange(newFiles)
+        }
+
         setFiles(newFiles)
       },
       [setFiles, onChange],
@@ -169,7 +172,6 @@ export const InputFile = forwardRef<HTMLInputElement, Props & ElementProps>(
           </BaseColumn>
         )}
         <span className={inputWrapperStyle}>
-          {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
           <input
             {...props}
             data-smarthr-ui-input="true"

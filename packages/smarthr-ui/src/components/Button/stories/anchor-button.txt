@@ -1,0 +1,12 @@
+size: default, s
+disabled: true, false
+prefix: あり, なし
+suffix: あり, なし
+square: true, false
+wide: true, false (10)
+
+# prefix と suffix は共存しない
+IF [prefix] = "あり" THEN [suffix] = "なし";
+
+# square のとき prefix や suffix、wide は共存しない
+IF [square] = "true" THEN [prefix] = "なし" AND [suffix] = "なし" AND [wide] = "false";

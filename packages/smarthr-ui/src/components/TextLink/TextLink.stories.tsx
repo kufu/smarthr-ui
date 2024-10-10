@@ -44,7 +44,7 @@ export const All: StoryFn = () => (
     </li>
     <li>
       {/* eslint-disable-next-line smarthr/a11y-anchor-has-href-attribute */}
-      <TextLink>onClick も href も指定されていない場合はフォーカスできません</TextLink>
+      <TextLink>onClickもhrefも指定されていない場合はフォーカスできません</TextLink>
       <br />
       <TextLink href={undefined}>hrefがundefinedの場合もフォーカスできません</TextLink>
     </li>

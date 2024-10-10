@@ -46,7 +46,7 @@ export const TimePicker = forwardRef<HTMLInputElement, Props & ElementProps>(
 
     return (
       <span className={wrapperStyle}>
-        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute, smarthr/a11y-input-in-form-control */}
+        {/* eslint-disable-next-line smarthr/a11y-input-in-form-control */}
         <input
           {...rest}
           data-smarthr-ui-input="true"

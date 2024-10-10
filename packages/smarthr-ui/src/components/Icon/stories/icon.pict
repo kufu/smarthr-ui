@@ -1,0 +1,8 @@
+color: default, others
+alt: あり, なし
+text: あり, なし
+gap: default, others
+right: true, false
+
+# right のとき、text は存在する
+IF [right] = "true" THEN [text] = "あり";
