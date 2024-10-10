@@ -10,9 +10,9 @@ import { Text } from '../Text'
 
 import { Base } from './Base'
 
-export type LayerKeys = keyof typeof LayerMap
+type LayerKeys = keyof typeof LayerMap
 
-export const LayerMap = {
+const LayerMap = {
   0: 'layer-0',
   1: 'layer-1',
   2: 'layer-2',
