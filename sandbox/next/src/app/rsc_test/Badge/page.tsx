@@ -4,7 +4,7 @@ export default function BadgePage() {
   return (
     <>
       <div>Success: Badge</div>
-      <Badge />
+      <Badge>Badge</Badge>
     </>
   )
 }

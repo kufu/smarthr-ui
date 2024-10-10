@@ -4,7 +4,7 @@ export default function ChipPage() {
   return (
     <>
       <div>Success: Chip</div>
-      <Chip />
+      <Chip>Chip</Chip>
     </>
   )
 }

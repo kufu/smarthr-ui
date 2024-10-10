@@ -4,7 +4,7 @@ export default function TdPage() {
   return (
     <>
       <div>Success: Td</div>
-      <Td />
+      <Td>td</Td>
     </>
   )
 }

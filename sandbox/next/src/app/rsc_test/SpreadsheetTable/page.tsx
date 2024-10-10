@@ -4,7 +4,13 @@ export default function SpreadsheetTablePage() {
   return (
     <>
       <div>Success: SpreadsheetTable</div>
-      <SpreadsheetTable />
+      <SpreadsheetTable
+        data={[
+          ['A', 'B', 'C'],
+          [1, 2, 3],
+          [4, 5, 6],
+        ]}
+      />
     </>
   )
 }

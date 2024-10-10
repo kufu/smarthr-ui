@@ -4,7 +4,7 @@ export default function VisuallyHiddenTextPage() {
   return (
     <>
       <div>Success: VisuallyHiddenText</div>
-      <VisuallyHiddenText />
+      <VisuallyHiddenText>VisuallyHiddenText</VisuallyHiddenText>
     </>
   )
 }

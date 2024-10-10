@@ -4,7 +4,7 @@ export default function BalloonPage() {
   return (
     <>
       <div>Success: Balloon</div>
-      <Balloon />
+      <Balloon>Balloon</Balloon>
     </>
   )
 }

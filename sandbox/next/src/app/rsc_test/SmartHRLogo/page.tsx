@@ -4,7 +4,7 @@ export default function SmartHRLogoPage() {
   return (
     <>
       <div>Success: SmartHRLogo</div>
-      <SmartHRLogo />
+      <SmartHRLogo fill="black" />
     </>
   )
 }

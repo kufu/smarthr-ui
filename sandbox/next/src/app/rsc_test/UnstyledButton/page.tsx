@@ -4,7 +4,7 @@ export default function UnstyledButtonPage() {
   return (
     <>
       <div>Success: UnstyledButton</div>
-      <UnstyledButton />
+      <UnstyledButton>Button</UnstyledButton>
     </>
   )
 }

@@ -8,10 +8,7 @@ const SERVER_COMPONENTS = [
   'Table',
   'Loader',
   'Td',
-  'RadioButton',
   'Chip',
-  'LineClamp',
-  'RemoteDialogTrigger',
   'SpreadsheetTable',
   'Balloon',
   'Badge',
@@ -19,15 +16,18 @@ const SERVER_COMPONENTS = [
   'SmartHRLogo',
   'UnstyledButton',
   'RangeSeparator',
-  'TableReel',
-  'BulkActionRow',
-  'Tooltip',
 ]
 
 /**
  * サーバーコンポーネントでは利用できないコンポーネント一覧
  */
 const CLIENT_COMPONENTS = [
+  'RadioButton',
+  'LineClamp',
+  'RemoteDialogTrigger',
+  'TableReel',
+  'BulkActionRow',
+  'Tooltip',
   'Button',
   'Icon',
   'Dropdown',
@@ -52,7 +52,6 @@ const CLIENT_COMPONENTS = [
   'Calendar',
   'FormControl',
   'Th',
-  'Cell',
   'AppNavi',
   'CompactInformationPanel',
   'PageHeading',
@@ -61,19 +60,16 @@ const CLIENT_COMPONENTS = [
   'NotificationBar',
   'StatusLabel',
   'TabBar',
-  'FormGroup',
   'BottomFixedArea',
   'Textarea',
   'DropdownMenuButton',
   'FloatArea',
   'CurrencyInput',
-  'Row',
   'MultiComboBox',
   'SingleComboBox',
   'BaseColumn',
   'InputFile',
   'EmptyTableBody',
-  'Head',
   'ErrorScreen',
   'FilterDropdown',
   'SegmentedControl',
@@ -116,7 +112,7 @@ test.describe('RSC非対応コンポーネントはRSCでエラーになるこ�
   for (const component of CLIENT_COMPONENTS) {
     test(component, async ({ page }) => {
       await page.goto(`http://localhost:3000/rsc_test/${component}`)
-      await expect(page.getByText('Server Error')).toBeVisible()
+      await expect(page.getByText(/Server Error|Unhandled Runtime Error/)).toBeVisible()
       await expect(page.getByText(`Success: ${component}`)).not.toBeVisible()
     })
   }

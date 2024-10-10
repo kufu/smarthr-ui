@@ -4,7 +4,7 @@ export default function TextPage() {
   return (
     <>
       <div>Success: Text</div>
-      <Text />
+      <Text>Text</Text>
     </>
   )
 }
