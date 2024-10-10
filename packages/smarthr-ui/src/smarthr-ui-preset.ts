@@ -30,6 +30,20 @@ defaultConfig.twMergeConfig = {
         leading: ['none', 'tight', 'normal', 'loose'],
       },
     ],
+    zIndex: [
+      {
+        z: [
+          'auto',
+          '0',
+          '1',
+          'fixed-menu',
+          'overlap-base',
+          'overlap',
+          'flash-message',
+          (classPart: string) => /^\[\d+\]$/.test(classPart),
+        ],
+      },
+    ],
   },
 }
 

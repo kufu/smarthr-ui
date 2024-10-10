@@ -148,8 +148,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
 
     const handleChange = useCallback(
       (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (onChange) onChange(event)
-        if (maxLetters) debouncedUpdateCount(event.currentTarget.value)
+        if (onChange) {
+          onChange(event)
+        }
+
+        if (maxLetters) {
+          debouncedUpdateCount(event.currentTarget.value)
+        }
       },
       [debouncedUpdateCount, maxLetters, onChange],
     )
@@ -176,7 +181,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
         }
 
         setInterimRows(currentRows < maxRows ? currentRows : maxRows)
-        if (onInput) onInput(e)
+
+        if (onInput) {
+          onInput(e)
+        }
       },
       [autoResize, lineHeight.normal, maxRows, onInput, rows],
     )
@@ -193,7 +201,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props & ElementProps>(
     }, [className, count, maxLetters, width])
 
     const body = (
-      // eslint-disable-next-line smarthr/a11y-input-has-name-attribute
       <textarea
         {...props}
         {...textareaStyleProps}

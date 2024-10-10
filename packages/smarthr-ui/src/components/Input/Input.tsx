@@ -148,7 +148,6 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
         {prefix && (
           <span className={affix({ className: 'smarthr-ui-Input-prefix' })}>{prefix}</span>
         )}
-        {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
         <input
           {...props}
           data-smarthr-ui-input="true"
@@ -171,5 +170,7 @@ export const Input = forwardRef<HTMLInputElement, Props & ElementProps>(
 
 const disableWheel = (e: WheelEvent) => {
   // wheel イベントに preventDefault はないため
-  if (e.target) (e.target as HTMLInputElement).blur()
+  if (e.target) {
+    ;(e.target as HTMLInputElement).blur()
+  }
 }

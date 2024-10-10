@@ -1,0 +1,4 @@
+size	disabled	disabledDetail	loading	prefix	suffix	square	wide
+default	false	なし	false	あり	なし	false	false
+default	false	なし	false	なし	なし	true	false
+s	false	なし	false	なし	あり	false	true

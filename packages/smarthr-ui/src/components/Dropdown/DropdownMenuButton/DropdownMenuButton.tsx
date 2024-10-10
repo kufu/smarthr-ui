@@ -85,8 +85,7 @@ export const DropdownMenuButton: FC<Props & ElementProps> = ({
     )
   }, [label, TriggerIcon, onlyIconTrigger])
   const triggerSuffix = useMemo(
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    () => (onlyIconTrigger ? <></> : <FaCaretDownIcon alt="候補を開く" />),
+    () => (onlyIconTrigger ? undefined : <FaCaretDownIcon alt="候補を開く" />),
     [onlyIconTrigger],
   )
 

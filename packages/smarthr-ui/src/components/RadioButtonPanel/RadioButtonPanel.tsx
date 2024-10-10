@@ -48,7 +48,6 @@ export const RadioButtonPanel: React.FC<Props> = ({ onClick, as, className, ...p
       as={as}
       className={styles}
     >
-      {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
       <RadioButton {...props} ref={innerRef} />
     </Base>
   )

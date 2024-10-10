@@ -16,7 +16,7 @@ type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
 export const generateIcon = (svg: IconType) => createIcon(svg)
 
-const colorSet = {
+export const colorSet = {
   TEXT_BLACK: 'black',
   TEXT_WHITE: 'white',
   TEXT_GREY: 'grey',
@@ -64,8 +64,6 @@ type BaseComponentProps = {
   iconGap?: CharRelativeSize | AbstractSize
   /** `true` のとき、アイコンを右側に表示する */
   right?: boolean
-  /** コンポーネントに適用するクラス名 */
-  className?: string
 }
 export type Props = Omit<IconProps & ElementProps, keyof BaseComponentProps> & BaseComponentProps
 

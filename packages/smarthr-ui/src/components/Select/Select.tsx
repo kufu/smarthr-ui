@@ -131,7 +131,6 @@ const ActualSelect = <T extends string>(
 
   return (
     <span {...wrapperStyleProps}>
-      {/* eslint-disable-next-line smarthr/a11y-input-has-name-attribute */}
       <select
         {...props}
         data-smarthr-ui-input="true"
