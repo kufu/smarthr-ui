@@ -1,6 +1,10 @@
+import React from 'react'
 import { Nav } from 'smarthr-ui'
-
 export default function NavPage() {
-  console.log(Nav)
-  return <div>Success: Nav</div>
+  return (
+    <>
+      <div>Success: Nav</div>
+      <Nav />
+    </>
+  )
 }

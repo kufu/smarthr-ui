@@ -1,6 +1,10 @@
+import React from 'react'
 import { Head } from 'smarthr-ui'
-
 export default function HeadPage() {
-  console.log(Head)
-  return <div>Success: Head</div>
+  return (
+    <>
+      <div>Success: Head</div>
+      <Head />
+    </>
+  )
 }

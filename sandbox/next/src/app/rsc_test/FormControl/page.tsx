@@ -1,6 +1,10 @@
+import React from 'react'
 import { FormControl } from 'smarthr-ui'
-
 export default function FormControlPage() {
-  console.log(FormControl)
-  return <div>Success: FormControl</div>
+  return (
+    <>
+      <div>Success: FormControl</div>
+      <FormControl />
+    </>
+  )
 }

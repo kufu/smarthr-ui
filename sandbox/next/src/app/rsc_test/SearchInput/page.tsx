@@ -1,6 +1,10 @@
+import React from 'react'
 import { SearchInput } from 'smarthr-ui'
-
 export default function SearchInputPage() {
-  console.log(SearchInput)
-  return <div>Success: SearchInput</div>
+  return (
+    <>
+      <div>Success: SearchInput</div>
+      <SearchInput />
+    </>
+  )
 }

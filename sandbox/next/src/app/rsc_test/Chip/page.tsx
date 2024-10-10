@@ -1,6 +1,10 @@
+import React from 'react'
 import { Chip } from 'smarthr-ui'
-
 export default function ChipPage() {
-  console.log(Chip)
-  return <div>Success: Chip</div>
+  return (
+    <>
+      <div>Success: Chip</div>
+      <Chip />
+    </>
+  )
 }

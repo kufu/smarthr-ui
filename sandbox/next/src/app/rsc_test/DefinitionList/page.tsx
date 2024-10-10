@@ -1,6 +1,10 @@
+import React from 'react'
 import { DefinitionList } from 'smarthr-ui'
-
 export default function DefinitionListPage() {
-  console.log(DefinitionList)
-  return <div>Success: DefinitionList</div>
+  return (
+    <>
+      <div>Success: DefinitionList</div>
+      <DefinitionList />
+    </>
+  )
 }

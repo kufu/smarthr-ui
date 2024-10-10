@@ -1,6 +1,10 @@
+import React from 'react'
 import { RemoteTriggerFormDialog } from 'smarthr-ui'
-
 export default function RemoteTriggerFormDialogPage() {
-  console.log(RemoteTriggerFormDialog)
-  return <div>Success: RemoteTriggerFormDialog</div>
+  return (
+    <>
+      <div>Success: RemoteTriggerFormDialog</div>
+      <RemoteTriggerFormDialog />
+    </>
+  )
 }

@@ -1,6 +1,10 @@
+import React from 'react'
 import { RadioButtonPanel } from 'smarthr-ui'
-
 export default function RadioButtonPanelPage() {
-  console.log(RadioButtonPanel)
-  return <div>Success: RadioButtonPanel</div>
+  return (
+    <>
+      <div>Success: RadioButtonPanel</div>
+      <RadioButtonPanel />
+    </>
+  )
 }

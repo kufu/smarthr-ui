@@ -1,6 +1,10 @@
+import React from 'react'
 import { Input } from 'smarthr-ui'
-
 export default function InputPage() {
-  console.log(Input)
-  return <div>Success: Input</div>
+  return (
+    <>
+      <div>Success: Input</div>
+      <Input />
+    </>
+  )
 }

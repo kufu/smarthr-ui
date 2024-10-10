@@ -1,6 +1,10 @@
+import React from 'react'
 import { AppLauncher } from 'smarthr-ui'
-
 export default function AppLauncherPage() {
-  console.log(AppLauncher)
-  return <div>Success: AppLauncher</div>
+  return (
+    <>
+      <div>Success: AppLauncher</div>
+      <AppLauncher />
+    </>
+  )
 }

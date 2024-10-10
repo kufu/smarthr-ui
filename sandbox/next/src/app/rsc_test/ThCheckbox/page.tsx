@@ -1,6 +1,10 @@
+import React from 'react'
 import { ThCheckbox } from 'smarthr-ui'
-
 export default function ThCheckboxPage() {
-  console.log(ThCheckbox)
-  return <div>Success: ThCheckbox</div>
+  return (
+    <>
+      <div>Success: ThCheckbox</div>
+      <ThCheckbox />
+    </>
+  )
 }

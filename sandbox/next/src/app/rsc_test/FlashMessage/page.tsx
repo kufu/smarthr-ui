@@ -1,6 +1,10 @@
+import React from 'react'
 import { FlashMessage } from 'smarthr-ui'
-
 export default function FlashMessagePage() {
-  console.log(FlashMessage)
-  return <div>Success: FlashMessage</div>
+  return (
+    <>
+      <div>Success: FlashMessage</div>
+      <FlashMessage />
+    </>
+  )
 }

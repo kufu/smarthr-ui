@@ -1,6 +1,10 @@
+import React from 'react'
 import { InformationPanel } from 'smarthr-ui'
-
 export default function InformationPanelPage() {
-  console.log(InformationPanel)
-  return <div>Success: InformationPanel</div>
+  return (
+    <>
+      <div>Success: InformationPanel</div>
+      <InformationPanel />
+    </>
+  )
 }

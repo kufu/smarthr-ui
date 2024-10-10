@@ -1,6 +1,10 @@
+import React from 'react'
 import { FilterDropdown } from 'smarthr-ui'
-
 export default function FilterDropdownPage() {
-  console.log(FilterDropdown)
-  return <div>Success: FilterDropdown</div>
+  return (
+    <>
+      <div>Success: FilterDropdown</div>
+      <FilterDropdown />
+    </>
+  )
 }
