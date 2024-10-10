@@ -4,7 +4,13 @@ export default function ActionDialogPage() {
   return (
     <>
       <div>Success: ActionDialog</div>
-      <ActionDialog />
+      <ActionDialog
+        title="title"
+        actionText="actionText"
+        onClickAction={() => {}}
+        onClickClose={() => {}}
+        isOpen
+      />
     </>
   )
 }

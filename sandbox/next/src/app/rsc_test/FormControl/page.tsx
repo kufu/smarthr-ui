@@ -4,7 +4,7 @@ export default function FormControlPage() {
   return (
     <>
       <div>Success: FormControl</div>
-      <FormControl />
+      <FormControl title="title" />
     </>
   )
 }

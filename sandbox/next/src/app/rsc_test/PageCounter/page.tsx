@@ -4,7 +4,7 @@ export default function PageCounterPage() {
   return (
     <>
       <div>Success: PageCounter</div>
-      <PageCounter />
+      <PageCounter start={0} end={0} />
     </>
   )
 }

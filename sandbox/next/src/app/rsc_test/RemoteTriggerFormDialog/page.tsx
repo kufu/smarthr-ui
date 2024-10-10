@@ -4,7 +4,7 @@ export default function RemoteTriggerFormDialogPage() {
   return (
     <>
       <div>Success: RemoteTriggerFormDialog</div>
-      <RemoteTriggerFormDialog />
+      <RemoteTriggerFormDialog title="title" onSubmit={() => {}} actionText="actionText" id="id" />
     </>
   )
 }

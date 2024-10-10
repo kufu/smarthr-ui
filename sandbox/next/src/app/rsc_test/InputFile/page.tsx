@@ -4,7 +4,7 @@ export default function InputFilePage() {
   return (
     <>
       <div>Success: InputFile</div>
-      <InputFile />
+      <InputFile name="name" label="label" />
     </>
   )
 }

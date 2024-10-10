@@ -4,7 +4,13 @@ export default function FormDialogPage() {
   return (
     <>
       <div>Success: FormDialog</div>
-      <FormDialog />
+      <FormDialog
+        isOpen={true}
+        actionText="actionText"
+        title="title"
+        onClickClose={() => {}}
+        onSubmit={() => {}}
+      />
     </>
   )
 }

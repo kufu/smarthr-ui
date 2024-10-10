@@ -4,7 +4,9 @@ export default function DropdownMenuButtonPage() {
   return (
     <>
       <div>Success: DropdownMenuButton</div>
-      <DropdownMenuButton />
+      <DropdownMenuButton label="label">
+        <div>children</div>
+      </DropdownMenuButton>
     </>
   )
 }

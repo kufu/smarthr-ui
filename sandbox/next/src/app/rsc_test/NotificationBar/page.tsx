@@ -4,7 +4,7 @@ export default function NotificationBarPage() {
   return (
     <>
       <div>Success: NotificationBar</div>
-      <NotificationBar />
+      <NotificationBar type="info" message="message" />
     </>
   )
 }

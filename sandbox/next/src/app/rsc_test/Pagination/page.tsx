@@ -4,7 +4,7 @@ export default function PaginationPage() {
   return (
     <>
       <div>Success: Pagination</div>
-      <Pagination />
+      <Pagination total={0} current={0} onClick={() => {}} />
     </>
   )
 }

@@ -4,7 +4,7 @@ export default function SwitchPage() {
   return (
     <>
       <div>Success: Switch</div>
-      <Switch />
+      <Switch>children</Switch>
     </>
   )
 }

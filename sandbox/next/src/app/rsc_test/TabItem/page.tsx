@@ -4,7 +4,7 @@ export default function TabItemPage() {
   return (
     <>
       <div>Success: TabItem</div>
-      <TabItem />
+      <TabItem id="id" onClick={() => {}} />
     </>
   )
 }

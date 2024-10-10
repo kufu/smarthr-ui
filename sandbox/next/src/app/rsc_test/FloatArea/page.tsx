@@ -4,7 +4,7 @@ export default function FloatAreaPage() {
   return (
     <>
       <div>Success: FloatArea</div>
-      <FloatArea />
+      <FloatArea primaryButton={<button type="button">button</button>} />
     </>
   )
 }

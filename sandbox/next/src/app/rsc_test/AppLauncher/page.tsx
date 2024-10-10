@@ -4,7 +4,7 @@ export default function AppLauncherPage() {
   return (
     <>
       <div>Success: AppLauncher</div>
-      <AppLauncher />
+      <AppLauncher apps={[]} />
     </>
   )
 }

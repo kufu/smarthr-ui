@@ -4,7 +4,7 @@ export default function DefinitionListPage() {
   return (
     <>
       <div>Success: DefinitionList</div>
-      <DefinitionList />
+      <DefinitionList items={[]} />
     </>
   )
 }

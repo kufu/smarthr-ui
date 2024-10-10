@@ -4,7 +4,7 @@ export default function RemoteTriggerMessageDialogPage() {
   return (
     <>
       <div>Success: RemoteTriggerMessageDialog</div>
-      <RemoteTriggerMessageDialog />
+      <RemoteTriggerMessageDialog title="title" description="description" id="id" />
     </>
   )
 }

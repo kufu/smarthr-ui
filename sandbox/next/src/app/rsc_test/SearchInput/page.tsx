@@ -4,7 +4,7 @@ export default function SearchInputPage() {
   return (
     <>
       <div>Success: SearchInput</div>
-      <SearchInput />
+      <SearchInput name="name" tooltipMessage="message" />
     </>
   )
 }

@@ -4,7 +4,7 @@ export default function SideNavPage() {
   return (
     <>
       <div>Success: SideNav</div>
-      <SideNav />
+      <SideNav items={[]} />
     </>
   )
 }

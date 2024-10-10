@@ -4,7 +4,7 @@ export default function TooltipPage() {
   return (
     <>
       <div>Success: Tooltip</div>
-      <Tooltip />
+      <Tooltip message="message" />
     </>
   )
 }

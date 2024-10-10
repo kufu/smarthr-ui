@@ -4,7 +4,7 @@ export default function CalendarPage() {
   return (
     <>
       <div>Success: Calendar</div>
-      <Calendar />
+      <Calendar onSelectDate={() => {}} />
     </>
   )
 }

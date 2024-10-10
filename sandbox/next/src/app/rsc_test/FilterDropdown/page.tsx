@@ -4,7 +4,7 @@ export default function FilterDropdownPage() {
   return (
     <>
       <div>Success: FilterDropdown</div>
-      <FilterDropdown />
+      <FilterDropdown onApply={() => {}}>children</FilterDropdown>
     </>
   )
 }

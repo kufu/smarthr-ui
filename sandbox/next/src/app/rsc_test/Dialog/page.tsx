@@ -4,7 +4,7 @@ export default function DialogPage() {
   return (
     <>
       <div>Success: Dialog</div>
-      <Dialog />
+      <Dialog isOpen={true} />
     </>
   )
 }

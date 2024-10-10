@@ -4,7 +4,9 @@ export default function RemoteDialogTriggerPage() {
   return (
     <>
       <div>Success: RemoteDialogTrigger</div>
-      <RemoteDialogTrigger />
+      <RemoteDialogTrigger targetId="id">
+        <button type="button">button</button>
+      </RemoteDialogTrigger>
     </>
   )
 }

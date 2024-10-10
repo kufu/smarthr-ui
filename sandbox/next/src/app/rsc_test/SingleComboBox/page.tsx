@@ -4,7 +4,7 @@ export default function SingleComboBoxPage() {
   return (
     <>
       <div>Success: SingleComboBox</div>
-      <SingleComboBox />
+      <SingleComboBox name="name" items={[]} selectedItem={null} />
     </>
   )
 }

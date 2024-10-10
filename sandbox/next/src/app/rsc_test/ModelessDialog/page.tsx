@@ -4,7 +4,7 @@ export default function ModelessDialogPage() {
   return (
     <>
       <div>Success: ModelessDialog</div>
-      <ModelessDialog />
+      <ModelessDialog header={<div>header</div>} isOpen={true} />
     </>
   )
 }

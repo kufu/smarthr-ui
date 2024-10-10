@@ -4,7 +4,7 @@ export default function InformationPanelPage() {
   return (
     <>
       <div>Success: InformationPanel</div>
-      <InformationPanel />
+      <InformationPanel title="title" />
     </>
   )
 }

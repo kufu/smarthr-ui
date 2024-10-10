@@ -4,7 +4,7 @@ export default function SegmentedControlPage() {
   return (
     <>
       <div>Success: SegmentedControl</div>
-      <SegmentedControl />
+      <SegmentedControl options={[]} />
     </>
   )
 }

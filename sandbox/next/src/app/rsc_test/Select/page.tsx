@@ -4,7 +4,7 @@ export default function SelectPage() {
   return (
     <>
       <div>Success: Select</div>
-      <Select />
+      <Select name="name" options={[]} />
     </>
   )
 }

@@ -4,7 +4,7 @@ export default function FlashMessagePage() {
   return (
     <>
       <div>Success: FlashMessage</div>
-      <FlashMessage />
+      <FlashMessage visible={true} type={'success'} text="text" onClose={() => {}} />
     </>
   )
 }

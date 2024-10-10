@@ -4,7 +4,7 @@ export default function TdCheckboxPage() {
   return (
     <>
       <div>Success: TdCheckbox</div>
-      <TdCheckbox />
+      <TdCheckbox name="name" aria-labelledby="label" />
     </>
   )
 }

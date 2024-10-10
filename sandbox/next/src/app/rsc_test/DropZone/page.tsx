@@ -4,7 +4,7 @@ export default function DropZonePage() {
   return (
     <>
       <div>Success: DropZone</div>
-      <DropZone />
+      <DropZone name="name" onSelectFiles={() => {}} />
     </>
   )
 }

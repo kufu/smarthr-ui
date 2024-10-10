@@ -4,7 +4,7 @@ export default function MultiComboBoxPage() {
   return (
     <>
       <div>Success: MultiComboBox</div>
-      <MultiComboBox />
+      <MultiComboBox name="name" items={[]} selectedItems={[]} />
     </>
   )
 }
