@@ -94,7 +94,7 @@ export const Leading: StoryObj<typeof Text> = {
 export const WhiteSpace: StoryObj<typeof Text> = {
   name: 'whiteSpace',
   render: (args) => (
-    <Stack>
+    <Stack gap={3} className="shr-w-[10em]">
       <Text {...args} whiteSpace="normal" />
       <Text {...args} whiteSpace="nowrap" />
       <Text {...args} whiteSpace="pre" />
@@ -102,6 +102,10 @@ export const WhiteSpace: StoryObj<typeof Text> = {
       <Text {...args} whiteSpace="pre-wrap" />
     </Stack>
   ),
+  args: {
+    children:
+      'well-working\n\n労働にまつわる社会課題をなくし、誰もがその人らしく働ける社会をつくる。',
+  },
 }
 
 export const Emphasis: StoryObj<typeof Text> = {
