@@ -18,7 +18,6 @@ const SERVER_COMPONENTS = [
   'RangeSeparator',
   'Icon',
   'TextLink',
-  'Select',
   'Th',
   'StatusLabel',
   'ResponseMessage',
@@ -28,6 +27,7 @@ const SERVER_COMPONENTS = [
  * サーバーコンポーネントでは利用できないコンポーネント一覧
  */
 const CLIENT_COMPONENTS = [
+  'Select',
   'SearchInput',
   'TabItem',
   'CurrencyInput',
@@ -57,7 +57,6 @@ const CLIENT_COMPONENTS = [
   'Pagination',
   'Calendar',
   'FormControl',
-  'Cell',
   'AppNavi',
   'CompactInformationPanel',
   'PageHeading',
@@ -68,7 +67,6 @@ const CLIENT_COMPONENTS = [
   'BottomFixedArea',
   'DropdownMenuButton',
   'FloatArea',
-  'Row',
   'MultiComboBox',
   'SingleComboBox',
   'BaseColumn',
