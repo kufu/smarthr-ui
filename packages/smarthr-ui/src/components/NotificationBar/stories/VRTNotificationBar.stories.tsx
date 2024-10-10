@@ -305,6 +305,14 @@ export default {
 
 export const VRT = {}
 
+export const VRTNotificationBarFocus: StoryObj = {
+  parameters: {
+    pseudo: {
+      focusVisible: ['.smarthr-ui-NotificationBar-closeButton'],
+    },
+  },
+}
+
 export const VRTForcedColors: StoryObj = {
   ...VRT,
   parameters: {
