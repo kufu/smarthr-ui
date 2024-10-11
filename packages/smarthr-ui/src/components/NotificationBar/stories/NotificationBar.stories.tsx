@@ -29,7 +29,7 @@ export const _onCloseHandlers = {
 }
 
 export default {
-  title: 'STATES（状態）/NotificationBar',
+  title: 'States（状態）/NotificationBar',
   component: NotificationBar,
   render: (args) => (
     <div className="shr-bg-base-grey shr-min-h-[50vh] shr-p-1">

@@ -9,7 +9,7 @@ import { _messages, _onCloseHandlers } from './NotificationBar.stories'
 import type { StoryObj } from '@storybook/react'
 
 export default {
-  title: 'STATES（状態）/NotificationBar/VRT',
+  title: 'States（状態）/NotificationBar/VRT',
   /* ペアワイズ法による網羅
   base    bold    type      message     layer       onClose
   ---------------------------------------------------------
