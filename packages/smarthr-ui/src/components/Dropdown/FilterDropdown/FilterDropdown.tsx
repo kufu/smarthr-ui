@@ -47,7 +47,7 @@ const filterDropdown = tv({
     ],
     fileteredIcon: 'shr-h-[0.5em] shr-w-[0.5em]',
     inner: 'shr-p-1.5',
-    actionArea: 'shr-border-t-shorthand shr-px-1.5 shr-py-1',
+    actionArea: 'shr-sticky shr-bottom-0 shr-border-t-shorthand shr-bg-white shr-px-1.5 shr-py-1',
     resetButtonArea: '-shr-ms-0.5',
     rightButtonArea: 'shr-ms-auto',
     message: 'shr-text-right',
