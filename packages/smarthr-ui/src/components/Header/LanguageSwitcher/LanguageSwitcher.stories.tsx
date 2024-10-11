@@ -28,6 +28,9 @@ export const All: StoryFn = () => {
   const handleLanguageSelect = (code: string) => {
     setLang(code)
     action('onLanguageSelect')
+    // Storybook上でもスクリーンリーダーでの読み上げを確認できるためhtmlのlangを変更してます
+    const page = document.querySelector('html')
+    page?.setAttribute('lang', code)
   }
 
   return (
