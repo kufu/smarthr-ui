@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-require-imports: 0 */
 const path = require('path')
 
 const { ECMAVersionValidatorPlugin } = require('ecma-version-validator-webpack-plugin')
