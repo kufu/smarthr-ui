@@ -1,6 +1,10 @@
+import React from 'react'
 import { Base } from 'smarthr-ui'
-
 export default function BasePage() {
-  console.log(Base)
-  return <div>Success: Base</div>
+  return (
+    <>
+      <div>Success: Base</div>
+      <Base />
+    </>
+  )
 }

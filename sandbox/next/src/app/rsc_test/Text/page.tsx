@@ -1,6 +1,10 @@
+import React from 'react'
 import { Text } from 'smarthr-ui'
-
 export default function TextPage() {
-  console.log(Text)
-  return <div>Success: Text</div>
+  return (
+    <>
+      <div>Success: Text</div>
+      <Text>Text</Text>
+    </>
+  )
 }

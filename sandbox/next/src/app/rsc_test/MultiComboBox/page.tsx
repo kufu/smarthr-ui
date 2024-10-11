@@ -1,6 +1,10 @@
+import React from 'react'
 import { MultiComboBox } from 'smarthr-ui'
-
 export default function MultiComboBoxPage() {
-  console.log(MultiComboBox)
-  return <div>Success: MultiComboBox</div>
+  return (
+    <>
+      <div>Success: MultiComboBox</div>
+      <MultiComboBox name="name" items={[]} selectedItems={[]} />
+    </>
+  )
 }

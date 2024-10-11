@@ -1,6 +1,10 @@
+import React from 'react'
 import { CurrencyInput } from 'smarthr-ui'
-
 export default function CurrencyInputPage() {
-  console.log(CurrencyInput)
-  return <div>Success: CurrencyInput</div>
+  return (
+    <>
+      <div>Success: CurrencyInput</div>
+      <CurrencyInput name="name" />
+    </>
+  )
 }

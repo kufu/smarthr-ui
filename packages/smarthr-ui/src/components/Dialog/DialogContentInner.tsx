@@ -105,10 +105,9 @@ export const DialogContentInner: FC<DialogContentInnerProps & ElementProps> = ({
   )
 
   const handleClickOverlay = useCallback(() => {
-    if (!isOpen) {
-      return
+    if (isOpen && onClickOverlay) {
+      onClickOverlay()
     }
-    onClickOverlay && onClickOverlay()
   }, [isOpen, onClickOverlay])
 
   useBodyScrollLock(isOpen)

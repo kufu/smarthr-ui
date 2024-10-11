@@ -1,6 +1,10 @@
+import React from 'react'
 import { Textarea } from 'smarthr-ui'
-
 export default function TextareaPage() {
-  console.log(Textarea)
-  return <div>Success: Textarea</div>
+  return (
+    <>
+      <div>Success: Textarea</div>
+      <Textarea />
+    </>
+  )
 }

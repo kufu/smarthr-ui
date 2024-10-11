@@ -1,6 +1,10 @@
+import React from 'react'
 import { FaAddressBookIcon } from 'smarthr-ui'
-
 export default function IconPage() {
-  console.log(FaAddressBookIcon)
-  return <div>Success: Icon</div>
+  return (
+    <>
+      <div>Success: Icon</div>
+      <FaAddressBookIcon />
+    </>
+  )
 }

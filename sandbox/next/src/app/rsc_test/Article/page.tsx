@@ -1,6 +1,10 @@
+import React from 'react'
 import { Article } from 'smarthr-ui'
-
 export default function ArticlePage() {
-  console.log(Article)
-  return <div>Success: Article</div>
+  return (
+    <>
+      <div>Success: Article</div>
+      <Article />
+    </>
+  )
 }

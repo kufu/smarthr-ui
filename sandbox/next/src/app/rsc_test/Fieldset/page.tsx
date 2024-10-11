@@ -1,6 +1,10 @@
-import { FieldSet } from 'smarthr-ui'
-
+import React from 'react'
+import { Fieldset } from 'smarthr-ui'
 export default function FieldSetPage() {
-  console.log(FieldSet)
-  return <div>Success: FieldSet</div>
+  return (
+    <>
+      <div>Success: FieldSet</div>
+      <Fieldset title="title" />
+    </>
+  )
 }

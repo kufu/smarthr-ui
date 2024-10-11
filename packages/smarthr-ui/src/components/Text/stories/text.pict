@@ -1,0 +1,10 @@
+size: undefined (10), XXS, XS, S, M, L, XL, XXL
+weight: undefined (10), normal, bold
+# italic は自分たちで定義した値ではないので除外
+color: undefined (10), TEXT_BLACK, TEXT_WHITE, TEXT_GREY, TEXT_DISABLED, TEXT_LINK, inherit
+leading: undefined (10), NONE, TIGHT, NORMAL, LOOSE
+emphasis: false (10), true
+# whiteSpace も自分たちで定義した値ではないので除外
+# styleType は styleType ごとに展開するので除外
+
+IF [emphasis] = "true" THEN [weight] = "bold";

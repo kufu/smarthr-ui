@@ -1,6 +1,10 @@
+import React from 'react'
 import { Section } from 'smarthr-ui'
-
 export default function SectionPage() {
-  console.log(Section)
-  return <div>Success: Section</div>
+  return (
+    <>
+      <div>Success: Section</div>
+      <Section />
+    </>
+  )
 }

@@ -1,6 +1,10 @@
+import React from 'react'
 import { SmartHRLogo } from 'smarthr-ui'
-
 export default function SmartHRLogoPage() {
-  console.log(SmartHRLogo)
-  return <div>Success: SmartHRLogo</div>
+  return (
+    <>
+      <div>Success: SmartHRLogo</div>
+      <SmartHRLogo fill="black" />
+    </>
+  )
 }
