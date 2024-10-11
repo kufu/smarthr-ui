@@ -46,7 +46,7 @@ export default {
   base    true    error     ReactNode   undefined   あり
 */
   render: (args: any) => (
-    <Stack {...args} className="shr-bg-base-grey shr-min-h-[50vh] shr-p-1">
+    <Stack {...args}>
       <NotificationBar
         base="base"
         bold={true}

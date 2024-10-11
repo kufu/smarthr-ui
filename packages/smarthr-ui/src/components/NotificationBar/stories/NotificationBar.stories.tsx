@@ -32,7 +32,7 @@ export default {
   title: 'States（状態）/NotificationBar',
   component: NotificationBar,
   render: (args) => (
-    <div className="shr-bg-base-grey shr-min-h-[50vh] shr-p-1">
+    <div>
       <NotificationBar {...args} />
     </div>
   ),
@@ -59,6 +59,7 @@ export default {
     },
   },
   parameters: {
+    backgrounds: { default: 'light' },
     chromatic: { disableSnapshot: true },
   },
   excludeStories: ['_SampleMessages', '_SampleOnCloseHandlers'],
@@ -71,7 +72,7 @@ export const Playground: StoryObj<typeof NotificationBar> = {
 export const Base: StoryObj<typeof NotificationBar> = {
   name: 'base',
   render: (args) => (
-    <Stack className="shr-bg-base-grey shr-min-h-[50vh] shr-p-1">
+    <Stack>
       <NotificationBar {...args} base="none" />
       <NotificationBar {...args} base="base" />
     </Stack>
@@ -81,7 +82,7 @@ export const Base: StoryObj<typeof NotificationBar> = {
 export const Animate: StoryObj<typeof NotificationBar> = {
   name: 'animate',
   render: (args) => (
-    <Stack className="shr-bg-base-grey shr-min-h-[50vh] shr-p-1">
+    <Stack>
       <NotificationBar {...args} animate={true} />
       <NotificationBar {...args} animate={false} />
     </Stack>
@@ -91,7 +92,7 @@ export const Animate: StoryObj<typeof NotificationBar> = {
 export const Bold: StoryObj<typeof NotificationBar> = {
   name: 'bold',
   render: (args) => (
-    <Stack className="shr-bg-base-grey shr-min-h-[50vh] shr-p-1">
+    <Stack>
       <NotificationBar {...args} bold={true} />
       <NotificationBar {...args} bold={false} />
     </Stack>
@@ -101,7 +102,7 @@ export const Bold: StoryObj<typeof NotificationBar> = {
 export const Type: StoryObj<typeof NotificationBar> = {
   name: 'type',
   render: (args) => (
-    <Stack className="shr-bg-base-grey shr-min-h-[50vh] shr-p-1">
+    <Stack>
       <NotificationBar {...args} type="success" />
       <NotificationBar {...args} type="error" />
       <NotificationBar {...args} type="info" />
@@ -114,7 +115,7 @@ export const Type: StoryObj<typeof NotificationBar> = {
 export const Message: StoryObj<typeof NotificationBar> = {
   name: 'message',
   render: (args) => (
-    <Stack className="shr-bg-base-grey shr-min-h-[50vh] shr-p-1">
+    <Stack>
       <NotificationBar {...args} message="NotificationBar が表示されました" />
       <NotificationBar
         {...args}
@@ -133,7 +134,7 @@ export const Message: StoryObj<typeof NotificationBar> = {
 export const Layer: StoryObj<typeof NotificationBar> = {
   name: 'layer',
   render: (args) => (
-    <Stack className="shr-bg-base-grey shr-min-h-[50vh] shr-p-1">
+    <Stack>
       <NotificationBar {...args} base="base" layer={0} />
       <NotificationBar {...args} base="base" layer={1} />
       <NotificationBar {...args} base="base" layer={2} />
@@ -146,7 +147,7 @@ export const Layer: StoryObj<typeof NotificationBar> = {
 export const OnClose: StoryObj<typeof NotificationBar> = {
   name: 'onClose',
   render: (args) => (
-    <Stack className="shr-bg-base-grey shr-min-h-[50vh] shr-p-1">
+    <Stack>
       <NotificationBar {...args} onClose={action('onClose')} />
       <NotificationBar {...args} onClose={undefined} />
     </Stack>
