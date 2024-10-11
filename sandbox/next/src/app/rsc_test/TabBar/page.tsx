@@ -1,6 +1,10 @@
+import React from 'react'
 import { TabBar } from 'smarthr-ui'
-
 export default function TabBarPage() {
-  console.log(TabBar)
-  return <div>Success: TabBar</div>
+  return (
+    <>
+      <div>Success: TabBar</div>
+      <TabBar />
+    </>
+  )
 }

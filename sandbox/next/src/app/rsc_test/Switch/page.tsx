@@ -1,6 +1,10 @@
+import React from 'react'
 import { Switch } from 'smarthr-ui'
-
 export default function SwitchPage() {
-  console.log(Switch)
-  return <div>Success: Switch</div>
+  return (
+    <>
+      <div>Success: Switch</div>
+      <Switch>children</Switch>
+    </>
+  )
 }

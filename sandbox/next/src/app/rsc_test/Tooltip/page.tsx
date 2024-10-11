@@ -1,6 +1,10 @@
+import React from 'react'
 import { Tooltip } from 'smarthr-ui'
-
 export default function TooltipPage() {
-  console.log(Tooltip)
-  return <div>Success: Tooltip</div>
+  return (
+    <>
+      <div>Success: Tooltip</div>
+      <Tooltip message="message" />
+    </>
+  )
 }

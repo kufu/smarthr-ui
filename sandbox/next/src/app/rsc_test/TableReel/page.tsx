@@ -1,6 +1,10 @@
+import React from 'react'
 import { TableReel } from 'smarthr-ui'
-
 export default function TableReelPage() {
-  console.log(TableReel)
-  return <div>Success: TableReel</div>
+  return (
+    <>
+      <div>Success: TableReel</div>
+      <TableReel />
+    </>
+  )
 }

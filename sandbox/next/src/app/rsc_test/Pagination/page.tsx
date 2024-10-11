@@ -1,6 +1,10 @@
+import React from 'react'
 import { Pagination } from 'smarthr-ui'
-
 export default function PaginationPage() {
-  console.log(Pagination)
-  return <div>Success: Pagination</div>
+  return (
+    <>
+      <div>Success: Pagination</div>
+      <Pagination total={0} current={0} onClick={() => {}} />
+    </>
+  )
 }

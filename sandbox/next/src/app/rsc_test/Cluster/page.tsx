@@ -1,6 +1,10 @@
+import React from 'react'
 import { Cluster } from 'smarthr-ui'
-
 export default function ClusterPage() {
-  console.log(Cluster)
-  return <div>Success: Cluster</div>
+  return (
+    <>
+      <div>Success: Cluster</div>
+      <Cluster />
+    </>
+  )
 }

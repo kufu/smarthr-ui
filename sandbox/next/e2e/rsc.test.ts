@@ -8,10 +8,7 @@ const SERVER_COMPONENTS = [
   'Table',
   'Loader',
   'Td',
-  'RadioButton',
   'Chip',
-  'LineClamp',
-  'RemoteDialogTrigger',
   'SpreadsheetTable',
   'Balloon',
   'Badge',
@@ -19,20 +16,10 @@ const SERVER_COMPONENTS = [
   'SmartHRLogo',
   'UnstyledButton',
   'RangeSeparator',
-  'TableReel',
-  'BulkActionRow',
-  'Tooltip',
   'Icon',
-  'Input',
-  'CheckBox',
   'TextLink',
-  'Select',
   'Th',
   'StatusLabel',
-  'Textarea',
-  'CurrencyInput',
-  'TabItem',
-  'SearchInput',
   'ResponseMessage',
 ]
 
@@ -40,6 +27,18 @@ const SERVER_COMPONENTS = [
  * サーバーコンポーネントでは利用できないコンポーネント一覧
  */
 const CLIENT_COMPONENTS = [
+  'Select',
+  'SearchInput',
+  'TabItem',
+  'CurrencyInput',
+  'Textarea',
+  'CheckBox',
+  'RadioButton',
+  'LineClamp',
+  'RemoteDialogTrigger',
+  'TableReel',
+  'BulkActionRow',
+  'Tooltip',
   'Button',
   'Dropdown',
   'Stack',
@@ -58,7 +57,6 @@ const CLIENT_COMPONENTS = [
   'Pagination',
   'Calendar',
   'FormControl',
-  'Cell',
   'AppNavi',
   'CompactInformationPanel',
   'PageHeading',
@@ -66,17 +64,14 @@ const CLIENT_COMPONENTS = [
   'Header',
   'NotificationBar',
   'TabBar',
-  'FormGroup',
   'BottomFixedArea',
   'DropdownMenuButton',
   'FloatArea',
-  'Row',
   'MultiComboBox',
   'SingleComboBox',
   'BaseColumn',
   'InputFile',
   'EmptyTableBody',
-  'Head',
   'ErrorScreen',
   'FilterDropdown',
   'SegmentedControl',
@@ -116,7 +111,7 @@ test.describe('RSC非対応コンポーネントはRSCでエラーになるこ�
   for (const component of CLIENT_COMPONENTS) {
     test(component, async ({ page }) => {
       await page.goto(`http://localhost:3000/rsc_test/${component}`)
-      await expect(page.getByText('Server Error')).toBeVisible()
+      await expect(page.getByText(/Server Error|Unhandled Runtime Error/)).toBeVisible()
       await expect(page.getByText(`Success: ${component}`)).not.toBeVisible()
     })
   }

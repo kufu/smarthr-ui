@@ -1,6 +1,10 @@
+import React from 'react'
 import { RangeSeparator } from 'smarthr-ui'
-
 export default function RangeSeparatorPage() {
-  console.log(RangeSeparator)
-  return <div>Success: RangeSeparator</div>
+  return (
+    <>
+      <div>Success: RangeSeparator</div>
+      <RangeSeparator />
+    </>
+  )
 }

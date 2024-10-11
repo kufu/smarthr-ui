@@ -1,6 +1,10 @@
+import React from 'react'
 import { Badge } from 'smarthr-ui'
-
 export default function BadgePage() {
-  console.log(Badge)
-  return <div>Success: Badge</div>
+  return (
+    <>
+      <div>Success: Badge</div>
+      <Badge>Badge</Badge>
+    </>
+  )
 }

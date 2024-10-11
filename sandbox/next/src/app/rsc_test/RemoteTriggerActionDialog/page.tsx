@@ -1,6 +1,15 @@
+import React from 'react'
 import { RemoteTriggerActionDialog } from 'smarthr-ui'
-
 export default function RemoteTriggerActionDialogPage() {
-  console.log(RemoteTriggerActionDialog)
-  return <div>Success: RemoteTriggerActionDialog</div>
+  return (
+    <>
+      <div>Success: RemoteTriggerActionDialog</div>
+      <RemoteTriggerActionDialog
+        id="id"
+        title="title"
+        actionText="actionText"
+        onClickAction={() => {}}
+      />
+    </>
+  )
 }

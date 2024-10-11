@@ -1,6 +1,10 @@
+import React from 'react'
 import { FloatArea } from 'smarthr-ui'
-
 export default function FloatAreaPage() {
-  console.log(FloatArea)
-  return <div>Success: FloatArea</div>
+  return (
+    <>
+      <div>Success: FloatArea</div>
+      <FloatArea primaryButton={<button type="button">button</button>} />
+    </>
+  )
 }

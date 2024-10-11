@@ -1,6 +1,15 @@
+import React from 'react'
 import { MessageDialog } from 'smarthr-ui'
-
 export default function MessageDialogPage() {
-  console.log(MessageDialog)
-  return <div>Success: MessageDialog</div>
+  return (
+    <>
+      <div>Success: MessageDialog</div>
+      <MessageDialog
+        title="title"
+        description="description"
+        onClickClose={() => {}}
+        isOpen={false}
+      />
+    </>
+  )
 }
