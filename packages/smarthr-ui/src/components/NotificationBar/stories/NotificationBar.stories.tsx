@@ -9,7 +9,7 @@ import { NotificationBar } from '../NotificationBar'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-export const _messages = {
+export const _SampleMessages = {
   String: 'NotificationBar が表示されました',
   ReactNode: (
     <>
@@ -21,7 +21,7 @@ export const _messages = {
     </>
   ),
 }
-export const _onCloseHandlers = {
+export const _SampleOnCloseHandlers = {
   あり: () => {
     action('onClose')()
   },
@@ -49,18 +49,19 @@ export default {
   argTypes: {
     message: {
       control: { type: 'radio' },
-      options: Object.keys(_messages),
-      mapping: _messages,
+      options: Object.keys(_SampleMessages),
+      mapping: _SampleMessages,
     },
     onClose: {
       control: { type: 'radio' },
-      options: Object.keys(_onCloseHandlers),
-      mapping: _onCloseHandlers,
+      options: Object.keys(_SampleOnCloseHandlers),
+      mapping: _SampleOnCloseHandlers,
     },
   },
   parameters: {
     chromatic: { disableSnapshot: true },
   },
+  excludeStories: ['_SampleMessages', '_SampleOnCloseHandlers'],
 } as Meta<typeof NotificationBar>
 
 export const Playground: StoryObj<typeof NotificationBar> = {

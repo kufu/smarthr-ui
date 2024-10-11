@@ -4,7 +4,7 @@ import React from 'react'
 import { Stack } from '../../Layout'
 import { NotificationBar } from '../NotificationBar'
 
-import { _messages, _onCloseHandlers } from './NotificationBar.stories'
+import { _SampleMessages, _SampleOnCloseHandlers } from './NotificationBar.stories'
 
 import type { StoryObj } from '@storybook/react'
 
@@ -51,249 +51,249 @@ export default {
         base="base"
         bold={true}
         type="warning"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={4}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={false}
         type="success"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={4}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={false}
         type="error"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={2}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="error"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={3}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="none"
         bold={false}
         type="warning"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={undefined}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={false}
         type="error"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={1}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="info"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={1}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="sync"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={2}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="warning"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={2}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={false}
         type="sync"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={3}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="error"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={0}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="none"
         bold={true}
         type="sync"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={undefined}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={false}
         type="warning"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={1}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="none"
         bold={true}
         type="success"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={undefined}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="success"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={3}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={false}
         type="success"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={0}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="none"
         bold={false}
         type="info"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={undefined}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={false}
         type="success"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={1}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={false}
         type="info"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={2}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="success"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={2}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="none"
         bold={false}
         type="error"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={undefined}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="error"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={4}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="info"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={0}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={false}
         type="sync"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={0}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="sync"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={1}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="sync"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={4}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="info"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={3}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="info"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={4}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={false}
         type="warning"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={3}
-        onClose={_onCloseHandlers.なし}
+        onClose={_SampleOnCloseHandlers.なし}
       />
       <NotificationBar
         base="base"
         bold={false}
         type="warning"
-        message={_messages.String}
+        message={_SampleMessages.String}
         layer={0}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
       <NotificationBar
         base="base"
         bold={true}
         type="error"
-        message={_messages.ReactNode}
+        message={_SampleMessages.ReactNode}
         layer={undefined}
-        onClose={_onCloseHandlers.あり}
+        onClose={_SampleOnCloseHandlers.あり}
       />
     </Stack>
   ),
