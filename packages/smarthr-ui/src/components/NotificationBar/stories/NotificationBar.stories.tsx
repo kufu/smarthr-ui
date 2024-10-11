@@ -38,7 +38,7 @@ export default {
   ),
   args: {
     base: 'none',
-    animate: true,
+    animate: false,
     bold: false,
     type: 'success',
     message: 'String',
